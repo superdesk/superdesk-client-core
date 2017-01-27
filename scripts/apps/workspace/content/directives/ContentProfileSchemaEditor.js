@@ -44,25 +44,27 @@ export function ContentProfileSchemaEditor(gettext, metadata, content, config) {
             content.getTypeMetadata(scope.model._id).then((typeMetadata) => {
                 scope.model.schema = angular.extend({}, typeMetadata.schema);
                 scope.model.editor = angular.extend({}, typeMetadata.editor);
-            });
 
-            scope.withEditor3 = config.features.editor3;
+                metadata.initialize().then(() => {
+                    scope.options = {subject: metadata.values.subjectcodes};
+                    scope.terms = {
+                        subject: metadata.values.subjectcodes,
+                        anpa_category: metadata.values.categories
+                    };
 
-            metadata.initialize().then(() => {
-                scope.options = {subject: metadata.values.subjectcodes};
-                scope.terms = {
-                    subject: metadata.values.subjectcodes,
-                    anpa_category: metadata.values.categories
-                };
+                    metadata.cvs.forEach((cv) => {
+                        var cvId = cv.schema_field || constant.CV_ALIAS[cv._id] || cv._id;
 
-                metadata.cvs.forEach((cv) => {
-                    var cvId = cv.schema_field || constant.CV_ALIAS[cv._id] || cv._id;
-
-                    if (scope.model.editor[cvId]) {
-                        scope.options[cvId] = cv.items;
-                    }
+                        if (scope.model.editor[cvId]) {
+                            scope.options[cvId] = cv.items;
+                        }
+                    });
                 });
             });
+
+            scope.directive = this.name;
+
+            scope.withEditor3 = config.features.editor3;
 
             scope.formatingOptions = [
                 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',

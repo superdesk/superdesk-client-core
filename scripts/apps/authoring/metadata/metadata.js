@@ -323,10 +323,13 @@ function MetaDropdownDirective($filter) {
             label: '@',
             change: '&',
             key: '@',
-            tabindex: '='
+            tabindex: '=',
+            containingDirective: '@'
         },
         templateUrl: 'scripts/apps/authoring/metadata/views/metadata-dropdown.html',
         link: function(scope, elem) {
+            scope.listFields = ['place', 'genre', 'anpa_category', 'subject'];
+
             scope.select = function(item) {
                 var o = {};
 
@@ -352,6 +355,11 @@ function MetaDropdownDirective($filter) {
             scope.$watch(':: list', () => {
                 scope.values = _.keyBy(scope.list, 'qcode');
             });
+
+            // UI binding assignment only if we are editing a content profile (NOT in authoring header or other places)
+            if (scope.containingDirective === 'sdContentSchemaEditor') {
+                scope.item[scope.field] = scope.item.default;
+            }
 
             scope.$applyAsync(() => {
                 if (scope.list) {

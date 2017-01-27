@@ -1,9 +1,9 @@
 <div class="dropdown" ng-class="{'dropdown--dropright': icon, 'dropdown--noarrow': !icon}" dropdown sd-metadropdown-focus sd-dropdown-position is-open="status.isOpen">
-    <button ng-disabled="disabled" class="dropdown__toggle line-input" tabindex="{{tabindex}}" dropdown__toggle ng-if="(field !== 'place' && field !== 'genre') && !icon">
+    <button ng-disabled="disabled" class="dropdown__toggle line-input" tabindex="{{tabindex}}" dropdown__toggle ng-if="listFields.indexOf(field) === -1 && !icon">
         {{ item[field].name || item[field] ? item[field].name || item[field] : "none" | translate }}
         <b class="dropdown__caret"></b>
     </button>
-    <button ng-disabled="disabled" class="dropdown__toggle line-input" tabindex="{{tabindex}}" dropdown__toggle ng-if="(field === 'place' || field === 'genre') && !icon">
+    <button ng-disabled="disabled" class="dropdown__toggle line-input" tabindex="{{tabindex}}" dropdown__toggle ng-if="listFields.indexOf(field) > -1 && !icon">
         {{ item[field].length > 0 ? item[field][0].name : "none" | translate }}
         <b class="dropdown__caret"></b>
     </button>
