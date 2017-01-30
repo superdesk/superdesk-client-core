@@ -21,6 +21,18 @@ class MetasearchController {
         this.query = '';
         this.items = null;
         this.location.search('query', null);
+        this.location.search('categories', null);
+        this.location.search('time_range', null);
+    }
+
+    setCategory(category) {
+        this.location.search('categories', category || null);
+        this.search();
+    }
+
+    setTime(time) {
+        this.location.search('time_range', time || null);
+        this.search();
     }
 
     search(event) {
@@ -28,11 +40,20 @@ class MetasearchController {
             return;
         }
 
+        this.category = this.location.search().categories;
+        this.time_range = this.location.search().time_range;
+
         this.location.search('query', this.query || null);
         if (this.query) {
+            let params = {q: this.query, format: 'json', pageno: 1};
+
             this.items = null;
             this.loading = true;
-            this.http.get(this.url, {params: {q: this.query, format: 'json', pageno: 1, categories: 'superdesk'}})
+
+            params.time_range = this.location.search().time_range || '';
+            params.categories = this.location.search().categories || 'superdesk';
+
+            this.http.get(this.url, {params: params})
                 .then((response) => {
                     this.items = response.data.results.slice(0, 25) || [];
                     this.loading = false;

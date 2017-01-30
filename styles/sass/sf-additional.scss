@@ -1,7 +1,6 @@
 // Styling for the superdesk specific elements
 // ----------------------------------------------------------------------------------------
 
-
 // Webkit scroll
 // --------------------------------------------------
 
@@ -1782,29 +1781,40 @@ header .sortbar {
 
 
 // metasearch
-.metasearch .main-section {
-    overflow-y: scroll;
+.metasearch {
+    .main-section {
+        overflow-y: scroll;
 
-    .stage {
-        padding: 8px 18px 3px;
-    }
+        .stage {
+            padding: 8px 18px 3px;
+        }
 
-    .engine {
-        opacity: .8;
-    }
+        .engine {
+            opacity: .8;
+        }
 
-    figure {
-        margin: 3px 0;
-        overflow: hidden;
-        height: 1%;
+        figure {
+            margin: 3px 0;
+            overflow: hidden;
+            height: 1%;
 
-        img {
-            float: left;
-            padding-right: 8px;
+            img {
+                float: left;
+                padding-right: 8px;
+            }
+        }
+
+        .embed.iframe {
+            margin: 3px 0;
+        }
+
+        .pills-list {
+            clear: both;
+            padding-top: 10px;
         }
     }
 
-    .embed.iframe {
-        margin: 3px 0;
+    .btn-group {
+        margin: 0 8px 8px 0;
     }
 }
