@@ -114,7 +114,14 @@ export function ChangeImageController($scope, gettext, notify, modal, $q, _, api
         $scope.resolve({
             cropData: $scope.data.cropData,
             metadata: _.pick($scope.data.item, [
-                'title', 'description_text', 'alt_text', 'credit', 'copyrightnotice', 'copyrightholder', 'poi'
+                'headline',
+                'description_text',
+                'alt_text',
+                'byline',
+                'copyrightholder',
+                'usageterms',
+                'copyrightnotice',
+                'poi'
             ])
         });
     };
