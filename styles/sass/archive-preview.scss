@@ -1213,6 +1213,26 @@ $lightbox-composite-condensed : 100px;
             color: #d25932;
             line-height: 116.6%;
         }
+        
+        .stage {
+            font-size: 10px;
+            @include text-light();
+            letter-spacing: 0.035em;
+            line-height: 29px;
+            color: $gray;
+            border: 0;
+            background-color: transparent;
+            text-transform: uppercase;
+            display: inline-block;
+            vertical-align: middle;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+            b {
+              color: $grayDark;
+              @include text-semibold();
+            }
+          }
 }
 
 // Preview image overlay

@@ -33,6 +33,10 @@ export function LegalArchiveController($scope, $location, legal, preferencesServ
 
     $scope.preview = function(selectedItem) {
         $scope.selected.preview = selectedItem;
+        if (selectedItem) {
+            $scope.deskName = selectedItem.task.desk;
+            $scope.stage = selectedItem.task.stage;
+        }
     };
 
     $scope.openLightbox = function() {
