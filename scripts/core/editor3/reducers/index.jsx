@@ -1,6 +1,7 @@
 import spellchecker from './spellchecker';
 import editor3 from './editor3';
 import toolbar from './toolbar';
+import findReplace from './find-replace';
 
 // Returns a new reducer which chains the state and action throught the given
 // list of reducers.
@@ -11,7 +12,8 @@ const chainReduce = (...reducers) =>
 const editorReducers = chainReduce(
     spellchecker,
     toolbar,
-    editor3
+    editor3,
+    findReplace
 );
 
 export default editorReducers;

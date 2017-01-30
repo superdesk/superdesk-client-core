@@ -7,6 +7,7 @@ import * as actions from '../actions';
 import {SpellcheckerError} from './spellchecker/SpellcheckerError';
 import LinkControl from './toolbar/links/LinkControl';
 import {blockRenderer} from './blockRenderer';
+import {customStyleMap} from './customStyleMap';
 
 /**
  * @ngdoc React
@@ -108,6 +109,7 @@ export class Editor3Component extends React.Component {
                         editorState={editorState}
                         handleKeyCommand={handleKeyCommand}
                         blockRendererFn={blockRenderer}
+                        customStyleMap={customStyleMap}
                         onChange={onChange}
                         onTab={onTab}
                         readOnly={readOnly}

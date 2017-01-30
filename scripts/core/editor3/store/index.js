@@ -7,6 +7,7 @@ import {Editor3} from '../components/Editor3';
 import {EditorState, convertFromRaw, convertToRaw, ContentState} from 'draft-js';
 import {stateToHTML} from 'draft-js-export-html';
 import {stateFromHTML} from 'draft-js-import-html';
+import {clearHighlights} from '../reducers/find-replace';
 
 /**
  * @name createEditorStore
@@ -26,6 +27,7 @@ export default function createEditorStore(ctrl) {
 
     const store = createStore(reducers, {
         editorState: EditorState.createWithContent(content, decorators),
+        searchTerm: {pattern: '', index: -1, caseSensitive: false},
         readOnly: ctrl.readOnly,
         showToolbar: showToolbar,
         singleLine: singleLine,
@@ -48,8 +50,11 @@ export default function createEditorStore(ctrl) {
  * is bound to the controller, so 'this' points to controller attributes.
  */
 function onChange(content) {
-    this.editorState = convertToRaw(content);
-    this.value = stateToHTML(content);
+    // clear find & replace highlights
+    const cleanedContent = clearHighlights(content).content;
+
+    this.editorState = convertToRaw(cleanedContent);
+    this.value = stateToHTML(cleanedContent);
     this.onChange();
 }
 

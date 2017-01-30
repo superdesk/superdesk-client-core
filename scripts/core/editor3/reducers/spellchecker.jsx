@@ -30,7 +30,7 @@ const replaceWord = (state, {word, newWord}) => {
 
     var newState = Modifier.replaceText(editorState.getCurrentContent(), wordSelection, newWord);
 
-    newState = EditorState.push(editorState, newState, 'spellchecker');
+    newState = EditorState.push(editorState, newState, 'spellcheck-change');
 
     return {...state, editorState: newState};
 };
