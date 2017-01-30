@@ -58,6 +58,10 @@
                 &.visible {
                     overflow: visible;
                 }
+                &.wrap {
+                    white-space: normal;
+                    text-align: right;
+                }
             }
             &.wider {
                 .data {
