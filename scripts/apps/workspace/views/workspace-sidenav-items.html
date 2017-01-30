@@ -27,8 +27,7 @@
     </a>
 </li>
 <li ng-class="{active: currentRoute.href === '/workspace/spike-monitoring'}">
-    <a href="#/workspace/spike-monitoring" ng-click="hideMonitoring(currentRoute.href === '/workspace/spike-monitoring', $event)"
-       title="{{ :: 'Spike' | translate }}" sd-hotkey="alt+x" sd-hotkey-options="{global: true}">
+    <a href="#/workspace/spike-monitoring" ng-click="hideMonitoring(currentRoute.href === '/workspace/spike-monitoring', $event)"title="{{ :: 'Spike' | translate }}" sd-hotkey="alt+x" sd-hotkey-options="{global: true}">
         <i class="big-icon-spiked main-icon"></i>
         <i class="big-icon-chevron-left helper-icon"></i>
     </a>
@@ -68,8 +67,10 @@
     </div>
 </li>
 <li ng-class="{active: currentRoute.href === '/workspace/metasearch'}">
-    <a href="#/workspace/metasearch" class="big-icon-facebook" title="Metasearch">
-      <i class="big-icon-search main-icon"></i>
+    <a href="#/workspace/metasearch" class="big-icon-facebook" title="Metasearch"
+      ng-click="hideMonitoring(currentRoute.href === '/workspace/metasearch', $event)">
+        <i class="big-icon-search main-icon"></i>
+        <i class="big-icon-chevron-left helper-icon"></i>
     </a>
 </li>
 
