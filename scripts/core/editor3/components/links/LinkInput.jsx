@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {getSelectedEntity} from '../../../common';
+import {getSelectedEntity} from './entityUtils';
 
 /**
  * @ngdoc React

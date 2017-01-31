@@ -1,5 +1,5 @@
 import React from 'react';
-import ImageBlock from './toolbar/images/ImageBlock';
+import ImageBlock from './images/ImageBlock';
 import {Entity} from 'draft-js';
 
 /**

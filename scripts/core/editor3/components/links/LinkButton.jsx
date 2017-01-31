@@ -3,24 +3,24 @@ import {Entity} from 'draft-js';
 import classNames from 'classnames';
 import LinkPopover from './LinkPopover';
 import LinkInput from './LinkInput';
-import * as common from '../../../common';
-import * as actions from '../../../actions';
+import * as entityUtils from './entityUtils';
+import * as actions from '../../actions';
 import {connect} from 'react-redux';
 
 /**
  * @ngdoc React
  * @module superdesk.core.editor3
- * @name LinkControlComponent
+ * @name LinkButtonComponent
  * @param {Object} editorState The editor state object.
  * @param {Object} editorRect Absolute position in pixels (top, left) of the editor.
  * state changes
  * @description This component holds the link button for the toolbar and the small
  * link editing popover that displays when clicking a link.
  */
-class LinkControlComponent extends Component {
+class LinkButtonComponent extends Component {
     /**
      * @ngdoc method
-     * @name LinkControlComponent#getDecorator
+     * @name LinkButtonComponent#getDecorator
      * @static
      * @returns {Object} decorator object
      * @description Returns an object to be passed to the composite decorator
@@ -50,7 +50,7 @@ class LinkControlComponent extends Component {
 
     /**
      * @ngdoc method
-     * @name LinkControlComponent#showInput
+     * @name LinkButtonComponent#showInput
      * @param {string=} url The URL to show in the input, when editing an already
      * existing link.
      * @description Shows the URL input box.
@@ -69,7 +69,7 @@ class LinkControlComponent extends Component {
 
     /**
      * @ngdoc method
-     * @name LinkControlComponent#hideInput
+     * @name LinkButtonComponent#hideInput
      * @description Hides the URL input.
      */
     hideInput() {
@@ -78,7 +78,7 @@ class LinkControlComponent extends Component {
 
     /**
      * @ngdoc method
-     * @name LinkControlComponent#removeLink
+     * @name LinkButtonComponent#removeLink
      * @description Calls the link removal action.
      */
     removeLink() {
@@ -88,8 +88,8 @@ class LinkControlComponent extends Component {
 
     render() {
         const {editorState, editorRect, applyLink} = this.props;
-        const entityType = common.getSelectedEntityType(editorState);
-        const {url} = common.getSelectedEntityData(editorState);
+        const entityType = entityUtils.getSelectedEntityType(editorState);
+        const {url} = entityUtils.getSelectedEntityData(editorState);
         const isEditing = typeof this.state.showInput === 'string';
         const isCollapsed = editorState.getSelection().isCollapsed();
 
@@ -131,7 +131,7 @@ function LinkStrategy(contentBlock, callback) {
     );
 }
 
-LinkControlComponent.propTypes = {
+LinkButtonComponent.propTypes = {
     editorState: React.PropTypes.object.isRequired,
     editorRect: React.PropTypes.object.isRequired,
     applyLink: React.PropTypes.func.isRequired,
@@ -148,6 +148,6 @@ const mapDispatchToProps = (dispatch) => ({
     removeLink: () => dispatch(actions.removeLink())
 });
 
-const LinkControl = connect(mapStateToProps, mapDispatchToProps)(LinkControlComponent);
+const LinkButton = connect(mapStateToProps, mapDispatchToProps)(LinkButtonComponent);
 
-export default LinkControl;
+export default LinkButton;

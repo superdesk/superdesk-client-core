@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 import Toolbar from './toolbar';
 import * as actions from '../actions';
 import {SpellcheckerError} from './spellchecker/SpellcheckerError';
-import LinkControl from './toolbar/links/LinkControl';
+import LinkButton from './links/LinkButton';
 import {blockRenderer} from './blockRenderer';
 import {customStyleMap} from './customStyleMap';
 
@@ -26,7 +26,7 @@ import {customStyleMap} from './customStyleMap';
 export class Editor3Component extends React.Component {
     static getDecorator() {
         return new CompositeDecorator([
-            LinkControl.getDecorator(),
+            LinkButton.getDecorator(),
             SpellcheckerError.getDecorator()
         ]);
     }

@@ -1,5 +1,5 @@
 import {RichUtils, Entity, AtomicBlockUtils, EditorState} from 'draft-js';
-import * as common from '../common';
+import * as entityUtils from '../components/links/entityUtils';
 
 /**
  * @description Contains the list of toolbar related reducers.
@@ -67,7 +67,7 @@ const applyLink = (state, {url, entity}) => {
     const {editorState} = state;
 
     if (entity) {
-        const key = common.getSelectedEntityKey(editorState);
+        const key = entityUtils.getSelectedEntityKey(editorState);
 
         Entity.mergeData(key, {url});
 
@@ -93,7 +93,7 @@ const removeLink = (state) => {
     const {editorState} = state;
     var stateAfterChange = editorState;
 
-    common.getSelectedEntityRange(editorState,
+    entityUtils.getSelectedEntityRange(editorState,
         (start, end) => {
             const selection = editorState.getSelection();
             const entitySelection = selection.merge({
