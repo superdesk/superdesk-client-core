@@ -76,7 +76,9 @@ const applyLink = (state, {url, entity}) => {
         return {...state};
     }
 
-    const entityKey = Entity.create('LINK', 'MUTABLE', {url});
+    const contentState = editorState.getCurrentContent();
+    const contentStateWithEntity = contentState.createEntity('LINK', 'MUTABLE', {url});
+    const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
     const stateAfterChange = RichUtils.toggleLink(
         editorState,
         editorState.getSelection(),
@@ -158,10 +160,8 @@ const updateImage = (state, {entityKey, img}) => {
 
     // focus the editor and softly force a refresh
     const {editorState} = state;
-    const newState = EditorState.forceSelection(
-        editorState,
-        editorState.getSelection()
-    );
+    const selection = editorState.getSelection();
+    const newState = EditorState.forceSelection(editorState, selection);
 
     return {...state, editorState: newState};
 };
@@ -175,7 +175,9 @@ const updateImage = (state, {entityKey, img}) => {
 const applyEmbed = (state, data) => {
     var {editorState} = state;
 
-    const entityKey = Entity.create('EMBED', 'MUTABLE', {data});
+    const contentState = state.editorState.getCurrentContent();
+    const contentStateWithEntity = contentState.createEntity('EMBED', 'MUTABLE', {data});
+    const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
 
     editorState = AtomicBlockUtils.insertAtomicBlock(
         editorState,

@@ -1,5 +1,4 @@
 import ng from 'core/services/ng';
-import {Entity} from 'draft-js';
 
 /**
  * @ngdoc method
@@ -76,14 +75,15 @@ export function insertImages() {
 /**
  * @ngdoc method
  * @name cropImage
+ * @param {String} entityKey
+ * @param {Object} entityData
  * @return {String} action
  * @description Displays the external crop image dialog and returns the crop image
- * action.
+ * action using data from the provided entity.
  */
-export function cropImage(entityKey) {
+export function cropImage(entityKey, entityData) {
     const renditions = ng.get('renditions');
-    const entity = Entity.get(entityKey);
-    const {img} = entity.getData();
+    const {img} = entityData;
 
     return (dispatch) => {
         renditions.crop(img).then((cropped) => {

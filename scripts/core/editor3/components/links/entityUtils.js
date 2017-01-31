@@ -1,5 +1,3 @@
-import {Entity} from 'draft-js';
-
 /**
  * @description Returns the key belonging to the entity that the start key of the
  * current selection is on.
@@ -19,8 +17,9 @@ export function getSelectedEntityKey(editorState) {
  */
 export function getSelectedEntity(editorState) {
     const entityKey = getSelectedEntityKey(editorState);
+    const contentState = editorState.getCurrentContent();
 
-    return entityKey !== null ? Entity.get(entityKey) : null;
+    return entityKey !== null ? contentState.getEntity(entityKey) : null;
 }
 
 /**

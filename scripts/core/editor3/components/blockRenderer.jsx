@@ -1,7 +1,6 @@
 import React from 'react';
 import ImageBlock from './images/ImageBlock';
 import EmbedBlock from './embeds/EmbedBlock';
-import {Entity} from 'draft-js';
 
 /**
  * @ngdoc React
@@ -11,8 +10,9 @@ import {Entity} from 'draft-js';
  * @description Media block renderer component.
  */
 const MediaComponent = (props) => {
-    const entityKey = props.block.getEntityAt(0);
-    const type = Entity.get(entityKey).getType();
+    const {block, contentState} = props;
+    const entityKey = block.getEntityAt(0);
+    const type = contentState.getEntity(entityKey).getType();
 
     switch (type) {
     case 'IMAGE':
@@ -25,7 +25,8 @@ const MediaComponent = (props) => {
 };
 
 MediaComponent.propTypes = {
-    block: React.PropTypes.object.isRequired
+    block: React.PropTypes.object.isRequired,
+    contentState: React.PropTypes.object.isRequired
 };
 
 export function blockRenderer(block) {

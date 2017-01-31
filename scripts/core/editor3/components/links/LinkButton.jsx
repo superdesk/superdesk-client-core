@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import {Entity} from 'draft-js';
 import classNames from 'classnames';
 import LinkPopover from './LinkPopover';
 import LinkInput from './LinkInput';
@@ -30,7 +29,8 @@ class LinkButtonComponent extends Component {
         return {
             strategy: LinkStrategy,
             component: (props) => {
-                const {url} = Entity.get(props.entityKey).getData();
+                const entity = props.contentState.getEntity(props.entityKey);
+                const {url} = entity.getData();
 
                 return <a href={url} title={url}>{props.children}</a>;
             }
@@ -120,12 +120,12 @@ class LinkButtonComponent extends Component {
     }
 }
 
-function LinkStrategy(contentBlock, callback) {
+function LinkStrategy(contentBlock, callback, contentState) {
     contentBlock.findEntityRanges(
         (character) => {
             const entityKey = character.getEntity();
 
-            return entityKey !== null && Entity.get(entityKey).getType() === 'LINK';
+            return entityKey !== null && contentState.getEntity(entityKey).getType() === 'LINK';
         },
         callback
     );

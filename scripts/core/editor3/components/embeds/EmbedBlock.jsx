@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import {Entity} from 'draft-js';
 
 /**
  * @ngdoc React
@@ -11,9 +10,9 @@ import {Entity} from 'draft-js';
  */
 export default class EmbedBlock extends Component {
     render() {
-        const {block} = this.props;
+        const {block, contentState} = this.props;
         const entityKey = block.getEntityAt(0);
-        const entity = Entity.get(entityKey);
+        const entity = contentState.getEntity(entityKey);
         const {data} = entity.getData();
 
         return (
@@ -23,5 +22,6 @@ export default class EmbedBlock extends Component {
 }
 
 EmbedBlock.propTypes = {
-    block: React.PropTypes.object.isRequired
+    block: React.PropTypes.object.isRequired,
+    contentState: React.PropTypes.object.isRequired
 };

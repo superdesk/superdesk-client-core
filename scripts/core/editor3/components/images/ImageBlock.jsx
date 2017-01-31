@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import * as actions from '../../actions';
-import {Entity} from 'draft-js';
 
 /**
  * @ngdoc React
@@ -26,9 +25,9 @@ class ImageBlockComponent extends Component {
      * @description Returns the image data.
      */
     data() {
-        const {block} = this.props;
+        const {block, contentState} = this.props;
         const entityKey = block.getEntityAt(0);
-        const entity = Entity.get(entityKey);
+        const entity = contentState.getEntity(entityKey);
         const {img} = entity.getData();
 
         return img;
@@ -41,10 +40,11 @@ class ImageBlockComponent extends Component {
      * action.
      */
     onClick() {
-        const {block, cropImage} = this.props;
+        const {block, cropImage, contentState} = this.props;
         const entityKey = block.getEntityAt(0);
+        const entity = contentState.getEntity(entityKey);
 
-        cropImage(entityKey);
+        cropImage(entityKey, entity.getData());
     }
 
     render() {
@@ -66,11 +66,12 @@ class ImageBlockComponent extends Component {
 
 ImageBlockComponent.propTypes = {
     cropImage: React.PropTypes.func.isRequired,
-    block: React.PropTypes.object.isRequired
+    block: React.PropTypes.object.isRequired,
+    contentState: React.PropTypes.object.isRequired
 };
 
 const mapDispatchToProps = (dispatch) => ({
-    cropImage: (entityKey) => dispatch(actions.cropImage(entityKey))
+    cropImage: (entityKey, entityData) => dispatch(actions.cropImage(entityKey, entityData))
 });
 
 const ImageBlock = connect(null, mapDispatchToProps)(ImageBlockComponent);
