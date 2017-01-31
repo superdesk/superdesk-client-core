@@ -126,7 +126,8 @@ export function ActivityReportPanel($location, desks, asset, config, metadata, a
                 var activityReportEdit = _.clone(scope.activityReport);
                 var toDelete = ['_id', '_etag', 'is_global', 'owner', 'name', 'description'];
 
-                activityReportEdit.operation_date = formatDate(scope.activityReport.operation_date);
+                activityReportEdit.operation_date_start = formatDate(scope.activityReport.operation_date_start);
+                activityReportEdit.operation_date_end = formatDate(scope.activityReport.operation_date_end);
                 toDelete.forEach((field) => {
                     delete activityReportEdit[field];
                 });

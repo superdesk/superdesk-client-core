@@ -52,7 +52,8 @@ export function SavedActivityReports($rootScope, api, session, modal, notify, ge
                     scope.globalSavedActivityReports = [];
                     scope.activityReports = activityReports;
                     _.forEach(scope.activityReports, (savedActivityReport) => {
-                        savedActivityReport.operation_date = formatDate(savedActivityReport.operation_date);
+                        savedActivityReport.operation_date_start = formatDate(savedActivityReport.operation_date_start);
+                        savedActivityReport.operation_date_end = formatDate(savedActivityReport.operation_date_end);
                         if (savedActivityReport.owner === session.identity._id) {
                             scope.userSavedActivityReports.push(savedActivityReport);
                         }

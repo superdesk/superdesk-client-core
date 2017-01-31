@@ -6,7 +6,8 @@ module.exports = new Analytics();
 function Analytics() {
     this.reportOperation = element(by.model('activityReport.operation'));
     this.reportDesk = element(by.model('activityReport.desk'));
-    this.reportOperationDate = element(by.id('parameters-operation_date'));
+    this.reportOperationDate = element(by.id('parameters-operation_date_start'));
+    this.reportOperationDate = element(by.id('parameters-operation_date_end'));
     this.reportGroupByDesk = element(by.id('activity_report_group_desk'));
     this.reportName = element(by.id('activity_report_name'));
     this.reportDescription = element(by.id('activity_report_description'));
@@ -131,9 +132,11 @@ function Analytics() {
      * @param {integer} urgency
      **/
     this.setUrgency = function(urgency) {
-        var urgencyElement = element(by.id('parameters-urgency'));
+        var urgencyStartElement = element(by.id('parameters-urgency-start'));
+        var urgencyEndElement = element(by.id('parameters-urgency-end'));
 
-        urgencyElement.click();
+        urgencyStartElement.click();
+        urgencyEndElement.click();
     };
 
     /**
@@ -141,9 +144,11 @@ function Analytics() {
      * @param {integer} priority
      **/
     this.setPriority = function(priority) {
-        var priorityElement = element(by.id('parameters-priority'));
+        var priorityStartElement = element(by.id('parameters-priority-start'));
+        var priorityEndElement = element(by.id('parameters-priority-end'));
 
-        priorityElement.click();
+        priorityStartElement.click();
+        priorityEndElement.click();
     };
 
     /**
