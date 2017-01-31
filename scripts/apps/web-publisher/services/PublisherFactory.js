@@ -174,6 +174,19 @@ export function PublisherFactory(pubapi) {
         queryArticles(id) {
             return pubapi.query('content/lists/' + id + '/items');
         }
+
+        /**
+         * @ngdoc method
+         * @name publisher#pinArticle
+         * @param {String} listId - id of content list
+         * @param {String} articleId - id of article
+         * @param {Object} article - article which is edited
+         * @returns {Promise}
+         * @description Pin article in list of articles
+         */
+        pinArticle(listId, articleId, article) {
+            return pubapi.save('content/lists/' + listId + '/items', article, articleId);
+        }
     }
 
     return new Publisher();

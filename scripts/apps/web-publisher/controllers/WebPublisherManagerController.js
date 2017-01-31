@@ -386,6 +386,13 @@ export function WebPublisherManagerController($scope, publisher, modal) {
         openListCriteria(list) {
             this.selectedList = list;
             $scope.newList = angular.extend({}, list);
+            $scope.metadataList = [];
+            if ($scope.newList.filters.metadata) {
+                angular.forEach($scope.newList.filters.metadata, (value, key) => {
+                    $scope.metadataList.push({metaName: key, metaValue: value});
+                });
+            }
+
             this.changeTab(list.type === 'automatic' ? 'content-list-automatic' : '');
         }
 
@@ -397,6 +404,15 @@ export function WebPublisherManagerController($scope, publisher, modal) {
         saveListCriteria() {
             var updatedFilters = _.pickBy($scope.newList.filters, _.identity);
 
+            if ($scope.metadataList) {
+                updatedFilters.metadata = {};
+                $scope.metadataList.forEach((item) => {
+                    if (item.metaName) {
+                        updatedFilters.metadata[item.metaName] = item.metaValue;
+                    }
+                });
+            }
+
             /**
              * @ngdoc event
              * @name WebPublisherManagerController#refreshArticles
@@ -406,6 +422,48 @@ export function WebPublisherManagerController($scope, publisher, modal) {
              */
             publisher.manageList({content_list: {filters: updatedFilters}}, this.selectedList.id)
                 .then(() => $scope.$broadcast('refreshArticles', $scope.newList));
+        }
+
+        /**
+         * @ngdoc method
+         * @name WebPublisherManagerController#addAuthor
+         * @description Adds author in criteria filters list
+         */
+        addAuthor() {
+            if (!$scope.newList.filters.author) {
+                $scope.newList.filters.author = [];
+            }
+
+            $scope.newList.filters.author.push('');
+        }
+
+        /**
+         * @ngdoc method
+         * @name WebPublisherManagerController#removeAuthor
+         * @param {Number} itemIdx - index of the item to remove
+         * @description Removes author from criteria filters list
+         */
+        removeAuthor(itemIdx) {
+            $scope.newList.filters.author.splice(itemIdx, 1);
+        }
+
+        /**
+         * @ngdoc method
+         * @name WebPublisherManagerController#addMetadata
+         * @description Adds metadata in criteria filters list
+         */
+        addMetadata() {
+            $scope.metadataList.push({metaName: '', metaValue: ''});
+        }
+
+        /**
+         * @ngdoc method
+         * @name WebPublisherManagerController#removeMetadata
+         * @param {Number} itemIdx - index of the item to remove
+         * @description Removes metadata from criteria filters list
+         */
+        removeMetadata(itemIdx) {
+            $scope.metadataList.splice(itemIdx, 1);
         }
 
         /**
