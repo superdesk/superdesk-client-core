@@ -8,6 +8,8 @@
         <div class="listElement listElement--noLeftBorder">
             <div class="listElement__content">
                 {{ :: article.content.title}}
+                <button ng-if="article.sticky" ng-click="pinArticle(article)" title="{{:: 'Unpin' | translate }}"><i class="icon-pin"></i></button>
+                <button ng-if="!article.sticky" ng-click="pinArticle(article)" title="{{:: 'Pin' | translate }}"><i class="icon-pencil"></i></button>
             </div>
         </div>
     </li>
