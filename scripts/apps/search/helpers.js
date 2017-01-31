@@ -104,13 +104,18 @@ export function renderToBody(elem, target) {
 }
 
 export function renderArea(area, itemProps, props) {
+    // If singleline preference is set, don't show second line
+    if (itemProps.scope.singleLine && area === 'secondLine') {
+        return;
+    }
+
     /* globals __SUPERDESK_CONFIG__: true */
     const listConfig = __SUPERDESK_CONFIG__.list || DEFAULT_LIST_CONFIG;
 
     var specs = listConfig[area] || [];
 
-    // If narrowView configuration is available and also thinRows are active
-    if (listConfig.thinRows && area === 'firstLine' && itemProps.narrow && listConfig.narrowView) {
+    // If narrowView configuration is available and also singleline are active
+    if (itemProps.scope.singleLine && area === 'firstLine' && itemProps.narrow && listConfig.narrowView) {
         specs = listConfig.narrowView;
     }
 

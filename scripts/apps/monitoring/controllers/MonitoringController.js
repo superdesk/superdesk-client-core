@@ -1,7 +1,24 @@
 import _ from 'lodash';
 
-MonitoringController.$inject = ['$rootScope', '$location', 'desks', 'storage', 'config'];
-export function MonitoringController($rootScope, $location, desks, storage, config) {
+/**
+ * @ngdoc controller
+ * @module superdesk.apps.monitoring
+ * @name MonitoringController
+ *
+ * @requires $rootscope
+ * @requires $location
+ * @requires desks
+ * @requires storage
+ * @requires config
+ * @requires superdeskFlags
+ * @requires preferencesService
+ *
+ * @description MonitoringController is responsible for providing functionalities in monitoring view of the application
+ */
+MonitoringController.$inject = ['$rootScope', '$location', 'desks', 'storage', 'config', 'superdeskFlags',
+    'preferencesService'];
+export function MonitoringController($rootScope, $location, desks, storage, config, superdeskFlags,
+    preferencesService) {
     this.state = {};
 
     this.preview = preview;
@@ -44,14 +61,19 @@ export function MonitoringController($rootScope, $location, desks, storage, conf
         }
     };
 
+    preferencesService.get('singleline:view').then((result) => {
+        this.singleLine = result.enabled;
+    });
+
     var self = this;
 
     self.switchView(self.viewColumn);
 
     function preview(item) {
         self.previewItem = item;
-        self.state['with-preview'] = !!item;
-        let sendPreviewEvent = config.list && config.list.thinRows && config.list.narrowView;
+        self.state['with-preview'] = superdeskFlags.flags.previewing = !!item;
+        let sendPreviewEvent = config.list && config.list.narrowView && superdeskFlags.flags.authoring;
+        let evnt = item ? 'rowview:narrow' : 'rowview:default';
 
         if (!_.isNil(self.previewItem)) {
             self.showHistoryTab = self.previewItem.state !== 'ingested';
@@ -61,8 +83,8 @@ export function MonitoringController($rootScope, $location, desks, storage, conf
             self.selectedGroup = null;
         }
 
-        if (self.state['with-preview'] && sendPreviewEvent) {
-            $rootScope.$broadcast('item:previewed');
+        if (self.singleLine && sendPreviewEvent) {
+            $rootScope.$broadcast(evnt);
         }
     }
 
