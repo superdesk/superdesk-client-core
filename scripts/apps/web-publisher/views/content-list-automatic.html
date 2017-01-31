@@ -21,9 +21,29 @@
             <form name="" class="flat">
                 <fieldset class="label-light">
                     <div class="item">
-	                    <label for="authorName" translate>author</label>
-	                    <input type="text" class="line-input" id="authorName" ng-model="newList.filters.author[0]">
+	                    <label translate>author</label>
+                        <div class="multiple" ng-repeat="item in newList.filters.author track by $index">
+                            <input type="text" class="line-input" ng-model="newList.filters.author[$index]">
+                            <button
+                                type="button"
+                                class="btn btn--small"
+                                ng-click="webPublisher.removeAuthor($index)"
+                                tooltip="{{:: 'Remove'|translate}}"
+                                tooltip-placement="bottom"
+                                tooltip-popup-delay="500">
+                                <i class="icon-close-small"></i>
+                            </button>
+                        </div>
 					</div>
+                    <button
+                        type="button"
+                        class="btn btn--primary btn--small"
+                        ng-click="webPublisher.addAuthor()"
+                        tooltip="{{:: 'Add author'|translate}}"
+                        tooltip-placement="right"
+                        tooltip-popup-delay="500">
+                        <i class="svg-icon-plus"></i>
+                    </button>
                     <div class="item">
                         <label for="publishedAt" translate>publish date</label>
                         <div sd-datepicker data-format="YYYY-MM-DD" name="publishedAt" id="publishedAt" ng-model="newList.filters.publishedAt"></div>
@@ -36,6 +56,31 @@
                         <label for="publishedAfter" translate>published after</label>
                         <div sd-datepicker data-format="YYYY-MM-DD" name="publishedAfter" id="publishedAfter" ng-model="newList.filters.publishedAfter"></div>
                     </div>
+                    <div class="item">
+	                    <label translate>metadata</label>
+                        <div class="multiple" ng-repeat="item in metadataList">
+                            <input type="text" class="line-input" ng-model="item.metaName">
+                            <input type="text" class="line-input" ng-model="item.metaValue">
+                            <button
+                                type="button"
+                                class="btn btn--small"
+                                ng-click="webPublisher.removeMetadata($index)"
+                                tooltip="{{:: 'Remove'|translate}}"
+                                tooltip-placement="bottom"
+                                tooltip-popup-delay="500">
+                                <i class="icon-close-small"></i>
+                            </button>
+                        </div>
+					</div>
+                    <button
+                        type="button"
+                        class="btn btn--primary btn--small"
+                        ng-click="webPublisher.addMetadata()"
+                        tooltip="{{:: 'Add metadata'|translate}}"
+                        tooltip-placement="right"
+                        tooltip-popup-delay="500">
+                        <i class="svg-icon-plus"></i>
+                    </button>
                 </fieldset>
             </form>
         </div>

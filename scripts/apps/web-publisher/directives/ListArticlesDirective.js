@@ -29,6 +29,17 @@ export function ListArticlesDirective(publisher) {
                 }
             };
 
+            /**
+             * @ngdoc method
+             * @name sdListArticles#pinArticle
+             * @param {Object} article
+             * @description Pins article
+             */
+            scope.pinArticle = (article) => {
+                publisher.pinArticle(scope.list.id, article.id, {content_list_item: {sticky: !article.sticky}}).then(
+                    (item) => this._queryItems(scope));
+            };
+
             scope.$on('refreshArticles', (e, data) => {
                 if (data.id === scope.list.id) {
                     this._queryItems(scope);
