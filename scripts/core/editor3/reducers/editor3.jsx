@@ -1,4 +1,5 @@
-import {RichUtils, EditorState, Entity, AtomicBlockUtils} from 'draft-js';
+import {RichUtils, EditorState} from 'draft-js';
+import {addImage} from './toolbar';
 
 /**
  * @description Contains the list of editor related reducers.
@@ -98,12 +99,7 @@ const dragDrop = (state, e) => {
     const mediaType = eventData.types[0];
     const data = eventData.getData(mediaType);
     const img = JSON.parse(data);
-    const entityKey = Entity.create('IMAGE', 'IMMUTABLE', {img});
-    const editorState = AtomicBlockUtils.insertAtomicBlock(
-        state.editorState,
-        entityKey,
-        ' '
-    );
+    const editorState = addImage(state.editorState, img);
 
     return {...state, editorState};
 };

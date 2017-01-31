@@ -118,16 +118,31 @@ const insertImages = (state, imgs = []) => {
     var {editorState} = state;
 
     imgs.forEach((img) => {
-        const entityKey = Entity.create('IMAGE', 'IMMUTABLE', {img});
-
-        editorState = AtomicBlockUtils.insertAtomicBlock(
-            editorState,
-            entityKey,
-            ' '
-        );
+        editorState = addImage(editorState, img);
     });
 
     return {...state, editorState};
+};
+
+/**
+ * @ngdoc method
+ * @name addImage
+ * @param {Object} editorState Editor state to add the image too.
+ * @param {Object} img Image data.
+ * @returns {Object} New editor state with image inserted as atomic block.
+ * @description Inserts the given image into the given editor state's content and returns
+ * the updated editor state.
+ */
+export const addImage = (editorState, img) => {
+    const contentState = editorState.getCurrentContent();
+    const contentStateWithEntity = contentState.createEntity('IMAGE', 'MUTABLE', {img});
+    const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+
+    return AtomicBlockUtils.insertAtomicBlock(
+        editorState,
+        entityKey,
+        ' '
+    );
 };
 
 /**

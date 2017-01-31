@@ -16,22 +16,22 @@ class ImageBlockComponent extends Component {
         super(props);
 
         this.onClick = this.onClick.bind(this);
-        this.href = this.href.bind(this);
+        this.data = this.data.bind(this);
     }
 
     /**
      * @ngdoc method
-     * @name ImageBlockComponent#href
-     * @returns {string} Hyperlink Reference
-     * @description Returns the link to the image that this block is supposed to show.
+     * @name ImageBlockComponent#data
+     * @returns {Object} Image data
+     * @description Returns the image data.
      */
-    href() {
+    data() {
         const {block} = this.props;
         const entityKey = block.getEntityAt(0);
         const entity = Entity.get(entityKey);
         const {img} = entity.getData();
 
-        return img.renditions.original.href;
+        return img;
     }
 
     /**
@@ -48,7 +48,19 @@ class ImageBlockComponent extends Component {
     }
 
     render() {
-        return <img src={this.href()} onClick={this.onClick} />;
+        const data = this.data();
+        const href = data.renditions.original.href;
+        const alt = data.alt_text;
+        const description = data.description_text;
+
+        return (
+            <div className="image-block">
+                <div className="image-block__wrapper">
+                    <img src={href} alt={alt} onClick={this.onClick} />
+                    <div className="image-block__description">{description}</div>
+                </div>
+            </div>
+        );
     }
 }
 
