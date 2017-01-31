@@ -3,6 +3,7 @@ import BlockStyleControls from './BlockStyleControls';
 import InlineStyleControls from './InlineStyleControls';
 import LinkButton from '../links/LinkButton';
 import ImageButton from '../images/ImageButton';
+import EmbedButton from '../embeds/EmbedButton';
 
 /**
  * @ngdoc React
@@ -25,6 +26,7 @@ export default class Toolbar extends Component {
                 <InlineStyleControls />
                 <LinkButton editorRect={editorRect} />
                 <ImageButton />
+                <EmbedButton />
             </div>
         );
     }

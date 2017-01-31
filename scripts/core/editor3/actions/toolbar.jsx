@@ -97,3 +97,16 @@ export function cropImage(entityKey) {
         });
     };
 }
+
+/**
+ * @ngdoc method
+ * @name embedURL
+ * @return {Object} oEmbed
+ * @description Dispatches the action to use the given oEmbed data for media embedding.
+ */
+export function embed(oEmbed) {
+    return {
+        type: 'TOOLBAR_APPLY_EMBED',
+        payload: oEmbed
+    };
+}

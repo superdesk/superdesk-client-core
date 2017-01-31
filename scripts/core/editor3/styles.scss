@@ -95,6 +95,49 @@
 	user-select: none;
 	position: relative;
 
+
+	.embed-dialog {
+		position: absolute;
+		left: 0;
+		top: 0;
+		z-index: 2000;
+		display: block;
+		background-color: #fff;
+		width: 100%;
+		border: 1px solid #dedede;
+
+		&__error {
+			padding: 3px;
+			font-size: 13px;
+			color: #880000;
+		}
+
+		input {
+			height: 33px;
+			padding: 8px 47px 8px 8px;
+		}
+	}
+
+	.input-controls {
+		position: absolute;
+		top: 0;
+		right: 0;
+		margin: 8px;
+		
+		i {
+			&.icon-close-small {
+				width: 16px;
+				height: 16px;
+			}
+
+			&.svg-icon-ok {
+				width: 15px;
+				height: 15px;
+				margin-right: 2px;
+			}
+		}
+	}
+
 	.link-input {
 		display: block;
 		background: #fff;
@@ -106,26 +149,6 @@
 		input[type="url"] {
 			height: 33px;
 			padding: 8px 47px 8px 8px;
-		}
-
-		&__controls {
-			position: absolute;
-			top: 0;
-			right: 0;
-			margin: 8px;
-			
-			i {
-				&.icon-close-small {
-					width: 16px;
-					height: 16px;
-				}
-
-				&.svg-icon-ok {
-					width: 15px;
-					height: 15px;
-					margin-right: 2px;
-				}
-			}
 		}
 	}
 }

@@ -70,7 +70,7 @@ export default class LinkInput extends Component {
                     placeholder="Enter a URL"
                     defaultValue={this.props.value} />
 
-                <div className="link-input__controls">
+                <div className="input-controls">
                     <i className="svg-icon-ok" onClick={this.onSubmit} />
                     <i className="icon-close-small" onClick={this.props.onCancel} />
                 </div>

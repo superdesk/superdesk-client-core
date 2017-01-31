@@ -18,6 +18,8 @@ const toolbar = (state = {}, action) => {
         return insertImages(state, action.payload);
     case 'TOOLBAR_UPDATE_IMAGE':
         return updateImage(state, action.payload);
+    case 'TOOLBAR_APPLY_EMBED':
+        return applyEmbed(state, action.payload);
     default:
         return state;
     }
@@ -162,6 +164,26 @@ const updateImage = (state, {entityKey, img}) => {
     );
 
     return {...state, editorState: newState};
+};
+
+/**
+ * @ngdoc method
+ * @name applyEmbed
+ * @param {Object} data oEmbed data
+ * @description Applies the embed in the given oEmbed data to the active block.
+ */
+const applyEmbed = (state, data) => {
+    var {editorState} = state;
+
+    const entityKey = Entity.create('EMBED', 'MUTABLE', {data});
+
+    editorState = AtomicBlockUtils.insertAtomicBlock(
+        editorState,
+        entityKey,
+        ' '
+    );
+
+    return {...state, editorState};
 };
 
 export default toolbar;

@@ -1,5 +1,6 @@
 import React from 'react';
 import ImageBlock from './images/ImageBlock';
+import EmbedBlock from './embeds/EmbedBlock';
 import {Entity} from 'draft-js';
 
 /**
@@ -16,6 +17,8 @@ const MediaComponent = (props) => {
     switch (type) {
     case 'IMAGE':
         return <ImageBlock {...props} />;
+    case 'EMBED':
+        return <EmbedBlock {...props} />;
     default:
         return null;
     }
