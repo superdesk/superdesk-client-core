@@ -10,6 +10,16 @@ export function PublisherFactory(pubapi) {
     class Publisher {
         /**
          * @ngdoc method
+         * @name publisher#setToken
+         * @returns {Promise}
+         * @description Sets token
+         */
+        setToken() {
+            return pubapi.setToken();
+        }
+
+        /**
+         * @ngdoc method
          * @name publisher#setTenant
          * @param {String} tenant
          * @returns {Object}
