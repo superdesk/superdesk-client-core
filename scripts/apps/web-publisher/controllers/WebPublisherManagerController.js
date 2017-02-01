@@ -12,7 +12,7 @@ export function WebPublisherManagerController($scope, publisher, modal) {
     class WebPublisherManager {
         constructor() {
             this.TEMPLATES_DIR = 'scripts/apps/web-publisher/views';
-            this._refreshSites();
+            publisher.setToken().then(() => this._refreshSites());
         }
 
         /**
@@ -387,7 +387,7 @@ export function WebPublisherManagerController($scope, publisher, modal) {
             this.selectedList = list;
             $scope.newList = angular.extend({}, list);
             $scope.metadataList = [];
-            if ($scope.newList.filters.metadata) {
+            if ($scope.newList.filters && $scope.newList.filters.metadata) {
                 angular.forEach($scope.newList.filters.metadata, (value, key) => {
                     $scope.metadataList.push({metaName: key, metaValue: value});
                 });
