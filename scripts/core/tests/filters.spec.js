@@ -18,5 +18,16 @@ describe('superdesk filters', () => {
                 {name: 'A', display_name: 'ANPA Categories'}, {name: 'b', display_name: 'broadcast'},
                 {name: 'c', display_name: 'category'}]);
         }));
+
+        it('can ignore case while sorting', inject((daysInAMonthFilter) => {
+            var jan = daysInAMonthFilter(0);
+
+            expect(jan.length).toEqual(31);
+            expect(jan[jan.length - 1]).toEqual(31);
+
+            var feb = daysInAMonthFilter(1);
+
+            expect(feb.length).toBeGreaterThanOrEqual(28);
+        }));
     });
 });
