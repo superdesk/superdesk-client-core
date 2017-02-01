@@ -37,6 +37,20 @@ export function PubAPIFactory(config, $http, $q, session) {
 
         /**
          * @ngdoc method
+         * @name pubapi#setToken
+         * @returns {Promise}
+         * @description Sets token
+         */
+        setToken() {
+            return this.save('auth/superdesk', {auth_superdesk: {session_id: session.sessionId, token: session.token}})
+                .then((response) => {
+                    this._token = response.token.api_key;
+                    return response;
+                });
+        }
+
+        /**
+         * @ngdoc method
          * @name pubapi#setTenant
          * @param {String} tenant
          * @description Change the tenant we are using the api for
