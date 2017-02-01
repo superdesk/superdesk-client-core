@@ -11,16 +11,7 @@
                 <button class="search-close"
                     ng-click="metasearch.reset()"
                     ng-class="{visible: metasearch.query}"><i class="icon-remove-sign"></i></button>
-            </div>
-        </div>
 
-        <h3 class="subnav__page-title">
-            <span>Metasearch</span>
-        </h3>
-    </div>
-    <section class="main-section" sd-loading="metasearch.loading">
-        <div class="content-list">
-            <div class="stage">
                 <div class="btn-group pull-left">
                     <button class="btn"
                         ng-disabled="!metasearch.category"
@@ -53,7 +44,16 @@
                         ng-disabled="metasearch.time_range === 'month'"
                         ng-click="metasearch.setTime('month')">Last month</button>
                 </div>
+            </div>
+        </div>
 
+        <h3 class="subnav__page-title">
+            <span>Metasearch</span>
+        </h3>
+    </div>
+    <section class="main-section" sd-loading="metasearch.loading">
+        <div class="content-list">
+            <div class="stage">
                 <ul ng-if="metasearch.items.length" class="pills-list">
                     <li ng-repeat="item in metasearch.items" ansa-metasearch-item>
                         <small class="engine">{{ :: item.engine }}</small>
