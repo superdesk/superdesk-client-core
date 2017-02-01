@@ -9,6 +9,21 @@ class MetasearchController {
         this.location = $location;
         this.Keys = Keys;
 
+        this.categories = [
+            {_id: '', label: 'Superdesk'},
+            {_id: 'general', label: 'General'},
+            {_id: 'news', label: 'News'},
+            {_id: 'social media', label: 'Social Media'},
+            {_id: 'videos', label: 'Videos'}
+        ];
+
+        this.time_ranges = [
+            {_id: '', label: 'Anytime'},
+            {_id: 'day', label: 'Today'},
+            {_id: 'week', label: 'Last Week'},
+            {_id: 'month', label: 'Last Month'},
+        ];
+
         // init
         this.search();
     }
@@ -40,8 +55,8 @@ class MetasearchController {
             return;
         }
 
-        this.category = this.location.search().categories;
-        this.time_range = this.location.search().time_range;
+        this.category = this.location.search().categories || '';
+        this.time_range = this.location.search().time_range || '';
 
         this.location.search('query', this.query || null);
         if (this.query) {

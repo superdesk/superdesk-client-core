@@ -12,37 +12,24 @@
                     ng-click="metasearch.reset()"
                     ng-class="{visible: metasearch.query}"><i class="icon-remove-sign"></i></button>
 
-                <div class="btn-group pull-left">
-                    <button class="btn"
-                        ng-disabled="!metasearch.category"
-                        ng-click="metasearch.setCategory(null)">Superdesk</button>
-                    <button class="btn"
-                        ng-disabled="metasearch.category === 'general'"
-                        ng-click="metasearch.setCategory('general')">General</button>
-                    <button class="btn"
-                        ng-disabled="metasearch.category === 'news'"
-                        ng-click="metasearch.setCategory('news')">News</button>
-                    <button class="btn"
-                        ng-disabled="metasearch.category === 'social media'"
-                        ng-click="metasearch.setCategory('social media')">Social Media</button>
-                    <button class="btn"
-                        ng-disabled="metasearch.category === 'videos'"
-                        ng-click="metasearch.setCategory('videos')">Video</button>
-                </div>
+                <div class="dropdown navbtn strict" dropdown>
+                    <button class="dropdown-toggle" dropdown-toggle>
+                        <i class="svg-icon-settings"></i>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li ng-repeat="cat in metasearch.categories track by cat._id">
+                            <button class="btn"
+                                ng-disabled="metasearch.category == cat._id"
+                                ng-click="metasearch.setCategory(cat._id)">{{ cat.label }}</button>
+                        </li>
 
-                <div class="btn-group pull-left">
-                    <button class="btn"
-                        ng-disabled="!metasearch.time_range"
-                        ng-click="metasearch.setTime(null)">Anytime</button>
-                    <button class="btn"
-                        ng-disabled="metasearch.time_range === 'day'"
-                        ng-click="metasearch.setTime('day')">Last day</button>
-                    <button class="btn"
-                        ng-disabled="metasearch.time_range === 'week'"
-                        ng-click="metasearch.setTime('week')">Last week</button>
-                    <button class="btn"
-                        ng-disabled="metasearch.time_range === 'month'"
-                        ng-click="metasearch.setTime('month')">Last month</button>
+                        <li class="divider"></li>
+                        <li ng-repeat="time in metasearch.time_ranges track by time._id">
+                            <button class="btn"
+                                ng-disabled="metasearch.time_range == time._id"
+                                ng-click="metasearch.setTime(time._id)">{{ time.label }}</button>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>

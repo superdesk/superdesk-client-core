@@ -1814,17 +1814,8 @@ header .sortbar {
         }
     }
 
-    .btn-group {
-        margin: 0 0 0 8px;
-
-        .btn {
-            padding: 5px 13px;
-            font-size: 11px;
-            line-height: 11px;
-        }
-
-        .btn[disabled] {
-            opacity: .5;
-        }
+    .navbtn {
+        margin-top: -10px;
+        margin-left: auto;
     }
 }
