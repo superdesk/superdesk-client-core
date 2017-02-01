@@ -9,8 +9,8 @@
  *
  * @description Publisher API service
  */
-PubAPIFactory.$inject = ['config', '$http', '$q'];
-export function PubAPIFactory(config, $http, $q) {
+PubAPIFactory.$inject = ['config', '$http', '$q', 'session'];
+export function PubAPIFactory(config, $http, $q, session) {
     class PubAPI {
         constructor() {
             let pubConfig = config.publisher || {};
@@ -19,6 +19,20 @@ export function PubAPIFactory(config, $http, $q) {
             this._protocol = pubConfig.protocol || 'http';
             this._domain = pubConfig.domain || '';
             this.setTenant(pubConfig.tenant || 'default');
+        }
+
+        /**
+         * @ngdoc method
+         * @name pubapi#setToken
+         * @returns {Promise}
+         * @description Sets token
+         */
+        setToken() {
+            return this.save('auth/superdesk', {auth_superdesk: {session_id: session.sessionId, token: session.token}})
+                .then((response) => {
+                    this._token = response.token.api_key;
+                    return response;
+                });
         }
 
         /**
@@ -130,6 +144,7 @@ export function PubAPIFactory(config, $http, $q) {
         * @description API Request - Adds basic error reporting, eventually authentication
         */
         req(config) {
+            config.headers = {Authorization: 'Basic ' + this._token};
             return $http(config).then((response) => {
                 if (response.status >= 200 && response.status < 300) {
                     return response.data;
