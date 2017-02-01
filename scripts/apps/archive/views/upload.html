@@ -37,29 +37,31 @@
                         <div class="bar" style="width:{{ item.progress }}%"></div>
                     </div>
 
-                    <div class="row">
-                        <label ng-class="{'label-asterisk':(requiredFields.indexOf('headline') > -1)}" translate>Title</label>
+                    <div ng-if="validator.headline" class="row">
+                        <label ng-class="{'label-asterisk':validator.headline.required}" translate>Title</label>
                         <div ng-model="item.meta.headline" contenteditable="true" class="contenteditable-input contenteditable-input--side-padding"></div>
                     </div>
                     <div class="other-info">
-                        <div class="row">
-                            <label ng-class="{'label-asterisk':(requiredFields.indexOf('description_text') > -1)}" translate>Description</label>
+                        <div class="row" ng-if="validator.description_text">
+                            <label ng-class="{'label-asterisk':validator.description_text.required}" translate>Description</label>
                             <div ng-model="item.meta.description_text" contenteditable="true" class="contenteditable-input contenteditable-input--side-padding"></div>
                         </div>
-                        <div class="row">
-                            <label ng-class="{'label-asterisk':(requiredFields.indexOf('alt_text') > -1)}" translate>Alt text</label>
+                        <div class="row" ng-if="validator.alt_text">
+                            <label ng-class="{'label-asterisk':validator.alt_text.required}" translate>Alt text</label>
                             <div ng-model="item.meta.alt_text" contenteditable="true" class="contenteditable-input contenteditable-input--side-padding"></div>
                         </div>
-                        <div class="row">
-                            <label ng-class="{'label-asterisk':(requiredFields.indexOf('byline') > -1)}" translate>Credit</label>
+                        <div class="row" ng-if="validator.byline">
+                            <label ng-class="{'label-asterisk':validator.byline.required}" translate>Credit</label>
                             <div ng-model="item.meta.byline" contenteditable="true" class="contenteditable-input contenteditable-input--side-padding"></div>
                         </div>
-                        <div class="row">
-                            <label ng-class="{'label-asterisk':(requiredFields.indexOf('copyrightholder') > -1)}" translate>Copyright holder</label>
+                        <div class="row" ng-if="validator.copyrightholder">
+                            <label ng-class="{'label-asterisk':validator.copyrightholder.required}" translate>Copyright holder</label>
                             <div ng-model="item.meta.copyrightholder" contenteditable="true" class="contenteditable-input contenteditable-input--side-padding"></div>
                         </div>
-                        <div class="row">
-                            <label><span translate>Assign Rights</span></label>
+                        <div class="row" ng-if="validator.usageterms">
+                            <label ng-class="{'label-asterisk':validator.usageterms.required}">
+                                <span translate>Assign Rights</span>
+                            </label>
                             <select ng-model="item.meta.usageterms">
                                 <option translate value="">--- Not selected ---</option> <!-- not selected / blank option -->
                                 <option translate value="single-usage">Single Usage</option>
@@ -67,8 +69,8 @@
                                 <option translate value="indefinite-usage">Indefinite Usage</option>
                             </select>
                         </div>
-                        <div class="row">
-                            <label ng-class="{'label-asterisk':(requiredFields.indexOf('copyrightnotice') > -1)}" translate>Copyright notice</label>
+                        <div class="row" ng-if="validator.copyrightnotice">
+                            <label ng-class="{'label-asterisk':validator.copyrightnotice.required}" translate>Copyright notice</label>
                             <div ng-model="item.meta.copyrightnotice" contenteditable="true" class="contenteditable-input contenteditable-input--side-padding"></div>
                         </div>
                         <div class="row" ng-if="item.cssType === 'image'">

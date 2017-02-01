@@ -7,23 +7,18 @@
  * @requires gettext
  * @requires notify
  * @requires modal
- * @requires $q
  * @requires lodash
  * @requires api
  * @requires $rootScope
  * @requires config
- * @requires authoringWorkspace
- * @requires archiveService
  *
  * @description Controller is responsible for cropping pictures and setting Point of Interest for an image.
  */
-ChangeImageController.$inject = ['$scope', 'gettext', 'notify', 'modal', '$q', 'lodash', 'api', '$rootScope',
-    'config', 'authoringWorkspace', 'archiveService'];
-export function ChangeImageController($scope, gettext, notify, modal, $q, _, api, $rootScope, config,
-    authoringWorkspace, archiveService) {
+ChangeImageController.$inject = ['$scope', 'gettext', 'notify', 'modal', 'lodash', 'api', '$rootScope', 'config'];
+export function ChangeImageController($scope, gettext, notify, modal, _, api, $rootScope, config) {
     $scope.data = $scope.locals.data;
     $scope.data.cropData = {};
-    $scope.data.requiredFields = config.requiredMediaMetadata;
+    $scope.validator = config.validatorMediaMetadata;
     let sizes = {};
 
     $scope.data.renditions.forEach((rendition) => {
@@ -87,11 +82,11 @@ export function ChangeImageController($scope, gettext, notify, modal, $q, _, api
         }
         /* Throw an exception if a required metadata field is missing */
         function validateMediaFields() {
-            _.each($scope.data.requiredFields, (key) => {
+            _.each(Object.keys($scope.validator), (key) => {
                 let value = $scope.data.metadata[key];
                 let regex = new RegExp('^\<*br\/*\>*$', 'i');
 
-                if (!value || value.match(regex)) {
+                if ($scope.validator[key].required && (!value || value.match(regex))) {
                     throw gettext('Required field(s) missing');
                 }
             });

@@ -71,28 +71,30 @@
              ng-class="{'modal-body__flex--disabled': isAoISelectionModeEnabled}"
              ng-if="data.showMetadataEditor">
             <div class="header" translate>Metadata</div>
-            <div>
-                <label ng-class="{'label-asterisk':(data.requiredFields.indexOf('headline') > -1)}" translate>Title</label>
+            <div ng-if="validator.headline">
+                <label ng-class="{'label-asterisk':validator.headline.required}" translate>Title</label>
                 <div ng-model="data.metadata.headline" ng-change="data.isDirty = true" contenteditable="true" class="contenteditable-input"></div>
             </div>
-            <div>
-                <label ng-class="{'label-asterisk':(data.requiredFields.indexOf('description_text') > -1)}" translate>Description</label>
+            <div ng-if="validator.description_text">
+                <label ng-class="{'label-asterisk':validator.description_text.required}" translate>Description</label>
                 <div ng-model="data.metadata.description_text" ng-change="data.isDirty = true" contenteditable="true" class="contenteditable-input"></div>
             </div>
-            <div>
-                <label ng-class="{'label-asterisk':(data.requiredFields.indexOf('alt_text') > -1)}" translate>Alt Text</label>
+            <div ng-if="validator.alt_text">
+                <label ng-class="{'label-asterisk':validator.alt_text.required}" translate>Alt Text</label>
                 <div ng-model="data.metadata.alt_text" ng-change="data.isDirty = true" contenteditable="true" class="contenteditable-input"></div>
             </div>
-            <div>
-                <label ng-class="{'label-asterisk':(data.requiredFields.indexOf('byline') > -1)}" translate>Credit</label>
+            <div ng-if="validator.byline">
+                <label ng-class="{'label-asterisk':validator.byline.required}" translate>Credit</label>
                 <div ng-model="data.metadata.byline" ng-change="data.isDirty = true" contenteditable="true" class="contenteditable-input"></div>
             </div>
-            <div>
-                <label ng-class="{'label-asterisk':(data.requiredFields.indexOf('copyrightholder') > -1)}" translate>Copyright holder</label>
+            <div ng-if="validator.copyrightholder">
+                <label ng-class="{'label-asterisk':validator.copyrightholder.required}" translate>Copyright holder</label>
                 <div ng-model="data.metadata.copyrightholder" ng-change="data.isDirty = true" contenteditable="true" class="contenteditable-input"></div>
             </div>
-            <div>
-                <label><span translate>Assign Rights</span></label>
+            <div ng-if="validator.usageterms">
+                <label ng-class="{'label-asterisk':validator.usageterms.required}">
+                    <span translate>Assign Rights</span>
+                </label>
                 <select ng-model="data.metadata.usageterms" ng-change="data.isDirty = true">
                     <option translate value="">--- Not selected ---</option> <!-- not selected / blank option -->
                     <option translate value="single-usage">Single Usage</option>
@@ -100,8 +102,8 @@
                     <option translate value="indefinite-usage">Indefinite Usage</option>
                 </select>
             </div>
-            <div>
-                <label ng-class="{'label-asterisk':(data.requiredFields.indexOf('copyrightnotice') > -1)}" translate>Copyright notice</label>
+            <div ng-if="validator.copyrightnotice">
+                <label ng-class="{'label-asterisk':validator.copyrightnotice.required}" translate>Copyright notice</label>
                 <div ng-model="data.metadata.copyrightnotice" ng-change="data.isDirty = true" contenteditable="true" class="contenteditable-input"></div>
             </div>
         </div>

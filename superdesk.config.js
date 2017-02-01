@@ -8,7 +8,29 @@
 module.exports = function(grunt) {
     return {
         defaultRoute: '/workspace',
-        requiredMediaMetadata: ['headline', 'description_text', 'alt_text'],
+        validatorMediaMetadata: {
+            headline: {
+                required: true
+            },
+            alt_text: {
+                required: true
+            },
+            description_text: {
+                required: true
+            },
+            copyrightholder: {
+                required: false
+            },
+            byline: {
+                required: false
+            },
+            usageterms: {
+                required: false
+            },
+            copyrightnotice: {
+                required: false
+            }
+        },
         features: {
             swimlane: {columnsLimit: 4}
         },
