@@ -4,7 +4,7 @@
         <li class="schema-item" ng-repeat="(id, specs) in model.schema track by $index">
 
             <div class="header">
-                <span class="title">{{label(model.editor[id].field_name || id) | translate}}</span>
+                <span class="title">{{model.editor[id].field_name || label(id) | translate}}</span>
                 <div class="pull-right">
                     <span class="sd-toggle"
                           ng-class="{'checked': model.editor[id].enabled}"
