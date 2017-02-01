@@ -18,16 +18,17 @@ import _ from 'lodash';
  * @requires multi
  * @requires archiveService
  * @requires $rootScope
+ * @requires preferencesService
  *
  * @description
  *   A directive that generates group/section on stages of a desk or saved search.
  */
 MonitoringGroup.$inject = ['cards', 'api', 'authoringWorkspace', '$timeout', 'superdesk', 'session',
     'activityService', 'workflowService', 'keyboardManager', 'desks', 'search', 'multi',
-    'archiveService', '$rootScope', 'config'];
+    'archiveService', '$rootScope', 'preferencesService'];
 export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superdesk, session, activityService,
-        workflowService, keyboardManager, desks, search, multi, archiveService, $rootScope, config) {
-    var ITEM_HEIGHT = config.list && config.list.thinRows ? 29 : 57;
+        workflowService, keyboardManager, desks, search, multi, archiveService, $rootScope, preferencesService) {
+    var ITEM_HEIGHT = 57;
 
     return {
         templateUrl: 'scripts/apps/monitoring/views/monitoring-group.html',
@@ -41,6 +42,10 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
         link: function(scope, elem, attrs, ctrls) {
             var monitoring = ctrls[0];
             var projections = search.getProjectedFields();
+
+            preferencesService.get('singleline:view').then((result) => {
+                ITEM_HEIGHT = result.enabled ? 29 : 57;
+            });
 
             scope.view = 'compact';
             scope.page = 1;

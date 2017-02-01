@@ -2,15 +2,11 @@ import React from 'react';
 import classNames from 'classnames';
 
 import {renderArea} from 'apps/search/helpers';
-import {DEFAULT_LIST_CONFIG} from 'apps/search/constants';
 
 export function ListItemInfo(props) {
-    const {config} = props.svc;
-    const listConfig = config.list || DEFAULT_LIST_CONFIG;
-
     return React.createElement(
         'div',
-        {className: classNames('item-info', {'item-info-reduced-rowheight': listConfig.thinRows})},
+        {className: classNames('item-info', {'item-info-reduced-rowheight': props.scope.singleLine})},
         renderArea('firstLine', angular.extend({
             svc: props.svc,
             scope: props.scope

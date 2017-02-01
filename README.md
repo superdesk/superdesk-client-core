@@ -99,9 +99,7 @@ You can configure what will be displayed in list views, there are 3 areas in lis
     - `expiry` - expiry of spiked items
     - `desk` - where an item was fetched for ingested, where an item is for others
 
-- `thinRows` - optional configuration flag to have thinner rows for each line in the list.
-
-- `narrowView` - optional narrow view of 'firstLine' when authoring and preview panes are both open. This is active when the thinRows configuration is also active.
+- `narrowView` - optional narrow view of 'firstLine' when authoring and preview panes are both open. This is active when singleline:view user preference is also active.
 
 ##### Miscellaneous
 

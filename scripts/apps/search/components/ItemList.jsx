@@ -63,13 +63,9 @@ export class ItemList extends React.Component {
         }
     }
 
-    // Function to make narrowView active: when both preview and authoring panes are open.
-    setNarrowView() {
-        const {superdeskFlags} = this.props.svc;
-
-        if (superdeskFlags.flags.authoring) {
-            this.setState({narrow: true});
-        }
+    // Function to make narrowView active/inactive
+    setNarrowView(setNarrow) {
+        this.setState({narrow: setNarrow});
     }
 
     select(item, event) {
@@ -170,7 +166,7 @@ export class ItemList extends React.Component {
     }
 
     deselectAll() {
-        this.setState({selected: null, narrow: false});
+        this.setState({selected: null});
     }
 
     updateAllItems(itemId, changes) {

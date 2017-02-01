@@ -1,5 +1,24 @@
-AuthoringWorkspaceService.$inject = ['$location', 'superdeskFlags', 'authoring', 'lock', 'send', 'config', 'suggest'];
-export function AuthoringWorkspaceService($location, superdeskFlags, authoring, lock, send, config, suggest) {
+/**
+ * @ngdoc service
+ * @module superdesk.apps.authoring
+ * @name authoringWorkspace
+ *
+ * @requires $location
+ * @requires superdeskFlags
+ * @requires authoring
+ * @requires lock
+ * @requires send
+ * @requires config
+ * @requires suggest
+ * @requires preferencesService
+ * @requires $rootscope
+ *
+ * @description Authoring Workspace Service is responsible for the actions done on the authoring workspace container
+ */
+AuthoringWorkspaceService.$inject = ['$location', 'superdeskFlags', 'authoring', 'lock', 'send', 'config', 'suggest',
+    'preferencesService', '$rootScope'];
+export function AuthoringWorkspaceService($location, superdeskFlags, authoring, lock, send, config, suggest,
+    preferencesService, $rootScope) {
     this.item = null;
     this.action = null;
     this.state = null;
@@ -75,6 +94,7 @@ export function AuthoringWorkspaceService($location, superdeskFlags, authoring, 
         }
 
         saveState();
+        sendRowViewEvents();
     };
 
     /**
@@ -150,6 +170,25 @@ export function AuthoringWorkspaceService($location, superdeskFlags, authoring, 
     }
 
     /**
+     * @ngdoc method
+     * @name authoringWorkspace#sendRowViewEvents
+     * @private
+     * @description If singLine:view preference is set, an item is being previewed, config has narrowView list
+     * then, sends rowview event
+     */
+    function sendRowViewEvents() {
+        let evnt = superdeskFlags.flags.authoring ? 'rowview:narrow' : 'rowview:default';
+
+        if (superdeskFlags.flags.previewing && config.list && config.list.narrowView) {
+            preferencesService.get('singleline:view').then((result) => {
+                if (result.enabled) {
+                    $rootScope.$broadcast(evnt);
+                }
+            });
+        }
+    }
+
+    /**
      * On load try to fetch item set in url
      */
     function init() {
@@ -167,7 +206,10 @@ export function AuthoringWorkspaceService($location, superdeskFlags, authoring, 
                 self.item = item;
                 self.action = action !== 'view' && item._editable ? action : 'view';
             })
-            .then(saveState);
+            .then(() => {
+                saveState();
+                sendRowViewEvents();
+            });
     }
 
     init();

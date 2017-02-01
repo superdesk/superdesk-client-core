@@ -10,7 +10,8 @@ SearchResults.$inject = [
     'search',
     'session',
     '$rootScope',
-    'config'
+    'config',
+    'superdeskFlags'
 ];
 
 const HEX_REG_EXP = /[a-f0-9]{24}/;
@@ -47,7 +48,8 @@ export function SearchResults(
         search,
         session,
         $rootScope,
-        config
+        config,
+        superdeskFlags
 ) { // uff - should it use injector instead?
     var preferencesUpdate = {
         'archive:view': {
@@ -388,11 +390,9 @@ export function SearchResults(
                     }
                 }
 
-                let sendPreviewEvent = config.list && config.list.thinRows && config.list.narrowView;
-
                 if (item) {
                     if (item._type === 'externalsource') {
-                        processPreview(item, sendPreviewEvent);
+                        processPreview(item);
                         return;
                     }
 
@@ -402,18 +402,35 @@ export function SearchResults(
                     api.query(getProvider(previewCriteria), previewCriteria).then((completeItems) => {
                         let completeItem = search.mergeHighlightFields(completeItems._items[0]);
 
-                        processPreview(completeItem, sendPreviewEvent);
+                        processPreview(completeItem);
                     })
                     .finally(() => {
                         scope.loading = false;
                     });
                 } else {
                     delete scope.selected.preview;
-                    if (sendPreviewEvent) {
-                        $rootScope.$broadcast('item:unselect');
-                    }
+                    superdeskFlags.flags.previewing = false;
+                    sendRowViewEvents();
                 }
             };
+
+            /**
+             * @ngdoc method
+             * @name sdSearchResults#sendRowViewEvents
+             * @private
+             * @param {Object} item
+             * @description If singLine:view preference is set, an item is being previewed, config has narrowView list
+             * then, sends rowview event
+             */
+            function sendRowViewEvents(item) {
+                let sendEvent = scope.singleLine && superdeskFlags.flags.authoring && config.list
+                    && config.list.narrowView;
+                let evnt = item ? 'rowview:narrow' : 'rowview:default';
+
+                if (sendEvent) {
+                    $rootScope.$broadcast(evnt);
+                }
+            }
 
             /**
              * @ngdoc method
@@ -422,15 +439,14 @@ export function SearchResults(
              * @param {Object} item
              * @description Sets the preview item
              */
-            function processPreview(item, sendPreviewEvent) {
+            function processPreview(item) {
                 scope.selected.preview = item;
                 scope.shouldRefresh = false; // prevents $routeUpdate to refresh, just on preview changes.
 
                 if (!_.isNil(scope.selected.preview)) {
                     scope.showHistoryTab = scope.selected.preview.state !== 'ingested';
-                    if (sendPreviewEvent) {
-                        $rootScope.$broadcast('item:previewed');
-                    }
+                    superdeskFlags.flags.previewing = true;
+                    sendRowViewEvents(item);
                 }
 
                 $location.search('_id', item ? item._id : null);
