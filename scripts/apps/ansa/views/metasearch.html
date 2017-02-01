@@ -43,6 +43,7 @@
             <div class="stage">
                 <ul ng-if="metasearch.items.length" class="pills-list">
                     <li ng-repeat="item in metasearch.items" ansa-metasearch-item>
+                        <small class="pull-right"><time sd-datetime data-date="item.pubdate"></time></small>
                         <small class="engine">{{ :: item.engine }}</small>
                         <div class="embed html">
                             <div ng-bind-html="html"></div>
