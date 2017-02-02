@@ -101,7 +101,7 @@ describe('superdesk.apps.workspace.content', () => {
 
             content.getTypes().then(success);
             $rootScope.$digest();
-            expect(api.query).toHaveBeenCalledWith('content_types', {where: {enabled: true}}, false);
+            expect(api.query).toHaveBeenCalledWith('content_types', {where: {enabled: true}, max_results: 200}, false);
             expect(success).toHaveBeenCalledWith(types);
             expect(content.types).toBe(types);
         }));

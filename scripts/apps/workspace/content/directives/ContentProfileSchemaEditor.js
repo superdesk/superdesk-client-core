@@ -38,6 +38,7 @@ export function ContentProfileSchemaEditor(gettext, metadata, content, config) {
             model: '=ngModel'
         },
         link: function(scope, elem, attr, form) {
+            scope.loading = true;
             scope.model.schema = angular.extend({}, content.contentProfileSchema);
             scope.model.editor = angular.extend({}, content.contentProfileEditor);
 
@@ -53,12 +54,14 @@ export function ContentProfileSchemaEditor(gettext, metadata, content, config) {
                     };
 
                     metadata.cvs.forEach((cv) => {
-                        var cvId = cv.schema_field || constant.CV_ALIAS[cv._id] || cv._id;
+                        var cvId = constant.CV_ALIAS[cv._id] || cv._id;
 
                         if (scope.model.editor[cvId]) {
                             scope.options[cvId] = cv.items;
                         }
                     });
+
+                    scope.loading = false;
                 });
             });
 
@@ -99,38 +102,8 @@ export function ContentProfileSchemaEditor(gettext, metadata, content, config) {
                 form.$dirty = true;
             };
 
-            /**
-             * Copy value from readonly[id][id] to `default`
-             *
-             * It is a workaround for meta-* directives, those have specific logic based on `id`
-             * but would set it to schema like `{schema: {genre: {genre: "default value"}}}`.
-             *
-             * @param {String} id
-             */
-            scope.setdefault = function(id) {
-                scope.model.schema[id].default = readonly[id][id];
-                form.$dirty = true;
-            };
-
             scope.setDirty = function(dirty) {
                 form.$dirty = !!dirty;
-            };
-
-            var readonly = {};
-
-            /**
-             * Create a copy of data where changes won't propagate back
-             *
-             * @param {Object} orig
-             * @param {String} key
-             * @return {Object}
-             */
-            scope.readonly = (orig, key) => {
-                if (!readonly.hasOwnProperty(key)) {
-                    readonly[key] = angular.extend({}, orig);
-                }
-
-                return readonly[key];
             };
         }
     };

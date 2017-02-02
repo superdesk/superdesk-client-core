@@ -158,6 +158,8 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
             params = {where: {enabled: true}};
         }
 
+        params.max_results = 200;
+
         // cache when fetching all types
         return api.query('content_types', params, !!includeDisabled).then((result) => {
             self.types = result._items.sort((a, b) => b.priority - a.priority // with higher priority goes up
