@@ -58,6 +58,10 @@
                     </div>
                     <div class="item">
 	                    <label translate>metadata</label>
+                        <div class="field" ng-if="metadataList.length>0">
+                            <label translate>Name</label>
+                            <label translate>Value</label>
+                        </div>
                         <div class="multiple" ng-repeat="item in metadataList">
                             <input type="text" class="line-input" ng-model="item.metaName">
                             <input type="text" class="line-input" ng-model="item.metaValue">
