@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {getSelectedEntity} from '../../../common';
+import {getSelectedEntity} from './entityUtils';
 
 /**
  * @ngdoc React
@@ -11,7 +11,7 @@ import {getSelectedEntity} from '../../../common';
  * @param {string} value The default value for the input.
  * @description This components holds the input form for entering a new URL.
  */
-export default class LinkInput extends Component {
+export class LinkInput extends Component {
     constructor(props) {
         super(props);
 
@@ -70,7 +70,7 @@ export default class LinkInput extends Component {
                     placeholder="Enter a URL"
                     defaultValue={this.props.value} />
 
-                <div className="link-input__controls">
+                <div className="input-controls">
                     <i className="svg-icon-ok" onClick={this.onSubmit} />
                     <i className="icon-close-small" onClick={this.props.onCancel} />
                 </div>

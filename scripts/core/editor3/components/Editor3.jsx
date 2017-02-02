@@ -1,11 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Editor, CompositeDecorator} from 'draft-js';
+import {Editor, CompositeDecorator, RichUtils} from 'draft-js';
 import {connect} from 'react-redux';
 import Toolbar from './toolbar';
 import * as actions from '../actions';
-import {SpellcheckerError} from './spellchecker/SpellcheckerError';
-import LinkControl from './toolbar/links/LinkControl';
+import {SpellcheckerDecorator} from './spellchecker';
+import {LinkDecorator} from './links';
 import {blockRenderer} from './blockRenderer';
 import {customStyleMap} from './customStyleMap';
 
@@ -19,15 +19,14 @@ import {customStyleMap} from './customStyleMap';
  * @param {editorState} the current state of draftjs editor
  * @param {Function} onChange the callback executed when the editor value is changed
  * @param {Function} onTab the callback for onTab event
- * @param {Function} handleKeyCommand the callback for custom key commands
  * @description Editor3 is a draft.js based editor that support customizable
  *  formatting, spellchecker and media files.
  */
 export class Editor3Component extends React.Component {
     static getDecorator() {
         return new CompositeDecorator([
-            LinkControl.getDecorator(),
-            SpellcheckerError.getDecorator()
+            LinkDecorator,
+            SpellcheckerDecorator
         ]);
     }
 
@@ -38,6 +37,7 @@ export class Editor3Component extends React.Component {
 
         this.focus = this.focus.bind(this);
         this.onDragOver = this.onDragOver.bind(this);
+        this.handleKeyCommand = this.handleKeyCommand.bind(this);
     }
 
     /**
@@ -68,9 +68,21 @@ export class Editor3Component extends React.Component {
 
     /**
      * @ngdoc method
-     * @name Editor3#componentWillUpdate
-     * @description Called before update, init the current editor rectangle
+     * @name Editor3#handleKeyCommand
+     * @description Handles key commands in the editor.
      */
+    handleKeyCommand(command) {
+        const {editorState, onChange} = this.props;
+        const newState = RichUtils.handleKeyCommand(editorState, command);
+
+        if (newState) {
+            onChange(newState);
+            return 'handled';
+        }
+
+        return 'not-handled';
+    }
+
     componentWillUpdate() {
         this.editorRect = ReactDOM.findDOMNode(this.refs.editor).getBoundingClientRect();
     }
@@ -82,12 +94,6 @@ export class Editor3Component extends React.Component {
         $node.on('drop dragdrop', this.props.dragDrop);
     }
 
-    /**
-     * @ngdoc method
-     * @name Editor3#render
-     * @param {String} command
-     * @description Render the editor based on current state
-     */
     render() {
         const {
             readOnly,
@@ -95,8 +101,7 @@ export class Editor3Component extends React.Component {
             singleLine,
             editorState,
             onChange,
-            onTab,
-            handleKeyCommand
+            onTab
         } = this.props;
 
         let className = singleLine ? 'Editor3-editor-single-line' : 'Editor3-editor';
@@ -107,7 +112,7 @@ export class Editor3Component extends React.Component {
                 <div className={className} onClick={this.focus}>
                     <Editor
                         editorState={editorState}
-                        handleKeyCommand={handleKeyCommand}
+                        handleKeyCommand={this.handleKeyCommand}
                         blockRendererFn={blockRenderer}
                         customStyleMap={customStyleMap}
                         onChange={onChange}
@@ -121,7 +126,6 @@ export class Editor3Component extends React.Component {
     }
 }
 
-/** Set the types of props for the editor */
 Editor3Component.propTypes = {
     readOnly: React.PropTypes.bool,
     showToolbar: React.PropTypes.bool,
@@ -129,17 +133,9 @@ Editor3Component.propTypes = {
     editorState: React.PropTypes.object,
     onChange: React.PropTypes.func,
     onTab: React.PropTypes.func,
-    dragDrop: React.PropTypes.func,
-    handleKeyCommand: React.PropTypes.func
+    dragDrop: React.PropTypes.func
 };
 
-/**
- * @ngdoc method
- * @name Editor3#mapStateToProps
- * @param {Object} state the editor state
- * @returns {Object} Returns the props values
- * @description Maps the values from state to the component value type props.
- */
 const mapStateToProps = (state) => ({
     readOnly: state.readOnly,
     showToolbar: state.showToolbar,
@@ -147,22 +143,10 @@ const mapStateToProps = (state) => ({
     editorState: state.editorState
 });
 
-/**
- * @ngdoc method
- * @name Editor3#mapDispatchToProps
- * @param {Function} dispatch callback to editor store
- * @returns {Object} Returns the props values
- * @description Maps the values from state to the component callback type props.
- */
 const mapDispatchToProps = (dispatch) => ({
     onChange: (editorState) => dispatch(actions.changeEditorState(editorState)),
     onTab: (e) => dispatch(actions.handleEditorTab(e)),
-    dragDrop: (e) => dispatch(actions.dragDrop(e)),
-    handleKeyCommand: (command) => {
-        // should return true if 'command' is in the list of custom commands(now no commands supported)
-        dispatch(actions.handleEditorKeyCommand(command));
-        return false;
-    }
+    dragDrop: (e) => dispatch(actions.dragDrop(e))
 });
 
 export const Editor3 = connect(mapStateToProps, mapDispatchToProps)(Editor3Component);

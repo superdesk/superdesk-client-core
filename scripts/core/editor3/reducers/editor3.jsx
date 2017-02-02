@@ -1,4 +1,5 @@
-import {RichUtils, EditorState, Entity, AtomicBlockUtils} from 'draft-js';
+import {RichUtils, EditorState} from 'draft-js';
+import {addImage} from './toolbar';
 
 /**
  * @description Contains the list of editor related reducers.
@@ -9,8 +10,6 @@ const editor3 = (state = {}, action) => {
         return onChange(state, action.payload);
     case 'EDITOR_TAB':
         return onTab(state, action.payload);
-    case 'EDITOR_KEY_COMMAND':
-        return handleKeyCommand(state, action.payload);
     case 'EDITOR_FORCE_UPDATE':
         return forceUpdate(state);
     case 'EDITOR_DRAG_DROP':
@@ -71,20 +70,6 @@ const onTab = (state, e) => {
 
 /**
  * @ngdoc method
- * @name handleKeyCommand
- * @param {String} command
- * @return {Object} returns new state
- * @description Handle the editor key pressed event
- */
-const handleKeyCommand = (state, command) => {
-    const {editorState} = state;
-    const newEditorState = RichUtils.handleKeyCommand(editorState, command);
-
-    return onChange(state, newEditorState ? newEditorState : editorState);
-};
-
-/**
- * @ngdoc method
  * @name dragDrop
  * @param {Event} e dragdrop event
  * @return {Object} New state
@@ -98,12 +83,7 @@ const dragDrop = (state, e) => {
     const mediaType = eventData.types[0];
     const data = eventData.getData(mediaType);
     const img = JSON.parse(data);
-    const entityKey = Entity.create('IMAGE', 'IMMUTABLE', {img});
-    const editorState = AtomicBlockUtils.insertAtomicBlock(
-        state.editorState,
-        entityKey,
-        ' '
-    );
+    const editorState = addImage(state.editorState, img);
 
     return {...state, editorState};
 };

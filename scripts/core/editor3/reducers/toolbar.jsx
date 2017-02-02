@@ -1,5 +1,5 @@
 import {RichUtils, Entity, AtomicBlockUtils, EditorState} from 'draft-js';
-import * as common from '../common';
+import * as entityUtils from '../components/links/entityUtils';
 
 /**
  * @description Contains the list of toolbar related reducers.
@@ -18,6 +18,8 @@ const toolbar = (state = {}, action) => {
         return insertImages(state, action.payload);
     case 'TOOLBAR_UPDATE_IMAGE':
         return updateImage(state, action.payload);
+    case 'TOOLBAR_APPLY_EMBED':
+        return applyEmbed(state, action.payload);
     default:
         return state;
     }
@@ -67,14 +69,16 @@ const applyLink = (state, {url, entity}) => {
     const {editorState} = state;
 
     if (entity) {
-        const key = common.getSelectedEntityKey(editorState);
+        const key = entityUtils.getSelectedEntityKey(editorState);
 
         Entity.mergeData(key, {url});
 
         return {...state};
     }
 
-    const entityKey = Entity.create('LINK', 'MUTABLE', {url});
+    const contentState = editorState.getCurrentContent();
+    const contentStateWithEntity = contentState.createEntity('LINK', 'MUTABLE', {url});
+    const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
     const stateAfterChange = RichUtils.toggleLink(
         editorState,
         editorState.getSelection(),
@@ -93,7 +97,7 @@ const removeLink = (state) => {
     const {editorState} = state;
     var stateAfterChange = editorState;
 
-    common.getSelectedEntityRange(editorState,
+    entityUtils.getSelectedEntityRange(editorState,
         (start, end) => {
             const selection = editorState.getSelection();
             const entitySelection = selection.merge({
@@ -118,16 +122,31 @@ const insertImages = (state, imgs = []) => {
     var {editorState} = state;
 
     imgs.forEach((img) => {
-        const entityKey = Entity.create('IMAGE', 'IMMUTABLE', {img});
-
-        editorState = AtomicBlockUtils.insertAtomicBlock(
-            editorState,
-            entityKey,
-            ' '
-        );
+        editorState = addImage(editorState, img);
     });
 
     return {...state, editorState};
+};
+
+/**
+ * @ngdoc method
+ * @name addImage
+ * @param {Object} editorState Editor state to add the image too.
+ * @param {Object} img Image data.
+ * @returns {Object} New editor state with image inserted as atomic block.
+ * @description Inserts the given image into the given editor state's content and returns
+ * the updated editor state.
+ */
+export const addImage = (editorState, img) => {
+    const contentState = editorState.getCurrentContent();
+    const contentStateWithEntity = contentState.createEntity('IMAGE', 'MUTABLE', {img});
+    const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+
+    return AtomicBlockUtils.insertAtomicBlock(
+        editorState,
+        entityKey,
+        ' '
+    );
 };
 
 /**
@@ -141,12 +160,32 @@ const updateImage = (state, {entityKey, img}) => {
 
     // focus the editor and softly force a refresh
     const {editorState} = state;
-    const newState = EditorState.forceSelection(
-        editorState,
-        editorState.getSelection()
-    );
+    const selection = editorState.getSelection();
+    const newState = EditorState.forceSelection(editorState, selection);
 
     return {...state, editorState: newState};
+};
+
+/**
+ * @ngdoc method
+ * @name applyEmbed
+ * @param {Object} data oEmbed data
+ * @description Applies the embed in the given oEmbed data to the active block.
+ */
+const applyEmbed = (state, data) => {
+    var {editorState} = state;
+
+    const contentState = state.editorState.getCurrentContent();
+    const contentStateWithEntity = contentState.createEntity('EMBED', 'MUTABLE', {data});
+    const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+
+    editorState = AtomicBlockUtils.insertAtomicBlock(
+        editorState,
+        entityKey,
+        ' '
+    );
+
+    return {...state, editorState};
 };
 
 export default toolbar;
