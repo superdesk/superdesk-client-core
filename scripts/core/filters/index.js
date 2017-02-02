@@ -154,14 +154,9 @@ export default angular.module('superdesk.core.filters', [])
         };
     }])
     .filter('daysInAMonth', () => function(month) {
-        var _timeStamp = month ? moment(month + 1, 'MM') : moment();
-        var daysInCurrMonth = [];
+        let _timeStamp = Number.isInteger(month) ? moment(month + 1, 'MM') : moment();
 
-        for (var i = _timeStamp.startOf('month').date(); i <= _timeStamp.endOf('month').date(); i++) {
-            daysInCurrMonth.push(i.toString());
-        }
-
-        return daysInCurrMonth;
+        return Array.from({length: _timeStamp.daysInMonth()}, (value, index) => index + 1);
     })
     .filter('parseDateline', () => function(dateToFormat, located) {
         var momentizedTimestamp = moment.utc(dateToFormat);
