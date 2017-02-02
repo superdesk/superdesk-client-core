@@ -11,6 +11,7 @@
     &--noLeftBorder {
         border-left: 1px solid $tableBorder;
     }
+
     &--bold {
         font-weight: 700;
     }
@@ -40,12 +41,25 @@
                 color: $grayLight;
             }
         }
-
     }
 
     &__content {
         width: 100%;
         color: $gray;
+
+        button {
+            border: 0;
+            background: none;
+            line-height: 0;
+            
+            &:hover {
+                opacity: 1;
+            }
+        }
+        .pin {
+            display: none;
+            opacity: 0.4;
+        }
     }
 
     &__right {
@@ -54,5 +68,9 @@
     }
     .countLabel {
         margin-right: 10px;
+    }
+
+    &:hover button {
+        display: inline-block;
     }
 }
