@@ -1,4 +1,10 @@
-.paneContent{
+.paneContent {
+
+    &--darker {
+        background-color: #3b3b3b;
+        color: $white;
+    }
+
     &__header {
         border-bottom: 1px solid #e4e4e4;
         background-color: $white;
@@ -15,10 +21,35 @@
             font-weight: inherit;
         }
 
-
         &--dark {
             background: #f4f4f4;
             border-color: $tableBorder;
+        }
+
+        &--darker {
+            background: #3b3b3b;
+            border-color: #424242;
+            color: $white;
+        }
+    }
+
+    &__tabItem {
+        display: inline-block;
+        color: $gray;
+        margin: -9px 1em -9px 1em;
+        line-height: 48px;
+        font-size: .9rem;
+        font-weight: 400;
+        cursor: pointer;
+
+        &:hover {
+            color: $grayDark;
+            text-decoration: none;
+        }
+
+        &--active{
+            color: $grayDark;
+            border-bottom: 2px solid $sd-blue;
         }
     }
 
@@ -27,12 +58,11 @@
         overflow-y: scroll;
         box-sizing: border-box;
 
-        &--hasFooter{
+        &--hasFooter {
             height: calc(100% - 108px);
         }
-<<<<<<< 46778b5f745cb494c8aeac0c6b8e0bd2ef789e3a
 
-        .multiple{ 
+        .multiple {
             .line-input {
                 margin-right: 10px;
             }
@@ -45,8 +75,6 @@
         .field {
             margin-bottom: 0;
         }
-=======
->>>>>>> Fixed navigation and some css improvements
     }
 
     &__main {
@@ -60,5 +88,13 @@
         box-sizing: border-box;
         padding: 16px 24px;
         box-shadow: 0 -1px 2px 0 rgba(0,0,0,.12);
+        
+        &--center {
+            text-align: center;
+        }
+
+        &--transparent {
+            background-color: transparent;
+        }
     }
 }
