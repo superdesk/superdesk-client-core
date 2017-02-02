@@ -64,6 +64,17 @@
                             <a ng-href="{{ :: item.url }}" target="_blank">{{ :: item.pretty_url }}</a>
                         </div>
                     </li>
+
+                    <li>
+                        <div class="btn-group">
+                            <button class="btn"
+                                ng-click="metasearch.goto(metasearch.page - 1)"
+                                ng-disabled="!metasearch.hasPrev">&lt;</button>
+                            <button class="btn"
+                                ng-click="metasearch.goto(metasearch.page + 1)"
+                                ng-disabled="!metasearch.hasNext">&gt;</button>
+                        </div>
+                    </li>
                 </ul>
                 <ul ng-show="metasearch.items.length === 0 && metasearch.query" class="pills-list">
                     <li>There are no results for the query "{{ metasearch.query }}".</li>

@@ -1,13 +1,16 @@
 
 class MetasearchController {
 
-    constructor($http, $location, config, Keys) {
+    constructor($http, $location, $timeout, config, Keys) {
         this.query = $location.search().query || '';
         this.openSearch = true; // active on start
         this.url = config.server.url.replace('api', 'metasearch') + '/';
         this.http = $http;
         this.location = $location;
+        this.timeout = $timeout;
         this.Keys = Keys;
+
+        this.maxItems = 10;
 
         this.categories = [
             {_id: '', label: 'Superdesk'},
@@ -70,14 +73,57 @@ class MetasearchController {
 
             this.http.get(this.url, {params: params})
                 .then((response) => {
-                    this.items = response.data.results.slice(0, 25) || [];
+                    this.page = 1;
+                    this.results = response.data.results || [];
+                    this.items = this.results.slice(0, this.maxItems);
                     this.loading = false;
+                    this.finished = false;
+                    this.params = params;
+                    this.updatePagination();
                 });
         }
     }
+
+    updatePagination() {
+        this.hasPrev = this.page > 1;
+        this.hasNext = this.page * this.maxItems + 1 < this.results.length;
+
+        if (!this.hasNext && !this.finished) {
+            this.items = null;
+            this.loading = true;
+            this.params.pageno++;
+            this.http.get(this.url, {params: this.params})
+                .then((response) => {
+                    this.loading = false;
+
+                    if (!response.data.results || !response.data.results.length) {
+                        this.finished = true;
+                    } else {
+                        this.results = this.results.concat(response.data.results);
+                    }
+
+                    // re-render
+                    this.goto(this.page);
+                });
+        }
+    }
+
+    goto(page) {
+        let start;
+
+        this.page = page || 1;
+
+        start = (this.page - 1) * this.maxItems;
+        this.items = null;
+
+        this.timeout(() => {
+            this.items = this.results.slice(start, start + this.maxItems);
+            this.updatePagination();
+        }, 200);
+    }
 }
 
-MetasearchController.$inject = ['$http', '$location', 'config', 'Keys'];
+MetasearchController.$inject = ['$http', '$location', '$timeout', 'config', 'Keys'];
 
 function AnsaMetasearchItem(config, $http, $sce) {
     var firstTwitter = true;
