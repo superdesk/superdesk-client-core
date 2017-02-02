@@ -33,8 +33,8 @@ ItemList.$inject = [
     '$interpolate',
     'metadata',
     'storage',
-    'superdeskFlags',
-    'keyboardManager'
+    'keyboardManager',
+    'preferencesService'
 ];
 
 export function ItemList(
@@ -64,8 +64,8 @@ export function ItemList(
     $interpolate,
     metadata,
     storage,
-    superdeskFlags,
-    keyboardManager
+    keyboardManager,
+    preferencesService
 ) {
     // contains all the injected services to be passed down to child
     // components via props
@@ -96,8 +96,8 @@ export function ItemList(
         $interpolate: $interpolate,
         metadata: metadata,
         storage: storage,
-        superdeskFlags: superdeskFlags,
-        keyboardManager: keyboardManager
+        keyboardManager: keyboardManager,
+        preferencesService: preferencesService
     };
 
     return {
@@ -329,8 +329,17 @@ export function ItemList(
                     }
                 });
 
-                scope.$on('item:previewed', listComponent.setNarrowView);
-                scope.$on('item:unselect', listComponent.deselectAll);
+                preferencesService.get('singleline:view').then((result) => {
+                    scope.singleLine = result.enabled;
+                });
+
+                scope.$on('rowview:narrow', () => {
+                    listComponent.setNarrowView(true);
+                });
+
+                scope.$on('rowview:default', () => {
+                    listComponent.setNarrowView(false);
+                });
 
                 var updateTimeout;
 
