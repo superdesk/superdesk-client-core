@@ -10,8 +10,6 @@ const editor3 = (state = {}, action) => {
         return onChange(state, action.payload);
     case 'EDITOR_TAB':
         return onTab(state, action.payload);
-    case 'EDITOR_KEY_COMMAND':
-        return handleKeyCommand(state, action.payload);
     case 'EDITOR_FORCE_UPDATE':
         return forceUpdate(state);
     case 'EDITOR_DRAG_DROP':
@@ -66,20 +64,6 @@ const onTab = (state, e) => {
     const maxDepth = 4;
     const {editorState} = state;
     const newEditorState = RichUtils.onTab(e, editorState, maxDepth);
-
-    return onChange(state, newEditorState ? newEditorState : editorState);
-};
-
-/**
- * @ngdoc method
- * @name handleKeyCommand
- * @param {String} command
- * @return {Object} returns new state
- * @description Handle the editor key pressed event
- */
-const handleKeyCommand = (state, command) => {
-    const {editorState} = state;
-    const newEditorState = RichUtils.handleKeyCommand(editorState, command);
 
     return onChange(state, newEditorState ? newEditorState : editorState);
 };

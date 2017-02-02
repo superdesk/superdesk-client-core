@@ -40,20 +40,6 @@ export function handleEditorTab(e) {
 
 /**
  * @ngdoc method
- * @name handleEditorKeyCommand
- * @param {Object} command the name of the command
- * @return {String} action
- * @description Creates the editor key command action
- */
-export function handleEditorKeyCommand(command) {
-    return {
-        type: 'EDITOR_KEY_COMMAND',
-        payload: command
-    };
-}
-
-/**
- * @ngdoc method
  * @name dragDrop
  * @param {Event} e
  * @return {String} action
