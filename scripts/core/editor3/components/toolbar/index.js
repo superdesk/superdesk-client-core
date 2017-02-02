@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import BlockStyleControls from './BlockStyleControls';
 import InlineStyleControls from './InlineStyleControls';
-import LinkButton from '../links/LinkButton';
-import ImageButton from '../images/ImageButton';
-import EmbedButton from '../embeds/EmbedButton';
+import {LinkButton} from '../links';
+import {ImageButton} from '../images';
+import {EmbedButton} from '../embeds';
 
 /**
  * @ngdoc React

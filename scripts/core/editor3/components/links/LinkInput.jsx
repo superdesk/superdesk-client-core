@@ -11,7 +11,7 @@ import {getSelectedEntity} from './entityUtils';
  * @param {string} value The default value for the input.
  * @description This components holds the input form for entering a new URL.
  */
-export default class LinkInput extends Component {
+export class LinkInput extends Component {
     constructor(props) {
         super(props);
 

@@ -4,8 +4,8 @@ import {Editor, CompositeDecorator} from 'draft-js';
 import {connect} from 'react-redux';
 import Toolbar from './toolbar';
 import * as actions from '../actions';
-import {SpellcheckerError} from './spellchecker/SpellcheckerError';
-import LinkButton from './links/LinkButton';
+import {SpellcheckerDecorator} from './spellchecker';
+import {LinkDecorator} from './links';
 import {blockRenderer} from './blockRenderer';
 import {customStyleMap} from './customStyleMap';
 
@@ -26,8 +26,8 @@ import {customStyleMap} from './customStyleMap';
 export class Editor3Component extends React.Component {
     static getDecorator() {
         return new CompositeDecorator([
-            LinkButton.getDecorator(),
-            SpellcheckerError.getDecorator()
+            LinkDecorator,
+            SpellcheckerDecorator
         ]);
     }
 

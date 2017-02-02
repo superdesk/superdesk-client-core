@@ -1,6 +1,6 @@
 import React from 'react';
-import ImageBlock from './images/ImageBlock';
-import EmbedBlock from './embeds/EmbedBlock';
+import {ImageBlock} from './images';
+import {EmbedBlock} from './embeds';
 
 /**
  * @ngdoc React

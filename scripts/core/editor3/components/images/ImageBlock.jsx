@@ -74,6 +74,4 @@ const mapDispatchToProps = (dispatch) => ({
     cropImage: (entityKey, entityData) => dispatch(actions.cropImage(entityKey, entityData))
 });
 
-const ImageBlock = connect(null, mapDispatchToProps)(ImageBlockComponent);
-
-export default ImageBlock;
+export const ImageBlock = connect(null, mapDispatchToProps)(ImageBlockComponent);

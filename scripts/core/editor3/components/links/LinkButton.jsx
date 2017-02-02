@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import classNames from 'classnames';
-import LinkPopover from './LinkPopover';
-import LinkInput from './LinkInput';
+import {LinkPopover, LinkInput} from '.';
 import * as entityUtils from './entityUtils';
 import * as actions from '../../actions';
 import {connect} from 'react-redux';
@@ -17,26 +16,6 @@ import {connect} from 'react-redux';
  * link editing popover that displays when clicking a link.
  */
 class LinkButtonComponent extends Component {
-    /**
-     * @ngdoc method
-     * @name LinkButtonComponent#getDecorator
-     * @static
-     * @returns {Object} decorator object
-     * @description Returns an object to be passed to the composite decorator
-     * that contains the strategy and component to be used when decorating links.
-     */
-    static getDecorator() {
-        return {
-            strategy: LinkStrategy,
-            component: (props) => {
-                const entity = props.contentState.getEntity(props.entityKey);
-                const {url} = entity.getData();
-
-                return <a href={url} title={url}>{props.children}</a>;
-            }
-        };
-    }
-
     constructor(props) {
         super(props);
 
@@ -120,17 +99,6 @@ class LinkButtonComponent extends Component {
     }
 }
 
-function LinkStrategy(contentBlock, callback, contentState) {
-    contentBlock.findEntityRanges(
-        (character) => {
-            const entityKey = character.getEntity();
-
-            return entityKey !== null && contentState.getEntity(entityKey).getType() === 'LINK';
-        },
-        callback
-    );
-}
-
 LinkButtonComponent.propTypes = {
     editorState: React.PropTypes.object.isRequired,
     editorRect: React.PropTypes.object.isRequired,
@@ -148,6 +116,4 @@ const mapDispatchToProps = (dispatch) => ({
     removeLink: () => dispatch(actions.removeLink())
 });
 
-const LinkButton = connect(mapStateToProps, mapDispatchToProps)(LinkButtonComponent);
-
-export default LinkButton;
+export const LinkButton = connect(mapStateToProps, mapDispatchToProps)(LinkButtonComponent);

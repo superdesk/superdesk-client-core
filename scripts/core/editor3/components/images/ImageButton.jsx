@@ -22,6 +22,4 @@ const mapDispatchToProps = (dispatch) => ({
     insertImages: () => dispatch(actions.insertImages())
 });
 
-const ImageButton = connect(null, mapDispatchToProps)(ImageButtonComponent);
-
-export default ImageButton;
+export const ImageButton = connect(null, mapDispatchToProps)(ImageButtonComponent);

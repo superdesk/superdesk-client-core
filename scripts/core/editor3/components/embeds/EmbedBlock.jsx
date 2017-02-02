@@ -8,7 +8,7 @@ import React, {Component} from 'react';
  * @description This component renders an embed block within the editor, using oEmbed data
  * retrieved from iframe.ly
  */
-export default class EmbedBlock extends Component {
+export class EmbedBlock extends Component {
     render() {
         const {block, contentState} = this.props;
         const entityKey = block.getEntityAt(0);

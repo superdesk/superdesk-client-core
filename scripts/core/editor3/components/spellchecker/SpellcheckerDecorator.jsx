@@ -8,18 +8,9 @@ import classNames from 'classnames';
  * @module superdesk.core.editor3
  * @name SpellcheckerError
  * @param {Array} children the children prop of the component
- * @param {Function} showContextMenu callback to show the spellchecker context menu for current word
- * @description The words with spellcheck errors are enclosed in this component in order to highlight
- * the error and allow the opening of the contextual spellchecker menu.
+ * @description This is the component that decorates spellchecker typos.
  */
-export class SpellcheckerError extends Component {
-    static getDecorator() {
-        return {
-            strategy: spellcheckStrategy,
-            component: SpellcheckerError
-        };
-    }
-
+class SpellcheckerError extends Component {
     constructor(props) {
         super(props);
 
@@ -85,8 +76,18 @@ export class SpellcheckerError extends Component {
     }
 }
 
+SpellcheckerError.propTypes = {
+    children: React.PropTypes.array
+};
+
+export const SpellcheckerDecorator = {
+    strategy: spellcheckStrategy,
+    component: SpellcheckerError
+};
+
 /**
- * @description For a block check the words that has errors
+ * @description The function that defines the strategy to identify ranges of text that
+ * should be highlighted as spellchecker typos.
  */
 function spellcheckStrategy(contentBlock, callback) {
     const spellcheck = ng.get('spellcheck');
@@ -102,9 +103,3 @@ function spellcheckStrategy(contentBlock, callback) {
         }
     }
 }
-
-
-/** Set the types of props for the spellchecker error component*/
-SpellcheckerError.propTypes = {
-    children: React.PropTypes.array
-};

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import EmbedInput from './EmbedInput';
+import {EmbedInput} from '.';
 import {loadIframelyEmbedJs} from './loadIframely';
 
 /**
@@ -8,25 +8,35 @@ import {loadIframelyEmbedJs} from './loadIframely';
  * @name EmbedButton
  * @description The embed button to be used on the toolbar.
  */
-class EmbedButton extends Component {
+export class EmbedButton extends Component {
     constructor(props) {
         super(props);
 
         this.state = {dialogOpen: false};
 
-        this.openDialog = this.openDialog.bind(this);
-        this.closeDialog = this.closeDialog.bind(this);
+        this.showInput = this.showInput.bind(this);
+        this.hideInput = this.hideInput.bind(this);
     }
 
     componentDidMount() {
         loadIframelyEmbedJs();
     }
 
-    openDialog() {
+    /**
+     * @ngdoc method
+     * @name EmbedButton#showInput
+     * @description Sets the state of the input to visible.
+     */
+    showInput() {
         this.setState({dialogOpen: true});
     }
 
-    closeDialog() {
+    /**
+     * @ngdoc method
+     * @name EmbedButton#hideInput
+     * @description Sets the state of the input to hidden.
+     */
+    hideInput() {
         this.setState({dialogOpen: false});
     }
 
@@ -35,11 +45,9 @@ class EmbedButton extends Component {
 
         return (
             <div className="Editor3-styleButton">
-                <span onClick={this.openDialog}>embed</span>
-                {dialogOpen ? <EmbedInput onCancel={this.closeDialog} /> : null}
+                <span onClick={this.showInput}>embed</span>
+                {dialogOpen ? <EmbedInput onCancel={this.hideInput} /> : null}
             </div>
         );
     }
 }
-
-export default EmbedButton;

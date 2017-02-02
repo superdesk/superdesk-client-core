@@ -8,6 +8,8 @@ const fallbackAPIKey = '1d1728bf82b2ac8139453f'; // register to author's persona
 /**
  * @ngdoc React
  * @module superdesk.core.editor3
+ * @param {Function} onCancel To be called when the input needs to be hidden.
+ * @param {Function} onSubmit Dispatcher for the submit action. Takes the oEmbed response object as a parameter.
  * @name EmbedInputComponent
  * @description The dialog displayed when an embed URL is entered.
  */
@@ -31,6 +33,7 @@ class EmbedInputComponent extends Component {
     /**
      * @ngdoc method
      * @name EmbedInputComponent#onKeyUp
+     * @param {Event} e
      * @description Handles key up events in the input. Cancels on ESC.
      */
     onKeyUp(e) {
@@ -39,15 +42,38 @@ class EmbedInputComponent extends Component {
         }
     }
 
+    /**
+     * @ngdoc method
+     * @name EmbedInputComponent#processResponse
+     * @param {Object} data
+     * @param {String} status
+     * @description Processes the success XHR response from the iframe.ly request. Dispatches
+     * the action that embeds the response into the editor.
+     */
     processSuccess(data, status) {
         this.props.onSubmit(data);
         this.onCancel();
     }
 
+    /**
+     * @ngdoc method
+     * @name EmbedInputComponent#processError
+     * @param {Object} data
+     * @param {String} status
+     * @description Processes the error XHR response from the iframe.ly request. Sets the state
+     * to erroneous, which should be shown in the UI.
+     */
     processError(data, status) {
         this.setState({error: data.responseJSON.error});
     }
 
+    /**
+     * @ngdoc method
+     * @name EmbedInputComponent#onKeyUp
+     * @param {Object} data
+     * @param {String} status
+     * @description Verifies with the iframe.ly API if the submitted URL is valid.
+     */
     onSubmit() {
         const {value} = this.refs.txt;
         const config = ng.get('config');
@@ -59,6 +85,11 @@ class EmbedInputComponent extends Component {
         }).then(this.processSuccess, this.processError);
     }
 
+    /**
+     * @ngdoc method
+     * @name EmbedInputComponent#onCancel
+     * @description Calls the onCancel prop function and resets the error state.
+     */
     onCancel() {
         this.setState({error: ''});
         this.props.onCancel();
@@ -90,6 +121,4 @@ const mapDispatchToProps = (dispatch) => ({
     onSubmit: (oEmbed) => dispatch(actions.embed(oEmbed))
 });
 
-const EmbedInput = connect(null, mapDispatchToProps)(EmbedInputComponent);
-
-export default EmbedInput;
+export const EmbedInput = connect(null, mapDispatchToProps)(EmbedInputComponent);
