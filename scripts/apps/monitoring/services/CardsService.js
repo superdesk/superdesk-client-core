@@ -67,7 +67,13 @@ export function CardsService(api, search, session, desks, config) {
 
         default:
             if (!_.isNil(card.singleViewType) && card.singleViewType === 'desk') {
-                query.filter({term: {'task.desk': card.deskId}});
+                query.filter({or: [
+                        {terms: {'marked_desks.desk_id': [card.deskId]}},
+                        {term: {'task.desk': card.deskId}}]});
+            } else if (desks.stageLookup[card._id] && desks.stageLookup[card._id].default_incoming) {
+                query.filter({or: [
+                        {terms: {'marked_desks.desk_id': [card.deskId]}},
+                        {term: {'task.stage': card._id}}]});
             } else {
                 query.filter({term: {'task.stage': card._id}});
             }
@@ -87,19 +93,15 @@ export function CardsService(api, search, session, desks, config) {
             if (desk.desk_type === 'authoring') {
                 query.filter({or: [
                     {term: {'task.last_authoring_desk': deskId}},
-                    {terms: {'marked_desks.desk_id': [deskId]}},
                     {and: [
                         {term: {'task.desk': deskId}},
                         {terms: {state: states}}
                     ]}
                 ]});
             } else if (desk.desk_type === 'production') {
-                query.filter({or: [
-                    {and: [
+                query.filter({and: [
                         {term: {'task.desk': deskId}},
-                        {terms: {state: states}}]},
-                    {terms: {'marked_desks.desk_id': [deskId]}}
-                ]});
+                        {terms: {state: states}}]});
             }
         }
     }
