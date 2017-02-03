@@ -348,10 +348,7 @@ export function SearchService($location, gettext, config, session) {
             }
 
             if (params.scheduled_after) {
-                var schedulerange = {utc_publish_schedule: {}};
-
-                schedulerange.utc_publish_schedule.gte = params.scheduled_after;
-                query.post_filter({range: schedulerange});
+                query.post_filter({range: {'schedule_settings.utc_publish_schedule': {gte: params.scheduled_after}}});
             }
 
             if (params.type) {
@@ -483,9 +480,9 @@ export function SearchService($location, gettext, config, session) {
         }
 
         // remove the older version of digital package as part for base filtering.
-        this.filter({not: {and: [{term: {_type: 'published'}},
+        this.filter({not: {bool: {must: [{term: {_type: 'published'}},
             {term: {package_type: 'takes'}},
-            {term: {last_published_version: false}}]}});
+            {term: {last_published_version: false}}]}}});
 
         // remove other users drafts.
         this.filter({or: [{and: [{term: {state: 'draft'}},
@@ -493,7 +490,7 @@ export function SearchService($location, gettext, config, session) {
                          {not: {terms: {state: ['draft']}}}]});
 
         // remove the digital package from production view.
-        this.filter({not: {and: [{term: {package_type: 'takes'}}, {term: {_type: 'archive'}}]}});
+        this.filter({not: {bool: {must: [{term: {package_type: 'takes'}}, {term: {_type: 'archive'}}]}}});
 
         buildFilters(params, this);
     }
