@@ -28,6 +28,10 @@ class CustomAnchorButton extends MediumEditor.extensions.anchor {
 
     doFormSave() {
         let input = this.getForm().getElementsByTagName('input')[0];
+
+        // prevent double encoding; medium editor don't detect if the url is already encoded
+        input.value = decodeURIComponent(input.value);
+
         let isValid = input.checkValidity();
 
         if (isValid) {
