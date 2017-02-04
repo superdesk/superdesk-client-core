@@ -7,13 +7,14 @@
  * @requires renditions
  * @requires config
  * @requires authoring
+ * @requires $q
  *
  * @description
  *   This directive is responsible for rendering media associated with the item.
  */
 
-ItemAssociationDirective.$inject = ['superdesk', 'renditions', 'config', 'authoring'];
-export function ItemAssociationDirective(superdesk, renditions, config, authoring) {
+ItemAssociationDirective.$inject = ['superdesk', 'renditions', 'config', 'authoring', '$q'];
+export function ItemAssociationDirective(superdesk, renditions, config, authoring, $q) {
     return {
         scope: {
             rel: '=',
@@ -58,12 +59,20 @@ export function ItemAssociationDirective(superdesk, renditions, config, authorin
                 event.stopPropagation();
                 let item = getItem(event, event.originalEvent.dataTransfer.types[0]);
 
-                if (scope.isEditable()) {
+                if (!scope.editable) {
+                    return;
+                }
+
+                if (scope.isMediaEditable()) {
                     scope.loading = true;
                     renditions.ingest(item)
                     .then(scope.edit)
                     .finally(() => {
                         scope.loading = false;
+                    });
+                } else {
+                    scope.$apply(() => {
+                        updateItemAssociation(item);
                     });
                 }
             });
@@ -103,7 +112,7 @@ export function ItemAssociationDirective(superdesk, renditions, config, authorin
              * @param {Object} item Item to be edited
              */
             scope.edit = function(item) {
-                if (!scope.isEditable()) {
+                if (!scope.isMediaEditable()) {
                     return;
                 }
 
@@ -147,13 +156,13 @@ export function ItemAssociationDirective(superdesk, renditions, config, authorin
 
             /**
              * @ngdoc method
-             * @name sdItemAssociation#isEditable
+             * @name sdItemAssociation#isMediaEditable
              * @public
-             * @description Check if the item can be edited or not.
+             * @description Check if featured media can be edited or not.
              */
-            scope.isEditable = function() {
+            scope.isMediaEditable = function() {
                 return !(config.features && 'editFeaturedImage' in config.features
-                    && !config.features.editFeaturedImage) && scope.editable;
+                    && !config.features.editFeaturedImage);
             };
 
             /**
