@@ -17,11 +17,12 @@ import _ from 'lodash';
  * @requires gettext
  * @requires config
  * @requires session
+ * @requires multi
  *
  * @description Search Service is responsible for creation and manipulation of Query object
  */
-SearchService.$inject = ['$location', 'gettext', 'config', 'session'];
-export function SearchService($location, gettext, config, session) {
+SearchService.$inject = ['$location', 'gettext', 'config', 'session', 'multi'];
+export function SearchService($location, gettext, config, session, multi) {
     var sortOptions = [
         {field: 'versioncreated', label: gettext('Updated')},
         {field: 'firstcreated', label: gettext('Created')},
@@ -599,6 +600,10 @@ export function SearchService($location, gettext, config, session) {
         if (this.getElasticHighlight()) {
             newItems._items = _.map(newItems._items, this.mergeHighlightFields);
         }
+
+        newItems._items.forEach((item) => {
+            item.selected = multi.isSelected(item);
+        });
 
         if (force || !scopeItems) {
             return newItems;
