@@ -25,6 +25,7 @@ export function ChangeImageController($scope, gettext, notify, modal, $q, _, api
     $scope.data.cropData = {};
     $scope.data.requiredFields = config.requiredMediaMetadata;
     let sizes = {};
+    let originalRenditions = _.cloneDeep($scope.data.item.renditions);
 
     $scope.data.renditions.forEach((rendition) => {
         let original = $scope.data.item.renditions.original;
@@ -133,6 +134,7 @@ export function ChangeImageController($scope, gettext, notify, modal, $q, _, api
     * @description Close the Change Image form.
     */
     $scope.close = function() {
+        $scope.data.item.renditions = originalRenditions;
         if ($scope.data.isDirty) {
             modal.confirm(gettext('You have unsaved changes, do you want to continue?'))
             .then(() => {
@@ -188,6 +190,22 @@ export function ChangeImageController($scope, gettext, notify, modal, $q, _, api
     * @description Based on the new Area of Interest save the original image and crops.
     */
     $scope.saveAreaOfInterest = function(croppingData) {
+        let [width, height] = [
+            croppingData.CropRight - croppingData.CropLeft,
+            croppingData.CropBottom - croppingData.CropTop
+        ];
+        let validCrop = true;
+
+        // check if new crop is valid or not.
+        if (Object.keys(sizes)) {
+            validCrop = Object.keys(sizes).every((key) => width >= sizes[key].width || height >= sizes[key].height);
+        }
+
+        if (!validCrop) {
+            notify.error(gettext('Original size cannot be less than the required crop sizes.'));
+            return;
+        }
+
         $scope.loaderForAoI = true;
         api.save('picture_crop', {item: $scope.data.item, crop: croppingData})
         .then((result) => {
