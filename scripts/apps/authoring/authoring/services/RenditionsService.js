@@ -74,7 +74,7 @@ export function RenditionsService(metadata, $q, api, superdesk, _) {
                 item: _.extend({}, picture),
                 renditions: withRatio,
                 poi: poi,
-                showAoISelectionButton: angular.isUndefined(picture.ingest_provider),
+                showAoISelectionButton: true,
                 showMetadataEditor: true,
                 isNew: isNew
             })

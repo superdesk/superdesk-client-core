@@ -1,7 +1,7 @@
 <figure class="item-association"
         ng-class="{'item-association--preview': related, 'item-association--loading': loading}"
-        ng-click="isEditable() && !related && upload()">
-    <div ng-if="related && isEditable()" class="close-overlay">
+        ng-click="editable && !related && upload()">
+    <div ng-if="related && editable" class="close-overlay">
         <button class="btn btn--mini btn--light btn--pull-right" ng-click="remove(related); $event.stopPropagation()">
             <i class="icon-close-small"></i>
         </button>
@@ -13,8 +13,8 @@
     </video>
     <img ng-if="related && (related.type === 'picture' || related.type === 'graphic')"
          ng-src="{{ related.renditions.viewImage.href }}"
-         ng-class="{'not-editable': !isEditable()}"
-         ng-click="isEditable() && edit(related); $event.stopPropagation()">
+         ng-class="{'not-editable': !(isMediaEditable() && editable)}"
+         ng-click="editable && edit(related); $event.stopPropagation()">
     <div sd-remove-tags
         type="text"
         ng-model="related.description_text"
