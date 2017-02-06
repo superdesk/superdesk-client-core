@@ -46,11 +46,11 @@ describe('marked desks', () => {
             // check the marked items in output stage of marked desk
             monitoring.openMonitoring();
             monitoring.switchToDesk('SPORTS DESK');
-            expect(monitoring.getGroupItems(5).count()).toBe(3);
+            expect(monitoring.getGroupItems(1).count()).toBe(3);
 
             // Remove the marked desk
-            monitoring.removeFromFirstDesk(5, 1);
-            expect(monitoring.getGroupItems(5).count()).toBe(2);
+            monitoring.removeFromFirstDesk(1, 1);
+            expect(monitoring.getGroupItems(1).count()).toBe(2);
         });
     });
 });
