@@ -165,6 +165,14 @@ describe('content', () => {
             multi.toggle(items[1]);
             expect(multi.getItems()).toEqual(items);
         }));
+
+        it('can check if item is selected', inject((multi) => {
+            var items = [{_id: 1, selected: true}];
+
+            multi.toggle(items[0]);
+            expect(multi.isSelected(items[0])).toEqual(true);
+            expect(multi.isSelected({_id: 2})).toEqual(false);
+        }));
     });
 
     describe('media-related directive', () => {
