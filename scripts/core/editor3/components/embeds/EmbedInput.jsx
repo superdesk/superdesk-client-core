@@ -80,7 +80,7 @@ class EmbedInputComponent extends Component {
         const apiKey = config.iframely.key || fallbackAPIKey;
 
         $.ajax({
-            url: `http://iframe.ly/api/oembed?callback=?&url=${value}&api_key=${apiKey}&omit_script=true&iframe=true`,
+            url: `//iframe.ly/api/oembed?callback=?&url=${value}&api_key=${apiKey}&omit_script=true&iframe=true`,
             dataType: 'json'
         }).then(this.processSuccess, this.processError);
     }
