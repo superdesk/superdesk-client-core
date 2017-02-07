@@ -38,7 +38,7 @@
     "angular-gettext": "^2.0.5",
     "angular-history": "git+https://github.com/decipherinc/angular-history.git#v0.8.0",
     "angular-i18n": "^1.5.8",
-    "angular-mocks": "^1.5.5",
+    "angular-mocks": "1.6.1",
     "angular-moment": "^0.10.3",
     "angular-resource": "^1.5.5",
     "angular-route": "^1.5.5",
