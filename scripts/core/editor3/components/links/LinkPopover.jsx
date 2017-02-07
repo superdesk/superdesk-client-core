@@ -11,7 +11,7 @@ import {getVisibleSelectionRect} from 'draft-js';
  * @description This component holds the link editing popover displayed when clicking
  * a link in the editor and is part of LinkControl.
  */
-export default class LinkPopover extends Component {
+export class LinkPopover extends Component {
     constructor(props) {
         super(props);
 

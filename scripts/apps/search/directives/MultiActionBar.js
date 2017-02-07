@@ -7,7 +7,17 @@ export function MultiActionBar(asset, multi, authoringWorkspace, superdesk, keyb
         scope: true,
         link: function(scope) {
             scope.multi = multi;
+            scope.display = true;
             scope.$watch(multi.getItems, detectType);
+
+            scope.$watch('multi.count', () => {
+                scope.display = true;
+            });
+
+            scope.toggleDisplay = () => {
+                scope.display = !scope.display;
+            };
+
             scope.$on('item:lock', (_e, data) => {
                 if (_.includes(multi.getIds(), data.item)) {
                     // locked item is in the selections so update lock info

@@ -1,54 +1,71 @@
-import _ from 'lodash';
-
+/**
+ * @ngdoc service
+ * @module superdesk.apps.archive
+ * @name multi
+ * @requires $rootScope
+ * @description Multi Service keeps track of multiple selections
+ */
 MultiService.$inject = ['$rootScope'];
 export function MultiService($rootScope) {
     var items = [];
-
     var self = this;
+    var findItem = (item) => _.find(items, (i) => i._id === item._id && i._current_version === item._current_version);
 
     /**
-     * Test if given item is selected
-     *
-     * @param {Object} item
+     * @ngdoc method
+     * @name multi#isSelected
+     * @public
+     * @description Checks if given item is selected
+     * @param {Object} item - story
+     * @returns {Boolean}
      */
     this.isSelected = function(item) {
-        return item.selected;
+        return _.size(findItem(item)) > 0;
     };
 
     /**
-     * Toggle item selected state
-     *
-     * @param {Object} item
+     * @ngdoc method
+     * @name multi#toggle
+     * @public
+     * @description Toggles the given item selected state
+     * @param {Object} item - story
      */
     this.toggle = function(item) {
-        items = _.without(items, _.find(items, identity));
+        items = _.without(items, findItem(item));
         if (item.selected) {
             items = _.union(items, [item]);
         }
 
         this.count = items.length;
-
-        function identity(_item) {
-            return _item._id === item._id && _item._current_version === item._current_version;
-        }
     };
 
     /**
-     * Get list of selected items identifiers
+     * @ngdoc method
+     * @name multi#getIds
+     * @public
+     * @description Returns list of selected item identifiers
+     * @returns {Array} item ids
      */
     this.getIds = function() {
         return _.map(items, '_id');
     };
 
     /**
-     * Get list of selected items
+     * @ngdoc method
+     * @name multi#getItems
+     * @public
+     * @description Returns list of selected items
+     * @returns {Array} items
      */
     this.getItems = function() {
         return items;
     };
 
     /**
-     * Reset to empty
+     * @ngdoc method
+     * @name multi#reset
+     * @public
+     * @description Resets selected items
      */
     this.reset = function() {
         var ids = [];
@@ -63,8 +80,11 @@ export function MultiService($rootScope) {
     };
 
     /**
-     * update count on deselection
-     * e.g, when selected item gets published, corrected or killed
+     * @ngdoc method
+     * @name multi#remove
+     * @public
+     * @description Removes the item and updates count on deselection
+     * @param {string} item id
      */
     this.remove = function(itemId) {
         _.remove(items, {_id: itemId});

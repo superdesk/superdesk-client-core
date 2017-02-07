@@ -371,7 +371,6 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
      * param {string} fileType
      */
     this.setFileType = function(fileType) {
-        multi.reset();
         if (fileType === 'all') {
             this.selectedFileType = [];
         } else {

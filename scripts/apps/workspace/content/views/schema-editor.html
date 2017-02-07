@@ -50,7 +50,7 @@
                         </div>
                         <div class="field" ng-show="specs.type === 'string' || specs.type === 'integer' || options[id] || terms[id]">
                             <label translate>Default value</label>
-                            <input ng-if="specs.type === 'integer' && !options[id]"
+                            <input ng-if="specs.type === 'integer' && !options[id] && !loading"
                                    type="number"
                                    class="input-medium line-input"
                                    placeholder="{{ 'Not set' | translate }}"
@@ -61,22 +61,24 @@
                                     ng-options="item.qcode as item.name for item in options[id]">
                                 <option translate>none</option>
                             </select>
-                            <div ng-if="specs.type === 'list' && options[id]"
-                                 sd-meta-dropdown
-                                 data-item="readonly(specs, id)"
-                                 data-field="{{ id }}"
+                            <div class="data"
+                                 ng-if="specs.type === 'list' && options[id] && !loading"
+                                 sd-meta-terms
+                                 data-item="specs"
+                                 data-field="default"
                                  data-unique="qcode"
                                  data-list="options[id]"
-                                 data-change="setdefault(field)"
-                                 data-containing-directive="{{ directive }}">
+                                 data-header="true"
+                                 data-change="setDirty(true)">
                             </div>
-                            <div ng-if="specs.type === 'list' && terms[id] && !options[id]"
+                            <div ng-if="specs.type === 'list' && terms[id] && !options[id] && !loading"
                                  sd-meta-terms
-                                 data-item="readonly(specs, id)"
-                                 data-field="{{ id }}"
+                                 data-item="specs"
+                                 data-field="default"
                                  data-unique="qcode"
                                  data-list="terms[id]"
-                                 data-change="setdefault(field)"
+                                 data-header="true"
+                                 data-change="setDirty(true)"
                                  ></div>
                             <input ng-if="specs.type === 'string'"
                                    type="text"

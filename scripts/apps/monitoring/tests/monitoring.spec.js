@@ -67,6 +67,7 @@ describe('monitoring', () => {
     describe('cards service', () => {
         beforeEach(inject((desks) => {
             desks.deskLookup = {1: {_id: 1, name: 'desk1', desk_type: 'authoring'}};
+            desks.stageLookup = {123: {default_incoming: false}, 456: {default_incoming: true}};
         }));
 
         it('can get criteria for stage', inject((cards, session) => {
@@ -138,9 +139,9 @@ describe('monitoring', () => {
             expect(criteria.source.query.filtered.query.query_string.query).toBe('test');
         }));
 
-        it('can get criteria for marked desks in output stage', inject((cards, session) => {
+        it('can get criteria for marked desks in incoming stage', inject((cards, session) => {
             session.identity = {_id: 'foo'};
-            var card = {_id: '1:output', query: 'test', type: 'deskOutput'};
+            var card = {_id: '456', deskId: '1'};
             var criteria = cards.criteria(card);
 
             expect(criteria.source.query.filtered.filter.and[4].or).toContain(

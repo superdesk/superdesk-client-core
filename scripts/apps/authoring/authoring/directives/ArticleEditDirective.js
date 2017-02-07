@@ -157,12 +157,16 @@ export function ArticleEditDirective(
                     scope.dateline.month = monthAndDay.month;
                     scope.dateline.day = monthAndDay.day;
                     scope.resetNumberOfDays(false);
+                    if (!item.dateline.date) {
+                        item.dateline.date = $filter('relativeUTCTimestamp')(scope.item.dateline.located,
+                                parseInt(scope.dateline.month, 10), parseInt(scope.dateline.day, 10));
+                    }
 
                     item.dateline.text = $filter('formatDatelineText')(item.dateline.located,
                         $interpolate('{{ month | translate }}')({
                             month: _.findKey(scope.monthNames, (m) => m === scope.dateline.month)
                         }),
-                        scope.dateline.day, item.dateline.source);
+                        scope.dateline.day, item.source);
                 }
             };
 
