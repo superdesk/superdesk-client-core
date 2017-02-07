@@ -103,7 +103,7 @@ class EmbedInputComponent extends Component {
             <form onSubmit={this.onSubmit} className="embed-dialog" onKeyUp={this.onKeyUp}>
                 <input type="url" ref="txt" placeholder="Enter a URL to embed" />
                 <div className="input-controls">
-                    <i className="icon-search" onClick={this.onSubmit} />
+                    <i className="svg-icon-ok" onClick={this.onSubmit} />
                     <i className="icon-close-small" onClick={onCancel} />
                 </div>
                 {error ? <div className="embed-dialog__error">{error}</div> : null}
