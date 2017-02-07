@@ -40,7 +40,6 @@ export default angular.module('superdesk.core.services.server', [])
             },
             _all: function(functionName, items = datas, datas) {
                 var self = this;
-                var delay = $q.defer();
                 var resource;
 
                 // to make it usable with createAll
@@ -58,14 +57,9 @@ export default angular.module('superdesk.core.services.server', [])
                     }
                 });
 
-                $q.all(promises).then((response) => {
-                    delay.resolve(response);
-                });
-
-                return delay.promise;
+                return $q.all(promises);
             },
             _http: function(method, url, params, data) {
-                var delay = $q.defer();
                 var created;
 
                 var options = {
@@ -85,13 +79,12 @@ export default angular.module('superdesk.core.services.server', [])
                     options.data = this._cleanData(data);
                 }
 
-                // TODO: For some reason switching success/error to then/catch
-                // here is failing the unit tests.
-                // eslint-disable-next-line angular/no-http-callback
-                $http(options)
-                .success((responseData) => {
+                return $http(options)
+                .then((response) => {
+                    let responseData = response.data;
+
                     if (method === 'POST') {
-                        delay.resolve(responseData);
+                        return responseData;
                     } else if (method === 'PATCH') {
                         var fields = ['_id', '_links', 'etag', 'updated'];
 
@@ -99,16 +92,11 @@ export default angular.module('superdesk.core.services.server', [])
                             data[field] = responseData[field];
                         });
                         data.created = created;
-                        delay.resolve(data);
-                    } else {
-                        delay.resolve(responseData);
+                        return data;
                     }
-                })
-                .error((responseData) => {
-                    delay.reject(responseData);
-                });
 
-                return delay.promise;
+                    return responseData;
+                });
             },
 
             /**
