@@ -12,14 +12,17 @@ describe('analytics', () => {
     it('manage activity reports', () => {
         analytics.setOperation('Publish');
         analytics.setDesk('Sports');
-        analytics.setOperationDate('13/12/2016');
+        analytics.setOperationDateStart('13/12/2016');
+        analytics.setOperationDateEnd('13/12/2016');
         analytics.setSubject(['education', 'university']);
         analytics.setReportName('report1');
         analytics.setReportDescription('report1 description');
         analytics.setKeywords(['testkey']);
         analytics.setCategory(['Australian Weather']);
-        analytics.setUrgency('3');
-        analytics.setPriority('6');
+        analytics.setUrgencyStart('3');
+        analytics.setUrgencyEnd('3');
+        analytics.setPriorityStart('6');
+        analytics.setPriorityEnd('6');
         analytics.setSubscriber('test1');
         analytics.saveReport();
         browser.sleep(100);
@@ -29,14 +32,17 @@ describe('analytics', () => {
 
         analytics.openActivityReportForm();
         analytics.setOperation('Correct');
-        analytics.setOperationDate('13/12/2016');
+        analytics.setOperationDateStart('13/12/2016');
+        analytics.setOperationDateEnd('13/12/2016');
         analytics.setSubject(['education', 'university']);
         analytics.setReportName('report2');
         analytics.setReportDescription('report2 description');
         analytics.setKeywords(['testkey2']);
         analytics.setCategory(['Australian Weather']);
-        analytics.setUrgency('4');
-        analytics.setPriority('5');
+        analytics.setUrgencyStart('4');
+        analytics.setUrgencyStart('4');
+        analytics.setPriorityStart('5');
+        analytics.setPriorityEnd('5');
         analytics.setSubscriber('test2');
         analytics.toggleGlobal();
         analytics.switchToGrouping();
@@ -56,7 +62,8 @@ describe('analytics', () => {
         expect(analytics.getReportDescription().getAttribute('value')).toEqual('report1 description');
         expect(analytics.getReportOperation().getAttribute('value')).toEqual('publish');
         expect(analytics.getReportDesk().getText()).toContain('Sports');
-        expect(analytics.getOperationDate().getAttribute('value')).toEqual('13/12/2016');
+        expect(analytics.getOperationDateStart().getAttribute('value')).toEqual('13/12/2016');
+        expect(analytics.getOperationDateEnd().getAttribute('value')).toEqual('13/12/2016');
         expect(analytics.getReportKeywords()).toBe('TESTKEY');
 
         expect(analytics.getReportGlobal().getAttribute('checked')).toBeFalsy();
@@ -73,7 +80,8 @@ describe('analytics', () => {
         expect(analytics.getReportName().getAttribute('value')).toEqual('report2');
         expect(analytics.getReportDescription().getAttribute('value')).toEqual('report2 description');
         expect(analytics.getReportOperation().getAttribute('value')).toEqual('correct');
-        expect(analytics.getOperationDate().getAttribute('value')).toEqual('13/12/2016');
+        expect(analytics.getOperationDateStart().getAttribute('value')).toEqual('13/12/2016');
+        expect(analytics.getOperationDateEnd().getAttribute('value')).toEqual('13/12/2016');
         expect(analytics.getReportGlobal().getAttribute('checked')).toBeTruthy();
         analytics.switchToGrouping();
         expect(analytics.getReportGroupByDesk().getAttribute('checked')).toBeTruthy();

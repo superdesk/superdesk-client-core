@@ -83,33 +83,25 @@
 
         <div class="multiple">
             <div class="field">
-                <label for="parameters-priority_start" translate="">From priority</label>
-                <select id="parameters-priority_start" ng-model="activityReport.priority_start"
-                    ng-options="i for i in [1,2,3,4,5,6]">
-                </select>
+                <label for="parameters-priority-start" translate="">From priority (values from 1 to 6)</label>
+                <input type="range" min="1" max="6" step="1" />
             </div>
 
             <div class="field">
-                <label for="parameters-priority_end" translate="">To priority</label>
-                <select id="parameters-priority_end" ng-model="activityReport.priority_end"
-                    ng-options="i for i in [1,2,3,4,5,6]">
-                </select> 
+                <label for="parameters-priority-end" translate="">To priority(values from 1 to 6)</label>
+                <input type="range" min="1" max="6" step="1" />
             </div>
         </div>
 
         <div class="multiple">
             <div class="field">
-                <label for="parameters-urgency_start" translate="">From urgency</label>
-                <select id="parameters-urgency_start" ng-model="activityReport.urgency_start"
-                    ng-options="i for i in [1,2,3,4,5]">
-                </select>
+                <label for="parameters-urgency-start" translate="">From urgency(values from 1 to 5)</label>
+                <input type="range" min="1" max="5" step="1" />
             </div>
 
             <div class="field">
-                <label for="parameters-urgency_end" translate="">To urgency</label>
-                <select id="parameters-urgency_end" ng-model="activityReport.urgency_end"
-                    ng-options="i for i in [1,2,3,4,5]">
-                </select>
+                <label for="parameters-urgency-end" translate="">To urgency(values from 1 to 5)</label>
+                <input type="range" min="1" max="5" step="1" />
             </div>
         </div>
 
