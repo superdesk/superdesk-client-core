@@ -98,10 +98,7 @@ export const CORE_PROJECTED_FIELDS = {
         'source',
         'last_published_version',
         'archived',
-        'associations',
-        'poi',
-        'alt_text',
-        'description_text'
+        'associations'
     ]
 };
 

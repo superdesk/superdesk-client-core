@@ -9,7 +9,7 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
     $scope.enableSave = false;
     $scope.currentUser = session.identity;
     $scope.uniqueUpload = $scope.locals && $scope.locals.data && $scope.locals.data.uniqueUpload === true;
-    $scope.requiredFields = config.requiredMediaMetadata;
+    $scope.validator = config.validatorMediaMetadata;
 
     var uploadFile = function(item) {
         var handleError = function(reason) {
@@ -49,8 +49,8 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
         $scope.errorMessage = null;
         if (!_.isEmpty($scope.items)) {
             _.each($scope.items, (item) => {
-                _.each($scope.requiredFields, (key) => {
-                    if (_.isNil(item.meta[key]) || _.isEmpty(item.meta[key])) {
+                _.each(Object.keys($scope.validator), (key) => {
+                    if ($scope.validator[key].required && (_.isNil(item.meta[key]) || _.isEmpty(item.meta[key]))) {
                         $scope.errorMessage = 'Required field(s) are missing';
                         return false;
                     }

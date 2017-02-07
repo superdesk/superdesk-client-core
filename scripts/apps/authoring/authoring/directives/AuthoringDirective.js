@@ -172,18 +172,23 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
 
                     return $scope.origItem;
                 }, (response) => {
+                    if (response.status === 412) {
+                        notifyPreconditionFailed();
+                        return;
+                    }
+
                     if (angular.isDefined(response.data._issues)) {
                         if (angular.isDefined(response.data._issues.unique_name) &&
                             response.data._issues.unique_name.unique === 1) {
                             notify.error(UNIQUE_NAME_ERROR);
+                            return;
                         } else if (angular.isDefined(response.data._issues['validator exception'])) {
                             notify.error(gettext('Error: ' + response.data._issues['validator exception']));
+                            return;
                         }
-                    } else if (response.status === 412) {
-                        notifyPreconditionFailed();
-                    } else {
-                        notify.error(gettext('Error. Item not updated.'));
                     }
+
+                    notify.error(gettext('Error. Item not updated.'));
                 });
             };
 
@@ -487,12 +492,12 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             }
 
             function validateForPublish(item) {
-                var requiredFields = $rootScope.config.requiredMediaMetadata;
+                var validator = $rootScope.config.validatorMediaMetadata;
 
                 if (item.type === 'picture' || item.type === 'graphic') {
                     // required media metadata fields are defined in superdesk.config.js
-                    _.each(requiredFields, (key) => {
-                        if (_.isNil(item[key]) || _.isEmpty(item[key])) {
+                    _.each(Object.keys(validator), (key) => {
+                        if (validator[key].required && (_.isNil(item[key]) || _.isEmpty(item[key]))) {
                             notify.error($interpolate(gettext(
                                 'Required field {{ key }} is missing. ...'))({key: key}));
                             return false;

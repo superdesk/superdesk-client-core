@@ -8,13 +8,14 @@
  * @requires config
  * @requires authoring
  * @requires $q
+ * @requires api
  *
  * @description
  *   This directive is responsible for rendering media associated with the item.
  */
 
-ItemAssociationDirective.$inject = ['superdesk', 'renditions', 'config', 'authoring', '$q'];
-export function ItemAssociationDirective(superdesk, renditions, config, authoring, $q) {
+ItemAssociationDirective.$inject = ['superdesk', 'renditions', 'config', 'authoring', '$q', 'api'];
+export function ItemAssociationDirective(superdesk, renditions, config, authoring, $q, api) {
     return {
         scope: {
             rel: '=',
@@ -37,12 +38,20 @@ export function ItemAssociationDirective(superdesk, renditions, config, authorin
              * @name sdItemAssociation#getItem
              * @private
              * @description Get superdesk item from event.
+             *              If not externalsource then fetch for archive collection not all fields
+             *              are available due to projections.
              * @param {Event} event
              * @param {string} dataType
              * @return {Object}
              */
             function getItem(event, dataType) {
-                return angular.fromJson(event.originalEvent.dataTransfer.getData(dataType));
+                let item = angular.fromJson(event.originalEvent.dataTransfer.getData(dataType));
+
+                if (item._type !== 'externalsource') {
+                    return api.find('archive', item._id)
+                        .then((result) => result);
+                }
+                return $q.when(item);
             }
 
             // it should prevent default as long as this is valid image
@@ -57,24 +66,24 @@ export function ItemAssociationDirective(superdesk, renditions, config, authorin
             elem.on('drop dragdrop', (event) => {
                 event.preventDefault();
                 event.stopPropagation();
-                let item = getItem(event, event.originalEvent.dataTransfer.types[0]);
+                getItem(event, event.originalEvent.dataTransfer.types[0])
+                    .then((item) => {
+                        if (!scope.editable) {
+                            return;
+                        }
 
-                if (!scope.editable) {
-                    return;
-                }
-
-                if (scope.isMediaEditable()) {
-                    scope.loading = true;
-                    renditions.ingest(item)
-                    .then(scope.edit)
-                    .finally(() => {
-                        scope.loading = false;
+                        if (scope.isMediaEditable()) {
+                            scope.loading = true;
+                            renditions.ingest(item)
+                            .then(scope.edit)
+                            .finally(() => {
+                                scope.loading = false;
+                            });
+                        } else {
+                            // update association in an item even if editing of metadata and crop not allowed.
+                            updateItemAssociation(item);
+                        }
                     });
-                } else {
-                    scope.$apply(() => {
-                        updateItemAssociation(item);
-                    });
-                }
             });
 
 
@@ -158,7 +167,7 @@ export function ItemAssociationDirective(superdesk, renditions, config, authorin
              * @ngdoc method
              * @name sdItemAssociation#isMediaEditable
              * @public
-             * @description Check if featured media can be edited or not.
+             * @description Check if featured media can be edited or not. i.e. metadata/crops can be changed or not.
              */
             scope.isMediaEditable = function() {
                 return !(config.features && 'editFeaturedImage' in config.features
