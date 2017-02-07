@@ -27,9 +27,9 @@
                         <div class="content">
                             <span class="keyword" ng-if="item.slugline">
                                 <span class="relate-item-label" ng-if="options.searchEnabled && actions.update && actions.update.condition(item)"
-                                      ng-class="{'update-item': actions.update && actions.update.condition(item)}">U</span>
+                                      ng-class="{'update-item': actions.update && actions.update.condition(item)}" title="{{ :: 'Can be associated as an update' | translate }}">U</span>
                                 <span class="relate-item-label" ng-if="options.searchEnabled && actions.addTake && actions.addTake.condition(item)"
-                                      ng-class="{'take-item': actions.addTake && actions.addTake.condition(item)}">T</span>
+                                      ng-class="{'take-item': actions.addTake && actions.addTake.condition(item)}" title="{{ :: 'Can be associated as a take' | translate }}">T</span>
                                 {{ item.slugline }}</span>
                             <span class="headline">{{item.headline || item.type}}</span>
                             <span class="takekey">{{item.anpa_take_key}}</span>
