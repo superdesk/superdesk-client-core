@@ -1,5 +1,5 @@
-ItemPreview.$inject = ['asset', 'storage'];
-export function ItemPreview(asset, storage) {
+ItemPreview.$inject = ['asset', 'storage', 'desks'];
+export function ItemPreview(asset, storage, desks) {
     /**
      * @description Closes the preview panel if the currently previewed
      * item is spiked / unspiked or moved.
@@ -45,6 +45,14 @@ export function ItemPreview(asset, storage) {
 
             scope.$watch('item', (item) => {
                 scope.selected = {preview: item || null};
+
+                // Set the desk and stage names
+                if (item && item.task && item.task.stage) {
+                    scope.deskName = desks.deskLookup[item.task.desk].name;
+                    scope.stage = desks.stageLookup[item.task.stage].name;
+                } else {
+                    scope.deskName = scope.stage = null;
+                }
             });
 
             var closePreviewEvents = [
