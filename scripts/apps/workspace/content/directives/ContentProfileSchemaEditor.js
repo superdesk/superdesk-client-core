@@ -11,7 +11,7 @@ export function ContentProfileSchemaEditor(gettext, metadata, content, config) {
         place: gettext('Place'),
         priority: gettext('Priority'),
         urgency: gettext('Urgency'),
-        anpa_category: gettext('Category'),
+        anpa_category: gettext('ANPA Category'),
         subject: gettext('Subject'),
         ednote: gettext('Editorial Note'),
         abstract: gettext('Abstract'),
