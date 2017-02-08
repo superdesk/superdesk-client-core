@@ -386,12 +386,29 @@ export function WebPublisherManagerController($scope, publisher, modal) {
         openListCriteria(list) {
             this.selectedList = list;
             $scope.newList = angular.extend({}, list);
-            $scope.metadataList = [];
-            if ($scope.newList.filters && $scope.newList.filters.metadata) {
+            this.metadataList = [];
+            this.selectedRoutes = [];
+            if (!$scope.newList.filters) {
+                $scope.newList.filters = {};
+            }
+
+            if ($scope.newList.filters.metadata) {
                 angular.forEach($scope.newList.filters.metadata, (value, key) => {
-                    $scope.metadataList.push({metaName: key, metaValue: value});
+                    this.metadataList.push({metaName: key, metaValue: value});
                 });
             }
+
+            publisher.queryRoutes().then((routes) => {
+                $scope.routes = routes;
+
+                if ($scope.newList.filters.route && $scope.newList.filters.route.length > 0) {
+                    routes.forEach((item) => {
+                        if ($scope.newList.filters.route.indexOf(item.id + '') !== -1) {
+                            this.selectedRoutes.push(item);
+                        }
+                    });
+                }
+            });
 
             this.changeTab(list.type === 'automatic' ? 'content-list-automatic' : '');
         }
@@ -404,12 +421,18 @@ export function WebPublisherManagerController($scope, publisher, modal) {
         saveListCriteria() {
             var updatedFilters = _.pickBy($scope.newList.filters, _.identity);
 
-            if ($scope.metadataList) {
-                updatedFilters.metadata = {};
-                $scope.metadataList.forEach((item) => {
-                    if (item.metaName) {
-                        updatedFilters.metadata[item.metaName] = item.metaValue;
-                    }
+            updatedFilters.metadata = {};
+            this.metadataList.forEach((item) => {
+                if (item.metaName) {
+                    updatedFilters.metadata[item.metaName] = item.metaValue;
+                }
+            });
+
+            delete updatedFilters.route;
+            if (this.selectedRoutes.length > 0) {
+                updatedFilters.route = [];
+                this.selectedRoutes.forEach((item) => {
+                    updatedFilters.route.push(item.id);
                 });
             }
 
@@ -453,7 +476,7 @@ export function WebPublisherManagerController($scope, publisher, modal) {
          * @description Adds metadata in criteria filters list
          */
         addMetadata() {
-            $scope.metadataList.push({metaName: '', metaValue: ''});
+            this.metadataList.push({metaName: '', metaValue: ''});
         }
 
         /**
@@ -463,7 +486,7 @@ export function WebPublisherManagerController($scope, publisher, modal) {
          * @description Removes metadata from criteria filters list
          */
         removeMetadata(itemIdx) {
-            $scope.metadataList.splice(itemIdx, 1);
+            this.metadataList.splice(itemIdx, 1);
         }
 
         /**
