@@ -176,10 +176,10 @@ export function StageItemListDirective(search, api, superdesk, desks, cards, $ti
             scope.fetchNext = function() {
                 if (!scope.fetching) {
                     if (scope.cacheNextItems.length > 0) {
+                        criteria.source.from = scope.page * criteria.source.size;
                         scope.fetching = true;
                         scope.page += 1;
 
-                        criteria.source.from = scope.page * criteria.source.size;
                         scope.loading = true;
 
                         if (scope.items.length > criteria.source.size) {
@@ -191,7 +191,7 @@ export function StageItemListDirective(search, api, superdesk, desks, cards, $ti
                                 scope.items = scope.items.concat(scope.cacheNextItems);
                             }
                             scope.fetching = false;
-                        }, 100);
+                        }, 200);
 
                         api(getProvider(criteria)).query(criteria)
                         .then((items) => {
@@ -206,11 +206,17 @@ export function StageItemListDirective(search, api, superdesk, desks, cards, $ti
                 }
             };
             scope.fetchPrevious = function() {
-                if (!scope.fetching && scope.page > 2) {
+                if (!scope.fetching && scope.page > 2 && criteria.source.from > 0) {
                     scope.fetching = true;
                     scope.page -= 1;
-                    criteria.source.from = scope.page > 3 ? (scope.page - 3) * criteria.source.size : 0;
                     scope.loading = true;
+
+                    if (scope.page > 3) {
+                        criteria.source.from = (scope.page - 2) * criteria.source.size;
+                    } else {
+                        criteria.source.size *= 2;
+                        criteria.source.from = 0;
+                    }
 
                     if (scope.items.length > criteria.source.size) {
                         scope.cacheNextItems = _.slice(scope.items, criteria.source.size, scope.items.length);
@@ -220,7 +226,7 @@ export function StageItemListDirective(search, api, superdesk, desks, cards, $ti
                     $timeout(() => {
                         scope.items.unshift(...scope.cachePreviousItems);
                         scope.fetching = false;
-                    }, 100)
+                    }, 200)
                     .then($timeout(() => {
                         // when load previous items, scroll back to focus selected item
                         container.scrollTop += scope.cachePreviousItems.length * itemHeight;
