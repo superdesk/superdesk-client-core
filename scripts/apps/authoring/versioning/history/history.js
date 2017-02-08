@@ -14,7 +14,8 @@ function HistoryController($scope, authoring, desks, archiveService) {
                 $scope.stages = desks.deskStages;
                 $scope.users = desks.users;
 
-                archiveService.getVersionHistory($scope.item, desks, 'operations').then((versions) => {
+                archiveService.getVersionHistory($scope.item, desks, 'operations')
+                .then((versions) => {
                     $scope.versions = versions;
                     $scope.last = archiveService.lastVersion($scope.item, $scope.versions);
 
@@ -30,6 +31,10 @@ function HistoryController($scope, authoring, desks, archiveService) {
                             $scope.openVersion($scope.last);
                         }
                     }
+                })
+                .catch((error) => {
+                    $scope.last = null;
+                    $scope.versions = null;
                 });
             });
     }
