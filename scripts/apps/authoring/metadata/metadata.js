@@ -660,7 +660,7 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
             });
 
             scope.openParent = function(term, $event) {
-                var parent = _.find(scope.list, {qcode: term.parent});
+                var parent = _.find(scope.list, {[scope.uniqueField]: term.parent});
 
                 scope.openTree(parent, $event);
             };
@@ -668,7 +668,7 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
             scope.openTree = function(term, $event) {
                 scope.activeTerm = term;
                 scope.termPath.push(term);
-                scope.activeTree = scope.tree[term ? term.qcode : null];
+                scope.activeTree = scope.tree[term ? term[scope.uniqueField] : null];
                 $event.stopPropagation();
                 _.defer(() => {
                     elem.find('button:not([disabled]):not(.dropdown__toggle)')[0].focus();

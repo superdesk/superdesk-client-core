@@ -21,6 +21,18 @@
             <form name="" class="flat">
                 <fieldset class="label-light">
                     <div class="item">
+	                    <label translate>routes</label>
+                        <div sd-meta-terms
+                            class="data"
+                            data-item="webPublisher"
+                            data-field="selectedRoutes"
+                            data-list="routes"
+                            data-unique="id"
+                            data-header="true"
+                            data-reload-list="true">
+                        </div>
+					</div>
+                    <div class="item">
 	                    <label translate>author</label>
                         <div class="multiple" ng-repeat="item in newList.filters.author track by $index">
                             <input type="text" class="line-input" ng-model="newList.filters.author[$index]">
@@ -58,11 +70,11 @@
                     </div>
                     <div class="item">
 	                    <label translate>metadata</label>
-                        <div class="field" ng-if="metadataList.length>0">
+                        <div class="field" ng-if="webPublisher.metadataList.length>0">
                             <label translate>Name</label>
                             <label translate>Value</label>
                         </div>
-                        <div class="multiple" ng-repeat="item in metadataList">
+                        <div class="multiple" ng-repeat="item in webPublisher.metadataList">
                             <input type="text" class="line-input" ng-model="item.metaName">
                             <input type="text" class="line-input" ng-model="item.metaValue">
                             <button
