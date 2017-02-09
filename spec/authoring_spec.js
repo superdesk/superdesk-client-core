@@ -285,7 +285,7 @@ describe('authoring', () => {
         monitoring.actionOnItem('Edit', 0, 0);
         authoring.showHistory();
         expect(authoring.getHistoryItems().count()).toBe(2);
-        expect(authoring.getHistoryItem(1).getText()).toMatch(/Copied to \d+ \(Politic Desk\/Working Stage\) by .*/);
+        expect(authoring.getHistoryItem(1).getText()).toMatch(/Duplicated from .*/);
         authoring.close();
     });
 
