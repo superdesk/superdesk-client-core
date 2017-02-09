@@ -890,7 +890,9 @@ angular.module('superdesk.apps.editor2', [
                     // Both are disabled because it overwrites the `ctrl`+`v` binding
                     // and we need it for the block paste feature
                     forcePlainText: false,
-                    cleanPastedHTML: false
+                    cleanPastedHTML: false,
+                    // SDESK-714 chrome will replace <p/> by <div/>. This line reverts it (SDESK-714)
+                    cleanReplacements: [[new RegExp(/<div.*?>/gi), '<p>'], [new RegExp(/<\/div>/gi), '</p>']],
                 },
                 anchor: {
                     placeholderText: gettextCatalog.getString(
