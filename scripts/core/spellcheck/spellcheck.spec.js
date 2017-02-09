@@ -161,6 +161,23 @@ describe('spellcheck', () => {
         expect(errors).toContain({word: 'foo', index: 1, sentenceWord: true});
     }));
 
+    it('can avoid reporting error if a valid word is in middle of sentence and starts with capital letter',
+        inject((spellcheck, api, $rootScope) => {
+            // Test with existing words in dictionary
+            var p = createParagraph('Foo what, Foo is foo.');
+
+            spellcheck.errors(p).then(assignErrors);
+            $rootScope.$digest();
+            expect(errors.length).toBe(0);
+
+            // now test if valid word, e.g. 'what' in middle of sentence starts with capital letter, i.e. 'What'.
+            p = createParagraph('Foo What, Foo is foo.');
+
+            spellcheck.errors(p).then(assignErrors);
+            $rootScope.$digest();
+            expect(errors.length).toBe(0);
+        }));
+
     it('can suggest', inject((spellcheck, api, $q) => {
         spyOn(api, 'save').and.returnValue($q.when({}));
         spellcheck.suggest('test');

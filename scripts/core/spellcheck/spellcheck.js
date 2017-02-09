@@ -265,13 +265,13 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _) {
      * @return {Boolean}
      */
     function isSpellingMistake(word, sentenceWord) {
-        if (sentenceWord && !isFirstLetterCapital(word)) {
-            return true; // first word in sentence should be capital
-        } else if (sentenceWord && isFirstLetterCapital(word)) {
+        if (isFirstLetterCapital(word)) {
             // first word, maybe it is in dict with capital, maybe not, check both
-            var lowercase = word[0].toLowerCase() + word.slice(1);
+            let lowercase = word[0].toLowerCase() + word.slice(1);
 
             return !wordExistInDict(word) && !wordExistInDict(lowercase);
+        } else if (sentenceWord) {
+            return true;
         }
 
         // check it as it is
