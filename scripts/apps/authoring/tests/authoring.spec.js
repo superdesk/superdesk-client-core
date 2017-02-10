@@ -793,7 +793,7 @@ describe('authoring actions', () => {
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
 
-            allowedActions(itemActions, ['save', 'edit', 'copy', 'spike', 'multi_edit']);
+            allowedActions(itemActions, ['save', 'edit', 'copy', 'spike', 'multi_edit', 'export']);
         }));
 
     it('can perform actions if the item is located on the desk',
@@ -826,7 +826,7 @@ describe('authoring actions', () => {
 
             allowedActions(itemActions, ['new_take', 'save', 'edit', 'duplicate', 'spike', 're_write',
                 'mark_item_for_highlight', 'mark_item_for_desks',
-                'package_item', 'multi_edit', 'publish', 'add_to_current']);
+                'package_item', 'multi_edit', 'publish', 'add_to_current', 'export']);
         }));
 
     it('cannot perform publish if the item is marked for not publication',
@@ -857,7 +857,7 @@ describe('authoring actions', () => {
             var itemActions = authoring.itemActions(item);
 
             allowedActions(itemActions, ['new_take', 'save', 'edit', 'duplicate', 'spike', 're_write',
-                'mark_item_for_highlight', 'package_item', 'multi_edit', 'add_to_current']);
+                'mark_item_for_highlight', 'package_item', 'multi_edit', 'add_to_current', 'export']);
         }));
 
     it('cannot perform publish if the item is highlight package',
@@ -919,7 +919,7 @@ describe('authoring actions', () => {
             var itemActions = authoring.itemActions(item);
 
             allowedActions(itemActions, ['new_take', 'save', 'edit', 'duplicate', 'spike', 're_write',
-                'mark_item_for_highlight', 'package_item', 'multi_edit', 'add_to_current']);
+                'mark_item_for_highlight', 'package_item', 'multi_edit', 'add_to_current', 'export']);
         }));
 
     it('can only view the item if the user does not have desk membership',
@@ -950,7 +950,7 @@ describe('authoring actions', () => {
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
 
-            allowedActions(itemActions, ['view', 're_write', 'new_take']);
+            allowedActions(itemActions, ['view', 're_write', 'new_take', 'export']);
         }));
 
     it('can only view the item if the item is killed',
@@ -978,7 +978,7 @@ describe('authoring actions', () => {
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
 
-            allowedActions(itemActions, ['view']);
+            allowedActions(itemActions, ['view', 'export']);
         }));
 
     it('cannot create an update for a rewritten story ',
@@ -1003,7 +1003,7 @@ describe('authoring actions', () => {
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
 
-            allowedActions(itemActions, ['view', 'package_item', 'multi_edit', 'add_to_current', 'resend']);
+            allowedActions(itemActions, ['view', 'package_item', 'multi_edit', 'add_to_current', 'resend', 'export']);
         }));
 
     it('can only view item if the item is spiked',
@@ -1031,7 +1031,7 @@ describe('authoring actions', () => {
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
 
-            allowedActions(itemActions, ['view', 'unspike']);
+            allowedActions(itemActions, ['view', 'unspike', 'export']);
         }));
 
     it('Cannot perform new take if more coming is true or take is not last take on the desk',
@@ -1061,7 +1061,7 @@ describe('authoring actions', () => {
             var itemActions = authoring.itemActions(item);
 
             allowedActions(itemActions, ['save', 'edit', 'duplicate', 'spike',
-                'mark_item_for_highlight', 'package_item', 'multi_edit', 'publish', 'add_to_current']);
+                'mark_item_for_highlight', 'package_item', 'multi_edit', 'publish', 'add_to_current', 'export']);
 
             item = {
                 _id: 'test',
@@ -1078,7 +1078,7 @@ describe('authoring actions', () => {
 
             itemActions = authoring.itemActions(item);
             allowedActions(itemActions, ['save', 'edit', 'duplicate',
-                'mark_item_for_highlight', 'package_item', 'multi_edit', 'publish', 'add_to_current']);
+                'mark_item_for_highlight', 'package_item', 'multi_edit', 'publish', 'add_to_current', 'export']);
         }));
 
     it('Can perform new take',
@@ -1112,7 +1112,7 @@ describe('authoring actions', () => {
             var itemActions = authoring.itemActions(item);
 
             allowedActions(itemActions, ['new_take', 'save', 'edit', 'duplicate', 'spike', 're_write',
-                'mark_item_for_highlight', 'package_item', 'multi_edit', 'publish', 'add_to_current']);
+                'mark_item_for_highlight', 'package_item', 'multi_edit', 'publish', 'add_to_current', 'export']);
 
             item = {
                 _id: 'test',
@@ -1140,7 +1140,8 @@ describe('authoring actions', () => {
 
             itemActions = authoring.itemActions(item);
             allowedActions(itemActions, ['new_take', 'duplicate', 'view', 'add_to_current',
-                'mark_item_for_highlight', 'package_item', 'multi_edit', 'correct', 'kill', 're_write', 'resend']);
+                'mark_item_for_highlight', 'package_item', 'multi_edit', 'correct', 'kill', 're_write', 'resend',
+                'export']);
         }));
 
     it('Can perform correction or kill on published item',
@@ -1185,7 +1186,7 @@ describe('authoring actions', () => {
 
             allowedActions(itemActions, ['new_take', 'duplicate', 'view', 'add_to_current',
                 'mark_item_for_highlight', 'package_item', 'multi_edit', 'correct', 'kill', 're_write',
-                'create_broadcast', 'resend']);
+                'create_broadcast', 'resend', 'export']);
         }));
 
     it('Can perform resend on rewritten item',
@@ -1230,12 +1231,12 @@ describe('authoring actions', () => {
 
             allowedActions(itemActions, ['new_take', 'duplicate', 'view', 'add_to_current',
                 'mark_item_for_highlight', 'package_item', 'multi_edit', 'correct', 'kill', 're_write',
-                'create_broadcast', 'resend']);
+                'create_broadcast', 'resend', 'export']);
 
             item.archive_item.rewritten_by = 'abc';
             itemActions = authoring.itemActions(item);
             allowedActions(itemActions, ['duplicate', 'view', 'add_to_current', 'mark_item_for_highlight',
-                'package_item', 'multi_edit', 'correct', 'kill', 'create_broadcast', 'resend']);
+                'package_item', 'multi_edit', 'correct', 'kill', 'create_broadcast', 'resend', 'export']);
         }));
 
     it('Cannot perform correction or kill on published item without privileges',
@@ -1278,7 +1279,7 @@ describe('authoring actions', () => {
             var itemActions = authoring.itemActions(item);
 
             allowedActions(itemActions, ['new_take', 'duplicate', 'view', 'add_to_current',
-                'mark_item_for_highlight', 'package_item', 'multi_edit', 're_write', 'resend']);
+                'mark_item_for_highlight', 'package_item', 'multi_edit', 're_write', 'resend', 'export']);
         }));
 
     it('Can only view if the item is not the current version',
@@ -1320,7 +1321,7 @@ describe('authoring actions', () => {
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
 
-            allowedActions(itemActions, ['view']);
+            allowedActions(itemActions, ['view', 'export']);
         }));
 
     it('Can only view, duplicate and deschedule if the item is scheduled',
@@ -1362,7 +1363,7 @@ describe('authoring actions', () => {
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
 
-            allowedActions(itemActions, ['view', 'duplicate', 'deschedule']);
+            allowedActions(itemActions, ['view', 'duplicate', 'deschedule', 'export']);
         }));
 
     it('Can only package if the item is not a take package',
@@ -1406,7 +1407,8 @@ describe('authoring actions', () => {
             var itemActions = authoring.itemActions(item);
 
             allowedActions(itemActions, ['correct', 'kill', 'new_take', 're_write', 'add_to_current',
-                'mark_item_for_highlight', 'duplicate', 'view', 'package_item', 'multi_edit', 'resend']);
+                'mark_item_for_highlight', 'duplicate', 'view', 'package_item', 'multi_edit', 'resend',
+                'export']);
         }));
 
     it('Cannot send item if the version is zero',
@@ -1441,7 +1443,7 @@ describe('authoring actions', () => {
             var itemActions = authoring.itemActions(item);
 
             allowedActions(itemActions, ['save', 'edit', 'duplicate', 'spike', 'add_to_current',
-                'mark_item_for_highlight', 'package_item', 'multi_edit', 'publish']);
+                'mark_item_for_highlight', 'package_item', 'multi_edit', 'publish', 'export']);
         }));
 
     it('Cannot perform new take if the version is zero',
@@ -1476,7 +1478,7 @@ describe('authoring actions', () => {
             var itemActions = authoring.itemActions(item);
 
             allowedActions(itemActions, ['save', 'edit', 'duplicate', 'spike', 'add_to_current',
-                'mark_item_for_highlight', 'package_item', 'multi_edit', 'publish']);
+                'mark_item_for_highlight', 'package_item', 'multi_edit', 'publish', 'export']);
         }));
 
     it('Cannot send item if the no move privileges',
@@ -1511,7 +1513,7 @@ describe('authoring actions', () => {
             var itemActions = authoring.itemActions(item);
 
             allowedActions(itemActions, ['new_take', 'save', 'edit', 'duplicate', 'spike', 'add_to_current',
-                're_write', 'mark_item_for_highlight', 'package_item', 'multi_edit', 'publish']);
+                're_write', 'mark_item_for_highlight', 'package_item', 'multi_edit', 'publish', 'export']);
         }));
 
     it('Can send item if the version greater then zero',
@@ -1546,7 +1548,8 @@ describe('authoring actions', () => {
             var itemActions = authoring.itemActions(item);
 
             allowedActions(itemActions, ['new_take', 'save', 'edit', 'duplicate', 'spike', 'add_to_current',
-                're_write', 'mark_item_for_highlight', 'package_item', 'multi_edit', 'publish', 'send']);
+                're_write', 'mark_item_for_highlight', 'package_item', 'multi_edit', 'publish', 'send',
+                'export']);
         }));
 
     it('Cannot do new take for embargo item.',
@@ -1582,7 +1585,7 @@ describe('authoring actions', () => {
             var itemActions = authoring.itemActions(item);
 
             allowedActions(itemActions, ['save', 'edit', 'duplicate', 'spike', 'add_to_current',
-                'mark_item_for_highlight', 'multi_edit', 'publish', 'send']);
+                'mark_item_for_highlight', 'multi_edit', 'publish', 'send', 'export']);
         }));
 
     it('Cannot do new take for scheduled item.',
@@ -1618,7 +1621,7 @@ describe('authoring actions', () => {
             var itemActions = authoring.itemActions(item);
 
             allowedActions(itemActions, ['save', 'edit', 'duplicate', 'spike', 'add_to_current',
-                'mark_item_for_highlight', 'multi_edit', 'publish', 'send']);
+                'mark_item_for_highlight', 'multi_edit', 'publish', 'send', 'export']);
         }));
 
     it('Can do new take, rewrite and package item for scheduled item after passing publish schedule.',
@@ -1658,7 +1661,7 @@ describe('authoring actions', () => {
             var itemActions = authoring.itemActions(item);
 
             allowedActions(itemActions, ['correct', 'kill', 'duplicate', 'add_to_current', 'new_take', 're_write',
-                'view', 'package_item', 'mark_item_for_highlight', 'multi_edit', 'resend']);
+                'view', 'package_item', 'mark_item_for_highlight', 'multi_edit', 'resend', 'export']);
         }));
 
     it('Create broadcast icon is available for text item.',
@@ -1704,7 +1707,7 @@ describe('authoring actions', () => {
             var itemActions = authoring.itemActions(item);
 
             allowedActions(itemActions, ['duplicate', 'new_take', 're_write', 'mark_item_for_highlight', 'multi_edit',
-                'correct', 'kill', 'package_item', 'view', 'create_broadcast', 'add_to_current', 'resend']);
+                'correct', 'kill', 'package_item', 'view', 'create_broadcast', 'add_to_current', 'resend', 'export']);
         }));
 
     it('Create broadcast icon is available for text item with genre Article.',
@@ -1750,7 +1753,7 @@ describe('authoring actions', () => {
             var itemActions = authoring.itemActions(item);
 
             allowedActions(itemActions, ['duplicate', 'new_take', 're_write', 'mark_item_for_highlight', 'multi_edit',
-                'correct', 'kill', 'package_item', 'view', 'create_broadcast', 'add_to_current', 'resend']);
+                'correct', 'kill', 'package_item', 'view', 'create_broadcast', 'add_to_current', 'resend', 'export']);
         }));
 
     it('Create broadcast icon is not available for broadcast item',
@@ -1802,7 +1805,53 @@ describe('authoring actions', () => {
             var itemActions = authoring.itemActions(item);
 
             allowedActions(itemActions, ['duplicate', 'mark_item_for_highlight', 'multi_edit',
-                'correct', 'kill', 'package_item', 'view', 'add_to_current', 'resend']);
+                'correct', 'kill', 'package_item', 'view', 'add_to_current', 'resend', 'export']);
+        }));
+
+    it('Export action is available for text item.',
+        inject((privileges, authoring, $rootScope) => {
+            var item = {
+                _id: 'test',
+                state: 'in_progress',
+                flags: {marked_for_not_publication: false},
+                type: 'text',
+                task: {
+                    desk: 'desk1'
+                }
+            };
+
+            var userPrivileges = {
+                mark_item: false,
+            };
+
+            privileges.setUserPrivileges(userPrivileges);
+            $rootScope.$digest();
+            var itemActions = authoring.itemActions(item);
+
+            allowedActions(itemActions, ['save', 'edit', 'package_item', 'multi_edit', 'add_to_current', 'export']);
+        }));
+
+    it('Export action is not available for non-text item.',
+        inject((privileges, authoring, $rootScope) => {
+            var item = {
+                _id: 'test',
+                state: 'in_progress',
+                flags: {marked_for_not_publication: false},
+                type: 'composite',
+                task: {
+                    desk: 'desk1'
+                }
+            };
+
+            var userPrivileges = {
+                mark_item: false,
+            };
+
+            privileges.setUserPrivileges(userPrivileges);
+            $rootScope.$digest();
+            var itemActions = authoring.itemActions(item);
+
+            allowedActions(itemActions, ['save', 'edit', 'package_item', 'multi_edit', 'add_to_current']);
         }));
 
     it('takes package is in published state.',
@@ -1934,7 +1983,7 @@ describe('authoring actions', () => {
             var itemActions = authoring.itemActions(item);
 
             allowedActions(itemActions, ['duplicate', 'mark_item_for_highlight', 'multi_edit', 'create_broadcast',
-                'correct', 'kill', 'package_item', 'view', 'add_to_current', 'resend']);
+                'correct', 'kill', 'package_item', 'view', 'add_to_current', 'resend', 'export']);
         }));
 });
 

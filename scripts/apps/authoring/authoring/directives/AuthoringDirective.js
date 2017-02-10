@@ -511,6 +511,19 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 return $rootScope.config.features && $rootScope.config.features.hideLiveSuggestions;
             };
 
+            $scope.openExport = function() {
+                $scope.export = true;
+            };
+
+            $scope.canExport = function() {
+                return $scope.privileges.content_export ? $scope.item.lock_user === session.identity._id &&
+                    $scope.itemActions.export : false;
+            };
+
+            $scope.closeExport = function() {
+                $scope.export = false;
+            };
+
             $scope.useTansaProofing = function() {
                 return $rootScope.config.features && $rootScope.config.features.useTansaProofing;
             };
@@ -725,7 +738,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             };
 
             $scope.previewFormattedEnabled = function() {
-                return !!$rootScope.config.previewFormats;
+                return !!_.get($rootScope.config, 'features.previewFormats');
             };
 
             // call the function to unlock and lock the story for editing.

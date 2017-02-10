@@ -10,7 +10,7 @@
         <div class="formatters">
             <label>{{ :: 'Formatters' | translate }}</label>
             <select ng-model="selectedFormatter">
-                <option value="{{formatter}}" ng-repeat="formatter in formatters">{{:: formatter.name}}</option>
+                <option value="{{formatter}}" ng-repeat="formatter in previewFormatters">{{:: formatter.name}}</option>
             </select>
             <button class="btn btn--primary btn--pull-right" ng-click="format(selectedFormatter)" translate>Format</button>
         </div>
