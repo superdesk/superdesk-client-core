@@ -54,13 +54,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
             scope.loading = false;
             scope.cacheNextItems = [];
             scope.cachePreviousItems = [];
-            scope.limited = !(monitoring.singleGroup || scope.group.type === 'highlights'
-                || scope.group.type === 'spike');
             scope.viewColumn = monitoring.viewColumn;
-
-            if (!_.isNil(scope.forceLimited)) {
-                scope.limited = scope.forceLimited;
-            }
 
             scope.$on('view:column', (event, data) => {
                 scope.$applyAsync(() => {
@@ -79,10 +73,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
             scope.viewSingleGroup = viewSingleGroup;
 
             scope.$watchCollection('group', () => {
-                if (scope.limited) {
-                    updateGroupStyle();
-                }
-
+                updateGroupStyle();
                 queryItems();
             });
 
@@ -129,6 +120,18 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                         scheduleQuery(event, data);
                     }
                 });
+            }
+
+            // Determines if limited maxHeight style need to apply on group list
+            function shouldLimited() {
+                let limited = !(monitoring.singleGroup || scope.group.type === 'highlights'
+                || scope.group.type === 'spike');
+
+                if (!_.isNil(scope.forceLimited)) {
+                    limited = JSON.parse(scope.forceLimited);
+                }
+
+                return limited;
             }
 
             function scheduleIfShouldUpdate(event, data) {
@@ -238,13 +241,13 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
             };
 
             function updateGroupStyle() {
+                scope.style.maxHeight = null;
                 if (scope.viewColumn) {
                     // maxHeight is not applicable for swimlane/column view, as each stages/column
-                    // don't need to have scroll bars/ because container scroll bar of monitoring
+                    // don't need to have scroll bars because container scroll bar of monitoring
                     // view will serve scrolling
-                    scope.style.maxHeight = null;
                     $rootScope.$broadcast('resize:header');
-                } else {
+                } else if (shouldLimited()) {
                     scope.style.maxHeight = (scope.group.max_items || 10) * ITEM_HEIGHT;
                 }
             }
