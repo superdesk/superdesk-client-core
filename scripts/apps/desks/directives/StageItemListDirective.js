@@ -31,8 +31,7 @@ export function StageItemListDirective(search, api, superdesk, desks, cards, $ti
 
             scope.page = 1;
             scope.fetching = false;
-            scope.cacheNextItems = [];
-            scope.cachePreviousItems = [];
+            scope.cache = [];
 
             /**
               * Generates Identifier to be used by track by expression.
@@ -90,8 +89,7 @@ export function StageItemListDirective(search, api, superdesk, desks, cards, $ti
                     .then((items) => {
                         scope.items = items._items;
                         scope.total = items._meta.total;
-
-                        scope.cachePreviousItems = items._items;
+                        scope.cache = items._items;
                         setNextItems(criteria);
                     })
                     .finally(() => {
@@ -159,96 +157,121 @@ export function StageItemListDirective(search, api, superdesk, desks, cards, $ti
             var container = elem[0];
             var offsetY = 0;
             var itemHeight = 0;
+            var lastScrollTop = 0;
 
-            elem.bind('scroll', () => {
-                scope.$apply(() => {
-                    if (container.scrollTop + container.offsetHeight >= container.scrollHeight - 3) {
+            elem.bind('scroll', (event) => {
+                if (scope.fetching) { // ignore scrolling while fetching
+                    event.preventDefault();
+                    return false;
+                }
+
+                if (container.scrollTop + container.offsetHeight >= container.scrollHeight - 3 &&
+                        lastScrollTop < container.scrollTop) {
+                    lastScrollTop = container.scrollTop;
+                    return scope.fetchNext().then(() => {
+                        setFetching();
                         container.scrollTop -= 3;
-                        scope.fetchNext();
-                    }
-                    if (container.scrollTop <= 2) {
+                    });
+                }
+
+                if (container.scrollTop <= 2 && lastScrollTop > container.scrollTop) {
+                    lastScrollTop = container.scrollTop;
+                    return scope.fetchPrevious().then(() => {
+                        setFetching();
                         offsetY = 2 - container.scrollTop;
                         container.scrollTop += offsetY;
-                        scope.fetchPrevious();
-                    }
-                });
-            });
-            scope.fetchNext = function() {
-                if (!scope.fetching) {
-                    if (scope.cacheNextItems.length > 0) {
-                        criteria.source.from = scope.page * criteria.source.size;
-                        scope.fetching = true;
-                        scope.page += 1;
-
-                        scope.loading = true;
-
-                        if (scope.items.length > criteria.source.size) {
-                            scope.cachePreviousItems = _.slice(scope.items, 0, criteria.source.size);
-                            scope.items.splice(0, criteria.source.size);
-                        }
-                        $timeout(() => {
-                            if (!_.isEqual(scope.items, scope.cacheNextItems)) {
-                                scope.items = scope.items.concat(scope.cacheNextItems);
-                            }
-                            scope.fetching = false;
-                        }, 200);
-
-                        api(getProvider(criteria)).query(criteria)
-                        .then((items) => {
-                            scope.cacheNextItems = items._items;
-                        })
-                        .finally(() => {
-                            scope.loading = false;
-                        });
-                    }
-                } else {
-                    return $q.when(false);
+                    });
                 }
-            };
-            scope.fetchPrevious = function() {
-                if (!scope.fetching && scope.page > 2 && criteria.source.from > 0) {
-                    scope.fetching = true;
-                    scope.page -= 1;
-                    scope.loading = true;
+            });
 
-                    if (scope.page > 3) {
-                        criteria.source.from = (scope.page - 2) * criteria.source.size;
-                    } else {
-                        criteria.source.size *= 2;
-                        criteria.source.from = 0;
-                    }
-
-                    if (scope.items.length > criteria.source.size) {
-                        scope.cacheNextItems = _.slice(scope.items, criteria.source.size, scope.items.length);
-                        scope.items.splice(criteria.source.size, scope.items.length - criteria.source.size);
-                    }
-
-                    $timeout(() => {
-                        scope.items.unshift(...scope.cachePreviousItems);
+            /**
+             * This will ignore scrolling for a while, used before we trigger scrolling
+             */
+            function setFetching() {
+                scope.fetching = true;
+                $timeout(() => {
+                    scope.$applyAsync(() => {
                         scope.fetching = false;
-                    }, 200)
-                    .then($timeout(() => {
-                        // when load previous items, scroll back to focus selected item
-                        container.scrollTop += scope.cachePreviousItems.length * itemHeight;
-                    }, 100));
+                    });
+                }, 200, false);
+            }
 
-                    api(getProvider(criteria)).query(criteria)
-                    .then((items) => {
-                        scope.cachePreviousItems = items._items;
-                    })
-                    .finally(() => {
+            /**
+             * Populate items from cache for current from/size values
+             */
+            function sliceItems() {
+                scope.items = scope.cache.slice(criteria.source.from, criteria.source.from + criteria.source.size);
+            }
+
+            /**
+             * Test if we can get items from cache for current from/size values
+             */
+            function hasItemsInCache() {
+                return criteria.source.from + criteria.source.size <= scope.cache.length;
+            }
+
+            /**
+             * Use cache to finish next/prev handling
+             */
+            function useCache() {
+                return $timeout(() => {
+                    scope.$applyAsync(() => { // add apply to avoid full page digest via timeout
+                        sliceItems();
+                        scope.fetching = false;
                         scope.loading = false;
                     });
-                } else {
-                    return $q.when(false);
+                }, 500, false);
+            }
+
+            scope.fetchNext = function() {
+                if (!scope.fetching) {
+                    scope.page += 1;
+                    scope.fetching = scope.loading = true;
+                    criteria.source.from = (scope.page - 1) * criteria.source.size;
+
+                    if (hasItemsInCache()) {
+                        return useCache();
+                    }
+
+                    return api(getProvider(criteria)).query(criteria)
+                        .then(addItemsToCache)
+                        .then(sliceItems)
+                        .finally(() => {
+                            scope.fetching = false;
+                            scope.loading = false;
+                        });
                 }
+
+                return $q.when(false);
             };
+
+            scope.fetchPrevious = function() {
+                if (!scope.fetching && scope.page > 1) {
+                    scope.page -= 1;
+                    scope.fetching = scope.loading = true;
+                    criteria.source.from = (scope.page - 1) * criteria.source.size;
+
+                    if (hasItemsInCache()) { // always true actually
+                        return useCache();
+                    }
+                }
+
+                return $q.when(false);
+            };
+
             function setNextItems(criteria) {
                 criteria.source.from = scope.page * criteria.source.size;
                 return api(getProvider(criteria)).query(criteria)
-                    .then((items) => {
-                        scope.cacheNextItems = items._items;
-                    });
+                    .then(addItemsToCache);
+            }
+
+            /**
+             * Add items to cache and filter out items which are there already
+             */
+            function addItemsToCache(items) {
+                scope.cache = scope.cache.concat(items._items.filter((item) =>
+                    !scope.cache.find((cacheItem) => cacheItem._id === item._id)
+                ));
             }
 
             var UP = -1,
