@@ -180,4 +180,8 @@ angular.module('superdesk.apps.ingest', [
             label: 'Email',
             templateUrl: asset.templateUrl('apps/ingest/views/settings/emailConfig.html')
         });
+        ingestSources.registerFeedingService('wufoo', {
+            label: 'Wufoo Forms',
+            templateUrl: asset.templateUrl('apps/ingest/views/settings/wufoo.html')
+        });
     }]);
