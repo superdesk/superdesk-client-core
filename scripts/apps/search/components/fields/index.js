@@ -23,3 +23,4 @@ export {fetchedDesk} from './fetchedDesk';
 export {priority} from './priority';
 export {urgency} from './urgency';
 export {associations} from './associations';
+export {queueError} from './queueError';
