@@ -104,7 +104,7 @@
         ng-show="_editable"
         ng-if = "itemActions.save && previewFormattedEnabled() && action === 'edit'"
         ng-disabled="save_enabled() && !saveDisabled"
-        sd-hotkey="ctrl+shift+p"
+        sd-hotkey="ctrl+shift+l"
         translate>Preview</button>
 
         <div sd-preview-formatted ng-if="previewFormatted"></div>
@@ -237,16 +237,16 @@
                         <button type="button"
                             ng-click="spellcheckMenu.spellcheck()"
                             ng-disabled="spellcheckMenu.isAuto"
-                            sd-hotkey="ctrl+shift+d">
-                              <span class="shortcut pull-right">Ctrl+Shift+D</span>
+                            sd-hotkey="ctrl+shift+*">
+                              <span class="shortcut pull-right">Ctrl+Shift+*</span>
                               <span translate>Check spelling</span>
                         </button>
                     </li>
                     <li ng-if="useTansaProofing()">
                         <button type="button"
                             ng-click="runTansa()" 
-                            sd-hotkey="ctrl+shift+d">
-                              <span class="shortcut pull-right">Ctrl+Shift+D</span>
+                            sd-hotkey="ctrl+shift+*">
+                              <span class="shortcut pull-right">Ctrl+Shift+*</span>
                               <span translate>Check spelling</span>
                         </button>
                     </li>

@@ -95,7 +95,7 @@ angular.module('superdesk.apps.authoring.find-replace', ['superdesk.apps.authori
                 template: 'scripts/apps/authoring/editor/views/find-replace.html',
                 order: 2,
                 side: 'right',
-                keyboardShortcut: 'ctrl+f',
+                keyboardShortcut: 'ctrl+shift+f',
                 needEditable: true,
                 needUnlock: true,
                 display: {authoring: true, packages: false, killedItem: false, legalArchive: false, archived: false}

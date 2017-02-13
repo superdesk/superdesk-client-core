@@ -1,6 +1,6 @@
 <li ng-class="{active: currentRoute.href === '/workspace'}">
     <a href="#/workspace" ng-click="hideMonitoring(currentRoute.href === '/workspace', $event)"
-       title="{{ :: 'Dashboard' | translate }}" sd-hotkey="alt+h" sd-hotkey-options="{global: true}">
+       title="{{ :: 'Dashboard' | translate }}" sd-hotkey="ctrl+alt+b" sd-hotkey-options="{global: true}">
         <i class="big-icon-dashboard main-icon"></i>
         <i class="big-icon-chevron-left helper-icon"></i>
     </a>
@@ -15,7 +15,7 @@
 <li ng-class="{active: currentRoute.href === '/workspace/highlights'}">
     <div class="dropdown dropdown--dropright dropdown--hover highlights-dropdown"
          title="{{ :: 'Highlights' | translate }}"
-         sd-hotkey="alt+d" sd-hotkey-options="{global: true}" sd-hotkey-callback="highlightsHotkey"
+         sd-hotkey="ctrl+alt+h" sd-hotkey-options="{global: true}" sd-hotkey-callback="highlightsHotkey"
          dropdown sd-package-highlights-dropdown>
     </div>
 </li>
@@ -28,7 +28,7 @@
 </li>
 <li ng-class="{active: currentRoute.href === '/workspace/spike-monitoring'}">
     <a href="#/workspace/spike-monitoring" ng-click="hideMonitoring(currentRoute.href === '/workspace/spike-monitoring', $event)"
-       title="{{ :: 'Spike' | translate }}" sd-hotkey="alt+x" sd-hotkey-options="{global: true}">
+       title="{{ :: 'Spike' | translate }}" sd-hotkey="ctrl+alt+k" sd-hotkey-options="{global: true}">
         <i class="big-icon-spiked main-icon"></i>
         <i class="big-icon-chevron-left helper-icon"></i>
     </a>
@@ -52,7 +52,7 @@
    <div class="dropdown dropdown--dropright dropdown--hover highlights-dropdown" dropdown>
       <a href="#/search" class="dropdown__toggle"
         title="{{ :: 'Search' | translate }}"
-        sd-hotkey="alt+f" sd-hotkey-options="{global: true}"
+        sd-hotkey="ctrl+alt+f" sd-hotkey-options="{global: true}"
         ng-click="hideMonitoring(currentRoute.href === '/search', $event)">
           <i class="big-icon-global-search main-icon"></i>
           <i class="big-icon-chevron-left helper-icon"></i>

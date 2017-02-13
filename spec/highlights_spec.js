@@ -5,7 +5,8 @@ var route = require('./helpers/utils').route,
     authoring = require('./helpers/authoring'),
     workspace = require('./helpers/workspace'),
     highlights = require('./helpers/highlights'),
-    desks = require('./helpers/desks');
+    desks = require('./helpers/desks'),
+    ctrlShiftKey = require('./helpers/utils').ctrlShiftKey;
 
 describe('highlights', () => {
     describe('add highlights configuration:', () => {
@@ -109,6 +110,39 @@ describe('highlights', () => {
 
     describe('mark for highlights in a desk:', () => {
         beforeEach(route('/workspace/monitoring'));
+
+        it('keyboard shortcuts', () => {
+            expect(workspace.getCurrentDesk()).toEqual('POLITIC DESK');
+            monitoring.previewAction(2, 0);
+
+            // trigger keyoard shortcut(ctrl+shift+^) for 'Mark for highlight'
+            ctrlShiftKey('^');
+
+            // focus to next highlight
+            browser.actions().sendKeys(protractor.Key.DOWN)
+            .perform();
+
+            // press enter to mark highlight
+            browser
+            .actions()
+            .sendKeys(protractor.Key.ENTER)
+            .perform();
+
+            // expect 'Highlight three' is marked
+            monitoring.checkMarkedForHighlight('Highlight three', 2, 0);
+
+            // again trigger keyoard shortcut for multimark
+            ctrlShiftKey('^');
+
+            // mark for first focused highlight in monitoring
+            browser
+            .actions()
+            .sendKeys(protractor.Key.ENTER)
+            .perform();
+
+            // expect 'Highlight two' is marked
+            monitoring.checkMarkedForMultiHighlight('Highlight two', 2, 0);
+        });
 
         it('create highlight package', () => {
             // Setup Desk Monitoring Settings

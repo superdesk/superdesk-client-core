@@ -171,8 +171,6 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
             scope.$on('item:fetch', scheduleIfShouldUpdate);
             scope.$on('item:move', scheduleIfShouldUpdate);
 
-            scope.$on('$destroy', unbindActionKeyShortcuts);
-
             scope.$watch('selected', (newVal, oldVal) => {
                 if (!newVal && scope.previewingBroadcast) {
                     scope.previewingBroadcast = false;
@@ -181,15 +179,17 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
 
             /*
              * Change between single stage view and grouped view by keyboard
-             * Keyboard shortcut: Ctrl + g
+             * Keyboard shortcut: Ctrl + alt + j
              */
-            scope.$on('key:ctrl:g', () => {
+            scope.$on('key:ctrl:alt:j', () => {
                 if (scope.selected) {
-                    if (_.isNil(monitoring.singleGroup)) {
-                        monitoring.viewSingleGroup(monitoring.selectedGroup, 'stage');
-                    } else {
-                        monitoring.viewMonitoringHome();
-                    }
+                    scope.$applyAsync(() => {
+                        if (_.isNil(monitoring.singleGroup)) {
+                            monitoring.viewSingleGroup(monitoring.selectedGroup, 'stage');
+                        } else {
+                            monitoring.viewMonitoringHome();
+                        }
+                    });
                 }
             });
 
@@ -214,15 +214,17 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
 
             /*
              * Change between single desk view and grouped view by keyboard
-             * Keyboard shortcut: Ctrl + g
+             * Keyboard shortcut: Ctrl + alt + g
              */
             scope.$on('key:ctrl:alt:g', () => {
                 if (scope.selected) {
-                    if (_.isNil(monitoring.singleGroup)) {
-                        monitoring.viewSingleGroup(monitoring.selectedGroup, 'desk');
-                    } else {
-                        monitoring.viewMonitoringHome();
-                    }
+                    scope.$applyAsync(() => {
+                        if (_.isNil(monitoring.singleGroup)) {
+                            monitoring.viewSingleGroup(monitoring.selectedGroup, 'desk');
+                        } else {
+                            monitoring.viewMonitoringHome();
+                        }
+                    });
                 }
             });
 
@@ -247,76 +249,6 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                 } else if (shouldLimited()) {
                     scope.style.maxHeight = (scope.group.max_items || 10) * ITEM_HEIGHT;
                 }
-            }
-            /*
-             * Bind item actions on keyboard shortcuts
-             * Keyboard shortcuts are defined with actions
-             *
-             * @param {Object} item
-             */
-            function bindActionKeyShortcuts(item) {
-                // First unbind all binded shortcuts
-                if (monitoring.bindedItems.length) {
-                    unbindActionKeyShortcuts();
-                }
-
-                var intent = {action: 'list'};
-
-                superdesk.findActivities(intent, item).forEach((activity) => {
-                    if (activity.keyboardShortcut && workflowService.isActionAllowed(item, activity.action)) {
-                        monitoring.bindedItems.push(
-                            scope.$on('key:' + activity.keyboardShortcut.replace(/\+/g, ':'),
-                            () => {
-                                if (activity._id === 'mark.item') {
-                                    bindMarkItemShortcut();
-                                } else {
-                                    activityService.start(activity, {data: {item: scope.selected}});
-                                }
-                            })
-                        );
-                    }
-                });
-            }
-
-            /*
-             * Bind highlight dropdown action
-             * Keyboard shortcut is defined with action
-             *
-             * @param {Object} item
-             */
-            function bindMarkItemShortcut() {
-                elem.find('.active .more-activity-toggle').click();
-                var highlightDropdown = angular.element('.more-activity-menu.open .dropdown--noarrow');
-
-                highlightDropdown.addClass('open');
-                if (highlightDropdown.find('button').length > 0) {
-                    highlightDropdown.find('button:not([disabled])')[0].focus();
-
-                    keyboardManager.push('up', () => {
-                        highlightDropdown.find('button:focus')
-                            .parent('li')
-                            .prev()
-                            .children('button')
-                            .focus();
-                    });
-                    keyboardManager.push('down', () => {
-                        highlightDropdown.find('button:focus')
-                            .parent('li')
-                            .next()
-                            .children('button')
-                            .focus();
-                    });
-                }
-            }
-
-            /*
-             * Unbind all item actions
-             */
-            function unbindActionKeyShortcuts() {
-                monitoring.bindedItems.forEach((func) => {
-                    func();
-                });
-                monitoring.bindedItems = [];
             }
 
             var queryTimeout;
@@ -363,7 +295,6 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                 scope.selected = item;
                 monitoring.selectedGroup = scope.group;
                 monitoring.preview(item);
-                bindActionKeyShortcuts(item);
             }
 
             function preview(item) {

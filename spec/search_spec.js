@@ -204,8 +204,8 @@ describe('search', () => {
         expect(previewPane.isPresent()).toBe(false);    // DOWN arrow key avoided for opening preview
         browser.actions().sendKeys(protractor.Key.UP).perform();
         expect(previewPane.isPresent()).toBe(false);    // UP arrow key avoided for opening preview
-        // it should not effect global keyboard shortcuts (e.g: 'ctrl+d', 'ctrl+shift+d')
-        // now test 'ctrl+shift+d' shortcut that triggers spell checker when not set to automatic
+        // it should not effect global keyboard shortcuts (e.g: 'ctrl+alt+d', 'ctrl+shift+*')
+        // now test 'ctrl+shift+*' shortcut that triggers spell checker when not set to automatic
         expect(element(by.model('spellcheckMenu.isAuto')).getAttribute('checked')).toBeTruthy();
         authoring.toggleAutoSpellCheck();
         expect(element(by.model('spellcheckMenu.isAuto')).getAttribute('checked')).toBeFalsy();
@@ -215,7 +215,7 @@ describe('search', () => {
         expect(authoring.getBodyText()).toContain('Testhilite');
         expect(authoring.getBodyInnerHtml()).not.toContain('sderror sdhilite');
         // trigger spell checker via keyboard operation
-        browser.actions().sendKeys(protractor.Key.chord(protractor.Key.CONTROL, protractor.Key.SHIFT, 'd')).perform();
+        browser.actions().sendKeys(protractor.Key.chord(protractor.Key.CONTROL, protractor.Key.SHIFT, '*')).perform();
         expect(authoring.getBodyText()).toContain('Testhilite');
         expect(authoring.getBodyInnerHtml()).toContain('sderror sdhilite');
         authoring.save();
