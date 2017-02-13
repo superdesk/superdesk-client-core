@@ -293,10 +293,9 @@ export class ItemList extends React.Component {
                 let distanceOfSelItemFromVisibleTop = $(selectedItemElem[0]).offset().top - $(document).scrollTop() -
                 $(container[0]).offset().top - $(document).scrollTop();
 
-                // If the selected item goes below 95% or above 0.15% of the scrollable height, only then, do something
-                // to make room for out-of-boundary items
-                if (distanceOfSelItemFromVisibleTop >= container[0].clientHeight * 0.95 ||
-                distanceOfSelItemFromVisibleTop <= container[0].clientHeight * 0.15) {
+                // If the selected item goes beyond container view, scroll it to middle.
+                if (distanceOfSelItemFromVisibleTop >= container[0].clientHeight ||
+                    distanceOfSelItemFromVisibleTop < 0) {
                     container.scrollTop(container.scrollTop() + distanceOfSelItemFromVisibleTop -
                     container[0].offsetHeight * 0.5);
                 }
