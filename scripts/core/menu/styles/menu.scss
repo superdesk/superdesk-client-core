@@ -49,7 +49,7 @@
     }
 
     &.test-environment {
-        background: #ff0000;
+        background: #3783a2;
         &:after {
             content: attr(data-text);
             color: black;
