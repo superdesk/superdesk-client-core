@@ -33,6 +33,8 @@ export function SearchService($location, gettext, config, session, multi) {
         {field: 'genre.name', label: gettext('Genre')}
     ];
 
+    var self = this;
+
     this.cvs = config.search_cvs ||
         [{id: 'subject', name: 'Subject', field: 'subject', list: 'subjectcodes'},
     {id: 'companycodes', name: 'Company Codes', field: 'company_codes', list: 'company_codes'}];
@@ -89,6 +91,15 @@ export function SearchService($location, gettext, config, session, multi) {
                 }
             }
         };
+
+        angular.forEach(self.cvs, (cv) => {
+            if (params[cv.id] && cv.field !== cv.id) {
+                var filter = {terms: {}};
+
+                filter.terms[cv.field + '.qcode'] = JSON.parse(params[cv.id]);
+                filters.push(filter);
+            }
+        });
 
         // set the filters for parameters defined in the parameters panel.
         _.each(PARAMETERS, (value, key) => {
