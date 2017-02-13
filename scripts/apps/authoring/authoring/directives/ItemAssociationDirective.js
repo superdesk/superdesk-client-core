@@ -62,12 +62,15 @@ export function ItemAssociationDirective(superdesk, renditions, config, authorin
              * @return {string}
              */
             function getSuperdeskType(event) {
-                return event.originalEvent.dataTransfer.types.find((name) => name.indexOf('application/superdesk') === 0);
+                return event.originalEvent.dataTransfer.types.find(
+                    (name) => name.indexOf('application/superdesk') === 0
+                );
             }
 
             // it should prevent default as long as this is valid image
             elem.on('dragover', (event) => {
                 let superdeskType = getSuperdeskType(event);
+
                 if (MEDIA_TYPES.indexOf(superdeskType) > -1) {
                     event.preventDefault();
                     event.stopPropagation();
@@ -78,7 +81,7 @@ export function ItemAssociationDirective(superdesk, renditions, config, authorin
             elem.on('drop dragdrop', (event) => {
                 event.preventDefault();
                 event.stopPropagation();
-                getItem(event, getSuperdeskType(event));
+                getItem(event, getSuperdeskType(event))
                     .then((item) => {
                         if (!scope.editable) {
                             return;

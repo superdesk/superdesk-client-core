@@ -751,7 +751,9 @@ angular.module('superdesk.apps.editor2', [
                         'text/html'
                     ];
 
-                    let getType = (event) => event.originalEvent.dataTransfer.types.find((_type) => MEDIA_TYPES.indexOf(_type) >= 0);
+                    let getType = (event) => event.originalEvent.dataTransfer.types.find(
+                        (_type) => MEDIA_TYPES.indexOf(_type) >= 0
+                    );
 
                     element.on('drop dragdrop', (event) => {
                         event.preventDefault();
@@ -779,10 +781,8 @@ angular.module('superdesk.apps.editor2', [
                                 // if it's a link (<a>...</a>), create an embed by using iframely
                                 // if not, create an embed based on the item content
                                 const urlMatch = /<a href="(.+?)".+<\/a>/.exec(item);
-                                console.log('match', urlMatch, item);
 
                                 if (urlMatch) {
-                                    console.log('embed url', urlMatch[1]);
                                     return embedService.get(urlMatch[1]).then((data) => ({
                                         blockType: 'embed',
                                         embedType: data.provider_name || EMBED_PROVIDERS.custom,
@@ -794,7 +794,6 @@ angular.module('superdesk.apps.editor2', [
                                         }),
                                     }));
                                 }
-                                console.log('embed html', item);
                                 return {
                                     blockType: 'embed',
                                     embedType: EMBED_PROVIDERS.custom,
@@ -806,8 +805,6 @@ angular.module('superdesk.apps.editor2', [
                                 ctrl.sdEditorCtrl.splitAndInsert(ctrl, block)
                                 .then(() => $timeout(ctrl.sdEditorCtrl.commitChanges));
                             });
-                        } else {
-                            console.log('ignore', mediaType, item);
                         }
                     })
                     .on('dragover', (event) => {

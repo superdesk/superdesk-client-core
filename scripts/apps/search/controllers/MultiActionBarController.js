@@ -127,6 +127,7 @@ export function MultiActionBarController(
         $q.all(multi.getItems().map((item) => authoring.publish(item, item)))
             .then((responses) => {
                 let errors = responses.filter((response) => response.status >= 400);
+
                 if (errors.length) {
                     notify.error('Some items couldn\'t be published.');
                 } else {

@@ -140,6 +140,7 @@ function AnsaMetasearchItem(config, $http, $sce) {
             elem.on('dragstart', (event) => {
                 let dt = event.dataTransfer || event.originalEvent.dataTransfer;
                 let link = document.createElement('a');
+
                 link.href = scope.item.url;
                 link.text = scope.item.title;
                 dt.setData('text/html', link.outerHTML);
@@ -151,7 +152,8 @@ function AnsaMetasearchItem(config, $http, $sce) {
 
             if (scope.item.url.indexOf('https://twitter.com') === 0 && scope.item.url.indexOf('status') > 0) {
                 scope.embed = true;
-                $http.get(config.server.url.replace('api', 'twitter/'), {params: {url: scope.item.url}, omit_script: !firstTwitter})
+                $http.get(config.server.url.replace('api', 'twitter/'),
+                    {params: {url: scope.item.url}, omit_script: !firstTwitter})
                     .then((response) => {
                         scope.html = $sce.trustAsHtml(response.data.html);
                     });
@@ -161,7 +163,9 @@ function AnsaMetasearchItem(config, $http, $sce) {
 
             if (scope.item.url.indexOf('https://www.youtube.com/watch?v=') === 0) {
                 scope.embed = true;
-                scope.iframe = $sce.trustAsResourceUrl(scope.item.url.replace('watch?v=', 'embed/').replace('www.', ''));
+                scope.iframe = $sce.trustAsResourceUrl(
+                    scope.item.url.replace('watch?v=', 'embed/').replace('www.', '')
+                );
                 scope.width = getEmbedWidth(elem);
                 scope.height = Math.floor(scope.width / 3 * 2);
             }
