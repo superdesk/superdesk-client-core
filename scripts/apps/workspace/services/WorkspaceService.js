@@ -10,10 +10,16 @@ export function WorkspaceService(api, desks, session, preferences, $q) {
     this.readActive = readActiveWorkspace;
     this.queryUserWorkspaces = queryUserWorkspaces;
     this.isCustom = isCustom;
+    this.extraItems = [];
+    this.registerExtraItem = registerExtraItem;
 
     var PREFERENCE_KEY = 'workspace:active',
         RESOURCE = 'workspaces',
         self = this;
+
+    function registerExtraItem(item) {
+        this.extraItems.push(item);
+    }
 
     function save(workspace, diff) {
         if (diff) {

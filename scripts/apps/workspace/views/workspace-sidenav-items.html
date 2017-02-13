@@ -75,6 +75,14 @@
     </a>
 </li>
 
+<hr ng-if="extraItems.length > 0"/>
+<li ng-repeat="item in extraItems" ng-class="{active: currentRoute.href === '/' + item.route}">
+    <a href="#/{{ item.route }}" title="{{ item.title }}" ng-click="item.onClick && item.onClick($event)">
+      <i class="{{ item.iconClass }}"></i>
+      <i class="big-icon-chevron-left helper-icon"></i>
+    </a>
+</li>
+
 <!-- this is something like deprecated.. don't add, only remove -->
 <hr ng-if="workspaceConfig.ingest">
 <li ng-if="workspaceConfig.ingest && privileges.ingest"
