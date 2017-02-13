@@ -193,7 +193,7 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
 
         // check if new crop is valid or not.
         if (Object.keys(sizes)) {
-            validCrop = Object.keys(sizes).every((key) => width >= sizes[key].width || height >= sizes[key].height);
+            validCrop = Object.keys(sizes).every((key) => width >= sizes[key].width && height >= sizes[key].height);
         }
 
         if (!validCrop) {
