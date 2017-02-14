@@ -59,7 +59,6 @@
             <label class="authoring-header__item-label uppercase" translate>SLUGLINE</label>
             <div class="authoring-header__input-holder">
               <input type="text"
-                     tansa-scope-sync
                      tabindex="{{editor.slugline.order}}"
                      class="line-input slugline"
                      id="slugline"
@@ -275,7 +274,6 @@
           <div class="authoring-header__input-holder">
               <textarea id="ednote" class="line-input ed-note" 
                         sd-auto-height
-                        tansa-scope-sync
                         tabindex="{{editor.ednote.order}}"
                         ng-model="item.ednote"
                         ng-disabled="!_editable"
