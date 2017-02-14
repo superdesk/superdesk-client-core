@@ -21,7 +21,7 @@
 			<div ng-if="loading" class="loading-overlay" ng-class="{active: loading}" style="opacity: 0.5;"></div>
 			<ul ng-if="!loading" class="pills-list">
 				<li ng-repeat="product in filteredProducts" class="{{testLookup[product._id].matched ? 'match':'no-match'}}">
-					<h6>{{ product.name }}</h6>
+					<h6>{{ product.name }} [{{ product.product_type }}]</h6>
 					<div class="actions">
 						<button ng-click="edit(product)" title="{{:: 'Edit product' | translate }}"><i class="icon-pencil"></i></button>
 					</div>
