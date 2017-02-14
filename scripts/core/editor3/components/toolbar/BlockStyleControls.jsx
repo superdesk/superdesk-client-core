@@ -22,7 +22,7 @@ const BLOCK_TYPES_STYLE = {
  * @name BlockStyleControl
  * @description Blocks style controls (h1, h2, h3, ...)
  */
-const BlockStyleControlsComponent = ({editorState, options, toggleBlockStyle}) => {
+export const BlockStyleControlsComponent = ({editorState, options, toggleBlockStyle}) => {
     const selection = editorState.getSelection();
     const blockType = editorState
         .getCurrentContent()

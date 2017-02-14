@@ -110,7 +110,8 @@ const findPrev = (state) => {
  */
 const setCriteria = (state, {pattern, caseSensitive}) => {
     // If a new pattern is entered, the FindReplaceDirective calls selectNext, so the
-    // index needs to become -1. See apps/authoring/editor/find-replace.js
+    // index needs to become -1. See apps/authoring/editor/find-replace.js.
+    // Otherwise, if only the sensitivity is changed, we reset to 0.
     const index = pattern !== state.searchTerm.pattern ? -1 : 0;
 
     return render({

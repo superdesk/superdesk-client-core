@@ -10,7 +10,7 @@ import * as actions from '../../actions';
  * @param {Object} block Information about the block where this component renders.
  * @description This component renders an image block within the editor.
  */
-class ImageBlockComponent extends Component {
+export class ImageBlockComponent extends Component {
     constructor(props) {
         super(props);
 

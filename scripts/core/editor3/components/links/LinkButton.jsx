@@ -15,7 +15,7 @@ import {connect} from 'react-redux';
  * @description This component holds the link button for the toolbar and the small
  * link editing popover that displays when clicking a link.
  */
-class LinkButtonComponent extends Component {
+export class LinkButtonComponent extends Component {
     constructor(props) {
         super(props);
 
