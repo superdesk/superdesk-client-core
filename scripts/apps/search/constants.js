@@ -44,6 +44,7 @@ export const DEFAULT_LIST_CONFIG = {
         'highlights',
         'markedDesks',
         'associations',
+        'publish_queue_errors',
         'headline',
         'versioncreated'
     ],
@@ -98,7 +99,8 @@ export const CORE_PROJECTED_FIELDS = {
         'source',
         'last_published_version',
         'archived',
-        'associations'
+        'associations',
+        'queue_state'
     ]
 };
 
@@ -119,5 +121,6 @@ export const UI_PROJECTED_FIELD_MAPPINGS = {
     category: 'anpa_category',
     versioncreator: 'version_creator',
     versioncreated: 'versioncreated',
-    markedDesks: 'marked_desks'
+    markedDesks: 'marked_desks',
+    queueError: 'error_message'
 };

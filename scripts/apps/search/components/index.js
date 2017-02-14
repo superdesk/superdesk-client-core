@@ -22,3 +22,4 @@ export {ListItemInfo} from './ListItemInfo';
 export {Item} from './Item';
 export {ItemList} from './ItemList';
 export {Associations} from './Associations';
+export {QueueError} from './QueueError';
