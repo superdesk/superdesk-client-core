@@ -65,14 +65,14 @@ export function SearchTags($location, tags, asset, metadata) {
                 }
 
                 angular.forEach(scope.cvs, (cv) => {
-                    if (param.toLowerCase().indexOf(cv.field) !== -1) {
+                    if (param.indexOf(cv.name) !== -1) {
                         var codeList = scope.metadata[cv.list];
                         var qcode = _.result(_.find(codeList,
                             (code) => code.name === parameterValue || code.qcode === parameterValue), 'qcode');
 
                         if (qcode) {
-                            if (searchParameters[cv.field]) {
-                                tags.removeFacet(cv.field, qcode);
+                            if (searchParameters[cv.id]) {
+                                tags.removeFacet(cv.id, qcode);
                             } else {
                                 searchParameters.q = searchParameters.q
                                     .replace(cv.id + '.qcode:(' + qcode + ')', '')
