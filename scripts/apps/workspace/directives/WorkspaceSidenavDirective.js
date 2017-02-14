@@ -1,11 +1,12 @@
 WorkspaceSidenavDirective.$inject = ['superdeskFlags', '$location', 'Keys', 'gettext', 'config',
-    '$route', 'api', '$filter', '$rootScope'];
+    '$route', 'api', '$filter', '$rootScope', 'workspaces'];
 export function WorkspaceSidenavDirective(superdeskFlags, $location, Keys, gettext, config,
-    $route, api, $filter, $rootScope) {
+    $route, api, $filter, $rootScope, workspaces) {
     return {
         templateUrl: 'scripts/apps/workspace/views/workspace-sidenav-items.html',
         link: function(scope, elem) {
             scope.workspaceConfig = config.workspace || {};
+            scope.extraItems = workspaces.extraItems || [];
 
             /*
              * Function for showing and hiding monitoring list
