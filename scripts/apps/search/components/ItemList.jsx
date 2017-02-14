@@ -10,8 +10,6 @@ export class ItemList extends React.Component {
     constructor(props) {
         super(props);
 
-        const {keyboardManager} = this.props.svc;
-
         this.state = {itemsList: [], itemsById: {}, selected: null, view: 'mgrid', narrow: false};
 
         this.multiSelect = this.multiSelect.bind(this);
@@ -32,8 +30,6 @@ export class ItemList extends React.Component {
         this.modifiedUserName = this.modifiedUserName.bind(this);
         this.setNarrowView = this.setNarrowView.bind(this);
         this.multiSelectCurrentItem = this.multiSelectCurrentItem.bind(this);
-
-        keyboardManager.bind('x', this.multiSelectCurrentItem);
     }
 
     multiSelect(items, selected) {
@@ -226,8 +222,34 @@ export class ItemList extends React.Component {
     handleKey(event) {
         const {scope} = this.props;
         const {Keys, monitoringState} = this.props.svc;
+        const KEY_CODES = Object.freeze({
+            X: 'X'.charCodeAt(0)
+        });
 
         var diff;
+
+        const moveActiveGroup = () => {
+            event.preventDefault();
+            event.stopPropagation();
+            this.select(); // deselect active item
+            scope.$applyAsync(() => {
+                monitoringState.moveActiveGroup(event.keyCode === Keys.pageup ? -1 : 1);
+            });
+        };
+
+        const openItem = () => {
+            if (this.state.selected) {
+                this.edit(this.getSelectedItem());
+            }
+
+            event.stopPropagation();
+        };
+
+        const performMultiSelect = () => {
+            event.preventDefault();
+            event.stopPropagation();
+            this.multiSelectCurrentItem();
+        };
 
         switch (event.keyCode) {
         case Keys.right:
@@ -241,22 +263,17 @@ export class ItemList extends React.Component {
             break;
 
         case Keys.enter:
-            if (this.state.selected) {
-                this.edit(this.getSelectedItem());
-            }
-
-            event.stopPropagation();
-            return;
+            openItem();
+            break;
 
         case Keys.pageup:
         case Keys.pagedown:
-            event.preventDefault();
-            event.stopPropagation();
-            this.select(); // deselect active item
-            scope.$applyAsync(() => {
-                monitoringState.moveActiveGroup(event.keyCode === Keys.pageup ? -1 : 1);
-            });
-            return;
+            moveActiveGroup();
+            break;
+
+        case KEY_CODES.X:
+            performMultiSelect();
+            break;
         }
 
         var highlightSelected = () => {
