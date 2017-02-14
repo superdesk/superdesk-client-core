@@ -148,14 +148,14 @@
                 <div ng-if="type === 'spike'" class="list">
                     <div ng-repeat="group in aggregate.spikeGroups track by group._id | orderBy: name"
                     sd-monitoring-group
-                    class="{singleGroup: aggregate.spikeGroups.length === 1}"
+                    ng-class="{'single-group': aggregate.spikeGroups.length === 1}"
                     data-group="group"
                     data-view-type="'spiked'"
                     data-force-limited="{{ aggregate.spikeGroups.length > 1 }}"
                     ></div>
                 </div>
                 <div ng-if="monitoring.singleGroup && !monitoring.isDeskChanged()" class="list">
-                    <div sd-monitoring-group class="single-group" data-group="monitoring.singleGroup" data-num-items="50" data-view-type="'single_monitoring'">
+                    <div sd-monitoring-group class="single-group" data-group="monitoring.singleGroup" data-view-type="'single_monitoring'">
                     </div>
                 </div>
                 <div ng-if="type === 'personal'" class="list">
