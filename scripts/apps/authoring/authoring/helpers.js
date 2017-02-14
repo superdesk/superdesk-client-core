@@ -93,9 +93,10 @@ export function filterDefaultValues(diff, orig) {
 export function stripHtmlRaw(content) {
     if (content) {
         var elem = document.createElement('div');
+        var htmlRegex = /(<([^>]+)>)/ig;
 
         elem.innerHTML = content;
-        return elem.textContent;
+        return elem.textContent.replace(htmlRegex, '');
     }
     return '';
 }
