@@ -18,9 +18,19 @@
              sd-text-editor-block-embed="block"
              on-block-change="vm.commitChanges()">
         </div>
-        <div ng-switch-when="text"
+        <div ng-if="!!vm.config.spellchecker"
+             ng-switch-when="text"
              sd-text-editor-block-text="block"
              tansa-scope-sync
+             type="vm.type"
+             config="vm.config"
+             language="vm.language"
+             ng-change="vm.commitChanges()"
+             ng-model="block.body">
+        </div>
+        <div ng-if="!!!vm.config.spellchecker"
+             ng-switch-when="text"
+             sd-text-editor-block-text="block"
              type="vm.type"
              config="vm.config"
              language="vm.language"
