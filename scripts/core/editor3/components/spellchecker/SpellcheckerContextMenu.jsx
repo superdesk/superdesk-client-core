@@ -14,7 +14,7 @@ import ng from 'core/services/ng';
  * @description The context menu for correction spellcheck errors. Contains a list of suggestions
  * and 'Add to dictionary' and 'Ignore word' actions.
  */
-class SpellcheckerContextMenuComponent extends Component {
+export class SpellcheckerContextMenuComponent extends Component {
     constructor(props) {
         super(props);
 

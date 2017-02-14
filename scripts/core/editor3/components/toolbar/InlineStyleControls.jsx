@@ -16,7 +16,7 @@ const INLINE_STYLES = {
  * @name InlineStyleControls
  * @description Inline style functional component, will manage the inline style related toolbar buttons
  */
-const InlineStyleControlsComponent = ({options, editorState, toggleInlineStyle}) => {
+export const InlineStyleControlsComponent = ({options, editorState, toggleInlineStyle}) => {
     const currentStyle = editorState.getCurrentInlineStyle();
 
     return (
