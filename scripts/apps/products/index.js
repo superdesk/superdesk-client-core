@@ -31,7 +31,6 @@ export default angular.module('superdesk.apps.products', ['superdesk.apps.users'
 
     .factory('products', ProductsFactory)
 
-    .directive('sdProductsConfig', () => ({controller: ProductsConfigController}))
     .directive('sdProductsConfigModal', () => ({
         templateUrl: 'scripts/apps/products/views/products-config-modal.html'
     }));

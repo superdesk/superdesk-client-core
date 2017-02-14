@@ -16,9 +16,6 @@ export const transmissionTypes = {
         label: 'File',
         templateUrl: 'scripts/apps/publish/views/file-config.html'
     },
-    pull: {
-        label: 'Pull'
-    },
     http_push: {
         label: 'HTTP Push',
         templateUrl: 'scripts/apps/publish/views/http-push-config.html'

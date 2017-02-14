@@ -1,3 +1,20 @@
+/**
+ * @ngdoc directive
+ * @module superdesk.apps.publish
+ * @name sdAdminPubSubscribers
+ * @requires gettext
+ * @requires notify
+ * @requires api
+ * @requires subscribersService
+ * @requires adminPublishSettingsService
+ * @requires modal
+ * @requires metadata
+ * @requires contentFilters
+ * @requires $q
+ * @requires $filter
+ * @requires products
+ * @description SubscribersDirective handles subscriber maintenance.
+ */
 SubscribersDirective.$inject = [
     'gettext', 'notify', 'api', 'subscribersService', 'adminPublishSettingsService', 'modal',
     'metadata', 'contentFilters', '$q', '$filter', 'products'
@@ -14,7 +31,8 @@ export function SubscribersDirective(
             $scope.subscribers = null;
             $scope.newDestination = null;
             $scope.contentFilters = null;
-            $scope.availableProducts = null;
+            $scope.apiProducts = null;
+            $scope.directProducts = null;
             $scope.subTypes = null;
 
             if (angular.isDefined(metadata.values.subscriber_types)) {
@@ -28,33 +46,37 @@ export function SubscribersDirective(
             /**
              * Fetches all subscribers from backend
              */
-            function fetchSubscribers() {
+            const fetchSubscribers = () => {
                 subscribersService.fetchSubscribers().then(
                     (result) => {
                         $scope.subscribers = result;
                     }
                 );
-            }
+            };
 
             /**
              * Fetches content filters from backend and returns the same.
              *
              * @return {*}
              */
-            var fetchProducts = function() {
-                return products.fetchAllProducts().then((items) => {
-                    $scope.availableProducts = items;
+            const fetchProducts = () =>
+                products.fetchAllProducts().then((items) => {
                     $scope.productLookup = [];
                     _.each(items, (item) => {
+                        item.name += ` [${item.product_type || 'both'}]`;
                         $scope.productLookup[item._id] = item;
                     });
+                    $scope.directProducts = _.filter(items, (item) =>
+                        _.includes(['direct', 'both'], item.product_type || 'both'));
+                    $scope.apiProducts = _.filter(items, (item) =>
+                        _.includes(['api', 'both'], item.product_type || 'both'));
                 });
-            };
+
 
             /**
              * Initializes the Global Filters on the selected subscriber.
              */
-            var initGlobalFilters = function() {
+            const initGlobalFilters = () => {
                 if (!$scope.subscriber) {
                     return;
                 }
@@ -75,22 +97,20 @@ export function SubscribersDirective(
              *
              * @return {*}
              */
-            var fetchGlobalContentFilters = function() {
-                return contentFilters.getGlobalContentFilters().then((filters) => {
+            const fetchGlobalContentFilters = () =>
+                contentFilters.getGlobalContentFilters().then((filters) => {
                     $scope.globalFilters = filters;
                 });
-            };
 
             /**
              * Fetch list of publish errors from the backend allowing the user to configure for the selected subscriber.
              *
              * @return {*}
              */
-            function fetchPublishErrors() {
-                return adminPublishSettingsService.fetchPublishErrors().then((result) => {
+            const fetchPublishErrors = () =>
+                adminPublishSettingsService.fetchPublishErrors().then((result) => {
                     $scope.all_errors = result._items[0].all_errors;
                 });
-            }
 
             /**
              * Initializes the new destination object.
@@ -126,9 +146,18 @@ export function SubscribersDirective(
              */
             $scope.save = function() {
                 $scope.subscriber.destinations = $scope.destinations;
-                $scope.subscriber.products = _.map($scope.subscriber.products, '_id');
 
-                api.subscribers.save($scope.origSubscriber, $scope.subscriber)
+                let diff = {};
+
+                _.forOwn($scope.subscriber, (value, key) => {
+                    if (_.includes(['api_products', 'products'], key)) {
+                        diff[key] = _.map(value, '_id');
+                        return;
+                    }
+                    diff[key] = value;
+                });
+
+                api.subscribers.save($scope.origSubscriber, diff)
                     .then(
                         () => {
                             notify.success(gettext('Subscriber saved.'));
@@ -159,7 +188,7 @@ export function SubscribersDirective(
              * user to update the subscriber details.
              */
             $scope.edit = function(subscriber) {
-                var promises = [];
+                let promises = [];
 
                 promises.push(fetchPublishErrors());
                 promises.push(fetchProducts());
@@ -175,13 +204,8 @@ export function SubscribersDirective(
                         $scope.subscriber.is_targetable = true;
                     }
 
-                    $scope.subscriber.products = [];
-                    if ($scope.origSubscriber.products) {
-                        _.each($scope.origSubscriber.products, (p) => {
-                            $scope.subscriber.products.push($scope.productLookup[p]);
-                        });
-                    }
-                    $scope.subscriber.products = $filter('sortByName')($scope.subscriber.products);
+                    initSubscriberProducts('products');
+                    initSubscriberProducts('api_products');
 
                     $scope.subscriber.global_filters = $scope.origSubscriber.global_filters || {};
 
@@ -199,6 +223,21 @@ export function SubscribersDirective(
                     notify.error(gettext('Subscriber could not be initialized!'));
                 });
             };
+
+            /**
+             * Initialize Subscriber Products
+             * @param field
+             */
+            function initSubscriberProducts(field) {
+                $scope.subscriber[field] = [];
+
+                if (_.get($scope.origSubscriber, field)) {
+                    _.each($scope.origSubscriber[field], (p) => {
+                        $scope.subscriber[field].push($scope.productLookup[p]);
+                    });
+                }
+                $scope.subscriber[field] = $filter('sortByName')($scope.subscriber[field]);
+            }
 
             /**
              * Reverts any changes made to the subscriber
