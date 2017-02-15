@@ -2825,6 +2825,10 @@ msgstr ""
 msgid "Headline"
 msgstr ""
 
+#: scripts/core/lang/missing-translations-strings.js:42
+msgid "HEADLINE is too long"
+msgstr ""
+
 #: scripts/apps/users/views/edit-form.html:115
 msgid "Help us translate Superdesk"
 msgstr ""
@@ -5508,6 +5512,10 @@ msgstr ""
 
 #: scripts/apps/authoring/views/authoring-header.html:59
 msgid "SLUGLINE"
+msgstr ""
+
+#: scripts/core/lang/missing-translations-strings.js:42
+msgid "SLUGLINE is too long"
 msgstr ""
 
 #: scripts/apps/archive/related-item-widget/relatedItem-configuration.html:4
