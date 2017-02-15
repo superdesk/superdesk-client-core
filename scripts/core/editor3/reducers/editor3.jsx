@@ -85,6 +85,8 @@ const dragDrop = (state, e) => {
     const img = JSON.parse(data);
     const editorState = addImage(state.editorState, img);
 
+    state.onChangeValue(editorState.getCurrentContent());
+
     return {...state, editorState};
 };
 
