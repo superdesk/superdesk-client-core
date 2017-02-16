@@ -1,5 +1,59 @@
 # Superdesk Client Changelog
 
+## [1.6.0] 2017-02-16
+
+### Fixed
+
+- Fix media captions are checked by Tansa but changes are not saved.
+- Updated translations.
+- Fix missing styles for item preview.
+- Make word counts consistent with server.
+- Fix missing items in monitoring widget.
+- Remove unwanted tags in item headline.
+- Fix scrolling when selecting an item.
+- Fix error in image crops editing when selected are is smaller than rendition.
+- New crop of original image should not be less than crops defined.
+- Keep items selected when going to single desk view and back.
+- Wrap guid in metadata panel.
+- Fix selecting default content profile in authoring.
+- Fix workqueue items not being unlocked after spiking.
+- Disable some widgets when item is spiked.
+- All renditions and metadata updates should be saved together.
+- Disable post button when there is no text in comment form.
+- Use user settings to load locales data.
+- Correct highlight behaviour based on user desk privileges.
+- Fix fetching of items from external source.
+- Cache fetch all queries in desks service.
+- Fix multiselecting when using keyboard shortcut.
+- Fix cursor position issues when editing tables.
+
+### Changed
+
+- Change spike view of desk to show more items.
+- Spellchecker should not mark capitalized words as mistakes.
+- Change initial number of items in single group monitoring to 50.
+- `thinRown` config is now a user preference.
+
+### Added
+
+- New editor based on draft-js (experimental).
+- Let pluggins add items to side nav menu.
+- Display queue errors for published items.
+- Group macros in authoring view.
+- Add desk/stage info to item preview.
+- Add tooltips to associate indicators.
+- Add mark for desk feature.
+- Validate data in routing scheme form.
+- Mark required fields when adding/editing subscriber.
+- Add `ctrl+shift+#` shortcut for spiking an item.
+- Allow config changes without rebuild.
+- Add password-less authentication via jabber.
+- Add remove link to other stories item action.
+- Allow selecting of items via `x` shortcut.
+- Add filter for items with featured media.
+- Add content api token management for subscribers.
+- Allow specific narrow view config when there is both preview and authoring opened.
+
 ## [1.5.2] 2017-01-18
 
 ### Fixed
