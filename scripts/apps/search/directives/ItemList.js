@@ -329,9 +329,11 @@ export function ItemList(
                     }
                 });
 
-                preferencesService.get('singleline:view').then((result) => {
-                    scope.singleLine = result.enabled;
-                });
+                if (config && config.list && config.list.secondLine) {
+                    preferencesService.get('singleline:view').then((result) => {
+                        scope.singleLine = result.enabled === null ? config.list.singleLineView : result.enabled;
+                    });
+                }
 
                 scope.$on('rowview:narrow', () => {
                     listComponent.setNarrowView(true);

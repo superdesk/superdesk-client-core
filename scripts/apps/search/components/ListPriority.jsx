@@ -3,9 +3,11 @@ import classNames from 'classnames';
 import {renderArea} from 'apps/search/helpers';
 
 export function ListPriority(props) {
+    const {config} = props.svc;
+    var reduceRowHeight = props.scope.singleLine || _.get(config, 'list.priority.length') > 1;
     var css = {
         className: classNames('list-field urgency', {
-            'urgency-reduced-rowheight': props.scope.singleLine
+            'urgency-reduced-rowheight': reduceRowHeight
         })
     };
 

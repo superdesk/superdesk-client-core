@@ -8,11 +8,11 @@
  *   themselves.
  */
 UserPreferencesDirective.$inject = ['api', 'session', 'preferencesService', 'notify', 'asset',
-    'metadata', 'desks', 'modal', '$timeout', '$q', 'userList', 'lodash'];
+    'metadata', 'desks', 'modal', '$timeout', '$q', 'userList', 'lodash', 'config'];
 
 export function UserPreferencesDirective(
     api, session, preferencesService, notify, asset, metadata, desks, modal,
-    $timeout, $q, userList, _
+    $timeout, $q, userList, _, config
 ) {
     return {
         templateUrl: asset.templateUrl('apps/users/views/user-preferences.html'),
@@ -135,6 +135,16 @@ export function UserPreferencesDirective(
              */
             scope.articleDefaultsChanged = function(item) {
                 scope.userPrefs.$setDirty();
+            };
+
+
+            scope.showCategory = function(preference) {
+                if (preference.category === 'rows') {
+                    return _.get(config, 'list.secondLine');
+                }
+                let noShowCategories = ['article_defaults', 'categories', 'desks'];
+
+                return _.indexOf(noShowCategories, preference.category) < 0;
             };
 
             /**
