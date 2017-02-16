@@ -110,12 +110,12 @@ export function CardsService(api, search, session, desks, config) {
         if (card.fileType) {
             var termsHighlightsPackage = {and: [
                 {bool: {must: {exists: {field: 'highlight'}}}},
-                {terms: {type: ['composite']}}
+                {term: {type: 'composite'}}
             ]};
 
             var termsTakesPackage = {and: [
                 {term: {package_type: 'takes'}},
-                {term: {type: ['composite']}}
+                {term: {type: 'composite'}}
             ]};
 
             var termsFileType = {terms: {type: JSON.parse(card.fileType)}};
