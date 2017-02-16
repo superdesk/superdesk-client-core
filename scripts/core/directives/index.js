@@ -22,6 +22,8 @@ import './SliderDirective';
 import './UserAvatarDirective';
 import './WithParamsDirective';
 
+import {PhoneHomeModalDirective} from './PhoneHomeModalDirective';
+
 /**
  * @ngdoc module
  * @module superdesk.core.directives
@@ -54,4 +56,7 @@ export default angular.module('superdesk.core.directives', [
     'superdesk.core.directives.slider',
     'superdesk.core.directives.avatar',
     'superdesk.core.directives.withParams'
-]);
+])
+
+.directive('sdPhoneHomeModal', PhoneHomeModalDirective)
+;

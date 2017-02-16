@@ -60,17 +60,7 @@ let core = angular.module('superdesk.core', [
     'superdesk.core.loading',
     'superdesk.core.editor3',
 
-    // services/
-    'superdesk.core.services.beta',
-    'superdesk.core.services.data',
-    'superdesk.core.services.modal',
-    'superdesk.core.services.dragdrop',
-    'superdesk.core.services.server',
-    'superdesk.core.services.entity',
-    'superdesk.core.services.permissions',
-    'superdesk.core.services.storage',
-    'superdesk.core.services.pageTitle',
-
+    'superdesk.core.services',
     'superdesk.core.directives',
 
     'superdesk.templates-cache'
