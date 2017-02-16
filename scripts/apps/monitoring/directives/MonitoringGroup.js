@@ -43,10 +43,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
             var monitoring = ctrls[0];
             var projections = search.getProjectedFields();
 
-            preferencesService.get('singleline:view').then((result) => {
-                ITEM_HEIGHT = result.enabled ? 29 : 57;
-            });
-
+            ITEM_HEIGHT = search.singleLine ? 29 : 57;
             scope.view = 'compact';
             scope.page = 1;
             scope.fetching = false;

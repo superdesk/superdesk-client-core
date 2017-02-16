@@ -18,11 +18,12 @@ import _ from 'lodash';
  * @requires config
  * @requires session
  * @requires multi
+ * @requires preferencesService
  *
  * @description Search Service is responsible for creation and manipulation of Query object
  */
-SearchService.$inject = ['$location', 'gettext', 'config', 'session', 'multi'];
-export function SearchService($location, gettext, config, session, multi) {
+SearchService.$inject = ['$location', 'gettext', 'config', 'session', 'multi', 'preferencesService'];
+export function SearchService($location, gettext, config, session, multi, preferencesService) {
     var sortOptions = [
         {field: 'versioncreated', label: gettext('Updated')},
         {field: 'firstcreated', label: gettext('Created')},
@@ -38,6 +39,24 @@ export function SearchService($location, gettext, config, session, multi) {
     this.cvs = config.search_cvs ||
         [{id: 'subject', name: 'Subject', field: 'subject', list: 'subjectcodes'},
     {id: 'companycodes', name: 'Company Codes', field: 'company_codes', list: 'company_codes'}];
+
+    preferencesService.get('singleline:view').then((result) => {
+        if (result) {
+            // No preference, but global config set
+            if (result.enabled === null && _.get(config, 'list.singleLineView') && _.get(config, 'list.singleLine')) {
+                this.singleLine = true;
+                return;
+            }
+
+            // Preference set, but singleLine not in config
+            if (result.enabled && !_.get(config, 'list.singleLine')) {
+                this.singleLine = false;
+                return;
+            }
+
+            this.singleLine = result.enabled;
+        }
+    });
 
     function getSort() {
         var sort = ($location.search().sort || 'versioncreated:desc').split(':');
@@ -760,5 +779,21 @@ export function SearchService($location, gettext, config, session, multi) {
             }
         });
         return _.union(CORE_PROJECTED_FIELDS.fields, projectedFields);
+    };
+
+    /**
+     * @ngdoc method
+     * @name search#updateSingleLineStatus
+     * @public
+     * @returns {Boolean}
+     * @description updates singleLine value after computation
+     */
+    this.updateSingleLineStatus = function(singleLinePref) {
+        if (singleLinePref && _.get(config, 'list.singleLine')) {
+            self.singleLine = true;
+            return;
+        }
+
+        self.singleLine = false;
     };
 }
