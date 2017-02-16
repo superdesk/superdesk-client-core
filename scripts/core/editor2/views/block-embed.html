@@ -16,6 +16,7 @@
     <div sd-remove-tags
         placeholder="{{::'Description'|translate}}"
         type="text"
+        tansa-scope-sync
         ng-model="vm.caption"
         ng-model-options="{debounce: 1000}"
         ng-change="vm.saveCaption(vm.caption)"
