@@ -77,6 +77,7 @@ export function SearchResults(
 
             scope.previewingBroadcast = false;
             scope.shouldRefresh = true;
+            superdeskFlags.flags.previewing = false;
 
             var criteria = search.query($location.search()).getCriteria(true),
                 oldQuery = _.omit($location.search(), '_id');

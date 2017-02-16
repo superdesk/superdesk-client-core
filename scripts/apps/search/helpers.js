@@ -115,7 +115,7 @@ export function renderArea(area, itemProps, props) {
     var specs = listConfig[area] || [];
 
     // If narrowView configuration is available and also singleline are active
-    if (itemProps.scope.singleLine && area === 'firstLine' && itemProps.narrow && listConfig.narrowView) {
+    if (itemProps.scope.singleLine && itemProps.narrow && listConfig.narrowView) {
         specs = listConfig.narrowView;
     }
 
