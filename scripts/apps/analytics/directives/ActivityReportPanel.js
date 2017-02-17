@@ -112,7 +112,7 @@ export function ActivityReportPanel($location, desks, asset, config, metadata, a
             scope.generate = function() {
                 function onSuccess(activityReport) {
                     $rootScope.$broadcast('view:activity_report', activityReport);
-                    notify.success(gettext('The activity report was genereated successfully'));
+                    notify.success(gettext('The activity report was generated successfully'));
                 }
 
                 function onFail(error) {
