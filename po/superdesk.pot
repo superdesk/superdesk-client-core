@@ -1763,7 +1763,7 @@ msgid "Disconnected from Notification Server!"
 msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.js:40
-msgid "Displaying news ingest statistics. You have ability to switch color themes or graph sources."
+msgid "Displaying news ingest statistics. You have the ability to switch color themes or graph sources."
 msgstr ""
 
 #: scripts/core/keyboard/keyboard.js:406
@@ -1776,7 +1776,7 @@ msgid "Do some admin chores"
 msgstr ""
 
 #: scripts/apps/authoring/views/confirm-media-associated.html:3
-msgid "Do you want to add image to this update?"
+msgid "Do you want to add an image to this update?"
 msgstr ""
 
 #: scripts/apps/archive/index.js:105
@@ -2378,7 +2378,7 @@ msgid "Failed to associate update:"
 msgstr ""
 
 #: scripts/apps/archive/related-item-widget/relatedItem.js:147
-msgid "Failed to associated as take:"
+msgid "Failed to associate as take:"
 msgstr ""
 
 #: scripts/apps/archive/index.js:234
@@ -4011,7 +4011,7 @@ msgid "Online"
 msgstr ""
 
 #: scripts/core/auth/secure-login.html:28
-msgid "Oops! Auhentication has been denied."
+msgid "Oops! Authentication has been denied."
 msgstr ""
 
 #: scripts/core/auth/reset-password.html:27
@@ -5999,7 +5999,7 @@ msgid "The activation token is not valid.<br>"
 msgstr ""
 
 #: scripts/apps/analytics/directives/ActivityReportPanel.js:115
-msgid "The activity report was genereated successfully"
+msgid "The activity report was generated successfully"
 msgstr ""
 
 #: scripts/apps/analytics/directives/SaveActivityReport.js:28
@@ -6055,7 +6055,7 @@ msgid "There is an error. Failed to associate update."
 msgstr ""
 
 #: scripts/apps/archive/related-item-widget/relatedItem.js:149
-msgid "There is an error. Failed to associated as take."
+msgid "There is an error. Failed to associate as take."
 msgstr ""
 
 #: scripts/apps/publish/views/subscribers.html:169
