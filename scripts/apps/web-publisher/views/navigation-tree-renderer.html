@@ -1,0 +1,36 @@
+<div class="listElement">
+    <button class="listElement__icon iconButton" ng-show="data.children.length">
+        <i class="icon-chevron-down-thin" ng-show="!data.closed" ng-click="data.closed = !data.closed"></i>
+        <i class="icon-chevron-right-thin" ng-show="data.closed" ng-click="data.closed = !data.closed"></i>
+    </button>
+    <div class="listElement__content">
+        <div>
+            <span class="profile-label">{{data.label}}</span>
+            <span class="text--bold">{{data.name}}</span>
+        </div>
+        <div>
+            <span class="text--light text--italic">route:</span>
+            <span class="text--lighter">{{data.route && data.route.name}}</span>
+
+            <span class="leftSpace text--light text--italic">URI:</span>
+            <span class="text--bold">{{data.uri}}</span>
+        </div>
+    </div>
+    <div class="listElement__right">
+        <button class="iconButton listElement__icon listElement__icon--active">
+            <i class="icon-ok"></i>
+        </button>
+        <div class="dropdown pull-right" dropdown>
+            <button class="dropdown__toggle" dropdown__toggle>
+                <i class="icon-dots-vertical"></i>
+            </button>
+            <ul class="dropdown__menu more-activity-menu pull-right">
+                <li><button ng-click="webPublisher.editMenu(data)"><i class="icon-pencil"></i>{{:: 'Edit'| translate}}</button></li>
+                <li><button ng-click="webPublisher.removeMenu(data)"><i class="icon-trash"></i>{{:: 'Delete'| translate}}</button></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<ul ng-show="data.children.length && !data.closed">
+    <li ng-repeat="data in data.children" ng-include="webPublisher.TEMPLATES_DIR + '/navigation-tree-renderer.html'"></li>
+</ul>
