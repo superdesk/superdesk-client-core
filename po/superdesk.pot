@@ -1763,7 +1763,7 @@ msgid "Disconnected from Notification Server!"
 msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.js:40
-msgid "Displaying news ingest statistics. You have the ability to switch color themes or graph sources."
+msgid "Displaying news ingest statistics. You can switch color themes or graph sources."
 msgstr ""
 
 #: scripts/core/keyboard/keyboard.js:406
