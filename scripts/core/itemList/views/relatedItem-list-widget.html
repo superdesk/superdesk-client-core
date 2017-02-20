@@ -21,7 +21,7 @@
                             </ul>
                         </div>
                     </div>
-                    
+
                     <div class="basic item-block" ng-click="view(item)">
                         <i sd-filetype-icon data-item="item"></i>
                         <div class="content">
@@ -35,7 +35,7 @@
                             <span class="takekey">{{item.anpa_take_key}}</span>
                             <time sd-datetime data-date="item.versioncreated"></time>
                             <span ng-if="item.takes && item.takes.sequence > 1" class="state-label takes" translate>Takes</span>
-                            <span ng-if="isPublished(item)" class="state-label state-{{item.state}}" translate>{{item.state}}</span>
+                            <span class="state-label state-{{item.state}}" translate>{{item.state | removeLodash}}</span>
                             <span ng-if="item.flags.marked_for_legal" class="state-label legal" translate>Legal</span>
                             <span ng-if="item.flags.marked_for_sms" class="state-label sms" translate>Sms</span>
                             <span ng-if="item.rewritten_by" class="state-label updated" translate>Updated</span>
