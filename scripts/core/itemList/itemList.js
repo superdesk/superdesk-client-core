@@ -85,6 +85,7 @@ angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
                                 } else {
                                     oldSearch = scope.itemListOptions.keyword;
                                     scope.itemListOptions.keyword = scope.options.item.slugline;
+                                    scope.refresh();
                                 }
                             } else {
                                 scope.itemListOptions.keyword = oldSearch || null;
