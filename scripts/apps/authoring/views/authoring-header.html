@@ -59,6 +59,7 @@
             <label class="authoring-header__item-label uppercase" translate>SLUGLINE</label>
             <div class="authoring-header__input-holder">
               <input type="text"
+                     tansa-proofing="false"
                      tabindex="{{editor.slugline.order}}"
                      class="line-input slugline"
                      id="slugline"
@@ -273,6 +274,7 @@
           <label class="authoring-header__item-label" translate>ED. NOTE</label>
           <div class="authoring-header__input-holder">
               <textarea id="ednote" class="line-input ed-note" 
+                        tansa-proofing="false"
                         sd-auto-height
                         tabindex="{{editor.ednote.order}}"
                         ng-model="item.ednote"

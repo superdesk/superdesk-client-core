@@ -3,6 +3,7 @@
     <span ng-if="schema.headline.maxlength" sd-character-count data-item="item.headline" data-html="true" data-limit="schema.headline.maxlength"></span>
     <div id="title" class="headline"
         sd-text-editor
+        tansa-proofing="true"
         data-config="{disableToolbar: true, imageDragging: false, disableReturn: true, disableEditing: isPublished(item), tabindex: editor.headline.order, paste: {cleanPastedHTML: editor.headline.cleanPastedHTML}}"
         data-editorformat="editor.headline.formatOptions"
         data-language="item.language"
@@ -113,6 +114,7 @@
   <label translate>Byline</label>
   <input type="text"
          sd-remove-tags
+         tansa-proofing="false"
          class="byline"
          id="byline"
          ng-model="item.byline"
@@ -130,7 +132,7 @@
     ng-if is used to hide dateline for the template create/edit screen.-->
 <div class="field" ng-show="item._type !== 'archived' && (!template || template.template_type !== 'kill') && schema.dateline" order="{{editor.dateline.order}}" sd-validation-error="error.dateline" data-required="schema.dateline.required" sd-width="{{editor.dateline.sdWidth || 'full'}}">
     <label translate>Dateline</label>
-    <div class="dateline">
+    <div class="dateline" tansa-proofing="false">
         <div sd-meta-locators
              class="dateline-city"
              data-tabindex="editor.dateline.order"
@@ -185,6 +187,7 @@
     <span sd-word-count data-item="item.body_html" data-html="true"></span>
     <div id="bodyhtml"
          sd-text-editor
+         tansa-proofing="true"
          data-config="{disableEditing: isPublished(item), multiBlockEdition: true, tabindex: editor.body_html.order, paste: {cleanPastedHTML: editor.body_html.cleanPastedHTML}}"
          data-editorformat="editor.body_html.formatOptions"
          ng-model="item.body_html"
@@ -248,6 +251,7 @@
   <label translate>Description</label>
   <div id="title" class="abstract"
         sd-text-editor
+        tansa-proofing="true"
         data-config="{disableToolbar: true, disableReturn: true, disableEditing: isPublished(item), tabindex: editor.description_text.order, paste: {cleanPastedHTML: editor.description_text.cleanPastedHTML}}"
         data-editorformat="editor.description_text.formatOptions"
         data-language="item.language"
@@ -298,6 +302,7 @@
     sd-width="{{editor.body_footer.sdWidth || 'full'}}">
     <label translate>Footer</label>
     <div id="body_footer" class="body"
+        tansa-proofing="false"
         sd-text-editor
         data-config="{spellchecker: false, disableToolbar: true, disableEditing: isPublished(item), tabindex: editor.body_footer.order, paste: {cleanPastedHTML: editor.body_footer.cleanPastedHTML}}"
         data-language="item.language"
@@ -334,7 +339,7 @@
   <div sd-package data-item="item" class="composite-preview" ng-if="!_editable"></div>
 </div>
 
-<div class="field pull-left" ng-if="schema.sign_off" order="{{editor.sign_off.order}}" sd-width="{{editor.sign_off.sdWidth || 'full'}}">
+<div class="field pull-left" tansa-proofing="false" ng-if="schema.sign_off" order="{{editor.sign_off.order}}" sd-width="{{editor.sign_off.sdWidth || 'full'}}">
     <label translate>Sign-Off</label>
     <button class="btn btn-signOff" ng-click="changeSignOffEdit()" tabindex="{{editor.sign_off.order}}" title="Unlock edit Sign-Off" ng-if="_editable">
       <i class="icon-lock" ng-hide="editSignOff"></i>
