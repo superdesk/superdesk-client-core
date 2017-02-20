@@ -121,7 +121,10 @@ export function SearchService($location, gettext, config, session, multi) {
                 filters.push({exists: {field: 'associations.featuremedia'}});
                 break;
             case 'subject':
-                filters.push({terms: {'subject.qcode': JSON.parse(params[key])}});
+                filters.push({or: [
+                    {terms: {'subject.qcode': JSON.parse(params[key])}},
+                    {terms: {'subject.parent': JSON.parse(params[key])}}
+                ]});
                 break;
             case 'company_codes':
                 filters.push({terms: {'company_codes.qcode': JSON.parse(params[key])}});
