@@ -432,6 +432,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         action.new_take = this._isNewTake(currentItem);
         action.unlinkTake = this._canUnlinkTake(currentItem);
         action.unlinkUpdate = this._canUnlinkUpdate(currentItem);
+        action.export = currentItem && currentItem.type && currentItem.type === 'text';
 
         // item is published state - corrected, published, scheduled, killed
         if (self.isPublished(currentItem)) {

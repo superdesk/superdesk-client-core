@@ -1263,3 +1263,21 @@ $modalMaxImageHeight : 250px;
         }
     }
 }
+
+.export-modal {
+    .formatters {
+        select {
+            padding: 4px;
+            width: 250px;
+        }
+    }
+    .validator {
+        margin-top: 4px;
+    }
+    .modal-body {
+        overflow: scroll;
+    }
+    .error {
+        color: #b94a48;
+    }
+}

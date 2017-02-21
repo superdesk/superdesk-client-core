@@ -14,9 +14,7 @@ export function PreviewFormattedDirective(api, config, notify, storage) {
 
                 api.save('formatters', {}, {article_id: scope.item._id, formatter_name: formatter.name})
                 .then((item) => {
-                    if (formatter.outputType === 'json') {
-                        scope.formattedItem = JSON.parse(item._id.formatted_doc)[formatter.outputField];
-                    }
+                    scope.formattedItem = item._id.formatted_doc;
                 }, (error) => {
                     if (angular.isDefined(error.data._message)) {
                         notify.error(gettext(error.data._message));
@@ -26,6 +24,11 @@ export function PreviewFormattedDirective(api, config, notify, storage) {
                     scope.loading = false;
                 });
             };
+
+            // Get formatters
+            api.query('formatters', {criteria: 'can_preview'}).then((result) => {
+                scope.previewFormatters = result._items;
+            });
         }
     };
 }

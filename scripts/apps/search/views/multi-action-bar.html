@@ -24,6 +24,10 @@
     </div>
 
     <div class="pull-right" ng-if="type === 'archive'">
+            <button class="navbtn strict" ng-if="activity['export']" ng-click="openExport()" title="{{ :: 'Export' | translate }}">
+            <i class="icon-download"></i>
+            <div sd-export ng-if="export"></div>
+        </button>
         <button class="navbtn strict" ng-if="activity['edit.item']" ng-click="action.multiedit()" title="{{ :: 'Multiedit' | translate }}">
             <i class="big-icon-multiedit"></i>
         </button>

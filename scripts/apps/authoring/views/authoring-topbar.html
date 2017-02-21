@@ -159,6 +159,17 @@
                   </li>
                 </ul>
 
+                <ul ng-if='canExport()'>
+                  <li>
+                    <button type="button"
+                        ng-click="openExport()"
+                        translate>Export
+                        <i class="icon-download-right-thin dropdown__submenu-icon"></i>
+                        <div sd-export ng-if="export"></div>
+                      </button>
+                  </li>
+                </ul>
+
                 <ul ng-if="item.task.desk && (itemActions.mark_item_for_desks || itemActions.mark_item_for_highlight)">
                   <li class="divider"></li>
                   <li><span class="dropdown__menu-label" translate>Mark item for</span></li>
