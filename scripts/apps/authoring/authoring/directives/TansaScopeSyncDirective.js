@@ -22,9 +22,7 @@ export function TansaScopeSyncDirective($rootScope) {
                     return node.value;
                 }
 
-                var txt = $(node).find('.text-editor');
-
-                return _.find(txt, (elem) => $(elem).is(':visible')).innerHTML;
+                return node.innerHTML;
             }
 
             scope.$on('$destroy', deregisterTansa);
