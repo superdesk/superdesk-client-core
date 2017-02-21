@@ -125,14 +125,18 @@ function MacrosController($scope, macros, desks, autosave, $rootScope, storage) 
      */
     function displayMacros(fetchedMacros) {
         $scope.macros = fetchedMacros;
+
         // grouped macros list
-        $scope.groupedMacros = _.groupBy(_.filter($scope.macros, 'group'), 'group');
+        let macrosByGroup = _.groupBy(_.filter($scope.macros, 'group'), 'group');
+
+        $scope.groupedMacros = _.isEmpty(macrosByGroup) ? null : macrosByGroup;
+
         // provide grouping macros list option and prepare list, if group available.
-        if (_.isEmpty($scope.groupedMacros)) {
-            $scope.groupedList = false;
-        } else {
+        if ($scope.groupedMacros) {
             $scope.groupedList = true;
             prepareMacrosList($scope.macros);
+        } else {
+            $scope.groupedList = false;
         }
     }
 
