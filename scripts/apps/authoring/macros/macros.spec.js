@@ -65,7 +65,7 @@ describe('macros', () => {
         expect($rootScope.$broadcast).toHaveBeenCalledWith('macro:diff', diff);
     }));
 
-    it('can provide group list option when group is defined in of macros',
+    it('can provide group list option when group is defined in any of macros',
         inject((macros, $q, autosave, $rootScope) => {
             // when group defined in any of macros
             let groupedMacros = _.groupBy(_.filter(allMacros, 'group'), 'group');
@@ -81,9 +81,9 @@ describe('macros', () => {
             expect($scope.groupedList).toBe(true);
         }));
 
-    it('can hide group list option when group undefined in any of macros',
+    it('can hide group list option when group is undefined in all macros',
         inject((macros, $q, autosave, $rootScope) => {
-            // when no group defined in any macros
+            // consider, when group is not available in all macros
             let withoutGroupMacros = _.filter(allMacros, (o) => o.group === undefined);
 
             let $scope = $rootScope.$new();
@@ -93,7 +93,7 @@ describe('macros', () => {
             $scope.$digest();
 
             expect($scope.macros).toEqual(withoutGroupMacros);
-            expect($scope.groupedMacros).toEqual({});
+            expect($scope.groupedMacros).toBe(null);
             expect($scope.groupedList).toBe(false);
         }));
 });
