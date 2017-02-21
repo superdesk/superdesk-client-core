@@ -6,7 +6,8 @@ module.exports = new Analytics();
 function Analytics() {
     this.reportOperation = element(by.model('activityReport.operation'));
     this.reportDesk = element(by.model('activityReport.desk'));
-    this.reportOperationDate = element(by.id('parameters-operation_date'));
+    this.reportOperationDateStart = element(by.id('parameters-operation_date_start'));
+    this.reportOperationDateEnd = element(by.id('parameters-operation_date_end'));
     this.reportGroupByDesk = element(by.id('activity_report_group_desk'));
     this.reportName = element(by.id('activity_report_name'));
     this.reportDescription = element(by.id('activity_report_description'));
@@ -64,8 +65,12 @@ function Analytics() {
      * Set the operation date
      * @param {string} date_string - the date formatted to string
      **/
-    this.setOperationDate = function(dateString) {
-        this.reportOperationDate.element(by.tagName('input')).sendKeys(dateString);
+    this.setOperationDateStart = function(dateString) {
+        this.reportOperationDateStart.element(by.tagName('input')).sendKeys(dateString);
+    };
+
+    this.setOperationDateEnd = function(dateString) {
+        this.reportOperationDateEnd.element(by.tagName('input')).sendKeys(dateString);
     };
 
     /**
@@ -130,8 +135,14 @@ function Analytics() {
      * Set the urgency
      * @param {integer} urgency
      **/
-    this.setUrgency = function(urgency) {
-        var urgencyElement = element(by.id('parameters-urgency'));
+    this.setUrgencyStart = function(urgency) {
+        var urgencyElement = element(by.id('parameters-urgency-start'));
+
+        urgencyElement.click();
+    };
+
+    this.setUrgencyEnd = function(urgency) {
+        var urgencyElement = element(by.id('parameters-urgency-end'));
 
         urgencyElement.click();
     };
@@ -140,8 +151,14 @@ function Analytics() {
      * Set the priority
      * @param {integer} priority
      **/
-    this.setPriority = function(priority) {
-        var priorityElement = element(by.id('parameters-priority'));
+    this.setPriorityStart = function(priority) {
+        var priorityElement = element(by.id('parameters-priority-start'));
+
+        priorityElement.click();
+    };
+
+    this.setPriorityEnd = function(priority) {
+        var priorityElement = element(by.id('parameters-priority-end'));
 
         priorityElement.click();
     };
@@ -236,8 +253,12 @@ function Analytics() {
     /**
      * Returns the operation date
      **/
-    this.getOperationDate = function() {
-        return this.reportOperationDate.element(by.tagName('input'));
+    this.getOperationDateStart = function() {
+        return this.reportOperationDateStart.element(by.tagName('input'));
+    };
+
+    this.getOperationDateEnd = function() {
+        return this.reportOperationDateEnd.element(by.tagName('input'));
     };
 
     /**
