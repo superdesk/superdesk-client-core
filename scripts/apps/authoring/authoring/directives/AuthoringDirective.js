@@ -114,6 +114,10 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             $scope.proofread = false;
             $scope.referrerUrl = referrer.getReferrerUrl();
 
+            content.getTypes().then(() => {
+                $scope.content_types = content.types;
+            });
+
             /**
              * Get the Desk and Stage for the item.
              */
@@ -752,6 +756,27 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
 
             $scope.isLockedByMe = function() {
                 return lock.isLockedByMe($scope.item);
+            };
+
+            /**
+            * On change content profile the default values from new content profile
+            * will overwrite the current values from item
+            *
+            * @function changeProfile
+            * @param {Object} item - ucurrent edited content items
+            */
+            $scope.changeProfile = function(item) {
+                angular.forEach($scope.content_types, (profile) => {
+                    if (item.profile === profile._id && profile.schema) {
+                        angular.forEach(profile.schema, (schema, key) => {
+                            if (schema && schema.default) {
+                                item[key] = _.cloneDeep(schema.default);
+                            }
+                        });
+                    }
+                });
+
+                $scope.autosave(item);
             };
 
             $scope.autosave = function(item) {

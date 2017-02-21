@@ -10,7 +10,7 @@
         <div ng-if="change_profile">
           <label translate>PROFILE</label>
           <div class="data">
-            <select id="item-profile" ng-model="item.profile" ng-change="autosave(item)" ng-options="type._id as type.label for type in content_types"></select>
+            <select id="item-profile" ng-model="item.profile" ng-change="changeProfile(item)" ng-options="type._id as type.label for type in content_types"></select>
           </div>
         </div>
         <div ng-if="item.type === 'text'">
