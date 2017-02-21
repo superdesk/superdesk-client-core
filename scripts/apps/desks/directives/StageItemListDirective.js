@@ -166,7 +166,7 @@ export function StageItemListDirective(search, api, superdesk, desks, cards, $ti
                 }
 
                 if (container.scrollTop + container.offsetHeight >= container.scrollHeight - 3 &&
-                        lastScrollTop < container.scrollTop) {
+                        lastScrollTop <= container.scrollTop) {
                     lastScrollTop = container.scrollTop;
                     return scope.fetchNext().then(() => {
                         setFetching();
@@ -174,7 +174,7 @@ export function StageItemListDirective(search, api, superdesk, desks, cards, $ti
                     });
                 }
 
-                if (container.scrollTop <= 2 && lastScrollTop > container.scrollTop) {
+                if (container.scrollTop <= 2 && lastScrollTop >= container.scrollTop) {
                     lastScrollTop = container.scrollTop;
                     return scope.fetchPrevious().then(() => {
                         setFetching();
