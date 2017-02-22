@@ -97,7 +97,7 @@ export class ItemList extends React.Component {
     }
 
     selectMultipleItems(lastItem) {
-        const {search, multi} = this.props.svc;
+        const {search} = this.props.svc;
 
         var itemId = search.generateTrackByIdentifier(lastItem),
             positionStart = 0,
@@ -119,7 +119,6 @@ export class ItemList extends React.Component {
             }
         }
 
-        multi.reset();
         this.multiSelect(selectedItems, true);
     }
 
