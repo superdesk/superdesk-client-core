@@ -22,8 +22,11 @@ function MetadataCtrl(
     .then(setAvailableCategories)
     .then(setAvailableCompanyCodes);
 
-    content.getTypes().then(() => {
-        $scope.content_types = content.types;
+    $scope.$watch(() => desks.active.desk, (activeDeskId) => {
+        content.getDeskProfiles(activeDeskId ? desks.getCurrentDesk() : null)
+            .then((profiles) => {
+                $scope.content_types = profiles;
+            });
     });
 
     $scope.processGenre = function() {
