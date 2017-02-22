@@ -55,11 +55,7 @@ export function IngestRoutingFilter() {
                 }
             }
 
-            init();
-
-            scope.$watch('rule', () => {
-                init();
-            });
+            scope.$watch('rule', init);
 
             /**
              * Finds a subset of all content filters whose names contain
