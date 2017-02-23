@@ -54,7 +54,9 @@ function onChange(content) {
     const cleanedContent = clearHighlights(content).content;
     const newValue = stateToHTML(cleanedContent);
 
-    if (this.value && newValue.localeCompare(this.value) == 0) {
+    this.value = this.value || '<p><br></p>';
+    if (newValue.localeCompare(this.value) === 0) {
+        this.value = newValue;
         return;
     }
 
