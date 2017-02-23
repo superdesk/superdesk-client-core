@@ -346,6 +346,10 @@ function Authoring() {
     };
 
     this.getHistoryItems = function() {
+        return element.all(by.repeater('historyItem in historyItems'));
+    };
+
+    this.getVersions = function() {
         return element.all(by.repeater('version in versions'));
     };
 

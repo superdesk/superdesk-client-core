@@ -43,7 +43,7 @@ describe('compare-versions-dropdown directive', () => {
     it('can fetch versions and set current item version queued',
         inject((compareVersions, desks, archiveService, $rootScope, $compile, $q) => {
             spyOn(desks, 'initialize').and.returnValue($q.when());
-            spyOn(archiveService, 'getVersionHistory').and.returnValue($q.when(versions));
+            spyOn(archiveService, 'getVersions').and.returnValue($q.when(versions));
 
             let scope = $rootScope.$new();
 
@@ -53,7 +53,7 @@ describe('compare-versions-dropdown directive', () => {
             scope.$digest();
 
             expect(desks.initialize).toHaveBeenCalled();
-            expect(archiveService.getVersionHistory).toHaveBeenCalledWith(scope.item, desks, 'versions');
+            expect(archiveService.getVersions).toHaveBeenCalledWith(scope.item, desks, 'versions');
 
             expect(compareVersions.versions).toBe(versions);
             expect(scope.items).toBe(versions);
