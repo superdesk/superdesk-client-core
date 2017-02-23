@@ -49,7 +49,7 @@ describe('item association directive', () => {
 
         scope.item.state = 'in_progress';
         event.originalEvent = {dataTransfer: {
-            types: [{type: 'video'}],
+            types: ['video'],
             getData: () => angular.toJson({headline: 'foo', _type: 'externalsource'})
         }};
 
@@ -73,7 +73,7 @@ describe('item association directive', () => {
 
         scope.item.state = 'published';
         event.originalEvent = {dataTransfer: {
-            types: [{type: 'video'}],
+            types: ['video'],
             getData: () => angular.toJson({headline: 'foo', _type: 'externalsource'})
         }};
 
@@ -101,7 +101,7 @@ describe('item association directive', () => {
             };
             scope.item.state = 'in_progress';
             event.originalEvent = {dataTransfer: {
-                types: [{type: 'image'}],
+                types: ['image'],
                 getData: () => angular.toJson({headline: 'foo', _type: 'externalsource'})
             }};
 
