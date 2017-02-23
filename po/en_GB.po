@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
-"PO-Revision-Date: 2017-02-17 14:49+0000\n"
+"PO-Revision-Date: 2017-02-23 11:06+0000\n"
 "Last-Translator: Daniel James <daniel@64studio.com>\n"
 "Language-Team: English (United Kingdom) (http://www.transifex.com/sourcefabric/superdesk/language/en_GB/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1785,9 +1785,9 @@ msgstr "Disconnected from Notification Server!"
 
 #: scripts/core/lang/missing-translations-strings.js:40
 msgid ""
-"Displaying news ingest statistics. You have ability to switch color themes "
-"or graph sources."
-msgstr ""
+"Displaying news ingest statistics. You can switch color themes or graph "
+"sources."
+msgstr "Displaying news ingest statistics. You can switch colour themes or graph sources."
 
 #: scripts/core/keyboard/keyboard.js:406 scripts/core/keyboard/keyboard.js:414
 msgid "Displays active keyboard shortcuts"
@@ -1798,7 +1798,7 @@ msgid "Do some admin chores"
 msgstr "Do some admin chores"
 
 #: scripts/apps/authoring/views/confirm-media-associated.html:3
-msgid "Do you want to add image to this update?"
+msgid "Do you want to add an image to this update?"
 msgstr "Do you want to add an image to this update?"
 
 #: scripts/apps/archive/index.js:105
@@ -2403,7 +2403,7 @@ msgid "Failed to associate update:"
 msgstr "Failed to associate update:"
 
 #: scripts/apps/archive/related-item-widget/relatedItem.js:147
-msgid "Failed to associated as take:"
+msgid "Failed to associate as take:"
 msgstr "Failed to associate as take:"
 
 #: scripts/apps/archive/index.js:234
@@ -4043,8 +4043,8 @@ msgid "Online"
 msgstr "Online"
 
 #: scripts/core/auth/secure-login.html:28
-msgid "Oops! Auhentication has been denied."
-msgstr ""
+msgid "Oops! Authentication has been denied."
+msgstr "Oops! Authentication has been denied."
 
 #: scripts/core/auth/reset-password.html:27
 msgid "Oops! Invalid user Email.<br>Please try again."
@@ -6040,8 +6040,8 @@ msgid "The activation token is not valid.<br>"
 msgstr "The activation token is not valid.<br>"
 
 #: scripts/apps/analytics/directives/ActivityReportPanel.js:115
-msgid "The activity report was genereated successfully"
-msgstr ""
+msgid "The activity report was generated successfully"
+msgstr "The activity report was generated successfully"
 
 #: scripts/apps/analytics/directives/SaveActivityReport.js:28
 msgid "The activity report was saved successfully"
@@ -6098,7 +6098,7 @@ msgid "There is an error. Failed to associate update."
 msgstr "There is an error. Failed to associate update."
 
 #: scripts/apps/archive/related-item-widget/relatedItem.js:149
-msgid "There is an error. Failed to associated as take."
+msgid "There is an error. Failed to associate as take."
 msgstr "There was an error. Failed to associate as take."
 
 #: scripts/apps/publish/views/subscribers.html:169

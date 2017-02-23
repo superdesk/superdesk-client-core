@@ -7,8 +7,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
-"PO-Revision-Date: 2017-02-17 09:10+0000\n"
-"Last-Translator: karelpetrak <karel.petrak@sourcefabric.org>\n"
+"PO-Revision-Date: 2017-02-21 09:29+0000\n"
+"Last-Translator: Daniel James <daniel@64studio.com>\n"
 "Language-Team: Norwegian Bokmål (http://www.transifex.com/sourcefabric/superdesk/language/nb/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1787,9 +1787,9 @@ msgstr "Forbindelse til serveren avbrutt!"
 
 #: scripts/core/lang/missing-translations-strings.js:40
 msgid ""
-"Displaying news ingest statistics. You have ability to switch color themes "
-"or graph sources."
-msgstr "Viser statistikk over importerte elementer. Du kan bytte kilder og farger i grafikken."
+"Displaying news ingest statistics. You can switch color themes or graph "
+"sources."
+msgstr ""
 
 #: scripts/core/keyboard/keyboard.js:406 scripts/core/keyboard/keyboard.js:414
 msgid "Displays active keyboard shortcuts"
@@ -1800,7 +1800,7 @@ msgid "Do some admin chores"
 msgstr "Utføre administrative oppgaver"
 
 #: scripts/apps/authoring/views/confirm-media-associated.html:3
-msgid "Do you want to add image to this update?"
+msgid "Do you want to add an image to this update?"
 msgstr ""
 
 #: scripts/apps/archive/index.js:105
@@ -2405,8 +2405,8 @@ msgid "Failed to associate update:"
 msgstr "Kunne ikke oppdatere"
 
 #: scripts/apps/archive/related-item-widget/relatedItem.js:147
-msgid "Failed to associated as take:"
-msgstr "Failed to associated as take:"
+msgid "Failed to associate as take:"
+msgstr ""
 
 #: scripts/apps/archive/index.js:234
 msgid "Failed to generate new take."
@@ -4045,7 +4045,7 @@ msgid "Online"
 msgstr "Online"
 
 #: scripts/core/auth/secure-login.html:28
-msgid "Oops! Auhentication has been denied."
+msgid "Oops! Authentication has been denied."
 msgstr ""
 
 #: scripts/core/auth/reset-password.html:27
@@ -6042,7 +6042,7 @@ msgid "The activation token is not valid.<br>"
 msgstr "Ugyldig aktiveringskode "
 
 #: scripts/apps/analytics/directives/ActivityReportPanel.js:115
-msgid "The activity report was genereated successfully"
+msgid "The activity report was generated successfully"
 msgstr ""
 
 #: scripts/apps/analytics/directives/SaveActivityReport.js:28
@@ -6100,8 +6100,8 @@ msgid "There is an error. Failed to associate update."
 msgstr "Feilmelding: Kunne ikke registreres som oppdatering."
 
 #: scripts/apps/archive/related-item-widget/relatedItem.js:149
-msgid "There is an error. Failed to associated as take."
-msgstr "There is an error. Failed to associated as take."
+msgid "There is an error. Failed to associate as take."
+msgstr ""
 
 #: scripts/apps/publish/views/subscribers.html:169
 msgid "There is no token for subscriber."
