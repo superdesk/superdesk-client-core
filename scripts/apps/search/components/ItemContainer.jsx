@@ -2,6 +2,7 @@ import React from 'react';
 
 export function ItemContainer(props) {
     const {gettext} = props.svc;
+    const {gettextCatalog} = props.svc;
 
     var item = props.item;
     var desk = props.desk || null;
@@ -10,7 +11,7 @@ export function ItemContainer(props) {
     if (item._type !== 'ingest') {
         if (desk) {
             label = gettext('desk:');
-            value = desk.name;
+            value = item._type !== 'archived' ? desk.name : gettextCatalog.getString('Archived from') + ' ' + desk.name;
         } else if (item._type === 'archive') {
             label = gettext('location:');
             value = gettext('workspace');
