@@ -67,6 +67,8 @@ export function ItemAssociationDirective(superdesk, renditions, config, authorin
                 );
             }
 
+            let dragOverClass = 'dragover';
+
             // it should prevent default as long as this is valid image
             elem.on('dragover', (event) => {
                 let superdeskType = getSuperdeskType(event);
@@ -74,7 +76,14 @@ export function ItemAssociationDirective(superdesk, renditions, config, authorin
                 if (MEDIA_TYPES.indexOf(superdeskType) > -1) {
                     event.preventDefault();
                     event.stopPropagation();
+                    elem.find('figure').addClass(dragOverClass);
+                } else {
+                    elem.find('figure').removeClass(dragOverClass);
                 }
+            });
+
+            elem.on('dragleave', () => {
+                elem.find('figure').removeClass(dragOverClass);
             });
 
             // update item associations on drop
