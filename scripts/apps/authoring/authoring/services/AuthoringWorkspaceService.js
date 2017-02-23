@@ -10,15 +10,15 @@
  * @requires send
  * @requires config
  * @requires suggest
- * @requires preferencesService
+ * @requires search
  * @requires $rootscope
  *
  * @description Authoring Workspace Service is responsible for the actions done on the authoring workspace container
  */
 AuthoringWorkspaceService.$inject = ['$location', 'superdeskFlags', 'authoring', 'lock', 'send', 'config', 'suggest',
-    'preferencesService', '$rootScope'];
+    '$rootScope', 'search'];
 export function AuthoringWorkspaceService($location, superdeskFlags, authoring, lock, send, config, suggest,
-    preferencesService, $rootScope) {
+    $rootScope, search) {
     this.item = null;
     this.action = null;
     this.state = null;
@@ -179,12 +179,8 @@ export function AuthoringWorkspaceService($location, superdeskFlags, authoring, 
     function sendRowViewEvents() {
         let evnt = superdeskFlags.flags.authoring ? 'rowview:narrow' : 'rowview:default';
 
-        if (superdeskFlags.flags.previewing && config.list && config.list.narrowView) {
-            preferencesService.get('singleline:view').then((result) => {
-                if (result.enabled) {
-                    $rootScope.$broadcast(evnt);
-                }
-            });
+        if (superdeskFlags.flags.previewing && search.singleLine && _.get(config, 'list.narrowView')) {
+            $rootScope.$broadcast(evnt);
         }
     }
 
