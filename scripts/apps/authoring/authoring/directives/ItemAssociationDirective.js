@@ -54,19 +54,39 @@ export function ItemAssociationDirective(superdesk, renditions, config, authorin
                 return $q.when(item);
             }
 
+            /**
+             * Get superdesk type for data transfer if any
+             *
+             * @param {Event} event
+             * @return {string}
+             */
+            function getSuperdeskType(event) {
+                return event.originalEvent.dataTransfer.types
+                    .find((name) => name.indexOf('application/superdesk') === 0);
+            }
+
+            let dragOverClass = 'dragover';
+
             // it should prevent default as long as this is valid image
             elem.on('dragover', (event) => {
-                if (MEDIA_TYPES.indexOf(event.originalEvent.dataTransfer.types[0]) > -1) {
+                if (MEDIA_TYPES.indexOf(getSuperdeskType(event)) > -1) {
                     event.preventDefault();
                     event.stopPropagation();
+                    elem.find('figure').addClass(dragOverClass);
+                } else {
+                    elem.find('figure').removeClass(dragOverClass);
                 }
+            });
+
+            elem.on('dragleave', () => {
+                elem.find('figure').removeClass(dragOverClass);
             });
 
             // update item associations on drop
             elem.on('drop dragdrop', (event) => {
                 event.preventDefault();
                 event.stopPropagation();
-                getItem(event, event.originalEvent.dataTransfer.types[0])
+                getItem(event, getSuperdeskType(event))
                     .then((item) => {
                         if (!scope.editable) {
                             return;
