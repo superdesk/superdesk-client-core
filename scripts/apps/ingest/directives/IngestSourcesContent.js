@@ -312,6 +312,11 @@ export function IngestSourcesContent(ingestSources, gettext, notify, api, $locat
                 } else {
                     $scope.provider.config = {};
                 }
+                if ($scope.provider.feeding_service === 'wufoo') {
+                    // TODO(jerome-poisson): temporary hardcoded in client, will move to backend
+                    //                       when SDESK-716 will be fixed
+                    $scope.provider.feed_parser = 'wufoo';
+                }
             };
 
             /**
