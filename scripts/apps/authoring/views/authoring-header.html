@@ -119,11 +119,13 @@
              order="{{editor.place.order}}">
           <label class="authoring-header__item-label" translate>PLACE</label>
           <div class="authoring-header__input-holder">
-            <div sd-meta-dropdown
+            <div sd-meta-terms
                  class="data"
                  data-tabindex="editor.place.order"
                  data-item="item"
                  data-field="place"
+                 data-unique="name"
+                 data-header="true"
                  data-list="metadata.locators"
                  ng-disabled="!_editable"
                  data-change="autosave(item)">

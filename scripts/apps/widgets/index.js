@@ -2,8 +2,21 @@ var _ = require('lodash');
 
 AnsaSemanticsCtrl.$inject = ['$scope', 'api'];
 function AnsaSemanticsCtrl($scope, api) {
-    let save = () => {
-        $scope.item.semantics = this.data;
+    let save = (result) => {
+        $scope.item.semantics = result.semantics;
+
+        if (result.place && _.isEmpty($scope.item.place)) {
+            $scope.item.place = result.place;
+        }
+
+        if (result.subject && _.isEmpty($scope.item.subject)) {
+            $scope.item.subject = result.subject;
+        }
+
+        if (result.slugline && _.isEmpty($scope.item.slugline)) {
+            $scope.item.slugline = result.slugline;
+        }
+
         $scope.autosave($scope.item);
     };
 
@@ -34,12 +47,12 @@ function AnsaSemanticsCtrl($scope, api) {
         abstract: ''
     }).then((result) => {
         this.data = result.semantics;
-        save();
+        save(result);
     });
 
     this.remove = (term, category) => {
         this.data[category] = _.without(this.data[category], term);
-        save();
+        save({semantics: this.data});
     };
 
     init();
