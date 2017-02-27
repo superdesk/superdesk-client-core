@@ -1095,6 +1095,11 @@
         }
     }
 
+    &.dragover {
+      background: $sd-hover;
+      border-color: $sd-blue;
+    }
+
     [contenteditable] {
         padding: 8px;
         min-height: 18px;
