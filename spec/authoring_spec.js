@@ -476,6 +476,65 @@ describe('authoring', () => {
         expect(authoring.multieditButton.isDisplayed()).toBe(false);
     });
 
+    it('Compare versions operations of an opened article via Compare versions menu option', () => {
+        expect(monitoring.getTextItem(2, 0)).toBe('item5');
+        monitoring.actionOnItem('Edit', 2, 0);
+        // Open versions' list with currently opened version as selected by default
+        authoring.openCompareVersionsMenuItem();
+        expect(authoring.getItemVersions().count()).toBe(1);
+        expect(authoring.isSelectedIcon.isDisplayed()).toBe(true);
+
+        // Provide another version on save
+        authoring.writeTextToHeadline('updated ');
+        authoring.save();
+        expect(authoring.getHeadlineText()).toBe('updated item5');
+        authoring.openCompareVersionsMenuItem();
+        expect(authoring.getItemVersions().count()).toBe(2);
+
+        authoring.selectItemVersion(1);
+
+        // Open selected versions in compare-versions screen boards
+        authoring.openCompareVersionsScreen();
+        expect(authoring.getCompareVersionsBoards().count()).toBe(2);
+        expect(authoring.getArticleHeadlineOfBoard(0)).toEqual('updated item5');
+        expect(authoring.getArticleHeadlineOfBoard(1)).toEqual('item5');
+
+        // Close compare-versions screen
+        authoring.closeCompareVersionsScreen();
+        // expect the article should be open on closing compare-versions screen
+        expect(authoring.headline.isDisplayed()).toBe(true);
+        expect(authoring.getHeadlineText()).toBe('updated item5');
+
+        // Update article headline again to get third version
+        authoring.writeTextToHeadline('newly ');
+        authoring.save();
+        expect(authoring.getHeadlineText()).toBe('newly updated item5');
+        authoring.openCompareVersionsMenuItem();
+        expect(authoring.getItemVersions().count()).toBe(3);
+        // select remaining two versions
+        authoring.selectItemVersion(1);
+        authoring.selectItemVersion(2);
+
+        authoring.openCompareVersionsScreen();
+        expect(authoring.getCompareVersionsBoards().count()).toBe(3);
+        expect(authoring.getArticleHeadlineOfBoard(0)).toEqual('newly updated item5');
+        expect(authoring.getArticleHeadlineOfBoard(1)).toEqual('updated item5');
+        expect(authoring.getArticleHeadlineOfBoard(2)).toEqual('item5');
+
+        authoring.openCompareVersionsInnerDropdown(2);
+        authoring.removePanel(2);
+        expect(authoring.getCompareVersionsBoards().count()).toBe(2);
+
+        authoring.openCompareVersionsFloatMenu();
+
+        expect(authoring.getInnerDropdownItemVersions().count()).toBe(1);
+        authoring.openItemVersionInNewBoard(0);
+
+        expect(authoring.getCompareVersionsBoards().count()).toBe(3);
+        authoring.openCompareVersionsFloatMenu();
+        expect(authoring.getInnerDropdownItemVersions().count()).toBe(0);
+    });
+
     it('open publish item with footer text without <br> tag', () => {
         expect(monitoring.getTextItem(2, 0)).toBe('item5');
         monitoring.actionOnItem('Edit', 2, 0);

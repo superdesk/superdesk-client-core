@@ -31,6 +31,8 @@ function Authoring() {
     this.moreActionsButton = element(by.id('more-actions'));
 
     this.multieditButton = element(by.id('multiedit'));
+    this.compareVersionsMenuItem = element(by.id('compare-versions'));
+    this.isSelectedIcon = element(by.className('icon-ok'));
 
     this.setCategoryBtn = element(by.id('category-setting'))
         .element(by.tagName('button'));
@@ -48,6 +50,7 @@ function Authoring() {
     this.publish_panel = element(by.css('#panel-publish:not(.ng-hide)'));
     this.send_panel = element(by.css('#panel-send:not(.ng-hide)'));
     this.fetch_panel = element(by.css('#panel-fetch:not(.ng-hide)'));
+    this.headline = element(by.model('item.headline')).all(by.className('editor-type-html')).first();
 
     /**
      * Find all file type icons in the item's info icons box matching the
@@ -479,7 +482,6 @@ function Authoring() {
     };
 
     var bodyHtml = element(by.model('item.body_html')).all(by.className('editor-type-html')).first();
-    var headline = element(by.model('item.headline')).all(by.className('editor-type-html')).first();
     var abstract = element(by.model('item.abstract')).all(by.className('editor-type-html')).first();
     var bodyFooter = element(by.id('body_footer')).all(by.className('editor-type-html')).first();
     var bodyFooterPreview = element(by.id('body_footer_preview')).all(by.css('[ng-bind-html="html"]')).first();
@@ -491,7 +493,7 @@ function Authoring() {
     };
 
     this.writeTextToHeadline = function(text) {
-        headline.sendKeys(text);
+        this.headline.sendKeys(text);
     };
 
     this.writeTextToAbstract = function(text) {
@@ -544,7 +546,7 @@ function Authoring() {
     };
 
     this.getHeadlineText = function() {
-        return headline.getText();
+        return this.headline.getText();
     };
 
     this.getAbstractText = function() {
@@ -755,5 +757,69 @@ function Authoring() {
         var _list = element(by.css('[data-title="' + group + '"]')).all(by.tagName('UL')).all(by.tagName('LI'));
 
         return _list;
+    };
+
+    this.openCompareVersionsMenuItem = function() {
+        this.moreActionsButton.click();
+        browser.actions().mouseMove(this.compareVersionsMenuItem).perform();
+    };
+
+    this.getItemVersions = function() {
+        return element(by.className('dropdown__menu--compare-versions')).all(by.repeater('item in items'));
+    };
+
+    this.selectItemVersion = function(index) {
+        let versionItem = element(by.className('dropdown__menu--compare-versions'))
+        .all(by.repeater('item in items')).get(index);
+
+        versionItem.element(by.tagName('button')).click();
+    };
+
+    this.openCompareVersionsScreen = function() {
+        this.compareVersionsMenuItem.all(by.css('[ng-click="open(); $event.stopPropagation();"]')).click();
+    };
+
+    this.getCompareVersionsBoards = function() {
+        return element(by.className('boards-list')).all(by.repeater('board in boards'));
+    };
+
+    this.closeCompareVersionsScreen = function() {
+        element.all(by.css('[ng-click="closeScreen()"]')).click();
+    };
+
+    this.getBoard = function(index) {
+        return this.getCompareVersionsBoards().get(index);
+    };
+
+    this.getBoardArticle = function(index) {
+        return this.getBoard(index).all(by.css('[data-article="board.article"]'));
+    };
+
+    this.getArticleHeadlineOfBoard = function(index) {
+        return this.getBoardArticle(index).all(by.className('headline')).first().getText();
+    };
+
+    this.openCompareVersionsInnerDropdown = function(index) {
+        this.getBoard(index).all(by.css('[class="navbtn dropdown"]')).click();
+    };
+
+    this.removePanel = function(index) {
+        this.getBoard(index).all(by.css('[ng-click="closeBoard($index)"]')).click();
+    };
+
+    this.openCompareVersionsFloatMenu = function() {
+        element(by.css('[sd-compare-versions-float-menu]')).click();
+    };
+
+    this.getInnerDropdownItemVersions = function() {
+        return element(by.css('[sd-compare-versions-float-menu]'))
+        .all(by.css('[sd-compare-versions-inner-dropdown]'))
+        .all(by.repeater('item in items'));
+    };
+
+    this.openItemVersionInNewBoard = function(index) {
+        let itemVersion = this.getInnerDropdownItemVersions().get(index);
+
+        itemVersion.all(by.tagName('button')).click();
     };
 }
