@@ -2,7 +2,7 @@ var _ = require('lodash');
 
 class MetasearchController {
 
-    constructor($http, $location, $timeout, config, Keys, workspace) {
+    constructor($scope, $http, $location, $timeout, config, Keys, workspace) {
         this.query = $location.search().query || '';
         this.openSearch = true; // active on start
         this.url = config.server.url.replace('api', 'metasearch') + '/';
@@ -28,14 +28,12 @@ class MetasearchController {
             {_id: 'month', label: 'Last Month'},
         ];
 
-        if (workspace.item && workspace.item.headline) {
-            this.query = workspace.item.headline;
-        }
-
-        this.queryItems = [];
-
-        // init
-        this.search();
+        $scope.$watch(() => workspace.item && workspace.item.headline, (headline, oldHeadline) => {
+            if (!this.query || this.query === oldHeadline) {
+                this.query = headline;
+                this.search();
+            }
+        });
     }
 
     toggle() {
@@ -144,7 +142,15 @@ class MetasearchController {
     }
 }
 
-MetasearchController.$inject = ['$http', '$location', '$timeout', 'config', 'Keys', 'authoringWorkspace'];
+MetasearchController.$inject = [
+    '$scope',
+    '$http',
+    '$location',
+    '$timeout',
+    'config',
+    'Keys',
+    'authoringWorkspace'
+];
 
 function AnsaMetasearchItem(config, $http, $sce) {
     var firstTwitter = true;
