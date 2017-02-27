@@ -77,18 +77,23 @@ function AnsaRelatedCtrl($scope, api) {
                 semantics[key].forEach((val) => {
                     let f = {};
 
-                    f[namespace(key)] = val;
-                    filters.push({term: f});
+                    if (val !== 'ANSA') {
+                        f[namespace(key)] = val;
+                        filters.push({term: f});
+                    }
                 });
             }
         });
 
         let query = {
             bool: {
-                must: {terms: {'semantics.iptcCodes': semantics.iptcCodes.map(lower)}},
+                must: [
+                    {terms: {'semantics.iptcCodes': semantics.iptcCodes.map(lower)}},
+                    {term: {type: 'picture'}},
+                ],
                 must_not: {term: {_id: $scope.item.guid}},
                 should: filters,
-                minimum_should_match: Math.max(1, Math.floor(filters.length / 2))
+                minimum_should_match: 1
             }
         };
 
