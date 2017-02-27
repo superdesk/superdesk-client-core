@@ -245,7 +245,6 @@ function AnsaRelatedCtrl($scope, api) {
         let filters = [];
         let semantics = $scope.item.semantics;
         let keys = ['persons', 'organizations'];
-        let lower = (val) => val.toLowerCase();
         let namespace = (key) => 'semantics.' + key;
 
         keys.forEach((key) => {
@@ -273,7 +272,7 @@ function AnsaRelatedCtrl($scope, api) {
                         bool: {
                             must: {term: {type: 'picture'}},
                             should: filters
-                        }   
+                        }
                     }
                 ]
             }
