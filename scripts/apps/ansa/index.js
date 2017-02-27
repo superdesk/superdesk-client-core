@@ -2,7 +2,7 @@ var _ = require('lodash');
 
 class MetasearchController {
 
-    constructor($http, $location, $timeout, config, Keys) {
+    constructor($http, $location, $timeout, config, Keys, workspace) {
         this.query = $location.search().query || '';
         this.openSearch = true; // active on start
         this.url = config.server.url.replace('api', 'metasearch') + '/';
@@ -27,6 +27,12 @@ class MetasearchController {
             {_id: 'week', label: 'Last Week'},
             {_id: 'month', label: 'Last Month'},
         ];
+
+        if (workspace.item && workspace.item.headline) {
+            this.query = workspace.item.headline;
+        }
+
+        this.queryItems = [];
 
         // init
         this.search();
@@ -122,9 +128,23 @@ class MetasearchController {
             this.updatePagination();
         }, 200);
     }
+
+    filter(term) {
+        if (term) {
+            this.http.get(this.url + '/autocompleter', {params: {q: term}})
+                .then((response) => {
+                    this.queryItems = response.data;
+                });
+        }
+    }
+
+    select(item) {
+        this.query = item;
+        this.search();
+    }
 }
 
-MetasearchController.$inject = ['$http', '$location', '$timeout', 'config', 'Keys'];
+MetasearchController.$inject = ['$http', '$location', '$timeout', 'config', 'Keys', 'authoringWorkspace'];
 
 function AnsaMetasearchItem(config, $http, $sce) {
     var firstTwitter = true;

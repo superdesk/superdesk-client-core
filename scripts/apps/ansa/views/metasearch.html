@@ -4,10 +4,13 @@
             <div class="search-handler">
                 <label for="search-input" class="trigger-icon"
                     ng-click="metasearch.toggle()"><i class="icon-search"></i></label>
-                <input id="search-input" type="text" placeholder="{{ :: 'Search' | translate }}"
-                    sd-autofocus
-                    ng-model="metasearch.query"
-                    ng-keyup="metasearch.search($event)">
+
+                <div id="search-input" sd-typeahead items="metasearch.queryItems" term="metasearch.query" search="metasearch.filter(term)" select="metasearch.select(item)">
+                    <ul>
+                        <li typeahead-item="item" ng-repeat="item in metasearch.queryItems">{{ item }}</li>
+                    </ul>
+                </div>
+
                 <button class="search-close"
                     ng-click="metasearch.reset()"
                     ng-class="{visible: metasearch.query}"><i class="icon-remove-sign"></i></button>
