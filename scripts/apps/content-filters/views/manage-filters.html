@@ -27,7 +27,7 @@
         </div>
     </div>
 
-    <div sd-modal data-model="contentFilter" class="content-filter-modal modal-large">
+    <div sd-modal data-model="contentFilter" data-close="close()" class="content-filter-modal modal-large">
         <div class="modal-header"> <a href="" class="close" ng-click="close()"><i class="icon-close-small"></i></a>
             <h3 ng-show="contentFilter._id"><span translate>Edit Content Filter</span> <span>"{{:: origContentFilter.name }}"</span></h3>
             <h3 translate ng-hide="contentFilter._id">Add New Content Filter</h3>

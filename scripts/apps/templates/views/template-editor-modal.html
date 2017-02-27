@@ -1,4 +1,4 @@
-<div sd-modal data-model="template" class="modal-huge template-editor-modal">
+<div sd-modal data-model="template" data-close="cancel()" class="modal-huge template-editor-modal">
     <div class="modal-header"> <a href="" class="close" ng-click="cancel()"><i class="icon-close-small"></i></a>
         <h3 ng-show="template._id">{{ :: 'Edit Template'}}: <span>{{ origTemplate.template_name}}</span></h3>
         <h3 ng-hide="template._id" translate>Add New Template</h3>

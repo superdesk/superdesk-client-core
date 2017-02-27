@@ -45,7 +45,7 @@ export default angular.module('superdesk.core.services.modal', ['ui.bootstrap', 
         return {
             template: '',
             transclude: true,
-            scope: {model: '=', onClose: '&'},
+            scope: {model: '=', close: '&'},
             link: function modalLinkFunction(scope, element, attrs, ctrl, transcludeFn) {
                 let modalElem;
 
@@ -70,19 +70,7 @@ export default angular.module('superdesk.core.services.modal', ['ui.bootstrap', 
                                 // reset model if needed
                                 if (scope.model) {
                                     scope.$applyAsync(() => {
-                                        scope.onClose(); // first try handler
-                                        scope.$applyAsync(() => {
-                                            // didn't work out, do it manually
-                                            // if there is '.' in model just set it and it should work,
-                                            // but otherwise use $parent as workaround
-                                            if (scope.model && attrs.model.indexOf('.') > -1) {
-                                                scope.model = null;
-                                            } else if (scope.model) {
-                                                scope.$parent.$applyAsync(() => {
-                                                    scope.$parent[attrs.model] = null;
-                                                });
-                                            }
-                                        });
+                                        scope.close();
                                     });
                                 }
                             });
