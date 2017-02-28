@@ -70,7 +70,7 @@ export function MonitoringController($rootScope, $location, desks, storage, conf
         let evnt = item ? 'rowview:narrow' : 'rowview:default';
 
         if (!_.isNil(self.previewItem)) {
-            self.showHistoryTab = self.previewItem.state !== 'ingested';
+            self.showHistoryTab = self.previewItem.state !== 'ingested' && self.previewItem._type !== 'archived';
         }
 
         if (!item) {

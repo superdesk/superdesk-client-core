@@ -196,7 +196,7 @@ describe('authoring', () => {
         monitoring.actionOnItem('Edit', 3, 2);
         authoring.showHistory();
         expect(authoring.getHistoryItems().count()).toBe(1);
-        expect(authoring.getHistoryItem(0).getText()).toMatch(/Fetched as \d+ to Politic Desk\/two by.*/);
+        expect(authoring.getHistoryItem(0).getText()).toMatch(/Fetched by first name last name Today/);
         authoring.close();
 
         // view item history move operation
@@ -214,14 +214,14 @@ describe('authoring', () => {
         monitoring.actionOnItem('Edit', 3, 0);
         authoring.showHistory();
         expect(authoring.getHistoryItems().count()).toBe(3);
-        expect(authoring.getHistoryItem(2).getText()).toMatch(/Moved to Politic Desk\/two by .*/);
+        expect(authoring.getHistoryItem(2).getText()).toMatch(/Moved by first name last name Today/);
         authoring.close();
 
         // view item history editable for newly created unsaved item
         authoring.createTextItem();
         authoring.showHistory();
         expect(authoring.getHistoryItems().count()).toBe(1);
-        expect(authoring.getHistoryItem(0).getText()).toMatch(/Story \d+ (.*) Created by.*/);
+        expect(authoring.getHistoryItem(0).getText()).toMatch(/Created by first name last name Today/);
         expect(authoring.save_button.isDisplayed()).toBe(true);
         authoring.getHistoryItem(0).click();
         expect(authoring.save_button.isDisplayed()).toBe(true); // expect save button still available
@@ -234,7 +234,7 @@ describe('authoring', () => {
         authoring.save();
         authoring.showHistory();
         expect(authoring.getHistoryItems().count()).toBe(2);
-        expect(authoring.getHistoryItem(0).getText()).toMatch(/Story \d+ (.*) Created by.*/);
+        expect(authoring.getHistoryItem(0).getText()).toMatch(/Created by first name last name Today/);
         expect(authoring.getHistoryItem(1).getText()).toMatch(/Updated by.*/);
         authoring.save();
         authoring.close();
@@ -250,9 +250,10 @@ describe('authoring', () => {
         monitoring.filterAction('takesPackage');
         monitoring.actionOnItem('Open', 5, 0);
         authoring.showHistory();
-        expect(authoring.getHistoryItems().count()).toBe(1);
-        expect(authoring.getHistoryItem(0).getText()).toMatch(/Published by.*/);
-        var transmissionDetails = authoring.showTransmissionDetails(0);
+        expect(authoring.getHistoryItems().count()).toBe(2);
+        expect(authoring.getHistoryItem(0).getText()).toMatch(/Created by.*/);
+        expect(authoring.getHistoryItem(1).getText()).toMatch(/Published by.*/);
+        var transmissionDetails = authoring.showTransmissionDetails(1);
 
         expect(transmissionDetails.count()).toBe(1);
         transmissionDetails.get(0).click();
@@ -274,8 +275,8 @@ describe('authoring', () => {
         monitoring.actionOnItem('Edit', 1, 0);
         authoring.showHistory();
         expect(authoring.getHistoryItems().count()).toBe(3);
-        expect(authoring.getHistoryItem(1).getText()).toMatch(/Spiked from Politic Desk\/one by .*/);
-        expect(authoring.getHistoryItem(2).getText()).toMatch(/Unspiked to Politic Desk\/Incoming Stage by .*/);
+        expect(authoring.getHistoryItem(1).getText()).toMatch(/Spiked by first name last name Today/);
+        expect(authoring.getHistoryItem(2).getText()).toMatch(/Unspiked by first name last name Today/);
         authoring.close();
 
         // view item history duplicate operation
@@ -285,7 +286,7 @@ describe('authoring', () => {
         monitoring.actionOnItem('Edit', 0, 0);
         authoring.showHistory();
         expect(authoring.getHistoryItems().count()).toBe(2);
-        expect(authoring.getHistoryItem(1).getText()).toMatch(/Duplicated from .*/);
+        expect(authoring.getHistoryItem(1).getText()).toMatch(/Duplicated by/);
         authoring.close();
     });
 

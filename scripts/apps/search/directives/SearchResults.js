@@ -445,7 +445,8 @@ export function SearchResults(
                 scope.shouldRefresh = false; // prevents $routeUpdate to refresh, just on preview changes.
 
                 if (!_.isNil(scope.selected.preview)) {
-                    scope.showHistoryTab = scope.selected.preview.state !== 'ingested';
+                    scope.showHistoryTab = scope.selected.preview.state !== 'ingested' &&
+                    scope.selected.preview._type !== 'archived';
                     superdeskFlags.flags.previewing = true;
                     sendRowViewEvents(item);
                 }

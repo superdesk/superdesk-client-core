@@ -105,14 +105,14 @@ export function ArchiveService(desks, session, api, $q, search, $location, confi
     };
 
     /** *
-     * Returns version history of the item.
+     * Returns versions of the item.
      *
      * @param {Object} item
      * @param {Object} desks deskService
-     * @param {String} historyType one of versions, operations
+     * @param {String} versionType one of versions, operations
      * @return list of object where each object is a version of the item
      */
-    this.getVersionHistory = function(item, desks, historyType) {
+    this.getVersions = function(item, desks, versionType) {
         if (this.isLegal(item)) {
             return api.find('legal_archive', item._id, {version: 'all', max_results: 200})
                 .then((result) => {
@@ -128,9 +128,9 @@ export function ArchiveService(desks, session, api, $q, search, $location, confi
                         }
                     });
 
-                    if (historyType === 'versions') {
+                    if (versionType === 'versions') {
                         return $q.when(_.sortBy(_.reject(result._items, {version: 0}), '_current_version').reverse());
-                    } else if (historyType === 'operations') {
+                    } else if (versionType === 'operations') {
                         return $q.when(_.sortBy(result._items, '_current_version'));
                     }
                 });
@@ -164,9 +164,9 @@ export function ArchiveService(desks, session, api, $q, search, $location, confi
                     }
                 });
 
-                if (historyType === 'versions') {
+                if (versionType === 'versions') {
                     return $q.when(_.sortBy(_.reject(result._items, {version: 0}), '_current_version').reverse());
-                } else if (historyType === 'operations') {
+                } else if (versionType === 'operations') {
                     return $q.when(_.sortBy(result._items, '_current_version'));
                 }
             });

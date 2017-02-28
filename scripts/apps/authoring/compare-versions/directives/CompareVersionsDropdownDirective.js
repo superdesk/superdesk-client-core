@@ -38,7 +38,7 @@ class LinkFunction {
             this.scope.desks = this.desks.desks;
             this.scope.stages = this.desks.deskStages;
 
-            return this.archiveService.getVersionHistory(this.scope.item, this.desks, 'versions');
+            return this.archiveService.getVersions(this.scope.item, this.desks, 'versions');
         })
         .then((versions) => {
             this.scope.items = this.compareVersions.versions = versions;
