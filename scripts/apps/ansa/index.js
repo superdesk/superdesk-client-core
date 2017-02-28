@@ -34,6 +34,9 @@ class MetasearchController {
             }
         });
 
+        this.category = null;
+        this.time_range = null;
+
         // init
         this.search();
     }
@@ -45,18 +48,15 @@ class MetasearchController {
     reset() {
         this.query = '';
         this.items = null;
-        this.location.search('query', null);
-        this.location.search('categories', null);
-        this.location.search('time_range', null);
     }
 
     setCategory(category) {
-        this.location.search('categories', category || null);
+        this.category = category;
         this.search();
     }
 
     setTime(time) {
-        this.location.search('time_range', time || null);
+        this.time_range = time;
         this.search();
     }
 
@@ -65,18 +65,17 @@ class MetasearchController {
             return;
         }
 
-        this.category = this.location.search().categories || '';
-        this.time_range = this.location.search().time_range || 'day';
+        this.category = this.category || '';
+        this.time_range = this.time_range === null ? 'day' : this.time_range;
 
-        this.location.search('query', this.query || null);
         if (this.query) {
             let params = {q: this.query, format: 'json', pageno: 1};
 
             this.items = null;
             this.loading = true;
 
-            params.time_range = this.location.search().time_range || '';
-            params.categories = this.location.search().categories || 'superdesk';
+            params.time_range = this.time_range;
+            params.categories = this.category || 'superdesk';
 
             this.metasearch.metasearch(params)
                 .then((response) => {

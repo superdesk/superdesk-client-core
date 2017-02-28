@@ -44,6 +44,10 @@
                 <dd><a href="" ng-click="startSearch(item.slugline)">{{ item.slugline }}</a></dd>
             </dl>
         </section>
+        <section class="main">
+            <h2 translate>Search hints to archive queries</h2>
+            <span class="pull-left" ng-repeat="word in semantics.mainLemmas"><span class="badge">{{ word }}</span></span>
+        </section>
     </div>
     <div class="live-suggest__body" ng-if="!semantics && !searchEnabled">
         <h6>There is no semantics info for current item.</h6>
