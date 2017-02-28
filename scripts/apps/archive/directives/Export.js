@@ -20,8 +20,7 @@ class LinkFunction {
      */
     init() {
         this.scope.loading = false;
-        this.scope.selectedFormatter = this.storage.getItem('selectedFormatter') ||
-                                        JSON.stringify(this.scope.exportFormatters[0]);
+        this.scope.selectedFormatter = this.storage.getItem('selectedFormatter');
         this.scope.validate = false;
         this.scope.exportFile = this.exportFile.bind(this);
         this.scope.failures = 0;
@@ -30,6 +29,10 @@ class LinkFunction {
 
         this.api.query('formatters', {criteria: 'can_export'}).then((result) => {
             this.scope.exportFormatters = result._items;
+            if (!this.scope.selectedFormatter &&
+                    this.scope.exportFormatters.length > 0) {
+                this.scope.selectedFormatter = JSON.stringify(this.scope.exportFormatters[0]);
+            }
         });
     }
 
