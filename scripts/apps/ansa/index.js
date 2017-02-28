@@ -21,10 +21,10 @@ class MetasearchController {
         ];
 
         this.time_ranges = [
-            {_id: '', label: 'Anytime'},
             {_id: 'day', label: 'Today'},
             {_id: 'week', label: 'Last Week'},
             {_id: 'month', label: 'Last Month'},
+            {_id: '', label: 'Anytime'}
         ];
 
         $scope.$watch(() => workspace.item && workspace.item.headline, (headline, oldHeadline) => {
@@ -33,6 +33,9 @@ class MetasearchController {
                 this.search();
             }
         });
+
+        // init
+        this.search();
     }
 
     toggle() {
@@ -63,7 +66,7 @@ class MetasearchController {
         }
 
         this.category = this.location.search().categories || '';
-        this.time_range = this.location.search().time_range || '';
+        this.time_range = this.location.search().time_range || 'day';
 
         this.location.search('query', this.query || null);
         if (this.query) {
@@ -96,7 +99,7 @@ class MetasearchController {
             this.items = null;
             this.loading = true;
             this.params.pageno++;
-            this.http.get(this.url, {params: this.params})
+            this.metasearch.metasearch(this.params)
                 .then((response) => {
                     this.loading = false;
 
@@ -305,12 +308,9 @@ function AnsaLiveSuggestions(workspace, metasearch) {
         template: require('./views/ansa-live-suggestions.html'),
         link: (scope, elem, attrs, ctrl) => {
             scope.$watch(() => workspace.item, (item) => {
+                scope.item = item;
+                scope.semantics = item && item.semantics;
                 scope.suggestions = null;
-                if (item && item.semantics) {
-                    scope.semantics = item.semantics;
-                } else {
-                    scope.semantics = null;
-                }
             });
 
             scope.toggleInfo = (val) => {
@@ -318,6 +318,9 @@ function AnsaLiveSuggestions(workspace, metasearch) {
                 metasearch.suggest(val)
                     .then((response) => {
                         scope.suggestions = response.data;
+                        if (_.isEmpty(scope.suggestions)) {
+                            scope.suggestions = [val];
+                        }
                     })
                     .finally(() => {
                         scope.loading = false;
@@ -365,6 +368,12 @@ function AnsaMetasearchResults() {
     };
 }
 
+function AnsaMetasearchDropdown() {
+    return {
+        template: require('./views/ansa-metasearch-dropdown.html')
+    };
+}
+
 angular.module('ansa.superdesk', [])
     .factory('metasearch', MetasearchFactory)
     .controller('MetasearchCtrl', MetasearchController)
@@ -373,6 +382,7 @@ angular.module('ansa.superdesk', [])
     .directive('ansaMetasearchItem', AnsaMetasearchItem)
     .directive('ansaLiveSuggestions', AnsaLiveSuggestions)
     .directive('ansaMetasearchResults', AnsaMetasearchResults)
+    .directive('ansaMetasearchDropdown', AnsaMetasearchDropdown)
     .config(['superdeskProvider', (superdeskProvider) => {
         superdeskProvider.activity('/workspace/metasearch', {
             label: gettext('Metasearch'),

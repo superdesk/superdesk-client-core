@@ -12,25 +12,7 @@
                     ng-click="metasearch.reset()"
                     ng-class="{visible: metasearch.query}"><i class="icon-remove-sign"></i></button>
 
-                <div class="dropdown navbtn strict" dropdown>
-                    <button class="dropdown-toggle dropdown__toggle" dropdown-toggle>
-                        <i class="svg-icon-settings"></i>
-                    </button>
-                    <ul class="dropdown__menu">
-                        <li ng-repeat="cat in metasearch.categories track by cat._id">
-                            <button class="btn"
-                                ng-disabled="metasearch.category == cat._id"
-                                ng-click="metasearch.setCategory(cat._id)">{{ cat.label }}</button>
-                        </li>
-
-                        <li class="divider"></li>
-                        <li ng-repeat="time in metasearch.time_ranges track by time._id">
-                            <button class="btn"
-                                ng-disabled="metasearch.time_range == time._id"
-                                ng-click="metasearch.setTime(time._id)">{{ time.label }}</button>
-                        </li>
-                    </ul>
-                </div>
+                <div ansa-metasearch-dropdown></div>
             </div>
         </div>
 
@@ -38,5 +20,7 @@
             <span>Metasearch</span>
         </h3>
     </div>
-    <section ansa-metasearch-results class="main-section"></section>
+    <div sd-loading="metasearch.loading">
+        <section ansa-metasearch-results class="main-section"></section>
+    </div>
 </div>
