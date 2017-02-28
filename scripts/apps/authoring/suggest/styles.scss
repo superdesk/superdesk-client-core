@@ -44,6 +44,7 @@ sd-suggest {
 		}
 
 		&__body {
+			padding: 18px;
 			.list-view {
 				height: 65%;
 				padding: 0;
@@ -64,6 +65,18 @@ sd-suggest {
 					.item-info {
 						padding: 10px 0 5px;
 					}
+				}
+			}
+
+			dl {
+				margin: 0 36px 0 0;
+
+				dt {
+					margin-bottom: 3px;
+				}
+
+				dd {
+					margin-bottom: 5px;
 				}
 			}
 		}

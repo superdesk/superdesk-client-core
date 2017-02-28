@@ -2,11 +2,10 @@ var _ = require('lodash');
 
 class MetasearchController {
 
-    constructor($scope, $http, $location, $timeout, config, Keys, workspace) {
+    constructor($scope, $location, $timeout, metasearch, Keys, workspace) {
         this.query = $location.search().query || '';
         this.openSearch = true; // active on start
-        this.url = config.server.url.replace('api', 'metasearch') + '/';
-        this.http = $http;
+        this.metasearch = metasearch;
         this.location = $location;
         this.timeout = $timeout;
         this.Keys = Keys;
@@ -76,7 +75,7 @@ class MetasearchController {
             params.time_range = this.location.search().time_range || '';
             params.categories = this.location.search().categories || 'superdesk';
 
-            this.http.get(this.url, {params: params})
+            this.metasearch.metasearch(params)
                 .then((response) => {
                     this.page = 1;
                     this.results = response.data.results || [];
@@ -126,28 +125,13 @@ class MetasearchController {
             this.updatePagination();
         }, 200);
     }
-
-    filter(term) {
-        if (term) {
-            this.http.get(this.url + '/autocompleter', {params: {q: term}})
-                .then((response) => {
-                    this.queryItems = response.data;
-                });
-        }
-    }
-
-    select(item) {
-        this.query = item;
-        this.search();
-    }
 }
 
 MetasearchController.$inject = [
     '$scope',
-    '$http',
     '$location',
     '$timeout',
-    'config',
+    'metasearch',
     'Keys',
     'authoringWorkspace'
 ];
@@ -314,11 +298,81 @@ function AnsaRelatedCtrl($scope, api) {
     init();
 }
 
+function AnsaLiveSuggestions(workspace, metasearch) {
+    return {
+        controller: 'MetasearchCtrl',
+        controllerAs: 'metasearch',
+        template: require('./views/ansa-live-suggestions.html'),
+        link: (scope, elem, attrs, ctrl) => {
+            scope.$watch(() => workspace.item, (item) => {
+                scope.suggestions = null;
+                if (item && item.semantics) {
+                    scope.semantics = item.semantics;
+                } else {
+                    scope.semantics = null;
+                }
+            });
+
+            scope.toggleInfo = (val) => {
+                scope.loading = true;
+                metasearch.suggest(val)
+                    .then((response) => {
+                        scope.suggestions = response.data;
+                    })
+                    .finally(() => {
+                        scope.loading = false;
+                    });
+            };
+
+            scope.startSearch = (query) => {
+                ctrl.query = query;
+                ctrl.search();
+                scope.searchEnabled = true;
+            };
+
+            scope.closeSearch = () => {
+                scope.searchEnabled = false;
+                ctrl.items = null;
+            };
+        }
+    };
+}
+
+AnsaLiveSuggestions.$inject = ['authoringWorkspace', 'metasearch'];
+
+function MetasearchFactory($http, config) {
+    let url = config.server.url.replace('api', 'metasearch') + '/';
+
+    class MetasearchService {
+
+        metasearch(params) {
+            return $http.get(url, {params: params});
+        }
+
+        suggest(word) {
+            return $http.get(url + '/autocompleter', {params: {q: word}});
+        }
+    }
+
+    return new MetasearchService();
+}
+
+MetasearchFactory.$inject = ['$http', 'config'];
+
+function AnsaMetasearchResults() {
+    return {
+        template: require('./views/ansa-metasearch-results.html')
+    };
+}
+
 angular.module('ansa.superdesk', [])
+    .factory('metasearch', MetasearchFactory)
     .controller('MetasearchCtrl', MetasearchController)
     .controller('AnsaSemanticsCtrl', AnsaSemanticsCtrl)
     .controller('AnsaRelatedCtrl', AnsaRelatedCtrl)
     .directive('ansaMetasearchItem', AnsaMetasearchItem)
+    .directive('ansaLiveSuggestions', AnsaLiveSuggestions)
+    .directive('ansaMetasearchResults', AnsaMetasearchResults)
     .config(['superdeskProvider', (superdeskProvider) => {
         superdeskProvider.activity('/workspace/metasearch', {
             label: gettext('Metasearch'),

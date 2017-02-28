@@ -4,7 +4,7 @@ export function AuthoringContainerDirective(authoring, authoringWorkspace) {
         var self = this;
 
         this.state = {};
-        this.showingSuggestions = false;
+        this.showingSuggestions = true;
 
         /**
          * Start editing item using given action mode

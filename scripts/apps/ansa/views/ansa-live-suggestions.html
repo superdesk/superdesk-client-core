@@ -1,0 +1,48 @@
+<div class="live-suggest__header subnav">
+    <h3 class="subnav__page-title">Live Suggestions</h3>
+        <a class="close" ng-click="ctrl.close()"><i class="icon-close-small"></i></a>
+    </div>
+    <div class="live-suggest__body" ng-if="semantics && !searchEnabled">
+        <dl class="pull-left">
+            <dt ng-show="semantics.persons.length" translate>Person</dt>
+            <dd ng-repeat="val in semantics.persons">
+                <a href="" ng-click="toggleInfo(val)">{{ val }}</a>
+            </dd>
+
+            <dt ng-show="semantics.organizations.length" translate>Organisation</dt>
+            <dd ng-repeat="val in semantics.organizations">
+                <a href="" ng-click="toggleInfo(val)">{{ val }}</a>
+            </dd>
+
+            <dt ng-show="semantics.places.length" translate>Place</dt>
+            <dd ng-repeat="val in semantics.places">
+                <a href="" ng-click="toggleInfo(val)">{{ val }}</a>
+            </dd>
+        </dl>
+
+        <dl class="pull-left" sd-loading="loading">
+            <dt translate>Suggestions</dt>
+            <dd ng-repeat="term in suggestions">
+                <a href="" ng-click="startSearch(term)">{{ term }}</a>
+            </dd>
+            <dd ng-show="!suggestions.length" translate>Click on an item to start.</dd>
+        </dl>
+    </div>
+    <div class="live-suggest__body" ng-if="!semantics && !searchEnabled">
+        <h6>There is no semantics info for current item.</h6>
+    </div>
+
+    <div class="live-suggest__body" ng-if="searchEnabled">
+        <div class="subnav">
+            <div class="flat-searchbar monitoring-backlink">
+                <div class="search-handler">
+                    <button class="backlink" ng-click="closeSearch()">&nbsp;</button>
+                </div>
+            </div>
+            <h3 class="subnav__page-title">{{ metasearch.query }}</h3>
+        </div>
+        <div sd-loading="metasearch.loading">
+            <section ansa-metasearch-results class="main-section"></section>
+        </div>
+    </div>
+</div>
