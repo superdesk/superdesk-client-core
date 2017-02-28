@@ -65,7 +65,7 @@
   background-color: $subnav-authoring;
   .highlights-toggle, .marks-toggle {
     .dropdown__menu {
-      max-height: 250px;
+      max-height: calc(100vh - 350px);
       overflow-y: auto;
     }
   }
