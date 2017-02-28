@@ -17,9 +17,10 @@
             </div>
         </div>
 
-        <div class="dropdown navbtn strict large" dropdown ng-show="!monitoring.singleGroup && type === 'monitoring'">
+        <div class="dropdown navbtn strict large" dropdown ng-if="!monitoring.singleGroup && type === 'monitoring'">
             <button class="dropdown__toggle" dropdown-toggle>{{ :: 'Monitoring' | translate }} <span class="caret"></span></button>
             <ul class="dropdown__menu scrollable">
+                <li><div class="dropdown__menu-label">{{ :: 'Stages' | translate }}</div></li> 
                 <li ng-repeat="card in aggregate.cards">
                     <button ng-click="monitoring.viewSingleGroup(card, 'stage')">{{ card.subheader || 'Output' }}</button>
                 </li>

@@ -118,7 +118,8 @@ function Monitoring() {
     };
 
     this.getMonitoringHomeTitle = function() {
-        return element.all(by.css('[ng-if="!monitoring.singleGroup && type === \'monitoring\'"]')).get(0).getText();
+        return element(by.css('[ng-if="!monitoring.singleGroup && type === \'monitoring\'"]'))
+            .element(by.className('dropdown__toggle')).getText();
     };
 
     this.getSpikedItems = function() {
