@@ -188,8 +188,8 @@ function AnsaMetasearchItem(config, $http, $sce) {
 
 AnsaMetasearchItem.$inject = ['config', '$http', '$sce'];
 
-AnsaSemanticsCtrl.$inject = ['$scope', 'api'];
-function AnsaSemanticsCtrl($scope, api) {
+AnsaSemanticsCtrl.$inject = ['$scope', '$rootScope', 'api'];
+function AnsaSemanticsCtrl($scope, $rootScope, api) {
     let save = (result) => {
         $scope.item.semantics = result.semantics;
 
@@ -236,12 +236,18 @@ function AnsaSemanticsCtrl($scope, api) {
     }).then((result) => {
         this.data = result.semantics;
         save(result);
+        broadcast(result.semantics);
     });
 
     this.remove = (term, category) => {
         this.data[category] = _.without(this.data[category], term);
         save({semantics: this.data});
+        broadcast(this.data);
     };
+
+    function broadcast(semantics) {
+        $rootScope.$broadcast('semantics:update', semantics);
+    }
 
     init();
 }
@@ -327,12 +333,18 @@ function AnsaLiveSuggestions(workspace, metasearch) {
         controllerAs: 'metasearch',
         template: require('./views/ansa-live-suggestions.html'),
         link: (scope, elem, attrs, ctrl) => {
-            scope.$watch(() => workspace.item, (item) => {
-                scope.item = item;
-                scope.semantics = item && item.semantics;
-                scope.suggestions = null;
-                scope.archiveQueries = getArchiveQueries(scope.semantics);
+            scope.$watch(() => workspace.item && workspace.item.semantics, refresh);
+            scope.$on('semantics:update', (event, semantics) => {
+                refresh(semantics);
             });
+
+            function refresh(semantics) {
+                scope.item = workspace.item;
+                scope.semantics = semantics;
+                scope.suggestions = null;
+                scope.archiveQueries = getArchiveQueries(semantics);
+                scope.closeSearch();
+            }
 
             scope.toggleInfo = (val) => {
                 scope.loading = true;
