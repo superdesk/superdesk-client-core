@@ -18,13 +18,12 @@ export default class Item extends React.Component {
 
     run(event) {
         const {scope} = this.props;
-        const {$rootScope, activityService} = this.props.svc;
+        const {activityService} = this.props.svc;
 
         // Stop event propagation so that click on item action
         // won't select that item for preview/authoring.
         event.stopPropagation();
         scope.$apply(() => {
-            $rootScope.$broadcast('broadcast:preview', {item: null}); // closes preview if already opened
             activityService.start(this.props.activity, {data: {item: this.props.item}});
         });
 
