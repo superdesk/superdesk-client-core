@@ -96,7 +96,7 @@
       @include text-semibold();
     }
   }
-  &.has-highlights {
+  &.enable-overflow {
     overflow: visible;
   }
 }
