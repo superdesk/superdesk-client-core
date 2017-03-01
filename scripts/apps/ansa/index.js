@@ -301,6 +301,27 @@ function AnsaRelatedCtrl($scope, api) {
 }
 
 function AnsaLiveSuggestions(workspace, metasearch) {
+    function getArchiveQueries(semantics) {
+        if (_.isEmpty(semantics)) {
+            return [];
+        }
+
+        const queries = {};
+        const fields = ['persons', 'organizations', 'places', 'mainGroups', 'mainLemmas', 'iptcCodes'];
+
+        fields.forEach((field) => {
+            if (_.isEmpty(semantics[field])) {
+                return;
+            }
+
+            semantics[field].forEach((val) => {
+                queries[val] = true;
+            });
+        });
+
+        return Object.keys(queries);
+    }
+
     return {
         controller: 'MetasearchCtrl',
         controllerAs: 'metasearch',
@@ -310,6 +331,7 @@ function AnsaLiveSuggestions(workspace, metasearch) {
                 scope.item = item;
                 scope.semantics = item && item.semantics;
                 scope.suggestions = null;
+                scope.archiveQueries = getArchiveQueries(scope.semantics);
             });
 
             scope.toggleInfo = (val) => {
