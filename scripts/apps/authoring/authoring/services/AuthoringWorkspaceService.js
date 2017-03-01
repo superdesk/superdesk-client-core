@@ -204,7 +204,8 @@ export function AuthoringWorkspaceService($location, superdeskFlags, authoring, 
             })
             .then(() => {
                 saveState();
-                sendRowViewEvents();
+                // closes preview if already opened
+                $rootScope.$broadcast('broadcast:preview', {item: null});
             });
     }
 
