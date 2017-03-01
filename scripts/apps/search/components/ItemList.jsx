@@ -47,6 +47,7 @@ export class ItemList extends React.Component {
             });
         });
 
+        this.select(_.last(items));
         this.setState({itemsById: itemsById});
     }
 
