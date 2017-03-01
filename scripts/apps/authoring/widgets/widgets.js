@@ -45,26 +45,24 @@ function WidgetsManagerCtrl($scope, $routeParams, authoringWidgets, archiveServi
     var shortcuts = [];
 
     function unbindAllShortcuts() {
-        shortcuts.forEach((unbind) => {
-            unbind();
+        shortcuts.forEach((sc) => {
+            keyboardManager.unbind(sc);
         });
         shortcuts = [];
     }
 
     function bindKeyShortcutToWidget(shortcut, widget) {
-        shortcuts.push($scope.$on('key:' + shortcut.replace('+', ':'), () => {
+        shortcuts.push(shortcut);
+        keyboardManager.bind(shortcut, () => {
             $scope.activate(widget);
-        }));
+        });
     }
 
     function bindAllShortcuts() {
         /*
-         * Navigate throw right tab widgets with keyboard combination
-         * Combination: Ctrl + {{widget number}} and custom keys from `keyboardShortcut` property
+         * Navigate through right tab widgets, include custom keys from `keyboardShortcut` property
          */
         angular.forEach(_.sortBy($scope.widgets, 'order'), (widget, index) => {
-            // binding ctrl + {{widget number}}
-            bindKeyShortcutToWidget('ctrl+' + (index + 1), widget);
             // binding keys from `widget.keyboardShortcut` property
             if (angular.isDefined(widget.keyboardShortcut)) {
                 bindKeyShortcutToWidget(widget.keyboardShortcut, widget);
@@ -122,6 +120,10 @@ function WidgetsManagerCtrl($scope, $routeParams, authoringWidgets, archiveServi
             $scope.activate(widget);
         }
     });
+
+    $scope.$on('$destroy', () => {
+        unbindAllShortcuts();
+    });
 }
 AuthoringWidgetsDir.$inject = ['desks', 'commentsService'];
 function AuthoringWidgetsDir(desks, commentsService) {
@@ -172,5 +174,7 @@ angular.module('superdesk.apps.authoring.widgets', ['superdesk.core.keyboard'])
     .provider('authoringWidgets', AuthoringWidgetsProvider)
     .directive('sdAuthoringWidgets', AuthoringWidgetsDir)
     .run(['keyboardManager', 'gettext', function(keyboardManager, gettext) {
-        keyboardManager.register('Authoring', 'ctrl + #', gettext('Toggles widget #'));
+        keyboardManager.register('Authoring', 'ctrl + alt + {N}',
+             gettext('Toggles Nth widget, where \'N\' is order of widget it appears'));
+        keyboardManager.register('Authoring', 'ctrl + shift + f', gettext('Toggles Find & Replace widget'));
     }]);

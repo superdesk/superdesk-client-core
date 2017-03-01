@@ -55,7 +55,7 @@ angular.module('superdesk.apps.packaging', [
                 label: gettext('Create package'),
                 priority: 50,
                 icon: 'package-create',
-                keyboardShortcut: 'ctrl+p',
+                keyboardShortcut: 'ctrl+alt+p',
                 controller: ctrl.PackageItemCtrl,
                 filters: [{action: 'list', type: 'archive'}],
                 additionalCondition: ['authoring', 'item', '$rootScope', function(authoring, item, $rootScope) {
@@ -89,7 +89,6 @@ angular.module('superdesk.apps.packaging', [
                 label: gettext('Combine with current'),
                 priority: 49,
                 icon: 'package-plus',
-                keyboardShortcut: 'ctrl+alt+p',
                 controller: ctrl.CombinePackageCtrl,
                 filters: [{action: 'list', type: 'archive'}],
                 additionalCondition: ['authoringWorkspace', 'item', 'authoring',

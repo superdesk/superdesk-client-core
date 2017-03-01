@@ -146,7 +146,7 @@ angular.module('superdesk.apps.archive', [
                     {action: 'list', type: 'archive'},
                     {action: 'list', type: 'archived'}
                 ],
-                keyboardShortcut: 'ctrl+d',
+                keyboardShortcut: 'ctrl+alt+d',
                 privileges: {duplicate: 1},
                 condition: function(item) {
                     return item.lock_user === null || angular.isUndefined(item.lock_user);

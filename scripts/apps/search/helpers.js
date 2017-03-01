@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {DEFAULT_LIST_CONFIG} from 'apps/search/constants';
 import * as fields from 'apps/search/components/fields';
+import ng from 'core/services/ng';
 
 export function getSpecStyle(spec) {
     var style = {};
@@ -130,4 +131,46 @@ export function renderArea(area, itemProps, props) {
     var elemProps = angular.extend({key: area}, props);
 
     return contents.length ? React.createElement('div', elemProps, contents) : null;
+}
+
+/*
+ * Bind mark Item dropdown action
+ * @param {String} label - activity label
+ */
+export function bindMarkItemShortcut(label) {
+    const keyboardManager = ng.get('keyboardManager');
+
+    angular.element('.active .more-activity-toggle').click();
+
+    let markDropdown = angular.element('.more-activity-menu.open .dropdown--noarrow');
+
+    if (markDropdown.find('[title="' + label + '"]').length > 0) {
+        markDropdown.find('[title="' + label + '"]')[0].click();
+    }
+
+    if (markDropdown.find('button').length > 0) {
+        markDropdown.find('button:not([disabled])')
+        .first()
+        .focus();
+
+        keyboardManager.push('up', () => {
+            markDropdown.find('button:focus')
+                .parent('li')
+                .prev()
+                .children('button')
+                .focus();
+        });
+        keyboardManager.push('down', () => {
+            markDropdown.find('button:focus')
+                .parent('li')
+                .next()
+                .children('button')
+                .focus();
+        });
+        keyboardManager.push('escape', () => {
+            let actionMenu = angular.element('.more-activity-menu.open');
+
+            actionMenu.find('button.dropdown__menu-close').click();
+        });
+    }
 }

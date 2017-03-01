@@ -21,12 +21,12 @@ angular.module('superdesk.apps.workspace', ['superdesk.apps.workspace.content'])
     .directive('sdEditWorkspace', directive.EditWorkspaceDirective)
 
     .run(['keyboardManager', 'gettext', function(keyboardManager, gettext) {
-        keyboardManager.register('General', 'alt + h', gettext('Opens workspace'));
+        keyboardManager.register('General', 'ctrl + alt + b', gettext('Opens workspace / dashboard'));
         keyboardManager.register('General', 'alt + m', gettext('Opens monitoring'));
-        keyboardManager.register('General', 'alt + d', gettext('Opens highlights'));
+        keyboardManager.register('General', 'ctrl + alt + h', gettext('Opens highlights'));
         keyboardManager.register('General', 'alt + t', gettext('Opens tasks'));
-        keyboardManager.register('General', 'alt + x', gettext('Opens spike'));
+        keyboardManager.register('General', 'ctrl + alt + k', gettext('Opens spike'));
         keyboardManager.register('General', 'alt + p', gettext('Opens personal'));
-        keyboardManager.register('General', 'alt + f', gettext('Opens search'));
+        keyboardManager.register('General', 'ctrl + alt + f', gettext('Opens search'));
         keyboardManager.register('General', 'x', gettext('Multi-selects(or deselects) an item'));
     }]);

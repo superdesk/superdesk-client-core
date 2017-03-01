@@ -11,6 +11,7 @@ module.exports.getListOption = getListOption;
 module.exports.ctrlKey = ctrlKey;
 module.exports.commandKey = commandKey;
 module.exports.ctrlShiftKey = ctrlShiftKey;
+module.exports.ctrlAltKey = ctrlAltKey;
 module.exports.altKey = altKey;
 module.exports.assertToastMsg = assertToastMsg;
 module.exports.wait = wait;
@@ -142,6 +143,18 @@ function ctrlShiftKey(key) {
     var Key = protractor.Key;
 
     browser.actions().sendKeys(Key.chord(Key.CONTROL, Key.SHIFT, key))
+        .perform();
+}
+
+/**
+ * Performs CTRL + ALT + key action
+ *
+ * @param {char} key
+ */
+function ctrlAltKey(key) {
+    var Key = protractor.Key;
+
+    browser.actions().sendKeys(Key.chord(Key.CONTROL, Key.ALT, key))
         .perform();
 }
 

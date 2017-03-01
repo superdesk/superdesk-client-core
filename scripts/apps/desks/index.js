@@ -77,7 +77,7 @@ angular.module('superdesk.apps.desks', [
                 priority: 30,
                 icon: 'bell',
                 dropdown: directive.DesksReactDropdown,
-                keyboardShortcut: 'ctrl+shift+d',
+                keyboardShortcut: 'ctrl+shift+!',
                 templateUrl: 'scripts/apps/desks/views/mark_desks_dropdown.html',
                 filters: [
                     {action: 'list', type: 'archive'}

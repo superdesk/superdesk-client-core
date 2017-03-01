@@ -93,7 +93,7 @@ angular.module('superdesk.apps.authoring', [
                 label: gettext('Edit'),
                 priority: 10,
                 icon: 'pencil',
-                keyboardShortcut: 'ctrl+e',
+                keyboardShortcut: 'ctrl+alt+e',
                 controller: ['data', 'authoringWorkspace', function(data, authoringWorkspace) {
                     authoringWorkspace.edit(data.item ? data.item : data);
                 }],
@@ -147,7 +147,7 @@ angular.module('superdesk.apps.authoring', [
                 label: gettext('Open'),
                 priority: 2000,
                 icon: 'external',
-                keyboardShortcut: 'ctrl+o',
+                keyboardShortcut: 'alt+o',
                 controller: ['data', 'authoringWorkspace', function(data, authoringWorkspace) {
                     authoringWorkspace.view(data.item || data);
                 }],
@@ -203,4 +203,8 @@ angular.module('superdesk.apps.authoring', [
         keyboardManager.register('Authoring', 'ctrl + shift + u', gettext('Unlocks current item'));
         keyboardManager.register('Authoring', 'ctrl + shift + e', gettext('Closes current item'));
         keyboardManager.register('Authoring', 'ctrl + shift + s', gettext('Saves current item'));
+        keyboardManager.register('Authoring', 'ctrl + shift + l',
+             gettext('Preview formatted article, when previewFormats feature configured'));
+        keyboardManager.register('Authoring', 'ctrl + shift + *',
+             gettext('Instant Spellchecking, when automatic spellchecking turned off'));
     }]);

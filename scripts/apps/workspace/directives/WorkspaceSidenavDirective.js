@@ -44,8 +44,12 @@ export function WorkspaceSidenavDirective(superdeskFlags, $location, Keys, gette
              *
              */
             scope.highlightsHotkey = function() {
-                elem.find('.highlights-dropdown .dropdown__toggle').click();
-                elem.find('.dropdown__menu button')[0].focus();
+                let ddlhighlights = elem.find('.highlights-dropdown .dropdown__toggle');
+
+                if (ddlhighlights.length > 0) {
+                    ddlhighlights.first().click();
+                    elem.find('.dropdown__menu button')[0].focus();
+                }
             };
 
             elem.on('keydown', function WorkspaceKeyboard(event) {

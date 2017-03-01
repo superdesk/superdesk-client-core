@@ -191,6 +191,9 @@ function Monitoring() {
 
     this.previewAction = function(group, item) {
         this.getItem(group, item).click();
+        var preview = element(by.id('item-preview'));
+
+        waitFor(preview);
     };
 
     this.closePreview = function() {

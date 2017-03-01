@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import {Item} from 'apps/search/components';
-import {isCheckAllowed, closeActionsMenu} from 'apps/search/helpers';
+import {isCheckAllowed, closeActionsMenu, bindMarkItemShortcut} from 'apps/search/helpers';
 
 /**
  * Item list component
@@ -10,7 +10,7 @@ export class ItemList extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {itemsList: [], itemsById: {}, selected: null, view: 'mgrid', narrow: false};
+        this.state = {itemsList: [], itemsById: {}, selected: null, view: 'mgrid', narrow: false, bindedItems: []};
 
         this.multiSelect = this.multiSelect.bind(this);
         this.select = this.select.bind(this);
@@ -30,6 +30,8 @@ export class ItemList extends React.Component {
         this.modifiedUserName = this.modifiedUserName.bind(this);
         this.setNarrowView = this.setNarrowView.bind(this);
         this.multiSelectCurrentItem = this.multiSelectCurrentItem.bind(this);
+        this.bindActionKeyShortcuts = this.bindActionKeyShortcuts.bind(this);
+        this.unbindActionKeyShortcuts = this.unbindActionKeyShortcuts.bind(this);
     }
 
     multiSelect(items, selected) {
@@ -84,9 +86,54 @@ export class ItemList extends React.Component {
             if (item && scope.preview) {
                 scope.$apply(() => {
                     scope.preview(item);
+                    this.bindActionKeyShortcuts(item);
                 });
             }
         }, 500, false);
+    }
+
+    /*
+     * Unbind all item actions
+     */
+    unbindActionKeyShortcuts() {
+        this.state.bindedItems.forEach((func) => {
+            func();
+        });
+        this.setState({bindedItems: []});
+    }
+
+    /*
+     * Bind item actions on keyboard shortcuts
+     * Keyboard shortcuts are defined with actions
+     *
+     * @param {Object} item
+     */
+    bindActionKeyShortcuts(selectedItem) {
+        const {superdesk, workflowService, activityService} = this.props.svc;
+
+        const {scope} = this.props;
+
+        // First unbind all binded shortcuts
+        if (this.state.bindedItems.length) {
+            this.unbindActionKeyShortcuts();
+        }
+
+        let intent = {action: 'list'};
+
+        superdesk.findActivities(intent, selectedItem).forEach((activity) => {
+            if (activity.keyboardShortcut && workflowService.isActionAllowed(selectedItem, activity.action)) {
+                this.state.bindedItems.push(
+                    scope.$on('key:' + activity.keyboardShortcut.replace(/\+/g, ':'),
+                    () => {
+                        if (_.includes(['mark.item', 'mark.desk'], activity._id)) {
+                            bindMarkItemShortcut(activity.label);
+                        } else {
+                            activityService.start(activity, {data: {item: selectedItem}});
+                        }
+                    })
+                );
+            }
+        });
     }
 
     selectItem(item) {
@@ -193,10 +240,10 @@ export class ItemList extends React.Component {
         const {monitoringState, $rootScope, search} = this.props.svc;
         const {scope} = this.props;
 
-        if (monitoringState.selectedGroup !== scope.$id) {
+        if (monitoringState.state.activeGroup !== scope.$id) {
             // If selected item is from another group, deselect all
             $rootScope.$broadcast('item:unselect');
-            monitoringState.selectedGroup = scope.$id;
+            monitoringState.setState({activeGroup: scope.$id});
         }
 
         this.setState({selected: item ? search.generateTrackByIdentifier(item) : null});
@@ -326,6 +373,7 @@ export class ItemList extends React.Component {
     }
 
     componentWillUnmount() {
+        this.unbindActionKeyShortcuts();
         this.closeActionsMenu();
     }
 
