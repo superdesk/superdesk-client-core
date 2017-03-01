@@ -1,3 +1,5 @@
+var _ = require('lodash');
+
 PackageHighlightsDropdown.$inject = ['desks', 'highlightsService', '$location', '$route'];
 export function PackageHighlightsDropdown(desks, highlightsService, $location, $route) {
     return {
@@ -8,7 +10,7 @@ export function PackageHighlightsDropdown(desks, highlightsService, $location, $
                 scope.selected = active;
 
                 // If the user has no desks assigned - this user should not view ANY highlights (including global)
-                if (desks.userDesks.length > 0) {
+                if (!_.isEmpty(desks.userDesks)) {
                     highlightsService.get(desks.getCurrentDeskId()).then((result) => {
                         scope.highlights = result._items;
                         scope.hasHighlights = _.size(scope.highlights) > 0;

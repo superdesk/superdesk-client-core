@@ -307,7 +307,7 @@ function AnsaLiveSuggestions(workspace, metasearch) {
         }
 
         const queries = {};
-        const fields = ['persons', 'organizations', 'places', 'mainGroups', 'mainLemmas', 'iptcCodes'];
+        const fields = ['persons', 'organizations', 'places', 'mainGroups', 'mainLemmas', 'iptcDomains'];
 
         fields.forEach((field) => {
             if (_.isEmpty(semantics[field])) {
