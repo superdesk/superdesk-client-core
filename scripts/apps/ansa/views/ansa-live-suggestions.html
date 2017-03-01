@@ -46,7 +46,9 @@
         </section>
         <section class="main">
             <h2 translate>Search hints to archive queries</h2>
-            <span class="pull-left" ng-repeat="word in archiveQueries"><span class="badge">{{ word }}</span></span>
+            <span class="pull-left" ng-repeat="word in archiveQueries">
+                <span class="badge"><a href="" ng-click="copy($event)">{{ word }}</a></span>
+            </span>
         </section>
     </div>
     <div class="live-suggest__body" ng-if="!semantics && !searchEnabled">

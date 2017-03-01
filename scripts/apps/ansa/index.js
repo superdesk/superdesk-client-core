@@ -370,6 +370,17 @@ function AnsaLiveSuggestions(workspace, metasearch) {
                 scope.searchEnabled = false;
                 ctrl.items = null;
             };
+
+            scope.copy = ($event) => {
+                let range = document.createRange();
+                let selection = document.getSelection();
+
+                range.selectNodeContents($event.target);
+                selection.removeAllRanges();
+                selection.addRange(range);
+                document.execCommand('copy');
+                selection.removeAllRanges();
+            };
         }
     };
 }
