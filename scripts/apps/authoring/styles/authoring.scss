@@ -63,6 +63,12 @@
 .subnav--authoring {
   z-index: 99;
   background-color: $subnav-authoring;
+  .highlights-toggle, .marks-toggle {
+    .dropdown__menu {
+      max-height: calc(100vh - 350px);
+      overflow-y: auto;
+    }
+  }
 }
 
 .subnav__authoring-topbar {
