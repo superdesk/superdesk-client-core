@@ -48,9 +48,9 @@
     </div>
 
     <!-- Create profile modal -->
-    <div sd-modal class="modal-large content-profile-modal" data-model="creating">
+    <div sd-modal class="modal-large content-profile-modal" data-model="creating" data-close="ctrl.toggleCreate()">
             <div class="modal-header"> <a href="" class="close" ng-click="ctrl.toggleCreate()"><i class="icon-close-small"></i></a>
-                <h3 translate>Add New Content Profile</h3>
+                <h3 translate>Add New Content Profile V</h3>
             </div>
             <div class="modal-body">
                 <form name="createForm">
@@ -73,7 +73,7 @@
     </div>
 
     <!-- Edit profile modal -->
-    <div sd-modal class="modal-large content-profile-update" data-model="!!editing">
+    <div sd-modal class="modal-large content-profile-update" data-model="!!editing" data-close="ctrl.toggleEdit(null)">
             <div class="modal-header"> <a href="" class="close" ng-click="ctrl.toggleEdit(null)"><i class="icon-close-small"></i></a>
                 <h3>{{ :: 'Editing' | translate }} "{{ editing.form.label }}"</h3>
             </div>

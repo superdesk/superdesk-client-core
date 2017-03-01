@@ -1,5 +1,5 @@
 <form name="editForm">
-<div sd-modal data-model="dictionary" class="add-dictionary-popup">
+<div sd-modal data-model="dictionary" data-close="cancel()" class="add-dictionary-popup">
     <div class="modal-header">
         <a href="" class="close" ng-click="cancel()"><i class="icon-close-small"></i></a>
         <h3 ng-show="!dictionary._id" translate>Add New {{(isAbbreviations() ? 'Abbreviations' : '') | translate}} Dictionary</h3>
