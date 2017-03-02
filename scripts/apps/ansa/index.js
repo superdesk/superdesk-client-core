@@ -271,7 +271,7 @@ function AnsaRelatedCtrl($scope, api) {
                     let f = {};
 
                     f[namespace(key)] = val;
-                    filters.push({term: f});
+                    filters.push({match: f});
                 });
             }
         });
