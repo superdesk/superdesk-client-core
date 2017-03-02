@@ -49,7 +49,7 @@ export function ItemAssociationDirective(superdesk, renditions, config, authorin
 
 
                 if (item._type !== 'externalsource') {
-                    return api.find('archive', item._id)
+                    return api.find(item._type, item._id)
                         .then((result) => result);
                 }
                 return $q.when(item);
