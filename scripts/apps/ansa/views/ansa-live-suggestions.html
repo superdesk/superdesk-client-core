@@ -45,9 +45,9 @@
             </dl>
         </section>
         <section class="main">
-            <h2 translate>Search hints to archive queries</h2>
+            <h2 translate>Web search hints</h2>
             <span class="pull-left" ng-repeat="word in archiveQueries">
-                <span class="badge"><a href="" ng-click="copy($event)">{{ word }}</a></span>
+                <span class="badge"><a href="" ng-click="startSearch(word)">{{ word }}</a></span>
             </span>
         </section>
     </div>
@@ -62,7 +62,11 @@
                     <button class="backlink" ng-click="closeSearch()">&nbsp;</button>
                 </div>
             </div>
-            <h3 class="subnav__page-title">{{ metasearch.query }}</h3>
+            <h3 class="subnav__page-title">
+                <input type="text" class="live-input input-large"
+                    ng-model="metasearch.query"
+                    ng-keyup="metasearch.search($event)">
+            </h3>
             <div class="pull-right" ansa-metasearch-dropdown></div>
         </div>
         <div sd-loading="metasearch.loading">
