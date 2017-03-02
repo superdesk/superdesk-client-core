@@ -1,5 +1,11 @@
 .paneContent{
+
+    &--darker{
+        background-color: #3b3b3b;
+        color: $white;
+    }
     &__header {
+
         border-bottom: 1px solid #e4e4e4;
         background-color: $white;
         position: relative;
@@ -20,6 +26,11 @@
             background: #f4f4f4;
             border-color: $tableBorder;
         }
+        &--darker{
+            background: #3b3b3b;
+            border-color: #424242;
+            color: $white;
+        }
     }
 
     &__content {
@@ -31,7 +42,7 @@
             height: calc(100% - 108px);
         }
 
-        .multiple{ 
+        .multiple {
             .line-input {
                 margin-right: 10px;
             }
