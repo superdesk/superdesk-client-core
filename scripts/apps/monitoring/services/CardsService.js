@@ -72,13 +72,7 @@ export function CardsService(api, search, session, desks, config) {
 
         default:
             if (!_.isNil(card.singleViewType) && card.singleViewType === 'desk') {
-                query.filter({or: [
-                        {terms: {'marked_desks.desk_id': [card.deskId]}},
-                        {term: {'task.desk': card.deskId}}]});
-            } else if (desks.stageLookup[card._id] && desks.stageLookup[card._id].default_incoming) {
-                query.filter({or: [
-                        {terms: {'marked_desks.desk_id': [card.deskId]}},
-                        {term: {'task.stage': card._id}}]});
+                query.filter({term: {'task.desk': card.deskId}});
             } else {
                 query.filter({term: {'task.stage': card._id}});
             }
