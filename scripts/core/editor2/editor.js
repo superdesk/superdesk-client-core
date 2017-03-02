@@ -751,8 +751,8 @@ angular.module('superdesk.apps.editor2', [
                         'text/html'
                     ];
 
-                    let getType = (event) => event.originalEvent.dataTransfer.types.find(
-                        (_type) => MEDIA_TYPES.indexOf(_type) >= 0
+                    let getType = (event) => MEDIA_TYPES.find(
+                        (_type) => event.originalEvent.dataTransfer.types.indexOf(_type) >= 0
                     );
 
                     element.on('drop dragdrop', (event) => {
