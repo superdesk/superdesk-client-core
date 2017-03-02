@@ -83,7 +83,7 @@ class MetasearchController {
                     this.results = response.data.results || [];
                     this.items = this.results.slice(0, this.maxItems);
                     this.loading = false;
-                    this.finished = false;
+                    this.finished = this.results.length < 11;
                     this.params = params;
                     this.updatePagination();
                 });
