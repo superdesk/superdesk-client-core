@@ -288,6 +288,30 @@ describe('authoring', () => {
         expect(authoring.getHistoryItems().count()).toBe(2);
         expect(authoring.getHistoryItem(1).getText()).toMatch(/Duplicated by/);
         authoring.close();
+
+        // view history of take operation
+        authoring.createTextItem();
+        authoring.setHeaderSluglineText('Story1 slugline');
+        authoring.save();
+        authoring.close();
+        authoring.createTextItem();
+        authoring.setHeaderSluglineText('Story2 slugline');
+        authoring.writeTextToHeadline('Story2 Headline');
+        authoring.save();
+        authoring.openRelatedItem(); // opens related item widget
+        authoring.searchRelatedItems('Story1 slugline');
+        browser.sleep(100);
+        authoring.actionRelatedItem(0, 'Associate as take');
+        browser.sleep(100);
+        expect(authoring.getANPATakeKeyValue()).toBe('=2');
+        authoring.close();
+        monitoring.actionOnItem('Spike', 0, 0);
+        monitoring.actionOnItem('Edit', 0, 0);
+        authoring.showHistory();
+        expect(authoring.getHistoryItems().count()).toBe(4);
+        expect(authoring.getHistoryItem(2).getText()).toMatch(/Take created by first name last name Today/);
+        expect(authoring.getHistoryItem(3).getText()).toMatch(/Unlinked by first name last name Today/);
+        authoring.close();
     });
 
     it('keyboard shortcuts', () => {

@@ -119,6 +119,23 @@
                 </div>
             </div>
 
+            <div ng-if="historyItem.operation === 'unlink'">
+                <strong>{{ :: 'Unlinked by' | translate }}</strong> {{ :: historyItem.displayName }}
+                <em><time sd-absdate ng-model="historyItem._created"></time></em>
+                <span ng-if="historyItems[$index-1].version !== historyItem.version && historyItem.version !== 0" class="version">
+                    <span translate>version</span><span>: {{:: historyItem.version }}</span>
+                </span>
+                <div class="more-description" ng-if="historyItem.update.hasOwnProperty('rewrite_of')">
+                    <span translate>Rewrite link is removed</span>
+                </div>
+                <div class="more-description" ng-if="historyItem.update.hasOwnProperty('rewritten_by')">
+                    <span translate>Rewritten link is removed</span>
+                </div>
+                <div class="more-description" ng-if="!historyItem.update || !historyItem.update.hasOwnProperty('rewrite_of') && !historyItem.update.hasOwnProperty('rewritten_by')">
+                    <span translate>Take link is removed</span>
+                </div>
+            </div>
+
             <div ng-if="historyItem.operation === 'rewrite'">
                 <strong>{{ :: 'Rewritten by' | translate }}</strong> {{ :: historyItem.displayName }}
                 <em><time sd-absdate ng-model="historyItem._created"></time></em>
