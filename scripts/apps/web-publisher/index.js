@@ -1,6 +1,7 @@
 import './styles/web-publisher.scss';
 
 import {WebPublisherManagerController} from './controllers';
+import {WebPublisherMonitoringController} from './controllers';
 import * as services from './services';
 import * as directive from './directives';
 
@@ -26,6 +27,8 @@ export default angular.module('superdesk.apps.web_publisher', [
             .activity('/web_publisher/monitoring', {
                 label: gettext('Web Publisher'),
                 description: gettext('Web Publisher'),
+                controller: WebPublisherMonitoringController,
+                controllerAs: 'webPublisherMonitoring',
                 templateUrl: 'scripts/apps/web-publisher/views/monitoring.html',
                 sideTemplateUrl: 'scripts/apps/web-publisher/views/sidenav-items.html'
             })

@@ -1,0 +1,80 @@
+<div class="subnav">
+    <div class="flat-searchbar monitoring-flat-searchbar" ng-class="{extended: aggregate.monitoringSearch}">
+        <div class="search-handler">
+            <label for="search-input" class="trigger-icon" ng-click="aggregate.monitoringSearch = !aggregate.monitoringSearch"><i class="icon-search"></i></label>
+            <input id="search-input" type="text" placeholder="{{ :: 'Search' | translate }}" ng-model="query"
+            ng-keyup="aggregate.searchOnEnter($event, query)">
+            <button class="search-close" ng-click="aggregate.search(query = null)" ng-class="{visible: query}"><i class="icon-remove-sign"></i></button>
+            <button class="search-close" ng-click="aggregate.search(query);" ng-class="{visible: query}">
+                <i class="svg-icon-right"></i>
+            </button>
+        </div>
+    </div>
+    <h3 class="page-nav-title">Web Monitoring</h3>
+    <div class="subnav__button-stack--square-buttons">
+        <div class="dropdown navbtn strict" ng-if="!state.opened" title="{{ :: 'Create' | translate }}" dropdown>
+            <button class="dropdown__toggle sd-create-btn" dropdown__toggle></button>
+            <ul class="dropdown__menu scrollable pull-right" sd-content-create></ul>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="paneLayout paneLayout--twoHeadersMargin">
+    <div class="paneLayout__content">
+        <div class="subnav static">
+            <div class="filter-trigger" title="Filters" ng-click="filterOpen = !filterOpen" ng-class="{'filter-trigger--active': filterOpen}">
+                <i class="icon-filter-large"></i>
+            </div>
+            <ul class="filter-type filter-type--padded rightPadding">
+                <li class="filter-type__item filter-type__item--active" ng-class="{'filter-type__item--active': true}">
+                    <a ng-click="">all</a>
+                </li>
+                <li class="filter-type__item" ng-class="{'filter-type__item--active': false}">
+                    <a ng-click="">website 1</a>
+                </li>
+                <li class="filter-type__item" ng-class="{'filter-type__item--active': false}">
+                    <a ng-click="">website 2</a>
+                </li>
+            </ul>
+            <div class="subnav__stretch-bar"></div>
+        </div>
+        <!-- paneLayout inside paneLayout :) -->
+        <div class="paneLayout paneLayout--headerMargin">
+            <div class="paneLayout__leftPane paneContent paneLayout__leftPane--open" ng-class="{'paneLayout__leftPane--open': filterOpen}">
+                <div class="paneContent__header paneContent__header--dark">
+                    <h3 class="pull-left">Advanced Filter</h3>
+                    <div ng-click="filterOpen = !filterOpen" class="close-filter">
+                        <i class="icon-close-small"></i>
+                    </div>
+                </div>
+                <div class="paneContent__content contentPadding">
+                    filters here
+                </div>
+            </div>
+
+            <div class="paneLayout__content">
+                <div class="contentPadding">
+                    <!-- CONTENT -->
+                    <div ng-include="webPublisherMonitoring.TEMPLATES_DIR + '/monitoring/index-content.html'"></div>
+                </div>
+            </div>
+        </div>
+        <!-- paneLayout inside paneLayout :) -->
+    </div>
+
+
+    <div class="paneLayout__pane paneContent paneContent--darker paneLayout__pane--open" ng-class="{'paneLayout__pane--open': filterOpen}">
+        <div class="paneContent__header paneContent__header--darker">
+            <h3 class="pull-left">Publishing pane</h3>
+            <div ng-click="filterOpen = !filterOpen" class="close-filter">
+                <i class="icon-close-small icon-white"></i>
+            </div>
+        </div>
+        <div class="paneContent__content contentPadding">
+            publishing page content
+      </div>
+  </div>
+</div>
