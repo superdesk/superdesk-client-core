@@ -14,8 +14,8 @@
  *   This directive is responsible for rendering media associated with the item.
  */
 
-ItemAssociationDirective.$inject = ['superdesk', 'renditions', 'config', 'authoring', '$q', 'api'];
-export function ItemAssociationDirective(superdesk, renditions, config, authoring, $q, api) {
+ItemAssociationDirective.$inject = ['superdesk', 'renditions', 'config', 'authoring', '$q', 'api', 'send'];
+export function ItemAssociationDirective(superdesk, renditions, config, authoring, $q, api, send) {
     return {
         scope: {
             rel: '=',
@@ -49,9 +49,13 @@ export function ItemAssociationDirective(superdesk, renditions, config, authorin
 
 
                 if (item._type !== 'externalsource') {
-                    return api.find(item._type, item._id)
-                        .then((result) => result);
+                    if (item._type === 'ingest') {
+                        return send.one(item);
+                    }
+
+                    return api.find(item._type, item._id);
                 }
+
                 return $q.when(item);
             }
 
