@@ -11,3 +11,27 @@
         top: 48px;
     }
 }
+
+
+.publisher-mediaBox {
+    overflow: visible !important;
+    .toolbox {
+        overflow: visible !important;
+        z-index: 1 !important;
+        .dropdown__menu{
+            z-index: 2 !important;
+        }
+        * {
+            overflow: visible !important;
+        }
+        .dropdown__toggle{
+            visibility: hidden;
+        }
+    }
+
+    &:hover{
+        .toolbox .dropdown__toggle{
+            visibility: visible;
+        }
+    }
+}

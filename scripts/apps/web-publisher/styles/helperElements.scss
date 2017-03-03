@@ -68,3 +68,15 @@
         color: $gray;
     }
 }
+
+.static{
+    position: static;
+}
+
+.publisherBoxShadow{
+    box-shadow: 0px 1px 4px 0 rgba(0, 0, 0, 0.2);
+}
+
+.flex-pull-right{
+    margin-left: auto;
+}
