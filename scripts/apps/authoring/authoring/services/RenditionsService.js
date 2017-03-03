@@ -60,7 +60,9 @@ export function RenditionsService(metadata, $q, api, superdesk, _) {
      *  @return {promise} returns the modified picture item
      */
     this.crop = function(picture, isNew = true) {
-        let poi = picture.poi ? _.extend({}, picture.poi) : {x: 0.5, y: 0.5};
+        let clonedPicture = _.extend({}, picture);
+
+        clonedPicture.renditions = _.cloneDeep(clonedPicture.renditions);
 
         return self.get().then((renditions) => {
             // we want to crop only renditions that change the ratio
@@ -71,9 +73,9 @@ export function RenditionsService(metadata, $q, api, superdesk, _) {
             }
 
             return superdesk.intent('edit', 'crop', {
-                item: _.extend({}, picture),
+                item: clonedPicture,
                 renditions: withRatio,
-                poi: poi,
+                poi: clonedPicture.poi || {x: 0.5, y: 0.5},
                 showAoISelectionButton: true,
                 showMetadataEditor: true,
                 isNew: isNew
@@ -103,10 +105,11 @@ export function RenditionsService(metadata, $q, api, superdesk, _) {
                 renditionNames.forEach((renditionName) => {
                     if (picture.renditions[renditionName] !== result.cropData[renditionName]) {
                         savingImagePromises.push(
-                            api.save('picture_crop', {item: picture, crop: result.cropData[renditionName]})
+                            api.save('picture_crop', {item: clonedPicture, crop: result.cropData[renditionName]})
                         );
                     }
                 });
+
                 return $q.all(savingImagePromises)
                 // return the cropped images
                 .then((croppedImages) => {
@@ -115,7 +118,7 @@ export function RenditionsService(metadata, $q, api, superdesk, _) {
                         let url = image.href;
 
                         // update association renditions
-                        picture.renditions[renditionNames[index]] = angular.extend(
+                        result.metadata.renditions[renditionNames[index]] = angular.extend(
                             image.crop,
                             {
                                 href: url,
