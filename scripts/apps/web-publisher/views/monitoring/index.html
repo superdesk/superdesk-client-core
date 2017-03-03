@@ -68,13 +68,46 @@
 
     <div class="paneLayout__pane paneContent paneContent--darker paneLayout__pane--open" ng-class="{'paneLayout__pane--open': filterOpen}">
         <div class="paneContent__header paneContent__header--darker">
-            <h3 class="pull-left">Publishing pane</h3>
+            <h3 class="pull-left">Publish to web</h3>
             <div ng-click="filterOpen = !filterOpen" class="close-filter">
                 <i class="icon-close-small icon-white"></i>
             </div>
         </div>
-        <div class="paneContent__content contentPadding">
-            publishing page content
-      </div>
+        <div class="paneContent__content paneContent__content--hasFooter contentPadding">
+
+            <form name="" class="flat">
+                <fieldset class="label-light">
+                    <div ng-repeat="i in [1,2,3]"
+                         sd-toggle-box
+                         data-title="Website {{i}}"
+                         data-open="true" data-style="dark">
+                            <div class="item">
+                                <label>Route</label>
+                                <!-- it should open to right side and be limited to one choice only. One route per tenant/website is allowed -->
+                                <div sd-meta-terms
+                                     class="data"
+                                     data-item=""
+                                     data-field=""
+                                     data-list=""
+                                     data-unique="id"
+                                     data-header="true"
+                                     data-reload-list="true">
+                                </div>
+                            </div>
+                            <div class="item">
+                                <!-- !achtung! route has to be set to publish to facebook -->
+                                <label>Publish to Facebook</label>
+                                <span class="" sd-switch ng-model="tenantFacebook"></span>
+                            </div>
+                    </div>
+                </fieldset>
+            </form>
+
+        </div>
+
+        <div class="paneContent__footer paneContent__footer--transparent">
+            <button class="btn btn--primary btn--full" ng-click="" >Publish to web</button>
+        </div>
+
   </div>
 </div>

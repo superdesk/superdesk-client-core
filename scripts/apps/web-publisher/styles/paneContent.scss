@@ -68,5 +68,9 @@
         box-sizing: border-box;
         padding: 16px 24px;
         box-shadow: 0 -1px 2px 0 rgba(0,0,0,.12);
+
+        &--transparent{
+            background-color: transparent;
+        }
     }
 }
