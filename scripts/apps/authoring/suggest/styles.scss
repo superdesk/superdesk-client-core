@@ -70,14 +70,20 @@ sd-suggest {
 
 			dl {
 				margin: 0 36px 0 0;
+				font-size: 15px;
+				line-height: 18px;
 
 				dt {
-					margin-bottom: 3px;
+					padding: 5px 0;
 				}
 
 				dd {
-					margin-bottom: 5px;
+					padding: 3px 0 5px;
 				}
+			}
+
+			.badge {
+				font-size: 15px;
 			}
 
 			section.main {
