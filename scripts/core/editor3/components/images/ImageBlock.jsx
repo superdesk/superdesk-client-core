@@ -49,7 +49,8 @@ class ImageBlockComponent extends Component {
 
     render() {
         const data = this.data();
-        const href = data.renditions.original.href;
+        const rendition = data.renditions.original || data.renditions.viewImage;
+        const href = rendition.href;
         const alt = data.alt_text;
         const description = data.description_text;
 
