@@ -72,6 +72,22 @@ describe('search service', () => {
         expect(filters).toContain({term: {original_creator: '123'}});
     }));
 
+    it('can create query for spike included', inject(($rootScope, search, session) => {
+        session.identity = {_id: 'foo'};
+        var criteria = search.query({spike: 'include'}).getCriteria();
+        var filters = criteria.query.filtered.filter.and;
+
+        expect(filters).not.toContain({not: {term: {state: 'spiked'}}});
+    }));
+
+    it('can create query for spike only', inject(($rootScope, search, session) => {
+        session.identity = {_id: 'foo'};
+        var criteria = search.query({spike: 'only'}).getCriteria();
+        var filters = criteria.query.filtered.filter.and;
+
+        expect(filters).toContain({term: {state: 'spiked'}});
+    }));
+
     it('can create query for ingest provider', inject(($rootScope, search, session) => {
         // only to desk is specified
         session.identity = {_id: 'foo'};

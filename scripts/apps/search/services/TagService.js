@@ -162,7 +162,7 @@ export function TagService($location, desks, userList, metadata, search, ingestS
         },
         company_codes: processMetadataFields,
         subject: processMetadataFields,
-        spike: processBooleanTags,
+        spike: (index, value) => index !== 'exclude' ? tags.selectedParameters.push(tag(value + ':' + index)) : null,
         featuremedia: processBooleanTags,
         ingest_provider: (index, value) => tags.selectedParameters.push(tag(value + ':' +
             ingestSources.providersLookup[index].name))
