@@ -20,7 +20,6 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
     $scope.data.cropData = {};
     $scope.validator = config.validatorMediaMetadata;
     let sizes = {};
-    let originalRenditions = _.cloneDeep($scope.data.item.renditions);
 
     $scope.data.renditions.forEach((rendition) => {
         let original = $scope.data.item.renditions.original;
@@ -117,7 +116,8 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
                 'copyrightholder',
                 'usageterms',
                 'copyrightnotice',
-                'poi'
+                'poi',
+                'renditions'
             ])
         });
     };
@@ -129,7 +129,6 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
     * @description Close the Change Image form.
     */
     $scope.close = function() {
-        $scope.data.item.renditions = originalRenditions;
         if ($scope.data.isDirty) {
             modal.confirm(gettext('You have unsaved changes, do you want to continue?'))
             .then(() => {
