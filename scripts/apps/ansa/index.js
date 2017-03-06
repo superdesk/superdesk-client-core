@@ -27,9 +27,9 @@ class MetasearchController {
             {_id: '', label: 'Anytime'}
         ];
 
-        $scope.$watch(() => workspace.item && workspace.item.headline, (headline, oldHeadline) => {
-            if (!this.query || this.query === oldHeadline) {
-                this.query = headline;
+        $scope.$watch(() => workspace.item && workspace.item.slugline, (slugline, oldVal) => {
+            if (!this.query || this.query === oldVal) {
+                this.query = slugline;
                 this.search();
             }
         });
