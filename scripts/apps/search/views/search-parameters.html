@@ -157,7 +157,7 @@
                 {{:: 'Slugline' | translate}}
             </label>
             <div class="control">
-                <input type="text" id="search-slugline" ng-model="meta.slugline">
+                <input type="text" ng-keypress="keyPressed($event)" id="search-slugline" ng-model="meta.slugline">
             </div>
         </div>
         <div class="field">
@@ -165,7 +165,7 @@
                 {{:: 'Description' | translate}}
             </label>
             <div class="control">
-                <input type="text" id="search-description" ng-model="meta.description_text">
+                <input type="text" ng-keypress="keyPressed($event)" id="search-description" ng-model="meta.description_text">
             </div>
         </div>
             <div class="field">
@@ -173,7 +173,7 @@
                 {{:: 'AAP Image Keyword' | translate}}
             </label>
             <div class="control">
-                <input type="text" id="search-aapkeyword" ng-model="meta.aapkeyword">
+                <input type="text" ng-keypress="keyPressed($event)" id="search-aapkeyword" ng-model="meta.aapkeyword">
             </div>
         </div>
     </fieldset>
@@ -181,12 +181,12 @@
         <div class="field">
             <label class="search-label" for="search-text" translate>Search</label>
             <div class="control">
-                <input type="text" id="search-text" ng-model="meta.text">
+                <input type="text" ng-keypress="keyPressed($event)" id="search-text" ng-model="meta.text">
             </div>
             <div ng-show="repo.search.indexOf('scanpix') === 0">
                 <label class="search-label" for="search-id" translate>Scanpix ID(s)</label>
                 <div class="control">
-                    <input type="text" id="search-id" ng-model="meta.id">
+                    <input type="text" ng-keypress="keyPressed($event)" id="search-id" ng-model="meta.id">
                 </div>
             </div>
             <div ng-show="repo.search === 'paimg'">
