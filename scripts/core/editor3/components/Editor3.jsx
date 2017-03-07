@@ -8,6 +8,7 @@ import {SpellcheckerDecorator} from './spellchecker';
 import {LinkDecorator} from './links';
 import {blockRenderer} from './blockRenderer';
 import {customStyleMap} from './customStyleMap';
+import classNames from 'classnames';
 
 /**
  * @ngdoc React
@@ -46,7 +47,9 @@ export class Editor3Component extends React.Component {
      * @description Handle the editor get focus event
      */
     focus() {
-        this.refs.editor.focus();
+        // TODO(gbbr): Do not unset read-only if the editor was originally read-only.
+        this.props.unsetReadOnly(false);
+        setTimeout(this.refs.editor.focus, 0); // after action
     }
 
     /**
@@ -105,9 +108,13 @@ export class Editor3Component extends React.Component {
         } = this.props;
 
         let className = singleLine ? 'Editor3-editor-single-line' : 'Editor3-editor';
+        let cx = classNames({
+            'Editor3-root': true,
+            'read-only': readOnly
+        });
 
         return (
-            <div className="Editor3-root">
+            <div className={cx}>
                 {showToolbar ? <Toolbar editorRect={this.editorRect} /> : null}
                 <div className={className} onClick={this.focus}>
                     <Editor
@@ -132,6 +139,7 @@ Editor3Component.propTypes = {
     singleLine: React.PropTypes.bool,
     editorState: React.PropTypes.object,
     onChange: React.PropTypes.func,
+    unsetReadOnly: React.PropTypes.func,
     onTab: React.PropTypes.func,
     dragDrop: React.PropTypes.func
 };
@@ -146,7 +154,8 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
     onChange: (editorState) => dispatch(actions.changeEditorState(editorState)),
     onTab: (e) => dispatch(actions.handleEditorTab(e)),
-    dragDrop: (e) => dispatch(actions.dragDrop(e))
+    dragDrop: (e) => dispatch(actions.dragDrop(e)),
+    unsetReadOnly: () => dispatch(actions.setReadOnly(false))
 });
 
 export const Editor3 = connect(mapStateToProps, mapDispatchToProps)(Editor3Component);

@@ -51,3 +51,10 @@ export function dragDrop(e) {
         payload: e
     };
 }
+
+export function setReadOnly(v) {
+    return {
+        type: 'EDITOR_SET_READONLY',
+        payload: v
+    };
+}

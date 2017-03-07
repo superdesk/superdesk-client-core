@@ -1,6 +1,7 @@
 import React from 'react';
 import {ImageBlock} from './images';
 import {EmbedBlock} from './embeds';
+import {TableBlock} from './tables';
 
 /**
  * @ngdoc React
@@ -19,6 +20,8 @@ const MediaComponent = (props) => {
         return <ImageBlock {...props} />;
     case 'EMBED':
         return <EmbedBlock {...props} />;
+    case 'TABLE':
+        return <TableBlock {...props} />;
     default:
         return null;
     }

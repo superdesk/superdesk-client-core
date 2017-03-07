@@ -110,3 +110,12 @@ export function embed(oEmbed) {
         payload: oEmbed
     };
 }
+
+export function addTable(w, h) {
+    const cells = [];
+
+    return {
+        type: 'TOOLBAR_ADD_TABLE',
+        payload: {w, h, cells}
+    };
+}

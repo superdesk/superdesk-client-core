@@ -8,6 +8,27 @@
 	padding: 15px;
 	position: relative;
 
+	&.read-only {
+		.Editor3-controls {
+			opacity: 0.7;
+
+			.Editor3-styleButton {
+				text-decoration: line-through;
+			}
+		}
+	}
+
+	table td {
+		.public-DraftEditor-content {
+			margin: 0;
+			padding: 0;
+		}
+
+		border: 1px solid #efefef;
+		padding: 5px;
+		min-width: 20px;
+	}
+
 	.word-typo:not(.ignored) {
 	    border-bottom-width: 1px;
 	    border-bottom-style: dotted;
@@ -94,7 +115,6 @@
 	margin-bottom: 5px;
 	user-select: none;
 	position: relative;
-
 
 	.embed-dialog {
 		position: absolute;
