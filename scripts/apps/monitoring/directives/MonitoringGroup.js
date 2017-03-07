@@ -106,9 +106,6 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
             scope.$on('item:highlights', scheduleQuery);
             scope.$on('item:marked_desks', scheduleQuery);
             scope.$on('content:update', scheduleIfShouldUpdate);
-            scope.$on('item:unselect', () => {
-                scope.selected = null;
-            });
 
             if (scope.group.type === 'search' && search.doesSearchAgainstRepo(scope.group.search, 'ingest')) {
                 scope.$on('ingest:update', (event, data) => {
@@ -177,19 +174,31 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
             });
 
             /*
+             * Change between single stage/desk view and monitoring grouped view
+             *
+             * @param {string} type - type is 'desk' or 'stage' to switch single view
+             */
+            function toggleMonitoringSingleView(type) {
+                if (_.isNil(monitoring.singleGroup) && scope.selected) {
+                    scope.$applyAsync(() => {
+                        monitoring.viewSingleGroup(monitoring.selectedGroup, type);
+                    });
+                }
+
+                // Returns back to monitoring view from single view
+                if (monitoring.singleGroup) {
+                    scope.$applyAsync(() => {
+                        monitoring.viewMonitoringHome();
+                    });
+                }
+            }
+
+            /*
              * Change between single stage view and grouped view by keyboard
              * Keyboard shortcut: Ctrl + alt + j
              */
-            scope.$on('key:ctrl:alt:j', () => {
-                if (scope.selected) {
-                    scope.$applyAsync(() => {
-                        if (_.isNil(monitoring.singleGroup)) {
-                            monitoring.viewSingleGroup(monitoring.selectedGroup, 'stage');
-                        } else {
-                            monitoring.viewMonitoringHome();
-                        }
-                    });
-                }
+            scope.$on('key:ctrl:alt:j', (event, data) => {
+                toggleMonitoringSingleView('stage');
             });
 
             // refreshes the list for matching group or view type only or if swimlane view is ON.
@@ -219,15 +228,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
              * Keyboard shortcut: Ctrl + alt + g
              */
             scope.$on('key:ctrl:alt:g', () => {
-                if (scope.selected) {
-                    scope.$applyAsync(() => {
-                        if (_.isNil(monitoring.singleGroup)) {
-                            monitoring.viewSingleGroup(monitoring.selectedGroup, 'desk');
-                        } else {
-                            monitoring.viewMonitoringHome();
-                        }
-                    });
-                }
+                toggleMonitoringSingleView('desk');
             });
 
             // forced refresh on refresh button click or on refresh:list

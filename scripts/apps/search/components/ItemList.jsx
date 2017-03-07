@@ -10,7 +10,7 @@ export class ItemList extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {itemsList: [], itemsById: {}, selected: null, view: 'mgrid', narrow: false, bindedItems: []};
+        this.state = {itemsList: [], itemsById: {}, selected: null, view: 'mgrid', narrow: false, bindedShortcuts: []};
 
         this.multiSelect = this.multiSelect.bind(this);
         this.select = this.select.bind(this);
@@ -96,10 +96,12 @@ export class ItemList extends React.Component {
      * Unbind all item actions
      */
     unbindActionKeyShortcuts() {
-        this.state.bindedItems.forEach((func) => {
-            func();
+        const {keyboardManager} = this.props.svc;
+
+        this.state.bindedShortcuts.forEach((shortcut) => {
+            keyboardManager.unbind(shortcut);
         });
-        this.setState({bindedItems: []});
+        this.setState({bindedShortcuts: []});
     }
 
     /*
@@ -109,29 +111,26 @@ export class ItemList extends React.Component {
      * @param {Object} item
      */
     bindActionKeyShortcuts(selectedItem) {
-        const {superdesk, workflowService, activityService} = this.props.svc;
-
-        const {scope} = this.props;
+        const {superdesk, workflowService, activityService, keyboardManager, archiveService} = this.props.svc;
 
         // First unbind all binded shortcuts
-        if (this.state.bindedItems.length) {
+        if (this.state.bindedShortcuts.length) {
             this.unbindActionKeyShortcuts();
         }
 
-        let intent = {action: 'list'};
+        let intent = {action: 'list', type: archiveService.getType(selectedItem)};
 
         superdesk.findActivities(intent, selectedItem).forEach((activity) => {
             if (activity.keyboardShortcut && workflowService.isActionAllowed(selectedItem, activity.action)) {
-                this.state.bindedItems.push(
-                    scope.$on('key:' + activity.keyboardShortcut.replace(/\+/g, ':'),
-                    () => {
-                        if (_.includes(['mark.item', 'mark.desk'], activity._id)) {
-                            bindMarkItemShortcut(activity.label);
-                        } else {
-                            activityService.start(activity, {data: {item: selectedItem}});
-                        }
-                    })
-                );
+                this.state.bindedShortcuts.push(activity.keyboardShortcut);
+
+                keyboardManager.bind(activity.keyboardShortcut, () => {
+                    if (_.includes(['mark.item', 'mark.desk'], activity._id)) {
+                        bindMarkItemShortcut(activity.label);
+                    } else {
+                        activityService.start(activity, {data: {item: selectedItem}});
+                    }
+                });
             }
         });
     }
@@ -210,6 +209,7 @@ export class ItemList extends React.Component {
 
     deselectAll() {
         this.setState({selected: null});
+        this.unbindActionKeyShortcuts();
     }
 
     updateAllItems(itemId, changes) {
@@ -278,7 +278,8 @@ export class ItemList extends React.Component {
         const moveActiveGroup = () => {
             event.preventDefault();
             event.stopPropagation();
-            this.select(); // deselect active item
+            this.deselectAll(); // deselect active item
+
             scope.$applyAsync(() => {
                 monitoringState.moveActiveGroup(event.keyCode === Keys.pageup ? -1 : 1);
             });

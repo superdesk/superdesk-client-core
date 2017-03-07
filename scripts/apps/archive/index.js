@@ -207,7 +207,6 @@ angular.module('superdesk.apps.archive', [
                 label: gettext('New Take'),
                 icon: 'new-doc',
                 filters: [{action: 'list', type: 'archive'}],
-                keyboardShortcut: 'ctrl+alt+t',
                 privileges: {archive: 1},
                 additionalCondition: ['authoring', 'item', 'config', function(authoring, item, config) {
                     return authoring.itemActions(item).new_take && !(config.features && config.features.noTakes);
