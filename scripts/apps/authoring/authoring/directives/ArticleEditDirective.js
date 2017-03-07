@@ -230,6 +230,16 @@ export function ArticleEditDirective(
             };
 
             /**
+             * Updates the sign_off field with the new value generated on the server side
+             * once the story is saved
+             */
+            scope.$watch('origItem.sign_off', (newValue, oldValue) => {
+                if (newValue !== oldValue) {
+                    scope.item.sign_off = newValue;
+                }
+            });
+
+            /**
              * Invoked when user selects a different day in dateline day list. This method calculates the
              * relative UTC based on the new values of month and day and sets to dateline.date.
              *
