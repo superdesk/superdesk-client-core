@@ -350,6 +350,28 @@ describe('authoring', () => {
         expect(authoring.getHeaderSluglineText()).toContain('item5');
     });
 
+    it('can calculate word counts', () => {
+        expect(monitoring.getTextItem(2, 0)).toBe('item5');
+        monitoring.actionOnItem('Edit', 2, 0);
+        authoring.cleanBodyHtmlElement();
+        authoring.writeText('There are seven words in this sentence.\n');
+        authoring.writeText('There are eight words in this   new sentence.');
+        authoring.writeText(protractor.Key.ENTER);
+        authoring.writeText(' ');
+        authoring.writeText(protractor.Key.ENTER);
+        authoring.writeText('There are nine words, in this   final last sentence.\n');
+        expect(authoring.getEditorWordCount()).toBe('24 words');
+        authoring.save();
+        authoring.close();
+        expect(monitoring.getMonitoringWordCount('item5')).toBe('24');
+        monitoring.actionOnItem('Edit', 2, 0);
+        authoring.cleanBodyHtmlElement();
+        expect(authoring.getEditorWordCount()).toBe('0 words');
+        authoring.save();
+        authoring.close();
+        expect(monitoring.getMonitoringWordCount('item5')).toBe('0');
+    });
+
     it('can update sign off manually', () => {
         expect(monitoring.getTextItem(2, 0)).toBe('item5');
         monitoring.actionOnItem('Edit', 2, 0);

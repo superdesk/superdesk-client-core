@@ -129,6 +129,8 @@ function Monitoring() {
         return element.all(by.className('media-box'));
     };
 
+    this.getMonitoringWordCount = (itemId) => element(by.id(itemId)).all(by.className('word-count')).first().getText();
+
     /**
      * Get the personal element at 'index' row
      *
