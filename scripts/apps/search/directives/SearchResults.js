@@ -176,7 +176,7 @@ export function SearchResults(
              */
             function queryItems(event, data) {
                 if (!nextUpdate) {
-                    if (scope.repo.search !== 'local') {
+                    if (scope.repo.search !== 'local' && !$location.search().q) {
                         return; // ignore updates with external content
                     }
 
