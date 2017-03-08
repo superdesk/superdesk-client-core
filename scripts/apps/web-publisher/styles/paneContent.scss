@@ -33,6 +33,25 @@
         }
     }
 
+    &__tabItem{
+        display: inline-block;
+        color: $gray;
+        margin: -9px 1em -9px 1em;
+        line-height: 48px;
+        font-size: .9rem;
+        font-weight: 400;
+        cursor: pointer;
+        &:hover{
+            color: $grayDark;
+            text-decoration: none;
+        }
+
+        &--active{
+            color: $grayDark;
+            border-bottom: 2px solid $sd-blue;
+        }
+    }
+
     &__content {
         height: calc(100% - 48px);
         overflow-y: scroll;
@@ -68,5 +87,11 @@
         box-sizing: border-box;
         padding: 16px 24px;
         box-shadow: 0 -1px 2px 0 rgba(0,0,0,.12);
+        &--center{
+            text-align: center;
+        }
+        &--transparent{
+            background-color: transparent;
+        }
     }
 }
