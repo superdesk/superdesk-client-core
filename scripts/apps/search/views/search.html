@@ -2,6 +2,17 @@
   <header class="search-page-header">
       <div class="filter-trigger" title="{{ :: 'Filters' | translate }}" ng-click="flags.facets = !flags.facets" ng-class="{'filter-trigger--active': flags.facets}"><i class="icon-filter-large"></i></div>
 
+      <div class="dropdown navbtn strict large" ansa-repo-dropdown dropdown>
+          <button class="dropdown__toggle" dropdown-toggle>{{ repos.active.source || 'Superdesk' }}<span class="caret"></span></button>
+          <ul class="dropdown__menu scrollable">
+              <li><div class="dropdown__menu-label">{{ :: 'Search In' | translate }}</div></li>
+              <li><button ng-click="repos.toggle()">Superdesk</button></li>
+              <li ng-repeat="provider in repos.providers">
+                <button ng-click="repos.toggle(provider)">{{ provider.source }}</button>
+              </li>
+          </ul>
+      </div>
+
       <div sd-item-searchbar data-repo="repo" data-context="context" class="searchbar-flex-handler"></div>
       <div sd-item-sortbar data-total="total_records" class="sortbar-flex-handler"></div>
       <div class="refresh-box">

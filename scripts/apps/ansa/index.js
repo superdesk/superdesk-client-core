@@ -418,6 +418,57 @@ function AnsaMetasearchDropdown() {
     };
 }
 
+AnsaRepoDropdown.$inject = ['api', '$filter', '$location', '$rootScope'];
+function AnsaRepoDropdown(api, $filter, $location, $rootScope) {
+    class AnsaRepoDropdownController {
+        constructor($scope) {
+            this.scope = $scope;
+            this.fetchProviders();
+        }
+
+        fetchProviders() {
+            return api.search_providers.query({max_results: 200})
+                .then((result) => {
+                    this.providers = $filter('sortByName')(result._items, 'search_provider');
+                    this.active = this.providers.find((provider) => $location.search().repo === provider._id);
+                });
+        }
+
+        toggle(provider) {
+            this.active = provider;
+            if (provider) {
+                $location.search('repo', provider._id);
+                this.scope.$applyAsync(() => angular.extend(this.scope.repo, {
+                    ingest: false,
+                    archive: false,
+                    published: false,
+                    archived: false,
+                    search: provider._id
+                }));
+                $rootScope.$broadcast('aggregations:changed');
+            } else {
+                $location.search('repo', null);
+                this.scope.$applyAsync(() => {
+                    angular.extend(this.scope.repo, {
+                        ingest: true,
+                        archive: true,
+                        published: true,
+                        archived: true,
+                        search: 'local'
+                    });
+                });
+            }
+        }
+    }
+
+    AnsaRepoDropdownController.$inject = ['$scope'];
+
+    return {
+        controller: AnsaRepoDropdownController,
+        controllerAs: 'repos'
+    };
+}
+
 angular.module('ansa.superdesk', [])
     .factory('metasearch', MetasearchFactory)
     .controller('MetasearchCtrl', MetasearchController)
@@ -427,6 +478,7 @@ angular.module('ansa.superdesk', [])
     .directive('ansaLiveSuggestions', AnsaLiveSuggestions)
     .directive('ansaMetasearchResults', AnsaMetasearchResults)
     .directive('ansaMetasearchDropdown', AnsaMetasearchDropdown)
+    .directive('ansaRepoDropdown', AnsaRepoDropdown)
     .config(['superdeskProvider', (superdeskProvider) => {
         superdeskProvider.activity('/workspace/metasearch', {
             label: gettext('Metasearch'),
