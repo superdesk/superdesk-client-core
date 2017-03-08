@@ -350,6 +350,21 @@ describe('authoring', () => {
         expect(authoring.getHeaderSluglineText()).toContain('item5');
     });
 
+    it('can update sign off manually', () => {
+        expect(monitoring.getTextItem(2, 0)).toBe('item5');
+        monitoring.actionOnItem('Edit', 2, 0);
+        expect(authoring.getSignoffText()).toBe('fl');
+        authoring.writeSignoffText('ABC');
+        authoring.save();
+        authoring.close();
+        expect(monitoring.getTextItem(2, 0)).toBe('item5');
+        monitoring.actionOnItem('Edit', 2, 0);
+        expect(authoring.getSignoffText()).toBe('ABC');
+        authoring.writeText('z');
+        authoring.save();
+        expect(authoring.getSignoffText()).toBe('ABC/fl');
+    });
+
     it('toggle auto spellcheck and hold changes', () => {
         monitoring.actionOnItem('Edit', 2, 1);
         expect(element(by.model('spellcheckMenu.isAuto')).getAttribute('checked')).toBeTruthy();

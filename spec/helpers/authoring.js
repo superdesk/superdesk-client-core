@@ -522,6 +522,22 @@ function Authoring() {
         packageSlugline.sendKeys(text);
     };
 
+    this.getSignoffText = function() {
+        return element(by.id('sign-off')).getText();
+    };
+
+    this.writeSignoffText = function(text) {
+        var signoffEditable = element(by.id('sign_off'));
+        var signoffUnlock = element(by.id('sign-off-unlock'));
+
+        // unlock sign-off
+        signoffUnlock.click();
+        signoffEditable.clear();
+        signoffEditable.sendKeys(text);
+        // lock sign-off
+        signoffUnlock.click();
+    };
+
     this.getBodyText = function() {
         return bodyHtml.getText();
     };
