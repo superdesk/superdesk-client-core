@@ -46,7 +46,9 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
                 }
 
                 if ($location.search().spike) {
-                    scope.fields.spike = true;
+                    scope.fields.spike = $location.search().spike;
+                } else {
+                    scope.fields.spike = 'exclude';
                 }
 
                 if ($location.search().featuremedia) {

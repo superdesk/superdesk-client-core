@@ -21,8 +21,13 @@ export function CardsService(api, search, session, desks, config) {
             params.q = card.query;
         }
 
-        params.spike = card.type === 'spike' || card.type === 'spike-personal' ||
-            card.type === 'search' && params.spike === true;
+        if (card.type === 'search' && (params.spike === 'include' || params.spike === 'only')) {
+            params.spike = params.spike;
+        }
+
+        if (card.type === 'spike' || card.type === 'spike-personal') {
+            params.spike = 'only';
+        }
 
         return params;
     }

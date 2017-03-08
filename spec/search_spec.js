@@ -4,6 +4,7 @@
 var openUrl = require('./helpers/utils').open,
     globalSearch = require('./helpers/search'),
     authoring = require('./helpers/authoring'),
+    content = require('./helpers/pages').content,
     monitoring = require('./helpers/monitoring');
 
 describe('search', () => {
@@ -181,6 +182,26 @@ describe('search', () => {
         rawTextbox.sendKeys('type:text AND (item1 OR item4)');
         globalSearch.goButton.click();
         expect(globalSearch.getItems().count()).toBe(2);
+
+        // search spiked content
+        globalSearch.openGlobalSearch();
+        globalSearch.setListView();
+        expect(globalSearch.getItems().count()).toBe(17);
+        content.actionOnItem('Spike Item', 2);
+        content.actionOnItem('Spike Item', 1);
+        content.actionOnItem('Spike Item', 0);
+        browser.sleep(200);
+        expect(globalSearch.getItems().count()).toBe(14);
+        globalSearch.openFilterPanel();
+        globalSearch.openParameters();
+        globalSearch.selectDesk('spike-options', 'Include spiked content');
+        globalSearch.goButton.click();
+        expect(globalSearch.getItems().count()).toBe(17);
+        expect(globalSearch.getSelectedTags().count()).toBe(1);
+        globalSearch.selectDesk('spike-options', 'Spiked only content');
+        globalSearch.goButton.click();
+        expect(globalSearch.getItems().count()).toBe(3);
+        expect(globalSearch.getSelectedTags().count()).toBe(1);
     });
 
     it('can action on items', () => {

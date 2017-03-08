@@ -490,10 +490,13 @@ export function SearchService($location, gettext, config, session, multi, prefer
             return this;
         };
 
-        // do base filtering
-        if (params.spike) {
+        // set spiked filters
+        if (params.spike === 'include') {
+            // no filters needed
+        } else if (params.spike === 'only') {
             this.filter({term: {state: 'spiked'}});
         } else {
+            // default exclude spiked items
             this.filter({not: {term: {state: 'spiked'}}});
         }
 

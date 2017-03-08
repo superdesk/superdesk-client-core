@@ -110,24 +110,26 @@
             </div>
         </div>
 
-        <div class="multiple">
-            <div class="field" ng-if="repo.archive && search_config.creator">
-                <label for="search-creator">
-                    {{:: 'Creator' | translate}}
-                </label>
-                <select id="search-creator"
-                        ng-model="fields.original_creator"
-                        ng-options="user._id  as user.display_name for user in userList track by user._id">
-                <option value="" label=""></option>
-                </select>
-            </div>
+        <div class="field" ng-if="repo.archive && search_config.creator">
+            <label for="search-creator">
+                {{:: 'Creator' | translate}}
+            </label>
+            <select id="search-creator"
+                    ng-model="fields.original_creator"
+                    ng-options="user._id  as user.display_name for user in userList track by user._id">
+            <option value="" label=""></option>
+            </select>
+        </div>
 
-            <div class="field" ng-if="search_config.spike">
-                <label for="search-spike">
-                {{:: 'In Spiked' | translate}}
-                </label>
-                <span sd-switch ng-model="fields.spike"></span>
-            </div>
+        <div class="field" ng-if="search_config.spike">
+            <label for="spike-options">
+                {{:: 'Spiked Content' | translate}}
+            </label>
+            <select id="spike-options" name="spike-options" ng-model="fields.spike">
+                <option value="exclude" label="{{:: 'Exclude spiked content' | translate }}"></option>
+                <option value="include" label="{{:: 'Include spiked content' | translate }}"></option>
+                <option value="only" label="{{:: 'Spiked only content' | translate }}"></option>
+            </select>
         </div>
 
         <div class="field" ng-if="search_config.featuremedia">
