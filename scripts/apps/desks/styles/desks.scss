@@ -694,6 +694,9 @@ $desk-width: 270px;
     &--locked {
         border-left-color: #b70101;
     }
+    &.gone {
+        opacity: 0.5;
+    }
     &--no-border {
         border-left:none;
     }

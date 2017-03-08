@@ -136,7 +136,7 @@ function Dashboard() {
      * @return {promise} items element list
      */
     this.getGroupItems = function(widget, group) {
-        return this.getGroup(widget, group).all(by.repeater('item in items'));
+        return this.getGroup(widget, group).all(by.css('content-item'));
     };
 
     /**

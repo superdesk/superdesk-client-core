@@ -29,7 +29,6 @@ angular.module('superdesk.apps.desks', [
 ])
     .factory('desks', DesksFactory)
 
-    .directive('sdStageItems', directive.StageItemListDirective)
     .directive('sdTaskStatusItems', directive.TaskStatusItemsDirective)
     .directive('sdUserRoleItems', directive.UserRoleItemListDirective)
     .directive('sdSluglinesItems', directive.SluglinesItemListDirective)
