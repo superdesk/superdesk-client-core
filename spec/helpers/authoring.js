@@ -538,6 +538,8 @@ function Authoring() {
         signoffUnlock.click();
     };
 
+    this.getEditorWordCount = () => element.all(by.className('char-count words')).last().getText();
+
     this.getBodyText = function() {
         return bodyHtml.getText();
     };
