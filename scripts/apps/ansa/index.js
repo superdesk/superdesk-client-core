@@ -263,7 +263,7 @@ function AnsaRelatedCtrl($scope, api) {
 
         let filters = [];
         let semantics = $scope.item.semantics;
-        let keys = ['persons', 'organizations'];
+        let keys = ['persons', 'organizations', 'places', 'iptcCodes'];
         let namespace = (key) => 'semantics.' + key;
 
         keys.forEach((key) => {
@@ -277,25 +277,18 @@ function AnsaRelatedCtrl($scope, api) {
             }
         });
 
+        // boost pictures
+        filters.push({term: {type: 'picture'}});
+
         let query = {
             bool: {
                 must_not: {term: {_id: $scope.item.guid}},
-                should: [
-                    {
-                        bool: {
-                            must: {terms: {'semantics.iptcCodes': semantics.iptcCodes}},
-                            should: filters
-                        }
-                    },
-                    {
-                        bool: {
-                            must: {term: {type: 'picture'}},
-                            should: filters
-                        }
-                    }
-                ]
+                should: filters,
+                minimum_should_match: filters.length > 8 ? 3 : 2
             }
         };
+
+        console.info('query', query);
 
         api.query('archive', {source: {query: query, sort: ['_score']}}).then((response) => {
             this.items = response._items;
