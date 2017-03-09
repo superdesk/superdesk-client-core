@@ -307,7 +307,8 @@ function AnsaRelatedCtrl($scope, api) {
                     {
                         bool: {
                             must: {term: {type: 'picture'}},
-                            should: pictureFilters
+                            should: pictureFilters,
+                            minimum_should_match: 1
                         }
                     }
                 ]
