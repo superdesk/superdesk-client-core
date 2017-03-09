@@ -1,12 +1,18 @@
 WorkspaceSidenavDirective.$inject = ['superdeskFlags', '$location', 'Keys', 'gettext', 'config',
-    '$route', 'api', '$filter', '$rootScope', 'workspaces'];
+    '$route', 'api', '$filter', '$rootScope', 'workspaces', 'privileges'];
 export function WorkspaceSidenavDirective(superdeskFlags, $location, Keys, gettext, config,
-    $route, api, $filter, $rootScope, workspaces) {
+    $route, api, $filter, $rootScope, workspaces, privileges) {
     return {
         templateUrl: 'scripts/apps/workspace/views/workspace-sidenav-items.html',
         link: function(scope, elem) {
             scope.workspaceConfig = config.workspace || {};
-            scope.extraItems = workspaces.extraItems || [];
+
+            // Filter extraItems based on privileges
+            if (workspaces.extraItems) {
+                scope.extraItems = workspaces.extraItems.filter((item) => privileges.userHasPrivileges(item.privilege));
+            } else {
+                scope.extraItems = [];
+            }
 
             /*
              * Function for showing and hiding monitoring list
