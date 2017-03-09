@@ -263,7 +263,7 @@ function AnsaRelatedCtrl($scope, api) {
 
         let filters = [];
         let semantics = $scope.item.semantics;
-        let keys = ['persons', 'organizations', 'places', 'iptcCodes'];
+        let keys = ['persons', 'organizations'];
         let namespace = (key) => 'semantics.' + key;
 
         keys.forEach((key) => {
@@ -277,18 +277,44 @@ function AnsaRelatedCtrl($scope, api) {
             }
         });
 
-        // boost pictures
-        filters.push({term: {type: 'picture'}});
+        let pictureFilters = filters.concat();
+        let prefixes = {};
+
+        if (!_.isEmpty(semantics.iptcCodes)) {
+            semantics.iptcCodes.forEach((code) => {
+                let prefix = code.substr(0, 2);
+
+                if (!prefixes[prefix]) {
+                    prefixes[prefix] = 1;
+                    pictureFilters.push({prefix: {'semantics.iptcCodes': prefix}});
+                }
+            });
+        }
 
         let query = {
             bool: {
                 must_not: {term: {_id: $scope.item.guid}},
-                should: filters,
-                minimum_should_match: filters.length > 8 ? 3 : 2
+                should: [
+                    {
+                        bool: {
+                            must: [
+                                {term: {type: 'text'}},
+                                {terms: {'semantics.iptcCodes': semantics.iptcCodes}}
+                            ],
+                            should: filters
+                        }
+                    },
+                    {
+                        bool: {
+                            must: {term: {type: 'picture'}},
+                            should: pictureFilters
+                        }
+                    }
+                ]
             }
         };
 
-        console.info('query', query);
+        console.info('query', angular.toJson(query, 2));
 
         api.query('archive', {source: {query: query, sort: ['_score']}}).then((response) => {
             this.items = response._items;
