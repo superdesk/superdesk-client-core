@@ -1,5 +1,33 @@
 # Superdesk Client Changelog
 
+## [1.6.1] 2017-03-09
+
+### Fixed
+
+- Fix build after new angular release.
+- Fix issue where renditions were not saved after original was modified.
+- Fix lost scroll position when user opens an item in authoring.
+- Pick item when select box is clicked.
+- Fix preview is not closed when an item is opened for authoring.
+- Hilite featured placeholder on dragover event.
+- Fix grouping of macros when group is missing.
+- Fix esc key handling in modal directives.
+- Fix bad schema settings in content profiles when using min length.
+- Disable reseting of items when performing multi select.
+- Filter profiles by desk in authoring.
+- Fix issue with scrolling in monitoring widget.
+- Fix tansa proofing.
+- Fix related widget to show state and display results when widget is opened.
+- Fix typos and grammar in UI.
+
+### Added
+
+- Prefix `Archived from` to desk info for archived items.
+
+### Changed
+
+- Make `singleLine` a new config.
+
 ## [1.6.0] 2017-02-16
 
 ### Fixed
