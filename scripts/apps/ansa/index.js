@@ -13,11 +13,12 @@ class MetasearchController {
         this.maxItems = 10;
 
         this.categories = [
-            {_id: '', label: 'Superdesk'},
-            {_id: 'general', label: 'General'},
+            {_id: '', label: 'General'},
             {_id: 'news', label: 'News'},
             {_id: 'social media', label: 'Social Media'},
-            {_id: 'videos', label: 'Videos'}
+            {_id: 'videos', label: 'Videos'},
+            {_id: 'ansa', label: 'ANSA'},
+            {_id: 'enciclopedia', label: 'Enciclopedia'}
         ];
 
         this.time_ranges = [
@@ -75,7 +76,7 @@ class MetasearchController {
             this.loading = true;
 
             params.time_range = this.time_range;
-            params.categories = this.category || 'superdesk';
+            params.categories = this.category || 'general';
 
             this.metasearch.metasearch(params)
                 .then((response) => {
