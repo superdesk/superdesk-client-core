@@ -318,7 +318,7 @@ function AnsaRelatedCtrl($scope, api) {
 
         console.info('query', angular.toJson(query, 2));
 
-        api.query('archive', {source: {query: query, sort: ['_score'], size: 50}}).then((response) => {
+        api.query('archive', {source: {query: query, sort: [{versioncreated: 'desc'}], size: 50}}).then((response) => {
             this.items = response._items;
         }, (reason) => {
             this.items = [];
