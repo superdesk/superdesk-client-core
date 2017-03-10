@@ -282,7 +282,7 @@ function AnsaRelatedCtrl($scope, api) {
 
         if (!_.isEmpty(semantics.iptcCodes)) {
             semantics.iptcCodes.forEach((code) => {
-                let prefix = code.substr(0, 2);
+                let prefix = code.substr(0, 5);
 
                 if (!prefixes[prefix]) {
                     prefixes[prefix] = 1;
@@ -301,7 +301,8 @@ function AnsaRelatedCtrl($scope, api) {
                                 {term: {type: 'text'}},
                                 {terms: {'semantics.iptcCodes': semantics.iptcCodes}}
                             ],
-                            should: filters
+                            should: filters,
+                            minimum_should_match: 1
                         }
                     },
                     {
