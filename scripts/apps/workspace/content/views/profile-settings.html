@@ -1,5 +1,6 @@
 <div sd-settings-view>
     <div class="split-content">
+
         <div class="header">
             <h2 translate>Content Profiles</h2>
 
@@ -7,40 +8,46 @@
                 <i class="icon-plus-sign icon-white"></i> {{ :: 'Add New Content Profile' | translate }}
             </button>
         </div>
+        <div class="content split-content">
+            <div class="header">
+                <span sd-check class="sd-checkbox--button-style" ng-model="active_only">{{:: 'Show active only'| translate}}</span>
+            </div>
 
-        <div class="content profile-settings desk-settings">
-            <div class="flex-grid box wrap-items small-1 medium-3 large-4 xlarge-6">
-                <div class="flex-item card-box"
-                     ng-repeat="type in ctrl.items | orderBy: 'label' track by type._id"
-                    ng-class="{inactive: !type.enabled}">
+            <div class="content profile-settings desk-settings">
+                <div class="flex-grid box wrap-items small-1 medium-3 large-4 xlarge-6">
+                    <div class="flex-item card-box"
+                        ng-repeat="type in ctrl.items | orderBy: 'label' track by type._id"
+                        ng-class="{inactive: !type.enabled}" ng-show="!active_only || (active_only && type.enabled)">
 
-                    <div class="card-box__header">
-                        <div class="dropdown" dropdown>
-                            <button class="dropdown__toggle" dropdown__toggle>
-                                <i class="icon-dots-vertical"></i>
-                            </button>
-                            <ul class="dropdown__menu more-activity-menu pull-right">
-                                <li><div class="dropdown__menu-label" translate>Actions</div></li>
-                                <li class="divider"></li>
-                                <li><button ng-click="ctrl.toggleEdit(type)" title="{{:: 'Edit Content Profile' | translate }}"><i class="icon-pencil"></i>{{:: 'Edit'| translate}}</button></li>
-                                <li><button ng-click="ctrl.delete(type)" ng-disabled="type.is_used" title="{{:: type.is_used ? 'Sorry, but profile is in use.' : 'Remove Content Profile' | translate }}"><i class="icon-trash"></i>{{:: 'Remove'| translate}}</button></li>
-                            </ul>
+                            <div class="card-box__header">
+                                <div class="dropdown" dropdown>
+                                    <button class="dropdown__toggle" dropdown__toggle>
+                                        <i class="icon-dots-vertical"></i>
+                                    </button>
+                                    <ul class="dropdown__menu more-activity-menu pull-right">
+                                        <li><div class="dropdown__menu-label" translate>Actions</div></li>
+                                        <li class="divider"></li>
+                                        <li><button ng-click="ctrl.toggleEdit(type)" title="{{:: 'Edit Content Profile' | translate }}"><i class="icon-pencil"></i>{{:: 'Edit'| translate}}</button></li>
+                                        <li><button ng-click="ctrl.delete(type)" ng-disabled="type.is_used" title="{{:: type.is_used ? 'Sorry, but profile is in use.' : 'Remove Content Profile' | translate }}"><i class="icon-trash"></i>{{:: 'Remove'| translate}}</button></li>
+                                    </ul>
+                                </div>
+                                <div class="card-box__heading">{{ type.label }}</div>
+                            </div>
+
+                            <div class="card-box__content">
+                                <ul class="card-box__content-list">
+                                    <li>
+                                        <h4 translate>Status</h4>
+                                        <span ng-show="type.enabled" translate>Active</span>
+                                        <span ng-hide="type.enabled" translate>Inactive</span>
+                                    </li>
+                                    <li>
+                                        <h4 translate>Updated</h4>
+                                        <span>{{ type._updated | reldate }}</span>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
-                        <div class="card-box__heading">{{ type.label }}</div>
-                    </div>
-
-                    <div class="card-box__content">
-                        <ul class="card-box__content-list">
-                            <li>
-                                <h4 translate>Status</h4>
-                                <span ng-show="type.enabled" translate>Active</span>
-                                <span ng-hide="type.enabled" translate>Inactive</span>
-                            </li>
-                            <li>
-                                <h4 translate>Updated</h4>
-                                <span>{{ type._updated | reldate }}</span>
-                            </li>
-                        </ul>
                     </div>
                 </div>
             </div>

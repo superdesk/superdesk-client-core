@@ -11,6 +11,10 @@ export function ContentProfilesController($scope, notify, content, modal, $q) {
     // be null.
     $scope.editing = null;
 
+    // if true, only active Content Profiles will be shown
+    // can be changed with a button
+    $scope.active_only = true;
+
     /**
      * @description Refreshes the list of content profiles by fetching them.
      * @returns {Promise}
