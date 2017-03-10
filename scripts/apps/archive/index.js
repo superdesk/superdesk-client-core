@@ -182,8 +182,7 @@ angular.module('superdesk.apps.archive', [
                 icon: 'copy',
                 monitor: true,
                 controller: ['api', 'data', '$rootScope', function(api, data, $rootScope) {
-                    api
-                        .save('copy', {}, {}, data.item)
+                    return api.save('copy', {}, {}, data.item)
                         .then((archiveItem) => {
                             data.item.task_id = archiveItem.task_id;
                             data.item.created = archiveItem._created;
@@ -192,7 +191,9 @@ angular.module('superdesk.apps.archive', [
                             data.item.error = response;
                         })
                         .finally(() => {
-                            data.item.actioning.archiveContent = false;
+                            if (data.item.actioning) {
+                                data.item.actioning.archiveContent = false;
+                            }
                         });
                 }],
                 filters: [{action: 'list', type: 'archive'}],
