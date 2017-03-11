@@ -239,6 +239,12 @@ function Authoring() {
         }
     };
 
+    this.publishFrom = function(desk) {
+        this.publish_panel.click();
+        this.selectDeskforSendTo(desk);
+        this.sendAndPublishBtn.click();
+    };
+
     this.schedule = function(skipConfirm) {
         browser.wait(() => this.sendToButton.isPresent(), 1000);
         this.sendToButton.click();

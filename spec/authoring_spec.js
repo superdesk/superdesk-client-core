@@ -704,9 +704,19 @@ describe('authoring', () => {
         expect(monitoring.getGroupItems(5).count()).toBe(0); // desk output
         expect(monitoring.getTextItem(3, 2)).toBe('item6');
         monitoring.actionOnItem('Edit', 3, 2);
+        authoring.writeTextToHeadline('testing send and publish');
+        authoring.save();
+        authoring.writeText('');
+        ctrlShiftKey(protractor.Key.END);
+        ctrlKey('x');
+        authoring.sendAndpublish('Sports Desk');
+        authoring.confirmSendTo(); // confirm unsaved changes
+        browser.sleep(1000);
+        authoring.publishFrom('Sports Desk');
+        assertToastMsg('error', 'BODY_HTML empty values not allowed'); // validation takes place
         authoring.writeText('Testing');
         authoring.save();
-        authoring.sendAndpublish('Sports Desk');
+        authoring.publishFrom('Sports Desk');
         // desk output count zero as content publish from sport desk
         expect(monitoring.getGroupItems(5).count()).toBe(0);
         workspace.selectDesk('Sports Desk');
