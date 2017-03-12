@@ -55,8 +55,7 @@
                     data-change="itemSearch(selecteditems, cv.id)"></div>
             </div>
         </div>
-
-        <div class="field">
+        <div class="field" ng-if="search_config.marked_desks">
             <label for="search-marked-desks">
                 {{:: 'Marked Desks' | translate}}
             </label>

@@ -389,7 +389,7 @@ function Monitoring() {
 
         btn.click();
         // wait for modal to be removed
-        browser.wait(() => btn.isPresent().then((isPresent) => !isPresent), 500);
+        browser.wait(() => btn.isPresent().then((isPresent) => !isPresent), 600);
     };
 
     /**
@@ -711,7 +711,7 @@ function Monitoring() {
 
         this.openMonitoring();
 
-        return browser.wait(() => element(by.className('list-view')).isPresent(), 300);
+        return browser.wait(() => element(by.className('list-view')).isPresent(), 500);
     };
 
     this.turnOffWorkingStage = function(deskIndex, canCloseSettingsModal) {
@@ -737,7 +737,6 @@ function Monitoring() {
 
     this.turnOffDeskWorkingStage = function(deskIndex, canCloseSettingsModal) {
         this.toggleStage(deskIndex, 0);
-
         if (typeof canCloseSettingsModal !== 'boolean') {
             this.nextStages();
             this.nextSearches();
