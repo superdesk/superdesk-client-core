@@ -24,7 +24,6 @@ export function MonitoringController($rootScope, $location, desks, storage, conf
     this.previewItem = null;
 
     this.selectedGroup = null;
-    this.bindedItems = [];
 
     this.singleGroup = null;
     this.viewSingleGroup = viewSingleGroup;
@@ -84,7 +83,6 @@ export function MonitoringController($rootScope, $location, desks, storage, conf
 
     function closePreview() {
         preview(null);
-        $rootScope.$broadcast('item:unselect');
         if (self.viewColumn) {
             $rootScope.$broadcast('resize:header');
         }

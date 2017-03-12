@@ -255,6 +255,11 @@ export function ItemList(
                     });
                 });
 
+                scope.$on('item:unselect', () => {
+                    listComponent.setState({selected: null});
+                    listComponent.unbindActionKeyShortcuts();
+                });
+
                 scope.$on('item:expired', (_e, data) => {
                     var itemsById = angular.extend({}, listComponent.state.itemsById);
                     var shouldUpdate = false;
@@ -399,6 +404,7 @@ export function ItemList(
                 // remove react elem on destroy
                 scope.$on('$destroy', () => {
                     elem.off();
+                    listComponent.unbindActionKeyShortcuts();
                     ReactDOM.unmountComponentAtNode(elem[0]);
                 });
             });
