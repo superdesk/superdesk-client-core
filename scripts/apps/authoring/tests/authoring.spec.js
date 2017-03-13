@@ -2535,6 +2535,9 @@ describe('send item directive', () => {
                 'data-action="action" data-publish="publish()"></div>')(scope);
             scope.$digest();
             iScope = elem.isolateScope();
+            iScope.beforeSend = function() {
+                return $q.when({});
+            };
         }));
 
         it('can send and publish item to different desk', inject((authoring, $q, authoringWorkspace) => {
