@@ -279,20 +279,6 @@ function AnsaRelatedCtrl($scope, api, storage) {
             }
         });
 
-        let pictureFilters = [];
-        let prefixes = {};
-
-        if (!_.isEmpty(semantics.iptcCodes)) {
-            semantics.iptcCodes.forEach((code) => {
-                let prefix = code.substr(0, 2);
-
-                if (!prefixes[prefix]) {
-                    prefixes[prefix] = 1;
-                    pictureFilters.push({prefix: {'semantics.iptcCodes': prefix}});
-                }
-            });
-        }
-
         let query = {
             bool: {
                 must_not: {term: {_id: $scope.item._id}},
@@ -311,10 +297,7 @@ function AnsaRelatedCtrl($scope, api, storage) {
             });
         } else {
             angular.extend(query.bool, {
-                must: [
-                    {term: {type: 'picture'}},
-                    {bool: {should: pictureFilters}}
-                ],
+                must: {term: {type: 'picture'}},
                 should: filters,
                 minimum_should_match: 1
             });
