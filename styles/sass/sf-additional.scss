@@ -1823,3 +1823,11 @@ header .sortbar {
         flex-grow: 1;
     }
 }
+
+#ansa-related-widget {
+    .btn-group {
+        position: fixed;
+        top: 106px;
+        right: 61px;
+    }
+}

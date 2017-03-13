@@ -253,13 +253,15 @@ function AnsaSemanticsCtrl($scope, $rootScope, api) {
     init();
 }
 
-AnsaRelatedCtrl.$inject = ['$scope', 'api'];
-function AnsaRelatedCtrl($scope, api) {
-    let init = () => {
+AnsaRelatedCtrl.$inject = ['$scope', 'api', 'storage'];
+function AnsaRelatedCtrl($scope, api, storage) {
+    let search = () => {
         if (!$scope.item.semantics || !$scope.item.semantics.iptcCodes) {
             this.items = [];
             return;
         }
+
+        this.items = null;
 
         let filters = [];
         let semantics = $scope.item.semantics;
@@ -294,30 +296,29 @@ function AnsaRelatedCtrl($scope, api) {
         let query = {
             bool: {
                 must_not: {term: {_id: $scope.item._id}},
-                should: [
-                    {
-                        bool: {
-                            must: [
-                                {term: {type: 'text'}},
-                                {terms: {'semantics.iptcCodes': semantics.iptcCodes}}
-                            ],
-                            should: filters,
-                            minimum_should_match: 1
-                        }
-                    },
-                    {
-                        bool: {
-                            must: [
-                                {term: {type: 'picture'}},
-                                {bool: {should: pictureFilters}}
-                            ],
-                            should: filters,
-                            minimum_should_match: 1
-                        }
-                    }
-                ]
+                should: []
             }
         };
+
+        if (this.activeFilter === 'text') {
+            angular.extend(query.bool, {
+                must: [
+                    {term: {type: 'text'}},
+                    {terms: {'semantics.iptcCodes': semantics.iptcCodes}}
+                ],
+                should: filters,
+                minimum_should_match: 1
+            });
+        } else {
+            angular.extend(query.bool, {
+                must: [
+                    {term: {type: 'picture'}},
+                    {bool: {should: pictureFilters}}
+                ],
+                should: filters,
+                minimum_should_match: 1
+            });
+        }
 
         console.info('query', angular.toJson(query, 2));
 
@@ -328,7 +329,15 @@ function AnsaRelatedCtrl($scope, api) {
         });
     };
 
-    init();
+    this.activeFilter = storage.getItem('ansa.related.filter') || 'text';
+
+    this.filter = (activeFilter) => {
+        this.activeFilter = activeFilter;
+        storage.setItem('ansa.related.filter', activeFilter);
+        search();
+    };
+
+    search();
 }
 
 function AnsaLiveSuggestions(workspace, metasearch) {
