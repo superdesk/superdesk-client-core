@@ -267,6 +267,7 @@ function AnsaRelatedCtrl($scope, api, storage) {
         let semantics = $scope.item.semantics;
         let keys = ['persons', 'organizations'];
         let namespace = (key) => 'semantics.' + key;
+        let pictureFilters = [];
 
         keys.forEach((key) => {
             if (semantics[key] && semantics[key].length) {
@@ -275,6 +276,10 @@ function AnsaRelatedCtrl($scope, api, storage) {
 
                     f[namespace(key)] = val;
                     filters.push({match: f});
+
+                    if (key === 'persons') {
+                        pictureFilters.push({match: {headline: val}});
+                    }
                 });
             }
         });
@@ -298,7 +303,7 @@ function AnsaRelatedCtrl($scope, api, storage) {
         } else {
             angular.extend(query.bool, {
                 must: {term: {type: 'picture'}},
-                should: filters,
+                should: filters.concat(pictureFilters),
                 minimum_should_match: 1
             });
         }
