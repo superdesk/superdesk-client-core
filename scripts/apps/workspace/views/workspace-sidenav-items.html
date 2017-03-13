@@ -57,9 +57,9 @@
           <i class="big-icon-global-search main-icon"></i>
           <i class="big-icon-chevron-left helper-icon"></i>
       </a>
-      <ul ng-if="$root.config.features.scanpixSearchShortcut && providers.length > 0" class="dropdown__menu pull-left">
+      <ul ng-if="$root.config.features.searchShortcut && providers.length > 0" class="dropdown__menu pull-left">
         <li ng-repeat="provider in providers track by provider._id">
-            <button ng-click="loadScanpixSearch(provider.source)">
+            <button ng-click="loadSearchShortcut(provider)">
               {{:: provider.source}}
             </button>
         </li>

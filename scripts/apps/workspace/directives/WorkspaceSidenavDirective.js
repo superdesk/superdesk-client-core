@@ -30,15 +30,20 @@ export function WorkspaceSidenavDirective(superdeskFlags, $location, Keys, gette
                 }
             };
 
-            scope.loadScanpixSearch = function(source) {
-                $location.url('/search?repo=' + source + '&q=subscription:(subscription)');
+            scope.loadSearchShortcut = function(provider) {
+                if (provider.search_provider.indexOf('scanpix') === 0) {
+                    $location.url('/search?repo=' + provider.source + '&q=subscription:(subscription)');
+                } else {
+                    $location.url('/search?repo=' + provider.source);
+                }
+
                 $route.reload();
             };
 
             /*
              * Initialize the search providers
              */
-            if ($rootScope.config && $rootScope.config.features && $rootScope.config.features.scanpixSearchShortcut) {
+            if ($rootScope.config && $rootScope.config.features && $rootScope.config.features.searchShortcut) {
                 api.search_providers.query({max_results: 200})
                     .then((result) => {
                         scope.providers = $filter('sortByName')(result._items, 'search_provider');
