@@ -277,7 +277,7 @@ function AnsaRelatedCtrl($scope, api) {
             }
         });
 
-        let pictureFilters = filters.concat();
+        let pictureFilters = [];
         let prefixes = {};
 
         if (!_.isEmpty(semantics.iptcCodes)) {
@@ -293,7 +293,7 @@ function AnsaRelatedCtrl($scope, api) {
 
         let query = {
             bool: {
-                must_not: {term: {_id: $scope.item.guid}},
+                must_not: {term: {_id: $scope.item._id}},
                 should: [
                     {
                         bool: {
@@ -307,8 +307,11 @@ function AnsaRelatedCtrl($scope, api) {
                     },
                     {
                         bool: {
-                            must: {term: {type: 'picture'}},
-                            should: pictureFilters,
+                            must: [
+                                {term: {type: 'picture'}},
+                                {bool: {should: pictureFilters}}
+                            ],
+                            should: filters,
                             minimum_should_match: 1
                         }
                     }
@@ -318,7 +321,7 @@ function AnsaRelatedCtrl($scope, api) {
 
         console.info('query', angular.toJson(query, 2));
 
-        api.query('archive', {source: {query: query, sort: [{versioncreated: 'desc'}], size: 50}}).then((response) => {
+        api.query('archive', {source: {query: query, sort: ['_score'], size: 50}}).then((response) => {
             this.items = response._items;
         }, (reason) => {
             this.items = [];
