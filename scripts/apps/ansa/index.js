@@ -284,7 +284,7 @@ function AnsaRelatedCtrl($scope, api, storage) {
 
         if (!_.isEmpty(semantics.iptcCodes)) {
             semantics.iptcCodes.forEach((code) => {
-                let prefix = code.substr(0, 5);
+                let prefix = code.substr(0, 2);
 
                 if (!prefixes[prefix]) {
                     prefixes[prefix] = 1;
