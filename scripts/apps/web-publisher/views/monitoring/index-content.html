@@ -1,35 +1,28 @@
 <div class="content-list">
     <div class="stage">
         <div class="stage-header">
-           <button class="stage-header__toggle" ng-class="{closed: !open }" ng-click="open=!open">
-                <i class="icon-chevron-down-thin"></i>
-            </button>
             <span class="stage-header__name">
                 <a href="">Incoming Content</a>
             </span>
-            <span class="label-total stage-header__number">139</span>
+            <span class="label-total stage-header__number">{{incomingArticles.total}}</span>
         </div>
         <div class="publisherBoxShadow">
             <ul class="list-view compact-view">
-                <li class="list-item-view" ng-repeat="i in [1,2,3,4,5]" ng-include="webPublisherMonitoring.TEMPLATES_DIR + '/monitoring/list-item.html'"></li>
+                <li class="list-item-view" ng-repeat="i in incomingArticles._embedded._items" ng-include="webPublisherMonitoring.TEMPLATES_DIR + '/monitoring/list-item.html'"></li>
             </ul>
         </div>
     </div>
 
-
     <div class="stage">
         <div class="stage-header">
-           <button class="stage-header__toggle" ng-class="{closed: !open }" ng-click="open=!open">
-                <i class="icon-chevron-down-thin"></i>
-            </button>
             <span class="stage-header__name">
                 <a href="">Published To Web</a>
             </span>
-            <span class="label-total stage-header__number">1439</span>
+            <span class="label-total stage-header__number">{{publishedArticles.total}}</span>
         </div>
         <div class="publisherBoxShadow">
             <ul class="list-view compact-view">
-                <li class="list-item-view" ng-repeat="i in [1,2,3,4,5]" ng-include="webPublisherMonitoring.TEMPLATES_DIR + '/monitoring/list-item.html'"></li>
+                <li class="list-item-view" ng-repeat="i in publishedArticles._embedded._items" ng-include="webPublisherMonitoring.TEMPLATES_DIR + '/monitoring/list-item.html'"></li>
             </ul>
         </div>
     </div>
