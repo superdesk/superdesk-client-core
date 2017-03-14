@@ -26,6 +26,8 @@ export function ListArticlesDirective(publisher) {
                     return 'scripts/apps/web-publisher/views/list-articles-card.html';
                 case 'detail':
                     return 'scripts/apps/web-publisher/views/list-articles-detail.html';
+                case 'draggable':
+                    return 'scripts/apps/web-publisher/views/list-articles-draggable.html';
                 }
             };
 

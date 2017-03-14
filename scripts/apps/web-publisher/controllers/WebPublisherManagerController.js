@@ -13,6 +13,51 @@ export function WebPublisherManagerController($scope, publisher, modal) {
         constructor() {
             this.TEMPLATES_DIR = 'scripts/apps/web-publisher/views';
             publisher.setToken().then(() => this._refreshSites());
+
+            // manual list drag/drop list handlers
+            $scope.getSelectedItemsIncluding = (list, item) => {
+                item.selected = true;
+                return list.items.filter((item) => item.selected);
+            };
+            $scope.onDragstart = (list, event) => {
+                list.dragging = true;
+                // used for setting css class while dragging
+                $scope.dragging = true;
+            };
+            $scope.onDrop = (list, items, index) => {
+                // used for setting css class while dragging
+                $scope.dragging = false;
+
+                angular.forEach(items, (item) => {
+                    item.selected = false;
+                });
+                list.items = list.items.slice(0, index)
+                    .concat(items)
+                    .concat(list.items.slice(index));
+                return true;
+            };
+
+            $scope.onMoved = (list) => {
+                list.items = list.items.filter((item) => !item.selected);
+            };
+
+
+            $scope.models = [
+                {listName: 'A', items: [], dragging: false},
+                {listName: 'B', items: [], dragging: false}
+            ];
+
+            // Generate initial model
+            angular.forEach($scope.models, (list) => {
+                for (var i = 1; i <= 4; ++i) {
+                    list.items.push({label: 'Item ' + list.listName + i});
+                }
+            });
+
+            // Model to JSON for demo purpose
+            $scope.$watch('models', (model) => {
+                $scope.modelAsJson = angular.toJson(model, true);
+            }, true);
         }
 
         /**
@@ -410,7 +455,7 @@ export function WebPublisherManagerController($scope, publisher, modal) {
                 }
             });
 
-            this.changeTab(list.type === 'automatic' ? 'content-list-automatic' : '');
+            this.changeTab(list.type === 'automatic' ? 'content-list-automatic' : 'content-list-manual');
         }
 
         /**

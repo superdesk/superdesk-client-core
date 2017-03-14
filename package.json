@@ -32,6 +32,7 @@
     "angular-animate": "^1.5.5",
     "angular-bootstrap-npm": "jusopi/angular-bootstrap-npm#0.13.1",
     "angular-contenteditable": "0.0.2",
+    "angular-drag-and-drop-lists": "^2.1.0",
     "angular-dynamic-locale": "^0.1.32",
     "angular-embed": "superdesk/angular-embed#2afd7397a7179f25b66c4b5f13ea2a0daf799821",
     "angular-embedly": "Urigo/angular-embedly#0.0.8",

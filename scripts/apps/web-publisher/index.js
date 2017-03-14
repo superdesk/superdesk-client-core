@@ -1,5 +1,6 @@
 import './styles/web-publisher.scss';
 
+import 'angular-drag-and-drop-lists/angular-drag-and-drop-lists';
 import {WebPublisherManagerController} from './controllers';
 import {WebPublisherMonitoringController} from './controllers';
 import * as services from './services';
@@ -13,7 +14,8 @@ import * as directive from './directives';
  * @description Superdesk web publisher module.
  */
 export default angular.module('superdesk.apps.web_publisher', [
-    'superdesk.core.activity'
+    'superdesk.core.activity',
+    'dndLists'
 ])
 
     .directive('sdSiteRoutes', directive.SiteRoutesDirective)

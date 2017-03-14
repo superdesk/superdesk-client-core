@@ -16,6 +16,10 @@
         font-weight: 700;
     }
 
+    &:hover button.hidden {
+        opacity: 0.4;
+    }
+
     &__icon {
         flex: 0 0 auto;
         display: inline-block;
@@ -51,14 +55,13 @@
             border: 0;
             background: none;
             line-height: 0;
-            
-            &:hover {
-                opacity: 1;
+            &.hidden{
+                opacity: 0;
+                &:hover{
+                    opacity: 1;
+                }
             }
-        }
-        .pin {
-            display: none;
-            opacity: 0.4;
+
         }
     }
 
@@ -68,9 +71,5 @@
     }
     .countLabel {
         margin-right: 10px;
-    }
-
-    &:hover button {
-        display: inline-block;
     }
 }

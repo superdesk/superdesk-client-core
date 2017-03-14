@@ -13,7 +13,7 @@
             <div class="listElement__content">
                 {{ :: article.content.title}}
                 <button class="pull-right" ng-if="article.sticky" ng-click="pinArticle(article)" title="{{:: 'Unpin' | translate }}"><i class="icon-pin"></i></button>
-                <button class="pin pull-right" ng-if="!article.sticky" ng-click="pinArticle(article)" title="{{:: 'Pin' | translate }}"><i class="icon-pin"></i></button>
+                <button class="hidden pull-right" ng-if="!article.sticky" ng-click="pinArticle(article)" title="{{:: 'Pin' | translate }}"><i class="icon-pin"></i></button>
                 <span ng-if="article.sticky" class="pull-right state-label state-fetched" translate>pinned</span>
             </div>
         </div>
