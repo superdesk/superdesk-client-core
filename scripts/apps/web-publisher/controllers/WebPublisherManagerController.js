@@ -66,7 +66,7 @@ export function WebPublisherManagerController($scope, publisher, modal) {
 
             this.selectedSite = {};
             $scope.newSite = {};
-            publisher.setTenant('');
+            publisher.setTenant();
         }
 
         /**

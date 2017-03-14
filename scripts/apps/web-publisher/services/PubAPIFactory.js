@@ -18,7 +18,8 @@ export function PubAPIFactory(config, $http, $q, session) {
             this._base = pubConfig.base || '';
             this._protocol = pubConfig.protocol || 'http';
             this._domain = pubConfig.domain || '';
-            this.setTenant(pubConfig.tenant);
+            this._tenant = pubConfig.tenant || '';
+            this.setTenant();
         }
 
         /**
@@ -42,8 +43,20 @@ export function PubAPIFactory(config, $http, $q, session) {
          * @description Change the tenant we are using the api for
          */
         setTenant(tenant) {
-            this._tenant = tenant;
-            this._server = `${this._protocol}://${this._tenant}.${this._domain}`;
+            this._server = this.buildServerURL(tenant);
+        }
+
+        /**
+         * @ngdoc method
+         * @name pubapi#buildServerURL
+         * @param {String} tenant
+         * @returns {String}
+         * @description Builds base server URL of the site.
+         */
+        buildServerURL(tenant) {
+            let subdomain = tenant || this._tenant ? `${tenant || this._tenant}.` : '';
+
+            return `${this._protocol}://${subdomain}${this._domain}`;
         }
 
         /**
