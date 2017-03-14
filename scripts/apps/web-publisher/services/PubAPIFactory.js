@@ -18,7 +18,7 @@ export function PubAPIFactory(config, $http, $q, session) {
             this._base = pubConfig.base || '';
             this._protocol = pubConfig.protocol || 'http';
             this._domain = pubConfig.domain || '';
-            this.setTenant(pubConfig.tenant || 'default');
+            this.setTenant(pubConfig.tenant);
         }
 
         /**
@@ -43,19 +43,19 @@ export function PubAPIFactory(config, $http, $q, session) {
          */
         setTenant(tenant) {
             this._tenant = tenant;
-            this._server = this.buildServerURL();
+            this._server = `${this._protocol}://${this._tenant}.${this._domain}`;
         }
 
         /**
          * @ngdoc method
-         * @name pubapi#buildServerURL
-         * @returns {String}
-         * @description Builds base server URL of the site.
+         * @name pubapi#setOrganization
+         * @description Set organization id for articles on monitoring
          */
-        buildServerURL() {
-            let subdomain = this._tenant === 'default' ? '' : `${this._tenant}.`;
-
-            return `${this._protocol}://${subdomain}${this._domain}`;
+        setOrganization() {
+            return this.query('organizations').then((organizations) => {
+                this._organizatonId = 3; // organizations[0].id;
+                return organizations;
+            });
         }
 
         /**
@@ -72,6 +72,22 @@ export function PubAPIFactory(config, $http, $q, session) {
                 method: 'GET',
                 params: params
             }).then((response) => response._embedded._items);
+        }
+
+        /**
+         * @ngdoc method
+         * @name pubapi#query
+         * @param {String} resource
+         * @param {Object} params
+         * @returns {Promise}
+         * @description Query resource
+         */
+        queryWithDetails(resource, params) {
+            return this.req({
+                url: this.resourceURL(resource),
+                method: 'GET',
+                params: params
+            });
         }
 
         /**

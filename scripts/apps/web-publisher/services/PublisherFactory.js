@@ -32,6 +32,16 @@ export function PublisherFactory(pubapi) {
 
         /**
          * @ngdoc method
+         * @name publisher#setOrganization
+         * @returns {Object}
+         * @description Set organization id for articles on monitoring
+         */
+        setOrganization() {
+            return pubapi.setOrganization();
+        }
+
+        /**
+         * @ngdoc method
          * @name publisher#manageSite
          * @param {Object} site - site which is edited
          * @param {String} code - code of site which is edited
@@ -176,12 +186,12 @@ export function PublisherFactory(pubapi) {
 
         /**
          * @ngdoc method
-         * @name publisher#queryLists
+         * @name publisher#queryListArticles
          * @param {String} id - id of content list
          * @returns {Promise}
          * @description List all articles for selected content list
          */
-        queryArticles(id) {
+        queryListArticles(id) {
             return pubapi.query('content/lists/' + id + '/items');
         }
 
@@ -196,6 +206,27 @@ export function PublisherFactory(pubapi) {
          */
         pinArticle(listId, articleId, article) {
             return pubapi.save('content/lists/' + listId + '/items', article, articleId);
+        }
+
+        /**
+         * @ngdoc method
+         * @name publisher#queryTenantArticles
+         * @returns {Promise}
+         * @description List all articles for selected tenant
+         */
+        queryTenantArticles() {
+            return pubapi.query('content/articles');
+        }
+
+        /**
+         * @ngdoc method
+         * @name publisher#queryMonitoringArticles
+         * @param {String} articleStatus - status of articles (new, published, unpublished, canceled)
+         * @returns {Promise}
+         * @description List all articles for monitoring view
+         */
+        queryMonitoringArticles(articleStatus) {
+            return pubapi.queryWithDetails('organization/articles', articleStatus);
         }
     }
 

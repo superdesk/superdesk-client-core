@@ -5,7 +5,7 @@
  * @requires publisher
  * @requires modal
  * @requires https://docs.angularjs.org/api/ng/type/$rootScope.Scope $scope
- * @description WebPublisherManagerController holds a set of functions used for web publisher
+ * @description WebPublisherManagerController holds a set of functions used for web publisher manager
  */
 WebPublisherManagerController.$inject = ['$scope', 'publisher', 'modal'];
 export function WebPublisherManagerController($scope, publisher, modal) {
@@ -66,7 +66,7 @@ export function WebPublisherManagerController($scope, publisher, modal) {
 
             this.selectedSite = {};
             $scope.newSite = {};
-            publisher.setTenant('default');
+            publisher.setTenant('');
         }
 
         /**

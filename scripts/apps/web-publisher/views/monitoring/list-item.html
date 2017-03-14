@@ -9,10 +9,9 @@
     </div>
     <div class="item-info">
         <div class="line">
-            <span class="word-count">587</span>
-            <span class="keyword">Able an hope of body</span>
+            <span class="keyword">{{i.title}}</span>
             <span class="item-heading">This is an article deck aka lead aka description</span>
-            <time title="February 17, 2017 1:29 PM">5 min ago</time>
+            <time ng-if="i.updatedAt">{{i.updatedAt | reldate}}</time>
         </div>
         <div class="line">
             <div class="state-label state-corrected">Update 2</div>
@@ -33,16 +32,9 @@
                     </li>
                     <li class="divider"></li>
                     <li><button><i class="icon-pencil"></i>{{:: 'Edit'| translate}}</button></li>
-                    <li><button><i class="icon-trash"></i>{{:: 'Spike'| translate}}</button></li>
-                    <li><button><i class="icon-copy"></i>{{:: 'Duplicate'| translate}}</button></li>
-                    <li class="divider"></li>
-                    <li>
-                        <div class="dropdown__menu-label">Corrections</div>
-                    </li>
-                    <li><button><i class="icon-edit-line"></i>{{:: 'Correct'| translate}}</button></li>
                     <li><button><i class="icon-kill"></i>{{:: 'Kill'| translate}}</button></li>
                     <li class="divider"></li>
-                    <li><button><i class="icon-expand-thin"></i>{{:: 'Publish to Web'| translate}}</button></li>
+                    <li><button><i class="icon-expand-thin"></i>{{:: 'Publish/Unpublish'| translate}}</button></li>
                 </ul>
             </div>
         </div>
