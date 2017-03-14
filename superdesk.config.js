@@ -36,8 +36,8 @@ module.exports = function(grunt) {
         },
         publisher: {
             protocol: 'http',
-            tenant: 'default',
-            domain: 'master.s-lab.sourcefabric.org',
+            tenant: 'master.s-lab',
+            domain: 'sourcefabric.org',
             base: 'api/v1'
         },
         features: {
