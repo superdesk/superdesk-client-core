@@ -1,7 +1,7 @@
 import {PARAMETERS} from 'apps/search/constants';
 
-SearchTags.$inject = ['$location', 'tags', 'asset', 'metadata'];
-export function SearchTags($location, tags, asset, metadata) {
+SearchTags.$inject = ['$location', 'tags', 'asset', 'metadata', 'desks'];
+export function SearchTags($location, tags, asset, metadata, desks) {
     return {
         scope: {},
         templateUrl: asset.templateUrl('apps/search/views/search-tags.html'),
@@ -38,6 +38,12 @@ export function SearchTags($location, tags, asset, metadata) {
                 tags.removeFacet(type, key);
             };
 
+            const removeMarkedDeskParameter = (deskName) => {
+                const deskId = desks.desks._items.find((d) => d.name === deskName)._id;
+
+                tags.removeFacet('marked_desks', deskId);
+            };
+
             scope.removeParameter = function(param) {
                 var searchParameters = $location.search();
 
@@ -53,9 +59,14 @@ export function SearchTags($location, tags, asset, metadata) {
                     parameterValue = param.substring(param.indexOf('(') + 1, param.lastIndexOf(')'));
                 } else {
                     var type = param.split(':')[0];
+                    var value = param.split(':')[1];
 
                     Object.keys(PARAMETERS).some((k) => {
                         if (PARAMETERS[k] === type && searchParameters[k]) {
+                            if (k === 'marked_desks') {
+                                removeMarkedDeskParameter(value);
+                                return true;
+                            }
                             $location.search(k, null);
                             return true;
                         }

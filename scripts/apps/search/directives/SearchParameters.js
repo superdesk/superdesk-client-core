@@ -131,7 +131,11 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
                     scope.selecteditems.marked_desks = scope.selecteditems.marked_desks || [];
                     var markedDesks = JSON.parse($location.search().marked_desks);
 
-                    markedDesks.map((d) => scope.selecteditems.marked_desks.push(desks.deskLookup[d]));
+                    markedDesks.map((d) => {
+                        scope.selecteditems.marked_desks.push(desks.deskLookup[d]);
+                        scope.fields.marked_desks.push(desks.deskLookup[d]);
+                        return true;
+                    });
                 } else {
                     scope.selecteditems.marked_desks = [];
                 }
