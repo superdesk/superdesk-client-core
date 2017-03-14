@@ -38,7 +38,8 @@ export function TemplatesService(api, session, $q, gettext, preferencesService, 
         'target_types',
         'target_regions',
         'target_subscribers',
-        'format'
+        'format',
+        'associations'
     ];
 
     /**
