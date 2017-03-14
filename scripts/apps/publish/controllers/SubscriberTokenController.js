@@ -11,15 +11,15 @@ let moment = require('moment');
 export function SubscriberTokenController($scope, api) {
     let subscriber = $scope.subscriber;
 
+    this.tokens = [];
+
     let fetchTokens = () => {
-        if (!subscriber._id) {
-            this.tokens = [];
-            return;
+        if (subscriber._id) {
+            api.query('subscriber_token', {where: {subscriber: subscriber._id}})
+                .then((response) => {
+                    this.tokens = response._items;
+                });
         }
-        api.query('subscriber_token', {where: {subscriber: subscriber._id}})
-        .then((response) => {
-            this.tokens = response._items;
-        });
     };
 
     let expiry = (ttl) => moment().utc()
