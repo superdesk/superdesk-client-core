@@ -16,7 +16,6 @@ import classNames from 'classnames';
  * @name Editor3
  * @param {Boolean} readOnly if true the editor is read only
  * @param {Boolean} showToolbar if true the editor will show the toolbar
- * @param {Boolean} singleLine if true the editor will have a single line
  * @param {editorState} the current state of draftjs editor
  * @param {Function} onChange the callback executed when the editor value is changed
  * @param {Function} onTab the callback for onTab event
@@ -35,6 +34,7 @@ export class Editor3Component extends React.Component {
         super(props);
 
         this.editorRect = {top: 0, left: 0};
+        this.readOnly = props.readOnly;
 
         this.focus = this.focus.bind(this);
         this.onDragOver = this.onDragOver.bind(this);
@@ -47,8 +47,7 @@ export class Editor3Component extends React.Component {
      * @description Handle the editor get focus event
      */
     focus() {
-        // TODO(gbbr): Do not unset read-only if the editor was originally read-only.
-        this.props.unsetReadOnly(false);
+        this.props.unsetReadOnly(this.readOnly);
         setTimeout(this.refs.editor.focus, 0); // after action
     }
 
@@ -101,33 +100,29 @@ export class Editor3Component extends React.Component {
         const {
             readOnly,
             showToolbar,
-            singleLine,
             editorState,
             onChange,
             onTab
         } = this.props;
 
-        let className = singleLine ? 'Editor3-editor-single-line' : 'Editor3-editor';
         let cx = classNames({
-            'Editor3-root': true,
+            'Editor3-root Editor3-editor': true,
             'read-only': readOnly
         });
 
         return (
-            <div className={cx}>
-                {showToolbar ? <Toolbar editorRect={this.editorRect} /> : null}
-                <div className={className} onClick={this.focus}>
-                    <Editor
-                        editorState={editorState}
-                        handleKeyCommand={this.handleKeyCommand}
-                        blockRendererFn={blockRenderer}
-                        customStyleMap={customStyleMap}
-                        onChange={onChange}
-                        onTab={onTab}
-                        readOnly={readOnly}
-                        ref="editor"
-                    />
-                </div>
+            <div className={cx} onClick={this.focus}>
+                {showToolbar ? <Toolbar editorRect={this.editorRect} disabled={readOnly} /> : null}
+                <Editor
+                    editorState={editorState}
+                    handleKeyCommand={this.handleKeyCommand}
+                    blockRendererFn={blockRenderer}
+                    customStyleMap={customStyleMap}
+                    onChange={onChange}
+                    onTab={onTab}
+                    readOnly={readOnly}
+                    ref="editor"
+                />
             </div>
         );
     }
@@ -136,7 +131,6 @@ export class Editor3Component extends React.Component {
 Editor3Component.propTypes = {
     readOnly: React.PropTypes.bool,
     showToolbar: React.PropTypes.bool,
-    singleLine: React.PropTypes.bool,
     editorState: React.PropTypes.object,
     onChange: React.PropTypes.func,
     unsetReadOnly: React.PropTypes.func,
@@ -147,7 +141,6 @@ Editor3Component.propTypes = {
 const mapStateToProps = (state) => ({
     readOnly: state.readOnly,
     showToolbar: state.showToolbar,
-    singleLine: state.singleLine,
     editorState: state.editorState
 });
 

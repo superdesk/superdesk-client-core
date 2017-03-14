@@ -10,6 +10,8 @@ export class TableBlockComponent extends Component {
 
         this.setCell = this.setCell.bind(this);
         this.getCell = this.getCell.bind(this);
+        this.addRow = this.addRow.bind(this);
+        this.addColumn = this.addColumn.bind(this);
         this.data = this.data.bind(this);
     }
 
@@ -46,26 +48,56 @@ export class TableBlockComponent extends Component {
         return data;
     }
 
+    addRow(e) {
+        e.stopPropagation();
+
+        const entityKey = this.props.block.getEntityAt(0);
+        const data = this.data();
+
+        data.h++;
+        Entity.mergeData(entityKey, {data});
+
+        this.forceUpdate();
+    }
+
+    addColumn(e) {
+        e.stopPropagation();
+
+        const entityKey = this.props.block.getEntityAt(0);
+        const data = this.data();
+
+        data.w++;
+        Entity.mergeData(entityKey, {data});
+
+        this.forceUpdate();
+    }
+
     render() {
         const {w, h} = this.data();
-        const {setReadOnly} = this.props;
+        const {setReadOnly, parentReadOnly} = this.props;
 
         return (
-            <table className="table-block">
-                <tbody>
-                    {Array.from(new Array(h)).map((v, i) =>
-                        <tr key={`col-${i}`}>
-                            {Array.from(new Array(w)).map((v, j) =>
-                                <TableCell
-                                    key={`cell-${i}-${j}`}
-                                    contentState={this.getCell(i, j)}
-                                    onChange={this.setCell.bind(this, i, j)}
-                                    onFocus={setReadOnly} />
-                            )}
-                        </tr>
-                    )}
-                </tbody>
-            </table>
+            <div className="table-block">
+                {parentReadOnly ? <div className="table-block__controls">
+                    <span onClick={this.addRow}>+ Row</span>
+                    <span onClick={this.addColumn}>+ Col</span>
+                </div> : null}
+                <table>
+                    <tbody>
+                        {Array.from(new Array(h)).map((v, i) =>
+                            <tr key={`col-${i}`}>
+                                {Array.from(new Array(w)).map((v, j) =>
+                                    <TableCell
+                                        key={`cell-${i}-${j}`}
+                                        contentState={this.getCell(i, j)}
+                                        onChange={this.setCell.bind(this, i, j)}
+                                        onFocus={setReadOnly} />
+                                )}
+                            </tr>
+                        )}
+                    </tbody>
+                </table>
+            </div>
         );
     }
 }
@@ -74,10 +106,15 @@ TableBlockComponent.propTypes = {
     block: React.PropTypes.object.isRequired,
     contentState: React.PropTypes.object.isRequired,
     setReadOnly: React.PropTypes.func.isRequired,
+    parentReadOnly: React.PropTypes.bool.isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({
     setReadOnly: (e) => dispatch(actions.setReadOnly())
 });
 
-export const TableBlock = connect(null, mapDispatchToProps)(TableBlockComponent);
+const mapStateToProps = (state) => ({
+    parentReadOnly: state.readOnly
+});
+
+export const TableBlock = connect(mapStateToProps, mapDispatchToProps)(TableBlockComponent);
