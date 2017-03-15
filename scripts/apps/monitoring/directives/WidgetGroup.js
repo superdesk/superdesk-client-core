@@ -133,7 +133,8 @@ export function WidgetGroup(search, api, superdesk, desks, cards, $timeout, $q,
                     .finally(() => {
                         scope.fetching = false;
 
-                        if (!scope.selected && scope.itemIds && scope.itemIds.length) {
+                        if ($rootScope.config.features.customMonitoringWidget &&
+                            !scope.selected && scope.itemIds && scope.itemIds.length) {
                             scope.selected = scope.itemsById[_.head(scope.itemIds)];
                             scope.action({item: scope.selected});
                         }

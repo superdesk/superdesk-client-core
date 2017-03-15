@@ -19,7 +19,7 @@ function MasterDesks() {
     };
 
     this.getItem = function(desk, stage, item) {
-        return this.getStage(desk, stage).all(by.repeater('item in items')).get(item);
+        return this.getStage(desk, stage).all(by.className('content-item')).get(item);
     };
 
     this.previewItem = function(desk, stage, item) {
