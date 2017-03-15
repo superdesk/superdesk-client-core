@@ -65,6 +65,7 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
                     initializeItems();
                     initializeMarkedDesks();
                     initializeProviders();
+                    initializeCreators();
                 }
             }
 
@@ -75,15 +76,10 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
              */
             function fetchUsers() {
                 userList.getAll()
-                .then((result) => {
-                    scope.userList = {};
-                    _.each(result, (user) => {
-                        scope.userList[user._id] = user;
-                    });
+                .then((users) => {
+                    scope.userList = users;
 
-                    if ($location.search().original_creator) {
-                        scope.fields.original_creator = $location.search().original_creator;
-                    }
+                    initializeCreators();
                 });
             }
 
@@ -112,6 +108,12 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
             function initializeProviders() {
                 if ($location.search().ingest_provider) {
                     scope.fields.ingest_provider = $location.search().ingest_provider;
+                }
+            }
+
+            function initializeCreators() {
+                if ($location.search().original_creator) {
+                    scope.fields.original_creator = $location.search().original_creator;
                 }
             }
 
