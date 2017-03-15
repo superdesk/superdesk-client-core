@@ -20,7 +20,7 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
             mode: '@'
         },
         controller: function() {
-            this.userActions = {send_to: 'send_to', publish: 'publish'};
+            this.userActions = {send_to: 'send_to', publish: 'publish', duplicate_to: 'duplicate_to'};
         },
         controllerAs: 'vm',
         templateUrl: 'scripts/apps/authoring/views/send-item.html',
@@ -791,6 +791,9 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                 scope.currentUserAction = storage.getItem(USER_ACTION_KEY) || ctrl.userActions.send_to;
                 if (scope.orig || scope.item) {
                     // if the last action is send to but item is published open publish tab.
+                    if (scope.config && scope.config.action === 'duplicateTo') {
+                        scope.currentUserAction = ctrl.userActions.duplicate_to;
+                    }
                     if (scope.currentUserAction === ctrl.userActions.send_to &&
                         scope.canPublishItem() && !scope.isSendEnabled()) {
                         scope.currentUserAction = ctrl.userActions.publish;

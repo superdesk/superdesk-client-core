@@ -155,6 +155,26 @@ angular.module('superdesk.apps.archive', [
                     return authoring.itemActions(item).duplicate;
                 }]
             })
+            .activity('duplicateTo', {
+                label: gettext('Duplicate To'),
+                icon: 'copy',
+                monitor: true,
+                controller: ['data', 'send', function(data, send) {
+                    send.allAs([data.item], 'duplicateTo');
+                }],
+                filters: [
+                    {action: 'list', type: 'archive'},
+                    {action: 'list', type: 'archived'}
+                ],
+                keyboardShortcut: 'ctrl+alt+r',
+                privileges: {duplicate: 1},
+                condition: function(item) {
+                    return item.lock_user === null || angular.isUndefined(item.lock_user);
+                },
+                additionalCondition: ['authoring', 'item', function(authoring, item) {
+                    return authoring.itemActions(item).duplicate;
+                }]
+            })
             .activity('createBroadcast', {
                 label: gettext('Create Broadcast'),
                 icon: 'broadcast',

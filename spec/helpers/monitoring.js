@@ -241,8 +241,13 @@ function Monitoring() {
      * @param {number} group
      * @param {number} item
      */
-    this.actionOnItem = function(action, group, item) {
+    this.actionOnItem = function(action, group, item, useFullLinkText) {
         var menu = this.openItemMenu(group, item);
+
+        if (useFullLinkText) {
+            menu.element(by.linkText(action)).click();
+            return;
+        }
 
         menu.element(by.partialLinkText(action)).click();
     };

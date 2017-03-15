@@ -126,6 +126,26 @@ function Authoring() {
         }
     };
 
+    this.duplicateTo = (desk, stage, open) => {
+        let duplicateButton = element(by.id('duplicate-btn'));
+        let duplicateAndOpenButton = element(by.id('duplicate-open-btn'));
+
+        var sidebar = element.all(by.css('.slide-pane')).last(),
+            dropdown = sidebar.element(by.css('.dropdown--dark .dropdown__toggle'));
+
+        dropdown.waitReady();
+        dropdown.click();
+        sidebar.element(by.buttonText(desk)).click();
+        if (stage) {
+            sidebar.element(by.buttonText(stage)).click();
+        }
+        if (open) {
+            duplicateAndOpenButton.click();
+        } else {
+            duplicateButton.click();
+        }
+    };
+
     this.selectDeskforSendTo = function(desk) {
         var sidebar = element.all(by.css('.slide-pane')).last(),
             dropdown = sidebar.element(by.css('.dropdown--dark .dropdown__toggle'));

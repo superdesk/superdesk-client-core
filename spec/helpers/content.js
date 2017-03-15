@@ -51,8 +51,12 @@ function Content() {
         }
     };
 
-    this.actionOnItem = function(action, item) {
+    this.actionOnItem = function(action, item, useFullLinkText) {
         var menu = this.openItemMenu(item);
+
+        if (useFullLinkText) {
+            return menu.element(by.linkText(action)).click();
+        }
 
         return menu.element(by.partialLinkText(action)).click();
     };
