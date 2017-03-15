@@ -11,6 +11,7 @@ import './styles/content-filters.scss';
 
 import {ContentFiltersService} from './services';
 import {ManageFiltersTab} from './directives';
+import {ContentFilterSelectDirective} from './directives';
 import * as ctrl from './controllers';
 
 // XXX: For some reason, loading the superdesk.apps.content_filters module in
@@ -48,4 +49,6 @@ angular.module('superdesk.apps.content_filters', ['superdesk.apps.publish'])
     .controller('ManageContentFiltersCtrl', ctrl.ManageContentFiltersController)
     .controller('ProductionTestCtrl', ctrl.ProductionTestController)
     .controller('FilterSearchCtrl', ctrl.FilterSearchController)
-    .directive('sdManageFiltersTab', ManageFiltersTab);
+    .directive('sdManageFiltersTab', ManageFiltersTab)
+    .directive('sdContentFilterSelect', ContentFilterSelectDirective)
+    ;
