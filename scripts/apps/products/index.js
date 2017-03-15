@@ -1,6 +1,6 @@
 // styles
 import './styles/products.scss';
-
+import {ProductsFilter} from './filters';
 import {ProductsFactory} from './services';
 import {ProductsConfigController} from './controllers';
 
@@ -26,7 +26,7 @@ export default angular.module('superdesk.apps.products', ['superdesk.apps.users'
     .config(['apiProvider', function(apiProvider) {
         apiProvider.api('products', {type: 'http', backend: {rel: 'products'}});
     }])
-
+    .filter('productsBy', ProductsFilter)
     .controller('ProductsConfigCtrl', ProductsConfigController)
 
     .factory('products', ProductsFactory)

@@ -168,7 +168,7 @@ export function ProductsConfigController($scope, gettext, notify, api, products,
     $scope.remove = function(product) {
         modal.confirm(gettext('Are you sure you want to delete product?')).then(() => {
             let remove = api.products.remove(product).then(() => {
-                notify.success(gettext('Product deleted.'), 3000);
+                notify.success(gettext('Product deleted.'));
             }, (response) => {
                 if (angular.isDefined(response.data._message)) {
                     notify.error(gettext('Error: ' + response.data._message));

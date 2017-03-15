@@ -133,3 +133,19 @@ div {
         }
     }
 }
+
+.subscriber-modal {
+    .tab-content {
+        .tab-pane {
+            min-height: 400px;
+        }
+    }
+}
+
+.products-content, .subscribers-content {
+    .sortbar {
+        span {
+            margin-left: 5px;
+        }
+    }
+}

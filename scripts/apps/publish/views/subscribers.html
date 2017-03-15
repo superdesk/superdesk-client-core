@@ -1,14 +1,25 @@
-<div ng-hide="hideList" class="split-content">
+<div ng-if="!hideList" class="split-content subscribers-content">
     <div class="header">
         <h2 translate>Subscribers</h2>
-        <button id="addSubscriber" class="btn btn--primary btn--pull-right" ng-click="edit()">
-            <i class="icon-plus-sign icon-white"></i> <span translate>Add New Subscriber</span>
-        </button>
+        <div class="pull-right">
+            <div class="sortbar pull-left">
+                <span translate>Filter:</span>
+                <input type="text" class="input-medium" ng-model="search.name" ng-model-options="{debounce: 800}"/>
+                <span translate>Target Type:</span>
+                <select class="input-medium" ng-model="search.subscriber_type"
+                        ng-options="s.qcode as s.name for s in subTypes">
+                        <option value="" translate>Select</option>
+                </select>
+            </div>
+            <button id="addSubscriber" class="btn btn--primary btn--pull-right" ng-click="edit()">
+                <i class="icon-plus-sign icon-white"></i> <span translate>Add New Subscriber</span>
+            </button>
+        </div>
     </div>
 
     <div class="content">
         <ul class="pills-list provider-list">
-            <li ng-repeat="subscriber in subscribers track by subscriber._id" class="clearfix">
+            <li ng-repeat="subscriber in subscribers | filter:search as filtered_subscribers track by subscriber._id" class="clearfix">
                 <div class="header">
                     <h6 id="subscriberName">{{ subscriber.name }}</h6>
                     <span class="label offProvider" ng-if="!subscriber.is_active" translate>Not Active</span>
@@ -17,6 +28,7 @@
                     </div>
                 </div>
             </li>
+            <li ng-show="subscribers.length > 0 && !filtered_subscribers.length"><h6 translate>No Subscribers Found</h6></li>
         </ul>
     </div>
 </div>
