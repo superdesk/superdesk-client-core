@@ -1,4 +1,4 @@
-describe('templates', () => {
+describe('aggregate widget', () => {
     beforeEach(window.module('superdesk.apps.aggregate'));
     beforeEach(window.module('superdesk.apps.searchProviders'));
 
@@ -47,7 +47,8 @@ describe('templates', () => {
         var fakeEndpoints = {};
         var queryDeferred;
 
-        beforeEach(window.module('superdesk.apps.aggregate', 'superdesk.templates-cache'));
+        beforeEach(window.module('superdesk.apps.aggregate'));
+        beforeEach(window.module('superdesk.apps.vocabularies'));
 
         beforeEach(window.module(($provide) => {
             function fakeApi() {
@@ -71,8 +72,7 @@ describe('templates', () => {
             $provide.value('cards', fakeCards);
         }));
 
-        beforeEach(inject(($templateCache, $q) => {
-            $templateCache.put('scripts/apps/desks/views/stage-item-list.html', '<div></div>');
+        beforeEach(inject(($q) => {
             queryDeferred = $q.defer();
             fakeEndpoints.archive = {
                 query: jasmine.createSpy('archive_query').and.returnValue(queryDeferred.promise)
@@ -81,6 +81,8 @@ describe('templates', () => {
 
         it('it responds to changes query', inject(($rootScope, $controller, $compile, api, cards) => {
             var scope = $rootScope.$new();
+
+            $rootScope.config.features = {customMonitoringWidget: true};
 
             scope.agg = {
                 total: 1,
@@ -92,7 +94,7 @@ describe('templates', () => {
 
             var elemStr = [
                 '<div ng-repeat="group in agg.cards">',
-                '<div sd-stage-items data-stage="group" data-filter="group.query" data-total="total"></div>',
+                '<div sd-widget-group data-stage="group" data-filter="group.query" data-total="total"></div>',
                 '</div>'
             ].join('');
 

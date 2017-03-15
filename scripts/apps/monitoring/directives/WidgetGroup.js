@@ -1,4 +1,9 @@
-StageItemListDirective.$inject = [
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+import {WidgetItemList as WidgetItemListComponent} from 'apps/search/components';
+
+WidgetGroup.$inject = [
     'search',
     'api',
     'superdesk',
@@ -9,13 +14,32 @@ StageItemListDirective.$inject = [
     '$location',
     '$anchorScroll',
     'activityService',
-    '$rootScope'
+    '$rootScope',
+    'gettextCatalog',
+    'datetime',
+    'metadata'
 ];
 
-export function StageItemListDirective(search, api, superdesk, desks, cards, $timeout, $q,
-    $location, $anchorScroll, activityService, $rootScope) {
+export function WidgetGroup(search, api, superdesk, desks, cards, $timeout, $q,
+    $location, $anchorScroll, activityService, $rootScope, gettextCatalog, datetime, metadata) {
+    const services = {
+        search: search,
+        api: api,
+        superdesk: superdesk,
+        desks: desks,
+        cards: cards,
+        $timeout: $timeout,
+        $q: $q,
+        $location: $location,
+        $anchorScroll: $anchorScroll,
+        activityService: activityService,
+        $rootScope: $rootScope,
+        gettextCatalog: gettextCatalog,
+        datetime: datetime,
+        metadata: metadata
+    };
+
     return {
-        templateUrl: 'scripts/apps/desks/views/stage-item-list.html',
         scope: {
             stage: '=',
             total: '=',
@@ -31,7 +55,8 @@ export function StageItemListDirective(search, api, superdesk, desks, cards, $ti
 
             scope.page = 1;
             scope.fetching = false;
-            scope.cache = [];
+            scope.itemIds = [];
+            scope.itemsById = {};
 
             /**
               * Generates Identifier to be used by track by expression.
@@ -77,9 +102,17 @@ export function StageItemListDirective(search, api, superdesk, desks, cards, $ti
             }
 
             function queryItems(queryString) {
+                if (!scope.fetching) {
+                     // page reload disabled when the user scrolls
+                    if (container.scrollTop > 20) {
+                        return;
+                    }
+                    scope.page = 1;
+                    scope.itemIds = [];
+                    scope.itemsById = {};
+                }
+
                 criteria = cards.criteria(scope.stage, queryString);
-                scope.loading = true;
-                scope.items = scope.total = null;
 
                 if (scope.page > 0 && criteria.source) {
                     criteria.source.from = (scope.page - 1) * criteria.source.size;
@@ -87,24 +120,79 @@ export function StageItemListDirective(search, api, superdesk, desks, cards, $ti
 
                 api(getProvider(criteria)).query(criteria)
                     .then((items) => {
-                        scope.items = items._items;
+                        items._items.forEach((item) => {
+                            var itemId = search.generateTrackByIdentifier(item);
+
+                            if (!scope.itemsById[itemId]) {
+                                scope.itemIds.push(itemId);
+                            }
+                            scope.itemsById[itemId] = item;
+                        });
                         scope.total = items._meta.total;
-                        scope.cache = items._items;
-                        setNextItems(criteria);
                     })
                     .finally(() => {
-                        scope.loading = false;
+                        scope.fetching = false;
+
+                        if (!scope.selected && scope.itemIds && scope.itemIds.length) {
+                            scope.selected = scope.itemsById[_.head(scope.itemIds)];
+                            scope.action({item: scope.selected});
+                        }
+
+                        scope.updateList({
+                            itemIds: scope.itemIds,
+                            itemsById: scope.itemsById,
+                            loading: false,
+                            selected: scope.selected
+                        });
                     });
             }
 
-            scope.$watch('filter', queryItems);
-            scope.$on('task:stage', (_e, data) => {
-                if (scope.stage && (data.new_stage === scope.stage || data.old_stage === scope.stage)) {
+
+            scope.updateItem = function(item, gone, schedule) {
+                var itemId;
+
+                if (!item) {
+                    if (schedule) {
+                        scheduleQuery();
+                        return;
+                    }
+                    return;
+                }
+
+                itemId = search.generateTrackByIdentifier(item);
+
+                if (scope.itemsById[itemId]) {
+                    angular.extend(item, {
+                        gone: gone
+                    });
+                    scope.itemsById[itemId] = item;
+                    scope.updateList({
+                        itemIds: scope.itemIds,
+                        itemsById: scope.itemsById
+                    });
+                } else if (schedule) {
                     scheduleQuery();
+                }
+            };
+
+            scope.$watch('filter', (query) => {
+                container.scrollTop = 0;
+                queryItems(query);
+            });
+
+            scope.$on('task:stage', (_e, data) => {
+                if (scope.stage && (data.new_stage === scope.stage._id || data.old_stage === scope.stage._id)) {
+                    scope.updateItem(getItem(data.item), data.new_stage !== scope.stage._id, true);
                 }
             });
 
             scope.$on('content:update', (_e, data) => {
+                if (data && cards.shouldUpdate(scope.stage, data)) {
+                    scheduleQuery();
+                }
+            });
+
+            scope.$on('item:fetch', (_e, data) => {
                 if (cards.shouldUpdate(scope.stage, data)) {
                     scheduleQuery();
                 }
@@ -113,27 +201,45 @@ export function StageItemListDirective(search, api, superdesk, desks, cards, $ti
             scope.$on('item:move', (_e, data) => {
                 if (data.to_desk && data.from_desk !== data.to_desk ||
                     data.to_stage && data.from_stage !== data.to_stage) {
-                    scheduleQuery(2000); // smaller delay.
+                    scope.updateItem(getItem(data.item), scope.stage._id !== data.to_stage, true);
                 }
             });
 
-            scope.$on('content:expired', scheduleQuery);
+            scope.$on('content:expired', (_e, data) => {
+                scope.updateItem(getItem(data.item), true, false);
+            });
 
             scope.$on('item:lock', (_e, data) => {
-                _.each(scope.items, (item) => {
-                    if (item._id === data.item) {
-                        item.lock_user = data.user;
-                    }
-                });
+                var item = getItem(data.item);
+
+                if (!item) {
+                    return;
+                }
+                item.lock_user = data.user;
+                scope.updateItem(item, false, false);
             });
 
             scope.$on('item:unlock', (_e, data) => {
-                _.each(scope.items, (item) => {
-                    if (item._id === data.item) {
-                        item.lock_user = null;
+                var item = getItem(data.item);
+
+                if (!item) {
+                    return;
+                }
+                item.lock_user = null;
+                scope.updateItem(item, false, false);
+            });
+
+            function getItem(itemId) {
+                var result;
+
+                _.forOwn(scope.itemsById, (item, key) => {
+                    if (item._id === itemId) {
+                        result = item;
                     }
                 });
-            });
+
+                return result;
+            }
 
             var queryTimeout;
 
@@ -176,11 +282,8 @@ export function StageItemListDirective(search, api, superdesk, desks, cards, $ti
 
                 if (container.scrollTop <= 2 && lastScrollTop >= container.scrollTop) {
                     lastScrollTop = container.scrollTop;
-                    return scope.fetchPrevious().then(() => {
-                        setFetching();
-                        offsetY = 2 - container.scrollTop;
-                        container.scrollTop += offsetY;
-                    });
+                    offsetY = 2 - container.scrollTop;
+                    container.scrollTop += offsetY;
                 }
             });
 
@@ -196,83 +299,15 @@ export function StageItemListDirective(search, api, superdesk, desks, cards, $ti
                 }, 200, false);
             }
 
-            /**
-             * Populate items from cache for current from/size values
-             */
-            function sliceItems() {
-                scope.items = scope.cache.slice(criteria.source.from, criteria.source.from + criteria.source.size);
-            }
-
-            /**
-             * Test if we can get items from cache for current from/size values
-             */
-            function hasItemsInCache() {
-                return criteria.source.from + criteria.source.size <= scope.cache.length;
-            }
-
-            /**
-             * Use cache to finish next/prev handling
-             */
-            function useCache() {
-                return $timeout(() => {
-                    scope.$applyAsync(() => { // add apply to avoid full page digest via timeout
-                        sliceItems();
-                        scope.fetching = false;
-                        scope.loading = false;
-                    });
-                }, 500, false);
-            }
-
             scope.fetchNext = function() {
                 if (!scope.fetching) {
                     scope.page += 1;
-                    scope.fetching = scope.loading = true;
-                    criteria.source.from = (scope.page - 1) * criteria.source.size;
-
-                    if (hasItemsInCache()) {
-                        return useCache();
-                    }
-
-                    return api(getProvider(criteria)).query(criteria)
-                        .then(addItemsToCache)
-                        .then(sliceItems)
-                        .finally(() => {
-                            scope.fetching = false;
-                            scope.loading = false;
-                        });
+                    scope.fetching = true;
+                    queryItems();
                 }
 
                 return $q.when(false);
             };
-
-            scope.fetchPrevious = function() {
-                if (!scope.fetching && scope.page > 1) {
-                    scope.page -= 1;
-                    scope.fetching = scope.loading = true;
-                    criteria.source.from = (scope.page - 1) * criteria.source.size;
-
-                    if (hasItemsInCache()) { // always true actually
-                        return useCache();
-                    }
-                }
-
-                return $q.when(false);
-            };
-
-            function setNextItems(criteria) {
-                criteria.source.from = scope.page * criteria.source.size;
-                return api(getProvider(criteria)).query(criteria)
-                    .then(addItemsToCache);
-            }
-
-            /**
-             * Add items to cache and filter out items which are there already
-             */
-            function addItemsToCache(items) {
-                scope.cache = scope.cache.concat(items._items.filter((item) =>
-                    !scope.cache.find((cacheItem) => cacheItem._id === item._id)
-                ));
-            }
 
             var UP = -1,
                 DOWN = 1;
@@ -299,8 +334,9 @@ export function StageItemListDirective(search, api, superdesk, desks, cards, $ti
             });
 
             scope.move = function(diff, event) {
-                if (!_.isNil(scope.selected) && $rootScope.config.features.customMonitoringWidget && scope.items) {
-                    var index = _.findIndex(scope.items, {_id: scope.selected._id});
+                if (!_.isNil(scope.selected) && $rootScope.config.features.customMonitoringWidget && scope.itemIds) {
+                    var itemId = scope.generateTrackByIdentifier(scope.selected);
+                    var index = scope.itemIds.findIndex((x) => x === itemId);
 
                     if (!itemHeight) {
                         var containerItems = container.getElementsByTagName('li');
@@ -311,12 +347,12 @@ export function StageItemListDirective(search, api, superdesk, desks, cards, $ti
                     }
                     if (index === -1) { // selected not in current items, select first
                         container.scrollTop = 0;
-                        clickItem(_.head(scope.items), event);
+                        clickItem(scope.itemsById[_.head(scope.itemIds)], event);
                     }
-                    var nextIndex = _.max([0, _.min([scope.items.length - 1, index + diff])]);
+                    var nextIndex = _.max([0, _.min([scope.itemIds.length - 1, index + diff])]);
 
                     if (nextIndex < 0) {
-                        clickItem(_.last(scope.items), event);
+                        clickItem(scope.itemsById[_.last(scope.itemIds)], event);
                     }
                     if (index !== nextIndex) {
                         // scrolling in monitoring widget for ntb is done by keyboard
@@ -329,7 +365,7 @@ export function StageItemListDirective(search, api, superdesk, desks, cards, $ti
                         if (nextIndex * itemHeight < container.scrollTop && nextIndex < index) {
                             container.scrollTop -= itemHeight * 2;
                         }
-                        clickItem(scope.items[nextIndex], event);
+                        clickItem(scope.itemsById[scope.itemIds[nextIndex]], event);
                     } else if (event) {
                         event.preventDefault();
                         event.stopPropagation();
@@ -337,17 +373,53 @@ export function StageItemListDirective(search, api, superdesk, desks, cards, $ti
                     }
                 }
             };
+
             function clickItem(item, $event) {
-                scope.select(item);
+                scope.select(item, false);
                 if ($event) {
                     $event.preventDefault();
                     $event.stopPropagation();
                     $event.stopImmediatePropagation();
                 }
             }
-            scope.select = function(view) {
-                this.selected = view;
+
+            scope.select = function(item, apply = true) {
+                scope.action({item: item});
+                scope.updateList({selected: item});
+                if (apply) {
+                    scope.$apply();
+                }
             };
+
+            scope.setLoading = function(loading) {
+                scope.updateList({
+                    loading: loading
+                });
+            };
+
+            scope.getUpdateCallback = function(updateCallback) {
+                scope.updateList = updateCallback;
+            };
+
+            var itemList = React.createElement(WidgetItemListComponent,
+                {
+                    allowed: scope.allowed,
+                    customMonitoringWidget: $rootScope.config.features.customMonitoringWidget,
+                    svc: services,
+                    preview: scope.preview,
+                    select: scope.select,
+                    edit: scope.edit,
+                    updateCallback: scope.getUpdateCallback
+                }
+            );
+
+            ReactDOM.render(itemList, elem[0]);
+
+            // remove react elem on destroy
+            scope.$on('$destroy', () => {
+                elem.off();
+                ReactDOM.unmountComponentAtNode(elem[0]);
+            });
         }
     };
 }

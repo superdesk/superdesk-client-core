@@ -16,7 +16,7 @@
                             <div sd-stage-header></div>
                             <div class="stage-content" ng-style="agg.getMaxHeightStyle(group.max_items)"
                                  ng-show="agg.getExpandedState(group._id) || agg.state.solo"
-                                 sd-stage-items
+                                 sd-widget-group
                                  data-stage="group"
                                  data-total="total"
                                  data-allowed="true"
@@ -35,7 +35,7 @@
                         <div class="stage" ng-show="total">
                             <div sd-stage-header></div>
                             <div class="stage-content" ng-show="agg.getExpandedState(group._id) || agg.state.solo"
-                                 sd-stage-items
+                                 sd-widget-group
                                  data-stage="group"
                                  data-total="total"
                                  data-allowed="true"

@@ -55,7 +55,7 @@ export function DeskListController($scope, desks, superdesk, privileges, tasks, 
     };
 
     $scope.isMemberOf = function(desk) {
-        return _.find(userDesks, {_id: desk._id});
+        return _.find(userDesks, {_id: desk._id}) !== null;
     };
 
     $scope.openDeskView = function(desk, target) {
