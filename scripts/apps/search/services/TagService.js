@@ -240,7 +240,7 @@ export function TagService($location, desks, userList, metadata, search, ingestS
     function removeFacet(type, key) {
         if (String(key).indexOf('Last') >= 0 || String(key).indexOf('after') >= 0
             || String(key).indexOf('before') >= 0) {
-            removeDateFacet();
+            removeDateFacet(type);
         } else {
             var search = $location.search();
 
@@ -266,20 +266,18 @@ export function TagService($location, desks, userList, metadata, search, ingestS
      * @ngdoc method
      * @name tags#initSelectedFacets
      * @private
+     * @param {String} key
      * @description Removes the date search related tags by modifying the $location.search
      */
-    function removeDateFacet() {
+    function removeDateFacet(key) {
         var search = $location.search();
 
-        if (search.after || search.afterfirstcreated || search.beforefirstcreated ||
-                search.afterversioncreated || search.beforeversioncreated) {
-            $location.search('after', null);
-            $location.search('afterfirstcreated', null);
-            $location.search('beforefirstcreated', null);
-            $location.search('afterversioncreated', null);
-            $location.search('beforeversioncreated', null);
-        } else if (search.scheduled_after) {
+        if (search[key]) {
+            $location.search(key, null);
+        } else if (key === 'scheduledDate') {
             $location.search('scheduled_after', null);
+        } else {
+            $location.search('after', null);
         }
     }
 
@@ -338,10 +336,10 @@ export function TagService($location, desks, userList, metadata, search, ingestS
                     break;
 
                 case 'scheduled_after':
-                    tags.selectedFacets.date = ['Scheduled in the Last Day'];
+                    tags.selectedFacets.scheduledDate = ['Scheduled in the Last Day'];
 
                     if (type === 'now-8H') {
-                        tags.selectedFacets.date = ['Scheduled in the Last 8 Hours'];
+                        tags.selectedFacets.scheduledDate = ['Scheduled in the Last 8 Hours'];
                     }
                     break;
                 case 'creditqcode':
@@ -357,9 +355,9 @@ export function TagService($location, desks, userList, metadata, search, ingestS
 
                     const createdOrModified = (t) => Object.keys(prefixForType).indexOf(t) !== -1;
 
-                    if (createdOrModified(type)) {
+                    if (createdOrModified(key)) {
                         $location.search('after', null);
-                        tags.selectedFacets.date = [`${prefixForType[type]} ${type}`];
+                        tags.selectedFacets[key] = [`${prefixForType[key]} ${type}`];
                     } else if (FacetKeys[key]) {
                         tags.selectedFacets[key] = JSON.parse(type);
                     }
