@@ -28,7 +28,9 @@ MonitoringGroup.$inject = ['cards', 'api', 'authoringWorkspace', '$timeout', 'su
     'archiveService', '$rootScope', 'preferencesService'];
 export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superdesk, session, activityService,
         workflowService, keyboardManager, desks, search, multi, archiveService, $rootScope, preferencesService) {
-    var ITEM_HEIGHT = 57;
+    let ITEM_HEIGHT = 57;
+    let PAGE_SIZE = 25;
+    let DEFAULT_GROUP_ITEMS = 10;
 
     return {
         templateUrl: 'scripts/apps/monitoring/views/monitoring-group.html',
@@ -250,7 +252,14 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                     // view will serve scrolling
                     $rootScope.$broadcast('resize:header');
                 } else if (shouldLimited()) {
-                    scope.style.maxHeight = (scope.group.max_items || 10) * ITEM_HEIGHT;
+                    let groupItems = scope.group.max_items || DEFAULT_GROUP_ITEMS;
+                    let scrollOffset = 0;
+
+                    if (groupItems === PAGE_SIZE) {
+                        scrollOffset = Math.round(ITEM_HEIGHT / 2);
+                    }
+
+                    scope.style.maxHeight = groupItems * ITEM_HEIGHT - scrollOffset;
                 }
             }
 
@@ -322,7 +331,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
 
                         // Reset to get bulk query items
                         criteria = cards.criteria(scope.group, null, monitoring.queryParam);
-                        criteria.source.size = 25;
+                        criteria.source.size = PAGE_SIZE;
                     });
                 } else {
                     select(item);
@@ -356,12 +365,12 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
             function queryItems(event, data) {
                 criteria = cards.criteria(scope.group, null, monitoring.queryParam);
                 criteria.source.from = 0;
-                criteria.source.size = 25;
+                criteria.source.size = PAGE_SIZE;
                 var originalQuery;
 
-                // when forced refresh or query then keep query size default as set 25 above.
+                // when forced refresh or query then keep query size default as set PAGE_SIZE (25) above.
                 // To compare current scope of items, consider fetching same number of items.
-                if (!(data && data.force) && scope.items && scope.items._items.length > 25) {
+                if (!(data && data.force) && scope.items && scope.items._items.length > PAGE_SIZE) {
                     criteria.source.size = scope.items._items.length;
                 }
 
@@ -444,7 +453,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                     if (searchCriteria.repo && searchCriteria.repo.indexOf(',') === -1) {
                         provider = searchCriteria.repo;
                         if (!angular.isDefined(searchCriteria.source.size)) {
-                            searchCriteria.source.size = 25;
+                            searchCriteria.source.size = PAGE_SIZE;
                         }
                     }
                 } else {
