@@ -28,7 +28,8 @@ export function getSpecValue(spec, value) {
  * @return {Boolean}
  */
 export function isCheckAllowed(item) {
-    return !(item.state === 'killed' || item._type === 'published' && !item.last_published_version);
+    return !(item._type === 'externalsource' || item.state === 'killed' ||
+         item._type === 'published' && !item.last_published_version);
 }
 
 export function createMarkUp(html) {

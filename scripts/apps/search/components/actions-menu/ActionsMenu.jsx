@@ -72,7 +72,8 @@ export class ActionsMenu extends React.Component {
                 activity: activity,
                 key: activity._id,
                 svc: this.props.svc,
-                scope: this.props.scope
+                scope: this.props.scope,
+                onActioning: this.props.onActioning
             });
 
         var actions = this.getActions();
@@ -142,4 +143,5 @@ ActionsMenu.propTypes = {
     svc: React.PropTypes.object.isRequired,
     scope: React.PropTypes.any.isRequired,
     item: React.PropTypes.any,
+    onActioning: React.PropTypes.func
 };

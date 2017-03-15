@@ -608,6 +608,19 @@ $rightfield-width:60px;
             opacity: 0.5;
         }
 
+        &.actioning {
+            background-color: fade(#f7f7f7, 20%);
+            border-color: fade(#cfcfcf, 20%);
+            &:before {
+                @include spinner-big();
+                content: '';
+                zoom: .7;
+                top: 50%;
+                transform: translateY(-50%);
+                position: absolute;
+            }
+        }
+
         &.swimlane {
             padding-left: 0px !important;
         }

@@ -24,12 +24,13 @@ export class Item extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {hover: false};
+        this.state = {hover: false, actioning: false};
 
         this.select = this.select.bind(this);
         this.selectTakesPackage = this.selectTakesPackage.bind(this);
         this.edit = this.edit.bind(this);
         this.dbClick = this.dbClick.bind(this);
+        this.setActioningState = this.setActioningState.bind(this);
         this.setHoverState = this.setHoverState.bind(this);
         this.unsetHoverState = this.unsetHoverState.bind(this);
         this.onDragStart = this.onDragStart.bind(this);
@@ -76,6 +77,14 @@ export class Item extends React.Component {
         }
     }
 
+    /**
+     * Set Actioning state
+     * @param {Boolean} isActioning - true if activity is in-progress, and false if completed
+     */
+    setActioningState(isActioning) {
+        this.setState({actioning: isActioning});
+    }
+
     setHoverState() {
         this.setState({hover: true});
     }
@@ -102,7 +111,8 @@ export class Item extends React.Component {
                         locked: item.lock_user && item.lock_session,
                         selected: this.props.flags.selected,
                         archived: item.archived || item.created,
-                        gone: item.gone
+                        gone: item.gone,
+                        actioning: this.state.actioning
                     }
                 )
 
@@ -115,8 +125,12 @@ export class Item extends React.Component {
 
         const getActionsMenu = () =>
             this.state.hover && !item.gone ? React.createElement(
-                ActionsMenu,
-                {item: item, svc: this.props.svc, scope: this.props.scope}
+                ActionsMenu, {
+                    item: item,
+                    svc: this.props.svc,
+                    scope: this.props.scope,
+                    onActioning: this.setActioningState
+                }
             ) : null;
 
         if (this.props.view === 'mgrid') {

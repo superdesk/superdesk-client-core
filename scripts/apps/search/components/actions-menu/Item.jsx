@@ -15,6 +15,13 @@ export default class Item extends React.Component {
         this.close = this.close.bind(this);
         this.closeMenu = this.closeMenu.bind(this);
         this.toggle = this.toggle.bind(this);
+        this.updateActioningStatus = this.updateActioningStatus.bind(this);
+    }
+
+    updateActioningStatus(isActioning) {
+        if (!this.props.item.gone) {
+            this.props.onActioning(isActioning);
+        }
     }
 
     run(event) {
@@ -24,12 +31,16 @@ export default class Item extends React.Component {
         // Stop event propagation so that click on item action
         // won't select that item for preview/authoring.
         event.stopPropagation();
+
+        this.updateActioningStatus(true);
         scope.$apply(() => {
-            activityService.start(this.props.activity, {data: {item: this.props.item}});
+            activityService.start(this.props.activity, {data: {item: this.props.item}})
+            .then(() => this.updateActioningStatus(false));
         });
 
         closeActionsMenu();
     }
+
 
     open() {
         const {$timeout} = this.props.svc;
@@ -146,4 +157,5 @@ Item.propTypes = {
     scope: React.PropTypes.any.isRequired,
     item: React.PropTypes.any,
     activity: React.PropTypes.any,
+    onActioning: React.PropTypes.func
 };
