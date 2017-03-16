@@ -6,6 +6,7 @@ export function ProductsConfigController($scope, gettext, notify, api, products,
     $scope.productLookup = {};
     $scope.loading = false;
     $scope.resultType = 'All';
+    $scope.products = [];
 
     var initProducts = function() {
         products.initialize().then(() => {
@@ -35,6 +36,16 @@ export function ProductsConfigController($scope, gettext, notify, api, products,
         }
     };
 
+    var initProductTypes = function() {
+        if (angular.isDefined(metadata.values.product_types)) {
+            $scope.product_types = $filter('sortByName')(metadata.values.product_types);
+        } else {
+            metadata.fetchMetadataValues().then(() => {
+                $scope.product_types = $filter('sortByName')(metadata.values.product_types);
+            });
+        }
+    };
+
     $scope.newProduct = function() {
         $scope.product.edit = {};
         $scope.product.edit.content_filter = {};
@@ -56,6 +67,7 @@ export function ProductsConfigController($scope, gettext, notify, api, products,
         initProducts();
         initSubscribers();
         initRegions();
+        initProductTypes();
     };
 
     $scope.cancel();
@@ -72,6 +84,8 @@ export function ProductsConfigController($scope, gettext, notify, api, products,
             } else if (angular.isDefined(response.data._issues)) {
                 if (response.data._issues.name && response.data._issues.name.unique) {
                     notify.error(gettext('Error: ' + gettext('Name needs to be unique')));
+                } else if (response.data._issues.product_type) {
+                    notify.error(gettext('Error: ' + gettext('Product Type is required')));
                 } else {
                     notify.error(gettext('Error: ' + JSON.stringify(response.data._issues)));
                 }

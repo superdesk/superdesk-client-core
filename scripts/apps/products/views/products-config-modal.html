@@ -11,12 +11,23 @@
                     <tab heading="Product Details" class="TabContent">
                         <fieldset>
                             <div class="field">
-                                <label for="product-name" translate>Product name</label>
+                                <i class="field-info pull-right" translate>* mandatory fields</i>
+                            </div>
+                            <div >
+                                <label for="product-name" translate>Product name</label><i class="field-info pull-right" translate>*</i>
                                 <input id="product-name" type="text" class="fullwidth-input" ng-model="product.edit.name" required>
                             </div>
                             <div class="field">
                                 <label translate>Product description</label>
                                 <textarea class="fullwidth-input" ng-model="product.edit.description"></textarea>
+                            </div>
+                            <div class="field">
+                                <label translate>Product Type</label><i class="field-info pull-right" translate>*</i>
+                                <select class="input"
+                                        ng-model="product.edit.product_type"
+                                        ng-options="p.qcode as p.name for p in product_types">
+                                    <option value=""></option>
+                                </select>
                             </div>
                             <div class="field">
                                 <label translate>Product codes</label><i class="field-info" translate>*comma separated values</i>
