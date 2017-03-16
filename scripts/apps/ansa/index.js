@@ -253,8 +253,8 @@ function AnsaSemanticsCtrl($scope, $rootScope, api) {
     init();
 }
 
-AnsaRelatedCtrl.$inject = ['$scope', 'api', 'storage'];
-function AnsaRelatedCtrl($scope, api, storage) {
+AnsaRelatedCtrl.$inject = ['$scope', 'api', 'storage', 'Keys'];
+function AnsaRelatedCtrl($scope, api, storage, Keys) {
     let search = () => {
         if (!$scope.item.semantics || !$scope.item.semantics.iptcCodes) {
             this.items = [];
@@ -317,13 +317,19 @@ function AnsaRelatedCtrl($scope, api, storage) {
             });
         }
 
-        console.info('query', angular.toJson(query, 2));
+        if (this.query) {
+            query = {
+                bool: {
+                    must: [
+                        {term: {type: this.activeFilter}},
+                        {query_string: {query: this.query, lenient: true}}
+                    ]
+                }
+            };
+        }
 
-        api.query('archive', {source: {query: query, sort: ['_score'], size: 50}}).then((response) => {
-            this.items = response._items;
-        }, (reason) => {
-            this.items = [];
-        });
+        console.info('query', angular.toJson(query, 2));
+        this.apiQuery(query);
     };
 
     this.activeFilter = storage.getItem('ansa.related.filter') || 'text';
@@ -333,6 +339,19 @@ function AnsaRelatedCtrl($scope, api, storage) {
         storage.setItem('ansa.related.filter', activeFilter);
         search();
     };
+
+    this.searchOnEnter = (event) => {
+        if (event.which === Keys.enter) {
+            search();
+        }
+    };
+
+    this.apiQuery = (query) => api.query('archive', {source: {query: query, sort: ['_score'], size: 50}})
+        .then((response) => {
+            this.items = response._items;
+        }, (reason) => {
+            this.items = [];
+        });
 
     search();
 }
