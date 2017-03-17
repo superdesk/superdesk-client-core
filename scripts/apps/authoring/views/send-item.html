@@ -27,7 +27,7 @@
                 data-selected-desk="selectedDesk"
                 on-change="selectDesk(desk)"></div>
 
-            <ul class="btn-list" ng-if="stages && vm.userActions.send_to === currentUserAction">
+            <ul class="btn-list" ng-if="stages">
                 <li ng-repeat="stage in stages track by stage._id">
                     <button class="btn__check"
                             ng-class="{active: stage._id === selectedStage._id}"
@@ -52,7 +52,9 @@
         </div>
 
         <div sd-toggle-box id="publishScheduleTimestamp" ng-if="mode === 'authoring' && showPublishSchedule()" data-title="{{ 'Publishing Schedule' | translate }}" data-open="true" data-style="dark">
-            <label class="label--lite" translate>Publish Schedule</label>
+            <label class="label--lite">{{ :: 'Publish Schedule' | translate }}
+                <button type="button" class="btn" ng-click="item.publish_schedule_date=null; item.publish_schedule_time=null;" title="{{ :: 'Clear Publish Schedule' | translate }}" sd-hotkey="ctrl+shift+x"><i class="icon-remove-sign icon-white"></i></button>
+            </label>
             <ul class="btn-list">
                 <li class="datepicker-input--dark">
                     <div sd-datepicker ng-model="item.publish_schedule_date" ng-disabled="!_editable"></div>
