@@ -870,6 +870,9 @@ $rightfield-width:60px;
                 min-width: 60px;
                 text-align: right;
                 margin-left: 3px;
+                &.time--short {
+                    min-width: 30px;
+                }
             }
             .associations {
                 position: static;
