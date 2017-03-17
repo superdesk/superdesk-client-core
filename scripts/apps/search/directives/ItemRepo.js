@@ -13,15 +13,6 @@ export function ItemRepo(
         templateUrl: asset.templateUrl('apps/search/views/item-repo.html'),
         link: function(scope, elem) {
             /*
-             * function to initialize default values on init or search provider change
-             */
-            function setDefaultValues() {
-                if (scope.repo && scope.repo.search && scope.repo.search.indexOf('scanpix') === 0) {
-                    common.meta.scanpix_subscription = common.scanpix_subscriptions[0].name;
-                }
-            }
-
-            /*
              * init function to setup the directive initial state and
              * called by $locationChangeSuccess event
              */
@@ -35,14 +26,6 @@ export function ItemRepo(
                 searchProviderService.getAllowedProviderTypes().then((providerTypes) => {
                     scope.searchProviderTypes = providerTypes;
                 });
-
-                common.scanpix_subscriptions = [{
-                    name: 'subscription',
-                    label: gettext('inside subscription')
-                }, {
-                    name: 'all',
-                    label: gettext('all photos')
-                }];
 
                 if (params.repo) {
                     var paramList = params.repo.split(',');
@@ -70,7 +53,6 @@ export function ItemRepo(
                 }
 
                 fetchProviders(params);
-                setDefaultValues();
             }
 
             init();
@@ -129,7 +111,6 @@ export function ItemRepo(
 
             scope.toggleRepo = function(repoName) {
                 $location.search('');
-                setDefaultValues();
                 scope.repo[repoName] = !scope.repo[repoName];
                 $location.search('repo', getActiveRepos());
             };

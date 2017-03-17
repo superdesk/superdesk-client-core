@@ -31,12 +31,7 @@ export function WorkspaceSidenavDirective(superdeskFlags, $location, Keys, gette
             };
 
             scope.loadSearchShortcut = function(provider) {
-                if (provider.search_provider.indexOf('scanpix') === 0) {
-                    $location.url('/search?repo=' + provider.source + '&q=subscription:(subscription)');
-                } else {
-                    $location.url('/search?repo=' + provider.source);
-                }
-
+                $location.url('/search?repo=' + provider.source);
                 $route.reload();
             };
 

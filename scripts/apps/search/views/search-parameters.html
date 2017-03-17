@@ -7,7 +7,7 @@
                 </label>
                 <input type="text" ng-keypress="keyPressed($event)" id="search-slugline" ng-model="meta.slugline">
             </div>
-            
+
             <div class="field" ng-if="search_config.headline">
                 <label for="search-headline">
                     {{:: 'Headline' | translate}}
@@ -151,7 +151,7 @@
                 </select>
             </div>
         </div>
-        
+
     </fieldset>
     <fieldset ng-show="repo.search === 'aapmm'">
         <div class="field">
@@ -208,14 +208,6 @@
                         <input type="checkbox" id="search-clear_edge" ng-model="meta.clear_edge">{{:: 'Clear Edge' | translate}}
                     </label>
                 </div>
-                <label class="search-label" for="from-desk">
-                    {{:: 'Subscription' | translate}}
-                </label>
-                <select
-                    id="subscription" name="subscription"
-                    ng-options="s.name as s.label | translate for s in common.scanpix_subscriptions"
-                    ng-model="meta.scanpix_subscription">
-                </select>
             </div>
         </div>
     </fieldset>
