@@ -97,7 +97,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
             })
             .then((newItem) => {
                 notify.success(gettext('Update Created.'));
-                authoringWorkspace.edit(newItem._id);
+                authoringWorkspace.edit(newItem);
             }, (response) => {
                 if (angular.isDefined(response.data._message)) {
                     notify.error(gettext('Failed to generate update: ' + response.data._message));
