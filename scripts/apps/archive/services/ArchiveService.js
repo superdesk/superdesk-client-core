@@ -154,7 +154,7 @@ export function ArchiveService(desks, session, api, $q, search, $location, confi
                     if (version.version_creator || version.original_creator) {
                         var versioncreator = desks.userLookup[version.version_creator || version.original_creator];
 
-                        version.creator = versioncreator && versioncreator.display_name;
+                        version.creator = versioncreator && versioncreator.display_name || 'System';
                     }
 
                     if (version.type === 'text') {

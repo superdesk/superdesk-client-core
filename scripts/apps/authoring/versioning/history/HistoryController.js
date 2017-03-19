@@ -139,7 +139,7 @@ export function HistoryController(
         displayName: version.creator,
         isPublished: ['published', 'corrected', 'killed'].includes(version.state),
         operation: version.operation,
-        item_id: version._id_document
+        item_id: version._id
     });
 
     /**
