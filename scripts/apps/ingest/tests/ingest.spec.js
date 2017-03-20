@@ -5,6 +5,11 @@ describe('ingest', () => {
         beforeEach(window.module('superdesk.templates-cache'));
         beforeEach(window.module('superdesk.apps.searchProviders'));
 
+        beforeEach(inject((notify) => {
+            spyOn(notify, 'success').and.returnValue(null);
+            spyOn(notify, 'error').and.returnValue(null);
+        }));
+
         it('can send an item', inject((send, api, $q, $rootScope) => {
             spyOn(api, 'save').and.returnValue($q.when({_created: 'now'}));
             var item = {_id: '1'};
@@ -41,6 +46,30 @@ describe('ingest', () => {
 
             expect(api.save).toHaveBeenCalled();
             expect(item.archived).toBe('now');
+        }));
+
+        it('can send an item as for externalsourceTo action', inject((send, api, $q, $rootScope, notify) => {
+            var item = {
+                    _id: 1,
+                    guid: 1,
+                    _type: 'externalsource',
+                    fetch_endpoint: 'search_providers_proxy',
+                    ingest_provider: '123'
+                },
+                config = {
+                    desk: 'desk1',
+                    stage: 'stage1',
+                    macro: 'macro1'
+                },
+                action = 'externalsourceTo';
+
+            spyOn(api, 'save').and.returnValue($q.when({_created: 'now'}));
+
+            expect(send.oneAs(item, config, action).then).toBeDefined();
+            $rootScope.$digest();
+
+            expect(api.save).toHaveBeenCalled();
+            expect(notify.success.calls.count()).toEqual(1);
         }));
 
         it('can send multiple items as', inject((send, api, $q, $rootScope) => {

@@ -128,6 +128,20 @@ angular.module('superdesk.apps.ingest', [
                     // Fetching to 'personal' desk is not allowed
                     return config.features.editFeaturedImage && !_.isNil(desks.getCurrentDeskId());
                 }]
+            })
+            .activity('externalsourceTo', {
+                label: gettext('Get From External Source To'),
+                icon: 'archive',
+                monitor: true,
+                controller: ['data', 'send', function(data, send) {
+                    send.allAs([data.item], 'externalsourceTo');
+                }],
+                filters: [{action: 'list', type: 'externalsource'}],
+                privileges: {fetch: 1},
+                additionalCondition: ['config', 'desks', function(config, desks) {
+                    // Fetching to 'personal' desk is not allowed
+                    return config.features.editFeaturedImage && !_.isNil(desks.getCurrentDeskId());
+                }]
             });
     }])
 

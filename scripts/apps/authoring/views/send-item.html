@@ -18,6 +18,10 @@
             class="panel-header {{currentUserAction === vm.userActions.duplicate_to ? 'panel-header-active' : ''}}"
             ng-show="!canPublishItem() && currentUserAction === vm.userActions.duplicate_to"
             translate>Duplicate To</h3>
+        <h3 id="panel-externalsource"
+            class="panel-header {{currentUserAction === vm.userActions.externalsource_to ? 'panel-header-active' : ''}}"
+            ng-show="!canSendItem() && !canPublishItem() && currentUserAction === vm.userActions.externalsource_to"
+            translate>Get From External Source To</h3>
         <div class="close" ng-click="close()"><i class="icon-close-small icon-white"></i></div>
     </div>
 
@@ -120,6 +124,22 @@
                         ng-disabled="disableSendButton()"
                         translate>
                     duplicate
+    <div class="slide-pane__footer" sd-loading="loading" ng-show="currentUserAction === vm.userActions.externalsource_to">
+        <ul class="btn-list">
+            <li class="full-width" ng-if="showSendButtonAndDestination() && !canSendItem()">
+                <button id="externalsource-open-btn" class="btn btn--light-gray"
+                        ng-click="send(true)"
+                        ng-disabled="disableFetchAndOpenButton()"
+                        translate>
+                    get from external source and open
+                </button>
+            </li>
+            <li class="full-width" ng-if="showSendButtonAndDestination()">
+                <button id="externalsource-btn" class="btn btn--primary"
+                        ng-click="send()"
+                        ng-disabled="disableSendButton()"
+                        translate>
+                    get from external source
                 </button>
             </li>
         </ul>
