@@ -10,6 +10,15 @@ import {
     getDefaultKeyBinding
 } from 'draft-js';
 
+/**
+ * @ngdoc React
+ * @module superdesk.core.editor3
+ * @name TableCell
+ * @param contentState {Object}
+ * @param onChange {Function}
+ * @param onFocus {Function}
+ * @description Handles a cell in the table, as well as the containing editor.
+ */
 export class TableCell extends Component {
     constructor(props) {
         super(props);
@@ -29,6 +38,12 @@ export class TableCell extends Component {
         };
     }
 
+    /**
+     * @ngdoc method
+     * @name TableCell#keyBindingFn
+     * @param {Event} e
+     * @description DraftJS key binding function.
+     */
     keyBindingFn(e) {
         if (e.ctrlKey && e.key === 'l') {
             return 'toggle-link';
@@ -37,6 +52,12 @@ export class TableCell extends Component {
         return getDefaultKeyBinding(e);
     }
 
+    /**
+     * @ngdoc method
+     * @name TableCell#handleKeyCommand
+     * @param {string} command
+     * @description DraftJS key command handler.
+     */
     handleKeyCommand(command) {
         const {editorState} = this.state;
         let newState;
@@ -57,6 +78,12 @@ export class TableCell extends Component {
         return 'not-handled';
     }
 
+    /**
+     * @ngdoc method
+     * @name TableCell#addLink
+     * @description Adds a new link on top of the current selection. If the selection
+     * is collapsed, no action is taken.
+     */
     addLink() {
         const {editorState} = this.state;
 
@@ -76,6 +103,11 @@ export class TableCell extends Component {
         );
     }
 
+    /**
+     * @ngdoc method
+     * @name TableCell#removeLink
+     * @description Removes the link behind the selection focus.
+     */
     removeLink() {
         const {editorState} = this.state;
         let stateAfterChange = editorState;
@@ -95,6 +127,12 @@ export class TableCell extends Component {
         return stateAfterChange;
     }
 
+    /**
+     * @ngdoc method
+     * @name TableCell#onChange
+     * @param {Object} editorState the new editor state.
+     * @description Triggered on changes to the cell's state.
+     */
     onChange(editorState) {
         if (this.isSameState(editorState, this.state.editorState)) {
             return;
@@ -104,6 +142,12 @@ export class TableCell extends Component {
         this.props.onChange(editorState);
     }
 
+    /**
+     * @ngdoc method
+     * @name TableCell#onClick
+     * @param {Event} e
+     * @description Triggered when clicking on the cell.
+     */
     onClick(e) {
         e.stopPropagation();
         this.props.onFocus();
@@ -115,6 +159,13 @@ export class TableCell extends Component {
         }, 0);
     }
 
+    /**
+     * @ngdoc method
+     * @name TableCell#isSameState
+     * @param {Object} es1
+     * @param {Object} es2
+     * @description Compares two editor states and returns true if they are the same.
+     */
     isSameState(es1, es2) {
         return _.isEqual(es1.toJS(), es2.toJS());
     }

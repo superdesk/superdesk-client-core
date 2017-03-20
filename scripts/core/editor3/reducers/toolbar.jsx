@@ -194,6 +194,12 @@ const applyEmbed = (state, data) => {
     return {...state, editorState};
 };
 
+/**
+ * @ngdoc method
+ * @name addTable
+ * @param {Object} data Table data (w, h, ...).
+ * @description Adds a table into the content.
+ */
 const addTable = (state, data) => {
     var {editorState} = state;
 

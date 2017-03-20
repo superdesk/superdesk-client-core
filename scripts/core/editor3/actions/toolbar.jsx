@@ -111,6 +111,13 @@ export function embed(oEmbed) {
     };
 }
 
+/**
+ * @ngdoc method
+ * @name addTable
+ * @param {Number} w Width (columns) of the table.
+ * @return {Number} h Height (rows) of the table.
+ * @description Dispatches the action that adds a table into the content.
+ */
 export function addTable(w, h) {
     const cells = [];
 
