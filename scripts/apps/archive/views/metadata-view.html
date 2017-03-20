@@ -205,9 +205,14 @@
         <dt translate>Type</dt>
         <dd>{{ item.type }}</dd>
     </dl>
-    <dl ng-if="item.renditions">
-        <dt translate>Dimensions</dt>
-        <dd>{{ item.renditions.original.width }} x {{ item.renditions.original.height }}</dd>
-    </dl>
-
+    <div class="preview-header__row">
+        <dl ng-if="item.renditions">
+            <dt translate>Dimensions</dt>
+            <dd>{{ item.renditions.original.width }} x {{ item.renditions.original.height }}</dd>
+        </dl>
+        <dl ng-if="item.type == 'picture' && item.archive_description && item.archive_description !== item.description_text">
+            <dt translate>Archive Description</dt>
+            <dd>{{ item.archive_description }}</dd>
+        </dl>
+    </div>
 </div>

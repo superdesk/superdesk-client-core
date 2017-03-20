@@ -79,6 +79,11 @@
                 <label ng-class="{'label-asterisk':validator.description_text.required}" translate>Description</label>
                 <div ng-model="data.metadata.description_text" ng-change="data.isDirty = true" contenteditable="true" class="contenteditable-input"></div>
             </div>
+            <div ng-if="validator.archive_description && data.metadata.archive_description && data.metadata.archive_description !== data.metadata.description_text">
+                <label ng-class="{'label-asterisk':validator.archive_description.required}" translate>Archive Description</label>
+                <div ng-model="data.metadata.archive_description" ng-change="data.isDirty = true" contenteditable="true" 
+                class="contenteditable-input"></div>
+            </div>
             <div ng-if="validator.alt_text">
                 <label ng-class="{'label-asterisk':validator.alt_text.required}" translate>Alt Text</label>
                 <div ng-model="data.metadata.alt_text" ng-change="data.isDirty = true" contenteditable="true" class="contenteditable-input"></div>
