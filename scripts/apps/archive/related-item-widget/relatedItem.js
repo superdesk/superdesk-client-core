@@ -170,7 +170,7 @@ function RelatedItemController(
                     item)
                 .then((newItem) => {
                     notify.success(gettext('Story is associated as update.'));
-                    authoringWorkspace.edit(newItem._id);
+                    authoringWorkspace.edit(newItem);
                 }, (response) => {
                     if (angular.isDefined(response.data._message)) {
                         notify.error(gettext('Failed to associate update: ' + response.data._message));

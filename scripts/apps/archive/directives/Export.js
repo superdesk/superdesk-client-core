@@ -53,17 +53,13 @@ class LinkFunction {
 
         return this.api.save('export', {}, {item_ids: itemIdList, format_type: formatter.name, validate: validate})
         .then((item) => {
-            if (item._id.err_msg) {
-                return this.onError(item._id.err_msg);
-            }
-
-            this.scope.failures = item._id.failures;
+            this.scope.failures = item.failures;
             // Click the url to triger download of file
-            if (item._id.url) {
+            if (item.url) {
                 let elem = $('#exportDownloadLink');
 
                 if (elem[0]) {
-                    elem[0].href = item._id.url;
+                    elem[0].href = item.url;
                     elem[0].click();
                 }
 

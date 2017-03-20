@@ -111,7 +111,7 @@ export function ProductsConfigController($scope, gettext, notify, api, products,
             if ($scope.resultType === 'All') {
                 $scope.filteredProducts = $scope.products;
             }
-            _.each(results._id, (result) => {
+            _.each(results._items, (result) => {
                 $scope.testLookup[result.product_id] = result;
 
                 if (result.matched && $scope.resultType === 'Match' ||
