@@ -427,7 +427,7 @@ describe('monitoring', () => {
         monitoring.openMonitoring();
         expect(monitoring.getGroupItems(1).count()).toBe(0);
         expect(monitoring.getGroupItems(2).count()).toBe(4);
-        monitoring.actionOnItem('Duplicate', 2, 0);
+        monitoring.actionOnItem('Duplicate', 2, 0, true);
         monitoring.filterAction('text');
         expect(monitoring.getGroupItems(0).count()).toBe(1);
         expect(monitoring.getTextItem(0, 0)).toBe('item5');
@@ -698,7 +698,7 @@ describe('monitoring', () => {
         expect(monitoring.getGroupItems(1).count()).toBe(0);
         expect(monitoring.getGroupItems(2).count()).toBe(4);
         expect(monitoring.getTextItem(2, 0)).toBe('item5'); // original item
-        monitoring.actionOnItem('Duplicate', 2, 0);
+        monitoring.actionOnItem('Duplicate', 2, 0, true);
         monitoring.filterAction('text');
         expect(monitoring.getGroupItems(0).count()).toBe(1);
         expect(monitoring.getTextItem(0, 0)).toBe('item5'); // duplicated item
@@ -709,6 +709,27 @@ describe('monitoring', () => {
         monitoring.previewAction(2, 0);
         monitoring.tabAction('related');
         expect(authoring.getDuplicatedItemState(0)).toBe('PUBLISHED');
+    });
+
+    it('can duplicate to a different desk and stage', () => {
+        monitoring.openMonitoring();
+        expect(monitoring.getGroupItems(1).count()).toBe(0);
+        expect(monitoring.getGroupItems(2).count()).toBe(4);
+        expect(monitoring.getTextItem(2, 0)).toBe('item5'); // original item
+        monitoring.actionOnItem('Duplicate To', 2, 0, true);
+        authoring.duplicateTo('Sports Desk', 'one');
+        workspace.selectDesk('Sports Desk');
+        expect(monitoring.getGroupItems(2).count()).toBe(2);
+        expect(monitoring.getTextItem(2, 0)).toBe('item5');
+        monitoring.actionOnItem('Edit', 2, 0);
+        authoring.setHeaderSluglineText(' testing');
+        authoring.save();
+        authoring.close();
+        monitoring.actionOnItem('Duplicate To', 2, 0, true);
+        authoring.duplicateTo('Politic Desk', 'two', true);
+        workspace.selectDesk('Politic Desk');
+        expect(monitoring.getTextItem(3, 0)).toBe('item5');
+        expect(authoring.getHeaderSluglineText()).toBe('item5 slugline one/two testing');
     });
 
     it('can view published item as readonly when opened', () => {

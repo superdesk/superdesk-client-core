@@ -61,9 +61,10 @@ export function SendService(desks, api, $q, notify, $injector, multi, $rootScope
      * @param {string} config.desk - desk id
      * @param {string} config.stage - stage id
      * @param {string} config.macro - macro name
+     * @param {string} action - name of the original action
      * @returns {Promise}
      */
-    function sendOneAs(item, config) {
+    function sendOneAs(item, config, action) {
         var data = getData(config);
 
         if (item._type === 'ingest') {
@@ -73,6 +74,25 @@ export function SendService(desks, api, $q, notify, $injector, multi, $rootScope
                     $injector.get('authoringWorkspace').edit(archived);
                 }
                 return archived;
+            });
+        } else if (action && action === 'duplicateTo') {
+            return api.save('duplicate', {},
+                {desk: data.desk, stage: data.stage, type: item._type, item_id: item.item_id}, item)
+            .then((duplicate) => {
+                $rootScope.$broadcast('item:duplicate');
+                notify.success(gettext('Item Duplicated'));
+                if (config.open) {
+                    $injector.get('authoringWorkspace').edit({_id: duplicate._id}, 'edit');
+                }
+                return duplicate;
+            }, (response) => {
+                var message = 'Failed to duplicate the item';
+
+                if (angular.isDefined(response.data._message)) {
+                    message = message + ': ' + response.data._message;
+                }
+                notify.error(gettext(message));
+                item.error = response;
             });
         } else if (!item.lock_user) {
             return api.save('move', {}, {task: data}, item).then((item) => {
@@ -108,12 +128,13 @@ export function SendService(desks, api, $q, notify, $injector, multi, $rootScope
      * @param {Array} items
      * @return {Promise}
      */
-    function sendAllAs(items) {
+    function sendAllAs(items, action) {
         self.config = $q.defer();
+        self.config.action = action;
         return self.config.promise.then((config) => {
             self.config = null;
             multi.reset();
-            return $q.all(items.map((item) => sendOneAs(item, config)));
+            return $q.all(items.map((item) => sendOneAs(item, config, action)));
         });
     }
 

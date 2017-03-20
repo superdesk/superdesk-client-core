@@ -127,8 +127,16 @@ function GlobalSearch() {
      * @param {string} action
      * @param {number} index
      */
-    this.actionOnItem = function(action, index) {
+    this.actionOnItem = function(action, index, useFullLinkText) {
         var menu = this.openItemMenu(index);
+
+        if (useFullLinkText) {
+            menu.element(by.linkText(action)).waitReady()
+            .then((elem) => {
+                elem.click();
+            });
+            return;
+        }
 
         menu.element(by.partialLinkText(action)).waitReady()
         .then((elem) => {

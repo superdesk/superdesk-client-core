@@ -281,7 +281,7 @@ describe('authoring', () => {
 
         // view item history duplicate operation
         expect(monitoring.getTextItem(2, 0)).toBe('item5');
-        monitoring.actionOnItem('Duplicate', 2, 0);
+        monitoring.actionOnItem('Duplicate', 2, 0, true);
         expect(monitoring.getTextItem(0, 0)).toBe('item5');
         monitoring.actionOnItem('Edit', 0, 0);
         authoring.showHistory();
