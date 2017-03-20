@@ -23,3 +23,4 @@ export {ItemPriority} from './ItemPriority';
 export {ItemUrgency} from './ItemUrgency';
 export {MarkedItemTitle} from './MarkedItemTitle';
 export {Export} from './Export';
+export {AssociatedItemMetadata} from './AssociatedItemMetadata';

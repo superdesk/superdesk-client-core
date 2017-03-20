@@ -130,7 +130,7 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
     * @description Close the Change Image form.
     */
     $scope.close = function() {
-        if ($scope.data.isDirty) {
+        if ($scope.data.editable && $scope.data.isDirty) {
             modal.confirm(gettext('You have unsaved changes, do you want to continue?'))
             .then(() => {
                 // Ok = continue w/o saving
