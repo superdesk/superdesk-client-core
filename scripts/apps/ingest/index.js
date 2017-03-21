@@ -21,6 +21,7 @@ angular.module('superdesk.apps.ingest.send', ['superdesk.core.api', 'superdesk.a
  */
 angular.module('superdesk.apps.ingest', [
     'superdesk.apps.search',
+    'superdesk.apps.searchProviders',
     'superdesk.apps.dashboard',
     'superdesk.apps.dashboard.widgets.base',
     'superdesk.apps.dashboard.widgets.ingeststats',
