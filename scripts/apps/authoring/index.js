@@ -2,6 +2,7 @@
 import './comments/comments.scss';
 import './metadata/metadata.scss';
 import './packages/packages.scss';
+import './package-manager/package-manager.scss';
 import './styles/authoring.scss';
 import './styles/multiedit.scss';
 import './styles/themes.scss';
@@ -20,6 +21,7 @@ import './versioning/history/history';
 import './metadata/metadata';
 import './workqueue/workqueue';
 import './packages/packages';
+import './package-manager/package-manager';
 import './editor/find-replace';
 import './multiedit/multiedit';
 import './compare-versions/index';
