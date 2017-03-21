@@ -33,6 +33,8 @@ describe('editor3.component.table-block', () => {
                 contentState={contentState}
                 block={block}
                 setReadOnly={() => { /* no-op */ }}
+                editorState={{}}
+                parentOnChange={() => { /* no-op */ }}
                 parentReadOnly={false} />
         );
 
@@ -47,6 +49,8 @@ describe('editor3.component.table-block', () => {
                 contentState={contentState}
                 block={block}
                 setReadOnly={() => { /* no-op */ }}
+                editorState={{}}
+                parentOnChange={() => { /* no-op */ }}
                 parentReadOnly={true} />
         );
 
@@ -60,6 +64,8 @@ describe('editor3.component.table-block', () => {
                 contentState={contentState}
                 block={block}
                 setReadOnly={() => { /* no-op */ }}
+                editorState={{}}
+                parentOnChange={() => { /* no-op */ }}
                 parentReadOnly={false} />
         );
 
@@ -73,6 +79,8 @@ describe('editor3.component.table-block', () => {
                 contentState={contentState}
                 block={block}
                 setReadOnly={() => { /* no-op */ }}
+                editorState={{}}
+                parentOnChange={() => { /* no-op */ }}
                 parentReadOnly={true} />
         );
 
@@ -88,6 +96,8 @@ describe('editor3.component.table-block', () => {
                 contentState={contentState}
                 block={block}
                 setReadOnly={() => { /* no-op */ }}
+                editorState={{}}
+                parentOnChange={() => { /* no-op */ }}
                 parentReadOnly={true} />
         );
 
@@ -103,6 +113,8 @@ describe('editor3.component.table-block', () => {
                 contentState={contentState}
                 block={block}
                 setReadOnly={() => { /* no-op */ }}
+                editorState={{}}
+                parentOnChange={() => { /* no-op */ }}
                 parentReadOnly={true} />
         );
 

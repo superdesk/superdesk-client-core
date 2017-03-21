@@ -37,7 +37,7 @@ export class TableBlockComponent extends Component {
     setCell(row, col, cellState) {
         const cellContentState = cellState.getCurrentContent();
         const data = this.data();
-        const {block, contentState} = this.props;
+        const {block, contentState, editorState, parentOnChange} = this.props;
         const entityKey = block.getEntityAt(0);
 
         if (!data.cells[row]) {
@@ -47,6 +47,7 @@ export class TableBlockComponent extends Component {
         data.cells[row][col] = convertToRaw(cellContentState);
 
         contentState.replaceEntityData(entityKey, {data});
+        parentOnChange(editorState);
     }
 
     /**
@@ -152,15 +153,19 @@ export class TableBlockComponent extends Component {
 TableBlockComponent.propTypes = {
     block: React.PropTypes.object.isRequired,
     contentState: React.PropTypes.object.isRequired,
+    editorState: React.PropTypes.object.isRequired,
     setReadOnly: React.PropTypes.func.isRequired,
+    parentOnChange: React.PropTypes.func.isRequired,
     parentReadOnly: React.PropTypes.bool.isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({
+    parentOnChange: (editorState) => dispatch(actions.changeEditorState(editorState)),
     setReadOnly: (e) => dispatch(actions.setReadOnly())
 });
 
 const mapStateToProps = (state) => ({
+    editorState: state.editorState,
     parentReadOnly: state.readOnly
 });
 

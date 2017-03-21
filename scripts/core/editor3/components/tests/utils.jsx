@@ -80,7 +80,7 @@ export function imageBlockAndContent() {
  * @param {Object} data Entity data
  * @returns {Object} Keys 'block' and 'contentState'
  */
-function createBlockAndContent(type, data) {
+export function createBlockAndContent(type, data) {
     const cs = ContentState.createFromText('here is an image:');
     const contentState = cs.createEntity(type, 'MUTABLE', data);
     const entityKey = contentState.getLastCreatedEntityKey();

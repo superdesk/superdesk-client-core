@@ -5,9 +5,9 @@ import ng from 'core/services/ng';
 import {forceUpdate} from '../actions';
 import {Editor3} from '../components/Editor3';
 import {EditorState, convertFromRaw, convertToRaw, ContentState} from 'draft-js';
-import {stateToHTML} from 'draft-js-export-html';
 import {stateFromHTML} from 'draft-js-import-html';
 import {clearHighlights} from '../reducers/find-replace';
+import {toHTML} from 'core/editor3/html';
 
 /**
  * @name createEditorStore
@@ -52,7 +52,7 @@ export default function createEditorStore(ctrl) {
 function onChange(content) {
     // clear find & replace highlights
     const cleanedContent = clearHighlights(content).content;
-    const newValue = stateToHTML(cleanedContent);
+    const newValue = toHTML(cleanedContent);
 
     this.value = this.value || '<p><br></p>';
     if (newValue.localeCompare(this.value) === 0) {
