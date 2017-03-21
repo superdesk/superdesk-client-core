@@ -8,6 +8,8 @@ const editor3 = (state = {}, action) => {
     switch (action.type) {
     case 'EDITOR_CHANGE_STATE':
         return onChange(state, action.payload);
+    case 'EDITOR_SET_READONLY':
+        return setReadOnly(state, action.payload);
     case 'EDITOR_TAB':
         return onTab(state, action.payload);
     case 'EDITOR_FORCE_UPDATE':
@@ -43,7 +45,6 @@ const forceUpdate = (state) => {
  * @ngdoc method
  * @name onChange
  * @param {Object} editorState
- * @param {bool} focus
  * @return {Object} returns new state
  * @description Handle the editor state has been changed event
  */
@@ -89,5 +90,10 @@ const dragDrop = (state, e) => {
 
     return {...state, editorState};
 };
+
+const setReadOnly = (state, val = true) => ({
+    ...state,
+    readOnly: val
+});
 
 export default editor3;

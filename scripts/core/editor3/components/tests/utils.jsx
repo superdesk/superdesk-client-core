@@ -4,7 +4,8 @@ import {
     ContentState,
     RichUtils,
     SelectionState,
-    AtomicBlockUtils
+    AtomicBlockUtils,
+    convertToRaw
 } from 'draft-js';
 
 /**
@@ -95,6 +96,21 @@ export function embedBlockAndContent() {
     return createBlockAndContent('EMBED', {
         data: {
             html: '<h1>Embed Title</h1>'
+        }
+    });
+}
+
+export function tableBlockAndContent(cells) {
+    const cs = (txt) => convertToRaw(ContentState.createFromText(txt));
+
+    return createBlockAndContent('TABLE', {
+        data: {
+            w: 3,
+            h: 2,
+            cells: cells || [
+                [cs('a'), cs('b'), cs('c')],
+                [cs('d'), cs('e'), cs('f')]
+            ]
         }
     });
 }

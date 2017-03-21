@@ -20,6 +20,8 @@ const toolbar = (state = {}, action) => {
         return updateImage(state, action.payload);
     case 'TOOLBAR_APPLY_EMBED':
         return applyEmbed(state, action.payload);
+    case 'TOOLBAR_ADD_TABLE':
+        return addTable(state, action.payload);
     default:
         return state;
     }
@@ -181,6 +183,28 @@ const applyEmbed = (state, data) => {
 
     const contentState = state.editorState.getCurrentContent();
     const contentStateWithEntity = contentState.createEntity('EMBED', 'MUTABLE', {data});
+    const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+
+    editorState = AtomicBlockUtils.insertAtomicBlock(
+        editorState,
+        entityKey,
+        ' '
+    );
+
+    return {...state, editorState};
+};
+
+/**
+ * @ngdoc method
+ * @name addTable
+ * @param {Object} data Table data (w, h, ...).
+ * @description Adds a table into the content.
+ */
+const addTable = (state, data) => {
+    var {editorState} = state;
+
+    const contentState = state.editorState.getCurrentContent();
+    const contentStateWithEntity = contentState.createEntity('TABLE', 'MUTABLE', {data});
     const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
 
     editorState = AtomicBlockUtils.insertAtomicBlock(

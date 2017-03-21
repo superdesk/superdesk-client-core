@@ -51,3 +51,17 @@ export function dragDrop(e) {
         payload: e
     };
 }
+
+/**
+ * @ngdoc method
+ * @name setReadOnly
+ * @param {Event} v
+ * @return {String} action
+ * @description Dispatches the action to set the main editor as read-only.
+ */
+export function setReadOnly(v) {
+    return {
+        type: 'EDITOR_SET_READONLY',
+        payload: v
+    };
+}

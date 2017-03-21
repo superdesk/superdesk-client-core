@@ -4,6 +4,8 @@ import InlineStyleControls from './InlineStyleControls';
 import {LinkButton} from '../links';
 import {ImageButton} from '../images';
 import {EmbedButton} from '../embeds';
+import {TableButton} from '../tables';
+import classNames from 'classnames';
 
 /**
  * @ngdoc React
@@ -18,20 +20,26 @@ import {EmbedButton} from '../embeds';
  */
 export default class Toolbar extends Component {
     render() {
-        const {editorRect} = this.props;
+        const {editorRect, disabled} = this.props;
+        const cx = classNames({
+            'Editor3-controls': true,
+            disabled: disabled
+        });
 
         return (
-            <div className="Editor3-controls">
+            <div className={cx}>
                 <BlockStyleControls />
                 <InlineStyleControls />
                 <LinkButton editorRect={editorRect} />
                 <ImageButton />
                 <EmbedButton />
+                <TableButton />
             </div>
         );
     }
 }
 
 Toolbar.propTypes = {
-    editorRect: React.PropTypes.object.isRequired
+    editorRect: React.PropTypes.object.isRequired,
+    disabled: React.PropTypes.bool
 };
