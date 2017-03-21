@@ -111,18 +111,20 @@ export class Editor3Component extends React.Component {
         });
 
         return (
-            <div className={cx} onClick={this.focus}>
+            <div className={cx}>
                 {showToolbar ? <Toolbar editorRect={this.editorRect} disabled={readOnly} /> : null}
-                <Editor
-                    editorState={editorState}
-                    handleKeyCommand={this.handleKeyCommand}
-                    blockRendererFn={blockRenderer}
-                    customStyleMap={customStyleMap}
-                    onChange={onChange}
-                    onTab={onTab}
-                    readOnly={readOnly}
-                    ref="editor"
-                />
+                <div className="focus-screen" onClick={this.focus}>
+                    <Editor
+                        editorState={editorState}
+                        handleKeyCommand={this.handleKeyCommand}
+                        blockRendererFn={blockRenderer}
+                        customStyleMap={customStyleMap}
+                        onChange={onChange}
+                        onTab={onTab}
+                        readOnly={readOnly}
+                        ref="editor"
+                    />
+                </div>
             </div>
         );
     }
