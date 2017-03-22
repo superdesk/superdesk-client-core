@@ -1,0 +1,55 @@
+// packaging.scss
+// Styling for package manger - editor widget
+// ----------------------------------------------------------------------------------------
+@import '~mixins.scss';
+@import '~variables.scss';
+
+.sd-widget.package-manager {
+    .widget-header {
+        background-color: $white;
+    }
+    
+    .sd-create-btn {
+        width: 47px;
+        height: 47px;
+        border: 0;
+    }
+
+    .package-manager-content {
+        padding-left: 10px;
+        padding-right: 10px;
+        background: $sd-background;
+        .package-preview {
+            margin-top: 5px;
+            margin-bottom: 5px;
+            border-radius: 5px;
+            border: 1px solid #efefef;
+            background: #fafafa;
+            padding: 5px;
+            .title {
+                padding-left: 5px;
+                padding-right: 5px;
+                .a {
+                    @include text-semibold();
+                    font-size: 14px;
+                    color: #000;
+                }
+            }
+        }
+    }
+}
+
+.modal-package-manager {
+    .modal-body { padding: 10px; }
+
+    .inline-content-items {
+        margin-top: 50px;
+
+        .content-item:hover {
+            background-color: #f4f4f4;
+        }
+    }    
+    .nav-tabs {
+        padding: 0;
+    }
+}
