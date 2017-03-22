@@ -1,14 +1,25 @@
-<div ng-hide="hideList" class="split-content">
+<div ng-if="!hideList" class="split-content subscribers-content">
     <div class="header">
         <h2 translate>Subscribers</h2>
-        <button id="addSubscriber" class="btn btn--primary btn--pull-right" ng-click="edit()">
-            <i class="icon-plus-sign icon-white"></i> <span translate>Add New Subscriber</span>
-        </button>
+        <div class="pull-right">
+            <div class="sortbar pull-left">
+                <span translate>Filter:</span>
+                <input type="text" class="input-medium" ng-model="search.name" ng-model-options="{debounce: 800}"/>
+                <span translate>Target Type:</span>
+                <select class="input-medium" ng-model="search.subscriber_type"
+                        ng-options="s.qcode as s.name for s in subTypes">
+                        <option value="" translate>Select</option>
+                </select>
+            </div>
+            <button id="addSubscriber" class="btn btn--primary btn--pull-right" ng-click="edit()">
+                <i class="icon-plus-sign icon-white"></i> <span translate>Add New Subscriber</span>
+            </button>
+        </div>
     </div>
 
     <div class="content">
         <ul class="pills-list provider-list">
-            <li ng-repeat="subscriber in subscribers track by subscriber._id" class="clearfix">
+            <li ng-repeat="subscriber in subscribers | filter:search as filtered_subscribers track by subscriber._id" class="clearfix">
                 <div class="header">
                     <h6 id="subscriberName">{{ subscriber.name }}</h6>
                     <span class="label offProvider" ng-if="!subscriber.is_active" translate>Not Active</span>
@@ -17,6 +28,7 @@
                     </div>
                 </div>
             </li>
+            <li ng-show="subscribers.length > 0 && !filtered_subscribers.length"><h6 translate>No Subscribers Found</h6></li>
         </ul>
     </div>
 </div>
@@ -95,7 +107,7 @@
                                 data-item="subscriber"
                                 data-field="products"
                                 data-unique="_id"
-                                data-list="availableProducts"
+                                data-list="directProducts"
                                 data-header="true">
                             </div>
                         </div>
@@ -113,12 +125,14 @@
 
                         <fieldset class="separated">
                         <legend translate>Destinations</legend>
+                            <div class="field">
+                                <i class="field-info pull-right" translate>* For Content API only subscriber destinations are not required.</i>
+                            </div>
                             <div sd-destination ng-repeat="destination in destinations" data-destination="destination"
                                  data-actions="[{label: 'Delete', fn: deleteDestination}]"></div>
                             <div sd-destination ng-if="newDestination"
                                 data-destination="newDestination"
                                 data-actions="[{label: 'Save', fn: saveNewDestination}, {label: 'Cancel', fn: cancelNewDestination}]"></div>
-                            <i class="field-info pull-right">*</i>
                             <button type="button" class="btn btn--primary" ng-click="addNewDestination()" ng-show="newDestination === null">
                                 <i class="icon-plus-sign icon-white"></i> <span translate>Add New Destination</span>
                             </button>
@@ -149,9 +163,21 @@
                         </div>
                     </tab>
 
-                    <tab heading="{{ :: 'Content API Tokens' | translate }}" class="TabContent">
-                        <div ng-controller="SubscriberTokenCtrl as tokens">
-                            <h3 translate>Authentication Token</h3>
+                    <tab heading="{{ :: 'Content API' | translate }}" class="TabContent">
+                        <div class="field">
+                            <label translate>Products</label>
+                            <div sd-meta-terms
+                                class="subscriber-products"
+                                data-reload-list="true"
+                                data-item="subscriber"
+                                data-field="api_products"
+                                data-unique="_id"
+                                data-list="apiProducts"
+                                data-header="true">
+                            </div>
+                        </div>
+                        <div class="field" ng-if="subscriber._id" ng-controller="SubscriberTokenCtrl as tokens">
+                            <label translate>Authentication Token</label>
                             <ul class="pills-list">
                                 <li ng-repeat="token in tokens.tokens track by token._id" class="field">
                                     <div class="header">
@@ -184,13 +210,15 @@
                             </fieldset>
                         </div>
                     </tab>
-
                 </tabset>
             </fieldset>
         </form>
     </div>
     <div class="modal-footer">
         <button class="btn" ng-click="cancel()" translate>Cancel</button>
-        <button class="btn btn--primary" ng-click="save()" ng-disabled="editForm.$invalid || destinations.length === 0" translate>Save</button>
+        <button class="btn btn--primary" ng-click="save()"
+                ng-disabled="editForm.$invalid ||
+                (destinations.length === 0 && api_products.length === 0) || (destinations.length === 0 && products.length > 0)"
+                translate>Save</button>
     </div>
 </div>
