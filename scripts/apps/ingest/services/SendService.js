@@ -94,6 +94,23 @@ export function SendService(desks, api, $q, notify, $injector, multi, $rootScope
                 notify.error(gettext(message));
                 item.error = response;
             });
+        } else if (action && action === 'externalsourceTo') {
+            return api.save(item.fetch_endpoint, {
+                guid: item.guid,
+                desk: data.desk,
+                stage: data.stage
+            }, null, null, {repo: item.ingest_provider})
+                .then((fetched) => {
+                    notify.success(gettext('Item Fetched.'));
+                    if (config.open) {
+                        $injector.get('authoringWorkspace').edit({_id: fetched._id}, 'edit');
+                    }
+                    return fetched;
+                }, (error) => {
+                    item.error = error;
+                    notify.error(gettext('Failed to get item.'));
+                    return item;
+                });
         } else if (!item.lock_user) {
             return api.save('move', {}, {task: data}, item).then((item) => {
                 $rootScope.$broadcast('item:update', {item: item});
