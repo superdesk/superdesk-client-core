@@ -446,7 +446,8 @@ export function SearchResults(
 
                 if (!_.isNil(scope.selected.preview)) {
                     scope.showHistoryTab = scope.selected.preview.state !== 'ingested' &&
-                    scope.selected.preview._type !== 'archived';
+                    !_.includes(['archived', 'externalsource'], scope.selected.preview._type);
+
                     superdeskFlags.flags.previewing = true;
                     sendRowViewEvents(item);
                 }
