@@ -76,13 +76,17 @@
                 <div ng-model="data.metadata.headline" ng-change="data.isDirty = true" contenteditable="true" class="contenteditable-input"></div>
             </div>
             <div ng-if="validator.description_text">
-                <label ng-class="{'label-asterisk':validator.description_text.required}" translate>Description</label>
+                <label ng-class="{'label-asterisk':validator.description_text.required}" translate>Caption</label>
                 <div ng-model="data.metadata.description_text" ng-change="data.isDirty = true" contenteditable="true" class="contenteditable-input"></div>
             </div>
-            <div ng-if="validator.archive_description">
+            <div ng-if="!data.isAssociated && validator.archive_description">
                 <label ng-class="{'label-asterisk':validator.archive_description.required}" translate>Archive Description</label>
                 <div ng-model="data.metadata.archive_description" ng-change="data.isDirty = true" contenteditable="true" 
                 class="contenteditable-input"></div>
+            </div>
+            <div ng-if="data.isAssociated && validator.archive_description">
+                <label translate>Archive Description</label>
+                <div>{{ data.metadata.archive_description }}</div>
             </div>
             <div ng-if="validator.alt_text">
                 <label ng-class="{'label-asterisk':validator.alt_text.required}" translate>Alt Text</label>

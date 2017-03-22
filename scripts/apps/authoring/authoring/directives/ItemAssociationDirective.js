@@ -147,7 +147,7 @@ export function ItemAssociationDirective(superdesk, renditions, config, authorin
 
                 if (item.renditions && item.renditions.original && scope.isImage(item.renditions.original)) {
                     scope.loading = true;
-                    return renditions.crop(item)
+                    return renditions.crop(item, true, true)
                     .then(updateItemAssociation)
                     .finally(() => {
                         scope.loading = false;
