@@ -20,20 +20,12 @@ export function ItemSearchbar($location, $document, asset) {
             };
 
             scope.search = function() {
-                var output = '';
-
                 if (scope.query) {
-                    var newQuery = _.uniq(scope.query.split(/[\s,]+/));
-
-                    _.each(newQuery, (item, key) => {
-                        if (item) {
-                            output += key !== 0 ? ' (' + item + ')' : '(' + item + ')';
-                        }
-                    });
+                    let newQuery = _.uniq(scope.query.split(/[\s,]+/));
 
                     scope.query = newQuery.join(' ');
                 }
-                $location.search('q', output || null);
+                $location.search('q', scope.query || null);
             };
 
             scope.cancel = function() {

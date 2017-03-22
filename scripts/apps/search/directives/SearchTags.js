@@ -48,8 +48,12 @@ export function SearchTags($location, tags, asset, metadata, desks) {
                 var searchParameters = $location.search();
 
                 if (searchParameters.q && searchParameters.q.indexOf(param) >= 0) {
-                    searchParameters.q = searchParameters.q.replace(param, '').trim();
+                    let newQuery = _.uniq(searchParameters.q.replace(param, '').trim()
+                        .split(/[\s,]+/));
+
+                    searchParameters.q = newQuery.join(' ');
                     $location.search('q', searchParameters.q || null);
+
                     return;
                 }
 

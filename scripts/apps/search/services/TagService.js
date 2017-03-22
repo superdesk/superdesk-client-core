@@ -87,28 +87,8 @@ export function TagService($location, desks, userList, metadata, search, ingestS
     /*
      * function to parse search input from the search bar.
      */
-    function initSelectedKeywords(kwds) {
-        let keywords = kwds;
-
-        tags.selectedKeywords = [];
-        while (keywords.indexOf('(') >= 0 && keywords.indexOf(')') > 0) {
-            var closeIndex = keywords.indexOf('(');
-            var counter = 1;
-
-            while (counter > 0 && closeIndex < keywords.length) {
-                var c = keywords[++closeIndex];
-
-                if (c === '(') {
-                    counter++;
-                } else if (c === ')') {
-                    counter--;
-                }
-            }
-            var keyword = keywords.substring(keywords.indexOf('('), closeIndex + 1);
-
-            tags.selectedKeywords.push(keyword);
-            keywords = keywords.replace(keyword, '');
-        }
+    function initSelectedKeywords(keywords) {
+        tags.selectedKeywords = keywords ? keywords.split(' ') : [];
     }
 
     function processFromToDesk(index, value) {
