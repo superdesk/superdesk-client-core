@@ -27,6 +27,7 @@ angular.module('superdesk.apps.authoring', [
     'superdesk.apps.authoring.versioning.history',
     'superdesk.apps.authoring.workqueue',
     'superdesk.apps.authoring.packages',
+    'superdesk.apps.authoring.package-manager',
     'superdesk.apps.authoring.find-replace',
     'superdesk.apps.authoring.macros',
     'superdesk.apps.authoring.autosave',

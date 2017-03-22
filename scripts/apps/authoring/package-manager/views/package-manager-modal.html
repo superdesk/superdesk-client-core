@@ -1,0 +1,36 @@
+<div sd-modal data-model="active" class="modal-large modal-package-manager">
+    <div class="modal-header">
+        <button class="close pull-right" ng-click="close()"><i class="icon-close-small"></i></button>
+        <h3 class="modal-heading" translate>Package Manager</h3>
+    </div>
+    <div class="modal-body">
+        <div class="nav nav-tabs item-searchbar">
+            <label for="search-input" class="button search-icon"></label>
+            <input id="search-input"
+                   type="text"
+                   placeholder="{{ 'Search'|translate }}"
+                   ng-model="query"
+                   tabindex="1">
+        </div>
+        <ul class="inline-content-items">
+            <li class="content-item shifted" ng-repeat="item in items| filter: query track by item._id">
+                <div class="content-item__type"><i class="filetype-icon-{{item.type}}"></i></div>
+                <div class="content-item__text">
+                    <span class="keywords">{{item.slugline}}</span>
+                    <span id="title" class="headline">{{item.headline}}</span>
+                </div>
+                <div class="content-item__action dropdown" dropdown dropdown-append-to-body>
+                    <button dropdown-toggle><i class="icon-dots-vertical"></i></button>
+                    <ul class="dropdown dropdown__menu more-activity-menu">
+                        <li ng-repeat="group in item.groups">
+                            <button ng-click="addItem(item, group)">{{group.id}}</button>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn--primary" ng-click="close()">Close</button>
+    </div>
+</div>
