@@ -284,14 +284,14 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
 
             function edit(item) {
                 if (item.state !== 'spiked') {
-                    if (item._type === 'ingest') {
-                        var intent = {action: 'list', type: 'ingest'},
-                            activity = superdesk.findActivities(intent, item)[0];
+                    var intent = {action: 'list'};
 
-                        activityService.start(activity, {data: {item: item}})
-                            .then((item) => {
-                                authoringWorkspace.edit(item);
-                            });
+                    if (item._type === 'ingest') {
+                        intent.type = 'ingest';
+                        fetchAndEdit(intent, item, 'archive');
+                    } else if (item._type === 'externalsource') {
+                        intent.type = 'externalsource';
+                        fetchAndEdit(intent, item, 'externalsource');
                     } else if (item.type === 'composite' && item.package_type === 'takes') {
                         authoringWorkspace.view(item);
                     } else if (archiveService.isPublished(item)) {
@@ -299,6 +299,24 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                     } else {
                         authoringWorkspace.edit(item);
                     }
+                }
+            }
+
+            /**
+             * Perform fetch for an item via activity and then edit fetched item
+             *
+             * @param {Object} intent
+             * @param {Object} item
+             * @param {String} activityId
+             */
+            function fetchAndEdit(intent, item, activityId) {
+                let activity = _.find(superdesk.findActivities(intent, item), {_id: activityId});
+
+                if (!_.isNil(activity)) {
+                    activityService.start(activity, {data: {item: item}})
+                    .then((item) => {
+                        authoringWorkspace.edit(item);
+                    });
                 }
             }
 
