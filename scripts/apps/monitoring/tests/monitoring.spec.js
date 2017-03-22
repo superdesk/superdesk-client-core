@@ -51,6 +51,26 @@ describe('monitoring', () => {
         expect(ctrl.state['with-preview']).toBeFalsy();
     }));
 
+    it('can hide history tabs when preview externalsource item', inject(($controller, $rootScope) => {
+        var scope = $rootScope.$new(),
+            ctrl = $controller('Monitoring', {$scope: scope}),
+            item = {};
+
+        expect(ctrl.state['with-preview']).toBeFalsy();
+
+        ctrl.preview(item);
+
+        expect(ctrl.previewItem).toBe(item);
+        expect(ctrl.state['with-preview']).toBeTruthy();
+        expect(ctrl.showHistoryTab).toBeTruthy();
+
+        item._type = 'externalsource';
+        ctrl.preview(item);
+
+        expect(ctrl.previewItem).toBe(item);
+        expect(ctrl.showHistoryTab).toBeFalsy();
+    }));
+
     it('can edit item', inject(($controller, $rootScope, session) => {
         session.identity = {_id: 'foo'};
         var scope = $rootScope.$new(),
