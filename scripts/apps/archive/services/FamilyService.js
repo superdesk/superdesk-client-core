@@ -36,6 +36,23 @@ export function FamilyService(api, desks) {
 
     /**
      * @ngdoc method
+     * @name family#fetchMediaUsedItems
+     * @public
+     * @description Returns stories which have used a media item
+     * @param {string} mediaUniqueId
+     * @returns {Array}
+     */
+    this.fetchMediaUsedItems = (mediaUniqueId) => {
+        let filter = [
+            {not: {term: {state: 'spiked'}}},
+            {term: {'associations.featuremedia.unique_id': mediaUniqueId}}
+        ];
+
+        return query(filter, 'versioncreated', 'desc');
+    };
+
+    /**
+     * @ngdoc method
      * @name family#query
      * @private
      * @description Creates the query object and performs the query

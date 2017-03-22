@@ -16,6 +16,9 @@
             <li ng-show="showHistoryTab" ng-class="{active: tab === 'history'}">
                 <button ng-click="tab = 'history'" translate>Item history</button>
             </li>
+            <li ng-show="isMediaUsed" ng-class="{active: tab === 'used'}">
+                <button ng-click="tab = 'used'" translate>Used</button>
+            </li>
         </ul>
         <button ng-click="close()" class="close-preview">
             <i class="icon-close-small"></i>
@@ -26,5 +29,6 @@
         <div ng-if="tab === 'metadata'" sd-media-metadata data-item="item"></div>
         <div ng-if="tab === 'related'" sd-media-related data-item="item"></div>
         <div ng-if="tab === 'history' && showHistoryTab" sd-versioning-history data-item="item"></div>
+        <div ng-if="tab === 'used' && isMediaUsed" sd-media-used data-item="item"></div>
     </div>
 </div>

@@ -1,5 +1,5 @@
-ItemPreview.$inject = ['asset', 'storage', 'desks'];
-export function ItemPreview(asset, storage, desks) {
+ItemPreview.$inject = ['asset', 'storage', 'desks', 'lodash'];
+export function ItemPreview(asset, storage, desks, _) {
     /**
      * @description Closes the preview panel if the currently previewed
      * item is spiked / unspiked or moved.
@@ -50,6 +50,8 @@ export function ItemPreview(asset, storage, desks) {
                 if (item && item.task && item.task.stage) {
                     scope.deskName = desks.deskLookup[item.task.desk].name;
                     scope.stage = desks.stageLookup[item.task.stage].name;
+                    scope.isMediaUsed = _.includes(['audio', 'video', 'picture', 'graphic'], scope.item.type) &&
+                        scope.item.used;
                 } else {
                     scope.deskName = scope.stage = null;
                 }

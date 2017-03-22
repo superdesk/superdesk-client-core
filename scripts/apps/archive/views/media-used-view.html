@@ -1,0 +1,17 @@
+<div class="mediaUsed">
+    <ul>
+        <li ng-repeat="usedItem in usedItems._items">
+            <div class="mediaUsed--Item" ng-click="open(usedItem)">
+                <i class="type-icon" sd-filetype-icon data-item="usedItem"></i>
+                <span class="keyword" ng-if="usedItem.slugline">{{ usedItem.slugline }}</span>
+                <span sd-item-container data-item="usedItem" class="container"></span>
+                <span class="state-label state-{{usedItem.state}}">{{ usedItem.state }}</span>
+                <div class="item">
+                    <span ng-href="" title="{{ usedItem.headline }}" class="headline">
+                        {{ usedItem.headline || usedItem.description_text }}
+                    </span>
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>
