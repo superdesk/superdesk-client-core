@@ -51,11 +51,10 @@ WorkqueueCtrl.$inject = [
     'authoring',
     'autosave',
     'confirm',
-    'notify',
     'referrer'
 ];
 function WorkqueueCtrl($scope, $rootScope, $route, workqueue, authoringWorkspace, multiEdit,
-        lock, $location, session, authoring, autosave, confirm, notify, referrer) {
+        lock, $location, session, authoring, autosave, confirm, referrer) {
     $scope.active = null;
     $scope.workqueue = workqueue;
     $scope.multiEdit = multiEdit;
@@ -161,9 +160,9 @@ function WorkqueueCtrl($scope, $rootScope, $route, workqueue, authoringWorkspace
     function _reOpenItem(item) {
         if ($scope.active && $scope.active._id !== item._id || !$scope.active && item) {
             authoringWorkspace.edit(item);
-        } else {
-            notify.success(gettext('Item already open.'));
+            $scope.active = item;
         }
+        $scope.dashboardActive = false;
     }
 
     function _closeItem(item) {
