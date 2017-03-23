@@ -8,11 +8,16 @@
     .widget-header {
         background-color: $white;
     }
-    
+
     .sd-create-btn {
         width: 47px;
         height: 47px;
         border: 0;
+    }
+    
+    .nav-tabs {
+        padding: 0 !important;
+        border: 0 !important;
     }
 
     .package-manager-content {
@@ -36,20 +41,13 @@
                 }
             }
         }
-    }
-}
+        .content-item__action {
+            display: block;
 
-.modal-package-manager {
-    .modal-body { padding: 10px; }
-
-    .inline-content-items {
-        margin-top: 50px;
-
-        .content-item:hover {
-            background-color: #f4f4f4;
+            button {
+                padding: 0;
+                height: 18px;
+            }
         }
-    }    
-    .nav-tabs {
-        padding: 0;
     }
 }
