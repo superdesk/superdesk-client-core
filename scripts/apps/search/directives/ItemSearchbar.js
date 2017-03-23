@@ -20,20 +20,12 @@ export function ItemSearchbar($location, $document, asset) {
             };
 
             scope.search = function() {
-                var output = '';
-
                 if (scope.query) {
-                    var newQuery = _.uniq(scope.query.split(/[\s,]+/));
-
-                    _.each(newQuery, (item, key) => {
-                        if (item) {
-                            output += key !== 0 ? ' (' + item + ')' : '(' + item + ')';
-                        }
-                    });
+                    let newQuery = _.uniq(scope.query.split(/[\s,]+/));
 
                     scope.query = newQuery.join(' ');
                 }
-                $location.search('q', output || null);
+                $location.search('q', scope.query || null);
             };
 
             scope.cancel = function() {
@@ -43,14 +35,19 @@ export function ItemSearchbar($location, $document, asset) {
                 // to be implemented
             };
 
-            // initial query
-            var srch = $location.search();
+            const init = () => {
+                let srch = $location.search();
 
-            if (srch.q && srch.q !== '') {
-                scope.query = srch.q.replace(/[()]/g, '');
-            } else {
-                scope.query = null;
-            }
+                if (srch.q && srch.q !== '') {
+                    scope.query = srch.q.replace(/[()]/g, '');
+                } else {
+                    scope.query = null;
+                }
+            };
+
+            init();
+
+            scope.$on('tag:removed', init);
 
             function closeOnClick() {
                 scope.$applyAsync(() => {

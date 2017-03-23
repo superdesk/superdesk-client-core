@@ -121,7 +121,7 @@ describe('Tag Service', () => {
 
         $rootScope.$digest();
         expect(members.selectedFacets.type.length).toBe(2);
-        expect(members.selectedKeywords.length).toBe(2);
+        expect(members.selectedKeywords.length).toBe(3);
         expect(members.selectedParameters.length).toBe(1);
     }));
 

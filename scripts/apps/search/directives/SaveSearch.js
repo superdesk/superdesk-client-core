@@ -44,6 +44,7 @@ export function SaveSearch($location, asset, api, session, notify, gettext, $roo
                         $location.search(key, null);
                     }
                 });
+                $rootScope.$broadcast('tag:removed');
             };
 
             scope.search = function() {

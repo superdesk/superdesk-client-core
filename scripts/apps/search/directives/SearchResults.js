@@ -11,7 +11,8 @@ SearchResults.$inject = [
     'session',
     '$rootScope',
     'config',
-    'superdeskFlags'
+    'superdeskFlags',
+    'notify'
 ];
 
 const HEX_REG_EXP = /[a-f0-9]{24}/;
@@ -49,7 +50,8 @@ export function SearchResults(
         session,
         $rootScope,
         config,
-        superdeskFlags
+        superdeskFlags,
+        notify
 ) { // uff - should it use injector instead?
     var preferencesUpdate = {
         'archive:view': {
@@ -243,6 +245,8 @@ export function SearchResults(
                         // update scope items only with the matching fetched items
                         scope.items = search.updateItems(items, scope.items);
                     }
+                }, (error) => {
+                    notify.error(gettext('Failed to run the query!'));
                 })
                 .finally(() => {
                     scope.loading = false;
