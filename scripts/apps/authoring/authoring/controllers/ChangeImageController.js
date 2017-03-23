@@ -111,6 +111,7 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
             metadata: _.pick($scope.data.item, [
                 'headline',
                 'description_text',
+                'archive_description',
                 'alt_text',
                 'byline',
                 'copyrightholder',

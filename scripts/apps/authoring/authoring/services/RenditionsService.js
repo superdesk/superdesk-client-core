@@ -59,7 +59,7 @@ export function RenditionsService(metadata, $q, api, superdesk, _) {
      *  @param {boolean} isNew to indicate if picture is new or not
      *  @return {promise} returns the modified picture item
      */
-    this.crop = function(picture, isNew = true) {
+    this.crop = function(picture, isNew = true, isAssociated = false) {
         let clonedPicture = _.extend({}, picture);
 
         clonedPicture.renditions = _.cloneDeep(clonedPicture.renditions);
@@ -78,7 +78,8 @@ export function RenditionsService(metadata, $q, api, superdesk, _) {
                 poi: clonedPicture.poi || {x: 0.5, y: 0.5},
                 showAoISelectionButton: true,
                 showMetadataEditor: true,
-                isNew: isNew
+                isNew: isNew,
+                isAssociated: isAssociated
             })
             .then((result) => {
                 let renditionNames = [];

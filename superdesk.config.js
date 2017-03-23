@@ -15,6 +15,9 @@ module.exports = function(grunt) {
             alt_text: {
                 required: true
             },
+            archive_description: {
+                required: false
+            },
             description_text: {
                 required: true
             },
