@@ -249,6 +249,7 @@
      sd-validation-error="error.description_text"
      sd-width="{{editor.media_description.sdWidth || 'full'}}" data-required="schema.media_description.required">
   <label translate>Caption</label>
+  <span ng-if="validator.description_text.maxlength" sd-character-count data-item="item.description_text" data-html="true" data-limit="validator.description_text.maxlength"></span>
   <div id="title" class="abstract"
         sd-text-editor
         tansa-proofing="true"
@@ -265,6 +266,7 @@
 
 <div ng-if="isMediaType && editor.description_text.editor3" class="field abstract" order="{{editor.media_description.order}}" sd-validation-error="error.description_text" sd-width="{{editor.media_description.sdWidth || 'full'}}" data-required="schema.media_description.required">
   <label translate>Caption</label>
+  <span ng-if="validator.description_text.maxlength" sd-character-count data-item="item.description_text" data-html="true" data-limit="validator.description_text.maxlength"></span>
   <div id="title" class="abstract"
         sd-editor3
         data-editor-format="editor.description_text.formatOptions"
