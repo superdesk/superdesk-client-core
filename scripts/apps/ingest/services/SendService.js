@@ -19,29 +19,52 @@ export function SendService(desks, api, $q, notify, $injector, multi, $rootScope
      * @returns {Promise}
      */
     function sendOne(item) {
-        return api
-            .save('fetch', {}, {desk: desks.getCurrentDeskId()}, item)
-            .then(
-                (archiveItem) => {
-                    item.task_id = archiveItem.task_id;
-                    item.archived = archiveItem._created;
-                    multi.reset();
-                    return archiveItem;
-                }, (response) => {
-                    var message = 'Failed to fetch the item';
+        if (item._type === 'ingest') {
+            return api
+                .save('fetch', {}, {desk: desks.getCurrentDeskId()}, item)
+                .then(
+                    (archiveItem) => {
+                        item.task_id = archiveItem.task_id;
+                        item.archived = archiveItem._created;
+                        multi.reset();
+                        return archiveItem;
+                    }, (response) => {
+                        var message = 'Failed to fetch the item';
 
-                    if (angular.isDefined(response.data._message)) {
-                        message = message + ': ' + response.data._message;
+                        if (angular.isDefined(response.data._message)) {
+                            message = message + ': ' + response.data._message;
+                        }
+                        notify.error(gettext(message));
+                        item.error = response;
                     }
-                    notify.error(gettext(message));
-                    item.error = response;
-                }
-            )
-            .finally(() => {
-                if (item.actioning) {
-                    item.actioning.archive = false;
-                }
-            });
+                )
+                .finally(() => {
+                    if (item.actioning) {
+                        item.actioning.archive = false;
+                    }
+                });
+        } else if (item._type === 'externalsource') {
+            return api
+                .save(item.fetch_endpoint, {
+                    guid: item.guid,
+                    desk: desks.getCurrentDeskId()
+                }, null, null, {repo: item.ingest_provider})
+                .then(
+                    (fetched) => {
+                        notify.success(gettext('Item Fetched.'));
+                        return fetched;
+                    }, (error) => {
+                        item.error = error;
+                        notify.error(gettext('Failed to get item.'));
+                        return item;
+                    }
+                )
+                .finally(() => {
+                    if (item.actioning) {
+                        item.actioning.externalsource = false;
+                    }
+                });
+        }
     }
 
     /**

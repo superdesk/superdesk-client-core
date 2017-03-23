@@ -10,9 +10,9 @@ describe('ingest', () => {
             spyOn(notify, 'error').and.returnValue(null);
         }));
 
-        it('can send an item', inject((send, api, $q, $rootScope) => {
+        it('can send an ingest item', inject((send, api, $q, $rootScope) => {
             spyOn(api, 'save').and.returnValue($q.when({_created: 'now'}));
-            var item = {_id: '1'};
+            var item = {_id: '1', _type: 'ingest'};
 
             expect(send.one(item).then).toBeDefined();
             $rootScope.$digest();
@@ -21,9 +21,20 @@ describe('ingest', () => {
             expect(item.archived).toBe('now');
         }));
 
+        it('can send an externalsource item', inject((send, api, $q, $rootScope, notify) => {
+            spyOn(api, 'save').and.returnValue($q.when({_created: 'now'}));
+            var item = {_id: '1', _type: 'externalsource'};
+
+            expect(send.one(item).then).toBeDefined();
+            $rootScope.$digest();
+
+            expect(api.save).toHaveBeenCalled();
+            expect(notify.success.calls.count()).toEqual(1);
+        }));
+
         it('can send multiple items', inject((send, api, $q, $rootScope) => {
             spyOn(api, 'save').and.returnValue($q.when({}));
-            var items = [{_id: 1}, {_id: 2}];
+            var items = [{_id: 1, _type: 'ingest'}, {_id: 2, _type: 'ingest'}];
 
             send.all(items);
             $rootScope.$digest();

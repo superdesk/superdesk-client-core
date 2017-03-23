@@ -38,8 +38,8 @@ export function AuthoringWorkspaceService($location, superdeskFlags, authoring, 
      */
     this.edit = function(item, action) {
         if (item) {
-            // disable edit of external ingest sources that are not editable(fetch not available)
-            if (item._type === 'externalsource' && config.features.editFeaturedImage === false) {
+            // disable edit of external ingest sources that are not editable (editFeaturedImage false or not available)
+            if (item._type === 'externalsource' && !!_.get(config.features, 'editFeaturedImage') === false) {
                 return;
             }
             authoringOpen(item._id, action || 'edit', item._type || null);
@@ -73,12 +73,12 @@ export function AuthoringWorkspaceService($location, superdeskFlags, authoring, 
             }
         }.bind(this);
 
-        // disable open for external ingest sources that are not editable(fetch not available)
-        if (item._type === 'externalsource' && config.features.editFeaturedImage === false) {
+        // disable open for external ingest sources that are not editable (editFeaturedImage false or not available)
+        if (item._type === 'externalsource' && !!_.get(config.features, 'editFeaturedImage') === false) {
             return;
         }
 
-        if (item._type === 'ingest' || item.state === 'ingested') {
+        if (_.includes(['ingest', 'externalsource'], item._type) || item.state === 'ingested') {
             send.one(item).then(_open);
         } else {
             _open(item);
