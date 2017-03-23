@@ -35,14 +35,19 @@ export function ItemSearchbar($location, $document, asset) {
                 // to be implemented
             };
 
-            // initial query
-            var srch = $location.search();
+            const init = () => {
+                let srch = $location.search();
 
-            if (srch.q && srch.q !== '') {
-                scope.query = srch.q.replace(/[()]/g, '');
-            } else {
-                scope.query = null;
-            }
+                if (srch.q && srch.q !== '') {
+                    scope.query = srch.q.replace(/[()]/g, '');
+                } else {
+                    scope.query = null;
+                }
+            };
+
+            init();
+
+            scope.$on('tag:removed', init);
 
             function closeOnClick() {
                 scope.$applyAsync(() => {

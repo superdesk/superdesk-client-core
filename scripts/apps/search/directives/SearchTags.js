@@ -1,7 +1,7 @@
 import {PARAMETERS} from 'apps/search/constants';
 
-SearchTags.$inject = ['$location', 'tags', 'asset', 'metadata', 'desks'];
-export function SearchTags($location, tags, asset, metadata, desks) {
+SearchTags.$inject = ['$location', 'tags', 'asset', 'metadata', 'desks', '$rootScope'];
+export function SearchTags($location, tags, asset, metadata, desks, $rootScope) {
     return {
         scope: {},
         templateUrl: asset.templateUrl('apps/search/views/search-tags.html'),
@@ -53,6 +53,7 @@ export function SearchTags($location, tags, asset, metadata, desks) {
 
                     searchParameters.q = newQuery.join(' ');
                     $location.search('q', searchParameters.q || null);
+                    $rootScope.$broadcast('tag:removed');
 
                     return;
                 }
