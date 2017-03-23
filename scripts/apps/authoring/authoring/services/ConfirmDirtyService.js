@@ -42,9 +42,9 @@ export function ConfirmDirtyService($window, $q, $filter, api, modal, gettextCat
      */
     this.reopen = function() {
         return modal.confirm(
-            gettextCatalog.getString('There are some unsaved changes, re-open the article to save changes?'),
+            gettextCatalog.getString('There are some unsaved changes, go to the article to save changes?'),
             gettextCatalog.getString('Save changes?'),
-            gettextCatalog.getString('Re-Open'),
+            gettextCatalog.getString('Go-To'),
             gettextCatalog.getString('Ignore'),
             gettextCatalog.getString('Cancel')
         );
