@@ -372,6 +372,12 @@
     div {
         border-bottom: 1px solid #e5e5e5;
     }
+    div:last-child {
+        border: 0px;
+    }
+    h4 {
+        margin-top: 10px;
+    }
     dl {
         @include clearfix();
         margin-bottom: 10px;
@@ -390,6 +396,9 @@
             min-height: 18px;
             margin: 0;
             word-break: break-word;
+            div {
+                border: 0px;
+            }
         }
     }
 }

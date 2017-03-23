@@ -40,6 +40,7 @@ angular.module('superdesk.apps.archive.directives', [
     .directive('sdItemUrgency', directive.ItemUrgency)
     .directive('sdMarkedItemTitle', directive.MarkedItemTitle)
     .directive('sdExport', directive.Export)
+    .directive('sdAssociatedItemMetadata', directive.AssociatedItemMetadata)
 
     .service('familyService', svc.FamilyService)
     .service('dragitem', svc.DragItemService);

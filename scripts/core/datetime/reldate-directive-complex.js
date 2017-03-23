@@ -14,14 +14,14 @@ function ReldateComplex(config, gettextCatalog) {
     var DATE_FORMAT = config.view.dateformat || config.model.dateformat;
     var TIME_FORMAT = config.view.timeformat || config.model.timeformat;
     var DISPLAY_DATE_FORMAT = DATE_FORMAT + ' ' + TIME_FORMAT;
-    var DISPLAY_DAY_FORMAT = 'dddd, ';
+    var DISPLAY_DAY_FORMAT = 'dddd ';
     var DISPLAY_TODAY_FORMAT = '[Today]';
 
     return {
         scope: {useutc: '='},
         require: 'ngModel',
         template: '<time datetime="{{ datetime }}">' +
-            '<span>{{ rday }}, &nbsp;{{ rdate }}</span></time>',
+            '<span>{{rday}}, &nbsp;{{ rdate }}</span></time>',
         link: function(scope, element, attrs, ngModel) {
             var useutc = angular.isUndefined(scope.useutc) ? true : !!scope.useutc;
 

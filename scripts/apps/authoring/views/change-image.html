@@ -1,5 +1,5 @@
 <div class="modal-header">
-    <h3 ng-if="!isAoISelectionModeEnabled" class="pull-left">{{ activity.label|translate }}</h3>
+    <h3 ng-if="!isAoISelectionModeEnabled" class="pull-left">{{ :: data.editable ? activity.label : 'View Crop' | translate }}</h3>
     <h3 ng-if="isAoISelectionModeEnabled" class="pull-left" translate>Select Area of Interest</h3>
     <div class="pull-right">
         <button type="button"
@@ -11,6 +11,7 @@
         class="btn btn--primary"
         ng-click="done()"
         ng-disabled="!saveIsEnabled()"
+        ng-if="data.editable"
         translate>Save</button>
     </div>
 </div>
@@ -19,7 +20,7 @@
     <div class="modal-body__flex-top">
         <div class="modal-body__flex-main">
             <div ng-if="!selectedRendition">
-                <label ng-if="!isAoISelectionModeEnabled"class="field-label">
+                <label ng-if="!isAoISelectionModeEnabled" class="field-label">
                     <span translate>Original</span>
                     <span class="size">
                         {{ data.item.renditions.original.width }} x {{ data.item.renditions.original.height }}
@@ -55,7 +56,7 @@
                 </div>
                 <button class="btn"
                         ng-click="showAreaOfInterestView()"
-                        ng-if="data.showAoISelectionButton && !isAoISelectionModeEnabled"
+                        ng-if="data.showAoISelectionButton && !isAoISelectionModeEnabled && data.editable"
                         translate>Select the area of interest</button>
             </div>
             <div class="crop-area selected" ng-if="selectedRendition">
@@ -71,17 +72,18 @@
              ng-class="{'modal-body__flex--disabled': isAoISelectionModeEnabled}"
              ng-if="data.showMetadataEditor">
             <div class="header" translate>Metadata</div>
+            <pre>{{ data.editable }}</pre>
             <div ng-if="validator.headline">
                 <label ng-class="{'label-asterisk':validator.headline.required}" translate>Title</label>
-                <div ng-model="data.metadata.headline" ng-change="data.isDirty = true" contenteditable="true" class="contenteditable-input"></div>
+                <div ng-model="data.metadata.headline" ng-change="data.isDirty = true" contenteditable="{{ data.editable }}" class="contenteditable-input"></div>
             </div>
             <div ng-if="validator.description_text">
                 <label ng-class="{'label-asterisk':validator.description_text.required}" translate>Caption</label>
-                <div ng-model="data.metadata.description_text" ng-change="data.isDirty = true" contenteditable="true" class="contenteditable-input"></div>
+                <div ng-model="data.metadata.description_text" ng-change="data.isDirty = true" contenteditable="{{ data.editable }}" class="contenteditable-input"></div>
             </div>
             <div ng-if="!data.isAssociated && validator.archive_description">
                 <label ng-class="{'label-asterisk':validator.archive_description.required}" translate>Description</label>
-                <div ng-model="data.metadata.archive_description" ng-change="data.isDirty = true" contenteditable="true" 
+                <div ng-model="data.metadata.archive_description" ng-change="data.isDirty = true" contenteditable="{{ data.editable }}"
                 class="contenteditable-input"></div>
             </div>
             <div ng-if="data.isAssociated && validator.archive_description">
@@ -90,21 +92,21 @@
             </div>
             <div ng-if="validator.alt_text">
                 <label ng-class="{'label-asterisk':validator.alt_text.required}" translate>Alt Text</label>
-                <div ng-model="data.metadata.alt_text" ng-change="data.isDirty = true" contenteditable="true" class="contenteditable-input"></div>
+                <div ng-model="data.metadata.alt_text" ng-change="data.isDirty = true" contenteditable="{{ data.editable }}" class="contenteditable-input"></div>
             </div>
             <div ng-if="validator.byline">
                 <label ng-class="{'label-asterisk':validator.byline.required}" translate>Credit</label>
-                <div ng-model="data.metadata.byline" ng-change="data.isDirty = true" contenteditable="true" class="contenteditable-input"></div>
+                <div ng-model="data.metadata.byline" ng-change="data.isDirty = true" contenteditable="{{ data.editable }}" class="contenteditable-input"></div>
             </div>
             <div ng-if="validator.copyrightholder">
                 <label ng-class="{'label-asterisk':validator.copyrightholder.required}" translate>Copyright holder</label>
-                <div ng-model="data.metadata.copyrightholder" ng-change="data.isDirty = true" contenteditable="true" class="contenteditable-input"></div>
+                <div ng-model="data.metadata.copyrightholder" ng-change="data.isDirty = true" contenteditable="{{ data.editable }}" class="contenteditable-input"></div>
             </div>
             <div ng-if="validator.usageterms">
                 <label ng-class="{'label-asterisk':validator.usageterms.required}">
                     <span translate>Assign Rights</span>
                 </label>
-                <select ng-model="data.metadata.usageterms" ng-change="data.isDirty = true">
+                <select ng-model="data.metadata.usageterms" ng-change="data.isDirty = true" ng-disabled="!data.editable">
                     <option translate value="">--- Not selected ---</option> <!-- not selected / blank option -->
                     <option translate value="single-usage">Single Usage</option>
                     <option translate value="time-restricted">Time Restricted</option>
@@ -113,7 +115,7 @@
             </div>
             <div ng-if="validator.copyrightnotice">
                 <label ng-class="{'label-asterisk':validator.copyrightnotice.required}" translate>Copyright notice</label>
-                <div ng-model="data.metadata.copyrightnotice" ng-change="data.isDirty = true" contenteditable="true" class="contenteditable-input"></div>
+                <div ng-model="data.metadata.copyrightnotice" ng-change="data.isDirty = true" contenteditable="{{ data.editable }}" class="contenteditable-input"></div>
             </div>
         </div>
     </div><!-- end flex top -->

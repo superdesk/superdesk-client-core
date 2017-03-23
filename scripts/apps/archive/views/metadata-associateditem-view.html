@@ -1,0 +1,47 @@
+<h4 translate>{{ title }}</h4>
+<dl ng-if="association.headline">
+    <dt translate>Title</dt>
+    <dd sd-html-preview="association.headline"></dd>
+</dl>
+<dl ng-if="association.description_text">
+    <dt translate>Description</dt>
+    <dd sd-html-preview="association.description_text"></dd>
+</dl>
+<dl ng-if="association.archive_description">
+    <dt translate>Archive Description</dt>
+    <dd sd-html-preview="association.archive_description"></dd>
+</dl>
+<dl ng-if="association.alt_text">
+    <dt translate>Alt Text</dt>
+    <dd sd-html-preview="association.alt_text"></dd>
+</dl>
+<dl ng-if="association.ednote">
+    <dt translate>Ed Note</dt>
+    <dd sd-html-preview="association.ednote"></dd>
+</dl>
+<dl ng-if="association.source">
+    <dt translate>Source</dt>
+    <dd>{{ association.source }}</dd>
+</dl>
+<dl ng-if="association.original_source">
+    <dt translate>Original Source</dt>
+    <dd>{{ association.original_source }}</dd>
+</dl>
+<!-- copyright details details -->
+<dl ng-if="association.copyrightholder">
+    <dt translate>Copyright holder</dt>
+    <dd >{{ association.copyrightholder }}</dd>
+</dl>
+<dl ng-if="association.copyrightnotice">
+    <dt translate>Copyright notice</dt>
+    <dd>{{ association.copyrightnotice }}</dd>
+</dl>
+<dl ng-if="association.usageterms">
+    <dt translate>Usage terms</dt>
+    <dd>{{ association.usageterms }}</dd>
+</dl>
+
+<dl ng-if="association.renditions">
+    <dt translate>Dimensions</dt>
+    <dd>{{ association.renditions.original.width }} x {{ association.renditions.original.height }}</dd>
+</dl>
