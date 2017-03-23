@@ -1158,3 +1158,15 @@ input {
     content: ' *';
   }
 }
+
+.char-count {
+    font-size: 11px;
+    font-style: italic;
+    color: $sd-text-label;
+    float: right;
+    margin-bottom: -16px;
+    margin-left: 5px;
+    &.error {
+        color: $red;
+    }
+}

@@ -61,6 +61,7 @@ export function ArticleEditDirective(
             scope.canListEditSignOff = config.user && config.user.sign_off_mapping;
             scope.editSignOff = false;
             scope.mediaLoading = false;
+            scope.validator = config.validatorMediaMetadata;
 
             var mainEditScope = scope.$parent.$parent;
             var autopopulateByline = config.features && config.features.autopopulateByline;

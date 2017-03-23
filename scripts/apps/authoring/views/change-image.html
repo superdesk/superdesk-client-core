@@ -75,14 +75,17 @@
             <pre>{{ data.editable }}</pre>
             <div ng-if="validator.headline">
                 <label ng-class="{'label-asterisk':validator.headline.required}" translate>Title</label>
+                <span ng-if="validator.headline.maxlength" sd-character-count data-item="data.metadata.headline" data-limit="validator.headline.maxlength"></span>
                 <div ng-model="data.metadata.headline" ng-change="data.isDirty = true" contenteditable="{{ data.editable }}" class="contenteditable-input"></div>
             </div>
             <div ng-if="validator.description_text">
                 <label ng-class="{'label-asterisk':validator.description_text.required}" translate>Caption</label>
+                <span ng-if="validator.description_text.maxlength" sd-character-count data-item="data.metadata.description_text" data-limit="validator.description_text.maxlength"></span>
                 <div ng-model="data.metadata.description_text" ng-change="data.isDirty = true" contenteditable="{{ data.editable }}" class="contenteditable-input"></div>
             </div>
             <div ng-if="!data.isAssociated && validator.archive_description">
                 <label ng-class="{'label-asterisk':validator.archive_description.required}" translate>Description</label>
+                <span ng-if="validator.archive_description.maxlength" sd-character-count data-item="data.metadata.archive_description" data-limit="validator.archive_description.maxlength"></span>
                 <div ng-model="data.metadata.archive_description" ng-change="data.isDirty = true" contenteditable="{{ data.editable }}"
                 class="contenteditable-input"></div>
             </div>
@@ -92,6 +95,7 @@
             </div>
             <div ng-if="validator.alt_text">
                 <label ng-class="{'label-asterisk':validator.alt_text.required}" translate>Alt Text</label>
+                <span ng-if="validator.alt_text.maxlength" sd-character-count data-item="data.metadata.alt_text" data-limit="validator.alt_text.maxlength"></span>
                 <div ng-model="data.metadata.alt_text" ng-change="data.isDirty = true" contenteditable="{{ data.editable }}" class="contenteditable-input"></div>
             </div>
             <div ng-if="validator.byline">
