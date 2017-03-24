@@ -1,7 +1,8 @@
-PackageManagerCtrl.$inject = ['$scope', 'api', 'search', 'packages', 'notify', 'gettext', 'autosave'];
-function PackageManagerCtrl($scope, api, search, packages, notify, gettext, autosave) {
+PackageManagerCtrl.$inject = ['$scope', 'api', 'search', 'packages', 'notify', 'gettext', 'autosave', 'archiveService'];
+function PackageManagerCtrl($scope, api, search, packages, notify, gettext, autosave, archiveService) {
     $scope.contentItems = [];
     $scope.packageModal = false;
+    $scope.groupList = packages.groupList;
 
     function fetchPackages() {
         var query = search.query();
@@ -16,12 +17,12 @@ function PackageManagerCtrl($scope, api, search, packages, notify, gettext, auto
         var filter = [
             {not: {term: {state: 'spiked'}}},
             {not: {terms: {guid: linkedPackages}}},
-            {terms: {type: ['composite']}}
+            {term: {type: 'composite'}},
+            {not: {term: {state: 'killed'}}}
         ];
 
-
         query.size(25).filter(filter);
-        api.archive.query(query.getCriteria(true))
+        api.query('search', query.getCriteria(true))
         .then((result) => {
             $scope.contentItems = result._items;
         });
@@ -37,16 +38,44 @@ function PackageManagerCtrl($scope, api, search, packages, notify, gettext, auto
     }
 
     this.addToPackage = function(pitem, group) {
-        var orig = _.clone(pitem);
-
-        packages.addItemsToPackage(pitem, group.id, [$scope.item]);
-        api.save('archive', orig, _.pick(pitem, 'groups')).then(() => {
+        var onSuccess = function() {
             notify.success(gettext('Package Updated'));
             autosave.drop(pitem);
 
             return updatePackageList(pitem);
-        });
+        };
+
+        var onError = function(error) {
+            if (angular.isDefined(error.data._message)) {
+                notify.error(error.data._message);
+            } else {
+                notify.error(gettext('Error. The item was not added to the package.'));
+            }
+        };
+
+        if (pitem.state in ['published', 'corrected']) {
+            return addToPublishedPackage(pitem, group, onSuccess, onError);
+        }
+        return addToUnpublishedPackage(pitem, group, onSuccess, onError);
     };
+
+    function addToPublishedPackage(pitem, group, onSuccess, onError) {
+        var query = {
+            new_items: {
+                group: group,
+                item_id: $scope.item._id
+            }
+        };
+
+        api.save('published_package_items', query, query).then(onSuccess, onError);
+    }
+
+    function addToUnpublishedPackage(pitem, group, onSuccess, onError) {
+        var orig = _.clone(pitem);
+
+        packages.addItemsToPackage(pitem, group, [$scope.item]);
+        api.save('archive', orig, _.pick(pitem, 'groups')).then(onSuccess, onError);
+    }
 
     fetchPackages();
 }
