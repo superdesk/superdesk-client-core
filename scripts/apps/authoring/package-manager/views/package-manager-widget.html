@@ -21,8 +21,8 @@
                     <div class="content-item__action dropdown" dropdown dropdown-append-to-body sd-dropdown-position-absolute>
                         <button dropdown-toggle><i class="icon-dots-vertical"></i></button>
                         <ul class="dropdown dropdown__menu more-activity-menu">
-                            <li ng-repeat="group in pitem.groups">
-                                <button ng-click="ctrl.addToPackage(pitem, group)">{{group.id}}</button>
+                            <li ng-repeat="group in groupList">
+                                <button ng-click="ctrl.addToPackage(pitem, group)">{{group}}</button>
                             </li>
                         </ul>
                     </div>
