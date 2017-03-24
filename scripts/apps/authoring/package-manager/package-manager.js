@@ -1,5 +1,5 @@
-PackageManagerCtrl.$inject = ['$scope', 'api', 'search', 'packages', 'notify', 'gettext', 'autosave', 'archiveService'];
-function PackageManagerCtrl($scope, api, search, packages, notify, gettext, autosave, archiveService) {
+PackageManagerCtrl.$inject = ['$scope', 'api', 'search', 'packages', 'notify', 'gettext', 'autosave'];
+function PackageManagerCtrl($scope, api, search, packages, notify, gettext, autosave) {
     $scope.contentItems = [];
     $scope.packageModal = false;
     $scope.groupList = packages.groupList;
@@ -53,7 +53,7 @@ function PackageManagerCtrl($scope, api, search, packages, notify, gettext, auto
             }
         };
 
-        if (pitem.state in ['published', 'corrected']) {
+        if (pitem.state === 'published' || pitem.state === 'corrected') {
             return addToPublishedPackage(pitem, group, onSuccess, onError);
         }
         return addToUnpublishedPackage(pitem, group, onSuccess, onError);
@@ -61,13 +61,14 @@ function PackageManagerCtrl($scope, api, search, packages, notify, gettext, auto
 
     function addToPublishedPackage(pitem, group, onSuccess, onError) {
         var query = {
-            new_items: {
+            package_id: pitem._id,
+            new_items: [{
                 group: group,
                 item_id: $scope.item._id
-            }
+            }]
         };
 
-        api.save('published_package_items', query, query).then(onSuccess, onError);
+        api.save('published_package_items', query).then(onSuccess, onError);
     }
 
     function addToUnpublishedPackage(pitem, group, onSuccess, onError) {
