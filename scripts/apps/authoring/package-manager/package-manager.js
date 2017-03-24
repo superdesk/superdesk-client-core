@@ -22,9 +22,12 @@ function PackageManagerCtrl($scope, api, search, packages, notify, gettext, auto
         ];
 
         query.size(25).filter(filter);
-        api.query('search', query.getCriteria(true))
+        var criteria = query.getCriteria(true);
+
+        criteria.repo = 'archive,published';
+        api.query('search', criteria)
         .then((result) => {
-            $scope.contentItems = result._items;
+            $scope.contentItems = _.uniqBy(result._items, '_id');
         });
     }
 

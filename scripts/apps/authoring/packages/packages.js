@@ -12,10 +12,13 @@ function PackagesCtrl($scope, superdesk, api, search) {
             filter.push(packageRef.package);
         });
 
-        query.size(25).filter({terms: {_id: filter}});
-        api.archive.query(query.getCriteria(true))
+        query.size(25).filter({terms: {guid: filter}});
+        var criteria = query.getCriteria(true);
+
+        criteria.repo = 'archive,published';
+        api.query('search', criteria)
         .then((result) => {
-            $scope.contentItems = result._items;
+            $scope.contentItems = _.uniqBy(result._items, '_id');
         });
     }
 
