@@ -23,6 +23,7 @@ class LinkFunction {
         this.scope.selectedFormatter = this.storage.getItem('selectedFormatter');
         this.scope.validate = false;
         this.scope.exportFile = this.exportFile.bind(this);
+        this.scope.cancel = this.cancel.bind(this);
         this.scope.failures = 0;
         this.scope.error = false;
         this.scope.err_msg = null;
@@ -34,6 +35,16 @@ class LinkFunction {
                 this.scope.selectedFormatter = JSON.stringify(this.scope.exportFormatters[0]);
             }
         });
+    }
+
+    /**
+     * @ngdoc method
+     * @name sdExport#cancel
+     * @private
+     * @description Closes the Export modal dialog
+     */
+    cancel() {
+        this.scope.closeExport();
     }
 
     /**

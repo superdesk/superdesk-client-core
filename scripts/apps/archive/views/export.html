@@ -1,13 +1,13 @@
 <div sd-modal data-model="export" data-close="closeExport()">
     <div class="modal-header">
-        <a href="" class="close" ng-click="closeExport()"><i class="icon-close-small"></i></a>
+        <a href="" class="close" sd-hotkey="esc" ng-click="closeExport()"><i class="icon-close-small"></i></a>
         <h3 translate>Export</h3>
     </div>
 
     <div class="export-modal modal-body" ng-loading="loading">
         <div class="formatters">
             <label>{{ :: 'Formatters' | translate }}</label>
-            <select ng-model="selectedFormatter">
+            <select selected="selectedFormatter" ng-model="selectedFormatter">
                 <option value="{{formatter}}" ng-repeat="formatter in exportFormatters">{{:: formatter.name}}</option>
             </select>
         </div>
@@ -22,6 +22,7 @@
         <a id='exportDownloadLink' href="" ng-show="!error"></a>
     </div>
     <div class="modal-footer">
-        <button class="btn btn--primary btn--pull-right" ng-click="exportFile(selectedFormatter, validate)" translate>Export</button>
+        <button class="btn btn--primary btn--pull-right" ng-disabled="!exportFormatters.length > 0" ng-click="exportFile(selectedFormatter, validate)" translate>Export</button>
+        <button class="btn" ng-click="cancel()" translate>Cancel</button>
     </div>
 </div>
