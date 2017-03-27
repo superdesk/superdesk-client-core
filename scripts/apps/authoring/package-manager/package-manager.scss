@@ -4,22 +4,7 @@
 @import '~mixins.scss';
 @import '~variables.scss';
 
-.sd-widget.package-manager {
-    .widget-header {
-        background-color: $white;
-    }
-
-    .sd-create-btn {
-        width: 47px;
-        height: 47px;
-        border: 0;
-    }
-    
-    .nav-tabs {
-        padding: 0 !important;
-        border: 0 !important;
-    }
-
+.sd-widget.package-manager, .sd-widget.packages {
     .package-manager-content {
         padding-left: 10px;
         padding-right: 10px;

@@ -23,7 +23,11 @@ function PackagesCtrl($scope, superdesk, api, search) {
     }
 
     $scope.openPackage = function(packageItem) {
-        superdesk.intent('edit', 'item', packageItem);
+        if (packageItem._type === 'published') {
+            superdesk.intent('view', 'item', packageItem);
+        } else {
+            superdesk.intent('edit', 'item', packageItem);
+        }
     };
 
     if ($scope.item && $scope.item.linked_in_packages && $scope.item.linked_in_packages.length > 0) {
