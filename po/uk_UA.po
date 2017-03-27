@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
-"PO-Revision-Date: 2017-02-21 09:29+0000\n"
+"PO-Revision-Date: 2017-03-24 09:51+0000\n"
 "Last-Translator: Daniel James <daniel@64studio.com>\n"
 "Language-Team: Ukrainian (Ukraine) (http://www.transifex.com/sourcefabric/superdesk/language/uk_UA/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3154,10 +3154,6 @@ msgstr "Існуючий шаблон буде оновлено."
 msgid "italic"
 msgstr "Курсив"
 
-#: scripts/apps/authoring/workqueue/workqueue.js:162
-msgid "Item already open."
-msgstr "Елемент вже відкритий."
-
 #: scripts/apps/archive/controllers/DuplicateController.js:13
 msgid "Item Duplicated"
 msgstr "Елемент продубльований"
@@ -4714,8 +4710,8 @@ msgid "Raw"
 msgstr "стрічка"
 
 #: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:47
-msgid "Re-Open"
-msgstr "відкрито повторно"
+msgid "Go-To"
+msgstr ""
 
 #: scripts/apps/users/config.js:147
 msgid "Read user roles"
@@ -6087,8 +6083,8 @@ msgid "There are some unsaved changes, do you want to save it now?"
 msgstr "Деякі зміни не збережено, хочете зберегти зараз?"
 
 #: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:45
-msgid "There are some unsaved changes, re-open the article to save changes?"
-msgstr "Деякі зміни не збережено, відкрити статтю повторно для збереження змін? "
+msgid "There are some unsaved changes, go to the article to save changes?"
+msgstr ""
 
 #: scripts/core/auth/auth.js:194
 msgid "There are some unsaved changes. Please save them before signing out."

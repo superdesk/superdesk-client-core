@@ -1,13 +1,13 @@
 # 
 # Translators:
 # Helen Vogt <helen.vogt@ntb.no>, 2016-2017
-# karelpetrak <karel.petrak@sourcefabric.org>, 2016
-# karelpetrak <karel.petrak@sourcefabric.org>, 2016-2017
+# Karel Petrak <karel.petrak@sourcefabric.org>, 2016
+# Karel Petrak <karel.petrak@sourcefabric.org>, 2016-2017
 # Rune Wikstøl <rune.wikstol@ntb.no>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
-"PO-Revision-Date: 2017-02-21 09:29+0000\n"
+"PO-Revision-Date: 2017-03-24 09:51+0000\n"
 "Last-Translator: Daniel James <daniel@64studio.com>\n"
 "Language-Team: Norwegian Bokmål (http://www.transifex.com/sourcefabric/superdesk/language/nb/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3150,10 +3150,6 @@ msgstr "Oppdaterer eksisterende mal."
 msgid "italic"
 msgstr "kursiv"
 
-#: scripts/apps/authoring/workqueue/workqueue.js:162
-msgid "Item already open."
-msgstr "Saken er allerede åpen"
-
 #: scripts/apps/archive/controllers/DuplicateController.js:13
 msgid "Item Duplicated"
 msgstr "Saken er duplisert"
@@ -4710,8 +4706,8 @@ msgid "Raw"
 msgstr "Raw"
 
 #: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:47
-msgid "Re-Open"
-msgstr "Gjenåpne"
+msgid "Go-To"
+msgstr ""
 
 #: scripts/apps/users/config.js:147
 msgid "Read user roles"
@@ -6083,8 +6079,8 @@ msgid "There are some unsaved changes, do you want to save it now?"
 msgstr "Noen endringer er ikke lagret. Vil du lagre nå?"
 
 #: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:45
-msgid "There are some unsaved changes, re-open the article to save changes?"
-msgstr "Noen endringer er ikke lagret. Vil du gjenåpne saken for å lagre endringene?"
+msgid "There are some unsaved changes, go to the article to save changes?"
+msgstr ""
 
 #: scripts/core/auth/auth.js:194
 msgid "There are some unsaved changes. Please save them before signing out."

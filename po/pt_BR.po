@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
-"PO-Revision-Date: 2017-02-21 09:29+0000\n"
+"PO-Revision-Date: 2017-03-24 09:51+0000\n"
 "Last-Translator: Daniel James <daniel@64studio.com>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/sourcefabric/superdesk/language/pt_BR/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3148,10 +3148,6 @@ msgstr ""
 msgid "italic"
 msgstr ""
 
-#: scripts/apps/authoring/workqueue/workqueue.js:162
-msgid "Item already open."
-msgstr ""
-
 #: scripts/apps/archive/controllers/DuplicateController.js:13
 msgid "Item Duplicated"
 msgstr ""
@@ -4708,7 +4704,7 @@ msgid "Raw"
 msgstr ""
 
 #: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:47
-msgid "Re-Open"
+msgid "Go-To"
 msgstr ""
 
 #: scripts/apps/users/config.js:147
@@ -6081,7 +6077,7 @@ msgid "There are some unsaved changes, do you want to save it now?"
 msgstr "Existem algumas alterações não salvas, deseja salvá-las agora?"
 
 #: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:45
-msgid "There are some unsaved changes, re-open the article to save changes?"
+msgid "There are some unsaved changes, go to the article to save changes?"
 msgstr ""
 
 #: scripts/core/auth/auth.js:194
