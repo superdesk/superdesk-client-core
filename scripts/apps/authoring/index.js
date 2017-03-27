@@ -1,7 +1,6 @@
 // styles
 import './comments/comments.scss';
 import './metadata/metadata.scss';
-import './packages/packages.scss';
 import './package-manager/package-manager.scss';
 import './styles/authoring.scss';
 import './styles/multiedit.scss';
