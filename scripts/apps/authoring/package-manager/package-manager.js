@@ -1,5 +1,5 @@
-PackageManagerCtrl.$inject = ['$scope', 'api', 'search', 'packages', 'notify', 'gettext', 'autosave'];
-function PackageManagerCtrl($scope, api, search, packages, notify, gettext, autosave) {
+PackageManagerCtrl.$inject = ['$scope', 'api', 'search', 'packages', 'notify', 'gettext', 'authoring'];
+function PackageManagerCtrl($scope, api, search, packages, notify, gettext, authoring) {
     $scope.contentItems = [];
     $scope.packageModal = false;
     $scope.groupList = packages.groupList;
@@ -43,7 +43,7 @@ function PackageManagerCtrl($scope, api, search, packages, notify, gettext, auto
     this.addToPackage = function(pitem, group) {
         var onSuccess = function() {
             notify.success(gettext('Package Updated'));
-            autosave.drop(pitem);
+            authoring.autosave(pitem);
 
             return updatePackageList(pitem);
         };
