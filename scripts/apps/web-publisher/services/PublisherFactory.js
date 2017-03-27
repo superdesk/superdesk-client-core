@@ -228,6 +228,10 @@ export function PublisherFactory(pubapi) {
         queryMonitoringArticles(articleStatus) {
             return pubapi.queryWithDetails('organization/articles', articleStatus);
         }
+
+        publishArticle(article, articleId) {
+            return pubapi.save('content/articles', article, articleId);
+        }
     }
 
     return new Publisher();

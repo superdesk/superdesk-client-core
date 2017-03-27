@@ -4,11 +4,17 @@
             <span class="stage-header__name">
                 <a href="">Incoming Content</a>
             </span>
-            <span class="label-total stage-header__number">{{incomingArticles.total}}</span>
+            <span class="label-total stage-header__number">{{totalIncoming.total}}</span>
         </div>
         <div class="publisherBoxShadow">
-            <ul class="list-view compact-view">
-                <li class="list-item-view" ng-repeat="i in incomingArticles._embedded._items" ng-include="webPublisherMonitoring.TEMPLATES_DIR + '/monitoring/list-item.html'"></li>
+            <ul class="list-view compact-view"
+                infinite-scroll="webPublisherMonitoring.loadIncoming()"
+                infinite-scroll-disabled="!tokenLoaded"
+                infinite-scroll-parent="true">
+                <li class="list-item-view" 
+                    ng-repeat="i in incomingArticles"
+                    ng-include="webPublisherMonitoring.TEMPLATES_DIR + '/monitoring/list-item.html'">
+                </li>
             </ul>
         </div>
     </div>
@@ -18,11 +24,17 @@
             <span class="stage-header__name">
                 <a href="">Published To Web</a>
             </span>
-            <span class="label-total stage-header__number">{{publishedArticles.total}}</span>
+            <span class="label-total stage-header__number">{{totalPublished.total}}</span>
         </div>
         <div class="publisherBoxShadow">
-            <ul class="list-view compact-view">
-                <li class="list-item-view" ng-repeat="i in publishedArticles._embedded._items" ng-include="webPublisherMonitoring.TEMPLATES_DIR + '/monitoring/list-item.html'"></li>
+            <ul class="list-view compact-view"
+                infinite-scroll="webPublisherMonitoring.loadPublished()"
+                infinite-scroll-disabled="!tokenLoaded"
+                infinite-scroll-parent="true">
+                <li class="list-item-view"
+                    ng-repeat="i in publishedArticles"
+                    ng-include="webPublisherMonitoring.TEMPLATES_DIR + '/monitoring/list-item.html'">
+                </li>
             </ul>
         </div>
     </div>

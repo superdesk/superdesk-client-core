@@ -1,3 +1,4 @@
+import 'ng-infinite-scroll';
 import './styles/web-publisher.scss';
 
 import {WebPublisherManagerController} from './controllers';
@@ -13,10 +14,12 @@ import * as directive from './directives';
  * @description Superdesk web publisher module.
  */
 export default angular.module('superdesk.apps.web_publisher', [
-    'superdesk.core.activity'
+    'superdesk.core.activity',
+    'infinite-scroll'
 ])
 
 .directive('sdSiteRoutes', directive.SiteRoutesDirective)
+.directive('sdPublishRoutes', directive.PublishRoutesDirective)
 .directive('sdListArticles', directive.ListArticlesDirective)
 .directive('sdCardInputFocus', directive.CardInputFocusDirective)
 .factory('publisher', services.PublisherFactory)

@@ -12,7 +12,7 @@ export function WebPublisherManagerController($scope, publisher, modal) {
     class WebPublisherManager {
         constructor() {
             this.TEMPLATES_DIR = 'scripts/apps/web-publisher/views';
-            publisher.setToken().then(() => this._refreshSites());
+            publisher.setToken().then(this._refreshSites);
         }
 
         /**
