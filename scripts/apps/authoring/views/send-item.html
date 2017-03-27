@@ -36,7 +36,8 @@
                 on-change="selectDesk(desk)"></div>
 
             <ul class="btn-list" ng-if="stages && !(vm.userActions.publish === currentUserAction)">
-                <li ng-repeat="stage in stages track by stage._id">
+                <li ng-repeat="stage in stages track by stage._id"
+                    ng-if = "!disableFetchAndOpenButton() || stage.is_visible">
                     <button class="btn__check"
                             ng-class="{active: stage._id === selectedStage._id}"
                             ng-disabled="mode !== 'spike' && stage._id === item.task.stage"

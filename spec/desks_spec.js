@@ -99,5 +99,18 @@ describe('desks', () => {
         desks.toggleWorkingStageFlag();
         desks.saveEditedStage();
         assertToastMsg('error', 'Must have one working stage');
+
+        // Turning Incoming flag ON should turn global read flag ON automatically
+        expect(desks.getGlobalReadFlag().getAttribute('checked')).toBeTruthy();
+        desks.toggleGlobalReadFlag();
+        expect(desks.getGlobalReadFlag().getAttribute('checked')).toBeFalsy();
+
+        expect(desks.getIncomingFlag().getAttribute('checked')).toBeFalsy();
+        expect(desks.getGlobalReadFlag().getAttribute('class')).not.toContain('prevent-off');
+        // Turn ON Incoming flag
+        desks.toggleIncomingStageFlag();
+        expect(desks.getGlobalReadFlag().getAttribute('checked')).toBeTruthy();
+        // Now try GlobalReadFlag to OFF, and expect GlobalReadFlag cannot be turn ON since Incoming flag is ON
+        expect(desks.getGlobalReadFlag().getAttribute('class')).toContain('prevent-off');
     });
 });

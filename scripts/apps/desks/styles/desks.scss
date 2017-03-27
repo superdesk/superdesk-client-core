@@ -413,6 +413,9 @@ $desk-width: 270px;
         .row {
             padding-top: 20px;
             clear: both;
+            .prevent-off {
+                pointer-events: none;
+            }
         }
         .heading {
             padding: 2px 0;
