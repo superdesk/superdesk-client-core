@@ -62,6 +62,9 @@ describe('dashboard', () => {
         monitoring.nextReorder();
         monitoring.saveSettings();
 
+        dashboard.showMonitoringSettings(0);
+        monitoring.saveSettings();
+
         expect(dashboard.getWidgetLabel(0)).toBe('test');
     });
 

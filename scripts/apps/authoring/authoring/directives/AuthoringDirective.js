@@ -114,6 +114,10 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             $scope.proofread = false;
             $scope.referrerUrl = referrer.getReferrerUrl();
 
+            content.getTypes().then(() => {
+                $scope.content_types = content.types;
+            });
+
             /**
              * Get the Desk and Stage for the item.
              */
@@ -511,6 +515,19 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 return $rootScope.config.features && $rootScope.config.features.hideLiveSuggestions;
             };
 
+            $scope.openExport = function() {
+                $scope.export = true;
+            };
+
+            $scope.canExport = function() {
+                return $scope.privileges.content_export ? $scope.item.lock_user === session.identity._id &&
+                    $scope.itemActions.export : false;
+            };
+
+            $scope.closeExport = function() {
+                $scope.export = false;
+            };
+
             $scope.useTansaProofing = function() {
                 return $rootScope.config.features && $rootScope.config.features.useTansaProofing;
             };
@@ -725,7 +742,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             };
 
             $scope.previewFormattedEnabled = function() {
-                return !!$rootScope.config.previewFormats;
+                return !!_.get($rootScope.config, 'features.previewFormats');
             };
 
             // call the function to unlock and lock the story for editing.
@@ -752,6 +769,27 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
 
             $scope.isLockedByMe = function() {
                 return lock.isLockedByMe($scope.item);
+            };
+
+            /**
+            * On change content profile the default values from new content profile
+            * will overwrite the current values from item
+            *
+            * @function changeProfile
+            * @param {Object} item - ucurrent edited content items
+            */
+            $scope.changeProfile = function(item) {
+                angular.forEach($scope.content_types, (profile) => {
+                    if (item.profile === profile._id && profile.schema) {
+                        angular.forEach(profile.schema, (schema, key) => {
+                            if (schema && schema.default) {
+                                item[key] = _.cloneDeep(schema.default);
+                            }
+                        });
+                    }
+                });
+
+                $scope.autosave(item);
             };
 
             $scope.autosave = function(item) {

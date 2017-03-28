@@ -33,8 +33,7 @@ ItemList.$inject = [
     '$interpolate',
     'metadata',
     'storage',
-    'keyboardManager',
-    'preferencesService'
+    'keyboardManager'
 ];
 
 export function ItemList(
@@ -64,8 +63,7 @@ export function ItemList(
     $interpolate,
     metadata,
     storage,
-    keyboardManager,
-    preferencesService
+    keyboardManager
 ) {
     // contains all the injected services to be passed down to child
     // components via props
@@ -96,8 +94,7 @@ export function ItemList(
         $interpolate: $interpolate,
         metadata: metadata,
         storage: storage,
-        keyboardManager: keyboardManager,
-        preferencesService: preferencesService
+        keyboardManager: keyboardManager
     };
 
     return {
@@ -258,6 +255,11 @@ export function ItemList(
                     });
                 });
 
+                scope.$on('item:unselect', () => {
+                    listComponent.setState({selected: null});
+                    listComponent.unbindActionKeyShortcuts();
+                });
+
                 scope.$on('item:expired', (_e, data) => {
                     var itemsById = angular.extend({}, listComponent.state.itemsById);
                     var shouldUpdate = false;
@@ -329,9 +331,8 @@ export function ItemList(
                     }
                 });
 
-                preferencesService.get('singleline:view').then((result) => {
-                    scope.singleLine = result.enabled;
-                });
+
+                scope.singleLine = search.singleLine;
 
                 scope.$on('rowview:narrow', () => {
                     listComponent.setNarrowView(true);
@@ -403,6 +404,7 @@ export function ItemList(
                 // remove react elem on destroy
                 scope.$on('$destroy', () => {
                     elem.off();
+                    listComponent.unbindActionKeyShortcuts();
                     ReactDOM.unmountComponentAtNode(elem[0]);
                 });
             });

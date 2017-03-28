@@ -20,6 +20,7 @@ export function MonitoringView($rootScope, authoringWorkspace, pageTitle, $timeo
             pageTitle.setUrl(_.capitalize(gettext(scope.type)));
 
             scope.viewColumn = scope.monitoring.viewColumn;
+            scope.shouldRefresh = true;
 
             /**
              * Toggle viewColumn to switch views between swimlane and list
@@ -51,7 +52,7 @@ export function MonitoringView($rootScope, authoringWorkspace, pageTitle, $timeo
 
                 // If scroll bar leaves top position update scope.scrollTop
                 // which is used to display refresh button on list item updates
-                if ($event.currentTarget.scrollTop >= 0 && $event.currentTarget.scrollTop < 100) {
+                if (scope.viewColumn && $event.currentTarget.scrollTop >= 0 && $event.currentTarget.scrollTop < 100) {
                     scope.$applyAsync(() => {
                         scope.scrollTop = scope.monitoring.scrollTop = $event.currentTarget.scrollTop;
 
@@ -105,7 +106,16 @@ export function MonitoringView($rootScope, authoringWorkspace, pageTitle, $timeo
                 containerElem.off('scroll');
             });
 
+            scope.$on('$routeUpdate', (event, data) => {
+                if (scope.shouldRefresh) {
+                    scope.refreshGroup();
+                } else {
+                    scope.shouldRefresh = true;
+                }
+            });
+
             scope.$watch(() => authoringWorkspace.item, (item) => {
+                scope.shouldRefresh = false; // when item opened or closed
                 if (item) {
                     scope.monitoring.closePreview();
                 }

@@ -59,7 +59,7 @@ export function TagService($location, desks, userList, metadata, search, ingestS
             var added = false;
 
             cvs.forEach((cv) => {
-                if (parameter.indexOf(cv.id + '.qcode') !== -1) {
+                if (parameter.indexOf(cv.id) !== -1) {
                     var value = parameter.substring(parameter.indexOf('(') + 1, parameter.lastIndexOf(')')),
                         codeList = metadata.values[cv.list],
                         name = _.result(_.find(codeList, {qcode: value}), 'name');
@@ -128,7 +128,7 @@ export function TagService($location, desks, userList, metadata, search, ingestS
         };
 
         cvs.forEach((cv) => {
-            if (cv.field !== key) {
+            if (cv.id !== key) {
                 return;
             }
 
@@ -162,7 +162,7 @@ export function TagService($location, desks, userList, metadata, search, ingestS
         },
         company_codes: processMetadataFields,
         subject: processMetadataFields,
-        spike: processBooleanTags,
+        spike: (index, value) => index !== 'exclude' ? tags.selectedParameters.push(tag(value + ':' + index)) : null,
         featuremedia: processBooleanTags,
         ingest_provider: (index, value) => tags.selectedParameters.push(tag(value + ':' +
             ingestSources.providersLookup[index].name))
@@ -196,6 +196,12 @@ export function TagService($location, desks, userList, metadata, search, ingestS
                 fieldProcessors[key](params[key], value, key);
             } else {
                 tags.selectedParameters.push(tag(value + ':' + params[key]));
+            }
+        });
+
+        angular.forEach(cvs, (cv) => {
+            if (params[cv.id] && cv.field !== cv.id) {
+                processMetadataFields(params[cv.id], cv.name, cv.id);
             }
         });
     }

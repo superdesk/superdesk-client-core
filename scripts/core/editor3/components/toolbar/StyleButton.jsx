@@ -4,7 +4,7 @@ import React from 'react';
  * @ngdoc React
  * @module superdesk.core.editor3
  * @name StyleButton
- * @description TODO(gbbr)
+ * @description Toolbar button that can be toggled.
  */
 export default class StyleButton extends React.Component {
     constructor(props) {

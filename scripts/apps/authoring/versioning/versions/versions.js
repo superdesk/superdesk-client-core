@@ -15,7 +15,7 @@ function VersioningController($scope, authoring, desks, archiveService) {
                 $scope.stages = desks.deskStages;
                 $scope.users = desks.users;
 
-                archiveService.getVersionHistory($scope.item, desks, 'versions').then((versions) => {
+                archiveService.getVersions($scope.item, desks, 'versions').then((versions) => {
                     $scope.versions = versions;
                     $scope.last = archiveService.lastVersion($scope.item, $scope.versions);
 

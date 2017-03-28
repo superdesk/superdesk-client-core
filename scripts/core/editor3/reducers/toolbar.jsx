@@ -125,6 +125,8 @@ const insertImages = (state, imgs = []) => {
         editorState = addImage(editorState, img);
     });
 
+    state.onChangeValue(editorState.getCurrentContent());
+
     return {...state, editorState};
 };
 
@@ -162,6 +164,8 @@ const updateImage = (state, {entityKey, img}) => {
     const {editorState} = state;
     const selection = editorState.getSelection();
     const newState = EditorState.forceSelection(editorState, selection);
+
+    state.onChangeValue(newState.getCurrentContent());
 
     return {...state, editorState: newState};
 };

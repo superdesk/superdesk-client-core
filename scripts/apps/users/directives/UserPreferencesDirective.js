@@ -8,11 +8,11 @@
  *   themselves.
  */
 UserPreferencesDirective.$inject = ['api', 'session', 'preferencesService', 'notify', 'asset',
-    'metadata', 'desks', 'modal', '$timeout', '$q', 'userList', 'lodash'];
+    'metadata', 'desks', 'modal', '$timeout', '$q', 'userList', 'lodash', 'config', 'search'];
 
 export function UserPreferencesDirective(
     api, session, preferencesService, notify, asset, metadata, desks, modal,
-    $timeout, $q, userList, _
+    $timeout, $q, userList, _, config, search
 ) {
     return {
         templateUrl: asset.templateUrl('apps/users/views/user-preferences.html'),
@@ -137,6 +137,16 @@ export function UserPreferencesDirective(
                 scope.userPrefs.$setDirty();
             };
 
+
+            scope.showCategory = function(preference) {
+                if (preference.category === 'rows') {
+                    return _.get(config, 'list.singleLineView');
+                }
+                let noShowCategories = ['article_defaults', 'categories', 'desks'];
+
+                return _.indexOf(noShowCategories, preference.category) < 0;
+            };
+
             /**
             * Builds a user preferences object in scope from the given
             * data.
@@ -237,6 +247,11 @@ export function UserPreferencesDirective(
                 });
 
                 scope.locators = helperData.locators;
+
+                if (scope.preferences['singleline:view']) {
+                    search.updateSingleLineStatus(scope.preferences['singleline:view'].enabled);
+                }
+
                 scope.preferencesLoaded = true;
             }
 

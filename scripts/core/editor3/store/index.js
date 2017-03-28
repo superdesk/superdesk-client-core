@@ -52,9 +52,16 @@ export default function createEditorStore(ctrl) {
 function onChange(content) {
     // clear find & replace highlights
     const cleanedContent = clearHighlights(content).content;
+    const newValue = stateToHTML(cleanedContent);
+
+    this.value = this.value || '<p><br></p>';
+    if (newValue.localeCompare(this.value) === 0) {
+        this.value = newValue;
+        return;
+    }
 
     this.editorState = convertToRaw(cleanedContent);
-    this.value = stateToHTML(cleanedContent);
+    this.value = newValue;
     this.onChange();
 }
 

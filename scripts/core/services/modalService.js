@@ -43,48 +43,51 @@ export default angular.module('superdesk.core.services.modal', ['ui.bootstrap', 
     }])
     .directive('sdModal', ['$document', function($document) {
         return {
-            template: [
-                '<div class="modal" data-backdrop="static">',
-                '<div class="modal-dialog" ng-if="model"><div class="modal-content" ng-transclude></div></div>',
-                '</div>'].join(''),
+            template: '',
             transclude: true,
-            scope: {
-                model: '='
-            },
-            link: function modalLinkFunction(scope, element, attrs) {
-                var content, _initialized = false;
+            scope: {model: '=', close: '&'},
+            link: function modalLinkFunction(scope, element, attrs, ctrl, transcludeFn) {
+                let modalElem;
 
-                scope.$watch('model', () => {
-                    if (scope.model) {
-                        if (!initialized()) {
-                            content = element.children();
-                            content.addClass(element.attr('class'));
-                            content.appendTo($document.find('body'));
-                            content[0].foo = 'bar';
-                            _initialized = true;
-                        }
-                        content.modal('show');
-                    } else if (initialized()) {
-                        content.modal('hide');
-                        closeModal();
+                scope.$watch('model', (model) => {
+                    if (model && !modalElem) {
+                        transcludeFn((clone, modalScope) => {
+                            modalElem = angular.element('<div class="modal" data-backdrop="static" />')
+                                .append(angular.element('<div class="modal-dialog"></div>')
+                                    .append(angular.element('<div class="modal-content"></div>')
+                                        .append(clone)
+                                    )
+                                );
+                            modalElem.addClass(element.attr('class'));
+                            modalElem.appendTo($document.find('body'));
+                            modalElem.modal('show');
+                            modalElem.on('hidden.bs.modal', () => {
+                                modalElem.off();
+                                modalElem.remove();
+                                modalScope.$destroy();
+                                modalElem = null;
+
+                                // reset model if needed
+                                if (scope.model) {
+                                    scope.$applyAsync(() => {
+                                        scope.close();
+                                    });
+                                }
+                            });
+                        });
+                    } else if (!model) {
+                        hideIfActive();
                     }
                 });
 
-                var closeModal = function() {
-                    scope.model = false;
-                    scope.$evalAsync();
-                };
+                scope.$on('$destroy', hideIfActive);
 
-                function initialized() {
-                    return _initialized && content;
+                // hide modal if is active
+                function hideIfActive() {
+                    if (modalElem) {
+                        modalElem.modal('hide');
+                    }
                 }
-
-                scope.$on('$destroy', () => {
-                    if (initialized()) {
-                        content.modal('hide');
-                        content.remove();
-                    }
-                });
             }
         };
     }]);

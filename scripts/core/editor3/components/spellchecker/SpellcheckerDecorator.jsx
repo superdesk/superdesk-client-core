@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import ng from 'core/services/ng';
 import {SpellcheckerContextMenu} from './SpellcheckerContextMenu';
-import classNames from 'classnames';
 
 /**
  * @ngdoc React
@@ -23,6 +22,14 @@ class SpellcheckerError extends Component {
         this.closeContextMenu = this.closeContextMenu.bind(this);
     }
 
+    /**
+     * @ngdoc method
+     * @name SpellcheckerError#showContextMenu
+     * @param {String} txt The word that suggestions are being showed for.
+     * @returns {Function} The event listener
+     * @description Creates a new event listener that shows the context menu
+     * for the passed word.
+     */
     showContextMenu(txt) {
         const spellcheck = ng.get('spellcheck');
 
@@ -35,6 +42,11 @@ class SpellcheckerError extends Component {
         };
     }
 
+    /**
+     * @ngdoc method
+     * @name SpellcheckerError#closeContextMenu
+     * @description Closes the context menu.
+     */
     closeContextMenu() {
         this.setState({menuShowing: false});
     }
@@ -55,18 +67,13 @@ class SpellcheckerError extends Component {
         $(window).off('mousedown', this.closeContextMenu);
     }
 
-    componentWillUnmount() {
-        $(window).off('click', this.closeContextMenu);
-    }
-
     render() {
         const {menuShowing, suggestions} = this.state;
         const {children} = this.props;
         const word = {text: children[0].props.text, offset: children[0].props.start};
-        const cx = classNames({'word-typo': true});
 
         return (
-            <span className={cx} onContextMenu={this.showContextMenu(word.text)}>
+            <span className="word-typo" onContextMenu={this.showContextMenu(word.text)}>
                 {menuShowing ?
                     <SpellcheckerContextMenu suggestions={suggestions} word={word} />
                     : null}

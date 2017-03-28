@@ -39,6 +39,7 @@ angular.module('superdesk.apps.archive.directives', [
     .directive('sdItemPriority', directive.ItemPriority)
     .directive('sdItemUrgency', directive.ItemUrgency)
     .directive('sdMarkedItemTitle', directive.MarkedItemTitle)
+    .directive('sdExport', directive.Export)
 
     .service('familyService', svc.FamilyService)
     .service('dragitem', svc.DragItemService);
@@ -145,7 +146,7 @@ angular.module('superdesk.apps.archive', [
                     {action: 'list', type: 'archive'},
                     {action: 'list', type: 'archived'}
                 ],
-                keyboardShortcut: 'ctrl+d',
+                keyboardShortcut: 'ctrl+alt+d',
                 privileges: {duplicate: 1},
                 condition: function(item) {
                     return item.lock_user === null || angular.isUndefined(item.lock_user);
@@ -206,7 +207,6 @@ angular.module('superdesk.apps.archive', [
                 label: gettext('New Take'),
                 icon: 'new-doc',
                 filters: [{action: 'list', type: 'archive'}],
-                keyboardShortcut: 'ctrl+alt+t',
                 privileges: {archive: 1},
                 additionalCondition: ['authoring', 'item', 'config', function(authoring, item, config) {
                     return authoring.itemActions(item).new_take && !(config.features && config.features.noTakes);
@@ -295,6 +295,31 @@ angular.module('superdesk.apps.archive', [
                 }],
                 controller: ['data', 'authoring', function(data, authoring) {
                     authoring.unlink(data.item);
+                }]
+            })
+            .activity('export', {
+                label: gettext('Export'),
+                icon: 'download',
+                templateUrl: 'scripts/apps/archive/views/export-dropdown.html',
+                filters: [{action: 'list', type: 'archive'}],
+                privileges: {content_export: 1},
+                additionalCondition: ['config', 'session', 'authoring', 'item',
+                    function(config, session, authoring, item) {
+                        let lockCond = item.lock_user === null || angular.isUndefined(item.lock_user) ||
+                            item.lock_user === session.identity._id;
+
+                        return lockCond && authoring.itemActions(item).export;
+                    }],
+                modal: true,
+                cssClass: 'modal-responsive',
+                controller: ['$scope', function($scope) {
+                    $scope.export = true;
+                    $scope.item = $scope.locals.data.item;
+
+                    $scope.closeExport = function() {
+                        $scope.export = false;
+                        $scope.reject();
+                    };
                 }]
             });
     }])

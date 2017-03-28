@@ -93,9 +93,10 @@ export function filterDefaultValues(diff, orig) {
 export function stripHtmlRaw(content) {
     if (content) {
         var elem = document.createElement('div');
+        var htmlRegex = /(<([^>]+)>)/ig;
 
         elem.innerHTML = content;
-        return elem.textContent;
+        return elem.textContent.replace(htmlRegex, '');
     }
     return '';
 }
@@ -139,7 +140,7 @@ export function cleanHtml(data) {
     // remove embeds by using the comments around them. Embeds don't matter for word counters
     .replace(/<!-- EMBED START [\s\S]+?<!-- EMBED END .* -->/g, '')
     .replace(/<br[^>]*>/gi, '&nbsp;')
-    .replace(/<\/?[^>]+><\/?[^>]+>/gi, '')
+    .replace(/<\/?[^>]+><\/?[^>]+>/gi, ' ')
     .replace(/<\/?[^>]+>/gi, '')
     .trim()
     .replace(/&nbsp;/g, ' ')

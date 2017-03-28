@@ -196,7 +196,7 @@ describe('authoring', () => {
         monitoring.actionOnItem('Edit', 3, 2);
         authoring.showHistory();
         expect(authoring.getHistoryItems().count()).toBe(1);
-        expect(authoring.getHistoryItem(0).getText()).toMatch(/Fetched as \d+ to Politic Desk\/two by.*/);
+        expect(authoring.getHistoryItem(0).getText()).toMatch(/Fetched by first name last name Today/);
         authoring.close();
 
         // view item history move operation
@@ -214,14 +214,14 @@ describe('authoring', () => {
         monitoring.actionOnItem('Edit', 3, 0);
         authoring.showHistory();
         expect(authoring.getHistoryItems().count()).toBe(3);
-        expect(authoring.getHistoryItem(2).getText()).toMatch(/Moved to Politic Desk\/two by .*/);
+        expect(authoring.getHistoryItem(2).getText()).toMatch(/Moved by first name last name Today/);
         authoring.close();
 
         // view item history editable for newly created unsaved item
         authoring.createTextItem();
         authoring.showHistory();
         expect(authoring.getHistoryItems().count()).toBe(1);
-        expect(authoring.getHistoryItem(0).getText()).toMatch(/Story \d+ (.*) Created by.*/);
+        expect(authoring.getHistoryItem(0).getText()).toMatch(/Created by first name last name Today/);
         expect(authoring.save_button.isDisplayed()).toBe(true);
         authoring.getHistoryItem(0).click();
         expect(authoring.save_button.isDisplayed()).toBe(true); // expect save button still available
@@ -234,7 +234,7 @@ describe('authoring', () => {
         authoring.save();
         authoring.showHistory();
         expect(authoring.getHistoryItems().count()).toBe(2);
-        expect(authoring.getHistoryItem(0).getText()).toMatch(/Story \d+ (.*) Created by.*/);
+        expect(authoring.getHistoryItem(0).getText()).toMatch(/Created by first name last name Today/);
         expect(authoring.getHistoryItem(1).getText()).toMatch(/Updated by.*/);
         authoring.save();
         authoring.close();
@@ -250,9 +250,10 @@ describe('authoring', () => {
         monitoring.filterAction('takesPackage');
         monitoring.actionOnItem('Open', 5, 0);
         authoring.showHistory();
-        expect(authoring.getHistoryItems().count()).toBe(1);
-        expect(authoring.getHistoryItem(0).getText()).toMatch(/Published by.*/);
-        var transmissionDetails = authoring.showTransmissionDetails(0);
+        expect(authoring.getHistoryItems().count()).toBe(2);
+        expect(authoring.getHistoryItem(0).getText()).toMatch(/Created by.*/);
+        expect(authoring.getHistoryItem(1).getText()).toMatch(/Published by.*/);
+        var transmissionDetails = authoring.showTransmissionDetails(1);
 
         expect(transmissionDetails.count()).toBe(1);
         transmissionDetails.get(0).click();
@@ -274,8 +275,8 @@ describe('authoring', () => {
         monitoring.actionOnItem('Edit', 1, 0);
         authoring.showHistory();
         expect(authoring.getHistoryItems().count()).toBe(3);
-        expect(authoring.getHistoryItem(1).getText()).toMatch(/Spiked from Politic Desk\/one by .*/);
-        expect(authoring.getHistoryItem(2).getText()).toMatch(/Unspiked to Politic Desk\/Incoming Stage by .*/);
+        expect(authoring.getHistoryItem(1).getText()).toMatch(/Spiked by first name last name Today/);
+        expect(authoring.getHistoryItem(2).getText()).toMatch(/Unspiked by first name last name Today/);
         authoring.close();
 
         // view item history duplicate operation
@@ -285,7 +286,31 @@ describe('authoring', () => {
         monitoring.actionOnItem('Edit', 0, 0);
         authoring.showHistory();
         expect(authoring.getHistoryItems().count()).toBe(2);
-        expect(authoring.getHistoryItem(1).getText()).toMatch(/Copied to \d+ \(Politic Desk\/Working Stage\) by .*/);
+        expect(authoring.getHistoryItem(1).getText()).toMatch(/Duplicated by/);
+        authoring.close();
+
+        // view history of take operation
+        authoring.createTextItem();
+        authoring.setHeaderSluglineText('Story1 slugline');
+        authoring.save();
+        authoring.close();
+        authoring.createTextItem();
+        authoring.setHeaderSluglineText('Story2 slugline');
+        authoring.writeTextToHeadline('Story2 Headline');
+        authoring.save();
+        authoring.openRelatedItem(); // opens related item widget
+        authoring.searchRelatedItems('Story1 slugline');
+        browser.sleep(100);
+        authoring.actionRelatedItem(0, 'Associate as take');
+        browser.sleep(100);
+        expect(authoring.getANPATakeKeyValue()).toBe('=2');
+        authoring.close();
+        monitoring.actionOnItem('Spike', 0, 0);
+        monitoring.actionOnItem('Edit', 0, 0);
+        authoring.showHistory();
+        expect(authoring.getHistoryItems().count()).toBe(4);
+        expect(authoring.getHistoryItem(2).getText()).toMatch(/Take created by first name last name Today/);
+        expect(authoring.getHistoryItem(3).getText()).toMatch(/Unlinked by first name last name Today/);
         authoring.close();
     });
 
@@ -323,6 +348,43 @@ describe('authoring', () => {
         monitoring.filterAction('text');
         monitoring.actionOnItem('Create Broadcast', 5, 0);
         expect(authoring.getHeaderSluglineText()).toContain('item5');
+    });
+
+    it('can calculate word counts', () => {
+        expect(monitoring.getTextItem(2, 0)).toBe('item5');
+        monitoring.actionOnItem('Edit', 2, 0);
+        authoring.cleanBodyHtmlElement();
+        authoring.writeText('There are seven words in this sentence.\n');
+        authoring.writeText('There are eight words in this   new sentence.');
+        authoring.writeText(protractor.Key.ENTER);
+        authoring.writeText(' ');
+        authoring.writeText(protractor.Key.ENTER);
+        authoring.writeText('There are nine words, in this   final last sentence.\n');
+        expect(authoring.getEditorWordCount()).toBe('24 words');
+        authoring.save();
+        authoring.close();
+        expect(monitoring.getMonitoringWordCount('item5')).toBe('24');
+        monitoring.actionOnItem('Edit', 2, 0);
+        authoring.cleanBodyHtmlElement();
+        expect(authoring.getEditorWordCount()).toBe('0 words');
+        authoring.save();
+        authoring.close();
+        expect(monitoring.getMonitoringWordCount('item5')).toBe('0');
+    });
+
+    it('can update sign off manually', () => {
+        expect(monitoring.getTextItem(2, 0)).toBe('item5');
+        monitoring.actionOnItem('Edit', 2, 0);
+        expect(authoring.getSignoffText()).toBe('fl');
+        authoring.writeSignoffText('ABC');
+        authoring.save();
+        authoring.close();
+        expect(monitoring.getTextItem(2, 0)).toBe('item5');
+        monitoring.actionOnItem('Edit', 2, 0);
+        expect(authoring.getSignoffText()).toBe('ABC');
+        authoring.writeText('z');
+        authoring.save();
+        expect(authoring.getSignoffText()).toBe('ABC/fl');
     });
 
     it('toggle auto spellcheck and hold changes', () => {
@@ -476,6 +538,65 @@ describe('authoring', () => {
         expect(authoring.multieditButton.isDisplayed()).toBe(false);
     });
 
+    it('Compare versions operations of an opened article via Compare versions menu option', () => {
+        expect(monitoring.getTextItem(2, 0)).toBe('item5');
+        monitoring.actionOnItem('Edit', 2, 0);
+        // Open versions' list with currently opened version as selected by default
+        authoring.openCompareVersionsMenuItem();
+        expect(authoring.getItemVersions().count()).toBe(1);
+        expect(authoring.isSelectedIcon.isDisplayed()).toBe(true);
+
+        // Provide another version on save
+        authoring.writeTextToHeadline('updated ');
+        authoring.save();
+        expect(authoring.getHeadlineText()).toBe('updated item5');
+        authoring.openCompareVersionsMenuItem();
+        expect(authoring.getItemVersions().count()).toBe(2);
+
+        authoring.selectItemVersion(1);
+
+        // Open selected versions in compare-versions screen boards
+        authoring.openCompareVersionsScreen();
+        expect(authoring.getCompareVersionsBoards().count()).toBe(2);
+        expect(authoring.getArticleHeadlineOfBoard(0)).toEqual('updated item5');
+        expect(authoring.getArticleHeadlineOfBoard(1)).toEqual('item5');
+
+        // Close compare-versions screen
+        authoring.closeCompareVersionsScreen();
+        // expect the article should be open on closing compare-versions screen
+        expect(authoring.headline.isDisplayed()).toBe(true);
+        expect(authoring.getHeadlineText()).toBe('updated item5');
+
+        // Update article headline again to get third version
+        authoring.writeTextToHeadline('newly ');
+        authoring.save();
+        expect(authoring.getHeadlineText()).toBe('newly updated item5');
+        authoring.openCompareVersionsMenuItem();
+        expect(authoring.getItemVersions().count()).toBe(3);
+        // select remaining two versions
+        authoring.selectItemVersion(1);
+        authoring.selectItemVersion(2);
+
+        authoring.openCompareVersionsScreen();
+        expect(authoring.getCompareVersionsBoards().count()).toBe(3);
+        expect(authoring.getArticleHeadlineOfBoard(0)).toEqual('newly updated item5');
+        expect(authoring.getArticleHeadlineOfBoard(1)).toEqual('updated item5');
+        expect(authoring.getArticleHeadlineOfBoard(2)).toEqual('item5');
+
+        authoring.openCompareVersionsInnerDropdown(2);
+        authoring.removePanel(2);
+        expect(authoring.getCompareVersionsBoards().count()).toBe(2);
+
+        authoring.openCompareVersionsFloatMenu();
+
+        expect(authoring.getInnerDropdownItemVersions().count()).toBe(1);
+        authoring.openItemVersionInNewBoard(0);
+
+        expect(authoring.getCompareVersionsBoards().count()).toBe(3);
+        authoring.openCompareVersionsFloatMenu();
+        expect(authoring.getInnerDropdownItemVersions().count()).toBe(0);
+    });
+
     it('open publish item with footer text without <br> tag', () => {
         expect(monitoring.getTextItem(2, 0)).toBe('item5');
         monitoring.actionOnItem('Edit', 2, 0);
@@ -583,9 +704,19 @@ describe('authoring', () => {
         expect(monitoring.getGroupItems(5).count()).toBe(0); // desk output
         expect(monitoring.getTextItem(3, 2)).toBe('item6');
         monitoring.actionOnItem('Edit', 3, 2);
+        authoring.writeTextToHeadline('testing send and publish');
+        authoring.save();
+        authoring.writeText('');
+        ctrlShiftKey(protractor.Key.END);
+        ctrlKey('x');
+        authoring.sendAndpublish('Sports Desk');
+        authoring.confirmSendTo(); // confirm unsaved changes
+        browser.sleep(1000);
+        authoring.publishFrom('Sports Desk');
+        assertToastMsg('error', 'BODY_HTML empty values not allowed'); // validation takes place
         authoring.writeText('Testing');
         authoring.save();
-        authoring.sendAndpublish('Sports Desk');
+        authoring.publishFrom('Sports Desk');
         // desk output count zero as content publish from sport desk
         expect(monitoring.getGroupItems(5).count()).toBe(0);
         workspace.selectDesk('Sports Desk');

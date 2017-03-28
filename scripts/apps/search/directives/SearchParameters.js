@@ -46,7 +46,9 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
                 }
 
                 if ($location.search().spike) {
-                    scope.fields.spike = true;
+                    scope.fields.spike = $location.search().spike;
+                } else {
+                    scope.fields.spike = 'exclude';
                 }
 
                 if ($location.search().featuremedia) {
@@ -137,23 +139,23 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
 
             function initializeItems() {
                 angular.forEach(scope.cvs, (cv) => {
-                    if ($location.search()[cv.field]) {
-                        scope.fields[cv.field] = [];
-                        scope.selecteditems[cv.field] = scope.selecteditems[cv.field] || [];
-                        var itemList = JSON.parse($location.search()[cv.field]);
+                    if ($location.search()[cv.id]) {
+                        scope.fields[cv.id] = [];
+                        scope.selecteditems[cv.id] = scope.selecteditems[cv.id] || [];
+                        var itemList = JSON.parse($location.search()[cv.id]);
 
                         angular.forEach(itemList, (qcode) => {
                             var match = _.find(scope.metadata[cv.list], (m) => m.qcode === qcode);
 
                             if (match) {
-                                scope.selecteditems[cv.field].push(angular.extend(match, {
+                                scope.selecteditems[cv.id].push(angular.extend(match, {
                                     scheme: cv.id
                                 }));
-                                scope.fields[cv.field].push(match);
+                                scope.fields[cv.id].push(match);
                             }
                         });
                     } else {
-                        scope.selecteditems[cv.field] = [];
+                        scope.selecteditems[cv.id] = [];
                     }
                 });
             }
@@ -271,12 +273,18 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
                     }
                 });
 
+                let fields = ['subject', 'company_codes'];
+
+                angular.forEach(scope.cvs, (cv) => {
+                    fields.push(cv.id);
+                });
+
                 angular.forEach(scope.fields, (val, key) => {
                     if (key === 'from_desk') {
                         $location.search('from_desk', getDeskParam('from_desk'));
                     } else if (key === 'to_desk') {
                         $location.search('to_desk', getDeskParam('to_desk'));
-                    } else if (_.includes(['subject', 'company_codes'], key)) {
+                    } else if (_.includes(fields, key)) {
                         $location.search(key, JSON.stringify(_.map(val, 'qcode')));
                     } else if (key === 'marked_desks') {
                         $location.search(key, JSON.stringify(_.map(val, '_id')));

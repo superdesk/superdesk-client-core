@@ -21,8 +21,13 @@ export function CardsService(api, search, session, desks, config) {
             params.q = card.query;
         }
 
-        params.spike = card.type === 'spike' || card.type === 'spike-personal' ||
-            card.type === 'search' && params.spike === true;
+        if (card.type === 'search' && (params.spike === 'include' || params.spike === 'only')) {
+            params.spike = params.spike;
+        }
+
+        if (card.type === 'spike' || card.type === 'spike-personal') {
+            params.spike = 'only';
+        }
 
         return params;
     }
@@ -67,13 +72,7 @@ export function CardsService(api, search, session, desks, config) {
 
         default:
             if (!_.isNil(card.singleViewType) && card.singleViewType === 'desk') {
-                query.filter({or: [
-                        {terms: {'marked_desks.desk_id': [card.deskId]}},
-                        {term: {'task.desk': card.deskId}}]});
-            } else if (desks.stageLookup[card._id] && desks.stageLookup[card._id].default_incoming) {
-                query.filter({or: [
-                        {terms: {'marked_desks.desk_id': [card.deskId]}},
-                        {term: {'task.stage': card._id}}]});
+                query.filter({term: {'task.desk': card.deskId}});
             } else {
                 query.filter({term: {'task.stage': card._id}});
             }
@@ -110,12 +109,12 @@ export function CardsService(api, search, session, desks, config) {
         if (card.fileType) {
             var termsHighlightsPackage = {and: [
                 {bool: {must: {exists: {field: 'highlight'}}}},
-                {terms: {type: ['composite']}}
+                {term: {type: 'composite'}}
             ]};
 
             var termsTakesPackage = {and: [
                 {term: {package_type: 'takes'}},
-                {term: {type: ['composite']}}
+                {term: {type: 'composite'}}
             ]};
 
             var termsFileType = {terms: {type: JSON.parse(card.fileType)}};

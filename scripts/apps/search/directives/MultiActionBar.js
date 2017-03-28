@@ -1,5 +1,5 @@
-MultiActionBar.$inject = ['asset', 'multi', 'authoringWorkspace', 'superdesk', 'keyboardManager'];
-export function MultiActionBar(asset, multi, authoringWorkspace, superdesk, keyboardManager) {
+MultiActionBar.$inject = ['asset', 'multi', 'authoringWorkspace', 'superdesk', 'keyboardManager', 'config'];
+export function MultiActionBar(asset, multi, authoringWorkspace, superdesk, keyboardManager, config) {
     return {
         controller: 'MultiActionBar',
         controllerAs: 'action',
@@ -34,6 +34,14 @@ export function MultiActionBar(asset, multi, authoringWorkspace, superdesk, keyb
                 return openItem && openItem.type === type;
             };
 
+            scope.openExport = function() {
+                scope.export = true;
+            };
+
+            scope.closeExport = function() {
+                scope.export = false;
+            };
+
             /**
              * Detects type of all selected items and assign it to scope,
              * but only when it's same for all of them.
@@ -50,11 +58,11 @@ export function MultiActionBar(asset, multi, authoringWorkspace, superdesk, keyb
                     states.push(item.state);
 
                     var _activities = superdesk.findActivities({action: 'list', type: item._type}, item) || [];
+                    let allowOnSessionOwnerLock = ['spike', 'export'];
 
                     _activities.forEach((activity) => {
-                        // Ignore activities if the item is locked (except Spike)
-                        // Spike allowed if item is locked by session user (activity.additionalCondition)
-                        if (!item.lock_user || activity._id === 'spike') {
+                        // Ignore activities if the item is locked (except those in allowOnSessionOwnerLock)
+                        if (!item.lock_user || allowOnSessionOwnerLock.indexOf(activity._id) >= 0) {
                             activities[activity._id] = activities[activity._id] ? activities[activity._id] + 1 : 1;
                         }
                     });

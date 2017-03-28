@@ -19,9 +19,6 @@
     </div>
 </div>
 
-
-
-
 <div class="paneLayout paneLayout--twoHeadersMargin">
     <div class="paneLayout__content">
         <div class="subnav static">
@@ -32,11 +29,9 @@
                 <li class="filter-type__item filter-type__item--active" ng-class="{'filter-type__item--active': true}">
                     <a ng-click="">all</a>
                 </li>
-                <li class="filter-type__item" ng-class="{'filter-type__item--active': false}">
-                    <a ng-click="">website 1</a>
-                </li>
-                <li class="filter-type__item" ng-class="{'filter-type__item--active': false}">
-                    <a ng-click="">website 2</a>
+
+                <li class="filter-type__item" ng-repeat="site in sites" ng-class="{'filter-type__item--active': false}">
+                    <a ng-click="webPublisherMonitoring.filterTenantArticles(site.subdomain)">{{ site.name }}</a>
                 </li>
             </ul>
             <div class="subnav__stretch-bar"></div>
@@ -176,7 +171,6 @@
         <!-- paneLayout inside paneLayout :) -->
     </div>
 
-
     <div class="paneLayout__pane paneContent paneContent--darker paneLayout__pane--open" ng-class="{'paneLayout__pane--open': filterOpen}">
         <div class="paneContent__header paneContent__header--darker">
             <h3 class="pull-left">Publish to web</h3>
@@ -216,6 +210,5 @@
         <div class="paneContent__footer paneContent__footer--transparent">
             <button class="btn btn--primary btn--full" ng-click="" >Publish to web</button>
         </div>
-
   </div>
 </div>

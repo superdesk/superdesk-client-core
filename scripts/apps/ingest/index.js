@@ -124,8 +124,9 @@ angular.module('superdesk.apps.ingest', [
                 controller: ctrl.ExternalSourceController,
                 filters: [{action: 'list', type: 'externalsource'}],
                 privileges: {fetch: 1},
-                additionalCondition: ['config', function(config) {
-                    return config.features.editFeaturedImage;
+                additionalCondition: ['config', 'desks', function(config, desks) {
+                    // Fetching to 'personal' desk is not allowed
+                    return config.features.editFeaturedImage && !_.isNil(desks.getCurrentDeskId());
                 }]
             });
     }])
@@ -179,5 +180,9 @@ angular.module('superdesk.apps.ingest', [
         ingestSources.registerFeedingService('email', {
             label: 'Email',
             templateUrl: asset.templateUrl('apps/ingest/views/settings/emailConfig.html')
+        });
+        ingestSources.registerFeedingService('wufoo', {
+            label: 'Wufoo Forms',
+            templateUrl: asset.templateUrl('apps/ingest/views/settings/wufoo.html')
         });
     }]);

@@ -11,14 +11,12 @@ import _ from 'lodash';
  * @requires storage
  * @requires config
  * @requires superdeskFlags
- * @requires preferencesService
+ * @requires search
  *
  * @description MonitoringController is responsible for providing functionalities in monitoring view of the application
  */
-MonitoringController.$inject = ['$rootScope', '$location', 'desks', 'storage', 'config', 'superdeskFlags',
-    'preferencesService'];
-export function MonitoringController($rootScope, $location, desks, storage, config, superdeskFlags,
-    preferencesService) {
+MonitoringController.$inject = ['$rootScope', '$location', 'desks', 'storage', 'config', 'superdeskFlags', 'search'];
+export function MonitoringController($rootScope, $location, desks, storage, config, superdeskFlags, search) {
     this.state = {};
 
     this.preview = preview;
@@ -26,7 +24,6 @@ export function MonitoringController($rootScope, $location, desks, storage, conf
     this.previewItem = null;
 
     this.selectedGroup = null;
-    this.bindedItems = [];
 
     this.singleGroup = null;
     this.viewSingleGroup = viewSingleGroup;
@@ -61,10 +58,6 @@ export function MonitoringController($rootScope, $location, desks, storage, conf
         }
     };
 
-    preferencesService.get('singleline:view').then((result) => {
-        this.singleLine = result.enabled;
-    });
-
     var self = this;
 
     self.switchView(self.viewColumn);
@@ -72,25 +65,24 @@ export function MonitoringController($rootScope, $location, desks, storage, conf
     function preview(item) {
         self.previewItem = item;
         self.state['with-preview'] = superdeskFlags.flags.previewing = !!item;
-        let sendPreviewEvent = config.list && config.list.narrowView && superdeskFlags.flags.authoring;
+        let sendPreviewEvent = _.get(config, 'list.narrowView') && search.singleLine && superdeskFlags.flags.authoring;
         let evnt = item ? 'rowview:narrow' : 'rowview:default';
 
         if (!_.isNil(self.previewItem)) {
-            self.showHistoryTab = self.previewItem.state !== 'ingested';
+            self.showHistoryTab = self.previewItem.state !== 'ingested' && self.previewItem._type !== 'archived';
         }
 
         if (!item) {
             self.selectedGroup = null;
         }
 
-        if (self.singleLine && sendPreviewEvent) {
+        if (sendPreviewEvent) {
             $rootScope.$broadcast(evnt);
         }
     }
 
     function closePreview() {
         preview(null);
-        $rootScope.$broadcast('item:unselect');
         if (self.viewColumn) {
             $rootScope.$broadcast('resize:header');
         }

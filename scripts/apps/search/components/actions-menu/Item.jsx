@@ -14,17 +14,17 @@ export default class Item extends React.Component {
         this.setPosition = this.setPosition.bind(this);
         this.close = this.close.bind(this);
         this.closeMenu = this.closeMenu.bind(this);
+        this.toggle = this.toggle.bind(this);
     }
 
     run(event) {
         const {scope} = this.props;
-        const {$rootScope, activityService} = this.props.svc;
+        const {activityService} = this.props.svc;
 
         // Stop event propagation so that click on item action
         // won't select that item for preview/authoring.
         event.stopPropagation();
         scope.$apply(() => {
-            $rootScope.$broadcast('broadcast:preview', {item: null}); // closes preview if already opened
             activityService.start(this.props.activity, {data: {item: this.props.item}});
         });
 
@@ -71,6 +71,15 @@ export default class Item extends React.Component {
         closeActionsMenu();
     }
 
+    toggle(event) {
+        if (!this.state.open) {
+            this.open();
+        } else {
+            this.close();
+            this.closeMenu(event);
+        }
+    }
+
     componentWillUnmount() {
         const {$timeout} = this.props.svc;
 
@@ -86,7 +95,7 @@ export default class Item extends React.Component {
         if (activity.dropdown) {
             return React.createElement(
                 'li',
-                {onMouseEnter: this.open, onMouseLeave: this.close, onClick: this.closeMenu},
+                {onMouseEnter: this.open, onMouseLeave: this.close, onClick: this.toggle},
                 React.createElement(
                     'div',
                     {className: 'dropdown dropdown--noarrow' + (this.state.open ? ' open' : '')},

@@ -77,6 +77,7 @@ export function SearchResults(
 
             scope.previewingBroadcast = false;
             scope.shouldRefresh = true;
+            superdeskFlags.flags.previewing = false;
 
             var criteria = search.query($location.search()).getCriteria(true),
                 oldQuery = _.omit($location.search(), '_id');
@@ -444,7 +445,8 @@ export function SearchResults(
                 scope.shouldRefresh = false; // prevents $routeUpdate to refresh, just on preview changes.
 
                 if (!_.isNil(scope.selected.preview)) {
-                    scope.showHistoryTab = scope.selected.preview.state !== 'ingested';
+                    scope.showHistoryTab = scope.selected.preview.state !== 'ingested' &&
+                    scope.selected.preview._type !== 'archived';
                     superdeskFlags.flags.previewing = true;
                     sendRowViewEvents(item);
                 }

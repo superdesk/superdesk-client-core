@@ -13,7 +13,7 @@ const fallbackAPIKey = '1d1728bf82b2ac8139453f'; // register to author's persona
  * @name EmbedInputComponent
  * @description The dialog displayed when an embed URL is entered.
  */
-class EmbedInputComponent extends Component {
+export class EmbedInputComponent extends Component {
     constructor(props) {
         super(props);
 

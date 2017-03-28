@@ -20,10 +20,10 @@
         <div class="paneContent__content paneContent__content--hasFooter contentPadding">
             <form name="" class="flat">
                 <fieldset class="label-light">
-                    <div class="item">
+                   <!--  <div class="item">
                         <label for="search" translate>Search</label>
                         <input type="text" name="search" id="search" class="line-input">
-                    </div>
+                    </div> -->
                     <div class="item">
                       <label translate>routes</label>
                         <div sd-meta-terms
@@ -36,6 +36,7 @@
                             data-reload-list="true">
                         </div>
                      </div>
+                    <!-- will be added later when API supports filtering
                     <div class="item">
                       <label translate>author</label>
                         <div class="multiple" ng-repeat="item in newList.filters.author track by $index">
@@ -93,7 +94,7 @@
                                 <i class="icon-close-small"></i>
                             </button>
                         </div>
-          </div>
+                    </div>
                     <button
                         type="button"
                         class="btn btn--primary btn--small"
@@ -102,33 +103,28 @@
                         tooltip-placement="right"
                         tooltip-popup-delay="500">
                         <i class="svg-icon-plus"></i>
-                    </button>
+                    </button> -->
                 </fieldset>
             </form>
         </div>
         <div class="paneContent__footer">
-            <button class="btn btn--primary btn--full" ng-click="" translate>Filter</button>
+            <button class="btn btn--primary btn--full" ng-click="webPublisher.filterArticles()" translate>Filter</button>
         </div>
     </div>
 
     <div class="paneLayout__content verticalLayout">
-        <div class="verticalLayout__element verticalLayout__element--border contentPadding dropZone" ng-class="{'dropZone--empty': !models[0].items.length, 'dropZone--active': dragging}">
+        <div class="verticalLayout__element verticalLayout__element--border contentPadding dropZone" ng-class="{'dropZone--empty': !newList.items.length, 'dropZone--active': webPublisher.draggingFlag}">
             <h3 class="text--uppercase text--bold text--smallHeading" translate>Content List Articles</h3>
-            <h2 class="dropZone__heading" ng-if="!models[0].items.length">Drag your Articles here</h2>
-            <!-- I suppose You will want to use that directive. I failed but will keep it here
-                <div sd-list-articles data-list="newList" data-type="draggable"></div>
-
-            This ng-repeat is hacky and I use it only to pass a list so list-articles-draggable will be pretty much ready to work with sd-list-articles directive.
-            -->
-            <div ng-repeat="list in [models[0]]" ng-include="'scripts/apps/web-publisher/views/list-articles-draggable.html'"></div>
-
+            <h2 class="dropZone__heading" ng-if="!newList.items.length">Drag your Articles here</h2>
+            <div sd-list-articles data-list="newList" data-type="draggable" data-draggingflag="webPublisher.draggingFlag" data-listchangeflag="webPublisher.listChangeFlag"></div>
         </div>
 
         <div class="verticalLayout__element contentPadding">
             <h3 class="text--uppercase text--bold text--smallHeading" translate>Published Articles</h3>
-            <!-- same as above -->
-            <div ng-repeat="list in [models[1]]" ng-include="'scripts/apps/web-publisher/views/list-articles-draggable.html'"></div>
+            <div sd-articles data-type="draggable" data-draggingflag="webPublisher.draggingFlag"></div>
         </div>
     </div>
-
+    <div class="manualListSaveBtn" ng-show="webPublisher.listChangeFlag">
+        <button class="btn btn--primary" ng-click="webPublisher.saveManualList(newList)" translate>Save changes</button>
+    </div>
 </div>

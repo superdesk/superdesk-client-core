@@ -43,10 +43,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
             var monitoring = ctrls[0];
             var projections = search.getProjectedFields();
 
-            preferencesService.get('singleline:view').then((result) => {
-                ITEM_HEIGHT = result.enabled ? 29 : 57;
-            });
-
+            ITEM_HEIGHT = search.singleLine ? 29 : 57;
             scope.view = 'compact';
             scope.page = 1;
             scope.fetching = false;
@@ -54,13 +51,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
             scope.loading = false;
             scope.cacheNextItems = [];
             scope.cachePreviousItems = [];
-            scope.limited = !(monitoring.singleGroup || scope.group.type === 'highlights'
-                || scope.group.type === 'spike');
             scope.viewColumn = monitoring.viewColumn;
-
-            if (!_.isNil(scope.forceLimited)) {
-                scope.limited = scope.forceLimited;
-            }
 
             scope.$on('view:column', (event, data) => {
                 scope.$applyAsync(() => {
@@ -79,10 +70,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
             scope.viewSingleGroup = viewSingleGroup;
 
             scope.$watchCollection('group', () => {
-                if (scope.limited) {
-                    updateGroupStyle();
-                }
-
+                updateGroupStyle();
                 queryItems();
             });
 
@@ -99,10 +87,9 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
             });
             scope.$on('item:unspike', scheduleIfShouldUpdate);
             scope.$on('$routeUpdate', (event, data) => {
-                scope.scrollTop = 0;
                 data.force = true;
-                scope.showRefresh = false;
                 scheduleQuery(event, data);
+
                 if (scope.viewColumn) {
                     updateGroupStyle();
                 }
@@ -119,9 +106,6 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
             scope.$on('item:highlights', scheduleQuery);
             scope.$on('item:marked_desks', scheduleQuery);
             scope.$on('content:update', scheduleIfShouldUpdate);
-            scope.$on('item:unselect', () => {
-                scope.selected = null;
-            });
 
             if (scope.group.type === 'search' && search.doesSearchAgainstRepo(scope.group.search, 'ingest')) {
                 scope.$on('ingest:update', (event, data) => {
@@ -129,6 +113,18 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                         scheduleQuery(event, data);
                     }
                 });
+            }
+
+            // Determines if limited maxHeight style need to apply on group list
+            function shouldLimited() {
+                let limited = !(monitoring.singleGroup || scope.group.type === 'highlights'
+                || scope.group.type === 'spike');
+
+                if (!_.isNil(scope.forceLimited)) {
+                    limited = JSON.parse(scope.forceLimited);
+                }
+
+                return limited;
             }
 
             function scheduleIfShouldUpdate(event, data) {
@@ -171,8 +167,6 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
             scope.$on('item:fetch', scheduleIfShouldUpdate);
             scope.$on('item:move', scheduleIfShouldUpdate);
 
-            scope.$on('$destroy', unbindActionKeyShortcuts);
-
             scope.$watch('selected', (newVal, oldVal) => {
                 if (!newVal && scope.previewingBroadcast) {
                     scope.previewingBroadcast = false;
@@ -180,26 +174,43 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
             });
 
             /*
-             * Change between single stage view and grouped view by keyboard
-             * Keyboard shortcut: Ctrl + g
+             * Change between single stage/desk view and monitoring grouped view
+             *
+             * @param {string} type - type is 'desk' or 'stage' to switch single view
              */
-            scope.$on('key:ctrl:g', () => {
-                if (scope.selected) {
-                    if (_.isNil(monitoring.singleGroup)) {
-                        monitoring.viewSingleGroup(monitoring.selectedGroup, 'stage');
-                    } else {
-                        monitoring.viewMonitoringHome();
-                    }
+            function toggleMonitoringSingleView(type) {
+                if (_.isNil(monitoring.singleGroup) && scope.selected) {
+                    scope.$applyAsync(() => {
+                        monitoring.viewSingleGroup(monitoring.selectedGroup, type);
+                    });
                 }
+
+                // Returns back to monitoring view from single view
+                if (monitoring.singleGroup) {
+                    scope.$applyAsync(() => {
+                        monitoring.viewMonitoringHome();
+                    });
+                }
+            }
+
+            /*
+             * Change between single stage view and grouped view by keyboard
+             * Keyboard shortcut: Ctrl + alt + j
+             */
+            scope.$on('key:ctrl:alt:j', (event, data) => {
+                toggleMonitoringSingleView('stage');
             });
 
             // refreshes the list for matching group or view type only or if swimlane view is ON.
             scope.$on('refresh:list', (event, group) => {
                 var _viewType = event.currentScope.viewType || '';
 
-                if (group && group._id === scope.group._id ||
-                        _.includes(['highlights', 'spiked'], _viewType) ||
-                        !group && scope.viewColumn) {
+                if (group && group._id === scope.group._id || !group &&
+                        _.includes(['highlights',
+                            'spiked',
+                            'single_monitoring',
+                            'monitoring'],
+                        _viewType)) {
                     scope.refreshGroup();
                 }
             });
@@ -214,16 +225,10 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
 
             /*
              * Change between single desk view and grouped view by keyboard
-             * Keyboard shortcut: Ctrl + g
+             * Keyboard shortcut: Ctrl + alt + g
              */
             scope.$on('key:ctrl:alt:g', () => {
-                if (scope.selected) {
-                    if (_.isNil(monitoring.singleGroup)) {
-                        monitoring.viewSingleGroup(monitoring.selectedGroup, 'desk');
-                    } else {
-                        monitoring.viewMonitoringHome();
-                    }
-                }
+                toggleMonitoringSingleView('desk');
             });
 
             // forced refresh on refresh button click or on refresh:list
@@ -238,85 +243,15 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
             };
 
             function updateGroupStyle() {
+                scope.style.maxHeight = null;
                 if (scope.viewColumn) {
                     // maxHeight is not applicable for swimlane/column view, as each stages/column
-                    // don't need to have scroll bars/ because container scroll bar of monitoring
+                    // don't need to have scroll bars because container scroll bar of monitoring
                     // view will serve scrolling
-                    scope.style.maxHeight = null;
                     $rootScope.$broadcast('resize:header');
-                } else {
+                } else if (shouldLimited()) {
                     scope.style.maxHeight = (scope.group.max_items || 10) * ITEM_HEIGHT;
                 }
-            }
-            /*
-             * Bind item actions on keyboard shortcuts
-             * Keyboard shortcuts are defined with actions
-             *
-             * @param {Object} item
-             */
-            function bindActionKeyShortcuts(item) {
-                // First unbind all binded shortcuts
-                if (monitoring.bindedItems.length) {
-                    unbindActionKeyShortcuts();
-                }
-
-                var intent = {action: 'list'};
-
-                superdesk.findActivities(intent, item).forEach((activity) => {
-                    if (activity.keyboardShortcut && workflowService.isActionAllowed(item, activity.action)) {
-                        monitoring.bindedItems.push(
-                            scope.$on('key:' + activity.keyboardShortcut.replace(/\+/g, ':'),
-                            () => {
-                                if (activity._id === 'mark.item') {
-                                    bindMarkItemShortcut();
-                                } else {
-                                    activityService.start(activity, {data: {item: scope.selected}});
-                                }
-                            })
-                        );
-                    }
-                });
-            }
-
-            /*
-             * Bind highlight dropdown action
-             * Keyboard shortcut is defined with action
-             *
-             * @param {Object} item
-             */
-            function bindMarkItemShortcut() {
-                elem.find('.active .more-activity-toggle').click();
-                var highlightDropdown = angular.element('.more-activity-menu.open .dropdown--noarrow');
-
-                highlightDropdown.addClass('open');
-                if (highlightDropdown.find('button').length > 0) {
-                    highlightDropdown.find('button:not([disabled])')[0].focus();
-
-                    keyboardManager.push('up', () => {
-                        highlightDropdown.find('button:focus')
-                            .parent('li')
-                            .prev()
-                            .children('button')
-                            .focus();
-                    });
-                    keyboardManager.push('down', () => {
-                        highlightDropdown.find('button:focus')
-                            .parent('li')
-                            .next()
-                            .children('button')
-                            .focus();
-                    });
-                }
-            }
-
-            /*
-             * Unbind all item actions
-             */
-            function unbindActionKeyShortcuts() {
-                monitoring.bindedItems.forEach((func) => {
-                    func();
-                });
-                monitoring.bindedItems = [];
             }
 
             var queryTimeout;
@@ -363,7 +298,6 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                 scope.selected = item;
                 monitoring.selectedGroup = scope.group;
                 monitoring.preview(item);
-                bindActionKeyShortcuts(item);
             }
 
             function preview(item) {

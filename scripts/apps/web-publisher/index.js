@@ -20,6 +20,7 @@ export default angular.module('superdesk.apps.web_publisher', [
 
     .directive('sdSiteRoutes', directive.SiteRoutesDirective)
     .directive('sdListArticles', directive.ListArticlesDirective)
+    .directive('sdArticles', directive.ArticlesDirective)
     .directive('sdCardInputFocus', directive.CardInputFocusDirective)
     .factory('publisher', services.PublisherFactory)
     .factory('pubapi', services.PubAPIFactory)
@@ -31,7 +32,7 @@ export default angular.module('superdesk.apps.web_publisher', [
                 description: gettext('Web Publisher'),
                 controller: WebPublisherMonitoringController,
                 controllerAs: 'webPublisherMonitoring',
-                templateUrl: 'scripts/apps/web-publisher/views/monitoring.html',
+                templateUrl: 'scripts/apps/web-publisher/views/monitoring/index.html',
                 sideTemplateUrl: 'scripts/apps/web-publisher/views/sidenav-items.html'
             })
             .activity('/web_publisher/manager', {

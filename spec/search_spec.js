@@ -4,6 +4,7 @@
 var openUrl = require('./helpers/utils').open,
     globalSearch = require('./helpers/search'),
     authoring = require('./helpers/authoring'),
+    content = require('./helpers/pages').content,
     monitoring = require('./helpers/monitoring');
 
 describe('search', () => {
@@ -181,6 +182,26 @@ describe('search', () => {
         rawTextbox.sendKeys('type:text AND (item1 OR item4)');
         globalSearch.goButton.click();
         expect(globalSearch.getItems().count()).toBe(2);
+
+        // search spiked content
+        globalSearch.openGlobalSearch();
+        globalSearch.setListView();
+        expect(globalSearch.getItems().count()).toBe(17);
+        content.actionOnItem('Spike Item', 2);
+        content.actionOnItem('Spike Item', 1);
+        content.actionOnItem('Spike Item', 0);
+        browser.sleep(200);
+        expect(globalSearch.getItems().count()).toBe(14);
+        globalSearch.openFilterPanel();
+        globalSearch.openParameters();
+        globalSearch.selectDesk('spike-options', 'Include spiked content');
+        globalSearch.goButton.click();
+        expect(globalSearch.getItems().count()).toBe(17);
+        expect(globalSearch.getSelectedTags().count()).toBe(1);
+        globalSearch.selectDesk('spike-options', 'Spiked only content');
+        globalSearch.goButton.click();
+        expect(globalSearch.getItems().count()).toBe(3);
+        expect(globalSearch.getSelectedTags().count()).toBe(1);
     });
 
     it('can action on items', () => {
@@ -204,8 +225,8 @@ describe('search', () => {
         expect(previewPane.isPresent()).toBe(false);    // DOWN arrow key avoided for opening preview
         browser.actions().sendKeys(protractor.Key.UP).perform();
         expect(previewPane.isPresent()).toBe(false);    // UP arrow key avoided for opening preview
-        // it should not effect global keyboard shortcuts (e.g: 'ctrl+d', 'ctrl+shift+d')
-        // now test 'ctrl+shift+d' shortcut that triggers spell checker when not set to automatic
+        // it should not effect global keyboard shortcuts (e.g: 'ctrl+alt+d', 'ctrl+shift+*')
+        // now test 'ctrl+shift+*' shortcut that triggers spell checker when not set to automatic
         expect(element(by.model('spellcheckMenu.isAuto')).getAttribute('checked')).toBeTruthy();
         authoring.toggleAutoSpellCheck();
         expect(element(by.model('spellcheckMenu.isAuto')).getAttribute('checked')).toBeFalsy();
@@ -215,7 +236,7 @@ describe('search', () => {
         expect(authoring.getBodyText()).toContain('Testhilite');
         expect(authoring.getBodyInnerHtml()).not.toContain('sderror sdhilite');
         // trigger spell checker via keyboard operation
-        browser.actions().sendKeys(protractor.Key.chord(protractor.Key.CONTROL, protractor.Key.SHIFT, 'd')).perform();
+        browser.actions().sendKeys(protractor.Key.chord(protractor.Key.CONTROL, protractor.Key.SHIFT, '*')).perform();
         expect(authoring.getBodyText()).toContain('Testhilite');
         expect(authoring.getBodyInnerHtml()).toContain('sderror sdhilite');
         authoring.save();

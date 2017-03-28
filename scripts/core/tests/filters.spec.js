@@ -23,7 +23,7 @@ describe('superdesk filters', () => {
             var jan = daysInAMonthFilter(0);
 
             expect(jan.length).toEqual(31);
-            expect(jan[jan.length - 1]).toEqual(31);
+            expect(jan[jan.length - 1]).toEqual('31');
 
             var feb = daysInAMonthFilter(1);
 

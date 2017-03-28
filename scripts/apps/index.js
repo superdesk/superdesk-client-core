@@ -22,7 +22,6 @@ import 'apps/monitoring';
 import 'apps/settings';
 import 'apps/ingest';
 import 'apps/search-providers';
-import 'apps/analytics';
 
 /* globals __SUPERDESK_CONFIG__: true */
 const appConfig = __SUPERDESK_CONFIG__;
@@ -30,10 +29,6 @@ const withPublisher = typeof appConfig.publisher !== 'undefined';
 
 if (withPublisher) {
     require('apps/web-publisher');
-}
-
-if (appConfig.features && appConfig.features.useTansaProofing) {
-    require('apps/tansa');
 }
 
 export default angular.module('superdesk.apps', [
@@ -63,7 +58,5 @@ export default angular.module('superdesk.apps', [
     'superdesk.apps.publish',
     'superdesk.apps.templates',
     'superdesk.apps.monitoring',
-    'superdesk.apps.profiling',
-    'superdesk.apps.analytics'
+    'superdesk.apps.profiling'
 ].concat(withPublisher ? 'superdesk.apps.web_publisher' : []));
-

@@ -861,6 +861,9 @@ $rightfield-width:60px;
             .associations {
                 position: static;
             }
+            .queue-error {
+                margin-right: 5px;
+            }
         }
 
         .item-info-reduced-rowheight {
@@ -1258,5 +1261,23 @@ $modalMaxImageHeight : 250px;
             height: 500px;
             font-family: "Roboto Mono", Consolas, Courier, monospace;
         }
+    }
+}
+
+.export-modal {
+    .formatters {
+        select {
+            padding: 4px;
+            width: 250px;
+        }
+    }
+    .validator {
+        margin-top: 4px;
+    }
+    .modal-body {
+        overflow: scroll;
+    }
+    .error {
+        color: #b94a48;
     }
 }

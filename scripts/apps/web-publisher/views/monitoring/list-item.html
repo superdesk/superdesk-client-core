@@ -9,10 +9,9 @@
     </div>
     <div class="item-info">
         <div class="line">
-            <span class="word-count">587</span>
-            <span class="keyword">Able an hope of body</span>
+            <span class="keyword">{{i.title}}</span>
             <span class="item-heading">This is an article deck aka lead aka description</span>
-            <time title="February 17, 2017 1:29 PM">5 min ago</time>
+            <time ng-if="i.updatedAt">{{i.updatedAt | reldate}}</time>
         </div>
         <div class="line">
             <div class="state-label state-corrected">Update 2</div>

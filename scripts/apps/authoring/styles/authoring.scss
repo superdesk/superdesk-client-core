@@ -63,6 +63,12 @@
 .subnav--authoring {
   z-index: 99;
   background-color: $subnav-authoring;
+  .highlights-toggle, .marks-toggle {
+    .dropdown__menu {
+      max-height: calc(100vh - 350px);
+      overflow-y: auto;
+    }
+  }
 }
 
 .subnav__authoring-topbar {
@@ -90,7 +96,7 @@
       @include text-semibold();
     }
   }
-  &.has-highlights {
+  &.enable-overflow {
     overflow: visible;
   }
 }
@@ -407,6 +413,10 @@
 
     h3 {
         margin-bottom: 0.5em;
+    }
+
+    .macro-option {
+      margin-bottom: 20px;
     }
 
     .link-list .btn {
@@ -1089,6 +1099,11 @@
         img {
             opacity: .2;
         }
+    }
+
+    &.dragover {
+      background: $sd-hover;
+      border-color: $sd-blue;
     }
 
     [contenteditable] {

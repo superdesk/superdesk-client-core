@@ -5,7 +5,7 @@
  * @requires publisher
  * @requires modal
  * @requires https://docs.angularjs.org/api/ng/type/$rootScope.Scope $scope
- * @description WebPublisherManagerController holds a set of functions used for web publisher
+ * @description WebPublisherManagerController holds a set of functions used for web publisher manager
  */
 WebPublisherManagerController.$inject = ['$scope', 'publisher', 'modal'];
 export function WebPublisherManagerController($scope, publisher, modal) {
@@ -13,51 +13,6 @@ export function WebPublisherManagerController($scope, publisher, modal) {
         constructor() {
             this.TEMPLATES_DIR = 'scripts/apps/web-publisher/views';
             publisher.setToken().then(() => this._refreshSites());
-
-            // manual list drag/drop list handlers
-            $scope.getSelectedItemsIncluding = (list, item) => {
-                item.selected = true;
-                return list.items.filter((item) => item.selected);
-            };
-            $scope.onDragstart = (list, event) => {
-                list.dragging = true;
-                // used for setting css class while dragging
-                $scope.dragging = true;
-            };
-            $scope.onDrop = (list, items, index) => {
-                // used for setting css class while dragging
-                $scope.dragging = false;
-
-                angular.forEach(items, (item) => {
-                    item.selected = false;
-                });
-                list.items = list.items.slice(0, index)
-                    .concat(items)
-                    .concat(list.items.slice(index));
-                return true;
-            };
-
-            $scope.onMoved = (list) => {
-                list.items = list.items.filter((item) => !item.selected);
-            };
-
-
-            $scope.models = [
-                {listName: 'A', items: [], dragging: false},
-                {listName: 'B', items: [], dragging: false}
-            ];
-
-            // Generate initial model
-            angular.forEach($scope.models, (list) => {
-                for (var i = 1; i <= 4; ++i) {
-                    list.items.push({label: 'Item ' + list.listName + i});
-                }
-            });
-
-            // Model to JSON for demo purpose
-            $scope.$watch('models', (model) => {
-                $scope.modelAsJson = angular.toJson(model, true);
-            }, true);
         }
 
         /**
@@ -111,7 +66,7 @@ export function WebPublisherManagerController($scope, publisher, modal) {
 
             this.selectedSite = {};
             $scope.newSite = {};
-            publisher.setTenant('default');
+            publisher.setTenant();
         }
 
         /**
@@ -411,6 +366,18 @@ export function WebPublisherManagerController($scope, publisher, modal) {
 
         /**
          * @ngdoc method
+         * @name WebPublisherManagerController#saveManualList
+         * @description Clears and saves state of manual content list
+         */
+        saveManualList(list) {
+            publisher.unlinkListArticle(this.selectedList.id, list.originalItems)
+                .then(publisher.linkListArticle(this.selectedList.id, list.items));
+
+            this.listChangeFlag = false;
+        }
+
+        /**
+         * @ngdoc method
          * @name WebPublisherManagerController#deleteList
          * @param {String} id - id of content list which is deleted
          * @description Deleting content list
@@ -483,13 +450,29 @@ export function WebPublisherManagerController($scope, publisher, modal) {
 
             /**
              * @ngdoc event
-             * @name WebPublisherManagerController#refreshArticles
+             * @name WebPublisherManagerController#refreshListArticles
              * @eventType broadcast on $scope
              * @param {Object} $scope.newList - list which will refresf articles
              * @description event is thrown when criteria is updated
              */
             publisher.manageList({content_list: {filters: updatedFilters}}, this.selectedList.id)
-                .then(() => $scope.$broadcast('refreshArticles', $scope.newList));
+                .then(() => $scope.$broadcast('refreshListArticles', $scope.newList));
+        }
+
+        /**
+         * @ngdoc method
+         * @name WebPublisherManagerController#filterArticles
+         * @description
+         */
+        filterArticles() {
+            /**
+             * @ngdoc event
+             * @name WebPublisherManagerController#refreshArticles
+             * @eventType broadcast on $scope
+             * @param {Object} this.selectedRoutes - list of routes
+             * @description event is thrown when filter criteria is updated
+             */
+            $scope.$broadcast('refreshArticles', this.selectedRoutes);
         }
 
         /**

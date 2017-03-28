@@ -1,0 +1,18 @@
+<div ng-if="loading">
+    <div class="item-group__loading"></div>
+</div>
+
+<div ng-if="!loading && !list.items.length" class="alert alert-info alert-block">
+    <h4 translate>The list is empty</h4>
+    <p translate>Please update filter criteria to add articles to the list.</p>
+</div>
+
+<ul ng-if="!loading && list.items.length" class="flatList">
+    <li ng-repeat="article in list.items">
+        <div class="listElement listElement--noLeftBorder">
+            <div class="listElement__content">
+                {{ :: article.title}}
+            </div>
+        </div>
+    </li>
+</ul>

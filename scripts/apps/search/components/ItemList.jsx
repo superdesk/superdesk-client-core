@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import {Item} from 'apps/search/components';
-import {isCheckAllowed, closeActionsMenu} from 'apps/search/helpers';
+import {isCheckAllowed, closeActionsMenu, bindMarkItemShortcut} from 'apps/search/helpers';
 
 /**
  * Item list component
@@ -10,9 +10,7 @@ export class ItemList extends React.Component {
     constructor(props) {
         super(props);
 
-        const {keyboardManager} = this.props.svc;
-
-        this.state = {itemsList: [], itemsById: {}, selected: null, view: 'mgrid', narrow: false};
+        this.state = {itemsList: [], itemsById: {}, selected: null, view: 'mgrid', narrow: false, bindedShortcuts: []};
 
         this.multiSelect = this.multiSelect.bind(this);
         this.select = this.select.bind(this);
@@ -32,8 +30,8 @@ export class ItemList extends React.Component {
         this.modifiedUserName = this.modifiedUserName.bind(this);
         this.setNarrowView = this.setNarrowView.bind(this);
         this.multiSelectCurrentItem = this.multiSelectCurrentItem.bind(this);
-
-        keyboardManager.bind('x', this.multiSelectCurrentItem);
+        this.bindActionKeyShortcuts = this.bindActionKeyShortcuts.bind(this);
+        this.unbindActionKeyShortcuts = this.unbindActionKeyShortcuts.bind(this);
     }
 
     multiSelect(items, selected) {
@@ -51,6 +49,7 @@ export class ItemList extends React.Component {
             });
         });
 
+        this.select(_.last(items));
         this.setState({itemsById: itemsById});
     }
 
@@ -87,9 +86,53 @@ export class ItemList extends React.Component {
             if (item && scope.preview) {
                 scope.$apply(() => {
                     scope.preview(item);
+                    this.bindActionKeyShortcuts(item);
                 });
             }
         }, 500, false);
+    }
+
+    /*
+     * Unbind all item actions
+     */
+    unbindActionKeyShortcuts() {
+        const {keyboardManager} = this.props.svc;
+
+        this.state.bindedShortcuts.forEach((shortcut) => {
+            keyboardManager.unbind(shortcut);
+        });
+        this.setState({bindedShortcuts: []});
+    }
+
+    /*
+     * Bind item actions on keyboard shortcuts
+     * Keyboard shortcuts are defined with actions
+     *
+     * @param {Object} item
+     */
+    bindActionKeyShortcuts(selectedItem) {
+        const {superdesk, workflowService, activityService, keyboardManager, archiveService} = this.props.svc;
+
+        // First unbind all binded shortcuts
+        if (this.state.bindedShortcuts.length) {
+            this.unbindActionKeyShortcuts();
+        }
+
+        let intent = {action: 'list', type: archiveService.getType(selectedItem)};
+
+        superdesk.findActivities(intent, selectedItem).forEach((activity) => {
+            if (activity.keyboardShortcut && workflowService.isActionAllowed(selectedItem, activity.action)) {
+                this.state.bindedShortcuts.push(activity.keyboardShortcut);
+
+                keyboardManager.bind(activity.keyboardShortcut, () => {
+                    if (_.includes(['mark.item', 'mark.desk'], activity._id)) {
+                        bindMarkItemShortcut(activity.label);
+                    } else {
+                        activityService.start(activity, {data: {item: selectedItem}});
+                    }
+                });
+            }
+        });
     }
 
     selectItem(item) {
@@ -101,7 +144,7 @@ export class ItemList extends React.Component {
     }
 
     selectMultipleItems(lastItem) {
-        const {search, multi} = this.props.svc;
+        const {search} = this.props.svc;
 
         var itemId = search.generateTrackByIdentifier(lastItem),
             positionStart = 0,
@@ -123,7 +166,6 @@ export class ItemList extends React.Component {
             }
         }
 
-        multi.reset();
         this.multiSelect(selectedItems, true);
     }
 
@@ -167,6 +209,7 @@ export class ItemList extends React.Component {
 
     deselectAll() {
         this.setState({selected: null});
+        this.unbindActionKeyShortcuts();
     }
 
     updateAllItems(itemId, changes) {
@@ -197,10 +240,10 @@ export class ItemList extends React.Component {
         const {monitoringState, $rootScope, search} = this.props.svc;
         const {scope} = this.props;
 
-        if (monitoringState.selectedGroup !== scope.$id) {
+        if (monitoringState.state.activeGroup !== scope.$id) {
             // If selected item is from another group, deselect all
             $rootScope.$broadcast('item:unselect');
-            monitoringState.selectedGroup = scope.$id;
+            monitoringState.setState({activeGroup: scope.$id});
         }
 
         this.setState({selected: item ? search.generateTrackByIdentifier(item) : null});
@@ -226,8 +269,35 @@ export class ItemList extends React.Component {
     handleKey(event) {
         const {scope} = this.props;
         const {Keys, monitoringState} = this.props.svc;
+        const KEY_CODES = Object.freeze({
+            X: 'X'.charCodeAt(0)
+        });
 
         var diff;
+
+        const moveActiveGroup = () => {
+            event.preventDefault();
+            event.stopPropagation();
+            this.deselectAll(); // deselect active item
+
+            scope.$applyAsync(() => {
+                monitoringState.moveActiveGroup(event.keyCode === Keys.pageup ? -1 : 1);
+            });
+        };
+
+        const openItem = () => {
+            if (this.state.selected) {
+                this.edit(this.getSelectedItem());
+            }
+
+            event.stopPropagation();
+        };
+
+        const performMultiSelect = () => {
+            event.preventDefault();
+            event.stopPropagation();
+            this.multiSelectCurrentItem();
+        };
 
         switch (event.keyCode) {
         case Keys.right:
@@ -241,22 +311,17 @@ export class ItemList extends React.Component {
             break;
 
         case Keys.enter:
-            if (this.state.selected) {
-                this.edit(this.getSelectedItem());
-            }
-
-            event.stopPropagation();
-            return;
+            openItem();
+            break;
 
         case Keys.pageup:
         case Keys.pagedown:
-            event.preventDefault();
-            event.stopPropagation();
-            this.select(); // deselect active item
-            scope.$applyAsync(() => {
-                monitoringState.moveActiveGroup(event.keyCode === Keys.pageup ? -1 : 1);
-            });
-            return;
+            moveActiveGroup();
+            break;
+
+        case KEY_CODES.X:
+            performMultiSelect();
+            break;
         }
 
         var highlightSelected = () => {
@@ -293,10 +358,9 @@ export class ItemList extends React.Component {
                 let distanceOfSelItemFromVisibleTop = $(selectedItemElem[0]).offset().top - $(document).scrollTop() -
                 $(container[0]).offset().top - $(document).scrollTop();
 
-                // If the selected item goes below 95% or above 0.15% of the scrollable height, only then, do something
-                // to make room for out-of-boundary items
-                if (distanceOfSelItemFromVisibleTop >= container[0].clientHeight * 0.95 ||
-                distanceOfSelItemFromVisibleTop <= container[0].clientHeight * 0.15) {
+                // If the selected item goes beyond container view, scroll it to middle.
+                if (distanceOfSelItemFromVisibleTop >= container[0].clientHeight ||
+                    distanceOfSelItemFromVisibleTop < 0) {
                     container.scrollTop(container.scrollTop() + distanceOfSelItemFromVisibleTop -
                     container[0].offsetHeight * 0.5);
                 }
@@ -310,6 +374,7 @@ export class ItemList extends React.Component {
     }
 
     componentWillUnmount() {
+        this.unbindActionKeyShortcuts();
         this.closeActionsMenu();
     }
 

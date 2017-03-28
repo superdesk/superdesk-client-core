@@ -10,7 +10,7 @@ import * as actions from '../../actions';
  * @param {Object} block Information about the block where this component renders.
  * @description This component renders an image block within the editor.
  */
-class ImageBlockComponent extends Component {
+export class ImageBlockComponent extends Component {
     constructor(props) {
         super(props);
 
@@ -49,7 +49,8 @@ class ImageBlockComponent extends Component {
 
     render() {
         const data = this.data();
-        const href = data.renditions.original.href;
+        const rendition = data.renditions.original || data.renditions.viewImage;
+        const href = rendition.href;
         const alt = data.alt_text;
         const description = data.description_text;
 

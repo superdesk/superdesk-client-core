@@ -3,6 +3,7 @@
     <span ng-if="schema.headline.maxlength" sd-character-count data-item="item.headline" data-html="true" data-limit="schema.headline.maxlength"></span>
     <div id="title" class="headline"
         sd-text-editor
+        tansa-proofing="true"
         data-config="{disableToolbar: true, imageDragging: false, disableReturn: true, disableEditing: isPublished(item), tabindex: editor.headline.order, paste: {cleanPastedHTML: editor.headline.cleanPastedHTML}}"
         data-editorformat="editor.headline.formatOptions"
         data-language="item.language"
@@ -26,7 +27,7 @@
         data-read-only="!_editable"></div>
 </div>
 
-<div class="field" ng-if="schema.sms && item._type !== 'archived'" sd-width="{{editor.sms.sdWidth || 'full'}}" order="{{editor.sms.order}}">
+<div class="field" ng-if="schema.sms && item._type !== 'archived' && !isMediaType" sd-width="{{editor.sms.sdWidth || 'full'}}" order="{{editor.sms.order}}">
     <label ng-if="_editable" translate>SMS</label>
     <div ng-if="_editable">
         <span ng-if="_editable" sd-switch ng-model="item.flags.marked_for_sms"
@@ -71,10 +72,9 @@
     data-editable="_editable"
     data-onchange="autosave(item)"
     data-save="save()"></div>
-    <div sd-item-crops ng-if="item.associations && item.associations.featuremedia" data-item="item.associations.featuremedia"></div>
 </div>
 
-<div class="field abstract" sd-width="{{editor.abstract.sdWidth || 'full'}}" ng-class="{'limit-error': item.abstract.length > schema.abstract.maxlength}" ng-if="schema.abstract && !editor.abstract.editor3" order="{{editor.abstract.order}}" sd-validation-error="error.abstract" data-required="schema.abstract.required">
+<div class="field abstract" sd-width="{{editor.abstract.sdWidth || 'full'}}" ng-class="{'limit-error': item.abstract.length > schema.abstract.maxlength}" ng-if="schema.abstract && !editor.abstract.editor3 && !isMediaType" order="{{editor.abstract.order}}" sd-validation-error="error.abstract" data-required="schema.abstract.required">
   <label translate>Abstract</label>
     <span sd-character-count
           data-item="item.abstract"
@@ -114,6 +114,7 @@
   <label translate>Byline</label>
   <input type="text"
          sd-remove-tags
+         tansa-proofing="false"
          class="byline"
          id="byline"
          ng-model="item.byline"
@@ -129,9 +130,9 @@
 
 <!--This article-edit view is used by templates as well.
     ng-if is used to hide dateline for the template create/edit screen.-->
-<div class="field" ng-show="item._type !== 'archived' && (!template || template.template_type !== 'kill') && schema.dateline" order="{{editor.dateline.order}}" sd-validation-error="error.dateline" data-required="schema.dateline.required" sd-width="{{editor.dateline.sdWidth || 'full'}}">
+<div class="field" ng-show="item._type !== 'archived' && (!template || template.template_type !== 'kill') && schema.dateline && !isMediaType" order="{{editor.dateline.order}}" sd-validation-error="error.dateline" data-required="schema.dateline.required" sd-width="{{editor.dateline.sdWidth || 'full'}}">
     <label translate>Dateline</label>
-    <div class="dateline">
+    <div class="dateline" tansa-proofing="false">
         <div sd-meta-locators
              class="dateline-city"
              data-tabindex="editor.dateline.order"
@@ -186,6 +187,7 @@
     <span sd-word-count data-item="item.body_html" data-html="true"></span>
     <div id="bodyhtml"
          sd-text-editor
+         tansa-proofing="true"
          data-config="{disableEditing: isPublished(item), multiBlockEdition: true, tabindex: editor.body_html.order, paste: {cleanPastedHTML: editor.body_html.cleanPastedHTML}}"
          data-editorformat="editor.body_html.formatOptions"
          ng-model="item.body_html"
@@ -249,6 +251,7 @@
   <label translate>Description</label>
   <div id="title" class="abstract"
         sd-text-editor
+        tansa-proofing="true"
         data-config="{disableToolbar: true, disableReturn: true, disableEditing: isPublished(item), tabindex: editor.description_text.order, paste: {cleanPastedHTML: editor.description_text.cleanPastedHTML}}"
         data-editorformat="editor.description_text.formatOptions"
         data-language="item.language"
@@ -292,15 +295,16 @@
 </div>
 
 <div class="field"
-    ng-if="schema.body_footer && !editor.body_footer.editor3"
+    ng-if="schema.body_footer && !editor.body_footer.editor3 && !isMediaType"
     order="{{editor.body_footer.order}}"
     sd-validation-error="error.body_footer"
     data-required="schema.body_footer.required"
     sd-width="{{editor.body_footer.sdWidth || 'full'}}">
     <label translate>Footer</label>
     <div id="body_footer" class="body"
+        tansa-proofing="false"
         sd-text-editor
-        data-config="{disableToolbar: true, disableEditing: isPublished(item), tabindex: editor.body_footer.order, paste: {cleanPastedHTML: editor.body_footer.cleanPastedHTML}}"
+        data-config="{spellchecker: false, disableToolbar: true, disableEditing: isPublished(item), tabindex: editor.body_footer.order, paste: {cleanPastedHTML: editor.body_footer.cleanPastedHTML}}"
         data-language="item.language"
         ng-model="item.body_footer"
         ng-model-options="{debounce: 100}"
@@ -335,13 +339,13 @@
   <div sd-package data-item="item" class="composite-preview" ng-if="!_editable"></div>
 </div>
 
-<div class="field pull-left" ng-if="schema.sign_off" order="{{editor.sign_off.order}}" sd-width="{{editor.sign_off.sdWidth || 'full'}}">
+<div class="field pull-left" tansa-proofing="false" ng-if="schema.sign_off && !isMediaType" order="{{editor.sign_off.order}}" sd-width="{{editor.sign_off.sdWidth || 'full'}}">
     <label translate>Sign-Off</label>
-    <button class="btn btn-signOff" ng-click="changeSignOffEdit()" tabindex="{{editor.sign_off.order}}" title="Unlock edit Sign-Off" ng-if="_editable">
+    <button id="sign-off-unlock" class="btn btn-signOff" ng-click="changeSignOffEdit()" tabindex="{{editor.sign_off.order}}" title="Unlock edit Sign-Off" ng-if="_editable">
       <i class="icon-lock" ng-hide="editSignOff"></i>
       <i class="icon-unlocked" ng-show="editSignOff"></i>
     </button>
-    <div ng-hide="editSignOff">{{item.sign_off}}</div>
+    <div ng-hide="editSignOff" id="sign-off">{{item.sign_off}}</div>
     <input type="text" sd-remove-tags
          class="byline"
          id="sign_off"

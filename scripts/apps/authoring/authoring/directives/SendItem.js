@@ -409,45 +409,72 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
             };
 
             /**
-             * Send the current item to different desk or stage and then publish the item
+             * Checks if a given item is valid to publish
+             *
+             * @param {Object} item story to be validated
+             * @return {Object} promise
              */
-            function runSendAndPublish() {
+            const validatePublish = (item) => api.save('validate', {act: 'publish', type: item.type, validate: item});
+
+            /**
+             * Sends and publishes the current item in scope
+             * First checks if the item is dirty and pops up save dialog if needed
+             * Then checks if the story is valid to publish before sending
+             * Then sends the story to the destination
+             * Then publishes it
+             *
+             * @param {Object} item story to be validated
+             * @return {Object} promise
+             */
+            const runSendAndPublish = () => {
                 var deskId = scope.selectedDesk._id;
                 var stageId = scope.selectedStage._id || scope.selectedDesk.incoming_stage;
                 // send releases lock, increment version.
 
-                return sendAuthoring(deskId, stageId, scope.selectedMacro, true)
-                    .then((item) => {
-                        scope.loading = true;
-                        // open the item for locking and publish
-                        return authoring.open(scope.item._id, false);
-                    })
-                    .then((item) => {
-                        // update the original item to avoid 412 error.
-                        scope.orig._etag = scope.item._etag = item._etag;
-                        scope.orig._locked = scope.item._locked = item._locked;
-                        scope.orig.task = scope.item.task = item.task;
-                        // change the desk location.
-                        $rootScope.$broadcast('desk_stage:change');
-                        // if locked then publish
-                        if (item._locked) {
-                            return scope.publish();
+                return scope.beforeSend({action: 'Send and Publish'})
+                .then(() => validatePublish(scope.item)
+                    .then((validationResult) => {
+                        if (_.get(validationResult, 'errors.length')) {
+                            for (var i = 0; i < validationResult.errors.length; i++) {
+                                notify.error('\'' + _.trim(validationResult.errors[i]) + '\'');
+                            }
+                            return $q.reject();
                         }
 
-                        return $q.reject();
-                    })
-                    .then((result) => {
-                        if (result) {
-                            authoringWorkspace.close(false);
-                        }
-                    })
-                    .catch((error) => {
-                        notify.error(gettext('Failed to send and publish.'));
+                        return sendAuthoring(deskId, stageId, scope.selectedMacro, true)
+                        .then((item) => {
+                            scope.loading = true;
+                            // open the item for locking and publish
+                            return authoring.open(scope.item._id, false);
+                        })
+                        .then((item) => {
+                            // update the original item to avoid 412 error.
+                            scope.orig._etag = scope.item._etag = item._etag;
+                            scope.orig._locked = scope.item._locked = item._locked;
+                            scope.orig.task = scope.item.task = item.task;
+                            // change the desk location.
+                            $rootScope.$broadcast('desk_stage:change');
+                            // if locked then publish
+                            if (item._locked) {
+                                return scope.publish();
+                            }
+
+                            return $q.reject();
+                        })
+                        .then((result) => {
+                            if (result) {
+                                authoringWorkspace.close(false);
+                            }
+                        })
+                        .catch((error) => {
+                            notify.error(gettext('Failed to send and publish.'));
+                        });
                     })
                     .finally(() => {
                         scope.loading = false;
-                    });
-            }
+                    })
+                );
+            };
 
             /**
              * Send the current item to different desk or stage and create a new take and open for editing.

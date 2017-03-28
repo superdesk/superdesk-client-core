@@ -32,6 +32,16 @@ export function PublisherFactory(pubapi) {
 
         /**
          * @ngdoc method
+         * @name publisher#setOrganization
+         * @returns {Object}
+         * @description Set organization id for articles on monitoring
+         */
+        setOrganization() {
+            return pubapi.setOrganization();
+        }
+
+        /**
+         * @ngdoc method
          * @name publisher#manageSite
          * @param {Object} site - site which is edited
          * @param {String} code - code of site which is edited
@@ -176,12 +186,12 @@ export function PublisherFactory(pubapi) {
 
         /**
          * @ngdoc method
-         * @name publisher#queryLists
+         * @name publisher#queryListArticles
          * @param {String} id - id of content list
          * @returns {Promise}
          * @description List all articles for selected content list
          */
-        queryArticles(id) {
+        queryListArticles(id) {
             return pubapi.query('content/lists/' + id + '/items');
         }
 
@@ -197,6 +207,73 @@ export function PublisherFactory(pubapi) {
         pinArticle(listId, articleId, article) {
             return pubapi.save('content/lists/' + listId + '/items', article, articleId);
         }
+
+        /**
+         * @ngdoc method
+         * @name publisher#queryTenantArticles
+         * @param {String} params - params passed to API (limit, status, route)
+         * @returns {Promise}
+         * @description List all articles for selected tenant
+         */
+        queryTenantArticles(params) {
+            return pubapi.queryWithDetails('content/articles', params);
+        }
+
+        /**
+         * @ngdoc method
+         * @name publisher#queryMonitoringArticles
+         * @param {String} articleStatus - status of articles (new, published, unpublished, canceled)
+         * @returns {Promise}
+         * @description List all articles for monitoring view
+         */
+        queryMonitoringArticles(articleStatus) {
+            return pubapi.queryWithDetails('organization/articles', articleStatus);
+        }
+
+        /**
+         * @ngdoc method
+         * @name publisher#linkListArticle
+         * @param {String} listId - id of content list
+         * @param {Array} list - list of articles
+         * @returns {Promise}
+         * @description Links articles to manual content list
+         */
+        linkListArticle(listId, list) {
+            let header = '';
+
+            angular.forEach(list, (item) => {
+                if (item.hasOwnProperty('content')) {
+                    header += '</api/content/articles/' + item.content.id + '; rel="article">,';
+                } else {
+                    header += '</api/content/articles/' + item.id + '; rel="article">,';
+                }
+            });
+
+            return pubapi.link('content/lists', listId, header);
+        }
+
+        /**
+         * @ngdoc method
+         * @name publisher#unlinkListArticle
+         * @param {String} listId - id of content list
+         * @param {Array} list - list of articles
+         * @returns {Promise}
+         * @description Links articles to manual content list
+         */
+        unlinkListArticle(listId, list) {
+            let header = '';
+
+            angular.forEach(list, (item) => {
+                if (item.hasOwnProperty('content')) {
+                    header += '</api/{version}/content/articles/' + item.content.id + '; rel="article">,';
+                } else {
+                    header += '</api/{version}/content/articles/' + item.id + '; rel="article">,';
+                }
+            });
+
+            return pubapi.unlink('content/lists', listId, header);
+        }
+
     }
 
     return new Publisher();

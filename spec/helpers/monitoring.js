@@ -118,7 +118,8 @@ function Monitoring() {
     };
 
     this.getMonitoringHomeTitle = function() {
-        return element.all(by.css('[ng-if="!monitoring.singleGroup && type === \'monitoring\'"]')).get(0).getText();
+        return element(by.css('[ng-if="!monitoring.singleGroup && type === \'monitoring\'"]'))
+            .element(by.className('dropdown__toggle')).getText();
     };
 
     this.getSpikedItems = function() {
@@ -128,6 +129,8 @@ function Monitoring() {
     this.getAllItems = function() {
         return element.all(by.className('media-box'));
     };
+
+    this.getMonitoringWordCount = (itemId) => element(by.id(itemId)).all(by.className('word-count')).first().getText();
 
     /**
      * Get the personal element at 'index' row
@@ -191,6 +194,9 @@ function Monitoring() {
 
     this.previewAction = function(group, item) {
         this.getItem(group, item).click();
+        var preview = element(by.id('item-preview'));
+
+        waitFor(preview);
     };
 
     this.closePreview = function() {
@@ -384,7 +390,7 @@ function Monitoring() {
 
         btn.click();
         // wait for modal to be removed
-        browser.wait(() => btn.isPresent().then((isPresent) => !isPresent), 500);
+        browser.wait(() => btn.isPresent().then((isPresent) => !isPresent), 600);
     };
 
     /**
@@ -706,7 +712,7 @@ function Monitoring() {
 
         this.openMonitoring();
 
-        return browser.wait(() => element(by.className('list-view')).isPresent(), 300);
+        return browser.wait(() => element(by.className('list-view')).isPresent(), 500);
     };
 
     this.turnOffWorkingStage = function(deskIndex, canCloseSettingsModal) {
@@ -732,7 +738,6 @@ function Monitoring() {
 
     this.turnOffDeskWorkingStage = function(deskIndex, canCloseSettingsModal) {
         this.toggleStage(deskIndex, 0);
-
         if (typeof canCloseSettingsModal !== 'boolean') {
             this.nextStages();
             this.nextSearches();

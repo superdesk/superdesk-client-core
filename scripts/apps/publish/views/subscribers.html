@@ -21,7 +21,7 @@
     </div>
 </div>
 
-<div sd-modal data-model="subscriber" class="subscriber-modal modal-big moz-scroll-fix">
+<div sd-modal data-model="subscriber" data-close="cancel()" class="subscriber-modal modal-big moz-scroll-fix">
     <div class="modal-header"> <a href="" class="close" ng-click="cancel()"><i class="icon-close-small"></i></a>
         <h3 ng-show="subscriber._id"><span translate>Edit Subscriber</span> "{{ origSubscriber.name }}"</h3>
         <h3 translate ng-hide="subscriber._id">Add New Subscriber</h3>

@@ -7,10 +7,10 @@
             <label translate>PROFILE</label>
             <div class="data" sd-item-profile data-profile="item.profile"></div>
         </div>
-        <div ng-if="change_profile">
+        <div ng-if="change_profile && content_types.length">
           <label translate>PROFILE</label>
           <div class="data">
-            <select id="item-profile" ng-model="item.profile" ng-change="autosave(item)" ng-options="type._id as type.label for type in content_types"></select>
+            <select id="item-profile" ng-model="item.profile" ng-change="changeProfile(item)" ng-options="type._id as type.label for type in content_types"></select>
           </div>
         </div>
         <div ng-if="item.type === 'text'">
@@ -23,10 +23,7 @@
             <label translate>SOURCE</label>
             <div id="item-source" class="data">{{ item.source }}</div>
         </div>
-        <div ng-if="item.anpa_take_key && !schema.relatedItems">
-            <div class="data update-info">{{ item.anpa_take_key | translate }}</div>
-        </div>
-        <div ng-if="relatedItems._items.length && schema.relatedItems">
+        <div ng-if="relatedItems._items.length">
             <label translate>RELATED</label>
             <div class="data"><a href="" ng-click="activateWidget()">{{relatedItems._items.length}}</a></div>
         </div>
@@ -35,7 +32,7 @@
             <div class="data">{{item.correction_sequence}}</div>
         </div>
         <div>
-            <span class="state-label missing-link" ng-if="missing_link && schema.relatedItems" translate>Missing Link</span>
+            <span class="state-label missing-link" ng-if="missing_link" translate>Missing Link</span>
             <span class="state-label legal" ng-if="item.flags.marked_for_legal" translate>Legal</span>
             <span class="state-label sms" ng-if="item.flags.marked_for_sms" translate>Sms</span>
             <span class="state-label not-for-publication" ng-if="item.flags.marked_for_not_publication" translate>Not For Publication</span>
@@ -59,7 +56,7 @@
             <label class="authoring-header__item-label uppercase" translate>SLUGLINE</label>
             <div class="authoring-header__input-holder">
               <input type="text"
-                     tansa-scope-sync
+                     tansa-proofing="false"
                      tabindex="{{editor.slugline.order}}"
                      class="line-input slugline"
                      id="slugline"
@@ -179,7 +176,7 @@
              ng-if="metadata.categories && schema.anpa_category"
              sd-width="{{editor.anpa_category.sdWidth}}"
              order="{{editor.anpa_category.order}}">
-          <label class="authoring-header__item-label uppercase" translate>ANPA CATEGORY</label>
+          <label class="authoring-header__item-label uppercase" translate>ANPA Category</label>
           <div sd-meta-terms
                class="data"
                data-tabindex="editor.anpa_category.order"
@@ -274,8 +271,8 @@
           <label class="authoring-header__item-label" translate>ED. NOTE</label>
           <div class="authoring-header__input-holder">
               <textarea id="ednote" class="line-input ed-note" 
+                        tansa-proofing="false"
                         sd-auto-height
-                        tansa-scope-sync
                         tabindex="{{editor.ednote.order}}"
                         ng-model="item.ednote"
                         ng-disabled="!_editable"

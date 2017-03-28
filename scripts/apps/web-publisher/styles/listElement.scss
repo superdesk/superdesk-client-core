@@ -55,13 +55,13 @@
             border: 0;
             background: none;
             line-height: 0;
+
             &.hidden{
                 opacity: 0;
                 &:hover{
                     opacity: 1;
                 }
             }
-
         }
     }
 
@@ -69,7 +69,12 @@
         flex: 0 0 auto;
         align-items: center;
     }
+
     .countLabel {
         margin-right: 10px;
+    }
+
+    &:hover button {
+        display: inline-block;
     }
 }

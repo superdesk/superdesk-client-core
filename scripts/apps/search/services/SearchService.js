@@ -18,11 +18,12 @@ import _ from 'lodash';
  * @requires config
  * @requires session
  * @requires multi
+ * @requires preferencesService
  *
  * @description Search Service is responsible for creation and manipulation of Query object
  */
-SearchService.$inject = ['$location', 'gettext', 'config', 'session', 'multi'];
-export function SearchService($location, gettext, config, session, multi) {
+SearchService.$inject = ['$location', 'gettext', 'config', 'session', 'multi', 'preferencesService'];
+export function SearchService($location, gettext, config, session, multi, preferencesService) {
     var sortOptions = [
         {field: 'versioncreated', label: gettext('Updated')},
         {field: 'firstcreated', label: gettext('Created')},
@@ -33,9 +34,29 @@ export function SearchService($location, gettext, config, session, multi) {
         {field: 'genre.name', label: gettext('Genre')}
     ];
 
+    var self = this;
+
     this.cvs = config.search_cvs ||
         [{id: 'subject', name: 'Subject', field: 'subject', list: 'subjectcodes'},
     {id: 'companycodes', name: 'Company Codes', field: 'company_codes', list: 'company_codes'}];
+
+    preferencesService.get('singleline:view').then((result) => {
+        if (result) {
+            // No preference, but global config set
+            if (result.enabled === null && _.get(config, 'list.singleLineView') && _.get(config, 'list.singleLine')) {
+                this.singleLine = true;
+                return;
+            }
+
+            // Preference set, but singleLine not in config
+            if (result.enabled && !_.get(config, 'list.singleLine')) {
+                this.singleLine = false;
+                return;
+            }
+
+            this.singleLine = result.enabled;
+        }
+    });
 
     function getSort() {
         var sort = ($location.search().sort || 'versioncreated:desc').split(':');
@@ -90,6 +111,15 @@ export function SearchService($location, gettext, config, session, multi) {
             }
         };
 
+        angular.forEach(self.cvs, (cv) => {
+            if (params[cv.id] && cv.field !== cv.id) {
+                var filter = {terms: {}};
+
+                filter.terms[cv.field + '.qcode'] = JSON.parse(params[cv.id]);
+                filters.push(filter);
+            }
+        });
+
         // set the filters for parameters defined in the parameters panel.
         _.each(PARAMETERS, (value, key) => {
             if (!params[key]) {
@@ -110,7 +140,10 @@ export function SearchService($location, gettext, config, session, multi) {
                 filters.push({exists: {field: 'associations.featuremedia'}});
                 break;
             case 'subject':
-                filters.push({terms: {'subject.qcode': JSON.parse(params[key])}});
+                filters.push({or: [
+                    {terms: {'subject.qcode': JSON.parse(params[key])}},
+                    {terms: {'subject.parent': JSON.parse(params[key])}}
+                ]});
                 break;
             case 'company_codes':
                 filters.push({terms: {'company_codes.qcode': JSON.parse(params[key])}});
@@ -349,10 +382,7 @@ export function SearchService($location, gettext, config, session, multi) {
             }
 
             if (params.scheduled_after) {
-                var schedulerange = {utc_publish_schedule: {}};
-
-                schedulerange.utc_publish_schedule.gte = params.scheduled_after;
-                query.post_filter({range: schedulerange});
+                query.post_filter({range: {'schedule_settings.utc_publish_schedule': {gte: params.scheduled_after}}});
             }
 
             if (params.type) {
@@ -460,10 +490,13 @@ export function SearchService($location, gettext, config, session, multi) {
             return this;
         };
 
-        // do base filtering
-        if (params.spike) {
+        // set spiked filters
+        if (params.spike === 'include') {
+            // no filters needed
+        } else if (params.spike === 'only') {
             this.filter({term: {state: 'spiked'}});
         } else {
+            // default exclude spiked items
             this.filter({not: {term: {state: 'spiked'}}});
         }
 
@@ -484,9 +517,9 @@ export function SearchService($location, gettext, config, session, multi) {
         }
 
         // remove the older version of digital package as part for base filtering.
-        this.filter({not: {and: [{term: {_type: 'published'}},
+        this.filter({not: {bool: {must: [{term: {_type: 'published'}},
             {term: {package_type: 'takes'}},
-            {term: {last_published_version: false}}]}});
+            {term: {last_published_version: false}}]}}});
 
         // remove other users drafts.
         this.filter({or: [{and: [{term: {state: 'draft'}},
@@ -494,7 +527,7 @@ export function SearchService($location, gettext, config, session, multi) {
                          {not: {terms: {state: ['draft']}}}]});
 
         // remove the digital package from production view.
-        this.filter({not: {and: [{term: {package_type: 'takes'}}, {term: {_type: 'archive'}}]}});
+        this.filter({not: {bool: {must: [{term: {package_type: 'takes'}}, {term: {_type: 'archive'}}]}}});
 
         buildFilters(params, this);
     }
@@ -749,5 +782,21 @@ export function SearchService($location, gettext, config, session, multi) {
             }
         });
         return _.union(CORE_PROJECTED_FIELDS.fields, projectedFields);
+    };
+
+    /**
+     * @ngdoc method
+     * @name search#updateSingleLineStatus
+     * @public
+     * @returns {Boolean}
+     * @description updates singleLine value after computation
+     */
+    this.updateSingleLineStatus = function(singleLinePref) {
+        if (singleLinePref && _.get(config, 'list.singleLine')) {
+            self.singleLine = true;
+            return;
+        }
+
+        self.singleLine = false;
     };
 }

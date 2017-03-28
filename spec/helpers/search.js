@@ -14,6 +14,7 @@ function GlobalSearch() {
     this.goButton = element(by.buttonText('Search'));
     this.searchInput = element(by.id('search-input'));
     this.subject = element.all(by.css('.dropdown-terms')).first();
+    this.marked = element(by.id('marked-desks')).all(by.css('.dropdown-terms')).first();
 
     /**
      * Open dashboard for current selected desk/custom workspace.
@@ -189,6 +190,13 @@ function GlobalSearch() {
         this.subject.element(by.css('.dropdown__toggle')).click();
     };
 
+     /**
+     * Opens Marked Desks dropdown
+     */
+    this.toggleMarkedDesks = function() {
+        this.marked.element(by.css('.dropdown__toggle')).click();
+    };
+
     /**
      * Gets the term on given 'index' from the
      * filtered metadata subject list
@@ -198,6 +206,17 @@ function GlobalSearch() {
      */
     this.getSubjectFilteredTerm = function(index) {
         return this.subject.all(by.repeater('t in $vs_collection track by t[uniqueField]')).get(index).getText();
+    };
+
+    /**
+     * Gets the term on given 'index' from the
+     * filtered Marked desks list
+     *
+     * @param {number} index
+     * @return {string}
+     */
+    this.getMarkedDesksFilteredTerm = function(index) {
+        return this.marked.all(by.repeater('t in $vs_collection track by t[uniqueField]')).get(index).getText();
     };
 
     /**

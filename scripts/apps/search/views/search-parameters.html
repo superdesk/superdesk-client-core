@@ -47,16 +47,15 @@
             <div id="search-{{cv.name}}">
                 <div id="{{cv.name}}" sd-meta-terms
                     data-item="selecteditems"
-                    data-field="{{cv.field}}"
+                    data-field="{{cv.id}}"
                     data-unique="qcode"
                     data-list="metadata[cv.list]"
                     data-reload-list="true"
                     data-header="true"
-                    data-change="itemSearch(selecteditems, cv.field)"></div>
+                    data-change="itemSearch(selecteditems, cv.id)"></div>
             </div>
         </div>
-
-        <div class="field">
+        <div class="field" ng-if="search_config.marked_desks">
             <label for="search-marked-desks">
                 {{:: 'Marked Desks' | translate}}
             </label>
@@ -110,24 +109,26 @@
             </div>
         </div>
 
-        <div class="multiple">
-            <div class="field" ng-if="repo.archive && search_config.creator">
-                <label for="search-creator">
-                    {{:: 'Creator' | translate}}
-                </label>
-                <select id="search-creator"
-                        ng-model="fields.original_creator"
-                        ng-options="user._id  as user.display_name for user in userList track by user._id">
-                <option value="" label=""></option>
-                </select>
-            </div>
+        <div class="field" ng-if="repo.archive && search_config.creator">
+            <label for="search-creator">
+                {{:: 'Creator' | translate}}
+            </label>
+            <select id="search-creator"
+                    ng-model="fields.original_creator"
+                    ng-options="user._id  as user.display_name for user in userList track by user._id">
+            <option value="" label=""></option>
+            </select>
+        </div>
 
-            <div class="field" ng-if="search_config.spike">
-                <label for="search-spike">
-                {{:: 'In Spiked' | translate}}
-                </label>
-                <span sd-switch ng-model="fields.spike"></span>
-            </div>
+        <div class="field" ng-if="search_config.spike">
+            <label for="spike-options">
+                {{:: 'Spiked Content' | translate}}
+            </label>
+            <select id="spike-options" name="spike-options" ng-model="fields.spike">
+                <option value="exclude" label="{{:: 'Exclude spiked content' | translate }}"></option>
+                <option value="include" label="{{:: 'Include spiked content' | translate }}"></option>
+                <option value="only" label="{{:: 'Spiked only content' | translate }}"></option>
+            </select>
         </div>
 
         <div class="field" ng-if="search_config.featuremedia">
@@ -157,7 +158,7 @@
                 {{:: 'Slugline' | translate}}
             </label>
             <div class="control">
-                <input type="text" id="search-slugline" ng-model="meta.slugline">
+                <input type="text" ng-keypress="keyPressed($event)" id="search-slugline" ng-model="meta.slugline">
             </div>
         </div>
         <div class="field">
@@ -165,7 +166,7 @@
                 {{:: 'Description' | translate}}
             </label>
             <div class="control">
-                <input type="text" id="search-description" ng-model="meta.description_text">
+                <input type="text" ng-keypress="keyPressed($event)" id="search-description" ng-model="meta.description_text">
             </div>
         </div>
             <div class="field">
@@ -173,7 +174,7 @@
                 {{:: 'AAP Image Keyword' | translate}}
             </label>
             <div class="control">
-                <input type="text" id="search-aapkeyword" ng-model="meta.aapkeyword">
+                <input type="text" ng-keypress="keyPressed($event)" id="search-aapkeyword" ng-model="meta.aapkeyword">
             </div>
         </div>
     </fieldset>
@@ -181,12 +182,12 @@
         <div class="field">
             <label class="search-label" for="search-text" translate>Search</label>
             <div class="control">
-                <input type="text" id="search-text" ng-model="meta.text">
+                <input type="text" ng-keypress="keyPressed($event)" id="search-text" ng-model="meta.text">
             </div>
             <div ng-show="repo.search.indexOf('scanpix') === 0">
                 <label class="search-label" for="search-id" translate>Scanpix ID(s)</label>
                 <div class="control">
-                    <input type="text" id="search-id" ng-model="meta.id">
+                    <input type="text" ng-keypress="keyPressed($event)" id="search-id" ng-model="meta.id">
                 </div>
             </div>
             <div ng-show="repo.search === 'paimg'">

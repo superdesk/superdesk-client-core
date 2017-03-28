@@ -1,6 +1,6 @@
 {
   "name": "superdesk-core",
-  "version": "1.6.0-rc.4",
+  "version": "1.7.0-alpha.0",
   "license": "AGPL-3.0",
   "repository": {
     "type": "git",
@@ -29,7 +29,7 @@
   "main": "scripts/index.js",
   "dependencies": {
     "angular": "1.5.11",
-    "angular-animate": "^1.5.5",
+    "angular-animate": "1.5.11",
     "angular-bootstrap-npm": "jusopi/angular-bootstrap-npm#0.13.1",
     "angular-contenteditable": "0.0.2",
     "angular-drag-and-drop-lists": "^2.1.0",
@@ -38,11 +38,11 @@
     "angular-embedly": "Urigo/angular-embedly#0.0.8",
     "angular-gettext": "^2.0.5",
     "angular-history": "git+https://github.com/decipherinc/angular-history.git#v0.8.0",
-    "angular-i18n": "^1.5.8",
-    "angular-mocks": "1.6.1",
+    "angular-i18n": "1.5.11",
+    "angular-mocks": "1.5.11",
     "angular-moment": "^0.10.3",
-    "angular-resource": "^1.5.5",
-    "angular-route": "^1.5.5",
+    "angular-resource": "1.5.11",
+    "angular-route": "1.5.11",
     "angular-vs-repeat": "^1.1.4",
     "babel-core": "^6.21.0",
     "babel-loader": "^6.2.10",

@@ -77,7 +77,7 @@ function WorkqueueCtrl($scope, $rootScope, $route, workqueue, authoringWorkspace
     $scope.$on('item:lock', (_e, data) => {
         // Update Workqueue only if the user has locked an item.
         if (data && data.user === session.identity._id) {
-            updateWorkqueue();
+            updateWorkqueue(_e, data);
         }
     });
     $scope.$on('item:unlock', (_e, data) => {
@@ -109,16 +109,19 @@ function WorkqueueCtrl($scope, $rootScope, $route, workqueue, authoringWorkspace
     updateWorkqueue();
 
     /**
-     * Update list of opened items and set one active if its id is in current route path.
+     * Update list of opened items and set one active to currently opened item
      */
-    function updateWorkqueue() {
+    function updateWorkqueue(e, data) {
         workqueue.fetch().then(() => {
             var route = $route.current || {_id: null, params: {}};
 
             $scope.isMultiedit = route._id === 'multiedit';
             $scope.active = null;
-            if (route.params.item) {
-                $scope.active = _.find(workqueue.items, {_id: route.params.item});
+
+            let currentItemId = data && data.item ? data.item : route.params.item;
+
+            if (currentItemId) {
+                $scope.active = _.find(workqueue.items, {_id: currentItemId});
             }
         });
     }
@@ -260,7 +263,8 @@ function ArticleDashboardDirective() {
 angular.module('superdesk.apps.authoring.workqueue', [
     'superdesk.core.activity',
     'superdesk.apps.notification',
-    'superdesk.apps.authoring.multiedit'
+    'superdesk.apps.authoring.multiedit',
+    'superdesk.apps.authoring.compare_versions'
 ])
     .service('workqueue', WorkqueueService)
     .controller('Workqueue', WorkqueueCtrl)

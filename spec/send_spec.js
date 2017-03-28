@@ -159,7 +159,7 @@ describe('send', () => {
 
         expect(dropdownSelected.getText()).toEqual('Sports Desk'); // desk remembered
 
-        var btnStage = element(by.buttonText('Working Stage'));
+        var btnStage = sidebar.element(by.buttonText('Working Stage'));
 
         expect(btnStage.getAttribute('class')).toContain('active'); // stage remembered
     });

@@ -26,7 +26,7 @@ function backendRequest(params, callback) {
     }
 
     // how many times it will try to request before throwing error
-    var ttl = 5;
+    var ttl = 3;
 
     function responseHandler(error, response, body) {
         if (!error && !isErrorResponse(response)) {
@@ -39,7 +39,6 @@ function backendRequest(params, callback) {
 
         if (ttl) {
             ttl -= 1;
-            params.timeout *= 2;
             return request(params, responseHandler);
         }
 
@@ -54,7 +53,7 @@ function backendRequest(params, callback) {
     }
 
     params.rejectUnauthorized = false;
-    params.timeout = 8000;
+    params.timeout = 30000;
     request(params, responseHandler);
 }
 

@@ -18,7 +18,8 @@ export function PubAPIFactory(config, $http, $q, session) {
             this._base = pubConfig.base || '';
             this._protocol = pubConfig.protocol || 'http';
             this._domain = pubConfig.domain || '';
-            this.setTenant(pubConfig.tenant || 'default');
+            this._tenant = pubConfig.tenant || '';
+            this.setTenant();
         }
 
         /**
@@ -42,20 +43,32 @@ export function PubAPIFactory(config, $http, $q, session) {
          * @description Change the tenant we are using the api for
          */
         setTenant(tenant) {
-            this._tenant = tenant;
-            this._server = this.buildServerURL();
+            this._server = this.buildServerURL(tenant);
         }
 
         /**
          * @ngdoc method
          * @name pubapi#buildServerURL
+         * @param {String} tenant
          * @returns {String}
          * @description Builds base server URL of the site.
          */
-        buildServerURL() {
-            let subdomain = this._tenant === 'default' ? '' : `${this._tenant}.`;
+        buildServerURL(tenant) {
+            let subdomain = tenant || this._tenant ? `${tenant || this._tenant}.` : '';
 
             return `${this._protocol}://${subdomain}${this._domain}`;
+        }
+
+        /**
+         * @ngdoc method
+         * @name pubapi#setOrganization
+         * @description Set organization id for articles on monitoring
+         */
+        setOrganization() {
+            return this.query('organizations').then((organizations) => {
+                this._organizatonId = 3; // organizations[0].id;
+                return organizations;
+            });
         }
 
         /**
@@ -72,6 +85,22 @@ export function PubAPIFactory(config, $http, $q, session) {
                 method: 'GET',
                 params: params
             }).then((response) => response._embedded._items);
+        }
+
+        /**
+         * @ngdoc method
+         * @name pubapi#query
+         * @param {String} resource
+         * @param {Object} params
+         * @returns {Promise}
+         * @description Query resource
+         */
+        queryWithDetails(resource, params) {
+            return this.req({
+                url: this.resourceURL(resource),
+                method: 'GET',
+                params: params
+            });
         }
 
         /**
@@ -122,6 +151,41 @@ export function PubAPIFactory(config, $http, $q, session) {
                 url: this.resourceURL(resource, id),
                 method: 'DELETE'
             });
+        }
+
+        /**
+         * @ngdoc method
+         * @name pubapi#link
+         * @param {String} resource
+         * @param {String} id - id of item which is saved
+         * @param {Object} header - header which need to be sent
+         * @returns {Promise}
+         * @description Link an item
+         */
+        link(resource, id, header) {
+            return this.req({
+                url: this.resourceURL(resource, id),
+                method: 'LINK',
+                headers: {link: header}
+            }).then((response) => response);
+        }
+
+        /**
+         * @ngdoc method
+         * @name pubapi#unlink
+         * @param {String} resource
+         * @param {String} id - id of item which is deleted
+         * @param {Object} header - header which need to be sent
+         * @returns {Promise}
+         * @description Unlink an item
+         */
+        unlink(resource, id, header) {
+            console.log(header);
+            return this.req({
+                url: this.resourceURL(resource, id),
+                method: 'UNLINK',
+                headers: {link: header}
+            }).then((response) => response);
         }
 
         /**

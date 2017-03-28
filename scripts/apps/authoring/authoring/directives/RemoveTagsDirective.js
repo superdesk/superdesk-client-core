@@ -2,8 +2,6 @@ import * as helpers from 'apps/authoring/authoring/helpers';
 
 RemoveTagsDirective.$inject = [];
 export function RemoveTagsDirective() {
-    var htmlRegex = /(<([^>]+)>)/ig;
-
     return {
         require: 'ngModel',
         scope: {
@@ -12,7 +10,7 @@ export function RemoveTagsDirective() {
         link: function(scope, elem, attr, ngModel) {
             scope.$watch('model', () => {
                 if (scope.model) {
-                    scope.model = helpers.stripHtmlRaw(scope.model).replace(htmlRegex, '');
+                    scope.model = helpers.stripHtmlRaw(scope.model);
                 }
             });
         }

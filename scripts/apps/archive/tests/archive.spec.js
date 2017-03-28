@@ -135,13 +135,13 @@ describe('content', () => {
             spyOn(api.legal_archive_versions, 'getByUrl').and.returnValue($q.when());
 
             item._links = {_id: '123'};
-            archiveService.getVersionHistory(item, {}, 'versions');
+            archiveService.getVersions(item, {}, 'versions');
             expect(api.find).toHaveBeenCalledWith('archive', '123',
                 {version: 'all', embedded: {user: 1}, max_results: 200});
 
             item._type = 'legal_archive';
             item._links = {collection: {href: '/legal_archive'}};
-            archiveService.getVersionHistory(item, {}, 'versions');
+            archiveService.getVersions(item, {}, 'versions');
             expect(api.find).toHaveBeenCalledWith('legal_archive', '123', {version: 'all', max_results: 200});
         }));
     });

@@ -73,7 +73,7 @@ describe('legal_archive', () => {
         content.actionOnItem('Open', 'item2 in legal archive');
 
         authoring.showVersions();
-        expect(authoring.getHistoryItems().count()).toBe(3);
+        expect(authoring.getVersions().count()).toBe(3);
         authoring.showVersions();
 
         authoring.showHistory();

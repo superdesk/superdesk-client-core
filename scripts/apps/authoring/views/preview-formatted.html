@@ -1,4 +1,5 @@
-<div sd-modal data-model="previewFormatted" class="formatted-preview-popup modal-big">
+<div sd-modal data-model="previewFormatted" data-close="closePreviewFormatted()"
+    class="formatted-preview-popup modal-big">
 
     <div class="modal-header">
         <a href="" class="close" ng-click="closePreviewFormatted()"><i class="icon-close-small"></i></a>
@@ -10,7 +11,7 @@
         <div class="formatters">
             <label>{{ :: 'Formatters' | translate }}</label>
             <select ng-model="selectedFormatter">
-                <option value="{{formatter}}" ng-repeat="formatter in formatters">{{:: formatter.name}}</option>
+                <option value="{{formatter}}" ng-repeat="formatter in previewFormatters">{{:: formatter.name}}</option>
             </select>
             <button class="btn btn--primary btn--pull-right" ng-click="format(selectedFormatter)" translate>Format</button>
         </div>

@@ -196,8 +196,7 @@ export class Item extends React.Component {
                 onDragStart: this.onDragStart,
                 onClick: this.select,
                 onDoubleClick: this.dbClick,
-                draggable: true,
-                tabIndex: '0'
+                draggable: true
             },
             React.createElement.apply(null, contents)
         );

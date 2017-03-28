@@ -46,7 +46,7 @@ export default angular.module('superdesk.apps.highlights', [
                 priority: 30,
                 icon: 'star',
                 dropdown: directive.HighlightsReactDropdown,
-                keyboardShortcut: 'ctrl+shift+d',
+                keyboardShortcut: 'ctrl+shift+^',
                 templateUrl: 'scripts/apps/highlights/views/mark_highlights_dropdown.html',
                 filters: [
                     {action: 'list', type: 'archive'}

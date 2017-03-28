@@ -13,10 +13,10 @@ describe('search service', () => {
         var filters = criteria.query.filtered.filter.and;
 
         expect(filters).toContain({not: {term: {state: 'spiked'}}});
-        expect(filters).toContain({not: {and: [{term: {package_type: 'takes'}}, {term: {_type: 'archive'}}]}});
-        expect(filters).toContain({not: {and: [{term: {_type: 'published'}},
+        expect(filters).toContain({not: {bool: {must: [{term: {package_type: 'takes'}}, {term: {_type: 'archive'}}]}}});
+        expect(filters).toContain({not: {bool: {must: [{term: {_type: 'published'}},
                 {term: {package_type: 'takes'}},
-                {term: {last_published_version: false}}]}});
+                {term: {last_published_version: false}}]}}});
         expect(criteria.sort).toEqual([{versioncreated: 'desc'}]);
     }));
 
@@ -70,6 +70,22 @@ describe('search service', () => {
         var filters = criteria.query.filtered.filter.and;
 
         expect(filters).toContain({term: {original_creator: '123'}});
+    }));
+
+    it('can create query for spike included', inject(($rootScope, search, session) => {
+        session.identity = {_id: 'foo'};
+        var criteria = search.query({spike: 'include'}).getCriteria();
+        var filters = criteria.query.filtered.filter.and;
+
+        expect(filters).not.toContain({not: {term: {state: 'spiked'}}});
+    }));
+
+    it('can create query for spike only', inject(($rootScope, search, session) => {
+        session.identity = {_id: 'foo'};
+        var criteria = search.query({spike: 'only'}).getCriteria();
+        var filters = criteria.query.filtered.filter.and;
+
+        expect(filters).toContain({term: {state: 'spiked'}});
     }));
 
     it('can create query for ingest provider', inject(($rootScope, search, session) => {

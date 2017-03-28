@@ -49,12 +49,26 @@ angular.module('superdesk.apps.monitoring', [
     .filter('splitText', SplitFilter)
 
     .run(['keyboardManager', 'gettext', function(keyboardManager, gettext) {
-        keyboardManager.register('Monitoring', 'ctrl + g', gettext('Switches between single/grouped stage view'));
-        keyboardManager.register('Monitoring', 'ctrl + alt + g', gettext('Switches between single/grouped desk view'));
-        keyboardManager.register('Monitoring', 'ctrl + d', gettext('Duplicates an item'));
-        keyboardManager.register('Monitoring', 'ctrl + b', gettext('Creates a broadcast'));
-        keyboardManager.register('Monitoring', 'ctrl + alt + t', gettext('Creates a new take'));
-        keyboardManager.register('Monitoring', 'ctrl + shift + #', gettext('Spikes item(s)'));
+        keyboardManager.register('Monitoring / List actions', 'ctrl + alt + j',
+             gettext('Switches between grouped/single stage view'));
+        keyboardManager.register('Monitoring / List actions', 'ctrl + alt + g',
+             gettext('Switches between grouped/single desk view'));
+        keyboardManager.register('Monitoring / List actions', 'page down',
+             gettext('Move focus to next stage or group'));
+        keyboardManager.register('Monitoring / List actions', 'page up',
+             gettext('Move focus to previous stage or group'));
+        keyboardManager.register('Monitoring / List actions', 'down/right Arrow',
+             gettext('Select next item on focused stage or group'));
+        keyboardManager.register('Monitoring / List actions', 'up/left Arrow',
+            gettext('Select previous item on focused stage or group'));
+        keyboardManager.register('Monitoring / List actions', 'alt + o', gettext('View an item'));
+        keyboardManager.register('Monitoring / List actions', 'ctrl + alt + e', gettext('Edit an item'));
+        keyboardManager.register('Monitoring / List actions', 'ctrl + alt + d', gettext('Duplicates an item'));
+        keyboardManager.register('Monitoring / List actions', 'ctrl + b', gettext('Creates a broadcast'));
+        keyboardManager.register('Monitoring / List actions', 'ctrl + shift + #', gettext('Spikes item(s)'));
+        keyboardManager.register('Monitoring / List actions', 'ctrl + alt + p', gettext('Creates Package'));
+        keyboardManager.register('Monitoring / List actions', 'ctrl + shift + ^', gettext('Mark for highlight'));
+        keyboardManager.register('Monitoring / List actions', 'ctrl + shift + !', gettext('Mark for desk'));
     }]);
 
 angular.module('superdesk.apps.aggregate', [

@@ -21,7 +21,7 @@ export class MarkBtn extends React.Component {
     }
 
     /** Marks the give item for a given desk */
-    markDesk() {
+    markDesk(event) {
         event.stopPropagation();
         this.desks.markItem(this.desk._id, this.item);
     }

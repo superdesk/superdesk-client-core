@@ -7,15 +7,15 @@
        dnd-draggable="getSelectedItemsIncluding(list, item)"
        dnd-dragstart="onDragstart(list, event)"
        dnd-moved="onMoved(list)"
-       dnd-dragend="list.dragging = false"
+       dnd-dragend="onDragEnd(list)"
        dnd-selected="item.selected = !item.selected"
        ng-class="{'selected': item.selected}"
        ng-hide="list.dragging && item.selected"
        >
         <div class="listElement listElement--noLeftBorder">
             <div class="listElement__content">
-                {{ :: item.label}}
-                <button class="hidden pull-right" ng-click="" title="{{:: 'Remove' | translate }}"><i class="icon-trash"></i></button>
+                {{ item.content.title || item.title }}
+                <button class="hidden pull-right" ng-click="removeFromList($index)" title="{{:: 'Remove' | translate }}"><i class="icon-trash"></i></button>
             </div>
         </div>
     </li>

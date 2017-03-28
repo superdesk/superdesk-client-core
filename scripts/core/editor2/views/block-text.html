@@ -19,7 +19,7 @@
         <small translate>Line: {{ cursor.line }}, Column: {{ cursor.column }}</small>
     </code>
 
-    <ul class="dropdown__menu">
+    <ul class="dropdown__menu dropdown__menu--suggestions">
         <li ng-repeat="word in suggestions"><button ng-click="replace(word.key)">{{ :: word.value }}</button></li>
         <li ng-show="suggestions.length === 0"><button translate>SORRY, NO SUGGESTIONS.</button></li>
         <li class="divider"></li>

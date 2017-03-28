@@ -144,9 +144,9 @@ function RelatedItemController(
                     authoringWorkspace.edit(originalItem);
                 }, (err) => {
                     if (angular.isDefined(err.data._message)) {
-                        notify.error(gettext('Failed to associated as take: ' + err.data._message));
+                        notify.error(gettext('Failed to associate as take: ' + err.data._message));
                     } else {
-                        notify.error(gettext('There is an error. Failed to associated as take.'));
+                        notify.error(gettext('There is an error. Failed to associate as take.'));
                     }
                 });
             },

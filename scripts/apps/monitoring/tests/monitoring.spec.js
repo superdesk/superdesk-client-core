@@ -139,16 +139,6 @@ describe('monitoring', () => {
             expect(criteria.source.query.filtered.query.query_string.query).toBe('test');
         }));
 
-        it('can get criteria for marked desks in incoming stage', inject((cards, session) => {
-            session.identity = {_id: 'foo'};
-            var card = {_id: '456', deskId: '1'};
-            var criteria = cards.criteria(card);
-
-            expect(criteria.source.query.filtered.filter.and[4].or).toContain(
-                {terms: {'marked_desks.desk_id': ['1']}}
-            );
-        }));
-
         it('can get criteria for personal with search', inject((cards, session) => {
             var card = {type: 'personal', query: 'test'};
 
