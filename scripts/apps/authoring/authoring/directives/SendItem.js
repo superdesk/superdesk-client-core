@@ -391,7 +391,8 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                 }
 
                 if (scope._action === 'edit') {
-                    return scope.itemActions.publish;
+                    return scope.item ? !scope.item.flags.marked_for_not_publication && scope.itemActions.publish :
+                            scope.itemActions.publish;
                 } else if (scope._action === 'correct') {
                     return privileges.privileges.publish && scope.itemActions.correct;
                 } else if (scope._action === 'kill') {
