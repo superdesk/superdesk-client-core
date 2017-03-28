@@ -260,7 +260,7 @@ DropdownPositionDirective.$inject = ['$document'];
 function DropdownPositionDirective($document) {
     return {
         link: function(scope, element) {
-            var tolerance = 300,
+            var tolerance = 100,
                 isRightOriented = null,
                 isInlineOriented = null,
                 menu = null, workspace = null;
