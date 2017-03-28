@@ -72,7 +72,6 @@
              ng-class="{'modal-body__flex--disabled': isAoISelectionModeEnabled}"
              ng-if="data.showMetadataEditor">
             <div class="header" translate>Metadata</div>
-            <pre>{{ data.editable }}</pre>
             <div ng-if="validator.headline">
                 <label ng-class="{'label-asterisk':validator.headline.required}" translate>Title</label>
                 <span ng-if="validator.headline.maxlength" sd-character-count data-item="data.metadata.headline" data-limit="validator.headline.maxlength"></span>
