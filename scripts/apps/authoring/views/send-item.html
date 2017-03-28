@@ -21,7 +21,7 @@
         <h3 id="panel-externalsource"
             class="panel-header {{currentUserAction === vm.userActions.externalsource_to ? 'panel-header-active' : ''}}"
             ng-show="!canSendItem() && !canPublishItem() && currentUserAction === vm.userActions.externalsource_to"
-            translate>Get From External Source To</h3>
+            translate>Fetch To</h3>
         <div class="close" ng-click="close()"><i class="icon-close-small icon-white"></i></div>
     </div>
 
@@ -35,7 +35,7 @@
                 data-selected-desk="selectedDesk"
                 on-change="selectDesk(desk)"></div>
 
-            <ul class="btn-list" ng-if="stages">
+            <ul class="btn-list" ng-if="stages && !(vm.userActions.publish === currentUserAction)">
                 <li ng-repeat="stage in stages track by stage._id">
                     <button class="btn__check"
                             ng-class="{active: stage._id === selectedStage._id}"
@@ -124,6 +124,11 @@
                         ng-disabled="disableSendButton()"
                         translate>
                     duplicate
+                </button>
+            </li>
+        </ul>
+    </div>
+
     <div class="slide-pane__footer" sd-loading="loading" ng-show="currentUserAction === vm.userActions.externalsource_to">
         <ul class="btn-list">
             <li class="full-width" ng-if="showSendButtonAndDestination() && !canSendItem()">
@@ -131,7 +136,7 @@
                         ng-click="send(true)"
                         ng-disabled="disableFetchAndOpenButton()"
                         translate>
-                    get from external source and open
+                    fetch and open
                 </button>
             </li>
             <li class="full-width" ng-if="showSendButtonAndDestination()">
@@ -139,7 +144,7 @@
                         ng-click="send()"
                         ng-disabled="disableSendButton()"
                         translate>
-                    get from external source
+                    fetch
                 </button>
             </li>
         </ul>

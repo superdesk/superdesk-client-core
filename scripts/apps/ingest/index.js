@@ -118,11 +118,13 @@ angular.module('superdesk.apps.ingest', [
                 }]
             })
 
-            .activity('externalsource', {
-                label: gettext('Get from external source'),
-                icon: 'archive',
+            .activity('externalsourceTo', {
+                label: gettext('Fetch To'),
+                icon: 'fetch-as',
                 monitor: true,
-                controller: ctrl.ExternalSourceController,
+                controller: ['data', 'send', function(data, send) {
+                    send.allAs([data.item], 'externalsourceTo');
+                }],
                 filters: [{action: 'list', type: 'externalsource'}],
                 privileges: {fetch: 1},
                 additionalCondition: ['config', 'desks', function(config, desks) {
@@ -130,13 +132,12 @@ angular.module('superdesk.apps.ingest', [
                     return config.features.editFeaturedImage && !_.isNil(desks.getCurrentDeskId());
                 }]
             })
-            .activity('externalsourceTo', {
-                label: gettext('Get From External Source To'),
+
+            .activity('externalsource', {
+                label: gettext('Fetch'),
                 icon: 'archive',
                 monitor: true,
-                controller: ['data', 'send', function(data, send) {
-                    send.allAs([data.item], 'externalsourceTo');
-                }],
+                controller: ctrl.ExternalSourceController,
                 filters: [{action: 'list', type: 'externalsource'}],
                 privileges: {fetch: 1},
                 additionalCondition: ['config', 'desks', function(config, desks) {
