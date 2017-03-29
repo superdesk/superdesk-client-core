@@ -78,7 +78,7 @@
                     <span translate>version</span><span>: {{:: historyItem.version }}</span>
                 </div>
                 <span class="more-description" ng-if="historyItem.update.highlight_id">
-                    <span translate>for highlight</span><span>: {{:: highlightsById[historyItem.update.highlight_id].name }}</span>
+                    <span translate>for highlight</span><span>: {{:: highlightsById[historyItem.update.highlight_id].name || historyItem.update.highlight_name }}</span>
                 </span>
                 <div class="more-description" ng-if="historyItem.update.desk_id">
                     <span translate>for desk</span><span>: {{:: deskLookup[historyItem.update.desk_id].name }}</span>
@@ -92,11 +92,26 @@
                     <span translate>version</span><span>: {{:: historyItem.version }}</span>
                 </div>
                 <span class="more-description" ng-if="historyItem.update.highlight_id">
-                    <span translate>removed highlight</span><span>: {{:: highlightsById[historyItem.update.highlight_id].name }}</span>
+                    <span translate>removed highlight</span><span>: {{:: highlightsById[historyItem.update.highlight_id].name  || historyItem.update.highlight_name }}</span>
                 </span>
                 <div class="more-description" ng-if="historyItem.update.desk_id">
                     <span translate>removed desk</span><span>: {{:: deskLookup[historyItem.update.desk_id].name }}</span>
                 </div>
+            </div>
+
+            <div ng-if="historyItem.operation === 'export_highlight'">
+                <strong>{{ :: 'Exported by' | translate }}</strong> {{ :: historyItem.displayName }}
+                <em><time sd-absdate ng-model="historyItem._created"></time></em>
+                <div ng-if="historyItems[$index-1].version !== historyItem.version && historyItem.version !== 0" class="version">
+                    <span translate>version</span><span>: {{:: historyItem.version }}</span>
+                </div>
+                <span class="more-description" ng-if="historyItem.update.highlight_id">
+                    <span class="more-description" translate>from highlight</span><span>: {{:: highlightsById[historyItem.update.highlight_id].name  || historyItem.update.highlight_name }}</span>
+                </span>
+            </div>
+
+            <div ng-if="historyItem.operation === 'create_highlight' && historyItem.update.highlight_id">
+                    <span class="more-description" translate>Created from highlight</span><span>: {{:: highlightsById[historyItem.update.highlight_id].name  || historyItem.update.highlight_name }}</span>
             </div>
 
             <div ng-if="['link', 'take', 'reopen'].includes(historyItem.operation)">
