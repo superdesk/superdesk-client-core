@@ -78,6 +78,10 @@ export function DeskeditStages(gettext, api, WizardHandler, tasks, $rootScope, d
                 return scope.editStage && scope.editStage._id === stage._id;
             };
 
+            scope.shouldVisible = function() {
+                scope.editStage.is_visible = scope.editStage.default_incoming ? true : scope.editStage.is_visible;
+            };
+
             scope.cancel = function() {
                 scope.editStage = null;
                 clearErrorMessages();

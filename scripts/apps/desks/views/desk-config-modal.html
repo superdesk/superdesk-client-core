@@ -207,9 +207,9 @@
                         </div>
 
                         <div class="row" ng-if="editStage">
-                            <div class="field">
+                            <div class="field" title="{{ editStage.default_incoming ? 'Global Read OFF is not allowed for Incoming stage' : null | translate }}">
                                 <label>{{ :: 'Global Read' | translate }}</label>
-                                <span class="pull-right" sd-switch ng-model="editStage.is_visible"></span>
+                                <span class="pull-right" ng-class="{'prevent-off' : editStage.default_incoming && editStage.is_visible}" sd-switch ng-model="editStage.is_visible"></span>
                             </div>
                             <div class="field">
                                 <label>{{ :: 'Local Read Only' | translate }}</label>
@@ -221,7 +221,7 @@
                             </div>
                             <div class="field">
                                 <label>{{:: 'Incoming Stage' | translate }}</label>
-                                <span class="pull-right" sd-switch ng-model="editStage.default_incoming"></span>
+                                <span class="pull-right" ng-click="shouldVisible()" sd-switch ng-model="editStage.default_incoming"></span>
                             </div>
                         </div>
                         <div class="row" ng-if="editStage">

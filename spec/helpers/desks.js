@@ -228,6 +228,13 @@ function Desks() {
     };
 
     /**
+     * Done action on stages tab
+     **/
+    this.actionDoneOnStagesTab = function() {
+        element(by.id('done-stages')).click();
+    };
+
+    /**
      * Save & Continue action on stages tab
      **/
     this.actionSaveAndContinueOnStagesTab = function() {
@@ -314,8 +321,30 @@ function Desks() {
     /**
      * Toggles the global read flag
      **/
-    this.toggleGlobalReadSFlag = function() {
+    this.toggleGlobalReadFlag = function() {
         element(by.model('editStage.is_visible')).click();
+    };
+
+    /**
+     * Get global read flag status
+     **/
+    this.getGlobalReadFlag = function() {
+        return element(by.model('editStage.is_visible'));
+    };
+
+    /**
+     * Get Incoming flag status
+     **/
+    this.getIncomingFlag = function() {
+        return element(by.model('editStage.default_incoming'));
+    };
+
+
+    /**
+     * Toggles the incoming stage flag
+     **/
+    this.toggleIncomingStageFlag = function() {
+        element(by.model('editStage.default_incoming')).click();
     };
 
     this.confirmStageDeleteButton = function(stageName) {
