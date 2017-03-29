@@ -37,7 +37,7 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
             scope.selectedStage = null;
             scope.selectedMacro = null;
             scope.beforeSend = scope._beforeSend || $q.when;
-            scope.destination_last = {send_to: null, publish: null};
+            scope.destination_last = {send_to: null, publish: null, duplicate_to: null};
             scope.origItem = angular.extend({}, scope.item);
 
             // key for the storing last desk/stage in the user preferences for send action.
@@ -132,6 +132,7 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                                 .then(runSend, (err) => false);
                         }
 
+                        updateLastDestination();
                         return runSend(open);
                     });
             };
@@ -269,9 +270,6 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                 } else if (scope.mode === 'archive') {
                     return sendContent(deskId, stageId, scope.selectedMacro, open);
                 } else if (scope.config) {
-                    // Remember last destination desk and stage
-                    updateLastDestination(deskId, stageId, PREFERENCE_KEY);
-
                     scope.config.promise.finally(() => {
                         scope.loading = false;
                     });
@@ -433,8 +431,8 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
             const runSendAndPublish = () => {
                 var deskId = scope.selectedDesk._id;
                 var stageId = scope.selectedStage._id || scope.selectedDesk.incoming_stage;
-                // send releases lock, increment version.
 
+                // send releases lock, increment version.
                 return scope.beforeSend({action: 'Send and Publish'})
                 .then(() => validatePublish(scope.item)
                     .then((validationResult) => {
@@ -486,6 +484,8 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
             function runSendAndContinue() {
                 var deskId = scope.selectedDesk._id;
                 var stageId = scope.selectedStage._id || scope.selectedDesk.incoming_stage;
+
+                updateLastDestination();
 
                 scope.item.sendTo = true;
                 return sendAuthoring(deskId, stageId, scope.selectedMacro, true)
@@ -567,7 +567,7 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
 
                             if (!lastDestination ||
                                 (lastDestination.desk !== deskId || lastDestination.stage !== stageId)) {
-                                updateLastDestination(deskId, stageId, PREFERENCE_KEY);
+                                updateLastDestination();
                             }
                         }
 
@@ -599,15 +599,15 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
 
             /**
              * Update the preferences to store last destinations
-             * @param {String} deskId
-             * @param {String} stageId
              * @param {String} key
              */
-            function updateLastDestination(deskId, stageId, key) {
+            function updateLastDestination() {
                 var updates = {};
+                var deskId = scope.selectedDesk._id;
+                var stageId = scope.selectedStage._id || scope.selectedDesk.incoming_stage;
 
-                updates[key] = {desk: deskId, stage: stageId};
-                preferencesService.update(updates, key);
+                updates[PREFERENCE_KEY] = {desk: deskId, stage: stageId};
+                preferencesService.update(updates, PREFERENCE_KEY);
             }
 
             /**
@@ -698,6 +698,11 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                                 desk: result.desk,
                                 stage: result.stage
                             };
+
+                            scope.destination_last.duplicate_to = {
+                                desk: result.desk,
+                                stage: result.stage
+                            };
                         }
                     });
             }
@@ -749,7 +754,8 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                 scope.stages = desks.deskStages[scope.selectedDesk._id];
                 var stage = null;
 
-                if (scope.currentUserAction === ctrl.userActions.send_to) {
+                if (scope.currentUserAction === ctrl.userActions.send_to ||
+                    scope.currentUserAction === ctrl.userActions.duplicate_to) {
                     var lastDestination = scope.destination_last[scope.currentUserAction];
 
                     if (lastDestination) {
