@@ -182,13 +182,11 @@ describe('highlights', () => {
             monitoring.checkMarkedForHighlight('Highlight All Desks', 2, 2);
 
             // multi mark for highlights, in case of partial mark for selected items
-            monitoring.selectItem(2, 1);
+            monitoring.selectItem(1, 0);
             monitoring.selectItem(2, 2);
             highlights.multiMarkHighlight('Highlight All Desks');
-            monitoring.checkMarkedForHighlight('Highlight All Desks', 2, 1);
-            monitoring.selectItem(2, 1); // to close the popup
             monitoring.checkMarkedForHighlight('Highlight All Desks', 2, 2);
-            monitoring.selectItem(2, 1); // to close the popup
+            monitoring.selectItem(2, 2); // to close the popup
 
             // Highlighting two items out of which first is already highlighted should retain it's highlight mark
             monitoring.actionOnItem('Edit', 2, 2);
@@ -204,13 +202,13 @@ describe('highlights', () => {
             monitoring.actionOnItemSubmenu('Mark for highlight', 'Highlight All Desks', 2, 2);
             highlights.createHighlightsPackage('Highlight All Desks');
             workspace.actionOnItemSubmenu('Add to current', 'main', 1);
-            expect(authoring.getGroupItems('main').count()).toBe(2);
+            expect(authoring.getGroupItems('main').count()).toBe(1);
             expect(element(by.className('preview-container')).isPresent()).toBe(true);
 
             // from monitoring add an item to highlight package
             workspace.showList('Monitoring (alt+m)');
             monitoring.actionOnItemSubmenu('Add to current', 'main', 2, 3);
-            expect(authoring.getGroupItems('main').count()).toBe(3);
+            expect(authoring.getGroupItems('main').count()).toBe(2);
 
             // change desk on highlights
             workspace.showHighlightList('Highlight four');
@@ -220,9 +218,9 @@ describe('highlights', () => {
             // show highlight three and add an item to highlight package two
             workspace.selectDesk('POLITIC DESK');
             workspace.showHighlightList('Highlight three');
-            expect(authoring.getGroupItems('main').count()).toBe(3);
+            expect(authoring.getGroupItems('main').count()).toBe(2);
             workspace.actionOnItemSubmenu('Add to current', 'main', 0);
-            expect(authoring.getGroupItems('main').count()).toBe(4);
+            expect(authoring.getGroupItems('main').count()).toBe(3);
 
             // export highlight
             authoring.save();
