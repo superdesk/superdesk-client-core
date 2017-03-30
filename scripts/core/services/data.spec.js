@@ -1,5 +1,4 @@
 
-
 describe('DataService', () => {
     beforeEach(() => {
         window.module('superdesk.core.services.data');
@@ -20,11 +19,11 @@ describe('DataService', () => {
 
     it('cat query resource', () => {
         var data = new DataAdapter('users'),
-            users = {_items: []},
-            promise = data.query({max_results: 25});
+            users = {_items: [{_id: 'foo'}]},
+            promise = data.query({max_results: 99});
 
         httpBackend
-            .expectGET('http://localhost/users?max_results=25')
+            .expectGET('http://localhost/users?max_results=99')
             .respond(200, users);
 
         promise.then((result) => {
@@ -33,6 +32,6 @@ describe('DataService', () => {
 
         httpBackend.flush();
 
-        expect(data._items.length).toBe(0);
+        expect(data._items.length).toBe(1);
     });
 });

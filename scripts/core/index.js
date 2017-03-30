@@ -74,6 +74,10 @@ core.config(['$routeProvider', ($routeProvider) => {
     });
 }]);
 
+// due to angular 1.6
+core.config(['$locationProvider', ($locationProvider) => $locationProvider.hashPrefix('')]);
+core.config(['$qProvider', ($qProvider) => $qProvider.errorOnUnhandledRejections(false)]);
+
 core.run(['$injector', ng.register]);
 
 export default core;
