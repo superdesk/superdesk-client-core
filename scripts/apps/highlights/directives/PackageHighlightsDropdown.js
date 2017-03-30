@@ -1,5 +1,5 @@
-PackageHighlightsDropdown.$inject = ['desks', 'highlightsService', '$location', '$route'];
-export function PackageHighlightsDropdown(desks, highlightsService, $location, $route) {
+PackageHighlightsDropdown.$inject = ['desks', 'highlightsService', '$location', '$route', 'lodash'];
+export function PackageHighlightsDropdown(desks, highlightsService, $location, $route, _) {
     return {
         scope: true,
         templateUrl: 'scripts/apps/highlights/views/package_highlights_dropdown_directive.html',
@@ -8,7 +8,7 @@ export function PackageHighlightsDropdown(desks, highlightsService, $location, $
                 scope.selected = active;
 
                 // If the user has no desks assigned - this user should not view ANY highlights (including global)
-                if (desks.userDesks.length > 0) {
+                if (!_.isEmpty(desks.userDesks)) {
                     highlightsService.get(desks.getCurrentDeskId()).then((result) => {
                         scope.highlights = result._items;
                         scope.hasHighlights = _.size(scope.highlights) > 0;

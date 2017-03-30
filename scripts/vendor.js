@@ -1,11 +1,9 @@
 import 'jquery-ui/jquery-ui';
 import 'jquery-jcrop';
 import 'jquery-gridster';
-import 'moment-timezone';
 import 'lodash';
 import 'bootstrap';
 import 'angular';
-import 'angular-moment';
 import 'angular-bootstrap-npm';
 import 'angular-resource';
 import 'angular-route';

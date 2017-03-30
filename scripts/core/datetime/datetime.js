@@ -158,11 +158,11 @@ export default angular.module('superdesk.core.datetime', [
 
     .directive('sdDatetime', DateTimeDirective)
 
-    .filter('reldate', function reldateFactory() {
+    .filter('reldate', ['moment', function reldateFactory(moment) {
         return function reldate(date) {
             return moment(date).fromNow();
         };
-    })
+    }])
 
     /**
      * Returns the difference between given date and the
@@ -171,7 +171,7 @@ export default angular.module('superdesk.core.datetime', [
      * @param {Datetime} date iso format datetime
      * @return {Int} hours
      */
-    .filter('hoursFromNow', function hoursFromNowFactory() {
+    .filter('hoursFromNow', ['moment', function hoursFromNowFactory(moment) {
         return function hoursFromNow(date) {
             var difference = moment().diff(moment(date));
             var d = moment.duration(difference);
@@ -179,10 +179,10 @@ export default angular.module('superdesk.core.datetime', [
 
             return s;
         };
-    })
+    }])
 
     // format datetime obj to time string
-    .filter('time', ['config', function timeFilterFactory(config) {
+    .filter('time', ['config', 'moment', function timeFilterFactory(config, moment) {
         var TIME_FORMAT = config.view ? config.view.timeformat : 'h:mm';
 
         return function timeFilter(time) {
@@ -192,7 +192,7 @@ export default angular.module('superdesk.core.datetime', [
         };
     }])
 
-    .constant('moment', moment)
+    .constant('moment', require('moment-timezone'))
 
     .factory('weekdays', ['gettext', function(gettext) {
         return Object.freeze({
