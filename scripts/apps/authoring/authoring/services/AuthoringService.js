@@ -559,7 +559,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
 
         // mark item for highlights
         action.mark_item_for_highlight = currentItem.task && currentItem.task.desk &&
-            !isReadOnlyState && currentItem.package_type !== 'takes' &&
+            !isReadOnlyState && currentItem.package_type !== 'takes' && currentItem.type === 'text' &&
              userPrivileges.mark_for_highlights;
 
         // mark item for desks

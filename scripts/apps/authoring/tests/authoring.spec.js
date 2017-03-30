@@ -888,7 +888,7 @@ describe('authoring actions', () => {
             var itemActions = authoring.itemActions(item);
 
             allowedActions(itemActions, ['save', 'edit', 'duplicate', 'spike',
-                'mark_item_for_highlight', 'package_item', 'multi_edit', 'add_to_current']);
+                'package_item', 'multi_edit', 'add_to_current']);
         }));
 
     it('cannot publish if user does not have publish privileges on the desk',
