@@ -60,7 +60,7 @@
       <ul ng-if="$root.config.features.searchShortcut && providers.length > 0" class="dropdown__menu pull-left">
         <li ng-repeat="provider in providers track by provider._id">
             <button ng-click="loadSearchShortcut(provider)">
-              {{:: provider.source}}
+              {{:: providerLabels[provider.source]}}
             </button>
         </li>
       </ul>

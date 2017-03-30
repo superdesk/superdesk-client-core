@@ -24,7 +24,7 @@ export function ItemRepo(
                 scope.search_config = metadata.search_config;
 
                 searchProviderService.getAllowedProviderTypes().then((providerTypes) => {
-                    scope.searchProviderTypes = providerTypes;
+                    scope.providerLabels = searchProviderService.getProviderLabels(providerTypes);
                 });
 
                 if (params.repo) {

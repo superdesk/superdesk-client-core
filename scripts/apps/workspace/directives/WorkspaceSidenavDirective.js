@@ -1,11 +1,18 @@
+
 WorkspaceSidenavDirective.$inject = ['superdeskFlags', '$location', 'Keys', 'gettext', 'config',
-    '$route', 'api', '$filter', '$rootScope', 'workspaces', 'privileges'];
+    '$route', 'api', '$filter', '$rootScope', 'workspaces', 'privileges', 'searchProviderService'];
 export function WorkspaceSidenavDirective(superdeskFlags, $location, Keys, gettext, config,
-    $route, api, $filter, $rootScope, workspaces, privileges) {
+    $route, api, $filter, $rootScope, workspaces, privileges, searchProviderService) {
     return {
         templateUrl: 'scripts/apps/workspace/views/workspace-sidenav-items.html',
         link: function(scope, elem) {
             scope.workspaceConfig = config.workspace || {};
+
+
+            searchProviderService.getAllowedProviderTypes().then((providerTypes) => {
+                scope.providerLabels = searchProviderService.getProviderLabels(providerTypes);
+            });
+
 
             // Filter extraItems based on privileges
             if (workspaces.extraItems) {
