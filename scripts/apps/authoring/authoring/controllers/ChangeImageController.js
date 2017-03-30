@@ -211,7 +211,7 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
                 media: result._id
             });
             $scope.data.isDirty = true;
-            return api.save('picture_renditions', {item: result.item}).then((item) => {
+            return api.save('picture_renditions', {item: result.item, no_custom_crops: true}).then((item) => {
                 $scope.data.item.renditions = item.renditions;
                 $scope.data.metadata = $scope.data.item;
                 $scope.data.poi = {x: 0.5, y: 0.5};
