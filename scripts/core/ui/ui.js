@@ -358,18 +358,22 @@ function DropdownPositionDirective($document) {
  * Detect and set position for dropdown
  * elements which are appended to body
  */
-DropdownPositionAbsoluteDirective.$inject = ['$position'];
-function DropdownPositionAbsoluteDirective($position) {
+DropdownPositionAbsoluteDirective.$inject = ['$position', '$timeout'];
+function DropdownPositionAbsoluteDirective($position, $timeout) {
     return {
         require: 'dropdown',
         link: function(scope, elem, attrs, dropdown) {
             var icon = elem.find('[class*="icon-"]');
             // ported from bootstrap 0.13.1
 
+            const TOP_MENU_BAR = 48, SUB_MENU_BAR = 48, LEFT_BAR_WIDTH = 48;
+
+            const ACTION_MENU_FROM_TOP = TOP_MENU_BAR + SUB_MENU_BAR;
+
             scope.$watch(dropdown.isOpen, (isOpen) => {
                 if (isOpen) {
                     var pos = $position.positionElements(icon, dropdown.dropdownMenu, 'bottom-right', true),
-                        windowHeight = window.innerHeight - 30; // Substracting 30 is for submenu bar
+                        windowHeight = window.innerHeight - SUB_MENU_BAR;
 
                     var css = {
                         top: pos.top + 'px',
@@ -384,34 +388,35 @@ function DropdownPositionAbsoluteDirective($position) {
                         dropdown.dropdownMenu.css({opacity: '0', left: 'auto'});
                     });
 
-                    scope.$applyAsync(() => {
-                        /*
-                         * Calculate if there is enough space for showing after the icon
-                         * if not, show it above the icon
-                         */
-                        var dropdownHeight = dropdown.dropdownMenu.outerHeight(),
-                            dropdownWidth = dropdown.dropdownMenu.outerWidth();
+                    $timeout(() => {
+                        scope.$applyAsync(() => {
+                            /*
+                             * Calculate if there is enough space for showing after the icon
+                             * if not, show it above the icon
+                             */
+                            var dropdownHeight = dropdown.dropdownMenu.outerHeight(),
+                                dropdownWidth = dropdown.dropdownMenu.outerWidth();
 
-                        if (windowHeight - pos.top < dropdownHeight) {
-                            if (pos.top - 150 < dropdownHeight) {
-                                // Substracting 150 is for topmenu and submenu bar
-                                css.top = '150px';
-                                css.right = css.right + 30;
-                            } else {
-                                css.top = pos.top - dropdownHeight - icon.outerHeight() - 15;
-                                // Subtracting 15 so the dropdown is not stick to the icon
+                            if (windowHeight - pos.top < dropdownHeight) {
+                                if (pos.top - ACTION_MENU_FROM_TOP < dropdownHeight) {
+                                    css.top = ACTION_MENU_FROM_TOP + 'px';
+                                    css.right = css.right + 15; // 15 to prevent menu from stick to icon
+                                } else {
+                                    css.top = pos.top - dropdownHeight - icon.outerHeight() - 15;
+                                    // Subtracting 15 so the dropdown is not stick to the icon
+                                }
                             }
-                        }
 
-                        /*
-                         * Calculate if there is enough space for opening on left side of icon,
-                         * if not, move it to the right side
-                         */
-                        if (pos.left - 48 < dropdownWidth) {
-                            css.right -= dropdownWidth;
-                        }
-                        dropdown.dropdownMenu.css(css);
-                    });
+                            /*
+                             * Calculate if there is enough space for opening on left side of icon,
+                             * if not, move it to the right side
+                             */
+                            if (pos.left - LEFT_BAR_WIDTH < dropdownWidth) {
+                                css.right -= dropdownWidth;
+                            }
+                            dropdown.dropdownMenu.css(css);
+                        });
+                    }, 150, false);
                 }
             });
         }
