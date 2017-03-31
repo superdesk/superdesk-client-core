@@ -732,6 +732,23 @@ describe('monitoring', () => {
         expect(authoring.getHeaderSluglineText()).toBe('item5 slugline one/two testing');
     });
 
+    it('can remember last duplicate destination desk', () => {
+        monitoring.openMonitoring(true);
+        monitoring.actionOnItem('Duplicate To', 2, 0, true);
+        authoring.duplicateTo('Sports Desk', 'one');
+        monitoring.actionOnItem('Duplicate To', 2, 0, true);
+
+        var dropdownSelected = monitoring.getSendToDropdown();
+
+        expect(dropdownSelected.getText()).toEqual('Sports Desk');
+        authoring.duplicateTo('Politic Desk', 'two', true);
+        monitoring.actionOnItem('Duplicate To', 2, 0, true);
+
+        dropdownSelected = monitoring.getSendToDropdown();
+        authoring.close();
+        expect(dropdownSelected.getText()).toEqual('Politic Desk');
+    });
+
     it('can view published item as readonly when opened', () => {
         setupDeskMonitoringSettings('POLITIC DESK');
         monitoring.turnOffDeskWorkingStage(0);
