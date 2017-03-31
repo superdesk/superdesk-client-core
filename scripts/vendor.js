@@ -14,6 +14,7 @@ import 'angular-embedly';
 import 'angular-embed';
 import 'angular-contenteditable';
 import 'angular-vs-repeat';
+import 'angular-moment';
 import 'ng-file-upload';
 import 'raven-js';
 import 'rangy';
