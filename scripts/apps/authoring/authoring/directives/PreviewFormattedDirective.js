@@ -3,9 +3,8 @@ export function PreviewFormattedDirective(api, config, notify, storage) {
     return {
         templateUrl: 'scripts/apps/authoring/views/preview-formatted.html',
         link: function(scope) {
-            scope.formatters = config.previewFormats;
             scope.loading = false;
-            scope.selectedFormatter = storage.getItem('selectedFormatter') || JSON.stringify(scope.formatters[0]);
+            scope.selectedFormatter = storage.getItem('selectedFormatter');
 
             scope.format = function(formatterString) {
                 scope.loading = true;
@@ -28,6 +27,9 @@ export function PreviewFormattedDirective(api, config, notify, storage) {
             // Get formatters
             api.query('formatters', {criteria: 'can_preview'}).then((result) => {
                 scope.previewFormatters = result._items;
+                if (!scope.selectedFormatter && scope.previewFormatters.length > 0) {
+                    scope.selectedFormatter = JSON.stringify(scope.previewFormatters[0]);
+                }
             });
         }
     };
