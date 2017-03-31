@@ -169,6 +169,8 @@ export function SendService(desks, api, $q, notify, $injector, multi, $rootScope
      * @return {Promise}
      */
     function sendAllAs(items, action) {
+        resetConfig();
+
         self.config = $q.defer();
         self.config.action = action;
         return self.config.promise.then((config) => {
@@ -188,11 +190,23 @@ export function SendService(desks, api, $q, notify, $injector, multi, $rootScope
     }
 
     /**
+     * reset deffered config if any.
+     */
+    function resetConfig() {
+        if (self.config) {
+            self.config.reject();
+            self.config = null;
+        }
+    }
+
+    /**
      * Start config via send item sidebar
      *
      * @return {Promise}
      */
     function startConfig() {
+        resetConfig();
+
         self.config = $q.defer();
         return self.config.promise.then((val) => {
             self.config = null;

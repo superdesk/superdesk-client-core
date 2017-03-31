@@ -161,7 +161,7 @@ angular.module('superdesk.apps.archive', [
                 icon: 'copy',
                 monitor: true,
                 controller: ['data', 'send', function(data, send) {
-                    send.allAs([data.item], 'duplicateTo');
+                    return send.allAs([data.item], 'duplicateTo');
                 }],
                 filters: [
                     {action: 'list', type: 'archive'},

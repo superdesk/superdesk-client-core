@@ -96,7 +96,7 @@ angular.module('superdesk.apps.ingest', [
                 label: gettext('Fetch To'),
                 icon: 'fetch-as',
                 controller: ['data', 'send', function(data, send) {
-                    send.allAs([data.item]);
+                    return send.allAs([data.item]);
                 }],
                 filters: [{action: 'list', type: 'ingest'}],
                 privileges: {fetch: 1}
@@ -123,7 +123,7 @@ angular.module('superdesk.apps.ingest', [
                 icon: 'fetch-as',
                 monitor: true,
                 controller: ['data', 'send', function(data, send) {
-                    send.allAs([data.item], 'externalsourceTo');
+                    return send.allAs([data.item], 'externalsourceTo');
                 }],
                 filters: [{action: 'list', type: 'externalsource'}],
                 privileges: {fetch: 1},
