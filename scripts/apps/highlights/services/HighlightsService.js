@@ -44,6 +44,7 @@ export function HighlightsService(api, $q, $cacheFactory, packages, privileges) 
 
         promise[key] = api('highlights').query(criteria)
             .then((result) => {
+                result._items = _.sortBy(result._items, (i) => i.name.toLowerCase());
                 setLabel(result._items);
                 cache.put(key, result);
                 promise[key] = null;

@@ -141,7 +141,7 @@ describe('highlights', () => {
             .perform();
 
             // expect 'Highlight two' is marked
-            monitoring.checkMarkedForMultiHighlight('Highlight two', 2, 0);
+            monitoring.checkMarkedForMultiHighlight('Highlight four', 2, 0);
         });
 
         it('create highlight package', () => {
