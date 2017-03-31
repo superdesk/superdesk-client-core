@@ -1,5 +1,5 @@
-LegalArchiveService.$inject = ['$q', 'api', 'notify', '$location', 'gettext', 'config'];
-export function LegalArchiveService($q, api, notify, $location, gettext, config) {
+LegalArchiveService.$inject = ['$q', 'api', 'notify', '$location', 'gettext', 'config', 'moment'];
+export function LegalArchiveService($q, api, notify, $location, gettext, config, moment) {
     var DEFAULT_PER_PAGE = 25;
 
     this.default_items = Object.freeze({_meta: {max_results: DEFAULT_PER_PAGE, page: 1, total: 1}});

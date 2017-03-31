@@ -10,6 +10,7 @@ import {LegalItemSortbar} from './directives';
  * @description Application that adds legal archive support.
  */
 export default angular.module('superdesk.apps.legal_archive', [
+    'superdesk.core.datetime',
     'superdesk.core.activity',
     'superdesk.core.api'
 ])

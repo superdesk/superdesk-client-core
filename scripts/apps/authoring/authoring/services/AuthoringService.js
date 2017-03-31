@@ -654,7 +654,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
 
         var now = moment();
         var schedule = moment.tz(
-            timestamp.replace('+0000', ''), // in case timestamp made it to server, it will be with tz, ignore it
+            timestamp.replace('+0000', '').replace('Z', ''), // avoid timezone info here
             timezone || config.defaultTimezone
         );
 

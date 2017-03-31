@@ -54,8 +54,8 @@ angular.module('superdesk.apps.dashboard.world-clock', [
      *   a dashboard widget for displaying the current time in different
      *   time zones around the world.
      */
-    .controller('WorldClockController', ['$scope', '$interval', 'tzdata',
-        function($scope, $interval, tzdata) {
+    .controller('WorldClockController', ['$scope', '$interval', 'tzdata', 'moment',
+        function($scope, $interval, tzdata, moment) {
             var interval, INTERVAL_DELAY = 500;
 
             function updateUTC() {
