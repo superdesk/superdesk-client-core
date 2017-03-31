@@ -30,6 +30,13 @@ export function ContentProfileSchemaEditor(gettext, metadata, content, config) {
         company_codes: gettext('Company Codes')
     };
 
+    const HAS_FORMAT_OPTIONS = {
+        abstract: true,
+        body_html: true,
+        footer: true,
+        body_footer: true
+    };
+
     return {
         restrict: 'E',
         templateUrl: 'scripts/apps/workspace/content/views/schema-editor.html',
@@ -105,6 +112,14 @@ export function ContentProfileSchemaEditor(gettext, metadata, content, config) {
             scope.setDirty = function(dirty) {
                 form.$dirty = !!dirty;
             };
+
+            /**
+             * Test if given field should have format options config
+             *
+             * @param {string} field
+             * @return {Boolean}
+             */
+            scope.hasFormatOptions = (field) => !!HAS_FORMAT_OPTIONS[field]; // return boolean so :: will work
         }
     };
 }
