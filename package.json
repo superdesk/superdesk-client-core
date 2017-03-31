@@ -42,6 +42,7 @@
     "angular-resource": "1.6.3",
     "angular-route": "1.6.3",
     "angular-vs-repeat": "^1.1.4",
+    "angular-moment": "^0.10.3",
     "babel-core": "^6.21.0",
     "babel-loader": "^6.2.10",
     "babel-plugin-transform-object-rest-spread": "^6.20.2",
