@@ -15,8 +15,10 @@ import _ from 'lodash';
  *
  * @description MonitoringController is responsible for providing functionalities in monitoring view of the application
  */
-MonitoringController.$inject = ['$rootScope', '$location', 'desks', 'storage', 'config', 'superdeskFlags', 'search'];
-export function MonitoringController($rootScope, $location, desks, storage, config, superdeskFlags, search) {
+MonitoringController.$inject = ['$rootScope', '$location', 'desks', 'storage', 'config', 'superdeskFlags',
+    'search', '$filter'];
+export function MonitoringController($rootScope, $location, desks, storage, config, superdeskFlags,
+        search, $filter) {
     this.state = {};
 
     this.preview = preview;
@@ -47,6 +49,8 @@ export function MonitoringController($rootScope, $location, desks, storage, conf
     this.showHistoryTab = true;
 
     this.scrollTop = false;
+
+    this.getGroupLabel = getGroupLabel;
 
     this.isDeskChanged = function() {
         return desks.changeDesk;
@@ -122,5 +126,18 @@ export function MonitoringController($rootScope, $location, desks, storage, conf
     function selectGroup(group) {
         self.selectedGroup = self.selectedGroup && self.selectedGroup._id === group._id ? null : group;
         return self.selectedGroup;
+    }
+
+    function getGroupLabel(group, activeWorkspace) {
+        let groupLabel;
+
+        if (group.subheader) {
+            groupLabel = activeWorkspace === 'workspace' ?
+                group.header + ' ' + group.subheader : group.subheader;
+        } else {
+            groupLabel = group.header + ' ' + $filter('splitText')(group.type);
+        }
+
+        return groupLabel;
     }
 }

@@ -41,6 +41,12 @@
         .title {
             text-transform: uppercase;
         }
+
+        .dropdown__menu {
+            .label-group {
+                text-transform: capitalize;
+            }
+        }
     }
 
     .monitoring-preview-layout {

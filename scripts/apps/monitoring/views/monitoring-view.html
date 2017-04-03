@@ -22,7 +22,8 @@
             <ul class="dropdown__menu scrollable">
                 <li><div class="dropdown__menu-label">{{ :: 'Stages' | translate }}</div></li> 
                 <li ng-repeat="card in aggregate.cards">
-                    <button ng-click="monitoring.viewSingleGroup(card, 'stage')">{{ card.subheader || 'Output' }}</button>
+                    <button class="label-group" ng-click="monitoring.viewSingleGroup(card,
+                    card.type === 'stage' ? card.type : 'single-stage')" translate>{{:: monitoring.getGroupLabel(card, aggregate.settings.type) }}</button>
                 </li>
             </ul>
         </div>
