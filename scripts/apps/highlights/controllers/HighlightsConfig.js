@@ -3,6 +3,7 @@ import _ from 'lodash';
 HighlightsConfig.$inject = ['$scope', 'highlightsService', 'desks', 'api', 'gettext', 'notify', 'modal'];
 export function HighlightsConfig($scope, highlightsService, desks, api, gettext, notify, modal) {
     highlightsService.get().then((items) => {
+        items._items = _.sortBy(items._items, (i) => i.name.toLowerCase());
         $scope.configurations = items;
     });
 
@@ -45,6 +46,7 @@ export function HighlightsConfig($scope, highlightsService, desks, api, gettext,
                 $scope.configurations._items.unshift(item);
             }
             $scope.modalActive = false;
+            $scope.configurations._items = _.sortBy($scope.configurations._items, (i) => i.name.toLowerCase());
         }, (response) => {
             errorMessage(response);
         });

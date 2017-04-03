@@ -10,7 +10,7 @@ export function PackageHighlightsDropdown(desks, highlightsService, $location, $
                 // If the user has no desks assigned - this user should not view ANY highlights (including global)
                 if (!_.isEmpty(desks.userDesks)) {
                     highlightsService.get(desks.getCurrentDeskId()).then((result) => {
-                        scope.highlights = result._items;
+                        scope.highlights = _.sortBy(result._items, (i) => i.name.toLowerCase());
                         scope.hasHighlights = _.size(scope.highlights) > 0;
                     });
                 }
