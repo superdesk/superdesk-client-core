@@ -319,7 +319,7 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
              * @return {Boolean}
              */
             scope.canSendAndContinue = function() {
-                if (config.ui && config.ui.publishSendAdnContinue === false) {
+                if (_.get(config, 'features.noTakes') || config.ui && config.ui.publishSendAdnContinue === false) {
                     return false;
                 }
                 return !authoring.isPublished(scope.item) && _.includes(['text'], scope.item.type);
