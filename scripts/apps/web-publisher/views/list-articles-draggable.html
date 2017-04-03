@@ -13,6 +13,10 @@
        ng-hide="list.dragging && item.selected"
        >
         <div class="listElement listElement--noLeftBorder">
+            <div class="listElement__icon">
+                <i ng-if="!item.featureMedia && !item.content.featureMedia" class="icon-text"></i>
+                <i  ng-if="item.featureMedia || item.content.featureMedia" class="icon-photo"></i>
+            </div>
             <div class="listElement__content">
                 {{ item.content.title || item.title }}
                 <button class="hidden pull-right" ng-click="removeFromList($index)" title="{{:: 'Remove' | translate }}"><i class="icon-trash"></i></button>

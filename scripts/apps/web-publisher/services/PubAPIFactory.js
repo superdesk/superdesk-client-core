@@ -43,20 +43,9 @@ export function PubAPIFactory(config, $http, $q, session) {
          * @description Change the tenant we are using the api for
          */
         setTenant(tenant) {
-            this._server = this.buildServerURL(tenant);
-        }
-
-        /**
-         * @ngdoc method
-         * @name pubapi#buildServerURL
-         * @param {String} tenant
-         * @returns {String}
-         * @description Builds base server URL of the site.
-         */
-        buildServerURL(tenant) {
             let subdomain = tenant || this._tenant ? `${tenant || this._tenant}.` : '';
 
-            return `${this._protocol}://${subdomain}${this._domain}`;
+            this._server = `${this._protocol}://${subdomain}${this._domain}`;
         }
 
         /**
@@ -180,7 +169,6 @@ export function PubAPIFactory(config, $http, $q, session) {
          * @description Unlink an item
          */
         unlink(resource, id, header) {
-            console.log(header);
             return this.req({
                 url: this.resourceURL(resource, id),
                 method: 'UNLINK',
@@ -205,7 +193,7 @@ export function PubAPIFactory(config, $http, $q, session) {
         * @name pubapi#req
         * @param {Object} config
         * @returns {Promise}
-        * @description API Request - Adds basic error reporting, eventually authentication
+        * @description API Request - Adds basic error reporting
         */
         req(config) {
             config.headers = {Authorization: 'Basic ' + this._token};

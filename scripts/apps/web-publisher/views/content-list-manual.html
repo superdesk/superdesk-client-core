@@ -119,9 +119,9 @@
             <div sd-list-articles data-list="newList" data-type="draggable" data-draggingflag="webPublisher.draggingFlag" data-listchangeflag="webPublisher.listChangeFlag"></div>
         </div>
 
-        <div class="verticalLayout__element contentPadding">
+        <div class="verticalLayout__element contentPadding" id="manualListArticlesScrolling">
             <h3 class="text--uppercase text--bold text--smallHeading" translate>Published Articles</h3>
-            <div sd-articles data-type="draggable" data-draggingflag="webPublisher.draggingFlag"></div>
+            <div sd-articles data-type="draggable" data-scrollcontainer="'#manualListArticlesScrolling'" data-draggingflag="webPublisher.draggingFlag"></div>
         </div>
     </div>
     <div class="manualListSaveBtn" ng-show="webPublisher.listChangeFlag">

@@ -9,11 +9,24 @@ ArticlesDirective.$inject = ['publisher'];
 export function ArticlesDirective(publisher) {
     class Articles {
         constructor() {
-            this.scope = {type: '@', draggingFlag: '=draggingflag'};
+            this.scope = {type: '@', draggingFlag: '=draggingflag', scrollContainer: '=scrollcontainer'};
             this.template = '<ng-include src="getTemplateUrl()"/>';
         }
 
         link(scope) {
+            scope.params = {
+                limit: 20,
+                status: 'published',
+                page: 1
+            };
+
+            scope.list = {
+                dragging: false,
+                items: [],
+                totalPages: 1,
+                page: 0
+            };
+
             /**
              * @ngdoc method
              * @name sdListArticles#getTemplateUrl
@@ -99,24 +112,32 @@ export function ArticlesDirective(publisher) {
                 list.items = list.items.filter((item) => !item.selected);
             };
 
-
-            scope.$on('refreshArticles', (e, data) => {
-                let params = {
-                    limit: 100,
-                    status: 'published'
-                };
-
-                if (data.length > 0) {
-                    params['route[]'] = [];
-                    data.forEach((item) => {
-                        params['route[]'].push(item.id);
-                    });
+            /**
+             * @ngdoc method
+             * @name sdArticles#loadMore
+             * @description loads more items
+             */
+            scope.loadMore = () => {
+                if (scope.loading || scope.list.page >= scope.list.totalPages) {
+                    return;
                 }
 
-                this._queryItems(scope, params);
+                scope.params.page = scope.list.page + 1;
+                this._queryItems(scope);
+            };
+
+            scope.$on('refreshArticles', (e, data) => {
+                scope.params.page = 1;
+                scope.params['route[]'] = [];
+                if (data.length > 0) {
+                    data.forEach((item) => {
+                        scope.params['route[]'].push(item.id);
+                    });
+                }
+                this._queryItems(scope);
             });
 
-            this._queryItems(scope, {limit: 100, status: 'published'});
+            // this._queryItems(scope);
         }
 
         /**
@@ -126,15 +147,17 @@ export function ArticlesDirective(publisher) {
          * @param {Object} scope
          * @description Loads items
          */
-        _queryItems(scope, params) {
+        _queryItems(scope) {
             scope.loading = true;
-            publisher.queryTenantArticles(params).then((response) => {
+            publisher.queryTenantArticles(scope.params).then((response) => {
                 scope.loading = false;
-                scope.list = {
-                    dragging: false,
-                    items: [],
-                };
-                scope.list.items = response._embedded._items;
+                scope.list.page = response.page;
+                scope.list.totalPages = response.pages;
+                if (response.page > 1) {
+                    scope.list.items = scope.list.items.concat(response._embedded._items);
+                } else {
+                    scope.list.items = response._embedded._items;
+                }
             });
         }
     }

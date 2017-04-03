@@ -31,14 +31,14 @@
                 </li>
 
                 <li class="filter-type__item" ng-repeat="site in sites" ng-class="{'filter-type__item--active': false}">
-                    <a ng-click="webPublisherMonitoring.filterTenantArticles(site.subdomain)">{{ site.name }}</a>
+                    <a ng-click="">{{ site.name }}</a>
                 </li>
             </ul>
             <div class="subnav__stretch-bar"></div>
         </div>
         <!-- paneLayout inside paneLayout :) -->
         <div class="paneLayout paneLayout--headerMargin">
-            <div class="paneLayout__leftPane paneContent paneLayout__leftPane--open" ng-class="{'paneLayout__leftPane--open': filterOpen}">
+            <div class="paneLayout__leftPane paneContent" ng-class="{'paneLayout__leftPane--open': filterOpen}">
                 <div class="paneContent__header paneContent__header--dark">
                     <h3>Advanced Filter</h3>
                     <!-- <a class="paneContent__tabItem"
@@ -171,44 +171,29 @@
         <!-- paneLayout inside paneLayout :) -->
     </div>
 
-    <div class="paneLayout__pane paneContent paneContent--darker paneLayout__pane--open" ng-class="{'paneLayout__pane--open': filterOpen}">
+    <div ng-if="webPublisherMonitoring.publishOpen"
+        class="paneLayout__pane paneContent paneContent--darker modal-content"
+        ng-class="{'paneLayout__pane--open': webPublisherMonitoring.publishOpen}">
         <div class="paneContent__header paneContent__header--darker">
-            <h3 class="pull-left">Publish to web</h3>
-            <div ng-click="filterOpen = !filterOpen" class="close-filter">
+            <h3 class="pull-left">Publishing to web</h3>
+            <div ng-click="webPublisherMonitoring.publishOpen = false" class="close-filter">
                 <i class="icon-close-small icon-white"></i>
             </div>
         </div>
         <div class="paneContent__content paneContent__content--hasFooter contentPadding">
-            <form name="" class="flat">
+            <form class="flat">
                 <fieldset class="label-light">
-                    <div ng-repeat="i in [1,2,3]"
+                    <div ng-repeat="site in sites"
                          sd-toggle-box
-                         data-title="Website {{i}}"
+                         data-title="{{site.name}}"
                          data-open="true" data-style="dark">
-                            <div class="item">
-                                <label>Route</label>
-                                <!-- it should open to right side and be limited to one choice only. One route per tenant/website is allowed -->
-                                <div sd-meta-terms
-                                     class="data"
-                                     data-item=""
-                                     data-field=""
-                                     data-list=""
-                                     data-unique="id"
-                                     data-header="true"
-                                     data-reload-list="true">
-                                </div>
-                            </div>
-                            <div class="item">
-                                <!-- !achtung! route has to be set to publish to facebook -->
-                                <label>Publish to Facebook</label>
-                                <span class="" sd-switch ng-model="tenantFacebook"></span>
-                            </div>
+                            <div sd-publish-routes data-site="site" data-monitoring-contoller="webPublisherMonitoring"></div>
                     </div>
                 </fieldset>
             </form>
         </div>
         <div class="paneContent__footer paneContent__footer--transparent">
-            <button class="btn btn--primary btn--full" ng-click="" >Publish to web</button>
+            <button class="btn btn--primary btn--full" ng-click="webPublisherMonitoring.publishArticle()">Publish to web</button>
         </div>
   </div>
 </div>

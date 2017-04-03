@@ -274,6 +274,10 @@ export function PublisherFactory(pubapi) {
             return pubapi.unlink('content/lists', listId, header);
         }
 
+        publishArticle(article, articleId) {
+            return pubapi.save('content/articles', article, articleId);
+        }
+
     }
 
     return new Publisher();
