@@ -39,7 +39,10 @@ export function TemplatesService(api, session, $q, gettext, preferencesService, 
         'target_regions',
         'target_subscribers',
         'format',
-        'associations'
+        'associations',
+        'sign_off',
+        'sms_message',
+        'company_codes'
     ];
 
     /**
