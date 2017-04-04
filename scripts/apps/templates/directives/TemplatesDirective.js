@@ -250,6 +250,18 @@ export function TemplatesDirective(gettext, notify, api, templates, modal, desks
                 }
             });
 
+            $scope.$watch('template.schedule.is_active', (newValue, oldValue) => {
+                if (!newValue && oldValue && $scope.template) {
+                    // clean schedule data
+                    if ($scope.template.schedule) {
+                        $scope.template.schedule.day_of_week = [];
+                    }
+                    delete $scope.template.schedule.create_at;
+                    $scope.template.schedule_desk = null;
+                    $scope.template.schedule_stage = null;
+                }
+            });
+
             function setupContentType(type) {
                 $scope.schema = content.schema(type);
                 $scope.editor = content.editor(type);
@@ -282,11 +294,12 @@ export function TemplatesDirective(gettext, notify, api, templates, modal, desks
                 $scope.template.schedule_stage = null;
             };
 
-            $scope.validSchedule = function() {
-                return $scope.template.schedule.is_active ?
-                    $scope.template.schedule.day_of_week && $scope.template.schedule.create_at :
-                    true;
-            };
+            $scope.isScheduleValid = () => $scope.showScheduling() && $scope.template.schedule.is_active ?
+                    $scope.template.schedule.day_of_week &&
+                    $scope.template.schedule.day_of_week.length > 0 &&
+                    $scope.template.schedule.create_at &&
+                    $scope.template.schedule_desk &&
+                    $scope.template.schedule_stage : true;
 
             $scope.filters = [
                 {label: gettext('All'), value: 'All'},
