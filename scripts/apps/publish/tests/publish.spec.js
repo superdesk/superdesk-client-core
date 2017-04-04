@@ -273,3 +273,57 @@ describe('publish queue', () => {
         expect($scope.publish_queue[0]._id).toEqual(publishQueue._items[1]._id);
     }));
 });
+
+describe('subscriber filter', () => {
+    let subscribers = [
+       {name: 'test all', subscriber_type: 'all'},
+       {name: 'test wire', subscriber_type: 'wire'},
+       {name: 'digital', subscriber_type: 'digital'}
+    ];
+
+    let subscribersByFilter = null;
+
+    beforeEach(window.module('superdesk.apps.publish'));
+    beforeEach(inject((_subscribersByFilter_) => {
+        subscribersByFilter = _subscribersByFilter_;
+    }));
+
+    it('can get all subscribers if no subscriber type', () => {
+        let items = subscribersByFilter(subscribers);
+
+        expect(items.length).toBe(subscribers.length);
+    });
+
+    it('can get all subscribers buy name test', () => {
+        let items = subscribersByFilter(subscribers, {name: 'test'});
+
+        expect(items.length).toBe(2);
+    });
+
+    it('can get all subscribers by subscriber type all', () => {
+        let items = subscribersByFilter(subscribers, {subscriber_type: 'all'});
+
+        expect(items.length).toBe(1);
+        expect(items[0].name).toBe('test all');
+    });
+
+    it('can get all subscribers by subscriber type digital', () => {
+        let items = subscribersByFilter(subscribers, {subscriber_type: 'digital'});
+
+        expect(items.length).toBe(1);
+        expect(items[0].name).toBe('digital');
+    });
+
+    it('can get all subscribers by subscriber type wire', () => {
+        let items = subscribersByFilter(subscribers, {subscriber_type: 'wire'});
+
+        expect(items.length).toBe(1);
+        expect(items[0].name).toBe('test wire');
+    });
+
+    it('can get all subscribers', () => {
+        let items = subscribersByFilter(subscribers, {subscriber_type: ''});
+
+        expect(items.length).toBe(subscribers.length);
+    });
+});

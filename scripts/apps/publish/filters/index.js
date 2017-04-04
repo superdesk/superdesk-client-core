@@ -1,15 +1,15 @@
 /**
  * @ngdoc filter
- * @module superdesk.apps.products
- * @name ProductsFilter
+ * @module superdesk.apps.publish
+ * @name SubscribersFilter
  * @description Returns a function that allows filtering an array of
- * products by various criteria.
+ * subscribes by various criteria.
  */
-export function ProductsFilter() {
+export function SubscribersFilter() {
     /**
      * @description Returns a new array based on the passed filter.
      * @param {Array<Object>} items - Array of templates to filter.
-     * @param {Object} search - The filter. search by name and product type.
+     * @param {Object} search - The filter. search by name and subscriber type.
      * @returns {Array<Object>} The filtered array.
      */
     return function(items, search) {
@@ -25,8 +25,8 @@ export function ProductsFilter() {
             filteredItems = filteredItems.filter((item) => item.name.match(regExp));
         }
 
-        if (search.product_type && search.product_type !== '') {
-            filteredItems = filteredItems.filter((item) => (item.product_type || 'both') === search.product_type);
+        if (search.subscriber_type && search.subscriber_type !== '') {
+            filteredItems = filteredItems.filter((item) => item.subscriber_type === search.subscriber_type);
         }
 
         return filteredItems;

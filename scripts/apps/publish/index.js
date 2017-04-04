@@ -13,6 +13,7 @@ import {transmissionTypes} from './constants';
 import * as svc from './services';
 import * as ctrl from './controllers';
 import * as directive from './directives';
+import * as filter from './filters';
 
 /**
  * @ngdoc module
@@ -30,6 +31,7 @@ export default angular.module('superdesk.apps.publish', ['superdesk.apps.users',
     .directive('sdAdminPubSubscribers', directive.SubscribersDirective)
     .directive('sdDestination', directive.DestinationDirective)
 
+    .filter('subscribersBy', filter.SubscribersFilter)
     .controller('publishQueueCtrl', ctrl.PublishQueueController)
     .controller('SubscriberTokenCtrl', ctrl.SubscriberTokenController)
 
