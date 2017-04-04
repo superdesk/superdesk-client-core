@@ -26,7 +26,7 @@ TableButtonComponent.propTypes = {
 };
 
 const mapDispatchToProps = (dispatch) => ({
-    addTable: () => dispatch(actions.addTable(2, 1))
+    addTable: () => dispatch(actions.addTable(1, 2))
 });
 
 export const TableButton = connect(null, mapDispatchToProps)(TableButtonComponent);

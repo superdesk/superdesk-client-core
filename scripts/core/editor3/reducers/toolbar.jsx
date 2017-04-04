@@ -197,7 +197,7 @@ const applyEmbed = (state, data) => {
 /**
  * @ngdoc method
  * @name addTable
- * @param {Object} data Table data (w, h, ...).
+ * @param {Object} data Table data (numRows, numCols, cells).
  * @description Adds a table into the content.
  */
 const addTable = (state, data) => {

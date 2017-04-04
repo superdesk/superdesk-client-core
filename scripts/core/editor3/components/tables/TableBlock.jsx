@@ -95,7 +95,7 @@ export class TableBlockComponent extends Component {
         const {contentState} = this.props;
         const data = this.data();
 
-        data.h++;
+        data.numRows++;
         contentState.mergeEntityData(entityKey, {data});
 
         this.forceUpdate();
@@ -114,14 +114,14 @@ export class TableBlockComponent extends Component {
         const {contentState} = this.props;
         const data = this.data();
 
-        data.w++;
+        data.numCols++;
         contentState.mergeEntityData(entityKey, {data});
 
         this.forceUpdate();
     }
 
     render() {
-        const {w, h} = this.data();
+        const {numRows, numCols} = this.data();
         const {setReadOnly, parentReadOnly} = this.props;
 
         return (
@@ -132,9 +132,9 @@ export class TableBlockComponent extends Component {
                 </div> : null}
                 <table>
                     <tbody>
-                        {Array.from(new Array(h)).map((v, i) =>
+                        {Array.from(new Array(numRows)).map((v, i) =>
                             <tr key={`col-${i}`}>
-                                {Array.from(new Array(w)).map((v, j) =>
+                                {Array.from(new Array(numCols)).map((v, j) =>
                                     <TableCell
                                         key={`cell-${i}-${j}`}
                                         contentState={this.getCell(i, j)}

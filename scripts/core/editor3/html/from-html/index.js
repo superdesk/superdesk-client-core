@@ -69,9 +69,10 @@ export class HTMLParser {
      */
     contentState() {
         const {contentBlocks, entityMap} = convertFromHTML(this.tree.html());
+        const processBlock = this.processBlock.bind(this);
 
         return ContentState.createFromBlockArray(
-            contentBlocks.map(this.processBlock.bind(this)),
+            contentBlocks.map(processBlock),
             entityMap
         );
     }
@@ -109,15 +110,13 @@ export class HTMLParser {
         tableNode.html(tableHTML);
 
         const rows = tableNode.find('tr');
-        const h = rows.length;
-        const w = rows.first()
-            .find('th,td')
-            .length;
+        const numRows = rows.length;
+        const numCols = rows.first().find('th,td').length;
 
         let cells = [];
 
-        for (let i = 0; i < h; i++) {
-            for (let j = 0; j < w; j++) {
+        for (let i = 0; i < numRows; i++) {
+            for (let j = 0; j < numCols; j++) {
                 const row = $(rows[i]);
                 const col = $(row.find('th,td')[j]);
                 const {contentBlocks, entityMap} = convertFromHTML(col.html());
@@ -128,7 +127,7 @@ export class HTMLParser {
             }
         }
 
-        return atomicBlock(block, 'TABLE', 'MUTABLE', {data: {w, h, cells}});
+        return atomicBlock(block, 'TABLE', 'MUTABLE', {data: {numRows, numCols, cells}});
     }
 }
 

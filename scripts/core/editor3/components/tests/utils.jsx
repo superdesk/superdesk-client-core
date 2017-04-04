@@ -105,8 +105,8 @@ export function tableBlockAndContent(cells) {
 
     return createBlockAndContent('TABLE', {
         data: {
-            w: 3,
-            h: 2,
+            numCols: 3,
+            numRows: 2,
             cells: cells || [
                 [cs('a'), cs('b'), cs('c')],
                 [cs('d'), cs('e'), cs('f')]

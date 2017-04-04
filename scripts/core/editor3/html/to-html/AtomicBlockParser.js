@@ -87,7 +87,7 @@ export class AtomicBlockParser {
             return '';
         }
 
-        const {w, h, cells} = data.data;
+        const {numRows, numCols, cells} = data.data;
         const getCell = (i, j) => {
             const cellContentState = cells[i] && cells[i][j]
                 ? convertFromRaw(cells[i][j])
@@ -96,9 +96,9 @@ export class AtomicBlockParser {
             return new HTMLGenerator(cellContentState, ['table']).html();
         };
 
-        return '<table><tbody>' + Array.from(new Array(h))
+        return '<table><tbody>' + Array.from(new Array(numRows))
             .map((_, i) =>
-                '<tr>' + Array.from(new Array(w))
+                '<tr>' + Array.from(new Array(numCols))
                     .map((_, j) => `<td>${getCell(i, j)}</td>`)
                     .join('') + '</tr>'
             )
