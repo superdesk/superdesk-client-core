@@ -1,1 +1,0 @@
-export {GroupsFactory} from './GroupsFactory';

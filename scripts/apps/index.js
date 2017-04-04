@@ -1,7 +1,6 @@
 import 'apps/workspace';
 import 'apps/dashboard';
 import 'apps/users';
-import 'apps/groups';
 import 'apps/products';
 import 'apps/publish';
 import 'apps/templates';
@@ -34,7 +33,6 @@ export default angular.module('superdesk.apps', [
     'superdesk.apps.archive',
     'superdesk.apps.ingest',
     'superdesk.apps.desks',
-    'superdesk.apps.groups',
     'superdesk.apps.products',
     'superdesk.apps.authoring',
     'superdesk.apps.packaging',
