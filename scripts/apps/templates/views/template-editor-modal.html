@@ -90,6 +90,11 @@
                 </div>
 
                 <div class="field">
+                    <label translate>Legal</label>
+                    <span sd-switch ng-model="item.flags.marked_for_legal" class="pull-right"></span>
+                </div>
+
+                <div class="field">
                     <label translate>Usage terms</label>
                     <div class="data">
                         <input class="line-input" type="text" ng-model="item.usageterms" ng-disabled="!_editable" ng-change="autosave(item)">

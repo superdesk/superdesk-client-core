@@ -8,14 +8,40 @@
  * at https://www.sourcefabric.org/superdesk/license
  */
 
-var templates = require('./helpers/templates');
+var templates = require('./helpers/templates'),
+    authoring = require('./helpers/authoring');
 
 describe('templates', () => {
     beforeEach(() => {
         templates.openTemplatesSettings();
     });
 
-    it('add create template', () => {
+    it('can create a new template', () => {
+        // add a new template
+        templates.add();
+        templates.getTemplateNameElement().sendKeys('New Template');
+        templates.setTemplateType('string:create');
+        templates.selectDesk('Politic Desk');
+        templates.selectDesk('Sports Desk');
+
+        templates.toggleMetadata();
+        templates.toggleLegal();
+        authoring.setHeaderSluglineText('Test Template');
+        authoring.writeTextToHeadline('New Item');
+        authoring.writeText('This is body');
+        authoring.writeSignoffText('ABC');
+        templates.save();
+        expect(templates.getListCount()).toEqual(2);
+        templates.edit('New Template');
+        templates.toggleMetadata();
+        expect(templates.getLegalSwitch().getAttribute('checked')).toEqual('true');
+        expect(authoring.getHeadlineText()).toEqual('New Item');
+        expect(authoring.getBodyText()).toEqual('This is body');
+        expect(authoring.getSignoffText()).toBe('ABC');
+    });
+
+
+    it('can add auto-create template', () => {
         // add a new template
         templates.add();
         templates.getTemplateNameElement().sendKeys('New Template');

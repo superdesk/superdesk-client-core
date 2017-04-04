@@ -37,6 +37,12 @@ function Templates() {
     };
 
     /**
+     * Get the legal switch element
+     * @returns {ElementFinder} legal switch element
+     **/
+    this.getLegalSwitch = () => element(by.model('item.flags.marked_for_legal'));
+
+    /**
      * Get the template type element
      * @returns {ElementFinder} template type element
      **/
@@ -80,6 +86,16 @@ function Templates() {
     this.getAutomaticItemCreationElement = function() {
         return element(by.model('template.schedule.is_active'));
     };
+
+    /**
+     * Toggles metadata section
+     **/
+    this.toggleMetadata = () => element(by.className('toggle-box__header')).click();
+
+    /**
+     * Toggles legal switch
+     **/
+    this.toggleLegal = () => this.getLegalSwitch().click();
 
     /**
      * Toggle automatic item creation
