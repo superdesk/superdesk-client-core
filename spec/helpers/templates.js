@@ -180,11 +180,13 @@ function Templates() {
         this.getStageScheduleElement(stageName).click();
     };
 
+    this.getSaveButton = () => element(by.css('[ng-click="save()"]'));
+
     /**
      * Saves template settings and close the template settings wizard
      **/
     this.save = function() {
-        element(by.css('[ng-click="save()"]')).click();
+        this.getSaveButton().click();
     };
 
     this.cancel = function() {

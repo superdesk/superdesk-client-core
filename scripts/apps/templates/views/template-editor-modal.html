@@ -5,7 +5,7 @@
     </div>
 
     <div class="modal-body">
-        <form class="template-content">
+        <form class="template-content" name="templateForm">
             <div class="template-icon">
                 <i class="icon-text"></i>
             </div>
@@ -193,7 +193,7 @@
         <button class="btn" ng-click="cancel()" translate>Cancel</button>
         <button class="btn btn--primary"
                 ng-click="save()"
-                ng-disabled="templateForm.$invalid || (!templateForm.$invalid && !validSchedule())"
+                ng-disabled="templateForm.$invalid || !isScheduleValid()"
                 translate>
             Save
         </button>

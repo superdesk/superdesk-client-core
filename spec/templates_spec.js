@@ -70,9 +70,9 @@ describe('templates', () => {
         expect(templates.getListCount()).toEqual(1);
     });
 
-    it('error adding empty template', () => {
+    it('cannot save empty template', () => {
         templates.add();
         templates.save();
-        expect(templates.getValidationElement('template_name').getAttribute('class')).toContain('sd-invalid');
+        expect(templates.getSaveButton().isEnabled()).toBe(false);
     });
 });
