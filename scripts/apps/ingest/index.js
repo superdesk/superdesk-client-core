@@ -138,7 +138,7 @@ angular.module('superdesk.apps.ingest', [
                 icon: 'archive',
                 monitor: true,
                 controller: ctrl.ExternalSourceController,
-                filters: [{action: 'list', type: 'externalsource'}],
+                filters: [{action: 'list', type: 'externalsource', id: 'externalsource'}],
                 privileges: {fetch: 1},
                 additionalCondition: ['config', 'desks', function(config, desks) {
                     // Fetching to 'personal' desk is not allowed

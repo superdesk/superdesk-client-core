@@ -1,6 +1,6 @@
 describe('Superdesk service', () => {
     var provider;
-    var intent = {action: 'testAction', type: 'testType'};
+    var intent = {action: 'testAction', type: 'testType', id: 'testId'};
     var testWidget = {testData: 123};
     var testPane = {testData: 123};
     var testActivity = {
@@ -85,9 +85,28 @@ describe('Superdesk service', () => {
         expect(failureResult).toBe(undefined);
     }));
 
+    it('can run activities by intent provided with an id', inject(($rootScope, superdesk) => {
+        var successResult = null;
+        var failureResult = null;
+
+        superdesk.intent('testAction', 'testType', 'testData', 'testId')
+        .then((result) => {
+            successResult = result;
+        });
+        superdesk.intent('testAction2', 'testType2', 'testData2', 'testId2')
+        .then(null, (result) => {
+            failureResult = result;
+        });
+
+        $rootScope.$digest();
+
+        expect(successResult).toBe('test');
+        expect(failureResult).toBe(undefined);
+    }));
+
     it('can find activities', inject((superdesk) => {
         var success = superdesk.findActivities(intent);
-        var failure = superdesk.findActivities({type: 'testType2', action: 'testAction2'});
+        var failure = superdesk.findActivities({type: 'testType2', action: 'testAction2', id: 'testId2'});
 
         expect(success.length).toBe(1);
         expect(success[0].label).toBe('test');
