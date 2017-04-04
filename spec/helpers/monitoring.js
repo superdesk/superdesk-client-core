@@ -224,7 +224,7 @@ function Monitoring() {
     };
 
     this.tabAction = function(tab) {
-        element.all(by.css('[ng-click="tab = \'' + tab + '\'"]')).click();
+        element.all(by.css('[ng-click="vm.current_tab = \'' + tab + '\'"]')).click();
     };
 
     this.openRelatedItem = function(index) {
