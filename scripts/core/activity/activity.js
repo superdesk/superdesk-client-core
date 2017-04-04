@@ -239,6 +239,9 @@ function SuperdeskProvider($routeProvider, _) {
                     if (intent.type) {
                         criteria.type = intent.type;
                     }
+                    if (intent.id) {
+                        criteria.id = intent.id;
+                    }
 
                     return _.sortBy(_.filter(this.activities, (activity) => {
                         return _.find(activity.filters, criteria) && isAllowed(activity) &&
@@ -269,11 +272,12 @@ function SuperdeskProvider($routeProvider, _) {
                  * @description
                  * Starts an activity for given action and data
                  */
-                intent: function(action, type, data) {
+                intent: function(action, type, data, id) {
                     var intent = {
                         action: action,
                         type: type,
-                        data: data
+                        data: data,
+                        id: id
                     };
 
                     var self = this;
