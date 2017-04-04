@@ -4,20 +4,20 @@
     </button>
     <header>
         <ul class="nav nav-tabs">
-            <li ng-class="{active: tab === 'content'}">
-                <button ng-click="tab = 'content'"><span translate>Content</span></button>
+            <li ng-class="{active: vm.current_tab === 'content'}">
+                <button ng-click="vm.current_tab = 'content'"><span translate>Content</span></button>
             </li>
-            <li ng-class="{active: tab === 'metadata'}">
-                <button ng-click="tab = 'metadata'"><span translate>Metadata</span></button>
+            <li ng-class="{active: vm.current_tab === 'metadata'}">
+                <button ng-click="vm.current_tab = 'metadata'"><span translate>Metadata</span></button>
             </li>
-            <li ng-show="showHistoryTab" ng-class="{active: tab === 'related'}">
-                <button ng-click="tab = 'related'"><span translate>Duplicates</span></button>
+            <li ng-show="showRelatedTab" ng-class="{active: vm.current_tab === 'related'}">
+                <button ng-click="vm.current_tab = 'related'"><span translate>Duplicates</span></button>
             </li>
-            <li ng-show="showHistoryTab" ng-class="{active: tab === 'history'}">
-                <button ng-click="tab = 'history'" translate>Item history</button>
+            <li ng-show="showHistoryTab" ng-class="{active: vm.current_tab === 'history'}">
+                <button ng-click="vm.current_tab = 'history'" translate>Item history</button>
             </li>
-            <li ng-show="isMediaUsed" ng-class="{active: tab === 'used'}">
-                <button ng-click="tab = 'used'" translate>Used</button>
+            <li ng-show="isMediaUsed" ng-class="{active: vm.current_tab === 'used'}">
+                <button ng-click="vm.current_tab = 'used'" translate>Used</button>
             </li>
         </ul>
         <button ng-click="close()" class="close-preview">
@@ -25,10 +25,13 @@
         </button>
     </header>
     <div class="content">
-        <div ng-if="tab === 'content'" sd-media-preview data-item="item"></div>
-        <div ng-if="tab === 'metadata'" sd-media-metadata data-item="item"></div>
-        <div ng-if="tab === 'related'" sd-media-related data-item="item"></div>
-        <div ng-if="tab === 'history' && showHistoryTab" sd-versioning-history data-item="item"></div>
-        <div ng-if="tab === 'used' && isMediaUsed" sd-media-used data-item="item"></div>
+        <div ng-if="vm.current_tab === 'content'" sd-media-preview data-item="item"></div>
+        <div ng-if="vm.current_tab === 'metadata'" sd-media-metadata data-item="item"></div>
+        <div ng-if="vm.current_tab === 'related' && showRelatedTab"
+             sd-media-related data-item="item"
+             data-related-items="relatedItems">
+        </div>
+        <div ng-if="vm.current_tab === 'history' && showHistoryTab" sd-versioning-history data-item="item"></div>
+        <div ng-if="vm.current_tab === 'used' && isMediaUsed" sd-media-used data-item="item"></div>
     </div>
 </div>
