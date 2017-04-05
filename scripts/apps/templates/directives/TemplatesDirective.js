@@ -227,6 +227,8 @@ export function TemplatesDirective(gettext, notify, api, templates, modal, desks
                     body_html: ''
                 };
                 $scope.template.template_desks = $scope.origTemplate.template_desks || [];
+                $scope.template_desk = $scope.template.template_desks.length > 0 ?
+                $scope.template.template_desks[0] : '';
                 $scope.stages = $scope.template.schedule_desk ? desks.deskStages[$scope.template.schedule_desk] : null;
                 $scope.template.template_type = $scope.origTemplate.template_type;
                 if (!templates.isAdmin()) {
