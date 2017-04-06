@@ -1,5 +1,11 @@
 # Superdesk Client Changelog
 
+## [1.6.2] 2017-04-06
+
+### Fixed
+
+- Fix moment-timezone version to 0.5.11.
+
 ## [1.6.1] 2017-03-09
 
 ### Fixed
