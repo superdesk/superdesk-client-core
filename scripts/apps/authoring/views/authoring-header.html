@@ -1,7 +1,7 @@
 <div class="authoring-header__holder" ng-controller="MetadataWidgetCtrl" ng-if="loaded">
     <div class="authoring-header__general-info">
         <div>
-            <i class="filetype-icon-{{ :: item.type}}" title="{{ :: 'Article Type' | translate }}"></i>
+            <i class="filetype-icon-{{ :: item.type}}" title="{{'Article Type' | translate }}: {{ item.type }}"></i>
         </div>
         <div ng-if="item.profile && !change_profile">
             <label translate>PROFILE</label>

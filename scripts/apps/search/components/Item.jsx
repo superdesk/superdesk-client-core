@@ -148,7 +148,7 @@ export class Item extends React.Component {
                     ingestProvider: this.props.ingestProvider,
                     svc: this.props.svc
                 }),
-                React.createElement(GridTypeIcon, {item: item}),
+                React.createElement(GridTypeIcon, {item: item, svc: this.props.svc}),
                 item.priority ?
                     React.createElement(ItemPriority, angular.extend({svc: this.props.svc}, item)) : null,
                 item.urgency ?
@@ -162,7 +162,8 @@ export class Item extends React.Component {
                 React.createElement(ListTypeIcon, {
                     item: item,
                     onMultiSelect: this.props.onMultiSelect,
-                    swimlane: this.props.swimlane
+                    swimlane: this.props.swimlane,
+                    svc: this.props.svc
                 }),
                 item.priority || item.urgency ? React.createElement(ListPriority, {
                     item: item,

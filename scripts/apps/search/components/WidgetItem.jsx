@@ -65,6 +65,7 @@ export class WidgetItem extends React.Component {
                         type={this.item.type}
                         package_type={this.item.package_type}
                         highlight={this.item.highlight}
+                        svc={this.props.svc}
                     />
                 </div>
                 <div className="content-item__urgency-field">

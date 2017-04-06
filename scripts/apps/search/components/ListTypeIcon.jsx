@@ -41,7 +41,8 @@ export class ListTypeIcon extends React.Component {
                     {
                         type: this.props.item.type,
                         package_type: this.props.item.package_type,
-                        highlight: this.props.item.highlight
+                        highlight: this.props.item.highlight,
+                        svc: this.props.svc
                     }
                 )
         );
@@ -49,6 +50,7 @@ export class ListTypeIcon extends React.Component {
 }
 
 ListTypeIcon.propTypes = {
+    svc: React.PropTypes.object.isRequired,
     onMultiSelect: React.PropTypes.func,
     item: React.PropTypes.any
 };

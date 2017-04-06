@@ -2,7 +2,7 @@ import React from 'react';
 import {getSpecStyle, getSpecTitle, getSpecValue} from '../helpers';
 
 export function ItemPriority(props) {
-    const {metadata, gettext} = props.svc;
+    const {metadata, gettextCatalog} = props.svc;
 
     var priority = props.priority || 3;
     var spec = metadata.priorityByValue(priority);
@@ -13,7 +13,7 @@ export function ItemPriority(props) {
             {
                 className: 'priority-label priority-label--' + priority,
                 style: getSpecStyle(spec),
-                title: getSpecTitle(spec, gettext('Priority')),
+                title: getSpecTitle(spec, gettextCatalog.getString('Priority')),
                 key: 'priority'
             },
             getSpecValue(spec, priority)
@@ -22,7 +22,11 @@ export function ItemPriority(props) {
 
     return React.createElement(
         'span',
-        {className: 'priority-label priority-label--' + priority, title: gettext('Priority'), key: 'priority'},
+        {
+            className: 'priority-label priority-label--' + priority,
+            title: gettextCatalog.getString('Priority'),
+            key: 'priority'
+        },
         priority
     );
 }
