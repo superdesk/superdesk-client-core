@@ -15,7 +15,7 @@ export function getSpecStyle(spec) {
 }
 
 export function getSpecTitle(spec, title) {
-    return spec.name || title;
+    return spec.name ? `${title}: ${spec.name}` : title;
 }
 
 export function getSpecValue(spec, value) {
