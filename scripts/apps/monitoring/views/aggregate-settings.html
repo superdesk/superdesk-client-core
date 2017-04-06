@@ -1,5 +1,5 @@
 <div class="modal-header">
-    <a href="" class="close" ng-click="cancel()"><i class="icon-close-small"></i></a>
+    <a href="" class="close" sd-hotkey="esc" ng-click="cancel()"><i class="icon-close-small"></i></a>
     <h3 translate>Monitoring settings <span ng-if="settings.desk" translate>for "{{settings.desk.name}}" Desk</span></h3>
 </div>
 
@@ -134,6 +134,7 @@
 
 <div class="modal-footer">
     <button id="previousBtn" class="btn btn--pull-left" ng-if="step.current !== 'desks' && !displayOnlyCurrentStep" ng-click="previous()" translate>Previous</button>
+    <button class="btn" ng-click="cancel()" translate>Cancel</button>
     <button id="nextBtn" class="btn" ng-if="step.current !== 'maxitems' && !displayOnlyCurrentStep" ng-click="next()" translate>Next</button>
     <button class="btn btn--primary" ng-click="save()" translate>Done</button>
 </div>
