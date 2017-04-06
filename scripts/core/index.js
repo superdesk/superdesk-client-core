@@ -77,6 +77,7 @@ core.config(['$routeProvider', ($routeProvider) => {
 // due to angular 1.6
 core.config(['$locationProvider', ($locationProvider) => $locationProvider.hashPrefix('')]);
 core.config(['$qProvider', ($qProvider) => $qProvider.errorOnUnhandledRejections(false)]);
+core.config(['$compileProvider', ($compileProvider) => $compileProvider.preAssignBindingsEnabled(true)]);
 
 core.run(['$injector', ng.register]);
 
