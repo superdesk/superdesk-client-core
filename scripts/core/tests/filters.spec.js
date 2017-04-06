@@ -1,6 +1,7 @@
 
 
 describe('superdesk filters', () => {
+    beforeEach(window.module('superdesk.core.datetime'));
     beforeEach(window.module('superdesk.core.filters'));
 
     describe('sort items', () => {
@@ -19,7 +20,7 @@ describe('superdesk filters', () => {
                 {name: 'c', display_name: 'category'}]);
         }));
 
-        it('can ignore case while sorting', inject((daysInAMonthFilter) => {
+        it('days in month', inject((daysInAMonthFilter) => {
             var jan = daysInAMonthFilter(0);
 
             expect(jan.length).toEqual(31);
