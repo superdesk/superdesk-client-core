@@ -73,7 +73,7 @@ export default angular.module('superdesk.core.filters', [])
     .filter('truncateString', () => function(inputString, limit, postfix) {
         return _.truncate(inputString, {length: limit, omission: postfix || '...'});
     })
-    .filter('formatDateTimeString', [function() {
+    .filter('formatDateTimeString', ['moment', function(moment) {
         return function(input, formatString) {
             var momentTimestamp = angular.isDefined(input) ? moment(input).utc() : moment.utc();
 
@@ -81,7 +81,7 @@ export default angular.module('superdesk.core.filters', [])
                 : momentTimestamp.format();
         };
     }])
-    .filter('formatLocalDateTimeString', [function() {
+    .filter('formatLocalDateTimeString', ['moment', function(moment) {
         return function(input, formatString) {
             var momentTimestamp = angular.isDefined(input) ? moment(input).utc() : moment.utc();
 
@@ -127,7 +127,7 @@ export default angular.module('superdesk.core.filters', [])
 
         return merged.join(', ');
     })
-    .filter('previewDateline', ['$filter', function($filter) {
+    .filter('previewDateline', ['$filter', 'moment', function($filter, moment) {
         return function(located, source, datelineDate) {
             if (_.isObject(located) && angular.isDefined(located.city)) {
                 var momentizedTimestamp = angular.isDefined(datelineDate) ? moment.utc(datelineDate) : moment.utc();
@@ -153,12 +153,12 @@ export default angular.module('superdesk.core.filters', [])
             return '';
         };
     }])
-    .filter('daysInAMonth', () => function(month) {
+    .filter('daysInAMonth', ['moment', (moment) => function(month) {
         let _timeStamp = Number.isInteger(month) ? moment(month + 1, 'MM') : moment();
 
         return Array.from({length: _timeStamp.daysInMonth()}, (value, index) => (index + 1).toString());
-    })
-    .filter('parseDateline', () => function(dateToFormat, located) {
+    }])
+    .filter('parseDateline', ['moment', (moment) => function(dateToFormat, located) {
         var momentizedTimestamp = dateToFormat ? moment.utc(dateToFormat) : moment.utc();
 
         if (angular.isDefined(located) && located.tz !== 'UTC') {
@@ -166,7 +166,7 @@ export default angular.module('superdesk.core.filters', [])
         }
 
         return {month: momentizedTimestamp.month().toString(), day: momentizedTimestamp.format('D')};
-    })
+    }])
     .filter('formatDatelineText', () => function(located, month, date, source = '') {
         var dateline = located.city_code;
         var datelineFields = located.dateline.split(',');
@@ -181,13 +181,13 @@ export default angular.module('superdesk.core.filters', [])
 
         return dateline.toUpperCase().concat(', ', month, ' ', date, ' ', source, ' -');
     })
-    .filter('relativeUTCTimestamp', () => function(located, month, date) {
+    .filter('relativeUTCTimestamp', ['moment', (moment) => function(located, month, date) {
         var currentTSInLocated = located.tz === 'UTC' ? moment.utc() : moment().tz(located.tz);
 
         currentTSInLocated.month(month).date(date);
 
         return currentTSInLocated.toISOString();
-    })
+    }])
     .filter('sortByName', () => function(_collection, propertyName = 'name') {
         return _.sortBy(_collection, (_entry) => _entry[propertyName] ?
             _entry[propertyName].toLowerCase()
