@@ -114,15 +114,15 @@ export function embed(oEmbed) {
 /**
  * @ngdoc method
  * @name addTable
- * @param {Number} w Width (columns) of the table.
- * @return {Number} h Height (rows) of the table.
+ * @param {Number} numRows
+ * @param {Number} numCols
  * @description Dispatches the action that adds a table into the content.
  */
-export function addTable(w, h) {
+export function addTable(numRows, numCols) {
     const cells = [];
 
     return {
         type: 'TOOLBAR_ADD_TABLE',
-        payload: {w, h, cells}
+        payload: {numRows, numCols, cells}
     };
 }

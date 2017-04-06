@@ -84,9 +84,9 @@ describe('editor3.component.table-block', () => {
                 parentReadOnly={true} />
         );
 
-        expect(getBlockData(block, contentState).h).toBe(2);
+        expect(getBlockData(block, contentState).numRows).toBe(2);
         wrapper.find('.add-row').simulate('click');
-        expect(getBlockData(block, contentState).h).toBe(3);
+        expect(getBlockData(block, contentState).numRows).toBe(3);
     });
 
     it('should add a column when clicking the add column button', () => {
@@ -101,9 +101,9 @@ describe('editor3.component.table-block', () => {
                 parentReadOnly={true} />
         );
 
-        expect(getBlockData(block, contentState).w).toBe(3);
+        expect(getBlockData(block, contentState).numCols).toBe(3);
         wrapper.find('.add-col').simulate('click');
-        expect(getBlockData(block, contentState).w).toBe(4);
+        expect(getBlockData(block, contentState).numCols).toBe(4);
     });
 
     it('should render correct text in each cell', () => {

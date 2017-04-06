@@ -5,9 +5,8 @@ import ng from 'core/services/ng';
 import {forceUpdate} from '../actions';
 import {Editor3} from '../components/Editor3';
 import {EditorState, convertFromRaw, convertToRaw, ContentState} from 'draft-js';
-import {stateFromHTML} from 'draft-js-import-html';
 import {clearHighlights} from '../reducers/find-replace';
-import {toHTML} from 'core/editor3/html';
+import {toHTML, fromHTML} from 'core/editor3/html';
 
 /**
  * @name createEditorStore
@@ -67,7 +66,7 @@ function onChange(content) {
 
 /**
  * @name getInitialContent
- * @params {Object} ctrl Controller hosting the editor
+ * @param {Object} ctrl Controller hosting the editor
  * @returns {ContentState} DraftJS ContentState object.
  * @description Gets the initial content state of the editor based on available information.
  * If an editor state is available as saved in the DB, we use that, otherwise we attempt to
@@ -81,7 +80,7 @@ function getInitialContent(ctrl) {
 
     // we have only HTML (possibly legacy editor2 or ingested item)
     if (ctrl.value) {
-        return stateFromHTML(ctrl.value);
+        return fromHTML(ctrl.value);
     }
 
     return ContentState.createFromText('');

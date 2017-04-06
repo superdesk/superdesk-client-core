@@ -34,8 +34,8 @@ describe('core.editor3.html.to-html.AtomicBlockParser', () => {
         const cs = (txt) => convertToRaw(ContentState.createFromText(txt));
         const {contentState, block} = testUtils.createBlockAndContent('TABLE', {
             data: {
-                w: 3,
-                h: 2,
+                numCols: 3,
+                numRows: 2,
                 cells: [
                     [cs('a'), undefined, cs('c')],
                     [cs('d'), cs('e'), cs('f')]
@@ -52,8 +52,8 @@ describe('core.editor3.html.to-html.AtomicBlockParser', () => {
     it('should correctly parse empty tables', () => {
         const {contentState, block} = testUtils.createBlockAndContent('TABLE', {
             data: {
-                w: 3,
-                h: 2,
+                numCols: 3,
+                numRows: 2,
                 cells: []
             }
         });
