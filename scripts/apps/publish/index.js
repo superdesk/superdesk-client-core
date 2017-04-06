@@ -38,7 +38,7 @@ export default angular.module('superdesk.apps.publish', ['superdesk.apps.users',
     .config(['superdeskProvider', function(superdesk) {
         superdesk
             .activity('/settings/publish', {
-                label: gettext('Publish'),
+                label: gettext('Subscribers'),
                 templateUrl: 'scripts/apps/publish/views/settings.html',
                 controller: ctrl.AdminPublishSettingsController,
                 category: superdesk.MENU_SETTINGS,
