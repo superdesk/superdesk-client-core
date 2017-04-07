@@ -1,6 +1,6 @@
 .listElement {
     border: 1px solid $tableBorder;
-    border-left: 3px solid #4d646f;
+    border-left: 4px solid #4d646f;
     border-top: 0;
     padding: 12px 5px 12px 15px;
     background-color: #fff;
@@ -8,9 +8,33 @@
     display: flex;
     align-items: center;
 
+    &--dark{
+        background-color: #444545;
+        border-color: #3b3b3b;
+    }
+
+    &--lightDark{
+        background-color: #535454;
+    }
+
+    &--noBorder {
+        border: none;
+        margin-top: 2px;
+    }
+
+    &--borderPublished{
+        border-left: 4px solid $green;
+    }
+
+    &--borderUnpublished{
+        border-left: 4px solid $red;
+    }
+
     &--noLeftBorder {
         border-left: 1px solid $tableBorder;
     }
+
+
 
     &--bold {
         font-weight: 700;
@@ -50,6 +74,10 @@
     &__content {
         width: 100%;
         color: $gray;
+
+        &--dark{
+            color: #eaeaea;
+        }
 
         button {
             border: 0;

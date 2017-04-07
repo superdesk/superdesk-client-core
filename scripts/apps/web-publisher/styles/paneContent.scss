@@ -50,6 +50,19 @@
             color: $grayDark;
             border-bottom: 2px solid $sd-blue;
         }
+
+        &--light{
+            color: $grayLight;
+
+            &:hover{
+                color: $white;
+            }
+        }
+
+        &--activeLight {
+            color: $grayLighter;
+            border-bottom: 2px solid $sd-blue;
+        }
     }
 
     &__content {
