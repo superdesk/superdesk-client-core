@@ -34,11 +34,15 @@
                     </li>
                     <li class="divider"></li>
                     <li><button><i class="icon-pencil"></i>{{:: 'Edit'| translate}}</button></li>
-                    <li><button><i class="icon-kill"></i>{{:: 'Remove'| translate}}</button></li>
                     <li class="divider"></li>
                     <li>
-                        <button ng-click="webPublisherMonitoring.openPublish(i)">
-                            <i class="icon-expand-thin"></i>{{:: 'Publish/Unpublish'| translate}}
+                        <button ng-click="webPublisherMonitoring.openPublish(i, 'publish')">
+                            <i class="icon-expand-thin"></i>{{:: 'Publish'| translate}}
+                        </button>
+                    </li>
+                    <li>
+                        <button ng-click="webPublisherMonitoring.openPublish(i, 'unpublish')">
+                            <i class="icon-kill"></i>{{:: 'Unpublish'| translate}}
                         </button>
                     </li>
                 </ul>
@@ -46,4 +50,3 @@
         </div>
     </div>
 </div>
-

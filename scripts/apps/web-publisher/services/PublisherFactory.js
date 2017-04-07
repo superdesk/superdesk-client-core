@@ -211,11 +211,12 @@ export function PublisherFactory(pubapi) {
         /**
          * @ngdoc method
          * @name publisher#queryTenantArticles
+         * @param {String} params - params passed to API (limit, status, route)
          * @returns {Promise}
          * @description List all articles for selected tenant
          */
-        queryTenantArticles() {
-            return pubapi.query('content/articles');
+        queryTenantArticles(params) {
+            return pubapi.queryWithDetails('content/articles', params);
         }
 
         /**
@@ -229,9 +230,54 @@ export function PublisherFactory(pubapi) {
             return pubapi.queryWithDetails('organization/articles', articleStatus);
         }
 
+        /**
+         * @ngdoc method
+         * @name publisher#linkListArticle
+         * @param {String} listId - id of content list
+         * @param {Array} list - list of articles
+         * @returns {Promise}
+         * @description Links articles to manual content list
+         */
+        linkListArticle(listId, list) {
+            let header = '';
+
+            angular.forEach(list, (item) => {
+                if (item.hasOwnProperty('content')) {
+                    header += '</api/content/articles/' + item.content.id + '; rel="article">,';
+                } else {
+                    header += '</api/content/articles/' + item.id + '; rel="article">,';
+                }
+            });
+
+            return pubapi.link('content/lists', listId, header);
+        }
+
+        /**
+         * @ngdoc method
+         * @name publisher#unlinkListArticle
+         * @param {String} listId - id of content list
+         * @param {Array} list - list of articles
+         * @returns {Promise}
+         * @description Links articles to manual content list
+         */
+        unlinkListArticle(listId, list) {
+            let header = '';
+
+            angular.forEach(list, (item) => {
+                if (item.hasOwnProperty('content')) {
+                    header += '</api/{version}/content/articles/' + item.content.id + '; rel="article">,';
+                } else {
+                    header += '</api/{version}/content/articles/' + item.id + '; rel="article">,';
+                }
+            });
+
+            return pubapi.unlink('content/lists', listId, header);
+        }
+
         publishArticle(article, articleId) {
             return pubapi.save('content/articles', article, articleId);
         }
+
     }
 
     return new Publisher();

@@ -1,4 +1,4 @@
-/**
+ /**
  * @ngdoc controller
  * @module superdesk.apps.web_publisher
  * @name WebPublisherMonitoringController
@@ -86,9 +86,10 @@ export function WebPublisherMonitoringController($scope, publisher, modal) {
                 });
         }
 
-        openPublish(article) {
+        openPublish(article, action) {
             this.selectedRoute = [];
             this.publishOpen = true;
+            this.activePublishPane = action;
             this.selectedArticle = article;
             this.selectedRoute.push(article.route);
         }

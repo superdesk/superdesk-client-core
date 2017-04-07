@@ -366,6 +366,18 @@ export function WebPublisherManagerController($scope, publisher, modal) {
 
         /**
          * @ngdoc method
+         * @name WebPublisherManagerController#saveManualList
+         * @description Clears and saves state of manual content list
+         */
+        saveManualList(list) {
+            publisher.unlinkListArticle(this.selectedList.id, list.originalItems)
+                .then(publisher.linkListArticle(this.selectedList.id, list.items));
+
+            this.listChangeFlag = false;
+        }
+
+        /**
+         * @ngdoc method
          * @name WebPublisherManagerController#deleteList
          * @param {String} id - id of content list which is deleted
          * @description Deleting content list
@@ -410,7 +422,7 @@ export function WebPublisherManagerController($scope, publisher, modal) {
                 }
             });
 
-            this.changeTab(list.type === 'automatic' ? 'content-list-automatic' : '');
+            this.changeTab(list.type === 'automatic' ? 'content-list-automatic' : 'content-list-manual');
         }
 
         /**
@@ -438,13 +450,29 @@ export function WebPublisherManagerController($scope, publisher, modal) {
 
             /**
              * @ngdoc event
-             * @name WebPublisherManagerController#refreshArticles
+             * @name WebPublisherManagerController#refreshListArticles
              * @eventType broadcast on $scope
              * @param {Object} $scope.newList - list which will refresf articles
              * @description event is thrown when criteria is updated
              */
             publisher.manageList({content_list: {filters: updatedFilters}}, this.selectedList.id)
-                .then(() => $scope.$broadcast('refreshArticles', $scope.newList));
+                .then(() => $scope.$broadcast('refreshListArticles', $scope.newList));
+        }
+
+        /**
+         * @ngdoc method
+         * @name WebPublisherManagerController#filterArticles
+         * @description
+         */
+        filterArticles() {
+            /**
+             * @ngdoc event
+             * @name WebPublisherManagerController#refreshArticles
+             * @eventType broadcast on $scope
+             * @param {Object} this.selectedRoutes - list of routes
+             * @description event is thrown when filter criteria is updated
+             */
+            $scope.$broadcast('refreshArticles', this.selectedRoutes);
         }
 
         /**
