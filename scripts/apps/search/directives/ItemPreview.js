@@ -1,5 +1,5 @@
-ItemPreview.$inject = ['asset', 'storage', 'desks', 'lodash'];
-export function ItemPreview(asset, storage, desks, _) {
+ItemPreview.$inject = ['asset', 'storage', 'desks', 'lodash', 'familyService'];
+export function ItemPreview(asset, storage, desks, _, familyService) {
     /**
      * @description Closes the preview panel if the currently previewed
      * item is spiked / unspiked or moved.
@@ -27,9 +27,12 @@ export function ItemPreview(asset, storage, desks, _) {
             hideActionsMenu: '=',
             showHistoryTab: '='
         },
+        controller: function() {
+            this.current_tab = 'content';
+        },
+        controllerAs: 'vm',
         link: function(scope) {
-            scope.tab = 'content';
-
+            scope.showRelatedTab = false;
             scope.toggleLeft = JSON.parse(storage.getItem('shiftLeft'));
 
             /**
@@ -43,17 +46,21 @@ export function ItemPreview(asset, storage, desks, _) {
                 });
             };
 
-            scope.$watch('item', (item) => {
-                scope.selected = {preview: item || null};
+            scope.$watch('item', (newItem, oldItem) => {
+                scope.selected = {preview: newItem || null};
 
-                // Set the desk and stage names
-                if (item && item.task && item.task.stage) {
-                    scope.deskName = desks.deskLookup[item.task.desk].name;
-                    scope.stage = desks.stageLookup[item.task.stage].name;
-                    scope.isMediaUsed = _.includes(['audio', 'video', 'picture', 'graphic'], scope.item.type) &&
-                        scope.item.used;
-                } else {
-                    scope.deskName = scope.stage = null;
+                if (newItem !== oldItem) {
+                    fetchRelatedItems();
+
+                    // Set the desk and stage names
+                    if (newItem && newItem.task && newItem.task.stage) {
+                        scope.deskName = desks.deskLookup[newItem.task.desk].name;
+                        scope.stage = desks.stageLookup[newItem.task.stage].name;
+                        scope.isMediaUsed = _.includes(['audio', 'video', 'picture', 'graphic'], scope.item.type) &&
+                            scope.item.used;
+                    } else {
+                        scope.deskName = scope.stage = null;
+                    }
                 }
             });
 
@@ -78,6 +85,49 @@ export function ItemPreview(asset, storage, desks, _) {
             scope.hideActions = function() {
                 return scope.hideActionsMenu;
             };
+
+            scope.$on('item:duplicate', fetchRelatedItems);
+
+            /**
+             * Reload the related items when navigating to the 'Duplicates' tab to ensure the list is current
+             */
+            scope.$watch('vm.current_tab', (newTab, oldTab) => {
+                if (newTab !== oldTab && newTab === 'related') {
+                    fetchRelatedItems();
+                }
+            });
+
+            /**
+             * Fetch related items to the current scope.item
+             * This is then used to calculate if we show the 'Duplicates' tab,
+             * as well as passed to the sd-media-related directive so we don't
+             * double up with this api call
+             */
+            function fetchRelatedItems() {
+                if (scope.item && _.includes(['archive', 'archived'], scope.item._type)) {
+                    familyService.fetchItems(scope.item.family_id || scope.item._id, scope.item)
+                    .then(setRelatedItems);
+                } else {
+                    setRelatedItems(null);
+                }
+            }
+
+            /**
+             * Sets the scope.relatedItems to the items provided,
+             * Then calculates if we should change th current tab to the default one, `content`.
+             * This get's around an issue where a previews an item, selects the `duplicates` tab,
+             * Then selects a different item that doesn't have duplicates, the duplicate tab is hidden
+             * But the duplicate tab is still selected.
+             *
+             * @param items: List of related items to scope.item
+             */
+            function setRelatedItems(items) {
+                scope.relatedItems = items;
+                scope.showRelatedTab = items && items._items.length > 0;
+                if (!scope.showRelatedTab && scope.vm.current_tab === 'related') {
+                    scope.vm.current_tab = 'content';
+                }
+            }
         }
     };
 }

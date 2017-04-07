@@ -465,6 +465,7 @@ describe('authoring', () => {
         monitoring.actionOnItem('Edit', 0, 0);
 
         authoring.openRelatedItem(); // opens related item widget
+        browser.sleep(10000);
         expect(authoring.getRelatedItemBySlugline(0).getText()).toContain('item9 slugline');
         authoring.actionOpenRelatedItem(0); // Open item
         expect(authoring.getHeaderSluglineText()).toContain('item9 slugline');

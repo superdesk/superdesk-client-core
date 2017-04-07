@@ -202,7 +202,7 @@ describe('content', () => {
         element(by.id('closeAuthoringBtn')).click();
 
         content.previewItem('item3');
-        element(by.css('[ng-click="tab = \'metadata\'"]')).click();
+        element(by.css('[ng-click="vm.current_tab = \'metadata\'"]')).click();
 
         expect(element(by.model('item.embargo')).isDisplayed()).toBe(true);
 
