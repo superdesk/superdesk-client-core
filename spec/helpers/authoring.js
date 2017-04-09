@@ -330,6 +330,14 @@ function Authoring() {
         return element(by.id('metadata')).click();
     };
 
+    this.minimize = () => element(by.css('[ng-click="minimize()"]')).click();
+
+    this.maximize = (name) => {
+        let href = `#/authoring/${name}`;
+
+        element(by.css('[ng-href="' + href + '"]')).click();
+    };
+
     this.toggleNotForPublication = function() {
         element(by.model('item.flags.marked_for_not_publication')).click();
     };

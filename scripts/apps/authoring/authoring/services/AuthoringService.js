@@ -50,8 +50,9 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
      * @param {string} _id Item _id.
      * @param {boolean} readOnly
      * @param {string} repo - repository where an item whose identifier is _id can be found.
+     * @param {string} action - action performed to open the story: edit, correct or kill
      */
-    this.open = function openAuthoring(_id, readOnly, repo) {
+    this.open = function openAuthoring(_id, readOnly, repo, action) {
         if ($location.$$path !== '/multiedit') {
             superdeskFlags.flags.authoring = true;
         }
@@ -79,7 +80,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
                 }
 
                 item._editable = true; // not locked at all, try to lock
-                return lock.lock(item);
+                return lock.lock(item, false, action);
             })
             .then((item) => autosave.open(item).then(null, (err) => item));
     };
