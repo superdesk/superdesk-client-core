@@ -207,7 +207,7 @@ function WorkqueueCtrl($scope, $rootScope, $route, workqueue, authoringWorkspace
     $scope.edit = function(item, event) {
         if (!event.ctrlKey) {
             $scope.active = item;
-            authoringWorkspace.edit(item);
+            authoringWorkspace.edit(item, item.lock_action);
             $scope.redirectOnCloseMulti();
             $scope.dashboardActive = false;
 

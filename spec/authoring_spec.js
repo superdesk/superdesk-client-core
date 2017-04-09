@@ -723,4 +723,25 @@ describe('authoring', () => {
         workspace.selectDesk('Sports Desk');
         expect(monitoring.getGroupItems(5).count()).toBe(2);
     }, 600000);
+
+    it('can minimize story while a correction and kill is being written', () => {
+        workspace.selectDesk('Politic Desk');
+        expect(monitoring.getTextItem(3, 2)).toBe('item6');
+        monitoring.actionOnItem('Edit', 3, 2);
+        authoring.publish();
+        monitoring.filterAction('text');
+        monitoring.actionOnItem('Correct item', 5, 0); // Edit for correction
+        authoring.minimize(); // minimize before publishing the correction
+        expect(monitoring.getTextItem(2, 1)).toBe('item9');
+        monitoring.actionOnItem('Edit', 2, 1);
+        authoring.publish();
+        monitoring.actionOnItem('Kill item', 5, 0); // Edit for kill
+        authoring.minimize(); // minimize before publishing the kill
+        authoring.maximize('item6');
+        authoring.sendToButton.click();
+        expect(monitoring.getPublishButtonText()).toBe('CORRECT');
+        authoring.maximize('item9');
+        authoring.sendToButton.click();
+        expect(monitoring.getPublishButtonText()).toBe('KILL');
+    });
 });
