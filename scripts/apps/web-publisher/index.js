@@ -22,6 +22,7 @@ export default angular.module('superdesk.apps.web_publisher', [
 .directive('sdPublishRoutes', directive.PublishRoutesDirective)
 .directive('sdListArticles', directive.ListArticlesDirective)
 .directive('sdCardInputFocus', directive.CardInputFocusDirective)
+.directive('sdGroupArticle', directive.GroupArticleDirective)
 .factory('publisher', services.PublisherFactory)
 .factory('pubapi', services.PubAPIFactory)
 
