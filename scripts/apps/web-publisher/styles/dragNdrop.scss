@@ -1,0 +1,37 @@
+ul[dnd-list] {
+    min-height: 42px;
+
+     .dndPlaceholder {
+        background-color: #ddd;
+        display: block;
+        min-height: 42px;
+    }
+
+    li.selected .listElement {
+        background-color: $sd-hover;
+    }
+}
+
+.dropZone{
+    &--empty {
+        border: 2px dashed #adadad;
+        background-color: #ebebeb;
+    }
+
+    &--active {
+        border: 2px dashed $sd-blue;
+        background-color: $sd-hover;
+    }
+
+    &__heading {
+        display: inline-block;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translateY(-50%);
+        transform: translateX(-50%);
+        font-size: 2rem;
+        font-weight: 200;
+        color: $grayLight;
+    }
+}
