@@ -172,7 +172,9 @@ export function TemplatesDirective(gettext, notify, api, templates, modal, desks
              */
             $scope.getScheduleDesk = function(template) {
                 if (!_.isNil(template)) {
-                    return _.find($scope.desks._items, {_id: template.schedule_desk}).name;
+                    let desk = _.find($scope.desks._items, {_id: template.schedule_desk});
+
+                    return desk ? desk.name : null;
                 }
                 return null;
             };
@@ -182,7 +184,9 @@ export function TemplatesDirective(gettext, notify, api, templates, modal, desks
              */
             $scope.getScheduleStage = function(template) {
                 if (!_.isNil(template)) {
-                    return _.find(desks.stages._items, {_id: template.schedule_stage}).name;
+                    let stage = _.find(desks.stages._items, {_id: template.schedule_stage});
+
+                    return stage ? stage.name : null;
                 }
                 return null;
             };
