@@ -9,6 +9,7 @@ import {LinkDecorator} from './links';
 import {blockRenderer} from './blockRenderer';
 import {customStyleMap} from './customStyleMap';
 import classNames from 'classnames';
+import {handlePastedText} from './handlePastedText';
 
 /**
  * @ngdoc React
@@ -121,6 +122,7 @@ export class Editor3Component extends React.Component {
                         customStyleMap={customStyleMap}
                         onChange={onChange}
                         onTab={onTab}
+                        handlePastedText={handlePastedText.bind(this)}
                         readOnly={readOnly}
                         ref="editor"
                     />
