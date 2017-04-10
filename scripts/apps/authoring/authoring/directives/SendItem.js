@@ -151,6 +151,26 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                 }
             });
 
+            // events on which panel should close
+            var closePanelEvents = ['item:spike', 'broadcast:preview'];
+
+            angular.forEach(closePanelEvents, (event) => {
+                scope.$on(event, shouldClosePanel);
+            });
+
+            /**
+             * @description Closes the opened 'duplicate/send To' panel if the same item getting
+             * spiked or any item is opening for authoring.
+             * @param {Object} event
+             * @param {Object} data - contains the item(=itemId) that was spiked or {item: null} when
+             * any item opened for authoring (utilising, 'broadcast:preview' with {item: null})
+             */
+            function shouldClosePanel(event, data) {
+                if (scope.config && _.includes(scope.config.itemIds, data.item) || _.isNil(data.item)) {
+                    scope.close();
+                }
+            }
+
             /*
              * Returns true if Destination field and Send button needs to be displayed, false otherwise.
              * @returns {Boolean}

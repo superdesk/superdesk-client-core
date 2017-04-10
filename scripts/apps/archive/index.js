@@ -108,10 +108,7 @@ angular.module('superdesk.apps.archive', [
                         var isPersonal = $location.path() === '/workspace/personal';
 
                         return $q.when(isPersonal ? modal.confirm(txt) : 0)
-                            .then(() => spike.spike(data.item).then((item) => {
-                                $rootScope.$broadcast('item:spike');
-                                return item;
-                            }));
+                            .then(() => spike.spike(data.item));
                     }],
                 filters: [{action: 'list', type: 'archive'}],
                 action: 'spike',
