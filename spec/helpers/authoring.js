@@ -314,11 +314,11 @@ function Authoring() {
     };
 
     this.showVersions = function() {
-        return element(by.id('Versioning')).click();
+        return element(by.id('versioning')).click();
     };
 
     this.showComments = function() {
-        return element(by.id('Comments')).click();
+        return element(by.id('comments')).click();
     };
 
     this.showHistory = function() {
@@ -327,7 +327,7 @@ function Authoring() {
     };
 
     this.showInfo = function() {
-        return element(by.id('Info')).click();
+        return element(by.id('metadata')).click();
     };
 
     this.toggleNotForPublication = function() {
@@ -356,7 +356,7 @@ function Authoring() {
     };
 
     this.showPackages = function() {
-        return element(by.id('Packages')).click();
+        return element(by.id('packages')).click();
     };
 
     this.getGUID = function() {
@@ -646,7 +646,7 @@ function Authoring() {
     };
 
     this.openRelatedItem = function() {
-        element(by.css('button[id="Related Items"]')).click();
+        element(by.css('button[id="related-item"]')).click();
         browser.sleep(1000);
     };
 
