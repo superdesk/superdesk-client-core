@@ -1,0 +1,61 @@
+<div class="listElement listElement--dark listElement--noBorder"
+      ng-class="{'listElement--borderPublished listElement--lightDark': webPublisherMonitoring.selectedArticle.status == 'published', 'listElement--borderUnpublished': webPublisherMonitoring.selectedArticle.status == 'unpublished'}">
+    <div class="listElement__content listElement__content--dark">
+        <div>
+            {{site.name}}
+        </div>
+        <div>
+            <div ng-show="webPublisherMonitoring.selectedArticle.status == 'new'" class="flexBox">
+                <span class="text--uppercase text--smaller flexBox__item text--lighter">route</span>
+                <div sd-meta-dropdown
+                    class="flexBox__fullItem flexBox__fullItem--margin  dropdownLight"
+                    data-item="webPublisherMonitoring"
+                    data-field="selectedRoute"
+                    data-list="webPublisherMonitoring.routes"
+                    data-change="">
+                </div>
+            </div>
+
+            <div ng-if="webPublisherMonitoring.selectedArticle.status != 'unpublished' && webPublisherMonitoring.selectedArticle.status != 'new'" >
+                <div ng-show="routeEditing" class="flexBox">
+                    <span class="text--uppercase text--smaller flexBox__item text--lighter">route</span>
+                    <div sd-meta-dropdown
+                        class="flexBox__fullItem leftSpace rightSpace--small dropdownLight"
+                        data-item="webPublisherMonitoring"
+                        data-field="selectedRoute"
+                        data-list="webPublisherMonitoring.routes"
+                        data-change="">
+                    </div>
+                    <div class="flexBox__item">
+                        <i class="icon-close-small icon-white icon--small text--verticalMiddle cursorPointer rightSpace"
+                            ng-click="routeEditing = false"/>
+                    </div>
+                </div>
+
+                <span class="label label--info text--smaller text--uppercase" ng-hide="routeEditing">{{webPublisherMonitoring.selectedArticle.route.name}}</span>
+                <span class="text--uppercase text--smaller text--blue cursorPointer leftSpace"
+                    ng-click="routeEditing = true"
+                    ng-hide="routeEditing">
+                    change
+                </span>
+            </div>
+            <span ng-if="webPublisherMonitoring.selectedArticle.status == 'unpublished'" class="label text--smaller text--uppercase">unpublished</span>
+        </div>
+    </div>
+    <div class="listElement__right">
+        <div class="text--small text--lighter text--right minHeightLine">
+            <span ng-if="webPublisherMonitoring.selectedArticle.status != 'new'">{{webPublisherMonitoring.selectedArticle.publishedAt | reldate}}</span>
+            <!-- if article is not published and route is selected this should appear -->
+            <span ng-if="webPublisherMonitoring.selectedArticle.status == 'new'" class="text--uppercase text--small text--blue cursorPointer rightSpace">
+                <i class="icon-external blue icon--small text--verticalMiddle rightSpace--small"/> Live Preview
+            </span>
+        </div>
+        <div class="minHeightLine">
+            <span ng-if="webPublisherMonitoring.selectedArticle.status == 'publishedAll'" class="label label--facebook text--smaller text--uppercase">facebook</span>
+            <div ng-if="webPublisherMonitoring.selectedArticle.status == 'notPublished' || webPublisherMonitoring.selectedArticle.status == 'publishedTenant'">
+                <span class="text--uppercase text--smaller text--lighter">publish to facebook</span>
+                <span class="sd-checkbox checkboxInlineRight" sd-check ng-model="facebookPublish"></span>
+            </div>
+        </div>
+    </div>
+</div>
