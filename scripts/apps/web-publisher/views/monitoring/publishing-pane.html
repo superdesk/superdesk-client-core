@@ -1,0 +1,59 @@
+<div class="paneContent__header paneContent__header--darker">
+    <span class="paneContent__tabItem paneContent__tabItem--light"
+        ng-class="{'paneContent__tabItem--activeLight' : webPublisherMonitoring.activePublishPane == 'publish' }"
+        ng-click="webPublisherMonitoring.activePublishPane = 'publish'">Publish
+    </span>
+    <span class="paneContent__tabItem paneContent__tabItem--light"
+        ng-class="{'paneContent__tabItem--activeLight' : webPublisherMonitoring.activePublishPane == 'unpublish' }"
+        ng-click="webPublisherMonitoring.activePublishPane = 'unpublish'">Unpublish
+    </span>
+    <div ng-click="webPublisherMonitoring.publishOpen = false" class="close-filter">
+        <i class="icon-close-small icon-white"></i>
+    </div>
+</div>
+<div class="paneContent__content paneContent__content--hasFooter contentPadding">
+    <h3 class="text--thin bottomPadding">{{webPublisherMonitoring.selectedArticle.title}}</h3>
+    <!-- publish -->
+    <div ng-show="webPublisherMonitoring.activePublishPane == 'publish'">
+        <ul class="darkFilters bottomPadding">
+            <li class="darkFilters__item"
+                ng-class="{'darkFilters__item--active': true}"
+                ng-click="">All
+            </li>
+            <li class="darkFilters__item"
+                ng-class="{'darkFilters__item--active': false}"
+                ng-click="">Published
+            </li>
+            <li class="darkFilters__item"
+                ng-class="{'fdarkFilters__item--active': false}"
+                ng-click="">Unpublished
+            </li>
+        </ul>
+        <ul>
+            <li ng-repeat="site in webPublisherMonitoring.sites" ng-include="webPublisherMonitoring.TEMPLATES_DIR + '/monitoring/publish-pane-listitem.html'">
+        </ul>
+    </div>
+    <!-- unpublish -->
+    <div ng-show="webPublisherMonitoring.activePublishPane == 'unpublish'">
+        <div class="bottomPadding">
+            <span class="text--small">Select All</span>
+            <span class="sd-checkbox checkboxInlineRight" sd-check ng-model="unpublishSelectAll"></span>
+        </div>
+        <button class="checkButton checkButton--full"
+            ng-class="{'checkButton--active': true}"
+            ng-click="">
+            www.cnn.com
+        </button>
+        <button class="checkButton checkButton--full"
+            ng-class="{'checkButton--active': false}"
+            ng-click="">
+            www.superdesk.org
+        </button>
+    </div>
+</div>
+<div ng-show="webPublisherMonitoring.activePublishPane == 'publish'" class="paneContent__footer paneContent__footer--transparent">
+    <button class="btn btn--primary btn--full" ng-click="webPublisherMonitoring.publishArticle()">Publish</button>
+</div>
+<div ng-show="webPublisherMonitoring.activePublishPane == 'unpublish'" class="paneContent__footer paneContent__footer--transparent">
+    <button class="btn btn--primary btn--full" ng-click="webPublisherMonitoring.unPublishArticle()">Unpublish</button>
+</div>

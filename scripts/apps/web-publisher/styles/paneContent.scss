@@ -1,5 +1,4 @@
 .paneContent {
-
     &--darker {
         background-color: #3b3b3b;
         color: $white;
@@ -51,6 +50,19 @@
             color: $grayDark;
             border-bottom: 2px solid $sd-blue;
         }
+
+        &--light {
+            color: $grayLight;
+
+            &:hover {
+                color: $white;
+            }
+        }
+
+        &--activeLight {
+            color: $grayLighter;
+            border-bottom: 2px solid $sd-blue;
+        }
     }
 
     &__content {
@@ -88,7 +100,7 @@
         box-sizing: border-box;
         padding: 16px 24px;
         box-shadow: 0 -1px 2px 0 rgba(0,0,0,.12);
-        
+
         &--center {
             text-align: center;
         }

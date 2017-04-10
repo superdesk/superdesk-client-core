@@ -14,8 +14,20 @@
     padding-right: 20px;
 }
 
+.bottomPadding {
+    padding-bottom: 20px;
+}
+
 .leftSpace {
     margin-left: .5em;
+}
+
+.rightSpace {
+    margin-right: .5em;
+
+    &--small {
+        margin-right: .2em;
+    }
 }
 
 .countLabel {
@@ -53,6 +65,10 @@
         font-weight: 500;
     }
 
+    &--thin {
+        font-weight: 300;
+    }
+
     &--uppercase {
         text-transform: uppercase;
     }
@@ -61,12 +77,32 @@
         font-size: .9em;
     }
 
+    &--smaller {
+        font-size: 9px;
+    }
+
     &--smallHeading {
         font-size: 12px;
         line-height: 1em;
         margin-bottom: .8em;
         color: $gray;
     }
+
+    &--right {
+        text-align: right;
+    }
+
+    &--verticalMiddle {
+        vertical-align: middle;
+    }
+
+    &--blue {
+        color: $sd-blue;
+    }
+}
+
+.cursorPointer {
+    cursor: pointer;
 }
 
 .static {
@@ -77,8 +113,51 @@
     max-height: 570px;
     overflow-y: scroll;
     box-shadow: 0px 1px 4px 0 rgba(0, 0, 0, 0.2);
+    .list-without-items {
+        margin-left: auto;
+        margin-right: auto;
+        line-height: 38px;
+        height: 38px;
+        text-align: center;
+        color: #999;
+    }
 }
 
 .flex-pull-right {
     margin-left: auto;
+}
+
+.publisherPaddingRight10 {
+    padding-right: 10px !important;
+}
+
+.manualListSaveBtn {
+    position: fixed;
+    right: 25px;
+    top: calc(50% - 5px);
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 3px;
+}
+
+.label--facebook {
+    background-color: #000080;
+    color: $grayLighter;
+}
+
+.checkboxInlineRight {
+    vertical-align: middle;
+    margin-left: 5px;
+    margin-right: 0;
+}
+
+.minHeightLine {
+    min-height: 18px;
+}
+
+.icon--small {
+    width: 14px;
+    height: 14px;
+    line-height: 14px;
+    font-size: 14px;
 }

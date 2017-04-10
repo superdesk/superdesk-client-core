@@ -1,0 +1,36 @@
+.checkButton {
+    background: #444545;
+    border: none;
+    box-shadow: 0px 2px 1px 0px rgba(0, 0, 0, 0.3);
+    color: $white;
+    padding: 10px 20px;
+    text-align: left;
+    margin-bottom: 1px;
+    overflow: hidden;
+
+    &--full {
+        display: block;
+        width: 100%;
+    }
+
+    &:hover {
+        background: #515252;
+    }
+
+    &--active {
+        position: relative;
+        background: #4c5e66;
+
+        &:after {
+            content: "";
+            width: 42px;
+            height: 42px;
+            position: absolute;
+            bottom: -10px;
+            right: -8px;
+            background: url(~images/checkmark-big-full.png) no-repeat;
+            background-size: 42px;
+            opacity: 0.16;
+        }
+    }
+}

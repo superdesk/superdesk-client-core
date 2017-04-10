@@ -1,0 +1,16 @@
+.verticalLayout {
+    display: flex;
+    flex-direction: column;
+
+    &__element {
+        position: relative;
+        flex-grow: 1;
+        flex-basis: 50%;
+        overflow-x: hidden;
+        overflow-y: auto;
+
+        &--border {
+            border-bottom: 2px solid $tableBorder;
+        }
+    }
+}
