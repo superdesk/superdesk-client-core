@@ -8,7 +8,7 @@ export default angular.module('superdesk.core.directives.filetypeIcon', [])
  *
  * @description Adds the "filetype-icon-*" class based on the item.
  */
-.directive('sdFiletypeIcon', () => ({
+.directive('sdFiletypeIcon', ['gettextCatalog', (gettextCatalog) => ({
     scope: {item: '='},
     link: function(scope, element, attrs) {
         var stopWatch = scope.$watch('item', (item) => {
@@ -28,7 +28,8 @@ export default angular.module('superdesk.core.directives.filetypeIcon', [])
             } else {
                 cls += item.type;
             }
+            element.attr('title', `${gettextCatalog.getString('Article Type')}: ${item.type}`);
             element.addClass(cls);
         }
     }
-}));
+})]);
