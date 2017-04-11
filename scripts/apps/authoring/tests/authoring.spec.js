@@ -58,7 +58,7 @@ describe('authoring', () => {
         $rootScope.$digest();
 
         expect(api.find).toHaveBeenCalledWith('archive', GUID, jasmine.any(Object));
-        expect(lock.lock).toHaveBeenCalledWith(ITEM);
+        expect(lock.lock).toHaveBeenCalledWith(ITEM, false, undefined);
         expect(autosave.open).toHaveBeenCalledWith(lockedItem);
         expect(_item.guid).toBe(GUID);
     }));
@@ -2048,11 +2048,11 @@ describe('authoring workspace', () => {
     it('can open an item for edit or readonly', inject((authoringWorkspace, authoring, send, $q, $rootScope) => {
         item.state = 'draft';
         authoringWorkspace.open(item);
-        expect(authoring.open).toHaveBeenCalledWith(item._id, false, null);
+        expect(authoring.open).toHaveBeenCalledWith(item._id, false, null, 'edit');
 
         item.state = 'published';
         authoringWorkspace.open(item);
-        expect(authoring.open).toHaveBeenCalledWith(item._id, true, null);
+        expect(authoring.open).toHaveBeenCalledWith(item._id, true, null, 'view');
 
         var archived = {_id: 'bar'};
 
@@ -2061,7 +2061,7 @@ describe('authoring workspace', () => {
         authoringWorkspace.open(item);
         expect(send.one).toHaveBeenCalledWith(item);
         $rootScope.$digest();
-        expect(authoring.open).toHaveBeenCalledWith(archived._id, false, null);
+        expect(authoring.open).toHaveBeenCalledWith(archived._id, false, null, 'edit');
     }));
 
     describe('init', () => {

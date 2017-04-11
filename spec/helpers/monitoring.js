@@ -536,6 +536,8 @@ function Monitoring() {
         element(by.css('[ng-click="_publish()"]')).click();
     };
 
+    this.getPublishButtonText = () => element(by.css('[ng-click="publish()"]')).getText();
+
     this.startUpload = function() {
         element(by.id('start-upload-btn')).click();
     };

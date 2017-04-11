@@ -202,7 +202,7 @@ export function AuthoringWorkspaceService($location, superdeskFlags, authoring, 
      * Fetch item by id and start editing it
      */
     function authoringOpen(itemId, action, repo) {
-        return authoring.open(itemId, action === 'view', repo)
+        return authoring.open(itemId, action === 'view', repo, action)
             .then((item) => {
                 self.item = item;
                 self.action = action !== 'view' && item._editable ? action : 'view';
