@@ -33,7 +33,7 @@
     "angular-bootstrap-npm": "jusopi/angular-bootstrap-npm#0.13.1",
     "angular-contenteditable": "0.0.2",
     "angular-dynamic-locale": "0.1.32",
-    "angular-embed": "superdesk/angular-embed#2afd7397a7179f25b66c4b5f13ea2a0daf799821",
+    "angular-embed": "superdesk/angular-embed#b2b4a69",
     "angular-embedly": "Urigo/angular-embedly#0.0.8",
     "angular-gettext": "2.3.9",
     "angular-history": "decipherinc/angular-history#v0.8.0",
@@ -129,6 +129,7 @@
     "karma-webpack": "~1.8.1",
     "protractor": "~4.0.14",
     "react-addons-test-utils": "~15.5.1",
+    "react-test-renderer": "~15.5.1",
     "sinon": "~2.1.0"
   },
   "scripts": {
