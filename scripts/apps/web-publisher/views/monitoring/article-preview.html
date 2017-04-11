@@ -1,0 +1,23 @@
+<div sd-modal data-model="true" data-full="true" class="modal--fullscreen publisherManager">
+    <div class="modal-header">
+        <h3 class="pull-left"><span translate>Manage:</span> <b>{{newSite.name}}</b></h3>
+        <div class="pull-right">
+            <button class="btn" ng-click="webPublisher.toogleCreateSite()" translate>Close</button>
+            <button
+                class="btn"
+                ng-disabled="webPublisher.siteForm.$invalid || !webPublisher.siteForm.$dirty"
+                ng-show="webPublisher.activeTab === 'general'"
+                ng-click="webPublisher.cancelEditSite()"
+                translate>Cancel</button>
+            <button
+                class="btn btn--primary"
+                ng-disabled="webPublisher.siteForm.$invalid || !webPublisher.siteForm.$dirty"
+                ng-show="webPublisher.activeTab === 'general'"
+                ng-click="webPublisher.saveSite()"
+                translate>Save</button>
+        </div>
+    </div>
+    <div class="modal-body">
+        tralala
+    </div>
+</div>

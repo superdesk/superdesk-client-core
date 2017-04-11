@@ -50,7 +50,7 @@
         <div class="text--small text--lighter text--right minHeightLine">
             <span ng-if="i != 'notPublished'">5 days ago</span>
             <!-- if article is not published and route is selected this should appear -->
-            <span ng-if="i == 'notPublished'" class="text--uppercase text--small text--blue cursorPointer rightSpace"><i class="icon-external blue icon--small text--verticalMiddle rightSpace--small"/> Live Preview</span>
+            <span ng-if="i == 'notPublished'" class="text--uppercase text--small text--blue cursorPointer rightSpace" ng-click="webPublisherMonitoring.openArticlePreview(i)"><i class="icon-external blue icon--small text--verticalMiddle rightSpace--small"/> Live Preview</span>
         </div>
         <div class="minHeightLine">
             <span ng-if="i == 'publishedAll'" class="label label--facebook text--smaller text--uppercase">facebook</span>

@@ -110,7 +110,20 @@ export function WebPublisherMonitoringController($scope, publisher, modal) {
                 $scope.publishedArticles = articles;
             });
         }
+
+        /**
+         * @ngdoc method
+         * @name WebPublisherMonitoringController#openArticlePreview
+         * @param {Object} article - article to preview
+         * @description Opens modal window for previewing article
+         */
+        openArticlePreview(article) {
+            // TODO: pass route id here
+            this.previewArticle = article;
+            this.openArticlePreviewModal = true;
+        }
     }
+
 
     return new WebPublisherMonitoring();
 }
