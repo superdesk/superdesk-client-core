@@ -1985,6 +1985,34 @@ describe('authoring actions', () => {
             allowedActions(itemActions, ['duplicate', 'mark_item_for_highlight', 'multi_edit', 'create_broadcast',
                 'correct', 'kill', 'package_item', 'view', 'add_to_current', 'resend', 'export']);
         }));
+
+    it('cannot mark or highlight if the item is not a text item',
+        inject((privileges, desks, authoring, $q, $rootScope) => {
+            let item = {
+                _id: 'test',
+                type: 'text',
+                task: {
+                    desk: 'desk1'
+                }
+            };
+
+            let userPrivileges = {
+                mark_for_highlights: true,
+                mark_for_desks: true
+            };
+
+            privileges.setUserPrivileges(userPrivileges);
+            $rootScope.$digest();
+            let itemActions = authoring.itemActions(item);
+
+            expect(itemActions.mark_item_for_desks).toBeTruthy();
+            expect(itemActions.mark_item_for_highlight).toBeTruthy();
+
+            item.type = 'picture';
+            itemActions = authoring.itemActions(item);
+            expect(itemActions.mark_item_for_desks).toBeFalsy();
+            expect(itemActions.mark_item_for_highlight).toBeFalsy();
+        }));
 });
 
 describe('authoring workspace', () => {
