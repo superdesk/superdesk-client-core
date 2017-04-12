@@ -2,24 +2,17 @@
     <div class="dropdown__menu-label" translate>Create new item</div>
 </li>
 
-<li ng-if="profiles.length === 0">
+<li ng-if="!defaultTemplate">
     <button id="create_text_article" ng-click="create()">
         <i class="icon-plus-small icon-round icon-white"></i>
         {{ :: 'Plain text' | translate }}
     </button>
 </li>
 
-<li ng-repeat="profile in profiles track by profile._id">
-    <button id="type-{{ :: profile._id }}" ng-click="createFromType(profile)">
+<li ng-if="defaultTemplate">
+    <button id="create_text_article" ng-click="createFromTemplate(defaultTemplate)">
         <i class="icon-plus-small icon-round icon-white"></i>
-        {{ :: profile.label }}
-    </button>
-</li>
-
-<li ng-if="canCreatePackage() && !$root.config.features.hideCreatePackage">
-    <button id="create_package"  ng-click="createPackage()">
-        <i class="icon-plus-small icon-round icon-white"></i>
-        {{ :: 'Empty Package' | translate }}
+        {{ defaultTemplate.template_name }}
     </button>
 </li>
 
@@ -33,19 +26,18 @@
 <li class="divider"></li>
 
 <li>
-    <div class="dropdown__menu-label" translate>From template</div>
+    <div class="dropdown__menu-label" translate>Recent templates</div>
 </li>
-<div ng-show="contentTemplates.length">
-    <li ng-repeat="template in contentTemplates | orderBy:'template_name'">
-        <button ng-click="createFromTemplate(template)">
-            <i class="icon-plus-small icon-round icon-white"></i> {{ :: template.template_name }}
-        </button>
-    </li>
-</div>
 
-<div ng-hide="contentTemplates.length">
-    <li translate>No recent templates.</li>
-</div>
+<li ng-repeat="template in contentTemplates | orderBy:'template_name'">
+    <button ng-click="createFromTemplate(template)">
+        <i class="icon-plus-small icon-round icon-white"></i> {{ :: template.template_name }}
+    </button>
+</li>
+
+<li ng-hide="contentTemplates.length">
+    <button translate>No recent templates.</button>
+</li>
 
 <li>
     <button ng-click="flags = {displayTemplateSelect: true}" translate>More templates...</button>
@@ -53,9 +45,16 @@
 
 <li class="divider" ng-if="openUpload"></li>
 
+<li ng-if="canCreatePackage() && !$root.config.features.hideCreatePackage">
+    <button id="create_package"  ng-click="createPackage()">
+        <i class="icon-plus-small icon-round icon-white"></i>
+        {{ :: 'Create Package' | translate }}
+    </button>
+</li>
+
 <li ng-if="openUpload">
     <button ng-click="openUpload()" id="start-upload-btn">
-        <i class="icon-upload blue"></i> {{ :: 'UPLOAD ITEM' | translate }}
+        <i class="icon-upload blue"></i> {{ :: 'Upload Media' | translate }}
     </button>
 </li>
 

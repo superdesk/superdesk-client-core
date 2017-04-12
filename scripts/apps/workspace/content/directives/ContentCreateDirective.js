@@ -72,11 +72,7 @@ export function ContentCreateDirective(api, desks, templates, content, authoring
             desks.initialize().then(() => {
                 scope.$watch(() => desks.active.desk, (activeDeskId) => {
                     getRecentTemplates(activeDeskId);
-
-                    content.getDeskProfiles(activeDeskId ? desks.getCurrentDesk() : null)
-                        .then((profiles) => {
-                            scope.profiles = profiles;
-                        });
+                    getDefaultTemplate();
                 });
             });
 
@@ -84,20 +80,32 @@ export function ContentCreateDirective(api, desks, templates, content, authoring
                 if (e) {
                     e.preventDefault();
                 }
-                scope.create();
+
+                scope.defaultTemplate ? scope.createFromTemplate(scope.defaultTemplate) : scope.create();
             });
 
             scope.$on('$destroy', () => {
                 keyboardManager.unbind('ctrl+m');
             });
 
+            function getDefaultTemplate() {
+                let desk = desks.getCurrentDesk();
+
+                scope.defaultTemplate = null;
+                if (desk.default_content_template) {
+                    templates.find(desk.default_content_template).then((template) => {
+                        scope.defaultTemplate = template;
+                    });
+                }
+            }
+
             /**
              * Create a new item using given type and start editing
              *
              * @param {Object} contentType
              */
-            scope.createFromType = function(contentType) {
-                content.createItemFromContentType(contentType).then(edit);
+            scope.createFromTemplate = function(template) {
+                content.createItemFromTemplate(template).then(edit);
             };
         }
     };

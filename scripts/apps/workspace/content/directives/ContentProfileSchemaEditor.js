@@ -1,9 +1,7 @@
-import * as constant from '../constants';
-
-ContentProfileSchemaEditor.$inject = ['gettext', 'metadata', 'content', 'config'];
-export function ContentProfileSchemaEditor(gettext, metadata, content, config) {
+ContentProfileSchemaEditor.$inject = ['gettext', 'content', 'config'];
+export function ContentProfileSchemaEditor(gettext, content, config) {
     // labelMap maps schema entry keys to their display names.
-    var labelMap = {
+    const labelMap = {
         headline: gettext('Headline'),
         slugline: gettext('Slug'),
         genre: gettext('Genre'),
@@ -52,24 +50,7 @@ export function ContentProfileSchemaEditor(gettext, metadata, content, config) {
             content.getTypeMetadata(scope.model._id).then((typeMetadata) => {
                 scope.model.schema = angular.extend({}, typeMetadata.schema);
                 scope.model.editor = angular.extend({}, typeMetadata.editor);
-
-                metadata.initialize().then(() => {
-                    scope.options = {subject: metadata.values.subjectcodes};
-                    scope.terms = {
-                        subject: metadata.values.subjectcodes,
-                        anpa_category: metadata.values.categories
-                    };
-
-                    metadata.cvs.forEach((cv) => {
-                        var cvId = constant.CV_ALIAS[cv._id] || cv._id;
-
-                        if (scope.model.editor[cvId]) {
-                            scope.options[cvId] = cv.items;
-                        }
-                    });
-
-                    scope.loading = false;
-                });
+                scope.loading = false;
             });
 
             scope.directive = this.name;

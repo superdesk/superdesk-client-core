@@ -55,10 +55,14 @@ export function TemplatesService(api, session, $q, gettext, preferencesService, 
         return _.pick(item, this.TEMPLATE_METADATA);
     };
 
+    const KILL_TYPE = 'kill';
+    const CREATE_TYPE = 'create';
+    const HIGHLIGHTS_TYPE = 'highlights';
+
     this.types = [
-        {_id: 'kill', label: gettext('Kill')},
-        {_id: 'create', label: gettext('Create')},
-        {_id: 'highlights', label: gettext('Highlights')}
+        {_id: KILL_TYPE, label: gettext('Kill')},
+        {_id: CREATE_TYPE, label: gettext('Create')},
+        {_id: HIGHLIGHTS_TYPE, label: gettext('Highlights')}
     ];
 
     /*
@@ -109,6 +113,29 @@ export function TemplatesService(api, session, $q, gettext, preferencesService, 
                 return params;
             })
             .then((params) => api.query('content_templates', params));
+    };
+
+    this.fetchTemplatesByDesk = function(desk) {
+        let params = {sort: 'template_name'};
+
+        let deskCriteria = [
+            {template_desks: {$exists: false}, is_public: true},
+            {template_desks: {$eq: []}, is_public: true}
+        ];
+
+        if (desk) {
+            deskCriteria.push({template_desks: {$in: [desk]}, is_public: true});
+        }
+
+        let criteria = {$or: deskCriteria, template_type: CREATE_TYPE};
+
+        if (!_.isEmpty(criteria)) {
+            params.where = JSON.stringify({
+                $and: [criteria]
+            });
+        }
+
+        return api.query('content_templates', params);
     };
 
     this.fetchTemplatesByUserDesk = function(user, desk, page, pageSize, type, templateName) {
@@ -170,6 +197,16 @@ export function TemplatesService(api, session, $q, gettext, preferencesService, 
             }
             return result;
         });
+    };
+
+    /**
+     * Find template by id
+     *
+     * @param {String} id
+     * @return {Promise}
+     */
+    this.find = function(id) {
+        return api.find('content_templates', id);
     };
 
     /**

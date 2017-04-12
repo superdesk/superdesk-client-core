@@ -10,8 +10,8 @@
  * @description Generates modal for editing desks
  */
 
-DeskConfigModal.$inject = ['metadata', 'content', 'api'];
-export function DeskConfigModal(metadata, content, api) {
+DeskConfigModal.$inject = ['metadata', 'content', 'templates', 'api'];
+export function DeskConfigModal(metadata, content, templates, api) {
     return {
         scope: {
             modalActive: '=active',
@@ -45,6 +45,15 @@ export function DeskConfigModal(metadata, content, api) {
              */
             api.query('languages').then((languages) => {
                 scope.languages = languages._items;
+            });
+
+            scope.$watch('desk', (desk) => {
+                scope.templates = null;
+                if (desk) {
+                    templates.fetchTemplatesByDesk(desk._id).then((data) => {
+                        scope.templates = data._items;
+                    });
+                }
             });
         }
     };

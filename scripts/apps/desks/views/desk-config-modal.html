@@ -69,13 +69,13 @@
                                     data-header="true">
                                 </div>
                             </div>
-                            <div class="field" ng-show="profiles.length">
-                                <label translate>Content Profiles</label>
-                                <ul class="content-profiles-list">
-                                    <li ng-repeat="profile in profiles track by profile._id">
-                                        <span sd-check class="sd-checkbox--button-style" ng-model="desk.edit.content_profiles[profile._id]">{{:: profile.label}}</span>
-                                    </li>
-                                </ul>
+                            <div class="field">
+                                <label translate>Default Content Template</label>
+                                <div class="line-select">
+                                    <select ng-model="desk.edit.default_content_template"
+                                        ng-options="template._id as template.template_name for template in templates">
+                                    </select>
+                                </div>
                             </div>
                             <div class="field" ng-show="profiles.length">
                                 <label translate>Default Content Profile</label>
