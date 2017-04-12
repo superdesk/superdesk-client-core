@@ -20,12 +20,14 @@ export default angular.module('superdesk.apps.web_publisher', [
     'infinite-scroll'
 ])
 
-    .directive('sdSiteRoutes', directive.SiteRoutesDirective)
-    .directive('sdListArticles', directive.ListArticlesDirective)
-    .directive('sdArticles', directive.ArticlesDirective)
-    .directive('sdCardInputFocus', directive.CardInputFocusDirective)
-    .factory('publisher', services.PublisherFactory)
-    .factory('pubapi', services.PubAPIFactory)
+.directive('sdSiteRoutes', directive.SiteRoutesDirective)
+.directive('sdPublishRoutes', directive.PublishRoutesDirective)
+.directive('sdListArticles', directive.ListArticlesDirective)
+.directive('sdCardInputFocus', directive.CardInputFocusDirective)
+.directive('sdGroupArticle', directive.GroupArticleDirective)
+.directive('sdArticles', directive.ArticlesDirective)
+.factory('publisher', services.PublisherFactory)
+.factory('pubapi', services.PubAPIFactory)
 
     .config(['superdeskProvider', function(superdesk) {
         superdesk

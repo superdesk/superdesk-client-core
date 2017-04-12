@@ -14,16 +14,18 @@
     padding-right: 20px;
 }
 
-.bottomPadding{
+.bottomPadding {
     padding-bottom: 20px;
 }
 
 .leftSpace {
     margin-left: .5em;
 }
+
 .rightSpace {
     margin-right: .5em;
-    &--small{
+
+    &--small {
         margin-right: .2em;
     }
 }
@@ -55,6 +57,10 @@
         color: $grayLight;
     }
 
+    &--dark {
+        color: $grayDarker;
+    }
+
     &--italic {
         font-style: italic;
     }
@@ -75,7 +81,7 @@
         font-size: .9em;
     }
 
-    &--smaller{
+    &--smaller {
         font-size: 9px;
     }
 
@@ -86,16 +92,33 @@
         color: $gray;
     }
 
-    &--right{
+    &--right {
         text-align: right;
     }
 
-    &--verticalMiddle{
+    &--verticalMiddle {
         vertical-align: middle;
     }
-    &--blue{
+
+    &--blue {
         color: $sd-blue;
     }
+
+    &--center {
+        text-align: center;
+    }
+
+    &--left {
+        text-align: left !important;
+    }
+
+    &--right {
+        text-align: right !important;
+    }
+}
+
+.cursorPointer {
+    cursor: pointer;
 }
 
 .cursorPointer{
@@ -109,17 +132,25 @@
     max-height: 570px;
     overflow-y: scroll;
     box-shadow: 0px 1px 4px 0 rgba(0, 0, 0, 0.2);
+    .list-without-items {
+        margin-left: auto;
+        margin-right: auto;
+        line-height: 38px;
+        height: 38px;
+        text-align: center;
+        color: #999;
+    }
 }
 
 .flex-pull-right {
     margin-left: auto;
 }
 
-.publisherPaddingRight10{
+.publisherPaddingRight10 {
     padding-right: 10px !important;
 }
 
-.manualListSaveBtn{
+.manualListSaveBtn {
     position: fixed;
     right: 25px;
     top: calc(50% - 5px);
@@ -128,24 +159,28 @@
     border-radius: 3px;
 }
 
-.label--facebook{
+.label--facebook {
     background-color: #000080;
     color: $grayLighter;
 }
 
-.checkboxInlineRight{
+.checkboxInlineRight {
     vertical-align: middle;
     margin-left: 5px;
     margin-right: 0;
 }
 
-.minHeightLine{
+.minHeightLine {
     min-height: 18px;
 }
 
-.icon--small{
+.icon--small {
     width: 14px;
     height: 14px;
     line-height: 14px;
     font-size: 14px;
+}
+
+.width200{
+    width: 200px;
 }

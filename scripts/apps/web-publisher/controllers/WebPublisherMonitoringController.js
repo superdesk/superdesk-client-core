@@ -7,19 +7,17 @@
  * @requires https://docs.angularjs.org/api/ng/type/$rootScope.Scope $scope
  * @description WebPublisherMonitoringController holds a set of functions used for web publisher monitoring
  */
-WebPublisherMonitoringController.$inject = ['$scope', 'publisher', 'modal'];
-export function WebPublisherMonitoringController($scope, publisher, modal) {
+WebPublisherMonitoringController.$inject = ['$scope', '$sce', 'publisher', 'modal'];
+export function WebPublisherMonitoringController($scope, $sce, publisher, modal) {
     class WebPublisherMonitoring {
         constructor() {
             this.TEMPLATES_DIR = 'scripts/apps/web-publisher/views';
-            $scope.incomingArticles = [];
-            $scope.publishedArticles = [];
 
             publisher.setToken()
                 .then(publisher.querySites)
                 .then((sites) => {
-                    $scope.tokenLoaded = true;
-                    $scope.sites = sites;
+                    $scope.loadArticles = true;
+                    this.sites = sites;
                 });
 
             $scope.routes = [
@@ -44,48 +42,6 @@ export function WebPublisherMonitoringController($scope, publisher, modal) {
                 {closed: true, name: 'Gossips'}];
         }
 
-        loadIncoming(reset) {
-            if ($scope.loadingIncoming) {
-                return;
-            }
-
-            let page = $scope.totalIncoming ? $scope.totalIncoming.page + 1 : 1;
-
-            if (reset) {
-                page = 1;
-                $scope.incomingArticles = [];
-            }
-
-            $scope.loadingIncoming = true;
-            publisher.queryMonitoringArticles(
-                {page: page, limit: 20, status: 'new'}).then((articles) => {
-                    $scope.totalIncoming = articles;
-                    $scope.incomingArticles = $scope.incomingArticles.concat(articles._embedded._items);
-                    $scope.loadingIncoming = false;
-                });
-        }
-
-        loadPublished(reset) {
-            if ($scope.loadingPublished) {
-                return;
-            }
-
-            let page = $scope.totalPublished ? $scope.totalPublished.page + 1 : 1;
-
-            if (reset) {
-                page = 1;
-                $scope.publishedArticles = [];
-            }
-
-            $scope.loadingPublished = true;
-            publisher.queryMonitoringArticles(
-                {page: page, limit: 20, 'status[]': ['published', 'unpublished', 'canceled']}).then((articles) => {
-                    $scope.totalPublished = articles;
-                    $scope.publishedArticles = $scope.publishedArticles.concat(articles._embedded._items);
-                    $scope.loadingPublished = false;
-                });
-        }
-
         openPublish(article, action) {
             this.selectedRoute = [];
             this.publishOpen = true;
@@ -95,13 +51,37 @@ export function WebPublisherMonitoringController($scope, publisher, modal) {
         }
 
         publishArticle() {
+            publisher.setTenant(this.selectedArticle.tenant.subdomain);
+
             publisher.publishArticle(
                 {article: {status: 'published', route: this.selectedRoute[0].id}}, this.selectedArticle.id)
                 .then(() => {
                     this.publishOpen = false;
-                    this.loadIncoming(true);
-                    this.loadPublished(true);
+                    $scope.$broadcast('refreshArticlesList', this.selectedArticle, this.selectedRoute[0].id);
                 });
+        }
+
+        viewTenantArticles() {
+            this.tenantArticles = true;
+        }
+
+        viewRouteArticles(site) {
+            this.routeArticles = true;
+            $scope.loadArticles = false;
+            publisher.setTenant(site.subdomain);
+            publisher.queryRoutes({type: 'collection'}).then((routes) => {
+                $scope.loadArticles = true;
+                this.routes = routes;
+            });
+        }
+
+        viewMonitoringHome() {
+            if (this.routeArticles) {
+                this.routeArticles = null;
+                return;
+            }
+
+            this.tenantArticles = null;
         }
 
         filterTenantArticles(tenant) {
@@ -114,13 +94,49 @@ export function WebPublisherMonitoringController($scope, publisher, modal) {
         /**
          * @ngdoc method
          * @name WebPublisherMonitoringController#openArticlePreview
-         * @param {Object} article - article to preview
+         * @param {Object} tenant
          * @description Opens modal window for previewing article
          */
-        openArticlePreview(article) {
+        openArticlePreview(tenant) {
             // TODO: pass route id here
-            this.previewArticle = article;
+            let src = 'http://magazine.s-lab.sourcefabric.org/business/kogi-truffaut-vaporware';
+
+            this.previewArticleSrc = $sce.trustAsResourceUrl(src);
             this.openArticlePreviewModal = true;
+            this.setArticlePreviewMode('desktop');
+        }
+
+        /**
+         * @ngdoc method
+         * @name WebPublisherMonitoringController#setArticlePreviewMode
+         * @param {String} mode - article preview mode (desktop, tablet, mobile etc)
+         * @description Sets type/mode of article preview
+         */
+        setArticlePreviewMode(mode) {
+            this.articlePreviewMode = mode;
+            switch (mode) {
+            case 'desktop':
+                this.articlePreviewModeReadable = 'Desktop';
+                break;
+            case 'tablet':
+                this.articlePreviewModeReadable = 'Tablet (portrait)';
+                break;
+            case 'tablet-landscape':
+                this.articlePreviewModeReadable = 'Tablet (landscape)';
+                break;
+            case 'mobile':
+                this.articlePreviewModeReadable = 'Mobile (portrait)';
+                break;
+            case 'mobile-landscape':
+                this.articlePreviewModeReadable = 'Mobile (landscape)';
+                break;
+            case 'amp':
+                this.articlePreviewModeReadable = 'AMP (portrait)';
+                break;
+            case 'amp-landscape':
+                this.articlePreviewModeReadable = 'AMP (landscape)';
+                break;
+            }
         }
     }
 

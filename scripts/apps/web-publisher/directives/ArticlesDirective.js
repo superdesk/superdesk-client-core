@@ -126,18 +126,17 @@ export function ArticlesDirective(publisher) {
                 this._queryItems(scope);
             };
 
-            scope.$on('refreshArticles', (e, data) => {
+            scope.$on('refreshArticles', (e, filters) => {
+                scope.params = filters;
                 scope.params.page = 1;
-                scope.params['route[]'] = [];
-                if (data.length > 0) {
-                    data.forEach((item) => {
-                        scope.params['route[]'].push(item.id);
-                    });
-                }
+                scope.params.includeSubRoutes = true;
+
                 this._queryItems(scope);
             });
 
-            // this._queryItems(scope);
+            if (scope.type !== 'draggable') {
+                this._queryItems(scope);
+            }
         }
 
         /**

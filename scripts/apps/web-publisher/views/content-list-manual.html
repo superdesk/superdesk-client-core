@@ -20,10 +20,10 @@
         <div class="paneContent__content paneContent__content--hasFooter contentPadding">
             <form name="" class="flat">
                 <fieldset class="label-light">
-                   <!--  <div class="item">
+                     <div class="item">
                         <label for="search" translate>Search</label>
-                        <input type="text" name="search" id="search" class="line-input">
-                    </div> -->
+                        <input type="text" ng-model="newList.filters.query" class="line-input">
+                    </div>
                     <div class="item">
                       <label translate>routes</label>
                         <div sd-meta-terms
@@ -36,7 +36,7 @@
                             data-reload-list="true">
                         </div>
                      </div>
-                    <!-- will be added later when API supports filtering
+
                     <div class="item">
                       <label translate>author</label>
                         <div class="multiple" ng-repeat="item in newList.filters.author track by $index">
@@ -62,21 +62,19 @@
                         <i class="svg-icon-plus"></i>
                     </button>
                     <div class="item">
-                        <label for="publishedAt" translate>publish date</label>
-                        <div sd-datepicker data-format="YYYY-MM-DD" name="publishedAt" id="publishedAt" ng-model="newList.filters.publishedAt"></div>
-                    </div>
-                    <div class="multiple">
-                        <div class="field publisherPaddingRight10">
-                            <label for="publishedBefore" translate>published before</label>
-                            <div sd-datepicker data-format="YYYY-MM-DD" name="publishedBefore" id="publishedBefore" ng-model="newList.filters.publishedBefore"></div>
-                        </div>
+                        <label for="publishedAfter" translate>published after</label>
                         <div class="field">
-                            <label for="publishedAfter" translate>published after</label>
                             <div sd-datepicker data-format="YYYY-MM-DD" name="publishedAfter" id="publishedAfter" ng-model="newList.filters.publishedAfter"></div>
                         </div>
                     </div>
                     <div class="item">
-                      <label translate>metadata</label>
+                        <label for="publishedBefore" translate>published before</label>
+                        <div class="field">
+                            <div sd-datepicker data-format="YYYY-MM-DD" name="publishedBefore" id="publishedBefore" ng-model="newList.filters.publishedBefore"></div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <label translate>metadata</label>
                         <div class="field" ng-if="webPublisher.metadataList.length>0">
                             <label translate>Name</label>
                             <label translate>Value</label>
@@ -103,7 +101,7 @@
                         tooltip-placement="right"
                         tooltip-popup-delay="500">
                         <i class="svg-icon-plus"></i>
-                    </button> -->
+                    </button>
                 </fieldset>
             </form>
         </div>

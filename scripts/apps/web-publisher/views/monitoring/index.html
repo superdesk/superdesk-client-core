@@ -1,4 +1,9 @@
 <div class="subnav">
+    <div class="flat-searchbar monitoring-backlink" ng-if="webPublisherMonitoring.tenantArticles">
+        <div class="search-handler">
+            <button tooltip="{{ :: 'Back to previous view' | translate }}" tooltip-placement="right" class="backlink" ng-click="webPublisherMonitoring.viewMonitoringHome()"></button>
+        </div>
+    </div>
     <div class="flat-searchbar monitoring-flat-searchbar" ng-class="{extended: aggregate.monitoringSearch}">
         <div class="search-handler">
             <label for="search-input" class="trigger-icon" ng-click="aggregate.monitoringSearch = !aggregate.monitoringSearch"><i class="icon-search"></i></label>
@@ -29,8 +34,7 @@
                 <li class="filter-type__item filter-type__item--active" ng-class="{'filter-type__item--active': true}">
                     <a ng-click="">all</a>
                 </li>
-
-                <li class="filter-type__item" ng-repeat="site in sites" ng-class="{'filter-type__item--active': false}">
+                <li class="filter-type__item" ng-repeat="site in webPublisherMonitoring.sites" ng-class="{'filter-type__item--active': false}">
                     <a ng-click="">{{ site.name }}</a>
                 </li>
             </ul>
@@ -173,7 +177,32 @@
 
     <div class="paneLayout__pane paneContent paneContent--darker"
         ng-class="{'paneLayout__pane--open': webPublisherMonitoring.publishOpen}"
-        ng-include="webPublisherMonitoring.TEMPLATES_DIR + '/monitoring/publishing-pane.html'"
-        >
-  </div>
- /div>
+        ng-include="webPublisherMonitoring.TEMPLATES_DIR + '/monitoring/publishing-pane.html'">
+    </div>
+
+    <!--<div ng-if="webPublisherMonitoring.publishOpen"
+        class="paneLayout__pane paneContent paneContent--darker modal-content"
+        ng-class="{'paneLayout__pane--open': webPublisherMonitoring.publishOpen}">
+        <div class="paneContent__header paneContent__header--darker">
+            <h3 class="pull-left">Publishing to web</h3>
+            <div ng-click="webPublisherMonitoring.publishOpen = false" class="close-filter">
+                <i class="icon-close-small icon-white"></i>
+            </div>
+        </div>
+        <div class="paneContent__content paneContent__content--hasFooter contentPadding">
+            <form class="flat">
+                <fieldset class="label-light">
+                    <div ng-repeat="site in webPublisherMonitoring.sites"
+                         sd-toggle-box
+                         data-title="{{site.name}}"
+                         data-open="true" data-style="dark">
+                            <div sd-publish-routes data-site="site" data-monitoring-contoller="webPublisherMonitoring"></div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+        <div class="paneContent__footer paneContent__footer--transparent">
+            <button class="btn btn--primary btn--full" ng-click="webPublisherMonitoring.publishArticle()">Publish to web</button>
+        </div>
+    </div>-->
+</div>

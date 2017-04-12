@@ -8,12 +8,12 @@
     display: flex;
     align-items: center;
 
-    &--dark{
+    &--dark {
         background-color: #444545;
         border-color: #3b3b3b;
     }
 
-    &--lightDark{
+    &--lightDark {
         background-color: #535454;
     }
 
@@ -22,11 +22,11 @@
         margin-top: 2px;
     }
 
-    &--borderPublished{
+    &--borderPublished {
         border-left: 4px solid $green;
     }
 
-    &--borderUnpublished{
+    &--borderUnpublished {
         border-left: 4px solid $red;
     }
 
@@ -75,7 +75,7 @@
         width: 100%;
         color: $gray;
 
-        &--dark{
+        &--dark {
             color: #eaeaea;
         }
 
@@ -84,12 +84,17 @@
             background: none;
             line-height: 0;
 
-            &.hidden{
+            &.hidden {
                 opacity: 0;
-                &:hover{
+                &:hover {
                     opacity: 1;
                 }
             }
+        }
+
+        .pin {
+            display: none;
+            opacity: 0.4;
         }
     }
 

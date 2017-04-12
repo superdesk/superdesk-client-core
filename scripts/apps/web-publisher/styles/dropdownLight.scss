@@ -1,15 +1,17 @@
-.dropdownLight{
-    .dropdown{
+.dropdownLight {
+    .dropdown {
         display: block;
     }
-    .dropdown__toggle.line-input{
+
+    .dropdown__toggle.line-input {
         border-color: rgba(255,255,255, .15) !important;
         color: #eaeaea;
         line-height: 20px;
         height: 20px;
         vertical-align: baseline;
     }
-    .dropdown__caret{
+
+    .dropdown__caret {
         border-top-color: #fff;
         position: absolute;
         top: 50%;

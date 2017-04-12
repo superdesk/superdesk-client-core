@@ -1,6 +1,7 @@
-.darkFilters{
+.darkFilters {
     white-space: nowrap;
-    &__item{
+
+    &__item {
         display: inline-block;
         vertical-align: middle;
         margin: 3px 2px;
@@ -11,17 +12,17 @@
         font-size: .9em;
         border-radius: 3px;
 
-        &:hover{
+        &:hover {
             border-color: $grayLighter;
             color: $grayLighter;
         }
 
-        &--active{
+        &--active {
             color: $white;
             background-color: $sd-blue;
             border-color: $sd-blue;
 
-            &:hover{
+            &:hover {
                 border-color: $sd-blue;
             }
         }

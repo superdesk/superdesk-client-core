@@ -465,6 +465,22 @@ export function WebPublisherManagerController($scope, publisher, modal) {
          * @description
          */
         filterArticles() {
+            let filters = _.pickBy($scope.newList.filters, _.identity);
+
+            filters.metadata = {};
+            this.metadataList.forEach((item) => {
+                if (item.metaName) {
+                    filters.metadata[item.metaName] = item.metaValue;
+                }
+            });
+
+            delete filters.route;
+            if (this.selectedRoutes.length > 0) {
+                filters.route = [];
+                this.selectedRoutes.forEach((item) => {
+                    filters.route.push(item.id);
+                });
+            }
             /**
              * @ngdoc event
              * @name WebPublisherManagerController#refreshArticles
@@ -472,7 +488,7 @@ export function WebPublisherManagerController($scope, publisher, modal) {
              * @param {Object} this.selectedRoutes - list of routes
              * @description event is thrown when filter criteria is updated
              */
-            $scope.$broadcast('refreshArticles', this.selectedRoutes);
+            $scope.$broadcast('refreshArticles', filters);
         }
 
         /**

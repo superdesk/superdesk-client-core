@@ -1,4 +1,4 @@
-ul[dnd-list]{
+ul[dnd-list] {
     min-height: 42px;
 
      .dndPlaceholder {
@@ -7,24 +7,23 @@ ul[dnd-list]{
         min-height: 42px;
     }
 
-    li.selected .listElement{
+    li.selected .listElement {
         background-color: $sd-hover;
     }
 }
 
 .dropZone{
-
-    &--empty{
+    &--empty {
         border: 2px dashed #adadad;
         background-color: #ebebeb;
     }
 
-    &--active{
+    &--active {
         border: 2px dashed $sd-blue;
         background-color: $sd-hover;
     }
 
-    &__heading{
+    &__heading {
         display: inline-block;
         position: absolute;
         top: 50%;

@@ -1,5 +1,4 @@
-.paneContent{
-
+.paneContent {
     &--darker {
         background-color: #3b3b3b;
         color: $white;
@@ -51,10 +50,10 @@
             border-bottom: 2px solid $sd-blue;
         }
 
-        &--light{
+        &--light {
             color: $grayLight;
 
-            &:hover{
+            &:hover {
                 color: $white;
             }
         }

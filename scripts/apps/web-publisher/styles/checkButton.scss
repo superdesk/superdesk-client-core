@@ -1,4 +1,4 @@
-.checkButton{
+.checkButton {
     background: #444545;
     border: none;
     box-shadow: 0px 2px 1px 0px rgba(0, 0, 0, 0.3);
@@ -8,19 +8,20 @@
     margin-bottom: 1px;
     overflow: hidden;
 
-    &--full{
+    &--full {
         display: block;
         width: 100%;
     }
 
-    &:hover{
+    &:hover {
         background: #515252;
     }
 
-    &--active{
+    &--active {
         position: relative;
         background: #4c5e66;
-        &:after{
+
+        &:after {
             content: "";
             width: 42px;
             height: 42px;

@@ -1,12 +1,12 @@
 <div class="paneContent__header paneContent__header--darker">
     <span class="paneContent__tabItem paneContent__tabItem--light"
         ng-class="{'paneContent__tabItem--activeLight' : webPublisherMonitoring.activePublishPane == 'publish' }"
-        ng-click="webPublisherMonitoring.activePublishPane = 'publish'"
-        >Publish</span>
+        ng-click="webPublisherMonitoring.activePublishPane = 'publish'">Publish
+    </span>
     <span class="paneContent__tabItem paneContent__tabItem--light"
         ng-class="{'paneContent__tabItem--activeLight' : webPublisherMonitoring.activePublishPane == 'unpublish' }"
-        ng-click="webPublisherMonitoring.activePublishPane = 'unpublish'"
-        >Unpublish</span>
+        ng-click="webPublisherMonitoring.activePublishPane = 'unpublish'">Unpublish
+    </span>
     <div ng-click="webPublisherMonitoring.publishOpen = false" class="close-filter">
         <i class="icon-close-small icon-white"></i>
     </div>
@@ -18,22 +18,19 @@
         <ul class="darkFilters bottomPadding">
             <li class="darkFilters__item"
                 ng-class="{'darkFilters__item--active': true}"
-                ng-click="">
-                All
+                ng-click="">All
             </li>
             <li class="darkFilters__item"
                 ng-class="{'darkFilters__item--active': false}"
-                ng-click="">
-                Published
+                ng-click="">Published
             </li>
             <li class="darkFilters__item"
                 ng-class="{'fdarkFilters__item--active': false}"
-                ng-click="">
-                Unpublished
+                ng-click="">Unpublished
             </li>
         </ul>
         <ul>
-            <li ng-repeat="i in ['publishedAll','notPublished','publishedTenant', 'unpublished']" ng-include="webPublisherMonitoring.TEMPLATES_DIR + '/monitoring/publish-pane-listitem.html'">
+            <li ng-repeat="site in webPublisherMonitoring.sites" ng-include="webPublisherMonitoring.TEMPLATES_DIR + '/monitoring/publish-pane-listitem.html'">
         </ul>
     </div>
     <!-- unpublish -->
@@ -53,9 +50,7 @@
             www.superdesk.org
         </button>
     </div>
-
 </div>
-
 <div ng-show="webPublisherMonitoring.activePublishPane == 'publish'" class="paneContent__footer paneContent__footer--transparent">
     <button class="btn btn--primary btn--full" ng-click="webPublisherMonitoring.publishArticle()">Publish</button>
 </div>

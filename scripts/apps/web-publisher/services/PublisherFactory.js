@@ -215,8 +215,8 @@ export function PublisherFactory(pubapi) {
          * @returns {Promise}
          * @description List all articles for selected tenant
          */
-        queryTenantArticles(params) {
-            return pubapi.queryWithDetails('content/articles', params);
+        queryTenantArticles(articleStatus) {
+            return pubapi.queryWithDetails('content/articles', articleStatus);
         }
 
         /**

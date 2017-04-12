@@ -1,41 +1,24 @@
 <div class="content-list">
-    <div class="stage">
-        <div class="stage-header">
-            <span class="stage-header__name">
-                <a href="">Incoming Content</a>
-            </span>
-            <span class="label-total stage-header__number">{{totalIncoming.total}}</span>
-        </div>
-        <div class="publisherBoxShadow">
-            <ul class="list-view compact-view"
-                infinite-scroll="webPublisherMonitoring.loadIncoming()"
-                infinite-scroll-disabled="!tokenLoaded"
-                infinite-scroll-parent="true">
-                <li class="list-item-view" 
-                    ng-repeat="i in incomingArticles"
-                    ng-include="webPublisherMonitoring.TEMPLATES_DIR + '/monitoring/list-item.html'">
-                </li>
-            </ul>
-        </div>
+    <div class="stage" ng-if="!webPublisherMonitoring.tenantArticles">
+        <div sd-group-article data-root-type="incoming" data-web-publisher-monitoring="webPublisherMonitoring" data-load-articles="loadArticles"></div>
     </div>
 
-    <div class="stage">
-        <div class="stage-header">
-            <span class="stage-header__name">
-                <a href="">Published To Web</a>
-            </span>
-            <span class="label-total stage-header__number">{{totalPublished.total}}</span>
-        </div>
-        <div class="publisherBoxShadow">
-            <ul class="list-view compact-view"
-                infinite-scroll="webPublisherMonitoring.loadPublished()"
-                infinite-scroll-disabled="!tokenLoaded"
-                infinite-scroll-parent="true">
-                <li class="list-item-view"
-                    ng-repeat="i in publishedArticles"
-                    ng-include="webPublisherMonitoring.TEMPLATES_DIR + '/monitoring/list-item.html'">
-                </li>
-            </ul>
+    <div class="stage" ng-if="!webPublisherMonitoring.tenantArticles">
+        <div sd-group-article data-root-type="published" data-web-publisher-monitoring="webPublisherMonitoring" data-load-articles="loadArticles"></div>
+    </div>
+
+    <div class="stage" ng-repeat="site in webPublisherMonitoring.sites"
+        ng-if="webPublisherMonitoring.tenantArticles && !webPublisherMonitoring.routeArticles">
+        <div sd-group-article data-site="site" data-web-publisher-monitoring="webPublisherMonitoring" data-load-articles="loadArticles"></div>
+    </div>
+
+    <div class="stage" ng-repeat="route in webPublisherMonitoring.routes"
+        ng-if="webPublisherMonitoring.routeArticles">
+        <div sd-group-article
+            data-site="site"
+            data-route="route"
+            data-web-publisher-monitoring="webPublisherMonitoring"
+            data-load-articles="loadArticles">
         </div>
     </div>
 </div>
