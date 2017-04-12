@@ -17,8 +17,6 @@
          ng-click="isMediaEditable() && edit(related); $event.stopPropagation()">
     <div sd-remove-tags
         type="text"
-        tansa-scope-sync
-        tansa-proofing="true"
         ng-model="related.description_text"
         ng-model-options="{debounce: 1000}"
         ng-change="onchange()"
