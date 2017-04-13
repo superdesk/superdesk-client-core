@@ -14,8 +14,8 @@
  *
  * @description Controller is responsible for cropping pictures and setting Point of Interest for an image.
  */
-ChangeImageController.$inject = ['$scope', 'gettext', 'notify', 'modal', 'lodash', 'api', '$rootScope', 'config'];
-export function ChangeImageController($scope, gettext, notify, modal, _, api, $rootScope, config) {
+ChangeImageController.$inject = ['$scope', 'gettext', 'notify', 'modal', 'lodash', 'api', '$rootScope', 'config', '$q'];
+export function ChangeImageController($scope, gettext, notify, modal, _, api, $rootScope, config, $q) {
     $scope.data = $scope.locals.data;
     $scope.data.cropData = {};
     $scope.validator = config.validatorMediaMetadata;
@@ -217,9 +217,19 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
                 $scope.data.poi = {x: 0.5, y: 0.5};
                 $rootScope.$broadcast('poiUpdate', $scope.data.poi);
             });
-        })
+        }, (response) =>
+            $q.reject(response)
+        )
         .then(() => {
             $scope.showAreaOfInterestView(false);
+        }, (response) => {
+            if (_.isObject(response.data) && angular.isDefined(response.data._message)) {
+                notify.error(gettext('Failed to save the area of interest: ' + response.data._message));
+            } else {
+                notify.error(gettext('There was an error. Failed to save the area of interest.'));
+            }
+
+            $scope.loaderForAoI = false;
         });
     };
 
