@@ -119,12 +119,11 @@ export function TemplatesService(api, session, $q, gettext, preferencesService, 
         let params = {sort: 'template_name'};
 
         let deskCriteria = [
-            {template_desks: {$exists: false}, is_public: true},
-            {template_desks: {$eq: []}, is_public: true}
+            {is_public: true},
         ];
 
         if (desk) {
-            deskCriteria.push({template_desks: {$in: [desk]}, is_public: true});
+            deskCriteria.push({template_desks: {$in: [desk]}});
         }
 
         let criteria = {$or: deskCriteria, template_type: CREATE_TYPE};
