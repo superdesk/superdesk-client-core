@@ -1100,7 +1100,14 @@ angular.module('superdesk.apps.authoring.metadata', [
                 template: 'scripts/apps/authoring/metadata/views/metadata-widget.html',
                 order: 1,
                 side: 'right',
-                display: {authoring: true, packages: true, killedItem: true, legalArchive: true, archived: true}
+                display: {
+                    authoring: true,
+                    packages: true,
+                    killedItem: true,
+                    legalArchive: true,
+                    archived: true,
+                    picture: true
+                }
             });
     }])
 

@@ -136,7 +136,14 @@ angular.module('superdesk.apps.authoring.comments', [
                 template: 'scripts/apps/authoring/comments/views/comments-widget.html',
                 order: 3,
                 side: 'right',
-                display: {authoring: true, packages: true, killedItem: true, legalArchive: false, archived: false}
+                display: {
+                    authoring: true,
+                    packages: true,
+                    killedItem: true,
+                    legalArchive: false,
+                    archived: false,
+                    picture: true
+                }
             });
     }])
 

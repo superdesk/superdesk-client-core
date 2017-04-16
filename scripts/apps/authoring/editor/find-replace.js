@@ -98,6 +98,13 @@ angular.module('superdesk.apps.authoring.find-replace', ['superdesk.apps.authori
                 keyboardShortcut: 'ctrl+shift+f',
                 needEditable: true,
                 needUnlock: true,
-                display: {authoring: true, packages: false, killedItem: false, legalArchive: false, archived: false}
+                display: {
+                    authoring: true,
+                    packages: false,
+                    killedItem: false,
+                    legalArchive: false,
+                    archived: false,
+                    picture: true
+                }
             });
     }]);
