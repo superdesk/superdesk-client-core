@@ -35,6 +35,9 @@ function WidgetsManagerCtrl($scope, $routeParams, authoringWidgets, archiveServi
             if (item.type === 'composite') {
                 display = 'packages';
             }
+            if (item.type === 'picture') {
+                display = 'picture';
+            }
         }
 
         $scope.widgets = authoringWidgets.filter((widget) => !!widget.display[display]);
