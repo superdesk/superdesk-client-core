@@ -329,7 +329,8 @@ angular.module('superdesk.apps.authoring.macros', [
                     killedItem: false,
                     legalArchive: false,
                     archived: false,
-                    picture: true
+                    picture: true,
+                    personal: true
                 }
             });
     }]);
