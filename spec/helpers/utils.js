@@ -16,6 +16,7 @@ module.exports.altKey = altKey;
 module.exports.assertToastMsg = assertToastMsg;
 module.exports.wait = wait;
 module.exports.hover = hover;
+module.exports.waitHidden = waitHidden;
 
 // construct url from uri and base url
 exports.constructUrl = function(base, uri) {
@@ -214,4 +215,15 @@ function wait(elem, time) {
 function hover(elem) {
     browser.actions().mouseMove(elem, {x: 3, y: 3})
         .perform();
+}
+
+/**
+ * Wait for an element to be hidden from display
+ *
+ * @param {Element} elem - The element you wish to wait for to be hidden
+ * @param {number} time - The ms timeout period, defaults to 1000
+ * @return {Promise}
+ */
+function waitHidden(elem, time) {
+    return browser.wait(() => elem.isDisplayed().then((isDisplayed) => !isDisplayed), time || 1000);
 }

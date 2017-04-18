@@ -688,8 +688,7 @@ describe('monitoring', () => {
         expect(monitoring.getMultiSelectCount()).toBe('1 Item selected');
 
         monitoring.actionOnItem('Correct item', 0, 0);
-        authoring.sendToButton.click();
-        authoring.correct_button.click();
+        authoring.send_correction_button.click();
         expect(element(by.id('multi-select-count')).isPresent()).toBeFalsy();
     });
 

@@ -664,6 +664,15 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 });
             };
 
+            /**
+             * Cancel an action, i.e. go back to view mode.
+             * This is used in the 'EDIT AND CORRECT' and 'EDIT AND KILL' actions.
+             * When the user clicks on the 'CANCEL' button it takes them back to the view action on the item
+             */
+            $scope.cancel = function() {
+                authoringWorkspace.view($scope.origItem);
+            };
+
             /*
              * Minimize an item
              */
