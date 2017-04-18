@@ -36,8 +36,11 @@ export class Editor3Component extends React.Component {
 
         this.editorRect = {top: 0, left: 0};
         this.readOnly = props.readOnly;
+        this.scrollContainer = $(props.scrollContainer || window);
+        this.state = {toolbarStyle: 'relative'};
 
         this.focus = this.focus.bind(this);
+        this.onScroll = this.onScroll.bind(this);
         this.onDragOver = this.onDragOver.bind(this);
         this.handleKeyCommand = this.handleKeyCommand.bind(this);
     }
@@ -50,6 +53,27 @@ export class Editor3Component extends React.Component {
     focus() {
         this.props.unsetReadOnly(this.readOnly);
         setTimeout(this.refs.editor.focus, 0); // after action
+    }
+
+    /**
+     * @ngdoc method
+     * @name Editor3#onScroll
+     * @description Triggered when the authoring page is scrolled. It adjusts toolbar
+     * style, based on the location of the editor within the scroll container.
+     */
+    onScroll(e) {
+        const editorRect = ReactDOM.findDOMNode(this.refs.editor).getBoundingClientRect();
+        const pageRect = this.scrollContainer[0].getBoundingClientRect();
+
+        if (!editorRect || !pageRect) {
+            return;
+        }
+
+        const toolbarStyle = editorRect.top < pageRect.top + 50 ? 'fixed' : 'relative';
+
+        if (toolbarStyle !== this.state.toolbarStyle) {
+            this.setState({toolbarStyle});
+        }
     }
 
     /**
@@ -95,9 +119,18 @@ export class Editor3Component extends React.Component {
 
         $node.on('dragover', this.onDragOver);
         $node.on('drop dragdrop', this.props.dragDrop);
+
+        if (this.props.showToolbar) {
+            this.scrollContainer.on('scroll', this.onScroll);
+        }
+    }
+
+    componentWillUnmount() {
+        this.scrollContainer.off('scroll', this.onScroll);
     }
 
     render() {
+        const {toolbarStyle} = this.state;
         const {
             readOnly,
             showToolbar,
@@ -108,6 +141,7 @@ export class Editor3Component extends React.Component {
 
         let cx = classNames({
             'Editor3-root Editor3-editor': true,
+            'floating-toolbar': toolbarStyle === 'fixed',
             'read-only': readOnly
         });
 
@@ -139,7 +173,8 @@ Editor3Component.propTypes = {
     onChange: React.PropTypes.func,
     unsetReadOnly: React.PropTypes.func,
     onTab: React.PropTypes.func,
-    dragDrop: React.PropTypes.func
+    dragDrop: React.PropTypes.func,
+    scrollContainer: React.PropTypes.object
 };
 
 const mapStateToProps = (state) => ({
