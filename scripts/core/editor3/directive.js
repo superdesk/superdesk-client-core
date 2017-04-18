@@ -24,21 +24,70 @@ class Editor3Directive {
         this.controller = ['$element', 'editor3', '$scope', this.initialize];
 
         this.bindToController = {
+            /**
+             * @type {String}
+             * @description If set, it will be used to make sure the toolbar is always
+             * visible when scrolling. If not set, window object is used as reference.
+             * Any valid jQuery selector will do.
+             */
             scrollContainer: '@',
-            config: '=',
+
+            /**
+             * @type {Boolean}
+             * @description Whether this editor is the target for find & replace
+             * operations. The Find & Replace service can only have one editor as
+             * target.
+             */
+            findReplaceTarget: '@',
+
+            /**
+             * @type {Object}
+             * @description Editor format options that are enabled and should be displayed
+             * in the toolbar.
+             */
             editorFormat: '=',
-            language: '=',
-            onChange: '&',
-            value: '=',
+
+            /**
+             * @type {Object}
+             * @description A JSON object representing the Content State of the Draft
+             * editor. When available, it is used to show content, using `convertFromRaw`.
+             * Either this, or value have to be set. Use this for most accurate behavior.
+             */
             editorState: '=',
-            readOnly: '='
+
+            /**
+             * @type {String}
+             * @description HTML value of editor. Used by the outside world.
+             */
+            value: '=',
+
+            /**
+             * @type {Boolean}
+             * @description If true, editor is read-only.
+             */
+            readOnly: '=',
+
+            /**
+             * @type {Function}
+             * @description Function that gets called on every content change.
+             */
+            onChange: '&',
+
+            /**
+             * @type {String}
+             * @description Spellchecker's language.
+             */
+            language: '='
         };
     }
 
     initialize($element, editor3, $scope) {
         const store = createStore(this);
 
-        editor3.setStore(store);
+        if (typeof this.findReplaceTarget !== 'undefined') {
+            editor3.setStore(store);
+            $scope.$on('$destroy', editor3.unsetStore);
+        }
 
         ReactDOM.render(
             <Provider store={store}>

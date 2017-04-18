@@ -23,7 +23,20 @@ export class EditorService {
      * @description Registers the passed redux store with the service.
      */
     setStore(s) {
+        if (store !== null) {
+            console.warn('You\'ve overwritten the find & replace target.');
+        }
+
         store = s;
+    }
+
+    /**
+     * @ngdoc method
+     * @name editor3#unsetStore
+     * @description Clears the store.
+     */
+    unsetStore() {
+        store = null;
     }
 
     /**
@@ -33,7 +46,7 @@ export class EditorService {
      * criteria in the editor.
      */
     selectNext() {
-        store.dispatch(action.findNext());
+        ok() && store.dispatch(action.findNext());
     }
 
     /**
@@ -43,7 +56,7 @@ export class EditorService {
      * criteria in the editor.
      */
     selectPrev() {
-        store.dispatch(action.findPrev());
+        ok() && store.dispatch(action.findPrev());
     }
 
     /**
@@ -53,7 +66,7 @@ export class EditorService {
      * @description Replaces the currently highlighted search criteria with the given text.
      */
     replace(txt) {
-        store.dispatch(action.replace(txt));
+        ok() && store.dispatch(action.replace(txt));
     }
 
     /**
@@ -63,7 +76,7 @@ export class EditorService {
      * @description Replaces all the search criteria with the given text.
      */
     replaceAll(txt) {
-        store.dispatch(action.replaceAll(txt));
+        ok() && store.dispatch(action.replaceAll(txt));
     }
 
     /**
@@ -74,6 +87,10 @@ export class EditorService {
      * @description Updates the search criteria.
      */
     setSettings({findreplace}) {
+        if (!ok()) {
+            return;
+        }
+
         if (findreplace === null) {
             store.dispatch(action.setHighlightCriteria({pattern: ''}));
 
@@ -92,6 +109,14 @@ export class EditorService {
      * @description Highlights the current search criteria in the editor.
      */
     render() {
-        store.dispatch(action.renderHighlights());
+        ok() && store.dispatch(action.renderHighlights());
     }
+}
+
+function ok() {
+    if (store === null) {
+        console.error('No editor set as target in service.');
+    }
+
+    return store !== null;
 }
