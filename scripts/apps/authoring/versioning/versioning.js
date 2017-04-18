@@ -14,7 +14,8 @@ angular.module('superdesk.apps.authoring.versioning', [])
                     killedItem: true,
                     legalArchive: true,
                     archived: false,
-                    picture: true
+                    picture: true,
+                    personal: true
                 },
                 afterClose: function(scope) {
                     if (scope && typeof scope.closePreview === 'function' && !scope._editable) {

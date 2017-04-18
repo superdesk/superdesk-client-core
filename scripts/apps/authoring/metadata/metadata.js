@@ -1106,7 +1106,8 @@ angular.module('superdesk.apps.authoring.metadata', [
                     killedItem: true,
                     legalArchive: true,
                     archived: true,
-                    picture: true
+                    picture: true,
+                    personal: true
                 }
             });
     }])

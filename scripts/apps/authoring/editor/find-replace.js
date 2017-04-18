@@ -104,7 +104,8 @@ angular.module('superdesk.apps.authoring.find-replace', ['superdesk.apps.authori
                     killedItem: false,
                     legalArchive: false,
                     archived: false,
-                    picture: true
+                    picture: true,
+                    personal: true
                 }
             });
     }]);

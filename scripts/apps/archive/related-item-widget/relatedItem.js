@@ -16,7 +16,9 @@ angular.module('superdesk.apps.dashboard.widgets.relatedItem', [
                 killedItem: true,
                 legalArchive: false,
                 archived: false,
-                picture: false},
+                picture: false,
+                personal: false
+            },
             configurationTemplate: 'scripts/apps/archive/related-item-widget/relatedItem-configuration.html',
             configurable: false,
             needEditable: true,

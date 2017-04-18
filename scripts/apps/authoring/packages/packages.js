@@ -43,7 +43,8 @@ export default angular.module('superdesk.apps.authoring.packages', ['superdesk.a
             killedItem: true,
             legalArchive: false,
             archived: false,
-            picture: true
+            picture: true,
+            personal: false
         }
     });
 }])
