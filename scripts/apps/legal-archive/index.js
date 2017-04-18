@@ -42,6 +42,7 @@ export default angular.module('superdesk.apps.legal_archive', [
                 sideTemplateUrl: 'scripts/apps/workspace/views/workspace-sidenav.html',
                 reloadOnSearch: false,
                 filters: [],
-                privileges: {legal_archive: 1}
+                privileges: {legal_archive: 1},
+                features: {legal_archive: 1}
             });
     }]);
