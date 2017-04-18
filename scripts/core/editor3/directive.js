@@ -24,6 +24,7 @@ class Editor3Directive {
         this.controller = ['$element', 'editor3', '$scope', this.initialize];
 
         this.bindToController = {
+            scrollContainer: '@',
             config: '=',
             editorFormat: '=',
             language: '=',
@@ -41,7 +42,7 @@ class Editor3Directive {
 
         ReactDOM.render(
             <Provider store={store}>
-                <Editor3 />
+                <Editor3 scrollContainer={this.scrollContainer} />
             </Provider>, $element.get(0)
         );
     }
