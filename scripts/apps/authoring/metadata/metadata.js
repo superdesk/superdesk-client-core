@@ -13,7 +13,8 @@ function MetadataCtrl(
         $scope.userLookup = desks.userLookup;
     });
 
-    $scope.change_profile = config.item_profile && config.item_profile.change_profile === 1;
+    $scope.change_profile = config.item_profile && config.item_profile.change_profile === 1 &&
+                            $scope.origItem.type === 'text';
 
     metadata.initialize().then(() => {
         $scope.metadata = metadata.values;
