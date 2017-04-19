@@ -101,6 +101,12 @@
                                 <span tooltip="{{ editing.form.enabled ? 'Yes' : 'No'  | translate }}" tooltip-placement="right"></span>
                                 <span class="pull-right" sd-switch ng-model="editing.form.enabled"></span>
                             </label>
+
+                            <label class="right" ng-if="withEditor3">
+                                {{:: 'Editor3' | translate }}&nbsp;
+                                <span tooltip="{{ editing.form.editor.body_html.editor3 ? 'Yes' : 'No'  | translate }}" tooltip-placement="right"></span>
+                                <span class="pull-right" sd-switch ng-model="editing.form.editor.body_html.editor3"></span>
+                            </label>
                         </div>
                         <div class="field">
                             <sd-content-schema-editor ng-model="editing.form"></sd-content-schema-editor>

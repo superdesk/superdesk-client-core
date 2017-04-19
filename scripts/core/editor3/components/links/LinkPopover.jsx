@@ -43,8 +43,8 @@ export class LinkPopover extends Component {
         }
 
         const {editorRect} = this.props;
-        const top = rect.top - editorRect.top + 52;
-        const left = rect.left - editorRect.left;
+        const top = rect.top - editorRect.top + 62;
+        const left = rect.left - editorRect.left + 20;
 
         this.position = {top, left};
     }

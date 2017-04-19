@@ -1,5 +1,5 @@
-ContentProfilesController.$inject = ['$scope', 'notify', 'content', 'modal', '$q'];
-export function ContentProfilesController($scope, notify, content, modal, $q) {
+ContentProfilesController.$inject = ['$scope', 'notify', 'content', 'modal', '$q', 'config'];
+export function ContentProfilesController($scope, notify, content, modal, $q, config) {
     var self = this;
 
     // creating will be true while the modal for creating a new content
@@ -14,6 +14,8 @@ export function ContentProfilesController($scope, notify, content, modal, $q) {
     // if true, only active Content Profiles will be shown
     // can be changed with a button
     $scope.active_only = true;
+
+    $scope.withEditor3 = config.features.editor3;
 
     /**
      * @description Refreshes the list of content profiles by fetching them.

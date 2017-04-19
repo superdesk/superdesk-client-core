@@ -7,10 +7,10 @@ import {InlineStyleControlsComponent as InlineStyleControls} from '../toolbar/In
 
 describe('editor3.components.toolbar', () => {
     it('(StyleButton) should render label', () => {
-        const wrapper = shallow(<StyleButton label={'button_label'} />);
+        const wrapper = shallow(<StyleButton label={'h1'} />);
 
         expect(wrapper.hasClass('Editor3-styleButton')).toBe(true);
-        expect(wrapper.text()).toBe('button_label');
+        expect(wrapper.find('i.icon-heading-1').length).toBe(1);
     });
 
     it('(StyleButton) should become active when prop is set to true', () => {

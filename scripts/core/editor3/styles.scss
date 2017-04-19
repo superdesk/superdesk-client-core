@@ -187,15 +187,15 @@
 		}
 
 		input {
-			height: 33px;
-			padding: 8px 47px 8px 8px;
+			height: 53px;
+			padding: 8px 47px 8px 15px;
 		}
 	}
 
 	.input-controls {
 		position: absolute;
-		top: 0;
-		right: 0;
+		top: 10px;
+		right: 5px;
 		margin: 8px;
 		
 		i {
@@ -221,17 +221,13 @@
 		top: 0;
 
 		input[type="url"] {
-			height: 33px;
-			padding: 8px 47px 8px 8px;
+			height: 53px;
+			padding: 8px 47px 8px 15px;
 		}
 	}
 }
 
 .Editor3-styleButton {
-	.inactive {
-		color: #ccc;
-	}
-
 	.link-button + .link-editor {
 		a {
 			margin-right: 5px;
@@ -263,10 +259,26 @@
 		font-size: 13px;
 		font-style: normal;
 	}
-}
 
-.Editor3-activeButton {
-	color: #5890ff;
+	[class*="icon-"] {
+		color: #999;
+
+		&:hover {
+			color: #555;
+		}
+	}
+
+	.inactive [class*="icon-"] {
+		color: #ddd;
+
+		&:hover {
+			color: #ddd;
+		}
+	}
+
+	&.Editor3-activeButton [class*="icon-"] {
+		color: #5890ff;
+	}
 }
 
 /** Editor2 CSS Fix for headline **/

@@ -1,5 +1,5 @@
-ContentProfileSchemaEditor.$inject = ['gettext', 'content', 'config'];
-export function ContentProfileSchemaEditor(gettext, content, config) {
+ContentProfileSchemaEditor.$inject = ['gettext', 'content'];
+export function ContentProfileSchemaEditor(gettext, content) {
     // labelMap maps schema entry keys to their display names.
     const labelMap = {
         headline: gettext('Headline'),
@@ -54,8 +54,6 @@ export function ContentProfileSchemaEditor(gettext, content, config) {
             });
 
             scope.directive = this.name;
-
-            scope.withEditor3 = config.features.editor3;
 
             scope.formatingOptions = [
                 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',

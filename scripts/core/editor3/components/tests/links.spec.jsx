@@ -27,9 +27,7 @@ function getWrapper(es = null, shallowMount = false) {
 describe('editor3.components.link-button', () => {
     it('should render button text', () => {
         const {wrapper} = getShallowWrapper();
-        const button = wrapper.find('span').first();
 
-        expect(button.text()).toBe('link');
         expect(wrapper.find('LinkPopover').length).toBe(0);
     });
 
