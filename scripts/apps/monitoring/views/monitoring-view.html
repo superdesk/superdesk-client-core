@@ -98,7 +98,7 @@
                 <i class="icon-th-list"></i>
             </button>
 
-            <div class="button-stack right-stack" ng-if="(type !== 'spike' && type !== 'highlights' ) || elementState === 'compact'">
+            <div class="button-stack right-stack" ng-if="type === 'monitoring' || elementState === 'compact'">
                 <div class="dropdown dropdown--align-right" dropdown>
                     <button class="navbtn dropdown__toggle" dropdown__toggle><i class="icon-dots-vertical"></i></button>
                     <ul class="dropdown__menu">
@@ -123,7 +123,7 @@
                             <span sd-item-sortbar></span>
                         </li>
                         <li ng-if="elementState === 'compact' && type !== 'spike'" class="dropdown__menu-divider"></li>
-                        <li ng-if="type !== 'spike' && type !== 'highlights'">
+                        <li ng-if="type === 'monitoring'">
                             <button ng-click="aggregate.edit('reorder', true)">
                                 <i class="icon-switches"></i>
                                  &nbsp;<span>{{:: 'Rearrange Groups' | translate}}</span>
