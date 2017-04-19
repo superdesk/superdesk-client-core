@@ -78,11 +78,11 @@
                                 <select id="schedule-minutes" class="input-mini"
                                     ng-model="provider.update_schedule.minutes"
                                     ng-options="min as min for min in minutes"
-                                ></select> <span translate>min</span>
+                                ></select> <span class="helper-text helper-text--padded" translate>min</span>
                                 <select class="input-mini"
                                     ng-model="provider.update_schedule.seconds"
                                     ng-options="sec as sec for sec in seconds"
-                                ></select> <span translate>sec</span>
+                                ></select> <span class="helper-text helper-text--padded" translate>sec</span>
                         </div>
 
                         <div class="field">
@@ -90,14 +90,14 @@
                                 <select id="idle-hours" class="input-mini"
                                     ng-model="provider.idle_time.hours"
                                     ng-options="hrs as hrs for hrs in hours"
-                                ></select> <span translate>hrs</span>
+                                ></select> <span class="helper-text helper-text--padded" translate>hrs</span>
                                 <select id="idle-minutes" class="input-mini"
                                     ng-model="provider.idle_time.minutes"
                                     ng-options="min as min for min in minutes"
-                                ></select> <span translate>min</span>
+                                ></select> <span class="helper-text helper-text--padded" translate>min</span>
                         </div>
 
-                        <div sd-content-expiry data-item="provider" data-preview="false" data-expiryfield="content_expiry" data-header="Content Expiry"></div>
+                        <div class="field" sd-content-expiry data-item="provider" data-preview="false" data-expiryfield="content_expiry" data-header="Content Expiry"></div>
 
                         <div class="field">
                             <label class="right">
