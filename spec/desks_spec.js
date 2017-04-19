@@ -113,4 +113,44 @@ describe('desks', () => {
         // Now try GlobalReadFlag to OFF, and expect GlobalReadFlag cannot be turn ON since Incoming flag is ON
         expect(desks.getGlobalReadFlag().getAttribute('class')).toContain('prevent-off');
     });
+
+    it('can set stage macro for new desk', () => {
+        // Start by entering the details in the `General` tab
+        desks.newDeskBtn.click();
+        desks.deskNameElement().sendKeys('Test Desk A');
+        desks.deskSourceElement().sendKeys('Test Source A');
+        desks.setDeskType('authoring');
+        desks.actionSaveAndContinueOnGeneralTab();
+
+        // Now create a new stage
+        desks.getNewStageButton().click();
+        desks.stageNameElement().sendKeys('Test Stage A');
+        desks.stageDescriptionElement().sendKeys('Test Desk A Stage A Description');
+
+        // Make sure the macros have loaded
+        expect(desks.getStageMacros().count()).toBe(2);
+
+        // Now set the stage macros
+        desks.setStageIncomingMacro('populate_abstract');
+        desks.setStageMovedOntoMacro('Validate for Publish');
+        desks.setStageOutgoingMacro('populate_abstract');
+        desks.saveNewStage();
+
+        // Save changes and exit the desk config
+        desks.actionSaveAndContinueOnStagesTab();
+        desks.showTab('macros');
+        desks.save();
+
+        // Now re-open the desk to make sure the changes have been applied
+        desks.edit('Test Desk A');
+        desks.showTab('Stages');
+        desks.editStage('Test Stage A');
+        expect(desks.getStageIncomingMacro().getAttribute('value')).toEqual('populate_abstract');
+        expect(desks.getStageMovedOntoMacro().getAttribute('value')).toEqual('Validate for Publish');
+        expect(desks.getStageOutgoingMacro().getAttribute('value')).toEqual('populate_abstract');
+        desks.close();
+
+        // And clean up the desk we created
+        desks.remove('Test Desk A');
+    });
 });

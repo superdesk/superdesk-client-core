@@ -11,8 +11,12 @@ export function DeskeditStages(gettext, api, WizardHandler, tasks, $rootScope, d
             scope.saving = false;
             scope.statuses = tasks.statuses;
 
-            if (scope.desk.edit && scope.desk.edit._id) {
+            if (scope.desk.edit && scope.desk.edit.name) {
                 macros.getByDesk(scope.desk.edit.name, true).then((macros) => {
+                    scope.macros = _.reject(macros, {action_type: 'interactive'});
+                });
+            } else {
+                macros.get().then((macros) => {
                     scope.macros = _.reject(macros, {action_type: 'interactive'});
                 });
             }
