@@ -45,7 +45,7 @@ class Editor3Directive {
              * @description Editor format options that are enabled and should be displayed
              * in the toolbar.
              */
-            editorFormat: '=',
+            editorFormat: '=?',
 
             /**
              * @type {Object}
@@ -53,7 +53,7 @@ class Editor3Directive {
              * editor. When available, it is used to show content, using `convertFromRaw`.
              * Either this, or value have to be set. Use this for most accurate behavior.
              */
-            editorState: '=',
+            editorState: '=?',
 
             /**
              * @type {String}
@@ -65,7 +65,7 @@ class Editor3Directive {
              * @type {Boolean}
              * @description If true, editor is read-only.
              */
-            readOnly: '=',
+            readOnly: '=?',
 
             /**
              * @type {Function}
@@ -77,21 +77,35 @@ class Editor3Directive {
              * @type {String}
              * @description Spellchecker's language.
              */
-            language: '='
+            language: '=?',
+
+            /**
+             * @type {Boolean}
+             * @description Disables the Enter key if the attribute is set.
+             */
+            singleLine: '@'
         };
     }
 
     initialize($element, editor3, $scope) {
+        // defaults
+        this.language = this.language || 'en';
+        this.readOnly = this.readOnly || false;
+        this.findReplaceTarget = typeof this.findReplaceTarget !== 'undefined';
+        this.singleLine = typeof this.singleLine !== 'undefined';
+
         const store = createStore(this);
 
-        if (typeof this.findReplaceTarget !== 'undefined') {
+        if (this.findReplaceTarget) {
             editor3.setStore(store);
             $scope.$on('$destroy', editor3.unsetStore);
         }
 
         ReactDOM.render(
             <Provider store={store}>
-                <Editor3 scrollContainer={this.scrollContainer} />
+                <Editor3
+                    scrollContainer={this.scrollContainer}
+                    singleLine={this.singleLine} />
             </Provider>, $element.get(0)
         );
     }

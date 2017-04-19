@@ -2274,9 +2274,15 @@ describe('authoring themes', () => {
 
 describe('send item directive', () => {
     beforeEach(window.module(($provide) => {
-        $provide.constant('config', {server: {url: undefined}, iframely: {key: '123'}, editor: {}});
+        $provide.constant('config', {
+            server: {url: undefined},
+            iframely: {key: '123'},
+            editor: {},
+            features: {onlyEditor3: false}
+        });
     }));
 
+    beforeEach(window.module('superdesk.core.editor3'));
     beforeEach(window.module('superdesk.apps.editor2'));
     beforeEach(window.module('superdesk.core.preferences'));
     beforeEach(window.module('superdesk.apps.authoring'));

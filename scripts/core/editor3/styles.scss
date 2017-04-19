@@ -8,6 +8,10 @@
 	padding: 40px 15px 15px;
 	position: relative;
 
+	&.no-toolbar {
+		padding-top: 5px;
+	}
+
 	&.floating-toolbar .Editor3-controls {
 		position: fixed;
 		top: 132px;
@@ -158,6 +162,7 @@
 	left: 0;
 	padding: 15px;
 	background-color: #fff;
+	line-height: 100% !important;
 
 	&.disabled {
 		* {
@@ -250,8 +255,38 @@
 	margin-right: 16px;
 	padding: 2px 0;
 	display: inline-block;
+
+	font-size: 13px;
+	font-style: normal;
+
+	span {
+		font-size: 13px;
+		font-style: normal;
+	}
 }
 
 .Editor3-activeButton {
 	color: #5890ff;
+}
+
+/** Editor2 CSS Fix for headline **/
+.main-article .headline div.Editor3-root div {
+	font-size: 14px !important;
+	line-height: 100% !important;
+
+	.DraftEditor-editorContainer div {
+		font-size: 28px !important;
+		line-height: 120% !important;
+	}
+}
+
+/** Editor2 CSS Fix for abstract **/
+.main-article .abstract div.Editor3-root div {
+	font-size: 14px !important;
+	line-height: 100% !important;
+
+	.DraftEditor-editorContainer div {
+		font-size: 16px !important;
+		line-height: 150% !important;
+	}
 }

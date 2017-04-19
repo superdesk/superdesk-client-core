@@ -9,14 +9,7 @@ describe('editor3.component', () => {
         const wrapper = shallow(<Editor3 showToolbar={false} />);
 
         expect(wrapper.find('DraftEditor').length).toBe(1);
-        expect(wrapper.find('Toolbar').length).toBe(0);
-    });
-
-    it('should show toolbar when enabled', () => {
-        const wrapper = shallow(<Editor3 showToolbar={true} />);
-
-        expect(wrapper.find('DraftEditor').length).toBe(1);
-        expect(wrapper.find('Toolbar').length).toBe(1);
+        expect(wrapper.find('.Editor3-controls').length).toBe(0);
     });
 
     it('should mount and put client rect inside attribute on update', () => {

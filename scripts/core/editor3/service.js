@@ -1,4 +1,6 @@
 import * as action from './actions/find-replace';
+import ng from 'core/services/ng';
+import {forEachMatch} from './reducers/find-replace';
 
 /**
  * @type {Object} Redux store
@@ -110,6 +112,46 @@ export class EditorService {
      */
     render() {
         ok() && store.dispatch(action.renderHighlights());
+    }
+
+    /**
+     * @ngdoc method
+     * @name editor3#countErrors
+     * @description Not sure what this method is supposed to do. It's needed by
+     * the interface and it's copied from `core/editor2/editor.js#93`.
+     */
+    countErrors() {
+        return ng.get('$q').when(0);
+    }
+
+    /**
+     * @ngdoc method
+     * @name editor3#getActiveText
+     * @description Gets the text under the current selection.
+     */
+    getActiveText() {
+        if (!ok()) {
+            return;
+        }
+
+        const state = store.getState();
+        const {editorState, searchTerm} = state;
+        const {index, pattern, caseSensitive} = searchTerm;
+        const content = editorState.getCurrentContent();
+
+        let txt = pattern;
+
+        // find the active match
+        forEachMatch(content, pattern, caseSensitive, (i, selection, block) => {
+            if (i === index) {
+                const start = selection.getStartOffset();
+                const end = selection.getEndOffset();
+
+                txt = block.getText().slice(start, end);
+            }
+        });
+
+        return txt;
     }
 }
 

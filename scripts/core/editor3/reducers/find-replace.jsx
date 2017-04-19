@@ -233,7 +233,7 @@ const createSelection = (key, start, end) =>
  * @description Searches the content for the given pattern and calls the given callback
  * for each occurrence, passing it the index of the match and its SelectionState.
  */
-const forEachMatch = (content, pattern, caseSensitive, cb) => {
+export const forEachMatch = (content, pattern, caseSensitive, cb) => {
     if (!pattern) {
         return false;
     }

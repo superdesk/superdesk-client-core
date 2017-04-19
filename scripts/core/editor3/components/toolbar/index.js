@@ -5,6 +5,7 @@ import {LinkButton} from '../links';
 import {ImageButton} from '../images';
 import {EmbedButton} from '../embeds';
 import {TableButton} from '../tables';
+import {connect} from 'react-redux';
 import classNames from 'classnames';
 
 /**
@@ -15,9 +16,10 @@ import classNames from 'classnames';
  * @param {boolean} disabled Disables clicking on the toolbar, if true.
  * @description Holds the editor's toolbar.
  */
-export default class Toolbar extends Component {
+class ToolbarComponent extends Component {
     render() {
-        const {editorRect, disabled} = this.props;
+        const {editorRect, disabled, editorFormat} = this.props;
+        const has = (opt) => editorFormat.indexOf(opt) > -1;
         const cx = classNames({
             'Editor3-controls': true,
             disabled: disabled
@@ -27,16 +29,23 @@ export default class Toolbar extends Component {
             <div className={cx}>
                 <BlockStyleControls />
                 <InlineStyleControls />
-                <LinkButton editorRect={editorRect} />
-                <ImageButton />
-                <EmbedButton />
-                <TableButton />
+                {has('anchor') ? <LinkButton editorRect={editorRect} /> : null}
+                {has('picture') ? <ImageButton /> : null}
+                {has('embed') ? <EmbedButton /> : null}
+                {has('table') ? <TableButton /> : null}
             </div>
         );
     }
 }
 
-Toolbar.propTypes = {
+ToolbarComponent.propTypes = {
     editorRect: React.PropTypes.object.isRequired,
-    disabled: React.PropTypes.bool
+    disabled: React.PropTypes.bool,
+    editorFormat: React.PropTypes.array
 };
+
+const mapStateToProps = (state) => ({editorFormat: state.editorFormat});
+
+const Toolbar = connect(mapStateToProps, null)(ToolbarComponent);
+
+export default Toolbar;

@@ -69,7 +69,9 @@ export class Editor3Component extends React.Component {
             return;
         }
 
-        const toolbarStyle = editorRect.top < pageRect.top + 50 ? 'fixed' : 'relative';
+        const isToolbarOut = editorRect.top < pageRect.top + 50;
+        const isBottomOut = editorRect.bottom < pageRect.top + 60;
+        const toolbarStyle = isToolbarOut && !isBottomOut ? 'fixed' : 'relative';
 
         if (toolbarStyle !== this.state.toolbarStyle) {
             this.setState({toolbarStyle});
@@ -99,7 +101,12 @@ export class Editor3Component extends React.Component {
      * @description Handles key commands in the editor.
      */
     handleKeyCommand(command) {
-        const {editorState, onChange} = this.props;
+        const {editorState, onChange, singleLine} = this.props;
+
+        if (singleLine && command === 'split-block') {
+            return 'handled';
+        }
+
         const newState = RichUtils.handleKeyCommand(editorState, command);
 
         if (newState) {
@@ -142,6 +149,7 @@ export class Editor3Component extends React.Component {
         let cx = classNames({
             'Editor3-root Editor3-editor': true,
             'floating-toolbar': toolbarStyle === 'fixed',
+            'no-toolbar': !showToolbar,
             'read-only': readOnly
         });
 
@@ -174,7 +182,8 @@ Editor3Component.propTypes = {
     unsetReadOnly: React.PropTypes.func,
     onTab: React.PropTypes.func,
     dragDrop: React.PropTypes.func,
-    scrollContainer: React.PropTypes.object
+    scrollContainer: React.PropTypes.string,
+    singleLine: React.PropTypes.bool
 };
 
 const mapStateToProps = (state) => ({
