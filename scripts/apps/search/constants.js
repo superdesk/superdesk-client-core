@@ -97,6 +97,7 @@ export const CORE_PROJECTED_FIELDS = {
         'lock_session',
         'genre',
         'source',
+        'language',
         'last_published_version',
         'archived',
         'associations',
