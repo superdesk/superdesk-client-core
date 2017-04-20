@@ -236,7 +236,7 @@ describe('search', () => {
         expect(authoring.getBodyText()).toContain('Testhilite');
         expect(authoring.getBodyInnerHtml()).not.toContain('sderror sdhilite');
         // trigger spell checker via keyboard operation
-        browser.actions().sendKeys(protractor.Key.chord(protractor.Key.CONTROL, protractor.Key.SHIFT, '*')).perform();
+        browser.actions().sendKeys(protractor.Key.chord(protractor.Key.CONTROL, protractor.Key.SHIFT, 'y')).perform();
         expect(authoring.getBodyText()).toContain('Testhilite');
         expect(authoring.getBodyInnerHtml()).toContain('sderror sdhilite');
         authoring.save();

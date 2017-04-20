@@ -205,6 +205,6 @@ angular.module('superdesk.apps.authoring', [
         keyboardManager.register('Authoring', 'ctrl + shift + s', gettext('Saves current item'));
         keyboardManager.register('Authoring', 'ctrl + shift + l',
              gettext('Preview formatted article, when previewFormats feature configured'));
-        keyboardManager.register('Authoring', 'ctrl + shift + *',
+        keyboardManager.register('Authoring', 'ctrl + shift + y',
              gettext('Instant Spellchecking, when automatic spellchecking turned off'));
     }]);
