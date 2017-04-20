@@ -8,7 +8,9 @@ describe('editor3.service', () => {
             'replace',
             'replaceAll',
             'setSettings',
-            'render'
+            'render',
+            'getActiveText',
+            'countErrors'
         ].forEach((fn) => {
             expect(typeof editor3[fn]).toBe('function');
         });

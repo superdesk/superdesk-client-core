@@ -62,6 +62,7 @@ export function ArticleEditDirective(
             scope.editSignOff = false;
             scope.mediaLoading = false;
             scope.validator = config.validatorMediaMetadata;
+            scope.features = config.features;
 
             var mainEditScope = scope.$parent.$parent;
             var autopopulateByline = config.features && config.features.autopopulateByline;

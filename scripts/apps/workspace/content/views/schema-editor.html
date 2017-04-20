@@ -17,10 +17,6 @@
             <div class="body" ng-if="model.editor[id].enabled">
                 <form>
                     <fieldset class="fieldset-flex">
-                        <div class="field" ng-if="id == 'body_html' && withEditor3">
-                            <label translate>Editor3</label>
-                            <div sd-check ng-model="model.editor[id].editor3"></div>
-                        </div>
                         <div class="field" ng-if="id == 'dateline'">
                             <label translate>Hide Date</label>
                             <div sd-check ng-model="model.editor[id].hideDate"></div>

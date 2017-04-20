@@ -15,7 +15,7 @@ export class TableButtonComponent extends Component {
 
         return (
             <div className="Editor3-styleButton">
-                <span onClick={addTable}>tbl</span>
+                <span onClick={addTable}><i className="icon-table" /></span>
             </div>
         );
     }

@@ -1,4 +1,6 @@
 import * as action from './actions/find-replace';
+import ng from 'core/services/ng';
+import {countOccurrences, forEachMatch} from './reducers/find-replace';
 
 /**
  * @type {Object} Redux store
@@ -23,7 +25,20 @@ export class EditorService {
      * @description Registers the passed redux store with the service.
      */
     setStore(s) {
+        if (store !== null) {
+            console.warn('You\'ve overwritten the find & replace target.');
+        }
+
         store = s;
+    }
+
+    /**
+     * @ngdoc method
+     * @name editor3#unsetStore
+     * @description Clears the store.
+     */
+    unsetStore() {
+        store = null;
     }
 
     /**
@@ -33,7 +48,7 @@ export class EditorService {
      * criteria in the editor.
      */
     selectNext() {
-        store.dispatch(action.findNext());
+        ok() && store.dispatch(action.findNext());
     }
 
     /**
@@ -43,7 +58,7 @@ export class EditorService {
      * criteria in the editor.
      */
     selectPrev() {
-        store.dispatch(action.findPrev());
+        ok() && store.dispatch(action.findPrev());
     }
 
     /**
@@ -53,7 +68,7 @@ export class EditorService {
      * @description Replaces the currently highlighted search criteria with the given text.
      */
     replace(txt) {
-        store.dispatch(action.replace(txt));
+        ok() && store.dispatch(action.replace(txt));
     }
 
     /**
@@ -63,7 +78,7 @@ export class EditorService {
      * @description Replaces all the search criteria with the given text.
      */
     replaceAll(txt) {
-        store.dispatch(action.replaceAll(txt));
+        ok() && store.dispatch(action.replaceAll(txt));
     }
 
     /**
@@ -74,6 +89,10 @@ export class EditorService {
      * @description Updates the search criteria.
      */
     setSettings({findreplace}) {
+        if (!ok()) {
+            return;
+        }
+
         if (findreplace === null) {
             store.dispatch(action.setHighlightCriteria({pattern: ''}));
 
@@ -92,6 +111,54 @@ export class EditorService {
      * @description Highlights the current search criteria in the editor.
      */
     render() {
-        store.dispatch(action.renderHighlights());
+        ok() && store.dispatch(action.renderHighlights());
     }
+
+    /**
+     * @ngdoc method
+     * @name editor3#countErrors
+     * @description Not sure what this method is supposed to do. It's needed by
+     * the interface and it's copied from `core/editor2/editor.js#93`.
+     */
+    countErrors() {
+        return ng.get('$q').when(countOccurrences(store.getState()));
+    }
+
+    /**
+     * @ngdoc method
+     * @name editor3#getActiveText
+     * @description Gets the text under the current selection.
+     */
+    getActiveText() {
+        if (!ok()) {
+            return;
+        }
+
+        const state = store.getState();
+        const {editorState, searchTerm} = state;
+        const {index, pattern, caseSensitive} = searchTerm;
+        const content = editorState.getCurrentContent();
+
+        let txt = pattern;
+
+        // find the active match
+        forEachMatch(content, pattern, caseSensitive, (i, selection, block) => {
+            if (i === index) {
+                const start = selection.getStartOffset();
+                const end = selection.getEndOffset();
+
+                txt = block.getText().slice(start, end);
+            }
+        });
+
+        return txt;
+    }
+}
+
+function ok() {
+    if (store === null) {
+        console.error('No editor set as target in service.');
+    }
+
+    return store !== null;
 }

@@ -216,7 +216,10 @@ function getDefaults(grunt) {
         // app features
         features: {
             // tansa spellchecker
-            useTansaProofing: false
+            useTansaProofing: false,
+
+            // replace editor2
+            onlyEditor3: false
         },
 
         // workspace defaults

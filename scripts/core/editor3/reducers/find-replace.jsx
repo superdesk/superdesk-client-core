@@ -157,7 +157,7 @@ export default findReplace;
  * @param {Object} state
  * @description Returns the number of occurences of the search criteria inside the current editor content.
  */
-const countOccurrences = (state) => {
+export const countOccurrences = (state) => {
     const content = state.editorState.getCurrentContent();
     const {pattern, caseSensitive} = state.searchTerm;
     const re = new RegExp(pattern, 'g' + (caseSensitive ? '' : 'i'));
@@ -233,7 +233,7 @@ const createSelection = (key, start, end) =>
  * @description Searches the content for the given pattern and calls the given callback
  * for each occurrence, passing it the index of the match and its SelectionState.
  */
-const forEachMatch = (content, pattern, caseSensitive, cb) => {
+export const forEachMatch = (content, pattern, caseSensitive, cb) => {
     if (!pattern) {
         return false;
     }

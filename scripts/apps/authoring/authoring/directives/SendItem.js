@@ -2,11 +2,11 @@ import _ from 'lodash';
 
 SendItem.$inject = ['$q', 'api', 'desks', 'notify', 'authoringWorkspace',
     'superdeskFlags', '$location', 'macros', '$rootScope',
-    'authoring', 'send', 'editor', 'confirm', 'archiveService',
+    'authoring', 'send', 'editorResolver', 'confirm', 'archiveService',
     'preferencesService', 'multi', 'datetimeHelper', 'config', 'privileges', 'storage'];
 export function SendItem($q, api, desks, notify, authoringWorkspace,
                   superdeskFlags, $location, macros, $rootScope,
-                  authoring, send, editor, confirm, archiveService,
+                  authoring, send, editorResolver, confirm, archiveService,
                   preferencesService, multi, datetimeHelper, config, privileges, storage) {
     return {
         scope: {
@@ -26,6 +26,8 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
         controllerAs: 'vm',
         templateUrl: 'scripts/apps/authoring/views/send-item.html',
         link: function sendItemLink(scope, elem, attrs, ctrl) {
+            const editor = editorResolver.get();
+
             scope.mode = scope.mode || 'authoring';
             scope.desks = null;
             scope.stages = null;

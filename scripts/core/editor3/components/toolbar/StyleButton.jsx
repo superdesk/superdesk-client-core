@@ -1,4 +1,21 @@
 import React from 'react';
+import classNames from 'classnames';
+
+const StyleIcons = {
+    bold: 'icon-bold',
+    italic: 'icon-italic',
+    underline: 'icon-underline',
+    strikethrough: 'icon-strikethrough',
+    h1: 'icon-heading-1',
+    h2: 'icon-heading-2',
+    h3: 'icon-heading-3',
+    h4: 'icon-heading-4',
+    h5: 'icon-heading-5',
+    h6: 'icon-heading-6',
+    quote: 'icon-quote',
+    ul: 'icon-unordered-list',
+    ol: 'icon-ordered-list'
+};
 
 /**
  * @ngdoc React
@@ -18,15 +35,16 @@ export default class StyleButton extends React.Component {
     }
 
     render() {
-        let className = 'Editor3-styleButton';
+        const {active, label} = this.props;
 
-        if (this.props.active) {
-            className += ' Editor3-activeButton';
-        }
+        const cx = classNames({
+            'Editor3-styleButton': true,
+            'Editor3-activeButton': active
+        });
 
         return (
-            <span className={className} onMouseDown={this.onToggle}>
-                {this.props.label}
+            <span className={cx} onMouseDown={this.onToggle}>
+                <i className={StyleIcons[label]} />
             </span>
         );
     }

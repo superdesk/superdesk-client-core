@@ -45,7 +45,7 @@ export class EmbedButton extends Component {
 
         return (
             <div className="Editor3-styleButton">
-                <span onClick={this.showInput}>embed</span>
+                <span onClick={this.showInput}><i className="icon-code" /></span>
                 {dialogOpen ? <EmbedInput onCancel={this.hideInput} /> : null}
             </div>
         );

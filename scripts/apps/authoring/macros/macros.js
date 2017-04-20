@@ -234,12 +234,14 @@ function MacrosController($scope, macros, desks, autosave, $rootScope, storage) 
  * apply the results of triggered macro with the use of available set of methods such that next,
  * prev and replace
  */
-MacrosReplaceDirective.$inject = ['editor'];
-function MacrosReplaceDirective(editor) {
+MacrosReplaceDirective.$inject = ['editorResolver'];
+function MacrosReplaceDirective(editorResolver) {
     return {
         scope: true,
         templateUrl: 'scripts/apps/authoring/macros/views/macros-replace.html',
         link: function(scope) {
+            const editor = editorResolver.get();
+
             scope.diff = null;
 
             scope.$on('macro:diff', (evt, diff) => {

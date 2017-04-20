@@ -79,7 +79,9 @@ export class LinkButtonComponent extends Component {
 
         return (
             <div className="Editor3-styleButton">
-                <span className={cx} onClick={this.showInput.bind(this, '')}>link</span>
+                <span className={cx} onClick={this.showInput.bind(this, '')}>
+                    <i className="icon-link" />
+                </span>
 
                 {entityType === 'LINK' ?
                     <LinkPopover

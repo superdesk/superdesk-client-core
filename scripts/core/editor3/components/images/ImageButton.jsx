@@ -11,7 +11,7 @@ import * as actions from '../../actions';
  */
 const ImageButtonComponent = ({insertImages}) =>
     <div className="Editor3-styleButton">
-        <span onClick={insertImages}>img</span>
+        <span onClick={insertImages}><i className="icon-picture" /></span>
     </div>;
 
 ImageButtonComponent.propTypes = {
