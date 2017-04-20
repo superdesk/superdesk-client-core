@@ -24,7 +24,19 @@
 
 	&.read-only {
 		.Editor3-controls {
-			opacity: 0.7;
+			* {
+				pointer-events: none;
+			}
+
+			opacity: 0.98;
+
+			[class*="icon-"] {
+				color: #ddd;
+
+				&:hover {
+					color: #ddd;
+				}
+			}
 
 			.Editor3-styleButton {
 				text-decoration: line-through;
@@ -106,6 +118,18 @@
 			display: inline-block;
 		}
 	}
+
+	ul.public-DraftStyleDefault-ul, ol.public-DraftStyleDefault-ul {
+		margin: 0 0 0 20px;
+		padding: 0 0 0 20px;
+
+		.public-DraftStyleDefault-depth1 {margin-left: 40px;}
+		.public-DraftStyleDefault-depth2 {margin-left: 60px;}
+		.public-DraftStyleDefault-depth3 {margin-left: 80px;}
+		.public-DraftStyleDefault-depth4 {margin-left: 100px;}
+	}
+
+	ul.public-DraftStyleDefault-ul > li { list-style-type: disc; }
 }
 
 .Editor3-editor {

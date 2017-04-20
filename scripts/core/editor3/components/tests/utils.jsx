@@ -1,11 +1,15 @@
 import React from 'react';
+import {Map, OrderedSet, List, Repeat} from 'immutable';
 import {
     EditorState,
     ContentState,
+    ContentBlock,
     RichUtils,
     SelectionState,
     AtomicBlockUtils,
-    convertToRaw
+    convertToRaw,
+    CharacterMetadata,
+    genKey
 } from 'draft-js';
 
 /**
@@ -92,6 +96,10 @@ export function createBlockAndContent(type, data) {
     return {block, contentState};
 }
 
+/**
+ * @description Creates a contentState containing an atomic block that is an embed.
+ * @returns {Object} Keys 'block' and 'contentState'
+ */
 export function embedBlockAndContent() {
     return createBlockAndContent('EMBED', {
         data: {
@@ -100,6 +108,39 @@ export function embedBlockAndContent() {
     });
 }
 
+/**
+ * @description Creates a new content state containing a given list of regular blocks.
+ * @param {Array<Array>} Contains an array that describes blocks. Each item is an array
+ * of 3 elements, describing block properties: style, depth and text.
+ * @returns {ContentState}
+ */
+export function blocksWithText(list) {
+    return ContentState.createFromBlockArray(list.map((data) => {
+        const type = data[0] || 'unstyled';
+        const depth = data[1] || 0;
+        const text = data[2] || '';
+
+        return new ContentBlock({
+            type: type,
+            key: genKey(),
+            depth: depth,
+            data: Map({}),
+            text: text,
+            characterList: List(Repeat(CharacterMetadata.create({
+                style: OrderedSet([]),
+                entity: null
+            }), text.length))
+        });
+    }));
+}
+
+/**
+ * @description Creates a contentState containing an atomic block that is a table
+ * containing the given cells. If omitted, a default table is returned, containing
+ * two rows and three columns.
+ * @param {Array<Array>=} cells
+ * @returns {Object} Keys 'block' and 'contentState'
+ */
 export function tableBlockAndContent(cells) {
     const cs = (txt) => convertToRaw(ContentState.createFromText(txt));
 
