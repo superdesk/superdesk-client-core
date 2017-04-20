@@ -30,6 +30,7 @@ export default function createEditorStore(ctrl) {
         readOnly: ctrl.readOnly,
         showToolbar: showToolbar,
         singleLine: singleLine,
+        activeCell: null,
         editorFormat: ctrl.editorFormat,
         onChangeValue: onChange.bind(ctrl)
     }, applyMiddleware(thunk));

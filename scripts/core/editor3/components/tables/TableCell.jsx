@@ -1,14 +1,6 @@
 import React, {Component} from 'react';
-import {LinkDecorator} from '../links/LinkDecorator';
 import {getSelectedEntityType, getSelectedEntityRange} from '../links/entityUtils';
-import {
-    Editor,
-    EditorState,
-    ContentState,
-    RichUtils,
-    CompositeDecorator,
-    getDefaultKeyBinding
-} from 'draft-js';
+import {Editor, RichUtils, getDefaultKeyBinding} from 'draft-js';
 
 /**
  * @ngdoc React
@@ -24,18 +16,10 @@ export class TableCell extends Component {
         super(props);
 
         this.onChange = this.onChange.bind(this);
-        this.isSameState = this.isSameState.bind(this);
         this.handleKeyCommand = this.handleKeyCommand.bind(this);
-        this.onClick = this.onClick.bind(this);
         this.keyBindingFn = this.keyBindingFn.bind(this);
 
-        const decorator = new CompositeDecorator([LinkDecorator]);
-
-        this.state = {
-            editorState: props.contentState
-                ? EditorState.createWithContent(props.contentState, decorator)
-                : EditorState.createWithContent(ContentState.createFromText(''), decorator)
-        };
+        this.state = {editorState: props.editorState};
     }
 
     /**
@@ -134,64 +118,29 @@ export class TableCell extends Component {
      * @description Triggered on changes to the cell's state.
      */
     onChange(editorState) {
-        if (this.isSameState(editorState, this.state.editorState)) {
-            return;
-        }
-
         this.setState({editorState});
         this.props.onChange(editorState);
     }
 
-    /**
-     * @ngdoc method
-     * @name TableCell#onClick
-     * @param {Event} e
-     * @description Triggered when clicking on the cell.
-     */
-    onClick(e) {
-        e.stopPropagation();
-        this.props.onFocus();
-
-        // after props.onFocus runs
-        setTimeout(() => {
-            this.refs.editor.focus();
-            this.forceUpdate();
-        }, 0);
-    }
-
-    /**
-     * @ngdoc method
-     * @name TableCell#isSameState
-     * @param {Object} es1
-     * @param {Object} es2
-     * @description Compares two editor states and returns true if they are the same.
-     */
-    isSameState(es1, es2) {
-        return _.isEqual(es1.toJS(), es2.toJS());
-    }
-
-    shouldComponentUpdate(nextProps, nextState) {
-        return !this.isSameState(this.state.editorState, nextState.editorState);
-    }
-
     render() {
         const {editorState} = this.state;
+        const {onFocus} = this.props;
 
         return (
-            <td onClick={this.onClick}>
+            <td onClick={(e) => e.stopPropagation()}>
                 <Editor
+                    onFocus={onFocus}
                     editorState={editorState}
                     handleKeyCommand={this.handleKeyCommand}
                     onChange={this.onChange}
-                    keyBindingFn={this.keyBindingFn}
-                    ref="editor" />
+                    keyBindingFn={this.keyBindingFn} />
             </td>
         );
     }
 }
 
 TableCell.propTypes = {
-    contentState: React.PropTypes.object.isRequired,
+    editorState: React.PropTypes.object.isRequired,
     onChange: React.PropTypes.func.isRequired,
     onFocus: React.PropTypes.func.isRequired
 };

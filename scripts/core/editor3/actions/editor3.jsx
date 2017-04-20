@@ -65,3 +65,15 @@ export function setReadOnly(v) {
         payload: v
     };
 }
+
+/**
+ * @ngdoc method
+ * @name setActiveCell
+ * @description Sets the active table and cell inside the editor.
+ */
+export function setActiveCell(i, j, key) {
+    return {
+        type: 'EDITOR_SET_CELL',
+        payload: {i, j, key}
+    };
+}

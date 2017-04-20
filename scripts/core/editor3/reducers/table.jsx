@@ -1,0 +1,168 @@
+import {AtomicBlockUtils, EditorState} from 'draft-js';
+import {forceUpdate} from './editor3';
+
+/**
+ * @description Contains the list of table related reducers.
+ */
+const table = (state = {}, action) => {
+    switch (action.type) {
+    case 'TOOLBAR_ADD_TABLE':
+        return addTable(state, action.payload);
+    case 'TOOLBAR_ADD_ROW_AFTER':
+        return addRowAfter(state);
+    case 'TOOLBAR_ADD_COL_AFTER':
+        return addColAfter(state);
+    case 'TOOLBAR_REMOVE_ROW':
+        return removeRow(state);
+    case 'TOOLBAR_REMOVE_COL':
+        return removeCol(state);
+    default:
+        return state;
+    }
+};
+
+/**
+ * @ngdoc method
+ * @name addTable
+ * @param {Object} data Table data (numRows, numCols, cells).
+ * @description Adds a table into the content.
+ */
+const addTable = (state, data) => {
+    var {editorState} = state;
+
+    const contentState = state.editorState.getCurrentContent();
+    const contentStateWithEntity = contentState.createEntity('TABLE', 'MUTABLE', {data});
+    const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+
+    editorState = AtomicBlockUtils.insertAtomicBlock(
+        editorState,
+        entityKey,
+        ' '
+    );
+
+    return {...state, editorState};
+};
+
+/**
+ * @ngdoc method
+ * @name addRowAfter
+ * @description Adds a row after the currently active one.
+ */
+const addRowAfter = (state) =>
+    processCells(state, (prevCells, numCols, nRows, i, j) => {
+        let numRows = nRows + 1;
+        let cells = [];
+
+        prevCells.forEach((row, index) => {
+            cells.push(row);
+
+            if (index === i) {
+                cells.push([]);
+            }
+        });
+
+        return {cells, numRows, numCols};
+    });
+
+/**
+ * @ngdoc method
+ * @name removeRow
+ * @description Removes the currently active row.
+ */
+const removeRow = (state) =>
+    processCells(state, (cells, numCols, nRows, i, j) => {
+        let numRows = nRows;
+
+        if (numRows > 1) {
+            cells.splice(i, 1);
+            numRows -= 1;
+        }
+
+        return {cells, numRows, numCols};
+    });
+
+/**
+ * @ngdoc method
+ * @name addColAfter
+ * @description Adds a column after the currently active one.
+ */
+const addColAfter = (state) =>
+    processCells(state, (cells, numCols, numRows, i, j) => ({
+        numRows: numRows,
+        numCols: numCols + 1,
+        cells: cells.map((_, ii) =>
+            Array.from(new Array(numCols + 1))
+                .map((_, jj) => {
+                    if (jj === j + 1) {
+                        return null;
+                    }
+
+                    let orig = jj;
+
+                    if (jj > j + 1) {
+                        orig -= 1;
+                    }
+
+                    if (cells[ii] && cells[ii][orig]) {
+                        return cells[ii][orig];
+                    }
+
+                    return null;
+                }))
+    }));
+
+/**
+ * @ngdoc method
+ * @name removeCol
+ * @description Removes the currently active column.
+ */
+const removeCol = (state) =>
+    processCells(state, (prevCells, nCols, numRows, i, j) => {
+        let numCols = nCols;
+        let cells = prevCells;
+
+        if (numCols > 1) {
+            numCols -= 1;
+            cells = prevCells.map((cell) => {
+                cell.splice(j, 1);
+                return cell;
+            });
+        }
+
+        return {cells, numRows, numCols};
+    });
+
+/**
+ * @ngdoc method
+ * @name removeCol
+ * @param {Function} fn Function that is called with parameters
+ * (cells, numCols, numRows, i, j) and is expected to return the new
+ * data that should be placed on the table entity. The expected return
+ * is an object with keys {cells, numRows, numCols}.
+ * @description Helper function to help process the cells in the currently active
+ * table and transform the entity data to a new form, using a callback function.
+ */
+const processCells = (state, fn) => {
+    const {activeCell, editorState} = state;
+
+    if (activeCell === null) {
+        return state;
+    }
+
+    const {i, j, key} = activeCell;
+    const contentState = editorState.getCurrentContent();
+    const block = contentState.getBlockForKey(key);
+    const entityKey = block.getEntityAt(0);
+    const entity = contentState.getEntity(entityKey);
+    const {cells, numRows, numCols} = entity.getData().data;
+    const newContentState = contentState.replaceEntityData(entityKey, {
+        data: fn(cells, numCols, numRows, i, j)
+    });
+
+    return forceUpdate({
+        ...state,
+        editorState: EditorState.push(editorState, newContentState, 'insert-row')
+    });
+};
+
+export default table;
