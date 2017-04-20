@@ -123,6 +123,12 @@
                                 <option value=""></option>
                             </select>
                         </div>
+                        <div class="field">
+                            <label class="right">
+                                {{:: 'Pass through content' | translate }}
+                                <span sd-switch ng-model="provider.pass_through"></span>
+                            </label>
+                        </div>
                     </tab>
                     <tab heading="{{ 'Notification' | translate }}" class="TabContent">
                         <div class="field">
