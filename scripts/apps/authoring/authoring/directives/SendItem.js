@@ -2,11 +2,11 @@ import _ from 'lodash';
 
 SendItem.$inject = ['$q', 'api', 'desks', 'notify', 'authoringWorkspace',
     'superdeskFlags', '$location', 'macros', '$rootScope',
-    'authoring', 'send', 'editor', 'editor3', 'confirm', 'archiveService',
+    'authoring', 'send', 'editorResolver', 'confirm', 'archiveService',
     'preferencesService', 'multi', 'datetimeHelper', 'config', 'privileges', 'storage'];
 export function SendItem($q, api, desks, notify, authoringWorkspace,
                   superdeskFlags, $location, macros, $rootScope,
-                  authoring, send, editor2, editor3, confirm, archiveService,
+                  authoring, send, editorResolver, confirm, archiveService,
                   preferencesService, multi, datetimeHelper, config, privileges, storage) {
     return {
         scope: {
@@ -26,9 +26,7 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
         controllerAs: 'vm',
         templateUrl: 'scripts/apps/authoring/views/send-item.html',
         link: function sendItemLink(scope, elem, attrs, ctrl) {
-            // use the editor service of editor3, if it's active globally, or on the content profile body
-            const isEditor3Body = authoring.editor && authoring.editor.body_html && authoring.editor.body_html.editor3;
-            const editor = config.features.onlyEditor3 || isEditor3Body ? editor3 : editor2;
+            const editor = editorResolver.get();
 
             scope.mode = scope.mode || 'authoring';
             scope.desks = null;
