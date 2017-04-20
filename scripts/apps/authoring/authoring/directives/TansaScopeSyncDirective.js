@@ -23,8 +23,12 @@ export function TansaScopeSyncDirective($rootScope) {
                 }
 
                 var txt = $(node).find('.text-editor');
+                var tag = _.find(txt, (elem) => $(elem).is(':visible'));
 
-                return _.find(txt, (elem) => $(elem).is(':visible')).innerHTML;
+                if (tag) {
+                    return tag.innerHTML;
+                }
+                return node.innerHTML;
             }
 
             scope.$on('$destroy', deregisterTansa);
