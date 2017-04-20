@@ -16,6 +16,6 @@ describe('superdesk.config', () => {
         expect(config.foo).toBe('bar');
         expect(config.a.b.c).toBe(true);
         expect(config.server.protocol).toBe('foo');
-        expect(config.server.url).toBe(null); // defined in mocks
+        expect(config.server.url).toBe(''); // defined in mocks
     }));
 });

@@ -19,13 +19,27 @@ angular.module('superdesk.core.auth.auth', []).service('auth', ['api', 'session'
         this.login = function(username, password) {
             return authAdapter.authenticate(username, password)
                 .then((sessionData) => api.users.getById(sessionData.user)
-                .then((userData) => {
-                    session.start(sessionData, userData);
-                    return session.identity;
-                })
+                    .then((userData) => {
+                        session.start(sessionData, userData);
+                        return session.identity;
+                    })
                 );
         };
 
+        /**
+         * @ngdoc method
+         * @name auth#loginOAuth
+         * @param {Object} data
+         * @return {Promise}
+         */
+        this.loginOAuth = function(response) {
+            authAdapter.setToken(response);
+            return api.users.getById(response.data.user)
+                .then((userData) => {
+                    session.start(response.data, userData);
+                    return session.identity;
+                });
+        };
 
         /**
          * @ngdoc method
@@ -38,10 +52,10 @@ angular.module('superdesk.core.auth.auth', []).service('auth', ['api', 'session'
         this.loginXMPP = function(jid, transactionId) {
             return authAdapter.authenticateXMPP(jid, transactionId)
                 .then((sessionData) => api.users.getById(sessionData.user)
-                .then((userData) => {
-                    session.start(sessionData, userData);
-                    return session.identity;
-                })
+                    .then((userData) => {
+                        session.start(sessionData, userData);
+                        return session.identity;
+                    })
                 );
         };
     }]);

@@ -37,6 +37,7 @@ module.exports = function(grunt) {
         features: {
             swimlane: {columnsLimit: 4}
         },
+        auth: {google: false},
         ingest: {
             PROVIDER_DASHBOARD_DEFAULTS: {
                 show_log_messages: true,

@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 /**
  * Login modal is watching session token and displays modal when needed
  */
@@ -5,13 +7,13 @@ angular.module('superdesk.core.auth.login', []).directive('sdLoginModal', [
     'session',
     'auth',
     'features',
-    'asset',
     'api',
+    'config',
     '$route',
-    function(session, auth, features, asset, api, $route) {
+    function(session, auth, features, api, config, $route) {
         return {
             replace: true,
-            templateUrl: asset.templateUrl('core/auth/login-modal.html'),
+            template: require('./login-modal.html'),
             link: function(scope, element, attrs) {
                 scope.features = features;
                 scope.secureActivated = false;
@@ -28,9 +30,7 @@ angular.module('superdesk.core.auth.login', []).directive('sdLoginModal', [
                     .then(() => {
                         scope.isLoading = false;
                         scope.password = null;
-                        if ($route.current && $route.current.redirectTo) {
-                            $route.reload();
-                        }
+                        reloadRoute();
                     }, (rejection) => {
                         scope.isLoading = false;
                         scope.loginError = rejection.status;
@@ -39,6 +39,42 @@ angular.module('superdesk.core.auth.login', []).directive('sdLoginModal', [
                         }
                     });
                 };
+
+                scope.openLoginPopup = function(service) {
+                    window.open(apiUrl.replace('api', 'login') + '/' + service);
+                };
+
+                scope.allowedAuth = config.auth;
+
+                let apiUrl = _.get(config, 'server.url', '').replace('api/', 'api'); // make sure there is no trailing /
+                let handleAuthMessage = (event) => {
+                    if (event.origin === apiUrl.replace('/api', '') && event.data.type === 'oauth') {
+                        let message = event.data;
+
+                        if (message.data.token) {
+                            auth.loginOAuth(message.data);
+                            reloadRoute();
+                        } else {
+                            scope.$apply(() => {
+                                scope.loginError = message.data.error;
+                            });
+                        }
+                    }
+
+                    return false;
+                };
+
+                window.addEventListener('message', handleAuthMessage);
+
+                scope.$on('$destroy', () => {
+                    window.removeEventListener('message', handleAuthMessage);
+                });
+
+                function reloadRoute() {
+                    if ($route.current && $route.current.redirectTo) {
+                        $route.reload();
+                    }
+                }
 
                 scope.$watchGroup([function getSessionToken() {
                     return session.token;

@@ -105,6 +105,10 @@ You can configure what will be displayed in list views, there are 3 areas in lis
 
 - `singleLineView` - optional config to have thinner rows with elements in singleLine displayed.
 
+##### Auth
+
+- `auth.google`: `false` - allow login via Google
+
 ##### Miscellaneous
 
 - `defaultRoute` - sets the route that the app will go to upon logging in (home route).
