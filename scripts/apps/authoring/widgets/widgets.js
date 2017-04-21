@@ -30,10 +30,15 @@ function WidgetsManagerCtrl($scope, $routeParams, authoringWidgets, archiveServi
             display = 'legalArchive';
         } else if (archiveService.isArchived(item)) {
             display = 'archived';
+        } else if (archiveService.isPersonal(item)) {
+            display = 'personal';
         } else {
             display = item.state === 'killed' ? 'killedItem' : 'authoring';
             if (item.type === 'composite') {
                 display = 'packages';
+            }
+            if (item.type === 'picture') {
+                display = 'picture';
             }
         }
 

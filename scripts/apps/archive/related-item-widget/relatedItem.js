@@ -10,7 +10,15 @@ angular.module('superdesk.apps.dashboard.widgets.relatedItem', [
             template: 'scripts/apps/archive/related-item-widget/widget-relatedItem.html',
             order: 7,
             side: 'right',
-            display: {authoring: true, packages: false, killedItem: true, legalArchive: false, archived: false},
+            display: {
+                authoring: true,
+                packages: false,
+                killedItem: true,
+                legalArchive: false,
+                archived: false,
+                picture: false,
+                personal: false
+            },
             configurationTemplate: 'scripts/apps/archive/related-item-widget/relatedItem-configuration.html',
             configurable: false,
             needEditable: true,

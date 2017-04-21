@@ -325,6 +325,14 @@ angular.module('superdesk.apps.authoring.macros', [
                 order: 6,
                 needEditable: true,
                 side: 'right',
-                display: {authoring: true, packages: true, killedItem: false, legalArchive: false, archived: false}
+                display: {
+                    authoring: true,
+                    packages: true,
+                    killedItem: false,
+                    legalArchive: false,
+                    archived: false,
+                    picture: true,
+                    personal: true
+                }
             });
     }]);

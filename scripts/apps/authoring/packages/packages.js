@@ -37,7 +37,15 @@ export default angular.module('superdesk.apps.authoring.packages', ['superdesk.a
         template: 'scripts/apps/authoring/packages/views/packages-widget.html',
         order: 5,
         side: 'right',
-        display: {authoring: true, packages: true, killedItem: true, legalArchive: false, archived: false}
+        display: {
+            authoring: true,
+            packages: true,
+            killedItem: true,
+            legalArchive: false,
+            archived: false,
+            picture: true,
+            personal: false
+        }
     });
 }])
 .controller('PackagesWidgetCtrl', PackagesCtrl);

@@ -63,6 +63,14 @@ export function ArchiveService(desks, session, api, $q, search, $location, confi
     };
 
     /**
+     * Returns true if the item is in personal workspace
+     *
+     * @param {Object} item
+     * @return boolean
+     */
+    this.isPersonal = (item) => item.task && item.task.user && !item.task.desk;
+
+    /**
      *  Returns the list of items having the same slugline from datetime
      *  @param {String} slugline
      *  @fromDateTime {DateTime} fromDateTime
