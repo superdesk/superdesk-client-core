@@ -90,9 +90,9 @@ export function AuthoringHeaderDirective(api, authoringWidgets, $rootScope, arch
                 }
             });
 
-            function getNoTakes() {
-                return config.features && 'noTakes' in config.features
-                    && config.features.noTakes;
+            function getNoMissingLink() {
+                return config.features && 'noMissingLink' in config.features
+                    && config.features.noMissingLink;
             }
 
             function getRelatedItems() {
@@ -106,7 +106,7 @@ export function AuthoringHeaderDirective(api, authoringWidgets, $rootScope, arch
                     archiveService.getRelatedItems(scope.item.slugline, fromDateTime, scope.item._id)
                         .then((items) => {
                             scope.relatedItems = items;
-                            if (items && items._items.length && !getNoTakes()) {
+                            if (items && items._items.length && !getNoMissingLink()) {
                                 var takesPackage = _.find(scope.item.linked_in_packages,
                                     (linkedPackage) => linkedPackage && linkedPackage.package_type === 'takes');
                                 // if takes package is missing or not rewrite of.
