@@ -1,8 +1,87 @@
 import * as testUtils from '../../components/tests/utils';
 import {AtomicBlockParser} from '../to-html';
 import {ContentState, convertToRaw} from 'draft-js';
-import {BlockInlineStyleWrapper, BlockEntityWrapper} from '../to-html';
+import {BlockInlineStyleWrapper, BlockEntityWrapper, HTMLGenerator} from '../to-html';
 import {OrderedSet as OS} from 'immutable';
+
+describe('core.editor3.html.to-html.HTMLGenerator', () => {
+    it('should correctly parse lists', () => {
+        const contentState = testUtils.blocksWithText([
+            // style, depth, text
+            ['unordered-list-item', 0, '1'],
+            ['unordered-list-item', 0, '2'],
+            ['unordered-list-item', 1, '11'],
+            ['unordered-list-item', 1, '22'],
+            ['unordered-list-item', 1, '3'],
+            ['unordered-list-item', 2, '4'],
+            ['unordered-list-item', 2, '5'],
+            ['unordered-list-item', 3, '6'],
+            ['unordered-list-item', 3, '6.5'],
+            ['unordered-list-item', 2, 'x'],
+            ['unordered-list-item', 1, '7'],
+            ['unordered-list-item', 1, '33'],
+            ['unordered-list-item', 0, '8']
+        ]);
+
+        const result = new HTMLGenerator(contentState).html();
+
+        expect(result).toBe(`
+            <ul>
+                <li>1</li>
+                <li>2
+                    <ul>
+                        <li>11</li>
+                        <li>22</li>
+                        <li>3
+                            <ul>
+                                <li>4</li>
+                                <li>5
+                                    <ul>
+                                        <li>6</li>
+                                        <li>6.5</li>
+                                    </ul>
+                                </li>
+                                <li>x</li>
+                            </ul>
+                        </li>
+                        <li>7</li>
+                        <li>33</li>
+                    </ul>
+                </li>
+                <li>8</li>
+            </ul>`.replace(/[\n\r\s]+/g, ''));
+    });
+
+    it('should correctly parse abruptly ending lists', () => {
+        const contentState = testUtils.blocksWithText([
+            // style, depth, text
+            ['unordered-list-item', 0, '1'],
+            ['unordered-list-item', 1, '2'],
+            ['unordered-list-item', 2, '3'],
+            ['unordered-list-item', 3, '4'],
+            ['unstyled', 0, 'abc']
+        ]);
+
+        const result = new HTMLGenerator(contentState).html();
+
+        expect(result).toBe(`
+            <ul>
+                <li>
+                    1
+                    <ul>
+                        <li>2
+                            <ul>
+                                <li>
+                                    3
+                                    <ul><li>4</li></ul>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul><p>abc</p>`.replace(/[\n\r\s]+/g, ''));
+    });
+});
 
 describe('core.editor3.html.to-html.AtomicBlockParser', () => {
     it('should correctly parse embeds', () => {

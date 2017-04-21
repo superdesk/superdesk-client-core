@@ -3,8 +3,11 @@ import StyleButton from './StyleButton';
 import * as actions from '../../actions';
 import {connect} from 'react-redux';
 
-/** The list of supported inline styles */
-const INLINE_STYLES = {
+/**
+ * @type {Object}
+ * @description Maps server 'editorFormat' options to Draft inline styles.
+ */
+const inlineStyles = {
     bold: 'BOLD',
     italic: 'ITALIC',
     underline: 'UNDERLINE'
@@ -16,18 +19,18 @@ const INLINE_STYLES = {
  * @name InlineStyleControls
  * @description Inline style functional component, will manage the inline style related toolbar buttons
  */
-export const InlineStyleControlsComponent = ({options, editorState, toggleInlineStyle}) => {
+export const InlineStyleControlsComponent = ({editorFormat, editorState, toggleInlineStyle}) => {
     const currentStyle = editorState.getCurrentInlineStyle();
 
     return (
         <span>
-            {options.filter((type) => type in INLINE_STYLES).map((type) =>
+            {editorFormat.filter((type) => type in inlineStyles).map((type) =>
                 <StyleButton
                     key={type}
-                    active={currentStyle.has(INLINE_STYLES[type])}
+                    active={currentStyle.has(inlineStyles[type])}
                     label={type}
                     onToggle={toggleInlineStyle}
-                    style={INLINE_STYLES[type]}
+                    style={inlineStyles[type]}
                 />
             )}
         </span>
@@ -36,13 +39,13 @@ export const InlineStyleControlsComponent = ({options, editorState, toggleInline
 
 InlineStyleControlsComponent.propTypes = {
     editorState: React.PropTypes.object,
-    options: React.PropTypes.array,
+    editorFormat: React.PropTypes.array,
     toggleInlineStyle: React.PropTypes.func
 };
 
 const mapStateToProps = (state) => ({
     editorState: state.editorState,
-    options: state.editorFormat
+    editorFormat: state.editorFormat
 });
 
 const mapDispatchToProps = (dispatch) => ({

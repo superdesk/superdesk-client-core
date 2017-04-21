@@ -62,11 +62,10 @@ const onChange = (state, editorState) => {
  * @description Handle the editor tab key pressed event
  */
 const onTab = (state, e) => {
-    const maxDepth = 4;
     const {editorState} = state;
-    const newEditorState = RichUtils.onTab(e, editorState, maxDepth);
+    const newState = RichUtils.onTab(e, editorState, 4);
 
-    return onChange(state, newEditorState ? newEditorState : editorState);
+    return onChange(state, newState);
 };
 
 /**

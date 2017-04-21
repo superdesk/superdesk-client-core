@@ -13,8 +13,8 @@ const StyleIcons = {
     h5: 'icon-heading-5',
     h6: 'icon-heading-6',
     quote: 'icon-quote',
-    ul: 'icon-unordered-list',
-    ol: 'icon-ordered-list'
+    unorderedlist: 'icon-unordered-list',
+    orderedlist: 'icon-ordered-list'
 };
 
 /**

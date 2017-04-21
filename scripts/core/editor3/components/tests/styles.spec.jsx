@@ -35,7 +35,7 @@ describe('editor3.components.toolbar', () => {
         const editorState = EditorState.createEmpty();
         const wrapper = mount(
             <BlockStyleControls
-                options={opts}
+                editorFormat={opts}
                 editorState={editorState}
             />
         );
@@ -53,7 +53,7 @@ describe('editor3.components.toolbar', () => {
         const editorState = EditorState.createEmpty();
         const wrapper = mount(
             <InlineStyleControls
-                options={opts}
+                editorFormat={opts}
                 editorState={editorState}
             />
         );

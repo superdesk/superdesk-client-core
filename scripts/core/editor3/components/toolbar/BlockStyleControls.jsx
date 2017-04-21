@@ -3,8 +3,11 @@ import StyleButton from './StyleButton';
 import * as actions from '../../actions';
 import {connect} from 'react-redux';
 
-/** The list of supported block types style */
-const BLOCK_TYPES_STYLE = {
+/**
+ * @type {Object}
+ * @description Maps server 'editorFormat' options to Draft styles.
+ */
+const blockStyles = {
     h1: 'header-one',
     h2: 'header-two',
     h3: 'header-three',
@@ -12,8 +15,8 @@ const BLOCK_TYPES_STYLE = {
     h5: 'header-five',
     h6: 'header-six',
     quote: 'blockquote',
-    ul: 'unordered-list-item',
-    ol: 'ordered-list-item'
+    unorderedlist: 'unordered-list-item',
+    orderedlist: 'ordered-list-item'
 };
 
 /**
@@ -22,7 +25,7 @@ const BLOCK_TYPES_STYLE = {
  * @name BlockStyleControl
  * @description Blocks style controls (h1, h2, h3, ...)
  */
-export const BlockStyleControlsComponent = ({editorState, options, toggleBlockStyle}) => {
+export const BlockStyleControlsComponent = ({editorState, editorFormat, toggleBlockStyle}) => {
     const selection = editorState.getSelection();
     const blockType = editorState
         .getCurrentContent()
@@ -31,13 +34,13 @@ export const BlockStyleControlsComponent = ({editorState, options, toggleBlockSt
 
     return (
         <span>
-            {options.filter((type) => type in BLOCK_TYPES_STYLE).map((type) =>
+            {editorFormat.filter((type) => type in blockStyles).map((type) =>
                 <StyleButton
                     key={type}
-                    active={BLOCK_TYPES_STYLE[type] === blockType}
+                    active={blockStyles[type] === blockType}
                     label={type}
                     onToggle={toggleBlockStyle}
-                    style={BLOCK_TYPES_STYLE[type]}
+                    style={blockStyles[type]}
                 />
             )}
         </span>
@@ -47,12 +50,12 @@ export const BlockStyleControlsComponent = ({editorState, options, toggleBlockSt
 BlockStyleControlsComponent.propTypes = {
     editorState: React.PropTypes.object,
     toggleBlockStyle: React.PropTypes.func,
-    options: React.PropTypes.array
+    editorFormat: React.PropTypes.array
 };
 
 const mapStateToProps = (state) => ({
     editorState: state.editorState,
-    options: state.editorFormat
+    editorFormat: state.editorFormat
 });
 
 const mapDispatchToProps = (dispatch) => ({
