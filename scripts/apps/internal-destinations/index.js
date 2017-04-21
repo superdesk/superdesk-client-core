@@ -22,8 +22,8 @@ function InternalDestinationsFactory(api) {
     return new InternalDestinationsService();
 }
 
-InternalDestinationsController.$inject = ['internalDestinations'];
-function InternalDestinationsController(internalDestinations) {
+InternalDestinationsController.$inject = ['internalDestinations', 'modal'];
+function InternalDestinationsController(internalDestinations, modal) {
     this.create = () => {
         this.active = {is_active: false};
     };
@@ -33,7 +33,11 @@ function InternalDestinationsController(internalDestinations) {
     };
 
     this.remove = (dest) => {
-        internalDestinations.remove(dest).then(this.load);
+        modal.confirm(gettext('Please confirm you want to delete internal destination.')).then(
+            function runConfirmed() {
+                internalDestinations.remove(dest).then(this.load);
+            }
+        );
     };
 
     this.stopEdit = () => {
