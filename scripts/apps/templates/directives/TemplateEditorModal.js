@@ -13,6 +13,12 @@ export function TemplateEditorModal() {
                     }
                 }
 
+                scope.$watch('template.schedule.day_of_week', (newValue, oldValue) => {
+                    if (newValue && newValue.length > 0 && !_.isEqual(newValue, oldValue)) {
+                        modalBodyContainer.scope().metadataForm.$setDirty();
+                    }
+                }, true);
+
                 modalBodyContainer.on('keydown', handleKeyDown);
 
                 scope.$on('$destroy', () => {
