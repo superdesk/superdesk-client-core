@@ -13,10 +13,20 @@ describe('search service', () => {
         var filters = criteria.query.filtered.filter.and;
 
         expect(filters).toContain({not: {term: {state: 'spiked'}}});
-        expect(filters).toContain({not: {bool: {must: [{term: {package_type: 'takes'}}, {term: {_type: 'archive'}}]}}});
         expect(filters).toContain({not: {bool: {must: [{term: {_type: 'published'}},
                 {term: {package_type: 'takes'}},
                 {term: {last_published_version: false}}]}}});
+        expect(criteria.sort).toEqual([{versioncreated: 'desc'}]);
+    }));
+
+    it('can create base query without take packages', inject((search, session) => {
+        session.identity = {_id: 'foo'};
+        var query = search.query({ignoreDigital: true});
+        var criteria = query.getCriteria();
+        var filters = criteria.query.filtered.filter.and;
+
+        expect(filters).toContain({not: {term: {state: 'spiked'}}});
+        expect(filters).toContain({not: {term: {package_type: 'takes'}}});
         expect(criteria.sort).toEqual([{versioncreated: 'desc'}]);
     }));
 

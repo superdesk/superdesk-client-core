@@ -305,6 +305,7 @@ describe('authoring', () => {
         browser.sleep(100);
         expect(authoring.getANPATakeKeyValue()).toBe('=2');
         authoring.close();
+        monitoring.filterAction('text');
         monitoring.actionOnItem('Spike', 0, 0);
         monitoring.actionOnItem('Edit', 0, 0);
         authoring.showHistory();
