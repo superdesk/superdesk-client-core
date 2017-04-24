@@ -1,4 +1,4 @@
 export const limits = {
-    stage: 15,
+    stage: 40,
     desk: 40
 };
