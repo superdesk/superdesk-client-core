@@ -1,19 +1,32 @@
 /**
  * @ngdoc directive
  * @module superdesk.apps.web_publisher
- * @name sdListArticles
+ * @name sdArticles
  * @requires publisher
- * @description Directive to handle listing articles in web lists
+ * @description Directive to handle listing articles in web
  */
-ListArticlesDirective.$inject = ['publisher'];
-export function ListArticlesDirective(publisher) {
-    class ListArticles {
+ArticlesDirective.$inject = ['publisher'];
+export function ArticlesDirective(publisher) {
+    class Articles {
         constructor() {
-            this.scope = {list: '=list', type: '@', draggingFlag: '=draggingflag', listChangeFlag: '=listchangeflag'};
+            this.scope = {type: '@', draggingFlag: '=draggingflag', scrollContainer: '=scrollcontainer'};
             this.template = '<ng-include src="getTemplateUrl()"/>';
         }
 
         link(scope) {
+            scope.params = {
+                limit: 20,
+                status: 'published',
+                page: 1
+            };
+
+            scope.list = {
+                dragging: false,
+                items: [],
+                totalPages: 1,
+                page: 0
+            };
+
             /**
              * @ngdoc method
              * @name sdListArticles#getTemplateUrl
@@ -22,18 +35,17 @@ export function ListArticlesDirective(publisher) {
              */
             scope.getTemplateUrl = function() {
                 switch (scope.type) {
-                case 'card':
-                    return 'scripts/apps/web-publisher/views/list-articles-card.html';
-                case 'detail':
-                    return 'scripts/apps/web-publisher/views/list-articles-detail.html';
                 case 'draggable':
-                    return 'scripts/apps/web-publisher/views/list-articles-draggable.html';
+                    return 'scripts/apps/web-publisher/views/articles-draggable.html';
+                default:
+                    return 'scripts/apps/web-publisher/views/articles-detail.html';
+
                 }
             };
 
             /**
              * @ngdoc method
-             * @name sdListArticles#getSelectedItemsIncluding
+             * @name sdArticles#getSelectedItemsIncluding
              * @param {Object} list - list of article items
              * @param {Object} item - article item
              * @returns {Object}
@@ -46,7 +58,7 @@ export function ListArticlesDirective(publisher) {
 
             /**
              * @ngdoc method
-             * @name sdListArticles#onDragstart
+             * @name sdArticles#onDragstart
              * @param {Object} list - list of article items
              * @param {Object} event - drag event
              * @description Handles start of dragging
@@ -58,7 +70,7 @@ export function ListArticlesDirective(publisher) {
 
             /**
              * @ngdoc method
-             * @name sdListArticles#onDragEnd
+             * @name sdArticles#onDragEnd
              * @param {Object} list - list of article items
              * @description Handles end of dragging
              */
@@ -69,7 +81,7 @@ export function ListArticlesDirective(publisher) {
 
             /**
              * @ngdoc method
-             * @name sdListArticles#onDrop
+             * @name sdArticles#onDrop
              * @param {Object} list - list of article items
              * @param {Array} items - dropped items
              * @param {Int} index - index of list where items were dropped
@@ -78,7 +90,6 @@ export function ListArticlesDirective(publisher) {
              */
             scope.onDrop = (list, items, index) => {
                 scope.draggingFlag = false;
-                scope.listChangeFlag = true;
 
                 angular.forEach(items, (item) => {
                     item.selected = false;
@@ -93,7 +104,7 @@ export function ListArticlesDirective(publisher) {
 
             /**
              * @ngdoc method
-             * @name sdListArticles#onMoved
+             * @name sdArticles#onMoved
              * @param {Object} list - list of article items
              * @description Handles move event
              */
@@ -103,56 +114,52 @@ export function ListArticlesDirective(publisher) {
 
             /**
              * @ngdoc method
-             * @name sdListArticles#removeFromList
-             * @param {Int} index
-             * @description Removes article from list
+             * @name sdArticles#loadMore
+             * @description loads more items
              */
-            scope.removeFromList = (index) => {
-                scope.list.items.splice(index, 1);
-                scope.listChangeFlag = true;
-            };
-
-            /**
-             * @ngdoc method
-             * @name sdListArticles#pinArticle
-             * @param {Object} article
-             * @description Pins article
-             */
-            scope.pinArticle = (article) => {
-                publisher.pinArticle(scope.list.id, article.id, {content_list_item: {sticky: !article.sticky}}).then(
-                    (item) => this._queryItems(scope));
-            };
-
-            scope.$on('refreshListArticles', (e, data) => {
-                if (data.id === scope.list.id) {
-                    this._queryItems(scope);
+            scope.loadMore = () => {
+                if (scope.loading || scope.list.page >= scope.list.totalPages) {
+                    return;
                 }
+
+                scope.params.page = scope.list.page + 1;
+                this._queryItems(scope);
+            };
+
+            scope.$on('refreshArticles', (e, filters) => {
+                scope.params = filters;
+                scope.params.page = 1;
+                scope.params.includeSubRoutes = true;
+
+                this._queryItems(scope);
             });
 
-            this._queryItems(scope);
+            if (scope.type !== 'draggable') {
+                this._queryItems(scope);
+            }
         }
 
         /**
          * @ngdoc method
-         * @name sdListArticles#_queryItems
+         * @name sdArticles#_queryItems
          * @private
          * @param {Object} scope
-         * @description Loads items for selected list
+         * @description Loads items
          */
         _queryItems(scope) {
             scope.loading = true;
-            publisher.queryListArticles(scope.list.id).then((articles) => {
+            publisher.queryTenantArticles(scope.params).then((response) => {
                 scope.loading = false;
-
-                if (scope.type === 'draggable') {
-                    scope.list.items = articles;
-                    scope.list.originalItems = articles;
+                scope.list.page = response.page;
+                scope.list.totalPages = response.pages;
+                if (response.page > 1) {
+                    scope.list.items = scope.list.items.concat(response._embedded._items);
                 } else {
-                    scope.articles = articles;
+                    scope.list.items = response._embedded._items;
                 }
             });
         }
     }
 
-    return new ListArticles();
+    return new Articles();
 }

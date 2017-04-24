@@ -1,4 +1,4 @@
-/**
+ /**
  * @ngdoc controller
  * @module superdesk.apps.web_publisher
  * @name WebPublisherMonitoringController
@@ -7,8 +7,8 @@
  * @requires https://docs.angularjs.org/api/ng/type/$rootScope.Scope $scope
  * @description WebPublisherMonitoringController holds a set of functions used for web publisher monitoring
  */
-WebPublisherMonitoringController.$inject = ['$scope', 'publisher', 'modal'];
-export function WebPublisherMonitoringController($scope, publisher, modal) {
+WebPublisherMonitoringController.$inject = ['$scope', '$sce', 'publisher', 'modal'];
+export function WebPublisherMonitoringController($scope, $sce, publisher, modal) {
     class WebPublisherMonitoring {
         constructor() {
             this.TEMPLATES_DIR = 'scripts/apps/web-publisher/views';
@@ -90,7 +90,56 @@ export function WebPublisherMonitoringController($scope, publisher, modal) {
                 $scope.publishedArticles = articles;
             });
         }
+
+        /**
+         * @ngdoc method
+         * @name WebPublisherMonitoringController#openArticlePreview
+         * @param {Object} tenant
+         * @description Opens modal window for previewing article
+         */
+        openArticlePreview(tenant) {
+            // TODO: pass route id here
+            let src = 'http://magazine.s-lab.sourcefabric.org/business/kogi-truffaut-vaporware';
+
+            this.previewArticleSrc = $sce.trustAsResourceUrl(src);
+            this.openArticlePreviewModal = true;
+            this.setArticlePreviewMode('desktop');
+        }
+
+        /**
+         * @ngdoc method
+         * @name WebPublisherMonitoringController#setArticlePreviewMode
+         * @param {String} mode - article preview mode (desktop, tablet, mobile etc)
+         * @description Sets type/mode of article preview
+         */
+        setArticlePreviewMode(mode) {
+            this.articlePreviewMode = mode;
+            switch (mode) {
+            case 'desktop':
+                this.articlePreviewModeReadable = 'Desktop';
+                break;
+            case 'tablet':
+                this.articlePreviewModeReadable = 'Tablet (portrait)';
+                break;
+            case 'tablet-landscape':
+                this.articlePreviewModeReadable = 'Tablet (landscape)';
+                break;
+            case 'mobile':
+                this.articlePreviewModeReadable = 'Mobile (portrait)';
+                break;
+            case 'mobile-landscape':
+                this.articlePreviewModeReadable = 'Mobile (landscape)';
+                break;
+            case 'amp':
+                this.articlePreviewModeReadable = 'AMP (portrait)';
+                break;
+            case 'amp-landscape':
+                this.articlePreviewModeReadable = 'AMP (landscape)';
+                break;
+            }
+        }
     }
+
 
     return new WebPublisherMonitoring();
 }

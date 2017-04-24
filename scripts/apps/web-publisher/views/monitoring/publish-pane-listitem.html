@@ -15,7 +15,6 @@
                     data-change="">
                 </div>
             </div>
-
             <div ng-if="webPublisherMonitoring.selectedArticle.status != 'unpublished' && webPublisherMonitoring.selectedArticle.status != 'new'" >
                 <div ng-show="routeEditing" class="flexBox">
                     <span class="text--uppercase text--smaller flexBox__item text--lighter">route</span>
@@ -31,7 +30,6 @@
                             ng-click="routeEditing = false"/>
                     </div>
                 </div>
-
                 <span class="label label--info text--smaller text--uppercase" ng-hide="routeEditing">{{webPublisherMonitoring.selectedArticle.route.name}}</span>
                 <span class="text--uppercase text--smaller text--blue cursorPointer leftSpace"
                     ng-click="routeEditing = true"
@@ -46,7 +44,9 @@
         <div class="text--small text--lighter text--right minHeightLine">
             <span ng-if="webPublisherMonitoring.selectedArticle.status != 'new'">{{webPublisherMonitoring.selectedArticle.publishedAt | reldate}}</span>
             <!-- if article is not published and route is selected this should appear -->
-            <span ng-if="webPublisherMonitoring.selectedArticle.status == 'new'" class="text--uppercase text--small text--blue cursorPointer rightSpace">
+            <span ng-if="webPublisherMonitoring.selectedArticle.status == 'new'"
+                class="text--uppercase text--small text--blue cursorPointer rightSpace"
+                ng-click="webPublisherMonitoring.openArticlePreview(site)">
                 <i class="icon-external blue icon--small text--verticalMiddle rightSpace--small"/> Live Preview
             </span>
         </div>

@@ -144,6 +144,40 @@ export function PubAPIFactory(config, $http, $q, session) {
 
         /**
          * @ngdoc method
+         * @name pubapi#link
+         * @param {String} resource
+         * @param {String} id - id of item which is saved
+         * @param {Object} header - header which need to be sent
+         * @returns {Promise}
+         * @description Link an item
+         */
+        link(resource, id, header) {
+            return this.req({
+                url: this.resourceURL(resource, id),
+                method: 'LINK',
+                headers: {link: header}
+            }).then((response) => response);
+        }
+
+        /**
+         * @ngdoc method
+         * @name pubapi#unlink
+         * @param {String} resource
+         * @param {String} id - id of item which is deleted
+         * @param {Object} header - header which need to be sent
+         * @returns {Promise}
+         * @description Unlink an item
+         */
+        unlink(resource, id, header) {
+            return this.req({
+                url: this.resourceURL(resource, id),
+                method: 'UNLINK',
+                headers: {link: header}
+            }).then((response) => response);
+        }
+
+        /**
+         * @ngdoc method
          * @name pubapi#resourceURL
          * @param {String} resource
          * @param {String} id

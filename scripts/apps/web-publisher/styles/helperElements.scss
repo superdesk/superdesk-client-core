@@ -57,6 +57,10 @@
         color: $grayLight;
     }
 
+    &--dark {
+        color: $grayDarker;
+    }
+
     &--italic {
         font-style: italic;
     }
@@ -99,12 +103,27 @@
     &--blue {
         color: $sd-blue;
     }
+
+    &--center {
+        text-align: center;
+    }
+
+    &--left {
+        text-align: left !important;
+    }
+
+    &--right {
+        text-align: right !important;
+    }
 }
 
 .cursorPointer {
     cursor: pointer;
 }
 
+.cursorPointer{
+    cursor: pointer;
+}
 .static {
     position: static;
 }
@@ -160,4 +179,8 @@
     height: 14px;
     line-height: 14px;
     font-size: 14px;
+}
+
+.width200{
+    width: 200px;
 }
