@@ -246,10 +246,13 @@ describe('superdesk.apps.workspace.content', () => {
             };
         }));
 
-        it('render correctly all fields', inject((content) => {
+        it('render correctly all fields', inject((content, $q) => {
             var el = compile({
                 model: {}
             });
+
+            spyOn(content, 'getTypeMetadata').and.returnValue($q.when({schema: content.contentProfileSchema,
+                editor: content.contentProfileEditor}));
 
             el.scope().$digest();
 
@@ -261,10 +264,13 @@ describe('superdesk.apps.workspace.content', () => {
                 .toBeTruthy();
         }));
 
-        it('should dirty parent form when toggling fields', () => {
+        it('should dirty parent form when toggling fields', inject((content, $q) => {
             var el = compile({
                 model: {}
             });
+
+            spyOn(content, 'getTypeMetadata').and.returnValue($q.when({schema: content.contentProfileSchema,
+                editor: content.contentProfileEditor}));
 
             el.scope().$digest();
 
@@ -276,6 +282,6 @@ describe('superdesk.apps.workspace.content', () => {
                 .find('span.sd-toggle')
                 .click();
             expect(form.$dirty).toBeTruthy();
-        });
+        }));
     });
 });

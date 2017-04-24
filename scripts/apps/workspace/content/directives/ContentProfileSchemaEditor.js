@@ -1,3 +1,13 @@
+/**
+ * @ngdoc directive
+ * @module superdesk.apps.workspace
+ * @name ContentProfileSchemaEditor
+ *
+ * @requires gettext
+ * @requires content
+ *
+ * @description Handles content profile schema editing
+ */
 ContentProfileSchemaEditor.$inject = ['gettext', 'content'];
 export function ContentProfileSchemaEditor(gettext, content) {
     // labelMap maps schema entry keys to their display names.
@@ -46,12 +56,28 @@ export function ContentProfileSchemaEditor(gettext, content) {
             scope.loading = true;
             scope.model.schema = angular.extend({}, content.contentProfileSchema);
             scope.model.editor = angular.extend({}, content.contentProfileEditor);
+            scope.schemaKeys = null;
 
             content.getTypeMetadata(scope.model._id).then((typeMetadata) => {
                 scope.model.schema = angular.extend({}, typeMetadata.schema);
                 scope.model.editor = angular.extend({}, typeMetadata.editor);
                 scope.loading = false;
+                getSchemaKeys();
             });
+
+            /**
+             * @ngdoc method
+             * @name ContentProfileSchemaEditor#getSchemaKeys
+             * @private
+             * @description Creates a list of field names of the schema sorted by 'order' value
+             * and assigns it to schemaKeys
+             */
+            const getSchemaKeys = () => {
+                // inner function to return the value of 'order' of a given field
+                const getOrder = (f) => scope.model.editor[f] && scope.model.editor[f].order || 99;
+
+                scope.schemaKeys = Object.keys(scope.model.schema).sort((a, b) => getOrder(a) - getOrder(b));
+            };
 
             scope.directive = this.name;
 
