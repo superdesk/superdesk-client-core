@@ -103,6 +103,12 @@
                 padding-right: 10px;
             }
         }
+
+        .field {
+            .helper-text--padded {
+                padding-left: 0;
+            }
+        }
     }
 }
 
