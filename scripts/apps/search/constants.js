@@ -92,6 +92,7 @@ export const CORE_PROJECTED_FIELDS = {
         'renditions',
         'package_type',
         'item_id',
+        'guid',
         '_current_version',
         'lock_user',
         'lock_session',
