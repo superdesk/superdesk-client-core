@@ -6,9 +6,7 @@ import './PasswordStrengthDirective';
 import './SearchListDirective';
 import './SearchListSingleDirective';
 import './FiletypeIconDirective';
-import './CheckDirective';
 import './CheckAllDirective';
-import './SwitchDirective';
 import './SwitchInvertedDirective';
 import './ConfirmDirective';
 import './SelectDirective';
@@ -41,9 +39,7 @@ export default angular.module('superdesk.core.directives', [
     'superdesk.core.directives.searchList',
     'superdesk.core.directives.searchListSingle',
     'superdesk.core.directives.filetypeIcon',
-    'superdesk.core.directives.check',
     'superdesk.core.directives.checkAll',
-    'superdesk.core.directives.switch',
     'superdesk.core.directives.switchInverted',
     'superdesk.core.directives.confirm',
     'superdesk.core.directives.select',

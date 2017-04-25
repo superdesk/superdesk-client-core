@@ -165,7 +165,7 @@ function Highlights() {
     };
 
     this.selectDesk = function(elem, name) {
-        elem.all(by.className('right-submenu')).all(by.partialButtonText(name)).click();
+        elem.all(by.className('dropdown__menu--submenu-left')).all(by.partialButtonText(name)).click();
     };
 
     this.createHighlightsPackage = function(highlight) {
@@ -179,14 +179,14 @@ function Highlights() {
     };
 
     this.exportHighlightsConfirm = function() {
-        var btn = element(by.className('modal-footer')).element(by.buttonText('OK'));
+        var btn = element(by.className('modal__footer')).element(by.buttonText('OK'));
 
         wait(btn, 500);
         btn.click();
     };
 
     this.saveTextHighlightsConfirm = function() {
-        var btn = element(by.className('modal-footer')).element(by.buttonText('Save'));
+        var btn = element(by.className('modal__footer')).element(by.buttonText('Save'));
 
         wait(btn, 500);
         btn.click();

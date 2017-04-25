@@ -1,5 +1,5 @@
-<div sd-modal data-model="item" data-close="closeAction()" data-full="true" class="modal--fullscreen">
-    <div class="modal-header modal-header--no-border">
+<div sd-modal data-model="item" data-full="true" class="modal--fullscreen modal--preview-article modal--white">
+    <div class="modal__header modal__header--no-border">
         <div class="btn-group pull-left">
             <span sd-check ng-model="hide_images" name="hide_images"></span>
             <label translate>Hide images</label>
@@ -9,7 +9,7 @@
             <button ng-if="closeAction" ng-click="closeAction()" title="{{'Close'|translate}}"><i class="icon-close-small"></i></button>
         </div>
     </div>
-    <div class="modal-body modal-body--white" sd-shadow>
+    <div class="modal__body modal-body--white" sd-shadow>
         <div class="preview-content" ng-class="{'hide-images': hide_images}">
             <div class="metadata">
                 <div ng-if="item.versioncreated">

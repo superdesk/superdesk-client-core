@@ -13,7 +13,7 @@
             <div class="footer">
                 <em>{{ :: 'version' | translate }}: {{ version._current_version }}</em>
                 <div class="state-label state-{{ :: version.state}}">{{ :: version.state | translate }}</div>
-                <button class="btn btn--light btn--mini btn--pull-right"
+                <button class="btn btn--light btn--mini pull-right"
                     ng-show="canRevert && !$first && !dirty"
                     ng-click="revert(version)"
                     translate>revert</button>

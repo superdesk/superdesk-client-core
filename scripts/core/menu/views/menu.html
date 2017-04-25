@@ -2,7 +2,7 @@
   <div id="top-menu" ng-class="{'menu-open': flags.menu, 'test-environment': isTestEnvironment}" data-text="{{environmentName}}">
       <div class="nav pull-left">
         <button class="collapse-nav pull-left" ng-click="toggleMenu()">
-          <i class="icon-collapse icon-white"></i>
+          <i class="icon-collapse icon--white"></i>
         </button>
         <a class="main-link pull-left"
           ng-hide="currentRoute.topTemplateUrl"
@@ -20,7 +20,7 @@
           </button>
           <button ng-if="privileges.feature_preview" ng-click="toggleBeta()" class="beta-switch pull-right">
               <span class="stable" ng-hide="beta" title="{{ :: 'Switch to feature preview' | translate }}">stable</span>
-              <span class="beta" ng-show="beta" title="{{ :: 'Turn off feature preview' | translate }}">feature preview</span>
+              <span class="beta" ng-show="beta" sd-tooltip="{{ :: 'Turn off feature preview' | translate }}" flow="down">feature preview</span>
           </button>
       </div>
   </div>

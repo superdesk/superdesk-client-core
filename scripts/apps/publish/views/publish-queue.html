@@ -74,8 +74,8 @@
                           translate-n="multiSelectCount"
                           translate-plural="{{ multiSelectCount }} Items selected">{{ multiSelectCount}} Item selected
                     </span>
-                    <button class="btn btn--primary btn--pull-right" ng-click="scheduleToSend()" ng-show="multiSelectCount > 0 && showResendBtn">{{ :: 'Resend' | translate}}</button>
-                    <button class="btn btn--primary btn--pull-right" ng-click="cancelSend()" ng-show="multiSelectCount > 0 && showCancelBtn">{{ :: 'Cancel' | translate}}</button>
+                    <button class="btn btn--primary pull-right" ng-click="scheduleToSend()" ng-show="multiSelectCount > 0 && showResendBtn">{{ :: 'Resend' | translate}}</button>
+                    <button class="btn btn--primary pull-right" ng-click="cancelSend()" ng-show="multiSelectCount > 0 && showCancelBtn">{{ :: 'Cancel' | translate}}</button>
                 </div>
             </header>
             <div class="content">

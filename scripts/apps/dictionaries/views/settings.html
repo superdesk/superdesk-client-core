@@ -4,14 +4,14 @@
 
         <div class="header">
             <h2 translate>Dictionary management</h2>
-            <button id="createPersonalDictionary" class="btn btn--primary btn--pull-right" ng-click="createPersonalDictionary()">
-                <i class="icon-plus-sign icon-white"></i> {{ :: 'Add New Personal Dictionary' | translate }}
+            <button id="createPersonalDictionary" class="btn btn--primary pull-right" ng-click="createPersonalDictionary()">
+                <i class="icon-plus-sign icon--white"></i> {{ :: 'Add New Personal Dictionary' | translate }}
             </button>
-            <button id="createDictionary" ng-if="isAdmin()" class="btn btn--primary btn--pull-right" ng-click="createDictionary()">
-                <i class="icon-plus-sign icon-white"></i> {{ :: 'Add New Dictionary' | translate }}
+            <button id="createDictionary" ng-if="isAdmin()" class="btn btn--primary pull-right" ng-click="createDictionary()">
+                <i class="icon-plus-sign icon--white"></i> {{ :: 'Add New Dictionary' | translate }}
             </button>
-            <button id="createAbbreviations" class="btn btn--primary btn--pull-right" ng-click="createAbbreviationsDictionary()">
-                <i class="icon-plus-sign icon-white"></i> {{ :: 'Add New Abbreviations Dictionary' | translate }}
+            <button id="createAbbreviations" class="btn btn--primary pull-right" ng-click="createAbbreviationsDictionary()">
+                <i class="icon-plus-sign icon--white"></i> {{ :: 'Add New Abbreviations Dictionary' | translate }}
             </button>
         </div>
 

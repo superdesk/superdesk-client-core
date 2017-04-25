@@ -1,4 +1,4 @@
-export default angular.module('superdesk.core.services.modal', ['ui.bootstrap', 'superdesk.core.services.asset'])
+export default angular.module('superdesk.core.services.modal', ['superdesk-ui', 'superdesk.core.services.asset'])
     .service('modal', ['$q', '$modal', '$sce', 'asset', function($q, $modal, $sce, asset) {
         this.confirm = function(
             bodyText,
@@ -39,55 +39,5 @@ export default angular.module('superdesk.core.services.modal', ['ui.bootstrap', 
             });
 
             return delay.promise;
-        };
-    }])
-    .directive('sdModal', ['$document', function($document) {
-        return {
-            template: '',
-            transclude: true,
-            scope: {model: '=', close: '&'},
-            link: function modalLinkFunction(scope, element, attrs, ctrl, transcludeFn) {
-                let modalElem;
-
-                scope.$watch('model', (model) => {
-                    if (model && !modalElem) {
-                        transcludeFn((clone, modalScope) => {
-                            modalElem = angular.element('<div class="modal" data-backdrop="static" />')
-                                .append(angular.element('<div class="modal-dialog"></div>')
-                                    .append(angular.element('<div class="modal-content"></div>')
-                                        .append(clone)
-                                    )
-                                );
-                            modalElem.addClass(element.attr('class'));
-                            modalElem.appendTo($document.find('body'));
-                            modalElem.modal('show');
-                            modalElem.on('hidden.bs.modal', () => {
-                                modalElem.off();
-                                modalElem.remove();
-                                modalScope.$destroy();
-                                modalElem = null;
-
-                                // reset model if needed
-                                if (scope.model) {
-                                    scope.$applyAsync(() => {
-                                        scope.close();
-                                    });
-                                }
-                            });
-                        });
-                    } else if (!model) {
-                        hideIfActive();
-                    }
-                });
-
-                scope.$on('$destroy', hideIfActive);
-
-                // hide modal if is active
-                function hideIfActive() {
-                    if (modalElem) {
-                        modalElem.modal('hide');
-                    }
-                }
-            }
         };
     }]);

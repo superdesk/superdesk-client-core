@@ -3,8 +3,8 @@
 
         <div class="header">
             <h2 translate>Desk management</h2>
-            <button id="add-new-desk" class="btn btn--primary btn--pull-right" ng-click="openDesk('general')">
-                <i class="icon-plus-sign icon-white"></i> {{ :: 'Add New Desk' | translate }}
+            <button id="add-new-desk" class="btn btn--primary pull-right" ng-click="openDesk('general')">
+                <i class="icon-plus-sign icon--white"></i> {{ :: 'Add New Desk' | translate }}
             </button>
         </div>
 
@@ -20,7 +20,7 @@
                                 </button>
                                 <ul class="dropdown__menu more-activity-menu pull-right">
                                     <li><div class="dropdown__menu-label" translate>Actions</div></li>
-                                    <li class="divider"></li>
+                                    <li class="dropdown__menu-divider"></li>
                                     <li><button ng-click="openDesk('general', desk)" title="{{:: 'Edit desk'| translate }}"><i class="icon-pencil"></i>{{:: 'Edit'| translate}}</button></li>
                                     <li><button ng-click="openMonitoringSettings(desk)" title="{{:: 'Monitoring settings'| translate }}"><i class="icon-settings"></i>{{:: 'Monitoring settings'| translate}}</button></li>
                                     <li><button ng-click="remove(desk)" title="{{:: 'Remove desk'| translate }}"><i class="icon-trash"></i>{{:: 'Remove'| translate}}</button></li>

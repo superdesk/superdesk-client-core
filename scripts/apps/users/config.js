@@ -118,7 +118,7 @@ export function Activities(superdesk, asset) {
         .activity('edit.avatar', {
             label: gettext('Change avatar'),
             modal: true,
-            cssClass: 'upload-avatar modal-static modal-large',
+            cssClass: 'upload-avatar modal--large modal--z-index-fix',
             controller: ChangeAvatarController,
             templateUrl: asset.templateUrl('apps/users/views/change-avatar.html'),
             filters: [{action: 'edit', type: 'avatar'}]

@@ -5,7 +5,6 @@ import './packages/packages.scss';
 import './styles/authoring.scss';
 import './styles/multiedit.scss';
 import './styles/themes.scss';
-import './styles/unused.scss';
 import './versioning/history/history.scss';
 import './versioning/versions/versions.scss';
 import './widgets/widgets-article.scss';

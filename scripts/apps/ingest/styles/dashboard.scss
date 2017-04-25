@@ -12,8 +12,7 @@
     overflow: auto;
     .card-list {
         display: flex;
-        flex-wrap: wrap;
-        align-items: flex-start;
+        flex-wrap: wrap;        
     }
     .card-list > li {
         width: 240px;
@@ -30,7 +29,7 @@
             right: 1px;
         }
         .header {
-            height: 90px;
+            height: 110px;
             background: #2c2c2c;
             padding: 15px;
             color: $white;
@@ -52,7 +51,8 @@
             color: $white;
             font-size: 14px;
             padding: 10px 15px;
-            height: 36px;
+            min-height: 36px;
+            box-sizing: content-box;
             .time {
                 font-size: 11px;
             }
@@ -82,7 +82,7 @@
         }
         .update-time {
             padding: 0 15px 10px 15px;
-             border-bottom: 1px  solid #e3e3e3;
+            border-bottom: 1px  solid #e3e3e3;
             .text {
                 margin-top: 10px;
                 font-size: 12px;

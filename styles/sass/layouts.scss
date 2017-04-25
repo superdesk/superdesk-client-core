@@ -265,14 +265,13 @@ a:hover {
         z-index: 2;
         @include box-shadow(inset 2px 0 3px -1px #d8d8d8);
         > header {
-            padding: 0 20px;
             position: relative;
             .btn {
                 margin-top: 10px;
             }
             .close-preview {
                 position: absolute;
-                top: 14px; right: 14px;
+                top: 14px; right: 8px;
                 @include opacity(60);
                 background: none;
                 border: 0;
@@ -289,9 +288,13 @@ a:hover {
             }
             .action-menu {
                 position: absolute;
-                top: 0;
+                top: 1px;
                 right: 0;
                 width: 50px;
+                height: 44px;
+                .dropdown {
+                    display: block;
+                }
             }
         }
         img {
@@ -426,10 +429,7 @@ $slide-pane-width: 400px;
         @include border-box();
 
         button {
-            width: 100%;
-            height: auto;
             margin-bottom: 15px;
-            padding: 12px 15px;
         }
 
         .btn-list li { padding-bottom: 0; }

@@ -87,7 +87,7 @@ describe('users', () => {
                     });
                 });
 
-            element(by.css('.modal-dialog')).waitReady().then((elem) => {
+            element(by.css('.modal__dialog')).waitReady().then((elem) => {
                 browser.wait(() => elem.element(by.binding('bodyText'))
                         .getText()
                         .then((text) => {

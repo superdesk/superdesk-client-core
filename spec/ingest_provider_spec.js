@@ -76,7 +76,7 @@ describe('ingest_provider', () => {
 
         browser.wait(() => element(by.id('ingest-settings')).isDisplayed(), 1000).then(() => {
             expect(element(by.id('ingest-settings')).isDisplayed()).toBe(true);
-            expect(element(by.css('.modal-dialog')).element(by.id('provider-name')).isDisplayed()).toBe(true);
+            expect(element(by.css('.modal__dialog')).element(by.id('provider-name')).isDisplayed()).toBe(true);
         });
     });
 });

@@ -1,6 +1,6 @@
-<div class="modal-header">
-    <h3 ng-if="!isAoISelectionModeEnabled" class="pull-left">{{ :: data.editable ? activity.label : 'View Crop' | translate }}</h3>
-    <h3 ng-if="isAoISelectionModeEnabled" class="pull-left" translate>Select Area of Interest</h3>
+<div class="modal__header">
+    <h3 ng-if="!isAoISelectionModeEnabled" class="modal__heading pull-left">{{ :: data.editable ? activity.label : 'View Crop' | translate }}</h3>
+    <h3 ng-if="isAoISelectionModeEnabled" class="modal__heading pull-left" translate>Select Area of Interest</h3>
     <div class="pull-right">
         <button type="button"
         class="btn"
@@ -13,10 +13,10 @@
         ng-disabled="!saveIsEnabled() || isAoISelectionModeEnabled"
         ng-if="data.editable"
         translate>Save</button>
-    </div>
+    </div>     
 </div>
 
-<div class="modal-body modal-body__flex">
+<div class="modal__body modal-body__flex">
     <div class="modal-body__flex-top">
         <div class="modal-body__flex-main">
             <div ng-if="!selectedRendition">

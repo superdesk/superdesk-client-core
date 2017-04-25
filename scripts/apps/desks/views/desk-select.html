@@ -1,4 +1,4 @@
-<div class="dropdown dropdown--noarrow dropdown--dark" dropdown is-open="isOpen" tabindex="">
+<div class="dropdown dropdown--noarrow dropdown--dark dropdown--full-width" dropdown is-open="isOpen" tabindex="">
     <button class="dropdown__toggle" dropdown__toggle>
         <span ng-show="!selectedDesk" translate>Select desk</span>
         <span ng-show="selectedDesk">{{ defaultDesk && defaultDesk._id === selectedDesk._id ? 'Default' : selectedDesk.name | translate}}</span>

@@ -154,9 +154,6 @@
           select {
           width: 120px;
         }
-          .sd-checkbox {
-          vertical-align: middle;
-        }
     }
     .ednote {
         @include clearfix();
@@ -171,8 +168,3 @@
 
 }
 
-button[disabled] {
-  background-color: $inputDisabledBackground;
-  border-color: #ddd;
-  cursor: not-allowed;
-}

@@ -3,8 +3,8 @@
         <div class="split-content" >
         <div class="header">
             <h2 translate>Content Filters</h2>
-            <button class="btn btn--primary btn--pull-right" ng-click="editFilter()">
-                <i class="icon-plus-sign icon-white"></i> <span translate>Add New Content Filter</span>
+            <button class="btn btn--primary pull-right" ng-click="editFilter()">
+                <i class="icon-plus-sign icon--white"></i> <span translate>Add New Content Filter</span>
             </button>
         </div>
 
@@ -27,12 +27,12 @@
         </div>
     </div>
 
-    <div sd-modal data-model="contentFilter" data-close="close()" class="content-filter-modal modal-large">
-        <div class="modal-header"> <a href="" class="close" ng-click="close()"><i class="icon-close-small"></i></a>
-            <h3 ng-show="contentFilter._id"><span translate>Edit Content Filter</span> <span>"{{:: origContentFilter.name }}"</span></h3>
-            <h3 translate ng-hide="contentFilter._id">Add New Content Filter</h3>
+    <div sd-modal data-model="contentFilter" data-close="close()" class="modal--large">
+        <div class="modal__header"> <a href="" class="close" ng-click="close()"><i class="icon-close-small"></i></a>
+            <h3 class="modal__heading" ng-show="contentFilter._id"><span translate>Edit Content Filter</span> <span>"{{:: origContentFilter.name }}"</span></h3>
+            <h3 class="modal__heading" translate ng-hide="contentFilter._id">Add New Content Filter</h3>
         </div>
-        <div class="modal-body">
+        <div class="modal__body">
             <form name="editForm" ng-submit="saveFilter()">
                 <fieldset>
                     <div class="field">
@@ -123,7 +123,7 @@
             </div>
         </div>
 
-        <div class="modal-footer">
+        <div class="modal__footer">
             <button class="btn" type="button" ng-click="addStatement()" translate>Add Filter Statement</button>
             <button class="btn" ng-click="close()" translate>Cancel</button>
             <button class="btn btn--primary" ng-click="saveFilter()" ng-disabled="!editForm.$valid" translate>Save</button>

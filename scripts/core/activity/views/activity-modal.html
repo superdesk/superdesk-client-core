@@ -1,6 +1,6 @@
-<div class="modal-backdrop" ng-if="activity"></div>
 <div class="modal in {{activity.cssClass}}" ng-if="activity">
-    <div class="modal-dialog" ng-controller="activity.controller">
-        <div class="modal-content" ng-include="activity.templateUrl"></div>
+    <div class="modal__dialog" ng-controller="activity.controller">
+        <div class="modal__content" ng-include="activity.templateUrl"></div>
     </div>
 </div>
+<div class="modal__backdrop" ng-if="activity"></div>

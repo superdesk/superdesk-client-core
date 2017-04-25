@@ -5,7 +5,7 @@
     <i class="icon-{{ :: activity.icon }} {{!activity.monitor|| !item.actioning[activity._id] || 'actioning'}}" ng-show=":: activity.icon"></i>
     <span>{{ :: activity.label | translate }}</span>
 </a>
-<li class="divider" ng-if="activity._id === 'mark.item'"></li>
+<li class="dropdown__menu-divider" ng-if="activity._id === 'mark.item'"></li>
 <div ng-if=":: activity.dropdown"
      class="dropdown dropdown--noarrow"
      ng-class="{open: dropdownOpen}"
@@ -14,8 +14,7 @@
      dropdown>
     <a class="dropdown__toggle" title="{{ :: activity.label | translate }}" dropdown__toggle>
         <i class="icon-{{ :: activity.icon }}" ng-show=":: activity.icon"></i>
-        <span>{{ :: activity.label | translate }}
-        <i class="icon-chevron-right-thin dropdown__submenu-icon"></i></span>
+        <span>{{ :: activity.label | translate }}</span>
     </a>
     <ul class="dropdown__menu right-submenu upward">
         <div ng-include="activity.templateUrl"></div>

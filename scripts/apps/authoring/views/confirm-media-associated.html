@@ -1,9 +1,9 @@
-<div class="modal-large">
-    <div class="modal-header">
-        <h3 translate>Do you want to add an image to this update?</h3>
+<div class="modal--large">
+    <div class="modal__header">
+        <h3 class="modal__heading" translate>Do you want to add an image to this update?</h3>
     </div>
 
-    <div class="modal-header">
+    <div class="modal__header">
         <div sd-width="full" class="field">
             <label translate>Featured Media</label>
             <div ng-if="item.associations.featuremedia" class="picture-preview">
@@ -13,7 +13,7 @@
         </div>
     </div>
 
-    <div class="modal-footer">
+    <div class="modal__footer">
         <button type="button" class="btn" translate ng-click="useMedia()">Use Media</button>
         <button type="button" class="btn" ng-click="publishWithoutMedia()" translate>Publish Without Media</button>
                 <button type="button" class="btn" ng-click="cancel()" translate>Cancel</button>

@@ -47,7 +47,7 @@ function Monitoring() {
      * create_preformatted_article and create_package
      */
     this.createItemAction = function(action) {
-        element(by.className('svg-icon-plus')).click();
+        element(by.className('icon-plus-large')).click();
         element(by.id(action)).click();
         browser.sleep(500);
     };

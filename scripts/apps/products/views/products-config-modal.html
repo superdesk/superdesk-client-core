@@ -1,10 +1,10 @@
-<div sd-modal data-model="modalActive" data-close="cancel()" class="add-product-popup modal-large modal-static">
-    <div class="modal-header">
+<div sd-modal data-model="modalActive" data-close="cancel()" class="modal--large">
+    <div class="modal__header">
         <a href="" class="close" ng-click="cancel()"><i class="icon-close-small"></i></a>
-        <h3 ng-show="!product.edit._id" translate>Add New Product</h3>
-        <h3 ng-show="product.edit._id" translate>Edit "{{product.edit.name}}" Product</h3>
+        <h3 class="modal__heading" ng-show="!product.edit._id" translate>Add New Product</h3>
+        <h3 class="modal__heading" ng-show="product.edit._id" translate>Edit "{{product.edit.name}}" Product</h3>
     </div>
-    <div class="modal-body">
+    <div class="modal__body">
         <form name="editForm">
             <fieldset>
                 <tabset>
@@ -42,8 +42,8 @@
                             </div>
                             <div class="field" ng-if="product.edit.content_filter.filter_id">
                                 <label translate>Content Filter Type</label>
-                                <label class="inline-label sd-radio"><input type="radio" ng-model="product.edit.content_filter.filter_type" value="permitting">{{ :: 'Permitting' | translate }}<span class="check"></span></label>
-                                <label class="inline-label sd-radio"><input type="radio" ng-model="product.edit.content_filter.filter_type" value="blocking">{{ :: 'Blocking' | translate }}<span class="check"></span></label>
+                                <sd-check ng-model="product.edit.content_filter.filter_type" type="radio" ng-value="permitting">{{ :: 'Permitting' | translate }}</sd-check>
+                                <sd-check ng-model="product.edit.content_filter.filter_type" type="radio" ng-value="blocking">{{ :: 'Blocking' | translate }}</sd-check>
                             </div>
                             <div class="field">
                                 <label for="geoRestrictions" translate>Target Regions</label>
@@ -64,7 +64,7 @@
             </fieldset>
         </form>
     </div>
-    <div class="modal-footer">
+    <div class="modal__footer">
         <button class="btn" ng-click="cancel()" translate>Cancel</button>
         <button class="btn btn--primary" ng-click="save()" ng-disabled="editForm.$invalid" translate>Save</button>
     </div>

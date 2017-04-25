@@ -1,7 +1,6 @@
 <div class="sortbar" ng-show="canSort()">
     <span ng-show="total" translate>Total:</span>
-    <span ng-show="total" class="label-total">{{total}}</span>
-    <span class="lab" translate>Sort:</span>
+    <span ng-show="total" class="label-total">{{total}}</span>    
     <div class="dropdown" dropdown sd-dropdown-position>
         <button id="order_button" class="dropdown__toggle" dropdown__toggle>{{ active.label | translate }} <b class="dropdown__caret"></b>
         </button>
@@ -11,7 +10,7 @@
             </li>
         </ul>
     </div>
-    <button ng-click="toggleDir()" class="direction" title="{{active.dir}}">
+    <button ng-click="toggleDir()" class="btn direction" title="{{active.dir}}">
         <i class="icon-ascending" ng-if="active.dir === 'asc'"></i>
         <i class="icon-descending" ng-if="active.dir === 'desc'"></i>
     </button>

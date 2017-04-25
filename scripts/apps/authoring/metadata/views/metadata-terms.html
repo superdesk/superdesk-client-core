@@ -9,7 +9,7 @@
 <div class="dropdown dropdown--dropright dropdown-terms" dropdown sd-dropdown-focus sd-dropdown-position
     title="{{ allSelected ? 'All items selected' : ''  | translate }}">
     <button class="dropdown__toggle" dropdown__toggle tabindex="{{tabindex}}" ng-disabled="disabled" ng-if="header && !disabled">
-        <i class="icon-white icon-plus-large"></i>
+        <i class="icon--white icon-plus-large"></i>
     </button>
     <ul class="dropdown__menu nested-menu pull-right">
         <li ng-show="!activeTerm && header">
@@ -29,7 +29,8 @@
         <li class="main-list" ng-if="activeTree.length && !activeList && header" ng-class="{active: activeTerm}" ng-hide="allSelected">
             <ul vs-repeat vs-scroll-parent=".main-list">
                 <li ng-repeat="term in activeTree track by term[uniqueField]">
-                    <button ng-if="tree[term[uniqueField]]" class="nested-toggle" ng-click="openTree(term, $event)">{{ :: term.name }} <i class="icon-chevron-right-thin dropdown__submenu-icon"></i></button>
+                    <button ng-if="tree[term[uniqueField]]" class="nested-toggle" ng-click="openTree(term, $event)">{{ :: term.name }} 
+                        <i class="icon-chevron-right-thin"></i></button>
                     <button ng-if="!tree[term[uniqueField]]" ng-click="selectTerm(term)">{{ :: term.name }}</button>
                 </li>
             </ul>

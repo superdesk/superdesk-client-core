@@ -13,7 +13,7 @@
                 <div class="dropdown__menu">
                     <ul class="dropdown__menu--multiedit" sd-multiedit-inner-dropdown data-board="{{$index}}"></ul>
                     <ul ng-if="boards.length > minBoards">
-                        <li class="divider"></li>
+                        <li class="dropdown__menu-divider"></li>
                         <li><button ng-click="closeBoard($index)"><i class="icon-close-small"></i> {{ 'Remove panel' | translate }}</button></li>
                     </ul>
                 </div>

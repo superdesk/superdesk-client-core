@@ -1,25 +1,32 @@
 <div sd-modal data-model="previewFormatted" data-close="closePreviewFormatted()"
-    class="formatted-preview-popup modal-big">
+    class="modal--large">
 
-    <div class="modal-header">
-        <a href="" class="close" ng-click="closePreviewFormatted()"><i class="icon-close-small"></i></a>
-        <h3 translate>Preview Formatted Story</h3>
+    <div class="modal__header">
+        <a href="" class="modal__close pull-right" ng-click="closePreviewFormatted()"><i class="icon-close-small"></i></a>
+        <h3 class="modal__heading" translate>Preview Formatted Story</h3>
     </div>
 
-    <div class="modal-body" ng-loading="loading">
+    <div class="modal__body" ng-loading="loading">
 
-        <div class="formatters">
-            <label>{{ :: 'Formatters' | translate }}</label>
-            <select ng-model="selectedFormatter">
-                <option value="{{formatter}}" ng-repeat="formatter in previewFormatters">{{:: formatter.name}}</option>
-            </select>
-            <button class="btn btn--primary btn--pull-right" ng-click="format(selectedFormatter)" translate>Format</button>
+        <div class="form__row form__row--flex">
+            <div class="sd-line-input sd-line-input--is-select">
+                <label class="sd-line-input__label">{{ :: 'Formatters' | translate }}</label>
+                <select ng-model="selectedFormatter" class="sd-line-input__select">
+                    <option value="{{formatter}}" ng-repeat="formatter in previewFormatters">{{:: formatter.name}}</option>
+                </select>                
+            </div>
+            <button class="btn btn--primary" ng-click="format(selectedFormatter)" translate>Format</button>
         </div>
 
-        <div class="formatted-item">
-            <textarea  ng-model="formattedItem"></textarea>
+        <div class="form__row form__row--flex">
+            <div class="sd-line-input">
+                <textarea rows="6" ng-model="formattedItem" class="sd-line-input__input"></textarea>
+            </div>
         </div>
 
+    </div>
+    <div class="modal__footer">
+        <button class="btn" ng-click="closePreviewFormatted()" translate>Close</button>
     </div>
 
 </div>

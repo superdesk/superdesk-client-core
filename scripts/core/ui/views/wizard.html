@@ -1,6 +1,8 @@
-<ul class="nav nav-tabs">
-    <li ng-repeat="step in steps" ng-class="{active: step.selected}">
-        <button ng-click="goTo(step)" ng-disabled="step.disabled" ng-hide="step.hide">{{ step.title | translate}}</button>
-    </li>
-</ul>
-<div class="steps" ng-transclude></div>
+<div class="modal__body-header">
+    <ul class="nav-tabs">
+        <li ng-repeat="step in steps" ng-class="{'nav-tabs__tab--active': step.selected}" class="nav-tabs__tab">
+            <button ng-click="goTo(step)" ng-disabled="step.disabled" ng-hide="step.hide" class="nav-tabs__link">{{ step.title | translate}}</button>
+        </li>
+    </ul>
+</div>
+<div class="modal__body-content" ng-transclude></div>

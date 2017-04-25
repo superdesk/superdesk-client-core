@@ -1,9 +1,9 @@
-<div class="modal-header">
+<div class="modal__header">
     <h3 ng-bind-html="headerText | translate"></h3>
 </div>
-<div class="modal-body" ng-bind-html="bodyText | translate"></div>
-<div class="modal-footer">
+<div class="modal__body" ng-bind-html="bodyText | translate"></div>
+<div class="modal__footer">
+    <button class="btn" ng-click="cancel()" ng-show="cancelText">{{ cancelText | translate }}</button>
+    <button class="btn" ng-click="additionalCancel()" ng-show="additionalCancelText">{{ additionalCancelText | translate }}</button>
     <button class="btn btn--primary" ng-click="ok()">{{ okText | translate }}</button>
-    <button class="btn btn--warning" ng-click="cancel()" ng-show="cancelText">{{ cancelText | translate }}</button>
-    <button class="btn btn--warning" ng-click="additionalCancel()" ng-show="additionalCancelText">{{ additionalCancelText | translate }}</button>
 </div>

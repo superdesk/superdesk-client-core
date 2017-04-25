@@ -1,12 +1,12 @@
 <article class="main-article" tabindex="0" ng-class="{locked: isLocked}"><form name="articleEdit">
     <div class="editbar clearfix">
-        <button class="btn btn--primary btn--pull-right"
+        <button class="btn btn--primary pull-right"
             type="button"
             ng-hide="isPublished(item)"
             ng-click="save(item, articleEdit)"
             ng-disabled="articleEdit.$pristine && !item._autosave"
             translate>Save</button>
-        <button class="btn btn--light btn--pull-right"
+        <button class="btn btn--light pull-right"
             type="button"
             ng-click="remove(item)"
             translate>Remove Item</button>

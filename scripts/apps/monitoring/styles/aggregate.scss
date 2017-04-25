@@ -424,25 +424,6 @@ $search-widget-preview-width: 440px;
 }
 
 .aggregate-widget-config {
-    .modal-body {
-        padding: 0 0 50px 0;
-        overflow: scroll;
-    }
-    .modal-screen {
-        position: relative;
-        padding: 0;
-        top: 48px;
-        .content {
-            padding: 10px 20px;
-            background-color: #fcfcfc;
-        }
-        .modal-footer {
-            position: relative;
-            bottom: 0;
-            left: 0;
-            right: 0;
-        }
-    }
     .legend {
         color: $grayLight;
         text-transform: uppercase;
@@ -453,7 +434,7 @@ $search-widget-preview-width: 440px;
     }
     .desk-title {
         float: left;
-        width: 80%;
+        width: 100%;
         font-size: 15px;
         @include text-semibold();
         padding: 5px 0 10px 0;
@@ -471,6 +452,9 @@ $search-widget-preview-width: 440px;
         .switch {
             float: right;
         }
+        &--80 {
+            width: 80%;
+        }
     }
     .box-items-count {
         width: 20%;
@@ -482,7 +466,7 @@ $search-widget-preview-width: 440px;
             @include border-box();
             width: 33%;
             overflow: hidden;
-            height: 18px;
+            height: 20px;
             text-overflow: ellipsis;
             white-space: nowrap;
         }

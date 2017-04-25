@@ -27,7 +27,7 @@ user avatar uploader
         position: relative;
     }
     .sidebar {
-        width: 229px;
+        width: 200px;
         ul {
             li {
                 border-bottom: 1px solid #eee;
@@ -127,9 +127,11 @@ user avatar uploader
                 height: 100%;
                 @include box-sizing(border-box);
                 border: 2px dashed #e0e0e0;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
                 .text {
                     text-align: center;
-                    margin-top: 140px;
                     color: #ccc;
                     font-size: 30px;
                     @include text-light();
@@ -208,7 +210,7 @@ user avatar uploader
                         width:120px;
                         height: 120px;
                         overflow: hidden;
-                        margin: 0 15px 30px 35px;
+                        margin: 0 15px 30px 15px;
                     }
                     .preview-large-4-3-small {
                         width:300px;
@@ -256,7 +258,7 @@ user avatar uploader
                         width:60px;
                         height: 60px;
                         overflow: hidden;
-                        margin: 0 45px 30px 65px;
+                        margin: 0 45px 30px 45px;
                         @include border-radius(30px);
                     }
                 }
@@ -287,11 +289,11 @@ media uploader
 */
 .upload-media {
 
-    .modal-body {
+    .modal__body {
         display: flex;
         flex-direction:column;
         overflow: hidden !important;
-        padding: 0;
+        padding: 0 !important;
     }
     .drag-area { //start screen on modal show
         position: absolute;
@@ -324,9 +326,9 @@ media uploader
         .upload-manual {
             position: absolute;
             top: 50%; left: 50%;
-            width: 200px;
+            width: 240px;
             margin-top: 20px;
-            margin-left: -100px;
+            margin-left: -120px;
             text-align: center;
             .or-label {
                 margin-bottom: 20px;
@@ -563,7 +565,7 @@ media uploader
             position: relative;
         }
         .optional-drag {
-            width: 120px;
+            width: 130px;
             margin: 0 auto;
             background: #ececec;
             padding: 5px 10px;
@@ -599,7 +601,7 @@ edit image modal
     }
     display: flex;
     flex-direction: column;
-    padding: 0;
+    padding: 0 !important;
     overflow-y: hidden !important;
     &-top {
         display: flex;

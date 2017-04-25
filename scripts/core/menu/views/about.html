@@ -1,12 +1,12 @@
-<div sd-modal data-model="aboutActive" data-close="closeAbout()" class="modal modal-large modal--about">
-  <div class="modal-header modal-header--about">
-    <h3 class="modal-header__sd-logo">Superdesk</h3>
+<div sd-modal data-model="aboutActive" data-close="closeAbout()" class="modal modal--large modal--about">
+  <div class="modal__header modal__header--about">
+    <h3 class="modal__header-sd-logo">Superdesk</h3>
     <div class="btn-group pull-right">
-      <button ng-click="closeAbout()" title="{{ :: 'Close' | translate }}" class="close"><i class="icon-close-small"></i></button>
+      <button ng-click="closeAbout()" title="{{ :: 'Close' | translate }}" class="modal__close"><i class="icon-close-small"></i></button>
     </div>
   </div>
 
-  <div class="modal-body">
+  <div class="modal__body">
     <div class="about-content">
       <span class="sf-logo"></span>
       <h4>Superdesk {{ :: version }}</span></h4>
@@ -31,7 +31,7 @@
       </p>
     </div>
   </div>
-  <div class="modal-footer">
-    <button ng-click="closeAbout()" class="btn btn--primary btn--pull-right" translate>Close</button>
+  <div class="modal__footer">
+    <button ng-click="closeAbout()" class="btn btn--primary pull-right" translate>Close</button>
   </div>
 </div>

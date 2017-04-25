@@ -127,7 +127,7 @@
 
 .nav-tabs > li:first-child > a,
 .nav-tabs > li:first-child > button {
-    margin-left: 0;
+    //margin-left: 0;
 }
 
 // PILLS
@@ -351,9 +351,8 @@
     &--padded {
         padding: 10px 20px;
     }
-    &--archive {
-        top:$nav-height*2;
-        z-index: 1000;
+    + .subnav {
+        z-index: 999;
     }
 }
 .subnav__page-title,
@@ -430,10 +429,6 @@
 .subnav__button-stack {
   position: relative;
   max-width: 100%;
-  & > .btn {
-    padding: 8px 20px;
-    height: 28px;
-  }
   &--square-buttons {
     height:48px;
     margin: 0 0 0 16px;
@@ -518,6 +513,16 @@
 }
 
 .shortcut {
-    text-style: italic;
+    font-style: italic;
     opacity: 0.5;
+}
+
+.navbtn--text-only {
+    padding: 0 20px;
+    width: auto;
+    font-size: 15px;
+    line-height: 48px;
+    &:hover {
+        background: hsla(0,0%,100%,.8);
+    }
 }

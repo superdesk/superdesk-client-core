@@ -15,7 +15,7 @@
            </div>
         </div>
         <button class="btn btn--primary" ng-click="edit()">
-          <i class="icon-plus-sign icon-white"></i> <span translate>Add New Template</span>
+          <i class="icon-plus-sign icon--white"></i> <span translate>Add New Template</span>
         </button>
     </div>
   </div>
@@ -30,7 +30,7 @@
                       </button>
                       <ul class="dropdown__menu more-activity-menu pull-right">
                           <li><div class="dropdown__menu-label" translate>Actions</div></li>
-                          <li class="divider"></li>
+                          <li class="dropdown__menu-divider"></li>
                           <li><button ng-click="edit(template)" title="{{:: 'Edit Template' | translate }}"><i class="icon-pencil"></i>{{:: 'Edit'| translate}}</button></li>
                           <li ng-if="template.template_type !== 'kill'"><button ng-click="remove(template)" title="{{:: 'Remove Template' | translate }}"><i class="icon-trash"></i>{{:: 'Remove'| translate}}</button></li>
                       </ul>

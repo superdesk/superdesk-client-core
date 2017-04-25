@@ -82,7 +82,7 @@ export class HighlightsList extends React.Component {
                     {className: 'dropdown__menu-close', onClick: closeActionsMenu},
                     React.createElement(
                         'i',
-                        {className: 'icon-close-small icon-white'}
+                        {className: 'icon-close-small icon--white'}
                     )
                 )
             )

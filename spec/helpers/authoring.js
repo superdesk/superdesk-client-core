@@ -101,9 +101,9 @@ function Authoring() {
     };
 
     this.confirmSendTo = function() {
-        element.all(by.className('modal-content')).count().then((closeModal) => {
+        element.all(by.className('modal__content')).count().then((closeModal) => {
             if (closeModal) {
-                element(by.className('modal-content')).all(by.css('[ng-click="ok()"]')).click();
+                element(by.className('modal__content')).all(by.css('[ng-click="ok()"]')).click();
             }
         });
     };
@@ -160,7 +160,7 @@ function Authoring() {
     };
 
     this.createTextItem = function() {
-        return element(by.css('[class="dropdown__toggle sd-create-btn dropdown-toggle"]'))
+        return element(by.css('[class="navbtn dropdown__toggle sd-create-btn dropdown-toggle"]'))
             .click()
             .then(() => element(by.id('create_text_article')).click());
     };
@@ -226,7 +226,7 @@ function Authoring() {
         this.publish_button.click();
 
         if (!skipConfirm) {
-            var modal = element(by.className('modal-dialog'));
+            var modal = element(by.className('modal__dialog'));
 
             modal.isPresent().then((click) => {
                 if (click) {
@@ -249,7 +249,7 @@ function Authoring() {
         this.sendAndPublishBtn.click();
 
         if (!skipConfirm) {
-            var modal = element(by.className('modal-dialog'));
+            var modal = element(by.className('modal__dialog'));
 
             modal.isPresent().then((click) => {
                 if (click) {
@@ -281,7 +281,7 @@ function Authoring() {
         this.publish_button.click();
 
         if (!skipConfirm) {
-            var modal = element(by.className('modal-dialog'));
+            var modal = element(by.className('modal__dialog'));
 
             modal.isPresent().then((click) => {
                 if (click) {
@@ -693,7 +693,7 @@ function Authoring() {
     };
 
     this.saveRelatedItemConfiguration = function() {
-        element(by.className('modal-footer'))
+        element(by.className('modal__footer'))
             .element(by.buttonText('Save')).click();
     };
 

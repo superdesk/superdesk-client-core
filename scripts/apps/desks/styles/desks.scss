@@ -329,78 +329,39 @@ $desk-width: 270px;
 
 /* Desk create/edit popup */
 
-.add-desk-popup {
-    .modal-body {
-        bottom: 0;
-        height: 500px !important;
-        max-height: 500px !important;
-        @include border-radius(0px 0px 4px 4px);
-        .modal-screen {
-            top: 48px;
-        }
-        .desk-content {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 55px;
-            padding: 21px;
-            overflow-y: scroll;
-            .content-profiles-list {
-              padding-top: 10px;
-              & > li {
-                display: inline-block;
-                padding: 0 0 6px;
-              }
+.sd-wizard {
+    .modal__body {
+        .modal__body-content {
+            display: flex;
+            flex-direction: column;
+            padding: 0;
+            background: 0 0;
+            > div, > div > div, > form, > form > fieldset {
+                display: flex;
+                flex-direction: column;
+                overflow-y: auto;
+            }
+            .content {
+                flex: 1 1 auto;
+                width: 100%;
+                overflow-y: auto;
+                padding: 2rem;
+                background: $sd-background;
+            }
+            form.content, .field {
+                display: block;
+            }
+            .modal__footer {
+                display: block;
+                flex: 0 0 auto;
             }
         }
-        .char-count-holder {
-            position: absolute;
-            top: -19px;
-            left: 2px;
-        }
-        .char-count {
-            font-size: 11px;
-            color: $sd-text;
-            margin-right: 3px;
-            font-style: italic;
-            &.error {
-                @include text-semibold();
-                color: #D33C30;
-            }
-        }
-        .desk-type {
-            clear: both;
-        }
-        .expiry {
-            list-style: none;
-            li {
-                float: left;
-                padding-left: 25px;
-            }
-            li:first-child {
-                padding-left: 0px;
-            }
-        }
-    }
-    .modal-footer {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-    }
-    .modal-footer-relative {
-        position: relative;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        float: right;
     }
     .stages {
         .col {
             position: absolute;
             @include border-box();
-            top: 10px; bottom: 70px;
+            top: 60px; bottom: 10px;
             left: 0; right: 50%;
             padding: 10px 20px;
             overflow-x: hidden;
@@ -420,6 +381,7 @@ $desk-width: 270px;
         .heading {
             padding: 2px 0;
             color: #666;
+            margin-right: 10px;
             text-transform: uppercase;
         }
         [sd-content-expiry] {
@@ -427,7 +389,7 @@ $desk-width: 270px;
             float: none;
             .right {
                 position: absolute;
-                top: -18px; right: -30px;
+                top: -18px; right: 0;
             }
             label {
                 font-size: 13px;
@@ -509,23 +471,13 @@ $desk-width: 270px;
     }
     .people-stage {
         .header {
-            height: 50px;
             .search-result {
-                position: absolute;
-                left: 40px; right: 40px;
-                top: 51px; bottom: 80px;
                 overflow: auto;
                 border: 1px solid #ddd;
                 background: #fff;
                 padding: 10px;
                 z-index: 1;
             }
-        }
-        .content {
-            position: absolute;
-            left: 20px; right: 20px;
-            top: 70px; bottom: 80px;
-            overflow: auto;
         }
         .member-list {
             ul {
@@ -536,7 +488,7 @@ $desk-width: 270px;
                     border: 1px solid rgba(0,0,0,0);
                     @include border-radius(3px);
                     padding: 15px 10px;
-                    width: 115px;
+                    width: 135px;
                     .avatar {
                         display: block;
                         width: 84px;
@@ -631,8 +583,8 @@ $desk-width: 270px;
         cursor: default;
     }
     &__header {
-        padding: 5px 2px;
-        height: 16px;
+        padding: 0;
+        height: 26px;
         line-height: 16px;
     }
     &__name {
