@@ -2,7 +2,8 @@ import React, {Component} from 'react';
 import * as actions from '../../actions';
 import {connect} from 'react-redux';
 import {TableCell} from '.';
-import {ContentState, convertToRaw, convertFromRaw} from 'draft-js';
+import {LinkDecorator} from '../links/LinkDecorator';
+import {ContentState, EditorState, CompositeDecorator, convertToRaw, convertFromRaw} from 'draft-js';
 
 /**
  * @ngdoc React
@@ -10,8 +11,7 @@ import {ContentState, convertToRaw, convertFromRaw} from 'draft-js';
  * @name TableBlockComponent
  * @param block {Object} Information about this atomic block.
  * @param contentState {Object} The content state containing this atomic block.
- * @param setReadOnly {Function} When called, sets the parent (main) editor to read only.
- * @param parentReadOnly {Boolean} The readOnly state of the main editor.
+ * @param setActiveCell {Function} When called, sets the parent (main) editor to read only.
  * @description Handles a cell in the table, as well as the containing editor.
  */
 export class TableBlockComponent extends Component {
@@ -20,9 +20,8 @@ export class TableBlockComponent extends Component {
 
         this.setCell = this.setCell.bind(this);
         this.getCell = this.getCell.bind(this);
-        this.addRow = this.addRow.bind(this);
-        this.addColumn = this.addColumn.bind(this);
         this.data = this.data.bind(this);
+        this.onFocus = this.onFocus.bind(this);
     }
 
     /**
@@ -59,12 +58,17 @@ export class TableBlockComponent extends Component {
      */
     getCell(row, col) {
         const {cells} = this.data();
+        const decorator = new CompositeDecorator([LinkDecorator]);
+
+        let editorState;
 
         if (!cells[row] || !cells[row][col]) {
-            return ContentState.createFromText('');
+            editorState = EditorState.createWithContent(ContentState.createFromText(''), decorator);
+        } else {
+            editorState = EditorState.createWithContent(convertFromRaw(cells[row][col]), decorator);
         }
 
-        return convertFromRaw(cells[row][col]);
+        return editorState;
     }
 
     /**
@@ -82,64 +86,27 @@ export class TableBlockComponent extends Component {
         return data;
     }
 
-    /**
-     * @ngdoc method
-     * @name TableBlockComponent#addRow
-     * @param {Event} e Click event from the command.
-     * @description Adds a new row to this table.
-     */
-    addRow(e) {
-        e.stopPropagation();
+    onFocus(i, j) {
+        const {setActiveCell, block} = this.props;
 
-        const entityKey = this.props.block.getEntityAt(0);
-        const {contentState} = this.props;
-        const data = this.data();
-
-        data.numRows++;
-        contentState.mergeEntityData(entityKey, {data});
-
-        this.forceUpdate();
-    }
-
-    /**
-     * @ngdoc method
-     * @name TableBlockComponent#addColumn
-     * @param {Event} e Click event from the command.
-     * @description Adds a new column to this table.
-     */
-    addColumn(e) {
-        e.stopPropagation();
-
-        const entityKey = this.props.block.getEntityAt(0);
-        const {contentState} = this.props;
-        const data = this.data();
-
-        data.numCols++;
-        contentState.mergeEntityData(entityKey, {data});
-
-        this.forceUpdate();
+        setActiveCell(i, j, block.key);
     }
 
     render() {
         const {numRows, numCols} = this.data();
-        const {setReadOnly, parentReadOnly} = this.props;
 
         return (
             <div className="table-block">
-                {parentReadOnly ? <div className="table-block__controls">
-                    <span className="add-row" onClick={this.addRow}>+ Row</span>
-                    <span className="add-col" onClick={this.addColumn}>+ Col</span>
-                </div> : null}
                 <table>
                     <tbody>
                         {Array.from(new Array(numRows)).map((v, i) =>
-                            <tr key={`col-${i}`}>
+                            <tr key={`col-${i}-${numRows}-${numCols}`}>
                                 {Array.from(new Array(numCols)).map((v, j) =>
                                     <TableCell
-                                        key={`cell-${i}-${j}`}
-                                        contentState={this.getCell(i, j)}
+                                        key={`cell-${i}-${j}-${numRows}-${numCols}`}
+                                        editorState={this.getCell(i, j)}
                                         onChange={this.setCell.bind(this, i, j)}
-                                        onFocus={setReadOnly} />
+                                        onFocus={this.onFocus.bind(this, i, j)} />
                                 )}
                             </tr>
                         )}
@@ -154,19 +121,17 @@ TableBlockComponent.propTypes = {
     block: React.PropTypes.object.isRequired,
     contentState: React.PropTypes.object.isRequired,
     editorState: React.PropTypes.object.isRequired,
-    setReadOnly: React.PropTypes.func.isRequired,
-    parentOnChange: React.PropTypes.func.isRequired,
-    parentReadOnly: React.PropTypes.bool.isRequired,
+    setActiveCell: React.PropTypes.func.isRequired,
+    parentOnChange: React.PropTypes.func.isRequired
 };
 
 const mapDispatchToProps = (dispatch) => ({
     parentOnChange: (editorState) => dispatch(actions.changeEditorState(editorState)),
-    setReadOnly: (e) => dispatch(actions.setReadOnly())
+    setActiveCell: (i, j, key) => dispatch(actions.setActiveCell(i, j, key))
 });
 
 const mapStateToProps = (state) => ({
-    editorState: state.editorState,
-    parentReadOnly: state.readOnly
+    editorState: state.editorState
 });
 
 export const TableBlock = connect(mapStateToProps, mapDispatchToProps)(TableBlockComponent);

@@ -28,6 +28,32 @@
 				pointer-events: none;
 			}
 
+			&.table-controls {
+				* {
+					pointer-events: all;
+				}
+
+				opacity: 1;
+
+				.Editor3-styleButton:hover {
+					color: #555;
+
+					[class*="icon-"] {
+						color: #555;
+					}
+				}
+
+				[class*="icon-"] {
+					color: #999;
+					position: relative;
+					top: 3px;
+
+					&:hover {
+						color: #555;
+					}
+				}
+			}
+
 			opacity: 0.98;
 
 			[class*="icon-"] {
@@ -36,10 +62,6 @@
 				&:hover {
 					color: #ddd;
 				}
-			}
-
-			.Editor3-styleButton {
-				text-decoration: line-through;
 			}
 		}
 	}
@@ -119,7 +141,7 @@
 		}
 	}
 
-	ul.public-DraftStyleDefault-ul, ol.public-DraftStyleDefault-ul {
+	ul.public-DraftStyleDefault-ul, ol.public-DraftStyleDefault-ol {
 		margin: 0 0 0 20px;
 		padding: 0 0 0 20px;
 
@@ -177,6 +199,8 @@
 }
 
 .Editor3-controls {
+	width: 100%;
+	min-width: 300px;
 	font-family: 'Helvetica', sans-serif;
 	font-size: 14px;
 	margin-bottom: 5px;
@@ -184,9 +208,12 @@
 	position: absolute;
 	top: 0;
 	left: 0;
-	padding: 15px;
 	background-color: #fff;
 	line-height: 100% !important;
+
+	> span:first-child {
+		margin-left: 7px;
+	}
 
 	&.disabled {
 		* {
@@ -252,6 +279,8 @@
 }
 
 .Editor3-styleButton {
+	&.short {padding-right: 2px; margin-right: -10px;}
+
 	.link-button + .link-editor {
 		a {
 			margin-right: 5px;
@@ -272,8 +301,8 @@
 
 	color: #999;
 	cursor: pointer;
-	margin-right: 16px;
-	padding: 2px 0;
+	margin: 0px;
+	padding: 10px;
 	display: inline-block;
 
 	font-size: 13px;

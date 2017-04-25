@@ -16,6 +16,8 @@ const editor3 = (state = {}, action) => {
         return forceUpdate(state);
     case 'EDITOR_DRAG_DROP':
         return dragDrop(state, action.payload);
+    case 'EDITOR_SET_CELL':
+        return setCell(state, action.payload);
     default:
         return state;
     }
@@ -30,7 +32,7 @@ const editor3 = (state = {}, action) => {
  * based on https://github.com/facebook/draft-js/issues/458#issuecomment-225710311
  * until a better solution is found.
  */
-const forceUpdate = (state) => {
+export const forceUpdate = (state) => {
     const {editorState} = state;
     const content = editorState.getCurrentContent();
     const decorator = editorState.getDecorator();
@@ -90,9 +92,34 @@ const dragDrop = (state, e) => {
     return {...state, editorState};
 };
 
-const setReadOnly = (state, val = true) => ({
+/**
+ * @ngdoc method
+ * @name setReadOnly
+ * @param {Boolean=} readOnly If true, editor is set to read-only.
+ * @return {Object} New state
+ * @description Handles setting the editor as active, or read-only.
+ */
+const setReadOnly = (state, readOnly = true) => {
+    let activeCell = {state};
+
+    if (!readOnly) {
+        activeCell = null;
+    }
+
+    return {...state, readOnly, activeCell};
+};
+
+/**
+ * @ngdoc method
+ * @name setCell
+ * @param {Object} ijK Contains active block key, row (i) and col (j).
+ * @return {Object} New state
+ * @description Sets the currently being edited (active) table cell.
+ */
+const setCell = (state, {i, j, key}) => ({
     ...state,
-    readOnly: val
+    readOnly: true,
+    activeCell: {i, j, key}
 });
 
 export default editor3;

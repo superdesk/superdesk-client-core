@@ -27,6 +27,7 @@ const blockStyles = {
  */
 export const BlockStyleControlsComponent = ({editorState, editorFormat, toggleBlockStyle}) => {
     const selection = editorState.getSelection();
+    const blockStyleKeys = Object.keys(blockStyles);
     const blockType = editorState
         .getCurrentContent()
         .getBlockForKey(selection.getStartKey())
@@ -34,7 +35,7 @@ export const BlockStyleControlsComponent = ({editorState, editorFormat, toggleBl
 
     return (
         <span>
-            {editorFormat.filter((type) => type in blockStyles).map((type) =>
+            {blockStyleKeys.filter((type) => editorFormat.indexOf(type) > -1).map((type) =>
                 <StyleButton
                     key={type}
                     active={blockStyles[type] === blockType}

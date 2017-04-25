@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import BlockStyleControls from './BlockStyleControls';
 import InlineStyleControls from './InlineStyleControls';
+import TableControls from './TableControls';
 import {LinkButton} from '../links';
 import {ImageButton} from '../images';
 import {EmbedButton} from '../embeds';
@@ -18,14 +19,21 @@ import classNames from 'classnames';
  */
 class ToolbarComponent extends Component {
     render() {
-        const {editorRect, disabled, editorFormat} = this.props;
+        const {
+            editorRect,
+            disabled,
+            editorFormat,
+            activeCell
+        } = this.props;
+
         const has = (opt) => editorFormat.indexOf(opt) > -1;
+
         const cx = classNames({
             'Editor3-controls': true,
             disabled: disabled
         });
 
-        return (
+        return activeCell !== null ? <TableControls /> :
             <div className={cx}>
                 <BlockStyleControls />
                 <InlineStyleControls />
@@ -33,18 +41,21 @@ class ToolbarComponent extends Component {
                 {has('picture') ? <ImageButton /> : null}
                 {has('embed') ? <EmbedButton /> : null}
                 {has('table') ? <TableButton /> : null}
-            </div>
-        );
+            </div>;
     }
 }
 
 ToolbarComponent.propTypes = {
     editorRect: React.PropTypes.object.isRequired,
     disabled: React.PropTypes.bool,
-    editorFormat: React.PropTypes.array
+    editorFormat: React.PropTypes.array,
+    activeCell: React.PropTypes.any
 };
 
-const mapStateToProps = (state) => ({editorFormat: state.editorFormat});
+const mapStateToProps = (state) => ({
+    editorFormat: state.editorFormat,
+    activeCell: state.activeCell
+});
 
 const Toolbar = connect(mapStateToProps, null)(ToolbarComponent);
 
