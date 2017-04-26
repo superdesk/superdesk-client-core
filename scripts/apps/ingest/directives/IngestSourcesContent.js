@@ -259,12 +259,19 @@ export function IngestSourcesContent(ingestSources, gettext, notify, api, $locat
                 delete $scope.provider.all_errors;
                 delete $scope.provider.source_errors;
 
+                $scope.loading = true;
                 api.ingestProviders.save($scope.origProvider, $scope.provider)
                     .then(() => {
                         notify.success(gettext('Provider saved!'));
                         $scope.cancel();
+                        $scope.error = null;
+                        fetchProviders();
+                    }, (error) => {
+                        $scope.error = error.data;
                     })
-                    .then(fetchProviders);
+                    .finally(() => {
+                        $scope.loading = null;
+                    });
             };
 
             $scope.gotoIngest = function(source) {

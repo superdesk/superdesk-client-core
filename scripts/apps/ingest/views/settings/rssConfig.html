@@ -4,6 +4,10 @@
       placeholder="{{:: 'RSS Feed URL'|translate }}"
       ng-model="provider.config.url" required
       ng-change="$parent.setConfig(provider)">
+  <div class="error" ng-show="error.code === 4001" translate>Connection timed out.</div>
+  <div class="error" ng-show="error.code === 4006" translate>URL not found.</div>
+  <div class="error" ng-show="error.code === 4009" translate>Can't connect to host.</div>
+  <div class="error" ng-show="error.code === 1001" translate>Can't parse the RSS.</div>
 </div>
 
 <div class="field">
