@@ -1,6 +1,6 @@
 
-IngestUserDashboard.$inject = ['api', 'userList', 'privileges', 'config'];
-export function IngestUserDashboard(api, userList, privileges, config) {
+IngestUserDashboard.$inject = ['api', 'userList', 'privileges', 'config', 'moment'];
+export function IngestUserDashboard(api, userList, privileges, config, moment) {
     return {
         templateUrl: 'scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html',
         scope: {

@@ -1,7 +1,7 @@
 AuthoringHeaderDirective.$inject = ['api', 'authoringWidgets', '$rootScope', 'archiveService', 'metadata',
-    'content', 'lodash', 'authoring', 'vocabularies', '$timeout', 'config'];
+    'content', 'lodash', 'authoring', 'vocabularies', '$timeout', 'config', 'moment'];
 export function AuthoringHeaderDirective(api, authoringWidgets, $rootScope, archiveService, metadata, content,
-    lodash, authoring, vocabularies, $timeout, config) {
+    lodash, authoring, vocabularies, $timeout, config, moment) {
     return {
         templateUrl: 'scripts/apps/authoring/views/authoring-header.html',
         require: '?^sdAuthoringWidgets',
