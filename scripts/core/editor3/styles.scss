@@ -67,6 +67,12 @@
 	}
 
 	.table-block {
+		&.table-header {
+			tr:first-child td {
+				background-color: #fafafa;
+			}
+		}
+
 		&__controls {
 			margin-bottom: 6px;
 
@@ -329,7 +335,7 @@
 		}
 	}
 
-	&.Editor3-activeButton [class*="icon-"] {
+	&.Editor3-activeButton, &.Editor3-activeButton [class*="icon-"] {
 		color: #5890ff;
 	}
 }

@@ -87,7 +87,7 @@ export class AtomicBlockParser {
             return '';
         }
 
-        const {numRows, numCols, cells} = data.data;
+        const {numRows, numCols, cells, withHeader} = data.data;
         const getCell = (i, j) => {
             const cellContentState = cells[i] && cells[i][j]
                 ? convertFromRaw(cells[i][j])
@@ -96,12 +96,36 @@ export class AtomicBlockParser {
             return new HTMLGenerator(cellContentState, ['table']).html();
         };
 
-        return '<table><tbody>' + Array.from(new Array(numRows))
-            .map((_, i) =>
-                '<tr>' + Array.from(new Array(numCols))
-                    .map((_, j) => `<td>${getCell(i, j)}</td>`)
-                    .join('') + '</tr>'
-            )
-            .join('') + '</tbody></table>';
+        let html = '<table>';
+        let startRow = 0;
+
+        if (withHeader) {
+            html += '<thead><tr>';
+
+            for (let j = 0; j < numCols; j++) {
+                html += `<th>${getCell(0, j)}</th>`;
+            }
+
+            html += '</tr></thead>';
+            startRow = 1;
+        }
+
+        if (numRows > 1) {
+            html += '<tbody>';
+
+            for (let i = startRow; i < numRows; i++) {
+                html += '<tr>';
+                for (let j = 0; j < numCols; j++) {
+                    html += `<td>${getCell(i, j)}</td>`;
+                }
+                html += '</tr>';
+            }
+
+            html += '</tbody>';
+        }
+
+        html += '</table>';
+
+        return html;
     }
 }

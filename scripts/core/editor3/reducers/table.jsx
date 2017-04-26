@@ -16,6 +16,8 @@ const table = (state = {}, action) => {
         return removeRow(state);
     case 'TOOLBAR_REMOVE_COL':
         return removeCol(state);
+    case 'TOOLBAR_TABLE_HEADER':
+        return toggleTableHeader(state);
     default:
         return state;
     }
@@ -49,7 +51,7 @@ const addTable = (state, data) => {
  * @description Adds a row after the currently active one.
  */
 const addRowAfter = (state) =>
-    processCells(state, (prevCells, numCols, nRows, i, j) => {
+    processCells(state, (prevCells, numCols, nRows, i, j, withHeader) => {
         let numRows = nRows + 1;
         let cells = [];
 
@@ -61,7 +63,7 @@ const addRowAfter = (state) =>
             }
         });
 
-        return {cells, numRows, numCols};
+        return {cells, numRows, numCols, withHeader};
     });
 
 /**
@@ -70,7 +72,7 @@ const addRowAfter = (state) =>
  * @description Removes the currently active row.
  */
 const removeRow = (state) =>
-    processCells(state, (cells, numCols, nRows, i, j) => {
+    processCells(state, (cells, numCols, nRows, i, j, withHeader) => {
         let numRows = nRows;
 
         if (numRows > 1) {
@@ -78,7 +80,7 @@ const removeRow = (state) =>
             numRows -= 1;
         }
 
-        return {cells, numRows, numCols};
+        return {cells, numRows, numCols, withHeader};
     });
 
 /**
@@ -87,9 +89,10 @@ const removeRow = (state) =>
  * @description Adds a column after the currently active one.
  */
 const addColAfter = (state) =>
-    processCells(state, (cells, numCols, numRows, i, j) => ({
+    processCells(state, (cells, numCols, numRows, i, j, withHeader) => ({
         numRows: numRows,
         numCols: numCols + 1,
+        withHeader: withHeader,
         cells: cells.map((_, ii) =>
             Array.from(new Array(numCols + 1))
                 .map((_, jj) => {
@@ -117,7 +120,7 @@ const addColAfter = (state) =>
  * @description Removes the currently active column.
  */
 const removeCol = (state) =>
-    processCells(state, (prevCells, nCols, numRows, i, j) => {
+    processCells(state, (prevCells, nCols, numRows, i, j, withHeader) => {
         let numCols = nCols;
         let cells = prevCells;
 
@@ -129,7 +132,7 @@ const removeCol = (state) =>
             });
         }
 
-        return {cells, numRows, numCols};
+        return {cells, numRows, numCols, withHeader};
     });
 
 /**
@@ -154,9 +157,9 @@ const processCells = (state, fn) => {
     const block = contentState.getBlockForKey(key);
     const entityKey = block.getEntityAt(0);
     const entity = contentState.getEntity(entityKey);
-    const {cells, numRows, numCols} = entity.getData().data;
-    const newContentState = contentState.replaceEntityData(entityKey, {
-        data: fn(cells, numCols, numRows, i, j)
+    const {cells, numRows, numCols, withHeader} = entity.getData().data;
+    const newContentState = contentState.mergeEntityData(entityKey, {
+        data: fn(cells, numCols, numRows, i, j, withHeader)
     });
 
     return forceUpdate({
@@ -164,5 +167,14 @@ const processCells = (state, fn) => {
         editorState: EditorState.push(editorState, newContentState, 'insert-row')
     });
 };
+
+/**
+ * @ngdoc method
+ * @name toggleTableHeader
+ * @description Toggles the table's header.
+ */
+const toggleTableHeader = (state) =>
+    processCells(state, (cells, numCols, numRows, i, j, withHeader) =>
+        ({cells: cells, numRows: numRows, numCols: numCols, withHeader: !withHeader}));
 
 export default table;

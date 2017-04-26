@@ -36,6 +36,7 @@ export default class StyleButton extends React.Component {
 
     render() {
         const {active, label} = this.props;
+        const iconClass = StyleIcons[label];
 
         const cx = classNames({
             'Editor3-styleButton': true,
@@ -44,7 +45,7 @@ export default class StyleButton extends React.Component {
 
         return (
             <span className={cx} onMouseDown={this.onToggle}>
-                <i className={StyleIcons[label]} />
+                {iconClass ? <i className={iconClass} /> : <b>{label}</b>}
             </span>
         );
     }
