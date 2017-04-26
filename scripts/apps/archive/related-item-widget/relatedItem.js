@@ -43,7 +43,8 @@ RelatedItemController.$inject = [
     'config',
     'storage',
     'familyService',
-    'gettext'
+    'gettext',
+    'moment'
 ];
 
 function RelatedItemController(
@@ -59,7 +60,8 @@ function RelatedItemController(
     config,
     storage,
     familyService,
-    gettext
+    gettext,
+    moment
 ) {
     $scope.type = 'archiveWidget';
     $scope.itemListOptions = {

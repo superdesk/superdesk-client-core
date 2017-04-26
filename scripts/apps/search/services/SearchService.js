@@ -22,8 +22,8 @@ import _ from 'lodash';
  *
  * @description Search Service is responsible for creation and manipulation of Query object
  */
-SearchService.$inject = ['$location', 'gettext', 'config', 'session', 'multi', 'preferencesService'];
-export function SearchService($location, gettext, config, session, multi, preferencesService) {
+SearchService.$inject = ['$location', 'gettext', 'config', 'session', 'multi', 'preferencesService', 'moment'];
+export function SearchService($location, gettext, config, session, multi, preferencesService, moment) {
     var sortOptions = [
         {field: 'versioncreated', label: gettext('Updated')},
         {field: 'firstcreated', label: gettext('Created')},
