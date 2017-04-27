@@ -367,4 +367,60 @@ function Desks() {
     this.saveEditedStage = function() {
         element(by.id('save-edited-stage')).click();
     };
+
+    /**
+     * Get the list of macros available to stages
+     * @return {promise} list of elements for macros available to stages
+     */
+    this.getStageMacros = function() {
+        return element.all(by.model('editStage.incoming_macro')).all(by.repeater('macro in macros'));
+    };
+
+    /**
+     * Get Incoming Macro for a stage
+     * @return {promise} stage incoming macro select input
+     */
+    this.getStageIncomingMacro = function() {
+        return element(by.model('editStage.incoming_macro'));
+    };
+
+    /**
+     * Set Incoming Macro for a stage
+     * @param {string} name of macro
+     */
+    this.setStageIncomingMacro = function(name) {
+        this.getStageIncomingMacro().$('[value="' + name + '"]').click();
+    };
+
+    /**
+     * Get Moved Onto Macro for a stage
+     * @return {promise} stage moved onto macro select input
+     */
+    this.getStageMovedOntoMacro = function() {
+        return element(by.model('editStage.onstage_macro'));
+    };
+
+    /**
+     * Set Moved Onto Macro for a stage
+     * @param {string} name of macro
+     */
+    this.setStageMovedOntoMacro = function(name) {
+        this.getStageMovedOntoMacro().$('[value="' + name + '"]').click();
+    };
+
+    /**
+     * Get Outgoing Macro for a stage
+     * @return {promise} stage outgoing macro select input
+     */
+    this.getStageOutgoingMacro = function() {
+        return element(by.model('editStage.outgoing_macro'));
+    };
+
+    /**
+     * Set Outgoing Macro for a stage
+     * @param {string} name of macro
+     */
+    this.setStageOutgoingMacro = function(name) {
+        this.getStageOutgoingMacro().$('[value="' + name + '"]').click();
+    };
 }
