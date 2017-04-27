@@ -12,9 +12,9 @@ function AuthoringWidgetsProvider() {
 }
 
 WidgetsManagerCtrl.$inject = ['$scope', '$routeParams', 'authoringWidgets', 'archiveService',
-    'keyboardManager', '$location', 'desks', 'lock'];
+    'keyboardManager', '$location', 'desks', 'lock', 'content'];
 function WidgetsManagerCtrl($scope, $routeParams, authoringWidgets, archiveService,
-    keyboardManager, $location, desks, lock) {
+    keyboardManager, $location, desks, lock, content) {
     $scope.active = null;
 
     $scope.$watch('item', (item) => {
@@ -42,7 +42,22 @@ function WidgetsManagerCtrl($scope, $routeParams, authoringWidgets, archiveServi
             }
         }
 
-        $scope.widgets = authoringWidgets.filter((widget) => !!widget.display[display]);
+        let widgets = authoringWidgets.filter((widget) => !!widget.display[display]);
+
+        // if the story has a content profile and if the widget has required fields defined
+        // check if the required fields exists in the content profile
+        if (item.profile) {
+            content.getType(item.profile).then((type) => {
+                $scope.widgets = widgets.filter((widget) => {
+                    if (widget.requiredFields) {
+                        return widget.requiredFields.every((field) => type.schema.hasOwnProperty(field));
+                    }
+                    return true;
+                });
+            });
+        } else {
+            $scope.widgets = widgets;
+        }
 
         bindAllShortcuts();
     });

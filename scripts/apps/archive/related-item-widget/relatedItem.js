@@ -19,6 +19,7 @@ angular.module('superdesk.apps.dashboard.widgets.relatedItem', [
                 picture: false,
                 personal: false
             },
+            requiredFields: ['slugline'],
             configurationTemplate: 'scripts/apps/archive/related-item-widget/relatedItem-configuration.html',
             configurable: false,
             needEditable: true,
