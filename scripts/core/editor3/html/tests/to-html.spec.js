@@ -128,6 +128,28 @@ describe('core.editor3.html.to-html.AtomicBlockParser', () => {
             '<tr><td><p>d</p></td><td><p>e</p></td><td><p>f</p></td></tr></tbody></table>');
     });
 
+    it('should correctly parse tables with headers', () => {
+        const cs = (txt) => convertToRaw(ContentState.createFromText(txt));
+        const {contentState, block} = testUtils.createBlockAndContent('TABLE', {
+            data: {
+                numCols: 3,
+                numRows: 3,
+                withHeader: true,
+                cells: [
+                    [cs('a'), undefined, cs('c')],
+                    [cs('d'), cs('e'), cs('f')],
+                    [cs('g'), cs('h'), cs('i')]
+                ]
+            }
+        });
+
+        const html = new AtomicBlockParser(contentState).parse(block);
+
+        expect(html).toBe('<table><thead><tr><th><p>a</p></th><th><p></p></th><th><p>c</p></th></tr></thead>' +
+            '<tbody><tr><td><p>d</p></td><td><p>e</p></td><td><p>f</p></td></tr>' +
+            '<tr><td><p>g</p></td><td><p>h</p></td><td><p>i</p></td></tr></tbody></table>');
+    });
+
     it('should correctly parse empty tables', () => {
         const {contentState, block} = testUtils.createBlockAndContent('TABLE', {
             data: {

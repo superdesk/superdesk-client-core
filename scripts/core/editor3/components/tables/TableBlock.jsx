@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import classNames from 'classnames';
 import * as actions from '../../actions';
 import {connect} from 'react-redux';
 import {TableCell} from '.';
@@ -93,10 +94,15 @@ export class TableBlockComponent extends Component {
     }
 
     render() {
-        const {numRows, numCols} = this.data();
+        const {numRows, numCols, withHeader} = this.data();
+
+        let cx = classNames({
+            'table-block': true,
+            'table-header': withHeader
+        });
 
         return (
-            <div className="table-block">
+            <div className={cx}>
                 <table>
                     <tbody>
                         {Array.from(new Array(numRows)).map((v, i) =>

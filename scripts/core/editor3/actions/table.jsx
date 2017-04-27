@@ -7,10 +7,11 @@
  */
 export function addTable(numRows, numCols) {
     const cells = [];
+    const withHeader = false;
 
     return {
         type: 'TOOLBAR_ADD_TABLE',
-        payload: {numRows, numCols, cells}
+        payload: {numRows, numCols, cells, withHeader}
     };
 }
 
@@ -48,4 +49,14 @@ export function removeRow() {
  */
 export function removeCol() {
     return {type: 'TOOLBAR_REMOVE_COL'};
+}
+
+/**
+ * @ngdoc method
+ * @name toggleTableHeader
+ * @description Toggles the tables header (enabled or disables the rendering of a header).
+ * When exporting HTML, thead/th & tbody are used, if on.
+ */
+export function toggleTableHeader() {
+    return {type: 'TOOLBAR_TABLE_HEADER'};
 }
