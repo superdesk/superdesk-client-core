@@ -110,7 +110,7 @@ export class AtomicBlockParser {
             startRow = 1;
         }
 
-        if (numRows > 1) {
+        if (!withHeader || withHeader && numRows > 1) {
             html += '<tbody>';
 
             for (let i = startRow; i < numRows; i++) {
