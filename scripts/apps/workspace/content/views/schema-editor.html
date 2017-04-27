@@ -1,8 +1,7 @@
 <div class="schema-editor">
     <h4 translate>Schema Configuration</h4>
     <ul class="pills-list">
-        <li class="schema-item" ng-repeat="(id, specs) in model.schema track by $index">
-
+        <li class="schema-item" ng-repeat="id in schemaKeys track by $index">
             <div class="header">
                 <span class="title">{{model.editor[id].field_name || label(id) | translate}}</span>
                 <div class="pull-right">
@@ -23,24 +22,24 @@
                         </div>
                         <div class="field">
                             <label translate>Required</label>
-                            <div sd-check ng-model="specs.required"></div>
+                            <div sd-check ng-model="model.schema[id].required"></div>
                         </div>
                         <div class="field">
                             <label translate>Order</label>
                             <input class="input-small line-input" placeholder="{{ 'Default' | translate }}" type="number" ng-model="model.editor[id].order" min="1" max="99" />
                         </div>
-                        <div class="field" ng-show="specs.type === 'string'">
+                        <div class="field" ng-show="model.schema[id].type === 'string'">
                             <label translate>Length</label>
                             <div class="controls">
                                 <span translate>min</span>:
-                                <input placeholder="{{ :: 'Not set' | translate }}" type="number" class="input-small line-input" ng-model="specs.minlength" min="0" />
+                                <input placeholder="{{ :: 'Not set' | translate }}" type="number" class="input-small line-input" ng-model="model.schema[id].minlength" min="0" />
                                 <span translate>max</span>:
-                                <input placeholder="{{ :: 'Not set' | translate }}" type="number" class="input-small line-input" ng-model="specs.maxlength" min="0" />
+                                <input placeholder="{{ :: 'Not set' | translate }}" type="number" class="input-small line-input" ng-model="model.schema[id].maxlength" min="0" />
                                 <span class="error"
-                                      ng-show="specs.minlength > specs.maxlength && specs.maxlength"
+                                      ng-show="model.schema[id].minlength > model.schema[id].maxlength && model.schema[id].maxlength"
                                       translate>Min length shouldn't be bigger than max length.</span>
                                 <span class="error"
-                                      ng-show="specs.maxlength === 0"
+                                      ng-show="model.schema[id].maxlength === 0"
                                       translate>Max length should be bigger than 0 or empty.</span>
                             </div>
                         </div>
@@ -52,7 +51,7 @@
                                 <option value="quarter" translate>Quarter</option>
                             </select>
                         </div>
-                        <div class="field" ng-if=":: specs.type === 'string'">
+                        <div class="field" ng-if=":: model.schema[id].type === 'string'">
                             <label translate>Clean Pasted HTML</label>
                             <div sd-check ng-model="model.editor[id].cleanPastedHTML"></div>
                         </div>
