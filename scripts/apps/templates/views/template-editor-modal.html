@@ -13,8 +13,9 @@
             <div class="template-header">
                 <div sd-validation-error="error.template_name" data-required="true"
                         class="authoring-header__item" sd-width="full">
-                    <input type="text" id="template-name" class="line-input" ng-model="template.template_name" placeholder="{{ :: 'Template name' | translate }}" required data-field="template_name" ng-disabled="template.template_name && template.template_type === 'kill'">
+                    <input type="text" id="template-name" class="line-input" name="name" ng-model="template.template_name" placeholder="{{ :: 'Template name' | translate }}" required data-field="template_name" ng-disabled="template.template_name && template.template_type === 'kill'" ng-maxlength="40">
                 </div>
+                <div class="error" ng-show="templateForm.name.$error.maxlength" translate>Please use less than 40 characters</div>
 
                 <div class="authoring-header__item" sd-width="full" ng-if="template.template_type !== 'kill' && !content_types.length">
                     <label for="template-profile" class="pull-left" translate>Content Profile</label>

@@ -10,11 +10,12 @@
             <div class="field">
                 <label for="template-name" translate>Name</label>
                 <div class="control">
-                    <input type="text" id="template-name" required ng-model="template.name">
+                    <input type="text" id="template-name" name="name" required ng-model="template.name" ng-maxlength="40">
                     <div class="error" ng-show="template._issues.template_name"
                         translate>Sorry, but template name must be unique.</div>
                     <em class="info" ng-show="template.template && template.template.template_name === template.name" translate>It will update existing template.</em>
                     <em class="info" ng-show="template.template && template.template.template_name !== template.name" translate>It will create a new template.</em>
+                    <span class="error" ng-show="templateForm.name.$error.maxlength" translate>Please use less than 40 characters</span>
                 </div>
             </div>
 
