@@ -128,6 +128,21 @@ describe('core.editor3.html.to-html.AtomicBlockParser', () => {
             '<tr><td><p>d</p></td><td><p>e</p></td><td><p>f</p></td></tr></tbody></table>');
     });
 
+    it('should correctly parse single row tables', () => {
+        const cs = (txt) => convertToRaw(ContentState.createFromText(txt));
+        const {contentState, block} = testUtils.createBlockAndContent('TABLE', {
+            data: {
+                numCols: 3,
+                numRows: 1,
+                cells: [[cs('a'), cs('b'), cs('c')]]
+            }
+        });
+
+        const html = new AtomicBlockParser(contentState).parse(block);
+
+        expect(html).toBe('<table><tbody><tr><td><p>a</p></td><td><p>b</p></td><td><p>c</p></td></tr></tbody></table>');
+    });
+
     it('should correctly parse tables with headers', () => {
         const cs = (txt) => convertToRaw(ContentState.createFromText(txt));
         const {contentState, block} = testUtils.createBlockAndContent('TABLE', {
@@ -148,6 +163,22 @@ describe('core.editor3.html.to-html.AtomicBlockParser', () => {
         expect(html).toBe('<table><thead><tr><th><p>a</p></th><th><p></p></th><th><p>c</p></th></tr></thead>' +
             '<tbody><tr><td><p>d</p></td><td><p>e</p></td><td><p>f</p></td></tr>' +
             '<tr><td><p>g</p></td><td><p>h</p></td><td><p>i</p></td></tr></tbody></table>');
+    });
+
+    it('should correctly parse single row tables with headers', () => {
+        const cs = (txt) => convertToRaw(ContentState.createFromText(txt));
+        const {contentState, block} = testUtils.createBlockAndContent('TABLE', {
+            data: {
+                numCols: 3,
+                numRows: 1,
+                withHeader: true,
+                cells: [[cs('a'), cs('b'), cs('c')]]
+            }
+        });
+
+        const html = new AtomicBlockParser(contentState).parse(block);
+
+        expect(html).toBe('<table><thead><tr><th><p>a</p></th><th><p>b</p></th><th><p>c</p></th></tr></thead></table>');
     });
 
     it('should correctly parse empty tables', () => {
