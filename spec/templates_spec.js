@@ -9,26 +9,24 @@
  */
 
 var templates = require('./helpers/templates'),
+    monitoring = require('./helpers/monitoring'),
+    workspace = require('./helpers/workspace'),
     authoring = require('./helpers/authoring');
 
 describe('templates', () => {
-    beforeEach(() => {
-        templates.openTemplatesSettings();
-    });
-
-    it('can create a new template', () => {
+    it('can manage templates', () => {
         // add a new template
+        templates.openTemplatesSettings();
         templates.add();
         templates.getTemplateNameElement().sendKeys('New Template');
         templates.setTemplateType('string:create');
         templates.selectDesk('Politic Desk');
         templates.selectDesk('Sports Desk');
-
         templates.toggleMetadata();
         templates.toggleLegal();
         authoring.setHeaderSluglineText('Test Template');
         authoring.writeTextToHeadline('New Item');
-        authoring.writeText('This is body');
+        authoring.writeText('This is body from the template');
         authoring.writeSignoffText('ABC');
         templates.save();
         expect(templates.getListCount()).toEqual(2);
@@ -36,15 +34,31 @@ describe('templates', () => {
         templates.toggleMetadata();
         expect(templates.getLegalSwitch().getAttribute('checked')).toEqual('true');
         expect(authoring.getHeadlineText()).toEqual('New Item');
-        expect(authoring.getBodyText()).toEqual('This is body');
+        expect(authoring.getBodyText()).toEqual('This is body from the template');
         expect(authoring.getSignoffText()).toBe('ABC');
-    });
+        templates.cancel();
 
+        // check the New Template is accessable from both desks
+        monitoring.openMonitoring();
+        workspace.selectDesk('Sports Desk');
+        authoring.createTextItemFromTemplate();
+        expect(authoring.getBodyText()).toBe('This is body from the template');
+        expect(authoring.getHeaderSluglineText()).toBe('Test Template');
+        expect(authoring.getHeadlineText()).toBe('New Item');
+        authoring.save();
+        authoring.close();
+        workspace.selectDesk('Politic Desk');
+        authoring.createTextItemFromTemplate();
+        expect(authoring.getBodyText()).toBe('This is body from the template');
+        expect(authoring.getHeaderSluglineText()).toBe('Test Template');
+        expect(authoring.getHeadlineText()).toBe('New Item');
+        authoring.save();
+        authoring.close();
 
-    it('can add auto-create template', () => {
-        // add a new template
+        // add a new auto-create template
+        templates.openTemplatesSettings();
         templates.add();
-        templates.getTemplateNameElement().sendKeys('New Template');
+        templates.getTemplateNameElement().sendKeys('Second New Template');
         templates.setTemplateType('string:create');
         templates.selectDesk('Politic Desk');
         templates.selectDesk('Sports Desk');
@@ -54,9 +68,9 @@ describe('templates', () => {
         templates.selectScheduleDesk('Politic Desk');
         templates.selectScheduleStage('one');
         templates.save();
-        expect(templates.getListCount()).toEqual(2);
-        templates.edit('New Template');
-        expect(templates.getTemplateNameElement().getAttribute('value')).toEqual('new template');
+        expect(templates.getListCount()).toEqual(3);
+        templates.edit('Second New Template');
+        expect(templates.getTemplateNameElement().getAttribute('value')).toEqual('second new template');
         expect(templates.getTemplateType().getAttribute('value')).toEqual('string:create');
         expect(templates.getDeskElement('Politic Desk').element(by.className('sd-checkbox'))
                 .getAttribute('checked')).toEqual('true');
@@ -68,11 +82,11 @@ describe('templates', () => {
         expect(templates.getDeskScheduleElement('Politic Desk').getAttribute('selected')).toEqual('true');
         expect(templates.getStageScheduleElement('one').getAttribute('selected')).toEqual('true');
         templates.cancel();
-        templates.remove('New Template');
-        expect(templates.getListCount()).toEqual(1);
-    });
+        templates.remove('Second New Template');
+        expect(templates.getListCount()).toEqual(2);
 
-    it('cannot save empty template', () => {
+        // cannot save empty template
+        templates.openTemplatesSettings();
         templates.add();
         templates.save();
         expect(templates.getSaveButton().isEnabled()).toBe(false);

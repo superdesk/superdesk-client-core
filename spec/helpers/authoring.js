@@ -160,9 +160,17 @@ function Authoring() {
     };
 
     this.createTextItem = function() {
-        return element(by.css('[class="navbtn dropdown__toggle sd-create-btn dropdown-toggle"]'))
+        return element(by.className('sd-create-btn'))
             .click()
             .then(() => element(by.id('create_text_article')).click());
+    };
+
+    this.createTextItemFromTemplate = () => {
+        element(by.className('sd-create-btn')).click();
+        element(by.id('more_templates')).click();
+        let templates = element.all(by.repeater('template in templates track by template._id'));
+
+        templates.all(by.css('[ng-click="select({template: template})"]')).first().click();
     };
 
     this.close = function() {
