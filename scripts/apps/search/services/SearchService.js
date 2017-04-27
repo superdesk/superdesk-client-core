@@ -394,10 +394,6 @@ export function SearchService($location, gettext, config, session, multi, prefer
             }
 
             buildGeneralFilters(params, query);
-
-            if (config.features && config.features.noTakes) {
-                query.post_filter({bool: {must_not: {term: {package_type: 'takes'}}}});
-            }
         }
 
         /**
@@ -508,26 +504,24 @@ export function SearchService($location, gettext, config, session, multi, prefer
             this.filter({not: {term: {last_published_version: 'false'}}});
         }
 
-        if (params.ignoreDigital) {
-            this.filter({not: {term: {package_type: 'takes'}}});
-        }
-
         if (params.ignoreScheduled) {
             this.filter({not: {term: {state: 'scheduled'}}});
         }
-
-        // remove the older version of digital package as part for base filtering.
-        this.filter({not: {bool: {must: [{term: {_type: 'published'}},
-            {term: {package_type: 'takes'}},
-            {term: {last_published_version: false}}]}}});
 
         // remove other users drafts.
         this.filter({or: [{and: [{term: {state: 'draft'}},
                                {term: {original_creator: session.identity._id}}]},
                          {not: {terms: {state: ['draft']}}}]});
 
-        // remove the digital package from production view.
-        this.filter({not: {bool: {must: [{term: {package_type: 'takes'}}, {term: {_type: 'archive'}}]}}});
+        if (params.ignoreDigital || config.features && config.features.noTakes) {
+            // remove all take packages
+            this.filter({not: {term: {package_type: 'takes'}}});
+        } else {
+            // remove the older version of digital package as part for base filtering.
+            this.filter({not: {bool: {must: [{term: {_type: 'published'}},
+                {term: {package_type: 'takes'}},
+                {term: {last_published_version: false}}]}}});
+        }
 
         buildFilters(params, this);
     }

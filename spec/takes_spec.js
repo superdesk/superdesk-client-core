@@ -212,6 +212,7 @@ describe('takes', () => {
         expect(monitoring.getItem(0, 0).element(by.className('takes')).isDisplayed()).toBe(true);
 
         monitoring.switchToDesk('POLITIC DESK');
+        monitoring.filterAction('text');
         expect(monitoring.getItem(0, 0).element(by.className('takes')).isDisplayed()).toBe(true);
 
         monitoring.getItem(0, 0).element(by.className('takes')).click();
