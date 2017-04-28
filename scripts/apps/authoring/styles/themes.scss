@@ -314,7 +314,7 @@ body, html {
             @include border-radius(2px);
             color: #fff;
             display: inline-block;
-            padding: 1px 8px 0;
+            padding: 0px 8px;
             font-size: 11px;
             line-height: 16px;
             height: 15px;
@@ -467,6 +467,7 @@ body, html {
     }
     #body_footer {
         .text-editor {
+            min-height: 26px;
             padding: 0 !important;
             margin-bottom: 10px !important;
             font-size:16px !important;
@@ -479,17 +480,17 @@ body, html {
         line-height: 120% !important;
         @include text-semibold();
         .text-editor {
-            min-height: 33px;
+            min-height: 48px;
             padding: 6px 0;
         }
     }
     .abstract, .abstract p, .abstract div {
-        min-height: 24px;
+        min-height: 26px;
         font-weight: 400 !important;
         font-size: 16px !important;
         line-height: 150% !important;
         .text-editor {
-            min-height: 24px;
+            min-height: 26px;
         }
     }
     .body {
