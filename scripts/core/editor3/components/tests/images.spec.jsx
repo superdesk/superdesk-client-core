@@ -9,12 +9,14 @@ describe('editor3.components.image-block', () => {
         const wrapper = shallow(
             <ImageBlock
                 cropImage={() => ({})}
+                changeCaption={() => ({})}
+                setReadOnly={() => ({})}
                 block={block}
                 contentState={contentState} />);
 
         expect(wrapper.find('img').props().src).toBe('image_href');
         expect(wrapper.find('img').props().alt).toBe('image_alt_text');
-        expect(wrapper.find('.image-block__description').text()).toBe('image_description');
+        expect(wrapper.find('.image-block__description').props().defaultValue).toBe('image_description');
     });
 
     it('should trigger cropImage prop when clicked', () => {
@@ -23,6 +25,8 @@ describe('editor3.components.image-block', () => {
         const wrapper = mount(
             <ImageBlock
                 cropImage={cropImage}
+                changeCaption={() => ({})}
+                setReadOnly={() => ({})}
                 block={block}
                 contentState={contentState} />);
 
