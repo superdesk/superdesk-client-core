@@ -1104,7 +1104,7 @@ input {
 
 // line input for contenteditable div
 .contenteditable-input {
-  min-height: 18px;
+  min-height: 23px;
   padding: 3px 0;
   background-color: transparent;
   border-bottom: 1px solid rgba(0,0,0,0.15);
@@ -1119,8 +1119,7 @@ input {
         background-color: transparent;
     }
     &--side-padding {
-        padding-left: 6px;
-        padding-right: 6px;
+        padding: 3px 6px;
     }
 }
 
