@@ -18,6 +18,8 @@ const editor3 = (state = {}, action) => {
         return dragDrop(state, action.payload);
     case 'EDITOR_SET_CELL':
         return setCell(state, action.payload);
+    case 'EDITOR_CHANGE_IMAGE_CAPTION':
+        return changeImageCaption(state, action.payload);
     default:
         return state;
     }
@@ -100,7 +102,7 @@ const dragDrop = (state, e) => {
  * @description Handles setting the editor as active, or read-only.
  */
 const setReadOnly = (state, readOnly = true) => {
-    let activeCell = {state};
+    let {activeCell} = state;
 
     if (!readOnly) {
         activeCell = null;
@@ -121,5 +123,26 @@ const setCell = (state, {i, j, key}) => ({
     readOnly: true,
     activeCell: {i, j, key}
 });
+
+/**
+ * @ngdoc method
+ * @name setCell
+ * @param {string} entityKey
+ * @param {string} newCaption
+ * @return {Object} New state
+ * @description Sets a new caption for the image at entityKey.
+ */
+const changeImageCaption = (state, {entityKey, newCaption}) => {
+    const {editorState} = state;
+    const contentState = editorState.getCurrentContent();
+    const entity = contentState.getEntity(entityKey);
+    let {img} = entity.getData();
+
+    img.description_text = newCaption;
+
+    const newContentState = contentState.replaceEntityData(entityKey, {img});
+
+    return onChange(state, EditorState.push(editorState, newContentState, 'update-image'));
+};
 
 export default editor3;

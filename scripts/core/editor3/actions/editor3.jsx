@@ -77,3 +77,18 @@ export function setActiveCell(i, j, key) {
         payload: {i, j, key}
     };
 }
+
+/**
+ * @ngdoc method
+ * @name changeImageCaption
+ * @param {string} entityKey
+ * @param {string} newCaption
+ * @description Change the image caption contained in the given entity key.
+ * @returns {Object}
+ */
+export function changeImageCaption(entityKey, newCaption) {
+    return {
+        type: 'EDITOR_CHANGE_IMAGE_CAPTION',
+        payload: {entityKey, newCaption}
+    };
+}
