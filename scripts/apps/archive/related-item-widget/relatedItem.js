@@ -44,7 +44,8 @@ RelatedItemController.$inject = [
     'storage',
     'familyService',
     'gettext',
-    'moment'
+    'moment',
+    'content'
 ];
 
 function RelatedItemController(
@@ -61,7 +62,8 @@ function RelatedItemController(
     storage,
     familyService,
     gettext,
-    moment
+    moment,
+    content
 ) {
     $scope.type = 'archiveWidget';
     $scope.itemListOptions = {
@@ -113,28 +115,45 @@ function RelatedItemController(
         return moment().format('YYYY-MM-DD') + 'T00:00:00' + moment().format('ZZ');
     }
 
+    /**
+     * Copies the field values from source object to destination
+     * if destination has a content profile then copies fields
+     * defined in the content profile only
+     */
+    const copyMetadata = (source, destination) => {
+        const fields = ['subject', 'anpa_category', 'headline',
+            'urgency', 'priority', 'slugline', 'place'];
+
+        destination.related_to = source._id;
+        if (destination.profile) {
+            return content.getType(destination.profile).then((type) => {
+                fields.forEach((field) => {
+                    if (type.schema.hasOwnProperty(field)) {
+                        destination[field] = source[field];
+                    }
+                });
+                return $q.when(destination);
+            });
+        }
+
+        fields.forEach((field) => {
+            destination[field] = source[field];
+        });
+        return $q.when(destination);
+    };
+
     $scope.actions = {
         apply: {
             title: 'Associate metadata',
             method: function(item) {
-                /* TODOs:
-                1) Overwrite Destination code
-                2) Patch IPTC Code
-                3) Overwrite category, service and locator fields
-                */
-
                 $scope.origItem = $scope.options.item;
-                $scope.options.item.subject = item.subject;
-                $scope.options.item.anpa_category = item.anpa_category;
-                $scope.options.item.headline = item.headline;
-                $scope.options.item.urgency = item.urgency;
-                $scope.options.item.priority = item.priority;
-                $scope.options.item.slugline = item.slugline;
-                $scope.options.item.related_to = item._id;
-                api.save('archive', $scope.origItem, $scope.options.item).then((_item) => {
+
+                copyMetadata(item, {}).then((copied) => api.save('archive', $scope.origItem, copied)
+                .then(() => {
+                    Object.assign($scope.options.item, copied);
                     notify.success(gettext('item metadata associated.'));
                     return item;
-                });
+                }));
             },
             class: 'open',
             icon: 'icon-expand',
