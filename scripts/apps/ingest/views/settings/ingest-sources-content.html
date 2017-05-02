@@ -35,7 +35,6 @@
     <div class="modal__body">
         <form name="editForm" sd-wizard data-name="ingestSources" data-current-step="step.current" data-finish="cancel()">
             <fieldset>
-                
                 <div sd-wizard-step data-title="{{ 'General' | translate }}" data-code="general">
                     <div class="field">
                         <label class="right">
@@ -47,6 +46,7 @@
                     <div class="field">
                         <label for="provider-name" translate>Provider Name</label>
                         <input type="text" id="provider-name" ng-model="provider.name" required>
+                        <div class="error" ng-show="error._issues.name" translate>Name is not unique.</div>
                     </div>
 
                     <div class="field">
@@ -109,6 +109,8 @@
                     </div>
 
                     <div class="field credentials">
+                        <div class="error" ng-show="error" translate>An error occured when testing config.</div>
+
                         <div ng-include="getConfigTemplateUrl()"></div>
                     </div>
 
