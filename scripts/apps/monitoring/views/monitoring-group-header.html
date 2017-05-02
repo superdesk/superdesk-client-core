@@ -42,9 +42,6 @@
                 dropdown-append-to-body dropdown sd-desk-notifications data-stage="group._id">
             </div>
         </div>
-        <button ng-if="showRefresh" class="btn btn--light btn--circle stage-header__refresh" ng-click="refreshGroup(group)" tooltip="{{:: 'Refresh' | translate}}" tooltip-placement="left">
-            <i class="icon-repeat blue"></i>
-        </button>
     </div>
     <!-- Desk output stages-->
     <div class="stage-header" ng-if="group.header && !group.subheader && viewType !== 'single_monitoring'">

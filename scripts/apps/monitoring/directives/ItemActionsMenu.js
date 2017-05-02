@@ -25,7 +25,7 @@ export function ItemActionsMenu(superdesk, activityService, workflowService, arc
                     angular.element('.dropdown--noarrow.open')
                         .removeClass('open');
                 } else {
-                    $rootScope.itemToogle = scope.toggleActions;
+                    $rootScope.itemToggle = scope.toggleActions;
                 }
             };
 
