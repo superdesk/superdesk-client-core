@@ -56,7 +56,7 @@ export function SearchPanel($location, desks, privileges, tags, asset, metadata,
                 scope.innerTab = tabName;
                 if (tabName === 'filters') {
                     $rootScope.aggregations = 1;
-                    $rootScope.$broadcast('aggregations:changed', {force: true});
+                    $rootScope.$broadcast('aggregations:changed');
                 } else {
                     $rootScope.aggregations = 0;
                 }

@@ -213,11 +213,6 @@ export function ItemList(
                         itemsById: itemsById,
                         view: scope.view
                     }, () => {
-                        // updates scroll position to top, such as when forced refresh
-                        // but not when an item is selected in the list and is view
-                        if (scope.scrollTop === 0 && scope.selected === null) {
-                            elem[0].scrollTop = scope.scrollTop;
-                        }
                         scope.rendering = scope.loading = false;
                     });
                 }, true);
@@ -349,16 +344,9 @@ export function ItemList(
                  * before activating render function
                  */
                 function handleScroll($event) {
-                    // If scroll bar leaves top position update scope.scrollTop
-                    // which is used to display refresh button on list item updates
-                    if (elem[0].scrollTop >= 0 && elem[0].scrollTop < 100) {
-                        scope.$applyAsync(() => {
-                            scope.scrollTop = elem[0].scrollTop;
-                            // force refresh the group or list, if scroll bar hits the top of list.
-                            if (scope.scrollTop === 0) {
-                                $rootScope.$broadcast('refresh:list', scope.group);
-                            }
-                        });
+                    // force refresh the group or list, if scroll bar hits the top of list.
+                    if (elem[0].scrollTop === 0) {
+                        $rootScope.$broadcast('refresh:list', scope.group);
                     }
 
                     if (scope.rendering) { // ignore
@@ -399,6 +387,7 @@ export function ItemList(
                 }
 
                 elem.on('keydown', listComponent.handleKey);
+
                 elem.on('scroll', handleScroll);
 
                 // remove react elem on destroy

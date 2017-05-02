@@ -16,7 +16,6 @@ export function MonitoringView($rootScope, authoringWorkspace, pageTitle, $timeo
         link: function(scope, elem) {
             var containerElem = elem.find('.content-list');
 
-            containerElem.on('scroll', handleContainerScroll);
             pageTitle.setUrl(_.capitalize(gettext(scope.type)));
 
             scope.viewColumn = scope.monitoring.viewColumn;
@@ -43,29 +42,22 @@ export function MonitoringView($rootScope, authoringWorkspace, pageTitle, $timeo
             var updateTimeout;
 
             function handleContainerScroll($event) {
-                if ($rootScope.itemToogle) {
+                if ($rootScope.itemToggle) {
                     scope.$applyAsync(() => {
-                        $rootScope.itemToogle(false);
-                        $rootScope.itemToogle = null;
+                        $rootScope.itemToggle(false);
+                        $rootScope.itemToggle = null;
                     });
                 }
 
-                // If scroll bar leaves top position update scope.scrollTop
-                // which is used to display refresh button on list item updates
-                if (scope.viewColumn && $event.currentTarget.scrollTop >= 0 && $event.currentTarget.scrollTop < 100) {
-                    scope.$applyAsync(() => {
-                        scope.scrollTop = scope.monitoring.scrollTop = $event.currentTarget.scrollTop;
-
-                        // force refresh the group or list, if scroll bar hits the top of list.
-                        if (scope.monitoring.scrollTop === 0) {
-                            scope.$broadcast('refresh:list', scope.group);
-                        }
-                    });
+                if (scope.viewColumn && containerElem[0].scrollTop === 0) {
+                    scope.refreshGroup(scope.group);
                 }
 
                 $timeout.cancel(updateTimeout);
-                updateTimeout = $timeout(renderIfNeeded($event), 100, false);
+                updateTimeout = $timeout(renderIfNeeded, 100, false);
             }
+
+            containerElem.on('scroll', handleContainerScroll);
 
             function isListEnd(containerElem) {
                 return containerElem.scrollTop + containerElem.offsetHeight + 200 >= containerElem.scrollHeight;
@@ -74,8 +66,8 @@ export function MonitoringView($rootScope, authoringWorkspace, pageTitle, $timeo
             /**
              * Trigger render in case user scrolls to the very end of list
              */
-            function renderIfNeeded($event) {
-                if (scope.viewColumn && isListEnd($event.currentTarget)) {
+            function renderIfNeeded() {
+                if (scope.viewColumn && isListEnd(containerElem[0])) {
                     scheduleFetchNext();
                 }
             }
@@ -98,12 +90,11 @@ export function MonitoringView($rootScope, authoringWorkspace, pageTitle, $timeo
 
             // force refresh on refresh button click when in specific view such as single, highlights or spiked.
             scope.refreshGroup = function(group) {
-                containerElem[0].scrollTop = 0;
                 scope.$broadcast('refresh:list', group);
             };
 
             scope.$on('$destroy', () => {
-                containerElem.off('scroll');
+                containerElem.off();
             });
 
             scope.$on('$routeUpdate', (event, data) => {
@@ -114,10 +105,12 @@ export function MonitoringView($rootScope, authoringWorkspace, pageTitle, $timeo
                 }
             });
 
-            scope.$watch(() => authoringWorkspace.item, (item) => {
-                scope.shouldRefresh = false; // when item opened or closed
-                if (item) {
-                    scope.monitoring.closePreview();
+            scope.$watch(() => authoringWorkspace.item, (newValue, oldValue) => {
+                if (newValue !== oldValue) {
+                    scope.shouldRefresh = false; // when item opened or closed
+                    if (newValue) { // when item opened
+                        scope.monitoring.closePreview();
+                    }
                 }
             });
         }

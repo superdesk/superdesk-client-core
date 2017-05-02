@@ -71,6 +71,7 @@ export function SearchResults(
         require: '^sdSearchContainer',
         templateUrl: asset.templateUrl('apps/search/views/search-results.html'),
         link: function(scope, elem, attr, controller) {
+            var containerElem = elem.find('.shadow-list-holder');
             var GRID_VIEW = 'mgrid',
                 LIST_VIEW = 'compact';
 
@@ -78,7 +79,6 @@ export function SearchResults(
             var multiSelectable = attr.multiSelectable !== undefined;
 
             scope.previewingBroadcast = false;
-            scope.shouldRefresh = true;
             superdeskFlags.flags.previewing = false;
 
             var criteria = search.query($location.search()).getCriteria(true),
@@ -121,17 +121,6 @@ export function SearchResults(
             scope.$on('content:update', queryItems);
             scope.$on('item:move', scheduleIfShouldUpdate);
 
-            scope.$on('$routeUpdate', (event, data) => {
-                if (scope.shouldRefresh) {
-                    scope.scrollTop = 0;
-                    data.force = true;
-                    scope.showRefresh = false;
-                    queryItems(event, data);
-                } else {
-                    scope.shouldRefresh = true;
-                }
-            });
-
             scope.$on('aggregations:changed', queryItems);
 
             scope.$on('broadcast:preview', (event, args) => {
@@ -152,10 +141,10 @@ export function SearchResults(
             });
 
             scope.$watch(function getSearchParams() {
-                return _.omit($location.search(), '_id');
+                return _.omit($location.search(), ['_id', 'item', 'action']);
             }, (newValue, oldValue) => {
                 if (newValue !== oldValue) {
-                    queryItems();
+                    scope.refreshList();
                 }
             }, true);
 
@@ -229,7 +218,7 @@ export function SearchResults(
                         var _data = {
                             newItems: items,
                             scopeItems: scope.items,
-                            scrollTop: scope.scrollTop,
+                            scrollTop: containerElem.scrollTop(),
                             isItemPreviewing: isItemPreviewing
                         };
 
@@ -252,6 +241,11 @@ export function SearchResults(
                     scope.loading = false;
                     if (originalQuery) {
                         criteria.source.query = originalQuery;
+                    }
+
+                    // update scroll position to top, when forced refresh
+                    if (data && data.force) {
+                        containerElem[0].scrollTop = 0;
                     }
                 });
             }
@@ -293,9 +287,6 @@ export function SearchResults(
             });
 
             scope.refreshList = function() {
-                scope.$applyAsync(() => {
-                    scope.scrollTop = 0;
-                });
                 scope.showRefresh = false;
                 queryItems(null, {force: true});
             };
@@ -446,7 +437,6 @@ export function SearchResults(
              */
             function processPreview(item) {
                 scope.selected.preview = item;
-                scope.shouldRefresh = false; // prevents $routeUpdate to refresh, just on preview changes.
 
                 if (!_.isNil(scope.selected.preview)) {
                     scope.showHistoryTab = scope.selected.preview.state !== 'ingested' &&

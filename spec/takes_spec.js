@@ -175,7 +175,8 @@ describe('takes', () => {
         expect(monitoring.getTextItemBySlugline(5, 0)).toBe('REOPENS SLUGLINE');
     });
 
-    it('performs Associate as a take scenario', () => {
+    // disabled as takes functionality obsolete
+    xit('performs Associate as a take scenario', () => {
         /*
         * Scenario: Associate as a take.
         */

@@ -54,7 +54,7 @@
         <div class="subnav__button-stack--square-buttons">
              <div class="refresh-box pull-right">
                 <button ng-if="monitoring.showRefresh &&
-                    (monitoring.singleGroup || type === 'spike' || type === 'highlights')"
+                    (monitoring.singleGroup || type === 'spike' || type === 'highlights' || viewColumn)"
                 ng-click="refreshGroup(monitoring.singleGroup)"
                     sd-tooltip="{{:: 'Refresh' | translate}}" flow="left">
                     <i class="icon-repeat blue"></i>
