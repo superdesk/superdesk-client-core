@@ -34,9 +34,7 @@ angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
                  * @description Fetches and assigns relatable items
                  */
                 scope.refresh = () => {
-                    if (scope.options.related &&
-                    scope.itemListOptions.keyword &&
-                    scope.itemListOptions.keyword.trim().length >= 2) {
+                    if (scope.options.related && scope.hasKeywords()) {
                         scope.loading = true;
                         familyService.fetchRelatableItems(scope.itemListOptions.keyword,
                             scope.itemListOptions.sluglineMatch,
@@ -81,7 +79,6 @@ angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
                             if (scope.options.related && scope.options.item) {
                                 if (!scope.options.item.slugline) {
                                     notify.error(gettext('Error: Slugline required.'));
-                                    scope.options.related = false;
                                 } else {
                                     oldSearch = scope.itemListOptions.keyword;
                                     scope.itemListOptions.keyword = scope.options.item.slugline;
@@ -109,6 +106,9 @@ angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
                         setProcessedItems();
                     }
                 });
+
+                scope.hasKeywords = () => scope.itemListOptions.keyword &&
+                    scope.itemListOptions.keyword.trim().length >= 2;
 
                 scope.view = (item) => {
                     scope.selected = item;

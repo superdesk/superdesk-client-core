@@ -3,7 +3,7 @@
     <div class="search-box" ng-class="{blank: related}" ng-show="options.searchEnabled">
         <input type="text" placeholder="{{ :: 'Search' | translate }}" ng-keypress="($event.which === 13)?refresh():null"
             ng-model="itemListOptions.keyword">
-        <button id="search-related-items" type="button" class="btn" ng-click="refresh()" translate>Search</button>
+        <button id="search-related-items" type="button" class="btn" ng-click="refresh()" ng-disabled="!hasKeywords()" translate>Search</button>
     </div>
 
     <div class="ingest-list-holder" ng-class="{'mode-detailed': options.mode === 'detailed'}">
