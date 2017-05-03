@@ -92,3 +92,18 @@ export function changeImageCaption(entityKey, newCaption) {
         payload: {entityKey, newCaption}
     };
 }
+
+/**
+ * @ngdoc method
+ * @name setHTML
+ * @param {string} html
+ * @description Replaces the current editor content with the given HTML. This is used
+ * by the Tansa spellchecker to apply a corrected text.
+ * @returns {Object}
+ */
+export function setHTML(html) {
+    return {
+        type: 'EDITOR_SET_HTML',
+        payload: html
+    };
+}

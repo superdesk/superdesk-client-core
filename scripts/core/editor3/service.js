@@ -1,6 +1,8 @@
-import * as action from './actions/find-replace';
+import * as action from './actions';
 import ng from 'core/services/ng';
 import {countOccurrences, forEachMatch} from './reducers/find-replace';
+import {toHTML} from './html';
+import {clearHighlights} from './reducers/find-replace';
 
 /**
  * @type {Object} Redux store
@@ -30,6 +32,16 @@ export class EditorService {
         }
 
         store = s;
+    }
+
+    /**
+     * @ngdoc method
+     * @name editor3#version
+     * @description Returns the editor version (this is for when using editorResolver).
+     * @returns {string}
+     */
+    version() {
+        return '3';
     }
 
     /**
@@ -152,6 +164,34 @@ export class EditorService {
         });
 
         return txt;
+    }
+
+    /**
+     * @ngdoc method
+     * @name editor3#getHTML
+     * @description Gets the content of the editor as HTML.
+     * @returns {string} HTML
+     */
+    getHTML() {
+        if (!ok()) {
+            return '';
+        }
+
+        const state = store.getState();
+        const content = state.editorState.getCurrentContent();
+        const cleanedContent = clearHighlights(content).content;
+
+        return toHTML(cleanedContent);
+    }
+
+    /**
+     * @ngdoc method
+     * @name editor3#setHTML
+     * @param {string} html
+     * @description Replaces the content of the editor with the given HTML.
+     */
+    setHTML(html) {
+        ok() && store.dispatch(action.setHTML(html));
     }
 }
 
