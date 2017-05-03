@@ -1,4 +1,6 @@
+import {Editor3} from '../components/Editor3';
 import {RichUtils, EditorState} from 'draft-js';
+import {fromHTML} from 'core/editor3/html';
 import {addImage} from './toolbar';
 
 /**
@@ -20,6 +22,8 @@ const editor3 = (state = {}, action) => {
         return setCell(state, action.payload);
     case 'EDITOR_CHANGE_IMAGE_CAPTION':
         return changeImageCaption(state, action.payload);
+    case 'EDITOR_SET_HTML':
+        return setHTML(state, action.payload);
     default:
         return state;
     }
@@ -143,6 +147,22 @@ const changeImageCaption = (state, {entityKey, newCaption}) => {
     const newContentState = contentState.replaceEntityData(entityKey, {img});
 
     return onChange(state, EditorState.push(editorState, newContentState, 'update-image'));
+};
+
+/**
+ * @ngdoc method
+ * @name setHTML
+ * @param {string} html
+ * @description Replaces the current editor content with the given HTML. This is used
+ * by the Tansa spellchecker to apply a corrected text.
+ * @returns {Object}
+ */
+const setHTML = (state, html) => {
+    const decorator = Editor3.getDecorator();
+    const content = fromHTML(html);
+    const editorState = EditorState.createWithContent(content, decorator);
+
+    return {...state, editorState};
 };
 
 export default editor3;

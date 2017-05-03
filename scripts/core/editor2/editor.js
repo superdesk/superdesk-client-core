@@ -94,6 +94,8 @@ function EditorService(spellcheck, $q, _, renditionsService, utils) {
         return $q.when(0);
     };
 
+    this.version = () => '2';
+
     this.KEY_CODES = Object.freeze({
         Y: 'Y'.charCodeAt(0),
         Z: 'Z'.charCodeAt(0),
