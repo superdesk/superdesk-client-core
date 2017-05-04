@@ -616,7 +616,7 @@
                     padding-top: 5px;
                 }
                 td {
-                        padding: 0 2px;
+                    padding: 0 2px;
                     .btn {
                         width: 100% !important;
                         min-width: 28px !important;
@@ -1375,10 +1375,10 @@ header .sortbar {
             text-overflow: ellipsis;
         }
         .label-group {
-          display: inline-block;
-          &.label-group--right {
-            float: right;
-          }
+            display: inline-block;
+            &.label-group--right {
+                float: right;
+            }
         }
         .label {
             font-size: 9px;
@@ -1685,6 +1685,22 @@ header .sortbar {
         }
         .toggle-box__line {
             background: #4f4f4f;
+        }
+    }
+
+    // Buttons
+    .toggle-box__button {
+        color: $grayLight;
+        cursor: pointer;
+        i {
+            color: $grayLight;
+            margin-right: 5px;
+            vertical-align: text-bottom;
+        }
+        &:hover {
+            text-decoration: none;
+            color: $white;
+            i { color: $white; }
         }
     }
 }

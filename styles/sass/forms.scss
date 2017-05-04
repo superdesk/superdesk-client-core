@@ -8,42 +8,42 @@
 
 // Make all forms have space below them
 form {
-  margin: 0;
+    margin: 0;
 }
 
 fieldset {
-  padding: 0;
-  margin: 0;
-  border: 0;
-  &.separated {
-    border:1px solid #d0d0d0;
-    border-width: 1px 0;
-    padding-bottom: 10px;
-  }
+    padding: 0;
+    margin: 0;
+    border: 0;
+    &.separated {
+        border:1px solid #d0d0d0;
+        border-width: 1px 0;
+        padding-bottom: 10px;
+    }
 }
 
 // Groups of fields with labels on top (legends)
 legend {
-  display: block;
-  padding: 0 6px 0 0;
-  margin-bottom: 10px;
-  font-size: 12px;
-  line-height: 31px;
-  color: #666;
-  border: 0;
-  text-transform: uppercase;
-  font-weight: 500;
-  background-color: transparent;
-  // Small legend
-  &.small {
+    display: block;
+    padding: 0 6px 0 0;
     margin-bottom: 10px;
-  }
+    font-size: 12px;
+    line-height: 31px;
+    color: #666;
+    border: 0;
+    text-transform: uppercase;
+    font-weight: 500;
+    background-color: transparent;
+    // Small legend
+    &.small {
+        margin-bottom: 10px;
+    }
 
-  //small text
-  small {
-    font-size: $baseLineHeight * .75;
-    color: $grayLight;
-  }
+    //small text
+    small {
+        font-size: $baseLineHeight * .75;
+        color: $grayLight;
+    }
 }
 
 
@@ -60,14 +60,14 @@ input,
 button,
 select,
 textarea {
-  font-family: $baseFontFamily; // And only set font-family here for those that need it (note the missing label element)
+    font-family: $baseFontFamily; // And only set font-family here for those that need it (note the missing label element)
 }
 
 // Identify controls by their labels
 label {
-  display: block;
-  margin-bottom: 5px;
-  color: $grayDark;
+    display: block;
+    margin-bottom: 5px;
+    color: $grayDark;
 }
 
 // Inputs, Textareas, Selects
@@ -75,114 +75,114 @@ input,
 textarea,
 select,
 .uneditable-input {
-  display: inline-block;
-  width: 210px;
-  min-height: $baseLineHeight;
-  padding: 4px;
-  margin-bottom: 9px;
-  font-size: $baseFontSize;
-  line-height: $baseLineHeight;
-  color: $gray;
-  border: 1px solid $inputBorder;
-  @include border-radius(2px);
+    display: inline-block;
+    width: 210px;
+    min-height: $baseLineHeight;
+    padding: 4px;
+    margin-bottom: 9px;
+    font-size: $baseFontSize;
+    line-height: $baseLineHeight;
+    color: $gray;
+    border: 1px solid $inputBorder;
+    @include border-radius(2px);
 }
 .uneditable-textarea {
-  width: auto;
-  height: auto;
+    width: auto;
+    height: auto;
 }
 
 // Inputs within a label
 label input,
 label textarea,
 label select {
-  display: block;
+    display: block;
 }
 
 // Mini reset for unique input types
 input[type="image"],
 input[type="checkbox"],
 input[type="radio"] {
-  width: auto;
-  height: auto;
-  padding: 0;
-  margin: 2px 0;
-  display: inline-block;
-  line-height: normal;
-  cursor: pointer;
-  @include border-radius(0);
-  border: 0 \9; /* IE9 and down */
+    width: auto;
+    height: auto;
+    padding: 0;
+    margin: 2px 0;
+    display: inline-block;
+    line-height: normal;
+    cursor: pointer;
+    @include border-radius(0);
+    border: 0 \9; /* IE9 and down */
 }
 
 input[type="image"] {
-  border: 0;
+    border: 0;
 }
 
 // Reset the file input to browser defaults
 input[type="file"] {
-  width: auto;
-  padding: initial;
-  line-height: initial;
-  border: initial;
-  background-color: $inputBackground;
-  background-color: initial;
-  @include box-shadow(none);
+    width: auto;
+    padding: initial;
+    line-height: initial;
+    border: initial;
+    background-color: $inputBackground;
+    background-color: initial;
+    @include box-shadow(none);
 }
 
 // Help out input buttons
 input[type="button"],
 input[type="reset"],
 input[type="submit"] {
-  width: auto;
-  height: auto;
+    width: auto;
+    height: auto;
 }
 
 // Set the height of select and file controls to match text inputs
 select,
 input[type="file"] {
-  height: 28px; /* In IE7, the height of the select element cannot be changed by height, only font-size */
-  line-height: 28px;
+    height: 28px; /* In IE7, the height of the select element cannot be changed by height, only font-size */
+    line-height: 28px;
 }
 
 // Reset line-height for IE
 input[type="file"] {
-  line-height: 18px \9;
+    line-height: 18px \9;
 }
 
 // Chrome on Linux and Mobile Safari need background-color
 select {
-  width: 220px; // default input width + 10px of padding that doesn't get applied
-  background-color: $inputBackground;
+    width: 220px; // default input width + 10px of padding that doesn't get applied
+    background-color: $inputBackground;
 }
 
 // Make multiple select elements height not fixed
 select[multiple],
 select[size] {
-  height: auto;
+    height: auto;
 }
 
 // Remove shadow from image inputs
 input[type="image"] {
-  @include box-shadow(none);
+    @include box-shadow(none);
 }
 
 // Make textarea height behave
 textarea {
-  height: auto;
+    height: auto;
 }
 
 // Hidden inputs
 input[type="hidden"] {
-  display: none;
+    display: none;
 }
 
 // legend 
 .legend {
-  padding: 0;
-  color: $grayLight;
-  font-size: 12px;
-  font-weight: 500;
-  text-transform: uppercase;
-  padding: 0 0 10px 0;
+    padding: 0;
+    color: $grayLight;
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    padding: 0 0 10px 0;
 }
 
 
@@ -192,80 +192,80 @@ input[type="hidden"] {
 // Indent the labels to position radios/checkboxes as hanging
 .radio,
 .checkbox {
-  padding-left: 18px;
+    padding-left: 18px;
 }
 .radio input[type="radio"],
 .checkbox input[type="checkbox"] {
-  float: left;
-  margin-left: -18px;
+    float: left;
+    margin-left: -18px;
 }
 
 // Move the options list down to align with labels
 .controls > .radio:first-child,
 .controls > .checkbox:first-child {
-  padding-top: 5px; // has to be padding because margin collaspes
+    padding-top: 5px; // has to be padding because margin collaspes
 }
 
 // Radios and checkboxes on same line
 // TODO v3: Convert .inline to .control-inline
 .radio.inline,
 .checkbox.inline {
-  display: inline-block;
-  padding-top: 5px;
-  margin-bottom: 0;
-  vertical-align: middle;
+    display: inline-block;
+    padding-top: 5px;
+    margin-bottom: 0;
+    vertical-align: middle;
 }
 .radio.inline + .radio.inline,
 .checkbox.inline + .checkbox.inline {
-  margin-left: 10px; // space out consecutive inline controls
+    margin-left: 10px; // space out consecutive inline controls
 }
 
 // Custom radio button
 .sd-radio {
-  position: relative;
-  padding-left: 3px;
-  input[type="radio"] {
-    visibility: hidden;
-    + .check {
-      display: inline-block;
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 11px;
-      height: 11px;
-      @include border-radius(50%);
-      border: 2px solid $inputBorder;
-      vertical-align: middle;
-      margin-left: 0px;
-    }
-    &:checked {
-      + .check {
-        border: 2px solid $sd-blue;
-        &:before {
-          content: '';
-          position: absolute;
-          width: 7px;
-          height: 7px;
-          margin: 2px 0 0 2px;
-          background-color: $sd-blue;
-          @include border-radius(50%);
-          @include box-sizing(border-box);
-        }
-      }
-    }
-  }
-  &:hover {
+    position: relative;
+    padding-left: 3px;
     input[type="radio"] {
-      + .check {
-        border: 2px solid $grayLight;
-      }
-      &:checked {
+        visibility: hidden;
         + .check {
-          border: 2px solid $sd-blue;
+            display: inline-block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 11px;
+            height: 11px;
+            @include border-radius(50%);
+            border: 2px solid $inputBorder;
+            vertical-align: middle;
+            margin-left: 0px;
         }
-      }
+        &:checked {
+            + .check {
+                border: 2px solid $sd-blue;
+                &:before {
+                    content: '';
+                    position: absolute;
+                    width: 7px;
+                    height: 7px;
+                    margin: 2px 0 0 2px;
+                    background-color: $sd-blue;
+                    @include border-radius(50%);
+                    @include box-sizing(border-box);
+                }
+            }
+        }
     }
-  }
+    &:hover {
+        input[type="radio"] {
+            + .check {
+                border: 2px solid $grayLight;
+            }
+            &:checked {
+                + .check {
+                    border: 2px solid $sd-blue;
+                }
+            }
+        }
+    }
 }
 
 // FOCUS STATE
@@ -273,24 +273,24 @@ input[type="hidden"] {
 
 input,
 textarea {
-  @include box-shadow(inset 0 1px 1px rgba(0,0,0,.075));
-  $transition: border linear .2s, box-shadow linear .2s;
-  @include transition($transition);
+    @include box-shadow(inset 0 1px 1px rgba(0,0,0,.075));
+    $transition: border linear .2s, box-shadow linear .2s;
+    @include transition($transition);
 }
 input:focus,
 textarea:focus {
-  border-color: rgba(82,168,236,.8);
-  $shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(82,168,236,.6);
-  @include box-shadow($shadow);
-  outline: 0;
-  outline: thin dotted \9; /* IE6-9 */
+    border-color: rgba(82,168,236,.8);
+    $shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(82,168,236,.6);
+    @include box-shadow($shadow);
+    outline: 0;
+    outline: thin dotted \9; /* IE6-9 */
 }
 input[type="file"]:focus,
 input[type="radio"]:focus,
 input[type="checkbox"]:focus,
 select:focus {
-  @include box-shadow(none); // override for file inputs
-  @include tab-focus();
+    @include box-shadow(none); // override for file inputs
+    @include tab-focus();
 }
 
 
@@ -298,7 +298,7 @@ select:focus {
 // INPUT SIZES
 // -----------
 input,textarea,select {
-  width: 100%;
+    width: 100%;
 }
 
 // General classes for quick sizes
@@ -320,9 +320,9 @@ textarea[disabled],
 input[readonly],
 select[readonly],
 textarea[readonly] {
-  background-color: $inputDisabledBackground;
-  border-color: #ddd;
-  cursor: not-allowed;
+    background-color: $inputDisabledBackground;
+    border-color: #ddd;
+    cursor: not-allowed;
 }
 
 
@@ -337,17 +337,21 @@ input:focus:required:invalid,
 textarea:focus:required:invalid,
 select:focus:required:invalid,
 .field .error {
-  color: #b94a48;
-  border-color: #ee5f5b;
-  &:focus {
-    border-color: darken(#ee5f5b, 10%);
-    @include box-shadow(0 0 6px lighten(#ee5f5b, 20%));
-  }
+    color: #b94a48;
+    border-color: #ee5f5b;
+    &:focus {
+        border-color: darken(#ee5f5b, 10%);
+        @include box-shadow(0 0 6px lighten(#ee5f5b, 20%));
+    }
 }
 
 .sd-validate {
-    label span {
-        border-bottom: 1px dotted red;
+    &:not(.field) label:after {
+        color: #E51C23 ;
+        content: '*';
+        vertical-align: top;
+        font-size: 12px;
+        padding-left: 3px;
     }
     .sd-required {
         font-size: 11px;
@@ -362,18 +366,13 @@ select:focus:required:invalid,
         padding-left: 5px;
         color: $red;
     }
-    &.sd-valid {
-        label span {
-            border-bottom: 1px dotted grey;
-        }
-    }
     &.sd-invalid {
         label span {
             color: red;
         }
         input, textarea, .text-editor, .line-input,
         input:focus, textarea:focus, .text-editor:focus,
-        input:hover, textarea:hover, text-editor:hover {
+            input:hover, textarea:hover, text-editor:hover {
             border-bottom: 1px solid red !important;
             border-bottom-color: red !important;
             @include box-shadow(none !important);
@@ -403,21 +402,21 @@ select:focus:required:invalid,
 // ------------
 
 .form-actions {
-  padding: ($baseLineHeight - 1) 20px $baseLineHeight;
-  margin-top: $baseLineHeight;
-  margin-bottom: $baseLineHeight;
-  background-color: $grayLighter;
-  border-top: 1px solid #ddd;
-  @include clearfix(); // Adding clearfix to allow for .pull-right button containers
+    padding: ($baseLineHeight - 1) 20px $baseLineHeight;
+    margin-top: $baseLineHeight;
+    margin-bottom: $baseLineHeight;
+    background-color: $grayLighter;
+    border-top: 1px solid #ddd;
+    @include clearfix(); // Adding clearfix to allow for .pull-right button containers
 }
 
 // For text that needs to appear as an input but should not be an input
 .uneditable-input {
-  display: block;
-  background-color: $inputBackground;
-  border-color: #eee;
-  @include box-shadow(inset 0 1px 2px rgba(0,0,0,.025));
-  cursor: not-allowed;
+    display: block;
+    background-color: $inputBackground;
+    border-color: #eee;
+    @include box-shadow(inset 0 1px 2px rgba(0,0,0,.025));
+    cursor: not-allowed;
 }
 
 // Placeholder text gets special styles; can't be bundled together though for some reason
@@ -430,84 +429,84 @@ select:focus:required:invalid,
 // Allow us to put symbols and text within the input field for a cleaner look
 .input-prepend,
 .input-append {
-  margin-bottom: 5px;
-  input,
-  select,
-  .uneditable-input {
-    *margin-left: 0;
-    @include border-radius(0 3px 3px 0);
-    &:focus {
-      position: relative;
-      z-index: 2;
+    margin-bottom: 5px;
+    input,
+    select,
+    .uneditable-input {
+        *margin-left: 0;
+        @include border-radius(0 3px 3px 0);
+        &:focus {
+            position: relative;
+            z-index: 2;
+        }
     }
-  }
-  .uneditable-input {
-    border-left-color: #ccc;
-  }
-  .add-on {
-    display: inline-block;
-    width: auto;
-    min-width: 16px;
-    height: $baseLineHeight;
-    padding: 4px 5px;
-    @include text-normal();
-    line-height: $baseLineHeight;
-    text-align: center;
-    text-shadow: 0 1px 0 $white;
-    vertical-align: middle;
-    background-color: $grayLighter;
-    border: 1px solid #ccc;
-  }
-  .add-on {
-    @include border-radius(3px 0 0 3px);
-    position: relative;
-    z-index: 5;
-  }
-  .active {
-    background-color: lighten($green, 30);
-    border-color: $green;
-  }
+    .uneditable-input {
+        border-left-color: #ccc;
+    }
+    .add-on {
+        display: inline-block;
+        width: auto;
+        min-width: 16px;
+        height: $baseLineHeight;
+        padding: 4px 5px;
+        @include text-normal();
+        line-height: $baseLineHeight;
+        text-align: center;
+        text-shadow: 0 1px 0 $white;
+        vertical-align: middle;
+        background-color: $grayLighter;
+        border: 1px solid #ccc;
+    }
+    .add-on {
+        @include border-radius(3px 0 0 3px);
+        position: relative;
+        z-index: 5;
+    }
+    .active {
+        background-color: lighten($green, 30);
+        border-color: $green;
+    }
 }
 .input-prepend {
-  .add-on,
-  .btn {
-    margin-right: -1px;
-  }
+    .add-on,
+    .btn {
+        margin-right: -1px;
+    }
 }
 .input-append {
-  input,
-  select
-  .uneditable-input {
-    @include border-radius(3px 0 0 3px);
-      margin-bottom:0;
-  }
-  .uneditable-input {
-    border-left-color: #eee;
-    border-right-color: #ccc;
-  }
-  .add-on {
-    padding-bottom: 3px !important;
-    margin-left: -4px;
-    @include border-radius(0 3px 3px 0);
-  }
+    input,
+    select
+    .uneditable-input {
+        @include border-radius(3px 0 0 3px);
+        margin-bottom:0;
+    }
+    .uneditable-input {
+        border-left-color: #eee;
+        border-right-color: #ccc;
+    }
+    .add-on {
+        padding-bottom: 3px !important;
+        margin-left: -4px;
+        @include border-radius(0 3px 3px 0);
+    }
 }
 // Remove all border-radius for inputs with both prepend and append
 .input-prepend.input-append {
-  input,
-  select,
-  .uneditable-input {
-    @include border-radius(0);
-  }
-  .add-on:first-child,
-  .btn:first-child {
-    margin-right: -1px;
-    @include border-radius(3px 0 0 3px);
-  }
-  .add-on:last-child,
-  .btn:last-child {
-    margin-left: -1px;
-    @include border-radius(0 3px 3px 0);
-  }
+    input,
+    select,
+    .uneditable-input {
+        @include border-radius(0);
+    }
+    .add-on:first-child,
+        .btn:first-child {
+        margin-right: -1px;
+        @include border-radius(3px 0 0 3px);
+    }
+    .add-on:last-child,
+        .btn:last-child {
+        margin-left: -1px;
+        @include border-radius(0 3px 3px 0);
+    }
 }
 
 
@@ -520,43 +519,43 @@ select:focus:required:invalid,
 
 .form-inline,
 .form-horizontal {
-  input,
-  textarea,
-  select,
-  .help-inline,
-  .uneditable-input,
-  .input-prepend,
-  .input-append {
-    display: inline-block;
-    margin-bottom: 0;
-  }
-  // Re-hide hidden elements due to specifity
-  .hide {
-    display: none;
-  }
+    input,
+    textarea,
+    select,
+    .help-inline,
+    .uneditable-input,
+    .input-prepend,
+    .input-append {
+        display: inline-block;
+        margin-bottom: 0;
+    }
+    // Re-hide hidden elements due to specifity
+    .hide {
+        display: none;
+    }
 }
 
 .form-inline label {
-  display: inline-block;
+    display: inline-block;
 }
 // Remove margin for input-prepend/-append
 .form-inline .input-append,
 .form-inline .input-prepend {
-  margin-bottom: 0;
+    margin-bottom: 0;
 }
 // Inline checkbox/radio labels (remove padding on left)
 .form-inline .radio,
 .form-inline .checkbox {
-  padding-left: 0;
-  margin-bottom: 0;
-  vertical-align: middle;
+    padding-left: 0;
+    margin-bottom: 0;
+    vertical-align: middle;
 }
 // Remove float and margin, set to inline-block
 .form-inline .radio input[type="radio"],
 .form-inline .checkbox input[type="checkbox"] {
-  float: left;
-  margin-left: 0;
-  margin-right: 3px;
+    float: left;
+    margin-left: 0;
+    margin-right: 3px;
 }
 
 
@@ -567,25 +566,25 @@ input[type="url"],
 input[type="password"],
 input[type="email"],
 textarea, select {
-  @include box-sizing(border-box);
-  line-height:15px;
-  display:inline-block;
-  font-size:13px;
-  color:#000;
-  vertical-align:middle;
-  margin:0px;
-  @include border-radius(2px !important);
-  border: 1px solid  #d0d0d0 !important;
-  padding: 6px;
-  outline:none !important;
-  @include box-shadow(inset 0 0 0 #000 !important);
-  @include box-shadow(none !important);
-  background: #fff;
-  &:focus {
-    @include box-shadow(0px 0px 5px 0px #d0d0d0 !important);
-    border-color: #b8b8b8 !important;
+    @include box-sizing(border-box);
+    line-height:15px;
+    display:inline-block;
+    font-size:13px;
+    color:#000;
+    vertical-align:middle;
+    margin:0px;
+    @include border-radius(2px !important);
+    border: 1px solid  #d0d0d0 !important;
+    padding: 6px;
     outline:none !important;
-  }
+    @include box-shadow(inset 0 0 0 #000 !important);
+    @include box-shadow(none !important);
+    background: #fff;
+    &:focus {
+        @include box-shadow(0px 0px 5px 0px #d0d0d0 !important);
+        border-color: #b8b8b8 !important;
+        outline:none !important;
+    }
 }
 
 input[type="text"],
@@ -595,28 +594,28 @@ input[type="url"],
 input[type="password"],
 input[type="email"],
 select{
-  height: 27px;
+    height: 27px;
 }
 
 select {
-  padding: 4px;
+    padding: 4px;
 }
 
 .inline-input {
-  border: 0;
-  margin: 0 !important;
-  vertical-align: baseline;
-  @include box-shadow(none);
-  &:focus {
-    @include box-shadow(none !important);
-    @include box-shadow(inset none !important);
-  }
+    border: 0;
+    margin: 0 !important;
+    vertical-align: baseline;
+    @include box-shadow(none);
+    &:focus {
+        @include box-shadow(none !important);
+        @include box-shadow(inset none !important);
+    }
 }
 
 .large-text-input {
-  height: 37px !important;
-  font-size: 16px !important;
-  line-height: 25px !important;
+    height: 37px !important;
+    font-size: 16px !important;
+    line-height: 25px !important;
 }
 
 
@@ -635,12 +634,12 @@ form, ng-form {
             }
         }
         label {
-              font-size: 11px;
-              @include text-semibold();
-              color: $grayLight;
-              text-transform: uppercase;
-              height: 18px;
-              &.inline-label {
+            font-size: 11px;
+            @include text-semibold();
+            color: $grayLight;
+            text-transform: uppercase;
+            height: 18px;
+            &.inline-label {
                 color: #333;
                 text-transform: none;
                 font-size: 13px;
@@ -648,14 +647,14 @@ form, ng-form {
                 display: inline-block;
                 margin-right: 20px;
                 font-weight: 400;
-              }
+            }
         }
         .multiple {
             display: flex;
             .field, .flex-field {
                 flex: 1 1 auto;
                 &:not(.btn) {
-                  padding-right: 20px;
+                    padding-right: 20px;
                 }
                 &:last-child:not(.btn) {
                     padding-right: 0;
@@ -695,137 +694,137 @@ form, ng-form {
 
 form.flat, .form-flat {
 
-  .title {
-      padding: 0 10px 10px 0;
-      color: $sd-text;
-      font-size: 16px;
-      line-height: 22px;
-  }
-
-  .required-info {
-    display: none;
-    font-size: 11px;
-    color: #999;
-    float: right;
-  }
-
-  fieldset, .fieldset {
-    margin-bottom: 20px;
-    position: relative;
-
-    legend, .legend {
-      padding: 0;
-      color: $sd-text;
-      font-size: 12px;
-      text-transform: uppercase;
-      @include text-semibold();
-      padding: 10px 0;
-      margin-top: 20px;
-    }
-
-    .item {
-      width: 100%;
-      font-size: 13px;
-      color: $sd-text;
-      position: relative;
-      @include box-sizing(border-box);
-      height: auto;
-      line-height: 24px;
-      padding: 10px 2px;
-
-      .required-asteriks {
-        font-size: 12px;
-        color: #999;
-        position: absolute;
-        right: 10px;
-        top: 8px;
-      }
-      label {
+    .title {
+        padding: 0 10px 10px 0;
         color: $sd-text;
-        min-width: 100px;
-        margin-right: 10px;
-        display: inline-block;
-      }
-      a {
-        color: $sd-blue-text;
-      }
-      .info-value {
-        display: inline-block;
-        vertical-align: middle;
-        .sdselect-btn {
-          float: left;
-          color: $sd-text;
-          width: auto;
-          .caret {
-            margin-left: 5px;
-          }
-        }
-      }
-      &.password {
-        .info-value {
-        -webkit-text-security: disc;
-          .info-editable {
-            -webkit-text-security: disc;
-          }
-        }
-        .change-btn {
-          &:hover {
-        cursor: pointer;
-          }
-        }
-      }
-      p.info-editable {
-        margin: 0;
-      }
-      .info-editable {
-        min-width: 275px;
-        border-color: rgba(0,0,0,0.10) !important;
-        border-width: 0 0 1px 0 !important;
-        border-radius: 0px !important;
-        font-size: 13px;
-        text-overflow: ellipsis;
-        margin-left: -6px;
-        background-color: transparent;
-        color: #000 !important;
-        box-sizing: border-box;
-        margin-top: 0;
-        transition: 0.3s;
-        &:hover {
-          border-color: rgba(0,0,0,0.25) !important;
-        }
-        &:focus {
-          @include box-shadow(0 1px 0 0 rgba(94,169,200,1) !important);
-          border-color: rgba(94,169,200,1) !important;
-        }
-      }
-      input.info-editable {
-        min-width: auto;
-      }
-      textarea.info-editable {
-        height: 150px;
-        width: 100%;
-        max-width: 100%;
-        line-height: 18px;
-        margin-left: 0;
-      }
-      select.info-editable {
-        padding: 0 !important;
-        border: 1px solid #d0d0d0 !important;
-        &:focus {
-          text-decoration: none !important;
-        }
-      }
+        font-size: 16px;
+        line-height: 22px;
     }
 
-    &.label-light {
-      label {
-        color: $grayLight;
-        text-transform: uppercase;
+    .required-info {
+        display: none;
         font-size: 11px;
-        @include text-semibold();
-      }
+        color: #999;
+        float: right;
     }
-  }
+
+    fieldset, .fieldset {
+        margin-bottom: 20px;
+        position: relative;
+
+        legend, .legend {
+            padding: 0;
+            color: $sd-text;
+            font-size: 12px;
+            text-transform: uppercase;
+            @include text-semibold();
+            padding: 10px 0;
+            margin-top: 20px;
+        }
+
+        .item {
+            width: 100%;
+            font-size: 13px;
+            color: $sd-text;
+            position: relative;
+            @include box-sizing(border-box);
+            height: auto;
+            line-height: 24px;
+            padding: 10px 2px;
+
+            .required-asteriks {
+                font-size: 12px;
+                color: #999;
+                position: absolute;
+                right: 10px;
+                top: 8px;
+            }
+            label {
+                color: $sd-text;
+                min-width: 100px;
+                margin-right: 10px;
+                display: inline-block;
+            }
+            a {
+                color: $sd-blue-text;
+            }
+            .info-value {
+                display: inline-block;
+                vertical-align: middle;
+                .sdselect-btn {
+                    float: left;
+                    color: $sd-text;
+                    width: auto;
+                    .caret {
+                        margin-left: 5px;
+                    }
+                }
+            }
+            &.password {
+                .info-value {
+                    -webkit-text-security: disc;
+                    .info-editable {
+                        -webkit-text-security: disc;
+                    }
+                }
+                .change-btn {
+                    &:hover {
+                        cursor: pointer;
+                    }
+                }
+            }
+            p.info-editable {
+                margin: 0;
+            }
+            .info-editable {
+                min-width: 275px;
+                border-color: rgba(0,0,0,0.10) !important;
+                border-width: 0 0 1px 0 !important;
+                border-radius: 0px !important;
+                font-size: 13px;
+                text-overflow: ellipsis;
+                margin-left: -6px;
+                background-color: transparent;
+                color: #000 !important;
+                box-sizing: border-box;
+                margin-top: 0;
+                transition: 0.3s;
+                &:hover {
+                    border-color: rgba(0,0,0,0.25) !important;
+                }
+                &:focus {
+                    @include box-shadow(0 1px 0 0 rgba(94,169,200,1) !important);
+                    border-color: rgba(94,169,200,1) !important;
+                }
+            }
+            input.info-editable {
+                min-width: auto;
+            }
+            textarea.info-editable {
+                height: 150px;
+                width: 100%;
+                max-width: 100%;
+                line-height: 18px;
+                margin-left: 0;
+            }
+            select.info-editable {
+                padding: 0 !important;
+                border: 1px solid #d0d0d0 !important;
+                &:focus {
+                    text-decoration: none !important;
+                }
+            }
+        }
+
+        &.label-light {
+            label {
+                color: $grayLight;
+                text-transform: uppercase;
+                font-size: 11px;
+                @include text-semibold();
+            }
+        }
+    }
 }
 
 // sdSlider
@@ -937,8 +936,8 @@ form.flat, .form-flat {
         }
         &.closed {
             i {
-              @include rotate(-90deg);
-              margin: auto;
+                @include rotate(-90deg);
+                margin: auto;
             }
         }
     }
@@ -992,124 +991,124 @@ input, textarea, .dropdown__toggle {
 
         /* alt is line input for dark background */
         &.line-input--alt {
-          color: $white;
-          border-bottom: 1px solid rgba(255,255,255,0.2)!important;
-          &:hover {
-            border-color: rgba(255,255,255,0.5) !important;
-          }
-          &:focus {
-            box-shadow: 0 1px 0 0 rgba(255,255,255,0.7) !important;
-            border-color: rgba(255,255,255,0.7) !important;
-            background-color: transparent !important;
-          }
+            color: $white;
+            border-bottom: 1px solid rgba(255,255,255,0.2)!important;
+            &:hover {
+                border-color: rgba(255,255,255,0.5) !important;
+            }
+            &:focus {
+                box-shadow: 0 1px 0 0 rgba(255,255,255,0.7) !important;
+                border-color: rgba(255,255,255,0.7) !important;
+                background-color: transparent !important;
+            }
         }
     }
 }
 textarea {
     &.line-input {
-      padding-top: 3px;
+        padding-top: 3px;
     }
 }
 
 .dropdown__toggle {
-  &.line-input {
-      position: relative;
-      padding: 0 15px 0 0 !important;
-      line-height: 24px;
-      text-align: left;
-  }
+    &.line-input {
+        position: relative;
+        padding: 0 15px 0 0 !important;
+        line-height: 24px;
+        text-align: left;
+    }
 }
 
 .line-select {
-  position: relative;
-  select {
     position: relative;
-    z-index: 2;
-    padding: 0 15px 0 0 !important;
-    line-height: 24px;
-    text-align: left;
-    -webkit-appearance: none;
-       -moz-appearance: none;
-            appearance: none;
-    width: 100%;
-    border-radius: 0 !important;
-    border: 0 !important;
-    border-bottom: 1px solid rgba(0,0,0,0.15)!important;
-    background-color: transparent;
-    padding: 0;
-    height:24px;
-    &:hover {
-        border-color: rgba(0,0,0,0.3) !important;
-        background-color: transparent !important;
+    select {
+        position: relative;
+        z-index: 2;
+        padding: 0 15px 0 0 !important;
+        line-height: 24px;
+        text-align: left;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        width: 100%;
+        border-radius: 0 !important;
+        border: 0 !important;
+        border-bottom: 1px solid rgba(0,0,0,0.15)!important;
+        background-color: transparent;
+        padding: 0;
+        height:24px;
+        &:hover {
+            border-color: rgba(0,0,0,0.3) !important;
+            background-color: transparent !important;
+        }
+        &:focus {
+            box-shadow: 0 1px 0 0 $sd-blue !important;
+            border-color: $sd-blue !important;
+            background-color: transparent !important;
+        }
     }
-    &:focus {
-        box-shadow: 0 1px 0 0 $sd-blue !important;
-        border-color: $sd-blue !important;
-        background-color: transparent !important;
-    }
-  }
-  &::after {
-    position: absolute;
-    top: 12px;
-    right: 4px;
-    display: inline-block;
-    width: 0;
-    height: 0;
-    vertical-align: middle;
-    margin-top: -2px;
-    border-left: 4px solid transparent;
-    border-right: 4px solid transparent;
-    border-top: 4px solid #000;
-    opacity: 0.3;
-    filter: alpha(opacity=30);
-    content: "";
-    z-index: 0;
-  }
-  &:hover {
     &::after {
-      opacity: 0.6;
-      filter: alpha(opacity=60);
+        position: absolute;
+        top: 12px;
+        right: 4px;
+        display: inline-block;
+        width: 0;
+        height: 0;
+        vertical-align: middle;
+        margin-top: -2px;
+        border-left: 4px solid transparent;
+        border-right: 4px solid transparent;
+        border-top: 4px solid #000;
+        opacity: 0.3;
+        filter: alpha(opacity=30);
+        content: "";
+        z-index: 0;
     }
-  }
+    &:hover {
+        &::after {
+            opacity: 0.6;
+            filter: alpha(opacity=60);
+        }
+    }
 }
 input {
-  &.line-input--inline-mini {
-    text-align: center;
-    width: 40px;
+    &.line-input--inline-mini {
+        text-align: center;
+        width: 40px;
 
-  }
+    }
 }
 .helper-text {
-  display: inline-block;
-  color: #747474;
+    display: inline-block;
+    color: #747474;
 }
 .helper-text--padded {
-  padding: 0 10px;
+    padding: 0 10px;
 }
 
 .label--inline {
-  text-transform: none;
-  color: #333;
-  display: inline-block;
-  font-size: 13px;
-  font-weight: 400;
-  margin-bottom: 0;
-  vertical-align: top;
+    text-transform: none;
+    color: #333;
+    display: inline-block;
+    font-size: 13px;
+    font-weight: 400;
+    margin-bottom: 0;
+    vertical-align: top;
 }
 
 .input-group {
-  padding-top: 6px;
+    padding-top: 6px;
 }
 
 
 // line input for contenteditable div
 .contenteditable-input {
-  min-height: 23px;
-  padding: 3px 0;
-  background-color: transparent;
-  border-bottom: 1px solid rgba(0,0,0,0.15);
-  line-height: 16px;
-  &:hover {
+    min-height: 23px;
+    padding: 3px 0;
+    background-color: transparent;
+    border-bottom: 1px solid rgba(0,0,0,0.15);
+    line-height: 16px;
+    &:hover {
         border-color: rgba(0,0,0,0.3);
         background-color: transparent;
     }
@@ -1139,9 +1138,9 @@ input {
 }
 
 .label-asterisk {
-  &:after {
-    content: ' *';
-  }
+    &:after {
+        content: ' *';
+    }
 }
 
 .char-count {
