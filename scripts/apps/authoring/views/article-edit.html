@@ -199,7 +199,8 @@
     <div class="text-editor" sd-html-preview="item.body_html" ng-if="!_editable"></div>
 </div>
 
-<div class="field body" ng-if="!isMediaType && schema.body_html && (features.onlyEditor3 || editor.body_html.editor3)" order="{{editor.body_html.order}}" sd-validation-error="error.body_html" data-required="schema.body_html.required" sd-width="{{editor.body_html.sdWidth || 'full'}}">
+<input type="text" id="editor3Tansa" value="" tansa-proofing="true" />
+<div class="field body" ng-if="!isMediaType && schema.body_html && (features.onlyEditor3 || editor.body_html.editor3)" order="{{editor.body_html.order}}" sd-validation-error="error.body_html" data-required="schema.body_html.required" sd-width="{{editor.body_html.sdWidth || 'full'}}" tansa-proofing="false">
   <label translate>Body</label>
     <span sd-character-count data-item="item.body_html" data-html="true"></span>
     <span sd-word-count data-item="item.body_html" data-html="true"></span>
