@@ -14,7 +14,7 @@ function MetadataCtrl(
     });
 
     $scope.change_profile = config.item_profile && config.item_profile.change_profile === 1 &&
-                            $scope.origItem.type === 'text';
+                            _.get($scope, 'origItem.type') === 'text';
 
     metadata.initialize().then(() => {
         $scope.metadata = metadata.values;
