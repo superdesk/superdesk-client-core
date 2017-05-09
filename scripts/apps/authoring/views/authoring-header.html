@@ -243,7 +243,7 @@
         <div class="authoring-header__item"
              sd-validation-error="error.company_codes"
              data-required="schema.company_codes.required"
-             ng-if="displayCompanyCodes"
+             ng-if="displayCompanyCodes && schema.company_codes"
              sd-width="{{editor.company_codes.sdWidth}}"
              order="{{editor.company_codes.order}}">
           <label class="authoring-header__item-label" translate>COMPANY</label>
