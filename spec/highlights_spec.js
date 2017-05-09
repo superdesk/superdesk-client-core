@@ -127,6 +127,7 @@ describe('highlights', () => {
             .actions()
             .sendKeys(protractor.Key.ENTER)
             .perform();
+            browser.sleep(1000);
 
             // expect 'Highlight three' is marked
             monitoring.checkMarkedForHighlight('Highlight three', 2, 0);
@@ -139,6 +140,7 @@ describe('highlights', () => {
             .actions()
             .sendKeys(protractor.Key.ENTER)
             .perform();
+            browser.sleep(1000);
 
             // expect 'Highlight two' is marked
             monitoring.checkMarkedForMultiHighlight('Highlight four', 2, 0);
