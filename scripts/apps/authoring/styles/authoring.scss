@@ -1245,3 +1245,15 @@ feature-image {
         }
   }
 }
+
+// Styling for formatted preview popup
+// -------------------------------------------------------------
+.sd-line-input {
+    textarea {
+        &.sd-line-input__input--formatted-preview {
+            height: 40rem;
+            font-family: "Roboto Mono", Consolas, Courier, monospace;
+        }
+    }
+}
+
