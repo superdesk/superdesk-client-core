@@ -67,7 +67,7 @@
 
             
 
-            <div class="dropdown navbtn strict" ng-if="!state.opened" title="{{ :: 'Create' | translate }}" dropdown>
+            <div class="dropdown navbtn strict" ng-if="!state.opened && (type !== 'spike' && type !== 'highlights')" title="{{ :: 'Create' | translate }}" dropdown>
                 <button class="dropdown__toggle sd-create-btn" dropdown__toggle></button>
                 <ul class="dropdown__menu dropdown__menu--scrollable pull-right" sd-content-create></ul>
             </div>
