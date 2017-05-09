@@ -67,7 +67,7 @@
 
             
 
-            <div class="dropdown dropdown--align-right strict" ng-if="!state.opened" sd-tooltip="{{ :: 'Create new item' | translate }}" flow="left" dropdown>
+            <div class="dropdown dropdown--align-right strict" ng-if="!state.opened && (type !== 'spike' && type !== 'highlights')" sd-tooltip="{{ :: 'Create new item' | translate }}" flow="left" dropdown>
                 <button class="navbtn dropdown__toggle sd-create-btn" dropdown__toggle></button>
                 <ul class="dropdown__menu dropdown__menu--scrollable pull-right" sd-content-create></ul>
             </div>
