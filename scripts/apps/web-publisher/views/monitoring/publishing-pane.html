@@ -57,3 +57,5 @@
 <div ng-show="webPublisherMonitoring.activePublishPane == 'unpublish'" class="paneContent__footer paneContent__footer--transparent">
     <button class="btn btn--primary btn--full" ng-click="webPublisherMonitoring.unPublishArticle()">Unpublish</button>
 </div>
+
+<div ng-include="webPublisherMonitoring.TEMPLATES_DIR + '/monitoring/article-preview.html'" ng-if="webPublisherMonitoring.openArticlePreviewModal"></div>

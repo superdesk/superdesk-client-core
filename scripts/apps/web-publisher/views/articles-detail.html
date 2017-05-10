@@ -1,0 +1,24 @@
+<div ng-if="loading">
+    <div class="item-group__loading"></div>
+</div>
+
+<div ng-if="!loading && !list.items.length" class="alert alert-info alert-block">
+    <h4 translate>The list is empty</h4>
+    <p translate>Please update filter criteria to add articles to the list.</p>
+</div>
+
+<ul class="flatList"
+    infinite-scroll="loadMore()"
+    infinite-scroll-container="scrollContainer">
+    <li ng-repeat="article in list.items">
+        <div class="listElement listElement--noLeftBorder">
+            <div class="listElement__icon">
+                <i ng-if="!article.featureMedia && !article.content.featureMedia" class="icon-text"></i>
+                <i  ng-if="article.featureMedia || article.content.featureMedia" class="icon-photo"></i>
+            </div>
+            <div class="listElement__content">
+                {{ :: article.title}}
+            </div>
+        </div>
+    </li>
+</ul>

@@ -8,6 +8,10 @@
         text-align: center;
         line-height: 1em;
         vertical-align: middle;
+
+        &--textLeft {
+            text-align: left;
+        }
     }
 
     &__fullItem {
