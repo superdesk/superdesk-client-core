@@ -80,8 +80,8 @@
                         <div class="line-select">
                             <select
                                 ng-model="desk.edit.default_content_profile"
-                                ng-options="profile._id as profile.label for profile in profiles">
-                                <option value=""></option>
+                                ng-options="profile._id as profile.label for profile in profiles | orderBy: 'label'">
+				<option value=""></option>
                             </select>
                         </div>
                     </div>
