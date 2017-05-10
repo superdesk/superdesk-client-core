@@ -31,6 +31,7 @@
     "angular": "1.6.3",
     "angular-animate": "1.6.3",
     "angular-contenteditable": "0.0.2",
+    "angular-drag-and-drop-lists": "^2.1.0",
     "angular-dynamic-locale": "0.1.32",
     "angular-embed": "superdesk/angular-embed#b2b4a69",
     "angular-embedly": "Urigo/angular-embedly#0.0.8",

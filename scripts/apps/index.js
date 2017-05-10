@@ -60,4 +60,3 @@ export default angular.module('superdesk.apps', [
     'superdesk.apps.profiling',
     'superdesk.apps.internal-destinations'
 ].concat(withPublisher ? 'superdesk.apps.web_publisher' : []));
-
