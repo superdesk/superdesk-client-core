@@ -71,6 +71,7 @@
                         <div class="line-select">
                             <select ng-model="desk.edit.default_content_template"
                                     ng-options="template._id as template.template_name for template in templates">
+                                <option value=""></option>
                             </select>
                         </div>
                     </div>
@@ -80,6 +81,7 @@
                             <select
                                 ng-model="desk.edit.default_content_profile"
                                 ng-options="profile._id as profile.label for profile in profiles">
+                                <option value=""></option>
                             </select>
                         </div>
                     </div>

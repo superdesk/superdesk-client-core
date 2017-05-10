@@ -33,7 +33,9 @@ export function ContentProfilesController($scope, notify, content, modal, $q, co
      * @private
      */
     function reportError(resp) {
-        notify.error('Operation failed (check console for response).');
+        let message = _.get(resp, 'data._issues["validator exception"]') || '';
+
+        notify.error(`Operation failed ${message} (check console for response).`);
         console.error(resp);
         return $q.reject(resp);
     }
