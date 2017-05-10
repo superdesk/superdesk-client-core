@@ -25,7 +25,6 @@ describe('editor3.store', () => {
         expect(spellcheck.getDict).toHaveBeenCalled();
         expect(state.readOnly).toBe(false);
         expect(state.showToolbar).toBe(true);
-        expect(state.singleLine).toBe(false);
         expect(state.editorFormat).toBe('123');
     }));
 });
