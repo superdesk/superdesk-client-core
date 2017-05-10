@@ -19,8 +19,6 @@ export default function createEditorStore(ctrl) {
     spellcheck.setLanguage(ctrl.language);
 
     const dict = spellcheck.getDict();
-    const singleLine = !!(!ctrl.editorFormat || ctrl.readOnly);
-    const showToolbar = !singleLine;
     const content = getInitialContent(ctrl);
     const decorators = Editor3.getDecorator();
 
@@ -28,10 +26,10 @@ export default function createEditorStore(ctrl) {
         editorState: EditorState.createWithContent(content, decorators),
         searchTerm: {pattern: '', index: -1, caseSensitive: false},
         readOnly: ctrl.readOnly,
-        showToolbar: showToolbar,
-        singleLine: singleLine,
+        showToolbar: !ctrl.singleLine,
+        singleLine: ctrl.singleLine,
         activeCell: null,
-        editorFormat: ctrl.editorFormat,
+        editorFormat: ctrl.editorFormat || [],
         onChangeValue: onChange.bind(ctrl)
     }, applyMiddleware(thunk));
 
