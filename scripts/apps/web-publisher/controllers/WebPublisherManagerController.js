@@ -366,6 +366,21 @@ export function WebPublisherManagerController($scope, publisher, modal) {
 
         /**
          * @ngdoc method
+         * @name WebPublisherManagerController#saveManualList
+         * @description Clears and saves state of manual content list
+         */
+        saveManualList() {
+            publisher.saveManualList(
+                {content_list: {items: $scope.newList.updatedItems, updated_at: $scope.newList.updatedAt}},
+                $scope.newList.id).then((savedList) => {
+                    $scope.newList.updatedAt = savedList.updatedAt;
+                    $scope.newList.updatedItems = [];
+                    this.listChangeFlag = false;
+                });
+        }
+
+        /**
+         * @ngdoc method
          * @name WebPublisherManagerController#deleteList
          * @param {String} id - id of content list which is deleted
          * @description Deleting content list
@@ -410,7 +425,7 @@ export function WebPublisherManagerController($scope, publisher, modal) {
                 }
             });
 
-            this.changeTab(list.type === 'automatic' ? 'content-list-automatic' : '');
+            this.changeTab(list.type === 'automatic' ? 'content-list-automatic' : 'content-list-manual');
         }
 
         /**
@@ -438,13 +453,45 @@ export function WebPublisherManagerController($scope, publisher, modal) {
 
             /**
              * @ngdoc event
-             * @name WebPublisherManagerController#refreshArticles
+             * @name WebPublisherManagerController#refreshListArticles
              * @eventType broadcast on $scope
              * @param {Object} $scope.newList - list which will refresf articles
              * @description event is thrown when criteria is updated
              */
             publisher.manageList({content_list: {filters: updatedFilters}}, this.selectedList.id)
-                .then(() => $scope.$broadcast('refreshArticles', $scope.newList));
+                .then(() => $scope.$broadcast('refreshListArticles', $scope.newList));
+        }
+
+        /**
+         * @ngdoc method
+         * @name WebPublisherManagerController#filterArticles
+         * @description
+         */
+        filterArticles() {
+            let filters = _.pickBy($scope.newList.filters, _.identity);
+
+            filters.metadata = {};
+            this.metadataList.forEach((item) => {
+                if (item.metaName) {
+                    filters.metadata[item.metaName] = item.metaValue;
+                }
+            });
+
+            delete filters.route;
+            if (this.selectedRoutes.length > 0) {
+                filters.route = [];
+                this.selectedRoutes.forEach((item) => {
+                    filters.route.push(item.id);
+                });
+            }
+            /**
+             * @ngdoc event
+             * @name WebPublisherManagerController#refreshArticles
+             * @eventType broadcast on $scope
+             * @param {Object} this.selectedRoutes - list of routes
+             * @description event is thrown when filter criteria is updated
+             */
+            $scope.$broadcast('refreshArticles', filters);
         }
 
         /**

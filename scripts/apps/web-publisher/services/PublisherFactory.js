@@ -210,7 +210,21 @@ export function PublisherFactory(pubapi) {
 
         /**
          * @ngdoc method
+         * @name publisher#pinArticle
+         * @param {String} listId - id of content list
+         * @param {String} articleId - id of article
+         * @param {Object} article - article which is edited
+         * @returns {Promise}
+         * @description Pin article in list of articles
+         */
+        saveManualList(list, listId) {
+            return pubapi.patch('content/lists/' + listId + '/items', list);
+        }
+
+        /**
+         * @ngdoc method
          * @name publisher#queryTenantArticles
+         * @param {String} articleStatus - params passed to API (limit, status, route)
          * @returns {Promise}
          * @description List all articles for selected tenant
          */
@@ -226,7 +240,7 @@ export function PublisherFactory(pubapi) {
          * @description List all articles for monitoring view
          */
         queryMonitoringArticles(articleStatus) {
-            return pubapi.queryWithDetails('organization/articles', articleStatus);
+            return pubapi.queryWithDetails('packages', articleStatus);
         }
 
         publishArticle(article, articleId) {
