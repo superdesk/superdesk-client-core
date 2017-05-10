@@ -19,25 +19,25 @@ function Monitoring() {
     };
 
     this.showMonitoring = function() {
-        element(by.className('big-icon-view')).click();
+        element(by.className('big-icon--view')).click();
     };
 
     this.showSpiked = function() {
-        element(by.className('big-icon-spiked')).click();
+        element(by.className('big-icon--spike')).click();
     };
 
     /**
      * Open personal monitoring view
      */
     this.showPersonal = function() {
-        element(by.className('big-icon-personal')).click();
+        element(by.className('big-icon--personal')).click();
     };
 
     /**
      * Open global search view
      */
     this.showSearch = function() {
-        element(by.className('big-icon-global-search')).click();
+        element(by.className('big-icon--global-search')).click();
     };
 
     /**
@@ -528,7 +528,7 @@ function Monitoring() {
 
     this.openSendMenu = function() {
         browser.sleep(500);
-        element(by.className('svg-icon-sendto')).click();
+        element(by.className('big-icon--send-to')).click();
         browser.sleep(100);
     };
 

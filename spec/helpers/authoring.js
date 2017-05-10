@@ -662,7 +662,7 @@ function Authoring() {
     };
 
     this.openRelatedItem = function() {
-        element(by.css('button[id="related-item"]')).click();
+        element(by.css('a[id="related-item"]')).click();
         browser.sleep(1000);
     };
 

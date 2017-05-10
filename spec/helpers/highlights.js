@@ -169,7 +169,7 @@ function Highlights() {
     };
 
     this.createHighlightsPackage = function(highlight) {
-        element(by.className('big-icon-marked-star')).click();
+        element(by.className('big-icon--marked-star')).click();
         this.selectHighlight(element(by.id('highlightPackage')), highlight);
         element(by.id('create')).click();
     };
@@ -195,7 +195,7 @@ function Highlights() {
     this.multiMarkHighlight = function(name) {
         var elem = element(by.css('[class="multi-action-bar ng-scope"]'));
 
-        elem.element(by.className('big-icon-marked-star')).click();
+        elem.element(by.className('big-icon--marked-star')).click();
         browser.sleep(200);
         elem.all(by.repeater('h in highlights track by h._id')).all(by.css('[option="' + name + '"]')).click();
         browser.sleep(200);

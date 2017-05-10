@@ -319,7 +319,7 @@ angular.module('superdesk.apps.authoring.macros', [
     .config(['authoringWidgetsProvider', function(authoringWidgetsProvider) {
         authoringWidgetsProvider
             .widget('macros', {
-                icon: 'macros',
+                icon: 'macro',
                 label: gettext('Macros'),
                 template: 'scripts/apps/authoring/macros/views/macros-widget.html',
                 order: 6,

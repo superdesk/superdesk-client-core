@@ -2,7 +2,7 @@ angular.module('superdesk.apps.authoring.versioning', [])
     .config(['authoringWidgetsProvider', function(authoringWidgetsProvider) {
         authoringWidgetsProvider
             .widget('versioning', {
-                icon: 'revision',
+                icon: 'history',
                 label: gettext('Versions') + '/' + gettext('History'),
                 removeHeader: true,
                 template: 'scripts/apps/authoring/versioning/views/versioning.html',

@@ -11,7 +11,7 @@ describe('workspace', () => {
 
     it('can switch views by keyboard', () => {
         // wait for icons
-        browser.wait(() => element(by.className('big-icon-view')).isDisplayed(), 2000);
+        browser.wait(() => element(by.className('big-icon--view')).isDisplayed(), 2000);
 
         // Can switch to monitoring view by pressing alt + m
         altKey('m');
