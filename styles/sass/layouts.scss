@@ -946,6 +946,11 @@ $main-item-color-inactive: #aaa;
         padding: 0;
         list-style: none;
 
+        &--scrollable {
+            height: 35vh;
+            overflow-y: scroll;
+        }
+
         li, .card-box__content-list-item {
             padding: 16px;
             border-bottom: 1px solid #ebebeb;

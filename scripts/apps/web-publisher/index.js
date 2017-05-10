@@ -1,6 +1,7 @@
 import 'ng-infinite-scroll';
 import './styles/web-publisher.scss';
 
+import 'angular-drag-and-drop-lists/angular-drag-and-drop-lists';
 import {WebPublisherManagerController} from './controllers';
 import {WebPublisherMonitoringController} from './controllers';
 import * as services from './services';
@@ -15,6 +16,7 @@ import * as directive from './directives';
  */
 export default angular.module('superdesk.apps.web_publisher', [
     'superdesk.core.activity',
+    'dndLists',
     'infinite-scroll'
 ])
 
@@ -23,6 +25,7 @@ export default angular.module('superdesk.apps.web_publisher', [
 .directive('sdListArticles', directive.ListArticlesDirective)
 .directive('sdCardInputFocus', directive.CardInputFocusDirective)
 .directive('sdGroupArticle', directive.GroupArticleDirective)
+.directive('sdArticles', directive.ArticlesDirective)
 .factory('publisher', services.PublisherFactory)
 .factory('pubapi', services.PubAPIFactory)
 

@@ -1,18 +1,4 @@
-<div class="item">
-    <label>Route</label>
-    <!-- it should open to right side and be limited to one choice only. One route per tenant/website is allowed -->
-    <div sd-meta-terms
-            class="data"
-            data-item="monitoringContoller"
-            data-field="selectedRoute"
-            data-list="routes"
-            data-unique="id"
-            data-header="true"
-            data-reload-list="true">
-    </div>
-</div>
-<div class="item">
-    <!-- !achtung! route has to be set to publish to facebook -->
-    <label>Publish to Facebook</label>
-    <span class="" sd-switch ng-model="tenantFacebook"></span>
-</div>
+<select class="dropdown__toggle line-input" ng-model="monitoringContoller.selectedRoute"
+    ng-options="route.id as route.name for route in monitoringContoller.routes">
+    <option value=""></option>
+</select>

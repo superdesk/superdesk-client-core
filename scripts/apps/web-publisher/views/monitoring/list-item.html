@@ -1,22 +1,22 @@
 <div class="media-box media-text publisher-mediaBox">
     <span class="state-border"></span>
     <div class="list-field type-icon">
-        <i ng-if="!i.featureMedia" class="filetype-icon-text"></i>
-        <i ng-if="i.featureMedia" class="filetype-icon-picture"></i>
+        <i ng-if="i.type == 'text'" class="filetype-icon-text"></i>
+        <i ng-if="i.type != 'text'" class="filetype-icon-picture"></i>
     </div>
     <div class="list-field urgency">
-        <span class="priority-label priority-label--{{ i.metadata.priority }}" title="{{i.metadata.priority}}">{{i.metadata.priority}}</span>
-        <span class="urgency-label urgency-label--{{ i.metadata.urgency }}" title="{{i.metadata.urgency}}">{{i.metadata.urgency}}</span>
+        <span class="priority-label priority-label--{{ i.priority }}" title="{{i.priority}}">{{i.priority}}</span>
+        <span class="urgency-label urgency-label--{{ i.urgency }}" title="{{i.urgency}}">{{i.urgency}}</span>
     </div>
     <div class="item-info">
         <div class="line">
-            <span class="keyword">{{i.slug}}</span>
+            <span class="keyword">{{i.slugline}}</span>
             <span class="item-heading">{{i.title}}</span>
-            <time>{{i.publishedAt | reldate}}</time>
+            <time>{{i.createdAt || i.updatedAt | reldate}}</time>
         </div>
         <div class="line">
-            <div class="state-label state-corrected">Update 2</div>
-            <span class="provider">{{i.metadata.byline}}</span>
+            <div class="state-label state-corrected">Update {{i.version}}</div>
+            <span class="provider">{{i.byline}}</span>
             <span class="container">{{i.route.name}}</span>
             <!-- only published articles -->
             <div class="state-label state-published flex-pull-right">Website 1</div>
@@ -50,4 +50,3 @@
         </div>
     </div>
 </div>
-
