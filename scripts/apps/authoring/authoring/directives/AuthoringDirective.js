@@ -545,6 +545,8 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                     window.tansa.settings.profileId = 2;
                     break;
                 }
+
+                isCheckedByTansa = true;
                 if (window.RunTansaProofing) {
                     window.RunTansaProofing();
                 } else {
@@ -799,8 +801,6 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 }
 
                 $scope.dirty = true;
-
-                isCheckedByTansa = false;
 
                 if (tryPublish) {
                     validate($scope.origItem, $scope.item);
