@@ -32,6 +32,7 @@ import _ from 'lodash';
  * @requires metadata
  * @requires suggest
  * @requires config
+ * @requires editorResolver
  *
  * @description
  *   This directive is responsible for generating superdesk content authoring form.
@@ -63,12 +64,13 @@ AuthoringDirective.$inject = [
     '$interpolate',
     'metadata',
     'suggest',
-    'config'
+    'config',
+    'editorResolver'
 ];
 export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace, notify,
     gettext, desks, authoring, api, session, lock, privileges, content, $location,
     referrer, macros, $timeout, $q, modal, archiveService, confirm, reloadService,
-    $rootScope, $interpolate, metadata, suggest, config) {
+    $rootScope, $interpolate, metadata, suggest, config, editorResolver) {
     return {
         link: function($scope, elem, attrs) {
             var _closing;
@@ -78,6 +80,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             var isCheckedByTansa = false;
 
             const UNIQUE_NAME_ERROR = gettext('Error: Unique Name is not unique.');
+            const editor = editorResolver.get();
 
             $scope.privileges = privileges.privileges;
             $scope.dirty = false;
@@ -536,6 +539,9 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
 
             $scope.runTansa = function() {
                 onlyTansaProof = true;
+                if (typeof editor.getText === 'function') {
+                    $('#editor3Tansa').val(editor.getText());
+                }
 
                 switch ($scope.item.language) {
                 case 'nb-NO':
@@ -556,10 +562,13 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             };
 
             function afterTansa(e, isCancelled) {
+                if (typeof editor.applyCorrections === 'function') {
+                    editor.applyCorrections($('#editor3Tansa').val());
+                }
+
                 if (onlyTansaProof) {
                     return;
                 }
-
                 // continueAfterPublish is passed only from $scope.publishAndContinue as bool,
                 // in other cases this is object (don't use parameter in those cases)
                 let publishFn = continueAfterPublish === true ? $scope.publishAndContinue : $scope.publish;
