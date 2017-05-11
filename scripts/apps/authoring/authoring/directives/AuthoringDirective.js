@@ -32,6 +32,7 @@ import _ from 'lodash';
  * @requires metadata
  * @requires suggest
  * @requires config
+ * @requires editorResolver
  *
  * @description
  *   This directive is responsible for generating superdesk content authoring form.
@@ -63,12 +64,13 @@ AuthoringDirective.$inject = [
     '$interpolate',
     'metadata',
     'suggest',
-    'config'
+    'config',
+    'editorResolver'
 ];
 export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace, notify,
     gettext, desks, authoring, api, session, lock, privileges, content, $location,
     referrer, macros, $timeout, $q, modal, archiveService, confirm, reloadService,
-    $rootScope, $interpolate, metadata, suggest, config) {
+    $rootScope, $interpolate, metadata, suggest, config, editorResolver) {
     return {
         link: function($scope, elem, attrs) {
             var _closing;
@@ -535,7 +537,12 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             var deregisterTansa = $rootScope.$on('tansa:end', afterTansa);
 
             $scope.runTansa = function() {
+                const editor = editorResolver.get();
+
                 onlyTansaProof = true;
+                if (editor && editor.version() === '3') {
+                    $('#editor3Tansa').html(editor.getHTML());
+                }
 
                 switch ($scope.item.language) {
                 case 'nb-NO':
@@ -556,10 +563,15 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             };
 
             function afterTansa(e, isCancelled) {
+                const editor = editorResolver.get();
+
+                if (editor && editor.version() === '3') {
+                    editor.setHTML($('#editor3Tansa').html());
+                }
+
                 if (onlyTansaProof) {
                     return;
                 }
-
                 // continueAfterPublish is passed only from $scope.publishAndContinue as bool,
                 // in other cases this is object (don't use parameter in those cases)
                 let publishFn = continueAfterPublish === true ? $scope.publishAndContinue : $scope.publish;

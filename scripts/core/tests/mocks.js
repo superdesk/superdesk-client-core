@@ -18,6 +18,7 @@ angular.module('superdesk.mocks', [])
             dateformat: 'DD/MM/YYYY',
             timeformat: 'HH:mm:ss'
         },
+        iframely: {key: ''},
         validatorMediaMetadata: {
             headline: {
                 required: true
