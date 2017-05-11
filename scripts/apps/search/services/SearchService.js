@@ -19,11 +19,14 @@ import _ from 'lodash';
  * @requires session
  * @requires multi
  * @requires preferencesService
+ * @requires moment
+ * @requires sort
  *
  * @description Search Service is responsible for creation and manipulation of Query object
  */
-SearchService.$inject = ['$location', 'gettext', 'config', 'session', 'multi', 'preferencesService', 'moment'];
-export function SearchService($location, gettext, config, session, multi, preferencesService, moment) {
+SearchService.$inject = ['$location', 'gettext', 'config', 'session', 'multi',
+    'preferencesService', 'moment', 'sort'];
+export function SearchService($location, gettext, config, session, multi, preferencesService, moment, sortService) {
     var sortOptions = [
         {field: 'versioncreated', label: gettext('Updated')},
         {field: 'firstcreated', label: gettext('Created')},
@@ -57,30 +60,6 @@ export function SearchService($location, gettext, config, session, multi, prefer
             this.singleLine = result.enabled;
         }
     });
-
-    function getSort() {
-        var sort = ($location.search().sort || 'versioncreated:desc').split(':');
-
-        return angular.extend(_.find(sortOptions, {field: sort[0]}), {dir: sort[1]});
-    }
-
-    function sort(field) {
-        var option = _.find(sortOptions, {field: field});
-
-        setSortSearch(option.field, option.defaultDir || 'desc');
-    }
-
-    function toggleSortDir() {
-        var sort = getSort();
-        var dir = sort.dir === 'asc' ? 'desc' : 'asc';
-
-        setSortSearch(sort.field, dir);
-    }
-
-    function setSortSearch(field, dir) {
-        $location.search('sort', field + ':' + dir);
-        $location.search('page', null);
-    }
 
     /*
      * Set filters for parameters
@@ -230,11 +209,7 @@ export function SearchService($location, gettext, config, session, multi, prefer
         return this.getSelectedCodes(currentTags, codes, 'company_codes');
     };
 
-    // sort public api
-    this.setSort = sort;
-    this.getSort = getSort;
     this.sortOptions = sortOptions;
-    this.toggleSortDir = toggleSortDir;
 
     /**
      * Converts the integer fields to string
@@ -400,11 +375,11 @@ export function SearchService($location, gettext, config, session, multi, prefer
          * Get criteria for given query
          */
         this.getCriteria = function getCriteria(withSource) {
-            var search = params;
-            var sort = getSort();
+            let search = params;
+            let sort = sortService.getSort(sortOptions);
 
             setParameters(filters, params);
-            var criteria = {
+            let criteria = {
                 query: {filtered: {filter: {and: filters}}},
                 sort: [_.zipObject([sort.field], [sort.dir])]
             };
@@ -414,7 +389,7 @@ export function SearchService($location, gettext, config, session, multi, prefer
             }
 
             // Construct the query string by combining the q parameter and the raw parameter, if both present
-            var queryString = null;
+            let queryString = null;
 
             if (search.q && search.raw) {
                 queryString = [search.q, search.raw]

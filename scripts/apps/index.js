@@ -22,6 +22,7 @@ import 'apps/settings';
 import 'apps/ingest';
 import 'apps/search-providers';
 import 'apps/internal-destinations';
+import 'apps/content-api';
 
 export default angular.module('superdesk.apps', [
     'superdesk.apps.settings',
@@ -50,5 +51,6 @@ export default angular.module('superdesk.apps', [
     'superdesk.apps.templates',
     'superdesk.apps.monitoring',
     'superdesk.apps.profiling',
-    'superdesk.apps.internal-destinations'
+    'superdesk.apps.internal-destinations',
+    'superdesk.apps.content-api'
 ]);

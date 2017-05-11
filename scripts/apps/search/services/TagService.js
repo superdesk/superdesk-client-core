@@ -11,11 +11,15 @@ import {PARAMETERS, EXCLUDE_FACETS} from 'apps/search/constants';
  * @requires search
  * @requires ingestSources
  * @requires gettextCatalog
+ * @requires subscribersService
+ * @requires $q
  *
  * @description Provides set of methods to manipulate with tags in search bar
  */
-TagService.$inject = ['$location', 'desks', 'userList', 'metadata', 'search', 'ingestSources', 'gettextCatalog'];
-export function TagService($location, desks, userList, metadata, search, ingestSources, gettextCatalog) {
+TagService.$inject = ['$location', 'desks', 'userList', 'metadata', 'search',
+    'ingestSources', 'gettextCatalog', 'subscribersService', '$q'];
+export function TagService($location, desks, userList, metadata, search,
+                           ingestSources, gettextCatalog, subscribersService, $q) {
     var tags = {};
 
     tags.selectedFacets = {};
@@ -145,7 +149,12 @@ export function TagService($location, desks, userList, metadata, search, ingestS
         spike: (index, value) => index !== 'exclude' ? tags.selectedParameters.push(tag(value + ':' + index)) : null,
         featuremedia: processBooleanTags,
         ingest_provider: (index, value) => tags.selectedParameters.push(tag(value + ':' +
-            ingestSources.providersLookup[index].name))
+            ingestSources.providersLookup[index].name)),
+        subscriber: (index, value) => {
+            let subscriberName = _.get(subscribersService, 'subscribersLookup.' + index + '.name', ':Unknown');
+
+            tags.selectedParameters.push(tag(value + ':' + subscriberName, value));
+        }
     };
 
     /**
@@ -269,7 +278,9 @@ export function TagService($location, desks, userList, metadata, search, ingestS
      * @return {Promise} List of items
      */
     function initSelectedFacets() {
-        return desks.initialize().then((result) => {
+        let promises = $q.all([desks.initialize(), subscribersService.initialize()]);
+
+        return promises.then((result) => {
             tags.selectedFacets = {};
             tags.selectedParameters = [];
             tags.selectedKeywords = [];

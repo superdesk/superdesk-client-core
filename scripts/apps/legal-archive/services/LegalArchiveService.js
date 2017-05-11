@@ -1,5 +1,18 @@
-LegalArchiveService.$inject = ['$q', 'api', 'notify', '$location', 'gettext', 'config', 'moment'];
-export function LegalArchiveService($q, api, notify, $location, gettext, config, moment) {
+/**
+ * @ngdoc service
+ * @module superdesk.apps.legal_archive
+ * @name legal
+ * @requires api
+ * @requires https://docs.angularjs.org/api/ng/service/$location $location
+ * @requires gettext
+ * @requires config
+ * @requires moment
+ * @requires sort
+ *
+ * @description Handles retrieval of data from legal archive
+ */
+LegalArchiveService.$inject = ['api', '$location', 'gettext', 'config', 'moment', 'sort'];
+export function LegalArchiveService(api, $location, gettext, config, moment, sortService) {
     var DEFAULT_PER_PAGE = 25;
 
     this.default_items = Object.freeze({_meta: {max_results: DEFAULT_PER_PAGE, page: 1, total: 1}});
@@ -13,43 +26,8 @@ export function LegalArchiveService($q, api, notify, $location, gettext, config,
         {field: 'priority', label: gettext('Priority')}
     ];
 
-    function getSort() {
-        var sort = ($location.search().sort || 'versioncreated:desc').split(':');
-
-        return angular.extend(_.find(sortOptions, {field: sort[0]}), {dir: sort[1]});
-    }
-
-    function sort(field) {
-        var option = _.find(sortOptions, {field: field});
-
-        setSortSearch(option.field, option.defaultDir || 'desc');
-    }
-
-    function toggleSortDir() {
-        var sort = getSort();
-        var dir = sort.dir === 'asc' ? 'desc' : 'asc';
-
-        setSortSearch(sort.field, dir);
-    }
-
-    function formatSort(key, dir) {
-        var val = dir === 'asc' ? 1 : -1;
-
-        return '[("' + encodeURIComponent(key) + '", ' + val + ')]';
-    }
-
-    function setSortSearch(field, dir) {
-        $location.search('sort', field + ':' + dir);
-        $location.search('page', null);
-    }
-
-    sort('versioncreated');
-
-    // sort public api
-    this.setSort = sort;
-    this.getSort = getSort;
+    sortService.setSort('versioncreated', sortOptions);
     this.sortOptions = sortOptions;
-    this.toggleSortDir = toggleSortDir;
 
     this.getCriteria = function() {
         var params = $location.search(),
@@ -68,9 +46,9 @@ export function LegalArchiveService($q, api, notify, $location, gettext, config,
         if (params.sort) {
             var sort = params.sort.split(':');
 
-            criteria.sort = formatSort(sort[0], sort[1]);
+            criteria.sort = sortService.formatSort(sort[0], sort[1]);
         } else {
-            criteria.sort = formatSort('versioncreated', 'desc');
+            criteria.sort = sortService.formatSort('versioncreated', 'desc');
         }
 
         return criteria;

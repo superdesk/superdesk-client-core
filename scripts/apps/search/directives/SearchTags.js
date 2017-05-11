@@ -1,5 +1,19 @@
 import {PARAMETERS} from 'apps/search/constants';
 
+/**
+ * @ngdoc directive
+ * @module superdesk.apps.search
+ * @name sdSearchParameters
+ *
+ * @requires $location
+ * @requires tags
+ * @requires asset
+ * @requires metadata
+ * @requires desks
+ * @requires $rootScope
+ * @description
+ *   A directive that parses location and generates tags.
+ */
 SearchTags.$inject = ['$location', 'tags', 'asset', 'metadata', 'desks', '$rootScope'];
 export function SearchTags($location, tags, asset, metadata, desks, $rootScope) {
     return {

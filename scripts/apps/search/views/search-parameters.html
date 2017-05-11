@@ -1,7 +1,8 @@
 <form>
-    <fieldset class="search-parameters" ng-show="repo.search === 'local'">
+    <fieldset class="search-parameters" ng-show="repo.search === 'local' || isContentApi()">
         <div class="multiple">
             <div class="field" ng-if="search_config.slugline">
+                <label for="search-slugline">
                 <label for="search-slugline">
                     {{:: 'Slugline' | translate}}
                 </label>
@@ -152,6 +153,16 @@
             </div>
         </div>
 
+        <div class="field" ng-if="isContentApi() && search_config.subscribers">
+            <label for="search-subscriber">
+                {{:: 'Subscriber' | translate}}
+            </label>
+            <select id="search-subscriber"
+                    ng-model='fields.subscriber'
+                    ng-options="subscriber._id as subscriber.name for subscriber in subscribers">
+                <option value="" label=""></option>
+            </select>
+        </div>
     </fieldset>
     <fieldset ng-show="repo.search === 'aapmm'">
         <div class="field">

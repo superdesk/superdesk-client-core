@@ -12,7 +12,8 @@ import {LegalItemSortbar} from './directives';
 export default angular.module('superdesk.apps.legal_archive', [
     'superdesk.core.datetime',
     'superdesk.core.activity',
-    'superdesk.core.api'
+    'superdesk.core.api',
+    'superdesk.apps.search'
 ])
     .service('legal', LegalArchiveService)
     .directive('sdLegalItemSortbar', LegalItemSortbar)

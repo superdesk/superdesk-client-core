@@ -1,0 +1,25 @@
+<div id="content-api-search-panel">
+    <div class="header">
+        <ul class="nav-tabs">
+            <li ng-class="{'nav-tabs__tab--active': !tab || tab === 'parameters'}" class="nav-tabs__tab">
+                <button ng-click="tab = 'parameters'" class="nav-tabs__link"><span translate>Parameters</span></button>
+            </li>
+            <li ng-class="{'nav-tabs__tab--active': tab === 'filters'}" class="nav-tabs__tab">
+                <button ng-click="tab = 'filters'" class="nav-tabs__link"><span translate>Filters</span></button>
+            </li>
+        </ul>
+       <div class="doopen" ng-click="flags.facets = !flags.facets"><i class="icon-close-small"></i></div>
+    </div>
+    <div class="nav-tabs__content content">
+        <div ng-if="!tab || tab === 'parameters'" class="nav-tabs__pane">
+            <div sd-search-parameters data-repo="repo"></div>
+        </div>
+        <div ng-if="tab === 'filters'" class="nav-tabs__pane">
+            <div sd-search-filters></div>
+        </div>
+    </div>
+   <div class="float-search-btn" ng-if="tab==='parameters'">
+        <a id="clear_filters" class="save-search__link" ng-click="clear()" translate>Clear filters</a>
+        <button class="btn btn--primary btn--full search" ng-click="searchItems()" translate>Search</button>
+   </div>
+</div>

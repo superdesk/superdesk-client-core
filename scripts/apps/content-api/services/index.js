@@ -1,0 +1,1 @@
+export {ContentAPISearchService} from './ContentAPISearchService';

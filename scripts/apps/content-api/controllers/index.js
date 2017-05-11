@@ -1,0 +1,1 @@
+export {ContentAPIController} from './ContentAPIController';

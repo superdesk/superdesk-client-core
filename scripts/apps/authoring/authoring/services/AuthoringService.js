@@ -410,19 +410,19 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         var userPrivileges = privileges.privileges;
         var action = angular.extend({}, helpers.DEFAULT_ACTIONS);
         var itemOnReadOnlyStage = item && item.task && item.task.stage && desks.isReadOnlyStage(item.task.stage);
+        var isUndefinedOperation = angular.isUndefined(currentItem) || angular.isUndefined(userPrivileges);
+        const isKilledItem = (item) => _.get(item, 'state') === 'killed' || _.get(item, 'takes.state') === 'killed';
+
+        action = this._updateActionsForContentApi(currentItem, action);
 
         // takes packages are readonly.
         // killed item and item that have last publish action are readonly
-        if (angular.isUndefined(currentItem) || angular.isUndefined(userPrivileges) ||
-            currentItem.state === 'killed' ||
-            itemOnReadOnlyStage ||
-            angular.isDefined(currentItem.takes) && currentItem.takes.state === 'killed') {
+        if (isUndefinedOperation || itemOnReadOnlyStage || isKilledItem(currentItem) || !action.view) {
             return action;
         }
 
         // Archived items can be duplicated
-        if (userPrivileges && !itemOnReadOnlyStage && currentItem &&
-            currentItem._type && currentItem._type === 'archived' && currentItem.type === 'text') {
+        if (_.get(currentItem, '_type') === 'archived' && currentItem.type === 'text') {
             action.duplicate = true;
             return action;
         }
@@ -457,6 +457,21 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         this._updateGeneralActions(currentItem, action);
 
         return this._updateDeskActions(currentItem, action);
+    };
+
+    this._updateActionsForContentApi = function(item, action) {
+        if (this.isContentApiItem(item)) {
+            let action = angular.extend({}, helpers.DEFAULT_ACTIONS);
+
+            action.view = false;
+            return action;
+        }
+
+        return action;
+    };
+
+    this.isContentApiItem = function(item) {
+        return item._type === 'items';
     };
 
     this._isBroadcastItem = function(item) {

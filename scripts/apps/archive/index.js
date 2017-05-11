@@ -170,7 +170,7 @@ angular.module('superdesk.apps.archive', [
                     return item.lock_user === null || angular.isUndefined(item.lock_user);
                 },
                 additionalCondition: ['authoring', 'item', function(authoring, item) {
-                    return item.state !== 'killed' &&
+                    return item.state !== 'killed' && !authoring.isContentApiItem(item) &&
                     (authoring.itemActions(item).duplicate || authoring.itemActions(item).view);
                 }]
             })

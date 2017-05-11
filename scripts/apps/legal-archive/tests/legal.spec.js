@@ -3,6 +3,7 @@
 describe('legal archive service', () => {
     beforeEach(window.module('superdesk.core.api'));
     beforeEach(window.module('superdesk.apps.legal_archive'));
+    beforeEach(window.module('superdesk.apps.search'));
 
     /**
      * Mock some of the dependencies of the parent directives.
@@ -65,14 +66,24 @@ describe('legal archive service', () => {
         ].join(',') + ']}');
     }));
 
-    it('can sort items', inject((legal, $location, $rootScope) => {
-        legal.setSort('urgency');
+    it('can sort items', inject((legal, sort, $location, $rootScope) => {
+        var sortOptions = [
+            {field: 'versioncreated', label: gettext('Updated')},
+            {field: 'firstcreated', label: gettext('Created')},
+            {field: 'urgency', label: gettext('Urgency')},
+            {field: 'anpa_category.name', label: gettext('Category')},
+            {field: 'slugline', label: gettext('Slugline')},
+            {field: 'priority', label: gettext('Priority')}
+        ];
+
+        sort.setSort('urgency', sortOptions);
         $rootScope.$digest();
         expect($location.search().sort).toBe('urgency:desc');
-        expect(legal.getSort()).toEqual({label: 'Urgency', field: 'urgency', dir: 'desc'});
+        expect(legal.getCriteria().sort).toEqual('[("' + encodeURIComponent('urgency') + '", -1)]');
 
-        legal.toggleSortDir();
+        sort.toggleSortDir(sortOptions);
         $rootScope.$digest();
-        expect(legal.getSort()).toEqual({label: 'Urgency', field: 'urgency', dir: 'asc'});
+        expect($location.search().sort).toBe('urgency:asc');
+        expect(legal.getCriteria().sort).toEqual('[("' + encodeURIComponent('urgency') + '", 1)]');
     }));
 });

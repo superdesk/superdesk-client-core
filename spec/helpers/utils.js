@@ -17,6 +17,7 @@ module.exports.assertToastMsg = assertToastMsg;
 module.exports.wait = wait;
 module.exports.hover = hover;
 module.exports.waitHidden = waitHidden;
+module.exports.scrollToView = scrollToView;
 
 // construct url from uri and base url
 exports.constructUrl = function(base, uri) {
@@ -226,4 +227,14 @@ function hover(elem) {
  */
 function waitHidden(elem, time) {
     return browser.wait(() => elem.isDisplayed().then((isDisplayed) => !isDisplayed), time || 1000);
+}
+
+
+/**
+ * Scroll to view given element.
+ *
+ * @param {Element} elem
+ */
+function scrollToView(elem) {
+    browser.executeScript('arguments[0].scrollIntoView();', elem);
 }
