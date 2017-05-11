@@ -36,7 +36,7 @@ export function UserEditDirective(api, gettext, notify, usersService, userList, 
             resetUser(scope.origUser);
 
             scope.isNetworkSubscription = () =>
-                ['solo', 'team'].indexOf(config.subscriptionLevel) !== 0;
+                ['solo', 'team'].indexOf(config.subscriptionLevel) === -1;
 
             scope.$watchCollection('user', (user) => {
                 _.each(user, (value, key) => {
