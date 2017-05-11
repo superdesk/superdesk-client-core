@@ -109,6 +109,14 @@ describe('vocabularies', () => {
                     items: [{foo: 'flareon', bar: 'beedrill', is_active: true}]
                 });
             }));
+
+            it('can remove an item', inject(() => {
+                let items = scope.vocabulary.items;
+
+                scope.removeItem(0);
+                expect(scope.vocabulary.items.length).toBe(0);
+                expect(scope.vocabulary.items).not.toBe(items);
+            }));
         });
     });
 });

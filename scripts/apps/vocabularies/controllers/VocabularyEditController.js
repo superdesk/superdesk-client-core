@@ -93,4 +93,14 @@ export function VocabularyEditController($scope, gettext, notify, api, vocabular
 
     $scope.model = model;
     $scope.schema = $scope.vocabulary.schema || cvSchema[$scope.vocabulary._id] || null;
+
+    /**
+     * Remove item from vocabulary items
+     *
+     * @param {number} index
+     */
+    $scope.removeItem = (index) => {
+        $scope.vocabulary.items.splice(index, 1);
+        $scope.vocabulary.items = $scope.vocabulary.items.slice(); // trigger watch on items collection
+    };
 }
