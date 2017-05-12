@@ -21,6 +21,8 @@ describe('authoring', () => {
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.apps.vocabularies'));
     beforeEach(window.module('superdesk.apps.searchProviders'));
+    beforeEach(window.module('superdesk.core.editor3'));
+    beforeEach(window.module('superdesk.apps.editor2'));
 
     beforeEach(inject(($window) => {
         $window.onbeforeunload = angular.noop;
@@ -572,6 +574,8 @@ describe('cropImage', () => {
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.apps.vocabularies'));
     beforeEach(window.module('superdesk.apps.searchProviders'));
+    beforeEach(window.module('superdesk.core.editor3'));
+    beforeEach(window.module('superdesk.apps.editor2'));
 
     it('can change button label for apply/edit crop',
     inject(($rootScope, $compile, $q, metadata) => {
