@@ -122,7 +122,7 @@
                 ng-if="!isLocked() && _editable"
                 title="{{ :: 'Minimize' | translate }}"
                 ng-click="minimize()">
-            <i class="big-icon-minimize"></i>
+            <i class="big-icon--minimize"></i>
         </button>
 
         <div id="authoring-extra-dropdown"
@@ -252,7 +252,7 @@
             class="navbtn navbtn--highlighted" sd-tooltip="{{ :: 'Send to / Publish' | translate }}" flow="left"
             ng-click="views.send = !views.send"
             ng-class="{'active': views.send}">
-            <i class="svg-icon-sendto inverse"></i>
+            <i class="big-icon--send-to big-icon--white"></i>
         </button>
     </div>
 </div>

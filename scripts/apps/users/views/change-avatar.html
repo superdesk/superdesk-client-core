@@ -7,11 +7,11 @@
     <aside class="sidebar">
         <ul>
             <li ng-repeat="method in methods" ng-click="activate(method)" ng-class="{active: active === method}">
-                <i class="avatar-icon-{{ method.id }}"></i> {{ method.label | translate }}
+                <i class="icon-{{ method.id }}"></i> {{ method.label | translate }}
             </li>
         </ul>
         <div class="remove-avatar" ng-click="removeImage()" ng-show="locals.data.picture_url">
-            <i class="avatar-icon-remove"></i><span class="ng-scope" translate>No image</span>
+            <i class="icon-trash"></i><span class="ng-scope" translate>No image</span>
             <label translate>shows your initials instead</label>
         </div>
     </aside>

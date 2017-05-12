@@ -47,7 +47,7 @@ user avatar uploader
                     margin-right: 4px;
                     @include transition(margin-right ease 0.2s);
                 }
-                [class^="avatar-icon-"] {
+                [class^="icon-"] {
                     float: left;
                     margin-right: 10px;
                 }
@@ -57,7 +57,7 @@ user avatar uploader
                     i {
                         margin-right: 0;
                     }
-                    [class^="avatar-icon-"] {
+                    [class^="icon-"] {
                         margin-right: 10px;
                     }
                 }
@@ -71,7 +71,7 @@ user avatar uploader
                     i {
                         margin-right: 0px;
                     }
-                    [class^="avatar-icon-"] {
+                    [class^="icon-"] {
                         margin-right: 10px;
                         @include opacity(100);
                     }

@@ -154,7 +154,7 @@ function Content() {
     this.createPackageFromItems = function() {
         var elem = element(by.css('[class="multi-action-bar ng-scope"]'));
 
-        elem.element(by.className('big-icon-package-create')).click();
+        elem.element(by.className('big-icon--create-package')).click();
         browser.sleep(500);
     };
 

@@ -9,15 +9,15 @@
 
     <div class="pull-right" ng-if="action.canPackageItems()">
         <button class="navbtn strict" ng-click="action.createPackage()" title="{{ :: 'Create Package' | translate }}">
-            <i class="big-icon-package-create"></i>
+            <i class="big-icon--create-package"></i>
         </button>
         <button class="navbtn strict" ng-if="isOpenItemType('composite')" ng-click="action.addToPackage()" title="{{ :: 'Add to Current Package' | translate }}">
-            <i class="big-icon-package-add"></i>
+            <i class="big-icon--package-add"></i>
         </button>
 
         <div class="dropdown strict highlights-dropdown pull-right" ng-if="action.canHighlightItems()" title="{{ :: 'Mark item' | translate }}" dropdown>
              <button class="dropdown__toggle navbtn" dropdown__toggle>
-                <i class="big-icon-marked-star"></i>
+                <i class="big-icon--marked-star"></i>
              </button>
              <ul class="dropdown__menu pull-right" sd-multi-mark-highlights-dropdown></ul>
         </div>
@@ -29,29 +29,29 @@
             <div sd-export ng-if="export"></div>
         </button>
         <button class="navbtn strict" ng-if="activity['edit.item']" ng-click="action.multiedit()" title="{{ :: 'Multiedit' | translate }}">
-            <i class="big-icon-multiedit"></i>
+            <i class="big-icon--multiedit"></i>
         </button>
         <button class="navbtn strict" ng-click="action.spikeItems()" title="{{ :: 'Spike' | translate }}"
             ng-if="!spike && !publish && activity['spike']">
-            <i class="big-icon-spike"></i>
+            <i class="big-icon--spike"></i>
         </button>
         <button class="navbtn strict" ng-click="action.unspikeItems()" title="{{ :: 'Unspike' | translate }}" ng-if="state === 'spiked'">
-            <i class="big-icon-unspike"></i>
+            <i class="big-icon--unspike"></i>
         </button>
         <button id="send-to-btn" class="navbtn strict" title="{{ :: 'Send to' | translate }}" ng-if="activity['edit.item']" ng-click="action.sendAs()">
-            <i class="svg-icon-sendto"></i>
+            <i class="big-icon--send-to"></i>
         </button>
     </div>
 
     <div class="pull-right" ng-if="type === 'ingest'">
         <button id="fetch-all-btn" class="navbtn strict" title="{{ :: 'Fetch' | translate }}" ng-click="action.send()">
-            <i class="big-icon-fetch"></i>
+            <i class="big-icon--fetch"></i>
         </button>
         <button id="fetch-all-as-btn" class="navbtn strict" title="{{ :: 'Fetch to' | translate }}" ng-click="action.sendAs()">
-            <i class="big-icon-fetch-as"></i>
+            <i class="big-icon--fetch-as"></i>
         </button>
         <button id="remove-all-as-btn" class="navbtn strict" class="navbtn strict" title="{{ :: 'Remove' | translate }}" ng-click="action.removeIngestItems()" ng-if="action.canRemoveIngestItems()">
-            <i class="big-icon-spike"></i>
+            <i class="big-icon--spike"></i>
         </button>
     </div>
 </div>

@@ -2,8 +2,8 @@ ChangeAvatarController.$inject = ['$scope', 'upload', 'session', 'urls', 'betaSe
 export function ChangeAvatarController($scope, upload, session, urls, beta, gettext, notify, _) {
     $scope.methods = [
         {id: 'upload', label: gettext('Upload from computer')},
-        {id: 'camera', label: gettext('Take a picture')},
-        {id: 'web', label: gettext('Use a Web URL')}
+        {id: 'photo', label: gettext('Take a picture')},
+        {id: 'globe', label: gettext('Use a Web URL')}
     ];
 
     beta.isBeta().then((beta) => {
