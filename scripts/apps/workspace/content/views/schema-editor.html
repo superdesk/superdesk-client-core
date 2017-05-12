@@ -51,16 +51,22 @@
                                 <option value="quarter" translate>Quarter</option>
                             </select>
                         </div>
-                        <div class="field" ng-if=":: model.schema[id].type === 'string'">
+                        <div class="field" ng-if="model.schema[id].type === 'string' && !model.editor.body_html.editor3">
                             <label translate>Clean Pasted HTML</label>
                             <div sd-check ng-model="model.editor[id].cleanPastedHTML"></div>
                         </div>
                         <div class="field" ng-if="hasFormatOptions(id)">
                             <label translate>Format options</label>
-                            <div class="controls"
+                            <div class="controls" ng-if="model.editor.body_html.editor3"
                                  sd-multi-select
                                  data-item="model.editor[id].formatOptions"
-                                 data-list="formatingOptions"
+                                 data-list="formattingOptionsEditor3"
+                                 data-change="setDirty(true)">
+                            </div>
+                            <div class="controls" ng-if="!model.editor.body_html.editor3"
+                                 sd-multi-select
+                                 data-item="model.editor[id].formatOptions"
+                                 data-list="formattingOptions"
                                  data-change="setDirty(true)">
                             </div>
                         </div>
