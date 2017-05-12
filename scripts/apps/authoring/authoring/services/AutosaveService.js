@@ -1,5 +1,6 @@
 import * as helpers from 'apps/authoring/authoring/helpers';
 
+const HTMLWorker = require('worker!./HTMLWorker');
 const RESOURCE = 'archive_autosave',
     AUTOSAVE_TIMEOUT = 3000;
 
@@ -13,6 +14,7 @@ export class AutosaveService {
         api = _api;
 
         this.timeouts = {};
+        this.workers = {};
     }
 
     /**
@@ -53,13 +55,35 @@ export class AutosaveService {
             var diff = helpers.extendItem({_id: id}, item);
 
             helpers.filterDefaultValues(diff, orig);
-            return api.save(RESOURCE, {}, diff).then((_autosave) => {
-                orig._autosave = _autosave;
-                return _autosave;
-            });
+
+            return this.prepareItem(diff).then((newItem) =>
+                api.save(RESOURCE, {}, newItem).then((_autosave) => {
+                    orig._autosave = _autosave;
+                    return _autosave;
+                }));
         }, timeout, false);
 
         return this.timeouts[id];
+    }
+
+    prepareItem(item) {
+        const editorState = item.editor_state;
+        const id = item._id;
+
+        if (!editorState || !Array.isArray(editorState.blocks)) {
+            return $q.resolve(item);
+        }
+
+        this.workers[id] = new HTMLWorker();
+
+        return $q((resolve, reject) => {
+            this.workers[id].onmessage = ({data}) => {
+                item.body_html = data.html;
+                resolve(item);
+            };
+
+            this.workers[id].postMessage({rawContent: editorState});
+        });
     }
 
     /**
@@ -71,6 +95,11 @@ export class AutosaveService {
         if (this.timeouts[id]) {
             $timeout.cancel(this.timeouts[id]);
             this.timeouts[id] = null;
+
+            if (this.workers[id]) {
+                this.workers[id].terminate();
+                this.workers[id] = null;
+            }
         }
     }
 
