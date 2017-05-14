@@ -43,20 +43,86 @@ export function WebPublisherMonitoringController($scope, $sce, publisher, modal)
         }
 
         openPublish(article, action) {
-            this.selectedRoute = article.route;
+            this.publishedDestinations = {};
+            this.publishFilter = 'all';
             this.publishOpen = true;
+            this.unpublishSelectAll = false;
             this.activePublishPane = action;
             this.selectedArticle = article;
+            angular.forEach(this.sites, (site) => {
+                site.routeEditing = false;
+            });
+            angular.forEach(article.articles, (item) => {
+                this.publishedDestinations[item.tenant.code] =
+                {
+                    tenant: item.tenant,
+                    route: item.route,
+                    fbia: item.fbia,
+                    status: item.status,
+                    updatedAt: item.updatedAt,
+                    unpublish: false
+                };
+            });
+            this.newDesinations = angular.copy(this.publishedDestinations);
         }
 
         publishArticle() {
-            publisher.setTenant(this.selectedArticle.tenant.subdomain);
+            angular.forEach(this.newDesinations, (item) => {
+                item.unpublish = false;
+            });
 
-            publisher.publishArticle(
-                {article: {status: 'published', route: this.selectedRoute.id}}, this.selectedArticle.id)
+            let destinations = [];
+            let oldDestinationsRoutes = [];
+            let updatedKeys = this._updatedKeys(this.newDesinations, this.publishedDestinations);
+
+            angular.forEach(updatedKeys, (item) => {
+                if (this.newDesinations[item].route.id) {
+                    destinations.push({
+                        tenant: item,
+                        route: this.newDesinations[item].route.id,
+                        fbia: this.newDesinations[item] && this.newDesinations[item].fbia === true});
+                }
+
+                if (this.publishedDestinations[item] && this.publishedDestinations[item].route.id) {
+                    oldDestinationsRoutes.push({
+                        route: this.publishedDestinations[item].route.id});
+                }
+            });
+
+            if (destinations.length) {
+                publisher.publishArticle(
+                    {publish: {destinations: destinations}}, this.selectedArticle.id)
+                    .then(() => {
+                        this.publishOpen = false;
+                        $scope.$broadcast('refreshArticlesList', destinations, oldDestinationsRoutes);
+                    });
+            }
+        }
+
+        unpublishAll() {
+            angular.forEach(this.newDesinations, (item) => {
+                item.unpublish = this.unpublishSelectAll;
+            });
+        }
+
+        unPublishArticle() {
+            let tenants = [];
+            let oldDestinationsRoutes = [];
+            let updatedKeys = this._updatedKeys(this.newDesinations, this.publishedDestinations);
+
+            angular.forEach(updatedKeys, (item) => {
+                if (this.newDesinations[item].unpublish === true) {
+                    tenants.push(item);
+                    oldDestinationsRoutes.push({
+                        route: this.publishedDestinations[item].route.id});
+                }
+            });
+
+            publisher.unPublishArticle(
+                {unpublish: {tenants: tenants}}, this.selectedArticle.id)
                 .then(() => {
                     this.publishOpen = false;
-                    $scope.$broadcast('refreshArticlesList', this.selectedArticle, this.selectedRoute.id);
+                    $scope.$broadcast('refreshArticlesList', tenants, oldDestinationsRoutes);
                 });
         }
 
@@ -136,6 +202,19 @@ export function WebPublisherMonitoringController($scope, $sce, publisher, modal)
                 this.articlePreviewModeReadable = 'AMP (landscape)';
                 break;
             }
+        }
+
+        /**
+         * @ngdoc method
+         * @name WebPublisherMonitoringController#_updatedKeys
+         * @private
+         * @param {Object} a
+         * @param {Object} b
+         * @returns {Array}
+         * @description Compares 2 objects and returns keys of fields that are updated
+         */
+        _updatedKeys(a, b) {
+            return _.reduce(a, (result, value, key) => _.isEqual(value, b[key]) ? result : result.concat(key), []);
         }
     }
 
