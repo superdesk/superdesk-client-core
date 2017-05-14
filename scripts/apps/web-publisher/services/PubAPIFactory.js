@@ -120,7 +120,8 @@ export function PubAPIFactory(config, $http, $q, session) {
             return this.req({
                 url: this.resourceURL(resource, id),
                 method: id ? 'PATCH' : 'POST',
-                data: item
+                data: item,
+                add_format: 'json'
             }).then((response) => {
                 angular.extend(item, response);
                 return response;
