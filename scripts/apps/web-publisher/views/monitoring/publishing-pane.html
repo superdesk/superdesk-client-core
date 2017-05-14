@@ -12,21 +12,21 @@
     </div>
 </div>
 <div class="paneContent__content paneContent__content--hasFooter contentPadding">
-    <h3 class="text--thin bottomPadding">{{webPublisherMonitoring.selectedArticle.title}}</h3>
+    <h3 class="text--thin bottomPadding">{{webPublisherMonitoring.selectedArticle.headline}}</h3>
     <!-- publish -->
     <div ng-show="webPublisherMonitoring.activePublishPane == 'publish'">
         <ul class="darkFilters bottomPadding">
             <li class="darkFilters__item"
-                ng-class="{'darkFilters__item--active': true}"
-                ng-click="">All
+                ng-class="{'darkFilters__item--active': webPublisherMonitoring.publishFilter == 'all'}"
+                ng-click="webPublisherMonitoring.publishFilter = 'all'">All
             </li>
             <li class="darkFilters__item"
-                ng-class="{'darkFilters__item--active': false}"
-                ng-click="">Published
+                ng-class="{'darkFilters__item--active': webPublisherMonitoring.publishFilter == 'published'}"
+                ng-click="webPublisherMonitoring.publishFilter = 'published'">Published
             </li>
             <li class="darkFilters__item"
-                ng-class="{'fdarkFilters__item--active': false}"
-                ng-click="">Unpublished
+                ng-class="{'darkFilters__item--active': webPublisherMonitoring.publishFilter == 'unpublished'}"
+                ng-click="webPublisherMonitoring.publishFilter = 'unpublished'">Unpublished
             </li>
         </ul>
         <ul>
@@ -37,17 +37,14 @@
     <div ng-show="webPublisherMonitoring.activePublishPane == 'unpublish'">
         <div class="bottomPadding">
             <span class="text--small">Select All</span>
-            <span class="sd-checkbox checkboxInlineRight" sd-check ng-model="unpublishSelectAll"></span>
+            <span class="sd-checkbox checkboxInlineRight" sd-check ng-click="webPublisherMonitoring.unpublishAll()" ng-model="webPublisherMonitoring.unpublishSelectAll"></span>
         </div>
-        <button class="checkButton checkButton--full"
-            ng-class="{'checkButton--active': true}"
-            ng-click="">
-            www.cnn.com
-        </button>
-        <button class="checkButton checkButton--full"
-            ng-class="{'checkButton--active': false}"
-            ng-click="">
-            www.superdesk.org
+        <button ng-repeat="item in webPublisherMonitoring.newDesinations"
+            ng-if="item.status == 'published'"
+            class="checkButton checkButton--full"
+            ng-class="{'checkButton--active': item.unpublish}"
+            ng-click="item.unpublish = !item.unpublish">
+            {{item.tenant.name}}
         </button>
     </div>
 </div>

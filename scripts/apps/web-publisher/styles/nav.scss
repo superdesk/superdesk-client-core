@@ -7,7 +7,7 @@
         }
 
         &.active, &:hover {
-            a {
+            button {
                 color: $sd-blue;
             }
         }
@@ -20,12 +20,24 @@
             font-size: 0.9em;
         }
 
-        a {
+        button {
             cursor: pointer;
             background: transparent;
             padding: 12px 0 12px 24px;
             font-size: 1.05em;
             color:#333;
+            border: none;
+            width: 100%;
+            text-align: left;
+
+            &:disabled {
+                cursor: default;
+                opacity: 0.2;
+
+                &:hover {
+                    color:#333;
+                }
+            }
         }
     }
 }
