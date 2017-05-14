@@ -21,28 +21,28 @@
         <div class="sidebarLayout__sidebar">
             <ul class="nav nav--stackedPublisher">
                 <li ng-class="{active: webPublisher.activeTab === 'general'}">
-                    <a ng-click="webPublisher.changeTab('general')">{{:: 'General'| translate}}</a>
+                    <button ng-click="webPublisher.changeTab('general')" translate>General</button>
                 </li>
                 <li ng-class="{active: webPublisher.activeTab === 'routes'}">
-                    <a ng-click="webPublisher.changeTab('routes')"
+                    <button ng-click="webPublisher.changeTab('routes')"
                         ng-disabled="!webPublisher.selectedSite.code || webPublisher.siteForm.$dirty"
-                        translate>Routes</a>
+                        translate>Routes</button>
                 </li>
                 <li ng-class="{active: webPublisher.activeTab === 'navigation' || webPublisher.activeTab === 'navigation-menu'}">
-                    <a ng-click="webPublisher.changeTab('navigation')"
+                    <button ng-click="webPublisher.changeTab('navigation')"
                         ng-disabled="!webPublisher.selectedSite.code || webPublisher.siteForm.$dirty"
-                        translate>Navigation</a>
+                        translate>Navigation</button>
                 </li>
                 <li ng-class="{active: webPublisher.activeTab === 'content-lists' || webPublisher.activeTab === 'content-list-automatic'}">
-                    <a ng-click="webPublisher.changeTab('content-lists')"
+                    <button ng-click="webPublisher.changeTab('content-lists')"
                         ng-disabled="!webPublisher.selectedSite.code || webPublisher.siteForm.$dirty"
-                        translate>Content Lists</a>
+                        translate>Content Lists</button>
                 </li>
                 <li class="group-header" translate>advanced</li>
                 <li ng-class="{active: webPublisher.activeTab === 'content-bucket' || webPublisher.activeTab === 'content-list-bucket'}">
-                    <a ng-click="webPublisher.changeTab('content-bucket')"
+                    <button ng-click="webPublisher.changeTab('content-bucket')"
                         ng-disabled="!webPublisher.selectedSite.code || webPublisher.siteForm.$dirty"
-                        translate>Content Buckets</a>
+                        translate>Content Buckets</button>
                 </li>
             </ul>
         </div>

@@ -139,7 +139,7 @@
     }
 }
 
-.flex-pull-right {
+.flex-pull-right:first-child, :not(.flex-pull-right) + .flex-pull-right {
     margin-left: auto;
 }
 
