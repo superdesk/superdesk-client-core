@@ -617,6 +617,10 @@ function Authoring() {
         return abstract.getText();
     };
 
+    this.getAbstractFieldCount = function() {
+        return element.all(by.model('item.abstract')).count();
+    };
+
     this.closeHeader = function() {
         element(by.className('icon-chevron-up-thin')).click();
     };

@@ -59,6 +59,13 @@ function Templates() {
     };
 
     /**
+     * Get the content profile element
+     **/
+    this.getContentProfile = function() {
+        return element(by.id('template-profile')).getText();
+    };
+
+    /**
      * Return desk selection element
      * @param {string} deskName desk name
      * @returns {ElementFinder} desk selection element

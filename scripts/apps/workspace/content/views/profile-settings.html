@@ -74,7 +74,7 @@
                 </form>
             </div>
             <div class="modal__footer">
-                <button class="btn btn--primary" ng-disabled="createForm.$invalid" ng-click="ctrl.save()" translate>Save &amp; Continue</button>
+                <button id="profile-save" class="btn btn--primary" ng-disabled="createForm.$invalid" ng-click="ctrl.save()" translate>Save &amp; Continue</button>
                 <button class="btn" ng-click="ctrl.toggleCreate()" translate>Cancel</button>
             </div>
     </div>
@@ -115,7 +115,7 @@
                 </form>
             </div>
             <div class="modal__footer">
-                <button class="btn btn--primary" ng-disabled="editForm.$invalid || !editForm.$dirty" ng-click="ctrl.update()" translate>Save</button>
+                <button id="profile-update" class="btn btn--primary" ng-disabled="editForm.$invalid || !editForm.$dirty" ng-click="ctrl.update()" translate>Save</button>
                 <button class="btn" ng-click="ctrl.toggleEdit(null)" translate>Cancel</button>
             </div>
     </div>
