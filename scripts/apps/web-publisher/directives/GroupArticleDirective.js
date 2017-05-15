@@ -34,7 +34,6 @@ export function GroupArticleDirective(publisher) {
                 scope.loadingArticles = true;
 
                 let page = reset || !scope.totalArticles ? 1 : scope.totalArticles.page + 1;
-                let queryFunction = scope.rootType ? publisher.queryMonitoringArticles : publisher.queryTenantArticles;
                 let queryParams = scope.rootType && scope.rootType === 'incoming' ?
                 {
                     page: page,
@@ -44,14 +43,11 @@ export function GroupArticleDirective(publisher) {
                     page: page,
                     limit: 20,
                     'status[]': ['published', 'unpublished', 'canceled'],
+                    tenant: scope.site ? scope.site.code : undefined,
                     route: scope.route ? scope.route.id : undefined
                 };
 
-                if (scope.site && !scope.route) {
-                    publisher.setTenant(scope.site.subdomain);
-                }
-
-                queryFunction(queryParams).then((articles) => {
+                publisher.queryMonitoringArticles(queryParams).then((articles) => {
                     scope.totalArticles = articles;
                     scope.articlesList = scope.articlesList.concat(articles._embedded._items);
                     scope.loadingArticles = false;
