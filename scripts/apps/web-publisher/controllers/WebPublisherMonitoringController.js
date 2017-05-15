@@ -18,28 +18,18 @@ export function WebPublisherMonitoringController($scope, $sce, publisher, modal)
                 .then((sites) => {
                     $scope.loadArticles = true;
                     this.sites = sites;
-                });
+                    // loading routes for filter pane
+                    angular.forEach(this.sites, (siteObj, key) => {
+                        publisher.setTenant(siteObj.subdomain);
+                        publisher.queryRoutes({type: 'collection'}).then((routes) => {
+                            siteObj.routes = routes;
+                        });
+                    });
+                    // "reset" tenant
+                    publisher.setTenant('');
 
-            $scope.routes = [
-                {closed: true, name: 'News',
-                    children: [
-                        {closed: true, name: 'Sport',
-                            children: [
-                            {closed: true, name: 'Business'},
-                            {closed: true, name: 'Politics'},
-                            {closed: true, name: 'Health'}]
-                        },
-                        {closed: true, name: 'Tech'},
-                        {closed: true, name: 'Science'}]
-                },
-                {closed: true, name: 'Local',
-                    children: [
-                    {closed: true, name: 'Prague'},
-                    {closed: true, name: 'Berlin'},
-                    {closed: true, name: 'Belgrade'}]
-                },
-                {closed: true, name: 'Entertainment'},
-                {closed: true, name: 'Gossips'}];
+                    this._setFilters($scope);
+                });
         }
 
         openPublish(article, action) {
@@ -215,6 +205,76 @@ export function WebPublisherMonitoringController($scope, $sce, publisher, modal)
          */
         _updatedKeys(a, b) {
             return _.reduce(a, (result, value, key) => _.isEqual(value, b[key]) ? result : result.concat(key), []);
+        }
+
+        /**
+         * @ngdoc method
+         * @name WebPublisherMonitoringController#filterRemoveAuthor
+         * @param {Number} index - index of the item to remove
+         * @description Removes author from filters list
+         */
+        filterRemoveAuthor(index) {
+            this.advancedFilters.author.splice(index, 1);
+        }
+
+         /**
+         * @ngdoc method
+         * @name WebPublisherMonitoringController#filterAddAuthor
+         * @description Adds author in criteria filters list
+         */
+        filterAddAuthor() {
+            if (!this.advancedFilters.author) {
+                this.advancedFilters.author = [];
+            }
+
+            this.advancedFilters.author.push('');
+        }
+
+        /**
+         * @ngdoc method
+         * @name WebPublisherMonitoringController#filterRemoveSource
+         * @param {Number} index - index of the item to remove
+         * @description Removes source from filters list
+         */
+        filterRemoveSource(index) {
+            this.advancedFilters.source.splice(index, 1);
+        }
+
+         /**
+         * @ngdoc method
+         * @name WebPublisherMonitoringController#filterAddSource
+         * @description Adds source in criteria filters list
+         */
+        filterAddSource() {
+            if (!this.advancedFilters.source) {
+                this.advancedFilters.source = [];
+            }
+
+            this.advancedFilters.source.push('');
+        }
+
+        /**
+         * @ngdoc method
+         * @name WebPublisherMonitoringController#_setFilters
+         * @description Sets user defined advanced filters (todo)
+         */
+        _setFilters(scope) {
+            // TODO: request to user API to load filter preset per user
+            this.advancedFilters = {
+                sites: [],
+                routes: []
+            };
+
+            scope.$watch(() => this.advancedFilters, (newVal, oldVal) => {
+                /**
+                 * @ngdoc event
+                 * @name WebPublisherMonitoringController#refreshArticles
+                 * @eventType broadcast on $scope
+                 * @param {Object} advancedFilters - filters to filter articles
+                 * @description event is thrown when advanced filters are changed
+                 */
+                $scope.$broadcast('refreshArticles', this.advancedFilters);
+            }, true);
         }
     }
 
