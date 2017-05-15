@@ -167,42 +167,14 @@
 
             <div class="paneLayout__content">
                 <div class="contentPadding">
-                    <!-- CONTENT -->
                     <div ng-include="webPublisherMonitoring.TEMPLATES_DIR + '/monitoring/index-content.html'"></div>
                 </div>
             </div>
         </div>
-        <!-- paneLayout inside paneLayout :) -->
     </div>
 
     <div class="paneLayout__pane paneContent paneContent--darker"
         ng-class="{'paneLayout__pane--open': webPublisherMonitoring.publishOpen}"
         ng-include="webPublisherMonitoring.TEMPLATES_DIR + '/monitoring/publishing-pane.html'">
     </div>
-
-    <!--<div ng-if="webPublisherMonitoring.publishOpen"
-        class="paneLayout__pane paneContent paneContent--darker modal-content"
-        ng-class="{'paneLayout__pane--open': webPublisherMonitoring.publishOpen}">
-        <div class="paneContent__header paneContent__header--darker">
-            <h3 class="pull-left">Publishing to web</h3>
-            <div ng-click="webPublisherMonitoring.publishOpen = false" class="close-filter">
-                <i class="icon-close-small icon-white"></i>
-            </div>
-        </div>
-        <div class="paneContent__content paneContent__content--hasFooter contentPadding">
-            <form class="flat">
-                <fieldset class="label-light">
-                    <div ng-repeat="site in webPublisherMonitoring.sites"
-                         sd-toggle-box
-                         data-title="{{site.name}}"
-                         data-open="true" data-style="dark">
-                            <div sd-publish-routes data-site="site" data-monitoring-contoller="webPublisherMonitoring"></div>
-                    </div>
-                </fieldset>
-            </form>
-        </div>
-        <div class="paneContent__footer paneContent__footer--transparent">
-            <button class="btn btn--primary btn--full" ng-click="webPublisherMonitoring.publishArticle()">Publish to web</button>
-        </div>
-    </div>-->
 </div>
