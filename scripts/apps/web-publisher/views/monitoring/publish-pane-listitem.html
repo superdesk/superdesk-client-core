@@ -35,21 +35,20 @@
     </div>
     <div class="listElement__right">
         <div class="text--small text--lighter text--right minHeightLine">
-            <span ng-if="webPublisherMonitoring.publishedDestinations[site.code]">
+            <span ng-if="webPublisherMonitoring.newDestinations[site.code].route.id && webPublisherMonitoring.publishedDestinations[site.code].route.id == webPublisherMonitoring.newDestinations[site.code].route.id">
                 {{webPublisherMonitoring.publishedDestinations[site.code].updatedAt | reldate}}
             </span>
-            <!-- if article is not published and route is selected this should appear -->
-             <span ng-if="!webPublisherMonitoring.publishedDestinations[site.code] && webPublisherMonitoring.newDesinations[site.code].route.id"
+             <span ng-if="webPublisherMonitoring.newDestinations[site.code].route.id && webPublisherMonitoring.publishedDestinations[site.code].route.id != webPublisherMonitoring.newDestinations[site.code].route.id"
                 class="text--uppercase text--small text--blue cursorPointer rightSpace"
                 ng-click="webPublisherMonitoring.openArticlePreview(site)">
-                <i class="icon-external blue icon--small text--verticalMiddle rightSpace--small">Live Preview</i>
+                <i class="icon-external blue icon--small text--verticalMiddle rightSpace--small"></i>Live Preview
             </span>
         </div>
         <div class="minHeightLine">
             <span ng-if="webPublisherMonitoring.publishedDestinations[site.code].fbia" class="label label--facebook text--smaller text--uppercase">facebook</span>
-            <div ng-if="webPublisherMonitoring.newDesinations[site.code].route.id && !webPublisherMonitoring.publishedDestinations[site.code].fbia && webPublisherMonitoring.publishedDestinations[site.code].status != 'unpublished'">
+            <div ng-if="webPublisherMonitoring.newDestinations[site.code].route.id && !webPublisherMonitoring.publishedDestinations[site.code].fbia && webPublisherMonitoring.publishedDestinations[site.code].status != 'unpublished'">
                 <span class="text--uppercase text--smaller text--lighter">publish to facebook</span>
-                <span class="sd-checkbox checkboxInlineRight" sd-check ng-model="webPublisherMonitoring.newDesinations[site.code].fbia"></span>
+                <span class="sd-checkbox checkboxInlineRight" sd-check ng-model="webPublisherMonitoring.newDestinations[site.code].fbia"></span>
             </div>
         </div>
     </div>
