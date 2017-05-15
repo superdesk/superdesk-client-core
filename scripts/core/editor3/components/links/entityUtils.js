@@ -71,3 +71,50 @@ export function getSelectedEntityRange(editorState, fn) {
 
     selectedBlock.findEntityRanges((c) => c.getEntity() === entityKey, fn);
 }
+
+/**
+ * @description Gets the entity type of the entity located on the same spot as the
+ * cursor. If offset is set, it gets the entity type offset to the cursor.
+ * @param {EditorState} editorState
+ * @param {Number} offset Offset to cursor. Negative is allowed.
+ * @returns {string} Entity type.
+ */
+export function getEntityTypeOffsetToCursor(editorState, offset = 0) {
+    const selection = editorState.getSelection();
+    const selectedBlock = getSelectedBlock(editorState);
+    const focusOffset = selection.getFocusOffset();
+    const targetOffset = focusOffset + offset;
+
+    if (targetOffset < 0 || targetOffset > selectedBlock.getText().length) {
+        return null;
+    }
+
+    const selectedEntityKey = selectedBlock.getEntityAt(focusOffset + offset);
+
+    if (selectedEntityKey === null) {
+        return null;
+    }
+
+    const contentState = editorState.getCurrentContent();
+    const selectedEntity = contentState.getEntity(selectedEntityKey);
+
+    return selectedEntity !== null ? selectedEntity.getType() : null;
+}
+
+/**
+ * @description Gets the entity type of the entity located after (at) the cursor.
+ * @param {EditorState} editorState
+ * @returns {string} Entity type.
+ */
+export function getEntityTypeAfterCursor(editorState) {
+    return getEntityTypeOffsetToCursor(editorState);
+}
+
+/**
+ * @description Gets the entity type of the entity located before the cursor.
+ * @param {EditorState} editorState
+ * @returns {string} Entity type.
+ */
+export function getEntityTypeBeforeCursor(editorState) {
+    return getEntityTypeOffsetToCursor(editorState, -1);
+}

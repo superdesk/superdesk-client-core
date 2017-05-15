@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Editor, CompositeDecorator, RichUtils} from 'draft-js';
+import {Editor, CompositeDecorator, RichUtils, Modifier, EditorState} from 'draft-js';
 import {connect} from 'react-redux';
 import Toolbar from './toolbar';
 import * as actions from '../actions';
@@ -10,6 +10,7 @@ import {blockRenderer} from './blockRenderer';
 import {customStyleMap} from './customStyleMap';
 import classNames from 'classnames';
 import {handlePastedText} from './handlePastedText';
+import {getEntityTypeAfterCursor, getEntityTypeBeforeCursor} from './links/entityUtils';
 
 /**
  * @ngdoc React
@@ -43,6 +44,7 @@ export class Editor3Component extends React.Component {
         this.onScroll = this.onScroll.bind(this);
         this.onDragOver = this.onDragOver.bind(this);
         this.handleKeyCommand = this.handleKeyCommand.bind(this);
+        this.handleBeforeInput = this.handleBeforeInput.bind(this);
     }
 
     /**
@@ -117,6 +119,39 @@ export class Editor3Component extends React.Component {
         return 'not-handled';
     }
 
+    /**
+     * @ngdoc method
+     * @name Editor3#handleBeforeInput
+     * @description Handles space characters before they are inputed. Makes sure that
+     * any space character added after a link does not perpetuate the link. It basically
+     * stops default DraftJS behavior, which is not quite suitable: when a link is added
+     * at the end of content, any character added will continue to be part of the link.
+     * This logic stops that behavior.
+     */
+    handleBeforeInput(chars) {
+        if (chars !== ' ') {
+            return false;
+        }
+
+        const {editorState, onChange} = this.props;
+        const typeAfterCursor = getEntityTypeAfterCursor(editorState);
+        const typeBeforeCursor = getEntityTypeBeforeCursor(editorState);
+        const shouldBreakLink = typeAfterCursor !== 'LINK' && typeBeforeCursor === 'LINK';
+
+        if (shouldBreakLink) {
+            const contentState = editorState.getCurrentContent();
+            const selection = editorState.getSelection();
+            const newContentState = Modifier.insertText(contentState, selection, ' ');
+            const newEditorState = EditorState.push(editorState, newContentState, 'insert-text');
+
+            onChange(newEditorState);
+
+            return true;
+        }
+
+        return false;
+    }
+
     componentWillUpdate() {
         this.editorRect = ReactDOM.findDOMNode(this.refs.editor).getBoundingClientRect();
     }
@@ -160,6 +195,7 @@ export class Editor3Component extends React.Component {
                     <Editor
                         editorState={editorState}
                         handleKeyCommand={this.handleKeyCommand}
+                        handleBeforeInput={this.handleBeforeInput}
                         blockRendererFn={blockRenderer}
                         customStyleMap={customStyleMap}
                         onChange={onChange}
