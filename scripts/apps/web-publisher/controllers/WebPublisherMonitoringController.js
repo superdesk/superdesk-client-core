@@ -53,24 +53,24 @@ export function WebPublisherMonitoringController($scope, $sce, publisher, modal)
                     unpublish: false
                 };
             });
-            this.newDesinations = angular.copy(this.publishedDestinations);
+            this.newDestinations = angular.copy(this.publishedDestinations);
         }
 
         publishArticle() {
-            angular.forEach(this.newDesinations, (item) => {
+            angular.forEach(this.newDestinations, (item) => {
                 item.unpublish = false;
             });
 
             let destinations = [];
             let oldDestinationsRoutes = [];
-            let updatedKeys = this._updatedKeys(this.newDesinations, this.publishedDestinations);
+            let updatedKeys = this._updatedKeys(this.newDestinations, this.publishedDestinations);
 
             angular.forEach(updatedKeys, (item) => {
-                if (this.newDesinations[item].route.id) {
+                if (this.newDestinations[item].route.id) {
                     destinations.push({
                         tenant: item,
-                        route: this.newDesinations[item].route.id,
-                        fbia: this.newDesinations[item] && this.newDesinations[item].fbia === true});
+                        route: this.newDestinations[item].route.id,
+                        fbia: this.newDestinations[item] && this.newDestinations[item].fbia === true});
                 }
 
                 if (this.publishedDestinations[item] && this.publishedDestinations[item].route.id) {
@@ -90,7 +90,7 @@ export function WebPublisherMonitoringController($scope, $sce, publisher, modal)
         }
 
         unpublishAll() {
-            angular.forEach(this.newDesinations, (item) => {
+            angular.forEach(this.newDestinations, (item) => {
                 item.unpublish = this.unpublishSelectAll;
             });
         }
@@ -98,10 +98,10 @@ export function WebPublisherMonitoringController($scope, $sce, publisher, modal)
         unPublishArticle() {
             let tenants = [];
             let oldDestinationsRoutes = [];
-            let updatedKeys = this._updatedKeys(this.newDesinations, this.publishedDestinations);
+            let updatedKeys = this._updatedKeys(this.newDestinations, this.publishedDestinations);
 
             angular.forEach(updatedKeys, (item) => {
-                if (this.newDesinations[item].unpublish === true) {
+                if (this.newDestinations[item].unpublish === true) {
                     tenants.push(item);
                     oldDestinationsRoutes.push({
                         route: this.publishedDestinations[item].route.id});

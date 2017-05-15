@@ -39,7 +39,7 @@
             <span class="text--small">Select All</span>
             <span class="sd-checkbox checkboxInlineRight" sd-check ng-click="webPublisherMonitoring.unpublishAll()" ng-model="webPublisherMonitoring.unpublishSelectAll"></span>
         </div>
-        <button ng-repeat="item in webPublisherMonitoring.newDesinations"
+        <button ng-repeat="item in webPublisherMonitoring.newDestinations"
             ng-if="item.status == 'published'"
             class="checkButton checkButton--full"
             ng-class="{'checkButton--active': item.unpublish}"
