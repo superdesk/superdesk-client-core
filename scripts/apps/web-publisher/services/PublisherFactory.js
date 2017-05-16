@@ -244,7 +244,11 @@ export function PublisherFactory(pubapi) {
         }
 
         publishArticle(article, articleId) {
-            return pubapi.save('content/articles', article, articleId);
+            return pubapi.save('packages/' + articleId + '/publish', article);
+        }
+
+        unPublishArticle(tenants, articleId) {
+            return pubapi.save('packages/' + articleId + '/unpublish', tenants);
         }
     }
 

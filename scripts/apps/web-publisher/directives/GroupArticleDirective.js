@@ -58,11 +58,11 @@ export function GroupArticleDirective(publisher) {
                 });
             };
 
-            scope.$on('refreshArticlesList', (e, selectedArticle, routeId, rootType) => {
+            scope.$on('refreshArticlesList', (e, updatedDestinations, oldDestinationsRoutes) => {
                 if (scope.rootType ||
-                    scope.site && scope.site.subdomain === selectedArticle.tenant.subdomain ||
-                    scope.route && scope.route.id === routeId ||
-                    scope.route && scope.route.id === selectedArticle.route.id) {
+                    scope.site && _.find(updatedDestinations, {tenant: scope.site.code}) ||
+                    scope.route && _.find(updatedDestinations, {route: scope.route.id}) ||
+                    scope.route && _.find(oldDestinationsRoutes, {route: scope.route.id})) {
                     scope.loadArticles(true);
                 }
             });

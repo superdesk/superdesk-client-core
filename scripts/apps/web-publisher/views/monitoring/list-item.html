@@ -18,9 +18,10 @@
             <div class="state-label state-corrected">Update {{i.version}}</div>
             <span class="provider">{{i.byline}}</span>
             <span class="container">{{i.route.name}}</span>
-            <!-- only published articles -->
-            <div class="state-label state-published flex-pull-right">Website 1</div>
-            <div class="state-label">Website 2</div>
+            <div ng-repeat="item in i.articles"
+                class="state-label flex-pull-right"
+                ng-class="{'state-published': item.status == 'published', 'state-killed': item.status == 'unpublished'}">{{item.tenant.name}}
+            </div>
         </div>
 
         <div class="item-right toolbox">
