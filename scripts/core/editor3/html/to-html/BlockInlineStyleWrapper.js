@@ -35,6 +35,10 @@ export class BlockInlineStyleWrapper {
      * @returns {string} HTML
      */
     openingTags(styles) {
+        if (styles.size === 0) {
+            return '';
+        }
+
         return styles.map((style) => {
             const tag = InlineStyleTags[style];
             const alreadyApplied = this.activeStyles.indexOf(style) > -1;
@@ -57,6 +61,10 @@ export class BlockInlineStyleWrapper {
      * @returns {string} HTML
      */
     closingTags(styles) {
+        if (this.activeStyles.length === 0) {
+            return '';
+        }
+
         const noLongerApplied = this.activeStyles
             .filter((s) => styles.toArray().indexOf(s) === -1);
 

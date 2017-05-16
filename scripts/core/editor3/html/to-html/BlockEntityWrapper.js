@@ -67,12 +67,13 @@ export class BlockEntityWrapper {
      * @returns {string} Closing tag or empty string.
      */
     flush() {
-        let tag = '';
-
-        if (this.activeEntity) {
-            tag = `</${this.activeEntity.tag}>`;
-            this.activeEntity = null;
+        if (this.activeEntity === null) {
+            return '';
         }
+
+        const tag = `</${this.activeEntity.tag}>`;
+
+        this.activeEntity = null;
 
         return tag;
     }
