@@ -553,7 +553,6 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                     break;
                 }
 
-                isCheckedByTansa = true;
                 if (window.RunTansaProofing) {
                     window.RunTansaProofing();
                 } else {
@@ -583,8 +582,10 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                     // after changes from tansa, there is some time needed for autosave
                     // and for commiting scope in editor
                     $timeout(() => {
-                        isCheckedByTansa = true;
-                        $scope.saveTopbar().then(publishFn);
+                        $scope.saveTopbar().then(() => {
+                            isCheckedByTansa = true;
+                            publishFn();
+                        });
                     }, 1000);
                 }
             }
@@ -617,6 +618,8 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                     });
                 } else if (validatePublishScheduleAndEmbargo($scope.item) && validateForPublish($scope.item)) {
                     var message = 'publish';
+
+                    isCheckedByTansa = false;
 
                     if ($scope.action && $scope.action !== 'edit') {
                         message = $scope.action;
@@ -813,6 +816,8 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 }
 
                 $scope.dirty = true;
+
+                isCheckedByTansa = false;
 
                 if (tryPublish) {
                     validate($scope.origItem, $scope.item);
