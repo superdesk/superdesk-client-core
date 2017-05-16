@@ -12,6 +12,7 @@ export function WebPublisherMonitoringController($scope, $sce, publisher, modal)
     class WebPublisherMonitoring {
         constructor() {
             this.TEMPLATES_DIR = 'scripts/apps/web-publisher/views';
+            this.filterButtonAllActive = true;
 
             publisher.setToken()
                 .then(publisher.querySites)
@@ -25,8 +26,6 @@ export function WebPublisherMonitoringController($scope, $sce, publisher, modal)
                             siteObj.routes = routes;
                         });
                     });
-                    // "reset" tenant
-                    publisher.setTenant('');
 
                     this._setFilters($scope);
                 });
@@ -53,24 +52,24 @@ export function WebPublisherMonitoringController($scope, $sce, publisher, modal)
                     unpublish: false
                 };
             });
-            this.newDesinations = angular.copy(this.publishedDestinations);
+            this.newDestinations = angular.copy(this.publishedDestinations);
         }
 
         publishArticle() {
-            angular.forEach(this.newDesinations, (item) => {
+            angular.forEach(this.newDestinations, (item) => {
                 item.unpublish = false;
             });
 
             let destinations = [];
             let oldDestinationsRoutes = [];
-            let updatedKeys = this._updatedKeys(this.newDesinations, this.publishedDestinations);
+            let updatedKeys = this._updatedKeys(this.newDestinations, this.publishedDestinations);
 
             angular.forEach(updatedKeys, (item) => {
-                if (this.newDesinations[item].route.id) {
+                if (this.newDestinations[item].route.id) {
                     destinations.push({
                         tenant: item,
-                        route: this.newDesinations[item].route.id,
-                        fbia: this.newDesinations[item] && this.newDesinations[item].fbia === true});
+                        route: this.newDestinations[item].route.id,
+                        fbia: this.newDestinations[item] && this.newDestinations[item].fbia === true});
                 }
 
                 if (this.publishedDestinations[item] && this.publishedDestinations[item].route.id) {
@@ -90,7 +89,7 @@ export function WebPublisherMonitoringController($scope, $sce, publisher, modal)
         }
 
         unpublishAll() {
-            angular.forEach(this.newDesinations, (item) => {
+            angular.forEach(this.newDestinations, (item) => {
                 item.unpublish = this.unpublishSelectAll;
             });
         }
@@ -98,10 +97,10 @@ export function WebPublisherMonitoringController($scope, $sce, publisher, modal)
         unPublishArticle() {
             let tenants = [];
             let oldDestinationsRoutes = [];
-            let updatedKeys = this._updatedKeys(this.newDesinations, this.publishedDestinations);
+            let updatedKeys = this._updatedKeys(this.newDestinations, this.publishedDestinations);
 
             angular.forEach(updatedKeys, (item) => {
-                if (this.newDesinations[item].unpublish === true) {
+                if (this.newDestinations[item].unpublish === true) {
                     tenants.push(item);
                     oldDestinationsRoutes.push({
                         route: this.publishedDestinations[item].route.id});
@@ -153,8 +152,9 @@ export function WebPublisherMonitoringController($scope, $sce, publisher, modal)
          * @description Opens modal window for previewing article
          */
         openArticlePreview(routeId, site) {
-            console.log(this.selectedArticle);
-            let src = '//' + site.subdomain + '.' + site.domainName + '/preview/article/' + routeId + '/' + this.selectedArticle.slug + '/?auth_token=<token>';
+            let src = '//' + site.subdomain + '.'
+                + site.domainName + '/preview/article/' + routeId
+                + '/' + this.selectedArticle.slug + '/?auth_token=<token>';
 
             this.previewArticleSrc = $sce.trustAsResourceUrl(src);
             this.openArticlePreviewModal = true;
@@ -243,17 +243,52 @@ export function WebPublisherMonitoringController($scope, $sce, publisher, modal)
 
         /**
          * @ngdoc method
+         * @name WebPublisherMonitoringController#filterClear
+         * @description clears criteria filters list
+         */
+        filterClear() {
+            this.advancedFilters = {
+                sites: {},
+                routes: []
+            };
+        }
+
+        /**
+         * @ngdoc method
+         * @name WebPublisherMonitoringController#filterButtonSetTenant
+         * @description Sets tenant for filtering (used by top bar buttons)
+         */
+        filterButtonSetTenant(tenantCode) {
+            this.advancedFilters.sites = {};
+
+            if (tenantCode) {
+                this.advancedFilters.sites[tenantCode] = true;
+            }
+        }
+
+        /**
+         * @ngdoc method
          * @name WebPublisherMonitoringController#_setFilters
          * @description Sets user defined advanced filters (todo)
          */
         _setFilters(scope) {
             // TODO: request to user API to load filter preset per user
             this.advancedFilters = {
-                sites: [],
+                sites: {},
                 routes: []
             };
 
             scope.$watch(() => this.advancedFilters, (newVal, oldVal) => {
+                // clearing sites for top bar filter buttons
+                if (this.advancedFilters.hasOwnProperty('sites')) {
+                    angular.forEach(this.advancedFilters.sites, (value, key) => {
+                        if (!value) {
+                            delete this.advancedFilters.sites[key];
+                        }
+                    });
+                    this.filterButtonAllActive = _.isEmpty(this.advancedFilters.sites);
+                }
+
                 /**
                  * @ngdoc event
                  * @name WebPublisherMonitoringController#refreshArticles
@@ -261,7 +296,7 @@ export function WebPublisherMonitoringController($scope, $sce, publisher, modal)
                  * @param {Object} advancedFilters - filters to filter articles
                  * @description event is thrown when advanced filters are changed
                  */
-                $scope.$broadcast('refreshArticles', this.advancedFilters);
+                $scope.$broadcast('updateMonitoringFilters', this.advancedFilters);
             }, true);
         }
 

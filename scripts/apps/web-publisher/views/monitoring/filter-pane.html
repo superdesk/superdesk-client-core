@@ -20,7 +20,7 @@
                                     <li ng-repeat="site in webPublisherMonitoring.sites">
                                         <div class="sectionTreeElement">
                                             <div class="sectionTreeElement__icon">
-                                                <span class="sd-checkbox" sd-check ng-model="webPublisherMonitoring.advancedFilters.sites[site.id]"></span>
+                                                <span class="sd-checkbox" sd-check ng-model="webPublisherMonitoring.advancedFilters.sites[site.code]"></span>
                                             </div>
                                             <button class="sectionTreeElement__icon iconButton sectionTreeElement__icon--extraMargin">
                                                 <i class="icon-chevron-down-thin" 
@@ -31,7 +31,8 @@
                                                 	ng-click="site.openInFilterPane = !site.openInFilterPane"></i>
                                             </button>
                                             <div class="sectionTreeElement__content">
-                                                {{ site.name }}<i class="sectionTreeElement__count">todo</i>
+                                                {{ site.name }}
+                                                <!-- <i class="sectionTreeElement__count">todo</i> -->
                                             </div>
                                         </div>
                                         <ul ng-show="site.openInFilterPane">
@@ -41,6 +42,21 @@
                                         </ul>
                                     </li>
                                 </ul>
+                            </div>
+
+                            <div sd-toggle-box data-title="Dates" data-open="false">
+                               <!--  <div class="item">
+                                    <label for="publishedAt" translate>publish date</label>
+                                    <div sd-datepicker data-format="YYYY-MM-DD" name="publishedAt" id="publishedAt" ng-model="webPublisherMonitoring.advancedFilters.publishedAt"></div>
+                                </div> -->
+                                <div class="item">
+                                    <label for="publishedAfter" translate>published after</label>
+                                    <div sd-datepicker data-format="YYYY-MM-DD" name="publishedAfter" id="publishedAfter" ng-model="webPublisherMonitoring.advancedFilters.publishedAfter"></div>
+                                </div>
+                                <div class="item">
+                                    <label for="publishedBefore" translate>published before</label>
+                                    <div sd-datepicker data-format="YYYY-MM-DD" name="publishedBefore" id="publishedBefore" ng-model="webPublisherMonitoring.advancedFilters.publishedBefore"></div>
+                                </div>
                             </div>
 
                             <div sd-toggle-box data-title="Authors" data-open="false">
@@ -67,21 +83,6 @@
                                     tooltip-popup-delay="500">
                                     <i class="svg-icon-plus"></i>
                                 </button>
-                            </div>
-
-                            <div sd-toggle-box data-title="Dates" data-open="false">
-                                <div class="item">
-                                    <label for="publishedAt" translate>publish date</label>
-                                    <div sd-datepicker data-format="YYYY-MM-DD" name="publishedAt" id="publishedAt" ng-model="webPublisherMonitoring.advancedFilters.publishedAt"></div>
-                                </div>
-                                <div class="item">
-                                    <label for="publishedBefore" translate>published before</label>
-                                    <div sd-datepicker data-format="YYYY-MM-DD" name="publishedBefore" id="publishedBefore" ng-model="webPublisherMonitoring.advancedFilters.publishedBefore"></div>
-                                </div>
-                                <div class="item">
-                                    <label for="publishedAfter" translate>published after</label>
-                                    <div sd-datepicker data-format="YYYY-MM-DD" name="publishedAfter" id="publishedAfter" ng-model="webPublisherMonitoring.advancedFilters.publishedAfter"></div>
-                                </div>
                             </div>
 
                             <div sd-toggle-box data-title="Ingest Source" data-open="false">
@@ -115,5 +116,5 @@
                 </div>
                 <div class="paneContent__footer paneContent__footer--center">
                     <!--  <a class="save-search__link" ng-click="">Clear filters</a> -->
-                    <button class="btn btn--primary" ng-click="" >Clear filters</button>
+                    <button class="btn btn--primary" ng-click="webPublisherMonitoring.filterClear()" >Clear filters</button>
                 </div>

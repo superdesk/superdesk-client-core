@@ -14,13 +14,93 @@ export function GroupArticleDirective(publisher) {
                 site: '=site',
                 route: '=route',
                 webPublisherMonitoring: '=webPublisherMonitoring',
-                loadArticles: '=loadArticles'
+                loadArticles: '=loadArticles',
+                initialFilters: '@filters'
             };
             this.templateUrl = 'scripts/apps/web-publisher/views/monitoring/group-article.html';
         }
 
         link(scope) {
             scope.articlesList = [];
+            scope.filters = scope.initialFilters ? scope.initialFilters : {};
+
+            scope.buildTenantParams = () => {
+                // tenant param
+                let tenant = [];
+
+                if (scope.site) {
+                    tenant.push(scope.site.code);
+                }
+
+                if (!tenant.length && scope.filters.hasOwnProperty('sites') && !_.isEmpty(scope.filters.sites)) {
+                    angular.forEach(scope.filters.sites, (value, key) => {
+                        if (value) {
+                            tenant.push(key);
+                        }
+                    });
+                }
+
+                return tenant;
+            };
+
+            scope.buildRouteParams = () => {
+                // route param
+                let route = [];
+
+                if (scope.route) {
+                    route.push(scope.route.id);
+                }
+
+                if (!route.length && scope.filters.hasOwnProperty('routes') && scope.filters.routes.length) {
+                    angular.forEach(scope.filters.routes, (value, key) => {
+                        if (value) {
+                            route.push(key);
+                        }
+                    });
+                }
+
+                return route;
+            };
+
+            scope.buildQueryParams = (reset) => {
+                let page = reset || !scope.totalArticles ? 1 : scope.totalArticles.page + 1;
+                let queryParams = {
+                    page: page,
+                    limit: 20,
+                    'status[]': []
+                };
+
+                let route = scope.buildRouteParams();
+                let tenant = scope.buildTenantParams();
+
+                // building query params for both cases
+                if (scope.rootType && scope.rootType === 'incoming') {
+                    queryParams['status[]'] = ['new'];
+                } else {
+                    queryParams['status[]'] = ['published', 'unpublished', 'canceled'];
+                    if (tenant.length) {
+                        queryParams['tenant[]'] = tenant;
+                    }
+                    if (route.length) {
+                        queryParams['route[]'] = route;
+                    }
+
+                    queryParams.publishedBefore = scope.filters.hasOwnProperty('publishedBefore') ?
+                    scope.filters.publishedBefore : undefined;
+                    queryParams.publishedAfter = scope.filters.hasOwnProperty('publishedAfter') ?
+                    scope.filters.publishedAfter : undefined;
+                }
+
+                // universal author and source params
+                if (scope.filters.hasOwnProperty('author') && scope.filters.author.length) {
+                    queryParams['author[]'] = scope.filters.author;
+                }
+                if (scope.filters.hasOwnProperty('source') && scope.filters.source.length) {
+                    queryParams['source[]'] = scope.filters.source;
+                }
+
+                return queryParams;
+            };
 
             scope.loadArticles = (reset) => {
                 if (scope.loadingArticles) {
@@ -32,31 +112,19 @@ export function GroupArticleDirective(publisher) {
                 }
 
                 scope.loadingArticles = true;
+                let queryParams = scope.buildQueryParams(reset);
 
-                let page = reset || !scope.totalArticles ? 1 : scope.totalArticles.page + 1;
-                let queryFunction = scope.rootType ? publisher.queryMonitoringArticles : publisher.queryTenantArticles;
-                let queryParams = scope.rootType && scope.rootType === 'incoming' ?
-                {
-                    page: page,
-                    limit: 20,
-                    status: 'new'
-                } : {
-                    page: page,
-                    limit: 20,
-                    'status[]': ['published', 'unpublished', 'canceled'],
-                    route: scope.route ? scope.route.id : undefined
-                };
-
-                if (scope.site && !scope.route) {
-                    publisher.setTenant(scope.site.subdomain);
-                }
-
-                queryFunction(queryParams).then((articles) => {
+                publisher.queryMonitoringArticles(queryParams).then((articles) => {
                     scope.totalArticles = articles;
                     scope.articlesList = scope.articlesList.concat(articles._embedded._items);
                     scope.loadingArticles = false;
                 });
             };
+
+            scope.$on('updateMonitoringFilters', (e, filters) => {
+                scope.filters = filters;
+                scope.loadArticles(true);
+            });
 
             scope.$on('refreshArticlesList', (e, updatedDestinations, oldDestinationsRoutes) => {
                 if (scope.rootType ||
