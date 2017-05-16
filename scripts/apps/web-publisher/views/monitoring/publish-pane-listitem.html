@@ -40,8 +40,8 @@
             </span>
              <span ng-if="webPublisherMonitoring.newDestinations[site.code].route.id && webPublisherMonitoring.publishedDestinations[site.code].route.id != webPublisherMonitoring.newDestinations[site.code].route.id"
                 class="text--uppercase text--small text--blue cursorPointer rightSpace"
-                ng-click="webPublisherMonitoring.openArticlePreview(site)">
-                <i class="icon-external blue icon--small text--verticalMiddle rightSpace--small"></i>Live Preview
+                ng-click="webPublisherMonitoring.openArticlePreview(webPublisherMonitoring.newDesinations[site.code].route.id, site)">
+                <i class="icon-external blue icon--small text--verticalMiddle rightSpace--small"></i> Live Preview
             </span>
         </div>
         <div class="minHeightLine">

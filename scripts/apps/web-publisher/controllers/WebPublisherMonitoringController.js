@@ -12,34 +12,23 @@ export function WebPublisherMonitoringController($scope, $sce, publisher, modal)
     class WebPublisherMonitoring {
         constructor() {
             this.TEMPLATES_DIR = 'scripts/apps/web-publisher/views';
+            this.filterButtonAllActive = true;
 
             publisher.setToken()
                 .then(publisher.querySites)
                 .then((sites) => {
                     $scope.loadArticles = true;
                     this.sites = sites;
-                });
+                    // loading routes for filter pane
+                    angular.forEach(this.sites, (siteObj, key) => {
+                        publisher.setTenant(siteObj.subdomain);
+                        publisher.queryRoutes({type: 'collection'}).then((routes) => {
+                            siteObj.routes = routes;
+                        });
+                    });
 
-            $scope.routes = [
-                {closed: true, name: 'News',
-                    children: [
-                        {closed: true, name: 'Sport',
-                            children: [
-                            {closed: true, name: 'Business'},
-                            {closed: true, name: 'Politics'},
-                            {closed: true, name: 'Health'}]
-                        },
-                        {closed: true, name: 'Tech'},
-                        {closed: true, name: 'Science'}]
-                },
-                {closed: true, name: 'Local',
-                    children: [
-                    {closed: true, name: 'Prague'},
-                    {closed: true, name: 'Berlin'},
-                    {closed: true, name: 'Belgrade'}]
-                },
-                {closed: true, name: 'Entertainment'},
-                {closed: true, name: 'Gossips'}];
+                    this._setFilters($scope);
+                });
         }
 
         openPublish(article, action) {
@@ -162,9 +151,10 @@ export function WebPublisherMonitoringController($scope, $sce, publisher, modal)
          * @param {Object} tenant
          * @description Opens modal window for previewing article
          */
-        openArticlePreview(tenant) {
-            // TODO: pass route id here
-            let src = 'http://magazine.s-lab.sourcefabric.org/business/kogi-truffaut-vaporware';
+        openArticlePreview(routeId, site) {
+            let src = '//' + site.subdomain + '.'
+                + site.domainName + '/preview/article/' + routeId
+                + '/' + this.selectedArticle.slug + '/?auth_token=<token>';
 
             this.previewArticleSrc = $sce.trustAsResourceUrl(src);
             this.openArticlePreviewModal = true;
@@ -204,6 +194,112 @@ export function WebPublisherMonitoringController($scope, $sce, publisher, modal)
             }
         }
 
+
+        /**
+         * @ngdoc method
+         * @name WebPublisherMonitoringController#filterRemoveAuthor
+         * @param {Number} index - index of the item to remove
+         * @description Removes author from filters list
+         */
+        filterRemoveAuthor(index) {
+            this.advancedFilters.author.splice(index, 1);
+        }
+
+         /**
+         * @ngdoc method
+         * @name WebPublisherMonitoringController#filterAddAuthor
+         * @description Adds author in criteria filters list
+         */
+        filterAddAuthor() {
+            if (!this.advancedFilters.author) {
+                this.advancedFilters.author = [];
+            }
+
+            this.advancedFilters.author.push('');
+        }
+
+        /**
+         * @ngdoc method
+         * @name WebPublisherMonitoringController#filterRemoveSource
+         * @param {Number} index - index of the item to remove
+         * @description Removes source from filters list
+         */
+        filterRemoveSource(index) {
+            this.advancedFilters.source.splice(index, 1);
+        }
+
+         /**
+         * @ngdoc method
+         * @name WebPublisherMonitoringController#filterAddSource
+         * @description Adds source in criteria filters list
+         */
+        filterAddSource() {
+            if (!this.advancedFilters.source) {
+                this.advancedFilters.source = [];
+            }
+
+            this.advancedFilters.source.push('');
+        }
+
+        /**
+         * @ngdoc method
+         * @name WebPublisherMonitoringController#filterClear
+         * @description clears criteria filters list
+         */
+        filterClear() {
+            this.advancedFilters = {
+                sites: {},
+                routes: []
+            };
+        }
+
+        /**
+         * @ngdoc method
+         * @name WebPublisherMonitoringController#filterButtonSetTenant
+         * @description Sets tenant for filtering (used by top bar buttons)
+         */
+        filterButtonSetTenant(tenantCode) {
+            this.advancedFilters.sites = {};
+
+            if (tenantCode) {
+                this.advancedFilters.sites[tenantCode] = true;
+            }
+        }
+
+        /**
+         * @ngdoc method
+         * @name WebPublisherMonitoringController#_setFilters
+         * @description Sets user defined advanced filters (todo)
+         */
+        _setFilters(scope) {
+            // TODO: request to user API to load filter preset per user
+            this.advancedFilters = {
+                sites: {},
+                routes: []
+            };
+
+            scope.$watch(() => this.advancedFilters, (newVal, oldVal) => {
+                // clearing sites for top bar filter buttons
+                if (this.advancedFilters.hasOwnProperty('sites')) {
+                    angular.forEach(this.advancedFilters.sites, (value, key) => {
+                        if (!value) {
+                            delete this.advancedFilters.sites[key];
+                        }
+                    });
+                    this.filterButtonAllActive = _.isEmpty(this.advancedFilters.sites);
+                }
+
+                /**
+                 * @ngdoc event
+                 * @name WebPublisherMonitoringController#refreshArticles
+                 * @eventType broadcast on $scope
+                 * @param {Object} advancedFilters - filters to filter articles
+                 * @description event is thrown when advanced filters are changed
+                 */
+                $scope.$broadcast('updateMonitoringFilters', this.advancedFilters);
+            }, true);
+        }
+
         /**
          * @ngdoc method
          * @name WebPublisherMonitoringController#_updatedKeys
@@ -217,6 +313,5 @@ export function WebPublisherMonitoringController($scope, $sce, publisher, modal)
             return _.reduce(a, (result, value, key) => _.isEqual(value, b[key]) ? result : result.concat(key), []);
         }
     }
-
     return new WebPublisherMonitoring();
 }

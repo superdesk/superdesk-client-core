@@ -1,15 +1,15 @@
 <div class="sectionTreeElement">
     <div class="sectionTreeElement__icon" >
-        <span class="sd-checkbox" sd-check ng-model="route.checked"></span>
+        <span class="sd-checkbox" sd-check ng-model="webPublisherMonitoring.advancedFilters.routes[route.id]"></span>
     </div>
     <button class="sectionTreeElement__icon iconButton" ng-class="{'sectionTreeElement__icon--extraMargin': route.children.length}" ng-if="route.children.length">
-        <i class="icon-chevron-down-thin" ng-show="!route.closed" ng-click="route.closed = !route.closed"></i>
-        <i class="icon-chevron-right-thin" ng-show="route.closed" ng-click="route.closed = !route.closed"></i>
+        <i class="icon-chevron-down-thin" ng-show="route.filterPaneOpen" ng-click="route.filterPaneOpen = !route.filterPaneOpen"></i>
+        <i class="icon-chevron-right-thin" ng-show="!route.filterPaneOpen" ng-click="route.filterPaneOpen = !route.filterPaneOpen"></i>
     </button>
     <div class="sectionTreeElement__content">
-        {{route.name}}<i class="sectionTreeElement__count">256</i>
+        {{route.name}} <!-- <i class="sectionTreeElement__count">todo</i> -->
     </div>
 </div>
-<ul ng-show="route.children.length && !route.closed">
+<ul ng-show="route.children.length && route.filterPaneOpen">
     <li ng-repeat="route in route.children" ng-include="webPublisherMonitoring.TEMPLATES_DIR + '/monitoring/sections-treeElement.html'"></li>
 </ul>
