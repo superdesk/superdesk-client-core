@@ -13,6 +13,8 @@
  * @requires $q
  * @requires $filter
  * @requires products
+ * @param {Array} subscribersList - provided list of subscribers to display
+ * @param {Boolean} hideHeader - controls the visibility of the header section
  * @description SubscribersDirective handles subscriber maintenance.
  */
 SubscribersDirective.$inject = [
@@ -24,11 +26,15 @@ export function SubscribersDirective(
     gettext, notify, api, subscribersService, adminPublishSettingsService,
     modal, metadata, contentFilters, $q, $filter, products) {
     return {
+        scope: {
+            subscribersList: '=',
+            hideHeader: '='
+        },
         templateUrl: 'scripts/apps/publish/views/subscribers.html',
         link: function($scope) {
             $scope.subscriber = null;
             $scope.origSubscriber = null;
-            $scope.subscribers = null;
+            $scope.subscribers = $scope.subscribersList || null;
             $scope.newDestination = null;
             $scope.contentFilters = null;
             $scope.apiProducts = null;
@@ -273,7 +279,10 @@ export function SubscribersDirective(
                 $scope.formats = formats;
             };
 
-            fetchSubscribers();
+            // If subscribers list provided don't fetch subscribers
+            if (!$scope.subscribersList) {
+                fetchSubscribers();
+            }
         }
     };
 }
