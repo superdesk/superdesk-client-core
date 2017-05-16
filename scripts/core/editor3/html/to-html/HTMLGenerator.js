@@ -34,10 +34,10 @@ export class HTMLGenerator {
         this.listTags = [];
         this.lastDepth = 0;
         this.atomicBlockParser = new AtomicBlockParser(contentState, disabled);
+        this.blocks = contentState.getBlocksAsArray();
 
         this.convertBlock = this.convertBlock.bind(this);
         this.getBlockTags = this.getBlockTags.bind(this);
-        this.nextBlock = this.nextBlock.bind(this);
         this.listTag = this.listTag.bind(this);
     }
 
@@ -53,24 +53,6 @@ export class HTMLGenerator {
             'unordered-list-item': 'ul',
             'ordered-list-item': 'ol'
         }[type];
-    }
-
-    /**
-     * @ngdoc method
-     * @param {string} id Block ID.
-     * @param {OrderedMap} blockMap Immutable OrderedMap of blocks.
-     * @returns {ContentBlock}
-     * @description Returns the block that comes after id in blockMap.
-     */
-    nextBlock(id, blockMap) {
-        const keys = Object.keys(blockMap.toJS());
-        const i = keys.indexOf(id);
-
-        if (i === keys.length - 1) {
-            return null;
-        }
-
-        return blockMap.get(keys[i + 1]);
     }
 
     /**
@@ -118,7 +100,7 @@ export class HTMLGenerator {
             after += `</${tag}>`;
         }
 
-        if (nextBlock === null && listTag) {
+        if (typeof nextBlock === 'undefined' && listTag) {
             after += this.flushListTags();
         }
 
@@ -145,11 +127,10 @@ export class HTMLGenerator {
      * @name HTMLGenerator#convertBlock
      * @param {Object} contentBlock
      * @param {string} id ID of current block
-     * @param {OrderedMap} blockMap
      * @returns {string} HTML
      * @description convertBlock takes a contentBlock and converts it to HTML.
      */
-    convertBlock(contentBlock, id, blockMap) {
+    convertBlock(contentBlock, id) {
         const type = contentBlock.getType();
 
         if (type === 'atomic') {
@@ -160,14 +141,15 @@ export class HTMLGenerator {
         const styleWrapper = new BlockInlineStyleWrapper();
         const entityWrapper = new BlockEntityWrapper(this.contentState);
 
-        let html = contentBlock.getCharacterList()
-            .map((charMeta, key) => {
+        let html = '';
+
+        contentBlock.getCharacterList()
+            .forEach((charMeta, key) => {
                 const entityTags = entityWrapper.tags(charMeta.getEntity());
                 const styleTags = styleWrapper.tags(charMeta.getStyle());
 
-                return styleTags + entityTags + text[key];
-            })
-            .join('');
+                html += styleTags + entityTags + text[key];
+            });
 
         // apply left-over close tags
         html += entityWrapper.flush();
@@ -175,7 +157,7 @@ export class HTMLGenerator {
 
         // get block wrapping tags (depth for lists)
         const depth = contentBlock.getDepth();
-        const nextBlock = this.nextBlock(id, blockMap);
+        const nextBlock = this.blocks[id + 1];
 
         let {before, after} = this.getBlockTags(type, depth, nextBlock);
 
@@ -192,9 +174,6 @@ export class HTMLGenerator {
      * this instance.
      */
     html() {
-        return this.contentState
-            .getBlockMap()
-            .map(this.convertBlock)
-            .join('');
+        return this.blocks.reduce((html, block, id) => html + this.convertBlock(block, id), '');
     }
 }
