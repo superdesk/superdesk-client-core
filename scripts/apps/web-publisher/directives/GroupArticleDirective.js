@@ -72,7 +72,8 @@ export function GroupArticleDirective(publisher) {
                 let queryParams = {
                     page: page,
                     limit: 20,
-                    'status[]': []
+                    'status[]': [],
+                    'sorting[updatedAt]': 'desc'
                 };
 
                 let route = scope.buildRouteParams();
