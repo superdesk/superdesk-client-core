@@ -3,7 +3,7 @@
         ng-class="{'paneContent__tabItem--activeLight' : webPublisherMonitoring.activePublishPane == 'publish' }"
         ng-click="webPublisherMonitoring.activePublishPane = 'publish'">Publish
     </span>
-    <span class="paneContent__tabItem paneContent__tabItem--light"
+    <span ng-if="webPublisherMonitoring.selectedArticle.status != 'new'" class="paneContent__tabItem paneContent__tabItem--light"
         ng-class="{'paneContent__tabItem--activeLight' : webPublisherMonitoring.activePublishPane == 'unpublish' }"
         ng-click="webPublisherMonitoring.activePublishPane = 'unpublish'">Unpublish
     </span>
