@@ -27,7 +27,7 @@
 <div class="paneLayout paneLayout--twoHeadersMargin">
     <div class="paneLayout__content">
         <div class="subnav static">
-            <div class="filter-trigger" title="Filters" ng-click="filterOpen = !filterOpen" ng-class="{'filter-trigger--active': filterOpen}">
+            <div class="filter-trigger" title="Filters" ng-click="webPublisherMonitoring.filterOpen = !webPublisherMonitoring.filterOpen" ng-class="{'filter-trigger--active': webPublisherMonitoring.filterOpen}">
                 <i class="icon-filter-large"></i>
             </div>
             <ul class="filter-type filter-type--padded rightPadding">
@@ -43,7 +43,7 @@
         <!-- paneLayout inside paneLayout :) -->
         <div class="paneLayout paneLayout--headerMargin">
             <div class="paneLayout__leftPane paneContent" 
-                ng-class="{'paneLayout__leftPane--open': filterOpen}"
+                ng-class="{'paneLayout__leftPane--open': webPublisherMonitoring.filterOpen}"
                 ng-include="webPublisherMonitoring.TEMPLATES_DIR + '/monitoring/filter-pane.html'"
                 >
             </div>
