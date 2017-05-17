@@ -347,8 +347,8 @@ export class ItemList extends React.Component {
         };
 
         // This function is to bring the selected item (by key press) into view if it is out of container boundary.
-        var scrollSelectedItemIfRequired = () => {
-            let container = $(event.currentTarget);
+        var scrollSelectedItemIfRequired = (event, scope) => {
+            let container = scope.viewColumn ? $(document).find('.content-list') : $(event.currentTarget);
 
             let selectedItemElem = $(event.currentTarget.firstChild).children('.list-item-view.active');
 

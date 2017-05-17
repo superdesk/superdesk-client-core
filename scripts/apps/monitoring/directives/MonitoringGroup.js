@@ -45,6 +45,8 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
             var monitoring = ctrls[0];
             var projections = search.getProjectedFields();
 
+            var containerElem = monitoring.viewColumn ? $(document).find('.content-list') : elem.find('.stage-content');
+
             ITEM_HEIGHT = search.singleLine ? 29 : 57;
             scope.view = 'compact';
             scope.page = 1;
@@ -58,8 +60,6 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
             scope.$on('view:column', (event, data) => {
                 scope.$applyAsync(() => {
                     scope.viewColumn = data.viewColumn;
-                    updateGroupStyle();
-                    scheduleQuery(null, {force: true});
                 });
             });
 
@@ -73,7 +73,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
 
             scope.$watchCollection('group', () => {
                 updateGroupStyle();
-                queryItems();
+                scope.refreshGroup();
             });
 
             scope.$on('task:stage', scheduleQuery);
@@ -89,9 +89,6 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
             });
             scope.$on('item:unspike', scheduleIfShouldUpdate);
             scope.$on('$routeUpdate', (event, data) => {
-                data.force = true;
-                scheduleQuery(event, data);
-
                 if (scope.viewColumn) {
                     updateGroupStyle();
                 }
@@ -136,6 +133,10 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                         gone: true,
                         _etag: data.from_stage // this must change to make it re-render
                     });
+                    scheduleQuery(event, data);
+                } else if (scope.group.type === 'deskOutput' && data &&
+                     scope.group._id === _.get(data, 'from_desk') + ':output') {
+                    // item was moved to production desk, therefore it should comes in from_desk's output stage too
                     scheduleQuery(event, data);
                 } else if (data && data.item && _.includes(['item:spike', 'item:unspike'], event.name)) {
                     // item was spiked/unspiked from the list
@@ -235,11 +236,6 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
 
             // forced refresh on refresh button click or on refresh:list
             scope.refreshGroup = function() {
-                scope.$applyAsync(() => {
-                    scope.scrollTop = 0;
-                    monitoring.scrollTop = 0;
-                });
-
                 monitoring.showRefresh = scope.showRefresh = false;
                 scheduleQuery(null, {force: true});
             };
@@ -414,10 +410,11 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                 return apiquery(criteria, true).then((items) => {
                     if (!scope.showRefresh && data && !data.force && data.user !== session.identity._id) {
                         var itemPreviewing = isItemPreviewing();
+
                         var _data = {
                             newItems: items,
                             scopeItems: scope.items,
-                            scrollTop: scope.viewColumn ? monitoring.scrollTop : scope.scrollTop,
+                            scrollTop: containerElem.scrollTop(),
                             isItemPreviewing: itemPreviewing
                         };
 
@@ -435,11 +432,16 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                         scope.items = search.updateItems(items, scope.items);
                     }
                 })
-               .finally(() => {
-                   if (originalQuery) {
-                       criteria.source.query = originalQuery;
-                   }
-               });
+                .finally(() => {
+                    if (originalQuery) {
+                        criteria.source.query = originalQuery;
+                    }
+
+                    // update scroll position to top, when forced refresh
+                    if (data && data.force) {
+                        containerElem[0].scrollTop = 0;
+                    }
+                });
             }
 
             function render(next) {
