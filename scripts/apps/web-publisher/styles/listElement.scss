@@ -75,6 +75,18 @@
 
         &--dark {
             color: #eaeaea;
+
+            .dropdown__toggle {
+                color: #eaeaea;
+
+                option {
+                    color: black;
+                }
+
+                &.line-input {
+                    border-bottom:1px solid rgba(255, 255, 255, 0.3) !important;
+                }
+            }
         }
 
         button {

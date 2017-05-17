@@ -4,7 +4,7 @@
             <button tooltip="{{ :: 'Back to previous view' | translate }}" tooltip-placement="right" class="backlink" ng-click="webPublisherMonitoring.viewMonitoringHome()"></button>
         </div>
     </div>
-    <div class="flat-searchbar monitoring-flat-searchbar" ng-class="{extended: aggregate.monitoringSearch}">
+    <!--<div class="flat-searchbar monitoring-flat-searchbar" ng-class="{extended: aggregate.monitoringSearch}">
         <div class="search-handler">
             <label for="search-input" class="trigger-icon" ng-click="aggregate.monitoringSearch = !aggregate.monitoringSearch"><i class="icon-search"></i></label>
             <input id="search-input" type="text" placeholder="{{ :: 'Search' | translate }}" ng-model="query"
@@ -14,14 +14,8 @@
                 <i class="svg-icon-right"></i>
             </button>
         </div>
-    </div>
+    </div>-->
     <h3 class="page-nav-title">Web Monitoring</h3>
-    <div class="subnav__button-stack--square-buttons">
-        <div class="dropdown navbtn strict" ng-if="!state.opened" title="{{ :: 'Create' | translate }}" dropdown>
-            <button class="dropdown__toggle sd-create-btn" dropdown__toggle></button>
-            <ul class="dropdown__menu scrollable pull-right" sd-content-create></ul>
-        </div>
-    </div>
 </div>
 
 <div class="paneLayout paneLayout--twoHeadersMargin">
