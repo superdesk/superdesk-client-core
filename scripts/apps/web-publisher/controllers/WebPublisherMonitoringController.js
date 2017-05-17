@@ -152,11 +152,18 @@ export function WebPublisherMonitoringController($scope, $sce, publisher, modal)
          * @description Opens modal window for previewing article
          */
         openArticlePreview(routeId, site) {
-            let src = '//' + site.subdomain + '.'
-                + site.domainName + '/preview/article/' + routeId
-                + '/' + this.selectedArticle.slug + '/?auth_token=<token>';
+            let token = publisher.getToken();
 
-            this.previewArticleSrc = $sce.trustAsResourceUrl(src);
+            this.previewArticleUrls = {
+                regular: '//' + site.subdomain + '.'
+                + site.domainName + '/preview/article/' + routeId
+                + '/' + this.selectedArticle.id + '?auth_token=' + token,
+                amp: '//' + site.subdomain + '.'
+                + site.domainName + '/preview/article/' + routeId
+                + '/' + this.selectedArticle.id + '?auth_token=' + token + '&amp'
+            };
+
+            this.previewArticleSrc = $sce.trustAsResourceUrl(this.previewArticleUrls.regular);
             this.openArticlePreviewModal = true;
             this.setArticlePreviewMode('desktop');
         }
@@ -171,24 +178,31 @@ export function WebPublisherMonitoringController($scope, $sce, publisher, modal)
             this.articlePreviewMode = mode;
             switch (mode) {
             case 'desktop':
+                this.previewArticleSrc = $sce.trustAsResourceUrl(this.previewArticleUrls.regular);
                 this.articlePreviewModeReadable = 'Desktop';
                 break;
             case 'tablet':
+                this.previewArticleSrc = $sce.trustAsResourceUrl(this.previewArticleUrls.regular);
                 this.articlePreviewModeReadable = 'Tablet (portrait)';
                 break;
             case 'tablet-landscape':
+                this.previewArticleSrc = $sce.trustAsResourceUrl(this.previewArticleUrls.regular);
                 this.articlePreviewModeReadable = 'Tablet (landscape)';
                 break;
             case 'mobile':
+                this.previewArticleSrc = $sce.trustAsResourceUrl(this.previewArticleUrls.regular);
                 this.articlePreviewModeReadable = 'Mobile (portrait)';
                 break;
             case 'mobile-landscape':
+                this.previewArticleSrc = $sce.trustAsResourceUrl(this.previewArticleUrls.regular);
                 this.articlePreviewModeReadable = 'Mobile (landscape)';
                 break;
             case 'amp':
+                this.previewArticleSrc = $sce.trustAsResourceUrl(this.previewArticleUrls.amp);
                 this.articlePreviewModeReadable = 'AMP (portrait)';
                 break;
             case 'amp-landscape':
+                this.previewArticleSrc = $sce.trustAsResourceUrl(this.previewArticleUrls.amp);
                 this.articlePreviewModeReadable = 'AMP (landscape)';
                 break;
             }
@@ -249,7 +263,7 @@ export function WebPublisherMonitoringController($scope, $sce, publisher, modal)
         filterClear() {
             this.advancedFilters = {
                 sites: {},
-                routes: []
+                routes: {}
             };
         }
 
@@ -275,7 +289,7 @@ export function WebPublisherMonitoringController($scope, $sce, publisher, modal)
             // TODO: request to user API to load filter preset per user
             this.advancedFilters = {
                 sites: {},
-                routes: []
+                routes: {}
             };
 
             scope.$watch(() => this.advancedFilters, (newVal, oldVal) => {

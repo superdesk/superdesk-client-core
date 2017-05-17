@@ -15,7 +15,7 @@ export function GroupArticleDirective(publisher) {
                 route: '=route',
                 webPublisherMonitoring: '=webPublisherMonitoring',
                 loadArticles: '=loadArticles',
-                initialFilters: '@filters'
+                initialFilters: '=filters'
             };
             this.templateUrl = 'scripts/apps/web-publisher/views/monitoring/group-article.html';
         }
@@ -51,10 +51,14 @@ export function GroupArticleDirective(publisher) {
                     route.push(scope.route.id);
                 }
 
-                if (!route.length && scope.filters.hasOwnProperty('routes') && scope.filters.routes.length) {
-                    angular.forEach(scope.filters.routes, (value, key) => {
-                        if (value) {
-                            route.push(key);
+                if (!route.length && scope.filters.hasOwnProperty('routes')) {
+                    angular.forEach(scope.filters.routes, (routesObj, tenantCode) => {
+                        if (!scope.site || scope.site.code === tenantCode) {
+                            angular.forEach(routesObj, (value, key) => {
+                                if (value) {
+                                    route.push(key);
+                                }
+                            });
                         }
                     });
                 }

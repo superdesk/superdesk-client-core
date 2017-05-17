@@ -20,6 +20,16 @@ export function PublisherFactory(pubapi) {
 
         /**
          * @ngdoc method
+         * @name publisher#getToken
+         * @returns {String}
+         * @description Gets token
+         */
+        getToken() {
+            return pubapi._token;
+        }
+
+        /**
+         * @ngdoc method
          * @name publisher#setTenant
          * @param {String} tenant
          * @returns {Object}
