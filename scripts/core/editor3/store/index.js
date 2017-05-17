@@ -21,12 +21,13 @@ export default function createEditorStore(ctrl) {
     const dict = spellcheck.getDict();
     const content = getInitialContent(ctrl);
     const decorators = Editor3.getDecorator();
+    const showToolbar = !ctrl.singleLine && (ctrl.editorFormat || []).length > 0;
 
     const store = createStore(reducers, {
         editorState: EditorState.createWithContent(content, decorators),
         searchTerm: {pattern: '', index: -1, caseSensitive: false},
         readOnly: ctrl.readOnly,
-        showToolbar: !ctrl.singleLine,
+        showToolbar: showToolbar,
         singleLine: ctrl.singleLine,
         activeCell: null,
         editorFormat: ctrl.editorFormat || [],
