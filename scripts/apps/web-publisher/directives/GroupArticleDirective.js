@@ -14,13 +14,98 @@ export function GroupArticleDirective(publisher) {
                 site: '=site',
                 route: '=route',
                 webPublisherMonitoring: '=webPublisherMonitoring',
-                loadArticles: '=loadArticles'
+                loadArticles: '=loadArticles',
+                initialFilters: '=filters'
             };
             this.templateUrl = 'scripts/apps/web-publisher/views/monitoring/group-article.html';
         }
 
         link(scope) {
             scope.articlesList = [];
+
+            scope.filters = scope.initialFilters ? scope.initialFilters : {};
+
+            scope.buildTenantParams = () => {
+                // tenant param
+                let tenant = [];
+
+                if (scope.site) {
+                    tenant.push(scope.site.code);
+                }
+
+                if (!tenant.length && scope.filters.hasOwnProperty('sites') && !_.isEmpty(scope.filters.sites)) {
+                    angular.forEach(scope.filters.sites, (value, key) => {
+                        if (value) {
+                            tenant.push(key);
+                        }
+                    });
+                }
+
+                return tenant;
+            };
+
+            scope.buildRouteParams = () => {
+                // route param
+                let route = [];
+
+                if (scope.route) {
+                    route.push(scope.route.id);
+                }
+
+                if (!route.length && scope.filters.hasOwnProperty('routes')) {
+                    angular.forEach(scope.filters.routes, (routesObj, tenantCode) => {
+                        if (!scope.site || scope.site.code === tenantCode) {
+                            angular.forEach(routesObj, (value, key) => {
+                                if (value) {
+                                    route.push(key);
+                                }
+                            });
+                        }
+                    });
+                }
+
+                return route;
+            };
+
+            scope.buildQueryParams = (reset) => {
+                let page = reset || !scope.totalArticles ? 1 : scope.totalArticles.page + 1;
+                let queryParams = {
+                    page: page,
+                    limit: 20,
+                    'status[]': []
+                };
+
+                let route = scope.buildRouteParams();
+                let tenant = scope.buildTenantParams();
+
+                // building query params for both cases
+                if (scope.rootType && scope.rootType === 'incoming') {
+                    queryParams['status[]'] = ['new'];
+                } else {
+                    queryParams['status[]'] = ['published', 'unpublished', 'canceled'];
+                    if (tenant.length) {
+                        queryParams['tenant[]'] = tenant;
+                    }
+                    if (route.length) {
+                        queryParams['route[]'] = route;
+                    }
+
+                    queryParams.publishedBefore = scope.filters.hasOwnProperty('publishedBefore') ?
+                    scope.filters.publishedBefore : undefined;
+                    queryParams.publishedAfter = scope.filters.hasOwnProperty('publishedAfter') ?
+                    scope.filters.publishedAfter : undefined;
+                }
+
+                // universal author and source params
+                if (scope.filters.hasOwnProperty('author') && scope.filters.author.length) {
+                    queryParams['author[]'] = scope.filters.author;
+                }
+                if (scope.filters.hasOwnProperty('source') && scope.filters.source.length) {
+                    queryParams['source[]'] = scope.filters.source;
+                }
+
+                return queryParams;
+            };
 
             scope.loadArticles = (reset) => {
                 if (scope.loadingArticles) {

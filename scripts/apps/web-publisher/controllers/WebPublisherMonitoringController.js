@@ -152,11 +152,19 @@ export function WebPublisherMonitoringController($scope, $sce, publisher, modal)
          * @param {Object} tenant
          * @description Opens modal window for previewing article
          */
-        openArticlePreview(tenant) {
-            // TODO: pass route id here
-            let src = 'http://magazine.s-lab.sourcefabric.org/business/kogi-truffaut-vaporware';
+        openArticlePreview(routeId, site) {
+            let token = publisher.getToken();
 
-            this.previewArticleSrc = $sce.trustAsResourceUrl(src);
+            this.previewArticleUrls = {
+                regular: '//' + site.subdomain + '.'
+                + site.domainName + '/preview/article/' + routeId
+                + '/' + this.selectedArticle.id + '?auth_token=' + token,
+                amp: '//' + site.subdomain + '.'
+                + site.domainName + '/preview/article/' + routeId
+                + '/' + this.selectedArticle.id + '?auth_token=' + token + '&amp'
+            };
+
+            this.previewArticleSrc = $sce.trustAsResourceUrl(this.previewArticleUrls.regular);
             this.openArticlePreviewModal = true;
             this.setArticlePreviewMode('desktop');
         }
@@ -171,24 +179,31 @@ export function WebPublisherMonitoringController($scope, $sce, publisher, modal)
             this.articlePreviewMode = mode;
             switch (mode) {
             case 'desktop':
+                this.previewArticleSrc = $sce.trustAsResourceUrl(this.previewArticleUrls.regular);
                 this.articlePreviewModeReadable = 'Desktop';
                 break;
             case 'tablet':
+                this.previewArticleSrc = $sce.trustAsResourceUrl(this.previewArticleUrls.regular);
                 this.articlePreviewModeReadable = 'Tablet (portrait)';
                 break;
             case 'tablet-landscape':
+                this.previewArticleSrc = $sce.trustAsResourceUrl(this.previewArticleUrls.regular);
                 this.articlePreviewModeReadable = 'Tablet (landscape)';
                 break;
             case 'mobile':
+                this.previewArticleSrc = $sce.trustAsResourceUrl(this.previewArticleUrls.regular);
                 this.articlePreviewModeReadable = 'Mobile (portrait)';
                 break;
             case 'mobile-landscape':
+                this.previewArticleSrc = $sce.trustAsResourceUrl(this.previewArticleUrls.regular);
                 this.articlePreviewModeReadable = 'Mobile (landscape)';
                 break;
             case 'amp':
+                this.previewArticleSrc = $sce.trustAsResourceUrl(this.previewArticleUrls.amp);
                 this.articlePreviewModeReadable = 'AMP (portrait)';
                 break;
             case 'amp-landscape':
+                this.previewArticleSrc = $sce.trustAsResourceUrl(this.previewArticleUrls.amp);
                 this.articlePreviewModeReadable = 'AMP (landscape)';
                 break;
             }
@@ -255,14 +270,39 @@ export function WebPublisherMonitoringController($scope, $sce, publisher, modal)
 
         /**
          * @ngdoc method
+         * @name WebPublisherMonitoringController#filterClear
+         * @description clears criteria filters list
+         */
+        filterClear() {
+            this.advancedFilters = {
+                sites: {},
+                routes: {}
+            };
+        }
+
+        /**
+         * @ngdoc method
+         * @name WebPublisherMonitoringController#filterButtonSetTenant
+         * @description Sets tenant for filtering (used by top bar buttons)
+         */
+        filterButtonSetTenant(tenantCode) {
+            this.advancedFilters.sites = {};
+
+            if (tenantCode) {
+                this.advancedFilters.sites[tenantCode] = true;
+            }
+        }
+
+        /**
+         * @ngdoc method
          * @name WebPublisherMonitoringController#_setFilters
          * @description Sets user defined advanced filters (todo)
          */
         _setFilters(scope) {
             // TODO: request to user API to load filter preset per user
             this.advancedFilters = {
-                sites: [],
-                routes: []
+                sites: {},
+                routes: {}
             };
 
             scope.$watch(() => this.advancedFilters, (newVal, oldVal) => {
