@@ -64,7 +64,7 @@ export function renderToBody(elem, target) {
     var width = rect.width;
     var height = rect.height;
 
-    var ACTION_MENU_FROM_TOP = 150; // 150 = top-menu + search bar
+    var ACTION_MENU_FROM_TOP = 100; // top-menu + search bar
     var MENU_MARGIN_HEIGHT = 16;
     var LEFT_BAR_WIDTH = 48;
     var BOTTOM_BAR_HEIGHT = 30;

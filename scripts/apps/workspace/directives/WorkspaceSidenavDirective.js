@@ -86,6 +86,10 @@ export function WorkspaceSidenavDirective(superdeskFlags, $location, Keys, gette
                     return false;
                 }
             });
+
+            if ($rootScope.popup) {
+                superdeskFlags.flags.hideMonitoring = true;
+            }
         }
     };
 }

@@ -16,9 +16,9 @@
  * @description Authoring Workspace Service is responsible for the actions done on the authoring workspace container
  */
 AuthoringWorkspaceService.$inject = ['$location', 'superdeskFlags', 'authoring', 'lock', 'send', 'config', 'suggest',
-    '$rootScope', 'search'];
+    '$rootScope', 'search', '$window'];
 export function AuthoringWorkspaceService($location, superdeskFlags, authoring, lock, send, config, suggest,
-    $rootScope, search) {
+    $rootScope, search, $window) {
     this.item = null;
     this.action = null;
     this.state = null;
@@ -91,6 +91,10 @@ export function AuthoringWorkspaceService($location, superdeskFlags, authoring, 
      * @param {boolean} showMonitoring when true shows the monitoring if monitoring is hidden.
      */
     this.close = function(showMonitoring) {
+        if ($rootScope.popup) {
+            window.close();
+        }
+
         suggest.setActive(false);
         self.item = null;
         self.action = null;
@@ -161,6 +165,24 @@ export function AuthoringWorkspaceService($location, superdeskFlags, authoring, 
      */
     this.update = function(item) {
         self.item = item;
+    };
+
+    /**
+     * Edit/view item in a new window
+     *
+     * @param {Object} item
+     * @param {string} action
+     */
+    this.popup = (item, action) => {
+        const host = $location.host();
+        const port = $location.port();
+        const proto = $location.protocol();
+        const baseURL = `${proto}://${host}${port !== 80 ? ':' + port : ''}`;
+
+        $window.open(
+            `${baseURL}/#/workspace/monitoring?item=${item._id}&action=${action}&popup`,
+            item._id
+        );
     };
 
     /**

@@ -54,4 +54,16 @@ describe('authoring', () => {
         expect(scope.item.anpa_category[0].qcode).toBe('paservice:motoring');
         expect(scope.item.anpa_category[0].scheme).toBeUndefined();
     }));
+
+    describe('authoring workspace', () => {
+        it('can open an item in new window', inject(($window, authoringWorkspace) => {
+            spyOn($window, 'open');
+            authoringWorkspace.popup({_id: 'foo'}, 'edit');
+            expect($window.open)
+                .toHaveBeenCalledWith(
+                    'http://server/#/workspace/monitoring?item=foo&action=edit&popup',
+                    'foo'
+                );
+        }));
+    });
 });
