@@ -200,11 +200,10 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
              * @returns {Boolean}
              */
             scope.disableSendButton = function() {
-                if (scope.item && scope.item.task) {
-                    return !scope.selectedDesk ||
-                           scope.mode !== 'ingest' && scope.selectedStage && scope.mode !== 'spike' &&
-                           scope.selectedStage._id === scope.item.task.stage;
-                }
+                return !scope.selectedDesk ||
+                        scope.mode !== 'ingest' && scope.selectedStage && scope.mode !== 'spike' &&
+                        (_.get(scope, 'item.task.stage') === scope.selectedStage._id ||
+                        _.includes(_.map(scope.multiItems, 'task.stage'), scope.selectedStage._id));
             };
 
             /*
