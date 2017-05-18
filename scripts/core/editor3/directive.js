@@ -83,7 +83,14 @@ class Editor3Directive {
              * @type {Boolean}
              * @description Disables the Enter key if the attribute is set.
              */
-            singleLine: '@'
+            singleLine: '@',
+
+            /**
+             * @type {String}
+             * @description Number indicating the debounce in ms for the on-change
+             * event.
+             */
+            debounce: '@'
         };
     }
 
@@ -93,6 +100,7 @@ class Editor3Directive {
         this.readOnly = this.readOnly || false;
         this.findReplaceTarget = typeof this.findReplaceTarget !== 'undefined';
         this.singleLine = typeof this.singleLine !== 'undefined';
+        this.debounce = parseInt(this.debounce || '100', 10);
 
         const store = createStore(this);
 
