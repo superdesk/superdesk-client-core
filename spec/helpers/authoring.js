@@ -3,12 +3,15 @@
 
 module.exports = new Authoring();
 
+var waitHidden = require('./utils').waitHidden;
+
 function Authoring() {
     this.lock = element(by.css('[ng-click="lock()"]'));
     this.publish_button = element(by.buttonText('publish'));
     this.correct_button = element(by.buttonText('correct'));
     this.kill_button = element(by.buttonText('kill'));
     this.close_button = element(by.buttonText('Close'));
+    this.cancel_button = element(by.buttonText('Cancel'));
     this.add_content_button = by.className('add-content__plus-btn');
     this.ignore_button = element(by.buttonText('Ignore'));
     this.save_publish_button = element(by.buttonText('Save and publish'));
@@ -51,6 +54,9 @@ function Authoring() {
     this.send_panel = element(by.css('#panel-send:not(.ng-hide)'));
     this.fetch_panel = element(by.css('#panel-fetch:not(.ng-hide)'));
     this.headline = element(by.model('item.headline')).all(by.className('editor-type-html')).first();
+
+    this.send_kill_button = element(by.id('send-kill-btn'));
+    this.send_correction_button = element(by.id('send-correction-btn'));
 
     /**
      * Find all file type icons in the item's info icons box matching the
@@ -175,6 +181,11 @@ function Authoring() {
 
     this.close = function() {
         return this.close_button.click();
+    };
+
+    this.cancel = function() {
+        this.cancel_button.click();
+        return waitHidden(this.cancel_button);
     };
 
     this.addEmbed = function(embedCode, context) {

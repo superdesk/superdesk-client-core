@@ -145,11 +145,11 @@ describe('authoring', () => {
 
         monitoring.filterAction('text');
         monitoring.actionOnItem('Kill item', 5, 0);
-        authoring.sendToButton.click();
-        expect(authoring.kill_button.isDisplayed()).toBe(true);
+        expect(authoring.send_kill_button.isDisplayed()).toBeTruthy();
+        authoring.cancel();
+        authoring.close();
 
         // publish & correct item
-        monitoring.openMonitoring();
         // reset filters
         monitoring.filterAction('all');
         expect(monitoring.getTextItem(3, 2)).toBe('item6');
@@ -157,10 +157,10 @@ describe('authoring', () => {
         authoring.publish();
         monitoring.filterAction('text');
         monitoring.actionOnItem('Correct item', 5, 0);
-        authoring.sendToButton.click();
-        expect(authoring.correct_button.isDisplayed()).toBe(true);
-
+        expect(authoring.send_correction_button.isDisplayed()).toBeTruthy();
+        authoring.cancel();
         authoring.close();
+
         expect(monitoring.getTextItem(5, 0)).toBe('item6');
         monitoring.actionOnItem('Open', 5, 0);
         expect(authoring.edit_correct_button.isDisplayed()).toBe(true);
@@ -482,8 +482,7 @@ describe('authoring', () => {
         expect(authoring.getBodyText()).toBe('This is kill template. Slugged item5 slugline one/two.');
         expect(authoring.getHeadlineText()).toBe('KILL NOTICE');
         expect(authoring.getHeadlineText()).toBe('KILL NOTICE');
-        authoring.sendToButton.click();
-        expect(authoring.kill_button.isDisplayed()).toBe(true);
+        expect(authoring.send_kill_button.isDisplayed()).toBeTruthy();
     });
 
     it('Emptied body text fails to validate', () => {
@@ -674,8 +673,7 @@ describe('authoring', () => {
         expect(authoring.getHeadlineText()).not.toBe('item5');
         expect(authoring.getHeadlineText()).toBe('KILL NOTICE');
 
-        authoring.sendToButton.click();
-        expect(authoring.kill_button.isDisplayed()).toBe(true);
+        expect(authoring.send_kill_button.isDisplayed()).toBeTruthy();
     });
 
     it('after undo/redo save last version', () => {
@@ -739,10 +737,9 @@ describe('authoring', () => {
         monitoring.actionOnItem('Kill item', 5, 0); // Edit for kill
         authoring.minimize(); // minimize before publishing the kill
         authoring.maximize('item6');
-        authoring.sendToButton.click();
-        expect(monitoring.getPublishButtonText()).toBe('CORRECT');
+        expect(authoring.send_correction_button.isDisplayed()).toBeTruthy();
+
         authoring.maximize('item9');
-        authoring.sendToButton.click();
-        expect(monitoring.getPublishButtonText()).toBe('KILL');
+        expect(authoring.send_kill_button.isDisplayed()).toBeTruthy();
     });
 });

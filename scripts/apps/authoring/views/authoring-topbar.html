@@ -87,6 +87,7 @@
         <button class="btn btn--close"
                 id="closeAuthoringBtn"
                 ng-click="close()"
+                ng-if="action !== 'correct' && action !== 'kill'"
                 title="{{ :: 'Close' | translate }}"
                 sd-hotkey="ctrl+shift+e">
             <span class="btn__text" translate>Close</span><i class="icon-close-small btn__text--alt-icon"></i>
@@ -115,6 +116,28 @@
         ng-disabled="!_editable"
         ng-if="showExportButton"
         translate>Export</button>
+
+        <button class="btn btn--primary" type="submit"
+                id="send-correction-btn"
+                ng-if="action === 'correct'"
+                ng-show="_editable"
+                ng-disabled="canSendAndPublish()"
+                ng-click="publish()"
+                translate>Send Correction</button>
+
+        <button class="btn btn--primary" type="submit"
+                id="send-kill-btn"
+                ng-if="action === 'kill'"
+                ng-show="_editable"
+                ng-disabled="canSendAndPublish()"
+                ng-click="publish()"
+                translate>Send Kill</button>
+
+        <button class="btn btn--close"
+                id="cancelAuthoringBtn"
+                ng-if="action === 'correct' || action === 'kill'"
+                ng-click="cancel()"
+                translate>Cancel</button>
     </div>
 
     <div class="subnav__button-stack subnav__button-stack--square-buttons">
@@ -249,6 +272,7 @@
         </div>
 
         <button id="send-to-btn" ng-show="_editable"
+            ng-if="action !== 'correct' && action !== 'kill'"
             class="navbtn navbtn--highlighted" sd-tooltip="{{ :: 'Send to / Publish' | translate }}" flow="left"
             ng-click="views.send = !views.send"
             ng-class="{'active': views.send}">
