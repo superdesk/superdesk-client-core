@@ -8,8 +8,10 @@ export function VocabularyConfigController($scope, vocabularies, $timeout) {
     $scope.openVocabulary = function(vocabulary) {
         $scope.loading = true;
         $timeout(() => {
-            $scope.vocabulary = vocabulary;
-        }, 200, true);
+            $scope.$apply(() => {
+                $scope.vocabulary = vocabulary;
+            });
+        }, 200, false);
     };
 
     $scope.$on('vocabularies:loaded', () => {

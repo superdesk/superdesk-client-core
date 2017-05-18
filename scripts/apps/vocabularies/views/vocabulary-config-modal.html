@@ -6,47 +6,72 @@
             <h3 class="modal__heading"><span translate>Edit Vocabulary</span>: {{ :: vocabulary.display_name | translate}}</h3>
         </div>       
         <div class="modal__body">
-            <div class="grid grid--padding-fix">
-                <div ng-repeat="(key, value) in model" ng-if="!schema && key !== 'is_active'" class="grid__item">
-                    <label ng-class="{'long-name': key === 'name'}">{{ :: key | translate}}</label>
-                </div>
-                <div ng-repeat="(key, options) in schema" ng-if="schema" class="grid__item">
-                    <label>{{ options.label || key }}</label>
-                </div>
-                <div class="grid__item" style="flex: 0 0 auto;"></div>
-            </div>
-
             <ng-form name="vocabularyForm" class="vocabularyForm">
 
-                <!-- auto config -->
-                <fieldset ng-if="!schema">
-                    <div ng-repeat="item in vocabulary.items track by $index" class="grid grid--padding-fix">
-                        <div ng-repeat="(key, value) in model"
-                            ng-if="key !== 'is_active'"
-                            class="grid__item"
-                            ng-switch on="key">
-                            <input type="color" ng-model="item[key]" ng-disabled="!item.is_active" ng-switch-when="color">
-                            <input type="text" ng-class="{'long-name': key === 'name'}" ng-model="item[key]" ng-disabled="!item.is_active" ng-switch-default>
-                        </div>
+            <table>
+            <thead>
+            <tr>
+                <th ng-repeat="(key, value) in model" ng-if="!schema && key !== 'is_active'">
+                    <label ng-class="{'long-name': key === 'name'}">{{ :: key | translate}}</label>
+                </th>
+                <th ng-repeat="(key, options) in schema" ng-if="schema">
+                    <label>{{ options.label || key | translate }}</label>
+                </th>
 
-                        <span class="pull-right vocabularyStatus" sd-switch ng-model="item.is_active" tooltip="{{ :: 'Enable / Disable' | translate }}" tooltip-placement="left"></span>
-                    </div>
+                <th><label translate>Active</label></th>
+                <th></th>
+            </tr>
+            </thead>
 
-                </fieldset>
+            <!-- auto config -->
+            <tbody ng-if="!schema">
+                <tr ng-repeat="item in vocabulary.items track by $index">
+                    <td ng-repeat="(key, value) in model"
+                        ng-if="key !== 'is_active'"
+                        ng-switch on="key">
+                        <input type="color" ng-model="item[key]" ng-disabled="!item.is_active" ng-switch-when="color">
+                        <input type="text" ng-class="{'long-name': key === 'name'}" ng-model="item[key]" ng-disabled="!item.is_active" ng-switch-default>
+                    </td>
 
-                <!-- schema based config -->
-                <fieldset ng-if="schema">
-                    <div ng-repeat="item in vocabulary.items track by $index">
-                        <div ng-repeat="(key, options) in schema" class="field vocabularyField" ng-switch on="options.label">
-                            <input type="color" ng-model="item[key]" ng-disabled="!item.is_active" ng-switch-when="Color">
-                            <input type="text" ng-model="item[key]" ng-disabled="!item.is_active" maxlength="2" placeholder="{{ :: '2 character limit' | translate }}" ng-switch-when="List Name">
-                            <input type="text" ng-model="item[key]" ng-disabled="!item.is_active" ng-switch-default>
-                        </div>
+                    <td>
+                        <span class="vocabularyStatus" sd-switch ng-model="item.is_active" tooltip="{{ :: 'Enable / Disable' | translate }}" tooltip-placement="left"></span>
+                    </td>
+                    <td>
+                        <button ng-show="vocabulary.items.length > 1" ng-click="removeItem($index)"><i class="icon-close-small"></i></button>
+                    </td>
+                </tr>
+            </tbody>
 
-                        <span class="pull-right vocabularyStatus" sd-switch ng-model="item.is_active" tooltip="{{ :: 'Enable / Disable' | translate }}" tooltip-placement="left"></span>
-                    </div>
+            <!-- schema based config -->
+            <tbody ng-if="schema">
+                <tr ng-repeat="item in vocabulary.items track by $index">
+                    <td ng-repeat="(key, options) in schema" ng-switch on="options.type">
+                        <input type="color"
+                            ng-model="item[key]"
+                            ng-disabled="!item.is_active"
+                            ng-switch-when="color">
+                        <input type="text"
+                            ng-model="item[key]"
+                            ng-disabled="!item.is_active"
+                            ng-maxlength="options.maxlength"
+                            placeholder="{{ options.maxlength }} {{ :: 'character limit' | translate }}"
+                            ng-switch-when="short">
+                        <input type="text"
+                            ng-model="item[key]"
+                            ng-disabled="!item.is_active"
+                            ng-switch-default>
+                    </td>
 
-                </fieldset>
+                    <td>
+                        <span class="vocabularyStatus" sd-switch ng-model="item.is_active" tooltip="{{ :: 'Enable / Disable' | translate }}" tooltip-placement="left"></span>
+                    </td>
+                    <td>
+                        <button ng-click="removeItem($index)"><i class="icon-close-small"></i></button>
+                    </td>
+                </tr>
+            </tbody>
+
+            </table>
 
             </ng-form>
             <p ng-if="errorMessage">{{ errorMessage }}</p>
