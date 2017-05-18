@@ -107,17 +107,22 @@ describe('superdesk.apps.workspace.content', () => {
         }));
 
         it('can fetch content types and filter by desk', inject((content, $rootScope, $q) => {
-            spyOn(content, 'getTypes').and.returnValue($q.when([{_id: 'foo'}, {_id: 'bar'}]));
+            spyOn(content, 'getTypes').and.returnValue($q.when([
+                {_id: 'foo'},
+                {_id: 'bar'},
+                {_id: 'baz'}
+            ]));
 
             var profiles;
 
-            content.getDeskProfiles({content_profiles: {bar: 1}}).then((_profiles) => {
+            content.getDeskProfiles({content_profiles: {bar: 1}}, 'baz').then((_profiles) => {
                 profiles = _profiles;
             });
 
             $rootScope.$digest();
-            expect(profiles.length).toBe(1);
+            expect(profiles.length).toBe(2);
             expect(profiles[0]._id).toBe('bar');
+            expect(profiles[1]._id).toBe('baz');
         }));
 
         it('can generate content types lookup dict', inject((content, $q, $rootScope) => {

@@ -24,9 +24,9 @@ function MetadataCtrl(
     .then(setAvailableCompanyCodes);
 
     $scope.$watch(() => desks.active.desk, (activeDeskId) => {
-        content.getDeskProfiles(activeDeskId ? desks.getCurrentDesk() : null)
+        content.getDeskProfiles(activeDeskId ? desks.getCurrentDesk() : null, $scope.item.profile)
             .then((profiles) => {
-                $scope.content_types = profiles;
+                $scope.desk_content_types = profiles;
             });
     });
 
