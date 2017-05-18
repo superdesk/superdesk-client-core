@@ -14,6 +14,9 @@ export function LegalArchiveController($scope, $location, legal, preferencesServ
     $scope.selected = {};
     $scope.openAdvanceSearch = false;
 
+    // to stop itemList to fetch new items when scrolled
+    $scope.noScroll = true;
+
     // Required to display action icons in grid view
     $scope.extras = {activity: {action: 'list'}};
 

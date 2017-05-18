@@ -359,7 +359,10 @@ export function ItemList(
 
                     listComponent.closeActionsMenu();
                     $timeout.cancel(updateTimeout);
-                    updateTimeout = $timeout(renderIfNeeded, 100, false);
+
+                    if (!scope.noScroll) {
+                        updateTimeout = $timeout(renderIfNeeded, 100, false);
+                    }
                 }
 
                 /**
