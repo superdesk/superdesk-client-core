@@ -105,6 +105,19 @@ angular.module('superdesk.apps.authoring', [
                     return authoring.itemActions(item).edit;
                 }]
             })
+            .activity('edit.item.popup', {
+                label: gettext('Edit in new Window'),
+                priority: 5,
+                icon: 'pencil',
+                keyboardShortcut: 'ctrl+alt+n',
+                controller: ['data', 'authoringWorkspace', (data, authoringWorkspace) => {
+                    authoringWorkspace.popup(data.item, 'edit');
+                }],
+                filters: [{action: 'list', type: 'archive'}],
+                additionalCondition: ['authoring', 'item', function(authoring, item) {
+                    return authoring.itemActions(item).edit;
+                }]
+            })
             .activity('kill.text', {
                 label: gettext('Kill item'),
                 priority: 100,
@@ -156,6 +169,23 @@ angular.module('superdesk.apps.authoring', [
                     {action: 'list', type: 'archived'},
                     {action: 'list', type: 'legal_archive'},
                     {action: 'view', type: 'item'}
+                ],
+                additionalCondition: ['authoring', 'item', function(authoring, item) {
+                    return authoring.itemActions(item).view;
+                }]
+            })
+            .activity('view.item.popup', {
+                label: gettext('Open in new Window'),
+                priority: 1990,
+                icon: 'external',
+                keyboardShortcut: 'ctrl+alt+n',
+                controller: ['data', 'authoringWorkspace', (data, authoringWorkspace) => {
+                    authoringWorkspace.popup(data.item, 'view');
+                }],
+                filters: [
+                    {action: 'list', type: 'archive'},
+                    {action: 'list', type: 'archived'},
+                    {action: 'list', type: 'legal_archive'}
                 ],
                 additionalCondition: ['authoring', 'item', function(authoring, item) {
                     return authoring.itemActions(item).view;

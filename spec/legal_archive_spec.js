@@ -23,7 +23,7 @@ describe('legal_archive', () => {
         var menu = content.openItemMenu('item1 in legal archive');
         var menuItems = menu.all(by.repeater('activity in actions.default'));
 
-        expect(menuItems.count()).toBe(1);
+        expect(menuItems.count()).toBe(2); // open + open in new window
     });
 
     it('on open item close preview in a Legal Archive', () => {
