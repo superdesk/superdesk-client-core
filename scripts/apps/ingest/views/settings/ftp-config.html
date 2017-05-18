@@ -24,3 +24,11 @@
     <label translate>Passive</label>
     <input type="checkbox" ng-model="provider.config.passive" ng-change="$parent.setConfig(provider)">
 </div>
+<div class="field">
+    <label translate>Move articles after ingestion</label>
+    <input type="checkbox" ng-model="provider.config.move" ng-change="$parent.setConfig(provider)">
+</div>
+<div class="field" ng-show="provider.config.move">
+    <label for="ftp_move_path" translate>Move ingested articles to</label>
+    <input type="text" id="ftp_move_path" placeholder="{{ :: 'FTP Server Path'|translate }}" ng-model="provider.config.move_path" ng-required="provider.config.move" ng-change="$parent.setConfig(provider)">
+</div>
