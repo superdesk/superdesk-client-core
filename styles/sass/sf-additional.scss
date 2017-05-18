@@ -380,6 +380,7 @@
 
     &--compare-versions {
         max-height: 400px;
+        min-width: 250px;
         overflow-y: auto;
         overflow-x: hidden;
         li {

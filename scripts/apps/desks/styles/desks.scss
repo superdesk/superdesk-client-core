@@ -374,6 +374,9 @@ $desk-width: 270px;
         .row {
             padding-top: 20px;
             clear: both;
+            label {
+                display: inline-block;
+            }
             .prevent-off {
                 pointer-events: none;
             }
