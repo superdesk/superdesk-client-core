@@ -83,7 +83,16 @@ class Editor3Directive {
              * @type {Boolean}
              * @description Disables the Enter key if the attribute is set.
              */
-            singleLine: '@'
+            singleLine: '@',
+
+            /**
+             * @type {Boolean}
+             * @description Disables the conversion to HTML on each change. This is
+             * needed on large texts because it is a performance bottleneck. In this
+             * case, HTML conversion should only happen when needed, ideally with a
+             * worker.
+             */
+            noHtml: '@'
         };
     }
 

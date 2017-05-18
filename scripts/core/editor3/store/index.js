@@ -48,19 +48,15 @@ export default function createEditorStore(ctrl) {
  * current content states and updates the values of the host controller. This function
  * is bound to the controller, so 'this' points to controller attributes.
  */
-function onChange(content) {
-    // clear find & replace highlights
-    const cleanedContent = clearHighlights(content).content;
-    const newValue = toHTML(cleanedContent);
+function onChange(editorContent) {
+    const {content} = clearHighlights(editorContent);
 
-    this.value = this.value || '<p><br></p>';
-    if (newValue.localeCompare(this.value) === 0) {
-        this.value = newValue;
-        return;
+    this.editorState = convertToRaw(content);
+
+    if (typeof this.noHtml === 'undefined') {
+        this.value = toHTML(content);
     }
 
-    this.editorState = convertToRaw(cleanedContent);
-    this.value = newValue;
     this.onChange();
 }
 

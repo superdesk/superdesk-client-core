@@ -1,5 +1,7 @@
 import * as helpers from 'apps/authoring/authoring/helpers';
 
+const HTMLWorker = require('worker!./HTMLWorker');
+
 /**
  * @ngdoc service
  * @module superdesk.apps.authoring
@@ -298,13 +300,14 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         helpers.filterDefaultValues(diff, origItem);
 
         if (_.size(diff) > 0) {
-            return api.save('archive', origItem, diff).then((_item) => {
-                origItem._autosave = null;
-                origItem._autosaved = false;
-                origItem._locked = lock.isLockedInCurrentSession(item);
-                $injector.get('authoringWorkspace').update(origItem);
-                return origItem;
-            });
+            return this.prepareItem(diff).then((newItem) =>
+                api.save('archive', origItem, newItem).then((_item) => {
+                    origItem._autosave = null;
+                    origItem._autosaved = false;
+                    origItem._locked = lock.isLockedInCurrentSession(item);
+                    $injector.get('authoringWorkspace').update(origItem);
+                    return origItem;
+                }));
         }
 
         if (origItem) {
@@ -314,6 +317,25 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         }
 
         return $q.when(origItem);
+    };
+
+    this.prepareItem = function(item) {
+        const editorState = item.editor_state;
+
+        if (!editorState || !Array.isArray(editorState.blocks)) {
+            return $q.resolve(item);
+        }
+
+        const worker = new HTMLWorker();
+
+        return $q((resolve, reject) => {
+            worker.onmessage = ({data}) => {
+                item.body_html = data.html;
+                resolve(item);
+            };
+
+            worker.postMessage({rawContent: editorState});
+        });
     };
 
     /**

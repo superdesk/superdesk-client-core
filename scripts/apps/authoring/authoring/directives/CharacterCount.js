@@ -1,4 +1,5 @@
 import * as helpers from 'apps/authoring/authoring/helpers';
+import {convertFromRaw} from 'draft-js';
 
 CharacterCount.$inject = [];
 export function CharacterCount() {
@@ -6,7 +7,8 @@ export function CharacterCount() {
         scope: {
             item: '=',
             limit: '=',
-            html: '@'
+            html: '@',
+            editorState: '@'
         },
         template: '<span class="char-count" ng-class="{error: limit && numChars > limit}" translate> ' +
                 gettext(' characters') + '</span>' +
@@ -19,6 +21,7 @@ export function CharacterCount() {
                 var input = scope.item || '';
 
                 input = scope.html ? helpers.cleanHtml(input) : input;
+                input = scope.editorState ? convertFromRaw(input).getPlainText() : input;
                 input = input.replace(/\r?\n|\r|\s/g, '');
 
                 scope.numChars = input.length || 0;

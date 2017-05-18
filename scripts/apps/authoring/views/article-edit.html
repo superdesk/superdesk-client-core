@@ -200,10 +200,11 @@
 <div contenteditable="true" id="editor3Tansa" tansa-proofing="true"  style="position: fixed; top: -1000px; left: -1000px; height: 150px; width: 500px; display: block;"></div>
 <div class="field body" ng-if="!isMediaType && schema.body_html && (features.onlyEditor3 || editor.body_html.editor3)" order="{{editor.body_html.order}}" sd-validation-error="error.body_html" data-required="schema.body_html.required" sd-width="{{editor.body_html.sdWidth || 'full'}}" tansa-proofing="false">
   <label translate>Body</label>
-    <span sd-character-count data-item="item.body_html" data-html="true"></span>
-    <span sd-word-count data-item="item.body_html" data-html="true"></span>
+    <span sd-character-count data-item="item.editor_state" data-editor-state="true"></span>
+    <span sd-word-count data-item="item.editor_state" data-editor-state="true"></span>
     <div id="bodyhtml"
          sd-editor3
+	    data-no-html
          data-find-replace-target
          data-scroll-container=".page-content-container"
          data-editor-format="editor.body_html.formatOptions"
