@@ -31,7 +31,7 @@ export default function createEditorStore(ctrl) {
         singleLine: ctrl.singleLine,
         activeCell: null,
         editorFormat: ctrl.editorFormat || [],
-        onChangeValue: _.debounce(onChange.bind(ctrl), 500)
+        onChangeValue: _.debounce(onChange.bind(ctrl), ctrl.debounce)
     }, applyMiddleware(thunk));
 
 

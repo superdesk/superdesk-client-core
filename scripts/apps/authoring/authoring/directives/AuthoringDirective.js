@@ -809,7 +809,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 $scope.autosave(item);
             };
 
-            $scope.autosave = function(item) {
+            $scope.autosave = function(item, timeout) {
                 if (item !== $scope.item) {
                     // keep items in sync
                     $scope.item = item;
@@ -823,7 +823,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                     validate($scope.origItem, $scope.item);
                 }
 
-                var autosavedItem = authoring.autosave($scope.item, $scope.origItem);
+                var autosavedItem = authoring.autosave($scope.item, $scope.origItem, timeout);
 
                 authoringWorkspace.addAutosave();
                 return autosavedItem;

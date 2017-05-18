@@ -210,7 +210,8 @@
          data-editor-state="item.editor_state"
          data-value="item.body_html"
          data-read-only="!_editable"
-         data-on-change="autosave(item)"
+         data-on-change="autosave(item, 0)"
+         data-debounce="3000"
          data-language="item.language">
     </div>
 </div>
