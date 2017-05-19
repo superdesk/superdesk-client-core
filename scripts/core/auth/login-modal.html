@@ -3,7 +3,7 @@
         <p ng-if="identity._id" class="session-error">{{ 'Your session has expired.'|translate }}<br />{{ 'Please log in again.'|translate }}</p>
 
         <div class="logo-handler" ng-show="!identity.Avatar">
-            <img src="images/superdesk-logo.svg" width="290" alt="Superdesk Logo">
+            <img src="/images/superdesk-logo.svg" width="290" alt="Superdesk Logo">
         </div>
 
         <div class="form-handler">
@@ -23,12 +23,19 @@
                         </div>
                     </button>
                 </fieldset>
+
+                <fieldset class="buttons" ng-show="allowedAuth.google">
+                    <button class="btn btn--sd-green"
+                        ng-click="openLoginPopup('google')" translate>Log In with Google</button>
+                </fieldset>
+
             </form>
             <a href="/#/secure-login/" class="text" ng-show="secureActivated" translate>Secure login</a>
 
             <div class="error-handler" ng-switch on="loginError">
                 <p class="error" ng-switch-when="401" translate>Oops! Invalid Username or Password.<br />Please try again.</p>
                 <p class="error" ng-switch-when="403" translate>Sorry, but your account has been suspended.</p>
+                <p class="error" ng-switch-when="404" translate>Sorry, user not found.</p>
                 <p class="error" ng-show="loginError" ng-switch-default translate>Sorry, but can't reach the server now.<br />Please try again later.</p>
 
                 <div class="network-error red" ng-show="serverStatus == 1">

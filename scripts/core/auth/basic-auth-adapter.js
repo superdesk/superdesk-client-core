@@ -6,8 +6,20 @@
  * to backend endpoints.
  */
 
-angular.module('superdesk.core.auth.basic', []).service('authAdapter', ['$http', 'urls',
-    function($http, urls) {
+angular.module('superdesk.core.auth.basic', [])
+    .service('authAdapter', ['$http', 'urls', function($http, urls) {
+        /**
+         * Set token using response object
+         *
+         * @param {Object} response
+         * @return {Object} response.data
+         */
+        this.setToken = (response) => {
+            response.data.token = formatToken(response.data.token);
+            $http.defaults.headers.common.Authorization = response.data.token;
+            return response.data;
+        };
+
         /**
          * @ngdoc method
          * @name authAdapter#authenticate
@@ -16,17 +28,9 @@ angular.module('superdesk.core.auth.basic', []).service('authAdapter', ['$http',
          * @returns {Promise} If successful, session data is returned, including session token
          * @description authenticate user using database auth
          */
-        this.authenticate = function(username, password) {
-            return urls.resource('auth_db').then((url) => $http.post(url, {
-                username: username,
-                password: password
-            }).then((response) => {
-                response.data.token = 'Basic ' + btoa(response.data.token + ':');
-                $http.defaults.headers.common.Authorization = response.data.token;
-                return response.data;
-            }));
-        };
-
+        this.authenticate = (username, password) => urls.resource('auth_db')
+            .then((url) => $http.post(url, {username: username, password: password}))
+            .then(this.setToken);
 
         /**
          * @ngdoc method
@@ -36,14 +40,17 @@ angular.module('superdesk.core.auth.basic', []).service('authAdapter', ['$http',
          * @returns {Promise} If successful, session data is returned, including session token
          * @description authenticate user using XMPP auth (aka secure login)
          */
-        this.authenticateXMPP = function(jid, transactionId) {
-            return urls.resource('auth_xmpp').then((url) => $http.post(url, {
-                jid: jid,
-                transactionId: transactionId
-            }).then((response) => {
-                response.data.token = 'Basic ' + btoa(response.data.token + ':');
-                $http.defaults.headers.common.Authorization = response.data.token;
-                return response.data;
-            }));
-        };
+        this.authenticateXMPP = (jid, transactionId) => urls.resource('auth_xmpp')
+            .then((url) => $http.post(url, {jid: jid, transactionId: transactionId}))
+            .then(this.setToken);
+
+        /**
+         * Format token for basic auth
+         *
+         * @param {string} token
+         * @return {string}
+         */
+        function formatToken(token) {
+            return token.startsWith('Basic') ? token : 'Basic ' + btoa(token + ':');
+        }
     }]);

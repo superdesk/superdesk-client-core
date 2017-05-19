@@ -4,19 +4,19 @@ describe('auth service', () => {
         window.module('superdesk.core.services.storage');
         window.module('superdesk.core.auth');
         window.module('superdesk.core.auth.session');
+        window.module('superdesk.core.auth.basic');
         window.module('superdesk.core.menu');
         window.module('superdesk.apps.authoring');
         window.module('superdesk.apps.searchProviders');
         window.module(($provide) => {
             $provide.service('api', function($q) {
                 this.users = {
-                    getById: function(id) {
-                        return $q.when({username: 'foo'});
-                    }
+                    getById: (id) => $q.when({username: 'foo'})
                 };
             });
         });
     });
+
     beforeEach(inject((session, preferencesService, authAdapter, urls, $q) => {
         session.clear();
         spyOn(preferencesService, 'get').and.returnValue($q.when({}));
@@ -25,26 +25,22 @@ describe('auth service', () => {
     }));
 
     it('can login', inject((auth, session, $httpBackend, $rootScope) => {
+        let success = jasmine.createSpy('authenticated');
+
+        $httpBackend.expectPOST('http://localhost:5000/api/auth').respond(200, {user: 'foo', token: 'bar'});
+
         expect(session.identity).toBe(null);
         expect(session.token).toBe(null);
 
-        var resolved = {};
+        auth.login('admin', 'admin').then(success);
 
-        $httpBackend.expectPOST('http://localhost:5000/api/auth').respond(200, {
-            user: 'foo'
-        });
-
-        auth.login('admin', 'admin').then((identity) => {
-            expect(session.start).toHaveBeenCalled();
-            resolved.login = true;
-        }, () => {
-            resolved.login = false;
-        });
-
+        $rootScope.$apply();
         $httpBackend.flush();
         $rootScope.$apply();
 
-        expect(resolved.login).toBe(true);
+        expect(session.start).toHaveBeenCalled();
+        expect(success).toHaveBeenCalled();
+        $httpBackend.verifyNoOutstandingExpectation();
     }));
 
     it('checks credentials', inject((auth, $httpBackend, $rootScope) => {
@@ -63,5 +59,13 @@ describe('auth service', () => {
 
         expect(resolved).toBe(false);
         expect(rejected).toBe(true);
+    }));
+
+    it('handles oauth login', inject((auth, session, $http, $rootScope) => {
+        auth.loginOAuth({data: {token: 'foo'}});
+        expect($http.defaults.headers.common.Authorization)
+            .toBe('Basic ' + btoa('foo:'));
+        $rootScope.$digest();
+        expect(session.start).toHaveBeenCalled();
     }));
 });

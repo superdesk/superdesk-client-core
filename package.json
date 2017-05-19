@@ -104,9 +104,9 @@
     "request": "2.61.0",
     "sass-loader": "4.1.1",
     "style-loader": "0.13.2",
+    "superdesk-ui-framework": "superdesk/superdesk-ui-framework",
     "webpack": "1.14.0",
-    "webpack-dev-server": "1.14.1",
-    "superdesk-ui-framework": "superdesk/superdesk-ui-framework"
+    "webpack-dev-server": "1.14.1"
   },
   "devDependencies": {
     "dgeni-alive": "gbbr/dgeni-alive#superdesk",

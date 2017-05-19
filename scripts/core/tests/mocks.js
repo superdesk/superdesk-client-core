@@ -12,7 +12,7 @@ angular.module('superdesk.mocks', [])
     .config(['$qProvider', ($qProvider) => $qProvider.errorOnUnhandledRejections(false)])
     .run(['$injector', ng.register])
     .constant('config', {
-        server: {url: null},
+        server: {url: ''},
         editor: {},
         model: {
             dateformat: 'DD/MM/YYYY',
