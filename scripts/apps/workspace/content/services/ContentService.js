@@ -232,13 +232,14 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
      * Get profiles selected for given desk
      *
      * @param {Object} desk
+     * @param {string} profileId if profileId is set add such profile to the list
      * @return {Promise}
      */
-    this.getDeskProfiles = function(desk) {
+    this.getDeskProfiles = function(desk, profileId) {
         return this.getTypes().then((profiles) => !desk || _.isEmpty(desk.content_profiles) ?
                 profiles :
-                profiles.filter((profile) => desk.content_profiles[profile._id]
-            ));
+                profiles.filter((profile) => desk.content_profiles[profile._id] || profile._id === profileId)
+            );
     };
 
     this.contentProfileSchema = angular.extend({}, constant.DEFAULT_SCHEMA, constant.EXTRA_SCHEMA_FIELDS);
