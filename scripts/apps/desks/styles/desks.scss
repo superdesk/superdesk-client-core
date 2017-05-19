@@ -405,8 +405,7 @@ $desk-width: 270px;
                 .global-label {
                     font-size: 12px;
                     color: #aaa;
-                    line-height: 0;
-                    margin-left: 5px;
+                    margin-top: 5px;
                     text-transform: none;
                     span:nth-child(2) { margin-left: 0; }
                 }
@@ -419,7 +418,7 @@ $desk-width: 270px;
                     &:focus { box-shadow: none !important; }
                 }
                 &.active {
-                    .global-label { color: $white; }
+                    .global-label { color: $white; opacity: 0.8; }
                 }
                 &.editable {
                     padding: 5.5px 16px;
