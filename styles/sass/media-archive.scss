@@ -1286,13 +1286,12 @@ $modalMaxImageHeight : 250px;
         select {
             padding: 4px;
             width: 250px;
+            margin-bottom: 12px;
         }
     }
     .validator {
         margin-top: 4px;
-    }
-    .modal-body {
-        overflow: scroll;
+        margin-left: 10px;
     }
     .error {
         color: #b94a48;
