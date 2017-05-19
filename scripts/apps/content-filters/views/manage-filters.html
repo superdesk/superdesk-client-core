@@ -27,7 +27,7 @@
         </div>
     </div>
 
-    <div sd-modal data-model="contentFilter" data-close="close()" class="modal--large">
+    <div sd-modal data-model="contentFilter" data-close="close()" class="modal--large content-filter-modal">
         <div class="modal__header"> <a href="" class="close" ng-click="close()"><i class="icon-close-small"></i></a>
             <h3 class="modal__heading" ng-show="contentFilter._id"><span translate>Edit Content Filter</span> <span>"{{:: origContentFilter.name }}"</span></h3>
             <h3 class="modal__heading" translate ng-hide="contentFilter._id">Add New Content Filter</h3>
@@ -72,54 +72,75 @@
                             <a href="" class="close" ng-click="removeStatement($index)"><i class="icon-close-small"></i></a>
                         </div>
 
-                        <div class="row">
-                            <div class="row-50">
+                        <div class="grid grid--padding-fix">
+                            <div class="grid__item grid__item--col-6">
                                 <label translate>Filter Conditions</label>
-                                <select class="input" ng-model="filterRow.selected" >
-                                    <option value=""></option>
-                                    <option value="{{filter._id}}" ng-repeat="filter in filterConditions track by filter._id">{{:: filter.name}}</option>
-                                </select>
-                                <button class="btn" type="button" ng-click="addFilter(filterRow, 'fc')"  translate>Add</button>
+                                <div class="grid grid--padding-fix">
+                                    <div class="grid__item grid__item--col-9">
+                                        <select class="input" ng-model="filterRow.selected" >
+                                            <option value=""></option>
+                                            <option value="{{filter._id}}" ng-repeat="filter in filterConditions track by filter._id">{{:: filter.name}}</option>
+                                        </select>
+                                    </div>
+                                    <div class="grid__item grid__item--col-3">
+                                        <button class="btn" type="button" ng-click="addFilter(filterRow, 'fc')"  translate>Add</button>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="row-50">
+                            <div class="grid__item grid__item--col-6">
                                 <label translate>Content Filters</label>
-                                <select class="input" ng-model="filterRow.selected">
-                                    <option value=""></option>
-                                    <option ng-if="filter._id!==contentFilter._id" value="{{filter._id}}" ng-repeat="filter in contentFilters track by filter._id">{{:: filter.name}}</option>
-                                </select>
-                                <button class="btn" type="button" ng-click="addFilter(filterRow, 'pf')" translate>Add</button>
+                                <div class="grid grid--padding-fix">
+                                    <div class="grid__item grid__item--col-9">
+                                        <select class="input" ng-model="filterRow.selected">
+                                            <option value=""></option>
+                                            <option ng-if="filter._id!==contentFilter._id" value="{{filter._id}}" ng-repeat="filter in contentFilters track by filter._id">{{:: filter.name}}</option>
+                                        </select>
+                                    </div>
+                                    <div class="grid__item grid__item--col-3">
+                                        <button class="btn" type="button" ng-click="addFilter(filterRow, 'pf')" translate>Add</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-
-                        <div class="row">
-                            <div class="inline-tag-list">
-                                <ul>
-                                    <li ng-repeat="filter in filterRow.expression.fc">
-                                        <div class="inline-tag">
-                                            <span>FC:</span>{{filterConditionLookup[filter].name}}<button type="button" ng-click="removeFilter(filterRow, filter, 'fc')"><i class="icon-close-small"></i></button>
-                                        </div>
-                                    </li>
-                                    <li ng-repeat="filter in filterRow.expression.pf">
-                                        <div class="inline-tag tag-darker">
-                                            <span>PF:</span>{{contentFiltersLookup[filter].name}}<button type="button" ng-click="removeFilter(filterRow, filter, 'pf')"><i class="icon-close-small"></i></button>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
+                       
+                        <div class="inline-tag-list">
+                            <ul>
+                                <li ng-repeat="filter in filterRow.expression.fc">
+                                    <div class="inline-tag">
+                                        <span>FC:</span>{{filterConditionLookup[filter].name}}<button type="button" ng-click="removeFilter(filterRow, filter, 'fc')"><i class="icon-close-small"></i></button>
+                                    </div>
+                                </li>
+                                <li ng-repeat="filter in filterRow.expression.pf">
+                                    <div class="inline-tag tag-darker">
+                                        <span>PF:</span>{{contentFiltersLookup[filter].name}}<button type="button" ng-click="removeFilter(filterRow, filter, 'pf')"><i class="icon-close-small"></i></button>
+                                    </div>
+                                </li>
+                            </ul>
                         </div>
+                        
                     </div>
                 </fieldset>
             </form>
 
-            <div class="row">
-                <label for="contentFilter-preview" translate>Filter Preview</label>
-                <textarea id="contentFilter-preview" readonly ng-model="preview"></textarea>
+            <div class="grid grid--padding-fix grid--wrap">
+                <div class="grid__item grid__item--col-12">
+                    <label for="contentFilter-preview" translate>Filter Preview</label>
+                </div>
+                <div class="grid__item grid__item--col-12">
+                    <textarea id="contentFilter-preview" readonly ng-model="preview"></textarea>
+                </div>
             </div>
-            <div class="test-row">
-                <label for="contentFilter-test" translate>Filter Test</label>
-                <input type="text" id="contentFilter-test" required ng-model="test.article_id" ng-change="test.test_result=null">
-                <button type="button" class="btn" ng-click="test()" translate>Test</button>
-                <div>{{test.test_result}}</div>
+            <div class="grid grid--padding-fix grid--wrap">
+                <div class="grid__item grid__item--col-12">
+                    <label for="contentFilter-test" translate>Filter Test</label>
+                </div>
+                <div class="grid__item grid__item--col-10">
+                    <input type="text" id="contentFilter-test" required ng-model="test.article_id" ng-change="test.test_result=null">
+                </div>
+                <div class="grid__item grid__item--col-2">
+                    <button type="button" class="btn" ng-click="test()" translate>Test</button>
+                </div>
+                <div class="grid__item grid__item--col-12">{{test.test_result}}</div>
             </div>
         </div>
 
