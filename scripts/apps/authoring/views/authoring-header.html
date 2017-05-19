@@ -69,6 +69,28 @@
             </div>
           </div>
 
+        <div class="authoring-header__item"
+             sd-validation-error="error.keywords"
+             data-required="schema.keywords.required"
+             ng-if="schema.keywords"
+             sd-width="{{editor.keywords.sdWidth}}"
+             order="{{editor.keywords.order}}">
+          <label class="authoring-header__item-label" translate>KEYWORDS</label>
+          <div sd-meta-terms
+               class="data"
+               data-tabindex="editor.keywords.order"
+               data-item="item"
+               data-field="keywords"
+               data-unique="qcode"
+               data-list="metadata.keywords"
+               ng-disabled="!_editable"
+               data-header="true"
+               data-change="autosave(item)"
+               data-reload-list="false"
+               data-search-unique="true">
+          </div>
+        </div>
+
           <div class="authoring-header__item"
                sd-validation-error="error.genre"
                data-required="schema.genre.required"
