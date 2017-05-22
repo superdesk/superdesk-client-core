@@ -106,42 +106,29 @@ export function DeskeditStages(gettext, api, WizardHandler, tasks, $rootScope, d
             scope.save = function() {
                 scope.saving = true;
                 scope.message = gettext('Saving...');
-                if (!orig._id) {
-                    angular.extend(scope.editStage, {desk: scope.desk.edit._id});
-                    api('stages').save({}, scope.editStage)
-                        .then((item) => {
-                            scope.stages.push(item);
-                            scope.editStage = null;
-                            scope.select(item);
-                            scope.message = null;
-                            broadcastChange();
-                            scope.getstages();
-                            desks.fetchDeskById(item.desk).then((desk) => {
-                                scope.desk.edit = desk;
-                            });
-                        }, errorMessage)
-                        .finally(() => {
-                            scope.saving = false;
-                            scope.message = null;
-                        });
-                } else {
-                    api('stages').save(orig, scope.editStage)
-                        .then((item) => {
-                            scope.editStage = null;
-                            scope.message = null;
-                            scope.select(item);
-                            broadcastChange();
-                            scope.getstages();
-                            desks.fetchDeskById(item.desk).then((desk) => {
-                                scope.desk.edit = desk;
-                            });
-                        }, errorMessage)
-                        .finally(() => {
-                            scope.saving = false;
-                            scope.message = null;
-                        });
-                }
+                var dest = orig._id ? orig : {};
+
+                var diff = orig._id ? scope.editStage : angular.extend(scope.editStage, {desk: scope.desk.edit._id});
+
+                saveStage(dest, diff);
             };
+
+            function saveStage(dest, diff) {
+                api('stages').save(dest, diff)
+                .then((item) => {
+                    scope.select(item);
+                    return desks.fetchDeskById(item.desk);
+                })
+                .then((desk) => {
+                    scope.desk.edit = desk;
+                    scope.getstages();
+                }, errorMessage)
+                .finally(() => {
+                    scope.saving = false;
+                    scope.message = null;
+                    scope.editStage = null;
+                });
+            }
 
             function errorMessage(response) {
                 if (response.status === 412) {
@@ -181,28 +168,25 @@ export function DeskeditStages(gettext, api, WizardHandler, tasks, $rootScope, d
 
             scope.remove = function(stage) {
                 api('stages').remove(stage)
-                    .then(() => {
-                        if (stage === scope.selected) {
-                            scope.selected = null;
-                        }
-                        _.remove(scope.stages, stage);
-                        scope.message = null;
-                        broadcastChange(stage._id);
-                        desks.fetchDeskById(stage.desk).then((desk) => {
-                            scope.desk.edit = desk;
-                        });
-                    }, (response) => {
-                        if (angular.isDefined(response.data._message)) {
-                            scope.message = gettext('Error: ' + response.data._message);
-                        } else {
-                            scope.message = gettext('There was a problem, stage was not deleted.');
-                        }
-                    });
+                .then(() => {
+                    if (stage === scope.selected) {
+                        scope.selected = null;
+                    }
+                    _.remove(scope.stages, stage);
+                    scope.message = null;
+                    return desks.fetchDeskById(stage.desk);
+                })
+                .then((desk) => {
+                    scope.desk.edit = desk;
+                    desks.refreshStages();
+                }, (response) => {
+                    if (angular.isDefined(response.data._message)) {
+                        scope.message = gettext('Error: ' + response.data._message);
+                    } else {
+                        scope.message = gettext('There was a problem, stage was not deleted.');
+                    }
+                });
             };
-
-            function broadcastChange(stageId, action) {
-                $rootScope.$broadcast('desks:refresh:stages', scope.desk.edit._id);
-            }
         }
     };
 }

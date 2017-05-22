@@ -62,10 +62,4 @@ export function DeskListController($scope, desks, superdesk, privileges, tasks, 
         desks.setCurrentDeskId(desk._id);
         superdesk.intent('view', target);
     };
-
-    $scope.$on('desks:refresh:stages', (e, deskId) => {
-        desks.refreshStages().then(() => {
-            $scope.deskStages[deskId] = desks.deskStages[deskId];
-        });
-    });
 }
