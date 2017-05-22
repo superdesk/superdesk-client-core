@@ -1,4 +1,5 @@
 import * as constant from '../constants';
+import _ from 'lodash';
 
 /**
  * @ngdoc service
@@ -11,15 +12,29 @@ import * as constant from '../constants';
  * @requires desks
  * @requires packages
  * @requires archiveService
+ * @requires notify
+ * @requires gettext
  * @requires $filter
  *
  * @description Content Service is responsible for creating packages or content items based
  * on templates or content types.
  * Also it is responsable for managing content types.
  */
-ContentService.$inject = ['api', 'superdesk', 'templates', 'desks', 'packages', 'archiveService', '$filter'];
-export function ContentService(api, superdesk, templates, desks, packages, archiveService, $filter) {
-    var TEXT_TYPE = 'text';
+ContentService.$inject = [
+    'api',
+    'superdesk',
+    'templates',
+    'desks',
+    'packages',
+    'archiveService',
+    'notify',
+    'gettext',
+    '$filter',
+    '$q'
+];
+export function ContentService(api, superdesk, templates, desks, packages, archiveService, notify, gettext,
+    $filter, $q) {
+    const TEXT_TYPE = 'text';
 
     function newItem(type) {
         return {
@@ -35,7 +50,17 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
      * @return {Promise}
      */
     function save(data) {
-        return api.save('archive', data);
+        return api.save('archive', data).catch((reason) => {
+            if (reason.status === 403) {
+                if (_.get(reason, 'data.error.readonly')) {
+                    notify.error(gettext('You are not allowed to create article on readonly stage.'));
+                } else {
+                    notify.error(gettext('You are not allowed to create an article there.'));
+                }
+            }
+
+            return $q.reject(reason);
+        });
     }
 
     /**
