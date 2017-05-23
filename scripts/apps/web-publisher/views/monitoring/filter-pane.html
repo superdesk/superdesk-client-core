@@ -18,9 +18,9 @@
                             <div sd-toggle-box data-title="Websites" data-open="true">
                                 <ul class="treeList">
                                     <li ng-repeat="site in webPublisherMonitoring.sites">
-                                        <div class="sectionTreeElement">
+                                        <div class="sectionTreeElement sectionTreeElement--extraPadding">
                                             <div class="sectionTreeElement__icon">
-                                                <span class="sd-checkbox" sd-check ng-model="webPublisherMonitoring.advancedFilters.sites[site.id]"></span>
+                                                <span class="sd-checkbox" sd-check ng-model="webPublisherMonitoring.advancedFilters.sites[site.code].status" ng-click="webPublisherMonitoring.advancedFilters.sites[site.code].name = site.name"></span>
                                             </div>
                                             <button class="sectionTreeElement__icon iconButton sectionTreeElement__icon--extraMargin">
                                                 <i class="icon-chevron-down-thin" 
@@ -114,6 +114,11 @@
                     </form>
                 </div>
                 <div class="paneContent__footer paneContent__footer--center">
+<<<<<<< e363371fbbca7e3569f00b4a5ffdbec642265628
                     <!--  <a class="save-search__link" ng-click="">Clear filters</a> -->
                     <button class="btn btn--primary" ng-click="" >Clear filters</button>
+=======
+                    <a class="save-search__link" ng-click="webPublisherMonitoring.filtersClear()">Clear filters</a>
+                    <button class="btn btn--primary" ng-click="webPublisherMonitoring.filtersSave()" >Save filters</button>
+>>>>>>> publisher monitoring advanced filters saving per user + labels
                 </div>

@@ -224,6 +224,37 @@ export function WebPublisherMonitoringController($scope, $sce, publisher, modal)
 
         /**
          * @ngdoc method
+         * @name WebPublisherMonitoringController#filterRemoveDate
+         * @param {Number} type - type of date to remove (publishedBefore, publishedAfter)
+         * @description Removes date from filters list
+         */
+        filterRemoveDate(type) {
+            delete this.advancedFilters[type];
+        }
+
+         /**
+         * @ngdoc method
+         * @name WebPublisherMonitoringController#filterRemoveRoute
+         * @param {String} tenant code
+         * @param {String} routeId - id of route
+         * @description Removes route from filters list
+         */
+        filterRemoveRoute(tenantCode, routeId) {
+            this.advancedFilters.sites[tenantCode].routes[routeId].status = false;
+        }
+
+        /**
+         * @ngdoc method
+         * @name WebPublisherMonitoringController#filterRemoveTenant
+         * @param {String} tenant code
+         * @description Removes tenant from filters list
+         */
+        filterRemoveTenant(tenantCode) {
+            this.advancedFilters.sites[tenantCode].status = false;
+        }
+
+        /**
+         * @ngdoc method
          * @name WebPublisherMonitoringController#filterRemoveAuthor
          * @param {Number} index - index of the item to remove
          * @description Removes author from filters list
@@ -270,40 +301,60 @@ export function WebPublisherMonitoringController($scope, $sce, publisher, modal)
 
         /**
          * @ngdoc method
-         * @name WebPublisherMonitoringController#filterClear
-         * @description clears criteria filters list
+         * @name WebPublisherMonitoringController#filtersClear
+         * @description Clears filters
          */
-        filterClear() {
+        filtersClear() {
             this.advancedFilters = {
-                sites: {},
-                routes: {}
+                sites: {}
             };
         }
 
         /**
          * @ngdoc method
-         * @name WebPublisherMonitoringController#filterButtonSetTenant
-         * @description Sets tenant for filtering (used by top bar buttons)
+         * @name WebPublisherMonitoringController#filtersSave
+         * @description Saves user defined filter criteria
          */
-        filterButtonSetTenant(tenantCode) {
-            this.advancedFilters.sites = {};
+        filtersSave() {
+            // removing unnecessary elements
+            angular.forEach(this.advancedFilters.sites, (site, key) => {
+                angular.forEach(site.routes, (route, key) => {
+                    if (!route.status) {
+                        delete site.routes[key];
+                    }
+                });
+            });
 
-            if (tenantCode) {
-                this.advancedFilters.sites[tenantCode] = true;
-            }
+            let settingsObj = {
+                settings: {
+                    name: 'filtering_prefrences',
+                    value: JSON.stringify(this.advancedFilters)
+                }
+            };
+
+            publisher.saveSettings(settingsObj);
         }
 
         /**
          * @ngdoc method
          * @name WebPublisherMonitoringController#_setFilters
-         * @description Sets user defined advanced filters (todo)
+         * @description Sets user defined advanced filters or default values
          */
         _setFilters(scope) {
-            // TODO: request to user API to load filter preset per user
             this.advancedFilters = {
-                sites: {},
-                routes: {}
+                sites: {}
             };
+
+            // request to settings API to load filter preset per user
+            publisher.getSettings()
+                .then((settings) => {
+                    let filteringPreferences = JSON.parse(settings.filtering_prefrences.value);
+
+                    // !!!!!!!!!!!!! TYPO IN API 'PREFERENCES' !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    if (!_.isEmpty(filteringPreferences)) {
+                        this.advancedFilters = filteringPreferences;
+                    }
+                });
 
             scope.$watch(() => this.advancedFilters, (newVal, oldVal) => {
                 /**
