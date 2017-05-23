@@ -33,8 +33,8 @@ export function GroupArticleDirective(publisher) {
                 }
 
                 if (!tenant.length && scope.filters.hasOwnProperty('sites') && !_.isEmpty(scope.filters.sites)) {
-                    angular.forEach(scope.filters.sites, (value, key) => {
-                        if (value) {
+                    angular.forEach(scope.filters.sites, (site, key) => {
+                        if (site.hasOwnProperty('status') && site.status) {
                             tenant.push(key);
                         }
                     });
@@ -51,11 +51,11 @@ export function GroupArticleDirective(publisher) {
                     route.push(scope.route.id);
                 }
 
-                if (!route.length && scope.filters.hasOwnProperty('routes')) {
-                    angular.forEach(scope.filters.routes, (routesObj, tenantCode) => {
-                        if (!scope.site || scope.site.code === tenantCode) {
-                            angular.forEach(routesObj, (value, key) => {
-                                if (value) {
+                if (!route.length && scope.filters.hasOwnProperty('sites')) {
+                    angular.forEach(scope.filters.sites, (siteObj, tenantCode) => {
+                        if ((!scope.site || scope.site.code === tenantCode) && siteObj.hasOwnProperty('routes')) {
+                            angular.forEach(siteObj.routes, (routeObj, key) => {
+                                if (routeObj.hasOwnProperty('status') && routeObj.status) {
                                     route.push(key);
                                 }
                             });

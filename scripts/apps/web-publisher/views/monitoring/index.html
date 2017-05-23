@@ -4,6 +4,9 @@
             <button tooltip="{{ :: 'Back to previous view' | translate }}" tooltip-placement="right" class="backlink" ng-click="webPublisherMonitoring.viewMonitoringHome()"></button>
         </div>
     </div>
+    <div class="filter-trigger" title="Filters" ng-click="webPublisherMonitoring.filterOpen = !webPublisherMonitoring.filterOpen" ng-class="{'filter-trigger--active': webPublisherMonitoring.filterOpen}">
+                <i class="icon-filter-large"></i>
+            </div>
     <!--<div class="flat-searchbar monitoring-flat-searchbar" ng-class="{extended: aggregate.monitoringSearch}">
         <div class="search-handler">
             <label for="search-input" class="trigger-icon" ng-click="aggregate.monitoringSearch = !aggregate.monitoringSearch"><i class="icon-search"></i></label>
@@ -18,23 +21,8 @@
     <h3 class="page-nav-title">Web Monitoring</h3>
 </div>
 
-<div class="paneLayout paneLayout--twoHeadersMargin">
+<div class="paneLayout paneLayout--headerMargin">
     <div class="paneLayout__content">
-        <div class="subnav static">
-            <div class="filter-trigger" title="Filters" ng-click="webPublisherMonitoring.filterOpen = !webPublisherMonitoring.filterOpen" ng-class="{'filter-trigger--active': webPublisherMonitoring.filterOpen}">
-                <i class="icon-filter-large"></i>
-            </div>
-            <ul class="filter-type filter-type--padded rightPadding">
-                <li class="filter-type__item" 
-                    ng-class="{'filter-type__item--active': webPublisherMonitoring.filterButtonAllActive}">
-                    <a ng-click="webPublisherMonitoring.filterButtonSetTenant(false)">all</a>
-                </li>
-                <li class="filter-type__item" ng-repeat="site in webPublisherMonitoring.sites" ng-class="{'filter-type__item--active': webPublisherMonitoring.advancedFilters.sites[site.code]}">
-                    <a ng-click="webPublisherMonitoring.filterButtonSetTenant(site.code)">{{ site.name }}</a>
-                </li>
-            </ul>
-            <div class="subnav__stretch-bar"></div>
-        </div>
         <!-- paneLayout inside paneLayout :) -->
         <div class="paneLayout paneLayout--headerMargin">
             <div class="paneLayout__leftPane paneContent" 
@@ -45,6 +33,7 @@
 
             <div class="paneLayout__content">
                 <div class="contentPadding">
+                    <div ng-include="webPublisherMonitoring.TEMPLATES_DIR + '/monitoring/filter-labels.html'"></div>
                     <div ng-include="webPublisherMonitoring.TEMPLATES_DIR + '/monitoring/index-content.html'"></div>
                 </div>
             </div>
