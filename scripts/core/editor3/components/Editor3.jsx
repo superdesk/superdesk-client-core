@@ -191,7 +191,7 @@ export class Editor3Component extends React.Component {
         return (
             <div className={cx}>
                 {showToolbar ? <Toolbar editorRect={this.editorRect} disabled={readOnly} /> : null}
-                <div className="focus-screen" onClick={this.focus}>
+                <div className="focus-screen" onMouseDown={this.focus}>
                     <Editor
                         editorState={editorState}
                         handleKeyCommand={this.handleKeyCommand}
