@@ -260,6 +260,26 @@ export function PublisherFactory(pubapi) {
         unPublishArticle(tenants, articleId) {
             return pubapi.save('packages/' + articleId + '/unpublish', tenants);
         }
+
+        /**
+         * @ngdoc method
+         * @name publisher#getSettings
+         * @returns {Promise}
+         * @description Gets Publisher settings
+         */
+        getSettings() {
+            return pubapi.get('settings');
+        }
+
+        /**
+         * @ngdoc method
+         * @name publisher#saveSettings
+         * @returns {Promise}
+         * @description Saves Publisher settings
+         */
+        saveSettings(settings) {
+            return pubapi.patch('settings', settings);
+        }
     }
 
     return new Publisher();
