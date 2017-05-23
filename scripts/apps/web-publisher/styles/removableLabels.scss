@@ -1,0 +1,21 @@
+.removableLabel {
+	display: inline-block;
+	background-color: $blue;
+	border-radius: 3px;
+	color: #fff;
+	line-height: 2em;
+	align-self: center;
+	margin-left: 1em;
+	margin-bottom: .5em;
+	padding-left: 1em;
+
+	&__smallText {
+		font-size: 0.8em;
+		color: $grayLighter;
+	}
+
+	&__close {
+		border: none;
+		background-color: transparent;
+	}
+}
