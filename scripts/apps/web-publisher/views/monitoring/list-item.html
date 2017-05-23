@@ -10,9 +10,9 @@
     </div>
     <div class="item-info">
         <div class="line">
-            <span class="keyword">{{i.slugline}}</span>
-            <span class="item-heading">{{i.title}}</span>
-            <time>{{i.createdAt || i.updatedAt | reldate}}</time>
+            <span class="keyword">{{i.headline}}</span>
+            <span class="item-heading">{{i.description_text}}</span>
+            <time>{{i.updatedAt | reldate}}</time>
         </div>
         <div class="line">
             <div class="state-label state-corrected">Update {{i.version}}</div>
@@ -34,14 +34,12 @@
                         <div class="dropdown__menu-label">Actions</div>
                     </li>
                     <li class="divider"></li>
-                    <li><button><i class="icon-pencil"></i>{{:: 'Edit'| translate}}</button></li>
-                    <li class="divider"></li>
                     <li>
                         <button ng-click="webPublisherMonitoring.openPublish(i, 'publish')">
                             <i class="icon-expand-thin"></i>{{:: 'Publish'| translate}}
                         </button>
                     </li>
-                    <li>
+                    <li ng-if="rootType != 'incoming'">
                         <button ng-click="webPublisherMonitoring.openPublish(i, 'unpublish')">
                             <i class="icon-kill"></i>{{:: 'Unpublish'| translate}}
                         </button>
