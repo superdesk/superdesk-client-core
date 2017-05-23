@@ -44,39 +44,22 @@ describe('aggregate widget', () => {
     });
 
     describe('Aggregate Widget', () => {
-        var fakeEndpoints = {};
-        var queryDeferred;
-
         beforeEach(window.module('superdesk.apps.aggregate'));
         beforeEach(window.module('superdesk.apps.vocabularies'));
 
         beforeEach(window.module(($provide) => {
-            function fakeApi() {
-                function apiMock(endpointName) {
-                    return fakeEndpoints[endpointName];
-                }
-                return apiMock;
-            }
-
-            $provide.service('api', fakeApi);
-
-            var fakeCards = {
+            $provide.value('cards', {
                 criteria: function(card, queryString) {
                     return {card: card, query: queryString};
                 },
                 shouldUpdate: function() {
                     return true;
                 }
-            };
-
-            $provide.value('cards', fakeCards);
+            });
         }));
 
-        beforeEach(inject(($q) => {
-            queryDeferred = $q.defer();
-            fakeEndpoints.archive = {
-                query: jasmine.createSpy('archive_query').and.returnValue(queryDeferred.promise)
-            };
+        beforeEach(inject((api, $q) => {
+            spyOn(api, 'query').and.returnValue($q.defer().promise);
         }));
 
         it('it responds to changes query', inject(($rootScope, $controller, $compile, api, cards) => {
@@ -100,10 +83,10 @@ describe('aggregate widget', () => {
 
             $compile(elemStr)(scope);
             scope.$digest();
-            expect(fakeEndpoints.archive.query).toHaveBeenCalledWith({card: scope.agg.cards[0], query: null});
+            expect(api.query).toHaveBeenCalledWith('archive', {card: scope.agg.cards[0], query: null});
             scope.agg.cards[0].query = 'Test';
             scope.$digest();
-            expect(fakeEndpoints.archive.query).toHaveBeenCalledWith({card: scope.agg.cards[0], query: 'Test'});
+            expect(api.query).toHaveBeenCalledWith('archive', {card: scope.agg.cards[0], query: 'Test'});
         }));
     });
 });

@@ -1,10 +1,10 @@
 import _ from 'lodash';
 
 AggregateCtrl.$inject = ['$scope', 'api', 'desks', 'workspaces', 'preferencesService', 'storage',
-    'gettext', 'multi', 'config', '$timeout', 'savedSearch'];
+    'gettext', 'multi', 'config', '$timeout', 'savedSearch', 'deployConfig'];
 
 export function AggregateCtrl($scope, api, desks, workspaces, preferencesService, storage,
-        gettext, multi, config, $timeout, savedSearch) {
+        gettext, multi, config, $timeout, savedSearch, deployConfig) {
     var PREFERENCES_KEY = 'agg:view';
     var defaultMaxItems = 10;
     var self = this;
@@ -26,7 +26,7 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
     this.monitoringSearch = false;
     this.searchQuery = null;
 
-    if (config.features && config.features.noTakes) {
+    if (deployConfig.getSync('no_takes')) {
         this.fileTypes = this.fileTypes.filter((type) => type !== 'takesPackage');
     }
 

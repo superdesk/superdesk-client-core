@@ -18,4 +18,21 @@ describe('superdesk.config', () => {
         expect(config.server.protocol).toBe('foo');
         expect(config.server.url).toBe(''); // defined in mocks
     }));
+
+    describe('deployConfig service', () => {
+        it('can provide config', inject((deployConfig, $rootScope) => {
+            let getSpy = jasmine.createSpy('get');
+            let allSpy = jasmine.createSpy('all');
+
+            deployConfig.config = {foo: 1, bar: 2, baz: 'x'};
+
+            deployConfig.get('foo').then(getSpy);
+            deployConfig.all({x: 'foo', y: 'baz'}).then(allSpy);
+
+            $rootScope.$digest();
+
+            expect(getSpy).toHaveBeenCalledWith(1);
+            expect(allSpy).toHaveBeenCalledWith({x: 1, y: 'x'});
+        }));
+    });
 });

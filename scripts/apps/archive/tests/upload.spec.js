@@ -8,20 +8,6 @@ describe('Upload controller', () => {
     beforeEach(window.module('superdesk.apps.archive'));
 
     beforeEach(window.module(($provide) => {
-        $provide.service('api', ($q) => ({
-            archive: {
-                getUrl: function() {
-                    return $q.when(UPLOAD_URL);
-                },
-                getHeaders: function() {
-                    return {};
-                },
-                update: function(dest, diff) {
-                    return $q.when({});
-                }
-            }
-        }));
-
         $provide.service('upload', function($q) {
             this.start = function(config) {
                 this.defer = $q.defer();
@@ -33,8 +19,15 @@ describe('Upload controller', () => {
             this.addTaskToArticle = function(item) { /* no-op */ };
         });
     }));
+
     beforeEach(inject((session) => {
         session.identity = {_id: 'user:1', byline: 'Admin'};
+    }));
+
+    beforeEach(inject((api, $q) => {
+        spyOn(api.archive, 'getUrl').and.returnValue($q.when(UPLOAD_URL));
+        spyOn(api.archive, 'getHeaders').and.returnValue({});
+        spyOn(api.archive, 'update').and.returnValue($q.when({}));
     }));
 
     it('can upload files when added', inject(($controller, $rootScope, $q, api, upload) => {
