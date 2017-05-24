@@ -938,8 +938,8 @@ function MetaLocatorsDirective() {
     };
 }
 
-MetadataService.$inject = ['api', 'subscribersService', 'config', 'vocabularies'];
-function MetadataService(api, subscribersService, config, vocabularies) {
+MetadataService.$inject = ['api', 'subscribersService', 'config', 'vocabularies', '$rootScope'];
+function MetadataService(api, subscribersService, config, vocabularies, $rootScope) {
     var service = {
         values: {},
         cvs: [],
@@ -1083,6 +1083,9 @@ function MetadataService(api, subscribersService, config, vocabularies) {
             return this._priorityByValue[value] || null;
         }
     };
+
+    $rootScope.$on('subscriber:create', () => service.fetchSubscribers());
+    $rootScope.$on('subscriber:update', () => service.fetchSubscribers());
 
     return service;
 }
