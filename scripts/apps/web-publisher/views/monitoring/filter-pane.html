@@ -15,7 +15,7 @@
                 <div class="paneContent__content paneContent__content--hasFooter contentPadding">
                     <form name="" class="flat">
                         <fieldset class="label-light">
-                            <div sd-toggle-box data-title="Websites" data-open="true">
+	                        <div sd-toggle-box data-title="Websites" data-open="true">
                                 <ul class="treeList">
                                     <li ng-repeat="site in webPublisherMonitoring.sites">
                                         <div class="sectionTreeElement sectionTreeElement--extraPadding">
@@ -62,7 +62,7 @@
                             <div sd-toggle-box data-title="Authors" data-open="false">
                                 <div class="item">
                                     <div class="multiple" ng-repeat="item in webPublisherMonitoring.advancedFilters.author track by $index">
-                                        <input type="text" class="line-input" ng-model="webPublisherMonitoring.advancedFilters.author[$index]">
+                                        <input type="text" class="line-input" ng-model="webPublisherMonitoring.advancedFilters.author[$index]" ng-model-options="{debounce: 1000}">
                                         <button
                                             type="button"
                                             class="btn btn--small"
@@ -88,7 +88,7 @@
                             <div sd-toggle-box data-title="Ingest Source" data-open="false">
                                 <div class="item">
                                     <div class="multiple" ng-repeat="item in webPublisherMonitoring.advancedFilters.source track by $index">
-                                        <input type="text" class="line-input" ng-model="webPublisherMonitoring.advancedFilters.source[$index]">
+                                        <input type="text" class="line-input" ng-model="webPublisherMonitoring.advancedFilters.source[$index]" ng-model-options="{debounce: 1000}">
                                         <button
                                             type="button"
                                             class="btn btn--small"
