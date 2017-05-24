@@ -25,15 +25,18 @@
         </div>
 
         <div class="item-right toolbox">
-            <div class="dropdown flex-pull-right" dropdown dropdown-append-to-body sd-dropdown-position-absolute>
+            <div class="dropdown flex-pull-right" dropdown dropdown-append-to-body>
                 <button class="dropdown__toggle dropdown__toggle--with-opacity" dropdown__toggle>
                     <i class="icon-dots-vertical"></i>
                 </button>
-                <ul class="dropdown dropdown__menu more-activity-menu pull-right">
+                <ul class="dropdown__menu">
                     <li>
-                        <div class="dropdown__menu-label">Actions</div>
+                        <div class="dropdown__menu-label">
+                            Actions
+                            <button class="dropdown__menu-close"><i class="icon-close-small"></i></button>
+                        </div>
                     </li>
-                    <li class="divider"></li>
+                    <li class="dropdown__menu-divider"></li>
                     <li>
                         <button ng-click="webPublisherMonitoring.openPublish(i, 'publish')">
                             <i class="icon-expand-thin"></i>{{:: 'Publish'| translate}}

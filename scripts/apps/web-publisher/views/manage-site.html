@@ -1,6 +1,6 @@
 <div sd-modal data-model="true" data-full="true" class="modal--fullscreen publisherManager" ng-init="webPublisher.activeTab = 'general'">
-    <div class="modal-header">
-        <h3 class="pull-left"><span translate>Manage:</span> <b>{{newSite.name}}</b></h3>
+    <div class="modal__header">
+        <h3 class="modal__heading pull-left"><span translate>Manage:</span> <b>{{newSite.name}}</b></h3>
         <div class="pull-right">
             <button class="btn" ng-click="webPublisher.toogleCreateSite()" translate>Close</button>
             <button
@@ -17,7 +17,7 @@
                 translate>Save</button>
         </div>
     </div>
-    <div class="modal-body sidebarLayout">
+    <div class="modal__body sidebarLayout">
         <div class="sidebarLayout__sidebar">
             <ul class="nav nav--stackedPublisher">
                 <li ng-class="{active: webPublisher.activeTab === 'general'}">
@@ -47,7 +47,7 @@
             </ul>
         </div>
         <div class="sidebarLayout__content" ng-switch="webPublisher.activeTab">
-            <div ng-if="webPublisher.activeTab === 'general'" class="modal-header modal-header--padding-20 ng-scope">
+            <div ng-if="webPublisher.activeTab === 'general'" class="modal__header modal__header--padding-20 ng-scope">
                 <h3 class="pull-left" translate="">General</h3>
             </div>
             <form name="webPublisher.siteForm">

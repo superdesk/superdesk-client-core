@@ -1,9 +1,9 @@
 <div class="split-content">
     <div class="header">
-        <div class="modal-header modal-header--padding-20">
+        <div class="modal__header modal__header--padding-20">
             <h3 class="pull-left" translate>Content Lists</h3>
         </div>
-        <div class="subnav">
+        <div class="subnav subnav--absolute">
             <ul class="filter-type filter-type--padded rightPadding">
                 <li class="filter-type__item" ng-class="{'filter-type__item--active': webPublisher.listType === ''}">
                     <a ng-click="webPublisher.changeListFilter('')" translate>all</a>
@@ -100,11 +100,11 @@
 </div>
 
 <div sd-modal data-model="webPublisher.settingsModal" class="modal--double">
-    <div class="modal-header">
+    <div class="modal__header">
         <a href="" class="close" ng-click="webPublisher.cancelListCardSettings()"><i class="icon-close-small"></i></a>
         <h3 translate>Settings</h3>
     </div>
-    <div class="modal-body">
+    <div class="modal__body">
         <form name="settingsForm">
             <fieldset>
                 <div class="field">
@@ -118,7 +118,7 @@
             </fieldset>
         </form>
     </div>
-    <div class="modal-footer">
+    <div class="modal__footer">
           <button class="btn" ng-click="webPublisher.cancelListCardSettings()" translate>Cancel</button>
           <button class="btn btn--primary" ng-click="webPublisher.saveList()" ng-disabled="!settingsForm.$valid" translate>Save</button>
     </div>
