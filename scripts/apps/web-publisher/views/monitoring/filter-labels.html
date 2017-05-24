@@ -16,12 +16,12 @@
     <span class="removableLabel__smallText">Published After:</span> {{webPublisherMonitoring.advancedFilters.publishedAfter}}
     <button class="removableLabel__close" ng-click="webPublisherMonitoring.filterRemoveDate('publishedAfter')"><i class="icon-close-small icon-white"></i></button>
 </div>
-<div class="removableLabel" ng-repeat="author in webPublisherMonitoring.advancedFilters.author">
+<div class="removableLabel" ng-repeat="author in webPublisherMonitoring.advancedFilters.author" ng-if="author.length">
     <span class="removableLabel__smallText">Author:</span> {{author}}
     <button class="removableLabel__close" ng-click="webPublisherMonitoring.filterRemoveAuthor($index)"><i class="icon-close-small icon-white"></i></button>
 </div>
 
-<div class="removableLabel" ng-repeat="source in webPublisherMonitoring.advancedFilters.source">
+<div class="removableLabel" ng-repeat="source in webPublisherMonitoring.advancedFilters.source" ng-if="source.length">
     <span class="removableLabel__smallText">Source:</span> {{source}}
     <button class="removableLabel__close" ng-click="webPublisherMonitoring.filterRemoveSource($index)"><i class="icon-close-small icon-white"></i></button>
 </div>
