@@ -312,10 +312,17 @@ export function WebPublisherMonitoringController($scope, $sce, publisher, modal)
                 });
             });
 
+            let filters = angular.copy(this.advancedFilters);
+
+            // we don't want to save search term
+            if (filters.hasOwnProperty('term')) {
+                delete filters.term;
+            }
+
             let settingsObj = {
                 settings: {
                     name: 'filtering_prefrences',
-                    value: JSON.stringify(this.advancedFilters)
+                    value: JSON.stringify(filters)
                 }
             };
 

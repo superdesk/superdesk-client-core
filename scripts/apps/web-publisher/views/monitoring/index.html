@@ -7,17 +7,13 @@
     <div class="filter-trigger" title="Filters" ng-click="webPublisherMonitoring.filterOpen = !webPublisherMonitoring.filterOpen" ng-class="{'filter-trigger--active': webPublisherMonitoring.filterOpen}">
                 <i class="icon-filter-large"></i>
             </div>
-    <!--<div class="flat-searchbar monitoring-flat-searchbar" ng-class="{extended: aggregate.monitoringSearch}">
+    <div class="flat-searchbar monitoring-flat-searchbar" ng-class="{extended: publisher.monitoringSearch || webPublisherMonitoring.advancedFilters.term}">
         <div class="search-handler">
-            <label for="search-input" class="trigger-icon" ng-click="aggregate.monitoringSearch = !aggregate.monitoringSearch"><i class="icon-search"></i></label>
-            <input id="search-input" type="text" placeholder="{{ :: 'Search' | translate }}" ng-model="query"
-            ng-keyup="aggregate.searchOnEnter($event, query)">
-            <button class="search-close" ng-click="aggregate.search(query = null)" ng-class="{visible: query}"><i class="icon-remove-sign"></i></button>
-            <button class="search-close" ng-click="aggregate.search(query);" ng-class="{visible: query}">
-                <i class="svg-icon-right"></i>
-            </button>
-        </div>
-    </div>-->
+            <label for="search-input" class="trigger-icon" ng-click="publisher.monitoringSearch = !publisher.monitoringSearch"><i class="icon-search"></i></label>
+            <input id="search-input" type="text" placeholder="{{ :: 'Search' | translate }}" ng-model="webPublisherMonitoring.advancedFilters.term" ng-model-options="{debounce: 1000}">
+            <button class="search-close" ng-click="webPublisherMonitoring.advancedFilters.term = ''" ng-class="{visible: webPublisherMonitoring.advancedFilters.term}"><i class="icon-remove-sign"></i></button>
+       </div>
+    </div>
     <h3 class="page-nav-title">Web Monitoring</h3>
 </div>
 

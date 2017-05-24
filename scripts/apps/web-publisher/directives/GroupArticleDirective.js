@@ -66,6 +66,23 @@ export function GroupArticleDirective(publisher) {
                 return route;
             };
 
+            scope.buildUniversalParams = () => {
+                let universalParams = {};
+
+                // universal author and source params
+                if (scope.filters.hasOwnProperty('author') && scope.filters.author.length) {
+                    universalParams['author[]'] = scope.filters.author;
+                }
+                if (scope.filters.hasOwnProperty('source') && scope.filters.source.length) {
+                    universalParams['source[]'] = scope.filters.source;
+                }
+                if (scope.filters.hasOwnProperty('term') && scope.filters.term.length) {
+                    universalParams.term = scope.filters.term;
+                }
+
+                return universalParams;
+            };
+
             scope.buildQueryParams = (reset) => {
                 let page = reset || !scope.totalArticles ? 1 : scope.totalArticles.page + 1;
                 let queryParams = {
@@ -77,31 +94,21 @@ export function GroupArticleDirective(publisher) {
 
                 let route = scope.buildRouteParams();
                 let tenant = scope.buildTenantParams();
+                let universal = scope.buildUniversalParams();
+
+                queryParams = Object.assign(queryParams, universal);
 
                 // building query params for both cases
                 if (scope.rootType && scope.rootType === 'incoming') {
                     queryParams['status[]'] = ['new'];
                 } else {
                     queryParams['status[]'] = ['published', 'unpublished', 'canceled'];
-                    if (tenant.length) {
-                        queryParams['tenant[]'] = tenant;
-                    }
-                    if (route.length) {
-                        queryParams['route[]'] = route;
-                    }
-
+                    queryParams['tenant[]'] = tenant.length ? tenant : undefined;
+                    queryParams['route[]'] = route.length ? route : undefined;
                     queryParams.publishedBefore = scope.filters.hasOwnProperty('publishedBefore') ?
                     scope.filters.publishedBefore : undefined;
                     queryParams.publishedAfter = scope.filters.hasOwnProperty('publishedAfter') ?
                     scope.filters.publishedAfter : undefined;
-                }
-
-                // universal author and source params
-                if (scope.filters.hasOwnProperty('author') && scope.filters.author.length) {
-                    queryParams['author[]'] = scope.filters.author;
-                }
-                if (scope.filters.hasOwnProperty('source') && scope.filters.source.length) {
-                    queryParams['source[]'] = scope.filters.source;
                 }
 
                 return queryParams;
@@ -109,7 +116,7 @@ export function GroupArticleDirective(publisher) {
 
             scope.loadArticles = (reset) => {
                 if (scope.loadingArticles) {
-                    return;
+                   // return;
                 }
 
                 if (reset) {
