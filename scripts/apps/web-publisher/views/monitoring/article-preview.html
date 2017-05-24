@@ -1,5 +1,5 @@
 <div sd-modal data-model="true" data-full="true" class="modal--fullscreen publisherManager">
-    <div class="modal-header">
+    <div class="modal__header">
         <div class="flexBox">
             <h6 class="flexBox__item text--left width200">Live preview: <b class="text--dark">{{webPublisherMonitoring.articlePreviewModeReadable}}</b></h6>
             <div class="flexBox__fullItem flexBox__fullItem--margin text--center">
@@ -30,7 +30,7 @@
             </div>
         </div>
     </div>
-    <div class="modal-body articlePreview">
+    <div class="modal__body articlePreview">
         <iframe ng-src="{{webPublisherMonitoring.previewArticleSrc}}"
             class="articlePreview__iframe"
             ng-class="{'articlePreview__iframe--tablet': webPublisherMonitoring.articlePreviewMode == 'tablet',
