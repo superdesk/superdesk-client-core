@@ -10,9 +10,9 @@
         position: relative;
         width: 100%;
         min-height: 48px;
-        padding: 9px 15px;
+        padding: .9rem 1rem;
         box-sizing: border-box;
-        font-size: 18px;
+        font-size: 1.4rem;
         font-weight: 100;
 
         > h3 {
@@ -35,9 +35,8 @@
     &__tabItem {
         display: inline-block;
         color: $gray;
-        margin: -9px 1em -9px 1em;
-        line-height: 48px;
-        font-size: .9rem;
+        margin: 0;
+        line-height: 48px;        
         font-weight: 400;
         cursor: pointer;
 
