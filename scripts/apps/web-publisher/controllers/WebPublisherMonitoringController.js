@@ -12,6 +12,7 @@ export function WebPublisherMonitoringController($scope, $sce, publisher, modal)
     class WebPublisherMonitoring {
         constructor() {
             this.TEMPLATES_DIR = 'scripts/apps/web-publisher/views';
+            this.filterButtonAllActive = true;
 
             publisher.setToken()
                 .then(publisher.querySites)
@@ -25,8 +26,6 @@ export function WebPublisherMonitoringController($scope, $sce, publisher, modal)
                             siteObj.routes = routes;
                         });
                     });
-                    // "reset" tenant
-                    publisher.setTenant('');
 
                     this._setFilters($scope);
                 });
@@ -209,18 +208,6 @@ export function WebPublisherMonitoringController($scope, $sce, publisher, modal)
             }
         }
 
-        /**
-         * @ngdoc method
-         * @name WebPublisherMonitoringController#_updatedKeys
-         * @private
-         * @param {Object} a
-         * @param {Object} b
-         * @returns {Array}
-         * @description Compares 2 objects and returns keys of fields that are updated
-         */
-        _updatedKeys(a, b) {
-            return _.reduce(a, (result, value, key) => _.isEqual(value, b[key]) ? result : result.concat(key), []);
-        }
 
         /**
          * @ngdoc method
@@ -325,10 +312,17 @@ export function WebPublisherMonitoringController($scope, $sce, publisher, modal)
                 });
             });
 
+            let filters = angular.copy(this.advancedFilters);
+
+            // we don't want to save search term
+            if (filters.hasOwnProperty('term')) {
+                delete filters.term;
+            }
+
             let settingsObj = {
                 settings: {
                     name: 'filtering_prefrences',
-                    value: JSON.stringify(this.advancedFilters)
+                    value: JSON.stringify(filters)
                 }
             };
 
@@ -364,10 +358,22 @@ export function WebPublisherMonitoringController($scope, $sce, publisher, modal)
                  * @param {Object} advancedFilters - filters to filter articles
                  * @description event is thrown when advanced filters are changed
                  */
-                $scope.$broadcast('refreshArticles', this.advancedFilters);
+                $scope.$broadcast('updateMonitoringFilters', this.advancedFilters);
             }, true);
         }
-    }
 
+        /**
+         * @ngdoc method
+         * @name WebPublisherMonitoringController#_updatedKeys
+         * @private
+         * @param {Object} a
+         * @param {Object} b
+         * @returns {Array}
+         * @description Compares 2 objects and returns keys of fields that are updated
+         */
+        _updatedKeys(a, b) {
+            return _.reduce(a, (result, value, key) => _.isEqual(value, b[key]) ? result : result.concat(key), []);
+        }
+    }
     return new WebPublisherMonitoring();
 }
