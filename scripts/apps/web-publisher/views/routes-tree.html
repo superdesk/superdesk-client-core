@@ -9,13 +9,12 @@
     <div class="listElement__content">
         <span ng-class="{'listElement--bold': route.type == 'collection'}">{{route.name}}</span>
     </div>
-    <div class="listElement__right">
-        <span class="badge badge--primary">123</span>
-        <div class="dropdown pull-right" dropdown>
-            <button class="dropdown__toggle dropdown__toggle--with-opacity" dropdown__toggle>
+    <div class="listElement__right">        
+        <div class="dropdown dropdown--align-right" dropdown>
+            <button class="dropdown__toggle" dropdown__toggle>
                 <i class="icon-dots-vertical"></i>
             </button>
-            <ul class="dropdown__menu more-activity-menu pull-right">
+            <ul class="dropdown__menu">
                 <li><button ng-click="webPublisher.editRoute(route)"><i class="icon-pencil"></i>{{:: 'Edit'| translate}}</button></li>
                 <li><button ng-click="webPublisher.deleteRoute(route.id)"><i class="icon-trash"></i>{{:: 'Delete'| translate}}</button></li>
             </ul>

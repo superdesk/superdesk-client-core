@@ -1,7 +1,7 @@
 <div class="split-content">
     <div class="header">
         <div class="modal__header modal__header--padding-20">
-            <h3 class="pull-left" translate>Content Lists</h3>
+            <h3 class="page-nav-title--text-light" translate>Content Lists</h3>
         </div>
         <div class="subnav subnav--absolute">
             <ul class="filter-type filter-type--padded rightPadding">
@@ -25,12 +25,12 @@
                     <li><div class="dropdown__menu-label" translate>Create new item</div></li>
                     <li>
                         <button ng-click="webPublisher.createListCard('automatic')">
-                            <i class="icon-plus-small icon-round icon-white"></i>{{:: 'Automatic list'| translate}}
+                            <i class="icon-plus-sign icon--blue"></i>{{:: 'Automatic list'| translate}}
                         </button>
                     </li>
                     <li>
                         <button ng-click="webPublisher.createListCard('manual')">
-                            <i class="icon-plus-small icon-round icon-white"></i>{{:: 'Manual list'| translate}}
+                            <i class="icon-plus-sign icon--blue"></i>{{:: 'Manual list'| translate}}
                         </button>
                     </li>
                 </ul>
@@ -43,10 +43,10 @@
                 ng-class="{'active': list.type === 'manual'}">
                 <div class="card-box__header">
                     <div ng-if="!webPublisher._editMode(list, webPublisher.selectedList, webPublisher.listAdd)" class="dropdown" dropdown>
-                        <button class="dropdown__toggle" dropdown__toggle>
+                        <button class="dropdown__toggle dropdown--align-right" dropdown__toggle>
                             <i class="icon-dots-vertical"></i>
                         </button>
-                        <ul class="dropdown__menu more-activity-menu pull-right">
+                        <ul class="dropdown__menu">
                             <li>
                                 <button ng-click="webPublisher.openListCriteria(list)" title="{{:: 'Edit list'| translate }}">
                                     <i class="icon-pencil"></i>{{:: 'Edit'| translate}}

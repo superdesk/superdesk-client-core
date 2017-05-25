@@ -1,5 +1,10 @@
-.publisherManager.modal label {
-    min-width: auto;
+.publisherManager.modal {
+    label {
+        min-width: auto;
+    }
+    .modal__header {
+        background-color: white;
+    }
 }
 
 .navigation-main {
@@ -34,4 +39,8 @@
             visibility: visible;
         }
     }
+}
+.flex-item {
+    display: flex;
+    flex-direction: column;
 }

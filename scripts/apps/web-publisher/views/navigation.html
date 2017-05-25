@@ -1,4 +1,4 @@
-<div class="subnav subnav--white-background paneLayout">
+<div class="subnav bg--white paneLayout">
     <h3 class="page-nav-title page-nav-title--text-light" translate>Navigation</h3>
     <div class="subnav__button-stack--square-buttons">
         <button class="navbtn sd-create-btn" ng-disabled="webPublisher.menuAdd" ng-click="webPublisher.createMenuCard()">
@@ -13,11 +13,11 @@
             <div class="flex-grid box wrap-items small-1 medium-2 large-3 xlarge-4">
                 <div class="flex-item card-box" ng-repeat="menu in menus | orderBy: 'id' track by menu.id">
                     <div class="card-box__header">
-                        <div ng-if="!webPublisher._editMode(menu, webPublisher.selectedMenu, webPublisher.menuAdd)" class="dropdown" dropdown>
+                        <div ng-if="!webPublisher._editMode(menu, webPublisher.selectedMenu, webPublisher.menuAdd)" class="dropdown dropdown--align-right" dropdown>
                             <button class="dropdown__toggle" dropdown__toggle>
                                 <i class="icon-dots-vertical"></i>
                             </button>
-                            <ul class="dropdown__menu more-activity-menu pull-right">
+                            <ul class="dropdown__menu">
                                 <li>
                                     <button ng-click="webPublisher.editMenuTree(menu)" title="{{:: 'Edit menu'| translate }}">
                                         <i class="icon-pencil"></i>{{:: 'Edit'| translate}}
