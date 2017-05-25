@@ -111,6 +111,14 @@
     &__right {
         flex: 0 0 auto;
         align-items: center;
+        .dropdown__toggle {
+            opacity: .3;
+        }
+        &:hover {
+            .dropdown__toggle {
+                opacity: 1;
+            }   
+        }
     }
 
     .countLabel {

@@ -9,6 +9,14 @@
             &:hover {
                 border: 2px solid rgba(255,255,255,.8);
             }
+
+            &.checked {
+                border: 2px solid transparent;
+
+                &:hover {
+                    border: 2px solid transparent;
+                }
+            }
         }
     }
 
@@ -18,13 +26,12 @@
         position: relative;
         width: 100%;
         min-height: 48px;
-        padding: .9rem 1rem;
+        padding: 1rem 2rem;
         box-sizing: border-box;
         font-size: 1.4rem;
         font-weight: 100;
 
-        > h3 {
-            font-size: inherit;
+        > h3 {            
             font-weight: inherit;
         }
 
