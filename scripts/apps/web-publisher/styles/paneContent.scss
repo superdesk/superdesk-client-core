@@ -2,6 +2,14 @@
     &--darker {
         background-color: #3b3b3b;
         color: $white;
+
+        .sd-checkbox {
+            border: 2px solid rgba(255,255,255,.4);
+
+            &:hover {
+                border: 2px solid rgba(255,255,255,.8);
+            }
+        }
     }
 
     &__header {
