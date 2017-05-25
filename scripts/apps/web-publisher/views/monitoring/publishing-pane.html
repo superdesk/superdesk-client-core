@@ -1,17 +1,3 @@
-<!--<div class="paneContent__header paneContent__header--darker">
-    <span class="paneContent__tabItem paneContent__tabItem--light"
-        ng-class="{'paneContent__tabItem--activeLight' : webPublisherMonitoring.activePublishPane == 'publish' }"
-        ng-click="webPublisherMonitoring.activePublishPane = 'publish'">Publish
-    </span>
-    <span ng-if="webPublisherMonitoring.selectedArticle.status != 'new'" class="paneContent__tabItem paneContent__tabItem--light"
-        ng-class="{'paneContent__tabItem--activeLight' : webPublisherMonitoring.activePublishPane == 'unpublish' }"
-        ng-click="webPublisherMonitoring.activePublishPane = 'unpublish'">Unpublish
-    </span>
-    <div ng-click="webPublisherMonitoring.publishOpen = false" class="close-filter">
-        <i class="icon-close-small icon-white"></i>
-    </div>
-</div>-->
-
 <ul class="nav-tabs nav-tabs--ui-dark">
     <li ng-class="{'nav-tabs__tab--active': webPublisherMonitoring.activePublishPane == 'publish' }" class="nav-tabs__tab">
          <button ng-click="webPublisherMonitoring.activePublishPane = 'publish'" class="nav-tabs__link"><span translate="">Publish</span></button>
@@ -21,10 +7,9 @@
         <button ng-click="webPublisherMonitoring.activePublishPane = 'unpublish'" class="nav-tabs__link"><span translate="">Unpublish</span></button>
     </li>
     <li ng-click="webPublisherMonitoring.publishOpen = false" class="close-filter">
-    <i class="icon-close-small icon--white"></i>
-</li>
+        <i class="icon-close-small icon--white"></i>
+    </li>
 </ul>
-
 
 <div class="paneContent__content paneContent__content--hasFooter contentPadding">
     <h3 class="text--thin bottomPadding">{{webPublisherMonitoring.selectedArticle.headline}}</h3>
