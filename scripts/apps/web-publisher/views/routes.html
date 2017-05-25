@@ -20,7 +20,7 @@
     <div class="subnav__stretch-bar"></div>
 
     <div class="subnav__button-stack--square-buttons">
-        <button class="navbtn sd-create-btn" ng-click="webPublisher.toogleCreateRoute()">
+        <button class="navbtn sd-create-btn" ng-click="webPublisher.toogleCreateRoute(true)">
             <i class="svg-icon-plus"></i><span class="circle"></span>
         </button>
     </div>
@@ -37,9 +37,10 @@
     </div>
     <div class="paneLayout__pane paneContent" ng-class="{'paneLayout__pane--open': webPublisher.routePaneOpen}">
         <div class="paneContent__header">
-            <h3 class="pull-left" translate>Add Route</h3>
+            <h3 class="pull-left" ng-if="webPublisher.isObjEmpty(webPublisher.selectedRoute)" translate>Add Route</h3>
+            <h3 class="pull-left" ng-if="!webPublisher.isObjEmpty(webPublisher.selectedRoute)" translate>Edit Route</h3>
             <div class="pull-right">
-                <button class="btn" ng-click="webPublisher.toogleCreateRoute()" translate>Cancel</button>
+                <button class="btn" ng-click="webPublisher.toogleCreateRoute(false)" translate>Cancel</button>
                 <button class="btn btn--primary"
                     ng-disabled="webPublisher.routeForm.$invalid || !webPublisher.routeForm.$dirty"
                     ng-click="webPublisher.saveRoute()" translate>Save</button>
