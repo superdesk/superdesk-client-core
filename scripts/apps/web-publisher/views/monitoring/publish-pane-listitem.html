@@ -48,7 +48,7 @@
             <span ng-if="webPublisherMonitoring.publishedDestinations[site.code].fbia" class="label label--facebook text--smaller text--uppercase">facebook</span>
             <div ng-if="webPublisherMonitoring.newDestinations[site.code].route.id && !webPublisherMonitoring.publishedDestinations[site.code].fbia && webPublisherMonitoring.publishedDestinations[site.code].status != 'unpublished'">
                 <span class="text--uppercase text--smaller text--lighter">publish to facebook</span>
-                <span class="sd-checkbox checkboxInlineRight" sd-check ng-model="webPublisherMonitoring.newDestinations[site.code].fbia"></span>
+                <sd-check ng-model="webPublisherMonitoring.newDestinations[site.code].fbia"></sd-check>
             </div>
         </div>
     </div>

@@ -1,7 +1,8 @@
 <div class="sectionTreeElement">
     <div class="sectionTreeElement__icon" >
-        <span class="sd-checkbox" sd-check ng-model="webPublisherMonitoring.advancedFilters.sites[site.code]['routes'][route.id].status"
-        ng-click="webPublisherMonitoring.advancedFilters.sites[site.code]['routes'][route.id].name = route.name; webPublisherMonitoring.advancedFilters.sites[site.code].name = site.name"></span>
+        <sd-check ng-model="webPublisherMonitoring.advancedFilters.sites[site.code]['routes'][route.id].status"
+            ng-click="webPublisherMonitoring.advancedFilters.sites[site.code]['routes'][route.id].name = route.name; webPublisherMonitoring.advancedFilters.sites[site.code].name = site.name">
+        </sd-check>
     </div>
     <button class="sectionTreeElement__icon iconButton" ng-class="{'sectionTreeElement__icon--extraMargin': route.children.length}" ng-if="route.children.length">
         <i class="icon-chevron-down-thin" ng-show="route.filterPaneOpen" ng-click="route.filterPaneOpen = !route.filterPaneOpen"></i>

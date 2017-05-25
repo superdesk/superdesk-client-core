@@ -32,19 +32,19 @@ export default angular.module('superdesk.apps.web_publisher', [
 .config(['superdeskProvider', function(superdesk) {
     superdesk
         .activity('/web_publisher/monitoring', {
-            label: gettext('Web Publisher'),
-            description: gettext('Web Publisher'),
+            label: gettext('Publisher'),
+            description: gettext('Publisher'),
+            priority: 100,
+            category: superdesk.MENU_MAIN,
+            adminTools: false,
             controller: WebPublisherMonitoringController,
             controllerAs: 'webPublisherMonitoring',
             templateUrl: 'scripts/apps/web-publisher/views/monitoring/index.html',
             sideTemplateUrl: 'scripts/apps/web-publisher/views/sidenav-items.html'
         })
         .activity('/web_publisher/manager', {
-            label: gettext('Web Site Management'),
-            description: gettext('Web Site Management'),
-            priority: 100,
-            category: superdesk.MENU_MAIN,
-            adminTools: false,
+            label: gettext('Publisher'),
+            description: gettext('Publisher'),
             controller: WebPublisherManagerController,
             controllerAs: 'webPublisher',
             templateUrl: 'scripts/apps/web-publisher/views/manager.html',
