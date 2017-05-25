@@ -52,7 +52,9 @@
     <div ng-show="webPublisherMonitoring.activePublishPane == 'unpublish'">
         <div class="bottomPadding">
             <span class="text--small">Select All</span>
-            <span class="sd-checkbox checkboxInlineRight" sd-check ng-click="webPublisherMonitoring.unpublishAll()" ng-model="webPublisherMonitoring.unpublishSelectAll"></span>
+            <sd-check ng-click="webPublisherMonitoring.unpublishAll()"
+                ng-model="webPublisherMonitoring.unpublishSelectAll">
+            </sd-check>
         </div>
         <button ng-repeat="item in webPublisherMonitoring.newDestinations"
             ng-if="item.status == 'published'"

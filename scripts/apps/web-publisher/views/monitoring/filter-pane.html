@@ -1,13 +1,5 @@
 <div class="paneContent__header paneContent__header--dark">
     <h3>Advanced Filter</h3>
-    <!-- <a class="paneContent__tabItem"
-        ng-class="{'paneContent__tabItem--active': openTab =='filter'}"
-        ng-click="openTab='filter'"
-        >Advanced Filter</a>
-        <a class="paneContent__tabItem"
-        ng-class="{'paneContent__tabItem--active': openTab =='saved'}"
-        ng-click="openTab='saved'"
-        >Saved</a> -->
     <div ng-click="webPublisherMonitoring.filterOpen = !webPublisherMonitoring.filterOpen" class="close-filter">
         <i class="icon-close-small"></i>
     </div>
@@ -20,11 +12,10 @@
                     <li ng-repeat="site in webPublisherMonitoring.sites">
                         <div class="sectionTreeElement sectionTreeElement--extraPadding">
                             <div class="sectionTreeElement__icon">
-                                <span class="sd-checkbox"
-                                    sd-check
+                                <sd-check
                                     ng-model="webPublisherMonitoring.advancedFilters.sites[site.code].status"
                                     ng-click="webPublisherMonitoring.advancedFilters.sites[site.code].name = site.name">
-                                </span>
+                                </sd-check>
                             </div>
                             <button class="sectionTreeElement__icon iconButton sectionTreeElement__icon--extraMargin">
                                 <i class="icon-chevron-down-thin" 
