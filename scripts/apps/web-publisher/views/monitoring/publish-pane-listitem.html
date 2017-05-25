@@ -16,7 +16,7 @@
                     <span class="text--uppercase text--smaller flexBox__item text--lighter">route</span>
                     <div sd-publish-routes data-site="site" data-monitoring-contoller="webPublisherMonitoring"></div>
                     <div class="flexBox__item">
-                        <i class="icon-close-small icon-white icon--small text--verticalMiddle cursorPointer rightSpace"
+                        <i class="icon-close-small icon--white text--verticalMiddle cursorPointer rightSpace"
                             ng-click="site.routeEditing = false"></i>
                     </div>
                 </div>
@@ -41,7 +41,7 @@
              <span ng-if="webPublisherMonitoring.newDestinations[site.code].route.id && webPublisherMonitoring.publishedDestinations[site.code].route.id != webPublisherMonitoring.newDestinations[site.code].route.id"
                 class="text--uppercase text--small text--blue cursorPointer rightSpace"
                 ng-click="webPublisherMonitoring.openArticlePreview(webPublisherMonitoring.newDestinations[site.code].route.id, site)">
-                <i class="icon-external blue icon--small text--verticalMiddle rightSpace--small"></i> Live Preview
+                <i class="icon-external icon--blue text--verticalMiddle rightSpace--small"></i> Live Preview
             </span>
         </div>
         <div class="minHeightLine">

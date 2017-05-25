@@ -50,6 +50,7 @@
         // margin instead of translateX because of automatic __content size
         margin-right: -500px;
         transition: all .3s;
+        position: relative;
 
         &--open {
             margin-right: 0;

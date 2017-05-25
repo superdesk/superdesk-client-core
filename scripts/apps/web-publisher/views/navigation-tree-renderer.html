@@ -20,11 +20,11 @@
         <button class="iconButton listElement__icon listElement__icon--active">
             <i class="icon-ok"></i>
         </button>
-        <div class="dropdown pull-right" dropdown>
+        <div class="dropdown dropdown--align-right" dropdown>
             <button class="dropdown__toggle" dropdown__toggle>
                 <i class="icon-dots-vertical"></i>
             </button>
-            <ul class="dropdown__menu more-activity-menu pull-right">
+            <ul class="dropdown__menu">
                 <li><button ng-click="webPublisher.editMenu(data)"><i class="icon-pencil"></i>{{:: 'Edit'| translate}}</button></li>
                 <li><button ng-click="webPublisher.removeMenu(data)"><i class="icon-trash"></i>{{:: 'Delete'| translate}}</button></li>
             </ul>

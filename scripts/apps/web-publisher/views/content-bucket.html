@@ -1,8 +1,8 @@
-<div class="subnav subnav--white-background paneLayout">
+<div class="subnav bg--white paneLayout">
     <h3 class="page-nav-title page-nav-title--text-light" translate>Content Bucket</h3>
     <div class="subnav__button-stack--square-buttons">
         <button class="navbtn sd-create-btn" ng-disabled="webPublisher.listAdd" ng-click="webPublisher.createListCard('bucket')">
-            <i class="svg-icon-plus"></i><span class="circle"></span>
+            <i class="icon-plus-sign icon--blue"></i>
         </button>
     </div>
 </div>
@@ -13,11 +13,11 @@
             <div class="flex-grid box wrap-items small-1 medium-2 large-3 xlarge-4">
                 <div class="flex-item card-box" ng-repeat="list in lists | filter: {type: 'bucket'} | orderBy: 'id' track by list.id">
                     <div class="card-box__header">
-                        <div ng-if="!webPublisher._editMode(list, webPublisher.selectedList, webPublisher.listAdd)" class="dropdown" dropdown>
+                        <div ng-if="!webPublisher._editMode(list, webPublisher.selectedList, webPublisher.listAdd)" class="dropdown dropdown--align-right" dropdown>
                             <button class="dropdown__toggle" dropdown__toggle>
                                 <i class="icon-dots-vertical"></i>
                             </button>
-                            <ul class="dropdown__menu more-activity-menu pull-right">
+                            <ul class="dropdown__menu">
                                 <li>
                                     <button ng-click="webPublisher.openListCriteria(list)" title="{{:: 'Edit list'| translate }}">
                                         <i class="icon-pencil"></i>{{:: 'Edit'| translate}}
