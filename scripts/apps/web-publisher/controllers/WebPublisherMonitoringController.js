@@ -342,9 +342,9 @@ export function WebPublisherMonitoringController($scope, $sce, publisher, modal)
             // request to settings API to load filter preset per user
             publisher.getSettings()
                 .then((settings) => {
+                    // !!!!!!!!!!!!! TYPO IN API 'PREFERENCES' !!!!!!!!!!!!!!!
                     let filteringPreferences = JSON.parse(settings.filtering_prefrences.value);
 
-                    // !!!!!!!!!!!!! TYPO IN API 'PREFERENCES' !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                     if (!_.isEmpty(filteringPreferences)) {
                         this.advancedFilters = filteringPreferences;
                     }
@@ -358,7 +358,9 @@ export function WebPublisherMonitoringController($scope, $sce, publisher, modal)
                  * @param {Object} advancedFilters - filters to filter articles
                  * @description event is thrown when advanced filters are changed
                  */
-                $scope.$broadcast('updateMonitoringFilters', this.advancedFilters);
+                if (newVal !== oldVal) {
+                    $scope.$broadcast('updateMonitoringFilters', this.advancedFilters);
+                }
             }, true);
         }
 

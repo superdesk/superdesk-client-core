@@ -6,7 +6,7 @@
     </div>
     <h3 class="page-nav-title">{{menu.label}}</h3>
     <div class="subnav__button-stack--square-buttons dropdown open">
-        <button class="navbtn sd-create-btn" ng-click="webPublisher.toogleCreateMenu()">
+        <button class="navbtn sd-create-btn" ng-click="webPublisher.toogleCreateMenu(true)">
             <i class="svg-icon-plus"></i><span class="circle"></span>
         </button>
     </div>
@@ -21,9 +21,10 @@
     </div>
     <div class="paneLayout__pane" ng-class="{'paneLayout__pane--open': webPublisher.menuPaneOpen}">
         <div class="modal__header">
-            <h3 class="pull-left page-nav-title--text-light" translate>Add Menu Item</h3>
+            <h3 class="pull-left page-nav-title--text-light" ng-if="webPublisher.isObjEmpty(webPublisher.selectedMenu)" translate>Add Menu Item</h3>
+            <h3 class="pull-left page-nav-title--text-light" ng-if="!webPublisher.isObjEmpty(webPublisher.selectedMenu)" translate>Edit Menu Item</h3>
             <div class="pull-right">
-                <button class="btn" ng-click="webPublisher.toogleCreateMenu()" translate>Cancel</button>
+                <button class="btn" ng-click="webPublisher.toogleCreateMenu(false)" translate>Cancel</button>
                 <button class="btn btn--primary" 
                     ng-disabled="webPublisher.menuForm.$invalid || !webPublisher.menuForm.$dirty" 
                     ng-click="webPublisher.saveMenu(webPublisher._refreshCurrentMenu)" translate>Save</button>

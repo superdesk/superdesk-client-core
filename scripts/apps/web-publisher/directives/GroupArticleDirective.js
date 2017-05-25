@@ -32,9 +32,9 @@ export function GroupArticleDirective(publisher) {
                     tenant.push(scope.site.code);
                 }
 
-                if (!tenant.length && scope.filters.hasOwnProperty('sites') && !_.isEmpty(scope.filters.sites)) {
+                if (!tenant.length && scope.filters.sites && !_.isEmpty(scope.filters.sites)) {
                     angular.forEach(scope.filters.sites, (site, key) => {
-                        if (site.hasOwnProperty('status') && site.status) {
+                        if (site.status) {
                             tenant.push(key);
                         }
                     });
@@ -51,11 +51,11 @@ export function GroupArticleDirective(publisher) {
                     route.push(scope.route.id);
                 }
 
-                if (!route.length && scope.filters.hasOwnProperty('sites')) {
+                if (!route.length && scope.filters.sites) {
                     angular.forEach(scope.filters.sites, (siteObj, tenantCode) => {
-                        if ((!scope.site || scope.site.code === tenantCode) && siteObj.hasOwnProperty('routes')) {
+                        if ((!scope.site || scope.site.code === tenantCode) && siteObj.routes) {
                             angular.forEach(siteObj.routes, (routeObj, key) => {
-                                if (routeObj.hasOwnProperty('status') && routeObj.status) {
+                                if (routeObj.status) {
                                     route.push(key);
                                 }
                             });
@@ -70,13 +70,13 @@ export function GroupArticleDirective(publisher) {
                 let universalParams = {};
 
                 // universal author and source params
-                if (scope.filters.hasOwnProperty('author') && scope.filters.author.length) {
+                if (scope.filters.author && scope.filters.author.length) {
                     universalParams['author[]'] = scope.filters.author;
                 }
-                if (scope.filters.hasOwnProperty('source') && scope.filters.source.length) {
+                if (scope.filters.source && scope.filters.source.length) {
                     universalParams['source[]'] = scope.filters.source;
                 }
-                if (scope.filters.hasOwnProperty('term') && scope.filters.term.length) {
+                if (scope.filters.term && scope.filters.term.length) {
                     universalParams.term = scope.filters.term;
                 }
 
@@ -105,10 +105,8 @@ export function GroupArticleDirective(publisher) {
                     queryParams['status[]'] = ['published', 'unpublished', 'canceled'];
                     queryParams['tenant[]'] = tenant.length ? tenant : undefined;
                     queryParams['route[]'] = route.length ? route : undefined;
-                    queryParams.publishedBefore = scope.filters.hasOwnProperty('publishedBefore') ?
-                    scope.filters.publishedBefore : undefined;
-                    queryParams.publishedAfter = scope.filters.hasOwnProperty('publishedAfter') ?
-                    scope.filters.publishedAfter : undefined;
+                    queryParams.publishedBefore = scope.filters.publishedBefore;
+                    queryParams.publishedAfter = scope.filters.publishedAfter;
                 }
 
                 return queryParams;

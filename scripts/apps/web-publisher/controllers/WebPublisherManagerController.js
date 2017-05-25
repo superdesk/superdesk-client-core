@@ -124,13 +124,25 @@ export function WebPublisherManagerController($scope, publisher, modal) {
 
         /**
          * @ngdoc method
+         * @name WebPublisherManagerController#isRouteEmpty
+         * @param {Object} value
+         * @returns {Boolean}
+         * @description Checks if object is empty
+         */
+        isObjEmpty(value) {
+            return angular.equals({}, value);
+        }
+
+        /**
+         * @ngdoc method
          * @name WebPublisherManagerController#toogleCreateRoute
+         * @param {Boolean} paneOpen - should pane be open
          * @description Opens window for creating new route
          */
-        toogleCreateRoute() {
+        toogleCreateRoute(paneOpen) {
             this.selectedRoute = {};
             $scope.newRoute = {};
-            this.routePaneOpen = !this.routePaneOpen;
+            this.routePaneOpen = paneOpen;
         }
 
         /**
@@ -257,12 +269,13 @@ export function WebPublisherManagerController($scope, publisher, modal) {
         /**
          * @ngdoc method
          * @name WebPublisherManagerController#toogleCreateMenu
+         * @param {Boolean} paneOpen - should pane be open
          * @description Creates a new menu
          */
-        toogleCreateMenu() {
+        toogleCreateMenu(paneOpen) {
             this.selectedMenu = {};
             $scope.newMenu = {};
-            this.menuPaneOpen = !this.menuPaneOpen;
+            this.menuPaneOpen = paneOpen;
         }
 
         /**
