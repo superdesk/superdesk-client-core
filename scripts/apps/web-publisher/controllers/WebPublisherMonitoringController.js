@@ -17,7 +17,6 @@ export function WebPublisherMonitoringController($scope, $sce, publisher, modal)
             publisher.setToken()
                 .then(publisher.querySites)
                 .then((sites) => {
-                    $scope.loadArticles = true;
                     this.sites = sites;
                     // loading routes for filter pane
                     angular.forEach(this.sites, (siteObj, key) => {
@@ -315,7 +314,7 @@ export function WebPublisherMonitoringController($scope, $sce, publisher, modal)
             let filters = angular.copy(this.advancedFilters);
 
             // we don't want to save search term
-            if (filters.hasOwnProperty('term')) {
+            if (filters.term) {
                 delete filters.term;
             }
 
@@ -359,7 +358,7 @@ export function WebPublisherMonitoringController($scope, $sce, publisher, modal)
                  * @description event is thrown when advanced filters are changed
                  */
                 if (newVal !== oldVal) {
-                    $scope.$broadcast('updateMonitoringFilters', this.advancedFilters);
+                    $scope.$broadcast('refreshArticlesList', undefined, undefined, this.advancedFilters);
                 }
             }, true);
         }
