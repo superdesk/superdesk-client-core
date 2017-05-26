@@ -10,83 +10,98 @@
         <div sd-wizard-step data-title="{{ 'General' | translate }}" data-code="general">       
             <form sd-deskedit-basic name="generalStep" class="content desk-content">
                 <fieldset>
-                    <span class="pull-right" sd-character-count data-item="desk.edit.name" data-limit="limits.desk"></span>
-                    <div class="field">
-                        <label translate>Desk name</label>
-                        <input type="text" class="line-input fullwidth-input"
-                               ng-model="desk.edit.name"
-                               ng-keyup="handleEdit($event);" required>
+                    <div class="form__row form__row--flex">
+                        <div class="form__row-item">
+                            <div class="sd-line-input sd-line-input--required">
+                                <label class="sd-line-input__label" translate>Desk name</label>
+                                <input class="sd-line-input__input" type="text" ng-model="desk.edit.name" ng-keyup="handleEdit($event);" required>
+                                <div class="sd-line-input__char-count" sd-character-count data-item="desk.edit.name" data-limit="limits.desk"></div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="field">
-                        <label translate>Desk description</label>
-                        <textarea class="line-input fullwidth-input" ng-model="desk.edit.description"></textarea>
+                    <div class="form__row form__row--flex">
+                        <div class="form__row-item">
+                            <div class="sd-line-input">
+                                <label class="sd-line-input__label" translate>Desk description</label>
+                                <textarea class="sd-line-input__input" ng-model="desk.edit.description"></textarea>
+                            </div>
+                        </div>
                     </div>
-                    <div class="field">
-                        <label translate>Source for User Created Articles</label>
-                        <input type="text" class="line-input fullwidth-input"
-                               ng-model="desk.edit.source"
-                               ng-keyup="handleEdit($event);" required>
+                    <div class="form__row form__row--flex">
+                        <div class="form__row-item">
+                            <div class="sd-line-input  sd-line-input--required">
+                                <label class="sd-line-input__label" translate>Source for User Created Articles</label>
+                                <input class="sd-line-input__input" type="text" ng-model="desk.edit.source" ng-keyup="handleEdit($event);" required>
+                            </div>
+                        </div>
                     </div>
-                    <div class="field">
-                        <div sd-content-expiry
-                             data-item="desk.edit"
-                             data-preview="false"
-                             data-expiryfield="content_expiry"
-                             data-header="Content Expiry"></div>
+                    <div sd-content-expiry
+                            data-item="desk.edit"
+                            data-preview="false"
+                            data-expiryfield="content_expiry"
+                            data-header="Content Expiry">
                     </div>
-                    <div class="field desk-type">
-                        <label translate>Desk Type</label>
-                        <div class="line-select">
-                            <select id="deskType" ng-model="desk.edit.desk_type" required>
-                                <option value=""></option>
-                                <option id="{{type.qcode}}" ng-repeat="type in deskTypes" value="{{type.qcode}}" ng-selected="desk.edit.desk_type === type.qcode"
+                    <div class="form__row form__row--flex">
+                        <div class="form__row-item">
+                            <div class="sd-line-input sd-line-input--is-select sd-line-input--required">
+                                <label class="sd-line-input__label" translate>Desk Type</label>
+                                <select class="sd-line-input__select" id="deskType" ng-model="desk.edit.desk_type" required>
+                                    <option value=""></option>
+                                    <option id="{{type.qcode}}" ng-repeat="type in deskTypes" value="{{type.qcode}}" ng-selected="desk.edit.desk_type === type.qcode"
                                         >{{ type.name | translate}}</option>
-                            </select>
+                                </select>
+                            </div>
                         </div>
                     </div>
-                    <div class="field">
-                        <label translate>Desk language</label>
-                        <div class="line-select">
-                            <select id="deskLanguage" ng-model="desk.edit.desk_language">
-                                <option value=""></option>
-                                <option ng-repeat="language in languages" value="{{language.language}}" ng-selected="desk.edit.desk_language === language.language">
-                                    {{ language.label | translate}}
-                                </option>
-                            </select>
+                    <div class="form__row form__row--flex">
+                        <div class="form__row-item">
+                            <div class="sd-line-input sd-line-input--is-select">
+                                <label class="sd-line-input__label" translate>Desk language</label>
+                                <select class="sd-line-input__select" id="deskLanguage" ng-model="desk.edit.desk_language">
+                                    <option value=""></option>
+                                    <option ng-repeat="language in languages" value="{{language.language}}" ng-selected="desk.edit.desk_language === language.language">
+                                        {{ language.label | translate}}
+                                    </option>
+                                </select>
+                            </div>
                         </div>
                     </div>
-                    <div class="field">
-                        <label translate>SERVICE</label>
-                        <div sd-meta-terms
-                             class="data"
-                             data-item="desk.edit.desk_metadata"
-                             data-field="anpa_category"
-                             data-unique="qcode"
-                             data-list="metadata.categories"
-                             data-header="true">
+                    <div class="form__row form__row--flex">
+                        <div class="form__row-item" style="padding-bottom: 1.4rem;">
+                            <label translate class="form-label">SERVICE</label>
+                            <div sd-meta-terms
+                                class="data"
+                                data-item="desk.edit.desk_metadata"
+                                data-field="anpa_category"
+                                data-unique="qcode"
+                                data-list="metadata.categories"
+                                data-header="true">
+                            </div>
                         </div>
                     </div>
-                    <div class="field">
-                        <label translate>Default Content Template</label>
-                        <div class="line-select">
-                            <select ng-model="desk.edit.default_content_template"
-                                    ng-options="template._id as template.template_name for template in templates">
-                                <option value=""></option>
-                            </select>
+                    <div class="form__row form__row--flex">
+                        <div class="form__row-item">
+                            <div class="sd-line-input sd-line-input--is-select">
+                                <label class="sd-line-input__label" translate>Default Content Template</label>
+                                <select ng-model="desk.edit.default_content_template"
+                                        ng-options="template._id as template.template_name for template in templates" class="sd-line-input__select">
+                                    <option value=""></option>
+                                </select>
+                            </div>
                         </div>
                     </div>
-                    <div class="field" ng-show="profiles.length">
-                        <label translate>Default Content Profile</label>
-                        <div class="line-select">
-                            <select
-                                ng-model="desk.edit.default_content_profile"
-                                ng-options="profile._id as profile.label for profile in profiles | orderBy: 'label'">
-				<option value=""></option>
-                            </select>
+                    <div class="form__row form__row--flex" ng-show="profiles.length">
+                        <div class="form__row-item">
+                            <div class="sd-line-input sd-line-input--is-select">
+                                <label class="sd-line-input__label" translate>Default Content Profile</label>
+                                <select ng-model="desk.edit.default_content_profile"
+                                        ng-options="profile._id as profile.label for profile in profiles | orderBy: 'label'" class="sd-line-input__select">
+                                    <option value=""></option>
+                                </select>
+                            </div>
                         </div>
                     </div>
                 </fieldset>
-
                 <span ng-show="message">{{ message}}</span>
                 <span class="alert-danger" ng-show="_errorLimits" translate>Character limit exceeded, desk can not be created/updated.</span>
                 <span class="alert-danger" ng-show="_error">{{ _errorMessage}}</span>                                     
@@ -103,22 +118,18 @@
                         ng-disabled="!generalStep.$valid || _errorLimits || saving" translate>Done</button>
             </div>           
         </div>
-
         <div sd-wizard-step data-title="{{ :: 'Stages' | translate }}" data-code="stages">
             <div sd-deskedit-stages class="content stages form-flat">
                 <div class="grid grid--padding-fix">
-                    <div class="grid__item grid__item--col-6">
-                        <div class="heading pull-left" translate>Work stages</div>
-                        <button id="new-stage" class="btn btn--primary btn--icon-only-circle btn--small" data-target="#insert-stage" ng-click="edit({}); selected = null" ng-disabled="editStage">
-                            <i class="icon-plus-large"></i>
-                        </button>
-                        <div class="row">
+                    <div class="grid__item grid__item--col-5">
+                        <div class="heading" translate>Work stages</div>
+                        <div class="column">
                             <ul class="pills-list" ng-class="{'edit-mode': editStage}">
                                 <li class="stage editable addnew" ng-show="editStage && !editStage._id">
-                                    <span sd-character-count class="char-count-holder" data-item="editStage.name" data-limit="limits.stage"></span>
-                                    <input type="text" id="insert-stage" ng-model="editStage.name" required ng-keyup="handleEdit($event);" />
-                                    <button class="btn" ng-click="cancel()" translate>Cancel</button>
-                                    <button id="save-new-stage" class="btn btn--primary" ng-click="save()" ng-disabled="!enableSave()" translate>Save</button>
+                                    <div class="sd-line-input">
+                                        <input class="sd-line-input__input" type="text" id="insert-stage" ng-model="editStage.name" required ng-keyup="handleEdit($event);" autofocus placeholder="{{ 'New stage' | translate }}">
+                                        <div sd-character-count class="sd-line-input__char-count" data-item="editStage.name" data-limit="limits.stage"></div>
+                                    </div>
                                 </li>
                                 <li ng-repeat="stage in stages track by stage._id" ng-click="select(stage)" ng-class="{active: selected === stage, editable: isActive(stage)}">
                                     <div ng-if="!isActive(stage)">
@@ -130,12 +141,12 @@
                                             <span translate>Local Readonly</span><span translate>: ON</span>
                                         </label>
                                     </div>
-
                                     <div ng-if="isActive(stage)">
-                                        <span sd-character-count class="char-count-holder" data-item="editStage.name" data-limit="limits.stage"></span>
-                                        <input type="text" id="edit-stage" ng-model="editStage.name" ng-keyup="handleEdit($event);" required />
+                                        <div class="sd-line-input">
+                                            <input class="sd-line-input__input" type="text" id="edit-stage" ng-model="editStage.name" ng-keyup="handleEdit($event);" required>
+                                            <div sd-character-count class="sd-line-input__char-count" data-item="editStage.name" data-limit="limits.stage"></div>
+                                        </div>
                                     </div>
-
                                     <div class="actions" ng-if="!editStage">
                                         <button ng-click="edit(stage)">
                                             <i class="icon-pencil" ></i>
@@ -146,8 +157,7 @@
                                     </div>
                                 </li>
                             </ul>
-
-                            <div ng-if="editStage && editStage._id">
+                            <div class="button-toolbar" ng-if="editStage && editStage._id">
                                 <button class="btn"
                                         ng-click="cancel()"
                                         ng-disabled="saving" translate>Cancel</button>
@@ -156,117 +166,139 @@
                                         ng-click="save()"
                                         ng-disabled="!enableSave() || saving" translate>Save</button>
                             </div>
-
-                            <p ng-show="message">{{ message}}</p>
-                            <p ng-show="_errorUniqueness"><span translate>Stage with name</span> "{{ editStage.name}}"" <span translate>already exists</span>.</p>
-                            <p ng-show="_errorLimits" translate>Character limit exceeded, stage can not be created/updated.</p>
-                            <p ng-show="_error" translate>There was a problem, stage not created/updated.</p>
+                            <div class="button-toolbar" ng-if="editStage && !editStage._id">
+                                <button class="btn"
+                                        ng-click="cancel()" translate>Cancel</button>
+                                <button id="save-new-stage" 
+                                        class="btn btn--primary" 
+                                        ng-click="save()" 
+                                        ng-disabled="!enableSave()" translate>Save</button>
+                            </div>
+                            <div ng-show="message" class="sd-alert sd-alert--hollow sd-alert--alert">{{ message}}</div>
+                            <div ng-show="_errorUniqueness" class="sd-alert sd-alert--hollow sd-alert--alert"><span translate>Stage with name</span> "{{ editStage.name}}"" <span translate>already exists</span>.</div>
+                            <div ng-show="_errorLimits" class="sd-alert sd-alert--hollow sd-alert--alert"translate>Character limit exceeded, stage can not be created/updated.</div>
+                            <div ng-show="_error" class="sd-alert sd-alert--hollow sd-alert--alert" translate>There was a problem, stage not created/updated.</div>
+                            <button ng-if="!editStage && !editStage._id" style="margin-top: 1.6rem;" id="new-stage" class="btn btn--large btn--expanded" data-target="#insert-stage" ng-click="edit({}); selected = null" ng-disabled="editStage" sd-tooltip="{{'Create new Stage' | translate}}">
+                                <i class="icon-plus-large"></i>
+                            </button>
                         </div>
                     </div>
 
-                    <div class="grid__item grid__item--col-6">
+                    <div class="grid__item grid__item--col-7">
                         <div class="heading" translate>Stage Details</div>
-                        <div class="row" ng-if="selected && !editStage">
-                            <div class="field stage-type" ng-if="selected.working_stage || selected.default_incoming">
+                        <div ng-if="!selected && !editStage" class="column">
+                            <i class="icon-info-sign icon--blue"></i><span class="helper-text helper-text--after-icon">Click on a Work stage on the left to view details.</span>
+                        </div>
+                        <div ng-if="selected && !editStage" class="column">
+                            <div class="list-row list-row--dotted" ng-if="selected.working_stage || selected.default_incoming">
                                 <span ng-if="selected.working_stage">{{:: 'Working Stage' | translate}}</span>
                                 <span ng-if="selected.working_stage && selected.default_incoming">, </span>
                                 <span ng-if="selected.default_incoming">{{:: 'Incoming Stage' | translate}}</span>
                             </div>
-                            <div class="field" ng-if="selected.is_visible">
-                                <label translate>Global Read: </label>
-                                <span  translate>{{selected.is_visible ? 'ON' : 'OFF'}}</span>
+                            <div class="list-row list-row--dotted list-row--flex" ng-if="selected.is_visible">
+                                <span class="text-label list-row__item list-row__item--grow" translate>Global Read: </span>
+                                <span class="list-row__item" translate>{{selected.is_visible ? 'ON' : 'OFF'}}</span>
                             </div>
-                            <div class="field" ng-if="selected.local_readonly">
-                                <label translate>Local Read Only: </label>
-                                <span  translate>{{selected.local_readonly ? 'ON' : 'OFF'}}</span>
+                            <div class="list-row list-row--dotted list-row--flex" ng-if="selected.local_readonly">
+                                <span class="text-label list-row__item list-row__item--grow" translate>Local Read Only: </span>
+                                <span class="list-row__item" translate>{{selected.local_readonly ? 'ON' : 'OFF'}}</span>
                             </div>
-                            <div class="field" ng-if="selected.description">
-                                <label translate>Stage description: </label>
-                                <span>{{ selected.description}}</span>
+                            <div class="list-row list-row--dotted" ng-if="selected.description">
+                                <span class="text-label list-row__item list-row__item--block" translate>Stage description: </span>
+                                <span class="list-row__item list-row__item--block">{{ selected.description}}</span>
                             </div>
-                            <div class="field">
-                                <label translate>Content expiry: </label>
-                                <span sd-content-expiry data-item="selected" data-preview="true" data-expiryfield="content_expiry"></span>
+                            <div class="list-row list-row--dotted list-row--flex">
+                                <span class="text-label list-row__item list-row__item--grow" translate>Content expiry: </span>
+                                <span class="list-row__item" sd-content-expiry data-item="selected" data-preview="true" data-expiryfield="content_expiry"></span>
                             </div>
-                            <div class="field" ng-if="selected.incoming_macro">
-                                <label translate>Incoming Rule: </label>
-                                <span>{{ selected.incoming_macro}}</span>
+                            <div class="list-row list-row--dotted list-row--flex" ng-if="selected.incoming_macro">
+                                <span class="text-label list-row__item list-row__item--grow" translate>Incoming Rule: </span>
+                                <span class="list-row__item">{{ selected.incoming_macro}}</span>
                             </div>
-                            <div class="field" ng-if="selected.onstage_macro">
-                                <label translate>Moved onto stage Rule: </label>
-                                <span>{{ selected.onstage_macro}}</span>
+                            <div class="list-row list-row--dotted list-row--flex" ng-if="selected.onstage_macro">
+                                <span class="text-label list-row__item list-row__item--grow" translate>Moved onto stage Rule: </span>
+                                <span class="list-row__item">{{ selected.onstage_macro}}</span>
                             </div>
-                            <div class="field" ng-if="selected.outgoing_macro">
-                                <label translate>Outgoing Rule: </label>
-                                <span>{{ selected.outgoing_macro}}</span>
+                            <div class="list-row list-row--dotted list-row--flex" ng-if="selected.outgoing_macro">
+                                <span class="text-label list-row__item list-row__item--grow" translate>Outgoing Rule: </span>
+                                <span class="list-row__item">{{ selected.outgoing_macro}}</span>
                             </div>
                         </div>
 
-                        <div class="row" ng-if="editStage">
-                            <div class="field" title="{{ editStage.default_incoming ? 'Global Read OFF is not allowed for Incoming stage' : null | translate }}">
-                                <label>{{ :: 'Global Read' | translate }}</label>
-                                <span class="pull-right" ng-class="{'prevent-off' : editStage.default_incoming && editStage.is_visible}" sd-switch ng-model="editStage.is_visible"></span>
+                        <div class="column column--mb24" ng-if="editStage">
+                            <div class="list-row list-row--small" title="{{ editStage.default_incoming ? 'Global Read OFF is not allowed for Incoming stage' : null | translate }}">
+                                <span class="" ng-class="{'prevent-off' : editStage.default_incoming && editStage.is_visible}" sd-switch ng-model="editStage.is_visible"></span>
+                                <label>{{ :: 'Global Read' | translate }}</label>  
                             </div>
-                            <div class="field">
-                                <label>{{ :: 'Local Read Only' | translate }}</label>
-                                <span class="pull-right" sd-switch ng-model="editStage.local_readonly"></span>
+                            <div class="list-row list-row--small">
+                                <span class="" sd-switch ng-model="editStage.local_readonly"></span>
+                                <label>{{ :: 'Local Read Only' | translate }}</label>     
                             </div>
-                            <div class="field">
-                                <label>{{:: 'Working Stage' | translate }}</label>
-                                <span class="pull-right" sd-switch ng-model="editStage.working_stage"></span>
+                            <div class="list-row list-row--small">
+                                <span class="" sd-switch ng-model="editStage.working_stage"></span>
+                                <label>{{:: 'Working Stage' | translate }}</label>                        
                             </div>
-                            <div class="field">
+                            <div class="list-row list-row--small">
+                                <span class="" ng-click="shouldVisible()" sd-switch ng-model="editStage.default_incoming"></span>
                                 <label>{{:: 'Incoming Stage' | translate }}</label>
-                                <span class="pull-right" ng-click="shouldVisible()" sd-switch ng-model="editStage.default_incoming"></span>
+                                
                             </div>
                         </div>
-                        <div class="row" ng-if="editStage">
-                            <div class="field">
-                                <label>{{ :: 'Stage description' | translate }}</label>
-                                <textarea class="fullwidth-input line-input" ng-model="editStage.description"></textarea>
-                            </div>
-                        </div>
-                        <div class="row" ng-if="editStage">
-                            <div class="field">
-                                <label>{{ :: 'Content expiry' | translate }}</label>
-                                <div class="pull-right" sd-content-expiry data-item="editStage" data-preview="false" data-expiryfield="content_expiry"></div>
-                            </div>
-                        </div>
-                        <div class="row" ng-if="editStage">
-                            <div class="field">
-                                <label>{{ :: 'Incoming Rule' | translate }}</label>
-                                <div class="line-select">
-                                    <select ng-model="editStage.incoming_macro">
-                                        <option value=""></option>
-                                        <option ng-repeat="macro in macros" ng-selected="editStage.incoming_macro === macro.name" value="{{macro.name}}">{{macro.label}}</option>
-                                    </select>
+                        <div class="form__row form__row--flex" ng-if="editStage">
+                            <div class="form__row-item">
+                                <div class="sd-line-input">
+                                    <label class="sd-line-input__label">{{ :: 'Stage description' | translate }}</label>
+                                    <textarea class="sd-line-input__input" ng-model="editStage.description"></textarea>
                                 </div>
                             </div>
-                            <div class="field">
-                                <label>{{ :: 'Moved onto stage Rule' | translate }}</label>
-                                <div class="line-select">
-                                    <select ng-model="editStage.onstage_macro">
-                                        <option value=""></option>
-                                        <option ng-repeat="macro in macros" ng-selected="editStage.onstage_macro === macro.name" value="{{macro.name}}">{{macro.label}}</option>
-                                    </select>
+                        </div>
+
+                        <div sd-content-expiry data-item="editStage" ng-if="editStage"
+                                data-preview="false"
+                                data-expiryfield="content_expiry"
+                                data-header="Content Expiry">
+                        </div>
+                        <div ng-if="editStage">
+                            <div class="form__row form__row--flex">
+                                <div class="form__row-item">
+                                    <div class="sd-line-input sd-line-input--is-select">
+                                        <label class="sd-line-input__label">{{ :: 'Incoming Rule' | translate }}</label>
+                                        <select ng-model="editStage.incoming_macro" class="sd-line-input__select">
+                                            <option value=""></option>
+                                            <option ng-repeat="macro in macros" ng-selected="editStage.incoming_macro === macro.name" value="{{macro.name}}">{{macro.label}}</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="field">
-                                <label>{{ :: 'Outgoing Rule' | translate }}</label>
-                                <div class="line-select">
-                                    <select ng-model="editStage.outgoing_macro">
-                                        <option value=""></option>
-                                        <option ng-repeat="macro in macros" ng-selected="editStage.outgoing_macro === macro.name" value="{{macro.name}}">{{macro.label}}</option>
-                                    </select>
+                            <div class="form__row form__row--flex">
+                                <div class="form__row-item">
+                                    <div class="sd-line-input sd-line-input--is-select">
+                                        <label class="sd-line-input__label">{{ :: 'Moved onto stage Rule' | translate }}</label>
+                                        <select ng-model="editStage.onstage_macro" class="sd-line-input__select">
+                                            <option value=""></option>
+                                            <option ng-repeat="macro in macros" ng-selected="editStage.onstage_macro === macro.name" value="{{macro.name}}">{{macro.label}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form__row form__row--flex">
+                                <div class="form__row-item">
+                                    <div class="sd-line-input sd-line-input--is-select">
+                                        <label class="sd-line-input__label">{{ :: 'Outgoing Rule' | translate }}</label>
+                                        <select ng-model="editStage.outgoing_macro" class="sd-line-input__select">
+                                            <option value=""></option>
+                                            <option ng-repeat="macro in macros" ng-selected="editStage.outgoing_macro === macro.name" value="{{macro.name}}">{{macro.label}}</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>                
-            <div class="modal__footer" ng-if="step.current === 'stages'">
-                <button id="next-stages" class="btn btn--primary" ng-disabled="message != null" ng-click="next()" translate>Continue</button>
-                <button id="done-stages" class="btn btn--primary" ng-disabled="message != null" ng-click="next(true)" translate>Done</button>
+            <div class="modal__footer" ng-if="step.current === 'stages'"> 
+                <button id="next-stages" class="btn btn--primary" ng-disabled="message != null || (editStage && editStage._id) || (editStage && !editStage._id)" ng-click="next()" translate>Continue</button>
+                <button id="done-stages" class="btn btn--primary" ng-disabled="message != null || (editStage && editStage._id) || (editStage && !editStage._id)" ng-click="next(true)" translate>Done</button>
             </div>
         </div>
 
@@ -275,19 +307,20 @@
                 <div class="header" sd-user-select-list data-exclude="deskMembers" data-onchoose="add(user)"></div>
                 <div>
                     <p ng-show="message">{{ message}}</p>
-                    <div class="member-list clearfix">
-                        <ul>
+                    <div class="members-list">
+                        <ul class="pills-list">
                             <li ng-repeat="user in deskMembers| orderBy: 'display_name' track by user._id" ng-class="{'inactive' : !user.is_enabled || !user.is_active}">
-                                <i class="icon-close-small" ng-click="remove(user)"></i>
                                 <figure class="avatar"><img sd-user-avatar data-user="user"></figure>
-                                <div class="name">{{:: user.display_name}}</div>
+                                <h5>{{:: user.display_name}}</h5> <span class="user-email">{{:: user.email}}</span>
+                                <div class="actions">
+                                    <button ng-click="remove(user)"><i class="icon-close-small"></i></button>
+                                </div>
                             </li>
                         </ul>
                     </div>
                 </div>
                 <span class="alert-danger" ng-show="_errorMessage">{{ _errorMessage}}</span>
             </div>                
-
             <div class="modal__footer" ng-if="step.current === 'people'">
                 <button id="next-people"
                         class="btn btn--primary"
@@ -300,14 +333,13 @@
                     ng-disabled="message != null || saving" translate>Done</button>
             </div>
         </div>
-
         <div sd-wizard-step data-title="{{ 'Macros' | translate }}" data-code="macros">
             <div class="content macros" sd-deskedit-macros>
                 <ul class="pills-list">
                     <li ng-repeat="macro in macros" class="clearfix">
                         <h6 class="pull-left">{{:: macro.name}}</h6>
                         <div class="label-group label-group--right">
-                            <span class="label default">{{:: macro.access_type}}</span><span class="label default">{{:: macro.action_type}}</span>
+                            <span class="label label--hollow">{{:: macro.access_type}}</span><span class="label label--hollow">{{:: macro.action_type}}</span>
                         </div>
                     </li>
                 </ul>
