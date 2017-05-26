@@ -43,7 +43,7 @@ export function DeskeditBasic(gettext, desks, WizardHandler, metadata, $filter, 
                     if (_new) {
                         scope.edit(scope.desk.edit);
                         scope.desks._items.unshift(scope.desk.edit);
-                        $rootScope.$broadcast('desks:refresh:stages');
+                        desks.refreshStages();
                     } else {
                         angular.extend(scope.desk.orig, res);
                     }

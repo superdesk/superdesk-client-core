@@ -101,6 +101,7 @@ describe('desks', () => {
         assertToastMsg('error', 'Must have one working stage');
 
         // Turning Incoming flag ON should turn global read flag ON automatically
+        desks.editStage('Test Stage');
         expect(desks.getGlobalReadFlag().getAttribute('checked')).toBeTruthy();
         desks.toggleGlobalReadFlag();
         expect(desks.getGlobalReadFlag().getAttribute('checked')).toBeFalsy();
