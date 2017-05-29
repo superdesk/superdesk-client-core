@@ -35,7 +35,6 @@ export class Editor3Component extends React.Component {
     constructor(props) {
         super(props);
 
-        this.editorRect = {top: 0, left: 0};
         this.readOnly = props.readOnly;
         this.scrollContainer = $(props.scrollContainer || window);
         this.state = {toolbarStyle: 'relative'};
@@ -152,10 +151,6 @@ export class Editor3Component extends React.Component {
         return false;
     }
 
-    componentWillUpdate() {
-        this.editorRect = ReactDOM.findDOMNode(this.refs.editor).getBoundingClientRect();
-    }
-
     componentDidMount() {
         const $node = $(ReactDOM.findDOMNode(this));
 
@@ -190,7 +185,7 @@ export class Editor3Component extends React.Component {
 
         return (
             <div className={cx}>
-                {showToolbar ? <Toolbar editorRect={this.editorRect} disabled={readOnly} /> : null}
+                {showToolbar ? <Toolbar disabled={readOnly} /> : null}
                 <div className="focus-screen" onMouseDown={this.focus}>
                     <Editor
                         editorState={editorState}

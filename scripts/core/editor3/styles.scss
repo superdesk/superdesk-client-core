@@ -1,5 +1,10 @@
 @import '~mixins.scss';
 
+.main-article .abstract div.Editor3-root div.link-toolbar {
+	font-size: 12px !important;
+	font-style: normal;
+}
+
 .Editor3-root {
 	background: #fff;
 	border: 1px solid #ddd;
@@ -12,12 +17,32 @@
 		padding-top: 5px;
 	}
 
+	.link-toolbar {
+		font-size: 12px;
+		color: #444;
+		padding: 5px 10px;
+		border-top: 1px solid #efefef;
+		background-color: #fdfdfd;
+		box-shadow: inset 0 4px 11px -6px #efefef;
+		border-bottom: 1px solid #f1f1f1;
+
+		&.empty {
+			border-bottom: 1px solid #fff;
+			box-shadow: none;
+			background: #fff;
+		}
+		
+		a {
+			margin-left: 5px;
+			cursor: pointer;
+		}
+	}
+
 	&.floating-toolbar .Editor3-controls {
 		position: fixed;
 		top: 132px;
 		left: auto;
 		z-index: 10;
-		border-bottom: 1px solid #dedede;
 		box-shadow: 0px 1px 5px #efefef;
 		max-width: 490px;
 	}
@@ -176,7 +201,7 @@
 
 .Editor3-editor .public-DraftEditorPlaceholder-root,
 .Editor3-editor .public-DraftEditor-content {
-	padding: 15px;
+	padding: 5px 0 15px 15px;
 }
 
 .Editor3-editor .public-DraftEditor-content {
@@ -210,7 +235,6 @@
 	font-size: 14px;
 	user-select: none;
 	background-color: #fafafa;
-	border-bottom: 1px solid #f1f1f1;
 	line-height: 100% !important;
 
 	&.disabled {
@@ -243,9 +267,8 @@
 
 	.input-controls {
 		position: absolute;
-		top: 10px;
+		top: 5px;
 		right: 5px;
-		margin: 8px;
 		
 		i {
 			&.icon-close-small {
@@ -265,13 +288,10 @@
 		display: block;
 		background: #fff;
 		width: 100%;
-		position: absolute;
-		left: 0;
-		top: 0;
+		position: relative;
 
 		input[type="url"] {
-			height: 53px;
-			padding: 8px 47px 8px 15px;
+			padding: 9px 47px 8px 15px;
 		}
 	}
 }
