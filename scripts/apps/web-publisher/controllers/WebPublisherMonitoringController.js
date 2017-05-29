@@ -155,10 +155,10 @@ export function WebPublisherMonitoringController($scope, $sce, publisher, modal)
 
             this.previewArticleUrls = {
                 regular: '//' + site.subdomain + '.'
-                + site.domainName + '/preview/article/' + routeId
+                + site.domainName + '/preview/package/' + routeId
                 + '/' + this.selectedArticle.id + '?auth_token=' + token,
                 amp: '//' + site.subdomain + '.'
-                + site.domainName + '/preview/article/' + routeId
+                + site.domainName + '/preview/package/' + routeId
                 + '/' + this.selectedArticle.id + '?auth_token=' + token + '&amp'
             };
 
