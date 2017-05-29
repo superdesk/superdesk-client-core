@@ -480,7 +480,8 @@ function MetaWordsListDirective() {
             disabled: '=',
             list: '=',
             change: '&',
-            header: '@'
+            header: '@',
+            style: '@'
         },
         templateUrl: 'scripts/apps/authoring/metadata/views/metadata-words-list.html',
         link: function(scope, element) {
