@@ -1,4 +1,4 @@
 export {LinkButton} from './LinkButton';
 export {LinkInput} from './LinkInput';
-export {LinkPopover} from './LinkPopover';
+export {LinkToolbar} from './LinkToolbar';
 export {LinkDecorator} from './LinkDecorator';

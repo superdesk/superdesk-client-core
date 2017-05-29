@@ -1,6 +1,5 @@
 import React from 'react';
 import {shallow, mount} from 'enzyme';
-import {EditorState} from 'draft-js';
 import {Editor3Component as Editor3} from '../Editor3';
 import {blockRenderer} from '../blockRenderer';
 
@@ -10,22 +9,6 @@ describe('editor3.component', () => {
 
         expect(wrapper.find('DraftEditor').length).toBe(1);
         expect(wrapper.find('.Editor3-controls').length).toBe(0);
-    });
-
-    it('should mount and put client rect inside attribute on update', () => {
-        const editorState = EditorState.createEmpty();
-
-        spyOn(Editor3.prototype, 'componentDidMount');
-
-        const wrapper = mount(<Editor3 editorState={editorState} />);
-        const instance = wrapper.instance();
-
-        expect(Editor3.prototype.componentDidMount.calls.count()).toEqual(1);
-        expect(instance.editorRect).toEqual({top: 0, left: 0});
-
-        wrapper.update();
-
-        expect(instance.editorRect).toEqual(jasmine.any(ClientRect));
     });
 
     it('should not accept dragging over invalid items', () => {

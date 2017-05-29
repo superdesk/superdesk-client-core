@@ -2,7 +2,8 @@ import React from 'react';
 import {shallow, mount} from 'enzyme';
 import {EditorState} from 'draft-js';
 import {LinkButtonComponent as LinkButton} from '../links/LinkButton';
-import {LinkInput, LinkPopover} from '../links';
+import {LinkToolbarComponent as LinkToolbar} from '../links/LinkToolbar';
+import {LinkInput} from '../links';
 import {stateWithLink, cursorAtPosition} from './utils';
 
 const getShallowWrapper = (es) => getWrapper(es, true);
@@ -18,30 +19,98 @@ function getWrapper(es = null, shallowMount = false) {
         <LinkButton
             editorRect={{top: 1, left: 2}}
             applyLink={applyLink}
+            onClick={() => { /* no-op */ }}
             removeLink={removeLink}
             editorState={editorState} />);
 
     return {wrapper, applyLink, removeLink};
 }
 
+describe('editor3.components.link-toolbar', () => {
+    it('should render correctly', () => {
+        const editorState = EditorState.createEmpty();
+        const wrapper = shallow(
+            <LinkToolbar
+                editorState={editorState}
+                removeLink={() => { /* no-op */ }}
+                onEdit={() => { /* no-op */ }} />);
+
+        expect(wrapper.find('div.link-toolbar').exists()).toBe(true);
+        expect(wrapper.find('a').length).toBe(0);
+    });
+
+    it('should not show controls when not hovering link', () => {
+        const editorState = cursorAtPosition(stateWithLink(), 0);
+        const wrapper = shallow(
+            <LinkToolbar
+                editorState={editorState}
+                removeLink={() => { /* no-op */ }}
+                onEdit={() => { /* no-op */ }} />);
+
+        expect(wrapper.find('div.link-toolbar').exists()).toBe(true);
+        expect(wrapper.find('div.link-toolbar').hasClass('empty')).toBe(true);
+        expect(wrapper.find('a').length).toBe(0);
+    });
+
+    it('should show controls when not hovering link', () => {
+        const editorState = cursorAtPosition(stateWithLink(), 6);
+        const wrapper = shallow(
+            <LinkToolbar
+                editorState={editorState}
+                removeLink={() => { /* no-op */ }}
+                onEdit={() => { /* no-op */ }} />);
+
+        expect(wrapper.find('div.link-toolbar').exists()).toBe(true);
+        expect(wrapper.find('a').length).toBe(3);
+    });
+
+    it('should reference correct link', () => {
+        const editorState = cursorAtPosition(stateWithLink(), 6);
+        const wrapper = shallow(
+            <LinkToolbar
+                editorState={editorState}
+                removeLink={() => { /* no-op */ }}
+                onEdit={() => { /* no-op */ }} />);
+
+        expect(wrapper.find('a[href="entity-url"]').exists()).toBe(true);
+    });
+
+    it('should call onEdit prop when clicking "Edit"', () => {
+        const editorState = cursorAtPosition(stateWithLink(), 6);
+        const onEdit = jasmine.createSpy();
+        const wrapper = shallow(
+            <LinkToolbar
+                editorState={editorState}
+                removeLink={() => { /* no-op */ }}
+                onEdit={onEdit} />);
+
+        wrapper.find('a').at(1)
+            .simulate('click');
+
+        expect(onEdit).toHaveBeenCalledWith('entity-url');
+    });
+
+    it('should call onRemove prop when clicking "Remove"', () => {
+        const editorState = cursorAtPosition(stateWithLink(), 6);
+        const onRemove = jasmine.createSpy();
+        const wrapper = shallow(
+            <LinkToolbar
+                editorState={editorState}
+                removeLink={onRemove}
+                onEdit={() => { /* no-op */ }} />);
+
+        wrapper.find('a').at(2)
+            .simulate('click');
+
+        expect(onRemove).toHaveBeenCalled();
+    });
+});
+
 describe('editor3.components.link-button', () => {
     it('should render button text', () => {
         const {wrapper} = getShallowWrapper();
 
         expect(wrapper.find('LinkPopover').length).toBe(0);
-    });
-
-    it('should show popover when selection is link', () => {
-        const editorState = cursorAtPosition(stateWithLink(), 0);
-        const {wrapper} = getWrapper(editorState);
-
-        expect(wrapper.find('LinkPopover').length).toBe(0);
-
-        wrapper.setProps({
-            editorState: cursorAtPosition(editorState, 7)
-        });
-
-        expect(wrapper.find('LinkPopover').length).toBe(1);
     });
 
     it('should have class "inactive" when selection is collapsed', () => {
@@ -56,19 +125,6 @@ describe('editor3.components.link-button', () => {
         const {wrapper} = getShallowWrapper(editorState);
 
         expect(wrapper.find('span.link-button').hasClass('inactive')).toBeFalsy();
-    });
-
-    it('should display link input when clicking button', () => {
-        const editorState = cursorAtPosition(stateWithLink(), 0, 3);
-        const {wrapper} = getShallowWrapper(editorState);
-
-        expect(wrapper.state().showInput).toBe(null);
-        expect(wrapper.find('LinkInput').length).toBe(0);
-
-        wrapper.find('span.link-button').simulate('click');
-
-        expect(wrapper.state().showInput).toBe('');
-        expect(wrapper.find('LinkInput').length).toBe(1);
     });
 });
 
@@ -141,71 +197,5 @@ describe('editor3.components.link-input', () => {
         expect(onSubmit.calls.first().args[0]).toBe('abc');
         expect(onSubmit.calls.first().args[1]).not.toBe(null);
         expect(onCancel).toHaveBeenCalled();
-    });
-});
-
-describe('editor3.components.link-popover', () => {
-    function fakePosition(obj = null) {
-        spyOn(LinkPopover.prototype, 'updatePosition')
-            .and
-            .callFake(function() {
-                this.position = obj;
-            });
-    }
-
-    it('should not render when position is null', () => {
-        fakePosition(null);
-        const wrapper = mount(
-            <LinkPopover
-                url={'abc'}
-                editorRect={{}}
-                onEdit={() => ({})}
-                onRemove={() => ({})} />);
-
-        expect(wrapper.find('.link-editor').length).toBe(0);
-    });
-
-    it('should render when it can obtain a position', () => {
-        fakePosition({top: 1, left: 2});
-        const wrapper = mount(
-            <LinkPopover
-                url={'abc'}
-                editorRect={{}}
-                onEdit={() => ({})}
-                onRemove={() => ({})} />);
-
-        expect(wrapper.find('.link-editor').length).toBe(1);
-    });
-
-    it('should call onRemove prop when trash icon is clicked', () => {
-        fakePosition({top: 1, left: 2});
-
-        const onRemove = jasmine.createSpy();
-        const wrapper = mount(
-            <LinkPopover
-                url={'abc'}
-                editorRect={{}}
-                onEdit={() => ({})}
-                onRemove={onRemove} />);
-
-        wrapper.find('.icon-trash').simulate('click');
-
-        expect(onRemove).toHaveBeenCalled();
-    });
-
-    it('should call onEdit prop when pencil icon is clicked, passing URL', () => {
-        fakePosition({top: 1, left: 2});
-
-        const onEdit = jasmine.createSpy();
-        const wrapper = mount(
-            <LinkPopover
-                url={'abc'}
-                editorRect={{}}
-                onEdit={onEdit}
-                onRemove={() => ({})} />);
-
-        wrapper.find('.icon-pencil').simulate('click');
-
-        expect(onEdit).toHaveBeenCalledWith('abc');
     });
 });
