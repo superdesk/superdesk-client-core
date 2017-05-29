@@ -357,9 +357,7 @@ export function WebPublisherMonitoringController($scope, $sce, publisher, modal)
                  * @param {Object} advancedFilters - filters to filter articles
                  * @description event is thrown when advanced filters are changed
                  */
-                if (newVal !== oldVal) {
-                    $scope.$broadcast('refreshArticlesList', undefined, undefined, this.advancedFilters);
-                }
+                $scope.$broadcast('refreshArticlesList', undefined, undefined, this.advancedFilters);
             }, true);
         }
 
