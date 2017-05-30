@@ -51,10 +51,6 @@ export function DeskConfigController($scope, $controller, gettext, notify, desks
         );
     };
 
-    $scope.$on('desks:refresh:stages', () => {
-        desks.refreshStages();
-    });
-
     $scope.getDeskStages = function(desk) {
         return desks.deskStages[desk._id];
     };

@@ -942,6 +942,7 @@
     display: inline-block;
     vertical-align: top;
     li {
+        display: inline-block;        
         position: relative;
         font-size: 12px;
         color: $black;
@@ -1197,12 +1198,9 @@ feature-image {
 				margin-top: -1px;
 				color: $white;
 			}
-
 			#timezone {
 				padding-right: 25px;
 			}
-
-			width: 345px;
 			background: #4f4f4f;
 			padding: 7px;
 			font-size: 13px;
@@ -1245,3 +1243,15 @@ feature-image {
         }
   }
 }
+
+// Styling for formatted preview popup
+// -------------------------------------------------------------
+.sd-line-input {
+    textarea {
+        &.sd-line-input__input--formatted-preview {
+            height: 40rem;
+            font-family: "Roboto Mono", Consolas, Courier, monospace;
+        }
+    }
+}
+

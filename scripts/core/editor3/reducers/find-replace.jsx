@@ -159,8 +159,7 @@ export default findReplace;
  */
 export const countOccurrences = (state) => {
     const content = state.editorState.getCurrentContent();
-    const {pattern, caseSensitive} = state.searchTerm;
-    const re = new RegExp(pattern, 'g' + (caseSensitive ? '' : 'i'));
+    const re = getRegExp(state.searchTerm);
 
     let matches = 0;
 
@@ -241,7 +240,7 @@ export const forEachMatch = (content, pattern, caseSensitive, cb) => {
     let match;
     let matchIndex = -1;
 
-    const re = new RegExp(pattern, 'g' + (caseSensitive ? '' : 'i'));
+    const re = getRegExp({pattern, caseSensitive});
 
     content.getBlocksAsArray().forEach((block) => {
         const key = block.getKey();
@@ -259,6 +258,9 @@ export const forEachMatch = (content, pattern, caseSensitive, cb) => {
 
     return matchIndex > -1;
 };
+
+const getRegExp = ({pattern, caseSensitive}) =>
+    new RegExp(pattern.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'g' + (caseSensitive ? '' : 'i'));
 
 /**
  * @name quietPush

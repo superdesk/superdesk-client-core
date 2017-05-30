@@ -68,19 +68,6 @@ $split-modal-sidebar : 200px;
     .nav-tabs {
         background: $white;
     }
-    .pills-list {
-        li {
-            cursor: pointer;
-            margin-top: 10px;
-            min-height: 38px;
-            &.highlight {
-                background-color: rgba(94, 169, 200, 0.1);
-            }
-        }
-        &.with-action li {
-            padding-right: 35px;
-        }
-    }
     .field {
         clear: both;
         float: none;

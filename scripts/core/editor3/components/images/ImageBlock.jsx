@@ -57,7 +57,7 @@ export class ImageBlockComponent extends Component {
         const {block, changeCaption} = this.props;
         const entityKey = block.getEntityAt(0);
 
-        changeCaption(entityKey, this.captionInput.value);
+        changeCaption(entityKey, this.captionInput.innerText);
     }
 
     render() {
@@ -70,14 +70,13 @@ export class ImageBlockComponent extends Component {
             <div className="image-block" onClick={(e) => e.stopPropagation()}>
                 <div className="image-block__wrapper">
                     <img src={rendition.href} alt={alt} onClick={this.onClick} />
-                    <input type="text" placeholder="Description"
+                    <div contentEditable={true} placeholder="Description"
                         ref={(el) => {
                             this.captionInput = el;
                         }}
                         onFocus={setReadOnly}
                         className="image-block__description"
-                        defaultValue={data.description_text}
-                        onChange={_.debounce(this.onChange, 500)} />
+                        onInput={_.debounce(this.onChange, 500)}>{data.description_text}</div>
                 </div>
             </div>
         );

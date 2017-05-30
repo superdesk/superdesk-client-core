@@ -9,13 +9,13 @@
         </div>
 
         <div class="content">
-            <ul class="pills-list provider-list">
+            <ul class="pills-list provider-list wide">
                 <li ng-repeat="filter in contentFilters track by filter._id" class="clearfix">
                     <div class="header">
                         <h6>{{ filter.name }}</h6>
-                        <i>{{ filter.is_global?'[Global Block]':'' }}</i>
-                        <i>{{ filter.is_archived_filter?'[Archived Block]':'' }}</i>
-                        <i>{{ filter.api_block?'[Block API]':'' }}</i>
+                        <span ng-if="filter.is_global" class="label label--warning label--hollow">Global Block</span>
+                        <span ng-if="filter.is_archived_filter" class="label label--warning label--hollow">Archived Block</span>
+                        <span ng-if="filter.api_block" class="label label--warning label--hollow">Block API</span>
                         <div class="actions">
                             <button ng-click="productionTest(filter)" title="{{:: 'Test Filter Against Content' | translate }}"><i class="icon-ok"></i></button>
                             <button ng-click="editFilter(filter)" title="{{:: 'Edit Content Filter' | translate }}"><i class="icon-pencil"></i></button>
@@ -37,7 +37,8 @@
                 <fieldset>
                     <div class="field">
                         <label for="contentFilter-name" translate>Name</label>
-                        <input type="text" id="contentFilter-name" required ng-model="contentFilter.name">
+                        <input type="text" id="contentFilter-name" name="label" required ng-model="contentFilter.name" ng-maxlength="80">
+                        <span class="error" ng-show="editForm.label.$error.maxlength" translate>Please use less than 80 characters</span>
                     </div>
 
                     <div class="field">
@@ -59,10 +60,6 @@
                                 <span class="pull-right" sd-switch ng-model="contentFilter.api_block"></span>
                             </span>
                         </label>
-                    </div>
-
-                    <div class="field">
-
                     </div>
 
                     <div class="filter-tags" ng-repeat="filterRow in contentFilter.content_filter">
@@ -106,13 +103,13 @@
                         <div class="inline-tag-list">
                             <ul>
                                 <li ng-repeat="filter in filterRow.expression.fc">
-                                    <div class="inline-tag">
+                                    <div class="inline-tag" title="{{'Filter Condition' | translate}}: {{filterConditionLookup[filter].name}}">
                                         <span>FC:</span>{{filterConditionLookup[filter].name}}<button type="button" ng-click="removeFilter(filterRow, filter, 'fc')"><i class="icon-close-small"></i></button>
                                     </div>
                                 </li>
                                 <li ng-repeat="filter in filterRow.expression.pf">
-                                    <div class="inline-tag tag-darker">
-                                        <span>PF:</span>{{contentFiltersLookup[filter].name}}<button type="button" ng-click="removeFilter(filterRow, filter, 'pf')"><i class="icon-close-small"></i></button>
+                                    <div class="inline-tag tag-darker" title="{{'Content Filter' | translate}}: {{contentFiltersLookup[filter].name}}">
+                                        <span>CF:</span>{{contentFiltersLookup[filter].name}}<button type="button" ng-click="removeFilter(filterRow, filter, 'pf')"><i class="icon-close-small"></i></button>
                                     </div>
                                 </li>
                             </ul>
@@ -147,7 +144,7 @@
         <div class="modal__footer">
             <button class="btn" type="button" ng-click="addStatement()" translate>Add Filter Statement</button>
             <button class="btn" ng-click="close()" translate>Cancel</button>
-            <button class="btn btn--primary" ng-click="saveFilter()" ng-disabled="!editForm.$valid" translate>Save</button>
+            <button class="btn btn--primary" ng-click="saveFilter()" ng-disabled="!editForm.$valid || !preview" translate>Save</button>
         </div>
     </div>
 
