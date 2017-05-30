@@ -106,13 +106,13 @@
                         <div class="inline-tag-list">
                             <ul>
                                 <li ng-repeat="filter in filterRow.expression.fc">
-                                    <div class="inline-tag">
+                                    <div class="inline-tag" title="{{'Filter Condition' | translate}}: {{filterConditionLookup[filter].name}}">
                                         <span>FC:</span>{{filterConditionLookup[filter].name}}<button type="button" ng-click="removeFilter(filterRow, filter, 'fc')"><i class="icon-close-small"></i></button>
                                     </div>
                                 </li>
                                 <li ng-repeat="filter in filterRow.expression.pf">
-                                    <div class="inline-tag tag-darker">
-                                        <span>PF:</span>{{contentFiltersLookup[filter].name}}<button type="button" ng-click="removeFilter(filterRow, filter, 'pf')"><i class="icon-close-small"></i></button>
+                                    <div class="inline-tag tag-darker" title="{{'Content Filter' | translate}}: {{contentFiltersLookup[filter].name}}">
+                                        <span>CF:</span>{{contentFiltersLookup[filter].name}}<button type="button" ng-click="removeFilter(filterRow, filter, 'pf')"><i class="icon-close-small"></i></button>
                                     </div>
                                 </li>
                             </ul>
