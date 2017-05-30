@@ -90,7 +90,8 @@
                     <fieldset>
                         <div class="field">
                             <label for="label" translate>Label:</label>
-                            <input type="text" name="label" ng-model="editing.form.label" required />
+                            <input type="text" name="label" ng-model="editing.form.label" required ng-maxlength="40"/>
+                            <span class="error" ng-show="editForm.label.$error.maxlength" translate>Please use less than 40 characters</span>
                         </div>
                         <div class="field">
                             <label for="description" translate>Description:</label>
