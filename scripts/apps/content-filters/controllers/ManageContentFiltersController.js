@@ -15,6 +15,8 @@ export function ManageContentFiltersController($scope, contentFilters, notify, m
     $scope.preview = null;
     $scope.filterConditionLookup = {};
     $scope.contentFiltersLookup = {};
+    $scope.valueLookup = {};
+    $scope.valueFieldLookup = {};
 
     $scope.editFilter = function(pf) {
         $scope.origContentFilter = pf || {};
@@ -152,7 +154,7 @@ export function ManageContentFiltersController($scope, contentFilters, notify, m
                 _.each(filterRow.expression.fc, (filterId) => {
                     var f = $scope.filterConditionLookup[filterId];
 
-                    statementPreviews.push('(' + f.field + ' ' + f.operator + ' "' + f.value + '")');
+                    statementPreviews.push(`(${getFilterConditionSummary(f)})`);
                 });
             }
 
@@ -168,17 +170,49 @@ export function ManageContentFiltersController($scope, contentFilters, notify, m
         return '';
     };
 
+    /**
+     * Returns the string representation of a given filter condition
+     */
+    const getFilterConditionSummary = (filterCondition) => {
+        let labels = [];
+        let values = filterCondition.value.split(',');
+
+        _.each(values, (value) => {
+            if ($scope.valueLookup[filterCondition.field]) {
+                let v = _.find($scope.valueLookup[filterCondition.field],
+                    (val) => val[$scope.valueFieldLookup[filterCondition.field]].toString() === value);
+
+                labels.push(v.name);
+            }
+        });
+
+        const conditionValue = labels.length > 0 ? labels.join(', ') : filterCondition.value;
+
+        return `${filterCondition.field} ${filterCondition.operator} "${conditionValue}"`;
+    };
+
     var initContentFilter = function() {
         if (!$scope.contentFilter.content_filter || $scope.contentFilter.content_filter.length === 0) {
             $scope.contentFilter.content_filter = [{expression: {}}];
         }
     };
 
+    /**
+     * Fetches all filter conditions and filter condition parameters
+     */
     var fetchFilterConditions = function() {
         contentFilters.getAllFilterConditions().then((_filterConditions) => {
             $scope.filterConditions = $filter('sortByName')(_filterConditions);
             _.each(_filterConditions, (filter) => {
                 $scope.filterConditionLookup[filter._id] = filter;
+            });
+        });
+
+        contentFilters.getFilterConditionParameters().then((params) => {
+            $scope.filterConditionParameters = params;
+            _.each(params, (param) => {
+                $scope.valueLookup[param.field] = param.values;
+                $scope.valueFieldLookup[param.field] = param.value_field;
             });
         });
     };
