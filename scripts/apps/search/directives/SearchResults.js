@@ -205,11 +205,12 @@ export function SearchResults(
                     }
 
                     criteria.source.query = search.getItemQuery(data.items);
+                } else {
+                    criteria.aggregations = $rootScope.aggregations;
                 }
 
                 criteria.source.from = 0;
                 scope.total = null;
-                criteria.aggregations = $rootScope.aggregations;
                 criteria.es_highlight = search.getElasticHighlight();
                 criteria.projections = JSON.stringify(projections);
                 return api.query(getProvider(criteria), criteria).then((items) => {
