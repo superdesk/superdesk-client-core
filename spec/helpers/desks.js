@@ -423,4 +423,18 @@ function Desks() {
     this.setStageOutgoingMacro = function(name) {
         this.getStageOutgoingMacro().$('[value="' + name + '"]').click();
     };
+
+    /**
+     * Saves the user by given name to the desk
+     * @param {string} userName
+     */
+    this.addUser = (userName) => {
+        const searchBox = element(by.model('search'));
+
+        searchBox.sendKeys(userName);
+        searchBox.sendKeys(protractor.Key.ENTER);
+        browser.sleep(1000);
+        element.all(by.repeater('user in users._items')).first().click();
+        element(by.id('next-people')).click();
+    };
 }
