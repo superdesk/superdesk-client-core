@@ -91,7 +91,16 @@ export function ArchiveService(desks, session, api, $q, search, $location, confi
         query.size(200);
 
         if (itemId) {
-            query.filter({not: {term: {_id: itemId}}});
+            let filter = {
+                bool: {
+                    must_not: [
+                        {bool: {must: [{term: {_id: itemId}}, {term: {_type: 'archive'}}]}},
+                        {bool: {must: [{term: {item_id: itemId}}, {term: {_type: 'published'}}]}}
+                    ]
+                }
+            };
+
+            query.filter(filter);
         }
 
         var criteria = query.getCriteria(true);
