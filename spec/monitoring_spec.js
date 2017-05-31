@@ -445,6 +445,8 @@ describe('monitoring', () => {
 
         expect(monitoring.getGroupItems(1).count()).toBe(4);
 
+        monitoring.actionOnItem('Edit', 1, 2);
+        authoring.close();
         monitoring.actionOnItem('Spike', 1, 2);
         expect(monitoring.getGroupItems(1).count()).toBe(3);
 

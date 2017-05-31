@@ -238,7 +238,8 @@ export function ItemList(
                     listComponent.updateItem(itemId, {
                         lock_user: data.user,
                         lock_session: data.lock_session,
-                        lock_time: data.lock_time
+                        lock_time: data.lock_time,
+                        _etag: data._etag
                     });
                 });
 
@@ -246,7 +247,8 @@ export function ItemList(
                     listComponent.updateAllItems(data.item, {
                         lock_user: null,
                         lock_session: null,
-                        lock_time: null
+                        lock_time: null,
+                        _etag: data._etag
                     });
                 });
 
