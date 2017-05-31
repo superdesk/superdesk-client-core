@@ -97,7 +97,7 @@ function Templates() {
     /**
      * Toggles metadata section
      **/
-    this.toggleMetadata = () => element(by.className('toggle-box__header')).click();
+    this.toggleMetadata = () => element(by.id('template-editor-metadata')).click();
 
     /**
      * Toggles legal switch

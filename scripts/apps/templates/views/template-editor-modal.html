@@ -63,48 +63,49 @@
 
         <form name="metadataForm">
             <div class="template-metadata">
-                <div class="authoring-header__item" ng-if="showDesks()">
-                    <label for="template-desk" ng-if="template.template_type !== 'create'" translate>Desk</label>
-                    <label for="template-desks" ng-if="template.template_type === 'create'" translate>Desks</label>
-
-                    <div class="authoring-header__input-holder">
+                <div ng-if="showDesks()">                    
+                    
+                    <div for="template-desk" ng-if="template.template_type !== 'create'">
+                        <div class="sd-line-input sd-line-input--is-select">
+                            <label class="sd-line-input__label">{{:: 'Desk' | translate }}</label>
+                            <select id="template-desk" ng-if="template.template_type !== 'create'"
+                                ng-model="template_desk" ng-change="setTemplateDesks(template_desk)"
+                                class="sd-line-input__select">
+                                <option value="" translate>None</option>
+                                <option ng-repeat="desk in desks._items track by desk._id" value="{{ desk._id }}"
+                                ng-selected="desk.selected">{{ :: desk.name }}</option>
+                            </select>
+                        </div>                        
+                    </div>
+                    
+                    <div for="template-desks" ng-if="template.template_type === 'create'" sd-toggle-box data-title="{{:: 'Desks' | translate }}" data-open="true">
                         <div class="multi-select" ng-if="template.template_type === 'create'">
                             <ul>
                                 <li ng-repeat="desk in desks._items track by desk._id">
-                                    <sd-check ng-model="desk.selected" ng-click="onDeskToggle(desk)">{{desk.name}}</sd-check>
+                                    <sd-check ng-model="desk.selected" ng-click="onDeskToggle(desk)" label-position="inside">{{desk.name}}</sd-check>
                                 </li>
                             </ul>
                         </div>
-                        <select id="template-desk" ng-if="template.template_type !== 'create'"
-                                ng-model="template_desk" ng-change="setTemplateDesks(template_desk)"
-                                class="dropdown__toggle line-input">
-                            <option value="" translate>None</option>
-                            <option ng-repeat="desk in desks._items track by desk._id" value="{{ desk._id }}"
-                                ng-selected="desk.selected">{{ :: desk.name }}</option>
-                        </select>
-                        <span class="arrow-down" ng-if="template.template_type !== 'create'"><b class="dropdown__caret"></b></span>
-                    </div>
+                    </div>                    
                 </div>
 
-                <div sd-toggle-box data-title="{{:: 'Metadata' | translate }}" data-open="false">
+                <div sd-toggle-box data-title="{{:: 'Metadata' | translate }}" data-open="false" id="template-editor-metadata">
                     <div class="field">
-                        <label translate>Not For Publication</label>
-                        <span sd-switch ng-model="item.flags.marked_for_not_publication" class="pull-right"></span>
+                        <span sd-switch ng-model="item.flags.marked_for_not_publication"></span><label>Not For Publication</label>                        
                     </div>
 
-                    <div class="field">
-                        <label translate>Legal</label>
-                        <span sd-switch ng-model="item.flags.marked_for_legal" class="pull-right"></span>
+                    <div class="field field--margin-double">                        
+                        <span sd-switch ng-model="item.flags.marked_for_legal"></span><label translate>Legal</label>
                     </div>
 
-                    <div class="field">
+                    <div class="field field--margin-double">
                         <label translate>Usage terms</label>
                         <div class="data">
                             <input class="line-input" type="text" ng-model="item.usageterms" ng-disabled="!_editable" ng-change="autosave(item)">
                         </div>
                     </div>
 
-                    <div class="field">
+                    <div class="field field--margin-double">
                         <label translate>Language</label>
                         <div class="data">
                             <input class="line-input" type="text" ng-model="item.language" ng-disabled="!_editable" ng-change="autosave(item)">
