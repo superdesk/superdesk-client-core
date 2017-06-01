@@ -36,6 +36,12 @@
                             <button class="dropdown__menu-close"><i class="icon-close-small"></i></button>
                         </div>
                     </li>
+                    <li ng-if="rootType == 'incoming'" class="dropdown__menu-divider"></li>
+                    <li ng-if="rootType == 'incoming'">
+                        <button ng-click="webPublisherMonitoring.editArticle(i)">
+                            <i class="icon-pencil"></i>{{:: 'Edit'| translate}}
+                        </button>
+                    </li>
                     <li class="dropdown__menu-divider"></li>
                     <li>
                         <button ng-click="webPublisherMonitoring.openPublish(i, 'publish')">
@@ -44,7 +50,7 @@
                     </li>
                     <li ng-if="rootType != 'incoming'">
                         <button ng-click="webPublisherMonitoring.openPublish(i, 'unpublish')">
-                            <i class="icon-kill"></i>{{:: 'Unpublish'| translate}}
+                            <i class="icon-expand-thin icon--rotate-180"></i>{{:: 'Unpublish'| translate}}
                         </button>
                     </li>
                 </ul>
