@@ -36,7 +36,8 @@
             <fieldset>
                 <div class="field">
                     <label for="filterCondition-name" translate>Name</label>
-                    <input type="text" id="filterCondition-name" required ng-model="filterCondition.name">
+                    <input type="text" id="filterCondition-name" name="label" required ng-model="filterCondition.name" ng-maxlength="80">
+                    <span class="error" ng-show="editForm.label.$error.maxlength" translate>Please use less than 80 characters</span>
                 </div>
 
                 <div class="field">
