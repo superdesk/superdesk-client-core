@@ -1,4 +1,79 @@
-angular.module('superdesk.config', [])
+import _ from 'lodash';
+
+DeployConfigFactory.$inject = ['api', '$q'];
+function DeployConfigFactory(api, $q) {
+    /**
+     * Deploy config service
+     *
+     * provides deployment related config from server
+     */
+    class DeployConfig {
+
+        constructor() {
+            this.config = null;
+            this.promise = null;
+        }
+
+        /**
+         * Get whole config
+         *
+         * @return {Promise}
+         */
+        fetch() {
+            if (this.config) {
+                return $q.when(this.config);
+            }
+
+            if (!this.promise) {
+                this.promise = api.query('client_config', {})
+                    .then((response) => {
+                        this.config = response.data.config;
+                        return this.config;
+                    });
+            }
+
+            return this.promise;
+        }
+
+        /**
+         * Get specific key
+         *
+         * @param {string} key
+         * @return {Promise}
+         */
+        get(key) {
+            return this.fetch().then(() => this.getSync(key));
+        }
+
+        /**
+         * Get sync
+         *
+         * @param {string} key
+         * @return {mixed}
+         */
+        getSync(key) {
+            if (!this.config) {
+                return;
+            }
+
+            return _.get(this.config, key);
+        }
+
+        /**
+         * Get multiple values at once
+         *
+         * @param {Object} spec
+         * @return {Promise}
+         */
+        all(spec) {
+            return this.fetch().then((config) => _.mapValues(spec, (key) => this.getSync(key)));
+        }
+    }
+
+    return new DeployConfig();
+}
+
+angular.module('superdesk.config', ['superdesk.core.api'])
     .provider('defaultConfig', ['config', function(config) {
         /**
          * Set default config value for given key
@@ -33,6 +108,9 @@ angular.module('superdesk.config', [])
         this.$get = angular.noop;
     }])
 
-    .run(['$rootScope', 'config', function($rootScope, config) {
+    .factory('deployConfig', DeployConfigFactory)
+
+    .run(['$rootScope', 'config', 'deployConfig', function($rootScope, config, deployConfig) {
         $rootScope.config = config || {};
+        deployConfig.fetch();
     }]);

@@ -118,7 +118,7 @@ export function WidgetGroup(search, api, superdesk, desks, cards, $timeout, $q,
                     criteria.source.from = (scope.page - 1) * criteria.source.size;
                 }
 
-                api(getProvider(criteria)).query(criteria)
+                api.query(getProvider(criteria), criteria)
                     .then((items) => {
                         items._items.forEach((item) => {
                             var itemId = search.generateTrackByIdentifier(item);

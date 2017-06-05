@@ -7,21 +7,22 @@ angular.module('superdesk.core.auth.login', []).directive('sdLoginModal', [
     'session',
     'auth',
     'features',
-    'api',
     'config',
+    'deployConfig',
     '$route',
-    function(session, auth, features, api, config, $route) {
+    function(session, auth, features, config, deployConfig, $route) {
         return {
             replace: true,
             template: require('./login-modal.html'),
             link: function(scope, element, attrs) {
                 scope.features = features;
-                scope.secureActivated = false;
 
-                api.query('auth_xmpp_activated', {}).then(
-                    (activatedData) => {
-                        scope.secureActivated = activatedData.activated;
-                    });
+                deployConfig.all({
+                    xmpp: 'xmpp_auth',
+                    google: 'google_auth'
+                }).then((methods) => {
+                    scope.methods = methods;
+                });
 
                 scope.authenticate = function() {
                     scope.isLoading = true;
@@ -44,15 +45,13 @@ angular.module('superdesk.core.auth.login', []).directive('sdLoginModal', [
                     window.open(apiUrl.replace('api', 'login') + '/' + service);
                 };
 
-                scope.allowedAuth = config.auth;
-
                 let apiUrl = _.get(config, 'server.url', '').replace('api/', 'api'); // make sure there is no trailing /
                 let handleAuthMessage = (event) => {
                     if (event.origin === apiUrl.replace('/api', '') && event.data.type === 'oauth') {
                         let message = event.data;
 
                         if (message.data.token) {
-                            auth.loginOAuth(message.data);
+                            auth.loginOAuth(message);
                             reloadRoute();
                         } else {
                             scope.$apply(() => {

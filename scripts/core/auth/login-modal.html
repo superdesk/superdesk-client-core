@@ -24,13 +24,13 @@
                     </button>
                 </fieldset>
 
-                <fieldset class="buttons" ng-show="allowedAuth.google">
+                <fieldset class="buttons" ng-show="methods.google">
                     <button class="btn btn--sd-green"
                         ng-click="openLoginPopup('google')" translate>Log In with Google</button>
                 </fieldset>
 
             </form>
-            <a href="/#/secure-login/" class="text" ng-show="secureActivated" translate>Secure login</a>
+            <a href="/#/secure-login/" class="text" ng-show="methods.xmpp" translate>Secure login</a>
 
             <div class="error-handler" ng-switch on="loginError">
                 <p class="error" ng-switch-when="401" translate>Oops! Invalid Username or Password.<br />Please try again.</p>

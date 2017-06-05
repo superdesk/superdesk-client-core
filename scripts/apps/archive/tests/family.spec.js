@@ -20,27 +20,26 @@ describe('family service', () => {
 
     describe('fetching family items', () => {
         beforeEach(window.module(($provide) => {
-            $provide.service('api', ($q) => ({
-                find: function() {
-                    return $q.reject({});
-                },
-                query: function(endpoint, params) {
-                    let familyId = params.source.query.filtered.filter.and[1].term.family_id;
-                    let members = _.filter(items, {family_id: familyId});
-
-                    if (params.source.query.filtered.filter.and[2]) {
-                        _.remove(members,
-                                {unique_id: params.source.query.filtered.filter.and[2].not.term.unique_id}
-                            );
-                    }
-
-                    return $q.when({_items: members});
-                }
-            }));
             $provide.service('desks', () => ({
                 deskLookup: deskList,
                 userDesks: userDesks
             }));
+        }));
+
+        beforeEach(inject((api, $q) => {
+            spyOn(api, 'find').and.returnValue($q.reject({}));
+            spyOn(api, 'query').and.callFake((endpoint, params) => {
+                let familyId = params.source.query.filtered.filter.and[1].term.family_id;
+                let members = _.filter(items, {family_id: familyId});
+
+                if (params.source.query.filtered.filter.and[2]) {
+                    _.remove(members,
+                            {unique_id: params.source.query.filtered.filter.and[2].not.term.unique_id}
+                        );
+                }
+
+                return $q.when({_items: members});
+            });
         }));
 
         it('can fetch members of a family', inject(($rootScope, familyService, api) => {
