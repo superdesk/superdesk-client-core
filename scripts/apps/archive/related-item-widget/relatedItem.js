@@ -46,7 +46,8 @@ RelatedItemController.$inject = [
     'familyService',
     'gettext',
     'moment',
-    'content'
+    'content',
+    'deployConfig'
 ];
 
 function RelatedItemController(
@@ -64,7 +65,8 @@ function RelatedItemController(
     familyService,
     gettext,
     moment,
-    content
+    content,
+    deployConfig
 ) {
     $scope.type = 'archiveWidget';
     $scope.itemListOptions = {
@@ -239,7 +241,7 @@ function RelatedItemController(
         }
     };
 
-    if (config.features && config.features.noTakes) {
+    if (deployConfig.getSync('no_takes')) {
         delete $scope.actions.addTake;
     }
 

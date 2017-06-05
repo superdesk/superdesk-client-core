@@ -8,20 +8,14 @@ describe('auth service', () => {
         window.module('superdesk.core.menu');
         window.module('superdesk.apps.authoring');
         window.module('superdesk.apps.searchProviders');
-        window.module(($provide) => {
-            $provide.service('api', function($q) {
-                this.users = {
-                    getById: (id) => $q.when({username: 'foo'})
-                };
-            });
-        });
     });
 
-    beforeEach(inject((session, preferencesService, authAdapter, urls, $q) => {
+    beforeEach(inject((session, preferencesService, authAdapter, urls, api, $q) => {
         session.clear();
         spyOn(preferencesService, 'get').and.returnValue($q.when({}));
         spyOn(urls, 'resource').and.returnValue($q.when('http://localhost:5000/api/auth'));
         spyOn(session, 'start').and.returnValue(true);
+        spyOn(api.users, 'getById').and.returnValue($q.when({username: 'foo'}));
     }));
 
     it('can login', inject((auth, session, $httpBackend, $rootScope) => {

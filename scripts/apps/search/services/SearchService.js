@@ -21,12 +21,23 @@ import _ from 'lodash';
  * @requires preferencesService
  * @requires moment
  * @requires sort
+ * @requires deployConfig
  *
  * @description Search Service is responsible for creation and manipulation of Query object
  */
-SearchService.$inject = ['$location', 'gettext', 'config', 'session', 'multi',
-    'preferencesService', 'moment', 'sort'];
-export function SearchService($location, gettext, config, session, multi, preferencesService, moment, sortService) {
+SearchService.$inject = [
+    '$location',
+    'gettext',
+    'config',
+    'session',
+    'multi',
+    'preferencesService',
+    'moment',
+    'sort',
+    'deployConfig'
+];
+export function SearchService($location, gettext, config, session, multi,
+preferencesService, moment, sortService, deployConfig) {
     var sortOptions = [
         {field: 'versioncreated', label: gettext('Updated')},
         {field: 'firstcreated', label: gettext('Created')},
@@ -488,7 +499,7 @@ export function SearchService($location, gettext, config, session, multi, prefer
                                {term: {original_creator: session.identity._id}}]},
                          {not: {terms: {state: ['draft']}}}]});
 
-        if (params.ignoreDigital || config.features && config.features.noTakes) {
+        if (params.ignoreDigital || deployConfig.getSync('no_takes')) {
             // remove all take packages
             this.filter({not: {term: {package_type: 'takes'}}});
         } else {

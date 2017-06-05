@@ -1,11 +1,11 @@
 import _ from 'lodash';
 
 SendItem.$inject = ['$q', 'api', 'desks', 'notify', 'authoringWorkspace',
-    'superdeskFlags', '$location', 'macros', '$rootScope',
+    'superdeskFlags', '$location', 'macros', '$rootScope', 'deployConfig',
     'authoring', 'send', 'editorResolver', 'confirm', 'archiveService',
     'preferencesService', 'multi', 'datetimeHelper', 'config', 'privileges', 'storage'];
 export function SendItem($q, api, desks, notify, authoringWorkspace,
-                  superdeskFlags, $location, macros, $rootScope,
+                  superdeskFlags, $location, macros, $rootScope, deployConfig,
                   authoring, send, editorResolver, confirm, archiveService,
                   preferencesService, multi, datetimeHelper, config, privileges, storage) {
     return {
@@ -340,7 +340,7 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
              * @return {Boolean}
              */
             scope.canSendAndContinue = function() {
-                if (_.get(config, 'features.noTakes') || config.ui && config.ui.publishSendAdnContinue === false) {
+                if (deployConfig.getSync('no_takes') || config.ui && config.ui.publishSendAdnContinue === false) {
                     return false;
                 }
                 return !authoring.isPublished(scope.item) && _.includes(['text'], scope.item.type);

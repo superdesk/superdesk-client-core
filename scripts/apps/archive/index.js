@@ -228,8 +228,8 @@ angular.module('superdesk.apps.archive', [
                 icon: 'new-doc',
                 filters: [{action: 'list', type: 'archive'}],
                 privileges: {archive: 1},
-                additionalCondition: ['authoring', 'item', 'config', function(authoring, item, config) {
-                    return authoring.itemActions(item).new_take && !(config.features && config.features.noTakes);
+                additionalCondition: ['authoring', 'item', 'deployConfig', function(authoring, item, deployConfig) {
+                    return authoring.itemActions(item).new_take && !deployConfig.getSync('no_takes');
                 }],
                 controller: ['data', '$rootScope', 'desks', 'authoring', 'authoringWorkspace', 'notify', 'superdesk',
                     function(data, $rootScope, desks, authoring, authoringWorkspace, notify) {

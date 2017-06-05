@@ -172,7 +172,6 @@ export default angular.module('superdesk.core.services.data', [])
                  * @description Get single item by ID.
                  */
                 this.find = function(id) {
-                    console.info('find', resource, id);
                     return em.find(resource, id);
                 };
 
