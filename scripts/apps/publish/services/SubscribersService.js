@@ -21,6 +21,9 @@ export function SubscribersService(api, $q, $filter) {
     };
 
     var service = {
+        fetched: null,
+        subscribersLookup: {},
+        subscribers: null,
         fetchSubscribers: function(criteria) {
             return _getAllSubscribers(criteria);
         },
@@ -46,6 +49,16 @@ export function SubscribersService(api, $q, $filter) {
                 parts.push({_id: id});
             });
             return this.fetchSubscribers({$or: parts});
+        },
+        initialize: function() {
+            if (!this.fetched) {
+                this.fetched = _getAllSubscribers()
+                    .then((subscribers) => {
+                        this.subscribers = subscribers;
+                        this.subscribersLookup = _.keyBy(subscribers, '_id');
+                    });
+            }
+            return this.fetched;
         }
     };
 

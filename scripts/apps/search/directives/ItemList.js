@@ -36,6 +36,43 @@ ItemList.$inject = [
     'keyboardManager'
 ];
 
+/**
+ * @ngdoc directive
+ * @module superdesk.apps.ItemList
+ * @name sdItemList
+ *
+ * @requires $location
+ * @requires $timeout
+ * @requires $injector
+ * @requires $filter
+ * @requires search
+ * @requires datetime
+ * @requires gettext
+ * @requires superdesk
+ * @requires workflowService
+ * @requires archiveService
+ * @requires activityService
+ * @requires multi
+ * @requires desks
+ * @requires familyService
+ * @requires Keys
+ * @requires dragitem
+ * @requires highlightsService
+ * @requires TranslationService
+ * @requires monitoringState
+ * @requires authoringWorkspace
+ * @requires gettextCatalog
+ * @requires $rootScope
+ * @requires config
+ * @requires $interpolate
+ * @requires metadata
+ * @requires storage
+ * @requires keyboardManager
+ *
+ * @description Handles the functionality displaying list of items from repos (archive, ingest, publish,
+ * external, content api, archived)
+ */
+
 export function ItemList(
     $location,
     $timeout,
@@ -184,6 +221,28 @@ export function ItemList(
                     return false;
                 }
 
+                /**
+                 * @ngdoc method
+                 * @name sdItemList#isContentApiItemAssociation
+                 * @private
+                 * @description
+                 * @param {object} oldItem Existing scope item
+                 * @param {object} newItem From search results
+                 * @return {boolean} returns true if the id of the featuremedia is same
+                 */
+                function isContentApiItemAssociation(oldItem, newItem) {
+                    if (_.get(oldItem, '_type') !== 'items' || _.get(newItem, '_type') !== 'items') {
+                        return true;
+                    }
+
+                    if (oldItem && newItem) {
+                        return _.get(oldItem, 'associations.featuremedia._id') ===
+                                _.get(newItem, 'associations.featuremedia._id');
+                    }
+
+                    return false;
+                }
+
                 scope.$watch('items', (items) => {
                     if (!items || !items._items) {
                         return;
@@ -198,7 +257,8 @@ export function ItemList(
                         var oldItem = itemsById[itemId] || null;
 
                         if (!oldItem || !isSameVersion(oldItem, item) ||
-                            !isArchiveItemSameVersion(oldItem, item)) {
+                            !isArchiveItemSameVersion(oldItem, item) ||
+                            !isContentApiItemAssociation(oldItem, item)) {
                             itemsById[itemId] = angular.extend({}, oldItem, item);
                         }
 

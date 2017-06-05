@@ -8,7 +8,7 @@
     </div>
     <div ng-repeat="provider in providers track by provider._id">
         <sd-check type="radio" ng-value="{{:: provider.search_provider }}" ng-model="repo.search" ng-checked="isDefault(provider)" ng-change="toggleRepo(provider.search_provider)">
-            {{:: providerLabels[provider.source]}}<span class="check"></span>
+           {{:: providerLabels[provider.source]}}<span class="check"></span>
         </sd-check>
     </div>
 </fieldset>

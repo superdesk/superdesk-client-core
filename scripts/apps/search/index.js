@@ -24,6 +24,7 @@ angular.module('superdesk.apps.search.react', [
 angular.module('superdesk.apps.search', [
     'superdesk.core.api',
     'superdesk.apps.desks',
+    'superdesk.apps.publish',
     'superdesk.core.activity',
     'superdesk.core.list',
     'superdesk.core.keyboard',
@@ -33,11 +34,13 @@ angular.module('superdesk.apps.search', [
     .service('search', svc.SearchService)
     .service('savedSearch', svc.SavedSearchService)
     .service('tags', svc.TagService)
+    .service('sort', svc.SortService)
 
     .controller('MultiActionBar', MultiActionBarController)
 
     .directive('sdSearchPanel', directive.SearchPanel)
     .directive('sdSearchTags', directive.SearchTags)
+    .directive('sdSearchFilters', directive.SearchFilters)
     .directive('sdSearchResults', directive.SearchResults)
     .directive('sdSaveSearch', directive.SaveSearch)
     .directive('sdItemContainer', directive.ItemContainer)

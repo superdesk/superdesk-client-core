@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React from 'react';
 import classNames from 'classnames';
 import {Item} from 'apps/search/components';
@@ -179,6 +180,10 @@ export class ItemList extends React.Component {
         this.setSelectedItem(item);
         $timeout.cancel(this.updateTimeout);
 
+        if (_.get(scope, 'flags.hideActions')) {
+            return;
+        }
+
         if (canEdit && scope.edit) {
             scope.$apply(() => {
                 scope.edit(item);
@@ -196,6 +201,11 @@ export class ItemList extends React.Component {
 
         this.setSelectedItem(item);
         $timeout.cancel(this.updateTimeout);
+
+        if (_.get(scope, 'flags.hideActions')) {
+            return;
+        }
+
         if (item && scope.edit) {
             scope.$apply(() => {
                 scope.edit(item);

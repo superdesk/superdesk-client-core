@@ -5,7 +5,8 @@ var openUrl = require('./helpers/utils').open,
     globalSearch = require('./helpers/search'),
     authoring = require('./helpers/authoring'),
     content = require('./helpers/pages').content,
-    monitoring = require('./helpers/monitoring');
+    monitoring = require('./helpers/monitoring'),
+    scrollToView = require('./helpers/utils').scrollToView;
 
 describe('search', () => {
     beforeEach(() => {
@@ -292,6 +293,7 @@ describe('search', () => {
         globalSearch.toggleSearchTabs('filters');
         var scheduleDay = element(by.id('search_scheduled_24h'));
 
+        scrollToView(scheduleDay);
         scheduleDay.click();
         expect(globalSearch.getItems().count()).toBe(2);
         expect(globalSearch.getItem(0).element(by.className('state-scheduled')).isDisplayed()).toBe(true);

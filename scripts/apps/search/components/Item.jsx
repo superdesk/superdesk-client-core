@@ -123,15 +123,17 @@ export class Item extends React.Component {
             contents.push(React.createElement(ProgressBar, {completed: item._progress}));
         }
 
-        const getActionsMenu = () =>
-            this.state.hover && !item.gone ? React.createElement(
-                ActionsMenu, {
-                    item: item,
-                    svc: this.props.svc,
-                    scope: this.props.scope,
-                    onActioning: this.setActioningState
-                }
-            ) : null;
+        const getActionsMenu = () => {
+            const {scope} = this.props;
+
+            return !_.get(scope, 'flags.hideActions') && this.state.hover && !item.gone ? React.createElement(
+                    ActionsMenu, {
+                        item: item,
+                        svc: this.props.svc,
+                        scope: this.props.scope,
+                        onActioning: this.setActioningState
+                    }) : null;
+        };
 
         if (this.props.view === 'mgrid') {
             contents.push(

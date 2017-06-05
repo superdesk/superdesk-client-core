@@ -1,4 +1,4 @@
-<div class="filter-content" ng-if="innerTab==='filters'" ng-class="{pull: showSaveSearch}">
+<div class="filter-content" ng-class="{pull: showSaveSearch}">
     <div sd-toggle-box data-title="{{:: 'Content types' | translate }}" ng-hide="isEmpty('type')" data-open="true">
         <ul class="filter-box content-type-filters">
             <li ng-repeat="(key,value) in aggregations.type" ng-click="toggleFilter('type', key)" ng-class="{checked: hasFilter('type',key)}">
@@ -137,7 +137,8 @@
                             class="btn btn--mini" 
                             ng-class="{active: hasFilter('date','Last Month')}">{{'Last Month' | translate}}</button>
             </div>
-            <fieldset ng-show="repo.search === 'local' || repo.search === 'paimg' || repo.search.indexOf('scanpix') === 0">
+            <fieldset ng-show="repo.search === 'local' || repo.search === 'paimg' ||
+            repo.search.indexOf('scanpix') === 0 || repo.search === 'content-api'">
                 <div class="multiple">
                     <div class="field" sd-date-param data-location="afterfirstcreated">
                          <label for="created_after" translate>Created from</label>

@@ -116,15 +116,20 @@ describe('search service', () => {
         expect(filters).toContain({term: {unique_name: '123'}});
     }));
 
-    it('can sort items', inject((search, $location, $rootScope) => {
-        search.setSort('urgency');
+    it('can sort items', inject((search, sort, session, $location, $rootScope) => {
+        sort.setSort('urgency', search.sortOptions);
         $rootScope.$digest();
         expect($location.search().sort).toBe('urgency:desc');
-        expect(search.getSort()).toEqual({label: 'Urgency', field: 'urgency', dir: 'desc'});
+        session.identity = {_id: 'foo'};
+        let criteria = search.query($location.search()).getCriteria();
 
-        search.toggleSortDir();
+        expect(criteria.sort).toEqual([{urgency: 'desc'}]);
+
+        sort.toggleSortDir(search.sortOptions);
         $rootScope.$digest();
-        expect(search.getSort()).toEqual({label: 'Urgency', field: 'urgency', dir: 'asc'});
+
+        criteria = search.query($location.search()).getCriteria();
+        expect(criteria.sort).toEqual([{urgency: 'asc'}]);
     }));
 
     it('can be watched for changes', inject((search, $rootScope, session) => {
@@ -422,4 +427,27 @@ describe('sdSearchPanel directive', () => {
             );
         });
     });
+});
+
+describe('sort service', () => {
+    let sortOptions = [
+        {field: 'versioncreated', label: gettext('Updated')},
+        {field: 'urgency', label: gettext('Urgency')}
+    ];
+
+
+    beforeEach(window.module(
+        'superdesk.apps.search'
+    ));
+
+    it('can sort items', inject((sort, $location, $rootScope) => {
+        sort.setSort('urgency', sortOptions);
+        $rootScope.$digest();
+        expect($location.search().sort).toBe('urgency:desc');
+        expect(sort.getSort(sortOptions)).toEqual({label: 'Urgency', field: 'urgency', dir: 'desc'});
+
+        sort.toggleSortDir(sortOptions);
+        $rootScope.$digest();
+        expect(sort.getSort(sortOptions)).toEqual({label: 'Urgency', field: 'urgency', dir: 'asc'});
+    }));
 });

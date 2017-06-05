@@ -13,6 +13,7 @@ describe('Tag Service', () => {
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.apps.ingest'));
     beforeEach(window.module('superdesk.apps.searchProviders'));
+    beforeEach(window.module('superdesk.apps.publish'));
 
     /**
      * Mock some of the dependencies of the parent directives.
@@ -26,8 +27,9 @@ describe('Tag Service', () => {
         $provide.value('metadata', fakeMetadata);
     }));
 
-    beforeEach(inject(($q) => {
+    beforeEach(inject(($q, subscribersService) => {
         fakeMetadata.fetchSubjectcodes.and.returnValue($q.when());
+        spyOn(subscribersService, 'initialize').and.returnValue($q.when());
     }));
 
     it('can populate keywords from location', inject(($location, tags, $rootScope, desks, $q) => {

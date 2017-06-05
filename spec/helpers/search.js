@@ -2,7 +2,8 @@
 
 
 var openUrl = require('./utils').open,
-    waitFor = require('./utils').wait;
+    waitFor = require('./utils').wait,
+    scrollToView = require('./utils').scrollToView;
 
 module.exports = new GlobalSearch();
 
@@ -353,6 +354,7 @@ function GlobalSearch() {
     this.selectMarkedDesk = function(index) {
         var markedDesks = element(by.id('marked-desks'));
 
+        scrollToView(markedDesks);
         markedDesks.element(by.className('dropdown-toggle')).click();
         markedDesks.all(by.repeater('term in $vs_collection track by term[uniqueField]')).get(index).click();
     };

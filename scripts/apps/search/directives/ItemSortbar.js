@@ -1,48 +1,55 @@
-ItemSortbar.$inject = ['search', 'asset', '$location'];
+import {BaseSortBar} from './BaseSortBar';
+
+class LinkFunction extends BaseSortBar {
+    constructor(search, $location, sort, scope, elem) {
+        super(scope, elem, sort);
+        this.search = search;
+        this.$location = $location;
+        this.scope.canSort = this.canSort.bind(this);
+        this.scope.sortOptions = search.sortOptions;
+        this.repos = {
+            aapmm: true,
+            paimg: true,
+            // temporaty fix to have several scanpix instances (SDNTB-217)
+            // FIXME: need to be refactored (SD-4448)
+            'scanpix(ntbtema)': true,
+            'scanpix(ntbkultur)': true,
+            'scanpix(desk)': true,
+            'scanpix(npk)': true
+        };
+
+        super.getActive();
+    }
+
+    /**
+     * @ngdoc method
+     * @name sdItemSortbar#canSort
+     * @public
+     * @description check if sort is available or not
+     * @return {boolean}
+     */
+    canSort() {
+        let criteria = this.search.query(this.$location.search()).getCriteria(true);
+
+        return !(angular.isDefined(criteria.repo) && this.repos[criteria.repo]);
+    }
+}
 
 /**
- * Item sort component
+ * @ngdoc directive
+ * @module superdesk.apps.content-api
+ * @name sd-item-sortbar
+ * @requires search
+ * @requires https://docs.angularjs.org/api/ng/service/$location $location
+ * @requires sort
+ * @description sd-item-sortbar handle the sort functi0nality
  */
-export function ItemSortbar(search, asset, $location) {
-    var repos = {
-        aapmm: true,
-        paimg: true,
-        // temporaty fix to have several scanpix instances (SDNTB-217)
-        // FIXME: need to be refactored (SD-4448)
-        'scanpix(ntbtema)': true,
-        'scanpix(ntbkultur)': true,
-        'scanpix(desk)': true,
-        'scanpix(npk)': true
-    };
-
+export function ItemSortbar(search, $location, sort) {
     return {
-        scope: {
-            total: '='
-        },
-        templateUrl: asset.templateUrl('apps/search/views/item-sortbar.html'),
-        link: function(scope) {
-            scope.sortOptions = search.sortOptions;
-
-            function getActive() {
-                scope.active = search.getSort();
-            }
-
-            scope.canSort = function() {
-                var criteria = search.query($location.search()).getCriteria(true);
-
-                return !(angular.isDefined(criteria.repo) && repos[criteria.repo]);
-            };
-
-            scope.sort = function sort(field) {
-                search.setSort(field);
-            };
-
-            scope.toggleDir = function toggleDir($event) {
-                search.toggleSortDir();
-            };
-
-            scope.$on('$routeUpdate', getActive);
-            getActive();
-        }
+        scope: {total: '='},
+        template: require('apps/search/views/item-sortbar.html'),
+        link: (scope, elem) => new LinkFunction(search, $location, sort, scope, elem)
     };
 }
+
+ItemSortbar.$inject = ['search', '$location', 'sort'];

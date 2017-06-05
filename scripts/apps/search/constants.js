@@ -12,7 +12,8 @@ export const PARAMETERS = Object.freeze({
     company_codes: 'Company Codes',
     marked_desks: 'Marked Desks',
     ingest_provider: 'Provider',
-    featuremedia: 'Associated Feature Media'
+    featuremedia: 'Associated Feature Media',
+    subscriber: 'Subscriber'
 });
 
 /**

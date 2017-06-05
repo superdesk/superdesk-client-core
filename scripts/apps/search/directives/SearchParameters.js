@@ -1,9 +1,32 @@
-SearchParameters.$inject = [
-    '$location', 'asset', 'tags', 'metadata', 'searchCommon', 'desks', 'userList', 'gettext',
-    'gettextCatalog', 'ingestSources'];
+import {PARAMETERS} from 'apps/search/constants';
+import _ from 'lodash';
 
-export function SearchParameters($location, asset, tags, metadata, common, desks, userList,
-    gettext, gettextCatalog, ingestSources) {
+/**
+ * @ngdoc directive
+ * @module superdesk.apps.search
+ * @name sdSearchParameters
+ *
+ * @requires $location
+ * @requires asset
+ * @requires tags
+ * @requires metadata
+ * @requires searchCommon
+ * @requires desks
+ * @requires userList
+ * @requires ingestSources
+ * @requires subscribersService
+ *
+ * @description
+ *   A directive that generates search parameter form.
+ */
+SearchParameters.$inject = [
+    '$location', 'asset', 'tags', 'metadata',
+    'searchCommon', 'desks', 'userList',
+    'ingestSources', 'subscribersService'
+];
+
+export function SearchParameters($location, asset, tags, metadata, common, desks,
+                                 userList, ingestSources, subscribersService) {
     return {
         scope: {
             repo: '=',
@@ -18,6 +41,21 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
                     searchParameters();
                     event.preventDefault();
                 }
+            };
+
+            const getSearchConfig = () => {
+                if (scope.isContentApi()) {
+                    let searchConfig = _.pick(metadata.search_config, ['slugline', 'headline',
+                        'byline', 'story_text']);
+
+                    searchConfig.subscribers = 1;
+                    return searchConfig;
+                }
+                return metadata.search_config;
+            };
+
+            scope.isContentApi = function() {
+                return _.get(scope, 'repo.search') === 'content-api';
             };
 
             /*
@@ -35,7 +73,7 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
                 scope.selecteditems = {};
                 scope.selectedCodes = {};
                 scope.cvs = metadata.search_cvs;
-                scope.search_config = metadata.search_config;
+                scope.search_config = getSearchConfig();
                 scope.lookupCvs = {};
                 angular.forEach(scope.cvs, (cv) => {
                     scope.lookupCvs[cv.id] = cv;
@@ -47,7 +85,7 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
 
                 if ($location.search().spike) {
                     scope.fields.spike = $location.search().spike;
-                } else {
+                } else if (!scope.isContentApi()) {
                     scope.fields.spike = 'exclude';
                 }
 
@@ -57,15 +95,23 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
 
                 if (loadData) {
                     fetchMetadata();
-                    fetchUsers();
-                    fetchDesks();
-                    fetchProviders();
+                    if (scope.isContentApi()) {
+                        fetchSubscribers();
+                    } else {
+                        fetchUsers();
+                        fetchDesks();
+                        fetchProviders();
+                    }
                 } else {
-                    initializeDesksDropDown();
                     initializeItems();
-                    initializeMarkedDesks();
-                    initializeProviders();
-                    initializeCreators();
+                    if (scope.isContentApi()) {
+                        initializeSubscriber();
+                    } else {
+                        initializeDesksDropDown();
+                        initializeMarkedDesks();
+                        initializeProviders();
+                        initializeCreators();
+                    }
                 }
             }
 
@@ -78,7 +124,6 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
                 userList.getAll()
                 .then((users) => {
                     scope.userList = users;
-
                     initializeCreators();
                 });
             }
@@ -92,6 +137,18 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
                     .then(() => {
                         scope.desks = desks.desks;
                         initializeDesksDropDown();
+                    });
+            }
+
+
+            function fetchSubscribers() {
+                if (scope.repo.search !== 'content-api') {
+                    return;
+                }
+                subscribersService.initialize()
+                    .then(() => {
+                        scope.subscribers = subscribersService.subscribers;
+                        initializeSubscriber();
                     });
             }
 
@@ -114,6 +171,12 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
             function initializeCreators() {
                 if ($location.search().original_creator) {
                     scope.fields.original_creator = $location.search().original_creator;
+                }
+            }
+
+            function initializeSubscriber() {
+                if ($location.search().subscriber) {
+                    scope.fields.subscriber = $location.search().subscriber;
                 }
             }
 
@@ -204,22 +267,15 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
             }
 
             scope.$on('$locationChangeSuccess', () => {
-                if (scope.query !== $location.search().q || isFieldDifferentThanSearch) {
+                if (scope.query !== $location.search().q || isFieldDifferentThanSearch()) {
                     init();
                 }
             });
 
             function isFieldDifferentThanSearch() {
-                return scope.fields.from_desk !== $location.search().from_desk ||
-                    scope.fields.to_desk !== $location.search().to_desk ||
-                    scope.fields.unique_name !== $location.search().unique_name ||
-                    scope.fields.original_creator !== $location.search().original_creator ||
-                    scope.fields.subject !== $location.search().subject ||
-                    scope.fields.company_codes !== $location.search().company_codes ||
-                    scope.fields.marked_desks !== $location.search().marked_desks ||
-                    scope.fields.spike !== $location.search().spike ||
-                    scope.fields.featuremedia !== $location.search().featuremedia ||
-                    scope.fields.ingest_provider !== $location.search().ingest_provider;
+                let params = $location.search();
+
+                return _.some(_.keys(PARAMETERS), (key) => _.get(scope.fields, key) !== _.get(params, key));
             }
 
             function getFirstKey(data) {
