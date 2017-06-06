@@ -43,6 +43,9 @@
 
         .field {
             margin-bottom: 15px;
+            &--margin-double {
+                margin-bottom: 30px;
+            }
         }
 
         .sd-toggle {
@@ -51,6 +54,15 @@
 
         .toggle-box__label {
             color: $black;
+        }
+        .multi-select {
+            margin-bottom: 20px;            
+            ul {
+                li {
+                    display: inline-block;
+                    margin-bottom: 8px;
+                }
+            }
         }
 
     }
