@@ -196,11 +196,9 @@
     <div class="modal__footer">
         <button class="btn" ng-click="cancel()" translate>Cancel</button>
         <button class="btn btn--primary"
-                ng-click="save()"
-                ng-disabled="templateForm.$invalid || !isScheduleValid() || (!templateForm.$dirty && !metadataForm.$dirty)"
-                translate>
-            Save
-        </button>
+            ng-click="save()"
+            ng-disabled="templateForm.$invalid || !isScheduleValid() || !isDirty(templateForm, metadataForm)"
+            translate>Save</button>
     </div>
 
 </div>

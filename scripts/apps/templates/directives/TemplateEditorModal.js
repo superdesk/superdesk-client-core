@@ -24,6 +24,20 @@ export function TemplateEditorModal() {
                 scope.$on('$destroy', () => {
                     modalBodyContainer.off('keydown', handleKeyDown);
                 });
+
+                let _isDirty;
+
+                /**
+                 * Set dirty on autosave - it is called on change
+                 */
+                scope.autosave = () => {
+                    _isDirty = true;
+                };
+
+                /**
+                 * Test if scope is dirty
+                 */
+                scope.isDirty = (templateForm, metadataForm) => templateForm.$dirty || metadataForm.$dirty || _isDirty;
             });
         }
     };
