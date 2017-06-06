@@ -1,5 +1,12 @@
 # Superdesk Client Changelog
 
+## [1.7.1] 2017-06-06
+
+### Fixed
+
+- Fix updating `_etags` when item is locked/unlocked.
+- Fix aggregation criteria reseting on single query when refresh frame is `ON`.
+
 ## [1.7.0] 2017-05-23
 
 ### Fixed
