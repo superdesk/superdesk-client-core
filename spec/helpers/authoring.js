@@ -46,6 +46,7 @@ function Authoring() {
     this.sendItemContainer = element(by.id('send-item-container'));
     this.linkToMasterButton = element(by.id('preview-master'));
     this.marked_for_legal = element(by.model('item.flags.marked_for_legal'));
+    this.sms = element(by.model('item.flags.marked_for_sms'));
     this.anpa_category = element(by.className('authoring-header__detailed'))
         .all(by.css('[data-field="anpa_category"]'));
     this.subject = element(by.className('authoring-header__detailed')).all(by.css('[data-field="subject"]'));
@@ -364,6 +365,8 @@ function Authoring() {
     this.toggleLegal = function() {
         this.marked_for_legal.click();
     };
+
+    this.toggleSms = () => this.sms.click();
 
     this.setKeywords = function(keyword) {
         var keywords = element(by.css('[data-field="keywords"]')).all(by.model('term'));
