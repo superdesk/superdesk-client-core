@@ -35,7 +35,8 @@ export function ContentProfileSchemaEditor(gettext, content) {
         feature_image: gettext('Feature Image'),
         feature_media: gettext('Feature Media'),
         relatedItems: gettext('Related Items'),
-        company_codes: gettext('Company Codes')
+        company_codes: gettext('Company Codes'),
+        keywords: gettext('Keywords')
     };
 
     const HAS_FORMAT_OPTIONS = {
