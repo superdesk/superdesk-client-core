@@ -3,21 +3,21 @@
         <i class="icon-chevron-left-thin"></i>
     </button>
     <header>
-        <ul class="nav nav-tabs">
-            <li ng-class="{active: vm.current_tab === 'content'}">
-                <button ng-click="vm.current_tab = 'content'"><span translate>Content</span></button>
+        <ul class="nav-tabs" ng-class="{'nav-tabs--small': (showRelatedTab && showHistoryTab) || (showRelatedTab && isMediaUsed) || (showHistoryTab && isMediaUsed)}">
+            <li class="nav-tabs__tab" ng-class="{'nav-tabs__tab--active': vm.current_tab === 'content'}">
+                <button class="nav-tabs__link" ng-click="vm.current_tab = 'content'"><span translate>Content</span></button>
             </li>
-            <li ng-class="{active: vm.current_tab === 'metadata'}">
-                <button ng-click="vm.current_tab = 'metadata'"><span translate>Metadata</span></button>
+            <li class="nav-tabs__tab" ng-class="{'nav-tabs__tab--active': vm.current_tab === 'metadata'}">
+                <button class="nav-tabs__link" ng-click="vm.current_tab = 'metadata'"><span translate>Metadata</span></button>
             </li>
-            <li ng-show="showRelatedTab" ng-class="{active: vm.current_tab === 'related'}">
-                <button ng-click="vm.current_tab = 'related'"><span translate>Duplicates</span></button>
+            <li class="nav-tabs__tab" ng-show="showRelatedTab" ng-class="{'nav-tabs__tab--active': vm.current_tab === 'related'}">
+                <button class="nav-tabs__link" ng-click="vm.current_tab = 'related'"><span translate>Duplicates</span></button>
             </li>
-            <li ng-show="showHistoryTab" ng-class="{active: vm.current_tab === 'history'}">
-                <button ng-click="vm.current_tab = 'history'" translate>Item history</button>
+            <li class="nav-tabs__tab" ng-show="showHistoryTab" ng-class="{'nav-tabs__tab--active': vm.current_tab === 'history'}">
+                <button class="nav-tabs__link" ng-click="vm.current_tab = 'history'" translate>Item history</button>
             </li>
-            <li ng-show="isMediaUsed" ng-class="{active: vm.current_tab === 'used'}">
-                <button ng-click="vm.current_tab = 'used'" translate>Used</button>
+            <li class="nav-tabs__tab" ng-show="isMediaUsed" ng-class="{'nav-tabs__tab--active': vm.current_tab === 'used'}">
+                <button class="nav-tabs__link" ng-click="vm.current_tab = 'used'" translate>Used</button>
             </li>
         </ul>
         <button ng-click="close()" class="close-preview">
