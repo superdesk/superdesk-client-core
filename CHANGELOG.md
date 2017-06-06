@@ -1,5 +1,122 @@
 # Superdesk Client Changelog
 
+## [1.7.1] 2017-06-06
+
+### Fixed
+
+- Fix updating `_etags` when item is locked/unlocked.
+- Fix aggregation criteria reseting on single query when refresh frame is `ON`.
+
+## [1.7.0] 2017-05-23
+
+### Fixed
+
+- Fix `null` value set for item profile if not enabled on desk.
+- Fix monitoring stage running multiple queries on item open/close.
+- Remove create content from spike and highlights views.
+- Fix tansa running twice.
+- Fix issue when template header is not visible.
+- Hide company codes if not activated via content profile.
+- Remove duplicate action on killed items.
+- Fix tansa checking on feature media.
+- Fix translate action not performed on items in the list view.
+- Increate stage max size from 15 to 40.
+- Enable template save button on change.
+- Show profile dropdown for text items only.
+- Close send to pane when an item is spiked.
+- Hide spinner when saving area of interest fails.
+- Update angular-embed to version supporting angular 1.6.
+- Use specific versions of dependencies.
+- Fix tooltips in duplicate tab and related item tab.
+- No duplicate option on items in read-only stage.
+- Enable mark for desk on text items only.
+- Handle missing desk in templates settings.
+- Correct and Kill buttons missing when workqueue item is opened.
+- Modify versions tooltip in the editor.
+- Disable save button when area of interest is opened.
+- Improve ui in settings sections.
+- Fix tooltips in metadata preview for type, priority and urgency.
+- Enable save button when template is valid.
+- Hide duplicates and used tab in metadata if empty.
+- Fix slugline and take key fields editing in template editor.
+- Fix missing fields when item is created from template.
+- Fix reseting for subscriber type filter.
+- Fix macros handling in action picker.
+- Hide *Send and Continue* when `noTakes` config is enabled.
+- Constant spinning sheel on item unspiking.
+- Sort highlights by name.
+- Only show format options on fields using editor in content profile.
+- Remember last duplicate to destination.
+- Fix moment timezone related console errors.
+- Hide Global Read off stages from send to pane.
+- Setting an item not for publication does not disable publish panel.
+- Reopen does not work in the all opened items dialog.
+- Double click on external source doesn't fetch item.
+- Remove duplicates and history tabs from preview for external items.
+- Image preview does not keep aspect ratio.
+- Don't show footer helpline for multimedia items while editing.
+- Fix headers issue after eve upgrade to 0.7.2.
+- Fix query when fetching items from queue.
+- Rewrite monitoring widget using React.
+- Creator dropdown in global search has inconsisten user names.
+- Add missing date search tags.
+- Fix max height issue when monitoring group widget is configured for 25 items.
+- Save and validate before send & publish action.
+- Only display plugins if user has privileges.
+- Fix fetching from external source to custom workspace.
+- Minimize amount of prepopuplate requests when testing.
+- Sign off field doesn't reflect updated value.
+- Missing footers in print preview.
+- Trigger search via enter on search providers parameters.
+- Fix keyboard shortucts which were not working across browsers.
+- Fix modal closing via keyboard.
+- Enable scrolling in highlights/desk lists.
+
+### Added
+
+- Add option to disable missing link warning.
+- Add cancel button to monitoring settings modal.
+- Add *Used* tab for media items if they are used in a story.
+- Add feature media metadata to metadata tab.
+- Provide distinct caption and description for images.
+- Add product types to products.
+- Add *Get from external source to* action to external items.
+- Add tables support in editor3.
+- Allow duplication to different desk/stage.
+- Add file extention config for ftp transmissions.
+- Add option to clear publish schedule date and time on send.
+- Support featured media in templates.
+- Add progress indicator when item is fetched from external repo.
+- Add internal destinations management.
+- Add stage dropdown to monitoring view.
+- Add filter to content profiles for active/inactive.
+- Test case for word counts.
+- Item history view.
+- Multi-view of item version history.
+- Added Wufoo service provider config.
+- Export and download feature for items.
+- Support parent based search for subject tree field.
+- Show email list subscription form.
+- Support for elasti 2.x.
+
+### Changed
+
+- Change spellcheck shortcut to `ctrl+shift+y`.
+- Hide related items widget for picture items.
+- Order settings alphabetically.
+- Remove groups settings.
+- Only allow text items to be added to highlights.
+- Update angular to 1.6.3.
+- Add maxlength validation for multimedia metadata.
+- Removing paranthesis from search bar keywords.
+- Exclude SMS, Abstract, Dateline, Footer and Sign Off on multi-media items.
+- Display marked for desk items as a separate group in monitoring.
+- Show take key, related item count and missing link in authoring header.
+- Allow spiked content in global search.
+- Analytics has its own repository.
+- Override values using content profile default when profile is changed.
+- Improve related item widget - display links.
+
 ## [1.6.2] 2017-04-06
 
 ### Fixed
