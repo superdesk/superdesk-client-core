@@ -35,7 +35,6 @@ export class Editor3Component extends React.Component {
     constructor(props) {
         super(props);
 
-        this.readOnly = props.readOnly;
         this.scrollContainer = $(props.scrollContainer || window);
         this.state = {toolbarStyle: 'relative'};
 
@@ -52,7 +51,7 @@ export class Editor3Component extends React.Component {
      * @description Handle the editor get focus event
      */
     focus() {
-        this.props.unsetReadOnly(this.readOnly);
+        this.props.unlock();
         setTimeout(this.refs.editor.focus, 0); // after action
     }
 
@@ -170,6 +169,7 @@ export class Editor3Component extends React.Component {
         const {toolbarStyle} = this.state;
         const {
             readOnly,
+            locked,
             showToolbar,
             editorState,
             onChange,
@@ -185,7 +185,7 @@ export class Editor3Component extends React.Component {
 
         return (
             <div className={cx}>
-                {showToolbar ? <Toolbar disabled={readOnly} /> : null}
+                {showToolbar ? <Toolbar disabled={locked || readOnly} /> : null}
                 <div className="focus-screen" onMouseDown={this.focus}>
                     <Editor
                         editorState={editorState}
@@ -196,7 +196,7 @@ export class Editor3Component extends React.Component {
                         onChange={onChange}
                         onTab={onTab}
                         handlePastedText={handlePastedText.bind(this)}
-                        readOnly={readOnly}
+                        readOnly={locked || readOnly}
                         ref="editor"
                     />
                 </div>
@@ -207,10 +207,11 @@ export class Editor3Component extends React.Component {
 
 Editor3Component.propTypes = {
     readOnly: React.PropTypes.bool,
+    locked: React.PropTypes.bool,
     showToolbar: React.PropTypes.bool,
     editorState: React.PropTypes.object,
     onChange: React.PropTypes.func,
-    unsetReadOnly: React.PropTypes.func,
+    unlock: React.PropTypes.func,
     onTab: React.PropTypes.func,
     dragDrop: React.PropTypes.func,
     scrollContainer: React.PropTypes.string,
@@ -220,14 +221,15 @@ Editor3Component.propTypes = {
 const mapStateToProps = (state) => ({
     readOnly: state.readOnly,
     showToolbar: state.showToolbar,
-    editorState: state.editorState
+    editorState: state.editorState,
+    locked: state.locked
 });
 
 const mapDispatchToProps = (dispatch) => ({
     onChange: (editorState) => dispatch(actions.changeEditorState(editorState)),
     onTab: (e) => dispatch(actions.handleEditorTab(e)),
     dragDrop: (e) => dispatch(actions.dragDrop(e)),
-    unsetReadOnly: () => dispatch(actions.setReadOnly(false))
+    unlock: () => dispatch(actions.setLocked(false))
 });
 
 export const Editor3 = connect(mapStateToProps, mapDispatchToProps)(Editor3Component);

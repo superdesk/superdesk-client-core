@@ -10,8 +10,8 @@ const editor3 = (state = {}, action) => {
     switch (action.type) {
     case 'EDITOR_CHANGE_STATE':
         return onChange(state, action.payload);
-    case 'EDITOR_SET_READONLY':
-        return setReadOnly(state, action.payload);
+    case 'EDITOR_SET_LOCKED':
+        return setLocked(state, action.payload);
     case 'EDITOR_TAB':
         return onTab(state, action.payload);
     case 'EDITOR_FORCE_UPDATE':
@@ -100,19 +100,19 @@ const dragDrop = (state, e) => {
 
 /**
  * @ngdoc method
- * @name setReadOnly
- * @param {Boolean=} readOnly If true, editor is set to read-only.
+ * @name setLocked
+ * @param {Boolean=} locked If true, editor is set to read-only.
  * @return {Object} New state
  * @description Handles setting the editor as active, or read-only.
  */
-const setReadOnly = (state, readOnly = true) => {
+const setLocked = (state, locked = true) => {
     let {activeCell} = state;
 
-    if (!readOnly) {
+    if (!locked) {
         activeCell = null;
     }
 
-    return {...state, readOnly, activeCell};
+    return {...state, locked, activeCell};
 };
 
 /**
@@ -124,7 +124,7 @@ const setReadOnly = (state, readOnly = true) => {
  */
 const setCell = (state, {i, j, key}) => ({
     ...state,
-    readOnly: true,
+    locked: true,
     activeCell: {i, j, key}
 });
 

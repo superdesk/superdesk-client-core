@@ -59,9 +59,9 @@ export function dragDrop(e) {
  * @return {String} action
  * @description Dispatches the action to set the main editor as read-only.
  */
-export function setReadOnly(v) {
+export function setLocked(v) {
     return {
-        type: 'EDITOR_SET_READONLY',
+        type: 'EDITOR_SET_LOCKED',
         payload: v
     };
 }
