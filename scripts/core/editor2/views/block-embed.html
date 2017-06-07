@@ -13,7 +13,8 @@
     <!-- <a class="btn btn--small" ng-click="vm.toggleEdition()" translate>Edit the code</a> -->
 </div>
 <div class="editor--caption">
-    <div sd-remove-tags
+    <input type="text"
+        sd-remove-tags
         tansa-scope-sync
         placeholder="{{::'Description'|translate}}"
         type="text"
@@ -21,7 +22,5 @@
         ng-model-options="{debounce: 1000}"
         ng-change="vm.saveCaption(vm.caption)"
         ng-paste="vm.handlePaste($event)"
-        contenteditable="true"
         class="image-caption contenteditable-input">
-    </div>
 </div>
