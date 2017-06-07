@@ -261,7 +261,7 @@ function Desks() {
      * @returns {ElementFinder} Content Expiry Hours input element
      */
     this.getDeskContentExpiryHours = function() {
-        return element(by.model('ContentExpiry.Hours'));
+        return element(by.model('contentExpiry.hours'));
     };
 
     /**
@@ -269,7 +269,7 @@ function Desks() {
      * @returns {ElementFinder} Content Expiry Minutes input element
      */
     this.getDeskContentExpiryMinutes = function() {
-        return element(by.model('ContentExpiry.Minutes'));
+        return element(by.model('contentExpiry.minutes'));
     };
 
     /**

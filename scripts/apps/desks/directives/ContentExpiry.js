@@ -1,32 +1,44 @@
+/**
+ * @ngdoc directive
+ * @module superdesk.apps.desks
+ * @name sdContentExpiry
+ *
+ * @description
+ *   This directive is responsible for rendering content expiry for ingest, desk and stages.
+ */
 export function ContentExpiry() {
     return {
         templateUrl: 'scripts/apps/desks/views/content-expiry.html',
         scope: {
             item: '=',
             preview: '=',
-            header: '@'
+            header: '@',
+            expiryMinutes: '=',
+            expiryContext: '@'
         },
         link: function(scope, elem, attrs) {
-            var expiryfield = attrs.expiryfield;
+            let expiryfield = attrs.expiryfield;
 
-            scope.ContentExpiry = {
-                Expire: true,
-                Days: 0,
-                Hours: 0,
-                Minutes: 0,
-                Header: 'Content Expiry'
+            scope.contentExpiry = {
+                expire: true,
+                days: 0,
+                hours: 0,
+                minutes: 0,
+                header: 'Content Expiry',
+                actualExpiry: null
             };
 
             scope.$watch('item', () => {
                 setContentExpiry(scope.item);
             });
 
-            scope.$watch('ContentExpiry', () => {
+            scope.$watch('contentExpiry', () => {
                 if (!scope.item) {
                     scope.item = {};
                 }
 
-                scope.item[expiryfield] = getTotalExpiryMinutes(scope.ContentExpiry);
+                scope.item[expiryfield] = getTotalExpiryMinutes(scope.contentExpiry);
+                getActualExpiry();
             }, true);
 
             function getExpiryDays(inputMin) {
@@ -42,29 +54,66 @@ export function ContentExpiry() {
             }
 
             function getTotalExpiryMinutes(contentExpiry) {
-                if (contentExpiry.Expire) {
-                    return contentExpiry.Days * 24 * 60 + contentExpiry.Hours * 60 + contentExpiry.Minutes;
+                if (contentExpiry.expire) {
+                    return contentExpiry.days * 24 * 60 + contentExpiry.hours * 60 + contentExpiry.minutes;
                 }
 
                 return -1;
             }
 
-            var setContentExpiry = function(item) {
-                scope.ContentExpiry.Header = scope.header;
-                scope.ContentExpiry.Expire = true;
-                scope.ContentExpiry.Days = 0;
-                scope.ContentExpiry.Hours = 0;
-                scope.ContentExpiry.Minutes = 0;
+            /**
+             * @ngdoc method
+             * @name sdContentExpiry#getActualExpiry
+             * @private
+             * @description Calculate the expiry string to display based on the context.
+             * The actual expiry is displayed if content expiry is not set.
+             */
+            function getActualExpiry() {
+                // if desk or stage or ingest content expiry then don't calculate.
+                if (scope.contentExpiry.expire && (scope.expiryMinutes > 0 ||
+                    scope.contentExpiry.days > 0 || scope.contentExpiry.hours > 0 ||
+                    scope.contentExpiry.minutes > 0)) {
+                    scope.contentExpiry.actualExpiry = null;
+                    return;
+                }
+
+                let days, hours, minutes;
+
+                if (scope.expiryMinutes > 0) {
+                    days = getExpiryDays(scope.expiryMinutes);
+                    hours = getExpiryHours(scope.expiryMinutes);
+                    minutes = getExpiryMinutes(scope.expiryMinutes);
+                    scope.contentExpiry.actualExpiry = {
+                        text: `Using ${scope.expiryContext} default`,
+                        expiry: `days:${days} hr:${hours} min:${minutes}`
+                    };
+                } else {
+                    // no expiry
+                    scope.contentExpiry.actualExpiry = {
+                        text: 'OFF',
+                        expiry: null
+                    };
+                }
+            }
+
+            const setContentExpiry = function(item) {
+                scope.contentExpiry.header = scope.header;
+                scope.contentExpiry.expire = true;
+                scope.contentExpiry.days = 0;
+                scope.contentExpiry.hours = 0;
+                scope.contentExpiry.minutes = 0;
+                scope.contentExpiry.actualExpiry = null;
 
                 if (item && !_.isNil(item[expiryfield])) {
                     if (item[expiryfield] < 0) {
-                        scope.ContentExpiry.Expire = false;
+                        scope.contentExpiry.expire = false;
                     } else {
-                        scope.ContentExpiry.Days = getExpiryDays(item[expiryfield]);
-                        scope.ContentExpiry.Hours = getExpiryHours(item[expiryfield]);
-                        scope.ContentExpiry.Minutes = getExpiryMinutes(item[expiryfield]);
+                        scope.contentExpiry.days = getExpiryDays(item[expiryfield]);
+                        scope.contentExpiry.hours = getExpiryHours(item[expiryfield]);
+                        scope.contentExpiry.minutes = getExpiryMinutes(item[expiryfield]);
                     }
                 }
+                getActualExpiry();
             };
         }
     };
