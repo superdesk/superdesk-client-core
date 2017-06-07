@@ -1,5 +1,55 @@
 # Superdesk Client Changelog
 
+## [Unreleased]
+
+### Fixed
+
+- Fix template editor button not active after metadata changes.
+- Fix related item query to look for both published and not published items.
+- Queue items get preselected.
+- When creating first stage on a new desk it does not appear.
+- Fix markup for preview and export views.
+- New subscriber is not available in item metadata dropdown.
+- Show error message when saving an item on readonly stage.
+- Prevent list updates when scrolled in legal archive.
+- Send button should not be active for current desk and stage.
+- Disable editor toolbar on headline field.
+- Order content profiles by name in desk settings.
+- Fix associate metadata to only copy fields defined in target item profile.
+- Fix required fields in authoring are not marked required.
+- Ignore whitespace when counting characters in authoring.
+- Disable related item widget if slugline field is not enabled in content profile.
+- Sort content profile fields by field order.
+- Count of records vs aggregate numbers are inconsistent when takes are off.
+- Changing day in schedule does not enable save button in template editor.
+- Remove rearrange groups action from personal workspace.
+- When crating new desk and stage, macros are not available.
+- Only display legal archive if enabled.
+- Fix template lookup to allow any public one.
+
+### Added
+
+- Add content API search page.
+- Add option to move files on FTP after ingestion.
+- Add login via google option.
+- Add edit in a new window action.
+- Allow item removal from vocabularies.
+- Allow desks and templates to deselect a profile.
+- Display errors in ingest provider configuration.
+
+### Changed
+
+- Add character limit for filter conditions.
+- Enable save button in content filters when there is at least one filter defined.
+- Limit name for content filter to 80 characters.
+- Changing label for content labels in preview.
+- Settings UI refactoring using UI framework.
+- Add keywords field to authoring header section.
+- Simplify workflow for corrent and kill actions.
+- Limit content profile and template name length.
+- Integrate Superdesk UI framework.
+- Use templates instead of profiles for content creation.
+
 ## [1.7.1] 2017-06-06
 
 ### Fixed
