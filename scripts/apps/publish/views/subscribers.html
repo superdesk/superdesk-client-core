@@ -43,13 +43,10 @@
                 <div sd-wizard-step data-title="{{ 'General' | translate }}" data-code="general">
                     <div class="content">
                         <div class="field">
-                            <i class="field-info pull-right" translate>* mandatory fields</i>
-                            <label class="left">
-                                {{:: 'Status' | translate }}
+                            <i class="field-info pull-right" translate>* mandatory fields</i>                            
                                 <span title="{{ subscriber.is_active ? 'Deactivate' : 'Activate' | translate }}">
-                                    <span sd-switch ng-model="subscriber.is_active"></span>
-                                </span>
-                            </label>
+                                    <span sd-switch ng-model="subscriber.is_active"></span><label>{{:: 'Status' | translate }}</label>
+                                </span>                        
                         </div>
 
                         <div class="field">
@@ -89,13 +86,10 @@
                             <textarea class="fullwidth-input" ng-model="subscriber.codes"></textarea>
                         </div>
 
-                        <div class="field">
-                            <label class="left">
-                                {{:: 'Targetable by users' | translate }}
+                        <div class="field">                            
                                 <span title="{{ subscriber.is_targetable ? 'Deactivate' : 'Activate' | translate }}">
-                                    <span sd-switch ng-model="subscriber.is_targetable"></span>
+                                    <span sd-switch ng-model="subscriber.is_targetable"></span><label>{{:: 'Targetable by users' | translate }}</label>
                                 </span>
-                            </label>
                         </div>
 
                         <div class="field">
@@ -142,11 +136,8 @@
 
                 <div sd-wizard-step data-title="{{ 'Critical Errors' | translate }}" data-code="critical-errors">
                     <div class="content">
-                        <div ng-repeat="(key, val) in all_errors" class="field">
-                            <label>
-                                {{::key}}: {{::val}}
-                                <span sd-switch ng-model="subscriber.critical_errors[key]"></span>
-                            </label>
+                        <div ng-repeat="(key, val) in all_errors" class="field">                            
+                            <span sd-switch ng-model="subscriber.critical_errors[key]"></span><label>{{::key}}: {{::val}}</label>
                         </div>
                     </div>
                 </div>
@@ -155,11 +146,8 @@
                     <div class="content privileges-settings">
                         <div class="horizontal">
                             <div class="roles-list">
-                                <div ng-repeat="gf in globalFilters track by gf._id" class="field">
-                                    <label>
-                                        {{:: gf.name}}
-                                        <span sd-switch ng-model="subscriber.global_filters[gf._id]"></span>
-                                    </label>
+                                <div ng-repeat="gf in globalFilters track by gf._id" class="field">                                    
+                                    <span sd-switch ng-model="subscriber.global_filters[gf._id]"></span><label>{{:: gf.name}}</label>
                                 </div>
                             </div>
                         </div>
