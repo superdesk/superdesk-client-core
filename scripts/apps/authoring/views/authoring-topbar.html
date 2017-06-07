@@ -21,6 +21,7 @@
                     ng-click="unlock()"
                     ng-disabled="unlockClicked"
                     sd-hotkey="ctrl+shift+u"
+                    sd-hotkey-options="{global: true}"
                     translate>
                 Unlock
             </button>
@@ -88,7 +89,8 @@
                 id="closeAuthoringBtn"
                 ng-click="close()"
                 title="{{ :: 'Close' | translate }}"
-                sd-hotkey="ctrl+shift+e">
+                sd-hotkey="ctrl+shift+e"
+                sd-hotkey-options="{global: true}">
             <span class="btn__text" translate>Close</span><i class="icon-close-small btn__text--alt-icon"></i>
         </button>
 
@@ -98,6 +100,7 @@
         ng-if = "itemActions.save && action === 'edit'"
         ng-disabled="!save_enabled() || saveDisabled"
         sd-hotkey="ctrl+shift+s"
+        sd-hotkey-options="{global: true}"
         translate>Save</button>
 
       <button class="btn btn--primary" type="submit"
@@ -106,6 +109,7 @@
         ng-if = "itemActions.save && previewFormattedEnabled() && action === 'edit'"
         ng-disabled="save_enabled() && !saveDisabled"
         sd-hotkey="ctrl+shift+l"
+        sd-hotkey-options="{global: true}"
         translate>Preview</button>
 
         <div sd-preview-formatted ng-if="previewFormatted"></div>
@@ -238,7 +242,8 @@
                         <button type="button"
                             ng-click="spellcheckMenu.spellcheck()"
                             ng-disabled="spellcheckMenu.isAuto"
-                            sd-hotkey="ctrl+shift+y">
+                            sd-hotkey="ctrl+shift+y"
+                            sd-hotkey-options="{global: true}">
                               <span class="shortcut pull-right">Ctrl+Shift+Y</span>
                               <span translate>Check spelling</span>
                         </button>
@@ -246,7 +251,8 @@
                     <li ng-if="useTansaProofing()">
                         <button type="button"
                             ng-click="runTansa()" 
-                            sd-hotkey="ctrl+shift+y">
+                            sd-hotkey="ctrl+shift+y"
+                            sd-hotkey-options="{global: true}">
                               <span class="shortcut pull-right">Ctrl+Shift+Y</span>
                               <span translate>Check spelling</span>
                         </button>
