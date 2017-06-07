@@ -25,10 +25,14 @@
     <input type="checkbox" ng-model="provider.config.passive" ng-change="$parent.setConfig(provider)">
 </div>
 <div class="field">
-    <label translate>Move articles after ingestion</label>
+    <label translate>Move items after ingestion</label>
     <input type="checkbox" ng-model="provider.config.move" ng-change="$parent.setConfig(provider)">
 </div>
 <div class="field" ng-show="provider.config.move">
-    <label for="ftp_move_path" translate>Move ingested articles to</label>
-    <input type="text" id="ftp_move_path" placeholder="{{ :: 'FTP Server Path'|translate }}" ng-model="provider.config.move_path" ng-required="provider.config.move" ng-change="$parent.setConfig(provider)">
+    <label for="ftp_move_path" translate>Move ingested items to</label>
+    <input type="text" id="ftp_move_path" placeholder="{{ :: 'FTP Server Path, keep empty to use default path'|translate }}" ng-model="provider.config.move_path" ng-change="$parent.setConfig(provider)">
+</div>
+<div class="field" ng-show="provider.config.move">
+    <label for="ftp_move_path_error" translate>Move *NOT* ingested items (i.e. on error) to</label>
+    <input type="text" id="ftp_move_path_error" placeholder="{{ :: 'FTP Server Path, keep empty to use default path'|translate }}" ng-model="provider.config.move_path_error" ng-change="$parent.setConfig(provider)">
 </div>
