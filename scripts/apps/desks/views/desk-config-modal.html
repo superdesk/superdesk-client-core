@@ -39,7 +39,9 @@
                             data-item="desk.edit"
                             data-preview="false"
                             data-expiryfield="content_expiry"
-                            data-header="Content Expiry">
+                            data-header="Content Expiry"
+                            data-expiry-minutes="systemExpiry"
+                            data-expiry-context="System">
                     </div>
                     <div class="form__row form__row--flex">
                         <div class="form__row-item">
@@ -209,7 +211,13 @@
                             </div>
                             <div class="list-row list-row--dotted list-row--flex">
                                 <span class="text-label list-row__item list-row__item--grow" translate>Content expiry: </span>
-                                <span class="list-row__item" sd-content-expiry data-item="selected" data-preview="true" data-expiryfield="content_expiry"></span>
+                                <span class="list-row__item" sd-content-expiry
+                                      data-item="selected"
+                                      data-preview="true"
+                                      data-expiryfield="content_expiry"
+                                      data-expiry-minutes="desk.edit.content_expiry || systemExpiry"
+                                      data-expiry-context="{{desk.edit.content_expiry ? 'Desk' : 'System'}}"
+                                ></span>
                             </div>
                             <div class="list-row list-row--dotted list-row--flex" ng-if="selected.incoming_macro">
                                 <span class="text-label list-row__item list-row__item--grow" translate>Incoming Rule: </span>
@@ -256,7 +264,9 @@
                         <div sd-content-expiry data-item="editStage" ng-if="editStage"
                                 data-preview="false"
                                 data-expiryfield="content_expiry"
-                                data-header="Content Expiry">
+                                data-header="Content Expiry"
+                                data-expiry-minutes="desk.edit.content_expiry || systemExpiry"
+                                data-expiry-context="{{ desk.edit.content_expiry ? 'Desk' : 'System' }}">
                         </div>
                         <div ng-if="editStage">
                             <div class="form__row form__row--flex">

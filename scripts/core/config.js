@@ -27,7 +27,7 @@ function DeployConfigFactory(api, $q) {
             if (!this.promise) {
                 this.promise = api.query('client_config', {})
                     .then((response) => {
-                        this.config = response.data.config;
+                        this.config = response.config;
                         return this.config;
                     });
             }

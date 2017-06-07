@@ -1,9 +1,9 @@
 import _ from 'lodash';
 
 IngestSourcesContent.$inject = ['ingestSources', 'gettext', 'notify', 'api', '$location',
-    'modal', '$filter', 'config'];
+    'modal', '$filter', 'config', 'deployConfig'];
 export function IngestSourcesContent(ingestSources, gettext, notify, api, $location,
-    modal, $filter, config) {
+    modal, $filter, config, deployConfig) {
     return {
         templateUrl: 'scripts/apps/ingest/views/settings/ingest-sources-content.html',
         link: function($scope) {
@@ -16,6 +16,7 @@ export function IngestSourcesContent(ingestSources, gettext, notify, api, $locat
             $scope.minutes = [0, 1, 2, 3, 4, 5, 8, 10, 15, 30, 45];
             $scope.seconds = [0, 5, 10, 15, 30, 45];
             $scope.hours = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24];
+            $scope.ingestExpiry = deployConfig.getSync('ingest_expiry_minutes');
 
             // a list of all data field names in retrieved content
             // expected by the server

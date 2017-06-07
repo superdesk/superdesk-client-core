@@ -10,8 +10,8 @@
  * @description Generates modal for editing desks
  */
 
-DeskConfigModal.$inject = ['metadata', 'content', 'templates', 'api'];
-export function DeskConfigModal(metadata, content, templates, api) {
+DeskConfigModal.$inject = ['metadata', 'content', 'templates', 'api', 'deployConfig'];
+export function DeskConfigModal(metadata, content, templates, api, deployConfig) {
     return {
         scope: {
             modalActive: '=active',
@@ -31,6 +31,7 @@ export function DeskConfigModal(metadata, content, templates, api) {
                 scope.metadata = metadata.values;
             });
 
+            scope.systemExpiry = deployConfig.getSync('content_expiry_minutes');
             /*
              * Initialize content types
              * @return {Object} profiles
