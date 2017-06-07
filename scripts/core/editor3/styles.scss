@@ -48,6 +48,8 @@
 	}
 
 	&.read-only {
+		cursor: not-allowed;
+
 		.Editor3-controls {
 			* {
 				pointer-events: none;

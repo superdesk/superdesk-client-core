@@ -124,7 +124,7 @@ export class TableCell extends Component {
 
     render() {
         const {editorState} = this.state;
-        const {onFocus} = this.props;
+        const {onFocus, readOnly} = this.props;
 
         return (
             <td onClick={(e) => e.stopPropagation()}>
@@ -132,6 +132,7 @@ export class TableCell extends Component {
                     onFocus={onFocus}
                     editorState={editorState}
                     handleKeyCommand={this.handleKeyCommand}
+                    readOnly={readOnly}
                     onChange={this.onChange}
                     keyBindingFn={this.keyBindingFn} />
             </td>
@@ -141,6 +142,7 @@ export class TableCell extends Component {
 
 TableCell.propTypes = {
     editorState: React.PropTypes.object.isRequired,
+    readOnly: React.PropTypes.bool.isRequired,
     onChange: React.PropTypes.func.isRequired,
     onFocus: React.PropTypes.func.isRequired
 };

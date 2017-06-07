@@ -110,6 +110,7 @@ export class TableBlockComponent extends Component {
                                 {Array.from(new Array(numCols)).map((v, j) =>
                                     <TableCell
                                         key={`cell-${i}-${j}-${numRows}-${numCols}`}
+                                        readOnly={this.props.readOnly}
                                         editorState={this.getCell(i, j)}
                                         onChange={this.setCell.bind(this, i, j)}
                                         onFocus={this.onFocus.bind(this, i, j)} />
@@ -126,6 +127,7 @@ export class TableBlockComponent extends Component {
 TableBlockComponent.propTypes = {
     block: React.PropTypes.object.isRequired,
     contentState: React.PropTypes.object.isRequired,
+    readOnly: React.PropTypes.bool.isRequired,
     editorState: React.PropTypes.object.isRequired,
     setActiveCell: React.PropTypes.func.isRequired,
     parentOnChange: React.PropTypes.func.isRequired
@@ -137,7 +139,8 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 const mapStateToProps = (state) => ({
-    editorState: state.editorState
+    editorState: state.editorState,
+    readOnly: state.readOnly
 });
 
 export const TableBlock = connect(mapStateToProps, mapDispatchToProps)(TableBlockComponent);

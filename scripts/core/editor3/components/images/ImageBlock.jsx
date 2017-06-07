@@ -61,7 +61,7 @@ export class ImageBlockComponent extends Component {
     }
 
     render() {
-        const {setReadOnly} = this.props;
+        const {setLocked} = this.props;
         const data = this.data();
         const rendition = data.renditions.viewImage || data.renditions.original;
         const alt = data.alt_text || data.description_text || data.caption;
@@ -74,7 +74,7 @@ export class ImageBlockComponent extends Component {
                         ref={(el) => {
                             this.captionInput = el;
                         }}
-                        onFocus={setReadOnly}
+                        onFocus={setLocked}
                         className="image-block__description"
                         onInput={_.debounce(this.onChange, 500)}>{data.description_text}</div>
                 </div>
@@ -86,7 +86,7 @@ export class ImageBlockComponent extends Component {
 ImageBlockComponent.propTypes = {
     cropImage: React.PropTypes.func.isRequired,
     changeCaption: React.PropTypes.func.isRequired,
-    setReadOnly: React.PropTypes.func.isRequired,
+    setLocked: React.PropTypes.func.isRequired,
     block: React.PropTypes.object.isRequired,
     contentState: React.PropTypes.object.isRequired
 };
@@ -94,7 +94,7 @@ ImageBlockComponent.propTypes = {
 const mapDispatchToProps = (dispatch) => ({
     cropImage: (entityKey, entityData) => dispatch(actions.cropImage(entityKey, entityData)),
     changeCaption: (entityKey, newCaption) => dispatch(actions.changeImageCaption(entityKey, newCaption)),
-    setReadOnly: () => dispatch(actions.setReadOnly())
+    setLocked: () => dispatch(actions.setLocked(true))
 });
 
 export const ImageBlock = connect(null, mapDispatchToProps)(ImageBlockComponent);
