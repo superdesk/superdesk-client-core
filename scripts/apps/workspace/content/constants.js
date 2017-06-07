@@ -52,6 +52,43 @@ export const DEFAULT_EDITOR = Object.freeze({
     sign_off: {order: 19, enabled: true}
 });
 
+// labelMap maps schema entry keys to their display names.
+export const LABEL_MAP = Object.freeze({
+    headline: gettext('Headline'),
+    slugline: gettext('Slugline'),
+    genre: gettext('Genre'),
+    anpa_take_key: gettext('Take Key'),
+    place: gettext('Place'),
+    priority: gettext('Priority'),
+    urgency: gettext('Urgency'),
+    anpa_category: gettext('Category'),
+    ingest_provider: gettext('Ingest Provider'),
+    subject: gettext('Subject'),
+    ednote: gettext('Editorial Note'),
+    abstract: gettext('Abstract'),
+    body_html: gettext('Body HTML'),
+    byline: gettext('Byline'),
+    dateline: gettext('Dateline'),
+    sign_off: gettext('Sign Off'),
+    sms: gettext('SMS'),
+    body_footer: gettext('Body footer'),
+    footer: gettext('Footer'),
+    media: gettext('Media'),
+    media_description: gettext('Media Description'),
+    feature_image: gettext('Feature Image'),
+    feature_media: gettext('Feature Media'),
+    relatedItems: gettext('Related Items'),
+    company_codes: gettext('Company Codes'),
+    keywords: gettext('Keywords')
+});
+
+export const HAS_FORMAT_OPTIONS = Object.freeze({
+    abstract: true,
+    body_html: true,
+    footer: true,
+    body_footer: true
+});
+
 export const CV_ALIAS = Object.freeze({
     locators: 'place',
     categories: 'anpa_category'

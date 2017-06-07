@@ -13,7 +13,7 @@ describe('content filters', () => {
         filterConditions.openFilterConditionSettings();
         filterConditions.addNew();
         filterConditions.addName('Test Filter Condition');
-        filterConditions.selectFilterConditionParameter('desk');
+        filterConditions.selectFilterConditionParameter('Desk');
         filterConditions.selectFilterConditionParameter('eq');
         filterConditions.selectFilterConditionParameter('Politic Desk');
         filterConditions.save();
@@ -21,7 +21,7 @@ describe('content filters', () => {
         // adding the second filter condition with the same name fails
         filterConditions.addNew();
         filterConditions.addName('Test Filter Condition');
-        filterConditions.selectFilterConditionParameter('stage');
+        filterConditions.selectFilterConditionParameter('Stage');
         filterConditions.selectFilterConditionParameter('eq');
         filterConditions.selectFilterConditionParameter('Politic Desk: one');
         filterConditions.save();
@@ -31,7 +31,7 @@ describe('content filters', () => {
         // adding the second filter condition with the same parameters fails
         filterConditions.addNew();
         filterConditions.addName('Test Filter Condition 2');
-        filterConditions.selectFilterConditionParameter('desk');
+        filterConditions.selectFilterConditionParameter('Desk');
         filterConditions.selectFilterConditionParameter('eq');
         filterConditions.selectFilterConditionParameter('Politic Desk');
         filterConditions.save();
@@ -55,31 +55,31 @@ describe('content filters', () => {
         filterConditions.openFilterConditionSettings();
         filterConditions.addNew();
         filterConditions.addName('Desk Condition');
-        filterConditions.selectFilterConditionParameter('desk');
+        filterConditions.selectFilterConditionParameter('Desk');
         filterConditions.selectFilterConditionParameter('eq');
         filterConditions.selectFilterConditionParameter('Politic Desk');
         filterConditions.save();
         filterConditions.addNew();
         filterConditions.addName('Body Condition');
-        filterConditions.selectFilterConditionParameter('body_html');
+        filterConditions.selectFilterConditionParameter('Body HTML');
         filterConditions.selectFilterConditionParameter('startswith');
         filterConditions.addFilterConditionParameter('Help');
         filterConditions.save();
         filterConditions.addNew();
         filterConditions.addName('Slugline Condition');
-        filterConditions.selectFilterConditionParameter('slugline');
+        filterConditions.selectFilterConditionParameter('Slugline');
         filterConditions.selectFilterConditionParameter('notlike');
         filterConditions.addFilterConditionParameter('amaz');
         filterConditions.save();
         filterConditions.addNew();
         filterConditions.addName('Sms Condition');
-        filterConditions.selectFilterConditionParameter('sms');
+        filterConditions.selectFilterConditionParameter('SMS');
         filterConditions.selectFilterConditionParameter('eq');
         filterConditions.selectFilterConditionParameter('True');
         filterConditions.save();
         filterConditions.addNew();
         filterConditions.addName('Urgency');
-        filterConditions.selectFilterConditionParameter('urgency');
+        filterConditions.selectFilterConditionParameter('Urgency');
         filterConditions.selectFilterConditionParameter('nin');
         filterConditions.openPredefinedValues();
         browser.actions().sendKeys('1')
@@ -193,7 +193,7 @@ describe('content filters', () => {
         filterConditions.openFilterConditionSettings();
         filterConditions.addNew();
         filterConditions.addName('Body Condition');
-        filterConditions.selectFilterConditionParameter('body_html');
+        filterConditions.selectFilterConditionParameter('Body HTML');
         filterConditions.selectFilterConditionParameter('startswith');
         filterConditions.addFilterConditionParameter('Help');
         filterConditions.save();
@@ -247,13 +247,13 @@ describe('content filters', () => {
         filterConditions.openFilterConditionSettings();
         filterConditions.addNew();
         filterConditions.addName('Desk Condition');
-        filterConditions.selectFilterConditionParameter('desk');
+        filterConditions.selectFilterConditionParameter('Desk');
         filterConditions.selectFilterConditionParameter('eq');
         filterConditions.selectFilterConditionParameter('Politic Desk');
         filterConditions.save();
         filterConditions.addNew();
         filterConditions.addName('Body Condition');
-        filterConditions.selectFilterConditionParameter('body_html');
+        filterConditions.selectFilterConditionParameter('Body HTML');
         filterConditions.selectFilterConditionParameter('startswith');
         filterConditions.addFilterConditionParameter('Help');
         filterConditions.save();

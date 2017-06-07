@@ -1,3 +1,4 @@
+import {LABEL_MAP, HAS_FORMAT_OPTIONS} from 'apps/workspace/content/constants';
 /**
  * @ngdoc directive
  * @module superdesk.apps.workspace
@@ -10,42 +11,6 @@
  */
 ContentProfileSchemaEditor.$inject = ['gettext', 'content'];
 export function ContentProfileSchemaEditor(gettext, content) {
-    // labelMap maps schema entry keys to their display names.
-    const labelMap = {
-        headline: gettext('Headline'),
-        slugline: gettext('Slug'),
-        genre: gettext('Genre'),
-        anpa_take_key: gettext('Take Key'),
-        place: gettext('Place'),
-        priority: gettext('Priority'),
-        urgency: gettext('Urgency'),
-        anpa_category: gettext('ANPA Category'),
-        subject: gettext('Subject'),
-        ednote: gettext('Editorial Note'),
-        abstract: gettext('Abstract'),
-        body_html: gettext('Body HTML'),
-        byline: gettext('Byline'),
-        dateline: gettext('Dateline'),
-        sign_off: gettext('Sign Off'),
-        sms: gettext('SMS'),
-        body_footer: gettext('Body footer'),
-        footer: gettext('Footer'),
-        media: gettext('Media'),
-        media_description: gettext('Media Description'),
-        feature_image: gettext('Feature Image'),
-        feature_media: gettext('Feature Media'),
-        relatedItems: gettext('Related Items'),
-        company_codes: gettext('Company Codes'),
-        keywords: gettext('Keywords')
-    };
-
-    const HAS_FORMAT_OPTIONS = {
-        abstract: true,
-        body_html: true,
-        footer: true,
-        body_footer: true
-    };
-
     return {
         restrict: 'E',
         templateUrl: 'scripts/apps/workspace/content/views/schema-editor.html',
@@ -99,8 +64,8 @@ export function ContentProfileSchemaEditor(gettext, content) {
              * @description label returns the display name for a key.
              */
             scope.label = function(id) {
-                if (labelMap.hasOwnProperty(id)) {
-                    return labelMap[id];
+                if (LABEL_MAP.hasOwnProperty(id)) {
+                    return LABEL_MAP[id];
                 }
 
                 console.warn(`could not find label for ${id}. Please add it in ` +

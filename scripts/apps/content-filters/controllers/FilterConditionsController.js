@@ -1,3 +1,4 @@
+import {LABEL_MAP} from 'apps/workspace/content/constants';
 /**
  * @ngdoc controller
  * @module superdesk.apps.content_filters
@@ -53,6 +54,17 @@ export function FilterConditionsController($scope, contentFilters, notify, modal
     $scope.isComparisonValue = function() {
         return _.includes(['eq', 'ne', 'lt', 'lte', 'gt', 'gte'], $scope.filterCondition.operator)
             && $scope.valueLookup[$scope.filterCondition.field];
+    };
+
+    /**
+     * @description label returns the display name for a key.
+     */
+    $scope.label = (id) => {
+        if (LABEL_MAP.hasOwnProperty(id)) {
+            return LABEL_MAP[id];
+        }
+
+        return gettext(id.charAt(0).toUpperCase() + id.substr(1).toLowerCase());
     };
 
     $scope.cancel = function() {
