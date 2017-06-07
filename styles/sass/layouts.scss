@@ -957,6 +957,9 @@ $main-item-color-inactive: #aaa;
                     text-align: right;
                 }
             }
+            .card-box__content-list-inline-span {
+                display: inline-block;
+            }
             &:last-child {
                 border: none;
             }

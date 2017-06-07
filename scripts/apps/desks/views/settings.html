@@ -32,12 +32,12 @@
                             <ul class="card-box__content-list">
                                 <li>
                                     <h4>{{ :: 'Stages' | translate }}<span class="label">{{getDeskStages(desk).length}}</span></h4>
-                                    <span ng-repeat="stage in getDeskStages(desk) track by stage._id">{{stage.name}}<span ng-if="$index < getDeskStages(desk).length-1">, </span></span>
+                                    <span ng-repeat="stage in getDeskStages(desk) track by stage._id" class="card-box__content-list-inline-span">{{stage.name}}<span ng-if="$index < getDeskStages(desk).length-1">,&nbsp;</span></span>
                                 </li>
                                 <li>
                                     <h4>{{ :: 'People' | translate }}<span class="label">{{getDeskUsers(desk).length}}</span></h4>
-                                    <span ng-repeat="user in getDeskUsers(desk) track by user._id" ng-if="$index < numberOfUsers">
-                                        {{user.display_name}}<span ng-if="$index < numberOfUsers-1">, </span>
+                                    <span ng-repeat="user in getDeskUsers(desk) track by user._id" ng-if="$index < numberOfUsers" class="card-box__content-list-inline-span">
+                                        {{user.display_name}}<span ng-if="$index < getDeskUsers(desk).length-1">,&nbsp;</span>
                                         <span ng-if="getDeskUsers(desk).length > numberOfUsers && $index === numberOfUsers-1"
                                               ng-click="openDesk('people', desk)"
                                               class="button__view-all">
