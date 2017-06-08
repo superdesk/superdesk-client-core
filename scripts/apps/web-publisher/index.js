@@ -4,6 +4,7 @@ import './styles/web-publisher.scss';
 import 'angular-drag-and-drop-lists/angular-drag-and-drop-lists';
 import {WebPublisherManagerController} from './controllers';
 import {WebPublisherMonitoringController} from './controllers';
+import {WebPublisherSettingsController} from './controllers';
 import * as services from './services';
 import * as directive from './directives';
 
@@ -48,6 +49,14 @@ export default angular.module('superdesk.apps.web_publisher', [
             controller: WebPublisherManagerController,
             controllerAs: 'webPublisher',
             templateUrl: 'scripts/apps/web-publisher/views/manager.html',
+            sideTemplateUrl: 'scripts/apps/web-publisher/views/sidenav-items.html'
+        })
+        .activity('/web_publisher/settings', {
+            label: gettext('Settings'),
+            description: gettext('Settings'),
+            controller: WebPublisherSettingsController,
+            controllerAs: 'webPublisherSettings',
+            templateUrl: 'scripts/apps/web-publisher/views/settings/index.html',
             sideTemplateUrl: 'scripts/apps/web-publisher/views/sidenav-items.html'
         });
 }]);

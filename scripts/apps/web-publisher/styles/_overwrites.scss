@@ -44,3 +44,14 @@
     display: flex;
     flex-direction: column;
 }
+
+// publisher UI conficts workarounds
+input.sd-line-input__input, .sd-line-input__select {
+    border-radius: 0 !important;
+    border: none !important;
+    border-bottom: 1px solid rgba(0,0,0,.15) !important;
+}
+
+.form__row label, .form__row-item label {
+    display: inline !important;
+}

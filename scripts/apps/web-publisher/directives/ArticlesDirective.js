@@ -122,7 +122,6 @@ export function ArticlesDirective(publisher) {
                 scope.params = filters;
                 scope.params.page = 1;
                 scope.params.includeSubRoutes = true;
-
                 this._queryItems(scope);
             });
 
