@@ -58,7 +58,7 @@
                     </div>
                     <div class="field">
                         <label for="subdomain" translate>Subdomain Name:</label>
-                        <input type="text" name="subdomain" ng-model="newSite.subdomain" class="line-input" required/>
+                        <input type="text" ng-trim="false" ng-change="newSite.subdomain = newSite.subdomain.split(' ').join('')" name="subdomain" ng-model="newSite.subdomain" class="line-input" required/>
                     </div>
                 </fieldset>
             </form>

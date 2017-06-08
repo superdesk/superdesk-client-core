@@ -102,7 +102,7 @@ export function GroupArticleDirective(publisher) {
                 if (scope.rootType && scope.rootType === 'incoming') {
                     queryParams['status[]'] = ['new'];
                 } else {
-                    queryParams['status[]'] = ['published', 'unpublished', 'canceled'];
+                    queryParams['status[]'] = ['published', 'unpublished'];
                     queryParams['tenant[]'] = tenant.length ? tenant : undefined;
                     queryParams['route[]'] = route.length ? route : undefined;
                     queryParams.publishedBefore = scope.filters.publishedBefore;
