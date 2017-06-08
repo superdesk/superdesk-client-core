@@ -124,7 +124,7 @@ export function WebPublisherManagerController($scope, publisher, modal) {
 
         /**
          * @ngdoc method
-         * @name WebPublisherManagerController#isRouteEmpty
+         * @name WebPublisherManagerController#isObjEmpty
          * @param {Object} value
          * @returns {Boolean}
          * @description Checks if object is empty
@@ -483,10 +483,12 @@ export function WebPublisherManagerController($scope, publisher, modal) {
         filterArticles() {
             let filters = _.pickBy($scope.newList.filters, _.identity);
 
-            filters.metadata = {};
             this.metadataList.forEach((item) => {
-                if (item.metaName) {
-                    filters.metadata[item.metaName] = item.metaValue;
+                if (item.metaName && item.metaValue) {
+                    if (!filters['metadata[' + item.metaName + '][]']) {
+                        filters['metadata[' + item.metaName + '][]'] = [];
+                    }
+                    filters['metadata[' + item.metaName + '][]'].push(item.metaValue);
                 }
             });
 

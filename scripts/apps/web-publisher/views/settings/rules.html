@@ -1,0 +1,29 @@
+<div class="subnav paneLayout">
+	<h3 class="subnav__page-title">Organization Rules</h3>
+	<button class="navbtn dropdown sd-create-btn" ng-click="webPublisherSettings.toggleCreateRule(true)">
+    	<i class="icon-plus-large"></i>
+        <span class="circle"></span>
+    </button>
+</div>
+
+<div class="paneLayout paneLayout--headerMargin">
+    <div class="paneLayout__content">
+        <div class="contentPadding">
+            <ul class="treeList">
+                <li ng-repeat="rule in organizationRules track by $index"
+                    ng-include="webPublisherSettings.TEMPLATES_DIR + '/settings/rule-item.html'">
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="paneLayout__pane paneContent" 
+    	ng-class="{'paneLayout__pane--open': webPublisherSettings.rulePaneOpen}"
+    	ng-include="webPublisherSettings.TEMPLATES_DIR + '/settings/rule-preview.html'" 
+    	ng-if="!webPublisherSettings.isObjEmpty(webPublisherSettings.selectedRule)">
+    </div>
+    <div class="paneLayout__pane paneContent" 
+    	ng-class="{'paneLayout__pane--open': webPublisherSettings.rulePaneOpen}"
+    	ng-include="webPublisherSettings.TEMPLATES_DIR + '/settings/rule-add.html'"
+    	ng-if="webPublisherSettings.isObjEmpty(webPublisherSettings.selectedRule)">
+    </div>
+</div>

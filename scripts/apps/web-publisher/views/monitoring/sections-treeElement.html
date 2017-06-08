@@ -9,7 +9,7 @@
         <i class="icon-chevron-right-thin" ng-show="!route.filterPaneOpen" ng-click="route.filterPaneOpen = !route.filterPaneOpen"></i>
     </button>
     <div class="sectionTreeElement__content">
-        {{route.name}} <!-- <i class="sectionTreeElement__count">todo</i> -->
+        {{route.name}} <i class="sectionTreeElement__count">{{route.articlesCount}}</i>
     </div>
 </div>
 <ul ng-show="route.children.length && route.filterPaneOpen">

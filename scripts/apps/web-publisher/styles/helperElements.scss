@@ -1,5 +1,9 @@
 .contentPadding {
     padding: 20px;
+
+    &--extraBottom {
+        padding-bottom: 50px;
+    }
 }
 
 .headerMargin {
@@ -22,6 +26,14 @@
     margin-bottom: 20px;
 }
 
+.topMargin {
+    margin-top: 1em;
+}
+
+.bottomMargin0 {
+    margin-bottom: 0;
+}
+
 .leftSpace {
     margin-left: .5em;
 }
@@ -32,6 +44,10 @@
     &--small {
         margin-right: .2em;
     }
+}
+
+.bottomSpace {
+    margin-bottom: .5em;
 }
 
 .countLabel {
@@ -106,6 +122,10 @@
 
     &--blue {
         color: $sd-blue;
+    }
+
+    &--keyword {
+        color: $sd-keyword;
     }
 
     &--center {
@@ -185,6 +205,36 @@
 .width200{
     width: 200px;
 }
+
 .bg--white {
     background-color: white !important;
+}
+
+.absoluteBottom {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.codeBlock {
+    background-color: #f2f2f2;
+    border-radius: 3px;
+    padding: 1em 1.5em;
+    margin: 2rem 0;
+    font-family: Consolas, Menlo, Courier, monospace;
+    font-size: 85%;
+}
+
+.shadowBlock {
+    border-radius: 3px;
+    padding: 1.5em;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.2), 0 1px 7px rgba(0, 0, 0, 0.16);
+    margin: 1em 0;
+}
+
+.iconFakeSpacer {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
 }

@@ -280,6 +280,40 @@ export function PublisherFactory(pubapi) {
         saveSettings(settings) {
             return pubapi.patch('settings', settings);
         }
+
+        /**
+         * @ngdoc method
+         * @name publisher#loadOrganizationRules
+         * @returns {Promise}
+         * @description Loads Organization Rules
+         */
+        queryOrganizationRules(params) {
+            return pubapi.query('organization/rules', params);
+        }
+
+        /**
+         * @ngdoc method
+         * @name publisher#removeOrganizationRule
+         * @param {Number} ruleId - id of rule which is deleted
+         * @returns {Promise}
+         * @description Delete organization rule
+         */
+        removeOrganizationRule(ruleId) {
+            return pubapi.remove('organization/rules', ruleId);
+        }
+
+         /**
+         * @ngdoc method
+         * @name publisher#manageOrganizationRule
+         * @param {Object} rule - rule which is edited
+         * @param {String} id - id of rule which is edited
+         * @returns {Promise}
+         * @description Add or edit organization rule
+         */
+        manageOrganizationRule(rule, id) {
+            return pubapi.save('organization/rules', rule, id);
+        }
+
     }
 
     return new Publisher();

@@ -1,0 +1,14 @@
+<div class="sidebarLayout headerMargin" ng-init="webPublisherSettings.activeTab = 'rules'">
+    <div class="sidebarLayout__sidebar">
+        <ul class="nav nav--stackedPublisher">
+            <li ng-class="{active: webPublisherSettings.activeTab === 'rules'}">
+                <button ng-click="webPublisherSettings.changeTab('rules')" translate>Rules</button>
+            </li>
+        </ul>
+    </div>
+    <div class="sidebarLayout__content" ng-switch="webPublisherSettings.activeTab">
+        <div ng-switch-when="rules">
+            <div ng-include="webPublisherSettings.TEMPLATES_DIR + '/settings/rules.html'"></div>
+        </div>
+    </div>
+</div>
