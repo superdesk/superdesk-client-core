@@ -405,6 +405,14 @@ export function WebPublisherMonitoringController($scope, $sce, publisher, modal,
                 });
 
             $scope.$watch(() => this.advancedFilters, (newVal, oldVal) => {
+                let updatedKeys = this._updatedKeys(newVal, oldVal);
+                let changedValues = newVal[updatedKeys[0]];
+
+                if (Array.isArray(changedValues) &&
+                    changedValues.length > 0 &&
+                    !changedValues[changedValues.length - 1]) {
+                    return;
+                }
                 /**
                  * @ngdoc event
                  * @name WebPublisherMonitoringController#refreshArticles
