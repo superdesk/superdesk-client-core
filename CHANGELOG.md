@@ -4,6 +4,10 @@
 
 ### Fixed
 
+- Cancel changes after attempting to kill or correct an item.
+- Fix authoring shortcuts issue after route change.
+- Fix jumping cursor on image caption.
+- Display content expiry based on system settings.
 - Fix template editor button not active after metadata changes.
 - Fix related item query to look for both published and not published items.
 - Queue items get preselected.
