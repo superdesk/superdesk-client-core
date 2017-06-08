@@ -147,7 +147,6 @@ describe('authoring', () => {
         monitoring.actionOnItem('Kill item', 5, 0);
         expect(authoring.send_kill_button.isDisplayed()).toBeTruthy();
         authoring.cancel();
-        authoring.close();
 
         // publish & correct item
         // reset filters
@@ -159,7 +158,6 @@ describe('authoring', () => {
         monitoring.actionOnItem('Correct item', 5, 0);
         expect(authoring.send_correction_button.isDisplayed()).toBeTruthy();
         authoring.cancel();
-        authoring.close();
 
         expect(monitoring.getTextItem(5, 0)).toBe('item6');
         monitoring.actionOnItem('Open', 5, 0);
