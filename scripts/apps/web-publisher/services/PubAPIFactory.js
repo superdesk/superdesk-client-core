@@ -15,8 +15,8 @@ export function PubAPIFactory(config, $http, $q, session, $location) {
         constructor() {
             let pubConfig = config.publisher || {};
 
-            this._protocol = $location.protocol();
             this._base = pubConfig.base || '';
+            this._protocol = pubConfig.protocol || $location.protocol();
             this._domain = pubConfig.domain || '';
             this._tenant = pubConfig.tenant || '';
             this.setTenant();
