@@ -9,14 +9,14 @@
  *
  * @description Publisher API service
  */
-PubAPIFactory.$inject = ['config', '$http', '$q', 'session'];
-export function PubAPIFactory(config, $http, $q, session) {
+PubAPIFactory.$inject = ['config', '$http', '$q', 'session', '$location'];
+export function PubAPIFactory(config, $http, $q, session, $location) {
     class PubAPI {
         constructor() {
             let pubConfig = config.publisher || {};
 
             this._base = pubConfig.base || '';
-            this._protocol = pubConfig.protocol || 'http';
+            this._protocol = pubConfig.protocol || $location.protocol();
             this._domain = pubConfig.domain || '';
             this._tenant = pubConfig.tenant || '';
             this.setTenant();

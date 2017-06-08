@@ -8,7 +8,11 @@
  * at https://www.sourcefabric.org/superdesk/license
  */
 
-var desks = require('./helpers/desks');
+var desks = require('./helpers/desks'),
+    workspace = require('./helpers/workspace'),
+    authoring = require('./helpers/authoring'),
+    monitoring = require('./helpers/monitoring');
+
 var assertToastMsg = require('./helpers/utils').assertToastMsg;
 
 describe('desks', () => {
@@ -101,6 +105,7 @@ describe('desks', () => {
         assertToastMsg('error', 'Must have one working stage');
 
         // Turning Incoming flag ON should turn global read flag ON automatically
+        desks.editStage('Test Stage');
         expect(desks.getGlobalReadFlag().getAttribute('checked')).toBeTruthy();
         desks.toggleGlobalReadFlag();
         expect(desks.getGlobalReadFlag().getAttribute('checked')).toBeFalsy();
@@ -152,5 +157,67 @@ describe('desks', () => {
 
         // And clean up the desk we created
         desks.remove('Test Desk A');
+    });
+
+    it('can enforce incoming, outgoing and onstage rules', () => {
+        // Send stories go to incoming stage
+        desks.newDeskBtn.click();
+        desks.deskNameElement().sendKeys('Test Desk');
+        desks.deskSourceElement().sendKeys('Test Source A');
+        desks.setDeskType('authoring');
+        desks.actionSaveAndContinueOnGeneralTab();
+
+        desks.getNewStageButton().click();
+        desks.stageNameElement().sendKeys('Test Stage A');
+        desks.stageDescriptionElement().sendKeys('Test Desk A Stage A Description');
+        desks.setStageIncomingMacro('Validate for Publish');
+        desks.saveNewStage();
+
+        desks.getNewStageButton().click();
+        desks.stageNameElement().sendKeys('Test Stage B');
+        desks.stageDescriptionElement().sendKeys('Test Desk B Stage B Description');
+        desks.setStageOutgoingMacro('Validate for Publish');
+        desks.saveNewStage();
+
+        desks.getNewStageButton().click();
+        desks.stageNameElement().sendKeys('Test Stage C');
+        desks.stageDescriptionElement().sendKeys('Test Desk C Stage C Description');
+        desks.setStageMovedOntoMacro('Validate for Publish');
+        desks.saveNewStage();
+
+        desks.showTab('people');
+        desks.addUser('admin');
+        desks.close();
+
+        // confirm story is created on working stage
+        monitoring.openMonitoring();
+        browser.refresh();
+        workspace.selectDesk('Test Desk');
+        authoring.createTextItem();
+        authoring.writeTextToHeadline('new item');
+        authoring.save();
+        expect(monitoring.getGroupItems(0).count()).toBe(1);
+
+        // confirm incoming rule kicks in
+        authoring.sendTo('Test Desk', 'Test Stage A');
+        assertToastMsg('error', 'BODY_HTML is a required field');
+        expect(monitoring.getGroupItems(2).count()).toBe(0);
+        authoring.close();
+
+        // confirm onstage rule kicks in
+        monitoring.actionOnItem('Edit', 0, 0);
+        authoring.sendTo('Test Desk', 'Test Stage C');
+        assertToastMsg('error', 'BODY_HTML is a required field');
+        expect(monitoring.getGroupItems(4).count()).toBe(1);
+        authoring.close();
+
+        // confirm outgoing rule kicks in
+        monitoring.actionOnItem('Edit', 4, 0);
+        authoring.sendTo('Test Desk', 'Test Stage B');
+        monitoring.actionOnItem('Edit', 3, 0);
+        authoring.sendTo('Test Desk', 'Test Stage A');
+        assertToastMsg('error', 'BODY_HTML is a required field');
+        expect(monitoring.getGroupItems(3).count()).toBe(1);
+        expect(monitoring.getGroupItems(2).count()).toBe(0);
     });
 });

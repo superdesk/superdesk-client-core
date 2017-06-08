@@ -5,7 +5,7 @@
 	border: 1px solid #ddd;
 	font-family: 'Georgia', serif;
 	font-size: 14px;
-	padding: 40px 15px 15px;
+	padding: 0;
 	position: relative;
 
 	&.no-toolbar {
@@ -16,10 +16,10 @@
 		position: fixed;
 		top: 132px;
 		left: auto;
-		margin-left: -15px;
 		z-index: 10;
 		border-bottom: 1px solid #dedede;
 		box-shadow: 0px 1px 5px #efefef;
+		max-width: 490px;
 	}
 
 	&.read-only {
@@ -176,7 +176,6 @@
 
 .Editor3-editor .public-DraftEditorPlaceholder-root,
 .Editor3-editor .public-DraftEditor-content {
-	margin: 0 -15px -15px;
 	padding: 15px;
 }
 
@@ -209,17 +208,10 @@
 	min-width: 300px;
 	font-family: 'Helvetica', sans-serif;
 	font-size: 14px;
-	margin-bottom: 5px;
 	user-select: none;
-	position: absolute;
-	top: 0;
-	left: 0;
-	background-color: #fff;
+	background-color: #fafafa;
+	border-bottom: 1px solid #f1f1f1;
 	line-height: 100% !important;
-
-	> span:first-child {
-		margin-left: 7px;
-	}
 
 	&.disabled {
 		* {

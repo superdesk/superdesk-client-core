@@ -14,18 +14,18 @@ export function GroupArticleDirective(publisher) {
                 site: '=site',
                 route: '=route',
                 webPublisherMonitoring: '=webPublisherMonitoring',
-                loadArticles: '=loadArticles',
                 initialFilters: '=filters'
             };
+
             this.templateUrl = 'scripts/apps/web-publisher/views/monitoring/group-article.html';
         }
 
         link(scope) {
             scope.articlesList = [];
             scope.filters = scope.initialFilters ? scope.initialFilters : {};
+            scope.loadedFilters = !!scope.initialFilters;
 
             scope.buildTenantParams = () => {
-                // tenant param
                 let tenant = [];
 
                 if (scope.site) {
@@ -44,7 +44,6 @@ export function GroupArticleDirective(publisher) {
             };
 
             scope.buildRouteParams = () => {
-                // route param
                 let route = [];
 
                 if (scope.route) {
@@ -69,13 +68,14 @@ export function GroupArticleDirective(publisher) {
             scope.buildUniversalParams = () => {
                 let universalParams = {};
 
-                // universal author and source params
                 if (scope.filters.author && scope.filters.author.length) {
                     universalParams['author[]'] = scope.filters.author;
                 }
+
                 if (scope.filters.source && scope.filters.source.length) {
                     universalParams['source[]'] = scope.filters.source;
                 }
+
                 if (scope.filters.term && scope.filters.term.length) {
                     universalParams.term = scope.filters.term;
                 }
@@ -102,7 +102,7 @@ export function GroupArticleDirective(publisher) {
                 if (scope.rootType && scope.rootType === 'incoming') {
                     queryParams['status[]'] = ['new'];
                 } else {
-                    queryParams['status[]'] = ['published', 'unpublished', 'canceled'];
+                    queryParams['status[]'] = ['published', 'unpublished'];
                     queryParams['tenant[]'] = tenant.length ? tenant : undefined;
                     queryParams['route[]'] = route.length ? route : undefined;
                     queryParams.publishedBefore = scope.filters.publishedBefore;
@@ -131,13 +131,13 @@ export function GroupArticleDirective(publisher) {
                 });
             };
 
-            scope.$on('updateMonitoringFilters', (e, filters) => {
-                scope.filters = filters;
-                scope.loadArticles(true);
-            });
+            scope.$on('refreshArticlesList', (e, updatedDestinations, oldDestinationsRoutes, filters) => {
+                if (filters) {
+                    scope.filters = filters;
+                    scope.loadedFilters = true;
+                }
 
-            scope.$on('refreshArticlesList', (e, updatedDestinations, oldDestinationsRoutes) => {
-                if (scope.rootType ||
+                if (filters || scope.rootType ||
                     scope.site && _.find(updatedDestinations, {tenant: scope.site.code}) ||
                     scope.route && _.find(updatedDestinations, {route: scope.route.id}) ||
                     scope.route && _.find(oldDestinationsRoutes, {route: scope.route.id})) {

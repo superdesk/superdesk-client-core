@@ -485,10 +485,11 @@ export function WebPublisherManagerController($scope, publisher, modal) {
 
             this.metadataList.forEach((item) => {
                 if (item.metaName && item.metaValue) {
-                    if (!filters['metadata[' + item.metaName + '][]']) {
-                        filters['metadata[' + item.metaName + '][]'] = [];
+                    if (!filters['metadata[' + item.metaName + ']']) {
+                        filters['metadata[' + item.metaName + ']'] = [];
                     }
-                    filters['metadata[' + item.metaName + '][]'].push(item.metaValue);
+
+                    filters['metadata[' + item.metaName + ']'].push(item.metaValue);
                 }
             });
 

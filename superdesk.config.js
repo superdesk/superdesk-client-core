@@ -38,7 +38,7 @@ module.exports = function(grunt) {
             protocol: 'http',
             tenant: 'master.s-lab',
             domain: 'sourcefabric.org',
-            base: 'app_dev.php/api/v1' //'api/v1'
+            base: 'api/v1'
         },
         features: {
             swimlane: {columnsLimit: 4}

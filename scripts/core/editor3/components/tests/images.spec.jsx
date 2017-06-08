@@ -16,7 +16,7 @@ describe('editor3.components.image-block', () => {
 
         expect(wrapper.find('img').props().src).toBe('image_href');
         expect(wrapper.find('img').props().alt).toBe('image_alt_text');
-        expect(wrapper.find('.image-block__description').props().defaultValue).toBe('image_description');
+        expect(wrapper.find('.image-block__description').text()).toBe('image_description');
     });
 
     it('should trigger cropImage prop when clicked', () => {

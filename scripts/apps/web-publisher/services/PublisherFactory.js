@@ -253,10 +253,26 @@ export function PublisherFactory(pubapi) {
             return pubapi.queryWithDetails('packages', articleStatus);
         }
 
-        publishArticle(article, articleId) {
-            return pubapi.save('packages/' + articleId + '/publish', article);
+        /**
+         * @ngdoc method
+         * @name publisher#publishArticle
+         * @param {Object} destinations - contains array of destionations where to publish article
+         * @param {String} articleId - id of article
+         * @returns {Promise}
+         * @description Publish article to different tenants
+         */
+        publishArticle(destinations, articleId) {
+            return pubapi.save('packages/' + articleId + '/publish', destinations);
         }
 
+        /**
+         * @ngdoc method
+         * @name publisher#unPublishArticle
+         * @param {String} tenants - containts array of tenants from wchic to unpublish article
+         * @param {String} articleId - id of article
+         * @returns {Promise}
+         * @description Unpublish article from different tenants
+         */
         unPublishArticle(tenants, articleId) {
             return pubapi.save('packages/' + articleId + '/unpublish', tenants);
         }

@@ -86,6 +86,21 @@ describe('editor3.reducers', () => {
         expect(block.getInlineStyleAt(13).has('HIGHLIGHT_STRONG')).toBe(false);
     });
 
+    it('HIGHLIGHTS_RENDER special characters', () => {
+        const startState = withSearchTerm(
+            '?apple banana ?apple ananas apple prune',
+            {index: 1, pattern: '?Apple', caseSensitive: false}
+        );
+
+        const state = reducer(startState, {type: 'HIGHLIGHTS_RENDER'});
+        const block = state.editorState.getCurrentContent().getFirstBlock();
+
+        expect(block.getInlineStyleAt(0).has('HIGHLIGHT')).toBe(true);
+        expect(block.getInlineStyleAt(1).has('HIGHLIGHT')).toBe(true);
+        expect(block.getInlineStyleAt(14).has('HIGHLIGHT_STRONG')).toBe(true);
+        expect(block.getInlineStyleAt(15).has('HIGHLIGHT_STRONG')).toBe(true);
+    });
+
     it('HIGHLIGHTS_CRITERIA change term', () => {
         const startState = withSearchTerm(
             'apple banana apple ananas apple prune',

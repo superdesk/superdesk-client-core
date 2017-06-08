@@ -1,34 +1,51 @@
-<div class="input-group" ng-if="preview && ContentExpiry.Expire">
-  <label>{{ContentExpiry.Header | translate}}
+<span ng-if="preview && ContentExpiry.Expire">
+  <span>{{ContentExpiry.Header | translate}}
     {{ ContentExpiry.Days}} <span class="helper-text" translate>day</span>
     {{ ContentExpiry.Hours}} <span class="helper-text" translate>hr</span>
     {{ ContentExpiry.Minutes}} <span class="helper-text" translate>min</span>
-  </label>
-</div>
+  </span>
+</span>
+
 <label ng-if="preview && !ContentExpiry.Expire">{{ContentExpiry.Header | translate}}
   <label class="label globalread" translate> OFF </label>
 </label>
-<div ng-if="!preview && ContentExpiry.Expire">
-  <label class="right">
-    {{ContentExpiry.Header | translate}}
-    <span>
-      <span sd-switch ng-model="ContentExpiry.Expire"></span>
-    </span>
-  </label>
-  <div class="input-group">
-    <input type="number" class="line-input line-input--inline-mini" ng-model="ContentExpiry.Days" min ="0" required>
-    <span class="helper-text helper-text--padded" translate>days</span>
-    <input type="number" class="line-input line-input--inline-mini" ng-model="ContentExpiry.Hours" min ="0" max="23" required>
-    <span class="helper-text helper-text--padded" translate>hr</span>
-    <input type="number" class="line-input line-input--inline-mini" ng-model="ContentExpiry.Minutes" min ="0" max="59" required>
-    <span class="helper-text helper-text--padded" translate>min</span>
+
+<div ng-if="!preview && ContentExpiry.Expire" class="form__row">
+  <div class="">
+    <span sd-switch ng-model="ContentExpiry.Expire"></span>
+    <label class="inline-label">{{ContentExpiry.Header | translate}}</label>
+  </div>
+  <div class="form__row form__row--flex">
+    <div class="form__row-item form__row-item--no-grow">
+      <div class="sd-line-input">          
+        <input class="sd-line-input__input sd-line-input__input--mini" type="number" ng-model="ContentExpiry.Days" min ="0" required>
+      </div>
+    </div>
+    <div class="form__row-item form__row-item--no-grow">
+      <span class="" translate>days</span>
+    </div>
+    <div class="form__row-item form__row-item--no-grow">
+      <div class="sd-line-input">          
+        <input class="sd-line-input__input sd-line-input__input--mini" type="number" ng-model="ContentExpiry.Hours" min ="0" max="23" required>
+      </div>
+    </div>
+    <div class="form__row-item form__row-item--no-grow">
+      <span class="" translate>hr</span>
+    </div>
+    <div class="form__row-item form__row-item--no-grow">
+      <div class="sd-line-input">          
+        <input class="sd-line-input__input sd-line-input__input--mini" type="number" ng-model="ContentExpiry.Minutes" min ="0" max="59" required>
+      </div>
+    </div>
+    <div class="form__row-item form__row-item--no-grow">
+      <span class="" translate>min</span>
+    </div>
   </div>
 </div>
-<div class="trt" ng-if="!preview && !ContentExpiry.Expire">
- <label class="right">
-    {{ContentExpiry.Header | translate}}
-    <span>
-      <span sd-switch ng-model="ContentExpiry.Expire"></span>
-    </span>
-  </label>
+
+<div ng-if="!preview && !ContentExpiry.Expire" class="form__row">
+  <div class="form__row-item" style="padding-bottom: 1.4rem;">
+    <span sd-switch ng-model="ContentExpiry.Expire"></span> 
+    <label class="inline-label">{{ContentExpiry.Header | translate}}</label>
+  </div>
 </div>

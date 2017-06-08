@@ -111,6 +111,7 @@
         }
         .terms {
             @include user-select(none);
+            width: auto;
             clear: both;
             float: right;
             padding-top: 10px;

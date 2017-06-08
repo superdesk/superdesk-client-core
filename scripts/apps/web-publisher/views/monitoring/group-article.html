@@ -10,13 +10,13 @@
 <div class="publisherBoxShadow">
     <ul class="list-view compact-view"
         infinite-scroll="loadArticles()"
-        infinite-scroll-disabled="!loadArticles"
+        infinite-scroll-disabled="!initialFilters || !loadedFilters"
         infinite-scroll-parent="true">
         <li class="list-item-view"
             ng-repeat="i in articlesList"
             ng-include="webPublisherMonitoring.TEMPLATES_DIR + '/monitoring/list-item.html'">
         </li>
-        <li class="list-without-items" ng-if="!loadingArticles && !articlesList.length">There are currently no items</li>
-        <li ng-if="loadingArticles" class="item-group__loading list-without-items"></li>
+        <li class="list-without-items" ng-if="initialFilters && loadedFilters && !loadingArticles && !articlesList.length">There are currently no items</li>
+        <li ng-if="!initialFilters || !loadedFilters || loadingArticles" class="item-group__loading list-without-items"></li>
     </ul>
 </div>

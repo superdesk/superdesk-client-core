@@ -260,8 +260,8 @@
         position: fixed;
         top: 100px;
         left: 50%;
-        width: 670px;
-        margin-left: -335px;
+        width: 400px;
+        margin-left: -200px;
         @include border-radius(6px);
         background: rgba(0,0,0,0.3);
         @include border-box();
@@ -269,6 +269,7 @@
         @include box-shadow(0 0 20px 0 rgba(0,0,0,0.25));
         z-index: 11112000;
         > .content {
+            width: 100%;
             background: #fff;
         }
     }
