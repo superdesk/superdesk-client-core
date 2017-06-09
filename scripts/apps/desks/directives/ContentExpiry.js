@@ -70,30 +70,30 @@ export function ContentExpiry() {
              */
             function getActualExpiry() {
                 // if desk or stage or ingest content expiry then don't calculate.
-                if (scope.contentExpiry.expire && (scope.expiryMinutes > 0 ||
+                if (scope.contentExpiry.expire && (
                     scope.contentExpiry.days > 0 || scope.contentExpiry.hours > 0 ||
                     scope.contentExpiry.minutes > 0)) {
                     scope.contentExpiry.actualExpiry = null;
                     return;
                 }
 
-                let days, hours, minutes;
+                let days, hours, minutes, expiry = null, text = 'OFF';
 
                 if (scope.expiryMinutes > 0) {
                     days = getExpiryDays(scope.expiryMinutes);
                     hours = getExpiryHours(scope.expiryMinutes);
                     minutes = getExpiryMinutes(scope.expiryMinutes);
-                    scope.contentExpiry.actualExpiry = {
-                        text: `Using ${scope.expiryContext} default`,
-                        expiry: `days:${days} hr:${hours} min:${minutes}`
-                    };
-                } else {
-                    // no expiry
-                    scope.contentExpiry.actualExpiry = {
-                        text: 'OFF',
-                        expiry: null
-                    };
+                    expiry = `days:${days} hr:${hours} min:${minutes}`;
+                    if (scope.preview) {
+                        expiry = `(${expiry})`;
+                    }
+                    text = `Using ${scope.expiryContext} default`;
                 }
+
+                scope.contentExpiry.actualExpiry = {
+                    text: text,
+                    expiry: expiry
+                };
             }
 
             const setContentExpiry = function(item) {
