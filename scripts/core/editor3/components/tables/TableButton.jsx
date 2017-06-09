@@ -14,7 +14,7 @@ export class TableButtonComponent extends Component {
         const {addTable} = this.props;
 
         return (
-            <div className="Editor3-styleButton">
+            <div data-flow={'down'} data-sd-tooltip="Table" className="Editor3-styleButton">
                 <span onClick={addTable}><i className="icon-table" /></span>
             </div>
         );
