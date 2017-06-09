@@ -1,6 +1,6 @@
 # Superdesk Client Changelog
 
-## [Unreleased]
+## [1.8.0] 2017-06-09
 
 ### Fixed
 
