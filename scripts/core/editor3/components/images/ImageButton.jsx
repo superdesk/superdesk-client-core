@@ -10,7 +10,7 @@ import * as actions from '../../actions';
  * @description This component renders the image button on the toolbar.
  */
 const ImageButtonComponent = ({insertImages}) =>
-    <div className="Editor3-styleButton">
+    <div data-flow={'down'} data-sd-tooltip="Image" className="Editor3-styleButton">
         <span onClick={insertImages}><i className="icon-picture" /></span>
     </div>;
 

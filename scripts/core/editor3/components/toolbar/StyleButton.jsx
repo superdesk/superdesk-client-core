@@ -17,6 +17,22 @@ const StyleIcons = {
     orderedlist: 'icon-ordered-list'
 };
 
+const StyleTooltips = {
+    bold: gettext('Bold (Ctrl+B)'),
+    italic: gettext('Italic (Ctrl+I)'),
+    underline: gettext('Underline (Ctrl+U)'),
+    h1: gettext('H1'),
+    h2: gettext('H2'),
+    h3: gettext('H3'),
+    h4: gettext('H4'),
+    h5: gettext('H5'),
+    h6: gettext('H6'),
+    quote: gettext('Quote'),
+    unorderedlist: gettext('Unordered list'),
+    orderedlist: gettext('Ordered list'),
+    TH: gettext('Toggle Header')
+};
+
 /**
  * @ngdoc React
  * @module superdesk.core.editor3
@@ -44,7 +60,7 @@ export default class StyleButton extends React.Component {
         });
 
         return (
-            <span className={cx} onMouseDown={this.onToggle}>
+            <span className={cx} data-sd-tooltip={StyleTooltips[label]} data-flow={'down'} onMouseDown={this.onToggle}>
                 {iconClass ? <i className={iconClass} /> : <b>{label}</b>}
             </span>
         );

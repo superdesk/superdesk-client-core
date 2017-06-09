@@ -21,7 +21,7 @@ export class LinkButtonComponent extends Component {
         });
 
         return (
-            <div className="Editor3-styleButton">
+            <div data-flow={'down'} data-sd-tooltip="Link" className="Editor3-styleButton">
                 <span className={cx} onClick={(e) => onClick()}>
                     <i className="icon-link" />
                 </span>
