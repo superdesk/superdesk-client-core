@@ -55,4 +55,15 @@ describe('content expiry', () => {
         expect(scope.contentExpiry.hours).toBe(0);
         expect(scope.contentExpiry.minutes).toBe(0);
     }));
+
+    it('expiry not set', inject(($rootScope, $compile) => {
+        let scope = setupElement('', 0);
+
+        scope.expiryMinutes = 0;
+        scope.contentExpiry.expire = false;
+        $rootScope.$digest();
+
+        expect(scope.contentExpiry.actualExpiry.text).toBe('OFF');
+        expect(scope.contentExpiry.actualExpiry.expiry).toBe(null);
+    }));
 });

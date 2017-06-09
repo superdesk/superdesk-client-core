@@ -5,12 +5,12 @@
     {{ contentExpiry.minutes}} <span class="helper-text" translate>min</span>
     </span>
     <span ng-if="contentExpiry.actualExpiry">
-        {{contentExpiry.actualExpiry.text | translate}} ({{contentExpiry.actualExpiry.expiry | translate}})
+        {{contentExpiry.actualExpiry.text | translate}} {{contentExpiry.actualExpiry.expiry | translate}}
     </span>
 </span>
 
 <label ng-if="preview && !contentExpiry.expire">{{contentExpiry.header | translate}}
-  {{contentExpiry.actualExpiry.text | translate}} ({{contentExpiry.actualExpiry.expiry | translate}})
+  {{contentExpiry.actualExpiry.text | translate}} {{contentExpiry.actualExpiry.expiry | translate}}
 </label>
 
 <div ng-if="!preview && contentExpiry.expire" class="form__row">
