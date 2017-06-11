@@ -112,7 +112,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
      * @ngdoc method
      * @name authoring#unlink
      * @public
-     * @description Removes the take or update link of a given story
+     * @description Removes the update link of a given story
      * @param {Object} item
      */
     this.unlink = (item) => session.getIdentity()
@@ -381,26 +381,6 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
     };
 
     /**
-    * Link an item for takes.
-    * @param {Object} item : Target Item
-    * @param {string} [linkId]: If not provider it returns the new Linked item.
-    * @param {string} [desk]: Desk for newly create item.
-    */
-    this.linkItem = function link(item, linkId, desk) {
-        var data = {};
-
-        if (linkId) {
-            data.link_id = linkId;
-        }
-
-        if (desk) {
-            data.desk = desk;
-        }
-
-        return api.save('archive_link', {}, data, item);
-    };
-
-    /**
     * Actions that it can perform on an item
     * @param {Object} item : item
     */
@@ -430,7 +410,6 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
 
         action.view = !lockedByMe;
         action.new_take = this._isNewTake(currentItem);
-        action.unlinkTake = this._canUnlinkTake(currentItem);
         action.unlinkUpdate = this._canUnlinkUpdate(currentItem);
         action.export = currentItem && currentItem.type && currentItem.type === 'text';
 
@@ -488,18 +467,6 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
             !this._isBroadcastItem(item) &&
             !item.rewritten_by;
     };
-
-    /**
-     * @ngdoc method
-     * @name authoring#_canUnlinkTake
-     * @private
-     * @description Checks if the given item can be unlinked as a take
-     * @param {Object} item
-     * @returns {boolean}
-     */
-    this._canUnlinkTake = (item) => !this._isReadOnly(item) && item.type === 'text' &&
-        !this.isPublished(item) &&
-        (!_.isNil(item.takes) && item.takes.last_take === item._id && item.takes.sequence > 1);
 
     /**
      * @ngdoc method

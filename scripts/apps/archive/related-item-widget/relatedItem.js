@@ -46,8 +46,7 @@ RelatedItemController.$inject = [
     'familyService',
     'gettext',
     'moment',
-    'content',
-    'deployConfig'
+    'content'
 ];
 
 function RelatedItemController(
@@ -65,8 +64,7 @@ function RelatedItemController(
     familyService,
     gettext,
     moment,
-    content,
-    deployConfig
+    content
 ) {
     $scope.type = 'archiveWidget';
     $scope.itemListOptions = {
@@ -164,36 +162,6 @@ function RelatedItemController(
                 return item.type !== 'composite';
             }
         },
-        addTake: {
-            title: 'Associate as take',
-            method: function(item) {
-                var target = {_id: item.package_type === 'takes' ? item.last_take : item._id};
-                var originalItem = $scope.item;
-
-                authoring.linkItem(target, $scope.item._id).then((_item) => {
-                    notify.success(gettext('item is associated as a take.'));
-                    authoringWorkspace.close(false);
-                    authoringWorkspace.edit(originalItem);
-                }, (err) => {
-                    if (angular.isDefined(err.data._message)) {
-                        notify.error(gettext('Failed to associate as take: ' + err.data._message));
-                    } else {
-                        notify.error(gettext('There is an error. Failed to associate as take.'));
-                    }
-                });
-            },
-            class: 'open',
-            icon: 'icon-expand',
-            condition: function(item) {
-                var canHaveNewTake = authoring.itemActions(item).new_take;
-
-                return (item.package_type === 'takes' || canHaveNewTake) &&
-                        $scope.item.type === 'text' &&
-                        !$scope.item.takes &&
-                        $scope.item._current_version >= 1 &&
-                        !$scope.item.rewrite_of && !$scope.item.rewritten_by;
-            }
-        },
         update: {
             title: 'Associate as update',
             method: function(item) {
@@ -241,9 +209,9 @@ function RelatedItemController(
         }
     };
 
-    if (deployConfig.getSync('no_takes')) {
-        delete $scope.actions.addTake;
-    }
+    // if (deployConfig.getSync('no_takes')) {
+    //     delete $scope.actions.addTake;
+    // }
 
     BaseWidgetController.call(this, $scope);
 

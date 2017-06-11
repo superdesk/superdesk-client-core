@@ -223,38 +223,6 @@ angular.module('superdesk.apps.archive', [
                     return authoring.itemActions(item).copy;
                 }]
             })
-            .activity('newtake', {
-                label: gettext('New Take'),
-                icon: 'new-doc',
-                filters: [{action: 'list', type: 'archive'}],
-                privileges: {archive: 1},
-                additionalCondition: ['authoring', 'item', 'deployConfig', function(authoring, item, deployConfig) {
-                    return authoring.itemActions(item).new_take && !deployConfig.getSync('no_takes');
-                }],
-                controller: ['data', '$rootScope', 'desks', 'authoring', 'authoringWorkspace', 'notify', 'superdesk',
-                    function(data, $rootScope, desks, authoring, authoringWorkspace, notify) {
-                        // get the desk of the item to create the new take.
-                        var deskId = null;
-
-                        deskId = desks.getCurrentDeskId();
-
-                        if (!deskId) {
-                            notify.error(gettext('Desk not specified. ' +
-                                'Please select Desk or configure a default desk.'));
-                            return;
-                        }
-
-                        authoring.linkItem(data.item, null, deskId)
-                            .then((item) => {
-                                notify.success(gettext('New take created.'));
-                                $rootScope.$broadcast('item:take');
-                                authoringWorkspace.edit(item);
-                            }, (response) => {
-                                data.item.error = response;
-                                notify.error(gettext('Failed to generate new take.'));
-                            });
-                    }]
-            })
             .activity('resend', {
                 label: gettext('Resend item'),
                 priority: 100,
@@ -283,22 +251,6 @@ angular.module('superdesk.apps.archive', [
                 }],
                 controller: ['data', 'authoring', function(data, authoring) {
                     authoring.rewrite(data.item);
-                }]
-            })
-            .activity('unlinkTake', {
-                label: gettext('Unlink take'),
-                icon: 'remove-sign',
-                filters: [{action: 'list', type: 'archive'}],
-                group: 'corrections',
-                privileges: {rewrite: 1},
-                condition: function(item) {
-                    return item.lock_user === null || angular.isUndefined(item.lock_user);
-                },
-                additionalCondition: ['authoring', 'item', function(authoring, item) {
-                    return authoring.itemActions(item).unlinkTake;
-                }],
-                controller: ['data', 'authoring', function(data, authoring) {
-                    authoring.unlink(data.item);
                 }]
             })
             .activity('unlinkRewrite', {
