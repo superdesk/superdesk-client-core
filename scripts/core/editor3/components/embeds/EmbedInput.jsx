@@ -76,6 +76,12 @@ export class EmbedInputComponent extends Component {
      */
     onSubmit() {
         const {value} = this.refs.txt;
+
+        if (!value.startsWith('http://') && !value.startsWith('https://')) {
+            this.props.embedCode(value);
+            return this.onCancel();
+        }
+
         const config = ng.get('config');
         const apiKey = config.iframely.key || fallbackAPIKey;
 
@@ -101,7 +107,7 @@ export class EmbedInputComponent extends Component {
 
         return (
             <form onSubmit={this.onSubmit} className="embed-dialog" onKeyUp={this.onKeyUp}>
-                <input type="url" ref="txt" placeholder="Enter a URL to embed" />
+                <input type="url" ref="txt" placeholder={gettext('Enter URL or code to embed')} />
                 <div className="input-controls">
                     <i className="svg-icon-ok" onClick={this.onSubmit} />
                     <i className="icon-close-small" onClick={onCancel} />
@@ -114,11 +120,13 @@ export class EmbedInputComponent extends Component {
 
 EmbedInputComponent.propTypes = {
     onCancel: React.PropTypes.func.isRequired,
-    onSubmit: React.PropTypes.func.isRequired
+    onSubmit: React.PropTypes.func.isRequired,
+    embedCode: React.PropTypes.func.isRequired
 };
 
 const mapDispatchToProps = (dispatch) => ({
-    onSubmit: (oEmbed) => dispatch(actions.embed(oEmbed))
+    onSubmit: (oEmbed) => dispatch(actions.embed(oEmbed)),
+    embedCode: (html) => dispatch(actions.embedCode(html))
 });
 
 export const EmbedInput = connect(null, mapDispatchToProps)(EmbedInputComponent);

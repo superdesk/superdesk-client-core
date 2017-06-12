@@ -100,7 +100,7 @@ export function cropImage(entityKey, entityData) {
 
 /**
  * @ngdoc method
- * @name embedURL
+ * @name embed
  * @return {Object} oEmbed
  * @description Dispatches the action to use the given oEmbed data for media embedding.
  */
@@ -108,5 +108,18 @@ export function embed(oEmbed) {
     return {
         type: 'TOOLBAR_APPLY_EMBED',
         payload: oEmbed
+    };
+}
+
+/**
+ * @ngdoc method
+ * @name embedCode
+ * @return {string} code
+ * @description Dispatches the action to use the given embed code for media embedding.
+ */
+export function embedCode(code) {
+    return {
+        type: 'TOOLBAR_APPLY_EMBED_CODE',
+        payload: code
     };
 }
