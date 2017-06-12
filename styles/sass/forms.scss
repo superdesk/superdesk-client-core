@@ -623,6 +623,7 @@ form, ng-form {
             display: flex;
             .field, .flex-field {
                 flex: 1 1 auto;
+                margin-bottom: 0;
                 &:not(.btn) {
                     padding-right: 20px;
                 }
