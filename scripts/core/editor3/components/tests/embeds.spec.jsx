@@ -84,13 +84,13 @@ describe('editor3.components.embed-input', () => {
     it('should display error when ajax call returns it', inject(($q, $rootScope) => {
         const {options} = mockStore();
         const noop = () => ({});
-        const wrapper = mount(<EmbedInput onCancel={noop} onSubmit={noop} />, options);
+        const wrapper = mount(<EmbedInput onCancel={noop} embedCode={noop} onSubmit={noop} />, options);
 
         spyOn($, 'ajax').and.returnValue($q.reject({
             responseJSON: {error: 'this is the error'}
         }));
 
-        wrapper.ref('txt').value = 'http://will.fail';
+        wrapper.find('input').node.value = 'http://will.fail';
         wrapper.simulate('submit');
 
         $rootScope.$apply();
@@ -108,7 +108,7 @@ describe('editor3.components.embed-input', () => {
         spyOn($, 'ajax').and.returnValue($q.resolve('resolve-value'));
 
         wrapper.setState({error: 'some error'});
-        wrapper.ref('txt').value = 'http://will.fail';
+        wrapper.find('input').node.value = 'http://will.fail';
         wrapper.simulate('submit');
 
         $rootScope.$apply();

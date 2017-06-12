@@ -10,7 +10,7 @@ describe('editor3.components.image-block', () => {
             <ImageBlock
                 cropImage={() => ({})}
                 changeCaption={() => ({})}
-                setReadOnly={() => ({})}
+                setLocked={() => ({})}
                 block={block}
                 contentState={contentState} />);
 
@@ -26,7 +26,7 @@ describe('editor3.components.image-block', () => {
             <ImageBlock
                 cropImage={cropImage}
                 changeCaption={() => ({})}
-                setReadOnly={() => ({})}
+                setLocked={() => ({})}
                 block={block}
                 contentState={contentState} />);
 

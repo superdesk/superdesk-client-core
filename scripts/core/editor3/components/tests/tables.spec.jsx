@@ -27,7 +27,7 @@ describe('editor3.component.table-block', () => {
                 setActiveCell={() => { /* no-op */ }}
                 editorState={{}}
                 parentOnChange={() => { /* no-op */ }}
-                parentReadOnly={false} />
+                readOnly={false} />
         );
 
         expect(wrapper.find('tr').length).toEqual(2);
@@ -43,7 +43,7 @@ describe('editor3.component.table-block', () => {
                 setActiveCell={() => { /* no-op */ }}
                 editorState={{}}
                 parentOnChange={() => { /* no-op */ }}
-                parentReadOnly={true} />
+                readOnly={true} />
         );
 
         ['a', 'b', 'c', 'd', 'e', 'f'].forEach((letter, i) => {
@@ -63,6 +63,7 @@ describe('editor3.component.table-cell', () => {
             <TableCell
                 editorState={EditorState.createWithContent(ContentState.createFromText('abc'))}
                 onChange={() => { /* no-op */ }}
+                readOnly={false}
                 onFocus={() => { /* no-op */ }} />
         );
 
