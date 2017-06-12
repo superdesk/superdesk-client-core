@@ -18,11 +18,12 @@
     <span ng-if="schema.headline.maxlength" sd-character-count data-item="item.headline" data-html="true" data-limit="schema.headline.maxlength"></span>
     <div id="title" class="headline"
         sd-editor3
-	   data-single-line
+        data-single-line
         data-language="item.language"
         data-value="item.headline"
         data-on-change="autosave(item)"
-        data-read-only="!_editable"></div>
+        data-read-only="!_editable"
+        data-disable-spellchecker="{{useTansaProofing()}}"></div>
 </div>
 
 <div class="field" ng-if="schema.sms && item._type !== 'archived' && !isMediaType" sd-width="{{editor.sms.sdWidth || 'full'}}" order="{{editor.sms.order}}">
@@ -105,7 +106,8 @@
         data-language="item.language"
         data-value="item.abstract"
         data-on-change="autosave(item)"
-        data-read-only="!_editable"></div>
+        data-read-only="!_editable"
+        data-disable-spellchecker="{{useTansaProofing()}}"></div>
 </div>
 
 <div class="field" ng-if="item._type !== 'archived' && schema.byline" sd-width="{{editor.byline.sdWidth || 'full'}}" order="{{editor.byline.order}}" sd-validation-error="error.byline" data-required="schema.byline.required">
@@ -212,7 +214,8 @@
          data-read-only="!_editable"
          data-on-change="autosave(item, 0)"
          data-debounce="3000"
-         data-language="item.language">
+         data-language="item.language"
+         data-disable-spellchecker="{{useTansaProofing()}}">
     </div>
 </div>
 
@@ -272,7 +275,8 @@
         data-value="item.description_text"
         data-read-only="!_editable"
         data-on-change="autosave(item)"
-        data-language="item.language"></div>
+        data-language="item.language"
+        data-disable-spellchecker="{{useTansaProofing()}}"></div>
 </div>
 
 <div class="field"
@@ -331,7 +335,8 @@
         data-value="item.body_footer"
         data-read-only="!_editable"
         data-on-change="autosave(item)"
-        data-language="item.language"></div>
+        data-language="item.language"
+        data-disable-spellchecker="{{useTansaProofing()}}"></div>
 </div>
 
 <div class="composite-preview" ng-if="item.type === 'composite'">

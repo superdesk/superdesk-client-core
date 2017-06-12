@@ -90,7 +90,13 @@ class Editor3Directive {
              * @description Number indicating the debounce in ms for the on-change
              * event.
              */
-            debounce: '@'
+            debounce: '@',
+
+            /**
+             * @type {Boolean}
+             * @description Disable internal spellchecker.
+             */
+            disableSpellchecker: '@',
         };
     }
 
@@ -101,6 +107,7 @@ class Editor3Directive {
         this.findReplaceTarget = typeof this.findReplaceTarget !== 'undefined';
         this.singleLine = typeof this.singleLine !== 'undefined';
         this.debounce = parseInt(this.debounce || '100', 10);
+        this.disableSpellchecker = this.disableSpellchecker || false;
 
         const store = createStore(this);
 

@@ -25,7 +25,10 @@ import {getEntityTypeAfterCursor, getEntityTypeBeforeCursor} from './links/entit
  *  formatting, spellchecker and media files.
  */
 export class Editor3Component extends React.Component {
-    static getDecorator() {
+    static getDecorator(disableSpellchecker) {
+        if (disableSpellchecker) {
+            return new CompositeDecorator([LinkDecorator]);
+        }
         return new CompositeDecorator([
             LinkDecorator,
             SpellcheckerDecorator
