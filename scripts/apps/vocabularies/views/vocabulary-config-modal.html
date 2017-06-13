@@ -56,6 +56,13 @@
                             ng-maxlength="options.maxlength"
                             placeholder="{{ options.maxlength }} {{ :: 'character limit' | translate }}"
                             ng-switch-when="short">
+                        <textarea rows="3" cols="30"
+                            sd-vocabulary-object-field
+                            ng-model="item[key]"
+                            ng-model-options="{debounce: 200}"
+                            ng-disabled="!item.is_active"
+                            ng-switch-when="object">
+                        </textarea>
                         <input type="text"
                             ng-model="item[key]"
                             ng-disabled="!item.is_active"
