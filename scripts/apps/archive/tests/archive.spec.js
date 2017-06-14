@@ -1,4 +1,5 @@
 
+import {DuplicateController} from '../controllers';
 
 describe('content', () => {
     var item = {_id: 1};
@@ -218,6 +219,25 @@ describe('content', () => {
 
             iscope.close();
             expect(iscope.item).toBe(null);
+        }));
+    });
+
+    describe('duplicate', () => {
+        it('can duplicate item to current desk', inject(($controller, desks, workspaces, session, api, $q) => {
+            spyOn(workspaces, 'isCustom').and.returnValue(true);
+            spyOn(desks, 'getCurrentDeskId').and.returnValue('sports');
+            spyOn(api, 'save').and.returnValue($q.when({}));
+            session.identity = {};
+
+            let data = {item: {item_id: 'foo', _type: 'archive', task: {}}};
+
+            $controller(DuplicateController, {data: data});
+
+            expect(api.save).toHaveBeenCalledWith('duplicate', {}, {
+                desk: 'sports',
+                type: 'archive',
+                item_id: 'foo'
+            }, data.item);
         }));
     });
 });
