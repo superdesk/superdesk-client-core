@@ -48,8 +48,7 @@ export function ItemAssociationDirective(superdesk, renditions, config, authorin
                 let item = angular.fromJson(event.originalEvent.dataTransfer.getData(dataType));
 
                 if (item._type !== 'externalsource') {
-                    return api.find('archive', item._id)
-                        .then((result) => result);
+                    return api.find(item._type, item._id);
                 }
                 return $q.when(item);
             }
