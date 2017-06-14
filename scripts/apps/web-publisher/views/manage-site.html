@@ -33,17 +33,6 @@
                         ng-disabled="!webPublisher.selectedSite.code || webPublisher.siteForm.$dirty"
                         translate>Navigation</button>
                 </li>
-                <li ng-class="{active: webPublisher.activeTab === 'content-lists' || webPublisher.activeTab === 'content-list-automatic'}">
-                    <button ng-click="webPublisher.changeTab('content-lists')"
-                        ng-disabled="!webPublisher.selectedSite.code || webPublisher.siteForm.$dirty"
-                        translate>Content Lists</button>
-                </li>
-                <li class="group-header" translate>advanced</li>
-                <li ng-class="{active: webPublisher.activeTab === 'content-bucket' || webPublisher.activeTab === 'content-list-bucket'}">
-                    <button ng-click="webPublisher.changeTab('content-bucket')"
-                        ng-disabled="!webPublisher.selectedSite.code || webPublisher.siteForm.$dirty"
-                        translate>Content Buckets</button>
-                </li>
             </ul>
         </div>
         <div class="sidebarLayout__content" ng-switch="webPublisher.activeTab">
@@ -70,15 +59,6 @@
             </div>
             <div ng-switch-when="navigation-menu">
                 <div ng-include="webPublisher.TEMPLATES_DIR + '/navigation-menu-tree.html'"></div>
-            </div>
-            <div ng-switch-when="content-lists">
-                <div ng-include="webPublisher.TEMPLATES_DIR + '/content-lists.html'"></div>
-            </div>
-            <div ng-switch-when="content-list-automatic">
-                <div ng-include="webPublisher.TEMPLATES_DIR + '/content-list-automatic.html'"></div>
-            </div>
-            <div ng-switch-when="content-list-manual">
-                <div ng-include="webPublisher.TEMPLATES_DIR + '/content-list-manual.html'"></div>
             </div>
             <div ng-switch-when="content-bucket">
                 <div ng-include="webPublisher.TEMPLATES_DIR + '/content-bucket.html'"></div>

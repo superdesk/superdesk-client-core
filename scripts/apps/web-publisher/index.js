@@ -5,6 +5,7 @@ import 'angular-drag-and-drop-lists/angular-drag-and-drop-lists';
 import {WebPublisherManagerController} from './controllers';
 import {WebPublisherMonitoringController} from './controllers';
 import {WebPublisherSettingsController} from './controllers';
+import {WebPublisherContentListsController} from './controllers';
 import * as services from './services';
 import * as directive from './directives';
 
@@ -49,6 +50,14 @@ export default angular.module('superdesk.apps.web_publisher', [
             controller: WebPublisherManagerController,
             controllerAs: 'webPublisher',
             templateUrl: 'scripts/apps/web-publisher/views/manager.html',
+            sideTemplateUrl: 'scripts/apps/web-publisher/views/sidenav-items.html'
+        })
+        .activity('/web_publisher/content_lists', {
+            label: gettext('Publisher'),
+            description: gettext('Publisher'),
+            controller: WebPublisherContentListsController,
+            controllerAs: 'webPublisherContentLists',
+            templateUrl: 'scripts/apps/web-publisher/views/content-lists.html',
             sideTemplateUrl: 'scripts/apps/web-publisher/views/sidenav-items.html'
         })
         .activity('/web_publisher/settings', {

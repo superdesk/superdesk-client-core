@@ -50,18 +50,6 @@ export function PubAPIFactory(config, $http, $q, session, $location) {
 
         /**
          * @ngdoc method
-         * @name pubapi#setOrganization
-         * @description Set organization id for articles on monitoring
-         */
-        setOrganization() {
-            return this.query('organizations').then((organizations) => {
-                this._organizatonId = 3; // organizations[0].id;
-                return organizations;
-            });
-        }
-
-        /**
-         * @ngdoc method
          * @name pubapi#query
          * @param {String} resource
          * @param {Object} params

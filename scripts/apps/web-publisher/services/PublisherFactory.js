@@ -42,16 +42,6 @@ export function PublisherFactory(pubapi) {
 
         /**
          * @ngdoc method
-         * @name publisher#setOrganization
-         * @returns {Object}
-         * @description Set organization id for articles on monitoring
-         */
-        setOrganization() {
-            return pubapi.setOrganization();
-        }
-
-        /**
-         * @ngdoc method
          * @name publisher#manageSite
          * @param {Object} site - site which is edited
          * @param {String} code - code of site which is edited

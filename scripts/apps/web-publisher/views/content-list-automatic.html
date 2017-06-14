@@ -1,7 +1,7 @@
 <div class="subnav paneLayout bg--white">
     <div class="flat-searchbar monitoring-backlink">
         <div class="search-handler">
-            <button class="backlink" ng-click="webPublisher.changeTab('content-lists')"></button>
+            <button class="backlink" ng-click="webPublisherContentLists.changeView('content-lists')"></button>
         </div>
     </div>
     <div class="filter-trigger" title="Filters" ng-click="filterOpen = !filterOpen" ng-class="{'filter-trigger--active': filterOpen}">
@@ -24,7 +24,7 @@
 	                    <label translate>routes</label>
                         <div sd-meta-terms
                             class="data"
-                            data-item="webPublisher"
+                            data-item="webPublisherContentLists"
                             data-field="selectedRoutes"
                             data-list="routes"
                             data-unique="id"
@@ -39,7 +39,7 @@
                             <button
                                 type="button"
                                 class="btn btn--small"
-                                ng-click="webPublisher.removeAuthor($index)"
+                                ng-click="webPublisherContentLists.removeAuthor($index)"
                                 tooltip="{{:: 'Remove'|translate}}"
                                 tooltip-placement="bottom"
                                 tooltip-popup-delay="500">
@@ -50,7 +50,7 @@
                     <button
                         type="button"
                         class="btn btn--primary btn--small"
-                        ng-click="webPublisher.addAuthor()"
+                        ng-click="webPublisherContentLists.addAuthor()"
                         tooltip="{{:: 'Add author'|translate}}"
                         tooltip-placement="right"
                         tooltip-popup-delay="500">
@@ -70,17 +70,17 @@
                     </div>
                     <div class="item">
 	                    <label translate>metadata</label>
-                        <div class="field" ng-if="webPublisher.metadataList.length>0">
+                        <div class="field" ng-if="webPublisherContentLists.metadataList.length>0">
                             <label translate>Name</label>
                             <label translate>Value</label>
                         </div>
-                        <div class="multiple" ng-repeat="item in webPublisher.metadataList">
+                        <div class="multiple" ng-repeat="item in webPublisherContentLists.metadataList">
                             <input type="text" class="line-input" ng-model="item.metaName">
                             <input type="text" class="line-input" ng-model="item.metaValue">
                             <button
                                 type="button"
                                 class="btn btn--small"
-                                ng-click="webPublisher.removeMetadata($index)"
+                                ng-click="webPublisherContentLists.removeMetadata($index)"
                                 tooltip="{{:: 'Remove'|translate}}"
                                 tooltip-placement="bottom"
                                 tooltip-popup-delay="500">
@@ -91,7 +91,7 @@
                     <button
                         type="button"
                         class="btn btn--primary btn--small"
-                        ng-click="webPublisher.addMetadata()"
+                        ng-click="webPublisherContentLists.addMetadata()"
                         tooltip="{{:: 'Add metadata'|translate}}"
                         tooltip-placement="right"
                         tooltip-popup-delay="500">
@@ -101,7 +101,7 @@
             </form>
         </div>
         <div class="paneContent__footer">
-            <button class="btn btn--large btn--primary btn--expanded" ng-click="webPublisher.saveListCriteria()" translate>Update Criteria</button>
+            <button class="btn btn--large btn--primary btn--expanded" ng-click="webPublisherContentLists.saveListCriteria()" translate>Update Criteria</button>
         </div>
     </div>
 
