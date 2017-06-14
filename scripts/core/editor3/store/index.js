@@ -20,7 +20,7 @@ export default function createEditorStore(ctrl) {
 
     const dict = spellcheck.getDict();
     const content = getInitialContent(ctrl);
-    const decorators = Editor3.getDecorator();
+    const decorators = Editor3.getDecorator(ctrl.disableSpellchecker);
     const showToolbar = !ctrl.singleLine && (ctrl.editorFormat || []).length > 0;
 
     const store = createStore(reducers, {
