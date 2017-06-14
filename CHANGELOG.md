@@ -1,5 +1,13 @@
 # Superdesk Client Changelog
 
+## [1.8.1] 2017-06-14
+
+### Fixed
+
+- Fix drag and drop to feature media from archived collection.
+- Fix duplicate not working if default desk is not set.
+- Fix UI issue with search providers.
+
 ## [1.8.0] 2017-06-09
 
 ### Fixed
