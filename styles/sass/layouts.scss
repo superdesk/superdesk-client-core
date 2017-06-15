@@ -80,7 +80,7 @@ a:hover {
             width: 44%;
             @include transition(width .5s);
             .content-item-preview {
-                display: block;
+                display: flex;
             }
             @media only screen and (max-width : 1430px) {
                 width: 54%;
@@ -380,6 +380,8 @@ $slide-pane-width: 400px;
     background-color: $white;
     z-index: $zindexSlidePane;
     @include border-box();
+    display: flex;
+    flex-direction: column;
 
     &.slide-pane--inset {
         top: $nav-height * 2;
@@ -390,7 +392,6 @@ $slide-pane-width: 400px;
     > .slide-pane__header {
         height: $nav-height;
         border-bottom: 1px solid #424242;
-        padding: 0 20px;
         h3 {
             font-size: 20px;
             line-height: $nav-height;
@@ -400,14 +401,16 @@ $slide-pane-width: 400px;
         }
         .close {
             margin-top: 14px;
+            position: absolute;
+            top: 0;
+            right: 12px;
         }
     }
 
     > .slide-pane__content {
-        position: absolute;
+        flex-grow: 1;
         width: 100%;
         top: $nav-height;
-        bottom: 120px;
         overflow: auto;
         padding: 20px 15px 0 20px;
         @include border-box();
@@ -421,10 +424,8 @@ $slide-pane-width: 400px;
     }
 
     > .slide-pane__footer {
-        position: absolute;
         width: 100%;
         padding: 15px 15px 0 15px;
-        bottom: 0;
         border-top: 1px solid #424242;
         @include border-box();
 
@@ -646,7 +647,7 @@ $slide-pane-width: 400px;
         width: 100%;
         background: #212121;
         @include box-shadow(inset 0 4px 4px -2px #000);
-        border-botom: 1px solid #313131;
+        border-bottom: 1px solid #313131;
         .avatar {
             margin: 12px 16px;
         }
