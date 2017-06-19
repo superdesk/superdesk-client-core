@@ -5,14 +5,22 @@ import {fromHTML} from 'core/editor3/html';
 /**
  * @ngdoc method
  * @name handlePastedText
+ * @param {string} editorKey
  * @param {string} text Text content of paste.
  * @param {string=} html HTML content of paste.
  * @returns {Boolean} True if this method took paste into its own hands.
  * @description Handles pasting into the editor, in cases where the content contains
  * atomic blocks that need special handling in editor3.
  */
-export function handlePastedText(text, html) {
+export function handlePastedText(editorKey, text, html) {
     if (!html) {
+        return false;
+    }
+
+    // If there are blocks that have been copied from the host editor, let the editor
+    // handle the paste. The chance of having content both from the editor and from
+    // outside it as a mix in the clipboard is impossible.
+    if (HTMLComesFromEditor(html, editorKey)) {
         return false;
     }
 
@@ -54,6 +62,21 @@ export function handlePastedText(text, html) {
     onChange(EditorState.push(editorState, contentState, 'insert-characters'));
 
     return true;
+}
+
+/**
+ * @description Checks if the given html contains blocks coming from the editor with
+ * key editorKey.
+ * @param {string} html
+ * @param {string} editorKey
+ * @returns {Boolean}
+ */
+function HTMLComesFromEditor(html, editorKey) {
+    const tree = $('<div></div>');
+
+    tree.html(html);
+
+    return $(tree).find(`[data-block="true"][data-editor="${editorKey}"]`).length > 0;
 }
 
 /**
