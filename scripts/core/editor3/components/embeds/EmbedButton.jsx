@@ -44,7 +44,7 @@ export class EmbedButton extends Component {
         const {dialogOpen} = this.state;
 
         return (
-            <div data-flow={'down'} data-sd-tooltip="Embed content" className="Editor3-styleButton">
+            <div className="Editor3-styleButton">
                 <span onClick={this.showInput}><i className="icon-code" /></span>
                 {dialogOpen ? <EmbedInput onCancel={this.hideInput} /> : null}
             </div>
