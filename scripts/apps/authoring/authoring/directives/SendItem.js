@@ -224,7 +224,6 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
             scope.showPublishSchedule = function() {
                 return scope.item && archiveService.getType(scope.item) !== 'ingest' &&
                     scope.item.type !== 'composite' && !scope.item.embargo_date && !scope.item.embargo_time &&
-                    !authoring.isTakeItem(scope.item) &&
                     ['published', 'killed', 'corrected'].indexOf(scope.item.state) === -1;
             };
 
@@ -249,7 +248,7 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                 }
                 var prePublishCondition = scope.item && archiveService.getType(scope.item) !== 'ingest' &&
                     scope.item.type !== 'composite' && !scope.item.publish_schedule_date &&
-                    !scope.item.publish_schedule_time && !authoring.isTakeItem(scope.item);
+                    !scope.item.publish_schedule_time;
 
                 if (prePublishCondition && authoring.isPublished(scope.item)) {
                     if (['published', 'corrected'].indexOf(scope.item.state) >= 0) {
@@ -335,44 +334,10 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
             };
 
             /**
-             * Check if the Send and Continue is allowed or not.
-             * Send And Continue is enabled using `superdesk.config.js`.
-             * @return {Boolean}
-             */
-            scope.canSendAndContinue = function() {
-                if (deployConfig.getSync('no_takes') || config.ui && config.ui.publishSendAdnContinue === false) {
-                    return false;
-                }
-                return !authoring.isPublished(scope.item) && _.includes(['text'], scope.item.type);
-            };
-
-            /**
              * Returns true if 'send' button should be displayed. Otherwise, returns false.
              * @return {boolean}
              */
             scope.isSendEnabled = () => scope.item && !authoring.isPublished(scope.item);
-
-            /**
-             * Send the current item (take) to different desk or stage and create a new take.
-             * If publish_schedule is set then the user cannot schedule the take.
-             * Fails if user has set Embargo on the item.
-             */
-            scope.sendAndContinue = function() {
-                // cannot schedule takes.
-                if (scope.item && scope.item.publish_schedule) {
-                    notify.error(gettext('Takes cannot be scheduled.'));
-                    return;
-                }
-
-                if (scope.item && scope.item.embargo) {
-                    notify.error(gettext('Takes cannot have Embargo.'));
-                    return;
-                }
-
-                return editor.countErrors()
-                    .then(confirm.confirmSpellcheck)
-                    .then(runSendAndContinue, (err) => false);
-            };
 
             /*
              * Send the current item to different desk or stage and publish the item from new location.
@@ -500,41 +465,6 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
             };
 
             /**
-             * Send the current item to different desk or stage and create a new take and open for editing.
-             */
-            function runSendAndContinue() {
-                var deskId = scope.selectedDesk._id;
-                var stageId = scope.selectedStage._id || scope.selectedDesk.incoming_stage;
-
-                updateLastDestination();
-
-                scope.item.sendTo = true;
-                return sendAuthoring(deskId, stageId, scope.selectedMacro, true)
-                    .then(() => {
-                        var itemDeskId = null;
-
-                        scope.loading = true;
-
-                        if (scope.item.task && scope.item.task.desk) {
-                            itemDeskId = scope.item.task.desk;
-                        }
-                        return authoring.linkItem(scope.item, null, itemDeskId);
-                    })
-                    .then((item) => {
-                        authoringWorkspace.close(false);
-                        notify.success(gettext('New take created.'));
-                        authoringWorkspace.edit(item);
-                    })
-                    .catch(() => {
-                        scope.item.sendTo = false;
-                        notify.error(gettext('Failed to send and continue.'));
-                    })
-                    .finally(() => {
-                        scope.loading = false;
-                    });
-            }
-
-            /**
              * Run the macro and returns to the modified item.
              * @param {Object} item
              * @param {String} macro
@@ -553,24 +483,18 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
              * @param {String} deskId - selected desk Id
              * @param {String} stageId - selected stage Id
              * @param {String} macro - macro to apply
-             * @param {Boolean} sendAndContinue - If "send and continue" or "send and publish"
-             *                                    return deferred promise object
              * @return {Object} promise
              */
-            function sendAuthoring(deskId, stageId, macro, sendAndContinue) {
-                var deferred, msg;
+            function sendAuthoring(deskId, stageId, macro) {
+                var msg;
 
                 scope.loading = true;
-
-                if (sendAndContinue) {
-                    deferred = $q.defer();
-                }
 
                 return runMacro(scope.item, macro)
                 .then((item) => api.find('tasks', scope.item._id)
                     .then((task) => {
                         scope.task = task;
-                        msg = sendAndContinue ? 'Send & Continue' : 'Send';
+                        msg = 'Send';
                         return scope.beforeSend({action: msg});
                     })
                     .then((result) => {
@@ -592,11 +516,6 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                             }
                         }
 
-                        if (sendAndContinue) {
-                            deferred.resolve();
-                            return deferred.promise;
-                        }
-
                         authoringWorkspace.close(true);
                         return true;
                     }, (err) => {
@@ -606,11 +525,6 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                             } else if (angular.isDefined(err.data._issues['validator exception'])) {
                                 notify.error(err.data._issues['validator exception']);
                             }
-                        }
-
-                        if (sendAndContinue) {
-                            deferred.reject(err);
-                            return deferred.promise;
                         }
                     }))
                 .finally(() => {

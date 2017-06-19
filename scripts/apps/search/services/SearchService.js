@@ -499,15 +499,8 @@ preferencesService, moment, sortService, deployConfig) {
                                {term: {original_creator: session.identity._id}}]},
                          {not: {terms: {state: ['draft']}}}]});
 
-        if (params.ignoreDigital || deployConfig.getSync('no_takes')) {
-            // remove all take packages
-            this.filter({not: {term: {package_type: 'takes'}}});
-        } else {
-            // remove the older version of digital package as part for base filtering.
-            this.filter({not: {bool: {must: [{term: {_type: 'published'}},
-                {term: {package_type: 'takes'}},
-                {term: {last_published_version: false}}]}}});
-        }
+        // this is needed for archived collection
+        this.filter({not: {term: {package_type: 'takes'}}});
 
         buildFilters(params, this);
     }

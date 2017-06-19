@@ -91,8 +91,7 @@ describe('dashboard', () => {
         dashboard.showDashboardSettings();
         dashboard.addWidget('monitoring');  // the monitoring widget
         dashboard.doneAction();
-
-        expect(dashboard.getTextItem(0, 5, 1)).toBe('item6');
+        expect(dashboard.getTextItem(0, 5, 0)).toBe('item6');
     });
 
     it('can display \'not for publication\' state in monitoring widget for such item', () => {

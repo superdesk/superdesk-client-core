@@ -42,7 +42,6 @@ describe('tasks', () => {
 
                 expect(publishedArgs[0]).toBe('published');
                 expect(publishedArgs[1].source.filter.bool.must.term).toEqual({'task.desk': 1});
-                expect(publishedArgs[1].source.filter.bool.must_not.term).toEqual({package_type: 'takes'});
             }));
 
             it('can get scheduled', inject((api) => {

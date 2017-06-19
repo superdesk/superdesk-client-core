@@ -14,7 +14,6 @@ export {takekey} from './takekey';
 export {signal} from './signal';
 export {broadcast} from './broadcast';
 export {flags} from './flags';
-export {takepackage} from './takepackage';
 export {category} from './category';
 export {provider} from './provider';
 export {expiry} from './expiry';

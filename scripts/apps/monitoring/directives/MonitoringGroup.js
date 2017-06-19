@@ -288,8 +288,6 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                     } else if (item._type === 'externalsource') {
                         intent.type = 'externalsource';
                         fetchAndEdit(intent, item, 'externalsource');
-                    } else if (item.type === 'composite' && item.package_type === 'takes') {
-                        authoringWorkspace.view(item);
                     } else if (archiveService.isPublished(item)) {
                         authoringWorkspace.view(item);
                     } else {

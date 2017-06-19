@@ -209,7 +209,7 @@ describe('content', () => {
         content.closePreview();
     });
 
-    it('can enable/disable send and continue based on embargo', () => {
+    it('can enable/disable send based on embargo', () => {
         // Initial steps before proceeding, to get initial state of send buttons.
         workspace.editItem('item3', 'SPORTS');
         authoring.sendTo('Sports Desk', 'Incoming Stage');
@@ -218,7 +218,6 @@ describe('content', () => {
         workspace.editItem('item3', 'SPORTS');
         authoring.sendToButton.click().then(() => {
             // Initial State
-            expect(authoring.sendAndContinueBtn.isEnabled()).toBe(false);
             expect(authoring.sendBtn.isEnabled()).toBe(false);
         });
 
@@ -231,19 +230,16 @@ describe('content', () => {
 
         // State after selecting different Stage in the same desk
         sidebar.element(by.buttonText('two')).click();
-        expect(authoring.sendAndContinueBtn.isEnabled()).toBe(true);
         expect(authoring.sendBtn.isEnabled()).toBe(true);
 
         // State after setting Embargo
         setEmbargo();
         browser.sleep(100);
-        expect(authoring.sendAndContinueBtn.isEnabled()).toBe(false);
         expect(authoring.sendBtn.isEnabled()).toBe(true);
 
         // State after changing Desk
         dropdown.click();
         sidebar.element(by.buttonText('Politic Desk')).click();
-        expect(authoring.sendAndContinueBtn.isEnabled()).toBe(false);
         expect(authoring.sendBtn.isEnabled()).toBe(true);
     });
 });

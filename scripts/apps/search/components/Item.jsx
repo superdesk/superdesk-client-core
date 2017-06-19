@@ -27,7 +27,6 @@ export class Item extends React.Component {
         this.state = {hover: false, actioning: false};
 
         this.select = this.select.bind(this);
-        this.selectTakesPackage = this.selectTakesPackage.bind(this);
         this.edit = this.edit.bind(this);
         this.dbClick = this.dbClick.bind(this);
         this.setActioningState = this.setActioningState.bind(this);
@@ -49,10 +48,6 @@ export class Item extends React.Component {
         if (!this.props.item.gone) {
             this.props.onSelect(this.props.item, event);
         }
-    }
-
-    selectTakesPackage() {
-        this.props.onSelect(this.props.item.takes || this.props.item.archive_item.takes);
     }
 
     /**
@@ -174,7 +169,6 @@ export class Item extends React.Component {
                 }) : null,
                 React.createElement(ListItemInfo, {
                     item: item,
-                    selectTakesPackage: this.selectTakesPackage,
                     openAuthoringView: this.openAuthoringView,
                     desk: this.props.desk,
                     ingestProvider: this.props.ingestProvider,

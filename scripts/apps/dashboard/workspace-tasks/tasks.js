@@ -25,8 +25,6 @@ function TasksService(desks, $rootScope, api, datetimeHelper) {
         var filters = [];
         var self = this;
 
-        filters.push({not: {term: {package_type: 'takes'}}});
-
         if (desks.getCurrentDeskId()) {
             // desk filter
             filters.push({term: {'task.desk': desks.getCurrentDeskId()}});
@@ -127,9 +125,6 @@ function TasksController($scope, $timeout, api, notify, desks, tasks, $filter, a
         var filter = {bool: {
             must: {
                 term: {'task.desk': desks.getCurrentDeskId()}
-            },
-            must_not: {
-                term: {package_type: 'takes'}
             }
         }};
 

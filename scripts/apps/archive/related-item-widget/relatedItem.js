@@ -186,8 +186,7 @@ function RelatedItemController(
 
                 var canBeRewrite = !authoring.isPublished($scope.item) &&
                 _.includes(['text', 'preformatted'], $scope.item.type) &&
-                !$scope.item.rewrite_of && authoring.itemActions($scope.item).new_take &&
-                (!$scope.item.broadcast || !$scope.item.broadcast.master_id) && !authoring.isTakeItem($scope.item);
+                !$scope.item.rewrite_of && (!$scope.item.broadcast || !$scope.item.broadcast.master_id);
 
                 var canBeRewritten = authoring.itemActions(item).re_write;
 
@@ -208,10 +207,6 @@ function RelatedItemController(
             }
         }
     };
-
-    // if (deployConfig.getSync('no_takes')) {
-    //     delete $scope.actions.addTake;
-    // }
 
     BaseWidgetController.call(this, $scope);
 

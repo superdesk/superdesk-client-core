@@ -21,9 +21,7 @@ export default angular.module('superdesk.core.directives.filetypeIcon', [])
         function initIcon(item) {
             var cls = 'filetype-icon-';
 
-            if (item.package_type) {
-                cls += 'takes-pack';
-            } else if (item.type === 'composite' && item.highlight) {
+            if (item.type === 'composite' && item.highlight) {
                 cls += 'highlight-pack';
             } else {
                 cls += item.type;
