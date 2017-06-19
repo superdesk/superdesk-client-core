@@ -40,6 +40,7 @@ export class Editor3Component extends React.Component {
 
         this.scrollContainer = $(props.scrollContainer || window);
         this.state = {toolbarStyle: 'relative'};
+        this.editorKey = null;
 
         this.focus = this.focus.bind(this);
         this.onScroll = this.onScroll.bind(this);
@@ -162,6 +163,9 @@ export class Editor3Component extends React.Component {
         if (this.props.showToolbar) {
             this.scrollContainer.on('scroll', this.onScroll);
         }
+
+        // the editorKey is used to identify the source of pasted blocks
+        this.editorKey = this.refs.editor._editorKey;
     }
 
     componentWillUnmount() {
@@ -198,7 +202,7 @@ export class Editor3Component extends React.Component {
                         customStyleMap={customStyleMap}
                         onChange={onChange}
                         onTab={onTab}
-                        handlePastedText={handlePastedText.bind(this)}
+                        handlePastedText={handlePastedText.bind(this, this.editorKey)}
                         readOnly={locked || readOnly}
                         ref="editor"
                     />
