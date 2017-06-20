@@ -9,7 +9,7 @@
             <div class="search-handler">
                 <label for="search-input" class="trigger-icon" ng-click="aggregate.monitoringSearch = !aggregate.monitoringSearch"><i class="icon-search"></i></label>
                 <input id="search-input" type="text" placeholder="{{ :: 'Search' | translate }}" ng-model="query"
-                ng-keyup="aggregate.searchOnEnter($event, query)">
+                       ng-keyup="aggregate.searchOnEnter($event, query)">
                 <button class="search-close" ng-click="aggregate.search(query = null)" ng-class="{visible: query}"><i class="icon-remove-sign"></i></button>
                 <button class="search-close" ng-click="aggregate.search(query);" ng-class="{visible: query}">
                     <i class="svg-icon-right"></i>
@@ -23,40 +23,40 @@
                 <li><div class="dropdown__menu-label">{{ :: 'Stages' | translate }}</div></li> 
                 <li ng-repeat="card in aggregate.cards">
                     <button class="label-group" ng-click="monitoring.viewSingleGroup(card,
-                    card.type === 'stage' ? card.type : 'single-stage')" translate>{{:: monitoring.getGroupLabel(card, aggregate.settings.type) }}</button>
+                                            card.type === 'stage' ? card.type : 'single-stage')" translate>{{:: monitoring.getGroupLabel(card, aggregate.settings.type)}}</button>
                 </li>
             </ul>
         </div>
 
         <h3 class="subnav__page-title">
-            <span ng-if="type === 'spike'"><span translate>Spiked Items</span> <span ng-if="aggregate.spikeGroups.length === 1" class="label-total">{{ monitoring.totalItems }}</span></span>
+            <span ng-if="type === 'spike'"><span translate>Spiked Items</span> <span ng-if="aggregate.spikeGroups.length === 1" class="label-total">{{ monitoring.totalItems}}</span></span>
             <span ng-if="type === 'personal'" translate>Personal Items</span>
             <span ng-if="type === 'highlights'" sd-highlight-label data-highlight="monitoring.queryParam.highlight" data-total="monitoring.totalItems"></span>
 
             <span ng-if="monitoring.singleGroup.subheader && monitoring.singleGroup.singleViewType == null">
-                {{ :: monitoring.singleGroup.header }} / {{ :: monitoring.singleGroup.subheader }} {{ :: monitoring.singleGroup.type}}
-                <span class="label-total">{{ monitoring.totalItems }}</span>
+                {{ :: monitoring.singleGroup.header}} / {{ :: monitoring.singleGroup.subheader}} {{ :: monitoring.singleGroup.type}}
+                <span class="label-total">{{ monitoring.totalItems}}</span>
             </span>
             <span ng-if="monitoring.singleGroup.singleViewType === 'desk'">
-                {{ :: monitoring.singleGroup.header }} {{ :: monitoring.singleGroup.singleViewType}}
-                <span class="label-total">{{ monitoring.totalItems }}</span>
+                {{ :: monitoring.singleGroup.header}} {{ :: monitoring.singleGroup.singleViewType}}
+                <span class="label-total">{{ monitoring.totalItems}}</span>
             </span>
             <span ng-if="monitoring.singleGroup.singleViewType === 'stage'">
-                {{ :: monitoring.singleGroup.header }} / {{ :: monitoring.singleGroup.subheader }} {{ :: monitoring.singleGroup.singleViewType}}
-                <span class="label-total">{{ monitoring.totalItems }}</span>
+                {{ :: monitoring.singleGroup.header}} / {{ :: monitoring.singleGroup.subheader}} {{ :: monitoring.singleGroup.singleViewType}}
+                <span class="label-total">{{ monitoring.totalItems}}</span>
             </span>
             <span ng-if="monitoring.singleGroup && !monitoring.singleGroup.subheader">
-                {{ :: monitoring.singleGroup.header }} {{ :: monitoring.singleGroup.type | splitText | translate }}
-                <span class="label-total">{{ monitoring.totalItems }}</span>
+                {{ :: monitoring.singleGroup.header}} {{ :: monitoring.singleGroup.type | splitText | translate }}
+                <span class="label-total">{{ monitoring.totalItems}}</span>
             </span>
         </h3>
         <div sd-multi-action-bar></div>
         <div class="subnav__button-stack--square-buttons">
-             <div class="refresh-box pull-right">
+            <div class="refresh-box pull-right">
                 <button ng-if="monitoring.showRefresh &&
-                    (monitoring.singleGroup || type === 'spike' || type === 'highlights' || viewColumn)"
-                ng-click="refreshGroup(monitoring.singleGroup)"
-                    sd-tooltip="{{:: 'Refresh' | translate}}" flow="left">
+                                        (monitoring.singleGroup || type === 'spike' || type === 'highlights' || viewColumn)"
+                        ng-click="refreshGroup(monitoring.singleGroup)"
+                        sd-tooltip="{{:: 'Refresh' | translate}}" flow="left">
                     <i class="icon-repeat blue"></i>
                 </button>
             </div>
@@ -64,8 +64,6 @@
             <button class="navbtn strict" ng-if="type === 'monitoring' && aggregate.settings.type === 'workspace'" ng-click="aggregate.edit()">
                 <i class="icon-settings"></i>
             </button>
-
-            
 
             <div class="dropdown dropdown--align-right strict" ng-if="!state.opened && (type !== 'spike' && type !== 'highlights')" sd-tooltip="{{ :: 'Create new item' | translate }}" flow="left" dropdown>
                 <button class="navbtn dropdown__toggle sd-create-btn" dropdown__toggle></button>
@@ -79,7 +77,7 @@
         <div sd-media-query min-width="700" class="subnav">
 
             <div class="button-list button-list--padded" ng-if="!elementState || elementState === 'comfort'">
-                <a href="" ng-repeat="fileType in aggregate.fileTypes" ng-click="aggregate.setFileType(fileType)" class="toggle-button" ng-class="{'toggle-button--active': aggregate.hasFileType(fileType)}" title="{{fileType | translate}}">
+                <a href="" ng-repeat="fileType in aggregate.fileTypes" ng-click="aggregate.setFileType(fileType)" class="toggle-button" ng-class="{'toggle-button--active': aggregate.hasFileType(fileType)}" title="{{fileType| translate}}">
                     <span ng-if="fileType === 'all'" class="toggle-button__text toggle-button__text--all">{{:: 'all' | translate}}</span>
                     <i ng-if="fileType !== 'all' && fileType !== 'takesPackage' && fileType !== 'highlightsPackage'" class="toggle-button__icon filetype-icon-{{fileType}}"></i>
                     <i ng-if="fileType === 'takesPackage'" class="toggle-button__icon filetype-icon-takes-pack" title="{{ :: 'Takes Package' | translate }}"></i>
@@ -92,9 +90,9 @@
             <div sd-item-sortbar ng-if="!elementState || elementState === 'comfort'" class="sortbar-container"></div>
 
             <button id="switch-view-btn" ng-if="!monitoring.singleGroup && type === 'monitoring' && monitoring.hasSwimlaneView"
-             class="swimlane-switch" ng-click="displayColumn()" ng-class="{'swimlane-switch--on': viewColumn}"
-                 sd-tooltip="{{ viewColumn ? 'Switch to List View' : 'Switch to Swimlane View'  | translate }}"
-                 flow="left">
+                    class="swimlane-switch" ng-click="displayColumn()" ng-class="{'swimlane-switch--on': viewColumn}"
+                    sd-tooltip="{{ viewColumn ? 'Switch to List View' : 'Switch to Swimlane View' | translate }}"
+                    flow="left">
                 <i class="icon-th-list"></i>
             </button>
 
@@ -106,14 +104,14 @@
                         <li ng-repeat="fileType in aggregate.fileTypes" 
                             ng-click="aggregate.setFileType(fileType)" 
                             ng-class="{'dropdown__menu-item--active': aggregate.hasFileType(fileType)}"
-                            ng-if="elementState === 'compact'" title="{{fileType | translate}}">
+                            ng-if="elementState === 'compact'" title="{{fileType| translate}}">
                             <button>
                                 <span ng-if="fileType === 'all'"></span>
                                 <i ng-if="fileType !== 'all' && fileType !== 'takesPackage' && fileType !== 'highlightsPackage'" class="filetype-icon-{{fileType}}"></i>
                                 <i ng-if="fileType === 'takesPackage'" class="filetype-icon-takes-pack"
-                                title="{{ :: 'Takes Package' | translate }}"></i>
+                                   title="{{ :: 'Takes Package' | translate }}"></i>
                                 <i ng-if="fileType === 'highlightsPackage'" class="filetype-icon-highlight-pack"
-                                title="{{ :: 'Highlight Package' | translate }}"></i>
+                                   title="{{ :: 'Highlight Package' | translate }}"></i>
                                 &nbsp;<span>{{fileType}}</span>
                             </button>
                         </li>
@@ -126,7 +124,7 @@
                         <li ng-if="type === 'monitoring'">
                             <button ng-click="aggregate.edit('reorder', true)">
                                 <i class="icon-switches"></i>
-                                 &nbsp;<span>{{:: 'Rearrange Groups' | translate}}</span>
+                                &nbsp;<span>{{:: 'Rearrange Groups' | translate}}</span>
                             </button>
                         </li>
                     </ul>
@@ -149,7 +147,7 @@
                     <div class="sd-columns"
                          ng-if="(!monitoring.singleGroup || monitoring.isDeskChanged()) && type === 'monitoring'">
                         <div class="sd-column" ng-class="{active: isActiveGroup(group), inactive: !isActiveGroup(group)}"
-                             ng-repeat="group in aggregate.groups | limitTo:monitoring.columnsLimit track by group._id"
+                             ng-repeat="group in aggregate.groups| limitTo:monitoring.columnsLimit track by group._id"
                              sd-monitoring-group data-group="group" data-num-items="group.max_items"
                              data-view-type="aggregate.isOutputType(group.type) ? group.type: 'monitoring'"
                              sd-header-resize>
@@ -158,12 +156,12 @@
                 </div>
                 <div ng-if="type === 'spike'" class="list">
                     <div ng-repeat="group in aggregate.spikeGroups track by group._id | orderBy: name"
-                    sd-monitoring-group
-                    ng-class="{'single-group': aggregate.spikeGroups.length === 1}"
-                    data-group="group"
-                    data-view-type="'spiked'"
-                    data-force-limited="{{ aggregate.spikeGroups.length > 1 }}"
-                    ></div>
+                         sd-monitoring-group
+                         ng-class="{'single-group': aggregate.spikeGroups.length === 1}"
+                         data-group="group"
+                         data-view-type="'spiked'"
+                         data-force-limited="{{ aggregate.spikeGroups.length > 1}}">
+                    </div>
                 </div>
                 <div ng-if="monitoring.singleGroup && !monitoring.isDeskChanged()" class="list">
                     <div sd-monitoring-group class="single-group" data-group="monitoring.singleGroup" data-view-type="'single_monitoring'">
@@ -175,19 +173,19 @@
                 </div>
                 <div ng-if="type === 'highlights' && !monitoring.highlightsDeskChanged()" class="list">
                     <div sd-monitoring-group class="single-group"
-                    data-group="{'type': 'highlights', 'query': query, 'fileType': aggregate.getSelectedFileTypes()}"
-                    data-view-type="'highlights'"></div>
+                         data-group="{'type': 'highlights', 'query': query, 'fileType': aggregate.getSelectedFileTypes()}"
+                         data-view-type="'highlights'"></div>
                 </div>
             </div>
 
             <div sd-item-preview
-                data-item="monitoring.previewItem"
-                data-close="monitoring.closePreview()"
-                data-show-history-tab="monitoring.showHistoryTab"></div>
+                 data-item="monitoring.previewItem"
+                 data-close="monitoring.closePreview()"
+                 data-show-history-tab="monitoring.showHistoryTab"></div>
 
             <div sd-send-item
-                data-item="null"
-                data-mode="{{type}}"></div>
+                 data-item="null"
+                 data-mode="{{type}}"></div>
         </div>
 
         <div sd-aggregate-settings
