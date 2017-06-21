@@ -320,6 +320,22 @@ describe('authoring', () => {
         expect(authoring.autosave).not.toHaveBeenCalled();
     }));
 
+    it('can reject publishing on error', inject((api, $q, $rootScope, authoring, lock) => {
+        let success = jasmine.createSpy('success');
+        let error = jasmine.createSpy('error');
+
+        spyOn(api, 'update').and.returnValue($q.reject('err'));
+        spyOn(lock, 'unlock').and.returnValue();
+
+        authoring.publish({}, {}).then(success, error);
+        $rootScope.$digest();
+
+        expect(api.update).toHaveBeenCalled();
+        expect(lock.unlock).not.toHaveBeenCalled();
+        expect(success).not.toHaveBeenCalled();
+        expect(error).toHaveBeenCalledWith('err');
+    }));
+
     /**
      * Start authoring ctrl for given item.
      *
