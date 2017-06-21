@@ -393,14 +393,15 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                         return $q.reject(false);
                     })
                     .then((response) => {
-                        if (!response) {
-                            notify.error(gettext('Unknown Error: Item not published.'));
-                            return $q.reject(false);
-                        }
+                        notify.success(gettext('Item published.'));
+                        $scope.item = response;
+                        $scope.dirty = false;
+                        authoringWorkspace.close(true);
+                        return true;
+                    }, (response) => {
+                        let issues = _.get(response, 'data._issues');
 
-                        if (angular.isDefined(response.data) && angular.isDefined(response.data._issues)) {
-                            let issues = response.data._issues;
-
+                        if (issues) {
                             if (angular.isDefined(issues['validator exception'])) {
                                 var errors = issues['validator exception'];
                                 var modifiedErrors = errors.replace(/\[/g, '')
@@ -419,23 +420,20 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                                     });
                                 }
 
-                                return false;
+                                return $q.reject(false);
                             }
 
                             if (issues.unique_name && issues.unique_name.unique) {
                                 notify.error(UNIQUE_NAME_ERROR);
-                                return false;
+                                return $q.reject(false);
                             }
-                        } else if (response.status === 412) {
+                        } else if (response && response.status === 412) {
                             notifyPreconditionFailed();
-                            return false;
+                            return $q.reject(false);
                         }
 
-                        notify.success(gettext('Item published.'));
-                        $scope.item = response;
-                        $scope.dirty = false;
-                        authoringWorkspace.close(true);
-                        return true;
+                        notify.error(gettext('Unknown Error: Item not published.'));
+                        return $q.reject(false);
                     });
             }
 
@@ -634,7 +632,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                             }
                         }, (response) => {
                             notify.error(gettext('Error. Item not published.'));
-                            return false;
+                            return $q.reject(false);
                         });
                     }
 
