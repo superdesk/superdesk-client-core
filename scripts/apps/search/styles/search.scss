@@ -124,20 +124,23 @@
     }
 
     .toggle {
-      width: 23px;
-      height: 23px;
-      border: 0;
-      padding: 0;
-      margin-right: 10px;
-      z-index: 3;
-      line-height: 0;
-      @include border-radius(23px);
-      box-shadow: 0 0 7px 0 rgba(0,0,0,0.3);
-      @include transition(transform 0.5s);
-      i { height: 15px; }
-      &.active {
-        @include rotate(180deg);
-      }
+        width: 23px;
+        height: 23px;
+        border: 0;
+        padding: 0;
+        margin-right: 10px;
+        z-index: 3;
+        line-height: 0;
+        @include border-radius(23px);
+        box-shadow: 0 0 7px 0 rgba(0,0,0,0.3);
+        @include transition(transform 0.5s);
+        i { height: 15px; }
+        &.active {
+            @include rotate(180deg);
+        }
+    }
+    .right-stack {
+        margin-right: -16px;
     }
 }
 

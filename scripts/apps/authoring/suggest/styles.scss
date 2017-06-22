@@ -1,131 +1,131 @@
 @import '~variables.scss';
 @import '~mixins.scss';
 
-$panel-width: 600px;
+$panel-width: 550px;
 
 sd-suggest {
-	box-sizing: border-box;
-	max-width: $panel-width;
-	width: 100%;
-	border: 1px solid rgba(0,0,0,0.25);
-	z-index: 100;
-	background: #fff;
-	position: absolute;
-	top: 0px;
-	left: -$panel-width;
-	height: 100%;
-	padding: 48px 0 0;
-	overflow-x: scroll;
-	@include box-shadow(-2px -7px 5px 0 rgba(0,0,0,0.25));
+    box-sizing: border-box;
+    max-width: $panel-width;
+    width: 100%;
+    border: 1px solid rgba(0,0,0,0.25);
+    z-index: 100;
+    background: #fff;
+    position: absolute;
+    top: 0px;
+    left: -$panel-width;
+    height: 100%;
+    padding: 48px 0 0;
+    overflow-x: scroll;
+    @include box-shadow(-2px -7px 5px 0 rgba(0,0,0,0.25));
 
-	h6.no-suggestions {
-		padding: 15px 18px;
-	}
+    h6.no-suggestions {
+        padding: 15px 18px;
+    }
 
-	label {
-		display: inline-block;
-	}
+    label {
+        display: inline-block;
+    }
 
-	.live-suggest {
-		&__header {
-			top:0;
-			background: #fff;
+    .live-suggest {
+        &__header {
+            top:0;
+            background: #fff;
 
-			h3 {color: $sd-text-label;}
+            h3 {color: $sd-text-label;}
 
-			.close i:before {
-				cursor: pointer;
-				font-weight: bold;
-				color: #000;
-				position: relative;
-				top: 13px;
-				right: 18px;
-			}
-		}
+            .close i:before {
+                cursor: pointer;
+                font-weight: bold;
+                color: #000;
+                position: relative;
+                top: 13px;
+                right: 18px;
+            }
+        }
 
-		&__body {
-			.list-view {
-				height: 65%;
-				padding: 0;
-				overflow-x: scroll;
-				box-shadow: none;
+        &__body {
+            .list-view {
+                height: 65%;
+                padding: 0;
+                overflow-x: scroll;
+                box-shadow: none;
 
-				.list-item-view.active .media-box {
-					&:hover {
-						background-color: #f4f4f4 !important;
-					}
-					background-color: transparent !important;
-					border-right: none !important;
-				}
+                .list-item-view.active .media-box {
+                    &:hover {
+                        background-color: #f4f4f4 !important;
+                    }
+                    background-color: transparent !important;
+                    border-right: none !important;
+                }
 
-				.media-box {
-					padding: 0 18px 10px;
+                .media-box {
+                    padding: 0 18px 10px;
 
-					.item-info {
-						padding: 10px 0 5px;
-					}
-				}
-			}
-		}
-	}
+                    .item-info {
+                        padding: 10px 0 5px;
+                    }
+                }
+            }
+        }
+    }
 
-	.item-info {
-		padding: 10px 0 5px;
+    .item-info {
+        padding: 10px 0 5px;
 
-		label {
-			color: $sd-text-label;
-		}
+        label {
+            color: $sd-text-label;
+        }
 
-		&__right {
-			float: right;
-		}
+        &__right {
+            float: right;
+        }
 
-		&:hover {
-			padding: 10px 0 5px;
-		}
-	}
+        &:hover {
+            padding: 10px 0 5px;
+        }
+    }
 
-	i[sd-filetype-icon] {
-		color: $grayLight;
-		width: 17px;
-		position: relative;
-		top: 3px;
-	}
+    i[sd-filetype-icon] {
+        color: $grayLight;
+        width: 17px;
+        position: relative;
+        top: 3px;
+    }
 
-	.keyword {
-		color: $sd-keyword;
-		text-transform: uppercase;
-		font-weight: bold;
-		font-size: 12px;
-		margin-right: 10px;
-	}
+    .keyword {
+        color: $sd-keyword;
+        text-transform: uppercase;
+        font-weight: bold;
+        font-size: 12px;
+        margin-right: 10px;
+    }
 
-	.word-count span {
-		color: $sd-text-label;
-		font-size: 12px;
-		font-weight: bold;
-	}
+    .word-count span {
+        color: $sd-text-label;
+        font-size: 12px;
+        font-weight: bold;
+    }
 
-	.item-details {
-	    i.backlink {
-			cursor: pointer;
-			line-height: 28px;
-			font-size: 0.7em;
-			font-style: normal;
-			padding-left: 35px;
-			margin-top: 0px;
-	    }	    
+    .item-details {
+        i.backlink {
+            cursor: pointer;
+            line-height: 28px;
+            font-size: 0.7em;
+            font-style: normal;
+            padding-left: 35px;
+            margin-top: 0px;
+        }	    
 
-	    .headline {
-		    margin: 13px 0 0;
-	    }
+        .headline {
+            margin: 13px 0 0;
+        }
 
-	    .abstract {
-		    margin: 10px 0;
-	    }
+        .abstract {
+            margin: 10px 0;
+        }
 
-	    &__body {
-		    padding: 0 18px;
-	    }
-	}
+        &__body {
+            padding: 0 18px;
+        }
+    }
 }

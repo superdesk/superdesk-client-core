@@ -2,7 +2,8 @@
     <span ng-show="total" translate>Total:</span>
     <span ng-show="total" class="label-total">{{total}}</span>    
     <div class="dropdown" dropdown sd-dropdown-position>
-        <button id="order_button" class="dropdown__toggle" dropdown__toggle>{{ active.label | translate }} <b class="dropdown__caret"></b>
+        <button id="order_button" class="dropdown__toggle" dropdown__toggle>
+            {{ active.label | translate }}
         </button>
         <ul class="dropdown__menu pull-right" id="order_selector">
             <li ng-repeat="option in sortOptions" ng-class="{active: option === selected}">
