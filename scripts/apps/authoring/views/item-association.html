@@ -15,14 +15,13 @@
          ng-src="{{ related.renditions.viewImage.href }}"
          ng-class="{'not-editable': !isMediaEditable() || !editable}"
          ng-click="isMediaEditable() && edit(related); $event.stopPropagation()">
-    <div sd-remove-tags
-        tansa-scope-sync
-        type="text"
-        ng-model="related.description_text"
-        ng-model-options="{debounce: 1000}"
-        ng-change="onchange()"
-        contenteditable="true"
-        ng-if="related"
-        class="image-caption contenteditable-input">
-    </div>
+    <textarea sd-remove-tags
+              sd-auto-height
+              tansa-scope-sync
+              ng-model="related.description_text"
+              ng-model-options="{debounce: 1000}"
+              ng-change="onchange()"
+              ng-if="related"
+              class="image-caption line-input">
+    </textarea>
 </figure>
