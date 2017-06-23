@@ -13,7 +13,8 @@
                     ng-disabled="isWidgetLocked(widget)"
                     id="{{ :: widget._id }}"
                     tooltip="{{ :: widget.label | translate}} (ctrl+alt+{{widget.order}})" tooltip-placement="left"
-                    sd-hotkey="ctrl+alt+{{widget.order}}">
+                    sd-hotkey="ctrl+alt+{{widget.order}}"
+                    sd-hotkey-options="{global: true}">
                     <i class="main-icon big-icon-{{ :: widget.icon }}"></i>
                     <i class="helper-icon icon-close-small"></i>
                 </button>
