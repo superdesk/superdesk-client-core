@@ -12,7 +12,8 @@
                     ng-disabled="isWidgetLocked(widget)"
                     id="{{ :: widget._id }}"
                     sd-tooltip="{{ :: widget.label | translate}} (ctrl+alt+{{widget.order}})" flow="left"
-                    sd-hotkey="ctrl+alt+{{widget.order}}">
+                    sd-hotkey="ctrl+alt+{{widget.order}}"
+                    sd-hotkey-options="{global: true}">
                     <span id="unread-count" class="sd-sidetab-menu__info-label badge badge--primary" ng-show="widget._id == 'comments' && comments.length">{{ comments.length }}</span>
                     <i class="sd-sidetab-menu__main-icon big-icon--{{ :: widget.icon }}"></i>
                     <i class="sd-sidetab-menu__helper-icon icon-close-small"></i>
