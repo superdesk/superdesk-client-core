@@ -14,10 +14,12 @@
 const MIN_BOARDS = 2; // at least two boards to display for versions comparision.
 
 export default class CompareVersionsService {
-    constructor(superdesk, authoringWorkspace, referrer, $location) {
+    constructor(superdesk, authoringWorkspace, referrer, desks, archiveService, $location) {
         this.superdesk = superdesk;
         this.authoringWorkspace = authoringWorkspace;
         this.referrer = referrer;
+        this.desks = desks;
+        this.archiveService = archiveService;
         this.$location = $location;
 
         /**
@@ -141,6 +143,25 @@ export default class CompareVersionsService {
     _createBoard(itemVersion) {
         return {article: itemVersion};
     }
+
+
+    init(item) {
+        this.desks.initialize()
+        .then(() => this.archiveService.getVersions(item, this.desks, 'versions'))
+        .then((versions) => {
+            this.versions = versions;
+            _.each(this.versions, (itemVersion) => {
+                itemVersion.author = this.desks.userLookup[itemVersion.version_creator];
+            });
+
+            this.create([{
+                id: item._id,
+                version: item._current_version,
+                author: this.desks.userLookup[item.version_creator]
+            }]);
+        });
+    }
 }
 
-CompareVersionsService.$inject = ['superdesk', 'authoringWorkspace', 'referrer', '$location'];
+CompareVersionsService.$inject = ['superdesk', 'authoringWorkspace', 'referrer',
+    'desks', 'archiveService', '$location'];

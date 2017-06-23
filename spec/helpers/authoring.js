@@ -35,7 +35,6 @@ function Authoring() {
 
     this.multieditButton = element(by.id('multiedit'));
     this.compareVersionsMenuItem = element(by.id('compare-versions'));
-    this.isSelectedIcon = element(by.className('icon-ok'));
 
     this.setCategoryBtn = element(by.id('category-setting'))
         .element(by.tagName('button'));
@@ -841,24 +840,9 @@ function Authoring() {
         return _list;
     };
 
-    this.openCompareVersionsMenuItem = function() {
-        this.moreActionsButton.click();
-        browser.actions().mouseMove(this.compareVersionsMenuItem).perform();
-    };
-
-    this.getItemVersions = function() {
-        return element(by.className('dropdown__menu--compare-versions')).all(by.repeater('item in items'));
-    };
-
-    this.selectItemVersion = function(index) {
-        let versionItem = element(by.className('dropdown__menu--compare-versions'))
-        .all(by.repeater('item in items')).get(index);
-
-        versionItem.element(by.tagName('button')).click();
-    };
-
     this.openCompareVersionsScreen = function() {
-        this.compareVersionsMenuItem.all(by.css('[ng-click="open(); $event.stopPropagation();"]')).click();
+        this.moreActionsButton.click();
+        this.compareVersionsMenuItem.click();
     };
 
     this.getCompareVersionsBoards = function() {
@@ -881,27 +865,22 @@ function Authoring() {
         return this.getBoardArticle(index).all(by.className('headline')).first().getText();
     };
 
+    this.getHtmlArticleHeadlineOfBoard = function(index) {
+        return this.getBoardArticle(index).all(by.className('headline')).first().getInnerHtml();
+    };
+
     this.openCompareVersionsInnerDropdown = function(index) {
         this.getBoard(index).all(by.css('[class="navbtn dropdown"]')).click();
     };
 
-    this.removePanel = function(index) {
-        this.getBoard(index).all(by.css('[ng-click="closeBoard($index)"]')).click();
-    };
-
-    this.openCompareVersionsFloatMenu = function() {
-        element(by.css('[sd-compare-versions-float-menu]')).click();
-    };
-
-    this.getInnerDropdownItemVersions = function() {
-        return element(by.css('[sd-compare-versions-float-menu]'))
+    this.getInnerDropdownItemVersions = function(index) {
+        return this.getBoard(index)
         .all(by.css('[sd-compare-versions-inner-dropdown]'))
         .all(by.repeater('item in items'));
     };
 
-    this.openItemVersionInNewBoard = function(index) {
-        let itemVersion = this.getInnerDropdownItemVersions().get(index);
-
-        itemVersion.all(by.tagName('button')).click();
+    this.openItemVersionInBoard = function(board, index) {
+        this.openCompareVersionsInnerDropdown(board);
+        this.getInnerDropdownItemVersions(board).get(index).click();
     };
 }

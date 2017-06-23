@@ -15,7 +15,7 @@
          ng-src="{{ related.renditions.viewImage.href }}"
          ng-class="{'not-editable': !isMediaEditable() || !editable}"
          ng-click="isMediaEditable() && edit(related); $event.stopPropagation()">
-    <textarea sd-remove-tags
+    <textarea
               sd-auto-height
               tansa-scope-sync
               ng-model="related.description_text"

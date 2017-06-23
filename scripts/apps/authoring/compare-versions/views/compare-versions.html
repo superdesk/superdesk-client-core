@@ -9,22 +9,13 @@
             class="board"
             style="width:{{ 100 / boards.length }}%">
             <div class="navbtn dropdown" dropdown>
-                <button class="dropdown__toggle" dropdown__toggle><i class="icon-collapse"></i></button>
+                <button class="dropdown__toggle" dropdown__toggle title="{{ 'Select current version.' | translate }}"><i class="icon-collapse"></i></button>
                 <div class="dropdown__menu">
                     <ul class="dropdown__menu--compare-versions" sd-compare-versions-inner-dropdown data-board="{{$index}}"></ul>
-                    <ul ng-if="boards.length > minBoards">
-                        <li class="divider"></li>
-                        <li><button ng-click="closeBoard($index)"><i class="icon-close-small"></i> {{ 'Remove panel' | translate }}</button></li>
-                    </ul>
                 </div>
             </div>
-            <div sd-compare-versions-article data-article="board.article" data-focus="$first" class="board-article" ng-if="board.article"></div>
-        </div>
-    </div>
-    <div class="boards-create" ng-if="boards.length > 0" sd-compare-versions-float-menu>
-        <i class="icon-plus-small"></i>
-        <div class="navbtn dropdown compare-versions-float">
-            <ul class="dropdown__menu dropdown__menu--compare-versions" id="compare-versions-float" sd-compare-versions-inner-dropdown data-board="{{boards.length}}"></ul>
+            <div ng-if="!board.article" class="board__no-article" translate>* choose article version from dropdown menu</div>
+            <div sd-compare-versions-article data-article="board.article" data-compare-with="boards[1].article" data-focus="$first" class="board-article" ng-if="board.article"></div>
         </div>
     </div>
 </div>
