@@ -3,8 +3,8 @@
  *
  * it's a directive so that it can be put together with authoring into some container directive
  */
-MonitoringView.$inject = ['$rootScope', 'authoringWorkspace', 'pageTitle', '$timeout'];
-export function MonitoringView($rootScope, authoringWorkspace, pageTitle, $timeout) {
+MonitoringView.$inject = ['$rootScope', 'authoringWorkspace', 'pageTitle', '$timeout', 'workspaces'];
+export function MonitoringView($rootScope, authoringWorkspace, pageTitle, $timeout, workspaces) {
     return {
         templateUrl: 'scripts/apps/monitoring/views/monitoring-view.html',
         controller: 'Monitoring',
@@ -20,6 +20,12 @@ export function MonitoringView($rootScope, authoringWorkspace, pageTitle, $timeo
 
             scope.viewColumn = scope.monitoring.viewColumn;
             scope.shouldRefresh = true;
+
+            scope.workspaces = workspaces;
+            scope.$watch('workspaces.active', (workspace) => {
+                scope.workspace = workspace;
+            });
+            workspaces.getActive();
 
             /**
              * Toggle viewColumn to switch views between swimlane and list
