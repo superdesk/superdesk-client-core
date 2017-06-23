@@ -13,14 +13,14 @@
     <!-- <a class="btn btn--small" ng-click="vm.toggleEdition()" translate>Edit the code</a> -->
 </div>
 <div class="editor--caption">
-    <input type="text"
-        sd-remove-tags
-        tansa-scope-sync
-        placeholder="{{::'Description'|translate}}"
-        type="text"
-        ng-model="vm.caption"
-        ng-model-options="{debounce: 1000}"
-        ng-change="vm.saveCaption(vm.caption)"
-        ng-paste="vm.handlePaste($event)"
-        class="image-caption contenteditable-input">
+    <textarea sd-remove-tags
+              sd-auto-height
+              tansa-scope-sync
+              placeholder="{{::'Description'|translate}}"
+              ng-model="vm.caption"
+              ng-model-options="{debounce: 1000}"
+              ng-change="vm.saveCaption(vm.caption)"
+              ng-paste="vm.handlePaste($event)"
+              class="image-caption line-input">
+    </textarea>
 </div>
