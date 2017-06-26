@@ -4,18 +4,13 @@
 
     <div class="header">
       <h2 translate>Vocabularies management</h2>
+      <button class="btn btn--primary pull-right"
+        ng-click="createVocabulary()"
+        translate>Add New Vocabulary</button>
     </div>
 
-    <div sd-vocabulary-config
-      class="content dictionary-settings"
-      vocabulary="data.vocabulary"
-    ></div>
-
-    <div sd-vocabulary-config-modal
-      ng-if="data.vocabulary"
-      vocabulary="data.vocabulary"
-    ></div>
+    <div sd-vocabulary-config class="content dictionary-settings"></div>
+    <div sd-vocabulary-config-modal ng-if="vocabulary"></div>
 
   </div>
-
 </div>
