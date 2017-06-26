@@ -544,10 +544,10 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
 
                 switch ($scope.item.language) {
                 case 'nb-NO':
-                    window.tansa.settings.profileId = 18;
+                    window.tansa.settings.profileId = 1;
                     break;
                 case 'nn-NO':
-                    window.tansa.settings.profileId = 108;
+                    window.tansa.settings.profileId = 2;
                     break;
                 }
 
