@@ -1,25 +1,80 @@
-VocabularyConfigController.$inject = ['$scope', 'vocabularies', '$timeout'];
-export function VocabularyConfigController($scope, vocabularies, $timeout) {
+
+const DEFAULT_SCHEMA = {
+    name: {},
+    qcode: {},
+    parent: {}
+};
+
+VocabularyConfigController.$inject = ['$scope', '$route', '$routeParams', 'vocabularies', '$timeout'];
+export function VocabularyConfigController($scope, $route, $routeParams, vocabularies, $timeout) {
+    $scope.loading = true;
+
     /**
-     * Opens vocabulary in the edit modal.
+     * Open vocabulary in the edit modal.
      *
      * @param {Object} vocabulary
      */
-    $scope.openVocabulary = function(vocabulary) {
-        $scope.loading = true;
-        $timeout(() => {
-            $scope.$apply(() => {
-                $scope.vocabulary = vocabulary;
-            });
-        }, 200, false);
+    $scope.openVocabulary = (vocabulary) => {
+        $route.updateParams({id: vocabulary._id});
     };
 
-    $scope.$on('vocabularies:loaded', () => {
-        $scope.loading = false;
-    });
+    /**
+     * Close vocabulary edit modal
+     */
+    $scope.closeVocabulary = () => {
+        $route.updateParams({id: null, new: null});
+    };
 
-    // load the list of vocabularies into component:
-    vocabularies.getVocabularies().then((vocabularies) => {
-        $scope.vocabularies = vocabularies;
-    });
+    /**
+     * Open modal with new item
+     */
+    $scope.createVocabulary = () => {
+        $route.updateParams({id: null, new: true});
+    };
+
+    /**
+     * Reload list of vocabularies
+     */
+    $scope.reloadList = () => {
+        $scope.loading = true;
+        vocabularies.getVocabularies().then((vocabularies) => {
+            $scope.vocabularies = vocabularies._items;
+            $scope.loading = false;
+            setupActiveVocabulary();
+        });
+    };
+
+    /**
+     * Update vocabulary in the list with given updates
+     *
+     * @param {Object} updates
+     */
+    $scope.updateVocabulary = (updates) => {
+        const index = $scope.vocabularies.findIndex((v) => v._id === updates._id);
+
+        if (index === -1) {
+            $scope.vocabularies = [updates].concat($scope.vocabularies);
+        } else {
+            $scope.vocabularies[index] = angular.extend({}, $scope.vocabularies[index], updates);
+        }
+    };
+
+    $scope.$on('$routeUpdate', setupActiveVocabulary);
+    $scope.reloadList();
+
+    function setupActiveVocabulary() {
+        $scope.vocabulary = null;
+
+        if ($routeParams.id) {
+            $scope.vocabulary = $scope.vocabularies.find((v) => v._id === $routeParams.id);
+        }
+
+        if ($routeParams.new) {
+            $scope.vocabulary = {
+                items: [],
+                type: 'manageable',
+                schema: angular.extend({}, DEFAULT_SCHEMA)
+            };
+        }
+    }
 }

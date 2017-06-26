@@ -22,6 +22,22 @@ describe('vocabularies', () => {
         expect(vocabularies.vocabularies).toBe(fixture);
     }));
 
+    describe('config controller', () => {
+        it('can sync changes in the list', inject(($controller, $rootScope) => {
+            const scope = $rootScope.$new();
+
+            scope.vocabularies = [{_id: 'foo', display_name: 'Foo'}];
+            $controller('VocabularyConfig', {$scope: scope});
+
+            scope.updateVocabulary({_id: 'foo', display_name: 'Bar'});
+            expect(scope.vocabularies.length).toBe(1);
+            expect(scope.vocabularies[0].display_name).toBe('Bar');
+
+            scope.updateVocabulary({_id: 'new', display_name: 'New'});
+            expect(scope.vocabularies.length).toBe(2);
+        }));
+    });
+
     describe('config modal', () => {
         describe('model', () => {
             var scope;
@@ -57,7 +73,7 @@ describe('vocabularies', () => {
             it('can add items', () => {
                 scope.addItem();
                 expect(scope.vocabulary.items.length).toBe(2);
-                expect(scope.vocabulary.items[0]).toEqual({foo: null, bar: null, is_active: true});
+                expect(scope.vocabulary.items[1]).toEqual({foo: null, bar: null, is_active: true});
             });
 
             it('can save vocabulary', inject((api, $q, $rootScope, metadata) => {
@@ -99,6 +115,8 @@ describe('vocabularies', () => {
             it('can cancel editing vocabulary', inject((api, $q, $rootScope, metadata) => {
                 var vocabularyLink = scope.vocabulary;
 
+                scope.closeVocabulary = jasmine.createSpy('close');
+
                 scope.vocabulary.items[0].foo = 'furret';
                 scope.vocabulary.items[0].bar = 'buizel';
 
@@ -108,6 +126,8 @@ describe('vocabularies', () => {
                 expect(vocabularyLink).toEqual({
                     items: [{foo: 'flareon', bar: 'beedrill', is_active: true}]
                 });
+
+                expect(scope.closeVocabulary).toHaveBeenCalled();
             }));
 
             it('can remove an item', inject(() => {
