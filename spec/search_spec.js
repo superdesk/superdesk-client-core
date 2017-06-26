@@ -295,12 +295,12 @@ describe('search', () => {
 
         scrollToView(scheduleDay);
         scheduleDay.click();
-        expect(globalSearch.getItems().count()).toBe(2);
+        expect(globalSearch.getItems().count()).toBe(1);
         expect(globalSearch.getItem(0).element(by.className('state-scheduled')).isDisplayed()).toBe(true);
         expect(globalSearch.getItem(0).element(by.className('state-scheduled')).getText()).toEqual('SCHEDULED');
         expect(element.all(by.repeater('key in keys')).count()).toBe(1);
         element(by.css('.icon-close-small.icon--white')).click();
-        expect(globalSearch.getItems().count()).toBe(15);
+        expect(globalSearch.getItems().count()).toBe(14);
     });
 
     it('can search by facet and exclude facet', () => {

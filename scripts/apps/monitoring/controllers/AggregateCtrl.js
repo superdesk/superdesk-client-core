@@ -20,15 +20,11 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
     this.searchLookup = {};
     this.deskLookup = {};
     this.stageLookup = {};
-    this.fileTypes = ['all', 'text', 'picture', 'graphic', 'composite', 'takesPackage',
+    this.fileTypes = ['all', 'text', 'picture', 'graphic', 'composite',
         'highlightsPackage', 'video', 'audio'];
     this.selectedFileType = $scope.type === 'monitoring' ? storage.getItem('selectedFileType') || [] : [];
     this.monitoringSearch = false;
     this.searchQuery = null;
-
-    if (deployConfig.getSync('no_takes')) {
-        this.fileTypes = this.fileTypes.filter((type) => type !== 'takesPackage');
-    }
 
     this.isOutputType = desks.isOutputType;
 

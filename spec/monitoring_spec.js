@@ -358,20 +358,20 @@ describe('monitoring', () => {
         monitoring.filterAction('composite');
         expect(monitoring.getTextItem(3, 2)).toBe('package1');
 
-        // Test filter for takes package
         monitoring.filterAction('all');
         expect(monitoring.getTextItem(2, 0)).toBe('item5');
 
         monitoring.actionOnItem('Edit', 2, 0);
         authoring.publish();
-        monitoring.filterAction('takesPackage');
+        monitoring.filterAction('text');
         expect(monitoring.getTextItem(5, 0)).toBe('item5');
 
         workspace.selectDesk('Sports Desk');
         expect(monitoring.getGroupItems(0).count()).toBe(0);
         expect(monitoring.getGroupItems(1).count()).toBe(0);
-        expect(monitoring.getGroupItems(2).count()).toBe(0);
+        expect(monitoring.getGroupItems(2).count()).toBe(1);
         expect(monitoring.getGroupItems(3).count()).toBe(0);
+        expect(monitoring.getGroupItems(4).count()).toBe(1);
     });
 
     it('can order content', () => {

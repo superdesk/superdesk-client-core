@@ -112,35 +112,17 @@ export function CardsService(api, search, session, desks, config) {
                 {term: {type: 'composite'}}
             ]};
 
-            var termsTakesPackage = {and: [
-                {term: {package_type: 'takes'}},
-                {term: {type: 'composite'}}
-            ]};
-
             var termsFileType = {terms: {type: JSON.parse(card.fileType)}};
 
             // Normal package
             if (_.includes(JSON.parse(card.fileType), 'composite')) {
                 termsFileType = {and: [
                     {bool: {must_not: {exists: {field: 'highlight'}}}},
-                    {bool: {must_not: {term: {package_type: 'takes'}}}},
                     {terms: {type: JSON.parse(card.fileType)}}
                 ]};
             }
 
-            if (_.includes(JSON.parse(card.fileType), 'highlightsPackage') &&
-                _.includes(JSON.parse(card.fileType), 'takesPackage')) {
-                query.filter({or: [
-                    termsHighlightsPackage,
-                    termsTakesPackage,
-                    termsFileType
-                ]});
-            } else if (_.includes(JSON.parse(card.fileType), 'takesPackage')) {
-                query.filter({or: [
-                    termsTakesPackage,
-                    termsFileType
-                ]});
-            } else if (_.includes(JSON.parse(card.fileType), 'highlightsPackage')) {
+            if (_.includes(JSON.parse(card.fileType), 'highlightsPackage')) {
                 query.filter({or: [
                     termsHighlightsPackage,
                     termsFileType

@@ -112,7 +112,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
      * @ngdoc method
      * @name authoring#unlink
      * @public
-     * @description Removes the take or update link of a given story
+     * @description Removes the update link of a given story
      * @param {Object} item
      */
     this.unlink = (item) => session.getIdentity()
@@ -381,26 +381,6 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
     };
 
     /**
-    * Link an item for takes.
-    * @param {Object} item : Target Item
-    * @param {string} [linkId]: If not provider it returns the new Linked item.
-    * @param {string} [desk]: Desk for newly create item.
-    */
-    this.linkItem = function link(item, linkId, desk) {
-        var data = {};
-
-        if (linkId) {
-            data.link_id = linkId;
-        }
-
-        if (desk) {
-            data.desk = desk;
-        }
-
-        return api.save('archive_link', {}, data, item);
-    };
-
-    /**
     * Actions that it can perform on an item
     * @param {Object} item : item
     */
@@ -410,11 +390,10 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         var action = angular.extend({}, helpers.DEFAULT_ACTIONS);
         var itemOnReadOnlyStage = item && item.task && item.task.stage && desks.isReadOnlyStage(item.task.stage);
         var isUndefinedOperation = angular.isUndefined(currentItem) || angular.isUndefined(userPrivileges);
-        const isKilledItem = (item) => _.get(item, 'state') === 'killed' || _.get(item, 'takes.state') === 'killed';
+        const isKilledItem = (item) => _.get(item, 'state') === 'killed';
 
         action = this._updateActionsForContentApi(currentItem, action);
 
-        // takes packages are readonly.
         // killed item and item that have last publish action are readonly
         if (isUndefinedOperation || itemOnReadOnlyStage || isKilledItem(currentItem) || !action.view) {
             return action;
@@ -429,8 +408,6 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         var lockedByMe = !lock.isLocked(currentItem);
 
         action.view = !lockedByMe;
-        action.new_take = this._isNewTake(currentItem);
-        action.unlinkTake = this._canUnlinkTake(currentItem);
         action.unlinkUpdate = this._canUnlinkUpdate(currentItem);
         action.export = currentItem && currentItem.type && currentItem.type === 'text';
 
@@ -479,28 +456,6 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
             item.genre.some((genre) => genre.name === 'Broadcast Script');
     };
 
-    // new take should be on the text item that are closed or last take but not killed and doesn't have embargo.
-    this._isNewTake = function(item) {
-        return !this._isReadOnly(item) && item.type === 'text' &&
-            !item.embargo && item._current_version > 0 &&
-            (this.isPublished(item) || !item.publish_schedule) &&
-            (angular.isUndefined(item.takes) || item.takes.last_take === item._id) &&
-            !this._isBroadcastItem(item) &&
-            !item.rewritten_by;
-    };
-
-    /**
-     * @ngdoc method
-     * @name authoring#_canUnlinkTake
-     * @private
-     * @description Checks if the given item can be unlinked as a take
-     * @param {Object} item
-     * @returns {boolean}
-     */
-    this._canUnlinkTake = (item) => !this._isReadOnly(item) && item.type === 'text' &&
-        !this.isPublished(item) &&
-        (!_.isNil(item.takes) && item.takes.last_take === item._id && item.takes.sequence > 1);
-
     /**
      * @ngdoc method
      * @name authoring#_canUnlinkUpdate
@@ -512,12 +467,8 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
     this._canUnlinkUpdate = (item) => !this._isReadOnly(item) && item.type === 'text' &&
         !this.isPublished(item) && !_.isNil(item.rewrite_of) && _.isNil(item.rewritten_by);
 
-    this._isDigitalPackage = function(item) {
-        return angular.isDefined(item.package_type) && item.package_type === 'takes';
-    };
-
     this._isReadOnly = function(item) {
-        return _.includes(['spiked', 'scheduled', 'killed'], item.state) || this._isDigitalPackage(item);
+        return _.includes(['spiked', 'scheduled', 'killed'], item.state);
     };
 
     this._updatePublished = function(currentItem, action) {
@@ -528,7 +479,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
 
         action.view = true;
 
-        if (currentItem.state === 'scheduled' && !this._isDigitalPackage(currentItem)) {
+        if (currentItem.state === 'scheduled') {
             action.deschedule = true;
         } else if (isPublishedOrCorrected) {
             action.kill = userPrivileges.kill && lockedByMe && !isReadOnlyState;
@@ -547,11 +498,9 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
                 (!currentItem.highlight || currentItem.type !== 'composite') &&
                 userPrivileges.publish && currentItem.state !== 'draft';
 
-        action.edit = !(currentItem.type === 'composite' && currentItem.package_type === 'takes') &&
-            currentItem.state !== 'spiked' && lockedByMe;
+        action.edit = currentItem.state !== 'spiked' && lockedByMe;
 
-        action.spike = currentItem.state !== 'spiked' && userPrivileges.spike &&
-            (angular.isUndefined(currentItem.takes) || currentItem.takes.last_take === currentItem._id);
+        action.spike = currentItem.state !== 'spiked' && userPrivileges.spike;
 
         action.send = currentItem._current_version > 0 && userPrivileges.move;
     };
@@ -565,7 +514,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         let userPrivileges = privileges.privileges;
 
         action.re_write = !isReadOnlyState && _.includes(['text'], currentItem.type) &&
-            !currentItem.embargo && !currentItem.rewritten_by && action.new_take &&
+            !currentItem.embargo && !currentItem.rewritten_by &&
             (!currentItem.broadcast || !currentItem.broadcast.master_id) &&
             (!currentItem.rewrite_of || currentItem.rewrite_of && this.isPublished(currentItem));
 
@@ -574,18 +523,15 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
 
         // mark item for highlights
         action.mark_item_for_highlight = currentItem.task && currentItem.task.desk &&
-            !isReadOnlyState && currentItem.package_type !== 'takes' && currentItem.type === 'text' &&
-             userPrivileges.mark_for_highlights;
+            !isReadOnlyState && currentItem.type === 'text' && userPrivileges.mark_for_highlights;
 
         // mark item for desks
         action.mark_item_for_desks = currentItem.task && currentItem.task.desk &&
-            !isReadOnlyState && currentItem.package_type !== 'takes' &&
-            userPrivileges.mark_for_desks && currentItem.type === 'text';
+            !isReadOnlyState && userPrivileges.mark_for_desks && currentItem.type === 'text';
 
         // allow all stories to be packaged if it doesn't have Embargo
         action.package_item = !_.includes(['spiked', 'scheduled', 'killed'], currentItem.state) &&
-            !currentItem.embargo && currentItem.package_type !== 'takes' &&
-            (this.isPublished(currentItem) || !currentItem.publish_schedule);
+            !currentItem.embargo && (this.isPublished(currentItem) || !currentItem.publish_schedule);
 
         action.create_broadcast = _.includes(['published', 'corrected'], currentItem.state) &&
             _.includes(['text', 'preformatted'], currentItem.type) &&
@@ -605,8 +551,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
             // in production
 
             action.duplicate = userPrivileges.duplicate &&
-                !_.includes(['spiked', 'killed'], currentItem.state) &&
-                (angular.isUndefined(currentItem.package_type) || currentItem.package_type !== 'takes');
+                !_.includes(['spiked', 'killed'], currentItem.state);
 
             action.add_to_current = !_.includes(['spiked', 'scheduled', 'killed'], currentItem.state);
 
@@ -616,28 +561,16 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
                 action = angular.extend({}, helpers.DEFAULT_ACTIONS);
                 // user can action `update` even if the user is not a member.
                 action.re_write = reWrite;
-                action.new_take = this._isNewTake(currentItem);
             }
         } else {
             // personal
             action.copy = true;
             action.view = false;
             action.package_item = false;
-            action.new_take = false;
             action.re_write = false;
         }
 
         return action;
-    };
-
-    /**
-     * Check whether the item is a Take or not.
-     * @param {object} item
-     * @returns {boolean} True if a "Valid Take" else False
-     */
-    this.isTakeItem = function(item) {
-        return _.includes(['text'], item.type) &&
-            item.takes && item.takes.sequence > 1;
     };
 
     /**

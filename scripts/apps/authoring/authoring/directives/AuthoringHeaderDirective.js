@@ -65,8 +65,7 @@ export function AuthoringHeaderDirective(api, authoringWidgets, $rootScope, arch
                     };
 
                     scope.previewMasterStory = function() {
-                        var itemId = item.broadcast.takes_package_id ?
-                            item.broadcast.takes_package_id : item.broadcast.master_id;
+                        var itemId = item.broadcast.master_id;
 
                         return api.find('archive', itemId).then((item) => {
                             $rootScope.$broadcast('broadcast:preview', {item: item});
@@ -107,11 +106,8 @@ export function AuthoringHeaderDirective(api, authoringWidgets, $rootScope, arch
                         .then((items) => {
                             scope.relatedItems = items;
                             if (items && items._items.length && !getNoMissingLink()) {
-                                var takesPackage = _.find(scope.item.linked_in_packages,
-                                    (linkedPackage) => linkedPackage && linkedPackage.package_type === 'takes');
                                 // if takes package is missing or not rewrite of.
-
-                                scope.missing_link = !takesPackage && !scope.item.rewrite_of &&
+                                scope.missing_link = !scope.item.rewrite_of &&
                                     !scope.item.rewritten_by;
                             }
                         });

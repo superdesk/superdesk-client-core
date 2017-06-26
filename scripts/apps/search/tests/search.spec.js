@@ -13,9 +13,7 @@ describe('search service', () => {
         var filters = criteria.query.filtered.filter.and;
 
         expect(filters).toContain({not: {term: {state: 'spiked'}}});
-        expect(filters).toContain({not: {bool: {must: [{term: {_type: 'published'}},
-                {term: {package_type: 'takes'}},
-                {term: {last_published_version: false}}]}}});
+        expect(filters).toContain({not: {term: {package_type: 'takes'}}});
         expect(criteria.sort).toEqual([{versioncreated: 'desc'}]);
     }));
 

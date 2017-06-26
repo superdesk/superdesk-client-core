@@ -63,7 +63,6 @@ export class WidgetItem extends React.Component {
                 <div className="content-item__type">
                     <TypeIcon
                         type={this.item.type}
-                        package_type={this.item.package_type}
                         highlight={this.item.highlight}
                         svc={this.props.svc}
                     />

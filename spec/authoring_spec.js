@@ -165,11 +165,6 @@ describe('authoring', () => {
         expect(authoring.edit_kill_button.isDisplayed()).toBe(true);
         authoring.close();
         monitoring.filterAction('all'); // reset filter
-        monitoring.filterAction('takesPackage');
-        expect(monitoring.getTextItem(5, 0)).toBe('item6');
-        monitoring.actionOnItem('Open', 5, 0);
-        expect(authoring.edit_correct_button.isDisplayed()).toBe(false);
-        expect(authoring.edit_kill_button.isDisplayed()).toBe(false);
 
         // update(rewrite) item
         monitoring.openMonitoring();
@@ -245,19 +240,20 @@ describe('authoring', () => {
         expect(authoring.save_button.getAttribute('disabled')).toBe(null);
         authoring.save();
         authoring.publish();
-        monitoring.filterAction('takesPackage');
+        monitoring.filterAction('text');
         monitoring.actionOnItem('Open', 5, 0);
         authoring.showHistory();
-        expect(authoring.getHistoryItems().count()).toBe(2);
-        expect(authoring.getHistoryItem(0).getText()).toMatch(/Created by.*/);
-        expect(authoring.getHistoryItem(1).getText()).toMatch(/Published by.*/);
-        var transmissionDetails = authoring.showTransmissionDetails(1);
+        expect(authoring.getHistoryItems().count()).toBe(3);
+        expect(authoring.getHistoryItem(0).getText()).toMatch(/Fetched by.*/);
+        expect(authoring.getHistoryItem(1).getText()).toMatch(/Updated by.*/);
+        expect(authoring.getHistoryItem(2).getText()).toMatch(/Published by.*/);
+        var transmissionDetails = authoring.showTransmissionDetails(2);
 
         expect(transmissionDetails.count()).toBe(1);
         transmissionDetails.get(0).click();
         expect(element(by.className('modal__body')).getText()).toMatch(/Kids Helpline*/);
         element(by.css('[ng-click="hideFormattedItem()"]')).click();
-        monitoring.filterAction('takesPackage');
+        monitoring.filterAction('text');
         authoring.close();
 
         // view item history spike-unspike operations
@@ -285,31 +281,6 @@ describe('authoring', () => {
         authoring.showHistory();
         expect(authoring.getHistoryItems().count()).toBe(2);
         expect(authoring.getHistoryItem(1).getText()).toMatch(/Duplicated by/);
-        authoring.close();
-
-        // view history of take operation
-        authoring.createTextItem();
-        authoring.setHeaderSluglineText('Story1 slugline');
-        authoring.save();
-        authoring.close();
-        authoring.createTextItem();
-        authoring.setHeaderSluglineText('Story2 slugline');
-        authoring.writeTextToHeadline('Story2 Headline');
-        authoring.save();
-        authoring.openRelatedItem(); // opens related item widget
-        authoring.searchRelatedItems('Story1 slugline');
-        browser.sleep(100);
-        authoring.actionRelatedItem(0, 'Associate as take');
-        browser.sleep(100);
-        expect(authoring.getANPATakeKeyValue()).toBe('=2');
-        authoring.close();
-        monitoring.filterAction('text');
-        monitoring.actionOnItem('Spike', 0, 0);
-        monitoring.actionOnItem('Edit', 0, 0);
-        authoring.showHistory();
-        expect(authoring.getHistoryItems().count()).toBe(4);
-        expect(authoring.getHistoryItem(2).getText()).toMatch(/Take created by first name last name Today/);
-        expect(authoring.getHistoryItem(3).getText()).toMatch(/Unlinked by first name last name Today/);
         authoring.close();
     });
 
@@ -718,7 +689,7 @@ describe('authoring', () => {
         // desk output count zero as content publish from sport desk
         expect(monitoring.getGroupItems(5).count()).toBe(0);
         workspace.selectDesk('Sports Desk');
-        expect(monitoring.getGroupItems(5).count()).toBe(2);
+        expect(monitoring.getGroupItems(5).count()).toBe(1);
     }, 600000);
 
     it('can minimize story while a correction and kill is being written', () => {

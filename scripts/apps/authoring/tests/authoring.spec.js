@@ -844,7 +844,7 @@ describe('authoring actions', () => {
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
 
-            allowedActions(itemActions, ['new_take', 'save', 'edit', 'duplicate', 'spike', 're_write',
+            allowedActions(itemActions, ['save', 'edit', 'duplicate', 'spike', 're_write',
                 'mark_item_for_highlight', 'mark_item_for_desks',
                 'package_item', 'multi_edit', 'publish', 'add_to_current', 'export']);
         }));
@@ -876,7 +876,7 @@ describe('authoring actions', () => {
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
 
-            allowedActions(itemActions, ['new_take', 'save', 'edit', 'duplicate', 'spike', 're_write',
+            allowedActions(itemActions, ['save', 'edit', 'duplicate', 'spike', 're_write',
                 'mark_item_for_highlight', 'package_item', 'multi_edit', 'add_to_current', 'export']);
         }));
 
@@ -938,7 +938,7 @@ describe('authoring actions', () => {
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
 
-            allowedActions(itemActions, ['new_take', 'save', 'edit', 'duplicate', 'spike', 're_write',
+            allowedActions(itemActions, ['save', 'edit', 'duplicate', 'spike', 're_write',
                 'mark_item_for_highlight', 'package_item', 'multi_edit', 'add_to_current', 'export']);
         }));
 
@@ -970,7 +970,7 @@ describe('authoring actions', () => {
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
 
-            allowedActions(itemActions, ['view', 're_write', 'new_take', 'export']);
+            allowedActions(itemActions, ['view', 're_write', 'export']);
         }));
 
     it('can only view the item if the item is killed',
@@ -1054,116 +1054,6 @@ describe('authoring actions', () => {
             allowedActions(itemActions, ['view', 'unspike', 'export']);
         }));
 
-    it('Cannot perform new take if more coming is true or take is not last take on the desk',
-        inject((privileges, desks, authoring, $q, $rootScope) => {
-            var item = {
-                _id: 'test',
-                state: 'in_progress',
-                flags: {marked_for_not_publication: false},
-                type: 'text',
-                task: {
-                    desk: 'desk1'
-                }
-            };
-
-            var userPrivileges = {
-                duplicate: true,
-                mark_item: false,
-                spike: true,
-                unspike: true,
-                mark_for_highlights: true,
-                unlock: true,
-                publish: true
-            };
-
-            privileges.setUserPrivileges(userPrivileges);
-            $rootScope.$digest();
-            var itemActions = authoring.itemActions(item);
-
-            allowedActions(itemActions, ['save', 'edit', 'duplicate', 'spike',
-                'mark_item_for_highlight', 'package_item', 'multi_edit', 'publish', 'add_to_current', 'export']);
-
-            item = {
-                _id: 'test',
-                state: 'in_progress',
-                flags: {marked_for_not_publication: false},
-                type: 'text',
-                task: {
-                    desk: 'desk1'
-                },
-                takes: {
-                    last_take: 'take2'
-                }
-            };
-
-            itemActions = authoring.itemActions(item);
-            allowedActions(itemActions, ['save', 'edit', 'duplicate',
-                'mark_item_for_highlight', 'package_item', 'multi_edit', 'publish', 'add_to_current', 'export']);
-        }));
-
-    it('Can perform new take',
-        inject((privileges, desks, authoring, $q, $rootScope) => {
-            var item = {
-                _id: 'test',
-                state: 'in_progress',
-                flags: {marked_for_not_publication: false},
-                type: 'text',
-                task: {
-                    desk: 'desk1'
-                },
-                _current_version: 1
-            };
-
-            var userPrivileges = {
-                duplicate: true,
-                mark_item: false,
-                spike: true,
-                unspike: true,
-                mark_for_highlights: true,
-                unlock: true,
-                publish: true,
-                correct: true,
-                kill: true,
-                resend: true
-            };
-
-            privileges.setUserPrivileges(userPrivileges);
-            $rootScope.$digest();
-            var itemActions = authoring.itemActions(item);
-
-            allowedActions(itemActions, ['new_take', 'save', 'edit', 'duplicate', 'spike', 're_write',
-                'mark_item_for_highlight', 'package_item', 'multi_edit', 'publish', 'add_to_current', 'export']);
-
-            item = {
-                _id: 'test',
-                state: 'published',
-                marked_for_not_publication: false,
-                type: 'text',
-                _current_version: 1,
-                task: {
-                    desk: 'desk1'
-                },
-                archive_item: {
-                    _id: 'test',
-                    state: 'published',
-                    flags: {marked_for_not_publication: false},
-                    type: 'text',
-                    task: {
-                        desk: 'desk1'
-                    },
-                    takes: {
-                        last_take: 'test'
-                    },
-                    _current_version: 1
-                }
-            };
-
-            itemActions = authoring.itemActions(item);
-            allowedActions(itemActions, ['new_take', 'duplicate', 'view', 'add_to_current',
-                'mark_item_for_highlight', 'package_item', 'multi_edit', 'correct', 'kill', 're_write', 'resend',
-                'export']);
-        }));
-
     it('Can perform correction or kill on published item',
         inject((privileges, desks, authoring, $q, $rootScope) => {
             var item = {
@@ -1204,7 +1094,7 @@ describe('authoring actions', () => {
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
 
-            allowedActions(itemActions, ['new_take', 'duplicate', 'view', 'add_to_current',
+            allowedActions(itemActions, ['duplicate', 'view', 'add_to_current',
                 'mark_item_for_highlight', 'package_item', 'multi_edit', 'correct', 'kill', 're_write',
                 'create_broadcast', 'resend', 'export']);
         }));
@@ -1249,7 +1139,7 @@ describe('authoring actions', () => {
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
 
-            allowedActions(itemActions, ['new_take', 'duplicate', 'view', 'add_to_current',
+            allowedActions(itemActions, ['duplicate', 'view', 'add_to_current',
                 'mark_item_for_highlight', 'package_item', 'multi_edit', 'correct', 'kill', 're_write',
                 'create_broadcast', 'resend', 'export']);
 
@@ -1298,7 +1188,7 @@ describe('authoring actions', () => {
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
 
-            allowedActions(itemActions, ['new_take', 'duplicate', 'view', 'add_to_current',
+            allowedActions(itemActions, ['duplicate', 'view', 'add_to_current',
                 'mark_item_for_highlight', 'package_item', 'multi_edit', 're_write', 'resend', 'export']);
         }));
 
@@ -1386,51 +1276,6 @@ describe('authoring actions', () => {
             allowedActions(itemActions, ['view', 'duplicate', 'deschedule', 'export']);
         }));
 
-    it('Can only package if the item is not a take package',
-        inject((privileges, desks, authoring, $q, $rootScope) => {
-            var item = {
-                _id: 'test',
-                state: 'published',
-                flags: {marked_for_not_publication: false},
-                type: 'text',
-                task: {
-                    desk: 'desk1'
-                },
-                _current_version: 8,
-                archive_item: {
-                    _id: 'test',
-                    state: 'published',
-                    flags: {marked_for_not_publication: false},
-                    type: 'text',
-                    task: {
-                        desk: 'desk1'
-                    },
-                    _current_version: 8
-                }
-            };
-
-            var userPrivileges = {
-                duplicate: true,
-                mark_item: false,
-                spike: true,
-                unspike: true,
-                mark_for_highlights: true,
-                unlock: true,
-                publish: true,
-                correct: true,
-                kill: true,
-                package_item: false
-            };
-
-            privileges.setUserPrivileges(userPrivileges);
-            $rootScope.$digest();
-            var itemActions = authoring.itemActions(item);
-
-            allowedActions(itemActions, ['correct', 'kill', 'new_take', 're_write', 'add_to_current',
-                'mark_item_for_highlight', 'duplicate', 'view', 'package_item', 'multi_edit', 'resend',
-                'export']);
-        }));
-
     it('Cannot send item if the version is zero',
         inject((privileges, desks, authoring, $q, $rootScope) => {
             var item = {
@@ -1450,6 +1295,7 @@ describe('authoring actions', () => {
                 spike: true,
                 unspike: true,
                 mark_for_highlights: true,
+                mark_for_desks: true,
                 unlock: true,
                 publish: true,
                 correct: true,
@@ -1463,10 +1309,11 @@ describe('authoring actions', () => {
             var itemActions = authoring.itemActions(item);
 
             allowedActions(itemActions, ['save', 'edit', 'duplicate', 'spike', 'add_to_current',
-                'mark_item_for_highlight', 'package_item', 'multi_edit', 'publish', 'export']);
+                'mark_item_for_highlight', 'package_item', 'multi_edit', 'publish', 'export',
+                'mark_item_for_desks', 're_write']);
         }));
 
-    it('Cannot perform new take if the version is zero',
+    it('Can edit if the version is zero',
         inject((privileges, desks, authoring, $q, $rootScope) => {
             var item = {
                 _id: 'test',
@@ -1498,7 +1345,7 @@ describe('authoring actions', () => {
             var itemActions = authoring.itemActions(item);
 
             allowedActions(itemActions, ['save', 'edit', 'duplicate', 'spike', 'add_to_current',
-                'mark_item_for_highlight', 'package_item', 'multi_edit', 'publish', 'export']);
+                'mark_item_for_highlight', 'package_item', 'multi_edit', 'publish', 'export', 're_write']);
         }));
 
     it('Cannot send item if the no move privileges',
@@ -1532,7 +1379,7 @@ describe('authoring actions', () => {
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
 
-            allowedActions(itemActions, ['new_take', 'save', 'edit', 'duplicate', 'spike', 'add_to_current',
+            allowedActions(itemActions, ['save', 'edit', 'duplicate', 'spike', 'add_to_current',
                 're_write', 'mark_item_for_highlight', 'package_item', 'multi_edit', 'publish', 'export']);
         }));
 
@@ -1567,12 +1414,12 @@ describe('authoring actions', () => {
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
 
-            allowedActions(itemActions, ['new_take', 'save', 'edit', 'duplicate', 'spike', 'add_to_current',
+            allowedActions(itemActions, ['save', 'edit', 'duplicate', 'spike', 'add_to_current',
                 're_write', 'mark_item_for_highlight', 'package_item', 'multi_edit', 'publish', 'send',
                 'export']);
         }));
 
-    it('Cannot do new take for embargo item.',
+    it('Can do edit for embargo item.',
         inject((privileges, desks, authoring, $q, $rootScope) => {
             var item = {
                 _id: 'test',
@@ -1608,7 +1455,7 @@ describe('authoring actions', () => {
                 'mark_item_for_highlight', 'multi_edit', 'publish', 'send', 'export']);
         }));
 
-    it('Cannot do new take for scheduled item.',
+    it('Can do edit for scheduled item.',
         inject((privileges, desks, authoring, $q, $rootScope) => {
             var item = {
                 _id: 'test',
@@ -1641,10 +1488,10 @@ describe('authoring actions', () => {
             var itemActions = authoring.itemActions(item);
 
             allowedActions(itemActions, ['save', 'edit', 'duplicate', 'spike', 'add_to_current',
-                'mark_item_for_highlight', 'multi_edit', 'publish', 'send', 'export']);
+                'mark_item_for_highlight', 'multi_edit', 'publish', 'send', 'export', 're_write']);
         }));
 
-    it('Can do new take, rewrite and package item for scheduled item after passing publish schedule.',
+    it('Can do rewrite and package item for scheduled item after passing publish schedule.',
         inject((privileges, desks, authoring, $q, $rootScope) => {
             var pastTimestamp = new Date();
 
@@ -1680,7 +1527,7 @@ describe('authoring actions', () => {
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
 
-            allowedActions(itemActions, ['correct', 'kill', 'duplicate', 'add_to_current', 'new_take', 're_write',
+            allowedActions(itemActions, ['correct', 'kill', 'duplicate', 'add_to_current', 're_write',
                 'view', 'package_item', 'mark_item_for_highlight', 'multi_edit', 'resend', 'export']);
         }));
 
@@ -1726,7 +1573,7 @@ describe('authoring actions', () => {
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
 
-            allowedActions(itemActions, ['duplicate', 'new_take', 're_write', 'mark_item_for_highlight', 'multi_edit',
+            allowedActions(itemActions, ['duplicate', 're_write', 'mark_item_for_highlight', 'multi_edit',
                 'correct', 'kill', 'package_item', 'view', 'create_broadcast', 'add_to_current', 'resend', 'export']);
         }));
 
@@ -1772,7 +1619,7 @@ describe('authoring actions', () => {
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
 
-            allowedActions(itemActions, ['duplicate', 'new_take', 're_write', 'mark_item_for_highlight', 'multi_edit',
+            allowedActions(itemActions, ['duplicate', 're_write', 'mark_item_for_highlight', 'multi_edit',
                 'correct', 'kill', 'package_item', 'view', 'create_broadcast', 'add_to_current', 'resend', 'export']);
         }));
 
@@ -1825,7 +1672,7 @@ describe('authoring actions', () => {
             var itemActions = authoring.itemActions(item);
 
             allowedActions(itemActions, ['duplicate', 'mark_item_for_highlight', 'multi_edit',
-                'correct', 'kill', 'package_item', 'view', 'add_to_current', 'resend', 'export']);
+                'correct', 'kill', 'package_item', 'view', 'add_to_current', 'resend', 'export', 're_write']);
         }));
 
     it('Export action is available for text item.',
@@ -1848,7 +1695,8 @@ describe('authoring actions', () => {
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
 
-            allowedActions(itemActions, ['save', 'edit', 'package_item', 'multi_edit', 'add_to_current', 'export']);
+            allowedActions(itemActions, ['re_write', 'save', 'edit', 'package_item',
+                'multi_edit', 'add_to_current', 'export']);
         }));
 
     it('Export action is not available for non-text item.',
@@ -1872,86 +1720,6 @@ describe('authoring actions', () => {
             var itemActions = authoring.itemActions(item);
 
             allowedActions(itemActions, ['save', 'edit', 'package_item', 'multi_edit', 'add_to_current']);
-        }));
-
-    it('takes package is in published state.',
-        inject((privileges, desks, authoring, $q, $rootScope) => {
-            var item = {
-                _id: 'test',
-                state: 'published',
-                flags: {marked_for_not_publication: false},
-                type: 'composite',
-                package_type: 'takes',
-                task: {
-                    desk: 'desk1'
-                },
-                _current_version: 1,
-                genre: [
-                    {name: 'Interview', value: 'Interview'}
-                ],
-                archive_item: {
-                    _id: 'test',
-                    state: 'published',
-                    flags: {marked_for_not_publication: false},
-                    type: 'composite',
-                    package_type: 'takes',
-                    task: {
-                        desk: 'desk1'
-                    },
-                    _current_version: 1,
-                    genre: [
-                        {name: 'Interview', value: 'Interview'}
-                    ]
-                }
-            };
-
-            var userPrivileges = {
-                archive_broadcast: true
-            };
-
-            privileges.setUserPrivileges(userPrivileges);
-            $rootScope.$digest();
-            var itemActions = authoring.itemActions(item);
-
-            allowedActions(itemActions, ['view', 'add_to_current']);
-        }));
-
-    it('takes package is in scheduled state.',
-        inject((privileges, desks, authoring, $q, $rootScope) => {
-            var item = {
-                _id: 'test',
-                state: 'scheduled',
-                flags: {marked_for_not_publication: false},
-                type: 'composite',
-                package_type: 'takes',
-                task: {
-                    desk: 'desk1'
-                },
-                _current_version: 1,
-                genre: [],
-                archive_item: {
-                    _id: 'test',
-                    state: 'scheduled',
-                    flags: {marked_for_not_publication: false},
-                    type: 'composite',
-                    package_type: 'takes',
-                    task: {
-                        desk: 'desk1'
-                    },
-                    _current_version: 1,
-                    genre: []
-                }
-            };
-
-            var userPrivileges = {
-                archive_broadcast: true
-            };
-
-            privileges.setUserPrivileges(userPrivileges);
-            $rootScope.$digest();
-            var itemActions = authoring.itemActions(item);
-
-            allowedActions(itemActions, ['view']);
         }));
 
     it('rewrite is not allowed if re-written item exists.',
@@ -2315,62 +2083,6 @@ describe('send item directive', () => {
         $templateCache.put('scripts/apps/authoring/views/send-item.html', '');
     }));
 
-    it('can hide embargo and publish schedule if take items more than one',
-        inject(($compile, $rootScope, privileges) => {
-            var scope, elem, iscope;
-
-            scope = $rootScope.$new();
-            scope.item = {
-                _id: 'foo',
-                type: 'text',
-                state: 'in-progress',
-                takes: {
-                    sequence: 2
-                }
-            };
-            var userPrivileges = {
-                embargo: true
-            };
-
-            privileges.setUserPrivileges(userPrivileges);
-            $rootScope.$digest();
-            scope.action = 'edit';
-            elem = $compile('<div sd-send-item data-item="item" data-mode="authoring" ' +
-                'data-action="action"></div>')(scope);
-            scope.$digest();
-            iscope = elem.isolateScope();
-            expect(iscope.showPublishSchedule()).toBe(false);
-            expect(iscope.showEmbargo()).toBe(false);
-        }));
-
-    it('can show embargo and publish schedule if only one take item',
-        inject(($compile, $rootScope, privileges) => {
-            var scope, elem, iscope;
-
-            scope = $rootScope.$new();
-            scope.item = {
-                _id: 'foo',
-                type: 'text',
-                state: 'in-progress',
-                takes: {
-                    sequence: 1
-                }
-            };
-            var userPrivileges = {
-                embargo: true
-            };
-
-            privileges.setUserPrivileges(userPrivileges);
-            $rootScope.$digest();
-            scope.action = 'edit';
-            elem = $compile('<div sd-send-item data-item="item" data-mode="authoring" ' +
-                'data-action="action"></div>')(scope);
-            scope.$digest();
-            iscope = elem.isolateScope();
-            expect(iscope.showPublishSchedule()).toBe(true);
-            expect(iscope.showEmbargo()).toBe(true);
-        }));
-
     it('can hide embargo if user does not have the privilege',
         inject(($compile, $rootScope, privileges) => {
             var scope, elem, iscope;
@@ -2379,10 +2091,7 @@ describe('send item directive', () => {
             scope.item = {
                 _id: 'foo',
                 type: 'text',
-                state: 'in-progress',
-                takes: {
-                    sequence: 1
-                }
+                state: 'in-progress'
             };
             var userPrivileges = {
                 embargo: false
@@ -2399,7 +2108,7 @@ describe('send item directive', () => {
             expect(iscope.showEmbargo()).toBe(false);
         }));
 
-    it('can show embargo and publish schedule if not a take item',
+    it('can show embargo and publish schedule for text item',
         inject(($compile, $rootScope, privileges) => {
             var scope, elem, iscope;
 
