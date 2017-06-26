@@ -45,6 +45,22 @@ export function WebPublisherMonitoringController($scope, $sce, publisher, modal,
 
         /**
          * @ngdoc method
+         * @name WebPublisherMonitoringController#openPreview
+         * @param {Object} event
+         * @param {Object} article
+         * @description Open article preview pane
+         */
+        openPreview(e, article) {
+            if (e.target.className !== 'icon-dots-vertical') {
+                this.publishOpen = false;
+                this.previewOpen = true;
+                this.selectedArticle = article;
+                this.bodyHtml = $sce.trustAsHtml(article.body_html);
+            }
+        }
+
+        /**
+         * @ngdoc method
          * @name WebPublisherMonitoringController#openPublish
          * @param {Object} article
          * @param {String} action
@@ -54,6 +70,7 @@ export function WebPublisherMonitoringController($scope, $sce, publisher, modal,
             this.publishedDestinations = {};
             this.publishFilter = 'all';
             this.publishOpen = true;
+            this.previewOpen = false;
             this.unpublishSelectAll = false;
             this.activePublishPane = action;
             this.selectedArticle = article;

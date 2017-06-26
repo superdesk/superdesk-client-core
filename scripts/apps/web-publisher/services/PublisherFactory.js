@@ -104,7 +104,10 @@ export function PublisherFactory(pubapi) {
          * @description List all routes for defined type
          */
         queryRoutes(type) {
-            return pubapi.query('content/routes', type);
+            let params = type ? type : {};
+
+            params.limit = 1000;
+            return pubapi.query('content/routes', params);
         }
 
         /**

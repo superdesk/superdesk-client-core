@@ -42,8 +42,7 @@
         <div class="paneLayout">
             <div class="paneLayout__leftPane paneContent" 
                 ng-class="{'paneLayout__leftPane--open': webPublisherMonitoring.filterOpen}"
-                ng-include="webPublisherMonitoring.TEMPLATES_DIR + '/monitoring/filter-pane.html'"
-                >
+                ng-include="webPublisherMonitoring.TEMPLATES_DIR + '/monitoring/filter-pane.html'">
             </div>
 
             <div class="paneLayout__content">
@@ -55,7 +54,13 @@
         </div>
     </div>
     <div class="paneLayout__pane paneContent paneContent--darker"
+        ng-show="webPublisherMonitoring.publishOpen"
         ng-class="{'paneLayout__pane--open': webPublisherMonitoring.publishOpen}"
         ng-include="webPublisherMonitoring.TEMPLATES_DIR + '/monitoring/publishing-pane.html'">
+    </div>
+    <div class="paneLayout__pane"
+        ng-show="webPublisherMonitoring.previewOpen"
+        ng-class="{'paneLayout__pane--open': webPublisherMonitoring.previewOpen}"
+        ng-include="webPublisherMonitoring.TEMPLATES_DIR + '/monitoring/preview-pane.html'">
     </div>
 </div>
