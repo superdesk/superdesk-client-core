@@ -13,7 +13,7 @@
     <div class="item-group" ng-repeat="role in roles" ng-show="total">
         <div class="item-group__header">
             <div class="item-group__name">{{ :: role.name}}</div>
-            <span class="item-group__label">{{total}}</span>
+            <span class="badge badge--light pull-right">{{total}}</span>
         </div>
         <div class="item-group__content" sd-user-role-items
             data-role="role._id"

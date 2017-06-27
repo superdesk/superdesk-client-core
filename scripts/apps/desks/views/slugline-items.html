@@ -8,7 +8,7 @@
 <div class="item-group" ng-if="!loading && items.length" ng-repeat="item_group in items">
     <div class="item-group__header">
         <div class="item-group__name">{{ :: item_group.place}}</div>
-        <span class="item-group__label">{{ item_group.items.length }}</span>
+        <span class="badge badge--light pull-right">{{ item_group.items.length }}</span>
     </div>
     <div class="item-group__content">
         <ul class="inline-content-items">

@@ -1,47 +1,6 @@
 // LABELS
 // ------
 
-// Base
-.label {
-    padding: 2px 8px;
-    font-size: 11px;
-    font-weight: 500;
-    line-height: 13px;
-    color: $white;
-    vertical-align: middle;
-    white-space: nowrap;
-    background-color: $gray;
-    box-sizing: border-box;
-    letter-spacing: 0.05em;
-    @include border-radius(2px);
-    &.small {
-        font-size: 10px;
-    }
-    &.circle {
-        padding: 1px 5px;
-        @include border-radius(50px);
-    }
-}
-.profile-label--snap {
-    margin-right: 10px;
-    background-color: $label-snap;
-    height: 17px;
-    padding: 2px 6px;
-    font-size: 10px;
-    text-transform: uppercase;
-    line-height: 14px;
-}
-
-// Hover state
-.label:hover {
-    text-decoration: none;
-}
-
-// Colors
-.label--info { 
-    background-color: darken($sd-blue, 10%); 
-}
-
 // Label lite
 .label--lite {
     font-size: 10px;

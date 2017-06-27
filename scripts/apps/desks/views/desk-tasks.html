@@ -13,7 +13,7 @@
     <div class="item-group" ng-repeat="status in statuses">
         <div class="item-group__header">
             <div class="item-group__name item-group__name--{{status._id}}">{{status.name}}</div>
-            <span class="item-group__label">{{total}}</span>
+            <span class="badge badge--light pull-right">{{total}}</span>
         </div>
         <div class="item-group__content" sd-task-status-items
             data-status="status._id"
