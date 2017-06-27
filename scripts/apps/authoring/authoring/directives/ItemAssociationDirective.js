@@ -9,13 +9,16 @@
  * @requires authoring
  * @requires $q
  * @requires api
+ * @requires notify
+ * @requires gettext
  *
  * @description
  *   This directive is responsible for rendering media associated with the item.
  */
 
-ItemAssociationDirective.$inject = ['superdesk', 'renditions', 'config', 'authoring', '$q', 'api'];
-export function ItemAssociationDirective(superdesk, renditions, config, authoring, $q, api) {
+ItemAssociationDirective.$inject = ['superdesk', 'renditions', 'config', 'authoring', '$q',
+    'api', 'notify', 'gettext'];
+export function ItemAssociationDirective(superdesk, renditions, config, authoring, $q, api, notify, gettext) {
     return {
         scope: {
             rel: '=',
@@ -88,6 +91,11 @@ export function ItemAssociationDirective(superdesk, renditions, config, authorin
                 getItem(event, getSuperdeskType(event))
                     .then((item) => {
                         if (!scope.editable) {
+                            return;
+                        }
+
+                        if (item.lock_user) {
+                            notify.error(gettext('Item is locked. Cannot associate media item.'));
                             return;
                         }
 
