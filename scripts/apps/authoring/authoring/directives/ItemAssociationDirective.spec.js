@@ -119,4 +119,25 @@ describe('item association directive', () => {
             expect(event.stopPropagation).toHaveBeenCalled();
             expect(scope.item.associations.featured.headline).toBe('foo');
         }));
+
+    it('cannot associated media if item is locked.', inject(($rootScope, renditions, notify) => {
+        var event = new window.$.Event('drop');
+
+        scope.item.state = 'in_progress';
+        event.originalEvent = {dataTransfer: {
+            types: ['image'],
+            getData: () => angular.toJson({headline: 'foo', _type: 'externalsource', lock_user: 'foo'})
+        }};
+
+        notify.error = jasmine.createSpy('error');
+        event.preventDefault = jasmine.createSpy('preventDefault');
+        event.stopPropagation = jasmine.createSpy('stopPropagation');
+        scope.onChange = jasmine.createSpy('onchange');
+        scope.save = jasmine.createSpy('save');
+        elem.triggerHandler(event);
+        $rootScope.$digest();
+        expect(notify.error).toHaveBeenCalled();
+        expect(renditions.ingest).not.toHaveBeenCalled();
+        expect(renditions.crop).not.toHaveBeenCalled();
+    }));
 });
