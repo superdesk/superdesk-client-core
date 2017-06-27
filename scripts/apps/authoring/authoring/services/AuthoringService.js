@@ -116,7 +116,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
      * @param {Object} item
      */
     this.unlink = (item) => session.getIdentity()
-        .then((user) => api.remove(item, {}, 'archive_link'))
+        .then((user) => api.remove(item, {}, 'archive_rewrite'))
         .then((data) => notify.success(gettext('Link has been removed')),
             (response) => {
                 if (angular.isDefined(response.data._message)) {
