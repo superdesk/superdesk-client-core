@@ -57,7 +57,7 @@ class LinkFunction {
         this.scope.$watch('item', (item) => {
             if (item) {
                 this.scope.marks = [];
-                if (item[this.scope.markField].length) {
+                if (item[this.scope.markField] && item[this.scope.markField].length) {
                     // (if) marked_desks is an array of objects (else) highlights is an array if string: highlight ids
                     if (this.scope.deskMarking) {
                         this.scope.marks = _.map(item[this.scope.markField], this.scope.idField);
