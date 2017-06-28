@@ -57,6 +57,7 @@ $split-modal-sidebar : 200px;
             flex-direction: column;
             overflow-y: auto;
         }
+        max-width: 840px !important;
     }
     .modal__body-header {
         flex-shrink: 0;
