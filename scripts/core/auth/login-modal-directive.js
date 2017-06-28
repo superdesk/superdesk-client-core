@@ -19,9 +19,17 @@ angular.module('superdesk.core.auth.login', []).directive('sdLoginModal', [
 
                 deployConfig.all({
                     xmpp: 'xmpp_auth',
+                    saml: 'saml_auth',
                     google: 'google_auth'
                 }).then((methods) => {
                     scope.methods = methods;
+                });
+
+                deployConfig.all({
+                    saml: 'saml_label'
+                }).then((labels) => {
+                    scope.labels = labels;
+                    console.info('labels', labels);
                 });
 
                 scope.authenticate = function() {
@@ -42,7 +50,7 @@ angular.module('superdesk.core.auth.login', []).directive('sdLoginModal', [
                 };
 
                 scope.openLoginPopup = function(service) {
-                    window.open(apiUrl.replace('api', 'login') + '/' + service);
+                    window.open(apiUrl + '/login/' + service);
                 };
 
                 let apiUrl = _.get(config, 'server.url', '').replace('api/', 'api'); // make sure there is no trailing /
