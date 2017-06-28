@@ -14,17 +14,10 @@ VocabularyEditController.$inject = [
 export function VocabularyEditController($scope, gettext, notify, api, vocabularies, metadata, cvSchema, $rootScope) {
     var origVocabularyItems = _.cloneDeep($scope.vocabulary.items);
 
-    /**
-     * Unload vocabulary/close modal.
-     */
-    function closeVocabulary() {
-        $rootScope.$broadcast('vocabularies:loaded');
-        $scope.vocabulary = null;
-    }
-
     function onSuccess(result) {
         notify.success(gettext('Vocabulary saved successfully'));
-        closeVocabulary();
+        $scope.closeVocabulary();
+        $scope.updateVocabulary(result);
         return result;
     }
 
@@ -59,6 +52,7 @@ export function VocabularyEditController($scope, gettext, notify, api, vocabular
         if (_.isNil($scope.errorMessage)) {
             api.save('vocabularies', $scope.vocabulary).then(onSuccess, onError);
         }
+
         // discard metadata cache:
         metadata.loaded = null;
         metadata.initialize();
@@ -69,7 +63,7 @@ export function VocabularyEditController($scope, gettext, notify, api, vocabular
      */
     $scope.cancel = function() {
         $scope.vocabulary.items = origVocabularyItems;
-        closeVocabulary();
+        $scope.closeVocabulary();
     };
 
     /**
@@ -81,7 +75,7 @@ export function VocabularyEditController($scope, gettext, notify, api, vocabular
         _.extend(newVocabulary, $scope.model);
         newVocabulary.is_active = true;
 
-        $scope.vocabulary.items.unshift(newVocabulary);
+        $scope.vocabulary.items = $scope.vocabulary.items.concat([newVocabulary]);
     };
 
     // try to reproduce data model of vocabulary:
@@ -93,6 +87,14 @@ export function VocabularyEditController($scope, gettext, notify, api, vocabular
 
     $scope.model = model;
     $scope.schema = $scope.vocabulary.schema || cvSchema[$scope.vocabulary._id] || null;
+    if ($scope.schema) {
+        $scope.schemaFields = Object.keys($scope.schema)
+            .sort()
+            .map((key) => angular.extend(
+                {key: key},
+                $scope.schema[key]
+            ));
+    }
 
     /**
      * Remove item from vocabulary items
