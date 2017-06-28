@@ -627,16 +627,6 @@ $desk-width: 270px;
             color: $done-color;
         }
     }
-    &__label {
-        @extend .label;
-        height: 16px;
-        line-height: 16px;
-        background: #dddddd;
-        color: $sd-text;
-        padding: 0 8px;
-        float: right;
-        @include border-radius(7px);
-    }
 
 }
 
