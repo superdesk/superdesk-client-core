@@ -202,10 +202,10 @@ function getDefaults(grunt) {
         },
 
         // if environment name is not set
-        isTestEnvironment: !!grunt.option('environmentName'),
+        isTestEnvironment: !!grunt.option('environmentName') || !!process.env.SUPERDESK_ENVIRONMENT,
 
         // environment name
-        environmentName: grunt.option('environmentName'),
+        environmentName: grunt.option('environmentName') || process.env.SUPERDESK_ENVIRONMENT,
 
         // route to be redirected to from '/'
         defaultRoute: '/workspace',
