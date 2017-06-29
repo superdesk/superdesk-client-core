@@ -11,7 +11,7 @@
             <i class="big-icon--create-package"></i>
         </button>
         <button class="navbtn strict" ng-if="isOpenItemType('composite')" ng-click="action.addToPackage()" title="{{ :: 'Add to Current Package' | translate }}">
-            <i class="big-icon--package-add"></i>
+            <i class="big-icon--add-to-package"></i>
         </button>
 
         <div class="dropdown dropdown--align-right strict highlights-dropdown pull-right" ng-if="action.canHighlightItems()" title="{{ :: 'Mark item' | translate }}" dropdown>
@@ -55,7 +55,7 @@
     </div>
 
     <div class="button-stack right-stack" ng-if="elementState || elementState === 'compact'">
-        <div class="dropdown dropdown--align-right" dropdown>
+        <div class="dropdown dropdown--align-right dropdown--multi-action-bar" dropdown>
             <button class="navbtn dropdown__toggle" dropdown__toggle><i class="icon-dots-vertical"></i></button>
 
             <ul class="dropdown__menu">

@@ -936,8 +936,8 @@ function HeaderResizeDirective($rootScope, $timeout, $window, workspaces) {
  * <div sd-media-query min-width='650' max-width='1440'></div>
  *
  */
-mediaQuery.$inject = ['$window'];
-function mediaQuery($window) {
+mediaQuery.$inject = ['$window', 'authoringWorkspace'];
+function mediaQuery($window, authoringWorkspace) {
     return {
         scope: {
             minWidth: '=',
@@ -948,6 +948,8 @@ function mediaQuery($window) {
             var resize = _.debounce(calcSize, 300);
 
             window.on('resize', resize);
+
+            scope.$watch(authoringWorkspace.getState, resize);
 
             function calcSize() {
                 var width = elem.width();

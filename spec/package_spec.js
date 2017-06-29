@@ -59,6 +59,7 @@ describe('package', () => {
         monitoring.actionOnItem('Edit', 3, 0);
         monitoring.selectItem(2, 0);
         monitoring.selectItem(3, 1);
+        monitoring.multiActionDropdown().click();
         monitoring.addToCurrentMultipleItems();
         expect(authoring.getGroupItems('MAIN').count()).toBe(2);
     });
