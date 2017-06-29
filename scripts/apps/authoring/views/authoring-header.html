@@ -141,6 +141,27 @@
             </div>
           </div>
         </div>
+
+        <div class="authoring-header__item"
+             sd-validation-error="error.language"
+             data-required="schema.language.required"
+             ng-if="metadata.languages && schema.language && editor.language"
+             sd-width="{{editor.language.sdWidth}}"
+             order="{{editor.language.order}}">
+          <label class="authoring-header__item-label" translate>LANGUAGE</label>
+          <div class="authoring-header__input-holder">
+            <div sd-meta-dropdown
+                 class="data"
+                 data-tabindex="editor.language.order"
+                 data-item="item"
+                 data-field="language"
+                 data-list="metadata.languages"
+                 ng-disabled="!_editable"
+                 data-change="autosave(item)">
+            </div>
+          </div>
+        </div>
+
         <div class="authoring-header__item"
              sd-validation-error="error.priority"
              data-required="schema.priority.required"
