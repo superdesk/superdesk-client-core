@@ -314,6 +314,24 @@
                         ng-change="autosave(item)">
               </textarea>
           </div>
+
+        <div class="authoring-header__item"
+             sd-validation-error="error.usageterms"
+             data-required="schema.usageterms.required"
+             ng-if="schema.usageterms"
+             sd-width="{{editor.usageterms.sdWidth}}"
+             order="{{editor.usageterms.order}}">
+          <label class="authoring-header__item-label" translate>Usage Terms</label>
+          <div class="authoring-header__input-holder">
+              <textarea id="usageterms" class="line-input ed-note" 
+                        sd-auto-height
+                        tansa-scope-sync
+                        tabindex="{{editor.usageterms.order}}"
+                        ng-model="item.usageterms"
+                        ng-disabled="!_editable"
+                        ng-change="autosave(item)">
+              </textarea>
+          </div>
         </div>
 
     </div>
