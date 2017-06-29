@@ -654,9 +654,9 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
 
                 scope.terms = filterSelected(scope.list);
                 if (scope.cv) { // filter out items from current cv
-                    scope.selectedItems = _.filter(selected, (term) => term.scheme === (scope.cv._id || scope.cv.id));
+                    scope.selectedItems = selected.filter((term) => term.scheme === (scope.cv._id || scope.cv.id));
                 } else {
-                    scope.selectedItems = selected;
+                    scope.selectedItems = selected.filter((term) => !term.scheme || term.scheme === scope.field);
                 }
             });
 

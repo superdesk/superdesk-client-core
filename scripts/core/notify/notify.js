@@ -12,7 +12,7 @@ export default angular.module('superdesk.core.notify', ['superdesk.core.translat
             var ttls = {
                 info: 3000,
                 success: 3000,
-                error: 5000
+                error: 8000
             };
 
             var messageTypes = ['info', 'success', 'error', 'warning'];
