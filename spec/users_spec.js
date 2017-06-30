@@ -307,7 +307,7 @@ describe('users', () => {
             var buttonCreate = element(by.className('sd-create-btn'));
 
             buttonCreate.click();
-            expect(browser.driver.isElementPresent(by.id('user_default_desk'))).toBe(false);
+            expect(element(by.id('user_default_desk')).isPresent()).toBe(false);
         });
 
         it('while pre-viewing and user clicks on create new user', () => {
@@ -316,7 +316,7 @@ describe('users', () => {
             element.all(by.repeater('users')).first().click();
 
             buttonCreate.click();
-            expect(browser.driver.isElementPresent(by.id('user_default_desk'))).toBe(false);
+            expect(element(by.id('user_default_desk')).isPresent()).toBe(false);
         });
     });
 

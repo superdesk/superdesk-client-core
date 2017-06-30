@@ -36,7 +36,7 @@ describe('login', () => {
 
         element(by.buttonText('SIGN OUT')).click();
 
-        browser.wait(() => browser.driver.isElementPresent(by.id('login-btn')), 5000);
+        browser.wait(() => element(by.id('login-btn')).isPresent(), 5000);
     });
 
     it('unknown user can\'t log in', () => {

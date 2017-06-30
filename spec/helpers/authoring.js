@@ -600,7 +600,8 @@ function Authoring() {
     };
 
     this.getBodyInnerHtml = function() {
-        return element(by.model('item.body_html')).all(by.className('editor-type-html')).last().getInnerHtml();
+        return browser.executeScript('return arguments[0].innerHTML;',
+                element(by.model('item.body_html')).all(by.className('editor-type-html')).last());
     };
 
     this.focusBodyHtmlElement = function() {
@@ -866,7 +867,8 @@ function Authoring() {
     };
 
     this.getHtmlArticleHeadlineOfBoard = function(index) {
-        return this.getBoardArticle(index).all(by.className('headline')).first().getInnerHtml();
+        return browser.executeScript('return arguments[0].innerHTML;',
+                this.getBoardArticle(index).all(by.className('headline')).first());
     };
 
     this.openCompareVersionsInnerDropdown = function(index) {
