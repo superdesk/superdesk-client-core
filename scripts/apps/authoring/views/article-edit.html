@@ -10,7 +10,7 @@
         ng-change="autosave(item)"
         ng-if="_editable"
         ng-trim="false"></div>
-  <div class="headline" ng-if="!_editable">{{item.headline}}</div>
+    <div class="headline" ng-if="!_editable" sd-html-preview="item.headline"></div>
 </div>
 
 <div class="field" sd-width="{{editor.headline.sdWidth || 'full'}}" ng-if="schema.headline && (features.onlyEditor3 || editor.body_html.editor3)" ng-class="{'limit-error': item.headline.length > schema.headline.maxlength}" order="{{editor.headline.order}}" sd-validation-error="error.headline" data-required="schema.headline.required">
@@ -124,7 +124,7 @@
          data-append-element=".field"
          data-append-class="active"
          tabindex="{{editor.byline.order}}">
-  <div ng-if="!_editable">{{item.byline}}</div>
+  <div class="byline" ng-if="!_editable" sd-html-preview="item.byline"></div>
 </div>
 
 <!--This article-edit view is used by templates as well.

@@ -2,7 +2,10 @@
     <button ng-click="open({id: item._id, version: item._current_version});">
         <span class="headline" ng-show="item.headline">{{ item.headline }}</span>
         <span ng-show="!item.headline">{{ :: 'Untitled' | translate }}</span>
-        <em>{{ :: 'version' | translate }}: {{ item._current_version }}</em>
+        <em>
+        	{{ :: 'version' | translate }}: {{ item._current_version }},
+        	{{ :: 'author' | translate }}: {{ item.author.display_name }}
+        </em>
     </button>
 </li>
 <li ng-if="!items.length" class="msg" translate>No items to add!</li>

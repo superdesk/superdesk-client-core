@@ -4,8 +4,6 @@
 @import '~mixins.scss';
 @import '~variables.scss';
 
-$create-board-pane: 110px;
-
 .close-compare-versions {
     position: absolute;
     top: 14px; right: 14px;
@@ -21,13 +19,11 @@ $create-board-pane: 110px;
 .compare-versions-screen {
     .boards-list {
         position: absolute;
-        top: 0; left: 0; bottom: 0;
-        right: $create-board-pane;
+        top: 0; left: 0; bottom: 0; right: 0;
     }
     .boards-create {
         position: absolute;
-        top: 0; bottom: 0; right: 0;
-        width: $create-board-pane;
+        top: 0; bottom: 0; right: 0; width: 0;
         @include border-box();
         i {
             font-size: 48px;
@@ -69,16 +65,16 @@ $create-board-pane: 110px;
             position: relative;
 
             > .dropdown {
-                left: 10px;
+                left: 8px;
                 top: 5px;
                 border: 0;
                 position: absolute;
                 z-index: 2;
-                display: none;
+                width: 4rem;
                 .dropdown__toggle {
-                    padding: 0 15px;
+                    padding: 0 12px;
                     i {
-                        @include opacity(70);
+                        @include opacity(40);
                     }
                 }
                 &.open .dropdown__toggle {
@@ -86,6 +82,13 @@ $create-board-pane: 110px;
                 }
                 .dropdown__menu {
                     margin-top: -4px;
+                }
+                &:hover {
+                    .dropdown__toggle {
+                        i {
+                            @include opacity(100);
+                        }
+                    }
                 }
             }
 
@@ -105,18 +108,33 @@ $create-board-pane: 110px;
                         overflow: hidden;
                         margin: 0 0 20px;
                     }
-
-                    em {
-                        font-size: 10px;
-                        font-weight: 500;
-                        color: #888;
+                    .board-article-header {
+                        margin: 0 0 2.4rem 3.2rem;
+                        &__metadata {
+                            display: inline-block;
+                            margin-right: .6rem;
+                            font-size: 12px;
+                            font-weight: 500;
+                            color: $grayDark;
+                            &-label {
+                                font-style: italic;
+                                font-weight: 400;
+                                color: $gray;
+                            }
+                            &-content {
+                                margin-right: 5px;
+                            }
+                        }
                     }
                 }
             }
+            &__no-article {
+                margin: 20px 0 0 60px;
+                font-size: 1.2rem;
+                color: gray;
+                font-style: italic;
+            }
             &:hover {
-                > .dropdown {
-                    display: block;
-                }
                 .editbar {
                     visibility: visible !important;
                 }

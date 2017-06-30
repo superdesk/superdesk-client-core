@@ -179,12 +179,9 @@
 
                 <ul id="compare-versions" ng-if="item.task.desk">
                     <li>
-                    <div class="dropdown compare-versions-toggle" dropdown>
-                      <button class="dropdown__toggle" dropdown__toggle>
-                        {{ :: 'Compare versions' | translate }}                        
-                      </button>
-                      <ul class="dropdown__menu dropdown__menu--submenu-left" sd-compare-versions-dropdown></ul>
-                    </div>
+                      <button type="button"
+                        ng-click="openCompareVersions(item)"
+                        translate>Compare versions</button>
                   </li>
                 </ul>
 

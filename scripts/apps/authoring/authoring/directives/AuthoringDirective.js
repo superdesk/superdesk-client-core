@@ -65,12 +65,13 @@ AuthoringDirective.$inject = [
     'metadata',
     'suggest',
     'config',
-    'editorResolver'
+    'editorResolver',
+    'compareVersions'
 ];
 export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace, notify,
     gettext, desks, authoring, api, session, lock, privileges, content, $location,
     referrer, macros, $timeout, $q, modal, archiveService, confirm, reloadService,
-    $rootScope, $interpolate, metadata, suggest, config, editorResolver) {
+    $rootScope, $interpolate, metadata, suggest, config, editorResolver, compareVersions) {
     return {
         link: function($scope, elem, attrs) {
             var _closing;
@@ -92,6 +93,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             $scope.highlight = !!$scope.origItem.highlight;
             $scope.showExportButton = $scope.highlight && $scope.origItem.type === 'composite';
             $scope.openSuggestions = () => suggest.setActive();
+            $scope.openCompareVersions = (item) => compareVersions.init(item);
 
             $scope.$watch('origItem', (newValue, oldValue) => {
                 $scope.itemActions = null;

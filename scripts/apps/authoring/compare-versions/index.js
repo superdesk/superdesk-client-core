@@ -14,10 +14,8 @@ import * as directive from './directives';
 angular.module('superdesk.apps.authoring.compare_versions',
     ['superdesk.core.activity', 'superdesk.apps.authoring'])
     .service('compareVersions', CompareVersionsService)
-    .directive('sdCompareVersionsDropdown', directive.CompareVersionsDropdownDirective)
     .directive('sdCompareVersionsInnerDropdown', directive.CompareVersionsDropdownInnerDirective)
     .directive('sdCompareVersionsArticle', directive.CompareVersionsArticleDirective)
-    .directive('sdCompareVersionsFloatMenu', directive.CompareVersionsFloatMenuDirective)
 
     .config(['superdeskProvider', function(superdesk) {
         superdesk
