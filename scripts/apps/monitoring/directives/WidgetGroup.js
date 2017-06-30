@@ -402,17 +402,15 @@ export function WidgetGroup(search, api, superdesk, desks, cards, $timeout, $q,
                 scope.updateList = updateCallback;
             };
 
-            var itemList = React.createElement(WidgetItemListComponent,
-                {
-                    allowed: scope.allowed,
-                    customMonitoringWidget: $rootScope.config.features.customMonitoringWidget,
-                    svc: services,
-                    preview: scope.preview,
-                    select: scope.select,
-                    edit: scope.edit,
-                    updateCallback: scope.getUpdateCallback
-                }
-            );
+            var itemList = React.createElement(WidgetItemListComponent, {
+                allowed: scope.allowed,
+                customMonitoringWidget: $rootScope.config.features.customMonitoringWidget,
+                svc: services,
+                preview: scope.preview,
+                select: scope.select,
+                edit: scope.edit,
+                updateCallback: scope.getUpdateCallback
+            });
 
             ReactDOM.render(itemList, elem[0]);
 

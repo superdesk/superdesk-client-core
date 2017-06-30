@@ -1,0 +1,29 @@
+<ul>
+    <li ng-class="{active: currentRoute.href === '/web_publisher/monitoring'}">
+        <a href="#/web_publisher/monitoring" class="sd-sidebar-menu__btn"
+            title="{{ :: 'Output Control' | translate }}" sd-hotkey="alt+m" sd-hotkey-options="{global: true}">
+            <i class="sd-sidebar-menu__main-icon big-icon--view"></i>
+        </a>
+    </li>
+    <li ng-class="{active: currentRoute.href === '/web_publisher/manager'}">
+        <a href="#/web_publisher/manager" class="sd-sidebar-menu__btn"
+            title="{{ :: 'Output Settings' | translate }}" sd-hotkey="alt+n" sd-hotkey-options="{global: true}">
+            <i class="sd-sidebar-menu__main-icon big-icon--web"></i>
+        </a>
+    </li>
+    <li ng-class="{active: currentRoute.href === '/web_publisher/content_lists'}">
+        <a href="#/web_publisher/content_lists" class="sd-sidebar-menu__btn"
+            title="{{ :: 'Content Lists' | translate }}" sd-hotkey="alt+l" sd-hotkey-options="{global: true}">
+            <i class="sd-sidebar-menu__main-icon big-icon--dashboard-alt"></i>
+        </a>
+    </li>
+</ul>
+
+<ul class="absoluteBottom">
+    <li ng-class="{active: currentRoute.href === '/web_publisher/settings'}">
+        <a href="#/web_publisher/settings" class="sd-sidebar-menu__btn"
+            title="{{ :: 'Settings' | translate }}" sd-hotkey="alt+s" sd-hotkey-options="{global: true}">
+            <i class="sd-sidebar-menu__main-icon big-icon--settings"></i>
+        </a>
+    </li>
+</ul>

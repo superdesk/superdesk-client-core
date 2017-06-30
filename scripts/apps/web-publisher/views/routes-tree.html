@@ -1,0 +1,26 @@
+<div class="listElement">
+    <button class="listElement__icon iconButton" ng-if="route.type == 'collection' && route.children.length">
+        <i class="icon-chevron-down-thin" ng-show="!route.closed" ng-click="route.closed = !route.closed"></i>
+        <i class="icon-chevron-right-thin" ng-show="route.closed" ng-click="route.closed = !route.closed"></i>
+    </button>
+    <div class="listElement__icon">
+        <i ng-class="{'icon-align-justify': route.type == 'collection', 'icon-text': route.type == 'content'}"></i>
+    </div>
+    <div class="listElement__content">
+        <span ng-class="{'listElement--bold': route.type == 'collection'}">{{route.name}}</span>
+    </div>
+    <div class="listElement__right">        
+        <div class="dropdown dropdown--align-right" dropdown>
+            <button class="dropdown__toggle" dropdown__toggle>
+                <i class="icon-dots-vertical"></i>
+            </button>
+            <ul class="dropdown__menu">
+                <li><button ng-click="webPublisher.editRoute(route)"><i class="icon-pencil"></i>{{:: 'Edit'| translate}}</button></li>
+                <li><button ng-click="webPublisher.deleteRoute(route.id)"><i class="icon-trash"></i>{{:: 'Delete'| translate}}</button></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<ul ng-show="route.children.length && !route.closed">
+    <li ng-repeat="route in route.children | filter: {type: webPublisher.routeType}" ng-include="webPublisher.TEMPLATES_DIR + '/routes-tree.html'"></li>
+</ul>

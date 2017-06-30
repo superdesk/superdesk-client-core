@@ -1,0 +1,43 @@
+.nav--stackedPublisher {
+    li {
+        border-left: 7px solid transparent;
+
+        &.active {
+            border-color: $sd-blue;
+        }
+
+        &.active, &:hover {
+            button {
+                color: $sd-blue;
+            }
+        }
+
+        &.group-header {
+            text-transform: uppercase;
+            padding-left: 12px;
+            padding-top: 24px;
+            opacity: 0.5;
+            font-size: 0.9em;
+        }
+
+        button {
+            cursor: pointer;
+            background: transparent;
+            padding: 12px 0 12px 24px;
+            font-size: 1.05em;
+            color:#333;
+            border: none;
+            width: 100%;
+            text-align: left;
+
+            &:disabled {
+                cursor: default;
+                opacity: 0.2;
+
+                &:hover {
+                    color:#333;
+                }
+            }
+        }
+    }
+}

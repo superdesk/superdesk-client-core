@@ -1,0 +1,16 @@
+<div class="paneContent__header">
+	<h3 class="pull-left" translate>Rule preview</h3>
+	<div class="pull-right">
+		<div ng-click="webPublisherSettings.toggleCreateRule(false)"" class="close-filter">
+            <i class="icon-close-small"></i>
+        </div>
+	</div>
+</div>
+<div class="paneContent__content contentPadding">
+	<h3>{{webPublisherSettings.selectedRule.name}}</h3>
+	<p>{{webPublisherSettings.selectedRule.description}}</p>
+
+	<p class="codeBlock">
+		{{webPublisherSettings.selectedRule.expression}}
+	</p>
+</div>

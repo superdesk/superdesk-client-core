@@ -1,0 +1,60 @@
+<ul class="nav-tabs nav-tabs--ui-dark">
+    <li ng-class="{'nav-tabs__tab--active': webPublisherMonitoring.activePublishPane == 'publish' }" class="nav-tabs__tab">
+         <button ng-click="webPublisherMonitoring.activePublishPane = 'publish'" class="nav-tabs__link"><span translate="">Publish</span></button>
+    </li>
+    <li ng-if="webPublisherMonitoring.selectedArticle.status != 'new'" class="nav-tabs__tab"
+      ng-class="{'nav-tabs__tab--active': webPublisherMonitoring.activePublishPane == 'unpublish' }">
+        <button ng-click="webPublisherMonitoring.activePublishPane = 'unpublish'" class="nav-tabs__link"><span translate="">Unpublish</span></button>
+    </li>
+    <li ng-click="webPublisherMonitoring.publishOpen = false" class="close-filter">
+        <i class="icon-close-small icon--white"></i>
+    </li>
+</ul>
+
+<div class="paneContent__content paneContent__content--hasFooter contentPadding">
+    <h3 class="text--thin bottomPadding">{{webPublisherMonitoring.selectedArticle.headline}}</h3>
+    <!-- publish -->
+    <div ng-show="webPublisherMonitoring.activePublishPane == 'publish'">
+        <ul class="darkFilters bottomPadding">
+            <li class="darkFilters__item"
+                ng-class="{'darkFilters__item--active': webPublisherMonitoring.publishFilter == 'all'}"
+                ng-click="webPublisherMonitoring.publishFilter = 'all'">All
+            </li>
+            <li class="darkFilters__item"
+                ng-class="{'darkFilters__item--active': webPublisherMonitoring.publishFilter == 'published'}"
+                ng-click="webPublisherMonitoring.publishFilter = 'published'">Published
+            </li>
+            <li class="darkFilters__item"
+                ng-class="{'darkFilters__item--active': webPublisherMonitoring.publishFilter == 'unpublished'}"
+                ng-click="webPublisherMonitoring.publishFilter = 'unpublished'">Unpublished
+            </li>
+        </ul>
+        <ul>
+            <li ng-repeat="site in webPublisherMonitoring.sites" ng-include="webPublisherMonitoring.TEMPLATES_DIR + '/monitoring/publish-pane-listitem.html'">
+        </ul>
+    </div>
+    <!-- unpublish -->
+    <div ng-show="webPublisherMonitoring.activePublishPane == 'unpublish'">
+        <div class="bottomPadding">
+            <span class="text--small">Select All</span>
+            <sd-check ng-click="webPublisherMonitoring.unpublishAll()"
+                ng-model="webPublisherMonitoring.unpublishSelectAll">
+            </sd-check>
+        </div>
+        <button ng-repeat="item in webPublisherMonitoring.newDestinations"
+            ng-if="item.status == 'published'"
+            class="checkButton checkButton--full"
+            ng-class="{'checkButton--active': item.unpublish}"
+            ng-click="item.unpublish = !item.unpublish">
+            {{item.tenant.name}}
+        </button>
+    </div>
+</div>
+<div ng-show="webPublisherMonitoring.activePublishPane == 'publish'" class="paneContent__footer paneContent__footer--transparent">
+    <button class="btn btn--large btn--primary btn--expanded" ng-click="webPublisherMonitoring.publishArticle()">Publish</button>
+</div>
+<div ng-show="webPublisherMonitoring.activePublishPane == 'unpublish'" class="paneContent__footer paneContent__footer--transparent">
+    <button class="btn btn--large btn--highlight btn--expanded" ng-click="webPublisherMonitoring.unPublishArticle()">Unpublish</button>
+</div>
+
+<div ng-include="webPublisherMonitoring.TEMPLATES_DIR + '/monitoring/article-preview.html'" ng-if="webPublisherMonitoring.openArticlePreviewModal"></div>

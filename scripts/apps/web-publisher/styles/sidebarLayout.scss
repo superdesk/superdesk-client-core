@@ -1,0 +1,21 @@
+.sidebarLayout {
+    display: flex;
+    padding: 0 !important;
+    height: 100%;
+
+    &__sidebar {
+        flex: 0 0 200px;
+        border-right: 1px solid $tableBorder;
+        box-shadow: inset -3px 0 8px -3px rgba(0, 0, 0, 0.1);
+        background: $sd-background;
+        padding: 20px 0;
+    }
+
+    &__content {
+        position: relative;
+        padding: 0;
+        width: 100%;
+        background-color: $sd-background;
+        overflow: hidden;
+    }
+}

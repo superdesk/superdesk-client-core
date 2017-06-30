@@ -1,0 +1,131 @@
+.listElement {
+    border: 1px solid $tableBorder;
+    border-left: 4px solid #4d646f;
+    border-top: 0;
+    padding: 12px 5px 12px 15px;
+    background-color: #fff;
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    &--dark {
+        background-color: #444545;
+        border-color: #3b3b3b;
+    }
+
+    &--lightDark {
+        background-color: #535454;
+    }
+
+    &--noBorder {
+        border: none;
+        margin-top: 2px;
+    }
+
+    &--borderPublished {
+        border-left: 4px solid $green;
+    }
+
+    &--borderUnpublished {
+        border-left: 4px solid $red;
+    }
+
+    &--noLeftBorder {
+        border-left: 1px solid $tableBorder;
+    }
+
+    &--bold {
+        font-weight: 700;
+    }
+
+    &:hover button.hidden {
+        opacity: 0.4;
+    }
+
+    &__icon {
+        flex: 0 0 auto;
+        display: inline-block;
+        margin-right: 10px;
+        line-height: 1em;
+        margin-top: 2px;
+        align-items: center;
+
+        i {
+          color: $grayLight;
+        }
+
+        &:hover i {
+            color: $blue;
+        }
+
+        &--active {
+            i {
+                color: $blue;
+            }
+
+            &:hover i {
+                color: $grayLight;
+            }
+        }
+    }
+
+    &__content {
+        width: 100%;
+        color: $gray;
+
+        &--dark {
+            color: #eaeaea;
+
+            .dropdown__toggle {
+                color: #eaeaea;
+
+                option {
+                    color: black;
+                }
+
+                &.line-input {
+                    border-bottom:1px solid rgba(255, 255, 255, 0.3) !important;
+                }
+            }
+        }
+
+        button {
+            border: 0;
+            background: none;
+            line-height: 0;
+
+            &.hidden {
+                opacity: 0;
+                &:hover {
+                    opacity: 1;
+                }
+            }
+        }
+
+        .pin {
+            display: none;
+            opacity: 0.4;
+        }
+    }
+
+    &__right {
+        flex: 0 0 auto;
+        align-items: center;
+        .dropdown__toggle {
+            opacity: .3;
+        }
+        &:hover {
+            .dropdown__toggle {
+                opacity: 1;
+            }   
+        }
+    }
+
+    .countLabel {
+        margin-right: 10px;
+    }
+
+    &:hover button {
+        display: inline-block;
+    }
+}

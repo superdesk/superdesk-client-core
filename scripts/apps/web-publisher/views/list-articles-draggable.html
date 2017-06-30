@@ -1,0 +1,25 @@
+<div ng-if="loading">
+    <div class="item-group__loading"></div>
+</div>
+
+<ul dnd-list dnd-drop="onDrop(list, item, index)" ng-if="!loading" class="flatList">
+    <li ng-repeat="item in list.items"
+       dnd-draggable="getSelectedItemsIncluding(list, item)"
+       dnd-dragstart="onDragstart(list, event)"
+       dnd-dragend="onDragEnd(list)"
+       dnd-selected="item.selected = !item.selected"
+       ng-class="{'selected': item.selected}"
+       ng-hide="list.dragging && item.selected"
+       >
+        <div class="listElement listElement--noLeftBorder">
+            <div class="listElement__icon">
+                <i ng-if="!item.featureMedia && !item.content.featureMedia" class="icon-text"></i>
+                <i  ng-if="item.featureMedia || item.content.featureMedia" class="icon-photo"></i>
+            </div>
+            <div class="listElement__content">
+                {{ item.content.title || item.title }}
+                <button class="hidden pull-right" ng-click="removeFromList($index)" title="{{:: 'Remove' | translate }}"><i class="icon-trash"></i></button>
+            </div>
+        </div>
+    </li>
+</ul>

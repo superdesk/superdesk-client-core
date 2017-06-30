@@ -1,0 +1,55 @@
+<div ng-show="webPublisherMonitoring.publishFilter == 'all' || webPublisherMonitoring.publishedDestinations[site.code].status == webPublisherMonitoring.publishFilter" 
+    class="listElement listElement--dark listElement--noBorder"
+    ng-class="{'listElement--borderPublished listElement--lightDark': webPublisherMonitoring.publishedDestinations[site.code].status == 'published',
+    'listElement--borderUnpublished': webPublisherMonitoring.publishedDestinations[site.code].status == 'unpublished'}">
+    <div class="listElement__content listElement__content--dark">
+        <div>
+            {{site.name}}
+        </div>
+        <div>
+            <div ng-if="!webPublisherMonitoring.publishedDestinations[site.code]" class="flexBox">
+                <span class="text--uppercase text--smaller flexBox__item text--lighter">route</span>
+                <div sd-publish-routes data-site="site" data-monitoring-contoller="webPublisherMonitoring"></div>
+            </div>
+            <div ng-if="webPublisherMonitoring.publishedDestinations[site.code] && webPublisherMonitoring.publishedDestinations[site.code].status != 'unpublished'" >
+                <div ng-show="site.routeEditing" class="flexBox">
+                    <span class="text--uppercase text--smaller flexBox__item text--lighter">route</span>
+                    <div sd-publish-routes data-site="site" data-monitoring-contoller="webPublisherMonitoring"></div>
+                    <div class="flexBox__item">
+                        <i class="icon-close-small icon--white text--verticalMiddle cursorPointer rightSpace"
+                            ng-click="site.routeEditing = false"></i>
+                    </div>
+                </div>
+                <span
+                    class="label label--info text--smaller text--uppercase"
+                    ng-hide="site.routeEditing">{{webPublisherMonitoring.publishedDestinations[site.code].route.name}}
+                </span>
+                <span class="text--uppercase text--smaller text--blue cursorPointer leftSpace"
+                    ng-click="site.routeEditing = true"
+                    ng-hide="site.routeEditing">
+                    change
+                </span>
+            </div>
+            <span ng-if="webPublisherMonitoring.publishedDestinations[site.code].status == 'unpublished'" class="label text--smaller text--uppercase">unpublished</span>
+        </div>
+    </div>
+    <div class="listElement__right">
+        <div class="text--small text--lighter text--right minHeightLine">
+            <span ng-if="webPublisherMonitoring.newDestinations[site.code].route.id && webPublisherMonitoring.publishedDestinations[site.code].route.id == webPublisherMonitoring.newDestinations[site.code].route.id">
+                {{webPublisherMonitoring.publishedDestinations[site.code].updatedAt | reldate}}
+            </span>
+            <span ng-if="webPublisherMonitoring.newDestinations[site.code].route.id"
+                class="text--uppercase text--small text--blue cursorPointer rightSpace--small"
+                ng-click="webPublisherMonitoring.openArticlePreview(webPublisherMonitoring.newDestinations[site.code].route.id, site)">
+                <span sd-tooltip="Live Preview"><i class="icon-external icon--blue text--verticalMiddle rightSpace--small"></i></span>
+            </span>
+        </div>
+        <div class="minHeightLine">
+            <span ng-if="webPublisherMonitoring.publishedDestinations[site.code].fbia" class="label label--facebook text--smaller text--uppercase">facebook</span>
+            <div ng-if="webPublisherMonitoring.newDestinations[site.code].route.id && !webPublisherMonitoring.publishedDestinations[site.code].fbia && webPublisherMonitoring.publishedDestinations[site.code].status != 'unpublished'">
+                <span class="text--uppercase text--smaller text--lighter">publish to facebook</span>
+                <sd-check ng-model="webPublisherMonitoring.newDestinations[site.code].fbia"></sd-check>
+            </div>
+        </div>
+    </div>
+</div>

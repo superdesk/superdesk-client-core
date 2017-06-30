@@ -1,0 +1,122 @@
+<div class="paneContent__header">
+	<h3 class="pull-left" translate>Add Rule</h3>
+	<div class="pull-right">
+		<button class="btn" ng-click="webPublisherSettings.toggleCreateRule(false)" translate>Cancel</button>
+		<button class="btn btn--primary"
+		ng-disabled="webPublisherSettings.ruleForm.$invalid || !webPublisherSettings.ruleForm.$dirty"
+		ng-click="webPublisherSettings.saveRule()" translate>Save</button>
+	</div>
+</div>
+<div class="paneContent__content contentPadding contentPadding--extraBottom">
+	<form name="webPublisherSettings.ruleForm" class="flat">
+		<div class="form__row">
+		    <div class="sd-line-input">
+		        <label class="sd-line-input__label">Name</label>
+		        <input class="sd-line-input__input" type="text" ng-model="newRule.name" required>
+		    </div>
+		</div>
+		<div class="form__row">
+		    <div class="sd-line-input">
+		        <label class="sd-line-input__label">Description</label>
+		        <input class="sd-line-input__input" type="text" ng-model="newRule.description" required>
+		    </div>
+		</div>
+
+		<label class="form-label">Expression</label>
+		<div class="form__row form__row--flex bottomMargin0" ng-repeat="expression in newRule.expressions">
+			 <div class="form__row-item">
+		    	<div class="sd-line-input sd-line-input--is-select bottomMargin0">
+				    <select class="sd-line-input__select"
+				    	required
+				    	ng-model="expression.option"
+                        ng-options="option as option.name for option in webPublisherSettings.expressionBuilder.options">
+                        <option value=""></option>
+                    </select>
+				</div>
+			</div>
+			<div class="form__row-item">
+		    	<div class="sd-line-input sd-line-input--is-select bottomMargin0">
+				    <select class="sd-line-input__select"
+				    	required
+				    	ng-disabled="!expression.option"
+				    	ng-model="expression.operator"
+                        ng-options="operator.value as operator.name for operator in webPublisherSettings.expressionBuilder.operators[expression.option.type]">
+                        <option value=""></option>
+                    </select>
+				</div>
+			</div>
+			<div class="form__row-item" ng-if="expression.option.name != 'Category'">
+				<div class="sd-line-input bottomMargin0">
+					 <input class="sd-line-input__input" type="text" ng-model="expression.value" ng-disabled="!expression.operator" required>
+				</div>
+			</div>
+			<div class="form__row-item" ng-if="expression.option.name == 'Category'">
+				<div class="sd-line-input sd-line-input--is-select bottomMargin0">
+				    <select class="sd-line-input__select"
+				    	required
+				    	ng-disabled="!expression.operator"
+				    	ng-model="expression.value"
+                        ">
+                        <option ng-repeat="category in webPublisherSettings.expressionBuilder.categories" value="/{{category.name}}/">{{category.name}}</option>
+                    </select>
+				</div>
+			</div>
+			<div class="form__row-item form__row-item--no-grow">
+				<i class="icon-trash cursorPointer" 
+				ng-click="webPublisherSettings.removeRuleExpression($index)" 
+				ng-if="$index > 0"></i>
+				<i class="iconFakeSpacer" 
+				ng-if="$index == 0"></i>
+			</div>
+		</div>
+
+		<div class="form__row topMargin">
+			<button class="btn" 
+				ng-click="webPublisherSettings.addRuleExpression()" 
+				ng-disabled="!newRule.expressions[newRule.expressions.length-1].value">
+				Add expression
+			</button>
+		</div>	
+
+		<label class="form-label">Publish automatically</label>
+		<div class="shadowBlock" ng-repeat="action in newRule.actions">
+			<div class="form__row">
+		    	<div class="sd-line-input sd-line-input--is-select">
+				    <label class="sd-line-input__label">Tenant</label>
+				    <select class="sd-line-input__select"
+				    	required
+				    	ng-model="action.tenant"
+                        ng-options="tenant as tenant.name for tenant in webPublisherSettings.sites">
+                        <option value=""></option>
+                    </select>
+				</div>
+			</div>
+			<div class="form__row form__row--flex">
+				 <div class="form__row-item">
+			    	<div class="sd-line-input sd-line-input--is-select">
+					    <label class="sd-line-input__label">Route</label>
+					    <select class="sd-line-input__select"
+					    	required
+					    	ng-disabled="!action.tenant"
+					    	ng-model="action.route"
+	                        ng-options="route.id as route.name for route in action.tenant.routes">
+	                        <option value=""></option>
+	                    </select>
+					</div>
+				</div>
+				<div class="form__row-item">
+					<div class="sd-line-input text--right">
+						<sd-check ng-model="action.fbia" label-position="left">Facebook</sd-check>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="form__row">
+			<button class="btn" 
+				ng-click="webPublisherSettings.addRuleAction()" 
+				ng-disabled="!newRule.actions[newRule.actions.length-1].route">
+				Add action
+			</button>
+		</div>	
+	</form>
+</div>

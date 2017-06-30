@@ -1,0 +1,32 @@
+.sectionTreeElement {
+    padding: 7px 5px 7px 15px;
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    &--extraPadding {
+        padding: 22px 5px 2px 15px;
+    }
+
+    &__icon {
+        flex: 0 0 auto;
+        display: inline-block;
+        line-height: 1em;
+        align-items: center;
+        &--extraMargin{
+            margin-right: 5px;
+        }
+    }
+
+    &__content {
+        width: 100%;
+    }
+
+    &__count {
+        color: $grayLight;
+        line-height: 16px;
+        margin-top: 3px;
+        margin-left: 5px;
+        font-size: 11px;
+    }
+}

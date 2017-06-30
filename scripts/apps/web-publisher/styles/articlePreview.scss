@@ -1,0 +1,78 @@
+.articlePreview {
+    display: flex;
+
+    &__iframe {
+        margin: auto;
+        width: 100%;
+        height: calc(100vh - 88px);
+        background-color: $white;
+        border: 1px solid #e0e0e0;
+        box-shadow: 0 0 12px rgba(0,0,0,0.1);
+
+        &--tablet {
+            width: 768px;
+            height: 1024px;
+        }
+
+        &--tabletLandscape {
+            width: 1024px;
+            height: 768px;
+        }
+
+        &--mobile {
+            width: 320px;
+            height: 640px;
+        }
+
+        &--mobileLandscape {
+            width: 640px;
+            height: 320px;
+        }
+    }
+}
+
+.previewIcon {
+    display: inline-block;
+    background-position: bottom center;
+    background-repeat: no-repeat;
+    height: 32px;
+    width: 32px;
+    opacity: 0.25;
+
+    &--desktop {
+        background-image: url(../images/icon-desktop.svg);
+    }
+
+    &--tablet {
+        background-image: url(../images/icon-tablet.svg);
+        width: 26px;
+        margin-left: 15px;
+    }
+
+    &--tabletLandscape {
+        background-image: url(../images/icon-tablet-lands.svg);
+    }
+
+    &--mobile {
+        background-image: url(../images/icon-mobile.svg);
+        width: 16px;
+        margin-left: 10px;
+    }
+
+    &--mobileLandscape {
+        background-image: url(../images/icon-mobile-lands.svg);
+    }
+
+    &--amp {
+        background-image: url(../images/icon-amp-port.svg);
+        margin-left: 10px;
+    }
+
+    &--ampLandscape {
+        background-image: url(../images/icon-amp-land.svg);
+    }
+
+    &--active {
+        opacity: 0.8;
+    }
+}

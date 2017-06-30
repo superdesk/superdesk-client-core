@@ -1,0 +1,132 @@
+<div class="paneContent__header paneContent__header--dark">
+    <h3>Advanced Filter</h3>
+    <div ng-click="webPublisherMonitoring.filterOpen = !webPublisherMonitoring.filterOpen" class="close-filter">
+        <i class="icon-close-small"></i>
+    </div>
+</div>
+<div class="paneContent__content paneContent__content--hasFooter contentPadding">
+    <form name="" class="flat">
+        <fieldset class="label-light">
+            <div sd-toggle-box data-title="Websites" data-open="true">
+                <ul class="treeList">
+                    <li ng-repeat="site in webPublisherMonitoring.sites">
+                        <div class="sectionTreeElement sectionTreeElement--extraPadding">
+                            <div class="sectionTreeElement__icon">
+                                <sd-check
+                                    ng-model="webPublisherMonitoring.advancedFilters.sites[site.code].status"
+                                    ng-click="webPublisherMonitoring.advancedFilters.sites[site.code].name = site.name">
+                                </sd-check>
+                            </div>
+                            <button class="sectionTreeElement__icon iconButton sectionTreeElement__icon--extraMargin">
+                                <i class="icon-chevron-down-thin" 
+                                    ng-show="site.openInFilterPane" 
+                                    ng-click="site.openInFilterPane = !site.openInFilterPane">
+                                </i>
+                                <i class="icon-chevron-right-thin" 
+                                    ng-show="!site.openInFilterPane" 
+                                    ng-click="site.openInFilterPane = !site.openInFilterPane">
+                                </i>
+                            </button>
+                            <div class="sectionTreeElement__content">
+                                {{ site.name }}
+                                <i class="sectionTreeElement__count">{{site.articlesCount}}</i>
+                            </div>
+                        </div>
+                        <ul ng-show="site.openInFilterPane">
+                            <li ng-repeat="route in site.routes"
+                                ng-include="webPublisherMonitoring.TEMPLATES_DIR + '/monitoring/sections-treeElement.html'">
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+            <div sd-toggle-box data-title="Dates" data-open="false">
+                <!--  <div class="item">
+                    <label for="publishedAt" translate>publish date</label>
+                    <div sd-datepicker data-format="YYYY-MM-DD" name="publishedAt" id="publishedAt" ng-model="webPublisherMonitoring.advancedFilters.publishedAt"></div>
+                </div> -->
+                <div class="item">
+                    <label for="publishedAfter" translate>published after</label>
+                    <div sd-datepicker
+                        data-format="YYYY-MM-DD"
+                        name="publishedAfter"
+                        id="publishedAfter"
+                        ng-model="webPublisherMonitoring.advancedFilters.publishedAfter">
+                    </div>
+                </div>
+                <div class="item">
+                    <label for="publishedBefore" translate>published before</label>
+                    <div sd-datepicker
+                        data-format="YYYY-MM-DD"
+                        name="publishedBefore"
+                        id="publishedBefore"
+                        ng-model="webPublisherMonitoring.advancedFilters.publishedBefore">
+                    </div>
+                </div>
+            </div>
+
+            <div sd-toggle-box data-title="Authors" data-open="false">
+                <div class="item">
+                    <div class="multiple" ng-repeat="item in webPublisherMonitoring.advancedFilters.author track by $index">
+                        <input type="text"
+                            class="line-input"
+                            ng-model="webPublisherMonitoring.advancedFilters.author[$index]"
+                            ng-model-options="{debounce: 1000}">
+                        <button
+                            type="button"
+                            class="btn btn--small"
+                            ng-click="webPublisherMonitoring.filterRemoveAuthor($index)"
+                            tooltip="{{:: 'Remove'|translate}}"
+                            tooltip-placement="bottom"
+                            tooltip-popup-delay="500">
+                            <i class="icon-close-small"></i>
+                        </button>
+                    </div>
+                </div>
+                <button
+                    type="button"
+                    class="btn btn--primary btn--small"
+                    ng-click="webPublisherMonitoring.filterAddAuthor()"
+                    tooltip="{{:: 'Add author'|translate}}"
+                    tooltip-placement="right"
+                    tooltip-popup-delay="500">
+                    <i class="svg-icon-plus"></i>
+                </button>
+            </div>
+
+            <div sd-toggle-box data-title="Ingest Source" data-open="false">
+                <div class="item">
+                    <div class="multiple" ng-repeat="item in webPublisherMonitoring.advancedFilters.source track by $index">
+                        <input type="text"
+                            class="line-input"
+                            ng-model="webPublisherMonitoring.advancedFilters.source[$index]"
+                            ng-model-options="{debounce: 1000}">
+                        <button
+                            type="button"
+                            class="btn btn--small"
+                            ng-click="webPublisherMonitoring.filterRemoveSource($index)"
+                            tooltip="{{:: 'Remove'|translate}}"
+                            tooltip-placement="bottom"
+                            tooltip-popup-delay="500">
+                            <i class="icon-close-small"></i>
+                        </button>
+                    </div>
+                </div>
+                <button
+                    type="button"
+                    class="btn btn--primary btn--small"
+                    ng-click="webPublisherMonitoring.filterAddSource()"
+                    tooltip="{{:: 'Add Source'|translate}}"
+                    tooltip-placement="right"
+                    tooltip-popup-delay="500">
+                    <i class="svg-icon-plus"></i>
+                </button>
+            </div>
+        </fieldset>
+    </form>
+</div>
+<div class="paneContent__footer paneContent__footer--center">
+    <a class="save-search__link" ng-click="webPublisherMonitoring.filtersClear()">Clear filters</a>
+    <button class="btn btn--primary" ng-click="webPublisherMonitoring.filtersSave()" >Save filters</button>
+</div>

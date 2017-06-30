@@ -1,0 +1,57 @@
+.publisherManager.modal {
+    label {
+        min-width: auto;
+    }
+    .modal__header {
+        background-color: white;
+    }
+}
+
+.navigation-main {
+    .subnav {
+        top: 0;
+    }
+    .flex-grid {
+        position: absolute;
+        top: 48px;
+    }
+}
+
+.publisher-mediaBox {
+    overflow: visible !important;
+    .toolbox {
+        overflow: visible !important;
+        z-index: 1 !important;
+
+        .dropdown__menu {
+            z-index: 2 !important;
+        }
+        * {
+            overflow: visible !important;
+        }
+        .dropdown__toggle {
+            visibility: hidden;
+        }
+    }
+
+    &:hover {
+        .toolbox .dropdown__toggle {
+            visibility: visible;
+        }
+    }
+}
+.flex-item {
+    display: flex;
+    flex-direction: column;
+}
+
+// publisher UI conficts workarounds
+input.sd-line-input__input, .sd-line-input__select {
+    border-radius: 0 !important;
+    border: none !important;
+    border-bottom: 1px solid rgba(0,0,0,.15) !important;
+}
+
+.form__row label, .form__row-item label {
+    display: inline !important;
+}

@@ -1,0 +1,27 @@
+<span ng-repeat="(siteCode, site) in webPublisherMonitoring.advancedFilters.sites">
+    <span class="removableLabel" ng-if="site.status">
+        {{site.name}}
+        <button class="removableLabel__close" ng-click="webPublisherMonitoring.filterRemoveTenant(siteCode)"><i class="icon-close-small icon--white"></i></button>
+    </span>
+    <span class="removableLabel" ng-repeat="(routeId, route) in site.routes" ng-if="route.status">
+        {{site.name}}/ {{route.name}}
+        <button class="removableLabel__close" ng-click="webPublisherMonitoring.filterRemoveRoute(siteCode, routeId)"><i class="icon-close-small icon--white"></i></button>
+    </span>
+</span>
+<div class="removableLabel" ng-if="webPublisherMonitoring.advancedFilters.publishedBefore">
+    <span class="removableLabel__smallText">Published Before:</span> {{webPublisherMonitoring.advancedFilters.publishedBefore}}
+    <button class="removableLabel__close" ng-click="webPublisherMonitoring.filterRemoveDate('publishedBefore')"><i class="icon-close-small icon--white"></i></button>
+</div>
+<div class="removableLabel" ng-if="webPublisherMonitoring.advancedFilters.publishedAfter">
+    <span class="removableLabel__smallText">Published After:</span> {{webPublisherMonitoring.advancedFilters.publishedAfter}}
+    <button class="removableLabel__close" ng-click="webPublisherMonitoring.filterRemoveDate('publishedAfter')"><i class="icon-close-small icon--white"></i></button>
+</div>
+<div class="removableLabel" ng-repeat="author in webPublisherMonitoring.advancedFilters.author" ng-if="author.length">
+    <span class="removableLabel__smallText">Author:</span> {{author}}
+    <button class="removableLabel__close" ng-click="webPublisherMonitoring.filterRemoveAuthor($index)"><i class="icon-close-small icon--white"></i></button>
+</div>
+
+<div class="removableLabel" ng-repeat="source in webPublisherMonitoring.advancedFilters.source" ng-if="source.length">
+    <span class="removableLabel__smallText">Source:</span> {{source}}
+    <button class="removableLabel__close" ng-click="webPublisherMonitoring.filterRemoveSource($index)"><i class="icon-close-small icon--white"></i></button>
+</div>

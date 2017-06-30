@@ -1,0 +1,25 @@
+.flexBox {
+    display: flex;
+    align-items: center;
+
+    &__item {
+        flex: 0 0 auto;
+        display: inline-block;
+        text-align: center;
+        line-height: 1em;
+        vertical-align: middle;
+
+        &--textLeft {
+            text-align: left;
+        }
+    }
+
+    &__fullItem {
+        width: 100%;
+
+        &--margin {
+            margin-left: 1em;
+            margin-right: 1em;
+        }
+    }
+}

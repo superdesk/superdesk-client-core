@@ -1,0 +1,15 @@
+ <div class="sd-list-item sd-shadow--z1 bottomSpace" 
+ 	ng-class="{'sd-list-item--activated': webPublisherSettings.selectedRule.id==rule.id}"
+ 	ng-click="webPublisherSettings.previewRule(rule)">
+     <div class="sd-list-item__border"></div>
+     <div class="sd-list-item__column sd-list-item__column--grow sd-list-item__column--no-border">
+         <div class="sd-list-item__row">
+         	 <span class="sd-overflow-ellipsis"><span class="text--uppercase text--blue text--keyword rightSpace">{{rule.name}}</span> {{rule.description}}</span>
+         </div>
+     </div>
+     <div class="sd-list-item__action-menu">
+        <button class="dropdown__toggle" ng-click="webPublisherSettings.deleteRule(rule.id, $event, $index)">
+        	<i class="icon-trash"></i>
+        </button>
+     </div>
+ </div>

@@ -1,0 +1,82 @@
+<div class="modal__header modal__header--padding-20 bg--white">
+    <h3 class="page-nav-title--text-light" translate>Routes</h3>
+</div>
+
+<div class="subnav subnav--absolute">
+    <ul class="filter-type filter-type--padded rightPadding">
+        <li class="filter-type__item" ng-class="{'filter-type__item--active': webPublisher.routeType === ''}">
+            <a ng-click="webPublisher.changeRouteFilter('')" translate>all</a>
+        </li>
+        <li class="filter-type__item" ng-class="{'filter-type__item--active': webPublisher.routeType === 'collection'}">
+            <a ng-click="webPublisher.changeRouteFilter('collection')" translate>collection</a>
+        </li>
+        <li class="filter-type__item" ng-class="{'filter-type__item--active': webPublisher.routeType === 'content'}">
+            <a ng-click="webPublisher.changeRouteFilter('content')" translate>content</a>
+        </li>
+    </ul>
+
+    <div sd-item-searchbar class="searchbar-flex-handler"></div>
+
+    <div class="subnav__stretch-bar"></div>
+
+    <div class="subnav__button-stack--square-buttons">
+        <button class="navbtn sd-create-btn" ng-click="webPublisher.toogleCreateRoute(true)">
+            <i class="svg-icon-plus"></i><span class="circle"></span>
+        </button>
+    </div>
+</div>
+<div class="paneLayout paneLayout--twoHeadersMargin">
+    <div class="paneLayout__content">
+        <div class="contentPadding">
+            <ul class="treeList">
+                <li ng-repeat="route in routes | filter: {type: webPublisher.routeType, level: webPublisher.routeType === 'content' ? '' : 0} | orderBy: ['type', 'name'] track by route.id"
+                    ng-include="webPublisher.TEMPLATES_DIR + '/routes-tree.html'">
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="paneLayout__pane paneContent" ng-class="{'paneLayout__pane--open': webPublisher.routePaneOpen}">
+        <div class="paneContent__header">
+            <h3 class="pull-left" ng-if="webPublisher.isObjEmpty(webPublisher.selectedRoute)" translate>Add Route</h3>
+            <h3 class="pull-left" ng-if="!webPublisher.isObjEmpty(webPublisher.selectedRoute)" translate>Edit Route</h3>
+            <div class="pull-right">
+                <button class="btn" ng-click="webPublisher.toogleCreateRoute(false)" translate>Cancel</button>
+                <button class="btn btn--primary"
+                    ng-disabled="webPublisher.routeForm.$invalid || !webPublisher.routeForm.$dirty"
+                    ng-click="webPublisher.saveRoute()" translate>Save</button>
+            </div>
+        </div>
+        <div class="paneContent__content contentPadding">
+            <form name="webPublisher.routeForm" class="flat">
+                <fieldset class="label-light">
+                	<div class="item">
+	                    <label for="routeName" translate>name</label>
+	                    <input type="text" class="line-input" id="routeName" ng-model="newRoute.name" required>
+					</div>
+					<div class="item">
+	                    <label for="routeType" translate>type</label>
+					    <select class="dropdown__toggle line-input" id="routeType" ng-model="newRoute.type" required>
+				      		<option value="collection" translate>Collection</option>
+				      		<option value="content" translate>Content</option>
+					    </select>
+				    </div>
+                    <div class="item">
+                        <label for="routeParent" translate>parent</label>
+                        <select id="routeParent" class="dropdown__toggle line-input" ng-model="newRoute.parent"
+                            ng-options="route.id as route.name for route in routes | filter: {type: 'collection', id: newRoute.id ? '!' + newRoute.id : ''}">
+                            <option value=""></option>
+                        </select>
+                    </div>
+                    <div class="item">
+	                    <label for="routeTemplate" translate>template name</label>
+	                    <input type="text" class="line-input" id="routeTemplate" ng-model="newRoute.templateName">
+                    </div>
+                    <div class="item">
+                        <label for="articleTemplate" translate>article template name</label>
+                        <input type="text" class="line-input" id="articleTemplate" ng-model="newRoute.articlesTemplateName">
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</div>
