@@ -1,0 +1,25 @@
+<div ng-if="loading">
+    <div class="item-group__loading"></div>
+</div>
+
+<div ng-if="!loading && !articles.length" class="alert alert-info alert-block">
+    <h4 translate>The list is empty</h4>
+    <p translate>Please update filter criteria to add articles to the list.</p>
+</div>
+
+<ul ng-if="!loading && articles.length" class="flatList">
+    <li ng-repeat="article in articles">
+        <div class="listElement listElement--noLeftBorder">
+            <div class="listElement__icon">
+                <i ng-if="!article.featureMedia && !article.content.featureMedia" class="icon-text"></i>
+                <i  ng-if="article.featureMedia || article.content.featureMedia" class="icon-photo"></i>
+            </div>
+            <div class="listElement__content">
+                {{ :: article.content.title}}
+                <button class="pull-right" ng-if="article.sticky" ng-click="pinArticle(article)" title="{{:: 'Unpin' | translate }}"><i class="icon-pin"></i></button>
+                <button class="hidden pull-right" ng-if="!article.sticky" ng-click="pinArticle(article)" title="{{:: 'Pin' | translate }}"><i class="icon-pin"></i></button>
+                <span ng-if="article.sticky" class="pull-right state-label state-fetched" translate>pinned</span>
+            </div>
+        </div>
+    </li>
+</ul>

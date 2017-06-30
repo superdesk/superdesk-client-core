@@ -1,0 +1,126 @@
+.paneContent {
+    &--darker {
+        background-color: #3b3b3b;
+        color: $white;
+
+        .sd-checkbox {
+            border: 2px solid rgba(255,255,255,.4);
+
+            &:hover {
+                border: 2px solid rgba(255,255,255,.8);
+            }
+
+            &.checked {
+                border: 2px solid transparent;
+
+                &:hover {
+                    border: 2px solid transparent;
+                }
+            }
+        }
+    }
+
+    &__header {
+        border-bottom: 1px solid #e4e4e4;
+        background-color: $white;
+        position: relative;
+        width: 100%;
+        min-height: 48px;
+        padding: 1rem 2rem;
+        box-sizing: border-box;
+        font-size: 1.4rem;
+        font-weight: 100;
+
+        > h3 {            
+            font-weight: inherit;
+        }
+
+        &--dark {
+            background: #f4f4f4;
+            border-color: $tableBorder;
+        }
+
+        &--darker {
+            background: #3b3b3b;
+            border-color: #424242;
+            color: $white;
+        }
+    }
+
+    &__tabItem {
+        display: inline-block;
+        color: $gray;
+        margin: 0;
+        line-height: 48px;        
+        font-weight: 400;
+        cursor: pointer;
+
+        &:hover {
+            color: $grayDark;
+            text-decoration: none;
+        }
+
+        &--active {
+            color: $grayDark;
+            border-bottom: 2px solid $sd-blue;
+        }
+
+        &--light {
+            color: $grayLight;
+
+            &:hover {
+                color: $white;
+            }
+        }
+
+        &--activeLight {
+            color: $grayLighter;
+            border-bottom: 2px solid $sd-blue;
+        }
+    }
+
+    &__content {
+        height: calc(100% - 48px);
+        overflow-y: scroll;
+        box-sizing: border-box;
+
+        &--hasFooter {
+            height: calc(100% - 108px);
+        }
+
+        .multiple {
+            .line-input {
+                margin-right: 10px;
+            }
+
+            i {
+                margin-right: 0;
+            }
+        }
+
+        .field {
+            margin-bottom: 0;
+        }
+    }
+
+    &__main {
+        padding: 20px;
+        width: 30%;
+    }
+
+    &__footer {
+        height: 60px;
+        background-color: $white;
+        box-sizing: border-box;
+        padding: 16px 24px;
+        box-shadow: 0 -1px 2px 0 rgba(0,0,0,.12);
+
+        &--center {
+            text-align: center;
+        }
+
+        &--transparent {
+            background-color: transparent;
+        }
+    }
+}

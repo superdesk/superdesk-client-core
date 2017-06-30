@@ -1,0 +1,104 @@
+<div class="subnav bg--white paneLayout">
+    <h3 class="page-nav-title page-nav-title--text-light" translate>Content Bucket</h3>
+    <div class="subnav__button-stack--square-buttons">
+        <button class="navbtn sd-create-btn" ng-disabled="webPublisher.listAdd" ng-click="webPublisher.createListCard('bucket')">
+            <i class="icon-plus-sign icon--blue"></i>
+        </button>
+    </div>
+</div>
+
+<div class="paneLayout paneLayout--headerMargin">
+    <div class="paneLayout__content">
+        <div class="contentPadding">
+            <div class="flex-grid box wrap-items small-1 medium-2 large-3 xlarge-4">
+                <div class="flex-item card-box" ng-repeat="list in lists | filter: {type: 'bucket'} | orderBy: 'id' track by list.id">
+                    <div class="card-box__header">
+                        <div ng-if="!webPublisher._editMode(list, webPublisher.selectedList, webPublisher.listAdd)" class="dropdown dropdown--align-right" dropdown>
+                            <button class="dropdown__toggle" dropdown__toggle>
+                                <i class="icon-dots-vertical"></i>
+                            </button>
+                            <ul class="dropdown__menu">
+                                <li>
+                                    <button ng-click="webPublisher.openListCriteria(list)" title="{{:: 'Edit list'| translate }}">
+                                        <i class="icon-pencil"></i>{{:: 'Edit'| translate}}
+                                    </button>
+                                </li>
+                                <li>
+                                    <button ng-click="webPublisher.editListCardSettings(list)" title="{{:: 'Settings'| translate }}">
+                                        <i class="icon-settings"></i>{{:: 'Settings'| translate}}
+                                    </button>
+                                </li>
+                                <li>
+                                    <button ng-click="webPublisher.deleteList(list.id)" title="{{:: 'Remove list'| translate }}">
+                                        <i class="icon-trash"></i>{{:: 'Remove'| translate}}
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                        <div ng-if="webPublisher._editMode(list, webPublisher.selectedList, webPublisher.listAdd)" class="card-box__btn-group card-box__btn-group--right">
+                            <button ng-click="webPublisher.cancelEditListCard()" class="btn">
+                                <i class="icon-close-small"></i>
+                            </button>
+                            <button ng-click="webPublisher.saveList()" class="btn">
+                                <i class="icon-ok"></i>
+                            </button>
+                        </div>
+                        <div ng-if="!webPublisher._editMode(list, webPublisher.selectedList, webPublisher.listAdd)"
+                            ng-click="webPublisher.editListCard(list)"
+                            class="card-box__heading card-box__heading--editable">
+                            <div>{{ list.name }}</div>
+                        </div>
+                        <div ng-if="webPublisher._editMode(list, webPublisher.selectedList, webPublisher.listAdd)" class="card-box__heading card-box__heading--editable">
+                            <input type="text" ng-model="newList.name" class="line-input line-input--alt" required sd-card-input-focus>
+                        </div>
+                    </div>
+
+                    <!-- todo: ng-show if listOfItems.length -->
+                    <div class="card-box__content">
+                        <ul class="card-box__content-list card-box__content-list--scrollable">
+                            <li ng-repeat="i in [1,2,3,4,5,6,7,8,9]">
+                                <h4>Article {{i}}</h4>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- todo: ng-show if listOfItems.length -->
+                    <div class="card-box__footer">
+                        <span class="text--lighter text--small text--uppercase">Last Modified:</span>
+                        <span class="leftSpace text--small">{{ list.updatedAt | reldate}}</span>
+                        <span class="pull-right state-label state-published" ng-show="list.enabled" translate>active</span>
+                        <span class="pull-right state-label state-killed" ng-hide="list.enabled" translate>inactive</span>
+                    </div>
+                    <!-- todo: ng-hide if listOfItems.length -->
+                    <div class="card-box__placeholder card-box__placeholder--cursorPointer" ng-hide="i!=3">
+                        Click to add items.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div sd-modal data-model="webPublisher.settingsModal" class="responsive-popup">
+    <div class="modal__header">
+        <a href="" class="close" ng-click="webPublisher.cancelListCardSettings()"><i class="icon-close-small"></i></a>
+        <h3 translate>Settings</h3>
+    </div>
+    <div class="modal__body">
+        <form name="settingsForm">
+            <fieldset>
+                <div class="field">
+                    <label for="listLimit" translate>number of articles limit</label>
+                    <input type="number" id="listLimit" class="line-input" ng-model="newList.limit" min="0">
+                </div>
+                <div class="field">
+                    <label for="listCacheLifeTime" translate>cache lifetime</label>
+                    <input type="number" id="listCacheLifeTime" class="line-input" ng-model="newList.cacheLifeTime" min="0" required>   
+                </div>
+            </fieldset>
+        </form>
+    </div>
+    <div class="modal__footer">
+          <button class="btn" ng-click="webPublisher.cancelListCardSettings()" translate>Cancel</button>
+          <button class="btn btn--primary" ng-click="webPublisher.saveList()" ng-disabled="!settingsForm.$valid" translate>Save</button>
+    </div>
+</div>

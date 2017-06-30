@@ -1,0 +1,75 @@
+.paneLayout {
+    display: flex;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    overflow-x: hidden;
+
+    .close-filter {
+        position: absolute;
+        top: 16px;
+        right: 8px;
+        padding-left: 10px;
+        padding-right: 10px;
+        @include opacity(40);
+        &:hover {
+            cursor: pointer;
+            @include opacity(100);
+        }
+    }
+
+    .terms-list li {
+        background-color: rgba(255, 255, 255, 0.8);
+    }
+
+    &--headerMargin {
+        top: 49px;
+    }
+
+    &--twoHeadersMargin {
+        top: 97px;
+    }
+    &--threeHeadersMargin {
+        top: 145px;
+    }
+
+    &__content {
+        background-color: $sd-background;
+        width: 100%;
+        overflow-y: auto;
+        position: relative;
+    }
+    // right pane
+    &__pane {
+        background-color: #fff;
+        border-left: 1px solid $tableBorder;
+        flex: 0 0 400px;
+        overflow: hidden;
+        // margin instead of translateX because of automatic __content size
+        margin-right: -500px;
+        transition: all .3s;
+        position: relative;
+
+        &--open {
+            margin-right: 0;
+        }
+    }
+    // left pane
+    &__leftPane {
+        @include box-sizing(border-box);
+        border-right: 1px solid $tableBorder;
+        flex: 0 0 300px;
+        // margin instead of translateX because of automatic __content size
+        margin-left: -300px;
+        overflow: hidden;
+        transition: all .3s;
+        background-color: #ededed;
+        box-shadow: inset -1px 0 6px 0 rgba(0,0,0,.1);
+
+        &--open {
+            margin-left: 0;
+        }
+    }
+}

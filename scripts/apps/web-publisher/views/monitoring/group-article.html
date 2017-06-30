@@ -1,0 +1,22 @@
+<div class="stage-header">
+    <span class="stage-header__name">
+        <a href="" ng-if="!webPublisherMonitoring.routeArticles" ng-click="webPublisherMonitoring.viewRouteArticles(site)">{{site.name}}</a>
+        <a href="" ng-if="webPublisherMonitoring.routeArticles">{{route.name}}</a>
+        <a href="" ng-if="!webPublisherMonitoring.tenantArticles && rootType == 'incoming'">Incoming Content</a>
+        <a href="" ng-if="!webPublisherMonitoring.tenantArticles && rootType == 'published'" ng-click="webPublisherMonitoring.viewTenantArticles()">Published To Web</a>
+    </span>
+    <span class="label-total stage-header__number">{{totalArticles.total}}</span>
+</div>
+<div class="publisherBoxShadow">
+    <ul class="list-view compact-view"
+        infinite-scroll="loadArticles()"
+        infinite-scroll-disabled="!initialFilters || !loadedFilters"
+        infinite-scroll-parent="true">
+        <li class="list-item-view"
+            ng-repeat="i in articlesList"
+            ng-include="webPublisherMonitoring.TEMPLATES_DIR + '/monitoring/list-item.html'">
+        </li>
+        <li class="list-without-items" ng-if="initialFilters && loadedFilters && !loadingArticles && !articlesList.length">There are currently no items</li>
+        <li ng-if="!initialFilters || !loadedFilters || loadingArticles" class="item-group__loading list-without-items"></li>
+    </ul>
+</div>

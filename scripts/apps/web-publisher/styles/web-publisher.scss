@@ -1,0 +1,25 @@
+// web-publisher.scss
+// Styling for the web publisher module
+// ----------------------------------------------------------------------------------------
+
+@import '~mixins.scss';
+@import '~variables.scss';
+
+@import '_overwrites.scss';
+@import 'sidebarLayout.scss';
+@import 'nav.scss';
+@import 'paneLayout.scss';
+@import 'treeList.scss';
+@import 'flatList.scss';
+@import 'listElement.scss';
+@import 'helperElements.scss';
+@import 'paneContent.scss';
+@import 'sectionTreeElement.scss';
+@import 'verticalLayout.scss';
+@import 'dragNdrop.scss';
+@import 'dropdownLight.scss';
+@import 'flexBox.scss';
+@import 'darkFilters.scss';
+@import 'checkButton.scss';
+@import 'articlePreview.scss';
+@import 'removableLabels.scss';

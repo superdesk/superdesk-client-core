@@ -1,0 +1,30 @@
+.darkFilters {
+    white-space: nowrap;
+
+    &__item {
+        display: inline-block;
+        vertical-align: middle;
+        margin: 3px 2px;
+        cursor: pointer;
+        border: 1px solid $grayLight;
+        color: $grayLight;
+        padding: 2px 9px;
+        font-size: .9em;
+        border-radius: 3px;
+
+        &:hover {
+            border-color: $grayLighter;
+            color: $grayLighter;
+        }
+
+        &--active {
+            color: $white;
+            background-color: $sd-blue;
+            border-color: $sd-blue;
+
+            &:hover {
+                border-color: $sd-blue;
+            }
+        }
+    }
+}

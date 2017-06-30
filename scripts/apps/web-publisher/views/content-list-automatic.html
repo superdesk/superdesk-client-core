@@ -1,0 +1,116 @@
+<div class="subnav paneLayout bg--white">
+    <div class="flat-searchbar monitoring-backlink">
+        <div class="search-handler">
+            <button class="backlink" ng-click="webPublisherContentLists.changeView('content-lists')"></button>
+        </div>
+    </div>
+    <div class="filter-trigger" title="Filters" ng-click="filterOpen = !filterOpen" ng-class="{'filter-trigger--active': filterOpen}">
+        <i class="icon-filter-large"></i>
+    </div>
+    <h3 class="page-nav-title">{{newList.name}}</h3>
+</div>
+<div class="paneLayout paneLayout--headerMargin">
+    <div class="paneLayout__leftPane paneContent" ng-class="{'paneLayout__leftPane--open': filterOpen}">
+        <div class="paneContent__header paneContent__header--dark">
+            <h3 class="pull-left" translate>Automatic List Criteria</h3>
+            <div ng-click="filterOpen = !filterOpen" class="close-filter">
+                <i class="icon-close-small"></i>
+            </div>
+        </div>
+        <div class="paneContent__content paneContent__content--hasFooter contentPadding">
+            <form class="flat">
+                <fieldset class="label-light">
+                    <div class="item">
+	                    <label translate>routes</label>
+                        <div sd-meta-terms
+                            class="data"
+                            data-item="webPublisherContentLists"
+                            data-field="selectedRoutes"
+                            data-list="routes"
+                            data-unique="id"
+                            data-header="true"
+                            data-reload-list="true">
+                        </div>
+					</div>
+                    <div class="item">
+	                    <label translate>author</label>
+                        <div class="multiple" ng-repeat="item in newList.filters.author track by $index">
+                            <input type="text" class="line-input" ng-model="newList.filters.author[$index]">
+                            <button
+                                type="button"
+                                class="btn btn--small"
+                                ng-click="webPublisherContentLists.removeAuthor($index)"
+                                tooltip="{{:: 'Remove'|translate}}"
+                                tooltip-placement="bottom"
+                                tooltip-popup-delay="500">
+                                <i class="icon-close-small"></i>
+                            </button>
+                        </div>
+					</div>
+                    <button
+                        type="button"
+                        class="btn btn--primary btn--small"
+                        ng-click="webPublisherContentLists.addAuthor()"
+                        tooltip="{{:: 'Add author'|translate}}"
+                        tooltip-placement="right"
+                        tooltip-popup-delay="500">
+                        <i class="svg-icon-plus"></i>
+                    </button>
+                    <div class="item">
+                        <label for="publishedAt" translate>publish date</label>
+                        <div sd-datepicker data-format="YYYY-MM-DD" name="publishedAt" id="publishedAt" ng-model="newList.filters.publishedAt"></div>
+                    </div>
+                    <div class="item">
+                        <label for="publishedBefore" translate>published before</label>
+                        <div sd-datepicker data-format="YYYY-MM-DD" name="publishedBefore" id="publishedBefore" ng-model="newList.filters.publishedBefore"></div>
+                    </div>
+                    <div class="item">
+                        <label for="publishedAfter" translate>published after</label>
+                        <div sd-datepicker data-format="YYYY-MM-DD" name="publishedAfter" id="publishedAfter" ng-model="newList.filters.publishedAfter"></div>
+                    </div>
+                    <div class="item">
+	                    <label translate>metadata</label>
+                        <div class="field" ng-if="webPublisherContentLists.metadataList.length>0">
+                            <label translate>Name</label>
+                            <label translate>Value</label>
+                        </div>
+                        <div class="multiple" ng-repeat="item in webPublisherContentLists.metadataList">
+                            <input type="text" class="line-input" ng-model="item.metaName">
+                            <input type="text" class="line-input" ng-model="item.metaValue">
+                            <button
+                                type="button"
+                                class="btn btn--small"
+                                ng-click="webPublisherContentLists.removeMetadata($index)"
+                                tooltip="{{:: 'Remove'|translate}}"
+                                tooltip-placement="bottom"
+                                tooltip-popup-delay="500">
+                                <i class="icon-close-small"></i>
+                            </button>
+                        </div>
+					</div>
+                    <button
+                        type="button"
+                        class="btn btn--primary btn--small"
+                        ng-click="webPublisherContentLists.addMetadata()"
+                        tooltip="{{:: 'Add metadata'|translate}}"
+                        tooltip-placement="right"
+                        tooltip-popup-delay="500">
+                        <i class="svg-icon-plus"></i>
+                    </button>
+                </fieldset>
+            </form>
+        </div>
+        <div class="paneContent__footer">
+            <button class="btn btn--large btn--primary btn--expanded" ng-click="webPublisherContentLists.saveListCriteria()" translate>Update Criteria</button>
+        </div>
+    </div>
+
+    <div class="paneLayout__content">
+        <div class="contentPadding">
+            <h3 class="text--uppercase text--bold text--smallHeading" translate>Content List Articles</h3>
+
+            <div sd-list-articles data-list="newList" data-type="detail"></div>
+        </div>
+    </div>
+
+</div>

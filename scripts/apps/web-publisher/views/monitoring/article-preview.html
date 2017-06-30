@@ -1,0 +1,42 @@
+<div sd-modal data-model="true" data-full="true" class="modal--fullscreen publisherManager">
+    <div class="modal__header">
+        <div class="flexBox">
+            <h6 class="flexBox__item text--left width200">Live preview: <b class="text--dark">{{webPublisherMonitoring.articlePreviewModeReadable}}</b></h6>
+            <div class="flexBox__fullItem flexBox__fullItem--margin text--center">
+                <a class="cursorPointer previewIcon previewIcon--desktop"
+                    ng-class="{'previewIcon--active': webPublisherMonitoring.articlePreviewMode == 'desktop'}"
+                    ng-click="webPublisherMonitoring.setArticlePreviewMode('desktop')"></a>
+                <a class="cursorPointer previewIcon previewIcon--tablet"
+                    ng-class="{'previewIcon--active': webPublisherMonitoring.articlePreviewMode == 'tablet'}"
+                    ng-click="webPublisherMonitoring.setArticlePreviewMode('tablet')"></a>
+                <a class="cursorPointer previewIcon previewIcon--tabletLandscape"
+                    ng-class="{'previewIcon--active': webPublisherMonitoring.articlePreviewMode == 'tablet-landscape'}"
+                    ng-click="webPublisherMonitoring.setArticlePreviewMode('tablet-landscape')"></a>
+                <a class="cursorPointer previewIcon previewIcon--mobile"
+                    ng-class="{'previewIcon--active': webPublisherMonitoring.articlePreviewMode == 'mobile'}"
+                    ng-click="webPublisherMonitoring.setArticlePreviewMode('mobile')"></a>
+                <a class="cursorPointer previewIcon previewIcon--mobileLandscape"
+                    ng-class="{'previewIcon--active': webPublisherMonitoring.articlePreviewMode == 'mobile-landscape'}"
+                    ng-click="webPublisherMonitoring.setArticlePreviewMode('mobile-landscape')"></a>
+                <a class="cursorPointer previewIcon previewIcon--amp"
+                    ng-class="{'previewIcon--active': webPublisherMonitoring.articlePreviewMode == 'amp'}"
+                    ng-click="webPublisherMonitoring.setArticlePreviewMode('amp')"></a>
+                <a class="cursorPointer previewIcon previewIcon--ampLandscape"
+                    ng-class="{'previewIcon--active': webPublisherMonitoring.articlePreviewMode == 'amp-landscape'}"
+                    ng-click="webPublisherMonitoring.setArticlePreviewMode('amp-landscape')"></a>
+            </div>
+            <div class="flexBox__item text--right width200">
+                <button class="btn" ng-click="webPublisherMonitoring.openArticlePreviewModal = false" translate>Close</button>
+            </div>
+        </div>
+    </div>
+    <div class="modal__body articlePreview">
+        <iframe ng-src="{{webPublisherMonitoring.previewArticleSrc}}"
+            class="articlePreview__iframe"
+            ng-class="{'articlePreview__iframe--tablet': webPublisherMonitoring.articlePreviewMode == 'tablet',
+                        'articlePreview__iframe--tabletLandscape': webPublisherMonitoring.articlePreviewMode == 'tablet-landscape',
+                        'articlePreview__iframe--mobile': webPublisherMonitoring.articlePreviewMode == 'mobile' || webPublisherMonitoring.articlePreviewMode == 'amp',
+                        'articlePreview__iframe--mobileLandscape': webPublisherMonitoring.articlePreviewMode == 'mobile-landscape' || webPublisherMonitoring.articlePreviewMode == 'amp-landscape'}">
+        </iframe>
+    </div>
+</div>

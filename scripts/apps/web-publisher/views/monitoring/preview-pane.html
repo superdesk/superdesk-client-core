@@ -1,0 +1,10 @@
+<ul class="nav-tabs nav-tabs--ui-dark">
+    <li ng-click="webPublisherMonitoring.previewOpen = false" class="close-filter">
+        <i class="icon-close-small"></i>
+    </li>
+</ul>
+
+<div class="paneContent__content paneContent__content--hasFooter contentPadding">
+    <h3 class="text--thin bottomPadding">{{webPublisherMonitoring.selectedArticle.headline}}</h3>
+    <div ng-bind-html="webPublisherMonitoring.bodyHtml"></div>
+</div>

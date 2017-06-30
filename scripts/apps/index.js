@@ -24,6 +24,14 @@ import 'apps/search-providers';
 import 'apps/internal-destinations';
 import 'apps/content-api';
 
+/* globals __SUPERDESK_CONFIG__: true */
+const appConfig = __SUPERDESK_CONFIG__;
+const withPublisher = typeof appConfig.publisher !== 'undefined';
+
+if (withPublisher) {
+    require('apps/web-publisher');
+}
+
 export default angular.module('superdesk.apps', [
     'superdesk.apps.settings',
     'superdesk.apps.dashboard',
@@ -53,4 +61,4 @@ export default angular.module('superdesk.apps', [
     'superdesk.apps.profiling',
     'superdesk.apps.internal-destinations',
     'superdesk.apps.content-api'
-]);
+].concat(withPublisher ? 'superdesk.apps.web_publisher' : []));

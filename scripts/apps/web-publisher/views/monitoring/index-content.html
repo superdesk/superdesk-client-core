@@ -1,0 +1,33 @@
+<div class="content-list">
+    <div class="stage" ng-if="!webPublisherMonitoring.tenantArticles">
+        <div sd-group-article
+            data-root-type="incoming"
+            data-web-publisher-monitoring="webPublisherMonitoring"
+            data-filters="webPublisherMonitoring.advancedFilters">
+        </div>
+    </div>
+    <div class="stage" ng-if="!webPublisherMonitoring.tenantArticles">
+        <div sd-group-article
+            data-root-type="published"
+            data-web-publisher-monitoring="webPublisherMonitoring"
+            data-filters="webPublisherMonitoring.advancedFilters">
+        </div>
+    </div>
+    <div class="stage" ng-repeat="site in webPublisherMonitoring.sites"
+        ng-if="webPublisherMonitoring.tenantArticles && !webPublisherMonitoring.routeArticles">
+        <div sd-group-article
+            data-site="site"
+            data-web-publisher-monitoring="webPublisherMonitoring"
+            data-filters="webPublisherMonitoring.advancedFilters">
+        </div>
+    </div>
+    <div class="stage" ng-repeat="route in webPublisherMonitoring.routes"
+        ng-if="webPublisherMonitoring.routeArticles">
+        <div sd-group-article
+            data-site="site"
+            data-route="route"
+            data-web-publisher-monitoring="webPublisherMonitoring"
+            data-filters="webPublisherMonitoring.advancedFilters">
+        </div>
+    </div>
+</div>

@@ -1,0 +1,64 @@
+<div class="media-box media-text publisher-mediaBox" ng-click="webPublisherMonitoring.openPreview($event, i)">
+    <span class="state-border"></span>
+    <div class="list-field type-icon">
+        <i ng-if="i.type == 'text'" class="filetype-icon-text"></i>
+        <i ng-if="i.type != 'text'" class="filetype-icon-picture"></i>
+    </div>
+    <div class="list-field urgency">
+        <span class="priority-label priority-label--{{ i.priority }}" title="{{i.priority}}">{{i.priority}}</span>
+        <span class="urgency-label urgency-label--{{ i.urgency }}" title="{{i.urgency}}">{{i.urgency}}</span>
+    </div>
+    <div class="item-info">
+        <div class="line">
+            <span class="keyword">{{i.headline}}</span>
+            <span class="item-heading">{{i.description_text}}</span>
+            <time>{{i.updatedAt | reldate}}</time>
+        </div>
+        <div class="line">
+            <div class="state-label state-corrected">Update {{i.version}}</div>
+            <span class="provider">{{i.byline}}</span>
+            <span class="container">{{i.route.name}}</span>
+            <div ng-repeat="item in i.articles"
+                class="state-label flex-pull-right"
+                ng-class="{'state-published': item.status == 'published', 'state-killed': item.status == 'unpublished'}">{{item.tenant.name}}
+            </div>
+        </div>
+
+        <div class="item-right toolbox">
+            <div class="dropdown flex-pull-right" dropdown dropdown-append-to-body>
+                <button class="dropdown__toggle" dropdown__toggle>
+                    <i class="icon-dots-vertical"></i>
+                </button>
+                <ul class="dropdown__menu">
+                    <li>
+                        <div class="dropdown__menu-label">
+                            Actions
+                            <button class="dropdown__menu-close"><i class="icon-close-small"></i></button>
+                        </div>
+                    </li>
+                    <li class="dropdown__menu-divider"></li>
+                    <li>
+                        <button ng-click="webPublisherMonitoring.openPublish(i, 'publish')">
+                            <i class="icon-expand-thin"></i>{{:: 'Publish'| translate}}
+                        </button>
+                    </li>
+                    <li ng-if="rootType != 'incoming'">
+                        <button ng-click="webPublisherMonitoring.openPublish(i, 'unpublish')">
+                            <i class="icon-expand-thin icon--rotate-180"></i>{{:: 'Unpublish'| translate}}
+                        </button>
+                    </li>
+                    <li ng-if="rootType == 'incoming'">
+                        <button ng-click="webPublisherMonitoring.editArticle(i)">
+                            <i class="icon-pencil"></i>{{:: 'Edit'| translate}}
+                        </button>
+                    </li>
+                    <li ng-if="rootType == 'incoming'">
+                        <button ng-click="webPublisherMonitoring.removeArticle(i)">
+                            <i class="icon-trash"></i>{{:: 'Remove'| translate}}
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
