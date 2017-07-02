@@ -29,7 +29,6 @@ angular.module('superdesk.core.auth.login', []).directive('sdLoginModal', [
                     saml: 'saml_label'
                 }).then((labels) => {
                     scope.labels = labels;
-                    console.info('labels', labels);
                 });
 
                 scope.authenticate = function() {

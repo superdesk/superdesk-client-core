@@ -92,7 +92,7 @@ export function ContentCreateDirective(api, desks, templates, content, authoring
                 let desk = desks.getCurrentDesk();
 
                 scope.defaultTemplate = null;
-                if (desk.default_content_template) {
+                if (desk && desk.default_content_template) {
                     templates.find(desk.default_content_template).then((template) => {
                         scope.defaultTemplate = template;
                     });
