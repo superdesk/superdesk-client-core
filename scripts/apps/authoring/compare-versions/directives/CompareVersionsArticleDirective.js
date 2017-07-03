@@ -53,6 +53,7 @@ class LinkFunction {
 
         this.scope.origItem = item;
         this.scope.item = _.cloneDeep(item);
+        this.scope.compareView = true;
         this.scope._editable = false;
         this.scope.isMediaType = _.includes(['audio', 'video', 'picture', 'graphic'], this.scope.item.type);
 

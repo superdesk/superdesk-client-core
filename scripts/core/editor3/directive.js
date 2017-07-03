@@ -72,6 +72,14 @@ class Editor3Directive {
             readOnly: '=?',
 
             /**
+             * @type {Boolean}
+             * @description If true, the value prop is being watched for changes,
+             * and the changes are applied to the editor. Experimental feature used
+             * in compare versions.
+             */
+            bindToValue: '=?',
+
+            /**
              * @type {Function}
              * @description Function that gets called on every content change.
              */
@@ -112,10 +120,11 @@ class Editor3Directive {
         this.singleLine = typeof this.singleLine !== 'undefined';
         this.debounce = parseInt(this.debounce || '100', 10);
         this.disableSpellchecker = this.disableSpellchecker || false;
+        this.bindToValue = this.bindToValue || false;
 
         const store = createStore(this);
 
-        $scope.$watch('vm.value', (newValue, oldValue) => {
+        this.bindToValue && $scope.$watch('vm.value', (newValue, oldValue) => {
             const text = (newValue || '')
                 .replace(/<ins/g, '<code')
                 .replace(/<\/ins>/g, '</code>');
