@@ -561,6 +561,10 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 }
             };
 
+            $scope.isRemovedField = function(fieldName) {
+                return _.has(config.infoRemovedFields, fieldName);
+            };
+
             function afterTansa(e, isCancelled) {
                 const editor = editorResolver.get();
 
