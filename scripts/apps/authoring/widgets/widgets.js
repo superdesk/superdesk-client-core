@@ -196,5 +196,4 @@ angular.module('superdesk.apps.authoring.widgets', ['superdesk.core.keyboard'])
     .run(['keyboardManager', 'gettext', function(keyboardManager, gettext) {
         keyboardManager.register('Authoring', 'ctrl + alt + {N}',
              gettext('Toggles Nth widget, where \'N\' is order of widget it appears'));
-        keyboardManager.register('Authoring', 'ctrl + shift + f', gettext('Toggles Find & Replace widget'));
     }]);

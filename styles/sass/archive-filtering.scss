@@ -75,6 +75,15 @@
         padding-bottom: $bottom-view-padding;
         &.pull { bottom: 60px; }
         &.pull-heigher { bottom: 120px; }
+
+        .sd-check__wrapper {
+            margin-left: 0;
+        }
+
+        .superdeskRepos {
+            margin-top: 10px;
+            margin-bottom: 5px;
+        }
     }
     
     .tab-box {
