@@ -6,7 +6,7 @@ import {EditorState} from 'draft-js';
 import {Editor3} from './components';
 import createStore from './store';
 import {fromHTML} from './html';
-import {changeEditorState} from './actions';
+import {changeEditorState, setReadOnly} from './actions';
 
 /**
  * @ngdoc directive
@@ -124,6 +124,7 @@ class Editor3Directive {
 
         const store = createStore(this);
 
+        // bind the directive value attribute bi-directionally between Angular and Redux.
         this.bindToValue && $scope.$watch('vm.value', (newValue, oldValue) => {
             const text = (newValue || '')
                 .replace(/<ins/g, '<code')
@@ -135,6 +136,15 @@ class Editor3Directive {
             store.dispatch(changeEditorState(editorState));
         });
 
+        // bind the directive readOnly attribute bi-directionally between Angular and Redux.
+        $scope.$watch('vm.readOnly', (val, old) => {
+            if (val !== old) {
+                store.dispatch(setReadOnly(val));
+            }
+        });
+
+        // if this editor is the find & replace target, expose the store in the editor3
+        // find & replace service.
         if (this.findReplaceTarget) {
             editor3.setStore(store);
             $scope.$on('$destroy', editor3.unsetStore);

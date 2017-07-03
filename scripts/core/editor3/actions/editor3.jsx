@@ -54,14 +54,32 @@ export function dragDrop(e) {
 
 /**
  * @ngdoc method
- * @name setReadOnly
+ * @name setLocked
  * @param {Event} v
  * @return {String} action
- * @description Dispatches the action to set the main editor as read-only.
+ * @description Dispatches the action to set the main editor as locked. The main editor
+ * is locked when other atomic blocks are edited that manage their own editor, such
+ * as tables or image descriptions.
  */
 export function setLocked(v) {
     return {
         type: 'EDITOR_SET_LOCKED',
+        payload: v
+    };
+}
+
+/**
+ * @ngdoc method
+ * @name setReadOnly
+ * @param {Event} v
+ * @return {String} action
+ * @description Dispatches the action to set the main editor as read-only. This is
+ * mainly used externally to allow bi-directional binding of the readOnly attribute
+ * on the Angular directive. Not used in React.
+ */
+export function setReadOnly(v) {
+    return {
+        type: 'EDITOR_SET_READONLY',
         payload: v
     };
 }
