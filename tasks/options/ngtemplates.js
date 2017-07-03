@@ -9,10 +9,6 @@ var src = [
 ];
 
 var options = {
-    htmlmin: {
-        collapseWhitespace: true,
-        collapseBooleanAttributes: true
-    },
     bootstrap: function(module, script) {
         return '"use strict";' +
             'angular.module("superdesk.templates-cache")' +
