@@ -1,6 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Editor, CompositeDecorator, RichUtils, Modifier, EditorState} from 'draft-js';
+import {
+    Editor,
+    CompositeDecorator,
+    RichUtils,
+    Modifier,
+    EditorState,
+    getDefaultKeyBinding,
+} from 'draft-js';
+
 import {connect} from 'react-redux';
 import Toolbar from './toolbar';
 import * as actions from '../actions';
@@ -47,6 +55,7 @@ export class Editor3Component extends React.Component {
         this.onDragOver = this.onDragOver.bind(this);
         this.handleKeyCommand = this.handleKeyCommand.bind(this);
         this.handleBeforeInput = this.handleBeforeInput.bind(this);
+        this.keyBindingFn = this.keyBindingFn.bind(this);
     }
 
     /**
@@ -99,6 +108,16 @@ export class Editor3Component extends React.Component {
         ].indexOf(mediaType) === -1;
     }
 
+    keyBindingFn(e) {
+        const {keyCode, shiftKey} = e;
+
+        if (keyCode === 13 && shiftKey) {
+            return 'soft-newline';
+        }
+
+        return getDefaultKeyBinding(e);
+    }
+
     /**
      * @ngdoc method
      * @name Editor3#handleKeyCommand
@@ -111,7 +130,13 @@ export class Editor3Component extends React.Component {
             return 'handled';
         }
 
-        const newState = RichUtils.handleKeyCommand(editorState, command);
+        let newState;
+
+        if (command === 'soft-newline') {
+            newState = RichUtils.insertSoftNewline(editorState);
+        } else {
+            newState = RichUtils.handleKeyCommand(editorState, command);
+        }
 
         if (newState) {
             onChange(newState);
@@ -197,6 +222,7 @@ export class Editor3Component extends React.Component {
                     <Editor
                         editorState={editorState}
                         handleKeyCommand={this.handleKeyCommand}
+                        keyBindingFn={this.keyBindingFn}
                         handleBeforeInput={this.handleBeforeInput}
                         blockRendererFn={blockRenderer}
                         customStyleMap={customStyleMap}
