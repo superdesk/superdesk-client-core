@@ -116,7 +116,10 @@ export function TemplatesService(api, session, $q, gettext, preferencesService, 
     };
 
     this.fetchTemplatesByDesk = function(desk) {
-        let params = {sort: 'template_name'};
+        let params = {
+            sort: 'template_name',
+            max_results: 200
+        };
 
         let deskCriteria = [
             {is_public: true},
