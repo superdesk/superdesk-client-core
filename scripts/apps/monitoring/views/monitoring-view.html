@@ -96,7 +96,7 @@
             </button>
 
             <div class="button-stack right-stack" ng-if="type === 'monitoring' || elementState === 'compact'">
-                <div class="dropdown dropdown--align-right" dropdown>
+                <div class="dropdown dropdown--align-right dropdown--compact-state" dropdown>
                     <button class="navbtn dropdown__toggle" dropdown__toggle><i class="icon-dots-vertical"></i></button>
                     <ul class="dropdown__menu">
                         <li ng-if="elementState === 'compact'"><span class="dropdown__menu-label">{{:: 'File types' | translate}}</span></li>
@@ -105,11 +105,9 @@
                             ng-class="{'dropdown__menu-item--active': aggregate.hasFileType(fileType)}"
                             ng-if="elementState === 'compact'" title="{{fileType| translate}}">
                             <button>
-                                <span ng-if="fileType === 'all'"></span>
-                                <i ng-if="fileType !== 'all' && fileType !== 'highlightsPackage'" class="filetype-icon-{{fileType}}"></i>
-                                <i ng-if="fileType === 'highlightsPackage'" class="filetype-icon-highlight-pack"
-                                   title="{{ :: 'Highlight Package' | translate }}"></i>
-                                &nbsp;<span>{{fileType}}</span>
+                                <span ng-if="fileType === 'all'" class="toggle-button__text--all">{{:: 'all' | translate}}</span>
+                                <span ng-if="fileType === 'highlightsPackage'"><i class="filetype-icon-highlight-pack"></i>&nbsp;{{ :: 'Highlight Package' | translate }}</span>
+                                <span ng-if="fileType !== 'all' && fileType !== 'highlightsPackage'"><i class="filetype-icon-{{fileType}}"></i>&nbsp;{{fileType}}</span>
                             </button>
                         </li>
                         <li ng-if="elementState === 'compact'" class="dropdown__menu-divider"></li>

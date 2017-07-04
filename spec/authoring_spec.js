@@ -142,11 +142,13 @@ describe('authoring', () => {
         expect(monitoring.getTextItem(2, 0)).toBe('item5');
         monitoring.actionOnItem('Edit', 2, 0);
         authoring.publish();
+        browser.sleep(300);
 
         monitoring.filterAction('text');
         monitoring.actionOnItem('Kill item', 5, 0);
         expect(authoring.send_kill_button.isDisplayed()).toBeTruthy();
         authoring.cancel();
+        browser.sleep(300);
 
         // publish & correct item
         // reset filters
@@ -154,6 +156,8 @@ describe('authoring', () => {
         expect(monitoring.getTextItem(3, 2)).toBe('item6');
         monitoring.actionOnItem('Edit', 3, 2);
         authoring.publish();
+        browser.sleep(300);
+
         monitoring.filterAction('text');
         monitoring.actionOnItem('Correct item', 5, 0);
         expect(authoring.send_correction_button.isDisplayed()).toBeTruthy();
@@ -164,6 +168,7 @@ describe('authoring', () => {
         expect(authoring.edit_correct_button.isDisplayed()).toBe(true);
         expect(authoring.edit_kill_button.isDisplayed()).toBe(true);
         authoring.close();
+        browser.sleep(300);
         monitoring.filterAction('all'); // reset filter
 
         // update(rewrite) item
@@ -173,11 +178,13 @@ describe('authoring', () => {
         expect(monitoring.getTextItem(2, 1)).toBe('item7');
         monitoring.actionOnItem('Edit', 2, 1);
         authoring.publish();
+        browser.sleep(300);
         monitoring.filterAction('text');
         expect(monitoring.getTextItem(5, 0)).toBe('item7');
         monitoring.actionOnItem('Open', 5, 0);
         expect(authoring.update_button.isDisplayed()).toBe(true);
         authoring.update_button.click();
+        monitoring.compactActionDropdown().click();
         monitoring.filterAction('all');
         expect(monitoring.getTextItem(0, 0)).toBe('item7');
         expect(monitoring.getTextItem(5, 0)).toBe('item7');
@@ -253,6 +260,7 @@ describe('authoring', () => {
         transmissionDetails.get(0).click();
         expect(element(by.className('modal__body')).getText()).toMatch(/Kids Helpline*/);
         element(by.css('[ng-click="hideFormattedItem()"]')).click();
+        monitoring.compactActionDropdown().click();
         monitoring.filterAction('text');
         authoring.close();
 

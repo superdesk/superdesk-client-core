@@ -190,6 +190,14 @@ function Monitoring() {
         }
     };
 
+    this.compactActionDropdown = function() {
+        return element(by.className('dropdown--compact-state'));
+    };
+
+    this.multiActionDropdown = function() {
+        return element(by.className('dropdown--multi-action-bar'));
+    };
+
     this.previewAction = function(group, item) {
         this.getItem(group, item).click();
         var preview = element(by.id('item-preview'));
