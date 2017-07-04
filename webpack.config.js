@@ -219,6 +219,14 @@ function getDefaults(grunt) {
             useTansaProofing: false
         },
 
+        // tansa config
+        tansa: {
+            profile: {
+                nb: 1,
+                nn: 2
+            }
+        },
+
         // workspace defaults
         workspace: {
             ingest: false,
