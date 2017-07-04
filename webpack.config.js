@@ -222,6 +222,14 @@ function getDefaults(grunt) {
             onlyEditor3: false
         },
 
+        // tansa config
+        tansa: {
+            profile: {
+                nb: 1,
+                nn: 2
+            }
+        },
+
         // workspace defaults
         workspace: {
             ingest: false,
