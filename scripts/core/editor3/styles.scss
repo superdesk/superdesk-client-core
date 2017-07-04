@@ -214,6 +214,10 @@
 
 .Editor3-editor .public-DraftEditor-content {
 	min-height: 20px;
+
+	[data-block="true"] {
+		margin-bottom: 10px;
+	}
 }
 
 .Editor3-hidePlaceholder .public-DraftEditorPlaceholder-root {
