@@ -1,5 +1,16 @@
 # Superdesk Client Changelog
 
+## [1.7.2] 2017-07-04
+
+### Fixed
+
+- Make tansa language profile ids configurable.
+- Make authoring widget shortcuts global.
+- Stop on error when publishing.
+- Fix issue with authoring shortcuts.
+- Fix jumping cursor on image caption field.
+- Allow tansa to run multiple times.
+
 ## [1.7.1] 2017-06-06
 
 ### Fixed
