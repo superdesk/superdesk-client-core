@@ -371,3 +371,19 @@
          data-display-user="{{ getSignOffMapping() }}"
     ></div>
 </div>
+
+<div class="field" ng-if="schema.usageterms" sd-width="{{editor.usageterms.sdWidth || 'full'}}" order="{{editor.usageterms.order}}" sd-validation-error="error.usageterms" data-required="schema.usageterms.required">
+  <label translate>Usage Terms</label>
+  <input type="text"
+         sd-remove-tags
+         class="usageterms"
+         id="usageterms"
+         ng-model="item.usageterms"
+         ng-model-options="{debounce: 100}"
+         ng-change="autosave(item)"
+         ng-if="_editable"
+         sd-focus-element
+         data-append-class="active"
+         tabindex="{{editor.usageterms.order}}">
+  <div class="usageterms" ng-if="!_editable" sd-html-preview="item.usageterms"></div>
+</div>
