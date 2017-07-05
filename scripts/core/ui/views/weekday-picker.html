@@ -1,6 +1,5 @@
-<button class="btn btn--light btn--pull-left"
-    ng-repeat="day in weekdayList"
-    ng-click="toggleDay(day)"
-    ng-class="{'btn--active': isDayChecked(day)}">
-    {{ weekdays[day] | translate }}
-</button>
+<span class="sd-check__wrapper" ng-repeat="day in weekdayList" ng-click="toggleDay(day)">
+    <span class="sd-checkbox sd-checkbox--button-style sd-checkbox--button-{{weekdays[day]}}" ng-class="{'checked': isDayChecked(day)}">
+        <label>{{ weekdays[day] | translate }}</label>
+    </span>
+</span>
