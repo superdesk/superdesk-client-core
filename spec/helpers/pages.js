@@ -195,17 +195,17 @@ function IngestSettings() {
         publishMacroList: element.all(by.name('macro')).get(1),
 
         daysButtons: {
-            mon: daysButonsBox.element(by.buttonText('Monday')),
-            tue: daysButonsBox.element(by.buttonText('Tuesday')),
-            wed: daysButonsBox.element(by.buttonText('Wednesday')),
-            thu: daysButonsBox.element(by.buttonText('Thursday')),
-            fri: daysButonsBox.element(by.buttonText('Friday')),
-            sat: daysButonsBox.element(by.buttonText('Saturday')),
-            sun: daysButonsBox.element(by.buttonText('Sunday'))
+            mon: daysButonsBox.element(by.className('sd-checkbox--button-Monday')),
+            tue: daysButonsBox.element(by.className('sd-checkbox--button-Tuesday')),
+            wed: daysButonsBox.element(by.className('sd-checkbox--button-Wednesday')),
+            thu: daysButonsBox.element(by.className('sd-checkbox--button-Thursday')),
+            fri: daysButonsBox.element(by.className('sd-checkbox--button-Friday')),
+            sat: daysButonsBox.element(by.className('sd-checkbox--button-Saturday')),
+            sun: daysButonsBox.element(by.className('sd-checkbox--button-Sunday'))
         },
 
         timezoneLabel: element(by.id('timezone')),
-        timezoneDeleteBtn: $$('.icon-remove-sign').get(0),
+        timezoneDeleteBtn: element(by.css('[ng-click="clearSelectedTimeZone()"]')),
         timezoneInput: $('[term="tzSearchTerm"]').element(by.model('term')),
         timezoneList: $('.item-list').all(by.tagName('li'))
     };

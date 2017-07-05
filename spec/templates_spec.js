@@ -77,9 +77,11 @@ describe('templates', () => {
         expect(templates.getDeskElement('Sports Desk').element(by.className('sd-checkbox'))
                 .getAttribute('checked')).toEqual('true');
         expect(templates.getAutomaticItemCreationElement().getAttribute('checked')).toEqual('true');
-        expect(templates.getWeekDayElement('Tuesday').getAttribute('class')).toContain('active');
+        expect(templates.getWeekDayElement('Tuesday').element(by.className('sd-checkbox'))
+                .getAttribute('class')).toContain('checked');
         expect(templates.getTimeElement().getAttribute('value')).toEqual('10:30');
-        expect(templates.getDeskScheduleElement('Politic Desk').getAttribute('selected')).toEqual('true');
+        expect(templates.getDeskScheduleElement('Politic Desk')
+                .getAttribute('selected')).toEqual('true');
         expect(templates.getStageScheduleElement('one').getAttribute('selected')).toEqual('true');
         templates.cancel();
         templates.remove('Second New Template');
