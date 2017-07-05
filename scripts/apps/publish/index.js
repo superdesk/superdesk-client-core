@@ -49,7 +49,6 @@ export default angular.module('superdesk.apps.publish', ['superdesk.apps.users',
             .activity('/publish_queue', {
                 label: gettext('Publish Queue'),
                 templateUrl: 'scripts/apps/publish/views/publish-queue.html',
-                sideTemplateUrl: 'scripts/apps/workspace/views/workspace-sidenav.html',
                 controller: ctrl.PublishQueueController,
                 category: superdesk.MENU_MAIN,
                 adminTools: false,
