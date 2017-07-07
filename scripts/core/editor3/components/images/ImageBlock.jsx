@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import * as actions from '../../actions';
+import Textarea from 'react-textarea-autosize';
 
 /**
  * @ngdoc React
@@ -53,11 +54,11 @@ export class ImageBlockComponent extends Component {
      * @name ImageBlockComponent#onChange
      * @description Triggered (debounced) when the image caption input is edited.
      */
-    onChange() {
+    onChange({target}) {
         const {block, changeCaption} = this.props;
         const entityKey = block.getEntityAt(0);
 
-        changeCaption(entityKey, this.captionInput.innerText);
+        changeCaption(entityKey, target.value);
     }
 
     render() {
@@ -70,13 +71,13 @@ export class ImageBlockComponent extends Component {
             <div className="image-block" onClick={(e) => e.stopPropagation()}>
                 <div className="image-block__wrapper">
                     <img src={rendition.href} alt={alt} onClick={this.onClick} />
-                    <div contentEditable={true} placeholder="Description"
-                        ref={(el) => {
-                            this.captionInput = el;
-                        }}
+                    <Textarea
+                        placeholder={gettext('Description')}
                         onFocus={setLocked}
                         className="image-block__description"
-                        onInput={_.debounce(this.onChange, 500)}>{data.description_text}</div>
+                        defaultValue={data.description_text}
+                        onChange={this.onChange}
+                    />
                 </div>
             </div>
         );

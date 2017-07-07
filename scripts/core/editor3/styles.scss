@@ -165,14 +165,15 @@
 			display: inline-block;
 		}
 
-                &__description {
-                    text-align: left;
-                    font-family: Arial;
-                    font-size: 14px;
-                    padding: 5px;
-                    min-height: 28px;
-                    background-color: #efefef;
-                }
+		&__description {
+			resize: none;
+			text-align: left;
+			font-family: Arial;
+			font-size: 14px;
+			padding: 5px;
+			min-height: 28px;
+			background-color: #efefef;
+		}
 
 		img {
 			display: inline-block;
