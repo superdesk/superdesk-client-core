@@ -15,7 +15,7 @@
          ng-src="{{ related.renditions.viewImage.href }}"
          ng-class="{'not-editable': !isMediaEditable() || !editable}"
          ng-click="isMediaEditable() && edit(related); $event.stopPropagation()">
-    <textarea
+    <div contenteditable="true"
               sd-auto-height
               tansa-scope-sync
               ng-model="related.description_text"
@@ -23,5 +23,5 @@
               ng-change="onchange()"
               ng-if="related"
               class="image-caption line-input">
-    </textarea>
+    </div>
 </figure>

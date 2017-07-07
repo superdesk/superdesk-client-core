@@ -152,6 +152,8 @@ class LinkFunction {
     replaceWords(text, mapWords) {
         let result = text;
 
+        result = result.replace(/\n/g, '');
+
         _.map(Object.keys(mapWords), (key) => {
             result = result.replace(
                 new RegExp(key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'),
