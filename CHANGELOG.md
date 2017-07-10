@@ -1,5 +1,11 @@
 # Superdesk Client Changelog
 
+## [1.7.3] 2017-07-10
+
+### Fixed
+
+- Fix issue with single line input for editor block description.
+
 ## [1.7.2] 2017-07-04
 
 ### Fixed
