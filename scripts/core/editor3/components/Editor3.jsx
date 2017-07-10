@@ -94,18 +94,21 @@ export class Editor3Component extends React.Component {
     /**
      * @ngdoc method
      * @name Editor3#onDragOver
-     * @returns {Boolean} Returns true if the item is permitted.
+     * @returns {Boolean} Returns true if the item is not permitted.
      * @description Checks if the dragged over item is allowed.
      */
     onDragOver(e) {
+        const {editorFormat, readOnly, singleLine} = this.props;
         const mediaType = e.originalEvent.dataTransfer.types[0] || '';
-
-        return [
+        const isValidMedia = [
             'application/superdesk.item.picture',
             'application/superdesk.item.graphic',
             'application/superdesk.item.video',
             'text/html',
-        ].indexOf(mediaType) === -1;
+        ].indexOf(mediaType) !== -1;
+        const supportsImages = !readOnly && !singleLine && editorFormat.indexOf('picture') !== -1;
+
+        return !(supportsImages && isValidMedia);
     }
 
     keyBindingFn(e) {
@@ -248,14 +251,22 @@ Editor3Component.propTypes = {
     onTab: React.PropTypes.func,
     dragDrop: React.PropTypes.func,
     scrollContainer: React.PropTypes.string,
-    singleLine: React.PropTypes.bool
+    singleLine: React.PropTypes.bool,
+    editorFormat: React.PropTypes.array
+};
+
+Editor3Component.defaultProps = {
+    readOnly: false,
+    singleLine: false,
+    editorFormat: []
 };
 
 const mapStateToProps = (state) => ({
     readOnly: state.readOnly,
     showToolbar: state.showToolbar,
     editorState: state.editorState,
-    locked: state.locked
+    locked: state.locked,
+    editorFormat: state.editorFormat
 });
 
 const mapDispatchToProps = (dispatch) => ({
