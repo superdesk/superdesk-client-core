@@ -78,8 +78,7 @@ export class EmbedInputComponent extends Component {
         const {value} = this.refs.txt;
 
         if (!value.startsWith('http://') && !value.startsWith('https://')) {
-            this.props.embedCode(value);
-            return this.onCancel();
+            return this.processSuccess(value);
         }
 
         const config = ng.get('config');
@@ -120,13 +119,11 @@ export class EmbedInputComponent extends Component {
 
 EmbedInputComponent.propTypes = {
     onCancel: React.PropTypes.func.isRequired,
-    onSubmit: React.PropTypes.func.isRequired,
-    embedCode: React.PropTypes.func.isRequired
+    onSubmit: React.PropTypes.func.isRequired
 };
 
 const mapDispatchToProps = (dispatch) => ({
-    onSubmit: (oEmbed) => dispatch(actions.embed(oEmbed)),
-    embedCode: (html) => dispatch(actions.embedCode(html))
+    onSubmit: (code) => dispatch(actions.embed(code))
 });
 
 export const EmbedInput = connect(null, mapDispatchToProps)(EmbedInputComponent);

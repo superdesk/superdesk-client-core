@@ -47,8 +47,18 @@ export class AtomicBlockParser {
      * @description Returns the HTML representation of an atomic 'EMBED' block having
      * the passed entity data.
      */
-    parseEmbed(data) {
-        return `<div class="embed-block">${data.data.html}</div>`;
+    parseEmbed({data}) {
+        if (data.qumuWidget) {
+            return `
+                <div class="embed-block">
+                    <script src="https://video.fidelity.tv/widgets/1/application.js"></script>
+                    <script>KV.widget(${JSON.stringify(data)});</script>
+                    <div id="${data.selector.slice(1)}"></div>
+                </div>
+            `;
+        }
+
+        return `<div class="embed-block">${data.html}</div>`;
     }
 
     /**

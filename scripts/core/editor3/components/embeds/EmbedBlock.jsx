@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {QumuWidget} from './QumuWidget';
 
 /**
  * @ngdoc React
@@ -57,12 +58,18 @@ export class EmbedBlock extends Component {
         return data.html !== oldData.html;
     }
 
-    render() {
-        const {html} = this.data();
-
+    embedBlock({html}) {
         this.runScripts(html);
 
         return <div className="embed-block" dangerouslySetInnerHTML={{__html: html}} />;
+    }
+
+    render() {
+        const data = this.data();
+
+        return data.qumuWidget
+            ? <QumuWidget code={data} />
+            : this.embedBlock(data);
     }
 }
 
