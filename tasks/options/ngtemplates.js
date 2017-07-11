@@ -56,7 +56,7 @@ module.exports = {
             bootstrap: () => {
                 const features = getConfig().features || {};
                 const buildIndex = require('../../index.html.js');
-                
+
                 return buildIndex(features);
             }
         }

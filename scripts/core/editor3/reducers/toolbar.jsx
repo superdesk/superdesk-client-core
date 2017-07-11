@@ -20,8 +20,6 @@ const toolbar = (state = {}, action) => {
         return updateImage(state, action.payload);
     case 'TOOLBAR_APPLY_EMBED':
         return applyEmbed(state, action.payload);
-    case 'TOOLBAR_APPLY_EMBED_CODE':
-        return applyEmbedCode(state, action.payload);
     default:
         return state;
     }
@@ -176,38 +174,15 @@ const updateImage = (state, {entityKey, img}) => {
 /**
  * @ngdoc method
  * @name applyEmbed
- * @param {Object} data oEmbed data
+ * @param {Object|string} data oEmbed data, HTML string or Qumu widget config.
  * @description Applies the embed in the given oEmbed data to the active block.
  */
-const applyEmbed = (state, data) => {
+const applyEmbed = (state, code) => {
     var {editorState} = state;
 
     const contentState = state.editorState.getCurrentContent();
+    const data = typeof code === 'string' ? {html: code} : code;
     const contentStateWithEntity = contentState.createEntity('EMBED', 'MUTABLE', {data});
-    const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
-
-    editorState = AtomicBlockUtils.insertAtomicBlock(
-        editorState,
-        entityKey,
-        ' '
-    );
-
-    return {...state, editorState};
-};
-
-/**
- * @ngdoc method
- * @name applyEmbedCode
- * @param {string} code
- * @description Applies the embed code into the editor.
- */
-const applyEmbedCode = (state, code) => {
-    var {editorState} = state;
-
-    const contentState = state.editorState.getCurrentContent();
-    const contentStateWithEntity = contentState.createEntity('EMBED', 'MUTABLE', {
-        data: {html: code}
-    });
     const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
 
     editorState = AtomicBlockUtils.insertAtomicBlock(

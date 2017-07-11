@@ -83,6 +83,7 @@
     "jquery-jcrop": "0.9.13",
     "jquery-ui": "components/jqueryui#1.11.4",
     "jquery.gridster": "dustmoo/gridster.js#c306335397816beceb74e4a176067baef34a0359",
+    "json5": "^0.5.1",
     "less": "2.7.2",
     "less-loader": "2.2.3",
     "load-grunt-config": "0.17.2",
