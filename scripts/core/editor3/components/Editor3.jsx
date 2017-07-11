@@ -52,7 +52,9 @@ export class Editor3Component extends React.Component {
 
         this.focus = this.focus.bind(this);
         this.onScroll = this.onScroll.bind(this);
+        this.allowItem = this.allowItem.bind(this);
         this.onDragOver = this.onDragOver.bind(this);
+        this.onDragDrop = this.onDragDrop.bind(this);
         this.handleKeyCommand = this.handleKeyCommand.bind(this);
         this.handleBeforeInput = this.handleBeforeInput.bind(this);
         this.keyBindingFn = this.keyBindingFn.bind(this);
@@ -93,11 +95,11 @@ export class Editor3Component extends React.Component {
 
     /**
      * @ngdoc method
-     * @name Editor3#onDragOver
-     * @returns {Boolean} Returns true if the item is not permitted.
-     * @description Checks if the dragged over item is allowed.
+     * @name Editor3#allowItem
+     * @returns {Boolean} Returns true if the item is permitted.
+     * @description Check if the editor accept images and if current item is valid media.
      */
-    onDragOver(e) {
+    allowItem(e) {
         const {editorFormat, readOnly, singleLine} = this.props;
         const mediaType = e.originalEvent.dataTransfer.types[0] || '';
         const isValidMedia = [
@@ -108,7 +110,30 @@ export class Editor3Component extends React.Component {
         ].indexOf(mediaType) !== -1;
         const supportsImages = !readOnly && !singleLine && editorFormat.indexOf('picture') !== -1;
 
-        return !(supportsImages && isValidMedia);
+        return supportsImages && isValidMedia;
+    }
+
+    /**
+     * @ngdoc method
+     * @name Editor3#onDragOver
+     * @returns {Boolean} Returns true if the item is not permitted.
+     * @description Checks if the dragged over item is not allowed.
+     */
+    onDragOver(e) {
+        return !this.allowItem(e);
+    }
+
+    /**
+     * @ngdoc method
+     * @name Editor3#onDragDrop
+     * @description If item is allowed process drop action.
+     */
+    onDragDrop(e) {
+        if (this.allowItem(e)) {
+            // Firefox ignores the result of onDragOver and accept the item in all cases
+            // Here will be tested again if the item is allowed
+            this.props.dragDrop(e);
+        }
     }
 
     keyBindingFn(e) {
@@ -186,7 +211,7 @@ export class Editor3Component extends React.Component {
         const $node = $(ReactDOM.findDOMNode(this));
 
         $node.on('dragover', this.onDragOver);
-        $node.on('drop dragdrop', this.props.dragDrop);
+        $node.on('drop dragdrop', this.onDragDrop);
 
         if (this.props.showToolbar) {
             this.scrollContainer.on('scroll', this.onScroll);
