@@ -59,9 +59,14 @@ export function UserPreferencesDirective(
                         userList.getUser(scope.user._id, true).then((u) => {
                             scope.user = u;
                         });
+                        return update;
                     });
                 }, () => $q.reject('canceledByModal'))
-                .then(() => {
+                .then((preferences) => {
+                    // ask for browser permission if desktop notification is enable
+                    if (_.get(preferences, 'desktop:notification.enabled')) {
+                        preferencesService.desktopNotification.requestPermission();
+                    }
                     notify.success(gettext('User preferences saved'));
                     scope.cancel();
                 }, (reason) => {
@@ -142,7 +147,12 @@ export function UserPreferencesDirective(
                 if (preference.category === 'rows') {
                     return _.get(config, 'list.singleLineView');
                 }
-                let noShowCategories = ['article_defaults', 'categories', 'desks'];
+                let noShowCategories = [
+                    'article_defaults',
+                    'categories',
+                    'desks',
+                    'notifications',
+                ];
 
                 return _.indexOf(noShowCategories, preference.category) < 0;
             };

@@ -32,7 +32,8 @@
                                     {{:: notification.item_slugline}}
                                 </a></i>:<br>{{:: notification.data.comment }}</p>
                         </div>
-                        <div class="content" ng-if="notification.name != 'notify' && notification.name != 'user:mention'">
+                        <div class="content" ng-if="notification.name != 'notify' && notification.name != 'user:mention'"
+                            ng-click="onNotificationClick(notification)">
                             <time sd-datetime data-date="notification._created"></time>
                             <p class="text"><b>{{:: notification.user_name || "System" }}</b>: <span sd-activity-message data-activity="notification"></span></p>
                         </div>
