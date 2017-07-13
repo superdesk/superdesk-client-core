@@ -20,7 +20,6 @@
     width: 100%;
 
     .searchbar-flex-handler {
-        //flex: 1 0 auto;
         flex-grow: 1;
     }
 
@@ -359,4 +358,52 @@
 
 .es-highlight {
     background-color: rgba(255, 61, 61, 0.25);
+}
+
+.subnav.legal-archive {
+    .sortbar-container {
+        padding: 10px 16px 10px 0;
+    }
+    .sortbar {
+        margin: 0 0 0 15px;
+        padding: 3px 0 0 10px;
+        height: 25px;
+        .lab {
+            line-height: 20px;
+        }
+    }
+    .dropdown {
+        .sortbar {
+            width: 100%;
+            height: auto;
+            margin: 0;
+            padding: 0;
+            text-align: left;
+            border-left: 0;
+            .dropdown {
+                min-width: 120px;
+                float: right;
+            }
+            .direction {
+                line-height: 18px;
+                margin-left: 15px;
+            }
+        }
+        .sd-pagination {
+            padding: 0 17px;
+            em.page-info, .btn-group  {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    }
+
+    .dropdown__menu {
+        .label-group {
+            text-transform: capitalize;
+        }
+        &-divider {
+            clear: both;
+        }
+    }
 }

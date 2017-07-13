@@ -13,7 +13,6 @@
         top: 0;
         .sortbar-container {
             padding: 10px 16px 10px 0;
-            //border-left: 1px solid #dfdfdf;
         }
         .sortbar {
             margin: 0 0 0 15px;
@@ -23,13 +22,23 @@
                 line-height: 20px;
             }
         }
-        .dropdown .sortbar {
-            width: 100%;
-            height: auto;
-            margin: 0;
-            padding: 0;
-            text-align: left;
-            border-left: 0;
+        .dropdown {
+            .sortbar {
+                width: 100%;
+                height: auto;
+                margin: 0;
+                padding: 0;
+                text-align: left;
+                border-left: 0;
+            }
+            .dropdown {
+                min-width: 120px;
+                float: right;
+            }
+            .direction {
+                line-height: 18px;
+                margin-left: 15px;
+            }
         }
 
         .navbtn {
