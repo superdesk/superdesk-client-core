@@ -10,13 +10,13 @@
         <div class="list-pane">
             <header>
                 <div class="pull-left" sd-searchbar></div>
-                <div class="pull-left sd-pagination">
+                <div class="pull-left">
                     <select id="user-filter"
                         ng-model="userFilter"
                         ng-options="filter.id as filter.label | translate for filter in filterOptions">
                     </select>
                 </div>
-                <div sd-pagination data-items="users"></div>
+                <div sd-pagination data-items="users" class="pull-right"></div>
             </header>
             <div class="content">
                 <div sd-shadow>
