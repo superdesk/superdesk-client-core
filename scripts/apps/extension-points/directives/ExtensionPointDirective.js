@@ -3,41 +3,33 @@ import React from 'react';
 
 /**
  * sdExtensionPoint can be used by plugins to hook into the core UI
- *
- * Usage:
- * TODO
- *
- * Params:
- *
- * @scope {string} extension-point-type - TODO
- *
  */
-
-function propsFromData(data, scope) {
-    var json = {};
-
-    _.forEach(data, (value) => {
-        json[value] = scope.$parent.$eval(value);
-    });
-    return json;
-}
 
 ExtensionPointDirective.$inject = ['extensionPoints'];
 export function ExtensionPointDirective(extensionPoints) {
+    function propsFromData(data, scope) {
+        var json = {};
+
+        _.forEach(data, (value) => {
+            json[value] = scope.$parent.$eval(value);
+        });
+        return json;
+    }
+
+    function buildCompoment(extension, scope) {
+        return React.createElement(
+            extension.componentClass,
+            propsFromData(extension.data, scope)
+        );
+    }
+
     return {
-        scope: {
-            sdExtensionPointType: '@',
-        },
         link: function(scope, elem, attr) {
-            var extensions = _.map(extensionPoints.extensions[attr.sdExtensionPoint],
-                                (extension) => React.createElement(
-                                    extension.componentClass,
-                                    propsFromData(extension.data, scope)
-                                )
-                            );
+            var registeredExtenstions = extensionPoints.extensions[attr.sdExtensionPoint];
+            var components = _.map(registeredExtenstions, (extension) => buildCompoment(extension, scope));
 
             ReactDOM.render(
-                <span>{extensions}</span>,
+                <span>{components}</span>,
                 elem[0]
             );
         }
