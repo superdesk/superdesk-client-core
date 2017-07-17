@@ -28,8 +28,8 @@ export function ExtensionPointDirective(extensionPoints) {
         scope: {
             sdExtensionPointType: '@',
         },
-        link: function(scope, elem) {
-            var extensions = _.map(extensionPoints.extensions[scope.sdExtensionPointType],
+        link: function(scope, elem, attr) {
+            var extensions = _.map(extensionPoints.extensions[attr.sdExtensionPoint],
                                 (extension) => React.createElement(
                                     extension.componentClass,
                                     propsFromData(extension.data, scope)

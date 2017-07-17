@@ -6,7 +6,7 @@ import * as svc from './services';
  * ----------------
  * Usage:
  * 1. Place this tag in a view where you'd like to add an extension:
- *   <span sd-extension-point sd-extension-point-type="MY_TYPE"></span>
+ *   <span sd-extension-point="MY_TYPE"></span>
  *
  * 2. Your extension then needs to register one or more components that get
  *    placed at the tag from the previous step.
