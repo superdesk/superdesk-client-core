@@ -25,7 +25,7 @@ export function ExtensionPointDirective(extensionPoints) {
 
     return {
         link: function(scope, elem, attr) {
-            var registeredExtenstions = extensionPoints.extensions[attr.sdExtensionPoint];
+            var registeredExtenstions = extensionPoints[attr.sdExtensionPoint];
             var components = _.map(registeredExtenstions, (extension) => buildCompoment(extension, scope));
 
             ReactDOM.render(

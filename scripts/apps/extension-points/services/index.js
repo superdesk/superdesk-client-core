@@ -1,1 +1,1 @@
-export {ExtensionPointService} from './ExtensionPointService';
+export {ExtensionPointsProvider} from './ExtensionPoints';

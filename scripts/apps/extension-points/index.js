@@ -10,16 +10,16 @@ import * as svc from './services';
  *
  * 2. Your extension then needs to register one or more components that get
  *    placed at the tag from the previous step.
- *    Inject 'extensionPoints' into your module and then:
+ *    Inject 'extensionPointsProvider' into your module and then:
  *
- *    extensionPoints.register('MY_TYPE', MyComponent, an_array);
+ *    extensionPointsProvider.register('MY_TYPE', MyComponent, an_array); // do this in config phase
  *
  *    where MyComponent is a React component and an_array is an array with names
  *    of variables that your component will receive as props from the parent
- *    scope, for example: ['item']
+ *    scope, for example: ['item'].
  *
  */
 
 angular.module('superdesk.apps.extension-points', [])
     .directive('sdExtensionPoint', directive.ExtensionPointDirective)
-    .service('extensionPoints', svc.ExtensionPointService);
+    .provider('extensionPoints', svc.ExtensionPointsProvider);
