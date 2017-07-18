@@ -152,10 +152,12 @@ function GlobalSearch() {
      * @param {string} submenu
      * @param {number} index
      */
-    this.actionOnSubmenuItem = function(action, submenu, index) {
+    this.actionOnSubmenuItem = function(action, submenu, index, linkTypeBtn) {
         var menu = this.openItemMenu(index);
         var header = menu.element(by.partialLinkText(action));
-        var btn = menu.element(by.partialButtonText(submenu));
+        var btn = linkTypeBtn ?
+                menu.element(by.partialLinkText(submenu)) :
+                menu.element(by.partialButtonText(submenu));
 
         browser.actions()
             .mouseMove(header, {x: -50, y: -50})

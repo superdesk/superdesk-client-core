@@ -13,9 +13,10 @@ export class ActionsMenu extends React.Component {
 
         this.groups = [
             {_id: 'default', label: gettext('Actions')},
-            {_id: 'packaging', label: gettext('Packaging')},
-            {_id: 'highlights', label: gettext('Highlights')},
-            {_id: 'corrections', label: gettext('Corrections')}
+            {_id: 'duplicate', label: gettext('Duplicate'), concate: true},
+            {_id: 'packaging'},
+            {_id: 'highlights'},
+            {_id: 'corrections'}
         ];
 
         this.toggle = this.toggle.bind(this);
@@ -63,6 +64,8 @@ export class ActionsMenu extends React.Component {
     }
 
     renderMenu() {
+        const {gettextCatalog} = this.props.svc;
+
         var menu = [];
         var item = this.props.item;
 
@@ -91,15 +94,33 @@ export class ActionsMenu extends React.Component {
                             key: 'group-divider-' + group._id
                         })
                     );
+                } else if (group.concate) {
+                    var submenu = [];
+
+                    actions[group._id].forEach((action) =>
+                        submenu.push(createAction(action)));
+
+                    menu.push(
+                        React.createElement('li', {key: 'group-label' + group._id},
+                            React.createElement('div',
+                                {className: 'dropdown dropdown--noarrow'},
+                                React.createElement('a', {
+                                    className: 'dropdown__toggle',
+                                    title: gettextCatalog.getString(group.label)
+                                }, actions[group._id][0].icon ? React.createElement('i', {
+                                    className: 'icon-' + actions[group._id][0].icon
+                                }, '') : null,
+                                    gettextCatalog.getString(group.label)
+                                ), React.createElement('ul',
+                                    {className: 'dropdown__menu dropdown__menu--submenu-left'},
+                                    submenu
+                        )))
+                    );
+                    return null;
                 } else {
                     menu.push(
                         React.createElement(Divider, {
                             key: 'group-divider-' + group._id
-                        }),
-                        React.createElement(Label, {
-                            label: group.label,
-                            key: 'group-label-' + group._id,
-                            svc: this.props.svc
                         })
                     );
                 }

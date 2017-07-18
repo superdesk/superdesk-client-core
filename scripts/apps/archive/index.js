@@ -135,8 +135,8 @@ angular.module('superdesk.apps.archive', [
                     return authoring.itemActions(item).unspike;
                 }]
             })
-            .activity('duplicate', {
-                label: gettext('Duplicate'),
+            .activity('duplicateInPlace', {
+                label: gettext('Duplicate in place'),
                 icon: 'copy',
                 monitor: true,
                 controller: ctrl.DuplicateController,
@@ -151,7 +151,10 @@ angular.module('superdesk.apps.archive', [
                 },
                 additionalCondition: ['authoring', 'item', function(authoring, item) {
                     return authoring.itemActions(item).duplicate;
-                }]
+                }],
+                group: 'duplicate',
+                groupLabel: gettext('Duplicate'),
+                groupIcon: 'copy'
             })
             .activity('duplicateTo', {
                 label: gettext('Duplicate To'),
@@ -172,7 +175,10 @@ angular.module('superdesk.apps.archive', [
                 additionalCondition: ['authoring', 'item', function(authoring, item) {
                     return item.state !== 'killed' && !authoring.isContentApiItem(item) &&
                     (authoring.itemActions(item).duplicate || authoring.itemActions(item).view);
-                }]
+                }],
+                group: 'duplicate',
+                groupLabel: gettext('Duplicate'),
+                groupIcon: 'copy'
             })
             .activity('createBroadcast', {
                 label: gettext('Create Broadcast'),

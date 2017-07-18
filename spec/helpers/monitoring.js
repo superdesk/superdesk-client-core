@@ -273,10 +273,12 @@ function Monitoring() {
      * @param {number} group
      * @param {number} item
      */
-    this.actionOnItemSubmenu = function(action, submenu, group, item) {
+    this.actionOnItemSubmenu = function(action, submenu, group, item, linkTypeBtn) {
         var menu = this.openItemMenu(group, item);
         var header = menu.element(by.partialLinkText(action));
-        var btn = menu.element(by.partialButtonText(submenu));
+        var btn = linkTypeBtn ?
+                menu.element(by.partialLinkText(submenu)) :
+                menu.element(by.partialButtonText(submenu));
 
         browser.actions()
             .mouseMove(header, {x: -50, y: -50})

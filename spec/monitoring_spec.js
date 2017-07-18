@@ -427,7 +427,7 @@ describe('monitoring', () => {
         monitoring.openMonitoring();
         expect(monitoring.getGroupItems(1).count()).toBe(0);
         expect(monitoring.getGroupItems(2).count()).toBe(4);
-        monitoring.actionOnItem('Duplicate', 2, 0, true);
+        monitoring.actionOnItemSubmenu('Duplicate', 'Duplicate in place', 2, 0, true);
         monitoring.filterAction('text');
         expect(monitoring.getGroupItems(0).count()).toBe(1);
         expect(monitoring.getTextItem(0, 0)).toBe('item5');
@@ -699,7 +699,7 @@ describe('monitoring', () => {
         expect(monitoring.getGroupItems(1).count()).toBe(0);
         expect(monitoring.getGroupItems(2).count()).toBe(4);
         expect(monitoring.getTextItem(2, 0)).toBe('item5'); // original item
-        monitoring.actionOnItem('Duplicate', 2, 0, true);
+        monitoring.actionOnItemSubmenu('Duplicate', 'Duplicate in place', 2, 0, true);
         monitoring.filterAction('text');
         expect(monitoring.getGroupItems(0).count()).toBe(1);
         expect(monitoring.getTextItem(0, 0)).toBe('item5'); // duplicated item
@@ -717,7 +717,7 @@ describe('monitoring', () => {
         expect(monitoring.getGroupItems(1).count()).toBe(0);
         expect(monitoring.getGroupItems(2).count()).toBe(4);
         expect(monitoring.getTextItem(2, 0)).toBe('item5'); // original item
-        monitoring.actionOnItem('Duplicate To', 2, 0, true);
+        monitoring.actionOnItemSubmenu('Duplicate', 'Duplicate To', 2, 0, true);
         authoring.duplicateTo('Sports Desk', 'one');
         workspace.selectDesk('Sports Desk');
         expect(monitoring.getGroupItems(2).count()).toBe(2);
@@ -726,7 +726,7 @@ describe('monitoring', () => {
         authoring.setHeaderSluglineText(' testing');
         authoring.save();
         authoring.close();
-        monitoring.actionOnItem('Duplicate To', 2, 0, true);
+        monitoring.actionOnItemSubmenu('Duplicate', 'Duplicate To', 2, 0, true);
         authoring.duplicateTo('Politic Desk', 'two', true);
         workspace.selectDesk('Politic Desk');
         expect(monitoring.getTextItem(3, 0)).toBe('item5');
@@ -735,15 +735,15 @@ describe('monitoring', () => {
 
     it('can remember last duplicate destination desk', () => {
         monitoring.openMonitoring(true);
-        monitoring.actionOnItem('Duplicate To', 2, 0, true);
+        monitoring.actionOnItemSubmenu('Duplicate', 'Duplicate To', 2, 0, true);
         authoring.duplicateTo('Sports Desk', 'one');
-        monitoring.actionOnItem('Duplicate To', 2, 0, true);
+        monitoring.actionOnItemSubmenu('Duplicate', 'Duplicate To', 2, 0, true);
 
         var dropdownSelected = monitoring.getSendToDropdown();
 
         expect(dropdownSelected.getText()).toEqual('Sports Desk');
         authoring.duplicateTo('Politic Desk', 'two', true);
-        monitoring.actionOnItem('Duplicate To', 2, 0, true);
+        monitoring.actionOnItemSubmenu('Duplicate', 'Duplicate To', 2, 0, true);
 
         dropdownSelected = monitoring.getSendToDropdown();
         authoring.close();
