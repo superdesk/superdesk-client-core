@@ -2,9 +2,17 @@ import ReactDOM from 'react-dom';
 import React from 'react';
 
 /**
- * sdExtensionPoint can be used by plugins to hook into the core UI
+ * @ngdoc directive
+ * @module superdesk.apps.extension-points
+ * @name extensionPointDirective
+ * @packageName superdesk.apps
+ * @description
+ * External superdesk apps can register components that then will be hooked into
+ * the core UI.
+ * Place this tag in a view where you'd like to add an extension:
+ *   <span sd-extension-point="MY_TYPE"></span>
+ * See also ExtensionPointsProvider.
  */
-
 ExtensionPointDirective.$inject = ['extensionPoints'];
 export function ExtensionPointDirective(extensionPoints) {
     function propsFromData(data, scope) {
