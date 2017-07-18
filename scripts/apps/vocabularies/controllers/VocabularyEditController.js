@@ -18,6 +18,7 @@ export function VocabularyEditController($scope, gettext, notify, api, vocabular
         notify.success(gettext('Vocabulary saved successfully'));
         $scope.closeVocabulary();
         $scope.updateVocabulary(result);
+        $scope.issues = null;
         return result;
     }
 
@@ -27,6 +28,7 @@ export function VocabularyEditController($scope, gettext, notify, api, vocabular
                 notify.error(gettext('Error: ' +
                                      response.data._issues['validator exception']));
             } else {
+                $scope.issues = response.data._issues;
                 notify.error(gettext('Error. Vocabulary not saved.'));
             }
         }
