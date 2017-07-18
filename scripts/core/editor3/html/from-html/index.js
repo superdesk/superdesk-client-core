@@ -31,6 +31,7 @@ import {
 export class HTMLParser {
     constructor(html) {
         this.tables = {};
+        this.images = {};
         this.tree = $('<div></div>');
 
         this.createTree(html);
@@ -58,6 +59,11 @@ export class HTMLParser {
         this.tree.find('table').each((i, node) => {
             this.tables[i] = $(node).html();
             $(node).replaceWith(`<figure>BLOCK_TABLE_${i}</figure>`);
+        });
+
+        this.tree.find('.image-block').each((i, node) => {
+            this.images[i] = $(node).html();
+            $(node).replaceWith(`<figure>BLOCK_IMAGE_${i}</figure>`);
         });
     }
 
@@ -87,9 +93,14 @@ export class HTMLParser {
     processBlock(block) {
         const isAtomic = block.getType() === 'atomic';
         const isTable = block.getText().indexOf('BLOCK_TABLE_') === 0;
+        const isImage = block.getText().indexOf('BLOCK_IMAGE_') === 0;
 
         if (isAtomic && isTable) {
             return this.createTableBlock(block);
+        }
+
+        if (isAtomic && isImage) {
+            return this.createImageBlock(block);
         }
 
         return block;
@@ -128,6 +139,34 @@ export class HTMLParser {
         }
 
         return atomicBlock(block, 'TABLE', 'MUTABLE', {data: {numRows, numCols, cells}});
+    }
+
+    /**
+     * @name HTMLParser#createImageBlock
+     * @param {ContentBlock} block
+     * @description Takes an unprocessed atomic block (that is assumed to be a
+     * an image block) and processes it.
+     * @returns {ContentBlock} The restored image block.
+     */
+    createImageBlock(block) {
+        const id = parseInt(block.getText().slice(12), 10);
+        const html = this.images[id];
+        const node = $('<div />');
+
+        node.html(html);
+
+        const img = node.find('img');
+        const href = img.attr('src');
+        const alt = img.attr('alt');
+        const txt = node.find('.image-block__description').text();
+
+        return atomicBlock(block, 'IMAGE', 'MUTABLE', {
+            img: {
+                alt_text: alt,
+                description_text: txt,
+                renditions: {viewImage: {href}}
+            }
+        });
     }
 }
 
