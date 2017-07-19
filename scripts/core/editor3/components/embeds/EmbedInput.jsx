@@ -4,6 +4,7 @@ import * as actions from '../../actions';
 import ng from 'core/services/ng';
 
 const fallbackAPIKey = '1d1728bf82b2ac8139453f'; // register to author's personal account
+const GenericError = gettext('This URL could not be embedded.');
 
 /**
  * @ngdoc React
@@ -63,8 +64,18 @@ export class EmbedInputComponent extends Component {
      * @description Processes the error XHR response from the iframe.ly request. Sets the state
      * to erroneous, which should be shown in the UI.
      */
-    processError(data, status) {
-        this.setState({error: data.responseJSON.error});
+    processError(data = {}, status) {
+        const {responseJSON} = data;
+        const hasMessage = responseJSON && responseJSON.error;
+        const is404 = !hasMessage && data.status === 404;
+
+        let error = hasMessage ? responseJSON.error : GenericError;
+
+        if (is404) {
+            error = gettext('URL not found.');
+        }
+
+        this.setState({error});
     }
 
     /**
@@ -87,7 +98,9 @@ export class EmbedInputComponent extends Component {
         $.ajax({
             url: `//iframe.ly/api/oembed?callback=?&url=${value}&api_key=${apiKey}&omit_script=true&iframe=true`,
             dataType: 'json'
-        }).then(this.processSuccess, this.processError);
+        })
+        .then((data) => data.type === 'link' ? $.Deferred().reject() : data)
+        .then(this.processSuccess, this.processError);
     }
 
     /**
