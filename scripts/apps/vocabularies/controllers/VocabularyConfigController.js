@@ -73,7 +73,8 @@ export function VocabularyConfigController($scope, $route, $routeParams, vocabul
             $scope.vocabulary = {
                 items: [],
                 type: 'manageable',
-                schema: angular.extend({}, DEFAULT_SCHEMA)
+                schema: angular.extend({}, DEFAULT_SCHEMA),
+                service: {all: 1} // needed for vocabulary to be visible in content profile
             };
         }
     }
