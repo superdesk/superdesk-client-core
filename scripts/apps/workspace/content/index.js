@@ -20,7 +20,6 @@ angular.module('superdesk.apps.workspace.content', [
     .service('content', ContentService)
 
     .directive('sdContentCreate', directive.ContentCreateDirective)
-    .directive('stringToArray', directive.StringToArrayDirective)
     .directive('sdContentSchemaEditor', directive.ContentProfileSchemaEditor)
     .directive('sdItemProfile', directive.ItemProfileDirective)
 

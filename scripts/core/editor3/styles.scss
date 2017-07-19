@@ -42,6 +42,10 @@
 		}
 	}
 
+	&.floating-toolbar .link-toolbar.empty {
+		display: none;
+	}
+
 	&.floating-toolbar .Editor3-controls {
 		position: fixed;
 		top: 132px;
@@ -267,8 +271,9 @@
 		z-index: 2000;
 		display: block;
 		background-color: #fff;
-		width: 100%;
+		width: 99%;
 		border: 1px solid #dedede;
+		margin: 3px;
 
 		&__error {
 			padding: 3px;
@@ -277,7 +282,7 @@
 		}
 
 		input {
-			height: 53px;
+			height: 30px;
 			padding: 8px 47px 8px 15px;
 		}
 	}
