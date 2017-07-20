@@ -13,7 +13,7 @@
         ng-disabled="!saveIsEnabled() || isAoISelectionModeEnabled"
         ng-if="data.editable"
         translate>Save</button>
-    </div>     
+    </div>
 </div>
 
 <div class="modal__body modal-body__flex">
@@ -45,13 +45,14 @@
                     data-src="data.item.renditions.viewImage.href"
                     data-original="data.item.renditions.original"
                     data-crop-data="areaOfInterestData"
+                    data-on-change="enableSaveAreaOfInterest()"
                     ng-if="isAoISelectionModeEnabled && !loaderForAoI">
                 </div>
                 <div ng-if="isAoISelectionModeEnabled && !loaderForAoI">
                     <button class="btn" ng-click="showAreaOfInterestView(false)" translate>Cancel</button>
                     <button class="btn btn--primary"
                             ng-click="saveAreaOfInterest(areaOfInterestData)"
-                            ng-disabled="!enableSaveAreaOfInterest()"
+                            ng-disabled="!isAoIDirty"
                             translate>Save</button>
                 </div>
                 <button class="btn"
@@ -61,11 +62,14 @@
             </div>
             <div class="crop-area selected" ng-if="selectedRendition">
                 <label class="field-label">{{ selectedRendition.name }}</label>
-                <div sd-image-crop-view
-                     data-src="data.item.renditions.viewImage.href"
-                     data-original="data.item.renditions.original"
-                     data-crop-data="data.cropData[selectedRendition.name]"
-                ></div>
+                <div sd-image-crop
+                    data-show-Min-Size-Error="true"
+                    data-src="data.item.renditions.viewImage.href"
+                    data-original="data.item.renditions.original"
+                    data-rendition="selectedRendition"
+                    data-crop-data="data.cropData[selectedRendition.name]"
+                    data-on-change="onChange(renditionName, cropData)">
+                </div>
             </div>
         </div>
         <div class="modal-body__flex-sidebar modal-body__flex-metadata"
