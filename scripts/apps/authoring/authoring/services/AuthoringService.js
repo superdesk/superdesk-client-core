@@ -232,7 +232,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         var endpoint = 'archive_' + action;
 
         return api.update(endpoint, orig, extDiff)
-            .then((result) => lock.unlock(result));
+            .then((result) => lock.unlock(result).catch(() => result)); // ignore unlock err
     };
 
     this.validateBeforeTansa = function(orig, diff, act) {
