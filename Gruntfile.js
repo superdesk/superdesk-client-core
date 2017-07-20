@@ -64,7 +64,6 @@ module.exports = function(grunt) {
     grunt.registerTask('server', [
         'clean',
         'ngtemplates:index',
-        'copy:index',
         'copy:config',
         'copy:locales',
         'ngtemplates:gen-apps',
@@ -77,7 +76,6 @@ module.exports = function(grunt) {
         grunt.task.run([
             'clean',
             'ngtemplates:index',
-            'copy:index',
             'copy:config',
             'copy:assets',
             'copy:locales',
