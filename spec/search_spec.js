@@ -151,11 +151,11 @@ describe('search', () => {
 
         // can dynamically update items in related tab when item duplicated
         expect(globalSearch.getItems().count()).toBe(15);
-        globalSearch.actionOnItem('Duplicate', 0, true);
+        globalSearch.actionOnSubmenuItem('Duplicate', 'Duplicate in place', 0, true);
         globalSearch.itemClick(0);
         monitoring.tabAction('related');
         expect(globalSearch.getRelatedItems().count()).toBe(1);
-        globalSearch.actionOnItem('Duplicate', 0, true);
+        globalSearch.actionOnSubmenuItem('Duplicate', 'Duplicate in place', 0, true);
         globalSearch.itemClick(0);
         monitoring.tabAction('related');
         expect(globalSearch.getRelatedItems().count()).toBe(2);

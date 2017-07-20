@@ -623,11 +623,22 @@ angular.module('superdesk.core.activity', [
         referrer.setReferrer(currentRoute, previousRoute);
     });
 }])
-.directive('sdActivityItem', ActivityItemDirective);
+.directive('sdActivityItem', ActivityItemDirective)
+.directive('sdActivityDropdownItem', ActivityItemDropdownDirective);
 
 ActivityItemDirective.$inject = ['asset'];
 function ActivityItemDirective(asset) {
     return {
         templateUrl: asset.templateUrl('core/activity/views/activity-item.html')
+    };
+}
+
+ActivityItemDropdownDirective.$inject = ['asset'];
+function ActivityItemDropdownDirective(asset) {
+    return {
+        templateUrl: asset.templateUrl('core/activity/views/activity-dropdown-item.html'),
+        link: function(scope, elem, attr) {
+            scope.group = attr.group;
+        }
     };
 }
