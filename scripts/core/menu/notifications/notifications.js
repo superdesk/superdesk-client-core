@@ -1,5 +1,20 @@
-UserNotificationsService.$inject = ['$rootScope', '$timeout', 'api', 'session', 'SESSION_EVENTS'];
-function UserNotificationsService($rootScope, $timeout, api, session, SESSION_EVENTS) {
+UserNotificationsService.$inject = [
+    '$rootScope',
+    '$timeout',
+    'api',
+    'session',
+    'SESSION_EVENTS',
+    'sdActivityMessage',
+    'preferencesService',
+];
+function UserNotificationsService(
+    $rootScope,
+    $timeout,
+    api,
+    session,
+    SESSION_EVENTS,
+    sdActivityMessage,
+    preferencesService) {
     var UPDATE_TIMEOUT = 500;
 
     this._items = null;
@@ -101,6 +116,10 @@ function UserNotificationsService($rootScope, $timeout, api, session, SESSION_EV
         $rootScope.$on('activity', (_e, extras) => {
             if (isCurrentUser(extras)) {
                 $timeout(this.reload, UPDATE_TIMEOUT, false);
+                // check for permission and send a desktop notificiation
+                preferencesService.desktopNotification.send(
+                    sdActivityMessage.format(extras.activity)
+                );
             }
         });
     });
@@ -230,7 +249,8 @@ angular.module('superdesk.core.menu.notifications', ['superdesk.core.services.as
     .service('deskNotifications', DeskNotificationsService)
     .directive('sdMarkAsRead', MarkAsReadDirective)
 
-    .directive('sdNotifications', ['asset', 'authoringWorkspace', function(asset, authoringWorkspace) {
+    .directive('sdNotifications',
+    ['asset', 'authoringWorkspace', '$rootScope', function(asset, authoringWorkspace, $rootScope) {
         return {
             require: '^sdSuperdeskView',
             templateUrl: asset.templateUrl('core/menu/notifications/views/notifications.html'),
@@ -240,6 +260,10 @@ angular.module('superdesk.core.menu.notifications', ['superdesk.core.services.as
                 scope.openArticle = function(notification) {
                     ctrl.flags.notifications = !ctrl.flags.notifications;
                     authoringWorkspace.edit({_id: notification.item}, 'edit');
+                };
+
+                scope.onNotificationClick = function(notification) {
+                    $rootScope.$broadcast('notification:click', {notification});
                 };
             }
         };

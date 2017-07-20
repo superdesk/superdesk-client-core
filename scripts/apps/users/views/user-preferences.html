@@ -20,6 +20,18 @@
                 </div>
             </li>
 
+            <li class="fieldset">
+                <div class="legend" translate>Notifications</div>
+                <div sd-info-item>
+                    <label>{{ :: preferences['email:notification'].label | translate }}</label>
+                    <span ng-hide="preferences['email:notification'].allowed" sd-switch ng-model="preferences['email:notification'].enabled"></span>
+                </div>
+                <div sd-info-item>
+                    <label>{{ :: preferences['desktop:notification'].label | translate }}</label>
+                    <span ng-hide="preferences['desktop:notification'].allowed" sd-switch ng-model="preferences['desktop:notification'].enabled"></span>
+                </div>
+            </li>
+
             <li class="fieldset terms-box">
                 <div class="legend" translate>Article Defaults</div>
 
