@@ -50,7 +50,7 @@ module.exports = {
 
     index: {
         cwd: '<%= coreDir %>',
-        dest: './index.html',
+        dest: '<%= distDir %>/index.html',
         src: __filename, // hack to make ngtemplate work
         options: {
             bootstrap: () => {
