@@ -156,7 +156,8 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
         angular.extend($scope, {
             isAoISelectionModeEnabled: show === undefined || show,
             areaOfInterestData: {},
-            loaderForAoI: false
+            loaderForAoI: false,
+            isAoIDirty: false
         });
     };
 
@@ -168,6 +169,12 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
     * @returns {Boolean}
     */
     $scope.enableSaveAreaOfInterest = function() {
+        $scope.$applyAsync(() => {
+            $scope.isAoIDirty = isAreaOfInterestChanged();
+        });
+    };
+
+    function isAreaOfInterestChanged() {
         if ($scope.areaOfInterestData && angular.isDefined($scope.areaOfInterestData.CropLeft)) {
             let {width, height} = $scope.data.item.renditions.original;
 
@@ -176,7 +183,7 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
         }
 
         return false;
-    };
+    }
 
    /**
     * @ngdoc method
