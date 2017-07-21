@@ -1,0 +1,1 @@
+export {ExtensionPointDirective} from './ExtensionPointDirective';

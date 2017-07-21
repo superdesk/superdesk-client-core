@@ -265,7 +265,7 @@
                     </li>
                     <li ng-if="useTansaProofing()">
                         <button type="button"
-                            ng-click="runTansa()" 
+                            ng-click="runTansa()"
                             sd-hotkey="ctrl+shift+y"
                             sd-hotkey-options="{global: true}">
                               <span class="shortcut pull-right">Ctrl+Shift+Y</span>
@@ -273,6 +273,7 @@
                         </button>
                     </li>
                 </ul>
+                <span sd-extension-point="authoring-topbar"></span>
             </div>
         </div>
 

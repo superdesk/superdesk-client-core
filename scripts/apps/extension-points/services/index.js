@@ -1,0 +1,1 @@
+export {ExtensionPointsProvider} from './ExtensionPoints';
