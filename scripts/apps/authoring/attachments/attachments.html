@@ -1,0 +1,35 @@
+<div class="attachments-pane" ng-controller="AttachmentsCtrl as ctrl">
+	<div class="attachments-list">
+		<ul ng-if="files">
+			<li ng-repeat="file in files">
+				<div class="title"><b>{{file.meta.title}}</b></div>
+				<div class="description">{{file.meta.description}}</div>
+				<a href="#"><i class="icon-attachment-large" />Download</a>
+			</li>
+		</ul>
+	</div>
+	<div class="attach-indicator" 
+		ngf-drop="ctrl.selectFiles($files)"
+		ngf-multiple="true"
+		ngf-max-files="10"
+		ngf-max-size="8MB">
+
+		<div class="round-box">
+			<i class="big-icon--upload-alt icon"></i>
+		</div>
+		<div class="subtext" translate>
+			Drag one or more files here to upload them, or just click the button below.
+		</div>
+
+		<a class="btn btn--hollow"
+			ngf-select="ctrl.selectFiles($files)"
+			ngf-drop="ctrl.selectFiles($files)"
+			ngf-multiple="true"
+			ngf-max-files="10"
+			ngf-max-size="8MB">
+			Attach files
+		</a>
+
+	</div>
+	<div class="clearfix"></div>
+</div>
