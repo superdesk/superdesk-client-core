@@ -13,6 +13,7 @@ import './widgets/widgets-article.scss';
 import './authoring';
 import './widgets/widgets';
 import './comments/comments';
+import './attachments/attachments';
 import './versioning/versioning';
 import './versioning/versions/versions';
 import './versioning/history/history';
