@@ -120,6 +120,6 @@ function ContentProfiles() {
      * Cancels content profile pop up
      **/
     this.cancel = function() {
-        element(by.css('[ng-click="ctrl.toggleEdit(null)"]')).click();
+        element(by.css('[ng-click="ctrl.toggleEdit()"]')).click();
     };
 }

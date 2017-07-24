@@ -140,6 +140,7 @@ describe('superdesk.apps.workspace.content', () => {
         it('can get content type', inject((api, content, $rootScope, $q) => {
             var type = {_id: 'foo'};
 
+            spyOn(api, 'query').and.returnValue($q.when({_items: []}));
             spyOn(api, 'find').and.returnValue($q.when(type));
             var success = jasmine.createSpy('ok');
 
@@ -189,6 +190,18 @@ describe('superdesk.apps.workspace.content', () => {
             editor = content.editor(contentType);
             expect(editor.foo).toBe(2);
             expect(editor.slugline).toBeFalsy();
+        }));
+
+        it('can filter custom fields per profile', inject((content) => {
+            content._fields = [
+                {_id: 'foo'},
+                {_id: 'bar'}
+            ];
+
+            const fields = content.fields({editor: {foo: {enabled: true}}});
+
+            expect(fields.length).toBe(1);
+            expect(fields[0]._id).toBe('foo');
         }));
     });
 
@@ -246,7 +259,7 @@ describe('superdesk.apps.workspace.content', () => {
 
                 angular.extend(scope, props);
                 return _$compile_(
-                    '<form><sd-content-schema-editor ng-model="model"></sd-content-schema-editor></form>'
+                    '<form><sd-content-schema-editor data-model="model"></sd-content-schema-editor></form>'
                 )(scope);
             };
         }));
@@ -263,7 +276,7 @@ describe('superdesk.apps.workspace.content', () => {
 
             var fields = el.find('li.schema-item');
 
-            expect(fields.length).toBe(Object.keys(content.contentProfileSchema).length);
+            expect(fields.length).toBe(Object.keys(content.contentProfileEditor).length);
             expect($(fields[0]).find('span.sd-toggle')
                 .hasClass('checked'))
                 .toBeTruthy();

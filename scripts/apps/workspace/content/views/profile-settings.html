@@ -81,8 +81,8 @@
     </div>
 
     <!-- Edit profile modal -->
-    <div sd-modal class="modal--large" data-model="!!editing" data-close="ctrl.toggleEdit(null)">
-            <div class="modal__header"> <a href="" class="close" ng-click="ctrl.toggleEdit(null)"><i class="icon-close-small"></i></a>
+    <div sd-modal class="modal--large" data-model="!!editing" data-close="ctrl.toggleEdit()">
+            <div class="modal__header"> <a href="" class="close" ng-click="ctrl.toggleEdit()"><i class="icon-close-small"></i></a>
                 <h3 class="modal__heading">{{ :: 'Editing' | translate }} "{{ editing.form.label }}"</h3>
             </div>
             <div class="modal__body">
@@ -111,14 +111,14 @@
                             </label>
                         </div>
                         <div class="field">
-                            <sd-content-schema-editor ng-model="editing.form"></sd-content-schema-editor>
+                            <sd-content-schema-editor data-model="editing.form"></sd-content-schema-editor>
                         </div>
                     </fieldset>
                 </form>
             </div>
             <div class="modal__footer">
                 <button id="profile-update" class="btn btn--primary" ng-disabled="editForm.$invalid || !editForm.$dirty" ng-click="ctrl.update()" translate>Save</button>
-                <button class="btn" ng-click="ctrl.toggleEdit(null)" translate>Cancel</button>
+                <button class="btn" ng-click="ctrl.toggleEdit()" translate>Cancel</button>
             </div>
     </div>
 </div>

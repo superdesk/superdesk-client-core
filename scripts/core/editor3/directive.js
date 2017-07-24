@@ -95,7 +95,7 @@ class Editor3Directive {
              * @type {Boolean}
              * @description Disables the Enter key if the attribute is set.
              */
-            singleLine: '@',
+            singleLine: '=?',
 
             /**
              * @type {String}
@@ -117,7 +117,7 @@ class Editor3Directive {
         this.language = this.language || 'en';
         this.readOnly = this.readOnly || false;
         this.findReplaceTarget = typeof this.findReplaceTarget !== 'undefined';
-        this.singleLine = typeof this.singleLine !== 'undefined';
+        this.singleLine = this.singleLine || false;
         this.debounce = parseInt(this.debounce || '100', 10);
         this.disableSpellchecker = this.disableSpellchecker || false;
         this.bindToValue = this.bindToValue || false;

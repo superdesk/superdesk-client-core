@@ -22,14 +22,21 @@ export function VocabularyConfigController($scope, $route, $routeParams, vocabul
      * Close vocabulary edit modal
      */
     $scope.closeVocabulary = () => {
-        $route.updateParams({id: null, new: null});
+        $route.updateParams({id: null, new: null, type: null});
     };
 
     /**
      * Open modal with new item
      */
     $scope.createVocabulary = () => {
-        $route.updateParams({id: null, new: true});
+        $route.updateParams({id: null, new: true, type: null});
+    };
+
+    /**
+     * Create new custom field
+     */
+    $scope.createCustomField = () => {
+        $route.updateParams({id: null, new: true, type: 'text'});
     };
 
     /**
@@ -71,6 +78,7 @@ export function VocabularyConfigController($scope, $route, $routeParams, vocabul
 
         if ($routeParams.new) {
             $scope.vocabulary = {
+                field_type: $routeParams.type || null,
                 items: [],
                 type: 'manageable',
                 schema: angular.extend({}, DEFAULT_SCHEMA),
