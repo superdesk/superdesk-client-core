@@ -133,7 +133,7 @@ export class EditorService {
      * the interface and it's copied from `core/editor2/editor.js#93`.
      */
     countErrors() {
-        return ng.get('$q').when(countOccurrences(store.getState()));
+        return ng.get('$q').when(store ? countOccurrences(store.getState()) : null);
     }
 
     /**
