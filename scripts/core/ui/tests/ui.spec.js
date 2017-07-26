@@ -265,4 +265,27 @@ describe('superdesk ui', () => {
             expect(scope.model.email).toBe(undefined);
         });
     });
+
+    describe('filesize filter', () => {
+        it('can format bytes', inject(($filter) => {
+            let filesize = $filter('filesize');
+
+            expect(filesize(0)).toBe('0 b');
+            expect(filesize(1024)).toBe('1.0 kB');
+            expect(filesize(1024 * 1.3)).toBe('1.3 kB');
+            expect(filesize(1024 * 1024)).toBe('1.0 MB');
+            expect(filesize(1024 * 1024 * 5)).toBe('5.0 MB');
+        }));
+    });
+
+    describe('fileicon filter', () => {
+        it('can get file icon', inject(($filter) => {
+            let filetype = $filter('fileicon');
+
+            expect(filetype('image/jpeg')).toBe('document-default');
+            expect(filetype('application/pdf')).toBe('document-pdf');
+            expect(filetype('application/msword')).toBe('document-doc');
+            expect(filetype('application/msexcel')).toBe('document-doc');
+        }));
+    });
 });

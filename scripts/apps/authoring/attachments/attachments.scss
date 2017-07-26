@@ -2,15 +2,31 @@
 
 .sd-widget.attachments {
 	.attachments-pane {
-		position: relative;
+
+		.attachments-list {
+			position: absolute;
+			top: 12px;
+			right: 12px;
+			bottom: 212px;
+			left: 12px;
+			overflow-y: scroll;
+		}
 
 		.attach-indicator {
 			position: absolute;
-			top: 100px;
+			bottom: 12px;
 			left: 50%;
 			margin-left: -125px;
 			width: 250px;
 			text-align: center;
+
+			&.empty {
+				bottom: 50%;
+
+				.round-box i.icon {
+					color: $sd-blue;
+				}
+			}
 
 			.round-box {
 				display: block;
@@ -27,7 +43,6 @@
 					display: block;
 					width: 56px;
 					height: 48px;
-					color: $sd-blue;
 					margin: 1.4rem auto 0 auto;
 					font-size: 5.2rem;
 				}

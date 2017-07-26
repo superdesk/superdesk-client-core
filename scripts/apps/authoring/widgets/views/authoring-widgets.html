@@ -15,6 +15,10 @@
                     sd-hotkey="ctrl+alt+{{widget.order}}"
                     sd-hotkey-options="{global: true}">
                     <span id="unread-count" class="sd-sidetab-menu__info-label badge badge--primary" ng-show="widget._id == 'comments' && comments.length">{{ comments.length }}</span>
+
+                    <span class="sd-sidetab-menu__info-label badge badge--primary"
+                        ng-show="badge(widget)">{{ badge(widget) }}</span>
+
                     <i class="sd-sidetab-menu__main-icon big-icon--{{ :: widget.icon }}"></i>
                     <i class="sd-sidetab-menu__helper-icon icon-close-small"></i>
                 </a>
