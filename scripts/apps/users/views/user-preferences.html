@@ -39,9 +39,9 @@
                 <div sd-info-item ng-if="preferencesLoaded === true">
                     <label>{{ :: preferences['dateline:located'].label | translate}}</label>
                     <span sd-meta-locators data-list="cities" data-item="preferences['dateline:located']" data-field="located"
-                          data-change="changeDatelinePreview(item, city)"></span>
+                          data-postprocessing="changeDatelinePreview(item, city)" data-keepinput="true"></span>
                 </div>
-                <div class="dateline_preview">
+                <div sd-info-item class="dateline_preview">
                     <label translate>Preview</label>
                     <span>{{ datelinePreview | previewDateline:datelineSource}} </span>
                 </div>
