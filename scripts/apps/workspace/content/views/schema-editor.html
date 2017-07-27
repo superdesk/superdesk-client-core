@@ -1,9 +1,9 @@
 <div class="schema-editor">
     <h4 translate>Schema Configuration</h4>
     <ul class="pills-list">
-        <li class="schema-item" ng-repeat="id in schemaKeys track by $index">
+        <li class="schema-item" ng-repeat="id in schemaKeys track by id">
             <div class="header">
-                <span class="title">{{model.editor[id].field_name || label(id) | translate}}</span>
+                <span class="title">{{ :: model.editor[id].field_name || label(id) | translate }}</span>
                 <div class="pull-right">
                     <span class="sd-toggle"
                           ng-class="{'checked': model.editor[id].enabled}"
@@ -29,7 +29,7 @@
                             <input class="input-small line-input" placeholder="{{ 'Default' | translate }}"
                                    type="number" ng-model="model.editor[id].order" min="1" max="99" />
                         </div>
-                        <div class="field" ng-show="model.schema[id].type === 'string'">
+                        <div class="field" ng-show="model.schema[id].type === 'string' || fields[id].field_type === 'text'">
                             <label translate>Length</label>
                             <div class="controls">
                                 <span translate>min</span>:
@@ -56,7 +56,7 @@
                             <label translate>Clean Pasted HTML</label>
                             <div sd-check ng-model="model.editor[id].cleanPastedHTML"></div>
                         </div>
-                        <div class="field" ng-if="hasFormatOptions(id)">
+                        <div class="field" ng-if=":: hasFormatOptions(id)">
                             <label translate>Format options</label>
                             <div class="controls" ng-if="model.editor.body_html.editor3"
                                  sd-multi-select

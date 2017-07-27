@@ -37,7 +37,7 @@ angular.module('superdesk.apps.vocabularies', [
 
     .config(['superdeskProvider', function(superdesk) {
         superdesk.activity('/settings/vocabularies', {
-            label: gettext('Vocabularies'),
+            label: gettext('Metadata'),
             templateUrl: 'scripts/apps/vocabularies/views/settings.html',
             category: superdesk.MENU_SETTINGS,
             priority: -800,

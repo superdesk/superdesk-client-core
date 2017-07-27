@@ -3,7 +3,8 @@
         <div class="modal__header">
             <a href="" class="close" ng-click="cancel()"><i class="icon-close-small"></i></a>
 
-            <h3 class="modal__heading" translate><span translate>Edit Vocabulary</span>: {{ vocabulary.display_name | translate}}</h3>
+            <h3 class="modal__heading" ng-show="vocabulary._id"><span translate>Edit</span> {{ vocabulary.display_name | translate }}</h3>
+            <h3 class="modal__heading" ng-show="!vocabulary._id"><span translate>Create</span></h3>
         </div>       
         <div class="modal__body">
             <ng-form name="vocabularyForm" class="vocabularyForm">
@@ -18,6 +19,8 @@
                     required>
                 <div class="sd-line-input__message"
                     ng-show="issues._id.unique" translate>ID must be unique.</div>
+                <div class="sd-line-input__message"
+                    ng-show="issues._id.conflict" translate>ID conflicts with system field.</div>
             </div>
 
             <div class="sd-line-input sd-line-input--required">
@@ -28,7 +31,12 @@
                     required>
             </div>
 
-            <div class="sd-line-input">
+            <div class="sd-line-input" ng-show="vocabulary.field_type === 'text'">
+                <label for="field-text-single" translate>Single line</label>
+                <input id="field-text-single" type="checkbox" ng-model="vocabulary.field_options.single">
+            </div>
+
+            <div class="sd-line-input" ng-show="!vocabulary.field_type">
                 <label translate>Items</label>
 
                 <table>

@@ -340,10 +340,12 @@ export function ArticleEditDirective(
                             scope.contentType = type;
                             scope.editor = authoring.editor = content.editor(type);
                             scope.schema = authoring.schema = content.schema(type);
+                            scope.fields = content.fields(type);
                         });
                 } else {
                     scope.editor = authoring.editor = content.editor();
                     scope.schema = authoring.schema = content.schema();
+                    scope.fields = null;
                 }
             });
 

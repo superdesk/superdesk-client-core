@@ -1,4 +1,6 @@
 import {LABEL_MAP, HAS_FORMAT_OPTIONS} from 'apps/workspace/content/constants';
+import _ from 'lodash';
+
 /**
  * @ngdoc directive
  * @module superdesk.apps.workspace
@@ -15,9 +17,7 @@ export function ContentProfileSchemaEditor(gettext, content) {
         restrict: 'E',
         templateUrl: 'scripts/apps/workspace/content/views/schema-editor.html',
         require: '^form',
-        scope: {
-            model: '=ngModel'
-        },
+        scope: {model: '='},
         link: function(scope, elem, attr, form) {
             scope.loading = true;
             scope.model.schema = angular.extend({}, content.contentProfileSchema);
@@ -29,6 +29,7 @@ export function ContentProfileSchemaEditor(gettext, content) {
                 scope.model.editor = angular.extend({}, typeMetadata.editor);
                 scope.loading = false;
                 getSchemaKeys();
+                scope.fields = _.keyBy(content.allFields(), '_id');
             });
 
             /**
@@ -40,12 +41,10 @@ export function ContentProfileSchemaEditor(gettext, content) {
              */
             const getSchemaKeys = () => {
                 // inner function to return the value of 'order' of a given field
-                const getOrder = (f) => scope.model.editor[f] && scope.model.editor[f].order || 99;
+                const getOrder = (f) => _.get(scope.model.editor[f], 'order') || 99;
 
-                scope.schemaKeys = Object.keys(scope.model.schema).sort((a, b) => getOrder(a) - getOrder(b));
+                scope.schemaKeys = Object.keys(scope.model.editor).sort((a, b) => getOrder(a) - getOrder(b));
             };
-
-            scope.directive = this.name;
 
             scope.formattingOptions = [
                 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
@@ -80,11 +79,20 @@ export function ContentProfileSchemaEditor(gettext, content) {
              * @param {String} id the key of the field to toggle.
              */
             scope.toggle = function(id) {
-                scope.model.editor[id].enabled = !scope.model.editor[id].enabled;
-                scope.model.schema[id].enabled = !scope.model.schema[id].enabled;
+                if (scope.model.editor[id]) {
+                    scope.model.editor[id].enabled = !scope.model.editor[id].enabled;
+                    scope.model.schema[id].enabled = scope.model.editor[id].enabled;
+                } else {
+                    scope.model.editor[id] = {enabled: true};
+                    scope.model.schema[id] = {enabled: true};
+                }
+
                 form.$dirty = true;
             };
 
+            /**
+             * @description Set form dirty
+             */
             scope.setDirty = function(dirty) {
                 form.$dirty = !!dirty;
             };
@@ -95,7 +103,16 @@ export function ContentProfileSchemaEditor(gettext, content) {
              * @param {string} field
              * @return {Boolean}
              */
-            scope.hasFormatOptions = (field) => !!HAS_FORMAT_OPTIONS[field]; // return boolean so :: will work
+            scope.hasFormatOptions = (field) => !!HAS_FORMAT_OPTIONS[field] || hasCustomFieldFormatOptions(field);
+
+            /**
+             * Test if given field is custom field
+             *
+             * @param {string} field
+             * @return {Boolean}
+             */
+            const hasCustomFieldFormatOptions = (field) =>
+                scope.fields[field] && scope.fields[field].field_type === 'text';
         }
     };
 }
