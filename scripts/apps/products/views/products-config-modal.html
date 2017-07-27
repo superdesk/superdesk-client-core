@@ -1,4 +1,4 @@
-<div sd-modal data-model="modalActive" data-close="cancel()" class="modal--large">
+<div sd-modal data-model="modalActive" data-close="cancel()" class="modal--large modal--tabs">
     <div class="modal__header">
         <a href="" class="close" ng-click="cancel()"><i class="icon-close-small"></i></a>
         <h3 class="modal__heading" ng-show="!product.edit._id" translate>Add New Product</h3>
@@ -6,17 +6,19 @@
     </div>
     <div class="modal__body">
         <form name="editForm">
-            <ul class="nav-tabs">
-                <li ng-class="{'nav-tabs__tab--active': !tab || tab === 'products'}" class="nav-tabs__tab">
-                    <button ng-click="tab = 'products'" class="nav-tabs__link"><span translate>Product Details</span>
-                    </button>
-                </li>
-                <li ng-class="{'nav-tabs__tab--active': tab === 'subscribers'}" class="nav-tabs__tab">
-                    <button ng-click="tab = 'subscribers'" class="nav-tabs__link"><span translate>Subscribers</span>
-                    </button>
-                </li>               
-            </ul>
-            <div class="nav-tabs__content">
+            <div class="modal__body-header">
+                <ul class="nav-tabs">
+                    <li ng-class="{'nav-tabs__tab--active': !tab || tab === 'products'}" class="nav-tabs__tab">
+                        <button ng-click="tab = 'products'" class="nav-tabs__link"><span translate>Product Details</span>
+                        </button>
+                    </li>
+                    <li ng-class="{'nav-tabs__tab--active': tab === 'subscribers'}" class="nav-tabs__tab">
+                        <button ng-click="tab = 'subscribers'" class="nav-tabs__link"><span translate>Subscribers</span>
+                        </button>
+                    </li>               
+                </ul>
+            </div>
+            <div class="modal__body-content">
                 <div ng-if="!tab || tab === 'products'" class="nav-tabs__pane">
                     <fieldset>
                         <div class="field">
@@ -71,9 +73,9 @@
                 </div>
             </div>
         </form>
-    </div>
-    <div class="modal__footer">
-        <button class="btn" ng-click="cancel()" translate>Cancel</button>
-        <button class="btn btn--primary" ng-click="save()" ng-disabled="editForm.$invalid" translate>Save</button>
+        <div class="modal__body-footer">
+            <button class="btn" ng-click="cancel()" translate>Cancel</button>
+            <button class="btn btn--primary" ng-click="save()" ng-disabled="editForm.$invalid" translate>Save</button>
+        </div>
     </div>
 </div>
