@@ -22,6 +22,7 @@ angular.module('superdesk.apps.workspace.content', [
     .directive('sdContentCreate', directive.ContentCreateDirective)
     .directive('sdContentSchemaEditor', directive.ContentProfileSchemaEditor)
     .directive('sdItemProfile', directive.ItemProfileDirective)
+    .directive('sdSortContentProfiles', directive.SortContentProfiles)
 
     .controller('ContentProfilesController', ctrl.ContentProfilesController)
 

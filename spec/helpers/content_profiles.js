@@ -98,7 +98,7 @@ function ContentProfiles() {
     this.disableField = function(fieldName) {
         const disableButton = element(by.cssContainingText('.title', fieldName))
         .element(by.xpath('..'))
-        .element(by.css('[ng-click="toggle(id)"]'));
+        .element(by.css('[ng-click="remove(id)"]'));
 
         disableButton.click();
     };

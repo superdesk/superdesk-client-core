@@ -277,9 +277,6 @@ describe('superdesk.apps.workspace.content', () => {
             var fields = el.find('li.schema-item');
 
             expect(fields.length).toBe(Object.keys(content.contentProfileEditor).length);
-            expect($(fields[0]).find('span.sd-toggle')
-                .hasClass('checked'))
-                .toBeTruthy();
         }));
 
         it('should dirty parent form when toggling fields', inject((content, $q) => {
@@ -297,7 +294,7 @@ describe('superdesk.apps.workspace.content', () => {
 
             expect(form.$dirty).toBeFalsy();
             $(fields[0])
-                .find('span.sd-toggle')
+                .find('#remove-item')
                 .click();
             expect(form.$dirty).toBeTruthy();
         }));

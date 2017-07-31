@@ -11,8 +11,8 @@ import _ from 'lodash';
  *
  * @description Handles content profile schema editing
  */
-ContentProfileSchemaEditor.$inject = ['gettext', 'content'];
-export function ContentProfileSchemaEditor(gettext, content) {
+ContentProfileSchemaEditor.$inject = ['content'];
+export function ContentProfileSchemaEditor(content) {
     return {
         restrict: 'E',
         templateUrl: 'scripts/apps/workspace/content/views/schema-editor.html',
@@ -43,7 +43,14 @@ export function ContentProfileSchemaEditor(gettext, content) {
                 // inner function to return the value of 'order' of a given field
                 const getOrder = (f) => _.get(scope.model.editor[f], 'order') || 99;
 
-                scope.schemaKeys = Object.keys(scope.model.editor).sort((a, b) => getOrder(a) - getOrder(b));
+                scope.schemaKeys = _.filter(Object.keys(scope.model.editor),
+                        (value) => scope.model.editor[value].enabled).sort((a, b) => getOrder(a) - getOrder(b));
+
+                scope.schemaKeysDisabled = _.filter(Object.keys(scope.model.editor),
+                        (value) => !scope.model.editor[value].enabled).sort((a, b) => getOrder(a) - getOrder(b));
+
+                scope.schemaKeysOrdering = _.clone(scope.schemaKeys);
+                scope.updateOrder();
             };
 
             scope.formattingOptions = [
@@ -75,26 +82,47 @@ export function ContentProfileSchemaEditor(gettext, content) {
             };
 
             /**
-             * @description Toggles whether a field is enabled or not.
+             * @description Set form dirty
+             */
+            scope.setDirty = function(dirty) {
+                form.$dirty = !!dirty;
+            };
+
+            /**
+             * @description Enable fiels in content profile
              * @param {String} id the key of the field to toggle.
              */
-            scope.toggle = function(id) {
+            scope.toggle = (id, order, position) => {
                 if (scope.model.editor[id]) {
-                    scope.model.editor[id].enabled = !scope.model.editor[id].enabled;
-                    scope.model.schema[id].enabled = scope.model.editor[id].enabled;
+                    scope.model.editor[id].enabled = true;
+                    scope.model.schema[id].enabled = true;
                 } else {
                     scope.model.editor[id] = {enabled: true};
                     scope.model.schema[id] = {enabled: true};
                 }
 
-                form.$dirty = true;
+                scope.schemaKeys.splice(position === 'before' ? order - 1 : order + 1, 0, id);
+                scope.schemaKeysDisabled.splice(scope.schemaKeysDisabled.indexOf(id), 1);
+                scope.schemaKeysOrdering = _.clone(scope.schemaKeys);
+
+                scope.updateOrder();
+                scope.setDirty(true);
             };
 
             /**
-             * @description Set form dirty
+             * @description Disable field in content profile
+             * @param {String} id the key of the field to toggle.
              */
-            scope.setDirty = function(dirty) {
-                form.$dirty = !!dirty;
+            scope.remove = (id) => {
+                scope.model.editor[id].enabled = false;
+                scope.model.schema[id].enabled = false;
+
+                scope.schemaKeys.splice(scope.schemaKeys.indexOf(id), 1);
+                scope.schemaKeysDisabled.unshift(id);
+                scope.schemaKeysOrdering = _.clone(scope.schemaKeys);
+
+                scope.updateOrder();
+                form.$dirty = true;
             };
 
             /**
@@ -113,6 +141,32 @@ export function ContentProfileSchemaEditor(gettext, content) {
              */
             const hasCustomFieldFormatOptions = (field) =>
                 scope.fields[field] && scope.fields[field].field_type === 'text';
+
+            /*
+             * @description Drag&Drop sorting functionality
+             * @param {int} start position of item before drag
+             * @param {int} end position of item after drop
+             */
+            scope.reorder = (start, end) => {
+                scope.schemaKeysOrdering.splice(end, 0, scope.schemaKeysOrdering.splice(start, 1)[0]);
+                scope.updateOrder();
+                scope.setDirty(true);
+            };
+
+            /*
+             * @description Update order on input change
+             * @param {string} id key of the field to toggle
+             */
+            scope.updateOrder = (key) => {
+                if (key) {
+                    scope.schemaKeysOrdering.splice(scope.model.editor[key].order - 1, 0,
+                            scope.schemaKeysOrdering.splice(scope.schemaKeysOrdering.indexOf(key), 1)[0]);
+                }
+
+                angular.forEach(scope.schemaKeys, (id) => {
+                    scope.model.editor[id].order = scope.schemaKeysOrdering.indexOf(id) + 1;
+                });
+            };
         }
     };
 }
