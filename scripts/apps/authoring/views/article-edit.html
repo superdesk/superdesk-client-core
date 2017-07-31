@@ -87,13 +87,11 @@
          tabindex="{{editor.feature_image.order}}">
     </div>
 </div>
-
 <div ng-if="schema.feature_media" class="field"
      sd-width="{{editor.feature_image.sdWidth|| 'full'}}"
      sd-validation-error="error.feature_media"
      order="{{editor.feature_media.order}}"
      data-required="schema.feature_media.required">
-
     <label translate>Featured Media</label>
     <div sd-item-association
          data-allow-video="true"
@@ -103,6 +101,12 @@
          data-onchange="autosave(item)"
          data-save="save()"
          tabindex="{{editor.feature_media.order}}">
+    </div>
+    <div sd-item-crops
+         data-item="item.associations['featuremedia']"
+         ng-if="editor.feature_media.showCrops && features.editFeaturedImage && 
+         (item.associations['featuremedia'].type == 'picture' ||
+         item.associations['featuremedia'].type == 'graphic')">
     </div>
 </div>
 
