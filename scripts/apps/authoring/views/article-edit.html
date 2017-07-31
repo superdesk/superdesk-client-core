@@ -70,6 +70,12 @@
     data-editable="_editable"
     data-onchange="autosave(item)"
     data-save="save()"></div>
+    <div sd-item-crops
+         data-item="item.associations['featuremedia']"
+         ng-if="editor.feature_media.showCrops && features.editFeaturedImage &&
+         (item.associations['featuremedia'].type == 'picture' ||
+         item.associations['featuremedia'].type == 'graphic')">
+    </div>
 </div>
 
 <div class="field abstract" sd-width="{{editor.abstract.sdWidth || 'full'}}" ng-class="{'limit-error': item.abstract.length > schema.abstract.maxlength}" ng-if="schema.abstract && !(features.onlyEditor3 || editor.body_html.editor3) && !isMediaType" order="{{editor.abstract.order}}" sd-validation-error="error.abstract" data-required="schema.abstract.required">
