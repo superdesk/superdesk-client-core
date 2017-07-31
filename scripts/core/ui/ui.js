@@ -758,6 +758,37 @@ function LeadingZeroFilter() {
     };
 }
 
+function FileiconFilter() {
+    const mapping = {
+        pdf: 'pdf',
+        excel: 'doc',
+        msword: 'doc',
+        opendocument: 'doc',
+        officedocument: 'doc',
+    };
+
+    return function(mimetype) {
+        let match = Object.keys(mapping).find((key) => mimetype.indexOf(key) > -1);
+
+        return 'document-' + (match ? mapping[match] : 'default');
+    };
+}
+
+function FilesizeFilter() {
+    const KB = Math.pow(2, 10);
+    const MB = KB * KB;
+
+    return function(bytes) {
+        if (bytes >= MB) {
+            return (bytes / MB).toFixed(1) + ' MB';
+        } else if (bytes >= KB) {
+            return (bytes / KB).toFixed(1) + ' kB';
+        }
+
+        return bytes + ' b';
+    };
+}
+
 WeekdayPickerDirective.$inject = ['weekdays'];
 function WeekdayPickerDirective(weekdays) {
     return {
@@ -1218,6 +1249,8 @@ export default angular.module('superdesk.core.ui', [
     .directive('sdTimepicker', TimepickerDirective)
     .service('popupService', PopupService)
     .filter('leadingZero', LeadingZeroFilter)
+    .filter('filesize', FilesizeFilter)
+    .filter('fileicon', FileiconFilter)
     .directive('sdDropdownFocus', DropdownFocus)
     .directive('sdWeekdayPicker', WeekdayPickerDirective)
     .directive('sdSplitterWidget', splitterWidget)

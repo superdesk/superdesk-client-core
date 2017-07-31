@@ -145,8 +145,8 @@ function WidgetsManagerCtrl($scope, $routeParams, authoringWidgets, archiveServi
         unbindAllShortcuts();
     });
 }
-AuthoringWidgetsDir.$inject = ['desks', 'commentsService'];
-function AuthoringWidgetsDir(desks, commentsService) {
+AuthoringWidgetsDir.$inject = ['desks', 'commentsService', '$injector'];
+function AuthoringWidgetsDir(desks, commentsService, $injector) {
     return {
         controller: WidgetsManagerCtrl,
         templateUrl: 'scripts/apps/authoring/widgets/views/authoring-widgets.html',
@@ -184,6 +184,12 @@ function AuthoringWidgetsDir(desks, commentsService) {
                     reload();
                 }
             });
+
+            scope.badge = (widget) => {
+                if (widget.badge) {
+                    return $injector.invoke(widget.badge, null, {item: scope.item});
+                }
+            };
 
             reload();
         }

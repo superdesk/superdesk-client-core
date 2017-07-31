@@ -1,0 +1,52 @@
+<div class="modal__header">
+    <button type="button" class="modal__close pull-right" ng-click="cancel()" ng-hide="saving"><i class="icon-close-small"></i></button>
+    <h3 class="modal__heading">{{ activity.label | translate }}</h3>
+</div>
+
+<div class="modal__body">
+	<form name="attachmentsForm">
+		<div class="upload-edit" ng-show="items.length">
+			<ul class="upload-thumbs">
+				<li ng-repeat="item in items">
+					<div class="thumb"></div>
+
+					<div class="thumb">
+						<div class="holder"><i class="big-icon--text" /></div>
+						<span class="remove" ng-click="cancelItem(item)"><i class="icon-close-small"></i></span>
+					</div>
+
+					<div class="info">
+						<div class="other-info">
+							<div class="row">
+								<label>Title *</label>
+								<input type="text" required ng-model="item.meta.title" class="contenteditable-input contenteditable-input--side-padding" />
+							</div>
+							<div class="row">
+								<label>Description *</label>
+								<input type="text" required ng-model="item.meta.description" class="contenteditable-input contenteditable-input--side-padding" />
+							</div>
+							<div class="row">
+								<label translate>File Name</label>
+								<div class="contenteditable-input contenteditable-input--side-padding">
+									{{ :: item.file.name }}
+								</div>                        
+							</div>
+							<div class="row">
+								<label translate>File Size</label>
+								<div class="contenteditable-input contenteditable-input--side-padding">
+									{{ :: item.file.size | filesize }}
+								</div> 
+							</div>
+						</div>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</form>
+</div>
+
+<div class="modal__footer">
+	<span class="pull-left" translate>* fields are required</span>
+	<button class="btn btn--primary pull-right" ng-click="save()" ng-disabled="attachmentsForm.$invalid || saving" translate>Upload</button>
+	<button class="btn pull-right" ng-click="cancel()" ng-disabled="saving" translate>Cancel</button>
+</div>

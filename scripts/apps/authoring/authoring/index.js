@@ -29,6 +29,7 @@ angular.module('superdesk.apps.authoring', [
     'superdesk.apps.authoring.packages',
     'superdesk.apps.authoring.find-replace',
     'superdesk.apps.authoring.macros',
+    'superdesk.apps.authoring.attachments',
     'superdesk.apps.authoring.autosave',
     'superdesk.apps.authoring.suggest',
     'superdesk.apps.desks',
