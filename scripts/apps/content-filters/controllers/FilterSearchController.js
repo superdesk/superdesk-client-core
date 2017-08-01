@@ -121,6 +121,11 @@ export function FilterSearchController($scope, contentFilters, notify, $filter) 
         }
     };
 
+    $scope.clear = function() {
+        $scope.searchResult = null;
+        $scope.filterCondition = null;
+    };
+
     populateData().then(() => {
         fetchContentFilters();
     });

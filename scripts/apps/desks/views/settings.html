@@ -1,86 +1,85 @@
-<div sd-settings-view>
-    <div class="split-content" sd-desk-config>
+<div class="sd-page__main-content" sd-settings-view sd-desk-config>
+    <div class="sd-page__header sd-page__header--white">
+        <h2 class="sd-page__page-heading" translate>Desk management</h2>
+    </div>
+    <div class="sd-page__header">
+        <span class="sd-page__element-grow"></span>
+        <button id="add-new-desk" class="btn btn--primary" ng-click="openDesk('general')">
+            <i class="icon-plus-sign icon--white"></i> {{ :: 'Add New' | translate }}
+        </button>
+    </div>
 
-        <div class="header">
-            <h2 translate>Desk management</h2>
-            <button id="add-new-desk" class="btn btn--primary pull-right" ng-click="openDesk('general')">
-                <i class="icon-plus-sign icon--white"></i> {{ :: 'Add New Desk' | translate }}
-            </button>
-        </div>
+    <div class="sd-page__content desk-settings">
+        <div class="flex-grid box wrap-items small-1 medium-3 large-4 xlarge-6">
 
-        <div class="content desk-settings">
-            <div sd-shadow>
-                <div class="flex-grid box wrap-items small-1 medium-3 large-4 xlarge-6">
-
-                    <div class="flex-item card-box" ng-repeat="desk in desks._items track by desk._id">
-                        <div class="card-box__header">
-                            <div class="dropdown" dropdown>
-                                <button class="dropdown__toggle" dropdown__toggle>
-                                    <i class="icon-dots-vertical"></i>
-                                </button>
-                                <ul class="dropdown__menu more-activity-menu pull-right">
-                                    <li><div class="dropdown__menu-label" translate>Actions</div></li>
-                                    <li class="dropdown__menu-divider"></li>
-                                    <li><button ng-click="openDesk('general', desk)" title="{{:: 'Edit desk'| translate }}"><i class="icon-pencil"></i>{{:: 'Edit'| translate}}</button></li>
-                                    <li><button ng-click="openMonitoringSettings(desk)" title="{{:: 'Monitoring settings'| translate }}"><i class="icon-settings"></i>{{:: 'Monitoring settings'| translate}}</button></li>
-                                    <li><button ng-click="remove(desk)" title="{{:: 'Remove desk'| translate }}"><i class="icon-trash"></i>{{:: 'Remove'| translate}}</button></li>
-                                </ul>
-                            </div>
-                            <div class="card-box__heading">{{ desk.name }}</div>
-                        </div>
-                        <div class="card-box__content">
-                            <ul class="card-box__content-list">
-                                <li>
-                                    <h4>{{ :: 'Stages' | translate }}<span class="label">{{getDeskStages(desk).length}}</span></h4>
-                                    <span ng-repeat="stage in getDeskStages(desk) track by stage._id" class="card-box__content-list-inline-span">{{stage.name}}<span ng-if="$index < getDeskStages(desk).length-1">,&nbsp;</span></span>
-                                </li>
-                                <li>
-                                    <h4>{{ :: 'People' | translate }}<span class="label">{{getDeskUsers(desk).length}}</span></h4>
-                                    <span ng-repeat="user in getDeskUsers(desk) track by user._id" ng-if="$index < numberOfUsers" class="card-box__content-list-inline-span">
-                                        {{user.display_name}}<span ng-if="$index < getDeskUsers(desk).length-1">,&nbsp;</span>
-                                        <span ng-if="getDeskUsers(desk).length > numberOfUsers && $index === numberOfUsers-1"
-                                              ng-click="openDesk('people', desk)"
-                                              class="button__view-all">
-                                            ... {{ :: 'view all' | translate }}
-                                        </span>
-                                    </span>
-                                </li>
-                                <li class="card-box__content-list-item--inline">
-                                    <h4>{{ :: 'Desk Type' | translate }}</h4>
-                                    <span>{{ desk.desk_type | translate }}</span>
-                                </li>
-                                <li class="card-box__content-list-item--inline" ng-if="desk.desk_language">
-                                    <h4>{{ :: 'Language' | translate }}</h4>
-                                    <span>{{ desk.desk_language | translate }}</span>
-                                </li>
-                            </ul>
-                        </div>
+            <div class="flex-item card-box" ng-repeat="desk in desks._items track by desk._id">
+                <div class="card-box__header">
+                    <div class="dropdown" dropdown>
+                        <button class="dropdown__toggle" dropdown__toggle>
+                            <i class="icon-dots-vertical"></i>
+                        </button>
+                        <ul class="dropdown__menu more-activity-menu pull-right">
+                            <li><div class="dropdown__menu-label" translate>Actions</div></li>
+                            <li class="dropdown__menu-divider"></li>
+                            <li><button ng-click="openDesk('general', desk)" title="{{:: 'Edit desk'| translate }}"><i class="icon-pencil"></i>{{:: 'Edit'| translate}}</button></li>
+                            <li><button ng-click="openMonitoringSettings(desk)" title="{{:: 'Monitoring settings'| translate }}"><i class="icon-settings"></i>{{:: 'Monitoring settings'| translate}}</button></li>
+                            <li><button ng-click="remove(desk)" title="{{:: 'Remove desk'| translate }}"><i class="icon-trash"></i>{{:: 'Remove'| translate}}</button></li>
+                        </ul>
                     </div>
-
+                    <div class="card-box__heading">{{ desk.name }}</div>
+                </div>
+                <div class="card-box__content">
+                    <ul class="card-box__content-list">
+                        <li>
+                            <h4>{{ :: 'Stages' | translate }}<span class="label">{{getDeskStages(desk).length}}</span></h4>
+                            <span ng-repeat="stage in getDeskStages(desk) track by stage._id" class="card-box__content-list-inline-span">{{stage.name}}<span ng-if="$index < getDeskStages(desk).length-1">,&nbsp;</span></span>
+                        </li>
+                        <li>
+                            <h4>{{ :: 'People' | translate }}<span class="label">{{getDeskUsers(desk).length}}</span></h4>
+                            <span ng-repeat="user in getDeskUsers(desk) track by user._id" ng-if="$index < numberOfUsers" class="card-box__content-list-inline-span">
+                                {{user.display_name}}<span ng-if="$index < getDeskUsers(desk).length-1">,&nbsp;</span>
+                                <span ng-if="getDeskUsers(desk).length > numberOfUsers && $index === numberOfUsers-1"
+                                        ng-click="openDesk('people', desk)"
+                                        class="button__view-all">
+                                    ... {{ :: 'view all' | translate }}
+                                </span>
+                            </span>
+                        </li>
+                        <li class="card-box__content-list-item--inline">
+                            <h4>{{ :: 'Desk Type' | translate }}</h4>
+                            <span>{{ desk.desk_type | translate }}</span>
+                        </li>
+                        <li class="card-box__content-list-item--inline" ng-if="desk.desk_language">
+                            <h4>{{ :: 'Language' | translate }}</h4>
+                            <span>{{ desk.desk_language | translate }}</span>
+                        </li>
+                    </ul>
                 </div>
             </div>
-        </div>
 
-        <div sd-aggregate-settings
-            data-modal-active="agg.modalActive"
-            data-desks="agg.desks"
-            data-desk-stages="agg.deskStages"
-            data-searches="agg.searches"
-            data-desk-lookup="agg.deskLookup"
-            data-stage-lookup="agg.stageLookup"
-            data-search-lookup="agg.searchLookup"
-            data-groups="agg.groups"
-            data-edit-groups="agg.editGroups"
-            data-settings="agg.settings">
-        </div>
-
-        <div sd-desk-config-modal
-             data-active="modalActive"
-             data-desk="desk"
-             data-desks="desks"
-             data-step="step"
-             data-cancel="cancel()">
         </div>
     </div>
+
+    <div sd-aggregate-settings
+        data-modal-active="agg.modalActive"
+        data-desks="agg.desks"
+        data-desk-stages="agg.deskStages"
+        data-searches="agg.searches"
+        data-desk-lookup="agg.deskLookup"
+        data-stage-lookup="agg.stageLookup"
+        data-search-lookup="agg.searchLookup"
+        data-groups="agg.groups"
+        data-edit-groups="agg.editGroups"
+        data-settings="agg.settings">
+    </div>
+
+    <div sd-desk-config-modal
+            data-active="modalActive"
+            data-desk="desk"
+            data-desks="desks"
+            data-step="step"
+            data-cancel="cancel()">
+    </div>
+
 
 </div>

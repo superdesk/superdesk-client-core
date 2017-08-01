@@ -4,10 +4,11 @@
         <button class="collapse-nav pull-left" ng-click="toggleMenu()">
           <i class="icon-collapse icon--white"></i>
         </button>
-        <a class="main-link pull-left"
-          ng-hide="currentRoute.topTemplateUrl"
-          ng-href="{{currentRoute | menuGroup}}"
-          >{{ currentRoute.label | translate}}</a>
+
+        <p class="sd-top-menu__header" ng-if="currentRoute.category !== 'superdesk.core.menu.settings'"
+          ng-hide="currentRoute.topTemplateUrl">{{ currentRoute.label | translate}}</p>
+        <p class="sd-top-menu__header" ng-if="currentRoute.category === 'superdesk.core.menu.settings'"
+          ng-hide="currentRoute.topTemplateUrl">{{ "Settings" | translate}}</p>
         <div class="top-nav pull-left" ng-include="currentRoute.topTemplateUrl"></div>
       </div>
 
