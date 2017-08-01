@@ -1,14 +1,15 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import * as actions from '../../actions';
 import {connect} from 'react-redux';
-import {getSelectedEntityType, getSelectedEntityData} from '../links/entityUtils';
 import classNames from 'classnames';
+
+import * as actions from '../../actions';
+import {getSelectedEntityType, getSelectedEntityData} from '../links/entityUtils';
 
 export class LinkToolbarComponent extends Component {
     render() {
         const {editorState, onEdit, removeLink} = this.props;
-        const {url} = getSelectedEntityData(editorState);
+        const {link} = getSelectedEntityData(editorState);
         const isLink = getSelectedEntityType(editorState) === 'LINK';
         const cx = classNames({
             dropdown: true,
@@ -20,9 +21,9 @@ export class LinkToolbarComponent extends Component {
             {!isLink ? <span>&nbsp;</span> :
                 <span>
                     {gettext('Link controls:')}
-                    <a href={url} target="_blank">Open</a>
-                    <a onClick={() => onEdit(url)}>Edit</a>
-                    <a onClick={removeLink}>Delete</a>
+                    {link && link.href ? <a href={link.href} target="_blank">{gettext('Open')}</a> : null}
+                    <a onClick={() => onEdit(link)}>{gettext('Edit')}</a>
+                    <a onClick={removeLink}>{gettext('Delete')}</a>
                 </span>}
         </div>;
     }

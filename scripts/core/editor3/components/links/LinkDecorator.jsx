@@ -31,9 +31,17 @@ function LinkStrategy(contentBlock, callback, contentState) {
  */
 function LinkComponent(props) {
     const entity = props.contentState.getEntity(props.entityKey);
-    const {url} = entity.getData();
+    let {link} = entity.getData();
 
-    return <a href={url} title={url}>{props.children}</a>;
+    if (!link && entity.getData() && entity.getData().url) { // BC
+        link = {href: entity.getData().url};
+    }
+
+    if (link.attachment) {
+        return <a data-attachment={link.attachment}>{props.children}</a>;
+    }
+
+    return <a href={link.href} title={link.href}>{props.children}</a>;
 }
 
 LinkComponent.propTypes = {
