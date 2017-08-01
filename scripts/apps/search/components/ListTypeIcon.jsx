@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {TypeIcon, SelectBox} from 'apps/search/components';
 import classNames from 'classnames';
 
@@ -49,7 +50,7 @@ export class ListTypeIcon extends React.Component {
 }
 
 ListTypeIcon.propTypes = {
-    svc: React.PropTypes.object.isRequired,
-    onMultiSelect: React.PropTypes.func,
-    item: React.PropTypes.any
+    svc: PropTypes.object.isRequired,
+    onMultiSelect: PropTypes.func,
+    item: PropTypes.any
 };

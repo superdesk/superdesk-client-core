@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 export function ProgressBar(props) {
     return React.createElement('div', {
@@ -8,5 +9,5 @@ export function ProgressBar(props) {
 }
 
 ProgressBar.propTypes = {
-    completed: React.PropTypes.any
+    completed: PropTypes.any
 };

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 const StyleIcons = {
@@ -68,8 +69,8 @@ export default class StyleButton extends React.Component {
 }
 
 StyleButton.propTypes = {
-    onToggle: React.PropTypes.func,
-    style: React.PropTypes.string,
-    active: React.PropTypes.bool,
-    label: React.PropTypes.string
+    onToggle: PropTypes.func,
+    style: PropTypes.string,
+    active: PropTypes.bool,
+    label: PropTypes.string
 };

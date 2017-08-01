@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import {
     Editor,
@@ -267,17 +268,17 @@ export class Editor3Component extends React.Component {
 }
 
 Editor3Component.propTypes = {
-    readOnly: React.PropTypes.bool,
-    locked: React.PropTypes.bool,
-    showToolbar: React.PropTypes.bool,
-    editorState: React.PropTypes.object,
-    onChange: React.PropTypes.func,
-    unlock: React.PropTypes.func,
-    onTab: React.PropTypes.func,
-    dragDrop: React.PropTypes.func,
-    scrollContainer: React.PropTypes.string,
-    singleLine: React.PropTypes.bool,
-    editorFormat: React.PropTypes.array
+    readOnly: PropTypes.bool,
+    locked: PropTypes.bool,
+    showToolbar: PropTypes.bool,
+    editorState: PropTypes.object,
+    onChange: PropTypes.func,
+    unlock: PropTypes.func,
+    onTab: PropTypes.func,
+    dragDrop: PropTypes.func,
+    scrollContainer: PropTypes.string,
+    singleLine: PropTypes.bool,
+    editorFormat: PropTypes.array
 };
 
 Editor3Component.defaultProps = {

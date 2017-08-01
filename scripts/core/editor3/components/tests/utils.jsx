@@ -1,4 +1,4 @@
-import React from 'react';
+import PropTypes from 'prop-types';
 import {Map, OrderedSet, List, Repeat} from 'immutable';
 import {
     EditorState,
@@ -30,7 +30,7 @@ export default function mockStore(state = {}) {
     const options = {
         context: {store},
         childContextTypes: {
-            store: React.PropTypes.object.isRequired
+            store: PropTypes.object.isRequired
         }
     };
 

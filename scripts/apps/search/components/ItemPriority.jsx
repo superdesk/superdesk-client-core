@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {getSpecStyle, getSpecTitle, getSpecValue} from '../helpers';
 
 export function ItemPriority(props) {
@@ -32,6 +33,6 @@ export function ItemPriority(props) {
 }
 
 ItemPriority.propTypes = {
-    svc: React.PropTypes.object.isRequired,
-    priority: React.PropTypes.any
+    svc: PropTypes.object.isRequired,
+    priority: PropTypes.any
 };

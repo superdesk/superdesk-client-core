@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {createMarkUp} from '../helpers';
 import {FetchedDesksInfo} from 'apps/search/components';
 
@@ -71,7 +72,7 @@ export function MediaInfo(props) {
 }
 
 MediaInfo.propTypes = {
-    svc: React.PropTypes.object.isRequired,
-    item: React.PropTypes.any,
-    ingestProvider: React.PropTypes.any,
+    svc: PropTypes.object.isRequired,
+    item: PropTypes.any,
+    ingestProvider: PropTypes.any,
 };

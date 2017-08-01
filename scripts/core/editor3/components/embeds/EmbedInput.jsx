@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import * as actions from '../../actions';
 import ng from 'core/services/ng';
@@ -131,8 +132,8 @@ export class EmbedInputComponent extends Component {
 }
 
 EmbedInputComponent.propTypes = {
-    onCancel: React.PropTypes.func.isRequired,
-    onSubmit: React.PropTypes.func.isRequired
+    onCancel: PropTypes.func.isRequired,
+    onSubmit: PropTypes.func.isRequired
 };
 
 const mapDispatchToProps = (dispatch) => ({

@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import PropTypes from 'prop-types';
 
 import Label from './Label';
 import Divider from './Divider';
@@ -161,8 +162,8 @@ export class ActionsMenu extends React.Component {
 }
 
 ActionsMenu.propTypes = {
-    svc: React.PropTypes.object.isRequired,
-    scope: React.PropTypes.any.isRequired,
-    item: React.PropTypes.any,
-    onActioning: React.PropTypes.func
+    svc: PropTypes.object.isRequired,
+    scope: PropTypes.any.isRequired,
+    item: PropTypes.any,
+    onActioning: PropTypes.func
 };

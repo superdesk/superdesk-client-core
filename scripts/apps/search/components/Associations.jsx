@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {TypeIcon} from 'apps/search/components';
 /**
  * @ngdoc React
@@ -51,7 +52,7 @@ export class Associations extends React.Component {
  * svc: contains gettext and is required
  */
 Associations.propTypes = {
-    svc: React.PropTypes.any.isRequired,
-    item: React.PropTypes.any,
-    openAuthoringView: React.PropTypes.func.isRequired
+    svc: PropTypes.any.isRequired,
+    item: PropTypes.any,
+    openAuthoringView: PropTypes.func.isRequired
 };

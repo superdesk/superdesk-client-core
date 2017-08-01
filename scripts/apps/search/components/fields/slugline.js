@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {createMarkUp} from 'apps/search/helpers';
 
 export function slugline(props) {
@@ -12,5 +13,5 @@ export function slugline(props) {
 }
 
 slugline.propTypes = {
-    item: React.PropTypes.any,
+    item: PropTypes.any,
 };

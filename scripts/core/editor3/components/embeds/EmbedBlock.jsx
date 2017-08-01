@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import {QumuWidget} from './QumuWidget';
 
 /**
@@ -74,6 +75,6 @@ export class EmbedBlock extends Component {
 }
 
 EmbedBlock.propTypes = {
-    block: React.PropTypes.object.isRequired,
-    contentState: React.PropTypes.object.isRequired
+    block: PropTypes.object.isRequired,
+    contentState: PropTypes.object.isRequired
 };

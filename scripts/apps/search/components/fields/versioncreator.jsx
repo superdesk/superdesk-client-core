@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 export function versioncreator(props) {
     return React.createElement(
@@ -9,5 +10,5 @@ export function versioncreator(props) {
 }
 
 versioncreator.propTypes = {
-    versioncreator: React.PropTypes.any
+    versioncreator: PropTypes.any
 };

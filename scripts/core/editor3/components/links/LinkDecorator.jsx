@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 export const LinkDecorator = {
     strategy: LinkStrategy,
@@ -36,7 +37,7 @@ function LinkComponent(props) {
 }
 
 LinkComponent.propTypes = {
-    contentState: React.PropTypes.object.isRequired,
-    entityKey: React.PropTypes.string.isRequired,
-    children: React.PropTypes.array.isRequired
+    contentState: PropTypes.object.isRequired,
+    entityKey: PropTypes.string.isRequired,
+    children: PropTypes.array.isRequired
 };

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 export function update(props) {
     const {$interpolate, gettextCatalog} = props.svc;
@@ -21,6 +22,6 @@ export function update(props) {
 }
 
 update.propTypes = {
-    svc: React.PropTypes.any.isRequired,
-    item: React.PropTypes.any,
+    svc: PropTypes.any.isRequired,
+    item: PropTypes.any,
 };

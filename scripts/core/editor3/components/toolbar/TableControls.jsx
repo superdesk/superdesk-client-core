@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import StyleButton from './StyleButton';
 import * as actions from '../../actions';
@@ -39,13 +40,13 @@ const TableControlsComponent = ({
 };
 
 TableControlsComponent.propTypes = {
-    addRowAfter: React.PropTypes.func,
-    addColAfter: React.PropTypes.func,
-    removeRow: React.PropTypes.func,
-    removeCol: React.PropTypes.func,
-    activeCell: React.PropTypes.object.isRequired,
-    editorState: React.PropTypes.object,
-    toggleTableHead: React.PropTypes.func
+    addRowAfter: PropTypes.func,
+    addColAfter: PropTypes.func,
+    removeRow: PropTypes.func,
+    removeCol: PropTypes.func,
+    activeCell: PropTypes.object.isRequired,
+    editorState: PropTypes.object,
+    toggleTableHead: PropTypes.func
 };
 
 const mapDispatchToProps = (dispatch) => ({

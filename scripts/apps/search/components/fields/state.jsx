@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 export function state(props) {
     const {$filter, gettextCatalog, datetime} = props.svc;
@@ -22,6 +23,6 @@ export function state(props) {
 }
 
 state.propTypes = {
-    svc: React.PropTypes.any.isRequired,
-    item: React.PropTypes.any,
+    svc: PropTypes.any.isRequired,
+    item: PropTypes.any,
 };

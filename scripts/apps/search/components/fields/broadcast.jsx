@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 export function broadcast(props) {
     var broadcast = props.item.broadcast || {};
@@ -13,5 +14,5 @@ export function broadcast(props) {
 }
 
 broadcast.propTypes = {
-    item: React.PropTypes.any,
+    item: PropTypes.any,
 };

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {HighlightsInfo} from 'apps/search/components';
 
 export function highlights(props) {
@@ -8,5 +9,5 @@ export function highlights(props) {
 }
 
 highlights.propTypes = {
-    item: React.PropTypes.any,
+    item: PropTypes.any,
 };

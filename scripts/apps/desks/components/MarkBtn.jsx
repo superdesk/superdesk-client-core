@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 /**
  * @ngdoc React
@@ -37,7 +38,7 @@ export class MarkBtn extends React.Component {
 
 /** Set the types of props for the MrkBtn */
 MarkBtn.propTypes = {
-    desks: React.PropTypes.object.isRequired,
-    desk: React.PropTypes.object.isRequired,
-    item: React.PropTypes.object.isRequired,
+    desks: PropTypes.object.isRequired,
+    desk: PropTypes.object.isRequired,
+    item: PropTypes.object.isRequired,
 };

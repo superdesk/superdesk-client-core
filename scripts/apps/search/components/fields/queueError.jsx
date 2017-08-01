@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {QueueError} from 'apps/search/components';
 
 export function queueError(props) {
@@ -12,5 +13,5 @@ export function queueError(props) {
  * item: published item having queue errors
  */
 queueError.propTypes = {
-    item: React.PropTypes.any
+    item: PropTypes.any
 };
