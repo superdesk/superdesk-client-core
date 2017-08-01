@@ -12,7 +12,6 @@
                     </span>
                 </div>
             </div>
-
             <div class="body" ng-if="model.editor[id].enabled">
                 <form>
                     <fieldset class="fieldset-flex">
@@ -70,6 +69,10 @@
                                  data-list="formattingOptions"
                                  data-change="setDirty(true)">
                             </div>
+                        </div>
+                        <div class="field" ng-if="id == 'feature_media'">
+                            <label translate>Show Crops</label>
+                            <div sd-check ng-model="model.editor[id].showCrops"></div>
                         </div>
                     </fieldset>
                 </form>
