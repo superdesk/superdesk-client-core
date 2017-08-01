@@ -1,4 +1,8 @@
-<div class="listElement">
+<div class="listElement"
+    dnd-draggable="data"
+    dnd-dragstart="data.dragging = true"
+    dnd-dragend="data.dragging = false"
+    ng-hide="data.dragging">
     <button class="listElement__icon iconButton" ng-show="data.children.length">
         <i class="icon-chevron-down-thin" ng-show="!data.closed" ng-click="data.closed = !data.closed"></i>
         <i class="icon-chevron-right-thin" ng-show="data.closed" ng-click="data.closed = !data.closed"></i>
@@ -31,6 +35,6 @@
         </div>
     </div>
 </div>
-<ul ng-show="data.children.length && !data.closed">
-    <li ng-repeat="data in data.children" ng-include="webPublisher.TEMPLATES_DIR + '/navigation-tree-renderer.html'"></li>
+<ul ng-show="data.children.length && !data.closed" dnd-list dnd-drop="webPublisher.reorderMenu(data, item, index)">
+    <li ng-repeat="data in data.children | orderBy: 'position'" ng-include="webPublisher.TEMPLATES_DIR + '/navigation-tree-renderer.html'"></li>
 </ul>

@@ -4,7 +4,7 @@
             <button class="backlink" ng-click="webPublisher.changeTab('navigation')"></button>
         </div>
     </div>
-    <h3 class="page-nav-title">{{menu.label}}</h3>
+    <h3 class="page-nav-title">{{menu.name}}</h3>
     <div class="subnav__button-stack--square-buttons dropdown open">
         <button class="navbtn sd-create-btn" ng-click="webPublisher.toogleCreateMenu(true)">
             <i class="svg-icon-plus"></i><span class="circle"></span>
@@ -14,8 +14,8 @@
 <div class="paneLayout paneLayout--headerMargin">
     <div class="paneLayout__content">
         <div class="contentPadding">
-            <ul class="treeList">
-                <li ng-repeat="data in menu.children" ng-include="webPublisher.TEMPLATES_DIR + '/navigation-tree-renderer.html'"></li>
+            <ul class="treeList" dnd-list dnd-drop="webPublisher.reorderMenu(menu, item, index)">
+                <li ng-repeat="data in menu.children | orderBy: 'position'" ng-include="webPublisher.TEMPLATES_DIR + '/navigation-tree-renderer.html'"></li>
             </ul>
         </div>
     </div>
@@ -46,7 +46,7 @@
                     <div class="item">
                         <label for="menuParent" translate>parent</label>
                         <select id="menuParent" class="dropdown__toggle line-input" ng-model="newMenu.parent"
-                            ng-options="parent.id as parent.label for parent in menusInTree | filter: {id: (newMenu.id ? '!' + newMenu.id : '')}" required>
+                            ng-options="parent.id as parent.name for parent in menusInTree | filter: {id: (newMenu.id ? '!' + newMenu.id : '')}" required>
                             <option value=""></option>
                         </select>
                     </div>
@@ -54,7 +54,7 @@
                     <div class="item">
                         <label for="menuRoute" translate>route</label>
                         <select id="menuRoute" class="dropdown__toggle line-input" ng-model="newMenu.route"
-                            ng-options="route.id as route.name for route in routes" required>
+                            ng-options="route.id as route.name for route in routes">
                             <option value=""></option>
                         </select>
                     </div>

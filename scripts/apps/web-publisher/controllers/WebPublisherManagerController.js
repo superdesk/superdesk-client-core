@@ -7,12 +7,13 @@
  * @requires https://docs.angularjs.org/api/ng/type/$rootScope.Scope $scope
  * @description WebPublisherManagerController holds a set of functions used for web publisher manager
  */
-WebPublisherManagerController.$inject = ['$scope', 'publisher', 'modal'];
-export function WebPublisherManagerController($scope, publisher, modal) {
+WebPublisherManagerController.$inject = ['$scope', 'publisher', 'modal', 'privileges', '$window'];
+export function WebPublisherManagerController($scope, publisher, modal, privileges, $window) {
     class WebPublisherManager {
         constructor() {
             this.TEMPLATES_DIR = 'scripts/apps/web-publisher/views';
             publisher.setToken().then(this._refreshSites);
+            this.livesitePermission = privileges.userHasPrivileges({livesite: 1});
         }
 
         /**
@@ -67,6 +68,19 @@ export function WebPublisherManagerController($scope, publisher, modal) {
             this.selectedSite = {};
             $scope.newSite = {};
             publisher.setTenant();
+        }
+
+        /**
+         * @ngdoc method
+         * @name WebPublisherManagerController#activateLiveSite
+         * @param {Object} site - site which is edited
+         * @description Opens site in new tab with live site activated
+         */
+        activateLiveSite(site) {
+            publisher.setTenant(site.subdomain);
+            publisher.activateLiveSite().then((response) => {
+                $window.open(response.url, '_blank');
+            });
         }
 
         /**
@@ -306,6 +320,39 @@ export function WebPublisherManagerController($scope, publisher, modal) {
 
         /**
          * @ngdoc method
+         * @name WebPublisherManagerController#reorderMenu
+         * @param {Object} list - object where list of menu items is
+         * @param {Object} item - object which is moved
+         * @param {Number} index - index where item would be moved
+         * @description Move menu to different position
+         */
+        reorderMenu(list, item, index) {
+            if (index !== -1) {
+                let parentId = list.children[0].parent;
+                let removedItem = _.find(list.children, {id: item.id});
+
+                if (removedItem) {
+                    removedItem.removed = true;
+                }
+
+                list.children = list.children.slice(0, index)
+                    .concat(item)
+                    .concat(list.children.slice(index))
+                    .filter((item) => !item.removed);
+
+                let menuPosition = list.children.indexOf(item);
+
+                if (menuPosition !== item.position || parentId !== item.parent) {
+                    list.children[menuPosition].position = menuPosition;
+
+                    publisher.reorderMenu({menu_move: {parent: parentId, position: menuPosition}}, item.id)
+                        .then(this._refreshCurrentMenu.bind(this));
+                }
+            }
+        }
+
+        /**
+         * @ngdoc method
          * @name WebPublisherManagerController#_editMode
          * @private
          * @param {Object} card - card for which to check mode
@@ -404,6 +451,7 @@ export function WebPublisherManagerController($scope, publisher, modal) {
             this.menuPaneOpen = false;
             publisher.getMenu($scope.menu.id).then((menu) => {
                 $scope.menu = menu;
+                $scope.menusInTree = this._flattenTree(menu);
             });
         }
 
