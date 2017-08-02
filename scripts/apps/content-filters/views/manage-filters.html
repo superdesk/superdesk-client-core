@@ -87,7 +87,7 @@
                                             <option ng-if="filter._id!==contentFilter._id" value="{{filter._id}}" ng-repeat="filter in contentFilters track by filter._id">{{:: filter.name}}</option>
                                         </select>
                                     </div>
-                                    <button class="btn" type="button" ng-click="addFilter(filterRow, 'fc')" translate>Add</button>
+                                    <button class="btn" type="button" ng-click="addFilter(filterRow, 'pf')" translate>Add</button>
                                 </div>
 
                             </div>
@@ -118,11 +118,11 @@
             <div class="form__row">
                 <div class="sd-line-input sd-line-input--disabled">
                     <label class="sd-line-input__label">Filter Preview</label>
-                    <textarea class="sd-line-input__input" id="contentFilter-preview" readonly ng-model="preview" disabled></textarea>
+                    <textarea class="sd-line-input__input" id="contentFilter-preview" readonly ng-model="preview" sd-auto-height disabled></textarea>
                 </div>
             </div>
             <div class="form__row form__row--flex">
-                <div class="sd-line-input" ng-class="{'sd-line-input--invalid': !test.article_id.$valid'}">
+                <div class="sd-line-input" ng-class="{'sd-line-input--invalid': !test.article_id.$valid}">
                     <label class="sd-line-input__label">Filter Test</label>
                     <input class="sd-line-input__input" type="text" id="contentFilter-test" required ng-model="test.article_id" ng-change="test.test_result=null">
                     <div class="sd-line-input__hint" translate>Use the article GUID for testing.</div>
