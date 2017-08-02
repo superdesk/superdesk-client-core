@@ -1,26 +1,27 @@
-<div class="split-content">
-  <div class="header">
-    <h2 translate>Templates</h2>
-    <div class="pull-right">
-        <div class="sortbar pull-left">
+<div class="sd-page__main-content">
+  <div class="sd-page__header sd-page__header--white">
+    <h2 class="sd-page__page-heading" translate>Templates</h2>
+  </div>
+  <div class="sd-page__header">
+        <div class="sortbar">
            <span class="lab" translate>Filter:</span>
-           <div class="dropdown dropdown--noarrow" dropdown sd-dropdown-position>
+           <div class="dropdown" dropdown sd-dropdown-position>
              <button id="order_button" class="dropdown__toggle" dropdown__toggle>{{ filters[activeFilter].label | translate }} <b class="dropdown__caret"></b>
              </button>
-             <ul class="dropdown__menu left-submenu" id="order_selector">
+             <ul class="dropdown__menu" id="order_selector">
                 <li ng-repeat="f in filters track by $index" ng-class="{active: activeFilter === $index}">
                   <a href="" ng-click="filterBy($index)">{{ f.label | translate }}</a>
                 </li>
              </ul>
            </div>
         </div>
+        <span class="sd-page__element-grow"></span>
         <button class="btn btn--primary" ng-click="edit()">
-          <i class="icon-plus-sign icon--white"></i> <span translate>Add New Template</span>
+          <i class="icon-plus-sign icon--white"></i><span translate>Add New</span>
         </button>
-    </div>
   </div>
 
-  <div class="content">
+  <div class="sd-page__content">
       <div class="flex-grid box wrap-items small-1 medium-3 large-4 xlarge-6">
           <div class="flex-item card-box template-card" ng-repeat="template in content_templates._items | templatesBy:filters[activeFilter]" ng-if="desks">
               <div class="card-box__header" ng-class="{'card-box__header--dark': !template.is_public}" >

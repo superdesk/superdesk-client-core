@@ -1,41 +1,55 @@
-<div class="split-content products-content" ng-controller="ProductsConfigCtrl">
-    <div class="header">
-        <h2 translate>Product Test</h2>
-    </div>
-    <div class="content">
-        <div class="product-search">
-            <label for="story-id" translate>Story GUID</label>
-            <input type="text" id="story-id" required ng-model="articleId">
-        </div>
-        <div class="product-search">
-            <label>{{ :: 'Result Type' | translate }}</label>
-            <select ng-model="resultType">
-                <option value="All">All</option>
-                <option value="Match">Match</option>
-                <option value="No-Match">No-Match</option>
-            </select>
-            <button class="btn btn--primary btn--pull-right" ng-disabled="!articleId" ng-click="test()" translate>Test Products</button>
-        </div>
-        
-        <br />
-        <br />
+<div class="sd-page__flex-helper products-content" ng-controller="ProductsConfigCtrl">
+    <div class="sd-page__content">
 
-        <div sd-shadow>
-            <div ng-if="loading" class="loading-overlay" ng-class="{active: loading}" style="opacity: 0.5;"></div>
-            <ul ng-if="!loading" class="pills-list">
-                <li ng-repeat="product in filteredProducts" class="{{testLookup[product._id].matched ? 'match':'no-match'}}">
-                    <h6>{{ product.name }} [{{ product.product_type || 'both'}}]</h6>
-                    <div class="actions">
-                        <button ng-click="edit(product)" title="{{:: 'Edit product' | translate }}"><i class="icon-pencil"></i></button>
+    <div class="grid" style="margin: 0 -2rem;">
+        <div class="grid__item grid__item--col-3">
+            <div class="panel-search sd-shadow--z2">
+                <div class="form__row">
+                    <div class="sd-line-input">
+                        <label class="sd-line-input__label">{{ :: 'Story GUID' | translate }}</label>
+                        <input class="sd-line-input__input" type="text" id="story-id" required ng-model="articleId">
                     </div>
-                    <div ng-if="testLookup[product._id]">
-                        <br /><br />
-                        <div>Test Result: <span>{{ testLookup[product._id].matched ? 'Match':'No-Match' }}</span></div>
-                        <div ng-if="!testLookup[product._id].matched">Reason: <span>{{ testLookup[product._id].reason }}</span></div>
+                </div>
+                <div class="form__row">
+                    <div class="sd-line-input sd-line-input--is-select">
+                        <label class="sd-line-input__label">{{ :: 'Result Type' | translate }}</label>
+                        <select class="sd-line-input__select" ng-model="resultType">
+                            <option value="All">All</option>
+                            <option value="Match">Match</option>
+                            <option value="No-Match">No-Match</option>
+                        </select>
                     </div>
-                </li>
-            </ul>
+                </div>
+                <div class="form__row" style="text-align:right;">
+                    <button class="btn btn--primary btn--pull-right" ng-disabled="!articleId" ng-click="test()" translate>Test Products</button>
+                </div>
+            </div>
         </div>
+        <div class="grid__item grid__item--col-9">
+            <div ng-if="loading" class="loading-overlay" ng-class="{active: loading}" style="opacity: 0.5;"></div>
+            <div ng-if="!loading">
+                <ul class="pills-list">
+                    <li ng-repeat="product in filteredProducts" class="{{testLookup[product._id].matched ? 'match':'no-match'}}">
+                        <h6>{{ product.name }} [{{ product.product_type || 'both'}}]</h6>
+                        <div class="actions">
+                            <button ng-click="edit(product)" title="{{:: 'Edit product' | translate }}"><i class="icon-pencil"></i></button>
+                        </div>
+                        <div ng-if="testLookup[product._id]">
+                            <br />
+                            <div>Test Result: <span>{{ testLookup[product._id].matched ? 'Match':'No-Match' }}</span></div>
+                            <div ng-if="!testLookup[product._id].matched">Reason: <span>{{ testLookup[product._id].reason }}</span></div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+
+
+
+
+
     </div>
     <div sd-products-config-modal ></div>
 </div>

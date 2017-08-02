@@ -12,7 +12,7 @@ function Templates() {
     this.name = element(by.model('template.name'));
 
     /** a button for creating a new template **/
-    this.newTemplateBtn = element(by.buttonText('Add New Template'));
+    this.newTemplateBtn = element(by.buttonText('Add New'));
 
     /**
      * Open the template settings wizard

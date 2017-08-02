@@ -1,21 +1,15 @@
-<div sd-settings-view>
-
-  <div class="split-content">
-
-    <div class="header">
-      <h2 translate>Metadata management</h2>
-
-      <button class="btn btn--primary pull-right"
-        ng-click="createCustomField()"
-        translate>Add New Text Field</button>
-
-      <button class="btn btn--primary pull-right"
-        ng-click="createVocabulary()"
-        translate>Add New Vocabulary</button>
+<div class="sd-page__main-content" sd-settings-view>
+    <div class="sd-page__header sd-page__header--white">
+      <h2 class="sd-page__page-heading" translate>Vocabularies management</h2>
     </div>
-
-    <div sd-vocabulary-config class="content dictionary-settings"></div>
+    <div class="sd-page__header">
+        <span class="sd-page__element-grow"></span>
+        <button class="btn btn--primary"
+          ng-click="createVocabulary()">
+          <i class="icon-plus-sign icon--white"></i>
+          <span translate>Add New</span>
+        </button>
+    </div>
+    <div sd-vocabulary-config class="sd-page__content dictionary-settings"></div>
     <div sd-vocabulary-config-modal ng-if="vocabulary"></div>
-
-  </div>
 </div>

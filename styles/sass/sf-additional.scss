@@ -1842,3 +1842,24 @@ header .sortbar {
     vertical-align: middle;
     text-align: center;
 }
+
+// SD-CHECK Override - should be removed once CSS is cleared
+// --------------------------------
+.sd-check__wrapper .sd-checkbox+label {
+    font-size: 13px;
+    font-weight: 400;
+    color: #333;
+    height: auto;
+    text-transform: none;
+    &.label--active {
+        color: #479dc0;
+    }
+}
+
+.sd-toggle+label {
+    font-size: 13px;
+    font-weight: 400;
+    color: #333;
+    height: auto;
+    text-transform: none;
+}

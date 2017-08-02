@@ -1,14 +1,12 @@
-<div ng-controller="FilterConditionsCtrl">
-    <div class="split-content" >
-    <div class="header">
-        <h2 translate>Filter Conditions</h2>
-        <button class="btn btn--primary pull-right" ng-click="edit()">
-            <i class="icon-plus-sign icon--white"></i> <span translate>Add New Filter Condition</span>
+<div ng-controller="FilterConditionsCtrl" class="sd-page__flex-helper">
+    <div class="sd-page__header">
+        <span class="sd-page__element-grow"></span>
+        <button class="btn btn--primary" ng-click="edit()">
+            <i class="icon-plus-sign icon--white"></i><span translate>Add New</span>
         </button>
     </div>
-
-    <div class="content" ng-if="loadedFilters">
-        <ul class="pills-list provider-list">
+    <div class="sd-page__content" ng-if="loadedFilters">
+        <ul class="pills-list wide">
             <li ng-repeat="filterCondition in filterConditions track by filterCondition._id" class="clearfix">
                 <div class="header">
                     <div>
@@ -24,59 +22,73 @@
             </li>
         </ul>
     </div>
-</div>
-
-<div sd-modal data-model="filterCondition" class="filter-condition-modal modal--large">
-    <div class="modal__header"> <a href="" class="close" ng-click="cancel()"><i class="icon-close-small"></i></a>
-        <h3 class="modal__heading" ng-show="filterCondition._id"><span translate>Edit Filter Condition</span> "{{ origFilterCondition.name }}"</h3>
-        <h3 class="modal__heading" translate ng-hide="filterCondition._id" translate>Add New Filter Condition</h3>
-    </div>
-    <div class="modal__body">
-        <form name="editForm">
-            <fieldset>
-                <div class="field">
-                    <label for="filterCondition-name" translate>Name</label>
-                    <input type="text" id="filterCondition-name" name="label" required ng-model="filterCondition.name" ng-maxlength="80">
-                    <span class="error" ng-show="editForm.label.$error.maxlength" translate>Please use less than 80 characters</span>
-                </div>
-
-                <div class="field">
-                    <label translate>Field</label>
-                    <select class="input" required ng-model="filterCondition.field" ng-change="clearConditionValues()">
-                        <option value="{{parameter.field}}" ng-selected="parameter.field === filterCondition.field" ng-repeat="parameter in filterConditionParameters | orderBy: 'field' track by $index">{{:: label(parameter.field) }}</option>
-                    </select>
-                </div>
-                <div class="field">
-                    <label translate>Operator</label>
-                    <select class="input" required ng-model="filterCondition.operator" >
-                        <option value="{{operator}}" ng-selected="operator === filterCondition.operator" ng-repeat="operator in operatorLookup[filterCondition.field]">{{operator}}</option>
-                    </select>
-                </div>
-                <div class="field">
-                    <label translate>Values</label>
-                    <input ng-if="!isListValue() && !isComparisonValue()" required ng-model="filterCondition.value">
-                    <select class="input" required ng-model="filterCondition.value" ng-if="isComparisonValue()">
-                        <option value="{{v[valueFieldLookup[filterCondition.field]]}}" ng-selected="v[valueFieldLookup[filterCondition.field]] === filterCondition.value" ng-repeat="v in valueLookup[filterCondition.field] | orderBy: 'name'">{{:: v.name}}</option>
-                    </select>
-                    <div ng-if="isListValue()">
-                        <div class="term-editor"
-                         sd-meta-terms
-                         data-item="filterCondition"
-                         data-field="values"
-                         data-unique="{{valueFieldLookup[filterCondition.field]}}"
-                         data-list="valueLookup[filterCondition.field]"
-                         data-header="true"
-                         data-reload-list="true"
-                         ></div>
+    <!-- Modal - -->
+    <div sd-modal data-model="filterCondition" class="filter-condition-modal modal--large">
+        <div class="modal__header"> <a href="" class="close" ng-click="cancel()"><i class="icon-close-small"></i></a>
+            <h3 class="modal__heading" ng-show="filterCondition._id"><span translate>Edit Filter Condition</span> "{{ origFilterCondition.name }}"</h3>
+            <h3 class="modal__heading" translate ng-hide="filterCondition._id" translate>Add New Filter Condition</h3>
+        </div>
+        <div class="modal__body">
+            <form name="editForm">
+                <fieldset>
+                    <div class="form__row">
+                        <div class="sd-line-input sd-line-input--required" ng-class="{'sd-line-input--invalid': editForm.label.$error.maxlength}">
+                            <label class="sd-line-input__label" translate>Name</label>
+                            <input class="sd-line-input__input" id="filterCondition-name" name="label" required ng-model="filterCondition.name" ng-maxlength="80">
+                            <div class="sd-line-input__message" ng-show="editForm.label.$error.maxlength" translate>Please use less than 80 characters.</div>
+                        </div>
                     </div>
-                </div>
-            </fieldset>
-        </form>
-    </div>
-    <div class="modal__footer">
-        <button class="btn" ng-click="cancel()" translate>Cancel</button>
-        <button class="btn btn--primary" ng-click="save()" ng-disabled="!editForm.$valid" translate>Save</button>
-    </div>
-</div>
-</div>
 
+                    <div class="form__row">
+                        <div class="sd-line-input sd-line-input--is-select sd-line-input--required">
+                            <label class="sd-line-input__label" translate>Field</label>
+                            <select class="sd-line-input__select" required ng-model="filterCondition.field" ng-change="clearConditionValues()">
+                                <option value="{{parameter.field}}" ng-selected="parameter.field === filterCondition.field" ng-repeat="parameter in filterConditionParameters | orderBy: 'field' track by $index">{{:: label(parameter.field) }}</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form__row">
+                        <div class="sd-line-input sd-line-input--is-select sd-line-input--required">
+                            <label class="sd-line-input__label" translate>Operator</label>
+                            <select class="sd-line-input__select" required ng-model="filterCondition.operator">
+                                <option value="{{operator}}" ng-selected="operator === filterCondition.operator" ng-repeat="operator in operatorLookup[filterCondition.field]">{{operator}}</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form__row">
+                        <div class="sd-line-input sd-line-input--is-select sd-line-input--required" ng-if="isComparisonValue()">
+                            <label class="sd-line-input__label" translate>Values</label>
+                            <select class="sd-line-input__select" required ng-model="filterCondition.value" ng-if="isComparisonValue()">
+                                <option value="{{v[valueFieldLookup[filterCondition.field]]}}" ng-selected="v[valueFieldLookup[filterCondition.field]] === filterCondition.value" ng-repeat="v in valueLookup[filterCondition.field] | orderBy: 'name'">{{:: v.name}}</option>
+                            </select>
+                        </div>
+                        <div class="sd-line-input sd-line-input--required" ng-if="!isListValue() && !isComparisonValue()" >
+                            <label class="sd-line-input__label" translate>Values</label>
+                            <input class="sd-line-input__input" required ng-model="filterCondition.value">
+                        </div>
+
+                        <div ng-if="isListValue()">
+                            <label class="form-label form-label--required" translate>Values</label>
+                            <div class="term-editor"
+                            sd-meta-terms
+                            data-item="filterCondition"
+                            data-field="values"
+                            data-unique="{{valueFieldLookup[filterCondition.field]}}"
+                            data-list="valueLookup[filterCondition.field]"
+                            data-header="true"
+                            data-reload-list="true">
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+        <div class="modal__footer">
+            <button class="btn" ng-click="cancel()" translate>Cancel</button>
+            <button class="btn btn--primary" ng-click="save()" ng-disabled="!editForm.$valid" translate>Save</button>
+        </div>
+    </div>
+    <!-- Close Modal -->
+</div>

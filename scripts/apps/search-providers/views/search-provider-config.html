@@ -1,12 +1,12 @@
-<div ng-hide="hideList" class="split-content">
-    <div class="header">
-        <h2 translate>Search Providers</h2>
-        <button id="addSearchProvider" class="btn btn--primary pull-right" ng-click="edit()" ng-disabled="noProvidersAllowed" title="{{ noProvidersAllowed ? 'There are no providers available.' : 'Add New Search Provider' | translate }}">
-            <i class="icon-plus-sign icon--white"></i> <span translate>Add New Search Provider</span>
+<div class="sd-page__flex-helper" ng-hide="hideList">
+    <div class="sd-page__header">
+        <span class="sd-page__element-grow"></span>
+        <button id="addSearchProvider" class="btn btn--primary" ng-click="edit()" ng-disabled="noProvidersAllowed" title="{{ noProvidersAllowed ? 'There are no providers available.' : 'Add New Search Provider' | translate }}">
+            <i class="icon-plus-sign icon--white"></i> <span translate>Add New</span>
         </button>
     </div>
 
-    <div class="content">
+    <div class="sd-page__content">
         <ul class="pills-list provider-list">
             <li ng-repeat="provider in providers track by provider._id" class="clearfix">
                 <div class="header">

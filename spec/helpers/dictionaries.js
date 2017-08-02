@@ -63,11 +63,13 @@ function Dictionaries() {
     };
 
     this.addDictionary = function() {
+        element(by.css('[data-sd-tooltip="Add new"]')).click();
         element(by.id('createDictionary')).click();
         browser.sleep(100);
     };
 
     this.addPersonalDictionary = function() {
+        element(by.css('[data-sd-tooltip="Add new"]')).click();
         element(by.id('createPersonalDictionary')).click();
         browser.sleep(100);
     };

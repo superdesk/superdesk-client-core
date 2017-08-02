@@ -1,17 +1,15 @@
-<div class="split-content">
-    <div class="header">
-        <h2 translate>Ingest Routing Schemes</h2>
-        <button class="btn btn--primary pull-right" ng-click="edit({})">
-            <i class="icon-plus-sign icon--white"></i> <span translate>Add New Routing Scheme</span>
+<div class="sd-page__flex-helper">
+    <div class="sd-page__header">
+        <span class="sd-page__element-grow"></span>
+        <button class="btn btn--primary" ng-click="edit({})">
+            <i class="icon-plus-sign icon--white"></i><span translate>Add New</span>
         </button>
     </div>
-
-    <div class="content">
+    <div class="sd-page__content">
         <ul class="pills-list ruleset-list">
             <li ng-repeat="scheme in schemes">
                 <div class="header">
                     <div class="name">{{scheme.name}}</div>
-
                     <div class="actions">
                         <button ng-click="edit(scheme)" title="{{:: 'Edit scheme' | translate }}"><i class="icon-pencil"></i></button>
                         <button ng-click="remove(scheme)" title="{{:: 'Remove scheme' | translate }}"><i class="icon-trash"></i></button>
@@ -22,6 +20,7 @@
     </div>
 </div>
 
+<!-- Modal -->
 <div sd-modal data-model="editScheme" class="add-scheme-modal modal--tabs">
     <div class="modal__header">
         <a href="" class="close" ng-click="cancel()">
@@ -92,3 +91,4 @@
         </form>
     </div>
 </div>
+<!-- END Modal -->
