@@ -22,7 +22,7 @@
             <span class="action"><span translate>Error</span>: {{ :: errorMessage | translate}}</span>
         </div>
         <ul class="upload-thumbs">
-            <li ng-repeat="item in items">
+            <li ng-repeat="item in items" class="sd-shadow--z3">
                 <div class="thumb" sd-image-preview="item.url" data-file="item.file" data-width="item.width" data-height="item.height">
                     <div class="holder">
                         <i class="filetype-icon-large-{{item.cssType}}" ng-hide="item.url && item.cssType === 'image'"></i>
