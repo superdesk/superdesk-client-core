@@ -42,6 +42,16 @@ export function PublisherFactory(pubapi) {
 
         /**
          * @ngdoc method
+         * @name publisher#activateLiveSite
+         * @returns {Promise}
+         * @description Open tenant with livesite editor in new tab
+         */
+        activateLiveSite() {
+            return pubapi.save('livesite/auth/livesite_editor');
+        }
+
+        /**
+         * @ngdoc method
          * @name publisher#manageSite
          * @param {Object} site - site which is edited
          * @param {String} code - code of site which is edited
@@ -142,6 +152,18 @@ export function PublisherFactory(pubapi) {
          */
         removeMenu(id) {
             return pubapi.remove('menus', id);
+        }
+
+        /**
+         * @ngdoc method
+         * @name publisher#reorderMenu
+         * @param {Object} menu - menu which is moved
+         * @param {String} id - id of menu which is moved
+         * @returns {Promise}
+         * @description Move menu to different position
+         */
+        reorderMenu(menu, id) {
+            return pubapi.patch('menus/' + id + '/move', menu);
         }
 
         /**

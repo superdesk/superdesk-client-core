@@ -49,8 +49,8 @@
                     </div>
                     <div class="card-box__content card-box__content--scrollable">
                         <ul class="card-box__content-list">
-                            <li ng-repeat="child in menu.children track by child.id" class="card-box__content-list-item--small card-box__content-list-item--border-bottom">
-                                <h4 class="card-box__h4--normal-case">{{ child.label }}<span class="label">{{ child.children.length }}</span></h4>
+                            <li ng-repeat="child in menu.children | orderBy: 'position' track by child.id" class="card-box__content-list-item--small card-box__content-list-item--border-bottom">
+                                <h4 class="card-box__h4--normal-case">{{ child.name }}<span class="label">{{ child.children.length }}</span></h4>
                             </li>
                         </ul>
                     </div>

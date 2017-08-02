@@ -111,7 +111,10 @@ export function PubAPIFactory(config, $http, $q, session, $location) {
                 data: item,
                 add_format: 'json'
             }).then((response) => {
-                angular.extend(item, response);
+                if (item) {
+                    angular.extend(item, response);
+                }
+
                 return response;
             });
         }
