@@ -135,12 +135,13 @@ function SuperdeskProvider($routeProvider, _) {
      * @requires privileges
      * @requires $injector
      * @requires lodash
+     * @requires config
      * @description This service allows interacting with registered activities.
      */
     this.$get = ['$q', '$route', '$rootScope', 'activityService', 'activityChooser',
-        'betaService', 'features', 'privileges', '$injector', 'lodash',
+        'betaService', 'features', 'privileges', '$injector', 'lodash', 'config',
         function superdeskFactory($q, $route, $rootScope, activityService, activityChooser, betaService,
-                                  features, privileges, $injector, _) {
+                                  features, privileges, $injector, _, config) {
             /**
              * Render main menu depending on registered acitivites
              */
@@ -172,6 +173,18 @@ function SuperdeskProvider($routeProvider, _) {
                 return privileges.userHasPrivileges(activity.privileges);
             }
 
+            function checkActivityEnabled(activity) {
+                if (!_.get(config, 'activity')) {
+                    return true;
+                }
+
+                if (_.isUndefined(config.activity[activity._id])) {
+                    return true;
+                }
+
+                return config.activity[activity._id];
+            }
+
             /**
              * @ngdoc method
              * @name superdesk#isAllowed
@@ -183,7 +196,7 @@ function SuperdeskProvider($routeProvider, _) {
              * Testing is based on current server setup (features) and user privileges.
              */
             function isAllowed(activity) {
-                return checkFeatures(activity) && checkPrivileges(activity);
+                return checkActivityEnabled(activity) && checkFeatures(activity) && checkPrivileges(activity);
             }
 
             return angular.extend({
