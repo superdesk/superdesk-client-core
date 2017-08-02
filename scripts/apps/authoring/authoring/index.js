@@ -115,7 +115,7 @@ angular.module('superdesk.apps.authoring', [
                     authoringWorkspace.popup(data.item, 'edit');
                 }],
                 filters: [{action: 'list', type: 'archive'}],
-                additionalCondition: ['authoring', 'item', function(authoring, item) {
+                additionalCondition: ['authoring', 'item', 'config', function(authoring, item, config) {
                     return authoring.itemActions(item).edit;
                 }]
             })
@@ -188,7 +188,7 @@ angular.module('superdesk.apps.authoring', [
                     {action: 'list', type: 'archived'},
                     {action: 'list', type: 'legal_archive'}
                 ],
-                additionalCondition: ['authoring', 'item', function(authoring, item) {
+                additionalCondition: ['authoring', 'item', 'config', function(authoring, item, config) {
                     return authoring.itemActions(item).view;
                 }]
             })
