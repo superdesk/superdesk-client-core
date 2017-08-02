@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import * as actions from '../../actions';
 import {connect} from 'react-redux';
@@ -125,12 +126,12 @@ export class TableBlockComponent extends Component {
 }
 
 TableBlockComponent.propTypes = {
-    block: React.PropTypes.object.isRequired,
-    contentState: React.PropTypes.object.isRequired,
-    readOnly: React.PropTypes.bool.isRequired,
-    editorState: React.PropTypes.object.isRequired,
-    setActiveCell: React.PropTypes.func.isRequired,
-    parentOnChange: React.PropTypes.func.isRequired
+    block: PropTypes.object.isRequired,
+    contentState: PropTypes.object.isRequired,
+    readOnly: PropTypes.bool.isRequired,
+    editorState: PropTypes.object.isRequired,
+    setActiveCell: PropTypes.func.isRequired,
+    parentOnChange: PropTypes.func.isRequired
 };
 
 const mapDispatchToProps = (dispatch) => ({

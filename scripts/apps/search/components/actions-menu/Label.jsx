@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {closeActionsMenu} from 'apps/search/helpers';
 
 export default function Label(props) {
@@ -23,6 +24,6 @@ export default function Label(props) {
 }
 
 Label.propTypes = {
-    svc: React.PropTypes.object.isRequired,
-    label: React.PropTypes.any,
+    svc: PropTypes.object.isRequired,
+    label: PropTypes.any,
 };

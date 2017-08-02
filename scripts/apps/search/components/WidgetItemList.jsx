@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {WidgetItem} from 'apps/search/components';
 
 
@@ -72,11 +73,11 @@ export class WidgetItemList extends React.Component {
 }
 
 WidgetItemList.propTypes = {
-    allowed: React.PropTypes.bool,
-    customMonitoringWidget: React.PropTypes.bool,
-    svc: React.PropTypes.object.isRequired,
-    preview: React.PropTypes.func.isRequired,
-    select: React.PropTypes.func.isRequired,
-    edit: React.PropTypes.func.isRequired,
-    updateCallback: React.PropTypes.func.isRequired
+    allowed: PropTypes.bool,
+    customMonitoringWidget: PropTypes.bool,
+    svc: PropTypes.object.isRequired,
+    preview: PropTypes.func.isRequired,
+    select: PropTypes.func.isRequired,
+    edit: PropTypes.func.isRequired,
+    updateCallback: PropTypes.func.isRequired
 };

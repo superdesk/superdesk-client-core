@@ -1,5 +1,6 @@
 /* eslint-disable react/no-multi-comp */
 import React from 'react';
+import PropTypes from 'prop-types';
 
 /**
  * @ngdoc directive
@@ -55,8 +56,8 @@ export function TranslationReactDropdown(item, className, TranslationService, no
     }
 
     TranslateBtn.propTypes = {
-        item: React.PropTypes.object,
-        language: React.PropTypes.object
+        item: PropTypes.object,
+        language: PropTypes.object
     };
 
     /*

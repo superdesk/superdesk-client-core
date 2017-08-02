@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import {connect} from 'react-redux';
 
@@ -31,8 +32,8 @@ export class LinkButtonComponent extends Component {
 }
 
 LinkButtonComponent.propTypes = {
-    editorState: React.PropTypes.object.isRequired,
-    onClick: React.PropTypes.func.isRequired
+    editorState: PropTypes.object.isRequired,
+    onClick: PropTypes.func.isRequired
 };
 
 const mapStateToProps = (state) => ({

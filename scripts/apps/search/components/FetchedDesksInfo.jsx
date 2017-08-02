@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {DesksDropdown} from 'apps/search/components';
 
 export class FetchedDesksInfo extends React.Component {
@@ -85,6 +86,6 @@ export class FetchedDesksInfo extends React.Component {
 }
 
 FetchedDesksInfo.propTypes = {
-    svc: React.PropTypes.object,
-    item: React.PropTypes.any,
+    svc: PropTypes.object,
+    item: PropTypes.any,
 };

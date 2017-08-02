@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 export function ErrorBox(props) {
     const {gettextCatalog} = props.svc;
@@ -11,5 +12,5 @@ export function ErrorBox(props) {
 }
 
 ErrorBox.propTypes = {
-    svc: React.PropTypes.object.isRequired
+    svc: PropTypes.object.isRequired
 };

@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import {getSelectedEntity} from './entityUtils';
 
 /**
@@ -80,8 +81,8 @@ export class LinkInput extends Component {
 }
 
 LinkInput.propTypes = {
-    editorState: React.PropTypes.object.isRequired,
-    onSubmit: React.PropTypes.func.isRequired,
-    onCancel: React.PropTypes.func.isRequired,
-    value: React.PropTypes.string
+    editorState: PropTypes.object.isRequired,
+    onSubmit: PropTypes.func.isRequired,
+    onCancel: PropTypes.func.isRequired,
+    value: PropTypes.string
 };

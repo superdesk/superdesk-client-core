@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 export function signal(props) {
     if (props.item.signal) {
@@ -7,5 +8,5 @@ export function signal(props) {
 }
 
 signal.propTypes = {
-    item: React.PropTypes.any,
+    item: PropTypes.any,
 };

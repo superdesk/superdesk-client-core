@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import * as actions from '../../actions';
 import Textarea from 'react-textarea-autosize';
@@ -85,11 +86,11 @@ export class ImageBlockComponent extends Component {
 }
 
 ImageBlockComponent.propTypes = {
-    cropImage: React.PropTypes.func.isRequired,
-    changeCaption: React.PropTypes.func.isRequired,
-    setLocked: React.PropTypes.func.isRequired,
-    block: React.PropTypes.object.isRequired,
-    contentState: React.PropTypes.object.isRequired
+    cropImage: PropTypes.func.isRequired,
+    changeCaption: PropTypes.func.isRequired,
+    setLocked: PropTypes.func.isRequired,
+    block: PropTypes.object.isRequired,
+    contentState: PropTypes.object.isRequired
 };
 
 const mapDispatchToProps = (dispatch) => ({

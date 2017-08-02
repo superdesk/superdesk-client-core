@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 export function category(props) {
     var anpa = props.item.anpa_category || {};
@@ -9,5 +10,5 @@ export function category(props) {
 }
 
 category.propTypes = {
-    item: React.PropTypes.any,
+    item: PropTypes.any,
 };

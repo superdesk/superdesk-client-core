@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {Associations} from 'apps/search/components';
 
 export function associations(props) {
@@ -16,8 +17,8 @@ export function associations(props) {
  * svc: contains gettext and is required
  */
 associations.propTypes = {
-    svc: React.PropTypes.any.isRequired,
-    item: React.PropTypes.any,
-    openAuthoringView: React.PropTypes.func.isRequired
+    svc: PropTypes.any.isRequired,
+    item: PropTypes.any,
+    openAuthoringView: PropTypes.func.isRequired
 };
 

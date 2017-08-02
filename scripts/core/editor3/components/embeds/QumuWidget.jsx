@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 
 export class QumuWidget extends Component {
     componentDidMount() {
@@ -13,5 +14,5 @@ export class QumuWidget extends Component {
 }
 
 QumuWidget.propTypes = {
-    code: React.PropTypes.object
+    code: PropTypes.object
 };

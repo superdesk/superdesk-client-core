@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {ImageBlock} from './images';
 import {EmbedBlock} from './embeds';
 import {TableBlock} from './tables';
@@ -28,8 +29,8 @@ const MediaComponent = (props) => {
 };
 
 MediaComponent.propTypes = {
-    block: React.PropTypes.object.isRequired,
-    contentState: React.PropTypes.object.isRequired
+    block: PropTypes.object.isRequired,
+    contentState: PropTypes.object.isRequired
 };
 
 export function blockRenderer(block) {

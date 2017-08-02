@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import * as actions from '../../actions';
 import {connect} from 'react-redux';
 import {getSelectedEntityType, getSelectedEntityData} from '../links/entityUtils';
@@ -10,6 +11,7 @@ export class LinkToolbarComponent extends Component {
         const {url} = getSelectedEntityData(editorState);
         const isLink = getSelectedEntityType(editorState) === 'LINK';
         const cx = classNames({
+            dropdown: true,
             'link-toolbar': true,
             empty: !isLink
         });
@@ -27,9 +29,9 @@ export class LinkToolbarComponent extends Component {
 }
 
 LinkToolbarComponent.propTypes = {
-    editorState: React.PropTypes.object,
-    removeLink: React.PropTypes.func,
-    onEdit: React.PropTypes.func
+    editorState: PropTypes.object,
+    removeLink: PropTypes.func,
+    onEdit: PropTypes.func
 };
 
 const mapStateToProps = (state) => ({

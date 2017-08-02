@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {ItemContainer, SelectBox} from 'apps/search/components';
 import {createMarkUp} from '../helpers';
 
@@ -54,8 +55,8 @@ export function MediaPreview(props) {
 }
 
 MediaPreview.propTypes = {
-    svc: React.PropTypes.object.isRequired,
-    onMultiSelect: React.PropTypes.func,
-    desk: React.PropTypes.any,
-    item: React.PropTypes.any
+    svc: PropTypes.object.isRequired,
+    onMultiSelect: PropTypes.func,
+    desk: PropTypes.any,
+    item: PropTypes.any
 };

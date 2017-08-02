@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
     closeActionsMenu
 } from 'apps/search/helpers';
@@ -85,7 +86,7 @@ export class MarkedDesksList extends React.Component {
  * markedDesksById: dict of desks by desk id
  */
 MarkedDesksList.propTypes = {
-    svc: React.PropTypes.object.isRequired,
-    item: React.PropTypes.any,
-    markedDesksById: React.PropTypes.any,
+    svc: PropTypes.object.isRequired,
+    item: PropTypes.any,
+    markedDesksById: PropTypes.any,
 };

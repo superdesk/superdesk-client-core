@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {createMarkUp} from 'apps/search/helpers';
 
 export function headline(props) {
@@ -12,5 +13,5 @@ export function headline(props) {
 }
 
 headline.propTypes = {
-    item: React.PropTypes.any,
+    item: PropTypes.any,
 };

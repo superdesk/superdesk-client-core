@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import BlockStyleControls from './BlockStyleControls';
 import InlineStyleControls from './InlineStyleControls';
 import TableControls from './TableControls';
@@ -94,11 +95,11 @@ class ToolbarComponent extends Component {
 }
 
 ToolbarComponent.propTypes = {
-    disabled: React.PropTypes.bool,
-    editorFormat: React.PropTypes.array,
-    activeCell: React.PropTypes.any,
-    applyLink: React.PropTypes.func,
-    editorState: React.PropTypes.object
+    disabled: PropTypes.bool,
+    editorFormat: PropTypes.array,
+    activeCell: PropTypes.any,
+    applyLink: PropTypes.func,
+    editorState: PropTypes.object
 };
 
 const mapStateToProps = (state) => ({
