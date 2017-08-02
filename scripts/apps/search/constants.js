@@ -101,7 +101,9 @@ export const CORE_PROJECTED_FIELDS = {
         'last_published_version',
         'archived',
         'associations',
-        'queue_state'
+        'queue_state',
+        'alt_text',
+        'description_text'
     ]
 };
 
