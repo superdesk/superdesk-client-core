@@ -1,4 +1,4 @@
-<div sd-modal data-model="modalActive" data-close="cancel()" class="modal--large">
+<div sd-modal data-model="modalActive" data-close="cancel()" class="modal--large modal--tabs">
     <div class="modal__header">
         <a href="" class="close" ng-click="cancel()"><i class="icon-close-small"></i></a>
         <h3 class="modal__heading" ng-show="!product.edit._id" translate>Add New Product</h3>
@@ -6,66 +6,76 @@
     </div>
     <div class="modal__body">
         <form name="editForm">
-            <fieldset>
-                <tabset>
-                    <tab heading="Product Details" class="TabContent">
-                        <fieldset>
-                            <div class="field">
-                                <i class="field-info pull-right" translate>* mandatory fields</i>
-                            </div>
-                            <div >
-                                <label for="product-name" translate>Product name</label><i class="field-info pull-right" translate>*</i>
-                                <input id="product-name" type="text" class="fullwidth-input" ng-model="product.edit.name" required>
-                            </div>
-                            <div class="field">
-                                <label translate>Product description</label>
-                                <textarea class="fullwidth-input" ng-model="product.edit.description"></textarea>
-                            </div>
-                            <div class="field">
-                                <label translate>Product Type</label><i class="field-info pull-right" translate>*</i>
-                                <select class="input"
-                                        ng-model="product.edit.product_type"
-                                        ng-options="p.qcode as p.name for p in product_types">
-                                    <option value=""></option>
-                                </select>
-                            </div>
-                            <div class="field">
-                                <label translate>Product codes</label><i class="field-info" translate>*comma separated values</i>
-                                <textarea class="fullwidth-input" ng-model="product.edit.codes"></textarea>
-                            </div>
-                            <div class="field">
-                                <label translate class="right">Content Filter</label>
-                                <select class="input" ng-model="product.edit.content_filter.filter_id">
-                                    <option value=""></option>
-                                    <option value="{{filter._id}}" ng-selected="filter._id === product.edit.content_filter.filter_id" ng-repeat="filter in contentFilters track by filter._id">{{:: filter.name}}</option>
-                                </select>
-                            </div>
-                            <div class="field" ng-if="product.edit.content_filter.filter_id">
-                                <label translate>Content Filter Type</label>
-                                <sd-check ng-model="product.edit.content_filter.filter_type" type="radio" ng-value="permitting">{{ :: 'Permitting' | translate }}</sd-check>
-                                <sd-check ng-model="product.edit.content_filter.filter_type" type="radio" ng-value="blocking">{{ :: 'Blocking' | translate }}</sd-check>
-                            </div>
-                            <div class="field">
-                                <label for="geoRestrictions" translate>Target Regions</label>
-                                <select id="geoRestrictions" ng-model="product.edit.geo_restrictions" ng-options="g.qcode as g.name for g in geoRestrictions">
-                                    <option value=""></option>
-                                </select>
-                            </div>
-                        </fieldset>
-                    </tab>
-                    <tab heading="Subscribers" class="TabContent">
-                        <div ng-repeat="subscriber in subscribers| orderBy:name" class="field">
-                            <span ng-if="subscriber.products.indexOf(product.edit._id) >= 0">
-                                {{::subscriber.name}}
-                            </span>
+            <div class="modal__body-header">
+                <ul class="nav-tabs">
+                    <li ng-class="{'nav-tabs__tab--active': !tab || tab === 'products'}" class="nav-tabs__tab">
+                        <button ng-click="tab = 'products'" class="nav-tabs__link"><span translate>Product Details</span>
+                        </button>
+                    </li>
+                    <li ng-class="{'nav-tabs__tab--active': tab === 'subscribers'}" class="nav-tabs__tab">
+                        <button ng-click="tab = 'subscribers'" class="nav-tabs__link"><span translate>Subscribers</span>
+                        </button>
+                    </li>               
+                </ul>
+            </div>
+            <div class="modal__body-content">
+                <div ng-if="!tab || tab === 'products'" class="nav-tabs__pane">
+                    <fieldset>
+                        <div class="field">
+                            <i class="field-info pull-right" translate>* mandatory fields</i>
                         </div>
-                    </tab>
-                </tabset>
-            </fieldset>
+                        <div >
+                            <label for="product-name" translate>Product name</label><i class="field-info pull-right" translate>*</i>
+                            <input id="product-name" type="text" class="fullwidth-input" ng-model="product.edit.name" required>
+                        </div>
+                        <div class="field">
+                            <label translate>Product description</label>
+                            <textarea class="fullwidth-input" ng-model="product.edit.description"></textarea>
+                        </div>
+                        <div class="field">
+                            <label translate>Product Type</label><i class="field-info pull-right" translate>*</i>
+                            <select class="input"
+                                    ng-model="product.edit.product_type"
+                                    ng-options="p.qcode as p.name for p in product_types">
+                                <option value=""></option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label translate>Product codes</label><i class="field-info" translate>*comma separated values</i>
+                            <textarea class="fullwidth-input" ng-model="product.edit.codes"></textarea>
+                        </div>
+                        <div class="field">
+                            <label translate class="right">Content Filter</label>
+                            <select class="input" ng-model="product.edit.content_filter.filter_id">
+                                <option value=""></option>
+                                <option value="{{filter._id}}" ng-selected="filter._id === product.edit.content_filter.filter_id" ng-repeat="filter in contentFilters track by filter._id">{{:: filter.name}}</option>
+                            </select>
+                        </div>
+                        <div class="field" ng-if="product.edit.content_filter.filter_id">
+                            <label translate>Content Filter Type</label>
+                            <sd-check ng-model="product.edit.content_filter.filter_type" type="radio" ng-value="permitting">{{ :: 'Permitting' | translate }}</sd-check>
+                            <sd-check ng-model="product.edit.content_filter.filter_type" type="radio" ng-value="blocking">{{ :: 'Blocking' | translate }}</sd-check>
+                        </div>
+                        <div class="field">
+                            <label for="geoRestrictions" translate>Target Regions</label>
+                            <select id="geoRestrictions" ng-model="product.edit.geo_restrictions" ng-options="g.qcode as g.name for g in geoRestrictions">
+                                <option value=""></option>
+                            </select>
+                        </div>
+                    </fieldset>
+                </div>
+                <div ng-if="tab === 'subscribers'" class="nav-tabs__pane">
+                    <div ng-repeat="subscriber in subscribers| orderBy:name" class="field">
+                        <span ng-if="subscriber.products.indexOf(product.edit._id) >= 0">
+                            {{::subscriber.name}}
+                        </span>
+                    </div>
+                </div>
+            </div>
         </form>
-    </div>
-    <div class="modal__footer">
-        <button class="btn" ng-click="cancel()" translate>Cancel</button>
-        <button class="btn btn--primary" ng-click="save()" ng-disabled="editForm.$invalid" translate>Save</button>
+        <div class="modal__body-footer">
+            <button class="btn" ng-click="cancel()" translate>Cancel</button>
+            <button class="btn btn--primary" ng-click="save()" ng-disabled="editForm.$invalid" translate>Save</button>
+        </div>
     </div>
 </div>

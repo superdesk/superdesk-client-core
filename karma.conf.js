@@ -67,7 +67,14 @@ module.exports = function(config) {
         autoWatch: true,
 
         // Start these browsers, currently available:
-        browsers: ['Chrome'],
+        browsers: ['ChromeNoSandbox'],
+
+        customLaunchers: {
+            ChromeNoSandbox: {
+                base: 'Chrome',
+                flags: ['--no-sandbox']
+            }
+        },
 
         // Continuous Integration mode
         singleRun: false
