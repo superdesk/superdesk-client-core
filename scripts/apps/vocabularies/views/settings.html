@@ -5,9 +5,15 @@
     <div class="sd-page__header">
         <span class="sd-page__element-grow"></span>
         <button class="btn btn--primary"
+          ng-click="createCustomField()">
+          <i class="icon-plus-sign icon--white"></i>
+          <span translate>Add New Text Field</span>
+        </button>
+
+        <button class="btn btn--primary"
           ng-click="createVocabulary()">
           <i class="icon-plus-sign icon--white"></i>
-          <span translate>Add New</span>
+          <span translate>Add New Vocabulary</span>
         </button>
     </div>
     <div sd-vocabulary-config class="sd-page__content dictionary-settings"></div>
