@@ -16,7 +16,6 @@
          ng-model-options="{debounce: 100}"
          ng-change="autosave(item)"
          ng-if="_editable"
-         tabindex="{{editor.headline.order}}"
          ng-trim="false"></div>
     <div class="headline" ng-if="!_editable" sd-html-preview="item.headline"></div>
 </div>
@@ -55,7 +54,7 @@
     <span ng-if="item.flags.marked_for_sms" sd-character-count data-item="item.sms_message" data-html="true" data-limit="160"></span>
     <div ng-if="item.flags.marked_for_sms">
         <label translate>SMS Message</label>
-        <input tabindex="{{editor.sms.order}}" type="text" sd-remove-tags
+        <input type="text" sd-remove-tags
                class="byline"
                id="sms_message"
                ng-model="item.sms_message"
@@ -130,8 +129,7 @@
          ng-model-options="{debounce: 100}"
          ng-change="autosave(item)"
          ng-if="_editable"
-         ng-trim="false"
-         tabindex="{{editor.abstract.order}}">
+         ng-trim="false">
     </div>
     <div class="abstract" ng-if="!_editable" sd-html-preview="item.abstract"></div>
 </div>
@@ -263,8 +261,7 @@
          ng-model-options="{debounce: 100}"
          data-associations="item.associations"
          data-language="item.language"
-         data-type="item.type"
-         tabindex="{{editor.body_html.order}}">
+         data-type="item.type">
     </div>
     <div class="text-editor" sd-html-preview="item.body_html" ng-if="!_editable"></div>
 </div>
@@ -343,8 +340,7 @@
          ng-model-options="{debounce: 100}"
          ng-change="autosave(item)"
          ng-if="_editable"
-         ng-trim="false"
-         tabindex="{{editor.media_description.order}}"></div>
+         ng-trim="false"></div>
     <div class="abstract" ng-if="!_editable">{{item.description_text}}</div>
 </div>
 
@@ -407,8 +403,7 @@
          ng-trim="false"
          sd-focus-element
          data-append-element=".field"
-         data-append-class="active"
-         tabindex="{{editor.body_footer.order}}">
+         data-append-class="active">
     </div>
     <div id="body_footer_preview" class="abstract" ng-if="!_editable"  sd-html-preview="item.body_footer"></div>
 </div>
