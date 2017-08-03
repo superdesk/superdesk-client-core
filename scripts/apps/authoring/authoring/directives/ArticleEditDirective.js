@@ -127,18 +127,16 @@ export function ArticleEditDirective(
                             display_name: session.identity.display_name
                         });
                     }
+                    if (_.includes(['picture', 'graphic'], item.type) && _.get(metadata, 'values.crop_sizes')) {
+                        item.hasCrops = metadata.values.crop_sizes.some(
+                            (crop) => item.renditions && item.renditions[crop.name]
+                        );
+                    }
                 }
             });
 
             metadata.initialize().then(() => {
                 scope.metadata = metadata.values;
-
-                if (scope.item && (scope.item.type === 'picture' || scope.item.type === 'graphic')) {
-                    scope.item.hasCrops = false;
-                    scope.item.hasCrops = scope.metadata.crop_sizes.some(
-                        (crop) => scope.item.renditions && scope.item.renditions[crop.name]
-                    );
-                }
 
                 if (scope.item && !scope.item.sign_off) {
                     scope.modifySignOff(session.identity);
