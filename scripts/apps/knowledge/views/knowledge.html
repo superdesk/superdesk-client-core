@@ -1,0 +1,11 @@
+<div class="sd-page" ng-controller="KnowledgeController">
+  <header class="sd-page__header">
+      <div class="view-select">
+          <button title="{{ :: 'Switch to grid view' | translate }}" ng-show="listView !== 'mgrid'" ng-click="setListView('mgrid')"><i class="icon-th"></i></button>
+          <button title="{{ :: 'Switch to list view' | translate }}" ng-show="listView !== 'compact'" ng-click="setListView('compact')"><i class="icon-th-list"></i></button>
+      </div>
+  </header>
+</div>
+<section class="sd-page__content" ng-class="{'sd-page__sidebar': flags.facets}">
+    <div sd-concept-item-list></div>
+</section>
