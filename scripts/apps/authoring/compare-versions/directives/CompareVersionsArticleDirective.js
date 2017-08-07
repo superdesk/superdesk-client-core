@@ -150,7 +150,7 @@ class LinkFunction {
      * @description Replace in text the words from mapWords with corespondent translation
      */
     replaceWords(text, mapWords) {
-        let result = text;
+        let result = text || '';
 
         result = result.replace(/\n/g, '');
 
