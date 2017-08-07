@@ -234,7 +234,8 @@ export class Editor3Component extends React.Component {
             showToolbar,
             editorState,
             onChange,
-            onTab
+            onTab,
+            tabindex
         } = this.props;
 
         let cx = classNames({
@@ -257,6 +258,7 @@ export class Editor3Component extends React.Component {
                         customStyleMap={customStyleMap}
                         onChange={onChange}
                         onTab={onTab}
+                        tabIndex={tabindex}
                         handlePastedText={handlePastedText.bind(this, this.editorKey)}
                         readOnly={locked || readOnly}
                         ref="editor"
@@ -278,7 +280,8 @@ Editor3Component.propTypes = {
     dragDrop: PropTypes.func,
     scrollContainer: PropTypes.string,
     singleLine: PropTypes.bool,
-    editorFormat: PropTypes.array
+    editorFormat: PropTypes.array,
+    tabindex: PropTypes.number
 };
 
 Editor3Component.defaultProps = {
@@ -292,7 +295,8 @@ const mapStateToProps = (state) => ({
     showToolbar: state.showToolbar,
     editorState: state.editorState,
     locked: state.locked,
-    editorFormat: state.editorFormat
+    editorFormat: state.editorFormat,
+    tabindex: state.tabindex
 });
 
 const mapDispatchToProps = (dispatch) => ({
