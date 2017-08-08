@@ -56,14 +56,14 @@ export function toggleInlineStyle(inlineStyle) {
 /**
  * @ngdoc method
  * @name applyLink
- * @param {Object} urlAndEntity
+ * @param {Object} linkAndEntity
  * @return {String} action
  * @description Returns the action for applying links to text selections.
  */
-export function applyLink({url, entity}) {
+export function applyLink({link, entity}) {
     return {
         type: 'TOOLBAR_APPLY_LINK',
-        payload: {url, entity}
+        payload: {link, entity}
     };
 }
 

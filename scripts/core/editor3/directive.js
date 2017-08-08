@@ -4,7 +4,7 @@ import {Provider} from 'react-redux';
 import {EditorState} from 'draft-js';
 
 import {Editor3} from './components';
-import createStore from './store';
+import createEditorStore from './store';
 import {fromHTML} from './html';
 import {changeEditorState, setReadOnly} from './actions';
 
@@ -109,6 +109,12 @@ class Editor3Directive {
              * @description Disable internal spellchecker.
              */
             disableSpellchecker: '@',
+
+            /**
+             * @type {Object}
+             * @description Item which is being edited
+             */
+            item: '=',
         };
     }
 
@@ -122,7 +128,7 @@ class Editor3Directive {
         this.disableSpellchecker = this.disableSpellchecker || false;
         this.bindToValue = this.bindToValue || false;
 
-        const store = createStore(this);
+        const store = createEditorStore(this);
 
         // bind the directive value attribute bi-directionally between Angular and Redux.
         this.bindToValue && $scope.$watch('vm.value', (newValue, oldValue) => {

@@ -82,6 +82,12 @@ AttachmentsController.$inject = ['$scope', 'superdesk', 'attachments', 'notify',
 AttachmentsFactory.$inject = ['api'];
 function AttachmentsFactory(api) {
     class AttachmentsService {
+        /**
+         * Get attachments by item
+         *
+         * @param {Object} item
+         * @return {Promise}
+         */
         byItem(item) {
             const attachments = item.attachments || [];
 
@@ -89,10 +95,23 @@ function AttachmentsFactory(api) {
                 .then((data) => data._items);
         }
 
+        /**
+         * Save attachment changes
+         *
+         * @param {Object} file
+         * @param {Object} diff
+         * @return {Promise}
+         */
         save(file, diff) {
             return api.save('attachments', file, diff);
         }
 
+        /**
+         * Remove attachment
+         *
+         * @param {Object} file
+         * @return {Promise}
+         */
         remove(file) {
             return api.remove(file);
         }

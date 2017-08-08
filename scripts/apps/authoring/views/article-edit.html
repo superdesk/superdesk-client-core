@@ -292,6 +292,7 @@
          data-debounce="3000"
          data-language="item.language"
          data-disable-spellchecker="{{useTansaProofing()}}"
+         data-item="item"
          tabindex="{{editor.body_html.order}}">
     </div>
 </div>
@@ -360,6 +361,7 @@
          data-on-change="autosave(item)"
          data-language="item.language"
          data-disable-spellchecker="{{useTansaProofing()}}"
+         data-item="item"
          tabindex="{{editor.media_description.order}}">
     </div>
 </div>
@@ -423,6 +425,7 @@
          data-on-change="autosave(item)"
          data-language="item.language"
          data-disable-spellchecker="{{useTansaProofing()}}"
+         data-item="item"
          tabindex="{{editor.body_footer.order}}">
     </div>
 </div>
@@ -498,6 +501,7 @@
         data-read-only="!_editable"
         data-disable-spellchecker="{{ useTansaProofing() }}"
         data-editor-format="editor[field._id].formatOptions"
+        data-item="item"
         tabindex="{{ editor[field._id].order }}">
     </div>
 </div>

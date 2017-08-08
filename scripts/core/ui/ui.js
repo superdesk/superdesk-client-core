@@ -758,7 +758,7 @@ function LeadingZeroFilter() {
     };
 }
 
-function FileiconFilter() {
+export function FileiconFilter() {
     const mapping = {
         pdf: 'pdf',
         excel: 'doc',
@@ -774,7 +774,7 @@ function FileiconFilter() {
     };
 }
 
-function FilesizeFilter() {
+export function FilesizeFilter() {
     const KB = Math.pow(2, 10);
     const MB = KB * KB;
 

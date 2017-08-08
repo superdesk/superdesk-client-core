@@ -33,7 +33,7 @@ class ToolbarComponent extends Component {
     /**
      * @ngdoc method
      * @name Toolbar#hideInput
-     * @description Hides the URL input.
+     * @description Hides the link input.
      */
     hideInput() {
         this.setState({inputLabel: null});
@@ -43,12 +43,12 @@ class ToolbarComponent extends Component {
      * @ngdoc method
      * @name Toolbar#showInput
      * @param {Event} e
-     * @param {string=} url The URL to show in the input, when editing an already
+     * @param {Object} link object to edit
      * existing link.
-     * @description Shows the URL input box.
+     * @description Shows the link input box.
      */
-    showInput(url = '') {
-        const isNewLink = url === '';
+    showInput(link) {
+        const isNewLink = !link;
         const isCollapsed = this.props.editorState.getSelection().isCollapsed();
 
         // only add new links if there is a selection
@@ -56,7 +56,7 @@ class ToolbarComponent extends Component {
             return;
         }
 
-        this.setState({inputLabel: url});
+        this.setState({inputLabel: link});
     }
 
     render() {
@@ -69,7 +69,7 @@ class ToolbarComponent extends Component {
         } = this.props;
 
         const has = (opt) => editorFormat.indexOf(opt) > -1;
-        const isEditing = typeof this.state.inputLabel === 'string';
+        const isEditing = this.state.inputLabel !== null;
 
         const cx = classNames({
             'Editor3-controls': true,
@@ -109,7 +109,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    applyLink: (url, entity = null) => dispatch(actions.applyLink({url, entity}))
+    applyLink: (link, entity = null) => dispatch(actions.applyLink({link, entity}))
 });
 
 const Toolbar = connect(mapStateToProps, mapDispatchToProps)(ToolbarComponent);

@@ -60,24 +60,20 @@ const toggleInlineStyle = (state, inlineStyle) => {
 /**
  * @ngdoc method
  * @name applyLink
- * @param {string} url The URL to apply
+ * @param {Object} link Link data to apply
  * @param {Entity|null} entity The entity to apply the URL too.
  * @description Applies the given URL to the current content selection. If an
  * entity is specified, it applies the link to that entity instead.
  */
-const applyLink = (state, {url, entity}) => {
+const applyLink = (state, {link, entity}) => {
     const {editorState} = state;
 
     if (entity) {
-        const key = entityUtils.getSelectedEntityKey(editorState);
-
-        Entity.mergeData(key, {url});
-
-        return {...state};
+        return {...state, editorState: entityUtils.replaceSelectedEntityData(editorState, {link})};
     }
 
     const contentState = editorState.getCurrentContent();
-    const contentStateWithEntity = contentState.createEntity('LINK', 'MUTABLE', {url});
+    const contentStateWithEntity = contentState.createEntity('LINK', 'MUTABLE', {link});
     const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
     const stateAfterChange = RichUtils.toggleLink(
         editorState,
