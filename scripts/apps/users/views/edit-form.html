@@ -131,12 +131,12 @@
                   <select ng-model="user.desk" name="user_default_desk" id="user_default_desk" ng-options="desk._id as desk.name for desk in userDesks"></select>
                 </div>
 
-                <div sd-info-item>
+                <div sd-info-item ng-hide="profileConfig.phone === false">
                   <label for="phone" translate>phone number</label>
                   <input type="text" name="phone" id="phone" ng-model="user.phone">
                 </div>
 
-                <div sd-info-item>
+                <div sd-info-item ng-hide="profileConfig.jid === false">
                   <label for="jid">JID</label>
                   <input type="text" name="jid" id="jid" ng-model="user.jid">
                 </div>
@@ -146,7 +146,7 @@
                   <span id="created" class="info-value" sd-reldate ng-model="user._created"></span>
                 </div>
 
-                <div sd-info-item ng-show="">
+                <div sd-info-item>
                   <label for="user_role" translate>user role</label>
                   <div sd-select class="info-value" ng-model="user.role" options="role._id as role.name for role in rolesList"></div>
                 </div>

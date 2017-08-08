@@ -104,6 +104,18 @@ You can configure what will be displayed in list views, there are 3 areas in lis
 
 - `singleLineView` - optional config to have thinner rows with elements in singleLine displayed.
 
+##### Profile
+
+You can disable certain content profile fields. Set value to `false` in order to disable it. Fields are:
+
+- `defaults` - Article defaults
+- `located` - Dateline located
+- `phone` - Phone number
+- `jid` - Jabber ID
+- `place` - Default place
+- `category` - Preferred categories
+- `desks` - Preferred desks
+
 ##### Miscellaneous
 
 - `defaultRoute` - sets the route that the app will go to upon logging in (home route).
