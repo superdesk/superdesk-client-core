@@ -19,7 +19,7 @@ export function CharacterCount() {
                 var input = scope.item || '';
 
                 input = scope.html ? helpers.cleanHtml(input) : input;
-                input = input.replace(/\r?\n|\r|\s/g, '');
+                input = input.replace(/\r?\n|\r/g, '');
 
                 scope.numChars = input.length || 0;
             });
