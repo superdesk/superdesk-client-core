@@ -270,6 +270,18 @@ export function PublisherFactory(pubapi) {
 
         /**
          * @ngdoc method
+         * @name publisher#removeArticle
+         * @param {Object} update - contains status of article
+         * @param {String} articleId - id of article
+         * @returns {Promise}
+         * @description Remove article from incoming list
+         */
+        removeArticle(update, articleId) {
+            return pubapi.patch('packages/' + articleId, update);
+        }
+
+        /**
+         * @ngdoc method
          * @name publisher#publishArticle
          * @param {Object} destinations - contains array of destionations where to publish article
          * @param {String} articleId - id of article
