@@ -1,4 +1,7 @@
-<div class="attachments-pane" ng-controller="AttachmentsCtrl as ctrl">
+<div class="attachments-pane" ng-controller="AttachmentsCtrl as ctrl"
+    ngf-drop="ctrl.selectFiles($files)"
+    ngf-stop-propagation="true"
+    ngf-multiple="true">
     <div class="attachments-list">
         <ul ng-if="files">
             <li ng-repeat="file in files track by file._id" class="sd-list-item sd-shadow--z1">
@@ -31,8 +34,7 @@
     <div class="attach-indicator"
         ng-show="files.length < ctrl.maxFiles"
         ng-class="{empty: files.length === 0}"
-        ngf-drop="ctrl.selectFiles($files)"
-        ngf-multiple="true">
+        >
 
         <div class="round-box">
             <i class="big-icon--upload-alt icon"></i>
@@ -42,7 +44,6 @@
 
         <a class="btn btn--hollow"
             ngf-select="ctrl.selectFiles($files)"
-            ngf-drop="ctrl.selectFiles($files)"
             ngf-multiple="true">
             {{ :: 'Attach files' | translate }}
         </a>
