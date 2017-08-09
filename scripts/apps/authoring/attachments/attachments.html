@@ -21,6 +21,9 @@
                 </div>
                 <div class="sd-list-item__action-menu sd-list-item__action-menu--direction-row">
                     <button class="dropdown__toggle"
+                        ng-click="ctrl.download(file)"
+                        title="{{ :: 'Download' | translate }}"><i class="icon-download"></i></button>
+                    <button class="dropdown__toggle"
                         ng-click="ctrl.startEdit(file)"
                         title="{{ :: 'Edit' | translate }}"><i class="icon-pencil"></i></button>
                     <button class="dropdown__toggle"
