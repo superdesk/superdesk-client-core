@@ -4,11 +4,12 @@
  * @name WebPublisherMonitoringController
  * @requires publisher
  * @requires modal
+ * @requires authoringWorkspace
  * @requires https://docs.angularjs.org/api/ng/type/$rootScope.Scope $scope
  * @description WebPublisherMonitoringController holds a set of functions used for web publisher monitoring
  */
-WebPublisherMonitoringController.$inject = ['$scope', '$sce', 'publisher', 'modal', 'authoringWorkspace'];
-export function WebPublisherMonitoringController($scope, $sce, publisher, modal, authoringWorkspace) {
+WebPublisherMonitoringController.$inject = ['$scope', '$sce', 'modal', 'publisher', 'authoringWorkspace'];
+export function WebPublisherMonitoringController($scope, $sce, modal, publisher, authoringWorkspace) {
     class WebPublisherMonitoring {
         constructor() {
             this.TEMPLATES_DIR = 'scripts/apps/web-publisher/views';
@@ -41,6 +42,18 @@ export function WebPublisherMonitoringController($scope, $sce, publisher, modal,
 
             item._id = article.guid;
             authoringWorkspace.popup(item, 'edit');
+        }
+
+        /**
+         * @ngdoc method
+         * @name WebPublisherMonitoringController#removeArticle
+         * @param {Object} article
+         * @description Remove article from incoming list
+         */
+        removeArticle(article) {
+            modal.confirm(gettext('Please confirm you want to remove article from incoming list.'))
+                .then(() => publisher.removeArticle({update: {pubStatus: 'canceled'}}, article.id)
+                .then(() => $scope.$broadcast('refreshArticlesList')));
         }
 
         /**
