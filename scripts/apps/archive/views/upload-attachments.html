@@ -6,8 +6,8 @@
 <div class="modal__body">
     <form name="attachmentsForm">
         <div class="upload-edit" ng-show="items.length">
-            <ul class="upload-thumbs">
-                <li ng-repeat="item in items" class="sd-shadow--z3">
+            <ul class="upload-thumbs flex-grid flex-grid--boxed flex-grid--wrap-items flex-grid--small-4">
+                <li ng-repeat="item in items" class="flex-grid__item sd-shadow--z3">
                     <div class="thumb">
                         <div class="holder"><i class="big-icon--text"></i></div>
                         <span class="remove" ng-click="cancelItem(item)"><i class="icon-close-small"></i></span>
@@ -20,21 +20,24 @@
                         <div class="other-info">
                             <div class="row">
                                 <label>Title *</label>
-                                <input type="text" required ng-model="item.meta.title" class="contenteditable-input contenteditable-input--side-padding" />
+                                <input type="text" required ng-model="item.meta.title" class="contenteditable-input" />
                             </div>
                             <div class="row">
                                 <label>Description *</label>
-                                <input type="text" required ng-model="item.meta.description" class="contenteditable-input contenteditable-input--side-padding" />
+                                <textarea class="contenteditable-input"
+                                    ng-model="item.meta.description"
+                                    sd-auto-height
+                                    required></textarea>
                             </div>
                             <div class="row">
                                 <label translate>File Name</label>
-                                <div class="contenteditable-input contenteditable-input--side-padding">
-                                    {{ :: item.file.name}}
+                                <div class="contenteditable-input">
+                                    {{ :: item.file.name }}
                                 </div>                        
                             </div>
                             <div class="row">
                                 <label translate>File Size</label>
-                                <div class="contenteditable-input contenteditable-input--side-padding">
+                                <div class="contenteditable-input">
                                     {{ :: item.file.size | filesize }}
                                 </div> 
                             </div>
