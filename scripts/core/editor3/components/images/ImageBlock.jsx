@@ -59,7 +59,7 @@ export class ImageBlockComponent extends Component {
         const {block, changeCaption} = this.props;
         const entityKey = block.getEntityAt(0);
 
-        changeCaption(entityKey, target.value);
+        changeCaption(entityKey, target.value, target.placeholder);
     }
 
     render() {
@@ -72,6 +72,13 @@ export class ImageBlockComponent extends Component {
             <div className="image-block" onClick={(e) => e.stopPropagation()}>
                 <div className="image-block__wrapper">
                     <img src={rendition.href} alt={alt} onClick={this.onClick} />
+                    <Textarea
+                        placeholder={gettext('Title')}
+                        onFocus={setLocked}
+                        className="image-block__description"
+                        defaultValue={data.headline}
+                        onChange={this.onChange}
+                    />
                     <Textarea
                         placeholder={gettext('Description')}
                         onFocus={setLocked}
@@ -95,7 +102,7 @@ ImageBlockComponent.propTypes = {
 
 const mapDispatchToProps = (dispatch) => ({
     cropImage: (entityKey, entityData) => dispatch(actions.cropImage(entityKey, entityData)),
-    changeCaption: (entityKey, newCaption) => dispatch(actions.changeImageCaption(entityKey, newCaption)),
+    changeCaption: (entityKey, newCaption, field) => dispatch(actions.changeImageCaption(entityKey, newCaption, field)),
     setLocked: () => dispatch(actions.setLocked(true))
 });
 

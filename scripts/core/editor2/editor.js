@@ -621,6 +621,7 @@ function SdTextEditorBlockEmbedController($timeout, editor, renditions, config) 
     angular.extend(self, {
         embedCode: undefined,  // defined below
         caption: undefined,  // defined below
+        title: undefined,  // defined below
         editable: false,
         toggleEdition: function() {
             self.editable = !self.editable;
@@ -636,15 +637,19 @@ function SdTextEditorBlockEmbedController($timeout, editor, renditions, config) 
         cancel: function() {
             self.embedCode = self.model.body;
         },
-        saveCaption: function(caption) {
-            // if block is a superdesk image (with association), we update the description_text
+        saveCaption: function(caption, title) {
+            // if block is a superdesk image (with association), we update the description_text and headline
             if (self.model.association) {
                 self.model.association.description_text = caption;
+                self.model.association.headline = title;
             }
             // update the caption in the model
             self.model.caption = caption;
+            self.model.title = title;
+
             // update the caption in the view
             self.caption = caption;
+            self.title = title;
 
             // on change callback
             $timeout(() => {
@@ -678,7 +683,7 @@ function SdTextEditorBlockEmbedController($timeout, editor, renditions, config) 
                     self.model.body = img;
                 });
                 // update caption
-                self.saveCaption(self.model.association.description_text);
+                self.saveCaption(self.model.association.description_text, self.model.association.headline);
             })
             .finally(() => {
                 self.model.loading = false;
@@ -688,7 +693,8 @@ function SdTextEditorBlockEmbedController($timeout, editor, renditions, config) 
     $timeout(() => {
         angular.extend(self, {
             embedCode: self.model.body,
-            caption: self.model.caption
+            caption: self.model.caption,
+            title: self.model.association.headline
         });
     });
 }
