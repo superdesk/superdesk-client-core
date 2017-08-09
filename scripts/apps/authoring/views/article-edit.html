@@ -38,7 +38,7 @@
          data-on-change="autosave(item)"
          data-read-only="!_editable"
          data-disable-spellchecker="{{useTansaProofing()}}"
-         tabindex="{{editor.headline.order}}">
+         data-tabindex="editor.headline.order">
     </div>
 </div>
 
@@ -153,7 +153,7 @@
          data-on-change="autosave(item)"
          data-read-only="!_editable"
          data-disable-spellchecker="{{useTansaProofing()}}"
-         tabindex="{{editor.abstract.order}}">
+         data-tabindex="editor.abstract.order">
     </div>
 </div>
 
@@ -293,7 +293,7 @@
          data-language="item.language"
          data-disable-spellchecker="{{useTansaProofing()}}"
          data-item="item"
-         tabindex="{{editor.body_html.order}}">
+         data-tabindex="editor.body_html.order">
     </div>
 </div>
 
@@ -362,7 +362,7 @@
          data-language="item.language"
          data-disable-spellchecker="{{useTansaProofing()}}"
          data-item="item"
-         tabindex="{{editor.media_description.order}}">
+         data-tabindex="editor.media_description.order">
     </div>
 </div>
 
@@ -426,7 +426,7 @@
          data-language="item.language"
          data-disable-spellchecker="{{useTansaProofing()}}"
          data-item="item"
-         tabindex="{{editor.body_footer.order}}">
+         data-tabindex="editor.body_footer.order">
     </div>
 </div>
 
@@ -502,6 +502,6 @@
         data-disable-spellchecker="{{ useTansaProofing() }}"
         data-editor-format="editor[field._id].formatOptions"
         data-item="item"
-        tabindex="{{ editor[field._id].order }}">
+        data-tabindex="editor[field._id].order">
     </div>
 </div>

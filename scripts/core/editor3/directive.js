@@ -111,10 +111,17 @@ class Editor3Directive {
             disableSpellchecker: '@',
 
             /**
+
              * @type {Object}
              * @description Item which is being edited
              */
             item: '=',
+
+            /**
+             * @type {Number}
+             * @description Tabindex value.
+             */
+            tabindex: '=?'
         };
     }
 
@@ -127,6 +134,7 @@ class Editor3Directive {
         this.debounce = parseInt(this.debounce || '100', 10);
         this.disableSpellchecker = this.disableSpellchecker || false;
         this.bindToValue = this.bindToValue || false;
+        this.tabindex = this.tabindex || 0;
 
         const store = createEditorStore(this);
 
