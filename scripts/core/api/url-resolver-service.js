@@ -46,6 +46,16 @@ function URLResolver($http, $q, $log, config) {
     };
 
     /**
+     * Get url for media field
+     *
+     * @param {Object} media
+     * @return {String}
+     */
+    this.media = function(media) {
+        return this.item(media.file).replace('/api/api/', '/api/');
+    };
+
+    /**
      * Fetch resource links via root url
      *
      * @returns {Promise}

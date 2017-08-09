@@ -1,12 +1,14 @@
 import './attachments.scss';
 
 class AttachmentsController {
-    constructor($scope, superdesk, attachments, notify, gettext, deployConfig) {
+    constructor($scope, $window, superdesk, attachments, notify, gettext, deployConfig, urls) {
         this.$scope = $scope;
+        this.$window = $window;
         this.superdesk = superdesk;
         this.attachments = attachments;
         this.notify = notify;
         this.gettext = gettext;
+        this.urls = urls;
 
         attachments.byItem($scope.item).then((files) => {
             this.$scope.files = files;
@@ -57,6 +59,10 @@ class AttachmentsController {
             });
     }
 
+    download(file) {
+        this.$window.open(this.urls.media(file.media), '_blank');
+    }
+
     autosave() {
         this.$scope.autosave(this.$scope.item);
     }
@@ -77,7 +83,16 @@ class AttachmentsController {
     }
 }
 
-AttachmentsController.$inject = ['$scope', 'superdesk', 'attachments', 'notify', 'gettext', 'deployConfig'];
+AttachmentsController.$inject = [
+    '$scope',
+    '$window',
+    'superdesk',
+    'attachments',
+    'notify',
+    'gettext',
+    'deployConfig',
+    'urls'
+];
 
 AttachmentsFactory.$inject = ['api'];
 function AttachmentsFactory(api) {
