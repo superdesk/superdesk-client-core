@@ -157,6 +157,8 @@ export function UserPreferencesDirective(
                 return _.indexOf(noShowCategories, preference.category) < 0;
             };
 
+            scope.profileConfig = _.get(config, 'profile', {});
+
             /**
             * Builds a user preferences object in scope from the given
             * data.

@@ -177,6 +177,8 @@ export function UserEditDirective(api, gettext, notify, usersService, userList, 
             scope.$on('user:updated', (event, user) => {
                 resetUser(user);
             });
+
+            scope.profileConfig = _.get(config, 'profile', {});
         }
     };
 }
