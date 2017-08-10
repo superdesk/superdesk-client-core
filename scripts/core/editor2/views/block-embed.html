@@ -16,6 +16,7 @@
     <textarea sd-remove-tags
               sd-auto-height
               tansa-scope-sync
+              ng-if="vm.config.imageTitle"
               placeholder="{{::'Title'|translate}}"
               ng-model="vm.title"
               ng-model-options="{debounce: 1000}"

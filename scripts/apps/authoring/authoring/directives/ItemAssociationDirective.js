@@ -26,6 +26,7 @@ export function ItemAssociationDirective(superdesk, renditions, config, authorin
             editable: '=',
             allowVideo: '@',
             onchange: '&',
+            showTitle: '=',
             save: '&'
         },
         templateUrl: 'scripts/apps/authoring/views/item-association.html',

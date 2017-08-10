@@ -138,6 +138,16 @@ export function ContentProfileSchemaEditor(content) {
             scope.hasFormatOptions = (field) => !!HAS_FORMAT_OPTIONS[field] || hasCustomFieldFormatOptions(field);
 
             /**
+             * Test if given field should have format options config
+             *
+             * @param {string} field
+             * @return {Boolean}
+             */
+            scope.hasImageSelected = (field) => scope.hasFormatOptions(field) &&
+                        _.includes(scope.model.editor[field].formatOptions, 'image') ||
+                        _.includes(scope.model.editor[field].formatOptions, 'picture');
+
+            /**
              * Test if given field is custom field
              *
              * @param {string} field

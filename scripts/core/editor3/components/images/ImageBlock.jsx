@@ -63,7 +63,7 @@ export class ImageBlockComponent extends Component {
     }
 
     render() {
-        const {setLocked} = this.props;
+        const {setLocked, showTitle} = this.props;
         const data = this.data();
         const rendition = data.renditions.viewImage || data.renditions.original;
         const alt = data.alt_text || data.description_text || data.caption;
@@ -72,13 +72,14 @@ export class ImageBlockComponent extends Component {
             <div className="image-block" onClick={(e) => e.stopPropagation()}>
                 <div className="image-block__wrapper">
                     <img src={rendition.href} alt={alt} onClick={this.onClick} />
-                    <Textarea
-                        placeholder={gettext('Title')}
-                        onFocus={setLocked}
-                        className="image-block__description"
-                        defaultValue={data.headline}
-                        onChange={this.onChange}
-                    />
+                    {showTitle ?
+                        <Textarea
+                            placeholder={gettext('Title')}
+                            onFocus={setLocked}
+                            className="image-block__description"
+                            defaultValue={data.headline}
+                            onChange={this.onChange}
+                        /> : null }
                     <Textarea
                         placeholder={gettext('Description')}
                         onFocus={setLocked}
@@ -97,8 +98,13 @@ ImageBlockComponent.propTypes = {
     changeCaption: PropTypes.func.isRequired,
     setLocked: PropTypes.func.isRequired,
     block: PropTypes.object.isRequired,
-    contentState: PropTypes.object.isRequired
+    contentState: PropTypes.object.isRequired,
+    showTitle: PropTypes.bool
 };
+
+const mapStateToProps = (state) => ({
+    showTitle: state.showTitle
+});
 
 const mapDispatchToProps = (dispatch) => ({
     cropImage: (entityKey, entityData) => dispatch(actions.cropImage(entityKey, entityData)),
@@ -106,4 +112,4 @@ const mapDispatchToProps = (dispatch) => ({
     setLocked: () => dispatch(actions.setLocked(true))
 });
 
-export const ImageBlock = connect(null, mapDispatchToProps)(ImageBlockComponent);
+export const ImageBlock = connect(mapStateToProps, mapDispatchToProps)(ImageBlockComponent);
