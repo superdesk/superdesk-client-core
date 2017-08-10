@@ -74,6 +74,10 @@ export function ContentProfileSchemaEditor(content) {
                     return LABEL_MAP[id];
                 }
 
+                if (scope.fields && scope.fields.hasOwnProperty(id)) {
+                    return scope.fields[id].display_name;
+                }
+
                 console.warn(`could not find label for ${id}. Please add it in ` +
                     '(apps/workspace/content/content/directives/ContentProfileSchemaEditor).' +
                     'ContentProfileSchemaEditor/labelMap');
