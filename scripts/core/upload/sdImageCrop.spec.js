@@ -100,17 +100,22 @@ describe('Image Crop', () => {
                           ', (it is 500x600).');
             }));
 
-            it('calls onChange callback on change only', inject(($timeout) => {
+            it('calls onChange callback on change only', inject(() => {
                 scope.onChange = jasmine.createSpy('onchange');
                 // fake jcropApi
-                jcropApi = {setOptions: function() { /* no-op */ }, destroy: function() { /* no-op */ }};
+                jcropApi = {
+                    setOptions: function() { /* no-op */ },
+                    tellSelect: function() { /* no-op */ },
+                    destroy: function() { /* no-op */ }
+                };
+
                 scope.$digest();
 
                 var handler = fakeImg.onload;
 
                 handler.apply(fakeImg);
 
-                // no calls to onChange callback on initialization
+                // no calls to onChange callback on Jcrop initialization
                 expect(scope.onChange).not.toHaveBeenCalled();
                 expect(scope.onChange.calls.count()).toBe(0);
 
@@ -120,9 +125,12 @@ describe('Image Crop', () => {
 
                 var callbackSpy = spyOn(jcropApi, 'setOptions');
 
+                spyOn(jcropApi, 'tellSelect').and.returnValue(coords);
+
                 var callbackHandler = retObj[1]; // handle Jcrop callback from $.fn.Jcrop
 
                 callbackHandler.apply(jcropApi);
+                expect(jcropApi.tellSelect).toHaveBeenCalled();
 
                 var callbackResult = callbackSpy.calls.mostRecent().args;
 
