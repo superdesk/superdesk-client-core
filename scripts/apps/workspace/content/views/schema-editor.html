@@ -96,7 +96,7 @@
                     <i class="icon-plus-large"></i>
                 </button>
                 <ul class="dropdown__menu">
-                    <li ng-repeat="key in schemaKeysDisabled track by $index">
+                    <li ng-repeat="key in schemaKeysDisabled track by key">
                         <button ng-click="toggle(key, model.editor[id].order, 'after')">{{model.editor[key].field_name|| label(key) | translate}}</button>
                     </li>
                 </ul>

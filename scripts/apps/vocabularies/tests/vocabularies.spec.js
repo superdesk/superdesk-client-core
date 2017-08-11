@@ -17,7 +17,7 @@ describe('vocabularies', () => {
             }
         );
         $rootScope.$digest();
-        expect(api.query).toHaveBeenCalledWith('vocabularies', {where: {type: 'manageable'}});
+        expect(api.query).toHaveBeenCalledWith('vocabularies', {where: {type: 'manageable'}, max_results: 200});
         expect(result).toBe(fixture);
         expect(vocabularies.vocabularies).toBe(fixture);
     }));
