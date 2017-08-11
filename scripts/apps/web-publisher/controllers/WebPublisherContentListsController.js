@@ -53,7 +53,7 @@ export function WebPublisherContentListsController($scope, publisher, modal) {
          * @description Sets tenant
          */
         setTenant(site) {
-            publisher.setTenant(site.subdomain);
+            publisher.setTenant(site);
             this.selectedTenant = site;
             this.changeListFilter('');
             this._refreshLists();

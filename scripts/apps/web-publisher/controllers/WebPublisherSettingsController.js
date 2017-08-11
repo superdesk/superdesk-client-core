@@ -19,7 +19,7 @@ export function WebPublisherSettingsController($scope, publisher, modal, vocabul
                     this.sites = sites;
                     // loading routes
                     angular.forEach(this.sites, (siteObj, key) => {
-                        publisher.setTenant(siteObj.subdomain);
+                        publisher.setTenant(siteObj);
                         publisher.queryRoutes({type: 'collection'}).then((routes) => {
                             siteObj.routes = routes;
                         });

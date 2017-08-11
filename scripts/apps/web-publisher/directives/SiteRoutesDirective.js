@@ -32,7 +32,7 @@ export function SiteRoutesDirective(publisher) {
          */
         _queryItems(scope) {
             scope.loading = true;
-            publisher.setTenant(scope.site.subdomain);
+            publisher.setTenant(scope.site);
             publisher.queryRoutes({type: 'collection'}).then((routes) => {
                 scope.loading = false;
                 scope.routes = routes;

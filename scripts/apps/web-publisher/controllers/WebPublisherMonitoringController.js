@@ -21,7 +21,7 @@ export function WebPublisherMonitoringController($scope, $sce, modal, publisher,
                     this.sites = sites;
                     // loading routes for filter pane
                     angular.forEach(this.sites, (siteObj, key) => {
-                        publisher.setTenant(siteObj.subdomain);
+                        publisher.setTenant(siteObj);
                         publisher.queryRoutes({type: 'collection'}).then((routes) => {
                             siteObj.routes = routes;
                         });
@@ -197,7 +197,7 @@ export function WebPublisherMonitoringController($scope, $sce, modal, publisher,
         viewRouteArticles(site) {
             this.routeArticles = true;
             $scope.loadArticles = false;
-            publisher.setTenant(site.subdomain);
+            publisher.setTenant(site);
             publisher.queryRoutes({type: 'collection'}).then((routes) => {
                 $scope.loadArticles = true;
                 this.routes = routes;
@@ -216,19 +216,6 @@ export function WebPublisherMonitoringController($scope, $sce, modal, publisher,
             }
 
             this.tenantArticles = null;
-        }
-
-        /**
-         * @ngdoc method
-         * @name WebPublisherMonitoringController#filterTenantArticles
-         * @param {Object} tenant
-         * @description Filter articles by tenant
-         */
-        filterTenantArticles(tenant) {
-            publisher.setTenant(tenant);
-            publisher.queryTenantArticles().then((articles) => {
-                $scope.publishedArticles = articles;
-            });
         }
 
         /**

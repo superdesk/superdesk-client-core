@@ -31,12 +31,12 @@ export function PublisherFactory(pubapi) {
         /**
          * @ngdoc method
          * @name publisher#setTenant
-         * @param {String} tenant
+         * @param {String} site
          * @returns {Object}
          * @description Change the tenant we are using the api for
          */
-        setTenant(tenant) {
-            pubapi.setTenant(tenant);
+        setTenant(site) {
+            pubapi.setTenant(site);
             return this;
         }
 

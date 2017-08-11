@@ -39,13 +39,23 @@ export function PubAPIFactory(config, $http, $q, session, $location) {
         /**
          * @ngdoc method
          * @name pubapi#setTenant
-         * @param {String} tenant
+         * @param {String} site
          * @description Change the tenant we are using the api for
          */
-        setTenant(tenant) {
-            let subdomain = tenant || this._tenant ? `${tenant || this._tenant}.` : '';
+        setTenant(site) {
+            let subdomain = this._tenant ? `${this._tenant}.` : '';
+            let domainName = this._domain;
 
-            this._server = `${this._protocol}://${subdomain}${this._domain}`;
+            if (site) {
+                if (site.subdomain) {
+                    subdomain = `${site.subdomain}.`;
+                }
+                if (site.domainName) {
+                    domainName = site.domainName;
+                }
+            }
+
+            this._server = `${this._protocol}://${subdomain}${domainName}`;
         }
 
         /**
