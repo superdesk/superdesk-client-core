@@ -16,6 +16,7 @@
     <div ng-switch="block.blockType">
         <div ng-switch-when="embed"
              sd-text-editor-block-embed="block"
+             config="vm.config"
              on-block-change="vm.commitChanges()">
         </div>
         <div ng-switch-when="text"

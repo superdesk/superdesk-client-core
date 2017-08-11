@@ -16,10 +16,21 @@
     <textarea sd-remove-tags
               sd-auto-height
               tansa-scope-sync
+              ng-if="vm.config.imageTitle"
+              placeholder="{{::'Title'|translate}}"
+              ng-model="vm.title"
+              ng-model-options="{debounce: 1000}"
+              ng-change="vm.saveCaption(vm.caption, vm.title)"
+              ng-paste="vm.handlePaste($event)"
+              class="image-caption line-input">
+    </textarea>
+    <textarea sd-remove-tags
+              sd-auto-height
+              tansa-scope-sync
               placeholder="{{::'Description'|translate}}"
               ng-model="vm.caption"
               ng-model-options="{debounce: 1000}"
-              ng-change="vm.saveCaption(vm.caption)"
+              ng-change="vm.saveCaption(vm.caption, vm.title)"
               ng-paste="vm.handlePaste($event)"
               class="image-caption line-input">
     </textarea>

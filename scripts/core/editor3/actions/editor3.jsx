@@ -101,13 +101,14 @@ export function setActiveCell(i, j, key) {
  * @name changeImageCaption
  * @param {string} entityKey
  * @param {string} newCaption
+ * @param {string} field
  * @description Change the image caption contained in the given entity key.
  * @returns {Object}
  */
-export function changeImageCaption(entityKey, newCaption) {
+export function changeImageCaption(entityKey, newCaption, field) {
     return {
         type: 'EDITOR_CHANGE_IMAGE_CAPTION',
-        payload: {entityKey, newCaption}
+        payload: {entityKey, newCaption, field}
     };
 }
 

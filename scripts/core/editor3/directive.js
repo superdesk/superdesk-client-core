@@ -121,7 +121,13 @@ class Editor3Directive {
              * @type {Number}
              * @description Tabindex value.
              */
-            tabindex: '=?'
+            tabindex: '=?',
+
+            /**
+             * @type {Boolean}
+             * @description Show image title.
+             */
+            showTitle: '=?'
         };
     }
 
@@ -135,6 +141,7 @@ class Editor3Directive {
         this.disableSpellchecker = this.disableSpellchecker || false;
         this.bindToValue = this.bindToValue || false;
         this.tabindex = this.tabindex || 0;
+        this.showTitle = this.showTitle || false;
 
         const store = createEditorStore(this);
 

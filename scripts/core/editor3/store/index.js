@@ -31,6 +31,7 @@ export default function createEditorStore(ctrl) {
         showToolbar: showToolbar,
         singleLine: ctrl.singleLine,
         tabindex: ctrl.tabindex,
+        showTitle: ctrl.showTitle,
         activeCell: null, // currently focused table cell
         editorFormat: ctrl.editorFormat || [],
         onChangeValue: _.debounce(onChange.bind(ctrl), ctrl.debounce),

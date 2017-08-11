@@ -70,11 +70,11 @@
     </div>
 </div>
 
-<div ng-if="schema.feature_image"
+<div ng-if="schema.feature_image" class="field"
      sd-width="{{editor.feature_image.sdWidth|| 'full'}}"
      sd-validation-error="error.feature_image"
      order="{{editor.feature_image.order}}"
-     data-required="schema.feature_image.required" class="field">
+     data-required="schema.feature_image.required">
 
     <label translate>Featured Image</label>
     <div sd-item-association
@@ -83,6 +83,7 @@
          data-editable="_editable"
          data-onchange="autosave(item)"
          data-save="save()"
+         data-show-title="editor.feature_image.imageTitle"
          tabindex="{{editor.feature_image.order}}">
     </div>
 </div>
@@ -99,6 +100,7 @@
          data-editable="_editable"
          data-onchange="autosave(item)"
          data-save="save()"
+         data-show-title="editor.feature_media.imageTitle"
          tabindex="{{editor.feature_media.order}}">
     </div>
     <div sd-item-crops
@@ -253,7 +255,7 @@
     <span sd-word-count data-item="item.body_html" data-html="true"></span>
     <div id="bodyhtml"
          sd-text-editor
-         data-config="{disableEditing: isPublished(item), multiBlockEdition: true, tabindex: editor.body_html.order, paste: {cleanPastedHTML: editor.body_html.cleanPastedHTML}}"
+         data-config="{disableEditing: isPublished(item), multiBlockEdition: true, tabindex: editor.body_html.order, showTitle: editor.body_html.imageTitle, paste: {cleanPastedHTML: editor.body_html.cleanPastedHTML}}"
          data-editorformat="editor.body_html.formatOptions"
          ng-model="item.body_html"
          ng-if="_editable"
@@ -293,6 +295,7 @@
          data-language="item.language"
          data-disable-spellchecker="{{useTansaProofing()}}"
          data-item="item"
+         data-show-title="editor.body_html.imageTitle"
          data-tabindex="editor.body_html.order">
     </div>
 </div>
