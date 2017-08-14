@@ -60,7 +60,7 @@ class AttachmentsController {
     }
 
     download(file) {
-        this.$window.open(this.urls.media(file.media), '_blank');
+        this.$window.open(this.urls.media(file.media, 'attachments'), '_blank');
     }
 
     autosave() {
