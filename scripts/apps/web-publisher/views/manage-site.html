@@ -46,8 +46,12 @@
                         <input type="text" name="name" ng-model="newSite.name" class="line-input" required/>
                     </div>
                     <div class="field">
+                        <label for="domainName" translate>Domain Name:</label>
+                        <input type="text" ng-trim="false" ng-change="newSite.domainName = newSite.domainName.split(' ').join('')" name="domainName" ng-model="newSite.domainName" class="line-input" required/>
+                    </div>
+                    <div class="field">
                         <label for="subdomain" translate>Subdomain Name:</label>
-                        <input type="text" ng-trim="false" ng-change="newSite.subdomain = newSite.subdomain.split(' ').join('')" name="subdomain" ng-model="newSite.subdomain" class="line-input" required/>
+                        <input type="text" ng-trim="false" ng-change="newSite.subdomain = newSite.subdomain.split(' ').join('')" name="subdomain" ng-model="newSite.subdomain" class="line-input"/>
                     </div>
                 </fieldset>
             </form>

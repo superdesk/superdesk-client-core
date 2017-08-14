@@ -77,7 +77,7 @@ export function WebPublisherManagerController($scope, publisher, modal, privileg
          * @description Opens site in new tab with live site activated
          */
         activateLiveSite(site) {
-            publisher.setTenant(site.subdomain);
+            publisher.setTenant(site);
             publisher.activateLiveSite().then((response) => {
                 $window.open(response.url, '_blank');
             });
@@ -93,7 +93,7 @@ export function WebPublisherManagerController($scope, publisher, modal, privileg
             this.selectedSite = site;
             $scope.newSite = angular.extend({}, site);
             this.openSiteModal = true;
-            publisher.setTenant(site.subdomain);
+            publisher.setTenant(site);
         }
 
         /**
@@ -118,7 +118,7 @@ export function WebPublisherManagerController($scope, publisher, modal, privileg
                 .then((site) => {
                     this.siteForm.$setPristine();
                     this.selectedSite = site;
-                    publisher.setTenant(site.subdomain);
+                    publisher.setTenant(site);
                     this.changeTab('routes');
                     this._refreshSites();
                 });

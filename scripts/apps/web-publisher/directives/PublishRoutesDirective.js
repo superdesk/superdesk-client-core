@@ -25,7 +25,7 @@ export function PublishRoutesDirective(publisher) {
          * @description Loads routes for selected site
          */
         _queryItems(scope) {
-            publisher.setTenant(scope.site.subdomain);
+            publisher.setTenant(scope.site);
             publisher.queryRoutes({type: 'collection'}).then((routes) => {
                 scope.routes = routes;
             });
