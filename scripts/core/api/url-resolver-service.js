@@ -49,10 +49,13 @@ function URLResolver($http, $q, $log, config) {
      * Get url for media field
      *
      * @param {Object} media
+     * @param {String} resource
      * @return {String}
      */
-    this.media = function(media) {
-        return this.item(media.file).replace('/api/api/', '/api/');
+    this.media = function(media, resource) {
+        const url = basejoin('upload-raw/' + media._id);
+
+        return resource ? url + '?resource=' + resource : url;
     };
 
     /**
