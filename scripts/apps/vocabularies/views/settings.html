@@ -1,21 +1,19 @@
-<div class="sd-page__main-content" sd-settings-view>
-    <div class="sd-page__header sd-page__header--white">
-      <h2 class="sd-page__page-heading" translate>Vocabularies management</h2>
-    </div>
-    <div class="sd-page__header">
-        <span class="sd-page__element-grow"></span>
-        <button class="btn btn--primary"
-          ng-click="createCustomField()">
-          <i class="icon-plus-sign icon--white"></i>
-          <span translate>Add New Text Field</span>
-        </button>
+<div class="sd-page__main-content" sd-settings-view ng-init="tab = 'vocabularies'">
+  <div class="sd-page__header sd-page__header--white">
+      <h2 class="sd-page__page-heading" translate>Metadata management</h2>
+  </div>
+    
+  <div class="sd-page__header sd-page__header--white">
+      <ul class="nav nav-tabs">
+          <li ng-class="{active: tab === 'vocabularies'}">
+              <button ng-click="tab = 'vocabularies'" translate>Vocabularies</button>
+          </li>
+          <li ng-class="{active: tab === 'text-fields'}">
+              <button ng-click="tab = 'text-fields'" translate>Custom text fields</button>
+          </li>
+      </ul>
+  </div>
 
-        <button class="btn btn--primary"
-          ng-click="createVocabulary()">
-          <i class="icon-plus-sign icon--white"></i>
-          <span translate>Add New Vocabulary</span>
-        </button>
-    </div>
-    <div sd-vocabulary-config class="sd-page__content dictionary-settings"></div>
-    <div sd-vocabulary-config-modal ng-if="vocabulary"></div>
-</div>
+  <div class="sd-page__flex-helper" sd-vocabulary-config data-tab="tab"></div>
+  <!-- <div class="sd-page__flex-helper" ng-if="tab === 'text-fields'" sd-text-field-config></div>  -->
+</div> 
