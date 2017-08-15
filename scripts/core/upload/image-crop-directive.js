@@ -276,11 +276,15 @@ export default angular.module('superdesk.core.upload.imagecrop', [
 
                             // Store the Jcrop API in the jcropApi variable
                             jcropApi = self;
-
                             // define onSelect once Jcrop initialized
                             jcropApi.setOptions({
                                 onSelect: updateScope
                             });
+
+                            // Make initial crops selection available for new image.
+                            if (_.isEmpty(scope.cropData)) {
+                                updateScope(jcropApi.tellSelect());
+                            }
                         });
                     };
 
