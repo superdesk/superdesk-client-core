@@ -2,6 +2,7 @@
      ng-class="{open: groupDropdownOpen}"
      ng-mouseenter="groupDropdownOpen = true"
      ng-mouseleave="groupDropdownOpen = false"
+     ng-if="actions[group]"
      dropdown>
     <a class="dropdown__toggle" title="{{ :: actions[group][0].groupLabel | translate }}" dropdown__toggle>
         <i class="icon-{{ :: actions[group][0].groupIcon}}" ng-show=":: actions[group][0].groupIcon"></i>

@@ -1042,7 +1042,7 @@ describe('authoring actions', () => {
             allowedActions(itemActions, ['view', 'package_item', 'multi_edit', 'add_to_current', 'resend', 'export']);
         }));
 
-    it('can only view item if the item is spiked',
+    it('can only view or unmark item if the item is spiked',
         inject((privileges, desks, authoring, $q, $rootScope) => {
             var item = {
                 _id: 'test',
@@ -1067,7 +1067,7 @@ describe('authoring actions', () => {
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
 
-            allowedActions(itemActions, ['view', 'unspike', 'export']);
+            allowedActions(itemActions, ['view', 'unspike', 'export', 'mark_item_for_highlight']);
         }));
 
     it('Can perform correction or kill on published item',
