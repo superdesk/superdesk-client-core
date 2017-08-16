@@ -102,7 +102,7 @@ export function AuthoringHeaderDirective(api, authoringWidgets, $rootScope, arch
                     var fromDateTime = moment().tz(config.defaultTimezone)
                         .format(config.view.dateformat);
 
-                    archiveService.getRelatedItems(scope.item.slugline, fromDateTime, scope.item._id)
+                    archiveService.getRelatedItems(scope.item, fromDateTime)
                         .then((items) => {
                             scope.relatedItems = items;
                             if (items && items._items.length && !getNoMissingLink()) {

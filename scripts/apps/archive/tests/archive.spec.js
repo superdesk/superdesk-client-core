@@ -92,7 +92,7 @@ describe('content', () => {
 
         it('returns the related items', inject((archiveService, api, $q, search) => {
             spyOn(api, 'query').and.returnValue($q.when());
-            archiveService.getRelatedItems('test');
+            archiveService.getRelatedItems({slugline: 'test'});
             expect(api.query).toHaveBeenCalled();
             var criteria = api.query.calls.mostRecent().args[1];
 
