@@ -1,3 +1,5 @@
+import {USER_TYPES} from './constants';
+
 UserListController.$inject = ['$scope', '$location', 'api', 'lodash'];
 export function UserListController($scope, $location, api, _) {
     var DEFAULT_SIZE = 25;
@@ -6,12 +8,27 @@ export function UserListController($scope, $location, api, _) {
     $scope.createdUsers = [];
     $scope.online_users = false;
 
+    $scope.userTypes = USER_TYPES;
+
     api('roles')
         .query()
         .then((result) => {
             $scope.roles = _.keyBy(result._items, '_id');
             $scope.noRolesWarning = result._items.length === 0;
         });
+
+    $scope.toggleTypesFilter = function(type) {
+        if ($scope.userTypesFilter.has(type)) {
+            $scope.userTypesFilter.delete(type);
+        } else {
+            $scope.userTypesFilter.add(type);
+        }
+    };
+
+    $scope.resetTypesFilter = function() {
+        $scope.userTypesFilter = new Set($scope.userTypes.map((t) => t.value));
+    };
+    $scope.resetTypesFilter();
 
     $scope.preview = function(user) {
         $scope.selected.user = user;

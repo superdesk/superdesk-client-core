@@ -6,65 +6,77 @@
 </div>
 
 <section class="main-section users">
-    <div class="preview-layout" ng-class="{closed: !selected.user}">
-        <div class="list-pane">
-            <header>
-                <div class="pull-left" sd-searchbar></div>
-                <div class="pull-left">
-                    <select id="user-filter"
-                        ng-model="userFilter"
-                        ng-options="filter.id as filter.label | translate for filter in filterOptions">
-                    </select>
-                </div>
-                <div sd-pagination data-items="users" class="pull-right"></div>
-            </header>
-            <div class="content">
-                <div sd-shadow>
-                    <div class="alert alert-error" ng-if="noRolesWarning" translate>No user roles defined!</div>
-                    <div class="users-table">
-                        <ul class="table-header">
-                            <li>
-                                <div class="row-wrapper">
-                                    <div class="name" sd-sort data-label="{{ 'Full name' | translate }}" data-field="full_name"></div>
-                                    <div class="username" sd-sort data-label="{{ 'Username' | translate }}" data-field="username"></div>
-                                    <div class="role" translate>Role</div>
-                                    <div class="email" sd-sort data-label="{{ 'Email' | translate }}" data-field="email"></div>
-                                    <div class="created" sd-sort data-label="{{ 'Created' | translate }}" data-field="_created"></div>
-                                </div>
-                            </li>
-                        </ul>
+    <nav class="sd-page__sidebar sd-left-nav">
+        <div class="button-list button-list--padded">
+            <label translate>
+                User Type Filter
+            </label>
+            <button type="button" class="toggle-button" ng-click="resetTypesFilter()">{{:: 'All' | translate}}</button>
+            <button type="button" class="toggle-button" ng-repeat="t in userTypes" ng-click="toggleTypesFilter(t.value)" ng-class="{'toggle-button--active': userTypesFilter.has(t.value)}">{{ t.label| translate}}</button>
+        </div>
+    </nav>
+    <div class="sd-page__main-content">
+        <div class="preview-layout" ng-class="{closed: !selected.user}">
+            <div class="list-pane">
+                <header>
+                    <div class="pull-left" sd-searchbar></div>
+                    <div class="pull-left">
+                        <select id="user-filter"
+                            ng-model="userFilter"
+                            ng-options="filter.id as filter.label | translate for filter in filterOptions">
+                        </select>
+                    </div>
+                    <div sd-pagination data-items="users" class="pull-right"></div>
+                </header>
+                <div class="content">
+                    <div sd-shadow>
+                        <div class="alert alert-error" ng-if="noRolesWarning" translate>No user roles defined!</div>
+                        <div class="users-table">
+                            <ul class="table-header">
+                                <li>
+                                    <div class="row-wrapper">
+                                        <div class="name" sd-sort data-label="{{ 'Full name' | translate }}" data-field="full_name"></div>
+                                        <div class="username" sd-sort data-label="{{ 'Username' | translate }}" data-field="username"></div>
+                                        <div class="role" translate>Role</div>
+                                        <div class="email" sd-sort data-label="{{ 'Email' | translate }}" data-field="email"></div>
+                                        <div class="created" sd-sort data-label="{{ 'Created' | translate }}" data-field="_created"></div>
+                                    </div>
+                                </li>
+                            </ul>
 
-                        <div class="table-title" ng-show="createdUsers.length" translate>Recently added</div>
+                            <div class="table-title" ng-show="createdUsers.length" translate>Recently added</div>
 
-                        <ul class="table-newest"
-                            sd-user-list
-                            data-roles="roles"
-                            data-users="createdUsers"
-                            data-selected="selected.user"
-                            data-done="afterDelete"
-                            ng-if="createdUsers.length"
-                        ></ul>
+                            <ul class="table-newest"
+                                sd-user-list
+                                data-roles="roles"
+                                data-users="createdUsers"
+                                data-selected="selected.user"
+                                data-done="afterDelete"
+                                ng-if="createdUsers.length"
+                            ></ul>
 
-                        <ul class="table-body"
-                            sd-user-list
-                            data-roles="roles"
-                            data-users="users._items"
-                            data-selected="selected.user"
-                            data-done="afterDelete"
-                        ></ul>
+                            <ul class="table-body"
+                                sd-user-list
+                                data-roles="roles"
+                                data-users="users._items"
+                                data-user-types-filter="userTypesFilter"
+                                data-selected="selected.user"
+                                data-done="afterDelete"
+                            ></ul>
 
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="preview-pane" ng-if="selected.user">
-            <header>
-                <button ng-click="intent('detail', 'user', selected.user)" class="btn btn--text-only" ng-show="selected.user._id" id="open-user-profile" translate>View full profile</button>
-                <button ng-click="selected.user = null" class="close-preview"><i class="icon-close-small"></i></button>
-            </header>
-            <div class="content" sd-user-details-pane ng-if="selected.user">
-                <div id="user-profile-edit" sd-user-edit data-user="selected.user" data-onsave="render(user)" data-oncancel="closePreview()"></div>
+            <div class="preview-pane" ng-if="selected.user">
+                <header>
+                    <button ng-click="intent('detail', 'user', selected.user)" class="btn btn--text-only" ng-show="selected.user._id" id="open-user-profile" translate>View full profile</button>
+                    <button ng-click="selected.user = null" class="close-preview"><i class="icon-close-small"></i></button>
+                </header>
+                <div class="content" sd-user-details-pane ng-if="selected.user">
+                    <div id="user-profile-edit" sd-user-edit data-user="selected.user" data-onsave="render(user)" data-oncancel="closePreview()"></div>
+                </div>
             </div>
         </div>
     </div>

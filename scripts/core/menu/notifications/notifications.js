@@ -34,7 +34,7 @@ function UserNotificationsService(
         filter = {'recipients.user_id': session.identity._id};
 
         // filter out system messages for non-admin users
-        if (session.identity.user_type === 'user') {
+        if (session.identity.user_type !== 'administrator') {
             filter.user = {$exists: true};
         }
 

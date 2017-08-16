@@ -115,9 +115,11 @@
                   <a href="https://www.transifex.com/projects/p/superdesk/" target="_blank" class="sd-blue">{{ "Help us translate Superdesk" | translate }}</a>
                 </div>
 
-                <div sd-info-item class="user_type" ng-if="privileges.users">
-                  <label for="user_type" translate>administrator</label>
-                  <input type="checkbox" ng-true-value="'administrator'" ng-false-value="'user'" ng-model="user.user_type" name="user_type" id="user_type">
+                <div sd-info-item class="user_type">
+                  <label for="user_type" translate>Type</label>
+                  <div class="field">
+                  <sd-check id="user_type" ng-repeat="t in userTypes" ng-model="user.user_type" ng-value="{{t.value}}" label-position="inside" type="radio" ng-checked="t.value==user.user_type">{{ t.label| translate}}</sd-check>
+                  </div>
                 </div>
 
                 <div sd-info-item class="user_role">
@@ -129,6 +131,13 @@
                 <div sd-info-item class="user_role" ng-if="userDesks && userDesks.length > 0">
                   <label for="user_default_desk" translate>Default Desk</label>
                   <select ng-model="user.desk" name="user_default_desk" id="user_default_desk" ng-options="desk._id as desk.name for desk in userDesks"></select>
+                </div>
+
+                <div sd-info-item ng-show="user.user_type === 'author'">
+                    <label for="job_title">{{ 'Job Title'|translate }}</label>
+                    <input type="text" name="jid" id="job_title" ng-model="user.job_title">
+                    <label for="biography">{{ 'Biography'|translate }}</label>
+                    <textarea id="biography" sd-auto-height ng-model="user.biography"></textarea>
                 </div>
 
                 <div sd-info-item ng-hide="profileConfig.phone === false">
