@@ -8,22 +8,22 @@
  * the core UI.
  * Inject 'extensionPointsProvider' into your module and then:
  *
- * extensionPointsProvider.register('MY_TYPE', MyComponent, an_array); // do this in config phase
+ * extensionPointsProvider.register('MY_TYPE', MyConnectedComponent, props, an_array); // do this in config phase
  *
- * where MyComponent is a React component and an_array is an array with names
- * of variables that your component will receive as props from the parent
- * scope, for example: ['item'].
+ * where MyConnectedComponent is a React component, the props is a json object that needs to contain at least the
+ * redux store and an_array is an array with names
+ * of variables that your component will receive as props from the parent scope, for example: ['item'].
  *
  * See also ExtensionPointsDirective.
  */
 export function ExtensionPointsProvider() {
     var extensions = {};
 
-    this.register = function(type, componentClass, data) {
+    this.register = function(type, componentClass, props, data) {
         if (typeof extensions[type] === 'undefined') {
             extensions[type] = [];
         }
-        extensions[type].push({type: type, componentClass: componentClass, data: data});
+        extensions[type].push({type, componentClass, props, data});
     };
 
     this.$get = function() {

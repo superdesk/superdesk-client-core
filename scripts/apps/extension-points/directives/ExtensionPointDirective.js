@@ -15,26 +15,18 @@ import React from 'react';
  */
 ExtensionPointDirective.$inject = ['extensionPoints'];
 export function ExtensionPointDirective(extensionPoints) {
-    function propsFromData(data, scope) {
-        var json = {};
-
-        _.forEach(data, (value) => {
-            json[value] = scope.$parent.$eval(value);
+    function _buildCompoment(extension, scope) {
+        // for easy access put values from parent scope into the redux store of the extension
+        _.forEach(extension.data, (value) => {
+            extension.props.store.getState()[value] = scope.$parent.$eval(value);
         });
-        return json;
-    }
-
-    function buildCompoment(extension, scope) {
-        return React.createElement(
-            extension.componentClass,
-            propsFromData(extension.data, scope)
-        );
+        return React.createElement(extension.componentClass, extension.props);
     }
 
     return {
         link: function(scope, elem, attr) {
             var registeredExtenstions = extensionPoints[attr.sdExtensionPoint];
-            var components = _.map(registeredExtenstions, (extension) => buildCompoment(extension, scope));
+            var components = _.map(registeredExtenstions, (extension) => _buildCompoment(extension, scope));
 
             ReactDOM.render(
                 <span>{components}</span>,
