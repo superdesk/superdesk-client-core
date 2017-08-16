@@ -43,11 +43,14 @@ export function ContentProfileSchemaEditor(content) {
                 // inner function to return the value of 'order' of a given field
                 const getOrder = (f) => _.get(scope.model.editor[f], 'order') || 99;
 
+                scope.schemaKeysDisabled = [];
                 scope.schemaKeys = _.filter(Object.keys(scope.model.editor),
                         (value) => scope.model.editor[value].enabled).sort((a, b) => getOrder(a) - getOrder(b));
 
-                scope.schemaKeysDisabled = _.filter(Object.keys(scope.model.editor),
-                        (value) => !scope.model.editor[value].enabled).sort((a, b) => getOrder(a) - getOrder(b));
+                _.each(_.difference(Object.keys(scope.model.editor), scope.schemaKeys), (value) =>
+                    scope.schemaKeysDisabled.push(
+                            {key: value, name: scope.model.editor[value].field_name || scope.label(value)}
+                    ));
 
                 scope.schemaKeysOrdering = _.clone(scope.schemaKeys);
                 scope.updateOrder();
@@ -96,17 +99,17 @@ export function ContentProfileSchemaEditor(content) {
              * @description Enable fiels in content profile
              * @param {String} id the key of the field to toggle.
              */
-            scope.toggle = (id, order, position) => {
-                if (scope.model.editor[id]) {
-                    scope.model.editor[id].enabled = true;
-                    scope.model.schema[id].enabled = true;
+            scope.toggle = (schema, order, position) => {
+                if (scope.model.editor[schema.key]) {
+                    scope.model.editor[schema.key].enabled = true;
+                    scope.model.schema[schema.key].enabled = true;
                 } else {
-                    scope.model.editor[id] = {enabled: true};
-                    scope.model.schema[id] = {enabled: true};
+                    scope.model.editor[schema.key] = {enabled: true};
+                    scope.model.schema[schema.key] = {enabled: true};
                 }
 
-                scope.schemaKeys.splice(position === 'before' ? order - 1 : order + 1, 0, id);
-                scope.schemaKeysDisabled.splice(scope.schemaKeysDisabled.indexOf(id), 1);
+                scope.schemaKeys.splice(position === 'before' ? order - 1 : order + 1, 0, schema.key);
+                _.remove(scope.schemaKeysDisabled, schema);
                 scope.schemaKeysOrdering = _.clone(scope.schemaKeys);
 
                 scope.updateOrder();
@@ -122,7 +125,7 @@ export function ContentProfileSchemaEditor(content) {
                 scope.model.schema[id].enabled = false;
 
                 scope.schemaKeys.splice(scope.schemaKeys.indexOf(id), 1);
-                scope.schemaKeysDisabled.unshift(id);
+                scope.schemaKeysDisabled.push({key: id, name: scope.model.editor[id].field_name || scope.label(id)});
                 scope.schemaKeysOrdering = _.clone(scope.schemaKeys);
 
                 scope.updateOrder();
