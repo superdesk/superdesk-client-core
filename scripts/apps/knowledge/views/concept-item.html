@@ -1,0 +1,22 @@
+<div class="concept-item-panel" ng-if="edit && activatePane">
+    <div class="concept-item-panel-panel__title" translate>Save</div>
+    <div class="concept-item-content">
+        <form name="viewsForm">
+            <fieldset>
+                <div class="field">
+                    <input id="first_name" type="text" class="fullwidth-input line-input" ng-model="edit.first_name" placeholder="{{:: 'First Name' | translate}}" required>
+                </div>
+                <div class="field">
+                    <input id="first_name" type="text" class="fullwidth-input line-input" ng-model="edit.first_name" placeholder="{{:: 'Last Name' | translate}}" required>
+                </div>
+                <div class="field">
+                    <input id="by_line" type="text" class="fullwidth-input line-input" ng-model="edit.by_line" placeholder="{{:: 'By Line' | translate}}" required>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+    <div class="pull-right">
+        <button class="btn" ng-click="cancel()" translate>Cancel</button>
+        <button id="concept_item_save" class="btn btn--primary" ng-click="save(edit)" ng-disabled="!viewsForm.$valid" translate>Ok</button>
+    </div>
+</div>
