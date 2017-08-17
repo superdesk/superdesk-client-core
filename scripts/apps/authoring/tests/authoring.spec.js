@@ -1067,7 +1067,8 @@ describe('authoring actions', () => {
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
 
-            allowedActions(itemActions, ['view', 'unspike', 'export', 'mark_item_for_highlight']);
+            allowedActions(itemActions,
+                    ['view', 'unspike', 'export', 'mark_item_for_desks', 'mark_item_for_highlight']);
         }));
 
     it('Can perform correction or kill on published item',
