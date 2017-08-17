@@ -83,7 +83,7 @@
                 <div class="sd-line-input__char-count" ng-if="validator.headline.maxlength" sd-character-count data-item="data.metadata.headline" data-limit="validator.headline.maxlength" data-html="true"></div>
             </div>
             <div ng-class="{'sd-line-input--required':validator.description_text.required}" class="sd-line-input" ng-if="validator.description_text">
-                <label class="sd-line-input__label" translate>Caption</label>
+                <label class="sd-line-input__label" translate>Description</label>
                 <div ng-model="data.metadata.description_text" ng-change="data.isDirty = true" contenteditable="{{ data.editable }}" class="abstract contenteditable-input"></div>
                 <div class="sd-line-input__char-count" ng-if="validator.description_text.maxlength" sd-character-count data-item="data.metadata.description_text" data-limit="validator.description_text.maxlength" data-html="true"></div>
             </div>
