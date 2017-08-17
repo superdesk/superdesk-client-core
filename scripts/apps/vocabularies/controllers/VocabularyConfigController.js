@@ -5,8 +5,8 @@ const DEFAULT_SCHEMA = {
     parent: {}
 };
 
-VocabularyConfigController.$inject = ['$scope', '$route', '$routeParams', 'vocabularies', '$timeout'];
-export function VocabularyConfigController($scope, $route, $routeParams, vocabularies, $timeout) {
+VocabularyConfigController.$inject = ['$scope', '$route', '$routeParams', 'vocabularies', '$rootScope'];
+export function VocabularyConfigController($scope, $route, $routeParams, vocabularies, $rootScope) {
     $scope.loading = true;
 
     /**
@@ -40,6 +40,12 @@ export function VocabularyConfigController($scope, $route, $routeParams, vocabul
     };
 
     /**
+     * Filter vocabularies by tab
+     */
+    $scope.filterVocabularies = (tab, fieldType) =>
+        tab === 'vocabularies' && !fieldType || tab === 'text-fields' && fieldType;
+
+    /**
      * Reload list of vocabularies
      */
     $scope.reloadList = () => {
@@ -64,6 +70,8 @@ export function VocabularyConfigController($scope, $route, $routeParams, vocabul
         } else {
             $scope.vocabularies[index] = angular.extend({}, $scope.vocabularies[index], updates);
         }
+
+        $rootScope.$broadcast('vocabularies:updated');
     };
 
     $scope.$on('$routeUpdate', setupActiveVocabulary);
