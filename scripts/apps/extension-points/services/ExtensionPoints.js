@@ -26,7 +26,5 @@ export function ExtensionPointsProvider() {
         extensions[type].push({type, componentClass, props, data});
     };
 
-    this.$get = function() {
-        return extensions;
-    };
+    this.$get = () => extensions;
 }
