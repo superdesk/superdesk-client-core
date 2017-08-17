@@ -1,7 +1,7 @@
 import './attachments.scss';
 
 class AttachmentsController {
-    constructor($scope, $window, superdesk, attachments, notify, gettext, deployConfig, urls) {
+    constructor($scope, $window, superdesk, attachments, notify, gettext, deployConfig, urls, lock) {
         this.$scope = $scope;
         this.$window = $window;
         this.superdesk = superdesk;
@@ -9,6 +9,7 @@ class AttachmentsController {
         this.notify = notify;
         this.gettext = gettext;
         this.urls = urls;
+        this.isLocked = lock.isLocked($scope.item);
 
         attachments.byItem($scope.item).then((files) => {
             this.$scope.files = files;
@@ -21,7 +22,7 @@ class AttachmentsController {
     }
 
     selectFiles(files) {
-        if (Array.isArray(files) && files.length > 0) {
+        if (Array.isArray(files) && files.length > 0 && !this.isLocked) {
             if (files.length + this.$scope.files.length > this.maxFiles) {
                 this.notify.error(this.gettext('Sorry, too many files selected.'));
                 return;
@@ -91,7 +92,8 @@ AttachmentsController.$inject = [
     'notify',
     'gettext',
     'deployConfig',
-    'urls'
+    'urls',
+    'lock'
 ];
 
 AttachmentsFactory.$inject = ['api'];
@@ -157,5 +159,4 @@ const config = (awp) =>
 angular.module('superdesk.apps.authoring.attachments', ['superdesk.apps.authoring.widgets', 'ngFileUpload'])
     .factory('attachments', AttachmentsFactory)
     .controller('AttachmentsCtrl', AttachmentsController)
-    .config(['authoringWidgetsProvider', config])
-    ;
+    .config(['authoringWidgetsProvider', config]);
