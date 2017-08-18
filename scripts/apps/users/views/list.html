@@ -15,6 +15,13 @@
                         ng-model="userFilter"
                         ng-options="filter.id as filter.label | translate for filter in filterOptions">
                     </select>
+
+                </div>
+                <div class="pull-left">
+                    <div id="author-filter" class="button-list button-list--padded">
+                        <button type="button" class="toggle-button" ng-click="authorOnlyFilter=!authorOnlyFilter" ng-class="{'toggle-button--active': !authorOnlyFilter}">{{:: 'All' | translate}}</button>
+                        <button type="button" class="toggle-button" ng-click="authorOnlyFilter=!authorOnlyFilter" ng-class="{'toggle-button--active': authorOnlyFilter}">{{:: 'Authors only' | translate}}</button>
+                    </div>
                 </div>
                 <div sd-pagination data-items="users" class="pull-right"></div>
             </header>
@@ -49,6 +56,7 @@
                             sd-user-list
                             data-roles="roles"
                             data-users="users._items"
+                            data-author-only-filter="authorOnlyFilter"
                             data-selected="selected.user"
                             data-done="afterDelete"
                         ></ul>

@@ -25,6 +25,9 @@ export function UserEditDirective(api, gettext, notify, usersService, userList, 
 
             scope.$watch('origUser', () => {
                 scope.user = _.create(scope.origUser);
+                if (scope.user.is_author === undefined) {
+                    scope.user.is_author = true;
+                }
             });
 
             resetUser(scope.origUser);
