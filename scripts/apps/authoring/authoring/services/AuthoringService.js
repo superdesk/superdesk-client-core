@@ -424,6 +424,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
             if (currentItem.state === 'spiked') {
                 action = angular.extend({}, helpers.DEFAULT_ACTIONS);
                 action.unspike = true;
+                action.mark_item_for_desks = true;
                 action.mark_item_for_highlight = true;
                 return action;
             }
