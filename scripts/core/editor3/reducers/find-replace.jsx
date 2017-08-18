@@ -269,14 +269,12 @@ const getRegExp = ({pattern, caseSensitive}) =>
  * @description Silently pushes the new content state into the given editor state, without
  * affecting the undo/redo stack.
  */
-const quietPush = (editorState, content) => {
-    const {allowUndo} = EditorState;
+export const quietPush = (editorState, content, changeType = 'insert-characters') => {
+    let newState;
 
-    EditorState.allowUndo = false;
-
-    const newState = EditorState.push(editorState, content, 'insert-characters');
-
-    EditorState.allowUndo = allowUndo;
+    newState = EditorState.set(editorState, {allowUndo: false});
+    newState = EditorState.push(newState, content, changeType);
+    newState = EditorState.set(newState, {allowUndo: true});
 
     return newState;
 };

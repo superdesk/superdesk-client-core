@@ -2,6 +2,7 @@ import {Editor3} from '../components/Editor3';
 import {RichUtils, EditorState} from 'draft-js';
 import {fromHTML} from 'core/editor3/html';
 import {addImage} from './toolbar';
+import {repositionComments, redrawComments} from '../comments';
 
 /**
  * @description Contains the list of editor related reducers.
@@ -58,7 +59,14 @@ export const forceUpdate = (state) => {
  * @return {Object} returns new state
  * @description Handle the editor state has been changed event
  */
-const onChange = (state, editorState) => {
+const onChange = (state, newState) => {
+    let updatedState = repositionComments(state.editorState, newState);
+    let {editorState, activeComment} = redrawComments(updatedState);
+
+    // TODO(gbbr): Remove me
+    // eslint-disable-next-line curly
+    if (activeComment) console.log(activeComment.data.msg); // eslint-disable-line no-console
+
     state.onChangeValue(editorState.getCurrentContent());
 
     return {...state, editorState};

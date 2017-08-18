@@ -65,7 +65,8 @@ class ToolbarComponent extends Component {
             editorFormat,
             activeCell,
             applyLink,
-            editorState
+            editorState,
+            addComment,
         } = this.props;
 
         const has = (opt) => editorFormat.indexOf(opt) > -1;
@@ -84,6 +85,13 @@ class ToolbarComponent extends Component {
                 {has('picture') ? <ImageButton /> : null}
                 {has('embed') ? <EmbedButton /> : null}
                 {has('table') ? <TableButton /> : null}
+
+                <div className="Editor3-styleButton">
+                    <span onClick={() => addComment(editorState.getSelection())}>
+                        <i className="icon-comment" />
+                    </span>
+                </div>
+
                 {!isEditing ? <LinkToolbar onEdit={this.showInput} /> :
                     <LinkInput
                         editorState={editorState}
@@ -99,17 +107,17 @@ ToolbarComponent.propTypes = {
     editorFormat: PropTypes.array,
     activeCell: PropTypes.any,
     applyLink: PropTypes.func,
+    addComment: PropTypes.func,
     editorState: PropTypes.object
 };
 
-const mapStateToProps = (state) => ({
-    editorFormat: state.editorFormat,
-    editorState: state.editorState,
-    activeCell: state.activeCell
+const mapStateToProps = ({editorFormat, editorState, activeCell}) => ({
+    editorFormat, editorState, activeCell
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    applyLink: (link, entity = null) => dispatch(actions.applyLink({link, entity}))
+    applyLink: (link, entity = null) => dispatch(actions.applyLink({link, entity})),
+    addComment: (selection) => dispatch(actions.addComment(selection))
 });
 
 const Toolbar = connect(mapStateToProps, mapDispatchToProps)(ToolbarComponent);

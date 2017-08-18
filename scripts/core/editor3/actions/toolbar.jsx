@@ -55,6 +55,23 @@ export function toggleInlineStyle(inlineStyle) {
 
 /**
  * @ngdoc method
+ * @name addComment
+ * @param {SelectionState} selection
+ * @return {String} action
+ * @description Triggers the action to add a comment to the given selection.
+ */
+export function addComment(selection) {
+    return {
+        type: 'TOOLBAR_ADD_COMMENT',
+        payload: {
+            msg: prompt('Comment'),
+            selection: selection
+        }
+    };
+}
+
+/**
+ * @ngdoc method
  * @name applyLink
  * @param {Object} linkAndEntity
  * @return {String} action
