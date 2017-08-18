@@ -45,9 +45,6 @@ export function handlePastedText(editorKey, text, html) {
         const entityKey = block.getEntityAt(0);
         const entity = pastedContent.getEntity(entityKey);
 
-        // TODO(gbbr): Is this needed for 0.11? In 0.10, we can remove this and still
-        // get working results, but possibly in 0.11 when the entity store is not global
-        // this could be needed.
         contentState = contentState.addEntity(entity);
 
         blocks = blocks.concat(

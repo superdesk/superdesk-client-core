@@ -5,8 +5,8 @@ import ng from 'core/services/ng';
 import {forceUpdate} from '../actions';
 import {Editor3} from '../components/Editor3';
 import {EditorState, convertFromRaw, convertToRaw, ContentState} from 'draft-js';
-import {clearHighlights} from '../reducers/find-replace';
 import {toHTML, fromHTML} from 'core/editor3/html';
+import {applyInlineStyles, removeInlineStyles} from '../comments';
 
 /**
  * @name createEditorStore
@@ -54,7 +54,9 @@ export default function createEditorStore(ctrl) {
  */
 function onChange(content) {
     // clear find & replace highlights
-    const cleanedContent = clearHighlights(content).content;
+    const cleanedContent = removeInlineStyles(content, [
+        'COMMENT', 'COMMENT_SELECTED', 'HIGHLIGHT', 'HIGHLIGHT_STRONG'
+    ]);
     const newValue = toHTML(cleanedContent);
 
     this.value = this.value || '<p><br></p>';
@@ -79,7 +81,7 @@ function onChange(content) {
 function getInitialContent(ctrl) {
     // we have an editor state stored in the DB
     if (typeof ctrl.editorState === 'object') {
-        return convertFromRaw(ctrl.editorState);
+        return applyInlineStyles(convertFromRaw(ctrl.editorState)).contentState;
     }
 
     // we have only HTML (possibly legacy editor2 or ingested item)
