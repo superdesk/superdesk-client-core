@@ -130,6 +130,7 @@ describe('send', () => {
             dropdown = sidebar.element(by.css('.dropdown--dark .dropdown__toggle')),
             dropdownSelected = dropdown.element(by.css('[ng-show="selectedDesk"]'));
 
+        browser.sleep(500);
         expect(dropdownSelected.getText()).toEqual('Politic Desk');
     });
 

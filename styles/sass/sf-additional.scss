@@ -1658,70 +1658,18 @@ header .sortbar {
 // Toggle box
 // ---------------------------------------------
 
-.toggle-box {
-    position: relative;
-    margin-bottom: 30px;
-
-    > .toggle-box__header {
-        display: flex;
-        cursor: pointer;
-        margin-bottom: 10px;
-
-        .toggle-box__chevron {
-            padding: 2px;
-            i {
-                @include transition(all .3s);
-                @include rotate(90deg);
-            }
-        }
-        .toggle-box__label {
-            font-size: 11px;
-            line-height: 27px;
-            padding: 0 10px 0 5px;
-            color: #666;
-            text-transform: uppercase;
-        }
-        .toggle-box__line {
-            flex: 1;
-            height: 1px;
-            margin: auto 4px auto 0;
-            background: #dcdcdc;
-        }
-    }
-    &.hidden {
-        .toggle-box__chevron {
-            i {
-                @include rotate(0);
-            }
-        }
-    }
-    // Stylings
-    &.toggle-box--dark {
-        .toggle-box__chevron {
-            i { color: $white; vertical-align: middle; }
-        }
-        .toggle-box__label {
-            color: $white;
-        }
-        .toggle-box__line {
-            background: #4f4f4f;
-        }
-    }
-
-    // Buttons
-    .toggle-box__button {
+.toggle-box__button {
+    color: $grayLight;
+    cursor: pointer;
+    i {
         color: $grayLight;
-        cursor: pointer;
-        i {
-            color: $grayLight;
-            margin-right: 5px;
-            vertical-align: text-bottom;
-        }
-        &:hover {
-            text-decoration: none;
-            color: $white;
-            i { color: $white; }
-        }
+        margin-right: 5px;
+        vertical-align: text-bottom;
+    }
+    &:hover {
+        text-decoration: none;
+        color: $white;
+        i { color: $white; }
     }
 }
 
