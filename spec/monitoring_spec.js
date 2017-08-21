@@ -741,12 +741,15 @@ describe('monitoring', () => {
 
         var dropdownSelected = monitoring.getSendToDropdown();
 
+        browser.sleep(500);
         expect(dropdownSelected.getText()).toEqual('Sports Desk');
         authoring.duplicateTo('Politic Desk', 'two', true);
         monitoring.actionOnItemSubmenu('Duplicate', 'Duplicate To', 2, 0, true);
 
         dropdownSelected = monitoring.getSendToDropdown();
         authoring.close();
+
+        browser.sleep(500);
         expect(dropdownSelected.getText()).toEqual('Politic Desk');
     });
 
