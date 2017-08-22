@@ -1,3 +1,5 @@
+import {USER_TYPES} from '../controllers/constants';
+
 UserEditDirective.$inject = ['api', 'gettext', 'notify', 'usersService', 'userList', 'session', 'lodash',
     'langmap', '$location', '$route', 'superdesk', 'features', 'asset', 'privileges',
     'desks', 'keyboardManager', 'gettextCatalog', 'config'];
@@ -13,6 +15,7 @@ export function UserEditDirective(api, gettext, notify, usersService, userList, 
             onupdate: '&'
         },
         link: function(scope, elem) {
+            scope.userTypes = USER_TYPES;
             scope.privileges = privileges.privileges;
             scope.features = features;
             scope.usernamePattern = usersService.usernamePattern;
@@ -25,6 +28,9 @@ export function UserEditDirective(api, gettext, notify, usersService, userList, 
 
             scope.$watch('origUser', () => {
                 scope.user = _.create(scope.origUser);
+                if (scope.user.user_type === undefined) {
+                    scope.user.user_type = 'author';
+                }
             });
 
             resetUser(scope.origUser);
