@@ -120,6 +120,18 @@
                   <input type="checkbox" ng-true-value="'administrator'" ng-false-value="'user'" ng-model="user.user_type" name="user_type" id="user_type">
                 </div>
 
+                <div sd-info-item class="user_author" ng-if="privileges.users">
+                  <label for="user_author" translate>author</label>
+                  <input type="checkbox" ng-model="user.is_author" name="user_author" id="user_author">
+                  <div sd-info-item>
+                    <label for="job_title">{{ 'Job Title'|translate }}</label>
+                    <input type="text" name="job_title" id="job_title" ng-model="user.job_title" ng-disabled="!user.is_author">
+                    <label for="biography">{{ 'Biography'|translate }}</label>
+                    <textarea id="biography" sd-auto-height ng-model="user.biography" ng-disabled="!user.is_author"></textarea>
+                  </div>
+
+                </div>
+
                 <div sd-info-item class="user_role">
                   <label for="user_role" translate>role</label>
                   <select ng-focus="focused()" ng-disabled="!privileges.users" ng-model="user.role" name="user_role"

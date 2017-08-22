@@ -7,6 +7,7 @@ export function UserListDirective(keyboardManager, usersService, asset) {
         scope: {
             roles: '=',
             users: '=',
+            authorOnlyFilter: '=',
             selected: '=',
             done: '='
         },
