@@ -50,14 +50,11 @@ class AttachmentsController {
     }
 
     removeFile(file) {
-        this.attachments.remove(file)
-            .then(() => {
-                this.$scope.files = this.$scope.files.filter((f) => f !== file);
-                this.$scope.item.attachments = this.$scope.item.attachments.filter(
-                    (item) => item.attachment !== file._id
-                );
-                this.autosave();
-            });
+        this.$scope.files = this.$scope.files.filter((f) => f !== file);
+        this.$scope.item.attachments = this.$scope.item.attachments.filter(
+            (item) => item.attachment !== file._id
+        );
+        this.autosave();
     }
 
     download(file) {

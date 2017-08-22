@@ -73,9 +73,10 @@
 
                 <div class="sd-line-input">
                     <label class="sd-line-input__label" translate>Description</label>
-                    <input type="text" class="sd-line-input__input"
+                    <textarea class="sd-line-input__input"
                         ng-model="ctrl.edit.description"
-                        required />
+                        sd-auto-height
+                        required></textarea>
                 </div>
             </form>
         </div>
