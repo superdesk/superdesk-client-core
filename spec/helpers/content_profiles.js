@@ -23,6 +23,12 @@ function ContentProfiles() {
         element(by.id('add-new-content-profile')).click();
     };
 
+    this.addNew = (name) => {
+        this.add();
+        this.getNameElement().sendKeys(name);
+        this.save();
+    };
+
     /**
      * Get the profile name element
      * @returns {ElementFinder} profile name element
@@ -121,5 +127,13 @@ function ContentProfiles() {
      **/
     this.cancel = function() {
         element(by.css('[ng-click="ctrl.toggleEdit()"]')).click();
+    };
+
+    /**
+     * Open first add field dropdown
+     */
+    this.openAddFieldDropdown = () => {
+        element.all(by.className('dropdown--add-more')).first()
+            .element(by.tagName('button')).click();
     };
 }
