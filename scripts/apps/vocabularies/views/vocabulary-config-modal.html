@@ -31,6 +31,18 @@
                     required>
             </div>
 
+            <div class="sd-line-input" ng-class="{'sd-line-input--invalid': vocabularyForm.$error.maxlength}">
+                <label for="cv_helper_text" translate>Helper text</label>
+                <input id="cv_helper_text"
+                    class="sd-line-input__input"
+                    type="text"
+                    ng-model="vocabulary.helper_text"
+                    ng-maxlength="120"
+                    required>
+                <div class="sd-line-input__message"
+                    ng-show="vocabularyForm.$error.maxlength">The helper text must not exceed 120 characters.</div>
+            </div>
+
             <div class="sd-line-input" ng-show="vocabulary.field_type === 'text'">
                 <label for="field-text-single" translate>Single line</label>
                 <input id="field-text-single" type="checkbox" ng-model="vocabulary.field_options.single">
