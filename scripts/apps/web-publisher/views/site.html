@@ -5,7 +5,7 @@
     <div class="desk__action dropdown dropdown--align-right" dropdown>
         <button class="dropdown__toggle" dropdown__toggle><i class="icon-dots"></i></button>
         <ul class="dropdown__menu">
-            <li ng-if="webPublisher.livesitePermission"><button ng-click="webPublisher.activateLiveSite(site)"><i class="icon-external"></i> {{ 'Livesite editor' | translate }}</button></li>
+            <li><button ng-click="webPublisher.activateLiveSite(site)"><i class="icon-external"></i> {{ 'Livesite editor' | translate }}</button></li>
             <li><button ng-click="webPublisher.editSite(site)"><i class="icon-pencil"></i> {{ 'Manage website' | translate }}</button></li>
             <li><button ng-click="webPublisher.deleteSite(site.code)"><i class="icon-trash"></i> {{ 'Delete website' | translate }}</button></li>
         </ul>
