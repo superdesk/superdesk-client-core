@@ -104,7 +104,7 @@
     "request": "2.61.0",
     "sass-loader": "4.1.1",
     "style-loader": "0.13.2",
-    "superdesk-ui-framework": "superdesk/superdesk-ui-framework",
+    "superdesk-ui-framework": "superdesk/superdesk-ui-framework#dd436eb3c5ceb",
     "webpack": "1.14.0",
     "webpack-dev-server": "1.14.1"
   },
