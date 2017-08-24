@@ -88,12 +88,7 @@ export function ListArticlesDirective(publisher) {
 
                     item.selected = false;
                     if (!_.find(list.updatedItems, {content_id: selectedItemId})) {
-                        let itemAction = 'add';
-
-                        if (_.find(list.items, {content: {id: selectedItemId}}) ||
-                            _.find(list.items, {id: selectedItemId})) {
-                            itemAction = 'move';
-                        }
+                        let itemAction = item.content ? 'move' : 'add';
 
                         list.updatedItems.push({content_id: selectedItemId, action: itemAction});
                     }
