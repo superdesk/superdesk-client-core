@@ -1,4 +1,4 @@
-<div class="term-editor data visible" ng-if="!header">
+<div class="term-editor data visible" ng-if="!header" title="{{helperText}}">
     <div sd-typeahead items="terms" term="selectedTerm" search="searchTerms(term)" select="selectTerm(item)" data-disabled="disabled">
         <ul ng-if="activeTerm || activeList">
             <li typeahead-item="t" ng-repeat="t in terms track by t[uniqueField]">{{ :: t.name }}</li>
@@ -7,7 +7,7 @@
 </div>
 
 <div class="dropdown dropdown--dropright dropdown-terms" dropdown sd-dropdown-focus sd-dropdown-position
-    title="{{ allSelected ? 'All items selected' : ''  | translate }}">
+    title="{{ allSelected ? 'All items selected' : helperText  | translate }}">
     <button class="dropdown__toggle" dropdown__toggle tabindex="{{tabindex}}" ng-disabled="disabled" ng-if="header && !disabled">
         <i class="icon--white icon-plus-large"></i>
     </button>
@@ -38,7 +38,7 @@
     </ul>
 </div>
 
-<div class="terms-list" ng-if="selectedItems.length">
+<div class="terms-list" ng-if="selectedItems.length" title="{{helperText}}">
     <ul>
         <li ng-if="!disabled" class="pull-left"
             ng-repeat="t in selectedItems track by t[uniqueField]"

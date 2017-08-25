@@ -101,7 +101,7 @@
              ng-if="schema.genre && editor.genre && !genreInCvs"
              sd-width="{{editor.genre.sdWidth}}"
              order="{{editor.genre.order}}">
-            <label class="authoring-header__item-label" translate>GENRE</label>
+            <label class="authoring-header__item-label" title="{{helper_text.genre}}" translate>GENRE</label>
             <div class="authoring-header__input-holder">
                 <div sd-meta-dropdown
                      class="data"
@@ -111,6 +111,7 @@
                      data-list="metadata.genre"
                      ng-disabled="!_editable || item.broadcast.master_id"
                      data-change="autosave(item)"
+                     data-helper-text="{{helper_text.genre}}"
                      tabindex="{{editor.genre.order}}">
                 </div>
             </div>
@@ -142,7 +143,7 @@
              ng-if="metadata.locators && schema.place && editor.place && !placeInCvs"
              sd-width="{{editor.place.sdWidth}}"
              order="{{editor.place.order}}">
-            <label class="authoring-header__item-label" translate>PLACE</label>
+            <label class="authoring-header__item-label" title="{{helper_text.locators}}" translate>PLACE</label>
             <div class="authoring-header__input-holder">
                 <div sd-meta-dropdown
                      class="data"
@@ -152,6 +153,7 @@
                      data-list="metadata.locators"
                      ng-disabled="!_editable"
                      data-change="autosave(item)"
+                     data-helper-text="{{helper_text.locators}}"
                      tabindex="{{editor.place.order}}">
                 </div>
             </div>
@@ -186,7 +188,7 @@
              ng-if="schema.priority"
              sd-width="{{editor.priority.sdWidth}}"
              order="{{editor.priority.order}}">
-            <label class="authoring-header__item-label" translate>PRIORITY</label>
+            <label class="authoring-header__item-label" title="{{helper_text.priority}}" translate>PRIORITY</label>
             <div class="authoring-header__input-holder">
                 <div sd-meta-dropdown
                      data-item="item"
@@ -198,6 +200,7 @@
                      ng-disabled="!_editable"
                      data-key="qcode"
                      data-change="autosave(item)"
+                     data-helper-text="{{helper_text.priority}}"
                      tabindex="{{editor.priority.order}}">
                 </div>
             </div>
@@ -208,7 +211,7 @@
              ng-if="schema.urgency && shouldDisplayUrgency()"
              sd-width="{{editor.urgency.sdWidth}}"
              order="{{editor.urgency.order}}">
-            <label class="authoring-header__item-label" translate>URGENCY</label>
+            <label class="authoring-header__item-label" title="{{helper_text.urgency}}" translate>URGENCY</label>
             <div class="authoring-header__input-holder">
                 <div sd-meta-dropdown
                      data-item="item"
@@ -220,6 +223,7 @@
                      ng-disabled="!_editable"
                      data-key="qcode"
                      data-change="autosave(item)"
+                     data-helper-text="{{helper_text.urgency}}"
                      tabindex="{{editor.urgency.order}}">
                 </div>
             </div>
@@ -231,7 +235,7 @@
              ng-if="metadata.categories && schema.anpa_category"
              sd-width="{{editor.anpa_category.sdWidth}}"
              order="{{editor.anpa_category.order}}">
-            <label class="authoring-header__item-label uppercase" translate>ANPA Category</label>
+            <label class="authoring-header__item-label uppercase" title="{{helper_text.categories}}" translate>ANPA Category</label>
             <div sd-meta-terms
                  class="data"
                  data-tabindex="editor.anpa_category.order"
@@ -244,6 +248,7 @@
                  data-change="autosave(item)"
                  data-reload-list="false"
                  data-set-language="true"
+                 data-helper-text="{{helper_text.categories}}"
                  tabindex="{{editor.anpa_category.order}}">
             </div>
         </div>
@@ -278,7 +283,7 @@
              ng-if="cv.terms.length && (editor[cv._id] || schema[cv._id])"
              sd-width="{{editor[cv._id].sdWidth}}"
              order="{{editor[cv._id].order}}">
-            <label class="authoring-header__item-label">
+            <label class="authoring-header__item-label" title="{{helper_text[cv._id]}}">
                 <span>{{ cv.display_name | translate }}</span>
             </label>
             <div sd-meta-terms
@@ -294,6 +299,7 @@
                  data-change="autosave(item)"
                  data-reload-list="true"
                  data-include-parent="{{editor[cv._id].includeparent}}"
+                 data-helper-text="{{helper_text[cv._id]}}"
                  tabindex="{{editor[cv._id].order}}">
             </div>
         </div>

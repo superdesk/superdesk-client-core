@@ -585,7 +585,8 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
             includeParent: '@',
             tabindex: '=',
             searchUnique: '@',
-            setLanguage: '@'
+            setLanguage: '@',
+            helperText: '@'
         },
         templateUrl: 'scripts/apps/authoring/metadata/views/metadata-terms.html',
         link: function(scope, elem, attrs) {
@@ -943,6 +944,7 @@ MetadataService.$inject = ['api', 'subscribersService', 'config', 'vocabularies'
 function MetadataService(api, subscribersService, config, vocabularies, $rootScope) {
     var service = {
         values: {},
+        helper_text: {},
         cvs: [],
         search_cvs: config.search_cvs || [
             {id: 'subject', name: 'Subject', field: 'subject', list: 'subjectcodes'},
@@ -964,6 +966,9 @@ function MetadataService(api, subscribersService, config, vocabularies, $rootSco
             return vocabularies.getAllActiveVocabularies().then((result) => {
                 _.each(result._items, (vocabulary) => {
                     self.values[vocabulary._id] = vocabulary.items;
+                    if (_.has(vocabulary, 'helper_text')) {
+                        self.helper_text[vocabulary._id] = vocabulary.helper_text;
+                    }
                 });
                 self.cvs = result._items;
                 self.values.regions = _.sortBy(self.values.geographical_restrictions,
