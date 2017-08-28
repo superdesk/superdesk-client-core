@@ -1,7 +1,16 @@
 <div class="sd-pagination" ng-if="total">
     <span class="page-info" translate>Page Size:</span>
     <div class="page-info">
-        <select class="line-input" ng-model="limit" ng-options="item for item in pgsizes" ng-change="setLimit(limit)"></select>
+        <!-- <select class="line-input" ng-model="limit" ng-options="item for item in pgsizes" ng-change="setLimit(limit)"></select> -->
+
+        <div class="sd-line-input sd-line-input--is-select sd-line-input--no-label sd-line-input--no-margin" style="min-width:50px;">
+            <select class="sd-line-input__select" 
+                ng-model="limit"
+                ng-options="item for item in pgsizes"
+                ng-change="setLimit(limit)">
+            </select>
+        </div>
+
     </div>
     <em class="page-info" ng-show="page <= lastPage">{{from}}-{{to}} {{'of'|translate }} {{total}}</em>
     <div class="btn-group">
