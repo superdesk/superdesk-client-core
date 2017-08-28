@@ -3,12 +3,6 @@ import DiffMatchPatch from 'diff-match-patch';
 import {Map} from 'immutable';
 import {getComments, replaceComments} from '.';
 
-// TODO(gbbr): Do not highlight selected on initial load.
-// TODO(gbbr): Optimize for speed (for 'insert-characters' mostly).
-
-// TODO(gbbr): Undo resets cursor position.
-// TODO(gbbr): Weird behaviour around copy/pasting comments around. Can this be fixed?
-
 /**
  * @typedef StateWithComment
  * @property {ContentState} contentState The new content state with styling applied.

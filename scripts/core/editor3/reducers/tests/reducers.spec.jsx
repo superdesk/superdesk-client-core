@@ -18,7 +18,10 @@ describe('editor3.reducers', () => {
         const editorState = {getCurrentContent: () => 'abc'};
         const onChangeValue = jasmine.createSpy();
 
-        reducer({onChangeValue}, {
+        reducer({
+            onChangeValue: onChangeValue,
+            editorState: EditorState.createEmpty()
+        }, {
             type: 'EDITOR_CHANGE_STATE',
             payload: editorState
         });

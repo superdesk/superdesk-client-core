@@ -31,17 +31,19 @@ export function redrawComments(es) {
  * @returns {ContentState}
  */
 export function removeInlineStyles(content, styles = ['COMMENT', 'COMMENT_SELECTED']) {
-    const firstBlock = content.getFirstBlock();
-    const lastBlock = content.getLastBlock();
-    const selection = SelectionState.createEmpty(firstBlock.getKey()).merge({
-        focusKey: lastBlock.getKey(),
-        focusOffset: lastBlock.getLength()
-    });
+    let contentState = content;
+    let filterFn = (c) => styles.some((s) => c.hasStyle(s));
 
-    let contentState;
+    contentState.getBlocksAsArray().forEach((b) => {
+        b.findStyleRanges(filterFn,
+            (start, end) => {
+                const empty = SelectionState.createEmpty(b.getKey());
+                const selection = empty.merge({anchorOffset: start, focusOffset: end});
 
-    styles.forEach((style) => {
-        contentState = Modifier.removeInlineStyle(content, selection, style);
+                styles.forEach((s) => {
+                    contentState = Modifier.removeInlineStyle(contentState, selection, s);
+                });
+            });
     });
 
     return contentState;
@@ -109,11 +111,8 @@ function selectionIn(content, a, b) {
     const key = a.getAnchorKey();
     const offset = a.getAnchorOffset();
 
-    if (key === startKey && offset > start) {
-        return true;
-    }
-
-    if (key === endKey && offset < end) {
+    if (key === startKey && offset > start ||
+        key === endKey && offset < end) {
         return true;
     }
 
