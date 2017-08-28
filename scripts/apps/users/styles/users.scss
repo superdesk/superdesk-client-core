@@ -11,9 +11,6 @@
             float: left;
         }
     }
-    #user-filter {
-        margin: 10px 20px;
-    }
 }
 
 .disabled-label {
@@ -38,8 +35,6 @@
     top: 3px;
     left: 3px;
     box-shadow: 0 0 0 1px #fff;
-    &.icon-settings{
-    }
 }
 
 .users-table {    //main list styles
@@ -218,13 +213,15 @@
 */
 
 .user-details-pane {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 20px;
-    @include box-sizing(border-box);
+    // position: absolute;
+    // top: 48px;
+    // left: 0;
+    // right: 0;
+    // bottom: 0;
+
+    position: relative;
+    height: 100vh;
+    width: 100%;
 
     ::-webkit-scrollbar {
         border-left: 9px solid #fff;
@@ -242,32 +239,30 @@
             background: #787878;
         }
     }
-
-    .action-buttons-main {
-        position: absolute;
-        top: -70px;
-        right: 12px;
-        @include transition(top ease 0.1s);
-        background: #fff;
-        &.show {
-            top: -25px;
-        }
+    .profile-info {
+        display: flex;
+        flex-direction: column;
     }
 
     .header-info {
-        height: 82px;
-        margin-bottom: 10px;
+        background-color: rgba(94, 169, 200, 0.11);
+        padding: 20px 0 0;
 
         h2 { //used as user's full name
-            font-size: 20px;
+            text-align: center;
+            font-size: 18px;
             line-height: 20px;
-            margin-bottom: 5px;
-            padding-right: 46px;
+            margin: 10px 0 4px 0;
+            padding: 0 20px;
         }
         h5 { //used as user's username
-            font-size: 16px;
+            text-align: center;
+            font-size: 14px;
             font-weight: normal;
             line-height: 16px;
+            padding: 0 20px;
+            margin-bottom: 10px;
+            color: rgba(0, 0, 0, 0.75);
         }
 
         .active {
@@ -291,6 +286,23 @@
         }
 
     }
+
+    .date-time {
+        color: #999;
+        font-weight: 300;
+    }
+    // .change-btn {
+    //     color: sd
+    // }
+
+    .details-info {
+        flex-grow: 1;
+        overflow: auto;
+        padding: 20px;
+        // height: 100vh;
+        position: relative;
+    }
+
     .error-holder {
         height: 40px;
         margin: 0 -20px;
@@ -308,115 +320,12 @@
     .validation-info {
         font-size: 11px;
         color: #888;
-        .badge {
-
-        }
     }
-    // .stats-box {
-    //     position: relative;
-    //     margin-top: 20px;
-    //     &:before {
-    //         content: " ";
-    //         position: absolute;
-    //         height: 1px;
-    //         background: #919191;
-    //         top: 11px;
-    //         width: 100%;
-    //     }
-    //     header {
-    //         font-size: 11px;
-    //         font-weight: bold;
-    //         text-transform: uppercase;
-    //         float: left;
-    //         padding: 2px 5px 2px 0;
-    //         background: #fff;
-    //         position: relative;
-    //         z-index: 2;
-    //     }
-    //     .stats-list {
-    //         list-style-type: none;
-    //         padding: 0;
-    //         margin: 0;
-    //         padding-top: 25px;
-    //         li {
-    //             width: 100%;
-    //             .box-sizing(border-box);
-    //             height: 30px;
-    //             line-height: 30px;
-    //             border-bottom: 1px solid #f0f0f0;
-    //             padding: 0 5px;
-    //             .stat-num {
-    //                 font-weight: bold;
-    //                 font-size: 16px;
-    //                 margin-right: 10px;
-    //                 color: #262626;
-    //             }
-    //             .stat-text {
-    //                 font-size: 12px;
-    //                 text-transform: uppercase;
-    //                 color: #262626;
-    //             }
-    //             &:first-child {
-    //                 padding: 8px;
-    //                 height: 46px;
-    //                 background: #707070;
-    //                 border: 0;
-    //                 display: table;
-    //                 .border-radius(3px);
-    //                 .stat-num {
-    //                     color:#fff;
-    //                     font-size: 32px;
-    //                     font-weight: normal;
-    //                     display: table-cell;
-    //                     vertical-align: middle;
-    //                     padding-right: 15px;
-    //                 }
-    //                 .stat-text {
-    //                     font-size: 12px;
-    //                     color: #cdcdcd;
-    //                     display: table-cell;
-    //                     vertical-align: middle;
-    //                     line-height: 15px;
-    //                     padding-right: 10px;
-    //                 }
-    //             }
-    //         }
-    //     }
-    //     &.stats-small {
-    //         width: 140px;
-    //         margin-top: 0;
-    //         &:before {
-    //             display: none;
-    //         }
-    //         .stats-list {
-    //             padding-top: 0;
-    //             li:first-child {
-    //                 padding: 2px 5px;
-    //                 height: 30px;
-    //                 .stat-num {
-    //                     font-size: 25px;
-    //                 }
-    //                 .stat-text {
-    //                     font-size: 10px;
-    //                     line-height: 12px;
-    //                 }
-    //             }
-    //         }
-    //     }
-    //     &.stats-static {
-    //         position: absolute;
-    //         top:0;
-    //         right: 0;
-    //     }
-    // }
-
-
     .profile-pic {
         width: 82px;
         height: 82px;
-        float: left;
-        margin-right: 14px;
         position: relative;
+        margin: 0 auto;
         .avatar {
             width: 100%;
             height: 100%;
@@ -424,7 +333,7 @@
             position: relative;
             background-image: url('~images/avatar_200.png');
             &.initials {
-                font-size: 32px;
+                font-size: 24px;
                 line-height: 82px;
                 font-weight: 300;
             }
@@ -462,49 +371,13 @@
         @include border-radius(0px);
     }
 
-    .details-info {
-        position: absolute;
-        top:140px;
-        bottom: 20px;
-        overflow: auto;
-        right: 20px;
-        left: 20px;
-        &.shifted {
-            top: 170px;
-        }
-    }
+
 
     .ng-invalid-required {
         .required-info {
             display: inline-block !important;
         }
     }
-
-
-    .password-popup {    //change password popup
-        position: absolute;
-        top: 150px;
-        left: 130px;
-        width: 260px;
-        &.shifted {
-            top: 170px;
-        }
-    }
-
-    .user_type {
-        input {
-            @include box-shadow(none);
-            width: auto !important;
-            margin-left: 3px !important;
-        }
-    }
-
-    .user_role {
-        select {
-            margin-left: -2px !important;
-        }        
-    }
-
 } //end of user detail pane
 
 
@@ -539,6 +412,11 @@
 Profile page styles
 ==============================================
 */
+.user-profile-page {
+    .user-details-pane {
+        top: 0;
+    }
+}
 
 .profile-activity-container {
     position: absolute;
@@ -663,7 +541,7 @@ Profile page styles
             position: absolute;
             top: 48px;
             left: 0; right: 0; bottom: 0;
-            padding: 20px 20px $scratchpad-closed;
+            padding: 0;
 
             .inner-content {
                 position: absolute;
@@ -686,7 +564,7 @@ Profile page styles
                 max-width: 160px;
             }
             &.initials {
-                font-size: 62px;
+                font-size: 48px;
                 line-height: 160px;
                 font-weight: 300;
             }
@@ -696,12 +574,6 @@ Profile page styles
         }
     }
 
-    .header-info {
-        height: 160px;
-    }
-    .details-info, .password-popup {
-        top:220px !important;
-    }
 
     .other-content {
         position: absolute;
@@ -836,4 +708,36 @@ Profile page styles
             color: #5ea9c8;
         }
     }
+}
+
+.mini-modal {
+    background-color: #fff;
+    
+    border-radius: 4px;
+    box-shadow: 0 2px 10px rgba(0,0,0,.2),0 6px 16px rgba(0,0,0,.3);
+    .title {
+        font-size: 15px;
+        padding: 12px 20px;
+        box-shadow: 0 1px 0 rgba(0,0,0,.1);
+    }
+    .content {
+        padding: 10px 20px;
+        font-size: 14px;
+    }
+    .footer {
+        padding: 10px 20px 20px;;
+    }
+    .close {
+        position: absolute;
+        top: 10px;
+        right:10px;
+    }
+}
+
+.password-popup {    //change password popup
+    position: absolute;
+    top: 150px;
+    left: 10%;
+    right: 10%;
+    // width: 260px;
 }
