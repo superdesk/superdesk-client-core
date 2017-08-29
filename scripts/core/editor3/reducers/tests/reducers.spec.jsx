@@ -15,7 +15,7 @@ function withSearchTerm(txt, searchTerm) {
 
 describe('editor3.reducers', () => {
     it('EDITOR_CHANGE_STATE', () => {
-        const editorState = {getCurrentContent: () => 'abc'};
+        const editorState = EditorState.createEmpty();
         const onChangeValue = jasmine.createSpy();
 
         reducer({
@@ -26,7 +26,7 @@ describe('editor3.reducers', () => {
             payload: editorState
         });
 
-        expect(onChangeValue).toHaveBeenCalledWith('abc');
+        expect(onChangeValue).toHaveBeenCalled();
     });
 
     it('EDITOR_DRAG_DROP', () => {
