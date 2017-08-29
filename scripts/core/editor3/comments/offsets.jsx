@@ -4,12 +4,6 @@ import {Map} from 'immutable';
 import {getComments, replaceComments} from '.';
 
 /**
- * @typedef StateWithComment
- * @property {ContentState} contentState The new content state with styling applied.
- * @property {Comment} activeComment The active comment.
- */
-
-/**
  * @name repositionComments
  * @description Returns a new editor state with all the comment offsets updated (based on
  * the last change type).
