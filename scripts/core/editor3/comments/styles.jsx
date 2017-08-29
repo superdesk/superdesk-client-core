@@ -7,8 +7,8 @@ import {getComments} from '.';
  * @param {EditorState} es
  * @returns {EditorState}
  */
-export function redrawComments(es) {
-    let editorState = es;
+export function redrawComments(oldState, newState) {
+    let editorState = newState;
 
     const selection = editorState.getSelection();
     const cleanContent = removeInlineStyles(editorState.getCurrentContent());
@@ -123,7 +123,6 @@ function selectionIn(content, a, b) {
         if (k === endKey) {
             break;
         }
-
         if (k === key) {
             return true;
         }
