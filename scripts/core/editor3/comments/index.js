@@ -9,6 +9,7 @@ import {redrawComments, removeInlineStyles, applyInlineStyles} from './styles';
 import {getComments, addComment, replaceComments} from './store';
 import {updateComments} from './comments';
 
+// TODO(gbbr): Problems with highlighting multiple blocks with headers (not sure how to repro).
 // TODO(gbbr): Weird behaviour around copy/pasting comments around. Can this be fixed?
 // TODO(gbbr): Optimize for speed (for 'insert-characters' mostly). Perhaps we can
 // redraw only changes?
