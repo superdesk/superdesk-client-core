@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
+import {EditorState} from 'draft-js';
 
 import {getSelectedEntity} from './entityUtils';
 
@@ -132,7 +133,7 @@ export class LinkInputComponent extends Component {
 }
 
 LinkInputComponent.propTypes = {
-    editorState: PropTypes.object.isRequired,
+    editorState: PropTypes.instanceOf(EditorState).isRequired,
     onSubmit: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
     value: PropTypes.object,

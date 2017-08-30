@@ -64,7 +64,7 @@ const onChange = (state, newState) => {
 
     // TODO(gbbr): Remove me
     // eslint-disable-next-line curly
-    if (activeComment) console.log(activeComment.data.msg); // eslint-disable-line no-console
+    if (activeComment) console.log(activeComment.data); // eslint-disable-line no-console
 
     state.onChangeValue(editorState.getCurrentContent());
 

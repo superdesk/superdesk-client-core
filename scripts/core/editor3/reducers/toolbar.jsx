@@ -1,6 +1,6 @@
 import {RichUtils, Entity, AtomicBlockUtils, EditorState} from 'draft-js';
 import * as entityUtils from '../components/links/entityUtils';
-import {addComment as addCommentToState} from '../comments';
+import {addComment} from '../comments';
 
 /**
  * @description Contains the list of toolbar related reducers.
@@ -22,7 +22,7 @@ const toolbar = (state = {}, action) => {
     case 'TOOLBAR_APPLY_EMBED':
         return applyEmbed(state, action.payload);
     case 'TOOLBAR_ADD_COMMENT':
-        return addComment(state, action.payload);
+        return applyComment(state, action.payload);
     default:
         return state;
     }
@@ -62,15 +62,14 @@ const toggleInlineStyle = (state, inlineStyle) => {
 
 /**
  * @ngdoc method
- * @name addComment
+ * @name applyComment
  * @param {Object} Comment data and selection.
  * @description Applies the given comment to the given selection.
  */
-const addComment = (state, {msg, selection}) => {
-    const editorState = addCommentToState(state.editorState, selection, {msg});
-
-    return {...state, editorState};
-};
+const applyComment = (state, {data, selection}) => ({
+    ...state,
+    editorState: addComment(state.editorState, selection, data)
+});
 
 /**
  * @ngdoc method
