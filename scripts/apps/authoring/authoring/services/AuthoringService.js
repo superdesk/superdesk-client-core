@@ -235,14 +235,6 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
             .then((result) => lock.unlock(result).catch(() => result)); // ignore unlock err
     };
 
-    this.validateBeforeTansa = function(orig, diff, act) {
-        let extDiff = helpers.extendItem({}, diff);
-
-        this.cleanUpdatesBeforePublishing(orig, extDiff);
-
-        return api.save('validate', {act: act, type: orig.type, validate: extDiff});
-    };
-
     this.saveWorkConfirmation = function saveWorkAuthoring(orig, diff, isDirty, message) {
         var promise = $q.when();
 
