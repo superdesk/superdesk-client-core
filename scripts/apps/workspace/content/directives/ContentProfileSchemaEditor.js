@@ -60,12 +60,12 @@ export function ContentProfileSchemaEditor(content) {
                 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
                 'justifyLeft', 'justifyCenter', 'justifyRight', 'justifyFull',
                 'outdent', 'indent', 'unorderedlist', 'orderedlist',
-                'pre', 'quote', 'image', 'anchor', 'superscript', 'subscript', 'strikethrough',
+                'pre', 'quote', 'picture', 'anchor', 'superscript', 'subscript', 'strikethrough',
                 'underline', 'italic', 'bold', 'table'
             ];
 
             scope.formattingOptionsEditor3 = [
-                'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'orderedlist', 'unorderedlist', 'quote', 'image', 'anchor',
+                'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'orderedlist', 'unorderedlist', 'quote', 'picture', 'anchor',
                 'embed', 'underline', 'italic', 'bold', 'table'
             ];
 
