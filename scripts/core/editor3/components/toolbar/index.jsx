@@ -10,6 +10,7 @@ import {EmbedButton} from '../embeds';
 import {TableButton} from '../tables';
 import {connect} from 'react-redux';
 import {LinkToolbar} from '../links';
+import {CommentButton, CommentInput} from '../comments';
 import classNames from 'classnames';
 import * as actions from '../../actions';
 
@@ -24,30 +25,40 @@ class ToolbarComponent extends Component {
     constructor(props) {
         super(props);
 
-        this.showInput = this.showInput.bind(this);
-        this.hideInput = this.hideInput.bind(this);
+        this.showLinkInput = this.showLinkInput.bind(this);
+        this.hideLinkInput = this.hideLinkInput.bind(this);
+        this.showCommentInput = this.showCommentInput.bind(this);
+        this.hideCommentInput = this.hideCommentInput.bind(this);
 
-        this.state = {inputLabel: null};
+        this.state = {
+            // If non-null, it contains the link that is currently being edited
+            // (or empty for a new link) and the popup is shown.
+            editedLink: null,
+
+            // If non-null, contains a DraftJS SelectionState where a comment
+            // needs to be added (the popup is displayed).
+            selectionForComment: null
+        };
     }
 
     /**
      * @ngdoc method
-     * @name Toolbar#hideInput
+     * @name Toolbar#hideLinkInput
      * @description Hides the link input.
      */
-    hideInput() {
-        this.setState({inputLabel: null});
+    hideLinkInput() {
+        this.setState({editedLink: null});
     }
 
     /**
      * @ngdoc method
-     * @name Toolbar#showInput
+     * @name Toolbar#showLinkInput
      * @param {Event} e
      * @param {Object} link object to edit
      * existing link.
      * @description Shows the link input box.
      */
-    showInput(link) {
+    showLinkInput(link) {
         const isNewLink = !link;
         const isCollapsed = this.props.editorState.getSelection().isCollapsed();
 
@@ -56,7 +67,15 @@ class ToolbarComponent extends Component {
             return;
         }
 
-        this.setState({inputLabel: link});
+        this.setState({editedLink: link});
+    }
+
+    showCommentInput(selection) {
+        this.setState({selectionForComment: selection});
+    }
+
+    hideCommentInput() {
+        this.setState({selectionForComment: null});
     }
 
     render() {
@@ -66,11 +85,11 @@ class ToolbarComponent extends Component {
             activeCell,
             applyLink,
             editorState,
-            addComment,
+            applyComment,
         } = this.props;
 
+        const {editedLink, selectionForComment} = this.state;
         const has = (opt) => editorFormat.indexOf(opt) > -1;
-        const isEditing = this.state.inputLabel !== null;
 
         const cx = classNames({
             'Editor3-controls': true,
@@ -81,23 +100,30 @@ class ToolbarComponent extends Component {
             <div className={cx}>
                 <BlockStyleControls />
                 <InlineStyleControls />
-                {has('anchor') ? <LinkButton onClick={this.showInput} /> : null}
-                {has('picture') ? <ImageButton /> : null}
-                {has('embed') ? <EmbedButton /> : null}
-                {has('table') ? <TableButton /> : null}
 
-                <div className="Editor3-styleButton">
-                    <span onClick={() => addComment(editorState.getSelection())}>
-                        <i className="icon-comment" />
-                    </span>
-                </div>
+                {has('anchor') && <LinkButton onClick={this.showLinkInput} />}
 
-                {!isEditing ? <LinkToolbar onEdit={this.showInput} /> :
+                {editedLink !== null &&
                     <LinkInput
                         editorState={editorState}
                         onSubmit={applyLink}
-                        onCancel={this.hideInput}
-                        value={this.state.inputLabel} />}
+                        onCancel={this.hideLinkInput}
+                        value={editedLink} />}
+
+                {has('picture') && <ImageButton />}
+                {has('embed') && <EmbedButton />}
+                {has('table') && <TableButton />}
+
+                <CommentButton onClick={this.showCommentInput} />
+
+                {selectionForComment !== null &&
+                    <CommentInput
+                        onSubmit={(msg) => applyComment(selectionForComment, msg)}
+                        onCancel={this.hideCommentInput} />}
+
+
+                {/* LinkToolbar must be the last node. */}
+                <LinkToolbar onEdit={this.showLinkInput} />
             </div>;
     }
 }
@@ -107,7 +133,7 @@ ToolbarComponent.propTypes = {
     editorFormat: PropTypes.array,
     activeCell: PropTypes.any,
     applyLink: PropTypes.func,
-    addComment: PropTypes.func,
+    applyComment: PropTypes.func,
     editorState: PropTypes.object
 };
 
@@ -117,7 +143,7 @@ const mapStateToProps = ({editorFormat, editorState, activeCell}) => ({
 
 const mapDispatchToProps = (dispatch) => ({
     applyLink: (link, entity = null) => dispatch(actions.applyLink({link, entity})),
-    addComment: (selection) => dispatch(actions.addComment(selection))
+    applyComment: (sel, msg) => dispatch(actions.applyComment(sel, msg)),
 });
 
 const Toolbar = connect(mapStateToProps, mapDispatchToProps)(ToolbarComponent);
