@@ -9,26 +9,27 @@ const topPadding = 50;
 
 export class CommentPopup extends Component {
     position() {
-        const rect = getVisibleSelectionRect(window);
         const {left: editorLeft} = this.props.editor.getBoundingClientRect();
+        const rect = getVisibleSelectionRect(window);
+
+        let top = 150;
+        let left = editorLeft - 260;
 
         if (rect) {
-            return {
-                top: rect.top - topPadding,
-                left: editorLeft - 260
-            };
+            top = rect.top - topPadding;
         }
 
-        return {top: 0, left: 0};
+        return {top, left};
     }
 
     component() {
         const {author, date, msg} = this.props.comment.data;
         const fromNow = moment(date).fromNow();
         const pretty = moment(date).format('MMMM Do YYYY, h:mm:ss a');
+        const position = this.position();
 
         return (
-            <div className="comment-popup" style={this.position()}>
+            <div className="comment-popup" style={position}>
                 <Dropdown open={true}>
                     <b>{author}</b> wrote <span title={pretty}>{fromNow}</span>:
                     <div className="comment-popup__body">{msg}</div>
@@ -48,11 +49,17 @@ export class CommentPopup extends Component {
     }
 
     shouldComponentUpdate(nextProps) {
-        return nextProps.selection.getAnchorOffset() !== this.props.selection.getAnchorOffset();
+        const nextSelection = nextProps.selection;
+        const {selection} = this.props;
+
+        return nextSelection.getAnchorOffset() !== selection.getAnchorOffset() ||
+            nextSelection.getAnchorKey() !== selection.getAnchorKey();
     }
 
     componentDidUpdate() {
-        this.customRender();
+        // Waiting one cycle allows the selection to be rendered in the browser
+        // so that we can correctly retrieve its position.
+        setTimeout(this.customRender.bind(this), 0);
     }
 
     render() {

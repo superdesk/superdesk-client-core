@@ -203,7 +203,7 @@ export class Editor3Component extends React.Component {
             const contentState = editorState.getCurrentContent();
             const selection = editorState.getSelection();
             const newContentState = Modifier.insertText(contentState, selection, ' ');
-            const newEditorState = EditorState.push(editorState, newContentState, 'insert-text');
+            const newEditorState = EditorState.push(editorState, newContentState, 'insert-characters');
 
             onChange(newEditorState);
 

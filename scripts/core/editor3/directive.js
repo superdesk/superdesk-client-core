@@ -152,7 +152,7 @@ class Editor3Directive {
                 .replace(/<\/ins>/g, '</code>');
             const content = fromHTML(text);
             const state = store.getState();
-            const editorState = EditorState.push(state.editorState, content, 'show-diff');
+            const editorState = EditorState.push(state.editorState, content, 'insert-characters');
 
             store.dispatch(changeEditorState(editorState));
         });
