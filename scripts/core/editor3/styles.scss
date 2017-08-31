@@ -435,3 +435,19 @@
 		line-height: 150% !important;
 	}
 }
+
+.comment-popup {
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 1000;
+
+	.dropdown__menu {
+		width: 250px;
+		padding: 15px;
+	}
+
+	&__body {
+		font-style: italic;
+	}
+}
