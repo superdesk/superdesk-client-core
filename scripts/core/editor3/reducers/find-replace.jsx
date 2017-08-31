@@ -55,7 +55,7 @@ const replaceHighlight = (state, txt, all = false) => {
     }
 
     if (contentChanged) {
-        editorState = EditorState.push(editorState, content, 'replace-text');
+        editorState = EditorState.push(editorState, content, 'insert-characters');
     }
 
     return {

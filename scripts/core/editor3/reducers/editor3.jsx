@@ -170,7 +170,7 @@ const changeImageCaption = (state, {entityKey, newCaption, field}) => {
 
     const newContentState = contentState.replaceEntityData(entityKey, {img});
 
-    return onChange(state, EditorState.push(editorState, newContentState, 'update-image'));
+    return onChange(state, EditorState.push(editorState, newContentState, 'change-block-data'));
 };
 
 /**

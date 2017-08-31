@@ -51,6 +51,6 @@ function preserveSelection(es, content) {
  * @returns {Boolean}
  */
 const changedContent = (editorState) => [
-    'backspace-character', 'delete-character', 'insert-characters',
-    'remove-range', 'insert-fragment', 'undo', 'redo', 'split-block'
+    'backspace-character', 'delete-character', 'insert-characters', 'remove-range',
+    'insert-fragment', 'undo', 'redo', 'split-block', 'spellcheck-change'
 ].indexOf(editorState.getLastChangeType()) > -1;

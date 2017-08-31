@@ -164,7 +164,7 @@ const processCells = (state, fn) => {
 
     return forceUpdate({
         ...state,
-        editorState: EditorState.push(editorState, newContentState, 'insert-row')
+        editorState: EditorState.push(editorState, newContentState, 'change-block-data')
     });
 };
 
