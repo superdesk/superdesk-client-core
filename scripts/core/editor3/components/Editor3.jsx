@@ -20,6 +20,7 @@ import {customStyleMap} from './customStyleMap';
 import classNames from 'classnames';
 import {handlePastedText} from './handlePastedText';
 import {getEntityTypeAfterCursor, getEntityTypeBeforeCursor} from './links/entityUtils';
+import {CommentPopup} from './comments';
 
 /**
  * @ngdoc React
@@ -224,6 +225,7 @@ export class Editor3Component extends React.Component {
 
         // the editorKey is used to identify the source of pasted blocks
         this.editorKey = this.refs.editor._editorKey;
+        this.editorNode = ReactDOM.findDOMNode(this.refs.editor);
     }
 
     componentWillUnmount() {
@@ -237,10 +239,12 @@ export class Editor3Component extends React.Component {
             locked,
             showToolbar,
             editorState,
+            activeComment,
             onChange,
             onTab,
             tabindex
         } = this.props;
+        const selection = editorState.getSelection();
 
         let cx = classNames({
             'Editor3-root Editor3-editor': true,
@@ -251,7 +255,8 @@ export class Editor3Component extends React.Component {
 
         return (
             <div className={cx}>
-                {showToolbar ? <Toolbar disabled={locked || readOnly} /> : null}
+                {showToolbar && <Toolbar disabled={locked || readOnly} />}
+                <CommentPopup comment={activeComment} editor={this.editorNode} selection={selection} />
                 <div className="focus-screen" onMouseDown={this.focus}>
                     <Editor
                         editorState={editorState}
@@ -278,6 +283,7 @@ Editor3Component.propTypes = {
     locked: PropTypes.bool,
     showToolbar: PropTypes.bool,
     editorState: PropTypes.object,
+    activeComment: PropTypes.object,
     onChange: PropTypes.func,
     unlock: PropTypes.func,
     onTab: PropTypes.func,
@@ -298,6 +304,7 @@ const mapStateToProps = (state) => ({
     readOnly: state.readOnly,
     showToolbar: state.showToolbar,
     editorState: state.editorState,
+    activeComment: state.activeComment,
     locked: state.locked,
     editorFormat: state.editorFormat,
     tabindex: state.tabindex

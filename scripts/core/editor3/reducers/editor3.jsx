@@ -62,13 +62,13 @@ export const forceUpdate = (state) => {
 const onChange = (state, newState) => {
     const {editorState, activeComment} = updateComments(state.editorState, newState);
 
-    // TODO(gbbr): Remove me
-    // eslint-disable-next-line curly
-    if (activeComment) console.log(activeComment.data); // eslint-disable-line no-console
-
     state.onChangeValue(editorState.getCurrentContent());
 
-    return {...state, editorState};
+    return {
+        ...state,
+        editorState,
+        activeComment
+    };
 };
 
 /**

@@ -17,26 +17,32 @@ import {repositionComments, redrawComments} from '.';
  * @returns {StateWithComment}
  */
 export function updateComments(oldState, newState) {
-    const selectionBefore = newState.getCurrentContent().getSelectionBefore();
-    const selectionAfter = newState.getCurrentContent().getSelectionAfter();
-
     let updatedState = repositionComments(oldState, newState);
     let {editorState, activeComment} = redrawComments(oldState, updatedState);
 
     if (changedContent(newState)) {
-        // Preserve before & after selection when content was changed. This helps
-        // with keeping the cursor more or less in the same position when undo-ing
-        // and redo-ing. Without this, all of the recalculating of offsets and styles
-        // will misplace the cursor position.
-        editorState = EditorState.set(editorState, {allowUndo: false});
-        editorState = EditorState.push(editorState, editorState.getCurrentContent()
-            .set('selectionBefore', selectionBefore)
-            .set('selectionAfter', selectionAfter)
-        );
-        editorState = EditorState.set(editorState, {allowUndo: true});
+        editorState = preserveSelection(editorState, newState.getCurrentContent());
     }
 
     return {editorState, activeComment};
+}
+
+// Preserve before & after selection when content was changed. This helps
+// with keeping the cursor more or less in the same position when undo-ing
+// and redo-ing. Without this, all of the recalculating of offsets and styles
+// will misplace the cursor position.
+function preserveSelection(es, content) {
+    let editorState = es;
+    let selectionBefore = content.getSelectionBefore();
+    let selectionAfter = content.getSelectionAfter();
+
+    editorState = EditorState.set(editorState, {allowUndo: false});
+    editorState = EditorState.push(editorState, editorState.getCurrentContent()
+        .set('selectionBefore', selectionBefore)
+        .set('selectionAfter', selectionAfter)
+    );
+
+    return EditorState.set(editorState, {allowUndo: true});
 }
 
 /**
