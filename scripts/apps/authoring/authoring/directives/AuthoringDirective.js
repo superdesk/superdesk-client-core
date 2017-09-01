@@ -76,9 +76,6 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
         link: function($scope, elem, attrs) {
             var _closing;
             var tryPublish = false;
-            var onlyTansaProof = true;
-            var continueAfterPublish = false;
-            var isCheckedByTansa = false;
 
             const UNIQUE_NAME_ERROR = gettext('Error: Unique Name is not unique.');
 
@@ -539,7 +536,6 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             $scope.runTansa = function() {
                 const editor = editorResolver.get();
 
-                onlyTansaProof = true;
                 if (editor && editor.version() === '3') {
                     $('#editor3Tansa').html(editor.getHTML());
                 }
@@ -556,7 +552,6 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 if (window.RunTansaProofing) {
                     window.RunTansaProofing();
                 } else {
-                    isCheckedByTansa = true;
                     notify.error(gettext('Tansa is not responding. You can continue editing or publish the story.'));
                 }
             };
@@ -571,59 +566,15 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 if (editor && editor.version() === '3') {
                     editor.setHTML($('#editor3Tansa').html());
                 }
-
-                if (onlyTansaProof) {
-                    return;
-                }
-                // continueAfterPublish is passed only from $scope.publishAndContinue as bool,
-                // in other cases this is object (don't use parameter in those cases)
-                let publishFn = continueAfterPublish === true ? $scope.publishAndContinue : $scope.publish;
-
-                if (isCancelled) {
-                    isCheckedByTansa = true;
-                    publishFn();
-                } else {
-                    // after changes from tansa, there is some time needed for autosave
-                    // and for commiting scope in editor
-                    $timeout(() => {
-                        $scope.saveTopbar().then(() => {
-                            isCheckedByTansa = true;
-                            publishFn();
-                        });
-                    }, 1000);
-                }
             }
-
-            let minTansaUrgency = $rootScope.config.tansa && $rootScope.config.tansa.urgency || 5;
 
             /**
              * Depending on the item state one of the publish, correct, kill actions will be executed on the item
              * in $scope.
              */
             $scope.publish = function(continueOnPublish) {
-                if ($scope.useTansaProofing() && $scope.item.urgency >= minTansaUrgency && !isCheckedByTansa) {
-                    var act = 'publish';
-
-                    if ($scope.origItem && $scope.origItem.state === 'published') {
-                        act = 'correct';
-                    }
-                    return authoring.validateBeforeTansa($scope.origItem, $scope.item, act)
-                    .then((response) => {
-                        continueAfterPublish = continueOnPublish;
-                        if (response.errors.length) {
-                            validate($scope.origItem, $scope.item);
-                            for (var i = 0; i < response.errors.length; i++) {
-                                notify.error('\'' + _.trim(response.errors[i]) + '\'');
-                            }
-                        } else {
-                            $scope.runTansa();
-                            onlyTansaProof = false;
-                        }
-                    });
-                } else if (validatePublishScheduleAndEmbargo($scope.item) && validateForPublish($scope.item)) {
+                if (validatePublishScheduleAndEmbargo($scope.item) && validateForPublish($scope.item)) {
                     var message = 'publish';
-
-                    isCheckedByTansa = false;
 
                     if ($scope.action && $scope.action !== 'edit') {
                         message = $scope.action;
@@ -829,8 +780,6 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 }
 
                 $scope.dirty = true;
-
-                isCheckedByTansa = false;
 
                 if (tryPublish) {
                     validate($scope.origItem, $scope.item);
