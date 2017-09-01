@@ -822,7 +822,8 @@ function Authoring() {
     };
 
     this.getNextLevelSelectedCategory = function() {
-        return this.subject.all(by.className('levelup')).all(by.css('[ng-click="selectTerm(activeTerm)"]'));
+        return this.subject.all(by.className('levelup')).all(
+            by.css('[ng-click="allowEntireCat && selectTerm(activeTerm)"]'));
     };
 
     this.getItemSource = function() {
