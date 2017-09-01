@@ -3,15 +3,14 @@ var templates = require('./helpers/templates'),
     monitoring = require('./helpers/monitoring'),
     workspace = require('./helpers/workspace'),
     authoring = require('./helpers/authoring'),
-    assertToastMsg = require('./helpers/utils').assertToastMsg;
+    assertToastMsg = require('./helpers/utils').assertToastMsg,
+    metadata = require('./helpers/metadata');
 
 describe('Content profiles', () => {
     it('creates corresponding template', () => {
         // create a new content profile
         contentProfiles.openContentProfileSettings();
-        contentProfiles.add();
-        contentProfiles.getNameElement().sendKeys('Simple');
-        contentProfiles.save();
+        contentProfiles.addNew('Simple');
         contentProfiles.toggleEnable();
         contentProfiles.disableField('Abstract');
         contentProfiles.update();
@@ -44,9 +43,7 @@ describe('Content profiles', () => {
     it('displays defined fields in authoring', () => {
         // create a new content profile
         contentProfiles.openContentProfileSettings();
-        contentProfiles.add();
-        contentProfiles.getNameElement().sendKeys('Simple');
-        contentProfiles.save();
+        contentProfiles.addNew('Simple');
         contentProfiles.toggleEnable();
         contentProfiles.disableField('Abstract');
         contentProfiles.setRequired('Editorial Note');
@@ -69,5 +66,24 @@ describe('Content profiles', () => {
         authoring.save();
         authoring.publish(true);
         assertToastMsg('error', 'EDNOTE is a required field');
+    });
+
+    it('displays custom text fields', () => {
+        const FIELD_LABEL = 'New custom text field';
+
+        metadata.open();
+        metadata.openCustomTextFields();
+        expect(metadata.items().count()).toBe(0);
+
+        metadata.addNew('custom', FIELD_LABEL);
+        expect(metadata.items().count()).toBe(1);
+
+        contentProfiles.openContentProfileSettings();
+        contentProfiles.addNew('Simple');
+
+        expect(element(by.buttonText(FIELD_LABEL)).isDisplayed()).toBeFalsy();
+
+        contentProfiles.openAddFieldDropdown();
+        expect(element(by.buttonText(FIELD_LABEL)).isDisplayed()).toBeTruthy();
     });
 });
