@@ -14,27 +14,11 @@
 .search-page-header {
     display: flex;
     position: relative;
-    background-color: $sd-background;
-    @include box-sizing(border-box);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.07), 0 1px 0 0 rgba(0, 0, 0, 0.1);
     width: 100%;
-
+    align-items: center;
     .searchbar-flex-handler {
         flex-grow: 1;
     }
-
-    .refresh-box {
-        button {
-            background: none;
-            border: 0;
-            padding-left: 15px;
-            border-left: 1px solid #dfdfdf;
-            &:hover {
-                @include opacity(80);
-            }
-        }
-    }
-
 }
 
 .ui-responsive-medium {
@@ -366,7 +350,7 @@
     }
     .sortbar {
         margin: 0 0 0 15px;
-        padding: 3px 0 0 10px;
+        padding: 0 0 0 10px;
         height: 25px;
         .lab {
             line-height: 20px;
