@@ -158,24 +158,25 @@ function stateFromData(editorState, data) {
  */
 function keyAndOffset(contentState, n) {
     const blocks = contentState.getBlocksAsArray();
+    const blockCount = blocks.length;
 
     let sum = 0;
     let lastSum = 0;
-    let blockOffset = 0;
+    let i = 0;
     let offset = 0;
 
-    for (let i = 0; i < blocks.length; i++) {
+    for (; i < blockCount; i++) {
         sum += blocks[i].getLength();
 
-        if (sum > n) {
+        if (sum >= n) {
             offset = n - lastSum;
             break;
         }
 
-        blockOffset++;
         lastSum = sum;
     }
 
+    const blockOffset = i === blockCount ? i - 1 : i;
     const key = blocks[blockOffset].getKey();
 
     return {key, offset};
@@ -190,22 +191,10 @@ function keyAndOffset(contentState, n) {
  * @returns {SelectionState}
  */
 function createSelection(contentState, start, end) {
-    const {
-        key: anchorKey,
-        offset: anchorOffset
-    } = keyAndOffset(contentState, start);
-
-    const {
-        key: focusKey,
-        offset: focusOffset
-    } = keyAndOffset(contentState, end);
-
-    const selection = new SelectionState({
-        anchorKey,
-        focusKey,
-        anchorOffset,
-        focusOffset
-    });
+    const {key: anchorKey, offset: anchorOffset} = keyAndOffset(contentState, start);
+    const {key: focusKey, offset: focusOffset} = keyAndOffset(contentState, end);
+    const isBackward = false;
+    const selection = new SelectionState({anchorKey, anchorOffset, focusKey, focusOffset, isBackward});
 
     return JSON.stringify(selection.toJSON());
 }
@@ -224,8 +213,8 @@ function flattenComments(oldState) {
 
     data.mapKeys((rawSelection, data) => {
         const s = new SelectionState(JSON.parse(rawSelection));
-        const start = absoluteOffset(content, s.getAnchorKey(), s.getAnchorOffset());
-        const end = absoluteOffset(content, s.getFocusKey(), s.getFocusOffset());
+        const start = absoluteOffset(content, s.getStartKey(), s.getStartOffset());
+        const end = absoluteOffset(content, s.getEndKey(), s.getEndOffset());
 
         flat.push({data, start, end});
     });

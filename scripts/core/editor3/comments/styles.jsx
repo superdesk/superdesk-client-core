@@ -99,17 +99,17 @@ function selectionIn(content, a, b) {
         return false;
     }
 
-    const start = b.getAnchorOffset();
-    const startKey = b.getAnchorKey();
-    const end = b.getFocusOffset();
-    const endKey = b.getFocusKey();
+    const start = b.getStartOffset();
+    const startKey = b.getStartKey();
+    const end = b.getEndOffset();
+    const endKey = b.getEndKey();
 
     if (startKey === endKey) {
         return a.hasEdgeWithin(startKey, start, end);
     }
 
-    const key = a.getAnchorKey();
-    const offset = a.getAnchorOffset();
+    const key = a.getStartKey();
+    const offset = a.getStartOffset();
 
     if (key === startKey && offset > start ||
         key === endKey && offset < end) {
