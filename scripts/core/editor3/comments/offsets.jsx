@@ -99,11 +99,12 @@ function diffMethod(oldState, newState) {
  * @description Shifts all comments (left or right) by n, starting at offset. It ignores
  * deleted comments and correctly chops off beginning or end parts.
  * @param {Array<FlatComment>} arr Array of flattened comments.
- * @param {Number} count Number of characters to shift. Can be negative for shifting left.
+ * @param {Number} count Number of characters to shift. Can be negative for deletion. Note
+ * that deletion happens forward, starting after offset.
  * @param {Number} start Offset after which selection ends must be shifted.
  * @returns {Array<FlatComment>} Array with shifting applied.
  */
-function shift(comments, n, offset = 0) {
+export function shift(comments, n, offset = 0) {
     let shifted = [];
 
     comments.forEach((c) => {
@@ -112,7 +113,7 @@ function shift(comments, n, offset = 0) {
             return;
         }
         // start is chopped off or shifted n
-        if (c.start > offset + 1) {
+        if (c.start > offset) {
             c.start += n < 0 && offset - n >= c.start ? offset - c.start + 1 : n;
         }
         // end is chopped off or shifted n
@@ -156,7 +157,7 @@ function stateFromData(editorState, data) {
  * @param {Number} char
  * @returns {KeyAndOffset}
  */
-function keyAndOffset(contentState, n) {
+export function keyAndOffset(contentState, n) {
     const blocks = contentState.getBlocksAsArray();
     const blockCount = blocks.length;
 
@@ -170,6 +171,10 @@ function keyAndOffset(contentState, n) {
 
         if (sum >= n) {
             offset = n - lastSum;
+            if (sum === n && i < blockCount - 1) {
+                offset = 0;
+                i++;
+            }
             break;
         }
 
@@ -229,7 +234,7 @@ function flattenComments(oldState) {
  * @param {Number} offset
  * @returns {Number}
  */
-function absoluteOffset(content, key, offset) {
+export function absoluteOffset(content, key, offset) {
     let blockArray = content.getBlocksAsArray();
     let sum = offset;
 
