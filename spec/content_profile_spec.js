@@ -75,7 +75,7 @@ describe('Content profiles', () => {
         metadata.openCustomTextFields();
         expect(metadata.items().count()).toBe(0);
 
-        metadata.addNew('custom', FIELD_LABEL);
+        metadata.addNew('custom', FIELD_LABEL, 'custom help');
         expect(metadata.items().count()).toBe(1);
 
         contentProfiles.openContentProfileSettings();
