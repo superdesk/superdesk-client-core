@@ -1,0 +1,14 @@
+<form name="systemSettingsForm">
+    <div class="sd-line-input">
+        <label for="expire_interval" class="sd-line-input__label" translate>Publish queue expire interval</label>
+        <div id="expire_interval" sd-time-interval data-interval="local_settings.publish_queue_expire_interval"></div>
+    </div>
+
+    <div class="modal__footer">
+        <button id="save-edit-btn" type="submit" class="btn btn--primary pull-right" ng-click="save()"
+                ng-disabled="systemSettingsForm.$invalid" translate>Save
+        </button>
+        <button id="cancel-edit-btn" type="button" class="btn pull-right" ng-click="cancel()" translate>Cancel
+        </button>
+    </div>
+</form>

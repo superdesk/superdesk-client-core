@@ -1,0 +1,36 @@
+<ng-form name="timeIntervalForm">
+<table>
+    <tr>
+        <td>
+            <div class="sd-line-input">
+                <label class="sd-line-input__label" translate>Days</label>
+                <input type="number" name="days" ng-model="time_interval.days" min="0" />
+            </div>
+        </td>
+        <td>
+            <div class="sd-line-input">
+                <label class="sd-line-input__label" translate>Hours</label>
+                <select class="sd-line-input__select" ng-model="time_interval.hours">
+                    <option ng-repeat="hour in hours" ng-value="hour">{{hour}}</option>
+                </select>
+            </div>
+        </td>
+        <td>
+            <div class="sd-line-input">
+                <label class="sd-line-input__label" translate>Minutes</label>
+                <select class="sd-line-input__select" ng-model="time_interval.minutes">
+                    <option ng-repeat="minute in minutes" ng-value="minute">{{minute}}</option>
+                </select>
+            </div>
+        </td>
+        <td>
+            <div class="sd-line-input">
+                <label class="sd-line-input__label" translate>Seconds</label>
+                <select class="sd-line-input__select" ng-model="time_interval.seconds">
+                    <option ng-repeat="second in minutes" ng-value="second">{{second}}</option>
+                </select>
+            </div>
+        </td>
+    </tr>
+</table>
+</ng-form>
