@@ -108,6 +108,7 @@ export class Editor3Component extends React.Component {
             'application/superdesk.item.graphic',
             'application/superdesk.item.video',
             'text/html',
+            'Files'
         ].indexOf(mediaType) !== -1;
         const supportsImages = !readOnly && !singleLine && editorFormat.indexOf('picture') !== -1;
 
@@ -133,8 +134,12 @@ export class Editor3Component extends React.Component {
         if (this.allowItem(e)) {
             // Firefox ignores the result of onDragOver and accept the item in all cases
             // Here will be tested again if the item is allowed
+
             this.props.dragDrop(e);
+            return true;
         }
+
+        return false;
     }
 
     keyBindingFn(e) {
