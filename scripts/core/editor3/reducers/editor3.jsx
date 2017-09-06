@@ -2,7 +2,7 @@ import {Editor3} from '../components/Editor3';
 import {RichUtils, EditorState} from 'draft-js';
 import {fromHTML} from 'core/editor3/html';
 import {addImage} from './toolbar';
-import {updateComments} from '../comments';
+import {updateComments} from './comments';
 
 /**
  * @description Contains the list of editor related reducers.

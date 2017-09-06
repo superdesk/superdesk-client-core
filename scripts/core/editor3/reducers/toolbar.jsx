@@ -1,6 +1,6 @@
 import {RichUtils, Entity, AtomicBlockUtils, EditorState} from 'draft-js';
 import * as entityUtils from '../components/links/entityUtils';
-import {addComment} from '../comments';
+import {addComment} from './comments';
 
 /**
  * @description Contains the list of toolbar related reducers.
