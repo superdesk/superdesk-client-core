@@ -1,3 +1,5 @@
+import {insertImages} from './toolbar';
+
 /**
  * @ngdoc method
  * @name changeEditorState
@@ -46,6 +48,12 @@ export function handleEditorTab(e) {
  * @description Creates the editor drop action.
  */
 export function dragDrop(e) {
+    const transfer = e.originalEvent.dataTransfer;
+
+    if (transfer.types[0] === 'Files') {
+        return insertImages(transfer.files);
+    }
+
     return {
         type: 'EDITOR_DRAG_DROP',
         payload: e

@@ -32,7 +32,7 @@ describe('editor3.actions.toolbar', () => {
 
         $rootScope.$apply();
 
-        expect(superdesk.intent).toHaveBeenCalledWith('upload', 'media');
+        expect(superdesk.intent).toHaveBeenCalledWith('upload', 'media', undefined);
         expect(dispatch).toHaveBeenCalledWith({
             type: 'TOOLBAR_INSERT_IMAGES',
             payload: 'image_list'
