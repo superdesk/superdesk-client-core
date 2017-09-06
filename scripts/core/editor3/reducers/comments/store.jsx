@@ -9,6 +9,7 @@ import {Map} from 'immutable';
 /**
  * @typedef Comment
  * @property {string} author Author name.
+ * @property {string} email Author email.
  * @property {string} date Date.
  * @property {string} msg Text body.
  */

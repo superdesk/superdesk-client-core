@@ -6,38 +6,6 @@ const blockArrayFromText = (...blocks) =>
         .createFromText(blocks.join('\r\n'))
         .getBlocksAsArray();
 
-// flatComments returns an array of objects denoting start and end offsets
-// marked by opening ([) and closing (]) brackets within the string s.
-const flatComments = (s) =>
-    Array.prototype.reduce.call(s, (f, c, i) => {
-        const len = f.length;
-
-        if (c === '[') {
-            f.push({start: i - len * 2});
-        }
-        if (c === ']') {
-            f[len - 1].end = i - len * 2 + 1;
-        }
-        return f;
-    }, []);
-
-// shiftTest runs a test of the shift function, using the given expect func (expFn),
-// passing (c1, n, offset) to shift and expecting c2 in return.
-const shiftTest = (msg, expFn, c1, c2, n, offset = 0) => {
-    const a = shift(flatComments(c1), n, offset);
-    const b = flatComments(c2);
-    const isEqual = _.isEqual(a, b);
-
-    expFn(a.length).toEqual(b.length);
-
-    if (!isEqual) {
-        // eslint-disable-next-line no-console
-        console.log(`${msg} failed (n=${n} offset=${offset}): `, a, b);
-    }
-
-    expFn(isEqual).toBeTruthy();
-};
-
 describe('editor3.comments.offsets', () => {
     it('keyAndOffset', () => {
         const blocks = blockArrayFromText('0123', '456', '78');
@@ -75,7 +43,7 @@ describe('editor3.comments.offsets', () => {
             [k(0), 1, 1],
             [k(0), 2, 2],
             [k(0), 3, 3],
-            [k(1), 0, 4], // ie. on block 1, character 0 has absolute offset 3
+            [k(1), 0, 4], // ie. on block 1, character 0 has absolute offset 4
             [k(1), 1, 5],
             [k(1), 2, 6],
             [k(2), 0, 7],
@@ -84,6 +52,21 @@ describe('editor3.comments.offsets', () => {
             expect(absoluteOffset(contentState, key, offset)).toBe(n);
         });
     });
+
+    // flatComments returns an array of objects denoting start and end offsets
+    // marked by opening ([) and closing (]) brackets within the string s.
+    const flatComments = (s) =>
+        Array.prototype.reduce.call(s, (f, c, i) => {
+            const len = f.length;
+
+            if (c === '[') {
+                f.push({start: i - len * 2});
+            }
+            if (c === ']') {
+                f[len - 1].end = i - len * 2 + 1;
+            }
+            return f;
+        }, []);
 
     it('flatComments test method', () => {
         expect(_.isEqual(flatComments('[01][2]3[45]6[789]0[12345]67[890]'), [
@@ -96,6 +79,23 @@ describe('editor3.comments.offsets', () => {
         ])).toBeTruthy();
     });
 
+    // shiftTest runs a test of the shift function, using the given expect func (expFn),
+    // passing (c1, n, offset) to shift and expecting c2 in return.
+    const shiftTest = (msg, expFn, c1, c2, n, offset = 0) => {
+        const a = shift(flatComments(c1), n, offset);
+        const b = flatComments(c2);
+        const isEqual = _.isEqual(a, b);
+
+        expFn(a.length).toEqual(b.length);
+
+        if (!isEqual) {
+            // eslint-disable-next-line no-console
+            console.log(`${msg} failed (n=${n} offset=${offset}): `, a, b);
+        }
+
+        expFn(isEqual).toBeTruthy();
+    };
+
     it('shift additions', () => {
         [
             ['0123[4567]890[123]45', 2, 3, '0123..[4567]890[123]45'],
@@ -103,7 +103,7 @@ describe('editor3.comments.offsets', () => {
             ['0123[4567]890[123]45', 2, 14, '0123[4567]890[123]4..5'],
             ['0123[4567]890[123]45', 2, 4, '0123[4..567]890[123]45'],
             ['0123[4567]890[123]45', 2, 3, '0123..[4567]890[123]45'],
-            ['0123[4567]890[123]45', 3, 7, '0123[4567...]890[123]45'],
+            ['0123[4567]890[123]45', 3, 7, '0123[4567]...890[123]45'],
             ['0123[4567]890[123]45', 3, 11, '0123[4567]890[1...23]45']
         ].forEach(([a, n, offset, b]) => shiftTest('additions', expect, a, b, n, offset));
     });

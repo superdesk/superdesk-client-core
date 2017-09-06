@@ -117,7 +117,7 @@ export function shift(comments, n, offset = 0) {
             c.start += n < 0 && offset - n >= c.start ? offset - c.start + 1 : n;
         }
         // end is chopped off or shifted n
-        if (c.end > offset) {
+        if (c.end > offset + 1) {
             c.end += n < 0 && offset - n + 1 > c.end ? offset - c.end + 1 : n;
         }
 
