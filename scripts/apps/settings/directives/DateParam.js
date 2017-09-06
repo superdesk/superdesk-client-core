@@ -15,7 +15,7 @@ export function DateParam($location) {
             });
 
             scope.$on('$routeUpdate', (event, route) => {
-                scope.date = route.params[attrs.location];
+                scope.date = route.params[attrs.location] || null;
             });
         }
     };
