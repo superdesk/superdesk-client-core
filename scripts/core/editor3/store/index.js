@@ -6,7 +6,7 @@ import {forceUpdate} from '../actions';
 import {Editor3} from '../components/Editor3';
 import {EditorState, convertFromRaw, convertToRaw, ContentState} from 'draft-js';
 import {toHTML, fromHTML} from 'core/editor3/html';
-import {applyInlineStyles, removeInlineStyles} from '../comments';
+import {applyInlineStyles, removeInlineStyles} from '../reducers/comments';
 
 /**
  * @name createEditorStore
