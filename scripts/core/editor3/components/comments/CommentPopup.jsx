@@ -5,9 +5,30 @@ import {Dropdown} from 'core/ui/components';
 import moment from 'moment';
 import {getVisibleSelectionRect, SelectionState} from 'draft-js';
 
+// topPadding holds the number of pixels between the selection and the top side
+// of CommentPopup.
 const topPadding = 50;
 
+/**
+ * @ngdoc React
+ * @module superdesk.core.editor3
+ * @name CommentPopup
+ * @param {SelectionState} selection The selection on which the comment exists.
+ * @param {Node} editor The node of the parent editor (used to calculating positioning).
+ * @param {Comment} comment
+ * @description CommentPopup displays information about the comment that the cursor
+ * is currently on in the editor. CommentPopup renders itself programmatically when
+ * this component is updated (inside componentDidUpdate) in order to place itself in
+ * Superdesk's common pop-up container, so that it can be displayed on top of the UI.
+ */
 export class CommentPopup extends Component {
+    /**
+     * @ngdoc method
+     * @name CommentPopup#position
+     * @description position returns the absolute top and left position that the popup
+     * needs to be displayed at, with regards to the current selection.
+     * @returns {Object} Object containing top and left in pixels.
+     */
     position() {
         const {left: editorLeft} = this.props.editor.getBoundingClientRect();
         const rect = getVisibleSelectionRect(window);
@@ -22,6 +43,12 @@ export class CommentPopup extends Component {
         return {top, left};
     }
 
+    /**
+     * @ngdoc method
+     * @name CommentPopup#component
+     * @description component returns the popup element to be rendered.
+     * @returns {JSX}
+     */
     component() {
         const {author, date, msg} = this.props.comment.data;
         const fromNow = moment(date).fromNow();
@@ -38,6 +65,12 @@ export class CommentPopup extends Component {
         );
     }
 
+    /**
+     * @ngdoc method
+     * @name CommentPopup#customRender
+     * @description customRender mounts the popup component if a comment exists in
+     * props, otherwise it unmounts it.
+     */
     customRender() {
         const node = document.getElementById('react-placeholder');
 

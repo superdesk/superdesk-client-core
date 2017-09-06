@@ -8,7 +8,9 @@ import {Map} from 'immutable';
 
 /**
  * @typedef Comment
- * @property {string} msg The comment body
+ * @property {string} author Author name.
+ * @property {string} date Date.
+ * @property {string} msg Text body.
  */
 
 /**
