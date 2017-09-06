@@ -24,6 +24,7 @@ import 'apps/search-providers';
 import 'apps/internal-destinations';
 import 'apps/content-api';
 import 'apps/extension-points';
+import 'apps/system-settings';
 
 export default angular.module('superdesk.apps', [
     'superdesk.apps.settings',
@@ -54,5 +55,6 @@ export default angular.module('superdesk.apps', [
     'superdesk.apps.profiling',
     'superdesk.apps.internal-destinations',
     'superdesk.apps.content-api',
-    'superdesk.apps.extension-points'
+    'superdesk.apps.extension-points',
+    'superdesk.apps.system-settings'
 ]);

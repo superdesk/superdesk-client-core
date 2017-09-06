@@ -95,7 +95,7 @@
             </div>
         </div>
 
-        <div class="authoring-header__item"
+        <div class="authoring-header__item sd-line-input"
              sd-validation-error="error.genre"
              data-required="schema.genre.required"
              ng-if="schema.genre && editor.genre && !genreInCvs"
@@ -115,6 +115,7 @@
                      tabindex="{{editor.genre.order}}">
                 </div>
             </div>
+            <div class="sd-line-input__hint" ng-if="helper_text.genre">{{helper_text.genre}}</div>
         </div>
 
         <div class="authoring-header__item"
@@ -157,6 +158,7 @@
                      tabindex="{{editor.place.order}}">
                 </div>
             </div>
+            <div class="sd-line-input__hint" ng-if="helper_text.locators">{{helper_text.locators}}</div>
         </div>
 
         <div class="authoring-header__item"
@@ -204,6 +206,7 @@
                      tabindex="{{editor.priority.order}}">
                 </div>
             </div>
+            <div class="sd-line-input__hint" ng-if="helper_text.priority">{{helper_text.priority}}</div>
         </div>
         <div class="authoring-header__item"
              sd-validation-error="error.urgency"
@@ -227,6 +230,7 @@
                      tabindex="{{editor.urgency.order}}">
                 </div>
             </div>
+            <div class="sd-line-input__hint" ng-if="helper_text.urgency">{{helper_text.urgency}}</div>
         </div>
 
         <div class="authoring-header__item" id="category-setting"
@@ -251,6 +255,7 @@
                  data-helper-text="{{helper_text.categories}}"
                  tabindex="{{editor.anpa_category.order}}">
             </div>
+            <div class="sd-line-input__hint" ng-if="helper_text.categories">{{helper_text.categories}}</div>
         </div>
 
         <div class="authoring-header__item"
@@ -302,6 +307,7 @@
                  data-helper-text="{{helper_text[cv._id]}}"
                  tabindex="{{editor[cv._id].order}}">
             </div>
+            <div class="sd-line-input__hint" ng-if="helper_text[cv._id]">{{helper_text[cv._id]}}</div>
         </div>
 
         <div class="authoring-header__item"
