@@ -231,9 +231,9 @@ angular.module('superdesk.apps.authoring', [
         });
     }])
     .run(['keyboardManager', 'gettext', function(keyboardManager, gettext) {
-        keyboardManager.register('Authoring', 'ctrl + shift + u', gettext('Unlocks current item'));
-        keyboardManager.register('Authoring', 'ctrl + shift + e', gettext('Closes current item'));
-        keyboardManager.register('Authoring', 'ctrl + shift + s', gettext('Saves current item'));
+        keyboardManager.register('Authoring', 'ctrl + shift + u', gettext('Unlock current item'));
+        keyboardManager.register('Authoring', 'ctrl + shift + e', gettext('Close current item'));
+        keyboardManager.register('Authoring', 'ctrl + shift + s', gettext('Save current item'));
         keyboardManager.register('Authoring', 'ctrl + shift + l',
              gettext('Preview formatted article, when previewFormats feature configured'));
         keyboardManager.register('Authoring', 'ctrl + shift + y',

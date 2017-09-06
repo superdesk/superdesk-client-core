@@ -39,5 +39,5 @@ angular.module('superdesk.apps.workspace.content', [
             });
     }])
     .run(['keyboardManager', 'gettext', function(keyboardManager, gettext) {
-        keyboardManager.register('General', 'ctrl + m', gettext('Creates new item'));
+        keyboardManager.register('General', 'ctrl + m', gettext('Create new item'));
     }]);

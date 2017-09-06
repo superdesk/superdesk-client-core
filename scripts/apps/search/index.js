@@ -67,6 +67,6 @@ angular.module('superdesk.apps.search', [
     }])
 
     .run(['keyboardManager', 'gettext', function(keyboardManager, gettext) {
-        keyboardManager.register('Search', 'ctrl + 0', gettext('Shows search modal'));
-        keyboardManager.register('Search', 'v', gettext('Toggles search view'));
+        keyboardManager.register('Search', 'ctrl + 0', gettext('Show search modal'));
+        keyboardManager.register('Search', 'v', gettext('Toggle search view'));
     }]);
