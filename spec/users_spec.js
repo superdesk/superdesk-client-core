@@ -153,6 +153,9 @@ describe('users', () => {
         });
 
         it('can enable/disable buttons based on form status', () => {
+            var generalTab = element(by.buttonText('General info'));
+            var authorsTab = element(by.buttonText('Author info'));
+
             var buttonSave = element(by.id('save-edit-btn'));
             var buttonCancel = element(by.id('cancel-edit-btn'));
             var inputFirstName = element(by.model('user.first_name'));
@@ -161,6 +164,7 @@ describe('users', () => {
             expect(buttonSave.isEnabled()).toBe(false);
             expect(buttonCancel.isEnabled()).toBe(false);
 
+            authorsTab.click();
             inputSignOff.clear();
             inputSignOff.sendKeys('X');
             expect(inputSignOff.getAttribute('value')).toBe('X');
@@ -169,8 +173,12 @@ describe('users', () => {
             expect(buttonSave.isEnabled()).toBe(true);
             expect(buttonCancel.isEnabled()).toBe(true);
 
+            generalTab.click();
             inputFirstName.clear();
+
+            authorsTab.click();
             inputSignOff.clear();
+            generalTab.click();
             inputFirstName.sendKeys('first name');
             expect(inputFirstName.getAttribute('value')).toBe('first name');
 

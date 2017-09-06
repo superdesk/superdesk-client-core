@@ -1,11 +1,11 @@
-<div class="subnav subnav--plain">
+<div class="subnav subnav--absolute">
   <header class="search-page-header">
       <div class="filter-trigger" title="{{ :: 'Filters' | translate }}" ng-click="flags.facets = !flags.facets" ng-class="{'filter-trigger--active': flags.facets}"><i class="icon-filter-large"></i></div>
 
       <div sd-item-searchbar data-repo="repo" data-context="context" class="searchbar-flex-handler"></div>
       <div sd-item-sortbar data-total="total_records" class="sortbar-flex-handler"></div>
       <div class="refresh-box">
-          <button ng-if="showRefresh" class="pull-right" ng-click="refreshList()"
+          <button ng-if="showRefresh" class="navbtn" ng-click="refreshList()"
               tooltip="{{:: 'Refresh' | translate}}" tooltip-placement="left">
               <i class="icon-repeat icon--blue"></i>
           </button>

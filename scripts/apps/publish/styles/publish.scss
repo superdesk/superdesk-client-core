@@ -58,54 +58,38 @@ div {
 .publish-queue {
     top: $subnav-height;
     header {
-        .sortbar {
-            margin-left: 10px;
-            .flat-searchbar.monitoring-flat-searchbar {
-                margin-top: -12px !important;
-            }
-        }
         .refresh-box {
             span {
                 font-style: italic;
                 padding: 16px 0;
-                line-height: 16px;
                 margin-right: 20px;
-            }
-            button {
-                background: none;
-                border: 0;
-                padding: 15px 16px;
-                border-left: 1px solid #dfdfdf;
-                @include opacity(60);
-                &:hover {
-                    @include opacity(80);
-                }
-            }
-        }
-        .pagination-box {
-            .page-info {
-                float: left;
-            }
-            .btn-group {
-                position: inherit !important;
             }
         }
     }
     .preview-layout {
+        .list-pane {
+            >.content {
+                overflow: auto;
+                right: 400px;
+            }
+        }
         &.closed {
             .list-pane {
-                header {
-                    right: 0 !important;
+                >.content {
+                    right: 0;
                 }
             }
         }
-        .list-pane header {
-            right: $sidepreview-width + 160;
-            @media only screen and (max-width : 1430px) {
-                right: $sidepreview-width - 40;
-            }
-            height: 48px;
-        }
+        // .list-pane header {
+        //     right: $sidepreview-width + 160;
+        //     @media only screen and (max-width : 1430px) {
+        //         right: $sidepreview-width - 40;
+        //     }
+        //     height: 48px;
+        // }
+    }
+    .shift-preview__toggle {
+        display: none;
     }
 }
 

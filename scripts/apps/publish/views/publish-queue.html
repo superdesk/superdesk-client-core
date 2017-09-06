@@ -1,8 +1,8 @@
 <section class="main-section publish-queue">
     <div class="preview-layout" ng-class="{closed: !selected.preview}">
-        <div class="list-pane">
-            <header>
-                <div class="flat-searchbar pull-left" ng-class="{extended: queueSearch}">
+
+        <header class="subnav">
+                <div class="flat-searchbar" ng-class="{extended: queueSearch}">
                     <div class="search-handler" >
                         <label for="search-input" class="trigger-icon" ng-click="queueSearch = !queueSearch"><i class="icon-search"></i></label>
                         <input id="search-input" type="text" placeholder="{{ :: 'Search' | translate }}" ng-model="query" ng-model-options="{debounce: 500}" ng-change="search(query)">
@@ -10,9 +10,9 @@
                     </div>
                 </div>
 
-                <div class="sortbar pull-left">
-                    <span class="lab pull-left" translate>Subscriber:</span>
-                    <div class="dropdown pull-left" dropdown>
+                <div class="sortbar">
+                    <span class="lab" translate>Subscriber:</span>
+                    <div class="dropdown" dropdown>
                         <button class="dropdown__toggle" dropdown__toggle>
                             {{ selectedFilterSubscriber.name }}
                             <span ng-if="!selectedFilterSubscriber">none</span>
@@ -27,8 +27,8 @@
                             </li>
                         </ul>
                     </div>
-                    <span class="lab pull-left" translate>Ingest Provider:</span>
-                    <div class="dropdown pull-left" dropdown>
+                    <span class="lab" translate>Ingest Provider:</span>
+                    <div class="dropdown" dropdown>
                         <button class="dropdown__toggle" dropdown__toggle>
                             {{ selectedFilterIngestProvider.name }}
                             <span ng-if="!selectedFilterIngestProvider">none</span>
@@ -43,8 +43,8 @@
                             </li>
                         </ul>
                     </div>
-                    <span class="lab pull-left" translate>Status:</span>
-                    <div class="dropdown pull-left" dropdown>
+                    <span class="lab" translate>Status:</span>
+                    <div class="dropdown" dropdown>
                         <button class="dropdown__toggle" dropdown__toggle>
                             {{ selectedFilterStatus }}
                             <span ng-if="!selectedFilterStatus">none</span>
@@ -59,25 +59,29 @@
                     </div>
                 </div>
 
-                <div class="refresh-box pull-right">
-                    <span >{{ :: 'Last refreshed at' | translate}}: {{ lastRefreshedAt | date:'dd-MM-yyyy HH:mm:ss' }}</span>
-                    <button ng-click="reload()" tooltip="{{:: 'Refresh' | translate}}" tooltip-placement="left"><i class="icon-refresh"></i></button>
-                </div>
+                <div sd-pagination-alt class="pagination-box subnav__element-grow" data-page="page" data-max-page="maxPage"></div>
 
-                <div sd-pagination-alt class="pagination-box" data-page="page" data-max-page="maxPage"></div>
+                <div class="refresh-box">
+                    <span >{{ :: 'Last refreshed at' | translate}}: {{ lastRefreshedAt | date:'dd-MM-yyyy HH:mm:ss' }}</span>
+                    <button class="navbtn" ng-click="reload()" tooltip="{{:: 'Refresh' | translate}}" tooltip-placement="left"><i class="icon-refresh"></i></button>
+                </div>
 
                 <div class="multi-action-bar" ng-show="multiSelectCount > 0">
                     <button class="btn" ng-click="cancelSelection(false)" ng-show="multiSelectCount > 0">{{ :: 'Cancel Selection' | translate}}</button>
                     <span id="multi-select-count"
-                          ng-show="multiSelectCount > 0"
-                          translate
-                          translate-n="multiSelectCount"
-                          translate-plural="{{ multiSelectCount }} Items selected">{{ multiSelectCount}} Item selected
+                            ng-show="multiSelectCount > 0"
+                            translate
+                            translate-n="multiSelectCount"
+                            translate-plural="{{ multiSelectCount }} Items selected">{{ multiSelectCount}} Item selected
                     </span>
                     <button class="btn btn--primary pull-right" ng-click="scheduleToSend()" ng-show="multiSelectCount > 0 && showResendBtn">{{ :: 'Resend' | translate}}</button>
                     <button class="btn btn--primary pull-right" ng-click="cancelSend()" ng-show="multiSelectCount > 0 && showCancelBtn">{{ :: 'Cancel' | translate}}</button>
                 </div>
             </header>
+
+
+        <div class="list-pane">
+
             <div class="content">
                 <div sd-shadow>
                     <table class="table styled-table">

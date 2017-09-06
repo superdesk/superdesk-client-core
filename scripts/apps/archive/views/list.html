@@ -1,5 +1,4 @@
-<div class="subnav" ng-if="type !== 'ingest'">
-
+<div class="subnav subnav--top" ng-if="type !== 'ingest'">
     <div class="subnav__desk-stage desk-stages subnav--padded">
         <div class="toggle-list" sd-desk-stages></div>
     </div>
@@ -10,9 +9,8 @@
             <ul class="dropdown__menu dropdown__menu--scrollable pull-right" sd-content-create></ul>
         </div>
     </div>
-
 </div>
-<div class="subnav subnav--plain" ng-class="{'subnav--archive': type === 'archive'}">
+<div class="subnav subnav--plain subnav--top" ng-class="{'subnav--archive': type === 'archive'}">
     <header class="search-page-header">
         <div class="filter-trigger" title="{{ :: 'Filters' | translate }}" ng-click="flags.facets = !flags.facets" ng-class="{'filter-trigger--active': flags.facets}"><i class="icon-filter-large"></i></div>
 

@@ -1,4 +1,4 @@
-<div class="subnav">
+<div class="subnav subnav--absolute">
     <h3 class="page-nav-title"><span translate>Dashboard</span> {{ dashboard.current.name | translate}}</h3>
 
     <div class="subnav__button-stack--square-buttons">
@@ -10,7 +10,7 @@
             <i class="svg-icon-ok inverse"></i>
         </button>
 
-        <div sd-tooltip="{{ :: 'Add widget' | translate }}" flow="left">
+        <div sd-tooltip="{{ :: 'Add widget' | translate }}" flow="left" ng-show="!dashboard.edit" >
             <button ng-if="configurable" class="navbtn sd-create-btn" ng-disabled="dashboard.edit" ng-click="dashboard.add = true"></button>
         </div>
         <div class="dropdown__menu pull-right" sd-multiedit-dropdown ng-if="dashboard.current.name !== 'personal' && dashboard.current._id && !dashboard.current.desk"></div>
