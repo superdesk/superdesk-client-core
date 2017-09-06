@@ -45,6 +45,12 @@ class Editor3Directive {
             findReplaceTarget: '@',
 
             /**
+             * @type {Boolean}
+             * @description If true, allows inline commenting.
+             */
+            comments: '@',
+
+            /**
              * @type {Object}
              * @description Editor format options that are enabled and should be displayed
              * in the toolbar.
@@ -142,6 +148,7 @@ class Editor3Directive {
         this.bindToValue = this.bindToValue || false;
         this.tabindex = this.tabindex || 0;
         this.showTitle = this.showTitle || false;
+        this.comments = typeof this.comments !== 'undefined';
 
         const store = createEditorStore(this);
 

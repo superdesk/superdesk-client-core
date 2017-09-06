@@ -60,7 +60,11 @@ export const forceUpdate = (state) => {
  * @description Handle the editor state has been changed event
  */
 const onChange = (state, newState) => {
-    const {editorState, activeComment} = updateComments(state.editorState, newState);
+    let editorState = newState, activeComment = null;
+
+    if (state.allowsCommenting) {
+        ({editorState, activeComment} = updateComments(state.editorState, newState));
+    }
 
     state.onChangeValue(editorState.getCurrentContent());
 
