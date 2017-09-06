@@ -65,7 +65,7 @@ export function ItemAssociationDirective(superdesk, renditions, config, authorin
              */
             function getSuperdeskType(event) {
                 return event.originalEvent.dataTransfer.types
-                    .find((name) => name.indexOf('application/superdesk') === 0);
+                    .find((name) => name.indexOf('application/superdesk') === 0 || name === 'Files');
             }
 
             let dragOverClass = 'dragover';
@@ -89,6 +89,23 @@ export function ItemAssociationDirective(superdesk, renditions, config, authorin
             elem.on('drop dragdrop', (event) => {
                 event.preventDefault();
                 event.stopPropagation();
+
+                if (getSuperdeskType(event) === 'Files') {
+                    if (scope.isMediaEditable()) {
+                        const files = event.originalEvent.dataTransfer.files;
+
+                        superdesk.intent('upload', 'media', files).then((images) => {
+                            // open the view to edit the PoI and the cropping areas
+                            if (images) {
+                                scope.$applyAsync(() => {
+                                    scope.edit(images[0]);
+                                });
+                            }
+                        });
+                    }
+                    return;
+                }
+
                 getItem(event, getSuperdeskType(event))
                     .then((item) => {
                         if (!scope.editable) {
