@@ -26,6 +26,7 @@ export default function createEditorStore(ctrl) {
     const store = createStore(reducers, {
         editorState: EditorState.createWithContent(content, decorators),
         activeComment: null,
+        allowsCommenting: ctrl.comments,
         searchTerm: {pattern: '', index: -1, caseSensitive: false},
         readOnly: ctrl.readOnly,
         locked: false, // when true, main editor is disabled (ie. when editing sub-components like tables or images)

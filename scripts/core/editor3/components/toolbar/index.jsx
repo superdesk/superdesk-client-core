@@ -86,6 +86,7 @@ class ToolbarComponent extends Component {
             applyLink,
             editorState,
             applyComment,
+            allowsCommenting,
         } = this.props;
 
         const {editedLink, selectionForComment} = this.state;
@@ -114,7 +115,8 @@ class ToolbarComponent extends Component {
                 {has('embed') && <EmbedButton />}
                 {has('table') && <TableButton />}
 
-                <CommentButton onClick={this.showCommentInput} />
+                {allowsCommenting &&
+                    <CommentButton onClick={this.showCommentInput} />}
 
                 {selectionForComment !== null &&
                     <CommentInput
@@ -130,6 +132,7 @@ class ToolbarComponent extends Component {
 
 ToolbarComponent.propTypes = {
     disabled: PropTypes.bool,
+    allowsCommenting: PropTypes.bool,
     editorFormat: PropTypes.array,
     activeCell: PropTypes.any,
     applyLink: PropTypes.func,
@@ -137,8 +140,8 @@ ToolbarComponent.propTypes = {
     editorState: PropTypes.object
 };
 
-const mapStateToProps = ({editorFormat, editorState, activeCell}) => ({
-    editorFormat, editorState, activeCell
+const mapStateToProps = ({editorFormat, editorState, activeCell, allowsCommenting}) => ({
+    editorFormat, editorState, activeCell, allowsCommenting
 });
 
 const mapDispatchToProps = (dispatch) => ({
