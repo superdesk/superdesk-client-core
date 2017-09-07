@@ -59,15 +59,16 @@ export const forceUpdate = (state) => {
  * @return {Object} returns new state
  * @description Handle the editor state has been changed event
  */
-const onChange = (state, newState) => {
+export const onChange = (state, newState) => {
     let editorState = newState, activeComment = null;
+    let contentChanged = state.editorState.getCurrentContent() !== newState.getCurrentContent();
 
     if (state.allowsCommenting) {
         ({editorState, activeComment} = updateComments(state.editorState, newState));
     }
-
-    state.onChangeValue(editorState.getCurrentContent());
-
+    if (contentChanged) {
+        state.onChangeValue(editorState.getCurrentContent());
+    }
     return {
         ...state,
         editorState,
@@ -106,9 +107,7 @@ const dragDrop = (state, e) => {
     const img = JSON.parse(data);
     const editorState = addImage(state.editorState, img);
 
-    state.onChangeValue(editorState.getCurrentContent());
-
-    return {...state, editorState};
+    return onChange(state, editorState);
 };
 
 /**
@@ -190,7 +189,7 @@ const setHTML = (state, html) => {
     const content = fromHTML(html);
     const editorState = EditorState.createWithContent(content, decorator);
 
-    return {...state, editorState};
+    return onChange(state, editorState);
 };
 
 export default editor3;

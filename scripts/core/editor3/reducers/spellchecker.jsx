@@ -1,4 +1,5 @@
 import {EditorState, Modifier} from 'draft-js';
+import {onChange} from './editor3';
 
 const spellchecker = (state = {}, action) => {
     switch (action.type) {
@@ -32,7 +33,7 @@ const replaceWord = (state, {word, newWord}) => {
 
     newState = EditorState.push(editorState, newState, 'spellcheck-change');
 
-    return {...state, editorState: newState};
+    return onChange(state, newState);
 };
 
 /**

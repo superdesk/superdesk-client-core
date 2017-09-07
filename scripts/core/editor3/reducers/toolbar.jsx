@@ -1,6 +1,7 @@
 import {RichUtils, Entity, AtomicBlockUtils, EditorState} from 'draft-js';
 import * as entityUtils from '../components/links/entityUtils';
 import {addComment} from './comments';
+import {onChange} from './editor3';
 
 /**
  * @description Contains the list of toolbar related reducers.
@@ -41,7 +42,7 @@ const toggleBlockStyle = (state, blockType) => {
         blockType
     );
 
-    return {...state, editorState: stateAfterChange};
+    return onChange(state, stateAfterChange);
 };
 
 /**
@@ -57,7 +58,7 @@ const toggleInlineStyle = (state, inlineStyle) => {
         inlineStyle
     );
 
-    return {...state, editorState: stateAfterChange};
+    return onChange(state, stateAfterChange);
 };
 
 /**
@@ -66,10 +67,10 @@ const toggleInlineStyle = (state, inlineStyle) => {
  * @param {Object} Comment data and selection.
  * @description Applies the given comment to the given selection.
  */
-const applyComment = (state, {data, selection}) => ({
-    ...state,
-    editorState: addComment(state.editorState, selection, data)
-});
+const applyComment = (state, {data, selection}) => onChange(
+    state,
+    addComment(state.editorState, selection, data)
+);
 
 /**
  * @ngdoc method
@@ -95,7 +96,7 @@ const applyLink = (state, {link, entity}) => {
         entityKey
     );
 
-    return {...state, editorState: stateAfterChange};
+    return onChange(state, stateAfterChange);
 };
 
 /**
@@ -120,7 +121,7 @@ const removeLink = (state) => {
         }
     );
 
-    return {...state, editorState: stateAfterChange};
+    return onChange(state, stateAfterChange);
 };
 
 /**
@@ -136,9 +137,7 @@ const insertImages = (state, imgs = []) => {
         editorState = addImage(editorState, img);
     });
 
-    state.onChangeValue(editorState.getCurrentContent());
-
-    return {...state, editorState};
+    return onChange(state, editorState);
 };
 
 /**
@@ -176,9 +175,7 @@ const updateImage = (state, {entityKey, img}) => {
     const selection = editorState.getSelection();
     const newState = EditorState.forceSelection(editorState, selection);
 
-    state.onChangeValue(newState.getCurrentContent());
-
-    return {...state, editorState: newState};
+    return onChange(state, newState);
 };
 
 /**
@@ -201,7 +198,7 @@ const applyEmbed = (state, code) => {
         ' '
     );
 
-    return {...state, editorState};
+    return onChange(state, editorState);
 };
 
 export default toolbar;

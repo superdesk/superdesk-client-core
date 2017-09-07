@@ -9,7 +9,7 @@ import {redrawComments, removeInlineStyles, applyInlineStyles} from './styles';
 import {getComments, addComment, replaceComments} from './store';
 import {updateComments} from './comments';
 
-// TODO(gbbr): Make sure save works when adding only a comment, and no content.
+// TODO(gbbr): Can not make a selection when the Comment Input is visible.
 // TODO(gbbr): Pimp up CommentInput.
 // TODO(gbbr): Use react-textarea-autosize in CommentInput to allow multi-line comments.
 
