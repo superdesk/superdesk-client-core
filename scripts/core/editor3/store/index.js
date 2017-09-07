@@ -55,20 +55,11 @@ export default function createEditorStore(ctrl) {
  * is bound to the controller, so 'this' points to controller attributes.
  */
 function onChange(content) {
-    // clear find & replace highlights
-    const cleanedContent = removeInlineStyles(content, [
-        'COMMENT', 'COMMENT_SELECTED', 'HIGHLIGHT', 'HIGHLIGHT_STRONG'
-    ]);
-    const newValue = toHTML(cleanedContent);
-
-    this.value = this.value || '<p><br></p>';
-    if (newValue.localeCompare(this.value) === 0) {
-        this.value = newValue;
-        return;
-    }
+    const decorativeStyles = ['COMMENT', 'COMMENT_SELECTED', 'HIGHLIGHT', 'HIGHLIGHT_STRONG'];
+    const cleanedContent = removeInlineStyles(content, decorativeStyles);
 
     this.editorState = convertToRaw(cleanedContent);
-    this.value = newValue;
+    this.value = toHTML(cleanedContent);
     this.onChange();
 }
 

@@ -235,7 +235,10 @@ describe('editor3.reducers', () => {
             ContentState.createFromText('abcd efgh')
         );
 
-        const state = reducer({editorState}, {
+        const state = reducer({
+            editorState: editorState,
+            onChangeValue: () => { /* no-op */ }
+        }, {
             type: 'SPELLCHECKER_REPLACE_WORD',
             payload: {
                 word: {text: 'efgh', offset: 5},

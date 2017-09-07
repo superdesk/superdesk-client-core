@@ -1,5 +1,5 @@
 import {AtomicBlockUtils, EditorState} from 'draft-js';
-import {forceUpdate} from './editor3';
+import {onChange, forceUpdate} from './editor3';
 
 /**
  * @description Contains the list of table related reducers.
@@ -42,7 +42,7 @@ const addTable = (state, data) => {
         ' '
     );
 
-    return {...state, editorState};
+    return onChange(state, editorState);
 };
 
 /**

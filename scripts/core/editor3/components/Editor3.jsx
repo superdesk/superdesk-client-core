@@ -242,6 +242,7 @@ export class Editor3Component extends React.Component {
             activeComment,
             onChange,
             onTab,
+            canComment,
             tabindex
         } = this.props;
         const selection = editorState.getSelection();
@@ -256,7 +257,7 @@ export class Editor3Component extends React.Component {
         return (
             <div className={cx}>
                 {showToolbar && <Toolbar disabled={locked || readOnly} />}
-                <CommentPopup comment={activeComment} editor={this.editorNode} selection={selection} />
+                {canComment && <CommentPopup comment={activeComment} editor={this.editorNode} selection={selection} />}
                 <div className="focus-screen" onMouseDown={this.focus}>
                     <Editor
                         editorState={editorState}
@@ -282,6 +283,7 @@ Editor3Component.propTypes = {
     readOnly: PropTypes.bool,
     locked: PropTypes.bool,
     showToolbar: PropTypes.bool,
+    canComment: PropTypes.bool,
     editorState: PropTypes.object,
     activeComment: PropTypes.object,
     onChange: PropTypes.func,
@@ -303,6 +305,7 @@ Editor3Component.defaultProps = {
 const mapStateToProps = (state) => ({
     readOnly: state.readOnly,
     showToolbar: state.showToolbar,
+    canComment: state.allowsCommenting,
     editorState: state.editorState,
     activeComment: state.activeComment,
     locked: state.locked,
