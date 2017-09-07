@@ -68,7 +68,6 @@ export class Editor3Component extends React.Component {
      */
     focus() {
         this.props.unlock();
-        setTimeout(this.refs.editor.focus, 0); // after action
     }
 
     /**
