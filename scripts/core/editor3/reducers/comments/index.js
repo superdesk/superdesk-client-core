@@ -12,10 +12,7 @@ import {updateComments} from './comments';
 // TODO(gbbr): Can not make a selection when the Comment Input is visible.
 // TODO(gbbr): Pimp up CommentInput.
 // TODO(gbbr): Use react-textarea-autosize in CommentInput to allow multi-line comments.
-
 // TODO(gbbr): Weird behaviour around copy/pasting comments around. Can this be fixed?
-// TODO(gbbr): Optimize for speed (for 'insert-characters' mostly). Perhaps we can
-// redraw only changes?
 
 export {
     repositionComments,

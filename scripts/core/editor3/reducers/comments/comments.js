@@ -3,15 +3,15 @@ import {repositionComments, redrawComments} from '.';
 
 /**
  * @typedef StateWithComment
- * @property {ContentState} contentState The new content state with styling applied.
- * @property {Comment} activeComment The active comment.
+ * @property {ContentState} editorState
+ * @property {Comment} activeComment
  */
 
 /**
  * @name updateComments
- * @description Returns a new editor state, along with the active comment if one is
- * hovered. The new editor state will contain the updated comment offsets, based on
- * the difference between the oldState and the newState.
+ * @description updateComments updates comment information after every content change. It
+ * recalculates comment offsets (start and end points) and reapplies the inline styling to
+ * match these.
  * @param {EditorState} oldState
  * @param {EditorState} newState
  * @returns {StateWithComment}
@@ -19,8 +19,9 @@ import {repositionComments, redrawComments} from '.';
 export function updateComments(oldState, newState) {
     let updatedState = repositionComments(oldState, newState);
     let {editorState, activeComment} = redrawComments(oldState, updatedState);
+    let contentChanged = oldState.getCurrentContent() !== newState.getCurrentContent();
 
-    if (changedContent(newState)) {
+    if (contentChanged) {
         editorState = preserveSelection(editorState, newState.getCurrentContent());
     }
 
@@ -30,7 +31,7 @@ export function updateComments(oldState, newState) {
 // Preserve before & after selection when content was changed. This helps
 // with keeping the cursor more or less in the same position when undo-ing
 // and redo-ing. Without this, all of the recalculating of offsets and styles
-// will misplace the cursor position.
+// will misplace the cursor position when the user performs an Undo operation.
 function preserveSelection(es, content) {
     let editorState = es;
     let selectionBefore = content.getSelectionBefore();
@@ -44,13 +45,3 @@ function preserveSelection(es, content) {
 
     return EditorState.set(editorState, {allowUndo: true});
 }
-
-/**
- * @name changedContent
- * @description True if the last change affected the content.
- * @returns {Boolean}
- */
-const changedContent = (editorState) => [
-    'backspace-character', 'delete-character', 'insert-characters', 'remove-range',
-    'insert-fragment', 'undo', 'redo', 'split-block', 'spellcheck-change'
-].indexOf(editorState.getLastChangeType()) > -1;

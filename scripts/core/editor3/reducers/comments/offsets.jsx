@@ -5,8 +5,8 @@ import {getComments, replaceComments} from '.';
 
 /**
  * @name repositionComments
- * @description Returns a new editor state with all the comment offsets updated (based on
- * the last change type).
+ * @description repositionComments returns a new EditorState with the comment offsets
+ * updated, making this operation invisible to the undoStack.
  * @param {EditorState} oldState
  * @param {EditorState} newState
  * @returns {EditorState}
@@ -27,8 +27,9 @@ export function repositionComments(oldState, newState) {
 
 /**
  * @name updateOffsets
- * @description Returns a new editor state having the comment offset updated, based on
- * the last change that ocurred in the editor.
+ * @description updateOffsets checks the last EditorChangeType and if it detects a content
+ * change, it returns a new EditorState with the metadata for the comments updated with the
+ * correct new start and end positions.
  * @param {EditorState} oldState
  * @param {EditorState} newState
  * @returns {EditorState}
@@ -59,9 +60,8 @@ const DiffNoChange = 0;
 const len = (s) => s.length - (s.match(/\r\n/g) || []).length * 2;
 
 /**
- * @description This function returns a new state with the comment offsets updated.
- * It creates a plain text diff between the old and new content and uses absolute
- * character positionings to simplify the algorithm.
+ * @description diffMethod uses DiffMatchPatch to compare the old content to the new
+ * content and obtain the new start & end offsets to the existing comments.
  * @param {EditorState} oldState
  * @param {EditorState} newState
  * @returns {EditorState}
@@ -96,8 +96,8 @@ function diffMethod(oldState, newState) {
  */
 
 /**
- * @description Shifts all comments (left or right) by n, starting at offset. It ignores
- * deleted comments and correctly chops off beginning or end parts.
+ * @description Shifts all comments (left or right) by `n`, starting after `offset`.
+ * It correctly removes comments integrally or partially on negative `n` values.
  * @param {Array<FlatComment>} arr Array of flattened comments.
  * @param {Number} count Number of characters to shift. Can be negative for deletion. Note
  * that deletion happens forward, starting after offset.
@@ -128,7 +128,7 @@ export function shift(comments, n, offset = 0) {
 }
 
 /**
- * @description Returns a new editor state with the given comment data applied.
+ * @description Returns a new EditorState with the new comment data applied.
  * @param {EditorState} editorState
  * @param {Array<FlatComment>} data The array of flattened comments.
  * @returns {EditorState}
@@ -188,7 +188,7 @@ export function keyAndOffset(contentState, n) {
 }
 
 /**
- * @description Creates a new selection object based on the given content state
+ * @description Creates a new SelectionState based on the given content state
  * and the aboslute character offsets start and end.
  * @param {ContentState} contentState
  * @param {Number} start
@@ -228,7 +228,7 @@ function flattenComments(oldState) {
 }
 
 /**
- * @description Returns the absolute position for the character at offset in block key.
+ * @description Returns the absolute position for the character at `offset` in block `key`.
  * @param {ContentState} content
  * @param {string} key
  * @param {Number} offset
