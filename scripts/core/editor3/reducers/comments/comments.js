@@ -18,7 +18,7 @@ import {repositionComments, redrawComments} from '.';
  */
 export function updateComments(oldState, newState) {
     let updatedState = repositionComments(oldState, newState);
-    let {editorState, activeComment} = redrawComments(oldState, updatedState);
+    let {editorState, activeComment} = redrawComments(updatedState);
     let contentChanged = oldState.getCurrentContent() !== newState.getCurrentContent();
 
     if (contentChanged) {

@@ -7,7 +7,7 @@ import {getComments} from '.';
  * @param {EditorState} es
  * @returns {EditorState}
  */
-export function redrawComments(oldState, newState) {
+export function redrawComments(newState) {
     let editorState = newState;
 
     const selection = editorState.getSelection();
