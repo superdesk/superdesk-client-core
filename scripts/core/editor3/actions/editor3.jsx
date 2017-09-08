@@ -51,6 +51,8 @@ export function dragDrop(e) {
     const transfer = e.originalEvent.dataTransfer;
 
     if (transfer.types[0] === 'Files') {
+        e.preventDefault();
+        e.stopPropagation();
         return insertImages(transfer.files);
     }
 
