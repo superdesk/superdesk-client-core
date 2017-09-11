@@ -72,17 +72,17 @@ export class ImageBlockComponent extends Component {
         return (
             <div className="image-block" onClick={(e) => e.stopPropagation()}>
                 <div className="image-block__wrapper">
-                    <img src={rendition.href} alt={alt} onClick={this.onClick} />
                     {showTitle ?
                         <Textarea
                             placeholder={gettext('Title')}
                             onFocus={setLocked}
-                            className="image-block__description"
+                            className="image-block__title"
                             value={data.headline}
                             onChange={this.onChange}
-                        /> : null }
+                    /> : null }
+                    <img src={rendition.href} alt={alt} onClick={this.onClick} />
                     <Textarea
-                        placeholder={gettext('Description')}
+                        placeholder={gettext('Caption')}
                         onFocus={setLocked}
                         className="image-block__description"
                         value={data.description_text}

@@ -1,4 +1,5 @@
 @import '~mixins.scss';
+@import '~variables/_typography.scss';
 
 .main-article .abstract div.Editor3-root div.link-toolbar {
 	font-size: 12px !important;
@@ -24,18 +25,19 @@
 	.link-toolbar {
 		font-size: 12px;
 		color: #444;
-		padding: 5px 10px;
+		padding: 0 10px;
 		border-top: 1px solid #efefef;
 		background-color: #fdfdfd;
-		box-shadow: inset 0 4px 11px -6px #efefef;
-		border-bottom: 1px solid #f1f1f1;
+		height: 0;
+		opacity: 0;
+		transition: all .2s ease-out;
 
-		&.empty {
-			border-bottom: 1px solid #fff;
-			box-shadow: none;
-			background: #fff;
+		&.is-link {
+			height: 26px; 
+			padding: 5px 10px;
+			opacity: 1;
 		}
-		
+
 		a {
 			margin-left: 5px;
 			cursor: pointer;
@@ -167,20 +169,32 @@
 	}
 
 	.image-block {
-		text-align: center;
-
+		text-align: left;
+		font-family: $baseFontFamily;
+		
 		&__wrapper {
 			display: inline-block;
 		}
 
-		&__description {
+		&__title {
 			resize: none;
-			text-align: left;
-			font-family: Arial;
-			font-size: 14px;
-			padding: 5px;
+			font-size: 16px;
+			line-height: 140%;	
+			padding: 5px 5px 5px 0;
+			margin-bottom: 5px;
 			min-height: 28px;
-			background-color: #efefef;
+			background-color: transparent;
+			border: none;
+		}
+		&__description {
+			font-size: 13px;			
+			line-height: 140%;
+			resize: none;
+			padding: 5px 5px 5px 0;
+			min-height: 28px;
+			color: #747474;
+			background-color: transparent;
+			border: none;
 		}
 
 		img {
@@ -206,6 +220,7 @@
 	border-top: 1px solid #ddd;
 	cursor: text;
 	font-size: 16px;
+	line-height: 140%;
 	margin-top: 10px;
 }
 
@@ -218,7 +233,7 @@
 
 .Editor3-editor .public-DraftEditorPlaceholder-root,
 .Editor3-editor .public-DraftEditor-content {
-	padding: 5px 0 15px 15px;
+	padding: 10px 15px 15px;
 }
 
 .Editor3-editor .public-DraftEditor-content {
@@ -256,6 +271,7 @@
 	font-size: 14px;
 	user-select: none;
 	background-color: #fafafa;
+	border-bottom: 1px solid #efefef;
 	line-height: 100% !important;
 
 	&.disabled {

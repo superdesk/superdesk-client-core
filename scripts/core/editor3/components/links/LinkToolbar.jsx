@@ -14,7 +14,7 @@ export class LinkToolbarComponent extends Component {
         const cx = classNames({
             dropdown: true,
             'link-toolbar': true,
-            empty: !isLink
+            'is-link': isLink
         });
 
         return <div className={cx}>
