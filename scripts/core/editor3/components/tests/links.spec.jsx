@@ -49,7 +49,7 @@ describe('editor3.components.link-toolbar', () => {
                 onEdit={() => { /* no-op */ }} />);
 
         expect(wrapper.find('div.link-toolbar').exists()).toBe(true);
-        expect(wrapper.find('div.link-toolbar').hasClass('empty')).toBe(true);
+        expect(wrapper.find('div.link-toolbar').hasClass('is-link')).toBe(false);
         expect(wrapper.find('a').length).toBe(0);
     });
 
