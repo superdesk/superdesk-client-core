@@ -534,22 +534,22 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             var deregisterTansa = $rootScope.$on('tansa:end', afterTansa);
 
             $scope.runTansa = function() {
-                const editor = editorResolver.get();
+                if (window.tansa && window.RunTansaProofing && window.tansaIsLoaded) {
+                    const editor = editorResolver.get();
 
-                if (editor && editor.version() === '3') {
-                    $('#editor3Tansa').html(editor.getHTML());
-                }
+                    if (editor && editor.version() === '3') {
+                        $('#editor3Tansa').html(editor.getHTML());
+                    }
 
-                switch ($scope.item.language) {
-                case 'nb-NO':
-                    window.tansa.settings.profileId = _.get($rootScope, 'config.tansa.profile.nb');
-                    break;
-                case 'nn-NO':
-                    window.tansa.settings.profileId = _.get($rootScope, 'config.tansa.profile.nn');
-                    break;
-                }
+                    switch ($scope.item.language) {
+                    case 'nb-NO':
+                        window.tansa.settings.profileId = _.get($rootScope, 'config.tansa.profile.nb');
+                        break;
+                    case 'nn-NO':
+                        window.tansa.settings.profileId = _.get($rootScope, 'config.tansa.profile.nn');
+                        break;
+                    }
 
-                if (window.RunTansaProofing) {
                     window.RunTansaProofing();
                 } else {
                     notify.error(gettext('Tansa is not responding. You can continue editing or publish the story.'));
