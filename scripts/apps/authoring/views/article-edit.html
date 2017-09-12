@@ -33,6 +33,7 @@
     <div id="title" class="headline"
          sd-editor3
          data-single-line="true"
+         data-bind-to-value="compareView"
          data-language="item.language"
          data-value="item.headline"
          data-on-change="autosave(item)"
@@ -150,6 +151,7 @@
     <div id="abstract" class="abstract"
          sd-editor3
          data-editor-format="editor.abstract.formatOptions"
+         data-bind-to-value="compareView"
          data-language="item.language"
          data-value="item.abstract"
          data-on-change="autosave(item)"
@@ -359,6 +361,7 @@
     <div id="title" class="abstract"
          sd-editor3
          data-editor-format="editor.description_text.formatOptions"
+         data-bind-to-value="compareView"
          data-value="item.description_text"
          data-read-only="!_editable"
          data-on-change="autosave(item)"
@@ -422,6 +425,7 @@
     <label translate>Footer</label>
     <div id="body_footer" class="body"
          sd-editor3
+         data-bind-to-value="compareView"
          data-editor-format="editor.body_footer.formatOptions"
          data-value="item.body_footer"
          data-read-only="!_editable"
@@ -499,6 +503,7 @@
         ng-if="field.field_type === 'text'"
         data-single-line="field.field_options.single"
         data-value="item.extra[field._id]"
+        data-bind-to-value="compareView"
         data-language="item.language"
         data-on-change="autosave(item)"
         data-read-only="!_editable"
