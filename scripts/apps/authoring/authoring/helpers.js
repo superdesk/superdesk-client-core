@@ -14,6 +14,7 @@ export const CONTENT_FIELDS_DEFAULTS = Object.freeze({
     groups: null,
     usageterms: null,
     ednote: null,
+    authors: [],
     place: [],
     dateline: {},
     language: null,
@@ -86,8 +87,8 @@ export function extendItem(dest, src) {
  */
 export function filterDefaultValues(diff, orig) {
     Object.keys(CONTENT_FIELDS_DEFAULTS).forEach((key) => {
-        if (diff.hasOwnProperty(key) && angular.equals(diff[key], CONTENT_FIELDS_DEFAULTS[key])
-            && !orig.hasOwnProperty(key)) {
+        if (diff.hasOwnProperty(key) && angular.equals(diff[key], CONTENT_FIELDS_DEFAULTS[key]) &&
+            !orig.hasOwnProperty(key)) {
             delete diff[key];
         }
     });

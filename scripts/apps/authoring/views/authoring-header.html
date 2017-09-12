@@ -335,7 +335,7 @@
              order="{{editor.ednote.order}}">
             <label class="authoring-header__item-label" translate>ED. NOTE</label>
             <div class="authoring-header__input-holder">
-                <textarea id="ednote" class="line-input ed-note" 
+                <textarea id="ednote" class="line-input ed-note"
                           sd-auto-height
                           tansa-scope-sync
                           tabindex="{{editor.ednote.order}}"
@@ -346,6 +346,31 @@
                 </textarea>
             </div>
 
+        </div>
+
+        <div class="authoring-header__item"
+             sd-validation-error="error.authors"
+             data-required="schema.authors.required"
+             ng-if="schema.authors && editor.authors"
+             sd-width="{{editor.authors.sdWidth}}"
+             order="{{editor.authors.order}}">
+            <label class="authoring-header__item-label" translate>AUTHORS</label>
+            <div id="authors"
+                 sd-meta-terms
+                 class="data"
+                 data-tabindex="editor.authors.order"
+                 data-item="item"
+                 data-field="authors"
+                 data-unique="_id"
+                 data-list="metadata.authors"
+                 data-label= "{{ :: 'Add author' | translate }}"
+                 ng-disabled="!_editable"
+                 data-header="true"
+                 data-change="autosave(item)"
+                 data-reload-list="true"
+                 data-select-entire-category="false"
+                 tabindex="{{editor.authors.order}}">
+            </div>
         </div>
     </div>
 </div>

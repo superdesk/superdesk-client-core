@@ -332,7 +332,7 @@ function MetaDropdownDirective($filter) {
         },
         templateUrl: 'scripts/apps/authoring/metadata/views/metadata-dropdown.html',
         link: function(scope, elem) {
-            scope.listFields = ['place', 'genre', 'anpa_category', 'subject'];
+            scope.listFields = ['place', 'genre', 'anpa_category', 'subject', 'authors'];
 
             scope.select = function(item) {
                 var o = {};
@@ -566,6 +566,7 @@ function MetaWordsListDirective() {
  * @param {Array} list - list of available values that can be added
  * @param {String} unique - specify the name of the field, in list item which is unique (qcode, value...)
  * @param {Boolean} searchUnique - to search unique field as well as name field
+ * @param {Boolean} selectEntireCategory - to allow a whole category to be selected (i.e. field without parent)
  *
  */
 MetaTermsDirective.$inject = ['metadata', '$filter', '$timeout'];
@@ -586,7 +587,8 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
             tabindex: '=',
             searchUnique: '@',
             setLanguage: '@',
-            helperText: '@'
+            helperText: '@',
+            selectEntireCategory: '@'
         },
         templateUrl: 'scripts/apps/authoring/metadata/views/metadata-terms.html',
         link: function(scope, elem, attrs) {
@@ -594,6 +596,9 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
             var reloadList = scope.reloadList === 'true';
             var includeParent = scope.includeParent === 'true';
             var searchUnique = scope.searchUnique === 'true';
+
+            // we want true as default value to keep legacy behaviour
+            scope.allowEntireCat = scope.selectEntireCategory !== 'false';
 
             scope.combinedList = [];
 
@@ -679,6 +684,7 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
                 _.defer(() => {
                     elem.find('button:not([disabled]):not(.dropdown__toggle)')[0].focus();
                 });
+                scope.activeList = false;
             };
 
             scope.activeList = false;
@@ -689,7 +695,13 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
                     scope.terms = filterSelected(scope.list);
                     scope.activeList = false;
                 } else {
-                    var searchList = reloadList ? scope.list : scope.combinedList;
+                    var searchList;
+
+                    if (!scope.allowEntireCat) {
+                        searchList = _.filter(scope.list, (item) => !item.parent);
+                    } else {
+                        searchList = reloadList ? scope.list : scope.combinedList;
+                    }
 
                     scope.terms = $filter('sortByName')(_.filter(filterSelected(searchList), (t) => {
                         var searchObj = {};
@@ -853,8 +865,8 @@ function MetaLocatorsDirective() {
 
             scope.$applyAsync(() => {
                 if (scope.item) {
-                    if (scope.fieldprefix && scope.item[scope.fieldprefix]
-                        && scope.item[scope.fieldprefix][scope.field]) {
+                    if (scope.fieldprefix && scope.item[scope.fieldprefix] &&
+                        scope.item[scope.fieldprefix][scope.field]) {
                         scope.selectedTerm = scope.item[scope.fieldprefix][scope.field].city;
                     } else if (scope.item[scope.field]) {
                         scope.selectedTerm = scope.item[scope.field].city;
@@ -940,8 +952,8 @@ function MetaLocatorsDirective() {
     };
 }
 
-MetadataService.$inject = ['api', 'subscribersService', 'config', 'vocabularies', '$rootScope'];
-function MetadataService(api, subscribersService, config, vocabularies, $rootScope) {
+MetadataService.$inject = ['api', 'subscribersService', 'config', 'vocabularies', '$rootScope', 'session', '$filter'];
+function MetadataService(api, subscribersService, config, vocabularies, $rootScope, session, $filter) {
     var service = {
         values: {},
         helper_text: {},
@@ -1002,6 +1014,38 @@ function MetadataService(api, subscribersService, config, vocabularies, $rootSco
 
             return api.get('/subjectcodes').then((result) => {
                 self.values.subjectcodes = result._items;
+            });
+        },
+        fetchAuthors: function(code) {
+            var self = this;
+
+            self.values.authors = [];
+
+            return api.get('/users', {is_author: 1}).then((result) => {
+                var first;
+
+                _.each(result._items, (user) => {
+                    var authorMetadata = {_id: user._id, name: user.display_name, user: user};
+
+                    if (session.identity.is_author && user._id === session.identity._id) {
+                        // we want logged user to appear first
+                        first = authorMetadata;
+                    } else {
+                        self.values.authors.push(authorMetadata);
+                    }
+                    _.each(self.values.author_roles, (role) => {
+                        self.values.authors.push({
+                            _id: [user._id, role.qcode],
+                            role: role.qcode,
+                            name: role.name,
+                            parent: user._id,
+                            sub_label: user.display_name});
+                    });
+                });
+                self.values.authors = $filter('sortByName')(self.values.authors);
+                if (first) {
+                    self.values.authors.unshift(first);
+                }
             });
         },
         removeSubjectTerm: function(term) {
@@ -1076,6 +1120,7 @@ function MetadataService(api, subscribersService, config, vocabularies, $rootSco
             if (!this.loaded) {
                 this.loaded = this.fetchMetadataValues()
                     .then(angular.bind(this, this.fetchSubjectcodes))
+                    .then(angular.bind(this, this.fetchAuthors))
                     .then(angular.bind(this, this.fetchSubscribers))
                     .then(angular.bind(this, this.fetchCities));
             }
