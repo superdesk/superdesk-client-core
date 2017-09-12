@@ -9,14 +9,14 @@ import {getComments} from '.';
  */
 export function redrawComments(newState) {
     let editorState = newState;
-
-    const selection = editorState.getSelection();
-    const cleanContent = removeInlineStyles(editorState.getCurrentContent());
-    const {contentState, activeComment} = applyInlineStyles(cleanContent, selection);
+    let selection = editorState.getSelection();
+    let cleanContent = removeInlineStyles(editorState.getCurrentContent());
+    let {contentState, activeComment} = applyInlineStyles(cleanContent, selection);
+    let selectionFunc = selection.getHasFocus() ? 'forceSelection' : 'acceptSelection';
 
     editorState = EditorState.set(editorState, {allowUndo: false});
     editorState = EditorState.push(editorState, contentState, 'change-inline-style');
-    editorState = EditorState.acceptSelection(editorState, selection);
+    editorState = EditorState[selectionFunc](editorState, selection);
     editorState = EditorState.set(editorState, {allowUndo: true});
 
     return {editorState, activeComment};
