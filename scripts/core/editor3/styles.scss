@@ -4,6 +4,19 @@
 .main-article .abstract div.Editor3-root div.link-toolbar {
 	font-size: 12px !important;
 	font-style: normal;
+	padding: 0 10px;
+	border-top: 1px solid #efefef;
+	background-color: #fdfdfd;
+	height: 0;
+	min-height: auto;
+	opacity: 0;
+	transition: all .2s ease-out;
+
+	&.is-link {
+		height: 26px; 
+		padding: 5px 10px;
+		opacity: 1;
+	}
 }
 
 .Editor3-root {
@@ -233,7 +246,7 @@
 
 .Editor3-editor .public-DraftEditorPlaceholder-root,
 .Editor3-editor .public-DraftEditor-content {
-	padding: 10px 15px 15px;
+	padding: 10px 15px 0 15px;
 }
 
 .Editor3-editor .public-DraftEditor-content {
@@ -329,7 +342,7 @@
 		position: relative;
 
 		input[type="url"] {
-			padding: 9px 47px 8px 15px;
+			padding: 0px 47px 0px 5px;
 		}
 	}
 }
