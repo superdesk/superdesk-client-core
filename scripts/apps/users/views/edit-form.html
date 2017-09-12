@@ -182,10 +182,9 @@
         <div class="details-info" ng-show="tab === 'author'">
 
             <div class="form__row" sd-info-item ng-if="!hideSignOff">
-                <div class="sd-line-input sd-line-input--required">
+                <div class="sd-line-input sd-line-input">
                     <label class="sd-line-input__label" for="sign_off" translate>Sign-Off</label>
-                    <input class="sd-line-input__input" type="text" name="sign_off" id="sign_off" ng-model="user.sign_off" ng-pattern="signOffPattern" required>
-                    <div class="sd-line-input__message" ng-show="userForm.sign_off.$error.required" translate>This field is required.</div>
+                    <input class="sd-line-input__input" type="text" name="sign_off" id="sign_off" ng-model="user.sign_off" ng-pattern="signOffPattern">
                     <div class="sd-line-input__message" ng-show="userForm.sign_off.$error.pattern || error.sign_off" sd-valid-info>
                         <i class="icon-info-sign-warning"></i>
                         <span translate>Invalid format. Only Alphanumerics are allowed.</span>

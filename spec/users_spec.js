@@ -173,18 +173,31 @@ describe('users', () => {
             expect(buttonSave.isEnabled()).toBe(true);
             expect(buttonCancel.isEnabled()).toBe(true);
 
+            inputSignOff.clear();
+            inputSignOff.sendKeys('fl');
+            expect(inputSignOff.getAttribute('value')).toBe('fl');
+
+            browser.sleep(200);
+            expect(buttonSave.isDisplayed()).toBe(false);
+            expect(buttonCancel.isDisplayed()).toBe(false);
+
             generalTab.click();
             inputFirstName.clear();
 
-            authorsTab.click();
-            inputSignOff.clear();
-            generalTab.click();
+            inputFirstName.sendKeys('X');
+            expect(inputFirstName.getAttribute('value')).toBe('X');
+
+            browser.sleep(200);
+            expect(buttonSave.isEnabled()).toBe(true);
+            expect(buttonCancel.isEnabled()).toBe(true);
+
+            inputFirstName.clear();
             inputFirstName.sendKeys('first name');
             expect(inputFirstName.getAttribute('value')).toBe('first name');
 
             browser.sleep(200);
-            expect(buttonSave.isEnabled()).toBe(false);
-            expect(buttonCancel.isEnabled()).toBe(true);
+            expect(buttonSave.isDisplayed()).toBe(false);
+            expect(buttonCancel.isDisplayed()).toBe(false);
         });
     });
 
