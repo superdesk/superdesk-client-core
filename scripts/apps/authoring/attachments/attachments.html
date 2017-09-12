@@ -37,7 +37,7 @@
     </div>
 
     <div class="attach-indicator"
-        ng-show="files.length < ctrl.maxFiles && !ctrl.isLocked"
+        ng-show="files.length < ctrl.maxFiles && ctrl.isLockedByMe"
         ng-class="{empty: files.length === 0}"
         >
 
