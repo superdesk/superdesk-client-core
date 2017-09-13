@@ -24,7 +24,14 @@ export function handlePastedText(editorKey, text, html) {
         return false;
     }
 
-    const {onChange, editorState} = this.props;
+    return ensureAtomicBlocks(this.props, html);
+}
+
+// Checks if there are atomic blocks in the paste content. If there are, we need to set
+// the 'atomic' block type using the Modifier tool and add these entities to the
+// contentState.
+function ensureAtomicBlocks(props, html) {
+    const {onChange, editorState} = props;
     const pastedContent = fromHTML(html);
     const blockMap = pastedContent.getBlockMap();
     const hasAtomicBlocks = blockMap.some((block) => block.getType() === 'atomic');
@@ -61,13 +68,7 @@ export function handlePastedText(editorKey, text, html) {
     return true;
 }
 
-/**
- * @description Checks if the given html contains blocks coming from the editor with
- * key editorKey.
- * @param {string} html
- * @param {string} editorKey
- * @returns {Boolean}
- */
+// Checks if the given html contains blocks coming from the editor with
 function HTMLComesFromEditor(html, editorKey) {
     const tree = $('<div></div>');
 
@@ -76,32 +77,14 @@ function HTMLComesFromEditor(html, editorKey) {
     return $(tree).find(`[data-block="true"][data-editor="${editorKey}"]`).length > 0;
 }
 
-/**
- * @ngdoc method
- * @name emptyBlock
- * @returns {ContentBlock}
- * @description Returns an empty block.
- */
+ // Returns an empty block.
 const emptyBlock = () => new ContentBlock({
-    key: genKey(),
-    type: 'unstyled',
-    text: '',
-    characterList: List()
+    key: genKey(), type: 'unstyled', text: '', characterList: List()
 });
 
-/**
- * @ngdoc method
- * @name emptyBlock
- * @param {Object} data Block data.
- * @param {string} entity Entity key.
- * @returns {ContentBlock}
- * @description Returns an atomic block with the given data, linked to the given
- * entity key.
- */
+ // Returns an atomic block with the given data, linked to the given entity key.
 const atomicBlock = (data, entity) => new ContentBlock({
-    key: genKey(),
-    type: 'atomic',
-    text: ' ',
+    key: genKey(), type: 'atomic', text: ' ',
     characterList: List([CharacterMetadata.create({entity})]),
     data: data
 });
