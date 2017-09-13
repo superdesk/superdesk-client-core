@@ -66,7 +66,7 @@ describe('superdesk.apps.workspace.content', () => {
         }));
 
         it('can create items from template', inject((api, content, desks, session, $rootScope) => {
-            session.identity = {_id: 'user:1'};
+            session.identity = {_id: 'user:1', byline: 'user1'};
 
             spyOn(desks, 'getCurrentDesk')
                 .and
@@ -89,7 +89,8 @@ describe('superdesk.apps.workspace.content', () => {
                 task: {desk: '2', stage: '4', user: 'user:1'},
                 template: 'template1',
                 type: 'text',
-                version: 0
+                version: 0,
+                byline: 'user1'
             });
         }));
 
