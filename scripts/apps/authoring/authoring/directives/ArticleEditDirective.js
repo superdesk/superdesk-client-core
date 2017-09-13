@@ -123,9 +123,7 @@ export function ArticleEditDirective(
                         _.extend(item, updates);
                     }
                     if (autopopulateByline && !item.byline) {
-                        item.byline = $interpolate(gettext('By {{ display_name }}'))({
-                            display_name: session.identity.display_name
-                        });
+                        item.byline = session.identity.byline;
                     }
                     if (_.includes(['picture', 'graphic'], item.type) && _.get(metadata, 'values.crop_sizes')) {
                         item.hasCrops = metadata.values.crop_sizes.some(
