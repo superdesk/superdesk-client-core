@@ -33,6 +33,8 @@ module.exports = function makeConfig(grunt) {
     const isEmbedded = require('fs').existsSync('./node_modules/superdesk-core');
 
     return {
+        cache: true,
+
         entry: {
             app: ['scripts/index.js']
         },
@@ -60,11 +62,10 @@ module.exports = function makeConfig(grunt) {
         ],
 
         resolve: {
-            modules: [
+            root: [
                 __dirname,
                 path.join(__dirname, '/scripts'),
-                path.join(__dirname, '/styles/sass'),
-                "node_modules"
+                path.join(__dirname, '/styles/sass')
             ],
             alias: {
                 'moment-timezone': 'moment-timezone/builds/moment-timezone-with-data-2010-2020',
@@ -75,27 +76,30 @@ module.exports = function makeConfig(grunt) {
                 // ensure that react is loaded only once (3rd party apps can load more...)
                 'react': path.resolve('./node_modules/react')
             },
-            extensions: ['.js', '.jsx']
+            extensions: ['', '.js', '.jsx']
+        },
+
+        eslint: {
+            configFile: isEmbedded ? './node_modules/superdesk-core/.eslintrc.json' : null,
+            ignorePath: isEmbedded ? './node_modules/superdesk-core/.eslintignore' : null
         },
 
         module: {
-            rules: [
+            preLoaders: [
                 {
-                    enforce: 'pre',
                     test: /\.jsx?$/,
                     loader: 'eslint-loader',
                     // superdesk apps handle their own linter
                     exclude: (p) => p.indexOf('node_modules') !== -1 || (sdConfig.apps && sdConfig.apps.some(app => p.indexOf(app) > -1)),
-                    options: {
-                        configFile: isEmbedded ? './node_modules/superdesk-core/.eslintrc.json' : null,
-                        ignorePath: isEmbedded ? './node_modules/superdesk-core/.eslintignore' : null
-                    }
-                },
+                }
+            ],
+
+            loaders: [
                 {
                     test: /\.jsx?$/,
                     exclude: shouldExclude,
-                    loader: 'babel-loader',
-                    options: {
+                    loader: 'babel',
+                    query: {
                         cacheDirectory: true,
                         presets: ['es2015', 'react'],
                         plugins: ['transform-object-rest-spread']
@@ -103,30 +107,23 @@ module.exports = function makeConfig(grunt) {
                 },
                 {
                     test: /\.html$/,
-                    loader: 'html-loader'
+                    loader: 'html'
                 },
                 {
-                    test: /\.css$/,
-                    use: [
-                        'style-loader',
-                        'css-loader'
-                    ]
+                    test: /\.json$/,
+                    loader: 'json-loader'
+                },
+                {
+                    test: /\.css/,
+                    loader: 'style!css'
                 },
                 {
                     test: /\.less$/,
-                    use: [
-                        'style-loader',
-                        'css-loader',
-                        'less-loader',
-                    ]
+                    loader: 'style!css!less'
                 },
                 {
                     test: /\.scss$/,
-                    use: [
-                        'style-loader',
-                        'css-loader',
-                        'sass-loader'
-                    ]
+                    loader: 'style!css!sass'
                 },
                 {
                     test: /\.(png|gif|jpeg|jpg|woff|woff2|eot|ttf|svg)(\?.*$|$)/,

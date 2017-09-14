@@ -34,19 +34,28 @@ var HTTP_API = {
     }
 };
 
+var apiProvider;
+
 function doConfig($provide) {
     $provide.constant('config', {server: {url: SERVER_URL}});
 }
 
+function doTestModule() {
+    angular.module('superdesk.core.api.tests', [])
+    .config(['apiProvider', function(_apiProvider_) {
+        apiProvider = _apiProvider_;
+    }]);
+    window.module('superdesk.core.api', 'superdesk.api.tests');
+    inject(() => { /* no-op */ });
+}
+
 describe('API Provider', () => {
     beforeEach(window.module(doConfig));
-    beforeEach(window.module('superdesk.core.api'));
+
+    beforeEach(doTestModule());
 
     beforeEach(() => {
-        angular.module('superdesk.core.api')
-            .config(['apiProvider', (apiProvider) => {
-                apiProvider.api('http', HTTP_API);
-            }]);
+        apiProvider.api('http', HTTP_API);
     });
 
     it('exists', inject((api) => {
