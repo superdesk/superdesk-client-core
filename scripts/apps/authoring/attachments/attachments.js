@@ -10,6 +10,7 @@ class AttachmentsController {
         this.gettext = gettext;
         this.urls = urls;
         this.isLocked = lock.isLocked($scope.item);
+        this.isLockedByMe = lock.isLockedByMe($scope.item);
 
         attachments.byItem($scope.item).then((files) => {
             this.$scope.files = files;
