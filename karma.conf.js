@@ -70,6 +70,9 @@ module.exports = function(config) {
         browsers: ['Chrome'],
 
         // Continuous Integration mode
-        singleRun: false
+        singleRun: false,
+
+        // Seams default 10s is not enough for CI sometime, so let's try 30s
+        browserNoActivityTimeout: 30000
     });
 };
