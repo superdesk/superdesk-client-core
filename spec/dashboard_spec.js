@@ -44,7 +44,12 @@ describe('dashboard', () => {
         monitoring.nextSearches();
         monitoring.nextReorder();
         monitoring.saveSettings();
-        browser.sleep(300);
+        browser.wait(() =>
+            dashboard.getWidget(0)
+                .element(by.id('title'))
+                .isDisplayed(),
+            5000
+        );
         expect(dashboard.getTextItem(0, 0, 0)).toBe('item3');
         expect(dashboard.getTextItem(0, 1, 0)).toBe('item4');
         expect(dashboard.getTextItem(1, 2, 0)).toBe('item5');
