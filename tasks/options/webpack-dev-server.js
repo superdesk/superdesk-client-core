@@ -7,7 +7,10 @@ module.exports = function(grunt) {
     return {
         options: {
             webpack: webpackConfig,
-            publicPath: '/dist',
+            contentBase: [
+                path.join(process.cwd(), 'dist'),
+                path.dirname(path.dirname(__dirname))
+            ],
             port: 9000,
             host: '0.0.0.0',
             headers: {
@@ -16,18 +19,7 @@ module.exports = function(grunt) {
         },
 
         start: {
-            keepAlive: true,
-            proxy: getProxy(),
-            webpack: {
-                devtool: 'eval',
-                debug: true,
-                entry: {
-                    app: ['webpack-dev-server/client?http://localhost:9000/'].concat(webpackConfig.entry.app)
-                },
-                output: {
-                    publicPath: 'dist'
-                }
-            }
+            webpack: {devtool: 'eval'}
         },
 
         'ui-guide': {
@@ -48,34 +40,3 @@ module.exports = function(grunt) {
         }
     };
 };
-
-// getProxy returns the proxy configuration for the dev server. In the dev
-// environment, some paths need to be rewritten.
-function getProxy() {
-    // isEmbedded will be true when the app is embedded into the main repo as a
-    // node module.
-    var isEmbedded = require('fs').existsSync('./node_modules/superdesk-core');
-
-    // prepend returns a proxy configuration that prepends the passed URL with
-    // the given parameter.
-    var prepend = function(loc) {
-        return {
-            target: 'http://localhost:9000',
-            rewrite: function(req) {
-                req.url = loc + req.url;
-            }
-        };
-    };
-
-    var proxy = isEmbedded ? {
-        '/scripts/*': prepend('node_modules/superdesk-core'),
-        '/images/*': prepend('node_modules/superdesk-core'),
-        '/locales/*': prepend('dist')
-    } : {};
-
-    // on the dev server the bundle is in the dist folder
-    proxy['/app.bundle.js'] = prepend('dist');
-    proxy['/config.js'] = prepend('dist');
-
-    return proxy;
-}
