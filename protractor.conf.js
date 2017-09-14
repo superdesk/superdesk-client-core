@@ -51,11 +51,27 @@ var config = {
                 consolidateAll: true
             })
         );
+        function takeScreenshot(dir, result) {
+            if (!dir) {
+                return
+            }
+            browser.takeScreenshot().then(function(png) {
+                var fs = require('fs');
+                if (!fs.existsSync(dir)) {
+                    fs.mkdirSync(dir);
+                }
+                var file = path.join(dir, result.fullName + '.png'),
+                    stream = fs.createWriteStream(file);
+                stream.write(new Buffer(png, 'base64'));
+                stream.end();
+            });
+        }
         function CustomReporter() {
             this.specDone = function(result) {
                 if (result.failedExpectations.length > 0) {
                     var name = result.fullName.split(' ');
                     console.log('at ' + name[0] + ': ' + result.description);
+                    takeScreenshot(process.env.SCREENSHOTS_DIR, result);
                 }
             };
         }
