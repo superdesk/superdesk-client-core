@@ -159,7 +159,7 @@ preferencesService, moment, sortService, deployConfig) {
                 nottype: 'type',
                 notdesk: 'task.desk',
                 notgenre: 'genre.name',
-                notcategory: 'anpa_category_name',
+                notcategory: 'anpa_category.name',
                 noturgency: 'urgency',
                 notpriority: 'priority',
                 notsource: 'source',
