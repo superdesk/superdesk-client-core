@@ -1709,38 +1709,35 @@
 
 // DRAG & DROP
 // ---------------------------------------------
-.draggable-list {
-    > li {
-        background-color: #fff;
-        padding: 18px 14px 19px 25px;
-        margin-bottom: 10px;
-        cursor: move;
-        @include box-shadow (0 1px 4px 0 rgba(0,0,0,0.2));
-        position: relative;
-        &.placeholder {
-            background: none;
-            @include box-shadow(none);
-            border: 2px dashed #ebebeb;
-        }
+.draggable-list__item {
+    background-color: #fff;
+    padding: 18px 14px 19px 25px;
+    margin-bottom: 10px;
+    cursor: move;
+    @include box-shadow (0 1px 4px 0 rgba(0,0,0,0.2));
+    position: relative;
+    &.placeholder {
+        background: none;
+        @include box-shadow(none);
+        border: 2px dashed #ebebeb;
+    }
+    &:after {
+        content: "";
+        width: 10px;
+        top: 0;
+        bottom: 0;
+        left: 2px;
+        background: transparent url(~images/draggable-bg.png) repeat-y left 3px top 3px;
+        opacity: 0.2;
+        position: absolute;
+        display: block;
+    }
+    &:hover {
+        @include box-shadow (0 1px 4px 0 rgba(0,0,0,0.4));
         &:after {
-            content: "";
-            width: 10px;
-            top: 0;
-            bottom: 0;
-            left: 2px;
-            background: transparent url(~images/draggable-bg.png) repeat-y left 3px top 3px;
-            opacity: 0.2;
-            position: absolute;
-            display: block;
-        }
-        &:hover {
-            @include box-shadow (0 1px 4px 0 rgba(0,0,0,0.4));
-            &:after {
-                opacity: 0.8;
-            }
+            opacity: 0.8;
         }
     }
-
 }
 .draggable-list.serial-decimal {
     list-style-type: decimal !important;

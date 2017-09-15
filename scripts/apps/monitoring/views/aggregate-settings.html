@@ -85,7 +85,7 @@
         <div class="content">
             <div class="legend" translate>Reorder stages and saved searches for view</div>
             <ul class="groups draggable-list serial-decimal" sd-sort-groups>
-                <li class="sort-item" ng-class="{'active': item.order < columnsLimit}"
+                <li class="sort-item draggable-list__item" ng-class="{'active': item.order < columnsLimit}"
                  ng-repeat="item in getValues() track by item.order">
                     <div class="group-title" ng-if="item.type === 'stage'">
                         {{deskLookup[stageLookup[item._id].desk].name}} : <span>{{stageLookup[item._id].name}}</span>
