@@ -734,7 +734,7 @@ describe('monitoring', () => {
     });
 
     it('can remember last duplicate destination desk', () => {
-        monitoring.openMonitoring(true);
+        monitoring.openMonitoring();
         monitoring.actionOnItemSubmenu('Duplicate', 'Duplicate To', 2, 0, true);
         authoring.duplicateTo('Sports Desk', 'one');
         monitoring.actionOnItemSubmenu('Duplicate', 'Duplicate To', 2, 0, true);

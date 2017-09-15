@@ -63,7 +63,7 @@ describe('send', () => {
     });
 
     it('can open send to panel when monitoring list is hidden', () => {
-        monitoring.openMonitoring(true);
+        monitoring.openMonitoring();
         workspace.selectDesk('Sports Desk');
 
         monitoring.openAction(2, 0);
@@ -75,7 +75,7 @@ describe('send', () => {
     });
 
     it('can display monitoring after submitting an item to a desk using full view of authoring', () => {
-        monitoring.openMonitoring(true);
+        monitoring.openMonitoring();
         workspace.selectDesk('Sports Desk');
 
         monitoring.openAction(2, 0);
@@ -108,7 +108,7 @@ describe('send', () => {
     });
 
     it('can remember last sent destination desk and stage', () => {
-        monitoring.openMonitoring(true);
+        monitoring.openMonitoring();
         workspace.selectDesk('Sports Desk');
 
         monitoring.openAction(2, 0);
@@ -135,7 +135,7 @@ describe('send', () => {
     });
 
     it('can remember last sent destination desk and stage on multi selection sendTo panel', () => {
-        monitoring.openMonitoring(true);
+        monitoring.openMonitoring();
         workspace.selectDesk('Politic Desk');
 
         monitoring.selectItem(2, 0);
