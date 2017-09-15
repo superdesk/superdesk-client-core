@@ -44,6 +44,11 @@ var config = {
 
     onPrepare: function() {
         require('./spec/helpers/setup')({fixture_profile: 'app_prepopulate_data'});
+
+        // so it can be used without import in tests
+        // useful when debugging on CI server
+        browser.screenshot = require('./spec/helpers/utils').screenshot;
+
         var reporters = require('jasmine-reporters');
         jasmine.getEnv().addReporter(
             new reporters.JUnitXmlReporter({
@@ -51,27 +56,13 @@ var config = {
                 consolidateAll: true
             })
         );
-        function takeScreenshot(dir, result) {
-            if (!dir) {
-                return
-            }
-            browser.takeScreenshot().then(function(png) {
-                var fs = require('fs');
-                if (!fs.existsSync(dir)) {
-                    fs.mkdirSync(dir);
-                }
-                var file = path.join(dir, result.fullName + '.png'),
-                    stream = fs.createWriteStream(file);
-                stream.write(new Buffer(png, 'base64'));
-                stream.end();
-            });
-        }
         function CustomReporter() {
             this.specDone = function(result) {
                 if (result.failedExpectations.length > 0) {
                     var name = result.fullName.split(' ');
                     console.log('at ' + name[0] + ': ' + result.description);
-                    takeScreenshot(process.env.SCREENSHOTS_DIR, result);
+
+                    browser.screenshot(result.fullName.replace(/[^\w]+/g, '-'));
                 }
             };
         }
