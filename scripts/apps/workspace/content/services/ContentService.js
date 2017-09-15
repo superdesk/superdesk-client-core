@@ -31,10 +31,11 @@ ContentService.$inject = [
     'gettext',
     '$filter',
     '$q',
-    '$rootScope'
+    '$rootScope',
+    'session'
 ];
 export function ContentService(api, superdesk, templates, desks, packages, archiveService, notify, gettext,
-    $filter, $q, $rootScope) {
+    $filter, $q, $rootScope, session) {
     const TEXT_TYPE = 'text';
 
     const self = this;
@@ -116,6 +117,11 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
             item.dateline = _.omit(item.dateline, 'text');
             item.dateline.date = $filter('formatDateTimeString')();
         }
+        // set missing byline from user profile.
+        if (!item.byline) {
+            item.byline = session.identity.byline;
+        }
+
         archiveService.addTaskToArticle(item);
         return save(item).then((_item) => {
             templates.addRecentTemplate(desks.activeDeskId, template._id);
