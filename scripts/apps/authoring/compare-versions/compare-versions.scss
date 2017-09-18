@@ -17,6 +17,9 @@
 }
 
 .compare-versions-screen {
+    height: 90%;
+    overflow-y: auto;
+
     .boards-list {
         position: absolute;
         top: 0; left: 0; bottom: 0; right: 0;
@@ -61,7 +64,6 @@
             @include border-box();
             border: 1px solid #cacaca;
             border-width: 0 1px;
-            overflow-y: auto;
             position: relative;
 
             > .dropdown {
