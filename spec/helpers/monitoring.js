@@ -1,8 +1,7 @@
 /* eslint-disable newline-per-chained-call */
 
 
-var openUrl = require('./utils').open,
-    nav = require('./utils').nav,
+var nav = require('./utils').nav,
     waitFor = require('./utils').wait;
 
 module.exports = new Monitoring();
@@ -11,11 +10,8 @@ function Monitoring() {
     this.config = element(by.className('aggregate-settings'));
     this.label = element(by.model('widget.configuration.label'));
 
-    this.openMonitoring = function(useNav) {
-        if (useNav) {
-            return nav('/workspace/monitoring');
-        }
-        return openUrl('/#/workspace/monitoring');
+    this.openMonitoring = function() {
+        return nav('/workspace/monitoring');
     };
 
     this.showMonitoring = function() {

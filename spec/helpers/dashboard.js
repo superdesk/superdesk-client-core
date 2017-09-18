@@ -1,7 +1,7 @@
 /* eslint-disable newline-per-chained-call */
 
 
-var openUrl = require('./utils').open;
+var nav = require('./utils').nav;
 
 module.exports = new Dashboard();
 
@@ -10,7 +10,7 @@ function Dashboard() {
      * Open dashboard for current selected desk/custom workspace.
      */
     this.openDashboard = function() {
-        openUrl('/#/workspace');
+        nav('/workspace');
     };
 
     /**

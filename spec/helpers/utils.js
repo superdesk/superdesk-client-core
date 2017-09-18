@@ -18,6 +18,7 @@ module.exports.wait = wait;
 module.exports.hover = hover;
 module.exports.waitHidden = waitHidden;
 module.exports.scrollToView = scrollToView;
+module.exports.screenshot = screenshot;
 
 // construct url from uri and base url
 exports.constructUrl = function(base, uri) {
@@ -242,4 +243,30 @@ function waitHidden(elem, time) {
  */
 function scrollToView(elem) {
     browser.executeScript('arguments[0].scrollIntoView();', elem);
+}
+
+
+/**
+ * Take and save screenshot if SCREENSHOTS_DIR env variable is set
+ *
+ * @param {string} name
+ */
+function screenshot(name) {
+    let path = require('path'),
+        fs = require('fs'),
+        dir = process.env.SCREENSHOTS_DIR;
+
+    if (!dir) {
+        return;
+    }
+    if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir);
+    }
+    browser.takeScreenshot().then((png) => {
+        let file = path.join(dir, name + '.png'),
+            stream = fs.createWriteStream(file);
+
+        stream.write(new Buffer(png, 'base64'));
+        stream.end();
+    });
 }
