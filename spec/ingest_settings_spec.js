@@ -1,11 +1,11 @@
 
-var openUrl = require('./helpers/utils').open,
+var nav = require('./helpers/utils').nav,
     ingestSettings = require('./helpers/pages').ingestSettings,
     utils = require('./helpers/utils');
 
 describe('ingest_settings', () => {
     beforeEach((done) => {
-        openUrl('/#/settings/ingest').then(done);
+        nav('/settings/ingest').then(done);
     });
 
     xit('unselecting options in dropdown lists on the Actions pane', () => {

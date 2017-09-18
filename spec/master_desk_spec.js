@@ -1,13 +1,13 @@
 /* eslint-disable newline-per-chained-call */
 
 
-var openUrl = require('./helpers/utils').open,
+var nav = require('./helpers/utils').nav,
     masterDesks = require('./helpers/master_desks'),
     authoring = require('./helpers/authoring');
 
 describe('master_desk', () => {
     beforeEach((done) => {
-        openUrl('/#/desks/').then(done);
+        nav('/desks/').then(done);
     });
 
     function itemHeadline(x, y, z) {

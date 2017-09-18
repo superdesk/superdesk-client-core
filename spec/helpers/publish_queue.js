@@ -1,13 +1,13 @@
 /* eslint-disable newline-per-chained-call */
 
 
-var openUrl = require('./utils').open;
+var nav = require('./utils').nav;
 
 module.exports = new PublishQueue();
 
 function PublishQueue() {
     this.openPublishQueue = function() {
-        openUrl('/#/publish_queue');
+        nav('/publish_queue');
     };
 
     this.getRow = function(rowNo) {

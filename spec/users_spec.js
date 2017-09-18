@@ -2,7 +2,7 @@
 
 var authoring = require('./helpers/authoring'),
     monitoring = require('./helpers/monitoring'),
-    openUrl = require('./helpers/utils').open,
+    nav = require('./helpers/utils').nav,
     post = require('./helpers/fixtures').post,
     userPrefs = require('./helpers/user_prefs'),
     workspace = require('./helpers/workspace');
@@ -23,7 +23,7 @@ describe('users', () => {
 
     describe('profile:', () => {
         beforeEach((done) => {
-            openUrl('/#/profile').then(done);
+            nav('/profile').then(done);
         });
 
         it('can render user profile', () => {
@@ -54,7 +54,7 @@ describe('users', () => {
 
     describe('users list:', () => {
         beforeEach(() => {
-            openUrl('/#/users');
+            nav('/users');
         });
 
         it('can list users', () => {
@@ -118,7 +118,7 @@ describe('users', () => {
 
     describe('user detail:', () => {
         beforeEach((done) => {
-            openUrl('/#/users').then(done);
+            nav('/users').then(done);
         });
 
         it('can open user detail', () => {
@@ -143,7 +143,7 @@ describe('users', () => {
 
     describe('user edit:', () => {
         beforeEach((done) => {
-            openUrl('/#/users')
+            nav('/users')
                 .then(() =>
                     element(by.repeater('user in users').row(0)
                         .column('username'))
@@ -321,7 +321,7 @@ describe('users', () => {
 
     describe('default desk field should not be visible', () => {
         beforeEach((done) => {
-            openUrl('/#/users').then(done);
+            nav('/users').then(done);
         });
 
         it('while creating a new user', () => {

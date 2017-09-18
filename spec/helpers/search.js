@@ -1,7 +1,7 @@
 /* eslint-disable newline-per-chained-call */
 
 
-var openUrl = require('./utils').open,
+var nav = require('./utils').nav,
     waitFor = require('./utils').wait,
     scrollToView = require('./utils').scrollToView;
 
@@ -21,7 +21,7 @@ function GlobalSearch() {
      * Open dashboard for current selected desk/custom workspace.
      */
     this.openGlobalSearch = function() {
-        openUrl('/#/search');
+        nav('/search');
     };
 
     /**

@@ -1,11 +1,11 @@
 
-var openUrl = require('./helpers/utils').open,
+var nav = require('./helpers/utils').nav,
     dictionaries = require('./helpers/dictionaries');
 
 describe('dictionaries', () => {
     describe('add dictionary', () => {
         beforeEach(() => {
-            openUrl('/#/settings/dictionaries');
+            nav('/settings/dictionaries');
         });
 
         it('add dictionary', () => {
@@ -26,7 +26,7 @@ describe('dictionaries', () => {
 
     describe('edit dictionary', () => {
         beforeEach(() => {
-            openUrl('/#/settings/dictionaries');
+            nav('/settings/dictionaries');
         });
 
         it('change dictionary name', () => {
@@ -50,7 +50,7 @@ describe('dictionaries', () => {
 
     describe('delete dictionary', () => {
         beforeEach(() => {
-            openUrl('/#/settings/dictionaries');
+            nav('/settings/dictionaries');
         });
 
         it('delete dictionary', () => {

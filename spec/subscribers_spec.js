@@ -1,10 +1,10 @@
-var openUrl = require('./helpers/utils').open,
+var nav = require('./helpers/utils').nav,
     subscribers = require('./helpers/subscribers');
 
 describe('subscribers', () => {
     describe('list subscriber', () => {
         beforeEach(() => {
-            openUrl('/#/settings/publish');
+            nav('/settings/publish');
         });
 
         it('list subscriber', () => {
@@ -15,7 +15,7 @@ describe('subscribers', () => {
 
     describe('edit subscriber', () => {
         beforeEach(() => {
-            openUrl('/#/settings/publish');
+            nav('/settings/publish');
         });
 
         it('save button is disabled when subscriber type is changed', () => {

@@ -1,7 +1,7 @@
 /* eslint-disable newline-per-chained-call */
 
 
-var openUrl = require('./utils').open;
+var nav = require('./utils').nav;
 
 module.exports = new Dictionaries();
 
@@ -11,7 +11,7 @@ function Dictionaries() {
     this.languageId = element(by.model('dictionary.language_id'));
 
     this.get = function() {
-        openUrl('/#/settings/dictionaries');
+        nav('/settings/dictionaries');
         browser.sleep(500);
     };
 
