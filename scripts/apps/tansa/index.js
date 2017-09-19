@@ -21,6 +21,7 @@ document.write(`
 
         // tansa apparently likes to polute window scope
         window.tansa = tansa;
+        window.tansaIsLoaded = false;
 
         function afterProofing (isCancelled) {
             let $rootScope = angular.element(document.body).injector().get('$rootScope');
@@ -33,14 +34,19 @@ document.write(`
 /* globals tansa: true */
 var script = document.createElement('script');
 
+script.async = true;
+script.onload = tansaLoaded;
 script.src = `${tansa.settings.baseUrl}tansaLoader.js?${new Date().getTime()}`;
 document.write(script.outerHTML);
 
-document.write(`
-     <script type="text/javascript">
-        var pgwBrowser = tansaJQuery.pgwBrowser();
-        window.tansa.settings.platformName = pgwBrowser.os.name;
-        window.tansa.settings.platformVersion = pgwBrowser.os.fullVersion;
-     </script>
-`);
+function tansaLoaded() {
+    document.write(`
+         <script type="text/javascript">
+            var pgwBrowser = tansaJQuery.pgwBrowser();
+            window.tansa.settings.platformName = pgwBrowser.os.name;
+            window.tansa.settings.platformVersion = pgwBrowser.os.fullVersion;
+         </script>
+    `);
+    window.tansaIsLoaded = true;
+}
 /* jshint ignore:end */
