@@ -9,5 +9,7 @@ export function markedDesks(props) {
 }
 
 markedDesks.propTypes = {
+    // item is passed through to MarkedDesksInfo directly via props
+    // eslint-disable-next-line react/no-unused-prop-types
     item: PropTypes.any,
 };
