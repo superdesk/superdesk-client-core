@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {render, unmountComponentAtNode} from 'react-dom';
 import PropTypes from 'prop-types';
 import {Dropdown} from 'core/ui/components';
+import {UserAvatar} from 'apps/users/components';
 import moment from 'moment';
 import {getVisibleSelectionRect, SelectionState} from 'draft-js';
 
@@ -50,15 +51,21 @@ export class CommentPopup extends Component {
      * @returns {JSX}
      */
     component() {
-        const {author, date, msg} = this.props.comment.data;
-        const fromNow = moment(date).fromNow();
-        const pretty = moment(date).format('MMMM Do YYYY, h:mm:ss a');
+        const {author, avatar, date, msg} = this.props.comment.data;
+        const fromNow = moment(date).calendar();
+        const fullDate = moment(date).format('MMMM Do YYYY, h:mm:ss a');
         const position = this.position();
 
         return (
             <div className="comment-popup" style={position}>
                 <Dropdown open={true}>
-                    <b>{author}</b> wrote <span title={pretty}>{fromNow}</span>:
+                    <div className="comment-popup__header">
+                        <UserAvatar displayName={author} pictureUrl={avatar} />
+                        <div className="user-info">
+                            <div className="author-name">{author}</div>
+                            <div className="date" title={fullDate}>{fromNow}</div>
+                        </div>
+                    </div>
                     <div className="comment-popup__body">{msg}</div>
                 </Dropdown>
             </div>
@@ -107,6 +114,7 @@ CommentPopup.propTypes = {
         data: PropTypes.shape({
             msg: PropTypes.string,
             author: PropTypes.string,
+            avatar: PropTypes.string,
             date: PropTypes.date
         })
     })

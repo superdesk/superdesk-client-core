@@ -61,13 +61,13 @@ export function toggleInlineStyle(inlineStyle) {
  * @description Triggers the action to add a comment to the given selection.
  */
 export function applyComment(selection, msg) {
-    const {display_name: author, email} = ng.get('session').identity;
     const date = new Date();
+    const {display_name: author, email, picture_url: avatar} = ng.get('session').identity;
 
     return {
         type: 'TOOLBAR_ADD_COMMENT',
         payload: {
-            data: {msg, author, email, date},
+            data: {msg, author, email, date, avatar},
             selection: selection
         }
     };
