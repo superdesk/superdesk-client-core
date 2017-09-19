@@ -82,6 +82,17 @@ module.exports = function makeConfig(grunt) {
         module: {
             rules: [
                 {
+                    enforce: "pre",
+                    test: /\.jsx?$/,
+                    loader: 'eslint-loader',
+                    // superdesk apps handle their own linter
+                    exclude: (p) => p.indexOf('node_modules') !== -1 || (sdConfig.apps && sdConfig.apps.some(app => p.indexOf(app) > -1)),
+                    options: {
+                        configFile: isEmbedded ? './node_modules/superdesk-core/.eslintrc.json' : './.eslintrc.json',
+                        ignorePath: isEmbedded ? './node_modules/superdesk-core/.eslintignore' : './.eslintignore'
+                     }
+                },
+                {
                     test: /\.jsx?$/,
                     exclude: shouldExclude,
                     loader: 'babel-loader',
