@@ -1,5 +1,8 @@
+//TODO: Refactor these styles into separate smaller files.
+
 @import '~mixins.scss';
 @import '~variables/_typography.scss';
+@import '~variables/_colors.scss';
 
 .main-article .abstract div.Editor3-root div.link-toolbar {
 	font-size: 12px !important;
@@ -436,6 +439,7 @@
 	}
 }
 
+/** COMMENTS **/
 .comment-input {
 	.dropdown__menu {
 		padding: 15px;
@@ -457,8 +461,30 @@
 		padding: 15px;
 	}
 
+	&__header {
+		float: left;
+		padding: 0 0 15px;
+		width: 100%;
+
+		.user-avatar figure {
+			margin: 1px 8px 0 0;
+		}
+
+		.user-info {
+			.author-name {
+				font-weight: bold;
+			}
+
+			.date {
+				color: $gray;
+				font-size: 11px;
+				line-height: 13px;
+			}
+		}
+	}
+
 	&__body {
-		font-style: italic;
+		clear: both;
 		white-space: pre-wrap;
 	}
 }
