@@ -83,7 +83,7 @@ function PasswordStrength(gettext, $interpolate) {
 
                 if (typeof pass !== 'undefined') {
                     strength = pass.length >= config.MIN_LENGTH ?
-                    (config.ONE_LOWER.test(pass) ? 1 : 0) +
+                        (config.ONE_LOWER.test(pass) ? 1 : 0) +
                     (config.ONE_UPPER.test(pass) ? 1 : 0) +
                     (config.ONE_NUMBER.test(pass) ? 1 : 0) +
                     (config.ONE_OTHER.test(pass) ? 1 : 0) : 0;

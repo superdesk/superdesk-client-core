@@ -5,42 +5,42 @@ angular.module('superdesk.core.services.beta', ['superdesk.core.preferences'])
 /**
  * Superdesk service for enabling/disabling beta preview in app
  */
-.service('betaService', ['$window', '$rootScope', '$q', 'preferencesService',
-    function($window, $rootScope, $q, preferencesService) {
-        $rootScope.beta = null;
+    .service('betaService', ['$window', '$rootScope', '$q', 'preferencesService',
+        function($window, $rootScope, $q, preferencesService) {
+            $rootScope.beta = null;
 
-        this.toggleBeta = function() {
-            var update = {
-                'feature:preview': {
-                    default: false,
-                    enabled: !$rootScope.beta,
-                    label: 'Enable Feature Preview',
-                    type: 'bool',
-                    category: 'feature'
-                }
+            this.toggleBeta = function() {
+                var update = {
+                    'feature:preview': {
+                        default: false,
+                        enabled: !$rootScope.beta,
+                        label: 'Enable Feature Preview',
+                        type: 'bool',
+                        category: 'feature'
+                    }
+                };
+
+                preferencesService.update(update, 'feature:preview').then(() => {
+                    $rootScope.beta = !$rootScope.beta;
+                    $window.location.reload();
+                });
             };
 
-            preferencesService.update(update, 'feature:preview').then(() => {
-                $rootScope.beta = !$rootScope.beta;
-                $window.location.reload();
-            });
-        };
+            this.isBeta = function() {
+                if (_.isNil($rootScope.beta)) {
+                    return preferencesService.get('feature:preview').then((result) => {
+                        $rootScope.beta = result && result.enabled;
+                        return $rootScope.beta;
+                    }, () => $q.when(false));
+                }
 
-        this.isBeta = function() {
-            if (_.isNil($rootScope.beta)) {
-                return preferencesService.get('feature:preview').then((result) => {
-                    $rootScope.beta = result && result.enabled;
-                    return $rootScope.beta;
-                }, () => $q.when(false));
-            }
+                return $q.resolve($rootScope.beta);
+            };
+        }])
 
-            return $q.resolve($rootScope.beta);
-        };
-    }])
-
-.config(['$httpProvider', function($httpProvider) {
-    $httpProvider.interceptors.push(BetaTemplateInterceptor);
-}]);
+    .config(['$httpProvider', function($httpProvider) {
+        $httpProvider.interceptors.push(BetaTemplateInterceptor);
+    }]);
 
 /**
  * Detect beta elements in phase of loading html templates and prevent rendering of those

@@ -14,8 +14,8 @@ export function update(props) {
             },
             $interpolate(
                 gettextCatalog.getString('Update {{ seq }}'))({
-                    seq: props.item.correction_sequence
-                }
+                seq: props.item.correction_sequence
+            }
             )
         );
     }

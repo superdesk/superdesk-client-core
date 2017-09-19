@@ -30,11 +30,11 @@ export function UserPopupService($compile, $timeout, userList) {
 
         // get data
         userList.getUser(userId)
-        .then((user) => {
-            buildTemplate(user, scope);
-        }, (response) => {
-            console.error(response);
-        });
+            .then((user) => {
+                buildTemplate(user, scope);
+            }, (response) => {
+                console.error(response);
+            });
 
         box.show();
     };

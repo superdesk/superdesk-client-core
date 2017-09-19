@@ -29,15 +29,15 @@ export function UserSelectList($filter, api) {
                         {email: {$regex: scope.search, $options: '-i'}}
                     ]
                 })})
-                .then((result) => {
-                    scope.users = result;
-                    scope.users._items = _.filter(scope.users._items,
-                        (item) => _.findIndex(scope.exclude, {_id: item._id}) === -1);
-                    scope.selected = null;
-                    if (scope.onsearch) {
-                        scope.onsearch({search: scope.search});
-                    }
-                });
+                    .then((result) => {
+                        scope.users = result;
+                        scope.users._items = _.filter(scope.users._items,
+                            (item) => _.findIndex(scope.exclude, {_id: item._id}) === -1);
+                        scope.selected = null;
+                        if (scope.onsearch) {
+                            scope.onsearch({search: scope.search});
+                        }
+                    });
             };
             var refresh = _.debounce(_refresh, 1000);
 

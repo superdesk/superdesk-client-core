@@ -46,7 +46,7 @@ describe('sdIngestRoutingContent directive', () => {
     describe('on initialization', () => {
         it('retrieves all content filters', () => {
             expect(contentFilters.getAllContentFilters)
-                .toHaveBeenCalledWith(1, []);  // i.e. starting with page 1
+                .toHaveBeenCalledWith(1, []); // i.e. starting with page 1
         });
 
         it('stores content filters list in scope on retrieval', () => {
@@ -81,15 +81,15 @@ describe('sdIngestRoutingContent directive', () => {
 
         it('sets the scope\'s rule object\'s filter name to the name of the ' +
             'filter the rule references',
-            () => {
-                var scopeRule,
-                    ruleToEdit = {_id: 'rule_1', filter: 'filter_2'};
+        () => {
+            var scopeRule,
+                ruleToEdit = {_id: 'rule_1', filter: 'filter_2'};
 
-                scope.editRule(ruleToEdit);
+            scope.editRule(ruleToEdit);
 
-                scopeRule = scope.rule || {};
-                expect(scopeRule.filterName).toEqual('filter two');
-            }
+            scopeRule = scope.rule || {};
+            expect(scopeRule.filterName).toEqual('filter two');
+        }
         );
     });
 });

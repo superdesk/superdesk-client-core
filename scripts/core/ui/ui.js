@@ -292,7 +292,7 @@ function DatepickerDirective($document) {
             function handleDatePicker(event) {
                 var isChild = element.find(event.target).length > 0;
 
-                if (scope.state.opened && !isChild) {  // outside Datepicker click
+                if (scope.state.opened && !isChild) { // outside Datepicker click
                     scope.$apply(() => {
                         close();
                     });
@@ -367,8 +367,8 @@ function DatepickerInnerDirective($compile, $document, popupService, datetimeHel
             };
 
             ctrl.$render = function() {
-                element.val(ctrl.$viewValue.viewdate);  // set the view
-                scope.date = ctrl.$viewValue.dpdate || moment().tz(config.defaultTimezone);    // set datepicker model
+                element.val(ctrl.$viewValue.viewdate); // set the view
+                scope.date = ctrl.$viewValue.dpdate || moment().tz(config.defaultTimezone); // set datepicker model
             };
 
             // handle model changes
@@ -453,7 +453,7 @@ function TimepickerDirective($document) {
             function handleTimePicker(event) {
                 var isChild = element.find(event.target).length > 0;
 
-                if (scope.opened && !isChild) {  // outside Timepicker click
+                if (scope.opened && !isChild) { // outside Timepicker click
                     scope.$apply(() => {
                         close();
                     });
@@ -520,8 +520,8 @@ function TimepickerInnerDirective($compile, $document, popupService, datetimeHel
             };
 
             ctrl.$render = function() {
-                element.val(ctrl.$viewValue.viewtime);  // set the view
-                scope.time = ctrl.$viewValue.tptime;    // set timepicker model
+                element.val(ctrl.$viewValue.viewtime); // set the view
+                scope.time = ctrl.$viewValue.tptime; // set timepicker model
             };
 
             // handle model changes
@@ -592,8 +592,8 @@ function TimezoneDirective(tzdata, config, $timeout) {
             style: '@'
         },
         link: function(scope, el) {
-            scope.timeZones = [];     // all time zones to choose from
-            scope.tzSearchTerm = '';  // the current time zone search term
+            scope.timeZones = []; // all time zones to choose from
+            scope.tzSearchTerm = ''; // the current time zone search term
 
             // filtered time zone list containing only those that match
             // user-provided search term
@@ -1052,7 +1052,7 @@ function validationDirective(gettextCatalog) {
                 elem.addClass('sd-validate');
                 if (elem.hasClass('field')) {
                     elem.find('label')
-                    .after('<span id="required_span" class="sd-required">'
+                        .after('<span id="required_span" class="sd-required">'
                         + gettextCatalog.getString('Required') + '</span>');
                 } else if (elem.find('.authoring-header__input-holder').length) {
                     elem.find('.authoring-header__input-holder').append(invalidText);

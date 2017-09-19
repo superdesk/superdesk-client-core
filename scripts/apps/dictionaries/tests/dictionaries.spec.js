@@ -16,8 +16,8 @@ describe('dictionaries', () => {
         $rootScope.$digest();
         expect(api.query).toHaveBeenCalledWith('dictionaries', {projection: {content: 0}, where: {
             $or: [
-                  {user: {$exists: false}},
-                  {user: 'foo'}
+                {user: {$exists: false}},
+                {user: 'foo'}
             ]}});
     }));
 
@@ -64,9 +64,9 @@ describe('dictionaries', () => {
                 projection: {content: 0},
                 where: {$and:
                 [{$or: [{language_id: 'en-US'}, {language_id: 'en'}]},
-                {is_active: {$in: ['true', null]}},
-                {$or: [{type: {$exists: 0}}, {type: 'dictionary'}]},
-                {$or: [{user: USER_ID}, {user: {$exists: false}}]}]
+                    {is_active: {$in: ['true', null]}},
+                    {$or: [{type: {$exists: 0}}, {type: 'dictionary'}]},
+                    {$or: [{user: USER_ID}, {user: {$exists: false}}]}]
                 }
             });
             expect(api.find).toHaveBeenCalledWith('dictionaries', 1);

@@ -49,7 +49,7 @@ describe('content', () => {
             spyOn(preferencesService, 'update').and.returnValue(true);
 
             desks.userDesks = {_items: [{_id: '1', name: 'sport', working_stage: '2', incoming_stage: '3'},
-                                        {_id: '2', name: 'news', working_stage: '4', incoming_stage: '5'}]};
+                {_id: '2', name: 'news', working_stage: '4', incoming_stage: '5'}]};
             desks.setCurrentDeskId('2');
 
             item = {_id: '123'};

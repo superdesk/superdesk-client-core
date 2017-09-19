@@ -23,7 +23,7 @@ angular.module('superdesk.core.auth.session').service('session', [
         this.identity = null;
         this.sessionId = null;
 
-    /**
+        /**
      * Get identity when available
      *
      * @returns {object} promise
@@ -37,7 +37,7 @@ angular.module('superdesk.core.auth.session').service('session', [
             return defer.promise;
         };
 
-    /**
+        /**
      * Update identity
      *
      * @param {object} updates
@@ -52,7 +52,7 @@ angular.module('superdesk.core.auth.session').service('session', [
             return this.identity;
         };
 
-    /**
+        /**
      * Start a new session
      *
      * @param {object} session
@@ -76,7 +76,7 @@ angular.module('superdesk.core.auth.session').service('session', [
             }
         }
 
-    /**
+        /**
      * Set current session expired
      */
         this.expire = function() {
@@ -87,7 +87,7 @@ angular.module('superdesk.core.auth.session').service('session', [
             $rootScope.$broadcast(SESSION_EVENTS.LOGOUT);
         };
 
-    /**
+        /**
      * Clear session info
      */
         this.clear = function() {
@@ -98,7 +98,7 @@ angular.module('superdesk.core.auth.session').service('session', [
             storage.clear();
         };
 
-    /**
+        /**
      * Return session url for delete
      *
      * @returns {string}
@@ -107,7 +107,7 @@ angular.module('superdesk.core.auth.session').service('session', [
             return localStorage.getItem(TOKEN_HREF);
         };
 
-    /**
+        /**
      * Setup test user with given id.
      *
      * @param {string} _id
@@ -127,7 +127,7 @@ angular.module('superdesk.core.auth.session').service('session', [
             }
         }));
 
-    /**
+        /**
      * Save token into local storage
      *
      * @param {string} token
@@ -140,7 +140,7 @@ angular.module('superdesk.core.auth.session').service('session', [
             }
         }
 
-    /**
+        /**
      * Save session id into local storage
      *
      * @param {string} sessionId
@@ -161,7 +161,7 @@ angular.module('superdesk.core.auth.session').service('session', [
             }
         }
 
-    /**
+        /**
      * Get token from local storage
      *
      * it's used via watch so it skips json serialization withing storage service

@@ -1,9 +1,9 @@
 
 
 describe('MetadataWidgetCtrl controller', () => {
-    var metadata,  // the metadata service
-        metaInit,  // deferred initialization of the metadata service
-        prefsGet,  // deferred result of the preferences service's get() method
+    var metadata, // the metadata service
+        metaInit, // deferred initialization of the metadata service
+        prefsGet, // deferred result of the preferences service's get() method
         scope;
 
     beforeEach(window.module('superdesk.apps.publish'));
@@ -107,13 +107,13 @@ describe('metadata terms directive', () => {
 
     itemCategories = [{name: 'National', qcode: 'a'}, {name: 'Sports', qcode: 's'}];
     availableCategories = [{name: 'International', qcode: 'i'},
-                {name: 'Domestic Sport', qcode: 't'}, {name: 'Motor Racing', qcode: 'm'},
-                {name: 'Horse Racing', qcode: 'r'}];
+        {name: 'Domestic Sport', qcode: 't'}, {name: 'Motor Racing', qcode: 'm'},
+        {name: 'Horse Racing', qcode: 'r'}];
 
     itemCompanyCodes = [{name: '1-PAGE LIMITED', qcode: '1PG'}, {name: '1300 SMILES LIMITED', qcode: 'ONT'}];
     availableCompanyCodes = [{name: '1ST AVAILABLE LTD', qcode: '1ST'},
-                {name: '360 CAPITAL GROUP', qcode: 'TGP'}, {name: '360 CAPITAL INDUSTRIAL FUND', qcode: 'TIX'},
-                {name: '360 CAPITAL OFFICE FUND', qcode: 'TOF'}];
+        {name: '360 CAPITAL GROUP', qcode: 'TGP'}, {name: '360 CAPITAL INDUSTRIAL FUND', qcode: 'TIX'},
+        {name: '360 CAPITAL OFFICE FUND', qcode: 'TOF'}];
 
     subjects = [{name: 'a', qcode: '123'},
         {name: 'b', qcode: '456', parent: '123'},

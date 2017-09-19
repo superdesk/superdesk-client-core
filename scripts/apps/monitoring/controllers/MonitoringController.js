@@ -18,7 +18,7 @@ import _ from 'lodash';
 MonitoringController.$inject = ['$rootScope', '$location', 'desks', 'storage', 'config', 'superdeskFlags',
     'search', '$filter'];
 export function MonitoringController($rootScope, $location, desks, storage, config, superdeskFlags,
-        search, $filter) {
+    search, $filter) {
     this.state = {};
 
     this.preview = preview;

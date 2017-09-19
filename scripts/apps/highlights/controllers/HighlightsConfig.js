@@ -63,12 +63,12 @@ export function HighlightsConfig($scope, highlightsService, desks, api, gettext,
 
     $scope.remove = function(config) {
         modal.confirm(gettext('Are you sure you want to delete configuration?'))
-        .then(() => {
-            highlightsService.removeConfig(config).then(() => {
-                _.remove($scope.configurations._items, config);
-                notify.success(gettext('Configuration deleted.'), 3000);
+            .then(() => {
+                highlightsService.removeConfig(config).then(() => {
+                    _.remove($scope.configurations._items, config);
+                    notify.success(gettext('Configuration deleted.'), 3000);
+                });
             });
-        });
     };
 
     $scope.getHourVal = function(hour) {

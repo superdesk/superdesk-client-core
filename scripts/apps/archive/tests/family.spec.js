@@ -34,8 +34,8 @@ describe('family service', () => {
 
                 if (params.source.query.filtered.filter.and[2]) {
                     _.remove(members,
-                            {unique_id: params.source.query.filtered.filter.and[2].not.term.unique_id}
-                        );
+                        {unique_id: params.source.query.filtered.filter.and[2].not.term.unique_id}
+                    );
                 }
 
                 return $q.when({_items: members});
@@ -46,9 +46,9 @@ describe('family service', () => {
             let members = null;
 
             familyService.fetchItems('family1')
-            .then((result) => {
-                members = result;
-            });
+                .then((result) => {
+                    members = result;
+                });
             $rootScope.$digest();
             expect(members._items.length).toBe(2);
         }));
@@ -57,9 +57,9 @@ describe('family service', () => {
             let members = null;
 
             familyService.fetchItems('family1', {unique_id: 1, _id: 'z'})
-            .then((result) => {
-                members = result;
-            });
+                .then((result) => {
+                    members = result;
+                });
             $rootScope.$digest();
             expect(members._items.length).toBe(1);
         }));
@@ -68,44 +68,44 @@ describe('family service', () => {
             let memberDesks = null;
 
             familyService.fetchDesks({_id: 'z', family_id: 'family1'})
-            .then((result) => {
-                memberDesks = result;
-            });
+                .then((result) => {
+                    memberDesks = result;
+                });
             $rootScope.$digest();
             expect(memberDesks.length).toBe(1);
         }));
 
         it('can determine weather a user is member of fetched desk',
-        inject(($rootScope, familyService, api, desks) => {
-            let memberDesks = null;
+            inject(($rootScope, familyService, api, desks) => {
+                let memberDesks = null;
 
-            familyService.fetchDesks({_id: 'z', family_id: 'family1', task: {desk: 'desk1'}})
-            .then((result) => {
-                memberDesks = result;
-            });
-            $rootScope.$digest();
-            expect(memberDesks.length).toBe(1);
-            expect(memberDesks[0].isUserDeskMember).toBe(true);
-        }));
+                familyService.fetchDesks({_id: 'z', family_id: 'family1', task: {desk: 'desk1'}})
+                    .then((result) => {
+                        memberDesks = result;
+                    });
+                $rootScope.$digest();
+                expect(memberDesks.length).toBe(1);
+                expect(memberDesks[0].isUserDeskMember).toBe(true);
+            }));
 
         it('can fetch desks of members of a family with exclusion',
-        inject(($rootScope, familyService, api, desks) => {
-            let memberDesks = null;
+            inject(($rootScope, familyService, api, desks) => {
+                let memberDesks = null;
 
-            familyService.fetchDesks({unique_id: 1, _id: 'z', family_id: 'family1'}, true)
-            .then((result) => {
-                memberDesks = result;
-            });
-            $rootScope.$digest();
-            expect(memberDesks.length).toBe(0);
-        }));
+                familyService.fetchDesks({unique_id: 1, _id: 'z', family_id: 'family1'}, true)
+                    .then((result) => {
+                        memberDesks = result;
+                    });
+                $rootScope.$digest();
+                expect(memberDesks.length).toBe(0);
+            }));
 
         it('can use item._id for ingest items instead of family id',
-        inject(($rootScope, $q, familyService) => {
-            spyOn(familyService, 'fetchItems').and.returnValue($q.when({}));
-            familyService.fetchDesks({_id: 'id', family_id: 'family_id', state: 'ingested'});
-            expect(familyService.fetchItems).toHaveBeenCalledWith('id', undefined);
-        }));
+            inject(($rootScope, $q, familyService) => {
+                spyOn(familyService, 'fetchItems').and.returnValue($q.when({}));
+                familyService.fetchDesks({_id: 'id', family_id: 'family_id', state: 'ingested'});
+                expect(familyService.fetchItems).toHaveBeenCalledWith('id', undefined);
+            }));
     });
 
     describe('fetching related items', () => {

@@ -14,9 +14,9 @@ function PackagesCtrl($scope, superdesk, api, search) {
 
         query.size(25).filter({terms: {guid: filter}});
         api.archive.query(query.getCriteria(true))
-        .then((result) => {
-            $scope.contentItems = result._items;
-        });
+            .then((result) => {
+                $scope.contentItems = result._items;
+            });
     }
 
     $scope.openPackage = function(packageItem) {
@@ -29,23 +29,23 @@ function PackagesCtrl($scope, superdesk, api, search) {
 }
 
 export default angular.module('superdesk.apps.authoring.packages', ['superdesk.apps.authoring.widgets'])
-.config(['authoringWidgetsProvider', function(authoringWidgetsProvider) {
-    authoringWidgetsProvider
-    .widget('packages', {
-        icon: 'package',
-        label: gettext('Packages'),
-        template: 'scripts/apps/authoring/packages/views/packages-widget.html',
-        order: 5,
-        side: 'right',
-        display: {
-            authoring: true,
-            packages: true,
-            killedItem: true,
-            legalArchive: false,
-            archived: false,
-            picture: true,
-            personal: false
-        }
-    });
-}])
-.controller('PackagesWidgetCtrl', PackagesCtrl);
+    .config(['authoringWidgetsProvider', function(authoringWidgetsProvider) {
+        authoringWidgetsProvider
+            .widget('packages', {
+                icon: 'package',
+                label: gettext('Packages'),
+                template: 'scripts/apps/authoring/packages/views/packages-widget.html',
+                order: 5,
+                side: 'right',
+                display: {
+                    authoring: true,
+                    packages: true,
+                    killedItem: true,
+                    legalArchive: false,
+                    archived: false,
+                    picture: true,
+                    personal: false
+                }
+            });
+    }])
+    .controller('PackagesWidgetCtrl', PackagesCtrl);

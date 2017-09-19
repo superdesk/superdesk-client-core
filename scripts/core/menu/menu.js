@@ -63,11 +63,11 @@ angular.module('superdesk.core.menu', [
                     scope.environmentName = config.environmentName;
 
                     superdesk.getMenu(superdesk.MENU_MAIN)
-                            .then(filterSettingsIfEmpty)
-                            .then((menu) => {
-                                scope.menu = menu;
-                                setActiveMenuItem($route.current);
-                            });
+                        .then(filterSettingsIfEmpty)
+                        .then((menu) => {
+                            scope.menu = menu;
+                            setActiveMenuItem($route.current);
+                        });
 
                     function filterSettingsIfEmpty(menu) {
                         return superdesk.getMenu(superdesk.MENU_SETTINGS).then((settingsMenu) => {

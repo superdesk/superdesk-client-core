@@ -115,31 +115,31 @@ describe('monitoring', () => {
     });
 
     it('configure a stage and a saved search then unselect stage and show search on monitoring view',
-    () => {
-        setupDeskMonitoringSettings('POLITIC DESK');
-        monitoring.turnOffDeskWorkingStage(0, false);
+        () => {
+            setupDeskMonitoringSettings('POLITIC DESK');
+            monitoring.turnOffDeskWorkingStage(0, false);
 
-        monitoring.toggleStage(0, 1);
-        monitoring.toggleStage(0, 2);
-        monitoring.toggleStage(0, 4);
-        monitoring.toggleDeskOutput(0);
-        monitoring.nextStages();
-        monitoring.toggleGlobalSearch(0);
-        monitoring.nextSearches();
-        monitoring.nextReorder();
-        monitoring.saveSettings();
+            monitoring.toggleStage(0, 1);
+            monitoring.toggleStage(0, 2);
+            monitoring.toggleStage(0, 4);
+            monitoring.toggleDeskOutput(0);
+            monitoring.nextStages();
+            monitoring.toggleGlobalSearch(0);
+            monitoring.nextSearches();
+            monitoring.nextReorder();
+            monitoring.saveSettings();
 
-        desks.showMonitoringSettings('POLITIC DESK');
-        monitoring.toggleStage(0, 3);
-        monitoring.nextStages();
-        monitoring.nextSearches();
-        monitoring.nextReorder();
-        monitoring.saveSettings();
+            desks.showMonitoringSettings('POLITIC DESK');
+            monitoring.toggleStage(0, 3);
+            monitoring.nextStages();
+            monitoring.nextSearches();
+            monitoring.nextReorder();
+            monitoring.saveSettings();
 
-        monitoring.openMonitoring();
+            monitoring.openMonitoring();
 
-        expect(monitoring.getTextItem(0, 0)).toBe('ingest1');
-    });
+            expect(monitoring.getTextItem(0, 0)).toBe('ingest1');
+        });
 
     it('configure stage and search and then reorder', () => {
         setupDeskMonitoringSettings('POLITIC DESK');
@@ -179,9 +179,9 @@ describe('monitoring', () => {
         monitoring.toggleStage(0, 3); // turn off stage two
         monitoring.toggleStage(0, 4); // turn off stage three
         monitoring.toggleDeskOutput(0); // turn off deskoutput stage
-        monitoring.togglePersonal();    // turn on personal
+        monitoring.togglePersonal(); // turn on personal
         monitoring.nextStages();
-        monitoring.toggleGlobalSearch(0);   // turn on global search
+        monitoring.toggleGlobalSearch(0); // turn on global search
         monitoring.nextSearches();
         monitoring.nextReorder();
 
@@ -193,9 +193,9 @@ describe('monitoring', () => {
 
         monitoring.openMonitoring();
 
-        expect(monitoring.getTextItem(0, 1)).toBe('item9');     // expect stage one 2nd item
-        expect(monitoring.getTextItem(1, 0)).toBe('item1');     // expect personal 1st item
-        expect(monitoring.getTextItem(2, 0)).toBe('ingest1');   // expect global serach 1st item
+        expect(monitoring.getTextItem(0, 1)).toBe('item9'); // expect stage one 2nd item
+        expect(monitoring.getTextItem(1, 0)).toBe('item1'); // expect personal 1st item
+        expect(monitoring.getTextItem(2, 0)).toBe('ingest1'); // expect global serach 1st item
     });
 
     it('configure a saved search that contain ingest items', () => {
@@ -764,7 +764,7 @@ describe('monitoring', () => {
         // open published text item
         monitoring.filterAction('text');
         monitoring.actionOnItem('Open', 4, 0);
-        expect(authoring.save_button.isPresent()).toBe(false);  // Save button hidden for publish item
+        expect(authoring.save_button.isPresent()).toBe(false); // Save button hidden for publish item
 
         var textField = element(by.className('text-editor'));
         // expect contenteditable=true attribute is missing/null for text-editor field,

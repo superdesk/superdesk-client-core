@@ -20,9 +20,9 @@ export function SavedSearches($rootScope, api, session, modal, notify, gettext, 
             var originalGlobalSavedSearches = [];
 
             desks.initialize()
-            .then(() => {
-                scope.userLookup = desks.userLookup;
-            });
+                .then(() => {
+                    scope.userLookup = desks.userLookup;
+                });
 
             function initSavedSearches() {
                 savedSearch.getUserSavedSearches(session.identity).then((searches) => {
@@ -75,14 +75,14 @@ export function SavedSearches($rootScope, api, session, modal, notify, gettext, 
                 modal.confirm(
                     gettext('Are you sure you want to delete saved search?')
                 )
-                .then(() => {
-                    resource.remove(searches).then(() => {
-                        notify.success(gettext('Saved search removed'));
-                        initSavedSearches();
-                    }, () => {
-                        notify.error(gettext('Error. Saved search not deleted.'));
+                    .then(() => {
+                        resource.remove(searches).then(() => {
+                            notify.success(gettext('Saved search removed'));
+                            initSavedSearches();
+                        }, () => {
+                            notify.error(gettext('Error. Saved search not deleted.'));
+                        });
                     });
-                });
             };
         }
     };

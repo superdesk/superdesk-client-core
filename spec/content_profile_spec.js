@@ -58,11 +58,11 @@ describe('Content profiles', () => {
         authoring.getSubjectMetadataDropdownOpened();
         browser.sleep(100);
         browser.actions().sendKeys('archaeology')
-        .perform();
+            .perform();
         browser.actions().sendKeys(protractor.Key.DOWN)
-        .perform();
+            .perform();
         browser.actions().sendKeys(protractor.Key.ENTER)
-        .perform();
+            .perform();
         authoring.save();
         authoring.publish(true);
         assertToastMsg('error', 'EDNOTE is a required field');

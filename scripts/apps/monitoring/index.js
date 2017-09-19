@@ -50,15 +50,15 @@ angular.module('superdesk.apps.monitoring', [
 
     .run(['keyboardManager', 'gettext', function(keyboardManager, gettext) {
         keyboardManager.register('Monitoring / List actions', 'ctrl + alt + j',
-             gettext('Switch between grouped/single stage view'));
+            gettext('Switch between grouped/single stage view'));
         keyboardManager.register('Monitoring / List actions', 'ctrl + alt + g',
-             gettext('Switch between grouped/single desk view'));
+            gettext('Switch between grouped/single desk view'));
         keyboardManager.register('Monitoring / List actions', 'page down',
-             gettext('Move focus to next stage or group'));
+            gettext('Move focus to next stage or group'));
         keyboardManager.register('Monitoring / List actions', 'page up',
-             gettext('Move focus to previous stage or group'));
+            gettext('Move focus to previous stage or group'));
         keyboardManager.register('Monitoring / List actions', 'down/right Arrow',
-             gettext('Select next item on focused stage or group'));
+            gettext('Select next item on focused stage or group'));
         keyboardManager.register('Monitoring / List actions', 'up/left Arrow',
             gettext('Select previous item on focused stage or group'));
         keyboardManager.register('Monitoring / List actions', 'alt + o', gettext('View an item'));

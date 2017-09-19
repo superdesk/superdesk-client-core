@@ -31,10 +31,10 @@ export function AggregateSettings(desks, workspaces, session, preferencesService
             scope.globalSavedSearches = [];
 
             desks.initialize()
-            .then(() => {
-                scope.userLookup = desks.userLookup;
-                scope.setCurrentStep();
-            });
+                .then(() => {
+                    scope.userLookup = desks.userLookup;
+                    scope.setCurrentStep();
+                });
 
             scope.$watch('step.current', (step) => {
                 if (step === 'searches') {
@@ -263,48 +263,49 @@ export function AggregateSettings(desks, workspaces, session, preferencesService
 
                 if (scope.widget) {
                     workspaces.getActive()
-                    .then((workspace) => {
-                        var widgets = angular.copy(workspace.widgets);
+                        .then((workspace) => {
+                            var widgets = angular.copy(workspace.widgets);
 
-                        _.each(widgets, (widget) => {
-                            if (scope.widget._id === widget._id && scope.widget.multiple_id === widget.multiple_id) {
-                                widget.configuration = {};
-                                widget.configuration.groups = groups;
-                                if (scope.widget.configuration.label) {
-                                    widget.configuration.label = scope.widget.configuration.label;
+                            _.each(widgets, (widget) => {
+                                if (scope.widget._id === widget._id
+                                    && scope.widget.multiple_id === widget.multiple_id) {
+                                    widget.configuration = {};
+                                    widget.configuration.groups = groups;
+                                    if (scope.widget.configuration.label) {
+                                        widget.configuration.label = scope.widget.configuration.label;
+                                    }
                                 }
-                            }
+                            });
+                            workspaces.save(workspace, {widgets: widgets})
+                                .then(() => {
+                                    scope.showGlobalSavedSearches = false;
+                                    scope.onclose();
+                                });
                         });
-                        workspaces.save(workspace, {widgets: widgets})
-                        .then(() => {
-                            scope.showGlobalSavedSearches = false;
-                            scope.onclose();
-                        });
-                    });
                 } else if (scope.settings && scope.settings.desk) {
                     desks.save(scope.deskLookup[scope.settings.desk._id], {monitoring_settings: groups})
-                    .then(() => {
-                        WizardHandler.wizard('aggregatesettings').finish();
-                    });
+                        .then(() => {
+                            WizardHandler.wizard('aggregatesettings').finish();
+                        });
                 } else {
                     workspaces.getActiveId()
-                    .then((activeWorkspace) => {
-                        if (activeWorkspace.type === 'workspace' || activeWorkspace.type === 'desk') {
-                            preferencesService.get(PREFERENCES_KEY)
-                            .then((preferences) => {
-                                var updates = {};
+                        .then((activeWorkspace) => {
+                            if (activeWorkspace.type === 'workspace' || activeWorkspace.type === 'desk') {
+                                preferencesService.get(PREFERENCES_KEY)
+                                    .then((preferences) => {
+                                        var updates = {};
 
-                                if (preferences) {
-                                    updates[PREFERENCES_KEY] = preferences;
-                                }
-                                updates[PREFERENCES_KEY][activeWorkspace.id] = {groups: groups};
-                                preferencesService.update(updates, PREFERENCES_KEY)
-                                .then(() => {
-                                    WizardHandler.wizard('aggregatesettings').finish();
-                                });
-                            });
-                        }
-                    });
+                                        if (preferences) {
+                                            updates[PREFERENCES_KEY] = preferences;
+                                        }
+                                        updates[PREFERENCES_KEY][activeWorkspace.id] = {groups: groups};
+                                        preferencesService.update(updates, PREFERENCES_KEY)
+                                            .then(() => {
+                                                WizardHandler.wizard('aggregatesettings').finish();
+                                            });
+                                    });
+                            }
+                        });
                     scope.showGlobalSavedSearches = false;
                     scope.onclose();
                 }

@@ -273,8 +273,8 @@ function Monitoring() {
         var menu = this.openItemMenu(group, item);
         var header = menu.element(by.partialLinkText(action));
         var btn = linkTypeBtn ?
-                menu.element(by.partialLinkText(submenu)) :
-                menu.element(by.partialButtonText(submenu));
+            menu.element(by.partialLinkText(submenu)) :
+            menu.element(by.partialButtonText(submenu));
 
         browser.actions()
             .mouseMove(header, {x: -50, y: -50})
@@ -684,7 +684,7 @@ function Monitoring() {
 
         function textFilter(elem) {
             return elem.element(by.tagName('button')).getText()
-            .then((text) => text.toUpperCase().indexOf(desk.toUpperCase()) >= 0);
+                .then((text) => text.toUpperCase().indexOf(desk.toUpperCase()) >= 0);
         }
 
         function clickFiltered(filtered) {

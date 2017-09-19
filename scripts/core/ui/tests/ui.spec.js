@@ -55,7 +55,7 @@ describe('superdesk ui', () => {
     describe('sdTimezone directive', () => {
         var fakeTzData,
             getTzDataDeferred,
-            isoScope;  // the directive's isolate scope
+            isoScope; // the directive's isolate scope
 
         beforeEach(window.module('superdesk.apps.ingest'));
         beforeEach(window.module(($provide) => {
@@ -177,24 +177,24 @@ describe('superdesk ui', () => {
 
             it('sets the matching time zones to an empty list if given ' +
                 'an empty search term',
-                () => {
-                    isoScope.matchingTimeZones = ['foo', 'bar'];
-                    isoScope.searchTimeZones('');
-                    expect(isoScope.matchingTimeZones).toEqual([]);
-                }
+            () => {
+                isoScope.matchingTimeZones = ['foo', 'bar'];
+                isoScope.searchTimeZones('');
+                expect(isoScope.matchingTimeZones).toEqual([]);
+            }
             );
 
             it('sets the matching time zones to those matching the given ' +
                 'search term',
-                () => {
-                    isoScope.timeZones = [
-                        'Foo/City', 'Asia/FooBar', 'EU_f/oo', 'bar_fOo', 'xyz'
-                    ];
-                    isoScope.searchTimeZones('fOO');
-                    expect(isoScope.matchingTimeZones).toEqual([
-                        'Foo/City', 'Asia/FooBar', 'bar_fOo'
-                    ]);
-                }
+            () => {
+                isoScope.timeZones = [
+                    'Foo/City', 'Asia/FooBar', 'EU_f/oo', 'bar_fOo', 'xyz'
+                ];
+                isoScope.searchTimeZones('fOO');
+                expect(isoScope.matchingTimeZones).toEqual([
+                    'Foo/City', 'Asia/FooBar', 'bar_fOo'
+                ]);
+            }
             );
         });
 

@@ -207,16 +207,16 @@ export function TemplatesDirective(gettext, notify, api, templates, modal, desks
             $scope.save = function() {
                 if (validate($scope.origTemplate, $scope.template)) {
                     templates.save($scope.origTemplate, $scope.template)
-                    .then(
-                        () => {
-                            notify.success(gettext('Template saved.'));
-                            $scope.cancel();
-                        },
-                        (response) => {
-                            notifySaveError(response, notify);
-                        }
-                    )
-                    .then(fetchTemplates);
+                        .then(
+                            () => {
+                                notify.success(gettext('Template saved.'));
+                                $scope.cancel();
+                            },
+                            (response) => {
+                                notifySaveError(response, notify);
+                            }
+                        )
+                        .then(fetchTemplates);
                 }
             };
 
@@ -232,7 +232,7 @@ export function TemplatesDirective(gettext, notify, api, templates, modal, desks
                 };
                 $scope.template.template_desks = $scope.origTemplate.template_desks || [];
                 $scope.template_desk = $scope.template.template_desks.length > 0 ?
-                $scope.template.template_desks[0] : '';
+                    $scope.template.template_desks[0] : '';
                 $scope.stages = $scope.template.schedule_desk ? desks.deskStages[$scope.template.schedule_desk] : null;
                 $scope.template.template_type = $scope.origTemplate.template_type;
                 if (!templates.isAdmin()) {
@@ -301,7 +301,7 @@ export function TemplatesDirective(gettext, notify, api, templates, modal, desks
             };
 
             $scope.isScheduleValid = () => $scope.showScheduling() && $scope.template.schedule.is_active ?
-                    $scope.template.schedule.day_of_week &&
+                $scope.template.schedule.day_of_week &&
                     $scope.template.schedule.day_of_week.length > 0 &&
                     $scope.template.schedule.create_at &&
                     $scope.template.schedule_desk &&

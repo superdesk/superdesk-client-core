@@ -57,9 +57,9 @@ describe('Superdesk service', () => {
         var result = null;
 
         activityService.start(superdesk.activities.testActivity)
-        .then((res) => {
-            result = res;
-        });
+            .then((res) => {
+                result = res;
+            });
 
         $rootScope.$digest();
 
@@ -71,13 +71,13 @@ describe('Superdesk service', () => {
         var failureResult = null;
 
         superdesk.intent('testAction', 'testType', 'testData')
-        .then((result) => {
-            successResult = result;
-        });
+            .then((result) => {
+                successResult = result;
+            });
         superdesk.intent('testAction2', 'testType2', 'testData2')
-        .then(null, (result) => {
-            failureResult = result;
-        });
+            .then(null, (result) => {
+                failureResult = result;
+            });
 
         $rootScope.$digest();
 
@@ -90,13 +90,13 @@ describe('Superdesk service', () => {
         var failureResult = null;
 
         superdesk.intent('testAction', 'testType', 'testData', 'testId')
-        .then((result) => {
-            successResult = result;
-        });
+            .then((result) => {
+                successResult = result;
+            });
         superdesk.intent('testAction2', 'testType2', 'testData2', 'testId2')
-        .then(null, (result) => {
-            failureResult = result;
-        });
+            .then(null, (result) => {
+                failureResult = result;
+            });
 
         $rootScope.$digest();
 
@@ -130,18 +130,18 @@ describe('Superdesk service', () => {
     }));
 
     it('can get main menu and filter out based on features/permissions',
-    inject((superdesk, $rootScope, privileges, $q) => {
-        privileges.loaded = $q.when();
+        inject((superdesk, $rootScope, privileges, $q) => {
+            privileges.loaded = $q.when();
 
-        var menu;
+            var menu;
 
-        superdesk.getMenu(superdesk.MENU_MAIN).then((_menu) => {
-            menu = _menu;
-        });
+            superdesk.getMenu(superdesk.MENU_MAIN).then((_menu) => {
+                menu = _menu;
+            });
 
-        $rootScope.$digest();
-        expect(menu.length).toBe(1);
-    }));
+            $rootScope.$digest();
+            expect(menu.length).toBe(1);
+        }));
 
     it('can get link for given activity', inject((activityService) => {
         var routeActivity = {href: '/test/:_id'};

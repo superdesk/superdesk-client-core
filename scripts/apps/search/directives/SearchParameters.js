@@ -26,7 +26,7 @@ SearchParameters.$inject = [
 ];
 
 export function SearchParameters($location, asset, tags, metadata, common, desks,
-                                 userList, ingestSources, subscribersService) {
+    userList, ingestSources, subscribersService) {
     return {
         scope: {
             repo: '=',
@@ -122,10 +122,10 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
              */
             function fetchUsers() {
                 userList.getAll()
-                .then((users) => {
-                    scope.userList = users;
-                    initializeCreators();
-                });
+                    .then((users) => {
+                        scope.userList = users;
+                        initializeCreators();
+                    });
             }
 
             /*

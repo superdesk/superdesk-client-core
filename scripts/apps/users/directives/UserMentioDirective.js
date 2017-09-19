@@ -36,8 +36,8 @@ export function UserMentioDirective(userList, desks, asset, $q) {
 
                     $q.all(promises).then(() => {
                         scope.users = _.sortBy(scope.users, (item) => item.type === 'user' ?
-                                item.item.username.toLowerCase()
-                                : item.item.name.toLowerCase());
+                            item.item.username.toLowerCase()
+                            : item.item.name.toLowerCase());
 
                         scope.fetching = false;
                         fetchedPages.push(page);

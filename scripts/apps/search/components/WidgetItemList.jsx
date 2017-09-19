@@ -47,25 +47,25 @@ export class WidgetItemList extends React.Component {
         return (
             <div tabIndex="0">
                 <ul className="inline-content-items">
-                {
-                    this.state.itemIds.map((itemId) => {
-                        var item = this.state.itemsById[itemId];
+                    {
+                        this.state.itemIds.map((itemId) => {
+                            var item = this.state.itemsById[itemId];
 
-                        return (
-                            <WidgetItem
-                                key={this.props.svc.search.generateTrackByIdentifier(item)}
-                                item={item}
-                                selected={this.state.selected && this.state.selected._id === item._id}
-                                allowed ={this.props.allowed}
-                                customMonitoringWidget={this.props.customMonitoringWidget}
-                                svc={this.props.svc}
-                                preview={this.props.preview}
-                                select={this.props.select}
-                                edit={this.props.edit}
-                            />
-                        );
-                    })
-                }
+                            return (
+                                <WidgetItem
+                                    key={this.props.svc.search.generateTrackByIdentifier(item)}
+                                    item={item}
+                                    selected={this.state.selected && this.state.selected._id === item._id}
+                                    allowed ={this.props.allowed}
+                                    customMonitoringWidget={this.props.customMonitoringWidget}
+                                    svc={this.props.svc}
+                                    preview={this.props.preview}
+                                    select={this.props.select}
+                                    edit={this.props.edit}
+                                />
+                            );
+                        })
+                    }
                 </ul>
             </div>
         );

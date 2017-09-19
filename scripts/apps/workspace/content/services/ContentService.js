@@ -292,9 +292,9 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
      */
     this.getDeskProfiles = function(desk, profileId) {
         return this.getTypes().then((profiles) => !desk || _.isEmpty(desk.content_profiles) ?
-                profiles :
-                profiles.filter((profile) => desk.content_profiles[profile._id] || profile._id === profileId)
-            );
+            profiles :
+            profiles.filter((profile) => desk.content_profiles[profile._id] || profile._id === profileId)
+        );
     };
 
     this.contentProfileSchema = angular.extend({}, constant.DEFAULT_SCHEMA, constant.EXTRA_SCHEMA_FIELDS);

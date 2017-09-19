@@ -38,15 +38,15 @@ export class DesksDropdown extends React.Component {
 
     render() {
         return React.createElement('dd',
-                {className: 'dropdown dropdown--dropup more-actions'},
-                React.createElement('button', {
-                    className: 'dropdown__toggle',
-                    onMouseOver: this.toggle,
-                    onMouseLeave: this.close
-                },
-                React.createElement('i',
-                        {className: 'icon-dots'})
-                ));
+            {className: 'dropdown dropdown--dropup more-actions'},
+            React.createElement('button', {
+                className: 'dropdown__toggle',
+                onMouseOver: this.toggle,
+                onMouseLeave: this.close
+            },
+            React.createElement('i',
+                {className: 'icon-dots'})
+            ));
     }
 
     renderDropdown() {

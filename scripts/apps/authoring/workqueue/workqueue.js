@@ -54,7 +54,7 @@ WorkqueueCtrl.$inject = [
     'referrer'
 ];
 function WorkqueueCtrl($scope, $rootScope, $route, workqueue, authoringWorkspace, multiEdit,
-        lock, $location, session, authoring, autosave, confirm, referrer) {
+    lock, $location, session, authoring, autosave, confirm, referrer) {
     $scope.active = null;
     $scope.workqueue = workqueue;
     $scope.multiEdit = multiEdit;

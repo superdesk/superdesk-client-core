@@ -18,7 +18,7 @@ function TasksService(desks, $rootScope, api, datetimeHelper) {
         }
 
         return api('tasks').save(orig, task)
-        .then((result) => result);
+            .then((result) => result);
     };
 
     this.buildFilter = function(status) {
@@ -183,10 +183,10 @@ function TasksController($scope, $timeout, api, notify, desks, tasks, $filter, a
 
     $scope.save = function() {
         tasks.save({}, $scope.newTask)
-        .then((result) => {
-            notify.success(gettext('Item saved.'));
-            $scope.close();
-        });
+            .then((result) => {
+                notify.success(gettext('Item saved.'));
+                $scope.close();
+            });
     };
 
     $scope.close = function() {
@@ -250,10 +250,10 @@ function TaskPreviewDirective(tasks, desks, notify, $filter) {
             scope.save = function() {
                 scope.task.task = _.extend(scope.task.task, scope.task_details);
                 tasks.save(_orig, scope.task)
-                .then((result) => {
-                    notify.success(gettext('Item saved.'));
-                    scope.editmode = false;
-                });
+                    .then((result) => {
+                        notify.success(gettext('Item saved.'));
+                        scope.editmode = false;
+                    });
             };
 
             scope.edit = function() {
@@ -360,29 +360,29 @@ function DeskStagesDirective() {
 
 angular.module('superdesk.apps.workspace.tasks', [])
 
-.factory('StagesCtrl', StagesCtrlFactory)
+    .factory('StagesCtrl', StagesCtrlFactory)
 
-.directive('sdTaskPreview', TaskPreviewDirective)
-.directive('sdAssigneeView', AssigneeViewDirective)
-.directive('sdDeskStages', DeskStagesDirective)
-.directive('sdTaskKanbanBoard', TaskKanbanBoardDirective)
-.controller('TasksController', TasksController)
-.service('tasks', TasksService)
+    .directive('sdTaskPreview', TaskPreviewDirective)
+    .directive('sdAssigneeView', AssigneeViewDirective)
+    .directive('sdDeskStages', DeskStagesDirective)
+    .directive('sdTaskKanbanBoard', TaskKanbanBoardDirective)
+    .controller('TasksController', TasksController)
+    .service('tasks', TasksService)
 
-.config(['superdeskProvider', function(superdesk) {
-    superdesk.activity('/workspace/tasks', {
-        label: gettext('Workspace'),
-        controller: TasksController,
-        templateUrl: 'scripts/apps/dashboard/workspace-tasks/views/workspace-tasks.html',
-        topTemplateUrl: 'scripts/apps/dashboard/views/workspace-topnav.html',
-        sideTemplateUrl: 'scripts/apps/workspace/views/workspace-sidenav.html',
-        filters: [{action: 'view', type: 'task'}]
-    });
+    .config(['superdeskProvider', function(superdesk) {
+        superdesk.activity('/workspace/tasks', {
+            label: gettext('Workspace'),
+            controller: TasksController,
+            templateUrl: 'scripts/apps/dashboard/workspace-tasks/views/workspace-tasks.html',
+            topTemplateUrl: 'scripts/apps/dashboard/views/workspace-topnav.html',
+            sideTemplateUrl: 'scripts/apps/workspace/views/workspace-sidenav.html',
+            filters: [{action: 'view', type: 'task'}]
+        });
 
-    superdesk.activity('pick.task', {
-        label: gettext('Pick task'),
-        icon: 'pick',
-        controller: ['data', 'superdesk',
+        superdesk.activity('pick.task', {
+            label: gettext('Pick task'),
+            icon: 'pick',
+            controller: ['data', 'superdesk',
             /**
              * Open given item using sidebar authoring
              *
@@ -390,10 +390,10 @@ angular.module('superdesk.apps.workspace.tasks', [])
              * @param {Object} superdesk service
              * @return {Promise}
              */
-            function pickTask(data, superdesk) {
-                return superdesk.intent('edit', 'item', data.item);
-            }
-        ],
-        filters: [{action: superdesk.ACTION_EDIT, type: 'task'}]
-    });
-}]);
+                function pickTask(data, superdesk) {
+                    return superdesk.intent('edit', 'item', data.item);
+                }
+            ],
+            filters: [{action: superdesk.ACTION_EDIT, type: 'task'}]
+        });
+    }]);

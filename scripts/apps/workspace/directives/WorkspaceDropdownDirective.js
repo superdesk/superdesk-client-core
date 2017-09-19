@@ -56,28 +56,28 @@ export function WorkspaceDropdownDirective(desks, workspaces, $route, preference
                 var activeWorkspace = null;
 
                 workspaces.getActiveId()
-                .then((workspace) => {
-                    activeWorkspace = workspace;
-                })
-                .then(angular.bind(desks, desks.fetchCurrentUserDesks))
-                .then((userDesks) => {
-                    scope.desks = userDesks;
-                })
-                .then(workspaces.queryUserWorkspaces)
-                .then((_workspaces) => {
-                    scope.wsList = _workspaces;
-                    scope.workspaceType = activeWorkspace.type;
-                    if (activeWorkspace.type === 'desk') {
-                        scope.selected = _.find(scope.desks, {_id: activeWorkspace.id}) || desks.getCurrentDesk();
-                    } else if (activeWorkspace.type === 'workspace') {
-                        scope.selected = _.find(scope.wsList, {_id: activeWorkspace.id});
-                    } else {
-                        scope.selected = null;
-                    }
-                })
-                .then(() => {
-                    deskNotifications.reload();
-                });
+                    .then((workspace) => {
+                        activeWorkspace = workspace;
+                    })
+                    .then(angular.bind(desks, desks.fetchCurrentUserDesks))
+                    .then((userDesks) => {
+                        scope.desks = userDesks;
+                    })
+                    .then(workspaces.queryUserWorkspaces)
+                    .then((_workspaces) => {
+                        scope.wsList = _workspaces;
+                        scope.workspaceType = activeWorkspace.type;
+                        if (activeWorkspace.type === 'desk') {
+                            scope.selected = _.find(scope.desks, {_id: activeWorkspace.id}) || desks.getCurrentDesk();
+                        } else if (activeWorkspace.type === 'workspace') {
+                            scope.selected = _.find(scope.wsList, {_id: activeWorkspace.id});
+                        } else {
+                            scope.selected = null;
+                        }
+                    })
+                    .then(() => {
+                        deskNotifications.reload();
+                    });
             }
 
             scope.$watch(() => workspaces.active, initialize, true);

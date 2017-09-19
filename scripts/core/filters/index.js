@@ -86,7 +86,7 @@ export default angular.module('superdesk.core.filters', [])
             var momentTimestamp = angular.isDefined(input) ? moment(input).utc() : moment.utc();
 
             return angular.isDefined(formatString) ? momentTimestamp.local().format(formatString) :
-            momentTimestamp.local().format();
+                momentTimestamp.local().format();
         };
     }])
     .filter('dateTimeString', ['$filter', function($filter) {

@@ -63,5 +63,5 @@ angular.module('superdesk.core.upload', [
     'superdesk.core.upload.imagepreview',
     'superdesk.core.upload.upload'
 ])
-.directive('sdSources', SourcesDirective)
-.directive('sdFileTypeValidator', FileValidatorDirective);
+    .directive('sdSources', SourcesDirective)
+    .directive('sdFileTypeValidator', FileValidatorDirective);

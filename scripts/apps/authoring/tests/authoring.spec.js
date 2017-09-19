@@ -45,59 +45,59 @@ describe('authoring', () => {
     }));
 
     it('can open an item',
-    inject((superdesk, api, lock, autosave, $injector, $q, $rootScope) => {
-        var _item,
-            lockedItem = angular.extend({_locked: false}, ITEM);
+        inject((superdesk, api, lock, autosave, $injector, $q, $rootScope) => {
+            var _item,
+                lockedItem = angular.extend({_locked: false}, ITEM);
 
-        spyOn(api, 'find').and.returnValue($q.when(ITEM));
-        spyOn(lock, 'lock').and.returnValue($q.when(lockedItem));
-        spyOn(autosave, 'open').and.returnValue($q.when(lockedItem));
+            spyOn(api, 'find').and.returnValue($q.when(ITEM));
+            spyOn(lock, 'lock').and.returnValue($q.when(lockedItem));
+            spyOn(autosave, 'open').and.returnValue($q.when(lockedItem));
 
-        $injector.invoke(superdesk.activity('authoring').resolve.item).then((resolvedItem) => {
-            _item = resolvedItem;
-        });
+            $injector.invoke(superdesk.activity('authoring').resolve.item).then((resolvedItem) => {
+                _item = resolvedItem;
+            });
 
-        $rootScope.$digest();
+            $rootScope.$digest();
 
-        expect(api.find).toHaveBeenCalledWith('archive', GUID, jasmine.any(Object));
-        expect(lock.lock).toHaveBeenCalledWith(ITEM, false, undefined);
-        expect(autosave.open).toHaveBeenCalledWith(lockedItem);
-        expect(_item.guid).toBe(GUID);
-    }));
+            expect(api.find).toHaveBeenCalledWith('archive', GUID, jasmine.any(Object));
+            expect(lock.lock).toHaveBeenCalledWith(ITEM, false, undefined);
+            expect(autosave.open).toHaveBeenCalledWith(lockedItem);
+            expect(_item.guid).toBe(GUID);
+        }));
 
     it('does lock item only once',
-    inject((superdesk, api, lock, autosave, session, $injector, $q, $rootScope) => {
-        var lockedItem = ITEM;
+        inject((superdesk, api, lock, autosave, session, $injector, $q, $rootScope) => {
+            var lockedItem = ITEM;
 
-        lockedItem.lock_user = USER;
-        lockedItem.lock_session = session.sessionId;
+            lockedItem.lock_user = USER;
+            lockedItem.lock_session = session.sessionId;
 
-        spyOn(api, 'find').and.returnValue($q.when(lockedItem));
+            spyOn(api, 'find').and.returnValue($q.when(lockedItem));
 
-        $injector.invoke(superdesk.activity('authoring').resolve.item);
-        $rootScope.$digest();
-        expect(ITEM._locked).toBe(true);
-    }));
+            $injector.invoke(superdesk.activity('authoring').resolve.item);
+            $rootScope.$digest();
+            expect(ITEM._locked).toBe(true);
+        }));
 
     it('unlocks a locked item and locks by current user',
-    inject((authoring, lock, $rootScope, $timeout, api, $q, $location) => {
-        spyOn(api, 'save').and.returnValue($q.when({}));
-        spyOn(lock, 'unlock').and.returnValue($q.when({}));
+        inject((authoring, lock, $rootScope, $timeout, api, $q, $location) => {
+            spyOn(api, 'save').and.returnValue($q.when({}));
+            spyOn(lock, 'unlock').and.returnValue($q.when({}));
 
-        var lockedItem = {guid: GUID, _id: GUID, _locked: true, lock_user: 'user:5', task: 'desk:1'};
-        var $scope = startAuthoring(lockedItem, 'edit');
+            var lockedItem = {guid: GUID, _id: GUID, _locked: true, lock_user: 'user:5', task: 'desk:1'};
+            var $scope = startAuthoring(lockedItem, 'edit');
 
-        $rootScope.$digest();
+            $rootScope.$digest();
 
-        $scope.unlock();
-        $timeout.flush(5000);
-        $rootScope.$digest();
-        expect($location.path(), '/authoring/' + $scope.item._id);
-    }));
+            $scope.unlock();
+            $timeout.flush(5000);
+            $rootScope.$digest();
+            expect($location.path(), '/authoring/' + $scope.item._id);
+        }));
 
     it('can autosave and save an item', inject((api, $q, $timeout, $rootScope) => {
         var $scope = startAuthoring({guid: GUID, _id: GUID, task: 'desk:1', _locked: true, _editable: true},
-                                    'edit'),
+                'edit'),
             headline = 'test headline';
 
         expect($scope.dirty).toBe(false);
@@ -176,151 +176,151 @@ describe('authoring', () => {
     }));
 
     it('confirm the associated media not called',
-    inject((api, $q, $rootScope, config, confirm) => {
-        let item = {
-            _id: 'test',
-            headline: 'headline'
-        };
+        inject((api, $q, $rootScope, config, confirm) => {
+            let item = {
+                _id: 'test',
+                headline: 'headline'
+            };
 
-        let rewriteOf = {
-            _id: 'rewriteOf',
-            headline: 'rewrite',
-            associations: {
-                featuremedia: {
+            let rewriteOf = {
+                _id: 'rewriteOf',
+                headline: 'rewrite',
+                associations: {
+                    featuremedia: {
 
+                    }
                 }
-            }
-        };
+            };
 
-        let defered = $q.defer();
+            let defered = $q.defer();
 
-        config.features = {
-            editFeaturedImage: 1
-        };
+            config.features = {
+                editFeaturedImage: 1
+            };
 
-        spyOn(api, 'find').and.returnValue($q.when({rewriteOf}));
-        spyOn(confirm, 'confirmFeatureMedia').and.returnValue(defered.promise);
-        let scope = startAuthoring(item, 'edit');
+            spyOn(api, 'find').and.returnValue($q.when({rewriteOf}));
+            spyOn(confirm, 'confirmFeatureMedia').and.returnValue(defered.promise);
+            let scope = startAuthoring(item, 'edit');
 
-        scope.publish();
-        $rootScope.$digest();
-        expect(confirm.confirmFeatureMedia).not.toHaveBeenCalled();
-        expect(api.find).not.toHaveBeenCalledWith('archive', 'rewriteOf');
-    }));
+            scope.publish();
+            $rootScope.$digest();
+            expect(confirm.confirmFeatureMedia).not.toHaveBeenCalled();
+            expect(api.find).not.toHaveBeenCalledWith('archive', 'rewriteOf');
+        }));
 
     it('confirm the associated media not called if not rewrite_of',
-    inject((api, $q, $rootScope, config, confirm) => {
-        let item = {
-            _id: 'test',
-            headline: 'headline'
-        };
+        inject((api, $q, $rootScope, config, confirm) => {
+            let item = {
+                _id: 'test',
+                headline: 'headline'
+            };
 
-        let rewriteOf = {
-            _id: 'rewriteOf',
-            headline: 'rewrite',
-            associations: {
-                featuremedia: {
+            let rewriteOf = {
+                _id: 'rewriteOf',
+                headline: 'rewrite',
+                associations: {
+                    featuremedia: {
 
+                    }
                 }
-            }
-        };
+            };
 
-        let defered = $q.defer();
+            let defered = $q.defer();
 
-        config.features = {
-            editFeaturedImage: 1,
-            confirmMediaOnUpdate: 1
-        };
+            config.features = {
+                editFeaturedImage: 1,
+                confirmMediaOnUpdate: 1
+            };
 
-        spyOn(api, 'find').and.returnValue($q.when({rewriteOf}));
-        spyOn(confirm, 'confirmFeatureMedia').and.returnValue(defered.promise);
-        let scope = startAuthoring(item, 'edit');
+            spyOn(api, 'find').and.returnValue($q.when({rewriteOf}));
+            spyOn(confirm, 'confirmFeatureMedia').and.returnValue(defered.promise);
+            let scope = startAuthoring(item, 'edit');
 
-        scope.publish();
-        $rootScope.$digest();
-        expect(confirm.confirmFeatureMedia).not.toHaveBeenCalled();
-        expect(api.find).not.toHaveBeenCalledWith('archive', 'rewriteOf');
-    }));
+            scope.publish();
+            $rootScope.$digest();
+            expect(confirm.confirmFeatureMedia).not.toHaveBeenCalled();
+            expect(api.find).not.toHaveBeenCalledWith('archive', 'rewriteOf');
+        }));
 
     it('confirm the associated media called if rewrite_of but no associated media on edited item',
-    inject((api, $q, $rootScope, config, confirm, authoring) => {
-        let item = {
-            _id: 'test',
-            headline: 'headline',
-            rewrite_of: 'rewriteOf'
-        };
+        inject((api, $q, $rootScope, config, confirm, authoring) => {
+            let item = {
+                _id: 'test',
+                headline: 'headline',
+                rewrite_of: 'rewriteOf'
+            };
 
-        let rewriteOf = {
-            _id: 'rewriteOf',
-            headline: 'rewrite',
-            associations: {
-                featuremedia: {
+            let rewriteOf = {
+                _id: 'rewriteOf',
+                headline: 'rewrite',
+                associations: {
+                    featuremedia: {
 
+                    }
                 }
-            }
-        };
+            };
 
-        let defered = $q.defer();
+            let defered = $q.defer();
 
-        config.features = {
-            editFeaturedImage: 1,
-            confirmMediaOnUpdate: 1
-        };
+            config.features = {
+                editFeaturedImage: 1,
+                confirmMediaOnUpdate: 1
+            };
 
-        spyOn(api, 'find').and.returnValue($q.when(rewriteOf));
-        spyOn(confirm, 'confirmFeatureMedia').and.returnValue(defered.promise);
-        spyOn(authoring, 'autosave').and.returnValue(item);
-        spyOn(authoring, 'publish').and.returnValue(item);
-        let scope = startAuthoring(item, 'edit');
+            spyOn(api, 'find').and.returnValue($q.when(rewriteOf));
+            spyOn(confirm, 'confirmFeatureMedia').and.returnValue(defered.promise);
+            spyOn(authoring, 'autosave').and.returnValue(item);
+            spyOn(authoring, 'publish').and.returnValue(item);
+            let scope = startAuthoring(item, 'edit');
 
-        scope.publish();
-        $rootScope.$digest();
-        expect(api.find).toHaveBeenCalledWith('archive', 'rewriteOf');
-        expect(confirm.confirmFeatureMedia).toHaveBeenCalledWith(rewriteOf);
-        defered.resolve(rewriteOf);
-        $rootScope.$digest();
-        expect(authoring.autosave).toHaveBeenCalled();
-        expect(authoring.publish).not.toHaveBeenCalled();
-    }));
+            scope.publish();
+            $rootScope.$digest();
+            expect(api.find).toHaveBeenCalledWith('archive', 'rewriteOf');
+            expect(confirm.confirmFeatureMedia).toHaveBeenCalledWith(rewriteOf);
+            defered.resolve(rewriteOf);
+            $rootScope.$digest();
+            expect(authoring.autosave).toHaveBeenCalled();
+            expect(authoring.publish).not.toHaveBeenCalled();
+        }));
 
     it('confirm the associated media but do not use the associated media',
-    inject((api, $q, $rootScope, config, confirm, authoring) => {
-        let item = {
-            _id: 'test',
-            rewrite_of: 'rewriteOf'
-        };
+        inject((api, $q, $rootScope, config, confirm, authoring) => {
+            let item = {
+                _id: 'test',
+                rewrite_of: 'rewriteOf'
+            };
 
-        let rewriteOf = {
-            _id: 'rewriteOf',
-            associations: {
-                featuremedia: {
-                    test: 'test'
+            let rewriteOf = {
+                _id: 'rewriteOf',
+                associations: {
+                    featuremedia: {
+                        test: 'test'
+                    }
                 }
-            }
-        };
+            };
 
-        let defered = $q.defer();
+            let defered = $q.defer();
 
-        config.features = {
-            editFeaturedImage: 1,
-            confirmMediaOnUpdate: 1
-        };
+            config.features = {
+                editFeaturedImage: 1,
+                confirmMediaOnUpdate: 1
+            };
 
-        spyOn(api, 'find').and.returnValue($q.when(rewriteOf));
-        spyOn(confirm, 'confirmFeatureMedia').and.returnValue(defered.promise);
-        spyOn(authoring, 'autosave').and.returnValue({});
-        spyOn(authoring, 'publish').and.returnValue({});
-        let scope = startAuthoring(item, 'edit');
+            spyOn(api, 'find').and.returnValue($q.when(rewriteOf));
+            spyOn(confirm, 'confirmFeatureMedia').and.returnValue(defered.promise);
+            spyOn(authoring, 'autosave').and.returnValue({});
+            spyOn(authoring, 'publish').and.returnValue({});
+            let scope = startAuthoring(item, 'edit');
 
-        scope.publish();
-        $rootScope.$digest();
-        expect(api.find).toHaveBeenCalledWith('archive', 'rewriteOf');
-        expect(confirm.confirmFeatureMedia).toHaveBeenCalledWith(rewriteOf);
-        defered.resolve({});
-        $rootScope.$digest();
-        expect(authoring.publish).toHaveBeenCalled();
-        expect(authoring.autosave).not.toHaveBeenCalled();
-    }));
+            scope.publish();
+            $rootScope.$digest();
+            expect(api.find).toHaveBeenCalledWith('archive', 'rewriteOf');
+            expect(confirm.confirmFeatureMedia).toHaveBeenCalledWith(rewriteOf);
+            defered.resolve({});
+            $rootScope.$digest();
+            expect(authoring.publish).toHaveBeenCalled();
+            expect(authoring.autosave).not.toHaveBeenCalled();
+        }));
 
     it('can reject publishing on error', inject((api, $q, $rootScope, authoring, lock) => {
         let success = jasmine.createSpy('success');
@@ -407,53 +407,53 @@ describe('authoring', () => {
         }));
 
         it('can unlock on close editable item without changes made',
-        inject((authoring, confirm, lock, $rootScope) => {
-            expect(authoring.isEditable(ITEM)).toBe(true);
-            authoring.close(ITEM, false);
-            $rootScope.$digest();
-            expect(confirm.confirm).not.toHaveBeenCalled();
-            expect(lock.unlock).toHaveBeenCalled();
-        }));
+            inject((authoring, confirm, lock, $rootScope) => {
+                expect(authoring.isEditable(ITEM)).toBe(true);
+                authoring.close(ITEM, false);
+                $rootScope.$digest();
+                expect(confirm.confirm).not.toHaveBeenCalled();
+                expect(lock.unlock).toHaveBeenCalled();
+            }));
 
         it('confirms if an item is dirty and saves',
-        inject((authoring, confirm, lock, $q, $rootScope) => {
-            var edit = Object.create(ITEM);
+            inject((authoring, confirm, lock, $q, $rootScope) => {
+                var edit = Object.create(ITEM);
 
-            edit.headline = 'test';
+                edit.headline = 'test';
 
-            authoring.close(edit, ITEM, true);
-            $rootScope.$digest();
+                authoring.close(edit, ITEM, true);
+                $rootScope.$digest();
 
-            expect(confirm.confirm).toHaveBeenCalled();
-            expect(lock.unlock).not.toHaveBeenCalled();
+                expect(confirm.confirm).toHaveBeenCalled();
+                expect(lock.unlock).not.toHaveBeenCalled();
 
-            spyOn(authoring, 'save').and.returnValue($q.when());
-            confirmDefer.resolve();
-            $rootScope.$digest();
+                spyOn(authoring, 'save').and.returnValue($q.when());
+                confirmDefer.resolve();
+                $rootScope.$digest();
 
-            expect(authoring.save).toHaveBeenCalledWith(ITEM, edit);
-            expect(lock.unlock).toHaveBeenCalled();
-        }));
+                expect(authoring.save).toHaveBeenCalledWith(ITEM, edit);
+                expect(lock.unlock).toHaveBeenCalled();
+            }));
 
         it('confirms if an item is dirty on opening new or existing item and not unlocking on save',
-        inject((authoring, confirm, lock, $q, $rootScope) => {
-            var edit = Object.create(ITEM);
+            inject((authoring, confirm, lock, $q, $rootScope) => {
+                var edit = Object.create(ITEM);
 
-            edit.headline = 'test';
+                edit.headline = 'test';
 
-            authoring.close(edit, ITEM, true, true);
-            $rootScope.$digest();
+                authoring.close(edit, ITEM, true, true);
+                $rootScope.$digest();
 
-            expect(confirm.confirm).toHaveBeenCalled();
-            expect(lock.unlock).not.toHaveBeenCalled();
+                expect(confirm.confirm).toHaveBeenCalled();
+                expect(lock.unlock).not.toHaveBeenCalled();
 
-            spyOn(authoring, 'save').and.returnValue($q.when());
-            confirmDefer.resolve();
-            $rootScope.$digest();
+                spyOn(authoring, 'save').and.returnValue($q.when());
+                confirmDefer.resolve();
+                $rootScope.$digest();
 
-            expect(authoring.save).toHaveBeenCalledWith(ITEM, edit);
-            expect(lock.unlock).not.toHaveBeenCalled();
-        }));
+                expect(authoring.save).toHaveBeenCalledWith(ITEM, edit);
+                expect(lock.unlock).not.toHaveBeenCalled();
+            }));
 
         it('can unlock an item', inject((authoring, session, confirm, autosave) => {
             var item = {lock_user: session.identity._id, lock_session: session.sessionId};
@@ -475,87 +475,87 @@ describe('authoring', () => {
         }));
 
         it('confirms if an item is dirty and saves and publish',
-        inject((authoring, api, confirm, lock, $q, $rootScope) => {
-            var edit = Object.create(ITEM);
+            inject((authoring, api, confirm, lock, $q, $rootScope) => {
+                var edit = Object.create(ITEM);
 
-            _.extend(edit, {
-                _id: 1,
-                headline: 'test',
-                lock_user: 'user:1',
-                state: 'submitted'
-            });
+                _.extend(edit, {
+                    _id: 1,
+                    headline: 'test',
+                    lock_user: 'user:1',
+                    state: 'submitted'
+                });
 
-            authoring.publishConfirmation(ITEM, edit, true, 'publish');
-            $rootScope.$digest();
+                authoring.publishConfirmation(ITEM, edit, true, 'publish');
+                $rootScope.$digest();
 
-            expect(confirm.confirmPublish).toHaveBeenCalled();
-            expect(lock.unlock).not.toHaveBeenCalled();
+                expect(confirm.confirmPublish).toHaveBeenCalled();
+                expect(lock.unlock).not.toHaveBeenCalled();
 
-            spyOn(api, 'update').and.returnValue($q.when(_.extend({}, edit, {})));
+                spyOn(api, 'update').and.returnValue($q.when(_.extend({}, edit, {})));
 
-            authoring.publish(edit);
-            $rootScope.$digest();
+                authoring.publish(edit);
+                $rootScope.$digest();
 
-            expect(api.update).toHaveBeenCalledWith('archive_publish', edit, {});
-            expect(lock.unlock).toHaveBeenCalled();
-        }));
+                expect(api.update).toHaveBeenCalledWith('archive_publish', edit, {});
+                expect(lock.unlock).toHaveBeenCalled();
+            }));
 
         it('confirms if an item is dirty and save work in personal',
-        inject((authoring, api, confirm, lock, $q, $rootScope) => {
-            var edit = Object.create(ITEM);
+            inject((authoring, api, confirm, lock, $q, $rootScope) => {
+                var edit = Object.create(ITEM);
 
-            _.extend(edit, {
-                task: {desk: null, stage: null, user: 1},
-                type: 'text',
-                version: 1
-            });
+                _.extend(edit, {
+                    task: {desk: null, stage: null, user: 1},
+                    type: 'text',
+                    version: 1
+                });
 
-            authoring.saveWorkConfirmation(ITEM, edit, true, 'User is disabled');
-            $rootScope.$digest();
+                authoring.saveWorkConfirmation(ITEM, edit, true, 'User is disabled');
+                $rootScope.$digest();
 
-            expect(confirm.confirmSaveWork).toHaveBeenCalled();
+                expect(confirm.confirmSaveWork).toHaveBeenCalled();
 
-            spyOn(api, 'save').and.returnValue($q.when(_.extend({}, edit, {})));
+                spyOn(api, 'save').and.returnValue($q.when(_.extend({}, edit, {})));
 
-            authoring.saveWork(edit);
-            $rootScope.$digest();
+                authoring.saveWork(edit);
+                $rootScope.$digest();
 
-            expect(api.save).toHaveBeenCalledWith('archive', {}, edit);
-        }));
+                expect(api.save).toHaveBeenCalledWith('archive', {}, edit);
+            }));
 
         it('close the published dirty item without confirmation',
-        inject((authoring, api, confirm, lock, autosave, $q, $rootScope) => {
-            var publishedItem = Object.create(ITEM);
+            inject((authoring, api, confirm, lock, autosave, $q, $rootScope) => {
+                var publishedItem = Object.create(ITEM);
 
-            publishedItem.state = 'published';
-            var edit = Object.create(publishedItem);
+                publishedItem.state = 'published';
+                var edit = Object.create(publishedItem);
 
-            edit.headline = 'test';
-            spyOn(authoring, 'isEditable').and.returnValue(true);
-            spyOn(autosave, 'drop').and.returnValue($q.when({}));
-            authoring.close(edit, publishedItem, true, false);
-            $rootScope.$digest();
-            expect(confirm.confirm).not.toHaveBeenCalled();
-            expect(lock.unlock).toHaveBeenCalled();
-            expect(autosave.drop).toHaveBeenCalled();
-        }));
+                edit.headline = 'test';
+                spyOn(authoring, 'isEditable').and.returnValue(true);
+                spyOn(autosave, 'drop').and.returnValue($q.when({}));
+                authoring.close(edit, publishedItem, true, false);
+                $rootScope.$digest();
+                expect(confirm.confirm).not.toHaveBeenCalled();
+                expect(lock.unlock).toHaveBeenCalled();
+                expect(autosave.drop).toHaveBeenCalled();
+            }));
 
         it('close the corrected dirty item without confirmation',
-        inject((authoring, api, confirm, lock, autosave, $q, $rootScope) => {
-            var publishedItem = Object.create(ITEM);
+            inject((authoring, api, confirm, lock, autosave, $q, $rootScope) => {
+                var publishedItem = Object.create(ITEM);
 
-            publishedItem.state = 'corrected';
-            var edit = Object.create(publishedItem);
+                publishedItem.state = 'corrected';
+                var edit = Object.create(publishedItem);
 
-            edit.headline = 'test';
-            spyOn(authoring, 'isEditable').and.returnValue(true);
-            spyOn(autosave, 'drop').and.returnValue($q.when({}));
-            authoring.close(edit, publishedItem, true, false);
-            $rootScope.$digest();
-            expect(confirm.confirm).not.toHaveBeenCalled();
-            expect(lock.unlock).toHaveBeenCalled();
-            expect(autosave.drop).toHaveBeenCalled();
-        }));
+                edit.headline = 'test';
+                spyOn(authoring, 'isEditable').and.returnValue(true);
+                spyOn(autosave, 'drop').and.returnValue($q.when({}));
+                authoring.close(edit, publishedItem, true, false);
+                $rootScope.$digest();
+                expect(confirm.confirm).not.toHaveBeenCalled();
+                expect(lock.unlock).toHaveBeenCalled();
+                expect(autosave.drop).toHaveBeenCalled();
+            }));
 
         it('can validate schedule', inject((authoring) => {
             var errors = authoring.validateSchedule('2010-10-10', '08:10:10', '2010-10-10T08:10:10', 'Europe/Prague');
@@ -583,19 +583,19 @@ describe('authoring', () => {
         }));
 
         it('updates orig item on save',
-        inject((authoring, $rootScope, $httpBackend, api, $q, urls) => {
-            var item = {headline: 'foo'};
-            var orig = {_links: {self: {href: 'archive/foo'}}};
+            inject((authoring, $rootScope, $httpBackend, api, $q, urls) => {
+                var item = {headline: 'foo'};
+                var orig = {_links: {self: {href: 'archive/foo'}}};
 
-            spyOn(urls, 'item').and.returnValue($q.when(orig._links.self.href));
-            $httpBackend.expectPATCH(orig._links.self.href, item)
-                .respond(200, {_etag: 'new', _current_version: 2});
-            authoring.save(orig, item);
-            $rootScope.$digest();
-            $httpBackend.flush();
-            expect(orig._etag).toBe('new');
-            expect(orig._current_version).toBe(2);
-        }));
+                spyOn(urls, 'item').and.returnValue($q.when(orig._links.self.href));
+                $httpBackend.expectPATCH(orig._links.self.href, item)
+                    .respond(200, {_etag: 'new', _current_version: 2});
+                authoring.save(orig, item);
+                $rootScope.$digest();
+                $httpBackend.flush();
+                expect(orig._etag).toBe('new');
+                expect(orig._current_version).toBe(2);
+            }));
     });
 });
 
@@ -610,47 +610,47 @@ describe('cropImage', () => {
     beforeEach(window.module('superdesk.apps.editor2'));
 
     it('can change button label for apply/edit crop',
-    inject(($rootScope, $compile, $q, metadata) => {
-        var metaInit = $q.defer();
+        inject(($rootScope, $compile, $q, metadata) => {
+            var metaInit = $q.defer();
 
-        metadata.values = {
-            crop_sizes: [
-                {name: '4-3'}, {name: '16-9'}
-            ]
-        };
+            metadata.values = {
+                crop_sizes: [
+                    {name: '4-3'}, {name: '16-9'}
+                ]
+            };
 
-        spyOn(metadata, 'initialize').and.returnValue(metaInit.promise);
+            spyOn(metadata, 'initialize').and.returnValue(metaInit.promise);
 
-        var elem = $compile('<div sd-article-edit></div>')($rootScope.$new());
-        var scope = elem.scope();
+            var elem = $compile('<div sd-article-edit></div>')($rootScope.$new());
+            var scope = elem.scope();
 
-        scope.item = {
-            type: 'picture',
-            renditions: {
-            }
-        };
-
-        metaInit.resolve();
-        scope.$digest();
-
-        expect(scope.item.hasCrops).toBe(false);
-
-        elem = $compile('<div sd-article-edit></div>')($rootScope.$new());
-        scope = elem.scope();
-
-        scope.item = {
-            type: 'picture',
-            renditions: {
-                '4-3': {
+            scope.item = {
+                type: 'picture',
+                renditions: {
                 }
-            }
-        };
+            };
 
-        metaInit.resolve();
-        scope.$digest();
+            metaInit.resolve();
+            scope.$digest();
 
-        expect(scope.item.hasCrops).toBe(true);
-    }));
+            expect(scope.item.hasCrops).toBe(false);
+
+            elem = $compile('<div sd-article-edit></div>')($rootScope.$new());
+            scope = elem.scope();
+
+            scope.item = {
+                type: 'picture',
+                renditions: {
+                    '4-3': {
+                    }
+                }
+            };
+
+            metaInit.resolve();
+            scope.$digest();
+
+            expect(scope.item.hasCrops).toBe(true);
+        }));
 });
 
 describe('autosave', () => {
@@ -1068,7 +1068,7 @@ describe('authoring actions', () => {
             var itemActions = authoring.itemActions(item);
 
             allowedActions(itemActions,
-                    ['view', 'unspike', 'export', 'mark_item_for_desks', 'mark_item_for_highlight']);
+                ['view', 'unspike', 'export', 'mark_item_for_desks', 'mark_item_for_highlight']);
         }));
 
     it('Can perform correction or kill on published item',
@@ -1854,7 +1854,7 @@ describe('authoring workspace', () => {
     }));
 
     it('can open item in readonly mode', inject((superdeskFlags, authoringWorkspace, $rootScope,
-                                                         authoring, $q) => {
+        authoring, $q) => {
         lockedItem._editable = false;
         authoringWorkspace.view(item);
         $rootScope.$apply();
@@ -1999,28 +1999,28 @@ describe('authoring container directive', () => {
         }));
 
         it('applies kill template',
-                inject((authoringWorkspace, $rootScope, api, $compile, $q) => {
-                    authoringWorkspace.kill(item);
-                    $rootScope.$digest();
-                    $rootScope.$digest();
-                    expect(iscope.authoring.item).toBe(lockedItem);
-                    expect(iscope.authoring.action).toBe('kill');
+            inject((authoringWorkspace, $rootScope, api, $compile, $q) => {
+                authoringWorkspace.kill(item);
+                $rootScope.$digest();
+                $rootScope.$digest();
+                expect(iscope.authoring.item).toBe(lockedItem);
+                expect(iscope.authoring.action).toBe('kill');
 
-                    spyOn(api, 'save').and.returnValue($q.when({}));
+                spyOn(api, 'save').and.returnValue($q.when({}));
 
-                    var elemEmbed = $compile('<div sd-authoring-embedded data-item="authoring.item"' +
+                var elemEmbed = $compile('<div sd-authoring-embedded data-item="authoring.item"' +
                 ' data-action="authoring.action"></div>')(iscope);
 
-                    iscope.$digest();
-                    var iscopeEmbed = elemEmbed.isolateScope();
+                iscope.$digest();
+                var iscopeEmbed = elemEmbed.isolateScope();
 
-                    expect(iscopeEmbed.action).toBe('kill');
-                    expect(api.save)
-                        .toHaveBeenCalledWith('content_templates_apply', {}, {
-                            template_name: 'kill',
-                            item: {_id: 'foo'}
-                        }, {});
-                }));
+                expect(iscopeEmbed.action).toBe('kill');
+                expect(api.save)
+                    .toHaveBeenCalledWith('content_templates_apply', {}, {
+                        template_name: 'kill',
+                        item: {_id: 'foo'}
+                    }, {});
+            }));
     });
 });
 

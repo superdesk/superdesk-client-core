@@ -193,12 +193,12 @@ export function TemplatesService(api, session, $q, gettext, preferencesService, 
         };
 
         return api.query('content_templates', params)
-        .then((result) => {
-            if (result && result._items) {
-                result._items.sort((a, b) => templateIds.indexOf(a._id) - templateIds.indexOf(b._id));
-            }
-            return result;
-        });
+            .then((result) => {
+                if (result && result._items) {
+                    result._items.sort((a, b) => templateIds.indexOf(a._id) - templateIds.indexOf(b._id));
+                }
+                return result;
+            });
     };
 
     /**
@@ -229,13 +229,13 @@ export function TemplatesService(api, session, $q, gettext, preferencesService, 
 
     this.addRecentTemplate = function(deskId, templateId) {
         return preferencesService.get()
-        .then((result = {}) => {
-            result[PREFERENCES_KEY] = result[PREFERENCES_KEY] || {};
-            result[PREFERENCES_KEY][deskId] = result[PREFERENCES_KEY][deskId] || [];
-            _.remove(result[PREFERENCES_KEY][deskId], (i) => i === templateId);
-            result[PREFERENCES_KEY][deskId].unshift(templateId);
-            return preferencesService.update(result);
-        });
+            .then((result = {}) => {
+                result[PREFERENCES_KEY] = result[PREFERENCES_KEY] || {};
+                result[PREFERENCES_KEY][deskId] = result[PREFERENCES_KEY][deskId] || [];
+                _.remove(result[PREFERENCES_KEY][deskId], (i) => i === templateId);
+                result[PREFERENCES_KEY][deskId].unshift(templateId);
+                return preferencesService.update(result);
+            });
     };
 
     this.getRecentTemplateIds = function(deskId, limit = PAGE_SIZE) {

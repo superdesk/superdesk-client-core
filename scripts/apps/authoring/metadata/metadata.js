@@ -8,10 +8,10 @@ function MetadataCtrl(
     $scope, desks, metadata, privileges, datetimeHelper,
     preferencesService, config, moment, content) {
     desks.initialize()
-    .then(() => {
-        $scope.deskLookup = desks.deskLookup;
-        $scope.userLookup = desks.userLookup;
-    });
+        .then(() => {
+            $scope.deskLookup = desks.deskLookup;
+            $scope.userLookup = desks.userLookup;
+        });
 
     $scope.change_profile = config.item_profile && config.item_profile.change_profile === 1 &&
                             _.get($scope, 'origItem.type') === 'text';
@@ -20,8 +20,8 @@ function MetadataCtrl(
         $scope.metadata = metadata.values;
         return preferencesService.get();
     })
-    .then(setAvailableCategories)
-    .then(setAvailableCompanyCodes);
+        .then(setAvailableCategories)
+        .then(setAvailableCompanyCodes);
 
     $scope.$watch(() => desks.active.desk, (activeDeskId) => {
         content.getDeskProfiles(activeDeskId ? desks.getCurrentDesk() : null, $scope.item.profile)
@@ -43,10 +43,10 @@ function MetadataCtrl(
     *   preferred categories settings, among other things
     */
     function setAvailableCategories(prefs) {
-        var all,        // all available categories
-            assigned = {},   // category codes already assigned to the article
+        var all, // all available categories
+            assigned = {}, // category codes already assigned to the article
             filtered,
-            itemCategories,  // existing categories assigned to the article
+            itemCategories, // existing categories assigned to the article
 
             // user's category preference settings , i.e. a map
             // object (<category_code> --> true/false)
@@ -74,10 +74,10 @@ function MetadataCtrl(
     * @function setAvailableCompanyCodes
     */
     function setAvailableCompanyCodes() {
-        var all,        // all available company codes
-            assigned = {},   // company codes already assigned to the article
+        var all, // all available company codes
+            assigned = {}, // company codes already assigned to the article
             filtered,
-            itemCompanyCodes;  // existing company codes assigned to the article
+            itemCompanyCodes; // existing company codes assigned to the article
 
         all = _.cloneDeep(metadata.values.company_codes || []);
 
@@ -275,7 +275,7 @@ function MetadropdownFocusDirective(keyboardManager) {
                 if (isOpen) {
                     _.defer(() => {
                         var keyboardOptions = {inputDisabled: false, propagate: false};
-                            // narrow the selection to consider only dropdown list's button items
+                        // narrow the selection to consider only dropdown list's button items
                         var buttonList = elem.find('.dropdown__menu button');
 
                         if (buttonList.length > 0) {
@@ -286,7 +286,7 @@ function MetadropdownFocusDirective(keyboardManager) {
                             if (buttonList.length > 0) {
                                 var focusedElem = elem.find('button:focus')[0];
                                 var indexValue = _.findIndex(buttonList, (chr) => chr === focusedElem);
-                                    // select previous item on key UP
+                                // select previous item on key UP
 
                                 if (indexValue > 0 && indexValue < buttonList.length) {
                                     buttonList[indexValue - 1].focus();
@@ -298,7 +298,7 @@ function MetadropdownFocusDirective(keyboardManager) {
                             if (buttonList.length > 0) {
                                 var focusedElem = elem.find('button:focus')[0];
                                 var indexValue = _.findIndex(buttonList, (chr) => chr === focusedElem);
-                                    // select next item on key DOWN
+                                // select next item on key DOWN
 
                                 if (indexValue < buttonList.length - 1) {
                                     buttonList[indexValue + 1].focus();
@@ -918,7 +918,7 @@ function MetaLocatorsDirective() {
 
                 if (!loc && scope.selectedTerm) {
                     var previousLocator = scope.fieldprefix ? scope.item[scope.fieldprefix][scope.field] :
-                                            scope.item[scope.field];
+                        scope.item[scope.field];
 
                     if (previousLocator && scope.selectedTerm === previousLocator.city) {
                         loc = previousLocator;

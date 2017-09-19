@@ -220,12 +220,12 @@ describe('search', () => {
         authoring.focusBodyHtmlElement();
         browser.actions().sendKeys(protractor.Key.ENTER).perform();
         browser.actions().sendKeys('additional text').perform();
-        expect(previewPane.isPresent()).toBe(false);    // ENTER key avoided for opening preview
+        expect(previewPane.isPresent()).toBe(false); // ENTER key avoided for opening preview
         browser.actions().sendKeys(protractor.Key.DOWN).perform();
         expect(authoring.getBodyText()).toContain('additional text');
-        expect(previewPane.isPresent()).toBe(false);    // DOWN arrow key avoided for opening preview
+        expect(previewPane.isPresent()).toBe(false); // DOWN arrow key avoided for opening preview
         browser.actions().sendKeys(protractor.Key.UP).perform();
-        expect(previewPane.isPresent()).toBe(false);    // UP arrow key avoided for opening preview
+        expect(previewPane.isPresent()).toBe(false); // UP arrow key avoided for opening preview
         // it should not effect global keyboard shortcuts (e.g: 'ctrl+alt+d', 'ctrl+shift+*')
         // now test 'ctrl+shift+*' shortcut that triggers spell checker when not set to automatic
         expect(element(by.model('spellcheckMenu.isAuto')).getAttribute('checked')).toBeTruthy();
@@ -260,7 +260,7 @@ describe('search', () => {
         previewPane = element(by.id('item-preview'));
         expect(previewPane.isPresent()).toBe(false);
         globalSearch.actionOnItem('Edit', 2);
-        expect(previewPane.isPresent()).toBe(false);    // avoids opening preview
+        expect(previewPane.isPresent()).toBe(false); // avoids opening preview
         authoring.save();
         authoring.close();
 
@@ -270,7 +270,7 @@ describe('search', () => {
         previewPane = element(by.id('item-preview'));
         expect(previewPane.isPresent()).toBe(true);
         globalSearch.actionOnItem('Edit', 3);
-        expect(previewPane.isPresent()).toBe(false);    // avoids retaining already opened preview
+        expect(previewPane.isPresent()).toBe(false); // avoids retaining already opened preview
         authoring.save();
         authoring.close();
 

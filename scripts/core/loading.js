@@ -6,17 +6,17 @@ angular.module('superdesk.core.loading', [])
 
             $rootScope.loading = true;
 
-        // fetch preferences on load
+            // fetch preferences on load
             preferencesService.get().then(() => {
                 stopListener();
                 $http.defaults.headers.common.Authorization = session.token;
                 $rootScope.loading = false;
-            // do this in next $digest so that beta service can setup route redirects
-            // for features that should not be available
+                // do this in next $digest so that beta service can setup route redirects
+                // for features that should not be available
                 $rootScope.$applyAsync($route.reload);
             });
 
-        // prevent routing when there is no token
+            // prevent routing when there is no token
             stopListener = $rootScope.$on('$locationChangeStart', (e) => {
                 $rootScope.requiredLogin = requiresLogin($location.path());
                 if ($rootScope.loading && $rootScope.requiredLogin) {
@@ -24,7 +24,7 @@ angular.module('superdesk.core.loading', [])
                 }
             });
 
-        /**
+            /**
          * Finds out if there is a route matching given url that requires a login
          *
          * @param {string} url

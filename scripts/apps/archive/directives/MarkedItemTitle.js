@@ -87,7 +87,7 @@ class LinkFunction {
                 let popup = $(this.elem).find('.highlights-list');
 
                 popup.filter('.open').children('.dropdown-toggle.dropdown__toggle')
-                .click();
+                    .click();
             });
         });
     }
@@ -200,7 +200,7 @@ export function MarkedItemTitle(desks, authoring, highlightsService, $filter, $l
         },
         template: require('scripts/apps/archive/views/marked_item_title.html'),
         link: (scope, elem) => new LinkFunction(desks, authoring,
-                                            highlightsService, $filter, $location, $timeout, scope, elem)
+            highlightsService, $filter, $location, $timeout, scope, elem)
     };
 }
 

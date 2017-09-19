@@ -18,8 +18,8 @@ export default angular.module('superdesk.core.directives.debounce', [])
                 interval = attrs.interval;
             }
             element.off('input')
-                    .off('keydown')
-                    .off('change');
+                .off('keydown')
+                .off('change');
 
             element.on('input', _.debounce(() => {
                 $scope.$apply(() => {

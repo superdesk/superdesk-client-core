@@ -79,7 +79,7 @@ export class ImageBlockComponent extends Component {
                             className="image-block__title"
                             value={data.headline}
                             onChange={this.onChange}
-                    /> : null }
+                        /> : null }
                     <img src={rendition.href} alt={alt} onClick={this.onClick} />
                     <Textarea
                         placeholder={gettext('Caption')}

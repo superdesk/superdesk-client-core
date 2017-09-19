@@ -11,7 +11,7 @@ export function IngestRoutingContent(api, gettext, notify, modal, contentFilters
     return {
         templateUrl: 'scripts/apps/ingest/views/settings/ingest-routing-content.html',
         link: function(scope) {
-            var filtersStartPage = 1,  // the fetch results page to start from
+            var filtersStartPage = 1, // the fetch results page to start from
                 _orig = null;
 
             scope.editScheme = null;
@@ -29,9 +29,9 @@ export function IngestRoutingContent(api, gettext, notify, modal, contentFilters
                 contentFilters.getAllContentFilters(
                     filtersStartPage, scope.contentFilters
                 )
-                .then((filters) => {
-                    scope.contentFilters = filters;
-                });
+                    .then((filters) => {
+                        scope.contentFilters = filters;
+                    });
             }
 
             initSchemes();
@@ -69,16 +69,16 @@ export function IngestRoutingContent(api, gettext, notify, modal, contentFilters
                 var _new = !scope.editScheme._id;
 
                 api('routing_schemes').save(_orig, scope.editScheme)
-                .then(() => {
-                    if (_new) {
-                        scope.schemes.push(_orig);
-                    }
-                    scope.schemes = $filter('sortByName')(scope.schemes);
-                    notify.success(gettext('Routing scheme saved.'));
-                    scope.cancel();
-                }, (response) => {
-                    notify.error(gettext('I\'m sorry but there was an error when saving the routing scheme.'));
-                });
+                    .then(() => {
+                        if (_new) {
+                            scope.schemes.push(_orig);
+                        }
+                        scope.schemes = $filter('sortByName')(scope.schemes);
+                        notify.success(gettext('Routing scheme saved.'));
+                        scope.cancel();
+                    }, (response) => {
+                        notify.error(gettext('I\'m sorry but there was an error when saving the routing scheme.'));
+                    });
             };
 
             scope.cancel = function() {
@@ -93,15 +93,15 @@ export function IngestRoutingContent(api, gettext, notify, modal, contentFilters
             scope.remove = function(scheme) {
                 confirm('scheme').then(() => {
                     api('routing_schemes').remove(scheme)
-                    .then((result) => {
-                        _.remove(scope.schemes, scheme);
-                    }, (response) => {
-                        if (angular.isDefined(response.data._message)) {
-                            notify.error(gettext('Error: ' + response.data._message));
-                        } else {
-                            notify.error(gettext('There was an error. Routing scheme cannot be deleted.'));
-                        }
-                    });
+                        .then((result) => {
+                            _.remove(scope.schemes, scheme);
+                        }, (response) => {
+                            if (angular.isDefined(response.data._message)) {
+                                notify.error(gettext('Error: ' + response.data._message));
+                            } else {
+                                notify.error(gettext('There was an error. Routing scheme cannot be deleted.'));
+                            }
+                        });
                 });
             };
 

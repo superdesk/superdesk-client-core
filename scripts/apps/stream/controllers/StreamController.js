@@ -33,8 +33,8 @@ export function StreamController($scope, api, $rootScope, desks) {
         }
 
         api('activity').query(filter)
-        .then((result) => {
-            $scope.activities = result;
-        });
+            .then((result) => {
+                $scope.activities = result;
+            });
     };
 }

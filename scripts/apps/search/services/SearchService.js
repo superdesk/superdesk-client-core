@@ -37,7 +37,7 @@ SearchService.$inject = [
     'deployConfig'
 ];
 export function SearchService($location, gettext, config, session, multi,
-preferencesService, moment, sortService, deployConfig) {
+    preferencesService, moment, sortService, deployConfig) {
     var sortOptions = [
         {field: 'versioncreated', label: gettext('Updated')},
         {field: 'firstcreated', label: gettext('Created')},
@@ -52,7 +52,7 @@ preferencesService, moment, sortService, deployConfig) {
 
     this.cvs = config.search_cvs ||
         [{id: 'subject', name: 'Subject', field: 'subject', list: 'subjectcodes'},
-    {id: 'companycodes', name: 'Company Codes', field: 'company_codes', list: 'company_codes'}];
+            {id: 'companycodes', name: 'Company Codes', field: 'company_codes', list: 'company_codes'}];
 
     preferencesService.get('singleline:view').then((result) => {
         if (result) {
@@ -124,7 +124,7 @@ preferencesService, moment, sortService, deployConfig) {
                 addToDeskFilter(key);
                 break;
             case 'spike':
-                    // Will get set in the base filters
+                // Will get set in the base filters
                 break;
             case 'featuremedia':
                 filters.push({exists: {field: 'associations.featuremedia'}});
@@ -193,8 +193,8 @@ preferencesService, moment, sortService, deployConfig) {
                 continue;
             }
             var elementName = queryArrayElement.substring(
-                    queryArrayElement.lastIndexOf('(') + 1,
-                    queryArrayElement.lastIndexOf(')')
+                queryArrayElement.lastIndexOf('(') + 1,
+                queryArrayElement.lastIndexOf(')')
             );
 
             for (var j = 0, codeListLength = codeList.length; j < codeListLength; j++) {
@@ -496,8 +496,8 @@ preferencesService, moment, sortService, deployConfig) {
 
         // remove other users drafts.
         this.filter({or: [{and: [{term: {state: 'draft'}},
-                               {term: {original_creator: session.identity._id}}]},
-                         {not: {terms: {state: ['draft']}}}]});
+            {term: {original_creator: session.identity._id}}]},
+        {not: {terms: {state: ['draft']}}}]});
 
         // this is needed for archived collection
         this.filter({not: {term: {package_type: 'takes'}}});

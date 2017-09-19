@@ -83,18 +83,18 @@ describe('content filters', () => {
         filterConditions.selectFilterConditionParameter('nin');
         filterConditions.openPredefinedValues();
         browser.actions().sendKeys('1')
-        .perform();
+            .perform();
         browser.actions().sendKeys(protractor.Key.DOWN)
-        .perform();
+            .perform();
         browser.actions().sendKeys(protractor.Key.ENTER)
-        .perform();
+            .perform();
         filterConditions.openPredefinedValues();
         browser.actions().sendKeys('2')
-        .perform();
+            .perform();
         browser.actions().sendKeys(protractor.Key.DOWN)
-        .perform();
+            .perform();
         browser.actions().sendKeys(protractor.Key.ENTER)
-        .perform();
+            .perform();
         filterConditions.save();
 
         // set up stories
@@ -267,7 +267,7 @@ describe('content filters', () => {
         contentFilters.selectFilterCondition('Body Condition');
         contentFilters.addFilterCondition();
         expect(contentFilters.previewField.getAttribute('value'))
-        .toEqual('[(desk eq "Politic Desk") AND (body_html startswith "Help")]');
+            .toEqual('[(desk eq "Politic Desk") AND (body_html startswith "Help")]');
         contentFilters.save();
 
         // create a content filter with OR
@@ -279,7 +279,7 @@ describe('content filters', () => {
         contentFilters.selectFilterConditionOnStatement('Body Condition', 2);
         contentFilters.addFilterCondition();
         expect(contentFilters.previewField.getAttribute('value'))
-        .toEqual('[(desk eq "Politic Desk")] OR [(body_html startswith "Help")]');
+            .toEqual('[(desk eq "Politic Desk")] OR [(body_html startswith "Help")]');
         contentFilters.save();
 
         // create a content filter with a filter condition and content filter
@@ -292,7 +292,7 @@ describe('content filters', () => {
         contentFilters.addContentFilter();
         /* eslint-disable max-len */
         expect(contentFilters.previewField.getAttribute('value'))
-        .toEqual('[[(desk eq "Politic Desk")] OR [(body_html startswith "Help")] AND (desk eq "Politic Desk")] OR [[(desk eq "Politic Desk")] OR [(body_html startswith "Help")]]');
+            .toEqual('[[(desk eq "Politic Desk")] OR [(body_html startswith "Help")] AND (desk eq "Politic Desk")] OR [[(desk eq "Politic Desk")] OR [(body_html startswith "Help")]]');
         contentFilters.save();
     });
 });

@@ -13,7 +13,7 @@ describe('superdesk filters', () => {
 
         it('can sort on a different property and ignore case while sorting', inject((sortByNameFilter) => {
             var unorderedList = [{name: 'c', display_name: 'category'}, {name: 'A', display_name: 'ANPA Categories'},
-                                 {name: 'b', display_name: 'broadcast'}];
+                {name: 'b', display_name: 'broadcast'}];
 
             expect(sortByNameFilter(unorderedList, 'display_name')).toEqual([
                 {name: 'A', display_name: 'ANPA Categories'}, {name: 'b', display_name: 'broadcast'},

@@ -217,7 +217,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                         .then(() => {
                             _exportHighlight(item._id);
                         }
-                    );
+                        );
                 } else {
                     _exportHighlight(item._id);
                 }
@@ -229,32 +229,32 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
 
             function _exportHighlight(_id) {
                 api.generate_highlights.save({}, {package: _id})
-                .then(authoringWorkspace.edit, (response) => {
-                    if (response.status === 403) {
-                        _forceExportHighlight(_id);
-                    } else {
-                        notify.error(gettext('Error creating highlight.'));
-                    }
-                });
+                    .then(authoringWorkspace.edit, (response) => {
+                        if (response.status === 403) {
+                            _forceExportHighlight(_id);
+                        } else {
+                            notify.error(gettext('Error creating highlight.'));
+                        }
+                    });
             }
 
             function _forceExportHighlight(_id) {
                 modal.confirm(gettext('There are items locked or not published. Do you want to continue?'))
                     .then(() => {
                         api.generate_highlights.save({}, {package: _id, export: true})
-                        .then(authoringWorkspace.edit, (response) => {
-                            notify.error(gettext('Error creating highlight.'));
-                        });
+                            .then(authoringWorkspace.edit, (response) => {
+                                notify.error(gettext('Error creating highlight.'));
+                            });
                     });
             }
 
             function _previewHighlight(_id) {
                 api.generate_highlights.save({}, {package: _id, preview: true})
-                .then((response) => {
-                    $scope.highlight_preview = response.body_html;
-                }, (data) => {
-                    $scope.highlight_preview = data.message;
-                });
+                    .then((response) => {
+                        $scope.highlight_preview = response.body_html;
+                    }, (data) => {
+                        $scope.highlight_preview = data.message;
+                    });
             }
 
             if ($scope.origItem.highlight) {
@@ -583,14 +583,14 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                     if ($scope.dirty && message === 'publish') {
                         // confirmation only required for publish
                         return authoring.publishConfirmation($scope.origItem, $scope.item, $scope.dirty, message)
-                        .then((res) => {
-                            if (res) {
-                                return publishItem($scope.origItem, $scope.item);
-                            }
-                        }, (response) => {
-                            notify.error(gettext('Error. Item not published.'));
-                            return $q.reject(false);
-                        });
+                            .then((res) => {
+                                if (res) {
+                                    return publishItem($scope.origItem, $scope.item);
+                                }
+                            }, (response) => {
+                                notify.error(gettext('Error. Item not published.'));
+                                return $q.reject(false);
+                            });
                     }
 
                     return publishItem($scope.origItem, $scope.item);
@@ -670,8 +670,8 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 $scope.sending = true;
                 if ($scope.dirty) {
                     return confirm.confirmSendTo(action)
-                    .then(() => $scope.save().then(() => lock.unlock($scope.origItem)), () =>  // cancel
-                         $q.reject());
+                        .then(() => $scope.save().then(() => lock.unlock($scope.origItem)), () => // cancel
+                            $q.reject());
                 }
 
                 return lock.unlock($scope.origItem);
@@ -818,13 +818,13 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 var changeMsg = msg;
 
                 authoring.saveWorkConfirmation($scope.origItem, $scope.item, $scope.dirty, changeMsg)
-                .then((res) => {
+                    .then((res) => {
                     // after saving work make sure this item won't be open again
-                    desks.setCurrentDeskId(null);
-                    $location.search('item', null);
-                    $location.search('action', null);
-                })
-                .finally(reloadService.forceReload);
+                        desks.setCurrentDeskId(null);
+                        $location.search('item', null);
+                        $location.search('action', null);
+                    })
+                    .finally(reloadService.forceReload);
             });
 
             $scope.$on('item:lock', (_e, data) => {

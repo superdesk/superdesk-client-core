@@ -101,22 +101,22 @@ export function SendService(desks, api, $q, notify, $injector, multi, $rootScope
         } else if (action && action === 'duplicateTo') {
             return api.save('duplicate', {},
                 {desk: data.desk, stage: data.stage, type: item._type, item_id: item.item_id}, item)
-            .then((duplicate) => {
-                $rootScope.$broadcast('item:duplicate');
-                notify.success(gettext('Item Duplicated'));
-                if (config.open) {
-                    $injector.get('authoringWorkspace').edit({_id: duplicate._id}, 'edit');
-                }
-                return duplicate;
-            }, (response) => {
-                var message = 'Failed to duplicate the item';
+                .then((duplicate) => {
+                    $rootScope.$broadcast('item:duplicate');
+                    notify.success(gettext('Item Duplicated'));
+                    if (config.open) {
+                        $injector.get('authoringWorkspace').edit({_id: duplicate._id}, 'edit');
+                    }
+                    return duplicate;
+                }, (response) => {
+                    var message = 'Failed to duplicate the item';
 
-                if (angular.isDefined(response.data._message)) {
-                    message = message + ': ' + response.data._message;
-                }
-                notify.error(gettext(message));
-                item.error = response;
-            });
+                    if (angular.isDefined(response.data._message)) {
+                        message = message + ': ' + response.data._message;
+                    }
+                    notify.error(gettext(message));
+                    item.error = response;
+                });
         } else if (action && action === 'externalsourceTo') {
             return api.save(item.fetch_endpoint, {
                 guid: item.guid,

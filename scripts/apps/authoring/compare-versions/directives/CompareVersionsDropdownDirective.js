@@ -34,22 +34,22 @@ class LinkFunction {
      */
     fetchVersions() {
         this.desks.initialize()
-        .then(() => {
-            this.scope.desks = this.desks.desks;
-            this.scope.stages = this.desks.deskStages;
+            .then(() => {
+                this.scope.desks = this.desks.desks;
+                this.scope.stages = this.desks.deskStages;
 
-            return this.archiveService.getVersions(this.scope.item, this.desks, 'versions');
-        })
-        .then((versions) => {
-            this.scope.items = this.compareVersions.versions = versions;
+                return this.archiveService.getVersions(this.scope.item, this.desks, 'versions');
+            })
+            .then((versions) => {
+                this.scope.items = this.compareVersions.versions = versions;
 
-            this.scope.current = {
-                id: this.scope.item._id,
-                version: this.scope.item._current_version
-            };
-            // maintains the list of selected versions for creating boards, by default the currently opened article.
-            this.scope.queue = [this.scope.current];
-        });
+                this.scope.current = {
+                    id: this.scope.item._id,
+                    version: this.scope.item._current_version
+                };
+                // maintains the list of selected versions for creating boards, by default the currently opened article.
+                this.scope.queue = [this.scope.current];
+            });
     }
 
 

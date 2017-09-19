@@ -44,36 +44,36 @@ describe('user notifications', () => {
     }));
 
     it('can fetch system notification for admins',
-    inject((userNotifications, session, api, $rootScope) => {
-        session.identity = {_id: 'foo', user_type: 'administrator'};
-        userNotifications.reload();
-        $rootScope.$digest();
-        var args = api.query.calls.argsFor(0);
-        var query = args[1].where;
+        inject((userNotifications, session, api, $rootScope) => {
+            session.identity = {_id: 'foo', user_type: 'administrator'};
+            userNotifications.reload();
+            $rootScope.$digest();
+            var args = api.query.calls.argsFor(0);
+            var query = args[1].where;
 
-        expect(query.user).toBeUndefined();
-        expect(query.item).toBeUndefined();
-    }));
+            expect(query.user).toBeUndefined();
+            expect(query.item).toBeUndefined();
+        }));
 
     it('can refresh when user is mentioned in comment',
-    inject((userNotifications, session, $rootScope, $timeout) => {
-        spyOn(userNotifications, 'reload');
-        $rootScope.$digest();
-        expect(userNotifications.reload).not.toHaveBeenCalled();
+        inject((userNotifications, session, $rootScope, $timeout) => {
+            spyOn(userNotifications, 'reload');
+            $rootScope.$digest();
+            expect(userNotifications.reload).not.toHaveBeenCalled();
 
-        session.identity = {_id: 'foo'};
+            session.identity = {_id: 'foo'};
 
-        $rootScope.$broadcast('user:mention', {_dest: [{user_id: 'bar'}]});
-        $rootScope.$digest();
+            $rootScope.$broadcast('user:mention', {_dest: [{user_id: 'bar'}]});
+            $rootScope.$digest();
 
-        expect(userNotifications.reload).not.toHaveBeenCalled();
+            expect(userNotifications.reload).not.toHaveBeenCalled();
 
-        $rootScope.$broadcast('user:mention', {_dest: [{user_id: 'foo'}]});
-        $rootScope.$digest();
-        $timeout.flush(1000);
+            $rootScope.$broadcast('user:mention', {_dest: [{user_id: 'foo'}]});
+            $rootScope.$digest();
+            $timeout.flush(1000);
 
-        expect(userNotifications.reload).toHaveBeenCalled();
-    }));
+            expect(userNotifications.reload).toHaveBeenCalled();
+        }));
 });
 
 describe('desk notifications', () => {

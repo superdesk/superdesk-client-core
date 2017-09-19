@@ -1,4 +1,4 @@
 angular.module('superdesk.core.services.dragdrop', [])
-.service('dragDropService', [function() {
-    this.item = null;
-}]);
+    .service('dragDropService', [function() {
+        this.item = null;
+    }]);

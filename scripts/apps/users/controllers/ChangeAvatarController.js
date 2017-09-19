@@ -57,8 +57,8 @@ export function ChangeAvatarController($scope, upload, session, urls, beta, gett
             return $scope.resolve(pictureUrl);
         }, (error) => {
             notify.error(error.statusText !== '' ?
-                                error.statusText :
-                                gettext('There was a problem with your upload'));
+                error.statusText :
+                gettext('There was a problem with your upload'));
         }, (update) => {
             $scope.progress.width = Math.round(update.loaded / update.total * 100.0);
         }));

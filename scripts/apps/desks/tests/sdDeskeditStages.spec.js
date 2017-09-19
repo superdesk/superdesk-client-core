@@ -14,9 +14,9 @@ describe('sdDeskeditStages directive', () => {
         macrosFromServer;
 
     macrosFromServer = [
-            {_id: 'foo', action_type: 'direct'},
-            {_id: 'bar', action_type: 'direct'},
-            {_id: 'baz', action_type: 'interactive'}
+        {_id: 'foo', action_type: 'direct'},
+        {_id: 'bar', action_type: 'direct'},
+        {_id: 'baz', action_type: 'interactive'}
     ];
 
     beforeEach(window.module('superdesk.templates-cache'));

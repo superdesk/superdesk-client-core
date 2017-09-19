@@ -25,9 +25,9 @@ export class FetchedDesksInfo extends React.Component {
 
         if (prevProps.item !== this.props.item) {
             familyService.fetchDesks(this.props.item, false)
-            .then((fetchedDesks) => {
-                this.setState({desks: fetchedDesks});
-            });
+                .then((fetchedDesks) => {
+                    this.setState({desks: fetchedDesks});
+                });
         }
     }
 

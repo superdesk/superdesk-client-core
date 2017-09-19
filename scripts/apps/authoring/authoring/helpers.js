@@ -142,11 +142,11 @@ export function forcedExtend(dest, src) {
 export function cleanHtml(data) {
     return data
     // remove embeds by using the comments around them. Embeds don't matter for word counters
-    .replace(/<!-- EMBED START [\s\S]+?<!-- EMBED END .* -->/g, '')
-    .replace(/<br[^>]*>/gi, '&nbsp;')
-    .replace(/<\/?[^>]+><\/?[^>]+>/gi, ' ')
-    .replace(/<\/?[^>]+>/gi, '')
-    .trim()
-    .replace(/&nbsp;/g, ' ')
-    .replace(/\s\s+/g, ' ');
+        .replace(/<!-- EMBED START [\s\S]+?<!-- EMBED END .* -->/g, '')
+        .replace(/<br[^>]*>/gi, '&nbsp;')
+        .replace(/<\/?[^>]+><\/?[^>]+>/gi, ' ')
+        .replace(/<\/?[^>]+>/gi, '')
+        .trim()
+        .replace(/&nbsp;/g, ' ')
+        .replace(/\s\s+/g, ' ');
 }

@@ -342,7 +342,7 @@ function Authoring() {
 
     this.showHistory = function() {
         this.showVersions();
-        return (element(by.id('authoring-container'))).element(by.css('[ng-click="tab = \'history\'"]')).click();
+        return element(by.id('authoring-container')).element(by.css('[ng-click="tab = \'history\'"]')).click();
     };
 
     this.showInfo = function() {
@@ -601,7 +601,7 @@ function Authoring() {
 
     this.getBodyInnerHtml = function() {
         return browser.executeScript('return arguments[0].innerHTML;',
-                element(by.model('item.body_html')).all(by.className('editor-type-html')).last());
+            element(by.model('item.body_html')).all(by.className('editor-type-html')).last());
     };
 
     this.focusBodyHtmlElement = function() {
@@ -641,19 +641,19 @@ function Authoring() {
 
     this.changeNormalTheme = function(theme) {
         element(by.className('theme-select'))
-                .element(by.className('dropdown__toggle')).click();
+            .element(by.className('dropdown__toggle')).click();
 
         element(by.className('normal-theme-list'))
-                .all(by.className(theme)).first().click();
+            .all(by.className(theme)).first().click();
     };
 
     this.changeProofreadTheme = function(theme) {
         element(by.className('proofread-toggle')).click();
         element(by.className('theme-select'))
-                .element(by.className('dropdown__toggle')).click();
+            .element(by.className('dropdown__toggle')).click();
 
         element(by.className('proofread-theme-list'))
-                .all(by.className(theme)).first().click();
+            .all(by.className(theme)).first().click();
     };
 
     this.addHelpline = function(helplineLabel) {
@@ -869,7 +869,7 @@ function Authoring() {
 
     this.getHtmlArticleHeadlineOfBoard = function(index) {
         return browser.executeScript('return arguments[0].innerHTML;',
-                this.getBoardArticle(index).all(by.className('headline')).first());
+            this.getBoardArticle(index).all(by.className('headline')).first());
     };
 
     this.openCompareVersionsInnerDropdown = function(index) {
@@ -878,8 +878,8 @@ function Authoring() {
 
     this.getInnerDropdownItemVersions = function(index) {
         return this.getBoard(index)
-        .all(by.css('[sd-compare-versions-inner-dropdown]'))
-        .all(by.repeater('item in items'));
+            .all(by.css('[sd-compare-versions-inner-dropdown]'))
+            .all(by.repeater('item in items'));
     };
 
     this.openItemVersionInBoard = function(board, index) {

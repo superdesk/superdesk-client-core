@@ -250,21 +250,21 @@ angular.module('superdesk.core.menu.notifications', ['superdesk.core.services.as
     .directive('sdMarkAsRead', MarkAsReadDirective)
 
     .directive('sdNotifications',
-    ['asset', 'authoringWorkspace', '$rootScope', function(asset, authoringWorkspace, $rootScope) {
-        return {
-            require: '^sdSuperdeskView',
-            templateUrl: asset.templateUrl('core/menu/notifications/views/notifications.html'),
-            link: function(scope, elem, attrs, ctrl) {
-                scope.flags = ctrl.flags;
+        ['asset', 'authoringWorkspace', '$rootScope', function(asset, authoringWorkspace, $rootScope) {
+            return {
+                require: '^sdSuperdeskView',
+                templateUrl: asset.templateUrl('core/menu/notifications/views/notifications.html'),
+                link: function(scope, elem, attrs, ctrl) {
+                    scope.flags = ctrl.flags;
 
-                scope.openArticle = function(notification) {
-                    ctrl.flags.notifications = !ctrl.flags.notifications;
-                    authoringWorkspace.edit({_id: notification.item}, 'edit');
-                };
+                    scope.openArticle = function(notification) {
+                        ctrl.flags.notifications = !ctrl.flags.notifications;
+                        authoringWorkspace.edit({_id: notification.item}, 'edit');
+                    };
 
-                scope.onNotificationClick = function(notification) {
-                    $rootScope.$broadcast('notification:click', {notification});
-                };
-            }
-        };
-    }]);
+                    scope.onNotificationClick = function(notification) {
+                        $rootScope.$broadcast('notification:click', {notification});
+                    };
+                }
+            };
+        }]);

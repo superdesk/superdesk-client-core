@@ -84,61 +84,61 @@ export function RenditionsService(metadata, $q, api, superdesk, _) {
                 isAssociated: isAssociated,
                 editable: editable
             })
-            .then((result) => {
-                let renditionNames = [];
-                let savingImagePromises = [];
+                .then((result) => {
+                    let renditionNames = [];
+                    let savingImagePromises = [];
 
-                // applying metadata changes
-                angular.forEach(result.cropData, (croppingData, renditionName) => {
+                    // applying metadata changes
+                    angular.forEach(result.cropData, (croppingData, renditionName) => {
                     // if there a change in the crop co-ordinates
-                    const keys = ['CropLeft', 'CropTop', 'CropBottom', 'CropRight'];
+                        const keys = ['CropLeft', 'CropTop', 'CropBottom', 'CropRight'];
 
-                    let canAdd = !keys.every((key) => {
-                        let sameCoords = angular.isDefined(picture.renditions[renditionName]) &&
+                        let canAdd = !keys.every((key) => {
+                            let sameCoords = angular.isDefined(picture.renditions[renditionName]) &&
                             picture.renditions[renditionName][key] === croppingData[key];
 
-                        return sameCoords;
+                            return sameCoords;
+                        });
+
+                        if (canAdd) {
+                            renditionNames.push(renditionName);
+                        }
                     });
 
-                    if (canAdd) {
-                        renditionNames.push(renditionName);
-                    }
-                });
-
-                // perform the request to make the cropped images
-                renditionNames.forEach((renditionName) => {
-                    if (picture.renditions[renditionName] !== result.cropData[renditionName]) {
-                        savingImagePromises.push(
-                            api.save('picture_crop', {item: clonedPicture, crop: result.cropData[renditionName]})
-                        );
-                    }
-                });
-
-                return $q.all(savingImagePromises)
-                // return the cropped images
-                .then((croppedImages) => {
-                    // save created images in "association" property
-                    croppedImages.forEach((image, index) => {
-                        let url = image.href;
-
-                        // update association renditions
-                        result.metadata.renditions[renditionNames[index]] = angular.extend(
-                            image.crop,
-                            {
-                                href: url,
-                                width: image.width,
-                                height: image.height,
-                                media: image._id,
-                                mimetype: image.item.mimetype
-                            }
-                        );
+                    // perform the request to make the cropped images
+                    renditionNames.forEach((renditionName) => {
+                        if (picture.renditions[renditionName] !== result.cropData[renditionName]) {
+                            savingImagePromises.push(
+                                api.save('picture_crop', {item: clonedPicture, crop: result.cropData[renditionName]})
+                            );
+                        }
                     });
 
-                    // apply the metadata changes
-                    angular.extend(picture, result.metadata);
-                    return picture;
+                    return $q.all(savingImagePromises)
+                    // return the cropped images
+                        .then((croppedImages) => {
+                            // save created images in "association" property
+                            croppedImages.forEach((image, index) => {
+                                let url = image.href;
+
+                                // update association renditions
+                                result.metadata.renditions[renditionNames[index]] = angular.extend(
+                                    image.crop,
+                                    {
+                                        href: url,
+                                        width: image.width,
+                                        height: image.height,
+                                        media: image._id,
+                                        mimetype: image.item.mimetype
+                                    }
+                                );
+                            });
+
+                            // apply the metadata changes
+                            angular.extend(picture, result.metadata);
+                            return picture;
+                        });
                 });
-            });
         });
     };
 }

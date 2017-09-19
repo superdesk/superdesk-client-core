@@ -115,17 +115,17 @@ export function HistoryController(
 
         if (item._type === 'legal_archive') {
             return api.query('legal_archive_history', criteria)
-            .then((historyItems) => {
-                historyItems._items.map(processLegalHistoryItem);
-                return historyItems._items;
-            });
+                .then((historyItems) => {
+                    historyItems._items.map(processLegalHistoryItem);
+                    return historyItems._items;
+                });
         }
 
         return api.query('archive_history', criteria)
-        .then((historyItems) => {
-            historyItems._items.map(processHistoryItem);
-            return historyItems._items;
-        });
+            .then((historyItems) => {
+                historyItems._items.map(processHistoryItem);
+                return historyItems._items;
+            });
     };
 
     /**

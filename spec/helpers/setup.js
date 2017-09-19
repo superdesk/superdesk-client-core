@@ -28,14 +28,14 @@ module.exports = function(params) {
     beforeEach((done) => {
         require('./waitReady');
         resize(1280, 800)
-        .then(() => {
-            resetApp(params.fixture_profile, () => {
-                openBaseUrl()
-                    .then(clearStorage)
-                    .then(openBaseUrl)
-                    .then(waitForSuperdesk)
-                    .then(done);
+            .then(() => {
+                resetApp(params.fixture_profile, () => {
+                    openBaseUrl()
+                        .then(clearStorage)
+                        .then(openBaseUrl)
+                        .then(waitForSuperdesk)
+                        .then(done);
+                });
             });
-        });
     });
 };

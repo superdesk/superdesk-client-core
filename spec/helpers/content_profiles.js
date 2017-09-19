@@ -103,8 +103,8 @@ function ContentProfiles() {
      **/
     this.disableField = function(fieldName) {
         const disableButton = element(by.cssContainingText('.title', fieldName))
-        .element(by.xpath('..'))
-        .element(by.css('[ng-click="remove(id)"]'));
+            .element(by.xpath('..'))
+            .element(by.css('[ng-click="remove(id)"]'));
 
         disableButton.click();
     };
@@ -115,9 +115,9 @@ function ContentProfiles() {
      **/
     this.setRequired = function(fieldName) {
         const requiredCheckbox = element(by.cssContainingText('.title', fieldName))
-        .element(by.xpath('..'))
-        .element(by.xpath('..'))
-        .element(by.model('model.schema[id].required'));
+            .element(by.xpath('..'))
+            .element(by.xpath('..'))
+            .element(by.model('model.schema[id].required'));
 
         requiredCheckbox.click();
     };

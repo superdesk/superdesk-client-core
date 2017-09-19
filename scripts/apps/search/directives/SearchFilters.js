@@ -254,7 +254,7 @@ class LinkFunction {
             this.$location.search(type, JSON.stringify(currentKeys));
         } else if (type === 'credit') {
             this.$location.search('creditqcode',
-                    JSON.stringify([{label: key, value: this.scope.aggregations.credit[key].qcode}]));
+                JSON.stringify([{label: key, value: this.scope.aggregations.credit[key].qcode}]));
         } else {
             this.$location.search(type, JSON.stringify([key]));
         }
@@ -338,7 +338,6 @@ class LinkFunction {
 
         return isDesk || isCredit || facet.indexOf(key) >= 0;
     }
-
 }
 
 

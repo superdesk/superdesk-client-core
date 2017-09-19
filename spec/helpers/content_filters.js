@@ -84,7 +84,7 @@ function ContentFilters() {
      **/
     this.selectFilterConditionOnStatement = (name, index) => {
         this.filterConditionDropdown.get(index).all(by.cssContainingText('option', name))
-        .click();
+            .click();
     };
 
     /**

@@ -25,7 +25,7 @@ import * as helpers from 'apps/authoring/authoring/helpers';
 AuthoringService.$inject = ['$q', '$location', 'api', 'lock', 'autosave', 'confirm', 'privileges',
     'desks', 'superdeskFlags', 'notify', 'session', '$injector', 'moment', 'config'];
 export function AuthoringService($q, $location, api, lock, autosave, confirm, privileges, desks, superdeskFlags,
-                    notify, session, $injector, moment, config) {
+    notify, session, $injector, moment, config) {
     var self = this;
 
     // TODO: have to trap desk update event for refereshing users desks.
@@ -144,8 +144,8 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
                     promise = confirm.confirm()
                         .then(angular.bind(this, function save() {
                             return this.save(orig, diff);
-                        }), () =>  // ignore saving
-                             $q.when('ignore'));
+                        }), () => // ignore saving
+                            $q.when('ignore'));
                 } else {
                     promise = $q.when('ignore');
                 }
@@ -181,8 +181,8 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
             promise = confirm.confirmPublish(action)
                 .then(angular.bind(this, function save() {
                     return true;
-                }), () =>  // cancel
-                     false);
+                }), () => // cancel
+                    false);
         }
 
         return promise;
@@ -243,8 +243,8 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
                 promise = confirm.confirmSaveWork(message)
                     .then(angular.bind(this, function save() {
                         return this.saveWork(orig, diff);
-                    }), (err) =>  // cancel
-                         $q.when());
+                    }), (err) => // cancel
+                        $q.when());
             }
         }
 
