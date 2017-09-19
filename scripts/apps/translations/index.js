@@ -22,23 +22,23 @@ angular.module('superdesk.apps.translations', [
     'superdesk.core.api'
 ])
 
-.service('TranslationService', svc.TranslationService)
+    .service('TranslationService', svc.TranslationService)
 
-.directive('sdTranslationDropdown', directive.TranslationDropdown)
+    .directive('sdTranslationDropdown', directive.TranslationDropdown)
 
-.config(['superdeskProvider', function(superdesk) {
-    superdesk
-        .activity('translate', {
-            label: gettext('Translate'),
-            icon: 'globe',
-            dropdown: directive.TranslationReactDropdown,
-            keyboardShortcut: 'ctrl+t',
-            templateUrl: 'scripts/apps/translations/views/TranslationDropdownTemplate.html',
-            filters: [
-                {action: 'list', type: 'archive'}
-            ],
-            additionalCondition: ['TranslationService', 'item', function(TranslationService, item) {
-                return TranslationService.checkAvailability(item);
-            }]
-        });
-}]);
+    .config(['superdeskProvider', function(superdesk) {
+        superdesk
+            .activity('translate', {
+                label: gettext('Translate'),
+                icon: 'globe',
+                dropdown: directive.TranslationReactDropdown,
+                keyboardShortcut: 'ctrl+t',
+                templateUrl: 'scripts/apps/translations/views/TranslationDropdownTemplate.html',
+                filters: [
+                    {action: 'list', type: 'archive'}
+                ],
+                additionalCondition: ['TranslationService', 'item', function(TranslationService, item) {
+                    return TranslationService.checkAvailability(item);
+                }]
+            });
+    }]);

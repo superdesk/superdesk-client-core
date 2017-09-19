@@ -28,17 +28,17 @@ export function PackageItemPreview(api, lock, superdesk, authoringWorkspace, $lo
                 }
 
                 api[endpoint].getByUrl(url)
-                .then((result) => {
-                    scope.data = result;
-                    if (scope.data.abstract) {
-                        scope.data.abstract = $sce.trustAsHtml(scope.data.abstract);
-                    }
-                    scope.isLocked = lock.isLocked(scope.data);
-                    scope.isPublished = _.includes(['published', 'corrected'], scope.data.state);
-                    scope.isKilled = scope.data.state === 'killed';
-                }, (response) => {
-                    scope.error = true;
-                });
+                    .then((result) => {
+                        scope.data = result;
+                        if (scope.data.abstract) {
+                            scope.data.abstract = $sce.trustAsHtml(scope.data.abstract);
+                        }
+                        scope.isLocked = lock.isLocked(scope.data);
+                        scope.isPublished = _.includes(['published', 'corrected'], scope.data.state);
+                        scope.isKilled = scope.data.state === 'killed';
+                    }, (response) => {
+                        scope.error = true;
+                    });
             }
 
             scope.$on('item:lock', (_e, data) => {

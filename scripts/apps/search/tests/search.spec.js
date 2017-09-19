@@ -279,7 +279,7 @@ describe('sdSearchPanel directive', () => {
         fakeApi,
         fakeMetadata,
         isoScope,
-        $element;  // directive's DOM element
+        $element; // directive's DOM element
 
     beforeEach(window.module(
         'superdesk.apps.authoring.metadata',
@@ -392,7 +392,7 @@ describe('sdSearchPanel directive', () => {
             ];
 
             desks.deskLookup = {
-                otherDesk: {}  // desk abc123 not present in deskLookup
+                otherDesk: {} // desk abc123 not present in deskLookup
             };
 
             try {
@@ -411,7 +411,7 @@ describe('sdSearchPanel directive', () => {
             ];
 
             desks.deskLookup = {
-                otherDesk: {}  // desk abc123 not present in deskLookup
+                otherDesk: {} // desk abc123 not present in deskLookup
             };
 
             spyOn(console, 'warn');

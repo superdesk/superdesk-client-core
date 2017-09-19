@@ -17,14 +17,14 @@ angular.module('superdesk.apps.editor2.content', []).directive('sdAddContent', [
                 if (!vm.config.embeds) {
                     return;
                 }
-            // initialize state
+                // initialize state
                 vm.updateState();
-            // listen for update state signals
+                // listen for update state signals
                 var unbindListener = scope.$parent.$on('sdAddContent::updateState',
                     (signal, event, editorElem) => {
                         vm.updateState(event, editorElem);
                     });
-            // update on resize
+                // update on resize
 
                 angular.element($window).on('resize', vm.updateState);
                 scope.$on('$destroy', () => {

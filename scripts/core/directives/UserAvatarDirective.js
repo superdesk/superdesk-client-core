@@ -43,8 +43,8 @@ export default angular.module('superdesk.core.directives.avatar', [])
 
                 if (figure.has('> span').length) {
                     figure.children('span')
-                            .text(initials)
-                            .show();
+                        .text(initials)
+                        .show();
                 } else {
                     figure.prepend('<span>' + initials + '</span>');
                 }

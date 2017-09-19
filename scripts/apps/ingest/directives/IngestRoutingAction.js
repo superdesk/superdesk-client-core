@@ -13,10 +13,10 @@ export function IngestRoutingAction(desks, macros, subscribersService, metadata,
             scope.target_types = [];
 
             desks.initialize()
-            .then(() => {
-                scope.deskLookup = desks.deskLookup;
-                scope.stageLookup = desks.stageLookup;
-            });
+                .then(() => {
+                    scope.deskLookup = desks.deskLookup;
+                    scope.stageLookup = desks.stageLookup;
+                });
 
             macros.get(true).then((macros) => {
                 _.transform(macros, (lookup, macro, idx) => {

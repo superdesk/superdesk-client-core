@@ -97,7 +97,7 @@ describe('Upload controller', () => {
 
             scope.errorMessage = null;
 
-        // missed meta.description field on purpose
+            // missed meta.description field on purpose
             scope.items[0].meta.headline = 'headline text';
             scope.items[0].meta.slugline = 'slugline text';
 
@@ -127,7 +127,7 @@ describe('Upload controller', () => {
             expect(scope.items[0].meta).not.toBe(undefined);
             expect(scope.items[0].progress).toBe(0);
 
-        // mandatory fields
+            // mandatory fields
             scope.items[0].meta.headline = 'headline text';
             scope.items[0].meta.slugline = 'slugline text';
             scope.items[0].meta.description_text = 'description';

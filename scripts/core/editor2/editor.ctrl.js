@@ -75,50 +75,55 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, editor, config, $q
         }
 
         $('<div>' + bodyHtml + '</div>')
-        .contents()
-        .toArray()
-        .forEach((element) => {
+            .contents()
+            .toArray()
+            .forEach((element) => {
             // if we get a <p>, we push the current block and create a new one
             // for the paragraph content
-            if (element.nodeName === 'P') {
-                handleParagraph(element);
+                if (element.nodeName === 'P') {
+                    handleParagraph(element);
                 // detect if it's an embed
-            } else if (element.nodeName === '#comment') {
-                if (element.nodeValue.indexOf('EMBED START') > -1) {
-                    commitBlock();
-                    // retrieve the embed type following the comment
-                    var embedType;
-                    var embedTypeRegex = /EMBED START ([\w-]+)/;
-                    var match;
+                } else if (element.nodeName === '#comment') {
+                    if (element.nodeValue.indexOf('EMBED START') > -1) {
+                        commitBlock();
+                        // retrieve the embed type following the comment
+                        var embedType;
+                        var embedTypeRegex = /EMBED START ([\w-]+)/;
+                        var match;
 
-                    if ((match = embedTypeRegex.exec(angular.copy(element.nodeValue).trim())) !== null) {
-                        embedType = match[1];
-                    } else {
-                        embedType = EMBED_PROVIDERS.custom;
-                    }
-                    // retrieve the association reference
-                    var association;
-                    var embedAssoKey = /{id: "(embedded\d+)"}/;
+                        if ((match = embedTypeRegex.exec(angular.copy(element.nodeValue).trim())) !== null) {
+                            embedType = match[1];
+                        } else {
+                            embedType = EMBED_PROVIDERS.custom;
+                        }
+                        // retrieve the association reference
+                        var association;
+                        var embedAssoKey = /{id: "(embedded\d+)"}/;
 
-                    if ((match = embedAssoKey.exec(angular.copy(element.nodeValue).trim())) !== null
+                        if ((match = embedAssoKey.exec(angular.copy(element.nodeValue).trim())) !== null
                         && self.associations) {
-                        association = angular.copy(self.associations[match[1]]);
+                            association = angular.copy(self.associations[match[1]]);
+                        }
+                        // create the embed block
+                        block = new Block({
+                            blockType: 'embed',
+                            embedType: embedType,
+                            association: association,
+                            body: ''
+                        });
                     }
-                    // create the embed block
-                    block = new Block({blockType: 'embed', embedType: embedType, association: association, body: ''});
-                }
-                if (element.nodeValue.indexOf('EMBED END') > -1) {
-                    commitBlock();
-                }
+                    if (element.nodeValue.indexOf('EMBED END') > -1) {
+                        commitBlock();
+                    }
                 // if it's not a paragraph or an embed, we update the current block
-            } else {
-                if (block === undefined) {
-                    block = new Block({body: ''});
+                } else {
+                    if (block === undefined) {
+                        block = new Block({body: ''});
+                    }
+                    // we want the outerHTML (ex: '<b>text</b>') or the node value for text and comment
+                    block.body += (element.outerHTML || element.nodeValue || '').trim();
                 }
-                // we want the outerHTML (ex: '<b>text</b>') or the node value for text and comment
-                block.body += (element.outerHTML || element.nodeValue || '').trim();
-            }
-        });
+            });
         // at the end of the loop, we push the last current block
         if (block !== undefined && block.body.trim() !== '') {
             blocks.push(block);

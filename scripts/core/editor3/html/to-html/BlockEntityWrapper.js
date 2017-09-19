@@ -54,7 +54,6 @@ export class BlockEntityWrapper {
                     html += `<a href="${link.href}">`;
                 }
             }
-
         }
 
         return html;

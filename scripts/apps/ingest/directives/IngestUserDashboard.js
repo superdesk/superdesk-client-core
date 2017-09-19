@@ -15,8 +15,8 @@ export function IngestUserDashboard(api, userList, privileges, config, moment) {
                             filtered: {
                                 filter: {
                                     and: [
-                                            {term: {ingest_provider: scope.item._id}},
-                                            {range: {versioncreated: {gte: 'now-24h'}}}
+                                        {term: {ingest_provider: scope.item._id}},
+                                        {range: {versioncreated: {gte: 'now-24h'}}}
                                     ]
                                 }
                             }
@@ -50,8 +50,8 @@ export function IngestUserDashboard(api, userList, privileges, config, moment) {
                 };
 
                 var where = [
-                        {resource: 'ingest_providers'},
-                        {'data.provider_id': scope.item._id}
+                    {resource: 'ingest_providers'},
+                    {'data.provider_id': scope.item._id}
                 ];
 
                 if (scope.item.log_messages === 'error') {

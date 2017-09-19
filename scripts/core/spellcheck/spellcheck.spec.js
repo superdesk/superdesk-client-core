@@ -42,28 +42,28 @@ describe('spellcheck', () => {
     }));
 
     it('can spellcheck using multiple dictionaries',
-    inject((spellcheck, dictionaries, $q, $rootScope) => {
-        var p = createParagraph('test what if foo bar baz');
+        inject((spellcheck, dictionaries, $q, $rootScope) => {
+            var p = createParagraph('test what if foo bar baz');
 
-        spellcheck.errors(p).then(assignErrors);
-        $rootScope.$digest();
-        expect(errors).toContain({word: 'test', index: 0, sentenceWord: true});
-        expect(errors).toContain({word: 'if', index: 10, sentenceWord: false});
-        expect(dictionaries.getActive).toHaveBeenCalledWith(LANG, 'en');
-    }));
+            spellcheck.errors(p).then(assignErrors);
+            $rootScope.$digest();
+            expect(errors).toContain({word: 'test', index: 0, sentenceWord: true});
+            expect(errors).toContain({word: 'if', index: 10, sentenceWord: false});
+            expect(dictionaries.getActive).toHaveBeenCalledWith(LANG, 'en');
+        }));
 
     it('can spellcheck using base dictionary',
-    inject((spellcheck, dictionaries, $q, $rootScope) => {
-        spellcheck.setLanguage('en');
-        var p = createParagraph('test what if foo bar baz');
+        inject((spellcheck, dictionaries, $q, $rootScope) => {
+            spellcheck.setLanguage('en');
+            var p = createParagraph('test what if foo bar baz');
 
-        spellcheck.errors(p).then(assignErrors);
-        $rootScope.$digest();
+            spellcheck.errors(p).then(assignErrors);
+            $rootScope.$digest();
 
-        expect(errors).toContain({word: 'test', index: 0, sentenceWord: true});
-        expect(errors).toContain({word: 'if', index: 10, sentenceWord: false});
-        expect(dictionaries.getActive).toHaveBeenCalledWith('en', null);
-    }));
+            expect(errors).toContain({word: 'test', index: 0, sentenceWord: true});
+            expect(errors).toContain({word: 'if', index: 10, sentenceWord: false});
+            expect(dictionaries.getActive).toHaveBeenCalledWith('en', null);
+        }));
 
     it('can add words to user dictionary', inject((spellcheck, api, $rootScope) => {
         var p = createParagraph('Test');
@@ -99,21 +99,21 @@ describe('spellcheck', () => {
     }));
 
     it('can report error if word comes after .|?|!|: (i.e, after : or at new sentence) starts with small letter',
-    inject((spellcheck, api, $rootScope) => {
+        inject((spellcheck, api, $rootScope) => {
         // Test with existing words in dictionary
-        var p = createParagraph('Foo what? Foo is foo. Foo is foo! What foo: Foo?');
+            var p = createParagraph('Foo what? Foo is foo. Foo is foo! What foo: Foo?');
 
-        spellcheck.errors(p).then(assignErrors);
-        $rootScope.$digest();
-        expect(errors.length).toBe(0);
+            spellcheck.errors(p).then(assignErrors);
+            $rootScope.$digest();
+            expect(errors.length).toBe(0);
 
-        // now test if existing word comes after .|?|!|: starts with small letter.
-        p = createParagraph('Foo what? foo is foo. foo is foo! what foo: foo?');
+            // now test if existing word comes after .|?|!|: starts with small letter.
+            p = createParagraph('Foo what? foo is foo. foo is foo! what foo: foo?');
 
-        spellcheck.errors(p).then(assignErrors);
-        $rootScope.$digest();
-        expect(errors.length).toBe(4);
-    }));
+            spellcheck.errors(p).then(assignErrors);
+            $rootScope.$digest();
+            expect(errors.length).toBe(4);
+        }));
 
     it('can report if text contains multiple spaces', inject((spellcheck, api, $rootScope) => {
         // Test with existing words in dictionary
@@ -132,34 +132,34 @@ describe('spellcheck', () => {
     }));
 
     it('can report error for sentences beginning with any quotes and starts with small letter',
-    inject((spellcheck, api, $rootScope) => {
+        inject((spellcheck, api, $rootScope) => {
         // Test with existing words in dictionary.
-        var p = createParagraph('"Foo what."');
+            var p = createParagraph('"Foo what."');
 
-        spellcheck.errors(p).then(assignErrors);
-        $rootScope.$digest();
-        expect(errors.length).toBe(0);
+            spellcheck.errors(p).then(assignErrors);
+            $rootScope.$digest();
+            expect(errors.length).toBe(0);
 
-        // now test if existing word starts with small letter within quotes.
-        p = createParagraph('"foo what."');
-        spellcheck.errors(p).then(assignErrors);
-        $rootScope.$digest();
-        expect(errors.length).toBe(1);
-        expect(errors).toContain({word: 'foo', index: 1, sentenceWord: true});
+            // now test if existing word starts with small letter within quotes.
+            p = createParagraph('"foo what."');
+            spellcheck.errors(p).then(assignErrors);
+            $rootScope.$digest();
+            expect(errors.length).toBe(1);
+            expect(errors).toContain({word: 'foo', index: 1, sentenceWord: true});
 
-        // now test if different variety of quote (“ ” or ' ') is used at beginning.
-        p = createParagraph('“foo what.”');
-        spellcheck.errors(p).then(assignErrors);
-        $rootScope.$digest();
-        expect(errors.length).toBe(1);
-        expect(errors).toContain({word: 'foo', index: 1, sentenceWord: true});
+            // now test if different variety of quote (“ ” or ' ') is used at beginning.
+            p = createParagraph('“foo what.”');
+            spellcheck.errors(p).then(assignErrors);
+            $rootScope.$digest();
+            expect(errors.length).toBe(1);
+            expect(errors).toContain({word: 'foo', index: 1, sentenceWord: true});
 
-        p = createParagraph('\'foo what.\'');
-        spellcheck.errors(p).then(assignErrors);
-        $rootScope.$digest();
-        expect(errors.length).toBe(1);
-        expect(errors).toContain({word: 'foo', index: 1, sentenceWord: true});
-    }));
+            p = createParagraph('\'foo what.\'');
+            spellcheck.errors(p).then(assignErrors);
+            $rootScope.$digest();
+            expect(errors.length).toBe(1);
+            expect(errors).toContain({word: 'foo', index: 1, sentenceWord: true});
+        }));
 
     it('can avoid reporting error if a valid word is in middle of sentence and starts with capital letter',
         inject((spellcheck, api, $rootScope) => {

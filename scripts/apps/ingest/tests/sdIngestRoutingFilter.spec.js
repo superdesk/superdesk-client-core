@@ -5,7 +5,7 @@
 * @module sdIngestRoutingFilter directive tests
 */
 describe('sdIngestRoutingFilter directive', () => {
-    var scope,  // the directive's own isolate scope
+    var scope, // the directive's own isolate scope
         $compile,
         $rootScope;
 
@@ -29,7 +29,7 @@ describe('sdIngestRoutingFilter directive', () => {
      */
     function compileDirective(scopeValues) {
         var html,
-            parentScope,  // scope of the element the directive is applied to
+            parentScope, // scope of the element the directive is applied to
             $element;
 
         parentScope = $rootScope.$new();
@@ -100,25 +100,25 @@ describe('sdIngestRoutingFilter directive', () => {
     describe('searchFilters() scope method', () => {
         it('changes the matching filters list to only contain those content ' +
             'filters that match the search term',
-            () => {
-                var expectedIds,
-                    matchIds;
+        () => {
+            var expectedIds,
+                matchIds;
 
-                scope.filters = [
-                    {id: 1, name: 'foo-bar name'},
-                    {id: 2, name: 'body contains "Foo+1" phrase'},
-                    {id: 3, name: 'text items named Foo*'},
-                    {id: 4, name: 'foooo1 in slugline'},
-                    {id: 5, name: 'breaking foo+1 news stories'}
-                ];
+            scope.filters = [
+                {id: 1, name: 'foo-bar name'},
+                {id: 2, name: 'body contains "Foo+1" phrase'},
+                {id: 3, name: 'text items named Foo*'},
+                {id: 4, name: 'foooo1 in slugline'},
+                {id: 5, name: 'breaking foo+1 news stories'}
+            ];
 
-                scope.matchingFilters = [];
-                scope.searchFilters('foo+1');
+            scope.matchingFilters = [];
+            scope.searchFilters('foo+1');
 
-                matchIds = _.map(scope.matchingFilters, 'id').sort();
-                expectedIds = [2, 5].sort();
-                expect(matchIds).toEqual(expectedIds);
-            }
+            matchIds = _.map(scope.matchingFilters, 'id').sort();
+            expectedIds = [2, 5].sort();
+            expect(matchIds).toEqual(expectedIds);
+        }
         );
     });
 

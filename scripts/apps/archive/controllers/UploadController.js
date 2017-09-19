@@ -130,10 +130,10 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
                     $scope.resolve(results);
                 });
             })
-            .finally(() => {
-                $scope.saving = false;
-                checkFail();
-            });
+                .finally(() => {
+                    $scope.saving = false;
+                    checkFail();
+                });
         }
     };
 

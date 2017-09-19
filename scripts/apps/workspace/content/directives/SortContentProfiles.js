@@ -18,11 +18,11 @@ export function SortContentProfiles() {
                 },
                 start: function(event, ui) {
                     ui.item.data('start_index',
-                            ui.item
+                        ui.item
                             .parent()
                             .find('li.schema-item')
                             .index(ui.item)
-                            );
+                    );
                 },
                 stop: function(event, ui) {
                     if (updated) {
@@ -30,7 +30,7 @@ export function SortContentProfiles() {
 
                         var start = ui.item.data('start_index'),
                             end = ui.item.parent().find('li.schema-item')
-                                    .index(ui.item);
+                                .index(ui.item);
 
                         scope.reorder(start, end, ui.item);
                         scope.$apply();

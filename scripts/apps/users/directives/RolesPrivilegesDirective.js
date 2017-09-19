@@ -22,9 +22,9 @@ export function RolesPrivilegesDirective(api, gettext, notify, $q, $filter) {
 
                 _.each(scope.roles, (role) => {
                     promises.push(api.save('roles', role, _.pick(role, 'privileges'))
-                    .then(null, (error) => {
-                        console.error(error);
-                    }));
+                        .then(null, (error) => {
+                            console.error(error);
+                        }));
                 });
 
                 $q.all(promises).then(() => {

@@ -36,7 +36,7 @@ export default class SuggestService {
         this._listener = (data) => { /* no-op */ };
     }
 
-     /**
+    /**
       * @ngdoc method
       * @name suggest#_get
       * @param {(Array|Object)} item Array of items or item.

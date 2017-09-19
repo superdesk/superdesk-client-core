@@ -85,12 +85,12 @@ export default angular.module('superdesk.core.directives.searchList', ['superdes
                         max_results: scope.pageSize,
                         page: scope.page
                     }))
-                    .then((result) => {
-                        var pageSize = scope.pageSize || defaults.pageSize;
+                        .then((result) => {
+                            var pageSize = scope.pageSize || defaults.pageSize;
 
-                        scope.maxPage = Math.ceil(result._meta.total / pageSize) || 0;
-                        scope.items = result._items;
-                    });
+                            scope.maxPage = Math.ceil(result._meta.total / pageSize) || 0;
+                            scope.items = result._items;
+                        });
                 };
                 var update = _.debounce(_update, 500);
 

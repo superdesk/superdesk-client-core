@@ -25,13 +25,13 @@ export function ActionPicker(desks, macros) {
             scope.$watchGroup(['desk', 'stage'], () => {
                 if (!scope.desks || !scope.deskStages) {
                     desks.initialize()
-                    .then(() => {
-                        scope.desks = desks.desks._items;
-                        scope.deskStages = desks.deskStages;
-                        if (scope.desk) {
-                            updateMacros();
-                        }
-                    });
+                        .then(() => {
+                            scope.desks = desks.desks._items;
+                            scope.deskStages = desks.deskStages;
+                            if (scope.desk) {
+                                updateMacros();
+                            }
+                        });
                 } else if (scope.desk) {
                     updateMacros();
                 }

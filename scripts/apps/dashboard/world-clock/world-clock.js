@@ -63,14 +63,14 @@ angular.module('superdesk.apps.dashboard.world-clock', [
                 $scope.$digest();
             }
 
-        // XXX: a hack-ish workaround to expose the object loaded via
-        // RequireJS to the testing code which does not use the latter
+            // XXX: a hack-ish workaround to expose the object loaded via
+            // RequireJS to the testing code which does not use the latter
             this._moment = moment;
 
             tzdata.$promise.then(() => {
                 moment.tz.add(
-                _.pick(tzdata, ['zones', 'links'])
-            );
+                    _.pick(tzdata, ['zones', 'links'])
+                );
             });
 
             interval = $interval(updateUTC, INTERVAL_DELAY, 0, false);
@@ -116,8 +116,8 @@ angular.module('superdesk.apps.dashboard.world-clock', [
 
                 var svg = d3.select(element[0])
                     .append('svg')
-                        .attr('widgth', width)
-                        .attr('height', height);
+                    .attr('widgth', width)
+                    .attr('height', height);
 
                 var clock = svg.append('g')
                     .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')');
@@ -138,16 +138,16 @@ angular.module('superdesk.apps.dashboard.world-clock', [
                     .data(_.range(0, 59, 5))
                     .enter()
                     .append('path')
-                        .attr('d', (d) => {
-                            var angle = scales.m(d);
-                            var arc = d3.svg.arc()
-                                .innerRadius(r * 0.7)
-                                .outerRadius(r * 0.9)
-                                .startAngle(angle)
-                                .endAngle(angle);
+                    .attr('d', (d) => {
+                        var angle = scales.m(d);
+                        var arc = d3.svg.arc()
+                            .innerRadius(r * 0.7)
+                            .outerRadius(r * 0.9)
+                            .startAngle(angle)
+                            .endAngle(angle);
 
-                            return arc();
-                        })
+                        return arc();
+                    })
                     .attr('class', 'number-lines')
                     .style('stroke-width', 1.5);
 

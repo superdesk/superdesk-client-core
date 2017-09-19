@@ -119,7 +119,7 @@ export class LinkInputComponent extends Component {
                         className="sd-line-input__input"
                         defaultValue={this.props.value ? this.props.value.href : null}
                         placeholder={gettext('Insert URL')}
-                        />
+                    />
                 </div>
             </form>
         );

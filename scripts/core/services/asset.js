@@ -20,8 +20,8 @@ export default angular.module('superdesk.core.services.asset', [])
                 ret = config.paths.superdesk + ret;
             }
             ret = ret.replace(/[^\/]+\/+\.\.\//g, '')
-                     .replace(/\.\//g, '')
-                     .replace(/(\w)\/\/(\w)/g, '$1/$2');
+                .replace(/\.\//g, '')
+                .replace(/(\w)\/\/(\w)/g, '$1/$2');
             return ret;
         };
 

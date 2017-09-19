@@ -8,7 +8,6 @@ function DeployConfigFactory(api, $q) {
      * provides deployment related config from server
      */
     class DeployConfig {
-
         constructor() {
             this.config = null;
             this.promise = null;

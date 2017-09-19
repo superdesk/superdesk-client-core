@@ -99,7 +99,8 @@ function CommentTextDirective($compile) {
 
                 if (scope.comment.mentioned_users && scope.comment.mentioned_users[username]) {
                     html = html.replace(token,
-                    '<i sd-user-info data-user="' + scope.comment.mentioned_users[username] + '">' + token + '</i>');
+                        '<i sd-user-info data-user="' + scope.comment.mentioned_users[username] + '">' + token + '</i>'
+                    );
                 }
             });
 
@@ -111,7 +112,7 @@ function CommentTextDirective($compile) {
 
                 if (scope.comment.mentioned_desks && scope.comment.mentioned_desks[deskname]) {
                     html = html.replace(token,
-                    '<a href="">' + token + '</a>');
+                        '<a href="">' + token + '</a>');
                 }
             });
             // build element

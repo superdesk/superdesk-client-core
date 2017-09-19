@@ -41,7 +41,7 @@ export function DeskeditStages(gettext, api, WizardHandler, tasks, $rootScope, d
                         scope.stages = stages;
                         scope.message = null;
                     })
-                    .finally(() => { /* no-op */ });
+                        .finally(() => { /* no-op */ });
                 } else {
                     WizardHandler.wizard('desks').goTo(previous);
                 }
@@ -117,19 +117,19 @@ export function DeskeditStages(gettext, api, WizardHandler, tasks, $rootScope, d
 
             function saveStage(dest, diff) {
                 api('stages').save(dest, diff)
-                .then((item) => {
-                    scope.select(item);
-                    return desks.fetchDeskById(item.desk);
-                })
-                .then((desk) => {
-                    scope.desk.edit = desk;
-                    scope.getstages();
-                }, errorMessage)
-                .finally(() => {
-                    scope.saving = false;
-                    scope.message = null;
-                    scope.editStage = null;
-                });
+                    .then((item) => {
+                        scope.select(item);
+                        return desks.fetchDeskById(item.desk);
+                    })
+                    .then((desk) => {
+                        scope.desk.edit = desk;
+                        scope.getstages();
+                    }, errorMessage)
+                    .finally(() => {
+                        scope.saving = false;
+                        scope.message = null;
+                        scope.editStage = null;
+                    });
             }
 
             function errorMessage(response) {
@@ -170,24 +170,24 @@ export function DeskeditStages(gettext, api, WizardHandler, tasks, $rootScope, d
 
             scope.remove = function(stage) {
                 api('stages').remove(stage)
-                .then(() => {
-                    if (stage === scope.selected) {
-                        scope.selected = null;
-                    }
-                    _.remove(scope.stages, stage);
-                    scope.message = null;
-                    return desks.fetchDeskById(stage.desk);
-                })
-                .then((desk) => {
-                    scope.desk.edit = desk;
-                    desks.refreshStages();
-                }, (response) => {
-                    if (angular.isDefined(response.data._message)) {
-                        scope.message = gettext('Error: ' + response.data._message);
-                    } else {
-                        scope.message = gettext('There was a problem, stage was not deleted.');
-                    }
-                });
+                    .then(() => {
+                        if (stage === scope.selected) {
+                            scope.selected = null;
+                        }
+                        _.remove(scope.stages, stage);
+                        scope.message = null;
+                        return desks.fetchDeskById(stage.desk);
+                    })
+                    .then((desk) => {
+                        scope.desk.edit = desk;
+                        desks.refreshStages();
+                    }, (response) => {
+                        if (angular.isDefined(response.data._message)) {
+                            scope.message = gettext('Error: ' + response.data._message);
+                        } else {
+                            scope.message = gettext('There was a problem, stage was not deleted.');
+                        }
+                    });
             };
         }
     };

@@ -58,10 +58,10 @@ export class MarkedDesksInfo extends React.Component {
         return (
             <div className="highlights-box" onClick={this.toggle}>
                 {markedDesks.length ? <div className="highlights-list dropdown">
-                        <button className="dropdown__toggle">
-                            <i className="icon-bell" />
-                        </button>
-                    </div> : null
+                    <button className="dropdown__toggle">
+                        <i className="icon-bell" />
+                    </button>
+                </div> : null
                 }
             </div>
         );

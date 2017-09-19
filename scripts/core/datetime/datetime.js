@@ -227,9 +227,9 @@ export default angular.module('superdesk.core.datetime', [
          */
         tzResource.prototype.getTzNames = function() {
             return _.union(
-                    _.keys(this.zones),
-                    _.keys(this.links)
-                    ).sort();
+                _.keys(this.zones),
+                _.keys(this.links)
+            ).sort();
         };
 
         // return an array that will contain the fetched data when

@@ -45,11 +45,11 @@ export function ContentProfileSchemaEditor(content) {
 
                 scope.schemaKeysDisabled = [];
                 scope.schemaKeys = _.filter(Object.keys(scope.model.editor),
-                        (value) => scope.model.editor[value].enabled).sort((a, b) => getOrder(a) - getOrder(b));
+                    (value) => scope.model.editor[value].enabled).sort((a, b) => getOrder(a) - getOrder(b));
 
                 _.each(_.difference(Object.keys(scope.model.editor), scope.schemaKeys), (value) =>
                     scope.schemaKeysDisabled.push(
-                            {key: value, name: scope.model.editor[value].field_name || scope.label(value)}
+                        {key: value, name: scope.model.editor[value].field_name || scope.label(value)}
                     ));
 
                 scope.schemaKeysOrdering = _.clone(scope.schemaKeys);
@@ -177,7 +177,7 @@ export function ContentProfileSchemaEditor(content) {
             scope.updateOrder = (key) => {
                 if (key) {
                     scope.schemaKeysOrdering.splice(scope.model.editor[key].order - 1, 0,
-                            scope.schemaKeysOrdering.splice(scope.schemaKeysOrdering.indexOf(key), 1)[0]);
+                        scope.schemaKeysOrdering.splice(scope.schemaKeysOrdering.indexOf(key), 1)[0]);
                 }
 
                 angular.forEach(scope.schemaKeys, (id) => {

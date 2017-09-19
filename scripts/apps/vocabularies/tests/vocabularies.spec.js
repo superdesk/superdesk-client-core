@@ -93,24 +93,24 @@ describe('vocabularies', () => {
             }));
 
             it('can validate crop_size vocabulary for minimum value(200)',
-                    inject((api, $q, $rootScope, metadata) => {
-                        scope.vocabulary._id = 'crop_sizes';
-                        scope.vocabulary.items[0].name = '4-3';
-                        scope.vocabulary.items[0].is_active = true;
-                        scope.vocabulary.items[0].width = 200;  // minimum 200 allowed
-                        scope.vocabulary.items[0].height = 100; // minimum 200 allowed
+                inject((api, $q, $rootScope, metadata) => {
+                    scope.vocabulary._id = 'crop_sizes';
+                    scope.vocabulary.items[0].name = '4-3';
+                    scope.vocabulary.items[0].is_active = true;
+                    scope.vocabulary.items[0].width = 200; // minimum 200 allowed
+                    scope.vocabulary.items[0].height = 100; // minimum 200 allowed
 
-                        spyOn(api, 'save').and.returnValue($q.when());
-                        spyOn(metadata, 'initialize').and.returnValue($q.when());
-                        scope.save();
+                    spyOn(api, 'save').and.returnValue($q.when());
+                    spyOn(metadata, 'initialize').and.returnValue($q.when());
+                    scope.save();
 
-                        $rootScope.$digest();
-                        expect(scope.errorMessage).toBe(
-                            'Minimum height and width should be greater than or equal to 200'
-                        );
-                        expect(api.save).not.toHaveBeenCalled();
-                        expect(metadata.initialize).toHaveBeenCalled();
-                    }));
+                    $rootScope.$digest();
+                    expect(scope.errorMessage).toBe(
+                        'Minimum height and width should be greater than or equal to 200'
+                    );
+                    expect(api.save).not.toHaveBeenCalled();
+                    expect(metadata.initialize).toHaveBeenCalled();
+                }));
 
             it('can cancel editing vocabulary', inject((api, $q, $rootScope, metadata) => {
                 var vocabularyLink = scope.vocabulary;

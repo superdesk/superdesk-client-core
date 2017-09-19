@@ -9,9 +9,9 @@ describe('ingest_settings', () => {
     });
 
     xit('unselecting options in dropdown lists on the Actions pane', () => {
-        var deskList,   // dropdown list for choosing a desk
-            macroList,  // dropdown list for choosing a macro
-            stageList,  // dropdown list for choosing a desk stage
+        var deskList, // dropdown list for choosing a desk
+            macroList, // dropdown list for choosing a macro
+            stageList, // dropdown list for choosing a desk stage
             ruleSettings;
 
         // open the routing scheme edit modal under the  Routing tab, add a new

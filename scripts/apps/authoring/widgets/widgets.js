@@ -201,5 +201,5 @@ angular.module('superdesk.apps.authoring.widgets', ['superdesk.core.keyboard'])
     .directive('sdAuthoringWidgets', AuthoringWidgetsDir)
     .run(['keyboardManager', 'gettext', function(keyboardManager, gettext) {
         keyboardManager.register('Authoring', 'ctrl + alt + {N}',
-             gettext('Toggle Nth widget, where \'N\' is order of widget it appears'));
+            gettext('Toggle Nth widget, where \'N\' is order of widget it appears'));
     }]);

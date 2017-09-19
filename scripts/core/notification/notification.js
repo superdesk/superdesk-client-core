@@ -76,9 +76,9 @@ function WebSocketProxy($rootScope, config, $interval, session, SESSION_EVENTS) 
             $interval.cancel(connectTimer);
             connectTimer = $interval(() => {
                 if (ws && session.sessionId) {
-                    connect();  // Retry to connect for every TIMEOUT interval.
+                    connect(); // Retry to connect for every TIMEOUT interval.
                 }
-            }, TIMEOUT, 0, false);  // passed invokeApply = false to prevent triggering digest cycle
+            }, TIMEOUT, 0, false); // passed invokeApply = false to prevent triggering digest cycle
         };
     };
 
@@ -108,7 +108,7 @@ function NotifyConnectionService($rootScope, notify, gettext, $timeout, session)
     $rootScope.$on('connected', (event) => {
         self.message = gettext('Connected to Notification Server!');
         $rootScope.$applyAsync(() => {
-            notify.pop();   // removes disconnection warning, once connected.
+            notify.pop(); // removes disconnection warning, once connected.
             notify.success(self.message);
         });
     });

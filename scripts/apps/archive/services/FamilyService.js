@@ -170,7 +170,7 @@ export function FamilyService(api, desks) {
             };
             break;
         default:
-                // exact match on slugline
+            // exact match on slugline
             queryString = {
                 query_string: {
                     query: 'slugline.phrase:("' + sanitizedKeyword + '")',
@@ -182,7 +182,7 @@ export function FamilyService(api, desks) {
         return query(filter, 'firstcreated', 'asc', queryString);
     };
 
-     /**
+    /**
      * @ngdoc method
      * @name family#fetchDesks
      * @public

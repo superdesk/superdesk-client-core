@@ -10,17 +10,17 @@ function UserImportService(api, $q) {
 
     this.importUser = function importUser(importUserData) {
         return api.save('import_profile', importUserData)
-        .then(null, function handleErrorResponse(response) {
-            var data = response.data;
+            .then(null, function handleErrorResponse(response) {
+                var data = response.data;
 
-            if (response.status === 404) {
-                return reject('profile_to_import', data._message);
-            } else if (response.status === 400) {
-                return reject(data._issues.profile_to_import ? 'profile_to_import' : 'credentials', data._message);
-            }
+                if (response.status === 404) {
+                    return reject('profile_to_import', data._message);
+                } else if (response.status === 400) {
+                    return reject(data._issues.profile_to_import ? 'profile_to_import' : 'credentials', data._message);
+                }
 
-            return reject('credentials', data._message);
-        });
+                return reject('credentials', data._message);
+            });
     };
 }
 

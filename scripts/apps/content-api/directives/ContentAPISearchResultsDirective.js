@@ -66,14 +66,14 @@ class LinkFunction {
         }, (error) => {
             this.notify.error(this.gettext('Failed to run the query!'));
         })
-        .finally(() => {
-            this.scope.loading = false;
+            .finally(() => {
+                this.scope.loading = false;
 
-            // update scroll position to top, when forced refresh
-            if (data && data.force) {
-                this.containerElem[0].scrollTop = 0;
-            }
-        });
+                // update scroll position to top, when forced refresh
+                if (data && data.force) {
+                    this.containerElem[0].scrollTop = 0;
+                }
+            });
     }
 
     /**

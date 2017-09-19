@@ -160,7 +160,7 @@ export function ArticleEditDirective(
                     scope.resetNumberOfDays(false);
                     if (!item.dateline.date) {
                         item.dateline.date = $filter('relativeUTCTimestamp')(scope.item.dateline.located,
-                                parseInt(scope.dateline.month, 10), parseInt(scope.dateline.day, 10));
+                            parseInt(scope.dateline.month, 10), parseInt(scope.dateline.day, 10));
                     }
 
                     item.dateline.text = $filter('formatDatelineText')(item.dateline.located,
@@ -253,7 +253,7 @@ export function ArticleEditDirective(
                     }
 
                     scope.item.dateline.date = $filter('relativeUTCTimestamp')(scope.item.dateline.located,
-                            parseInt(scope.dateline.month, 10), parseInt(scope.dateline.day, 10));
+                        parseInt(scope.dateline.month, 10), parseInt(scope.dateline.day, 10));
 
                     scope.item.dateline.text = $filter('formatDatelineText')(scope.item.dateline.located,
                         $interpolate('{{ month | translate }}')({

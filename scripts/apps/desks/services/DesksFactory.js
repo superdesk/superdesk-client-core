@@ -87,39 +87,39 @@ export function DesksFactory($q, api, preferencesService, userList, notify,
             var self = this;
 
             return _fetchAll('desks')
-            .then((items) => {
-                let byName = $filter('sortByName')(items);
+                .then((items) => {
+                    let byName = $filter('sortByName')(items);
 
-                self.desks = {_items: byName};
-                _.each(byName, (item) => {
-                    self.deskLookup[item._id] = item;
+                    self.desks = {_items: byName};
+                    _.each(byName, (item) => {
+                        self.deskLookup[item._id] = item;
+                    });
+                    return self.desks;
                 });
-                return self.desks;
-            });
         },
 
         fetchUsers: function() {
             var self = this;
 
             return userList.getAll()
-            .then((result) => {
-                self.users = {};
-                self.users._items = result;
-                _.each(result, (user) => {
-                    self.userLookup[user._id] = user;
+                .then((result) => {
+                    self.users = {};
+                    self.users._items = result;
+                    _.each(result, (user) => {
+                        self.userLookup[user._id] = user;
+                    });
                 });
-            });
         },
         fetchStages: function() {
             var self = this;
 
             return _fetchAll('stages')
-            .then((items) => {
-                self.stages = {_items: items};
-                _.each(items, (item) => {
-                    self.stageLookup[item._id] = item;
+                .then((items) => {
+                    self.stages = {_items: items};
+                    _.each(items, (item) => {
+                        self.stageLookup[item._id] = item;
+                    });
                 });
-            });
         },
         fetchDeskStages: function(desk, refresh) {
             var self = this;
@@ -181,13 +181,13 @@ export function DesksFactory($q, api, preferencesService, userList, notify,
             }
 
             return this.fetchCurrentDeskId() // make sure there will be current desk
-                    .then(angular.bind(session, session.getIdentity))
-                    .then(angular.bind(this, this.fetchUserDesks))
-                    .then(angular.bind(this, function(desks) {
-                        self.userDesks = desks;
-                        setActive(this);
-                        return desks;
-                    }));
+                .then(angular.bind(session, session.getIdentity))
+                .then(angular.bind(this, this.fetchUserDesks))
+                .then(angular.bind(this, function(desks) {
+                    self.userDesks = desks;
+                    setActive(this);
+                    return desks;
+                }));
         },
 
         fetchCurrentDeskId: function() {

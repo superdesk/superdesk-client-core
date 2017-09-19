@@ -4,7 +4,7 @@ AggregateCtrl.$inject = ['$scope', 'api', 'desks', 'workspaces', 'preferencesSer
     'gettext', 'multi', 'config', '$timeout', 'savedSearch', 'deployConfig'];
 
 export function AggregateCtrl($scope, api, desks, workspaces, preferencesService, storage,
-        gettext, multi, config, $timeout, savedSearch, deployConfig) {
+    gettext, multi, config, $timeout, savedSearch, deployConfig) {
     var PREFERENCES_KEY = 'agg:view';
     var defaultMaxItems = 10;
     var self = this;
@@ -29,33 +29,33 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
     this.isOutputType = desks.isOutputType;
 
     desks.initialize()
-    .then(angular.bind(this, function() {
-        this.desks = desks.desks._items;
-        this.deskLookup = desks.deskLookup;
-        this.deskStages = desks.deskStages;
-        _.each(this.desks, (desk) => {
-            _.each(self.deskStages[desk._id], (stage) => {
-                self.stageLookup[stage._id] = stage;
+        .then(angular.bind(this, function() {
+            this.desks = desks.desks._items;
+            this.deskLookup = desks.deskLookup;
+            this.deskStages = desks.deskStages;
+            _.each(this.desks, (desk) => {
+                _.each(self.deskStages[desk._id], (stage) => {
+                    self.stageLookup[stage._id] = stage;
+                });
             });
-        });
-    }))
-    .then(angular.bind(this, function() {
-        return savedSearch.getAllSavedSearches().then(angular.bind(this, function(searchesList) {
-            this.searches = searchesList;
-            _.each(this.searches, (item) => {
-                self.searchLookup[item._id] = item;
-            });
-        }));
-    }))
-    .then(angular.bind(this, function() {
-        return this.readSettings()
-            .then(angular.bind(this, function(settings) {
-                initGroups(settings);
-                setupCards();
-                this.loading = false;
-                this.settings = settings;
+        }))
+        .then(angular.bind(this, function() {
+            return savedSearch.getAllSavedSearches().then(angular.bind(this, function(searchesList) {
+                this.searches = searchesList;
+                _.each(this.searches, (item) => {
+                    self.searchLookup[item._id] = item;
+                });
             }));
-    }));
+        }))
+        .then(angular.bind(this, function() {
+            return this.readSettings()
+                .then(angular.bind(this, function(settings) {
+                    initGroups(settings);
+                    setupCards();
+                    this.loading = false;
+                    this.settings = settings;
+                }));
+        }));
 
     /**
      * If view showed as widget set the current widget

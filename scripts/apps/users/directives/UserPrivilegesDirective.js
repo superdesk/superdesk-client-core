@@ -68,15 +68,15 @@ export function UserPrivilegesDirective(api, gettext, notify, userList, $q) {
                     scope.user,
                     _.pick(scope.user, 'privileges')
                 )
-                .then(() => {
-                    scope.origPrivileges = angular.copy(
-                        scope.user.privileges);
-                    scope.userPrivileges.$setPristine();
-                    notify.success(gettext('Privileges updated.'));
-                }, (response) => {
-                    notify.error(
-                        gettext(handleError(response)));
-                });
+                    .then(() => {
+                        scope.origPrivileges = angular.copy(
+                            scope.user.privileges);
+                        scope.userPrivileges.$setPristine();
+                        notify.success(gettext('Privileges updated.'));
+                    }, (response) => {
+                        notify.error(
+                            gettext(handleError(response)));
+                    });
             };
 
             /**

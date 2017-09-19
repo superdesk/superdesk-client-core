@@ -70,8 +70,8 @@ function printLogs(prefix) {
 function waitForSuperdesk() {
     return browser.driver.wait(() =>
         browser.driver.executeScript('return window.superdeskIsReady || false'),
-        5000,
-        '"window.superdeskIsReady" is not here');
+    5000,
+    '"window.superdeskIsReady" is not here');
 }
 
 /**
@@ -228,11 +228,11 @@ function hover(elem) {
 function waitHidden(elem, time) {
     return browser.wait(() =>
         elem.isPresent()
-        .then((isPresent) =>
-            !isPresent ? true : elem.isDisplayed()
-            .then((isDisplayed) => !isDisplayed)
-        )
-    , time || 1000);
+            .then((isPresent) =>
+                !isPresent ? true : elem.isDisplayed()
+                    .then((isDisplayed) => !isDisplayed)
+            )
+        , time || 1000);
 }
 
 

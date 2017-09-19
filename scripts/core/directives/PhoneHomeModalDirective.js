@@ -3,7 +3,6 @@ export function PhoneHomeModalDirective(serverConfig, api, session) {
     let template = require('./views/phone-home-modal-directive.html');
 
     class PhoneController {
-
         constructor() {
             this.data = {};
 

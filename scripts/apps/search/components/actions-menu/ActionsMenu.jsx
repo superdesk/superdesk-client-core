@@ -111,11 +111,11 @@ export class ActionsMenu extends React.Component {
                                 }, actions[group._id][0].icon ? React.createElement('i', {
                                     className: 'icon-' + actions[group._id][0].icon
                                 }, '') : null,
-                                    gettextCatalog.getString(group.label)
+                                gettextCatalog.getString(group.label)
                                 ), React.createElement('ul',
                                     {className: 'dropdown__menu dropdown__menu--submenu-left'},
                                     submenu
-                        )))
+                                )))
                     );
                     return null;
                 } else {

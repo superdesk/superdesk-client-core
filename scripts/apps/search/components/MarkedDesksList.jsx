@@ -59,7 +59,7 @@ export class MarkedDesksList extends React.Component {
 
         return (
             <ul className="dropdown dropdown__menu highlights-list-menu open"
-            onMouseEnter={this.stopTimeout} onMouseLeave={this.close}>
+                onMouseEnter={this.stopTimeout} onMouseLeave={this.close}>
                 <li key="item-marked-label">
                     <div className="dropdown__menu-label">{gettext('Marked For')}
                         <button className="dropdown__menu-close" onClick={closeActionsMenu}>
@@ -69,13 +69,13 @@ export class MarkedDesksList extends React.Component {
                 </li>
                 {
                     markedDesks.map((d) => <li key={'item-marked-' + markedDesksById[d]._id}>
-                    {markedDesksById[d].name}
-                    {desks.hasMarkItemPrivilege() ? <button className="btn btn--mini"
-                        onClick={this.removeMarkedDesk(markedDesksById[d])}>
+                        {markedDesksById[d].name}
+                        {desks.hasMarkItemPrivilege() ? <button className="btn btn--mini"
+                            onClick={this.removeMarkedDesk(markedDesksById[d])}>
                             {gettext('REMOVE')}</button> : null}
                     </li>)
-            }
-                </ul>
+                }
+            </ul>
         );
     }
 }

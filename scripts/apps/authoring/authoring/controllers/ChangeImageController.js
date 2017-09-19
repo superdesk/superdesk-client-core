@@ -58,7 +58,7 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
         return $scope.data.isDirty || $scope.isNew;
     };
 
-   /**
+    /**
     * @ngdoc method
     * @name ChangeImageController#done
     * @public
@@ -123,7 +123,7 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
         });
     };
 
-   /**
+    /**
     * @ngdoc method
     * @name ChangeImageController#close
     * @public
@@ -132,12 +132,12 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
     $scope.close = function() {
         if ($scope.data.editable && $scope.data.isDirty) {
             modal.confirm(gettext('You have unsaved changes, do you want to continue?'))
-            .then(() => {
+                .then(() => {
                 // Ok = continue w/o saving
-                let promise = $scope.reject();
+                    let promise = $scope.reject();
 
-                return promise;
-            });
+                    return promise;
+                });
         } else {
             $scope.reject();
         }
@@ -146,7 +146,7 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
     // Area of Interest
     $scope.data.showAoISelectionButton = $scope.data.showAoISelectionButton === true;
 
-   /**
+    /**
     * @ngdoc method
     * @name ChangeImageController#showAreaOfInterestView
     * @public
@@ -161,7 +161,7 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
         });
     };
 
-   /**
+    /**
     * @ngdoc method
     * @name ChangeImageController#enableSaveAreaOfInterest
     * @public
@@ -185,7 +185,7 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
         return false;
     }
 
-   /**
+    /**
     * @ngdoc method
     * @name ChangeImageController#saveAreaOfInterest
     * @public
@@ -210,37 +210,37 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
 
         $scope.loaderForAoI = true;
         api.save('picture_crop', {item: $scope.data.item, crop: croppingData})
-        .then((result) => {
-            angular.extend(result.item.renditions.original, {
-                href: result.href,
-                width: result.width,
-                height: result.height,
-                media: result._id
-            });
-            $scope.data.isDirty = true;
-            return api.save('picture_renditions', {item: result.item, no_custom_crops: true}).then((item) => {
-                $scope.data.item.renditions = item.renditions;
-                $scope.data.metadata = $scope.data.item;
-                $scope.data.poi = {x: 0.5, y: 0.5};
-                $rootScope.$broadcast('poiUpdate', $scope.data.poi);
-            });
-        }, (response) =>
-            $q.reject(response)
-        )
-        .then(() => {
-            $scope.showAreaOfInterestView(false);
-        }, (response) => {
-            if (_.isObject(response.data) && angular.isDefined(response.data._message)) {
-                notify.error(gettext('Failed to save the area of interest: ' + response.data._message));
-            } else {
-                notify.error(gettext('There was an error. Failed to save the area of interest.'));
-            }
+            .then((result) => {
+                angular.extend(result.item.renditions.original, {
+                    href: result.href,
+                    width: result.width,
+                    height: result.height,
+                    media: result._id
+                });
+                $scope.data.isDirty = true;
+                return api.save('picture_renditions', {item: result.item, no_custom_crops: true}).then((item) => {
+                    $scope.data.item.renditions = item.renditions;
+                    $scope.data.metadata = $scope.data.item;
+                    $scope.data.poi = {x: 0.5, y: 0.5};
+                    $rootScope.$broadcast('poiUpdate', $scope.data.poi);
+                });
+            }, (response) =>
+                $q.reject(response)
+            )
+            .then(() => {
+                $scope.showAreaOfInterestView(false);
+            }, (response) => {
+                if (_.isObject(response.data) && angular.isDefined(response.data._message)) {
+                    notify.error(gettext('Failed to save the area of interest: ' + response.data._message));
+                } else {
+                    notify.error(gettext('There was an error. Failed to save the area of interest.'));
+                }
 
-            $scope.loaderForAoI = false;
-        });
+                $scope.loaderForAoI = false;
+            });
     };
 
-   /**
+    /**
     * @ngdoc method
     * @name ChangeImageController#onChange
     * @public

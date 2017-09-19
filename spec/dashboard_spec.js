@@ -61,7 +61,7 @@ describe('dashboard', () => {
 
     it('configure a label for the view', () => {
         dashboard.showDashboardSettings();
-        dashboard.addWidget('monitoring');  // the monitoring widget
+        dashboard.addWidget('monitoring'); // the monitoring widget
         dashboard.doneAction();
 
         dashboard.showMonitoringSettings(0);
@@ -79,7 +79,7 @@ describe('dashboard', () => {
 
     it('search in monitoring widget', () => {
         dashboard.showDashboardSettings();
-        dashboard.addWidget('monitoring');  // the monitoring widget
+        dashboard.addWidget('monitoring'); // the monitoring widget
         dashboard.doneAction();
         expect(dashboard.getWidgets().count()).toBe(1);
         expect(dashboard.getGroupItems(0, 2).count()).toBe(4);
@@ -98,7 +98,7 @@ describe('dashboard', () => {
 
         dashboard.openDashboard();
         dashboard.showDashboardSettings();
-        dashboard.addWidget('monitoring');  // the monitoring widget
+        dashboard.addWidget('monitoring'); // the monitoring widget
         dashboard.doneAction();
         expect(dashboard.getTextItem(0, 5, 0)).toBe('item6');
     });
@@ -116,7 +116,7 @@ describe('dashboard', () => {
 
         dashboard.openDashboard();
         dashboard.showDashboardSettings();
-        dashboard.addWidget('monitoring');  // the monitoring widget
+        dashboard.addWidget('monitoring'); // the monitoring widget
         dashboard.doneAction();
         expect(dashboard.getTextItem(0, 3, 0)).toBe('item6');
 

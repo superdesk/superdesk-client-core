@@ -80,23 +80,23 @@ export default angular.module('superdesk.core.services.server', [])
                 }
 
                 return $http(options)
-                .then((response) => {
-                    let responseData = response.data;
+                    .then((response) => {
+                        let responseData = response.data;
 
-                    if (method === 'POST') {
+                        if (method === 'POST') {
+                            return responseData;
+                        } else if (method === 'PATCH') {
+                            var fields = ['_id', '_links', 'etag', 'updated'];
+
+                            _.forEach(fields, (field) => {
+                                data[field] = responseData[field];
+                            });
+                            data.created = created;
+                            return data;
+                        }
+
                         return responseData;
-                    } else if (method === 'PATCH') {
-                        var fields = ['_id', '_links', 'etag', 'updated'];
-
-                        _.forEach(fields, (field) => {
-                            data[field] = responseData[field];
-                        });
-                        data.created = created;
-                        return data;
-                    }
-
-                    return responseData;
-                });
+                    });
             },
 
             /**

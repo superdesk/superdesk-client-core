@@ -19,8 +19,8 @@ export function DictionaryService(api, urls, session, Upload, $q) {
             projection: {content: 0},
             where: {
                 $or: [
-                        {user: {$exists: false}},
-                        {user: identity._id}
+                    {user: {$exists: false}},
+                    {user: identity._id}
                 ]}
         })
             .then(success, error));

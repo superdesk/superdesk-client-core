@@ -99,8 +99,8 @@ export function CardsService(api, search, session, desks, config) {
                 ]});
             } else if (desk.desk_type === 'production') {
                 query.filter({and: [
-                        {term: {'task.desk': deskId}},
-                        {terms: {state: states}}]});
+                    {term: {'task.desk': deskId}},
+                    {terms: {state: states}}]});
             }
         }
     }

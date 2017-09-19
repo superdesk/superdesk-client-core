@@ -115,9 +115,9 @@ export function FilterSearchController($scope, contentFilters, notify, $filter) 
 
                 $scope.filterCondition.value = null;
             })
-            .finally(() => {
-                $scope.loading = false;
-            });
+                .finally(() => {
+                    $scope.loading = false;
+                });
         }
     };
 

@@ -103,7 +103,7 @@ export function WidgetGroup(search, api, superdesk, desks, cards, $timeout, $q,
 
             function queryItems(queryString) {
                 if (!scope.fetching) {
-                     // page reload disabled when the user scrolls
+                    // page reload disabled when the user scrolls
                     if (container.scrollTop > 20) {
                         return;
                     }

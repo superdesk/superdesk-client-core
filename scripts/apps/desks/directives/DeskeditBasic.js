@@ -57,10 +57,10 @@ export function DeskeditBasic(gettext, desks, WizardHandler, metadata, $filter, 
                         WizardHandler.wizard('desks').finish();
                     }
                 }, errorMessage)
-                .finally(() => {
-                    scope.saving = false;
-                    scope.message = null;
-                });
+                    .finally(() => {
+                        scope.saving = false;
+                        scope.message = null;
+                    });
             };
 
             function errorMessage(response) {

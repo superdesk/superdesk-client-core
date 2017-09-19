@@ -121,13 +121,13 @@ describe('highlights', () => {
 
             // focus to next highlight
             browser.actions().sendKeys(protractor.Key.DOWN)
-            .perform();
+                .perform();
 
             // press enter to mark highlight
             browser
-            .actions()
-            .sendKeys(protractor.Key.ENTER)
-            .perform();
+                .actions()
+                .sendKeys(protractor.Key.ENTER)
+                .perform();
             browser.sleep(1000);
 
             // expect 'Highlight three' is marked
@@ -138,9 +138,9 @@ describe('highlights', () => {
 
             // mark for first focused highlight in monitoring
             browser
-            .actions()
-            .sendKeys(protractor.Key.ENTER)
-            .perform();
+                .actions()
+                .sendKeys(protractor.Key.ENTER)
+                .perform();
             browser.sleep(1000);
 
             // expect 'Highlight two' is marked

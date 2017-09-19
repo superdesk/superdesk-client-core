@@ -178,32 +178,32 @@ describe('templates', () => {
         }));
 
         it('can fetch templates all templates with user type user with privileges',
-        inject((api, templates, privileges, desks, $q, $rootScope) => {
-            privileges.privileges.content_templates = 1;
-            spyOn(desks, 'fetchCurrentUserDesks').and.returnValue($q.when([
-                {_id: 'finance'},
-                {_id: 'sports'}
-            ]));
+            inject((api, templates, privileges, desks, $q, $rootScope) => {
+                privileges.privileges.content_templates = 1;
+                spyOn(desks, 'fetchCurrentUserDesks').and.returnValue($q.when([
+                    {_id: 'finance'},
+                    {_id: 'sports'}
+                ]));
 
-            templates.fetchAllTemplates();
-            $rootScope.$digest();
-            expect(api.query).toHaveBeenCalledWith('content_templates', {
-                page: 1,
-                max_results: 10,
-                sort: 'template_name',
-                where: angular.toJson({
-                    $and: [{
-                        $or: [
-                            {user: 'foo'},
-                            {
-                                is_public: true,
-                                template_desks: {$in: ['finance', 'sports']}
-                            }
-                        ]
-                    }]
-                })
-            });
-        }));
+                templates.fetchAllTemplates();
+                $rootScope.$digest();
+                expect(api.query).toHaveBeenCalledWith('content_templates', {
+                    page: 1,
+                    max_results: 10,
+                    sort: 'template_name',
+                    where: angular.toJson({
+                        $and: [{
+                            $or: [
+                                {user: 'foo'},
+                                {
+                                    is_public: true,
+                                    template_desks: {$in: ['finance', 'sports']}
+                                }
+                            ]
+                        }]
+                    })
+                });
+            }));
 
         it('can fetch templates all templates with user type as administrator',
             inject((api, templates, session, $rootScope) => {
@@ -247,30 +247,30 @@ describe('templates', () => {
 
     describe('template select directive', () => {
         it('can fetch desk templates and user private templates together',
-        inject((api, session, desks, $rootScope, $compile, $q) => {
-            $rootScope.$digest(); // let it reset identity in auth
-            session.identity = {_id: 'foo'};
-            spyOn(desks, 'getCurrentDeskId').and.returnValue('sports');
-            spyOn(api, 'query').and.returnValue($q.when({_items: [
-                {_id: 'public1'},
-                {_id: 'public2'},
-                {_id: 'private', is_public: false}
-            ], _meta: {total: 3}}));
-            var scope = $rootScope.$new();
+            inject((api, session, desks, $rootScope, $compile, $q) => {
+                $rootScope.$digest(); // let it reset identity in auth
+                session.identity = {_id: 'foo'};
+                spyOn(desks, 'getCurrentDeskId').and.returnValue('sports');
+                spyOn(api, 'query').and.returnValue($q.when({_items: [
+                    {_id: 'public1'},
+                    {_id: 'public2'},
+                    {_id: 'private', is_public: false}
+                ], _meta: {total: 3}}));
+                var scope = $rootScope.$new();
 
-            scope.open = {};
-            var elem = $compile('<div sd-template-select data-open="open"></div>')(scope);
+                scope.open = {};
+                var elem = $compile('<div sd-template-select data-open="open"></div>')(scope);
 
-            $rootScope.$digest();
-            expect(api.query).toHaveBeenCalled();
-            var args = api.query.calls.argsFor(0);
+                $rootScope.$digest();
+                expect(api.query).toHaveBeenCalled();
+                var args = api.query.calls.argsFor(0);
 
-            expect(args[0]).toBe('content_templates');
-            $rootScope.$digest();
-            var iscope = elem.isolateScope();
+                expect(args[0]).toBe('content_templates');
+                $rootScope.$digest();
+                var iscope = elem.isolateScope();
 
-            expect(iscope.publicTemplates.length).toBe(2);
-            expect(iscope.privateTemplates.length).toBe(1);
-        }));
+                expect(iscope.publicTemplates.length).toBe(2);
+                expect(iscope.privateTemplates.length).toBe(1);
+            }));
     });
 });

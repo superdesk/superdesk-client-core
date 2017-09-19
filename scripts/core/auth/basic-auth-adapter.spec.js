@@ -24,7 +24,7 @@ describe('basic auth adapter', () => {
     it('can login', inject((authAdapter, urls, $q) => {
         $httpBackend
             .expectPOST(LOGIN_URL, {username: username, password: password})
-                .respond({token: session, user: '1'});
+            .respond({token: session, user: '1'});
 
         spyOn(urls, 'resource').and.returnValue($q.when(LOGIN_URL));
 

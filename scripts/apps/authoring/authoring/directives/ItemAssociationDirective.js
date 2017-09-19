@@ -120,10 +120,10 @@ export function ItemAssociationDirective(superdesk, renditions, config, authorin
                         if (scope.isMediaEditable()) {
                             scope.loading = true;
                             renditions.ingest(item)
-                            .then(scope.edit)
-                            .finally(() => {
-                                scope.loading = false;
-                            });
+                                .then(scope.edit)
+                                .finally(() => {
+                                    scope.loading = false;
+                                });
                         } else {
                             // update association in an item even if editing of metadata and crop not allowed.
                             updateItemAssociation(item);
@@ -173,10 +173,10 @@ export function ItemAssociationDirective(superdesk, renditions, config, authorin
                 if (item.renditions && item.renditions.original && scope.isImage(item.renditions.original)) {
                     scope.loading = true;
                     return renditions.crop(item, true, scope.editable, true)
-                    .then(updateItemAssociation)
-                    .finally(() => {
-                        scope.loading = false;
-                    });
+                        .then(updateItemAssociation)
+                        .finally(() => {
+                            scope.loading = false;
+                        });
                 }
 
                 updateItemAssociation(item);

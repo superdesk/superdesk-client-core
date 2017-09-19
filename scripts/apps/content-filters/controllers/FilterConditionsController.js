@@ -100,16 +100,16 @@ export function FilterConditionsController($scope, contentFilters, notify, modal
 
     $scope.remove = function(filterCondition) {
         modal.confirm(gettext('Are you sure you want to delete filter condition?'))
-        .then(() => contentFilters.remove(filterCondition))
-        .then((result) => {
-            _.remove($scope.filterConditions, filterCondition);
-        }, (response) => {
-            if (angular.isDefined(response.data._message)) {
-                notify.error(gettext('Error: ' + response.data._message));
-            } else {
-                notify.error(gettext('There was an error. Filter condition cannot be deleted.'));
-            }
-        });
+            .then(() => contentFilters.remove(filterCondition))
+            .then((result) => {
+                _.remove($scope.filterConditions, filterCondition);
+            }, (response) => {
+                if (angular.isDefined(response.data._message)) {
+                    notify.error(gettext('Error: ' + response.data._message));
+                } else {
+                    notify.error(gettext('There was an error. Filter condition cannot be deleted.'));
+                }
+            });
     };
 
     var getFilterValue = function() {

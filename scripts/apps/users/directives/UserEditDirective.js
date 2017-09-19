@@ -106,46 +106,46 @@ export function UserEditDirective(api, gettext, notify, usersService, userList, 
                 scope.error = null;
                 notify.info(gettext('Saving...'));
                 return usersService.save(scope.origUser, scope.user)
-                .then((response) => {
-                    scope.origUser = response;
-                    resetUser(scope.origUser);
-                    notify.pop();
-                    notify.success(gettext('user saved.'));
-                    scope.onsave({user: scope.origUser});
+                    .then((response) => {
+                        scope.origUser = response;
+                        resetUser(scope.origUser);
+                        notify.pop();
+                        notify.success(gettext('user saved.'));
+                        scope.onsave({user: scope.origUser});
 
-                    if (scope.user._id === session.identity._id) {
-                        session.updateIdentity(scope.origUser);
-                    }
+                        if (scope.user._id === session.identity._id) {
+                            session.updateIdentity(scope.origUser);
+                        }
 
-                    userList.clearCache();
-                }, (response) => {
-                    notify.pop();
-                    if (response.status === 404) {
-                        if ($location.path() === '/users/') {
-                            $route.reload();
+                        userList.clearCache();
+                    }, (response) => {
+                        notify.pop();
+                        if (response.status === 404) {
+                            if ($location.path() === '/users/') {
+                                $route.reload();
+                            } else {
+                                $location.path('/users/');
+                            }
+                            notify.error(gettext('User was not found. The account might have been deleted.'));
                         } else {
-                            $location.path('/users/');
-                        }
-                        notify.error(gettext('User was not found. The account might have been deleted.'));
-                    } else {
-                        var errorMessage = gettext('There was an error when saving the user account. ');
+                            var errorMessage = gettext('There was an error when saving the user account. ');
 
-                        if (response.data && response.data._issues) {
-                            if (angular.isDefined(response.data._issues['validator exception'])) {
-                                errorMessage = gettext('Error: ' + response.data._issues['validator exception']);
+                            if (response.data && response.data._issues) {
+                                if (angular.isDefined(response.data._issues['validator exception'])) {
+                                    errorMessage = gettext('Error: ' + response.data._issues['validator exception']);
+                                }
+
+                                scope.error = response.data._issues;
+                                scope.error.message = errorMessage;
+
+                                for (var field in response.data._issues) {
+                                    validateField(response, field);
+                                }
                             }
 
-                            scope.error = response.data._issues;
-                            scope.error.message = errorMessage;
-
-                            for (var field in response.data._issues) {
-                                validateField(response, field);
-                            }
+                            notify.error(errorMessage);
                         }
-
-                        notify.error(errorMessage);
-                    }
-                });
+                    });
             };
 
             scope.toggleStatus = function(active) {

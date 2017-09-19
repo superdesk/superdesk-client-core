@@ -158,8 +158,8 @@ const changeImageCaption = (state, {entityKey, newCaption, field}) => {
     let {img} = entity.getData();
 
     field === 'Title' ?
-            img.headline = newCaption :
-            img.description_text = newCaption;
+        img.headline = newCaption :
+        img.description_text = newCaption;
 
     const newContentState = contentState.replaceEntityData(entityKey, {img});
 

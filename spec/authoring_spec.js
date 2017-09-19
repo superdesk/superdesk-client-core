@@ -571,19 +571,19 @@ describe('authoring', () => {
         authoring.addHelpline('Suicide');
         expect(authoring.getBodyFooter()).toMatch(/Readers seeking support and information about suicide*/);
         expect(authoring.save_button.isEnabled()).toBe(true);
-        expect(authoring.getHelplineSelectedOption(0)).toBe('true');    // first option remained selected
-        expect(authoring.getHelplineSelectedOption(1)).toBe(null);      // Suicide not remained selected
+        expect(authoring.getHelplineSelectedOption(0)).toBe('true'); // first option remained selected
+        expect(authoring.getHelplineSelectedOption(1)).toBe(null); // Suicide not remained selected
 
         // select another helpline
         authoring.addHelpline('Children');
-        expect(authoring.getHelplineSelectedOption(0)).toBe('true');    // first option remained selected
-        expect(authoring.getHelplineSelectedOption(2)).toBe(null);      // Children not remained selected
+        expect(authoring.getHelplineSelectedOption(0)).toBe('true'); // first option remained selected
+        expect(authoring.getHelplineSelectedOption(2)).toBe(null); // Children not remained selected
     });
 
     it('Not be able to Ctrl-z to the original, actionable text when killing an item', () => {
         expect(monitoring.getTextItem(2, 0)).toBe('item5');
         monitoring.actionOnItem('Edit', 2, 0);
-        expect(authoring.getHeadlineText()).toBe('item5');  // original, actionable headline text
+        expect(authoring.getHeadlineText()).toBe('item5'); // original, actionable headline text
         expect(authoring.getBodyText()).toBe('item5 text'); // original, actionable body text
 
         authoring.publish();

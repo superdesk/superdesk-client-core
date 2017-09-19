@@ -33,7 +33,7 @@ describe('WorldClockConfigController', () => {
         var expectedList,
             serverTzdata;
 
-        scope.availableZones = [];  // make sure it is initially empty
+        scope.availableZones = []; // make sure it is initially empty
 
         serverTzdata = {
             zones: {

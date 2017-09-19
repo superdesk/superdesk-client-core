@@ -103,7 +103,7 @@ export function ProductionTestController($scope, contentFilters, notify, $locati
         contentFilters.testContentFilter({
             filter_id: $scope.selectedfilter,
             return_matching: $scope.$eval($scope.model.selectedType
-        )}).then(
+            )}).then(
             (result) => {
                 $scope.testResult = result.match_results;
             },

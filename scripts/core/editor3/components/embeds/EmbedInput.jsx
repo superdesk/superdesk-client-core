@@ -100,8 +100,8 @@ export class EmbedInputComponent extends Component {
             url: `//iframe.ly/api/oembed?callback=?&url=${value}&api_key=${apiKey}&omit_script=true&iframe=true`,
             dataType: 'json'
         })
-        .then((data) => data.type === 'link' ? $.Deferred().reject() : data)
-        .then(this.processSuccess, this.processError);
+            .then((data) => data.type === 'link' ? $.Deferred().reject() : data)
+            .then(this.processSuccess, this.processError);
     }
 
     /**

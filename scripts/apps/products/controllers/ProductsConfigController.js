@@ -179,7 +179,7 @@ export function ProductsConfigController($scope, gettext, notify, api, products,
 
             return remove;
         })
-        .then($scope.cancel);
+            .then($scope.cancel);
     };
 
     /**
@@ -215,8 +215,8 @@ export function ProductsConfigController($scope, gettext, notify, api, products,
 
             notify.error(gettext('Error: ' + msg));
         })
-        .finally(() => {
-            $scope.loading = false;
-        });
+            .finally(() => {
+                $scope.loading = false;
+            });
     };
 }

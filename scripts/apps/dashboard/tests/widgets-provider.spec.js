@@ -3,9 +3,9 @@ describe('widgets provider', () => {
 
     beforeEach(() => {
         angular.module('superdesk.apps.dashboard.widgets.tests', [])
-        .config(['dashboardWidgetsProvider', function(_dashboardWidgetsProvider_) {
-            dashboardWidgetsProvider = _dashboardWidgetsProvider_;
-        }]);
+            .config(['dashboardWidgetsProvider', function(_dashboardWidgetsProvider_) {
+                dashboardWidgetsProvider = _dashboardWidgetsProvider_;
+            }]);
 
         window.module('superdesk.apps.dashboard.widgets', 'superdesk.apps.dashboard.widgets.tests');
 

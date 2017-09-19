@@ -37,7 +37,7 @@ describe('superdesk.apps.workspace.content', () => {
             expect(api.save).toHaveBeenCalledWith('archive', {headline: '', slugline: '',
                 description_text: '', type: 'composite',
                 groups: [{role: 'grpRole:NEP', refs: [{idRef: 'main'}], id: 'root'},
-                {refs: [], id: 'main', role: 'grpRole:main'}], version: 0,
+                    {refs: [], id: 'main', role: 'grpRole:main'}], version: 0,
                 task: {desk: '1', stage: '2', user: '1'}});
             expect(done).toHaveBeenCalledWith(ITEM);
         }));
@@ -59,10 +59,10 @@ describe('superdesk.apps.workspace.content', () => {
                 version: 0,
                 task: {desk: '1', stage: '2', user: '1'},
                 groups: [
-                {role: 'grpRole:NEP', refs: [{idRef: 'main'}], id: 'root'},
+                    {role: 'grpRole:NEP', refs: [{idRef: 'main'}], id: 'root'},
                     {refs: [{headline: '', residRef: undefined, location: 'archive',
                         slugline: '', renditions: {}, itemClass: '', type: ''}],
-                        id: 'main', role: 'grpRole:main'}]});
+                    id: 'main', role: 'grpRole:main'}]});
         }));
 
         it('can create items from template', inject((api, content, desks, session, $rootScope) => {

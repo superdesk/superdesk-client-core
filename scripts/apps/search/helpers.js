@@ -151,8 +151,8 @@ export function bindMarkItemShortcut(label) {
 
     if (markDropdown.find('button').length > 0) {
         markDropdown.find('button:not([disabled])')
-        .first()
-        .focus();
+            .first()
+            .focus();
 
         keyboardManager.push('up', () => {
             markDropdown.find('button:focus')

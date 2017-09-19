@@ -56,11 +56,11 @@ angular.module('superdesk.apps.users.activity', [
                 }
             }, true);
         }])
-        .controller('ActivityConfigController', ['$scope',
-            function($scope) {
-                $scope.notIn = function(haystack) {
-                    return function(needle) {
-                        return haystack.indexOf(needle) === -1;
-                    };
+    .controller('ActivityConfigController', ['$scope',
+        function($scope) {
+            $scope.notIn = function(haystack) {
+                return function(needle) {
+                    return haystack.indexOf(needle) === -1;
                 };
-            }]);
+            };
+        }]);

@@ -61,9 +61,9 @@ export function ItemGlobalSearch(
                     {not: {term: {state: 'spiked'}}},
                     {bool:
                     {should: [{term: {unique_name: scope.meta.unique_name}},
-                            {term: {_id: scope.meta.unique_name}},
-                            {term: {guid: scope.meta.unique_name}},
-                            {term: {item_id: scope.meta.unique_name}}
+                        {term: {_id: scope.meta.unique_name}},
+                        {term: {guid: scope.meta.unique_name}},
+                        {term: {item_id: scope.meta.unique_name}}
                     ]}
                     }
                 ];

@@ -26,14 +26,14 @@ export function SavedSearchService(api, $filter, $q, $rootScope) {
         }
 
         return _getAll('all_saved_searches', page, items)
-        .then((savedSearches) => {
-            self.savedSearches = savedSearches;
-            self.savedSearchLookup = {};
-            _.each(savedSearches, (item) => {
-                self.savedSearchLookup[item._id] = item;
+            .then((savedSearches) => {
+                self.savedSearches = savedSearches;
+                self.savedSearchLookup = {};
+                _.each(savedSearches, (item) => {
+                    self.savedSearchLookup[item._id] = item;
+                });
+                return savedSearches;
             });
-            return savedSearches;
-        });
     };
 
     this.getUserSavedSearches = function(userId, page, items) {

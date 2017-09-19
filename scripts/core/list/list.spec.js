@@ -77,24 +77,24 @@ describe('superdesk.core.list module', () => {
         }));
 
         it('can calculate last of multiple pages when max_results defined',
-        inject(($compile, $rootScope, $location) => {
-            var $scope = $rootScope.$new(true);
+            inject(($compile, $rootScope, $location) => {
+                var $scope = $rootScope.$new(true);
 
-            $scope.items = {_meta: {total: 55}};
-            $scope.limit = 25;
-            $location.search('page', 2);
-            $location.search('max_results', 50);
+                $scope.items = {_meta: {total: 55}};
+                $scope.limit = 25;
+                $location.search('page', 2);
+                $location.search('max_results', 50);
 
-            var elem = $compile(TEMPLATE)($scope);
+                var elem = $compile(TEMPLATE)($scope);
 
-            $scope.$apply();
+                $scope.$apply();
 
-            var scope = elem.isolateScope();
+                var scope = elem.isolateScope();
 
-            expect(scope.page).toBe(2);
-            expect(scope.lastPage).toBe(2);
-            expect(scope.from).toBe(51);
-            expect(scope.to).toBe(55);
-        }));
+                expect(scope.page).toBe(2);
+                expect(scope.lastPage).toBe(2);
+                expect(scope.from).toBe(51);
+                expect(scope.to).toBe(55);
+            }));
     });
 });

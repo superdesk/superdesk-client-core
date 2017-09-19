@@ -116,7 +116,7 @@ describe('fetch', () => {
         desks.stageNameElement().sendKeys('Test Stage');
         desks.stageDescriptionElement().sendKeys('Test Stage Description');
         expect(desks.getGlobalReadFlag().getAttribute('checked')).toBeTruthy();
-        desks.toggleGlobalReadFlag();   // turn OFF Global Read
+        desks.toggleGlobalReadFlag(); // turn OFF Global Read
         expect(desks.getGlobalReadFlag().getAttribute('checked')).toBeFalsy();
         desks.saveNewStage();
         // consider existing stage with Global Read ON

@@ -3,7 +3,7 @@ import _ from 'lodash';
 
 export class ArchiveListController extends BaseListController {
     constructor($scope, $injector, $location, $q, $timeout, superdesk, session, api, desks, content,
-    StagesCtrl, notify, multi, search) {
+        StagesCtrl, notify, multi, search) {
         super($scope, $location, search, desks);
 
         var resource,

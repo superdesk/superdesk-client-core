@@ -22,17 +22,17 @@ export function IngestRulesContent(api, gettext, notify, modal, $filter) {
                 var _new = !ruleset._id;
 
                 api('rule_sets').save(_orig, ruleset)
-                .then(() => {
-                    if (_new) {
-                        scope.rulesets.push(_orig);
-                    }
+                    .then(() => {
+                        if (_new) {
+                            scope.rulesets.push(_orig);
+                        }
 
-                    scope.rulesets = $filter('sortByName')(scope.rulesets);
-                    notify.success(gettext('Rule set saved.'));
-                    scope.cancel();
-                }, (response) => {
-                    notify.error(gettext('I\'m sorry but there was an error when saving the rule set.'));
-                });
+                        scope.rulesets = $filter('sortByName')(scope.rulesets);
+                        notify.success(gettext('Rule set saved.'));
+                        scope.cancel();
+                    }, (response) => {
+                        notify.error(gettext('I\'m sorry but there was an error when saving the rule set.'));
+                    });
             };
 
             scope.cancel = function() {
@@ -42,15 +42,15 @@ export function IngestRulesContent(api, gettext, notify, modal, $filter) {
             scope.remove = function(ruleset) {
                 confirm().then(() => {
                     api('rule_sets').remove(ruleset)
-                    .then((result) => {
-                        _.remove(scope.rulesets, ruleset);
-                    }, (response) => {
-                        if (angular.isDefined(response.data._message)) {
-                            notify.error(gettext('Error: ' + response.data._message));
-                        } else {
-                            notify.error(gettext('There was an error. Rule set cannot be deleted.'));
-                        }
-                    });
+                        .then((result) => {
+                            _.remove(scope.rulesets, ruleset);
+                        }, (response) => {
+                            if (angular.isDefined(response.data._message)) {
+                                notify.error(gettext('Error: ' + response.data._message));
+                            } else {
+                                notify.error(gettext('There was an error. Rule set cannot be deleted.'));
+                            }
+                        });
                 });
             };
 

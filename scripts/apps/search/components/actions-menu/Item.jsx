@@ -36,7 +36,7 @@ export default class Item extends React.Component {
         this.updateActioningStatus(true);
         scope.$apply(() => {
             activityService.start(this.props.activity, {data: {item: this.props.item}})
-            .finally(() => this.updateActioningStatus(false));
+                .finally(() => this.updateActioningStatus(false));
         });
 
         closeActionsMenu();

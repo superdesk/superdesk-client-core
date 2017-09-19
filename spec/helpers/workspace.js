@@ -50,7 +50,7 @@ function Workspace() {
 
         function textFilter(elem) {
             return elem.element(by.tagName('button')).getText()
-            .then((text) => text.toUpperCase().indexOf(desk.toUpperCase()) >= 0);
+                .then((text) => text.toUpperCase().indexOf(desk.toUpperCase()) >= 0);
         }
 
         function clickFiltered(filtered) {
