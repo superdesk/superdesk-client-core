@@ -1,14 +1,14 @@
 /* eslint-disable newline-per-chained-call */
 
 
-var openUrl = require('./helpers/utils').open,
+var nav = require('./helpers/utils').nav,
     workspace = require('./helpers/pages').workspace,
     content = require('./helpers/pages').content,
     monitoring = require('./helpers/monitoring');
 
 describe('spike', () => {
     beforeEach((done) => {
-        openUrl('/#/workspace/content').then(done);
+        nav('/workspace/content').then(done);
     });
 
     it('can spike item', () => {

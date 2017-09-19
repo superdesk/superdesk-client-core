@@ -1,7 +1,7 @@
 /* eslint-disable newline-per-chained-call */
 
 
-var openUrl = require('./helpers/utils').open,
+var nav = require('./helpers/utils').nav,
     waitForSuperdesk = require('./helpers/utils').waitForSuperdesk,
     login = require('./helpers/utils').login,
     globalSearch = require('./helpers/search');
@@ -10,7 +10,7 @@ var Login = require('./helpers/pages').login;
 
 describe('saved_search', () => {
     beforeEach(() => {
-        openUrl('/#/search').then(globalSearch.setListView());
+        nav('/search').then(globalSearch.setListView());
     });
 
     it('can save a private search', () => {

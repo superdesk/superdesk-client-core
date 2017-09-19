@@ -1,7 +1,7 @@
 /* eslint-disable newline-per-chained-call */
 
 
-var openUrl = require('./helpers/utils').open,
+var nav = require('./helpers/utils').nav,
     globalSearch = require('./helpers/search'),
     authoring = require('./helpers/authoring'),
     content = require('./helpers/pages').content,
@@ -10,7 +10,7 @@ var openUrl = require('./helpers/utils').open,
 
 describe('search', () => {
     beforeEach(() => {
-        openUrl('/#/search').then(globalSearch.setListView());
+        nav('/search').then(globalSearch.setListView());
     });
 
     it('can search by search field', () => {
@@ -159,6 +159,7 @@ describe('search', () => {
         globalSearch.itemClick(0);
         monitoring.tabAction('related');
         expect(globalSearch.getRelatedItems().count()).toBe(2);
+        element(by.css('.close-preview')).click();
 
         // can search with different repos
         globalSearch.openParameters();
@@ -183,6 +184,8 @@ describe('search', () => {
         rawTextbox.sendKeys('type:text AND (item1 OR item4)');
         globalSearch.goButton.click();
         expect(globalSearch.getItems().count()).toBe(2);
+        // toggle filter panel to reset it
+        globalSearch.openFilterPanel();
 
         // search spiked content
         globalSearch.openGlobalSearch();

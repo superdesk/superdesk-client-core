@@ -170,6 +170,7 @@ describe('highlights', () => {
             search.openGlobalSearch();
             monitoring.openMonitoring();
             monitoring.checkMarkedForHighlight('Highlight two', 1, 1);
+            element(by.id('closeAuthoringBtn')).click();
 
             // multi mark for highlights
             highlights.get();
@@ -216,7 +217,7 @@ describe('highlights', () => {
             // change desk on highlights
             workspace.showHighlightList('Highlight four');
             workspace.selectDesk('SPORTS DESK');
-            expect(browser.getLocationAbsUrl()).toMatch('/monitoring');
+            expect(browser.getCurrentUrl()).toMatch('/monitoring');
 
             // show highlight three and add an item to highlight package two
             workspace.selectDesk('POLITIC DESK');

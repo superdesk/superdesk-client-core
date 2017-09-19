@@ -1,6 +1,6 @@
 
 
-var openUrl = require('./helpers/utils').open,
+var nav = require('./helpers/utils').nav,
     globalSearch = require('./helpers/search'),
     authoring = require('./helpers/authoring'),
     content = require('./helpers/content'),
@@ -8,7 +8,7 @@ var openUrl = require('./helpers/utils').open,
 
 describe('archived', () => {
     beforeEach(() => {
-        openUrl('/#/search').then(globalSearch.setListView());
+        nav('/search').then(globalSearch.setListView());
     });
 
     it('display items and open an item preview', () => {

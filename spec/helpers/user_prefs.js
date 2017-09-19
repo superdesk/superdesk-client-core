@@ -2,7 +2,7 @@
 
 module.exports = new UserPrefs();
 
-var openUrl = require('./utils').open;
+var nav = require('./utils').nav;
 
 /**
  * A helper for working with the user preference settings located in the
@@ -32,6 +32,6 @@ function UserPrefs() {
     };
 
     this.navigateTo = function() {
-        return openUrl('/#/profile');
+        return nav('/profile');
     };
 }

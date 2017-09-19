@@ -7,7 +7,7 @@ var monitoring = require('./helpers/monitoring'),
     commandKey = require('./helpers/utils').commandKey,
     ctrlShiftKey = require('./helpers/utils').ctrlShiftKey,
     assertToastMsg = require('./helpers/utils').assertToastMsg,
-    openUrl = require('./helpers/utils').open,
+    nav = require('./helpers/utils').nav,
     dictionaries = require('./helpers/dictionaries'),
     workspace = require('./helpers/workspace');
 
@@ -376,7 +376,7 @@ describe('authoring', () => {
     });
 
     it('spellcheck hilite sentence word for capitalization and ignore the word after abbreviations', () => {
-        openUrl('/#/settings/dictionaries');
+        nav('/settings/dictionaries');
         dictionaries.edit('Test 1');
         expect(dictionaries.getWordsCount()).toBe(0);
         dictionaries.search('abbrev.');
