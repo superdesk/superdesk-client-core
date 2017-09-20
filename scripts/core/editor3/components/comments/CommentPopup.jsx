@@ -23,6 +23,12 @@ const topPadding = 50;
  * Superdesk's common pop-up container, so that it can be displayed on top of the UI.
  */
 export class CommentPopup extends Component {
+    constructor(props) {
+        super(props);
+
+        this.onDocumentClick = this.onDocumentClick.bind(this);
+    }
+
     /**
      * @ngdoc method
      * @name CommentPopup#position
@@ -74,17 +80,41 @@ export class CommentPopup extends Component {
 
     /**
      * @ngdoc method
-     * @name CommentPopup#customRender
-     * @description customRender mounts the popup component if a comment exists in
-     * props, otherwise it unmounts it.
+     * @name CommentPopup#renderCustom
+     * @description Renders the comment popup component.
      */
-    customRender() {
-        const node = document.getElementById('react-placeholder');
+    renderCustom() {
+        render(this.component(), document.getElementById('react-placeholder'));
+        document.addEventListener('click', this.onDocumentClick);
+    }
 
-        if (this.props.comment) {
-            render(this.component(), node);
-        } else {
-            unmountComponentAtNode(node);
+    /**
+     * @ngdoc method
+     * @name CommentPopup#unmountCustom
+     * @description Unmounts the comment popup component.
+     */
+    unmountCustom() {
+        unmountComponentAtNode(document.getElementById('react-placeholder'));
+        document.addEventListener('click', this.onDocumentClick);
+    }
+
+    /**
+     * @ngdoc method
+     * @name CommentPopup#onDocumentClick
+     * @param {Event} e
+     * @description Triggered when the document is clicked. It checks if the click
+     * occurred on the popup or on the editor, and if it didn't, unmounts the
+     * component.
+     */
+    onDocumentClick(e) {
+        const t = $(e.target);
+        const editorNode = this.props.editor;
+        const onPopup = t.hasClass('comment-popup') || t.closest('.comment-popup').length;
+        const onEditor = t.is(editorNode) || t.closest(editorNode).length;
+
+        if (!onPopup && !onEditor) {
+            // if the click occurred outside the editor and the popup we close it
+            this.unmountCustom();
         }
     }
 
@@ -99,7 +129,7 @@ export class CommentPopup extends Component {
     componentDidUpdate() {
         // Waiting one cycle allows the selection to be rendered in the browser
         // so that we can correctly retrieve its position.
-        setTimeout(this.customRender.bind(this), 0);
+        setTimeout(() => this.props.comment ? this.renderCustom() : this.unmountCustom(), 0);
     }
 
     render() {
