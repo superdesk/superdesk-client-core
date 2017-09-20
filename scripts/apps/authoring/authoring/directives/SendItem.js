@@ -224,7 +224,8 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
             scope.showPublishSchedule = function() {
                 return scope.item && archiveService.getType(scope.item) !== 'ingest' &&
                     scope.item.type !== 'composite' && !scope.item.embargo_date && !scope.item.embargo_time &&
-                    ['published', 'killed', 'corrected'].indexOf(scope.item.state) === -1;
+                    ['published', 'killed', 'corrected'].indexOf(scope.item.state) === -1 &&
+                    canPublishOnDesk();
             };
 
             /**
@@ -367,10 +368,21 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
             };
 
             /**
+             * Check if it is allowed to publish on current desk
+             * @returns {Boolean}
+             */
+            function canPublishOnDesk() {
+                const currentDesk = desks.getCurrentDesk();
+                const isAuthoringDesk = currentDesk && currentDesk.desk_type === 'authoring';
+
+                return !(isAuthoringDesk && config.features.noPublishOnAuthoringDesk);
+            }
+
+            /**
              * If the action is correct and kill then the publish privilege needs to be checked.
              */
             scope.canPublishItem = function() {
-                if (!scope.itemActions) {
+                if (!scope.itemActions || !canPublishOnDesk()) {
                     return false;
                 }
 
