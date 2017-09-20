@@ -9,8 +9,6 @@ import {redrawComments, removeInlineStyles, applyInlineStyles} from './styles';
 import {getComments, addComment, replaceComments} from './store';
 import {updateComments} from './comments';
 
-// TODO(gbbr): Weird behaviour around copy/pasting comments around. Can this be fixed?
-
 export {
     repositionComments,
     redrawComments,
