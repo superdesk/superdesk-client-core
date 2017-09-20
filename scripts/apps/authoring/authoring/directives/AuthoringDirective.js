@@ -534,7 +534,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             var deregisterTansa = $rootScope.$on('tansa:end', afterTansa);
 
             $scope.runTansa = function() {
-                if (window.tansa && window.RunTansaProofing && window.tansaIsLoaded) {
+                if (window.RunTansaProofing) {
                     const editor = editorResolver.get();
 
                     if (editor && editor.version() === '3') {
