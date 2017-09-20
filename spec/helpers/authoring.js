@@ -196,6 +196,7 @@ function Authoring() {
         }
         browser.wait(() => ctx.element(this.add_content_button).isDisplayed(), 1000);
         ctx.element(this.add_content_button).click();
+        browser.wait(() => element(by.id('closeAuthoringBtn')).isDisplayed(), 2000);
         ctx.element(by.css('[ng-click="vm.triggerAction(\'addEmbed\')"]')).click();
         ctx.element(by.css('.add-embed__input input')).sendKeys(embedCode || 'embed code');
         ctx.element(by.css('[ng-click="vm.createBlockFromEmbed()"]')).click();
@@ -279,6 +280,7 @@ function Authoring() {
     };
 
     this.publishFrom = function(desk) {
+        browser.wait(() => this.publish_panel.isPresent(), 2000);
         this.publish_panel.click();
         this.selectDeskforSendTo(desk);
         this.sendAndPublishBtn.click();
