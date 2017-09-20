@@ -106,7 +106,7 @@
     </div>
     <div sd-item-crops
          data-item="item.associations['featuremedia']"
-         ng-if="editor.feature_media.showCrops && features.editFeaturedImage && 
+         ng-if="editor.feature_media.showCrops && features.editFeaturedImage &&
          (item.associations['featuremedia'].type == 'picture' ||
          item.associations['featuremedia'].type == 'graphic')">
     </div>
@@ -161,7 +161,7 @@
     </div>
 </div>
 
-<div class="field" 
+<div class="field"
      ng-if="item._type !== 'archived' && schema.byline"
      sd-width="{{editor.byline.sdWidth|| 'full'}}"
      order="{{editor.byline.order}}"
@@ -246,13 +246,14 @@
     </div>
 </div>
 
-<div class="field body" 
+<div class="field body"
      ng-if="!isMediaType && schema.body_html && !(features.onlyEditor3 || editor.body_html.editor3)"
      order="{{editor.body_html.order}}"
      sd-validation-error="error.body_html"
      data-required="schema.body_html.required"
      sd-width="{{editor.body_html.sdWidth|| 'full'}}">
     <label translate>Body</label>
+    <span sd-reading-time data-item="item.body_html" data-html="true"></span>
     <span sd-character-count data-item="item.body_html" data-html="true"></span>
     <span sd-word-count data-item="item.body_html" data-html="true"></span>
     <div id="bodyhtml"
@@ -281,6 +282,7 @@
      tansa-proofing="false">
 
     <label translate>Body</label>
+    <span sd-reading-time data-item="item.body_html" data-html="true"></span>
     <span sd-character-count data-item="item.body_html" data-html="true"></span>
     <span sd-word-count data-item="item.body_html" data-html="true"></span>
     <div id="bodyhtml"
