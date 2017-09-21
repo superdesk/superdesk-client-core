@@ -135,10 +135,19 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
 
                         desks.fetchDeskById($scope.origItem.task.desk).then((desk) => {
                             $scope.deskName = desk.name;
+                            $scope.deskType = desk.desk_type;
                         });
                     }
                 }
             }
+
+            /**
+             * Check if it is allowed to publish on desk
+             * @returns {Boolean}
+             */
+            $scope.canPublishOnDesk = function() {
+                return !($scope.deskType === 'authoring' && config.features.noPublishOnAuthoringDesk);
+            };
 
             getDeskStage();
             /**
