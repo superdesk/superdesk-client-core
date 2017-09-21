@@ -665,7 +665,6 @@ describe('authoring', () => {
         ctrlKey('x');
         authoring.sendAndpublish('Sports Desk');
         authoring.confirmSendTo(); // confirm unsaved changes
-        browser.sleep(1000);
         authoring.publishFrom('Sports Desk');
         assertToastMsg('error', 'BODY_HTML empty values not allowed'); // validation takes place
         authoring.writeText('Testing');
