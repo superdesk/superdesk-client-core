@@ -61,17 +61,18 @@
 		}
 	}
 
-	&.floating-toolbar .link-toolbar.empty {
-		display: none;
-	}
 
-	&.floating-toolbar .Editor3-controls {
+	.Editor3-controls.floating-toolbar {
 		position: fixed;
 		top: 132px;
 		left: auto;
 		z-index: 10;
 		box-shadow: 0px 1px 5px #efefef;
 		max-width: 490px;
+
+		.link-toolbar.empty {
+			display: none;
+		}
 	}
 
 	&.read-only {

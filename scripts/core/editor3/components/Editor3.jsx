@@ -48,12 +48,9 @@ export class Editor3Component extends React.Component {
     constructor(props) {
         super(props);
 
-        this.scrollContainer = $(props.scrollContainer || window);
-        this.state = {toolbarStyle: 'relative'};
         this.editorKey = null;
 
         this.focus = this.focus.bind(this);
-        this.onScroll = this.onScroll.bind(this);
         this.allowItem = this.allowItem.bind(this);
         this.onDragOver = this.onDragOver.bind(this);
         this.onDragDrop = this.onDragDrop.bind(this);
@@ -69,29 +66,6 @@ export class Editor3Component extends React.Component {
      */
     focus() {
         this.props.unlock();
-    }
-
-    /**
-     * @ngdoc method
-     * @name Editor3#onScroll
-     * @description Triggered when the authoring page is scrolled. It adjusts toolbar
-     * style, based on the location of the editor within the scroll container.
-     */
-    onScroll(e) {
-        const editorRect = ReactDOM.findDOMNode(this.refs.editor).getBoundingClientRect();
-        const pageRect = this.scrollContainer[0].getBoundingClientRect();
-
-        if (!editorRect || !pageRect) {
-            return;
-        }
-
-        const isToolbarOut = editorRect.top < pageRect.top + 50;
-        const isBottomOut = editorRect.bottom < pageRect.top + 60;
-        const toolbarStyle = isToolbarOut && !isBottomOut ? 'fixed' : 'relative';
-
-        if (toolbarStyle !== this.state.toolbarStyle) {
-            this.setState({toolbarStyle});
-        }
     }
 
     /**
@@ -219,21 +193,12 @@ export class Editor3Component extends React.Component {
         $node.on('dragover', this.onDragOver);
         $node.on('drop dragdrop', this.onDragDrop);
 
-        if (this.props.showToolbar) {
-            this.scrollContainer.on('scroll', this.onScroll);
-        }
-
         // the editorKey is used to identify the source of pasted blocks
         this.editorKey = this.refs.editor._editorKey;
         this.editorNode = ReactDOM.findDOMNode(this.refs.editor);
     }
 
-    componentWillUnmount() {
-        this.scrollContainer.off('scroll', this.onScroll);
-    }
-
     render() {
-        const {toolbarStyle} = this.state;
         const {
             readOnly,
             locked,
@@ -243,21 +208,33 @@ export class Editor3Component extends React.Component {
             onChange,
             onTab,
             canComment,
-            tabindex
+            tabindex,
+            scrollContainer
         } = this.props;
         const selection = editorState.getSelection();
 
         let cx = classNames({
             'Editor3-root Editor3-editor': true,
-            'floating-toolbar': toolbarStyle === 'fixed',
             'no-toolbar': !showToolbar,
             'read-only': readOnly
         });
 
         return (
             <div className={cx}>
-                {showToolbar && <Toolbar disabled={locked || readOnly} />}
-                {canComment && <CommentPopup comment={activeComment} editor={this.editorNode} selection={selection} />}
+                {showToolbar &&
+                    <Toolbar
+                        disabled={locked || readOnly}
+                        scrollContainer={scrollContainer}
+                        editorNode={this.editorNode}
+                    />
+                }
+                {canComment &&
+                    <CommentPopup
+                        comment={activeComment}
+                        editorNode={this.editorNode}
+                        selection={selection}
+                    />
+                }
                 <div className="focus-screen" onMouseDown={this.focus}>
                     <Editor
                         editorState={editorState}

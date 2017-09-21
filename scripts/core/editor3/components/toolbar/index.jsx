@@ -25,6 +25,9 @@ class ToolbarComponent extends Component {
     constructor(props) {
         super(props);
 
+        this.scrollContainer = $(props.scrollContainer || window);
+
+        this.onScroll = this.onScroll.bind(this);
         this.showLinkInput = this.showLinkInput.bind(this);
         this.hideLinkInput = this.hideLinkInput.bind(this);
         this.showCommentInput = this.showCommentInput.bind(this);
@@ -37,8 +40,36 @@ class ToolbarComponent extends Component {
 
             // If non-null, contains a DraftJS SelectionState where a comment
             // needs to be added (the popup is displayed).
-            selectionForComment: null
+            selectionForComment: null,
+
+            // When true, the toolbar is floating at the top of the item. This
+            // helps the toolbar continue to be visible when it goes out of view
+            // because of scrolling.
+            floating: false
         };
+    }
+
+    /**
+     * @ngdoc method
+     * @name Toolbar#onScroll
+     * @description Triggered when the authoring page is scrolled. It adjusts toolbar
+     * style, based on the location of the editor within the scroll container.
+     */
+    onScroll(e) {
+        const editorRect = this.props.editorNode.getBoundingClientRect();
+        const pageRect = this.scrollContainer[0].getBoundingClientRect();
+
+        if (!editorRect || !pageRect) {
+            return;
+        }
+
+        const isToolbarOut = editorRect.top < pageRect.top + 50;
+        const isBottomOut = editorRect.bottom < pageRect.top + 60;
+        const floating = isToolbarOut && !isBottomOut;
+
+        if (floating !== this.state.floating) {
+            this.setState({floating});
+        }
     }
 
     /**
@@ -78,7 +109,16 @@ class ToolbarComponent extends Component {
         this.setState({selectionForComment: null});
     }
 
+    componentDidMount() {
+        this.scrollContainer.on('scroll', this.onScroll);
+    }
+
+    componentWillUnmount() {
+        this.scrollContainer.off('scroll', this.onScroll);
+    }
+
     render() {
+        const {floating} = this.state;
         const {
             disabled,
             editorFormat,
@@ -94,6 +134,7 @@ class ToolbarComponent extends Component {
 
         const cx = classNames({
             'Editor3-controls': true,
+            'floating-toolbar': floating,
             disabled: disabled
         });
 
@@ -123,7 +164,6 @@ class ToolbarComponent extends Component {
                         onSubmit={(msg) => applyComment(selectionForComment, msg)}
                         onCancel={this.hideCommentInput} />}
 
-
                 {/* LinkToolbar must be the last node. */}
                 <LinkToolbar onEdit={this.showLinkInput} />
             </div>;
@@ -137,7 +177,9 @@ ToolbarComponent.propTypes = {
     activeCell: PropTypes.any,
     applyLink: PropTypes.func,
     applyComment: PropTypes.func,
-    editorState: PropTypes.object
+    editorState: PropTypes.object,
+    editorNode: PropTypes.object,
+    scrollContainer: PropTypes.string
 };
 
 const mapStateToProps = ({editorFormat, editorState, activeCell, allowsCommenting}) => ({
