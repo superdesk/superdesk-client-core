@@ -52,6 +52,9 @@
                                     <option id="{{type.qcode}}" ng-repeat="type in deskTypes" value="{{type.qcode}}" ng-selected="desk.edit.desk_type === type.qcode"
                                         >{{ type.name | translate}}</option>
                                 </select>
+                                <div ng-show="showNoPublishOnAuthoringDesk(desk.edit.desk_type)" class="column">
+                                    <i class="icon-info-sign icon--blue"></i><span class="helper-text helper-text--after-icon" translate>Authoring desks are for content creation, and items within it are protected from accidental publication. Publishing is only permitted  from production desks.</span>
+                                </div>
                             </div>
                         </div>
                     </div>
