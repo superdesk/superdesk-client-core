@@ -37,7 +37,7 @@ export class CommentPopup extends Component {
      * @returns {Object} Object containing top and left in pixels.
      */
     position() {
-        const {left: editorLeft} = this.props.editor.getBoundingClientRect();
+        const {left: editorLeft} = this.props.editorNode.getBoundingClientRect();
         const rect = getVisibleSelectionRect(window);
 
         let top = 150;
@@ -108,7 +108,7 @@ export class CommentPopup extends Component {
      */
     onDocumentClick(e) {
         const t = $(e.target);
-        const editorNode = this.props.editor;
+        const {editorNode} = this.props;
         const onPopup = t.hasClass('comment-popup') || t.closest('.comment-popup').length;
         const onEditor = t.is(editorNode) || t.closest(editorNode).length;
 
@@ -139,7 +139,7 @@ export class CommentPopup extends Component {
 
 CommentPopup.propTypes = {
     selection: PropTypes.instanceOf(SelectionState),
-    editor: PropTypes.object,
+    editorNode: PropTypes.object,
     comment: PropTypes.shape({
         data: PropTypes.shape({
             msg: PropTypes.string,
