@@ -1,6 +1,5 @@
 import * as action from './actions';
-import ng from 'core/services/ng';
-import {countOccurrences, forEachMatch} from './reducers/find-replace';
+import {forEachMatch} from './reducers/find-replace';
 import {toHTML} from './html';
 import {clearHighlights} from './reducers/find-replace';
 
@@ -124,16 +123,6 @@ export class EditorService {
      */
     render() {
         ok() && store.dispatch(action.renderHighlights());
-    }
-
-    /**
-     * @ngdoc method
-     * @name editor3#countErrors
-     * @description Not sure what this method is supposed to do. It's needed by
-     * the interface and it's copied from `core/editor2/editor.js#93`.
-     */
-    countErrors() {
-        return ng.get('$q').when(store ? countOccurrences(store.getState()) : null);
     }
 
     /**

@@ -87,13 +87,6 @@ EditorService.$inject = ['spellcheck', '$q', 'lodash', 'renditions', 'editorUtil
 function EditorService(spellcheck, $q, _, renditionsService, utils) {
     this.settings = {spellcheck: true};
 
-    /**
-     * mock spellcheck integration
-     */
-    this.countErrors = function() {
-        return $q.when(0);
-    };
-
     this.version = () => '2';
 
     this.KEY_CODES = Object.freeze({
