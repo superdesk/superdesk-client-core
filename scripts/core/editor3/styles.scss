@@ -28,6 +28,7 @@
 	border: 1px solid #ddd;
 	font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
 	font-size: 14px;
+	font-weight: 300;
 	padding: 0;
 	position: relative;
 
@@ -253,7 +254,7 @@
 	min-height: 20px;
 
 	[data-block="true"] {
-		margin-bottom: 10px;
+		margin-bottom: 1.6em;
 	}
 }
 
