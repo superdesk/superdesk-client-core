@@ -26,8 +26,6 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
         controllerAs: 'vm',
         templateUrl: 'scripts/apps/authoring/views/send-item.html',
         link: function sendItemLink(scope, elem, attrs, ctrl) {
-            const editor = editorResolver.get();
-
             scope.mode = scope.mode || 'authoring';
             scope.desks = null;
             scope.stages = null;
@@ -127,16 +125,8 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
             };
 
             scope.send = function(open) {
-                return editor.countErrors()
-                    .then((spellcheckErrors) => {
-                        if (scope.mode === 'authoring') {
-                            return confirm.confirmSpellcheck(spellcheckErrors)
-                                .then(runSend, (err) => false);
-                        }
-
-                        updateLastDestination();
-                        return runSend(open);
-                    });
+                updateLastDestination();
+                return runSend(open);
             };
 
             scope.$on('item:nextStage', (_e, data) => {
@@ -344,9 +334,7 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
              * Send the current item to different desk or stage and publish the item from new location.
              */
             scope.sendAndPublish = function() {
-                return editor.countErrors()
-                    .then(confirm.confirmSpellcheck)
-                    .then(runSendAndPublish, (err) => false);
+                return runSendAndPublish();
             };
 
             /*

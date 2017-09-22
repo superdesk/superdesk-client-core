@@ -102,21 +102,6 @@ export function ConfirmDirtyService($window, $q, $filter, api, modal, gettextCat
     };
 
     /**
-     * If there are spelling errors ask the user that if the user wants to save changes or not.
-     */
-    this.confirmSpellcheck = function(spellingErrors) {
-        if (spellingErrors === 0) {
-            return $q.resolve();
-        }
-        var mistakes = spellingErrors > 1 ? 'mistakes' : 'mistake';
-        var confirmMessage = 'You have {{ spellingErrors }} spelling {{ mistakes }}. ' +
-            'Are you sure you want to continue?';
-
-        return modal.confirm($interpolate(gettextCatalog.getString(confirmMessage))({
-            message: spellingErrors, mistakes: mistakes}));
-    };
-
-    /**
      * Make user aware that an item was unlocked
      *
      * @param {string} userId Id of user who unlocked an item.

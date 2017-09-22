@@ -2291,7 +2291,6 @@ describe('send item directive', () => {
         };
 
         beforeEach(inject(($q, $compile, $rootScope, api, editor) => {
-            spyOn(editor, 'countErrors').and.returnValue($q.when(0));
             spyOn(api, 'find').and.returnValue($q.when({}));
             spyOn(api, 'save').and.returnValue($q.when({task: {desk: 'new', stage: 'new'}}));
 
