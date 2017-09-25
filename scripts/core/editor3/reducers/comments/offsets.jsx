@@ -77,7 +77,7 @@ function diffMethod(oldState, newState) {
     diff.forEach(([changeType, chunk]) => {
         switch (changeType) {
         case DiffNoChange:
-            offset += len(chunk) - 1;
+            offset += len(chunk);
             break;
         case DiffAdd:
         case DiffRemove:
@@ -96,29 +96,32 @@ function diffMethod(oldState, newState) {
  */
 
 /**
- * @description Shifts all comments (left or right) by `n`, starting after `offset`.
- * It correctly removes comments integrally or partially on negative `n` values.
+ * @description Shifts all comments (left or right) by `n`, starting at and including
+ * `offset`. It correctly removes comments integrally or partially on negative `n`
+ * values.
  * @param {Array<FlatComment>} arr Array of flattened comments.
- * @param {Number} count Number of characters to shift. Can be negative for deletion. Note
- * that deletion happens forward, starting after offset.
- * @param {Number} start Offset after which selection ends must be shifted.
+ * @param {Number} n Number of characters to shift. Can be negative for deletion.
+ * Note that deletion applies to all characters after offset.
+ * @param {Number} offset Offset after which selection ends must be shifted inclusive of offset.
  * @returns {Array<FlatComment>} Array with shifting applied.
  */
 export function shift(comments, n, offset = 0) {
     let shifted = [];
 
     comments.forEach((c) => {
-        // deleted
-        if (n < 0 && c.start > offset && c.end > offset && c.start <= offset - n && c.end <= offset - n + 1) {
+        if (n < 0
+            && c.start >= offset && c.start <= offset - n
+            && c.end > offset && c.end <= offset - n) {
+            // deleted
             return;
         }
-        // start is chopped off or shifted n
-        if (c.start > offset) {
-            c.start += n < 0 && offset - n >= c.start ? offset - c.start + 1 : n;
+        if (c.start >= offset) {
+            // start is chopped off or shifted n
+            c.start += n < 0 && c.start <= offset - n ? offset - c.start : n;
         }
-        // end is chopped off or shifted n
-        if (c.end > offset + 1) {
-            c.end += n < 0 && offset - n + 1 > c.end ? offset - c.end + 1 : n;
+        if (c.end > offset) {
+            // end is chopped off or shifted n
+            c.end += n < 0 && c.end < offset - n ? offset - c.end : n;
         }
 
         shifted.push(c);
