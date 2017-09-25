@@ -3,6 +3,7 @@ export {DashboardCard} from './DashboardCard';
 export {SendItem} from './SendItem';
 export {CharacterCount} from './CharacterCount';
 export {WordCount} from './WordCount';
+export {ReadingTime} from './ReadingTime';
 export {ThemeSelectDirective} from './ThemeSelectDirective';
 export {ArticleEditDirective} from './ArticleEditDirective';
 export {AuthoringDirective} from './AuthoringDirective';

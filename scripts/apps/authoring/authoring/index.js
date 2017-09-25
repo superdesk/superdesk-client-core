@@ -53,6 +53,7 @@ angular.module('superdesk.apps.authoring', [
     .directive('sdSendItem', directive.SendItem)
     .directive('sdCharacterCount', directive.CharacterCount)
     .directive('sdWordCount', directive.WordCount)
+    .directive('sdReadingTime', directive.ReadingTime)
     .directive('sdThemeSelect', directive.ThemeSelectDirective)
     .directive('sdArticleEdit', directive.ArticleEditDirective)
     .directive('sdAuthoring', directive.AuthoringDirective)
