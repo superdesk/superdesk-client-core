@@ -176,6 +176,7 @@ describe('user edit form', () => {
     beforeEach(window.module('superdesk.mocks'));
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.apps.searchProviders'));
+    beforeEach(window.module('superdesk.apps.vocabularies'));
 
     beforeEach(window.module(($provide) => {
         $provide.service('session', ($q) => ({

@@ -66,7 +66,7 @@
                 <div class="sd-line-input sd-line-input--required">
                     <label class="sd-line-input__label" for="last-name" translate>last name</label>
                     <input class="sd-line-input__input" type="text" name="last_name" id="last-name" ng-model="user.last_name" required ng-readonly="user._readonly && user._readonly.last_name">
-                    <div class="sd-line-input__message" ng-show="userForm.last_name.$error.required" translate>This field is required.</div> 
+                    <div class="sd-line-input__message" ng-show="userForm.last_name.$error.required" translate>This field is required.</div>
                 </div>
             </div>
 
@@ -143,7 +143,7 @@
             <div sd-info-item class="user_role form__row">
                 <div class="sd-line-input sd-line-input--is-select">
                     <label class="sd-line-input__label" for="user_role" translate>Role</label>
-                    <select class="sd-line-input__select" 
+                    <select class="sd-line-input__select"
                             ng-focus="focused()"
                             ng-disabled="!privileges.users"
                             ng-model="user.role"
@@ -200,9 +200,9 @@
             </div>
 
             <div sd-info-item class="form__row" ng-if="privileges.users">
-                <div class="sd-line-input">
-                    <label class="sd-line-input__label" for="job_title">{{ 'Job Title'|translate }}</label>
-                    <input class="sd-line-input__input" type="text" name="job_title" id="job_title" ng-model="user.job_title" ng-disabled="!user.is_author">
+                <div class="sd-line-input ng-disabled="!user.is_author">
+                    <label class="sd-line-input__label" for="job_title" translate>Job Title</label>
+                    <select class="sd-line-input__select" ng-focus="focused()" ng-model="user.job_title" name="job_title" id="job_title" ng-options="job.qcode as job.name for job in metadata.job_titles" ng-disabled="!user.is_author"></select>
                 </div>
             </div>
 
