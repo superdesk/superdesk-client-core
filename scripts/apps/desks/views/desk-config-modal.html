@@ -215,8 +215,8 @@
                                       data-item="selected"
                                       data-preview="true"
                                       data-expiryfield="content_expiry"
-                                      data-expiry-minutes="desk.edit.content_expiry || systemExpiry"
-                                      data-expiry-context="{{desk.edit.content_expiry ? 'Desk' : 'System'}}"
+                                      data-expiry-minutes="desk.edit.content_expiry > 0 ? desk.edit.content_expiry : systemExpiry"
+                                      data-expiry-context="{{desk.edit.content_expiry > 0 ? 'Desk' : 'System'}}"
                                 ></span>
                             </div>
                             <div class="list-row list-row--dotted list-row--flex" ng-if="selected.incoming_macro">
@@ -265,8 +265,8 @@
                                 data-preview="false"
                                 data-expiryfield="content_expiry"
                                 data-header="Content Expiry"
-                                data-expiry-minutes="desk.edit.content_expiry || systemExpiry"
-                                data-expiry-context="{{ desk.edit.content_expiry ? 'Desk' : 'System' }}">
+                                data-expiry-minutes="desk.edit.content_expiry > 0 ? desk.edit.content_expiry : systemExpiry"
+                                data-expiry-context="{{ desk.edit.content_expiry > 0 ? 'Desk' : 'System' }}">
                         </div>
                         <div ng-if="editStage">
                             <div class="form__row form__row--flex">
