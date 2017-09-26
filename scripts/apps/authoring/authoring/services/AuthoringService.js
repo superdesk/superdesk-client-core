@@ -212,6 +212,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         }
 
         helpers.stripHtml(updates);
+        helpers.stripWhitespaces(updates);
 
         // If the text equivalent of the body_html is empty then set the body empty
         if (angular.isDefined(updates.body_html)) {
@@ -280,6 +281,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         }
 
         helpers.stripHtml(diff);
+        helpers.stripWhitespaces(diff);
         autosave.stop(item);
 
         if (diff._etag) { // make sure we use orig item etag
