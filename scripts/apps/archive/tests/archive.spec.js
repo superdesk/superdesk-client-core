@@ -90,7 +90,7 @@ describe('content', () => {
             expect(archiveService.isArchived(item)).toBe(true);
         }));
 
-        it('returns the related items', inject((archiveService, api, $q, search) => {
+        it('returns the related items', inject((archiveService, api, $q) => {
             spyOn(api, 'query').and.returnValue($q.when());
             archiveService.getRelatedItems({slugline: 'test'});
             expect(api.query).toHaveBeenCalled();

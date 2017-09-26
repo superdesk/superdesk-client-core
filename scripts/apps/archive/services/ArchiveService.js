@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 ArchiveService.$inject = ['desks', 'session', 'api', '$q', 'search', '$location', 'config'];
 export function ArchiveService(desks, session, api, $q, search, $location, config) {
     /**
@@ -71,7 +73,7 @@ export function ArchiveService(desks, session, api, $q, search, $location, confi
     this.isPersonal = (item) => item.task && item.task.user && !item.task.desk;
 
     /**
-     *  Returns the list of items having the same slugline from datetime
+     *  Returns the list of items having the same slugline, type and genre from midnight onwards.
      *  @param {Object} item
      *  @param {Datetime} fromDateTime - from datetime
      *  @return {Object} the list of archive items
@@ -81,7 +83,7 @@ export function ArchiveService(desks, session, api, $q, search, $location, confi
             .format(config.view.dateformat);
         var params = {};
 
-        params.q = 'slugline.phrase:"' + item.slugline + '"'; // exact match
+        params.q = 'slugline.phrase:"' + _.trim(item.slugline) + '"'; // exact match
         params.ignoreKilled = true;
         params.ignoreDigital = true;
         params.afterversioncreated = beforeDateTime;
@@ -100,6 +102,10 @@ export function ArchiveService(desks, session, api, $q, search, $location, confi
                     must: [{term: {type: item.type}}]
                 }
             };
+
+            if (_.get(item, 'genre[0].qcode')) {
+                filter.bool.must.push({term: {'genre.qcode': _.get(item, 'genre[0].qcode')}});
+            }
 
             query.filter(filter);
         }
