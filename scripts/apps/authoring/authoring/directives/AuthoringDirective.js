@@ -467,6 +467,9 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                         if (value) {
                             if (typeof value === 'object' && hasNullValue(value)) {
                                 $scope.error[key] = true;
+                            } else if (typeof value === 'string' && authoring.schema[key].required &&
+                                helpers.removeWhitespaces(value) === '') {
+                                $scope.error[key] = true;
                             } else {
                                 $scope.error[key] = false;
                             }

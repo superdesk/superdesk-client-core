@@ -147,3 +147,33 @@ export function cleanHtml(data) {
     .replace(/&nbsp;/g, ' ')
     .replace(/\s\s+/g, ' ');
 }
+
+/**
+ * Removes whitespaces
+ * @param data
+ */
+export function removeWhitespaces(data) {
+    if (!data) {
+        return data;
+    }
+
+    return data
+        .replace(/&nbsp;/g, ' ')
+        .replace(/\s\s+/g, ' ')
+        .trim();
+}
+
+
+/**
+ * Removes whitespaces for fields
+ * @param data
+ */
+export function stripWhitespaces(item) {
+    var fields = ['headline', 'slugline', 'anpa_take_key', 'sms_message', 'abstract'];
+
+    _.each(fields, (key) => {
+        if (angular.isDefined(item[key])) {
+            item[key] = removeWhitespaces(item[key]);
+        }
+    });
+}
