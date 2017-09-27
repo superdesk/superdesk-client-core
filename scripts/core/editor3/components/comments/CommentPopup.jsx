@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {render, unmountComponentAtNode} from 'react-dom';
 import PropTypes from 'prop-types';
 import {Dropdown} from 'core/ui/components';
-import {UserAvatar} from 'apps/users/components';
+import {UserAvatar, TextWithMentions} from 'apps/users/components';
 import moment from 'moment';
 import {getVisibleSelectionRect, SelectionState} from 'draft-js';
 
@@ -72,7 +72,7 @@ export class CommentPopup extends Component {
                             <div className="date" title={fullDate}>{fromNow}</div>
                         </div>
                     </div>
-                    <div className="comment-popup__body">{msg}</div>
+                    <TextWithMentions className="comment-popup__body">{msg}</TextWithMentions>
                 </Dropdown>
             </div>
         );
