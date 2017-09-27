@@ -261,6 +261,10 @@
 	[data-block="true"] {
 		margin-bottom: 1.6em;
 	}
+
+	[data-block="true"]:last-child {
+		margin-bottom: 0.6em;
+	}
 }
 
 .Editor3-hidePlaceholder .public-DraftEditorPlaceholder-root {
@@ -445,8 +449,37 @@
 	.dropdown__menu {
 		padding: 15px;
 
-		.comment-text {
+		.mentions-input {
+			width: 300px;
 			margin-bottom: 10px;
+
+			&__suggestions__item {
+				height: 33px;
+				width: 240px;
+
+				&__display {
+					overflow: hidden;
+					text-overflow: ellipsis;
+					width: 175px;
+					white-space: nowrap;
+				}
+			}
+
+			.entry {
+				.avatar.initials {
+					width: 21px;
+					height: 21px;
+					margin: 0 5px 0 0;
+					line-height: 21px;
+					font-size: 10px;
+				}
+
+				.icon-tasks {
+					margin: 0 5px 0 2px;
+					position: relative;
+					top: 2px;
+				}
+			}
 		}
 	}
 }
@@ -485,6 +518,9 @@
 	}
 
 	&__body {
+		a {
+			color: #5d9bc0;
+		}
 		clear: both;
 		white-space: pre-wrap;
 	}

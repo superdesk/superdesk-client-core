@@ -12,6 +12,7 @@ templates-cache.generated.js
 .env
 npm-debug.log
 index.html
+yarn.lock
 
 # VIM related files
 *.swo
