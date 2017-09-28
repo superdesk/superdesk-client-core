@@ -13,8 +13,16 @@ function getBackendUrl(uri) {
     return constructUrl(browser.params.baseBackendUrl, uri);
 }
 
-function backendRequest(params, callback) {
+/**
+ * Do request to backend with retry on error
+ *
+ * @param {Object} params
+ * @param {function} callback
+ * @param {Integer} retry - how many times it will try to request before throwing error
+ */
+function backendRequest(params, callback, retry = 3) {
     let cb = callback || function() { /* no-op */ };
+    let ttl = retry || 0;
 
     if (params.uri) {
         params.url = getBackendUrl(params.uri);
@@ -24,9 +32,6 @@ function backendRequest(params, callback) {
     function isErrorResponse(response) {
         return response.statusCode < 200 || response.statusCode >= 300;
     }
-
-    // how many times it will try to request before throwing error
-    var ttl = 3;
 
     function responseHandler(error, response, body) {
         if (!error && !isErrorResponse(response)) {
@@ -53,7 +58,7 @@ function backendRequest(params, callback) {
     }
 
     params.rejectUnauthorized = false;
-    params.timeout = 30000;
+    params.timeout = params.timeout || 10000;
     request(params, responseHandler);
 }
 
