@@ -1,9 +1,9 @@
 UserEditDirective.$inject = ['api', 'gettext', 'notify', 'usersService', 'userList', 'session', 'lodash',
     'langmap', '$location', '$route', 'superdesk', 'features', 'asset', 'privileges',
-    'desks', 'keyboardManager', 'gettextCatalog', 'config'];
+    'desks', 'keyboardManager', 'gettextCatalog', 'config', 'metadata'];
 export function UserEditDirective(api, gettext, notify, usersService, userList, session, _,
     langmap, $location, $route, superdesk, features, asset, privileges, desks, keyboardManager,
-    gettextCatalog, config) {
+    gettextCatalog, config, metadata) {
     return {
         templateUrl: asset.templateUrl('apps/users/views/edit-form.html'),
         scope: {
@@ -13,6 +13,9 @@ export function UserEditDirective(api, gettext, notify, usersService, userList, 
             onupdate: '&'
         },
         link: function(scope, elem) {
+            metadata.initialize().then(() => {
+                scope.metadata = metadata.values;
+            });
             scope.privileges = privileges.privileges;
             scope.features = features;
             scope.usernamePattern = usersService.usernamePattern;
