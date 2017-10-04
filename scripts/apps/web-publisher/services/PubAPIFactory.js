@@ -173,7 +173,7 @@ export function PubAPIFactory(config, $http, $q, session, $location) {
          * @description Get resource url
          */
         resourceURL(resource, id = '') {
-            return `${this._server}/app_dev.php/${this._base}/${resource}/${id}`;
+            return `${this._server}/${this._base}/${resource}/${id}`;
         }
 
         /**
