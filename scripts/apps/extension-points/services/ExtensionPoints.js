@@ -16,15 +16,13 @@
  *
  * See also ExtensionPointsDirective.
  */
-export function ExtensionPointsProvider() {
-    var extensions = {};
+export function ExtensionPointsService() {
+    this.extensions = {};
 
     this.register = function(type, componentClass, props, data) {
-        if (typeof extensions[type] === 'undefined') {
-            extensions[type] = [];
+        if (typeof this.extensions[type] === 'undefined') {
+            this.extensions[type] = [];
         }
-        extensions[type].push({type, componentClass, props, data});
+        this.extensions[type].push({type, componentClass, props, data});
     };
-
-    this.$get = () => extensions;
 }
