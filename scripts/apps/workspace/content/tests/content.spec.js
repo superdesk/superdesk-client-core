@@ -37,7 +37,7 @@ describe('superdesk.apps.workspace.content', () => {
             expect(api.save).toHaveBeenCalledWith('archive', {headline: '', slugline: '',
                 description_text: '', type: 'composite',
                 groups: [{role: 'grpRole:NEP', refs: [{idRef: 'main'}], id: 'root'},
-                {refs: [], id: 'main', role: 'grpRole:main'}], version: 0,
+                    {refs: [], id: 'main', role: 'grpRole:main'}], version: 0,
                 task: {desk: '1', stage: '2', user: '1'}});
             expect(done).toHaveBeenCalledWith(ITEM);
         }));
@@ -59,14 +59,14 @@ describe('superdesk.apps.workspace.content', () => {
                 version: 0,
                 task: {desk: '1', stage: '2', user: '1'},
                 groups: [
-                {role: 'grpRole:NEP', refs: [{idRef: 'main'}], id: 'root'},
+                    {role: 'grpRole:NEP', refs: [{idRef: 'main'}], id: 'root'},
                     {refs: [{headline: '', residRef: undefined, location: 'archive',
                         slugline: '', renditions: {}, itemClass: '', type: ''}],
-                        id: 'main', role: 'grpRole:main'}]});
+                    id: 'main', role: 'grpRole:main'}]});
         }));
 
         it('can create items from template', inject((api, content, desks, session, $rootScope) => {
-            session.identity = {_id: 'user:1'};
+            session.identity = {_id: 'user:1', byline: 'user1'};
 
             spyOn(desks, 'getCurrentDesk')
                 .and
@@ -89,7 +89,8 @@ describe('superdesk.apps.workspace.content', () => {
                 task: {desk: '2', stage: '4', user: 'user:1'},
                 template: 'template1',
                 type: 'text',
-                version: 0
+                version: 0,
+                byline: 'user1'
             });
         }));
 
@@ -140,6 +141,7 @@ describe('superdesk.apps.workspace.content', () => {
         it('can get content type', inject((api, content, $rootScope, $q) => {
             var type = {_id: 'foo'};
 
+            spyOn(api, 'query').and.returnValue($q.when({_items: []}));
             spyOn(api, 'find').and.returnValue($q.when(type));
             var success = jasmine.createSpy('ok');
 
@@ -189,6 +191,18 @@ describe('superdesk.apps.workspace.content', () => {
             editor = content.editor(contentType);
             expect(editor.foo).toBe(2);
             expect(editor.slugline).toBeFalsy();
+        }));
+
+        it('can filter custom fields per profile', inject((content) => {
+            content._fields = [
+                {_id: 'foo'},
+                {_id: 'bar'}
+            ];
+
+            const fields = content.fields({editor: {foo: {enabled: true}}});
+
+            expect(fields.length).toBe(1);
+            expect(fields[0]._id).toBe('foo');
         }));
     });
 
@@ -246,7 +260,7 @@ describe('superdesk.apps.workspace.content', () => {
 
                 angular.extend(scope, props);
                 return _$compile_(
-                    '<form><sd-content-schema-editor ng-model="model"></sd-content-schema-editor></form>'
+                    '<form><sd-content-schema-editor data-model="model"></sd-content-schema-editor></form>'
                 )(scope);
             };
         }));
@@ -263,10 +277,7 @@ describe('superdesk.apps.workspace.content', () => {
 
             var fields = el.find('li.schema-item');
 
-            expect(fields.length).toBe(Object.keys(content.contentProfileSchema).length);
-            expect($(fields[0]).find('span.sd-toggle')
-                .hasClass('checked'))
-                .toBeTruthy();
+            expect(fields.length).toBe(Object.keys(content.contentProfileEditor).length);
         }));
 
         it('should dirty parent form when toggling fields', inject((content, $q) => {
@@ -284,7 +295,7 @@ describe('superdesk.apps.workspace.content', () => {
 
             expect(form.$dirty).toBeFalsy();
             $(fields[0])
-                .find('span.sd-toggle')
+                .find('#remove-item')
                 .click();
             expect(form.$dirty).toBeTruthy();
         }));

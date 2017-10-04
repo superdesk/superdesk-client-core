@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import PropTypes from 'prop-types';
 
 import {closeActionsMenu} from 'apps/search/helpers';
 
@@ -35,7 +36,7 @@ export default class Item extends React.Component {
         this.updateActioningStatus(true);
         scope.$apply(() => {
             activityService.start(this.props.activity, {data: {item: this.props.item}})
-            .finally(() => this.updateActioningStatus(false));
+                .finally(() => this.updateActioningStatus(false));
         });
 
         closeActionsMenu();
@@ -150,9 +151,9 @@ export default class Item extends React.Component {
 }
 
 Item.propTypes = {
-    svc: React.PropTypes.object.isRequired,
-    scope: React.PropTypes.any.isRequired,
-    item: React.PropTypes.any,
-    activity: React.PropTypes.any,
-    onActioning: React.PropTypes.func
+    svc: PropTypes.object.isRequired,
+    scope: PropTypes.any.isRequired,
+    item: PropTypes.any,
+    activity: PropTypes.any,
+    onActioning: PropTypes.func
 };

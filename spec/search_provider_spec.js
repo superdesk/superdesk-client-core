@@ -1,13 +1,13 @@
 /* eslint-disable newline-per-chained-call */
 
 
-var openUrl = require('./helpers/utils').open,
+var nav = require('./helpers/utils').nav,
     searchProvider = require('./helpers/pages').searchProvider,
     globalSearch = require('./helpers/search');
 
 describe('search_provider', () => {
     beforeEach((done) => {
-        openUrl('/#/settings/searchProviders').then(done);
+        nav('/settings/searchProviders').then(done);
     });
 
     xit('Add Search Provider', () => {
@@ -28,7 +28,7 @@ describe('search_provider', () => {
         expect(searchProvider.checkbox.isSelected()).toBeFalsy();
 
         // in search the first provider should be selected
-        openUrl('/#/search');
+        nav('/search');
         globalSearch.openFilterPanel();
         globalSearch.openParameters();
         expect(element.all(by.css('[value="local"]')).first().isSelected()).toBeFalsy();

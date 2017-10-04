@@ -21,8 +21,8 @@
         <div class="upload-error" ng-if="errorMessage">
             <span class="action"><span translate>Error</span>: {{ :: errorMessage | translate}}</span>
         </div>
-        <ul class="upload-thumbs">
-            <li ng-repeat="item in items">
+        <ul class="upload-thumbs flex-grid flex-grid--boxed flex-grid--wrap-items flex-grid--small-4">
+            <li ng-repeat="item in items" class="flex-grid__item sd-shadow--z3">
                 <div class="thumb" sd-image-preview="item.url" data-file="item.file" data-width="item.width" data-height="item.height">
                     <div class="holder">
                         <i class="filetype-icon-large-{{item.cssType}}" ng-hide="item.url && item.cssType === 'image'"></i>
@@ -39,28 +39,30 @@
 
                     <div ng-if="validator.headline" class="row">
                         <label ng-class="{'label-asterisk':validator.headline.required}" translate>Title</label>
-                        <div ng-model="item.meta.headline" contenteditable="true" class="contenteditable-input contenteditable-input--side-padding"></div>
+                        <input type="text" ng-model="item.meta.headline" />
                     </div>
                     <div class="other-info">
                         <div class="row" ng-if="validator.description_text">
-                            <label ng-class="{'label-asterisk':validator.description_text.required}" translate>Caption</label>
-                            <div ng-model="item.meta.description_text" contenteditable="true" class="contenteditable-input contenteditable-input--side-padding"></div>
+                            <label ng-class="{'label-asterisk':validator.description_text.required}" translate>Description</label>
+                            <textarea sd-auto-height
+                                ng-model="item.meta.description_text"
+                                class="contenteditable-input"></textarea>
                         </div>
                         <div class="row" ng-if="validator.archive_description">
                             <label translate>Description</label>
-                            <div ng-model="item.meta.archive_description" contenteditable="true" class="contenteditable-input contenteditable-input--side-padding"></div>                        
+                            <textarea sd-auto-height ng-model="item.meta.archive_description" class="contenteditable-input"></textarea>
                         </div>
                         <div class="row" ng-if="validator.alt_text">
                             <label ng-class="{'label-asterisk':validator.alt_text.required}" translate>Alt text</label>
-                            <div ng-model="item.meta.alt_text" contenteditable="true" class="contenteditable-input contenteditable-input--side-padding"></div>
+                            <textarea sd-auto-height ng-model="item.meta.alt_text" class="contenteditable-input"></textarea>
                         </div>
                         <div class="row" ng-if="validator.byline">
                             <label ng-class="{'label-asterisk':validator.byline.required}" translate>Credit</label>
-                            <div ng-model="item.meta.byline" contenteditable="true" class="contenteditable-input contenteditable-input--side-padding"></div>
+                            <input type="text" ng-model="item.meta.byline" />
                         </div>
                         <div class="row" ng-if="validator.copyrightholder">
                             <label ng-class="{'label-asterisk':validator.copyrightholder.required}" translate>Copyright holder</label>
-                            <div ng-model="item.meta.copyrightholder" contenteditable="true" class="contenteditable-input contenteditable-input--side-padding"></div>
+                            <textarea sd-auto-height ng-model="item.meta.copyrightholder" class="contenteditable-input"></textarea>
                         </div>
                         <div class="row" ng-if="validator.usageterms">
                             <label ng-class="{'label-asterisk':validator.usageterms.required}">
@@ -75,7 +77,7 @@
                         </div>
                         <div class="row" ng-if="validator.copyrightnotice">
                             <label ng-class="{'label-asterisk':validator.copyrightnotice.required}" translate>Copyright notice</label>
-                            <div ng-model="item.meta.copyrightnotice" contenteditable="true" class="contenteditable-input contenteditable-input--side-padding"></div>
+                            <textarea sd-auto-height ng-model="item.meta.copyrightnotice" class="contenteditable-input"></textarea>
                         </div>
                         <div class="row" ng-if="item.cssType === 'image'">
                             <label><span translate>Dimensions</span></label>

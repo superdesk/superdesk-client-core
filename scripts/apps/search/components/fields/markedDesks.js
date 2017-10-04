@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {MarkedDesksInfo} from 'apps/search/components';
 
 export function markedDesks(props) {
@@ -8,5 +9,7 @@ export function markedDesks(props) {
 }
 
 markedDesks.propTypes = {
-    item: React.PropTypes.any,
+    // item is passed through to MarkedDesksInfo directly via props
+    // eslint-disable-next-line react/no-unused-prop-types
+    item: PropTypes.any,
 };

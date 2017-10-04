@@ -67,16 +67,16 @@ export function ManageContentFiltersController($scope, contentFilters, notify, m
 
     $scope.remove = function(pf) {
         modal.confirm(gettext('Are you sure you want to delete content filter?'))
-        .then(() => contentFilters.remove(pf))
-        .then((result) => {
-            _.remove($scope.contentFilters, pf);
-        }, (response) => {
-            if (angular.isDefined(response.data._message)) {
-                notify.error(gettext('Error: ' + response.data._message));
-            } else {
-                notify.error(gettext('There was an error. Content filter cannot be deleted.'));
-            }
-        });
+            .then(() => contentFilters.remove(pf))
+            .then((result) => {
+                _.remove($scope.contentFilters, pf);
+            }, (response) => {
+                if (angular.isDefined(response.data._message)) {
+                    notify.error(gettext('Error: ' + response.data._message));
+                } else {
+                    notify.error(gettext('There was an error. Content filter cannot be deleted.'));
+                }
+            });
     };
 
     $scope.addStatement = function() {
@@ -111,7 +111,7 @@ export function ManageContentFiltersController($scope, contentFilters, notify, m
 
     $scope.test = function() {
         if (!$scope.test.article_id) {
-            notify.error(gettext('Please provide an article id'));
+            notify.error(gettext('Please provide an article GUID'));
             return;
         }
 

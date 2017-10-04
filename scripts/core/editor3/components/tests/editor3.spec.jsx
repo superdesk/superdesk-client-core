@@ -12,7 +12,7 @@ describe('editor3.component', () => {
     });
 
     it('should not accept dragging over invalid items', () => {
-        const wrapper = shallow(<Editor3 />);
+        const wrapper = shallow(<Editor3 editorFormat={['picture']}/>);
         const {onDragOver} = wrapper.instance();
         const makeEvent = (t) => ({originalEvent: {dataTransfer: {types: [t]}}});
 
@@ -30,7 +30,52 @@ describe('editor3.component', () => {
             'application/javascript',
             'invalid'
         ].forEach((invalidType) => {
-            expect(onDragOver(makeEvent(invalidType))).toBe(true);
+            expect(onDragOver(makeEvent(invalidType))).toBeTruthy();
+        });
+    });
+
+    it('should not accept dragging when editor is readOnly', () => {
+        const wrapper = shallow(<Editor3 readOnly editorFormat={['picture']}/>);
+        const {onDragOver} = wrapper.instance();
+        const makeEvent = (t) => ({originalEvent: {dataTransfer: {types: [t]}}});
+
+        [
+            'application/superdesk.item.picture',
+            'application/superdesk.item.graphic',
+            'application/superdesk.item.video',
+            'text/html'
+        ].forEach((validType) => {
+            expect(onDragOver(makeEvent(validType))).toBeTruthy();
+        });
+    });
+
+    it('should not accept dragging when editor does not support images', () => {
+        const wrapper = shallow(<Editor3/>);
+        const {onDragOver} = wrapper.instance();
+        const makeEvent = (t) => ({originalEvent: {dataTransfer: {types: [t]}}});
+
+        [
+            'application/superdesk.item.picture',
+            'application/superdesk.item.graphic',
+            'application/superdesk.item.video',
+            'text/html'
+        ].forEach((validType) => {
+            expect(onDragOver(makeEvent(validType))).toBeTruthy();
+        });
+    });
+
+    it('should not accept dragging when editor is single line', () => {
+        const wrapper = shallow(<Editor3 singleLine editorFormat={['picture']}/>);
+        const {onDragOver} = wrapper.instance();
+        const makeEvent = (t) => ({originalEvent: {dataTransfer: {types: [t]}}});
+
+        [
+            'application/superdesk.item.picture',
+            'application/superdesk.item.graphic',
+            'application/superdesk.item.video',
+            'text/html'
+        ].forEach((validType) => {
+            expect(onDragOver(makeEvent(validType))).toBeTruthy();
         });
     });
 });

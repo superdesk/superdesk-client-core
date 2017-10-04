@@ -87,13 +87,6 @@ EditorService.$inject = ['spellcheck', '$q', 'lodash', 'renditions', 'editorUtil
 function EditorService(spellcheck, $q, _, renditionsService, utils) {
     this.settings = {spellcheck: true};
 
-    /**
-     * mock spellcheck integration
-     */
-    this.countErrors = function() {
-        return $q.when(0);
-    };
-
     this.version = () => '2';
 
     this.KEY_CODES = Object.freeze({
@@ -112,7 +105,7 @@ function EditorService(spellcheck, $q, _, renditionsService, utils) {
         37: 1, // left
         38: 1, // up
         39: 1, // right
-        40: 1  // down
+        40: 1 // down
     });
 
     this.META = Object.freeze({
@@ -619,8 +612,9 @@ function SdTextEditorBlockEmbedController($timeout, editor, renditions, config) 
     var self = this;
 
     angular.extend(self, {
-        embedCode: undefined,  // defined below
-        caption: undefined,  // defined below
+        embedCode: undefined, // defined below
+        caption: undefined, // defined below
+        title: undefined, // defined below
         editable: false,
         toggleEdition: function() {
             self.editable = !self.editable;
@@ -636,15 +630,19 @@ function SdTextEditorBlockEmbedController($timeout, editor, renditions, config) 
         cancel: function() {
             self.embedCode = self.model.body;
         },
-        saveCaption: function(caption) {
-            // if block is a superdesk image (with association), we update the description_text
+        saveCaption: function(caption, title) {
+            // if block is a superdesk image (with association), we update the description_text and headline
             if (self.model.association) {
                 self.model.association.description_text = caption;
+                self.model.association.headline = title;
             }
             // update the caption in the model
             self.model.caption = caption;
+            self.model.title = title;
+
             // update the caption in the view
             self.caption = caption;
+            self.title = title;
 
             // on change callback
             $timeout(() => {
@@ -678,17 +676,18 @@ function SdTextEditorBlockEmbedController($timeout, editor, renditions, config) 
                     self.model.body = img;
                 });
                 // update caption
-                self.saveCaption(self.model.association.description_text);
+                self.saveCaption(self.model.association.description_text, self.model.association.headline);
             })
-            .finally(() => {
-                self.model.loading = false;
-            });
+                .finally(() => {
+                    self.model.loading = false;
+                });
         }
     });
     $timeout(() => {
         angular.extend(self, {
             embedCode: self.model.body,
-            caption: self.model.caption
+            caption: self.model.caption,
+            title: self.model.association.headline
         });
     });
 }
@@ -797,32 +796,33 @@ angular.module('superdesk.apps.editor2', [
                                 };
                             })())
                             // split the current block and insert the new block, then commit changes
-                            .then((block) => {
-                                ctrl.sdEditorCtrl.splitAndInsert(ctrl, block)
-                                .then(() => $timeout(ctrl.sdEditorCtrl.commitChanges));
-                            });
+                                .then((block) => {
+                                    ctrl.sdEditorCtrl.splitAndInsert(ctrl, block)
+                                        .then(() => $timeout(ctrl.sdEditorCtrl.commitChanges));
+                                });
                         }
                     })
-                    .on('dragover', (event) => {
-                        const paragraph = angular.element(event.target);
+                        .on('dragover', (event) => {
+                            const paragraph = angular.element(event.target);
 
-                        if (MEDIA_TYPES.indexOf(event.originalEvent.dataTransfer.types[0]) > -1) {
+                            if (MEDIA_TYPES.indexOf(event.originalEvent.dataTransfer.types[0]) > -1) {
                             // allow to overwite the drop binder (see above)
-                            event.preventDefault();
-                            event.stopPropagation();
-                            // if dragged element is a picture and if the paragraph is empty, highlight the paragraph
-                            if (paragraph.text() === '') {
-                                return paragraph.addClass(dragOverClass);
+                                event.preventDefault();
+                                event.stopPropagation();
+                                // if dragged element is a picture and if the paragraph is empty,
+                                // highlight the paragraph
+                                if (paragraph.text() === '') {
+                                    return paragraph.addClass(dragOverClass);
+                                }
                             }
-                        }
-                        // otherwise, remove the style
-                        paragraph.removeClass(dragOverClass);
-                    })
-                    .on('dragleave', (event) => {
-                        const paragraph = angular.element(event.target);
+                            // otherwise, remove the style
+                            paragraph.removeClass(dragOverClass);
+                        })
+                        .on('dragleave', (event) => {
+                            const paragraph = angular.element(event.target);
 
-                        paragraph.removeClass(dragOverClass);
-                    });
+                            paragraph.removeClass(dragOverClass);
+                        });
                 }
             };
         }])
@@ -915,7 +915,7 @@ angular.module('superdesk.apps.editor2', [
                 angular.extend(EDITOR_CONFIG, config.editor);
             }
 
-        /**
+            /**
          * Get number of lines for all p nodes before given node withing same parent.
          */
             function getLinesBeforeNode(p) {
@@ -938,7 +938,7 @@ angular.module('superdesk.apps.editor2', [
                 return lines;
             }
 
-        /**
+            /**
          * Get line/column coordinates for given cursor position.
          */
             function getLineColumn() {
@@ -953,8 +953,8 @@ angular.module('superdesk.apps.editor2', [
                     while (node.nodeName !== 'P') {
                         if (node.previousSibling) {
                             column += node.previousSibling.wholeText ?
-                            node.previousSibling.wholeText.length :
-                            node.previousSibling.textContent.length;
+                                node.previousSibling.wholeText.length :
+                                node.previousSibling.textContent.length;
                             node = node.previousSibling;
                         } else {
                             node = node.parentNode;
@@ -997,12 +997,12 @@ angular.module('superdesk.apps.editor2', [
                         range.setStart(selRange.endContainer, selRange.endOffset);
                         var remaining = range.extractContents();
                         var $blockEl = $(blockEl);
-                    // clear if empty of text
+                        // clear if empty of text
 
                         if ($blockEl.text() === '') {
                             $blockEl.html('');
                         }
-                    // remove empty last line
+                        // remove empty last line
                         $blockEl.find('p:last').each(function() {
                             if ($(this).text() === '') {
                                 this.remove();
@@ -1089,7 +1089,7 @@ angular.module('superdesk.apps.editor2', [
                     var sdTextEditor = controllers[1];
 
                     scope.model = ngModel;
-                // give the block model and the editor controller to the text block controller
+                    // give the block model and the editor controller to the text block controller
                     var vm = controllers[2];
 
                     angular.extend(vm, {
@@ -1109,7 +1109,7 @@ angular.module('superdesk.apps.editor2', [
                         if (editorConfig.toolbar) {
                             editorConfig.toolbar.buttons = [];
                             setEditorFormatOptions(editorConfig, sdTextEditor.editorformat, scope);
-                        // if config.multiBlockEdition is true, add Embed and Image button to the toolbar
+                            // if config.multiBlockEdition is true, add Embed and Image button to the toolbar
                             if (scope.config.multiBlockEdition) {
                             // this dummy imageDragging stop preventing drag & drop events
                                 editorConfig.extensions = {imageDragging: {}};
@@ -1125,27 +1125,27 @@ angular.module('superdesk.apps.editor2', [
                         spellcheck.setLanguage(scope.language);
                         editorElem = elem.find(scope.type === 'preformatted' ? '.editor-type-text'
                             : '.editor-type-html');
-                    // events could be attached already, so remove these
+                        // events could be attached already, so remove these
                         editorElem.off('mouseup keydown keyup click contextmenu');
                         editorElem.empty();
                         editorElem.html(ngModel.$viewValue || '');
                         scope.node = editorElem[0];
                         scope.model = ngModel;
-                    // destroy exiting instance
+                        // destroy exiting instance
                         if (scope.medium) {
                             scope.medium.destroy();
                         }
 
-                    // create a new instance of the medium editor binded to this node
+                        // create a new instance of the medium editor binded to this node
                         scope.medium = new MediumEditor(scope.node, editorConfig);
-                    // restore the selection if exist
+                        // restore the selection if exist
                         if (scope.sdTextEditorBlockText.caretPosition) {
                             scope.node.focus();
                             vm.restoreSelection();
-                        // clear the saved position
+                            // clear the saved position
                             scope.sdTextEditorBlockText.caretPosition = undefined;
                         }
-                    // listen for paste event and insert a block if exists in clipboard
+                        // listen for paste event and insert a block if exists in clipboard
                         scope.medium.subscribe('editablePaste', (e) => {
                             var clipboard = vm.sdEditorCtrl.getCutBlock(true);
 
@@ -1154,7 +1154,7 @@ angular.module('superdesk.apps.editor2', [
                                 vm.sdEditorCtrl.splitAndInsert(vm, clipboard);
                             }
                         });
-                    // listen caret moves in order to show or hide the (+) button beside the caret
+                        // listen caret moves in order to show or hide the (+) button beside the caret
                         function updateAddContentButton(e) {
                             scope.$emit('sdAddContent::updateState', e, editorElem);
                         }
@@ -1163,7 +1163,7 @@ angular.module('superdesk.apps.editor2', [
                             .forEach((eventName) => {
                                 scope.medium.subscribe(eventName, updateAddContentButton);
                             });
-                    // listen updates by medium editor to update the model
+                        // listen updates by medium editor to update the model
                         scope.medium.subscribe('editableInput', (e, elem) => {
                             elem.querySelectorAll('span[style]').forEach((span) => {
                                 span.before(span.firstChild);
@@ -1179,8 +1179,8 @@ angular.module('superdesk.apps.editor2', [
 
                             vm.updateModel();
                         });
-                    // update the toolbar, bc it can be displayed at the
-                    // wrong place if offset of block has changed
+                        // update the toolbar, bc it can be displayed at the
+                        // wrong place if offset of block has changed
                         scope.medium.subscribe('focus', () => {
                             var toolbar = scope.medium.getExtensionByName('toolbar');
 
@@ -1189,7 +1189,7 @@ angular.module('superdesk.apps.editor2', [
                             }
                         });
 
-                    // hide toolbar if element is under header
+                        // hide toolbar if element is under header
                         scope.medium.subscribe('positionedToolbar', (e, elem) => {
                             var toolbar = scope.medium.getExtensionByName('toolbar'),
                                 elemPosition = elem.getBoundingClientRect();
@@ -1211,7 +1211,7 @@ angular.module('superdesk.apps.editor2', [
                             if (paragraphToBeSelected.length > 0) {
                             // select the paragraph
                                 scope.medium.selectElement(paragraphToBeSelected.get(0));
-                            // scroll to the paragraph
+                                // scroll to the paragraph
                                 var $scrollableParent = $('.page-content-container');
                                 var offset = $scrollableParent.scrollTop();
 
@@ -1233,7 +1233,7 @@ angular.module('superdesk.apps.editor2', [
                                     selectedText = selectedText.toUpperCase();
                                 }
                                 scope.medium.saveSelection();
-                            // replace the selected text
+                                // replace the selected text
                                 scope.medium.cleanPaste(selectedText);
                                 scope.medium.restoreSelection();
                             }
@@ -1248,7 +1248,7 @@ angular.module('superdesk.apps.editor2', [
                             if (editor.shouldIgnore(event)) {
                                 return;
                             }
-                        // prevent default behaviour for ctrl or shift operations
+                            // prevent default behaviour for ctrl or shift operations
                             if (event.ctrlKey && ctrlOperations[event.keyCode] ||
                             event.shiftKey && shiftOperations[event.keyCode]) {
                                 event.preventDefault();
@@ -1271,7 +1271,7 @@ angular.module('superdesk.apps.editor2', [
                             updateTimeout = $timeout(vm.updateModel, 800, false);
                         });
 
-                    /**
+                        /**
                      * Test if given point {x, y} is in given bouding rectangle.
                      */
                         function isPointInRect(point, rect) {
@@ -1303,7 +1303,7 @@ angular.module('superdesk.apps.editor2', [
                                 scope.openDropdown = false;
                             });
 
-                        // set data needed for replacing
+                            // set data needed for replacing
                             scope.replaceWord = node.dataset.word;
                             scope.replaceIndex = parseInt(node.dataset.index, 10);
                             scope.sentenceWord = node.dataset.sentenceWord === 'true';
@@ -1491,12 +1491,12 @@ angular.module('superdesk.apps.editor2', [
             patterns: [playBuzzPattern],
             embed: function(url) {
                 return iframelyService.embed(url)
-                .then((result) => {
-                    result.html = playBuzzEmbed
-                        .replace('$_LOADER', playBuzzlLoader)
-                        .replace('$_URL', url.match(playBuzzPattern)[1]);
-                    return result;
-                });
+                    .then((result) => {
+                        result.html = playBuzzEmbed
+                            .replace('$_LOADER', playBuzzlLoader)
+                            .replace('$_URL', url.match(playBuzzPattern)[1]);
+                        return result;
+                    });
             }
         });
         var samdeskEmbed = [
@@ -1525,12 +1525,12 @@ angular.module('superdesk.apps.editor2', [
     .config(['embedServiceProvider', 'iframelyServiceProvider', '$injector',
         function(embedServiceProvider, iframelyServiceProvider, $injector) {
             var config = $injector.get('config');
-        // iframe.ly private key
+            // iframe.ly private key
 
             iframelyServiceProvider.setKey(config.iframely.key);
-        // don't use noembed as first choice
+            // don't use noembed as first choice
             embedServiceProvider.setConfig('useOnlyFallback', true);
-        // iframely respect the original embed for more services than 'embedly'
+            // iframely respect the original embed for more services than 'embedly'
             embedServiceProvider.setConfig('fallbackService', 'iframely');
         }]);
 

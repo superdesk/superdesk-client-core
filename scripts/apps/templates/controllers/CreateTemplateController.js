@@ -49,13 +49,13 @@ export function CreateTemplateController(item, templates, api, desks, $q, notify
         }
 
         return api.save('content_templates', template, diff)
-        .then((data) => {
-            self._issues = null;
-            return data;
-        }, (response) => {
-            notifySaveError(response, notify);
-            self._issues = response.data._issues;
-            return $q.reject(self._issues);
-        });
+            .then((data) => {
+                self._issues = null;
+                return data;
+            }, (response) => {
+                notifySaveError(response, notify);
+                self._issues = response.data._issues;
+                return $q.reject(self._issues);
+            });
     }
 }

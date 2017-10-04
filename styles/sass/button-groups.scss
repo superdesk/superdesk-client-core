@@ -116,3 +116,31 @@
   }
 }
 
+
+// Custom toolbar buttons
+.subnav__button-stack--custom-buttons {
+    .btn {
+        &--custom {
+            color: $white;
+            white-space: nowrap;
+            background-color: $gray;
+            &:hover {
+                text-decoration: none;
+                color: $white;
+                background-color: $btn-custom-hover;
+            }
+        }
+        &--publish {
+            background-color: $btn-publish;
+            &:hover {
+                background-color: $btn-publish-hover;
+            }
+        }
+        &--publish-plus {
+            background-color: $btn-publish-plus;
+            &:hover {
+                background-color: $btn-publish-plus-hover;
+            }
+        }
+    }
+}

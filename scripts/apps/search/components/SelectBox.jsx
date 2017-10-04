@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {isCheckAllowed} from '../helpers';
 
 export class SelectBox extends React.Component {
@@ -41,6 +42,6 @@ export class SelectBox extends React.Component {
 }
 
 SelectBox.propTypes = {
-    item: React.PropTypes.any,
-    onMultiSelect: React.PropTypes.func,
+    item: PropTypes.any,
+    onMultiSelect: PropTypes.func,
 };

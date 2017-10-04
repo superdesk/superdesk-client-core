@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import {getSelectedEntityType, getSelectedEntityRange} from '../links/entityUtils';
 import {Editor, RichUtils, getDefaultKeyBinding} from 'draft-js';
 
@@ -141,8 +142,8 @@ export class TableCell extends Component {
 }
 
 TableCell.propTypes = {
-    editorState: React.PropTypes.object.isRequired,
-    readOnly: React.PropTypes.bool.isRequired,
-    onChange: React.PropTypes.func.isRequired,
-    onFocus: React.PropTypes.func.isRequired
+    editorState: PropTypes.object.isRequired,
+    readOnly: PropTypes.bool.isRequired,
+    onChange: PropTypes.func.isRequired,
+    onFocus: PropTypes.func.isRequired
 };

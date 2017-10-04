@@ -106,7 +106,7 @@ export function ItemPreview(asset, storage, desks, _, familyService) {
             function fetchRelatedItems() {
                 if (scope.item && _.includes(['archive', 'archived'], scope.item._type)) {
                     familyService.fetchItems(scope.item.family_id || scope.item._id, scope.item)
-                    .then(setRelatedItems);
+                        .then(setRelatedItems);
                 } else {
                     setRelatedItems(null);
                 }

@@ -1,29 +1,4 @@
 /**
- * Gives toggle functionality to the box
- *
- * Usage:
- * <div sd-toggle-box data-title="Some title" data-open="true" data-icon="list"></div>
- *
- */
-function ToggleBoxDirective() {
-    return {
-        templateUrl: 'scripts/core/ui/views/toggle-box.html',
-        transclude: true,
-        scope: true,
-        link: function($scope, element, attrs) {
-            $scope.title = attrs.title;
-            $scope.isOpen = attrs.open === 'true';
-            $scope.icon = attrs.icon;
-            $scope.mode = attrs.mode;
-            $scope.style = attrs.style;
-            $scope.toggleModule = function() {
-                $scope.isOpen = !$scope.isOpen;
-            };
-        }
-    };
-}
-
-/**
  * Gives top shadow for scroll elements
  *
  * Usage:
@@ -317,7 +292,7 @@ function DatepickerDirective($document) {
             function handleDatePicker(event) {
                 var isChild = element.find(event.target).length > 0;
 
-                if (scope.state.opened && !isChild) {  // outside Datepicker click
+                if (scope.state.opened && !isChild) { // outside Datepicker click
                     scope.$apply(() => {
                         close();
                     });
@@ -392,8 +367,8 @@ function DatepickerInnerDirective($compile, $document, popupService, datetimeHel
             };
 
             ctrl.$render = function() {
-                element.val(ctrl.$viewValue.viewdate);  // set the view
-                scope.date = ctrl.$viewValue.dpdate || moment().tz(config.defaultTimezone);    // set datepicker model
+                element.val(ctrl.$viewValue.viewdate); // set the view
+                scope.date = ctrl.$viewValue.dpdate || moment().tz(config.defaultTimezone); // set datepicker model
             };
 
             // handle model changes
@@ -478,7 +453,7 @@ function TimepickerDirective($document) {
             function handleTimePicker(event) {
                 var isChild = element.find(event.target).length > 0;
 
-                if (scope.opened && !isChild) {  // outside Timepicker click
+                if (scope.opened && !isChild) { // outside Timepicker click
                     scope.$apply(() => {
                         close();
                     });
@@ -545,8 +520,8 @@ function TimepickerInnerDirective($compile, $document, popupService, datetimeHel
             };
 
             ctrl.$render = function() {
-                element.val(ctrl.$viewValue.viewtime);  // set the view
-                scope.time = ctrl.$viewValue.tptime;    // set timepicker model
+                element.val(ctrl.$viewValue.viewtime); // set the view
+                scope.time = ctrl.$viewValue.tptime; // set timepicker model
             };
 
             // handle model changes
@@ -617,8 +592,8 @@ function TimezoneDirective(tzdata, config, $timeout) {
             style: '@'
         },
         link: function(scope, el) {
-            scope.timeZones = [];     // all time zones to choose from
-            scope.tzSearchTerm = '';  // the current time zone search term
+            scope.timeZones = []; // all time zones to choose from
+            scope.tzSearchTerm = ''; // the current time zone search term
 
             // filtered time zone list containing only those that match
             // user-provided search term
@@ -755,6 +730,37 @@ function TimepickerPopupDirective($timeout, config) {
 function LeadingZeroFilter() {
     return function(input) {
         return input < 10 ? '0' + input : input;
+    };
+}
+
+export function FileiconFilter() {
+    const mapping = {
+        pdf: 'pdf',
+        excel: 'doc',
+        msword: 'doc',
+        opendocument: 'doc',
+        officedocument: 'doc',
+    };
+
+    return function(mimetype) {
+        let match = Object.keys(mapping).find((key) => mimetype.indexOf(key) > -1);
+
+        return 'document-' + (match ? mapping[match] : 'default');
+    };
+}
+
+export function FilesizeFilter() {
+    const KB = Math.pow(2, 10);
+    const MB = KB * KB;
+
+    return function(bytes) {
+        if (bytes >= MB) {
+            return (bytes / MB).toFixed(1) + ' MB';
+        } else if (bytes >= KB) {
+            return (bytes / KB).toFixed(1) + ' kB';
+        }
+
+        return bytes + ' b';
     };
 }
 
@@ -1046,7 +1052,7 @@ function validationDirective(gettextCatalog) {
                 elem.addClass('sd-validate');
                 if (elem.hasClass('field')) {
                     elem.find('label')
-                    .after('<span id="required_span" class="sd-required">'
+                        .after('<span id="required_span" class="sd-required">'
                         + gettextCatalog.getString('Required') + '</span>');
                 } else if (elem.find('.authoring-header__input-holder').length) {
                     elem.find('.authoring-header__input-holder').append(invalidText);
@@ -1203,7 +1209,6 @@ export default angular.module('superdesk.core.ui', [
     }])
 
     .directive('sdShadow', ShadowDirective)
-    .directive('sdToggleBox', ToggleBoxDirective)
     .filter('nl2el', NewlineToElement)
     .directive('sdCreateBtn', CreateButtonDirective)
     .directive('sdAutofocus', AutofocusDirective)
@@ -1218,6 +1223,8 @@ export default angular.module('superdesk.core.ui', [
     .directive('sdTimepicker', TimepickerDirective)
     .service('popupService', PopupService)
     .filter('leadingZero', LeadingZeroFilter)
+    .filter('filesize', FilesizeFilter)
+    .filter('fileicon', FileiconFilter)
     .directive('sdDropdownFocus', DropdownFocus)
     .directive('sdWeekdayPicker', WeekdayPickerDirective)
     .directive('sdSplitterWidget', splitterWidget)

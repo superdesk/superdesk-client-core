@@ -15,22 +15,22 @@ describe('workspace', () => {
 
         // Can switch to monitoring view by pressing alt + m
         altKey('m');
-        expect(browser.getLocationAbsUrl()).toMatch('/workspace/monitoring');
+        expect(browser.getCurrentUrl()).toMatch('/workspace/monitoring');
 
         // Can switch to spiked view by pressing ctrl + alt + k
         ctrlAltKey('k');
-        expect(browser.getLocationAbsUrl()).toMatch('/workspace/spike-monitoring');
+        expect(browser.getCurrentUrl()).toMatch('/workspace/spike-monitoring');
 
         // Can switch to personal view by pressing alt + p
         altKey('p');
-        expect(browser.getLocationAbsUrl()).toMatch('/workspace/personal');
+        expect(browser.getCurrentUrl()).toMatch('/workspace/personal');
 
         // Can switch to search view by pressing ctrl + alt + f
         ctrlAltKey('f');
-        expect(browser.getLocationAbsUrl()).toMatch('/search');
+        expect(browser.getCurrentUrl()).toMatch('/search');
 
         // Can get back to dashboard by pressing ctrl + alt + b
         ctrlAltKey('b');
-        expect(browser.getLocationAbsUrl()).toMatch('/workspace');
+        expect(browser.getCurrentUrl()).toMatch('/workspace');
     });
 });

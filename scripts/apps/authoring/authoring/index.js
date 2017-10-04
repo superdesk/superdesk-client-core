@@ -29,6 +29,7 @@ angular.module('superdesk.apps.authoring', [
     'superdesk.apps.authoring.packages',
     'superdesk.apps.authoring.find-replace',
     'superdesk.apps.authoring.macros',
+    'superdesk.apps.authoring.attachments',
     'superdesk.apps.authoring.autosave',
     'superdesk.apps.authoring.suggest',
     'superdesk.apps.desks',
@@ -52,6 +53,7 @@ angular.module('superdesk.apps.authoring', [
     .directive('sdSendItem', directive.SendItem)
     .directive('sdCharacterCount', directive.CharacterCount)
     .directive('sdWordCount', directive.WordCount)
+    .directive('sdReadingTime', directive.ReadingTime)
     .directive('sdThemeSelect', directive.ThemeSelectDirective)
     .directive('sdArticleEdit', directive.ArticleEditDirective)
     .directive('sdAuthoring', directive.AuthoringDirective)
@@ -114,7 +116,7 @@ angular.module('superdesk.apps.authoring', [
                     authoringWorkspace.popup(data.item, 'edit');
                 }],
                 filters: [{action: 'list', type: 'archive'}],
-                additionalCondition: ['authoring', 'item', function(authoring, item) {
+                additionalCondition: ['authoring', 'item', 'config', function(authoring, item, config) {
                     return authoring.itemActions(item).edit;
                 }]
             })
@@ -187,7 +189,7 @@ angular.module('superdesk.apps.authoring', [
                     {action: 'list', type: 'archived'},
                     {action: 'list', type: 'legal_archive'}
                 ],
-                additionalCondition: ['authoring', 'item', function(authoring, item) {
+                additionalCondition: ['authoring', 'item', 'config', function(authoring, item, config) {
                     return authoring.itemActions(item).view;
                 }]
             })
@@ -230,11 +232,11 @@ angular.module('superdesk.apps.authoring', [
         });
     }])
     .run(['keyboardManager', 'gettext', function(keyboardManager, gettext) {
-        keyboardManager.register('Authoring', 'ctrl + shift + u', gettext('Unlocks current item'));
-        keyboardManager.register('Authoring', 'ctrl + shift + e', gettext('Closes current item'));
-        keyboardManager.register('Authoring', 'ctrl + shift + s', gettext('Saves current item'));
+        keyboardManager.register('Authoring', 'ctrl + shift + u', gettext('Unlock current item'));
+        keyboardManager.register('Authoring', 'ctrl + shift + e', gettext('Close current item'));
+        keyboardManager.register('Authoring', 'ctrl + shift + s', gettext('Save current item'));
         keyboardManager.register('Authoring', 'ctrl + shift + l',
-             gettext('Preview formatted article, when previewFormats feature configured'));
+            gettext('Preview formatted article, when previewFormats feature configured'));
         keyboardManager.register('Authoring', 'ctrl + shift + y',
-             gettext('Instant Spellchecking, when automatic spellchecking turned off'));
+            gettext('Instant Spellchecking, when automatic spellchecking turned off'));
     }]);

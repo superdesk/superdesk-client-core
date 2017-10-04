@@ -16,7 +16,7 @@ describe('monitoring', () => {
 
         // Default will be list view
         storage.clear();
-        expect(ctrl.viewColumn).toBe(null);       // no swimlane
+        expect(ctrl.viewColumn).toBe(null); // no swimlane
         // display all groups for list view, i.e. limitTo: null when no swimlane
         expect(ctrl.columnsLimit).toBe(null);
 
@@ -24,7 +24,7 @@ describe('monitoring', () => {
         // view while swimlane view was already ON
         ctrl.switchView(true);
         expect(storage.getItem('displaySwimlane')).toBe(true);
-        expect(ctrl.viewColumn).toBe(true);     // swimlane
+        expect(ctrl.viewColumn).toBe(true); // swimlane
         expect(ctrl.columnsLimit).toBe(4);
 
         // Switch back to list view
@@ -239,25 +239,25 @@ describe('monitoring', () => {
         }));
 
         it('can update items on item:move event',
-        inject(($rootScope, $compile, $q, api, $timeout, session) => {
-            session.identity = {_id: 'foo'};
-            var scope = $rootScope.$new();
+            inject(($rootScope, $compile, $q, api, $timeout, session) => {
+                session.identity = {_id: 'foo'};
+                var scope = $rootScope.$new();
 
-            $compile('<div sd-monitoring-view></div>')(scope);
-            scope.$digest();
+                $compile('<div sd-monitoring-view></div>')(scope);
+                scope.$digest();
 
-            spyOn(api, 'query').and.returnValue($q.when({_items: [], _meta: {total: 0}}));
+                spyOn(api, 'query').and.returnValue($q.when({_items: [], _meta: {total: 0}}));
 
-            scope.$broadcast('item:move', {from_stage: 'bar', to_stage: 'bar'});
-            scope.$digest();
-            $timeout.flush(500);
-            expect(api.query).not.toHaveBeenCalled();
+                scope.$broadcast('item:move', {from_stage: 'bar', to_stage: 'bar'});
+                scope.$digest();
+                $timeout.flush(500);
+                expect(api.query).not.toHaveBeenCalled();
 
-            scope.$broadcast('item:move', {from_stage: 'bar', to_stage: 'foo'});
-            scope.$digest();
-            $timeout.flush(2000);
-            expect(api.query).toHaveBeenCalled();
-        }));
+                scope.$broadcast('item:move', {from_stage: 'bar', to_stage: 'foo'});
+                scope.$digest();
+                $timeout.flush(2000);
+                expect(api.query).toHaveBeenCalled();
+            }));
 
         it('can edit non spiked item', inject(($controller, $rootScope, $compile, authoringWorkspace, session) => {
             session.identity = {_id: 'foo'};

@@ -40,18 +40,18 @@ function isObjectId(value) {
  * @description Item list with sidebar preview
  */
 export function SearchResults(
-        $location,
-        preferencesService,
-        packages,
-        asset,
-        $timeout,
-        api,
-        search,
-        session,
-        $rootScope,
-        config,
-        superdeskFlags,
-        notify
+    $location,
+    preferencesService,
+    packages,
+    asset,
+    $timeout,
+    api,
+    search,
+    session,
+    $rootScope,
+    config,
+    superdeskFlags,
+    notify
 ) { // uff - should it use injector instead?
     var preferencesUpdate = {
         'archive:view': {
@@ -238,17 +238,17 @@ export function SearchResults(
                 }, (error) => {
                     notify.error(gettext('Failed to run the query!'));
                 })
-                .finally(() => {
-                    scope.loading = false;
-                    if (originalQuery) {
-                        criteria.source.query = originalQuery;
-                    }
+                    .finally(() => {
+                        scope.loading = false;
+                        if (originalQuery) {
+                            criteria.source.query = originalQuery;
+                        }
 
-                    // update scroll position to top, when forced refresh
-                    if (data && data.force) {
-                        containerElem[0].scrollTop = 0;
-                    }
-                });
+                        // update scroll position to top, when forced refresh
+                        if (data && data.force) {
+                            containerElem[0].scrollTop = 0;
+                        }
+                    });
             }
 
             function scheduleIfShouldUpdate(event, data) {
@@ -401,9 +401,9 @@ export function SearchResults(
 
                         processPreview(completeItem);
                     })
-                    .finally(() => {
-                        scope.loading = false;
-                    });
+                        .finally(() => {
+                            scope.loading = false;
+                        });
                 } else {
                     delete scope.selected.preview;
                     superdeskFlags.flags.previewing = false;

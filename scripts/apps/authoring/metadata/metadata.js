@@ -8,10 +8,10 @@ function MetadataCtrl(
     $scope, desks, metadata, privileges, datetimeHelper,
     preferencesService, config, moment, content) {
     desks.initialize()
-    .then(() => {
-        $scope.deskLookup = desks.deskLookup;
-        $scope.userLookup = desks.userLookup;
-    });
+        .then(() => {
+            $scope.deskLookup = desks.deskLookup;
+            $scope.userLookup = desks.userLookup;
+        });
 
     $scope.change_profile = config.item_profile && config.item_profile.change_profile === 1 &&
                             _.get($scope, 'origItem.type') === 'text';
@@ -20,8 +20,8 @@ function MetadataCtrl(
         $scope.metadata = metadata.values;
         return preferencesService.get();
     })
-    .then(setAvailableCategories)
-    .then(setAvailableCompanyCodes);
+        .then(setAvailableCategories)
+        .then(setAvailableCompanyCodes);
 
     $scope.$watch(() => desks.active.desk, (activeDeskId) => {
         content.getDeskProfiles(activeDeskId ? desks.getCurrentDesk() : null, $scope.item.profile)
@@ -43,10 +43,10 @@ function MetadataCtrl(
     *   preferred categories settings, among other things
     */
     function setAvailableCategories(prefs) {
-        var all,        // all available categories
-            assigned = {},   // category codes already assigned to the article
+        var all, // all available categories
+            assigned = {}, // category codes already assigned to the article
             filtered,
-            itemCategories,  // existing categories assigned to the article
+            itemCategories, // existing categories assigned to the article
 
             // user's category preference settings , i.e. a map
             // object (<category_code> --> true/false)
@@ -74,10 +74,10 @@ function MetadataCtrl(
     * @function setAvailableCompanyCodes
     */
     function setAvailableCompanyCodes() {
-        var all,        // all available company codes
-            assigned = {},   // company codes already assigned to the article
+        var all, // all available company codes
+            assigned = {}, // company codes already assigned to the article
             filtered,
-            itemCompanyCodes;  // existing company codes assigned to the article
+            itemCompanyCodes; // existing company codes assigned to the article
 
         all = _.cloneDeep(metadata.values.company_codes || []);
 
@@ -275,7 +275,7 @@ function MetadropdownFocusDirective(keyboardManager) {
                 if (isOpen) {
                     _.defer(() => {
                         var keyboardOptions = {inputDisabled: false, propagate: false};
-                            // narrow the selection to consider only dropdown list's button items
+                        // narrow the selection to consider only dropdown list's button items
                         var buttonList = elem.find('.dropdown__menu button');
 
                         if (buttonList.length > 0) {
@@ -286,7 +286,7 @@ function MetadropdownFocusDirective(keyboardManager) {
                             if (buttonList.length > 0) {
                                 var focusedElem = elem.find('button:focus')[0];
                                 var indexValue = _.findIndex(buttonList, (chr) => chr === focusedElem);
-                                    // select previous item on key UP
+                                // select previous item on key UP
 
                                 if (indexValue > 0 && indexValue < buttonList.length) {
                                     buttonList[indexValue - 1].focus();
@@ -298,7 +298,7 @@ function MetadropdownFocusDirective(keyboardManager) {
                             if (buttonList.length > 0) {
                                 var focusedElem = elem.find('button:focus')[0];
                                 var indexValue = _.findIndex(buttonList, (chr) => chr === focusedElem);
-                                    // select next item on key DOWN
+                                // select next item on key DOWN
 
                                 if (indexValue < buttonList.length - 1) {
                                     buttonList[indexValue + 1].focus();
@@ -332,7 +332,7 @@ function MetaDropdownDirective($filter) {
         },
         templateUrl: 'scripts/apps/authoring/metadata/views/metadata-dropdown.html',
         link: function(scope, elem) {
-            scope.listFields = ['place', 'genre', 'anpa_category', 'subject'];
+            scope.listFields = ['place', 'genre', 'anpa_category', 'subject', 'authors'];
 
             scope.select = function(item) {
                 var o = {};
@@ -566,6 +566,7 @@ function MetaWordsListDirective() {
  * @param {Array} list - list of available values that can be added
  * @param {String} unique - specify the name of the field, in list item which is unique (qcode, value...)
  * @param {Boolean} searchUnique - to search unique field as well as name field
+ * @param {Boolean} selectEntireCategory - to allow a whole category to be selected (i.e. field without parent)
  *
  */
 MetaTermsDirective.$inject = ['metadata', '$filter', '$timeout'];
@@ -585,7 +586,9 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
             includeParent: '@',
             tabindex: '=',
             searchUnique: '@',
-            setLanguage: '@'
+            setLanguage: '@',
+            helperText: '@',
+            selectEntireCategory: '@'
         },
         templateUrl: 'scripts/apps/authoring/metadata/views/metadata-terms.html',
         link: function(scope, elem, attrs) {
@@ -593,6 +596,9 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
             var reloadList = scope.reloadList === 'true';
             var includeParent = scope.includeParent === 'true';
             var searchUnique = scope.searchUnique === 'true';
+
+            // we want true as default value to keep legacy behaviour
+            scope.allowEntireCat = scope.selectEntireCategory !== 'false';
 
             scope.combinedList = [];
 
@@ -678,6 +684,7 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
                 _.defer(() => {
                     elem.find('button:not([disabled]):not(.dropdown__toggle)')[0].focus();
                 });
+                scope.activeList = false;
             };
 
             scope.activeList = false;
@@ -688,7 +695,13 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
                     scope.terms = filterSelected(scope.list);
                     scope.activeList = false;
                 } else {
-                    var searchList = reloadList ? scope.list : scope.combinedList;
+                    var searchList;
+
+                    if (!scope.allowEntireCat) {
+                        searchList = _.filter(scope.list, (item) => !item.parent);
+                    } else {
+                        searchList = reloadList ? scope.list : scope.combinedList;
+                    }
 
                     scope.terms = $filter('sortByName')(_.filter(filterSelected(searchList), (t) => {
                         var searchObj = {};
@@ -852,8 +865,8 @@ function MetaLocatorsDirective() {
 
             scope.$applyAsync(() => {
                 if (scope.item) {
-                    if (scope.fieldprefix && scope.item[scope.fieldprefix]
-                        && scope.item[scope.fieldprefix][scope.field]) {
+                    if (scope.fieldprefix && scope.item[scope.fieldprefix] &&
+                        scope.item[scope.fieldprefix][scope.field]) {
                         scope.selectedTerm = scope.item[scope.fieldprefix][scope.field].city;
                     } else if (scope.item[scope.field]) {
                         scope.selectedTerm = scope.item[scope.field].city;
@@ -905,7 +918,7 @@ function MetaLocatorsDirective() {
 
                 if (!loc && scope.selectedTerm) {
                     var previousLocator = scope.fieldprefix ? scope.item[scope.fieldprefix][scope.field] :
-                                            scope.item[scope.field];
+                        scope.item[scope.field];
 
                     if (previousLocator && scope.selectedTerm === previousLocator.city) {
                         loc = previousLocator;
@@ -939,10 +952,11 @@ function MetaLocatorsDirective() {
     };
 }
 
-MetadataService.$inject = ['api', 'subscribersService', 'config', 'vocabularies', '$rootScope'];
-function MetadataService(api, subscribersService, config, vocabularies, $rootScope) {
+MetadataService.$inject = ['api', 'subscribersService', 'config', 'vocabularies', '$rootScope', 'session', '$filter'];
+function MetadataService(api, subscribersService, config, vocabularies, $rootScope, session, $filter) {
     var service = {
         values: {},
+        helper_text: {},
         cvs: [],
         search_cvs: config.search_cvs || [
             {id: 'subject', name: 'Subject', field: 'subject', list: 'subjectcodes'},
@@ -964,6 +978,9 @@ function MetadataService(api, subscribersService, config, vocabularies, $rootSco
             return vocabularies.getAllActiveVocabularies().then((result) => {
                 _.each(result._items, (vocabulary) => {
                     self.values[vocabulary._id] = vocabulary.items;
+                    if (_.has(vocabulary, 'helper_text')) {
+                        self.helper_text[vocabulary._id] = vocabulary.helper_text;
+                    }
                 });
                 self.cvs = result._items;
                 self.values.regions = _.sortBy(self.values.geographical_restrictions,
@@ -997,6 +1014,38 @@ function MetadataService(api, subscribersService, config, vocabularies, $rootSco
 
             return api.get('/subjectcodes').then((result) => {
                 self.values.subjectcodes = result._items;
+            });
+        },
+        fetchAuthors: function(code) {
+            var self = this;
+
+            self.values.authors = [];
+
+            return api.get('/users', {is_author: 1}).then((result) => {
+                var first;
+
+                _.each(result._items, (user) => {
+                    var authorMetadata = {_id: user._id, name: user.display_name, user: user};
+
+                    if (session.identity.is_author && user._id === session.identity._id) {
+                        // we want logged user to appear first
+                        first = authorMetadata;
+                    } else {
+                        self.values.authors.push(authorMetadata);
+                    }
+                    _.each(self.values.author_roles, (role) => {
+                        self.values.authors.push({
+                            _id: [user._id, role.qcode],
+                            role: role.qcode,
+                            name: role.name,
+                            parent: user._id,
+                            sub_label: user.display_name});
+                    });
+                });
+                self.values.authors = $filter('sortByName')(self.values.authors);
+                if (first) {
+                    self.values.authors.unshift(first);
+                }
             });
         },
         removeSubjectTerm: function(term) {
@@ -1071,6 +1120,7 @@ function MetadataService(api, subscribersService, config, vocabularies, $rootSco
             if (!this.loaded) {
                 this.loaded = this.fetchMetadataValues()
                     .then(angular.bind(this, this.fetchSubjectcodes))
+                    .then(angular.bind(this, this.fetchAuthors))
                     .then(angular.bind(this, this.fetchSubscribers))
                     .then(angular.bind(this, this.fetchCities));
             }

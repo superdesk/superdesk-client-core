@@ -54,5 +54,5 @@ export default angular.module('superdesk.core.directives', [
     'superdesk.core.directives.withParams'
 ])
 
-.directive('sdPhoneHomeModal', PhoneHomeModalDirective)
+    .directive('sdPhoneHomeModal', PhoneHomeModalDirective)
 ;

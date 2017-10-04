@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 export default class PackageGroup extends React.Component {
     constructor(props) {
@@ -24,7 +25,7 @@ export default class PackageGroup extends React.Component {
 }
 
 PackageGroup.propTypes = {
-    group: React.PropTypes.string,
-    item: React.PropTypes.object,
-    packages: React.PropTypes.object
+    group: PropTypes.string,
+    item: PropTypes.object,
+    packages: PropTypes.object
 };

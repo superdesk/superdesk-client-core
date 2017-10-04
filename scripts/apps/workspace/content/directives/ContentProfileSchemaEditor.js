@@ -1,4 +1,6 @@
 import {LABEL_MAP, HAS_FORMAT_OPTIONS} from 'apps/workspace/content/constants';
+import _ from 'lodash';
+
 /**
  * @ngdoc directive
  * @module superdesk.apps.workspace
@@ -9,15 +11,13 @@ import {LABEL_MAP, HAS_FORMAT_OPTIONS} from 'apps/workspace/content/constants';
  *
  * @description Handles content profile schema editing
  */
-ContentProfileSchemaEditor.$inject = ['gettext', 'content'];
-export function ContentProfileSchemaEditor(gettext, content) {
+ContentProfileSchemaEditor.$inject = ['content'];
+export function ContentProfileSchemaEditor(content) {
     return {
         restrict: 'E',
         templateUrl: 'scripts/apps/workspace/content/views/schema-editor.html',
         require: '^form',
-        scope: {
-            model: '=ngModel'
-        },
+        scope: {model: '='},
         link: function(scope, elem, attr, form) {
             scope.loading = true;
             scope.model.schema = angular.extend({}, content.contentProfileSchema);
@@ -29,6 +29,7 @@ export function ContentProfileSchemaEditor(gettext, content) {
                 scope.model.editor = angular.extend({}, typeMetadata.editor);
                 scope.loading = false;
                 getSchemaKeys();
+                scope.fields = _.keyBy(content.allFields(), '_id');
             });
 
             /**
@@ -40,23 +41,31 @@ export function ContentProfileSchemaEditor(gettext, content) {
              */
             const getSchemaKeys = () => {
                 // inner function to return the value of 'order' of a given field
-                const getOrder = (f) => scope.model.editor[f] && scope.model.editor[f].order || 99;
+                const getOrder = (f) => _.get(scope.model.editor[f], 'order') || 99;
 
-                scope.schemaKeys = Object.keys(scope.model.schema).sort((a, b) => getOrder(a) - getOrder(b));
+                scope.schemaKeysDisabled = [];
+                scope.schemaKeys = _.filter(Object.keys(scope.model.editor),
+                    (value) => scope.model.editor[value].enabled).sort((a, b) => getOrder(a) - getOrder(b));
+
+                _.each(_.difference(Object.keys(scope.model.editor), scope.schemaKeys), (value) =>
+                    scope.schemaKeysDisabled.push(
+                        {key: value, name: scope.model.editor[value].field_name || scope.label(value)}
+                    ));
+
+                scope.schemaKeysOrdering = _.clone(scope.schemaKeys);
+                scope.updateOrder();
             };
-
-            scope.directive = this.name;
 
             scope.formattingOptions = [
                 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
                 'justifyLeft', 'justifyCenter', 'justifyRight', 'justifyFull',
                 'outdent', 'indent', 'unorderedlist', 'orderedlist',
-                'pre', 'quote', 'image', 'anchor', 'superscript', 'subscript', 'strikethrough',
+                'pre', 'quote', 'picture', 'anchor', 'superscript', 'subscript', 'strikethrough',
                 'underline', 'italic', 'bold', 'table'
             ];
 
             scope.formattingOptionsEditor3 = [
-                'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'orderedlist', 'unorderedlist', 'quote', 'image', 'anchor',
+                'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'orderedlist', 'unorderedlist', 'quote', 'picture', 'anchor',
                 'embed', 'underline', 'italic', 'bold', 'table'
             ];
 
@@ -68,6 +77,10 @@ export function ContentProfileSchemaEditor(gettext, content) {
                     return LABEL_MAP[id];
                 }
 
+                if (scope.fields && scope.fields.hasOwnProperty(id)) {
+                    return scope.fields[id].display_name;
+                }
+
                 console.warn(`could not find label for ${id}. Please add it in ` +
                     '(apps/workspace/content/content/directives/ContentProfileSchemaEditor).' +
                     'ContentProfileSchemaEditor/labelMap');
@@ -76,17 +89,47 @@ export function ContentProfileSchemaEditor(gettext, content) {
             };
 
             /**
-             * @description Toggles whether a field is enabled or not.
-             * @param {String} id the key of the field to toggle.
+             * @description Set form dirty
              */
-            scope.toggle = function(id) {
-                scope.model.editor[id].enabled = !scope.model.editor[id].enabled;
-                scope.model.schema[id].enabled = !scope.model.schema[id].enabled;
-                form.$dirty = true;
-            };
-
             scope.setDirty = function(dirty) {
                 form.$dirty = !!dirty;
+            };
+
+            /**
+             * @description Enable fiels in content profile
+             * @param {String} id the key of the field to toggle.
+             */
+            scope.toggle = (schema, order, position) => {
+                if (scope.model.editor[schema.key]) {
+                    scope.model.editor[schema.key].enabled = true;
+                    scope.model.schema[schema.key].enabled = true;
+                } else {
+                    scope.model.editor[schema.key] = {enabled: true};
+                    scope.model.schema[schema.key] = {enabled: true};
+                }
+
+                scope.schemaKeys.splice(position === 'before' ? order - 1 : order + 1, 0, schema.key);
+                _.remove(scope.schemaKeysDisabled, schema);
+                scope.schemaKeysOrdering = _.clone(scope.schemaKeys);
+
+                scope.updateOrder();
+                scope.setDirty(true);
+            };
+
+            /**
+             * @description Disable field in content profile
+             * @param {String} id the key of the field to toggle.
+             */
+            scope.remove = (id) => {
+                scope.model.editor[id].enabled = false;
+                scope.model.schema[id].enabled = false;
+
+                scope.schemaKeys.splice(scope.schemaKeys.indexOf(id), 1);
+                scope.schemaKeysDisabled.push({key: id, name: scope.model.editor[id].field_name || scope.label(id)});
+                scope.schemaKeysOrdering = _.clone(scope.schemaKeys);
+
+                scope.updateOrder();
+                form.$dirty = true;
             };
 
             /**
@@ -95,7 +138,52 @@ export function ContentProfileSchemaEditor(gettext, content) {
              * @param {string} field
              * @return {Boolean}
              */
-            scope.hasFormatOptions = (field) => !!HAS_FORMAT_OPTIONS[field]; // return boolean so :: will work
+            scope.hasFormatOptions = (field) => !!HAS_FORMAT_OPTIONS[field] || hasCustomFieldFormatOptions(field);
+
+            /**
+             * Test if given field should have format options config
+             *
+             * @param {string} field
+             * @return {Boolean}
+             */
+            scope.hasImageSelected = (field) => scope.hasFormatOptions(field) &&
+                        _.includes(scope.model.editor[field].formatOptions, 'image') ||
+                        _.includes(scope.model.editor[field].formatOptions, 'picture');
+
+            /**
+             * Test if given field is custom field
+             *
+             * @param {string} field
+             * @return {Boolean}
+             */
+            const hasCustomFieldFormatOptions = (field) =>
+                scope.fields[field] && scope.fields[field].field_type === 'text';
+
+            /*
+             * @description Drag&Drop sorting functionality
+             * @param {int} start position of item before drag
+             * @param {int} end position of item after drop
+             */
+            scope.reorder = (start, end) => {
+                scope.schemaKeysOrdering.splice(end, 0, scope.schemaKeysOrdering.splice(start, 1)[0]);
+                scope.updateOrder();
+                scope.setDirty(true);
+            };
+
+            /*
+             * @description Update order on input change
+             * @param {string} id key of the field to toggle
+             */
+            scope.updateOrder = (key) => {
+                if (key) {
+                    scope.schemaKeysOrdering.splice(scope.model.editor[key].order - 1, 0,
+                        scope.schemaKeysOrdering.splice(scope.schemaKeysOrdering.indexOf(key), 1)[0]);
+                }
+
+                angular.forEach(scope.schemaKeys, (id) => {
+                    scope.model.editor[id].order = scope.schemaKeysOrdering.indexOf(id) + 1;
+                });
+            };
         }
     };
 }

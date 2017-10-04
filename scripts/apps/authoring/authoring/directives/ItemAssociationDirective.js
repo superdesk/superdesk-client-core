@@ -26,6 +26,7 @@ export function ItemAssociationDirective(superdesk, renditions, config, authorin
             editable: '=',
             allowVideo: '@',
             onchange: '&',
+            showTitle: '=',
             save: '&'
         },
         templateUrl: 'scripts/apps/authoring/views/item-association.html',
@@ -64,7 +65,7 @@ export function ItemAssociationDirective(superdesk, renditions, config, authorin
              */
             function getSuperdeskType(event) {
                 return event.originalEvent.dataTransfer.types
-                    .find((name) => name.indexOf('application/superdesk') === 0);
+                    .find((name) => name.indexOf('application/superdesk') === 0 || name === 'Files');
             }
 
             let dragOverClass = 'dragover';
@@ -88,6 +89,23 @@ export function ItemAssociationDirective(superdesk, renditions, config, authorin
             elem.on('drop dragdrop', (event) => {
                 event.preventDefault();
                 event.stopPropagation();
+
+                if (getSuperdeskType(event) === 'Files') {
+                    if (scope.isMediaEditable()) {
+                        const files = event.originalEvent.dataTransfer.files;
+
+                        superdesk.intent('upload', 'media', files).then((images) => {
+                            // open the view to edit the PoI and the cropping areas
+                            if (images) {
+                                scope.$applyAsync(() => {
+                                    scope.edit(images[0]);
+                                });
+                            }
+                        });
+                    }
+                    return;
+                }
+
                 getItem(event, getSuperdeskType(event))
                     .then((item) => {
                         if (!scope.editable) {
@@ -102,10 +120,10 @@ export function ItemAssociationDirective(superdesk, renditions, config, authorin
                         if (scope.isMediaEditable()) {
                             scope.loading = true;
                             renditions.ingest(item)
-                            .then(scope.edit)
-                            .finally(() => {
-                                scope.loading = false;
-                            });
+                                .then(scope.edit)
+                                .finally(() => {
+                                    scope.loading = false;
+                                });
                         } else {
                             // update association in an item even if editing of metadata and crop not allowed.
                             updateItemAssociation(item);
@@ -155,10 +173,10 @@ export function ItemAssociationDirective(superdesk, renditions, config, authorin
                 if (item.renditions && item.renditions.original && scope.isImage(item.renditions.original)) {
                     scope.loading = true;
                     return renditions.crop(item, true, scope.editable, true)
-                    .then(updateItemAssociation)
-                    .finally(() => {
-                        scope.loading = false;
-                    });
+                        .then(updateItemAssociation)
+                        .finally(() => {
+                            scope.loading = false;
+                        });
                 }
 
                 updateItemAssociation(item);

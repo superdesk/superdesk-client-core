@@ -151,13 +151,15 @@ const setCell = (state, {i, j, key}) => ({
  * @return {Object} New state
  * @description Sets a new caption for the image at entityKey.
  */
-const changeImageCaption = (state, {entityKey, newCaption}) => {
+const changeImageCaption = (state, {entityKey, newCaption, field}) => {
     const {editorState} = state;
     const contentState = editorState.getCurrentContent();
     const entity = contentState.getEntity(entityKey);
     let {img} = entity.getData();
 
-    img.description_text = newCaption;
+    field === 'Title' ?
+        img.headline = newCaption :
+        img.description_text = newCaption;
 
     const newContentState = contentState.replaceEntityData(entityKey, {img});
 

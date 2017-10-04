@@ -1,6 +1,6 @@
 <div class="dropdown dropdown--noarrow dropdown--dropright" dropdown sd-metadropdown-focus>
     <button ng-disabled="disabled" class="dropdown__toggle line-input" tabindex="{{tabindex}}" dropdown__toggle ng-if="listFields.indexOf(field) === -1 && !icon">
-        {{ item[field].name || item[field] ? item[field].name || item[field] : "none" | translate }}
+        {{ key && values[item[field]]  && values[item[field]].name ? values[item[field]].name: (item[field].name || item[field] ? item[field].name || item[field] : "none") | translate }}
         <b class="dropdown__caret"></b>
     </button>
     <button ng-disabled="disabled" class="dropdown__toggle line-input" tabindex="{{tabindex}}" dropdown__toggle ng-if="listFields.indexOf(field) > -1 && !icon">

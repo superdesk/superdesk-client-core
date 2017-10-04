@@ -1,14 +1,8 @@
-<div>
-    <div class="settings-page">
-        <div class="tabbable outer">
-            <ul class="nav-tabs nav-stacked">
-                <li ng-repeat="item in settings | orderBy:'label'" ng-class="{active: currentRoute._id === item._id}"><a ng-href="#{{ item.href }}">{{ item.label | translate}}</a></li>
-            </ul>
-            <div>
-                <div class="tab-content outer">
-                    <div class="tab-pane outer" ng-transclude></div>
-                </div>
-            </div>
-        </div>
-    </div>
+<div class="sd-page">
+    <nav class="sd-page__sidebar sd-left-nav">
+        <ul>
+            <li ng-repeat="item in settings | orderBy:'label'"><a class="sd-left-nav__btn" ng-class="{'sd-left-nav__btn--active': currentRoute._id === item._id}" ng-href="#{{ item.href }}">{{ item.label | translate}}</a></li>
+        </ul>
+    </nav>
+    <section class="sd-page__main-content" ng-transclude></section>
 </div>

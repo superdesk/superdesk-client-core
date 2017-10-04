@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import * as actions from '../../actions';
+import Textarea from 'react-textarea-autosize';
 
 /**
  * @ngdoc React
@@ -53,15 +55,16 @@ export class ImageBlockComponent extends Component {
      * @name ImageBlockComponent#onChange
      * @description Triggered (debounced) when the image caption input is edited.
      */
-    onChange() {
+    onChange({target}) {
         const {block, changeCaption} = this.props;
         const entityKey = block.getEntityAt(0);
 
-        changeCaption(entityKey, this.captionInput.innerText);
+        changeCaption(entityKey, target.value, target.placeholder);
+        this.forceUpdate();
     }
 
     render() {
-        const {setLocked} = this.props;
+        const {setLocked, showTitle} = this.props;
         const data = this.data();
         const rendition = data.renditions.viewImage || data.renditions.original;
         const alt = data.alt_text || data.description_text || data.caption;
@@ -69,14 +72,22 @@ export class ImageBlockComponent extends Component {
         return (
             <div className="image-block" onClick={(e) => e.stopPropagation()}>
                 <div className="image-block__wrapper">
+                    {showTitle ?
+                        <Textarea
+                            placeholder={gettext('Title')}
+                            onFocus={setLocked}
+                            className="image-block__title"
+                            value={data.headline}
+                            onChange={this.onChange}
+                        /> : null }
                     <img src={rendition.href} alt={alt} onClick={this.onClick} />
-                    <div contentEditable={true} placeholder="Description"
-                        ref={(el) => {
-                            this.captionInput = el;
-                        }}
+                    <Textarea
+                        placeholder={gettext('Caption')}
                         onFocus={setLocked}
                         className="image-block__description"
-                        onInput={_.debounce(this.onChange, 500)}>{data.description_text}</div>
+                        value={data.description_text}
+                        onChange={this.onChange}
+                    />
                 </div>
             </div>
         );
@@ -84,17 +95,22 @@ export class ImageBlockComponent extends Component {
 }
 
 ImageBlockComponent.propTypes = {
-    cropImage: React.PropTypes.func.isRequired,
-    changeCaption: React.PropTypes.func.isRequired,
-    setLocked: React.PropTypes.func.isRequired,
-    block: React.PropTypes.object.isRequired,
-    contentState: React.PropTypes.object.isRequired
+    cropImage: PropTypes.func.isRequired,
+    changeCaption: PropTypes.func.isRequired,
+    setLocked: PropTypes.func.isRequired,
+    block: PropTypes.object.isRequired,
+    contentState: PropTypes.object.isRequired,
+    showTitle: PropTypes.bool
 };
+
+const mapStateToProps = (state) => ({
+    showTitle: state.showTitle
+});
 
 const mapDispatchToProps = (dispatch) => ({
     cropImage: (entityKey, entityData) => dispatch(actions.cropImage(entityKey, entityData)),
-    changeCaption: (entityKey, newCaption) => dispatch(actions.changeImageCaption(entityKey, newCaption)),
+    changeCaption: (entityKey, newCaption, field) => dispatch(actions.changeImageCaption(entityKey, newCaption, field)),
     setLocked: () => dispatch(actions.setLocked(true))
 });
 
-export const ImageBlock = connect(null, mapDispatchToProps)(ImageBlockComponent);
+export const ImageBlock = connect(mapStateToProps, mapDispatchToProps)(ImageBlockComponent);

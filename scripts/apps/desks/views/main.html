@@ -1,4 +1,4 @@
-<div class="subnav">
+<div class="subnav subnav--absolute">
     <div class="button-list button-list--padded desk-tabs">
         <a href="" ng-repeat="v in views" ng-class="{'toggle-button--active': v === view}" id="{{v}}" ng-click="setView(v)" class="toggle-button">{{v | translate}}</a>
         <div class="online-users" ng-if="view === 'users'">

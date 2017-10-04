@@ -1,9 +1,11 @@
 import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import * as actions from '../../actions';
 import ng from 'core/services/ng';
 
 const fallbackAPIKey = '1d1728bf82b2ac8139453f'; // register to author's personal account
+const GenericError = gettext('This URL could not be embedded.');
 
 /**
  * @ngdoc React
@@ -63,8 +65,18 @@ export class EmbedInputComponent extends Component {
      * @description Processes the error XHR response from the iframe.ly request. Sets the state
      * to erroneous, which should be shown in the UI.
      */
-    processError(data, status) {
-        this.setState({error: data.responseJSON.error});
+    processError(data = {}, status) {
+        const {responseJSON} = data;
+        const hasMessage = responseJSON && responseJSON.error;
+        const is404 = !hasMessage && data.status === 404;
+
+        let error = hasMessage ? responseJSON.error : GenericError;
+
+        if (is404) {
+            error = gettext('URL not found.');
+        }
+
+        this.setState({error});
     }
 
     /**
@@ -78,8 +90,7 @@ export class EmbedInputComponent extends Component {
         const {value} = this.refs.txt;
 
         if (!value.startsWith('http://') && !value.startsWith('https://')) {
-            this.props.embedCode(value);
-            return this.onCancel();
+            return this.processSuccess(value);
         }
 
         const config = ng.get('config');
@@ -88,7 +99,9 @@ export class EmbedInputComponent extends Component {
         $.ajax({
             url: `//iframe.ly/api/oembed?callback=?&url=${value}&api_key=${apiKey}&omit_script=true&iframe=true`,
             dataType: 'json'
-        }).then(this.processSuccess, this.processError);
+        })
+            .then((data) => data.type === 'link' ? $.Deferred().reject() : data)
+            .then(this.processSuccess, this.processError);
     }
 
     /**
@@ -119,14 +132,12 @@ export class EmbedInputComponent extends Component {
 }
 
 EmbedInputComponent.propTypes = {
-    onCancel: React.PropTypes.func.isRequired,
-    onSubmit: React.PropTypes.func.isRequired,
-    embedCode: React.PropTypes.func.isRequired
+    onCancel: PropTypes.func.isRequired,
+    onSubmit: PropTypes.func.isRequired
 };
 
 const mapDispatchToProps = (dispatch) => ({
-    onSubmit: (oEmbed) => dispatch(actions.embed(oEmbed)),
-    embedCode: (html) => dispatch(actions.embedCode(html))
+    onSubmit: (code) => dispatch(actions.embed(code))
 });
 
 export const EmbedInput = connect(null, mapDispatchToProps)(EmbedInputComponent);

@@ -44,7 +44,7 @@ export function IngestRoutingFilter() {
             var currFilter;
 
             function init() {
-                scope.matchingFilters = [];  // used for filter search
+                scope.matchingFilters = []; // used for filter search
                 scope.filterSearchTerm = null;
 
                 currFilter = _.find(scope.filters, {_id: scope.rule.filter});

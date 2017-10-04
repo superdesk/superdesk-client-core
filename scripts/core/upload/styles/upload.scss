@@ -292,7 +292,7 @@ media uploader
     .modal__body {
         display: flex;
         flex-direction:column;
-        overflow: hidden !important;
+        overflow-x: hidden !important;
         padding: 0 !important;
     }
     .drag-area { //start screen on modal show
@@ -421,17 +421,15 @@ media uploader
 
         .upload-thumbs {
             li {
-                float: left;
-                margin: 0 10px 10px 0;
-                width: 260px;
                 min-height: 350px;
+                background: #fff;
                 .thumb {
                     @include border-radius(3px 3px 0 0);
                     overflow: hidden;
                     position: relative;
                     .holder {
                         height: 200px;
-                        background: #fff;
+                        background-color: $grayLighter;
                         position: relative;
                         line-height: 205px;
                         i {
@@ -478,11 +476,9 @@ media uploader
                 .info {
                     position: relative;
                     padding-top: 2px;
-                    padding-bottom: 6px;
+                    padding-bottom: 3px;
                     border-top: 1px solid #ebebeb;
-                    border-bottom: 2px solid #c8c8c8;
                     @include border-radius(0 0 3px 3px);
-                    background: #fff;
 
                     .upload-progress {
                         @include generic-upload-progress();
@@ -493,7 +489,7 @@ media uploader
                         border: 0 !important;
                         height: 26px !important;
                         font-size: 13px;
-                        padding: 2px 6px 8px 6px;
+                        padding: 2px 0 8px 0;
                         border-bottom: 1px solid #ebebeb !important;
                         @include border-radius(0 !important);
                         &:hover {
@@ -505,7 +501,7 @@ media uploader
                         }
                     }
                     label {
-                        padding: 0 6px;
+                        padding: 0;
                         line-height: 14px;
                         color: #999;
                     }
@@ -525,7 +521,7 @@ media uploader
                     .row {
                         line-height: 18px;
                         position: relative;
-                        padding: 3px 0;
+                        padding: 3px 6px;
                         &:hover {
                             .btn--mini {
                                 display: block;
@@ -651,7 +647,7 @@ edit image modal
     }
     &-metadata {
         > div {
-            margin-bottom: 12px;
+            margin-bottom: 25px;
         }
         label {
             font-size: 11px;

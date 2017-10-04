@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import {renderArea} from 'apps/search/helpers';
 
@@ -13,6 +14,6 @@ export function ListPriority(props) {
 }
 
 ListPriority.propTypes = {
-    svc: React.PropTypes.object.isRequired,
-    scope: React.PropTypes.any.isRequired
+    svc: PropTypes.object.isRequired,
+    scope: PropTypes.any.isRequired
 };

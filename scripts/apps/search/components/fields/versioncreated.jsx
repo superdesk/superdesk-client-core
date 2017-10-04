@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {TimeElem} from 'apps/search/components';
 
 export function versioncreated(props) {
@@ -12,6 +13,6 @@ export function versioncreated(props) {
 }
 
 versioncreated.propTypes = {
-    svc: React.PropTypes.object.isRequired,
-    item: React.PropTypes.any,
+    svc: PropTypes.object.isRequired,
+    item: PropTypes.any,
 };

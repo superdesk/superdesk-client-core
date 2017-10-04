@@ -54,23 +54,23 @@ function ResetPassworController($scope, $location, api, notify, gettext) {
     $scope.sendToken = function() {
         $scope.sendTokenError = null;
         api.resetPassword.create({email: $scope.email})
-        .then((result) => {
-            notify.success(gettext('Link sent. Please check your email inbox.'));
-            $scope.flowStep = 2;
-        }, (rejection) => {
-            $scope.sendTokenError = rejection.status;
-        });
+            .then((result) => {
+                notify.success(gettext('Link sent. Please check your email inbox.'));
+                $scope.flowStep = 2;
+            }, (rejection) => {
+                $scope.sendTokenError = rejection.status;
+            });
         resetForm();
     };
     $scope.resetPassword = function() {
         $scope.setPasswordError = null;
         api.resetPassword.create({token: $scope.token, password: $scope.password})
-        .then((result) => {
-            notify.success(gettext('Password was changed. You can login using your new password.'));
-            $location.path('/').search({});
-        }, (rejection) => {
-            $scope.setPasswordError = rejection.status;
-        });
+            .then((result) => {
+                notify.success(gettext('Password was changed. You can login using your new password.'));
+                $location.path('/').search({});
+            }, (rejection) => {
+                $scope.setPasswordError = rejection.status;
+            });
         resetForm();
     };
 
@@ -80,13 +80,13 @@ function ResetPassworController($scope, $location, api, notify, gettext) {
 
     if (query.token) {
         api.resetPassword.create({token: query.token})
-        .then((result) => {
-            $scope.token = query.token;
-            $scope.flowStep = 3;
-        }, (rejection) => {
-            $scope.setPasswordError = rejection.status;
-            $scope.flowStep = 1;
-        });
+            .then((result) => {
+                $scope.token = query.token;
+                $scope.flowStep = 3;
+            }, (rejection) => {
+                $scope.setPasswordError = rejection.status;
+                $scope.flowStep = 1;
+            });
     } else {
         $scope.flowStep = 1;
     }
@@ -109,13 +109,13 @@ function SecureLoginController(scope, auth, $route, $window) {
         scope.isLoading = true;
         scope.loginError = null;
         auth.loginXMPP(scope.jid || '', scope.transactionId || '')
-        .then(() => {
-            scope.isLoading = false;
-            $window.location.replace('/'); // reset page for new user
-        }, (rejection) => {
-            scope.isLoading = false;
-            scope.loginError = rejection.status;
-        });
+            .then(() => {
+                scope.isLoading = false;
+                $window.location.replace('/'); // reset page for new user
+            }, (rejection) => {
+                scope.isLoading = false;
+                scope.loginError = rejection.status;
+            });
     };
 }
 
@@ -194,7 +194,7 @@ export default angular.module('superdesk.core.auth', [
                     if (item && item._autosaved) {
                         canLogout = false;
                         modal.confirm(gettext('There are some unsaved changes. Please save them before signing out.'),
-                        gettext('Warning'), gettext('OK'), '');
+                            gettext('Warning'), gettext('OK'), '');
                     }
                 }
 
@@ -205,7 +205,7 @@ export default angular.module('superdesk.core.auth', [
                 }
             };
 
-        // populate current user
+            // populate current user
             $rootScope.$watch(function watchSessionIdentity() {
                 return session.identity;
             }, (identity) => {
@@ -213,7 +213,7 @@ export default angular.module('superdesk.core.auth', [
                 $rootScope.$broadcast(SESSION_EVENTS.IDENTITY_LOADED);
             });
 
-        // set auth header
+            // set auth header
             $rootScope.$watch(function watchSessionToken() {
                 return session.token;
             }, (token) => {

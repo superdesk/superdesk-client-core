@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {HighlightsInfo} from 'apps/search/components';
 
 export function highlights(props) {
@@ -8,5 +9,7 @@ export function highlights(props) {
 }
 
 highlights.propTypes = {
-    item: React.PropTypes.any,
+    // item is passed through to HighlightsInfo directly via props
+    // eslint-disable-next-line react/no-unused-prop-types
+    item: PropTypes.any,
 };

@@ -30,11 +30,15 @@ ContentService.$inject = [
     'notify',
     'gettext',
     '$filter',
-    '$q'
+    '$q',
+    '$rootScope',
+    'session'
 ];
 export function ContentService(api, superdesk, templates, desks, packages, archiveService, notify, gettext,
-    $filter, $q) {
+    $filter, $q, $rootScope, session) {
     const TEXT_TYPE = 'text';
+
+    const self = this;
 
     function newItem(type) {
         return {
@@ -113,6 +117,11 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
             item.dateline = _.omit(item.dateline, 'text');
             item.dateline.date = $filter('formatDateTimeString')();
         }
+        // set missing byline from user profile.
+        if (!item.byline) {
+            item.byline = session.identity.byline;
+        }
+
         archiveService.addTaskToArticle(item);
         return save(item).then((_item) => {
             templates.addRecentTemplate(desks.activeDeskId, template._id);
@@ -220,7 +229,8 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
      * @return {Promise}
      */
     this.getType = function(id) {
-        return api.find('content_types', id);
+        return getCustomFields()
+            .then(() => api.find('content_types', id));
     };
 
     /**
@@ -230,7 +240,8 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
      * @return {Promise}
      */
     this.getTypeMetadata = function(id) {
-        return api.find('content_types', id, {edit: true});
+        return getCustomFields()
+            .then(() => api.find('content_types', id, {edit: true}));
     };
 
     /**
@@ -254,6 +265,25 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
     };
 
     /**
+     * Get custom fields enabled in given profile
+     *
+     * @param {Object} profile
+     * @return {Array}
+     */
+    this.fields = (contentType) => {
+        const editor = contentType.editor || {};
+
+        return this._fields.filter((field) => !!editor[field._id]);
+    };
+
+    /**
+     * Get all custom fields
+     *
+     * @return {Array}
+     */
+    this.allFields = () => this._fields;
+
+    /**
      * Get profiles selected for given desk
      *
      * @param {Object} desk
@@ -262,11 +292,43 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
      */
     this.getDeskProfiles = function(desk, profileId) {
         return this.getTypes().then((profiles) => !desk || _.isEmpty(desk.content_profiles) ?
-                profiles :
-                profiles.filter((profile) => desk.content_profiles[profile._id] || profile._id === profileId)
-            );
+            profiles :
+            profiles.filter((profile) => desk.content_profiles[profile._id] || profile._id === profileId)
+        );
     };
 
     this.contentProfileSchema = angular.extend({}, constant.DEFAULT_SCHEMA, constant.EXTRA_SCHEMA_FIELDS);
     this.contentProfileEditor = angular.extend({}, constant.DEFAULT_EDITOR, constant.EXTRA_EDITOR_FIELDS);
+
+    $rootScope.$on('vocabularies:updated', resetFields);
+
+    /**
+     * Fetch custom fields
+     *
+     * this is called before getting type info so it's ready for use
+     */
+    function getCustomFields() {
+        if (self._fields) {
+            return $q.when(self._fields);
+        }
+
+        if (!self._fieldsPromise) {
+            self._fieldsPromise = api.query('vocabularies', {where: {field_type: 'text'}, max_results: 200})
+                .then((response) => {
+                    self._fields = response._items;
+                    self._fieldsPromise = null;
+                    return self._fields;
+                });
+        }
+
+        return self._fieldsPromise;
+    }
+
+    /**
+     * Reset custom fields info
+     */
+    function resetFields() {
+        self._fields = null;
+        self._fieldsPromise = null;
+    }
 }

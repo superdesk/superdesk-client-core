@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 export function update(props) {
     const {$interpolate, gettextCatalog} = props.svc;
@@ -13,14 +14,14 @@ export function update(props) {
             },
             $interpolate(
                 gettextCatalog.getString('Update {{ seq }}'))({
-                    seq: props.item.correction_sequence
-                }
+                seq: props.item.correction_sequence
+            }
             )
         );
     }
 }
 
 update.propTypes = {
-    svc: React.PropTypes.any.isRequired,
-    item: React.PropTypes.any,
+    svc: PropTypes.any.isRequired,
+    item: PropTypes.any,
 };

@@ -1,3 +1,5 @@
+import {EditorState} from 'draft-js';
+
 /**
  * @description Returns the key belonging to the entity that the start key of the
  * current selection is on.
@@ -20,6 +22,40 @@ export function getSelectedEntity(editorState) {
     const contentState = editorState.getCurrentContent();
 
     return entityKey !== null ? contentState.getEntity(entityKey) : null;
+}
+
+/**
+ * @description Merge entity data of selected entity
+ * @param {Object} editorState Editor state object.
+ * @param {Object} data to merge.
+ * @returns {Object} Editor state.
+ */
+export function mergeSelectedEntityData(editorState, data) {
+    const entityKey = getSelectedEntityKey(editorState);
+    const contentState = editorState.getCurrentContent();
+
+    return EditorState.push(
+        editorState,
+        contentState.mergeEntityData(entityKey, data),
+        'change-block-data'
+    );
+}
+
+/**
+ * @description Replace entity data of selected entity
+ * @param {Object} editorState Editor state object.
+ * @param {Object} data to merge.
+ * @returns {Object} Editor state.
+ */
+export function replaceSelectedEntityData(editorState, data) {
+    const entityKey = getSelectedEntityKey(editorState);
+    const contentState = editorState.getCurrentContent();
+
+    return EditorState.push(
+        editorState,
+        contentState.replaceEntityData(entityKey, data),
+        'change-block-data'
+    );
 }
 
 /**

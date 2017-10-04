@@ -18,6 +18,15 @@
     <div contenteditable="true"
               sd-auto-height
               tansa-scope-sync
+              ng-model="related.headline"
+              ng-model-options="{debounce: 1000}"
+              ng-change="onchange()"
+              ng-if="related && showTitle"
+              class="image-caption line-input">
+    </div>
+    <div contenteditable="true"
+              sd-auto-height
+              tansa-scope-sync
               ng-model="related.description_text"
               ng-model-options="{debounce: 1000}"
               ng-change="onchange()"

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import {
     Editor,
@@ -52,7 +53,9 @@ export class Editor3Component extends React.Component {
 
         this.focus = this.focus.bind(this);
         this.onScroll = this.onScroll.bind(this);
+        this.allowItem = this.allowItem.bind(this);
         this.onDragOver = this.onDragOver.bind(this);
+        this.onDragDrop = this.onDragDrop.bind(this);
         this.handleKeyCommand = this.handleKeyCommand.bind(this);
         this.handleBeforeInput = this.handleBeforeInput.bind(this);
         this.keyBindingFn = this.keyBindingFn.bind(this);
@@ -65,7 +68,6 @@ export class Editor3Component extends React.Component {
      */
     focus() {
         this.props.unlock();
-        setTimeout(this.refs.editor.focus, 0); // after action
     }
 
     /**
@@ -93,19 +95,50 @@ export class Editor3Component extends React.Component {
 
     /**
      * @ngdoc method
-     * @name Editor3#onDragOver
+     * @name Editor3#allowItem
      * @returns {Boolean} Returns true if the item is permitted.
-     * @description Checks if the dragged over item is allowed.
+     * @description Check if the editor accept images and if current item is valid media.
      */
-    onDragOver(e) {
+    allowItem(e) {
+        const {editorFormat, readOnly, singleLine} = this.props;
         const mediaType = e.originalEvent.dataTransfer.types[0] || '';
-
-        return [
+        const isValidMedia = [
             'application/superdesk.item.picture',
             'application/superdesk.item.graphic',
             'application/superdesk.item.video',
             'text/html',
-        ].indexOf(mediaType) === -1;
+            'Files'
+        ].indexOf(mediaType) !== -1;
+        const supportsImages = !readOnly && !singleLine && editorFormat.indexOf('picture') !== -1;
+
+        return supportsImages && isValidMedia;
+    }
+
+    /**
+     * @ngdoc method
+     * @name Editor3#onDragOver
+     * @returns {Boolean} Returns true if the item is not permitted.
+     * @description Checks if the dragged over item is not allowed.
+     */
+    onDragOver(e) {
+        return !this.allowItem(e);
+    }
+
+    /**
+     * @ngdoc method
+     * @name Editor3#onDragDrop
+     * @description If item is allowed process drop action.
+     */
+    onDragDrop(e) {
+        if (this.allowItem(e)) {
+            // Firefox ignores the result of onDragOver and accept the item in all cases
+            // Here will be tested again if the item is allowed
+
+            this.props.dragDrop(e);
+            return true;
+        }
+
+        return false;
     }
 
     keyBindingFn(e) {
@@ -183,7 +216,7 @@ export class Editor3Component extends React.Component {
         const $node = $(ReactDOM.findDOMNode(this));
 
         $node.on('dragover', this.onDragOver);
-        $node.on('drop dragdrop', this.props.dragDrop);
+        $node.on('drop dragdrop', this.onDragDrop);
 
         if (this.props.showToolbar) {
             this.scrollContainer.on('scroll', this.onScroll);
@@ -205,7 +238,8 @@ export class Editor3Component extends React.Component {
             showToolbar,
             editorState,
             onChange,
-            onTab
+            onTab,
+            tabindex
         } = this.props;
 
         let cx = classNames({
@@ -228,6 +262,7 @@ export class Editor3Component extends React.Component {
                         customStyleMap={customStyleMap}
                         onChange={onChange}
                         onTab={onTab}
+                        tabIndex={tabindex}
                         handlePastedText={handlePastedText.bind(this, this.editorKey)}
                         readOnly={locked || readOnly}
                         ref="editor"
@@ -239,23 +274,33 @@ export class Editor3Component extends React.Component {
 }
 
 Editor3Component.propTypes = {
-    readOnly: React.PropTypes.bool,
-    locked: React.PropTypes.bool,
-    showToolbar: React.PropTypes.bool,
-    editorState: React.PropTypes.object,
-    onChange: React.PropTypes.func,
-    unlock: React.PropTypes.func,
-    onTab: React.PropTypes.func,
-    dragDrop: React.PropTypes.func,
-    scrollContainer: React.PropTypes.string,
-    singleLine: React.PropTypes.bool
+    readOnly: PropTypes.bool,
+    locked: PropTypes.bool,
+    showToolbar: PropTypes.bool,
+    editorState: PropTypes.object,
+    onChange: PropTypes.func,
+    unlock: PropTypes.func,
+    onTab: PropTypes.func,
+    dragDrop: PropTypes.func,
+    scrollContainer: PropTypes.string,
+    singleLine: PropTypes.bool,
+    editorFormat: PropTypes.array,
+    tabindex: PropTypes.number
+};
+
+Editor3Component.defaultProps = {
+    readOnly: false,
+    singleLine: false,
+    editorFormat: []
 };
 
 const mapStateToProps = (state) => ({
     readOnly: state.readOnly,
     showToolbar: state.showToolbar,
     editorState: state.editorState,
-    locked: state.locked
+    locked: state.locked,
+    editorFormat: state.editorFormat,
+    tabindex: state.tabindex
 });
 
 const mapDispatchToProps = (dispatch) => ({

@@ -11,10 +11,10 @@ export function IngestRoutingGeneral(weekdays, desks, macros) {
             scope.macroLookup = {};
 
             desks.initialize()
-            .then(() => {
-                scope.deskLookup = desks.deskLookup;
-                scope.stageLookup = desks.stageLookup;
-            });
+                .then(() => {
+                    scope.deskLookup = desks.deskLookup;
+                    scope.stageLookup = desks.stageLookup;
+                });
 
             scope.remove = function() {
                 if (typeof scope.removeAction === 'function') {

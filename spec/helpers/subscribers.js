@@ -1,7 +1,7 @@
 /* eslint-disable newline-per-chained-call */
 
 
-var openUrl = require('./utils').open;
+var nav = require('./utils').nav;
 
 module.exports = new Subscribers();
 
@@ -11,7 +11,7 @@ function Subscribers() {
     this.cancelSubscriberButton = element(by.css('[ng-click="cancel()"]'));
 
     this.get = function() {
-        openUrl('/#/settings/publish');
+        nav('/settings/publish');
         browser.sleep(500);
     };
 

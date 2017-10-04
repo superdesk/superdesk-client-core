@@ -5,14 +5,6 @@
 @import '~mixins.scss';
 @import '~variables.scss';
 
-.pull-right-20 {
-    float: right;
-    margin-right: 65px;
-}
-.pull-left-20 {
-    float: left;
-    margin-left: 65px;
-}
 div {
     -webkit-column-rule: 4px outset #ff00ff; /* Chrome, Safari, Opera */
     -moz-column-rule: 4px outset #ff00ff; /* Firefox */

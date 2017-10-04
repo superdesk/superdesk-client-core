@@ -123,22 +123,18 @@ export function ArticleEditDirective(
                         _.extend(item, updates);
                     }
                     if (autopopulateByline && !item.byline) {
-                        item.byline = $interpolate(gettext('By {{ display_name }}'))({
-                            display_name: session.identity.display_name
-                        });
+                        item.byline = session.identity.byline;
+                    }
+                    if (_.includes(['picture', 'graphic'], item.type) && _.get(metadata, 'values.crop_sizes')) {
+                        item.hasCrops = metadata.values.crop_sizes.some(
+                            (crop) => item.renditions && item.renditions[crop.name]
+                        );
                     }
                 }
             });
 
             metadata.initialize().then(() => {
                 scope.metadata = metadata.values;
-
-                if (scope.item && (scope.item.type === 'picture' || scope.item.type === 'graphic')) {
-                    scope.item.hasCrops = false;
-                    scope.item.hasCrops = scope.metadata.crop_sizes.some(
-                        (crop) => scope.item.renditions && scope.item.renditions[crop.name]
-                    );
-                }
 
                 if (scope.item && !scope.item.sign_off) {
                     scope.modifySignOff(session.identity);
@@ -164,7 +160,7 @@ export function ArticleEditDirective(
                     scope.resetNumberOfDays(false);
                     if (!item.dateline.date) {
                         item.dateline.date = $filter('relativeUTCTimestamp')(scope.item.dateline.located,
-                                parseInt(scope.dateline.month, 10), parseInt(scope.dateline.day, 10));
+                            parseInt(scope.dateline.month, 10), parseInt(scope.dateline.day, 10));
                     }
 
                     item.dateline.text = $filter('formatDatelineText')(item.dateline.located,
@@ -257,7 +253,7 @@ export function ArticleEditDirective(
                     }
 
                     scope.item.dateline.date = $filter('relativeUTCTimestamp')(scope.item.dateline.located,
-                            parseInt(scope.dateline.month, 10), parseInt(scope.dateline.day, 10));
+                        parseInt(scope.dateline.month, 10), parseInt(scope.dateline.day, 10));
 
                     scope.item.dateline.text = $filter('formatDatelineText')(scope.item.dateline.located,
                         $interpolate('{{ month | translate }}')({
@@ -340,10 +336,12 @@ export function ArticleEditDirective(
                             scope.contentType = type;
                             scope.editor = authoring.editor = content.editor(type);
                             scope.schema = authoring.schema = content.schema(type);
+                            scope.fields = content.fields(type);
                         });
                 } else {
                     scope.editor = authoring.editor = content.editor();
                     scope.schema = authoring.schema = content.schema();
+                    scope.fields = null;
                 }
             });
 

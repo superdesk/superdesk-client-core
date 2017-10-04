@@ -9,9 +9,9 @@ export function SubjectService(api) {
             var self = this;
 
             return api.get('/subjectcodes')
-            .then((result) => {
-                self.rawSubjects = result;
-            });
+                .then((result) => {
+                    self.rawSubjects = result;
+                });
         },
         process: function() {
             var self = this;

@@ -8,8 +8,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
-"PO-Revision-Date: 2017-03-27 16:32+0000\n"
-"Last-Translator: Eva Dangendorf <wiederspielwert@googlemail.com>\n"
+"PO-Revision-Date: 2017-09-04 08:19+0000\n"
+"Last-Translator: Ingo Lauter <ingo.lauter@sourcefabric.org>\n"
 "Language-Team: German (Germany) (http://www.transifex.com/sourcefabric/superdesk/language/de_DE/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -648,7 +648,7 @@ msgstr "ANPA Kategorie"
 
 #: scripts/core/lang/missing-translations-strings.js:26
 msgid "ANPA Take Key"
-msgstr ""
+msgstr "ANPA Zusammenstellungs ID"
 
 #: scripts/apps/dashboard/workspace-tasks/views/desk-stages.html:6
 msgid "Any"
@@ -868,7 +868,7 @@ msgstr "Headline fehlt. "
 
 #: scripts/apps/content-filters/views/manage-filters.html:57
 msgid "Block API"
-msgstr ""
+msgstr "Block API"
 
 #: scripts/apps/products/views/products-config-modal.html:35
 msgid "Blocking"
@@ -936,7 +936,7 @@ msgstr "Die Auswahl von Kategorien wird bei der Ansicht der Inhaltselemente ber�
 msgid ""
 "By selecting the desks as your preferred desks, they appear first in the "
 "order when sending or publishing items."
-msgstr ""
+msgstr "Alle bevorzugten Desks werden beim Senden oder Veröffentlichen von Artikeln in der Reihenfolge als erstes dargestellt."
 
 #: scripts/apps/users/views/edit-form.html:79
 msgid "byline"
@@ -951,11 +951,11 @@ msgstr "Autor/ Kürzel"
 
 #: scripts/core/itemList/views/relatedItem-list-widget.html:32
 msgid "Can be associated as a take"
-msgstr ""
+msgstr "Das Element kann als Zusammensstellung verknüpft werden. "
 
 #: scripts/core/itemList/views/relatedItem-list-widget.html:30
 msgid "Can be associated as an update"
-msgstr ""
+msgstr "Das Element kann als Update verknüpft werden. "
 
 #: scripts/apps/analytics/views/save-activity-report.html:9
 #: scripts/apps/archive/views/archived-kill.html:13
@@ -1433,7 +1433,7 @@ msgstr "Die Datenquelle {{name}} wurde erstellt"
 msgid ""
 "created new version {{ version }} for item {{ type }} about \"{{ subject "
 "}}\""
-msgstr ""
+msgstr "Neue Version {{ version }} des Artikels {{ type }} über \"{{ subject }}\""
 
 #: scripts/apps/dashboard/workspace-tasks/views/task-preview.html:2
 msgid "Created on"
@@ -1458,7 +1458,7 @@ msgstr "Broadcast erstellen"
 
 #: scripts/apps/monitoring/index.js:56
 msgid "Creates a new take"
-msgstr ""
+msgstr "Erstellt neue Zusammenstellung "
 
 #: scripts/apps/workspace/content/index.js:42
 msgid "Creates new item"
@@ -1472,11 +1472,11 @@ msgstr "Autor"
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:68
 #: scripts/apps/authoring/views/change-image.html:87
 msgid "Credit"
-msgstr ""
+msgstr "Credit"
 
 #: scripts/apps/search/views/search-filters.html:44
 msgid "Credits"
-msgstr ""
+msgstr "Credits"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:154
 #: scripts/apps/publish/views/subscribers.html:128
@@ -1790,7 +1790,7 @@ msgstr "Die Serververbindung wurde unterbrochen."
 msgid ""
 "Displaying news ingest statistics. You can switch color themes or graph "
 "sources."
-msgstr ""
+msgstr "Statistiken der Datenquellen. Sie können die Farbschemata oder Quelldaten ändern."
 
 #: scripts/core/keyboard/keyboard.js:406 scripts/core/keyboard/keyboard.js:414
 msgid "Displays active keyboard shortcuts"
@@ -1798,7 +1798,7 @@ msgstr "Aktive Tastatur Shortcuts anzeigen"
 
 #: scripts/apps/settings/index.js:17
 msgid "Do some admin chores"
-msgstr ""
+msgstr "Administrator Aufgaben"
 
 #: scripts/apps/authoring/views/confirm-media-associated.html:3
 msgid "Do you want to add an image to this update?"
@@ -1892,7 +1892,7 @@ msgstr "Dupliziert ein Element"
 
 #: scripts/apps/publish/views/subscribers.html:51
 msgid "E-Mail to broadcast Kill Events"
-msgstr ""
+msgstr "E-Mail zur Kommunikation von \"Kill Events\""
 
 #: scripts/apps/authoring/views/full-preview.html:95
 msgid "Ed. Note"
@@ -1913,24 +1913,24 @@ msgstr "Bearbeiten"
 
 #: scripts/apps/highlights/views/highlights_config_modal.html:6
 msgid "Edit \"{{configEdit.name}}\" highlight"
-msgstr ""
+msgstr "\"{{configEdit.name}}\" Highlight bearbeiten"
 
 #: scripts/apps/desks/views/desk-config-modal.html:6
 msgid "Edit \"{{desk.edit.name}}\" Desk"
-msgstr ""
+msgstr "\"{{desk.edit.name}}\" Desk bearbeiten"
 
 #: scripts/apps/groups/views/groups-config-modal.html:6
 msgid "Edit \"{{group.edit.name}}\" Group"
-msgstr ""
+msgstr "Gruppe \"{{group.edit.name}}\" bearbeiten"
 
 #: scripts/apps/products/views/products-config-modal.html:5
 msgid "Edit \"{{product.edit.name}}\" Product"
-msgstr ""
+msgstr "Produkt \"{{product.edit.name}}\" bearbeiten"
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:6
 msgid ""
 "Edit {{(isAbbreviations() ? 'Abbreviations' : '') | translate}} Dictionary"
-msgstr ""
+msgstr "Wörterbuch für Abkürzungen {{(isAbbreviations() ? 'Abbreviations' : '') | translate}} bearbeiten"
 
 #: scripts/apps/analytics/views/saved-activity-reports.html:14
 #: scripts/apps/analytics/views/saved-activity-reports.html:27
@@ -1947,20 +1947,20 @@ msgstr "Bearbeiten und vernichten"
 
 #: scripts/apps/highlights/views/settings.html:20
 msgid "Edit configuration"
-msgstr ""
+msgstr "Konfiguration bearbeiten"
 
 #: scripts/apps/content-filters/views/manage-filters.html:21
 #: scripts/apps/content-filters/views/manage-filters.html:32
 msgid "Edit Content Filter"
-msgstr ""
+msgstr "Suchfilter bearbeiten"
 
 #: scripts/apps/workspace/content/views/profile-settings.html:25
 msgid "Edit Content Profile"
-msgstr ""
+msgstr "Inhaltsprofil bearbeiten"
 
 #: scripts/apps/authoring/authoring/index.js:165
 msgid "Edit Crop"
-msgstr ""
+msgstr "Bild bearbeiten"
 
 #: scripts/apps/authoring/views/article-edit.html:230
 msgid "EDIT CROPS"
@@ -2075,20 +2075,20 @@ msgstr "Vokabular bearbeiten"
 
 #: scripts/apps/workspace/content/views/profile-settings.html:78
 msgid "Editing"
-msgstr ""
+msgstr "Bearbeiten"
 
 #: scripts/apps/search/views/search-parameters.html:193
 msgid "Editor's Choice"
-msgstr ""
+msgstr "Editor's Choice"
 
 #: scripts/apps/workspace/content/views/schema-editor.html:21
 msgid "Editor3"
-msgstr ""
+msgstr "Editor 3"
 
 #: scripts/apps/archive/views/metadata-view.html:65
 #: scripts/apps/workspace/content/directives/ContentProfileSchemaEditor.js:16
 msgid "Editorial Note"
-msgstr ""
+msgstr "Editorial Note"
 
 #: scripts/apps/users/views/edit-form.html:94
 msgid "email"
@@ -2244,11 +2244,11 @@ msgstr "Fehler: Das Produkt wurde nicht gelöscht."
 
 #: scripts/apps/content-filters/controllers/ProductionTestController.js:116
 msgid "Error: Failed to fetch production test results."
-msgstr ""
+msgstr "Fehler: Testergebnisse der Produktion wurden nicht hinzugefügt."
 
 #: scripts/apps/publish/controllers/PublishQueueController.js:166
 msgid "Error: Failed to re-schedule"
-msgstr ""
+msgstr "Fehler: Die Planung wurde nicht angepasst."
 
 #: scripts/apps/content-filters/controllers/ManageContentFiltersController.js:127
 msgid "Error: Failed to save content filter."
@@ -2283,7 +2283,7 @@ msgid ""
 "Error: Please re-assign new format for each destination as the changed "
 "subscriber type has formats which are not supported by existing "
 "destination(s)."
-msgstr ""
+msgstr "Fehler: Bitte fügen Sie für jede Destination ein neues Format hinzu.\nDer geänderte Abonnententyp besitzt Formate, welche von den bestehend Destinationen nicht unterstützt werden."
 
 #: scripts/core/itemList/itemList.js:83
 msgid "Error: Slugline required."
@@ -2347,7 +2347,7 @@ msgstr "Fehler: Die Aktivität konnte nicht erstellt werden"
 
 #: scripts/apps/analytics/directives/SaveActivityReport.js:37
 msgid "Error. The activity report could not be saved."
-msgstr ""
+msgstr "Fehler: Der Activity Report wurde nicht gespeichert"
 
 #: scripts/apps/users/controllers/UserDeleteCommand.js:22
 msgid "Error. User Profile cannot be disabled."
@@ -2382,7 +2382,7 @@ msgstr "verfällt am:"
 #: scripts/apps/archive/views/metadata-view.html:96
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:92
 msgid "Expiry"
-msgstr ""
+msgstr "Ablauf"
 
 #: scripts/apps/authoring/views/authoring-topbar.html:112
 msgid "Export"
@@ -2390,7 +2390,7 @@ msgstr "Exportieren"
 
 #: scripts/apps/archive/views/metadata-view.html:161
 msgid "Exposure time"
-msgstr ""
+msgstr "Verfügbarkeit"
 
 #: scripts/core/lang/missing-translations-strings.js:6
 msgid "failed"
@@ -2399,19 +2399,19 @@ msgstr "Fehlgeschlagen"
 #: scripts/apps/archive/directives/ArchivedItemKill.js:28
 #: scripts/apps/authoring/authoring/directives/AuthoringEmbeddedDirective.js:27
 msgid "Failed to apply kill template to the item."
-msgstr ""
+msgstr "Die Vorlage dieses Elements wurde nicht vernichtet."
 
 #: scripts/apps/archive/related-item-widget/relatedItem.js:176
 msgid "Failed to associate update:"
-msgstr ""
+msgstr "Fehler: Das Update wurde nicht durchgefüht."
 
 #: scripts/apps/archive/related-item-widget/relatedItem.js:147
 msgid "Failed to associate as take:"
-msgstr ""
+msgstr "Fehler: Das Element wurde nicht als Zusammenstellung gespeichert. "
 
 #: scripts/apps/archive/index.js:234
 msgid "Failed to generate new take."
-msgstr ""
+msgstr "Fehler: Die Zusammenstellung wurde nicht erstellt."
 
 #: scripts/apps/authoring/authoring/services/AuthoringService.js:103
 msgid "Failed to generate update:"
@@ -2482,7 +2482,7 @@ msgstr "Feed URL"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:56
 msgid "Feeding Service"
-msgstr ""
+msgstr "Feeding Service"
 
 #: scripts/apps/ingest/index.js:105
 #: scripts/apps/ingest/views/settings/ingest-routing-action.html:2
@@ -2570,7 +2570,7 @@ msgstr "Filtersuche"
 
 #: scripts/apps/content-filters/views/manage-filters.html:70
 msgid "Filter Statement"
-msgstr ""
+msgstr "Filter"
 
 #: scripts/apps/content-filters/views/manage-filters.html:119
 msgid "Filter Test"
@@ -2586,14 +2586,14 @@ msgstr "Filter:"
 
 #: scripts/apps/desks/views/desk-select.html:8
 msgid "filter: \"{{ filter }}\""
-msgstr ""
+msgstr "Filter: \"{{ filter }}\""
 
 #: scripts/apps/archive/views/list.html:17
 #: scripts/apps/content-filters/views/settings.html:6
 #: scripts/apps/search/views/search-panel.html:34
 #: scripts/apps/search/views/search.html:3
 msgid "Filters"
-msgstr ""
+msgstr "Filter"
 
 #: scripts/apps/authoring/editor/views/find-replace.html:5
 msgid "Find"
@@ -2605,7 +2605,7 @@ msgstr "Suchen und Ersetzen"
 
 #: scripts/apps/search/index.js:58
 msgid "Find live and archived content"
-msgstr ""
+msgstr "Suche live und archivierte Inhalte"
 
 #: scripts/apps/users/config.js:37
 msgid "Find your colleagues"
@@ -2617,15 +2617,15 @@ msgstr "Vorname"
 
 #: scripts/apps/search/views/search-filters.html:106
 msgid "Flags"
-msgstr ""
+msgstr "Markierungen"
 
 #: scripts/apps/archive/views/metadata-view.html:164
 msgid "Flash"
-msgstr ""
+msgstr "Flash"
 
 #: scripts/apps/archive/views/metadata-view.html:162
 msgid "Focal length"
-msgstr ""
+msgstr "Focal length"
 
 #: scripts/apps/authoring/views/article-edit.html:299
 #: scripts/apps/authoring/views/article-edit.html:322
@@ -2635,11 +2635,11 @@ msgstr "Fußzeile"
 
 #: scripts/apps/monitoring/views/aggregate-settings.html:3
 msgid "for \"{{settings.desk.name}}\" Desk"
-msgstr ""
+msgstr "für \"{{settings.desk.name}}\" Desk"
 
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:19
 msgid "For Publication"
-msgstr ""
+msgstr "Zur Veröffentlichung"
 
 #: scripts/core/auth/login-modal.html:48
 msgid "Forgot password?"
@@ -2686,7 +2686,7 @@ msgstr "FTP Server URL"
 
 #: scripts/apps/workspace/content/views/schema-editor.html:92
 msgid "Full"
-msgstr ""
+msgstr "Ganze Breite"
 
 #: scripts/apps/users/views/edit-form.html:32
 msgid "full name"
@@ -2712,26 +2712,26 @@ msgstr "Allgemein"
 
 #: scripts/apps/analytics/views/activity-report-panel.html:28
 msgid "Generate"
-msgstr ""
+msgstr "Erstellen"
 
 #: scripts/apps/publish/views/subscribers.html:182
 msgid "Generate token"
-msgstr ""
+msgstr "Token erstellen"
 
 #: scripts/apps/archive/views/metadata-view.html:57
 #: scripts/apps/authoring/views/full-preview.html:54
 #: scripts/apps/search/services/SearchService.js:33
 #: scripts/apps/workspace/content/directives/ContentProfileSchemaEditor.js:9
 msgid "Genre"
-msgstr ""
+msgstr "Genre"
 
 #: scripts/apps/authoring/views/authoring-header.html:80
 msgid "GENRE"
-msgstr ""
+msgstr "Genre"
 
 #: scripts/apps/search/views/search-filters.html:67
 msgid "Genres"
-msgstr ""
+msgstr "Genres"
 
 #: scripts/apps/ingest/index.js:121
 msgid "Get from external source"
@@ -2739,20 +2739,20 @@ msgstr "Aus externer Quelle laden"
 
 #: scripts/core/auth/reset-password.html:17
 msgid "Get token"
-msgstr ""
+msgstr "Passwort- Link zum Zurücksetzen anfordern"
 
 #: scripts/apps/content-filters/views/manage-filters.html:45
 msgid "Global Block"
-msgstr ""
+msgstr "Global Block"
 
 #: scripts/apps/desks/views/desk-config-modal.html:131
 #: scripts/apps/desks/views/desk-config-modal.html:211
 msgid "Global Read"
-msgstr ""
+msgstr "Global verfügbar"
 
 #: scripts/apps/desks/views/desk-config-modal.html:180
 msgid "Global Read:"
-msgstr ""
+msgstr "Global verfügbar"
 
 #: scripts/apps/analytics/views/saved-activity-reports.html:19
 msgid "Global Saved Activity Reports"
@@ -2785,7 +2785,7 @@ msgstr "Gruppen Beschreibung"
 
 #: scripts/apps/authoring/macros/views/macros-widget.html:3
 msgid "Group Macros"
-msgstr ""
+msgstr "Group Macros"
 
 #: scripts/apps/groups/views/settings.html:5
 msgid "Group management"
@@ -2801,7 +2801,7 @@ msgstr "Gruppenname"
 
 #: scripts/apps/analytics/views/activity-report-panel.html:17
 msgid "Grouping"
-msgstr ""
+msgstr "Gruppieren"
 
 #: scripts/apps/groups/index.js:21
 msgid "Groups"
@@ -2878,20 +2878,20 @@ msgstr "Bilder ausblenden"
 
 #: scripts/apps/authoring/versioning/history/views/publish_queue.html:6
 msgid "Hide sent/queued items"
-msgstr ""
+msgstr "Gesendete/ geplante Elemente ausblenden"
 
 #: scripts/core/views/sdSlider.html:3
 msgid "high"
-msgstr ""
+msgstr "nach oben"
 
 #: scripts/apps/monitoring/views/monitoring-view.html:105
 #: scripts/apps/monitoring/views/monitoring-view.html:75
 msgid "Highlight Package"
-msgstr ""
+msgstr "Highlights"
 
 #: scripts/apps/highlights/views/highlights_config_modal.html:16
 msgid "Highlight with name"
-msgstr ""
+msgstr "Highlight Name"
 
 #: scripts/core/lang/missing-translations-strings.js:29
 msgid "highlights"
@@ -2907,7 +2907,7 @@ msgstr "Highlights"
 
 #: scripts/apps/highlights/views/settings.html:6
 msgid "Highlights configurations"
-msgstr ""
+msgstr "Highlights Konfigurationen"
 
 #: scripts/apps/highlights/index.js:68
 msgid "Highlights View"
@@ -2980,7 +2980,7 @@ msgstr "Wort ingnorieren"
 #: scripts/core/upload/crop-directive.js:39
 msgid ""
 "Image is bigger than {{ maxFileSize }}MB, upload file size may be limited!"
-msgstr ""
+msgstr "Die Bilddatei ist größer als {{ maxFileSize }}MB (Upload Limit)"
 
 #: scripts/apps/users/import/views/import-user.html:44
 msgid "Import"
@@ -3012,7 +3012,7 @@ msgstr "In Bearbeitung"
 
 #: scripts/apps/search/views/search-parameters.html:127
 msgid "In Spiked"
-msgstr ""
+msgstr "Im Papierkorb"
 
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:67
 msgid "in the last 24 hours."
@@ -3020,7 +3020,7 @@ msgstr "in den letzten 24h."
 
 #: scripts/apps/authoring/authoring/directives/AuthoringEmbeddedDirective.js:31
 msgid "In the story \""
-msgstr ""
+msgstr "Im Inhalt"
 
 #: scripts/core/lang/missing-translations-strings.js:5
 msgid "in_progress"
@@ -3051,7 +3051,7 @@ msgstr "Eingangsregel:"
 #: scripts/apps/desks/views/desk-config-modal.html:177
 #: scripts/apps/desks/views/desk-config-modal.html:223
 msgid "Incoming Stage"
-msgstr ""
+msgstr "Incoming Stage"
 
 #: scripts/apps/archive/views/upload.html:69
 #: scripts/apps/authoring/views/change-image.html:102
@@ -3060,7 +3060,7 @@ msgstr "Unbefristete Nutzung"
 
 #: scripts/apps/authoring/metadata/metadata.js:1095
 msgid "Info"
-msgstr ""
+msgstr "Info"
 
 #: scripts/apps/ingest/index.js:64 scripts/apps/search/views/item-repo.html:7
 #: scripts/apps/workspace/views/workspace-sidenav-items.html:91
@@ -3121,15 +3121,15 @@ msgstr "hinzugefügt"
 
 #: scripts/core/editor2/editor.js:1117
 msgid "insert table"
-msgstr ""
+msgstr "Tabelle einfügen"
 
 #: scripts/apps/search/directives/ItemRepo.js:41
 msgid "inside subscription"
-msgstr ""
+msgstr "Innerhalb des Abonnement"
 
 #: scripts/apps/users/views/edit-form.html:74
 msgid "Invalid format. Only Alphanumerics are allowed."
-msgstr ""
+msgstr "Das Format ist ungültig. Bitte benutzen Sie nur alphanumerische Zeichen."
 
 #: scripts/apps/search-providers/views/search-provider-config.html:43
 msgid "Is Default"
@@ -3141,11 +3141,11 @@ msgstr "Iso"
 
 #: scripts/apps/templates/views/create-template.html:17
 msgid "It will create a new template."
-msgstr ""
+msgstr "Erstellung einer neuen Vorlage"
 
 #: scripts/apps/templates/views/create-template.html:16
 msgid "It will update existing template."
-msgstr ""
+msgstr "Bestehende Vorlage aktualisieren"
 
 #: scripts/core/editor2/editor.js:1059
 msgid "italic"
@@ -3161,7 +3161,7 @@ msgstr "Element hinzugefügt."
 
 #: scripts/apps/ingest/controllers/ExternalSourceController.js:26
 msgid "Item Fetched."
-msgstr ""
+msgstr "Element geholt"
 
 #: scripts/apps/archive/directives/ArchivedItemKill.js:42
 msgid "Item has been killed."
@@ -3175,21 +3175,21 @@ msgstr "Element wurde erneut gesendet."
 msgid ""
 "Item has changed since it was opened. Please close and reopen the item to "
 "continue. Regrettably, your changes cannot be saved."
-msgstr ""
+msgstr "Das geöffnete Element wurde geändert. Bitte schliessen Sie das Element und öffnen Sie es erneut, um es zu bearbeiten. Ihre bisherigen Änderungen werden leider nicht gespeichert."
 
 #: scripts/apps/authoring/versioning/views/versioning.html:6
 #: scripts/apps/legal-archive/views/legal_archive.html:98
 #: scripts/apps/search/views/item-preview.html:17
 msgid "Item history"
-msgstr ""
+msgstr "Element Historie"
 
 #: scripts/apps/packaging/directives/PackageItemsEdit.js:17
 msgid "Item is already in this package."
-msgstr ""
+msgstr "Das Element existiert in dieser Sammlung bereits."
 
 #: scripts/apps/archive/related-item-widget/relatedItem.js:142
 msgid "item is associated as a take."
-msgstr ""
+msgstr "Das Element wurde der Zusammenstellung hinzugefügt"
 
 #: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:143
 msgid "Item locked"
@@ -3227,7 +3227,7 @@ msgstr "Element übersetzt"
 
 #: scripts/apps/ingest/ingest-stats-widget/configuration.html:11
 msgid "Item type stats"
-msgstr ""
+msgstr "Statistik Elementtypen"
 
 #: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:130
 msgid "Item Unlocked"
@@ -3245,7 +3245,7 @@ msgstr "Elemente"
 
 #: scripts/apps/monitoring/views/aggregate-settings.html:108
 msgid "Items Count"
-msgstr ""
+msgstr "Anzahl der Elemente"
 
 #: scripts/core/keyboard/views/keyboard-modal.html:3
 msgid "Keyboard Shortcuts"
@@ -3393,7 +3393,7 @@ msgstr "Der Link wurde versendet. Bitte prüfen Sie Ihr E-Mail Postfach."
 
 #: scripts/apps/authoring/versioning/history/views/history.html:26
 msgid "Linked as take by"
-msgstr ""
+msgstr "Zusammenstellung verlinkt durch"
 
 #: scripts/apps/vocabularies/services/SchemaFactory.js:7
 msgid "List Name"
@@ -3435,20 +3435,20 @@ msgstr "Lokaler Pfad"
 
 #: scripts/apps/desks/views/desk-config-modal.html:215
 msgid "Local Read Only"
-msgstr ""
+msgstr "Local Read Only"
 
 #: scripts/apps/desks/views/desk-config-modal.html:184
 msgid "Local Read Only:"
-msgstr ""
+msgstr "Local Read Only"
 
 #: scripts/apps/desks/views/desk-config-modal.html:134
 msgid "Local Readonly"
-msgstr ""
+msgstr "Local Read Only"
 
 #: scripts/core/lang/missing-translations-strings.js:26
 #: scripts/core/lang/missing-translations-strings.js:9
 msgid "Located"
-msgstr ""
+msgstr "Angeordnet"
 
 #: scripts/apps/archive/views/item-lock.html:4
 #: scripts/apps/authoring/views/authoring-topbar.html:12
@@ -3466,11 +3466,11 @@ msgstr "Login"
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:41
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:82
 msgid "Log Messages"
-msgstr ""
+msgstr "Log Nachrichten"
 
 #: scripts/core/views/sdSlider.html:2
 msgid "low"
-msgstr ""
+msgstr "nach unten"
 
 #: scripts/apps/desks/views/actionpicker.html:24
 msgid "Macro"
@@ -3524,11 +3524,11 @@ msgstr "Element für einen Desk markieren "
 
 #: scripts/apps/highlights/index.js:45
 msgid "Mark for highlight"
-msgstr ""
+msgstr "Als Highlight kennzeichnen"
 
 #: scripts/apps/search/views/multi-action-bar.html:18
 msgid "Mark item"
-msgstr ""
+msgstr "Element markieren"
 
 #: scripts/apps/authoring/views/authoring-topbar.html:164
 msgid "Mark item for"
@@ -3536,7 +3536,7 @@ msgstr "Element markieren für"
 
 #: scripts/core/lang/missing-translations-strings.js:14
 msgid "Mark items for Highlights/Summary Lists"
-msgstr ""
+msgstr "Elemente als Highlight kennzeichnen/ Liste"
 
 #: scripts/apps/search/views/search-parameters.html:61
 msgid "Marked Desks"
@@ -3556,11 +3556,11 @@ msgstr "Master Desk"
 
 #: scripts/apps/archive/related-item-widget/relatedItem-configuration.html:8
 msgid "Match Any"
-msgstr ""
+msgstr "Match Any"
 
 #: scripts/apps/archive/related-item-widget/relatedItem-configuration.html:9
 msgid "Match Prefix"
-msgstr ""
+msgstr "Match Prefix"
 
 #: scripts/apps/workspace/content/views/schema-editor.html:41
 msgid "max"
@@ -3589,15 +3589,15 @@ msgstr "Medientyp"
 
 #: scripts/apps/users/views/edit-form.html:145
 msgid "member since"
-msgstr ""
+msgstr "Mitglied seid"
 
 #: scripts/core/menu/notifications/views/notifications.html:30
 msgid "mentioned you"
-msgstr ""
+msgstr "Sie wurden erwähnt"
 
 #: scripts/apps/publish/views/publish-queue.html:99
 msgid "Message"
-msgstr ""
+msgstr "Nachricht"
 
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:3
 #: scripts/apps/authoring/views/change-image.html:73
@@ -3608,11 +3608,11 @@ msgstr ""
 #: scripts/apps/search/views/item-preview.html:11
 #: scripts/apps/templates/views/template-editor-modal.html:86
 msgid "Metadata"
-msgstr ""
+msgstr "Metadaten"
 
 #: scripts/core/lang/missing-translations-strings.js:8
 msgid "mgrid"
-msgstr ""
+msgstr "Raster"
 
 #: scripts/apps/desks/views/content-expiry.html:24
 #: scripts/apps/desks/views/content-expiry.html:5
@@ -3620,11 +3620,11 @@ msgstr ""
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:97
 #: scripts/apps/workspace/content/views/schema-editor.html:39
 msgid "min"
-msgstr ""
+msgstr "min"
 
 #: scripts/apps/workspace/content/views/schema-editor.html:43
 msgid "Min length shouldn't be bigger than max length."
-msgstr ""
+msgstr "Minimale Länge sollte sollte nicht größer als die maximale Länge sein."
 
 #: scripts/apps/authoring/views/authoring-topbar.html:122
 msgid "Minimize"
@@ -3661,7 +3661,7 @@ msgstr "Geändert vom"
 
 #: scripts/apps/search/views/search-filters.html:157
 msgid "Modified until"
-msgstr ""
+msgstr "Geändert bis"
 
 #: scripts/apps/archive/views/media-view.html:46
 msgid "Modified:"
@@ -3676,7 +3676,7 @@ msgstr "Montag"
 #: scripts/apps/workspace/views/workspace-sidenav-items.html:10
 #: scripts/core/lang/missing-translations-strings.js:39
 msgid "Monitoring"
-msgstr ""
+msgstr "Monitoring"
 
 #: scripts/apps/desks/views/settings.html:25
 msgid "Monitoring settings"
@@ -3702,19 +3702,19 @@ msgstr "Inhalt in einen anderen Desk verschieben"
 
 #: scripts/apps/desks/views/desk-config-modal.html:250
 msgid "Moved onto stage Rule"
-msgstr ""
+msgstr "Stage Regel"
 
 #: scripts/apps/desks/views/desk-config-modal.html:200
 msgid "Moved onto stage Rule:"
-msgstr ""
+msgstr "Stage Regel"
 
 #: scripts/apps/authoring/versioning/history/views/history.html:42
 msgid "Moved to"
-msgstr ""
+msgstr "Übertragen an"
 
 #: scripts/apps/workspace/index.js:31
 msgid "Multi-selects(or deselects) an item"
-msgstr ""
+msgstr "Mehrfachauswahl oder Mahrfachabwahl eines Artikels"
 
 #: scripts/apps/authoring/multiedit/views/multiedit.html:2
 #: scripts/apps/authoring/views/authoring-topbar.html:154
@@ -3729,7 +3729,7 @@ msgid ""
 "of 4 of the following:<ul><li>a lower case letter (a-z)</li><li>an upper "
 "case letter (A-Z)</li><li>a number (0-9)</li><li>a special character "
 "(!@#$%^&...)</li></ul>"
-msgstr ""
+msgstr "Das Passwort muß mindestens {{ MIN_LENGTH }} Zeichen lang sein und {{ MIN_STRENGTH }} von 4 der folgenden Zeichen beinhalten:<ul><li>Kleinbuchstaben (a-z)</li><li>Großbuchstaben (A-Z)</li><li>Zahl (0-9)</li><li>Sonderzeichen (!@#$%^&...)</li></ul>"
 
 #: scripts/apps/users/index.js:84
 msgid "My Profile"
@@ -3833,15 +3833,15 @@ msgstr "Keine Kommentare vorhanden"
 
 #: scripts/apps/templates/directives/TemplatesDirective.js:294
 msgid "No Desk"
-msgstr ""
+msgstr "Kein Desk"
 
 #: scripts/apps/ingest/views/settings/rssConfig.html:42
 msgid "No field aliases defined."
-msgstr ""
+msgstr "Es ist kein Feld Alias vorhanden"
 
 #: scripts/apps/highlights/views/search_highlights_dropdown_directive.html:6
 msgid "No Filter"
-msgstr ""
+msgstr "Kein Filter"
 
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:849
 msgid "No formatters found for"
@@ -3912,13 +3912,13 @@ msgstr "Es sind keine Benutzerrollen definiert!"
 
 #: scripts/apps/publish/views/subscribers.html:71
 msgid "Non-media"
-msgstr ""
+msgstr "Non-media"
 
 #: scripts/apps/profiling/views/profiling.html:10
 #: scripts/apps/users/views/user-preferences.html:64
 #: scripts/apps/workspace/content/views/schema-editor.html:62
 msgid "none"
-msgstr ""
+msgstr "leer"
 
 #: scripts/apps/archive/views/marked_item_title.html:23
 #: scripts/apps/authoring/metadata/views/metadata-dropdown.html:17
@@ -3929,16 +3929,16 @@ msgstr ""
 #: scripts/apps/templates/views/template-editor-modal.html:78
 #: scripts/core/views/sdSearchList.html:32
 msgid "None"
-msgstr ""
+msgstr "leer"
 
 #: scripts/apps/authoring/views/theme-select.html:13
 #: scripts/apps/authoring/views/theme-select.html:31
 msgid "Normal font"
-msgstr ""
+msgstr "Normale Buchstaben"
 
 #: scripts/apps/ingest/directives/IngestRoutingAction.js:59
 msgid "Not"
-msgstr ""
+msgstr "Nicht"
 
 #: scripts/apps/content-filters/views/filter-search-result.html:60
 #: scripts/apps/publish/views/subscribers.html:14
@@ -3947,7 +3947,7 @@ msgstr "Nicht aktiv"
 
 #: scripts/apps/authoring/versioning/history/views/publish_queue.html:10
 msgid "Not been transmitted to any subscriber"
-msgstr ""
+msgstr "Nicht an Abonnenten übertragen"
 
 #: scripts/apps/archive/views/item-preview.html:9
 #: scripts/apps/archive/views/metadata-view.html:189
@@ -3965,7 +3965,7 @@ msgstr "Nicht zur Veröffentlichung"
 #: scripts/apps/workspace/content/views/schema-editor.html:56
 #: scripts/apps/workspace/content/views/schema-editor.html:86
 msgid "Not set"
-msgstr ""
+msgstr "leer"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:127
 msgid "Notification"
@@ -3986,36 +3986,36 @@ msgstr "Benachrichtigungen"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:89
 msgid "Notify when idle for more than"
-msgstr ""
+msgstr "Benachrichtigung bei Leerlauf nach"
 
 #: scripts/core/lang/missing-translations-strings.js:28
 msgid "NTB Currency Macro"
-msgstr ""
+msgstr "NTB Währungsmacro"
 
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:66
 #: scripts/apps/users/activity-widget/configuration.html:6
 msgid "Number of items"
-msgstr ""
+msgstr "Anzahl der Elemente"
 
 #: scripts/core/list/views/sdPagination.html:21
 #: scripts/core/list/views/sdPaginationAlt.html:2
 #: scripts/core/views/sdSearchList.html:15
 msgid "of"
-msgstr ""
+msgstr "von"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-general.html:37
 msgid "Off"
-msgstr ""
+msgstr "Aus"
 
 #: scripts/apps/desks/views/content-expiry.html:9
 msgid "OFF"
-msgstr ""
+msgstr "Aus"
 
 #: scripts/apps/authoring/multiedit/views/sd-multiedit-dropdown.html:14
 #: scripts/apps/search/views/save-search.html:29
 #: scripts/apps/users/views/settings-roles.html:52
 msgid "Ok"
-msgstr ""
+msgstr "OK"
 
 #: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:130
 #: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:143
@@ -4024,51 +4024,51 @@ msgstr ""
 #: scripts/core/directives/PasswordStrengthDirective.js:41
 #: scripts/core/services/modalService.js:6
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 #: scripts/apps/authoring/versioning/history/views/publish_queue.html:17
 #: scripts/apps/authoring/versioning/history/views/publish_queue.html:22
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:11
 msgid "on"
-msgstr ""
+msgstr "An"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-general.html:36
 #: scripts/apps/templates/views/template-editor-modal.html:144
 msgid "On"
-msgstr ""
+msgstr "Tag"
 
 #: scripts/apps/users/controllers/UserListController.js:143
 msgid "Online"
-msgstr ""
+msgstr "Online"
 
 #: scripts/core/auth/secure-login.html:28
 msgid "Oops! Authentication has been denied."
-msgstr ""
+msgstr "Authentifizierung wurde verweigert."
 
 #: scripts/core/auth/reset-password.html:27
 msgid "Oops! Invalid user Email.<br>Please try again."
-msgstr ""
+msgstr "Oops! Diese E-Mail Adresse ist uns nicht bekannt. Bitte versuchen Sie es erneut."
 
 #: scripts/core/auth/login-modal.html:30
 msgid "Oops! Invalid Username or Password.<br>Please try again."
-msgstr ""
+msgstr "Oops! Der Benutzername oder das Passwort sind uns nicht bekannt. Bitte versuchen Sie es erneut."
 
 #: scripts/apps/users/views/user-list-item.html:36
 #: scripts/core/list/views/list-view.html:3
 msgid "Oops! There are no items."
-msgstr ""
+msgstr "Oops! Keine Elemente."
 
 #: scripts/apps/authoring/authoring/index.js:147
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:142
 msgid "Open"
-msgstr ""
+msgstr "Öffnen"
 
 #: scripts/apps/desks/views/desk_users.html:3
 #: scripts/apps/desks/views/desk-tasks.html:3
 #: scripts/apps/desks/views/desk.html:3
 #: scripts/apps/desks/views/slugline.html:3
 msgid "Open desk content"
-msgstr ""
+msgstr "Desk Inhalte anzeigen"
 
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:18
 msgid "Opened"
@@ -4088,7 +4088,7 @@ msgstr "Monitoring öffnen"
 
 #: scripts/apps/workspace/index.js:29
 msgid "Opens personal"
-msgstr ""
+msgstr "Persönlichen Desk öffnen"
 
 #: scripts/apps/workspace/index.js:30
 msgid "Opens search"
@@ -4096,7 +4096,7 @@ msgstr "Suche öffnen"
 
 #: scripts/apps/workspace/index.js:28
 msgid "Opens spike"
-msgstr ""
+msgstr "Papierkorb öffnen"
 
 #: scripts/apps/workspace/index.js:27
 msgid "Opens tasks"
@@ -4117,7 +4117,7 @@ msgstr "Ausführungsdatum"
 #: scripts/apps/content-filters/views/filter-search.html:12
 #: scripts/apps/content-filters/views/manage-filter-conditions.html:49
 msgid "Operator"
-msgstr ""
+msgstr "Operator"
 
 #: scripts/apps/archive/views/upload.html:11
 msgid "or"
@@ -4125,11 +4125,11 @@ msgstr "oder"
 
 #: scripts/apps/users/views/change-avatar.html:29
 msgid "or Select from computer"
-msgstr ""
+msgstr "oder von der Festplatte auswählen"
 
 #: scripts/apps/workspace/content/views/schema-editor.html:33
 msgid "Order"
-msgstr ""
+msgstr "Reihenfolge"
 
 #: scripts/apps/archive/views/item-preview.html:24
 #: scripts/apps/archive/views/preview.html:95
@@ -4137,48 +4137,48 @@ msgstr ""
 #: scripts/apps/authoring/views/change-image.html:121
 #: scripts/apps/authoring/views/change-image.html:23
 msgid "Original"
-msgstr ""
+msgstr "Original"
 
 #: scripts/apps/archive/views/metadata-view.html:104
 msgid "Original creator"
-msgstr ""
+msgstr "Ursprünglicher Autor"
 
 #: scripts/apps/archive/views/metadata-view.html:100
 msgid "Original ID"
-msgstr ""
+msgstr "Original ID"
 
 #: scripts/apps/authoring/authoring/controllers/ChangeImageController.js:200
 msgid "Original size cannot be less than the required crop sizes."
-msgstr ""
+msgstr "Die originale Größe kann nicht kleiner als die erforderliche Crop Größe sein"
 
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:60
 msgid "Original source"
-msgstr ""
+msgstr "Originalquelle"
 
 #: scripts/apps/archive/views/metadata-view.html:31
 msgid "Original Source"
-msgstr ""
+msgstr "Originalquelle"
 
 #: scripts/apps/desks/views/desk-config-modal.html:259
 msgid "Outgoing Rule"
-msgstr ""
+msgstr "Originalregel"
 
 #: scripts/apps/desks/views/desk-config-modal.html:204
 msgid "Outgoing Rule:"
-msgstr ""
+msgstr "Ausgangsregel"
 
 #: scripts/apps/publish/views/file-config.html:2
 #: scripts/apps/publish/views/file-config.html:4
 msgid "Output file path"
-msgstr ""
+msgstr "Output Dokumentenpfad"
 
 #: scripts/apps/monitoring/views/aggregate-settings.html:32
 msgid "Output/Published"
-msgstr ""
+msgstr "Output/ Veröffentlicht"
 
 #: scripts/apps/monitoring/views/aggregate-settings.html:29
 msgid "Output/Scheduled"
-msgstr ""
+msgstr "Output/ Geplant"
 
 #: scripts/apps/users/views/edit.html:18
 msgid "Overview"
@@ -4186,27 +4186,27 @@ msgstr "Übersicht"
 
 #: scripts/apps/authoring/views/authoring-topbar.html:50
 msgid "P"
-msgstr ""
+msgstr "P"
 
 #: scripts/apps/authoring/views/authoring-topbar.html:56
 msgid "P & C"
-msgstr ""
+msgstr "P&C"
 
 #: scripts/apps/workspace/content/views/sd-content-create.html:29
 msgid "Package current item"
-msgstr ""
+msgstr "Element zur Sammlung hinzufügen"
 
 #: scripts/apps/publish/views/http-push-config.html:3
 msgid "Package individual items"
-msgstr ""
+msgstr "Sammlung einzelner Elemente"
 
 #: scripts/apps/archive/views/item-preview.html:5
 msgid "Package preview"
-msgstr ""
+msgstr "Sammlung Vorschau"
 
 #: scripts/apps/authoring/packages/packages.js:36
 msgid "Packages"
-msgstr ""
+msgstr "Sammlungen"
 
 #: scripts/apps/monitoring/views/item-actions-menu.html:20
 msgid "Packaging"
@@ -4218,7 +4218,7 @@ msgstr "Seite"
 
 #: scripts/core/list/views/sdPagination.html:1
 msgid "Page Size:"
-msgstr ""
+msgstr "Angezeigte Elemente"
 
 #: scripts/apps/analytics/views/activity-report-panel.html:16
 #: scripts/apps/search/views/search-panel.html:33
@@ -4286,21 +4286,21 @@ msgstr "Ordnerpfad"
 
 #: scripts/apps/users/views/user-list-item.html:16
 msgid "pending"
-msgstr ""
+msgstr "unerledigt"
 
 #: scripts/apps/users/controllers/UserListController.js:144
 msgid "Pending"
-msgstr ""
+msgstr "Schwebend"
 
 #: scripts/apps/desks/views/desk-config-modal.html:277
 #: scripts/apps/desks/views/settings.html:38
 #: scripts/apps/groups/views/groups-config-modal.html:38
 msgid "People"
-msgstr ""
+msgstr "Nutzer"
 
 #: scripts/apps/products/views/products-config-modal.html:34
 msgid "Permitting"
-msgstr ""
+msgstr "Erlaubnis"
 
 #: scripts/apps/dictionaries/views/settings.html:26
 #: scripts/apps/monitoring/config.js:32
@@ -4311,13 +4311,13 @@ msgstr ""
 #: scripts/apps/templates/directives/TemplatesDirective.js:293
 #: scripts/apps/workspace/views/workspace-sidenav-items.html:46
 msgid "Personal"
-msgstr ""
+msgstr "Persönlich"
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:45
 msgid ""
 "Personal dictionary for language \"{{ dictionary.language_id }}\" already "
 "exists."
-msgstr ""
+msgstr "Ein pesönliches Wörterbuch für die Sprache \"{{ dictionary.language_id }}\" besteht bereits."
 
 #: scripts/apps/monitoring/views/monitoring-view.html:22
 msgid "Personal Items"
@@ -4360,31 +4360,31 @@ msgstr "Reiner Text"
 
 #: scripts/core/lang/missing-translations-strings.js:14
 msgid "Planning Management"
-msgstr ""
+msgstr "Planung Verwaltung"
 
 #: scripts/core/auth/secure-login.html:14
 msgid "Please check that the following id is the same as on your device:"
-msgstr ""
+msgstr "Bitte stellen Sie sicher, dass die folgende ID mit der ID auf Ihrem Device übereinstimmen:"
 
 #: scripts/apps/users/config.js:92
 msgid "Please confirm that you want to delete all the sessions for this user."
-msgstr ""
+msgstr "Bitte bestätigen Sie, dass alle Sessions dieses Nutzers gelöscht werden sollen."
 
 #: scripts/apps/users/config.js:75
 msgid "Please confirm that you want to disable a user."
-msgstr ""
+msgstr "Bitte bestätigen Sie, dass der Benutzer deaktiviert werden soll."
 
 #: scripts/apps/desks/controllers/DeskConfigController.js:34
 msgid "Please confirm you want to delete desk."
-msgstr ""
+msgstr "Wollen Sie den Desk wirklich löschen?"
 
 #: scripts/apps/dictionaries/controllers/DictionaryConfigController.js:80
 msgid "Please confirm you want to delete dictionary."
-msgstr ""
+msgstr "Bitte bestätigen Sie, dass das Wörterbuch gelöscht werden soll."
 
 #: scripts/core/auth/login-modal.html:3
 msgid "Please log in again."
-msgstr ""
+msgstr "Bitte melden Sie sich wieder an."
 
 #: scripts/apps/users/views/edit-form.html:103
 msgid "please provide a valid email address"
@@ -4415,7 +4415,7 @@ msgstr "Zusammenfassung erstellen."
 
 #: scripts/apps/authoring/comments/views/comments-widget.html:27
 msgid "Post"
-msgstr ""
+msgstr "Senden"
 
 #: scripts/apps/authoring/comments/views/comments-widget.html:26
 msgid "Post on 'Enter'"
@@ -4431,43 +4431,43 @@ msgstr "Bevorzugte Kategorien"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-action.html:74
 msgid "Preserve Desk"
-msgstr ""
+msgstr "Desk erhalten"
 
 #: scripts/apps/authoring/macros/views/macros-replace.html:7
 msgid "prev"
-msgstr ""
+msgstr "vorherige"
 
 #: scripts/apps/authoring/views/authoring-topbar.html:102
 #: scripts/apps/authoring/views/authoring.html:22
 #: scripts/apps/desks/views/stage-item-list.html:23
 #: scripts/apps/users/views/user-preferences.html:35
 msgid "Preview"
-msgstr ""
+msgstr "Vorschau"
 
 #: scripts/apps/authoring/views/preview-formatted.html:5
 msgid "Preview Formatted Story"
-msgstr ""
+msgstr "Vorschau"
 
 #: scripts/apps/authoring/views/authoring-header.html:46
 msgid "Preview master story"
-msgstr ""
+msgstr "Vorschau"
 
 #: scripts/apps/archive/views/media-view.html:31
 msgid "previous"
-msgstr ""
+msgstr "vorherige"
 
 #: scripts/apps/groups/views/groups-config-modal.html:56
 #: scripts/apps/monitoring/views/aggregate-settings.html:136
 msgid "Previous"
-msgstr ""
+msgstr "Vorherige"
 
 #: scripts/apps/users/config.js:154
 msgid "Previous user"
-msgstr ""
+msgstr "Vorheriger Benutzer"
 
 #: scripts/apps/authoring/views/full-preview.html:8
 msgid "Print"
-msgstr ""
+msgstr "Druck"
 
 #: scripts/apps/analytics/views/activity-report-parameters.html:84
 #: scripts/apps/archive/directives/ItemPriority.js:19
@@ -4477,38 +4477,38 @@ msgstr ""
 #: scripts/apps/search/views/search-filters.html:93
 #: scripts/apps/workspace/content/directives/ContentProfileSchemaEditor.js:12
 msgid "Priority"
-msgstr ""
+msgstr "Priorität"
 
 #: scripts/apps/authoring/views/authoring-header.html:138
 msgid "PRIORITY"
-msgstr ""
+msgstr "Priorität"
 
 #: scripts/apps/monitoring/views/aggregate-settings.html:65
 msgid "Private saved searches"
-msgstr ""
+msgstr "Private gespeicherte Suchen"
 
 #: scripts/apps/users/views/edit.html:24
 #: scripts/apps/users/views/settings.html:9
 msgid "Privileges"
-msgstr ""
+msgstr "Berechtigungen"
 
 #: scripts/apps/users/directives/UserPrivilegesDirective.js:41
 msgid "Privileges not found."
-msgstr ""
+msgstr "Es sind keine Berechtigungen vorhanden"
 
 #: scripts/apps/users/directives/RolesPrivilegesDirective.js:31
 #: scripts/apps/users/directives/UserPrivilegesDirective.js:75
 msgid "Privileges updated."
-msgstr ""
+msgstr "Berechtigungen aktualisiert"
 
 #: scripts/apps/packaging/views/sd-package-item-preview.html:34
 #: scripts/apps/packaging/views/sd-package-item-preview.html:8
 msgid "Problems occurred while fetching data."
-msgstr ""
+msgstr "Fehler: Daten konnten nicht vollständig geladen werden."
 
 #: scripts/apps/products/views/products-config-modal.html:22
 msgid "Product codes"
-msgstr ""
+msgstr "Produkt Codes"
 
 #: scripts/apps/products/controllers/ProductsConfigController.js:87
 msgid "Product deleted."
@@ -4567,7 +4567,7 @@ msgstr "Profil:"
 
 #: scripts/apps/profiling/index.js:25
 msgid "Profiling Data"
-msgstr ""
+msgstr "Profiling Daten"
 
 #: scripts/core/auth/reset-password.html:11
 msgid ""
@@ -4586,11 +4586,11 @@ msgstr "Anbieter"
 #: scripts/core/lang/missing-translations-strings.js:34
 msgid ""
 "Provider {{name}} has gone strangely quiet. Last activity was on {{last}}"
-msgstr ""
+msgstr "Provider {{name}} ist wahrscheinlich nicht aktiv. Die letzte Aktivität war {{last}}"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:46
 msgid "Provider Name"
-msgstr ""
+msgstr "Anbieter Name"
 
 #: scripts/apps/ingest/directives/IngestSourcesContent.js:264
 msgid "Provider saved!"
@@ -4598,15 +4598,15 @@ msgstr "Anbieter gespeichert"
 
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:88
 msgid "Provider sequence"
-msgstr ""
+msgstr "Anbieter Sequenz"
 
 #: scripts/apps/search-providers/views/search-provider-config.html:51
 msgid "Provider Type"
-msgstr ""
+msgstr "Anbeiter Typ"
 
 #: scripts/core/lang/missing-translations-strings.js:4
 msgid "publish"
-msgstr ""
+msgstr "Veröffentlichen"
 
 #: scripts/apps/analytics/views/activity-report-parameters.html:8
 #: scripts/apps/authoring/views/authoring-topbar.html:48
@@ -4616,131 +4616,131 @@ msgstr ""
 #: scripts/apps/ingest/views/settings/ingest-routing-general.html:29
 #: scripts/apps/publish/index.js:39
 msgid "Publish"
-msgstr ""
+msgstr "Veröffentlichen"
 
 #: scripts/apps/authoring/views/authoring-topbar.html:54
 #: scripts/apps/authoring/views/authoring-topbar.html:55
 msgid "Publish and Continue"
-msgstr ""
+msgstr "Veröffentlichen & Weiter"
 
 #: scripts/apps/authoring/views/send-item.html:104
 msgid "publish from"
-msgstr ""
+msgstr "Veröffentlicht ab"
 
 #: scripts/apps/publish/index.js:48
 msgid "Publish Queue"
-msgstr ""
+msgstr "Liste Veröffentlichungen"
 
 #: scripts/apps/archive/views/metadata-view.html:135
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:327
 #: scripts/apps/authoring/views/send-item.html:55
 msgid "Publish Schedule"
-msgstr ""
+msgstr "Veröffentlichungsplan"
 
 #: scripts/apps/authoring/views/confirm-media-associated.html:18
 msgid "Publish Without Media"
-msgstr ""
+msgstr "Ohne Medien veröffentlichen"
 
 #: scripts/core/lang/missing-translations-strings.js:7
 msgid "published"
-msgstr ""
+msgstr "Veröffentlicht"
 
 #: scripts/apps/dashboard/workspace-tasks/views/desk-stages.html:22
 #: scripts/apps/search/views/item-repo.html:9
 msgid "Published"
-msgstr ""
+msgstr "Veröffentlicht"
 
 #: scripts/apps/authoring/versioning/history/views/history.html:59
 msgid "Published by"
-msgstr ""
+msgstr "Veröffentlicht von"
 
 #: scripts/apps/legal-archive/views/legal_archive.html:62
 msgid "Published From"
-msgstr ""
+msgstr "Veröffentlicht ab"
 
 #: scripts/apps/legal-archive/views/legal_archive.html:66
 msgid "Published Until"
-msgstr ""
+msgstr "Veröffentlicht bis"
 
 #: scripts/apps/publish/views/publish-queue.html:91
 msgid "Publishing Action"
-msgstr ""
+msgstr "Veröfffentlichung Aktionen"
 
 #: scripts/apps/authoring/views/send-item.html:54
 msgid "Publishing Schedule"
-msgstr ""
+msgstr "Veröffentlichungsplan"
 
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:54
 msgid "Pubstatus"
-msgstr ""
+msgstr "PubStatus"
 
 #: scripts/apps/archive/views/metadata-view.html:121
 msgid "PubStatus"
-msgstr ""
+msgstr "PubStatus"
 
 #: scripts/apps/vocabularies/services/SchemaFactory.js:5
 msgid "QCode"
-msgstr ""
+msgstr "QCode"
 
 #: scripts/apps/workspace/content/views/schema-editor.html:94
 msgid "Quarter"
-msgstr ""
+msgstr "Viertel Breite"
 
 #: scripts/apps/search/views/raw-search.html:3
 msgid "Query Text"
-msgstr ""
+msgstr "Suchtext"
 
 #: scripts/apps/publish/views/publish-queue.html:95
 msgid "Queued at"
-msgstr ""
+msgstr "Gelistet am"
 
 #: scripts/apps/authoring/macros/views/macros-widget.html:14
 msgid "quick list"
-msgstr ""
+msgstr "Schnellübersicht"
 
 #: scripts/core/editor2/editor.js:1067
 msgid "quote"
-msgstr ""
+msgstr "Zitat"
 
 #: scripts/apps/search/views/search-panel.html:13
 msgid "Raw"
-msgstr ""
+msgstr "Freitext"
 
 #: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:47
 msgid "Go-To"
-msgstr ""
+msgstr "Gehe zu"
 
 #: scripts/apps/users/config.js:147
 msgid "Read user roles"
-msgstr ""
+msgstr "Benutzerrollen ansehen"
 
 #: scripts/apps/users/config.js:137
 msgid "Read users"
-msgstr ""
+msgstr "Benutzer ansehen"
 
 #: scripts/apps/monitoring/views/monitoring-view.html:118
 msgid "Rearrange Groups"
-msgstr ""
+msgstr "Gruppen neu gruppieren"
 
 #: scripts/apps/dashboard/views/workspace.html:6
 msgid "Rearrange widgets"
-msgstr ""
+msgstr "Widgets neu gruppieren"
 
 #: scripts/apps/users/views/list.html:37
 msgid "Recently added"
-msgstr ""
+msgstr "Vor Kurzem hinzugefügt"
 
 #: scripts/apps/publish/views/email-config.html:2
 msgid "Recipients"
-msgstr ""
+msgstr "Empfänger"
 
 #: scripts/apps/publish/views/email-config.html:8
 msgid "Recipients (Bcc, hidden)"
-msgstr ""
+msgstr "Empfänger (bcc, versteckt)"
 
 #: scripts/apps/publish/views/email-config.html:4
 msgid "Recipients (visible to everybody)"
-msgstr ""
+msgstr "Empfänger"
 
 #: scripts/apps/monitoring/views/monitoring-group-header.html:24
 #: scripts/apps/monitoring/views/monitoring-group-header.html:45
@@ -4750,11 +4750,11 @@ msgstr ""
 #: scripts/apps/publish/views/publish-queue.html:64
 #: scripts/apps/search/views/search.html:9
 msgid "Refresh"
-msgstr ""
+msgstr "Aktualisieren"
 
 #: scripts/apps/authoring/metadata/views/metadata-tags.html:9
 msgid "Refresh suggestions"
-msgstr ""
+msgstr "Vorschläge aktualisieren"
 
 #: scripts/apps/authoring/metadata/views/metadata-tags.html:10
 msgid "Refreshing..."
@@ -4762,7 +4762,7 @@ msgstr "Aktualisiere..."
 
 #: scripts/apps/archive/related-item-widget/relatedItem.js:90
 msgid "Relate an item"
-msgstr ""
+msgstr "Element verbinden"
 
 #: scripts/apps/authoring/views/authoring-header.html:30
 msgid "RELATED"
@@ -4870,7 +4870,7 @@ msgstr "Vorlage entfernen"
 
 #: scripts/core/lang/missing-translations-strings.js:32
 msgid "removed item {{ type }} about {{ subject }}"
-msgstr ""
+msgstr "Artikel {{ type }} über {{ subject }} entfernt"
 
 #: scripts/apps/dashboard/views/workspace.html:27
 msgid "Rename workspace"
@@ -4882,11 +4882,11 @@ msgstr "Arbeitsbereich umbennenen"
 
 #: scripts/apps/monitoring/views/aggregate-settings.html:83
 msgid "Reorder Sections"
-msgstr ""
+msgstr "Abschnitte neu ordnen"
 
 #: scripts/apps/monitoring/views/aggregate-settings.html:86
 msgid "Reorder stages and saved searches for view"
-msgstr ""
+msgstr "Stages und gespeicherte Suchen neu gruppieren"
 
 #: scripts/apps/authoring/macros/views/macros-replace.html:6
 msgid "replace"
@@ -4906,7 +4906,7 @@ msgstr "Ersetzen durch"
 
 #: scripts/core/lang/missing-translations-strings.js:38
 msgid "replaced item {{ type }} about {{ subject }}"
-msgstr ""
+msgstr "Artikel {{ type }} über {{ subject }} ersetzt"
 
 #: scripts/apps/workspace/content/views/schema-editor.html:29
 #: scripts/core/ui/ui.js:1341
@@ -4915,11 +4915,11 @@ msgstr "Erforderlich"
 
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:501
 msgid "Required field {{ key }} is missing. ..."
-msgstr ""
+msgstr "Das Feld {{ key }} ist ein Pflichtfeld."
 
 #: scripts/apps/authoring/authoring/controllers/ChangeImageController.js:91
 msgid "Required field(s) missing"
-msgstr ""
+msgstr "Bitte füllen Sie die Pflichtfelder aus."
 
 #: scripts/apps/ingest/views/settings/rssConfig.html:14
 msgid "Requires Authentication"
@@ -4937,7 +4937,7 @@ msgstr "Element erneut senden"
 
 #: scripts/apps/archive/views/resend-configuration.html:4
 msgid "Resend To"
-msgstr ""
+msgstr "Erneut gesendet an"
 
 #: scripts/apps/profiling/views/profiling.html:22
 msgid "Reset"
@@ -4967,56 +4967,56 @@ msgstr "Ergebnistyp"
 
 #: scripts/core/lang/missing-translations-strings.js:6
 msgid "retrying"
-msgstr ""
+msgstr "wiederhole"
 
 #: scripts/apps/authoring/versioning/versions/views/versions.html:16
 msgid "revert"
-msgstr ""
+msgstr "rückgängig"
 
 #: scripts/apps/publish/views/subscribers.html:162
 msgid "Revoke"
-msgstr ""
+msgstr "Widerrufen"
 
 #: scripts/apps/authoring/versioning/history/views/history.html:21
 msgid "Rewritten by"
-msgstr ""
+msgstr "Überarbeitet von"
 
 #: scripts/apps/users/views/edit-form.html:124
 msgid "role"
-msgstr ""
+msgstr "Rolle"
 
 #: scripts/apps/users/views/list.html:30
 #: scripts/apps/users/views/user-privileges.html:17
 msgid "Role"
-msgstr ""
+msgstr "Rolle"
 
 #: scripts/core/lang/missing-translations-strings.js:36
 msgid "role {{role}} is granted new privileges: Please re-login."
-msgstr ""
+msgstr "Die Rolle {{role}} hat neue Rechte bekommen. \nBitte loggen Sie sich erneut ein."
 
 #: scripts/apps/users/views/settings-roles.html:39
 msgid "Role Description"
-msgstr ""
+msgstr "Rollenbeschreibung"
 
 #: scripts/apps/users/views/settings-roles.html:35
 msgid "Role Name"
-msgstr ""
+msgstr "Rollenname"
 
 #: scripts/apps/users/views/settings.html:6
 msgid "Roles"
-msgstr ""
+msgstr "Rollen"
 
 #: scripts/core/lang/missing-translations-strings.js:15
 msgid "Roles Management"
-msgstr ""
+msgstr "Rollen Verwaltung"
 
 #: scripts/apps/users/views/settings-privileges.html:3
 msgid "Roles privileges"
-msgstr ""
+msgstr "Rollen Berechtigungen"
 
 #: scripts/core/lang/missing-translations-strings.js:6
 msgid "routed"
-msgstr ""
+msgstr "routed"
 
 #: scripts/apps/ingest/views/settings/settings.html:12
 msgid "Routing"
@@ -5024,7 +5024,7 @@ msgstr "Routing"
 
 #: scripts/core/lang/missing-translations-strings.js:15
 msgid "Routing Rules Management"
-msgstr ""
+msgstr "Routing Regeln"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:121
 msgid "Routing Scheme"
@@ -5041,31 +5041,31 @@ msgstr "RSS Feed URL"
 #: scripts/apps/ingest/views/settings/ingest-routing-general.html:2
 #: scripts/apps/ingest/views/settings/ingest-routing-general.html:3
 msgid "Rule name"
-msgstr ""
+msgstr "Regel Name"
 
 #: scripts/apps/ingest/views/settings/ingest-rules-content.html:36
 msgid "Rule set name"
-msgstr ""
+msgstr "Regelsatz Name"
 
 #: scripts/apps/ingest/directives/IngestRulesContent.js:31
 msgid "Rule set saved."
-msgstr ""
+msgstr "Regelsatz gespeichert"
 
 #: scripts/apps/ingest/views/settings/settings.html:9
 msgid "Rule sets"
-msgstr ""
+msgstr "Regelsätze"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:114
 msgid "Ruleset"
-msgstr ""
+msgstr "Regelsatz"
 
 #: scripts/apps/authoring/views/authoring-topbar.html:210
 msgid "Run automatically"
-msgstr ""
+msgstr "Automatisch ausführen"
 
 #: scripts/core/datetime/datetime.js:204
 msgid "Saturday"
-msgstr ""
+msgstr "Samstag"
 
 #: scripts/apps/analytics/views/save-activity-report.html:10
 #: scripts/apps/archive/views/upload.html:99
@@ -5101,32 +5101,32 @@ msgstr ""
 #: scripts/apps/workspace/views/edit-workspace-modal.html:20
 #: scripts/core/editor2/views/block-embed.html:4
 msgid "Save"
-msgstr ""
+msgstr "Speichern"
 
 #: scripts/apps/desks/views/desk-config-modal.html:100
 #: scripts/apps/desks/views/desk-config-modal.html:299
 msgid "Save & Continue"
-msgstr ""
+msgstr "Speichern & Weiter"
 
 #: scripts/apps/workspace/content/views/profile-settings.html:70
 msgid "Save &amp; Continue"
-msgstr ""
+msgstr "Speichern & Weiter"
 
 #: scripts/apps/analytics/views/save-activity-report.html:2
 msgid "Save activity report"
-msgstr ""
+msgstr "Activity Report speichern"
 
 #: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:75
 msgid "Save and publish"
-msgstr ""
+msgstr "Speichern und Veröffentlichen"
 
 #: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:89
 msgid "Save and send"
-msgstr ""
+msgstr "Speichern und Senden"
 
 #: scripts/apps/search/views/save-search.html:14
 msgid "Save As"
-msgstr ""
+msgstr "Speichern unter"
 
 #: scripts/apps/authoring/views/authoring-topbar.html:136
 #: scripts/apps/templates/views/create-template.html:4
@@ -5181,61 +5181,61 @@ msgstr "Speichert das aktuelle Element"
 #: scripts/apps/users/directives/UserEditDirective.js:104
 #: scripts/core/notify/notify.js:50
 msgid "Saving..."
-msgstr ""
+msgstr "Speichern ..."
 
 #: scripts/apps/search/views/search-parameters.html:187
 msgid "Scanpix ID(s)"
-msgstr ""
+msgstr "Scanpix ID(s)"
 
 #: scripts/apps/templates/views/templates.html:50
 msgid "Sched. Desk / Stage"
-msgstr ""
+msgstr "Planung Desk/ Stage"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-content.html:74
 #: scripts/apps/ingest/views/settings/ingest-routing-general.html:42
 msgid "Schedule"
-msgstr ""
+msgstr "Planung"
 
 #: scripts/apps/templates/views/template-editor-modal.html:161
 msgid "Schedule Desk"
-msgstr ""
+msgstr "Desk zuordnen"
 
 #: scripts/apps/templates/views/template-editor-modal.html:173
 msgid "Schedule Stage"
-msgstr ""
+msgstr "Planung Stage"
 
 #: scripts/core/lang/missing-translations-strings.js:7
 msgid "scheduled"
-msgstr ""
+msgstr "Geplant"
 
 #: scripts/apps/search/views/search-filters.html:177
 msgid "Scheduled"
-msgstr ""
+msgstr "Geplant"
 
 #: scripts/apps/publish/views/publish-queue.html:96
 msgid "Scheduled at"
-msgstr ""
+msgstr "Geplant am"
 
 #: scripts/core/lang/missing-translations-strings.js:21
 msgid "scheduled Desk Output"
-msgstr ""
+msgstr "Geplanter Desk Output"
 
 #: scripts/apps/workspace/content/views/schema-editor.html:2
 msgid "Schema Configuration"
-msgstr ""
+msgstr "Schema Konfiguration"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-content.html:37
 #: scripts/apps/ingest/views/settings/ingest-routing-content.html:38
 msgid "Scheme name"
-msgstr ""
+msgstr "Schema Name"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-content.html:45
 msgid "Scheme rules"
-msgstr ""
+msgstr "Schema Regeln"
 
 #: scripts/core/lang/missing-translations-strings.js:20
 msgid "search"
-msgstr ""
+msgstr "Suchen"
 
 #: scripts/apps/content-filters/views/filter-search.html:33
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:52
@@ -5257,7 +5257,7 @@ msgstr ""
 #: scripts/core/list/views/searchbar.html:4
 #: scripts/core/views/sdSearchList.html:43
 msgid "Search"
-msgstr ""
+msgstr "Suche"
 
 #: scripts/apps/dashboard/world-clock/configuration.html:37
 msgid "Search for clock"
@@ -5299,51 +5299,51 @@ msgstr "Die Suche wurde gespeichert."
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:85
 msgid "sec"
-msgstr ""
+msgstr "Sek"
 
 #: scripts/core/auth/secure-login.html:18
 msgid "Secure Log In"
-msgstr ""
+msgstr "Secure Log In"
 
 #: scripts/core/auth/login-modal.html:27
 msgid "Secure login"
-msgstr ""
+msgstr "Secure Log In"
 
 #: scripts/core/views/sdSearchList.html:3
 msgid "Select"
-msgstr ""
+msgstr "Auswählen"
 
 #: scripts/apps/users/views/user-preferences.html:61
 msgid "Select all categories"
-msgstr ""
+msgstr "Alle Kategorien auswählen"
 
 #: scripts/apps/authoring/views/change-image.html:3
 msgid "Select Area of Interest"
-msgstr ""
+msgstr "Area of Interest auswählen"
 
 #: scripts/apps/ingest/ingest-stats-widget/configuration.html:17
 msgid "Select color"
-msgstr ""
+msgstr "Farbe auswählen"
 
 #: scripts/apps/users/views/user-preferences.html:69
 msgid "Select default categories only"
-msgstr ""
+msgstr "Nur Standardkategorien auswählen"
 
 #: scripts/apps/desks/views/desk-select.html:3
 msgid "Select desk"
-msgstr ""
+msgstr "Desk auswählen"
 
 #: scripts/apps/monitoring/views/aggregate-settings.html:18
 msgid "Select desks for view"
-msgstr ""
+msgstr "Desk zur Ansicht auswählen"
 
 #: scripts/apps/monitoring/views/aggregate-settings.html:48
 msgid "Select global saved searches"
-msgstr ""
+msgstr "Globale gespeicherte Suchen zur Ansicht auswählen"
 
 #: scripts/apps/monitoring/views/aggregate-settings.html:79
 msgid "Select saved searches for view"
-msgstr ""
+msgstr "Gespeicherte Suchen zur Ansicht auswählen"
 
 #: scripts/apps/monitoring/views/aggregate-settings.html:41
 msgid "Select saved searches to view"
@@ -5388,65 +5388,65 @@ msgstr "Ausgewählte Elemente"
 
 #: scripts/core/lang/missing-translations-strings.js:4
 msgid "send"
-msgstr ""
+msgstr "Senden"
 
 #: scripts/apps/authoring/views/send-item.html:75
 msgid "send and continue"
-msgstr ""
+msgstr "Senden und weiter bearbeiten"
 
 #: scripts/core/lang/missing-translations-strings.js:9
 msgid "Send notifications via email"
-msgstr ""
+msgstr "Benachrichtigungen per E-Mail senden"
 
 #: scripts/apps/authoring/views/send-item.html:3
 #: scripts/apps/search/views/multi-action-bar.html:37
 msgid "Send to"
-msgstr ""
+msgstr "Senden an"
 
 #: scripts/apps/authoring/views/authoring-topbar.html:235
 msgid "Send to / Publish"
-msgstr ""
+msgstr "Verschicken / Veröffentlichen"
 
 #: scripts/core/lang/missing-translations-strings.js:17
 msgid "Sending"
-msgstr ""
+msgstr "Senden"
 
 #: scripts/apps/authoring/versioning/history/views/publish_queue.html:16
 msgid "Sent/Queued as"
-msgstr ""
+msgstr "Gesendet/ gelistet am"
 
 #: scripts/apps/publish/views/publish-queue.html:87
 msgid "Sequence No"
-msgstr ""
+msgstr "Sequenz Nr:"
 
 #: scripts/apps/publish/views/subscribers.html:104
 msgid "Sequence Number Settings"
-msgstr ""
+msgstr "Einstellungen Sequenznummer"
 
 #: scripts/apps/ingest/views/settings/fileConfig.html:2
 msgid "Server Folder"
-msgstr ""
+msgstr "Server Ordner"
 
 #: scripts/apps/archive/views/metadata-view.html:49
 #: scripts/apps/authoring/views/full-preview.html:33
 msgid "Service"
-msgstr ""
+msgstr "Service"
 
 #: scripts/apps/desks/views/desk-config-modal.html:62
 msgid "SERVICE"
-msgstr ""
+msgstr "Service"
 
 #: scripts/apps/search/views/search-filters.html:53
 msgid "Services"
-msgstr ""
+msgstr "Services"
 
 #: scripts/apps/users/controllers/SessionsDeleteCommand.js:11
 msgid "Sessions cleared"
-msgstr ""
+msgstr "Sessions bereinigt"
 
 #: scripts/apps/monitoring/views/aggregate-settings.html:111
 msgid "Set maximum items per stages and saved searches for view"
-msgstr ""
+msgstr "Ansicht: Maximale Anzahl der Elemente pro Stage und gespeicherte Suche"
 
 #: scripts/apps/settings/directives/SettingsView.js:13
 #: scripts/apps/settings/index.js:16
@@ -5483,7 +5483,7 @@ msgstr "Nur Nutzer anzeigen, die online sind"
 
 #: scripts/apps/authoring/versioning/history/views/publish_queue.html:3
 msgid "Show sent/queued items"
-msgstr ""
+msgstr "Zeige gesendete/ gelistete Elemente"
 
 #: scripts/apps/search/index.js:67
 msgid "Shows search modal"
@@ -5553,7 +5553,7 @@ msgstr "Kopfzeile"
 
 #: scripts/core/lang/missing-translations-strings.js:42
 msgid "SLUGLINE is too long"
-msgstr ""
+msgstr "SLUGLINE ist zu lang"
 
 #: scripts/apps/archive/related-item-widget/relatedItem-configuration.html:4
 msgid "Slugline Match"
@@ -5636,7 +5636,7 @@ msgstr "Sortieren:"
 
 #: scripts/apps/monitoring/views/monitoring-view.html:110
 msgid "Sorting"
-msgstr ""
+msgstr "Sortieren"
 
 #: scripts/apps/archive/views/metadata-view.html:36
 #: scripts/apps/content-filters/views/production-test-view.html:22
@@ -5662,11 +5662,11 @@ msgstr "Quelle des Suchanbieters"
 
 #: scripts/apps/ingest/ingest-stats-widget/configuration.html:9
 msgid "Source stats"
-msgstr ""
+msgstr "Statistik Quelle"
 
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:3
 msgid "Source Type:"
-msgstr ""
+msgstr "Quelle Typ"
 
 #: scripts/apps/ingest/views/settings/settings.html:6
 #: scripts/apps/search/views/search-filters.html:31
@@ -5680,35 +5680,35 @@ msgstr "Rechtschreibprüfung"
 #: scripts/apps/search/views/multi-action-bar.html:30
 #: scripts/apps/workspace/views/workspace-sidenav-items.html:31
 msgid "Spike"
-msgstr ""
+msgstr "Papierkorb"
 
 #: scripts/apps/archive/index.js:94
 msgid "Spike Item"
-msgstr ""
+msgstr "In den Papierkorb"
 
 #: scripts/apps/monitoring/config.js:17
 msgid "Spike Monitoring"
-msgstr ""
+msgstr "Monitoring Papierkorb"
 
 #: scripts/core/lang/missing-translations-strings.js:7
 msgid "spiked"
-msgstr ""
+msgstr "Papierkorb"
 
 #: scripts/apps/dashboard/workspace-tasks/views/desk-stages.html:17
 msgid "Spiked"
-msgstr ""
+msgstr "Papierkorb"
 
 #: scripts/apps/authoring/versioning/history/views/history.html:46
 msgid "Spiked from"
-msgstr ""
+msgstr "Papierkorb von"
 
 #: scripts/apps/monitoring/views/monitoring-view.html:21
 msgid "Spiked Items"
-msgstr ""
+msgstr "Elemente im Papierkorb"
 
 #: scripts/apps/monitoring/index.js:57
 msgid "Spikes item(s)"
-msgstr ""
+msgstr "Artikel anpinnen"
 
 #: scripts/core/lang/missing-translations-strings.js:21
 msgid "stage"
@@ -5732,7 +5732,7 @@ msgstr "Stage Details"
 
 #: scripts/apps/desks/directives/DeskeditStages.js:140
 msgid "Stage has been modified elsewhere. Please reload the desks"
-msgstr ""
+msgstr "Der Bereich wurde an andere Stelle verschoben. Bitte laden Sie die Desks neu."
 
 #: scripts/apps/desks/views/desk-config-modal.html:165
 msgid "Stage with name"
@@ -5745,21 +5745,21 @@ msgstr "Stage"
 #: scripts/apps/desks/views/desk-config-modal.html:110
 #: scripts/apps/desks/views/settings.html:34
 msgid "Stages"
-msgstr ""
+msgstr "Stages"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-general.html:50
 msgid "Start time"
-msgstr ""
+msgstr "Startzeit"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-schedule.html:7
 msgid "Start Time (inclusive)"
-msgstr ""
+msgstr "Startzeit (inklusive)"
 
 #: scripts/apps/archive/views/metadata-view.html:185
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:72
 #: scripts/apps/content-filters/views/production-test-view.html:18
 msgid "State"
-msgstr ""
+msgstr "Status"
 
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:150
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:59
@@ -5769,7 +5769,7 @@ msgstr ""
 #: scripts/apps/search-providers/views/search-provider-config.html:35
 #: scripts/apps/workspace/content/views/profile-settings.html:35
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 #: scripts/apps/publish/views/publish-queue.html:46
 msgid "Status:"
@@ -5778,11 +5778,11 @@ msgstr "Status"
 #: scripts/apps/publish/views/odbc-config.html:11
 #: scripts/apps/publish/views/odbc-config.html:9
 msgid "Stored Procedure"
-msgstr ""
+msgstr "Gespeicherte Prozedur"
 
 #: scripts/apps/products/views/product-test.html:4
 msgid "Story GUID"
-msgstr ""
+msgstr "Story GUID"
 
 #: scripts/apps/archive/related-item-widget/relatedItem.js:172
 msgid "Story is associated as update."
@@ -5791,7 +5791,7 @@ msgstr "Die Story wurde als Update verknüpft."
 #: scripts/apps/legal-archive/views/legal_archive.html:56
 #: scripts/apps/search/views/search-parameters.html:21
 msgid "Story Text"
-msgstr ""
+msgstr "Story Text"
 
 #: scripts/core/directives/PasswordStrengthDirective.js:64
 msgid "Strength"
@@ -5826,15 +5826,15 @@ msgstr "Abonnent "
 
 #: scripts/apps/publish/views/subscribers.html:77
 msgid "Subscriber codes"
-msgstr ""
+msgstr "Abonnenten Codes "
 
 #: scripts/apps/publish/directives/SubscribersDirective.js:199
 msgid "Subscriber could not be initialized!"
-msgstr ""
+msgstr "Fehler: Der Abonnent konte nicht aktiviert werden."
 
 #: scripts/apps/publish/directives/SubscribersDirective.js:134
 msgid "Subscriber saved."
-msgstr ""
+msgstr "Der Abonnent wurde gespeichert."
 
 #: scripts/apps/publish/views/publish-queue.html:14
 msgid "Subscriber:"
@@ -5868,7 +5868,7 @@ msgstr "Sonntag"
 
 #: scripts/core/menu/views/superdesk-view.html:27
 msgid "Superdesk is experiencing network connection issues:/"
-msgstr ""
+msgstr "Fehler: Es bestehen Verbindungs- oder Netzwerkprobleme"
 
 #: scripts/core/menu/views/menu.html:22
 msgid "Switch to feature preview"
@@ -5902,11 +5902,11 @@ msgstr "Wechseln zwischen Einzel-/Gruppenansicht für Stages"
 
 #: scripts/apps/authoring/views/authoring-topbar.html:43
 msgid "T D"
-msgstr ""
+msgstr "TD"
 
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:43
 msgid "Tags"
-msgstr ""
+msgstr "Tags"
 
 #: scripts/apps/users/controllers/ChangeAvatarController.js:5
 msgid "Take a picture"
@@ -5939,55 +5939,55 @@ msgstr "Zusammenstellungen können kein Embargo haben."
 #: scripts/apps/monitoring/views/monitoring-view.html:103
 #: scripts/apps/monitoring/views/monitoring-view.html:74
 msgid "Takes Package"
-msgstr ""
+msgstr "Zusammenstellung"
 
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:535
 msgid ""
 "Tansa is not responding. You can continue editing or publish the story."
-msgstr ""
+msgstr "Tansa antwortet nicht. \nSie können die Inhalte dennoch weiter editieren oder veröffentlichen."
 
 #: scripts/apps/archive/views/metadata-view.html:149
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:122
 #: scripts/apps/products/views/products-config-modal.html:38
 #: scripts/apps/templates/views/template-editor-modal.html:118
 msgid "Target Regions"
-msgstr ""
+msgstr "Target: Region"
 
 #: scripts/apps/archive/views/metadata-view.html:154
 msgid "Target Subscriber Types"
-msgstr ""
+msgstr "Target: Abonnententyp"
 
 #: scripts/apps/archive/views/metadata-view.html:144
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:108
 #: scripts/apps/templates/views/template-editor-modal.html:107
 msgid "Target Subscribers"
-msgstr ""
+msgstr "Target: Abonnenten"
 
 #: scripts/apps/publish/views/subscribers.html:60
 msgid "Target Type"
-msgstr ""
+msgstr "Target: Typ"
 
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:130
 #: scripts/apps/ingest/views/settings/ingest-routing-action.html:46
 #: scripts/apps/templates/views/template-editor-modal.html:126
 msgid "Target Types"
-msgstr ""
+msgstr "Target: Typ"
 
 #: scripts/apps/publish/views/subscribers.html:83
 msgid "Targetable by users"
-msgstr ""
+msgstr "Zur Nutzung freigegeben"
 
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:6
 msgid "Task Details"
-msgstr ""
+msgstr "Aufgaben Details"
 
 #: scripts/apps/workspace/views/workspace-sidenav-items.html:24
 msgid "Tasks"
-msgstr ""
+msgstr "Aufgaben"
 
 #: scripts/core/lang/missing-translations-strings.js:15
 msgid "Tasks Management"
-msgstr ""
+msgstr "Aufgaben Verwaltung"
 
 #: scripts/apps/highlights/views/highlights_config_modal.html:19
 msgid "Template"
@@ -6036,247 +6036,247 @@ msgstr "Text"
 
 #: scripts/core/auth/reset-password.html:75
 msgid "The activation token is not valid.<br>"
-msgstr ""
+msgstr "Der Aktivierungsschlüssel ist nicht gültig."
 
 #: scripts/apps/analytics/directives/ActivityReportPanel.js:115
 msgid "The activity report was generated successfully"
-msgstr ""
+msgstr "Der Activity Report wurde erstellt"
 
 #: scripts/apps/analytics/directives/SaveActivityReport.js:28
 msgid "The activity report was saved successfully"
-msgstr ""
+msgstr "Der Activity Report wurde gespeichert"
 
 #: scripts/apps/users/views/change-avatar.html:31
 msgid "The minimum image resolution is 200x200 pixels."
-msgstr ""
+msgstr "Mindestbildgröße 200x200 Pixel."
 
 #: scripts/apps/users/directives/ChangePasswordDirective.js:19
 msgid "The password has been changed."
-msgstr ""
+msgstr "Das Passwort wurde geändert."
 
 #: scripts/apps/users/directives/ResetPasswordDirective.js:16
 msgid "The password has been reset."
-msgstr ""
+msgstr "Das Passwort wurde zurückgesetzt."
 
 #: scripts/apps/archive/views/upload.html:18
 msgid "There are failed uploads."
-msgstr ""
+msgstr "Einige Uploads wurden nicht durchgeführt."
 
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:237
 msgid "There are items locked or not published. Do you want to continue?"
-msgstr ""
+msgstr "Einige Elemente sind gesperrt oder wurden nicht veröffentlicht. Möchten Sie dennoch fortfahren?"
 
 #: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:71
 msgid ""
 "There are some unsaved changes, do you want to save and publish it now?"
-msgstr ""
+msgstr "Einige Änderungen wurden noch nicht gespeichert. Wollen Sie diese jetzt speichern und veröffentlichen?"
 
 #: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:85
 msgid "There are some unsaved changes, do you want to save and send it now?"
-msgstr ""
+msgstr "Einige Änderungen wurden noch nicht gespeichert. Wollen Sie diese jetzt speichern und senden?"
 
 #: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:58
 msgid "There are some unsaved changes, do you want to save it now?"
-msgstr ""
+msgstr "Einige Änderungen wurden noch nicht gespeichert. \nWollen Sie diese jetzt speichern?"
 
 #: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:45
 msgid "There are some unsaved changes, go to the article to save changes?"
-msgstr ""
+msgstr "Ihre Änderungen wurden noch nicht gespeichert. Wollen Sie das Element öffnen, um die Änderungen zu speichern? "
 
 #: scripts/core/auth/auth.js:194
 msgid "There are some unsaved changes. Please save them before signing out."
-msgstr ""
+msgstr "Ihre Änderungen wurden noch nicht gespeichert.\nBitte speichern Sie die Änderungen bevor Sie sich abmelden."
 
 #: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:26
 msgid ""
 "There are unsaved changes. If you navigate away, your changes will be lost."
-msgstr ""
+msgstr "Ihre Änderungen wurden noch nicht gespeichert.\nBitte speichern Sie die Änderungen, ansonsten werden diese verworfen."
 
 #: scripts/apps/archive/related-item-widget/relatedItem.js:178
 msgid "There is an error. Failed to associate update."
-msgstr ""
+msgstr "Fehler: Das Update wurde nicht durchgefüht."
 
 #: scripts/apps/archive/related-item-widget/relatedItem.js:149
 msgid "There is an error. Failed to associate as take."
-msgstr ""
+msgstr "Ein Fehler ist aufgetreten. Take konnte nicht verbunden werden."
 
 #: scripts/apps/publish/views/subscribers.html:169
 msgid "There is no token for subscriber."
-msgstr ""
+msgstr "Keine Auswahl für Abonnenten."
 
 #: scripts/apps/highlights/controllers/HighlightsConfig.js:57
 msgid "There was a problem while saving highlights configuration"
-msgstr ""
+msgstr "Fehler: Die Konfiguration der Highlights wurde nicht gespeichert."
 
 #: scripts/apps/users/controllers/ChangeAvatarController.js:49
 #: scripts/apps/users/controllers/ChangeAvatarController.js:61
 msgid "There was a problem with your upload"
-msgstr ""
+msgstr "Fehler: Der Upload wurde nicht durchgeführt."
 
 #: scripts/apps/desks/directives/DeskeditBasic.js:68
 msgid "There was a problem, desk not created/updated."
-msgstr ""
+msgstr "Fehler: Der Desk wurde nicht erstellt bzw. aktualisiert."
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:47
 msgid "There was a problem, dictionary not created/updated."
-msgstr ""
+msgstr "Fehler: Das Wörterbuch wurde nicht erstellt/ aktualisiert."
 
 #: scripts/apps/groups/views/groups-config-modal.html:29
 msgid "There was a problem, group not created/updated."
-msgstr ""
+msgstr "Fehler: Die Gruppe wurde nicht erstellt/ aktualisiert."
 
 #: scripts/apps/search/directives/ItemGlobalSearch.js:56
 #: scripts/apps/search/directives/ItemGlobalSearch.js:88
 msgid "There was a problem, item can not open."
-msgstr ""
+msgstr "Fehler: Das Element kann nicht geöffnet werden."
 
 #: scripts/apps/groups/directives/GroupeditPeopleDirective.js:46
 msgid "There was a problem, members not saved."
-msgstr ""
+msgstr "Fehler: Die Mitglieder wurden nicht gespeichert."
 
 #: scripts/apps/desks/directives/DeskeditPeople.js:56
 msgid "There was a problem, members not saved. Refresh Desks."
-msgstr ""
+msgstr "Fehler: Die User wurden nicht gespeichert.\nBitte laden sie die Desks neu."
 
 #: scripts/apps/desks/views/desk-config-modal.html:167
 msgid "There was a problem, stage not created/updated."
-msgstr ""
+msgstr "Fehler: Die Stage wurde nicht erstellt bzw. aktualisiert."
 
 #: scripts/apps/desks/directives/DeskeditStages.js:190
 msgid "There was a problem, stage was not deleted."
-msgstr ""
+msgstr "Fehler: Die Stage wurde nicht entfernt."
 
 #: scripts/apps/users/directives/UserEditDirective.js:128
 msgid "There was an error when saving the user account."
-msgstr ""
+msgstr "Fehler: Der Benutzer Account wurde nicht gespeichert. "
 
 #: scripts/apps/content-filters/controllers/ManageContentFiltersController.js:75
 msgid "There was an error. Content filter cannot be deleted."
-msgstr ""
+msgstr "Fehler: Der Filter wurde nicht gelöscht."
 
 #: scripts/apps/authoring/authoring/services/AuthoringService.js:105
 msgid "There was an error. Failed to generate update."
-msgstr ""
+msgstr "Fehler: Ein Update konnte nicht eingespielt werden."
 
 #: scripts/apps/authoring/authoring/services/AuthoringService.js:124
 msgid "There was an error. Failed to remove link."
-msgstr ""
+msgstr "Fehler: Der Link wurde nicht entfernt"
 
 #: scripts/apps/content-filters/controllers/FilterConditionsController.js:98
 msgid "There was an error. Filter condition cannot be deleted."
-msgstr ""
+msgstr "Fehler: Die Suchbedingung kann nicht gelöscht werden."
 
 #: scripts/apps/users/directives/UserRolesDirective.js:62
 msgid "There was an error. Role cannot be deleted."
-msgstr ""
+msgstr "Fehler: Die Rolle kann nicht gelöscht werden."
 
 #: scripts/apps/ingest/directives/IngestRoutingContent.js:102
 msgid "There was an error. Routing scheme cannot be deleted."
-msgstr ""
+msgstr "Fehler: Das Routing Schema kann nicht gelöscht werden."
 
 #: scripts/apps/ingest/directives/IngestRulesContent.js:51
 msgid "There was an error. Rule set cannot be deleted."
-msgstr ""
+msgstr "Fehler: Diese Regel kann nicht gelöscht werden."
 
 #: scripts/apps/templates/directives/TemplatesDirective.js:267
 msgid "There was an error. Template cannot be deleted."
-msgstr ""
+msgstr "Fehler: Diese Vorlage kann nicht gelöscht werden."
 
 #: scripts/core/ui/ui.js:1320
 msgid "This field is required"
-msgstr ""
+msgstr "Dies ist ein Pflichtfeld."
 
 #: scripts/apps/authoring/authoring/directives/AuthoringEmbeddedDirective.js:34
 msgid "This is a corrected repeat."
-msgstr ""
+msgstr "Dies ist eine korrigierte Fassung."
 
 #: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:141
 msgid "This item was locked by <b></b>."
-msgstr ""
+msgstr "Dieses Element wurde von <b></b> gesperrt"
 
 #: scripts/apps/archive/views/preview.html:77
 msgid "This story has been rewritten by:"
-msgstr ""
+msgstr "Diese Story wurde neu erstellt durch:"
 
 #: scripts/apps/highlights/views/highlights_config_modal.html:41
 msgid "This week"
-msgstr ""
+msgstr "Diese Woche"
 
 #: scripts/core/lang/missing-translations-strings.js:41
 msgid ""
 "This widget allows you to create literally any content view you may need in "
 "Superdesk, be it production or ingest. All you need is to select a desk, its"
 " stages or a saved search. Name your view once you are done. Enjoy!"
-msgstr ""
+msgstr "Die Zusammenstellung von Inhalten in Widgets ist frei definierbar."
 
 #: scripts/core/datetime/datetime.js:202
 msgid "Thursday"
-msgstr ""
+msgstr "Donnerstag"
 
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:74
 msgid "Time"
-msgstr ""
+msgstr "Zeit"
 
 #: scripts/apps/profiling/views/profiling.html:34
 msgid "Time per call"
-msgstr ""
+msgstr "Zeit pro Aufruf"
 
 #: scripts/apps/archive/views/upload.html:68
 #: scripts/apps/authoring/views/change-image.html:101
 msgid "Time Restricted"
-msgstr ""
+msgstr "Zeitlich begrenzt"
 
 #: scripts/apps/archive/views/metadata-view.html:139
 #: scripts/core/ui/views/sd-timezone.html:1
 msgid "Time Zone"
-msgstr ""
+msgstr "Zeitzone"
 
 #: scripts/core/lang/missing-translations-strings.js:29
 msgid "Timezone"
-msgstr ""
+msgstr "Zeitzone"
 
 #: scripts/apps/archive/views/upload.html:41
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:142
 #: scripts/apps/authoring/views/change-image.html:75
 msgid "Title"
-msgstr ""
+msgstr "Titel"
 
 #: scripts/apps/authoring/views/authoring-topbar.html:41
 #: scripts/apps/authoring/views/authoring-topbar.html:42
 #: scripts/apps/search/views/search-parameters.html:102
 msgid "To Desk"
-msgstr ""
+msgstr "An Desk"
 
 #: scripts/apps/dashboard/workspace-tasks/tasks.js:6
 msgid "To Do"
-msgstr ""
+msgstr "To Do"
 
 #: scripts/apps/archive/related-item-widget/relatedItem-configuration.html:19
 #: scripts/apps/highlights/views/highlights_config_modal.html:40
 #: scripts/core/datetime/absdate-directive.js:16
 #: scripts/core/ui/views/datepicker-wrapper.html:6
 msgid "Today"
-msgstr ""
+msgstr "Heute"
 
 #: scripts/apps/authoring/views/authoring.html:32
 msgid "Toggle theme"
-msgstr ""
+msgstr "Theme ändern"
 
 #: scripts/apps/search/index.js:68
 msgid "Toggles search view"
-msgstr ""
+msgstr "Suchansicht ändern"
 
 #: scripts/apps/authoring/widgets/widgets.js:175
 msgid "Toggles widget #"
-msgstr ""
+msgstr "Widget # ändern"
 
 #: scripts/apps/publish/views/subscribers.html:175
 msgid "Token expiry"
-msgstr ""
+msgstr "Token Ablaufdatum"
 
 #: scripts/core/ui/views/datepicker-wrapper.html:7
 msgid "Tomorrow"
-msgstr ""
+msgstr "Morgen"
 
 #: scripts/apps/authoring/views/full-preview.html:75
 msgid "Topic"
@@ -6292,7 +6292,7 @@ msgstr "Gesamt:"
 
 #: scripts/core/lang/missing-translations-strings.js:16
 msgid "Transformation Rules Management"
-msgstr ""
+msgstr "Transformationsregeln Verwaltung"
 
 #: scripts/apps/translations/index.js:32
 msgid "Translate"
@@ -6300,59 +6300,59 @@ msgstr "Übersetzen"
 
 #: scripts/apps/authoring/views/authoring-topbar.html:191
 msgid "Translate item to"
-msgstr ""
+msgstr "Element übersetzen"
 
 #: scripts/apps/authoring/views/authoring-topbar.html:187
 msgid "Translations"
-msgstr ""
+msgstr "Übersetzungen"
 
 #: scripts/apps/publish/views/publish-queue.html:97
 msgid "Transmitted at"
-msgstr ""
+msgstr "Gesendet um"
 
 #: scripts/apps/archive/views/upload.html:18
 msgid "Try again"
-msgstr ""
+msgstr "Bitte versuchen Sie es noch einmal."
 
 #: scripts/core/auth/login-modal.html:41
 #: scripts/core/auth/reset-password.html:38
 #: scripts/core/auth/reset-password.html:86
 #: scripts/core/auth/secure-login.html:39
 msgid "Trying to reconnect...<br>Please wait."
-msgstr ""
+msgstr "Verbindung herstellen...<br>Bitte warten Sie."
 
 #: scripts/core/datetime/datetime.js:200
 msgid "Tuesday"
-msgstr ""
+msgstr "Dienstag"
 
 #: scripts/core/menu/views/menu.html:23
 msgid "Turn off feature preview"
-msgstr ""
+msgstr "Feature Vorschau ausschalten"
 
 #: scripts/apps/archive/views/metadata-view.html:205
 msgid "Type"
-msgstr ""
+msgstr "Typ"
 
 #: scripts/core/lang/missing-translations-strings.js:16
 msgid "Un Spike"
-msgstr ""
+msgstr "Wiederherstellen"
 
 #: scripts/apps/dashboard/workspace-tasks/views/assignee-view.html:6
 #: scripts/apps/dashboard/workspace-tasks/views/task-preview.html:50
 msgid "Unassigned"
-msgstr ""
+msgstr "Nicht zugeordnet"
 
 #: scripts/core/views/sdselect.html:14
 msgid "Uncheck all"
-msgstr ""
+msgstr "Alle Markierungen aufheben"
 
 #: scripts/core/editor2/editor.js:1052
 msgid "underline"
-msgstr ""
+msgstr "Unterstreichen"
 
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:100
 msgid "Unique name"
-msgstr ""
+msgstr "Eindeutiger Name"
 
 #: scripts/apps/archive/views/metadata-view.html:201
 #: scripts/apps/content-filters/views/production-test-view.html:19
@@ -6360,39 +6360,39 @@ msgstr ""
 #: scripts/apps/publish/views/publish-queue.html:88
 #: scripts/apps/search/views/search-parameters.html:31
 msgid "Unique Name"
-msgstr ""
+msgstr "Eindeutiger Name"
 
 #: scripts/apps/search/views/item-globalsearch.html:11
 msgid "Unique Name/ID/GUID"
-msgstr ""
+msgstr "Eindeutiger Name/ID/GUID"
 
 #: scripts/apps/archive/directives/ArchivedItemKill.js:34
 msgid "Unknown Error: Cannot kill the item"
-msgstr ""
+msgstr "Fehler: Dieses Element kann nicht gelöscht werden."
 
 #: scripts/apps/archive/directives/ResendItem.js:42
 msgid "Unknown Error: Cannot resend the item"
-msgstr ""
+msgstr "Fehler: Das Element kann nicht erneut gesendet werden."
 
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:391
 msgid "Unknown Error: Item not published."
-msgstr ""
+msgstr "Fehler: Das Element wurde nicht veröffentlicht."
 
 #: scripts/apps/desks/controllers/DeskConfigController.js:46
 msgid "Unknown Error: There was a problem, desk was not deleted."
-msgstr ""
+msgstr "Fehler: Der Desk wurde nicht gelöscht."
 
 #: scripts/apps/archive/index.js:269
 msgid "Unlink take"
-msgstr ""
+msgstr "Verbindung des Take aufheben"
 
 #: scripts/apps/archive/index.js:285
 msgid "Unlink update"
-msgstr ""
+msgstr "Update-Verbindung aufheben"
 
 #: scripts/apps/authoring/versioning/history/views/history.html:30
 msgid "Unlinked by"
-msgstr ""
+msgstr "Verbindung aufgehoben von"
 
 #: scripts/apps/archive/views/item-lock.html:13
 #: scripts/apps/archive/views/item-lock.html:5
@@ -6406,19 +6406,19 @@ msgstr "Inhalt entsperren"
 
 #: scripts/apps/authoring/authoring/index.js:203
 msgid "Unlocks current item"
-msgstr ""
+msgstr "Inhalt entsperren"
 
 #: scripts/apps/search/views/multi-action-bar.html:34
 msgid "Unspike"
-msgstr ""
+msgstr "Wiederherstellen"
 
 #: scripts/apps/archive/index.js:124
 msgid "Unspike Item"
-msgstr ""
+msgstr "Element wiederherstellen"
 
 #: scripts/apps/authoring/versioning/history/views/history.html:50
 msgid "Unspiked to"
-msgstr ""
+msgstr "Wiederhergestellt an"
 
 #: scripts/apps/authoring/multiedit/views/sd-multiedit-dropdown.html:6
 #: scripts/apps/authoring/multiedit/views/sd-multiedit-inner-dropdown.html:4
@@ -6481,7 +6481,7 @@ msgstr "Die Datenquelle {{name}} wurde aktualisiert"
 
 #: scripts/core/lang/missing-translations-strings.js:33
 msgid "updated task {{ subject }} for item {{ type }}"
-msgstr ""
+msgstr "Aufgabe {{ subject }} für Artikel {{ type }} erneuert"
 
 #: scripts/apps/users/controllers/ChangeAvatarController.js:4
 msgid "Upload from computer"
@@ -6497,7 +6497,7 @@ msgstr "Medien hochladen"
 
 #: scripts/core/lang/missing-translations-strings.js:29
 msgid "uploaded media {{ name }}"
-msgstr ""
+msgstr "Hochgeladene Medien {{ name }}"
 
 #: scripts/apps/analytics/views/activity-report-parameters.html:77
 #: scripts/apps/archive/directives/ItemUrgency.js:19
@@ -6551,28 +6551,28 @@ msgstr "Der Benutzer {{user}} hat neue Rechte bekommen. Bitte loggen Sie sich er
 
 #: scripts/core/lang/missing-translations-strings.js:37
 msgid "user {{user}} is updated to administrator: Please re-login."
-msgstr ""
+msgstr "Der Benutzer {{user}} hat neue Rechte bekommen. Bitte loggen Sie sich erneut ein."
 
 #: scripts/apps/users/config.js:36
 msgid "User management"
-msgstr ""
+msgstr "Benutzer Verwaltung"
 
 #: scripts/core/lang/missing-translations-strings.js:16
 msgid "User Management"
-msgstr ""
+msgstr "Benutzer Verwaltung"
 
 #: scripts/apps/users/directives/UserPrivilegesDirective.js:30
 msgid "User not found."
-msgstr ""
+msgstr "Dieser Benutzer wurde nicht gefunden"
 
 #: scripts/apps/users/directives/UserPreferencesDirective.js:69
 #: scripts/core/services/preferencesService.js:218
 msgid "User preferences could not be saved..."
-msgstr ""
+msgstr "Fehler: Benutzer Einstellungen wurden nicht gespeichert."
 
 #: scripts/apps/users/directives/UserPreferencesDirective.js:65
 msgid "User preferences saved"
-msgstr ""
+msgstr "Benutzer Einstellungen gespeichert"
 
 #: scripts/apps/users/import/views/import-user.html:28
 msgid "User Profile to Import"
@@ -6646,44 +6646,44 @@ msgstr "Benutzer"
 
 #: scripts/core/lang/missing-translations-strings.js:8
 msgid "Users archive view format"
-msgstr ""
+msgstr "Ansicht Benutzer Archiv"
 
 #: scripts/apps/users/config.js:54 scripts/apps/users/views/edit.html:9
 msgid "Users Profile"
-msgstr ""
+msgstr "Benutzerprofil"
 
 #: scripts/apps/content-filters/views/filter-search.html:18
 #: scripts/apps/content-filters/views/manage-filter-conditions.html:55
 msgid "Values"
-msgstr ""
+msgstr "Werte"
 
 #: scripts/apps/authoring/versioning/versions/views/versions.html:14
 msgid "version"
-msgstr ""
+msgstr "Version"
 
 #: scripts/apps/archive/views/metadata-view.html:84
 msgid "Version"
-msgstr ""
+msgstr "Version"
 
 #: scripts/apps/archive/views/metadata-view.html:108
 msgid "Version creator"
-msgstr ""
+msgstr "Version Autor"
 
 #: scripts/apps/authoring/versioning/versioning.js:6
 msgid "Versioning"
-msgstr ""
+msgstr "Versionierung"
 
 #: scripts/apps/authoring/versioning/views/versioning.html:3
 msgid "Versions"
-msgstr ""
+msgstr "Versionen"
 
 #: scripts/core/lang/missing-translations-strings.js:4
 msgid "video"
-msgstr ""
+msgstr "Video"
 
 #: scripts/apps/desks/views/settings.html:44
 msgid "view all"
-msgstr ""
+msgstr "Alle ansehen"
 
 #: scripts/apps/users/views/list.html:63
 msgid "View full profile"
@@ -6733,7 +6733,7 @@ msgstr "Mittwoch"
 
 #: scripts/apps/highlights/views/highlights_config_modal.html:37
 msgid "When creating a highlights package"
-msgstr ""
+msgstr "Erstellen einer Highlight Sammlung"
 
 #: scripts/apps/workspace/content/views/schema-editor.html:90
 msgid "Width"

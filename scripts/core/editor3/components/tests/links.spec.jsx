@@ -1,4 +1,5 @@
 import React from 'react';
+import {createStore} from 'redux';
 import {shallow, mount} from 'enzyme';
 import {EditorState} from 'draft-js';
 import {LinkButtonComponent as LinkButton} from '../links/LinkButton';
@@ -48,7 +49,7 @@ describe('editor3.components.link-toolbar', () => {
                 onEdit={() => { /* no-op */ }} />);
 
         expect(wrapper.find('div.link-toolbar').exists()).toBe(true);
-        expect(wrapper.find('div.link-toolbar').hasClass('empty')).toBe(true);
+        expect(wrapper.find('div.link-toolbar').hasClass('is-link')).toBe(false);
         expect(wrapper.find('a').length).toBe(0);
     });
 
@@ -87,7 +88,7 @@ describe('editor3.components.link-toolbar', () => {
         wrapper.find('a').at(1)
             .simulate('click');
 
-        expect(onEdit).toHaveBeenCalledWith('entity-url');
+        expect(onEdit).toHaveBeenCalledWith({href: 'entity-url'});
     });
 
     it('should call onRemove prop when clicking "Remove"', () => {
@@ -129,27 +130,32 @@ describe('editor3.components.link-button', () => {
 });
 
 describe('editor3.components.link-input', () => {
+    const value = {href: 'abc'};
+    const store = createStore(() => ({}), {item: {}});
+
     it('should render given value', () => {
-        const wrapper = shallow(
+        const wrapper = mount(
             <LinkInput
+                store={store}
                 editorState={stateWithLink()}
-                value={'abc'}
+                value={value}
                 onSubmit={() => ({})}
                 onCancel={() => ({})} />);
 
-        expect(wrapper.find('input').props().defaultValue).toBe('abc');
+        expect(wrapper.find('input').props().defaultValue).toBe(value.href);
     });
 
     it('should call onCancel prop when "x" button is clicked', () => {
         const onCancel = jasmine.createSpy();
         const wrapper = mount(
             <LinkInput
+                store={store}
                 editorState={stateWithLink()}
-                value={'abc'}
+                value={value}
                 onSubmit={() => ({})}
                 onCancel={onCancel} />);
 
-        wrapper.find('.icon-close-small').simulate('click');
+        wrapper.find('.btn--cancel').simulate('click');
 
         expect(onCancel).toHaveBeenCalled();
     });
@@ -158,8 +164,9 @@ describe('editor3.components.link-input', () => {
         const onCancel = jasmine.createSpy();
         const wrapper = mount(
             <LinkInput
+                store={store}
                 editorState={stateWithLink()}
-                value={'abc'}
+                value={value}
                 onSubmit={() => ({})}
                 onCancel={onCancel} />);
 
@@ -172,12 +179,13 @@ describe('editor3.components.link-input', () => {
         const onCancel = jasmine.createSpy();
         const wrapper = mount(
             <LinkInput
+                store={store}
                 editorState={stateWithLink()}
-                value={'abc'}
+                value={value}
                 onSubmit={() => ({})}
                 onCancel={onCancel} />);
 
-        wrapper.simulate('keyup', {key: 'Escape'});
+        wrapper.find('form').simulate('keyup', {key: 'Escape'});
 
         expect(onCancel).toHaveBeenCalled();
     });
@@ -187,14 +195,15 @@ describe('editor3.components.link-input', () => {
         const onCancel = jasmine.createSpy();
         const wrapper = mount(
             <LinkInput
+                store={store}
                 editorState={stateWithLink()}
-                value={'abc'}
+                value={value}
                 onCancel={onCancel}
                 onSubmit={onSubmit} />);
 
-        wrapper.simulate('submit');
+        wrapper.find('form').simulate('submit');
 
-        expect(onSubmit.calls.first().args[0]).toBe('abc');
+        expect(onSubmit.calls.first().args[0]).toEqual({href: 'abc'});
         expect(onSubmit.calls.first().args[1]).not.toBe(null);
         expect(onCancel).toHaveBeenCalled();
     });

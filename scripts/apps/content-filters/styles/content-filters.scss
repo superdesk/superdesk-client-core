@@ -5,29 +5,22 @@
 @import '~mixins.scss';
 @import '~variables.scss';
 
-.pull-right-20 {
-    float: right;
-    margin-right: 65px;
-}
-.pull-left-20 {
-    float: left;
-    margin-left: 65px;
+
+.padded--sides10 {
+    padding: 0 10px;
 }
 .panel-search {
-    float: left;
-    width: 30%;
+    padding: 3rem 2rem 0rem;
+    border-radius: 4px;
+    background-color: $white;
+    min-width: 260px;
 }
 .panel-search-result {
-    float: right;
-    width: 70%;
     .column-width {
         width:50%;
     }
 }
-.panel-subscriber {
-    float: right;
-    width: 70%;
-}
+
 .wide {
     max-width: 960px;
 }
@@ -120,5 +113,11 @@ div {
         i {
             margin-left: 2px;
         }
+    }
+}
+
+td {
+    .sd-page__content {
+        padding: 0;
     }
 }

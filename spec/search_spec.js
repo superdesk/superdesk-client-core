@@ -1,7 +1,7 @@
 /* eslint-disable newline-per-chained-call */
 
 
-var openUrl = require('./helpers/utils').open,
+var nav = require('./helpers/utils').nav,
     globalSearch = require('./helpers/search'),
     authoring = require('./helpers/authoring'),
     content = require('./helpers/pages').content,
@@ -10,7 +10,7 @@ var openUrl = require('./helpers/utils').open,
 
 describe('search', () => {
     beforeEach(() => {
-        openUrl('/#/search').then(globalSearch.setListView());
+        nav('/search').then(globalSearch.setListView());
     });
 
     it('can search by search field', () => {
@@ -151,14 +151,15 @@ describe('search', () => {
 
         // can dynamically update items in related tab when item duplicated
         expect(globalSearch.getItems().count()).toBe(15);
-        globalSearch.actionOnItem('Duplicate', 0, true);
+        globalSearch.actionOnSubmenuItem('Duplicate', 'Duplicate in place', 0, true);
         globalSearch.itemClick(0);
         monitoring.tabAction('related');
         expect(globalSearch.getRelatedItems().count()).toBe(1);
-        globalSearch.actionOnItem('Duplicate', 0, true);
+        globalSearch.actionOnSubmenuItem('Duplicate', 'Duplicate in place', 0, true);
         globalSearch.itemClick(0);
         monitoring.tabAction('related');
         expect(globalSearch.getRelatedItems().count()).toBe(2);
+        element(by.css('.close-preview')).click();
 
         // can search with different repos
         globalSearch.openParameters();
@@ -183,6 +184,8 @@ describe('search', () => {
         rawTextbox.sendKeys('type:text AND (item1 OR item4)');
         globalSearch.goButton.click();
         expect(globalSearch.getItems().count()).toBe(2);
+        // toggle filter panel to reset it
+        globalSearch.openFilterPanel();
 
         // search spiked content
         globalSearch.openGlobalSearch();
@@ -220,12 +223,12 @@ describe('search', () => {
         authoring.focusBodyHtmlElement();
         browser.actions().sendKeys(protractor.Key.ENTER).perform();
         browser.actions().sendKeys('additional text').perform();
-        expect(previewPane.isPresent()).toBe(false);    // ENTER key avoided for opening preview
+        expect(previewPane.isPresent()).toBe(false); // ENTER key avoided for opening preview
         browser.actions().sendKeys(protractor.Key.DOWN).perform();
         expect(authoring.getBodyText()).toContain('additional text');
-        expect(previewPane.isPresent()).toBe(false);    // DOWN arrow key avoided for opening preview
+        expect(previewPane.isPresent()).toBe(false); // DOWN arrow key avoided for opening preview
         browser.actions().sendKeys(protractor.Key.UP).perform();
-        expect(previewPane.isPresent()).toBe(false);    // UP arrow key avoided for opening preview
+        expect(previewPane.isPresent()).toBe(false); // UP arrow key avoided for opening preview
         // it should not effect global keyboard shortcuts (e.g: 'ctrl+alt+d', 'ctrl+shift+*')
         // now test 'ctrl+shift+*' shortcut that triggers spell checker when not set to automatic
         expect(element(by.model('spellcheckMenu.isAuto')).getAttribute('checked')).toBeTruthy();
@@ -260,7 +263,7 @@ describe('search', () => {
         previewPane = element(by.id('item-preview'));
         expect(previewPane.isPresent()).toBe(false);
         globalSearch.actionOnItem('Edit', 2);
-        expect(previewPane.isPresent()).toBe(false);    // avoids opening preview
+        expect(previewPane.isPresent()).toBe(false); // avoids opening preview
         authoring.save();
         authoring.close();
 
@@ -270,7 +273,7 @@ describe('search', () => {
         previewPane = element(by.id('item-preview'));
         expect(previewPane.isPresent()).toBe(true);
         globalSearch.actionOnItem('Edit', 3);
-        expect(previewPane.isPresent()).toBe(false);    // avoids retaining already opened preview
+        expect(previewPane.isPresent()).toBe(false); // avoids retaining already opened preview
         authoring.save();
         authoring.close();
 

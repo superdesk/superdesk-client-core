@@ -1,124 +1,123 @@
-<div sd-settings-view>
-    <div class="split-content">
+<div class="sd-page__main-content" sd-settings-view>
+    <div class="sd-page__header sd-page__header--white">
+        <h2 class="sd-page__page-heading" translate>Content Profiles</h2>
+    </div>
+    <div class="sd-page__header">
+        <sd-check ng-model="active_only" label-position="inside" type="radio" style="margin-left: 0;">{{:: 'All'| translate}}</sd-check>                
+        <sd-check ng-model="active_only" ng-value="true" label-position="inside" type="radio" ng-checked="true">{{:: 'Active only'| translate}}</sd-check>
+        <span class="sd-page__element-grow"></span>
+        <button id="add-new-content-profile" class="btn btn--primary" ng-click="ctrl.toggleCreate()" data-close="cancel()">
+            <i class="icon-plus-sign icon--white"></i>{{ :: 'Add New' | translate }}
+        </button>
+    </div>
 
-        <div class="header">
-            <h2 translate>Content Profiles</h2>
+    <div class="sd-page__content profile-settings desk-settings">
+        <div class="flex-grid box wrap-items small-1 medium-3 large-4 xlarge-6">
+            <div class="flex-item card-box"
+                 ng-repeat="type in ctrl.items| orderBy: 'label' track by type._id"
+                 ng-class="{inactive: !type.enabled}" ng-show="!active_only || (active_only && type.enabled)">
 
-            <button id="add-new-content-profile" class="btn btn--primary pull-right" ng-click="ctrl.toggleCreate()" data-close="cancel()">
-                <i class="icon-plus-sign icon--white"></i> {{ :: 'Add New Content Profile' | translate }}
-            </button>
-        </div>
-        <div class="content split-content">
-            <div class="header">
-                <sd-check ng-model="active_only" label-position="inside">{{:: 'Show active only'| translate}}</sd-check>                
-            </div>
-
-            <div class="content profile-settings desk-settings">
-                <div class="flex-grid box wrap-items small-1 medium-3 large-4 xlarge-6">
-                    <div class="flex-item card-box"
-                        ng-repeat="type in ctrl.items | orderBy: 'label' track by type._id"
-                        ng-class="{inactive: !type.enabled}" ng-show="!active_only || (active_only && type.enabled)">
-
-                    <div class="card-box__header">
-                        <div class="dropdown" dropdown>
-                            <button class="dropdown__toggle" dropdown__toggle>
-                                <i class="icon-dots-vertical"></i>
-                            </button>
-                            <ul class="dropdown__menu more-activity-menu pull-right">
-                                <li><div class="dropdown__menu-label" translate>Actions</div></li>
-                                <li class="dropdown__menu-divider"></li>
-                                <li><button ng-click="ctrl.toggleEdit(type)" title="{{:: 'Edit Content Profile' | translate }}"><i class="icon-pencil"></i>{{:: 'Edit'| translate}}</button></li>
-                                <li><button ng-click="ctrl.delete(type)" ng-disabled="type.is_used" title="{{:: type.is_used ? 'Sorry, but profile is in use.' : 'Remove Content Profile' | translate }}"><i class="icon-trash"></i>{{:: 'Remove'| translate}}</button></li>
-                            </ul>
-                        </div>
-                        <div class="card-box__heading">{{ type.label }}</div>
+                <div class="card-box__header">
+                    <div class="dropdown" dropdown>
+                        <button class="dropdown__toggle" dropdown__toggle>
+                            <i class="icon-dots-vertical"></i>
+                        </button>
+                        <ul class="dropdown__menu more-activity-menu pull-right">
+                            <li><div class="dropdown__menu-label" translate>Actions</div></li>
+                            <li class="dropdown__menu-divider"></li>
+                            <li><button ng-click="ctrl.toggleEdit(type)" title="{{:: 'Edit Content Profile' | translate }}"><i class="icon-pencil"></i>{{:: 'Edit'| translate}}</button></li>
+                            <li><button ng-click="ctrl.delete(type)" ng-disabled="type.is_used" title="{{:: type.is_used ? 'Sorry, but profile is in use.' : 'Remove Content Profile' | translate }}"><i class="icon-trash"></i>{{:: 'Remove'| translate}}</button></li>
+                        </ul>
                     </div>
-
-                            <div class="card-box__content">
-                                <ul class="card-box__content-list">
-                                    <li>
-                                        <h4 translate>Status</h4>
-                                        <span ng-show="type.enabled" translate>Active</span>
-                                        <span ng-hide="type.enabled" translate>Inactive</span>
-                                    </li>
-                                    <li>
-                                        <h4 translate>Updated</h4>
-                                        <span>{{ type._updated | reldate }}</span>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
+                    <div class="card-box__heading">{{ type.label}}</div>
+                </div>
+                <div class="card-box__content">
+                    <ul class="card-box__content-list">
+                        <li>
+                            <h4 translate>Status</h4>
+                            <span ng-show="type.enabled" translate>Active</span>
+                            <span ng-hide="type.enabled" translate>Inactive</span>
+                        </li>
+                        <li>
+                            <h4 translate>Updated</h4>
+                            <span>{{ type._updated | reldate }}</span>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Create profile modal -->
-    <div sd-modal class="modal--large" data-model="creating" data-close="ctrl.toggleCreate()">
-            <div class="modal__header"> <a href="" class="close" ng-click="ctrl.toggleCreate()"><i class="icon-close-small"></i></a>
-                <h3 class="modal__heading" translate>Add New Content Profile</h3>
-            </div>
-            <div class="modal__body">
-                <form name="createForm">
-                    <fieldset>
-                        <div class="field">
-                            <label for="label" translate>Label:</label>
-                            <input type="text" name="label" ng-model="new.label" required ng-maxlength="40"/>
-                            <span class="error" ng-show="createForm.label.$error.maxlength" translate>Please use less than 40 characters</span>
-                        </div>
-                        <div class="field">
-                            <label for="description" translate>Description:</label>
-                            <input type="text" name="description" ng-model="new.description" />
-                        </div>
-                    </fieldset>
-                </form>
-            </div>
-            <div class="modal__footer">
-                <button id="profile-save" class="btn btn--primary" ng-disabled="createForm.$invalid" ng-click="ctrl.save()" translate>Save &amp; Continue</button>
-                <button class="btn" ng-click="ctrl.toggleCreate()" translate>Cancel</button>
-            </div>
+<!-- Create profile modal -->
+<div sd-modal class="modal--large" data-model="creating" data-close="ctrl.toggleCreate()">
+    <div class="modal__header"> <a href="" class="close" ng-click="ctrl.toggleCreate()"><i class="icon-close-small"></i></a>
+        <h3 class="modal__heading" translate>Add New Content Profile</h3>
     </div>
-
-    <!-- Edit profile modal -->
-    <div sd-modal class="modal--large" data-model="!!editing" data-close="ctrl.toggleEdit(null)">
-            <div class="modal__header"> <a href="" class="close" ng-click="ctrl.toggleEdit(null)"><i class="icon-close-small"></i></a>
-                <h3 class="modal__heading">{{ :: 'Editing' | translate }} "{{ editing.form.label }}"</h3>
-            </div>
-            <div class="modal__body">
-                <form name="editForm">
-                    <fieldset>
-                        <div class="field">
-                            <label for="label" translate>Label:</label>
-                            <input type="text" name="label" ng-model="editing.form.label" required ng-maxlength="40"/>
-                            <span class="error" ng-show="editForm.label.$error.maxlength" translate>Please use less than 40 characters</span>
-                        </div>
-                        <div class="field">
-                            <label for="description" translate>Description:</label>
-                            <input type="text" name="description" ng-model="editing.form.description" />
-                        </div>
-                        <div class="field">
-                            <label class="right">
-                                {{:: 'Active' | translate }}&nbsp;
-                                <span tooltip="{{ editing.form.enabled ? 'Yes' : 'No'  | translate }}" tooltip-placement="right"></span>
-                                <span class="pull-right" sd-switch ng-model="editing.form.enabled"></span>
-                            </label>
-
-                            <label class="right" ng-if="withEditor3">
-                                {{:: 'Editor3' | translate }}&nbsp;
-                                <span tooltip="{{ editing.form.editor.body_html.editor3 ? 'Yes' : 'No'  | translate }}" tooltip-placement="right"></span>
-                                <span class="pull-right" sd-switch ng-model="editing.form.editor.body_html.editor3"></span>
-                            </label>
-                        </div>
-                        <div class="field">
-                            <sd-content-schema-editor ng-model="editing.form"></sd-content-schema-editor>
-                        </div>
-                    </fieldset>
-                </form>
-            </div>
-            <div class="modal__footer">
-                <button id="profile-update" class="btn btn--primary" ng-disabled="editForm.$invalid || !editForm.$dirty" ng-click="ctrl.update()" translate>Save</button>
-                <button class="btn" ng-click="ctrl.toggleEdit(null)" translate>Cancel</button>
-            </div>
+    <div class="modal__body">
+        <form name="createForm">
+            <fieldset>
+                <div class="form__row">
+                    <div class="sd-line-input" ng-class="{'sd-line-input--invalid': createForm.label.$error.maxlength}">
+                        <label class="sd-line-input__label" translate>Label</label>
+                        <input type="text" name="label" class="sd-line-input__input" ng-model="new.label" required ng-maxlength="40"/>
+                        <div class="sd-line-input__message" ng-show="createForm.label.$error.maxlength" translate>Please use less than 40 characters</div>
+                    </div>
+                </div>
+                <div class="form__row">
+                    <div class="sd-line-input">
+                        <label class="sd-line-input__label" translate>Description</label>
+                        <input type="text" name="description" class="sd-line-input__input" ng-model="new.description" />
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+    <div class="modal__footer">
+        <button id="profile-save" class="btn btn--primary" ng-disabled="createForm.$invalid" ng-click="ctrl.save()" translate>Save &amp; Continue</button>
+        <button class="btn" ng-click="ctrl.toggleCreate()" translate>Cancel</button>
     </div>
 </div>
+<!-- END Create profile modal -->
+<!-- Edit profile modal -->
+<div sd-modal class="modal--large" data-model="!!editing" data-close="ctrl.toggleEdit()">
+    <div class="modal__header"> <a href="" class="close" ng-click="ctrl.toggleEdit()"><i class="icon-close-small"></i></a>
+        <h3 class="modal__heading">{{ :: 'Editing' | translate }} "{{ editing.form.label}}"</h3>
+    </div>
+    <div class="modal__body">
+        <form name="editForm">
+            <fieldset>
+                <div class="form__row">
+                    <div class="sd-line-input" ng-class="{'sd-line-input--invalid': editForm.label.$error.maxlength}">
+                        <label class="sd-line-input__label" translate>Label</label>
+                        <input type="text" name="label" class="sd-line-input__input" ng-model="editing.form.label" required ng-maxlength="40"/>
+                        <div class="sd-line-input__message" ng-show="editForm.label.$error.maxlength" translate>Please use less than 40 characters</div>
+                    </div>
+                </div>
+                <div class="form__row">
+                    <div class="sd-line-input">
+                        <label class="sd-line-input__label" translate>Description</label>
+                        <input type="text" name="description" class="sd-line-input__input" ng-model="editing.form.description" />
+                    </div>
+                </div>
+                <div class="field">
+                    <span ng-model="editing.form.enabled" sd-switch></span><label>{{:: 'Active' | translate }}</label>
+                </div>
+                <div class="field" ng-if="withEditor3">
+                    <span ng-model="editing.form.editor.body_html.editor3" sd-switch></span><label>{{:: 'Editor3' | translate }}</label>
+                </div>
+                <div class="field">
+                    <sd-content-schema-editor data-model="editing.form"></sd-content-schema-editor>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+    <div class="modal__footer">
+        <button id="profile-update" class="btn btn--primary" ng-disabled="editForm.$invalid || !editForm.$dirty" ng-click="ctrl.update()" translate>Save</button>
+        <button class="btn" ng-click="ctrl.toggleEdit()" translate>Cancel</button>
+    </div>
+    <!-- END Edit profile modal -->
+</div>
+
+
+

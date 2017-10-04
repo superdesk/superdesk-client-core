@@ -14,17 +14,17 @@ export function EditWorkspaceDirective(workspaces) {
              */
             scope.save = function() {
                 workspaces.save(scope.workspace)
-                .then(() => {
-                    scope.errors = null;
-                    var workspace = scope.workspace;
+                    .then(() => {
+                        scope.errors = null;
+                        var workspace = scope.workspace;
 
-                    scope.workspace = null;
-                    if (scope.done) {
-                        return scope.done(workspace);
-                    }
-                }, (response) => {
-                    scope.errors = response.data._issues;
-                });
+                        scope.workspace = null;
+                        if (scope.done) {
+                            return scope.done(workspace);
+                        }
+                    }, (response) => {
+                        scope.errors = response.data._issues;
+                    });
             };
 
             scope.cancel = function() {

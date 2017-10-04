@@ -1,37 +1,33 @@
-<div class="split-content products-content" ng-controller="ProductsConfigCtrl">
-    <div class="header">
-        <h2 translate>Product management</h2>
-        <div class="pull-right">
-            <div class="sortbar pull-left">
-                <span translate>Filter:</span>
-                <input type="text" class="input-medium" ng-model="search.name" ng-model-options="{debounce: 800}"/>
-                <span translate>Product Type:</span>
-                <select class="input-small"
-                        ng-model="search.product_type"
-                        ng-options="p.qcode as p.name for p in product_types">
-                    <option value="" translate>Select</option>
-                </select>
-            </div>
-
-            <button class="btn btn--primary pull-right" ng-click="newProduct()">
-                <i class="icon-plus-sign icon--white"></i> {{ :: 'Add New Product' | translate }}
-            </button>
+<div class="sd-page__flex-helper products-content" ng-controller="ProductsConfigCtrl">
+    <div class="sd-page__header">
+        <div class="sortbar">
+            <span translate>Filter: </span>
+            <input type="text" class="input-medium" ng-model="search.name" ng-model-options="{debounce: 800}"/>
+            <span translate>Product Type: </span>
+            <select class="input-small"
+                    ng-model="search.product_type"
+                    ng-options="p.qcode as p.name for p in product_types">
+                <option value="" translate>Select</option>
+            </select>
         </div>
+        <span class="sd-page__element-grow"></span>
+        <button class="btn btn--primary" ng-click="newProduct()">
+            <i class="icon-plus-sign icon--white"></i>{{ :: 'Add New' | translate }}
+        </button>
     </div>
 
-    <div class="content">
-        <div sd-shadow>
-            <ul class="pills-list" >
-                <li ng-repeat="product in products| productsBy:search as filtered_products track by product._id" class="clearfix">
-                    <h6>{{ product.name}}</h6> <i>[{{ product.product_type || 'both' }}]</i>
-                    <div class="actions">
-                        <button ng-click="edit(product)" title="{{:: 'Edit product' | translate }}"><i class="icon-pencil"></i></button>
-                        <button ng-click="remove(product)" title="{{:: 'Remove product' | translate }}"><i class="icon-trash"></i></button>
-                    </div>
-                </li>
-                <li ng-show="products.length > 0 && !filtered_products.length"><h6 translate>No Products Found</h6></li>
-            </ul>
-        </div>
+    <div class="sd-page__content">
+        <ul class="pills-list" >
+            <li ng-repeat="product in products| productsBy:search as filtered_products track by product._id" class="clearfix">
+                <h6>{{ product.name}}</h6> <i>[{{ product.product_type || 'both' }}]</i>
+                <div class="actions">
+                    <button ng-click="edit(product)" title="{{:: 'Edit product' | translate }}"><i class="icon-pencil"></i></button>
+                    <button ng-click="remove(product)" title="{{:: 'Remove product' | translate }}"><i class="icon-trash"></i></button>
+                </div>
+            </li>
+            <li ng-show="products.length > 0 && !filtered_products.length"><h6 translate>No Products Found</h6></li>
+        </ul>
     </div>
     <div sd-products-config-modal></div>
 </div>
+

@@ -14,14 +14,14 @@ export function DeskListController($scope, desks, superdesk, privileges, tasks, 
     }
 
     desks.initialize()
-    .then(() => {
-        $scope.desks = desks.desks;
-        $scope.deskStages = desks.deskStages;
+        .then(() => {
+            $scope.desks = desks.desks;
+            $scope.deskStages = desks.deskStages;
 
-        desks.fetchCurrentUserDesks().then((deskList) => {
-            userDesks = deskList;
+            desks.fetchCurrentUserDesks().then((deskList) => {
+                userDesks = deskList;
+            });
         });
-    });
 
     $scope.statuses = tasks.statuses;
     $scope.online_users = false;

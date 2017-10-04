@@ -49,7 +49,7 @@ describe('content', () => {
             spyOn(preferencesService, 'update').and.returnValue(true);
 
             desks.userDesks = {_items: [{_id: '1', name: 'sport', working_stage: '2', incoming_stage: '3'},
-                                        {_id: '2', name: 'news', working_stage: '4', incoming_stage: '5'}]};
+                {_id: '2', name: 'news', working_stage: '4', incoming_stage: '5'}]};
             desks.setCurrentDeskId('2');
 
             item = {_id: '123'};
@@ -90,9 +90,9 @@ describe('content', () => {
             expect(archiveService.isArchived(item)).toBe(true);
         }));
 
-        it('returns the related items', inject((archiveService, api, $q, search) => {
+        it('returns the related items', inject((archiveService, api, $q) => {
             spyOn(api, 'query').and.returnValue($q.when());
-            archiveService.getRelatedItems('test');
+            archiveService.getRelatedItems({slugline: 'test'});
             expect(api.query).toHaveBeenCalled();
             var criteria = api.query.calls.mostRecent().args[1];
 

@@ -1,12 +1,12 @@
 /* eslint-disable newline-per-chained-call */
 
 
-var openUrl = require('./helpers/utils').open,
+var nav = require('./helpers/utils').nav,
     ingestDashboard = require('./helpers/pages').ingestDashboard;
 
 describe('ingest_provider', () => {
     beforeEach((done) => {
-        openUrl('/#/ingest_dashboard').then(done);
+        nav('/ingest_dashboard').then(done);
     });
 
     function addProvider() {

@@ -90,22 +90,22 @@ function RelatedItemController(
 
     $scope.loading = true;
     familyService.fetchRelatedItems($scope.item)
-    .then((items) => {
-        if (items && items._items && items._items.length > 1) {
-            $scope.options.existingRelations = items._items;
-            $scope.widget.configurable = false;
-            $scope.options.searchEnabled = false;
-            $scope.widget.label = gettext('Related Items');
-        } else {
-            $scope.options.existingRelations = false;
-            $scope.widget.configurable = true;
-            $scope.options.searchEnabled = true;
-            $scope.widget.label = gettext('Relate an item');
-        }
-    })
-    .finally(() => {
-        $scope.loading = false;
-    });
+        .then((items) => {
+            if (items && items._items && items._items.length > 1) {
+                $scope.options.existingRelations = items._items;
+                $scope.widget.configurable = false;
+                $scope.options.searchEnabled = false;
+                $scope.widget.label = gettext('Related Items');
+            } else {
+                $scope.options.existingRelations = false;
+                $scope.widget.configurable = true;
+                $scope.options.searchEnabled = true;
+                $scope.widget.label = gettext('Relate an item');
+            }
+        })
+        .finally(() => {
+            $scope.loading = false;
+        });
 
     function today() {
         if (config.search && config.search.useDefaultTimezone) {
@@ -150,11 +150,11 @@ function RelatedItemController(
                 $scope.origItem = $scope.options.item;
 
                 copyMetadata(item, {}).then((copied) => api.save('archive', $scope.origItem, copied)
-                .then(() => {
-                    Object.assign($scope.options.item, copied);
-                    notify.success(gettext('item metadata associated.'));
-                    return item;
-                }));
+                    .then(() => {
+                        Object.assign($scope.options.item, copied);
+                        notify.success(gettext('item metadata associated.'));
+                        return item;
+                    }));
             },
             class: 'open',
             icon: 'icon-expand',
@@ -168,16 +168,16 @@ function RelatedItemController(
                 api.save('archive_rewrite', {},
                     {update: angular.extend({}, $scope.origItem, $scope.item)},
                     item)
-                .then((newItem) => {
-                    notify.success(gettext('Story is associated as update.'));
-                    authoringWorkspace.edit(newItem);
-                }, (response) => {
-                    if (angular.isDefined(response.data._message)) {
-                        notify.error(gettext('Failed to associate update: ' + response.data._message));
-                    } else {
-                        notify.error(gettext('There is an error. Failed to associate update.'));
-                    }
-                });
+                    .then((newItem) => {
+                        notify.success(gettext('Story is associated as update.'));
+                        authoringWorkspace.edit(newItem);
+                    }, (response) => {
+                        if (angular.isDefined(response.data._message)) {
+                            notify.error(gettext('Failed to associate update: ' + response.data._message));
+                        } else {
+                            notify.error(gettext('There is an error. Failed to associate update.'));
+                        }
+                    });
             },
             class: 'open',
             icon: 'icon-expand',

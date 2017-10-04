@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 export function takekey(props) {
     const {gettextCatalog} = props.svc;
@@ -10,6 +11,6 @@ export function takekey(props) {
 }
 
 takekey.propTypes = {
-    svc: React.PropTypes.any.isRequired,
-    item: React.PropTypes.any,
+    svc: PropTypes.any.isRequired,
+    item: PropTypes.any,
 };

@@ -1,14 +1,20 @@
 import * as helpers from 'apps/authoring/authoring/helpers';
 
-WordCount.$inject = ['gettextCatalog'];
-export function WordCount(gettextCatalog) {
+/**
+ * @ngdoc directive
+ * @module superdesk.apps.authoring
+ * @name sdWordCount
+ * @description Display the number of words in an item.
+ *
+ * @param {String} item text to use
+ */
+export function WordCount() {
     return {
         scope: {
             item: '=',
             html: '@'
         },
-        template: '<span class="char-count words">{{numWords}} <span translate>'
-            + gettextCatalog.getString('words') + '</span></span>',
+        template: '<span class="char-count words" translate>{{numWords}} words</span>',
         link: function wordCountLink(scope, elem, attrs) {
             scope.html = scope.html || false;
             scope.numWords = 0;

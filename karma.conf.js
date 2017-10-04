@@ -7,7 +7,7 @@ module.exports = function(config) {
     var webpackConfig = makeConfig(grunt);
 
     // in karma, entry is read from files prop
-    webpackConfig.entry = {};
+    webpackConfig.entry = null;
     webpackConfig.devtool = 'inline-source-map';
 
     config.set({
@@ -17,7 +17,6 @@ module.exports = function(config) {
 
         plugins: [
             'karma-jasmine',
-            'karma-junit-reporter',
             'karma-chrome-launcher',
             'karma-ng-html2js-preprocessor',
             'karma-sourcemap-loader',
@@ -50,10 +49,6 @@ module.exports = function(config) {
             moduleName: 'superdesk.templates-cache'
         },
 
-        junitReporter: {
-            outputFile: 'test-results.xml'
-        },
-
         // test results reporter to use
         reporters: ['dots'],
 
@@ -70,6 +65,9 @@ module.exports = function(config) {
         browsers: ['Chrome'],
 
         // Continuous Integration mode
-        singleRun: false
+        singleRun: false,
+
+        // Seams default 10s is not enough for CI sometime, so let's try 30s
+        browserNoActivityTimeout: 30000
     });
 };

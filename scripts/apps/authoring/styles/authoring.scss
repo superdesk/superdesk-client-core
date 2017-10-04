@@ -62,6 +62,10 @@
 
 .subnav--authoring {
     z-index: 99;
+    position: absolute;
+    top: $subnav-height;
+    left: 0;
+    right: 0;
     background-color: $subnav-authoring;
     .highlights-toggle, .marks-toggle {
         .dropdown__menu {
@@ -76,7 +80,7 @@
     max-width: 100%;
     flex-grow: 1;
     flex-shrink: 1;
-    padding: 10px 0 0 20px;
+    padding: 0 0 0 20px;
     .stage {
         font-size: 10px;
         @include text-light();
@@ -727,6 +731,14 @@
     }
 }
 
+.authoring-header__item .authoring-header__hint {
+    font-size: 12px;
+    color: #747474;
+    float: left;
+    margin-bottom: -16px;
+    margin-left: 0;
+}
+
 .authoring-header__item-label {
     min-width: 80px;
     max-width: 80px;
@@ -877,7 +889,7 @@
         };
     }
     .dropdown__menu {
-        width: 230px;
+        width: 260px;
         max-height: 275px;
         padding: 0;
         .input-term {

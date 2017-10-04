@@ -5,9 +5,9 @@ SendItem.$inject = ['$q', 'api', 'desks', 'notify', 'authoringWorkspace',
     'authoring', 'send', 'editorResolver', 'confirm', 'archiveService',
     'preferencesService', 'multi', 'datetimeHelper', 'config', 'privileges', 'storage'];
 export function SendItem($q, api, desks, notify, authoringWorkspace,
-                  superdeskFlags, $location, macros, $rootScope, deployConfig,
-                  authoring, send, editorResolver, confirm, archiveService,
-                  preferencesService, multi, datetimeHelper, config, privileges, storage) {
+    superdeskFlags, $location, macros, $rootScope, deployConfig,
+    authoring, send, editorResolver, confirm, archiveService,
+    preferencesService, multi, datetimeHelper, config, privileges, storage) {
     return {
         scope: {
             item: '=',
@@ -26,8 +26,6 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
         controllerAs: 'vm',
         templateUrl: 'scripts/apps/authoring/views/send-item.html',
         link: function sendItemLink(scope, elem, attrs, ctrl) {
-            const editor = editorResolver.get();
-
             scope.mode = scope.mode || 'authoring';
             scope.desks = null;
             scope.stages = null;
@@ -127,16 +125,8 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
             };
 
             scope.send = function(open) {
-                return editor.countErrors()
-                    .then((spellcheckErrors) => {
-                        if (scope.mode === 'authoring') {
-                            return confirm.confirmSpellcheck(spellcheckErrors)
-                                .then(runSend, (err) => false);
-                        }
-
-                        updateLastDestination();
-                        return runSend(open);
-                    });
+                updateLastDestination();
+                return runSend(open);
             };
 
             scope.$on('item:nextStage', (_e, data) => {
@@ -224,7 +214,8 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
             scope.showPublishSchedule = function() {
                 return scope.item && archiveService.getType(scope.item) !== 'ingest' &&
                     scope.item.type !== 'composite' && !scope.item.embargo_date && !scope.item.embargo_time &&
-                    ['published', 'killed', 'corrected'].indexOf(scope.item.state) === -1;
+                    ['published', 'killed', 'corrected'].indexOf(scope.item.state) === -1 &&
+                    canPublishOnDesk();
             };
 
             /**
@@ -343,9 +334,7 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
              * Send the current item to different desk or stage and publish the item from new location.
              */
             scope.sendAndPublish = function() {
-                return editor.countErrors()
-                    .then(confirm.confirmSpellcheck)
-                    .then(runSendAndPublish, (err) => false);
+                return runSendAndPublish();
             };
 
             /*
@@ -367,16 +356,27 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
             };
 
             /**
+             * Check if it is allowed to publish on current desk
+             * @returns {Boolean}
+             */
+            function canPublishOnDesk() {
+                const currentDesk = desks.getCurrentDesk();
+                const isAuthoringDesk = currentDesk && currentDesk.desk_type === 'authoring';
+
+                return !(isAuthoringDesk && config.features.noPublishOnAuthoringDesk);
+            }
+
+            /**
              * If the action is correct and kill then the publish privilege needs to be checked.
              */
             scope.canPublishItem = function() {
-                if (!scope.itemActions) {
+                if (!scope.itemActions || !canPublishOnDesk()) {
                     return false;
                 }
 
                 if (scope._action === 'edit') {
                     return scope.item ? !scope.item.flags.marked_for_not_publication && scope.itemActions.publish :
-                            scope.itemActions.publish;
+                        scope.itemActions.publish;
                 } else if (scope._action === 'correct') {
                     return privileges.privileges.publish && scope.itemActions.correct;
                 } else if (scope._action === 'kill') {
@@ -420,48 +420,48 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
 
                 // send releases lock, increment version.
                 return scope.beforeSend({action: 'Send and Publish'})
-                .then(() => validatePublish(scope.item)
-                    .then((validationResult) => {
-                        if (_.get(validationResult, 'errors.length')) {
-                            for (var i = 0; i < validationResult.errors.length; i++) {
-                                notify.error('\'' + _.trim(validationResult.errors[i]) + '\'');
-                            }
-                            return $q.reject();
-                        }
-
-                        return sendAuthoring(deskId, stageId, scope.selectedMacro, true)
-                        .then((item) => {
-                            scope.loading = true;
-                            // open the item for locking and publish
-                            return authoring.open(scope.item._id, false);
-                        })
-                        .then((item) => {
-                            // update the original item to avoid 412 error.
-                            scope.orig._etag = scope.item._etag = item._etag;
-                            scope.orig._locked = scope.item._locked = item._locked;
-                            scope.orig.task = scope.item.task = item.task;
-                            // change the desk location.
-                            $rootScope.$broadcast('desk_stage:change');
-                            // if locked then publish
-                            if (item._locked) {
-                                return scope.publish();
+                    .then(() => validatePublish(scope.item)
+                        .then((validationResult) => {
+                            if (_.get(validationResult, 'errors.length')) {
+                                for (var i = 0; i < validationResult.errors.length; i++) {
+                                    notify.error('\'' + _.trim(validationResult.errors[i]) + '\'');
+                                }
+                                return $q.reject();
                             }
 
-                            return $q.reject();
+                            return sendAuthoring(deskId, stageId, scope.selectedMacro, true)
+                                .then((item) => {
+                                    scope.loading = true;
+                                    // open the item for locking and publish
+                                    return authoring.open(scope.item._id, false);
+                                })
+                                .then((item) => {
+                                    // update the original item to avoid 412 error.
+                                    scope.orig._etag = scope.item._etag = item._etag;
+                                    scope.orig._locked = scope.item._locked = item._locked;
+                                    scope.orig.task = scope.item.task = item.task;
+                                    // change the desk location.
+                                    $rootScope.$broadcast('desk_stage:change');
+                                    // if locked then publish
+                                    if (item._locked) {
+                                        return scope.publish();
+                                    }
+
+                                    return $q.reject();
+                                })
+                                .then((result) => {
+                                    if (result) {
+                                        authoringWorkspace.close(false);
+                                    }
+                                })
+                                .catch((error) => {
+                                    notify.error(gettext('Failed to send and publish.'));
+                                });
                         })
-                        .then((result) => {
-                            if (result) {
-                                authoringWorkspace.close(false);
-                            }
+                        .finally(() => {
+                            scope.loading = false;
                         })
-                        .catch((error) => {
-                            notify.error(gettext('Failed to send and publish.'));
-                        });
-                    })
-                    .finally(() => {
-                        scope.loading = false;
-                    })
-                );
+                    );
             };
 
             /**
@@ -491,45 +491,45 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                 scope.loading = true;
 
                 return runMacro(scope.item, macro)
-                .then((item) => api.find('tasks', scope.item._id)
-                    .then((task) => {
-                        scope.task = task;
-                        msg = 'Send';
-                        return scope.beforeSend({action: msg});
-                    })
-                    .then((result) => {
-                        if (result && result._etag) {
-                            scope.task._etag = result._etag;
-                        }
-                        return api.save('move', {}, {task: {desk: deskId, stage: stageId}}, scope.item);
-                    })
-                    .then((value) => {
-                        notify.success(gettext('Item sent.'));
+                    .then((item) => api.find('tasks', scope.item._id)
+                        .then((task) => {
+                            scope.task = task;
+                            msg = 'Send';
+                            return scope.beforeSend({action: msg});
+                        })
+                        .then((result) => {
+                            if (result && result._etag) {
+                                scope.task._etag = result._etag;
+                            }
+                            return api.save('move', {}, {task: {desk: deskId, stage: stageId}}, scope.item);
+                        })
+                        .then((value) => {
+                            notify.success(gettext('Item sent.'));
 
-                        if (scope.currentUserAction === ctrl.userActions.send_to) {
+                            if (scope.currentUserAction === ctrl.userActions.send_to) {
                             // Remember last destination desk and stage for send_to.
-                            var lastDestination = scope.destination_last[scope.currentUserAction];
+                                var lastDestination = scope.destination_last[scope.currentUserAction];
 
-                            if (!lastDestination ||
+                                if (!lastDestination ||
                                 (lastDestination.desk !== deskId || lastDestination.stage !== stageId)) {
-                                updateLastDestination();
+                                    updateLastDestination();
+                                }
                             }
-                        }
 
-                        authoringWorkspace.close(true);
-                        return true;
-                    }, (err) => {
-                        if (err) {
-                            if (angular.isDefined(err.data._message)) {
-                                notify.error(err.data._message);
-                            } else if (angular.isDefined(err.data._issues['validator exception'])) {
-                                notify.error(err.data._issues['validator exception']);
+                            authoringWorkspace.close(true);
+                            return true;
+                        }, (err) => {
+                            if (err) {
+                                if (angular.isDefined(err.data._message)) {
+                                    notify.error(err.data._message);
+                                } else if (angular.isDefined(err.data._issues['validator exception'])) {
+                                    notify.error(err.data._issues['validator exception']);
+                                }
                             }
-                        }
-                    }))
-                .finally(() => {
-                    scope.loading = false;
-                });
+                        }))
+                    .finally(() => {
+                        scope.loading = false;
+                    });
             }
 
             /**
@@ -558,30 +558,30 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                 scope.loading = true;
 
                 return api.save('duplicate', {}, {desk: scope.item.task.desk}, scope.item)
-                .then((item) => api.find('archive', item._id))
-                .then((item) => runMacro(item, macro))
-                .then((item) => {
-                    finalItem = item;
-                    return api.find('tasks', item._id);
-                })
-                .then((_task) => {
-                    scope.task = _task;
-                    api.save('tasks', scope.task, {
-                        task: _.extend(scope.task.task, {desk: deskId, stage: stageId})
+                    .then((item) => api.find('archive', item._id))
+                    .then((item) => runMacro(item, macro))
+                    .then((item) => {
+                        finalItem = item;
+                        return api.find('tasks', item._id);
+                    })
+                    .then((_task) => {
+                        scope.task = _task;
+                        api.save('tasks', scope.task, {
+                            task: _.extend(scope.task.task, {desk: deskId, stage: stageId})
+                        });
+                    })
+                    .then(() => {
+                        notify.success(gettext('Item sent.'));
+                        scope.close();
+                        if (open) {
+                            $location.url('/authoring/' + finalItem._id);
+                        } else {
+                            $rootScope.$broadcast('item:fetch');
+                        }
+                    })
+                    .finally(() => {
+                        scope.loading = false;
                     });
-                })
-                .then(() => {
-                    notify.success(gettext('Item sent.'));
-                    scope.close();
-                    if (open) {
-                        $location.url('/authoring/' + finalItem._id);
-                    } else {
-                        $rootScope.$broadcast('item:fetch');
-                    }
-                })
-                .finally(() => {
-                    scope.loading = false;
-                });
             }
 
             /**
@@ -606,9 +606,9 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                         $rootScope.$broadcast('item:fetch');
                     }
                 })
-                .finally(() => {
-                    scope.loading = false;
-                });
+                    .finally(() => {
+                        scope.loading = false;
+                    });
             }
 
             /**
@@ -715,9 +715,9 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                     return;
                 }
                 macros.getByDesk(scope.selectedDesk.name)
-                .then((_macros) => {
-                    scope.macros = _macros;
-                });
+                    .then((_macros) => {
+                        scope.macros = _macros;
+                    });
             }
 
             /**

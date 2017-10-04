@@ -1,7 +1,7 @@
 /* eslint-disable newline-per-chained-call */
 
 
-var openUrl = require('./utils').open;
+var nav = require('./utils').nav;
 
 module.exports = new Dictionaries();
 
@@ -11,7 +11,7 @@ function Dictionaries() {
     this.languageId = element(by.model('dictionary.language_id'));
 
     this.get = function() {
-        openUrl('/#/settings/dictionaries');
+        nav('/settings/dictionaries');
         browser.sleep(500);
     };
 
@@ -63,11 +63,13 @@ function Dictionaries() {
     };
 
     this.addDictionary = function() {
+        element(by.css('[data-sd-tooltip="Add new"]')).click();
         element(by.id('createDictionary')).click();
         browser.sleep(100);
     };
 
     this.addPersonalDictionary = function() {
+        element(by.css('[data-sd-tooltip="Add new"]')).click();
         element(by.id('createPersonalDictionary')).click();
         browser.sleep(100);
     };

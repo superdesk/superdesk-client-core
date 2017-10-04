@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 /**
  * Type icon component
@@ -17,7 +18,7 @@ export function TypeIcon(props) {
 }
 
 TypeIcon.propTypes = {
-    svc: React.PropTypes.object.isRequired,
-    type: React.PropTypes.any,
-    highlight: React.PropTypes.any,
+    svc: PropTypes.object.isRequired,
+    type: PropTypes.any,
+    highlight: PropTypes.any,
 };

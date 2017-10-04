@@ -54,7 +54,7 @@ export default angular.module('superdesk.apps.highlights', [
                 additionalCondition: ['authoring', 'item', function(authoring, item) {
                     return authoring.itemActions(item).mark_item_for_highlight;
                 }],
-                group: 'packaging'
+                group: 'highlights'
             })
             .activity('/settings/highlights', {
                 label: gettext('Highlights'),

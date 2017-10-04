@@ -1,17 +1,17 @@
 
-var openUrl = require('./helpers/utils').open,
+var nav = require('./helpers/utils').nav,
     ingestSettings = require('./helpers/pages').ingestSettings,
     utils = require('./helpers/utils');
 
 describe('ingest_settings', () => {
     beforeEach((done) => {
-        openUrl('/#/settings/ingest').then(done);
+        nav('/settings/ingest').then(done);
     });
 
     xit('unselecting options in dropdown lists on the Actions pane', () => {
-        var deskList,   // dropdown list for choosing a desk
-            macroList,  // dropdown list for choosing a macro
-            stageList,  // dropdown list for choosing a desk stage
+        var deskList, // dropdown list for choosing a desk
+            macroList, // dropdown list for choosing a macro
+            stageList, // dropdown list for choosing a desk stage
             ruleSettings;
 
         // open the routing scheme edit modal under the  Routing tab, add a new

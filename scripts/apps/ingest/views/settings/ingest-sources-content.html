@@ -1,12 +1,12 @@
-<div class="split-content">
-    <div class="header">
-        <h2 translate>Ingest sources</h2>
-        <button class="btn btn--primary pull-right" ng-click="edit()">
-            <i class="icon-plus-sign icon--white"></i> <span translate>Add New Source</span>
+<div class="sd-page__flex-helper">
+    <div class="sd-page__header">
+        <span class="sd-page__element-grow"></span>
+        <button class="btn btn--primary" ng-click="edit()">
+            <i class="icon-plus-sign icon--white"></i><span translate>Add New</span>
         </button>
     </div>
 
-    <div class="content">
+    <div class="sd-page__content">
         <ul class="pills-list provider-list">
             <li ng-repeat="provider in providers._items" class="clearfix">
                 <div class="header">
@@ -25,8 +25,8 @@
     </div>
 </div>
 
+<!-- Modal -->
 <div sd-modal data-model="provider" class="modal--tabs modal--large">
-
     <div class="modal__header"> <a href="" class="close" ng-click="cancel()"><i class="icon-close-small"></i></a>
         <h3 class="modal__heading" ng-show="provider._id"><span translate>Edit Source</span> "{{ origProvider.name}}"</h3>
         <h3 class="modal__heading" translate ng-hide="provider._id" translate>Add New Source</h3>
@@ -185,3 +185,4 @@
         <button class="btn btn--primary" ng-click="save()" ng-disabled="!editForm.$valid" translate>Save</button>
     </div>
 </div>
+<!-- END Modal -->

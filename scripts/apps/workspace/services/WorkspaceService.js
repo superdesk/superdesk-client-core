@@ -32,20 +32,20 @@ export function WorkspaceService(api, desks, session, preferences, $q) {
 
     function _delete(workspace) {
         return api.remove(workspace)
-        .then(() => {
-            if (!self.active || self.active._id !== workspace._id) {
-                return $q.when();
-            }
-            return self.queryUserWorkspaces();
-        })
-        .then((items) => {
-            if (items && items.length) {
-                self.setActive(items[0]);
-            } else {
-                self.setActive(null);
-            }
-            self.getActive();
-        });
+            .then(() => {
+                if (!self.active || self.active._id !== workspace._id) {
+                    return $q.when();
+                }
+                return self.queryUserWorkspaces();
+            })
+            .then((items) => {
+                if (items && items.length) {
+                    self.setActive(items[0]);
+                } else {
+                    self.setActive(null);
+                }
+                self.getActive();
+            });
     }
 
     /**
@@ -226,6 +226,6 @@ export function WorkspaceService(api, desks, session, preferences, $q) {
      */
     function queryUserWorkspaces() {
         return session.getIdentity().then((identity) => api.query(RESOURCE, {where: {user: identity._id}}))
-        .then((response) => response._items);
+            .then((response) => response._items);
     }
 }

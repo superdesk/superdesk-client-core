@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import StyleButton from './StyleButton';
 import * as actions from '../../actions';
 import {connect} from 'react-redux';
@@ -49,9 +50,9 @@ export const BlockStyleControlsComponent = ({editorState, editorFormat, toggleBl
 };
 
 BlockStyleControlsComponent.propTypes = {
-    editorState: React.PropTypes.object,
-    toggleBlockStyle: React.PropTypes.func,
-    editorFormat: React.PropTypes.array
+    editorState: PropTypes.object,
+    toggleBlockStyle: PropTypes.func,
+    editorFormat: PropTypes.array
 };
 
 const mapStateToProps = (state) => ({

@@ -1,65 +1,54 @@
-<div ng-if="searchResult.filter_conditions.length > 0 && !loading" class="pull-left-20">
-    <div class="content">
-        <div sd-shadow>
-            <table>
-                <thead>
-                    <tr>
-                        <th translate>Filter Conditions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr ng-repeat="fc in searchResult.filter_conditions track by fc._id">
-                        <td class="column-width">
-                            {{:: fc.name }}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
+<div class="flex-grid flex-grid--wrap-items flex-grid--small-4">
+
+<div ng-if="searchResult.filter_conditions.length > 0 && !loading" class="flex-grid__item padded--sides10">
+    <table>
+        <thead>
+            <tr>
+                <th translate>Filter Conditions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="fc in searchResult.filter_conditions track by fc._id">
+                <td class="column-width">
+                    {{:: fc.name }}
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </div>
 
-<div ng-if="searchResult.content_filters.length > 0 && !loading" class="pull-left-20">
-    <div class="content">
-        <div sd-shadow>
-            <table>
-                <thead>
-                    <tr>
-                        <th translate>Content Filters</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr ng-repeat="cf in searchResult.content_filters track by cf._id">
-                        <td class="column-width">
-                            {{:: cf.name }}
-                            <i ng-if="cf.is_global">[Global]</i>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
+<div ng-if="searchResult.content_filters.length > 0 && !loading" class="flex-grid__item padded--sides10">
+    <table>
+        <thead>
+            <tr>
+                <th translate>Content Filters</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="cf in searchResult.content_filters track by cf._id">
+                <td class="column-width">
+                    {{:: cf.name }}
+                    <i ng-if="cf.is_global">[Global]</i>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </div>
 
-<div ng-if="searchResult.selected_subscribers.length > 0 && !loading" class="pull-left-20">
-    <div class="content">
-        <div sd-shadow>
-            <table>
-                <thead>
-                    <tr>
-                        <th translate>Subscribers</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="column-width">
-                            <div class="content">
-                                <div sd-admin-pub-subscribers data-subscribers-list="searchResult.selected_subscribers" data-hide-header="true"></div>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
+<div ng-if="searchResult.selected_subscribers.length > 0 && !loading" class="flex-grid__item padded--sides10">
+    <table>
+        <thead>
+            <tr>
+                <th translate>Subscribers</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="column-width">
+                    <div sd-admin-pub-subscribers data-subscribers-list="searchResult.selected_subscribers" data-hide-header="true"></div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
 </div>

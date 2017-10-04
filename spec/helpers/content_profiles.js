@@ -23,6 +23,12 @@ function ContentProfiles() {
         element(by.id('add-new-content-profile')).click();
     };
 
+    this.addNew = (name) => {
+        this.add();
+        this.getNameElement().sendKeys(name);
+        this.save();
+    };
+
     /**
      * Get the profile name element
      * @returns {ElementFinder} profile name element
@@ -97,8 +103,8 @@ function ContentProfiles() {
      **/
     this.disableField = function(fieldName) {
         const disableButton = element(by.cssContainingText('.title', fieldName))
-        .element(by.xpath('..'))
-        .element(by.css('[ng-click="toggle(id)"]'));
+            .element(by.xpath('..'))
+            .element(by.css('[ng-click="remove(id)"]'));
 
         disableButton.click();
     };
@@ -109,9 +115,9 @@ function ContentProfiles() {
      **/
     this.setRequired = function(fieldName) {
         const requiredCheckbox = element(by.cssContainingText('.title', fieldName))
-        .element(by.xpath('..'))
-        .element(by.xpath('..'))
-        .element(by.model('model.schema[id].required'));
+            .element(by.xpath('..'))
+            .element(by.xpath('..'))
+            .element(by.model('model.schema[id].required'));
 
         requiredCheckbox.click();
     };
@@ -120,6 +126,14 @@ function ContentProfiles() {
      * Cancels content profile pop up
      **/
     this.cancel = function() {
-        element(by.css('[ng-click="ctrl.toggleEdit(null)"]')).click();
+        element(by.css('[ng-click="ctrl.toggleEdit()"]')).click();
+    };
+
+    /**
+     * Open first add field dropdown
+     */
+    this.openAddFieldDropdown = () => {
+        element.all(by.className('dropdown--add-more')).first()
+            .element(by.tagName('button')).click();
     };
 }

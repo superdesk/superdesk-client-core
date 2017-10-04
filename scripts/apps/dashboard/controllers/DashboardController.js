@@ -126,7 +126,7 @@ export function DashboardController($scope, desks, dashboardWidgets, api, sessio
         modal.confirm(
             gettext('Are you sure you want to delete current workspace?')
         )
-        .then(() => workspaces.delete(self.current));
+            .then(() => workspaces.delete(self.current));
     };
 
     /*

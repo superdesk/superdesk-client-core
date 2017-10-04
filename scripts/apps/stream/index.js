@@ -1,4 +1,5 @@
 import {StreamController} from './controllers';
+import {ActivityMessageService} from './services';
 import {ActivityStream, ActivityMessage} from './directives';
 
 export default angular.module('superdesk.apps.stream', [
@@ -7,6 +8,7 @@ export default angular.module('superdesk.apps.stream', [
 ])
     .controller('StreamController', StreamController)
 
+    .service('sdActivityMessage', ActivityMessageService)
     .directive('sdActivityStream', ActivityStream)
     .directive('sdActivityMessage', ActivityMessage)
 

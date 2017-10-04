@@ -50,49 +50,49 @@ describe('workqueue', () => {
     }));
 
     it('can get active item from url', inject(
-    (api, $location, $controller, $q, $rootScope) => {
-        spyOn(api, 'query').and.returnValue($q.when({_items: [{_id: 'foo'}]}));
-        $location.path('/mock');
-        $location.search('item', 'foo');
-        $rootScope.$digest();
+        (api, $location, $controller, $q, $rootScope) => {
+            spyOn(api, 'query').and.returnValue($q.when({_items: [{_id: 'foo'}]}));
+            $location.path('/mock');
+            $location.search('item', 'foo');
+            $rootScope.$digest();
 
-        var scope = $rootScope.$new();
+            var scope = $rootScope.$new();
 
-        $controller('Workqueue', {$scope: scope});
-        $rootScope.$digest();
-        expect(scope.active._id).toBe('foo');
-    }));
+            $controller('Workqueue', {$scope: scope});
+            $rootScope.$digest();
+            expect(scope.active._id).toBe('foo');
+        }));
 
     it('can confirm before closing autosaved or not autosaved, but dirty active item', inject(
-    (api, $location, $controller, $q, $rootScope, autosave, confirm) => {
+        (api, $location, $controller, $q, $rootScope, autosave, confirm) => {
         // first get active item from url.
-        spyOn(api, 'query').and.returnValue($q.when({_items: [{_id: 'foo'}]}));
-        $location.path('/mock');
-        $location.search('item', 'foo');
-        $rootScope.$digest();
+            spyOn(api, 'query').and.returnValue($q.when({_items: [{_id: 'foo'}]}));
+            $location.path('/mock');
+            $location.search('item', 'foo');
+            $rootScope.$digest();
 
-        var scope = $rootScope.$new();
+            var scope = $rootScope.$new();
 
-        $controller('Workqueue', {$scope: scope});
-        $rootScope.$digest();
-        expect(scope.active._id).toBe('foo');
+            $controller('Workqueue', {$scope: scope});
+            $rootScope.$digest();
+            expect(scope.active._id).toBe('foo');
 
-        var confirmDefer;
+            var confirmDefer;
 
-        confirmDefer = $q.defer();
-        // Spy On autosave.get(), testing first call would return with success and second with error.
-        spyOn(autosave, 'get').and.returnValues($q.when(scope.active), $q.reject({statusText: 'NOT FOUND'}));
-        spyOn(confirm, 'reopen').and.returnValue(confirmDefer.promise);
+            confirmDefer = $q.defer();
+            // Spy On autosave.get(), testing first call would return with success and second with error.
+            spyOn(autosave, 'get').and.returnValues($q.when(scope.active), $q.reject({statusText: 'NOT FOUND'}));
+            spyOn(confirm, 'reopen').and.returnValue(confirmDefer.promise);
 
-        // call for success, i.e. gets autosaved.
-        scope.closeItem(scope.active);
-        $rootScope.$digest();
-        expect(confirm.reopen).toHaveBeenCalled();
+            // call for success, i.e. gets autosaved.
+            scope.closeItem(scope.active);
+            $rootScope.$digest();
+            expect(confirm.reopen).toHaveBeenCalled();
 
-        // call for error, i.e. not gets autosaved.
-        confirm.dirty = true;   // current item is dirty
-        scope.closeItem(scope.active);
-        $rootScope.$digest();
-        expect(confirm.reopen).toHaveBeenCalled();
-    }));
+            // call for error, i.e. not gets autosaved.
+            confirm.dirty = true; // current item is dirty
+            scope.closeItem(scope.active);
+            $rootScope.$digest();
+            expect(confirm.reopen).toHaveBeenCalled();
+        }));
 });

@@ -79,7 +79,9 @@ export const LABEL_MAP = Object.freeze({
     feature_media: gettext('Feature Media'),
     relatedItems: gettext('Related Items'),
     company_codes: gettext('Company Codes'),
-    keywords: gettext('Keywords')
+    keywords: gettext('Keywords'),
+    language: gettext('Language'),
+    usageterms: gettext('Usage Terms'),
 });
 
 export const HAS_FORMAT_OPTIONS = Object.freeze({

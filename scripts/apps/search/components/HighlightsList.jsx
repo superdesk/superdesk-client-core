@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
     closeActionsMenu
 } from 'apps/search/helpers';
@@ -101,9 +102,9 @@ export class HighlightsList extends React.Component {
 }
 
 HighlightsList.propTypes = {
-    svc: React.PropTypes.object.isRequired,
-    scope: React.PropTypes.any.isRequired,
-    item: React.PropTypes.any,
-    highlights: React.PropTypes.any,
-    highlightsById: React.PropTypes.any,
+    svc: PropTypes.object.isRequired,
+    scope: PropTypes.any.isRequired,
+    item: PropTypes.any,
+    highlights: PropTypes.any,
+    highlightsById: PropTypes.any,
 };

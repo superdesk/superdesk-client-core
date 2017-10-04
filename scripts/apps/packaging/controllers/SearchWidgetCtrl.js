@@ -38,9 +38,9 @@ export function SearchWidgetCtrl($scope, packages, api, search) {
         criteria.repo = 'archive,published';
 
         api.query('search', criteria)
-        .then((result) => {
-            $scope.contentItems = result._items;
-        });
+            .then((result) => {
+                $scope.contentItems = result._items;
+            });
     }
 
     $scope.$watch('query', (query) => {
@@ -55,14 +55,14 @@ export function SearchWidgetCtrl($scope, packages, api, search) {
         $scope.highlight = item.highlight;
         if ($scope.highlight) {
             api('highlights').getById($scope.highlight)
-            .then((result) => {
-                $scope.groupList = result.groups;
-                init = true;
-                fetchContentItems();
-            }, (response) => {
-                init = true;
-                fetchContentItems();
-            });
+                .then((result) => {
+                    $scope.groupList = result.groups;
+                    init = true;
+                    fetchContentItems();
+                }, (response) => {
+                    init = true;
+                    fetchContentItems();
+                });
         } else {
             init = true;
             fetchContentItems();

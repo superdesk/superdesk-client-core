@@ -46,6 +46,19 @@ function URLResolver($http, $q, $log, config) {
     };
 
     /**
+     * Get url for media field
+     *
+     * @param {Object} media
+     * @param {String} resource
+     * @return {String}
+     */
+    this.media = function(media, resource) {
+        const url = basejoin('upload-raw/' + media._id);
+
+        return resource ? url + '?resource=' + resource : url;
+    };
+
+    /**
      * Fetch resource links via root url
      *
      * @returns {Promise}
@@ -76,4 +89,4 @@ function URLResolver($http, $q, $log, config) {
 }
 
 angular.module('superdesk.core.api.urls', [])
-.service('urls', URLResolver);
+    .service('urls', URLResolver);

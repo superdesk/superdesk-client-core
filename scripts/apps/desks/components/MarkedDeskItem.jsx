@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {MarkBtn} from 'apps/desks/components';
 
 /**
@@ -22,7 +23,7 @@ export class MarkedDeskItem extends React.Component {
 
 /** Set the types of props for the MarkedDeskItem */
 MarkedDeskItem.propTypes = {
-    desks: React.PropTypes.object.isRequired,
-    desk: React.PropTypes.object.isRequired,
-    item: React.PropTypes.object.isRequired,
+    desks: PropTypes.object.isRequired,
+    desk: PropTypes.object.isRequired,
+    item: PropTypes.object.isRequired,
 };

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 export function updated(props) {
     const {gettextCatalog} = props.svc;
@@ -18,7 +19,7 @@ export function updated(props) {
 }
 
 updated.propTypes = {
-    svc: React.PropTypes.any.isRequired,
-    item: React.PropTypes.any,
-    openAuthoringView: React.PropTypes.func
+    svc: PropTypes.any.isRequired,
+    item: PropTypes.any,
+    openAuthoringView: PropTypes.func
 };

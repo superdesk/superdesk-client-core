@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 export function TimeElem(props) {
     const {datetime} = props.svc;
@@ -11,6 +12,6 @@ export function TimeElem(props) {
 }
 
 TimeElem.propTypes = {
-    svc: React.PropTypes.object.isRequired,
-    date: React.PropTypes.any
+    svc: PropTypes.object.isRequired,
+    date: PropTypes.any
 };

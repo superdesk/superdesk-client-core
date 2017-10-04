@@ -1,5 +1,6 @@
 /* eslint-disable react/no-multi-comp */
 import React from 'react';
+import PropTypes from 'prop-types';
 
 /**
  * @ngdoc directive
@@ -45,18 +46,18 @@ export function TranslationReactDropdown(item, className, TranslationService, no
             }
 
             return React.createElement(
-                    'button', {
-                        disabled: isCurrentLang,
-                        onClick: this.markTranslate
-                    },
-                    language.label
-                    );
+                'button', {
+                    disabled: isCurrentLang,
+                    onClick: this.markTranslate
+                },
+                language.label
+            );
         }
     }
 
     TranslateBtn.propTypes = {
-        item: React.PropTypes.object,
-        language: React.PropTypes.object
+        item: PropTypes.object,
+        language: PropTypes.object
     };
 
     /*
@@ -65,10 +66,10 @@ export function TranslationReactDropdown(item, className, TranslationService, no
      */
     var createTranslateItem = function(language) {
         return React.createElement(
-                'li',
-                {key: 'language-' + language._id},
-                React.createElement(TranslateBtn, {item: item, language: language})
-                );
+            'li',
+            {key: 'language-' + language._id},
+            React.createElement(TranslateBtn, {item: item, language: language})
+        );
     };
 
     /*
@@ -77,13 +78,13 @@ export function TranslationReactDropdown(item, className, TranslationService, no
      */
     var noLanguage = function() {
         return React.createElement(
-                'li',
-                {},
-                React.createElement(
-                        'button',
-                        {disabled: true},
-                        noLanguagesLabel)
-                );
+            'li',
+            {},
+            React.createElement(
+                'button',
+                {disabled: true},
+                noLanguagesLabel)
+        );
     };
 
     /*
@@ -91,8 +92,8 @@ export function TranslationReactDropdown(item, className, TranslationService, no
      * @return {React} List element
      */
     return React.createElement(
-            'ul',
-            {className: className},
-            languages._items.length ? languages._items.map(createTranslateItem) : React.createElement(noLanguage)
-            );
+        'ul',
+        {className: className},
+        languages._items.length ? languages._items.map(createTranslateItem) : React.createElement(noLanguage)
+    );
 }

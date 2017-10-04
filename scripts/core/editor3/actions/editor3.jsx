@@ -1,3 +1,5 @@
+import {insertImages} from './toolbar';
+
 /**
  * @ngdoc method
  * @name changeEditorState
@@ -46,6 +48,14 @@ export function handleEditorTab(e) {
  * @description Creates the editor drop action.
  */
 export function dragDrop(e) {
+    const transfer = e.originalEvent.dataTransfer;
+
+    if (transfer.types[0] === 'Files') {
+        e.preventDefault();
+        e.stopPropagation();
+        return insertImages(transfer.files);
+    }
+
     return {
         type: 'EDITOR_DRAG_DROP',
         payload: e
@@ -101,13 +111,14 @@ export function setActiveCell(i, j, key) {
  * @name changeImageCaption
  * @param {string} entityKey
  * @param {string} newCaption
+ * @param {string} field
  * @description Change the image caption contained in the given entity key.
  * @returns {Object}
  */
-export function changeImageCaption(entityKey, newCaption) {
+export function changeImageCaption(entityKey, newCaption, field) {
     return {
         type: 'EDITOR_CHANGE_IMAGE_CAPTION',
-        payload: {entityKey, newCaption}
+        payload: {entityKey, newCaption, field}
     };
 }
 

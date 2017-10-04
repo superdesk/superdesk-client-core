@@ -55,7 +55,7 @@ describe('superdesk ui', () => {
     describe('sdTimezone directive', () => {
         var fakeTzData,
             getTzDataDeferred,
-            isoScope;  // the directive's isolate scope
+            isoScope; // the directive's isolate scope
 
         beforeEach(window.module('superdesk.apps.ingest'));
         beforeEach(window.module(($provide) => {
@@ -177,24 +177,24 @@ describe('superdesk ui', () => {
 
             it('sets the matching time zones to an empty list if given ' +
                 'an empty search term',
-                () => {
-                    isoScope.matchingTimeZones = ['foo', 'bar'];
-                    isoScope.searchTimeZones('');
-                    expect(isoScope.matchingTimeZones).toEqual([]);
-                }
+            () => {
+                isoScope.matchingTimeZones = ['foo', 'bar'];
+                isoScope.searchTimeZones('');
+                expect(isoScope.matchingTimeZones).toEqual([]);
+            }
             );
 
             it('sets the matching time zones to those matching the given ' +
                 'search term',
-                () => {
-                    isoScope.timeZones = [
-                        'Foo/City', 'Asia/FooBar', 'EU_f/oo', 'bar_fOo', 'xyz'
-                    ];
-                    isoScope.searchTimeZones('fOO');
-                    expect(isoScope.matchingTimeZones).toEqual([
-                        'Foo/City', 'Asia/FooBar', 'bar_fOo'
-                    ]);
-                }
+            () => {
+                isoScope.timeZones = [
+                    'Foo/City', 'Asia/FooBar', 'EU_f/oo', 'bar_fOo', 'xyz'
+                ];
+                isoScope.searchTimeZones('fOO');
+                expect(isoScope.matchingTimeZones).toEqual([
+                    'Foo/City', 'Asia/FooBar', 'bar_fOo'
+                ]);
+            }
             );
         });
 
@@ -264,5 +264,28 @@ describe('superdesk ui', () => {
             expect(form.email.$valid).toBe(false);
             expect(scope.model.email).toBe(undefined);
         });
+    });
+
+    describe('filesize filter', () => {
+        it('can format bytes', inject(($filter) => {
+            let filesize = $filter('filesize');
+
+            expect(filesize(0)).toBe('0 b');
+            expect(filesize(1024)).toBe('1.0 kB');
+            expect(filesize(1024 * 1.3)).toBe('1.3 kB');
+            expect(filesize(1024 * 1024)).toBe('1.0 MB');
+            expect(filesize(1024 * 1024 * 5)).toBe('5.0 MB');
+        }));
+    });
+
+    describe('fileicon filter', () => {
+        it('can get file icon', inject(($filter) => {
+            let filetype = $filter('fileicon');
+
+            expect(filetype('image/jpeg')).toBe('document-default');
+            expect(filetype('application/pdf')).toBe('document-pdf');
+            expect(filetype('application/msword')).toBe('document-doc');
+            expect(filetype('application/msexcel')).toBe('document-doc');
+        }));
     });
 });

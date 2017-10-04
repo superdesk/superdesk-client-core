@@ -193,8 +193,8 @@ export function ItemList(
                         return item[0];
                     }
 
-                    return (_.map(a.es_highlight, getEsHighlight)).join('-') ===
-                        (_.map(b.es_highlight, getEsHighlight)).join('-');
+                    return _.map(a.es_highlight, getEsHighlight).join('-') ===
+                        _.map(b.es_highlight, getEsHighlight).join('-');
                 }
 
                 /**
@@ -211,7 +211,7 @@ export function ItemList(
 
                     if (a.archive_item && b.archive_item) {
                         if (b.archive_item.takes) {
-                            return false;   // take package of the new item might have changed
+                            return false; // take package of the new item might have changed
                         }
 
                         return a.archive_item._current_version === b.archive_item._current_version &&

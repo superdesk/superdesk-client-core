@@ -1092,6 +1092,7 @@ input {
     min-height: 23px;
     padding: 3px 0;
     background-color: transparent;
+    border: none;
     border-bottom: 1px solid rgba(0,0,0,0.15);
     line-height: 16px;
     &:hover {
@@ -1099,7 +1100,7 @@ input {
         background-color: transparent;
     }
     &:focus {
-        box-shadow: 0 1px 0 0 $sd-blue;
+        box-shadow: none;
         border-color: $sd-blue;
         background-color: transparent;
     }

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import PackageGroup from './PackageGroup';
 
 export default class PackageGroupList extends React.Component {
@@ -39,9 +40,9 @@ export default class PackageGroupList extends React.Component {
 }
 
 PackageGroupList.propTypes = {
-    package: React.PropTypes.object,
-    api: React.PropTypes.func,
-    item: React.PropTypes.object,
-    className: React.PropTypes.any,
-    packages: React.PropTypes.object
+    package: PropTypes.object,
+    api: PropTypes.func,
+    item: PropTypes.object,
+    className: PropTypes.any,
+    packages: PropTypes.object
 };

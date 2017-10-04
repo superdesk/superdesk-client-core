@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import * as actions from '../../actions';
 import ng from 'core/services/ng';
@@ -92,10 +93,10 @@ export class SpellcheckerContextMenuComponent extends Component {
 
 /** Set the types of props for the spellchecker context menu component*/
 SpellcheckerContextMenuComponent.propTypes = {
-    word: React.PropTypes.object,
-    suggestions: React.PropTypes.array,
-    replaceWord: React.PropTypes.func,
-    refreshWord: React.PropTypes.func
+    word: PropTypes.object,
+    suggestions: PropTypes.array,
+    replaceWord: PropTypes.func,
+    refreshWord: PropTypes.func
 };
 
 /**

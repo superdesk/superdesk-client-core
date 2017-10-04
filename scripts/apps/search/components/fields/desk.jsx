@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {ItemContainer} from 'apps/search/components';
 
 export function desk(props) {
@@ -13,7 +14,7 @@ export function desk(props) {
 }
 
 desk.propTypes = {
-    svc: React.PropTypes.object.isRequired,
-    item: React.PropTypes.any,
-    desk: React.PropTypes.any,
+    svc: PropTypes.object.isRequired,
+    item: PropTypes.any,
+    desk: PropTypes.any,
 };

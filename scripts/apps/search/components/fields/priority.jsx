@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {ItemPriority} from 'apps/search/components';
 
 export function priority(props) {
@@ -13,6 +14,6 @@ export function priority(props) {
 }
 
 priority.propTypes = {
-    svc: React.PropTypes.any.isRequired,
-    item: React.PropTypes.any,
+    svc: PropTypes.any.isRequired,
+    item: PropTypes.any,
 };

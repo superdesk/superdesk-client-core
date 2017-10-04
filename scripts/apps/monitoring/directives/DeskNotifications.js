@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 /**
  * Displays the notifications of the desk of a given stage
  */
@@ -11,8 +13,10 @@ export function DeskNotifications(desks, deskNotifications, authoringWorkspace, 
                 // Update the figures if there's a desk mention message
                 initNotifications();
                 if (scope.default_incoming) {
-                    scope.$on('desk:mention', () => {
-                        $timeout(reload, 5000, true);
+                    scope.$on('activity', (event, data) => {
+                        if (_.get(data, 'activity.name') === 'desk:mention' && data.activity.desk === scope.desk) {
+                            $timeout(reload, 5000, false);
+                        }
                     });
                 }
             }
@@ -27,8 +31,7 @@ export function DeskNotifications(desks, deskNotifications, authoringWorkspace, 
             }
 
             function reload() {
-                deskNotifications.reload();
-                initNotifications();
+                deskNotifications.reload().then(initNotifications);
             }
 
             /**
@@ -48,7 +51,7 @@ export function DeskNotifications(desks, deskNotifications, authoringWorkspace, 
              */
             scope.acknowledge = function(notification) {
                 deskNotifications.markAsRead(notification, scope.desk);
-                $timeout(reload, 5000);
+                $timeout(reload, 5000, false);
             };
 
             function getRecipient(notification) {

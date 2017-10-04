@@ -14,6 +14,7 @@ export const CONTENT_FIELDS_DEFAULTS = Object.freeze({
     groups: null,
     usageterms: null,
     ednote: null,
+    authors: [],
     place: [],
     dateline: {},
     language: null,
@@ -40,7 +41,9 @@ export const CONTENT_FIELDS_DEFAULTS = Object.freeze({
     alt_text: null,
     copyrightnotice: null,
     copyrightholder: null,
-    archive_description: null
+    archive_description: null,
+    extra: {},
+    attachments: null,
 });
 
 export const DEFAULT_ACTIONS = Object.freeze({
@@ -84,8 +87,8 @@ export function extendItem(dest, src) {
  */
 export function filterDefaultValues(diff, orig) {
     Object.keys(CONTENT_FIELDS_DEFAULTS).forEach((key) => {
-        if (diff.hasOwnProperty(key) && angular.equals(diff[key], CONTENT_FIELDS_DEFAULTS[key])
-            && !orig.hasOwnProperty(key)) {
+        if (diff.hasOwnProperty(key) && angular.equals(diff[key], CONTENT_FIELDS_DEFAULTS[key]) &&
+            !orig.hasOwnProperty(key)) {
             delete diff[key];
         }
     });
@@ -139,11 +142,41 @@ export function forcedExtend(dest, src) {
 export function cleanHtml(data) {
     return data
     // remove embeds by using the comments around them. Embeds don't matter for word counters
-    .replace(/<!-- EMBED START [\s\S]+?<!-- EMBED END .* -->/g, '')
-    .replace(/<br[^>]*>/gi, '&nbsp;')
-    .replace(/<\/?[^>]+><\/?[^>]+>/gi, ' ')
-    .replace(/<\/?[^>]+>/gi, '')
-    .trim()
-    .replace(/&nbsp;/g, ' ')
-    .replace(/\s\s+/g, ' ');
+        .replace(/<!-- EMBED START [\s\S]+?<!-- EMBED END .* -->/g, '')
+        .replace(/<br[^>]*>/gi, '&nbsp;')
+        .replace(/<\/?[^>]+><\/?[^>]+>/gi, ' ')
+        .replace(/<\/?[^>]+>/gi, '')
+        .trim()
+        .replace(/&nbsp;/g, ' ')
+        .replace(/\s\s+/g, ' ');
+}
+
+/**
+ * Removes whitespaces
+ * @param data
+ */
+export function removeWhitespaces(data) {
+    if (!data) {
+        return data;
+    }
+
+    return data
+        .replace(/&nbsp;/g, ' ')
+        .replace(/\s\s+/g, ' ')
+        .trim();
+}
+
+
+/**
+ * Removes whitespaces for fields
+ * @param data
+ */
+export function stripWhitespaces(item) {
+    var fields = ['headline', 'slugline', 'anpa_take_key', 'sms_message', 'abstract'];
+
+    _.each(fields, (key) => {
+        if (angular.isDefined(item[key])) {
+            item[key] = removeWhitespaces(item[key]);
+        }
+    });
 }

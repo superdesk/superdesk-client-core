@@ -76,9 +76,6 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
         link: function($scope, elem, attrs) {
             var _closing;
             var tryPublish = false;
-            var onlyTansaProof = true;
-            var continueAfterPublish = false;
-            var isCheckedByTansa = false;
 
             const UNIQUE_NAME_ERROR = gettext('Error: Unique Name is not unique.');
 
@@ -138,10 +135,19 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
 
                         desks.fetchDeskById($scope.origItem.task.desk).then((desk) => {
                             $scope.deskName = desk.name;
+                            $scope.deskType = desk.desk_type;
                         });
                     }
                 }
             }
+
+            /**
+             * Check if it is allowed to publish on desk
+             * @returns {Boolean}
+             */
+            $scope.canPublishOnDesk = function() {
+                return !($scope.deskType === 'authoring' && config.features.noPublishOnAuthoringDesk);
+            };
 
             getDeskStage();
             /**
@@ -220,7 +226,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                         .then(() => {
                             _exportHighlight(item._id);
                         }
-                    );
+                        );
                 } else {
                     _exportHighlight(item._id);
                 }
@@ -232,32 +238,32 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
 
             function _exportHighlight(_id) {
                 api.generate_highlights.save({}, {package: _id})
-                .then(authoringWorkspace.edit, (response) => {
-                    if (response.status === 403) {
-                        _forceExportHighlight(_id);
-                    } else {
-                        notify.error(gettext('Error creating highlight.'));
-                    }
-                });
+                    .then(authoringWorkspace.edit, (response) => {
+                        if (response.status === 403) {
+                            _forceExportHighlight(_id);
+                        } else {
+                            notify.error(gettext('Error creating highlight.'));
+                        }
+                    });
             }
 
             function _forceExportHighlight(_id) {
                 modal.confirm(gettext('There are items locked or not published. Do you want to continue?'))
                     .then(() => {
                         api.generate_highlights.save({}, {package: _id, export: true})
-                        .then(authoringWorkspace.edit, (response) => {
-                            notify.error(gettext('Error creating highlight.'));
-                        });
+                            .then(authoringWorkspace.edit, (response) => {
+                                notify.error(gettext('Error creating highlight.'));
+                            });
                     });
             }
 
             function _previewHighlight(_id) {
                 api.generate_highlights.save({}, {package: _id, preview: true})
-                .then((response) => {
-                    $scope.highlight_preview = response.body_html;
-                }, (data) => {
-                    $scope.highlight_preview = data.message;
-                });
+                    .then((response) => {
+                        $scope.highlight_preview = response.body_html;
+                    }, (data) => {
+                        $scope.highlight_preview = data.message;
+                    });
             }
 
             if ($scope.origItem.highlight) {
@@ -469,6 +475,9 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                         if (value) {
                             if (typeof value === 'object' && hasNullValue(value)) {
                                 $scope.error[key] = true;
+                            } else if (typeof value === 'string' && authoring.schema[key].required &&
+                                helpers.removeWhitespaces(value) === '') {
+                                $scope.error[key] = true;
                             } else {
                                 $scope.error[key] = false;
                             }
@@ -537,26 +546,24 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             var deregisterTansa = $rootScope.$on('tansa:end', afterTansa);
 
             $scope.runTansa = function() {
-                const editor = editorResolver.get();
-
-                onlyTansaProof = true;
-                if (editor && editor.version() === '3') {
-                    $('#editor3Tansa').html(editor.getHTML());
-                }
-
-                switch ($scope.item.language) {
-                case 'nb-NO':
-                    window.tansa.settings.profileId = _.get($rootScope, 'config.tansa.profile.nb');
-                    break;
-                case 'nn-NO':
-                    window.tansa.settings.profileId = _.get($rootScope, 'config.tansa.profile.nn');
-                    break;
-                }
-
                 if (window.RunTansaProofing) {
+                    const editor = editorResolver.get();
+
+                    if (editor && editor.version() === '3') {
+                        $('#editor3Tansa').html(editor.getHTML());
+                    }
+
+                    switch ($scope.item.language) {
+                    case 'nb-NO':
+                        window.tansa.settings.profileId = _.get($rootScope, 'config.tansa.profile.nb');
+                        break;
+                    case 'nn-NO':
+                        window.tansa.settings.profileId = _.get($rootScope, 'config.tansa.profile.nn');
+                        break;
+                    }
+
                     window.RunTansaProofing();
                 } else {
-                    isCheckedByTansa = true;
                     notify.error(gettext('Tansa is not responding. You can continue editing or publish the story.'));
                 }
             };
@@ -571,59 +578,15 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 if (editor && editor.version() === '3') {
                     editor.setHTML($('#editor3Tansa').html());
                 }
-
-                if (onlyTansaProof) {
-                    return;
-                }
-                // continueAfterPublish is passed only from $scope.publishAndContinue as bool,
-                // in other cases this is object (don't use parameter in those cases)
-                let publishFn = continueAfterPublish === true ? $scope.publishAndContinue : $scope.publish;
-
-                if (isCancelled) {
-                    isCheckedByTansa = true;
-                    publishFn();
-                } else {
-                    // after changes from tansa, there is some time needed for autosave
-                    // and for commiting scope in editor
-                    $timeout(() => {
-                        $scope.saveTopbar().then(() => {
-                            isCheckedByTansa = true;
-                            publishFn();
-                        });
-                    }, 1000);
-                }
             }
-
-            let minTansaUrgency = $rootScope.config.tansa && $rootScope.config.tansa.urgency || 5;
 
             /**
              * Depending on the item state one of the publish, correct, kill actions will be executed on the item
              * in $scope.
              */
             $scope.publish = function(continueOnPublish) {
-                if ($scope.useTansaProofing() && $scope.item.urgency >= minTansaUrgency && !isCheckedByTansa) {
-                    var act = 'publish';
-
-                    if ($scope.origItem && $scope.origItem.state === 'published') {
-                        act = 'correct';
-                    }
-                    return authoring.validateBeforeTansa($scope.origItem, $scope.item, act)
-                    .then((response) => {
-                        continueAfterPublish = continueOnPublish;
-                        if (response.errors.length) {
-                            validate($scope.origItem, $scope.item);
-                            for (var i = 0; i < response.errors.length; i++) {
-                                notify.error('\'' + _.trim(response.errors[i]) + '\'');
-                            }
-                        } else {
-                            $scope.runTansa();
-                            onlyTansaProof = false;
-                        }
-                    });
-                } else if (validatePublishScheduleAndEmbargo($scope.item) && validateForPublish($scope.item)) {
+                if (validatePublishScheduleAndEmbargo($scope.item) && validateForPublish($scope.item)) {
                     var message = 'publish';
-
-                    isCheckedByTansa = false;
 
                     if ($scope.action && $scope.action !== 'edit') {
                         message = $scope.action;
@@ -632,14 +595,14 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                     if ($scope.dirty && message === 'publish') {
                         // confirmation only required for publish
                         return authoring.publishConfirmation($scope.origItem, $scope.item, $scope.dirty, message)
-                        .then((res) => {
-                            if (res) {
-                                return publishItem($scope.origItem, $scope.item);
-                            }
-                        }, (response) => {
-                            notify.error(gettext('Error. Item not published.'));
-                            return $q.reject(false);
-                        });
+                            .then((res) => {
+                                if (res) {
+                                    return publishItem($scope.origItem, $scope.item);
+                                }
+                            }, (response) => {
+                                notify.error(gettext('Error. Item not published.'));
+                                return $q.reject(false);
+                            });
                     }
 
                     return publishItem($scope.origItem, $scope.item);
@@ -719,8 +682,8 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 $scope.sending = true;
                 if ($scope.dirty) {
                     return confirm.confirmSendTo(action)
-                    .then(() => $scope.save().then(() => lock.unlock($scope.origItem)), () =>  // cancel
-                         $q.reject());
+                        .then(() => $scope.save().then(() => lock.unlock($scope.origItem)), () => // cancel
+                            $q.reject());
                 }
 
                 return lock.unlock($scope.origItem);
@@ -830,8 +793,6 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
 
                 $scope.dirty = true;
 
-                isCheckedByTansa = false;
-
                 if (tryPublish) {
                     validate($scope.origItem, $scope.item);
                 }
@@ -869,13 +830,13 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 var changeMsg = msg;
 
                 authoring.saveWorkConfirmation($scope.origItem, $scope.item, $scope.dirty, changeMsg)
-                .then((res) => {
+                    .then((res) => {
                     // after saving work make sure this item won't be open again
-                    desks.setCurrentDeskId(null);
-                    $location.search('item', null);
-                    $location.search('action', null);
-                })
-                .finally(reloadService.forceReload);
+                        desks.setCurrentDeskId(null);
+                        $location.search('item', null);
+                        $location.search('action', null);
+                    })
+                    .finally(reloadService.forceReload);
             });
 
             $scope.$on('item:lock', (_e, data) => {

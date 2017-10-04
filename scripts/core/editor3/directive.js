@@ -4,7 +4,7 @@ import {Provider} from 'react-redux';
 import {EditorState} from 'draft-js';
 
 import {Editor3} from './components';
-import createStore from './store';
+import createEditorStore from './store';
 import {fromHTML} from './html';
 import {changeEditorState, setReadOnly} from './actions';
 
@@ -95,7 +95,7 @@ class Editor3Directive {
              * @type {Boolean}
              * @description Disables the Enter key if the attribute is set.
              */
-            singleLine: '@',
+            singleLine: '=?',
 
             /**
              * @type {String}
@@ -109,6 +109,25 @@ class Editor3Directive {
              * @description Disable internal spellchecker.
              */
             disableSpellchecker: '@',
+
+            /**
+
+             * @type {Object}
+             * @description Item which is being edited
+             */
+            item: '=',
+
+            /**
+             * @type {Number}
+             * @description Tabindex value.
+             */
+            tabindex: '=?',
+
+            /**
+             * @type {Boolean}
+             * @description Show image title.
+             */
+            showTitle: '=?'
         };
     }
 
@@ -117,12 +136,14 @@ class Editor3Directive {
         this.language = this.language || 'en';
         this.readOnly = this.readOnly || false;
         this.findReplaceTarget = typeof this.findReplaceTarget !== 'undefined';
-        this.singleLine = typeof this.singleLine !== 'undefined';
+        this.singleLine = this.singleLine || false;
         this.debounce = parseInt(this.debounce || '100', 10);
         this.disableSpellchecker = this.disableSpellchecker || false;
         this.bindToValue = this.bindToValue || false;
+        this.tabindex = this.tabindex || 0;
+        this.showTitle = this.showTitle || false;
 
-        const store = createStore(this);
+        const store = createEditorStore(this);
 
         // bind the directive value attribute bi-directionally between Angular and Redux.
         this.bindToValue && $scope.$watch('vm.value', (newValue, oldValue) => {

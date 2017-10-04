@@ -4,6 +4,7 @@
     <div class="dropdown" dropdown sd-dropdown-position>
         <button id="order_button" class="dropdown__toggle" dropdown__toggle>
             {{ active.label | translate }}
+            <span class="dropdown__caret"></span>
         </button>
         <ul class="dropdown__menu pull-right" id="order_selector">
             <li ng-repeat="option in sortOptions" ng-class="{active: option === selected}">

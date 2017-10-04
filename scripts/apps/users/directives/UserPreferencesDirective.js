@@ -22,7 +22,7 @@ export function UserPreferencesDirective(
              * directives which depend on scope variables might fail to load properly.
              */
             scope.preferencesLoaded = false;
-            var orig;  // original preferences, before any changes
+            var orig; // original preferences, before any changes
 
             preferencesService.get(null, true).then((result) => {
                 orig = result;
@@ -52,25 +52,30 @@ export function UserPreferencesDirective(
             */
             scope.save = function() {
                 preSaveCategoriesCheck()
-                .then(() => {
-                    var update = createPatchObject();
+                    .then(() => {
+                        var update = createPatchObject();
 
-                    return preferencesService.update(update).then(() => {
-                        userList.getUser(scope.user._id, true).then((u) => {
-                            scope.user = u;
+                        return preferencesService.update(update).then(() => {
+                            userList.getUser(scope.user._id, true).then((u) => {
+                                scope.user = u;
+                            });
+                            return update;
                         });
+                    }, () => $q.reject('canceledByModal'))
+                    .then((preferences) => {
+                    // ask for browser permission if desktop notification is enable
+                        if (_.get(preferences, 'desktop:notification.enabled')) {
+                            preferencesService.desktopNotification.requestPermission();
+                        }
+                        notify.success(gettext('User preferences saved'));
+                        scope.cancel();
+                    }, (reason) => {
+                        if (reason !== 'canceledByModal') {
+                            notify.error(gettext(
+                                'User preferences could not be saved...'
+                            ));
+                        }
                     });
-                }, () => $q.reject('canceledByModal'))
-                .then(() => {
-                    notify.success(gettext('User preferences saved'));
-                    scope.cancel();
-                }, (reason) => {
-                    if (reason !== 'canceledByModal') {
-                        notify.error(gettext(
-                            'User preferences could not be saved...'
-                        ));
-                    }
-                });
             };
 
             /**
@@ -142,10 +147,17 @@ export function UserPreferencesDirective(
                 if (preference.category === 'rows') {
                     return _.get(config, 'list.singleLineView');
                 }
-                let noShowCategories = ['article_defaults', 'categories', 'desks'];
+                let noShowCategories = [
+                    'article_defaults',
+                    'categories',
+                    'desks',
+                    'notifications',
+                ];
 
                 return _.indexOf(noShowCategories, preference.category) < 0;
             };
+
+            scope.profileConfig = _.get(config, 'profile', {});
 
             /**
             * Builds a user preferences object in scope from the given
@@ -158,8 +170,8 @@ export function UserPreferencesDirective(
             *   user preferences settings for a particular group.
             */
             function buildPreferences(data) {
-                var buckets,  // names of the needed metadata buckets
-                    initNeeded;  // metadata service init needed?
+                var buckets, // names of the needed metadata buckets
+                    initNeeded; // metadata service init needed?
 
                 scope.preferences = {};
                 _.each(data, (val, key) => {

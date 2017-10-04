@@ -60,11 +60,6 @@
                 .buttons {
                     button {
                         width: 100%;
-                        padding: 8px 12px;
-                        text-transform: uppercase;
-                        @include text-semibold();
-                        font-size: 14px;
-                        @include box-shadow(inset 0 0 0 0 #000);
                         position: relative;
                     }
                 }

@@ -59,20 +59,20 @@ function GoogleTracking(config) {
  */
 angular.module('superdesk.core.analytics', [])
 
-.service('analytics', ['config', function(config) {
-    if (config.analytics.piwik.url) {
-        PiwikTracking.call(this, config.analytics.piwik);
-    } else if (config.analytics.ga.id) {
-        GoogleTracking.call(this, config.analytics.ga);
-    } else {
-        NoopTracking.call(this);
-    }
-}])
-
-.run(['$rootScope', 'analytics', function($rootScope, analytics) {
-    $rootScope.$on('$routeChangeSuccess', (ev, route) => {
-        if (angular.isDefined(route)) {
-            analytics.track(route);
+    .service('analytics', ['config', function(config) {
+        if (config.analytics.piwik.url) {
+            PiwikTracking.call(this, config.analytics.piwik);
+        } else if (config.analytics.ga.id) {
+            GoogleTracking.call(this, config.analytics.ga);
+        } else {
+            NoopTracking.call(this);
         }
-    });
-}]);
+    }])
+
+    .run(['$rootScope', 'analytics', function($rootScope, analytics) {
+        $rootScope.$on('$routeChangeSuccess', (ev, route) => {
+            if (angular.isDefined(route)) {
+                analytics.track(route);
+            }
+        });
+    }]);

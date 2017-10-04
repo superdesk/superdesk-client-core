@@ -50,25 +50,25 @@ describe('Tag Service', () => {
     }));
 
     it('can populate parameters from location',
-    inject(($location, tags, $rootScope, desks, $q, gettextCatalog) => {
-        var members = null;
+        inject(($location, tags, $rootScope, desks, $q, gettextCatalog) => {
+            var members = null;
 
-        $location.search('q=headline:(Obama)');
-        $rootScope.$apply();
+            $location.search('q=headline:(Obama)');
+            $rootScope.$apply();
 
-        spyOn(desks, 'initialize').and.returnValue($q.when({deskLookup: deskList}));
-        gettextCatalog.setStrings(gettextCatalog.getCurrentLanguage(), {headline: 'foo'});
+            spyOn(desks, 'initialize').and.returnValue($q.when({deskLookup: deskList}));
+            gettextCatalog.setStrings(gettextCatalog.getCurrentLanguage(), {headline: 'foo'});
 
-        tags.initSelectedFacets()
-            .then((currentTags) => {
-                members = currentTags;
-            });
+            tags.initSelectedFacets()
+                .then((currentTags) => {
+                    members = currentTags;
+                });
 
-        $rootScope.$digest();
-        expect(members.selectedParameters.length).toBe(1);
-        expect(members.selectedParameters[0].label).toBe('foo:(Obama)');
-        expect(members.selectedParameters[0].value).toBe('headline:(Obama)');
-    }));
+            $rootScope.$digest();
+            expect(members.selectedParameters.length).toBe(1);
+            expect(members.selectedParameters[0].label).toBe('foo:(Obama)');
+            expect(members.selectedParameters[0].value).toBe('headline:(Obama)');
+        }));
 
     it('can populate type facet from location', inject(($location, tags, $rootScope, desks, $q) => {
         var members = null;

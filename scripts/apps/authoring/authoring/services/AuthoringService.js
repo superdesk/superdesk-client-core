@@ -25,7 +25,7 @@ import * as helpers from 'apps/authoring/authoring/helpers';
 AuthoringService.$inject = ['$q', '$location', 'api', 'lock', 'autosave', 'confirm', 'privileges',
     'desks', 'superdeskFlags', 'notify', 'session', '$injector', 'moment', 'config'];
 export function AuthoringService($q, $location, api, lock, autosave, confirm, privileges, desks, superdeskFlags,
-                    notify, session, $injector, moment, config) {
+    notify, session, $injector, moment, config) {
     var self = this;
 
     // TODO: have to trap desk update event for refereshing users desks.
@@ -144,8 +144,8 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
                     promise = confirm.confirm()
                         .then(angular.bind(this, function save() {
                             return this.save(orig, diff);
-                        }), () =>  // ignore saving
-                             $q.when('ignore'));
+                        }), () => // ignore saving
+                            $q.when('ignore'));
                 } else {
                     promise = $q.when('ignore');
                 }
@@ -181,8 +181,8 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
             promise = confirm.confirmPublish(action)
                 .then(angular.bind(this, function save() {
                     return true;
-                }), () =>  // cancel
-                     false);
+                }), () => // cancel
+                    false);
         }
 
         return promise;
@@ -212,6 +212,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         }
 
         helpers.stripHtml(updates);
+        helpers.stripWhitespaces(updates);
 
         // If the text equivalent of the body_html is empty then set the body empty
         if (angular.isDefined(updates.body_html)) {
@@ -232,15 +233,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         var endpoint = 'archive_' + action;
 
         return api.update(endpoint, orig, extDiff)
-            .then((result) => lock.unlock(result));
-    };
-
-    this.validateBeforeTansa = function(orig, diff, act) {
-        let extDiff = helpers.extendItem({}, diff);
-
-        this.cleanUpdatesBeforePublishing(orig, extDiff);
-
-        return api.save('validate', {act: act, type: orig.type, validate: extDiff});
+            .then((result) => lock.unlock(result).catch(() => result)); // ignore unlock err
     };
 
     this.saveWorkConfirmation = function saveWorkAuthoring(orig, diff, isDirty, message) {
@@ -251,8 +244,8 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
                 promise = confirm.confirmSaveWork(message)
                     .then(angular.bind(this, function save() {
                         return this.saveWork(orig, diff);
-                    }), (err) =>  // cancel
-                         $q.when());
+                    }), (err) => // cancel
+                        $q.when());
             }
         }
 
@@ -288,6 +281,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         }
 
         helpers.stripHtml(diff);
+        helpers.stripWhitespaces(diff);
         autosave.stop(item);
 
         if (diff._etag) { // make sure we use orig item etag
@@ -424,6 +418,8 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
             if (currentItem.state === 'spiked') {
                 action = angular.extend({}, helpers.DEFAULT_ACTIONS);
                 action.unspike = true;
+                action.mark_item_for_desks = true;
+                action.mark_item_for_highlight = true;
                 return action;
             }
 

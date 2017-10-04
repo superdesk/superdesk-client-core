@@ -20,9 +20,9 @@ angular.module('superdesk.apps.workspace.content', [
     .service('content', ContentService)
 
     .directive('sdContentCreate', directive.ContentCreateDirective)
-    .directive('stringToArray', directive.StringToArrayDirective)
     .directive('sdContentSchemaEditor', directive.ContentProfileSchemaEditor)
     .directive('sdItemProfile', directive.ItemProfileDirective)
+    .directive('sdSortContentProfiles', directive.SortContentProfiles)
 
     .controller('ContentProfilesController', ctrl.ContentProfilesController)
 
@@ -39,5 +39,5 @@ angular.module('superdesk.apps.workspace.content', [
             });
     }])
     .run(['keyboardManager', 'gettext', function(keyboardManager, gettext) {
-        keyboardManager.register('General', 'ctrl + m', gettext('Creates new item'));
+        keyboardManager.register('General', 'ctrl + m', gettext('Create new item'));
     }]);

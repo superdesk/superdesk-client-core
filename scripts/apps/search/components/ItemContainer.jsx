@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 export function ItemContainer(props) {
     const {gettext} = props.svc;
@@ -34,7 +35,7 @@ export function ItemContainer(props) {
 }
 
 ItemContainer.propTypes = {
-    svc: React.PropTypes.object.isRequired,
-    item: React.PropTypes.any,
-    desk: React.PropTypes.any,
+    svc: PropTypes.object.isRequired,
+    item: PropTypes.any,
+    desk: PropTypes.any,
 };

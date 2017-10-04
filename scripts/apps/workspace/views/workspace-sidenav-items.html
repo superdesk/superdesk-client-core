@@ -26,6 +26,13 @@
         <i class="sd-sidebar-menu__helper-icon big-icon--chevron-left"></i>
     </a>
 </li>
+<li ng-class="{active: currentRoute.href === '/workspace/assignments'}" ng-if="privileges.planning && workspaceConfig.assignments">
+    <a href="#/workspace/assignments" ng-click="hideMonitoring(currentRoute.href === '/workspace/assignments', $event)"
+       title="{{ :: 'Assignments' | translate }}" sd-hotkey="ctrl+alt+a" sd-hotkey-options="{global: true}" class="sd-sidebar-menu__btn">
+        <i class="sd-sidebar-menu__main-icon big-icon--tasks"></i>
+        <i class="sd-sidebar-menu__helper-icon big-icon--chevron-left"></i>
+    </a>
+</li>
 <li ng-class="{active: currentRoute.href === '/workspace/spike-monitoring'}">
     <a href="#/workspace/spike-monitoring" ng-click="hideMonitoring(currentRoute.href === '/workspace/spike-monitoring', $event)"
        title="{{ :: 'Spike' | translate }}" sd-hotkey="ctrl+alt+k" sd-hotkey-options="{global: true}" class="sd-sidebar-menu__btn">

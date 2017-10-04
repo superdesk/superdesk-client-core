@@ -3,7 +3,7 @@ ItemRepo.$inject = [
 ];
 
 export function ItemRepo(
-	$location, asset, metadata, common, searchProviderService, $filter, gettext, api
+    $location, asset, metadata, common, searchProviderService, $filter, gettext, api
 ) {
     return {
         scope: {

@@ -43,7 +43,17 @@ export class BlockEntityWrapper {
         case 'LINK':
             this.activeEntity = {key: entityKey, tag: 'a'};
 
-            html += `<a href="${data.url}">`;
+            if (data.url) {
+                html += `<a href="${data.url}">`;
+            } else {
+                const link = data.link;
+
+                if (link.attachment) {
+                    html += `<a data-attachment="${link.attachment}">`;
+                } else {
+                    html += `<a href="${link.href}">`;
+                }
+            }
         }
 
         return html;

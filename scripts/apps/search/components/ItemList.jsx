@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import React from 'react';
+import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import {Item} from 'apps/search/components';
 import {isCheckAllowed, closeActionsMenu, bindMarkItemShortcut} from 'apps/search/helpers';
@@ -454,12 +455,12 @@ export class ItemList extends React.Component {
 }
 
 ItemList.propTypes = {
-    svc: React.PropTypes.object.isRequired,
-    scope: React.PropTypes.any.isRequired,
-    profilesById: React.PropTypes.any,
-    highlightsById: React.PropTypes.any,
-    markedDesksById: React.PropTypes.any,
-    desksById: React.PropTypes.any,
-    ingestProvidersById: React.PropTypes.any,
-    usersById: React.PropTypes.any,
+    svc: PropTypes.object.isRequired,
+    scope: PropTypes.any.isRequired,
+    profilesById: PropTypes.any,
+    highlightsById: PropTypes.any,
+    markedDesksById: PropTypes.any,
+    desksById: PropTypes.any,
+    ingestProvidersById: PropTypes.any,
+    usersById: PropTypes.any,
 };

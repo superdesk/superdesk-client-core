@@ -164,7 +164,7 @@ describe('content', () => {
         browser.sleep(500);
 
         expect(content.getItemType('text').isDisplayed()).toBe(true);
-        expect(content.getWidgets().count()).toBe(5);
+        expect(content.getWidgets().count()).toBeGreaterThanOrEqual(5);
 
         element(by.id('closeAuthoringBtn')).click();
     });
@@ -186,7 +186,7 @@ describe('content', () => {
         browser.sleep(500);
 
         expect(content.getItemType('composite').isDisplayed()).toBe(true);
-        expect(content.getWidgets().count()).toBe(5);
+        expect(content.getWidgets().count()).toBeGreaterThanOrEqual(5);
 
         element(by.id('closeAuthoringBtn')).click();
     });

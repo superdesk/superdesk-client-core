@@ -5,11 +5,11 @@ angular.module('superdesk.apps.editor2.embed', []).controller('SdAddEmbedControl
 SdAddEmbedController.$inject = ['embedService', '$element', '$timeout', '$q', 'lodash',
     'EMBED_PROVIDERS', '$scope', 'editor', '$injector'];
 function SdAddEmbedController(embedService, $element, $timeout, $q, _,
-EMBED_PROVIDERS, $scope, editor, $injector) {
+    EMBED_PROVIDERS, $scope, editor, $injector) {
     var self = this;
 
     angular.extend(self, {
-        editorCtrl: undefined,  // defined in link method
+        editorCtrl: undefined, // defined in link method
         previewLoading: false,
         toggle: function(close) {
             // use parameter or toggle

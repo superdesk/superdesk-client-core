@@ -21,12 +21,12 @@ angular.module('superdesk.apps.workspace', ['superdesk.apps.workspace.content'])
     .directive('sdEditWorkspace', directive.EditWorkspaceDirective)
 
     .run(['keyboardManager', 'gettext', function(keyboardManager, gettext) {
-        keyboardManager.register('General', 'ctrl + alt + b', gettext('Opens workspace / dashboard'));
-        keyboardManager.register('General', 'alt + m', gettext('Opens monitoring'));
-        keyboardManager.register('General', 'ctrl + alt + h', gettext('Opens highlights'));
-        keyboardManager.register('General', 'alt + t', gettext('Opens tasks'));
-        keyboardManager.register('General', 'ctrl + alt + k', gettext('Opens spike'));
-        keyboardManager.register('General', 'alt + p', gettext('Opens personal'));
-        keyboardManager.register('General', 'ctrl + alt + f', gettext('Opens search'));
-        keyboardManager.register('General', 'x', gettext('Multi-selects(or deselects) an item'));
+        keyboardManager.register('General', 'ctrl + alt + b', gettext('Open workspace / dashboard'));
+        keyboardManager.register('General', 'alt + m', gettext('Open monitoring'));
+        keyboardManager.register('General', 'ctrl + alt + h', gettext('Open highlights'));
+        keyboardManager.register('General', 'alt + t', gettext('Open tasks'));
+        keyboardManager.register('General', 'ctrl + alt + k', gettext('Open spike'));
+        keyboardManager.register('General', 'alt + p', gettext('Open personal'));
+        keyboardManager.register('General', 'ctrl + alt + f', gettext('Open search'));
+        keyboardManager.register('General', 'x', gettext('Multi-select (or deselect) an item'));
     }]);

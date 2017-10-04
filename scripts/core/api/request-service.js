@@ -3,7 +3,7 @@
  */
 RequestService.$inject = ['$injector'];
 function RequestService($injector) {
- // using $injector to avoid circular dependency on $http
+    // using $injector to avoid circular dependency on $http
 
     /**
      * @link upload:isUpload
@@ -22,4 +22,4 @@ function RequestService($injector) {
 }
 
 angular.module('superdesk.core.api.request', [])
-.service('request', RequestService);
+    .service('request', RequestService);

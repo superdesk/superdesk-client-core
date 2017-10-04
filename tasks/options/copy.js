@@ -6,13 +6,8 @@ module.exports = {
         files: [
             {
                 cwd: process.cwd(),
-                src: path.join(appRoot, 'index.html'),
+                src: './index.html',
                 dest: '<%= distDir %>/index.html'
-            },
-            {
-                cwd: process.cwd(),
-                src: path.join(appRoot, 'index.html'),
-                dest: './index.html'
             }
         ]
     },

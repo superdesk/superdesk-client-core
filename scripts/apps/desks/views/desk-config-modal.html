@@ -52,6 +52,9 @@
                                     <option id="{{type.qcode}}" ng-repeat="type in deskTypes" value="{{type.qcode}}" ng-selected="desk.edit.desk_type === type.qcode"
                                         >{{ type.name | translate}}</option>
                                 </select>
+                                <div ng-show="showNoPublishOnAuthoringDesk(desk.edit.desk_type)" class="column">
+                                    <i class="icon-info-sign icon--blue"></i><span class="helper-text helper-text--after-icon" translate>Authoring desks are for content creation, and items within it are protected from accidental publication. Publishing is only permitted  from production desks.</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -215,8 +218,8 @@
                                       data-item="selected"
                                       data-preview="true"
                                       data-expiryfield="content_expiry"
-                                      data-expiry-minutes="desk.edit.content_expiry || systemExpiry"
-                                      data-expiry-context="{{desk.edit.content_expiry ? 'Desk' : 'System'}}"
+                                      data-expiry-minutes="desk.edit.content_expiry > 0 ? desk.edit.content_expiry : systemExpiry"
+                                      data-expiry-context="{{desk.edit.content_expiry > 0 ? 'Desk' : 'System'}}"
                                 ></span>
                             </div>
                             <div class="list-row list-row--dotted list-row--flex" ng-if="selected.incoming_macro">
@@ -265,8 +268,8 @@
                                 data-preview="false"
                                 data-expiryfield="content_expiry"
                                 data-header="Content Expiry"
-                                data-expiry-minutes="desk.edit.content_expiry || systemExpiry"
-                                data-expiry-context="{{ desk.edit.content_expiry ? 'Desk' : 'System' }}">
+                                data-expiry-minutes="desk.edit.content_expiry > 0 ? desk.edit.content_expiry : systemExpiry"
+                                data-expiry-context="{{ desk.edit.content_expiry > 0 ? 'Desk' : 'System' }}">
                         </div>
                         <div ng-if="editStage">
                             <div class="form__row form__row--flex">

@@ -20,28 +20,40 @@
                 </div>
             </li>
 
-            <li class="fieldset terms-box">
-                <div class="legend" translate>Article Defaults</div>
+            <li class="fieldset">
+                <div class="legend" translate>Notifications</div>
+                <div sd-info-item>
+                    <label>{{ :: preferences['email:notification'].label | translate }}</label>
+                    <span ng-hide="preferences['email:notification'].allowed" sd-switch ng-model="preferences['email:notification'].enabled"></span>
+                </div>
+                <div sd-info-item>
+                    <label>{{ :: preferences['desktop:notification'].label | translate }}</label>
+                    <span ng-hide="preferences['desktop:notification'].allowed" sd-switch ng-model="preferences['desktop:notification'].enabled"></span>
+                </div>
+            </li>
 
+            <li class="fieldset terms-box" ng-hide="profileConfig.defaults === false">
+                <div class="legend" translate>Article Defaults</div>
                 <div class="legend" translate>Dateline</div>
-                <div sd-info-item ng-if="preferencesLoaded === true">
+
+                <div sd-info-item ng-if="preferencesLoaded === true" ng-hide="profileConfig.located === false">
                     <label>{{ :: preferences['dateline:located'].label | translate}}</label>
                     <span sd-meta-locators data-list="cities" data-item="preferences['dateline:located']" data-field="located"
-                          data-change="changeDatelinePreview(item, city)"></span>
+                          data-postprocessing="changeDatelinePreview(item, city)" data-keepinput="true"></span>
                 </div>
-                <div class="dateline_preview">
+                <div sd-info-item class="dateline_preview" ng-hide="profileConfig.located === false">
                     <label translate>Preview</label>
                     <span>{{ datelinePreview | previewDateline:datelineSource}} </span>
                 </div>
 
-                <div sd-info-item ng-if="preferencesLoaded === true">
+                <div sd-info-item ng-if="preferencesLoaded === true" ng-hide="profileConfig.place === false">
                     <label>{{ :: preferences['article:default:place'].label | translate}}</label>
                     <span sd-meta-dropdown data-item="preferences['article:default:place']"
                           data-field="place" data-list="locators" data-change="articleDefaultsChanged(item)"></span>
                 </div>
             </li>
 
-            <li class="fieldset">
+            <li class="fieldset" ng-hide="profileConfig.category === false">
                 <div class="legend">
                     {{ :: preferences['categories:preferred'].category | translate }}
                 </div>
@@ -79,7 +91,7 @@
                 </div>
             </li>
 
-            <li class="fieldset">
+            <li class="fieldset" ng-hide="profileConfig.desks === false">
                 <div class="legend">
                     {{ :: preferences['desks:preferred'].category | translate }}
                 </div>

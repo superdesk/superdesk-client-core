@@ -1,5 +1,5 @@
-ContentProfilesController.$inject = ['$scope', 'notify', 'content', 'modal', '$q', 'config'];
-export function ContentProfilesController($scope, notify, content, modal, $q, config) {
+ContentProfilesController.$inject = ['$scope', '$location', 'notify', 'content', 'modal', '$q', 'config'];
+export function ContentProfilesController($scope, $location, notify, content, modal, $q, config) {
     var self = this;
 
     // creating will be true while the modal for creating a new content
@@ -25,7 +25,27 @@ export function ContentProfilesController($scope, notify, content, modal, $q, co
     function refreshList() {
         return content.getTypes(true).then((types) => {
             self.items = types;
+            editActive();
         });
+    }
+
+    /**
+     * @description Start editing active profile
+     * @private
+     */
+    function editActive() {
+        $scope.editing = null;
+
+        if ($location.search()._id) {
+            const active = self.items.find((p) => p._id === $location.search()._id);
+
+            if (active) {
+                $scope.editing = {
+                    form: _.cloneDeep(active),
+                    original: active
+                };
+            }
+        }
     }
 
     /**
@@ -76,10 +96,8 @@ export function ContentProfilesController($scope, notify, content, modal, $q, co
      * @param {Object} p the content profile being edited.
      */
     this.toggleEdit = function(p) {
-        $scope.editing = angular.isObject(p) ? {
-            form: _.cloneDeep(p),
-            original: p
-        } : null;
+        $location.search({_id: p ? p._id : null});
+        $scope.$applyAsync(editActive);
     };
 
     /**

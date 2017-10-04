@@ -13,10 +13,10 @@ export function IngestRoutingAction(desks, macros, subscribersService, metadata,
             scope.target_types = [];
 
             desks.initialize()
-            .then(() => {
-                scope.deskLookup = desks.deskLookup;
-                scope.stageLookup = desks.stageLookup;
-            });
+                .then(() => {
+                    scope.deskLookup = desks.deskLookup;
+                    scope.stageLookup = desks.stageLookup;
+                });
 
             macros.get(true).then((macros) => {
                 _.transform(macros, (lookup, macro, idx) => {
@@ -43,7 +43,8 @@ export function IngestRoutingAction(desks, macros, subscribersService, metadata,
                     actionValues.push(scope.deskLookup[action.desk].name);
                     actionValues.push(scope.stageLookup[action.stage].name);
                     if (action.macro) {
-                        actionValues.push(scope.macroLookup[action.macro].label);
+                        actionValues.push(scope.macroLookup[action.macro].label ||
+                            scope.macroLookup[action.macro].name);
                     } else {
                         actionValues.push(' - ');
                     }

@@ -1,4 +1,4 @@
-import React from 'react';
+import PropTypes from 'prop-types';
 import {Map, OrderedSet, List, Repeat} from 'immutable';
 import {
     EditorState,
@@ -30,7 +30,7 @@ export default function mockStore(state = {}) {
     const options = {
         context: {store},
         childContextTypes: {
-            store: React.PropTypes.object.isRequired
+            store: PropTypes.object.isRequired
         }
     };
 
@@ -41,13 +41,13 @@ export default function mockStore(state = {}) {
  * @name stateWithLink
  * @description Returns a new editorState that has the text "click HERE to open page"
  * as content, having the uppercased letters marked as an entity of type LINK, containing
- * the data {url: 'entity-url'}
+ * the data {link: {href: 'entity-url'}}
  * @returns {Object} editorState
  */
 export function stateWithLink() {
     const contentState = ContentState
         .createFromText('click HERE to open page')
-        .createEntity('LINK', 'MUTABLE', {url: 'entity-url'});
+        .createEntity('LINK', 'MUTABLE', {link: {href: 'entity-url'}});
 
     const entityKey = contentState.getLastCreatedEntityKey();
     const blockKey = contentState.getFirstBlock().getKey();
@@ -72,6 +72,7 @@ export function imageBlockAndContent() {
         img: {
             renditions: {original: {href: 'image_href'}},
             alt_text: 'image_alt_text',
+            headline: 'image_headline',
             description_text: 'image_description'
         }
     });

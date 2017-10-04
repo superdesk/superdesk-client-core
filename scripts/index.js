@@ -13,7 +13,8 @@ const appConfig = __SUPERDESK_CONFIG__;
 import externalApps from 'external-apps';
 
 if (appConfig.features.useTansaProofing) {
-    require('apps/tansa');
+    // see: http://www.hiddenwebgenius.com/blog/guides/understanding-javascripts-asynchronous-code/
+    setTimeout(require('apps/tansa'), 0);
 }
 
 let body = angular.element('body');

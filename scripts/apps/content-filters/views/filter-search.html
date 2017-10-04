@@ -1,49 +1,57 @@
-<div ng-controller="FilterSearchCtrl">
-    <div class="split-content" >
-        <div class="header">
-            <h2 translate>Filter Search</h2>
-        </div>
-        <div class="content">    
-            <div class="panel-search">
+<div class="sd-page__content" ng-controller="FilterSearchCtrl">
+    <div class="grid" style="margin: 0 -2rem;">
+        <div class="grid__item grid__item--col-3">
+            <div class="panel-search sd-shadow--z2">
                 <form name="searchForm" ng-submit="search()">
                     <fieldset>
-                        <div class="field">
-                            <label translate>Field</label>
-                            <select class="input" ng-change="resetValues()" required ng-model="filterCondition.field">
-                                <option value="{{parameter.field}}" ng-selected="parameter.field === filterCondition.field" ng-repeat="parameter in filterConditionParameters | orderBy: 'field' track by $index">{{:: parameter.field}}</option>
-                            </select>
-                        </div>
-                        <div class="field">
-                            <label translate>Operator</label>
-                            <select class="input" ng-change="resetValues()" required ng-model="filterCondition.operator" >
-                                <option value="{{operator}}" ng-selected="operator === filterCondition.operator" ng-repeat="operator in operatorLookup[filterCondition.field] track by $index">{{:: operator | translate}}</option>
-                            </select>
-                        </div>
-                        <div class="field">
-                            <label translate>Values</label>
-                            <input ng-if="!isListValue()" required ng-model="filterCondition.value">
-                            <div ng-if="isListValue()">
-                                <div class="term-editor"
-                                     sd-meta-terms
-                                     data-item="filterCondition"
-                                     data-field="values"
-                                     data-unique="{{valueFieldLookup[filterCondition.field]}}"
-                                     data-list="valueLookup[filterCondition.field]"
-                                     data-header="true"
-                                     data-reload-list="true"
-                                     ></div>
+                        <div class="form__row">
+                            <div class="sd-line-input sd-line-input--is-select">
+                                <label class="sd-line-input__label" translate>Field</label>
+                                <select class="sd-line-input__select" ng-change="resetValues()" required ng-model="filterCondition.field">
+                                    <option value="{{parameter.field}}" ng-selected="parameter.field === filterCondition.field" ng-repeat="parameter in filterConditionParameters | orderBy: 'field' track by $index">{{:: parameter.field}}</option>
+                                </select>
                             </div>
                         </div>
-                        <div class="pull-right">
+                        <div class="form__row">
+                            <div class="sd-line-input sd-line-input--is-select">
+                                <label class="sd-line-input__label" translate>Operator</label>
+                                <select class="sd-line-input__select" ng-change="resetValues()" required ng-model="filterCondition.operator" >
+                                    <option value="{{operator}}" ng-selected="operator === filterCondition.operator" ng-repeat="operator in operatorLookup[filterCondition.field] track by $index">{{:: operator | translate}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form__row">
+                            <div class="sd-line-input" ng-if="!isListValue()" >
+                                <label class="sd-line-input__label"translate>Values</label>
+                                <input class="sd-line-input__input" required ng-model="filterCondition.value">
+                            </div>
+                            <div ng-if="isListValue()">
+                                <label class="form-label" translate>Values</label>
+                                <div class="term-editor"
+                                        sd-meta-terms
+                                        data-item="filterCondition"
+                                        data-field="values"
+                                        data-unique="{{valueFieldLookup[filterCondition.field]}}"
+                                        data-list="valueLookup[filterCondition.field]"
+                                        data-header="true"
+                                        data-reload-list="true">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form__row" style="text-align:right;">
+                            <button type="reset" class="btn" ng-disabled="!(filterCondition.value || filterCondition.values.length > 0)" ng-click="clear()" translate>Clear search</button>
                             <button class="btn btn--primary" ng-disabled="!(filterCondition.value || filterCondition.values.length > 0)" ng-click="search()" translate>Search</button>
                         </div>
                     </fieldset>
-                </form>
-            </div>
-            <div class="panel-search-result" ng-if="searchResult">
-                <div ng-include="'scripts/apps/content-filters/views/filter-search-result.html'"></div>
-                <div sd-manage-filters-tab></div>
+                </form> 
             </div>
         </div>
+        <div class="grid__item grid__item--col-9">
+            <div class="panel-search-result" ng-if="searchResult" ng-include="'scripts/apps/content-filters/views/filter-search-result.html'"></div>
+        </div>
     </div>
+
+
+
+
 </div>

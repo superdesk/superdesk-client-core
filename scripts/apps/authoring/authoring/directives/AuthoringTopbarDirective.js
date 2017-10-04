@@ -21,9 +21,9 @@ export function AuthoringTopbarDirective(TranslationService) {
             scope.saveTopbar = function() {
                 scope.saveDisabled = true;
                 return scope.save(scope.item)
-                .finally(() => {
-                    scope.saveDisabled = false;
-                });
+                    .finally(() => {
+                        scope.saveDisabled = false;
+                    });
             };
 
             // Activate preview formatted item

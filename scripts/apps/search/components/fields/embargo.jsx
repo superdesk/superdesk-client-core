@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 export function embargo(props) {
     const {gettext} = props.svc;
@@ -13,6 +14,6 @@ export function embargo(props) {
 }
 
 embargo.propTypes = {
-    svc: React.PropTypes.any.isRequired,
-    item: React.PropTypes.any,
+    svc: PropTypes.any.isRequired,
+    item: PropTypes.any,
 };

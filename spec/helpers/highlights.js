@@ -1,7 +1,7 @@
 /* eslint-disable newline-per-chained-call */
 
 
-var openUrl = require('./utils').open;
+var nav = require('./utils').nav;
 var wait = require('./utils').wait;
 
 module.exports = new Highlights();
@@ -14,7 +14,7 @@ function Highlights() {
     this.btnSave = element(by.css('[ng-click="save()"]'));
 
     this.get = function() {
-        openUrl('/#/settings/highlights');
+        nav('/settings/highlights');
     };
 
     this.getRow = function(name) {

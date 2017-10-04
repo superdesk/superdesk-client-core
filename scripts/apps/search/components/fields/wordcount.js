@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 export function wordcount(props) {
     return React.createElement(
@@ -9,5 +10,5 @@ export function wordcount(props) {
 }
 
 wordcount.propTypes = {
-    item: React.PropTypes.any,
+    item: PropTypes.any,
 };

@@ -48,6 +48,20 @@ module.exports = {
         options: {bootstrap: () => ''}
     },
 
+    index: {
+        cwd: '<%= coreDir %>',
+        dest: './index.html',
+        src: __filename, // hack to make ngtemplate work
+        options: {
+            bootstrap: () => {
+                const features = getConfig().features || {};
+                const buildIndex = require('../../index.html.js');
+
+                return buildIndex(features);
+            }
+        }
+    },
+
     // gen-apps generates a file that imports all of the external node
     // modules defined in superdesk.config.js and returns an array of their
     // exports.

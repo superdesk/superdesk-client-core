@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {getSpecStyle, getSpecTitle, getSpecValue} from '../helpers';
 
 export function ItemUrgency(props) {
@@ -32,6 +33,6 @@ export function ItemUrgency(props) {
 }
 
 ItemUrgency.propTypes = {
-    svc: React.PropTypes.object.isRequired,
-    urgency: React.PropTypes.any
+    svc: PropTypes.object.isRequired,
+    urgency: PropTypes.any
 };

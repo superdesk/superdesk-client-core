@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 import {ItemUrgency, TypeIcon} from 'apps/search/components';
@@ -99,12 +100,12 @@ export class WidgetItem extends React.Component {
 }
 
 WidgetItem.propTypes = {
-    item: React.PropTypes.object,
-    selected: React.PropTypes.bool,
-    allowed: React.PropTypes.bool,
-    customMonitoringWidget: React.PropTypes.bool,
-    svc: React.PropTypes.object.isRequired,
-    preview: React.PropTypes.func.isRequired,
-    select: React.PropTypes.func.isRequired,
-    edit: React.PropTypes.func.isRequired
+    item: PropTypes.object,
+    selected: PropTypes.bool,
+    allowed: PropTypes.bool,
+    customMonitoringWidget: PropTypes.bool,
+    svc: PropTypes.object.isRequired,
+    preview: PropTypes.func.isRequired,
+    select: PropTypes.func.isRequired,
+    edit: PropTypes.func.isRequired
 };

@@ -8,7 +8,7 @@ describe('sdUserPrivileges directive', () => {
     var queryDeferred,
         getByIdDeferred,
         fakeEndpoints,
-        isoScope,  // the directive's own isolate scope
+        isoScope, // the directive's own isolate scope
         $compile,
         $rootScope;
 
@@ -42,12 +42,12 @@ describe('sdUserPrivileges directive', () => {
 
         fakeEndpoints.privileges = {
             query: jasmine.createSpy('privileges_query')
-                        .and.returnValue(queryDeferred.promise)
+                .and.returnValue(queryDeferred.promise)
         };
 
         fakeEndpoints.roles = {
             getById: jasmine.createSpy('get_roles_by_user_id')
-                        .and.returnValue(getByIdDeferred.promise)
+                .and.returnValue(getByIdDeferred.promise)
         };
 
         var user = {_id: 1, role: '€d1t0r', privileges: [{name: 'foo'}, {name: 'bar'}]};
@@ -69,7 +69,7 @@ describe('sdUserPrivileges directive', () => {
      */
     function compileDirective(scopeValues) {
         var html,
-            scope,  // the scope of the element the directive is applied to
+            scope, // the scope of the element the directive is applied to
             $element;
 
         scope = $rootScope.$new();

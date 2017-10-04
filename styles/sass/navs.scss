@@ -336,24 +336,37 @@
 // SUBNAV
 // ------------
 .subnav {
-    position: absolute;
-    display: flex;
-    top: $nav-height;
-    left: 0;
-    right: 0;
-    height:$subnav-height;
-    @include border-box();
+    align-items: center;
     z-index: 1001;
-    background: rgba(245,245,245,0.90);
-    border-bottom: 0px;
-    @include box-shadow-both(0 1px 3px rgba(0,0,0,0.07), 0 1px 0 0 rgba(0,0,0,0.1));
-    @include transition( all 0.3s ease);
+    // position: absolute;
+    // display: flex;
+    // top: $nav-height;
+    // left: 0;
+    // right: 0;
+    // height:$subnav-height;
+    // @include border-box();
+    // z-index: 1001;
+    // background: rgba(245,245,245,0.90);
+    // border-bottom: 0px;
+    // @include box-shadow-both(0 1px 3px rgba(0,0,0,0.07), 0 1px 0 0 rgba(0,0,0,0.1));
+    // @include transition( all 0.3s ease);
     &--padded {
         padding: 10px 20px;
     }
     + .subnav {
         z-index: 999;
     }
+}
+
+.subnav--absolute {
+    position: absolute;
+    top:48px;
+    left:0;
+    right:0;
+    z-index: 1001;
+}
+.subnav--top {
+    top: 48px;
 }
 .subnav__page-title,
 .page-nav-title {
@@ -520,14 +533,4 @@
 .shortcut {
     font-style: italic;
     opacity: 0.5;
-}
-
-.navbtn--text-only {
-    padding: 0 20px;
-    width: auto;
-    font-size: 15px;
-    line-height: 48px;
-    &:hover {
-        background: hsla(0,0%,100%,.8);
-    }
 }

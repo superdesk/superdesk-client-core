@@ -102,7 +102,7 @@ export function AuthoringHeaderDirective(api, authoringWidgets, $rootScope, arch
                     var fromDateTime = moment().tz(config.defaultTimezone)
                         .format(config.view.dateformat);
 
-                    archiveService.getRelatedItems(scope.item.slugline, fromDateTime, scope.item._id)
+                    archiveService.getRelatedItems(scope.item, fromDateTime)
                         .then((items) => {
                             scope.relatedItems = items;
                             if (items && items._items.length && !getNoMissingLink()) {
@@ -155,6 +155,8 @@ export function AuthoringHeaderDirective(api, authoringWidgets, $rootScope, arch
             }
 
             metadata.initialize().then(() => {
+                scope.helper_text = metadata.helper_text;
+
                 scope.$watch('item.anpa_category', (services) => {
                     var qcodes = _.map(services, 'qcode');
                     var cvs = [];

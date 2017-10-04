@@ -135,12 +135,13 @@ function SuperdeskProvider($routeProvider, _) {
      * @requires privileges
      * @requires $injector
      * @requires lodash
+     * @requires config
      * @description This service allows interacting with registered activities.
      */
     this.$get = ['$q', '$route', '$rootScope', 'activityService', 'activityChooser',
-        'betaService', 'features', 'privileges', '$injector', 'lodash',
+        'betaService', 'features', 'privileges', '$injector', 'lodash', 'config',
         function superdeskFactory($q, $route, $rootScope, activityService, activityChooser, betaService,
-                                  features, privileges, $injector, _) {
+            features, privileges, $injector, _, config) {
             /**
              * Render main menu depending on registered acitivites
              */
@@ -172,6 +173,18 @@ function SuperdeskProvider($routeProvider, _) {
                 return privileges.userHasPrivileges(activity.privileges);
             }
 
+            function checkActivityEnabled(activity) {
+                if (!_.get(config, 'activity')) {
+                    return true;
+                }
+
+                if (_.isUndefined(config.activity[activity._id])) {
+                    return true;
+                }
+
+                return config.activity[activity._id];
+            }
+
             /**
              * @ngdoc method
              * @name superdesk#isAllowed
@@ -183,7 +196,7 @@ function SuperdeskProvider($routeProvider, _) {
              * Testing is based on current server setup (features) and user privileges.
              */
             function isAllowed(activity) {
-                return checkFeatures(activity) && checkPrivileges(activity);
+                return checkActivityEnabled(activity) && checkFeatures(activity) && checkPrivileges(activity);
             }
 
             return angular.extend({
@@ -371,9 +384,9 @@ angular.module('superdesk.core.activity', [
     'superdesk.core.activity.list',
     'superdesk.core.activity.modal'
 ])
-.constant('lodash', window._)
-.constant('langmap', langmap)
-.provider('superdesk', SuperdeskProvider)
+    .constant('lodash', window._)
+    .constant('langmap', langmap)
+    .provider('superdesk', SuperdeskProvider)
 
 /**
  * @ngdoc service
@@ -387,38 +400,38 @@ angular.module('superdesk.core.activity', [
  * @requires lodash
  * @description The service allows choosing activities to perform.
  */
-.service('activityService', ['$location', '$injector', '$q', 'gettext', 'modal', 'lodash',
-    function($location, $injector, $q, gettext, modal, _) {
-        var activityStack = [];
+    .service('activityService', ['$location', '$injector', '$q', 'gettext', 'modal', 'lodash',
+        function($location, $injector, $q, gettext, modal, _) {
+            var activityStack = [];
 
-        this.activityStack = activityStack;
+            this.activityStack = activityStack;
 
-    /**
+            /**
      * Expand path using given locals, eg. with /users/:Id and locals {Id: 2} returns /users/2
      *
      * @param {Object} activity
      * @param {Object} locals
      * @returns {string}
      */
-        function getPath(activity, locals) {
-            if (activity.href[0] === '/') { // trigger route
-                var matchAll = true,
-                    path = activity.href.replace(/:([_a-zA-Z0-9]+)/, (match, key) => {
-                        matchAll = matchAll && locals[key];
-                        return locals[key] ? locals[key] : match;
-                    });
+            function getPath(activity, locals) {
+                if (activity.href[0] === '/') { // trigger route
+                    var matchAll = true,
+                        path = activity.href.replace(/:([_a-zA-Z0-9]+)/, (match, key) => {
+                            matchAll = matchAll && locals[key];
+                            return locals[key] ? locals[key] : match;
+                        });
 
-                path = matchAll ? path : null;
+                    path = matchAll ? path : null;
 
-                if (activity.href.indexOf('_type') !== -1 && !_.isNull(path)) {
-                    path = path.replace(':_type', locals._type ? locals._type : 'archive');
+                    if (activity.href.indexOf('_type') !== -1 && !_.isNull(path)) {
+                        path = path.replace(':_type', locals._type ? locals._type : 'archive');
+                    }
+
+                    return path;
                 }
-
-                return path;
             }
-        }
 
-    /**
+            /**
      * @ngdoc method
      * @name activityService#getLink
      * @public
@@ -430,9 +443,9 @@ angular.module('superdesk.core.activity', [
      * @description
      * Get URL for given activity
      */
-        this.getLink = getPath;
+            this.getLink = getPath;
 
-    /**
+            /**
      * @ngdoc method
      * @name activityService#start
      * @public
@@ -444,53 +457,53 @@ angular.module('superdesk.core.activity', [
      * @description
      * Start given activity
      */
-        this.start = function startActivity(activity, locals) {
-            function execute(activity, locals) {
-                var path = getPath(activity, locals && locals.data);
+            this.start = function startActivity(activity, locals) {
+                function execute(activity, locals) {
+                    var path = getPath(activity, locals && locals.data);
 
-                if (path) { // trigger route
-                    $location.path(path);
-                    return $q.when(locals);
+                    if (path) { // trigger route
+                        $location.path(path);
+                        return $q.when(locals);
+                    }
+
+                    if (activity.modal) {
+                        var defer = $q.defer();
+
+                        activityStack.push({
+                            defer: defer,
+                            activity: activity,
+                            locals: locals
+                        });
+
+                        return defer.promise;
+                    }
+
+                    return $q.when($injector.invoke(activity.controller, {}, locals));
                 }
 
-                if (activity.modal) {
-                    var defer = $q.defer();
-
-                    activityStack.push({
-                        defer: defer,
-                        activity: activity,
-                        locals: locals
-                    });
-
-                    return defer.promise;
+                if (activity.confirm) {
+                    return modal.confirm(gettext(activity.confirm)).then(function runConfirmed() {
+                        return execute(activity, locals);
+                    }, () => $q.reject({confirm: 1}));
                 }
 
-                return $q.when($injector.invoke(activity.controller, {}, locals));
-            }
+                return execute(activity, locals);
+            };
+        }])
 
-            if (activity.confirm) {
-                return modal.confirm(gettext(activity.confirm)).then(function runConfirmed() {
-                    return execute(activity, locals);
-                }, () => $q.reject({confirm: 1}));
-            }
+    .run(['$rootScope', 'superdesk', function($rootScope, superdesk) {
+        $rootScope.superdesk = superdesk; // add superdesk reference so we can use constants in templates
 
-            return execute(activity, locals);
+        $rootScope.intent = function() {
+            return superdesk.intent(...arguments);
+        };
+
+        $rootScope.link = function() {
+            var path = superdesk.link(...arguments);
+
+            return path ? '#' + path : null;
         };
     }])
-
-.run(['$rootScope', 'superdesk', function($rootScope, superdesk) {
-    $rootScope.superdesk = superdesk; // add superdesk reference so we can use constants in templates
-
-    $rootScope.intent = function() {
-        return superdesk.intent(...arguments);
-    };
-
-    $rootScope.link = function() {
-        var path = superdesk.link(...arguments);
-
-        return path ? '#' + path : null;
-    };
-}])
 
 /**
  * @ngdoc service
@@ -499,25 +512,25 @@ angular.module('superdesk.core.activity', [
  * @description
  * Activity chooser service - bridge between superdesk and activity chooser directive
  */
-.service('activityChooser', ['$q', function($q) {
-    var defer;
+    .service('activityChooser', ['$q', function($q) {
+        var defer;
 
-    this.choose = function(activities) {
-        defer = $q.defer();
-        this.activities = activities;
-        return defer.promise;
-    };
+        this.choose = function(activities) {
+            defer = $q.defer();
+            this.activities = activities;
+            return defer.promise;
+        };
 
-    this.resolve = function(activity) {
-        this.activities = null;
-        defer.resolve(activity);
-    };
+        this.resolve = function(activity) {
+            this.activities = null;
+            defer.resolve(activity);
+        };
 
-    this.reject = function() {
-        this.activities = null;
-        defer.reject();
-    };
-}])
+        this.reject = function() {
+            this.activities = null;
+            defer.reject();
+        };
+    }])
 
 /**
  * @ngdoc service
@@ -526,7 +539,7 @@ angular.module('superdesk.core.activity', [
  * @description
  * Referrer service to set/get the referrer Url
  */
-.service('referrer', ['lodash', function(_) {
+    .service('referrer', ['lodash', function(_) {
     /**
      * @ngdoc method
      * @name referrer#setReferrer
@@ -542,43 +555,43 @@ angular.module('superdesk.core.activity', [
      * on authoring page if referrer url is unidentified direct link
      * (i.e from notification pane)
      */
-    this.setReferrer = function(currentRoute, previousRoute) {
-        if (currentRoute && previousRoute) {
-            if (currentRoute.$$route !== undefined && previousRoute.$$route !== undefined) {
-                if (currentRoute.$$route.originalPath === '/') {
-                    this.setReferrerUrl('/workspace');
-                    localStorage.setItem('referrerUrl', '/workspace');
-                    sessionStorage.removeItem('previewUrl');
-                } else if (currentRoute.$$route.authoring && (!previousRoute.$$route.authoring ||
+        this.setReferrer = function(currentRoute, previousRoute) {
+            if (currentRoute && previousRoute) {
+                if (currentRoute.$$route !== undefined && previousRoute.$$route !== undefined) {
+                    if (currentRoute.$$route.originalPath === '/') {
+                        this.setReferrerUrl('/workspace');
+                        localStorage.setItem('referrerUrl', '/workspace');
+                        sessionStorage.removeItem('previewUrl');
+                    } else if (currentRoute.$$route.authoring && (!previousRoute.$$route.authoring ||
                         previousRoute.$$route._id === 'packaging')) {
-                    this.setReferrerUrl(prepareUrl(previousRoute));
-                    localStorage.setItem('referrerUrl', this.getReferrerUrl());
-                    sessionStorage.removeItem('previewUrl');
+                        this.setReferrerUrl(prepareUrl(previousRoute));
+                        localStorage.setItem('referrerUrl', this.getReferrerUrl());
+                        sessionStorage.removeItem('previewUrl');
+                    }
                 }
             }
-        }
-    };
+        };
 
-    var referrerURL;
+        var referrerURL;
 
-    this.setReferrerUrl = function(refURL) {
-        referrerURL = refURL;
-    };
+        this.setReferrerUrl = function(refURL) {
+            referrerURL = refURL;
+        };
 
-    this.getReferrerUrl = function() {
-        if (typeof referrerURL === 'undefined' || referrerURL === null) {
-            if (typeof localStorage.getItem('referrerUrl') === 'undefined'
+        this.getReferrerUrl = function() {
+            if (typeof referrerURL === 'undefined' || referrerURL === null) {
+                if (typeof localStorage.getItem('referrerUrl') === 'undefined'
                 || localStorage.getItem('referrerUrl') === null) {
-                this.setReferrerUrl('/workspace');
-            } else {
-                referrerURL = localStorage.getItem('referrerUrl');
+                    this.setReferrerUrl('/workspace');
+                } else {
+                    referrerURL = localStorage.getItem('referrerUrl');
+                }
             }
-        }
 
-        return referrerURL;
-    };
+            return referrerURL;
+        };
 
-    /**
+        /**
      * @ngdoc method
      * @name referrer#prepareUrl
      * @private
@@ -590,44 +603,55 @@ angular.module('superdesk.core.activity', [
      * Prepares complete Referrer Url from previous route href and querystring params(if exist),
      * e.g /workspace/content?q=test$repo=archive
      */
-    function prepareUrl(refRoute) {
-        var completeUrl;
+        function prepareUrl(refRoute) {
+            var completeUrl;
 
-        if (refRoute) {
-            completeUrl = refRoute.$$route.href.replace('/:_id', '');
-            if (!_.isEqual({}, refRoute.pathParams)) {
-                completeUrl = completeUrl + '/' + refRoute.pathParams._id;
-            }
+            if (refRoute) {
+                completeUrl = refRoute.$$route.href.replace('/:_id', '');
+                if (!_.isEqual({}, refRoute.pathParams)) {
+                    completeUrl = completeUrl + '/' + refRoute.pathParams._id;
+                }
 
-            if (!_.isEqual({}, refRoute.params)) {
-                completeUrl = completeUrl + '?';
-                completeUrl = completeUrl + decodeURIComponent($.param(refRoute.params));
+                if (!_.isEqual({}, refRoute.params)) {
+                    completeUrl = completeUrl + '?';
+                    completeUrl = completeUrl + decodeURIComponent($.param(refRoute.params));
+                }
             }
+            return completeUrl;
         }
-        return completeUrl;
-    }
-}])
+    }])
 
 // reject modal on route change
 // todo(petr): what about blocking route change as long as it is opened?
-.run(['$rootScope', 'activityService', 'referrer', function($rootScope, activityService, referrer) {
-    $rootScope.$on('$routeChangeStart', () => {
-        if (activityService.activityStack.length) {
-            var item = activityService.activityStack.pop();
+    .run(['$rootScope', 'activityService', 'referrer', function($rootScope, activityService, referrer) {
+        $rootScope.$on('$routeChangeStart', () => {
+            if (activityService.activityStack.length) {
+                var item = activityService.activityStack.pop();
 
-            item.defer.reject();
-        }
-    });
+                item.defer.reject();
+            }
+        });
 
-    $rootScope.$on('$routeChangeSuccess', (ev, currentRoute, previousRoute) => {
-        referrer.setReferrer(currentRoute, previousRoute);
-    });
-}])
-.directive('sdActivityItem', ActivityItemDirective);
+        $rootScope.$on('$routeChangeSuccess', (ev, currentRoute, previousRoute) => {
+            referrer.setReferrer(currentRoute, previousRoute);
+        });
+    }])
+    .directive('sdActivityItem', ActivityItemDirective)
+    .directive('sdActivityDropdownItem', ActivityItemDropdownDirective);
 
 ActivityItemDirective.$inject = ['asset'];
 function ActivityItemDirective(asset) {
     return {
         templateUrl: asset.templateUrl('core/activity/views/activity-item.html')
+    };
+}
+
+ActivityItemDropdownDirective.$inject = ['asset'];
+function ActivityItemDropdownDirective(asset) {
+    return {
+        templateUrl: asset.templateUrl('core/activity/views/activity-dropdown-item.html'),
+        link: function(scope, elem, attr) {
+            scope.group = attr.group;
+        }
     };
 }

@@ -1,8 +1,10 @@
 import {limits} from 'apps/desks/constants';
 import _ from 'lodash';
 
-DeskeditBasic.$inject = ['gettext', 'desks', 'WizardHandler', 'metadata', '$filter', '$interpolate', '$rootScope'];
-export function DeskeditBasic(gettext, desks, WizardHandler, metadata, $filter, $interpolate, $rootScope) {
+DeskeditBasic.$inject = ['gettext', 'desks', 'WizardHandler', 'metadata', 'config',
+    '$filter', '$interpolate', '$rootScope'];
+export function DeskeditBasic(gettext, desks, WizardHandler, metadata, config,
+    $filter, $interpolate, $rootScope) {
     return {
         link: function(scope, elem, attrs) {
             scope.limits = limits;
@@ -57,10 +59,10 @@ export function DeskeditBasic(gettext, desks, WizardHandler, metadata, $filter, 
                         WizardHandler.wizard('desks').finish();
                     }
                 }, errorMessage)
-                .finally(() => {
-                    scope.saving = false;
-                    scope.message = null;
-                });
+                    .finally(() => {
+                        scope.saving = false;
+                        scope.message = null;
+                    });
             };
 
             function errorMessage(response) {
@@ -91,6 +93,10 @@ export function DeskeditBasic(gettext, desks, WizardHandler, metadata, $filter, 
                 if (!_.isNil(scope.desk.edit.name)) {
                     scope._errorLimits = scope.desk.edit.name.length > scope.limits.desk ? true : null;
                 }
+            };
+
+            scope.showNoPublishOnAuthoringDesk = function(deskType) {
+                return deskType === 'authoring' && config.features.noPublishOnAuthoringDesk;
             };
 
             if (metadata.values.desk_types) {

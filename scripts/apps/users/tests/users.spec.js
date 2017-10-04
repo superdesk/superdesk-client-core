@@ -69,9 +69,9 @@ describe('userlist service', () => {
         var res = null;
 
         userList.get()
-        .then((result) => {
-            res = result;
-        });
+            .then((result) => {
+                res = result;
+            });
         $rootScope.$digest();
         expect(res).toEqual({_items: [{_id: 1}, {_id: 2}, {_id: 3}]});
     }));
@@ -92,9 +92,9 @@ describe('userlist service', () => {
         var res = null;
 
         userList.getUser(1)
-        .then((result) => {
-            res = result;
-        });
+            .then((result) => {
+                res = result;
+            });
         $rootScope.$digest();
         expect(res).toEqual({_id: 1});
     }));
@@ -136,7 +136,7 @@ describe('mentio directive', () => {
             return {
                 query: function() {
                     return $q.when({_items: [{_id: 1, username: 'moo'},
-                            {_id: 2, username: 'foo'}, {_id: 3, username: 'fast'}]});
+                        {_id: 2, username: 'foo'}, {_id: 3, username: 'fast'}]});
                 }
             };
         });
@@ -163,10 +163,10 @@ describe('mentio directive', () => {
         $rootScope.$digest();
         expect(iscope.users).toEqual(
             [{type: 'desk', item: {name: 'desk1'}},
-            {type: 'desk', item: {name: 'desk3'}},
-            {type: 'user', item: {_id: 3, username: 'fast'}},
-            {type: 'user', item: {_id: 2, username: 'foo'}},
-            {type: 'user', item: {_id: 1, username: 'moo'}}]);
+                {type: 'desk', item: {name: 'desk3'}},
+                {type: 'user', item: {_id: 3, username: 'fast'}},
+                {type: 'user', item: {_id: 2, username: 'foo'}},
+                {type: 'user', item: {_id: 1, username: 'moo'}}]);
     }));
 });
 
@@ -176,14 +176,15 @@ describe('user edit form', () => {
     beforeEach(window.module('superdesk.mocks'));
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.apps.searchProviders'));
+    beforeEach(window.module('superdesk.apps.vocabularies'));
 
     beforeEach(window.module(($provide) => {
         $provide.service('session', ($q) => ({
             identity: {_id: 1},
             getIdentity: function() {
                 return $q.when(
-                        {who: 'cares', this: 'is', totaly: 'fake'}
-                    );
+                    {who: 'cares', this: 'is', totaly: 'fake'}
+                );
             }
         }));
     }));

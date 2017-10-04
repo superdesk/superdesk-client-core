@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 import {broadcast} from 'apps/search/components/fields';
@@ -122,12 +123,12 @@ export class Item extends React.Component {
             const {scope} = this.props;
 
             return !_.get(scope, 'flags.hideActions') && this.state.hover && !item.gone ? React.createElement(
-                    ActionsMenu, {
-                        item: item,
-                        svc: this.props.svc,
-                        scope: this.props.scope,
-                        onActioning: this.setActioningState
-                    }) : null;
+                ActionsMenu, {
+                    item: item,
+                    svc: this.props.svc,
+                    scope: this.props.scope,
+                    onActioning: this.setActioningState
+                }) : null;
         };
 
         if (this.props.view === 'mgrid') {
@@ -215,21 +216,21 @@ export class Item extends React.Component {
 }
 
 Item.propTypes = {
-    svc: React.PropTypes.object.isRequired,
-    scope: React.PropTypes.any.isRequired,
-    swimlane: React.PropTypes.any,
-    item: React.PropTypes.any,
-    profilesById: React.PropTypes.any,
-    highlightsById: React.PropTypes.any,
-    markedDesksById: React.PropTypes.any,
-    ingestProvider: React.PropTypes.any,
-    versioncreator: React.PropTypes.any,
-    onMultiSelect: React.PropTypes.any,
-    desk: React.PropTypes.any,
-    flags: React.PropTypes.any,
-    view: React.PropTypes.any,
-    onDbClick: React.PropTypes.any,
-    onEdit: React.PropTypes.any,
-    onSelect: React.PropTypes.any,
-    narrow: React.PropTypes.any
+    svc: PropTypes.object.isRequired,
+    scope: PropTypes.any.isRequired,
+    swimlane: PropTypes.any,
+    item: PropTypes.any,
+    profilesById: PropTypes.any,
+    highlightsById: PropTypes.any,
+    markedDesksById: PropTypes.any,
+    ingestProvider: PropTypes.any,
+    versioncreator: PropTypes.any,
+    onMultiSelect: PropTypes.any,
+    desk: PropTypes.any,
+    flags: PropTypes.any,
+    view: PropTypes.any,
+    onDbClick: PropTypes.any,
+    onEdit: PropTypes.any,
+    onSelect: PropTypes.any,
+    narrow: PropTypes.any
 };

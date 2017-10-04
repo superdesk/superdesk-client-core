@@ -7,7 +7,7 @@ var monitoring = require('./helpers/monitoring'),
     commandKey = require('./helpers/utils').commandKey,
     ctrlShiftKey = require('./helpers/utils').ctrlShiftKey,
     assertToastMsg = require('./helpers/utils').assertToastMsg,
-    openUrl = require('./helpers/utils').open,
+    nav = require('./helpers/utils').nav,
     dictionaries = require('./helpers/dictionaries'),
     workspace = require('./helpers/workspace');
 
@@ -283,7 +283,7 @@ describe('authoring', () => {
 
         // view item history duplicate operation
         expect(monitoring.getTextItem(2, 0)).toBe('item5');
-        monitoring.actionOnItem('Duplicate', 2, 0, true);
+        monitoring.actionOnItemSubmenu('Duplicate', 'Duplicate in place', 2, 0, true);
         expect(monitoring.getTextItem(0, 0)).toBe('item5');
         monitoring.actionOnItem('Edit', 0, 0);
         authoring.showHistory();
@@ -376,7 +376,7 @@ describe('authoring', () => {
     });
 
     it('spellcheck hilite sentence word for capitalization and ignore the word after abbreviations', () => {
-        openUrl('/#/settings/dictionaries');
+        nav('/settings/dictionaries');
         dictionaries.edit('Test 1');
         expect(dictionaries.getWordsCount()).toBe(0);
         dictionaries.search('abbrev.');
@@ -571,19 +571,19 @@ describe('authoring', () => {
         authoring.addHelpline('Suicide');
         expect(authoring.getBodyFooter()).toMatch(/Readers seeking support and information about suicide*/);
         expect(authoring.save_button.isEnabled()).toBe(true);
-        expect(authoring.getHelplineSelectedOption(0)).toBe('true');    // first option remained selected
-        expect(authoring.getHelplineSelectedOption(1)).toBe(null);      // Suicide not remained selected
+        expect(authoring.getHelplineSelectedOption(0)).toBe('true'); // first option remained selected
+        expect(authoring.getHelplineSelectedOption(1)).toBe(null); // Suicide not remained selected
 
         // select another helpline
         authoring.addHelpline('Children');
-        expect(authoring.getHelplineSelectedOption(0)).toBe('true');    // first option remained selected
-        expect(authoring.getHelplineSelectedOption(2)).toBe(null);      // Children not remained selected
+        expect(authoring.getHelplineSelectedOption(0)).toBe('true'); // first option remained selected
+        expect(authoring.getHelplineSelectedOption(2)).toBe(null); // Children not remained selected
     });
 
     it('Not be able to Ctrl-z to the original, actionable text when killing an item', () => {
         expect(monitoring.getTextItem(2, 0)).toBe('item5');
         monitoring.actionOnItem('Edit', 2, 0);
-        expect(authoring.getHeadlineText()).toBe('item5');  // original, actionable headline text
+        expect(authoring.getHeadlineText()).toBe('item5'); // original, actionable headline text
         expect(authoring.getBodyText()).toBe('item5 text'); // original, actionable body text
 
         authoring.publish();
@@ -665,7 +665,6 @@ describe('authoring', () => {
         ctrlKey('x');
         authoring.sendAndpublish('Sports Desk');
         authoring.confirmSendTo(); // confirm unsaved changes
-        browser.sleep(1000);
         authoring.publishFrom('Sports Desk');
         assertToastMsg('error', 'BODY_HTML empty values not allowed'); // validation takes place
         authoring.writeText('Testing');

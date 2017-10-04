@@ -50,25 +50,25 @@ angular.module('superdesk.apps.monitoring', [
 
     .run(['keyboardManager', 'gettext', function(keyboardManager, gettext) {
         keyboardManager.register('Monitoring / List actions', 'ctrl + alt + j',
-             gettext('Switches between grouped/single stage view'));
+            gettext('Switch between grouped/single stage view'));
         keyboardManager.register('Monitoring / List actions', 'ctrl + alt + g',
-             gettext('Switches between grouped/single desk view'));
+            gettext('Switch between grouped/single desk view'));
         keyboardManager.register('Monitoring / List actions', 'page down',
-             gettext('Move focus to next stage or group'));
+            gettext('Move focus to next stage or group'));
         keyboardManager.register('Monitoring / List actions', 'page up',
-             gettext('Move focus to previous stage or group'));
+            gettext('Move focus to previous stage or group'));
         keyboardManager.register('Monitoring / List actions', 'down/right Arrow',
-             gettext('Select next item on focused stage or group'));
+            gettext('Select next item on focused stage or group'));
         keyboardManager.register('Monitoring / List actions', 'up/left Arrow',
             gettext('Select previous item on focused stage or group'));
         keyboardManager.register('Monitoring / List actions', 'alt + o', gettext('View an item'));
         keyboardManager.register('Monitoring / List actions', 'ctrl + alt + e', gettext('Edit an item'));
         keyboardManager.register('Monitoring / List actions', 'ctrl + alt + n',
             gettext('Edit an item in a new Window'));
-        keyboardManager.register('Monitoring / List actions', 'ctrl + alt + d', gettext('Duplicates an item'));
-        keyboardManager.register('Monitoring / List actions', 'ctrl + b', gettext('Creates a broadcast'));
-        keyboardManager.register('Monitoring / List actions', 'ctrl + shift + #', gettext('Spikes item(s)'));
-        keyboardManager.register('Monitoring / List actions', 'ctrl + alt + p', gettext('Creates Package'));
+        keyboardManager.register('Monitoring / List actions', 'ctrl + alt + d', gettext('Duplicate an item'));
+        keyboardManager.register('Monitoring / List actions', 'ctrl + b', gettext('Create a broadcast'));
+        keyboardManager.register('Monitoring / List actions', 'ctrl + shift + #', gettext('Spike item(s)'));
+        keyboardManager.register('Monitoring / List actions', 'ctrl + alt + p', gettext('Create Package'));
         keyboardManager.register('Monitoring / List actions', 'ctrl + shift + ^', gettext('Mark for highlight'));
         keyboardManager.register('Monitoring / List actions', 'ctrl + shift + !', gettext('Mark for desk'));
     }]);

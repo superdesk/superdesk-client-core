@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {FetchedDesksInfo} from 'apps/search/components';
 
 export function fetchedDesk(props) {
@@ -12,6 +13,6 @@ export function fetchedDesk(props) {
 }
 
 fetchedDesk.propTypes = {
-    svc: React.PropTypes.object.isRequired,
-    item: React.PropTypes.any,
+    svc: PropTypes.object.isRequired,
+    item: PropTypes.any,
 };

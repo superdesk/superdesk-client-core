@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import * as actions from '../../actions';
 import {connect} from 'react-redux';
 
@@ -22,7 +23,7 @@ export class TableButtonComponent extends Component {
 }
 
 TableButtonComponent.propTypes = {
-    addTable: React.PropTypes.func.isRequired,
+    addTable: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({

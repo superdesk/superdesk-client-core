@@ -23,12 +23,12 @@ export default angular.module('superdesk.core.notify', ['superdesk.core.translat
                 return this.messages.pop();
             };
 
-            this.addMessage = function(type, text, ttl = ttls[type]) {
+            this.addMessage = function(type, text, ttl = ttls[type], options = {}) {
                 var self = this;
 
                 // add message, only if it's not already exist
                 if (_.find(this.messages, _.matches({msg: text})) === undefined) {
-                    this.messages.push({type: type, msg: text});
+                    this.messages.push({type: type, msg: text, options: options});
                 }
 
                 if (ttl) {
@@ -41,8 +41,8 @@ export default angular.module('superdesk.core.notify', ['superdesk.core.translat
             angular.forEach(messageTypes, function(type) {
                 var self = this;
 
-                this[type] = function(text, ttl) {
-                    self.addMessage(type, text, ttl);
+                this[type] = function(text, ttl, options) {
+                    self.addMessage(type, text, ttl, options);
                 };
             }, this);
 

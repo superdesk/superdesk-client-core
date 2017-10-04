@@ -2,6 +2,7 @@ import React from 'react';
 import {shallow, mount} from 'enzyme';
 import {ImageBlockComponent as ImageBlock} from '../images/ImageBlock';
 import {imageBlockAndContent} from './utils';
+import Textarea from 'react-textarea-autosize';
 
 describe('editor3.components.image-block', () => {
     it('should render', () => {
@@ -16,7 +17,7 @@ describe('editor3.components.image-block', () => {
 
         expect(wrapper.find('img').props().src).toBe('image_href');
         expect(wrapper.find('img').props().alt).toBe('image_alt_text');
-        expect(wrapper.find('.image-block__description').text()).toBe('image_description');
+        expect(wrapper.find(Textarea).prop('value')).toBe('image_description');
     });
 
     it('should trigger cropImage prop when clicked', () => {

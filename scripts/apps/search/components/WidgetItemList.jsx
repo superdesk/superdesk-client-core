@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {WidgetItem} from 'apps/search/components';
 
 
@@ -46,25 +47,25 @@ export class WidgetItemList extends React.Component {
         return (
             <div tabIndex="0">
                 <ul className="inline-content-items">
-                {
-                    this.state.itemIds.map((itemId) => {
-                        var item = this.state.itemsById[itemId];
+                    {
+                        this.state.itemIds.map((itemId) => {
+                            var item = this.state.itemsById[itemId];
 
-                        return (
-                            <WidgetItem
-                                key={this.props.svc.search.generateTrackByIdentifier(item)}
-                                item={item}
-                                selected={this.state.selected && this.state.selected._id === item._id}
-                                allowed ={this.props.allowed}
-                                customMonitoringWidget={this.props.customMonitoringWidget}
-                                svc={this.props.svc}
-                                preview={this.props.preview}
-                                select={this.props.select}
-                                edit={this.props.edit}
-                            />
-                        );
-                    })
-                }
+                            return (
+                                <WidgetItem
+                                    key={this.props.svc.search.generateTrackByIdentifier(item)}
+                                    item={item}
+                                    selected={this.state.selected && this.state.selected._id === item._id}
+                                    allowed ={this.props.allowed}
+                                    customMonitoringWidget={this.props.customMonitoringWidget}
+                                    svc={this.props.svc}
+                                    preview={this.props.preview}
+                                    select={this.props.select}
+                                    edit={this.props.edit}
+                                />
+                            );
+                        })
+                    }
                 </ul>
             </div>
         );
@@ -72,11 +73,11 @@ export class WidgetItemList extends React.Component {
 }
 
 WidgetItemList.propTypes = {
-    allowed: React.PropTypes.bool,
-    customMonitoringWidget: React.PropTypes.bool,
-    svc: React.PropTypes.object.isRequired,
-    preview: React.PropTypes.func.isRequired,
-    select: React.PropTypes.func.isRequired,
-    edit: React.PropTypes.func.isRequired,
-    updateCallback: React.PropTypes.func.isRequired
+    allowed: PropTypes.bool,
+    customMonitoringWidget: PropTypes.bool,
+    svc: PropTypes.object.isRequired,
+    preview: PropTypes.func.isRequired,
+    select: PropTypes.func.isRequired,
+    edit: PropTypes.func.isRequired,
+    updateCallback: PropTypes.func.isRequired
 };

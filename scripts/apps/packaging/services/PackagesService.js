@@ -31,7 +31,7 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
             refs: [{idRef: idRef}],
             id: 'root'
         },
-            getGroupFor(null, idRef)
+        getGroupFor(null, idRef)
         ];
 
         newPackage = setDefaults(newPackage, defaults);

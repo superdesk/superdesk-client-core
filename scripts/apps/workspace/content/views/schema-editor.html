@@ -1,79 +1,126 @@
 <div class="schema-editor">
     <h4 translate>Schema Configuration</h4>
-    <ul class="pills-list">
-        <li class="schema-item" ng-repeat="id in schemaKeys track by $index">
-            <div class="header">
-                <span class="title">{{model.editor[id].field_name || label(id) | translate}}</span>
-                <div class="pull-right">
-                    <span class="sd-toggle"
-                          ng-class="{'checked': model.editor[id].enabled}"
-                          ng-click="toggle(id)">
-                        <span class="inner"></span>
-                    </span>
-                </div>
+    <ul class="pills-list" sd-sort-content-profiles>
+        <li class="schema-item" ng-repeat="id in schemaKeys track by id">
+
+            <div class="dropdown dropdown--add-more dropdown--add-more__top dropdown-terms" dropdown>
+                <button class="btn btn--primary btn--icon-only-circle" sd-tooltip="{{ :: 'Add Field' | translate }}" flow="right" ng-click="search = ''" dropdown__toggle>
+                    <i class="icon-plus-large"></i>
+                </button>
+                <ul class="dropdown__menu nested-menu">
+                    <li class="input-term">
+                        <input ng-model="search" type="text" ng-click="$event.stopPropagation()">
+                    </li>
+                    <li class="main-list">
+                        <ul>
+                            <li ng-repeat="schema in schemaKeysDisabled | orderBy: 'name' | filter: search track by schema.key">
+                                <button ng-click="toggle(schema, model.editor[id].order, 'before')">{{schema.name | translate}}</button>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
             </div>
 
-            <div class="body" ng-if="model.editor[id].enabled">
-                <form>
-                    <fieldset class="fieldset-flex">
-                        <div class="field" ng-if="id == 'dateline'">
-                            <label translate>Hide Date</label>
-                            <div sd-check ng-model="model.editor[id].hideDate"></div>
-                        </div>
-                        <div class="field">
-                            <label translate>Required</label>
-                            <div sd-check ng-model="model.schema[id].required"></div>
-                        </div>
-                        <div class="field">
-                            <label translate>Order</label>
-                            <input class="input-small line-input" placeholder="{{ 'Default' | translate }}"
-                                   type="number" ng-model="model.editor[id].order" min="0" max="99" />
-                        </div>
-                        <div class="field" ng-show="model.schema[id].type === 'string'">
-                            <label translate>Length</label>
-                            <div class="controls">
-                                <span translate>min</span>:
-                                <input placeholder="{{ :: 'Not set' | translate }}" type="number" class="input-small line-input" ng-model="model.schema[id].minlength" min="0" />
-                                <span translate>max</span>:
-                                <input placeholder="{{ :: 'Not set' | translate }}" type="number" class="input-small line-input" ng-model="model.schema[id].maxlength" min="0" />
-                                <span class="error"
-                                      ng-show="model.schema[id].minlength > model.schema[id].maxlength && model.schema[id].maxlength"
-                                      translate>Min length shouldn't be bigger than max length.</span>
-                                <span class="error"
-                                      ng-show="model.schema[id].maxlength === 0"
-                                      translate>Max length should be bigger than 0 or empty.</span>
-                            </div>
-                        </div>
-                        <div class="field">
-                            <label translate>Width</label>
-                            <select class="dropdown__toggle line-input" ng-model="model.editor[id].sdWidth">
-                                <option value="full" translate>Full</option>
-                                <option value="half" translate>Half</option>
-                                <option value="quarter" translate>Quarter</option>
-                            </select>
-                        </div>
-                        <div class="field" ng-if="model.schema[id].type === 'string' && !model.editor.body_html.editor3">
-                            <label translate>Clean Pasted HTML</label>
-                            <div sd-check ng-model="model.editor[id].cleanPastedHTML"></div>
-                        </div>
-                        <div class="field" ng-if="hasFormatOptions(id)">
-                            <label translate>Format options</label>
-                            <div class="controls" ng-if="model.editor.body_html.editor3"
-                                 sd-multi-select
-                                 data-item="model.editor[id].formatOptions"
-                                 data-list="formattingOptionsEditor3"
-                                 data-change="setDirty(true)">
-                            </div>
-                            <div class="controls" ng-if="!model.editor.body_html.editor3"
-                                 sd-multi-select
-                                 data-item="model.editor[id].formatOptions"
-                                 data-list="formattingOptions"
-                                 data-change="setDirty(true)">
-                            </div>
-                        </div>
-                    </fieldset>
-                </form>
+            <div class="header">
+                <span class="title">{{ :: model.editor[id].field_name|| label(id) | translate}}</span>
+                <button class="btn btn--icon-only btn--text-only pull-right" id="remove-item" ng-click="remove(id)">
+                    <i class="icon-close-small"></i>
+                </button>
             </div>
+            <form>
+                <fieldset class="fieldset-flex">
+                    <div class="field" ng-if="id === 'dateline'">
+                        <label translate>Hide Date</label>
+                        <div sd-check ng-model="model.editor[id].hideDate"></div>
+                    </div>
+
+                    <div class="field">
+                        <label translate>Required</label>
+                        <div sd-check ng-model="model.schema[id].required"></div>
+                    </div>
+
+                    <div class="field">
+                        <label translate>Order</label>
+                        <input class="input-small line-input" placeholder="{{ 'Default' | translate }}"
+                               type="number" ng-model="model.editor[id].order" min="1" max="99" ng-change="updateOrder(id)" />
+                    </div>
+
+                    <div class="field" ng-show="model.schema[id].type === 'string' || fields[id].field_type === 'text'">
+                        <label translate>Length</label>
+                        <div class="controls">
+                            <span translate>min</span>:
+                            <input placeholder="{{ :: 'Not set' | translate }}" type="number" class="input-small line-input" ng-model="model.schema[id].minlength" min="0" />
+                            <span translate>max</span>:
+                            <input placeholder="{{ :: 'Not set' | translate }}" type="number" class="input-small line-input" ng-model="model.schema[id].maxlength" min="0" />
+                            <span class="error"
+                                  ng-show="model.schema[id].minlength > model.schema[id].maxlength && model.schema[id].maxlength"
+                                  translate>Min length shouldn't be bigger than max length.</span>
+                            <span class="error"
+                                  ng-show="model.schema[id].maxlength === 0"
+                                  translate>Max length should be bigger than 0 or empty.</span>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label translate>Width</label>
+                        <select class="dropdown__toggle line-input" ng-model="model.editor[id].sdWidth">
+                            <option value="full" translate>Full</option>
+                            <option value="half" translate>Half</option>
+                            <option value="quarter" translate>Quarter</option>
+                        </select>
+                    </div>
+
+                    <div class="field" ng-if="model.schema[id].type === 'string' && !model.editor.body_html.editor3">
+                        <label translate>Clean Pasted HTML</label>
+                        <div sd-check ng-model="model.editor[id].cleanPastedHTML"></div>
+                    </div>
+
+                    <div class="field" ng-if=":: hasFormatOptions(id)">
+                        <label translate>Format options</label>
+                        <div class="controls" ng-if="model.editor.body_html.editor3"
+                             sd-multi-select
+                             data-item="model.editor[id].formatOptions"
+                             data-list="formattingOptionsEditor3"
+                             data-change="setDirty(true)">
+                        </div>
+                        <div class="controls" ng-if="!model.editor.body_html.editor3"
+                             sd-multi-select
+                             data-item="model.editor[id].formatOptions"
+                             data-list="formattingOptions"
+                             data-change="setDirty(true)">
+                        </div>
+                    </div>
+
+                    <div class="field" ng-if="id === 'feature_media'">
+                        <label translate>Show Crops</label>
+                        <div sd-check ng-model="model.editor[id].showCrops"></div>
+                    </div>
+
+                    <div class="field" ng-if="id === 'feature_media' || hasImageSelected(id)">
+                        <label translate>Show Image Title</label>
+                        <div sd-check ng-model="model.editor[id].imageTitle"></div>
+                    </div>
+                </fieldset>
+            </form>
+
+            <div class="dropdown dropdown--add-more dropdown--add-more__bottom dropdown-terms" dropdown>
+                <button class="btn btn--primary btn--icon-only-circle" sd-tooltip="{{ :: 'Add Field' | translate }}" flow="right" ng-click="search = ''" dropdown__toggle>
+                    <i class="icon-plus-large"></i>
+                </button>
+                <ul class="dropdown__menu nested-menu">
+                    <li class="input-term">
+                        <input ng-model="search" type="text" ng-click="$event.stopPropagation()">
+                    </li>
+                    <li class="main-list">
+                        <ul>
+                            <li ng-repeat="schema in schemaKeysDisabled | orderBy: 'name' | filter: search track by schema.key">
+                                <button ng-click="toggle(schema, model.editor[schema.key].order, 'after')">{{schema.name | translate}}</button>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
         </li>
     </ul>
 </div>

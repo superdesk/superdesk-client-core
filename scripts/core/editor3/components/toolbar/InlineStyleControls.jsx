@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import StyleButton from './StyleButton';
 import * as actions from '../../actions';
 import {connect} from 'react-redux';
@@ -38,9 +39,9 @@ export const InlineStyleControlsComponent = ({editorFormat, editorState, toggleI
 };
 
 InlineStyleControlsComponent.propTypes = {
-    editorState: React.PropTypes.object,
-    editorFormat: React.PropTypes.array,
-    toggleInlineStyle: React.PropTypes.func
+    editorState: PropTypes.object,
+    editorFormat: PropTypes.array,
+    toggleInlineStyle: PropTypes.func
 };
 
 const mapStateToProps = (state) => ({

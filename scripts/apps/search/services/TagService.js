@@ -19,7 +19,7 @@ import {PARAMETERS, EXCLUDE_FACETS} from 'apps/search/constants';
 TagService.$inject = ['$location', 'desks', 'userList', 'metadata', 'search',
     'ingestSources', 'gettextCatalog', 'subscribersService', '$q'];
 export function TagService($location, desks, userList, metadata, search,
-                           ingestSources, gettextCatalog, subscribersService, $q) {
+    ingestSources, gettextCatalog, subscribersService, $q) {
     var tags = {};
 
     tags.selectedFacets = {};

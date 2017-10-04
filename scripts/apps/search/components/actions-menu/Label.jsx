@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {closeActionsMenu} from 'apps/search/helpers';
 
 export default function Label(props) {
@@ -10,19 +11,19 @@ export default function Label(props) {
         React.createElement('div', {
             className: 'dropdown__menu-label'
         }, gettextCatalog.getString(props.label),
-            props.label === 'Actions' ? React.createElement(
-                'button',
-                {className: 'dropdown__menu-close', onClick: closeActionsMenu},
-                React.createElement(
-                    'i',
-                    {className: 'icon-close-small'}
-                )
-            ) : null
+        props.label === 'Actions' ? React.createElement(
+            'button',
+            {className: 'dropdown__menu-close', onClick: closeActionsMenu},
+            React.createElement(
+                'i',
+                {className: 'icon-close-small'}
+            )
+        ) : null
         )
     );
 }
 
 Label.propTypes = {
-    svc: React.PropTypes.object.isRequired,
-    label: React.PropTypes.any,
+    svc: PropTypes.object.isRequired,
+    label: PropTypes.any,
 };

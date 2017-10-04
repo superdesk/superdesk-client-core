@@ -65,6 +65,7 @@ angular.module('superdesk.apps.archive', [
     .service('archiveService', svc.ArchiveService)
 
     .controller('UploadController', ctrl.UploadController)
+    .controller('UploadAttachmentsController', ctrl.UploadAttachmentsController)
     .controller('ArchiveListController', ctrl.ArchiveListController)
 
     .config(['superdeskProvider', function(superdesk) {
@@ -89,6 +90,17 @@ angular.module('superdesk.apps.archive', [
                 templateUrl: 'scripts/apps/archive/views/upload.html',
                 filters: [
                     {action: 'upload', type: 'media'}
+                ],
+                privileges: {archive: 1}
+            })
+            .activity('upload.attachments', {
+                label: gettext('Attach files'),
+                modal: true,
+                cssClass: 'upload-media edit-attachments modal--z-index-fix modal--fill',
+                controller: ctrl.UploadAttachmentsController,
+                templateUrl: 'scripts/apps/archive/views/upload-attachments.html',
+                filters: [
+                    {action: 'upload', type: 'attachments'}
                 ],
                 privileges: {archive: 1}
             })
@@ -135,8 +147,8 @@ angular.module('superdesk.apps.archive', [
                     return authoring.itemActions(item).unspike;
                 }]
             })
-            .activity('duplicate', {
-                label: gettext('Duplicate'),
+            .activity('duplicateInPlace', {
+                label: gettext('Duplicate in place'),
                 icon: 'copy',
                 monitor: true,
                 controller: ctrl.DuplicateController,
@@ -151,7 +163,10 @@ angular.module('superdesk.apps.archive', [
                 },
                 additionalCondition: ['authoring', 'item', function(authoring, item) {
                     return authoring.itemActions(item).duplicate;
-                }]
+                }],
+                group: 'duplicate',
+                groupLabel: gettext('Duplicate'),
+                groupIcon: 'copy'
             })
             .activity('duplicateTo', {
                 label: gettext('Duplicate To'),
@@ -172,7 +187,10 @@ angular.module('superdesk.apps.archive', [
                 additionalCondition: ['authoring', 'item', function(authoring, item) {
                     return item.state !== 'killed' && !authoring.isContentApiItem(item) &&
                     (authoring.itemActions(item).duplicate || authoring.itemActions(item).view);
-                }]
+                }],
+                group: 'duplicate',
+                groupLabel: gettext('Duplicate'),
+                groupIcon: 'copy'
             })
             .activity('createBroadcast', {
                 label: gettext('Create Broadcast'),
@@ -181,10 +199,10 @@ angular.module('superdesk.apps.archive', [
                 controller: ['api', 'notify', '$rootScope', 'data', 'desks', 'authoringWorkspace',
                     function(api, notify, $rootScope, data, desks, authoringWorkspace) {
                         api.save('archive_broadcast', {}, {desk: desks.getCurrentDeskId()}, data.item)
-                        .then((broadcastItem) => {
-                            authoringWorkspace.edit(broadcastItem);
-                            $rootScope.$broadcast('broadcast:created', {item: data.item});
-                        });
+                            .then((broadcastItem) => {
+                                authoringWorkspace.edit(broadcastItem);
+                                $rootScope.$broadcast('broadcast:created', {item: data.item});
+                            });
                     }],
                 filters: [{action: 'list', type: 'archive'}],
                 keyboardShortcut: 'ctrl+b',

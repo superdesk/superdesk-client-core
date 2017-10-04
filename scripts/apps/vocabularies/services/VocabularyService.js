@@ -15,6 +15,7 @@ import _ from 'lodash';
 VocabularyService.$inject = ['api', '$q', '$filter', '$rootScope'];
 export function VocabularyService(api, $q, $filter, $rootScope) {
     var self = this;
+    const MAX_RESULTS = 200;
 
     self.AllActiveVocabularies = null;
     self.vocabularies = null;
@@ -29,7 +30,7 @@ export function VocabularyService(api, $q, $filter, $rootScope) {
      */
     this.getAllActiveVocabularies = function() {
         if (_.isNil(self.AllActiveVocabularies)) {
-            return api.query('vocabularies', {max_results: 50}).then(
+            return api.query('vocabularies', {max_results: MAX_RESULTS}).then(
                 (result) => {
                     self.AllActiveVocabularies = result;
                     return self.AllActiveVocabularies;
@@ -49,7 +50,7 @@ export function VocabularyService(api, $q, $filter, $rootScope) {
      */
     this.getVocabularies = function() {
         if (_.isNil(self.vocabularies)) {
-            return api.query('vocabularies', {where: {type: 'manageable'}}).then(
+            return api.query('vocabularies', {where: {type: 'manageable'}, max_results: MAX_RESULTS}).then(
                 (result) => {
                     result._items = $filter('sortByName')(result._items, 'display_name');
                     self.vocabularies = result;

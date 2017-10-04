@@ -152,10 +152,10 @@ function IngestSettings() {
 
     // the main navigation tabs on the ingest settings page
     this.tabs = {
-        routingTab: element(by.buttonText('Routing'))
+        routingTab: element(by.buttonText('Ingest Routing'))
     };
 
-    this.newSchemeBtn = element(by.partialButtonText('New Routing Scheme'));
+    this.newSchemeBtn = element(by.partialButtonText('Add New'));
 
     this.newRoutingRuleBtn = element(by.partialButtonText('New Rule'));
 

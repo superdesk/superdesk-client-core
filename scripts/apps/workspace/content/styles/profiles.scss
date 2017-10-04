@@ -1,37 +1,110 @@
+@import '~mixins.scss';
+@import '~variables.scss';
+
 sd-content-schema-editor {
     .schema-editor {
         margin-bottom: 10px;
         box-sizing: border-box;
+        cursor: pointer;
 
-        h4 {
-            padding: 5px;
-        }
+        h4 { padding: 5px; }
 
         ul.pills-list {
             padding-top: 10px;
-
-            li {
+            > li {
+                padding: 20px;
+                margin-bottom: 12px;
                 .header {
+                    margin-bottom: 10px;
+
+                    button {
+                        margin: -15px;
+                        opacity: 0;
+                    }
                     .title {
-                        font-weight: bold;
-                        font-size: 14px;
+                        font-size: 16px;
+                        font-weight: 500;
                     }
                 }
 
-                .body {
+                fieldset {
                     padding-top: 10px;
+                }
+
+                .dropdown--add-more {
+                    > button {
+                        opacity: .1;
+                        z-index: 99;
+                        @include transition(all .3s);
+                    }
+                    .dropdown__menu {
+                        margin-top: 10px;
+                        margin-left: -90px;
+                        max-height: 253px;
+                        overflow: auto;
+                        z-index: 100;
+                    }
+                }
+
+                &:hover {
+                    .header button {
+                        opacity: 1
+                    }
+                    .dropdown--add-more > button {
+                        opacity: 1;
+                    }
+                }
+                &:first-of-type {
+                    .dropdown--add-more__top {
+                        top: -14px;
+                    }
+                }
+                &:last-of-type {
+                    .dropdown--add-more__bottom {
+                        bottom: -14px;
+                    }
+                }
+                &.ui-sortable-helper {
+                    .dropdown--add-more {
+                        display: none;
+                    }
+                }
+            }
+
+            .dropdown--add-more {
+                position: absolute;
+                margin-left: -14px;
+                left: 50%;
+                &__top {
+                    top: -18px;
+                }
+                &__bottom {
+                    bottom: -19px;
                 }
             }
         }
 
         .field {
-            label { min-width: 110px; }
+            margin-bottom: 15px;
+            label { 
+                min-width: 130px;
+                line-height: 23px;
+            }
 
             input, select, .input-medium {
                 width: 90px;
             }
             .dropdown { margin-top: 0; }
-            .sd-checkbox { margin-top: 3px; }
+            .sd-check__wrapper {
+                margin-left: 0;
+                .sd-checkbox {
+                    margin-top: 3px;
+                    margin-left: 0;
+                }
+            }
+            &:last-of-type {
+                margin-bottom: 0;
+            }
         }
     }
 }

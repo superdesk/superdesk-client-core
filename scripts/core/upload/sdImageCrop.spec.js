@@ -5,7 +5,7 @@ describe('Image Crop', () => {
     beforeEach(window.module('superdesk.core.services.imageFactory'));
 
     describe('sdImageCrop directive', () => {
-        var scope, isoScope, fakeImg, $elm;
+        var scope, isoScope, fakeImg, $elm, jcropApi;
         var url = 'http://master.dev.superdesk.org/api/upload/55dbf92936b0650033518780/raw?_schema=http';
         var newUrl = 'http://master.dev.superdesk.org/api/upload/55ca5972b8e27e006385b6e3/raw?_schema=http';
 
@@ -18,7 +18,7 @@ describe('Image Crop', () => {
             scope.boxWidth = 640;
             scope.boxHeight = 480;
             scope.src = url;
-            scope.rendition = {width: 800, height: 600};
+            scope.rendition = {width: 800, height: 600, name: '4-3'};
             scope.original = {width: 900, height: 600};
             scope.cropData = {};
             $elm = $compile('<div sd-image-crop data-src="src" data-show-Min-Size-Error="true"' +
@@ -100,24 +100,56 @@ describe('Image Crop', () => {
                           ', (it is 500x600).');
             }));
 
-            it('calls onChange callback on change only', inject(($timeout) => {
+            it('calls onChange callback on change only', inject(() => {
                 scope.onChange = jasmine.createSpy('onchange');
+                // fake jcropApi
+                jcropApi = {
+                    setOptions: function() { /* no-op */ },
+                    tellSelect: function() { /* no-op */ },
+                    destroy: function() { /* no-op */ }
+                };
+
                 scope.$digest();
 
                 var handler = fakeImg.onload;
 
                 handler.apply(fakeImg);
 
-                var coords = {x: 0, x2: 100, y: 0, y2: 100};
-                var retObj = mySpy.calls.argsFor(0);
+                // no calls to onChange callback on Jcrop initialization
+                expect(scope.onChange).not.toHaveBeenCalled();
+                expect(scope.onChange.calls.count()).toBe(0);
 
-                retObj[0].onSelect(coords);
-                $timeout.flush(10);
-                scope.$digest();
+                var coords = {x: 0, x2: 100, y: 0, y2: 100};
+
+                var retObj = mySpy.calls.mostRecent().args;
+
+                var callbackSpy = spyOn(jcropApi, 'setOptions');
+
+                spyOn(jcropApi, 'tellSelect').and.returnValue(coords);
+
+                var callbackHandler = retObj[1]; // handle Jcrop callback from $.fn.Jcrop
+
+                callbackHandler.apply(jcropApi);
+                expect(jcropApi.tellSelect).toHaveBeenCalled();
+
+                var callbackResult = callbackSpy.calls.mostRecent().args;
+
+                // calls onChange callback on selection
+                callbackResult[0].onSelect(coords);
+                expect(scope.onChange).toHaveBeenCalled();
                 expect(scope.onChange.calls.count()).toBe(1);
 
-                retObj[0].onSelect(coords);
-                $timeout.flush(10);
+                scope.onChange.calls.reset(); // clears calls count
+
+                // no calls to onChange callback, when no change. (coords unchanged)
+                callbackResult[0].onSelect(coords);
+                expect(scope.onChange).not.toHaveBeenCalled();
+                expect(scope.onChange.calls.count()).toBe(0);
+
+                // calls onChange callback on change only (coords changed)
+                coords = {x: 0, x2: 200, y: 0, y2: 200};
+                callbackResult[0].onSelect(coords);
+                expect(scope.onChange).toHaveBeenCalled();
                 expect(scope.onChange.calls.count()).toBe(1);
             }));
         });

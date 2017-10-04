@@ -1,0 +1,90 @@
+<div class="attachments-pane" ng-controller="AttachmentsCtrl as ctrl"
+    ngf-drop="ctrl.selectFiles($files)"
+    ngf-stop-propagation="true"
+    ngf-multiple="true">
+    <div class="attachments-list">
+        <ul ng-if="files">
+            <li ng-repeat="file in files track by file._id" class="sd-list-item sd-shadow--z1">
+                <div class="sd-list-item__column sd-list-item__column--no-border" title="{{ :: file.mimetype }}">
+                    <i class="big-icon--{{ :: file.mimetype | fileicon }}"></i>
+                </div>
+                <div class="sd-list-item__column sd-list-item__column--grow">
+                    <div class="sd-list-item__row">
+                        <h4>{{ file.title }}</h4>
+                    </div>
+                    <div class="sd-list-item__row">
+                        <h5>{{ :: file.filename }} ({{ :: file.media.length | filesize }})</h5>
+                    </div>
+                    <div class="sd-list-item__row">
+                        <div class="description">{{ file.description }}</div>
+                    </div>
+                </div>
+                <div class="sd-list-item__action-menu sd-list-item__action-menu--direction-row">
+                    <button class="dropdown__toggle"
+                        ng-click="ctrl.download(file)"
+                        title="{{ :: 'Download' | translate }}"><i class="icon-download"></i></button>
+                    <button class="dropdown__toggle"
+                        ng-if="!ctrl.isLocked"
+                        ng-click="ctrl.startEdit(file)"
+                        title="{{ :: 'Edit' | translate }}"><i class="icon-pencil"></i></button>
+                    <button class="dropdown__toggle"
+                        ng-if="!ctrl.isLocked"
+                        ng-click="ctrl.removeFile(file)"
+                        title="{{ :: 'Remove' | translate }}"><i class="icon-trash"></i></button>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <div class="attach-indicator"
+        ng-show="files.length < ctrl.maxFiles && ctrl.isLockedByMe"
+        ng-class="{empty: files.length === 0}"
+        >
+
+        <div class="round-box">
+            <i class="big-icon--upload-alt icon"></i>
+        </div>
+
+        <div class="subtext" translate>Drag one or more files here to upload them, or just click the button below.</div>
+
+        <a class="btn btn--hollow"
+            ngf-select="ctrl.selectFiles($files)"
+            ngf-multiple="true">
+            {{ :: 'Attach files' | translate }}
+        </a>
+    </div>
+
+    <div sd-modal data-model="ctrl.edit" data-close="ctrl.closeEdit()">
+        <div class="modal__header">
+            <button type="button" class="modal__close pull-right" ng-click="ctrl.closeEdit()">
+                <i class="icon-close-small"></i>
+            </button>
+            <h3 class="modal__heading" translate>Edit Attachment</h3>
+        </div>
+
+        <div class="modal__body">
+            <form name="attachmentsForm">
+                <div class="sd-line-input">
+                    <label class="sd-line-input__label" translate>Title</label>
+                    <input type="text" class="sd-line-input__input"
+                        ng-model="ctrl.edit.title"
+                        required />
+                </div>
+
+                <div class="sd-line-input">
+                    <label class="sd-line-input__label" translate>Description</label>
+                    <textarea class="sd-line-input__input"
+                        ng-model="ctrl.edit.description"
+                        sd-auto-height
+                        required></textarea>
+                </div>
+            </form>
+        </div>
+
+        <div class="modal__footer">
+            <button class="btn btn--primary pull-right" ng-click="ctrl.saveEdit()" ng-disabled="attachmentsForm.$invalid" translate>Update</button>
+            <button class="btn pull-right" ng-click="ctrl.closeEdit()" translate>Cancel</button>
+        </div>
+    </div>
+
+</div>

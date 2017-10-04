@@ -43,7 +43,7 @@
                 <label translate>Tags</label>
                 <div sd-meta-tags data-item="item" data-field="keywords" data-source-field="body_html" data-change="autosave(item)" data-disabled="!_editable">
             </li>
-            <li>
+            <li ng-if="!isRemovedField('language')">
                 <label translate>Language</label>
                 <div class="data">
                     <input class="line-input" type="text" ng-model="item.language" ng-disabled="!_editable" ng-change="autosave(item)">

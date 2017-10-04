@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 /*
  * Creates specific highlight button in list
@@ -30,7 +31,7 @@ export default class HighlightBtn extends React.Component {
 }
 
 HighlightBtn.propTypes = {
-    highlight: React.PropTypes.object,
-    item: React.PropTypes.object,
-    service: React.PropTypes.any
+    highlight: PropTypes.object,
+    item: PropTypes.object,
+    service: PropTypes.any
 };

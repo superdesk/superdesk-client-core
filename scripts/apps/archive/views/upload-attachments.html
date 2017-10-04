@@ -1,0 +1,56 @@
+<div class="modal__header">
+    <button type="button" class="modal__close pull-right" ng-click="cancel()" ng-hide="saving"><i class="icon-close-small"></i></button>
+    <h3 class="modal__heading">{{ activity.label | translate }}</h3>
+</div>
+
+<div class="modal__body">
+    <form name="attachmentsForm">
+        <div class="upload-edit" ng-show="items.length">
+            <ul class="upload-thumbs flex-grid flex-grid--boxed flex-grid--wrap-items flex-grid--small-4">
+                <li ng-repeat="item in items" class="flex-grid__item sd-shadow--z3">
+                    <div class="thumb">
+                        <div class="holder"><i class="big-icon--text"></i></div>
+                        <span class="remove" ng-click="cancelItem(item)"><i class="icon-close-small"></i></span>
+                    </div>
+
+                    <div class="info">
+                        <div class="upload-progress" ng-show="item.progress">
+                            <div class="bar" style="width:{{ item.progress }}%"></div>
+                        </div>
+                        <div class="other-info">
+                            <div class="row">
+                                <label>Title *</label>
+                                <input type="text" required ng-model="item.meta.title" class="contenteditable-input" />
+                            </div>
+                            <div class="row">
+                                <label>Description *</label>
+                                <textarea class="contenteditable-input"
+                                    ng-model="item.meta.description"
+                                    sd-auto-height
+                                    required></textarea>
+                            </div>
+                            <div class="row">
+                                <label translate>File Name</label>
+                                <div class="contenteditable-input">
+                                    {{ :: item.file.name }}
+                                </div>                        
+                            </div>
+                            <div class="row">
+                                <label translate>File Size</label>
+                                <div class="contenteditable-input">
+                                    {{ :: item.file.size | filesize }}
+                                </div> 
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </form>
+</div>
+
+<div class="modal__footer">
+    <span class="pull-left" translate>* fields are required</span>
+    <button class="btn btn--primary pull-right" ng-click="save()" ng-disabled="attachmentsForm.$invalid || saving" translate>Upload</button>
+    <button class="btn pull-right" ng-click="cancel()" ng-disabled="saving" translate>Cancel</button>
+</div>

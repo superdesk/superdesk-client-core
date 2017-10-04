@@ -1,0 +1,57 @@
+@import '~variables.scss';
+
+.sd-widget.attachments {
+	.attachments-pane {
+
+		.attachments-list {
+			position: absolute;
+			top: 12px;
+			right: 12px;
+			bottom: 212px;
+			left: 12px;
+			overflow-y: scroll;
+		}
+
+		.attach-indicator {
+			position: absolute;
+			bottom: 12px;
+			left: 50%;
+			margin-left: -125px;
+			width: 250px;
+			text-align: center;
+
+			&.empty {
+				bottom: 50%;
+
+				.round-box i.icon {
+					color: $sd-blue;
+				}
+			}
+
+			.round-box {
+				display: block;
+				box-sizing: border-box;
+				padding-top: 16px;
+				height: 90px;
+				width: 90px;
+				background-color: #fff;
+				border-radius: 50%;
+				margin: 0 auto;
+				box-shadow: 0 0 6px 1px rgba(0,0,0,0.08);
+				
+				i.icon {
+					display: block;
+					width: 56px;
+					height: 48px;
+					margin: 1.4rem auto 0 auto;
+					font-size: 5.2rem;
+				}
+			}
+
+			.subtext {
+				margin: 15px 0;
+				color: $sd-text-label;
+			}
+		}
+	}
+}

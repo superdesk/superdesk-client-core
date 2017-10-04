@@ -1,4 +1,7 @@
-<li ng-repeat="user in users" ng-click="select(user)" ng-class="{selected: user === selected, 'inactive' : !user.is_enabled || !user.is_active}">
+<li ng-repeat="user in users track by user._id"
+    ng-click="select(user)"
+    ng-show="!authorOnlyFilter || authorOnlyFilter && user.is_author"
+    ng-class="{selected: user._id === selected._id, 'inactive' : !user.is_enabled || !user.is_active}">
     <figure class="avatar avatar-with-info" ng-class="{'user-logged': isLoggedIn(user)}">
         <div class="logged-info"></div>
         <div class="user-image">

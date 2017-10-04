@@ -1,4 +1,29 @@
 import ng from 'core/services/ng';
+import json5 from 'json5';
+
+// String identifying embed codes that are Qumu widgets.
+const QumuString = 'KV.widget({';
+
+// https://gist.github.com/jed/982883
+function uuid(a) {
+    return a // if the placeholder was passed, return
+        ? ( // a random number from 0 to 15
+            a ^ // unless b is 8,
+        Math.random() // in which case
+        * 16 // a random number from
+        >> a / 4 // 8 to 11
+        ).toString(16) // in hexadecimal
+        : ( // or otherwise a concatenated string:
+            [1e7] + // 10000000 +
+        -1e3 + // -1000 +
+        -4e3 + // -4000 +
+        -8e3 + // -80000000 +
+        -1e11 // -100000000000,
+        ).replace( // replacing
+            /[018]/g, // zeroes, ones, and eights with
+            uuid // random hex digits
+        );
+}
 
 /**
  * @ngdoc method
@@ -31,14 +56,14 @@ export function toggleInlineStyle(inlineStyle) {
 /**
  * @ngdoc method
  * @name applyLink
- * @param {Object} urlAndEntity
+ * @param {Object} linkAndEntity
  * @return {String} action
  * @description Returns the action for applying links to text selections.
  */
-export function applyLink({url, entity}) {
+export function applyLink({link, entity}) {
     return {
         type: 'TOOLBAR_APPLY_LINK',
-        payload: {url, entity}
+        payload: {link, entity}
     };
 }
 
@@ -55,15 +80,16 @@ export function removeLink() {
 /**
  * @ngdoc method
  * @name insertImages
+ * @param {Array} filest to be uploaded and inserted
  * @return {String} action
  * @description Displays the external upload dialog and returns the insert images
  * action.
  */
-export function insertImages() {
+export function insertImages(files) {
     const superdesk = ng.get('superdesk');
 
     return (dispatch) => {
-        superdesk.intent('upload', 'media').then((imgs) => {
+        superdesk.intent('upload', 'media', files).then((imgs) => {
             dispatch({
                 type: 'TOOLBAR_INSERT_IMAGES',
                 payload: imgs
@@ -101,25 +127,38 @@ export function cropImage(entityKey, entityData) {
 /**
  * @ngdoc method
  * @name embed
- * @return {Object} oEmbed
+ * @param {Object|string} oEmbed code, HTML string or Qumu widget config.
+ * @return {Object}
  * @description Dispatches the action to use the given oEmbed data for media embedding.
  */
-export function embed(oEmbed) {
+export function embed(code) {
     return {
         type: 'TOOLBAR_APPLY_EMBED',
-        payload: oEmbed
+        payload: parseEmbed(code)
     };
 }
 
-/**
- * @ngdoc method
- * @name embedCode
- * @return {string} code
- * @description Dispatches the action to use the given embed code for media embedding.
- */
-export function embedCode(code) {
-    return {
-        type: 'TOOLBAR_APPLY_EMBED_CODE',
-        payload: code
-    };
+// Parses the embed code and processes a potential Qumu widget string.
+function parseEmbed(code) {
+    if (typeof code !== 'string') {
+        return code; // oEmbed code
+    }
+
+    const {features} = ng.get('config');
+    const isQumuWidget = features.qumu && code.indexOf(QumuString) > -1;
+
+    if (!isQumuWidget) {
+        return code; // HTML string
+    }
+
+    const startIndex = code.indexOf(QumuString) + QumuString.length - 1;
+    const configString = code.slice(startIndex, code.lastIndexOf('}') + 1);
+
+    return _.extend(
+        json5.parse(configString),
+        {
+            selector: `#qumu-${uuid()}`,
+            qumuWidget: true
+        }
+    ); // Qumu widget
 }

@@ -28,12 +28,12 @@ export function ArchivedItemKill(authoring, api, notify, gettext) {
                         notify.error(gettext('Failed to apply kill template to the item.'));
                     });
                 }, (response) => {
-                if (response.data._message) {
-                    notify.error(response.data._message);
-                } else {
-                    notify.error(gettext('Unknown Error: Cannot kill the item'));
+                    if (response.data._message) {
+                        notify.error(response.data._message);
+                    } else {
+                        notify.error(gettext('Unknown Error: Cannot kill the item'));
+                    }
                 }
-            }
             );
 
             scope.kill = function() {

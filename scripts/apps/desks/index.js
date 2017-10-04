@@ -84,7 +84,7 @@ angular.module('superdesk.apps.desks', [
                 additionalCondition: ['authoring', 'item', function(authoring, item) {
                     return authoring.itemActions(item).mark_item_for_desks;
                 }],
-                group: 'packaging'
+                group: 'highlights'
             });
     }])
 

@@ -7,8 +7,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
-"PO-Revision-Date: 2017-03-24 09:51+0000\n"
-"Last-Translator: Daniel James <daniel@64studio.com>\n"
+"PO-Revision-Date: 2017-06-02 07:43+0000\n"
+"Last-Translator: Helen Vogt <helen.vogt@ntb.no>\n"
 "Language-Team: Norwegian Bokmål (http://www.transifex.com/sourcefabric/superdesk/language/nb/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -467,7 +467,7 @@ msgstr "Legg til ny ordliste"
 #: scripts/apps/content-filters/views/manage-filter-conditions.html:32
 #: scripts/apps/content-filters/views/manage-filter-conditions.html:6
 msgid "Add New Filter Condition"
-msgstr "Legg til nye filtreringsvalg"
+msgstr "Legg til nye filterbetingelser"
 
 #: scripts/apps/groups/views/groups-config-modal.html:5
 #: scripts/apps/groups/views/settings.html:7
@@ -2557,7 +2557,7 @@ msgstr "Filterbetingelser lagret"
 #: scripts/apps/content-filters/views/manage-filters.html:77
 #: scripts/apps/content-filters/views/settings.html:12
 msgid "Filter Conditions"
-msgstr "Filtreringsvalg"
+msgstr "Filterbetingelser"
 
 #: scripts/apps/content-filters/views/manage-filters.html:115
 msgid "Filter Preview"
@@ -2565,7 +2565,7 @@ msgstr "Forhåndsvis filter"
 
 #: scripts/apps/content-filters/views/settings.html:19
 msgid "Filter Search"
-msgstr "Filtrer søk"
+msgstr "Filtersøk"
 
 #: scripts/apps/content-filters/views/manage-filters.html:70
 msgid "Filter Statement"
@@ -2711,7 +2711,7 @@ msgstr "Generelt"
 
 #: scripts/apps/analytics/views/activity-report-panel.html:28
 msgid "Generate"
-msgstr ""
+msgstr "Lag kode"
 
 #: scripts/apps/publish/views/subscribers.html:182
 msgid "Generate token"
@@ -4817,7 +4817,7 @@ msgstr "Fjern filter"
 
 #: scripts/apps/content-filters/views/manage-filter-conditions.html:21
 msgid "Remove Filter Condition"
-msgstr "Fjern filtreringsvalg"
+msgstr "Fjern filterbetingelser"
 
 #: scripts/core/editor2/editor.js:1073
 msgid "remove formatting"

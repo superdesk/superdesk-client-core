@@ -121,13 +121,13 @@ describe('highlights', () => {
 
             // focus to next highlight
             browser.actions().sendKeys(protractor.Key.DOWN)
-            .perform();
+                .perform();
 
             // press enter to mark highlight
             browser
-            .actions()
-            .sendKeys(protractor.Key.ENTER)
-            .perform();
+                .actions()
+                .sendKeys(protractor.Key.ENTER)
+                .perform();
             browser.sleep(1000);
 
             // expect 'Highlight three' is marked
@@ -138,9 +138,9 @@ describe('highlights', () => {
 
             // mark for first focused highlight in monitoring
             browser
-            .actions()
-            .sendKeys(protractor.Key.ENTER)
-            .perform();
+                .actions()
+                .sendKeys(protractor.Key.ENTER)
+                .perform();
             browser.sleep(1000);
 
             // expect 'Highlight two' is marked
@@ -170,6 +170,7 @@ describe('highlights', () => {
             search.openGlobalSearch();
             monitoring.openMonitoring();
             monitoring.checkMarkedForHighlight('Highlight two', 1, 1);
+            element(by.id('closeAuthoringBtn')).click();
 
             // multi mark for highlights
             highlights.get();
@@ -216,7 +217,7 @@ describe('highlights', () => {
             // change desk on highlights
             workspace.showHighlightList('Highlight four');
             workspace.selectDesk('SPORTS DESK');
-            expect(browser.getLocationAbsUrl()).toMatch('/monitoring');
+            expect(browser.getCurrentUrl()).toMatch('/monitoring');
 
             // show highlight three and add an item to highlight package two
             workspace.selectDesk('POLITIC DESK');

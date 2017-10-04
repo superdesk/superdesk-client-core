@@ -11,9 +11,9 @@ export function SluglinesItemListDirective(api) {
             api.get('desks/' + scope.desk + '/sluglines').then((items) => {
                 scope.items = items._items;
             })
-            .finally(() => {
-                scope.loading = false;
-            });
+                .finally(() => {
+                    scope.loading = false;
+                });
         }
     };
 }

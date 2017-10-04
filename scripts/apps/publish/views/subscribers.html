@@ -1,23 +1,22 @@
-<div ng-class="{'split-content': !hideHeader}">
-    <div class="header" ng-hide="hideHeader">
-        <h2 translate>Subscribers</h2>
-        <div class="pull-right">
-            <div class="sortbar pull-left">
-                <span translate>Filter:</span>
-                <input type="text" class="input-medium" ng-model="search.name" ng-model-options="{debounce: 800}"/>
-                <span translate>Target Type:</span>
-                <select class="input-medium" ng-model="search.subscriber_type"
-                        ng-options="s.qcode as s.name for s in subTypes">
-                    <option value="" translate>Select</option>
-                </select>
-            </div>
-            <button id="addSubscriber" class="btn btn--primary btn--pull-right" ng-click="edit()">
-                <i class="icon-plus-sign icon-/white"></i> <span translate>Add New Subscriber</span>
-            </button>
+<div class="sd-page__flex-helper">
+    <div class="sd-page__header" ng-hide="hideHeader">
+        <div class="sortbar">
+            <span translate>Filter:</span>
+            <input type="text" class="input-medium" ng-model="search.name" ng-model-options="{debounce: 800}"/>
+            <span translate>Target Type:</span>
+            <select class="input-medium" ng-model="search.subscriber_type"
+                    ng-options="s.qcode as s.name for s in subTypes">
+                <option value="" translate>Select</option>
+            </select>
         </div>
+        <span class="sd-page__element-grow"></span>
+        <button id="addSubscriber" class="btn btn--primary" ng-click="edit()">
+            <i class="icon-plus-sign icon-/white"></i>{{ :: 'Add New' | translate }}
+        </button>
     </div>
-    <div class="content">
-        <ul class="pills-list provider-list">
+
+    <div class="sd-page__content">
+        <ul class="pills-list">
             <li ng-repeat="subscriber in subscribers | subscribersBy:search as filtered_subscribers track by subscriber._id" class="clearfix">
                 <div class="header">
                     <h6 id="subscriberName">{{ subscriber.name }}</h6>
@@ -27,11 +26,12 @@
                     </div>
                 </div>
             </li>
-            <li ng-show="subscribers.length > 0 && !filtered_subscribers.length"><h6 translate>No Subscribers Found</h6></li>
+            <li ng-show="subscribers.length > 0 && !filtered_subscribers.length" class="clearfix"><h6 translate>No Subscribers Found</h6></li>
         </ul>
     </div>
 </div>
 
+<!-- Modal -->
 <div sd-modal data-model="subscriber" data-close="cancel()" class="modal--large modal--tabs sd-wizard">
     <div class="modal__header"> <a href="" class="close" ng-click="cancel()"><i class="icon-close-small"></i></a>
         <h3 class="modal__heading" ng-show="subscriber._id"><span translate>Edit Subscriber</span> "{{ origSubscriber.name}}"</h3>

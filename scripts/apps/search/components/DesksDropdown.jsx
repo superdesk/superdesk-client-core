@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import PropTypes from 'prop-types';
 import {closeActionsMenu, renderToBody} from '../helpers';
 
 var closeTimeout;
@@ -37,15 +38,15 @@ export class DesksDropdown extends React.Component {
 
     render() {
         return React.createElement('dd',
-                {className: 'dropdown dropdown--dropup more-actions'},
-                React.createElement('button', {
-                    className: 'dropdown__toggle',
-                    onMouseOver: this.toggle,
-                    onMouseLeave: this.close
-                },
-                React.createElement('i',
-                        {className: 'icon-dots'})
-                ));
+            {className: 'dropdown dropdown--dropup more-actions'},
+            React.createElement('button', {
+                className: 'dropdown__toggle',
+                onMouseOver: this.toggle,
+                onMouseLeave: this.close
+            },
+            React.createElement('i',
+                {className: 'icon-dots'})
+            ));
     }
 
     renderDropdown() {
@@ -72,7 +73,7 @@ export class DesksDropdown extends React.Component {
 }
 
 DesksDropdown.propTypes = {
-    svc: React.PropTypes.object.isRequired,
-    openDesk: React.PropTypes.func,
-    desks: React.PropTypes.any,
+    svc: PropTypes.object.isRequired,
+    openDesk: PropTypes.func,
+    desks: PropTypes.any,
 };

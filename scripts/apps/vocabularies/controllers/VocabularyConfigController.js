@@ -5,8 +5,8 @@ const DEFAULT_SCHEMA = {
     parent: {}
 };
 
-VocabularyConfigController.$inject = ['$scope', '$route', '$routeParams', 'vocabularies', '$timeout'];
-export function VocabularyConfigController($scope, $route, $routeParams, vocabularies, $timeout) {
+VocabularyConfigController.$inject = ['$scope', '$route', '$routeParams', 'vocabularies', '$rootScope'];
+export function VocabularyConfigController($scope, $route, $routeParams, vocabularies, $rootScope) {
     $scope.loading = true;
 
     /**
@@ -22,15 +22,28 @@ export function VocabularyConfigController($scope, $route, $routeParams, vocabul
      * Close vocabulary edit modal
      */
     $scope.closeVocabulary = () => {
-        $route.updateParams({id: null, new: null});
+        $route.updateParams({id: null, new: null, type: null});
     };
 
     /**
      * Open modal with new item
      */
     $scope.createVocabulary = () => {
-        $route.updateParams({id: null, new: true});
+        $route.updateParams({id: null, new: true, type: null});
     };
+
+    /**
+     * Create new custom field
+     */
+    $scope.createCustomField = () => {
+        $route.updateParams({id: null, new: true, type: 'text'});
+    };
+
+    /**
+     * Filter vocabularies by tab
+     */
+    $scope.filterVocabularies = (tab, fieldType) =>
+        tab === 'vocabularies' && !fieldType || tab === 'text-fields' && fieldType;
 
     /**
      * Reload list of vocabularies
@@ -57,6 +70,8 @@ export function VocabularyConfigController($scope, $route, $routeParams, vocabul
         } else {
             $scope.vocabularies[index] = angular.extend({}, $scope.vocabularies[index], updates);
         }
+
+        $rootScope.$broadcast('vocabularies:updated');
     };
 
     $scope.$on('$routeUpdate', setupActiveVocabulary);
@@ -71,9 +86,11 @@ export function VocabularyConfigController($scope, $route, $routeParams, vocabul
 
         if ($routeParams.new) {
             $scope.vocabulary = {
+                field_type: $routeParams.type || null,
                 items: [],
                 type: 'manageable',
-                schema: angular.extend({}, DEFAULT_SCHEMA)
+                schema: angular.extend({}, DEFAULT_SCHEMA),
+                service: {all: 1} // needed for vocabulary to be visible in content profile
             };
         }
     }

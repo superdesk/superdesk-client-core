@@ -28,12 +28,12 @@ angular.module('superdesk.apps.dashboard.grid', [])
             this.addWidget = function(widget, element) {
                 widget.active = true;
                 widget.el = $scope.gridster.add_widget(
-                        element,
-                        widget.sizex,
-                        widget.sizey,
-                        widget.col,
-                        widget.row
-                    );
+                    element,
+                    widget.sizex,
+                    widget.sizey,
+                    widget.col,
+                    widget.row
+                );
             };
 
             this.removeWidget = function(widget, element) {

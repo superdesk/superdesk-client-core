@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 export function provider(props) {
     var provider = props.ingestProvider ? props.ingestProvider.source : '';
@@ -12,6 +13,6 @@ export function provider(props) {
 }
 
 provider.propTypes = {
-    item: React.PropTypes.any,
-    ingestProvider: React.PropTypes.any,
+    item: PropTypes.any,
+    ingestProvider: PropTypes.any,
 };

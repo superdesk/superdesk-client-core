@@ -1,0 +1,14 @@
+<div class="dropdown dropdown--noarrow"
+     ng-class="{open: groupDropdownOpen}"
+     ng-mouseenter="groupDropdownOpen = true"
+     ng-mouseleave="groupDropdownOpen = false"
+     ng-if="actions[group]"
+     dropdown>
+    <a class="dropdown__toggle" title="{{ :: actions[group][0].groupLabel | translate }}" dropdown__toggle>
+        <i class="icon-{{ :: actions[group][0].groupIcon}}" ng-show=":: actions[group][0].groupIcon"></i>
+        <span>{{ :: actions[group][0].groupLabel | translate }}</span>
+    </a>
+    <ul class="dropdown__menu dropdown__menu--submenu-left">
+        <li ng-repeat="activity in actions[group]" sd-activity-item></li>
+    </ul>
+</div>

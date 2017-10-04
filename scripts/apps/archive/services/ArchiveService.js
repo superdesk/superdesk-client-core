@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 ArchiveService.$inject = ['desks', 'session', 'api', '$q', 'search', '$location', 'config'];
 export function ArchiveService(desks, session, api, $q, search, $location, config) {
     /**
@@ -71,17 +73,17 @@ export function ArchiveService(desks, session, api, $q, search, $location, confi
     this.isPersonal = (item) => item.task && item.task.user && !item.task.desk;
 
     /**
-     *  Returns the list of items having the same slugline from datetime
-     *  @param {String} slugline
-     *  @fromDateTime {DateTime} fromDateTime
+     *  Returns the list of items having the same slugline, type and genre from midnight onwards.
+     *  @param {Object} item
+     *  @param {Datetime} fromDateTime - from datetime
      *  @return {Object} the list of archive items
      */
-    this.getRelatedItems = function(slugline, fromDateTime, itemId) {
+    this.getRelatedItems = function(item, fromDateTime) {
         var beforeDateTime = fromDateTime || moment().subtract(1, 'days')
             .format(config.view.dateformat);
         var params = {};
 
-        params.q = 'slugline.phrase:"' + slugline + '"'; // exact match
+        params.q = 'slugline.phrase:"' + _.trim(item.slugline) + '"'; // exact match
         params.ignoreKilled = true;
         params.ignoreDigital = true;
         params.afterversioncreated = beforeDateTime;
@@ -90,15 +92,20 @@ export function ArchiveService(desks, session, api, $q, search, $location, confi
 
         query.size(200);
 
-        if (itemId) {
+        if (_.get(item, '_id')) {
             let filter = {
                 bool: {
                     must_not: [
-                        {bool: {must: [{term: {_id: itemId}}, {term: {_type: 'archive'}}]}},
-                        {bool: {must: [{term: {item_id: itemId}}, {term: {_type: 'published'}}]}}
-                    ]
+                        {bool: {must: [{term: {_id: item._id}}, {term: {_type: 'archive'}}]}},
+                        {bool: {must: [{term: {item_id: item._id}}, {term: {_type: 'published'}}]}}
+                    ],
+                    must: [{term: {type: item.type}}]
                 }
             };
+
+            if (_.get(item, 'genre[0].qcode')) {
+                filter.bool.must.push({term: {'genre.qcode': _.get(item, 'genre[0].qcode')}});
+            }
 
             query.filter(filter);
         }

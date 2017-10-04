@@ -50,7 +50,7 @@ function Workspace() {
 
         function textFilter(elem) {
             return elem.element(by.tagName('button')).getText()
-            .then((text) => text.toUpperCase().indexOf(desk.toUpperCase()) >= 0);
+                .then((text) => text.toUpperCase().indexOf(desk.toUpperCase()) >= 0);
         }
 
         function clickFiltered(filtered) {
@@ -200,13 +200,13 @@ function Workspace() {
      * @param {string} submenu
      * @param {number} item
      */
-    this.actionOnItemSubmenu = function(action, submenu, item) {
+    this.actionOnItemSubmenu = function(action, submenu, item, linkTypeBtn) {
         var menu = this.openItemMenu(item);
 
         browser.actions()
             .mouseMove(menu.element(by.partialLinkText(action)))
             .perform();
-        menu.element(by.partialButtonText(submenu)).click();
+        menu.element(linkTypeBtn ? by.partialLinkText(submenu) : by.partialButtonText(submenu)).click();
     };
 
     /**
@@ -249,7 +249,7 @@ function Workspace() {
     this.duplicateItem = function(item, desk) {
         return this.switchToDesk(desk || 'PERSONAL')
             .then(content.setListView)
-            .then(() => content.actionOnItem('Duplicate', item));
+            .then(() => content.actionOnItemSubmenu('Duplicate', 'Duplicate in place', item, true));
     };
 
     this.filterItems = function(type) {

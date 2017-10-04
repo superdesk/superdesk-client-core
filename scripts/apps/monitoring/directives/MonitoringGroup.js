@@ -27,7 +27,7 @@ MonitoringGroup.$inject = ['cards', 'api', 'authoringWorkspace', '$timeout', 'su
     'activityService', 'workflowService', 'keyboardManager', 'desks', 'search', 'multi',
     'archiveService', '$rootScope', 'preferencesService'];
 export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superdesk, session, activityService,
-        workflowService, keyboardManager, desks, search, multi, archiveService, $rootScope, preferencesService) {
+    workflowService, keyboardManager, desks, search, multi, archiveService, $rootScope, preferencesService) {
     let ITEM_HEIGHT = 57;
     let PAGE_SIZE = 25;
     let DEFAULT_GROUP_ITEMS = 10;
@@ -308,9 +308,9 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
 
                 if (!_.isNil(activity)) {
                     activityService.start(activity, {data: {item: item}})
-                    .then((item) => {
-                        authoringWorkspace.edit(item);
-                    });
+                        .then((item) => {
+                            authoringWorkspace.edit(item);
+                        });
                 }
             }
 
@@ -338,13 +338,13 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
 
                         select(completeItem);
                     })
-                    .finally(() => {
-                        scope.loading = false;
+                        .finally(() => {
+                            scope.loading = false;
 
-                        // Reset to get bulk query items
-                        criteria = cards.criteria(scope.group, null, monitoring.queryParam);
-                        criteria.source.size = PAGE_SIZE;
-                    });
+                            // Reset to get bulk query items
+                            criteria = cards.criteria(scope.group, null, monitoring.queryParam);
+                            criteria.source.size = PAGE_SIZE;
+                        });
                 } else {
                     select(item);
                 }
@@ -430,16 +430,16 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                         scope.items = search.updateItems(items, scope.items);
                     }
                 })
-                .finally(() => {
-                    if (originalQuery) {
-                        criteria.source.query = originalQuery;
-                    }
+                    .finally(() => {
+                        if (originalQuery) {
+                            criteria.source.query = originalQuery;
+                        }
 
-                    // update scroll position to top, when forced refresh
-                    if (data && data.force) {
-                        containerElem[0].scrollTop = 0;
-                    }
-                });
+                        // update scroll position to top, when forced refresh
+                        if (data && data.force) {
+                            containerElem[0].scrollTop = 0;
+                        }
+                    });
             }
 
             function render(next) {

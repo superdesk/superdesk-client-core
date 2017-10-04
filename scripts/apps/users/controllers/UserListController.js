@@ -5,6 +5,7 @@ export function UserListController($scope, $location, api, _) {
     $scope.selected = {user: null};
     $scope.createdUsers = [];
     $scope.online_users = false;
+    $scope.authorOnlyFilter = false;
 
     api('roles')
         .query()

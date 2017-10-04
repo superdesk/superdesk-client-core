@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import PropTypes from 'prop-types';
 
 import {MarkedDesksList} from 'apps/search/components';
 
@@ -57,10 +58,10 @@ export class MarkedDesksInfo extends React.Component {
         return (
             <div className="highlights-box" onClick={this.toggle}>
                 {markedDesks.length ? <div className="highlights-list dropdown">
-                        <button className="dropdown__toggle">
-                            <i className="icon-bell" />
-                        </button>
-                    </div> : null
+                    <button className="dropdown__toggle">
+                        <i className="icon-bell" />
+                    </button>
+                </div> : null
                 }
             </div>
         );
@@ -87,7 +88,7 @@ export class MarkedDesksInfo extends React.Component {
  * markedDesksById: dict of desks by desk id
  */
 MarkedDesksInfo.propTypes = {
-    svc: React.PropTypes.object.isRequired,
-    item: React.PropTypes.any,
-    markedDesksById: React.PropTypes.any,
+    svc: PropTypes.object.isRequired,
+    item: PropTypes.any,
+    markedDesksById: PropTypes.any,
 };

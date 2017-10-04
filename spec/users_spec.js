@@ -2,7 +2,7 @@
 
 var authoring = require('./helpers/authoring'),
     monitoring = require('./helpers/monitoring'),
-    openUrl = require('./helpers/utils').open,
+    nav = require('./helpers/utils').nav,
     post = require('./helpers/fixtures').post,
     userPrefs = require('./helpers/user_prefs'),
     workspace = require('./helpers/workspace');
@@ -23,7 +23,7 @@ describe('users', () => {
 
     describe('profile:', () => {
         beforeEach((done) => {
-            openUrl('/#/profile').then(done);
+            nav('/profile').then(done);
         });
 
         it('can render user profile', () => {
@@ -54,7 +54,7 @@ describe('users', () => {
 
     describe('users list:', () => {
         beforeEach(() => {
-            openUrl('/#/users');
+            nav('/users');
         });
 
         it('can list users', () => {
@@ -89,12 +89,12 @@ describe('users', () => {
 
             element(by.css('.modal__dialog')).waitReady().then((elem) => {
                 browser.wait(() => elem.element(by.binding('bodyText'))
-                        .getText()
-                        .then((text) => {
-                            if (text === 'Please confirm that you want to disable a user.') {
-                                return true;
-                            }
-                        }), 5000);
+                    .getText()
+                    .then((text) => {
+                        if (text === 'Please confirm that you want to disable a user.') {
+                            return true;
+                        }
+                    }), 5000);
                 return elem;
             }).then((elem) => {
                 browser.wait(() => {
@@ -118,7 +118,7 @@ describe('users', () => {
 
     describe('user detail:', () => {
         beforeEach((done) => {
-            openUrl('/#/users').then(done);
+            nav('/users').then(done);
         });
 
         it('can open user detail', () => {
@@ -143,7 +143,7 @@ describe('users', () => {
 
     describe('user edit:', () => {
         beforeEach((done) => {
-            openUrl('/#/users')
+            nav('/users')
                 .then(() =>
                     element(by.repeater('user in users').row(0)
                         .column('username'))
@@ -153,6 +153,9 @@ describe('users', () => {
         });
 
         it('can enable/disable buttons based on form status', () => {
+            var generalTab = element(by.buttonText('General info'));
+            var authorsTab = element(by.buttonText('Author info'));
+
             var buttonSave = element(by.id('save-edit-btn'));
             var buttonCancel = element(by.id('cancel-edit-btn'));
             var inputFirstName = element(by.model('user.first_name'));
@@ -161,6 +164,7 @@ describe('users', () => {
             expect(buttonSave.isEnabled()).toBe(false);
             expect(buttonCancel.isEnabled()).toBe(false);
 
+            authorsTab.click();
             inputSignOff.clear();
             inputSignOff.sendKeys('X');
             expect(inputSignOff.getAttribute('value')).toBe('X');
@@ -169,14 +173,31 @@ describe('users', () => {
             expect(buttonSave.isEnabled()).toBe(true);
             expect(buttonCancel.isEnabled()).toBe(true);
 
-            inputFirstName.clear();
             inputSignOff.clear();
+            inputSignOff.sendKeys('fl');
+            expect(inputSignOff.getAttribute('value')).toBe('fl');
+
+            browser.sleep(200);
+            expect(buttonSave.isDisplayed()).toBe(false);
+            expect(buttonCancel.isDisplayed()).toBe(false);
+
+            generalTab.click();
+            inputFirstName.clear();
+
+            inputFirstName.sendKeys('X');
+            expect(inputFirstName.getAttribute('value')).toBe('X');
+
+            browser.sleep(200);
+            expect(buttonSave.isEnabled()).toBe(true);
+            expect(buttonCancel.isEnabled()).toBe(true);
+
+            inputFirstName.clear();
             inputFirstName.sendKeys('first name');
             expect(inputFirstName.getAttribute('value')).toBe('first name');
 
             browser.sleep(200);
-            expect(buttonSave.isEnabled()).toBe(false);
-            expect(buttonCancel.isEnabled()).toBe(true);
+            expect(buttonSave.isDisplayed()).toBe(false);
+            expect(buttonCancel.isDisplayed()).toBe(false);
         });
     });
 
@@ -187,65 +208,65 @@ describe('users', () => {
 
         it('should filter categories in the Authoring metadata head menu ' +
            'based on the user\'s preferred categories settings',
-            () => {
-                userPrefs.btnCheckNone.click();  // uncheck all categories
+        () => {
+            userPrefs.btnCheckNone.click(); // uncheck all categories
 
-                // select the Entertainment and Finance categories
-                userPrefs.categoryCheckboxes.get(3).click();  // Entertainment
-                userPrefs.categoryCheckboxes.get(4).click();  // Finance
+            // select the Entertainment and Finance categories
+            userPrefs.categoryCheckboxes.get(3).click(); // Entertainment
+            userPrefs.categoryCheckboxes.get(4).click(); // Finance
 
-                userPrefs.btnSave.click();  // save changes
+            userPrefs.btnSave.click(); // save changes
 
-                // navigate to Workspace and create a new article
-                workspace.openContent();
-                authoring.navbarMenuBtn.click();
-                authoring.newPlainArticleLink.click();
+            // navigate to Workspace and create a new article
+            workspace.openContent();
+            authoring.navbarMenuBtn.click();
+            authoring.newPlainArticleLink.click();
 
-                // authoring opened, click the set category menu and see what
-                // categories are offered
-                authoring.setCategoryBtn.click();
+            // authoring opened, click the set category menu and see what
+            // categories are offered
+            authoring.setCategoryBtn.click();
 
-                var catListItems = authoring.getCategoryListItems;
+            var catListItems = authoring.getCategoryListItems;
 
-                expect(catListItems.count()).toBe(2);
-                expect(catListItems.get(0).getText()).toEqual('Entertainment');
-                expect(catListItems.get(1).getText()).toEqual('Finance');
-            }
+            expect(catListItems.count()).toBe(2);
+            expect(catListItems.get(0).getText()).toEqual('Entertainment');
+            expect(catListItems.get(1).getText()).toEqual('Finance');
+        }
         );
 
         it('should filter and navigate filtered list via keyboard action in the ' +
            'Authoring metadata based on the user\'s preferred categories settings',
-            () => {
-                userPrefs.btnCheckNone.click();  // uncheck all categories
-                browser.sleep(100);
+        () => {
+            userPrefs.btnCheckNone.click(); // uncheck all categories
+            browser.sleep(100);
 
-                // select the Entertainment and Finance categories
-                userPrefs.categoryCheckboxes.get(3).click();  // Entertainment
-                userPrefs.categoryCheckboxes.get(4).click();  // Finance
+            // select the Entertainment and Finance categories
+            userPrefs.categoryCheckboxes.get(3).click(); // Entertainment
+            userPrefs.categoryCheckboxes.get(4).click(); // Finance
 
-                userPrefs.btnSave.click();  // save changes
+            userPrefs.btnSave.click(); // save changes
 
-                // navigate to Workspace and create a new article
-                monitoring.openMonitoring();
-                authoring.navbarMenuBtn.click();
-                authoring.newPlainArticleLink.click();
+            // navigate to Workspace and create a new article
+            monitoring.openMonitoring();
+            authoring.navbarMenuBtn.click();
+            authoring.newPlainArticleLink.click();
 
-                browser.sleep(100);
-                // Open subject metadata dropdown field
-                authoring.getCategoryMetadataDropdownOpened();
-                browser.sleep(100); // wait a bit
+            browser.sleep(100);
+            // Open subject metadata dropdown field
+            authoring.getCategoryMetadataDropdownOpened();
+            browser.sleep(100); // wait a bit
 
-                var catListItems = authoring.getCategoryListItems;
+            var catListItems = authoring.getCategoryListItems;
 
-                expect(catListItems.count()).toBe(2);
-                expect(catListItems.get(0).getText()).toEqual('Entertainment');
-                expect(catListItems.get(1).getText()).toEqual('Finance');
+            expect(catListItems.count()).toBe(2);
+            expect(catListItems.get(0).getText()).toEqual('Entertainment');
+            expect(catListItems.get(1).getText()).toEqual('Finance');
 
-                // now type some search term and check if down arrow navigates to filtered list
-                browser.actions().sendKeys('fin').perform();
-                browser.actions().sendKeys(protractor.Key.DOWN).perform();
-                expect(element(by.css('.sd-typeahead li.active')).getText()).toBe('Finance');
-            }
+            // now type some search term and check if down arrow navigates to filtered list
+            browser.actions().sendKeys('fin').perform();
+            browser.actions().sendKeys(protractor.Key.DOWN).perform();
+            expect(element(by.css('.sd-typeahead li.active')).getText()).toBe('Finance');
+        }
         );
         //
     });
@@ -257,50 +278,50 @@ describe('users', () => {
 
         it('should reset the form to the last saved state when the Cancel ' +
             'button is clicked',
-            () => {
-                var checkboxes = userPrefs.privlCheckboxes;
+        () => {
+            var checkboxes = userPrefs.privlCheckboxes;
 
-                // Initially all checboxes are unchecked. Now let's select
-                // a few of them, click the Cancel button and see if they have
-                // been reset.
-                checkboxes.get(0).click();  // archive
-                checkboxes.get(2).click();  // content filters
-                expect(checkboxes.get(0).isSelected()).toBeTruthy();
-                expect(checkboxes.get(2).isSelected()).toBeTruthy();
+            // Initially all checboxes are unchecked. Now let's select
+            // a few of them, click the Cancel button and see if they have
+            // been reset.
+            checkboxes.get(0).click(); // archive
+            checkboxes.get(2).click(); // content filters
+            expect(checkboxes.get(0).isSelected()).toBeTruthy();
+            expect(checkboxes.get(2).isSelected()).toBeTruthy();
 
-                userPrefs.btnCancel.click();
+            userPrefs.btnCancel.click();
 
-                expect(checkboxes.get(0).isSelected()).toBeFalsy();
-                expect(checkboxes.get(2).isSelected()).toBeFalsy();
+            expect(checkboxes.get(0).isSelected()).toBeFalsy();
+            expect(checkboxes.get(2).isSelected()).toBeFalsy();
 
-                // Check the checkboxes again, save the changes, then check a
-                // few more. After clicking the Cancel button, only the
-                // checkboxes checked after the save should be reset.
-                checkboxes.get(0).click();
-                checkboxes.get(2).click();
-                expect(checkboxes.get(0).isSelected()).toBeTruthy();
-                expect(checkboxes.get(2).isSelected()).toBeTruthy();
+            // Check the checkboxes again, save the changes, then check a
+            // few more. After clicking the Cancel button, only the
+            // checkboxes checked after the save should be reset.
+            checkboxes.get(0).click();
+            checkboxes.get(2).click();
+            expect(checkboxes.get(0).isSelected()).toBeTruthy();
+            expect(checkboxes.get(2).isSelected()).toBeTruthy();
 
-                userPrefs.btnSave.click();
+            userPrefs.btnSave.click();
 
-                checkboxes.get(1).click();  // archived management
-                checkboxes.get(4).click();  // desk management
-                expect(checkboxes.get(1).isSelected()).toBeTruthy();
-                expect(checkboxes.get(4).isSelected()).toBeTruthy();
+            checkboxes.get(1).click(); // archived management
+            checkboxes.get(4).click(); // desk management
+            expect(checkboxes.get(1).isSelected()).toBeTruthy();
+            expect(checkboxes.get(4).isSelected()).toBeTruthy();
 
-                userPrefs.btnCancel.click();
+            userPrefs.btnCancel.click();
 
-                expect(checkboxes.get(0).isSelected()).toBeTruthy();
-                expect(checkboxes.get(2).isSelected()).toBeTruthy();
-                expect(checkboxes.get(1).isSelected()).toBeFalsy();
-                expect(checkboxes.get(4).isSelected()).toBeFalsy();
-            }
+            expect(checkboxes.get(0).isSelected()).toBeTruthy();
+            expect(checkboxes.get(2).isSelected()).toBeTruthy();
+            expect(checkboxes.get(1).isSelected()).toBeFalsy();
+            expect(checkboxes.get(4).isSelected()).toBeFalsy();
+        }
         );
     });
 
     describe('default desk field should not be visible', () => {
         beforeEach((done) => {
-            openUrl('/#/users').then(done);
+            nav('/users').then(done);
         });
 
         it('while creating a new user', () => {

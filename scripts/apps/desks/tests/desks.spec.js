@@ -8,22 +8,22 @@ describe('desks service', () => {
     beforeEach(window.module('superdesk.apps.searchProviders'));
 
     it('can fetch current user desks',
-    inject((desks, session, api, preferencesService, $rootScope, $q) => {
-        spyOn(session, 'getIdentity').and.returnValue($q.when({_links: {self: {href: USER_URL}}}));
-        spyOn(desks, 'fetchUserDesks').and.returnValue($q.when([{name: 'sport'}, {name: 'news'}]));
-        spyOn(preferencesService, 'get').and.returnValue($q.when([]));
-        spyOn(preferencesService, 'update');
+        inject((desks, session, api, preferencesService, $rootScope, $q) => {
+            spyOn(session, 'getIdentity').and.returnValue($q.when({_links: {self: {href: USER_URL}}}));
+            spyOn(desks, 'fetchUserDesks').and.returnValue($q.when([{name: 'sport'}, {name: 'news'}]));
+            spyOn(preferencesService, 'get').and.returnValue($q.when([]));
+            spyOn(preferencesService, 'update');
 
-        var userDesks;
+            var userDesks;
 
-        desks.fetchCurrentUserDesks().then((_userDesks) => {
-            userDesks = _userDesks;
-        });
+            desks.fetchCurrentUserDesks().then((_userDesks) => {
+                userDesks = _userDesks;
+            });
 
-        $rootScope.$apply();
+            $rootScope.$apply();
 
-        expect(userDesks.length).toBe(2);
-    }));
+            expect(userDesks.length).toBe(2);
+        }));
 
     it('can pick personal desk if user has no current desk selected',
         inject((desks, session, api, preferencesService, $q, $rootScope) => {

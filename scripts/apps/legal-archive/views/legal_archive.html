@@ -1,20 +1,38 @@
-<div class="subnav subnav--plain">
-    <header class="search-page-header">
-        <div class="filter-trigger" ng-click="openAdvanceSearch = !openAdvanceSearch" ng-class="{'filter-trigger--active': openAdvanceSearch}"><i class="icon-filter-large"></i></div>
-        <div sd-pagination data-items="items"></div>
-        <div class="searchbar-flex-handler"></div>
-        <div sd-legal-item-sortbar></div>
+<div class="subnav legal-archive subnav--absolute" sd-media-query min-width="700">
+    <div class="filter-trigger" ng-click="openAdvanceSearch = !openAdvanceSearch"
+         ng-class="{'filter-trigger--active': openAdvanceSearch}">
+        <i class="icon-filter-large"></i>
+    </div>
 
-        <div class="view-select">
-            <button tooltip="{{ :: 'switch to grid view' | translate }}" tooltip-placement="left"  ng-show="view !== 'mgrid'" ng-click="setview('mgrid')"><i class="icon-th"></i></button>
-            <button tooltip="{{ :: 'switch to list view' | translate }}" tooltip-placement="left"  ng-show="view !== 'compact'" ng-click="setview('compact')"><i class="icon-th-list"></i></button>
+    <div sd-pagination data-items="items" ng-if="elementState !== 'compact'"></div>
+    <div class="subnav__stretch-bar"></div>   
+    <div sd-legal-item-sortbar ng-if="elementState !== 'compact'" class="sortbar-container"></div>
+
+    <div class="view-select">
+        <button tooltip="{{ :: 'switch to grid view' | translate }}" tooltip-placement="left"  ng-show="view !== 'mgrid'" ng-click="setview('mgrid')"><i class="icon-th"></i></button>
+        <button tooltip="{{ :: 'switch to list view' | translate }}" tooltip-placement="left"  ng-show="view !== 'compact'" ng-click="setview('compact')"><i class="icon-th-list"></i></button>
+    </div>
+
+    <div class="button-stack right-stack" ng-if="elementState === 'compact'">
+        <div class="dropdown dropdown--align-right dropdown--compact-state" dropdown>
+            <button class="navbtn dropdown__toggle" dropdown__toggle><i class="icon-dots-vertical"></i></button>
+            <ul class="dropdown__menu">
+                <li><span class="dropdown__menu-label">{{:: 'Pagination' | translate}}</span></li>
+                <li>
+                    <span sd-pagination data-items="items"></span>
+                </li>
+                <li class="dropdown__menu-divider"></li>
+                <li><span class="dropdown__menu-label">{{:: 'Sorting' | translate}}</span></li>
+                <li>
+                    <span sd-legal-item-sortbar></span>
+                </li>
+            </ul>
         </div>
-    </header>
+    </div>
 </div>
 
 <section class="search main-section search-page-container" ng-class="{'sidebar-open': openAdvanceSearch}">
-
-    <div class="archive-sidebar"> <!-- Search widget -->
+    <div class="archive-sidebar">
         <div class="header">
             <ul>
                 <li translate>Search</li>
@@ -77,7 +95,9 @@
     </div>
 
     <div class="archive-content">
-        <div class="preview-layout" ng-class="{closed: !selected.preview}" >
+        <div class="preview-layout" ng-class="{
+                    closed: !selected.preview
+                }" >
             <div class="list-pane {{ view || 'list' }}-view">
                 <div id="content-list" class="content" sd-updown data-items="items._items" data-select="preview(item)">
                     <div class="loading-indicator" ng-show="loading" translate>loading</div>
@@ -88,13 +108,18 @@
             <div id="item-preview" class="preview-pane content-item-preview" ng-show="selected.preview" ng-init="tab = 'content'">
                 <header>
                     <ul class="nav nav-tabs">
-                        <li ng-class="{active: tab === 'content'}">
+                        <li ng-class="{
+                                    active: tab === 'content'
+                                }">
                             <button ng-click="tab = 'content'"><span translate>Content</span></button>
                         </li>
-                        <li ng-class="{active: tab === 'metadata'}">
+                        <li ng-class="{
+                                    active: tab === 'metadata'
+                                }">
                             <button ng-click="tab = 'metadata'"><span translate>Metadata</span></button>
                         </li>
-                        <li ng-class="{active: tab === 'history'}">
+                        <li ng-class="{
+                                    active: tab === 'history'}">
                             <button ng-click="tab = 'history'"><span translate>Item history</span></button>
                         </li>
                     </ul>

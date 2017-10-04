@@ -16,7 +16,7 @@ function Desks() {
     this.stages = element.all(by.repeater('stage in stages'));
 
     /** a button for creating a new desk **/
-    this.newDeskBtn = element(by.buttonText('Add New Desk'));
+    this.newDeskBtn = element(by.buttonText('Add New'));
 
     /** the list of macros listed in a desk settings modal **/
     this.listedMacros = element.all(by.repeater('macro in macros'));

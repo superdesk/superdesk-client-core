@@ -30,9 +30,12 @@ export default function createEditorStore(ctrl) {
         locked: false, // when true, main editor is disabled (ie. when editing sub-components like tables or images)
         showToolbar: showToolbar,
         singleLine: ctrl.singleLine,
+        tabindex: ctrl.tabindex,
+        showTitle: ctrl.showTitle,
         activeCell: null, // currently focused table cell
         editorFormat: ctrl.editorFormat || [],
-        onChangeValue: _.debounce(onChange.bind(ctrl), ctrl.debounce)
+        onChangeValue: _.debounce(onChange.bind(ctrl), ctrl.debounce),
+        item: ctrl.item
     }, applyMiddleware(thunk));
 
 

@@ -8,16 +8,21 @@
 <section class="main-section users">
     <div class="preview-layout" ng-class="{closed: !selected.user}">
         <div class="list-pane">
-            <header>
-                <div class="pull-left" sd-searchbar></div>
-                <div class="pull-left sd-pagination">
-                    <select id="user-filter"
+            <div class="subnav">
+                <div sd-searchbar></div>
+                <div class="button-list button-list--padded">
+                    <button type="button" class="toggle-button" ng-click="authorOnlyFilter=!authorOnlyFilter" ng-class="{'toggle-button--active': !authorOnlyFilter}">{{:: 'All user types' | translate}}</button>
+                    <button type="button" class="toggle-button" ng-click="authorOnlyFilter=!authorOnlyFilter" ng-class="{'toggle-button--active': authorOnlyFilter}">{{:: 'Authors only' | translate}}</button>
+                </div>
+                <div class="sd-line-input sd-line-input--is-select sd-line-input--no-label sd-line-input--no-margin" style="min-width:100px; margin:0 40px;">
+                    <select id="user-filter" class="sd-line-input__select" 
                         ng-model="userFilter"
                         ng-options="filter.id as filter.label | translate for filter in filterOptions">
                     </select>
                 </div>
-                <div sd-pagination data-items="users"></div>
-            </header>
+                <div class="subnav__element-grow"></div>
+                <div sd-pagination data-items="users" class="pull-right"></div>
+            </div>
             <div class="content">
                 <div sd-shadow>
                     <div class="alert alert-error" ng-if="noRolesWarning" translate>No user roles defined!</div>
@@ -42,30 +47,32 @@
                             data-users="createdUsers"
                             data-selected="selected.user"
                             data-done="afterDelete"
-                            ng-if="createdUsers.length"
-                        ></ul>
+                            ng-if="createdUsers.length">
+                        </ul>
 
                         <ul class="table-body"
                             sd-user-list
                             data-roles="roles"
                             data-users="users._items"
+                            data-author-only-filter="authorOnlyFilter"
                             data-selected="selected.user"
-                            data-done="afterDelete"
-                        ></ul>
-
+                            data-done="afterDelete">
+                        </ul>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="preview-pane" ng-if="selected.user">
-            <header>
-                <a id="open-user-profile" href="" ng-click="intent('detail', 'user', selected.user)" ng-show="selected.user._id" class="btn btn--light btn--pull-left" translate>View full profile</a>
-                <button ng-click="selected.user = null" class="close-preview"><i class="icon-close-small"></i></button>
-            </header>
-            <div class="content" sd-user-details-pane ng-if="selected.user">
-                <div id="user-profile-edit" sd-user-edit data-user="selected.user" data-onsave="render(user)" data-oncancel="closePreview()"></div>
+            <div class="preview-pane" ng-if="selected.user">
+                <header>
+                    <button ng-click="intent('detail', 'user', selected.user)" class="btn btn--text-only" ng-show="selected.user._id" id="open-user-profile" translate>View full profile</button>
+                    <button ng-click="selected.user = null" class="close-preview"><i class="icon-close-small"></i></button>
+                </header>
+                <div sd-user-details-pane ng-if="selected.user">
+                    <div id="user-profile-edit" sd-user-edit data-user="selected.user" data-onsave="render(user)" data-oncancel="closePreview()"></div>
+                </div>
             </div>
+
+
         </div>
     </div>
 </section>

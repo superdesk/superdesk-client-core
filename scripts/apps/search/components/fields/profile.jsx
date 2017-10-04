@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 export function profile(props) {
     if (props.item.profile) {
@@ -13,6 +14,6 @@ export function profile(props) {
 }
 
 profile.propTypes = {
-    item: React.PropTypes.any,
-    profilesById: React.PropTypes.any,
+    item: PropTypes.any,
+    profilesById: PropTypes.any,
 };

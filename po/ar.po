@@ -2,12 +2,13 @@
 # Translators:
 # Ahmed Khaled <ahmed.khaled@engineer.com>, 2016
 # Ahmed Salem <ahmed@e-tawasol.com>, 2015
-# Mohamed Farid <ferrycode@gmail.com>, 2016
+# ferry code <ferrycode@gmail.com>, 2016-2017
+# ferry code <ferrycode@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
-"PO-Revision-Date: 2017-03-24 09:51+0000\n"
-"Last-Translator: Daniel James <daniel@64studio.com>\n"
+"PO-Revision-Date: 2017-08-23 11:57+0000\n"
+"Last-Translator: ferry code <ferrycode@gmail.com>\n"
 "Language-Team: Arabic (http://www.transifex.com/sourcefabric/superdesk/language/ar/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -17,19 +18,19 @@ msgstr ""
 #: scripts/apps/archive/views/upload.html:66
 #: scripts/apps/authoring/views/change-image.html:99
 msgid "--- Not selected ---"
-msgstr ""
+msgstr "--- لا يوجد اختيار ---"
 
 #: scripts/apps/desks/views/desk-config-modal.html:131
 msgid ": OFF"
-msgstr ""
+msgstr "ايقاف"
 
 #: scripts/apps/desks/views/desk-config-modal.html:134
 msgid ": ON"
-msgstr ""
+msgstr "تشغيل"
 
 #: scripts/core/lang/missing-translations-strings.js:18
 msgid "'ABSTRACT is a required field'"
-msgstr ""
+msgstr "\"الملخص هو حقل مطلوب\""
 
 #: scripts/core/lang/missing-translations-strings.js:19
 msgid "'ANPA_CATEGORY is a required field'"
@@ -61,7 +62,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.js:29
 msgid "'must be of list type'\""
-msgstr ""
+msgstr "'يجب أن يكون من نوع القائمة' \""
 
 #: scripts/core/lang/missing-translations-strings.js:25
 msgid "'PLACE is a required field'"
@@ -85,7 +86,7 @@ msgstr ""
 
 #: scripts/apps/authoring/authoring/directives/AuthoringEmbeddedDirective.js:31
 msgid "\" sent at:"
-msgstr ""
+msgstr "\" أرسلت في:"
 
 #: scripts/core/lang/missing-translations-strings.js:27
 msgid "\"GENRE 'null value not allowed'"
@@ -176,151 +177,151 @@ msgstr ""
 
 #: scripts/apps/archive/views/upload.html:98
 msgid "* fields are required"
-msgstr ""
+msgstr "* الحقول مطلوبة"
 
 #: scripts/apps/publish/views/subscribers.html:35
 #: scripts/apps/users/views/edit-form.html:29
 msgid "* mandatory fields"
-msgstr ""
+msgstr "* حقول إلزامية"
 
 #: scripts/apps/publish/views/email-config.html:3
 msgid "*at least one visible or hidden recipient needed"
-msgstr ""
+msgstr "* يلزم وجود مستلم مرئي أو مخفي واحد على الأقل"
 
 #: scripts/apps/products/views/products-config-modal.html:22
 #: scripts/apps/publish/views/subscribers.html:77
 msgid "*comma separated values"
-msgstr ""
+msgstr "*قيم تفصلها فواصل"
 
 #: scripts/apps/publish/views/subscribers.html:178
 msgid "1 month"
-msgstr ""
+msgstr "شهر واحد"
 
 #: scripts/apps/publish/views/subscribers.html:176
 msgid "1 week"
-msgstr ""
+msgstr "أسبوع واحد"
 
 #: scripts/apps/publish/views/subscribers.html:180
 msgid "1 year"
-msgstr ""
+msgstr "سنة واحدة"
 
 #: scripts/core/lang/missing-translations-strings.js:23
 msgid "10th update"
-msgstr ""
+msgstr "التحديث العاشر"
 
 #: scripts/core/lang/missing-translations-strings.js:23
 msgid "11th update"
-msgstr ""
+msgstr "التحديث الحادي عشر"
 
 #: scripts/apps/archive/related-item-widget/relatedItem-configuration.html:18
 msgid "12 Hours"
-msgstr ""
+msgstr "12 ساعة"
 
 #: scripts/core/lang/missing-translations-strings.js:24
 msgid "12th update"
-msgstr ""
+msgstr "التحديث الثاني عشر"
 
 #: scripts/core/lang/missing-translations-strings.js:24
 msgid "13th update"
-msgstr ""
+msgstr "التحديث الثالث عشر"
 
 #: scripts/core/lang/missing-translations-strings.js:24
 msgid "14th update"
-msgstr ""
+msgstr "التحديث الرابع عشر"
 
 #: scripts/core/lang/missing-translations-strings.js:24
 msgid "15th update"
-msgstr ""
+msgstr "التحديث الخامس عشر"
 
 #: scripts/core/lang/missing-translations-strings.js:24
 msgid "16th update"
-msgstr ""
+msgstr "التحديث السادس عشر"
 
 #: scripts/core/lang/missing-translations-strings.js:24
 msgid "17th update"
-msgstr ""
+msgstr "التحديث السابع عشر"
 
 #: scripts/core/lang/missing-translations-strings.js:25
 msgid "18th update"
-msgstr ""
+msgstr "التحديث الثامن عشر"
 
 #: scripts/core/lang/missing-translations-strings.js:25
 msgid "19th update"
-msgstr ""
+msgstr "التحديث التاسع عشر"
 
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:41
 msgid "2 character limit"
-msgstr ""
+msgstr "عدد الأحرف المسموح به 2 فقط "
 
 #: scripts/apps/publish/views/subscribers.html:177
 msgid "2 weeks"
-msgstr ""
+msgstr "اسبوعان"
 
 #: scripts/core/lang/missing-translations-strings.js:25
 msgid "20th update"
-msgstr ""
+msgstr "التحديث العشرون"
 
 #: scripts/apps/archive/related-item-widget/relatedItem-configuration.html:20
 msgid "24 Hours"
-msgstr ""
+msgstr "24 ساعة"
 
 #: scripts/core/lang/missing-translations-strings.js:22
 msgid "2nd update"
-msgstr ""
+msgstr "التحديث الثاني"
 
 #: scripts/core/lang/missing-translations-strings.js:22
 msgid "3rd update"
-msgstr ""
+msgstr "التحديث الثالث"
 
 #: scripts/core/lang/missing-translations-strings.js:20
 msgid "412: Can't publish as item state is draft"
-msgstr ""
+msgstr "412: لا يمكن النشر حيث ان حالة العنصر هي مسودة"
 
 #: scripts/apps/archive/related-item-widget/relatedItem-configuration.html:21
 msgid "48 Hours"
-msgstr ""
+msgstr "48 ساعة"
 
 #: scripts/core/lang/missing-translations-strings.js:22
 msgid "4th update"
-msgstr ""
+msgstr "التحديث الرابع"
 
 #: scripts/core/lang/missing-translations-strings.js:22
 msgid "5th update"
-msgstr ""
+msgstr "التحديث الخامس"
 
 #: scripts/apps/archive/related-item-widget/relatedItem-configuration.html:17
 msgid "6 Hours"
-msgstr ""
+msgstr "6 ساعات"
 
 #: scripts/apps/publish/views/subscribers.html:179
 msgid "6 months"
-msgstr ""
+msgstr "6 أشهر"
 
 #: scripts/core/lang/missing-translations-strings.js:23
 msgid "6th update"
-msgstr ""
+msgstr "التحديث السادس"
 
 #: scripts/core/lang/missing-translations-strings.js:23
 msgid "7th update"
-msgstr ""
+msgstr "التحديث السابع"
 
 #: scripts/core/lang/missing-translations-strings.js:23
 msgid "8th update"
-msgstr ""
+msgstr "التحديث الثامن"
 
 #: scripts/core/lang/missing-translations-strings.js:23
 msgid "9th update"
-msgstr ""
+msgstr "التحديث التاسع"
 
 #: scripts/apps/workspace/content/controllers/ContentProfilesController.js:56
 msgid "A content profile with this name already exists."
-msgstr ""
+msgstr "يوجد ملف شخصي للمحتوى بهذا الاسم من قبل."
 
 #: scripts/core/auth/reset-password.html:43
 msgid ""
 "A link was sent to the specified email address. Please use it to reset your "
 "password. It is valid a limited amount of time."
-msgstr ""
+msgstr "تم إرسال رابط إلى عنوان البريد الإلكتروني المحدد. الرجاء استخدامه لإعادة تعيين كلمة المرور. وهي صالحة لفترة محدودة من الوقت."
 
 #: scripts/apps/search/views/search-parameters.html:173
 msgid "AAP Image Keyword"
@@ -329,65 +330,65 @@ msgstr ""
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:82
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:97
 msgid "Abbreviation"
-msgstr ""
+msgstr "اختصار"
 
 #: scripts/apps/dictionaries/controllers/DictionaryEditController.js:154
 msgid "Abbreviation already exists. Do you want to overwrite it?"
-msgstr ""
+msgstr "اختصار موجود بالفعل. هل تريد استبداله؟"
 
 #: scripts/apps/authoring/views/article-edit.html:77
 #: scripts/apps/authoring/views/article-edit.html:97
 #: scripts/apps/packaging/views/sd-package-edit.html:19
 #: scripts/apps/workspace/content/directives/ContentProfileSchemaEditor.js:17
 msgid "Abstract"
-msgstr ""
+msgstr "ملخص"
 
 #: scripts/core/lang/missing-translations-strings.js:42
 msgid "ABSTRACT is too long"
-msgstr ""
+msgstr "الملخص طويل جدا"
 
 #: scripts/apps/monitoring/views/desk-notifications.html:19
 msgid "Acknowledge"
-msgstr ""
+msgstr "تـاكيد"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-content.html:71
 #: scripts/apps/ingest/views/settings/ingest-routing-general.html:21
 #: scripts/apps/publish/views/publish-queue.html:100
 msgid "Action"
-msgstr ""
+msgstr "إجراء"
 
 #: scripts/apps/desks/views/settings.html:22
 #: scripts/apps/monitoring/views/item-actions-menu.html:14
 #: scripts/apps/templates/views/templates.html:32
 #: scripts/apps/workspace/content/views/profile-settings.html:23
 msgid "Actions"
-msgstr ""
+msgstr "إجراءات"
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:18
 #: scripts/apps/users/controllers/UserListController.js:142
 #: scripts/apps/workspace/content/views/profile-settings.html:36
 #: scripts/apps/workspace/content/views/profile-settings.html:93
 msgid "Active"
-msgstr ""
+msgstr "نشّط"
 
 #: scripts/apps/analytics/directives/ActivityReportContainer.js:11
 #: scripts/apps/analytics/views/activity-report-panel.html:4
 #: scripts/apps/analytics/views/activity-report-view.html:2
 msgid "Activity Report"
-msgstr ""
+msgstr "تقرير النشاط"
 
 #: scripts/apps/analytics/directives/SavedActivityReports.js:109
 msgid "Activity report deleted"
-msgstr ""
+msgstr "تم حذف تقرير النشاط"
 
 #: scripts/apps/users/views/activity-feed.html:4
 #: scripts/core/lang/missing-translations-strings.js:39
 msgid "Activity Stream"
-msgstr ""
+msgstr "تدفق النشاط"
 
 #: scripts/core/lang/missing-translations-strings.js:39
 msgid "Activity stream widget"
-msgstr ""
+msgstr "مبوبة تدفق النشاط"
 
 #: scripts/apps/authoring/metadata/views/metadata-target-publishing.html:6
 #: scripts/apps/content-filters/views/manage-filters.html:82
@@ -396,19 +397,19 @@ msgstr ""
 #: scripts/apps/ingest/views/settings/ingest-routing-action.html:53
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:61
 msgid "Add"
-msgstr ""
+msgstr "إضافه"
 
 #: scripts/core/editor2/views/add-content.html:14
 msgid "add a picture"
-msgstr ""
+msgstr "إضافة صورة"
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:89
 msgid "ADD ABBREVIATION"
-msgstr ""
+msgstr "اضافة اختصار"
 
 #: scripts/apps/ingest/views/settings/rssConfig.html:87
 msgid "Add alias"
-msgstr ""
+msgstr "إضافة مرادف"
 
 #: scripts/core/editor2/views/add-content.html:9
 msgid "add an embed"
@@ -416,7 +417,7 @@ msgstr ""
 
 #: scripts/core/editor2/views/block-text.html:14
 msgid "Add content here"
-msgstr ""
+msgstr "أضف محتوى هنا"
 
 #: scripts/apps/dashboard/workspace-tasks/views/workspace-tasks.html:54
 msgid "Add content slugline"
@@ -424,11 +425,11 @@ msgstr ""
 
 #: scripts/apps/dashboard/workspace-tasks/views/task-preview.html:58
 msgid "Add description"
-msgstr ""
+msgstr "إضافة وصف"
 
 #: scripts/apps/content-filters/views/manage-filters.html:127
 msgid "Add Filter Statement"
-msgstr ""
+msgstr "إضافة جمل تصفية"
 
 #: scripts/apps/ingest/views/dashboard/ingest-sources-list.html:1
 msgid "Add Ingest Sources"
@@ -436,11 +437,11 @@ msgstr ""
 
 #: scripts/apps/packaging/views/search.html:10
 msgid "Add items"
-msgstr ""
+msgstr "إضافة عناصر"
 
 #: scripts/apps/archive/views/upload.html:91
 msgid "Add more files"
-msgstr ""
+msgstr "إضافة المزيد من الملفات"
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:5
 msgid ""
@@ -450,53 +451,53 @@ msgstr ""
 
 #: scripts/apps/dictionaries/views/settings.html:14
 msgid "Add New Abbreviations Dictionary"
-msgstr ""
+msgstr "إضافة قاموس اختصارات جديدة"
 
 #: scripts/apps/content-filters/views/manage-filters.html:33
 #: scripts/apps/content-filters/views/manage-filters.html:7
 msgid "Add New Content Filter"
-msgstr ""
+msgstr "إضافة تصفية محتوى جديد"
 
 #: scripts/apps/workspace/content/views/profile-settings.html:53
 #: scripts/apps/workspace/content/views/profile-settings.html:7
 msgid "Add New Content Profile"
-msgstr ""
+msgstr "إضافة ملف تعريف جديد للمحتوى"
 
 #: scripts/apps/desks/views/desk-config-modal.html:5
 #: scripts/apps/desks/views/settings.html:7
 msgid "Add New Desk"
-msgstr ""
+msgstr "إضافة ديسك جديد"
 
 #: scripts/apps/publish/views/subscribers.html:123
 msgid "Add New Destination"
-msgstr ""
+msgstr "إضافة وجهة جديدة"
 
 #: scripts/apps/dictionaries/views/settings.html:11
 msgid "Add New Dictionary"
-msgstr ""
+msgstr "إضافة قاموس جديد"
 
 #: scripts/apps/content-filters/views/manage-filter-conditions.html:32
 #: scripts/apps/content-filters/views/manage-filter-conditions.html:6
 msgid "Add New Filter Condition"
-msgstr ""
+msgstr "إضافة شرط تصفية جديدة"
 
 #: scripts/apps/groups/views/groups-config-modal.html:5
 #: scripts/apps/groups/views/settings.html:7
 msgid "Add New Group"
-msgstr ""
+msgstr "إضافة مجموعة جديدة"
 
 #: scripts/apps/dictionaries/views/settings.html:8
 msgid "Add New Personal Dictionary"
-msgstr ""
+msgstr "إضافة قاموس شخصي جديد"
 
 #: scripts/apps/products/views/products-config-modal.html:4
 #: scripts/apps/products/views/products.html:5
 msgid "Add New Product"
-msgstr ""
+msgstr "إضافة منتج جديد"
 
 #: scripts/apps/users/views/settings-roles.html:6
 msgid "Add New Role"
-msgstr ""
+msgstr "إضافة دور مستخدم جديد"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-content.html:5
 msgid "Add New Routing Scheme"
@@ -504,12 +505,12 @@ msgstr ""
 
 #: scripts/apps/ingest/views/settings/ingest-routing-content.html:58
 msgid "Add New Rule"
-msgstr ""
+msgstr "إضافة قاعدة جديدة"
 
 #: scripts/apps/ingest/views/settings/ingest-rules-content.html:29
 #: scripts/apps/ingest/views/settings/ingest-rules-content.html:6
 msgid "Add New Rule Set"
-msgstr ""
+msgstr "إضافة مجموعة دور مستخدم جديدة"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-content.html:31
 msgid "Add New Scheme"
@@ -518,58 +519,58 @@ msgstr ""
 #: scripts/apps/search-providers/views/search-provider-config.html:28
 #: scripts/apps/search-providers/views/search-provider-config.html:5
 msgid "Add New Search Provider"
-msgstr ""
+msgstr "إضافة موفر بحث جديد"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:31
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:5
 msgid "Add New Source"
-msgstr ""
+msgstr "إضافة مصدر جديد"
 
 #: scripts/apps/publish/views/subscribers.html:27
 #: scripts/apps/publish/views/subscribers.html:5
 msgid "Add New Subscriber"
-msgstr ""
+msgstr "أضافة مشترك جديد"
 
 #: scripts/apps/templates/views/template-editor-modal.html:4
 #: scripts/apps/templates/views/templates.html:18
 msgid "Add New Template"
-msgstr ""
+msgstr "إضافة نموذج جديد"
 
 #: scripts/apps/dashboard/views/workspace.html:63
 msgid "Add new widget"
-msgstr ""
+msgstr "إضافة مبوبة جديدة"
 
 #: scripts/apps/ingest/views/settings/ingest-rules-content.html:37
 msgid "Add rule"
-msgstr ""
+msgstr "إضافة قاعدة "
 
 #: scripts/apps/dashboard/workspace-tasks/views/workspace-tasks.html:65
 msgid "Add task description"
-msgstr ""
+msgstr "أضف وصف مهمة"
 
 #: scripts/apps/dashboard/views/workspace.html:91
 msgid "Add This Widget"
-msgstr ""
+msgstr "إضافة هذه المبوبة"
 
 #: scripts/apps/dashboard/workspace-tasks/views/task-preview.html:56
 msgid "Add title"
-msgstr ""
+msgstr "أضف عنوان"
 
 #: scripts/apps/packaging/index.js:70
 msgid "Add to current"
-msgstr ""
+msgstr "إضافة إلى الحالي"
 
 #: scripts/apps/search/views/multi-action-bar.html:14
 msgid "Add to Current Package"
-msgstr ""
+msgstr "إضافة إلى الحزمة الحالية"
 
 #: scripts/core/editor2/views/block-text.html:26
 msgid "Add to dictionary"
-msgstr ""
+msgstr "إضافة إلى القاموس"
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:62
 msgid "ADD WORD"
-msgstr ""
+msgstr "إضافة كلمة"
 
 #: scripts/core/lang/missing-translations-strings.js:30
 msgid "added new {{ type }} item about \"{{ subject }}\""
@@ -585,37 +586,37 @@ msgstr ""
 
 #: scripts/apps/users/views/user-list-item.html:9
 msgid "admin"
-msgstr ""
+msgstr "مدير النظام"
 
 #: scripts/core/menu/views/menu.html:37
 msgid "Admin tools"
-msgstr ""
+msgstr "أدوات ادارة النظام "
 
 #: scripts/apps/users/views/edit-form.html:119
 msgid "administrator"
-msgstr ""
+msgstr "مدير النظام"
 
 #: scripts/apps/search/views/search-panel.html:7
 msgid "Advanced Search"
-msgstr ""
+msgstr "بحث متقدم"
 
 #: scripts/apps/monitoring/views/monitoring-view.html:72
 #: scripts/apps/users/views/user-preferences.html:60
 msgid "all"
-msgstr ""
+msgstr "الكل"
 
 #: scripts/apps/templates/directives/TemplatesDirective.js:292
 #: scripts/apps/users/controllers/UserListController.js:147
 msgid "All"
-msgstr ""
+msgstr "الكل "
 
 #: scripts/core/menu/notifications/views/notifications.html:40
 msgid "All good so far."
-msgstr ""
+msgstr "كل شيء جيد حتى الآن."
 
 #: scripts/apps/authoring/views/opened-articles.html:3
 msgid "All opened items"
-msgstr ""
+msgstr "جميع العناصر المفتوحة"
 
 #: scripts/apps/search/directives/ItemRepo.js:44
 msgid "all photos"
@@ -647,7 +648,7 @@ msgstr ""
 #: scripts/apps/analytics/views/analytics.html:3
 #: scripts/apps/workspace/views/workspace-sidenav-items.html:72
 msgid "Analytics"
-msgstr ""
+msgstr "إحصاءات"
 
 #: scripts/apps/authoring/views/authoring-header.html:181
 #: scripts/apps/content-filters/views/production-test-view.html:23
@@ -662,7 +663,7 @@ msgstr ""
 
 #: scripts/apps/dashboard/workspace-tasks/views/desk-stages.html:6
 msgid "Any"
-msgstr ""
+msgstr "أي"
 
 #: scripts/apps/archive/views/metadata-view.html:160
 msgid "Aperture"
@@ -678,19 +679,19 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.js:8
 msgid "archive"
-msgstr ""
+msgstr "الأرشيف"
 
 #: scripts/core/lang/missing-translations-strings.js:10
 msgid "Archive"
-msgstr ""
+msgstr "الأرشيف"
 
 #: scripts/apps/search/views/item-repo.html:10
 msgid "Archived"
-msgstr ""
+msgstr "مؤرشف"
 
 #: scripts/apps/content-filters/views/manage-filters.html:51
 msgid "Archived Block"
-msgstr ""
+msgstr "كتلة مؤرشفة"
 
 #: scripts/core/lang/missing-translations-strings.js:10
 msgid "Archived Management"
@@ -698,23 +699,23 @@ msgstr ""
 
 #: scripts/apps/highlights/controllers/HighlightsConfig.js:63
 msgid "Are you sure you want to delete configuration?"
-msgstr ""
+msgstr "هل أنت متأكد من أنك تريد حذف الاعدادات؟"
 
 #: scripts/apps/content-filters/controllers/ManageContentFiltersController.js:67
 msgid "Are you sure you want to delete content filter?"
-msgstr ""
+msgstr "هل تريد بالتأكيد حذف فلتر المحتوى؟"
 
 #: scripts/apps/dashboard/controllers/DashboardController.js:127
 msgid "Are you sure you want to delete current workspace?"
-msgstr ""
+msgstr "هل تريد بالتأكيد حذف مساحة العمل الحالية؟"
 
 #: scripts/apps/content-filters/controllers/FilterConditionsController.js:90
 msgid "Are you sure you want to delete filter condition?"
-msgstr ""
+msgstr "هل تريد بالتأكيد حذف حالة التصفية؟"
 
 #: scripts/apps/groups/controllers/GroupsConfigController.js:24
 msgid "Are you sure you want to delete group?"
-msgstr ""
+msgstr "هل انت متاكد انك تريد حذف هذه المجموعة؟"
 
 #: scripts/apps/ingest/directives/IngestSourcesContent.js:98
 msgid "Are you sure you want to delete Ingest Source?"
@@ -730,15 +731,15 @@ msgstr ""
 
 #: scripts/apps/search/directives/SavedSearches.js:76
 msgid "Are you sure you want to delete saved search?"
-msgstr ""
+msgstr "هل تريد بالتأكيد حذف البحث المحفوظ؟"
 
 #: scripts/apps/search-providers/directive.js:71
 msgid "Are you sure you want to delete Search Provider?"
-msgstr ""
+msgstr "هل تريد بالتأكيد حذف موفر البحث؟"
 
 #: scripts/apps/analytics/directives/SavedActivityReports.js:106
 msgid "Are you sure you want to delete the activity report?"
-msgstr ""
+msgstr "هل تريد بالتأكيد حذف تقرير النشاط؟"
 
 #: scripts/apps/templates/directives/TemplatesDirective.js:259
 msgid "Are you sure you want to delete the template?"
@@ -823,19 +824,19 @@ msgstr ""
 
 #: scripts/apps/templates/views/templates.html:55
 msgid "Automated item creation"
-msgstr ""
+msgstr "إنشاء العنصر تلقائيا"
 
 #: scripts/apps/templates/views/template-editor-modal.html:138
 msgid "Automatically create item"
-msgstr ""
+msgstr "إنشاء العنصر تلقائيا"
 
 #: scripts/apps/highlights/views/highlights_config_modal.html:38
 msgid "Automatically insert items from"
-msgstr ""
+msgstr "إدراج العناصر تلقائيا من"
 
 #: scripts/apps/dashboard/world-clock/configuration.html:34
 msgid "Available clock"
-msgstr ""
+msgstr "الساعة المتاحة"
 
 #: scripts/core/editor2/editor.js:1046
 msgid "B"
@@ -845,31 +846,31 @@ msgstr ""
 #: scripts/apps/monitoring/aggregate-widget/aggregate-widget.html:58
 #: scripts/core/itemList/views/relatedItem-list-widget.html:55
 msgid "Back"
-msgstr ""
+msgstr "رجوع"
 
 #: scripts/apps/search/views/search-panel.html:4
 msgid "Back / Cancel"
-msgstr ""
+msgstr "رجوع / إلغاء"
 
 #: scripts/apps/monitoring/views/monitoring-view.html:5
 msgid "Back to original view"
-msgstr ""
+msgstr "الرجوع إلى الواجهة الأصلية"
 
 #: scripts/apps/users/views/edit.html:5
 msgid "Back to Users list"
-msgstr ""
+msgstr "الرجوع إلى قائمة المستخدمين"
 
 #: scripts/apps/authoring/comments/views/comments-widget.html:17
 msgid "Be the first..."
-msgstr ""
+msgstr "كن الأول..."
 
 #: scripts/core/directives/PasswordStrengthDirective.js:40
 msgid "Better"
-msgstr ""
+msgstr "أفضل"
 
 #: scripts/apps/search/views/search-parameters.html:201
 msgid "Black&White"
-msgstr ""
+msgstr "أبيض وأسود"
 
 #: scripts/apps/authoring/packages/views/packages-widget.html:13
 #: scripts/apps/packaging/views/sd-package-item-preview.html:20
@@ -878,7 +879,7 @@ msgstr ""
 
 #: scripts/apps/content-filters/views/manage-filters.html:57
 msgid "Block API"
-msgstr ""
+msgstr "Block API"
 
 #: scripts/apps/products/views/products-config-modal.html:35
 msgid "Blocking"
@@ -888,28 +889,28 @@ msgstr ""
 #: scripts/apps/authoring/views/article-edit.html:202
 #: scripts/apps/packaging/views/sd-package-edit.html:31
 msgid "Body"
-msgstr ""
+msgstr "المتن"
 
 #: scripts/apps/workspace/content/directives/ContentProfileSchemaEditor.js:23
 msgid "Body footer"
-msgstr ""
+msgstr "تذييل المتن"
 
 #: scripts/apps/workspace/content/directives/ContentProfileSchemaEditor.js:18
 #: scripts/core/lang/missing-translations-strings.js:26
 msgid "Body HTML"
-msgstr ""
+msgstr "المتن بصيغة HTML"
 
 #: scripts/core/editor2/editor.js:1044
 msgid "bold"
-msgstr ""
+msgstr "البنط العريض"
 
 #: scripts/apps/publish/views/subscribers.html:72
 msgid "Both"
-msgstr ""
+msgstr "كلاهما"
 
 #: scripts/core/lang/missing-translations-strings.js:10
 msgid "Broadcast"
-msgstr ""
+msgstr "بث"
 
 #: scripts/apps/archive/views/preview.html:7
 #: scripts/apps/authoring/suggest/SuggestView.html:23
@@ -921,15 +922,15 @@ msgstr ""
 #: scripts/apps/authoring/views/authoring.html:8
 #: scripts/apps/dashboard/workspace-tasks/views/task-preview.html:2
 msgid "by"
-msgstr ""
+msgstr "بواسطة"
 
 #: scripts/core/lang/missing-translations-strings.js:26
 msgid "By"
-msgstr ""
+msgstr "بواسطة"
 
 #: scripts/apps/authoring/authoring/directives/ArticleEditDirective.js:121
 msgid "By {{ display_name }}"
-msgstr ""
+msgstr "بواسطة {{ display_name }}"
 
 #: scripts/apps/packaging/views/sd-package-item-preview.html:25
 msgid "by <b>{{userLookup[data.original_creator].display_name}}</b>"
@@ -1019,33 +1020,33 @@ msgstr ""
 #: scripts/core/ui/views/datepicker-wrapper.html:15
 #: scripts/core/ui/views/sd-timepicker-popup.html:27
 msgid "Cancel"
-msgstr ""
+msgstr "إلغاء"
 
 #: scripts/apps/publish/views/publish-queue.html:70
 msgid "Cancel Selection"
-msgstr ""
+msgstr "إلغاء التحديد"
 
 #: scripts/apps/authoring/editor/views/find-replace.html:17
 msgid "Case Sensitive"
-msgstr ""
+msgstr "حساس لحالة الأحرف"
 
 #: scripts/core/lang/missing-translations-strings.js:9
 msgid "categories"
-msgstr ""
+msgstr "فئات"
 
 #: scripts/apps/analytics/views/activity-report-parameters.html:44
 #: scripts/apps/authoring/views/full-preview.html:44
 #: scripts/apps/legal-archive/services/LegalArchiveService.js:11
 msgid "Category"
-msgstr ""
+msgstr "الفئة"
 
 #: scripts/apps/users/config.js:119
 msgid "Change avatar"
-msgstr ""
+msgstr "تغيير الصورة التعبيرية"
 
 #: scripts/apps/users/views/edit-form.html:10
 msgid "Change Photo"
-msgstr ""
+msgstr "تغيير الصورة"
 
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:38
 msgid "Channel has gone strangely quiet."
@@ -1069,24 +1070,24 @@ msgstr ""
 
 #: scripts/apps/desks/views/desk-config-modal.html:166
 msgid "Character limit exceeded, stage can not be created/updated."
-msgstr ""
+msgstr "تجاوز عدد الأحرف المسموحة، لا يمكن إنشاء/تعديل  المرحلة."
 
 #: scripts/apps/authoring/authoring/directives/CharacterCount.js:12
 msgid "characters"
-msgstr ""
+msgstr "حروف"
 
 #: scripts/core/views/sdselect.html:13
 msgid "Check all"
-msgstr ""
+msgstr "اختيار الكل"
 
 #: scripts/apps/authoring/views/authoring-topbar.html:219
 #: scripts/apps/authoring/views/authoring-topbar.html:227
 msgid "Check spelling"
-msgstr ""
+msgstr "التأكد من التهجئة"
 
 #: scripts/apps/authoring/metadata/views/metadata-terms.html:26
 msgid "Choose entire category"
-msgstr ""
+msgstr "اختر فئة كاملة"
 
 #: scripts/apps/highlights/views/package_highlights_dropdown_directive.html:7
 msgid "Choose highlight list"
@@ -1237,7 +1238,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.js:5
 msgid "content"
-msgstr ""
+msgstr "المحتوى"
 
 #: scripts/apps/content-filters/views/production-test-view.html:52
 #: scripts/apps/legal-archive/views/legal_archive.html:92
@@ -1246,7 +1247,7 @@ msgstr ""
 #: scripts/apps/search/views/item-preview.html:8
 #: scripts/apps/workspace/views/workspace-sidenav-items.html:37
 msgid "Content"
-msgstr ""
+msgstr "المحتوى"
 
 #: scripts/apps/publish/views/subscribers.html:152
 msgid "Content API Tokens"
@@ -1318,35 +1319,35 @@ msgstr ""
 
 #: scripts/apps/desks/views/desk-config-modal.html:271
 msgid "Continue"
-msgstr ""
+msgstr "استمرار"
 
 #: scripts/apps/archive/index.js:180
 msgid "Copy"
-msgstr ""
+msgstr "نسخ"
 
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:64
 msgid "Copyright"
-msgstr ""
+msgstr "حقوق النشر"
 
 #: scripts/apps/archive/views/metadata-view.html:171
 #: scripts/apps/archive/views/upload.html:58
 #: scripts/apps/authoring/views/change-image.html:91
 msgid "Copyright holder"
-msgstr ""
+msgstr "مالك حقوق النشر"
 
 #: scripts/apps/archive/views/metadata-view.html:175
 #: scripts/apps/archive/views/upload.html:73
 #: scripts/apps/authoring/views/change-image.html:106
 msgid "Copyright notice"
-msgstr ""
+msgstr "حقوق التأليف"
 
 #: scripts/apps/analytics/views/activity-report-parameters.html:9
 msgid "Correct"
-msgstr ""
+msgstr "صحيح"
 
 #: scripts/apps/authoring/authoring/index.js:133
 msgid "Correct item"
-msgstr ""
+msgstr "تصحيح العنصر"
 
 #: scripts/core/lang/missing-translations-strings.js:7
 msgid "corrected"
@@ -1409,11 +1410,11 @@ msgstr ""
 
 #: scripts/apps/packaging/index.js:46 scripts/apps/packaging/index.js:55
 msgid "Create package"
-msgstr ""
+msgstr "إنشاء حزمة"
 
 #: scripts/apps/search/views/multi-action-bar.html:11
 msgid "Create Package"
-msgstr ""
+msgstr "إنشاء حزمة"
 
 #: scripts/apps/archive/views/metadata-view.html:88
 #: scripts/apps/archive/views/preview.html:6
@@ -1424,11 +1425,11 @@ msgstr ""
 #: scripts/apps/search/services/SearchService.js:28
 #: scripts/apps/users/views/list.html:32
 msgid "Created"
-msgstr ""
+msgstr "تم الإنشاء"
 
 #: scripts/apps/authoring/versioning/history/views/history.html:11
 msgid "Created by"
-msgstr ""
+msgstr "انشئ بواسطة"
 
 #: scripts/apps/search/views/search-filters.html:143
 #: scripts/apps/search/views/search-filters.html:165
@@ -1760,11 +1761,11 @@ msgstr ""
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:23
 msgid "Dictionary name"
-msgstr ""
+msgstr "إسم القاموس"
 
 #: scripts/apps/dictionaries/controllers/DictionaryEditController.js:11
 msgid "Dictionary saved successfully"
-msgstr ""
+msgstr "تم حفظ القاموس بنجاح"
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:44
 msgid "Dictionary with name \"{{ dictionary.name }}\" already exists."
@@ -1777,12 +1778,12 @@ msgstr ""
 
 #: scripts/apps/users/config.js:73
 msgid "Disable user"
-msgstr ""
+msgstr "تعطيل المستخدم"
 
 #: scripts/apps/users/views/edit-form.html:12
 #: scripts/apps/users/views/user-list-item.html:14
 msgid "disabled"
-msgstr ""
+msgstr "معطل"
 
 #: scripts/apps/users/controllers/UserListController.js:146
 msgid "Disabled"
@@ -1812,7 +1813,7 @@ msgstr ""
 
 #: scripts/apps/authoring/views/confirm-media-associated.html:3
 msgid "Do you want to add an image to this update?"
-msgstr ""
+msgstr "هل تريد إضافة صورة إلى هذا التحديث؟"
 
 #: scripts/apps/archive/index.js:105
 msgid "Do you want to delete the item permanently?"
@@ -2007,7 +2008,7 @@ msgstr ""
 
 #: scripts/apps/archive/views/media-view.html:51
 msgid "Edit metadata"
-msgstr ""
+msgstr "تعديل البيانات الوصفية"
 
 #: scripts/apps/products/views/product-test.html:26
 #: scripts/apps/products/views/products.html:14
@@ -2041,20 +2042,20 @@ msgstr ""
 #: scripts/apps/search/views/saved-searches.html:14
 #: scripts/apps/search/views/saved-searches.html:27
 msgid "Edit search"
-msgstr ""
+msgstr "تعديل البحث"
 
 #: scripts/apps/search-providers/views/search-provider-config.html:16
 #: scripts/apps/search-providers/views/search-provider-config.html:27
 msgid "Edit Search Provider"
-msgstr ""
+msgstr "تعديل موفر البحث"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:19
 msgid "Edit source"
-msgstr ""
+msgstr "تحرير المصدر"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:30
 msgid "Edit Source"
-msgstr ""
+msgstr "تحرير المصدر"
 
 #: scripts/apps/content-filters/views/filter-search-result.html:62
 #: scripts/apps/publish/views/subscribers.html:16
@@ -3251,7 +3252,7 @@ msgstr ""
 #: scripts/apps/analytics/views/activity-report-view.html:5
 #: scripts/core/views/sdSearchList.html:36
 msgid "Items"
-msgstr ""
+msgstr "عناصر"
 
 #: scripts/apps/monitoring/views/aggregate-settings.html:108
 msgid "Items Count"
@@ -3331,43 +3332,43 @@ msgstr ""
 
 #: scripts/apps/authoring/views/full-preview.html:17
 msgid "Last Modified"
-msgstr ""
+msgstr "آخر تعديل"
 
 #: scripts/apps/search/views/search-filters.html:138
 #: scripts/core/lang/missing-translations-strings.js:16
 msgid "Last Month"
-msgstr ""
+msgstr "الشهر الماضي"
 
 #: scripts/apps/users/views/edit-form.html:43
 msgid "last name"
-msgstr ""
+msgstr "اسم العائلة"
 
 #: scripts/apps/profiling/views/profiling.html:24
 #: scripts/apps/publish/views/publish-queue.html:63
 msgid "Last refreshed at"
-msgstr ""
+msgstr "آخر تاريخ استرجاع البيانات في"
 
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:30
 msgid "Last Time Updated"
-msgstr ""
+msgstr "آخر تاريخ للتحديث "
 
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:75
 msgid "last update and last item arrived."
-msgstr ""
+msgstr "آخر تحديث ووصول آخر عنصر."
 
 #: scripts/apps/archive/views/metadata-view.html:92
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:15
 msgid "Last updated"
-msgstr ""
+msgstr "آخر تحديث"
 
 #: scripts/apps/archive/related-item-widget/relatedItem-configuration.html:14
 msgid "Last Updated"
-msgstr ""
+msgstr "آخر تحديث"
 
 #: scripts/apps/search/views/search-filters.html:135
 #: scripts/core/lang/missing-translations-strings.js:21
 msgid "Last Week"
-msgstr ""
+msgstr "الاسبوع الماضى"
 
 #: scripts/apps/archive/views/item-preview.html:10
 #: scripts/apps/archive/views/metadata-view.html:190
@@ -3445,29 +3446,29 @@ msgstr ""
 
 #: scripts/apps/desks/views/desk-config-modal.html:215
 msgid "Local Read Only"
-msgstr ""
+msgstr "محلي للقراءة فقط "
 
 #: scripts/apps/desks/views/desk-config-modal.html:184
 msgid "Local Read Only:"
-msgstr ""
+msgstr "محلي للقراءة فقط :"
 
 #: scripts/apps/desks/views/desk-config-modal.html:134
 msgid "Local Readonly"
-msgstr ""
+msgstr "محلي للقراءة فقط "
 
 #: scripts/core/lang/missing-translations-strings.js:26
 #: scripts/core/lang/missing-translations-strings.js:9
 msgid "Located"
-msgstr ""
+msgstr "تقع"
 
 #: scripts/apps/archive/views/item-lock.html:4
 #: scripts/apps/authoring/views/authoring-topbar.html:12
 msgid "Locked by"
-msgstr ""
+msgstr "تم قفله بواسطة"
 
 #: scripts/apps/archive/views/item-lock.html:12
 msgid "Locked by you in another browser"
-msgstr ""
+msgstr "مقفل من قبلك في متصفح آخر"
 
 #: scripts/core/auth/login-modal.html:19
 msgid "Log In"
@@ -4196,27 +4197,27 @@ msgstr ""
 
 #: scripts/apps/authoring/views/authoring-topbar.html:50
 msgid "P"
-msgstr ""
+msgstr "P"
 
 #: scripts/apps/authoring/views/authoring-topbar.html:56
 msgid "P & C"
-msgstr ""
+msgstr "P & C"
 
 #: scripts/apps/workspace/content/views/sd-content-create.html:29
 msgid "Package current item"
-msgstr ""
+msgstr "حزمة البند الحالي"
 
 #: scripts/apps/publish/views/http-push-config.html:3
 msgid "Package individual items"
-msgstr ""
+msgstr "حزمة العناصر المفردة"
 
 #: scripts/apps/archive/views/item-preview.html:5
 msgid "Package preview"
-msgstr ""
+msgstr "معاينة الحزمة"
 
 #: scripts/apps/authoring/packages/packages.js:36
 msgid "Packages"
-msgstr ""
+msgstr "الباقات"
 
 #: scripts/apps/monitoring/views/item-actions-menu.html:20
 msgid "Packaging"
@@ -6074,12 +6075,12 @@ msgstr ""
 
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:237
 msgid "There are items locked or not published. Do you want to continue?"
-msgstr ""
+msgstr "هناك عناصر مقفلة أو غير منشورة. هل تريد الاستمرار؟"
 
 #: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:71
 msgid ""
 "There are some unsaved changes, do you want to save and publish it now?"
-msgstr ""
+msgstr "هناك بعض التغييرات التي لم يتم حفظها، هل تريد حفظها ونشرها الآن؟"
 
 #: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:85
 msgid "There are some unsaved changes, do you want to save and send it now?"
@@ -6158,7 +6159,7 @@ msgstr ""
 
 #: scripts/apps/users/directives/UserEditDirective.js:128
 msgid "There was an error when saving the user account."
-msgstr ""
+msgstr "حدث خطأ أثناء حفظ حساب المستخدم."
 
 #: scripts/apps/content-filters/controllers/ManageContentFiltersController.js:75
 msgid "There was an error. Content filter cannot be deleted."
@@ -6747,7 +6748,7 @@ msgstr ""
 
 #: scripts/apps/workspace/content/views/schema-editor.html:90
 msgid "Width"
-msgstr ""
+msgstr "العرض"
 
 #: scripts/apps/archive/views/preview.html:50
 #: scripts/apps/authoring/suggest/SuggestView.html:16
@@ -6755,76 +6756,76 @@ msgstr ""
 #: scripts/apps/authoring/views/authoring-header.html:17
 msgid "WORD"
 msgid_plural "WORDS"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
-msgstr[4] ""
-msgstr[5] ""
+msgstr[0] "وورد"
+msgstr[1] "وورد"
+msgstr[2] "وورد"
+msgstr[3] "وورد"
+msgstr[4] "وورد"
+msgstr[5] "الكلمات "
 
 #: scripts/apps/archive/views/metadata-view.html:17
 msgid "Word Count"
-msgstr ""
+msgstr "عدد الكلمات"
 
 #: scripts/apps/authoring/authoring/directives/WordCount.js:11
 msgid "words"
-msgstr ""
+msgstr "الكلمات"
 
 #: scripts/apps/desks/views/desk-config-modal.html:115
 msgid "Work stages"
-msgstr ""
+msgstr "مراحل العمل"
 
 #: scripts/apps/desks/views/desk-config-modal.html:175
 #: scripts/apps/desks/views/desk-config-modal.html:219
 msgid "Working Stage"
-msgstr ""
+msgstr "مرحلة العمل"
 
 #: scripts/apps/archive/index.js:71 scripts/apps/dashboard/index.js:41
 #: scripts/apps/dashboard/views/workspace.html:22
 #: scripts/apps/dashboard/workspace-tasks/tasks.js:379
 #: scripts/apps/ingest/index.js:53 scripts/apps/stream/index.js:15
 msgid "Workspace"
-msgstr ""
+msgstr "مساحة العمل"
 
 #: scripts/apps/workspace/views/edit-workspace-modal.html:10
 msgid "Workspace name"
-msgstr ""
+msgstr "اسم مساحة العمل"
 
 #: scripts/apps/dashboard/world-clock/world-clock.js:203
 #: scripts/core/lang/missing-translations-strings.js:39
 msgid "World Clock"
-msgstr ""
+msgstr "الساعة العالمية"
 
 #: scripts/apps/dashboard/world-clock/world-clock.js:33
 msgid "World clock added:"
-msgstr ""
+msgstr "تم إضافة الساعة العالمية "
 
 #: scripts/apps/dashboard/world-clock/world-clock.js:35
 msgid "World clock removed:"
-msgstr ""
+msgstr "إزالة الساعة العالمية"
 
 #: scripts/apps/dashboard/world-clock/world-clock.js:214
 #: scripts/core/lang/missing-translations-strings.js:40
 msgid "World clock widget"
-msgstr ""
+msgstr "مبوبة الساعة العالمية "
 
 #: scripts/apps/monitoring/views/item-actions-menu.html:32
 msgid "You don't have the privileges to perform any action"
-msgstr ""
+msgstr "ليس لديك الصلاحيات لتنفيذ الإجراء"
 
 #: scripts/apps/authoring/authoring/controllers/ChangeImageController.js:134
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:211
 msgid "You have unsaved changes, do you want to continue?"
-msgstr ""
+msgstr "يوجد تغييرات لم يتم حفظها، هل تريد المتابعة؟"
 
 #: scripts/apps/dashboard/world-clock/configuration.html:20
 msgid "Your clock"
-msgstr ""
+msgstr "ساعتك"
 
 #: scripts/apps/users/import/views/import-user.html:11
 msgid "Your Credentials"
-msgstr ""
+msgstr "بيانات الاعتماد الخاصة بك"
 
 #: scripts/core/auth/login-modal.html:3
 msgid "Your session has expired."
-msgstr ""
+msgstr "انتهت صلاحية جلسة العمل الخاصة بك."

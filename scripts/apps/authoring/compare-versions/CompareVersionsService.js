@@ -147,19 +147,19 @@ export default class CompareVersionsService {
 
     init(item) {
         this.desks.initialize()
-        .then(() => this.archiveService.getVersions(item, this.desks, 'versions'))
-        .then((versions) => {
-            this.versions = versions;
-            _.each(this.versions, (itemVersion) => {
-                itemVersion.author = this.desks.userLookup[itemVersion.version_creator];
-            });
+            .then(() => this.archiveService.getVersions(item, this.desks, 'versions'))
+            .then((versions) => {
+                this.versions = versions;
+                _.each(this.versions, (itemVersion) => {
+                    itemVersion.author = this.desks.userLookup[itemVersion.version_creator];
+                });
 
-            this.create([{
-                id: item._id,
-                version: item._current_version,
-                author: this.desks.userLookup[item.version_creator]
-            }]);
-        });
+                this.create([{
+                    id: item._id,
+                    version: item._current_version,
+                    author: this.desks.userLookup[item.version_creator]
+                }]);
+            });
     }
 }
 

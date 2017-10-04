@@ -1,13 +1,13 @@
 /* eslint-disable newline-per-chained-call */
 
 
-var openUrl = require('./utils').open;
+var nav = require('./utils').nav;
 
 module.exports = new PublishQueue();
 
 function PublishQueue() {
     this.openPublishQueue = function() {
-        openUrl('/#/publish_queue');
+        nav('/publish_queue');
     };
 
     this.getRow = function(rowNo) {
@@ -40,7 +40,7 @@ function PublishQueue() {
 
     this.openCompositeItem = function(group) {
         var _list = element(by.css('[data-title="' + group.toLowerCase() + '"]'))
-        .all(by.repeater('child in item.childData'));
+            .all(by.repeater('child in item.childData'));
 
         _list.all(by.css('[ng-click="open(data)"]')).get(0).click();
     };
@@ -55,8 +55,8 @@ function PublishQueue() {
 
     this.getPreviewTitle = function() {
         return element(by.css('.content-container'))
-        .element(by.css('.preview-headline'))
-        .getText();
+            .element(by.css('.preview-headline'))
+            .getText();
     };
 
     this.searchAction = function(search) {
@@ -75,7 +75,7 @@ function PublishQueue() {
     var list = element(by.className('list-pane'));
 
     this.getItemCount = function() {
-        browser.sleep(500);     // wait for a while to get list populated.
+        browser.sleep(500); // wait for a while to get list populated.
         return list.all(by.repeater('queue_item in publish_queue track by queue_item._id')).count();
     };
 }

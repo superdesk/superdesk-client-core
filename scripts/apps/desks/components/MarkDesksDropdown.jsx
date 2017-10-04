@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {MarkedDeskItem} from 'apps/desks/components';
 
 /**
@@ -28,8 +29,8 @@ export class MarkDesksDropdown extends React.Component {
 
 /** Set the types of props for the MarkDesksDropdown */
 MarkDesksDropdown.propTypes = {
-    className: React.PropTypes.string.isRequired,
-    desks: React.PropTypes.object.isRequired,
-    item: React.PropTypes.object.isRequired,
-    noDesksLabel: React.PropTypes.string.isRequired
+    className: PropTypes.string.isRequired,
+    desks: PropTypes.object.isRequired,
+    item: PropTypes.object.isRequired,
+    noDesksLabel: PropTypes.string.isRequired
 };

@@ -115,31 +115,31 @@ describe('monitoring', () => {
     });
 
     it('configure a stage and a saved search then unselect stage and show search on monitoring view',
-    () => {
-        setupDeskMonitoringSettings('POLITIC DESK');
-        monitoring.turnOffDeskWorkingStage(0, false);
+        () => {
+            setupDeskMonitoringSettings('POLITIC DESK');
+            monitoring.turnOffDeskWorkingStage(0, false);
 
-        monitoring.toggleStage(0, 1);
-        monitoring.toggleStage(0, 2);
-        monitoring.toggleStage(0, 4);
-        monitoring.toggleDeskOutput(0);
-        monitoring.nextStages();
-        monitoring.toggleGlobalSearch(0);
-        monitoring.nextSearches();
-        monitoring.nextReorder();
-        monitoring.saveSettings();
+            monitoring.toggleStage(0, 1);
+            monitoring.toggleStage(0, 2);
+            monitoring.toggleStage(0, 4);
+            monitoring.toggleDeskOutput(0);
+            monitoring.nextStages();
+            monitoring.toggleGlobalSearch(0);
+            monitoring.nextSearches();
+            monitoring.nextReorder();
+            monitoring.saveSettings();
 
-        desks.showMonitoringSettings('POLITIC DESK');
-        monitoring.toggleStage(0, 3);
-        monitoring.nextStages();
-        monitoring.nextSearches();
-        monitoring.nextReorder();
-        monitoring.saveSettings();
+            desks.showMonitoringSettings('POLITIC DESK');
+            monitoring.toggleStage(0, 3);
+            monitoring.nextStages();
+            monitoring.nextSearches();
+            monitoring.nextReorder();
+            monitoring.saveSettings();
 
-        monitoring.openMonitoring();
+            monitoring.openMonitoring();
 
-        expect(monitoring.getTextItem(0, 0)).toBe('ingest1');
-    });
+            expect(monitoring.getTextItem(0, 0)).toBe('ingest1');
+        });
 
     it('configure stage and search and then reorder', () => {
         setupDeskMonitoringSettings('POLITIC DESK');
@@ -179,9 +179,9 @@ describe('monitoring', () => {
         monitoring.toggleStage(0, 3); // turn off stage two
         monitoring.toggleStage(0, 4); // turn off stage three
         monitoring.toggleDeskOutput(0); // turn off deskoutput stage
-        monitoring.togglePersonal();    // turn on personal
+        monitoring.togglePersonal(); // turn on personal
         monitoring.nextStages();
-        monitoring.toggleGlobalSearch(0);   // turn on global search
+        monitoring.toggleGlobalSearch(0); // turn on global search
         monitoring.nextSearches();
         monitoring.nextReorder();
 
@@ -193,9 +193,9 @@ describe('monitoring', () => {
 
         monitoring.openMonitoring();
 
-        expect(monitoring.getTextItem(0, 1)).toBe('item9');     // expect stage one 2nd item
-        expect(monitoring.getTextItem(1, 0)).toBe('item1');     // expect personal 1st item
-        expect(monitoring.getTextItem(2, 0)).toBe('ingest1');   // expect global serach 1st item
+        expect(monitoring.getTextItem(0, 1)).toBe('item9'); // expect stage one 2nd item
+        expect(monitoring.getTextItem(1, 0)).toBe('item1'); // expect personal 1st item
+        expect(monitoring.getTextItem(2, 0)).toBe('ingest1'); // expect global serach 1st item
     });
 
     it('configure a saved search that contain ingest items', () => {
@@ -427,7 +427,7 @@ describe('monitoring', () => {
         monitoring.openMonitoring();
         expect(monitoring.getGroupItems(1).count()).toBe(0);
         expect(monitoring.getGroupItems(2).count()).toBe(4);
-        monitoring.actionOnItem('Duplicate', 2, 0, true);
+        monitoring.actionOnItemSubmenu('Duplicate', 'Duplicate in place', 2, 0, true);
         monitoring.filterAction('text');
         expect(monitoring.getGroupItems(0).count()).toBe(1);
         expect(monitoring.getTextItem(0, 0)).toBe('item5');
@@ -699,7 +699,7 @@ describe('monitoring', () => {
         expect(monitoring.getGroupItems(1).count()).toBe(0);
         expect(monitoring.getGroupItems(2).count()).toBe(4);
         expect(monitoring.getTextItem(2, 0)).toBe('item5'); // original item
-        monitoring.actionOnItem('Duplicate', 2, 0, true);
+        monitoring.actionOnItemSubmenu('Duplicate', 'Duplicate in place', 2, 0, true);
         monitoring.filterAction('text');
         expect(monitoring.getGroupItems(0).count()).toBe(1);
         expect(monitoring.getTextItem(0, 0)).toBe('item5'); // duplicated item
@@ -717,7 +717,7 @@ describe('monitoring', () => {
         expect(monitoring.getGroupItems(1).count()).toBe(0);
         expect(monitoring.getGroupItems(2).count()).toBe(4);
         expect(monitoring.getTextItem(2, 0)).toBe('item5'); // original item
-        monitoring.actionOnItem('Duplicate To', 2, 0, true);
+        monitoring.actionOnItemSubmenu('Duplicate', 'Duplicate To', 2, 0, true);
         authoring.duplicateTo('Sports Desk', 'one');
         workspace.selectDesk('Sports Desk');
         expect(monitoring.getGroupItems(2).count()).toBe(2);
@@ -726,7 +726,7 @@ describe('monitoring', () => {
         authoring.setHeaderSluglineText(' testing');
         authoring.save();
         authoring.close();
-        monitoring.actionOnItem('Duplicate To', 2, 0, true);
+        monitoring.actionOnItemSubmenu('Duplicate', 'Duplicate To', 2, 0, true);
         authoring.duplicateTo('Politic Desk', 'two', true);
         workspace.selectDesk('Politic Desk');
         expect(monitoring.getTextItem(3, 0)).toBe('item5');
@@ -734,19 +734,22 @@ describe('monitoring', () => {
     });
 
     it('can remember last duplicate destination desk', () => {
-        monitoring.openMonitoring(true);
-        monitoring.actionOnItem('Duplicate To', 2, 0, true);
+        monitoring.openMonitoring();
+        monitoring.actionOnItemSubmenu('Duplicate', 'Duplicate To', 2, 0, true);
         authoring.duplicateTo('Sports Desk', 'one');
-        monitoring.actionOnItem('Duplicate To', 2, 0, true);
+        monitoring.actionOnItemSubmenu('Duplicate', 'Duplicate To', 2, 0, true);
 
         var dropdownSelected = monitoring.getSendToDropdown();
 
+        browser.sleep(500);
         expect(dropdownSelected.getText()).toEqual('Sports Desk');
         authoring.duplicateTo('Politic Desk', 'two', true);
-        monitoring.actionOnItem('Duplicate To', 2, 0, true);
+        monitoring.actionOnItemSubmenu('Duplicate', 'Duplicate To', 2, 0, true);
 
         dropdownSelected = monitoring.getSendToDropdown();
         authoring.close();
+
+        browser.sleep(500);
         expect(dropdownSelected.getText()).toEqual('Politic Desk');
     });
 
@@ -761,7 +764,7 @@ describe('monitoring', () => {
         // open published text item
         monitoring.filterAction('text');
         monitoring.actionOnItem('Open', 4, 0);
-        expect(authoring.save_button.isPresent()).toBe(false);  // Save button hidden for publish item
+        expect(authoring.save_button.isPresent()).toBe(false); // Save button hidden for publish item
 
         var textField = element(by.className('text-editor'));
         // expect contenteditable=true attribute is missing/null for text-editor field,

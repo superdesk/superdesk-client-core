@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import ng from 'core/services/ng';
 import {SpellcheckerContextMenu} from './SpellcheckerContextMenu';
 
@@ -84,7 +85,7 @@ class SpellcheckerError extends Component {
 }
 
 SpellcheckerError.propTypes = {
-    children: React.PropTypes.array
+    children: PropTypes.array
 };
 
 export const SpellcheckerDecorator = {

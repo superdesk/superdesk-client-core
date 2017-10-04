@@ -1,13 +1,13 @@
 /* eslint-disable newline-per-chained-call */
 
 
-var openUrl = require('./helpers/utils').open,
+var nav = require('./helpers/utils').nav,
     masterDesks = require('./helpers/master_desks'),
     authoring = require('./helpers/authoring');
 
 describe('master_desk', () => {
     beforeEach((done) => {
-        openUrl('/#/desks/').then(done);
+        nav('/desks/').then(done);
     });
 
     function itemHeadline(x, y, z) {
@@ -55,13 +55,13 @@ describe('master_desk', () => {
     xit('show tasks view', () => {
         masterDesks.switchToTab('tasks');
         expect(masterDesks.getTask(1, 0, 0).element(by.className('content-item__text')).getText())
-                .toContain('item3 slugline');
+            .toContain('item3 slugline');
         expect(masterDesks.getTask(1, 2, 0).element(by.className('content-item__text')).getText())
-                .toContain('item4 slugline');
+            .toContain('item4 slugline');
         expect(masterDesks.getTask(0, 0, 0).element(by.className('content-item__text')).getText())
-                .toContain('item5 slugline');
+            .toContain('item5 slugline');
         expect(masterDesks.getTask(0, 1, 2).element(by.className('content-item__text')).getText())
-                .toContain('item6 slugline');
+            .toContain('item6 slugline');
     });
 
     xit('tasks view - show desk', () => {

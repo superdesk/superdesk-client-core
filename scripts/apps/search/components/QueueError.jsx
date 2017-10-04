@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 /**
  * @ngdoc React
@@ -20,5 +21,5 @@ export class QueueError extends React.Component {
 }
 
 QueueError.propTypes = {
-    item: React.PropTypes.object.isRequired
+    item: PropTypes.object.isRequired
 };

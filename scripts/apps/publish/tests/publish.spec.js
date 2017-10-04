@@ -107,9 +107,9 @@ describe('publish queue', () => {
             unique_name: '#57537'
         }
     ],
-        _meta: {
-            total: 3
-        }};
+    _meta: {
+        total: 3
+    }};
 
     var $scope;
 
@@ -276,9 +276,9 @@ describe('publish queue', () => {
 
 describe('subscriber filter', () => {
     let subscribers = [
-       {name: 'test all', subscriber_type: 'all'},
-       {name: 'test wire', subscriber_type: 'wire'},
-       {name: 'digital', subscriber_type: 'digital'}
+        {name: 'test all', subscriber_type: 'all'},
+        {name: 'test wire', subscriber_type: 'wire'},
+        {name: 'digital', subscriber_type: 'digital'}
     ];
 
     let subscribersByFilter = null;

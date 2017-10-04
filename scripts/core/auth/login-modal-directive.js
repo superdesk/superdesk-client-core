@@ -35,17 +35,17 @@ angular.module('superdesk.core.auth.login', []).directive('sdLoginModal', [
                     scope.isLoading = true;
                     scope.loginError = null;
                     auth.login(scope.username || '', scope.password || '')
-                    .then(() => {
-                        scope.isLoading = false;
-                        scope.password = null;
-                        reloadRoute();
-                    }, (rejection) => {
-                        scope.isLoading = false;
-                        scope.loginError = rejection.status;
-                        if (scope.loginError === 401) {
+                        .then(() => {
+                            scope.isLoading = false;
                             scope.password = null;
-                        }
-                    });
+                            reloadRoute();
+                        }, (rejection) => {
+                            scope.isLoading = false;
+                            scope.loginError = rejection.status;
+                            if (scope.loginError === 401) {
+                                scope.password = null;
+                            }
+                        });
                 };
 
                 scope.openLoginPopup = function(service) {

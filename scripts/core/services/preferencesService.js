@@ -23,6 +23,7 @@ export default angular.module('superdesk.core.preferences', ['superdesk.core.not
                     'feature:preview': 1,
                     'archive:view': 1,
                     'email:notification': 1,
+                    'desktop:notification': 1,
                     'workqueue:items': 1,
                     'dashboard:ingest': 1,
                     'agg:view': 1,
@@ -62,6 +63,38 @@ export default angular.module('superdesk.core.preferences', ['superdesk.core.not
             this.getActions = function getActions() {
                 return this.get().then(() => preferences[ACTIONS] || []);
             };
+
+            /**
+             * @ngdoc object
+             * @name preferencesService#desktopNotification
+             * @public
+             *
+             * @returns {object}
+             *
+             * @description All the methods related to desktop notifications
+             */
+            const desktopNotification = {
+                // ask for permission
+                requestPermission: () => {
+                    if ('Notification' in window) {
+                        Notification.requestPermission();
+                    }
+                },
+                // ask for permission and send a desktop notification
+                send: (msg) => {
+                    if (_.get(preferences, 'user_preferences.desktop:notification.enabled')) {
+                        if ('Notification' in window && Notification.permission !== 'denied') {
+                            Notification.requestPermission((permission) => {
+                                if (permission === 'granted') {
+                                    new Notification(msg);
+                                }
+                            });
+                        }
+                    }
+                },
+            };
+
+            this.desktopNotification = desktopNotification;
 
             /**
              * @ngdoc method
@@ -236,6 +269,9 @@ export default angular.module('superdesk.core.preferences', ['superdesk.core.not
              * Make sure all segments are presented in preferences.
              */
             function initPreferences(preferences) {
+                if (_.get(preferences, 'user_preferences.desktop:notification.enabled')) {
+                    desktopNotification.requestPermission();
+                }
                 angular.forEach([
                     USER_PREFERENCES,
                     SESSION_PREFERENCES,

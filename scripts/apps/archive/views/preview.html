@@ -2,9 +2,9 @@
     <div class="content-container">
 
       <header class="preview-header" ng-class="{active: !toggleHeader}">
-        <div class="preview-header__timestamp">
+        <div class="preview-header__timestamp" title="{{userLookup[selected.preview.original_creator].display_name || selected.preview.original_creator}}">
             <label translate>Created</label><time sd-datetime data-date="selected.preview.firstcreated"></time>
-            <label ng-if="selected.preview.original_creator" translate>by</label><b>{{userLookup[selected.preview.original_creator].display_name}}</b>
+            <label ng-if="selected.preview.original_creator" translate>by</label><b>{{userLookup[selected.preview.original_creator].display_name || selected.preview.original_creator}}</b>
             <div ng-if="selected.preview.versioncreated" class="preview-header__border-block">
                 <label translate>Modified</label>
                 <time sd-datetime data-date="selected.preview.versioncreated"></time>

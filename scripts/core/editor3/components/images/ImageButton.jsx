@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import * as actions from '../../actions';
 
@@ -15,7 +16,7 @@ const ImageButtonComponent = ({insertImages}) =>
     </div>;
 
 ImageButtonComponent.propTypes = {
-    insertImages: React.PropTypes.func.isRequired
+    insertImages: PropTypes.func.isRequired
 };
 
 const mapDispatchToProps = (dispatch) => ({

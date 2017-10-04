@@ -1,7 +1,7 @@
 /* eslint-disable newline-per-chained-call */
 
 
-var openUrl = require('./utils').open,
+var nav = require('./utils').nav,
     waitFor = require('./utils').wait,
     scrollToView = require('./utils').scrollToView;
 
@@ -21,7 +21,7 @@ function GlobalSearch() {
      * Open dashboard for current selected desk/custom workspace.
      */
     this.openGlobalSearch = function() {
-        openUrl('/#/search');
+        nav('/search');
     };
 
     /**
@@ -133,16 +133,16 @@ function GlobalSearch() {
 
         if (useFullLinkText) {
             menu.element(by.linkText(action)).waitReady()
-            .then((elem) => {
-                elem.click();
-            });
+                .then((elem) => {
+                    elem.click();
+                });
             return;
         }
 
         menu.element(by.partialLinkText(action)).waitReady()
-        .then((elem) => {
-            elem.click();
-        });
+            .then((elem) => {
+                elem.click();
+            });
     };
 
     /**
@@ -152,10 +152,12 @@ function GlobalSearch() {
      * @param {string} submenu
      * @param {number} index
      */
-    this.actionOnSubmenuItem = function(action, submenu, index) {
+    this.actionOnSubmenuItem = function(action, submenu, index, linkTypeBtn) {
         var menu = this.openItemMenu(index);
         var header = menu.element(by.partialLinkText(action));
-        var btn = menu.element(by.partialButtonText(submenu));
+        var btn = linkTypeBtn ?
+            menu.element(by.partialLinkText(submenu)) :
+            menu.element(by.partialButtonText(submenu));
 
         browser.actions()
             .mouseMove(header, {x: -50, y: -50})
@@ -173,7 +175,7 @@ function GlobalSearch() {
      */
     this.openToggleBox = function(title) {
         element(by.css('[data-title="' + title + '"]'))
-        .all(by.css('[ng-click="toggleModule()"]')).first().click();
+            .all(by.css('[ng-click="toggleModule()"]')).first().click();
     };
 
     /**
@@ -199,7 +201,7 @@ function GlobalSearch() {
         this.subject.element(by.css('.dropdown__toggle')).click();
     };
 
-     /**
+    /**
      * Opens Marked Desks dropdown
      */
     this.toggleMarkedDesks = function() {
@@ -288,7 +290,7 @@ function GlobalSearch() {
     this.showCustomSearch = function() {
         browser.sleep(500);
         element(by.className('filter-trigger'))
-        .element(by.className('icon-filter-large')).click();
+            .element(by.className('icon-filter-large')).click();
         browser.sleep(500);
     };
 
@@ -347,7 +349,7 @@ function GlobalSearch() {
         element(by.id(selectId)).element(by.css('option[label="' + deskName + '"]')).click();
     };
 
-     /**
+    /**
      * Open the search Parameters marked desk field
      * @param {int} selectId - Index of the desk
      */

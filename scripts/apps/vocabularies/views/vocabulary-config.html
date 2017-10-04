@@ -1,16 +1,34 @@
-<div ng-if="loading" class="loading-overlay" ng-class="{active: loading}" style="opacity: 0.5;"></div>
-<div sd-shadow>
-  <ul class="pills-list">
+<div class="sd-page__flex-helper">
+    <div class="sd-page__header">
+        <span class="sd-page__element-grow"></span>
+        <button class="btn btn--primary"
+          ng-click="createCustomField()" ng-if="tab === 'text-fields'">
+          <i class="icon-plus-sign icon--white"></i>
+          <span translate>Add New</span>
+        </button>
+ 
+        <button class="btn btn--primary"
+          ng-click="createVocabulary()" ng-if="tab === 'vocabularies'">
+          <i class="icon-plus-sign icon--white"></i>
+          <span translate>Add New</span>
+        </button>
+    </div>
 
-    <li ng-repeat="vocabulary in vocabularies">
-      <h6>{{ vocabulary.display_name | translate }}</h6>&nbsp;
-      <em><strong>({{ vocabulary.items.length }})</strong></em>
-      <div class="actions">
-        <button
-          ng-click="openVocabulary(vocabulary)"
-          title="{{:: 'Edit vocabulary' | translate }}"
-        ><i class="icon-pencil"></i></button>
-      </div>
-    </li>
-  </ul>
+    <div class="sd-page__content">
+      <div ng-if="loading" class="loading-overlay" ng-class="{active: loading}" style="opacity: 0.5;"></div>
+        <ul class="pills-list">
+          <li ng-repeat="vocabulary in vocabularies" ng-if="filterVocabularies(tab, vocabulary.field_type)">
+            <h6>{{ vocabulary.display_name | translate }}</h6>&nbsp;
+            <em><strong ng-show="!vocabulary.field_type">({{ vocabulary.items.length }})</strong></em>
+            <div class="actions">
+              <button
+                ng-click="openVocabulary(vocabulary)"
+                title="{{:: 'Edit vocabulary' | translate }}"
+              ><i class="icon-pencil"></i></button>
+            </div>
+          </li>
+        </ul>
+    </div>
 </div>
+
+<div sd-vocabulary-config-modal ng-if="vocabulary"></div>

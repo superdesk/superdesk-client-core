@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {TypeIcon} from 'apps/search/components';
 import classNames from 'classnames';
 
@@ -11,7 +12,7 @@ export function GridTypeIcon(props) {
 }
 
 GridTypeIcon.propTypes = {
-    svc: React.PropTypes.object.isRequired,
-    swimlane: React.PropTypes.any,
-    item: React.PropTypes.any
+    svc: PropTypes.object.isRequired,
+    swimlane: PropTypes.any,
+    item: PropTypes.any
 };

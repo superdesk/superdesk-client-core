@@ -112,9 +112,9 @@ function MacrosController($scope, macros, desks, autosave, $rootScope, storage) 
             displayMacros(macros.macros);
         }
     })
-    .finally(() => {
-        $scope.loading = false;
-    });
+        .finally(() => {
+            $scope.loading = false;
+        });
 
     /**
      * @ngdoc method
@@ -161,9 +161,9 @@ function MacrosController($scope, macros, desks, autosave, $rootScope, storage) 
             }
             $scope.closeWidget();
         })
-       .finally(() => {
-           $scope.loading = false;
-       });
+            .finally(() => {
+                $scope.loading = false;
+            });
     };
 
     /**
@@ -185,10 +185,10 @@ function MacrosController($scope, macros, desks, autosave, $rootScope, storage) 
         let ordered = {};
 
         Object.keys($scope.groupedMacros)
-        .sort()
-        .forEach((key) => {
-            ordered[key] = _.sortBy($scope.groupedMacros[key], 'label');
-        });
+            .sort()
+            .forEach((key) => {
+                ordered[key] = _.sortBy($scope.groupedMacros[key], 'label');
+            });
 
         // sorted grouped macros
         $scope.orderedGroupedMacros = ordered;

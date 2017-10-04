@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 import {HighlightsList} from 'apps/search/components';
@@ -124,8 +125,8 @@ export class HighlightsInfo extends React.Component {
 }
 
 HighlightsInfo.propTypes = {
-    svc: React.PropTypes.object.isRequired,
-    scope: React.PropTypes.any.isRequired,
-    item: React.PropTypes.any,
-    highlightsById: React.PropTypes.any,
+    svc: PropTypes.object.isRequired,
+    scope: PropTypes.any.isRequired,
+    item: PropTypes.any,
+    highlightsById: PropTypes.any,
 };
