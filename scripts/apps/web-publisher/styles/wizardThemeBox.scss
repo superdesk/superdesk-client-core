@@ -1,0 +1,37 @@
+.wizardThemeBox {
+    background-color: $white;
+    position: relative;
+    &--active {
+        background-color: $green;
+        color: $white;
+    }
+
+    &__image {
+        display: block;
+        max-width: 100%;
+    }
+    &__name {
+        display: block;
+        text-align: center;
+        line-height: 2.5em;
+    }
+    &__overlay {
+        opacity: 0;
+        background-color: rgba(255, 255, 255, 0.8);
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        transition: opacity .2s linear;
+        display: flex;
+        align-items: flex-end;
+        flex-direction: column;
+        justify-content: center;
+        padding: 2rem;
+    }
+
+    &:hover &__overlay {
+        opacity: 1;
+    }
+}

@@ -24,6 +24,9 @@
 
 .bottomMargin {
     margin-bottom: 20px;
+    &--10 {
+        margin-bottom: 10px;
+    }
 }
 
 .topMargin {
@@ -237,4 +240,17 @@
     display: inline-block;
     width: 16px;
     height: 16px;
+}
+
+.absPosition {
+    position: absolute;
+
+    &--topRight {
+        top: 2rem;
+        right: 2rem;
+    }
+}
+
+.maxWidth100 {
+    max-width: 100%;
 }

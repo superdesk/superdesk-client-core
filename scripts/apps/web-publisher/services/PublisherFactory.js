@@ -357,6 +357,27 @@ export function PublisherFactory(pubapi) {
             return pubapi.save('organization/rules', rule, id);
         }
 
+        /**
+         * @ngdoc method
+         * @name publisher#getOrganizationThemes
+         * @returns {Promise}
+         * @description Gets available themes
+         */
+        getOrganizationThemes() {
+            return pubapi.get('organization/themes');
+        }
+
+        /**
+         * @ngdoc method
+         * @name publisher#installTenantTheme
+         * @param {Object} themeInstall - object with params to save
+         * @returns {Promise}
+         * @description Add or edit organization rule
+         */
+        installTenantTheme(themeInstall) {
+            return pubapi.save('themes', themeInstall);
+        }
+
     }
 
     return new Publisher();
