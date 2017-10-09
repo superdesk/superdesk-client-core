@@ -10,8 +10,8 @@ angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
  * @param {object} loading
  * @description Creates a list of stories to appear in related items widget.
  */
-    .directive('sdRelatedItemListWidget', ['notify', 'gettext', 'familyService',
-        function(notify, gettext, familyService) {
+    .directive('sdRelatedItemListWidget', ['notify', 'gettext', 'familyService', 'desks',
+        function(notify, gettext, familyService, desks) {
             return {
                 scope: {
                     options: '=',
@@ -63,6 +63,24 @@ angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
                         return scope.actions.update && scope.actions.update.condition(item) ||
                     scope.actions.addTake && scope.actions.addTake.condition(item);
                     };
+
+                    /**
+                 * @ngdoc method
+                 * @name sdRelatedItemListWidget#deskName
+                 * @returns {String}
+                 * @param {object} item
+                 * @description Extracts the id of the desk the item is on and returns it's name
+                 */
+                    scope.deskName = (item) => desks.deskLookup[item.task.desk].name;
+
+                    /**
+                 * @ngdoc method
+                 * @name sdRelatedItemListWidget#deskStage
+                 * @returns {String}
+                 * @param {object} item
+                 * @description Extracts the id of the stage the item is on and returns it's name
+                 */
+                    scope.deskStage = (item) => desks.stageLookup[item.task.stage].name;
 
                     /**
                  * @ngdoc method
