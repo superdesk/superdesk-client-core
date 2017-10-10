@@ -20,7 +20,7 @@ export function FilterConditionsController($scope, contentFilters, notify, modal
     $scope.valueLookup = {};
     $scope.valueFieldLookup = {};
     $scope.loadedFilters = false;
-    $scope.labels = {};
+    var fieldsLabels = {};
 
     $scope.edit = function(fc) {
         $scope.origFilterCondition = fc || {};
@@ -65,8 +65,8 @@ export function FilterConditionsController($scope, contentFilters, notify, modal
             return LABEL_MAP[id];
         }
 
-        if ($scope.labels.hasOwnProperty(id)) {
-            return gettext($scope.labels[id]);
+        if (fieldsLabels.hasOwnProperty(id)) {
+            return gettext(fieldsLabels[id]);
         }
 
         return gettext(id.charAt(0).toUpperCase() + id.substr(1).toLowerCase());
@@ -161,7 +161,7 @@ export function FilterConditionsController($scope, contentFilters, notify, modal
                 $scope.valueLookup[param.field] = param.values;
                 $scope.valueFieldLookup[param.field] = param.value_field;
                 if (param.hasOwnProperty('label')) {
-                    $scope.labels[param.field] = param.label;
+                    fieldsLabels[param.field] = param.label;
                 }
             });
             $scope.loadedFilters = true;
