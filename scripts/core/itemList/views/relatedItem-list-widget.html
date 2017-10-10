@@ -39,6 +39,11 @@
                             <span ng-if="item.flags.marked_for_legal" class="state-label legal" translate>Legal</span>
                             <span ng-if="item.flags.marked_for_sms" class="state-label sms" translate>Sms</span>
                             <span ng-if="item.rewritten_by" class="state-label updated" translate>Updated</span>
+                            <span class="headline">
+                                <span ng-if="item.task.desk">{{ :: 'desk:' | translate }} {{deskName(item)}}</span>
+                                <span ng-if="item.task.stage" class="pull-right">{{ :: 'stage:' | translate }} {{deskStage(item)}}</span>
+                                <span class="headline" ng-show="item.genre  && item.genre.length > 0">{{ :: 'genre:' | translate }} {{ item.genre | mergeWords:'name'}}</span>
+                            </span>
                         </div>
 
                         <div sd-item-actions-menu data-item="item" data-active="item" ng-if="!options.searchEnabled"></div>
