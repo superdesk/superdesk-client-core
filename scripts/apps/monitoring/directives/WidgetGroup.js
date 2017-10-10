@@ -176,6 +176,19 @@ export function WidgetGroup(search, api, superdesk, desks, cards, $timeout, $q,
                 }
             };
 
+            scope.$on('item:spike', scheduleQuery);
+            scope.$on('item:unspike', scheduleQuery);
+            scope.$on('item:copy', scheduleQuery);
+            scope.$on('item:unlink', scheduleQuery);
+            scope.$on('item:duplicate', scheduleQuery);
+            scope.$on('item:translate', scheduleQuery);
+            scope.$on('item:highlights', scheduleQuery);
+            scope.$on('item:marked_desks', scheduleQuery);
+
+            if (scope.stage.type === 'search' && search.doesSearchAgainstRepo(scope.stage.search, 'ingest')) {
+                scope.$on('ingest:update', scheduleQuery);
+            }
+
             scope.$watch('filter', (query) => {
                 container.scrollTop = 0;
                 queryItems(query);
