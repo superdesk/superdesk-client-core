@@ -676,7 +676,7 @@ export function SearchService($location, gettext, config, session, multi,
      * @param {String} repo name of the repo: ingest, archive, published, archived
      */
     this.doesSearchAgainstRepo = function(search, repo) {
-        return !search.filter.query.repo || search.filter.query.repo.toLowerCase().indexOf(repo.toLowerCase());
+        return !search.filter.query.repo || search.filter.query.repo.toLowerCase().indexOf(repo.toLowerCase()) !== -1;
     };
 
     /**
