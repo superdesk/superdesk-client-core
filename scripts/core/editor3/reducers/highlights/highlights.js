@@ -1,31 +1,31 @@
 import {EditorState} from 'draft-js';
-import {repositionComments, redrawComments} from '.';
+import {repositionHighlights, redrawHighlights} from '.';
 
 /**
  * @typedef StateWithComment
  * @property {ContentState} editorState
- * @property {Comment} activeComment
+ * @property {Comment} activeHighlight
  */
 
 /**
- * @name updateComments
- * @description updateComments updates comment information after every content change. It
- * recalculates comment offsets (start and end points) and reapplies the inline styling to
+ * @name updateHighlights
+ * @description Updates highlight information after every content change. It
+ * recalculates offsets (start and end points) and reapplies the inline styling to
  * match these.
  * @param {EditorState} oldState
  * @param {EditorState} newState
  * @returns {StateWithComment}
  */
-export function updateComments(oldState, newState) {
-    let updatedState = repositionComments(oldState, newState);
-    let {editorState, activeComment} = redrawComments(updatedState);
+export function updateHighlights(oldState, newState) {
+    let updatedState = repositionHighlights(oldState, newState);
+    let {editorState, activeHighlight} = redrawHighlights(updatedState);
     let contentChanged = oldState.getCurrentContent() !== newState.getCurrentContent();
 
     if (contentChanged) {
         editorState = preserveSelection(editorState, newState.getCurrentContent());
     }
 
-    return {editorState, activeComment};
+    return {editorState, activeHighlight};
 }
 
 // Preserve before & after selection when content was changed. This helps

@@ -1,17 +1,17 @@
 import {EditorState, Modifier, SelectionState} from 'draft-js';
-import {getComments} from '.';
+import {getHighlights, highlightTypes} from '.';
 
 /**
- * @name redrawComments
- * @description Resets the comment inline styles, returning a new editor state.
+ * @name redrawHighlights
+ * @description Resets the highlights inline styles, returning a new editor state.
  * @param {EditorState} es
  * @returns {EditorState}
  */
-export function redrawComments(newState) {
+export function redrawHighlights(newState) {
     let editorState = newState;
     let selection = editorState.getSelection();
     let cleanContent = removeInlineStyles(editorState.getCurrentContent());
-    let {contentState, activeComment} = applyInlineStyles(cleanContent, selection);
+    let {contentState, activeHighlight} = applyInlineStyles(cleanContent, selection);
     let selectionFunc = selection.getHasFocus() ? 'forceSelection' : 'acceptSelection';
 
     editorState = EditorState.set(editorState, {allowUndo: false});
@@ -19,7 +19,7 @@ export function redrawComments(newState) {
     editorState = EditorState[selectionFunc](editorState, selection);
     editorState = EditorState.set(editorState, {allowUndo: true});
 
-    return {editorState, activeComment};
+    return {editorState, activeHighlight};
 }
 
 /**
@@ -30,7 +30,7 @@ export function redrawComments(newState) {
  * @param {Array<string>} styles Styles to remove.
  * @returns {ContentState}
  */
-export function removeInlineStyles(content, styles = ['COMMENT', 'COMMENT_SELECTED']) {
+export function removeInlineStyles(content, styles = highlightTypes) {
     let contentState = content;
     let filterFn = (c) => styles.some((s) => c.hasStyle(s));
 
@@ -51,40 +51,43 @@ export function removeInlineStyles(content, styles = ['COMMENT', 'COMMENT_SELECT
 
 /**
  * @name applyInlineStyles
- * @description Applies inline styling where comments exist in the given content state.
- * Additionally, it also highlights the active comment, if a user selection is supplied.
- * @param {ContentState} contentState The content state from which to read the comment
+ * @description Applies inline styling where highlights exist in the given content state.
+ * Additionally, it also highlights the active 'highlight', if a user selection is supplied.
+ * @param {ContentState} contentState The content state from which to read the highlight
  * data and to which we apply the inline styling
  * @param {SelectionState} cursor The current selection. If this is set and it
- * overlaps with any comment, it will be highlighted as the active comment.
- * @returns {StateWithComment} Returns the new content state along with the active comment,
+ * overlaps with any other highlight, it will be highlighted as the active highlight.
+ * @returns {StateWithHighlight} Returns the new content state along with the active highlight,
  * if one was selected.
  */
 export function applyInlineStyles(content, cursor = null) {
-    const data = getComments(content);
+    const data = getHighlights(content);
 
     if (data.isEmpty()) {
         return {contentState: content};
     }
 
     let contentState = content;
-    let activeComment = null;
+    let activeHighlight = null;
 
-    data.mapKeys((rawSelection, comment) => {
+    data.mapKeys((rawSelection, highlight) => {
         const selection = new SelectionState(JSON.parse(rawSelection));
 
-        if (activeComment === null && selectionIn(content, cursor, selection)) {
-            activeComment = {selection: selection, data: comment};
+        if (activeHighlight === null && selectionIn(content, cursor, selection)) {
+            activeHighlight = {selection: selection, data: highlight};
         }
 
-        contentState = Modifier.applyInlineStyle(contentState, selection, 'COMMENT');
+        contentState = Modifier.applyInlineStyle(contentState, selection, highlight.type);
     });
 
-    if (activeComment) {
-        contentState = Modifier.applyInlineStyle(contentState, activeComment.selection, 'COMMENT_SELECTED');
+    if (activeHighlight) {
+        const selectedType = `${activeHighlight.data.type}_SELECTED`;
+        const selection = activeHighlight.selection;
+
+        contentState = Modifier.applyInlineStyle(contentState, selection, selectedType);
     }
 
-    return {contentState, activeComment};
+    return {contentState, activeHighlight};
 }
 
 /**

@@ -2,7 +2,7 @@ import {Editor3} from '../components/Editor3';
 import {RichUtils, EditorState} from 'draft-js';
 import {fromHTML} from 'core/editor3/html';
 import {addImage} from './toolbar';
-import {updateComments} from './comments';
+import {updateHighlights} from './highlights';
 
 /**
  * @description Contains the list of editor related reducers.
@@ -60,11 +60,11 @@ export const forceUpdate = (state) => {
  * @description Handle the editor state has been changed event
  */
 export const onChange = (state, newState) => {
-    let editorState = newState, activeComment = null;
+    let editorState = newState, activeHighlight = null;
     let contentChanged = state.editorState.getCurrentContent() !== newState.getCurrentContent();
 
-    if (state.allowsCommenting) {
-        ({editorState, activeComment} = updateComments(state.editorState, newState));
+    if (state.allowsHighlights) {
+        ({editorState, activeHighlight} = updateHighlights(state.editorState, newState));
     }
     if (contentChanged) {
         state.onChangeValue(editorState.getCurrentContent());
@@ -72,7 +72,7 @@ export const onChange = (state, newState) => {
     return {
         ...state,
         editorState,
-        activeComment
+        activeHighlight
     };
 };
 

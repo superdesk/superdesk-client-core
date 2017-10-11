@@ -19,6 +19,14 @@ export const customStyleMap = {
         backgroundColor: 'rgba(255, 235, 59, 0.6)'
     },
 
+    ANNOTATION: {
+        backgroundColor: 'rgba(0, 255, 0, 0.2)'
+    },
+
+    ANNOTATION_SELECTED: {
+        backgroundColor: 'rgba(0, 255, 0, 0.6)'
+    },
+
     STRIKETHROUGH: {
         backgroundColor: '#ffe6e6',
         textDecoration: 'line-through'

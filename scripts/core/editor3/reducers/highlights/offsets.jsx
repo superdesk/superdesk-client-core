@@ -1,18 +1,18 @@
 import {SelectionState, EditorState} from 'draft-js';
 import DiffMatchPatch from 'diff-match-patch';
 import {Map} from 'immutable';
-import {getComments, replaceComments} from '.';
+import {getHighlights, replaceHighlights} from '.';
 
 /**
- * @name repositionComments
- * @description repositionComments returns a new EditorState with the comment offsets
- * updated, making this operation invisible to the undoStack.
+ * @name repositionHighlights
+ * @description repositionHighlights returns a new EditorState with the highlights offsets
+ * updated, making this operation invisible in the undoStack.
  * @param {EditorState} oldState
  * @param {EditorState} newState
  * @returns {EditorState}
  */
-export function repositionComments(oldState, newState) {
-    if (getComments(oldState.getCurrentContent()).isEmpty()) {
+export function repositionHighlights(oldState, newState) {
+    if (getHighlights(oldState.getCurrentContent()).isEmpty()) {
         return newState;
     }
 
@@ -28,7 +28,7 @@ export function repositionComments(oldState, newState) {
 /**
  * @name updateOffsets
  * @description updateOffsets checks the last EditorChangeType and if it detects a content
- * change, it returns a new EditorState with the metadata for the comments updated with the
+ * change, it returns a new EditorState with the metadata for the highlights updated with the
  * correct new start and end positions.
  * @param {EditorState} oldState
  * @param {EditorState} newState
@@ -61,7 +61,7 @@ const len = (s) => s.length - (s.match(/\r\n/g) || []).length * 2;
 
 /**
  * @description diffMethod uses DiffMatchPatch to compare the old content to the new
- * content and obtain the new start & end offsets to the existing comments.
+ * content and obtain the new start & end offsets to the existing highlights.
  * @param {EditorState} oldState
  * @param {EditorState} newState
  * @returns {EditorState}
@@ -72,7 +72,7 @@ function diffMethod(oldState, newState) {
     const diff = dmp.diff_main(oldText, newText);
 
     let offset = 0;
-    let data = flattenComments(oldState);
+    let data = flattenHighlights(oldState);
 
     diff.forEach(([changeType, chunk]) => {
         switch (changeType) {
@@ -89,26 +89,26 @@ function diffMethod(oldState, newState) {
 }
 
 /**
- * @typedef FlatComment
+ * @typedef FlatHighlight
  * @property {Number} start The absolute start position.
  * @property {Number} end The absolute end position.
- * @property {Comment} data The comment data.
+ * @property {Highlight} data The highlight data.
  */
 
 /**
- * @description Shifts all comments (left or right) by `n`, starting at and including
- * `offset`. It correctly removes comments integrally or partially on negative `n`
+ * @description Shifts all higlights (left or right) by `n`, starting at and including
+ * `offset`. It correctly removes higlights integrally or partially on negative `n`
  * values.
- * @param {Array<FlatComment>} arr Array of flattened comments.
+ * @param {Array<FlatHighlights>} arr Array of flattened highlights.
  * @param {Number} n Number of characters to shift. Can be negative for deletion.
  * Note that deletion applies to all characters after offset.
  * @param {Number} offset Offset after which selection ends must be shifted inclusive of offset.
- * @returns {Array<FlatComment>} Array with shifting applied.
+ * @returns {Array<FlatHighlight>} Array with shifting applied.
  */
-export function shift(comments, n, offset = 0) {
+export function shift(highlights, n, offset = 0) {
     let shifted = [];
 
-    comments.forEach((c) => {
+    highlights.forEach((c) => {
         if (n < 0
             && c.start >= offset && c.start <= offset - n
             && c.end > offset && c.end <= offset - n) {
@@ -131,9 +131,9 @@ export function shift(comments, n, offset = 0) {
 }
 
 /**
- * @description Returns a new EditorState with the new comment data applied.
+ * @description Returns a new EditorState with the new highlight data applied.
  * @param {EditorState} editorState
- * @param {Array<FlatComment>} data The array of flattened comments.
+ * @param {Array<FlatHighlight>} data The array of flattened highlights.
  * @returns {EditorState}
  */
 function stateFromData(editorState, data) {
@@ -144,7 +144,7 @@ function stateFromData(editorState, data) {
         map[createSelection(content, c.start, c.end)] = c.data;
     });
 
-    return replaceComments(editorState, new Map(map));
+    return replaceHighlights(editorState, new Map(map));
 }
 
 /**
@@ -208,14 +208,14 @@ function createSelection(contentState, start, end) {
 }
 
 /**
- * @description Returns an array containing all the comments, having all the start
+ * @description Returns an array containing all the highlights, having all the start
  * and end values as absolute character offsets within the text.
  * @param {EditorState} oldState
- * @returns {Array<FlatComment>}
+ * @returns {Array<FlatHighlight>}
  */
-function flattenComments(oldState) {
+function flattenHighlights(oldState) {
     const content = oldState.getCurrentContent();
-    const data = getComments(content);
+    const data = getHighlights(content);
 
     let flat = [];
 
@@ -248,5 +248,5 @@ export function absoluteOffset(content, key, offset) {
         sum += blockArray[i].getLength();
     }
 
-    console.error('block not found editor3/comments/offset.jsx.(charactersUntilBlock)', key);
+    console.error('block not found editor3/highlights/offset.jsx.(charactersUntilBlock)', key);
 }

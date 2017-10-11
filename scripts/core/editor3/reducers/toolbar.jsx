@@ -1,6 +1,6 @@
 import {RichUtils, Entity, AtomicBlockUtils, EditorState} from 'draft-js';
 import * as entityUtils from '../components/links/entityUtils';
-import {addComment} from './comments';
+import {addHighlight} from './highlights';
 import {onChange} from './editor3';
 
 /**
@@ -22,8 +22,8 @@ const toolbar = (state = {}, action) => {
         return updateImage(state, action.payload);
     case 'TOOLBAR_APPLY_EMBED':
         return applyEmbed(state, action.payload);
-    case 'TOOLBAR_ADD_COMMENT':
-        return applyComment(state, action.payload);
+    case 'TOOLBAR_ADD_HIGHLIGHT':
+        return applyHighlight(state, action.payload);
     default:
         return state;
     }
@@ -63,13 +63,13 @@ const toggleInlineStyle = (state, inlineStyle) => {
 
 /**
  * @ngdoc method
- * @name applyComment
+ * @name applyHighlight
  * @param {Object} Comment data and selection.
- * @description Applies the given comment to the given selection.
+ * @description Applies the given highlight to the given selection.
  */
-const applyComment = (state, {data, selection}) => onChange(
+const applyHighlight = (state, {data, selection}) => onChange(
     state,
-    addComment(state.editorState, selection, data)
+    addHighlight(state.editorState, selection, data)
 );
 
 /**

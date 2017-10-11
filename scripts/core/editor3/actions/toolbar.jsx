@@ -63,11 +63,12 @@ export function toggleInlineStyle(inlineStyle) {
 export function applyComment(selection, msg) {
     const date = new Date();
     const {display_name: author, email, picture_url: avatar} = ng.get('session').identity;
+    const type = 'ANNOTATION';
 
     return {
-        type: 'TOOLBAR_ADD_COMMENT',
+        type: 'TOOLBAR_ADD_HIGHLIGHT',
         payload: {
-            data: {msg, author, email, date, avatar},
+            data: {msg, author, email, date, avatar, type},
             selection: selection
         }
     };
