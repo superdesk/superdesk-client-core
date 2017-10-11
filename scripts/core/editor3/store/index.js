@@ -6,7 +6,7 @@ import {forceUpdate} from '../actions';
 import {Editor3} from '../components/Editor3';
 import {EditorState, convertFromRaw, convertToRaw, ContentState} from 'draft-js';
 import {toHTML, fromHTML} from 'core/editor3/html';
-import {applyInlineStyles, removeInlineStyles} from '../reducers/comments';
+import {applyInlineStyles, removeInlineStyles, highlightTypes} from '../reducers/highlights';
 
 /**
  * @name createEditorStore
@@ -25,8 +25,8 @@ export default function createEditorStore(ctrl) {
 
     const store = createStore(reducers, {
         editorState: EditorState.createWithContent(content, decorators),
-        activeComment: null,
-        allowsCommenting: ctrl.comments,
+        activeHighlight: null,
+        allowsHighlights: ctrl.highlights,
         searchTerm: {pattern: '', index: -1, caseSensitive: false},
         readOnly: ctrl.readOnly,
         locked: false, // when true, main editor is disabled (ie. when editing sub-components like tables or images)
@@ -55,7 +55,7 @@ export default function createEditorStore(ctrl) {
  * is bound to the controller, so 'this' points to controller attributes.
  */
 function onChange(content) {
-    const decorativeStyles = ['COMMENT', 'COMMENT_SELECTED', 'HIGHLIGHT', 'HIGHLIGHT_STRONG'];
+    const decorativeStyles = highlightTypes.concat(['HIGHLIGHT', 'HIGHLIGHT_STRONG']);
     const cleanedContent = removeInlineStyles(content, decorativeStyles);
 
     this.editorState = convertToRaw(cleanedContent);

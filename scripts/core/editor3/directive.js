@@ -46,9 +46,9 @@ class Editor3Directive {
 
             /**
              * @type {Boolean}
-             * @description If true, allows inline commenting.
+             * @description If true, allows inline highlights (commenting, annotating, etc.).
              */
-            comments: '@',
+            highlights: '@',
 
             /**
              * @type {Object}
@@ -148,7 +148,7 @@ class Editor3Directive {
         this.bindToValue = this.bindToValue || false;
         this.tabindex = this.tabindex || 0;
         this.showTitle = this.showTitle || false;
-        this.comments = typeof this.comments !== 'undefined';
+        this.highlights = typeof this.highlights !== 'undefined';
 
         const store = createEditorStore(this);
 

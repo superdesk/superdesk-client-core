@@ -204,7 +204,7 @@ export class Editor3Component extends React.Component {
             locked,
             showToolbar,
             editorState,
-            activeComment,
+            activeHighlight,
             onChange,
             onTab,
             canComment,
@@ -230,7 +230,7 @@ export class Editor3Component extends React.Component {
                 }
                 {canComment &&
                     <CommentPopup
-                        comment={activeComment}
+                        comment={activeHighlight}
                         editorNode={this.editorNode}
                         selection={selection}
                     />
@@ -262,7 +262,7 @@ Editor3Component.propTypes = {
     showToolbar: PropTypes.bool,
     canComment: PropTypes.bool,
     editorState: PropTypes.object,
-    activeComment: PropTypes.object,
+    activeHighlight: PropTypes.object,
     onChange: PropTypes.func,
     unlock: PropTypes.func,
     onTab: PropTypes.func,
@@ -282,9 +282,9 @@ Editor3Component.defaultProps = {
 const mapStateToProps = (state) => ({
     readOnly: state.readOnly,
     showToolbar: state.showToolbar,
-    canComment: state.allowsCommenting,
+    canComment: state.allowsHighlights,
     editorState: state.editorState,
-    activeComment: state.activeComment,
+    activeHighlight: state.activeHighlight,
     locked: state.locked,
     editorFormat: state.editorFormat,
     tabindex: state.tabindex

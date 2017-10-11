@@ -6,7 +6,7 @@ const blockArrayFromText = (...blocks) =>
         .createFromText(blocks.join('\r\n'))
         .getBlocksAsArray();
 
-describe('editor3.comments.offsets', () => {
+describe('editor3.highlights.offsets', () => {
     it('keyAndOffset', () => {
         const blocks = blockArrayFromText('0123', '456', '78');
         const k = (i) => blocks[i].getKey();
