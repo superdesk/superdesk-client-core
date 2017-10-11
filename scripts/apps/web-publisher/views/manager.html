@@ -1,4 +1,4 @@
-<div class="subnav">
+    <div class="subnav">
     <div class="flat-searchbar monitoring-flat-searchbar" ng-class="{extended: aggregate.monitoringSearch}">
         <div class="search-handler">
             <label for="search-input" class="trigger-icon" ng-click="aggregate.monitoringSearch = !aggregate.monitoringSearch">
@@ -16,7 +16,7 @@
     </div>
     <h3 class="page-nav-title"><span translate>Output Settings</span></h3>
     <div class="subnav__button-stack--square-buttons">
-        <button class="navbtn sd-create-btn" ng-click="webPublisher.toogleCreateSite()">
+        <button class="navbtn sd-create-btn" ng-click="webPublisher.toggleSiteWizard()">
             <i class="svg-icon-plus"></i>
             <span class="circle"></span>
         </button>
@@ -29,6 +29,15 @@
             <div class="desk" ng-include="'scripts/apps/web-publisher/views/site.html'"></div>
         </div>
     </div>
-
+    <a class="btn btn--sd-green btn--icon-only-circle btn--large sd-shadow--z4 absPosition absPosition--topRight" ng-click="webPublisher.toggleInfoCarousel()"><i class="icon-info-large"></i></a>
+    <div class="panel-info" ng-if="!sites.length && !loading">
+        <div class="panel-info__icon">
+            <i class="big-icon--add-to-list"></i>
+        </div>
+        <h3 class="panel-info__heading">No tenants so far.</h3>
+        <p class="panel-info__description">To create a site click on the plus button to top right.</p>
+    </div>
+    <div ng-include="'scripts/apps/web-publisher/views/site-wizard.html'"></div>
+    <div ng-include="'scripts/apps/web-publisher/views/info-carousel.html'"></div>
     <div ng-include="'scripts/apps/web-publisher/views/manage-site.html'" ng-if="webPublisher.openSiteModal"></div>
 </section>

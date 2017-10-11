@@ -2,7 +2,7 @@
     <div class="modal__header">
         <h3 class="modal__heading pull-left"><span translate>Manage:</span> <b>{{newSite.name}}</b></h3>
         <div class="pull-right">
-            <button class="btn" ng-click="webPublisher.toogleCreateSite()" translate>Close</button>
+            <button class="btn" ng-click="webPublisher.toggleEditSite()" translate>Close</button>
             <button
                 class="btn"
                 ng-disabled="webPublisher.siteForm.$invalid || !webPublisher.siteForm.$dirty"

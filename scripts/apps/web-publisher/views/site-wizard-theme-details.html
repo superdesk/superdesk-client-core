@@ -1,0 +1,39 @@
+<div class="wizardThemeDetails">
+    <div class="wizardThemeDetails__header bg--white">
+        <button class="icn-btn" 
+            ng-click="webPublisher.wizard.themeDetailsActive = false"
+            ng-disabled="webPublisher.wizard.step != 'details'"><i class="icon-arrow-left"></i></button>
+    </div>
+    <div class="wizardThemeDetails__content" 
+        ng-if="webPublisher.wizard.step=='details'">
+        <div class="grid">
+            <div class="grid__item grid__item--col-4">
+                <img class="wizardThemeBox__image" ng-if="!webPublisher.wizard.theme.screenshots[0] || !webPublisher.wizard.theme.screenshots[0].url" src="scripts/apps/web-publisher/images/no-theme-preview.png" />
+                <img class="wizardThemeBox__image" ng-if="webPublisher.wizard.theme.screenshots[0] && webPublisher.wizard.theme.screenshots[0].url" ng-src="{{webPublisher.wizard.theme.screenshots[0].url}}" />
+                <a class="btn btn--primary btn--large btn--expanded bottomMargin--10"
+                ng-click="webPublisher.siteWizardInstallTheme(webPublisher.wizard.theme)">Install</a>
+                <span>
+                    <a class="btn btn--hollow btn--large btn--expanded" ng-if="webPublisher.wizard.theme.preview_url" ng-href="{{webPublisher.wizard.theme.preview_url}}" target="_blank">Preview</a>
+                </span>
+            </div>
+            <div class="grid__item grid__item--col-8">
+                <h4 class="bottomMargin">{{webPublisher.wizard.theme.title}}</h4>
+                <p>{{webPublisher.wizard.theme.description}}</p>
+            </div>
+        </div>
+    </div>
+    <div class="wizardThemeDetails__content" 
+        ng-if="webPublisher.wizard.step=='installation'">
+        <div class="panel-info">
+            <p class="panel-info__description">Installing, please wait.</p>
+        </div>
+    </div>
+    <div class="wizardThemeDetails__content" 
+        ng-if="webPublisher.wizard.step=='finish'">
+        <div class="panel-info">
+            <p class="panel-info__description bottomMargin">Installation successful.<br />To use this theme please activate it.</p>
+            <a class="btn" ng-click="webPublisher.wizard.themeDetailsActive = false">Cancel</a>
+            <a class="btn btn--success" ng-click="webPublisher.siteWizardActivateTheme()">Activate</a>
+        </div>
+    </div>
+</div>

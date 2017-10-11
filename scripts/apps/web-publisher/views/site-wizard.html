@@ -1,0 +1,83 @@
+<div sd-modal data-model="webPublisher.siteWizardActive" class="modal--tabs modal--large sd-wizard">
+
+    <div class="modal__header">
+        <a href="" class="close" ng-click="webPublisher.toggleSiteWizard()"><i class="icon-close-small"></i></a>
+        <h3 class="modal__heading" translate>Create Site Wizard</h3>
+    </div>
+
+    <div class="modal__body" sd-wizard data-name="siteWizard" data-current-step="step.current" data-finish="webPublisher.toogleSiteWizard()">
+        <div sd-wizard-step data-title="{{ 'Add site' | translate }}" data-code="addSite" data-disabled="true">
+            <form name="generalStep" class="content">
+                <div class="sd-alert sd-alert--hollow sd-alert--alert" ng-if="webPublisher.wizard.errorMessage">
+                    {{webPublisher.wizard.errorMessage}}
+                </div>
+                <fieldset>
+                    <div class="form__row form__row--flex">
+                        <div class="form__row-item">
+                            <div class="sd-line-input sd-line-input--required">
+                                <label class="sd-line-input__label" translate>Site name</label>
+                                <input class="sd-line-input__input" type="text" ng-model="newSite.name" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form__row form__row--flex">
+                        <div class="form__row-item">
+                            <div class="sd-line-input sd-line-input--required">
+                                <label class="sd-line-input__label" translate>Domain name</label>
+                                <input class="sd-line-input__input" type="text"
+                                    ng-trim="false"
+                                    ng-change="newSite.domainName = newSite.domainName.split(' ').join('')" 
+                                    name="domainName" 
+                                    ng-model="newSite.domainName" 
+                                required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form__row form__row--flex">
+                        <div class="form__row-item">
+                            <div class="sd-line-input">
+                                <label class="sd-line-input__label" translate>Subdomain name</label>
+                                <input class="sd-line-input__input" type="text"
+                                    ng-trim="false" 
+                                    ng-change="newSite.subdomain = newSite.subdomain.split(' ').join('')" 
+                                    name="subdomain" 
+                                    ng-model="newSite.subdomain"
+                                >
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+      
+            <div class="modal__footer">
+                <button id="next-general"
+                        class="btn btn--primary"
+                        ng-click="webPublisher.siteWizardSaveSite()"
+                        ng-disabled="!generalStep.$valid || webPublisher.wizard.busy">Continue</button>
+            </div>           
+        </div>
+        <div sd-wizard-step data-title="{{ :: 'Install theme' | translate }}" data-code="installTheme" data-disabled="false">
+            <div class="content">
+                <div class="flex-grid flex-grid--boxed flex-grid--wrap-items flex-grid--small-2">
+                    <div class="flex-grid__item" ng-repeat="theme in webPublisher.wizard.organizationThemes">
+                        <div class="wizardThemeBox sd-shadow--z1" ng-class="{'wizardThemeBox--active': webPublisher.wizard.theme && webPublisher.wizard.theme.active && webPublisher.wizard.theme.name == theme.name}">
+                            <img class="wizardThemeBox__image" ng-if="!theme.screenshots[0] || !theme.screenshots[0].url" src="scripts/apps/web-publisher/images/no-theme-preview.png" />
+                            <img class="wizardThemeBox__image" ng-if="theme.screenshots[0] && theme.screenshots[0].url" ng-src="{{theme.screenshots[0].url}}" />
+                            <h4 class="wizardThemeBox__name">{{theme.title}}</h4>
+                            <div class="wizardThemeBox__overlay">
+                                <a class="btn btn--primary btn--large btn--expanded bottomMargin" ng-click="webPublisher.openWizardThemeDetails(theme)">Details/Install</a>
+                                <a class="btn btn--hollow btn--large btn--expanded" ng-if="theme.preview_url" ng-href="{{theme.preview_url}}" target="_blank">Preview</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+             <div ng-include="'scripts/apps/web-publisher/views/site-wizard-theme-details.html'" ng-if="webPublisher.wizard.themeDetailsActive"></div>
+            <div class="modal__footer"> 
+                <button class="btn btn--primary" ng-disabled="!webPublisher.wizard.ready"  ng-click="webPublisher.siteWizardConfigureSite()">Configure your site</button>
+                <button class="btn btn--hollow  btn--primary" ng-disabled="!webPublisher.wizard.ready" ng-click="webPublisher.toogleSiteWizard()">Done</button>
+            </div>
+        </div>
+
+    </div>
+</div>
