@@ -108,7 +108,7 @@ class Editor3Directive {
              * @type {Boolean}
              * @description Disable internal spellchecker.
              */
-            disableSpellchecker: '@',
+            disableSpellchecker: '=?',
 
             /**
 
