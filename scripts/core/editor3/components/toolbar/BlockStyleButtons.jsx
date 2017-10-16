@@ -26,7 +26,7 @@ const blockStyles = {
  * @name BlockStyleControl
  * @description Blocks style controls (h1, h2, h3, ...)
  */
-export const BlockStyleControlsComponent = ({editorState, editorFormat, toggleBlockStyle}) => {
+export const BlockStyleButtonsComponent = ({editorState, editorFormat, toggleBlockStyle}) => {
     const selection = editorState.getSelection();
     const blockStyleKeys = Object.keys(blockStyles);
     const blockType = editorState
@@ -49,7 +49,7 @@ export const BlockStyleControlsComponent = ({editorState, editorFormat, toggleBl
     );
 };
 
-BlockStyleControlsComponent.propTypes = {
+BlockStyleButtonsComponent.propTypes = {
     editorState: PropTypes.object,
     toggleBlockStyle: PropTypes.func,
     editorFormat: PropTypes.array
@@ -64,6 +64,6 @@ const mapDispatchToProps = (dispatch) => ({
     toggleBlockStyle: (blockType) => dispatch(actions.toggleBlockStyle(blockType))
 });
 
-const BlockStyleControls = connect(mapStateToProps, mapDispatchToProps)(BlockStyleControlsComponent);
+const BlockStyleButtons = connect(mapStateToProps, mapDispatchToProps)(BlockStyleButtonsComponent);
 
-export default BlockStyleControls;
+export default BlockStyleButtons;

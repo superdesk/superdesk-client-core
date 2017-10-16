@@ -1,16 +1,15 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import BlockStyleControls from './BlockStyleControls';
-import InlineStyleControls from './InlineStyleControls';
+import BlockStyleButtons from './BlockStyleButtons';
+import InlineStyleButtons from './InlineStyleButtons';
 import TableControls from './TableControls';
-import {LinkButton} from '../links';
+import {SelectionButton} from './SelectionButton';
+import {IconButton} from './IconButton';
 import {LinkInput} from '../links';
-import {ImageButton} from '../images';
 import {EmbedButton} from '../embeds';
-import {TableButton} from '../tables';
 import {connect} from 'react-redux';
 import {LinkToolbar} from '../links';
-import {CommentButton, CommentInput} from '../comments';
+import {CommentInput} from '../comments';
 import classNames from 'classnames';
 import * as actions from '../../actions';
 
@@ -126,6 +125,8 @@ class ToolbarComponent extends Component {
             applyLink,
             editorState,
             applyComment,
+            addTable,
+            insertImages,
             allowsHighlights,
         } = this.props;
 
@@ -140,10 +141,15 @@ class ToolbarComponent extends Component {
 
         return activeCell !== null ? <TableControls /> :
             <div className={cx}>
-                <BlockStyleControls />
-                <InlineStyleControls />
+                <BlockStyleButtons />
+                <InlineStyleButtons />
 
-                {has('anchor') && <LinkButton onClick={this.showLinkInput} />}
+                {has('anchor') &&
+                    <SelectionButton
+                        onClick={this.showLinkInput}
+                        iconName="link"
+                        tooltip={gettext('Link')}
+                    />}
 
                 {editedLink !== null &&
                     <LinkInput
@@ -152,12 +158,36 @@ class ToolbarComponent extends Component {
                         onCancel={this.hideLinkInput}
                         value={editedLink} />}
 
-                {has('picture') && <ImageButton />}
                 {has('embed') && <EmbedButton />}
-                {has('table') && <TableButton />}
+                {has('picture') &&
+                    <IconButton
+                        onClick={insertImages}
+                        tooltip={gettext('Image')}
+                        iconName="picture"
+                    />
+                }
+                {has('table') &&
+                    <IconButton
+                        onClick={addTable}
+                        tooltip={gettext('Table')}
+                        iconName="table"
+                    />
+                }
 
-                {allowsHighlights &&
-                    <CommentButton onClick={this.showCommentInput} />}
+                {allowsHighlights && [
+                    <SelectionButton
+                        onClick={this.showCommentInput}
+                        key="comment-button"
+                        iconName="comment"
+                        tooltip={gettext('Add comment')}
+                    />,
+                    <SelectionButton
+                        onClick={this.showCommentInput}
+                        key="annotation-button"
+                        iconName="pencil"
+                        tooltip={gettext('Add annotation')}
+                    />
+                ]}
 
                 {selectionForComment !== null &&
                     <CommentInput
@@ -176,6 +206,8 @@ ToolbarComponent.propTypes = {
     editorFormat: PropTypes.array,
     activeCell: PropTypes.any,
     applyLink: PropTypes.func,
+    addTable: PropTypes.func,
+    insertImages: PropTypes.func,
     applyComment: PropTypes.func,
     editorState: PropTypes.object,
     editorNode: PropTypes.object,
@@ -189,6 +221,8 @@ const mapStateToProps = ({editorFormat, editorState, activeCell, allowsHighlight
 const mapDispatchToProps = (dispatch) => ({
     applyLink: (link, entity = null) => dispatch(actions.applyLink({link, entity})),
     applyComment: (sel, msg) => dispatch(actions.applyComment(sel, msg)),
+    insertImages: () => dispatch(actions.insertImages()),
+    addTable: () => dispatch(actions.addTable(1, 2))
 });
 
 const Toolbar = connect(mapStateToProps, mapDispatchToProps)(ToolbarComponent);

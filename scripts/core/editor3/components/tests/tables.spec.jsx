@@ -4,18 +4,6 @@ import {shallow, mount} from 'enzyme';
 import {tableBlockAndContent} from './utils';
 import {TableCell} from '../tables';
 import {TableBlockComponent as TableBlock} from '../tables/TableBlock';
-import {TableButtonComponent as TableButton} from '../tables/TableButton';
-
-describe('editor3.component.table-button', () => {
-    it('should call action when clicked', () => {
-        const action = jasmine.createSpy();
-        const wrapper = mount(<TableButton addTable={action} />);
-
-        wrapper.find('span').simulate('click');
-
-        expect(action).toHaveBeenCalled();
-    });
-});
 
 describe('editor3.component.table-block', () => {
     it('should render 2 rows and 6 cells', () => {
