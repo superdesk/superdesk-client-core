@@ -200,7 +200,7 @@
             </div>
 
             <div sd-info-item class="form__row" ng-if="privileges.users">
-                <div class="sd-line-input ng-disabled="!user.is_author">
+                <div class="sd-line-input" ng-disabled="!user.is_author">
                     <label class="sd-line-input__label" for="job_title" translate>Job Title</label>
                     <select class="sd-line-input__select" ng-focus="focused()" ng-model="user.job_title" name="job_title" id="job_title" ng-options="job.qcode as job.name for job in metadata.job_titles" ng-disabled="!user.is_author"></select>
                 </div>

@@ -2,8 +2,9 @@ import DiffMatchPatch from 'diff-match-patch';
 import shortid from 'shortid';
 
 class LinkFunction {
-    constructor(compareVersions, lock, $timeout, scope, elem) {
+    constructor(compareVersions, content, lock, $timeout, scope, elem) {
         this.compareVersions = compareVersions;
+        this.content = content;
         this.lock = lock;
         this.$timeout = $timeout;
         this.scope = scope;
@@ -91,6 +92,14 @@ class LinkFunction {
             }
         });
 
+        if (item.extra) {
+            _.map(this.content.allFields(), (field) => {
+                if (item.extra[field._id] || oldItem.extra[field._id]) {
+                    item.extra[field._id] = this.highlightDifferences(item.extra[field._id], oldItem.extra[field._id]);
+                }
+            });
+        }
+
         if (item.associations && item.associations.featuremedia &&
             oldItem.associations && oldItem.associations.featuremedia) {
             item.associations.featuremedia.description_text = this.highlightDifferences(
@@ -168,7 +177,7 @@ class LinkFunction {
      * @ngdoc reverseMap
      * @name sdCompareVersionsArticle#reverseMap
      * @param {Map} mapWords
-     * @description Reverse teh key with content on mapWords
+     * @description Reverse the key with content on mapWords
      */
     reverseMap(mapWords, addSpan) {
         let reversedMap = {};
@@ -225,6 +234,7 @@ class LinkFunction {
  * @module superdesk.apps.authoring.compare_versions
  * @name sdCompareVersionsArticle
  * @requires compareVersions
+ * @requires content
  * @requires lock
  * @requires $timeout
  * @param {Object} article - current article's version to display on board - {id: _id, version: _current_version}
@@ -232,12 +242,12 @@ class LinkFunction {
  * @description Displays the board which contains sdArticleEdit directive to display the contents of the selected
  * version of opened article and provides a remove function to remove the item version from board.
  */
-export function CompareVersionsArticleDirective(compareVersions, lock, $timeout) {
+export function CompareVersionsArticleDirective(compareVersions, content, lock, $timeout) {
     return {
         template: require('scripts/apps/authoring/compare-versions/views/sd-compare-versions-article.html'),
         scope: {article: '=', compareWith: '=', focus: '='},
-        link: (scope, elem) => new LinkFunction(compareVersions, lock, $timeout, scope, elem)
+        link: (scope, elem) => new LinkFunction(compareVersions, content, lock, $timeout, scope, elem)
     };
 }
 
-CompareVersionsArticleDirective.$inject = ['compareVersions', 'lock', '$timeout'];
+CompareVersionsArticleDirective.$inject = ['compareVersions', 'content', 'lock', '$timeout'];
