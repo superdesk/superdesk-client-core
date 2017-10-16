@@ -2,30 +2,9 @@ import React from 'react';
 import {createStore} from 'redux';
 import {shallow, mount} from 'enzyme';
 import {EditorState} from 'draft-js';
-import {LinkButtonComponent as LinkButton} from '../links/LinkButton';
 import {LinkToolbarComponent as LinkToolbar} from '../links/LinkToolbar';
 import {LinkInput} from '../links';
 import {stateWithLink, cursorAtPosition} from './utils';
-
-const getShallowWrapper = (es) => getWrapper(es, true);
-
-// returns a wrapper around the link button, along with two spies
-// for the applyLink and removeLink property
-function getWrapper(es = null, shallowMount = false) {
-    const editorState = es || EditorState.createEmpty();
-    const mountFunc = shallowMount ? shallow : mount;
-    const applyLink = jasmine.createSpy();
-    const removeLink = jasmine.createSpy();
-    const wrapper = mountFunc(
-        <LinkButton
-            editorRect={{top: 1, left: 2}}
-            applyLink={applyLink}
-            onClick={() => { /* no-op */ }}
-            removeLink={removeLink}
-            editorState={editorState} />);
-
-    return {wrapper, applyLink, removeLink};
-}
 
 describe('editor3.components.link-toolbar', () => {
     it('should render correctly', () => {
@@ -104,28 +83,6 @@ describe('editor3.components.link-toolbar', () => {
             .simulate('click');
 
         expect(onRemove).toHaveBeenCalled();
-    });
-});
-
-describe('editor3.components.link-button', () => {
-    it('should render button text', () => {
-        const {wrapper} = getShallowWrapper();
-
-        expect(wrapper.find('LinkPopover').length).toBe(0);
-    });
-
-    it('should have class "inactive" when selection is collapsed', () => {
-        const editorState = cursorAtPosition(stateWithLink(), 0);
-        const {wrapper} = getShallowWrapper(editorState);
-
-        expect(wrapper.find('span.link-button').hasClass('inactive')).toBeTruthy();
-    });
-
-    it('should not have class "inactive" when selection is not collapsed', () => {
-        const editorState = cursorAtPosition(stateWithLink(), 1, 3);
-        const {wrapper} = getShallowWrapper(editorState);
-
-        expect(wrapper.find('span.link-button').hasClass('inactive')).toBeFalsy();
     });
 });
 

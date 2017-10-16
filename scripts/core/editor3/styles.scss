@@ -360,24 +360,6 @@
 .Editor3-styleButton {
 	&.short {padding-right: 2px; margin-right: -10px;}
 
-	.link-button + .link-editor {
-		a {
-			margin-right: 5px;
-		}
-
-		.icon {
-			font-size: 12px;
-			color: #666;
-		}
-
-		position: absolute;
-		padding: 2px 3px 2px 5px;
-		border: 1px solid #ddd;
-		background: #fafafa;
-		color: #000;
-		font-size: 12px;
-	}
-
 	color: #999;
 	cursor: pointer;
 	margin: 0px;

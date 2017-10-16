@@ -2,8 +2,8 @@ import React from 'react';
 import {shallow, mount} from 'enzyme';
 import {EditorState} from 'draft-js';
 import StyleButton from '../toolbar/StyleButton';
-import {BlockStyleControlsComponent as BlockStyleControls} from '../toolbar/BlockStyleControls';
-import {InlineStyleControlsComponent as InlineStyleControls} from '../toolbar/InlineStyleControls';
+import {BlockStyleButtonsComponent as BlockStyleButtons} from '../toolbar/BlockStyleButtons';
+import {InlineStyleButtonsComponent as InlineStyleButtons} from '../toolbar/InlineStyleButtons';
 
 describe('editor3.components.toolbar', () => {
     it('(StyleButton) should render label', () => {
@@ -30,11 +30,11 @@ describe('editor3.components.toolbar', () => {
         expect(toggleFn).toHaveBeenCalledWith('my-style');
     });
 
-    it('(BlockStyleControls) should render only given types', () => {
+    it('(BlockStyleButtons) should render only given types', () => {
         const opts = ['h1', 'h2', 'ul'];
         const editorState = EditorState.createEmpty();
         const wrapper = mount(
-            <BlockStyleControls
+            <BlockStyleButtons
                 editorFormat={opts}
                 editorState={editorState}
             />
@@ -48,11 +48,11 @@ describe('editor3.components.toolbar', () => {
         });
     });
 
-    it('(InlineStyleControls) should render only given types', () => {
+    it('(InlineStyleButtons) should render only given types', () => {
         const opts = ['BOLD', 'UNDERLINE'];
         const editorState = EditorState.createEmpty();
         const wrapper = mount(
-            <InlineStyleControls
+            <InlineStyleButtons
                 editorFormat={opts}
                 editorState={editorState}
             />

@@ -17,10 +17,10 @@ const inlineStyles = {
 /**
  * @ngdoc React
  * @module superdesk.core.editor3
- * @name InlineStyleControls
+ * @name InlineStyleButtons
  * @description Inline style functional component, will manage the inline style related toolbar buttons
  */
-export const InlineStyleControlsComponent = ({editorFormat, editorState, toggleInlineStyle}) => {
+export const InlineStyleButtonsComponent = ({editorFormat, editorState, toggleInlineStyle}) => {
     const currentStyle = editorState.getCurrentInlineStyle();
 
     return (
@@ -38,7 +38,7 @@ export const InlineStyleControlsComponent = ({editorFormat, editorState, toggleI
     );
 };
 
-InlineStyleControlsComponent.propTypes = {
+InlineStyleButtonsComponent.propTypes = {
     editorState: PropTypes.object,
     editorFormat: PropTypes.array,
     toggleInlineStyle: PropTypes.func
@@ -53,6 +53,6 @@ const mapDispatchToProps = (dispatch) => ({
     toggleInlineStyle: (type) => dispatch(actions.toggleInlineStyle(type))
 });
 
-const InlineStyleControls = connect(mapStateToProps, mapDispatchToProps)(InlineStyleControlsComponent);
+const InlineStyleButtons = connect(mapStateToProps, mapDispatchToProps)(InlineStyleButtonsComponent);
 
-export default InlineStyleControls;
+export default InlineStyleButtons;
