@@ -28,6 +28,23 @@
 - Add config to enable edit in new window and open in new window actions.
 - Make display crops for featured media configurable.
 
+## [1.7.3] 2017-07-10
+
+### Fixed
+
+- Fix issue with single line input for editor block description.
+
+## [1.7.2] 2017-07-04
+
+### Fixed
+
+- Make tansa language profile ids configurable.
+- Make authoring widget shortcuts global.
+- Stop on error when publishing.
+- Fix issue with authoring shortcuts.
+- Fix jumping cursor on image caption field.
+- Allow tansa to run multiple times.
+
 ## [1.8.1] 2017-06-14
 
 ### Fixed
