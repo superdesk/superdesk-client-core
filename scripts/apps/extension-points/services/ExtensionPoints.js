@@ -6,27 +6,30 @@
  * @description
  * External superdesk apps can register components that then will be hooked into
  * the core UI.
- * Inject 'extensionPointsProvider' into your module and then:
+ * Inject 'extensionPoints' into your module and then:
  *
- * extensionPointsProvider.register('MY_TYPE', MyComponent, an_array); // do this in config phase
+ * extensionPoints.register('MY_TYPE', MyConnectedComponent, props, data); // do this in config phase
  *
- * where MyComponent is a React component and an_array is an array with names
- * of variables that your component will receive as props from the parent
- * scope, for example: ['item'].
+ * where MyConnectedComponent is a React component, the props is a json object that may contain a
+ * redux store and data is an array with names of variables that your component will receive as props
+ * from the parent scope, for example: ['item'].
  *
  * See also ExtensionPointsDirective.
  */
-export function ExtensionPointsProvider() {
-    var extensions = {};
+export function ExtensionPointsService() {
+    this.extensions = {};
 
-    this.register = function(type, componentClass, data) {
-        if (typeof extensions[type] === 'undefined') {
-            extensions[type] = [];
+    this.register = function(type, componentClass, props = {}, data = []) {
+        if (typeof this.extensions[type] === 'undefined') {
+            this.extensions[type] = [];
         }
-        extensions[type].push({type: type, componentClass: componentClass, data: data});
+        this.extensions[type].push({type, componentClass, props, data});
     };
 
-    this.$get = function() {
-        return extensions;
+    this.get = (type) => {
+        if (typeof this.extensions[type] === 'undefined') {
+            return [];
+        }
+        return this.extensions[type];
     };
 }

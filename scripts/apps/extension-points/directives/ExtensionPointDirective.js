@@ -11,30 +11,30 @@ import React from 'react';
  * the core UI.
  * Place this tag in a view where you'd like to add an extension:
  *   <span sd-extension-point="MY_TYPE"></span>
- * See also ExtensionPointsProvider.
+ * See also ExtensionPointsService.
  */
 ExtensionPointDirective.$inject = ['extensionPoints'];
 export function ExtensionPointDirective(extensionPoints) {
-    function propsFromData(data, scope) {
-        var json = {};
-
-        _.forEach(data, (value) => {
-            json[value] = scope.$parent.$eval(value);
-        });
-        return json;
-    }
-
-    function buildCompoment(extension, scope) {
-        return React.createElement(
-            extension.componentClass,
-            propsFromData(extension.data, scope)
-        );
+    function _buildCompoment(extension, scope) {
+        // for easy access put values from parent scope into ...
+        if (typeof extension.props.store === 'undefined') {
+            // ... the component's props or ...
+            extension.data.forEach((value) => {
+                extension.props[value] = scope.$parent.$eval(value);
+            });
+        } else {
+            // ... into the component's redux store
+            extension.data.forEach((value) => {
+                extension.props.store.getState()[value] = scope.$parent.$eval(value);
+            });
+        }
+        return React.createElement(extension.componentClass, extension.props);
     }
 
     return {
         link: function(scope, elem, attr) {
-            var registeredExtenstions = extensionPoints[attr.sdExtensionPoint];
-            var components = _.map(registeredExtenstions, (extension) => buildCompoment(extension, scope));
+            var registeredExtensions = extensionPoints.get(attr.sdExtensionPoint);
+            var components = registeredExtensions.map((extension) => _buildCompoment(extension, scope));
 
             ReactDOM.render(
                 <span>{components}</span>,

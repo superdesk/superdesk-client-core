@@ -3,4 +3,4 @@ import * as svc from './services';
 
 angular.module('superdesk.apps.extension-points', [])
     .directive('sdExtensionPoint', directive.ExtensionPointDirective)
-    .provider('extensionPoints', svc.ExtensionPointsProvider);
+    .service('extensionPoints', svc.ExtensionPointsService);
