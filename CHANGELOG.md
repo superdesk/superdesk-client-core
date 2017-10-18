@@ -1,5 +1,33 @@
 # Superdesk Client Changelog
 
+## [1.8.2] 2017-10-12
+
+### Fixed
+
+- Strip whitespace characters before saving and publishing.
+- Fix the content expiry label.
+- Fix the query for 'not category' filters.
+- Byline is not populated from user preferences.
+- Date should not clear when manually edited in Global advanced filter.
+- Use specific version of superdesk ui framework.
+- Fix the query for missing link.
+- Allow initial crops available to be saved on new images.
+- Use macro name if no label is defined for ingest routing.
+- Cancel confirmation was hidden behind edit crop modal.
+- Fix item history for scheduled items.
+- Fix broken ingest routing modal.
+- Fix problem where user can't publish stories when featured media is locked.
+- Fix issue with mark for desk in authoring.
+- Fix issue with non-updating highlights on authoring.
+- Fix issue with single line input field.
+
+### Added
+
+- Add genre and desk to related item list.
+- Add the action progress indicator in the grid view.
+- Add config to enable edit in new window and open in new window actions.
+- Make display crops for featured media configurable.
+
 ## [1.8.1] 2017-06-14
 
 ### Fixed
