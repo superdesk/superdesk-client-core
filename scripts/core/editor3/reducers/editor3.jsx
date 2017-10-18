@@ -157,7 +157,7 @@ const setCell = (state, {i, j, key}) => ({
  * @ngdoc method
  * @name setCell
  * @param {string} entityKey
- * @param {string} newCaption
+ * @param {string} changeImageCaption
  * @return {Object} New state
  * @description Sets a new caption for the image at entityKey.
  */
