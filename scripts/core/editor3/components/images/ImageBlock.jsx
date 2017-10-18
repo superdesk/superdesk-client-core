@@ -76,6 +76,7 @@ export class ImageBlockComponent extends Component {
                         <Textarea
                             placeholder={gettext('Title')}
                             onFocus={setLocked}
+                            onClick={setLocked}
                             className="image-block__title"
                             value={data.headline}
                             onChange={this.onChange}
@@ -84,6 +85,7 @@ export class ImageBlockComponent extends Component {
                     <Textarea
                         placeholder={gettext('Caption')}
                         onFocus={setLocked}
+                        onClick={setLocked}
                         className="image-block__description"
                         value={data.description_text}
                         onChange={this.onChange}
