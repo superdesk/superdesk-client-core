@@ -5,11 +5,9 @@ import InlineStyleButtons from './InlineStyleButtons';
 import TableControls from './TableControls';
 import {SelectionButton} from './SelectionButton';
 import {IconButton} from './IconButton';
-import {LinkInput} from '../links';
-import {EmbedButton} from '../embeds';
+import {ToolbarPopup} from './ToolbarPopup';
 import {connect} from 'react-redux';
 import {LinkToolbar} from '../links';
-import {CommentInput} from '../comments';
 import classNames from 'classnames';
 import * as actions from '../../actions';
 
@@ -20,11 +18,12 @@ import * as actions from '../../actions';
  * a selection for adding the comment or annotation too)
  */
 
-const PopupTypes = {
+export const PopupTypes = {
     Hidden: 'NONE',
     Annotation: 'ANNOTATION',
     Comment: 'COMMENT',
-    Link: 'LINK'
+    Link: 'LINK',
+    Embed: 'EMBED'
 };
 
 /**
@@ -118,10 +117,6 @@ class ToolbarComponent extends Component {
             disabled,
             editorFormat,
             activeCell,
-            applyLink,
-            editorState,
-            applyComment,
-            applyAnnotation,
             addTable,
             insertImages,
             allowsHighlights,
@@ -138,9 +133,11 @@ class ToolbarComponent extends Component {
 
         return activeCell !== null ? <TableControls /> :
             <div className={cx}>
+                {/* Styles */}
                 <BlockStyleButtons />
                 <InlineStyleButtons />
 
+                {/* Formatting options */}
                 {has('anchor') &&
                     <SelectionButton
                         onClick={this.showPopup(PopupTypes.Link)}
@@ -149,7 +146,11 @@ class ToolbarComponent extends Component {
                     />
                 }
                 {has('embed') &&
-                    <EmbedButton />
+                    <IconButton
+                        onClick={this.showPopup(PopupTypes.Embed)}
+                        iconName="code"
+                        tooltip="Embed"
+                    />
                 }
                 {has('picture') &&
                     <IconButton
@@ -180,23 +181,7 @@ class ToolbarComponent extends Component {
                     />
                 ]}
 
-                {/* TODO: Perhaps it would be cleaner to have popups in a separate component */}
-                {popup.type === PopupTypes.Link &&
-                    <LinkInput
-                        editorState={editorState}
-                        onSubmit={applyLink}
-                        onCancel={this.hidePopup}
-                        value={popup.data} />}
-
-                {popup.type === PopupTypes.Comment &&
-                    <CommentInput
-                        onSubmit={(msg) => applyComment(popup.data, {msg})}
-                        onCancel={this.hidePopup} />}
-
-                {popup.type === PopupTypes.Annotation &&
-                    <CommentInput
-                        onSubmit={(msg) => applyAnnotation(popup.data, {msg})}
-                        onCancel={this.hidePopup} />}
+                <ToolbarPopup onCancel={this.hidePopup} type={popup.type} data={popup.data} />
 
                 {/* LinkToolbar must be the last node. */}
                 <LinkToolbar onEdit={this.showPopup(PopupTypes.Link)} />
@@ -209,24 +194,17 @@ ToolbarComponent.propTypes = {
     allowsHighlights: PropTypes.bool,
     editorFormat: PropTypes.array,
     activeCell: PropTypes.any,
-    applyLink: PropTypes.func,
     addTable: PropTypes.func,
     insertImages: PropTypes.func,
-    applyComment: PropTypes.func,
-    applyAnnotation: PropTypes.func,
-    editorState: PropTypes.object,
     editorNode: PropTypes.object,
     scrollContainer: PropTypes.string
 };
 
-const mapStateToProps = ({editorFormat, editorState, activeCell, allowsHighlights}) => ({
-    editorFormat, editorState, activeCell, allowsHighlights
+const mapStateToProps = ({editorFormat, activeCell, allowsHighlights}) => ({
+    editorFormat, activeCell, allowsHighlights
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    applyLink: (link, entity = null) => dispatch(actions.applyLink({link, entity})),
-    applyComment: (sel, msg) => dispatch(actions.applyComment(sel, msg)),
-    applyAnnotation: (sel, msg) => dispatch(actions.applyAnnotation(sel, msg)),
     insertImages: () => dispatch(actions.insertImages()),
     addTable: () => dispatch(actions.addTable(1, 2))
 });

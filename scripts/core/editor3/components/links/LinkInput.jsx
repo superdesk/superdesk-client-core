@@ -141,7 +141,8 @@ LinkInputComponent.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-    item: state.item
+    item: state.item,
+    editorState: state.editorState
 });
 
 export const LinkInput = connect(mapStateToProps)(LinkInputComponent);

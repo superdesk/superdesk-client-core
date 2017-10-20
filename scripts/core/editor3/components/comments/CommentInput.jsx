@@ -39,10 +39,10 @@ export class CommentInput extends Component {
      */
     onSubmit() {
         const {msg} = this.state;
-        const {onSubmit, onCancel} = this.props;
+        const {onSubmit, onCancel, value} = this.props;
 
         if (msg !== '') {
-            onSubmit(msg);
+            onSubmit(value, {msg});
             onCancel();
         }
     }
@@ -160,5 +160,6 @@ export class CommentInput extends Component {
 
 CommentInput.propTypes = {
     onSubmit: PropTypes.func,
-    onCancel: PropTypes.func
+    onCancel: PropTypes.func,
+    value: PropTypes.object
 };
