@@ -418,9 +418,12 @@
 }
 
 /** COMMENTS **/
-.comment-input {
+.comment-input, .annotation-input {
 	.dropdown__menu {
 		padding: 15px;
+
+		label    { margin-bottom: 5px; }
+		textarea { margin-bottom: 10px; }
 
 		.mentions-input {
 			width: 300px;

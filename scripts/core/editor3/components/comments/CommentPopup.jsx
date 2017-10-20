@@ -140,12 +140,5 @@ export class CommentPopup extends Component {
 CommentPopup.propTypes = {
     selection: PropTypes.instanceOf(SelectionState),
     editorNode: PropTypes.object,
-    comment: PropTypes.shape({
-        data: PropTypes.shape({
-            msg: PropTypes.string,
-            author: PropTypes.string,
-            avatar: PropTypes.string,
-            date: PropTypes.date
-        })
-    })
+    comment: PropTypes.object
 };
