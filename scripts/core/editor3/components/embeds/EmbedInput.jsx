@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
-import * as actions from '../../actions';
+import {loadIframelyEmbedJs} from './loadIframely';
 import ng from 'core/services/ng';
 
 const fallbackAPIKey = '1d1728bf82b2ac8139453f'; // register to author's personal account
@@ -15,7 +14,7 @@ const GenericError = gettext('This URL could not be embedded.');
  * @name EmbedInputComponent
  * @description The dialog displayed when an embed URL is entered.
  */
-export class EmbedInputComponent extends Component {
+export class EmbedInput extends Component {
     constructor(props) {
         super(props);
 
@@ -114,6 +113,11 @@ export class EmbedInputComponent extends Component {
         this.props.onCancel();
     }
 
+    componentDidMount() {
+        loadIframelyEmbedJs();
+        $('.embed-dialog input').focus();
+    }
+
     render() {
         const {onCancel} = this.props;
         const {error} = this.state;
@@ -131,13 +135,7 @@ export class EmbedInputComponent extends Component {
     }
 }
 
-EmbedInputComponent.propTypes = {
+EmbedInput.propTypes = {
     onCancel: PropTypes.func.isRequired,
     onSubmit: PropTypes.func.isRequired
 };
-
-const mapDispatchToProps = (dispatch) => ({
-    onSubmit: (code) => dispatch(actions.embed(code))
-});
-
-export const EmbedInput = connect(null, mapDispatchToProps)(EmbedInputComponent);

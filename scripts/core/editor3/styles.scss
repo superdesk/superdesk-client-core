@@ -393,15 +393,6 @@
 	&.Editor3-activeButton, &.Editor3-activeButton [class*="icon-"] {
 		color: #5890ff;
 	}
-	
-	// Embed tooltip fix (using tooltip on span element)
-	&.Editor3-styleButton--tooltip-on-span {
-		padding: 0;
-		> span {
-			padding: 10px;
-			display: block;
-		}
-	}
 }
 
 /** Editor2 CSS Fix for headline **/
