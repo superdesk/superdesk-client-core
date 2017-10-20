@@ -171,13 +171,13 @@ class ToolbarComponent extends Component {
                         onClick={this.showPopup(PopupTypes.Comment)}
                         key="comment-button"
                         iconName="comment"
-                        tooltip={gettext('Add comment')}
+                        tooltip={gettext('Comment')}
                     />,
                     <SelectionButton
                         onClick={this.showPopup(PopupTypes.Annotation)}
                         key="annotation-button"
                         iconName="pencil"
-                        tooltip={gettext('Add annotation')}
+                        tooltip={gettext('Annotation')}
                     />
                 ]}
 

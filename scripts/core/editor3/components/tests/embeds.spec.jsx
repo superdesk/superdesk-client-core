@@ -1,8 +1,8 @@
 import React from 'react';
 import {shallow, mount} from 'enzyme';
 import mockStore, {embedBlockAndContent} from './utils';
-import {EmbedBlock, EmbedButton} from '../embeds';
-import {EmbedInputComponent as EmbedInput} from '../embeds/EmbedInput';
+import {EmbedBlock} from '../embeds';
+import {EmbedInput} from '../embeds/EmbedInput';
 
 describe('editor3.components.embed-block', () => {
     it('should render entity html', () => {
@@ -11,25 +11,6 @@ describe('editor3.components.embed-block', () => {
 
         expect(wrapper.find('.embed-block').html())
             .toBe('<div class="embed-block"><h1>Embed Title</h1></div>');
-    });
-});
-
-describe('editor3.components.embed-button', () => {
-    it('should render with hidden input', () => {
-        spyOn(EmbedButton.prototype, 'componentDidMount').and.returnValue(null);
-        const wrapper = shallow(<EmbedButton />);
-
-        expect(wrapper.find('EmbedInput').length).toEqual(0);
-    });
-
-    it('should show input when clicked', () => {
-        spyOn(EmbedButton.prototype, 'componentDidMount').and.returnValue(null);
-        const {options} = mockStore();
-        const wrapper = mount(<EmbedButton />, options);
-
-        wrapper.find('span').simulate('click');
-
-        expect(wrapper.find('EmbedInputComponent').length).toBe(1);
     });
 });
 

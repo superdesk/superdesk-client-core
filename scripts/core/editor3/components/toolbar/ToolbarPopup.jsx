@@ -8,7 +8,7 @@ import {PopupTypes} from '.';
 import {connect} from 'react-redux';
 import * as actions from '../../actions';
 
-class ToolbarButtonComponent extends Component {
+class ToolbarPopupComponent extends Component {
     render() {
         const {onCancel, type, data, applyLink, applyComment, applyAnnotation, embedCode} = this.props;
 
@@ -27,7 +27,7 @@ class ToolbarButtonComponent extends Component {
     }
 }
 
-ToolbarButtonComponent.propTypes = {
+ToolbarPopupComponent.propTypes = {
     applyLink: PropTypes.func,
     applyComment: PropTypes.func,
     applyAnnotation: PropTypes.func,
@@ -44,4 +44,4 @@ const mapDispatchToProps = (dispatch) => ({
     embedCode: (code) => dispatch(actions.embed(code))
 });
 
-export const ToolbarPopup = connect(null, mapDispatchToProps)(ToolbarButtonComponent);
+export const ToolbarPopup = connect(null, mapDispatchToProps)(ToolbarPopupComponent);
