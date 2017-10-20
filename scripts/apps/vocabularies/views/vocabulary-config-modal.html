@@ -47,6 +47,36 @@
                 <input id="field-text-single" type="checkbox" ng-model="vocabulary.field_options.single">
             </div>
 
+            <div class="sd-line-input" ng-show="vocabulary.field_type && vocabulary.field_type !== 'text'">
+                <label for="field-media-type" translate>Media Type</label>
+                <ul>
+                    <li>
+                        <div>
+                            <label>
+                                <input type="radio" name="field_type" value="picture" ng-model="vocabulary.field_type">
+                                <span translate>Image</span>
+                            </label>
+                        </div>
+                    </li>
+                    <li>
+                        <div>
+                            <label>
+                                <input type="radio" name="field_type" value="video" ng-model="vocabulary.field_type">
+                                <span translate>Video</span>
+                            </label>
+                        </div>
+                    </li>
+                    <li>
+                        <div>
+                            <label>
+                                <input type="radio" name="field_type" value="embed" ng-model="vocabulary.field_type">
+                                <span translate>Embed</span>
+                            </label>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
             <div class="sd-line-input" ng-show="!vocabulary.field_type">
                 <label translate>Items</label>
 

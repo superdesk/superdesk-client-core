@@ -34,16 +34,19 @@ export function VocabularyConfigController($scope, $route, $routeParams, vocabul
 
     /**
      * Create new custom field
+     * @param {string} type (text, picture, video or embed)
      */
-    $scope.createCustomField = () => {
-        $route.updateParams({id: null, new: true, type: 'text'});
+    $scope.createCustomField = (type) => {
+        $route.updateParams({id: null, new: true, type: type});
     };
 
     /**
      * Filter vocabularies by tab
      */
     $scope.filterVocabularies = (tab, fieldType) =>
-        tab === 'vocabularies' && !fieldType || tab === 'text-fields' && fieldType;
+        tab === 'vocabularies' && !fieldType || fieldType &&
+        (tab === 'text-fields' && fieldType === 'text' ||
+         tab === 'media-fields' && fieldType !== 'text');
 
     /**
      * Reload list of vocabularies
