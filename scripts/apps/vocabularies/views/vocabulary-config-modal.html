@@ -88,6 +88,7 @@
                 <tbody ng-if="schema">
                     <tr ng-repeat="item in vocabulary.items track by $index">
                         <td ng-repeat="field in schemaFields" ng-switch on="field.type">
+                            <span sd-switch ng-model="item[field.key]" ng-switch-when="bool" tooltip="{{ :: 'Enable / Disable' | translate }}" tooltip-placement="left"></span>
                             <input type="color"
                                 ng-model="item[field.key]"
                                 ng-disabled="!item.is_active"
