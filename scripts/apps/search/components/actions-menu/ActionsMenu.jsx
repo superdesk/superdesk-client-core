@@ -1,24 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
-
 import Label from './Label';
 import Divider from './Divider';
 import Item from './Item';
 
 import {closeActionsMenu, renderToBody} from 'apps/search/helpers';
+import {AUTHORING_MENU_GROUPS} from '../../../authoring/authoring/constants';
 
 export class ActionsMenu extends React.Component {
     constructor(props) {
         super(props);
-
-        this.groups = [
-            {_id: 'default', label: gettext('Actions')},
-            {_id: 'duplicate', label: gettext('Duplicate'), concate: true},
-            {_id: 'packaging'},
-            {_id: 'highlights'},
-            {_id: 'corrections'}
-        ];
 
         this.toggle = this.toggle.bind(this);
         this.getActions = this.getActions.bind(this);
@@ -82,7 +74,7 @@ export class ActionsMenu extends React.Component {
 
         var actions = this.getActions();
 
-        this.groups.map((group) => {
+        AUTHORING_MENU_GROUPS.map((group) => {
             if (actions[group._id]) {
                 if (group.label === 'Actions') {
                     menu.push(
@@ -128,7 +120,22 @@ export class ActionsMenu extends React.Component {
 
                 menu.push(...actions[group._id].map(createAction));
             }
+
             return null;
+        });
+
+        // adding menu item for the groups that are not define above
+        Object.keys(actions).forEach((groupName) => {
+            var existingGroup = AUTHORING_MENU_GROUPS.find((g) => g._id === groupName);
+
+            if (!existingGroup) {
+                menu.push(
+                    React.createElement(Divider, {
+                        key: 'group-divider-' + groupName
+                    })
+                );
+                menu.push(...actions[groupName].map(createAction));
+            }
         });
 
         return React.createElement(

@@ -11,22 +11,13 @@
 
     <ul class="dropdown dropdown--align-right dropdown__menu more-activity-menu" ng-class="{open: open}">
         <li><div class="dropdown__menu-label" translate>Actions</div></li>
+        <li ng-repeat-start="group in menuGroups"></li>
         <li class="dropdown__menu-divider"></li>
-
-        <li ng-repeat="activity in actions.default" sd-activity-item></li>
-        <li sd-activity-dropdown-item data-group="duplicate"></li>
-
-        <li class="dropdown__menu-divider" ng-if="actions.packaging"></li>
-        <li ng-repeat="activity in actions.packaging" sd-activity-item></li>
-
-        <li class="dropdown__menu-divider" ng-if="actions.highlights"></li>
-        <li ng-repeat="activity in actions.highlights" sd-activity-item></li>
-
-        <li class="dropdown__menu-divider" ng-if="actions.corrections"></li>
-        <li ng-repeat="activity in actions.corrections" sd-activity-item></li>
-
-        <li ng-if="!actions.default && !actions.packaging && !actions.highlights && !actions.corrections">
+        <li ng-repeat="activity in group.actions" sd-activity-item></li>
+        <li ng-if="group.concate" sd-activity-dropdown-item data-group="{group.label}"></li>
+        <li ng-if="!menuGroups.length">
             <div class="info-block" translate>You don't have the privileges to perform any action</div>
         </li>
+        <li ng-repeat-end></li>
     </ul>
 </div>

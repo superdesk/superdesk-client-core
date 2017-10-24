@@ -17,7 +17,20 @@ function WorkqueueService(session, api) {
     this.fetch = function() {
         return session.getIdentity()
             .then(angular.bind(this, function(identity) {
-                return api.query('workqueue', {source: {filter: {term: {lock_user: identity._id}}}})
+                const query = {
+                    source: {
+                        query: {
+                            bool: {
+                                must: [
+                                    {term: {lock_user: identity._id}},
+                                    {terms: {lock_action: ['edit', 'correct', 'kill']}}
+                                ]
+                            }
+                        }
+                    }
+                };
+
+                return api.query('workqueue', query)
                     .then(angular.bind(this, function(res) {
                         this.items = null;
                         this.items = res._items || [];

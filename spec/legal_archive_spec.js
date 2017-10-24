@@ -21,7 +21,7 @@ describe('legal_archive', () => {
     it('can display only OPEN option in the Actions Menu for items in Legal Archive', () => {
         legalArchive.open();
         var menu = content.openItemMenu('item1 in legal archive');
-        var menuItems = menu.all(by.repeater('activity in actions.default'));
+        var menuItems = menu.all(by.repeater('activity in group.actions'));
 
         expect(menuItems.count()).toBe(2); // open + open in new window
     });

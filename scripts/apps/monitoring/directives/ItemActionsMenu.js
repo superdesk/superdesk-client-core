@@ -1,3 +1,5 @@
+import {AUTHORING_MENU_GROUPS} from '../../authoring/authoring/constants';
+
 ItemActionsMenu.$inject = ['superdesk', 'activityService', 'workflowService', 'archiveService', '$rootScope'];
 export function ItemActionsMenu(superdesk, activityService, workflowService, archiveService, $rootScope) {
     return {
@@ -13,7 +15,7 @@ export function ItemActionsMenu(superdesk, activityService, workflowService, arc
              * @param {boolean} isOpen
              */
             scope.toggleActions = function(isOpen) {
-                scope.actions = isOpen ? getActions(scope.item) : scope.actions;
+                scope.menuGroups = isOpen ? getActions(scope.item) : scope.menuGroups;
                 scope.open = isOpen;
 
                 if (!isOpen) {
@@ -62,18 +64,38 @@ export function ItemActionsMenu(superdesk, activityService, workflowService, arc
              * @return {object}
              */
             function getActions(item) {
-                var intent = {action: 'list', type: getType(item)};
-                var groups = {};
+                let intent = {action: 'list', type: getType(item)};
+                let groups = {};
 
                 superdesk.findActivities(intent, item).forEach((activity) => {
                     if (workflowService.isActionAllowed(scope.item, activity.action)) {
-                        var group = activity.group || 'default';
+                        let group = activity.group || 'default';
 
                         groups[group] = groups[group] || [];
                         groups[group].push(activity);
                     }
                 });
-                return groups;
+
+                let menuGroups = [];
+
+                AUTHORING_MENU_GROUPS.forEach((mg) => {
+                    if (groups[mg._id]) {
+                        let group = {...mg};
+
+                        group.actions = groups[mg._id];
+                        menuGroups.push(group);
+                    }
+                });
+
+                Object.keys(groups).forEach((groupName) => {
+                    var existingGroup = AUTHORING_MENU_GROUPS.find((g) => g._id === groupName);
+
+                    if (!existingGroup) {
+                        menuGroups.push({_id: groupName, label: groupName, actions: groups[groupName]});
+                    }
+                });
+
+                return menuGroups;
             }
 
             /**

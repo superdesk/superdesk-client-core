@@ -103,7 +103,8 @@ export const CORE_PROJECTED_FIELDS = {
         'associations',
         'queue_state',
         'alt_text',
-        'description_text'
+        'description_text',
+        'assignment_id'
     ]
 };
 

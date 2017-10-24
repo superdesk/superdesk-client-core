@@ -22,6 +22,18 @@ describe('workqueue', () => {
 
     it('loads locked items of current user', inject((workqueue, api, session, $q, $rootScope) => {
         var items;
+        const query = {
+            source: {
+                query: {
+                    bool: {
+                        must: [
+                            {term: {lock_user: USER_ID}},
+                            {terms: {lock_action: ['edit', 'correct', 'kill']}}
+                        ]
+                    }
+                }
+            }
+        };
 
         spyOn(api, 'query').and.returnValue($q.when({_items: [{}]}));
 
@@ -31,9 +43,10 @@ describe('workqueue', () => {
 
         $rootScope.$apply();
 
+
         expect(items.length).toBe(1);
         expect(items).toBe(workqueue.items);
-        expect(api.query).toHaveBeenCalledWith('workqueue', {source: {filter: {term: {lock_user: USER_ID}}}});
+        expect(api.query).toHaveBeenCalledWith('workqueue', query);
         expect(session.getIdentity).toHaveBeenCalled();
     }));
 
