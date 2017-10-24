@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {Dropdown} from 'core/ui/components';
-import Textarea from 'react-textarea-autosize';
+import {toHTML, Editor} from 'core/editor3';
 
 export class AnnotationInput extends Component {
     constructor(props) {
@@ -27,14 +27,15 @@ export class AnnotationInput extends Component {
         if (body !== '') {
             onSubmit(value, {
                 msg: body,
+                msgType: 'html',
                 annotationType: type
             });
             onCancel();
         }
     }
 
-    onChange({target}) {
-        this.setState({body: target.value});
+    onChange(content) {
+        this.setState({body: toHTML(content)});
     }
 
     onSelect({target}) {
@@ -47,7 +48,7 @@ export class AnnotationInput extends Component {
 
     render() {
         const {onCancel} = this.props;
-        const {body, type} = this.state;
+        const {type} = this.state;
 
         return (
             <div className="annotation-input">
@@ -60,11 +61,9 @@ export class AnnotationInput extends Component {
                         </select>
                     </div>
                     <label className="sd-line-input__label">Annotation Body</label>
-                    <Textarea
-                        placeholder={gettext('Body')}
-                        className="annotation-input__textarea"
-                        value={body}
+                    <Editor
                         onChange={this.onChange}
+                        editorFormat={['bold', 'italic', 'underline', 'anchor']}
                     />
                     <div className="pull-right">
                         <button className="btn btn--cancel" onClick={onCancel}>{gettext('Cancel')}</button>

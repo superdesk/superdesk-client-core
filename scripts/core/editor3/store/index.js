@@ -11,33 +11,38 @@ import {applyInlineStyles, removeInlineStyles, highlightTypes} from '../reducers
 /**
  * @name createEditorStore
  * @description Returns a new redux store.
+ * @param {Object} props The properties of the editor (for Angular, the controller instance).
+ * @param {Boolean=} isReact True if the store is created for a React component.
  * @returns {Object} Redux store.
  */
-export default function createEditorStore(ctrl) {
+export default function createEditorStore(props, isReact = false) {
     const spellcheck = ng.get('spellcheck');
 
-    spellcheck.setLanguage(ctrl.language);
+    if (!props.disableSpellchecker) {
+        spellcheck.setLanguage(props.language);
+    }
 
     const dict = spellcheck.getDict();
-    const content = getInitialContent(ctrl);
-    const decorators = Editor3.getDecorator(ctrl.disableSpellchecker);
-    const showToolbar = !ctrl.singleLine && (ctrl.editorFormat || []).length > 0;
+    const content = getInitialContent(props);
+    const decorators = Editor3.getDecorator(props.disableSpellchecker);
+    const showToolbar = !props.singleLine && (props.editorFormat || []).length > 0;
+    const onChangeValue = isReact ? props.onChange : _.debounce(onChange.bind(props), props.debounce);
 
     const store = createStore(reducers, {
         editorState: EditorState.createWithContent(content, decorators),
         activeHighlight: null,
-        allowsHighlights: ctrl.highlights,
+        allowsHighlights: props.highlights,
         searchTerm: {pattern: '', index: -1, caseSensitive: false},
-        readOnly: ctrl.readOnly,
+        readOnly: props.readOnly,
         locked: false, // when true, main editor is disabled (ie. when editing sub-components like tables or images)
         showToolbar: showToolbar,
-        singleLine: ctrl.singleLine,
-        tabindex: ctrl.tabindex,
-        showTitle: ctrl.showTitle,
+        singleLine: props.singleLine,
+        tabindex: props.tabindex,
+        showTitle: props.showTitle,
         activeCell: null, // currently focused table cell
-        editorFormat: ctrl.editorFormat || [],
-        onChangeValue: _.debounce(onChange.bind(ctrl), ctrl.debounce),
-        item: ctrl.item
+        editorFormat: props.editorFormat || [],
+        onChangeValue: onChangeValue,
+        item: props.item
     }, applyMiddleware(thunk));
 
 
@@ -65,21 +70,21 @@ function onChange(content) {
 
 /**
  * @name getInitialContent
- * @param {Object} ctrl Controller hosting the editor
+ * @param {Object} props Controller hosting the editor
  * @returns {ContentState} DraftJS ContentState object.
  * @description Gets the initial content state of the editor based on available information.
  * If an editor state is available as saved in the DB, we use that, otherwise we attempt to
  * use available HTML. If none are available, an empty ContentState is created.
  */
-function getInitialContent(ctrl) {
+function getInitialContent(props) {
     // we have an editor state stored in the DB
-    if (typeof ctrl.editorState === 'object') {
-        return applyInlineStyles(convertFromRaw(ctrl.editorState)).contentState;
+    if (typeof props.editorState === 'object') {
+        return applyInlineStyles(convertFromRaw(props.editorState)).contentState;
     }
 
     // we have only HTML (possibly legacy editor2 or ingested item)
-    if (ctrl.value) {
-        return fromHTML(ctrl.value);
+    if (props.value) {
+        return fromHTML(props.value);
     }
 
     return ContentState.createFromText('');
