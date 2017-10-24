@@ -53,7 +53,7 @@
                     <li>
                         <div>
                             <label>
-                                <input type="radio" name="field_type" value="picture" ng-model="vocabulary.field_type">
+                                <input type="checkbox" name="field_type" ng-model="vocabulary.field_options.allowed_types.picture">
                                 <span translate>Image</span>
                             </label>
                         </div>
@@ -61,8 +61,16 @@
                     <li>
                         <div>
                             <label>
-                                <input type="radio" name="field_type" value="video" ng-model="vocabulary.field_type">
+                                <input type="checkbox" name="field_type" ng-model="vocabulary.field_options.allowed_types.video">
                                 <span translate>Video</span>
+                            </label>
+                        </div>
+                    </li>
+                    <li>
+                        <div>
+                            <label>
+                                <input type="checkbox" name="field_type" ng-model="vocabulary.field_options.allowed_types.audio">
+                                <span translate>Audio</span>
                             </label>
                         </div>
                     </li>

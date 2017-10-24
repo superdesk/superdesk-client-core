@@ -96,6 +96,7 @@
     <label translate>Featured Media</label>
     <div sd-item-association
          data-allow-video="true"
+         data-allow-picture="true"
          data-item="item"
          data-rel="'featuremedia'"
          data-editable="_editable"
@@ -519,14 +520,15 @@
 </div>
 
 <div class="field" ng-repeat="field in fields track by field._id"
-     ng-if="field.field_type === 'picture' || field.field_type === 'video'"
+     ng-if="field.field_type === 'media'"
      sd-width="{{editor[field._id].sdWidth || 'full'}}"
      sd-validation-error="error.extra[field._id]"
      order="{{editor[field._id].order}}"
      data-required="schema[field._id].required">
     <label translate>{{ field.display_name }}</label>
     <div sd-item-association
-         data-allow-video="field.field_type === 'video'"
+         data-allow-video="!!field.field_options.allowed_types.video"
+         data-allow-picture="!!field.field_options.allowed_types.picture"
          data-item="item"
          data-rel="field._id"
          data-editable="_editable"
@@ -538,8 +540,7 @@
     <div sd-item-crops
          data-item="item.associations[field._id]"
          ng-if="editor[field._id].showCrops && features.editFeaturedImage &&
-         (item.associations[field._id].type == 'picture' ||
-         item.associations[field._id].type == 'graphic')">
+         !!field.field_options.allowed_types.picture">
     </div>
     <div class="sd-line-input__hint" ng-if="helper_text[field._id]">{{field.helper_text}}</div>
 </div>
