@@ -417,8 +417,15 @@
 	}
 }
 
+.annotation-input {
+	.dropdown__menu {
+		width: 465px;
+	}
+}
+
 /** COMMENTS **/
 .comment-input, .annotation-input {
+	.dropdown a { color: $sd-blue; }
 	.dropdown__menu {
 		padding: 15px;
 
@@ -466,6 +473,7 @@
 	left: 0;
 	z-index: 1000;
 
+	.dropdown a { color: $sd-blue; }
 	.dropdown__menu {
 		width: 250px;
 		padding: 15px;

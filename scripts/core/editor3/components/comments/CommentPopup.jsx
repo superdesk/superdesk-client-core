@@ -57,7 +57,7 @@ export class CommentPopup extends Component {
      * @returns {JSX}
      */
     component() {
-        const {author, avatar, date, msg} = this.props.comment.data;
+        const {author, avatar, date, msg, msgType} = this.props.comment.data;
         const fromNow = moment(date).calendar();
         const fullDate = moment(date).format('MMMM Do YYYY, h:mm:ss a');
         const position = this.position();
@@ -72,7 +72,10 @@ export class CommentPopup extends Component {
                             <div className="date" title={fullDate}>{fromNow}</div>
                         </div>
                     </div>
-                    <TextWithMentions className="comment-popup__body">{msg}</TextWithMentions>
+                    {msgType !== 'html'
+                        ? <TextWithMentions className="comment-popup__body">{msg}</TextWithMentions>
+                        : <div dangerouslySetInnerHTML={{__html: msg}} />
+                    }
                 </Dropdown>
             </div>
         );

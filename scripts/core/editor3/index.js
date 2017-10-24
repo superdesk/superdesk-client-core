@@ -9,7 +9,7 @@ import ng from 'core/services/ng';
  * @module superdesk.core.editor3
  * @name superdesk.core.editor3
  * @packageName superdesk.core
- * @description Superdesk core editor version 3.
+ * @description Editor as an Angular directive.
  */
 export default angular.module('superdesk.core.editor3', ['superdesk.apps.spellcheck'])
     .service('editor3', EditorService)
@@ -24,3 +24,7 @@ export default angular.module('superdesk.core.editor3', ['superdesk.apps.spellch
         };
     }])
     .directive('sdEditor3', sdEditor3);
+
+// Editor as a React Component.
+export {Editor} from './react';
+export {toHTML, fromHTML} from './html';
