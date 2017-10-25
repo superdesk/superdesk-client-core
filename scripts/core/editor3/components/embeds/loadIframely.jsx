@@ -9,6 +9,10 @@ export function loadIframelyEmbedJs() {
         var ifs = document.createElement('script');
         var s = document.getElementsByTagName('script')[0];
 
+        if (typeof s === 'undefined') {
+            return; // happens in tests
+        }
+
         ifs.type = 'text/javascript';
         ifs.async = true;
         ifs.src = (document.location.protocol === 'https:' ? 'https:' : 'http:') + '//cdn.iframe.ly/embed.js';
