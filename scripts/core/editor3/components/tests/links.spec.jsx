@@ -3,7 +3,7 @@ import {createStore} from 'redux';
 import {shallow, mount} from 'enzyme';
 import {EditorState} from 'draft-js';
 import {LinkToolbarComponent as LinkToolbar} from '../links/LinkToolbar';
-import {LinkInput} from '../links';
+import {LinkInputComponent as LinkInput} from '../links/LinkInput';
 import {stateWithLink, cursorAtPosition} from './utils';
 
 describe('editor3.components.link-toolbar', () => {
@@ -86,8 +86,7 @@ describe('editor3.components.link-toolbar', () => {
     });
 });
 
-// TODO(gbbr): Fix this test.
-xdescribe('editor3.components.link-input', () => {
+describe('editor3.components.link-input', () => {
     const value = {href: 'abc'};
     const store = createStore(() => ({}), {item: {}});
 
