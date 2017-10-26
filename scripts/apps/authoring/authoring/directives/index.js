@@ -16,3 +16,4 @@ export {ItemAssociationDirective} from './ItemAssociationDirective';
 export {FullPreviewDirective} from './FullPreviewDirective';
 export {RemoveTagsDirective} from './RemoveTagsDirective';
 export {TansaScopeSyncDirective} from './TansaScopeSyncDirective';
+export {ItemActionsByIntentDirective} from './ItemActionsByIntentDirective';

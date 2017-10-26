@@ -1,0 +1,11 @@
+<ul ng-if="menuGroups.length">
+    <li ng-repeat-start="group in menuGroups"></li>
+    <li class="dropdown__menu-divider"></li>
+    <li>
+        <span class="dropdown__menu-label" translate>{{ ::group._id }}</span>
+    </li>
+    <li ng-repeat="activity in group.actions" sd-activity-item></li>
+    <li ng-repeat-end></li>
+</ul>
+
+
