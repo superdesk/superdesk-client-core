@@ -10,7 +10,7 @@ import {ng} from 'core/services/ng';
 /**
  * @ngdoc React
  * @name Editor
- * @description A React component wrapping the editor.
+ * @description Editor as a React component.
  */
 export class Editor extends Component {
     constructor(props) {

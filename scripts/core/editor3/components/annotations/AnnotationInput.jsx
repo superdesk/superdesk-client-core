@@ -3,6 +3,14 @@ import PropTypes from 'prop-types';
 import {Dropdown} from 'core/ui/components';
 import {toHTML, Editor} from 'core/editor3';
 
+/**
+ * @ngdoc React
+ * @module superdesk.core.editor3
+ * @param {Function} onCancel
+ * @param {Function} onSubmit Receives value (generally SelectionState) and highlight data.
+ * @description AnnotationInput is the popup containing the fields needed to fill in information
+ * about an annotation.
+ */
 export class AnnotationInput extends Component {
     constructor(props) {
         super(props);
@@ -34,10 +42,22 @@ export class AnnotationInput extends Component {
         }
     }
 
+    /**
+     * @ngdoc method
+     * @name CommentInput#onChange
+     * @param {ContentState} content
+     * @description onChange is triggered when the content of the editor changes.
+     */
     onChange(content) {
         this.setState({body: toHTML(content)});
     }
 
+    /**
+     * @ngdoc method
+     * @name CommentInput#onSelect
+     * @param {Event} e
+     * @description onSelect is triggered when the annotation type is toggled.
+     */
     onSelect({target}) {
         this.setState({type: target.value});
     }

@@ -8,6 +8,16 @@ import {PopupTypes} from '.';
 import {connect} from 'react-redux';
 import * as actions from '../../actions';
 
+/**
+ * @ngdoc React
+ * @module superdesk.core.editor3
+ * @param {Function} onCancel
+ * @param {PopupTypes} type Popup type.
+ * @param {Object} data Metadata to pass to the pop-up (generally the SelectionState in the editor at
+ * the time.
+ * @description ToolbarPopupComponent renders the popup specified by the type property and passes it
+ * the onCancel value along with the given prop data.
+ */
 class ToolbarPopupComponent extends Component {
     render() {
         const {onCancel, type, data, applyLink, applyComment, applyAnnotation, embedCode} = this.props;
