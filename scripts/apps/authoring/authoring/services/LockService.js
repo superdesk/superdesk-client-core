@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 LockService.$inject = ['$q', 'api', 'session', 'privileges', 'notify'];
 export function LockService($q, api, session, privileges, notify) {
     /**
@@ -13,7 +15,10 @@ export function LockService($q, api, session, privileges, notify) {
                 item.lock_action = action || 'edit';
                 return item;
             }, (err) => {
-                notify.error(gettext('Failed to get a lock on the item!'));
+                const msg = _.get(err, 'data._message') ? gettext('Error: ' + err.data._message) :
+                    gettext('Failed to get a lock on the item!');
+
+                notify.error(msg);
                 item._locked = false;
                 item._editable = false;
                 return item;
