@@ -166,20 +166,22 @@ class ToolbarComponent extends Component {
                         iconName="table"
                     />
                 }
-                {allowsHighlights && [
+                {allowsHighlights &&
                     <SelectionButton
                         onClick={this.showPopup(PopupTypes.Comment)}
                         key="comment-button"
                         iconName="comment"
                         tooltip={gettext('Comment')}
-                    />,
+                    />
+                }
+                {allowsHighlights && has('annotation') &&
                     <SelectionButton
                         onClick={this.showPopup(PopupTypes.Annotation)}
                         key="annotation-button"
                         iconName="pencil"
                         tooltip={gettext('Annotation')}
                     />
-                ]}
+                }
 
                 <ToolbarPopup onCancel={this.hidePopup} type={popup.type} data={popup.data} />
 
