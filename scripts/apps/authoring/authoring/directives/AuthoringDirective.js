@@ -617,9 +617,11 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
 
             $scope.saveAndContinue = function(customButtonAction) {
                 if ($scope.dirty) {
-                    $scope.saveTopbar().then(customButtonAction);
+                    $scope.saveTopbar()
+                        .then(confirm.confirmQuickPublish)
+                        .then(customButtonAction);
                 } else {
-                    customButtonAction();
+                    confirm.confirmQuickPublish().then(customButtonAction);
                 }
             };
 
