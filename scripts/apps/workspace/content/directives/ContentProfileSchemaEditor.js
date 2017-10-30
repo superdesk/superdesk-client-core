@@ -11,8 +11,8 @@ import _ from 'lodash';
  *
  * @description Handles content profile schema editing
  */
-ContentProfileSchemaEditor.$inject = ['content'];
-export function ContentProfileSchemaEditor(content) {
+ContentProfileSchemaEditor.$inject = ['content', 'config'];
+export function ContentProfileSchemaEditor(content, config) {
     return {
         restrict: 'E',
         templateUrl: 'scripts/apps/workspace/content/views/schema-editor.html',
@@ -68,6 +68,10 @@ export function ContentProfileSchemaEditor(content) {
                 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'orderedlist', 'unorderedlist', 'quote', 'picture', 'anchor',
                 'embed', 'underline', 'italic', 'bold', 'table'
             ];
+
+            if (config.features.editorHighlights) {
+                scope.formattingOptionsEditor3.push('annotation');
+            }
 
             /**
              * @description label returns the display name for a key.
