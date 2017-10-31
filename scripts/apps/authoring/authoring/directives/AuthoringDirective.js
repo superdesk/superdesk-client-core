@@ -33,6 +33,7 @@ import _ from 'lodash';
  * @requires suggest
  * @requires config
  * @requires editorResolver
+ * @requires $sce
  *
  * @description
  *   This directive is responsible for generating superdesk content authoring form.
@@ -66,12 +67,15 @@ AuthoringDirective.$inject = [
     'suggest',
     'config',
     'editorResolver',
-    'compareVersions'
+    'compareVersions',
+    'embedService',
+    '$sce'
 ];
 export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace, notify,
     gettext, desks, authoring, api, session, lock, privileges, content, $location,
     referrer, macros, $timeout, $q, modal, archiveService, confirm, reloadService,
-    $rootScope, $interpolate, metadata, suggest, config, editorResolver, compareVersions) {
+    $rootScope, $interpolate, metadata, suggest, config, editorResolver, compareVersions,
+    embedService, $sce) {
     return {
         link: function($scope, elem, attrs) {
             var _closing;
@@ -91,6 +95,8 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             $scope.showExportButton = $scope.highlight && $scope.origItem.type === 'composite';
             $scope.openSuggestions = () => suggest.setActive();
             $scope.openCompareVersions = (item) => compareVersions.init(item);
+            $scope.isValidEmbed = {};
+            $scope.embedPreviews = {};
 
             $scope.$watch('origItem', (newValue, oldValue) => {
                 $scope.itemActions = null;
@@ -733,7 +739,8 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
 
             $scope.save_enabled = function() {
                 confirm.dirty = $scope.dirty;
-                return $scope.dirty || $scope.item._autosave;
+                return ($scope.dirty || $scope.item._autosave) &&
+                    _.reduce($scope.isValidEmbed, (agg, val) => agg && val, true);
             };
 
             $scope.previewFormattedEnabled = function() {
@@ -818,6 +825,49 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 $rootScope.$broadcast('item:nextStage', {stage: stageList[stageIndex], itemId: $scope.item._id});
             };
 
+            // Returns true if the given text is an URL
+            $scope.isURL = (text) =>
+                _.startsWith(_.lowerCase(_.trim(text)), 'http');
+
+            // Shows the preview for the given embed field.
+            $scope.previewEmbed = (field) => {
+                $scope.embedPreviews[field._id] = $sce.trustAsHtml($scope.item.extra[field._id].embed);
+            };
+
+            // Hides the preview for the given embed field.
+            $scope.hideEmbedPreview = (field) => {
+                $scope.embedPreviews[field._id] = null;
+            };
+
+            // Returns true if the preview for the given embed field was on.
+            $scope.isPreviewOn = (field) =>
+                !!$scope.embedPreviews && !!$scope.embedPreviews[field._id];
+
+            // Validates the given embed field
+            $scope.validateEmbed = (field) => {
+                $scope.hideEmbedPreview(field);
+
+                if ($scope.item.extra[field._id].embed) {
+                    $scope.isValidEmbed[field._id] = !$scope.isURL($scope.item.extra[field._id].embed);
+                    if ($scope.isValidEmbed[field._id]) {
+                        $scope.autosave($scope.item);
+                    }
+                } else {
+                    $scope.isValidEmbed[field._id] = !$scope.embedFieldRequired[field._id];
+                }
+            };
+
+            // Retrieves the embed script for a given URL.
+            $scope.processEmbed = (field) => {
+                if (_.startsWith($scope.item.extra[field._id].embed, 'http')) {
+                    embedService.get($scope.item.extra[field._id].embed).then((data) => {
+                        $scope.item.extra[field._id].embed = data.html;
+                        $scope.isValidEmbed[field._id] = true;
+                        $scope.autosave($scope.item);
+                    });
+                }
+            };
+
             function refreshItem() {
                 authoring.open($scope.item._id, true)
                     .then((item) => {
@@ -884,10 +934,32 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
 
             $scope.$on('$destroy', deregisterTansa);
 
+            var initEmbedFieldsValidation = () => {
+                $scope.embedFieldRequired = {};
+                $scope.isValidEmbed = {};
+                content.getTypes().then(() => {
+                    _.forEach(content.types, (profile) => {
+                        if ($scope.item.profile === profile._id && profile.schema) {
+                            _.forEach(profile.schema, (schema, field) => {
+                                if (schema && schema.type === 'embed') {
+                                    $scope.embedFieldRequired[field] = schema.required;
+                                    if ($scope.item.extra[field] && $scope.item.extra[field].embed) {
+                                        $scope.isValidEmbed[field] = !$scope.isURL($scope.item.extra[field].embed);
+                                    } else {
+                                        $scope.isValidEmbed[field] = !schema.required;
+                                    }
+                                }
+                            });
+                        }
+                    });
+                });
+            };
+
             // init
             $scope.content = content;
             $scope.closePreview();
             macros.setupShortcuts($scope);
+            initEmbedFieldsValidation();
         }
     };
 }

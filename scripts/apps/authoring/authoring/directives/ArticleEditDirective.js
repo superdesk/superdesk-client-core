@@ -16,7 +16,6 @@
  * @requires $interpolate
  * @requires suggest
  * @requires renditions
- * @requires editorResolver
  *
  * @description
  *   This directive is responsible for generating handles editing of the main text fields of the item in authoring.
@@ -36,8 +35,7 @@ ArticleEditDirective.$inject = [
     'history',
     '$interpolate',
     'suggest',
-    'renditions',
-    'editorResolver'
+    'renditions'
 ];
 export function ArticleEditDirective(
     autosave,
@@ -52,8 +50,7 @@ export function ArticleEditDirective(
     history,
     $interpolate,
     suggest,
-    renditions,
-    editorResolver
+    renditions
 ) {
     return {
         templateUrl: 'scripts/apps/authoring/views/article-edit.html',
