@@ -1,0 +1,323 @@
+<form name="contactForm">
+        <div class="action-bar clearfix show">
+            <button id="save-edit-btn" type="submit" class="btn btn--primary pull-right"
+             ng-if="privileges.contacts" ng-click="contactForm.$valid && save()"
+             ng-disabled="contactForm.$invalid || !contactForm.$dirty" translate>Save</button>
+            <button id="cancel-edit-btn" type="button" class="btn pull-right"
+                ng-click="cancel()" translate>Cancel</button>
+        </div>
+        <div class="profile-info">
+            <div class="header-info">
+                <div class="profile-pic">
+                    <figure class="avatar" 
+                        ng-class="{'organisation': !contactForm.first_name}">
+                    </figure>
+                    <span class="disabled-label" ng-if="contact._id && !contact.is_active" translate>
+                        inactive</span>
+                </div>
+                <h2>{{ display_name }}</h2>
+                <h5>{{ contact.job_title}}</h5>
+                <div class="active" ng-if="privileges.contacts"
+                    sd-tooltip="{{ :: 'ACTIVE/INACTIVE' | translate }}" flow="left">
+                    <span sd-switch ng-model="contact.is_active">
+                    </span>
+                </div>
+            </div>
+
+            <div class="details-info">
+                <fieldset ng-disabled="!privileges.contacts">
+                    <div class="sd-alert__container" ng-init="alert = true" ng-if="privileges.contacts">
+                        <div class="sd-alert sd-alert--hollow" ng-class="{'sd-alert--hidden': !alert}">
+                            <button class="sd-alert__close" ng-click="alert=false"></button>
+                            <span class="alert-info-msg" translate>At minimum  {{contactForm.first_name ? '\'first name, last name\'' : '\'organisation\'' | translate}} and at least one of [mobile, phone, email, twitter, facebook, instagram] fields are required.</span>
+                        </div>
+                        <span class="sd-alert__info-btn sd-shadow--z2" ng-click="alert=!alert" ng-class="{'sd-alert__info-btn--hidden': alert}"><i class="icon-info-large"></i></span>
+                    </div>
+                    <div class="form__row" ng-if="privileges.contacts">
+                        <div class="sd-line-input sd-line-input--disabled">
+                            <label class="sd-line-input__label" for="public" translate>public</label>
+                            <div class="active">
+                                <span sd-switch ng-model="contact.public">
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form__row" ng-if="origContact.type === 'person' || origContact.first_name">
+                        <div class="sd-line-input" >
+                            <label class="sd-line-input__label" for="honorific" translate>honorific</label>
+                            <input class="sd-line-input__input" type="text" name="honorific"
+                             id="honorific" ng-model="contact.honorific">
+                            <span class="sd-line-input__hint" translate>e.g. professor, commissioner</span>
+                        </div>
+                    </div>
+
+                    <div class="form__row" ng-if="origContact.type === 'person' || origContact.first_name">
+                        <div class="sd-line-input sd-line-input--required">
+                            <label class="sd-line-input__label" for="first-name" translate>first name</label>
+                            <input class="sd-line-input__input" type="text" name="first_name" id="first-name"
+                             ng-model="contact.first_name" required>
+                            <div ng-show="contactForm.first_name.$error.required" class="sd-line-input__message"
+                             translate>This field is required.</div>
+                        </div>
+                    </div>
+
+                    <div class="form__row" ng-if="origContact.type === 'person' || origContact.last_name">
+                        <div class="sd-line-input sd-line-input--required">
+                            <label class="sd-line-input__label" for="last-name" translate>last name</label>
+                            <input class="sd-line-input__input" type="text" name="last_name" id="last-name"
+                             ng-model="contact.last_name" required>
+                            <div class="sd-line-input__message" ng-show="contactForm.last_name.$error.required"
+                             translate>This field is required.</div> 
+                        </div>
+                    </div>
+
+                    <div class="form__row">
+                        <div class="sd-line-input" ng-class="{'sd-line-input--required': !contactForm.first_name}">
+                            <label class="sd-line-input__label" for="organisation" translate>organisation</label>
+                            <input class="sd-line-input__input" type="text" name="organisation"
+                            id="organisation" ng-model="contact.organisation"
+                            ng-required="!contactForm.first_name">
+                            <div ng-show="contactForm.organisation.$error.required" class="sd-line-input__message" translate>This field is required.</div>
+                        </div>
+                    </div>
+
+                    <div class="form__row">
+                        <div class="sd-line-input sd-line-input--is-select">
+                            <label class="sd-line-input__label" for="job_title" translate>Job Title</label>
+                            <select class="sd-line-input__select"
+                                    ng-disabled="!privileges.contacts"
+                                    ng-model="contact.job_title"
+                                    name="job_title"
+                                    id="job_title"
+                                    ng-options="job.name as job.name for job in metadata.contact_job_titles">
+                            </select>
+                            <option value=""></option>
+                        </div>
+                    </div>
+
+                    <div class="form__row">
+                        <div class="sd-line-input" ng-class="{'sd-line-input--required': requiredField}">
+                            <label class="sd-line-input__label" for="email" translate>email</label>
+                        </div>
+                        <div ng-repeat="email in contact.email track by $index" class="form__row form__row--flex">
+                                <div class="sd-line-input">
+                                    <input class="sd-line-input__input" type="email" name="email{{$index}}"
+                                     id="email{{$index}}" placeholder="Email {{$index + 1}}"
+                                     ng-model="contact.email[$index]" required>
+                                    <div class="sd-line-input__message"
+                                        ng-show="contactForm.email{{$index}}.$error.email">
+                                        <i class="icon-warning-sign"></i>
+                                        <span translate>please provide a valid email address</span>
+                                    </div>
+                                </div>
+                                <div class="sd-line-input" ng-if="privileges.contacts">
+                                    <button ng-click="removeField('email', email)"><i class="icon-trash"></i></button>
+                                </div>
+                        </div>
+                        <button class="btn btn--small btn--expanded" ng-if="privileges.contacts"
+                             ng-disabled="contactForm.$invalid && !requiredField"
+                             ng-click="addField('email')"><i class="icon-plus-large"></i></button>
+                    </div>
+
+                    <div class="form__row">
+                        <div class="sd-line-input" ng-class="{'sd-line-input--required': requiredField}">
+                            <label class="sd-line-input__label" for="phone" translate>phone</label>
+                        </div>
+                        <div ng-repeat="phone in contact.phone" class="form__row form__row--flex">
+                                <div class="sd-line-input">
+                                    <label class="sd-line-input__label" for="number" translate>number</label>
+                                    <input class="sd-line-input__input" type="text" ng-model="phone.number" required>
+                                </div>
+                                <div class="sd-line-input sd-line-input--is-select">
+                                    <label class="sd-line-input__label" for="usage" translate>usage</label>
+                                    <select class="sd-line-input__select"
+                                            placeholder="usage"
+                                            ng-model="phone.usage"
+                                            name="phone_usage"
+                                            id="phone_usage"
+                                            ng-change="updateUsage(phone.usage, 'phone', $index)"
+                                            ng-options="usage.qcode as usage.qcode for usage in metadata.contact_phone_usage">
+                                    </select>
+                                </div>
+                                <div class="sd-line-input">
+                                    <label class="sd-line-input__label" for="public" translate>public</label>
+                                    <div ng-class="{'prevent-switch': phone.usage === 'Confidential' || !privileges.contacts}">
+                                        <span sd-switch ng-model="phone.public"></span>
+                                    </div>
+                                </div>
+                                <div class="sd-line-input" ng-if="privileges.contacts">
+                                    <button ng-click="removeField('phone', phone)">
+                                        <i class="icon-trash"></i>
+                                    </button>
+                                </div>
+                        </div>
+                        <button class="btn btn--small btn--expanded" ng-if="privileges.contacts"
+                             ng-disabled="contactForm.$invalid && !requiredField"
+                             ng-click="addField('phone')"><i class="icon-plus-large"></i></button>
+                    </div>
+
+                    <div sd-toggle-box="" data-title="More Details" data-open="true">
+
+                        <div class="form__row">
+                            <div class="sd-line-input" ng-class="{'sd-line-input--required': requiredField}">
+                                <label class="sd-line-input__label" for="mobile" translate>mobile</label>
+                            </div>
+                            <div ng-repeat="mobile in contact.mobile" class="form__row form__row--flex">
+                                    <div class="sd-line-input">
+                                        <label class="sd-line-input__label" for="number" translate>number</label>
+                                        <input class="sd-line-input__input" type="text" ng-model="mobile.number" required>
+                                    </div>
+                                    <div class="sd-line-input sd-line-input--is-select">
+                                        <label class="sd-line-input__label" for="usage" translate>usage</label>
+                                        <select class="sd-line-input__select"
+                                            placeholder="usage"
+                                            ng-model="mobile.usage"
+                                            name="mobile_usage"
+                                            id="mobile_usage"
+                                            ng-change="updateUsage(mobile.usage, 'mobile', $index)"
+                                            ng-options="usage.qcode as usage.qcode for usage in metadata.contact_mobile_usage">
+                                        </select>
+                                    </div>
+                                    <div class="sd-line-input" >
+                                        <label class="sd-line-input__label" for="public" translate>public</label>
+                                        <div ng-class="{'prevent-switch': mobile.usage === 'Confidential' || !privileges.contacts}">
+                                            <span sd-switch ng-model="mobile.public"></span>
+                                        </div>
+                                    </div>
+                                    <div class="sd-line-input" ng-if="privileges.contacts">
+                                        <button ng-click="removeField('mobile', mobile)"><i class="icon-trash"></i></button>
+                                    </div>
+                            </div>
+                            <button class="btn btn--small btn--expanded" ng-if="privileges.contacts"
+                                 ng-disabled="contactForm.$invalid && !requiredField"
+                                 ng-click="addField('mobile')"><i class="icon-plus-large"></i></button>
+                        </div>
+
+                        <div class="form__row">
+                            <div class="sd-line-input">
+                                <label class="sd-line-input__label" for="fax" translate>fax</label>
+                                <input class="sd-line-input__input" type="text" name="fax" id="fax"
+                                 ng-model="contact.fax">
+                            </div>
+                        </div>
+
+                        <div class="form__row">
+                            <div class="sd-line-input">
+                                <label class="sd-line-input__label" for="website" translate>website</label>
+                                <input class="sd-line-input__input" type="text" name="website" id="website"
+                                 ng-model="contact.website">
+                            </div>
+                        </div>
+
+                        <div class="form__row">
+                            <div class="sd-line-input" 
+                            ng-class="{'sd-line-input--required': requiredField}">
+                                <label class="sd-line-input__label" for="twitter" translate>twitter</label>
+                                <input class="sd-line-input__input" type="text" name="twitter" id="twitter"
+                                placeholder="@username" ng-model="contact.twitter"
+                                ng-required="requiredField" ng-pattern="twitterPattern">
+                                <span ng-if="!requiredField" class="sd-line-input__hint" translate>e.g. @cityofsydney</span>
+                                <div ng-show="contactForm.twitter.$error.required" class="sd-line-input__message" translate>This field is required.</div>
+                                <div ng-show="contactForm.twitter.$error.pattern" class="sd-line-input__message" translate>
+                                    <i class="icon-warning-sign"></i>
+                                    Please enter valid twitter account
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form__row">
+                            <div class="sd-line-input" ng-class="{'sd-line-input--required': requiredField}">
+                                <label class="sd-line-input__label" for="facebook" translate>facebook</label>
+                                <input class="sd-line-input__input" type="text" name="facebook" id="facebook" 
+                                placeholder="username" ng-model="contact.facebook"
+                                ng-required="requiredField">
+                                <span ng-if="!requiredField" class="sd-line-input__hint" translate>e.g. cityofsydney from <i>https://www.facebook.com/cityofsydney</i></span>
+                                <div ng-show="contactForm.facebook.$error.required" class="sd-line-input__message" translate>This field is required.</div>
+                            </div>
+                        </div>
+
+                        <div class="form__row">
+                            <div class="sd-line-input" ng-class="{'sd-line-input--required': requiredField}">
+                                <label class="sd-line-input__label" for="instagram" translate>instagram</label>
+                                <input class="sd-line-input__input" type="text" name="instagram" id="instagram" 
+                                placeholder="username" ng-model="contact.instagram">
+                                <span class="sd-line-input__hint" translate>e.g. cityofsydney from <i>https://www.instagram.com/cityofsydney</i></span>
+                            </div>
+                        </div>
+
+                        <div class="form__row">
+                            <div class="sd-line-input">
+                                <label class="sd-line-input__label" for="address" translate>address</label>
+                            </div>
+                            <div ng-repeat="address in contact.address track by $index" class="form__row form__row--flex">
+                                    <div class="sd-line-input">
+                                        <input class="sd-line-input__input" type="text" placeholder="address"
+                                         ng-model="contact.address[$index]" required>
+                                    </div>
+                                    <div class="sd-line-input" ng-if="privileges.contacts">
+                                        <button ng-click="removeField('address', address)"><i class="icon-trash"></i></button>
+                                    </div>
+                            </div>
+                            <button class="btn btn--small btn--expanded" ng-if="privileges.contacts"
+                                 ng-click="addField('address')"><i class="icon-plus-large"></i></button>
+                        </div>
+
+                        <div class="form__row form__row--flex">
+                            <div class="sd-line-input">
+                                <label class="sd-line-input__label" for="locality" translate>locality</label>
+                                <input class="sd-line-input__input" type="text" name="locality" id="locality"
+                                 ng-model="contact.locality">
+                                <span class="sd-line-input__hint" translate>e.g. Rhodes, CBD</span>
+                            </div>
+                            <div class="sd-line-input">
+                                <label class="sd-line-input__label" for="postcode" translate>post code</label>
+                                <input class="sd-line-input__input" type="text" name="postcode" id="postcode"
+                                 ng-model="contact.postcode">
+                            </div>
+                        </div>
+
+                        <div class="form__row">
+                            <div class="sd-line-input">
+                                <label class="sd-line-input__label" for="city" translate>City</label>
+                                <input class="sd-line-input__input" type="text" name="city" id="city"
+                                 ng-model="contact.city">
+                            </div>
+                        </div>
+                        <div class="form__row form__row--flex">
+                            <div class="sd-line-input sd-line-input--is-select">
+                                <label class="sd-line-input__label">State</label>
+                                <select class="sd-line-input__select"
+                                    id="state"
+                                    name="state"
+                                    ng-model="contact.state"
+                                    ng-options="g.qcode as g.name for g in stateNames"
+                                    ng-change="updateState(contact.state)">
+                                </select>
+                            </div>
+                            <div class="sd-line-input" ng-if="displayOther">
+                                <input class="sd-line-input__input" type="text" placeholder="State"
+                                 ng-model="contact.state">
+                            </div>
+                        </div>
+
+                        <div class="form__row">
+                            <div class="sd-line-input">
+                                <label class="sd-line-input__label" for="country" translate>Country</label>
+                                <input class="sd-line-input__input" type="text" name="country" id="country"
+                                 ng-model="contact.country">
+                            </div>
+                        </div>
+
+                        <div class="form__row">
+                            <div class="sd-line-input">
+                                <label class="sd-line-input__label" for="notes" translate>notes</label>
+                                <textarea class="sd-line-input__input" id="notes" sd-auto-height ng-model="contact.notes">
+                                </textarea>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+</form>

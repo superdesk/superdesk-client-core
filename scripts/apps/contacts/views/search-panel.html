@@ -1,0 +1,110 @@
+<div id="contacts-search-panel">
+    <div class="header">
+        <ul>
+            <li translate>Search</li>
+        </ul>
+        <div class="doopen" ng-click="openAdvanceSearch = !openAdvanceSearch">
+            <i class="icon-close-small"></i>
+        </div>
+    </div>
+    <div class="nav-tabs__content content">
+        <div class="nav-tabs__pane">
+            <form>
+                <fieldset class="search-parameters">
+                    <div class="field multiple">
+                        <div class="field">
+                            <label for="search-fname" translate>First Name</label>
+                            <div class="control">
+                                <input type="text" ng-keypress="keyPressed($event)" id="search-fname"
+                                    ng-model="meta.first_name">
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <label for="search-lname" translate>Last Name</label>
+                            <div class="control">
+                                <input type="text" id="search-lname" ng-keypress="keyPressed($event)"
+                                    ng-model="meta.last_name">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="search-org" translate>Organisation</label>
+                        <div class="control">
+                            <input type="text" id="search-org" ng-keypress="keyPressed($event)"
+                                ng-model="meta.organisation">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="search-job_title" translate>Job Title</label>
+                        <select ng-model="meta.job_title"
+                                name="job_title"
+                                id="job_title"
+                                ng-options="job.name as job.name for job in metadata.contact_job_titles">
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label for="search-postcode" translate>Email</label>
+                        <div class="control">
+                            <input type="text" id="search-email" ng-keypress="keyPressed($event)"
+                                ng-model="meta.email">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="search-postcode" translate>Post Code</label>
+                        <div class="control">
+                            <input type="text" id="search-postcode" ng-keypress="keyPressed($event)"
+                                ng-model="meta.postcode">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="search-city" translate>City</label>
+                        <div class="control">
+                            <input type="text" id="search-city" ng-keypress="keyPressed($event)"
+                                ng-model="meta.city">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="search-state" translate>State</label>
+                        <div class="control">
+                            <input type="text" id="search-state" ng-keypress="keyPressed($event)"
+                                ng-model="meta.state">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="search-country" translate>Country</label>
+                        <div class="control">
+                            <input type="text" id="search-country" ng-keypress="keyPressed($event)"
+                                ng-model="meta.country">
+                        </div>
+                    </div>
+                    <div class="field multiple">
+                        <div class="field">
+                            <label class="search-all" translate>All</label>
+                            <div class="control">
+                                <input type="checkbox" id="search-all" ng-keypress="keyPressed($event)"
+                                    ng-model="toggle.all">
+                            </div>
+                        </div>
+                        <div class="field"
+                            title="{{ toggle.all ? 'uncheck all to enable switch' : null | translate }}">
+                            <label for="search-public" translate>Public</label>
+                            <span sd-switch ng-model="meta.public" 
+                                ng-class="{'prevent-switch': toggle.all}"></span>
+                        </div>
+                        <div class="field"
+                            title="{{ toggle.all ? 'uncheck all to enable switch' : null | translate }}">
+                            <label for="search-active" translate>Active</label>
+                            <span sd-switch ng-model="meta.is_active"
+                                ng-class="{'prevent-switch': toggle.all}"></span>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+   <div class="float-search-btn">
+        <a id="clear_filters" class="save-search__link" ng-click="clear()" translate>Clear filters</a>
+        <button class="btn btn--primary btn--full searchItemsch" ng-click="searchItems()" translate>Search</button>
+   </div>
+</div>

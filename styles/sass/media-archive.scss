@@ -474,6 +474,59 @@ $sfbox_mediaMaxWidth : 172px;
                     display: block;
                 }
         @include media-box-generic;
+
+        &.contacts {
+            min-height: $sfbox_minHeight;
+            min-width: $sfbox_minWidth * 2;
+
+            .media {
+                height: 25px;
+            }
+
+            dl {
+                dt:after {
+                    content : "";
+                }
+                dd {
+                    margin-left: 6px;
+                    line-height:18px;
+                    &.dark {
+                        color:#444;
+                        font-weight:500;
+                    }
+                }     
+            }
+
+            .org-label {
+                @extend .state-label;
+                background-color: $state-color-default;
+                color: $white !important;
+            }
+
+            .update-info {
+                position: absolute;
+                bottom: 0px;
+            }
+
+            .link {
+                color: $sd-blue-text;
+                @include text-light();
+                font-size: small;
+            }
+
+            .notes {
+                display: flex;
+            }
+
+            .item-notes {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                margin: 0 5px 0 5px;
+                max-width: 320px;
+                display: flex;
+            }
+        }
+
         &.locked {
             border-bottom-color: #e51c23 !important;
         }
@@ -734,6 +787,26 @@ $rightfield-width:60px;
             }
         }
 
+        
+        &.contacts {
+            .org-label {
+                @extend .state-label;
+                background-color: $state-color-default;
+                color: $white !important;
+            }
+            .item-notes {
+                flex-grow: 1;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                margin: 0 5px 0 5px;
+            }
+            .contact-name {
+                @extend .keyword;
+            }
+        }
+        
+
         .item-info {
             padding: 10px 10px 10px 10px;
             .line {
@@ -849,6 +922,11 @@ $rightfield-width:60px;
                 overflow: hidden;
                 text-overflow: ellipsis;
                 white-space: nowrap;
+                &.link {
+                    color: $sd-blue-text;
+                    @include text-light();
+                    text-overflow: inherit;
+                }
             }
             .takekey {
                 color: #333;
