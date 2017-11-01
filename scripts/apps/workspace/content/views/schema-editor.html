@@ -91,12 +91,12 @@
                         </div>
                     </div>
 
-                    <div class="field" ng-if="model.schema[id].type === 'picture'">
+                    <div class="field" ng-if="model.schema[id].type === 'media'">
                         <label translate>Show Crops</label>
                         <div sd-check ng-model="model.editor[id].showCrops"></div>
                     </div>
 
-                    <div class="field" ng-if="model.schema[id].type === 'picture' || hasImageSelected(id)">
+                    <div class="field" ng-if="model.schema[id].type === 'media' || hasImageSelected(id)">
                         <label translate>Show Image Title</label>
                         <div sd-check ng-model="model.editor[id].imageTitle"></div>
                     </div>

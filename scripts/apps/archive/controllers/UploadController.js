@@ -9,6 +9,8 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
     $scope.enableSave = false;
     $scope.currentUser = session.identity;
     $scope.uniqueUpload = $scope.locals && $scope.locals.data && $scope.locals.data.uniqueUpload === true;
+    $scope.allowPicture = !($scope.locals && $scope.locals.data && $scope.locals.data.allowPicture === false);
+    $scope.allowVideo = !($scope.locals && $scope.locals.data && $scope.locals.data.allowVideo === false);
     $scope.validator = config.validatorMediaMetadata;
 
     var uploadFile = function(item) {
@@ -51,7 +53,7 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
             _.each($scope.items, (item) => {
                 _.each(Object.keys($scope.validator), (key) => {
                     if ($scope.validator[key].required && (_.isNil(item.meta[key]) || _.isEmpty(item.meta[key]))) {
-                        $scope.errorMessage = 'Required field(s) are missing';
+                        $scope.errorMessage = gettext('Required field(s) are missing');
                         return false;
                     }
                 });
@@ -81,8 +83,12 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
         if (!files.length) {
             return false;
         }
+
         _.each(files, (file) => {
             if (/^image/.test(file.type)) {
+                if (!$scope.allowPicture && $scope.allowVideo) {
+                    $scope.errorMessage = gettext('Only video files are allowed');
+                }
                 EXIF.getData(file, function() {
                     var fileMeta = this.iptcdata;
 
@@ -96,6 +102,18 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
                     });
                 });
             } else {
+                if (/^video/.test(file.type)) {
+                    if (!$scope.allowVideo && $scope.allowPicture) {
+                        $scope.errorMessage = gettext('Only image files are allowed');
+                    }
+                } else if ($scope.allowVideo && $scope.allowPicture) {
+                    $scope.errorMessage = gettext('Only image and video files are allowed');
+                } else if ($scope.allowPicture) {
+                    $scope.errorMessage = gettext('Only image files are allowed');
+                } else if ($scope.allowVideo) {
+                    $scope.errorMessage = gettext('Only video files are allowed');
+                }
+
                 initFile(file, {
                     byline: $scope.currentUser.byline // initialize meta.byline from user profile
                 });
