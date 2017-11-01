@@ -85,7 +85,8 @@ describe('Content API Search', () => {
         expect(criteria.filter).toEqual(expected);
     }));
 
-    it('can search by range filter', inject((contentApiSearch) => {
+    it('can search by range filter', inject((contentApiSearch, search) => {
+        spyOn(search, 'formatDate').and.returnValue('2017-05-15T23:59:59+0000');
         let criteria = contentApiSearch.getCriteria({beforefirstcreated: '05/15/2017'});
         let expected = '[{"range":{"firstcreated":{"lte":"2017-05-15T23:59:59+0000"},"versioncreated":{}}}]';
 

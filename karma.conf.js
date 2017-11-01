@@ -62,7 +62,7 @@ module.exports = function(config) {
         autoWatch: true,
 
         // Start these browsers, currently available:
-        browsers: ['Chrome'],
+        browsers: ['ChromeHeadless'],
 
         // Continuous Integration mode
         singleRun: false,
