@@ -1,5 +1,6 @@
 // styles
 import './styles/related-item.scss';
+import {get} from 'lodash';
 
 // scripts
 import './related-item-widget/relatedItem';
@@ -108,18 +109,23 @@ angular.module('superdesk.apps.archive', [
                 label: gettext('Spike Item'),
                 icon: 'trash',
                 monitor: true,
-                controller: ['spike', 'data', '$rootScope', 'modal', '$location', '$q', 'multi',
-                    function spikeActivity(spike, data, $rootScope, modal, $location, $q, multi) {
-                        // For the sake of keyboard shortcut to work consitently,
+                controller: ['spike', 'data', '$rootScope', 'modal', '$location', '$q', 'multi', 'config',
+                    function spikeActivity(spike, data, $rootScope, modal, $location, $q, multi, config) {
+                        // For the sake of keyboard shortcut to work consistently,
                         // if the item is multi-selected, let multibar controller handle its spike
                         if (!data.item || multi.count > 0 && _.includes(multi.getIds(), data.item._id)) {
                             return;
                         }
 
                         var txt = gettext('Do you want to delete the item permanently?');
-                        var isPersonal = $location.path() === '/workspace/personal';
+                        var showConfirmation = $location.path() === '/workspace/personal';
 
-                        return $q.when(isPersonal ? modal.confirm(txt) : 0)
+                        if (get(config, 'features.planning') && data.item && data.item.assignment_id) {
+                            txt = gettext('This item is linked to in-progress planning coverage, spike anyway?');
+                            showConfirmation = true;
+                        }
+
+                        return $q.when(showConfirmation ? modal.confirm(txt) : 0)
                             .then(() => spike.spike(data.item));
                     }],
                 filters: [{action: 'list', type: 'archive'}],

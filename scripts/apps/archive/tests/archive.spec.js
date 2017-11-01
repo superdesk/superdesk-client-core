@@ -240,4 +240,73 @@ describe('content', () => {
             }, data.item);
         }));
     });
+
+    describe('spike activity', () => {
+        it('spike action prompts user of confirmation for in progress assignment',
+            inject(($rootScope, superdesk, activityService, config, modal, $q, spike) => {
+                config.features = {
+                    planning: 1
+                };
+
+                let item = {
+                    _id: 'foo1',
+                    _type: 'archive',
+                    task: {desk: 'desk1', stage: 'stage1'},
+                    type: 'text',
+                    assignment_id: 'as1'
+                };
+
+                spyOn(modal, 'confirm').and.returnValue($q.when({}));
+                spyOn(spike, 'spike').and.returnValue($q.when({}));
+
+                activityService.start(superdesk.activities.spike, {data: {item: item}});
+                $rootScope.$digest();
+
+                expect(modal.confirm).toHaveBeenCalledWith('This item is linked to in-progress ' +
+                    'planning coverage, spike anyway?');
+                expect(spike.spike).toHaveBeenCalled();
+            }));
+
+        it('spike action does not prompts user of confirmation if no assignment linked',
+            inject(($rootScope, superdesk, activityService, config, modal, $q, spike) => {
+                config.features = {
+                    planning: 1
+                };
+
+                let item = {
+                    _id: 'foo1',
+                    _type: 'archive',
+                    task: {desk: 'desk1', stage: 'stage1'},
+                    type: 'text'
+                };
+
+                spyOn(modal, 'confirm').and.returnValue($q.when({}));
+                spyOn(spike, 'spike').and.returnValue($q.when({}));
+
+                activityService.start(superdesk.activities.spike, {data: {item: item}});
+                $rootScope.$digest();
+
+                expect(modal.confirm).not.toHaveBeenCalled();
+                expect(spike.spike).toHaveBeenCalled();
+            }));
+
+        it('spike action does not prompts user if planning component not activated',
+            inject(($rootScope, superdesk, activityService, config, modal, $q, spike) => {
+                let item = {
+                    _id: 'foo1',
+                    _type: 'archive',
+                    task: {desk: 'desk1', stage: 'stage1'},
+                    type: 'text'
+                };
+
+                spyOn(modal, 'confirm').and.returnValue($q.when({}));
+                spyOn(spike, 'spike').and.returnValue($q.when({}));
+
+                activityService.start(superdesk.activities.spike, {data: {item: item}});
+                $rootScope.$digest();
+
+                expect(modal.confirm).not.toHaveBeenCalled();
+                expect(spike.spike).toHaveBeenCalled();
+            }));
+    });
 });

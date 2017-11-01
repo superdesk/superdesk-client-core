@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 /**
  * @ngdoc controller
  * @module superdesk.apps.search
@@ -14,20 +16,20 @@
  * @requires notify
  * @requires spike
  * @requires authoring
- * @requires privileges
  * @requires $location
+ * @requires config
  * @description MultiActionBarController holds a set of convenience functions which
  * are used by the Multi-Action bar wwhen an item is click-selected.
  */
 
 MultiActionBarController.$inject = [
     '$rootScope', 'multi', 'multiEdit', 'send', 'remove', 'modal', '$q',
-    'packages', 'superdesk', 'notify', 'spike', 'authoring', 'privileges', '$location'
+    'packages', 'superdesk', 'notify', 'spike', 'authoring', '$location', 'config'
 ];
 
 export function MultiActionBarController(
     $rootScope, multi, multiEdit, send, remove, modal, $q,
-    packages, superdesk, notify, spike, authoring, privileges, $location
+    packages, superdesk, notify, spike, authoring, $location, config
 ) {
     this.send = function() {
         send.all(multi.getItems());
@@ -81,9 +83,18 @@ export function MultiActionBarController(
      */
     this.spikeItems = function() {
         var txt = gettext('Do you want to delete these items permanently?');
-        var isPersonal = $location.path() === '/workspace/personal';
+        var showConfirmation = $location.path() === '/workspace/personal';
 
-        return $q.when(isPersonal ? modal.confirm(txt) : 0)
+        if (_.get(config, 'features.planning')) {
+            var assignedItems = multi.getItems().filter((item) => item.assignment_id);
+
+            if (assignedItems.length) {
+                showConfirmation = true;
+                txt = gettext('Some item/s are linked to in-progress planning coverage, spike anyway?');
+            }
+        }
+
+        return $q.when(showConfirmation ? modal.confirm(txt) : 0)
             .then(() => {
                 spike.spikeMultiple(multi.getItems());
                 $rootScope.$broadcast('item:spike');
