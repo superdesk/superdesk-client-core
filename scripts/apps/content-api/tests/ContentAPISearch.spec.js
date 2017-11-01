@@ -20,7 +20,7 @@ describe('Content API Search', () => {
             search: {
                 useDefaultTimezone: true
             },
-            defaultTimezone: 'Europe/London',
+            defaultTimezone: 'UTC',
             server: {url: undefined}
         });
     }));

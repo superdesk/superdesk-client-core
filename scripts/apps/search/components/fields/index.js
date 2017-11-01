@@ -23,3 +23,4 @@ export {priority} from './priority';
 export {urgency} from './urgency';
 export {associations} from './associations';
 export {queueError} from './queueError';
+export {assignment} from './assignment';
