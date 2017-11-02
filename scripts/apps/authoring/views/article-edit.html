@@ -46,7 +46,9 @@
 <div class="field"
      ng-if="schema.sms && item._type !== 'archived' && !isMediaType"
      sd-width="{{editor.sms.sdWidth|| 'full'}}"
-     order="{{editor.sms.order}}">
+     order="{{editor.sms.order}}"
+     sd-validation-error="error.sms"
+     data-required="schema.sms.required">
 
     <label ng-if="_editable" translate>SMS</label>
     <div ng-if="_editable">
@@ -89,7 +91,7 @@
     </div>
 </div>
 <div ng-if="schema.feature_media" class="field"
-     sd-width="{{editor.feature_image.sdWidth|| 'full'}}"
+     sd-width="{{editor.feature_media.sdWidth|| 'full'}}"
      sd-validation-error="error.feature_media"
      order="{{editor.feature_media.order}}"
      data-required="schema.feature_media.required">
@@ -310,6 +312,8 @@
      ng-if="isMediaType"
      ng-class="{'media-item--loading': mediaLoading}"
      order="{{editor.media.order}}"
+     sd-validation-error="error.media"
+     data-required="schema.media.required"
      tabindex="{{editor.media.order}}"
      sd-width="{{editor.media.sdWidth|| 'full'}}">
 
@@ -338,7 +342,8 @@
      class="field abstract"
      order="{{editor.media_description.order}}"
      sd-validation-error="error.description_text"
-     sd-width="{{editor.media_description.sdWidth|| 'full'}}" data-required="schema.media_description.required">
+     sd-width="{{editor.media_description.sdWidth|| 'full'}}"
+     data-required="schema.media_description.required">
     <label translate>Caption</label>
     <span ng-if="validator.description_text.maxlength" sd-character-count data-item="item.description_text" data-html="true" data-limit="validator.description_text.maxlength"></span>
     <div id="title" class="abstract"
@@ -449,6 +454,8 @@
 <div class="field pull-left"
      ng-if="schema.sign_off && !isMediaType"
      order="{{editor.sign_off.order}}"
+     sd-validation-error="error.sign_off"
+     data-required="schema.sign_off.required"
      sd-width="{{editor.sign_off.sdWidth|| 'full'}}">
     <label translate>Sign-Off</label>
     <button id="sign-off-unlock" class="btn btn-signOff" ng-click="changeSignOffEdit()" tabindex="{{editor.sign_off.order}}" title="Unlock edit Sign-Off" ng-if="_editable">
@@ -479,7 +486,11 @@
     </div>
 </div>
 
-<div class="field" ng-if="schema.usageterms" sd-width="{{editor.usageterms.sdWidth || 'full'}}" order="{{editor.usageterms.order}}" sd-validation-error="error.usageterms" data-required="schema.usageterms.required">
+<div class="field" ng-if="schema.usageterms"
+    sd-width="{{editor.usageterms.sdWidth || 'full'}}"
+    order="{{editor.usageterms.order}}"
+    sd-validation-error="error.usageterms"
+    data-required="schema.usageterms.required">
   <label translate>Usage Terms</label>
   <input type="text"
          sd-remove-tags
@@ -501,7 +512,7 @@
     sd-width="{{ editor[field._id].sdWidth || 'full' }}"
     data-required="schema[field._id].required"
     order="{{ editor[field._id].order }}"
-    sd-validation-error="error.extra[field._id]">
+    sd-validation-error="error[field._id.toLowerCase()]">
 
     <label>{{ field.display_name }}</label>
     <div sd-editor3
@@ -522,7 +533,7 @@
 <div class="field" ng-repeat="field in fields track by field._id"
      ng-if="field.field_type === 'media'"
      sd-width="{{editor[field._id].sdWidth || 'full'}}"
-     sd-validation-error="error.extra[field._id]"
+     sd-validation-error="error[field._id.toLowerCase()]"
      order="{{editor[field._id].order}}"
      data-required="schema[field._id].required">
     <label translate>{{ field.display_name }}</label>

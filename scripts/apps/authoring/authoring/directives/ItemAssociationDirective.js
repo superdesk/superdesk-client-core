@@ -34,13 +34,17 @@ export function ItemAssociationDirective(superdesk, renditions, config, authorin
         link: function(scope, elem) {
             var MEDIA_TYPES = [];
 
-            if (scope.allowPicture === 'true') {
+            if (scope.allowPicture) {
                 MEDIA_TYPES.push('application/superdesk.item.picture');
                 MEDIA_TYPES.push('application/superdesk.item.graphic');
             }
 
-            if (scope.allowVideo === 'true') {
+            if (scope.allowVideo) {
                 MEDIA_TYPES.push('application/superdesk.item.video');
+            }
+
+            if (scope.allowAudio) {
+                MEDIA_TYPES.push('application/superdesk.item.audio');
             }
 
             /**
