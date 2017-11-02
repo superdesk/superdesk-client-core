@@ -155,7 +155,7 @@ class ToolbarComponent extends Component {
                 {has('picture') &&
                     <IconButton
                         onClick={insertImages}
-                        tooltip={gettext('Image')}
+                        tooltip={gettext('Media')}
                         iconName="picture"
                     />
                 }

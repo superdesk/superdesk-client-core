@@ -68,6 +68,7 @@ export class ImageBlockComponent extends Component {
         const data = this.data();
         const rendition = data.renditions.viewImage || data.renditions.original;
         const alt = data.alt_text || data.description_text || data.caption;
+        const mediaType = data.type;
 
         return (
             <div className="image-block" onClick={(e) => e.stopPropagation()}>
@@ -81,7 +82,15 @@ export class ImageBlockComponent extends Component {
                             value={data.headline}
                             onChange={this.onChange}
                         /> : null }
-                    <img src={rendition.href} alt={alt} onClick={this.onClick} />
+                    {mediaType === 'picture' &&
+                        <img src={rendition.href} alt={alt} onClick={this.onClick} />
+                    }
+                    {mediaType === 'video' &&
+                        <video controls src={rendition.href} alt={alt} width="100%" height="100%" />
+                    }
+                    {mediaType === 'audio' &&
+                        <audio controls src={rendition.href} alt={alt} width="100%" height="100%" />
+                    }
                     <Textarea
                         placeholder={gettext('Caption')}
                         onFocus={setLocked}
