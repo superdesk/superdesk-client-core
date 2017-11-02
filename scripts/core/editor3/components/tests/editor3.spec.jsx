@@ -23,6 +23,7 @@ describe('editor3.component', () => {
             'application/superdesk.item.picture',
             'application/superdesk.item.graphic',
             'application/superdesk.item.video',
+            'application/superdesk.item.audio',
             'text/html'
         ].forEach((validType) => {
             expect(onDragOver(makeEvent(validType))).toBe(false);
@@ -46,6 +47,7 @@ describe('editor3.component', () => {
             'application/superdesk.item.picture',
             'application/superdesk.item.graphic',
             'application/superdesk.item.video',
+            'application/superdesk.item.audio',
             'text/html'
         ].forEach((validType) => {
             expect(onDragOver(makeEvent(validType))).toBeTruthy();
@@ -61,6 +63,7 @@ describe('editor3.component', () => {
             'application/superdesk.item.picture',
             'application/superdesk.item.graphic',
             'application/superdesk.item.video',
+            'application/superdesk.item.audio',
             'text/html'
         ].forEach((validType) => {
             expect(onDragOver(makeEvent(validType))).toBeTruthy();
@@ -76,6 +79,7 @@ describe('editor3.component', () => {
             'application/superdesk.item.picture',
             'application/superdesk.item.graphic',
             'application/superdesk.item.video',
+            'application/superdesk.item.audio',
             'text/html'
         ].forEach((validType) => {
             expect(onDragOver(makeEvent(validType))).toBeTruthy();

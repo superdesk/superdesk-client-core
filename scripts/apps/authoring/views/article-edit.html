@@ -95,8 +95,9 @@
      data-required="schema.feature_media.required">
     <label translate>Featured Media</label>
     <div sd-item-association
-         data-allow-video="true"
          data-allow-picture="true"
+         data-allow-video="true"
+         data-allow-audio="true"
          data-item="item"
          data-rel="'featuremedia'"
          data-editable="_editable"
@@ -527,8 +528,9 @@
      data-required="schema[field._id].required">
     <label translate>{{ field.display_name }}</label>
     <div sd-item-association
-         data-allow-video="!!field.field_options.allowed_types.video"
          data-allow-picture="!!field.field_options.allowed_types.picture"
+         data-allow-video="!!field.field_options.allowed_types.video"
+         data-allow-audio="!!field.field_options.allowed_types.audio"
          data-item="item"
          data-rel="field._id"
          data-editable="_editable"

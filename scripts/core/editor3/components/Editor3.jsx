@@ -81,6 +81,7 @@ export class Editor3Component extends React.Component {
             'application/superdesk.item.picture',
             'application/superdesk.item.graphic',
             'application/superdesk.item.video',
+            'application/superdesk.item.audio',
             'text/html',
             'Files'
         ].indexOf(mediaType) !== -1;
