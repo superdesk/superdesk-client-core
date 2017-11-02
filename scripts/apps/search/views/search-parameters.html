@@ -166,11 +166,11 @@
     </fieldset>
     <fieldset ng-show="repo.search === 'aapmm'">
         <div class="field">
-            <label for="search-slugline">
-                {{:: 'Slugline' | translate}}
+            <label for="search-objectname">
+                {{:: 'Object Name (Slugline)' | translate}}
             </label>
             <div class="control">
-                <input type="text" ng-keypress="keyPressed($event)" id="search-slugline" ng-model="meta.slugline">
+                <input type="text" ng-keypress="keyPressed($event)" id="search-objectname" ng-model="meta.objectname">
             </div>
         </div>
         <div class="field">
@@ -187,6 +187,15 @@
             </label>
             <div class="control">
                 <input type="text" ng-keypress="keyPressed($event)" id="search-aapkeyword" ng-model="meta.aapkeyword">
+            </div>
+        </div>
+        <div>
+            <div class="field">
+            <label for="search-keywords">
+                {{:: 'Keywords'}}
+            </label>
+            <div class="control">
+                <input type="text" ng-keypress="keyPressed($event)" id="search-keywords" ng-model="meta.keywords">
             </div>
         </div>
     </fieldset>
