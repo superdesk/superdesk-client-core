@@ -14,6 +14,8 @@ VocabularyEditController.$inject = [
 export function VocabularyEditController($scope, gettext, notify, api, vocabularies, metadata, cvSchema, $rootScope) {
     var origVocabularyItems = _.cloneDeep($scope.vocabulary.items);
 
+    $scope.idRegex = '^[a-zA-Z0-9-_]+$';
+
     function onSuccess(result) {
         notify.success(gettext('Vocabulary saved successfully'));
         $scope.closeVocabulary();
