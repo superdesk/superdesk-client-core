@@ -16,11 +16,14 @@
                 <input id="cv_id" class="sd-line-input__input"
                     type="text"
                     ng-model="vocabulary._id"
+                    ng-pattern="idRegex"
                     required>
                 <div class="sd-line-input__message"
                     ng-show="issues._id.unique" translate>ID must be unique.</div>
                 <div class="sd-line-input__message"
                     ng-show="issues._id.conflict" translate>ID conflicts with system field.</div>
+                <div class="sd-line-input__message"
+                    ng-show="issues._id.indexOf('regex') >= 0" translate>ID must contain only letters, digits and characters -, _.</div>
             </div>
 
             <div class="sd-line-input sd-line-input--required">
