@@ -467,7 +467,7 @@
 	}
 }
 
-.comment-popup {
+.highlights-popup {
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -507,5 +507,11 @@
 		}
 		clear: both;
 		white-space: pre-wrap;
+	}
+
+	&__html {
+		p:last-child {
+			margin-bottom: 0;
+		}
 	}
 }

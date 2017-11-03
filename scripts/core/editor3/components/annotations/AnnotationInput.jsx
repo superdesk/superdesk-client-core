@@ -35,7 +35,6 @@ export class AnnotationInput extends Component {
         if (body !== '') {
             onSubmit(value, {
                 msg: body,
-                msgType: 'html',
                 annotationType: type
             });
             onCancel();

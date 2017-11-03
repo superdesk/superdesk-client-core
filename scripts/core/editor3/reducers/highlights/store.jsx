@@ -43,6 +43,19 @@ export const addHighlight = (editorState, selection, data) => {
 };
 
 /**
+ * @description Removes the given highlight.
+ * @param {EditorState} editorState
+ * @param {Object} highlight
+ * @returns {EditorState} New editor state with highlight removed.
+ */
+export const removeHighlight = (editorState, {selection, data}) => {
+    const all = getHighlights(editorState.getCurrentContent());
+    const toRemove = JSON.stringify(selection.toJSON());
+
+    return replaceHighlights(editorState, all.remove(toRemove));
+};
+
+/**
  * @description Replaces the highlights in the given state and returns the new
  * editor state.
  * @param {EditorState} editorState

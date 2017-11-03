@@ -20,7 +20,7 @@ import {customStyleMap} from './customStyleMap';
 import classNames from 'classnames';
 import {handlePastedText} from './handlePastedText';
 import {getEntityTypeAfterCursor, getEntityTypeBeforeCursor} from './links/entityUtils';
-import {CommentPopup} from './comments';
+import {HighlightsPopup} from './HighlightsPopup';
 
 /**
  * @ngdoc React
@@ -207,7 +207,7 @@ export class Editor3Component extends React.Component {
             activeHighlight,
             onChange,
             onTab,
-            canComment,
+            highlightsEnabled,
             tabindex,
             scrollContainer
         } = this.props;
@@ -228,16 +228,15 @@ export class Editor3Component extends React.Component {
                         editorNode={this.editorNode}
                     />
                 }
-                {canComment &&
-                    <CommentPopup
-                        comment={activeHighlight}
+                {highlightsEnabled &&
+                    <HighlightsPopup
+                        highlight={activeHighlight}
                         editorNode={this.editorNode}
                         selection={selection}
                     />
                 }
                 <div className="focus-screen" onMouseDown={this.focus}>
-                    <Editor
-                        editorState={editorState}
+                    <Editor editorState={editorState}
                         handleKeyCommand={this.handleKeyCommand}
                         keyBindingFn={this.keyBindingFn}
                         handleBeforeInput={this.handleBeforeInput}
@@ -260,7 +259,7 @@ Editor3Component.propTypes = {
     readOnly: PropTypes.bool,
     locked: PropTypes.bool,
     showToolbar: PropTypes.bool,
-    canComment: PropTypes.bool,
+    highlightsEnabled: PropTypes.bool,
     editorState: PropTypes.object,
     activeHighlight: PropTypes.object,
     onChange: PropTypes.func,
@@ -282,7 +281,7 @@ Editor3Component.defaultProps = {
 const mapStateToProps = (state) => ({
     readOnly: state.readOnly,
     showToolbar: state.showToolbar,
-    canComment: state.allowsHighlights,
+    highlightsEnabled: state.allowsHighlights,
     editorState: state.editorState,
     activeHighlight: state.activeHighlight,
     locked: state.locked,
