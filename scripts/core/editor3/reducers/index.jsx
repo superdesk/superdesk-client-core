@@ -3,6 +3,7 @@ import editor3 from './editor3';
 import toolbar from './toolbar';
 import table from './table';
 import findReplace from './find-replace';
+import highlights from './highlight';
 
 // Returns a new reducer which chains the state and action throught the given
 // list of reducers.
@@ -15,7 +16,8 @@ const editorReducers = chainReduce(
     toolbar,
     table,
     editor3,
-    findReplace
+    findReplace,
+    highlights
 );
 
 export default editorReducers;

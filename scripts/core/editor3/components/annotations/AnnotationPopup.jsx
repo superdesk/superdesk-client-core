@@ -1,10 +1,12 @@
 import React from 'react';
-import {UserAvatar, TextWithMentions} from 'apps/users/components';
+import {UserAvatar} from 'apps/users/components';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import {connect} from 'react-redux';
+import {deleteHighlight} from '../../actions';
 
-export const CommentPopup = ({comment}) => {
-    const {author, avatar, date, msg} = comment.data;
+const Annotation = ({annotation, deleteHighlight}) => {
+    const {author, avatar, date, msg} = annotation.data;
     const fromNow = moment(date).calendar();
     const fullDate = moment(date).format('MMMM Do YYYY, h:mm:ss a');
 
@@ -17,11 +19,17 @@ export const CommentPopup = ({comment}) => {
                     <div className="date" title={fullDate}>{fromNow}</div>
                 </div>
             </div>
-            <TextWithMentions className="highlights-popup__body">{msg}</TextWithMentions>
+            <div className="highlights-popup__html" dangerouslySetInnerHTML={{__html: msg}} />
+            <a onClick={() => deleteHighlight(annotation)}>Delete</a>
         </div>
     );
 };
 
-CommentPopup.propTypes = {
-    comment: PropTypes.object
+Annotation.propTypes = {
+    deleteHighlight: PropTypes.func,
+    annotation: PropTypes.object
 };
+
+export const AnnotationPopup = connect(null, {
+    deleteHighlight
+})(Annotation);
