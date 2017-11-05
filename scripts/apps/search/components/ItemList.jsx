@@ -274,6 +274,10 @@ export class ItemList extends React.Component {
 
             itemsById[itemId] = angular.extend({}, item, changes);
             this.setState({itemsById: itemsById});
+
+            if (_.get(changes, 'highlights') || _.get(changes, 'marked_desks')) {
+                this.closeActionsMenu();
+            }
         }
     }
 
@@ -314,24 +318,29 @@ export class ItemList extends React.Component {
         case Keys.right:
         case Keys.down:
             diff = 1;
+            this.closeActionsMenu();
             break;
 
         case Keys.left:
         case Keys.up:
             diff = -1;
+            this.closeActionsMenu();
             break;
 
         case Keys.enter:
             openItem();
+            this.closeActionsMenu();
             break;
 
         case Keys.pageup:
         case Keys.pagedown:
             moveActiveGroup();
+            this.closeActionsMenu();
             break;
 
         case KEY_CODES.X:
             performMultiSelect();
+            this.closeActionsMenu();
             break;
         }
 
@@ -386,10 +395,6 @@ export class ItemList extends React.Component {
 
     componentWillUnmount() {
         this.unbindActionKeyShortcuts();
-        this.closeActionsMenu();
-    }
-
-    componentWillUpdate() {
         this.closeActionsMenu();
     }
 
