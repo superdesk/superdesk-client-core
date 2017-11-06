@@ -64,15 +64,25 @@ export function ConfirmDirtyService($window, $q, $filter, api, modal, gettextCat
     };
 
     /**
+     * In case publish is triggered by quick buttons, show confirmation dialog
+     */
+    this.confirmQuickPublish = function() {
+        return modal.confirm(
+            gettextCatalog.getString('Do you want to publish the article?'),
+            gettextCatalog.getString('Publish'),
+            gettextCatalog.getString('Publish'),
+            gettextCatalog.getString('Cancel')
+        );
+    };
+
+    /**
      * In case $scope is dirty ask user if he want's to save changes and publish.
      */
-    this.confirmPublish = function confirmPublish(action) {
+    this.confirmPublish = function() {
         return modal.confirm(
-            $interpolate(gettextCatalog.getString(
-                'There are some unsaved changes, do you want to save and publish it now?'
-            ))({action: action}),
+            gettextCatalog.getString('There are some unsaved changes, do you want to save and publish it now?'),
             gettextCatalog.getString('Save changes?'),
-            $interpolate(gettextCatalog.getString('Save and publish'))({action: action}),
+            gettextCatalog.getString('Save and publish'),
             gettextCatalog.getString('Cancel')
         );
     };
