@@ -17,6 +17,7 @@ import {
     ProgressBar,
     ListItemInfo
 } from 'apps/search/components';
+import {closeActionsMenu} from '../helpers';
 
 /**
  * Item component
@@ -25,7 +26,7 @@ export class Item extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {hover: false, actioning: false};
+        this.state = {hover: false, actioning: false, isActionMenuOpen: false};
 
         this.select = this.select.bind(this);
         this.edit = this.edit.bind(this);
@@ -35,6 +36,20 @@ export class Item extends React.Component {
         this.unsetHoverState = this.unsetHoverState.bind(this);
         this.onDragStart = this.onDragStart.bind(this);
         this.openAuthoringView = this.openAuthoringView.bind(this);
+        this.setActionMenuState = this.setActionMenuState.bind(this);
+    }
+
+    componentWillUnmount() {
+        if (this.state.isActionMenuOpen) {
+            closeActionsMenu();
+        }
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (this.state.isActionMenuOpen && nextProps.item !== this.props.item) {
+            this.setActionMenuState(false);
+            closeActionsMenu();
+        }
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -43,6 +58,10 @@ export class Item extends React.Component {
             nextProps.flags.selected !== this.props.flags.selected ||
             nextProps.narrow !== this.props.narrow ||
             nextState !== this.state;
+    }
+
+    setActionMenuState(value) {
+        this.setState({isActionMenuOpen: value});
     }
 
     select(event) {
@@ -127,7 +146,8 @@ export class Item extends React.Component {
                     item: item,
                     svc: this.props.svc,
                     scope: this.props.scope,
-                    onActioning: this.setActioningState
+                    onActioning: this.setActioningState,
+                    onToggle: this.setActionMenuState
                 }) : null;
         };
 

@@ -36,7 +36,7 @@ export function createMarkUp(html) {
     return {__html: html};
 }
 
-function menuHolderElem() {
+export function menuHolderElem() {
     return document.getElementById('react-placeholder');
 }
 
