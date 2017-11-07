@@ -8,7 +8,7 @@ export function assignment({item}) {
     }
 
     return (
-        <span>
+        <span key="assignment">
             <i className="icon-calendar" />
         </span>
     );
