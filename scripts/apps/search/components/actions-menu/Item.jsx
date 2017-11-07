@@ -80,6 +80,11 @@ export default class Item extends React.Component {
         // called by the onclick event of the submenu dropdown to close actions menu.
         event.stopPropagation();
         closeActionsMenu();
+        const {onClose} = this.props;
+
+        if (onClose) {
+            onClose();
+        }
     }
 
     toggle(event) {
@@ -154,5 +159,6 @@ Item.propTypes = {
     scope: React.PropTypes.any.isRequired,
     item: React.PropTypes.any,
     activity: React.PropTypes.any,
-    onActioning: React.PropTypes.func
+    onActioning: React.PropTypes.func,
+    onClose: React.PropTypes.func
 };
