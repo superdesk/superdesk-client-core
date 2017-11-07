@@ -748,6 +748,7 @@ angular.module('superdesk.apps.editor2', [
                         'application/superdesk.item.picture',
                         'application/superdesk.item.graphic',
                         'application/superdesk.item.video',
+                        'application/superdesk.item.audio',
                         'text/html',
                     ];
 

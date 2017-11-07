@@ -11,6 +11,7 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
     $scope.uniqueUpload = $scope.locals && $scope.locals.data && $scope.locals.data.uniqueUpload === true;
     $scope.allowPicture = !($scope.locals && $scope.locals.data && $scope.locals.data.allowPicture === false);
     $scope.allowVideo = !($scope.locals && $scope.locals.data && $scope.locals.data.allowVideo === false);
+    $scope.allowAudio = !($scope.locals && $scope.locals.data && $scope.locals.data.allowAudio === false);
     $scope.validator = config.validatorMediaMetadata;
 
     var uploadFile = function(item) {
@@ -76,18 +77,42 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
 
         item.cssType = item.file.type.split('/')[0];
         $scope.items.unshift(item);
-        $scope.enableSave = true;
+        $scope.enableSave = _.isNil($scope.errorMessage);
+    };
+
+    var getErrorMessage = function(type) {
+        var errorMessage = gettext('Only the following files are allowed: ');
+        var separator = '';
+        var separatorAnd = ' ' + gettext('and') + ' ';
+
+        if ($scope.allowPicture && type !== 'image') {
+            errorMessage += separator + gettext('image');
+            separator = separatorAnd;
+        }
+
+        if ($scope.allowVideo && type !== 'video') {
+            errorMessage += separator + gettext('video');
+            separator = separatorAnd;
+        }
+
+        if ($scope.allowAudio && type !== 'audio') {
+            errorMessage += separator + gettext('audio');
+            separator = separatorAnd;
+        }
+
+        return errorMessage;
     };
 
     $scope.addFiles = function(files) {
+        $scope.errorMessage = null;
         if (!files.length) {
             return false;
         }
 
         _.each(files, (file) => {
             if (/^image/.test(file.type)) {
-                if (!$scope.allowPicture && $scope.allowVideo) {
-                    $scope.errorMessage = gettext('Only video files are allowed');
+                if (!$scope.allowPicture) {
+                    $scope.errorMessage = getErrorMessage('image');
                 }
                 EXIF.getData(file, function() {
                     var fileMeta = this.iptcdata;
@@ -103,15 +128,15 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
                 });
             } else {
                 if (/^video/.test(file.type)) {
-                    if (!$scope.allowVideo && $scope.allowPicture) {
-                        $scope.errorMessage = gettext('Only image files are allowed');
+                    if (!$scope.allowVideo) {
+                        $scope.errorMessage = getErrorMessage('video');
                     }
-                } else if ($scope.allowVideo && $scope.allowPicture) {
-                    $scope.errorMessage = gettext('Only image and video files are allowed');
-                } else if ($scope.allowPicture) {
-                    $scope.errorMessage = gettext('Only image files are allowed');
-                } else if ($scope.allowVideo) {
-                    $scope.errorMessage = gettext('Only video files are allowed');
+                } else if (/^audio/.test(file.type)) {
+                    if (!$scope.allowAudio) {
+                        $scope.errorMessage = getErrorMessage('audio');
+                    }
+                } else if ($scope.allowPicture || $scope.allowVideo || $scope.allowAudio) {
+                    $scope.errorMessage = getErrorMessage('');
                 }
 
                 initFile(file, {

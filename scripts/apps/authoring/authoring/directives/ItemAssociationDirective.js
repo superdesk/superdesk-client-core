@@ -23,24 +23,29 @@ export function ItemAssociationDirective(superdesk, renditions, config, authorin
         scope: {
             rel: '=',
             item: '=',
-            editable: '=',
-            allowVideo: '=',
-            allowPicture: '=',
+            editable: '<',
+            allowPicture: '<',
+            allowVideo: '<',
+            allowAudio: '<',
             onchange: '&',
-            showTitle: '=',
+            showTitle: '<',
             save: '&'
         },
         templateUrl: 'scripts/apps/authoring/views/item-association.html',
         link: function(scope, elem) {
             var MEDIA_TYPES = [];
 
-            if (scope.allowPicture === 'true') {
+            if (scope.allowPicture) {
                 MEDIA_TYPES.push('application/superdesk.item.picture');
                 MEDIA_TYPES.push('application/superdesk.item.graphic');
             }
 
-            if (scope.allowVideo === 'true') {
+            if (scope.allowVideo) {
                 MEDIA_TYPES.push('application/superdesk.item.video');
+            }
+
+            if (scope.allowAudio) {
+                MEDIA_TYPES.push('application/superdesk.item.audio');
             }
 
             /**
@@ -245,8 +250,9 @@ export function ItemAssociationDirective(superdesk, renditions, config, authorin
                 if (scope.editable) {
                     superdesk.intent('upload', 'media', {
                         uniqueUpload: true,
+                        allowPicture: scope.allowPicture,
                         allowVideo: scope.allowVideo,
-                        allowPicture: scope.allowPicture
+                        allowAudio: scope.allowAudio
                     }).then((images) => {
                         // open the view to edit the PoI and the cropping areas
                         if (images) {
