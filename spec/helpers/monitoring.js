@@ -591,12 +591,14 @@ function Monitoring() {
      * @param {number} item
      */
     this.checkMarkedForHighlight = function(highlight, group, item) {
-        var crtItem = this.getItem(group, item);
+        const crtItem = this.getItem(group, item);
+        const starIcon = crtItem.element(by.className('icon-star'));
+        const highlightList = element(by.className('highlights-list-menu'));
 
-        crtItem.element(by.className('icon-star')).click();
-        var highlightList = element(by.className('highlights-list-menu'));
+        waitFor(starIcon, 2000);
+        starIcon.click();
 
-        waitFor(highlightList);
+        waitFor(highlightList, 2000);
         expect(highlightList.getText()).toContain(highlight);
     };
 
@@ -624,14 +626,14 @@ function Monitoring() {
      * @param {number} item
      */
     this.checkMarkedForMultiHighlight = function(highlight, group, item) {
-        var crtItem = this.getItem(group, item);
-        var star = crtItem.element(by.className('icon-multi-star'));
+        const crtItem = this.getItem(group, item);
+        const star = crtItem.element(by.className('icon-multi-star'));
+        const highlightList = element(by.className('highlights-list-menu'));
 
-        expect(star.isPresent()).toBe(true);
+        waitFor(star, 2000);
         star.click();
-        var highlightList = element(by.className('highlights-list-menu'));
 
-        waitFor(highlightList);
+        waitFor(highlightList, 2000);
         expect(highlightList.getText()).toContain(highlight);
     };
 

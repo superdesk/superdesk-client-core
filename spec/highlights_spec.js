@@ -116,31 +116,31 @@ describe('highlights', () => {
             monitoring.previewAction(2, 0);
 
             // trigger keyoard shortcut(ctrl+shift+^) for 'Mark for highlight'
+            monitoring.selectItem(2, 0).click();
             ctrlShiftKey('^');
 
             // focus to next highlight
             browser.actions().sendKeys(protractor.Key.DOWN)
-            .perform();
+                  .perform();
 
             // press enter to mark highlight
             browser
-            .actions()
-            .sendKeys(protractor.Key.ENTER)
-            .perform();
-            browser.sleep(1000);
+                  .actions()
+                  .sendKeys(protractor.Key.ENTER)
+                  .perform();
 
             // expect 'Highlight three' is marked
             monitoring.checkMarkedForHighlight('Highlight three', 2, 0);
 
             // again trigger keyoard shortcut for multimark
+            monitoring.selectItem(2, 0);
             ctrlShiftKey('^');
 
             // mark for first focused highlight in monitoring
             browser
-            .actions()
-            .sendKeys(protractor.Key.ENTER)
-            .perform();
-            browser.sleep(1000);
+                  .actions()
+                  .sendKeys(protractor.Key.ENTER)
+                  .perform();
 
             // expect 'Highlight two' is marked
             monitoring.checkMarkedForMultiHighlight('Highlight four', 2, 0);
