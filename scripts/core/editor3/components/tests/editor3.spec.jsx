@@ -15,7 +15,7 @@ describe('editor3.component', () => {
     });
 
     it('should not accept dragging over invalid items', () => {
-        const wrapper = shallow(<Editor3 editorFormat={['picture']} editorState={editorState} />);
+        const wrapper = shallow(<Editor3 editorFormat={['media']} editorState={editorState} />);
         const {onDragOver} = wrapper.instance();
         const makeEvent = (t) => ({originalEvent: {dataTransfer: {types: [t]}}});
 
@@ -39,7 +39,7 @@ describe('editor3.component', () => {
     });
 
     it('should not accept dragging when editor is readOnly', () => {
-        const wrapper = shallow(<Editor3 readOnly editorFormat={['picture']} editorState={editorState} />);
+        const wrapper = shallow(<Editor3 readOnly editorFormat={['media']} editorState={editorState} />);
         const {onDragOver} = wrapper.instance();
         const makeEvent = (t) => ({originalEvent: {dataTransfer: {types: [t]}}});
 
@@ -71,7 +71,7 @@ describe('editor3.component', () => {
     });
 
     it('should not accept dragging when editor is single line', () => {
-        const wrapper = shallow(<Editor3 singleLine editorFormat={['picture']} editorState={editorState} />);
+        const wrapper = shallow(<Editor3 singleLine editorFormat={['media']} editorState={editorState} />);
         const {onDragOver} = wrapper.instance();
         const makeEvent = (t) => ({originalEvent: {dataTransfer: {types: [t]}}});
 

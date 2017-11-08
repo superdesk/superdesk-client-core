@@ -1,4 +1,4 @@
-import {insertImages} from './toolbar';
+import {insertMedia} from './toolbar';
 
 /**
  * @ngdoc method
@@ -53,7 +53,7 @@ export function dragDrop(e) {
     if (transfer.types[0] === 'Files') {
         e.preventDefault();
         e.stopPropagation();
-        return insertImages(transfer.files);
+        return insertMedia(transfer.files);
     }
 
     return {

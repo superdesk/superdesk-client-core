@@ -85,9 +85,9 @@ export class Editor3Component extends React.Component {
             'text/html',
             'Files'
         ].indexOf(mediaType) !== -1;
-        const supportsImages = !readOnly && !singleLine && editorFormat.indexOf('picture') !== -1;
+        const supportsMedia = !readOnly && !singleLine && editorFormat.indexOf('media') !== -1;
 
-        return supportsImages && isValidMedia;
+        return supportsMedia && isValidMedia;
     }
 
     /**

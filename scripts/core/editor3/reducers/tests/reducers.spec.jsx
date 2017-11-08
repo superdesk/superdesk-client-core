@@ -54,9 +54,9 @@ describe('editor3.reducers', () => {
         const entityKey = contentState.getLastCreatedEntityKey();
         const entity = contentState.getEntity(entityKey);
 
-        expect(entity.getType()).toBe('IMAGE');
+        expect(entity.getType()).toBe('MEDIA');
         expect(entity.getMutability()).toBe('MUTABLE');
-        expect(entity.getData()).toEqual({img: {a: 1}});
+        expect(entity.getData()).toEqual({media: {a: 1}});
         expect(getData).toHaveBeenCalledWith('superdesk/image');
     });
 

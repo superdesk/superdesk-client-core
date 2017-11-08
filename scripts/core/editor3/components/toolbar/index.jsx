@@ -118,7 +118,7 @@ class ToolbarComponent extends Component {
             editorFormat,
             activeCell,
             addTable,
-            insertImages,
+            insertMedia,
             allowsHighlights,
         } = this.props;
 
@@ -152,10 +152,10 @@ class ToolbarComponent extends Component {
                         tooltip="Embed"
                     />
                 }
-                {has('picture') &&
+                {has('media') &&
                     <IconButton
-                        onClick={insertImages}
-                        tooltip={gettext('Image')}
+                        onClick={insertMedia}
+                        tooltip={gettext('Media')}
                         iconName="picture"
                     />
                 }
@@ -197,7 +197,7 @@ ToolbarComponent.propTypes = {
     editorFormat: PropTypes.array,
     activeCell: PropTypes.any,
     addTable: PropTypes.func,
-    insertImages: PropTypes.func,
+    insertMedia: PropTypes.func,
     editorNode: PropTypes.object,
     scrollContainer: PropTypes.string
 };
@@ -207,7 +207,7 @@ const mapStateToProps = ({editorFormat, activeCell, allowsHighlights}) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    insertImages: () => dispatch(actions.insertImages()),
+    insertMedia: () => dispatch(actions.insertMedia()),
     addTable: () => dispatch(actions.addTable(1, 2))
 });
 

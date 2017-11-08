@@ -60,12 +60,12 @@ export function ContentProfileSchemaEditor(content, config) {
                 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
                 'justifyLeft', 'justifyCenter', 'justifyRight', 'justifyFull',
                 'outdent', 'indent', 'unorderedlist', 'orderedlist',
-                'pre', 'quote', 'picture', 'anchor', 'superscript', 'subscript', 'strikethrough',
+                'pre', 'quote', 'media', 'anchor', 'superscript', 'subscript', 'strikethrough',
                 'underline', 'italic', 'bold', 'table'
             ];
 
             scope.formattingOptionsEditor3 = [
-                'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'orderedlist', 'unorderedlist', 'quote', 'picture', 'anchor',
+                'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'orderedlist', 'unorderedlist', 'quote', 'media', 'anchor',
                 'embed', 'underline', 'italic', 'bold', 'table'
             ];
 
@@ -151,8 +151,7 @@ export function ContentProfileSchemaEditor(content, config) {
              * @return {Boolean}
              */
             scope.hasImageSelected = (field) => scope.hasFormatOptions(field) &&
-                        _.includes(scope.model.editor[field].formatOptions, 'image') ||
-                        _.includes(scope.model.editor[field].formatOptions, 'picture');
+                        _.includes(scope.model.editor[field].formatOptions, 'media');
 
             /**
              * Test if given field is custom field

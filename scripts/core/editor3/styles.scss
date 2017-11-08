@@ -186,7 +186,7 @@
 		white-space: initial;
 	}
 
-	.image-block {
+	.media-block {
 		text-align: left;
 		font-family: $baseFontFamily;
 		
@@ -215,7 +215,7 @@
 			border: none;
 		}
 
-		img {
+		img, video, audio {
 			display: inline-block;
 			cursor: pointer;
 		}

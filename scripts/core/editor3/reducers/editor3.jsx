@@ -1,7 +1,7 @@
 import {Editor3} from '../components/Editor3';
 import {RichUtils, EditorState} from 'draft-js';
 import {fromHTML} from 'core/editor3/html';
-import {addImage} from './toolbar';
+import {addMedia} from './toolbar';
 import {updateHighlights} from './highlights';
 
 /**
@@ -104,8 +104,8 @@ const dragDrop = (state, e) => {
     const eventData = e.originalEvent.dataTransfer;
     const mediaType = eventData.types[0];
     const data = eventData.getData(mediaType);
-    const img = JSON.parse(data);
-    const editorState = addImage(state.editorState, img);
+    const media = JSON.parse(data);
+    const editorState = addMedia(state.editorState, media);
 
     return onChange(state, editorState);
 };

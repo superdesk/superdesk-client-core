@@ -95,18 +95,18 @@ describe('core.editor3.html.to-html.AtomicBlockParser', () => {
         const {block, contentState} = testUtils.imageBlockAndContent();
         const html = new AtomicBlockParser(contentState).parse(block);
 
-        expect(html).toBe('<div class="image-block"><img src="image_href" alt="image_alt_text" />' +
-            '<span class="image-block__description">image_description</span></div>');
+        expect(html).toBe('<div class="media-block"><img src="image_href" alt="image_alt_text" />' +
+            '<span class="media-block__description">image_description</span></div>');
     });
 
     it('should correctly parse images without alt and description', () => {
-        const {block, contentState} = testUtils.createBlockAndContent('IMAGE', {
-            img: {renditions: {original: {href: 'image_href'}}}
+        const {block, contentState} = testUtils.createBlockAndContent('MEDIA', {
+            media: {renditions: {original: {href: 'image_href'}}}
         });
 
         const html = new AtomicBlockParser(contentState).parse(block);
 
-        expect(html).toBe('<div class="image-block"><img src="image_href" alt="" /></div>');
+        expect(html).toBe('<div class="media-block"><img src="image_href" alt="" /></div>');
     });
 
     it('should correctly parse tables', () => {

@@ -7,12 +7,12 @@ import Textarea from 'react-textarea-autosize';
 /**
  * @ngdoc React
  * @module superdesk.core.editor3
- * @name ImageBlockComponent
+ * @name MediaBlockComponent
  * @param {Function} cropImage Dispatches the crop image action.
  * @param {Object} block Information about the block where this component renders.
  * @description This component renders an image block within the editor.
  */
-export class ImageBlockComponent extends Component {
+export class MediaBlockComponent extends Component {
     constructor(props) {
         super(props);
 
@@ -23,7 +23,7 @@ export class ImageBlockComponent extends Component {
 
     /**
      * @ngdoc method
-     * @name ImageBlockComponent#data
+     * @name MediaBlockComponent#data
      * @returns {Object} Image data
      * @description Returns the image data.
      */
@@ -31,14 +31,14 @@ export class ImageBlockComponent extends Component {
         const {block, contentState} = this.props;
         const entityKey = block.getEntityAt(0);
         const entity = contentState.getEntity(entityKey);
-        const {img} = entity.getData();
+        const {media} = entity.getData();
 
-        return img;
+        return media;
     }
 
     /**
      * @ngdoc method
-     * @name ImageBlockComponent#onClick
+     * @name MediaBlockComponent#onClick
      * @description Handles clicking on the image event. Dispatches the crop image
      * action.
      */
@@ -52,7 +52,7 @@ export class ImageBlockComponent extends Component {
 
     /**
      * @ngdoc method
-     * @name ImageBlockComponent#onChange
+     * @name MediaBlockComponent#onChange
      * @description Triggered (debounced) when the image caption input is edited.
      */
     onChange({target}) {
@@ -68,6 +68,7 @@ export class ImageBlockComponent extends Component {
         const data = this.data();
         const rendition = data.renditions.viewImage || data.renditions.original;
         const alt = data.alt_text || data.description_text || data.caption;
+        const mediaType = data.type;
 
         return (
             <div className="image-block" onClick={(e) => e.stopPropagation()}>
@@ -81,7 +82,15 @@ export class ImageBlockComponent extends Component {
                             value={data.headline}
                             onChange={this.onChange}
                         /> : null }
-                    <img src={rendition.href} alt={alt} onClick={this.onClick} />
+                    {mediaType === 'picture' &&
+                        <img src={rendition.href} alt={alt} onClick={this.onClick} />
+                    }
+                    {mediaType === 'video' &&
+                        <video controls src={rendition.href} alt={alt} width="100%" height="100%" />
+                    }
+                    {mediaType === 'audio' &&
+                        <audio controls src={rendition.href} alt={alt} width="100%" height="100%" />
+                    }
                     <Textarea
                         placeholder={gettext('Caption')}
                         onFocus={setLocked}
@@ -96,7 +105,7 @@ export class ImageBlockComponent extends Component {
     }
 }
 
-ImageBlockComponent.propTypes = {
+MediaBlockComponent.propTypes = {
     cropImage: PropTypes.func.isRequired,
     changeCaption: PropTypes.func.isRequired,
     setLocked: PropTypes.func.isRequired,
@@ -115,4 +124,4 @@ const mapDispatchToProps = (dispatch) => ({
     setLocked: () => dispatch(actions.setLocked(true))
 });
 
-export const ImageBlock = connect(mapStateToProps, mapDispatchToProps)(ImageBlockComponent);
+export const MediaBlock = connect(mapStateToProps, mapDispatchToProps)(MediaBlockComponent);

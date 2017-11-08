@@ -1,14 +1,14 @@
 import React from 'react';
 import {shallow, mount} from 'enzyme';
-import {ImageBlockComponent as ImageBlock} from '../images/ImageBlock';
+import {MediaBlockComponent as MediaBlock} from '../media/MediaBlock';
 import {imageBlockAndContent} from './utils';
 import Textarea from 'react-textarea-autosize';
 
-describe('editor3.components.image-block', () => {
+describe('editor3.components.media-block', () => {
     it('should render', () => {
         const {block, contentState} = imageBlockAndContent();
         const wrapper = shallow(
-            <ImageBlock
+            <MediaBlock
                 cropImage={() => ({})}
                 changeCaption={() => ({})}
                 setLocked={() => ({})}
@@ -24,7 +24,7 @@ describe('editor3.components.image-block', () => {
         const {block, contentState} = imageBlockAndContent();
         const cropImage = jasmine.createSpy();
         const wrapper = mount(
-            <ImageBlock
+            <MediaBlock
                 cropImage={cropImage}
                 changeCaption={() => ({})}
                 setLocked={() => ({})}
