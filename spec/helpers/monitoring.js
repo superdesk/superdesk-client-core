@@ -395,7 +395,7 @@ function Monitoring() {
 
         btn.click();
         // wait for modal to be removed
-        browser.wait(() => btn.isPresent().then((isPresent) => !isPresent), 600);
+        browser.wait(() => btn.isPresent().then((isPresent) => !isPresent), 2000);
     };
 
     /**

@@ -44,6 +44,7 @@ describe('dashboard', () => {
         monitoring.nextSearches();
         monitoring.nextReorder();
         monitoring.saveSettings();
+
         expect(dashboard.getTextItem(0, 0, 0)).toBe('item3');
         expect(dashboard.getTextItem(0, 1, 0)).toBe('item4');
         expect(dashboard.getTextItem(1, 2, 0)).toBe('item5');
