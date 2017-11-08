@@ -15,8 +15,8 @@ const toolbar = (state = {}, action) => {
         return applyLink(state, action.payload);
     case 'TOOLBAR_REMOVE_LINK':
         return removeLink(state);
-    case 'TOOLBAR_INSERT_IMAGES':
-        return insertImages(state, action.payload);
+    case 'TOOLBAR_INSERT_MEDIA':
+        return insertMedia(state, action.payload);
     case 'TOOLBAR_UPDATE_IMAGE':
         return updateImage(state, action.payload);
     case 'TOOLBAR_APPLY_EMBED':
@@ -112,15 +112,15 @@ const removeLink = (state) => {
 
 /**
  * @ngdoc method
- * @name insertImages
- * @param {Array} imgs List of images to insert into document.
- * @description Inserts a list of images into the document.
+ * @name insertMedia
+ * @param {Array} imgs List of media files to be inserted into document.
+ * @description Inserts a list of media files into the document.
  */
-const insertImages = (state, imgs = []) => {
+const insertMedia = (state, files = []) => {
     var {editorState} = state;
 
-    imgs.forEach((img) => {
-        editorState = addImage(editorState, img);
+    files.forEach((file) => {
+        editorState = addMedia(editorState, file);
     });
 
     return onChange(state, editorState);
@@ -128,16 +128,16 @@ const insertImages = (state, imgs = []) => {
 
 /**
  * @ngdoc method
- * @name addImage
- * @param {Object} editorState Editor state to add the image too.
- * @param {Object} img Image data.
- * @returns {Object} New editor state with image inserted as atomic block.
- * @description Inserts the given image into the given editor state's content and returns
+ * @name addMedia
+ * @param {Object} editorState Editor state to add the media to.
+ * @param {Object} media Media data.
+ * @returns {Object} New editor state with media inserted as atomic block.
+ * @description Inserts the given media into the given editor state's content and returns
  * the updated editor state.
  */
-export const addImage = (editorState, img) => {
+export const addMedia = (editorState, media) => {
     const contentState = editorState.getCurrentContent();
-    const contentStateWithEntity = contentState.createEntity('IMAGE', 'MUTABLE', {img});
+    const contentStateWithEntity = contentState.createEntity('MEDIA', 'MUTABLE', {media});
     const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
 
     return AtomicBlockUtils.insertAtomicBlock(

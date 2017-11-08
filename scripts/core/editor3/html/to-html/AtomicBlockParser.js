@@ -28,7 +28,7 @@ export class AtomicBlockParser {
         const data = entity.getData();
 
         switch (entity.getType()) {
-        case 'IMAGE':
+        case 'MEDIA':
             return this.parseImage(data);
         case 'EMBED':
             return this.parseEmbed(data);
@@ -66,19 +66,31 @@ export class AtomicBlockParser {
      * @name AtomicBlockParser#parseImage
      * @param {Object} data Entity data.
      * @returns {string} HTML
-     * @description Returns the HTML representation of an atomic 'IMAGE' block having
+     * @description Returns the HTML representation of an atomic 'MEDIA' block having
      * the passed entity data.
      */
     parseImage(data) {
-        const {img} = data;
-        const rendition = img.renditions.original || img.renditions.viewImage;
+        const {media} = data;
+        const rendition = media.renditions.original || media.renditions.viewImage;
         const href = rendition.href;
-        const alt = img.alt_text || '';
+        const alt = media.alt_text || '';
+        const mediaType = media.type;
 
-        let html = `<div class="image-block"><img src="${href}" alt="${alt}" />`;
+        let html = '<div class="media-block">';
 
-        html += img.description_text
-            ? `<span class="image-block__description">${img.description_text}</span>`
+        switch (mediaType) {
+        case 'video':
+            html += `<video controls src="${href}" alt="${alt}" width="100%" height="100%" />`;
+            break;
+        case 'audio':
+            html += `<audio controls src="${href}" alt="${alt}" width="100%" height="100%" />`;
+            break;
+        default:
+            html += `<img src="${href}" alt="${alt}" />`;
+        }
+
+        html += media.description_text
+            ? `<span class="media-block__description">${media.description_text}</span>`
             : '';
 
         return `${html}</div>`;

@@ -1,9 +1,9 @@
-import {cropImage, insertImages} from '..';
+import {cropImage, insertMedia} from '..';
 
 describe('editor3.actions.toolbar', () => {
     beforeEach(window.module(($provide) => {
         $provide.service('superdesk', ($q) => ({
-            intent: jasmine.createSpy().and.returnValue($q.when('image_list'))
+            intent: jasmine.createSpy().and.returnValue($q.when('media_list'))
         }));
 
         $provide.service('renditions', ($q) => ({
@@ -25,17 +25,17 @@ describe('editor3.actions.toolbar', () => {
         });
     }));
 
-    it('insertImages', inject((superdesk, $rootScope) => {
+    it('insertMedia', inject((superdesk, $rootScope) => {
         const dispatch = jasmine.createSpy('dispatcher');
 
-        insertImages()(dispatch);
+        insertMedia()(dispatch);
 
         $rootScope.$apply();
 
         expect(superdesk.intent).toHaveBeenCalledWith('upload', 'media', undefined);
         expect(dispatch).toHaveBeenCalledWith({
-            type: 'TOOLBAR_INSERT_IMAGES',
-            payload: 'image_list'
+            type: 'TOOLBAR_INSERT_MEDIA',
+            payload: 'media_list'
         });
     }));
 });

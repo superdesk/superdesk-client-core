@@ -68,8 +68,8 @@ export function stateWithLink() {
  * @returns {Object} Keys 'block' and 'contentState'
  */
 export function imageBlockAndContent() {
-    return createBlockAndContent('IMAGE', {
-        img: {
+    return createBlockAndContent('MEDIA', {
+        media: {
             renditions: {original: {href: 'image_href'}},
             alt_text: 'image_alt_text',
             headline: 'image_headline',

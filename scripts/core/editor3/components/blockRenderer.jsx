@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {ImageBlock} from './images';
+import {MediaBlock} from './media';
 import {EmbedBlock} from './embeds';
 import {TableBlock} from './tables';
 
@@ -17,8 +17,8 @@ const MediaComponent = (props) => {
     const type = contentState.getEntity(entityKey).getType();
 
     switch (type) {
-    case 'IMAGE':
-        return <ImageBlock {...props} />;
+    case 'MEDIA':
+        return <MediaBlock {...props} />;
     case 'EMBED':
         return <EmbedBlock {...props} />;
     case 'TABLE':

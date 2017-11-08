@@ -79,20 +79,20 @@ export function removeLink() {
 
 /**
  * @ngdoc method
- * @name insertImages
- * @param {Array} filest to be uploaded and inserted
+ * @name insertMedia
+ * @param {Array} files to be uploaded and inserted
  * @return {String} action
- * @description Displays the external upload dialog and returns the insert images
+ * @description Displays the external upload dialog and returns the insert media
  * action.
  */
-export function insertImages(files) {
+export function insertMedia(files) {
     const superdesk = ng.get('superdesk');
 
     return (dispatch) => {
-        superdesk.intent('upload', 'media', files).then((imgs) => {
+        superdesk.intent('upload', 'media', files).then((media) => {
             dispatch({
-                type: 'TOOLBAR_INSERT_IMAGES',
-                payload: imgs
+                type: 'TOOLBAR_INSERT_MEDIA',
+                payload: media
             });
         });
     };
