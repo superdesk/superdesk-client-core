@@ -75,7 +75,6 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
     return {
         link: function($scope, elem, attrs) {
             var _closing;
-            var tryPublish = false;
 
             const UNIQUE_NAME_ERROR = gettext('Error: Unique Name is not unique.');
 
@@ -391,7 +390,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             function publishItem(orig, item) {
                 var action = $scope.action === 'edit' ? 'publish' : $scope.action;
 
-                validate(orig, item);
+                $scope.error = {};
 
                 return checkMediaAssociatedToUpdate()
                     .then((result) => {
@@ -417,7 +416,12 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                                     .split(',');
 
                                 for (var i = 0; i < modifiedErrors.length; i++) {
-                                    notify.error(_.trim(modifiedErrors[i]));
+                                    var message = _.trim(modifiedErrors[i]);
+                                    // the message format is 'Field error text' (contains ')
+                                    var field = message.split(' ')[0].substr(1);
+
+                                    $scope.error[field.toLowerCase()] = true;
+                                    notify.error(message);
                                 }
 
                                 if (errors.indexOf('9007') >= 0 || errors.indexOf('9009') >= 0) {
@@ -443,59 +447,6 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                         notify.error(gettext('Unknown Error: Item not published.'));
                         return $q.reject(false);
                     });
-            }
-
-            function validate(orig, item) {
-                let updated = _.cloneDeep(orig);
-
-                $scope.error = {};
-                tryPublish = true;
-                helpers.extendItem(updated, item);
-                angular.forEach(authoring.editor, (editor, key) => {
-                    if (!authoring.schema[key]) {
-                        var found = false;
-                        var cv = _.find(metadata.cvs, (item) => item._id === key);
-
-                        if (cv) {
-                            var field = cv.schema_field || 'subject';
-
-                            angular.forEach(cv.items, (row) => {
-                                var element = _.find(updated[field], (item) => item.qcode === row.qcode);
-
-                                if (element) {
-                                    found = true;
-                                }
-                            });
-                        }
-
-                        $scope.error[key] = !found;
-                    } else {
-                        var value = updated[key];
-
-                        if (value) {
-                            if (typeof value === 'object' && hasNullValue(value)) {
-                                $scope.error[key] = true;
-                            } else if (typeof value === 'string' && authoring.schema[key].required &&
-                                helpers.removeWhitespaces(value) === '') {
-                                $scope.error[key] = true;
-                            } else {
-                                $scope.error[key] = false;
-                            }
-                        } else {
-                            $scope.error[key] = true;
-                        }
-                    }
-                });
-            }
-
-            function hasNullValue(target) {
-                for (var member in target) {
-                    if (_.isNil(target[member])) {
-                        return true;
-                    }
-                }
-
-                return target.length === 0;
             }
 
             function notifyPreconditionFailed() {
@@ -794,10 +745,6 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 }
 
                 $scope.dirty = true;
-
-                if (tryPublish) {
-                    validate($scope.origItem, $scope.item);
-                }
 
                 var autosavedItem = authoring.autosave($scope.item, $scope.origItem, timeout);
 
