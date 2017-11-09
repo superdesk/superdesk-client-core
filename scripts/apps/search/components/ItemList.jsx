@@ -274,10 +274,6 @@ export class ItemList extends React.Component {
             itemsById[itemId] = angular.extend({}, item, changes);
             this.setState({itemsById: itemsById});
         }
-
-        if (_.get(changes, 'highlights') || _.get(changes, 'marked_desks')) {
-            this.closeActionsMenu();
-        }
     }
 
     handleKey(event) {

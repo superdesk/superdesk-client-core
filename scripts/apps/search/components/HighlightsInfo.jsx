@@ -14,10 +14,30 @@ export class HighlightsInfo extends React.Component {
     constructor(props) {
         super(props);
 
+        this.state = {isActionMenuOpen: false};
+
         this.toggle = this.toggle.bind(this);
         this.getHighlightStatuses = this.getHighlightStatuses.bind(this);
         this.getHighlights = this.getHighlights.bind(this);
         this.renderDropdown = this.renderDropdown.bind(this);
+        this.setActionMenuState = this.setActionMenuState.bind(this);
+    }
+
+    componentWillUnmount() {
+        if (this.state.isActionMenuOpen) {
+            closeActionsMenu();
+        }
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (this.state.isActionMenuOpen && nextProps.item !== this.props.item) {
+            this.setActionMenuState(false);
+            closeActionsMenu();
+        }
+    }
+
+    setActionMenuState(value) {
+        this.setState({isActionMenuOpen: value});
     }
 
     toggle(event) {
@@ -27,6 +47,7 @@ export class HighlightsInfo extends React.Component {
 
         closeActionsMenu();
         this.renderDropdown();
+        this.setActionMenuState(true);
     }
 
     /**
@@ -113,7 +134,8 @@ export class HighlightsInfo extends React.Component {
             highlights: this.getHighlights(),
             highlightsById: this.props.highlightsById,
             svc: this.props.svc,
-            scope: this.props.scope
+            scope: this.props.scope,
+            onClose: this.setActionMenuState
         });
 
         var icon = ReactDOM.findDOMNode(this).getElementsByClassName('icon-star')[0] ||
