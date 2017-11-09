@@ -22,9 +22,29 @@ export class MarkedDesksInfo extends React.Component {
     constructor(props) {
         super(props);
 
+        this.state = {isActionMenuOpen: false};
+
         this.toggle = this.toggle.bind(this);
         this.getMarkedDesks = this.getMarkedDesks.bind(this);
         this.renderDropdown = this.renderDropdown.bind(this);
+        this.setActionMenuState = this.setActionMenuState.bind(this);
+    }
+
+    componentWillUnmount() {
+        if (this.state.isActionMenuOpen) {
+            closeActionsMenu();
+        }
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (this.state.isActionMenuOpen && nextProps.item !== this.props.item) {
+            this.setActionMenuState(false);
+            closeActionsMenu();
+        }
+    }
+
+    setActionMenuState(value) {
+        this.setState({isActionMenuOpen: value});
     }
 
     toggle(event) {
@@ -34,6 +54,7 @@ export class MarkedDesksInfo extends React.Component {
 
         closeActionsMenu();
         this.renderDropdown();
+        this.setActionMenuState(true);
     }
 
     getMarkedDesks() {
@@ -71,7 +92,8 @@ export class MarkedDesksInfo extends React.Component {
             item: this.props.item,
             desks: this.getMarkedDesks(),
             markedDesksById: this.props.markedDesksById,
-            svc: this.props.svc
+            svc: this.props.svc,
+            onClose: this.setActionMenuState
         });
 
         var icon = ReactDOM.findDOMNode(this).getElementsByClassName('icon-bell')[0] ||

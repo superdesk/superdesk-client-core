@@ -10,6 +10,7 @@ export class HighlightsList extends React.Component {
         this.removeHighlight = this.removeHighlight.bind(this);
         this.stopTimeout = this.stopTimeout.bind(this);
         this.close = this.close.bind(this);
+        this.closeMenu = this.closeMenu.bind(this);
     }
 
     removeHighlight(highlight) {
@@ -19,6 +20,7 @@ export class HighlightsList extends React.Component {
         return function(event) {
             event.stopPropagation();
             highlightsService.markItem(highlight._id, this.props.item);
+            this.closeMenu();
 
             if (scope.viewType === 'highlights' && this.props.item.highlights.length === 1) {
                 $rootScope.$broadcast('multi:remove', this.props.item._id);
@@ -40,10 +42,17 @@ export class HighlightsList extends React.Component {
         this.timeout = $timeout.cancel(this.timeout);
     }
 
+    closeMenu() {
+        this.props.onClose && this.props.onClose();
+        closeActionsMenu();
+    }
+
     close() {
         const {$timeout} = this.props.svc;
 
-        this.timeout = $timeout(closeActionsMenu, 2000, false);
+        this.timeout = $timeout(() => {
+            this.closeMenu();
+        }, 2000, false);
     }
 
     render() {
@@ -106,4 +115,5 @@ HighlightsList.propTypes = {
     item: React.PropTypes.any,
     highlights: React.PropTypes.any,
     highlightsById: React.PropTypes.any,
+    onClose: React.PropTypes.func
 };
