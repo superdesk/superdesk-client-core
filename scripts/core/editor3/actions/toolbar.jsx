@@ -109,15 +109,15 @@ export function insertMedia(files) {
  */
 export function cropImage(entityKey, entityData) {
     const renditions = ng.get('renditions');
-    const {img} = entityData;
+    const {media} = entityData;
 
     return (dispatch) => {
-        renditions.crop(img).then((cropped) => {
+        renditions.crop(media).then((cropped) => {
             dispatch({
                 type: 'TOOLBAR_UPDATE_IMAGE',
                 payload: {
                     entityKey: entityKey,
-                    img: cropped
+                    media: cropped
                 }
             });
         });

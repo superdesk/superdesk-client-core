@@ -1,4 +1,4 @@
-import {RichUtils, Entity, AtomicBlockUtils, EditorState} from 'draft-js';
+import {RichUtils, AtomicBlockUtils, EditorState} from 'draft-js';
 import * as entityUtils from '../components/links/entityUtils';
 import {onChange} from './editor3';
 
@@ -113,7 +113,7 @@ const removeLink = (state) => {
 /**
  * @ngdoc method
  * @name insertMedia
- * @param {Array} imgs List of media files to be inserted into document.
+ * @param {Array} files List of media files to be inserted into document.
  * @description Inserts a list of media files into the document.
  */
 const insertMedia = (state, files = []) => {
@@ -153,13 +153,14 @@ export const addMedia = (editorState, media) => {
  * @param {Object} data Contains the entityKey and the new image data.
  * @description Updates the given entityKey with the new image data.
  */
-const updateImage = (state, {entityKey, img}) => {
-    Entity.replaceData(entityKey, {img});
-
-    // focus the editor and softly force a refresh
+const updateImage = (state, {entityKey, media}) => {
     const {editorState} = state;
     const selection = editorState.getSelection();
-    const newState = EditorState.forceSelection(editorState, selection);
+    const contentState = editorState.getCurrentContent();
+    const newContentState = contentState.replaceEntityData(entityKey, {media});
+    const newEditorState = EditorState.push(editorState, newContentState, 'change-block-data');
+    // focus the editor and softly force a refresh
+    const newState = EditorState.forceSelection(newEditorState, selection);
 
     return onChange(state, newState);
 };

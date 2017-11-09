@@ -55,20 +55,37 @@ export const forceUpdate = (state) => {
 /**
  * @ngdoc method
  * @name onChange
+ * @param {Object} state
  * @param {Object} editorState
+ * @param {Bool} force When true, forces an editor update regardless of whether the content has changed.
+ * This is used because currently it is impossible to detect changes happening solely on entity data.
+ * In Draft v0.11.0 we will be able to request all entities from the content and could compare them to get a
+ * more accurate result.
+ * See https://draftjs.org/docs/api-reference-content-state.html#getentitymap"
  * @return {Object} returns new state
  * @description Handle the editor state has been changed event
  */
-export const onChange = (state, newState) => {
+export const onChange = (state, newState, force = false) => {
+    // TODO(x): Remove `force` once Draft v0.11.0 is in
     let editorState = newState, activeHighlight = null;
     let contentChanged = state.editorState.getCurrentContent() !== newState.getCurrentContent();
 
     if (state.allowsHighlights) {
         ({editorState, activeHighlight} = updateHighlights(state.editorState, newState));
     }
-    if (contentChanged) {
+
+    if (contentChanged || force) {
         state.onChangeValue(editorState.getCurrentContent());
     }
+
+    if (force) {
+        return forceUpdate({
+            ...state,
+            editorState,
+            activeHighlight
+        });
+    }
+
     return {
         ...state,
         editorState,
@@ -165,15 +182,19 @@ const changeImageCaption = (state, {entityKey, newCaption, field}) => {
     const {editorState} = state;
     const contentState = editorState.getCurrentContent();
     const entity = contentState.getEntity(entityKey);
-    let {img} = entity.getData();
+    let {media} = entity.getData();
 
-    field === 'Title' ?
-        img.headline = newCaption :
-        img.description_text = newCaption;
+    if (field === 'Title') {
+        media.headline = newCaption;
+    } else {
+        media.description_text = newCaption;
+    }
 
-    const newContentState = contentState.replaceEntityData(entityKey, {img});
+    const newContentState = contentState.replaceEntityData(entityKey, {media});
+    const newEditorState = EditorState.push(editorState, newContentState, 'change-block-data');
+    const entityDataHasChanged = true;
 
-    return onChange(state, EditorState.push(editorState, newContentState, 'change-block-data'));
+    return onChange(state, newEditorState, entityDataHasChanged);
 };
 
 /**

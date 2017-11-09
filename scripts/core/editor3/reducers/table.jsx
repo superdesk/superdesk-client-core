@@ -1,5 +1,5 @@
 import {AtomicBlockUtils, EditorState} from 'draft-js';
-import {onChange, forceUpdate} from './editor3';
+import {onChange} from './editor3';
 
 /**
  * @description Contains the list of table related reducers.
@@ -137,9 +137,9 @@ const removeCol = (state) =>
 
 /**
  * @ngdoc method
- * @name removeCol
+ * @name processCells
  * @param {Function} fn Function that is called with parameters
- * (cells, numCols, numRows, i, j) and is expected to return the new
+ * (cells, numCols, numRows, i, j, withHeader) and is expected to return the new
  * data that should be placed on the table entity. The expected return
  * is an object with keys {cells, numRows, numCols}.
  * @description Helper function to help process the cells in the currently active
@@ -161,11 +161,10 @@ const processCells = (state, fn) => {
     const newContentState = contentState.mergeEntityData(entityKey, {
         data: fn(cells, numCols, numRows, i, j, withHeader)
     });
+    const newEditorState = EditorState.push(editorState, newContentState, 'change-block-data');
+    const entityDataHasChanged = true;
 
-    return forceUpdate({
-        ...state,
-        editorState: EditorState.push(editorState, newContentState, 'change-block-data')
-    });
+    return onChange(state, newEditorState, entityDataHasChanged);
 };
 
 /**
