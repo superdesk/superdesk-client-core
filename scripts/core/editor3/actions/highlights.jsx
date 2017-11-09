@@ -27,7 +27,16 @@ export const applyAnnotation = (s, data) => applyHighlight('ANNOTATION', s, data
  * @return {String} action
  * @description Deletes the given highlight from the content.
  */
-export const deleteHighlight = (h) => ({type: 'DELETE_HIGHLIGHT', payload: h});
+export const deleteHighlight = (h) => ({type: 'HIGHLIGHT_DELETE', payload: h});
+
+/**
+ * @ngdoc method
+ * @name updateHighlight
+ * @param {Highlight} h
+ * @return {String} action
+ * @description Updates the highlight on the selection found in h with fresh data.
+ */
+export const updateHighlight = (h) => ({type: 'HIGHLIGHT_UPDATE', payload: h});
 
 // applyHighlights creates an action that applies the highlight of the given type to
 // selection and contains the given meta data.
