@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {loadIframelyEmbedJs} from './loadIframely';
 import ng from 'core/services/ng';
+import {connect} from 'react-redux';
+import {embed, hidePopups} from '../../actions';
 
 const fallbackAPIKey = '1d1728bf82b2ac8139453f'; // register to author's personal account
 const GenericError = gettext('This URL could not be embedded.');
@@ -9,12 +11,12 @@ const GenericError = gettext('This URL could not be embedded.');
 /**
  * @ngdoc React
  * @module superdesk.core.editor3
- * @param {Function} onCancel To be called when the input needs to be hidden.
+ * @param {Function} hidePopups To be called when the input needs to be hidden.
  * @param {Function} onSubmit Dispatcher for the submit action. Takes the oEmbed response object as a parameter.
  * @name EmbedInputComponent
  * @description The dialog displayed when an embed URL is entered.
  */
-export class EmbedInput extends Component {
+export class EmbedInputComponent extends Component {
     constructor(props) {
         super(props);
 
@@ -39,7 +41,7 @@ export class EmbedInput extends Component {
      */
     onKeyUp(e) {
         if (e.key === 'Escape') {
-            this.props.onCancel();
+            this.props.hidePopups();
         }
     }
 
@@ -52,7 +54,7 @@ export class EmbedInput extends Component {
      * the action that embeds the response into the editor.
      */
     processSuccess(data, status) {
-        this.props.onSubmit(data);
+        this.props.embed(data);
         this.onCancel();
     }
 
@@ -110,7 +112,7 @@ export class EmbedInput extends Component {
      */
     onCancel() {
         this.setState({error: ''});
-        this.props.onCancel();
+        this.props.hidePopups();
     }
 
     componentDidMount() {
@@ -119,7 +121,7 @@ export class EmbedInput extends Component {
     }
 
     render() {
-        const {onCancel} = this.props;
+        const {hidePopups} = this.props;
         const {error} = this.state;
 
         return (
@@ -127,7 +129,7 @@ export class EmbedInput extends Component {
                 <input type="url" ref="txt" placeholder={gettext('Enter URL or code to embed')} />
                 <div className="input-controls">
                     <i className="svg-icon-ok" onClick={this.onSubmit} />
-                    <i className="icon-close-small" onClick={onCancel} />
+                    <i className="icon-close-small" onClick={hidePopups} />
                 </div>
                 {error ? <div className="embed-dialog__error">{error}</div> : null}
             </form>
@@ -135,7 +137,12 @@ export class EmbedInput extends Component {
     }
 }
 
-EmbedInput.propTypes = {
-    onCancel: PropTypes.func.isRequired,
-    onSubmit: PropTypes.func.isRequired
+EmbedInputComponent.propTypes = {
+    embed: PropTypes.func.isRequired,
+    hidePopups: PropTypes.func.isRequired
 };
+
+export const EmbedInput = connect(null, {
+    embed,
+    hidePopups
+})(EmbedInputComponent);

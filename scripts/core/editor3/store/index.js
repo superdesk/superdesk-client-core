@@ -7,6 +7,7 @@ import {Editor3} from '../components/Editor3';
 import {EditorState, convertFromRaw, convertToRaw, ContentState} from 'draft-js';
 import {toHTML, fromHTML} from 'core/editor3/html';
 import {applyInlineStyles, removeInlineStyles, highlightTypes} from '../reducers/highlights';
+import {PopupTypes} from '../actions';
 
 /**
  * @name createEditorStore
@@ -33,6 +34,7 @@ export default function createEditorStore(props, isReact = false) {
         activeHighlight: null,
         allowsHighlights: props.highlights,
         searchTerm: {pattern: '', index: -1, caseSensitive: false},
+        popup: {type: PopupTypes.Hidden},
         readOnly: props.readOnly,
         locked: false, // when true, main editor is disabled (ie. when editing sub-components like tables or images)
         showToolbar: showToolbar,

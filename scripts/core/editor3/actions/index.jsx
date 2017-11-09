@@ -4,3 +4,4 @@ export * from './toolbar';
 export * from './find-replace';
 export * from './table';
 export * from './highlights';
+export * from './popups';

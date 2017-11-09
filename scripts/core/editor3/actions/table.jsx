@@ -5,7 +5,7 @@
  * @param {Number} numCols
  * @description Dispatches the action that adds a table into the content.
  */
-export function addTable(numRows, numCols) {
+export function addTable(numRows = 1, numCols = 2) {
     const cells = [];
     const withHeader = false;
 
