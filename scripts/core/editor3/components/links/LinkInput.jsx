@@ -2,19 +2,17 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {EditorState} from 'draft-js';
-
 import {getSelectedEntity} from './entityUtils';
-
 import {Dropdown, DropdownMenuDivider, NavTabs} from 'core/ui/components';
 import {AttachmentList} from './AttachmentList';
+import {applyLink, hidePopups} from '../../actions';
 
 /**
  * @ngdoc React
- * @module superdesk.core.editor3 * @name LinkInput
+ * @module superdesk.core.editor3 
+ * @name LinkInput
  * @param {Object} editorState The editor state object.
- * @param {Function} onSubmit Function to call when submitting the form.
- * @param {Function} onCancel Function to call when cancelling submission.
- * @param {string} value The default value for the input.
+ * @param {string} data The default value for the input.
  * @description This components holds the input form for entering a new URL.
  */
 export class LinkInputComponent extends Component {
@@ -32,14 +30,14 @@ export class LinkInputComponent extends Component {
         this.activeTab = 0;
         this.state = {};
 
-        if (props.value) {
+        if (props.data) {
             // if a value has been passed, it is safe to assume that it
             // is coming from the currently selected entity
             this.entity = getSelectedEntity(props.editorState);
 
-            if (props.value.attachment) {
+            if (props.data.attachment) {
                 this.activeTab = 1;
-                this.state = {selected: props.value.attachment};
+                this.state = {selected: props.data.attachment};
             }
         }
 
@@ -66,8 +64,8 @@ export class LinkInputComponent extends Component {
             return;
         }
 
-        this.props.onSubmit(val, this.entity);
-        this.props.onCancel();
+        this.props.applyLink(val, this.entity);
+        this.props.hidePopups();
     }
 
     /**
@@ -78,7 +76,7 @@ export class LinkInputComponent extends Component {
      */
     onKeyUp(e) {
         if (e.key === 'Escape') {
-            this.props.onCancel();
+            this.props.hidePopups();
         }
     }
 
@@ -99,7 +97,7 @@ export class LinkInputComponent extends Component {
                 <DropdownMenuDivider />
                 <div className="pull-right">
                     <button className="btn btn--cancel"
-                        onClick={this.props.onCancel}>{gettext('Cancel')}</button>
+                        onClick={this.props.hidePopups}>{gettext('Cancel')}</button>
                     <button className="btn btn--primary"
                         onClick={this.onSubmit}>{gettext('Insert')}</button>
                 </div>
@@ -118,7 +116,7 @@ export class LinkInputComponent extends Component {
                     <input type="url"
                         ref={setInput}
                         className="sd-line-input__input"
-                        defaultValue={this.props.value ? this.props.value.href : null}
+                        defaultValue={this.props.data ? this.props.data.href : null}
                         placeholder={gettext('Insert URL')}
                     />
                 </div>
@@ -134,9 +132,9 @@ export class LinkInputComponent extends Component {
 
 LinkInputComponent.propTypes = {
     editorState: PropTypes.instanceOf(EditorState).isRequired,
-    onSubmit: PropTypes.func.isRequired,
-    onCancel: PropTypes.func.isRequired,
-    value: PropTypes.object,
+    applyLink: PropTypes.func.isRequired,
+    hidePopups: PropTypes.func.isRequired,
+    data: PropTypes.object,
     item: PropTypes.object.isRequired,
 };
 
@@ -145,4 +143,7 @@ const mapStateToProps = (state) => ({
     editorState: state.editorState
 });
 
-export const LinkInput = connect(mapStateToProps)(LinkInputComponent);
+export const LinkInput = connect(mapStateToProps, {
+    applyLink,
+    hidePopups
+})(LinkInputComponent);

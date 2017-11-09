@@ -4,9 +4,7 @@ import {LinkInput} from '../links';
 import {CommentInput} from '../comments';
 import {AnnotationInput} from '../annotations';
 import {EmbedInput} from '../embeds';
-import {PopupTypes} from '.';
-import {connect} from 'react-redux';
-import * as actions from '../../actions';
+import {PopupTypes} from '../../actions';
 
 /**
  * @ngdoc React
@@ -18,40 +16,26 @@ import * as actions from '../../actions';
  * @description ToolbarPopupComponent renders the popup specified by the type property and passes it
  * the onCancel value along with the given prop data.
  */
-class ToolbarPopupComponent extends Component {
+export class ToolbarPopup extends Component {
     render() {
-        const {onCancel, type, data, applyLink, applyComment, applyAnnotation, embedCode} = this.props;
+        const {type, data} = this.props;
 
         switch (type) {
         case PopupTypes.Annotation:
-            return <AnnotationInput onSubmit={applyAnnotation} onCancel={onCancel} value={data} />;
+            return <AnnotationInput data={data} />;
         case PopupTypes.Comment:
-            return <CommentInput onSubmit={applyComment} onCancel={onCancel} value={data} />;
+            return <CommentInput data={data} />;
         case PopupTypes.Link:
-            return <LinkInput onSubmit={applyLink} onCancel={onCancel} value={data} />;
+            return <LinkInput data={data} />;
         case PopupTypes.Embed:
-            return <EmbedInput onSubmit={embedCode} onCancel={onCancel} />;
+            return <EmbedInput />;
         }
 
         return null;
     }
 }
 
-ToolbarPopupComponent.propTypes = {
-    applyLink: PropTypes.func,
-    applyComment: PropTypes.func,
-    applyAnnotation: PropTypes.func,
-    embedCode: PropTypes.func,
-    onCancel: PropTypes.func,
+ToolbarPopup.propTypes = {
     type: PropTypes.string,
     data: PropTypes.object,
 };
-
-const mapDispatchToProps = (dispatch) => ({
-    applyLink: (link, entity = null) => dispatch(actions.applyLink({link, entity})),
-    applyComment: (sel, data) => dispatch(actions.applyComment(sel, data)),
-    applyAnnotation: (sel, data) => dispatch(actions.applyAnnotation(sel, data)),
-    embedCode: (code) => dispatch(actions.embed(code))
-});
-
-export const ToolbarPopup = connect(null, mapDispatchToProps)(ToolbarPopupComponent);

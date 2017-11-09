@@ -60,7 +60,7 @@ export function toggleInlineStyle(inlineStyle) {
  * @return {String} action
  * @description Returns the action for applying links to text selections.
  */
-export function applyLink({link, entity}) {
+export function applyLink(link, entity = null) {
     return {
         type: 'TOOLBAR_APPLY_LINK',
         payload: {link, entity}

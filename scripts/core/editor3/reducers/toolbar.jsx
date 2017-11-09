@@ -21,6 +21,8 @@ const toolbar = (state = {}, action) => {
         return updateImage(state, action.payload);
     case 'TOOLBAR_APPLY_EMBED':
         return applyEmbed(state, action.payload);
+    case 'TOOLBAR_SET_POPUP':
+        return setPopup(state, action.payload);
     default:
         return state;
     }
@@ -187,5 +189,13 @@ const applyEmbed = (state, code) => {
 
     return onChange(state, editorState);
 };
+
+/**
+ * @ngdoc method
+ * @name setPopup
+ * @param {Object} data Type of popup and popup data.
+ * @description Sets the toolbar popup to the given type.
+ */
+const setPopup = (state, {type, data}) => ({...state, popup: {type, data}});
 
 export default toolbar;

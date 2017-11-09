@@ -5,18 +5,20 @@ import {Mention, MentionsInput} from 'react-mentions';
 import {UserAvatar} from 'apps/users/components';
 import mentionsStyle from './mentionsStyle';
 import ng from 'core/services/ng';
+import {connect} from 'react-redux';
+import {applyComment, hidePopups} from '../../actions';
 
 /**
  * @ngdoc React
  * @module superdesk.core.editor3
- * @name CommentInput
- * @param {Function} onSubmit Called when a new comment is submitted. It receives the
+ * @name CommentInputBody
+ * @param {Function} applyComment Called when a new comment is submitted. It receives the
  * comment body as a parameter.
- * @param {Function} onCancel
- * @description CommentInput holds the dropdown that is used to enter the text for a
+ * @param {Function} hidePopups
+ * @description CommentInputBody holds the dropdown that is used to enter the text for a
  * comment.
  */
-export class CommentInput extends Component {
+class CommentInputBody extends Component {
     constructor(props) {
         super(props);
 
@@ -33,23 +35,23 @@ export class CommentInput extends Component {
 
     /**
      * @ngdoc method
-     * @name CommentInput#onSubmit
+     * @name CommentInputBody#onSubmit
      * @description onSubmit is called when the user clicks the Submit button in the UI.
      * Consequently, it calls the `onSubmit` prop, passing it the value of the text input.
      */
     onSubmit() {
         const {msg} = this.state;
-        const {onSubmit, onCancel, value} = this.props;
+        const {applyComment, hidePopups, data} = this.props;
 
         if (msg !== '') {
-            onSubmit(value, {msg});
-            onCancel();
+            applyComment(data.selection, {msg});
+            hidePopups();
         }
     }
 
     /**
      * @ngdoc method
-     * @name CommentInput#onChange
+     * @name CommentInputBody#onChange
      * @description onChange is triggered when the Textarea content changes.
      */
     onChange(ev, value) {
@@ -62,7 +64,7 @@ export class CommentInput extends Component {
 
     /**
      * @ngdoc method
-     * @name CommentInput#suggestDesk
+     * @name CommentInputBody#suggestDesk
      * @param {String} q Query string for mentions
      * @param {Function<Array>} cb Callback for async ops on requesting the results.
      * @description suggest returns the list of suggestions for a given query q.
@@ -83,7 +85,7 @@ export class CommentInput extends Component {
 
     /**
      * @ngdoc method
-     * @name CommentInput#suggestUser
+     * @name CommentInputBody#suggestUser
      * @param {String} q Query string for mentions
      * @param {Function<Array>} cb Callback for async ops on requesting the results.
      * @description suggest returns the list of suggestions for a given query q.
@@ -102,7 +104,7 @@ export class CommentInput extends Component {
 
     /**
      * @ngdoc method
-     * @name CommentInput#renderSuggestion
+     * @name CommentInputBody#renderSuggestion
      * @description renderSuggestion renders each list item to be displayed in the
      * suggested items dropdown based on its data.
      * @returns {JSX}
@@ -149,7 +151,7 @@ export class CommentInput extends Component {
                         />
                     </MentionsInput>
                     <div className="pull-right">
-                        <button className="btn btn--cancel" onClick={this.props.onCancel}>{gettext('Cancel')}</button>
+                        <button className="btn btn--cancel" onClick={this.props.hidePopups}>{gettext('Cancel')}</button>
                         <button className="btn btn--primary" onClick={this.onSubmit}>{gettext('Submit')}</button>
                     </div>
                 </Dropdown>
@@ -158,8 +160,13 @@ export class CommentInput extends Component {
     }
 }
 
-CommentInput.propTypes = {
-    onSubmit: PropTypes.func,
-    onCancel: PropTypes.func,
-    value: PropTypes.object
+CommentInputBody.propTypes = {
+    applyComment: PropTypes.func,
+    hidePopups: PropTypes.func,
+    data: PropTypes.object
 };
+
+export const CommentInput = connect(null, {
+    applyComment,
+    hidePopups
+})(CommentInputBody);

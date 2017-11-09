@@ -2,17 +2,19 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {Dropdown} from 'core/ui/components';
 import {toHTML, Editor} from 'core/editor3';
+import {connect} from 'react-redux';
+import {applyAnnotation, hidePopups} from '../../actions';
 import ng from 'core/services/ng';
 
 /**
  * @ngdoc React
  * @module superdesk.core.editor3
- * @param {Function} onCancel
- * @param {Function} onSubmit Receives value (generally SelectionState) and highlight data.
+ * @param {Function} hidePopups
+ * @param {Function} applyAnnotation Receives value (generally SelectionState) and highlight data.
  * @description AnnotationInput is the popup containing the fields needed to fill in information
  * about an annotation.
  */
-export class AnnotationInput extends Component {
+class AnnotationInputBody extends Component {
     constructor(props) {
         super(props);
 
@@ -35,14 +37,15 @@ export class AnnotationInput extends Component {
      */
     onSubmit() {
         const {body, type} = this.state;
-        const {onSubmit, onCancel, value} = this.props;
+        const {applyAnnotation, hidePopups, data} = this.props;
 
         if (body !== '') {
-            onSubmit(value, {
+            applyAnnotation(data.selection, {
                 msg: body,
                 annotationType: type
             });
-            onCancel();
+
+            hidePopups();
         }
     }
 
@@ -71,7 +74,7 @@ export class AnnotationInput extends Component {
     }
 
     render() {
-        const {onCancel} = this.props;
+        const {hidePopups} = this.props;
         const {type, annotationTypes} = this.state;
 
         return (
@@ -95,7 +98,7 @@ export class AnnotationInput extends Component {
                         editorFormat={['bold', 'italic', 'underline', 'anchor']}
                     />
                     <div className="pull-right">
-                        <button className="btn btn--cancel" onClick={onCancel}>{gettext('Cancel')}</button>
+                        <button className="btn btn--cancel" onClick={hidePopups}>{gettext('Cancel')}</button>
                         <button className="btn btn--primary" onClick={this.onSubmit}>{gettext('Submit')}</button>
                     </div>
                 </Dropdown>
@@ -104,8 +107,13 @@ export class AnnotationInput extends Component {
     }
 }
 
-AnnotationInput.propTypes = {
-    onSubmit: PropTypes.func,
-    onCancel: PropTypes.func,
-    value: PropTypes.object
+AnnotationInputBody.propTypes = {
+    applyAnnotation: PropTypes.func,
+    hidePopups: PropTypes.func,
+    data: PropTypes.object
 };
+
+export const AnnotationInput = connect(null, {
+    applyAnnotation,
+    hidePopups
+})(AnnotationInputBody);

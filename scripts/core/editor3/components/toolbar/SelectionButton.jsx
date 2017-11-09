@@ -19,7 +19,9 @@ const SelectionButtonComponent = ({editorState, onClick, tooltip, iconName}) => 
 
     const clickHandler = () => {
         if (!isCollapsed) {
-            onClick(editorState.getSelection());
+            onClick({
+                selection: editorState.getSelection()
+            });
         }
     };
 
