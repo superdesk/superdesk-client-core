@@ -14,14 +14,14 @@ describe('editor3.actions.toolbar', () => {
     it('cropImage', inject((renditions, $rootScope) => {
         const dispatch = jasmine.createSpy('dispatcher');
 
-        cropImage('key', {img: 'image_data'})(dispatch);
+        cropImage('key', {media: 'image_data'})(dispatch);
 
         $rootScope.$apply(); // settles promise
 
         expect(renditions.crop).toHaveBeenCalledWith('image_data');
         expect(dispatch).toHaveBeenCalledWith({
             type: 'TOOLBAR_UPDATE_IMAGE',
-            payload: {entityKey: 'key', img: 'cropped_image'}
+            payload: {entityKey: 'key', media: 'cropped_image'}
         });
     }));
 

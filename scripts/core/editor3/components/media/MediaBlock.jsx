@@ -60,7 +60,6 @@ export class MediaBlockComponent extends Component {
         const entityKey = block.getEntityAt(0);
 
         changeCaption(entityKey, target.value, target.placeholder);
-        this.forceUpdate();
     }
 
     render() {
