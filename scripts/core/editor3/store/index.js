@@ -80,7 +80,7 @@ function onChange(content) {
  */
 function getInitialContent(props) {
     // we have an editor state stored in the DB
-    if (typeof props.editorState === 'object') {
+    if (props.editorState && typeof props.editorState === 'object') {
         return applyInlineStyles(convertFromRaw(props.editorState)).contentState;
     }
 

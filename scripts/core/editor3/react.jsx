@@ -71,7 +71,7 @@ Editor.propTypes = {
     // A JSON object representing the initial Content State of the Draft editor.
     // It is transformed using `convertFromRaw` and its value is expected to be the
     // result of `converToRaw`.
-    contentState: PropTypes.object,
+    editorState: PropTypes.object,
 
     // HTML value of editor. If contentState is not set, this is used.
     html: PropTypes.string,

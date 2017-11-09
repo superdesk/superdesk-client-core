@@ -6,7 +6,7 @@
  */
 import {repositionHighlights} from './offsets';
 import {redrawHighlights, removeInlineStyles, applyInlineStyles} from './styles';
-import {getHighlights, addHighlight, removeHighlight, replaceHighlights} from './store';
+import {getHighlights, addHighlight, updateHighlight, removeHighlight, replaceHighlights} from './store';
 import {updateHighlights} from './highlights';
 
 // To add new highlight types, simply list them here. They must map one-to-one
@@ -27,6 +27,7 @@ export {
     removeInlineStyles,
     getHighlights,
     addHighlight,
+    updateHighlight,
     removeHighlight,
     replaceHighlights,
     updateHighlights,

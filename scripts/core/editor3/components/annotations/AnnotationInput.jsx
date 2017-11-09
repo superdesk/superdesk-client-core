@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {Dropdown} from 'core/ui/components';
-import {toHTML, Editor} from 'core/editor3';
+import {Editor} from 'core/editor3';
 import {connect} from 'react-redux';
-import {applyAnnotation, hidePopups} from '../../actions';
+import {convertToRaw} from 'draft-js';
+import {applyAnnotation, updateHighlight as updateAnnotation, hidePopups} from '../../actions';
 import ng from 'core/services/ng';
 
 /**
@@ -18,11 +19,20 @@ class AnnotationInputBody extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            annotationTypes: ng.get('metadata').values.annotation_types,
-            type: '',
-            body: ''
-        };
+        const {data} = props;
+        const editing = typeof data.annotation === 'object';
+
+        let body = null;
+        let type = '';
+        let annotationTypes = ng.get('metadata').values.annotation_types;
+
+        if (editing) {
+            ({annotationType: type, msg: body} = data.annotation.data);
+            body = JSON.parse(body);
+        }
+
+        this.state = {body, type, annotationTypes};
+        this.initialContent = body;
 
         this.onSubmit = this.onSubmit.bind(this);
         this.onChange = this.onChange.bind(this);
@@ -37,13 +47,21 @@ class AnnotationInputBody extends Component {
      */
     onSubmit() {
         const {body, type} = this.state;
-        const {applyAnnotation, hidePopups, data} = this.props;
+        const {updateAnnotation, applyAnnotation, hidePopups, data} = this.props;
+        const update = typeof data.annotation === 'object';
 
         if (body !== '') {
-            applyAnnotation(data.selection, {
-                msg: body,
-                annotationType: type
-            });
+            if (update) {
+                data.annotation.data.annotationType = type;
+                data.annotation.data.msg = JSON.stringify(body);
+
+                updateAnnotation(data.annotation);
+            } else {
+                applyAnnotation(data.selection, {
+                    msg: JSON.stringify(body),
+                    annotationType: type
+                });
+            }
 
             hidePopups();
         }
@@ -56,7 +74,7 @@ class AnnotationInputBody extends Component {
      * @description onChange is triggered when the content of the editor changes.
      */
     onChange(content) {
-        this.setState({body: toHTML(content)});
+        this.setState({body: convertToRaw(content)});
     }
 
     /**
@@ -96,6 +114,7 @@ class AnnotationInputBody extends Component {
                     <Editor
                         onChange={this.onChange}
                         editorFormat={['bold', 'italic', 'underline', 'anchor']}
+                        editorState={this.initialContent}
                     />
                     <div className="pull-right">
                         <button className="btn btn--cancel" onClick={hidePopups}>{gettext('Cancel')}</button>
@@ -108,6 +127,7 @@ class AnnotationInputBody extends Component {
 }
 
 AnnotationInputBody.propTypes = {
+    updateAnnotation: PropTypes.func,
     applyAnnotation: PropTypes.func,
     hidePopups: PropTypes.func,
     data: PropTypes.object
@@ -115,5 +135,6 @@ AnnotationInputBody.propTypes = {
 
 export const AnnotationInput = connect(null, {
     applyAnnotation,
+    updateAnnotation,
     hidePopups
 })(AnnotationInputBody);

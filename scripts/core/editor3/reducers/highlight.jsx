@@ -1,12 +1,14 @@
-import {addHighlight, removeHighlight} from './highlights';
+import {addHighlight, removeHighlight, updateHighlight} from './highlights';
 import {onChange} from './editor3';
 
 const highlights = (state = {}, action) => {
     switch (action.type) {
     case 'TOOLBAR_ADD_HIGHLIGHT':
         return applyHighlight(state, action.payload);
-    case 'DELETE_HIGHLIGHT':
+    case 'HIGHLIGHT_DELETE':
         return deleteHighlight(state, action.payload);
+    case 'HIGHLIGHT_UPDATE':
+        return replaceHighlight(state, action.payload);
     default:
         return state;
     }
@@ -32,6 +34,18 @@ const applyHighlight = (state, {data, selection}) => onChange(
 const deleteHighlight = (state, highlight) => onChange(
     state,
     removeHighlight(state.editorState, highlight)
+);
+
+/**
+ * @ngdoc method
+ * @name deleteHighlight
+ * @param {Object} Highlight data and selection.
+ * @description Attempts to update the highlight located on the selection
+ * with the new data.
+ */
+const replaceHighlight = (state, highlight) => onChange(
+    state,
+    updateHighlight(state.editorState, highlight)
 );
 
 export default highlights;

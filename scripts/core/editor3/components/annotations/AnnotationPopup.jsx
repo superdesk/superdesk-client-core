@@ -3,18 +3,21 @@ import {UserAvatar} from 'apps/users/components';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import {connect} from 'react-redux';
-import {deleteHighlight} from '../../actions';
+import {showPopup, deleteHighlight, PopupTypes} from '../../actions';
+import {toHTML} from 'core/editor3';
+import {convertFromRaw} from 'draft-js';
 import ng from 'core/services/ng';
 
-const Annotation = ({annotation, deleteHighlight}) => {
-    const {author, avatar, date, msg} = annotation.data;
+const Annotation = ({annotation, deleteHighlight, showPopup}) => {
+    const {author, avatar, date, msg, annotationType: type} = annotation.data;
     const fromNow = moment(date).calendar();
     const fullDate = moment(date).format('MMMM Do YYYY, h:mm:ss a');
+    const html = toHTML(convertFromRaw(JSON.parse(msg)));
     const modal = ng.get('modal');
-    const deleteAnnotation = () => {
-        modal.confirm(gettext('The annotation will be deleted. Are you sure?'))
-            .then(() => deleteHighlight(annotation));
-    };
+
+    const deleteAnnotation = () => modal
+        .confirm(gettext('The annotation will be deleted. Are you sure?'))
+        .then(() => deleteHighlight(annotation));
 
     return (
         <div>
@@ -25,17 +28,21 @@ const Annotation = ({annotation, deleteHighlight}) => {
                     <div className="date" title={fullDate}>{fromNow}</div>
                 </div>
             </div>
-            <div className="highlights-popup__html" dangerouslySetInnerHTML={{__html: msg}} />
+            <b>Type: </b>{type}
+            <div className="highlights-popup__html" dangerouslySetInnerHTML={{__html: html}} />
+            <a onClick={() => showPopup(PopupTypes.Annotation, {annotation})}>Edit</a>
             <a onClick={deleteAnnotation}>Delete</a>
         </div>
     );
 };
 
 Annotation.propTypes = {
+    showPopup: PropTypes.func,
     deleteHighlight: PropTypes.func,
     annotation: PropTypes.object
 };
 
 export const AnnotationPopup = connect(null, {
+    showPopup,
     deleteHighlight
 })(Annotation);
