@@ -7,8 +7,8 @@ import {HighlightsList} from 'apps/search/components';
 
 import {
     closeActionsMenu,
-    isCheckAllowed,
-    renderToBody
+    openActionsMenu,
+    isCheckAllowed
 } from 'apps/search/helpers';
 
 export class HighlightsInfo extends React.Component {
@@ -26,7 +26,7 @@ export class HighlightsInfo extends React.Component {
             event.stopPropagation();
         }
 
-        closeActionsMenu();
+        closeActionsMenu(this.props.item._id);
         this.renderDropdown();
     }
 
@@ -120,7 +120,7 @@ export class HighlightsInfo extends React.Component {
         var icon = ReactDOM.findDOMNode(this).getElementsByClassName('icon-star')[0] ||
         ReactDOM.findDOMNode(this).getElementsByClassName('icon-multi-star')[0];
 
-        renderToBody(elem, icon);
+        openActionsMenu(elem, icon, this.props.item._id);
     }
 }
 

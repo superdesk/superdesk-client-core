@@ -13,7 +13,9 @@ export default function Label(props) {
         }, gettextCatalog.getString(props.label),
         props.label === 'Actions' ? React.createElement(
             'button',
-            {className: 'dropdown__menu-close', onClick: closeActionsMenu},
+            {className: 'dropdown__menu-close', onClick: () => {
+                closeActionsMenu(props.item._id);
+            }},
             React.createElement(
                 'i',
                 {className: 'icon-close-small'}
@@ -26,4 +28,5 @@ export default function Label(props) {
 Label.propTypes = {
     svc: PropTypes.object.isRequired,
     label: PropTypes.any,
+    item: PropTypes.object
 };

@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import MenuItems from './MenuItems';
 
-import {closeActionsMenu, renderToBody} from 'apps/search/helpers';
+import {closeActionsMenu, openActionsMenu} from 'apps/search/helpers';
 
 export class ActionsMenu extends React.Component {
     constructor(props) {
@@ -15,17 +15,15 @@ export class ActionsMenu extends React.Component {
 
     toggle(event) {
         this.stopEvent(event);
-        closeActionsMenu();
+        closeActionsMenu(this.props.item._id);
         var icon = ReactDOM.findDOMNode(this)
             .getElementsByClassName('icon-dots-vertical')[0];
 
-        renderToBody(<MenuItems
+        openActionsMenu(<MenuItems
             svc={this.props.svc}
             scope={this.props.scope}
             item={this.props.item}
-            onActioning={this.props.onActioning}
-            onClose={this.props.onToggle} />, icon);
-        this.props.onToggle(true);
+            onActioning={this.props.onActioning}/>, icon, this.props.item._id);
     }
 
     stopEvent(event) {
@@ -58,6 +56,5 @@ ActionsMenu.propTypes = {
     svc: PropTypes.object.isRequired,
     scope: PropTypes.any.isRequired,
     item: PropTypes.any,
-    onActioning: PropTypes.func,
-    onToggle: PropTypes.func,
+    onActioning: PropTypes.func
 };
