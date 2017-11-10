@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {Dropdown} from 'core/ui/components';
 import {toHTML, Editor} from 'core/editor3';
+import ng from 'core/services/ng';
 
 /**
  * @ngdoc React
@@ -15,7 +16,11 @@ export class AnnotationInput extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {body: '', type: 'regular'};
+        this.state = {
+            annotationTypes: ng.get('metadata').values.annotation_types,
+            type: '',
+            body: ''
+        };
 
         this.onSubmit = this.onSubmit.bind(this);
         this.onChange = this.onChange.bind(this);
@@ -67,18 +72,23 @@ export class AnnotationInput extends Component {
 
     render() {
         const {onCancel} = this.props;
-        const {type} = this.state;
+        const {type, annotationTypes} = this.state;
 
         return (
             <div className="annotation-input">
                 <Dropdown open={true}>
-                    <div className="sd-line-input sd-line-input--is-select">
-                        <label className="sd-line-input__label">Annotation Type</label>
-                        <select className="sd-line-input__select" onChange={this.onSelect} value={type}>
-                            <option value="regular">Regular</option>
-                            <option value="remark">Remark</option>
-                        </select>
-                    </div>
+                    {annotationTypes &&
+                        <div className="sd-line-input sd-line-input--is-select">
+                            <label className="sd-line-input__label">Annotation Type</label>
+                            <select className="sd-line-input__select" onChange={this.onSelect} value={type}>
+                                {annotationTypes.map((annotationType) =>
+                                    <option key={annotationType.qcode} value={annotationType.qcode}>
+                                        {annotationType.name}
+                                    </option>
+                                )}
+                            </select>
+                        </div>
+                    }
                     <label className="sd-line-input__label">Annotation Body</label>
                     <Editor
                         onChange={this.onChange}
