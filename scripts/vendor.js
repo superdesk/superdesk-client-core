@@ -19,4 +19,4 @@ import 'raven-js';
 import 'rangy';
 import 'rangy-saverestore';
 import 'ment.io';
-import 'superdesk-ui-framework/dist/superdesk-ui-framework';
+import 'superdesk-ui-framework';
