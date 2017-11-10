@@ -95,9 +95,9 @@ describe('editor3.components.link-input', () => {
             <LinkInput
                 store={store}
                 editorState={stateWithLink()}
-                value={value}
+                data={value}
                 onSubmit={() => ({})}
-                onCancel={() => ({})} />);
+                hidePopups={() => ({})} />);
 
         expect(wrapper.find('input').props().defaultValue).toBe(value.href);
     });
@@ -108,9 +108,9 @@ describe('editor3.components.link-input', () => {
             <LinkInput
                 store={store}
                 editorState={stateWithLink()}
-                value={value}
+                data={value}
                 onSubmit={() => ({})}
-                onCancel={onCancel} />);
+                hidePopups={onCancel} />);
 
         wrapper.find('.btn--cancel').simulate('click');
 
@@ -123,9 +123,9 @@ describe('editor3.components.link-input', () => {
             <LinkInput
                 store={store}
                 editorState={stateWithLink()}
-                value={value}
+                data={value}
                 onSubmit={() => ({})}
-                onCancel={onCancel} />);
+                hidePopups={onCancel} />);
 
         wrapper.simulate('keyup', {key: 'A'});
 
@@ -138,9 +138,9 @@ describe('editor3.components.link-input', () => {
             <LinkInput
                 store={store}
                 editorState={stateWithLink()}
-                value={value}
+                data={value}
                 onSubmit={() => ({})}
-                onCancel={onCancel} />);
+                hidePopups={onCancel} />);
 
         wrapper.find('form').simulate('keyup', {key: 'Escape'});
 
@@ -154,9 +154,9 @@ describe('editor3.components.link-input', () => {
             <LinkInput
                 store={store}
                 editorState={stateWithLink()}
-                value={value}
-                onCancel={onCancel}
-                onSubmit={onSubmit} />);
+                data={value}
+                hidePopups={onCancel}
+                applyLink={onSubmit} />);
 
         wrapper.find('form').simulate('submit');
 
