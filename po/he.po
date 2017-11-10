@@ -1,31 +1,29 @@
 # 
 # Translators:
-# Media Wnet Cooperative <lech.rustecki@mediawnet.pl>, 2016
-# ahilles107 <mikolajczuk.private@gmail.com>, 2016-2017
-# Rafał Muszyński <rafal.muszynski@sourcefabric.org>, 2016-2017
+# Nadav Schachter <nadav-s@globes.co.il>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
-"PO-Revision-Date: 2017-10-16 14:40+0000\n"
-"Last-Translator: Rafał Muszyński <rafal.muszynski@sourcefabric.org>\n"
-"Language-Team: Polish (http://www.transifex.com/sourcefabric/superdesk/language/pl/)\n"
+"PO-Revision-Date: 2017-10-31 09:57+0000\n"
+"Last-Translator: Nadav Schachter <nadav-s@globes.co.il>\n"
+"Language-Team: Hebrew (http://www.transifex.com/sourcefabric/superdesk/language/he/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: pl\n"
-"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"Language: he\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: scripts/apps/archive/views/upload.html:66
 #: scripts/apps/authoring/views/change-image.html:99
 msgid "--- Not selected ---"
-msgstr "--- nie wybrano ---"
+msgstr ""
 
 #: scripts/apps/desks/views/desk-config-modal.html:131
 msgid ": OFF"
-msgstr ": Wyłącz"
+msgstr ""
 
 #: scripts/apps/desks/views/desk-config-modal.html:134
 msgid ": ON"
-msgstr ": Włącz"
+msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.js:18
 msgid "'ABSTRACT is a required field'"
@@ -85,7 +83,7 @@ msgstr ""
 
 #: scripts/apps/authoring/authoring/directives/AuthoringEmbeddedDirective.js:31
 msgid "\" sent at:"
-msgstr "\" wysłano o:"
+msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.js:27
 msgid "\"GENRE 'null value not allowed'"
@@ -93,60 +91,54 @@ msgstr ""
 
 #: scripts/apps/highlights/services/HighlightsService.js:58
 msgid "(Global)"
-msgstr "(Globalny)"
+msgstr ""
 
 #: scripts/core/ui/views/sd-timezone.html:12
 msgid "(no matches)"
-msgstr "(brak dopasowań)"
+msgstr ""
 
 #: scripts/apps/analytics/views/saved-activity-reports.html:10
 #: scripts/apps/search/views/saved-searches.html:10
 msgid "[Global]"
-msgstr "[Globalny]"
+msgstr ""
 
 #: scripts/apps/ingest/views/settings/ingest-routing-general.html:16
 msgid "[none]"
-msgstr "[brak]"
+msgstr ""
 
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:295
 msgid "{{ field }} cannot be earlier than now!"
-msgstr "{{ field }} nie może być wcześniej niż teraz!"
+msgstr ""
 
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:283
 msgid "{{ field }} date is required!"
-msgstr "Data w polu {{ field }} jest wymagana!"
+msgstr ""
 
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:291
 msgid "{{ field }} is not a valid date!"
-msgstr "{{ field }} nie jest poprawną datą!"
+msgstr ""
 
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:287
 msgid "{{ field }} time is required!"
-msgstr "{{ field }} czas jest wymagany!"
+msgstr ""
 
 #: scripts/apps/search/views/multi-action-bar.html:5
 msgid "{{ multi.count }} Item selected"
 msgid_plural "{{ multi.count }} Items selected"
-msgstr[0] "{{ multi.count }} wybrany element"
-msgstr[1] "{{ multi.count }} wybranych elementów "
-msgstr[2] "{{ multi.count }} wybranych elementów "
-msgstr[3] "{{ multi.count }} wybranych elementów "
+msgstr[0] ""
+msgstr[1] ""
 
 #: scripts/apps/publish/views/publish-queue.html:71
 msgid "{{ multiSelectCount}} Item selected"
 msgid_plural "{{ multiSelectCount }} Items selected"
-msgstr[0] "{{ multiSelectCount }} Wybrany element"
-msgstr[1] "{{ multiSelectCount }} Wybranych elementów"
-msgstr[2] "{{ multiSelectCount }} Wybranych elementów"
-msgstr[3] "{{ multiSelectCount }} wybranych elementów"
+msgstr[0] ""
+msgstr[1] ""
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:52
 msgid "{{ wordsCount }} word"
 msgid_plural "{{ $count }} words"
-msgstr[0] "{{ wordsCount }} słowo"
-msgstr[1] "{{ $count }} słów"
-msgstr[2] "{{ $count }} słów"
-msgstr[3] "{{ $count }} słów"
+msgstr[0] ""
+msgstr[1] ""
 
 #: scripts/apps/users/views/edit-form.html:107
 msgid "{{error.email}}"
@@ -158,11 +150,11 @@ msgstr ""
 
 #: scripts/apps/desks/views/desk-config-modal.html:181
 msgid "{{selected.is_visible ? 'ON' : 'OFF'}}"
-msgstr "{{selected.is_visible ? 'Włączony' : 'Wyłączony'}}"
+msgstr ""
 
 #: scripts/apps/desks/views/desk-config-modal.html:185
 msgid "{{selected.local_readonly ? 'ON' : 'OFF'}}"
-msgstr "{{selected.local_readonly ? 'Włączony' : 'Wyłączony'}}"
+msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.js:35
 msgid "{{status}} Ingest Channel {{name}}"
@@ -170,12 +162,12 @@ msgstr ""
 
 #: scripts/apps/archive/views/upload.html:98
 msgid "* fields are required"
-msgstr "* wymagane pola"
+msgstr ""
 
 #: scripts/apps/publish/views/subscribers.html:35
 #: scripts/apps/users/views/edit-form.html:29
 msgid "* mandatory fields"
-msgstr "* obowiązkowe pola"
+msgstr ""
 
 #: scripts/apps/publish/views/email-config.html:3
 msgid "*at least one visible or hidden recipient needed"
@@ -184,19 +176,19 @@ msgstr ""
 #: scripts/apps/products/views/products-config-modal.html:22
 #: scripts/apps/publish/views/subscribers.html:77
 msgid "*comma separated values"
-msgstr "*wartości rozdzielone przecinkiem"
+msgstr ""
 
 #: scripts/apps/publish/views/subscribers.html:178
 msgid "1 month"
-msgstr "1 miesiąc"
+msgstr ""
 
 #: scripts/apps/publish/views/subscribers.html:176
 msgid "1 week"
-msgstr "1 tydzień"
+msgstr ""
 
 #: scripts/apps/publish/views/subscribers.html:180
 msgid "1 year"
-msgstr "1 rok"
+msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.js:23
 msgid "10th update"
@@ -208,7 +200,7 @@ msgstr ""
 
 #: scripts/apps/archive/related-item-widget/relatedItem-configuration.html:18
 msgid "12 Hours"
-msgstr "12 godzin"
+msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.js:24
 msgid "12th update"
@@ -244,7 +236,7 @@ msgstr ""
 
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:41
 msgid "2 character limit"
-msgstr "limit 2 znaków"
+msgstr ""
 
 #: scripts/apps/publish/views/subscribers.html:177
 msgid "2 weeks"
@@ -256,7 +248,7 @@ msgstr ""
 
 #: scripts/apps/archive/related-item-widget/relatedItem-configuration.html:20
 msgid "24 Hours"
-msgstr "24 Godziny"
+msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.js:22
 msgid "2nd update"
@@ -272,7 +264,7 @@ msgstr ""
 
 #: scripts/apps/archive/related-item-widget/relatedItem-configuration.html:21
 msgid "48 Hours"
-msgstr "48 Godzin"
+msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.js:22
 msgid "4th update"
@@ -284,7 +276,7 @@ msgstr ""
 
 #: scripts/apps/archive/related-item-widget/relatedItem-configuration.html:17
 msgid "6 Hours"
-msgstr "6 Godzin"
+msgstr ""
 
 #: scripts/apps/publish/views/subscribers.html:179
 msgid "6 months"
@@ -308,7 +300,7 @@ msgstr ""
 
 #: scripts/apps/workspace/content/controllers/ContentProfilesController.js:56
 msgid "A content profile with this name already exists."
-msgstr "Profil zawartości o tej nazwie już istnieje."
+msgstr ""
 
 #: scripts/core/auth/reset-password.html:43
 msgid ""
@@ -323,18 +315,18 @@ msgstr ""
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:82
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:97
 msgid "Abbreviation"
-msgstr "Skrót"
+msgstr ""
 
 #: scripts/apps/dictionaries/controllers/DictionaryEditController.js:154
 msgid "Abbreviation already exists. Do you want to overwrite it?"
-msgstr "Skrót już istnieje. Chcesz go nadpisać?"
+msgstr ""
 
 #: scripts/apps/authoring/views/article-edit.html:77
 #: scripts/apps/authoring/views/article-edit.html:97
 #: scripts/apps/packaging/views/sd-package-edit.html:19
 #: scripts/apps/workspace/content/directives/ContentProfileSchemaEditor.js:17
 msgid "Abstract"
-msgstr "Streszczenie"
+msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.js:42
 msgid "ABSTRACT is too long"
@@ -342,33 +334,33 @@ msgstr ""
 
 #: scripts/apps/monitoring/views/desk-notifications.html:19
 msgid "Acknowledge"
-msgstr "Uznanie"
+msgstr ""
 
 #: scripts/apps/ingest/views/settings/ingest-routing-content.html:71
 #: scripts/apps/ingest/views/settings/ingest-routing-general.html:21
 #: scripts/apps/publish/views/publish-queue.html:100
 msgid "Action"
-msgstr "Akcja"
+msgstr ""
 
 #: scripts/apps/desks/views/settings.html:22
 #: scripts/apps/monitoring/views/item-actions-menu.html:14
 #: scripts/apps/templates/views/templates.html:32
 #: scripts/apps/workspace/content/views/profile-settings.html:23
 msgid "Actions"
-msgstr "Akcje"
+msgstr ""
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:18
 #: scripts/apps/users/controllers/UserListController.js:142
 #: scripts/apps/workspace/content/views/profile-settings.html:36
 #: scripts/apps/workspace/content/views/profile-settings.html:93
 msgid "Active"
-msgstr "Aktywa"
+msgstr ""
 
 #: scripts/apps/analytics/directives/ActivityReportContainer.js:11
 #: scripts/apps/analytics/views/activity-report-panel.html:4
 #: scripts/apps/analytics/views/activity-report-view.html:2
 msgid "Activity Report"
-msgstr "Raport aktywności"
+msgstr ""
 
 #: scripts/apps/analytics/directives/SavedActivityReports.js:109
 msgid "Activity report deleted"
@@ -377,7 +369,7 @@ msgstr ""
 #: scripts/apps/users/views/activity-feed.html:4
 #: scripts/core/lang/missing-translations-strings.js:39
 msgid "Activity Stream"
-msgstr "Strumień aktywności"
+msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.js:39
 msgid "Activity stream widget"
@@ -390,7 +382,7 @@ msgstr ""
 #: scripts/apps/ingest/views/settings/ingest-routing-action.html:53
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:61
 msgid "Add"
-msgstr "Dodaj"
+msgstr ""
 
 #: scripts/core/editor2/views/add-content.html:14
 msgid "add a picture"
@@ -398,11 +390,11 @@ msgstr ""
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:89
 msgid "ADD ABBREVIATION"
-msgstr "DODAJ SKRÓT"
+msgstr ""
 
 #: scripts/apps/ingest/views/settings/rssConfig.html:87
 msgid "Add alias"
-msgstr "Dodaj alias"
+msgstr ""
 
 #: scripts/core/editor2/views/add-content.html:9
 msgid "add an embed"
@@ -418,7 +410,7 @@ msgstr ""
 
 #: scripts/apps/dashboard/workspace-tasks/views/task-preview.html:58
 msgid "Add description"
-msgstr "Dodaj opis"
+msgstr ""
 
 #: scripts/apps/content-filters/views/manage-filters.html:127
 msgid "Add Filter Statement"
@@ -430,11 +422,11 @@ msgstr ""
 
 #: scripts/apps/packaging/views/search.html:10
 msgid "Add items"
-msgstr "Dodaj elementy"
+msgstr ""
 
 #: scripts/apps/archive/views/upload.html:91
 msgid "Add more files"
-msgstr "Dodaj więcej plików"
+msgstr ""
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:5
 msgid ""
@@ -6751,8 +6743,6 @@ msgid "WORD"
 msgid_plural "WORDS"
 msgstr[0] ""
 msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
 
 #: scripts/apps/archive/views/metadata-view.html:17
 msgid "Word Count"
