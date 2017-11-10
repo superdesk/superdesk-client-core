@@ -210,6 +210,24 @@ export function ItemAssociationDirective(superdesk, renditions, config, authorin
 
             /**
              * @ngdoc method
+             * @name sdItemAssociation#isAudio
+             * @public
+             * @description Check if the rendition is audio or not.
+             * @param {Object} rendition Rendition of the item.
+             */
+            scope.isAudio = function(rendition) {
+                if (_.startsWith(rendition.mimetype, 'audio')) {
+                    return true;
+                }
+
+                return _.some(
+                    ['.mp3', '.3gp', '.wav', '.ogg', 'wma', 'aa', 'aiff'],
+                    (ext) => _.endsWith(rendition.href, ext)
+                );
+            };
+
+            /**
+             * @ngdoc method
              * @name sdItemAssociation#isImage
              * @public
              * @description Check if the rendition is image or not.

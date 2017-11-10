@@ -11,6 +11,11 @@
                 ng-repeat="(key, rendition) in related.renditions"
                 ng-if="isVideo(rendition)" html5vfix>
     </video>
+    <audio ng-if="related && related.type === 'audio'" controls="controls">
+        <source vsrc="{{ rendition.href }}"
+            ng-repeat="(key, rendition) in related.renditions"
+            ng-if="isAudio(rendition)" html5vfix>
+    </audio>
     <img ng-if="related && (related.type === 'picture' || related.type === 'graphic')"
          ng-src="{{ related.renditions.viewImage.href }}"
          ng-class="{'not-editable': !isMediaEditable() || !editable}"
