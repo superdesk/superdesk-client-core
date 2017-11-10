@@ -41,12 +41,13 @@ export function VocabularyConfigController($scope, $route, $routeParams, vocabul
     };
 
     /**
-     * Filter vocabularies by tab
+     * Match field type to vocabularies tab
      */
-    $scope.filterVocabularies = (tab, fieldType) =>
+    $scope.matchFieldTypeToTab = (tab, fieldType) =>
         tab === 'vocabularies' && !fieldType || fieldType &&
         (tab === 'text-fields' && fieldType === 'text' ||
-         tab === 'media-fields' && fieldType !== 'text');
+         tab === 'media-fields' && fieldType === 'media' ||
+         tab === 'embed-fields' && fieldType === 'embed');
 
     /**
      * Reload list of vocabularies
