@@ -9,7 +9,7 @@ import {applyLink, hidePopups} from '../../actions';
 
 /**
  * @ngdoc React
- * @module superdesk.core.editor3 
+ * @module superdesk.core.editor3
  * @name LinkInput
  * @param {Object} editorState The editor state object.
  * @param {string} data The default value for the input.

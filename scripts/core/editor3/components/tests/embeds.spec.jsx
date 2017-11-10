@@ -2,7 +2,7 @@ import React from 'react';
 import {shallow, mount} from 'enzyme';
 import mockStore, {embedBlockAndContent} from './utils';
 import {EmbedBlock} from '../embeds';
-import {EmbedInput} from '../embeds/EmbedInput';
+import {EmbedInputComponent as EmbedInput} from '../embeds/EmbedInput';
 
 describe('editor3.components.embed-block', () => {
     it('should render entity html', () => {
@@ -33,7 +33,7 @@ describe('editor3.components.embed-input', () => {
         const {options} = mockStore();
         const noop = () => ({});
         const onCancel = jasmine.createSpy();
-        const wrapper = mount(<EmbedInput embedCode={noop} onCancel={onCancel} onSubmit={noop} />, options);
+        const wrapper = mount(<EmbedInput embedCode={noop} hidePopups={onCancel} />, options);
 
         wrapper.find('.icon-close-small').simulate('click');
 
@@ -44,7 +44,7 @@ describe('editor3.components.embed-input', () => {
         const {options} = mockStore();
         const noop = () => ({});
         const onCancel = jasmine.createSpy();
-        const wrapper = mount(<EmbedInput embedCode={noop} onCancel={onCancel} onSubmit={noop} />, options);
+        const wrapper = mount(<EmbedInput embedCode={noop} hidePopups={onCancel} />, options);
 
         wrapper.simulate('keyup', {key: 'Escape'});
 
@@ -55,7 +55,7 @@ describe('editor3.components.embed-input', () => {
         const {options} = mockStore();
         const noop = () => ({});
         const onCancel = jasmine.createSpy();
-        const wrapper = mount(<EmbedInput embedCode={noop} onCancel={onCancel} onSubmit={noop} />, options);
+        const wrapper = mount(<EmbedInput embedCode={noop} onCancel={onCancel} />, options);
 
         wrapper.simulate('keyup', {key: '.'});
 
@@ -65,14 +65,7 @@ describe('editor3.components.embed-input', () => {
     it('should display error when ajax call returns it', inject(($q, $rootScope) => {
         const {options} = mockStore();
         const noop = () => ({});
-        const wrapper = mount(
-            <EmbedInput
-                embedCode={noop}
-                onCancel={noop}
-                embedCode={noop}
-                onSubmit={noop}
-            />, options
-        );
+        const wrapper = mount(<EmbedInput hidePopups={noop} embed={noop} />, options);
 
         spyOn($, 'ajax').and.returnValue($q.reject({
             responseJSON: {error: 'this is the error'}
@@ -91,8 +84,7 @@ describe('editor3.components.embed-input', () => {
         const {options} = mockStore();
         const onCancel = jasmine.createSpy();
         const onSubmit = jasmine.createSpy();
-        const noop = () => ({});
-        const wrapper = mount(<EmbedInput embedCode={noop} onCancel={onCancel} onSubmit={onSubmit} />, options);
+        const wrapper = mount(<EmbedInput embed={onSubmit} hidePopups={onCancel} />, options);
 
         spyOn($, 'ajax').and.returnValue($q.resolve('resolve-value'));
 

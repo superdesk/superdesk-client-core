@@ -41,7 +41,7 @@ export class EmbedInputComponent extends Component {
      */
     onKeyUp(e) {
         if (e.key === 'Escape') {
-            this.props.hidePopups();
+            this.onCancel();
         }
     }
 
@@ -121,7 +121,6 @@ export class EmbedInputComponent extends Component {
     }
 
     render() {
-        const {hidePopups} = this.props;
         const {error} = this.state;
 
         return (
@@ -129,7 +128,7 @@ export class EmbedInputComponent extends Component {
                 <input type="url" ref="txt" placeholder={gettext('Enter URL or code to embed')} />
                 <div className="input-controls">
                     <i className="svg-icon-ok" onClick={this.onSubmit} />
-                    <i className="icon-close-small" onClick={hidePopups} />
+                    <i className="icon-close-small" onClick={this.onCancel} />
                 </div>
                 {error ? <div className="embed-dialog__error">{error}</div> : null}
             </form>
