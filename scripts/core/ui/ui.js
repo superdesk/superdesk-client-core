@@ -1,29 +1,4 @@
 /**
- * Gives toggle functionality to the box
- *
- * Usage:
- * <div sd-toggle-box data-title="Some title" data-open="true" data-icon="list"></div>
- *
- */
-function ToggleBoxDirective() {
-    return {
-        templateUrl: 'scripts/core/ui/views/toggle-box.html',
-        transclude: true,
-        scope: true,
-        link: function($scope, element, attrs) {
-            $scope.title = attrs.title;
-            $scope.isOpen = attrs.open === 'true';
-            $scope.icon = attrs.icon;
-            $scope.mode = attrs.mode;
-            $scope.style = attrs.style;
-            $scope.toggleModule = function() {
-                $scope.isOpen = !$scope.isOpen;
-            };
-        }
-    };
-}
-
-/**
  * Gives top shadow for scroll elements
  *
  * Usage:
@@ -1201,7 +1176,6 @@ export default angular.module('superdesk.core.ui', [
     }])
 
     .directive('sdShadow', ShadowDirective)
-    .directive('sdToggleBox', ToggleBoxDirective)
     .filter('nl2el', NewlineToElement)
     .directive('sdCreateBtn', CreateButtonDirective)
     .directive('sdAutofocus', AutofocusDirective)

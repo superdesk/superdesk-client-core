@@ -36,7 +36,7 @@ module.exports = function(grunt) {
         },
         publisher: {
             protocol: 'http',
-            tenant: 'master.s-lab',
+            tenant: 'sp-tribune.s-lab',
             domain: 'sourcefabric.org',
             base: 'api/v1'
         },
