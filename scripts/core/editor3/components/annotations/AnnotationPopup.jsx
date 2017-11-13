@@ -15,6 +15,7 @@ const Annotation = ({annotation, deleteHighlight, showPopup}) => {
     const html = toHTML(convertFromRaw(JSON.parse(msg)));
     const modal = ng.get('modal');
 
+    const editAnnotation = () => showPopup(PopupTypes.Annotation, {annotation});
     const deleteAnnotation = () => modal
         .confirm(gettext('The annotation will be deleted. Are you sure?'))
         .then(() => deleteHighlight(annotation));
@@ -28,10 +29,10 @@ const Annotation = ({annotation, deleteHighlight, showPopup}) => {
                     <div className="date" title={fullDate}>{fromNow}</div>
                 </div>
             </div>
-            <b>Type: </b>{type}
+            <div className="highlights-popup__type"><b>{gettext('Annotation type')}: </b>{type}</div>
             <div className="highlights-popup__html" dangerouslySetInnerHTML={{__html: html}} />
-            <a onClick={() => showPopup(PopupTypes.Annotation, {annotation})}>Edit</a>
-            <a onClick={deleteAnnotation}>Delete</a>
+            <a className="btn btn--small btn--hollow" onClick={editAnnotation}>{gettext('Edit')}</a>
+            <a className="btn btn--small btn--hollow" onClick={deleteAnnotation}>{gettext('Delete')}</a>
         </div>
     );
 };
