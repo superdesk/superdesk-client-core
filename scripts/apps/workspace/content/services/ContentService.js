@@ -15,6 +15,10 @@ import _ from 'lodash';
  * @requires notify
  * @requires gettext
  * @requires $filter
+ * @requires $q
+ * @requires $rootScope
+ * @requires session
+ * @requires deployConfig
  *
  * @description Content Service is responsible for creating packages or content items based
  * on templates or content types.
@@ -32,10 +36,11 @@ ContentService.$inject = [
     '$filter',
     '$q',
     '$rootScope',
-    'session'
+    'session',
+    'deployConfig'
 ];
 export function ContentService(api, superdesk, templates, desks, packages, archiveService, notify, gettext,
-    $filter, $q, $rootScope, session) {
+    $filter, $q, $rootScope, session, deployConfig) {
     const TEXT_TYPE = 'text';
 
     const self = this;
@@ -245,23 +250,31 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
     };
 
     /**
-     * Get schema for given content type
+     * Get schema for given profile/content type
      *
-     * @param {Object} contentType
+     * @param {Object} profile
+     * @param {String} contentType
      * @return {Object}
      */
-    this.schema = function(contentType) {
-        return contentType && contentType.schema ? angular.extend({}, contentType.schema) : constant.DEFAULT_SCHEMA;
+    this.schema = function(profile, contentType) {
+        const schema = _.get(profile, 'schema',
+            _.get(deployConfig.getSync('schema'), contentType, constant.DEFAULT_SCHEMA));
+
+        return angular.extend({}, schema);
     };
 
     /**
-     * Get editor config for given content type
+     * Get editor config for given profile/ content type
      *
-     * @param {Object} contentType
+     * @param {Object} profile
+     * @param {String} contentType
      * @return {Object}
      */
-    this.editor = function(contentType) {
-        return contentType && contentType.editor ? angular.extend({}, contentType.editor) : constant.DEFAULT_EDITOR;
+    this.editor = function(profile, contentType) {
+        const editor = _.get(profile, 'editor',
+            _.get(deployConfig.getSync('editor'), contentType, constant.DEFAULT_EDITOR));
+
+        return angular.extend({}, editor);
     };
 
     /**
