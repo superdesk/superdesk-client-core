@@ -25,6 +25,7 @@ export class HighlightsPopup extends Component {
     constructor(props) {
         super(props);
 
+        this.lastTop = 150;
         this.onDocumentClick = this.onDocumentClick.bind(this);
     }
 
@@ -42,9 +43,15 @@ export class HighlightsPopup extends Component {
         let top = 150;
         let left = editorLeft - 260;
 
-        if (rect) {
+        if (rect === null || rect.top === 0 && rect.left === 0) {
+            // special case, happens when editor is out of focus,
+            // so we just reuse whatever the last value was.
+            top = this.lastTop;
+        } else {
             top = rect.top - topPadding;
         }
+
+        this.lastTop = top; // if we lose rect, keep this for next time.
 
         return {top, left};
     }
