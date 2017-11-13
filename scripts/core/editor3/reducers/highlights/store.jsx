@@ -50,10 +50,10 @@ export const addHighlight = (editorState, selection, data) => {
  * @returns {EditorState}
  */
 export const updateHighlight = (editorState, {selection, data}) => {
-    const m = getHighlights(editorState.getCurrentContent());
-    const k = JSON.stringify(selection.toJSON());
+    const map = getHighlights(editorState.getCurrentContent());
+    const key = JSON.stringify(selection.toJSON());
 
-    return replaceHighlights(editorState, m.set(k, data));
+    return replaceHighlights(editorState, map.set(key, data));
 };
 
 /**
