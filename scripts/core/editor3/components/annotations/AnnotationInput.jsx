@@ -4,7 +4,14 @@ import {Dropdown} from 'core/ui/components';
 import {Editor} from 'core/editor3';
 import {connect} from 'react-redux';
 import {convertToRaw} from 'draft-js';
-import {applyAnnotation, updateHighlight as updateAnnotation, hidePopups} from '../../actions';
+
+import {
+    applyAnnotation,
+    updateHighlight as updateAnnotation,
+    hidePopups,
+    deleteHighlight
+} from '../../actions';
+
 import ng from 'core/services/ng';
 
 /**
@@ -37,6 +44,7 @@ class AnnotationInputBody extends Component {
         this.onSubmit = this.onSubmit.bind(this);
         this.onChange = this.onChange.bind(this);
         this.onSelect = this.onSelect.bind(this);
+        this.deleteAnnotation = this.deleteAnnotation.bind(this);
     }
 
     /**
@@ -91,8 +99,20 @@ class AnnotationInputBody extends Component {
         $('.annotation-input textarea').focus();
     }
 
+    deleteAnnotation() {
+        const {annotation} = this.props.data;
+        const {deleteHighlight, hidePopups} = this.props;
+
+        ng.get('modal')
+            .confirm(gettext('The annotation will be deleted. Are you sure?'))
+            .then(() => deleteHighlight(annotation));
+
+        hidePopups();
+    }
+
     render() {
-        const {hidePopups} = this.props;
+        const {hidePopups, data} = this.props;
+        const {annotation} = data;
         const {type, annotationTypes} = this.state;
 
         return (
@@ -117,6 +137,12 @@ class AnnotationInputBody extends Component {
                         editorState={this.initialContent}
                     />
                     <div className="pull-right">
+                        {typeof annotation === 'object' &&
+                            <button
+                                className="btn btn--cancel"
+                                onClick={this.deleteAnnotation}>
+                                {gettext('Delete')}
+                            </button>}
                         <button className="btn btn--cancel" onClick={hidePopups}>{gettext('Cancel')}</button>
                         <button className="btn btn--primary" onClick={this.onSubmit}>{gettext('Submit')}</button>
                     </div>
@@ -130,11 +156,13 @@ AnnotationInputBody.propTypes = {
     updateAnnotation: PropTypes.func,
     applyAnnotation: PropTypes.func,
     hidePopups: PropTypes.func,
+    deleteHighlight: PropTypes.func,
     data: PropTypes.object
 };
 
 export const AnnotationInput = connect(null, {
     applyAnnotation,
     updateAnnotation,
+    deleteHighlight,
     hidePopups
 })(AnnotationInputBody);
