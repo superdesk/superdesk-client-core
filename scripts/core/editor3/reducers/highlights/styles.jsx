@@ -133,3 +133,36 @@ function selectionIn(content, a, b) {
 
     return false;
 }
+
+// edgeLeft returns a new selection comprised of only the start position of s.
+function edgeLeft(s) {
+    return new SelectionState({
+        anchorKey: s.getStartKey(),
+        anchorOffset: s.getStartOffset(),
+        focusKey: s.getStartKey(),
+        focusOffset: s.getStartOffset(),
+        isBackward: false
+    });
+}
+
+// edgeRight returns a new selection comprised of only the end position of s.
+function edgeRight(s) {
+    return new SelectionState({
+        anchorKey: s.getEndKey(),
+        anchorOffset: s.getEndOffset(),
+        focusKey: s.getEndKey(),
+        focusOffset: s.getEndOffset(),
+        isBackward: false
+    });
+}
+
+// selectionsOverlap returns true if selections a and b overlap in content.
+export function selectionsOverlap(content, a, b) {
+    const aStart = edgeLeft(a);
+    const aEnd = edgeRight(a);
+    const bStart = edgeLeft(b);
+    const bEnd = edgeRight(b);
+    const isIn = selectionIn.bind(this, content);
+
+    return isIn(aStart, b) || isIn(aEnd, b) || isIn(bStart, a) || isIn(bEnd, a);
+}

@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {SelectionState} from 'draft-js';
 import PropTypes from 'prop-types';
 import BlockStyleButtons from './BlockStyleButtons';
 import InlineStyleButtons from './InlineStyleButtons';
@@ -11,6 +12,8 @@ import {LinkToolbar} from '../links';
 import classNames from 'classnames';
 import * as actions from '../../actions';
 import {PopupTypes} from '../../actions';
+import {getHighlights} from '../../reducers/highlights';
+import {selectionsOverlap} from '../../reducers/highlights/styles';
 
 /**
  * @ngdoc React
@@ -25,6 +28,7 @@ class ToolbarComponent extends Component {
 
         this.scrollContainer = $(props.scrollContainer || window);
         this.onScroll = this.onScroll.bind(this);
+        this.canAnnotate = this.canAnnotate.bind(this);
 
         this.state = {
             // When true, the toolbar is floating at the top of the item. This
@@ -63,6 +67,22 @@ class ToolbarComponent extends Component {
 
     componentWillUnmount() {
         this.scrollContainer.off('scroll', this.onScroll);
+    }
+
+    canAnnotate() {
+        const {editorState} = this.props;
+        const content = editorState.getCurrentContent();
+
+        return getHighlights(content).some((highlight, rawSelection) => {
+            if (highlight.type !== 'ANNOTATION') {
+                return true;
+            }
+            return !selectionsOverlap(
+                content,
+                editorState.getSelection(),
+                new SelectionState(JSON.parse(rawSelection))
+            );
+        });
     }
 
     render() {
@@ -132,6 +152,7 @@ class ToolbarComponent extends Component {
                 {allowsHighlights && has('annotation') &&
                     <SelectionButton
                         onClick={showPopup(PopupTypes.Annotation)}
+                        precondition={this.canAnnotate()}
                         key="annotation-button"
                         iconName="pencil"
                         tooltip={gettext('Annotation')}
@@ -155,12 +176,13 @@ ToolbarComponent.propTypes = {
     insertMedia: PropTypes.func,
     showPopup: PropTypes.func,
     popup: PropTypes.object,
+    editorState: PropTypes.object,
     editorNode: PropTypes.object,
     scrollContainer: PropTypes.string
 };
 
-const mapStateToProps = ({editorFormat, activeCell, allowsHighlights, popup}) => ({
-    editorFormat, activeCell, allowsHighlights, popup
+const mapStateToProps = ({editorFormat, activeCell, allowsHighlights, popup, editorState}) => ({
+    editorFormat, activeCell, allowsHighlights, popup, editorState
 });
 
 const mapDispatchToProps = (dispatch) => ({
