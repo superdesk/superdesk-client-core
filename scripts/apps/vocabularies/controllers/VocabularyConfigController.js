@@ -5,8 +5,10 @@ const DEFAULT_SCHEMA = {
     parent: {}
 };
 
-VocabularyConfigController.$inject = ['$scope', '$route', '$routeParams', 'vocabularies', '$rootScope'];
-export function VocabularyConfigController($scope, $route, $routeParams, vocabularies, $rootScope) {
+VocabularyConfigController.$inject = ['$scope', '$route', '$routeParams', 'vocabularies', '$rootScope',
+    'api', 'notify', 'modal'];
+export function VocabularyConfigController($scope, $route, $routeParams, vocabularies, $rootScope,
+    api, notify, modal) {
     $scope.loading = true;
 
     /**
@@ -76,6 +78,36 @@ export function VocabularyConfigController($scope, $route, $routeParams, vocabul
         }
 
         $rootScope.$broadcast('vocabularies:updated');
+    };
+
+    // remove is the UI callback for deleting a vocabulary entry
+    $scope.remove = (vocabulary) => {
+        modal.confirm(gettext('Please confirm you want to delete the vocabulary.'))
+            .then(() => api.remove(vocabulary, {}, 'vocabularies'))
+            .then(vocabularyRemoved(vocabulary), errorRemovingVocabulary);
+    };
+
+    // vocabularyRemoved updates the UI after the given vocabulary has been removed via the API.
+    const vocabularyRemoved = (vocabulary) => () => {
+        _.remove($scope.vocabularies, (v) => v._id === vocabulary._id);
+        $scope.reloadList();
+        notify.success(gettext('Vocabulary was deleted.'));
+    };
+
+    // errorRemoving alerts the user of an error that occurred while attempting to remove a vocabulary.
+    const errorRemovingVocabulary = (response) => {
+        const issues = response.data._issues;
+
+        if (!issues) {
+            notify.error(gettext('Error removing the vocabulary.'));
+        } else if (issues._message) {
+            notify.error(issues._message);
+        } else if (issues.content_types) {
+            const contentTypes = _.reduce(issues.content_types,
+                (result, value) => result ? `${result}, ${value.label}` : value.label, null);
+
+            notify.error(gettext('The vocabulary is used in the following content types:') + ' ' + contentTypes);
+        }
     };
 
     $scope.$on('$routeUpdate', setupActiveVocabulary);
