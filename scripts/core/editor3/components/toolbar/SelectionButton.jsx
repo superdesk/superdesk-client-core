@@ -11,14 +11,15 @@ import {connect} from 'react-redux';
  * @description SelectionButton is a button that can be added to the toolbar, which only
  * becomes active and clickable when a selection is made in the editor. This is for actions
  * that are bound exclusively to having text selected in the editor, such as: links, comments,
- * annotations, etc.
+ * annotations, etc. Note that a precondition prop may be supplied which precedes any other condition.
  */
-const SelectionButtonComponent = ({editorState, onClick, tooltip, iconName}) => {
+const SelectionButtonComponent = ({editorState, onClick, tooltip, iconName, precondition}) => {
     const isCollapsed = editorState.getSelection().isCollapsed();
-    const cx = classNames({inactive: isCollapsed});
+    const inactive = !precondition || isCollapsed;
+    const cx = classNames({inactive});
 
     const clickHandler = () => {
-        if (!isCollapsed) {
+        if (!inactive) {
             onClick({
                 selection: editorState.getSelection()
             });
@@ -36,9 +37,14 @@ const SelectionButtonComponent = ({editorState, onClick, tooltip, iconName}) => 
 
 SelectionButtonComponent.propTypes = {
     iconName: PropTypes.string.isRequired,
-    tooltip: PropTypes.string,
     editorState: PropTypes.object.isRequired,
+    tooltip: PropTypes.string,
+    precondition: PropTypes.bool,
     onClick: PropTypes.func.isRequired
+};
+
+SelectionButtonComponent.defaultProps = {
+    precondition: true
 };
 
 const mapStateToProps = (state) => ({
