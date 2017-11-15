@@ -37,6 +37,11 @@
                 ng-click="openVocabulary(vocabulary)"
                 title="{{:: 'Edit vocabulary' | translate }}"
               ><i class="icon-pencil"></i></button>
+              <button
+                ng-click="remove(vocabulary)"
+                ng-if="tab !== 'vocabularies'"
+                title="{{:: 'Remove vocabulary' | translate }}"
+              ><i class="icon-trash"></i></button>
             </div>
           </li>
         </ul>
