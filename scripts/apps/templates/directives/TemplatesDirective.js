@@ -269,8 +269,8 @@ export function TemplatesDirective(gettext, notify, api, templates, modal, desks
             });
 
             function setupContentType(type) {
-                $scope.schema = content.schema(type);
-                $scope.editor = content.editor(type);
+                $scope.schema = content.schema(type, $scope.item.type);
+                $scope.editor = content.editor(type, $scope.item.type);
             }
 
             $scope.remove = function(template) {

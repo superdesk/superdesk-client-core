@@ -193,6 +193,28 @@ describe('superdesk.apps.workspace.content', () => {
             expect(editor.slugline).toBeFalsy();
         }));
 
+        it('can get custom package schema', inject((content, deployConfig) => {
+            const packageSchema = {headline: {}};
+
+            spyOn(deployConfig, 'getSync').and.returnValue({composite: packageSchema});
+
+            const schema = content.schema(null, 'composite');
+
+            expect(deployConfig.getSync).toHaveBeenCalledWith('schema');
+            expect(schema).toEqual(packageSchema);
+        }));
+
+        it('can get custom package editor', inject((content, deployConfig) => {
+            const packageEditor = {headline: {}};
+
+            spyOn(deployConfig, 'getSync').and.returnValue({composite: packageEditor});
+
+            const editor = content.editor(null, 'composite');
+
+            expect(deployConfig.getSync).toHaveBeenCalledWith('editor');
+            expect(editor).toEqual(packageEditor);
+        }));
+
         it('can filter custom fields per profile', inject((content) => {
             content._fields = [
                 {_id: 'foo'},
