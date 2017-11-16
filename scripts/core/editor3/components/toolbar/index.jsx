@@ -69,15 +69,21 @@ class ToolbarComponent extends Component {
         this.scrollContainer.off('scroll', this.onScroll);
     }
 
+    /**
+     * @ngdoc method
+     * @name Toolbar#canAnnotate
+     * @description canAnnotate is called as a precondition to the SelectionButton for creating
+     * an annotation. It returns true if the current selection does not overlap any annotation.
+     */
     canAnnotate() {
         const {editorState} = this.props;
         const content = editorState.getCurrentContent();
 
-        return getHighlights(content).some((highlight, rawSelection) => {
+        return !getHighlights(content).some((highlight, rawSelection) => {
             if (highlight.type !== 'ANNOTATION') {
-                return true;
+                return false;
             }
-            return !selectionsOverlap(
+            return selectionsOverlap(
                 content,
                 editorState.getSelection(),
                 new SelectionState(JSON.parse(rawSelection))
