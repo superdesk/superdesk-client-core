@@ -30,6 +30,10 @@
                     <label>{{ :: preferences['desktop:notification'].label | translate }}</label>
                     <span ng-hide="preferences['desktop:notification'].allowed" sd-switch ng-model="preferences['desktop:notification'].enabled"></span>
                 </div>
+                <div sd-info-item ng-hide="!$root.config.features.slackNotifications">
+                    <label>{{ :: preferences['slack:notification'].label | translate }}</label>
+                    <span ng-hide="preferences['slack:notification'].allowed" sd-switch ng-model="preferences['slack:notification'].enabled"></span>
+                </div>
             </li>
 
             <li class="fieldset terms-box" ng-hide="profileConfig.defaults === false">

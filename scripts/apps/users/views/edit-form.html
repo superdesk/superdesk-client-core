@@ -175,6 +175,14 @@
                 </div>
             </div>
 
+            <div class="form__row" sd-info-item ng-hide="!$root.config.features.slackNotifications">
+                <div class="sd-line-input">
+                    <label class="sd-line-input__label" for="slack_username">Slack Username</label>
+                    <input class="sd-line-input__input" type="text" name="slack_username" id="slack_username" ng-model="user.slack_username">
+                    <span class="sd-line-input__hint" translate>Your Slack user name without the leading @</span>
+                </div>
+            </div>
+
         </div><!-- END General Tab content -->
 
 
