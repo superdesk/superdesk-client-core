@@ -141,9 +141,26 @@ export class Editor3Component extends React.Component {
 
         let newState;
 
-        if (command === 'soft-newline') {
+        switch (command) {
+        case 'soft-newline':
             newState = RichUtils.insertSoftNewline(editorState);
-        } else {
+            break;
+        case 'backspace': {
+            // This is a workaround for un/ordered-list-item, when it is deleted an empty
+            // ordered list(just 1. is shown) it will delete the previous block if it exists
+            // (for example a table and then imediately after the ordered list)
+            const selection = editorState.getSelection();
+            const key = selection.getAnchorKey();
+            const content = editorState.getCurrentContent();
+            const block = content.getBlockForKey(key);
+            const commands = ['unordered-list-item', 'ordered-list-item'];
+
+            if (block.text === '' && commands.indexOf(block.type) !== -1) {
+                newState = RichUtils.toggleBlockType(editorState, block.type);
+                break;
+            }
+        }
+        default:
             newState = RichUtils.handleKeyCommand(editorState, command);
         }
 
