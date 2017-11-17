@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {get} from 'lodash';
 
 export function assignment({item}) {
-    if (!get(item, 'assignment')) {
+    if (!get(item, 'assignment_id')) {
         return null;
     }
 
