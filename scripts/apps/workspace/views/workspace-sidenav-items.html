@@ -82,6 +82,15 @@
     </a>
 </li>
 
+<hr ng-if="workspaceConfig.planning && privileges.planning">
+<li ng-if="workspaceConfig.planning && privileges.planning" ng-class="{active: currentRoute.href === '/planning'}">
+    <a href="#/planning" title="{{ :: 'Planning' | translate }}" class="sd-sidebar-menu__btn"
+      ng-click="hideMonitoring(currentRoute.href === '/planning', $event)">
+      <i class="sd-sidebar-menu__main-icon big-icon--calendar"></i>
+      <i class="sd-sidebar-menu__helper-icon big-icon--chevron-left"></i>
+    </a>
+</li>
+
 <hr ng-if="extraItems.length > 0"/>
 <li ng-repeat="item in extraItems" ng-class="{active: currentRoute.href === '/' + item.route}">
     <a href="#/{{ item.route }}" title="{{ item.title }}" ng-click="item.onClick && item.onClick($event)" class="sd-sidebar-menu__btn">
