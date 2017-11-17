@@ -42,6 +42,7 @@ export function VocabularyEditController($scope, gettext, notify, api, vocabular
     $scope.save = function() {
         $scope._errorUniqueness = false;
         $scope.errorMessage = null;
+        delete $scope.vocabulary._deleted;
 
         if ($scope.vocabulary._id === 'crop_sizes') {
             var activeItems = _.filter($scope.vocabulary.items, (o) => o.is_active);
