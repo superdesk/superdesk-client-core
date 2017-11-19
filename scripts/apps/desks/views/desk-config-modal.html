@@ -35,6 +35,15 @@
                             </div>
                         </div>
                     </div>
+                    <div class="form__row form__row--flex" ng-hide="!$root.config.features.slackNotifications">
+                        <div class="form__row-item">
+                            <div class="sd-line-input">
+                                <label class="sd-line-input__label" translate>Slack Channel Name</label>
+                                <input class="sd-line-input__input" type="text" ng-model="desk.edit.slack_channel_name" ng-keyup="handleEdit($event);">
+                                <span class="sd-line-input__hint" translate>The name of a Slack channel associated with this desk, the # is not required</span>
+                            </div>
+                        </div>
+                    </div>                    
                     <div sd-content-expiry
                             data-item="desk.edit"
                             data-preview="false"

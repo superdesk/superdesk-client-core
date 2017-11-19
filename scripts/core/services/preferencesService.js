@@ -24,6 +24,7 @@ export default angular.module('superdesk.core.preferences', ['superdesk.core.not
                     'archive:view': 1,
                     'email:notification': 1,
                     'desktop:notification': 1,
+                    'slack:notification': 1,
                     'workqueue:items': 1,
                     'dashboard:ingest': 1,
                     'agg:view': 1,
