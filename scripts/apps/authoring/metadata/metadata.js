@@ -1021,7 +1021,7 @@ function MetadataService(api, subscribersService, config, vocabularies, $rootSco
 
             self.values.authors = [];
 
-            return api.get('/users', {is_author: 1}).then((result) => {
+            return api.get('/users', {is_author: 1, max_results: 200}).then((result) => {
                 var first;
 
                 _.each(result._items, (user) => {
