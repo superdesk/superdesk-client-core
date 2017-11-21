@@ -70,7 +70,7 @@ export function ContentProfileSchemaEditor(content, config) {
             ];
 
             if (config.features.editorHighlights) {
-                scope.formattingOptionsEditor3.push('annotation');
+                scope.formattingOptionsEditor3.push('annotation', 'comments');
             }
 
             /**
