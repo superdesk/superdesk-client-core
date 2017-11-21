@@ -121,7 +121,7 @@ class ToolbarComponent extends Component {
                         iconName="table"
                     />
                 }
-                {allowsHighlights &&
+                {allowsHighlights && has('comments') &&
                     <SelectionButton
                         onClick={showPopup(PopupTypes.Comment)}
                         key="comment-button"
