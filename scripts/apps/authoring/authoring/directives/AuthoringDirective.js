@@ -777,39 +777,44 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 _.startsWith(_.lowerCase(_.trim(text)), 'http');
 
             // Shows the preview for the given embed field.
-            $scope.previewEmbed = (field) => {
-                $scope.embedPreviews[field._id] = $sce.trustAsHtml($scope.item.extra[field._id].embed);
+            $scope.previewEmbed = (fieldId) => {
+                $scope.embedPreviews[fieldId] = $sce.trustAsHtml($scope.item.extra[fieldId].embed);
             };
 
             // Hides the preview for the given embed field.
-            $scope.hideEmbedPreview = (field) => {
-                $scope.embedPreviews[field._id] = null;
+            $scope.hideEmbedPreview = (fieldId) => {
+                $scope.embedPreviews[fieldId] = null;
             };
 
             // Returns true if the preview for the given embed field was on.
-            $scope.isPreviewOn = (field) =>
-                !!$scope.embedPreviews && !!$scope.embedPreviews[field._id];
+            $scope.isPreviewOn = (fieldId) =>
+                !!$scope.embedPreviews && !!$scope.embedPreviews[fieldId];
 
             // Validates the given embed field
-            $scope.validateEmbed = (field) => {
-                $scope.hideEmbedPreview(field);
-
-                if ($scope.item.extra[field._id].embed) {
-                    $scope.isValidEmbed[field._id] = !$scope.isURL($scope.item.extra[field._id].embed);
-                    if ($scope.isValidEmbed[field._id]) {
-                        $scope.autosave($scope.item);
-                    }
+            function validateEmbed(fieldId) {
+                if ($scope.item.extra[fieldId].embed) {
+                    $scope.isValidEmbed[fieldId] = !$scope.isURL($scope.item.extra[fieldId].embed);
                 } else {
-                    $scope.isValidEmbed[field._id] = !$scope.embedFieldRequired[field._id];
+                    $scope.isValidEmbed[fieldId] = true;
+                }
+            }
+
+            // Validates the given embed field, hides the preview and calls autosave if the embed was valid
+            $scope.validateEmbed = (fieldId) => {
+                $scope.hideEmbedPreview(fieldId);
+
+                validateEmbed(fieldId);
+                if ($scope.isValidEmbed[fieldId]) {
+                    $scope.autosave($scope.item);
                 }
             };
 
             // Retrieves the embed script for a given URL.
-            $scope.processEmbed = (field) => {
-                if (_.startsWith($scope.item.extra[field._id].embed, 'http')) {
-                    embedService.get($scope.item.extra[field._id].embed).then((data) => {
-                        $scope.item.extra[field._id].embed = data.html;
-                        $scope.isValidEmbed[field._id] = true;
+            $scope.processEmbed = (fieldId) => {
+                if (_.startsWith($scope.item.extra[fieldId].embed, 'http')) {
+                    embedService.get($scope.item.extra[fieldId].embed).then((data) => {
+                        $scope.item.extra[fieldId].embed = data.html;
+                        $scope.isValidEmbed[fieldId] = true;
                         $scope.autosave($scope.item);
                     });
                 }
@@ -882,19 +887,13 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             $scope.$on('$destroy', deregisterTansa);
 
             var initEmbedFieldsValidation = () => {
-                $scope.embedFieldRequired = {};
                 $scope.isValidEmbed = {};
                 content.getTypes().then(() => {
                     _.forEach(content.types, (profile) => {
                         if ($scope.item.profile === profile._id && profile.schema) {
-                            _.forEach(profile.schema, (schema, field) => {
+                            _.forEach(profile.schema, (schema, fieldId) => {
                                 if (schema && schema.type === 'embed') {
-                                    $scope.embedFieldRequired[field] = schema.required;
-                                    if ($scope.item.extra[field] && $scope.item.extra[field].embed) {
-                                        $scope.isValidEmbed[field] = !$scope.isURL($scope.item.extra[field].embed);
-                                    } else {
-                                        $scope.isValidEmbed[field] = !schema.required;
-                                    }
+                                    validateEmbed(fieldId);
                                 }
                             });
                         }
