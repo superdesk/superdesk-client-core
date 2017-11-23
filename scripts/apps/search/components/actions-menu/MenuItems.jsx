@@ -29,8 +29,7 @@ export default class MenuItems extends React.Component {
         const domNode = ReactDOM.findDOMNode(menuHolderElem());
 
         if (!domNode || !domNode.contains(event.target)) {
-            closeActionsMenu();
-            this.props.onClose(true);
+            closeActionsMenu(this.props.item._id);
         }
     }
 
@@ -71,7 +70,6 @@ export default class MenuItems extends React.Component {
                 scope={this.props.scope}
                 item={item} activity={activity}
                 onActioning={this.props.onActioning}
-                onClose={this.props.onClose}
             />;
 
         var actions = this.getActions();
@@ -80,7 +78,11 @@ export default class MenuItems extends React.Component {
             if (actions[group._id]) {
                 if (group.label === 'Actions') {
                     menu.push(
-                        <Label label={group.label} svc={this.props.svc} key={`group-label-${group._id}`} />,
+                        <Label
+                            label={group.label}
+                            svc={this.props.svc}
+                            key={`group-label-${group._id}`}
+                            item={this.props.item} />,
                         <Divider key={`group-divider-${group._id}`} />
                     );
                 } else if (group.concate) {
@@ -142,6 +144,5 @@ MenuItems.propTypes = {
     svc: PropTypes.object.isRequired,
     scope: PropTypes.any.isRequired,
     item: PropTypes.any,
-    onActioning: PropTypes.func,
-    onClose: PropTypes.func,
+    onActioning: PropTypes.func
 };

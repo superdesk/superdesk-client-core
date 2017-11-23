@@ -40,8 +40,23 @@ export function menuHolderElem() {
     return document.getElementById('react-placeholder');
 }
 
-export function closeActionsMenu() {
+export function closeActionsMenu(itemId) {
+    const menuHolder = menuHolderElem();
+    const menuItemId = menuHolder.getAttribute('data-item-id');
+
+    if (menuItemId && menuItemId !== itemId) {
+        return;
+    }
+
+    menuHolder.removeAttribute('data-item-id');
     ReactDOM.unmountComponentAtNode(menuHolderElem());
+}
+
+export function openActionsMenu(elem, target, itemId) {
+    const menuHolder = menuHolderElem();
+
+    menuHolder.setAttribute('data-item-id', itemId);
+    renderToBody(elem, target);
 }
 
 /**

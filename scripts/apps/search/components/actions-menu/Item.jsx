@@ -39,7 +39,7 @@ export default class Item extends React.Component {
                 .finally(() => this.updateActioningStatus(false));
         });
 
-        closeActionsMenu();
+        closeActionsMenu(this.props.item._id);
     }
 
 
@@ -80,12 +80,7 @@ export default class Item extends React.Component {
     closeMenu(event) {
         // called by the onclick event of the submenu dropdown to close actions menu.
         event.stopPropagation();
-        closeActionsMenu();
-        const {onClose} = this.props;
-
-        if (onClose) {
-            onClose(false);
-        }
+        closeActionsMenu(this.props.item._id);
     }
 
     toggle(event) {
@@ -160,6 +155,5 @@ Item.propTypes = {
     scope: PropTypes.any.isRequired,
     item: PropTypes.any,
     activity: PropTypes.any,
-    onActioning: PropTypes.func,
-    onClose: PropTypes.func
+    onActioning: PropTypes.func
 };

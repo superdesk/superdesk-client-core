@@ -20,6 +20,7 @@ export class MarkedDesksList extends React.Component {
         this.removeMarkedDesk = this.removeMarkedDesk.bind(this);
         this.stopTimeout = this.stopTimeout.bind(this);
         this.close = this.close.bind(this);
+        this.closeMenu = this.closeMenu.bind(this);
     }
 
     removeMarkedDesk(desk) {
@@ -28,6 +29,7 @@ export class MarkedDesksList extends React.Component {
         return function(event) {
             event.stopPropagation();
             desks.markItem(desk._id, this.props.item);
+            this.closeMenu();
         }.bind(this);
     }
 
@@ -39,6 +41,10 @@ export class MarkedDesksList extends React.Component {
         this.stopTimeout();
     }
 
+    closeMenu() {
+        closeActionsMenu(this.props.item._id);
+    }
+
     stopTimeout() {
         const {$timeout} = this.props.svc;
 
@@ -48,7 +54,7 @@ export class MarkedDesksList extends React.Component {
     close() {
         const {$timeout} = this.props.svc;
 
-        this.timeout = $timeout(closeActionsMenu, 2000, false);
+        this.timeout = $timeout(this.closeMenu, 2000, false);
     }
 
     render() {
@@ -62,7 +68,7 @@ export class MarkedDesksList extends React.Component {
                 onMouseEnter={this.stopTimeout} onMouseLeave={this.close}>
                 <li key="item-marked-label">
                     <div className="dropdown__menu-label">{gettext('Marked For')}
-                        <button className="dropdown__menu-close" onClick={closeActionsMenu}>
+                        <button className="dropdown__menu-close" onClick={this.closeMenu}>
                             <i className="icon-close-small icon--white" />
                         </button>
                     </div>
@@ -88,5 +94,5 @@ export class MarkedDesksList extends React.Component {
 MarkedDesksList.propTypes = {
     svc: PropTypes.object.isRequired,
     item: PropTypes.any,
-    markedDesksById: PropTypes.any,
+    markedDesksById: PropTypes.any
 };

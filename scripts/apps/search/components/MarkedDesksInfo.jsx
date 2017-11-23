@@ -6,8 +6,8 @@ import {MarkedDesksList} from 'apps/search/components';
 
 import {
     closeActionsMenu,
-    isCheckAllowed,
-    renderToBody
+    openActionsMenu,
+    isCheckAllowed
 } from 'apps/search/helpers';
 
 /**
@@ -33,7 +33,7 @@ export class MarkedDesksInfo extends React.Component {
             event.stopPropagation();
         }
 
-        closeActionsMenu();
+        closeActionsMenu(this.props.item._id);
         this.renderDropdown();
     }
 
@@ -78,7 +78,7 @@ export class MarkedDesksInfo extends React.Component {
         var icon = ReactDOM.findDOMNode(this).getElementsByClassName('icon-bell')[0] ||
         ReactDOM.findDOMNode(this).getElementsByClassName('icon-bell')[0];
 
-        renderToBody(elem, icon);
+        openActionsMenu(elem, icon, this.props.item._id);
     }
 }
 
