@@ -1,5 +1,5 @@
-ItemPreview.$inject = ['asset', 'storage', 'desks', 'lodash', 'familyService'];
-export function ItemPreview(asset, storage, desks, _, familyService) {
+ItemPreview.$inject = ['asset', 'storage', 'desks', 'lodash', 'familyService', 'api', 'config'];
+export function ItemPreview(asset, storage, desks, _, familyService, api, config) {
     /**
      * @description Closes the preview panel if the currently previewed
      * item is spiked / unspiked or moved.
@@ -60,6 +60,13 @@ export function ItemPreview(asset, storage, desks, _, familyService) {
                             scope.item.used;
                     } else {
                         scope.deskName = scope.stage = null;
+                    }
+
+                    // item is associated to an assignment
+                    scope.isAssigned = scope.item.assignment_id && config.features.planning;
+
+                    if (scope.vm.current_tab === 'assignment' && !scope.isAssigned) {
+                        scope.vm.current_tab = 'content';
                     }
                 }
             });
