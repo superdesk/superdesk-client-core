@@ -55,10 +55,6 @@
     "d3": "3.5.17",
     "diff-match-patch": "^1.0.0",
     "draft-js": "0.10.2",
-    "eslint": "^4.7.0",
-    "eslint-loader": "^1.9.0",
-    "eslint-plugin-angular": "1.6.4",
-    "eslint-plugin-react": "^7.3.0",
     "exif-js": "2.3.0",
     "file-loader": "0.11.2",
     "git-rev-sync": "1.9.1",
@@ -120,6 +116,10 @@
     "dgeni-alive": "gbbr/dgeni-alive#superdesk",
     "dgeni-packages": "~0.16.10",
     "enzyme": "~2.9.1",
+    "eslint": "^4.11.0",
+    "eslint-plugin-angular": "^3.1.1",
+    "eslint-plugin-jasmine": "^2.9.1",
+    "eslint-plugin-react": "^7.5.1",
     "grunt-eslint": "^20.1.0",
     "grunt-karma": "2.0.0",
     "jasmine-core": "2.8.0",
@@ -137,7 +137,8 @@
     "sinon": "~3.3.0"
   },
   "scripts": {
-    "test": "grunt ci:travis"
+    "test": "grunt ci:travis",
+    "lint": "eslint --ext .js --ext .jsx scripts spec tasks *.js"
   },
   "engines": {
     "node": ">=6.6.0 <7.0.0",

@@ -1,4 +1,4 @@
-'use strict';
+
 
 var grunt = require('grunt');
 var makeConfig = require('./webpack.config.js');
@@ -36,7 +36,7 @@ module.exports = function(config) {
             stats: false,
             debug: false,
             progress: false
-            //quiet: true
+            // quiet: true
         },
 
         files: [

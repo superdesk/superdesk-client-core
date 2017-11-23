@@ -26,12 +26,9 @@ module.exports = function makeConfig(grunt) {
 
         // include only 'superdesk-core' and valid modules inside node_modules
         let validModules = ['superdesk-core'].concat(sdConfig.apps);
-        return !validModules.some(app => p.indexOf(app) > -1);
-    };
 
-    // isEmbedded will be true when the app is embedded into the main repo as a
-    // node module.
-    const isEmbedded = require('fs').existsSync('./node_modules/superdesk-core');
+        return !validModules.some((app) => p.indexOf(app) > -1);
+    };
 
     return {
         entry: {
@@ -46,14 +43,14 @@ module.exports = function makeConfig(grunt) {
 
         plugins: [
             new webpack.ProvidePlugin({
-                '$': 'jquery',
+                $: 'jquery',
                 'window.$': 'jquery',
-                'jQuery': 'jquery',
+                jQuery: 'jquery',
                 'window.jQuery': 'jquery',
-                'moment': 'moment',
+                moment: 'moment',
                 // MediumEditor needs to be globally available, because
                 // its plugins will not be able to find it otherwise.
-                'MediumEditor': 'medium-editor'
+                MediumEditor: 'medium-editor'
             }),
             new webpack.DefinePlugin({
                 __SUPERDESK_CONFIG__: JSON.stringify(sdConfig)
@@ -74,24 +71,13 @@ module.exports = function makeConfig(grunt) {
                 'jquery-gridster': 'gridster/dist/jquery.gridster.min',
                 'external-apps': path.join(process.cwd(), 'dist', 'app-importer.generated.js'),
                 // ensure that react is loaded only once (3rd party apps can load more...)
-                'react': path.resolve('./node_modules/react')
+                react: path.resolve('./node_modules/react')
             },
             extensions: ['.js', '.jsx']
         },
 
         module: {
             rules: [
-                {
-                    enforce: "pre",
-                    test: /\.jsx?$/,
-                    loader: 'eslint-loader',
-                    // superdesk apps handle their own linter
-                    exclude: (p) => p.indexOf('node_modules') !== -1 || (sdConfig.apps && sdConfig.apps.some(app => p.indexOf(app) > -1)),
-                    options: {
-                        configFile: isEmbedded ? './node_modules/superdesk-core/.eslintrc.json' : './.eslintrc.json',
-                        ignorePath: isEmbedded ? './node_modules/superdesk-core/.eslintignore' : './.eslintignore'
-                     }
-                },
                 {
                     test: /\.jsx?$/,
                     exclude: shouldExclude,

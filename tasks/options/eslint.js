@@ -3,7 +3,7 @@ var root = path.dirname(path.dirname(__dirname));
 
 module.exports = {
     options: {
-        configFile: path.join(root, '.eslintrc.json'),
+        configFile: path.join(root, '.eslintrc.js'),
         quiet: true
     },
 
@@ -26,5 +26,10 @@ module.exports = {
     tasks: {
         src: path.join(root, 'tasks/**/*.js'),
         envs: ['node']
-    }
+    },
+
+    root: {
+        src: path.join(root, '*.js'),
+        envs: ['node']
+    },
 };

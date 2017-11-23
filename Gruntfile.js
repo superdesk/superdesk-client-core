@@ -89,7 +89,8 @@ module.exports = function(grunt) {
         // use them to generate "lang.generated.js"
         // to support client based translations
         var pkgName = grunt.file.readJSON('package.json').name;
-        if (grunt.file.expand("po/*.po").length && pkgName != 'superdesk-core') {
+
+        if (grunt.file.expand('po/*.po').length && pkgName != 'superdesk-core') {
             grunt.task.run([
                 'nggettext_extract',
                 'nggettext_compile'
