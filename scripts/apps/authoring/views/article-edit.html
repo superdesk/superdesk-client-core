@@ -516,6 +516,8 @@
     sd-validation-error="error[field._id.toLowerCase()]">
 
     <label>{{ field.display_name }}</label>
+    <span ng-if="schema[field._id].maxlength || schema[field._id].minlength" sd-character-count
+        data-item="item.extra[field._id]" data-html="true" data-limit="schema[field._id].maxlength"></span>
     <div sd-editor3
         data-single-line="field.field_options.single"
         data-value="item.extra[field._id]"
