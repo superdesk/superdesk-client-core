@@ -16,8 +16,8 @@ const blockStyles = {
     h5: 'header-five',
     h6: 'header-six',
     quote: 'blockquote',
-    unorderedlist: 'unordered-list-item',
-    orderedlist: 'ordered-list-item'
+    'unordered list': 'unordered-list-item',
+    'ordered list': 'ordered-list-item'
 };
 
 /**

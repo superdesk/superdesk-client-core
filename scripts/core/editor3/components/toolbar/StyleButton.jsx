@@ -14,8 +14,8 @@ const StyleIcons = {
     h5: 'icon-heading-5',
     h6: 'icon-heading-6',
     quote: 'icon-quote',
-    unorderedlist: 'icon-unordered-list',
-    orderedlist: 'icon-ordered-list'
+    'unordered list': 'icon-unordered-list',
+    'ordered list': 'icon-ordered-list'
 };
 
 const StyleTooltips = {
@@ -29,8 +29,8 @@ const StyleTooltips = {
     h5: gettext('H5'),
     h6: gettext('H6'),
     quote: gettext('Quote'),
-    unorderedlist: gettext('Unordered list'),
-    orderedlist: gettext('Ordered list'),
+    'unordered list': gettext('Unordered list'),
+    'ordered list': gettext('Ordered list'),
     TH: gettext('Toggle Header')
 };
 
