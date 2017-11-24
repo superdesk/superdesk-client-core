@@ -9,14 +9,15 @@
         <div class="modal__body">
             <ng-form name="vocabularyForm" class="vocabularyForm">
 
-            <div class="sd-line-input sd-line-input--required"
-                ng-class="{'sd-line-input--invalid': issues._id}"
-                ng-if="!vocabulary._links">
+            <div class="sd-line-input"
+                ng-class="{'sd-line-input--invalid': issues._id, 'sd-line-input--required': !vocabulary._id}"
+                ng-if="!vocabulary._links || !matchFieldTypeToTab('vocabularies', vocabulary.field_type)">
                 <label for="cv_id" class="sd-line-input__label" translate>ID</label>
                 <input id="cv_id" class="sd-line-input__input"
                     type="text"
                     ng-model="vocabulary._id"
                     ng-pattern="idRegex"
+                    ng-readonly="!!vocabulary._id"
                     required>
                 <div class="sd-line-input__message"
                     ng-show="issues._id.unique" translate>ID must be unique.</div>
