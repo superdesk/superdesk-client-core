@@ -17,7 +17,7 @@
                     type="text"
                     ng-model="vocabulary._id"
                     ng-pattern="idRegex"
-                    ng-readonly="!!vocabulary._id"
+                    ng-readonly="!!vocabulary._links"
                     required>
                 <div class="sd-line-input__message"
                     ng-show="issues._id.unique" translate>ID must be unique.</div>
