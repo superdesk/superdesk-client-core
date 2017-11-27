@@ -108,6 +108,7 @@ angular.module('superdesk.core.menu', [
                         scope.currentRoute = route || null;
                         setActiveMenuItem(scope.currentRoute);
                         ctrl.flags.workspace = route ? !!route.sideTemplateUrl : false;
+                        ctrl.flags.workqueue = ctrl.flags.workqueue || true;
                     });
 
                     scope.notifications = userNotifications;
