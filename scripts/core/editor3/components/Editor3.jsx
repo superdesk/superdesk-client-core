@@ -159,7 +159,7 @@ export class Editor3Component extends React.Component {
                 newState = RichUtils.toggleBlockType(editorState, block.type);
                 break;
             }
-        }
+        } // fall through
         default:
             newState = RichUtils.handleKeyCommand(editorState, command);
         }

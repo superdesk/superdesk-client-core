@@ -1,4 +1,4 @@
-'use strict';
+
 
 var path = require('path');
 
@@ -50,6 +50,7 @@ var config = {
         browser.screenshot = require('./spec/helpers/utils').screenshot;
 
         var reporters = require('jasmine-reporters');
+
         jasmine.getEnv().addReporter(
             new reporters.JUnitXmlReporter({
                 savePath: 'e2e-test-results',
@@ -59,9 +60,6 @@ var config = {
         function CustomReporter() {
             this.specDone = function(result) {
                 if (result.failedExpectations.length > 0) {
-                    var name = result.fullName.split(' ');
-                    console.log('at ' + name[0] + ': ' + result.description);
-
                     browser.screenshot(result.fullName.replace(/[^\w]+/g, '-'));
                 }
             };

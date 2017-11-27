@@ -29,10 +29,6 @@ export class EmbedInputComponent extends Component {
         this.processError = this.processError.bind(this);
     }
 
-    componentDidMount() {
-        this.refs.txt.focus();
-    }
-
     /**
      * @ngdoc method
      * @name EmbedInputComponent#onKeyUp
@@ -88,7 +84,7 @@ export class EmbedInputComponent extends Component {
      * @description Verifies with the iframe.ly API if the submitted URL is valid.
      */
     onSubmit() {
-        const {value} = this.refs.txt;
+        const {value} = this.txt;
 
         if (!value.startsWith('http://') && !value.startsWith('https://')) {
             return this.processSuccess(value);
@@ -117,7 +113,7 @@ export class EmbedInputComponent extends Component {
 
     componentDidMount() {
         loadIframelyEmbedJs();
-        $('.embed-dialog input').focus();
+        this.txt.focus();
     }
 
     render() {
@@ -125,7 +121,7 @@ export class EmbedInputComponent extends Component {
 
         return (
             <form onSubmit={this.onSubmit} className="embed-dialog" onKeyUp={this.onKeyUp}>
-                <input type="url" ref="txt" placeholder={gettext('Enter URL or code to embed')} />
+                <input type="url" ref={(txt) => this.txt = txt} placeholder={gettext('Enter URL or code to embed')} />
                 <div className="input-controls">
                     <i className="svg-icon-ok" onClick={this.onSubmit} />
                     <i className="icon-close-small" onClick={this.onCancel} />
