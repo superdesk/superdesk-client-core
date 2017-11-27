@@ -63,7 +63,7 @@ export class MediaBlockComponent extends Component {
     }
 
     render() {
-        const {setLocked, showTitle} = this.props;
+        const {setLocked, showTitle, readOnly} = this.props;
         const data = this.data();
         const rendition = data.renditions.viewImage || data.renditions.original;
         const alt = data.alt_text || data.description_text || data.caption;
@@ -81,8 +81,11 @@ export class MediaBlockComponent extends Component {
                             value={data.headline}
                             onChange={this.onChange}
                         /> : null }
-                    {mediaType === 'picture' &&
+                    {mediaType === 'picture' && !readOnly &&
                         <img src={rendition.href} alt={alt} onClick={this.onClick} />
+                    }
+                    {mediaType === 'picture' && readOnly &&
+                        <img src={rendition.href} alt={alt} />
                     }
                     {mediaType === 'video' &&
                         <video controls src={rendition.href} alt={alt} width="100%" height="100%" />
@@ -110,11 +113,13 @@ MediaBlockComponent.propTypes = {
     setLocked: PropTypes.func.isRequired,
     block: PropTypes.object.isRequired,
     contentState: PropTypes.object.isRequired,
-    showTitle: PropTypes.bool
+    showTitle: PropTypes.bool,
+    readOnly: PropTypes.bool
 };
 
 const mapStateToProps = (state) => ({
-    showTitle: state.showTitle
+    showTitle: state.showTitle,
+    readOnly: state.readOnly
 });
 
 const mapDispatchToProps = (dispatch) => ({
