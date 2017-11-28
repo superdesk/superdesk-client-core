@@ -36,6 +36,13 @@ export function VocabularyEditController($scope, gettext, notify, api, vocabular
         }
     }
 
+    function uniqueQcode() {
+        const list = $scope.vocabulary.items || {};
+        const uniqueList = _.uniqBy(list, (item) => item.qcode);
+
+        return list.length === uniqueList.length;
+    }
+
     /**
      * Save current edit modal contents on backend.
      */
@@ -52,6 +59,10 @@ export function VocabularyEditController($scope, gettext, notify, api, vocabular
                     $scope.errorMessage = gettext('Minimum height and width should be greater than or equal to 200');
                 }
             });
+        }
+
+        if (!uniqueQcode()) {
+            $scope.errorMessage = gettext('The qcode values should be unique');
         }
 
         if (_.isNil($scope.errorMessage)) {
