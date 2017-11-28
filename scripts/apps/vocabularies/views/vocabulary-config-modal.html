@@ -164,9 +164,10 @@
 
                 </table>
             </div>
-
+            <div ng-if="errorMessage" class="sd-line-input sd-line-input--invalid">
+                <p class="sd-line-input__message">{{ errorMessage }}</p>
+            </div>
             </ng-form>
-            <p ng-if="errorMessage">{{ errorMessage }}</p>
         </div>
 
         <div class="modal__footer">
