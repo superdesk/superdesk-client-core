@@ -1,0 +1,157 @@
+// contacts.scss
+// Styling for the superdesk media contacts management page
+// ----------------------------------------------------------------------------------------
+@import '~mixins.scss';
+@import '~variables.scss';
+
+/*
+====================================================
+    contacts detail pane
+====================================================
+*/
+
+.contact-details-pane {
+    position: relative;
+    width: 100%;
+
+    ::-webkit-scrollbar {
+        border-left: 9px solid #fff;
+        border-right: 1px solid #fff;
+        width: 13px;
+        background: #fff;
+        &:hover {
+            background: #e8e8e8;
+        }
+    }
+    ::-webkit-scrollbar-thumb {
+        border-left: 8px solid #fff;
+        background: #bbb;
+        &:hover {
+            background: #787878;
+        }
+    }
+    .profile-info {
+        display: flex;
+        flex-direction: column;
+        height: calc(100vh - 160px);
+        position: relative;
+        overflow-y: auto;
+    }
+
+    .action-bar {
+        position: inherit !important;
+        &.show {
+            top: 0px;
+        }
+    }
+
+    .header-info {
+        background-color: rgba(94, 169, 200, 0.11);
+        padding: 10px 0 0;
+
+        h2 { //used as contact's display name
+            text-align: center;
+            font-size: 18px;
+            line-height: 20px;
+            margin: 10px 0 4px 0;
+            padding: 0 20px;
+        }
+        h5 { // to be use for job_title
+            text-align: center;
+            font-size: 14px;
+            font-weight: normal;
+            line-height: 16px;
+            padding: 0 20px;
+            margin-bottom: 10px;
+            color: rgba(0, 0, 0, 0.75);
+        }
+
+        .active {
+            position: absolute;
+            top: 24px;
+            right: 15px;
+        }
+    }
+
+    .date-time {
+        color: #999;
+        font-weight: 300;
+    }
+
+    .details-info {
+        flex-grow: 1;
+        padding: 10px;
+    }
+
+    .alert-info-msg {
+        font-size: 1.2rem;
+        line-height: 1.4rem;
+        transition: all .3s cubic-bezier(.55,0,.55,.2);
+        color: grey;
+        letter-spacing: .03em;
+    }
+
+    .error-holder {
+        height: 40px;
+        margin: 0 -20px;
+        .alert {
+            padding: 10px 20px;
+        }
+    }
+
+    .validation-error {
+        color: #ab3434;
+        font-size: 12px;
+        margin-top: 5px;
+        margin-bottom: 0;
+    }
+    .validation-info {
+        font-size: 11px;
+        color: #888;
+    }
+    .profile-pic {
+        width: 82px;
+        height: 82px;
+        position: relative;
+        margin: 0 auto;
+        .avatar {
+            width: 100%;
+            height: 100%;
+            @include border-radius(50%);
+            position: relative;
+            background-image: url('~images/avatar_200.png');
+            &.organisation {
+                background-image: url('~images/avatar_group_64.png');
+            }
+            &.initials {
+                font-size: 24px;
+                line-height: 82px;
+                font-weight: 300;
+            }
+        }
+        .disabled-label {
+            position: absolute;
+            bottom: 15%;
+            left: 40%;
+            border: 1px solid #fff;
+        }
+    }
+
+    .alert {
+        @include border-radius(0px);
+    }
+
+    .ng-invalid-required {
+        .required-info {
+            display: inline-block !important;
+        }
+    }
+}
+
+.prevent-switch {
+    pointer-events: none;
+}
+
+.preview-layout .preview-pane {
+    overflow-y: hidden !important;
+}

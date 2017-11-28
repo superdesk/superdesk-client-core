@@ -1,0 +1,1 @@
+export {ContactsController} from './ContactsController';

@@ -33,7 +33,8 @@ export default angular.module('superdesk.core.preferences', ['superdesk.core.not
                     'desks:preferred': 1,
                     'destination:active': 1, // key to store last desk/stage for send to/fetch to.
                     'spellchecker:status': 1,
-                    'singleline:view': 1
+                    'singleline:view': 1,
+                    'contacts:view': 1
                 },
                 preferences,
                 preferencesPromise;

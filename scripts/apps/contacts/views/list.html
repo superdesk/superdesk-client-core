@@ -1,0 +1,42 @@
+<div class="subnav subnav--absolute">
+  <header class="search-page-header">
+      <div class="filter-trigger"
+           title="{{ :: 'Filters' | translate }}"
+           ng-click="openAdvanceSearch = !openAdvanceSearch"
+           ng-class="{'filter-trigger--active': openAdvanceSearch}"
+      ><i class="icon-filter-large"></i></div>
+      <div sd-item-searchbar class="searchbar-flex-handler"></div>
+      <div sd-contacts-sort-bar data-total="total" class="sortbar-flex-handler"></div>
+      <div class="view-select">
+          <button title="{{ :: 'Switch to grid view' | translate }}" ng-show="view !== 'mgrid'" ng-click="setView('mgrid')"><i class="icon-th"></i></button>
+          <button title="{{ :: 'Switch to list view' | translate }}" ng-show="view !== 'compact'" ng-click="setView('compact')"><i class="icon-th-list"></i></button>
+      </div>
+      <div class="subnav__button-stack--square-buttons" ng-if="privileges.contacts"
+        sd-tooltip="{{ :: 'Create contact' | translate }}" flow="left">
+         <div id="contacts-dropdown" class="dropdown strict" dropdown sd-tooltip="{{ :: 'Add Contacts' | translate }}" flow="left">
+            <button class="navbtn dropdown__toggle sd-create-btn" dropdown__toggle></button>
+            <ul class="dropdown__menu dropdown__menu--scrollable pull-right">
+              <li>
+                <div class="dropdown__menu-label">
+                  Create New Contact
+                </div>
+              </li>
+              <li>
+                <button ng-click="createContact('organisation')">
+                  <i class="icon-globe" /> Organisation
+                </button>
+              </li>
+              <li>
+                <button ng-click="createContact('person')">
+                  <i class="icon-user" /> Person
+                </button>
+              </li>
+            </ul>
+        </div>
+      </div>
+  </header>
+</div>
+<section class="search main-section search-page-container" ng-class="{'sidebar-open': openAdvanceSearch}">
+    <div sd-contacts-search-panel data-items="items" class="archive-sidebar"></div>
+    <div sd-contacts-search-results class="archive-content"></div>
+</section>
