@@ -59,27 +59,17 @@ class Editor3Directive {
 
             /**
              * @type {Object}
-             * @description Item which is being edited
+             * @description A JSON object representing the Content State of the Draft
+             * editor. When available, it is used to show content, using `convertFromRaw`.
+             * Either this, or value have to be set. Use this for most accurate behavior.
              */
-            item: '=',
+            editorState: '=?',
 
             /**
              * @type {String}
-             * @description The field name that is edited
+             * @description HTML value of editor. Used by the outside world.
              */
-            field: '@',
-
-            /**
-             * @type {Boolean}
-             * @description True if data is read&save from/to editor_state
-             */
-            useEditorState: '@',
-
-            /**
-             * @type {Boolean}
-             * @description If true the current field is custom
-             */
-            extra: '@?',
+            value: '=',
 
             /**
              * @type {Boolean}
@@ -125,6 +115,13 @@ class Editor3Directive {
              * @description Disable internal spellchecker.
              */
             disableSpellchecker: '=?',
+
+            /**
+
+             * @type {Object}
+             * @description Item which is being edited
+             */
+            item: '=',
 
             /**
              * @type {Number}

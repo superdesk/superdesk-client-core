@@ -43,7 +43,8 @@ export default function createEditorStore(props, isReact = false) {
         showTitle: props.showTitle,
         activeCell: null, // currently focused table cell
         editorFormat: props.editorFormat || [],
-        onChangeValue: onChangeValue
+        onChangeValue: onChangeValue,
+        item: props.item
     }, applyMiddleware(thunk));
 
 
@@ -64,16 +65,8 @@ function onChange(content) {
     const decorativeStyles = highlightTypes.concat(['HIGHLIGHT', 'HIGHLIGHT_STRONG']);
     const cleanedContent = removeInlineStyles(content, decorativeStyles);
 
-    if (this.useEditorState) {
-        this.item.editor_state = convertToRaw(cleanedContent);
-    }
-
-    if (this.extra) {
-        this.item.extra[this.field] = toHTML(cleanedContent);
-    } else {
-        this.item[this.field] = toHTML(cleanedContent);
-    }
-
+    this.editorState = convertToRaw(cleanedContent);
+    this.value = toHTML(cleanedContent);
     this.onChange();
 }
 
@@ -82,25 +75,18 @@ function onChange(content) {
  * @param {Object} props Controller hosting the editor
  * @returns {ContentState} DraftJS ContentState object.
  * @description Gets the initial content state of the editor based on available information.
- * If the field uses editor state and if the editor state is available as saved in the DB,
- * we use that, otherwise we attempt to use available HTML.
- * If none are available, an empty ContentState is created.
+ * If an editor state is available as saved in the DB, we use that, otherwise we attempt to
+ * use available HTML. If none are available, an empty ContentState is created.
  */
 function getInitialContent(props) {
-    // we have an editor state stored in the DB for this field
-    if (props.useEditorState && props.item.editor_state &&
-        typeof props.item.editor_state === 'object') {
-        return applyInlineStyles(convertFromRaw(props.item.editor_state)).contentState;
+    // we have an editor state stored in the DB
+    if (props.editorState && typeof props.editorState === 'object') {
+        return applyInlineStyles(convertFromRaw(props.editorState)).contentState;
     }
 
-    if (props.extra) {
-        props.item.extra = props.item.extra || {};
-    }
-
-    const value = props.extra ? props.item.extra[props.field] : props.item[props.field];
-
-    if (value) {
-        return fromHTML(value);
+    // we have only HTML (possibly legacy editor2 or ingested item)
+    if (props.value) {
+        return fromHTML(props.value);
     }
 
     return ContentState.createFromText('');

@@ -14,7 +14,6 @@ describe('editor3.store', () => {
             language: 'en',
             editorFormat: '123',
             readOnly: false,
-            item: {},
             trim: true,
             onChange: () => { /* no-op */ },
             value: 'abc'
