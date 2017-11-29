@@ -1,6 +1,8 @@
 import * as helpers from 'apps/authoring/authoring/helpers';
 import _ from 'lodash';
 
+import postscribe from 'postscribe';
+
 /**
  * @ngdoc directive
  * @module superdesk.apps.authoring
@@ -778,12 +780,16 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
 
             // Shows the preview for the given embed field.
             $scope.previewEmbed = (fieldId) => {
-                $scope.embedPreviews[fieldId] = $sce.trustAsHtml($scope.item.extra[fieldId].embed);
+                if ($scope.item.extra[fieldId].embed) {
+                    $scope.embedPreviews[fieldId] = true;
+                    postscribe('#embed-preview-' + fieldId, $scope.item.extra[fieldId].embed);
+                }
             };
 
             // Hides the preview for the given embed field.
             $scope.hideEmbedPreview = (fieldId) => {
-                $scope.embedPreviews[fieldId] = null;
+                document.getElementById('embed-preview-' + fieldId).innerHTML = null;
+                $scope.embedPreviews[fieldId] = false;
             };
 
             // Returns true if the preview for the given embed field was on.

@@ -556,7 +556,7 @@
         sd-validation-error="error.extra[field._id].embed" data-required="schema[field._id].required"></textarea>
     <input type="text" class="sd-line-input__input" ng-model="item.extra[field._id].description"
         sd-remove-tags ng-change="autosave(item)" placeholder="{{ 'Description' | translate }}">
-    <div id="embed-preview-{{ field._id }}" ng-if="item.extra[field._id].embed" ng-bind-html="embedPreviews[field._id]"></div>
+    <div id="embed-preview-{{ field._id }}" ng-show="embedPreviews[field._id]"></div>
     <div class="sd-line-input__hint" ng-if="helper_text[field._id]">{{field.helper_text}}</div>
 </div>
 
