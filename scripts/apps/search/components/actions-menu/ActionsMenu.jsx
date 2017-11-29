@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import MenuItems from './MenuItems';
 
-import {closeActionsMenu, openActionsMenu} from 'apps/search/helpers';
+import {closeActionsMenu, openActionsMenu} from '../../helpers';
 
 export class ActionsMenu extends React.Component {
     constructor(props) {

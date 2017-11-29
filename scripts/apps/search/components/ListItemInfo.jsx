@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
-import {renderArea} from 'apps/search/helpers';
+import {renderArea} from '../helpers';
 
 export function ListItemInfo(props) {
     if (props.scope.singleLine) {

@@ -2,13 +2,13 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 
-import {MarkedDesksList} from 'apps/search/components';
+import {MarkedDesksList} from './index';
 
 import {
     closeActionsMenu,
     openActionsMenu,
     isCheckAllowed
-} from 'apps/search/helpers';
+} from '../helpers';
 
 /**
  * @ngdoc React

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {HighlightsInfo} from 'apps/search/components';
+import {HighlightsInfo} from '../index';
 
 export function highlights(props) {
     return React.createElement(HighlightsInfo, angular.extend({

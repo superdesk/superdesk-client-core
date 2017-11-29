@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
-import {broadcast} from 'apps/search/components/fields';
+import {broadcast} from './fields';
 
 import {
     ItemPriority,
@@ -16,7 +16,7 @@ import {
     ErrorBox,
     ProgressBar,
     ListItemInfo
-} from 'apps/search/components';
+} from './index';
 import {closeActionsMenu} from '../helpers';
 
 /**

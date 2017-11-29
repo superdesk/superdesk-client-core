@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {TypeIcon, SelectBox} from 'apps/search/components';
+import {TypeIcon, SelectBox} from './index';
 import classNames from 'classnames';
 
 export class ListTypeIcon extends React.Component {

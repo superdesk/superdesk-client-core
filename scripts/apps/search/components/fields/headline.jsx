@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {createMarkUp} from 'apps/search/helpers';
+import {createMarkUp} from '../../helpers';
 
 export function headline(props) {
     var headline = props.item.headline ? props.item.headline : props.item.type;

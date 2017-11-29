@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {
     closeActionsMenu
-} from 'apps/search/helpers';
+} from '../helpers';
 
 export class HighlightsList extends React.Component {
     constructor(props) {

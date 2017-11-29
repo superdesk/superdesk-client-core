@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {DesksDropdown} from 'apps/search/components';
+import {DesksDropdown} from './index';
 
 export class FetchedDesksInfo extends React.Component {
     constructor(props) {

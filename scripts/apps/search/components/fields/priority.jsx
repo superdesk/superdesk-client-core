@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {ItemPriority} from 'apps/search/components';
+import {ItemPriority} from '../index';
 
 export function priority(props) {
     return props.item.priority ?

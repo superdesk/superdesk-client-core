@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {TimeElem} from 'apps/search/components';
+import {TimeElem} from '../index';
 
 export function versioncreated(props) {
     return React.createElement(

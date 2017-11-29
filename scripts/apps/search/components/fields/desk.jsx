@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {ItemContainer} from 'apps/search/components';
+import {ItemContainer} from '../index';
 
 export function desk(props) {
     if (!props.item.archived) {
