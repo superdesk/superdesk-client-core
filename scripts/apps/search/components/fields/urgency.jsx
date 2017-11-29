@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {ItemUrgency} from 'apps/search/components';
+import {ItemUrgency} from '../index';
 
 export function urgency(props) {
     return props.item.urgency ?

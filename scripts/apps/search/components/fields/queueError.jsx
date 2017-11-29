@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {QueueError} from 'apps/search/components';
+import {QueueError} from '../index';
 
 export function queueError(props) {
     return <QueueError

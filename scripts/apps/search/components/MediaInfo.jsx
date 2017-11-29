@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {createMarkUp} from '../helpers';
-import {FetchedDesksInfo} from 'apps/search/components';
+import {FetchedDesksInfo} from './index';
 
 /**
  * Media Info - renders item metadata

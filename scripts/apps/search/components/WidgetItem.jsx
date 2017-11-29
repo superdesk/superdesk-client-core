@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
-import {ItemUrgency, TypeIcon} from 'apps/search/components';
+import {ItemUrgency, TypeIcon} from './index';
 
 
 /**

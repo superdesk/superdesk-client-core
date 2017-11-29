@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {FetchedDesksInfo} from 'apps/search/components';
+import {FetchedDesksInfo} from '../index';
 
 export function fetchedDesk(props) {
     if (props.item.archived) {

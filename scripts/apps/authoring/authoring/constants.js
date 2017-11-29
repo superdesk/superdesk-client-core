@@ -1,3 +1,7 @@
+// Adding the following because planning webpack when compiled for test cases
+// won't be aware of gettext.
+const gettext = _.get(window, 'gettext', (text) => text);
+
 /**
  * Menu groups for authoring
  */

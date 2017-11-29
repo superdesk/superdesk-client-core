@@ -3,13 +3,13 @@ import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
-import {HighlightsList} from 'apps/search/components';
+import {HighlightsList} from './index';
 
 import {
     closeActionsMenu,
     openActionsMenu,
     isCheckAllowed
-} from 'apps/search/helpers';
+} from '../helpers';
 
 export class HighlightsInfo extends React.Component {
     constructor(props) {

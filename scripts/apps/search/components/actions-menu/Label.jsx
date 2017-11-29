@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {closeActionsMenu} from 'apps/search/helpers';
+import {closeActionsMenu} from '../../helpers';
 
 export default function Label(props) {
     const {gettextCatalog} = props.svc;

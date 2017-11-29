@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 
-import {closeActionsMenu} from 'apps/search/helpers';
+import {closeActionsMenu} from '../../helpers';
 
 export default class Item extends React.Component {
     constructor(props) {

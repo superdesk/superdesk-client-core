@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Associations} from 'apps/search/components';
+import {Associations} from '../index';
 
 export function associations(props) {
     return <Associations

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {TypeIcon} from 'apps/search/components';
+import {TypeIcon} from './index';
 import classNames from 'classnames';
 
 export function GridTypeIcon(props) {

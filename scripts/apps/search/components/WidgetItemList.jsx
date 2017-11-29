@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {WidgetItem} from 'apps/search/components';
+import {WidgetItem} from './index';
 
 
 /**
