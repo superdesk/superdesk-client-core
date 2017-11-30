@@ -65,9 +65,11 @@ function onChange(content) {
     const decorativeStyles = highlightTypes.concat(['HIGHLIGHT', 'HIGHLIGHT_STRONG']);
     const cleanedContent = removeInlineStyles(content, decorativeStyles);
 
-    this.editorState = convertToRaw(cleanedContent);
-    this.value = toHTML(cleanedContent);
-    this.onChange();
+    this.$rootScope.$apply(() => {
+        this.editorState = convertToRaw(cleanedContent);
+        this.value = toHTML(cleanedContent);
+        this.onChange();
+    });
 }
 
 /**

@@ -25,7 +25,7 @@ class Editor3Directive {
     constructor() {
         this.scope = {};
         this.controllerAs = 'vm';
-        this.controller = ['config', '$element', 'editor3', '$scope', this.initialize];
+        this.controller = ['config', '$element', 'editor3', '$scope', '$rootScope', this.initialize];
 
         this.bindToController = {
             /**
@@ -137,7 +137,7 @@ class Editor3Directive {
         };
     }
 
-    initialize(config, $element, editor3, $scope) {
+    initialize(config, $element, editor3, $scope, $rootScope) {
         // defaults
         this.language = this.language || 'en';
         this.readOnly = this.readOnly || false;
@@ -149,6 +149,7 @@ class Editor3Directive {
         this.tabindex = this.tabindex || 0;
         this.showTitle = this.showTitle || false;
         this.highlights = typeof this.highlights !== 'undefined' && config.features.editorHighlights;
+        this.$rootScope = $rootScope;
 
         const store = createEditorStore(this);
 
