@@ -133,7 +133,13 @@ class Editor3Directive {
              * @type {Boolean}
              * @description Show image title.
              */
-            showTitle: '=?'
+            showTitle: '=?',
+
+            /**
+             * @type {Boolean}
+             * @description process annotations
+             */
+            annotations: '=?',
         };
     }
 
@@ -151,6 +157,7 @@ class Editor3Directive {
         this.highlights = typeof this.highlights !== 'undefined' && config.features.editorHighlights;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
+        this.annotations = !!this.annotations;
 
         const store = createEditorStore(this);
 

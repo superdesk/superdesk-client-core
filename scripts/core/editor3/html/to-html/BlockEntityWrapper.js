@@ -54,6 +54,12 @@ export class BlockEntityWrapper {
                     html += `<a href="${link.href}">`;
                 }
             }
+            break;
+
+        case 'ANNOTATION':
+            this.activeEntity = {key: entityKey, tag: 'span'};
+            html += `<span annotation-id="${data.id}">`;
+            break;
         }
 
         return html;

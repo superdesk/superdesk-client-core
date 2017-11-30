@@ -45,7 +45,8 @@ export default function createEditorStore(props, isReact = false) {
         editorFormat: props.editorFormat || [],
         onChangeValue: onChangeValue,
         item: props.item,
-        spellcheckerEnabled: !props.disableSpellchecker
+        spellcheckerEnabled: !props.disableSpellchecker,
+        annotations: props.annotations,
     }, applyMiddleware(thunk));
 
 
@@ -68,14 +69,21 @@ function onChange(content) {
 
     // sync controller to scope
     this.$scope.$apply(() => {
+        const output = toHTML(cleanedContent, {annotations: this.annotations});
+
         // to avoid merge of dictionaries in backend, editorState is wrapped in a list
         this.editorState = [convertToRaw(cleanedContent)];
-        this.value = toHTML(cleanedContent);
+        if (this.annotations) {
+            this.value = output.html;
+            this.item.annotations = output.annotations;
+        } else {
+            this.value = output;
+        }
     });
 
     // call on change with scope updated
     this.$rootScope.$applyAsync(() => {
-        this.onChange();
+        this.onChange({item: this.item});
     });
 }
 
