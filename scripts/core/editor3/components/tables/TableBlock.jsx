@@ -45,10 +45,22 @@ export class TableBlockComponent extends Component {
             data.cells[row] = [];
         }
 
+        let forceUpdate = true;
+
+        if (data.cells[row][col]) {
+            forceUpdate = convertFromRaw(data.cells[row][col]).getPlainText() !== cellContentState.getPlainText();
+        }
+
         data.cells[row][col] = convertToRaw(cellContentState);
 
-        contentState.replaceEntityData(entityKey, {data});
-        parentOnChange(editorState);
+        const updatedContentState = contentState.replaceEntityData(entityKey, {data});
+        const updatedEditorState = EditorState.push(
+            editorState,
+            updatedContentState,
+            'apply-entity'
+        );
+
+        parentOnChange(updatedEditorState, forceUpdate);
     }
 
     /**
@@ -88,9 +100,10 @@ export class TableBlockComponent extends Component {
         return data;
     }
 
-    onFocus(i, j) {
+    onFocus(i, j, event) {
         const {setActiveCell, block} = this.props;
 
+        event.stopPropagation();
         setActiveCell(i, j, block.key);
     }
 
@@ -135,7 +148,7 @@ TableBlockComponent.propTypes = {
 };
 
 const mapDispatchToProps = (dispatch) => ({
-    parentOnChange: (editorState) => dispatch(actions.changeEditorState(editorState)),
+    parentOnChange: (editorState, force) => dispatch(actions.changeEditorState(editorState, force)),
     setActiveCell: (i, j, key) => dispatch(actions.setActiveCell(i, j, key))
 });
 

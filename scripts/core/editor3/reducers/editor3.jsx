@@ -10,7 +10,7 @@ import {updateHighlights} from './highlights';
 const editor3 = (state = {}, action) => {
     switch (action.type) {
     case 'EDITOR_CHANGE_STATE':
-        return onChange(state, action.payload);
+        return onChange(state, action.payload.editorState, action.payload.force);
     case 'EDITOR_SET_LOCKED':
         return setLocked(state, action.payload);
     case 'EDITOR_SET_READONLY':
