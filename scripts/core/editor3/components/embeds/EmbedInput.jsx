@@ -121,7 +121,11 @@ export class EmbedInputComponent extends Component {
 
         return (
             <form onSubmit={this.onSubmit} className="embed-dialog" onKeyUp={this.onKeyUp}>
-                <input type="url" ref={(txt) => this.txt = txt} placeholder={gettext('Enter URL or code to embed')} />
+                <input type="url"
+                    ref={(txt) => {
+                        this.txt = txt;
+                    }}
+                    placeholder={gettext('Enter URL or code to embed')} />
                 <div className="input-controls">
                     <i className="svg-icon-ok" onClick={this.onSubmit} />
                     <i className="icon-close-small" onClick={this.onCancel} />
