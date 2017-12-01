@@ -23,7 +23,7 @@ describe('editor3.reducers', () => {
             editorState: EditorState.createEmpty()
         }, {
             type: 'EDITOR_CHANGE_STATE',
-            payload: editorState
+            payload: {editorState}
         });
 
         expect(onChangeValue).toHaveBeenCalled();

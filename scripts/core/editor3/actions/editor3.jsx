@@ -4,13 +4,14 @@ import {insertMedia} from './toolbar';
  * @ngdoc method
  * @name changeEditorState
  * @param {Object} editorState
+ * @param {force} force update
  * @return {String} action
  * @description Creates the change editor action
  */
-export function changeEditorState(editorState) {
+export function changeEditorState(editorState, force) {
     return {
         type: 'EDITOR_CHANGE_STATE',
-        payload: editorState
+        payload: {editorState, force},
     };
 }
 

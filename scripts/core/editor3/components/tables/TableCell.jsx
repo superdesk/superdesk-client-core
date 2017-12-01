@@ -128,7 +128,7 @@ export class TableCell extends Component {
         const {onFocus, readOnly} = this.props;
 
         return (
-            <td onClick={(e) => e.stopPropagation()}>
+            <td onClick={(event) => event.stopPropagation()}>
                 <Editor
                     onFocus={onFocus}
                     editorState={editorState}
