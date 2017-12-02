@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
-"PO-Revision-Date: 2017-12-02 23:42+0000\n"
+"PO-Revision-Date: 2017-12-02 23:47+0000\n"
 "Last-Translator: jonas.orting <jonas.orting@gmail.com>\n"
 "Language-Team: Danish (http://www.transifex.com/sourcefabric/superdesk/language/da/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1909,7 +1909,7 @@ msgstr "Rediger"
 
 #: scripts/apps/highlights/views/highlights_config_modal.html:6
 msgid "Edit \"{{configEdit.name}}\" highlight"
-msgstr "Rediger fremhævningen \"{{configEdit.name}}\""
+msgstr "Rediger udvalget \"{{configEdit.name}}\""
 
 #: scripts/apps/desks/views/desk-config-modal.html:6
 msgid "Edit \"{{desk.edit.name}}\" Desk"
@@ -2183,7 +2183,7 @@ msgstr "Fejl"
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:231
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:241
 msgid "Error creating highlight."
-msgstr "Fejl: Fremhævning blev ikke oprettet"
+msgstr "Fejl: Udvalget blev ikke oprettet"
 
 #: scripts/apps/authoring/versioning/history/views/publish_queue.html:21
 msgid "Error sending as"
@@ -2883,15 +2883,15 @@ msgstr "høj"
 #: scripts/apps/monitoring/views/monitoring-view.html:105
 #: scripts/apps/monitoring/views/monitoring-view.html:75
 msgid "Highlight Package"
-msgstr "Fremhæv pakke"
+msgstr "Udvælg pakke"
 
 #: scripts/apps/highlights/views/highlights_config_modal.html:16
 msgid "Highlight with name"
-msgstr "Fremhæv med navn"
+msgstr "Udvælg med navn"
 
 #: scripts/core/lang/missing-translations-strings.js:29
 msgid "highlights"
-msgstr "fremhævninger"
+msgstr "udvalg"
 
 #: scripts/apps/authoring/views/authoring-topbar.html:168
 #: scripts/apps/highlights/index.js:60
@@ -2899,19 +2899,19 @@ msgstr "fremhævninger"
 #: scripts/apps/templates/services/TemplatesService.js:57
 #: scripts/apps/workspace/views/workspace-sidenav-items.html:17
 msgid "Highlights"
-msgstr "Fremhævninger"
+msgstr "Udvalg"
 
 #: scripts/apps/highlights/views/settings.html:6
 msgid "Highlights configurations"
-msgstr "Fremhævningsopsætning"
+msgstr "Udvalgsopsætning"
 
 #: scripts/apps/highlights/index.js:68
 msgid "Highlights View"
-msgstr "Fremhævningsvisning"
+msgstr "Udvalgsvisning"
 
 #: scripts/core/lang/missing-translations-strings.js:12
 msgid "Highlights/Summary List Management"
-msgstr "Fremhævnings/uddragsliste administration"
+msgstr "Administration af udvalgs/uddragslister"
 
 #: scripts/core/lang/missing-translations-strings.js:13
 msgid "Hold"
@@ -3520,7 +3520,7 @@ msgstr "Vælg til redaktion"
 
 #: scripts/apps/highlights/index.js:45
 msgid "Mark for highlight"
-msgstr "Vælg til fremhævning"
+msgstr "Udvælg"
 
 #: scripts/apps/search/views/multi-action-bar.html:18
 msgid "Mark item"
@@ -3532,7 +3532,7 @@ msgstr "Marker post til"
 
 #: scripts/core/lang/missing-translations-strings.js:14
 msgid "Mark items for Highlights/Summary Lists"
-msgstr "Vælg poster til fremhævnings/uddragslister"
+msgstr "Vælg poster til udvalgs/uddragslister"
 
 #: scripts/apps/search/views/search-parameters.html:61
 msgid "Marked Desks"
@@ -3809,7 +3809,7 @@ msgstr "Ingen tilgængelige redaktioner"
 #: scripts/apps/highlights/views/mark_highlights_dropdown_directive.html:8
 #: scripts/apps/highlights/views/package_highlights_dropdown_directive.html:13
 msgid "No available highlights"
-msgstr "Ingen tilgængelige fremhævninger"
+msgstr "Ingen tilgængelige udvalg"
 
 #: scripts/apps/translations/views/TranslationDropdown.html:8
 msgid "No available languages"
@@ -3841,7 +3841,7 @@ msgstr "Intet filter"
 
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:849
 msgid "No formatters found for"
-msgstr ""
+msgstr "Der blev ikke fundet nogen formatteringer for"
 
 #: scripts/apps/users/views/change-avatar.html:14
 msgid "No image"
@@ -4076,7 +4076,7 @@ msgstr "Åbnet af"
 
 #: scripts/apps/workspace/index.js:26
 msgid "Opens highlights"
-msgstr "Åbner fremhævninger"
+msgstr "Åbner udvalg"
 
 #: scripts/apps/workspace/index.js:25
 msgid "Opens monitoring"
@@ -4108,7 +4108,7 @@ msgstr "Handling"
 
 #: scripts/apps/analytics/views/activity-report-parameters.html:22
 msgid "Operation date"
-msgstr ""
+msgstr "Kørselsdato"
 
 #: scripts/apps/content-filters/views/filter-search.html:12
 #: scripts/apps/content-filters/views/manage-filter-conditions.html:49
@@ -4137,7 +4137,7 @@ msgstr "Original"
 
 #: scripts/apps/archive/views/metadata-view.html:104
 msgid "Original creator"
-msgstr ""
+msgstr "Først oprettet af"
 
 #: scripts/apps/archive/views/metadata-view.html:100
 msgid "Original ID"
@@ -4296,7 +4296,7 @@ msgstr "Personer"
 
 #: scripts/apps/products/views/products-config-modal.html:34
 msgid "Permitting"
-msgstr ""
+msgstr "Tillader"
 
 #: scripts/apps/dictionaries/views/settings.html:26
 #: scripts/apps/monitoring/config.js:32
@@ -5646,7 +5646,7 @@ msgstr "ILDE"
 
 #: scripts/apps/desks/views/desk-config-modal.html:28
 msgid "Source for User Created Articles"
-msgstr ""
+msgstr "Kilde for brugeroprettede poster"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:51
 msgid "Source Name"
@@ -5654,11 +5654,11 @@ msgstr "Kildenavn"
 
 #: scripts/apps/search-providers/views/search-provider-config.html:60
 msgid "source of the search provider"
-msgstr ""
+msgstr "kilde for søgeleverandør"
 
 #: scripts/apps/ingest/ingest-stats-widget/configuration.html:9
 msgid "Source stats"
-msgstr ""
+msgstr "Statistik for kilden"
 
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:3
 msgid "Source Type:"
@@ -5749,7 +5749,7 @@ msgstr "Starttidspunkt"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-schedule.html:7
 msgid "Start Time (inclusive)"
-msgstr ""
+msgstr "Starttidspunkt (inklusiv)"
 
 #: scripts/apps/archive/views/metadata-view.html:185
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:72
@@ -5774,7 +5774,7 @@ msgstr "Status:"
 #: scripts/apps/publish/views/odbc-config.html:11
 #: scripts/apps/publish/views/odbc-config.html:9
 msgid "Stored Procedure"
-msgstr ""
+msgstr "Gemt procedure"
 
 #: scripts/apps/products/views/product-test.html:4
 msgid "Story GUID"
@@ -5826,7 +5826,7 @@ msgstr "Abonnentkoder"
 
 #: scripts/apps/publish/directives/SubscribersDirective.js:199
 msgid "Subscriber could not be initialized!"
-msgstr ""
+msgstr "Abonnenten kunne ikke initialiseres!"
 
 #: scripts/apps/publish/directives/SubscribersDirective.js:134
 msgid "Subscriber saved."
@@ -5947,31 +5947,31 @@ msgstr "Tansa stave/grammatikkontrollen svarer ikke. Du kan fortsætte redigerin
 #: scripts/apps/products/views/products-config-modal.html:38
 #: scripts/apps/templates/views/template-editor-modal.html:118
 msgid "Target Regions"
-msgstr ""
+msgstr "Modtagerregioner"
 
 #: scripts/apps/archive/views/metadata-view.html:154
 msgid "Target Subscriber Types"
-msgstr ""
+msgstr "Modtagerabonnenttyper"
 
 #: scripts/apps/archive/views/metadata-view.html:144
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:108
 #: scripts/apps/templates/views/template-editor-modal.html:107
 msgid "Target Subscribers"
-msgstr ""
+msgstr "Modtagerabonnenter"
 
 #: scripts/apps/publish/views/subscribers.html:60
 msgid "Target Type"
-msgstr ""
+msgstr "Modtagertype"
 
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:130
 #: scripts/apps/ingest/views/settings/ingest-routing-action.html:46
 #: scripts/apps/templates/views/template-editor-modal.html:126
 msgid "Target Types"
-msgstr ""
+msgstr "Modtagertyper"
 
 #: scripts/apps/publish/views/subscribers.html:83
 msgid "Targetable by users"
-msgstr ""
+msgstr "Valgbar for brugere"
 
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:6
 msgid "Task Details"
@@ -6024,7 +6024,7 @@ msgstr "Test filter mod indhold"
 
 #: scripts/apps/products/views/product-test.html:14
 msgid "Test Products"
-msgstr ""
+msgstr "Testprodukter"
 
 #: scripts/core/lang/missing-translations-strings.js:4
 msgid "text"
@@ -6098,11 +6098,11 @@ msgstr "Fejl: Blev ikke tilknyttet som et take."
 
 #: scripts/apps/publish/views/subscribers.html:169
 msgid "There is no token for subscriber."
-msgstr ""
+msgstr "Abonnenten har ingen token."
 
 #: scripts/apps/highlights/controllers/HighlightsConfig.js:57
 msgid "There was a problem while saving highlights configuration"
-msgstr "Fejl: Fremhævningsopsætningen blev ikke gemt."
+msgstr "Fejl: Udvalgsopsætningen blev ikke gemt."
 
 #: scripts/apps/users/controllers/ChangeAvatarController.js:49
 #: scripts/apps/users/controllers/ChangeAvatarController.js:61
@@ -6184,7 +6184,7 @@ msgstr "Dette felt er obligatorisk"
 
 #: scripts/apps/authoring/authoring/directives/AuthoringEmbeddedDirective.js:34
 msgid "This is a corrected repeat."
-msgstr ""
+msgstr "Dette er en rettelse."
 
 #: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:141
 msgid "This item was locked by <b></b>."
@@ -6203,7 +6203,7 @@ msgid ""
 "This widget allows you to create literally any content view you may need in "
 "Superdesk, be it production or ingest. All you need is to select a desk, its"
 " stages or a saved search. Name your view once you are done. Enjoy!"
-msgstr ""
+msgstr "Her kan du lave din egen oversigt over alle typer indhold. Vælg redaktion og trin eller en gemt søgning, og giv visningen et navn."
 
 #: scripts/core/datetime/datetime.js:202
 msgid "Thursday"
@@ -6220,7 +6220,7 @@ msgstr "Tid per samtale"
 #: scripts/apps/archive/views/upload.html:68
 #: scripts/apps/authoring/views/change-image.html:101
 msgid "Time Restricted"
-msgstr ""
+msgstr "Tidsbegrænset"
 
 #: scripts/apps/archive/views/metadata-view.html:139
 #: scripts/core/ui/views/sd-timezone.html:1
@@ -6260,15 +6260,15 @@ msgstr "Skift tema"
 
 #: scripts/apps/search/index.js:68
 msgid "Toggles search view"
-msgstr ""
+msgstr "Skifter søgevisning"
 
 #: scripts/apps/authoring/widgets/widgets.js:175
 msgid "Toggles widget #"
-msgstr ""
+msgstr "Skifter widget #"
 
 #: scripts/apps/publish/views/subscribers.html:175
 msgid "Token expiry"
-msgstr ""
+msgstr "Token udløb"
 
 #: scripts/core/ui/views/datepicker-wrapper.html:7
 msgid "Tomorrow"
@@ -6288,7 +6288,7 @@ msgstr "Total:"
 
 #: scripts/core/lang/missing-translations-strings.js:16
 msgid "Transformation Rules Management"
-msgstr ""
+msgstr "Administration af transformationsregler"
 
 #: scripts/apps/translations/index.js:32
 msgid "Translate"
@@ -6304,7 +6304,7 @@ msgstr "Oversættelser"
 
 #: scripts/apps/publish/views/publish-queue.html:97
 msgid "Transmitted at"
-msgstr ""
+msgstr "Udgivet"
 
 #: scripts/apps/archive/views/upload.html:18
 msgid "Try again"
@@ -6431,17 +6431,17 @@ msgstr "KOMMENDE"
 
 #: scripts/core/lang/missing-translations-strings.js:22
 msgid "update"
-msgstr ""
+msgstr "opdatering"
 
 #: scripts/apps/archive/index.js:253
 #: scripts/apps/authoring/views/authoring-topbar.html:71
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:130
 msgid "Update"
-msgstr ""
+msgstr "Opdatering"
 
 #: scripts/apps/authoring/views/authoring-header.html:34
 msgid "UPDATE"
-msgstr ""
+msgstr "OPDATERING"
 
 #: scripts/apps/authoring/authoring/services/AuthoringService.js:99
 msgid "Update Created."
@@ -6449,7 +6449,7 @@ msgstr "Opdatering oprettet."
 
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:4
 msgid "Update Cycle:"
-msgstr ""
+msgstr "Opdateringsplan:"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:77
 msgid "Update every"
@@ -6477,7 +6477,7 @@ msgstr "opdater indtagskanalen {{name}}"
 
 #: scripts/core/lang/missing-translations-strings.js:33
 msgid "updated task {{ subject }} for item {{ type }}"
-msgstr ""
+msgstr "opgaven {{ subject }} for posten {{ type }} blev opdateret"
 
 #: scripts/apps/users/controllers/ChangeAvatarController.js:4
 msgid "Upload from computer"
@@ -6512,7 +6512,7 @@ msgstr "PRIORITET"
 
 #: scripts/apps/ingest/ingest-stats-widget/configuration.html:10
 msgid "Urgency stats"
-msgstr ""
+msgstr "Statistik for prioritet"
 
 #: scripts/apps/ingest/views/settings/reutersConfig.html:6
 msgid "URL for Authentication"
@@ -6522,11 +6522,11 @@ msgstr "URL til godkendelse"
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:33
 #: scripts/apps/templates/views/template-editor-modal.html:93
 msgid "Usage terms"
-msgstr ""
+msgstr "Vilkår for anvendelse"
 
 #: scripts/apps/users/controllers/ChangeAvatarController.js:6
 msgid "Use a Web URL"
-msgstr ""
+msgstr "Brug en webadresse (URL)"
 
 #: scripts/apps/authoring/views/confirm-media-associated.html:17
 msgid "Use Media"
@@ -6642,7 +6642,7 @@ msgstr "Brugere"
 
 #: scripts/core/lang/missing-translations-strings.js:8
 msgid "Users archive view format"
-msgstr ""
+msgstr "Brugers arkivvisningsformat"
 
 #: scripts/apps/users/config.js:54 scripts/apps/users/views/edit.html:9
 msgid "Users Profile"
@@ -6663,7 +6663,7 @@ msgstr "Version"
 
 #: scripts/apps/archive/views/metadata-view.html:108
 msgid "Version creator"
-msgstr ""
+msgstr "Version oprettet af"
 
 #: scripts/apps/authoring/versioning/versioning.js:6
 msgid "Versioning"
@@ -6729,7 +6729,7 @@ msgstr "Onsdag"
 
 #: scripts/apps/highlights/views/highlights_config_modal.html:37
 msgid "When creating a highlights package"
-msgstr ""
+msgstr "Ved oprettelse af en udvalgspakke"
 
 #: scripts/apps/workspace/content/views/schema-editor.html:90
 msgid "Width"
@@ -6805,7 +6805,7 @@ msgstr "Dit ur"
 
 #: scripts/apps/users/import/views/import-user.html:11
 msgid "Your Credentials"
-msgstr ""
+msgstr "Din legitimation"
 
 #: scripts/core/auth/login-modal.html:3
 msgid "Your session has expired."
