@@ -65,9 +65,14 @@ function onChange(content) {
     const decorativeStyles = highlightTypes.concat(['HIGHLIGHT', 'HIGHLIGHT_STRONG']);
     const cleanedContent = removeInlineStyles(content, decorativeStyles);
 
-    this.$rootScope.$apply(() => {
+    // sync controller to scope
+    this.$scope.$apply(() => {
         this.editorState = convertToRaw(cleanedContent);
         this.value = toHTML(cleanedContent);
+    });
+
+    // call on change with scope updated
+    this.$rootScope.$applyAsync(() => {
         this.onChange();
     });
 }
