@@ -224,16 +224,17 @@ mod.directive('sdPagination', ['$location', 'asset', 'lodash', function($locatio
             items: '='
         },
         link: function(scope, element, attrs) {
-            var size = 25;
+            const SIZE = 25;
 
-            scope.pgsizes = [25, 50, 100];
+            scope.pgsizes = [SIZE, SIZE * 2, SIZE * 4];
+
             scope.$watch('items._meta', (meta) => {
                 scope.total = 0;
                 if (meta) {
                     scope.total = meta.total;
                     scope.page = Number($location.search().page) || 1;
                     scope.limit = Number(localStorage.getItem('pagesize'))
-                        || Number($location.search().max_results) || size;
+                        || Number($location.search().max_results) || SIZE;
                     scope.lastPage = scope.limit ? Math.ceil(scope.total / scope.limit) : scope.page;
                     scope.from = (scope.page - 1) * scope.limit + 1;
                     scope.to = Math.min(scope.total, scope.from + scope.limit - 1);
@@ -264,7 +265,7 @@ mod.directive('sdPagination', ['$location', 'asset', 'lodash', function($locatio
             scope.setLimit = function(pagesize) {
                 localStorage.setItem('pagesize', pagesize);
                 scope.setPage(0);
-                $location.search('max_results', !_.isNil(pagesize) ? pagesize : size);
+                $location.search('max_results', !_.isNil(pagesize) ? pagesize : SIZE);
             };
         }
     };

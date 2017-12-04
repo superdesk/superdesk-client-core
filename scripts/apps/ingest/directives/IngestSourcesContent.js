@@ -5,7 +5,7 @@ IngestSourcesContent.$inject = ['ingestSources', 'gettext', 'notify', 'api', '$l
 export function IngestSourcesContent(ingestSources, gettext, notify, api, $location,
     modal, $filter, config, deployConfig) {
     return {
-        templateUrl: 'scripts/apps/ingest/views/settings/ingest-sources-content.html',
+        template: require('../views/settings/ingest-sources-content.html'),
         link: function($scope) {
             $scope.provider = null;
             $scope.origProvider = null;
@@ -35,11 +35,13 @@ export function IngestSourcesContent(ingestSources, gettext, notify, api, $locat
             $scope.fieldAliases = [];
 
             function fetchProviders() {
-                return api.ingestProviders.query({max_results: 200})
-                    .then((result) => {
-                        result._items = $filter('sortByName')(result._items);
-                        $scope.providers = result;
-                    });
+                return api.ingestProviders.query({
+                    max_results: $location.search().max_results || 25,
+                    page: $location.search().page || 1,
+                    sort: 'name',
+                }).then((result) => {
+                    $scope.providers = result;
+                });
             }
 
             function openProviderModal() {
@@ -341,6 +343,8 @@ export function IngestSourcesContent(ingestSources, gettext, notify, api, $locat
             function getCurrentService() {
                 return _.find($scope.feedingServices, {feeding_service: $scope.provider.feeding_service});
             }
+
+            $scope.$on('$locationChangeSuccess', fetchProviders);
         }
     };
 }
