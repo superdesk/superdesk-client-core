@@ -150,6 +150,7 @@ class Editor3Directive {
         this.showTitle = this.showTitle || false;
         this.highlights = typeof this.highlights !== 'undefined' && config.features.editorHighlights;
         this.$rootScope = $rootScope;
+        this.$scope = $scope;
 
         const store = createEditorStore(this);
 
