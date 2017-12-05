@@ -124,7 +124,7 @@ describe('core.editor3.html.to-html.AtomicBlockParser', () => {
 
         const html = new AtomicBlockParser(contentState).parse(block);
 
-        expect(html).toBe('<table><tbody><tr><td><p>a</p></td><td><p></p></td><td><p>c</p></td></tr>' +
+        expect(html).toBe('<table><tbody><tr><td><p>a</p></td><td></td><td><p>c</p></td></tr>' +
             '<tr><td><p>d</p></td><td><p>e</p></td><td><p>f</p></td></tr></tbody></table>');
     });
 
@@ -160,7 +160,7 @@ describe('core.editor3.html.to-html.AtomicBlockParser', () => {
 
         const html = new AtomicBlockParser(contentState).parse(block);
 
-        expect(html).toBe('<table><thead><tr><th><p>a</p></th><th><p></p></th><th><p>c</p></th></tr></thead>' +
+        expect(html).toBe('<table><thead><tr><th><p>a</p></th><th></th><th><p>c</p></th></tr></thead>' +
             '<tbody><tr><td><p>d</p></td><td><p>e</p></td><td><p>f</p></td></tr>' +
             '<tr><td><p>g</p></td><td><p>h</p></td><td><p>i</p></td></tr></tbody></table>');
     });
@@ -192,8 +192,8 @@ describe('core.editor3.html.to-html.AtomicBlockParser', () => {
 
         const html = new AtomicBlockParser(contentState).parse(block);
 
-        expect(html).toBe('<table><tbody><tr><td><p></p></td><td><p></p></td><td><p></p></td></tr>' +
-            '<tr><td><p></p></td><td><p></p></td><td><p></p></td></tr></tbody></table>');
+        expect(html).toBe('<table><tbody><tr><td></td><td></td><td></td></tr>' +
+            '<tr><td></td><td></td><td></td></tr></tbody></table>');
     });
 });
 

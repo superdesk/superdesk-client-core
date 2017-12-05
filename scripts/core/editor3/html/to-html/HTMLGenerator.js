@@ -163,6 +163,10 @@ export class HTMLGenerator {
 
         this.lastDepth = depth;
 
+        if (before === '<p>' && html === '' && after === '</p>') {
+            return '';
+        }
+
         return `${before}${html}${after}`;
     }
 
