@@ -105,7 +105,13 @@ export function ItemAssociationDirective(superdesk, renditions, config, authorin
                     if (scope.isMediaEditable()) {
                         const files = event.originalEvent.dataTransfer.files;
 
-                        superdesk.intent('upload', 'media', files).then((images) => {
+                        superdesk.intent('upload', 'media', {
+                            files: files,
+                            uniqueUpload: true,
+                            allowPicture: scope.allowPicture,
+                            allowVideo: scope.allowVideo,
+                            allowAudio: scope.allowAudio
+                        }).then((images) => {
                             // open the view to edit the PoI and the cropping areas
                             if (images) {
                                 scope.$applyAsync(() => {

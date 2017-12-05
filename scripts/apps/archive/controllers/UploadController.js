@@ -208,6 +208,10 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
     };
 
     if ($scope.locals && $scope.locals.data) {
-        $scope.addFiles($scope.locals.data);
+        if ($scope.locals.data.files) {
+            $scope.addFiles($scope.locals.data.files);
+        } else {
+            $scope.addFiles($scope.locals.data);
+        }
     }
 }
