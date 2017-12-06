@@ -163,8 +163,9 @@ const updateImage = (state, {entityKey, media}) => {
     const newEditorState = EditorState.push(editorState, newContentState, 'change-block-data');
     // focus the editor and softly force a refresh
     const newState = EditorState.forceSelection(newEditorState, selection);
+    const entityDataHasChanged = true;
 
-    return onChange(state, newState);
+    return onChange(state, newState, entityDataHasChanged);
 };
 
 /**
