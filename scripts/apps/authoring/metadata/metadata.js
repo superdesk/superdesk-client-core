@@ -17,7 +17,10 @@ function MetadataCtrl(
                             _.get($scope, 'origItem.type') === 'text';
 
     metadata.initialize().then(() => {
-        $scope.metadata = metadata.values;
+        $scope.$watch('item.language', (language) => {
+            $scope.metadata = metadata.getVocabulariesLocale(metadata.values, language);
+        });
+
         return preferencesService.get();
     })
         .then(setAvailableCategories)
@@ -356,7 +359,7 @@ function MetaDropdownDirective($filter) {
                 }
             };
 
-            scope.$watch(':: list', () => {
+            scope.$watch('list', () => {
                 scope.values = _.keyBy(scope.list, 'qcode');
             });
 
@@ -1132,6 +1135,31 @@ function MetadataService(api, subscribersService, config, vocabularies, $rootSco
         },
         priorityByValue: function(value) {
             return this._priorityByValue[value] || null;
+        },
+        getVocabulariesLocale: function(vocabularies, language) {
+            var localeVocabularies = {};
+
+            _.forEach(vocabularies, (vocabulary, key) => {
+                var localeVocabulary = _.map(vocabulary, (item) => {
+                    if (!item.translations) {
+                        return item;
+                    }
+
+                    var newItem = _.extend({}, item);
+
+                    _.forEach(newItem.translations, (values, field) => {
+                        if (field in newItem && language in values) {
+                            newItem[field] = values[language];
+                        }
+                    });
+
+                    return newItem;
+                });
+
+                localeVocabularies[key] = localeVocabulary;
+            });
+
+            return localeVocabularies;
         }
     };
 
