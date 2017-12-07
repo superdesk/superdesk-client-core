@@ -433,6 +433,11 @@
 			padding: 5px 10px 0 10px;
 		}
 
+		.DraftEditor-root {
+			max-height: 150px;
+			overflow-y: auto;
+		}
+
 		.Editor3-styleButton {
 			padding: 5px;
 			i { font-size: 13px; }
@@ -494,6 +499,8 @@
 	.dropdown__menu {
 		width: 250px;
 		padding: 15px;
+		max-height: 250px;
+		overflow-y: auto;
 	}
 
 	&__header {

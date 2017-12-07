@@ -39,6 +39,8 @@ export class HighlightsPopup extends Component {
     position() {
         const {left: editorLeft} = this.props.editorNode.getBoundingClientRect();
         const rect = getVisibleSelectionRect(window);
+        const maxHeight = $('div.auth-screen').height();
+        const maxTop = maxHeight - 60/* top & bottom bar */ - 250/* max dropdown height */;
 
         let top = 150;
         let left = editorLeft - 260;
@@ -51,6 +53,7 @@ export class HighlightsPopup extends Component {
             top = rect.top - topPadding;
         }
 
+        top = top > maxTop ? maxTop : top; // don't cut off bottom side of dropdown.
         this.lastTop = top; // if we lose rect, keep this for next time.
 
         return {top, left};
@@ -78,6 +81,13 @@ export class HighlightsPopup extends Component {
                 console.error('Invalid highlight type in HighlightsPopup.jsx: ', type);
             }
         };
+
+        const activeDropdown = $('.highlights-popup .dropdown__menu');
+
+        if (activeDropdown.length) {
+            // popup open, reset scroll position.
+            activeDropdown[0].scrollTo(0, 0);
+        }
 
         // We need to create a new provider here because this component gets rendered
         // outside the editor tree and loses context.
