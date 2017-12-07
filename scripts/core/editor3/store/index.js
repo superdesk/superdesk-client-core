@@ -67,7 +67,8 @@ function onChange(content) {
 
     // sync controller to scope
     this.$scope.$apply(() => {
-        this.editorState = convertToRaw(cleanedContent);
+        // to avoid merge of dictionaries in backend, editorState is wrapped in a list
+        this.editorState = [convertToRaw(cleanedContent)];
         this.value = toHTML(cleanedContent);
     });
 
@@ -87,8 +88,11 @@ function onChange(content) {
  */
 function getInitialContent(props) {
     // we have an editor state stored in the DB
-    if (props.editorState && typeof props.editorState === 'object') {
-        return applyInlineStyles(convertFromRaw(props.editorState)).contentState;
+    if (props.editorState) {
+        // suport for both regular and list wrapper versions of editor state
+        var editorState = (props.editorState instanceof Array) ? props.editorState[0] : props.editorState;
+
+        return applyInlineStyles(convertFromRaw(editorState)).contentState;
     }
 
     // we have only HTML (possibly legacy editor2 or ingested item)
