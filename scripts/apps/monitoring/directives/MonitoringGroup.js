@@ -369,6 +369,8 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                 } else if (scope.group.type === 'highlights') {
                     return monitoring.previewItem &&
                         _.includes(monitoring.previewItem.highlights, monitoring.queryParam.highlight);
+                } else if (scope.group.type === 'search') {
+                    return !!monitoring.previewItem;
                 }
 
                 return monitoring.previewItem && monitoring.previewItem.task.stage === scope.group._id;
