@@ -119,7 +119,7 @@ class ToolbarComponent extends Component {
                 <InlineStyleButtons />
 
                 {/* Formatting options */}
-                {has('anchor') &&
+                {has('link') &&
                     <SelectionButton
                         onClick={showPopup(PopupTypes.Link)}
                         iconName="link"
