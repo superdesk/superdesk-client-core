@@ -15,7 +15,7 @@ export function HistoryFactory(History, $window, $timeout) {
                 History.watch(expression, scope);
             }, 0, false);
             var onHistoryKey = function(event, cb) {
-                var modifier = event.ctrlKey || event.metaKey;
+                var modifier = (event.ctrlKey || event.metaKey) && !event.altKey && !event.shiftKey;
 
                 if (modifier && KeyOperations[event.keyCode]) {
                     cb();
