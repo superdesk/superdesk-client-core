@@ -5,7 +5,7 @@ export function ContentFilterSelectDirective(contentFilters) {
         scope: {model: '='},
         template: require('../views/content-filter-select.html'),
         link: (scope) => {
-            contentFilters.getAllContentFilters(1, [])
+            contentFilters.getAllContentFilters()
                 .then((filters) => {
                     scope.filters = filters;
                 });

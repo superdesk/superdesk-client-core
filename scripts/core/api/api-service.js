@@ -248,6 +248,34 @@ function APIProvider() {
 
         /**
          * @ngdoc method
+         * @name api#getAll
+         * @public
+         * @param {Object} params
+         * @description
+         * Retrieve all items of a query
+         */
+        Resource.prototype.getAll = function(params) {
+            function _getAll(page = 1, items = []) {
+                return this.query(Object.assign({max_results: 199, page: page}, params))
+                    .then((result) => {
+                        let pg = page;
+                        let merged = items.concat(result._items);
+
+                        if (result._links.next) {
+                            pg++;
+                            // p = p.then(_getAll.call(this, pg, merged));
+                            return _getAll.call(this, pg, merged);
+                        } else {
+                            // deferred.resolve(merged);
+                            return merged;
+                        }
+                    });
+            }
+            return _getAll.call(this);
+        };
+
+        /**
+         * @ngdoc method
          * @name api#getById
          * @public
          *
@@ -368,6 +396,10 @@ function APIProvider() {
                 url: urls.item(url),
                 params: params
             });
+        };
+
+        api.getAll = function apiGetAll(resource, params) {
+            return api(resource).getAll(params);
         };
 
         angular.forEach(apis, (config, apiName) => {

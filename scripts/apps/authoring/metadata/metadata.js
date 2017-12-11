@@ -1040,10 +1040,10 @@ function MetadataService(api, subscribersService, config, vocabularies, $rootSco
 
             self.values.authors = [];
 
-            return api.get('/users', {is_author: 1, max_results: 200}).then((result) => {
+            return api.getAll('users', {is_author: 1}).then((users) => {
                 var first;
 
-                _.each(result._items, (user) => {
+                _.each(users, (user) => {
                     var authorMetadata = {_id: user._id, name: user.display_name, user: user};
 
                     if (session.identity.is_author && user._id === session.identity._id) {
