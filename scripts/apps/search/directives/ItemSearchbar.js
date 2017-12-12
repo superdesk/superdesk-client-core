@@ -25,6 +25,7 @@ export function ItemSearchbar($location, $document, asset) {
 
                     scope.query = newQuery.join(' ');
                 }
+
                 $location.search('q', scope.query || null);
             };
 

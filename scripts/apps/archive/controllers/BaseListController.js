@@ -8,10 +8,10 @@ export class BaseListController {
         $scope.selected = {};
 
         $scope.fetchNext = (from) => {
-            var criteria = this.getQuery();
+            const source = this.getQuery(null, $scope.repo.archive || false);
 
-            criteria.from = from;
-            this.fetchItems({source: criteria}, true);
+            source.from = from;
+            this.fetchItems({source}, true);
         };
 
         $scope.$on('$routeUpdate', (e, data) => {

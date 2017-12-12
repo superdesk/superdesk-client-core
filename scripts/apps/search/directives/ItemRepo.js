@@ -109,10 +109,13 @@ export function ItemRepo(
                 return scope.repo && scope.repo.search && provider.source && scope.repo.search === provider.source;
             };
 
-            scope.toggleRepo = function(repoName) {
+            scope.toggleRepo = function(repoName, searchProvider) {
                 $location.search('');
                 scope.repo[repoName] = !scope.repo[repoName];
                 $location.search('repo', getActiveRepos());
+                if (searchProvider) {
+                    $location.search('repo', repoName);
+                }
             };
         }
     };

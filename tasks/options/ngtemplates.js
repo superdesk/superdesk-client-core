@@ -78,21 +78,10 @@ module.exports = {
                     return 'export default [];\r\n';
                 }
 
-                // abs returns the correct absolute path to be used with a require call. On Windows,
-                // it correctly converts backslash (\) characters to forward-slash (/).
-                let abs = (p) => {
-                    let abspath = path.join(process.cwd(), 'node_modules', p);
-
-                    if (/^win/.test(process.platform)) {
-                        return abspath.replace(/\\/g, '/');
-                    }
-                    return abspath;
-                };
-
-                let data = 'export default [\r\n\trequire("' + abs(paths[0]) + '").default.name';
+                let data = 'export default [\r\n\trequire("' + paths[0] + '").default.name';
 
                 for (var i = 1; i < paths.length; i++) {
-                    data += ',\r\n\trequire("' + abs(paths[i]) + '").default.name';
+                    data += ',\r\n\trequire("' + paths[i] + '").default.name';
                 }
 
                 return data + '\r\n];\r\n';

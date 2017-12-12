@@ -5,7 +5,7 @@
 @import '~variables.scss';
 
 .sd-widget {
-    &.ingest, &.archive, &.related-item, &.aggregate {
+    &.ingest, &.archive, &.related-item, &.aggregate, &.package-manager, &.packages {
         .widget-header {
             z-index: 1;
             background: $white;

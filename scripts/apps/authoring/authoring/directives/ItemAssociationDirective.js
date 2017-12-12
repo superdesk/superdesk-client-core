@@ -17,8 +17,8 @@
  */
 
 ItemAssociationDirective.$inject = ['superdesk', 'renditions', 'config', 'authoring', '$q',
-    'api', 'notify', 'gettext'];
-export function ItemAssociationDirective(superdesk, renditions, config, authoring, $q, api, notify, gettext) {
+    'api', 'notify', 'gettext', 'send'];
+export function ItemAssociationDirective(superdesk, renditions, config, authoring, $q, api, notify, gettext, send) {
     return {
         scope: {
             rel: '=',
@@ -63,8 +63,13 @@ export function ItemAssociationDirective(superdesk, renditions, config, authorin
                 let item = angular.fromJson(event.originalEvent.dataTransfer.getData(dataType));
 
                 if (item._type !== 'externalsource') {
+                    if (item._type === 'ingest') {
+                        return send.one(item);
+                    }
+
                     return api.find(item._type, item._id);
                 }
+
                 return $q.when(item);
             }
 
