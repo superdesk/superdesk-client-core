@@ -1,27 +1,88 @@
-import React from 'react';
-import {UserAvatar, TextWithMentions} from 'apps/users/components';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import moment from 'moment';
+import {connect} from 'react-redux';
+import {replyComment} from '../../actions';
+import {Comment} from './Comment';
 
-export const CommentPopup = ({comment}) => {
-    const {author, avatar, date, msg} = comment.data;
-    const fromNow = moment(date).calendar();
-    const fullDate = moment(date).format('MMMM Do YYYY, h:mm:ss a');
+/**
+ * @ngdoc React
+ * @module superdesk.core.editor3
+ * @name CommentPopupComponent
+ * @param {Function} replyComment Action to reply to a comment.
+ * @param {Comment} comment Comment to display.
+ * @description CommentPopup renders the popup which displays the content of a comment along
+ * with any replies.
+ */
+class CommentPopupComponent extends Component {
+    constructor(props) {
+        super(props);
 
-    return (
-        <div>
-            <div className="highlights-popup__header">
-                <UserAvatar displayName={author} pictureUrl={avatar} />
-                <div className="user-info">
-                    <div className="author-name">{author}</div>
-                    <div className="date" title={fullDate}>{fromNow}</div>
+        this.input = null;
+        this.postReply = this.postReply.bind(this);
+    }
+
+    /**
+     * @ngdoc method
+     * @name CommentPopup#postReply
+     * @param {SelectionState} selection Selection that represents the comment that is being
+     * replied to.
+     * @description Posts a reply to the comment on top of the given selection.
+     */
+    postReply(selection) {
+        const msg = this.input.value;
+
+        if (msg === '') {
+            return; // empty reply message.
+        }
+
+        this.props.replyComment(selection, {msg});
+        this.input.value = '';
+        this.forceUpdate();
+    }
+
+    componentDidMount() {
+        this.focusInput();
+    }
+
+    componentDidUpdate() {
+        // While this may deem handy, note that removing it will trigger a bug in DraftJS
+        // which stops the onChange handler from being called. For some reason, the textarea
+        // element in this popup is breaking DraftJS.
+        // TODO(x): Maybe this gets fixed in 0.11
+        this.focusInput();
+    }
+
+    focusInput() {
+        this.input.focus();
+    }
+
+    render() {
+        const {comment} = this.props;
+        const {replies} = comment.data;
+        const postReply = this.postReply.bind(this, comment.selection);
+
+        return (
+            <div>
+                <Comment data={comment.data} />
+
+                <div className="comment-replies">
+                    {replies.map((data, i) => <Comment key={i} data={data} className="small" />)}
+                </div>
+
+                <div className="comment-reply-input">
+                    <textarea ref={(el) => {
+                        this.input = el;
+                    }} />
+                    <a className="btn btn--small btn--hollow btn-reply" onClick={postReply}>Reply</a>
                 </div>
             </div>
-            <TextWithMentions className="highlights-popup__body">{msg}</TextWithMentions>
-        </div>
-    );
+        );
+    }
+}
+
+CommentPopupComponent.propTypes = {
+    comment: PropTypes.object,
+    replyComment: PropTypes.func,
 };
 
-CommentPopup.propTypes = {
-    comment: PropTypes.object
-};
+export const CommentPopup = connect(null, {replyComment})(CommentPopupComponent);

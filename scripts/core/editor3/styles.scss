@@ -503,6 +503,29 @@
 		overflow-y: auto;
 	}
 
+	.comment-replies {
+		margin: 10px 0;
+
+		.small {
+			font-size: 11px;
+			border-left: 5px solid #eaeaea;
+			border-bottom: 1px solid #eaeaea;
+			background: #fbfbfb;
+			padding: 10px 0 5px 10px;
+		}
+
+		.highlights-popup__header {
+			padding: 0 0 5px;
+		}
+	}
+
+	.comment-reply-input {
+		.btn-reply {
+			margin: 5px 0 0;
+			float: right;
+		}
+	}
+
 	&__header {
 		float: left;
 		padding: 0 0 15px;
