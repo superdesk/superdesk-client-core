@@ -31,7 +31,7 @@ class AnnotationInputBody extends Component {
 
         let body = null;
         let annotationTypes = ng.get('metadata').values.annotation_types;
-        let type = annotationTypes.length > 0 ? annotationTypes[0].name : '';
+        let type = annotationTypes.length > 0 ? annotationTypes[0].qcode : '';
 
         if (editing) {
             ({annotationType: type, msg: body} = data.annotation.data);
@@ -123,7 +123,7 @@ class AnnotationInputBody extends Component {
                             <label className="sd-line-input__label">Annotation Type</label>
                             <select className="sd-line-input__select" onChange={this.onSelect} value={type}>
                                 {annotationTypes.map((annotationType) =>
-                                    <option key={annotationType.name} value={annotationType.name}>
+                                    <option key={annotationType.qcode} value={annotationType.qcode}>
                                         {annotationType.name}
                                     </option>
                                 )}
