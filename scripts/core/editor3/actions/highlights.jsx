@@ -8,7 +8,10 @@ import ng from 'core/services/ng';
  * @return {String} action
  * @description Triggers the action to add a comment to the given selection.
  */
-export const applyComment = (s, data) => applyHighlight('COMMENT', s, data);
+export const applyComment = (s, data) => {
+    data.replies = [];
+    return applyHighlight('COMMENT', s, data);
+};
 
 /**
  * @ngdoc method
@@ -37,6 +40,29 @@ export const deleteHighlight = (h) => ({type: 'HIGHLIGHT_DELETE', payload: h});
  * @description Updates the highlight on the selection found in h with fresh data.
  */
 export const updateHighlight = (h) => ({type: 'HIGHLIGHT_UPDATE', payload: h});
+
+/**
+ * @ngdoc method
+ * @name replyComment
+ * @param {SelectionState} selection The selection where the comment that is being
+ * replied to is located.
+ * @return {Comment} data The actual reply.
+ * @description Adds a reply to the comment at selection, using the given data.
+ */
+export const replyComment = (selection, data) => {
+    const date = new Date();
+    const {display_name: author, email, picture_url: avatar} = ng.get('session').identity;
+
+    data.author = author;
+    data.email = email;
+    data.date = date;
+    data.avatar = avatar;
+
+    return {
+        type: 'HIGHLIGHT_COMMENT_REPLY',
+        payload: {selection, data},
+    };
+};
 
 // applyHighlights creates an action that applies the highlight of the given type to
 // selection and contains the given meta data.

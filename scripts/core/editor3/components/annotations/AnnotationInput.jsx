@@ -49,7 +49,7 @@ class AnnotationInputBody extends Component {
 
     /**
      * @ngdoc method
-     * @name CommentInput#onSubmit
+     * @name AnnotationInput#onSubmit
      * @description onSubmit is called when the user clicks the Submit button in the UI.
      * Consequently, it calls the `onSubmit` prop, passing it the value of the text input.
      */
@@ -77,7 +77,7 @@ class AnnotationInputBody extends Component {
 
     /**
      * @ngdoc method
-     * @name CommentInput#onChange
+     * @name AnnotationInput#onChange
      * @param {ContentState} content
      * @description onChange is triggered when the content of the editor changes.
      */
@@ -87,7 +87,7 @@ class AnnotationInputBody extends Component {
 
     /**
      * @ngdoc method
-     * @name CommentInput#onSelect
+     * @name AnnotationInput#onSelect
      * @param {Event} e
      * @description onSelect is triggered when the annotation type is toggled.
      */

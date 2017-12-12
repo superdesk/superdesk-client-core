@@ -12,7 +12,7 @@ import {PopupTypes} from '../../actions';
  * @param {Function} onCancel
  * @param {PopupTypes} type Popup type.
  * @param {Object} data Metadata to pass to the pop-up (generally the SelectionState in the editor at
- * the time.
+ * the time).
  * @description ToolbarPopupComponent renders the popup specified by the type property and passes it
  * the onCancel value along with the given prop data.
  */
