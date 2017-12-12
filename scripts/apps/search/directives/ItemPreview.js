@@ -1,5 +1,19 @@
-ItemPreview.$inject = ['asset', 'storage', 'desks', 'lodash', 'familyService', 'api', 'config'];
-export function ItemPreview(asset, storage, desks, _, familyService, api, config) {
+/**
+ * @ngdoc directive
+ * @module superdesk.apps.ItemPreview
+ * @name sdItemPreview
+ *
+ * @requires asset
+ * @requires storage
+ * @requires desks
+ * @requires lodash
+ * @requires familyService
+ * @requires privileges
+ *
+ * @description Handles the functionality of previewing content item.
+ */
+ItemPreview.$inject = ['asset', 'storage', 'desks', 'lodash', 'familyService', 'privileges'];
+export function ItemPreview(asset, storage, desks, _, familyService, privileges) {
     /**
      * @description Closes the preview panel if the currently previewed
      * item is spiked / unspiked or moved.
@@ -63,7 +77,7 @@ export function ItemPreview(asset, storage, desks, _, familyService, api, config
                     }
 
                     // item is associated to an assignment
-                    scope.isAssigned = scope.item.assignment_id && config.features.planning;
+                    scope.isAssigned = scope.item.assignment_id && _.get(privileges, 'privileges.planning');
 
                     if (scope.vm.current_tab === 'assignment' && !scope.isAssigned) {
                         scope.vm.current_tab = 'content';

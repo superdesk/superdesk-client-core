@@ -8,8 +8,10 @@ describe('sdItemPreview directive', () => {
 
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.mocks'));
+    beforeEach(window.module('superdesk.core.privileges'));
     beforeEach(window.module('superdesk.apps.archive'));
     beforeEach(window.module('superdesk.apps.vocabularies'));
+
 
     beforeEach(inject(($rootScope, $compile) => {
         let html = '<div sd-item-preview data-item="item" data-close="" data-show-history-tab="true"></div>';
@@ -159,5 +161,31 @@ describe('sdItemPreview directive', () => {
         scope.$apply();
 
         expect(iscope.close).toHaveBeenCalledTimes(0);
+    });
+
+    describe('assignment tab', () => {
+        it('can display the assignment tab', inject((privileges) => {
+            privileges.privileges = {planning: 1};
+
+            scope.item = {_id: '1', family_id: '1', _type: 'archive', assignment_id: '123'};
+            scope.$apply();
+            expect(iscope.isAssigned).toBeTruthy();
+        }));
+
+        it('cannot display the assignment tab if no assignment', inject((privileges) => {
+            privileges.privileges = {planning: 1};
+
+            scope.item = {_id: '1', family_id: '1', _type: 'archive'};
+            scope.$apply();
+            expect(iscope.isAssigned).toBeFalsy();
+        }));
+
+        it('cannot display the assignment tab if no privileges', inject((privileges) => {
+            privileges.privileges = {planning: 0};
+
+            scope.item = {_id: '1', family_id: '1', _type: 'archive', assignment_id: '123'};
+            scope.$apply();
+            expect(iscope.isAssigned).toBeFalsy();
+        }));
     });
 });
