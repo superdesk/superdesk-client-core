@@ -50,8 +50,9 @@ angular.module('superdesk.core.menu', [
         'asset',
         'privileges',
         'config',
+        'deployConfig',
         'lodash',
-        function($route, superdesk, betaService, userNotifications, asset, privileges, config, _) {
+        function($route, superdesk, betaService, userNotifications, asset, privileges, config, deployConfig, _) {
             return {
                 require: '^sdSuperdeskView',
                 templateUrl: asset.templateUrl('core/menu/views/menu.html'),
@@ -61,6 +62,10 @@ angular.module('superdesk.core.menu', [
                     scope.menu = [];
                     scope.isTestEnvironment = config.isTestEnvironment;
                     scope.environmentName = config.environmentName;
+
+                    deployConfig.get('feedback_url').then((url) => {
+                        scope.feedback_url = url;
+                    });
 
                     superdesk.getMenu(superdesk.MENU_MAIN)
                         .then(filterSettingsIfEmpty)
