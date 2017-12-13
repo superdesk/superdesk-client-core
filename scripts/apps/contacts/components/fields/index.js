@@ -6,3 +6,4 @@ export {VersionCreated} from './VersionCreated';
 export {Phone} from './Phone';
 export {Email} from './Email';
 export {OrgName} from './OrgName';
+export {Mobile} from './Mobile';

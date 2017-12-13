@@ -344,6 +344,7 @@ $sfbox_mediaMaxWidth : 172px;
             left: 20px;
         }
     }
+
     dl {
         @include clearfix();
         font-size: 11px;
@@ -406,7 +407,7 @@ $sfbox_mediaMaxWidth : 172px;
         left: 36px;
     }
 
-        .priority-label {
+    .priority-label {
         position: absolute;
         bottom: 7px;
         left: 60px;
@@ -476,8 +477,8 @@ $sfbox_mediaMaxWidth : 172px;
         @include media-box-generic;
 
         &.contacts {
-            min-height: $sfbox_minHeight;
-            min-width: $sfbox_minWidth * 2;
+            min-height: $sfbox_minHeight + 75; // 300px
+            min-width: $sfbox_minWidth * 2 + 73; // 425px
 
             .media {
                 height: 25px;
@@ -494,13 +495,30 @@ $sfbox_mediaMaxWidth : 172px;
                         color:#444;
                         font-weight:500;
                     }
-                }     
+                }
             }
 
             .org-label {
                 @extend .state-label;
                 background-color: $state-color-default;
                 color: $white !important;
+            }
+
+            .item-info {
+                padding: 10px 10px 10px 10px;
+                .container {
+                    @include text-semibold();
+                    color: #444;
+                    margin-right: 10px;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    &.link {
+                        color: $sd-blue-text;
+                        @include text-light();
+                        text-overflow: ellipsis;
+                    }
+                }
             }
 
             .update-info {
@@ -518,11 +536,16 @@ $sfbox_mediaMaxWidth : 172px;
                 display: flex;
             }
 
+            .contact-name {
+                @extend .keyword;
+                font-size: 1.1em;
+            }
+
             .item-notes {
                 overflow: hidden;
                 text-overflow: ellipsis;
                 margin: 0 5px 0 5px;
-                max-width: 320px;
+                max-width: 390px;
                 display: flex;
             }
         }

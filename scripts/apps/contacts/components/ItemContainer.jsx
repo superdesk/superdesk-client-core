@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {find} from 'lodash';
+import {find, join, map} from 'lodash';
 
 export class ItemContainer extends React.Component {
     constructor(props) {
@@ -9,16 +9,17 @@ export class ItemContainer extends React.Component {
         this.init();
     }
 
-    getPhoneValue(item) {
-        return find(item.phone, 'number') ? find(item.phone, 'number').number : null;
+    getContactNumber(item, field) {
+        return find(item[field], 'number') ? join(map(item[field], 'number'), ', ') : null;
     }
 
-    getPhoneTitle(item) {
-        return find(item.phone, 'usage') ? find(item.phone, 'usage').usage : null;
+    getContactNumberTitle(item, field) {
+        return find(item[field], 'usage') ? join(map(item[field], 'usage'), ', ') : null;
     }
+
 
     getEmailValue(item) {
-        return item.email ? item.email[0] : null;
+        return item.email ? join(item.email, ', ') : null;
     }
 
     init() {
@@ -33,15 +34,20 @@ export class ItemContainer extends React.Component {
 
         switch (key) {
         case 'phone':
-            value = this.getPhoneValue(item);
-            title = value && gettextCatalog.getString(this.getPhoneTitle(item));
+            value = this.getContactNumber(item, key);
+            title = value && gettextCatalog.getString(this.getContactNumberTitle(item, key));
+            break;
+        case 'mobile':
+            value = this.getContactNumber(item, key);
+            title = value && gettextCatalog.getString(this.getContactNumberTitle(item, key));
             break;
         case 'email':
             value = this.getEmailValue(item);
             _class = _link;
             break;
         case 'website':
-            value = item.website;
+            value = (<a href={item.website} target="_blank">{item.website}</a>);
+            title = value && gettextCatalog.getString(item.website);
             _class = _link;
             break;
         case 'twitter':
@@ -49,7 +55,8 @@ export class ItemContainer extends React.Component {
             _class = _link;
             break;
         case 'facebook':
-            value = item.facebook;
+            value = (<a href={item.facebook} target="_blank">{item.facebook}</a>);
+            title = value && gettextCatalog.getString(item.facebook);
             _class = _link;
             break;
         }
@@ -58,7 +65,8 @@ export class ItemContainer extends React.Component {
 
         this.elemProps = {
             key: key,
-            className: _class, title: title ? title : altTitle
+            className: _class,
+            title: title ? title : altTitle
         };
 
         this.elemValue = value;
