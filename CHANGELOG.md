@@ -1,5 +1,74 @@
 # Superdesk Client Changelog
 
+## [1.9.0] 2017-12-13
+
+### Fixed
+
+- Fix check spelling shortuct not working when body html has the focus.
+- Lists for ingest saved searches are not refreshed in monitoring when preview is open.
+- Siplay custom error message on item lock failure. 
+- Fix the refresh for monitoring widget when item is ingested/updated.
+- Load Tansa module in async mode when used.
+- Fix the need to save twice in upload form.
+- Fix drag&drop from external folder to feature media field.
+- Allow removing of highlight from spiked item.
+- Fix edit crops button in multi edit.
+- Add image metadata to item lists.
+- Fix upload input fields.
+- Fix reset password button.
+- Fix missing content templates in desks settings.
+- Fix highlights issues in preview.
+- Fix weekdays toggle styles.
+- Remove authoring and side navigation from Publish Queue.
+- Fix `sd-splitter` issues.
+- Fix priority/urgency fields styles.
+- Refactor send panel - add scroll on small screens.
+- Filter condition field name improvements.
+
+### Added
+
+- Add annotations to editor3.
+- Add support for translations of vocabularies in authoring.
+- Add pagination to ingest providers settings.
+- Add Contacts management view.
+- Add Slack channel setting to Desks and Slack user name to User profile.
+- Allow custom schema/editor config for core types.
+- Add confirm dialog to quick publish buttons.
+- Add secret token field to HTTP Push subscriber settings.
+- Allow usage of custom cvs in filter conditions.
+- Add time to read to authoring.
+- Add Author field to authoring header.
+- Arabic translation added.
+- Add text helper field for custom fields.
+- Add author flag to user management.
+- Add title to image preview in authoring.
+- Allow hiding of certain user profile fields via config.
+- Add Attachments authoring widget.
+- Support custom fields in content profiles.
+- Re-instance the subscriber tab in products management.
+- Save dateline in user preferences.
+- Add app extension points to authoring.
+- Display notifications via desktop notifications.
+- Add env var setting for environment name.
+- Show scheduled date/time for scheduled content.
+- Support language field in authoring header.
+- Add name for custom workspace to monitoring.
+- Allow new vocabulary creation.
+- Add SAML auth support.
+- Add Compare versions view. 
+- Support object type fields in vocabulary schema.
+- Add move path to FTP ingest settings.
+- Add editor3 option to content profiles.
+
+### Changed
+
+- Disable publishing from desks type authoring.
+- Make Sign-off field in user profile not required.
+- Avoid Tansa when publishing.
+- Improve content profile management UI.
+- Refactor Settings UI.
+- Takes are removed from core.
+
 ## [1.8.2] 2017-10-12
 
 ### Fixed
