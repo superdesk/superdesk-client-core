@@ -10,6 +10,8 @@ import ng from 'core/services/ng';
  */
 export const applyComment = (s, data) => {
     data.replies = [];
+    data.resolved = false;
+
     return applyHighlight('COMMENT', s, data);
 };
 
@@ -63,6 +65,18 @@ export const replyComment = (selection, data) => {
         payload: {selection, data},
     };
 };
+
+/**
+ * @ngdoc method
+ * @name resolveComment
+ * @param {SelectionState} selection Location of comment to resolve.
+ * @return {String} action
+ * @description Resolves the comment at selection.
+ */
+export const resolveComment = ({selection}) => ({
+    type: 'HIGHLIGHT_COMMENT_RESOLVE',
+    payload: {selection}
+});
 
 // applyHighlights creates an action that applies the highlight of the given type to
 // selection and contains the given meta data.

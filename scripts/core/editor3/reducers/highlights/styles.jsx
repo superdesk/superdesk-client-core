@@ -61,7 +61,8 @@ export function removeInlineStyles(content, styles = highlightTypes) {
  * if one was selected.
  */
 export function applyInlineStyles(content, cursor = null) {
-    const data = getHighlights(content);
+    const includeResolved = false;
+    const data = getHighlights(content, includeResolved);
 
     if (data.isEmpty()) {
         return {contentState: content};

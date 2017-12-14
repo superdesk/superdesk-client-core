@@ -19,7 +19,15 @@ import {Map} from 'immutable';
  * @param {ContentState} content
  * @returns {Map<SelectionState, Highlight>}
  */
-export const getHighlights = (content) => content.getFirstBlock().getData();
+export const getHighlights = (content, includeResolved = true) => {
+    let data = content.getFirstBlock().getData();
+
+    if (!includeResolved) {
+        data = data.filter(({resolved}) => !resolved);
+    }
+
+    return data;
+};
 
 /**
  * @description Adds a new highlight to the editor state for the given selection
