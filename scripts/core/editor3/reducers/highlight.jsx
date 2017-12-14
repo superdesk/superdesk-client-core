@@ -11,10 +11,23 @@ const highlights = (state = {}, action) => {
         return replaceHighlight(state, action.payload);
     case 'HIGHLIGHT_COMMENT_REPLY':
         return replyComment(state, action.payload);
+    case 'HIGHLIGHT_COMMENT_RESOLVE':
+        return resolveComment(state, action.payload);
     default:
         return state;
     }
 };
+
+/**
+ * @ngdoc method
+ * @name resolveComment
+ * @param {SelectionState} selection The selection of the comment being resolved.
+ * @description Resolved the comment at selection.
+ */
+const resolveComment = (state, {selection}) =>
+    updateComment(state, selection, (comment) => {
+        comment.resolved = true;
+    });
 
 /**
  * @ngdoc method
@@ -23,19 +36,10 @@ const highlights = (state = {}, action) => {
  * @param {Object} data The actual reply.
  * @description Applies a reply to the comment at selection, having the given data.
  */
-const replyComment = (state, {selection, data}) => {
-    const content = state.editorState.getCurrentContent();
-    const all = getHighlights(content);
-    const key = JSON.stringify(selection.toJSON());
-    const comment = all.get(key);
-
-    comment.replies.push(data);
-
-    return replaceHighlight(state, {
-        selection: selection,
-        data: comment,
+const replyComment = (state, {selection, data}) =>
+    updateComment(state, selection, (comment) => {
+        comment.replies.push(data);
     });
-};
 
 /**
  * @ngdoc method
@@ -43,10 +47,11 @@ const replyComment = (state, {selection, data}) => {
  * @param {Object} Highlight data and selection.
  * @description Applies the given highlight to the given selection.
  */
-const applyHighlight = (state, {data, selection}) => onChange(
-    state,
-    addHighlight(state.editorState, selection, data)
-);
+const applyHighlight = (state, {data, selection}) =>
+    onChange(
+        state,
+        addHighlight(state.editorState, selection, data)
+    );
 
 /**
  * @ngdoc method
@@ -54,10 +59,11 @@ const applyHighlight = (state, {data, selection}) => onChange(
  * @param {Object} Highlight data and selection.
  * @description Deletes the given highlight.
  */
-const deleteHighlight = (state, highlight) => onChange(
-    state,
-    removeHighlight(state.editorState, highlight)
-);
+const deleteHighlight = (state, highlight) =>
+    onChange(
+        state,
+        removeHighlight(state.editorState, highlight)
+    );
 
 /**
  * @ngdoc method
@@ -66,9 +72,35 @@ const deleteHighlight = (state, highlight) => onChange(
  * @description Attempts to update the highlight located on the selection
  * with the new data.
  */
-const replaceHighlight = (state, highlight) => onChange(
-    state,
-    updateHighlight(state.editorState, highlight)
-);
+const replaceHighlight = (state, highlight) =>
+    onChange(
+        state,
+        updateHighlight(state.editorState, highlight)
+    );
+
+/**
+ * @ngdoc method
+ * @name updateComment
+ * @param {Object} state The store state. Used to obtain the editor's content.
+ * @param {SelectionState} selection The selection of the comment to be affected.
+ * @param {Function<Comment>} fn A function that will take a comment as a parameter.
+ * The function may change comment properties, for it to be submitted after its call.
+ * @description Takes a function that will receive as a parameter the comment located
+ * at the given selection. The function can modify the comment as it pleases, for it
+ * to be updated after its call.
+ */
+const updateComment = (state, selection, fn) => {
+    const content = state.editorState.getCurrentContent();
+    const all = getHighlights(content);
+    const key = JSON.stringify(selection.toJSON());
+    const comment = all.get(key);
+
+    fn(comment);
+
+    return replaceHighlight(state, {
+        selection: selection,
+        data: comment,
+    });
+};
 
 export default highlights;

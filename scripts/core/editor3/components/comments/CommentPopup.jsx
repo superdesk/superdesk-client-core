@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
-import {replyComment, deleteHighlight} from '../../actions';
+import {replyComment, deleteHighlight, resolveComment} from '../../actions';
 import {Comment} from './Comment';
 import ng from 'core/services/ng';
 
@@ -60,18 +60,20 @@ class CommentPopupComponent extends Component {
 
     render() {
         const {comment} = this.props;
-        const {replies} = comment.data;
-        const postReply = this.postReply.bind(this, comment.selection);
+        const {replies, resolved} = comment.data;
         const isAuthor = comment.data.email === this.currentUser;
-        const modal = ng.get('modal');
-        const deleteComment = () => modal
+
+        const onReply = this.postReply.bind(this, comment.selection);
+        const onResolve = this.props.resolveComment.bind(this, comment);
+        const onDelete = () => ng.get('modal')
             .confirm(gettext('The comment will be deleted. Are you sure?'))
             .then(() => this.props.deleteHighlight(comment));
 
         return (
             <div>
                 <Comment data={comment.data} />
-                {isAuthor && <a className="btn btn--small btn--hollow" onClick={deleteComment}>Delete</a>}
+                {isAuthor && <a className="btn btn--small btn--hollow" onClick={onDelete}>{gettext('Delete')}</a>}
+                {!resolved && <a className="btn btn--small btn--hollow" onClick={onResolve}>{gettext('Resolve')}</a>}
 
                 <div className="comment-replies">
                     {replies.map((data, i) => <Comment key={i} data={data} className="small" />)}
@@ -81,7 +83,7 @@ class CommentPopupComponent extends Component {
                     <textarea ref={(el) => {
                         this.input = el;
                     }} />
-                    <a className="btn btn--small btn--hollow btn-reply" onClick={postReply}>Reply</a>
+                    <a className="btn btn--small btn--hollow btn-reply" onClick={onReply}>{gettext('Reply')}</a>
                 </div>
             </div>
         );
@@ -91,6 +93,8 @@ class CommentPopupComponent extends Component {
 CommentPopupComponent.propTypes = {
     comment: PropTypes.object,
     replyComment: PropTypes.func,
+    resolveComment: PropTypes.func,
+    deleteHighlight: PropTypes.func,
 };
 
-export const CommentPopup = connect(null, {replyComment, deleteHighlight})(CommentPopupComponent);
+export const CommentPopup = connect(null, {replyComment, deleteHighlight, resolveComment})(CommentPopupComponent);
