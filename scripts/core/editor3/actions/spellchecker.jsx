@@ -26,3 +26,17 @@ export function refreshWord(word) {
         payload: word
     };
 }
+
+/**
+ * @ngdoc method
+ * @name setAutoSpellchecker
+ * @param {Boolean} enabled True if the autospellchecker should be enabled
+ * @return {String} action
+ * @description Enable/disable auto mode for spellchecker.
+ */
+export function setAutoSpellchecker(enabled) {
+    return {
+        type: 'SPELLCHECKER_AUTO',
+        payload: enabled
+    };
+}
