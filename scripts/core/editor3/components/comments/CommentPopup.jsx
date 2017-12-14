@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
-import {replyComment} from '../../actions';
+import {replyComment, deleteHighlight} from '../../actions';
 import {Comment} from './Comment';
+import ng from 'core/services/ng';
 
 /**
  * @ngdoc React
@@ -18,6 +19,7 @@ class CommentPopupComponent extends Component {
         super(props);
 
         this.input = null;
+        this.currentUser = ng.get('session').identity.email;
         this.postReply = this.postReply.bind(this);
     }
 
@@ -60,10 +62,16 @@ class CommentPopupComponent extends Component {
         const {comment} = this.props;
         const {replies} = comment.data;
         const postReply = this.postReply.bind(this, comment.selection);
+        const isAuthor = comment.data.email === this.currentUser;
+        const modal = ng.get('modal');
+        const deleteComment = () => modal
+            .confirm(gettext('The comment will be deleted. Are you sure?'))
+            .then(() => this.props.deleteHighlight(comment));
 
         return (
             <div>
                 <Comment data={comment.data} />
+                {isAuthor && <a className="btn btn--small btn--hollow" onClick={deleteComment}>Delete</a>}
 
                 <div className="comment-replies">
                     {replies.map((data, i) => <Comment key={i} data={data} className="small" />)}
@@ -85,4 +93,4 @@ CommentPopupComponent.propTypes = {
     replyComment: PropTypes.func,
 };
 
-export const CommentPopup = connect(null, {replyComment})(CommentPopupComponent);
+export const CommentPopup = connect(null, {replyComment, deleteHighlight})(CommentPopupComponent);
