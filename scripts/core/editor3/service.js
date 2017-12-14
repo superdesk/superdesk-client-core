@@ -94,26 +94,42 @@ export class EditorService {
 
     /**
      * @ngdoc method
-     * @name editor3#setSettings
+     * @name editor3#setSearchCriteria
      * @param {Object} findReplace The new search criteria. An object containing the keys
      * caseSensitive (boolean) and diff (object having one key that is the pattern).
      * @description Updates the search criteria.
      */
-    setSettings({findreplace}) {
-        if (!ok()) {
-            return;
-        }
-
-        if (findreplace === null) {
+    setSearchCriteria(criteria) {
+        if (criteria === null) {
             store.dispatch(action.setHighlightCriteria({pattern: ''}));
 
             return;
         }
 
-        const {diff, caseSensitive} = findreplace;
+        const {diff, caseSensitive} = criteria;
         const pattern = Object.keys(diff || {})[0] || '';
 
         store.dispatch(action.setHighlightCriteria({pattern, caseSensitive}));
+    }
+
+    /**
+     * @ngdoc method
+     * @name editor3#setSettings
+     * @param {Object} The setting can be findreplace or spellcheck.
+     * @description Updates the settings for editor3.
+     */
+    setSettings({findreplace, spellcheck}) {
+        if (!ok()) {
+            return;
+        }
+
+        if (typeof findreplace !== 'undefined') {
+            this.setSearchCriteria(findreplace);
+        }
+
+        if (typeof spellcheck !== 'undefined') {
+            store.dispatch(action.setAutoSpellchecker(spellcheck));
+        }
     }
 
     /**

@@ -440,8 +440,8 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _) {
     });
 }
 
-SpellcheckMenuController.$inject = ['editor', 'preferencesService'];
-function SpellcheckMenuController(editor, preferencesService) {
+SpellcheckMenuController.$inject = ['$rootScope', 'editorResolver', 'preferencesService'];
+function SpellcheckMenuController($rootScope, editorResolver, preferencesService) {
     this.isAuto = null;
     this.spellcheck = spellcheck;
     this.pushSettings = pushSettings;
@@ -481,13 +481,23 @@ function SpellcheckMenuController(editor, preferencesService) {
      * Force spell ckecking
      */
     function spellcheck() {
-        editor.render(true);
+        const editor = editorResolver.get();
+
+        if (editor && editor.version() === '3') {
+            // on editor3 set auto spellcheck when the spellcheck is run
+            self.isAuto = true && !useTansaProofing();
+            pushSettings();
+        } else {
+            editor.render(true);
+        }
     }
 
     /**
      * render the editor based on the spell check settings.
      */
     function render() {
+        const editor = editorResolver.get();
+
         editor.setSettings({spellcheck: self.isAuto});
         editor.render();
     }
@@ -500,8 +510,15 @@ function SpellcheckMenuController(editor, preferencesService) {
         setStatus(self.isAuto);
     }
 
+    /**
+     * check if tansa is activated
+     */
+    function useTansaProofing() {
+        return $rootScope.config.features && $rootScope.config.features.useTansaProofing;
+    }
+
     getStatus().then((status) => {
-        self.isAuto = status;
+        self.isAuto = status && !useTansaProofing();
         render();
     });
 }

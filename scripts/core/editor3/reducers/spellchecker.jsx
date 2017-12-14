@@ -1,5 +1,6 @@
 import {EditorState, Modifier} from 'draft-js';
 import {onChange} from './editor3';
+import {Editor3} from '../components/Editor3';
 
 const spellchecker = (state = {}, action) => {
     switch (action.type) {
@@ -7,6 +8,8 @@ const spellchecker = (state = {}, action) => {
         return replaceWord(state, action.payload);
     case 'SPELLCHECKER_REFRESH_WORD':
         return refreshWord(state, action.payload);
+    case 'SPELLCHECKER_AUTO':
+        return autoSpellchecker(state, action.payload);
     default:
         return state;
     }
@@ -46,5 +49,22 @@ const replaceWord = (state, {word, newWord}) => {
  * dictionary).
  */
 const refreshWord = (state, word) => replaceWord(state, {word: word, newWord: word.text});
+
+/**
+ * @ngdoc method
+ * @name autoSpelchecker
+ * @param {Object} state
+ * @param {Boolean} enabled True if the autospellchecker should be enabled
+ * @return {Object} returns new state
+ * @description Disable/enable auto mode for spellchecker.
+ */
+const autoSpellchecker = (state, enabled) => {
+    const {editorState} = state;
+    const content = editorState.getCurrentContent();
+    const decorators = Editor3.getDecorator(!enabled);
+    const newState = EditorState.createWithContent(content, decorators);
+
+    return onChange(state, newState);
+};
 
 export default spellchecker;

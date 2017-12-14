@@ -20,10 +20,11 @@ describe('spellcheck', () => {
         errors = [];
 
     beforeEach(window.module(($provide) => {
-        $provide.constant('config', {server: {url: undefined}, iframely: {key: '123'}, editor: {}});
+        $provide.constant('config', {server: {url: undefined}, iframely: {key: '123'}, editor: {}, features: {}});
     }));
 
     beforeEach(window.module('superdesk.apps.editor2'));
+    beforeEach(window.module('superdesk.core.editor3'));
     beforeEach(window.module('superdesk.apps.spellcheck'));
     beforeEach(window.module('superdesk.core.preferences'));
     beforeEach(window.module('superdesk.apps.vocabularies'));
@@ -266,27 +267,29 @@ describe('spellcheck', () => {
     }
 
     describe('spellcheck menu', () => {
-        it('can toggle auto spellcheck', inject((editor, $controller, $rootScope, preferencesService) => {
-            var ctrl = $controller('SpellcheckMenu');
+        it('can toggle auto spellcheck',
+            inject((editor, editorResolver, $controller, $rootScope, preferencesService) => {
+                var ctrl = $controller('SpellcheckMenu');
 
-            expect(ctrl.isAuto).toBe(null);
+                expect(ctrl.isAuto).toBe(null);
 
-            $rootScope.$digest();
-            expect(ctrl.isAuto).toBe(true);
-            expect(preferencesService.get).toHaveBeenCalledWith('spellchecker:status');
+                $rootScope.$digest();
+                expect(ctrl.isAuto).toBe(true);
+                expect(preferencesService.get).toHaveBeenCalledWith('spellchecker:status');
 
-            ctrl.pushSettings();
-            expect(editor.settings.spellcheck).toBe(true);
-            expect(preferencesService.update).toHaveBeenCalled();
+                ctrl.pushSettings();
+                expect(editor.settings.spellcheck).toBe(true);
+                expect(preferencesService.update).toHaveBeenCalled();
 
-            ctrl.isAuto = false;
-            ctrl.pushSettings();
-            expect(editor.settings.spellcheck).toBe(false);
-            expect(preferencesService.update).toHaveBeenCalled();
+                ctrl.isAuto = false;
+                ctrl.pushSettings();
+                expect(editor.settings.spellcheck).toBe(false);
+                expect(preferencesService.update).toHaveBeenCalled();
 
-            spyOn(editor, 'render');
-            ctrl.spellcheck();
-            expect(editor.render).toHaveBeenCalled();
-        }));
+                spyOn(editor, 'render');
+                ctrl.spellcheck();
+                expect(editor.render).toHaveBeenCalled();
+            })
+        );
     });
 });
