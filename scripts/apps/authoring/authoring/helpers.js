@@ -17,6 +17,7 @@ export const CONTENT_FIELDS_DEFAULTS = Object.freeze({
     authors: [],
     place: [],
     dateline: {},
+    destination: [],
     language: null,
     unique_name: '',
     keywords: [],
