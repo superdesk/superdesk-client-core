@@ -18,7 +18,7 @@ function MetadataCtrl(
 
     metadata.initialize().then(() => {
         $scope.$watch('item.language', (language) => {
-            $scope.metadata = metadata.getVocabulariesLocale(metadata.values, language);
+            $scope.metadata = metadata.getLocaleItemsForCvs(metadata.values, language);
         });
 
         return preferencesService.get();
@@ -653,6 +653,7 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
                 scope.tree = tree;
                 scope.activeTree = tree.null;
                 scope.combinedList = _.union(scope.list, scope.item[scope.field] ? scope.item[scope.field] : []);
+                scope.selectedItems = getSelected(items);
             });
 
             scope.$watch('item[field]', (selected) => {
@@ -734,6 +735,21 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
                 });
 
                 return _.filter(terms, (term) => term && !selected[term[scope.uniqueField]]);
+            }
+
+            /**
+             * Return the list of locale selected items
+             */
+            function getSelected(terms) {
+                var selected = {};
+
+                angular.forEach(scope.item[scope.field], (term) => {
+                    if (term) {
+                        selected[term[scope.uniqueField]] = 1;
+                    }
+                });
+
+                return _.filter(terms, (term) => term && selected[term[scope.uniqueField]]);
             }
 
             function addTerm(term) {
@@ -1083,21 +1099,22 @@ function MetadataService(api, subscribersService, config, vocabularies, $rootSco
                 self.values.cities = result._items;
             });
         },
-        filterCvs: function(qcodes, cvs) {
+        filterCvs: function(qcodes, cvs, language) {
             var self = this;
 
             self.cvs.forEach((cv) => {
                 var cvService = cv.service || {};
                 var match = false;
+                var localeItems = self.getLocaleItems(cv.items, language);
 
                 if (cvService.all) {
                     match = true;
-                    cv.terms = self.filterByService(cv.items, qcodes);
+                    cv.terms = self.filterByService(localeItems, qcodes);
                 } else {
                     qcodes.forEach((qcode) => {
                         match = match || cvService[qcode];
                     });
-                    cv.terms = cv.items;
+                    cv.terms = localeItems;
                 }
 
                 if (match) {
@@ -1136,30 +1153,36 @@ function MetadataService(api, subscribersService, config, vocabularies, $rootSco
         priorityByValue: function(value) {
             return this._priorityByValue[value] || null;
         },
-        getVocabulariesLocale: function(vocabularies, language) {
-            var localeVocabularies = {};
+        setLocaleTerms: function(cvs, language) {
+            cvs.forEach((cv) => {
+                cv.terms = this.getLocaleItems(cv.items, language);
+            });
+        },
+        getLocaleItemsForCvs: function(itemsForCvs, language) {
+            var localeItemsForCvs = {};
 
-            _.forEach(vocabularies, (vocabulary, key) => {
-                var localeVocabulary = _.map(vocabulary, (item) => {
-                    if (!item.translations) {
-                        return item;
-                    }
-
-                    var newItem = _.extend({}, item);
-
-                    _.forEach(newItem.translations, (values, field) => {
-                        if (field in newItem && language in values) {
-                            newItem[field] = values[language];
-                        }
-                    });
-
-                    return newItem;
-                });
-
-                localeVocabularies[key] = localeVocabulary;
+            _.forEach(itemsForCvs, (items, key) => {
+                localeItemsForCvs[key] = this.getLocaleItems(items, language);
             });
 
-            return localeVocabularies;
+            return localeItemsForCvs;
+        },
+        getLocaleItems: function(items, language) {
+            return _.map(items, (item) => {
+                if (!item.translations) {
+                    return item;
+                }
+
+                var newItem = _.extend({}, item);
+
+                _.forEach(newItem.translations, (values, field) => {
+                    if (field in newItem && language in values) {
+                        newItem[field] = values[language];
+                    }
+                });
+
+                return newItem;
+            });
         }
     };
 
