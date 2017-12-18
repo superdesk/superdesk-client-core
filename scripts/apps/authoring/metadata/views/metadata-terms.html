@@ -34,7 +34,7 @@
             </button>
         </li>
         <li class="main-list" ng-if="activeTree.length && !activeList && header" ng-class="{active: activeTerm}" ng-hide="allSelected">
-            <ul vs-repeat vs-scroll-parent=".main-list" vs-size="activeTree.length">
+            <ul vs-repeat vs-scroll-parent=".main-list">
                 <li ng-repeat="term in activeTree track by term[uniqueField]">
                     <button ng-if="tree[term[uniqueField]]" class="nested-toggle" ng-click="openTree(term, $event)">
                         <figure ng-if="term.user" class="avatar">
