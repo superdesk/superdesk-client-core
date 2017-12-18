@@ -53,11 +53,11 @@
     <ul>
         <li ng-if="!disabled && !t.sub_label" class="pull-left"
             ng-repeat="t in selectedItems track by t[uniqueField]"
-            ng-click="removeTerm(t)">{{ :: t.name}}<i class="icon-close-small"></i></li>
+            ng-click="removeTerm(t)">{{t.name}}<i class="icon-close-small"></i></li>
         <li ng-if="!disabled && t.sub_label" class="pull-left"
             ng-repeat="t in selectedItems track by t[uniqueField]"
-            ng-click="removeTerm(t)"><label>{{ :: t.name}}:</label>{{ :: t.sub_label}}<i class="icon-close-small"></i></li>
+            ng-click="removeTerm(t)"><label>{{ :: t.name}}:</label>{{t.sub_label}}<i class="icon-close-small"></i></li>
         <li ng-if="disabled" class="pull-left disabled"
-            ng-repeat="t in selectedItems track by t[uniqueField]">{{ :: t.name}}</li>
+            ng-repeat="t in selectedItems track by t[uniqueField]">{{t.name}}</li>
     </ul>
 </div>
