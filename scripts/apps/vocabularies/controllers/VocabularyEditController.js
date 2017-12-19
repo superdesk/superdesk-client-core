@@ -36,9 +36,10 @@ export function VocabularyEditController($scope, gettext, notify, api, vocabular
         }
     }
 
-    function uniqueQcode() {
+    function checkForUniqueValues() {
+        const uniqueField = $scope.vocabulary.unique_field || 'qcode';
         const list = $scope.vocabulary.items || {};
-        const uniqueList = _.uniqBy(list, (item) => item.qcode);
+        const uniqueList = _.uniqBy(list, (item) => item[uniqueField]);
 
         return list.length === uniqueList.length;
     }
@@ -61,8 +62,10 @@ export function VocabularyEditController($scope, gettext, notify, api, vocabular
             });
         }
 
-        if (!uniqueQcode()) {
-            $scope.errorMessage = gettext('The qcode values should be unique');
+        if (!checkForUniqueValues()) {
+            const uniqueField = $scope.vocabulary.unique_field || 'qcode';
+
+            $scope.errorMessage = gettext('The values should be unique for ') + uniqueField;
         }
 
         if (_.isNil($scope.errorMessage)) {
