@@ -4,12 +4,17 @@
 @import '~variables/_typography.scss';
 @import '~variables/_colors.scss';
 
+// colors
+$editor-neutral-border: rgba(150,150,150,0.4);
+$editor-neutral-bg: rgba(150,150,150,0.25);
+$editor-neutral-color: rgba(150,150,150,0.8);
+
 .main-article .abstract div.Editor3-root div.link-toolbar {
 	font-size: 12px !important;
 	font-style: normal;
 	padding: 0 10px;
-	border-top: 1px solid #efefef;
-	background-color: #fdfdfd;
+	border-top: 1px solid rgba(150,150,150,0.5);
+	//background-color: #fdfdfd;
 	height: 0;
 	min-height: auto;
 	opacity: 0;
@@ -26,10 +31,8 @@
 	iframe {
 		width: 97%;
 	}
-
-	background: #fff;
-	border: 1px solid #ddd;
-	font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
+	border: 1px solid $editor-neutral-border;
+	//font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
 	font-size: 14px;
 	font-weight: 300;
 	padding: 0;
@@ -41,10 +44,9 @@
 
 	.link-toolbar {
 		font-size: 12px;
-		color: #444;
+		color: $editor-neutral-color;
 		padding: 0 10px;
-		border-top: 1px solid #efefef;
-		background-color: #fdfdfd;
+		border-top: 1px solid rgba(150,150,150,0.25);
 		height: 0;
 		opacity: 0;
 		transition: all .2s ease-out;
@@ -56,8 +58,13 @@
 		}
 
 		a {
-			margin-left: 5px;
+			margin-left: 10px;
 			cursor: pointer;
+			color: rgba(150,150,150,0.90);
+			&:hover {
+				color: rgba(150,150,150,1);
+				border-bottom: 1px dotted $sd-blue;
+			}
 		}
 	}
 
@@ -67,7 +74,7 @@
 		top: 132px;
 		left: auto;
 		z-index: 10;
-		box-shadow: 0px 1px 5px #efefef;
+		box-shadow: 0px 1px 5px rgba(0,0,0,0.4);
 		max-width: 490px;
 
 		.link-toolbar.empty {
@@ -124,7 +131,7 @@
 	.table-block {
 		&.table-header {
 			tr:first-child td {
-				background-color: #fafafa;
+				background-color: rgba(150,150,150,0.2);
 			}
 		}
 
@@ -161,7 +168,7 @@
 			}
 
 			position: relative;
-			border: 1px solid #efefef;
+			border: 1px solid rgba(150,150,150,0.25);
 			padding: 5px;
 			min-width: 20px;
 		}
@@ -235,7 +242,6 @@
 }
 
 .Editor3-editor {
-	border-top: 1px solid #ddd;
 	cursor: text;
 	font-size: 16px;
 	line-height: 140%;
@@ -274,7 +280,6 @@
 .Editor3-editor .Editor3-blockquote {
 	border-left: 5px solid #eee;
 	color: #666;
-	font-family: 'Hoefler Text', 'Georgia', serif;
 	font-style: italic;
 	margin: 16px 0;
 	padding: 10px 20px;
@@ -293,8 +298,9 @@
 	font-family: 'Helvetica', sans-serif;
 	font-size: 14px;
 	user-select: none;
-	background-color: #fafafa;
-	border-bottom: 1px solid #efefef;
+	background-color: scale-color($editor-neutral-bg, $alpha: -60%);
+	border-bottom: 1px solid;
+	border-bottom-color: scale-color($editor-neutral-border, $alpha: -50%);
 	line-height: 100% !important;
 
 	&.disabled {
@@ -360,7 +366,7 @@
 .Editor3-styleButton {
 	&.short {padding-right: 2px; margin-right: -10px;}
 
-	color: #999;
+	color: rgba(150,150,150,0.8);
 	cursor: pointer;
 	margin: 0px;
 	padding: 10px;
@@ -375,7 +381,7 @@
 	}
 
 	[class*="icon-"] {
-		color: #999;
+		color: rgba(150,150,150,0.8);
 
 		&:hover {
 			color: #555;
@@ -383,7 +389,7 @@
 	}
 
 	.inactive [class*="icon-"] {
-		color: #ddd;
+		color: rgba(150,150,150,0.2);
 
 		&:hover {
 			color: #ddd;

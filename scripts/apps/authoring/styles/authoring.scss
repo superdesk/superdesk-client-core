@@ -1029,23 +1029,9 @@
 }
 
 .preview-modal-control { // toggle for preview dialog
-                         .btn {
-                             position: absolute;
-                             top: 12px;
-                             right: 80px;
-                             z-index: 100;
-                             background-color: transparent;
-                             height: 22px;
-                             padding: 0px 6px;
-                             @include border-radius(0);
-                             &:hover {
-                                 background-color: rgba(152,152,152,.3);
-                                 @include box-shadow(none);
-                             }
-                             [class^="icon-"], .btn [class*=" icon-"] {
-                                 margin: 3px 0 0;
-                             }
-                         }
+    .preview-toggle {
+        z-index: 100;
+    }
 }
 
 .preview-pane {
@@ -1084,8 +1070,8 @@
 }
 
 .item-association {
-    border: 2px dashed #cfcfcf;
-    background-color: #f7f7f7;
+    border: 2px dashed rgba(150,150,150,0.3);
+    background-color: rgba(150,150,150,0.12);
     width: 100%;
     height: 65px;
     position: relative;

@@ -459,11 +459,11 @@
      data-required="schema.sign_off.required"
      sd-width="{{editor.sign_off.sdWidth|| 'full'}}">
     <label translate>Sign-Off</label>
-    <button id="sign-off-unlock" class="btn btn-signOff" ng-click="changeSignOffEdit()" tabindex="{{editor.sign_off.order}}" title="Unlock edit Sign-Off" ng-if="_editable">
+    <button id="sign-off-unlock" class="icn-btn btn-signOff" ng-click="changeSignOffEdit()" tabindex="{{editor.sign_off.order}}" title="Unlock edit Sign-Off" ng-if="_editable">
         <i class="icon-lock" ng-hide="editSignOff"></i>
         <i class="icon-unlocked" ng-show="editSignOff"></i>
     </button>
-    <div ng-hide="editSignOff" id="sign-off">{{item.sign_off}}</div>
+    <div ng-hide="editSignOff" class="text-field__non-editable" id="sign-off">{{item.sign_off}}</div>
     <input type="text" sd-remove-tags
            class="byline"
            id="sign_off"

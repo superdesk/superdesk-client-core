@@ -7,39 +7,34 @@ export function AuthoringThemesService(storage, preferencesService) {
 
     service.availableThemes = [
         {
-            cssClass: '',
+            cssClass: 'main-article--theme-default',
             label: 'Default',
             key: 'default'
         },
         {
-            cssClass: 'dark-theme',
+            cssClass: 'main-article--theme-dark',
             label: 'Dark',
             key: 'dark'
         },
         {
-            cssClass: 'natural-theme',
+            cssClass: 'main-article--theme-natural',
             label: 'Natural',
             key: 'natural'
         },
         {
-            cssClass: 'dark-blue-theme',
-            label: 'Dark blue',
+            cssClass: 'main-article--theme-blue',
+            label: 'Blue',
             key: 'dark-blue'
         },
         {
-            cssClass: 'dark-turquoise-theme',
-            label: 'Dark turquoise',
+            cssClass: 'main-article--theme-turquoise',
+            label: 'Turquoise',
             key: 'dark-turquoise'
         },
         {
-            cssClass: 'dark-khaki-theme',
-            label: 'Dark khaki',
+            cssClass: 'main-article--theme-military',
+            label: 'Military',
             key: 'dark-khaki'
-        },
-        {
-            cssClass: 'dark-theme-mono',
-            label: 'Dark monospace',
-            key: 'dark-mono'
         }
     ];
 
