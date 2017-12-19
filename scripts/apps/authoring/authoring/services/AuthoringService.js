@@ -197,10 +197,6 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
             delete updates.publish_schedule;
         }
 
-        if (this.isPublished(original)) {
-            delete updates.dateline;
-        }
-
         // check if rendition is dirty for real
         if (_.isEqual(original.renditions, updates.renditions)) {
             delete updates.renditions;
