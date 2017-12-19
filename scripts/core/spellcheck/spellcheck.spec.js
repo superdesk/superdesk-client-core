@@ -271,7 +271,7 @@ describe('spellcheck', () => {
             inject((editor, editorResolver, $controller, $rootScope, preferencesService) => {
                 var ctrl = $controller('SpellcheckMenu');
 
-                expect(ctrl.isAuto).toBe(null);
+                expect(ctrl.isAuto).toBe(false);
 
                 $rootScope.$digest();
                 expect(ctrl.isAuto).toBe(true);
@@ -287,7 +287,7 @@ describe('spellcheck', () => {
                 expect(preferencesService.update).toHaveBeenCalled();
 
                 spyOn(editor, 'render');
-                ctrl.spellcheck();
+                ctrl.runSpellchecker();
                 expect(editor.render).toHaveBeenCalled();
             })
         );
