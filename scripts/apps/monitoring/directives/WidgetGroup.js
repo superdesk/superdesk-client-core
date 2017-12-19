@@ -101,7 +101,7 @@ export function WidgetGroup(search, api, superdesk, desks, cards, $timeout, $q,
                 return provider;
             }
 
-            function queryItems(queryString) {
+            function queryItems(queryString, params) {
                 if (!scope.fetching) {
                     // page reload disabled when the user scrolls
                     if (container.scrollTop > 20) {
@@ -116,6 +116,10 @@ export function WidgetGroup(search, api, superdesk, desks, cards, $timeout, $q,
 
                 if (scope.page > 0 && criteria.source) {
                     criteria.source.from = (scope.page - 1) * criteria.source.size;
+                }
+
+                if (params) {
+                    angular.extend(criteria, params);
                 }
 
                 api.query(getProvider(criteria), criteria)
@@ -265,7 +269,7 @@ export function WidgetGroup(search, api, superdesk, desks, cards, $timeout, $q,
             function scheduleQuery(delay = 5000) {
                 if (!queryTimeout) {
                     queryTimeout = $timeout(() => {
-                        queryItems();
+                        queryItems(null, {auto: 1});
                         scope.$applyAsync(() => {
                             // ignore any updates requested in current $digest
                             queryTimeout = null;

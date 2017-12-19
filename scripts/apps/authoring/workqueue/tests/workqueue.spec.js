@@ -32,7 +32,8 @@ describe('workqueue', () => {
                         ]
                     }
                 }
-            }
+            },
+            auto: 1,
         };
 
         spyOn(api, 'query').and.returnValue($q.when({_items: [{}]}));
