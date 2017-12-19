@@ -83,53 +83,32 @@ body, html {
 }
 
 .authoring-sticky__theme-controls {
-    &:hover {
-        .proofread-toggle {
-            background-color: $grayLighter;
-        }
-        .theme-select {
-            background-color: $grayLighter;
-        }
+    position: absolute;
+    right: 10px;
+    top:5px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    .icn-btn {
+        margin-left: 3px;
     }
-
-    .toggle {
-        position: absolute;
-        top: 12px;
-        color: #666;
-        height: 22px;
-        padding: 4px 6px;
-        font-size: 11px;
-        letter-spacing: 0.06em;
-        box-shadow: none;
-        border-radius: 0px;
-        background-color: transparent;
-        z-index: 10;
-        line-height: 0;
-        i {
-            margin-top: -3px;
-            margin-right: 0;
-        }
+    .proofread-toggle {
         &:hover {
             background-color: rgba(152, 152, 152, 0.3);
         }
         &.active {
             @include box-shadow(inset 0 2px 0 rgba(55, 55, 55, 0.1));
-            background-color: rgba(152, 152, 152, 0.3);
+            background-color: $sd-blue;
+            color: $white;
         }
     }
 
-    .proofread-toggle {
-        right: 52px;
-    }
 
     .theme-select {
-        position: absolute;
-        top: 12px;
-        right: 30px;
+        display: inline-block;
+
         .dropdown__toggle {
             position: relative;
-            height: 22px;
-            padding: 1px 4px;
             i {
                 margin-bottom: 1px;
             }
@@ -178,23 +157,9 @@ body, html {
             .btn-group {
                 margin-bottom: 20px;
                 display: flex;
-                .btn {
-                    border:none !important;
-                    text-transform: none;
-                    font-size: 12px;
-                    text-align: center;
-                    padding: 3px 0;
-                    min-height: 22px;
-                    height: auto;
-                    line-height: 110%;
-                    white-space: pre-wrap;
-                    box-sizing: border-box;
-                    background: rgba(0,0,0,0.07);
-                    &.active {
-                        background: rgba(0,0,0,0.6);
-                        color: #fff;
-                        border: none;
-                    }
+                justify-content: space-between;
+                .toggle-button {
+                    width: 48%;
                 }
             }
             .theme-btn {
@@ -206,14 +171,15 @@ body, html {
                 padding-left: 12px;
                 text-overflow: ellipsis;
                 overflow: hidden;
+                min-width: auto !important;
+                width: 100%;
+                min-width: auto;
                 i {
                     margin: 0;
                     position: absolute;
-                    top:7px;
-                    right: 2px;
-                }
-                &.large-text {
-                    font-size: 15px;
+                    top:10px;
+                    right: 0px;
+                    color: inherit !important;
                 }
                 &.dark-theme {
                     border: 0;
@@ -222,25 +188,15 @@ body, html {
                 &.dark-blue-theme {
                     border: 0;
                     @include dark-blue-theme();
-                    i {
-                        color: white;
-                    }
                 }
                 &.dark-theme-mono {
                     border: 0;
                     @include dark-theme();
                     font-family: $monoFontFamily;
-                    i {
-                        color: white;
-                    }
                 }
                 &.natural-theme {
                     border: 0;
                     @include natural-theme();
-                }
-                &.pale-yellow-theme {
-                    border: 0;
-                    @include pale-yellow-theme();
                 }
                 &.dark-khaki-theme {
                     border: 0;
@@ -249,6 +205,10 @@ body, html {
                 &.dark-turquoise-theme {
                     border: 0;
                     @include dark-turquoise-theme();
+                }
+                &:hover {
+                    background-color: inherit !important;
+                    color: inherit !important;
                 }
             }
         }
@@ -273,6 +233,12 @@ body, html {
         flex-wrap: wrap;
         align-content: flex-start;
     }
+    .sd-validate .sd-required {
+        color: inherit;
+        opacity: 0.75;
+        letter-spacing: 0.04em;
+        font-family: "Roboto", sans-serif;
+    }
     .field {
         margin-bottom: 20px;
         .full-preview {
@@ -284,7 +250,7 @@ body, html {
                 text-transform: uppercase;
             }
             input, select, option {
-                color: #333 !important;
+                color: inherit;
                 font-size: 14px;
                 font-weight: 400 !important;
                 padding: 0;
@@ -306,6 +272,12 @@ body, html {
             display: block;
         }
     }
+    .text-field__non-editable {
+        font-size: 1.6rem;
+        line-height: 150%;
+        min-height: 2.7rem;
+        padding: 2px 0 0 1px;
+    }
     //labels
     .field {
         label {
@@ -314,10 +286,11 @@ body, html {
             @include border-radius(2px);
             color: #fff;
             display: inline-block;
-            padding: 0px 8px;
+            padding: 2px 8px 1px;
             font-size: 11px;
+            font-family: "Roboto", sans-serif;
             line-height: 16px;
-            height: 15px;
+            //height: 16px;
             @include transition(all ease 0.2s);
             opacity: 0.4;
             text-transform: uppercase;
@@ -373,6 +346,7 @@ body, html {
     }
     // character and word counting
     .char-count {
+        font-family: "Roboto", sans-serif;
         font-size: 11px;
         font-style: italic;
         color: rgba(120, 120, 120, 1);
@@ -422,7 +396,7 @@ body, html {
     // text styles
     color: rgba(51, 51, 51, 1);
     .text-editor, .headline, .abstract, input {
-        color: rgba(51, 51, 51, 1);
+        color: inherit;
         padding-left: 0;
         padding-right: 0;
     }

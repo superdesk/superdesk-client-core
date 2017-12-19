@@ -23,6 +23,10 @@ export function ThemeSelectDirective(authThemes) {
                 applyTheme('proofreadTheme');
             });
 
+            scope.closeModal = function() {
+                scope.modalEditorConfig = false;
+            }
+
             /*
              * Changing predefined themes for proofread and normal mode
              *
