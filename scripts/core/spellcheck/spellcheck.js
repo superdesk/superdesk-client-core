@@ -1,9 +1,10 @@
 /**
  * Spellcheck module
  */
-SpellcheckService.$inject = ['$q', 'api', 'dictionaries', '$rootScope', '$location', 'lodash'];
-function SpellcheckService($q, api, dictionaries, $rootScope, $location, _) {
-    var lang,
+SpellcheckService.$inject = ['$q', 'api', 'dictionaries', '$rootScope', '$location', 'lodash', 'preferencesService'];
+function SpellcheckService($q, api, dictionaries, $rootScope, $location, _, preferencesService) {
+    var PREFERENCES_KEY = 'spellchecker:status',
+        lang,
         dict,
         ignored = {},
         abbreviationList = [],
@@ -13,6 +14,9 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _) {
 
     self = this;
     self.abbreviationsDict = null;
+    self.isAutoSpellchecker = false;
+
+
     /**
      * Set current language
      *
@@ -431,42 +435,17 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _) {
         return !isNaN(word) || !dict.content || isIgnored(word) || !isSpellingMistake(word, isSentenceWord);
     };
 
-
     // reset ignore list for an item if it was unlocked
     $rootScope.$on('item:unlock', (event, data) => {
         if (ignored.hasOwnProperty(data.item)) {
             ignored[data.item] = {};
         }
     });
-}
-
-SpellcheckMenuController.$inject = ['$rootScope', 'editorResolver', 'preferencesService'];
-function SpellcheckMenuController($rootScope, editorResolver, preferencesService) {
-    this.isAuto = null;
-    this.spellcheck = spellcheck;
-    this.pushSettings = pushSettings;
-    var PREFERENCES_KEY = 'spellchecker:status';
-    var self = this;
-
-    /**
-     * Set the spell checker status
-     */
-    function setStatus(status) {
-        var updates = {};
-
-        updates[PREFERENCES_KEY] = {
-            type: 'bool',
-            enabled: status,
-            default: true
-        };
-
-        preferencesService.update(updates, PREFERENCES_KEY);
-    }
 
     /**
      * Get the spell checker status
      */
-    function getStatus() {
+    this.getSpellcheckerStatus = function getSpellcheckerStatus() {
         var status = true;
 
         return preferencesService.get(PREFERENCES_KEY).then((result) => {
@@ -475,12 +454,41 @@ function SpellcheckMenuController($rootScope, editorResolver, preferencesService
             }
             return status;
         }, (error) => status);
-    }
+    };
+
+    /**
+     * Set the spell checker status
+     */
+    this.setSpellcheckerStatus = function setSpellcheckerStatus(status) {
+        var updates = {};
+
+        self.isAutoSpellchecker = status;
+
+        updates[PREFERENCES_KEY] = {
+            type: 'bool',
+            enabled: status,
+            default: true
+        };
+
+        preferencesService.update(updates, PREFERENCES_KEY);
+    };
+
+    this.getSpellcheckerStatus().then((status) => {
+        self.isAutoSpellchecker = status;
+    });
+}
+
+SpellcheckMenuController.$inject = ['$rootScope', 'editorResolver', 'spellcheck'];
+function SpellcheckMenuController($rootScope, editorResolver, spellcheck) {
+    this.isAuto = false;
+    this.runSpellchecker = runSpellchecker;
+    this.pushSettings = pushSettings;
+    var self = this;
 
     /**
      * Force spell ckecking
      */
-    function spellcheck() {
+    function runSpellchecker() {
         const editor = editorResolver.get();
 
         if (editor && editor.version() === '3') {
@@ -507,7 +515,7 @@ function SpellcheckMenuController($rootScope, editorResolver, preferencesService
      */
     function pushSettings() {
         render();
-        setStatus(self.isAuto);
+        spellcheck.setSpellcheckerStatus(self.isAuto);
     }
 
     /**
@@ -517,7 +525,7 @@ function SpellcheckMenuController($rootScope, editorResolver, preferencesService
         return $rootScope.config.features && $rootScope.config.features.useTansaProofing;
     }
 
-    getStatus().then((status) => {
+    spellcheck.getSpellcheckerStatus().then((status) => {
         self.isAuto = status && !useTansaProofing();
         render();
     });
