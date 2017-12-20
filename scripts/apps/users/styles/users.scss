@@ -730,9 +730,10 @@ Profile page styles
 }
 
 .password-popup {    //change password popup
-    position: absolute;
+    position: fixed;
+    min-width: 260px;
     top: 150px;
     left: 10%;
-    right: 10%;
-    // width: 260px;
+    background-color: $white;
+    z-index: 999;
 }
