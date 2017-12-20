@@ -27,7 +27,8 @@ function WorkqueueService(session, api) {
                                 ]
                             }
                         }
-                    }
+                    },
+                    auto: 1,
                 };
 
                 return api.query('workqueue', query)

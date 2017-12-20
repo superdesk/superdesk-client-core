@@ -267,7 +267,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
             function scheduleQuery(event, data) {
                 if (!queryTimeout) {
                     queryTimeout = $timeout(() => {
-                        queryItems(event, data);
+                        queryItems(event, data, {auto: data.force ? 0 : 1});
                         scope.$applyAsync(() => {
                             // ignore any updates requested in current $digest
                             queryTimeout = null;
@@ -376,7 +376,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                 return monitoring.previewItem && monitoring.previewItem.task.stage === scope.group._id;
             }
 
-            function queryItems(event, data) {
+            function queryItems(event, data, params) {
                 criteria = cards.criteria(scope.group, null, monitoring.queryParam);
                 criteria.source.from = 0;
                 criteria.source.size = PAGE_SIZE;
@@ -405,6 +405,10 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                     }
 
                     criteria.source.query = search.getItemQuery(items);
+                }
+
+                if (params) {
+                    angular.extend(criteria, params);
                 }
 
                 return apiquery(criteria, true).then((items) => {
