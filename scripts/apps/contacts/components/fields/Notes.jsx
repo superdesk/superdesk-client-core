@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 export const Notes = ({item, svc}) => {
     const {gettextCatalog, $filter} = svc;
     let notes = gettextCatalog.getString(item.notes);
-    let displayNotes = $filter('truncateString')(notes, 100);
+    let displayNotes = $filter('truncateString')(notes, 250);
 
     return (
         <div key="notes" className="item-notes">

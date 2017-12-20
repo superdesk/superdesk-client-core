@@ -1,6 +1,6 @@
 import React from 'react';
-import {DEFAULT_LIST_CONFIG} from 'apps/contacts/constants';
-import * as fields from 'apps/contacts/components/fields';
+import {DEFAULT_LIST_CONFIG} from 'scripts/apps/contacts/constants';
+import * as fields from 'scripts/apps/contacts/components/fields';
 
 export function renderArea(area, itemProps, props) {
     // If singleline preference is set, don't show second line

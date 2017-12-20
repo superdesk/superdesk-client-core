@@ -35,6 +35,15 @@ export const ContactInfo = ({item, svc}) => {
         );
     }
 
+    if (!isEmpty(item.mobile) && findKey(item.mobile, 'number')) {
+        meta.push(
+            <dt key="mobile-dt"><i key="mobile-icon" className="icon-mobile" /></dt>,
+            <dd key="mobile-dd" className="dark">
+                <ItemContainer item={item} field="mobile" svc={svc} />
+            </dd>
+        );
+    }
+
     if (item.twitter) {
         meta.push(
             <dt key="6"><i key="6.1" className="icon-twitter" /></dt>,
