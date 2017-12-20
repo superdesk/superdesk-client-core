@@ -84,7 +84,7 @@
             </div>
             <div ng-class="{'sd-line-input--required':validator.description_text.required}" class="sd-line-input" ng-if="validator.description_text">
                 <label class="sd-line-input__label" translate>Description</label>
-                <div ng-model="data.metadata.description_text" ng-change="data.isDirty = true" contenteditable="{{ data.editable }}" class="abstract contenteditable-input"></div>
+                <textarea ng-model="data.metadata.description_text" ng-change="data.isDirty = true" contenteditable="{{ data.editable }}" class="abstract contenteditable-input"></textarea>
                 <div class="sd-line-input__char-count" ng-if="validator.description_text.maxlength" sd-character-count data-item="data.metadata.description_text" data-limit="validator.description_text.maxlength" data-html="true"></div>
             </div>
             <div class="sd-line-input" ng-if="!data.isAssociated && validator.archive_description">
@@ -109,7 +109,7 @@
             <div ng-class="{'sd-line-input--required':validator.copyrightholder.required}" class="sd-line-input" ng-if="validator.copyrightholder">
                 <label class="sd-line-input__label" translate>Copyright holder</label>
                 <input class="sd-line-input__input" ng-model="data.metadata.copyrightholder" ng-change="data.isDirty = true" contenteditable="{{ data.editable }}" type="text">
-            </div>            
+            </div>
             <div ng-class="{'sd-line-input--required':validator.usageterms.required}" class="sd-line-input sd-line-input--is-select" ng-if="validator.usageterms">
                 <label class="sd-line-input__label" translate>Assign Rights</label>
                 <select class="sd-line-input__select" ng-model="data.metadata.usageterms" ng-change="data.isDirty = true" ng-disabled="!data.editable">
