@@ -1,52 +1,9 @@
-<!-- <button class="icn-btn" ng-click="modalEditorConfig = true">
+<button class="icn-btn" ng-click="modalEditorConfig = true">
     <i class="icon-switches"></i>
-</button> -->
-<div class="dropdown theme-select pull-right" dropdown>
-    <button class="dropdown__toggle icn-btn" dropdown__toggle>
-        <i class="icon-switches"></i>
-    </button>
-    <div class="dropdown__menu pull-right" ng-click="$event.stopPropagation()">
-        <ul class="normal-theme-list">
-            <li>
-                <i class="theme-status" ng-class="{active: key === 'theme'}"></i>
-                <div class="dropdown__menu-label" translate>Choose Normal Theme</div>
-            </li>
-            <li>
-                <div class="btn-group">
-                    <button type="button" class="toggle-button" ng-class="{'toggle-button--active': large.theme === false}" ng-click="changeSize('theme', false)" translate>Normal font</button>
-                    <button type="button" class="toggle-button" ng-class="{'toggle-button--active': large.theme === true}" ng-click="changeSize('theme', true)" translate>Large font</button>
-                </div>
-            </li>
-            <li ng-repeat="t in themes">
-                <button ng-click="changeTheme('theme', t)" class="theme-btn {{t.cssClass}}">
-                    {{:: t.label}}
-                    <i class="icon-ok" ng-if="theme === t" style="color: inherit;"></i>
-                </button>
-            </li>
-        </ul>
-        <ul class="proofread-theme-list">
-            <li>
-                <i class="theme-status" ng-class="{active: key === 'proofreadTheme'}"></i>
-                <div class="dropdown__menu-label" translate>Choose Proofread Theme</div>
-            </li>
-            <li>
-                <div class="btn-group">
-                    <button type="button" class="toggle-button" ng-class="{'toggle-button--active': large.proofreadTheme === false}" ng-click="changeSize('proofreadTheme', false)" translate>Normal font</button>
-                    <button type="button" class="toggle-button" ng-class="{'toggle-button--active': large.proofreadTheme  === true}" ng-click="changeSize('proofreadTheme', true)" translate>Large font</button>
-                </div>
-            </li>
-            <li ng-repeat="t in themes">
-                <button ng-click="changeTheme('proofreadTheme', t)" class="theme-btn {{t.cssClass}}">
-                    {{:: t.label}}
-                    <i class="icon-ok" ng-if="proofreadTheme === t"></i>
-                </button>
-            </li>
-        </ul>
-    </div>
-</div>
+</button>
 
 <!-- Editor configuration modal -->
-<!-- <div sd-modal data-model="modalEditorConfig" class="modal--x-large">
+<div sd-modal data-model="modalEditorConfig" class="modal--x-large">
     <div class="modal__header">
         <button class="modal__close pull-right icn-btn" ng-click="closeModal()"><i class="icon-close-small"></i></button>
         <h3 class="modal__heading">Configure Editor themes</h3>
@@ -54,94 +11,112 @@
     <div class="modal__body modal__body--no-padding">
         <div class="sd-column-box--2">
             <div class="sd-column-box__main-column sd-column-box__main-column--left sd-column-box__main-column--padded">
+
                 <h2 class="modal__body-heading"><span class="badge badge--success">&nbsp;</span>Default Theme</h2>
                 <div class="form__row">
                     <div class="sd-line-input sd-line-input--no-margin sd-line-input--is-select">
                         <label class="sd-line-input__label">Font</label>
-                        <select class="sd-line-input__select" ng-model="fontFace" ng-init="fontFace = 'sans'" >
-                            <option value="sans">Sans-serif (Roboto)</option>
-                            <option value="serif">Serif (Merriweather)</option>
-                            <option value="mono">Monospace (Roboto Mono)</option>
+                        <select class="sd-line-input__select" ng-model="themePref.font">
+                            <option ng-repeat="font in themes.fonts track by font.key" ng-value="font.key">{{font.label}}</option>
                         </select>
                     </div>
                 </div>
-                <div class="color-swatch__list" ng-init="selctTheme1 = true">
-                    <div class="color-swatch" 
-                        ng-click="selctTheme1 = true; selctTheme2 = false; selctTheme3 = false; selctTheme4 = false; selctTheme5 = false; selctTheme6 = false;" 
-                        ng-class="{'color-swatch--selected' : selctTheme1}">
-                        <span class="color-swatch__inner">a</span>
-                    </div>
-                    <div class="color-swatch color-swatch--dark" 
-                        ng-click="selctTheme2 = true; selctTheme1 = false; selctTheme3 = false; selctTheme4 = false; selctTheme5 = false; selctTheme6 = false;" 
-                        ng-class="{'color-swatch--selected' : selctTheme2}">
-                        <span class="color-swatch__inner">a</span>
-                    </div>
-                    <div class="color-swatch color-swatch--blue" 
-                        ng-click="selctTheme3 = true; selctTheme1 = false; selctTheme2 = false; selctTheme4 = false; selctTheme5 = false; selctTheme6 = false;" 
-                        ng-class="{'color-swatch--selected' : selctTheme3}">
-                        <span class="color-swatch__inner">a</span>
-                    </div>
-                    <div class="color-swatch color-swatch--turquoise" 
-                        ng-click="selctTheme4 = true; selctTheme1 = false; selctTheme2 = false; selctTheme3 = false; selctTheme5 = false; selctTheme6 = false;" 
-                        ng-class="{'color-swatch--selected' : selctTheme4}">
-                        <span class="color-swatch__inner">a</span>
-                    </div>
-                    <div class="color-swatch color-swatch--military" 
-                        ng-click="selctTheme5 = true; selctTheme1 = false; selctTheme2 = false; selctTheme3 = false; selctTheme4 = false; selctTheme6 = false;" 
-                        ng-class="{'color-swatch--selected' : selctTheme5}">
-                        <span class="color-swatch__inner">a</span>
-                    </div>
-                    <div class="color-swatch color-swatch--natural" 
-                        ng-click="selctTheme6 = true; selctTheme1 = false; selctTheme2 = false; selctTheme3 = false; selctTheme4 = false; selctTheme5 = false;" 
-                        ng-class="{'color-swatch--selected' : selctTheme6}">
+
+                <div class="color-swatch__list">
+                    <div ng-repeat="color in themes.colors track by color.key"
+                        class="color-swatch sd-editor--theme-{{color.key}}"
+                        ng-click="pickTheme('theme', color.key)"
+                        ng-class="{'color-swatch--selected' : themePref.theme === color.key}">
                         <span class="color-swatch__inner">a</span>
                     </div>
                 </div>
-                <div class="theme-preview" ng-class="{'theme-preview--sans' : fontFace === 'sans', 'theme-preview--serif' : fontFace === 'serif', 'theme-preview--mono' : fontFace === 'mono', 'theme-preview--default' : selctTheme1, 'theme-preview--dark' : selctTheme2, 'theme-preview--blue' : selctTheme3, 'theme-preview--turquoise' : selctTheme4,  'theme-preview--military' : selctTheme5, 'theme-preview--natural' : selctTheme6}">
+
+                <div class="theme-preview sd-editor--theme-{{themePref.theme}} sd-editor--font-{{themePref.font}} sd-editor--headline-{{themePref.headline}} sd-editor--abstract-{{themePref.abstract}} sd-editor--body-{{themePref.body}}">
                     <div class="theme-preview__block">
                         <label class="theme-preview__label">Headline</label>
-                        <div class="theme-preview__text-field text-field__headline" ng-class="{'text-field__headline--small' : fontSizeHeadline === 's', 'text-field__headline--medium' : fontSizeHeadline === 'm', 'text-field__headline--large' : fontSizeHeadline === 'l'}">
+                        <div class="theme-preview__text-field text-field__headline">
                             This is the headline
                         </div>
-                        <div class="theme-preview__button-bar" ng-init="fontSizeHeadline = 'm'" ng-class="{'dark-ui' : selctTheme2 || selctTheme3}">
-                            <sd-check type="radio" ng-model="fontSizeHeadline" label-position="inside" ng-value="s">S</sd-check>
-                            <sd-check type="radio" ng-model="fontSizeHeadline" label-position="inside" ng-value="m">M</sd-check>
-                            <sd-check type="radio" ng-model="fontSizeHeadline" label-position="inside" ng-value="l">L</sd-check>
+                        <div class="theme-preview__button-bar">
+                            <sd-check type="radio" ng-repeat="size in themes.sizes track by size.key" ng-model="themePref['headline']" label-position="inside" ng-value="{{size.key}}">{{size.label}}</sd-check>
                         </div>
                     </div>
                     <div class="theme-preview__block">
                         <label class="theme-preview__label">Abstract</label>
-                        <div class="theme-preview__text-field text-field__abstract" ng-class="{'text-field__abstract--small' : fontSizeAbstract === 's', 'text-field__abstract--medium' : fontSizeAbstract === 'm', 'text-field__abstract--large' : fontSizeAbstract === 'l'}">
+                        <div class="theme-preview__text-field text-field__abstract">
                             Abstract example. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Fusce id purus. Phasellus ullamcorper…
                         </div>
-                        <div class="theme-preview__button-bar" ng-init="fontSizeAbstract = 'm'"ng-class="{'dark-ui' : selctTheme2 || selctTheme3}">
-                            <sd-check type="radio" ng-model="fontSizeAbstract" label-position="inside" ng-value="s">S</sd-check>
-                            <sd-check type="radio" ng-model="fontSizeAbstract" label-position="inside" ng-value="m">M</sd-check>
-                            <sd-check type="radio" ng-model="fontSizeAbstract" label-position="inside" ng-value="l">L</sd-check>
+                        <div class="theme-preview__button-bar">
+                            <sd-check type="radio" ng-repeat="size in themes.sizes track by size.key" ng-model="themePref['abstract']" label-position="inside" ng-value="{{size.key}}">{{size.label}}</sd-check>
                         </div>
                     </div>
                     <div class="theme-preview__block">
                         <label class="theme-preview__label">Body</label>
-                        <div class="theme-preview__text-field text-field__body" ng-class="{'text-field__body--small' : fontSizeBody === 's', 'text-field__body--medium' : fontSizeBody === 'm', 'text-field__body--large' : fontSizeBody === 'l'}">
+                        <div class="theme-preview__text-field text-field__body">
                             Body text example. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Fusce id purus. Phasellus ullamcorper…
                         </div>
-                        <div class="theme-preview__button-bar" ng-init="fontSizeBody = 'm'" ng-class="{'dark-ui' : selctTheme2 || selctTheme3}">
-                            <sd-check type="radio" ng-model="fontSizeBody" label-position="inside" ng-value="s">S</sd-check>
-                            <sd-check type="radio" ng-model="fontSizeBody" label-position="inside" ng-value="m">M</sd-check>
-                            <sd-check type="radio" ng-model="fontSizeBody" label-position="inside" ng-value="l">L</sd-check>
+                        <div class="theme-preview__button-bar">
+                            <sd-check type="radio" ng-repeat="size in themes.sizes track by size.key" ng-model="themePref['body']" label-position="inside" ng-value="{{size.key}}">{{size.label}}</sd-check>
                         </div>
                     </div>
                 </div>
             </div>
+
             <div class="sd-column-box__main-column sd-column-box__main-column--padded">
                 <h2 class="modal__body-heading modal__body-heading--inactive"><span class="badge badge--light">&nbsp;</span>Proofread Theme</h2>
-                <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. </p>
+                <div class="form__row">
+                    <div class="sd-line-input sd-line-input--no-margin sd-line-input--is-select">
+                        <label class="sd-line-input__label">Font</label>
+                        <select class="sd-line-input__select" ng-model="proofredThemePref.font">
+                            <option ng-repeat="font in themes.fonts track by font.key" ng-value="font.key">{{font.label}}</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="color-swatch__list">
+                    <div ng-repeat="color in themes.colors track by color.key"
+                        class="color-swatch sd-editor--theme-{{color.key}}"
+                        ng-click="pickTheme('proofredThemePref', color.key)"
+                        ng-class="{'color-swatch--selected' : proofredThemePref.theme === color.key}">
+                        <span class="color-swatch__inner">a</span>
+                    </div>
+                </div>
+
+                <div class="theme-preview sd-editor--theme-{{proofredThemePref.theme}} sd-editor--font-{{proofredThemePref.font}} sd-editor--headline-{{proofredThemePref.headline}} sd-editor--abstract-{{proofredThemePref.abstract}} sd-editor--body-{{proofredThemePref.body}}">
+                    <div class="theme-preview__block">
+                        <label class="theme-preview__label">Headline</label>
+                        <div class="theme-preview__text-field text-field__headline">
+                            This is the headline
+                        </div>
+                        <div class="theme-preview__button-bar">
+                            <sd-check type="radio" ng-repeat="size in themes.sizes track by size.key" ng-model="proofredThemePref['headline']" label-position="inside" ng-value="{{size.key}}">{{size.label}}</sd-check>
+                        </div>
+                    </div>
+                    <div class="theme-preview__block">
+                        <label class="theme-preview__label">Abstract</label>
+                        <div class="theme-preview__text-field text-field__abstract">
+                            Abstract example. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Fusce id purus. Phasellus ullamcorper…
+                        </div>
+                        <div class="theme-preview__button-bar">
+                            <sd-check type="radio" ng-repeat="size in themes.sizes track by size.key" ng-model="proofredThemePref['abstract']" label-position="inside" ng-value="{{size.key}}">{{size.label}}</sd-check>
+                        </div>
+                    </div>
+                    <div class="theme-preview__block">
+                        <label class="theme-preview__label">Body</label>
+                        <div class="theme-preview__text-field text-field__body">
+                            Body text example. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Fusce id purus. Phasellus ullamcorper…
+                        </div>
+                        <div class="theme-preview__button-bar">
+                            <sd-check type="radio" ng-repeat="size in themes.sizes track by size.key" ng-model="proofredThemePref['body']" label-position="inside" ng-value="{{size.key}}">{{size.label}}</sd-check>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
     <div class="modal__footer">
-        <button class="btn" ng-click="closeModal('modalEditorConfig')">Cancel</button>
-        <button class="btn btn--primary" ng-click="closeModal('modalEditorConfig')">Save</button>
+        <button class="btn" ng-click="closeModal()">Cancel</button>
+        <button class="btn btn--primary" ng-click="saveTheme()">Save</button>
     </div>
-</div> -->
+</div>
 <!-- END Editor configuration modal -->

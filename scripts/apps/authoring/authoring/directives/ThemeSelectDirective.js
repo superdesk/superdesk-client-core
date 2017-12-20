@@ -4,74 +4,57 @@ export function ThemeSelectDirective(authThemes) {
         templateUrl: 'scripts/apps/authoring/views/theme-select.html',
         scope: {key: '@'},
         link: function themeSelectLink(scope, elem) {
-            var DEFAULT_CLASS = 'main-article theme-container';
+            let DEFAULT_CLASS = 'main-article theme-container';
 
             scope.themes = authThemes.availableThemes;
-            scope.large = {};
+
             authThemes.get('theme').then((theme) => {
-                var selectedTheme = _.find(authThemes.availableThemes, {key: themeKey(theme)});
-
-                scope.theme = selectedTheme;
-                scope.large.theme = themeLarge(theme);
-                applyTheme('theme');
+                scope.themePref = theme;
+                scope.applyTheme('theme', theme);
             });
+
             authThemes.get('proofreadTheme').then((theme) => {
-                var selectedTheme = _.find(authThemes.availableThemes, {key: themeKey(theme)});
-
-                scope.proofreadTheme = selectedTheme;
-                scope.large.proofreadTheme = themeLarge(theme);
-                applyTheme('proofreadTheme');
+                scope.proofredThemePref = theme;
+                scope.applyTheme('proofreadTheme', theme);
             });
 
-            scope.closeModal = function() {
-                scope.modalEditorConfig = false;
+            /*
+             * Color Theme picker
+             * @param {string} key Color key
+             */
+            scope.pickTheme = (themeKey, color) => {
+                scope[themeKey].theme = color;
             }
 
-            /*
-             * Changing predefined themes for proofread and normal mode
-             *
-             * @param {string} key Type of theme (proofread or normal)
-             * @param {object} theme New theme
-             */
-            scope.changeTheme = function(key, theme) {
-                scope[key] = theme;
-                authThemes.save(key, scope);
-                applyTheme(key);
-            };
-
-            /*
-             * Changing predefined size for proofread and normal mode
-             *
-             * @param {string} key Type of theme (proofread or normal)
-             * @param {object} size New size
-             */
-            scope.changeSize = function(key, size) {
-                scope.large[key] = size;
-                authThemes.save(key, scope);
-                applyTheme(key);
-            };
-
-            /*
-             * Applying a theme for currently selected mode
-             *
-             * @param {string} key Type of theme (proofread or normal)
-             */
-            function applyTheme(key) {
-                if (scope.key === key) {
-                    angular.element('.page-content-container')
-                        .children('.theme-container')
-                        .attr('class', DEFAULT_CLASS)
-                        .addClass(scope[key].cssClass)
-                        .addClass(scope.large[key] && 'large-text');
+            scope.applyTheme = (key, theme) => {
+                if (scope.key !== key) {
+                    return false;
                 }
+
+                let themeClasses = '';
+
+                angular.forEach(theme, (value, key) => {
+                    themeClasses += ' sd-editor--' + key + '-' + value;
+                });
+
+                angular.element('.page-content-container')
+                    .children('.theme-container')
+                    .attr('class', DEFAULT_CLASS)
+                    .addClass(themeClasses);
             }
 
-            function themeKey(theme) {
-                return theme.indexOf('-large') !== -1 ? theme.slice(0, theme.indexOf('-large')) : theme;
+            scope.saveTheme = () => {
+                scope.applyTheme('theme', scope.themePref);
+                scope.applyTheme('proofreadTheme', scope.proofredThemePref);
+
+                authThemes.save('theme', scope.themePref);
+                authThemes.save('proofreadTheme', scope.proofredThemePref);
+
+                return scope.closeModal();
             }
 
-            function themeLarge(theme) {
-                return theme.indexOf('-large') !== -1;
+            scope.closeModal = () => {
+                return scope.modalEditorConfig = false;
             }
         }
     };
