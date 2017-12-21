@@ -67,11 +67,11 @@ export const forceUpdate = (state) => {
  */
 export const onChange = (state, newState, force = false) => {
     // TODO(x): Remove `force` once Draft v0.11.0 is in
-    let editorState = newState, activeHighlight = null;
+    let editorState = newState, activeHighlights = {};
     let contentChanged = state.editorState.getCurrentContent() !== newState.getCurrentContent();
 
     if (state.allowsHighlights) {
-        ({editorState, activeHighlight} = updateHighlights(state.editorState, newState));
+        ({editorState, activeHighlights} = updateHighlights(state.editorState, newState));
     }
 
     if (contentChanged || force) {
@@ -82,14 +82,14 @@ export const onChange = (state, newState, force = false) => {
         return forceUpdate({
             ...state,
             editorState,
-            activeHighlight
+            activeHighlights
         });
     }
 
     return {
         ...state,
         editorState,
-        activeHighlight
+        activeHighlights
     };
 };
 

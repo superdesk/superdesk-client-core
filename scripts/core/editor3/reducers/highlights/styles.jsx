@@ -11,7 +11,7 @@ export function redrawHighlights(newState) {
     let editorState = newState;
     let selection = editorState.getSelection();
     let cleanContent = removeInlineStyles(editorState.getCurrentContent());
-    let {contentState, activeHighlight} = applyInlineStyles(cleanContent, selection);
+    let {contentState, activeHighlights} = applyInlineStyles(cleanContent, selection);
     let selectionFunc = selection.getHasFocus() ? 'forceSelection' : 'acceptSelection';
 
     editorState = EditorState.set(editorState, {allowUndo: false});
@@ -19,7 +19,7 @@ export function redrawHighlights(newState) {
     editorState = EditorState[selectionFunc](editorState, selection);
     editorState = EditorState.set(editorState, {allowUndo: true});
 
-    return {editorState, activeHighlight};
+    return {editorState, activeHighlights};
 }
 
 /**
@@ -61,34 +61,36 @@ export function removeInlineStyles(content, styles = highlightTypes) {
  * if one was selected.
  */
 export function applyInlineStyles(content, cursor = null) {
-    const includeResolved = false;
-    const data = getHighlights(content, includeResolved);
+    let includeResolved = false;
+    let data = getHighlights(content, includeResolved);
+    let contentState = content;
+    let activeHighlights = {};
 
     if (data.isEmpty()) {
-        return {contentState: content};
+        return {contentState, activeHighlights};
     }
 
-    let contentState = content;
-    let activeHighlight = null;
-
+    // find selected highlights
     data.mapKeys((rawSelection, highlight) => {
         const selection = new SelectionState(JSON.parse(rawSelection));
 
-        if (activeHighlight === null && selectionIn(content, cursor, selection)) {
-            activeHighlight = {selection: selection, data: highlight};
+        if (selectionIn(content, cursor, selection)) {
+            activeHighlights[highlight.type] = {selection: selection, data: highlight};
         }
 
         contentState = Modifier.applyInlineStyle(contentState, selection, highlight.type);
     });
 
-    if (activeHighlight) {
-        const selectedType = `${activeHighlight.data.type}_SELECTED`;
-        const selection = activeHighlight.selection;
+    // highlight them by applying the corresponding inline styles
+    Object.keys(activeHighlights).forEach((type) => {
+        const selectedType = `${type}_SELECTED`;
+        const h = activeHighlights[type];
+        const selection = h.selection;
 
         contentState = Modifier.applyInlineStyle(contentState, selection, selectedType);
-    }
+    });
 
-    return {contentState, activeHighlight};
+    return {contentState, activeHighlights};
 }
 
 /**

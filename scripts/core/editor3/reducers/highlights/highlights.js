@@ -4,7 +4,7 @@ import {repositionHighlights, redrawHighlights} from '.';
 /**
  * @typedef StateWithComment
  * @property {ContentState} editorState
- * @property {Comment} activeHighlight
+ * @property {Comment} activeHighlights
  */
 
 /**
@@ -18,14 +18,14 @@ import {repositionHighlights, redrawHighlights} from '.';
  */
 export function updateHighlights(oldState, newState) {
     let updatedState = repositionHighlights(oldState, newState);
-    let {editorState, activeHighlight} = redrawHighlights(updatedState);
+    let {editorState, activeHighlights} = redrawHighlights(updatedState);
     let contentChanged = oldState.getCurrentContent() !== newState.getCurrentContent();
 
     if (contentChanged) {
         editorState = preserveSelection(editorState, newState.getCurrentContent());
     }
 
-    return {editorState, activeHighlight};
+    return {editorState, activeHighlights};
 }
 
 // Preserve before & after selection when content was changed. This helps
