@@ -25,7 +25,7 @@
                 <div class="color-swatch__list">
                     <div ng-repeat="color in themes.colors track by color.key"
                         class="color-swatch sd-editor--theme-{{color.key}}"
-                        ng-click="pickTheme('theme', color.key)"
+                        ng-click="pickTheme('themePref', color.key)"
                         ng-class="{'color-swatch--selected' : themePref.theme === color.key}">
                         <span class="color-swatch__inner">a</span>
                     </div>
@@ -67,7 +67,7 @@
                 <div class="form__row">
                     <div class="sd-line-input sd-line-input--no-margin sd-line-input--is-select">
                         <label class="sd-line-input__label">Font</label>
-                        <select class="sd-line-input__select" ng-model="proofredThemePref.font">
+                        <select class="sd-line-input__select" ng-model="proofreadThemePref.font">
                             <option ng-repeat="font in themes.fonts track by font.key" ng-value="font.key">{{font.label}}</option>
                         </select>
                     </div>
@@ -76,20 +76,20 @@
                 <div class="color-swatch__list">
                     <div ng-repeat="color in themes.colors track by color.key"
                         class="color-swatch sd-editor--theme-{{color.key}}"
-                        ng-click="pickTheme('proofredThemePref', color.key)"
-                        ng-class="{'color-swatch--selected' : proofredThemePref.theme === color.key}">
+                        ng-click="pickTheme('proofreadThemePref', color.key)"
+                        ng-class="{'color-swatch--selected' : proofreadThemePref.theme === color.key}">
                         <span class="color-swatch__inner">a</span>
                     </div>
                 </div>
 
-                <div class="theme-preview sd-editor--theme-{{proofredThemePref.theme}} sd-editor--font-{{proofredThemePref.font}} sd-editor--headline-{{proofredThemePref.headline}} sd-editor--abstract-{{proofredThemePref.abstract}} sd-editor--body-{{proofredThemePref.body}}">
+                <div class="theme-preview sd-editor--theme-{{proofreadThemePref.theme}} sd-editor--font-{{proofreadThemePref.font}} sd-editor--headline-{{proofreadThemePref.headline}} sd-editor--abstract-{{proofreadThemePref.abstract}} sd-editor--body-{{proofreadThemePref.body}}">
                     <div class="theme-preview__block">
                         <label class="theme-preview__label">Headline</label>
                         <div class="theme-preview__text-field text-field__headline">
                             This is the headline
                         </div>
                         <div class="theme-preview__button-bar">
-                            <sd-check type="radio" ng-repeat="size in themes.sizes track by size.key" ng-model="proofredThemePref['headline']" label-position="inside" ng-value="{{size.key}}">{{size.label}}</sd-check>
+                            <sd-check type="radio" ng-repeat="size in themes.sizes track by size.key" ng-model="proofreadThemePref['headline']" label-position="inside" ng-value="{{size.key}}">{{size.label}}</sd-check>
                         </div>
                     </div>
                     <div class="theme-preview__block">
@@ -98,7 +98,7 @@
                             Abstract example. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Fusce id purus. Phasellus ullamcorper…
                         </div>
                         <div class="theme-preview__button-bar">
-                            <sd-check type="radio" ng-repeat="size in themes.sizes track by size.key" ng-model="proofredThemePref['abstract']" label-position="inside" ng-value="{{size.key}}">{{size.label}}</sd-check>
+                            <sd-check type="radio" ng-repeat="size in themes.sizes track by size.key" ng-model="proofreadThemePref['abstract']" label-position="inside" ng-value="{{size.key}}">{{size.label}}</sd-check>
                         </div>
                     </div>
                     <div class="theme-preview__block">
@@ -107,7 +107,7 @@
                             Body text example. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Fusce id purus. Phasellus ullamcorper…
                         </div>
                         <div class="theme-preview__button-bar">
-                            <sd-check type="radio" ng-repeat="size in themes.sizes track by size.key" ng-model="proofredThemePref['body']" label-position="inside" ng-value="{{size.key}}">{{size.label}}</sd-check>
+                            <sd-check type="radio" ng-repeat="size in themes.sizes track by size.key" ng-model="proofreadThemePref['body']" label-position="inside" ng-value="{{size.key}}">{{size.label}}</sd-check>
                         </div>
                     </div>
                 </div>

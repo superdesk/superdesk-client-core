@@ -77,7 +77,7 @@ export function AuthoringThemesService(storage, preferencesService) {
             try {
                 theme = JSON.parse(theme);
             } catch(e) {
-                theme = THEME_DEFAULT;
+                theme = angular.copy(THEME_DEFAULT);
             }
 
             return theme;
