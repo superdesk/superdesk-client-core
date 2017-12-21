@@ -24,8 +24,13 @@ export class LinkInputComponent extends Component {
 
         this.tabs = [
             {label: gettext('URL'), render: this.renderURL.bind(this)},
-            {label: gettext('Attachment'), render: this.renderAttachment.bind(this)}
         ];
+
+        if (props.item) {
+            this.tabs.push(
+                {label: gettext('Attachment'), render: this.renderAttachment.bind(this)}
+            );
+        }
 
         this.activeTab = 0;
         this.state = {};
@@ -135,7 +140,7 @@ LinkInputComponent.propTypes = {
     applyLink: PropTypes.func.isRequired,
     hidePopups: PropTypes.func.isRequired,
     data: PropTypes.object,
-    item: PropTypes.object.isRequired,
+    item: PropTypes.object
 };
 
 const mapStateToProps = (state) => ({

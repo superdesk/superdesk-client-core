@@ -31,7 +31,7 @@ class AnnotationInputBody extends Component {
 
         let body = null;
         let annotationTypes = ng.get('metadata').values.annotation_types;
-        let type = annotationTypes.length > 0 ? annotationTypes[0].qcode : '';
+        let type = annotationTypes && annotationTypes.length > 0 ? annotationTypes[0].qcode : '';
 
         if (editing) {
             ({annotationType: type, msg: body} = data.annotation.data);
@@ -133,7 +133,7 @@ class AnnotationInputBody extends Component {
                     <label className="sd-line-input__label">Annotation Body</label>
                     <Editor
                         onChange={this.onChange}
-                        editorFormat={['bold', 'italic', 'underline', 'anchor']}
+                        editorFormat={['bold', 'italic', 'underline', 'link']}
                         editorState={this.initialContent}
                     />
                     <div className="pull-right">
