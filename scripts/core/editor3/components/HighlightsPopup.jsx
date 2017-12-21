@@ -26,7 +26,9 @@ export class HighlightsPopup extends Component {
         super(props);
 
         this.lastTop = 150;
+
         this.onDocumentClick = this.onDocumentClick.bind(this);
+        this.createHighlight = this.createHighlight.bind(this);
     }
 
     /**
@@ -40,10 +42,13 @@ export class HighlightsPopup extends Component {
         const {left: editorLeft} = this.props.editorNode.getBoundingClientRect();
         const rect = getVisibleSelectionRect(window);
         const maxHeight = $('div.auth-screen').height();
-        const maxTop = maxHeight - 60/* top & bottom bar */ - 250/* max dropdown height */;
+        const numDropdowns = Object.keys(this.props.highlights).length;
 
+        let maxTop = maxHeight - 60/* top & bottom bar */ - 250/* max dropdown height */ * numDropdowns;
         let top = 150;
         let left = editorLeft - 260;
+
+        maxTop = maxTop < 60 ? 60 : maxTop;
 
         if (rect === null || rect.top === 0 && rect.left === 0) {
             // special case, happens when editor is out of focus,
@@ -66,38 +71,46 @@ export class HighlightsPopup extends Component {
      * @returns {JSX}
      */
     component() {
-        const {highlight} = this.props;
-        const {type} = highlight.data;
-        const position = this.position();
+        const {highlights} = this.props;
         const {store} = this.context;
-
-        const contents = () => {
-            switch (type) {
-            case 'ANNOTATION':
-                return <AnnotationPopup annotation={highlight} />;
-            case 'COMMENT':
-                return <CommentPopup comment={highlight} />;
-            default:
-                console.error('Invalid highlight type in HighlightsPopup.jsx: ', type);
-            }
-        };
-
-        const activeDropdown = $('.highlights-popup .dropdown__menu');
-
-        if (activeDropdown.length) {
-            // popup open, reset scroll position.
-            activeDropdown[0].scrollTo(0, 0);
-        }
+        const position = this.position();
 
         // We need to create a new provider here because this component gets rendered
         // outside the editor tree and loses context.
         return (
             <Provider store={store}>
                 <div className="highlights-popup" style={position}>
-                    <Dropdown open={true}>{contents()}</Dropdown>
+                    {Object.keys(highlights).map(this.createHighlight)}
                 </div>
             </Provider>
         );
+    }
+
+    /**
+     * @ngdoc method
+     * @name HighlightsPopup#createHighlight
+     * @param {String} type Highlight Type
+     * @param {*} key Key to use for componennt.
+     * @description Renders the active highlight of the given type and assigns it
+     * the given key. Used when iterating over the highlights in a mapping function
+     * inside the component method.
+     * @returns {JSX}
+     */
+    createHighlight(type, key) {
+        const h = this.props.highlights[type];
+
+        const contents = () => {
+            switch (type) {
+            case 'ANNOTATION':
+                return <AnnotationPopup annotation={h} />;
+            case 'COMMENT':
+                return <CommentPopup comment={h} />;
+            default:
+                console.error('Invalid highlight type in HighlightsPopup.jsx: ', type);
+            }
+        };
+
+        return <Dropdown key={key} open={true}>{contents()}</Dropdown>;
     }
 
     /**
@@ -154,9 +167,11 @@ export class HighlightsPopup extends Component {
     }
 
     componentDidUpdate() {
+        const shouldRender = Object.keys(this.props.highlights).length > 0;
+
         // Waiting one cycle allows the selection to be rendered in the browser
         // so that we can correctly retrieve its position.
-        setTimeout(() => this.props.highlight ? this.renderCustom() : this.unmountCustom(), 0);
+        setTimeout(() => shouldRender ? this.renderCustom() : this.unmountCustom(), 0);
     }
 
     componentWillUnmount() {
@@ -177,5 +192,5 @@ HighlightsPopup.contextTypes = {
 HighlightsPopup.propTypes = {
     selection: PropTypes.instanceOf(SelectionState),
     editorNode: PropTypes.object,
-    highlight: PropTypes.object
+    highlights: PropTypes.object
 };

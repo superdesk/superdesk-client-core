@@ -222,7 +222,7 @@ export class Editor3Component extends React.Component {
             locked,
             showToolbar,
             editorState,
-            activeHighlight,
+            activeHighlights,
             onChange,
             onTab,
             highlightsEnabled,
@@ -248,7 +248,7 @@ export class Editor3Component extends React.Component {
                 }
                 {highlightsEnabled &&
                     <HighlightsPopup
-                        highlight={activeHighlight}
+                        highlights={activeHighlights}
                         editorNode={this.editorNode}
                         selection={selection}
                     />
@@ -279,7 +279,7 @@ Editor3Component.propTypes = {
     showToolbar: PropTypes.bool,
     highlightsEnabled: PropTypes.bool,
     editorState: PropTypes.object,
-    activeHighlight: PropTypes.object,
+    activeHighlights: PropTypes.object,
     onChange: PropTypes.func,
     unlock: PropTypes.func,
     onTab: PropTypes.func,
@@ -301,7 +301,7 @@ const mapStateToProps = (state) => ({
     showToolbar: state.showToolbar,
     highlightsEnabled: state.allowsHighlights,
     editorState: state.editorState,
-    activeHighlight: state.activeHighlight,
+    activeHighlights: state.activeHighlights,
     locked: state.locked,
     editorFormat: state.editorFormat,
     tabindex: state.tabindex

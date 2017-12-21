@@ -20,11 +20,11 @@ export const customStyleMap = {
     },
 
     ANNOTATION: {
-        backgroundColor: 'rgba(0, 255, 0, 0.2)'
+        borderBottom: '4px solid rgba(100, 205, 0, 0.6)'
     },
 
     ANNOTATION_SELECTED: {
-        backgroundColor: 'rgba(0, 255, 0, 0.6)'
+        borderBottom: '4px solid rgba(100, 205, 0, 1.0)'
     },
 
     STRIKETHROUGH: {

@@ -90,17 +90,14 @@ const replaceHighlight = (state, highlight) =>
  * to be updated after its call.
  */
 const updateComment = (state, selection, fn) => {
-    const content = state.editorState.getCurrentContent();
-    const all = getHighlights(content);
-    const key = JSON.stringify(selection.toJSON());
-    const comment = all.get(key);
+    let content = state.editorState.getCurrentContent();
+    let all = getHighlights(content);
+    let key = JSON.stringify(selection.toJSON());
+    let data = all.get(key);
 
-    fn(comment);
+    fn(data); // function mutates data
 
-    return replaceHighlight(state, {
-        selection: selection,
-        data: comment,
-    });
+    return replaceHighlight(state, {selection, data});
 };
 
 export default highlights;

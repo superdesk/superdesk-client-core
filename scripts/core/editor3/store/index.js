@@ -31,7 +31,7 @@ export default function createEditorStore(props, isReact = false) {
 
     const store = createStore(reducers, {
         editorState: EditorState.createWithContent(content, decorators),
-        activeHighlight: null,
+        activeHighlights: {},
         allowsHighlights: props.highlights,
         searchTerm: {pattern: '', index: -1, caseSensitive: false},
         popup: {type: PopupTypes.Hidden},
