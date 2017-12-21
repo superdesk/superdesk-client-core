@@ -7,8 +7,6 @@ import 'angular';
 import 'angular-resource';
 import 'angular-route';
 import 'angular-gettext';
-import 'angular-mocks';
-import 'angular-animate';
 import 'angular-embedly';
 import 'angular-embed';
 import 'angular-contenteditable';

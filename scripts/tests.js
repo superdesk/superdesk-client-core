@@ -1,4 +1,5 @@
 import 'vendor';
+import 'angular-mocks';
 import 'core';
 import 'core/tests/mocks';
 import 'apps';
