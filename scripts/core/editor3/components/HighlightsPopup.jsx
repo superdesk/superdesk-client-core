@@ -110,6 +110,7 @@ export class HighlightsPopup extends Component {
     renderCustom() {
         render(this.component(), document.getElementById('react-placeholder'));
         document.addEventListener('click', this.onDocumentClick);
+        this.rendered = true;
     }
 
     /**
@@ -119,7 +120,8 @@ export class HighlightsPopup extends Component {
      */
     unmountCustom() {
         unmountComponentAtNode(document.getElementById('react-placeholder'));
-        document.addEventListener('click', this.onDocumentClick);
+        document.removeEventListener('click', this.onDocumentClick);
+        this.rendered = false;
     }
 
     /**
@@ -155,6 +157,12 @@ export class HighlightsPopup extends Component {
         // Waiting one cycle allows the selection to be rendered in the browser
         // so that we can correctly retrieve its position.
         setTimeout(() => this.props.highlight ? this.renderCustom() : this.unmountCustom(), 0);
+    }
+
+    componentWillUnmount() {
+        if (this.rendered) {
+            this.unmountCustom();
+        }
     }
 
     render() {
