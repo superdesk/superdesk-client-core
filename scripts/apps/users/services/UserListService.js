@@ -12,32 +12,7 @@ export function UserListService(api, $q, $cacheFactory) {
     var DEFAULT_PAGE = 1;
     var DEFAULT_PER_PAGE = 20;
 
-    userservice.getAll = function() {
-        var p = $q.when();
-        var deferred = $q.defer();
-
-        function _getAll(page = DEFAULT_PAGE, items = []) {
-            api('users')
-                .query({max_results: 200, page: page})
-                .then((result) => {
-                    let pg = page;
-                    let merged = items.concat(result._items);
-
-                    if (result._links.next) {
-                        pg++;
-                        p = p.then(_getAll(pg, merged));
-                    } else {
-                        cache.put(DEFAULT_CACHE_KEY, merged);
-                        deferred.resolve(merged);
-                    }
-                });
-
-            return deferred.promise;
-        }
-
-        p = _getAll();
-        return p.then((res) => res);
-    };
+    userservice.getAll = () => api('users').getAll();
 
     /**
      * Fetches and caches users, or returns from the cache.
