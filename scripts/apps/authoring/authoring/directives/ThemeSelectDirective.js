@@ -14,7 +14,7 @@ export function ThemeSelectDirective(authThemes) {
             });
 
             authThemes.get('proofreadTheme').then((theme) => {
-                scope.proofredThemePref = theme;
+                scope.proofreadThemePref = theme;
                 scope.applyTheme('proofreadTheme', theme);
             });
 
@@ -45,10 +45,10 @@ export function ThemeSelectDirective(authThemes) {
 
             scope.saveTheme = () => {
                 scope.applyTheme('theme', scope.themePref);
-                scope.applyTheme('proofreadTheme', scope.proofredThemePref);
+                scope.applyTheme('proofreadTheme', scope.proofreadThemePref);
 
                 authThemes.save('theme', scope.themePref);
-                authThemes.save('proofreadTheme', scope.proofredThemePref);
+                authThemes.save('proofreadTheme', scope.proofreadThemePref);
 
                 return scope.closeModal();
             }
