@@ -748,6 +748,9 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                     } else if (scope.currentUserAction === ctrl.userActions.publish &&
                         !scope.canPublishItem() && scope.showSendButtonAndDestination()) {
                         scope.currentUserAction = ctrl.userActions.send_to;
+                    } else if (scope.currentUserAction === ctrl.userActions.publish &&
+                        isAuthoringDesk() && noPublishOnAuthoringDesk()) {
+                        scope.currentUserAction = ctrl.userActions.send_to;
                     }
                 }
             }
@@ -761,6 +764,26 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                 if (scope.orig || scope.item) {
                     scope.itemActions = authoring.itemActions(scope.orig || scope.item);
                 }
+            }
+
+            /**
+             * Test if desk of current item is authoring type.
+             *
+             * @return {Boolean}
+             */
+            function isAuthoringDesk() {
+                const desk = scope.allDesks.find((desk) => desk._id === scope.item.task.desk);
+
+                return desk && desk.desk_type === 'authoring';
+            }
+
+            /**
+             * Test if noPublishOnAuthoringDesk config is active.
+             *
+             * @return {Boolean}
+             */
+            function noPublishOnAuthoringDesk() {
+                return config.features.noPublishOnAuthoringDesk;
             }
 
             // update actions on item save
