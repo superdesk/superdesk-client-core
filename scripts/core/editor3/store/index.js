@@ -44,7 +44,8 @@ export default function createEditorStore(props, isReact = false) {
         activeCell: null, // currently focused table cell
         editorFormat: props.editorFormat || [],
         onChangeValue: onChangeValue,
-        item: props.item
+        item: props.item,
+        spellcheckerEnabled: !props.disableSpellchecker
     }, applyMiddleware(thunk));
 
 

@@ -54,17 +54,20 @@ const refreshWord = (state, word) => replaceWord(state, {word: word, newWord: wo
  * @ngdoc method
  * @name autoSpelchecker
  * @param {Object} state
- * @param {Boolean} enabled True if the autospellchecker should be enabled
+ * @param {Boolean} spellcheckerEnabled True if the autospellchecker should be enabled
  * @return {Object} returns new state
  * @description Disable/enable auto mode for spellchecker.
  */
-const autoSpellchecker = (state, enabled) => {
+const autoSpellchecker = (state, spellcheckerEnabled) => {
     const {editorState} = state;
-    const content = editorState.getCurrentContent();
-    const decorators = Editor3.getDecorator(!enabled);
-    const newState = EditorState.createWithContent(content, decorators);
+    const decorator = Editor3.getDecorator(!spellcheckerEnabled);
+    const newState = EditorState.set(editorState, {decorator});
+    const stateNotChanged = false;
 
-    return onChange(state, newState);
+    return {
+        ...onChange(state, newState, stateNotChanged),
+        spellcheckerEnabled
+    };
 };
 
 export default spellchecker;

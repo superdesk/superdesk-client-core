@@ -42,9 +42,9 @@ const editor3 = (state = {}, action) => {
  * until a better solution is found.
  */
 export const forceUpdate = (state) => {
-    const {editorState} = state;
+    const {editorState, spellcheckerEnabled} = state;
     const content = editorState.getCurrentContent();
-    const decorator = editorState.getDecorator();
+    const decorator = editorState.getDecorator(!spellcheckerEnabled);
 
     return {
         ...state,
