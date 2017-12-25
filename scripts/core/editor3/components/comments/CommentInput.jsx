@@ -22,7 +22,8 @@ class CommentInputBody extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {msg: ''};
+        this.state = {msg: props.data.msg || ''};
+
         this.onSubmit = this.onSubmit.bind(this);
         this.onChange = this.onChange.bind(this);
         this.suggestUser = this.suggestUser.bind(this);
