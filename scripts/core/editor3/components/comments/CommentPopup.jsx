@@ -1,7 +1,13 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
-import {replyComment, deleteHighlight, resolveComment} from '../../actions';
+import {
+    replyComment,
+    deleteHighlight,
+    resolveComment,
+    showPopup,
+    PopupTypes
+} from '../../actions';
 import {Comment} from './Comment';
 import ng from 'core/services/ng';
 
@@ -60,10 +66,12 @@ class CommentPopupComponent extends Component {
 
     render() {
         const {comment} = this.props;
-        const {replies, resolved} = comment.data;
-        const isAuthor = comment.data.email === this.currentUser;
+        const {data, selection} = comment;
+        const {replies, resolved, msg} = data;
+        const isAuthor = data.email === this.currentUser;
 
-        const onReply = this.postReply.bind(this, comment.selection);
+        const onEdit = () => this.props.showPopup(PopupTypes.Comment, {msg, selection});
+        const onReply = this.postReply.bind(this, selection);
         const onResolve = this.props.resolveComment.bind(this, comment);
         const onDelete = () => ng.get('modal')
             .confirm(gettext('The comment will be deleted. Are you sure?'))
@@ -71,7 +79,9 @@ class CommentPopupComponent extends Component {
 
         return (
             <div>
-                <Comment data={comment.data} />
+                <Comment data={data} />
+
+                {isAuthor && <a className="btn btn--small btn--hollow" onClick={onEdit}>{gettext('Edit')}</a>}
                 {isAuthor && <a className="btn btn--small btn--hollow" onClick={onDelete}>{gettext('Delete')}</a>}
                 {!resolved && <a className="btn btn--small btn--hollow" onClick={onResolve}>{gettext('Resolve')}</a>}
 
@@ -95,6 +105,12 @@ CommentPopupComponent.propTypes = {
     replyComment: PropTypes.func,
     resolveComment: PropTypes.func,
     deleteHighlight: PropTypes.func,
+    showPopup: PropTypes.func
 };
 
-export const CommentPopup = connect(null, {replyComment, deleteHighlight, resolveComment})(CommentPopupComponent);
+export const CommentPopup = connect(null, {
+    replyComment,
+    deleteHighlight,
+    resolveComment,
+    showPopup
+})(CommentPopupComponent);
