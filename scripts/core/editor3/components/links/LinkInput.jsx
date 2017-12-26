@@ -97,10 +97,9 @@ export class LinkInputComponent extends Component {
 
     render() {
         return (
-            <Dropdown open={true}>
+            <Dropdown open={true} className="dropdown--link-input">
                 <NavTabs tabs={this.tabs} active={this.activeTab} />
-                <DropdownMenuDivider />
-                <div className="pull-right">
+                <div className="dropdown__menu-footer dropdown__menu-footer--align-right">
                     <button className="btn btn--cancel"
                         onClick={this.props.hidePopups}>{gettext('Cancel')}</button>
                     <button className="btn btn--primary"

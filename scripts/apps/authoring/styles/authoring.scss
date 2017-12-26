@@ -184,16 +184,16 @@
 
     .sderror {
         border-bottom: 1px dotted #cc0000;
-        background-color: rgba(204, 0, 0, 0.08);
+        background-color: rgba(204,0,0,0.1);
         line-height: normal;
     }
 
     .sdfindreplace {
-        background-color: rgba(0, 0, 0, 0.08);
+        background-color: rgba(0,0,0,0.1);
     }
 
     .sdfindreplace.sdactive {
-        background-color: rgba(255, 255, 0, 1);
+        background-color: rgba(255,230,0,1);
     }
 
 
@@ -225,7 +225,7 @@
     &:empty:before{
         content: attr(placeholder);
         display: block; /* For Firefox */
-        color: #ccc;
+        color: rgba(150, 150, 150, 0.5);
     }
     &:focus:before{
         display: none;
