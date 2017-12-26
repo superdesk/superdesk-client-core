@@ -54,8 +54,9 @@
     <div ng-if="_editable">
         <span ng-if="_editable" sd-switch ng-model="item.flags.marked_for_sms" class="sms-switch" tabindex="{{editor.sms.order}}"></span>
     </div>
-    <span ng-if="item.flags.marked_for_sms" sd-character-count data-item="item.sms_message" data-html="true" data-limit="160"></span>
-    <div ng-if="item.flags.marked_for_sms">
+    
+    <div ng-if="item.flags.marked_for_sms" style="margin-top: 27px;">
+        <span sd-character-count data-item="item.sms_message" data-html="true" data-limit="160"></span>
         <label translate>SMS Message</label>
         <input type="text" sd-remove-tags
                class="byline"
@@ -270,7 +271,8 @@
          ng-model-options="{debounce: 100}"
          data-associations="item.associations"
          data-language="item.language"
-         data-type="item.type">
+         data-type="item.type"
+         class="body-text">
     </div>
     <div class="text-editor" sd-html-preview="item.body_html" ng-if="!_editable"></div>
 </div>

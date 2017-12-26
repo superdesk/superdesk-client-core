@@ -254,6 +254,8 @@ body, html {
                 font-size: 14px;
                 font-weight: 400 !important;
                 padding: 0;
+                -webkit-appearance: none;
+                -moz-appearance: none;
             }
             select {
                 width: 20%;
@@ -306,8 +308,8 @@ body, html {
     }
     // inputs
     .text-editor, input, select {
-        border: 1px solid rgba(150, 150, 150, 0) !important;
-        border-bottom-color: rgba(150, 150, 150, 0.15) !important;
+        border: 1px solid rgba(123, 123, 123, 0) !important;
+        border-bottom-color: rgba(123, 123, 123, 0.30) !important;
         padding: 0;
         border-radius: 0;
         background-color: transparent;
@@ -325,14 +327,14 @@ body, html {
         -webkit-appearance: none;
     }
     .text-editor:hover, .headline:hover, .abstract:hover, input:hover, select:hover {
-        border-bottom-color: rgba(150, 150, 150, 0.55) !important;
+        border-bottom-color: rgba(123, 123, 123, 0.60) !important;
         cursor: text;
     }
     select:hover {
         -moz-appearance: menulist-button;
         -webkit-appearance: menulist-button;
     }
-    .text-editor:focus, .headline:focus, .abstract:focus, input:focus, select:focus, .sms-switch:focus {
+    .text-editor:focus, .headline:focus, .abstract:focus, input:focus, select:focus {
         //.box-shadow(none) !important;
         border-width: 1px !important;
         border-color: rgba(94, 169, 200, 0.3) !important;
@@ -349,7 +351,7 @@ body, html {
         font-family: "Roboto", sans-serif;
         font-size: 11px;
         font-style: italic;
-        color: rgba(120, 120, 120, 1);
+        color: inherit;
         margin-left: 5px;
         float: right;
         @include opacity(0);
@@ -357,10 +359,17 @@ body, html {
         &.error {
             @include text-semibold();
             color: #D33C30;
+            @include opacity(100);
         }
     }
     &:hover, &:focus {
-        .char-count, .field label {
+        .char-count {
+            @include opacity(40);
+            &.error {
+                @include opacity(100);
+            }
+        }
+        .field label {
             @include opacity(100);
         }
     }
@@ -412,11 +421,12 @@ body, html {
             min-height: 24px;
         }
         &::-webkit-input-placeholder {
-            color: #ccc;
+            color: inherit;
+            opacity: 0.4;
         }
         &::-moz-placeholder {
-            color: #ccc;
-            opacity: 1;
+            color: inherit;
+            opacity: 0.4;
         }
         &:focus {
             &::-webkit-input-placeholder { color:transparent; }
@@ -428,11 +438,12 @@ body, html {
         text-transform: none;
         line-height: 140%;
         &::-webkit-input-placeholder {
-            color: #ccc;
+            color: inherit;
+            opacity: 0.4;
         }
         &::-moz-placeholder {
-            color: #ccc;
-            opacity: 1;
+            color: inherit;
+            opacity: 0.4;
         }
         &:focus {
             &::-webkit-input-placeholder { color:transparent; }
@@ -450,7 +461,7 @@ body, html {
         }
     }
     .headline, .headline p,  .headline div {
-        font-size:28px !important;
+
         line-height: 120% !important;
         @include text-semibold();
         .text-editor {
@@ -461,8 +472,6 @@ body, html {
     .abstract, .abstract p, .abstract div {
         min-height: 26px;
         font-weight: 400 !important;
-        font-size: 16px !important;
-        line-height: 150% !important;
         .text-editor {
             min-height: 26px;
         }
@@ -476,7 +485,7 @@ body, html {
     p {
         padding: 0;
         margin-bottom: 10px;
-        font-size:16px;
+
         line-height: 150%;
         @include text-light();
     }

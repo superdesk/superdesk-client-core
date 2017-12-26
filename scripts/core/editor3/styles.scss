@@ -7,13 +7,16 @@
 // colors
 $editor-neutral-border: rgba(150,150,150,0.4);
 $editor-neutral-bg: rgba(150,150,150,0.25);
-$editor-neutral-color: rgba(150,150,150,0.8);
+$editor-neutral-color: rgba(123,123,123,0.8);
+
+$editor-styleButton-color:inherit;
+$editor-styleButton-active-color:#5890ff;
 
 .main-article .abstract div.Editor3-root div.link-toolbar {
-	font-size: 12px !important;
+	font-size: 13px !important;
 	font-style: normal;
 	padding: 0 10px;
-	border-top: 1px solid rgba(150,150,150,0.5);
+	border-top: 1px solid $editor-neutral-border;
 	//background-color: #fdfdfd;
 	height: 0;
 	min-height: auto;
@@ -32,8 +35,6 @@ $editor-neutral-color: rgba(150,150,150,0.8);
 		width: 97%;
 	}
 	border: 1px solid $editor-neutral-border;
-	//font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
-	font-size: 14px;
 	font-weight: 300;
 	padding: 0;
 	position: relative;
@@ -43,7 +44,7 @@ $editor-neutral-color: rgba(150,150,150,0.8);
 	}
 
 	.link-toolbar {
-		font-size: 12px;
+		font-size: 13px;
 		color: $editor-neutral-color;
 		padding: 0 10px;
 		border-top: 1px solid rgba(150,150,150,0.25);
@@ -60,9 +61,9 @@ $editor-neutral-color: rgba(150,150,150,0.8);
 		a {
 			margin-left: 10px;
 			cursor: pointer;
-			color: rgba(150,150,150,0.90);
+			color: $editor-neutral-color;
 			&:hover {
-				color: rgba(150,150,150,1);
+				color: scale-color($editor-neutral-border, $alpha: +100%);
 				border-bottom: 1px dotted $sd-blue;
 			}
 		}
@@ -73,10 +74,11 @@ $editor-neutral-color: rgba(150,150,150,0.8);
 		position: fixed;
 		top: 132px;
 		left: auto;
+		right: auto;
 		z-index: 10;
 		box-shadow: 0px 1px 5px rgba(0,0,0,0.4);
-		max-width: 490px;
-
+		max-width: 34.4%;
+		background-color: #f8f8f8;
 		.link-toolbar.empty {
 			display: none;
 		}
@@ -144,7 +146,8 @@ $editor-neutral-color: rgba(150,150,150,0.8);
 				padding: 5px 10px;
 				cursor: pointer;
 				font-size: 13px;
-				font-family: 'Helvetica', sans-serif;
+				//font-family: "Roboto", Helvetica, Arial, sans-serif;
+				font-family: $baseFontFamily;
 
 				&:hover {
 					background: #444;
@@ -183,6 +186,7 @@ $editor-neutral-color: rgba(150,150,150,0.8);
 	}
 
 	.suggestions-dropdown {
+		font-family: $baseFontFamily;
 		display: block;
 		position: absolute;
 		top: 24px;
@@ -279,7 +283,6 @@ $editor-neutral-color: rgba(150,150,150,0.8);
 
 .Editor3-editor .Editor3-blockquote {
 	border-left: 5px solid #eee;
-	color: #666;
 	font-style: italic;
 	margin: 16px 0;
 	padding: 10px 20px;
@@ -287,18 +290,17 @@ $editor-neutral-color: rgba(150,150,150,0.8);
 
 .Editor3-editor .public-DraftStyleDefault-pre {
 	background-color: rgba(0, 0, 0, 0.05);
-	font-family: 'Inconsolata', 'Menlo', 'Consolas', monospace;
-	font-size: 16px;
+	font-family: 'Roboto Mono', monospace;
 	padding: 20px;
 }
 
 .Editor3-controls {
 	width: 100%;
 	min-width: 300px;
-	font-family: 'Helvetica', sans-serif;
-	font-size: 14px;
+	font-family: $baseFontFamily;
+	font-size: 14px !important;
 	user-select: none;
-	background-color: scale-color($editor-neutral-bg, $alpha: -60%);
+	background-color: scale-color($editor-neutral-bg, $alpha: -70%);
 	border-bottom: 1px solid;
 	border-bottom-color: scale-color($editor-neutral-border, $alpha: -50%);
 	line-height: 100% !important;
@@ -310,20 +312,27 @@ $editor-neutral-color: rgba(150,150,150,0.8);
 	}
 
 	.embed-dialog {
+		color: $sd-text;
 		position: absolute;
 		left: 0;
 		top: 0;
 		z-index: 2000;
-		display: block;
+		display: flex;
+		align-content: center;
+		flex-direction: row;
 		background-color: #fff;
-		width: 99%;
+		width: 100%;
 		border: 1px solid #dedede;
-		margin: 3px;
+		margin: -1px 0px;
+		padding: 4px;
+		border: 1px solid rgba(0, 0, 0, 0.4);
+		box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
 
 		&__error {
 			padding: 3px;
 			font-size: 13px;
-			color: #880000;
+			color: #a80000;
+			font-weight: 400;
 		}
 
 		input {
@@ -333,93 +342,69 @@ $editor-neutral-color: rgba(150,150,150,0.8);
 	}
 
 	.input-controls {
-		position: absolute;
-		top: 5px;
-		right: 5px;
-		
-		i {
-			&.icon-close-small {
-				width: 16px;
-				height: 16px;
-			}
-
-			&.svg-icon-ok {
-				width: 15px;
-				height: 15px;
-				margin-right: 2px;
-			}
-		}
+		flex-grow: 0;
+		display: flex;
 	}
 
 	.link-input {
 		display: block;
 		background: #fff;
-		width: 100%;
+		flex-grow: 1;
 		position: relative;
 
 		input[type="url"] {
+
 			padding: 0px 47px 0px 5px;
 		}
 	}
 }
 
 .Editor3-styleButton {
-	&.short {padding-right: 2px; margin-right: -10px;}
-
-	color: rgba(150,150,150,0.8);
+	&.short {
+		padding-right: 2px; 
+		margin-right: -10px;
+	}
+	color: $editor-styleButton-color;
 	cursor: pointer;
-	margin: 0px;
-	padding: 10px;
+	margin: 0.4rem 0.2rem;
+	height: 3rem;
+	width: 3rem;
+	padding: 0.6rem;
 	display: inline-block;
-
-	font-size: 13px;
-	font-style: normal;
-
-	span {
-		font-size: 13px;
-		font-style: normal;
-	}
-
+	border-radius: 50%;
+	text-align: center;
 	[class*="icon-"] {
-		color: rgba(150,150,150,0.8);
-
-		&:hover {
-			color: #555;
+		color: inherit;
+		opacity: 0.5;
+	}
+	&:hover {
+		[class*="icon-"] {
+			color: inherit;
+			opacity: 0.9;
 		}
 	}
-
-	.inactive [class*="icon-"] {
-		color: rgba(150,150,150,0.2);
-
+	.inactive {
+		[class*="icon-"] {
+			opacity: 0.2;
+		}
 		&:hover {
-			color: #ddd;
+			[class*="icon-"] {
+				opacity: 0.2;
+			}
 		}
 	}
-
-	&.Editor3-activeButton, &.Editor3-activeButton [class*="icon-"] {
-		color: #5890ff;
+	&.Editor3-activeButton, &.Editor3-activeButton:hover {
+		color: $editor-styleButton-active-color;
+		background-color: rgba(0, 0, 0, 0.075);
+		[class*="icon-"] {
+			opacity: 1;
+		}
 	}
 }
 
-/** Editor2 CSS Fix for headline **/
-.main-article .headline div.Editor3-root div {
-	font-size: 14px !important;
-	line-height: 100% !important;
-
-	.DraftEditor-editorContainer div {
-		font-size: 28px !important;
-		line-height: 120% !important;
-	}
-}
-
-/** Editor2 CSS Fix for abstract **/
-.main-article .abstract div.Editor3-root div {
-	font-size: 14px !important;
-	line-height: 100% !important;
-
-	.DraftEditor-editorContainer div {
-		font-size: 16px !important;
-		line-height: 150% !important;
+.main-article {
+	.dropdown__menu {
+		color: $sd-text;
 	}
 }
 
@@ -440,13 +425,9 @@ $editor-neutral-color: rgba(150,150,150,0.8);
 		}
 
 		.DraftEditor-root {
-			max-height: 150px;
+			max-height: 15rem;
+			min-height: 3.6rem;
 			overflow-y: auto;
-		}
-
-		.Editor3-styleButton {
-			padding: 5px;
-			i { font-size: 13px; }
 		}
 	}
 }
@@ -571,5 +552,69 @@ $editor-neutral-color: rgba(150,150,150,0.8);
 
 	&__type {
 		font-size: 1.1rem;
+	}
+}
+
+
+
+// Link input dropdown
+.dropdown--link-input {
+	.dropdown__menu {
+		padding:0;
+		max-width: 400px;
+		color: $sd-text;
+	}
+	.nav-tabs--small {
+		padding: 0 !important;
+	}
+	.nav-tabs__tab {
+		flex-grow: 1;
+		&.nav-tabs-small {
+			padding: 0;
+		}
+		button.nav-tabs__link {
+			text-align: center !important;
+			background-color: transparent !important;
+			margin: 0 !important;
+			cursor: pointer;
+			color: #747474 !important;
+		}
+		&.nav-tabs__tab--active {
+			button.nav-tabs__link {
+				cursor: default !important;
+				color: #333 !important;
+			}
+		}
+	}
+	.nav-tabs__content {
+		font-weight: 400;
+		p {
+			font-size: 1.4rem;
+			line-height: 140%;
+			margin-bottom: 0;
+		}
+	}
+}
+
+// Theme specific overrides
+
+.sd-editor--theme-turquoise, .sd-editor--theme-military {
+	.Editor3-controls, .item-association {
+		background-color: rgba(0, 0, 0, 0.03);
+		border-bottom-color: rgba(0, 0, 0, 0.1);
+	}
+	.Editor3-root, .item-association {
+		border-color: rgba(0, 0, 0, 0.1);
+	}
+	.Editor3-styleButton.Editor3-activeButton, 
+	.Editor3-styleButton.Editor3-activeButton:hover {
+		color: #9c27b0;
+	}
+}
+
+.sd-editor--theme-dark, .sd-editor--theme-blue {
+	.Editor3-styleButton.Editor3-activeButton, 
+	.Editor3-styleButton.Editor3-activeButton:hover {
+		background-color: rgba(0, 0, 0, 0.3);
 	}
 }
