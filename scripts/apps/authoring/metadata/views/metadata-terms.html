@@ -1,7 +1,7 @@
 <div class="term-editor data visible" ng-if="!header" title="{{helperText}}">
     <div sd-typeahead items="terms" term="selectedTerm" search="searchTerms(term)" select="selectTerm(item)" data-disabled="disabled">
         <ul ng-if="activeTerm || activeList">
-            <li typeahead-item="t" ng-repeat="t in terms track by t[uniqueField]">{{ :: t.name }}</li>
+            <li typeahead-item="t" ng-repeat="t in terms track by t[uniqueField]">{{t.name}}</li>
         </ul>
     </div>
 </div>
@@ -20,7 +20,7 @@
                             <figure ng-if="t.user" class="avatar">
                                 <img sd-user-avatar data-user="t.user" alt="{{ :: t.name}}">
                             </figure>
-                            {{ :: t.name}}
+                            {{t.name}}
                         </button>
                     </li>
                 </ul>
@@ -40,9 +40,9 @@
                         <figure ng-if="term.user" class="avatar">
                             <img sd-user-avatar data-user="term.user" alt="{{ :: term.name}}">
                         </figure>
-                        {{ :: term.name}}
+                        {{term.name}}
                         <i class="icon-chevron-right-thin"></i></button>
-                    <button ng-if="!tree[term[uniqueField]]" ng-click="selectTerm(term)">{{ :: term.name}}</button>
+                    <button ng-if="!tree[term[uniqueField]]" ng-click="selectTerm(term)">{{term.name}}</button>
                 </li>
             </ul>
         </li>
@@ -56,7 +56,7 @@
             ng-click="removeTerm(t)">{{t.name}}<i class="icon-close-small"></i></li>
         <li ng-if="!disabled && t.sub_label" class="pull-left"
             ng-repeat="t in selectedItems track by t[uniqueField]"
-            ng-click="removeTerm(t)"><label>{{ :: t.name}}:</label>{{t.sub_label}}<i class="icon-close-small"></i></li>
+            ng-click="removeTerm(t)"><label>{{t.name}}:</label>{{t.sub_label}}<i class="icon-close-small"></i></li>
         <li ng-if="disabled" class="pull-left disabled"
             ng-repeat="t in selectedItems track by t[uniqueField]">{{t.name}}</li>
     </ul>
