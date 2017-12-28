@@ -1,7 +1,7 @@
 <div class="term-editor data visible" ng-if="!header" title="{{helperText}}">
     <div sd-typeahead items="terms" term="selectedTerm" search="searchTerms(term)" select="selectTerm(item)" data-disabled="disabled">
         <ul ng-if="activeTerm || activeList">
-            <li typeahead-item="t" ng-repeat="t in terms track by t[uniqueField]">{{t.name}}</li>
+            <li typeahead-item="t" ng-repeat="t in terms track by t[uniqueField]">{{getLocaleName(t)}}</li>
         </ul>
     </div>
 </div>
@@ -18,9 +18,9 @@
                     <li typeahead-item="t" ng-repeat="t in terms track by t[uniqueField]">
                         <button ng-click="!allowEntireCat && openTree(t, $event)">
                             <figure ng-if="t.user" class="avatar">
-                                <img sd-user-avatar data-user="t.user" alt="{{ :: t.name}}">
+                                <img sd-user-avatar data-user="t.user" alt="{{getLocaleName(t)}}">
                             </figure>
-                            {{t.name}}
+                            {{getLocaleName(t)}}
                         </button>
                     </li>
                 </ul>
@@ -29,7 +29,7 @@
         <li class="levelup" ng-if="activeTerm">
             <i class="backlink" ng-click="openParent(activeTerm, $event)"></i>
             <button ng-click="allowEntireCat && selectTerm(activeTerm)">
-                <b class="category">{{ activeTerm.name }}</b>
+                <b class="category">{{getLocaleName(activeTerm)}}</b>
                 <b class="category-hover" ng-if="allowEntireCat">{{ :: "Choose entire category" | translate }}</b>
             </button>
         </li>
@@ -38,11 +38,11 @@
                 <li ng-repeat="term in activeTree track by term[uniqueField]">
                     <button ng-if="tree[term[uniqueField]]" class="nested-toggle" ng-click="openTree(term, $event)">
                         <figure ng-if="term.user" class="avatar">
-                            <img sd-user-avatar data-user="term.user" alt="{{ :: term.name}}">
+                            <img sd-user-avatar data-user="term.user" alt="{{getLocaleName(term)}}">
                         </figure>
-                        {{term.name}}
+                        {{getLocaleName(term)}}
                         <i class="icon-chevron-right-thin"></i></button>
-                    <button ng-if="!tree[term[uniqueField]]" ng-click="selectTerm(term)">{{term.name}}</button>
+                    <button ng-if="!tree[term[uniqueField]]" ng-click="selectTerm(term)">{{getLocaleName(term)}}</button>
                 </li>
             </ul>
         </li>
@@ -53,11 +53,11 @@
     <ul>
         <li ng-if="!disabled && !t.sub_label" class="pull-left"
             ng-repeat="t in selectedItems track by t[uniqueField]"
-            ng-click="removeTerm(t)">{{t.name}}<i class="icon-close-small"></i></li>
+            ng-click="removeTerm(t)">{{getLocaleName(t)}}<i class="icon-close-small"></i></li>
         <li ng-if="!disabled && t.sub_label" class="pull-left"
             ng-repeat="t in selectedItems track by t[uniqueField]"
-            ng-click="removeTerm(t)"><label>{{t.name}}:</label>{{t.sub_label}}<i class="icon-close-small"></i></li>
+            ng-click="removeTerm(t)"><label>{{getLocaleName(t)}}:</label>{{t.sub_label}}<i class="icon-close-small"></i></li>
         <li ng-if="disabled" class="pull-left disabled"
-            ng-repeat="t in selectedItems track by t[uniqueField]">{{t.name}}</li>
+            ng-repeat="t in selectedItems track by t[uniqueField]">{{getLocaleName(t)}}</li>
     </ul>
 </div>
