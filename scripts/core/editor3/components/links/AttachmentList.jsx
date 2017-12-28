@@ -55,7 +55,7 @@ export class AttachmentList extends Component {
             return <div>{attachments}</div>;
         }
 
-        return <div>{gettext('There are no attachments yet. Upload some first using Attachments widget.')}</div>;
+        return <p>{gettext('There are no attachments yet. Upload some first using Attachments widget.')}</p>;
     }
 }
 

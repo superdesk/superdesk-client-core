@@ -54,8 +54,9 @@
     <div ng-if="_editable">
         <span ng-if="_editable" sd-switch ng-model="item.flags.marked_for_sms" class="sms-switch" tabindex="{{editor.sms.order}}"></span>
     </div>
-    <span ng-if="item.flags.marked_for_sms" sd-character-count data-item="item.sms_message" data-html="true" data-limit="160"></span>
-    <div ng-if="item.flags.marked_for_sms">
+    
+    <div ng-if="item.flags.marked_for_sms" style="margin-top: 27px;">
+        <span sd-character-count data-item="item.sms_message" data-html="true" data-limit="160"></span>
         <label translate>SMS Message</label>
         <input type="text" sd-remove-tags
                class="byline"
@@ -270,7 +271,8 @@
          ng-model-options="{debounce: 100}"
          data-associations="item.associations"
          data-language="item.language"
-         data-type="item.type">
+         data-type="item.type"
+         class="body-text">
     </div>
     <div class="text-editor" sd-html-preview="item.body_html" ng-if="!_editable"></div>
 </div>
@@ -459,11 +461,11 @@
      data-required="schema.sign_off.required"
      sd-width="{{editor.sign_off.sdWidth|| 'full'}}">
     <label translate>Sign-Off</label>
-    <button id="sign-off-unlock" class="btn btn-signOff" ng-click="changeSignOffEdit()" tabindex="{{editor.sign_off.order}}" title="Unlock edit Sign-Off" ng-if="_editable">
+    <button id="sign-off-unlock" class="icn-btn btn-signOff" ng-click="changeSignOffEdit()" tabindex="{{editor.sign_off.order}}" title="Unlock edit Sign-Off" ng-if="_editable">
         <i class="icon-lock" ng-hide="editSignOff"></i>
         <i class="icon-unlocked" ng-show="editSignOff"></i>
     </button>
-    <div ng-hide="editSignOff" id="sign-off">{{item.sign_off}}</div>
+    <div ng-hide="editSignOff" class="text-field__non-editable" id="sign-off">{{item.sign_off}}</div>
     <input type="text" sd-remove-tags
            class="byline"
            id="sign_off"

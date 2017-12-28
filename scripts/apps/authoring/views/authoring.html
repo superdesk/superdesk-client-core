@@ -13,21 +13,21 @@
                     <span sd-extension-point="authoring-sticky-detailed"></span>
                 </div>
 
-                <div class="authoring-sticky__theme-controls pull-right">
+                <div class="authoring-sticky__theme-controls ">
                    <div class="preview-modal-control" ng-if="$root.config.features.preview">
                         <div sd-full-preview ng-if="fullPreview"
                             data-item="item"
                             data-close-action="closeFullPreview"></div>
-                        <a class="preview-toggle btn"
+                        <button class="preview-toggle icn-btn"
                             ng-if="item.type === 'text'"
                             title="{{:: 'Preview' | translate}}"
                             ng-click="openFullPreview($event)"
                             ng-href="{{fullPreviewUrl}}">
                             <i class="icon-preview-mode"></i>
-                        </a>
+                        </button>
                     </div>
 
-                    <button class="proofread-toggle toggle btn"
+                    <button class="proofread-toggle icn-btn"
                         ng-class="{active: proofread}"
                         ng-click="proofread = !proofread"
                         title="{{:: 'Toggle theme' | translate}}">
