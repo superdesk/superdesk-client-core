@@ -373,6 +373,31 @@
                  tabindex="{{editor.authors.order}}">
             </div>
         </div>
+
+        <div class="authoring-header__item"
+             sd-validation-error="error.destination"
+             data-required="schema.destination.required"
+             ng-if="schema.destination && editor.destination"
+             sd-width="{{editor.destination.sdWidth}}"
+             order="{{editor.destination.order}}">
+            <label class="authoring-header__item-label" translate>Destination</label>
+            <div id="destination"
+                 sd-meta-terms
+                 class="data"
+                 data-tabindex="editor.destination.order"
+                 data-item="item"
+                 data-field="destination"
+                 data-unique="qcode"
+                 data-list="metadata.destination"
+                 ng-disabled="!_editable"
+                 data-header="true"
+                 data-change="autosave(item)"
+                 data-reload-list="true"
+                 tabindex="{{editor.destination.order}}">
+            </div>
+            <div class="authoring-header__hint" ng-if="helper_text.destination">{{helper_text.destination}}</div>
+        </div>
+
     </div>
 </div>
 <button class="authoring-header__toggle" ng-class="{active: toggleHeader}" ng-click="toggleHeader = !toggleHeader" tabindex="-1"><i class="icon-chevron-up-thin"></i></button>
