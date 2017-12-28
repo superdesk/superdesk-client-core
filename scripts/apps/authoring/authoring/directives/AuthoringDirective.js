@@ -81,8 +81,11 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
     return {
         link: function($scope, elem, attrs) {
             var _closing;
+            var mediaFields = {};
 
             const UNIQUE_NAME_ERROR = gettext('Error: Unique Name is not unique.');
+            const MEDIA_TYPES = ['video', 'picture', 'audio'];
+            const MEDIA_FIELD_FORMAT = /(\S+)__#(\d+)/i;
 
             $scope.privileges = privileges.privileges;
             $scope.dirty = false;
@@ -98,6 +101,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             $scope.openCompareVersions = (item) => compareVersions.init(item);
             $scope.isValidEmbed = {};
             $scope.embedPreviews = {};
+            $scope.mediaFieldVersions = {};
 
             $scope.$watch('origItem', (newValue, oldValue) => {
                 $scope.itemActions = null;
@@ -114,6 +118,20 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                     $scope.dirty = true;
                 }
             }, true);
+
+            $scope.$watch('item.profile', (profile) => {
+                if (profile) {
+                    content.getType(profile)
+                        .then((type) => {
+                            $scope.contentType = type;
+                            $scope.fields = content.fields(type);
+                            initMedia();
+                        });
+                } else {
+                    $scope.contentType = null;
+                    $scope.fields = null;
+                }
+            });
 
             $scope._isInProductionStates = !authoring.isPublished($scope.origItem);
 
@@ -191,6 +209,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
 
                     notify.success(gettext('Item updated.'));
 
+                    initMedia();
                     return $scope.origItem;
                 }, (response) => {
                     if (response.status === 412) {
@@ -587,6 +606,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                         confirm.confirmQuickPublish().then(customButtonAction) :
                         customButtonAction();
                 }
+                initMedia();
             };
 
             $scope.publishAndContinue = function() {
@@ -597,6 +617,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 }, (err) => {
                     notify.error(gettext('Failed to publish and continue.'));
                 });
+                initMedia();
             };
 
             $scope.deschedule = function() {
@@ -763,6 +784,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 var autosavedItem = authoring.autosave($scope.item, $scope.origItem, timeout);
 
                 authoringWorkspace.addAutosave();
+                initMedia();
                 return autosavedItem;
             };
 
@@ -838,6 +860,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                         $scope.dirty = false;
                         $scope.closePreview();
                         $scope.item._editable = $scope._editable;
+                        initMedia();
                     });
             }
 
@@ -900,7 +923,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             var initEmbedFieldsValidation = () => {
                 $scope.isValidEmbed = {};
                 content.getTypes().then(() => {
-                    _.forEach(content.types, (profile) => {
+                    _.forEach($scope.content_types, (profile) => {
                         if ($scope.item.profile === profile._id && profile.schema) {
                             _.forEach(profile.schema, (schema, fieldId) => {
                                 if (schema && schema.type === 'embed') {
@@ -910,6 +933,159 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                         }
                     });
                 });
+            };
+
+            /**
+             * @ngdoc method
+             * @name sdAuthoring#getFieldParts
+             * @private
+             * @description Splits an association field containing versioning in the
+             *              root part and the version number and returns them in an array.
+             * @param {string} fieldId
+             * @return {Object}
+             */
+            function getFieldParts(fieldId) {
+                var match = MEDIA_FIELD_FORMAT.exec(fieldId);
+
+                if (!match) {
+                    return [fieldId, null];
+                }
+                if (match.length === 3) {
+                    return [match[1], parseInt(match[2], 10)];
+                }
+                return [match[1], null];
+            }
+
+            /**
+             * @ngdoc method
+             * @name sdAuthoring#getFieldVersionName
+             * @private
+             * @description Returns an association field generated from the vocabulary
+             *              field identifier and version number.
+             * @param {string} rootField
+             * @param {string} version
+             * @return {string}
+             */
+            function getFieldVersionName(rootField, version) {
+                if (version === null || version === undefined) {
+                    return rootField;
+                }
+                return rootField + '__#' + version;
+            }
+
+            /**
+             * @ngdoc method
+             * @name sdAuthoring#isMediaField
+             * @private
+             * @description Returns true if the given string is a vocabulary media
+             *              field identifier, false otherwise.
+             * @param {string} fieldId
+             * @return {bool}
+             */
+            function isMediaField(fieldId) {
+                var parts = getFieldParts(fieldId);
+                var field = _.find($scope.fields, (field) => field._id === parts[0]);
+
+                return field && field.field_type === 'media';
+            }
+
+            /**
+             * @ngdoc method
+             * @name sdAuthoring#computeMediaFieldVersions
+             * @private
+             * @description Generates an array of name versions for a given vocabulary
+             *              media field.
+             * @param {string} fieldId
+             */
+            function computeMediaFieldVersions(fieldId) {
+                $scope.mediaFieldVersions[fieldId] = [];
+
+                var field = _.find($scope.fields, (field) => field._id === fieldId);
+
+                if (field) {
+                    var multipleItems = _.get(field, 'field_options.multiple_items.enabled');
+                    var maxItems = !multipleItems ? 1 : _.get(field, 'field_options.multiple_items.max_items');
+
+                    if (!maxItems || !mediaFields[fieldId] || mediaFields[fieldId].length < maxItems) {
+                        $scope.mediaFieldVersions[fieldId].push($scope.getNewMediaFieldId(fieldId));
+                    }
+                    _.forEach(mediaFields[fieldId], (version) => {
+                        $scope.mediaFieldVersions[fieldId].push(getFieldVersionName(fieldId, version));
+                    });
+                }
+            }
+
+            /**
+             * @ngdoc method
+             * @name sdAuthoring#addMediaField
+             * @private
+             * @description Adds the version of the given field name to the versions array.
+             * @param {string} fieldId
+             */
+            function addMediaField(fieldId) {
+                var [rootField, index] = getFieldParts(fieldId);
+
+                if (!_.has(mediaFields, rootField)) {
+                    mediaFields[rootField] = [];
+                }
+                mediaFields[rootField].push(index);
+                mediaFields[rootField].sort((a, b) => {
+                    if (b === null || b === undefined) {
+                        return -1;
+                    }
+                    if (a === null || a === undefined) {
+                        return 1;
+                    }
+                    return b - a;
+                });
+            }
+
+            /**
+             * @ngdoc method
+             * @name sdAuthoring#initMedia
+             * @private
+             * @description Initializes arrays containing the media fields versions.
+             */
+            function initMedia() {
+                mediaFields = {};
+                $scope.mediaFieldVersions = {};
+
+                _.forEach($scope.item.associations, (association, fieldId) => {
+                    if (association && _.findIndex(MEDIA_TYPES, (type) => type === association.type) !== -1
+                        && isMediaField(fieldId)) {
+                        addMediaField(fieldId);
+                    }
+                });
+
+                if ($scope.contentType && $scope.contentType.schema) {
+                    _.forEach($scope.fields, (field) => {
+                        if (isMediaField(field._id)) {
+                            computeMediaFieldVersions(field._id);
+                        }
+                    });
+                }
+            }
+
+            /**
+             * @ngdoc method
+             * @name sdAuthoring#getNewMediaFieldId
+             * @private
+             * @description Returns a new name version for a given media field.
+             * @param {string} fieldId
+             * @return {string}
+             */
+            $scope.getNewMediaFieldId = (fieldId) => {
+                var field = _.find($scope.fields, (field) => field._id === fieldId);
+                var multipleItems = field ? _.get(field, 'field_options.multiple_items.enabled') : false;
+                var parts = getFieldParts(fieldId);
+                var newIndex = multipleItems ? 1 : null;
+
+                if (_.has(mediaFields, parts[0])) {
+                    var fieldVersions = mediaFields[parts[0]];
+
+                    newIndex = fieldVersions.length ? 1 + fieldVersions[0] : 1;
+                }
+                return getFieldVersionName(parts[0], newIndex);
             };
 
             // init

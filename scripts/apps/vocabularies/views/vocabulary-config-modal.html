@@ -28,7 +28,7 @@
             </div>
 
             <div class="sd-line-input sd-line-input--required">
-                <label for="cv_display_name" translate>Name</label>
+                <label for="cv_display_name" class="sd-line-input__label" translate>Name</label>
                 <input id="cv_display_name"
                     type="text"
                     ng-model="vocabulary.display_name"
@@ -36,7 +36,7 @@
             </div>
 
             <div class="sd-line-input" ng-class="{'sd-line-input--invalid': vocabularyForm.$error.maxlength}">
-                <label for="cv_helper_text" translate>Helper text</label>
+                <label for="cv_helper_text" class="sd-line-input__label" translate>Helper text</label>
                 <input id="cv_helper_text"
                     class="sd-line-input__input"
                     type="text"
@@ -47,12 +47,12 @@
             </div>
 
             <div class="sd-line-input" ng-show="matchFieldTypeToTab('text-fields', vocabulary.field_type)">
-                <label for="field-text-single" translate>Single line</label>
+                <label for="field-text-single" class="sd-line-input__label" translate>Single line</label>
                 <input id="field-text-single" type="checkbox" ng-model="vocabulary.field_options.single">
             </div>
 
             <div class="sd-line-input" ng-show="matchFieldTypeToTab('media-fields', vocabulary.field_type)">
-                <label for="field-media-type" translate>Media Type</label>
+                <label for="field-media-type" class="sd-line-input__label" translate>Media Type</label>
                 <ul>
                     <li>
                         <div>
@@ -79,10 +79,20 @@
                         </div>
                     </li>
                 </ul>
+
+            </div>
+
+            <div class="sd-line-input" ng-show="matchFieldTypeToTab('media-fields', vocabulary.field_type)">
+                <span id="multiple_items" sd-switch ng-model="vocabulary.field_options.multiple_items.enabled"></span>
+                <label for="multiple_items" translate>Allow Multiple Items</label>
+                <label for="max_items" translate>No. of items</label>
+                <input id="max_items" type="number" min="0" max="99" class="input-small line-input"
+                    ng-model="vocabulary.field_options.multiple_items.max_items"
+                    ng-disabled="!vocabulary.field_options.multiple_items.enabled">
             </div>
 
             <div class="sd-line-input" ng-show="matchFieldTypeToTab('vocabularies', vocabulary.field_type)">
-                <label translate>Items</label>
+                <label class="sd-line-input__label" translate>Items</label>
 
                 <table>
                 <thead>
