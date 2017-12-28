@@ -24,7 +24,7 @@ describe('editor3.components.embed-input', () => {
         const noop = () => ({});
         const wrapper = shallow(<EmbedInput embedCode={noop} onCancel={noop} onSubmit={noop} />, options);
 
-        expect(wrapper.find('.svg-icon-ok').length).toBe(1);
+        expect(wrapper.find('.icon-ok').length).toBe(1);
         expect(wrapper.find('.icon-close-small').length).toBe(1);
         expect(wrapper.find('.embed-dialog__error').length).toBe(0);
     });

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {EditorState} from 'draft-js';
 import {getSelectedEntity} from './entityUtils';
-import {Dropdown, DropdownMenuDivider, NavTabs} from 'core/ui/components';
+import {Dropdown, NavTabs} from 'core/ui/components';
 import {AttachmentList} from './AttachmentList';
 import {applyLink, hidePopups} from '../../actions';
 

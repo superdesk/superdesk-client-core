@@ -5,11 +5,11 @@ export function AuthoringThemesService(storage, preferencesService) {
     var PREFERENCES_KEY = 'editor:theme';
 
     var THEME_DEFAULT = {
-        'font': 'sans',
-        'theme': 'default',
-        'headline': 'medium',
-        'abstract': 'medium',
-        'body': 'medium'
+        font: 'sans',
+        theme: 'default',
+        headline: 'medium',
+        abstract: 'medium',
+        body: 'medium'
     };
 
     service.availableThemes = {
@@ -71,12 +71,12 @@ export function AuthoringThemesService(storage, preferencesService) {
 
     service.get = function(key) {
         return preferencesService.get().then((result) => {
-            var theme = result[PREFERENCES_KEY] && result[PREFERENCES_KEY][key]  ?
-            result[PREFERENCES_KEY][key] : THEME_DEFAULT;
+            var theme = result[PREFERENCES_KEY] && result[PREFERENCES_KEY][key] ?
+                result[PREFERENCES_KEY][key] : THEME_DEFAULT;
 
             try {
                 theme = JSON.parse(theme);
-            } catch(e) {
+            } catch (e) {
                 theme = angular.copy(THEME_DEFAULT);
             }
 

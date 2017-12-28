@@ -24,7 +24,7 @@ export function ThemeSelectDirective(authThemes) {
              */
             scope.pickTheme = (themeKey, color) => {
                 scope[themeKey].theme = color;
-            }
+            };
 
             scope.applyTheme = (key, theme) => {
                 if (scope.key !== key) {
@@ -41,7 +41,7 @@ export function ThemeSelectDirective(authThemes) {
                     .children('.theme-container')
                     .attr('class', DEFAULT_CLASS)
                     .addClass(themeClasses);
-            }
+            };
 
             scope.saveTheme = () => {
                 scope.applyTheme('theme', scope.themePref);
@@ -51,11 +51,9 @@ export function ThemeSelectDirective(authThemes) {
                 authThemes.save('proofreadTheme', scope.proofreadThemePref);
 
                 return scope.closeModal();
-            }
+            };
 
-            scope.closeModal = () => {
-                return scope.modalEditorConfig = false;
-            }
+            scope.closeModal = () => scope.modalEditorConfig = false;
         }
     };
 }
