@@ -17,10 +17,7 @@ function MetadataCtrl(
                             _.get($scope, 'origItem.type') === 'text';
 
     metadata.initialize().then(() => {
-        $scope.$watch('item.language', (language) => {
-            $scope.metadata = metadata.getLocaleItemsForCvs(metadata.values, language);
-        });
-
+        $scope.metadata = metadata.values;
         return preferencesService.get();
     })
         .then(setAvailableCategories)
@@ -359,7 +356,7 @@ function MetaDropdownDirective($filter) {
                 }
             };
 
-            scope.$watch('list', () => {
+            scope.$watch(':: list', () => {
                 scope.values = _.keyBy(scope.list, 'qcode');
             });
 
@@ -653,7 +650,6 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
                 scope.tree = tree;
                 scope.activeTree = tree.null;
                 scope.combinedList = _.union(scope.list, scope.item[scope.field] ? scope.item[scope.field] : []);
-                scope.selectedItems = getSelected(items);
             });
 
             scope.$watch('item[field]', (selected) => {
@@ -735,21 +731,6 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
                 });
 
                 return _.filter(terms, (term) => term && !selected[term[scope.uniqueField]]);
-            }
-
-            /**
-             * Return the list of locale selected items
-             */
-            function getSelected(terms) {
-                var selected = {};
-
-                angular.forEach(scope.item[scope.field], (term) => {
-                    if (term) {
-                        selected[term[scope.uniqueField]] = 1;
-                    }
-                });
-
-                return _.filter(terms, (term) => term && selected[term[scope.uniqueField]]);
             }
 
             function addTerm(term) {
@@ -856,6 +837,18 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
                 scope.terms = $filter('sortByName')(scope.terms);
                 scope.change({item: scope.item, field: scope.field});
                 elem.find('.dropdown__toggle').focus(); // retain focus
+            };
+
+            scope.getLocaleName = function(term) {
+                if (!term) {
+                    return 'None';
+                }
+                if (term.translations && scope.item.language
+                    && term.translations.name[scope.item.language]) {
+                    return term.translations.name[scope.item.language];
+                }
+
+                return term.name;
             };
         }
     };
@@ -1099,22 +1092,21 @@ function MetadataService(api, subscribersService, config, vocabularies, $rootSco
                 self.values.cities = result._items;
             });
         },
-        filterCvs: function(qcodes, cvs, language) {
+        filterCvs: function(qcodes, cvs) {
             var self = this;
 
             self.cvs.forEach((cv) => {
                 var cvService = cv.service || {};
                 var match = false;
-                var localeItems = self.getLocaleItems(cv.items, language);
 
                 if (cvService.all) {
                     match = true;
-                    cv.terms = self.filterByService(localeItems, qcodes);
+                    cv.terms = self.filterByService(cv.items, qcodes);
                 } else {
                     qcodes.forEach((qcode) => {
                         match = match || cvService[qcode];
                     });
-                    cv.terms = localeItems;
+                    cv.terms = cv.items;
                 }
 
                 if (match) {
@@ -1152,37 +1144,6 @@ function MetadataService(api, subscribersService, config, vocabularies, $rootSco
         },
         priorityByValue: function(value) {
             return this._priorityByValue[value] || null;
-        },
-        setLocaleTerms: function(cvs, language) {
-            cvs.forEach((cv) => {
-                cv.terms = this.getLocaleItems(cv.items, language);
-            });
-        },
-        getLocaleItemsForCvs: function(itemsForCvs, language) {
-            var localeItemsForCvs = {};
-
-            _.forEach(itemsForCvs, (items, key) => {
-                localeItemsForCvs[key] = this.getLocaleItems(items, language);
-            });
-
-            return localeItemsForCvs;
-        },
-        getLocaleItems: function(items, language) {
-            return _.map(items, (item) => {
-                if (!item.translations) {
-                    return item;
-                }
-
-                var newItem = _.extend({}, item);
-
-                _.forEach(newItem.translations, (values, field) => {
-                    if (field in newItem && language in values) {
-                        newItem[field] = values[language];
-                    }
-                });
-
-                return newItem;
-            });
         }
     };
 

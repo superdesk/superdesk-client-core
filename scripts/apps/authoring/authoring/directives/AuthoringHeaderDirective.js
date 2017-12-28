@@ -161,7 +161,7 @@ export function AuthoringHeaderDirective(api, authoringWidgets, $rootScope, arch
                     var qcodes = _.map(services, 'qcode');
                     var cvs = [];
 
-                    metadata.filterCvs(qcodes, cvs, scope.item.language);
+                    metadata.filterCvs(qcodes, cvs);
 
                     scope.cvs = _.sortBy(cvs, 'priority');
                     scope.genreInCvs = _.map(cvs, 'schema_field').indexOf('genre') !== -1;
@@ -172,10 +172,6 @@ export function AuthoringHeaderDirective(api, authoringWidgets, $rootScope, arch
 
                 scope.$watch('item.subject', () => {
                     scope.shouldDisplayCompanyCodes();
-                });
-
-                scope.$watch('item.language', (language) => {
-                    metadata.setLocaleTerms(scope.cvs, language);
                 });
             });
 

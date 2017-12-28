@@ -14,7 +14,7 @@ export function MediaMetadata(userList, archiveService, metadata) {
                 var cvs = [];
 
                 metadata.fetchMetadataValues().then(() => {
-                    metadata.filterCvs(qcodes, cvs, scope.item.language);
+                    metadata.filterCvs(qcodes, cvs);
                     scope.cvs = _.sortBy(cvs, 'priority');
                     scope.genreInCvs = _.map(cvs, 'schema_field').indexOf('genre') !== -1;
                     scope.placeInCvs = _.map(cvs, 'schema_field').indexOf('place') !== -1;
