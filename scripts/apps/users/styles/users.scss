@@ -213,27 +213,14 @@
 */
 
 .user-details-pane {
+    display: flex;
+    flex-direction: column;
     position: relative;
     width: 100%;
-    height: calc(100% - 48px);
-    overflow: auto;
+    height: 100%;
+    
+    > div { overflow: auto; }
 
-    ::-webkit-scrollbar {
-        border-left: 9px solid #fff;
-        border-right: 1px solid #fff;
-        width: 13px;
-        background: #fff;
-        &:hover {
-            background: #e8e8e8;
-        }
-    }
-    ::-webkit-scrollbar-thumb {
-        border-left: 8px solid #fff;
-        background: #bbb;
-        &:hover {
-            background: #787878;
-        }
-    }
     .profile-info {
         display: flex;
         flex-direction: column;
@@ -544,6 +531,11 @@ Profile page styles
                 bottom: $scratchpad-closed + 20px;
                 overflow: auto;
             }
+        }
+
+        .action-bar {
+            top: -48px;
+            &.show { top:0; }
         }
     }
 
