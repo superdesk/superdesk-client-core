@@ -539,7 +539,8 @@
     ng-if="field.field_type === 'embed'"
     sd-width="{{ editor[field._id].sdWidth || 'full' }}"
     order="{{ editor[field._id].order }}"
-    class="sd-line-input">
+    class="sd-line-input"
+    data-required="schema[field._id].required">
     <label translate>{{ field.display_name }}</label>
     <button type="button" class="btn btn--primary pull-right"
         ng-click="processEmbed(field._id)" ng-show="isURL(item.extra[field._id].embed)" translate>Generate From URL
@@ -547,12 +548,12 @@
     <button id="preview-embed-btn" type="button" class="btn btn--primary pull-right" ng-click="previewEmbed(field._id)"
             ng-show="item.extra[field._id].embed && isValidEmbed[field._id] && !isPreviewOn(field._id)" translate>Preview
     </button>
-    <button id="preview-embed-btn" type="button" class="btn btn--primary pull-right" ng-click="hideEmbedPreview(field._id)"
+    <button id="hide-preview-embed-btn" type="button" class="btn btn--primary pull-right" ng-click="hideEmbedPreview(field._id)"
             ng-show="isPreviewOn(field._id)" translate>Hide Preview
     </button>
     <textarea id="embed-field-{{ field._id }}" class="sd-line-input__input" type="text"
         ng-change="validateEmbed(field._id)" ng-model="item.extra[field._id].embed"
-        sd-validation-error="error.extra[field._id].embed" data-required="schema[field._id].required"></textarea>
+        sd-validation-error="error.extra[field._id].embed"></textarea>
     <input type="text" class="sd-line-input__input" ng-model="item.extra[field._id].description"
         sd-remove-tags ng-change="autosave(item)" placeholder="{{ 'Description' | translate }}">
     <div id="embed-preview-{{ field._id }}" ng-show="embedPreviews[field._id]"></div>
