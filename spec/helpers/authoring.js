@@ -642,20 +642,22 @@ function Authoring() {
     };
 
     this.changeNormalTheme = function(theme) {
-        element(by.className('theme-select'))
-            .element(by.className('dropdown__toggle')).click();
+        element(by.css('[sd-theme-select]')).click();
 
-        element(by.className('normal-theme-list'))
-            .all(by.className(theme)).first().click();
+        element(by.className('sd-column-box__main-column--left'))
+            .element(by.className(theme)).click();
+
+        element(by.css('[ng-click="saveTheme()"]')).click();
     };
 
     this.changeProofreadTheme = function(theme) {
         element(by.className('proofread-toggle')).click();
-        element(by.className('theme-select'))
-            .element(by.className('dropdown__toggle')).click();
+        element(by.css('[sd-theme-select]')).click();
 
-        element(by.className('proofread-theme-list'))
-            .all(by.className(theme)).first().click();
+        element(by.className('sd-column-box__main-column--right'))
+            .element(by.className(theme)).click();
+
+        element(by.css('[ng-click="saveTheme()"]')).click();
     };
 
     this.addHelpline = function(helplineLabel) {
