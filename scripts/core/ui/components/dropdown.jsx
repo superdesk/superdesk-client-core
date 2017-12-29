@@ -3,7 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 export function Dropdown(props) {
-    const className = props.open ? 'dropdown open' : 'dropdown';
+    const className = props.open ? 'dropdown open ' + props.className : 'dropdown ' + props.className;
 
     return (
         <div className={className}>
@@ -14,5 +14,6 @@ export function Dropdown(props) {
 
 Dropdown.propTypes = {
     open: PropTypes.bool,
-    children: PropTypes.node
+    children: PropTypes.node,
+    className: PropTypes.string
 };

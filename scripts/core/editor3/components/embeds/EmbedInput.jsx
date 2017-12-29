@@ -127,8 +127,12 @@ export class EmbedInputComponent extends Component {
                     }}
                     placeholder={gettext('Enter URL or code to embed')} />
                 <div className="input-controls">
-                    <i className="svg-icon-ok" onClick={this.onSubmit} />
-                    <i className="icon-close-small" onClick={this.onCancel} />
+                    <a className="icn-btn" onClick={this.onSubmit}>
+                        <i className="icon-ok" />
+                    </a>
+                    <a className="icn-btn" onClick={this.onCancel}>
+                        <i className="icon-close-small" />
+                    </a>
                 </div>
                 {error ? <div className="embed-dialog__error">{error}</div> : null}
             </form>

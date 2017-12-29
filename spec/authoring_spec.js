@@ -127,15 +127,15 @@ describe('authoring', () => {
         // can change normal theme
         expect(monitoring.getTextItem(3, 2)).toBe('item6');
         monitoring.actionOnItem('Edit', 3, 2);
-        authoring.changeNormalTheme('dark-theme');
-        expect(monitoring.hasClass(element(by.className('main-article')), 'dark-theme')).toBe(true);
+        authoring.changeNormalTheme('sd-editor--theme-blue');
+        expect(monitoring.hasClass(element(by.className('main-article')), 'sd-editor--theme-blue')).toBe(true);
         authoring.close();
 
         // can change proofread theme
         expect(monitoring.getTextItem(3, 2)).toBe('item6');
         monitoring.actionOnItem('Edit', 3, 2);
-        authoring.changeProofreadTheme('dark-theme-mono');
-        expect(monitoring.hasClass(element(by.className('main-article')), 'dark-theme-mono')).toBe(true);
+        authoring.changeProofreadTheme('sd-editor--theme-dark');
+        expect(monitoring.hasClass(element(by.className('main-article')), 'sd-editor--theme-dark')).toBe(true);
         authoring.close();
 
         // publish & kill item

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {EditorState} from 'draft-js';
 import {getSelectedEntity} from './entityUtils';
-import {Dropdown, DropdownMenuDivider, NavTabs} from 'core/ui/components';
+import {Dropdown, NavTabs} from 'core/ui/components';
 import {AttachmentList} from './AttachmentList';
 import {applyLink, hidePopups} from '../../actions';
 
@@ -97,10 +97,9 @@ export class LinkInputComponent extends Component {
 
     render() {
         return (
-            <Dropdown open={true}>
+            <Dropdown open={true} className="dropdown--link-input">
                 <NavTabs tabs={this.tabs} active={this.activeTab} />
-                <DropdownMenuDivider />
-                <div className="pull-right">
+                <div className="dropdown__menu-footer dropdown__menu-footer--align-right">
                     <button className="btn btn--cancel"
                         onClick={this.props.hidePopups}>{gettext('Cancel')}</button>
                     <button className="btn btn--primary"
