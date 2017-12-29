@@ -69,29 +69,38 @@
             bottom: 30px;
             fieldset {
                 padding: 10px;
+                &.fieldset--no-padding {
+                    padding: 0;
+                }
                 .btn-group.pull-left {
                     margin-left: 0;
                 }
             }
-                        span.chevron {
-                            background-color: $sd-background;
-                            ~ h6 {
-                                background-color: $sd-background;
-                            }
-                        }
-                        .nav-tabs {
-                            padding: 0 10px;
-                            background-color: $white;
-                            @include box-shadow(0 1px 0 0 rgba(0, 0, 0, 0.1));
-                        }
-                        .content {
-                            padding: 10px;
-                        }
-        }
-                &.remove-header {
-                        .widget-content {
-                            top: 0;
-                        }
+            span.chevron {
+                background-color: $sd-background;
+                ~ h6 {
+                    background-color: $sd-background;
                 }
+            }
+            .nav-tabs {
+                padding: 0 10px;
+                background-color: $white;
+                @include box-shadow(0 1px 0 0 rgba(0, 0, 0, 0.1));
+            }
+            .content {
+                padding: 10px;
+            }
+            .widget-header__action {
+                position: fixed;
+                top: 106px;
+                right: 61px;
+                z-index: 999;
+            }
+        }
+        &.remove-header {
+                .widget-content {
+                    top: 0;
+                }
+        }
     }
 }

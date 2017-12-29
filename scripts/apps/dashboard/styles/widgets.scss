@@ -145,6 +145,10 @@
                         color: #999;
                         margin-top: 1px;
                     }
+                    &--basic {
+                        border-bottom: none;
+                        padding: 4px 0;
+                    }
                 }
                 .basic {
                     .legal {
@@ -259,11 +263,17 @@
                     font-size: 10px;
                     color: $grayLight;
                 }
+                .toggle-box {
+                    margin-bottom: 0;
+                }
             }
             .active {
                 .item-block {
                     background: $sd-hover;
                 }
+            }
+            &.simple-list {
+                margin-top: 1.6rem;
             }
         }
         .main-list {
