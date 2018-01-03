@@ -441,39 +441,46 @@ $editor-styleButton-active-color:#5890ff;
 		label    { margin-bottom: 5px; }
 		textarea { margin-bottom: 10px; }
 
-		.mentions-input {
-			width: 300px;
-			margin-bottom: 10px;
+	}
+}
 
-			&__suggestions__item {
-				height: 33px;
-				width: 240px;
+.mentions-input {
+	width: 300px;
+	margin-bottom: 10px;
 
-				&__display {
-					overflow: hidden;
-					text-overflow: ellipsis;
-					width: 175px;
-					white-space: nowrap;
-				}
-			}
+	&__suggestions__item {
+		height: 33px;
+		width: 240px;
 
-			.entry {
-				.avatar.initials {
-					width: 21px;
-					height: 21px;
-					margin: 0 5px 0 0;
-					line-height: 21px;
-					font-size: 10px;
-				}
-
-				.icon-tasks {
-					margin: 0 5px 0 2px;
-					position: relative;
-					top: 2px;
-				}
-			}
+		&__display {
+			overflow: hidden;
+			text-overflow: ellipsis;
+			width: 175px;
+			white-space: nowrap;
 		}
 	}
+
+	.entry {
+		.avatar.initials {
+			width: 21px;
+			height: 21px;
+			margin: 0 5px 0 0;
+			line-height: 21px;
+			font-size: 10px;
+		}
+
+		.icon-tasks {
+			margin: 0 5px 0 2px;
+			position: relative;
+			top: 2px;
+		}
+	}
+}
+
+.comment-textarea {
+	position: relative;
+	max-height: 250px;
+	overflow: visible;
 }
 
 .highlights-popup {
@@ -481,19 +488,19 @@ $editor-styleButton-active-color:#5890ff;
 	top: 0;
 	left: 0;
 	z-index: 1000;
-	width: 250px;
+	width: 330px;
 
 	.dropdown a:not(.btn) { color: $sd-blue; }
 	.dropdown__menu {
-		width: 250px;
+		width: 330px;
 		padding: 15px;
-		max-height: 250px;
-		overflow-y: auto;
 		position: relative;
 	}
 
 	.comment-replies {
 		margin: 10px 0;
+		max-height: 180px;
+		overflow-y: scroll;
 
 		.small {
 			font-size: 11px;
@@ -509,9 +516,14 @@ $editor-styleButton-active-color:#5890ff;
 	}
 
 	.comment-reply-input {
-		.btn-reply {
-			margin: 5px 0 0;
-			float: right;
+
+		.comment-reply-buttons {
+			height: 1%;
+			overflow: hidden;
+			.btn-reply {
+				margin: 5px 0 0;
+				float: right;
+			}
 		}
 	}
 

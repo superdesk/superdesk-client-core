@@ -9,6 +9,7 @@ import {
     PopupTypes
 } from '../../actions';
 import {Comment} from './Comment';
+import CommentTextArea from './CommentTextArea';
 import ng from 'core/services/ng';
 
 /**
@@ -24,9 +25,9 @@ class CommentPopupComponent extends Component {
     constructor(props) {
         super(props);
 
-        this.input = null;
         this.currentUser = ng.get('session').identity.email;
         this.postReply = this.postReply.bind(this);
+        this.state = {reply: ''};
     }
 
     /**
@@ -37,31 +38,14 @@ class CommentPopupComponent extends Component {
      * @description Posts a reply to the comment on top of the given selection.
      */
     postReply(selection) {
-        const msg = this.input.value;
+        const msg = this.state.reply;
 
         if (msg === '') {
             return; // empty reply message.
         }
 
         this.props.replyComment(selection, {msg});
-        this.input.value = '';
-        this.forceUpdate();
-    }
-
-    componentDidMount() {
-        this.focusInput();
-    }
-
-    componentDidUpdate() {
-        // While this may deem handy, note that removing it will trigger a bug in DraftJS
-        // which stops the onChange handler from being called. For some reason, the textarea
-        // element in this popup is breaking DraftJS.
-        // TODO(x): Maybe this gets fixed in 0.11
-        this.focusInput();
-    }
-
-    focusInput() {
-        this.input.focus();
+        this.setState({reply: ''});
     }
 
     render() {
@@ -90,10 +74,14 @@ class CommentPopupComponent extends Component {
                 </div>
 
                 <div className="comment-reply-input">
-                    <textarea ref={(el) => {
-                        this.input = el;
-                    }} />
-                    <a className="btn btn--small btn--hollow btn-reply" onClick={onReply}>{gettext('Reply')}</a>
+                    <CommentTextArea
+                        value={this.state.reply}
+                        onChange={(event, value) => this.setState({reply: value})}
+                    />
+
+                    <div className="comment-reply-buttons">
+                        <a className="btn btn--small btn--hollow btn-reply" onClick={onReply}>{gettext('Reply')}</a>
+                    </div>
                 </div>
             </div>
         );
