@@ -264,7 +264,6 @@ describe('search', () => {
         expect(previewPane.isPresent()).toBe(false);
         globalSearch.actionOnItem('Edit', 2);
         expect(previewPane.isPresent()).toBe(false); // avoids opening preview
-        authoring.save();
         authoring.close();
 
         // can avoid retaining item\'s preview on an item action
@@ -274,7 +273,6 @@ describe('search', () => {
         expect(previewPane.isPresent()).toBe(true);
         globalSearch.actionOnItem('Edit', 3);
         expect(previewPane.isPresent()).toBe(false); // avoids retaining already opened preview
-        authoring.save();
         authoring.close();
 
         // can display embargo item when set

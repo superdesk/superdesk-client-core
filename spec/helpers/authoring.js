@@ -3,7 +3,7 @@
 
 module.exports = new Authoring();
 
-var waitHidden = require('./utils').waitHidden;
+var utils = require('./utils');
 
 function Authoring() {
     this.lock = element(by.css('[ng-click="lock()"]'));
@@ -171,12 +171,19 @@ function Authoring() {
             .then(() => element(by.id('create_text_article')).click());
     };
 
-    this.createTextItemFromTemplate = () => {
+    /**
+     * Create an item using template
+     *
+     * @param {String} name
+     */
+    this.createTextItemFromTemplate = (name) => {
         element(by.className('sd-create-btn')).click();
         element(by.id('more_templates')).click();
         let templates = element.all(by.repeater('template in templates track by template._id'));
 
-        templates.all(by.css('[ng-click="select({template: template})"]')).first().click();
+        templates.all(by.css('[ng-click="select({template: template})"]'))
+            .filter((elem) => elem.getText().then((text) => text.toUpperCase().indexOf(name.toUpperCase()) > -1))
+            .click();
     };
 
     this.close = function() {
@@ -185,7 +192,7 @@ function Authoring() {
 
     this.cancel = function() {
         this.cancel_button.click();
-        return waitHidden(this.cancel_button);
+        return utils.waitHidden(this.cancel_button);
     };
 
     this.addEmbed = function(embedCode, context) {
@@ -209,11 +216,12 @@ function Authoring() {
     };
 
     this.blockContains = function blockContains(position, expectedValue) {
-        var block = this.getBlock(position);
+        const block = this.getBlock(position);
+        const editor = block.all(by.className('editor-type-html')).first();
 
-        block.element(by.css('.editor-type-html')).isPresent().then((isText) => {
+        editor.isPresent().then((isText) => {
             if (isText) {
-                return block.element(by.css('.editor-type-html')).getText();
+                return editor.getText();
             }
 
             return block.element(by.css('.preview--embed')).getText();
@@ -318,8 +326,9 @@ function Authoring() {
     };
 
     this.save = function() {
-        element(by.css('[ng-click="saveTopbar()"]')).click();
-        return browser.wait(() => element(by.buttonText('Save')).getAttribute('disabled'));
+        browser.wait(() => this.save_button.isEnabled(), 2000);
+        this.save_button.click();
+        return browser.wait(() => this.save_button.getAttribute('disabled'));
     };
 
     this.edit = function() {
@@ -685,19 +694,19 @@ function Authoring() {
 
     this.openRelatedItem = function() {
         element(by.css('a[id="related-item"]')).click();
-        browser.sleep(1000);
+        utils.wait(element(by.className('widget-related-item')), 1000);
     };
 
     this.searchRelatedItems = function(searchText) {
+        const btn = element(by.id('search-related-items'));
+
         if (searchText) {
-            let elm = element(by.model('itemListOptions.keyword'));
+            const input = element(by.model('itemListOptions.keyword'));
 
-            elm.clear();
-            elm.sendKeys(searchText);
-            browser.sleep(2000);
+            input.clear();
+            input.sendKeys(searchText);
+            browser.wait(() => btn.isEnabled(), 2000);
         }
-
-        let btn = element(by.id('search-related-items'));
 
         btn.click();
     };
@@ -727,10 +736,11 @@ function Authoring() {
             .element(by.buttonText('Save')).click();
     };
 
-    this.getRelatedItemBySlugline = function(item) {
-        var relItems = element.all(by.repeater('item in processedItems')).get(item);
+    this.getRelatedItemSlugline = function(item) {
+        const relItems = element.all(by.repeater('item in processedItems'));
 
-        return relItems.element(by.binding('item.slugline')).getText();
+        browser.wait(() => relItems.count(), 5000);
+        return relItems.get(item).element(by.binding('item.slugline')).getText();
     };
 
     this.actionOpenRelatedItem = function(item) {

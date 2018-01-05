@@ -48,6 +48,11 @@ function Monitoring() {
         browser.sleep(500);
     };
 
+    /**
+     * Create new item using desk template
+     */
+    this.createFromDeskTemplate = () => this.createItemAction('create_text_article');
+
     this.getGroup = function(group) {
         return this.getGroups().get(group);
     };
@@ -211,6 +216,8 @@ function Monitoring() {
         return headline.getText();
     };
 
+    this.getPreviewBody = () => element(by.id('item-preview')).element(by.className('body-text'));
+
     this.setOrder = function(field, switchDir) {
         element(by.id('order_button')).click();
         element(by.id('order_selector')).element(by.partialLinkText(field)).click();
@@ -251,13 +258,13 @@ function Monitoring() {
             return;
         }
 
-        menu.element(by.partialLinkText(action)).click();
+        menu.all(by.partialLinkText(action)).first().click();
     };
 
     this.getMenuActionElement = function(action, group, item) {
         var menu = this.openItemMenu(group, item);
 
-        return menu.element(by.partialLinkText(action));
+        return menu.all(by.partialLinkText(action)).first();
     };
 
     /**
@@ -273,8 +280,8 @@ function Monitoring() {
         var menu = this.openItemMenu(group, item);
         var header = menu.element(by.partialLinkText(action));
         var btn = linkTypeBtn ?
-            menu.element(by.partialLinkText(submenu)) :
-            menu.element(by.partialButtonText(submenu));
+            menu.all(by.partialLinkText(submenu)).first() :
+            menu.all(by.partialButtonText(submenu)).first();
 
         browser.actions()
             .mouseMove(header, {x: -50, y: -50})

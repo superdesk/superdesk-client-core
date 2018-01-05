@@ -29,7 +29,7 @@ describe('templates', () => {
         authoring.writeText('This is body from the template');
         authoring.writeSignoffText('ABC');
         templates.save();
-        expect(templates.getListCount()).toEqual(2);
+        expect(templates.getListCount()).toBeGreaterThan(2);
         templates.edit('New Template');
         templates.toggleMetadata();
         expect(templates.getLegalSwitch().getAttribute('checked')).toEqual('true');
@@ -41,18 +41,16 @@ describe('templates', () => {
         // check the New Template is accessable from both desks
         monitoring.openMonitoring();
         workspace.selectDesk('Sports Desk');
-        authoring.createTextItemFromTemplate();
+        authoring.createTextItemFromTemplate('new');
         expect(authoring.getBodyText()).toBe('This is body from the template');
         expect(authoring.getHeaderSluglineText()).toBe('Test Template');
         expect(authoring.getHeadlineText()).toBe('New Item');
-        authoring.save();
         authoring.close();
         workspace.selectDesk('Politic Desk');
-        authoring.createTextItemFromTemplate();
+        authoring.createTextItemFromTemplate('new');
         expect(authoring.getBodyText()).toBe('This is body from the template');
         expect(authoring.getHeaderSluglineText()).toBe('Test Template');
         expect(authoring.getHeadlineText()).toBe('New Item');
-        authoring.save();
         authoring.close();
 
         // add a new auto-create template
@@ -68,7 +66,7 @@ describe('templates', () => {
         templates.selectScheduleDesk('Politic Desk');
         templates.selectScheduleStage('one');
         templates.save();
-        expect(templates.getListCount()).toEqual(3);
+        expect(templates.getListCount()).toBeGreaterThan(3);
         templates.edit('Second New Template');
         expect(templates.getTemplateNameElement().getAttribute('value')).toEqual('second new template');
         expect(templates.getTemplateType().getAttribute('value')).toEqual('string:create');
@@ -84,8 +82,12 @@ describe('templates', () => {
             .getAttribute('selected')).toEqual('true');
         expect(templates.getStageScheduleElement('one').getAttribute('selected')).toEqual('true');
         templates.cancel();
-        templates.remove('Second New Template');
-        expect(templates.getListCount()).toEqual(2);
+
+
+        templates.getListCount().then((count) => {
+            templates.remove('Second New Template');
+            expect(templates.getListCount()).toBeLessThan(count);
+        });
 
         // cannot save empty template
         templates.openTemplatesSettings();

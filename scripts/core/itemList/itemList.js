@@ -88,6 +88,10 @@ angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
                  * @description Creates or removes listeners
                  */
                     var setProcessedItems = () => {
+                        if (scope.loading) {
+                            return;
+                        }
+
                         if (scope.options.existingRelations) {
                             scope.processedItems = scope.options.existingRelations;
                             itemListListener && itemListListener();
@@ -119,11 +123,7 @@ angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
                     scope.isPublished = (item) => _.includes(['published', 'killed', 'scheduled', 'corrected'],
                         item.state);
 
-                    scope.$watch('options.existingRelations', (newVal, oldVal) => {
-                        if (newVal !== oldVal) {
-                            setProcessedItems();
-                        }
-                    });
+                    scope.$watchGroup(['options.item.slugline', 'options.existingRelations'], setProcessedItems);
 
                     scope.hasKeywords = () => scope.itemListOptions.keyword &&
                     scope.itemListOptions.keyword.trim().length >= 2;

@@ -59,10 +59,14 @@ function Templates() {
     };
 
     /**
-     * Get the content profile element
+     * Get the selected content profile name
      **/
     this.getContentProfile = function() {
-        return element(by.id('template-profile')).getText();
+        return element(by.id('template-profile'))
+            .all(by.tagName('option'))
+            .filter((option) => option.getAttribute('selected'))
+            .first()
+            .getText();
     };
 
     /**
