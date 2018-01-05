@@ -1,5 +1,20 @@
 # Superdesk Client Changelog
 
+## [1.10.0] 2018-01-05
+
+### Fixed
+
+- Fix Publish From panel visible on authoring desk.
+- Fix missing links in annotation editor.
+- Fix display issue with user password modal.
+- Fix turning spellchecker on/off for editor3.
+
+### Added
+
+- Make font size configurable in editor.
+- Add delete/resolve/edit/reply editor3 inline comment actions.
+- Add feedback link to lefthand panel if configured.
+
 ## [1.9.0] 2017-12-13
 
 ### Fixed
