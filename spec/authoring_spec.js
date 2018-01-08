@@ -24,7 +24,7 @@ describe('authoring', () => {
         authoring.addEmbed('embed');
         var thirdBlockContext = element(by.model('item.body_html')).all(by.repeater('block in vm.blocks')).get(2);
 
-        thirdBlockContext.element(by.css('.editor-type-html')).sendKeys('line\n');
+        thirdBlockContext.all(by.css('.editor-type-html')).first().sendKeys('line\n');
         authoring.addEmbed('embed', thirdBlockContext);
         authoring.blockContains(0, 'line');
         authoring.blockContains(1, 'embed');
@@ -56,7 +56,7 @@ describe('authoring', () => {
         authoring.addEmbed('Embed at position 15');
         authoring.blockContains(0, (body1 + body2).replace(/\n$/, ''));
         authoring.blockContains(2, body3.replace(/\n$/, ''));
-        element(by.model('item.body_html')).all(by.css('.editor-type-html')).get(0).click();
+        element(by.model('item.body_html')).all(by.css('.editor-type-html')).first().click();
         authoring.writeText(protractor.Key.ENTER);
         authoring.addEmbed('Embed at position 8');
         authoring.blockContains(0, body1.replace(/\n$/, ''));
@@ -236,7 +236,6 @@ describe('authoring', () => {
         expect(authoring.getHistoryItems().count()).toBe(2);
         expect(authoring.getHistoryItem(0).getText()).toMatch(/Created by first name last name Today/);
         expect(authoring.getHistoryItem(1).getText()).toMatch(/Updated by.*/);
-        authoring.save();
         authoring.close();
 
         // view item history publish operation
@@ -443,8 +442,7 @@ describe('authoring', () => {
         monitoring.actionOnItem('Edit', 0, 0);
 
         authoring.openRelatedItem(); // opens related item widget
-        browser.sleep(10000);
-        expect(authoring.getRelatedItemBySlugline(0).getText()).toContain('item9 slugline');
+        expect(authoring.getRelatedItemSlugline(0)).toContain('item9 slugline');
         authoring.actionOpenRelatedItem(0); // Open item
         expect(authoring.getHeaderSluglineText()).toContain('item9 slugline');
     });

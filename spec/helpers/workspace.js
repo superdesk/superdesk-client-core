@@ -251,11 +251,4 @@ function Workspace() {
             .then(content.setListView)
             .then(() => content.actionOnItemSubmenu('Duplicate', 'Duplicate in place', item, true));
     };
-
-    this.filterItems = function(type) {
-        element(by.css('.filter-trigger')).click();
-        element(by.css('.content-type-filters'))
-            .element(by.css('.filetype-icon-' + type))
-            .click();
-    };
 }

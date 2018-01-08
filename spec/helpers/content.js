@@ -58,7 +58,7 @@ function Content() {
             return menu.element(by.linkText(action)).click();
         }
 
-        return menu.element(by.partialLinkText(action)).click();
+        return menu.all(by.partialLinkText(action)).first().click();
     };
 
     this.editItem = function(item) {

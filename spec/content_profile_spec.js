@@ -15,7 +15,7 @@ describe('Content profiles', () => {
         contentProfiles.disableField('Abstract');
         contentProfiles.update();
         templates.openTemplatesSettings();
-        expect(templates.getListCount()).toEqual(2);
+        expect(templates.getListCount()).toBeGreaterThan(2);
         templates.edit('Simple');
         expect(authoring.getAbstractFieldCount()).toEqual(0);
         expect(templates.getContentProfile()).toEqual('Simple');
@@ -33,7 +33,7 @@ describe('Content profiles', () => {
         contentProfiles.openContentProfileSettings();
         contentProfiles.delete('Simple');
         templates.openTemplatesSettings();
-        expect(templates.getListCount()).toEqual(2);
+        expect(templates.getListCount()).toBeGreaterThan(2);
         templates.edit('Simple');
         expect(authoring.getAbstractFieldCount()).toEqual(1);
         expect(templates.getContentProfile()).toEqual('');
@@ -50,7 +50,7 @@ describe('Content profiles', () => {
         contentProfiles.update();
         monitoring.openMonitoring();
         workspace.selectDesk('Sports Desk');
-        authoring.createTextItemFromTemplate();
+        authoring.createTextItemFromTemplate('simple');
         expect(authoring.getAbstractFieldCount()).toEqual(0);
 
         // publish of the required field will fail
