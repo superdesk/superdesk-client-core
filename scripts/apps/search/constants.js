@@ -63,7 +63,9 @@ export const DEFAULT_LIST_CONFIG = {
         'provider',
         'expiry',
         'desk',
-        'fetchedDesk'
+        'fetchedDesk',
+        'rewrite',
+        'duplicated'
     ]
 };
 
@@ -104,7 +106,8 @@ export const CORE_PROJECTED_FIELDS = {
         'queue_state',
         'alt_text',
         'description_text',
-        'assignment_id'
+        'assignment_id',
+        'operation'
     ]
 };
 
