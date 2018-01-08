@@ -44,9 +44,9 @@ export class HighlightsPopup extends Component {
         const maxHeight = $('div.auth-screen').height();
         const numDropdowns = Object.keys(this.props.highlights).length;
 
-        let maxTop = maxHeight - 60/* top & bottom bar */ - 250/* max dropdown height */ * numDropdowns;
+        let maxTop = maxHeight - 60/* top & bottom bar */ - 450/* max dropdown height */ * numDropdowns;
         let top = 150;
-        let left = editorLeft - 260;
+        let left = editorLeft - 360;
 
         maxTop = maxTop < 60 ? 60 : maxTop;
 
@@ -148,8 +148,8 @@ export class HighlightsPopup extends Component {
     onDocumentClick(e) {
         const t = $(e.target);
         const {editorNode} = this.props;
-        const onPopup = t.hasClass('highlights-popup') || t.closest('.highlights-popup').length;
-        const onEditor = t.is(editorNode) || t.closest(editorNode).length;
+        const onPopup = t.closest('.highlights-popup').length || t.closest('.mentions-input__suggestions').length;
+        const onEditor = t.closest(editorNode).length;
 
         if (!onPopup && !onEditor) {
             // if the click occurred outside the editor and the popup we close it
