@@ -360,10 +360,7 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
              * @returns {Boolean}
              */
             function canPublishOnDesk() {
-                const currentDesk = desks.getCurrentDesk();
-                const isAuthoringDesk = currentDesk && currentDesk.desk_type === 'authoring';
-
-                return !(isAuthoringDesk && config.features.noPublishOnAuthoringDesk);
+                return !(isAuthoringDesk() && config.features.noPublishOnAuthoringDesk);
             }
 
             /**
@@ -772,7 +769,7 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
              * @return {Boolean}
              */
             function isAuthoringDesk() {
-                const desk = scope.allDesks.find((desk) => desk._id === scope.item.task.desk);
+                const desk = desks.getItemDesk(scope.item);
 
                 return desk && desk.desk_type === 'authoring';
             }
