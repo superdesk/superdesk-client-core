@@ -48,6 +48,7 @@ export function VocabularyConfigController($scope, $route, $routeParams, vocabul
     $scope.matchFieldTypeToTab = (tab, fieldType) =>
         tab === 'vocabularies' && !fieldType || fieldType &&
         (tab === 'text-fields' && fieldType === 'text' ||
+         tab === 'date-fields' && fieldType === 'date' ||
          tab === 'media-fields' && fieldType === 'media' ||
          tab === 'embed-fields' && fieldType === 'embed');
 
