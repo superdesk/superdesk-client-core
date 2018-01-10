@@ -11,14 +11,16 @@
  * @requires api
  * @requires notify
  * @requires gettext
+ * @requires mediaIdGenerator
  *
  * @description
  *   This directive is responsible for rendering media associated with the item.
  */
 
 ItemAssociationDirective.$inject = ['superdesk', 'renditions', 'config', 'authoring', '$q',
-    'api', 'notify', 'gettext', 'send'];
-export function ItemAssociationDirective(superdesk, renditions, config, authoring, $q, api, notify, gettext, send) {
+    'api', 'notify', 'gettext', 'send', 'mediaIdGenerator'];
+export function ItemAssociationDirective(superdesk, renditions, config, authoring, $q, api, notify, gettext,
+    send, mediaIdGenerator) {
     return {
         scope: {
             rel: '=',
@@ -29,7 +31,8 @@ export function ItemAssociationDirective(superdesk, renditions, config, authorin
             allowAudio: '<',
             onchange: '&',
             showTitle: '<',
-            save: '&'
+            save: '&',
+            maxUploads: '='
         },
         templateUrl: 'scripts/apps/authoring/views/item-association.html',
         link: function(scope, elem) {
@@ -278,7 +281,8 @@ export function ItemAssociationDirective(superdesk, renditions, config, authorin
             scope.upload = function() {
                 if (scope.editable) {
                     superdesk.intent('upload', 'media', {
-                        uniqueUpload: true,
+                        uniqueUpload: scope.maxUploads === undefined || scope.maxUploads === 1,
+                        maxUploads: scope.maxUploads,
                         allowPicture: scope.allowPicture,
                         allowVideo: scope.allowVideo,
                         allowAudio: scope.allowAudio
@@ -286,7 +290,20 @@ export function ItemAssociationDirective(superdesk, renditions, config, authorin
                         // open the view to edit the PoI and the cropping areas
                         if (images) {
                             scope.$applyAsync(() => {
-                                scope.edit(images[0]);
+                                var lastPromise;
+
+                                _.forEach(images, (image) => {
+                                    if (lastPromise) {
+                                        lastPromise.then(() => {
+                                            var [rootField, index] = mediaIdGenerator.getFieldParts(scope.rel);
+
+                                            scope.rel = mediaIdGenerator.getFieldVersionName(rootField, index + 1);
+                                            lastPromise = scope.edit(image);
+                                        });
+                                    } else {
+                                        lastPromise = scope.edit(image);
+                                    }
+                                });
                             });
                         }
                     });

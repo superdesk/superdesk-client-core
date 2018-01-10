@@ -586,15 +586,16 @@
              data-allow-video="!!field.field_options.allowed_types.video"
              data-allow-audio="!!field.field_options.allowed_types.audio"
              data-item="item"
-             data-rel="fieldVersion"
+             data-rel="fieldVersion.fieldId"
              data-editable="_editable"
              data-onchange="autosave(item)"
              data-save="save()"
              data-show-title="editor[field._id].imageTitle"
+             data-max-uploads="maxUploads(field.field_options)"
              tabindex="{{editor[field._id].order}}">
         </div>
         <div sd-item-crops
-             data-item="item.associations[fieldVersion]"
+             data-item="item.associations[fieldVersion.fieldId]"
              ng-if="editor[field._id].showCrops && features.editFeaturedImage &&
              !!field.field_options.allowed_types.picture">
         </div>

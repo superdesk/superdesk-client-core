@@ -316,6 +316,15 @@ export function ArticleEditDirective(
                 });
             };
 
+            // Returns the maximum number upload files
+            scope.maxUploads = function(fieldOptions) {
+                if (fieldOptions && fieldOptions.multiple_items &&
+                    fieldOptions.multiple_items.enabled) {
+                    return fieldOptions.multiple_items.max_items ? fieldOptions.multiple_items.max_items : 0;
+                }
+                return 1;
+            };
+
             scope.$watch('item.body_html', () => suggest.trigger(scope.item, scope.origItem));
 
             scope.$watch('item.flags.marked_for_sms', (isMarked) => {

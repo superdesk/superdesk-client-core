@@ -6,3 +6,4 @@ export {AuthoringThemesService} from './AuthoringThemesService';
 export {AuthoringWorkspaceService} from './AuthoringWorkspaceService';
 export {RenditionsService} from './RenditionsService';
 export {HistoryFactory} from './HistoryFactory';
+export {MediaIdGeneratorService} from './MediaIdGeneratorService';

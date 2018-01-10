@@ -45,6 +45,7 @@ angular.module('superdesk.apps.authoring', [
     .service('authThemes', svc.AuthoringThemesService)
     .service('authoringWorkspace', svc.AuthoringWorkspaceService)
     .service('renditions', svc.RenditionsService)
+    .service('mediaIdGenerator', svc.MediaIdGeneratorService)
 
     .factory('history', svc.HistoryFactory)
 

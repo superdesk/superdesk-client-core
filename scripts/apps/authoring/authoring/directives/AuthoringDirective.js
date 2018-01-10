@@ -36,6 +36,7 @@ import postscribe from 'postscribe';
  * @requires config
  * @requires editorResolver
  * @requires $sce
+ * @requires mediaIdGenerator
  *
  * @description
  *   This directive is responsible for generating superdesk content authoring form.
@@ -71,13 +72,14 @@ AuthoringDirective.$inject = [
     'editorResolver',
     'compareVersions',
     'embedService',
-    '$sce'
+    '$sce',
+    'mediaIdGenerator'
 ];
 export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace, notify,
     gettext, desks, authoring, api, session, lock, privileges, content, $location,
     referrer, macros, $timeout, $q, modal, archiveService, confirm, reloadService,
     $rootScope, $interpolate, metadata, suggest, config, editorResolver, compareVersions,
-    embedService, $sce) {
+    embedService, $sce, mediaIdGenerator) {
     return {
         link: function($scope, elem, attrs) {
             var _closing;
@@ -85,7 +87,6 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
 
             const UNIQUE_NAME_ERROR = gettext('Error: Unique Name is not unique.');
             const MEDIA_TYPES = ['video', 'picture', 'audio'];
-            const MEDIA_FIELD_FORMAT = /(\S+)__#(\d+)/i;
 
             $scope.privileges = privileges.privileges;
             $scope.dirty = false;
@@ -937,44 +938,6 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
 
             /**
              * @ngdoc method
-             * @name sdAuthoring#getFieldParts
-             * @private
-             * @description Splits an association field containing versioning in the
-             *              root part and the version number and returns them in an array.
-             * @param {string} fieldId
-             * @return {Object}
-             */
-            function getFieldParts(fieldId) {
-                var match = MEDIA_FIELD_FORMAT.exec(fieldId);
-
-                if (!match) {
-                    return [fieldId, null];
-                }
-                if (match.length === 3) {
-                    return [match[1], parseInt(match[2], 10)];
-                }
-                return [match[1], null];
-            }
-
-            /**
-             * @ngdoc method
-             * @name sdAuthoring#getFieldVersionName
-             * @private
-             * @description Returns an association field generated from the vocabulary
-             *              field identifier and version number.
-             * @param {string} rootField
-             * @param {string} version
-             * @return {string}
-             */
-            function getFieldVersionName(rootField, version) {
-                if (version === null || version === undefined) {
-                    return rootField;
-                }
-                return rootField + '__#' + version;
-            }
-
-            /**
-             * @ngdoc method
              * @name sdAuthoring#isMediaField
              * @private
              * @description Returns true if the given string is a vocabulary media
@@ -983,7 +946,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
              * @return {bool}
              */
             function isMediaField(fieldId) {
-                var parts = getFieldParts(fieldId);
+                var parts = mediaIdGenerator.getFieldParts(fieldId);
                 var field = _.find($scope.fields, (field) => field._id === parts[0]);
 
                 return field && field.field_type === 'media';
@@ -1007,12 +970,23 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                     var maxItems = !multipleItems ? 1 : _.get(field, 'field_options.multiple_items.max_items');
 
                     if (!maxItems || !mediaFields[fieldId] || mediaFields[fieldId].length < maxItems) {
-                        $scope.mediaFieldVersions[fieldId].push($scope.getNewMediaFieldId(fieldId));
+                        addMediaFieldVersion(fieldId, $scope.getNewMediaFieldId(fieldId), null);
                     }
                     _.forEach(mediaFields[fieldId], (version) => {
-                        $scope.mediaFieldVersions[fieldId].push(getFieldVersionName(fieldId, version));
+                        addMediaFieldVersion(fieldId, mediaIdGenerator.getFieldVersionName(fieldId, version));
                     });
                 }
+            }
+
+            function addMediaFieldVersion(fieldId, fieldVersion) {
+                var field = {fieldId: fieldVersion};
+
+                if (_.has($scope.item.associations, fieldVersion)) {
+                    field[fieldVersion] = $scope.item.associations[fieldVersion];
+                } else {
+                    field[fieldVersion] = null;
+                }
+                $scope.mediaFieldVersions[fieldId].push(field);
             }
 
             /**
@@ -1023,7 +997,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
              * @param {string} fieldId
              */
             function addMediaField(fieldId) {
-                var [rootField, index] = getFieldParts(fieldId);
+                var [rootField, index] = mediaIdGenerator.getFieldParts(fieldId);
 
                 if (!_.has(mediaFields, rootField)) {
                     mediaFields[rootField] = [];
@@ -1069,15 +1043,15 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             /**
              * @ngdoc method
              * @name sdAuthoring#getNewMediaFieldId
-             * @private
+             * @public
              * @description Returns a new name version for a given media field.
-             * @param {string} fieldId
-             * @return {string}
+             * @param {String} fieldId
+             * @return {String}
              */
             $scope.getNewMediaFieldId = (fieldId) => {
                 var field = _.find($scope.fields, (field) => field._id === fieldId);
                 var multipleItems = field ? _.get(field, 'field_options.multiple_items.enabled') : false;
-                var parts = getFieldParts(fieldId);
+                var parts = mediaIdGenerator.getFieldParts(fieldId);
                 var newIndex = multipleItems ? 1 : null;
 
                 if (_.has(mediaFields, parts[0])) {
@@ -1085,7 +1059,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
 
                     newIndex = fieldVersions.length ? 1 + fieldVersions[0] : 1;
                 }
-                return getFieldVersionName(parts[0], newIndex);
+                return mediaIdGenerator.getFieldVersionName(parts[0], newIndex);
             };
 
             // init
