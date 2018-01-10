@@ -148,8 +148,7 @@ export function cleanHtml(data) {
         .replace(/<\/?[^>]+><\/?[^>]+>/gi, ' ')
         .replace(/<\/?[^>]+>/gi, '')
         .trim()
-        .replace(/&nbsp;/g, ' ')
-        .replace(/\s\s+/g, ' ');
+        .replace(/&nbsp;/g, ' ');
 }
 
 /**
