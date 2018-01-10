@@ -72,7 +72,7 @@ const applyLink = (state, {link, entity}) => {
     const {editorState} = state;
 
     if (entity) {
-        return {...state, editorState: entityUtils.replaceSelectedEntityData(editorState, {link})};
+        return onChange(state, entityUtils.replaceSelectedEntityData(editorState, {link}), true);
     }
 
     const contentState = editorState.getCurrentContent();
