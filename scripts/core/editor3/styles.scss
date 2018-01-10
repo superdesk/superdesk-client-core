@@ -24,7 +24,7 @@ $editor-styleButton-active-color:#5890ff;
 	transition: all .2s ease-out;
 
 	&.is-link {
-		height: 26px; 
+		height: 26px;
 		padding: 5px 10px;
 		opacity: 1;
 	}
@@ -53,7 +53,7 @@ $editor-styleButton-active-color:#5890ff;
 		transition: all .2s ease-out;
 
 		&.is-link {
-			height: 26px; 
+			height: 26px;
 			padding: 5px 10px;
 			opacity: 1;
 		}
@@ -182,7 +182,6 @@ $editor-styleButton-active-color:#5890ff;
 	    border-bottom-style: dotted;
 	    border-bottom-color: red;
 	    position: relative;
-	    display: inline-block;
 	}
 
 	.suggestions-dropdown {
@@ -200,7 +199,7 @@ $editor-styleButton-active-color:#5890ff;
 	.media-block {
 		text-align: left;
 		font-family: $baseFontFamily;
-		
+
 		&__wrapper {
 			display: inline-block;
 		}
@@ -208,7 +207,7 @@ $editor-styleButton-active-color:#5890ff;
 		&__title {
 			resize: none;
 			font-size: 16px;
-			line-height: 140%;	
+			line-height: 140%;
 			padding: 5px 5px 5px 0;
 			margin-bottom: 5px;
 			min-height: 28px;
@@ -216,7 +215,7 @@ $editor-styleButton-active-color:#5890ff;
 			border: none;
 		}
 		&__description {
-			font-size: 13px;			
+			font-size: 13px;
 			line-height: 140%;
 			resize: none;
 			padding: 5px 5px 5px 0;
@@ -361,7 +360,7 @@ $editor-styleButton-active-color:#5890ff;
 
 .Editor3-styleButton {
 	&.short {
-		padding-right: 2px; 
+		padding-right: 2px;
 		margin-right: -10px;
 	}
 	color: $editor-styleButton-color;
@@ -620,14 +619,14 @@ $editor-styleButton-active-color:#5890ff;
 	.Editor3-root, .item-association {
 		border-color: rgba(0, 0, 0, 0.1);
 	}
-	.Editor3-styleButton.Editor3-activeButton, 
+	.Editor3-styleButton.Editor3-activeButton,
 	.Editor3-styleButton.Editor3-activeButton:hover {
 		color: #9c27b0;
 	}
 }
 
 .sd-editor--theme-dark, .sd-editor--theme-blue {
-	.Editor3-styleButton.Editor3-activeButton, 
+	.Editor3-styleButton.Editor3-activeButton,
 	.Editor3-styleButton.Editor3-activeButton:hover {
 		background-color: rgba(0, 0, 0, 0.3);
 	}
