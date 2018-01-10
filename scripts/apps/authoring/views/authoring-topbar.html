@@ -41,7 +41,7 @@
     <div class="subnav__stretch-bar" ng-if="showCustomButtons(item)">
       <div class="subnav__button-stack subnav__button-stack--custom-buttons" ng-if="$root.config.features.customAuthoringTopbar" ng-show="_editable && itemActions.save && action === 'edit'">
         <button class="btn btn--custom"
-                ng-click="saveAndContinue(sendToNextStage)"
+                ng-click="saveAndContinue(sendToNextStage, false)"
                 title="{{ :: 'To Desk' | translate }}">
                 <span class="btn__text" translate>To Desk</span>
                 <span class="btn__text--short" translate>T D</span>
@@ -49,14 +49,14 @@
         <button class="btn btn--custom btn--publish"
                 type="submit"
                 ng-if="canPublishOnDesk()"
-                ng-click="saveAndContinue(publish)"
+                ng-click="saveAndContinue(publish, true)"
                 title="{{ :: 'Publish' | translate }}">
                 <span class="btn__text" translate>Publish</span>
                 <span class="btn__text--short" translate>P</span>
         </button>
         <button class="btn btn--custom btn--publish-plus"
                 ng-if="canPublishOnDesk()"
-                ng-click="saveAndContinue(publishAndContinue)"
+                ng-click="saveAndContinue(publishAndContinue, true)"
                 title="{{ :: 'Publish and Continue' | translate }}">
                 <span class="btn__text">{{ :: 'Publish and Continue' | translate }}</span>
                 <span class="btn__text--short">{{ :: 'P & C' | translate }}</span>

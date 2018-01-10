@@ -12,7 +12,7 @@ VocabularyEditController.$inject = [
 ];
 
 export function VocabularyEditController($scope, gettext, notify, api, vocabularies, metadata, cvSchema, $rootScope) {
-    var origVocabularyItems = _.cloneDeep($scope.vocabulary.items);
+    var origVocabulary = _.cloneDeep($scope.vocabulary);
 
     $scope.idRegex = '^[a-zA-Z0-9-_]+$';
 
@@ -81,7 +81,7 @@ export function VocabularyEditController($scope, gettext, notify, api, vocabular
      * Discard changes and close modal.
      */
     $scope.cancel = function() {
-        $scope.vocabulary.items = origVocabularyItems;
+        angular.copy(origVocabulary, $scope.vocabulary);
         $scope.closeVocabulary();
     };
 
