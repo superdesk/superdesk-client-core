@@ -12,11 +12,14 @@ export function WordCount() {
     return {
         scope: {
             item: '=',
-            html: '@'
+            html: '@',
+            countOnly: '@'
         },
-        template: '<span class="char-count words" translate>{{numWords}} words</span>',
+        template: '<span ng-if="!countOnly" class="char-count words" translate>{{numWords}} words</span>' +
+                  '<span ng-if="countOnly" class="char-count words">{{numWords}}</span>',
         link: function wordCountLink(scope, elem, attrs) {
             scope.html = scope.html || false;
+            scope.countOnly = scope.countOnly || false;
             scope.numWords = 0;
             scope.$watch('item', () => {
                 var input = scope.item || '';
