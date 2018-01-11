@@ -111,7 +111,7 @@ class AnnotationInputBody extends Component {
     }
 
     render() {
-        const {hidePopups, data} = this.props;
+        const {hidePopups, data, spellcheckerEnabled, language} = this.props;
         const {annotation} = data;
         const {type, annotationTypes} = this.state;
 
@@ -135,6 +135,8 @@ class AnnotationInputBody extends Component {
                         onChange={this.onChange}
                         editorFormat={['bold', 'italic', 'underline', 'link']}
                         editorState={this.initialContent}
+                        language={language}
+                        disableSpellchecker={!spellcheckerEnabled}
                     />
                     <div className="pull-right">
                         {typeof annotation === 'object' &&
@@ -157,10 +159,17 @@ AnnotationInputBody.propTypes = {
     applyAnnotation: PropTypes.func,
     hidePopups: PropTypes.func,
     deleteHighlight: PropTypes.func,
-    data: PropTypes.object
+    data: PropTypes.object,
+    language: PropTypes.string,
+    spellcheckerEnabled: PropTypes.bool
 };
 
-export const AnnotationInput = connect(null, {
+const mapStateToProps = (state) => ({
+    language: state.item.language,
+    spellcheckerEnabled: state.spellcheckerEnabled
+});
+
+export const AnnotationInput = connect(mapStateToProps, {
     applyAnnotation,
     updateAnnotation,
     deleteHighlight,
