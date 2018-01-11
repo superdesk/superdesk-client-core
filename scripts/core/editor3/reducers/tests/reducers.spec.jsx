@@ -1,5 +1,6 @@
-import {EditorState, ContentState} from 'draft-js';
+import {EditorState, ContentState, SelectionState} from 'draft-js';
 import reducer from '..';
+import {applyLink} from '../../actions/toolbar';
 
 /**
  * @description Creates a new store state that contains the editorState and searchTerm.
@@ -249,5 +250,48 @@ describe('editor3.reducers', () => {
         const text = state.editorState.getCurrentContent().getPlainText();
 
         expect(text).toBe('abcd 1234');
+    });
+
+    it('TOOLBAR_APPLY_LINK', () => {
+        const contentState = ContentState.createFromText('some text');
+
+        const blockKey = contentState.getFirstBlock().getKey();
+        const selectionState = SelectionState.createEmpty(blockKey);
+        const updatedSelection = selectionState.merge({
+            focusKey: blockKey,
+            focusOffset: 4
+        });
+
+        const editorState = EditorState.createWithContent(contentState);
+        const selectedEditorState = EditorState.forceSelection(editorState, updatedSelection);
+
+        const state = reducer(
+            {
+                editorState: selectedEditorState,
+                onChangeValue: jasmine.createSpy('onChangeValue')
+            },
+            applyLink({link: 'http://example.com'})
+        );
+
+        let updatedContent = state.editorState.getCurrentContent();
+        let entity = updatedContent.getEntity(updatedContent.getLastCreatedEntityKey());
+
+        expect(entity.type).toBe('LINK');
+        expect(entity.data.link.link).toBe('http://example.com');
+        expect(state.onChangeValue).toHaveBeenCalled();
+
+        const nextState = reducer(
+            {
+                editorState: state.editorState,
+                onChangeValue: jasmine.createSpy('onChangeValue')
+            },
+            applyLink({link: 'http://foo.com'}, entity)
+        );
+
+        updatedContent = nextState.editorState.getCurrentContent();
+        entity = updatedContent.getEntity(updatedContent.getLastCreatedEntityKey());
+
+        expect(entity.data.link.link).toBe('http://foo.com');
+        expect(nextState.onChangeValue).toHaveBeenCalled();
     });
 });
