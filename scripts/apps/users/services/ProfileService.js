@@ -13,7 +13,8 @@ export function ProfileService(api) {
     this.getUserActivity = function(user, maxResults, page) {
         var q = {
             where: {user: user._id},
-            sort: '[(\'_created\',-1)]'
+            sort: '[(\'_created\',-1)]',
+            embedded: {user: 1}
         };
 
         if (maxResults) {
@@ -39,7 +40,8 @@ export function ProfileService(api) {
     this.getAllUsersActivity = function(maxResults, page) {
         var q = {
             sort: '[(\'_created\',-1)]',
-            where: {user: {$exists: true}, item: {$exists: true}}
+            where: {user: {$exists: true}, item: {$exists: true}},
+            embedded: {user: 1}
         };
 
         if (maxResults) {
