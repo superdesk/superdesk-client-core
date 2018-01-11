@@ -98,8 +98,30 @@
                         <span>{{item.ednote}}</span>
                     </div>
                 </div>
+                <!-- custom fields -->
+                <div ng-repeat="field in fields track by field._id"
+                    ng-if="field.field_type === 'text' || field.field_type === 'date'"
+                    order="{{ editor[field._id].order }}">
+                    <div class="preview-label">
+                        <label translate>{{field.display_name}}</label>
+                    </div>
+                    <div class="preview-data">
+                        <div sd-short-date ng-if="field.field_type === 'date'" data-date="item.extra[field._id]"></div>
+                        <div ng-if="field.field_type === 'text'" ng-bind-html="getHtml(item.extra[field._id])"></div>
+                    </div>
+                </div>
             </div>
             <div class="headline" order="{{editor.headline.order}}" ng-if="!editor.headline.hideOnPrint">{{item.headline}}</div>
+            <div ng-repeat="field in fields track by field._id"
+                ng-if="field.field_type === 'embed'"
+                order="{{ editor[field._id].order }}"
+                class="body preview-editor">
+                <div class="preview-label">
+                    <label translate>{{field.display_name}}</label>
+                </div>
+                <div ng-if="field.field_type === 'embed' && !hide_images" ng-bind-html="getHtml(item.extra[field._id].embed)">
+                </div>
+            </div>
             <div order="{{editor.feature_image.order}}" ng-if="!editor.feature_image.hideOnPrint"
                 ng-repeat="association in item.associations|embeddedFilter" class="association">
                 <img src="{{association.renditions.viewImage.href}}" ng-if="!hide_images">

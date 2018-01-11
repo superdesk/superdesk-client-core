@@ -21,6 +21,31 @@ function DateTimeDirective(datetime, moment) {
     };
 }
 
+ShortDateDirective.$inject = ['config', 'moment'];
+function ShortDateDirective(config, moment) {
+    var DATE_FORMAT = config.view.dateformat || config.model.dateformat;
+
+    return {
+        scope: {date: '='},
+        link: function dateLink(scope, elem) {
+            scope.$watch('date', renderDate);
+
+            /**
+             * Render short date within given directive
+             *
+             * @param {string} date iso date
+             */
+            function renderDate(date) {
+                var momentDate = moment(date, 'YYYY-MM-DD');
+                var text = momentDate.format(DATE_FORMAT);
+
+                elem.text(text);
+                elem.attr('title', text);
+            }
+        }
+    };
+}
+
 DateTimeService.$inject = ['moment', 'config'];
 function DateTimeService(moment, config) {
     var ISO_DATE_FORMAT = 'YYYY-MM-DD';
@@ -157,6 +182,7 @@ export default angular.module('superdesk.core.datetime', [
     }])
 
     .directive('sdDatetime', DateTimeDirective)
+    .directive('sdShortDate', ShortDateDirective)
 
     .filter('reldate', ['moment', function reldateFactory(moment) {
         return function reldate(date) {

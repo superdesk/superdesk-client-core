@@ -1,5 +1,5 @@
-FullPreviewDirective.$inject = ['api', '$timeout', 'config', 'content'];
-export function FullPreviewDirective(api, $timeout, config, content) {
+FullPreviewDirective.$inject = ['api', '$timeout', 'config', 'content', '$sce'];
+export function FullPreviewDirective(api, $timeout, config, content, $sce) {
     return {
         scope: {
             item: '=',
@@ -15,10 +15,15 @@ export function FullPreviewDirective(api, $timeout, config, content) {
                 content.getType(scope.item.profile)
                     .then((type) => {
                         scope.editor = content.editor(type);
+                        scope.fields = content.fields(type);
                     });
             } else {
                 scope.editor = content.editor();
             }
+
+            scope.getHtml = function(html) {
+                return $sce.trustAsHtml(html);
+            };
 
             scope.printPreview = function() {
                 angular.element('body').addClass('prepare-print');
