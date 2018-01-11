@@ -44,11 +44,13 @@ const editor3 = (state = {}, action) => {
 export const forceUpdate = (state) => {
     const {editorState, spellcheckerEnabled} = state;
     const content = editorState.getCurrentContent();
+    const selection = editorState.getSelection();
     const decorator = editorState.getDecorator(!spellcheckerEnabled);
+    const newState = EditorState.createWithContent(content, decorator);
 
     return {
         ...state,
-        editorState: EditorState.createWithContent(content, decorator)
+        editorState: EditorState.acceptSelection(newState, selection),
     };
 };
 
@@ -71,7 +73,10 @@ export const onChange = (state, newState, force = false) => {
     let contentChanged = state.editorState.getCurrentContent() !== newState.getCurrentContent();
 
     if (state.allowsHighlights) {
+        const selection = editorState.getSelection();
+
         ({editorState, activeHighlights} = updateHighlights(state.editorState, newState));
+        editorState = EditorState.acceptSelection(editorState, selection);
     }
 
     if (contentChanged || force) {

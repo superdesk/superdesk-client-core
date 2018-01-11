@@ -45,6 +45,10 @@ class ToolbarComponent extends Component {
      * style, based on the location of the editor within the scroll container.
      */
     onScroll(e) {
+        if (!this.props.editorNode) {
+            return;
+        }
+
         const editorRect = this.props.editorNode.getBoundingClientRect();
         const pageRect = this.scrollContainer[0].getBoundingClientRect();
 

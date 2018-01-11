@@ -4,10 +4,10 @@
  * content states by adding, removing, changing and re-calculating the offsets of
  * inline highlights.
  */
-import {repositionHighlights} from './offsets';
-import {redrawHighlights, removeInlineStyles, applyInlineStyles} from './styles';
-import {getHighlights, addHighlight, updateHighlight, removeHighlight, replaceHighlights} from './store';
-import {updateHighlights} from './highlights';
+export {repositionHighlights} from './offsets';
+export {redrawHighlights, removeInlineStyles, applyInlineStyles} from './styles';
+export {getHighlights, addHighlight, updateHighlight, removeHighlight, replaceHighlights} from './store';
+export {updateHighlights} from './highlights';
 
 // To add new highlight types, simply list them here. They must map one-to-one
 // to their styles in core/editor3/components/customStylesMap.jsx.
@@ -19,16 +19,3 @@ export const highlightTypes = [
     'ANNOTATION',
     'ANNOTATION_SELECTED'
 ];
-
-export {
-    repositionHighlights,
-    redrawHighlights,
-    applyInlineStyles,
-    removeInlineStyles,
-    getHighlights,
-    addHighlight,
-    updateHighlight,
-    removeHighlight,
-    replaceHighlights,
-    updateHighlights,
-};

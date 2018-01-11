@@ -163,7 +163,8 @@ export class HighlightsPopup extends Component {
 
         // only update the component if the cursor has moved
         return nextSelection.getAnchorOffset() !== selection.getAnchorOffset() ||
-            nextSelection.getAnchorKey() !== selection.getAnchorKey();
+            nextSelection.getAnchorKey() !== selection.getAnchorKey() ||
+            Object.keys(nextProps.highlights).length !== Object.keys(this.props.highlights).length;
     }
 
     componentDidUpdate() {
