@@ -32,7 +32,7 @@ export function StreamController($scope, api, $rootScope, desks) {
             filter.where = {desk: $scope.desk._id};
         }
 
-        api('activity').query(filter)
+        api('activity', {embedded: {user: 1}}).query(filter)
             .then((result) => {
                 $scope.activities = result;
             });

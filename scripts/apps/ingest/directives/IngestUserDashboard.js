@@ -46,7 +46,8 @@ export function IngestUserDashboard(api, userList, privileges, config, moment) {
             function getLogMessages() {
                 var criteria = {
                     max_results: 5,
-                    sort: '[(\'_created\',-1)]'
+                    sort: '[(\'_created\',-1)]',
+                    embedded: {user: 1}
                 };
 
                 var where = [

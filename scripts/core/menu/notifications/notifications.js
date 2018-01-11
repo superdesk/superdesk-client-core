@@ -51,7 +51,8 @@ function UserNotificationsService(
 
         var criteria = {
             where: getFilter(),
-            max_results: 8
+            max_results: 8,
+            embedded: {user: 1}
         };
 
         return api.query('activity', criteria)
@@ -77,7 +78,7 @@ function UserNotificationsService(
 
         if (recipient && !recipient.read) {
             recipient.read = true;
-            return api('activity')
+            return api('activity', {embedded: {user: 1}})
                 .save(_notification, {recipients: recipients})
                 .then(() => {
                     this.unread = _.max([0, this.unread - 1]);
@@ -156,8 +157,11 @@ function DeskNotificationsService($rootScope, api, session) {
     this.reload = function() {
         var criteria = {
             where: getFilter(),
-            embedded: {item: 1},
-            max_results: 20
+            embedded: {
+                item: 1,
+                user: 1
+            },
+            max_results: 20,
         };
 
         return api.query('activity', criteria)
@@ -191,7 +195,7 @@ function DeskNotificationsService($rootScope, api, session) {
         if (recipient && !recipient.read) {
             recipient.read = true;
             recipient.user_id = session.identity._id;
-            return api('activity')
+            return api('activity', {embedded: {user: 1}})
                 .save(_notification, {recipients: recipients})
                 .then(() => {
                     this.unread = _.max([0, this.unread - 1]);
