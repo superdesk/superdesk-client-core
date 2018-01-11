@@ -535,6 +535,19 @@
     <div class="sd-line-input__hint" ng-if="helper_text[field._id]">{{field.helper_text}}</div>
 </div>
 
+<!-- custom date editor fields -->
+<div class="field" ng-repeat="field in fields track by field._id"
+    ng-if="field.field_type === 'date'"
+    sd-width="{{ editor[field._id].sdWidth || 'full' }}"
+    data-required="schema[field._id].required"
+    order="{{ editor[field._id].order }}"
+    sd-validation-error="error[field._id.toLowerCase()]">
+
+    <label>{{ field.display_name }}</label>
+    <div sd-datepicker ng-model="item.extra[field._id]" data-format="YYYY/MM/DD" data-on-change="autosave(item)"></div>
+    <div class="sd-line-input__hint" ng-if="helper_text[field._id]">{{field.helper_text}}</div>
+</div>
+
 <div class="field" ng-repeat="field in fields track by field._id"
     ng-if="field.field_type === 'embed'"
     sd-width="{{ editor[field._id].sdWidth || 'full' }}"

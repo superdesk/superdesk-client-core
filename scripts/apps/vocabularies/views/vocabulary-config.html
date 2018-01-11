@@ -8,6 +8,12 @@
         </button>
 
         <button class="btn btn--primary"
+          ng-click="createCustomField('date')" ng-if="tab === 'date-fields'">
+          <i class="icon-plus-sign icon--white"></i>
+          <span translate>Add New</span>
+        </button>
+
+        <button class="btn btn--primary"
           ng-click="createCustomField('media')" ng-if="tab === 'media-fields'">
           <i class="icon-plus-sign icon--white"></i>
           <span translate>Add New</span>

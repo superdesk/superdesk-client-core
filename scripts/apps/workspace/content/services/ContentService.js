@@ -327,7 +327,7 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
 
         if (!self._fieldsPromise) {
             self._fieldsPromise = api.query('vocabularies',
-                {where: {field_type: {$in: ['text', 'media', 'embed']}}, max_results: 200})
+                {where: {field_type: {$in: ['text', 'date', 'media', 'embed']}}, max_results: 200})
                 .then((response) => {
                     self._fields = response._items;
                     self._fieldsPromise = null;

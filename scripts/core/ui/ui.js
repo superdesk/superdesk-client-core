@@ -273,7 +273,8 @@ function DatepickerDirective($document) {
         scope: {
             dt: '=ngModel',
             disabled: '=ngDisabled',
-            format: '@'
+            format: '@',
+            onChange: '&'
         },
         templateUrl: 'scripts/core/ui/views/sd-datepicker.html',
         link: function(scope, element) {
@@ -298,6 +299,12 @@ function DatepickerDirective($document) {
                     });
                 }
             }
+
+            scope.change = function() {
+                if (scope.onChange) {
+                    scope.onChange();
+                }
+            };
 
             scope.$on('$destroy', () => {
                 $document.off('click', handleDatePicker);
