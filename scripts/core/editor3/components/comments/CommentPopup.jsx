@@ -1,16 +1,23 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
+import ng from 'core/services/ng';
+
+import {Comment} from './Comment';
+import CommentTextArea from './CommentTextArea';
+
 import {
     replyComment,
     deleteHighlight,
     resolveComment,
+    removeReply,
+    updateReply,
+} from '../../actions/highlights';
+
+import {
     showPopup,
     PopupTypes
-} from '../../actions';
-import {Comment} from './Comment';
-import CommentTextArea from './CommentTextArea';
-import ng from 'core/services/ng';
+} from '../../actions/popups';
 
 /**
  * @ngdoc React
@@ -27,7 +34,16 @@ class CommentPopupComponent extends Component {
 
         this.currentUser = ng.get('session').identity.email;
         this.postReply = this.postReply.bind(this);
-        this.state = {reply: ''};
+        this.state = {reply: '', index: null};
+        this.resetState = this.resetState.bind(this);
+    }
+
+    resetState(event) {
+        ng.get('$timeout')( // must run after the click handler finishes
+            () => this.setState({reply: '', index: null}),
+            10,
+            false
+        );
     }
 
     /**
@@ -44,8 +60,23 @@ class CommentPopupComponent extends Component {
             return; // empty reply message.
         }
 
-        this.props.replyComment(selection, {msg});
-        this.setState({reply: ''});
+        if (this.state.index !== null) {
+            this.props.updateReply(selection, this.state.index, msg);
+        } else {
+            this.props.replyComment(selection, {msg});
+        }
+
+        this.resetState();
+    }
+
+    editReply(data, index) {
+        this.setState({reply: data.msg, index: index});
+    }
+
+    removeReply(data, index) {
+        const {selection} = this.props.comment;
+
+        this.props.removeReply(selection, index);
     }
 
     render() {
@@ -70,7 +101,19 @@ class CommentPopupComponent extends Component {
                 {!resolved && <a className="btn btn--small btn--hollow" onClick={onResolve}>{gettext('Resolve')}</a>}
 
                 <div className="comment-replies">
-                    {replies.map((data, i) => <Comment key={i} data={data} className="small" />)}
+                    {replies.map((data, i) => {
+                        const isReplyAuthor = data.email === this.currentUser;
+                        const onEdit = isReplyAuthor ? () => this.editReply(data, i) : null;
+                        const onRemove = isReplyAuthor ? () => this.removeReply(data, i) : null;
+
+                        return (
+                            <Comment key={i}
+                                data={data}
+                                onEdit={onEdit}
+                                onRemove={onRemove}
+                                className="small" />
+                        );
+                    })}
                 </div>
 
                 <div className="comment-reply-input">
@@ -80,7 +123,15 @@ class CommentPopupComponent extends Component {
                     />
 
                     <div className="comment-reply-buttons">
-                        <a className="btn btn--small btn--hollow btn-reply" onClick={onReply}>{gettext('Reply')}</a>
+                        <button className="btn btn--small btn--hollow btn-reply" onClick={onReply}>
+                            {this.state.index !== null ? gettext('Save') : gettext('Reply')}
+                        </button>
+
+                        {this.state.index !== null && (
+                            <button className="btn btn--small btn--hollow" onClick={this.resetState}>
+                                {gettext('Cancel')}
+                            </button>
+                        )}
                     </div>
                 </div>
             </div>
@@ -93,12 +144,16 @@ CommentPopupComponent.propTypes = {
     replyComment: PropTypes.func,
     resolveComment: PropTypes.func,
     deleteHighlight: PropTypes.func,
-    showPopup: PropTypes.func
+    showPopup: PropTypes.func,
+    removeReply: PropTypes.func,
+    updateReply: PropTypes.func,
 };
 
 export const CommentPopup = connect(null, {
     replyComment,
     deleteHighlight,
     resolveComment,
-    showPopup
+    showPopup,
+    removeReply,
+    updateReply,
 })(CommentPopupComponent);

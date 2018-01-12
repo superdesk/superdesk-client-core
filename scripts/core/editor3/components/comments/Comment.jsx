@@ -13,7 +13,7 @@ import PropTypes from 'prop-types';
  * and the body of that comment. It is also used for displaying replies and can take an
  * additional class.
  */
-export const Comment = ({data, className}) => {
+export const Comment = ({data, className, onEdit, onRemove}) => {
     const {author, date, avatar, msg} = data;
     const fromNow = moment(date).calendar();
     const fullDate = moment(date).format('MMMM Do YYYY, h:mm:ss a');
@@ -26,6 +26,12 @@ export const Comment = ({data, className}) => {
                     <div className="author-name">{author}</div>
                     <div className="date" title={fullDate}>{fromNow}</div>
                 </div>
+                {onEdit && onRemove && (
+                    <div className="highlights-popup__header__actions">
+                        <button onClick={onEdit} title={gettext('Edit')}><i className="icon-pencil" /></button>
+                        <button onClick={onRemove} title={gettext('Remove')}><i className="icon-close-small" /></button>
+                    </div>
+                )}
             </div>
             <TextWithMentions className="highlights-popup__body">{msg}</TextWithMentions>
         </div>
@@ -39,5 +45,7 @@ Comment.propTypes = {
         avatar: PropTypes.string,
         msg: PropTypes.string
     }),
-    className: PropTypes.string
+    className: PropTypes.string,
+    onEdit: PropTypes.func,
+    onRemove: PropTypes.func,
 };
