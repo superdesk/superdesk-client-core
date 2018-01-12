@@ -21,8 +21,8 @@
     </div>
 
     <div class="package-item__item-creator">
-      Created <time sd-datetime data-date="item.firstcreated" data-from-now="true"></time>
-	 <span ng-if="userLookup[data.original_creator]" translate>by <b>{{userLookup[data.original_creator].display_name}}</b></span>
+      Created <time sd-datetime data-date="data.versioncreated" data-from-now="true"></time>
+   <span ng-if="userLookup[data.original_creator]" translate>by <b>{{userLookup[data.original_creator].display_name}}</b></span>
     </div>
 
     <div class="package-item__item-abstract" ng-if="data.abstract" ng-bind-html="data.abstract"></div>
