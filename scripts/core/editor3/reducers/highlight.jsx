@@ -72,11 +72,13 @@ const deleteHighlight = (state, highlight) =>
  * @description Attempts to update the highlight located on the selection
  * with the new data.
  */
-const replaceHighlight = (state, highlight) =>
-    onChange(
+function replaceHighlight(state, highlight) {
+    return onChange(
         state,
-        updateHighlight(state.editorState, highlight)
+        updateHighlight(state.editorState, highlight),
+        true
     );
+}
 
 /**
  * @ngdoc method
