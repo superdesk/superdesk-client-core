@@ -34,7 +34,7 @@
                     </div>
                     <div class="preview-data">
                         <span ng-repeat="service in item.anpa_category">
-                            {{service.name}}
+                            {{getLocaleName(service)}}
                         </span>
                     </div>
                 </div>
@@ -55,7 +55,7 @@
                     </div>
                     <div class="preview-data">
                         <span ng-repeat="genre in item.genre">
-                            {{genre.name}}
+                            {{getLocaleName(genre)}}
                         </span>
                     </div>
                 </div>
@@ -65,8 +65,8 @@
                         <label translate>Subject</label>
                     </div>
                     <div class="preview-data">
-                        <span ng-repeat="subject in item.subject | mergeWords:'name' : 'subject_custom': true">
-                            {{subject}}
+                        <span ng-repeat="subject in item.subject | filter:{'scheme':'subject_custom'}">
+                            {{getLocaleName(subject)}}
                         </span>
                     </div>
                 </div>
@@ -76,7 +76,7 @@
                     </div>
                     <div class="preview-data">
                         <span ng-repeat="topic in item.subject|filter:filterKey">
-                            {{topic.name}}
+                            {{getLocaleName(topic)}}
                         </span>
                     </div>
                 </div>
@@ -86,7 +86,7 @@
                     </div>
                     <div class="preview-data">
                         <span ng-repeat="place in item.place">
-                            {{place.name}}
+                            {{getLocaleName(place)}}
                         </span>
                     </div>
                 </div>
