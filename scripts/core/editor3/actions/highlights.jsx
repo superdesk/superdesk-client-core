@@ -68,6 +68,35 @@ export const replyComment = (selection, data) => {
 
 /**
  * @ngdoc method
+ * @name removeReply
+ * @param {SelectionState} selection
+ * @param {Number} index
+ * @description Remove comment reply.
+ */
+export function removeReply(selection, index) {
+    return {
+        type: 'HIGHLIGHT_COMMENT_REPLY_REMOVE',
+        payload: {selection, index},
+    };
+}
+
+/**
+ * @ngdoc method
+ * @name updateReply
+ * @param {SelectionState} selection
+ * @param {Number} index
+ * @param {String} reply
+ * @description Update comment reply text.
+ */
+export function updateReply(selection, index, reply) {
+    return {
+        type: 'HIGHLIGHT_COMMENT_REPLY_UPDATE',
+        payload: {selection, index, reply},
+    };
+}
+
+/**
+ * @ngdoc method
  * @name resolveComment
  * @param {SelectionState} selection Location of comment to resolve.
  * @return {String} action
