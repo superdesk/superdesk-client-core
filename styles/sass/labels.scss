@@ -245,6 +245,10 @@ $priority-label-color-6 : #c0c9a1;
     color: $white;
 }
 
+.language-label {
+    @extend .state-label;
+}
+
 .info-block {
     max-width: 70%;
     text-align: center;
