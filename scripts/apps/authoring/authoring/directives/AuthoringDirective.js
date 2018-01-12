@@ -574,13 +574,18 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 return item.task && item.task.desk && item.state !== 'draft' || $scope.dirty;
             };
 
-            $scope.saveAndContinue = function(customButtonAction) {
+            $scope.saveAndContinue = function(customButtonAction, showConfirm) {
                 if ($scope.dirty) {
-                    $scope.saveTopbar()
-                        .then(confirm.confirmQuickPublish)
-                        .then(customButtonAction);
+                    showConfirm ?
+                        $scope.saveTopbar()
+                            .then(confirm.confirmQuickPublish)
+                            .then(customButtonAction) :
+                        $scope.saveTopbar()
+                            .then(customButtonAction);
                 } else {
-                    confirm.confirmQuickPublish().then(customButtonAction);
+                    showConfirm ?
+                        confirm.confirmQuickPublish().then(customButtonAction) :
+                        customButtonAction();
                 }
             };
 
