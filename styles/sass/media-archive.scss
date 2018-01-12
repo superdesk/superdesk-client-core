@@ -870,6 +870,11 @@ $rightfield-width:60px;
                 overflow: hidden;
                 text-overflow: ellipsis;
             }
+            .language-label {
+                overflow: visible;
+                text-overflow: initial;
+            }
+
             .label {
                 margin-right: 6px;
                 margin-top: 2px;
