@@ -163,14 +163,24 @@ export function ItemAssociationDirective(superdesk, renditions, config, authorin
              * @private
              * @description If the item is not published then it saves the changes otherwise calls autosave.
              * @param {Object} updated Item to be edited
+             * @param {String} custom association identifier
+             * @param {Function} callback to call after save
              */
-            function updateItemAssociation(updated) {
+            function updateItemAssociation(updated, customRel, callback = null) {
                 let data = {};
 
+                if (customRel) {
+                    scope.rel = customRel;
+                }
                 data[scope.rel] = updated;
                 scope.item.associations = angular.extend({}, scope.item.associations, data);
                 if (!authoring.isPublished(scope.item) && updated) {
-                    return scope.save();
+                    var promise = scope.save();
+
+                    if (callback) {
+                        return promise.then(callback);
+                    }
+                    return promise;
                 }
 
                 scope.onchange({item: scope.item, data: data});
@@ -190,7 +200,7 @@ export function ItemAssociationDirective(superdesk, renditions, config, authorin
              * @description Opens the item for edit.
              * @param {Object} item Item to be edited
              */
-            scope.edit = function(item) {
+            scope.edit = function(item, customRel, callback = null) {
                 if (!scope.isMediaEditable()) {
                     return;
                 }
@@ -198,13 +208,15 @@ export function ItemAssociationDirective(superdesk, renditions, config, authorin
                 if (item.renditions && item.renditions.original && scope.isImage(item.renditions.original)) {
                     scope.loading = true;
                     return renditions.crop(item, true, scope.editable, true)
-                        .then(updateItemAssociation)
+                        .then((rendition) => {
+                            updateItemAssociation(rendition, customRel, callback);
+                        })
                         .finally(() => {
                             scope.loading = false;
                         });
                 }
 
-                updateItemAssociation(item);
+                updateItemAssociation(item, customRel, callback);
             };
 
             /**
@@ -290,20 +302,22 @@ export function ItemAssociationDirective(superdesk, renditions, config, authorin
                         // open the view to edit the PoI and the cropping areas
                         if (images) {
                             scope.$applyAsync(() => {
-                                var lastPromise;
+                                var [rootField, index] = mediaIdGenerator.getFieldParts(scope.rel);
+                                var imagesWithIds = [];
+
+                                function editNextFile() {
+                                    if (imagesWithIds.length > 0) {
+                                        var imageWithId = imagesWithIds.shift();
+
+                                        scope.edit(imageWithId.image, imageWithId.id, editNextFile);
+                                    }
+                                }
 
                                 _.forEach(images, (image) => {
-                                    if (lastPromise) {
-                                        lastPromise.then(() => {
-                                            var [rootField, index] = mediaIdGenerator.getFieldParts(scope.rel);
-
-                                            scope.rel = mediaIdGenerator.getFieldVersionName(rootField, index + 1);
-                                            lastPromise = scope.edit(image);
-                                        });
-                                    } else {
-                                        lastPromise = scope.edit(image);
-                                    }
+                                    imagesWithIds.push({id: scope.rel, image: image});
+                                    scope.rel = mediaIdGenerator.getFieldVersionName(rootField, ++index);
                                 });
+                                editNextFile();
                             });
                         }
                     });

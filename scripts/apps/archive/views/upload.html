@@ -5,7 +5,7 @@
 
 <div class="modal__body" ng-init="dragshow = false">
 
-    <div class="drag-area" ng-show="(!items.length || dragshow) && freeUploadSlots() > 0" ngf-drop="addFiles($files)"
+    <div class="drag-area" ng-show="(!items.length || dragshow) && canUpload()" ngf-drop="addFiles($files)"
         ngf-multiple="!uniqueUpload" ng-class="{compact: dragshow && items.length}">
         <div class="title" translate>Drag Your Files Here</div>
         <div class="upload-manual">
@@ -94,7 +94,7 @@
         </ul>
     </div>
 
-    <div class="optional-drag-holder" ng-class="{open: dragshow}" ng-show="items.length && !uniqueUpload && freeUploadSlots() > 0">
+    <div class="optional-drag-holder" ng-class="{open: dragshow}" ng-show="items.length && !uniqueUpload && canUpload() > 0">
         <div class="optional-drag" ng-click="dragshow = !dragshow">
             <i class="icon-chevron-up-thin" ng-show="!dragshow"></i>
             <i class="icon-chevron-down-thin" ng-show="dragshow"></i>

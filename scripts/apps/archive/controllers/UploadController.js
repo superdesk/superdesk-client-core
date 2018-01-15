@@ -79,7 +79,7 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
 
         item.cssType = item.file.type.split('/')[0];
         $scope.items.unshift(item);
-        $scope.enableSave = _.isNil($scope.errorMessage) && $scope.freeUploadSlots() >= 0;
+        $scope.enableSave = _.isNil($scope.errorMessage) && $scope.items.length > 0;
     };
 
     var getErrorMessage = function(type) {
@@ -114,7 +114,7 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
             $scope.errorMessage = gettext('Only one file can be uploaded');
             return false;
         }
-        if (!$scope.uniqueUpload && $scope.maxUploads && files.length > $scope.maxUploads) {
+        if (!$scope.uniqueUpload && $scope.maxUploads && (files.length + $scope.items.length) > $scope.maxUploads) {
             $scope.errorMessage = gettext('Select at most ') + $scope.maxUploads + gettext(' files to upload.');
             return false;
         }
@@ -217,11 +217,11 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
         checkFail();
     };
 
-    $scope.freeUploadSlots = function() {
+    $scope.canUpload = () => {
         if ($scope.uniqueUpload) {
-            return $scope.items.length ? 0 : 1;
+            return $scope.items.length === 0;
         }
-        return $scope.maxUploads === undefined ? undefined : $scope.maxUploads - $scope.items.length;
+        return $scope.maxUploads === undefined || $scope.maxUploads > $scope.items.length;
     };
 
     if ($scope.locals && $scope.locals.data) {
