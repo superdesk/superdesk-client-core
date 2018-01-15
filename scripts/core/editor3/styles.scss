@@ -511,6 +511,14 @@ $editor-styleButton-active-color:#5890ff;
 
 		.highlights-popup__header {
 			padding: 0 0 5px;
+            position: relative;
+
+
+            .highlights-popup__header__actions {
+                position: absolute;
+                top: 0;
+                right: 0;
+            }
 		}
 	}
 

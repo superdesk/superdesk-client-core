@@ -11,6 +11,10 @@ const highlights = (state = {}, action) => {
         return replaceHighlight(state, action.payload);
     case 'HIGHLIGHT_COMMENT_REPLY':
         return replyComment(state, action.payload);
+    case 'HIGHLIGHT_COMMENT_REPLY_REMOVE':
+        return removeCommentReply(state, action.payload);
+    case 'HIGHLIGHT_COMMENT_REPLY_UPDATE':
+        return updateCommentReply(state, action.payload);
     case 'HIGHLIGHT_COMMENT_RESOLVE':
         return resolveComment(state, action.payload);
     default:
@@ -40,6 +44,33 @@ const replyComment = (state, {selection, data}) =>
     updateComment(state, selection, (comment) => {
         comment.replies.push(data);
     });
+
+/**
+ * @ngdoc method
+ * @name removeReply
+ * @param {SelectionState} selection
+ * @param {Number} index index to remove
+ * @description Remove comment reply.
+ */
+function removeCommentReply(state, {selection, index}) {
+    return updateComment(state, selection, (comment) => {
+        comment.replies.splice(index, 1);
+    });
+}
+
+/**
+ * @ngdoc method
+ * @name removeReply
+ * @param {SelectionState} selection
+ * @param {Number} index reply index
+ * @param {String} reply reply text
+ * @description Update comment reply text.
+ */
+function updateCommentReply(state, {selection, reply, index}) {
+    return updateComment(state, selection, (comment) => {
+        comment.replies[index].msg = reply;
+    });
+}
 
 /**
  * @ngdoc method

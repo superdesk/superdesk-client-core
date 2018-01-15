@@ -225,55 +225,59 @@
     </div>
 </form>
 
-
-<div sd-reset-password class="password-popup mini-modal inline" ng-if="features.reset_user_password && show.reset_password && user._id">
-    <div class="title">Reset password</div>
-    <div class="close" ng-click="show.reset_password = false">
-        <i class="icon-close-small"></i>
+<div sd-modal data-model="features.reset_user_password && show.reset_password && user._id" class="modal--tabs">
+    <div class="modal__header">
+        <button class="modal__close pull-right" ng-click="show.reset_password = false"><i class="icon-close-small"></i></button>
+        <h3 class="modal__heading">Reset password</h3>
     </div>
-    <div class="content">
-        <p translate>Do you want to reset the password for user {{ user.full_name}} ?</p>
-    </div>
-    <div class="footer" style="text-align:right;">
-        <button class="btn" ng-click="show.reset_password = false" translate>Cancel</button>
-        <button class="btn btn--primary" ng-click="resetPassword()" translate>Reset password</button>
+    <div class="modal__body" sd-reset-password>
+        <div class="modal__body-content">
+            <p translate>Do you want to reset the password for user {{ user.full_name}} ?</p>
+        </div>
+        <div class="modal__body-footer">
+            <button class="btn" ng-click="show.reset_password = false">Cancel</button>
+            <button class="btn btn--primary" ng-click="resetPassword()">Reset password</button>
+        </div>
     </div>
 </div>
 
-
-<div sd-change-password class="password-popup mini-modal inline" ng-if="features.reset_user_password && show.change_password && user._id">
-    <div class="title">Change password</div>
-    <div class="close" ng-click="show.change_password = false">
-        <i class="icon-close-small"></i>
+<div sd-modal data-model="features.reset_user_password && show.change_password && user._id" class="modal--tabs">
+    <div class="modal__header">
+        <button class="modal__close pull-right" ng-click="show.change_password = false"><i class="icon-close-small"></i></button>
+        <h3 class="modal__heading">Change password</h3>
     </div>
-    <form name="changePasswordForm">
-        <div class="content">
-
-            <div class="field">
-                <label translate>current</label>
-                <input name="old" type="password" ng-model="oldPwd" required>
-                <p sd-valid-error ng-show="oldPasswordInvalid">sorry, but this is not the original password.</p>
-            </div>
-
-            <div class="field">
-                <label translate>new</label>
-                <input sd-password-strength name="new" type="password" ng-model="newPwd" required>
-            </div>
-
-            <div class="field">
-                <label translate>confirm</label>
-                <input name="confirm" type="password" ng-model="_confirm" required
-                       sd-password-confirm ng-model="_confirm" data-password="newPwd">
-                <p sd-valid-error ng-show="changePasswordForm.confirm.$error.confirm">confirm doesn't match new password yet.</p>
-            </div>
-
+    <div class="modal__body" sd-change-password>
+        <div class="modal__body-content">
+            <form name="changePasswordForm">
+                <div class="content">
+                    <div class="field">
+                        <label translate>current</label>
+                        <input name="old" type="password" ng-model="oldPwd" required>
+                        <p sd-valid-error ng-show="oldPasswordInvalid">sorry, but this is not the original password.</p>
+                    </div>
+        
+                    <div class="field">
+                        <label translate>new</label>
+                        <input sd-password-strength name="new" type="password" ng-model="newPwd" required>
+                    </div>
+        
+                    <div class="field">
+                        <label translate>confirm</label>
+                        <input name="confirm" type="password" ng-model="_confirm" required
+                                sd-password-confirm ng-model="_confirm" data-password="newPwd">
+                        <p sd-valid-error ng-show="changePasswordForm.confirm.$error.confirm">confirm doesn't match new password yet.</p>
+                    </div>
+                </div>
+            </form>
         </div>
-        <div class="footer" style="text-align:right;">
+        <div class="modal__body-footer">
             <button class="btn" ng-click="show.change_password = false" translate>Cancel</button>
             <button class="btn btn--primary"
                     ng-click="changePasswordForm.$valid && changePassword(oldPwd, newPwd)"
                     ng-disabled="changePasswordForm.$invalid"
-                    translate>Save password</button>
+                    translate>
+                Save password
+            </button>
         </div>
-    </form>
+    </div>
 </div>
