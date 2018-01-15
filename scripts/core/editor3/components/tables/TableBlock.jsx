@@ -107,6 +107,11 @@ export class TableBlockComponent extends Component {
         setActiveCell(i, j, block.key);
     }
 
+    // onMouseDown is used in the main editor to set focus and stop table editing
+    onMouseDown(event) {
+        event.stopPropagation();
+    }
+
     render() {
         const {numRows, numCols, withHeader} = this.data();
 
@@ -116,7 +121,7 @@ export class TableBlockComponent extends Component {
         });
 
         return (
-            <div className={cx}>
+            <div className={cx} onMouseDown={this.onMouseDown}>
                 <table>
                     <tbody>
                         {Array.from(new Array(numRows)).map((v, i) =>
