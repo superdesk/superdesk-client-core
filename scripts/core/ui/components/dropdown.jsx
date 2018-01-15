@@ -7,7 +7,7 @@ export function Dropdown(props) {
 
     return (
         <div className={className}>
-            <div className="dropdown__menu">{props.children}</div>
+            <div className="dropdown__menu dropdown__menu--scrollable">{props.children}</div>
         </div>
     );
 }
