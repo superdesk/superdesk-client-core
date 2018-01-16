@@ -1,5 +1,6 @@
 import {AtomicBlockUtils, EditorState} from 'draft-js';
 import {onChange} from './editor3';
+import removeBlankLinesAroundAtomicBlocks from '../helpers/remove-blank-lines-around-atomic-blocks';
 
 /**
  * @description Contains the list of table related reducers.
@@ -36,10 +37,12 @@ const addTable = (state, data) => {
     const contentStateWithEntity = contentState.createEntity('TABLE', 'MUTABLE', {data});
     const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
 
-    editorState = AtomicBlockUtils.insertAtomicBlock(
-        editorState,
-        entityKey,
-        ' '
+    editorState = removeBlankLinesAroundAtomicBlocks(
+        AtomicBlockUtils.insertAtomicBlock(
+            editorState,
+            entityKey,
+            ' '
+        )
     );
 
     return onChange(state, editorState);
