@@ -18,6 +18,12 @@ export function WordCount() {
         template: '<span ng-if="!countOnly" class="char-count words" translate>{{numWords}} words</span>' +
                   '<span ng-if="countOnly" class="char-count words">{{numWords}}</span>',
         link: function wordCountLink(scope, elem, attrs) {
+            /* This pattern matches http(s) links, numbers (1.000.000 or 1,000,000 or 1 000 000), regulars words,
+            compound words (e.g. "two-done") or abbreviation (e.g. D.C.)
+            If you modify, please keep in sync with superdesk-core/superdesk/text_utils.py
+            */
+            const WORD_PATTERN = /https?:[^ ]*|([0-9]+[,. ]?)+|([\w]\.)+|[\w][\w-]*/g;
+
             scope.html = scope.html || false;
             scope.countOnly = scope.countOnly || false;
             scope.numWords = 0;
@@ -25,7 +31,7 @@ export function WordCount() {
                 var input = scope.item || '';
 
                 input = scope.html ? helpers.cleanHtml(input) : input;
-                scope.numWords = _.compact(input.split(/\s+/)).length || 0;
+                scope.numWords = (input.match(WORD_PATTERN) || '').length;
             });
         }
     };
