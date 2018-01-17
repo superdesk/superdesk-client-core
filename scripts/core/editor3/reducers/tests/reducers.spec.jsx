@@ -31,15 +31,7 @@ describe('editor3.reducers', () => {
     });
 
     it('EDITOR_DRAG_DROP', () => {
-        const event = new DragEvent('drop');
-        const getData = jasmine.createSpy().and.callFake(() => '{"a": 1}');
-
-        event.originalEvent = {
-            dataTransfer: {
-                getData: getData,
-                types: ['superdesk/image']
-            }
-        };
+        const data = '{"a": 1}';
 
         const startState = {
             editorState: EditorState.createEmpty(),
@@ -48,7 +40,7 @@ describe('editor3.reducers', () => {
 
         const {editorState} = reducer(startState, {
             type: 'EDITOR_DRAG_DROP',
-            payload: event
+            payload: data
         });
 
         const contentState = editorState.getCurrentContent();
@@ -58,7 +50,6 @@ describe('editor3.reducers', () => {
         expect(entity.getType()).toBe('MEDIA');
         expect(entity.getMutability()).toBe('MUTABLE');
         expect(entity.getData()).toEqual({media: {a: 1}});
-        expect(getData).toHaveBeenCalledWith('superdesk/image');
     });
 
     it('HIGHLIGHTS_RENDER highlight', () => {
