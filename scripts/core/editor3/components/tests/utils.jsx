@@ -11,7 +11,6 @@ import {
     CharacterMetadata,
     genKey
 } from 'draft-js';
-import removeBlankLinesAroundAtomicBlocks from '../../helpers/remove-blank-lines-around-atomic-blocks';
 
 /**
  * @name mockStore
@@ -91,13 +90,9 @@ export function createBlockAndContent(type, data) {
     const cs = ContentState.createFromText('here is an image:');
     const contentState = cs.createEntity(type, 'MUTABLE', data);
     const entityKey = contentState.getLastCreatedEntityKey();
-    const editorState = removeBlankLinesAroundAtomicBlocks(
-        AtomicBlockUtils.insertAtomicBlock(
-            EditorState.createWithContent(contentState),
-            entityKey,
-            ' '
-        )
-    );
+    const editorState = AtomicBlockUtils.insertAtomicBlock(
+        EditorState.createWithContent(contentState),
+        entityKey, ' ');
     const block = editorState.getCurrentContent().getBlocksAsArray()[1];
 
     return {block, contentState};
