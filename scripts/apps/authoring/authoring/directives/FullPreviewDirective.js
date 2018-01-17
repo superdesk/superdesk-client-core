@@ -49,6 +49,19 @@ export function FullPreviewDirective(api, $timeout, config, content, $sce) {
                 }, 200, false);
                 return false;
             };
+
+            scope.getLocaleName = function(term) {
+                if (!term) {
+                    return 'None';
+                }
+
+                if (term.translations && scope.item.language
+                    && term.translations.name[scope.item.language]) {
+                    return term.translations.name[scope.item.language];
+                }
+
+                return term.name;
+            };
         }
     };
 }

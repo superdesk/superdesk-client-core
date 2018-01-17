@@ -16,11 +16,14 @@ export default ({
 
             highlighter: {
                 padding: 9,
+                overflowY: 'hidden',
             },
 
             input: {
                 padding: 9,
                 minHeight: 63,
+                maxHeight: 200,
+                overflowY: 'scroll',
                 outline: 0,
                 border: 0,
             },
