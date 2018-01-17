@@ -22,6 +22,25 @@ import {handlePastedText} from './handlePastedText';
 import {getEntityTypeAfterCursor, getEntityTypeBeforeCursor} from './links/entityUtils';
 import {HighlightsPopup} from './HighlightsPopup';
 
+const VALID_MEDIA_TYPES = [
+    'application/superdesk.item.picture',
+    'application/superdesk.item.graphic',
+    'application/superdesk.item.video',
+    'application/superdesk.item.audio',
+    'text/html',
+    'Files'
+];
+
+/**
+ * Get valid media type from event dataTransfer types
+ *
+ * @param {Event} event
+ * @return {String}
+ */
+function getValidMediaType(event) {
+    return event.dataTransfer.types.find((mediaType) => VALID_MEDIA_TYPES.indexOf(mediaType) !== -1);
+}
+
 /**
  * @ngdoc React
  * @module superdesk.core.editor3
@@ -76,15 +95,7 @@ export class Editor3Component extends React.Component {
      */
     allowItem(e) {
         const {editorFormat, readOnly, singleLine} = this.props;
-        const mediaType = e.originalEvent.dataTransfer.types[0] || '';
-        const isValidMedia = [
-            'application/superdesk.item.picture',
-            'application/superdesk.item.graphic',
-            'application/superdesk.item.video',
-            'application/superdesk.item.audio',
-            'text/html',
-            'Files'
-        ].indexOf(mediaType) !== -1;
+        const isValidMedia = !!getValidMediaType(e.originalEvent);
         const supportsMedia = !readOnly && !singleLine && editorFormat.indexOf('media') !== -1;
 
         return supportsMedia && isValidMedia;
@@ -110,7 +121,13 @@ export class Editor3Component extends React.Component {
             // Firefox ignores the result of onDragOver and accept the item in all cases
             // Here will be tested again if the item is allowed
 
-            this.props.dragDrop(e);
+            e.preventDefault();
+            e.stopPropagation();
+
+            const dataTransfer = e.originalEvent.dataTransfer;
+            const mediaType = getValidMediaType(e.originalEvent);
+
+            this.props.dragDrop(dataTransfer, mediaType);
             return true;
         }
 
@@ -310,7 +327,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
     onChange: (editorState) => dispatch(actions.changeEditorState(editorState)),
     onTab: (e) => dispatch(actions.handleEditorTab(e)),
-    dragDrop: (e) => dispatch(actions.dragDrop(e)),
+    dragDrop: (transfer, mediaType) => dispatch(actions.dragDrop(transfer, mediaType)),
     unlock: () => dispatch(actions.setLocked(false))
 });
 

@@ -44,22 +44,18 @@ export function handleEditorTab(e) {
 /**
  * @ngdoc method
  * @name dragDrop
- * @param {Event} e
- * @return {String} action
+ * @param {DataTransfer} transfer
+ * @return {String} mediaType
  * @description Creates the editor drop action.
  */
-export function dragDrop(e) {
-    const transfer = e.originalEvent.dataTransfer;
-
-    if (transfer.types[0] === 'Files') {
-        e.preventDefault();
-        e.stopPropagation();
+export function dragDrop(transfer, mediaType) {
+    if (mediaType === 'Files') {
         return insertMedia(transfer.files);
     }
 
     return {
         type: 'EDITOR_DRAG_DROP',
-        payload: e
+        payload: transfer.getData(mediaType),
     };
 }
 
