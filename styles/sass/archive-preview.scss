@@ -351,11 +351,18 @@
         }
     }
 
-    .metadata-view {
+    .metadata-view,
+    .article-versions {
         position: absolute;
         top:0; left: 0; right: 0; bottom: 0;
         padding: 20px 20px $bottom-view-padding;
         overflow: auto;
+    }
+
+    .article-versions {
+        padding-top: 10px;
+        padding-left: 10px;
+        padding-right: 10px;
     }
 
     .related-item-view, .mediaUsed {
