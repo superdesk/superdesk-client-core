@@ -36,11 +36,13 @@ function ShortDateDirective(config, moment) {
              * @param {string} date iso date
              */
             function renderDate(date) {
-                var momentDate = moment(date, 'YYYY-MM-DD');
+                var momentDate = moment(date);
                 var text = momentDate.format(DATE_FORMAT);
 
-                elem.text(text);
-                elem.attr('title', text);
+                if (momentDate) {
+                    elem.text(text);
+                    elem.attr('title', text);
+                }
             }
         }
     };
