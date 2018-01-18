@@ -17,7 +17,7 @@ describe('editor3.component', () => {
     it('should not accept dragging over invalid items', () => {
         const wrapper = shallow(<Editor3 editorFormat={['media']} editorState={editorState} />);
         const {onDragOver} = wrapper.instance();
-        const makeEvent = (t) => ({originalEvent: {dataTransfer: {types: [t]}}});
+        const makeEvent = (t) => ({originalEvent: {dataTransfer: {types: ['foo', t]}}});
 
         [
             'application/superdesk.item.picture',

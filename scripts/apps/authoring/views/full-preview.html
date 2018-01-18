@@ -38,18 +38,8 @@
                         </span>
                     </div>
                 </div>
-                <div ng-if="(item.subject | mergeWords:'name' : 'category') && !editor.category.hideOnPrint && !editor.subject.topicOnPrint"
-                    order="{{editor.category.order}}">
-                    <div class="preview-label">
-                        <label translate>Category</label>
-                    </div>
-                    <div class="preview-data">
-                        <span ng-repeat="category in item.subject | mergeWords:'name' : 'category': true">
-                            {{category}}
-                        </span>
-                    </div>
-                </div>
-                <div ng-if="item.genre.length && !editor.genre.hideOnPrint" order="{{editor.genre_custom.order}}">
+
+                <div ng-if="item.genre.length && !editor.genre.hideOnPrint && editor.genre" order="{{editor.genre.order}}">
                     <div class="preview-label">
                         <label translate>Genre</label>
                     </div>
@@ -59,28 +49,18 @@
                         </span>
                     </div>
                 </div>
-                <div ng-if="(item.subject | mergeWords:'name' : 'subject_custom') && !editor.subject_custom.hideOnPrint && !editor.subject.topicOnPrint"
-                    order="{{editor.subject_custom.order}}">
+                <div ng-if="(item.subject | filter:{'scheme': field._id}).length && editor.subject && !editor.subject.hideOnPrint"
+                    order="{{editor.subject.order}}">
                     <div class="preview-label">
                         <label translate>Subject</label>
                     </div>
                     <div class="preview-data">
-                        <span ng-repeat="subject in item.subject | filter:{'scheme':'subject_custom'}">
+                        <span ng-repeat="subject in item.subject | filter:{'scheme': field._id}">
                             {{getLocaleName(subject)}}
                         </span>
                     </div>
                 </div>
-                <div ng-if="item.subject.length && editor.subject.topicOnPrint" order="{{editor.subject_custom.order}}">
-                    <div class="preview-label">
-                        <label translate>Topic</label>
-                    </div>
-                    <div class="preview-data">
-                        <span ng-repeat="topic in item.subject|filter:filterKey">
-                            {{getLocaleName(topic)}}
-                        </span>
-                    </div>
-                </div>
-                <div ng-if="item.place.length && !editor.place.hideOnPrint" order="{{editor.place_custom.order}}">
+                <div ng-if="item.place.length && editor.place && !editor.place.hideOnPrint" order="{{editor.place.order}}">
                     <div class="preview-label">
                         <label translate>Place</label>
                     </div>
@@ -98,9 +78,35 @@
                         <span>{{item.ednote}}</span>
                     </div>
                 </div>
-                <!-- custom fields -->
+                <!-- custom dropdown fields saved on own field-->
                 <div ng-repeat="field in fields track by field._id"
-                    ng-if="field.field_type === 'text' || field.field_type === 'date'"
+                    ng-if="(item[field.schema_field] | filter:{'scheme': field._id}).length && isCustomList(field) && field.schema_field && !editor[field._id].hideOnPrint"
+                    order="{{editor[field._id].order}}">
+                    <div class="preview-label">
+                        <label translate>{{field.display_name}}</label>
+                    </div>
+                    <div class="preview-data">
+                        <span ng-repeat="value in item[field.schema_field] | filter:{'scheme': field._id}">
+                            {{getLocaleName(value)}}
+                        </span>
+                    </div>
+                </div>
+                <!-- custom dropdown fields saved on subject-->
+                <div ng-repeat="field in fields track by field._id"
+                    ng-if="(item.subject | filter:{'scheme': field._id}).length && isCustomList(field) && !field.schema_field &&  !editor[field._id].hideOnPrint"
+                    order="{{editor[field._id].order}}">
+                    <div class="preview-label">
+                        <label translate>{{field.display_name}}</label>
+                    </div>
+                    <div class="preview-data">
+                        <span ng-repeat="value in item.subject | filter:{'scheme': field._id}">
+                            {{getLocaleName(value)}}
+                        </span>
+                    </div>
+                </div>
+                <!-- custom date and text fields -->
+                <div ng-repeat="field in fields track by field._id"
+                    ng-if="item.extra[field._id] && (field.field_type === 'text' || field.field_type === 'date') && !editor[field._id].hideOnPrint"
                     order="{{ editor[field._id].order }}">
                     <div class="preview-label">
                         <label translate>{{field.display_name}}</label>
@@ -112,8 +118,9 @@
                 </div>
             </div>
             <div class="headline" order="{{editor.headline.order}}" ng-if="!editor.headline.hideOnPrint">{{item.headline}}</div>
+            <!-- custom media and embed fields -->
             <div ng-repeat="field in fields track by field._id"
-                ng-if="field.field_type === 'embed'"
+                ng-if="(field.field_type === 'media' && item.associations[field._id] || field.field_type === 'embed' && item.extra[field._id]) && !editor[field._id].hideOnPrint"
                 order="{{ editor[field._id].order }}"
                 class="body preview-editor">
                 <div class="preview-label">
@@ -121,11 +128,14 @@
                 </div>
                 <div ng-if="field.field_type === 'embed' && !hide_images" ng-bind-html="getHtml(item.extra[field._id].embed)">
                 </div>
+                <div ng-if="field.field_type === 'media' && !hide_images" class="association">
+                    <img src="{{item.associations[field._id].renditions.viewImage.href}}" ng-if="!hide_images">
+                    <p><i class="icon-picture" ng-if="hide_images"></i>{{item.associations[field._id].description_text}}</p>
+                </div>
             </div>
-            <div order="{{editor.feature_image.order}}" ng-if="!editor.feature_image.hideOnPrint"
-                ng-repeat="association in item.associations|embeddedFilter" class="association">
-                <img src="{{association.renditions.viewImage.href}}" ng-if="!hide_images">
-                <p><i class="icon-picture" ng-if="hide_images"></i>{{association.description_text}}</p>
+            <div order="{{editor.feature_media.order}}" ng-if="!editor.feature_media.hideOnPrint" class="association">
+                <img src="{{item.associations.featuremedia.renditions.viewImage.href}}" ng-if="!hide_images">
+                <p><i class="icon-picture" ng-if="hide_images"></i>{{item.associations.featuremedia.description_text}}</p>
             </div>
             <div class="abstract" order="{{editor.abstract.order}}" ng-if="!editor.abstract.hideOnPrint" sd-html-preview="item.abstract"></div>
             <div class="byline" order="{{editor.byline.order}}" ng-if="!editor.byline.hideOnPrint">{{item.byline}}</div>

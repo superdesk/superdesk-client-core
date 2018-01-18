@@ -25,6 +25,10 @@ export function FullPreviewDirective(api, $timeout, config, content, $sce) {
                 return $sce.trustAsHtml(html);
             };
 
+            scope.isCustomList = function(field) {
+                return ['text', 'date', 'media', 'embed'].indexOf(field.field_type) === -1;
+            };
+
             scope.printPreview = function() {
                 angular.element('body').addClass('prepare-print');
 

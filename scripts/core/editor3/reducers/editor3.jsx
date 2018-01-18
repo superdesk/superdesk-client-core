@@ -115,17 +115,11 @@ const onTab = (state, e) => {
 /**
  * @ngdoc method
  * @name dragDrop
- * @param {Event} e dragdrop event
+ * @param {String} data event data
  * @return {Object} New state
  * @description Handles the dragdrop event over the editor.
  */
-const dragDrop = (state, e) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    const eventData = e.originalEvent.dataTransfer;
-    const mediaType = eventData.types[0];
-    const data = eventData.getData(mediaType);
+const dragDrop = (state, data) => {
     const media = JSON.parse(data);
     const editorState = addMedia(state.editorState, media);
 
