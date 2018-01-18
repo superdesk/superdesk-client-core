@@ -234,6 +234,7 @@
                 width: $sidepreview-width - 80;
                 overflow: visible;
                 right: -324px;
+                overflow-y: visible !important;
             }
             &.shift {
                 @media only screen and (max-width : 1430px) {
