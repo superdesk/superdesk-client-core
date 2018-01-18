@@ -17,20 +17,20 @@ export const ContactInfo = ({item, svc}) => {
         </h5>
     );
 
-    if (!isEmpty(item.email)) {
+    if (!isEmpty(item.contact_email)) {
         meta.push(
             <dt key="2"><i key="2.1" className="icon-envelope" /></dt>,
             <dd key="3">
-                <ItemContainer item={item} field="email" svc={svc} />
+                <ItemContainer item={item} field="contact_email" svc={svc} />
             </dd>
         );
     }
 
-    if (!isEmpty(item.phone) && findKey(item.phone, 'number')) {
+    if (!isEmpty(item.contact_phone) && findKey(item.contact_phone, 'number')) {
         meta.push(
             <dt key="4"><i key="4.1" className="icon-phone" /></dt>,
             <dd key="5" className="dark">
-                <ItemContainer item={item} field="phone" svc={svc} />
+                <ItemContainer item={item} field="contact_phone" svc={svc} />
             </dd>
         );
     }

@@ -18,7 +18,7 @@ export const ContactFooter = ({item, svc}) => {
                     </dd>
                 </dl>
             </span>
-            {item.state && <h2><State item={item} svc={svc} /></h2>}
+            {item.contact_state && <h2><State item={item} svc={svc} /></h2>}
         </div>
     );
 };

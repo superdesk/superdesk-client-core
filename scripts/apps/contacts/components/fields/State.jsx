@@ -3,14 +3,14 @@ import PropTypes from 'prop-types';
 
 export const State = ({item, svc}) => {
     const {gettextCatalog} = svc;
-    let cssClass = item.state ? 'state-label state-' + item.state : null;
+    let cssClass = item.contact_state ? 'state-label' : null;
 
     return (
         <div key="state" className={cssClass}>
             {
-                item.state !== undefined && item.state !== null &&
-                <span title={item.state}>
-                    {gettextCatalog.getString(item.state)}
+                item.contact_state !== undefined && item.contact_state !== null &&
+                <span title={item.contact_state}>
+                    {gettextCatalog.getString(item.contact_state)}
                 </span>
             }
         </div>

@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {truncate} from 'lodash';
 
 export const Notes = ({item, svc}) => {
-    const {gettextCatalog, $filter} = svc;
+    const {gettextCatalog} = svc;
     let notes = gettextCatalog.getString(item.notes);
-    let displayNotes = $filter('truncateString')(notes, 250);
+    let displayNotes = truncate(notes, {length: 250});
 
     return (
         <div key="notes" className="item-notes">
