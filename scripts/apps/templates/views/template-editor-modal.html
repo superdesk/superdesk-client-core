@@ -148,45 +148,39 @@
                             <div class="toggle-box__line"></div>
                         </div>
                     </div>
-                    <div class="toggle-box__content">
-                        <div class="field" ng-if="template.schedule.is_active && template.template_type !== 'kill'">
-                            <label translate>On</label>
-                            <div class="day-filter-box clearfix" sd-weekday-picker data-model="template.schedule.day_of_week"></div>
+                    <div>
+                        <div class="sd-line-input sd-line-input--required"
+                                ng-if="template.schedule.is_active && template.template_type !== 'kill'">
+                            <label class="sd-line-input__label" translate>On</label>
+                            <div class="day-filter-box clearfix sd-line-input__select" sd-weekday-picker data-model="template.schedule.day_of_week"></div>
                         </div>
-                        <div class="field" ng-if="template.schedule.is_active && template.template_type !== 'kill'">
-                            <div class="field--double">
-                                <div class="field">
-                                    <label translate>At</label>
-                                    <span sd-timepicker ng-model="template.schedule.create_at" data-style="line-input"></span>
-                                </div>
-                                <div class="field">
-                                    <div sd-timezone data-timezone="template.schedule.time_zone" data-style="line-input"></div>
-                                </div>
+                        <div ng-if="template.schedule.is_active && template.template_type !== 'kill'">
+                            <div class="sd-line-input sd-line-input--required">
+                                <label class="sd-line-input__label" translate>At</label>
+                                <span sd-timepicker ng-model="template.schedule.create_at" data-style="line-input"></span>
+                            </div>
+                            <div>
+                                <span sd-timezone data-timezone="template.schedule.time_zone" data-style="line-input"></span>
                             </div>
                         </div>
                     </div>
-
-                    <div class="authoring-header__item template-schedule" ng-if="showScheduling() && template.schedule.is_active" sd-width="full">
-                        <label for="schedule-desk" translate>Schedule Desk</label>
-                        <div class="authoring-header__input-holder">
-                            <select id="schedule-desk" ng-model="template.schedule_desk"
-                                    ng-change="updateStages(template.schedule_desk)" class="dropdown__toggle line-input">
-                                <option value="" translate>None</option>
-                                <option ng-repeat="desk in desks._items track by desk._id" value="{{ desk._id }}"
-                                    ng-selected="desk._id === template.schedule_desk">{{ :: desk.name }}</option>
-                            </select>
-                            <span class="arrow-down"><b class="dropdown__caret"></b></span>
-                        </div>
+                    <div ng-if="showScheduling() && template.schedule.is_active"
+                             class="sd-line-input sd-line-input--is-select sd-line-input--required">
+                        <label for="schedule-desk" class="sd-line-input__label" translate>Schedule Desk</label>
+                        <select id="schedule-desk" ng-model="template.schedule_desk" 
+                                ng-change="updateStages(template.schedule_desk)" class="sd-line-input__select">
+                            <option value="" translate>None</option>
+                            <option ng-repeat="desk in desks._items track by desk._id" value="{{ desk._id }}"
+                                ng-selected="desk._id === template.schedule_desk">{{ :: desk.name }}</option>
+                        </select>
                     </div>
-                    <div class="authoring-header__item template-schedule" ng-if="showStages() && template.schedule.is_active" sd-width="full">
-                        <label for="template-stage" translate>Schedule Stage</label>
-                        <div class="authoring-header__input-holder">
-                            <select id="template-stage" ng-model="template.schedule_stage" class="dropdown__toggle line-input">
-                                <option ng-repeat="stage in stages track by stage._id" value="{{ stage._id }}"
-                                    ng-selected="stage._id === template.schedule_stage">{{ :: stage.name }}</option>
-                            </select>
-                            <span class="arrow-down"><b class="dropdown__caret"></b></span>
-                        </div>
+                    <div ng-if="showStages() && template.schedule.is_active"
+                             class="sd-line-input sd-line-input--is-select sd-line-input--required">
+                        <label for="template-stage" class="sd-line-input__label" translate>Schedule Stage</label>
+                        <select id="template-stage" ng-model="template.schedule_stage" class="sd-line-input__select">
+                            <option ng-repeat="stage in stages track by stage._id" value="{{ stage._id }}"
+                                ng-selected="stage._id === template.schedule_stage">{{ :: stage.name }}</option>
+                        </select>
                     </div>
                 </div>
 
