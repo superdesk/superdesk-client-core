@@ -28,7 +28,8 @@
             position: absolute;
             top:0;
             width: 240px;
-            height: 44px;
+            padding-top: 10px;
+            padding-bottom: 10px;
             @include border-radius(3px);
             color: #fff;
             font-size: 11px;
