@@ -1,5 +1,46 @@
 # Superdesk Client Changelog
 
+## [1.11.0] 2018-01-19
+
+### Fixed
+
+- Fix arrow button to move preview is not visible.
+- Fix session error message alignment.
+- Fix image drop on editor3 in firefox not working.
+- Display meta sub-label even if it's disabled.
+- Publish queue item history missing scrollbar.
+- Correct the metadata of type list&image on preview.
+- Limit input height in inline comments popup.
+- Display translations for metadata values in preview.
+- Fix text selecting in table displays wrong toolbar in editor3.
+- Make inline comments dropdown scrollable.
+- Show correct created timestamp on package item preview.
+- Fix position of password reset window in user profile.
+- Fix cancel button saving changes in metadata management.
+- Fix publish confirmation dialog displayed for "send to desk" action.
+- Close inline comments popup on resolve.
+- Display custom fields in item preview.
+- Fix missing avatars in activity list.
+- Fix link editing in editor3 not being preserved.
+- Fix editor3 up/down and home/end buttons behaviour on spellcheck errors.
+- Change word counter on frontend to match backend.
+- Use current item desk in send to/publish panel to detect if desk is authoring.
+
+### Added
+
+- Add edit/remove actions to inline comment replies.
+- Add support for language in item lists.
+- Add support for custom date field.
+- Run spellcheker on annotation body in editor3.
+- Add editor3 e2e tests.
+- Enable user mentions in replies to inline comments.
+
+# Changed
+
+- Use backend config to override editor note.
+- Allow leading and trailing spaces in find and replace.
+- Make word count in authoring header dynamic to reflect latest changes.
+
 ## [1.10.0] 2018-01-05
 
 ### Fixed
