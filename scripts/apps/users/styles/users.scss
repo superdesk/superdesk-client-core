@@ -217,13 +217,13 @@
     flex-direction: column;
     position: relative;
     width: 100%;
-    height: 100%;
-    
-    > div { overflow: auto; }
+    height: calc(100% - 48px);
 
     .profile-info {
-        display: flex;
-        flex-direction: column;
+        position: absolute;
+        top: 0; bottom: 0;
+        left: 0; right: 0;
+        overflow: auto;
     }
 
     .header-info {
@@ -397,6 +397,8 @@ Profile page styles
 .user-profile-page {
     .user-details-pane {
         top: 0;
+        padding: 0;
+        height: 100%;
     }
 }
 
@@ -510,7 +512,6 @@ Profile page styles
     }
 
     .user-details-pane {
-        padding: 0;
         > header {
             height: 48px;
             @include border-box();
@@ -534,8 +535,8 @@ Profile page styles
         }
 
         .action-bar {
-            top: -48px;
-            &.show { top:0; }
+            top: -96px;
+            &.show { top:-48px; }
         }
     }
 
