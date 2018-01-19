@@ -74,9 +74,12 @@ export const onChange = (state, newState, force = false) => {
 
     if (state.allowsHighlights) {
         const selection = editorState.getSelection();
+        const inlineStyle = editorState.getCurrentInlineStyle();
 
         ({editorState, activeHighlights} = updateHighlights(state.editorState, newState));
         editorState = EditorState.acceptSelection(editorState, selection);
+
+        editorState = EditorState.setInlineStyleOverride(editorState, inlineStyle);
     }
 
     if (contentChanged || force) {
