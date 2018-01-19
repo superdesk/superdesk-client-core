@@ -54,6 +54,26 @@ export const forceUpdate = (state) => {
     };
 };
 
+
+function noCharactersAreSelectedAndCursorIsInsideCommentOrAnnotation(editorState) {
+    var selection = editorState.getSelection();
+    var character = editorState
+        .getCurrentContent()
+        .getBlockForKey(selection.getAnchorKey())
+        .getCharacterList()
+        .get(selection.getAnchorOffset());
+
+    if (character === undefined) {
+        return false;
+    }
+
+    var characterStyle = character.getStyle();
+
+    return selection.getAnchorKey() === selection.getFocusKey()
+        && selection.getAnchorOffset() === selection.getFocusOffset()
+        && (characterStyle.contains('COMMENT') || characterStyle.contains('ANNOTATION'));
+}
+
 /**
  * @ngdoc method
  * @name onChange
@@ -72,7 +92,7 @@ export const onChange = (state, newState, force = false) => {
     let editorState = newState, activeHighlights = {};
     let contentChanged = state.editorState.getCurrentContent() !== newState.getCurrentContent();
 
-    if (state.allowsHighlights) {
+    if (state.allowsHighlights && noCharactersAreSelectedAndCursorIsInsideCommentOrAnnotation(newState)) {
         const selection = editorState.getSelection();
 
         ({editorState, activeHighlights} = updateHighlights(state.editorState, newState));
