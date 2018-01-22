@@ -6,11 +6,12 @@
             <input type="text" class="form-control" id="find-replace-what"
                 ng-model="from"
                 sd-autofocus
+                ng-trim="false"
                 ng-model-options="{debounce: 500}">
         </div>
         <div class="form-group field">
             <label for="find-replace-with" translate>Replace with</label>
-            <input type="text" class="form-control" id="find-replace-with" ng-model="to">
+            <input type="text" class="form-control" id="find-replace-with" ng-model="to" ng-trim="false">
         </div>
 
         <div class="btn-group" role="group">
