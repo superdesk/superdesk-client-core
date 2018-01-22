@@ -118,7 +118,7 @@ function AddContentCtrl(scope, element, superdesk, editor, $timeout, config, $q)
                 });
             },
             addPicture: function() {
-                superdesk.intent('upload', 'media').then((images) => {
+                superdesk.intent('upload', 'media', {uniqueUpload: true}).then((images) => {
                     $q.all(images.map((image) => editor.generateMediaTag(image).then((imgTag) => ({
                         blockType: 'embed',
                         embedType: 'Image',

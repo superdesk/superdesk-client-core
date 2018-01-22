@@ -9,6 +9,8 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
     $scope.enableSave = false;
     $scope.currentUser = session.identity;
     $scope.uniqueUpload = $scope.locals && $scope.locals.data && $scope.locals.data.uniqueUpload === true;
+    $scope.maxUploads = !$scope.uniqueUpload && $scope.locals && $scope.locals.data &&
+        $scope.locals.data.maxUploads ? $scope.locals.data.maxUploads : undefined;
     $scope.allowPicture = !($scope.locals && $scope.locals.data && $scope.locals.data.allowPicture === false);
     $scope.allowVideo = !($scope.locals && $scope.locals.data && $scope.locals.data.allowVideo === false);
     $scope.allowAudio = !($scope.locals && $scope.locals.data && $scope.locals.data.allowAudio === false);
@@ -77,7 +79,7 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
 
         item.cssType = item.file.type.split('/')[0];
         $scope.items.unshift(item);
-        $scope.enableSave = _.isNil($scope.errorMessage);
+        $scope.enableSave = _.isNil($scope.errorMessage) && $scope.items.length > 0;
     };
 
     var getErrorMessage = function(type) {
@@ -106,6 +108,14 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
     $scope.addFiles = function(files) {
         $scope.errorMessage = null;
         if (!files.length) {
+            return false;
+        }
+        if ($scope.uniqueUpload && files.length > 1) {
+            $scope.errorMessage = gettext('Only one file can be uploaded');
+            return false;
+        }
+        if (!$scope.uniqueUpload && $scope.maxUploads && (files.length + $scope.items.length) > $scope.maxUploads) {
+            $scope.errorMessage = gettext('Select at most ') + $scope.maxUploads + gettext(' files to upload.');
             return false;
         }
 
@@ -205,6 +215,13 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
             $scope.enableSave = false;
         }
         checkFail();
+    };
+
+    $scope.canUpload = () => {
+        if ($scope.uniqueUpload) {
+            return $scope.items.length === 0;
+        }
+        return $scope.maxUploads === undefined || $scope.maxUploads > $scope.items.length;
     };
 
     if ($scope.locals && $scope.locals.data) {

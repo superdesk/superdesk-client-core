@@ -36,6 +36,7 @@ import postscribe from 'postscribe';
  * @requires config
  * @requires editorResolver
  * @requires $sce
+ * @requires mediaIdGenerator
  *
  * @description
  *   This directive is responsible for generating superdesk content authoring form.
@@ -71,18 +72,21 @@ AuthoringDirective.$inject = [
     'editorResolver',
     'compareVersions',
     'embedService',
-    '$sce'
+    '$sce',
+    'mediaIdGenerator'
 ];
 export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace, notify,
     gettext, desks, authoring, api, session, lock, privileges, content, $location,
     referrer, macros, $timeout, $q, modal, archiveService, confirm, reloadService,
     $rootScope, $interpolate, metadata, suggest, config, editorResolver, compareVersions,
-    embedService, $sce) {
+    embedService, $sce, mediaIdGenerator) {
     return {
         link: function($scope, elem, attrs) {
             var _closing;
+            var mediaFields = {};
 
             const UNIQUE_NAME_ERROR = gettext('Error: Unique Name is not unique.');
+            const MEDIA_TYPES = ['video', 'picture', 'audio'];
 
             $scope.privileges = privileges.privileges;
             $scope.dirty = false;
@@ -98,6 +102,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             $scope.openCompareVersions = (item) => compareVersions.init(item);
             $scope.isValidEmbed = {};
             $scope.embedPreviews = {};
+            $scope.mediaFieldVersions = {};
 
             $scope.$watch('origItem', (newValue, oldValue) => {
                 $scope.itemActions = null;
@@ -114,6 +119,20 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                     $scope.dirty = true;
                 }
             }, true);
+
+            $scope.$watch('item.profile', (profile) => {
+                if (profile) {
+                    content.getType(profile)
+                        .then((type) => {
+                            $scope.contentType = type;
+                            $scope.fields = content.fields(type);
+                            initMedia();
+                        });
+                } else {
+                    $scope.contentType = null;
+                    $scope.fields = null;
+                }
+            });
 
             $scope._isInProductionStates = !authoring.isPublished($scope.origItem);
 
@@ -191,6 +210,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
 
                     notify.success(gettext('Item updated.'));
 
+                    initMedia();
                     return $scope.origItem;
                 }, (response) => {
                     if (response.status === 412) {
@@ -587,6 +607,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                         confirm.confirmQuickPublish().then(customButtonAction) :
                         customButtonAction();
                 }
+                initMedia();
             };
 
             $scope.publishAndContinue = function() {
@@ -597,6 +618,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 }, (err) => {
                     notify.error(gettext('Failed to publish and continue.'));
                 });
+                initMedia();
             };
 
             $scope.deschedule = function() {
@@ -763,6 +785,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 var autosavedItem = authoring.autosave($scope.item, $scope.origItem, timeout);
 
                 authoringWorkspace.addAutosave();
+                initMedia();
                 return autosavedItem;
             };
 
@@ -838,6 +861,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                         $scope.dirty = false;
                         $scope.closePreview();
                         $scope.item._editable = $scope._editable;
+                        initMedia();
                     });
             }
 
@@ -900,7 +924,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             var initEmbedFieldsValidation = () => {
                 $scope.isValidEmbed = {};
                 content.getTypes().then(() => {
-                    _.forEach(content.types, (profile) => {
+                    _.forEach($scope.content_types, (profile) => {
                         if ($scope.item.profile === profile._id && profile.schema) {
                             _.forEach(profile.schema, (schema, fieldId) => {
                                 if (schema && schema.type === 'embed') {
@@ -910,6 +934,132 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                         }
                     });
                 });
+            };
+
+            /**
+             * @ngdoc method
+             * @name sdAuthoring#isMediaField
+             * @private
+             * @description Returns true if the given string is a vocabulary media
+             *              field identifier, false otherwise.
+             * @param {string} fieldId
+             * @return {bool}
+             */
+            function isMediaField(fieldId) {
+                var parts = mediaIdGenerator.getFieldParts(fieldId);
+                var field = _.find($scope.fields, (field) => field._id === parts[0]);
+
+                return field && field.field_type === 'media';
+            }
+
+            /**
+             * @ngdoc method
+             * @name sdAuthoring#computeMediaFieldVersions
+             * @private
+             * @description Generates an array of name versions for a given vocabulary
+             *              media field.
+             * @param {string} fieldId
+             */
+            function computeMediaFieldVersions(fieldId) {
+                $scope.mediaFieldVersions[fieldId] = [];
+
+                var field = _.find($scope.fields, (field) => field._id === fieldId);
+
+                if (field) {
+                    var multipleItems = _.get(field, 'field_options.multiple_items.enabled');
+                    var maxItems = !multipleItems ? 1 : _.get(field, 'field_options.multiple_items.max_items');
+
+                    if (!maxItems || !mediaFields[fieldId] || mediaFields[fieldId].length < maxItems) {
+                        addMediaFieldVersion(fieldId, $scope.getNewMediaFieldId(fieldId), null);
+                    }
+                    _.forEach(mediaFields[fieldId], (version) => {
+                        addMediaFieldVersion(fieldId, mediaIdGenerator.getFieldVersionName(fieldId, version));
+                    });
+                }
+            }
+
+            function addMediaFieldVersion(fieldId, fieldVersion) {
+                var field = {fieldId: fieldVersion};
+
+                if (_.has($scope.item.associations, fieldVersion)) {
+                    field[fieldVersion] = $scope.item.associations[fieldVersion];
+                } else {
+                    field[fieldVersion] = null;
+                }
+                $scope.mediaFieldVersions[fieldId].push(field);
+            }
+
+            /**
+             * @ngdoc method
+             * @name sdAuthoring#addMediaField
+             * @private
+             * @description Adds the version of the given field name to the versions array.
+             * @param {string} fieldId
+             */
+            function addMediaField(fieldId) {
+                var [rootField, index] = mediaIdGenerator.getFieldParts(fieldId);
+
+                if (!_.has(mediaFields, rootField)) {
+                    mediaFields[rootField] = [];
+                }
+                mediaFields[rootField].push(index);
+                mediaFields[rootField].sort((a, b) => {
+                    if (b === null || b === undefined) {
+                        return -1;
+                    }
+                    if (a === null || a === undefined) {
+                        return 1;
+                    }
+                    return b - a;
+                });
+            }
+
+            /**
+             * @ngdoc method
+             * @name sdAuthoring#initMedia
+             * @private
+             * @description Initializes arrays containing the media fields versions.
+             */
+            function initMedia() {
+                mediaFields = {};
+                $scope.mediaFieldVersions = {};
+
+                _.forEach($scope.item.associations, (association, fieldId) => {
+                    if (association && _.findIndex(MEDIA_TYPES, (type) => type === association.type) !== -1
+                        && isMediaField(fieldId)) {
+                        addMediaField(fieldId);
+                    }
+                });
+
+                if ($scope.contentType && $scope.contentType.schema) {
+                    _.forEach($scope.fields, (field) => {
+                        if (isMediaField(field._id)) {
+                            computeMediaFieldVersions(field._id);
+                        }
+                    });
+                }
+            }
+
+            /**
+             * @ngdoc method
+             * @name sdAuthoring#getNewMediaFieldId
+             * @public
+             * @description Returns a new name version for a given media field.
+             * @param {String} fieldId
+             * @return {String}
+             */
+            $scope.getNewMediaFieldId = (fieldId) => {
+                var field = _.find($scope.fields, (field) => field._id === fieldId);
+                var multipleItems = field ? _.get(field, 'field_options.multiple_items.enabled') : false;
+                var parts = mediaIdGenerator.getFieldParts(fieldId);
+                var newIndex = multipleItems ? 1 : null;
+
+                if (_.has(mediaFields, parts[0])) {
+                    var fieldVersions = mediaFields[parts[0]];
+
+                    newIndex = fieldVersions.length ? 1 + fieldVersions[0] : 1;
+                }
+                return mediaIdGenerator.getFieldVersionName(parts[0], newIndex);
             };
 
             // init

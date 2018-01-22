@@ -11,14 +11,16 @@
  * @requires api
  * @requires notify
  * @requires gettext
+ * @requires mediaIdGenerator
  *
  * @description
  *   This directive is responsible for rendering media associated with the item.
  */
 
 ItemAssociationDirective.$inject = ['superdesk', 'renditions', 'config', 'authoring', '$q',
-    'api', 'notify', 'gettext', 'send'];
-export function ItemAssociationDirective(superdesk, renditions, config, authoring, $q, api, notify, gettext, send) {
+    'api', 'notify', 'gettext', 'send', 'mediaIdGenerator'];
+export function ItemAssociationDirective(superdesk, renditions, config, authoring, $q, api, notify, gettext,
+    send, mediaIdGenerator) {
     return {
         scope: {
             rel: '=',
@@ -29,7 +31,8 @@ export function ItemAssociationDirective(superdesk, renditions, config, authorin
             allowAudio: '<',
             onchange: '&',
             showTitle: '<',
-            save: '&'
+            save: '&',
+            maxUploads: '='
         },
         templateUrl: 'scripts/apps/authoring/views/item-association.html',
         link: function(scope, elem) {
@@ -160,14 +163,24 @@ export function ItemAssociationDirective(superdesk, renditions, config, authorin
              * @private
              * @description If the item is not published then it saves the changes otherwise calls autosave.
              * @param {Object} updated Item to be edited
+             * @param {String} custom association identifier
+             * @param {Function} callback to call after save
              */
-            function updateItemAssociation(updated) {
+            function updateItemAssociation(updated, customRel, callback = null) {
                 let data = {};
 
+                if (customRel) {
+                    scope.rel = customRel;
+                }
                 data[scope.rel] = updated;
                 scope.item.associations = angular.extend({}, scope.item.associations, data);
                 if (!authoring.isPublished(scope.item) && updated) {
-                    return scope.save();
+                    var promise = scope.save();
+
+                    if (callback) {
+                        return promise.then(callback);
+                    }
+                    return promise;
                 }
 
                 scope.onchange({item: scope.item, data: data});
@@ -187,7 +200,7 @@ export function ItemAssociationDirective(superdesk, renditions, config, authorin
              * @description Opens the item for edit.
              * @param {Object} item Item to be edited
              */
-            scope.edit = function(item) {
+            scope.edit = function(item, customRel, callback = null) {
                 if (!scope.isMediaEditable()) {
                     return;
                 }
@@ -195,13 +208,15 @@ export function ItemAssociationDirective(superdesk, renditions, config, authorin
                 if (item.renditions && item.renditions.original && scope.isImage(item.renditions.original)) {
                     scope.loading = true;
                     return renditions.crop(item, true, scope.editable, true)
-                        .then(updateItemAssociation)
+                        .then((rendition) => {
+                            updateItemAssociation(rendition, customRel, callback);
+                        })
                         .finally(() => {
                             scope.loading = false;
                         });
                 }
 
-                updateItemAssociation(item);
+                updateItemAssociation(item, customRel, callback);
             };
 
             /**
@@ -278,7 +293,8 @@ export function ItemAssociationDirective(superdesk, renditions, config, authorin
             scope.upload = function() {
                 if (scope.editable) {
                     superdesk.intent('upload', 'media', {
-                        uniqueUpload: true,
+                        uniqueUpload: scope.maxUploads === undefined || scope.maxUploads === 1,
+                        maxUploads: scope.maxUploads,
                         allowPicture: scope.allowPicture,
                         allowVideo: scope.allowVideo,
                         allowAudio: scope.allowAudio
@@ -286,7 +302,22 @@ export function ItemAssociationDirective(superdesk, renditions, config, authorin
                         // open the view to edit the PoI and the cropping areas
                         if (images) {
                             scope.$applyAsync(() => {
-                                scope.edit(images[0]);
+                                var [rootField, index] = mediaIdGenerator.getFieldParts(scope.rel);
+                                var imagesWithIds = [];
+
+                                function editNextFile() {
+                                    if (imagesWithIds.length > 0) {
+                                        var imageWithId = imagesWithIds.shift();
+
+                                        scope.edit(imageWithId.image, imageWithId.id, editNextFile);
+                                    }
+                                }
+
+                                _.forEach(images, (image) => {
+                                    imagesWithIds.push({id: scope.rel, image: image});
+                                    scope.rel = mediaIdGenerator.getFieldVersionName(rootField, ++index);
+                                });
+                                editNextFile();
                             });
                         }
                     });

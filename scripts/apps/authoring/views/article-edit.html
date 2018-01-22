@@ -580,22 +580,25 @@
      order="{{editor[field._id].order}}"
      data-required="schema[field._id].required">
     <label translate>{{ field.display_name }}</label>
-    <div sd-item-association
-         data-allow-picture="!!field.field_options.allowed_types.picture"
-         data-allow-video="!!field.field_options.allowed_types.video"
-         data-allow-audio="!!field.field_options.allowed_types.audio"
-         data-item="item"
-         data-rel="field._id"
-         data-editable="_editable"
-         data-onchange="autosave(item)"
-         data-save="save()"
-         data-show-title="editor[field._id].imageTitle"
-         tabindex="{{editor[field._id].order}}">
-    </div>
-    <div sd-item-crops
-         data-item="item.associations[field._id]"
-         ng-if="editor[field._id].showCrops && features.editFeaturedImage &&
-         !!field.field_options.allowed_types.picture">
+    <div ng-repeat="fieldVersion in mediaFieldVersions[field._id]">
+        <div sd-item-association
+             data-allow-picture="!!field.field_options.allowed_types.picture"
+             data-allow-video="!!field.field_options.allowed_types.video"
+             data-allow-audio="!!field.field_options.allowed_types.audio"
+             data-item="item"
+             data-rel="fieldVersion.fieldId"
+             data-editable="_editable"
+             data-onchange="autosave(item)"
+             data-save="save()"
+             data-show-title="editor[field._id].imageTitle"
+             data-max-uploads="maxUploads(field.field_options)"
+             tabindex="{{editor[field._id].order}}">
+        </div>
+        <div sd-item-crops
+             data-item="item.associations[fieldVersion.fieldId]"
+             ng-if="editor[field._id].showCrops && features.editFeaturedImage &&
+             !!field.field_options.allowed_types.picture">
+        </div>
     </div>
     <div class="sd-line-input__hint" ng-if="helper_text[field._id]">{{field.helper_text}}</div>
 </div>

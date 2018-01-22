@@ -5,7 +5,8 @@
 
 <div class="modal__body" ng-init="dragshow = false">
 
-    <div class="drag-area" ng-show="!items.length || dragshow" ngf-drop="addFiles($files)" ng-class="{compact: dragshow && items.length}">
+    <div class="drag-area" ng-show="(!items.length || dragshow) && canUpload()" ngf-drop="addFiles($files)"
+        ngf-multiple="!uniqueUpload" ng-class="{compact: dragshow && items.length}">
         <div class="title" translate>Drag Your Files Here</div>
         <div class="upload-manual">
             <div class="or-label" translate>or</div>
@@ -17,9 +18,12 @@
     <div class="upload-error" ng-show="failed">
         <span translate>There are failed uploads.</span><span class="action" ng-click="tryAgain()" translate>Try again</span>
     </div>
+    <div class="upload-error" ng-show="errorMessage && items.length === 0">
+        <span class="action"><span translate>Error</span>: {{ errorMessage | translate}}</span>
+    </div>
     <div class="upload-edit" ng-show="items.length" ng-class="{compact: dragshow, error: failed}">
         <div class="upload-error" ng-if="errorMessage">
-            <span class="action"><span translate>Error</span>: {{ :: errorMessage | translate}}</span>
+            <span class="action"><span translate>Error</span>: {{ errorMessage | translate}}</span>
         </div>
         <ul class="upload-thumbs flex-grid flex-grid--boxed flex-grid--wrap-items flex-grid--small-4">
             <li ng-repeat="item in items" class="flex-grid__item sd-shadow--z3">
@@ -90,7 +94,7 @@
         </ul>
     </div>
 
-    <div class="optional-drag-holder" ng-class="{open: dragshow}" ng-show="items.length && !uniqueUpload">
+    <div class="optional-drag-holder" ng-class="{open: dragshow}" ng-show="items.length && !uniqueUpload && canUpload() > 0">
         <div class="optional-drag" ng-click="dragshow = !dragshow">
             <i class="icon-chevron-up-thin" ng-show="!dragshow"></i>
             <i class="icon-chevron-down-thin" ng-show="dragshow"></i>
