@@ -96,6 +96,9 @@ AttachmentsController.$inject = [
 
 AttachmentsFactory.$inject = ['api'];
 function AttachmentsFactory(api) {
+    const RESOURCE = 'attachments';
+    const _byIdCache = {};
+
     class AttachmentsService {
         /**
          * Get attachments by item
@@ -106,7 +109,7 @@ function AttachmentsFactory(api) {
         byItem(item) {
             const attachments = item.attachments || [];
 
-            return api.query('attachments', {where: {_id: {$in: attachments.map((ref) => ref.attachment)}}})
+            return api.query(RESOURCE, {where: {_id: {$in: attachments.map((ref) => ref.attachment)}}})
                 .then((data) => data._items);
         }
 
@@ -118,7 +121,8 @@ function AttachmentsFactory(api) {
          * @return {Promise}
          */
         save(file, diff) {
-            return api.save('attachments', file, diff);
+            clearCache(file);
+            return api.save(RESOURCE, file, diff);
         }
 
         /**
@@ -128,7 +132,28 @@ function AttachmentsFactory(api) {
          * @return {Promise}
          */
         remove(file) {
+            clearCache(file);
             return api.remove(file);
+        }
+
+        /**
+         * Get attachment by id
+         *
+         * @param {String} id
+         * @return {Promise}
+         */
+        byId(id) {
+            if (!_byIdCache[id]) {
+                _byIdCache[id] = api.find(RESOURCE, id);
+            }
+
+            return _byIdCache[id];
+        }
+    }
+
+    function clearCache(file) {
+        if (_byIdCache[file._id]) {
+            _byIdCache[file._id] = null;
         }
     }
 
@@ -154,7 +179,11 @@ const config = (awp) =>
         }
     });
 
-angular.module('superdesk.apps.authoring.attachments', ['superdesk.apps.authoring.widgets', 'ngFileUpload'])
+angular.module('superdesk.apps.authoring.attachments', [
+    'ngFileUpload',
+    'superdesk.core.api',
+    'superdesk.apps.authoring.widgets',
+])
     .factory('attachments', AttachmentsFactory)
     .controller('AttachmentsCtrl', AttachmentsController)
     .config(['authoringWidgetsProvider', config]);
