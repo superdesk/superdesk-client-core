@@ -180,6 +180,11 @@ class Editor3Directive {
             $scope.$on('$destroy', editor3.unsetStore);
         }
 
+        // Expose the store in the editor3 spellchecker service
+        const storeIndex = editor3.addSpellcheckerStore(store);
+
+        $scope.$on('$destroy', () => editor3.removeSpellcheckerStore(storeIndex));
+
         ReactDOM.render(
             <Provider store={store}>
                 <Editor3

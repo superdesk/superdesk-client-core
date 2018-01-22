@@ -4,11 +4,20 @@ import {toHTML} from './html';
 import {clearHighlights} from './reducers/find-replace';
 
 /**
- * @type {Object} Redux store
- * @description Holds the store of the currently active body editor of the open article.
+ * @type {Object} Redux stores
+ * @description Holds the store of the find and replace target
+ * of the open article.
  * @private
  */
 let store = null;
+
+/**
+ * @type {array} Redux stores
+ * @description Holds the stores of the editors on the open article
+ * if they are spellchecker targets
+ * @private
+ */
+let spellcheckerStores = [];
 
 /**
  * @ngdoc service
@@ -35,6 +44,18 @@ export class EditorService {
 
     /**
      * @ngdoc method
+     * @name editor3#addSpellcheckerStore
+     * @param {Object} redux store
+     * @description Registers the passed redux store with the spellchecker service
+     * @returns {Integer}
+     */
+    addSpellcheckerStore(s) {
+        spellcheckerStores.push(s);
+        return spellcheckerStores.length - 1;
+    }
+
+    /**
+     * @ngdoc method
      * @name editor3#version
      * @description Returns the editor version (this is for when using editorResolver).
      * @returns {string}
@@ -46,10 +67,20 @@ export class EditorService {
     /**
      * @ngdoc method
      * @name editor3#unsetStore
-     * @description Clears the store.
+     * @description Clears the find and replace store.
      */
     unsetStore() {
         store = null;
+    }
+
+    /**
+     * @ngdoc method
+     * @name editor3#removeSpellcheckerStore
+     * @param {Integer}
+     * @description Clears a spellchecker store
+     */
+    removeSpellcheckerStore(i) {
+        spellcheckerStores.slice(i, 1);
     }
 
     /**
@@ -128,7 +159,7 @@ export class EditorService {
         }
 
         if (typeof spellcheck !== 'undefined') {
-            store.dispatch(action.setAutoSpellchecker(spellcheck));
+            spellcheckerStores.map((s) => s.dispatch(action.setAutoSpellchecker(spellcheck)));
         }
     }
 
