@@ -69,7 +69,7 @@ export function ConfirmDirtyService($window, $q, $filter, api, modal, gettextCat
     this.confirmQuickPublish = function() {
         return modal.confirm(
             gettextCatalog.getString('Do you want to publish the article?'),
-            gettextCatalog.getString('Publish'),
+            gettextCatalog.getString('Publishing'),
             gettextCatalog.getString('Publish'),
             gettextCatalog.getString('Cancel')
         );
