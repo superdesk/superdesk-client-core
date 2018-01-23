@@ -282,7 +282,7 @@ body, html {
     }
     //labels
     .field {
-        label {
+        > label {
             @include text-normal();
             background: rgba(0, 0, 0, 0.4);
             @include border-radius(2px);
@@ -300,7 +300,7 @@ body, html {
             letter-spacing: 0.1em;
         }
         &.active {
-            label {
+            > label {
                 background: $sd-blue;
                 @include transition(all ease 0.6s);
             }
