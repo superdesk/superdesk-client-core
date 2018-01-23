@@ -483,7 +483,7 @@ function MetaWordsListDirective() {
             header: '@',
             style: '@'
         },
-        templateUrl: 'scripts/apps/authoring/metadata/views/metadata-words-list.html',
+        template: require('./views/metadata-words-list.html'),
         link: function(scope, element) {
             scope.words = [];
             scope.selectedTerm = '';
@@ -526,7 +526,7 @@ function MetaWordsListDirective() {
                 var index = _.findIndex(t, (word) => word.toLowerCase() === keyword.toLowerCase());
 
                 if (index < 0) {
-                    t.push(keyword.toUpperCase());
+                    t.push(keyword);
 
                     var o = {};
 
