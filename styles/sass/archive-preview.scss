@@ -268,7 +268,7 @@
                     width: 100%;
                     height: 200px;
                     background: $sd-background url(~images/loading-large.gif) center center no-repeat;
-                }                
+                }
             }
             figure {
                 margin: 10px 0 8px 0;
@@ -347,6 +347,11 @@
                 border-left: 3px solid rgba(160, 160, 160, 0.5);
                 padding: 4px 0 4px 14px;
                 font-style: italic;
+            }
+            .embed-block {
+                iframe {
+                    width: 97%;
+                }
             }
         }
     }
@@ -1230,7 +1235,7 @@ $lightbox-composite-condensed : 100px;
             color: #d25932;
             line-height: 116.6%;
         }
-        
+
         .stage {
             font-size: 10px;
             @include text-light();
