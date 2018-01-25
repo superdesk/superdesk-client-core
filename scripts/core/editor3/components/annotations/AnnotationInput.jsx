@@ -130,14 +130,16 @@ class AnnotationInputBody extends Component {
                             </select>
                         </div>
                     }
-                    <label className="sd-line-input__label">Annotation Body</label>
-                    <Editor
-                        onChange={this.onChange}
-                        editorFormat={['bold', 'italic', 'underline', 'link']}
-                        editorState={this.initialContent}
-                        language={language}
-                        disableSpellchecker={!spellcheckerEnabled}
-                    />
+                    <div className="sd-line-input">
+                        <label className="sd-line-input__label">Annotation Body</label>
+                        <Editor
+                            onChange={this.onChange}
+                            editorFormat={['bold', 'italic', 'underline', 'link']}
+                            editorState={this.initialContent}
+                            language={language}
+                            disableSpellchecker={!spellcheckerEnabled}
+                        />
+                    </div>
                     <div className="pull-right">
                         {typeof annotation === 'object' &&
                             <button
