@@ -7,7 +7,7 @@
 </div>
 <div class="field">
     <label for="twitter-consumer_secret" translate>twitter consumer_secret</label>
-    <input type="text" id="twitter-consumer_secret" placeholder="{{:: 'twitter consumer_secret'|translate }}"
+    <input type="password" id="twitter-consumer_secret" placeholder="{{:: 'twitter consumer_secret'|translate }}"
       ng-model="provider.config.consumer_secret" required
       ng-change="$parent.setConfig(provider)">
 </div>
@@ -19,7 +19,7 @@
 </div>
 <div class="field">
     <label for="twitter-access_token_secret" translate>twitter access_token_secret</label>
-    <input type="text" id="twitter-access_token_secret" placeholder="{{:: 'twitter access_token_secret'|translate }}"
+    <input type="password" id="twitter-access_token_secret" placeholder="{{:: 'twitter access_token_secret'|translate }}"
       ng-model="provider.config.access_token_secret" required
       ng-change="$parent.setConfig(provider)">
 </div>
