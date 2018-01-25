@@ -7654,18 +7654,6 @@ msgstr ""
 msgid "\" sent at:"
 msgstr ""
 
-msgid "{{ multi.count }} Item selected"
-msgstr ""
-
-msgid_plural "{{ multi.count }} Items selected"
-msgstr ""
-
-msgid "{{ wordsCount }} word"
-msgstr ""
-
-msgid_plural "{{ $count }} words"
-msgstr ""
-
 msgid "{{item.state}}"
 msgstr ""
 
