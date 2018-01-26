@@ -7,6 +7,9 @@ export function HtmlPreview($sce) {
         link: function(scope, elem, attrs) {
             scope.$watch('sdHtmlPreview', (html) => {
                 scope.html = $sce.trustAsHtml(html);
+                if (window.hasOwnProperty('instgrm')) {
+                    window.instgrm.Embeds.process();
+                }
             });
         }
     };
