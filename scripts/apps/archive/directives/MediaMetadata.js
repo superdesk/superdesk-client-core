@@ -38,6 +38,21 @@ export function MediaMetadata(userList, archiveService, metadata) {
                     }
                 }
             }
+
+            scope.getLocaleName = function(terms, scheme) {
+                const term = terms.find((elem) => elem.scheme === scheme);
+
+                if (!term) {
+                    return 'None';
+                }
+
+                if (term.translations && scope.item.language
+                    && term.translations.name[scope.item.language]) {
+                    return term.translations.name[scope.item.language];
+                }
+
+                return term.name;
+            };
         }
     };
 }
