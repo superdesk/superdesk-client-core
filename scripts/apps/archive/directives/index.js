@@ -25,3 +25,4 @@ export {MarkedItemTitle} from './MarkedItemTitle';
 export {Export} from './Export';
 export {AssociatedItemMetadata} from './AssociatedItemMetadata';
 export {MediaUsed} from	'./MediaUsed';
+export {PackageItemLabelsDropdown} from './PackageItemLabelsDropdown';
