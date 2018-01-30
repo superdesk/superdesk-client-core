@@ -20,7 +20,7 @@
       <div ng-hide=":: data.headline || data.slugline || data.description_text" translate>Blank headline received</div>
     </div>
     <div>
-      <span ng-if="label" class="package-item__item-creator">label: <span><b>{{label.name}}</b></span></span>
+      <span ng-if="label" class="state-label state-in_progress">label: <span id="package-item-label"><b>{{label.name}}</b></span></span>
       <span class="package-item__item-creator">
         Created <time sd-datetime data-date="data.firstcreated" data-from-now="true"></time>
         <span ng-if="userLookup[data.original_creator]" translate>by <b>{{userLookup[data.original_creator].display_name}}</b></span>
