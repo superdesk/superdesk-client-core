@@ -3,7 +3,7 @@ var search = require('./helpers/search'),
     monitoring = require('./helpers/monitoring'),
     workspace = require('./helpers/workspace');
 
-describe('package', () => {
+fdescribe('package', () => {
     beforeEach(() => {
         monitoring.openMonitoring();
     });
@@ -81,7 +81,7 @@ describe('package', () => {
         expect(authoring.getGroupItems('MAIN').count()).toBe(1);
     });
 
-    xit('sets package item label', () => {
+    fit('sets package item label', () => {
         workspace.selectDesk('Politic Desk');
         expect(monitoring.getTextItem(3, 1)).toBe('package2');
         monitoring.actionOnItem('Edit', 3, 1);
