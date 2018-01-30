@@ -1,5 +1,5 @@
-DestinationDirective.$inject = ['transmissionTypes'];
-export function DestinationDirective(transmissionTypes) {
+DestinationDirective.$inject = ['adminPublishSettingsService'];
+export function DestinationDirective(adminPublishSettingsService) {
     return {
         templateUrl: 'scripts/apps/publish/views/destination.html',
         scope: {
@@ -7,7 +7,7 @@ export function DestinationDirective(transmissionTypes) {
             actions: '='
         },
         link: function($scope) {
-            $scope.types = transmissionTypes;
+            $scope.types = adminPublishSettingsService.getTransmissionServices();
 
             $scope.$watch('destination.delivery_type', (type) => {
                 if (type && !$scope.destination.config && $scope.types[type].config) {
