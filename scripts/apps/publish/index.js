@@ -9,7 +9,6 @@
  */
 import './styles/publish.scss';
 
-import {transmissionTypes} from './constants';
 import * as svc from './services';
 import * as ctrl from './controllers';
 import * as directive from './directives';
@@ -23,7 +22,6 @@ import * as filter from './filters';
  * @description Superdesk publishing support.
  */
 export default angular.module('superdesk.apps.publish', ['superdesk.apps.users', 'superdesk.apps.content_filters'])
-    .value('transmissionTypes', transmissionTypes)
 
     .service('adminPublishSettingsService', svc.AdminPublishSettingsService)
     .service('subscribersService', svc.SubscribersService)
