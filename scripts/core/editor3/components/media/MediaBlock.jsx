@@ -17,6 +17,7 @@ export class MediaBlockComponent extends Component {
         super(props);
 
         this.onClick = this.onClick.bind(this);
+        this.onClickDelete = this.onClickDelete.bind(this);
         this.data = this.data.bind(this);
         this.onChange = this.onChange.bind(this);
     }
@@ -50,6 +51,12 @@ export class MediaBlockComponent extends Component {
         cropImage(entityKey, entity.getData());
     }
 
+    onClickDelete() {
+        const {block, removeBlock} = this.props;
+
+        removeBlock(block.getKey());
+    }
+
     /**
      * @ngdoc method
      * @name MediaBlockComponent#onChange
@@ -70,7 +77,10 @@ export class MediaBlockComponent extends Component {
         const mediaType = data.type;
 
         return (
-            <div className="image-block" onClick={(e) => e.stopPropagation()}>
+            <div className="image-block image-block__remove sd-shadow--z1" onClick={(e) => e.stopPropagation()}>
+                <a className="btn btn--small btn--icon-only-circle" onClick={this.onClickDelete}>
+                    <i className="icon-close-small" />
+                </a>
                 <div className="image-block__wrapper">
                     {showTitle ?
                         <Textarea
@@ -106,6 +116,7 @@ export class MediaBlockComponent extends Component {
 
 MediaBlockComponent.propTypes = {
     cropImage: PropTypes.func.isRequired,
+    removeBlock: PropTypes.func.isRequired,
     changeCaption: PropTypes.func.isRequired,
     setLocked: PropTypes.func.isRequired,
     block: PropTypes.object.isRequired,
@@ -119,6 +130,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
     cropImage: (entityKey, entityData) => dispatch(actions.cropImage(entityKey, entityData)),
+    removeBlock: (blockKey) => dispatch(actions.removeBlock(blockKey)),
     changeCaption: (entityKey, newCaption, field) => dispatch(actions.changeImageCaption(entityKey, newCaption, field)),
     setLocked: () => dispatch(actions.setLocked(true))
 });

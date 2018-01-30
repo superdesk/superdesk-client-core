@@ -1,4 +1,4 @@
-import {RichUtils, AtomicBlockUtils, EditorState} from 'draft-js';
+import {RichUtils, AtomicBlockUtils, EditorState, ContentState} from 'draft-js';
 import * as entityUtils from '../components/links/entityUtils';
 import {onChange} from './editor3';
 
@@ -19,6 +19,8 @@ const toolbar = (state = {}, action) => {
         return insertMedia(state, action.payload);
     case 'TOOLBAR_UPDATE_IMAGE':
         return updateImage(state, action.payload);
+    case 'TOOLBAR_REMOVE_BLOCK':
+        return removeBlock(state, action.payload);
     case 'TOOLBAR_APPLY_EMBED':
         return applyEmbed(state, action.payload);
     case 'TOOLBAR_SET_POPUP':
@@ -166,6 +168,25 @@ const updateImage = (state, {entityKey, media}) => {
     const entityDataHasChanged = true;
 
     return onChange(state, newState, entityDataHasChanged);
+};
+
+/**
+ * @ngdoc method
+ * @name removeBlock
+ * @param {Object} data Contains the key from of block to remove
+ * @description Removes block from editor
+ */
+const removeBlock = (state, {blockKey}) => {
+    const {editorState} = state;
+    const contentState = editorState.getCurrentContent();
+
+    const blocksArray = contentState.getBlocksAsArray();
+    const newBlocksArray = blocksArray.filter((block) => block.getKey() !== blockKey);
+
+    const newContentState = ContentState.createFromBlockArray(newBlocksArray);
+    const newState = EditorState.push(editorState, newContentState, 'change-block-data');
+
+    return onChange(state, newState);
 };
 
 /**
