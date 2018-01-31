@@ -204,7 +204,7 @@ angular.module('superdesk.apps.archive', [
                 priority: 30,
                 icon: 'label',
                 monitor: true,
-                disableInList: true,
+                list: false,
                 keyboardShortcut: 'ctrl+alt+l',
                 filters: [{action: 'list', type: 'archive'}],
                 group: 'labels',

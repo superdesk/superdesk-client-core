@@ -42,7 +42,7 @@ export default class MenuItems extends React.Component {
         const {superdesk, workflowService} = this.props.svc;
 
         superdesk.findActivities(intent, item).forEach((activity) => {
-            if (workflowService.isActionAllowed(item, activity.action) && !activity.disableInList) {
+            if (workflowService.isActionAllowed(item, activity.action) && activity.list !== false) {
                 var group = activity.group || 'default';
 
                 groups[group] = groups[group] || [];
