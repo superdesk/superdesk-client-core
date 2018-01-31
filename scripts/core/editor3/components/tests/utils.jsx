@@ -6,11 +6,12 @@ import {
     ContentBlock,
     RichUtils,
     SelectionState,
-    AtomicBlockUtils,
     convertToRaw,
     CharacterMetadata,
     genKey
 } from 'draft-js';
+
+import insertAtomicBlockWithoutEmptyLines from '../../helpers/insertAtomicBlockWithoutEmptyLines';
 
 /**
  * @name mockStore
@@ -90,7 +91,7 @@ export function createBlockAndContent(type, data) {
     const cs = ContentState.createFromText('here is an image:');
     const contentState = cs.createEntity(type, 'MUTABLE', data);
     const entityKey = contentState.getLastCreatedEntityKey();
-    const editorState = AtomicBlockUtils.insertAtomicBlock(
+    const editorState = insertAtomicBlockWithoutEmptyLines(
         EditorState.createWithContent(contentState),
         entityKey, ' ');
     const block = editorState.getCurrentContent().getBlocksAsArray()[1];

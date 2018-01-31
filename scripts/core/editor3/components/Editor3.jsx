@@ -233,6 +233,12 @@ export class Editor3Component extends React.Component {
         this.editorNode = ReactDOM.findDOMNode(this.refs.editor);
     }
 
+    componentDidUpdate() {
+        if (window.hasOwnProperty('instgrm')) {
+            window.instgrm.Embeds.process();
+        }
+    }
+
     render() {
         const {
             readOnly,
