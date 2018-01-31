@@ -43,6 +43,7 @@ angular.module('superdesk.apps.archive.directives', [
     .directive('sdExport', directive.Export)
     .directive('sdAssociatedItemMetadata', directive.AssociatedItemMetadata)
     .directive('sdMediaUsed', directive.MediaUsed)
+    .directive('sdPackageItemLabelsDropdown', directive.PackageItemLabelsDropdown)
     .service('familyService', svc.FamilyService)
     .service('dragitem', svc.DragItemService);
 
@@ -197,6 +198,26 @@ angular.module('superdesk.apps.archive', [
                 group: 'duplicate',
                 groupLabel: gettext('Duplicate'),
                 groupIcon: 'copy'
+            })
+            .activity('label', {
+                label: gettext('Set label in current package'),
+                priority: 30,
+                icon: 'label',
+                monitor: true,
+                list: false,
+                keyboardShortcut: 'ctrl+alt+l',
+                filters: [{action: 'list', type: 'archive'}],
+                group: 'labels',
+                dropdown: true,
+                templateUrl: 'scripts/apps/archive/views/package_item_labels_dropdown.html',
+                additionalCondition: ['authoring', 'item', 'vocabularies', 'authoringWorkspace', 'packages',
+                    function(authoring, item, vocabularies, authoringWorkspace, packages) {
+                        var openedItem = authoringWorkspace.getItem();
+
+                        return item.state !== 'killed' && !authoring.isContentApiItem(item) &&
+                            authoring.itemActions(item).set_label && openedItem && openedItem.type === 'composite' &&
+                            packages.isAdded(openedItem, item) && vocabularies.isInit();
+                    }]
             })
             .activity('createBroadcast', {
                 label: gettext('Create Broadcast'),

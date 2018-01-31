@@ -104,6 +104,8 @@ export default class Item extends React.Component {
 
         var activity = this.props.activity;
 
+        var invoke = typeof activity.dropdown === 'function' || typeof activity.dropdown === 'object';
+
         if (activity.dropdown) {
             return React.createElement(
                 'li',
@@ -122,7 +124,7 @@ export default class Item extends React.Component {
                         }, '') : null,
                         gettextCatalog.getString(activity.label)
                     ),
-                    this.state.open ? $injector.invoke(activity.dropdown, activity, {
+                    this.state.open && invoke ? $injector.invoke(activity.dropdown, activity, {
                         item: this.props.item,
                         className: 'dropdown__menu upward ' + this.state.position,
                         noHighlightsLabel: gettextCatalog.getString('No available highlights'),
