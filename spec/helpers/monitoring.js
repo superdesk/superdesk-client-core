@@ -807,10 +807,14 @@ function Monitoring() {
     };
 
     this.getPackageItemLabelOption = function(index) {
-        return element.all(by.repeater('label in labels')).get(index);
+        var elemIndex = index ? index : 0;
+
+        return element.all(by.name('package-item-label')).get(elemIndex);
     };
 
     this.getPackageItemLabel = function(index) {
-        return element.all(by.id('package-item-label')).get(index);
+        var elemIndex = index ? index : 0;
+
+        return element.all(by.id('package-item-label')).get(elemIndex);
     };
 }

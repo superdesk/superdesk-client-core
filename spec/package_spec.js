@@ -3,7 +3,7 @@ var search = require('./helpers/search'),
     monitoring = require('./helpers/monitoring'),
     workspace = require('./helpers/workspace');
 
-fdescribe('package', () => {
+describe('package', () => {
     beforeEach(() => {
         monitoring.openMonitoring();
     });
@@ -81,7 +81,7 @@ fdescribe('package', () => {
         expect(authoring.getGroupItems('MAIN').count()).toBe(1);
     });
 
-    fit('sets package item label', () => {
+    it('sets package item label', () => {
         workspace.selectDesk('Politic Desk');
         expect(monitoring.getTextItem(3, 1)).toBe('package2');
         monitoring.actionOnItem('Edit', 3, 1);
@@ -89,6 +89,7 @@ fdescribe('package', () => {
         browser.actions()
             .mouseMove(monitoring.getPackageItemLabelEntry())
             .perform();
+        browser.sleep(500);
         monitoring.getPackageItemLabelOption(1).click();
         expect(monitoring.getPackageItemLabel(0).getText()).toBe('Featured');
     });
