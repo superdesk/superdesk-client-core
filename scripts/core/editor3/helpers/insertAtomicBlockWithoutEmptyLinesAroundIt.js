@@ -13,7 +13,6 @@ var List = Immutable.List,
     Repeat = Immutable.Repeat;
 
 function getInsertionTarget(contentState, selectionState) {
-
     var afterRemoval = Modifier.removeRange(contentState, selectionState, 'backward');
     var targetSelection = afterRemoval.getSelectionAfter();
     var afterSplit = Modifier.splitBlock(afterRemoval, targetSelection);
