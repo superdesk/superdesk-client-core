@@ -1,4 +1,4 @@
-import {RichUtils, AtomicBlockUtils, EditorState, ContentState} from 'draft-js';
+import {RichUtils, AtomicBlockUtils, EditorState, SelectionState, Modifier} from 'draft-js';
 import * as entityUtils from '../components/links/entityUtils';
 import {onChange} from './editor3';
 
@@ -180,13 +180,23 @@ const removeBlock = (state, {blockKey}) => {
     const {editorState} = state;
     const contentState = editorState.getCurrentContent();
 
-    const blocksArray = contentState.getBlocksAsArray();
-    const newBlocksArray = blocksArray.filter((block) => block.getKey() !== blockKey);
+    const afterKey = contentState.getKeyAfter(blockKey);
+    const targetRange = new SelectionState({
+        anchorKey: blockKey,
+        anchorOffset: 0,
+        focusKey: afterKey,
+        focusOffset: 0
+    });
+    let newContentState = Modifier.setBlockType(
+        contentState,
+        targetRange,
+        'unstyled'
+    );
 
-    const newContentState = ContentState.createFromBlockArray(newBlocksArray);
-    const newState = EditorState.push(editorState, newContentState, 'change-block-data');
+    newContentState = Modifier.removeRange(newContentState, targetRange, 'backward');
+    const newEditorState = EditorState.push(editorState, newContentState, 'remove-range');
 
-    return onChange(state, newState);
+    return onChange(state, newEditorState);
 };
 
 /**
