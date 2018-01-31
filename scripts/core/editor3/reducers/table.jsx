@@ -1,6 +1,6 @@
 import {EditorState} from 'draft-js';
 import {onChange} from './editor3';
-import insertAtomicBlockWithoutEmptyLinesAroundIt from '../helpers/insertAtomicBlockWithoutEmptyLinesAroundIt';
+import insertAtomicBlockWithoutEmptyLines from '../helpers/insertAtomicBlockWithoutEmptyLines';
 
 /**
  * @description Contains the list of table related reducers.
@@ -37,7 +37,7 @@ const addTable = (state, data) => {
     const contentStateWithEntity = contentState.createEntity('TABLE', 'MUTABLE', {data});
     const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
 
-    editorState = insertAtomicBlockWithoutEmptyLinesAroundIt(
+    editorState = insertAtomicBlockWithoutEmptyLines(
         editorState,
         entityKey,
         ' '
