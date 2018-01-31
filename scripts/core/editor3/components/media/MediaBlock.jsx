@@ -51,6 +51,12 @@ export class MediaBlockComponent extends Component {
         cropImage(entityKey, entity.getData());
     }
 
+    /**
+     * @ngdoc method
+     * @name MediaBlockComponent#onClickDelete
+     * @description Handles clicking on the delete button. Dispatches the
+     * remove block action.
+     */
     onClickDelete() {
         const {block, removeBlock} = this.props;
 
