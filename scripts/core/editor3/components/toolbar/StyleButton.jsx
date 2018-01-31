@@ -15,7 +15,8 @@ const StyleIcons = {
     h6: 'icon-heading-6',
     quote: 'icon-quote',
     'unordered list': 'icon-unordered-list',
-    'ordered list': 'icon-ordered-list'
+    'ordered list': 'icon-ordered-list',
+    suggestions: 'icon-multiedit'
 };
 
 const StyleTooltips = {
@@ -31,7 +32,8 @@ const StyleTooltips = {
     quote: gettext('Quote'),
     'unordered list': gettext('Unordered list'),
     'ordered list': gettext('Ordered list'),
-    TH: gettext('Toggle Header')
+    TH: gettext('Toggle Header'),
+    suggestions: gettext('Toggle Suggestions Mode')
 };
 
 /**

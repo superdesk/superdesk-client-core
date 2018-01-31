@@ -2,6 +2,7 @@ import spellchecker from './spellchecker';
 import editor3 from './editor3';
 import toolbar from './toolbar';
 import table from './table';
+import suggestions from './suggestions';
 import findReplace from './find-replace';
 import highlights from './highlight';
 
@@ -17,7 +18,8 @@ const editorReducers = chainReduce(
     table,
     editor3,
     findReplace,
-    highlights
+    highlights,
+    suggestions
 );
 
 export default editorReducers;
