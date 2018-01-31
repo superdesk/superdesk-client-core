@@ -34,14 +34,14 @@ function getInsertionTarget(contentState, selectionState) {
 }
 
 /*
-    insertAtomicBlockWithoutEmptyLinesAroundIt: function(
+    insertAtomicBlockWithoutEmptyLines: function(
         editorState: EditorState,
         entityKey: string,
         character: string
     ): EditorState
 */
 
-function insertAtomicBlockWithoutEmptyLinesAroundIt(editorState, entityKey, character) {
+function insertAtomicBlockWithoutEmptyLines(editorState, entityKey, character) {
     var selectionState = editorState.getSelection();
     var target = getInsertionTarget(editorState.getCurrentContent(), selectionState);
     var asAtomicBlock = Modifier.setBlockType(target.contentState, target.selectionState, 'atomic');
@@ -92,4 +92,4 @@ function insertAtomicBlockWithoutEmptyLinesAroundIt(editorState, entityKey, char
     return EditorState.push(editorState, newContent, 'insert-fragment');
 }
 
-module.exports = insertAtomicBlockWithoutEmptyLinesAroundIt;
+module.exports = insertAtomicBlockWithoutEmptyLines;
