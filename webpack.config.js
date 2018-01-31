@@ -24,8 +24,10 @@ module.exports = function makeConfig(grunt) {
             return false;
         }
 
+        const apps = sdConfig.importApps || sdConfig.apps || [];
+
         // include only 'superdesk-core' and valid modules inside node_modules
-        let validModules = ['superdesk-core'].concat(sdConfig.apps);
+        let validModules = ['superdesk-core'].concat(apps);
 
         return !validModules.some((app) => p.indexOf(app) > -1);
     };
