@@ -87,6 +87,49 @@ export function ItemAssociationDirective(superdesk, renditions, config, authorin
                     .find((name) => name.indexOf('application/superdesk') === 0 || name === 'Files');
             }
 
+            /**
+             * @ngdoc method
+             * @name sdItemAssociation#uploadAndCropImages
+             * @private
+             * @description Opens the file upload dialog. If files contains an array of files populates
+             *              the dialog with the given files. Opens the crop dialog for each uploaded file.
+             * @param {Array} files
+             */
+            function uploadAndCropImages(files) {
+                let uploadData = {
+                    files: files,
+                    uniqueUpload: scope.maxUploads === undefined || scope.maxUploads === 1,
+                    maxUploads: scope.maxUploads,
+                    allowPicture: scope.allowPicture,
+                    allowVideo: scope.allowVideo,
+                    allowAudio: scope.allowAudio
+                };
+
+                superdesk.intent('upload', 'media', uploadData).then((images) => {
+                    // open the view to edit the PoI and the cropping areas
+                    if (images) {
+                        scope.$applyAsync(() => {
+                            var [rootField, index] = mediaIdGenerator.getFieldParts(scope.rel);
+                            var imagesWithIds = [];
+
+                            function editNextFile() {
+                                if (imagesWithIds.length > 0) {
+                                    var imageWithId = imagesWithIds.shift();
+
+                                    scope.edit(imageWithId.image, imageWithId.id, editNextFile);
+                                }
+                            }
+
+                            _.forEach(images, (image) => {
+                                imagesWithIds.push({id: scope.rel, image: image});
+                                scope.rel = mediaIdGenerator.getFieldVersionName(rootField, ++index);
+                            });
+                            editNextFile();
+                        });
+                    }
+                });
+            }
+
             let dragOverClass = 'dragover';
 
             // it should prevent default as long as this is valid image
@@ -113,20 +156,7 @@ export function ItemAssociationDirective(superdesk, renditions, config, authorin
                     if (scope.isMediaEditable()) {
                         const files = event.originalEvent.dataTransfer.files;
 
-                        superdesk.intent('upload', 'media', {
-                            files: files,
-                            uniqueUpload: true,
-                            allowPicture: scope.allowPicture,
-                            allowVideo: scope.allowVideo,
-                            allowAudio: scope.allowAudio
-                        }).then((images) => {
-                            // open the view to edit the PoI and the cropping areas
-                            if (images) {
-                                scope.$applyAsync(() => {
-                                    scope.edit(images[0]);
-                                });
-                            }
-                        });
+                        uploadAndCropImages(files);
                     }
                     return;
                 }
@@ -292,35 +322,7 @@ export function ItemAssociationDirective(superdesk, renditions, config, authorin
              */
             scope.upload = function() {
                 if (scope.editable) {
-                    superdesk.intent('upload', 'media', {
-                        uniqueUpload: scope.maxUploads === undefined || scope.maxUploads === 1,
-                        maxUploads: scope.maxUploads,
-                        allowPicture: scope.allowPicture,
-                        allowVideo: scope.allowVideo,
-                        allowAudio: scope.allowAudio
-                    }).then((images) => {
-                        // open the view to edit the PoI and the cropping areas
-                        if (images) {
-                            scope.$applyAsync(() => {
-                                var [rootField, index] = mediaIdGenerator.getFieldParts(scope.rel);
-                                var imagesWithIds = [];
-
-                                function editNextFile() {
-                                    if (imagesWithIds.length > 0) {
-                                        var imageWithId = imagesWithIds.shift();
-
-                                        scope.edit(imageWithId.image, imageWithId.id, editNextFile);
-                                    }
-                                }
-
-                                _.forEach(images, (image) => {
-                                    imagesWithIds.push({id: scope.rel, image: image});
-                                    scope.rel = mediaIdGenerator.getFieldVersionName(rootField, ++index);
-                                });
-                                editNextFile();
-                            });
-                        }
-                    });
+                    uploadAndCropImages();
                 }
             };
         }
