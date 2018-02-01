@@ -1,0 +1,8 @@
+<div class="field">
+    <label for="ritzau_username" translate>Username</label>
+    <input type="text" id="ritzau_username" placeholder="{{:: 'username'|translate }}" ng-model="provider.config.username" required ng-change="$parent.setConfig(provider)">
+</div>
+<div class="field">
+    <label for="ritzau_password" translate>Password</label>
+    <input type="password" id="ritzau_password" placeholder="{{:: 'password'|translate }}" ng-model="provider.config.password" required ng-change="$parent.setConfig(provider)">
+</div>
