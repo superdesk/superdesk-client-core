@@ -1,5 +1,12 @@
 # Superdesk Client Changelog
 
+## [1.11.1] 2018-02-01
+
+### Fixed
+
+- Fix metadata translations in metadata view.
+- Fix style issues with custom fields in preview.
+
 ## [1.11.0] 2018-01-19
 
 ### Fixed
