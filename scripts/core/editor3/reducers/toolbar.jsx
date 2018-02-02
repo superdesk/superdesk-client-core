@@ -1,4 +1,4 @@
-import {RichUtils, EditorState} from 'draft-js';
+import {RichUtils, EditorState, SelectionState, Modifier} from 'draft-js';
 import * as entityUtils from '../components/links/entityUtils';
 import {onChange} from './editor3';
 import insertAtomicBlockWithoutEmptyLines from '../helpers/insertAtomicBlockWithoutEmptyLines';
@@ -20,6 +20,8 @@ const toolbar = (state = {}, action) => {
         return insertMedia(state, action.payload);
     case 'TOOLBAR_UPDATE_IMAGE':
         return updateImage(state, action.payload);
+    case 'TOOLBAR_REMOVE_BLOCK':
+        return removeBlock(state, action.payload);
     case 'TOOLBAR_APPLY_EMBED':
         return applyEmbed(state, action.payload);
     case 'TOOLBAR_SET_POPUP':
@@ -167,6 +169,35 @@ const updateImage = (state, {entityKey, media}) => {
     const entityDataHasChanged = true;
 
     return onChange(state, newState, entityDataHasChanged);
+};
+
+/**
+ * @ngdoc method
+ * @name removeBlock
+ * @param {Object} data Contains the key from of block to remove
+ * @description Removes block from editor
+ */
+const removeBlock = (state, {blockKey}) => {
+    const {editorState} = state;
+    const contentState = editorState.getCurrentContent();
+
+    const afterKey = contentState.getKeyAfter(blockKey);
+    const targetRange = new SelectionState({
+        anchorKey: blockKey,
+        anchorOffset: 0,
+        focusKey: afterKey,
+        focusOffset: 0
+    });
+    let newContentState = Modifier.setBlockType(
+        contentState,
+        targetRange,
+        'unstyled'
+    );
+
+    newContentState = Modifier.removeRange(newContentState, targetRange, 'backward');
+    const newEditorState = EditorState.push(editorState, newContentState, 'remove-range');
+
+    return onChange(state, newEditorState);
 };
 
 /**

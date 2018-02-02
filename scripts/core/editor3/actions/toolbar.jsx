@@ -126,6 +126,23 @@ export function cropImage(entityKey, entityData) {
 
 /**
  * @ngdoc method
+ * @name removeBlock
+ * @param {String} blockKey
+ * @return {String} action
+ * @description Removes a media block
+ */
+
+export function removeBlock(blockKey) {
+    return {
+        type: 'TOOLBAR_REMOVE_BLOCK',
+        payload: {
+            blockKey
+        }
+    };
+}
+
+/**
+ * @ngdoc method
  * @name embed
  * @param {Object|string} oEmbed code, HTML string or Qumu widget config.
  * @return {Object}
