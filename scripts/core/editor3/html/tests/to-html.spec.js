@@ -88,7 +88,7 @@ describe('core.editor3.html.to-html.AtomicBlockParser', () => {
         const {block, contentState} = testUtils.embedBlockAndContent();
         const html = new AtomicBlockParser(contentState).parse(block);
 
-        expect(html).toContain('<div class="embed-block"><h1>Embed Title</h1></div>');
+        expect(html).toBe('<div class="embed-block"><h1>Embed Title</h1></div>');
     });
 
     it('should correctly parse images', () => {

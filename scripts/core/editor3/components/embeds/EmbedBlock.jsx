@@ -1,26 +1,18 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
 import {QumuWidget} from './QumuWidget';
-import * as actions from '../../actions';
 
 /**
  * @ngdoc React
  * @module superdesk.core.editor3
- * @name EmbedBlockComponent
+ * @name EmbedBlock
  * @param {Object} block Information about the block where this component renders.
  * @description This component renders an embed block within the editor, using oEmbed data
  * retrieved from iframe.ly
  */
-export class EmbedBlockComponent extends Component {
-    constructor(props) {
-        super(props);
-
-        this.onClickDelete = this.onClickDelete.bind(this);
-    }
-
+export class EmbedBlock extends Component {
     /**
-     * @name EmbedBlockComponent#runScripts
+     * @name EmbedBlock#runScripts
      * @param {string} html
      * @description Runs and imports all the scripts in the given HTML.
      */
@@ -67,32 +59,10 @@ export class EmbedBlockComponent extends Component {
         return data.html !== oldData.html;
     }
 
-    /**
-     * @ngdoc method
-     * @name EmbedBlockComponent#onClickDelete
-     * @description Handles clicking on the delete button. Dispatches the
-     * remove block action.
-     */
-    onClickDelete() {
-        const {block, removeBlock} = this.props;
-
-        removeBlock(block.getKey());
-    }
-
     embedBlock({html}) {
         this.runScripts(html);
 
-        return (
-            <div style={{position: 'relative'}}>
-                <a
-                    className="btn btn--small btn--icon-only-circle"
-                    onClick={this.onClickDelete}
-                    style={{position: 'absolute', right: '-1rem', top: '-1rem'}}>
-                    <i className="icon-close-small" />
-                </a>
-                <div className="embed-block" dangerouslySetInnerHTML={{__html: html}} />
-            </div>
-        );
+        return <div className="embed-block" dangerouslySetInnerHTML={{__html: html}} />;
     }
 
     render() {
@@ -104,14 +74,7 @@ export class EmbedBlockComponent extends Component {
     }
 }
 
-EmbedBlockComponent.propTypes = {
+EmbedBlock.propTypes = {
     block: PropTypes.object.isRequired,
-    contentState: PropTypes.object.isRequired,
-    removeBlock: PropTypes.func.isRequired,
+    contentState: PropTypes.object.isRequired
 };
-
-const mapDispatchToProps = (dispatch) => ({
-    removeBlock: (blockKey) => dispatch(actions.removeBlock(blockKey)),
-});
-
-export const EmbedBlock = connect(() => ({}), mapDispatchToProps)(EmbedBlockComponent);
