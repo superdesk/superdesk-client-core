@@ -1,5 +1,35 @@
 # Superdesk Client Changelog
 
+## [1.12.0] 2018-02-02
+
+### Fixed
+
+- Make image fit to size and not stretch in preview.
+- Fix instagram embeds and facebook videos display.
+- Avoid using uppercase for keywords, save them as written.
+- Fix label for publish confirm modal.
+- Fix annotations type select box styling in editor3.
+- Fix text decoration in editor3.
+- Extend editor3 service to allow spellchecking on all fields.
+- Use attachment name as link title in editor3.
+- Sync word count method with backend implementation.
+- Automatic creation switch in templates is causing save button to malfunction.
+- Fix issue with save button always active in vocabularies management.
+- Fix issue when using tabs in user create form disables save button.
+
+### Added
+
+- Add support for multiple items on custom media fields.
+- Allow labels on stories in a package.
+- Add `importApps` config option.
+- Allow transmitters to be added dynamicaly.
+- Support for multiple items on custom media fields.
+
+### Changed
+
+- Insert empty line before/after embed only if the embed is frist or last item in editor3.
+- Update pot file.
+
 ## [1.11.0] 2018-01-19
 
 ### Fixed
