@@ -64,6 +64,41 @@ export function VocabularyService(api, $q, $filter, $rootScope) {
 
     /**
      * @ngdoc method
+     * @name VocabularyService#isInit
+     * @public
+     * @description Returns true if the vocabularies were initialized.
+     * @return {Boolean}
+     */
+    this.isInit = () => !!self.AllActiveVocabularies;
+
+    /**
+     * @ngdoc method
+     * @name VocabularyService#getVocabulary
+     * @public
+     * @description Returns the vocabulary identified by the given id.
+     * @param {String} vocabularyId
+     * @return {Promise} {Object} vocabulary
+     */
+    this.getVocabulary = function(vocabularyId) {
+        return self.getAllActiveVocabularies().then((vocabularies) => _.find(vocabularies._items, {_id: vocabularyId}));
+    };
+
+    /**
+     * @ngdoc method
+     * @name VocabularyService#getVocabularySync
+     * @public
+     * @description Returns the vocabulary identified by the given id.
+     * @param {String} vocabularyId
+     * @return {Object} vocabulary
+     */
+    this.getVocabularySync = function(vocabularyId) {
+        if (self.AllActiveVocabularies) {
+            return _.find(self.AllActiveVocabularies._items, {_id: vocabularyId});
+        }
+    };
+
+    /**
+     * @ngdoc method
      * @name VocabularyService#_resetVocabularies
      * @private
      * @description Clears the cached vocabularies.

@@ -648,15 +648,6 @@ $lightbox-composite-condensed : 100px;
                     max-height: 100%;
                     height: auto !important;
                 }
-                &.portrait {
-                    > figure {
-                        display: block;
-                    }
-                    img {
-                        max-height: 100%;
-                        width: auto !important;
-                    }
-                }
             }
 
             &.composite {
