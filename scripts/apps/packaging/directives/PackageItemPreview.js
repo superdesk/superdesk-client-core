@@ -1,5 +1,7 @@
-PackageItemPreview.$inject = ['api', 'lock', 'superdesk', 'authoringWorkspace', '$location', '$sce', 'desks'];
-export function PackageItemPreview(api, lock, superdesk, authoringWorkspace, $location, $sce, desks) {
+PackageItemPreview.$inject = ['api', 'lock', 'superdesk', 'authoringWorkspace', '$location', '$sce',
+    'desks', 'vocabularies'];
+export function PackageItemPreview(api, lock, superdesk, authoringWorkspace, $location, $sce,
+    desks, vocabularies) {
     return {
         scope: {
             item: '=',
@@ -10,6 +12,19 @@ export function PackageItemPreview(api, lock, superdesk, authoringWorkspace, $lo
             scope.data = null;
             scope.error = null;
             scope.userLookup = desks.userLookup;
+            scope.label = null;
+            scope.labels = [];
+
+            const packageItemLabelsVocabularyId = 'package-story-labels';
+
+            var initLabels = () => {
+                vocabularies.getVocabulary(packageItemLabelsVocabularyId).then((vocabulary) => {
+                    scope.labels = vocabulary.items;
+                    scope.label = _.find(vocabulary.items, {qcode: scope.item.label});
+                });
+            };
+
+            initLabels();
 
             if (scope.item.location) {
                 var url = '';
@@ -64,6 +79,18 @@ export function PackageItemPreview(api, lock, superdesk, authoringWorkspace, $lo
                     scope.$applyAsync(() => {
                         scope.isPublished = true;
                     });
+                }
+            });
+
+            scope.$on('item:label', (_e, data) => {
+                if (scope.data && scope.data._id === data.item.guid) {
+                    scope.label = _.find(scope.labels, {qcode: data.item.label});
+                }
+            });
+
+            scope.$on('vocabularies:updated', (_e, data) => {
+                if (data.vocabulary_id === packageItemLabelsVocabularyId) {
+                    initLabels();
                 }
             });
 

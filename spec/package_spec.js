@@ -1,6 +1,7 @@
 var search = require('./helpers/search'),
     authoring = require('./helpers/pages').authoring,
-    monitoring = require('./helpers/monitoring');
+    monitoring = require('./helpers/monitoring'),
+    workspace = require('./helpers/workspace');
 
 describe('package', () => {
     beforeEach(() => {
@@ -78,6 +79,18 @@ describe('package', () => {
         expect(search.getTextItem(0)).toBe('item5');
         search.actionOnItem('Create package', 0);
         expect(authoring.getGroupItems('MAIN').count()).toBe(1);
+    });
+
+    xit('sets package item label', () => {
+        workspace.selectDesk('Politic Desk');
+        expect(monitoring.getTextItem(3, 1)).toBe('package2');
+        monitoring.actionOnItem('Edit', 3, 1);
+        monitoring.getPackageItemActionDropdown(0).click();
+        browser.actions()
+            .mouseMove(monitoring.getPackageItemLabelEntry())
+            .perform();
+        monitoring.getPackageItemLabelOption(1).click();
+        expect(monitoring.getPackageItemLabel(0).getText()).toBe('Featured');
     });
 
     xit('can preview package in a package', () => {

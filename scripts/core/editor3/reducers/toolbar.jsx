@@ -1,7 +1,7 @@
 import {RichUtils, EditorState} from 'draft-js';
 import * as entityUtils from '../components/links/entityUtils';
 import {onChange} from './editor3';
-import insertAtomicBlockWithoutEmptyLinesAroundIt from '../helpers/insertAtomicBlockWithoutEmptyLinesAroundIt';
+import insertAtomicBlockWithoutEmptyLines from '../helpers/insertAtomicBlockWithoutEmptyLines';
 
 /**
  * @description Contains the list of toolbar related reducers.
@@ -143,7 +143,7 @@ export const addMedia = (editorState, media) => {
     const contentStateWithEntity = contentState.createEntity('MEDIA', 'MUTABLE', {media});
     const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
 
-    return insertAtomicBlockWithoutEmptyLinesAroundIt(
+    return insertAtomicBlockWithoutEmptyLines(
         editorState,
         entityKey,
         ' '
@@ -183,7 +183,7 @@ const applyEmbed = (state, code) => {
     const contentStateWithEntity = contentState.createEntity('EMBED', 'MUTABLE', {data});
     const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
 
-    editorState = insertAtomicBlockWithoutEmptyLinesAroundIt(
+    editorState = insertAtomicBlockWithoutEmptyLines(
         editorState,
         entityKey,
         ' '

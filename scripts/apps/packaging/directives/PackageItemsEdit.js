@@ -1,5 +1,5 @@
-PackageItemsEdit.$inject = ['packages', 'notify'];
-export function PackageItemsEdit(packages, notify) {
+PackageItemsEdit.$inject = ['packages', 'notify', '$rootScope'];
+export function PackageItemsEdit(packages, notify, $rootScope) {
     return {
         scope: false,
         require: 'ngModel',
@@ -21,6 +21,21 @@ export function PackageItemsEdit(packages, notify) {
                 }
                 autosave();
             });
+
+            scope.$on('package:updateGroupRef', (event, data) => {
+                var group = _.find(scope.list, {id: data.group.id});
+
+                if (group) {
+                    var ref = _.find(group.items, {residRef: data.ref.residRef});
+
+                    if (ref) {
+                        _.merge(ref, data.ref);
+                        $rootScope.$broadcast('item:label', {item: data.ref});
+                    }
+                }
+                autosave();
+            });
+
             scope.$on('$destroy', () => {
                 packages.packageGroupItems = {};
             });

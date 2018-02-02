@@ -67,7 +67,8 @@ export const DEFAULT_ACTIONS = Object.freeze({
     send: false,
     create_broadcast: false,
     add_to_current: false,
-    resend: false
+    resend: false,
+    set_label: true
 });
 
 /**
