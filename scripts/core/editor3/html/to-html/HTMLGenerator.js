@@ -1,6 +1,7 @@
 import {BlockEntityWrapper} from '.';
 import {BlockInlineStyleWrapper} from '.';
 import {AtomicBlockParser} from '.';
+import {Modifier, SelectionState, convertFromRaw} from 'draft-js';
 
 /**
  * @type {Object}
@@ -15,9 +16,9 @@ const BlockStyleTags = {
     'header-four': 'h4',
     'header-five': 'h5',
     'header-six': 'h6',
-    blockquote: 'quote',
+    blockquote: 'blockquote',
     'unordered-list-item': 'li',
-    'ordered-list-item': 'li'
+    'ordered-list-item': 'li',
 };
 
 /**
@@ -173,11 +174,60 @@ export class HTMLGenerator {
     /**
      * @ngdoc method
      * @name HTMLGenerator#html
+     * @param {Object} options
      * @returns {string} HTML
      * @description Returns the HTML representation of the contentState stored by
      * this instance.
      */
-    html() {
-        return this.blocks.reduce((html, block, id) => html + this.convertBlock(block, id), '');
+    html(options) {
+        if (options && options.annotations) {
+            const highlights = this.blocks[0].getData();
+            const annotations = [];
+            let highlightIndex = 1;
+
+            // populate content state with entities
+            highlights.forEach((data, key) => {
+                const selection = JSON.parse(key);
+                const id = highlightIndex++;
+
+                const selectionState = SelectionState.createEmpty();
+                const contentStateWithEntity = this.contentState.createEntity(
+                    'ANNOTATION',
+                    'MUTABLE',
+                    {id}
+                );
+
+                const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+
+                this.contentState = Modifier.applyEntity(
+                    contentStateWithEntity,
+                    selectionState.merge(selection),
+                    entityKey
+                );
+
+                const annotationState = convertFromRaw(JSON.parse(data.msg));
+
+                annotations.push({
+                    id: id,
+                    type: data.annotationType,
+                    body: generateHtml(annotationState),
+                });
+            });
+
+            this.blocks = this.contentState.getBlocksAsArray();
+
+            return {
+                annotations: annotations,
+                html: this.blocks.map((block, id) => this.convertBlock(block, id)).join(''),
+            };
+        }
+
+        return this.blocks.map((block, id) => this.convertBlock(block, id)).join('');
     }
+}
+
+function generateHtml(editorState) {
+    const generator = new HTMLGenerator(editorState);
+
+    return generator.html();
 }

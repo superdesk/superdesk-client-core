@@ -53,7 +53,7 @@ export function ArticleEditDirective(
     renditions
 ) {
     return {
-        templateUrl: 'scripts/apps/authoring/views/article-edit.html',
+        template: require('../../views/article-edit.html'),
         link: function(scope, elem) {
             scope.toggleDetails = true;
             scope.errorMessage = null;
