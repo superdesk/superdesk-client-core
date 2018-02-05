@@ -181,12 +181,11 @@ const removeBlock = (state, {blockKey}) => {
     const {editorState} = state;
     const contentState = editorState.getCurrentContent();
 
-    const afterKey = contentState.getKeyAfter(blockKey);
     const targetRange = new SelectionState({
         anchorKey: blockKey,
         anchorOffset: 0,
-        focusKey: afterKey,
-        focusOffset: 0
+        focusKey: blockKey,
+        focusOffset: 1
     });
     let newContentState = Modifier.setBlockType(
         contentState,
@@ -232,3 +231,4 @@ const applyEmbed = (state, code) => {
 const setPopup = (state, {type, data}) => ({...state, popup: {type, data}});
 
 export default toolbar;
+
