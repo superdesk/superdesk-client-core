@@ -3,6 +3,7 @@ import {shallow, mount} from 'enzyme';
 import {Editor3Component as Editor3} from '../Editor3';
 import {blockRenderer} from '../blockRenderer';
 import {EditorState} from 'draft-js';
+import mockStore from './utils';
 
 const editorState = EditorState.createEmpty();
 
@@ -105,8 +106,9 @@ describe('editor3.blockRenderer', () => {
         const block = {getType: () => 'atomic', getEntityAt: () => 'entity_key'};
         const contentState = {getEntity: () => ({getType: () => 'EMBED', getData: () => ({data: {html: 'abc'}})})};
         const component = blockRenderer(block).component({block, contentState});
+        const {options} = mockStore();
 
         expect(component).not.toBe(null);
-        expect(mount(component).name()).toBe('EmbedBlock');
+        expect(mount(component, options).name()).toBe('Connect(EmbedBlockComponent)');
     });
 });
