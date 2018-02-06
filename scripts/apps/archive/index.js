@@ -110,8 +110,8 @@ angular.module('superdesk.apps.archive', [
                 label: gettext('Spike Item'),
                 icon: 'trash',
                 monitor: true,
-                controller: ['spike', 'data', '$rootScope', 'modal', '$location', '$q', 'multi', 'config',
-                    function spikeActivity(spike, data, $rootScope, modal, $location, $q, multi, config) {
+                controller: ['spike', 'data', '$rootScope', 'modal', '$location', '$q', 'multi', 'privileges',
+                    function spikeActivity(spike, data, $rootScope, modal, $location, $q, multi, privileges) {
                         // For the sake of keyboard shortcut to work consistently,
                         // if the item is multi-selected, let multibar controller handle its spike
                         if (!data.item || multi.count > 0 && _.includes(multi.getIds(), data.item._id)) {
@@ -121,7 +121,7 @@ angular.module('superdesk.apps.archive', [
                         var txt = gettext('Do you want to delete the item permanently?');
                         var showConfirmation = $location.path() === '/workspace/personal';
 
-                        if (get(config, 'features.planning') && data.item && data.item.assignment_id) {
+                        if (get(privileges, 'privileges.planning') && data.item && data.item.assignment_id) {
                             txt = gettext('This item is linked to in-progress planning coverage, spike anyway?');
                             showConfirmation = true;
                         }

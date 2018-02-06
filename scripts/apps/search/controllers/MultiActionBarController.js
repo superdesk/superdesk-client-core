@@ -17,19 +17,18 @@ import _ from 'lodash';
  * @requires spike
  * @requires authoring
  * @requires $location
- * @requires config
  * @description MultiActionBarController holds a set of convenience functions which
  * are used by the Multi-Action bar wwhen an item is click-selected.
  */
 
 MultiActionBarController.$inject = [
     '$rootScope', 'multi', 'multiEdit', 'send', 'remove', 'modal', '$q', 'gettext',
-    'packages', 'superdesk', 'notify', 'spike', 'authoring', 'privileges', '$location', 'config'
+    'packages', 'superdesk', 'notify', 'spike', 'authoring', 'privileges', '$location'
 ];
 
 export function MultiActionBarController(
     $rootScope, multi, multiEdit, send, remove, modal, $q, gettext,
-    packages, superdesk, notify, spike, authoring, privileges, $location, config
+    packages, superdesk, notify, spike, authoring, privileges, $location
 ) {
     this.send = function() {
         send.all(multi.getItems());
@@ -85,7 +84,7 @@ export function MultiActionBarController(
         var txt = gettext('Do you want to delete these items permanently?');
         var showConfirmation = $location.path() === '/workspace/personal';
 
-        if (_.get(config, 'features.planning')) {
+        if (_.get(privileges, 'privileges.planning')) {
             var assignedItems = multi.getItems().filter((item) => item.assignment_id);
 
             if (assignedItems.length) {
