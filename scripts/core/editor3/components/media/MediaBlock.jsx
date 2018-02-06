@@ -83,8 +83,8 @@ export class MediaBlockComponent extends Component {
         const mediaType = data.type;
 
         return (
-            <div className="image-block image-block__remove sd-shadow--z1" onClick={(e) => e.stopPropagation()}>
-                <a className="btn btn--small btn--icon-only-circle" onClick={this.onClickDelete}>
+            <div className="image-block sd-shadow--z1 image-block__remove" onClick={(e) => e.stopPropagation()}>
+                <a className="btn btn--small btn--icon-only-circle pull-right" onClick={this.onClickDelete}>
                     <i className="icon-close-small" />
                 </a>
                 <div className="image-block__wrapper">

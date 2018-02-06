@@ -132,11 +132,10 @@ $editor-styleButton-active-color:#5890ff;
 
     .image-block {
         position: relative;
+        padding: 1rem;
 
-        &__remove > .btn {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
+        &__remove .btn {
+            margin-bottom: 1rem;
         }
     }
 
