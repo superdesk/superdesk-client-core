@@ -92,7 +92,7 @@ export class MediaBlockComponent extends Component {
             <div className="image-block image-block__remove sd-shadow--z1"
                 onClick={(e) => e.stopPropagation()}
                 draggable={true} onDragStart={this.onDragStart}>
-                <a className="btn btn--small btn--icon-only-circle" onClick={this.onClickDelete}>
+                <a className="btn btn--small btn--icon-only-circle pull-right" onClick={this.onClickDelete}>
                     <i className="icon-close-small" />
                 </a>
                 <div className="image-block__wrapper">
