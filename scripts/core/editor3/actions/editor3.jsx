@@ -133,3 +133,17 @@ export function setHTML(html) {
         payload: html
     };
 }
+
+/**
+ * Move one block after another
+ *
+ * @param {String} block
+ * @param {String} dest
+ * @return {Object}
+ */
+export function moveBlock(block, dest, insertionMode) {
+    return {
+        type: 'EDITOR_MOVE_BLOCK',
+        payload: {block, dest, insertionMode},
+    };
+}

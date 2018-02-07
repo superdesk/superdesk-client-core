@@ -1,5 +1,5 @@
 import {Editor3} from '../components/Editor3';
-import {RichUtils, EditorState} from 'draft-js';
+import {RichUtils, EditorState, AtomicBlockUtils, SelectionState} from 'draft-js';
 import {fromHTML} from 'core/editor3/html';
 import {addMedia} from './toolbar';
 import {updateHighlights} from './highlights';
@@ -27,6 +27,8 @@ const editor3 = (state = {}, action) => {
         return changeImageCaption(state, action.payload);
     case 'EDITOR_SET_HTML':
         return setHTML(state, action.payload);
+    case 'EDITOR_MOVE_BLOCK':
+        return moveBlock(state, action.payload);
     default:
         return state;
     }
@@ -214,5 +216,39 @@ const setHTML = (state, html) => {
 
     return onChange(state, editorState);
 };
+
+/**
+ * Move atomic block
+ *
+ * @param {Object} state
+ * @param {String} block
+ * @param {String} dest
+ * @param {String} insertionMode before|after
+ * @return {Object}
+ */
+function moveBlock(state, {block, dest, insertionMode}) {
+    const {editorState} = state;
+    const contentState = editorState.getCurrentContent();
+
+    switch (true) {
+    case !contentState.getBlockForKey(dest):
+    case !contentState.getBlockForKey(block):
+    case dest === contentState.getKeyBefore(block) && insertionMode === 'after':
+    case dest === contentState.getKeyAfter(block) && insertionMode === 'before':
+    case dest === contentState.getKeyAfter(block) && !insertionMode:
+        return state; // noop
+    }
+
+    const atomicBlock = contentState.getBlockForKey(block);
+    const targetRange = SelectionState.createEmpty(dest);
+    const withMovedAtomicBlock = AtomicBlockUtils.moveAtomicBlock(
+        editorState,
+        atomicBlock,
+        targetRange,
+        insertionMode
+    );
+
+    return onChange(state, withMovedAtomicBlock);
+}
 
 export default editor3;
