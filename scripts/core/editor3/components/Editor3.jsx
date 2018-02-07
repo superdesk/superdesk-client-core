@@ -161,7 +161,7 @@ export class Editor3Component extends React.Component {
      * @description Handles key commands in the editor.
      */
     handleKeyCommand(command) {
-        const {editorState, onChange, singleLine} = this.props;
+        const {editorState, onChange, singleLine, suggestingMode, onCreateDeleteSuggestion} = this.props;
 
         if (singleLine && command === 'split-block') {
             return 'handled';
@@ -174,6 +174,11 @@ export class Editor3Component extends React.Component {
             newState = RichUtils.insertSoftNewline(editorState);
             break;
         case 'backspace': {
+            if (suggestingMode) {
+                onCreateDeleteSuggestion();
+                return 'handled';
+            }
+
             // This is a workaround for un/ordered-list-item, when it is deleted an empty
             // ordered list(just 1. is shown) it will delete the previous block if it exists
             // (for example a table and then imediately after the ordered list)
@@ -210,11 +215,15 @@ export class Editor3Component extends React.Component {
      * This logic stops that behavior.
      */
     handleBeforeInput(chars) {
-        if (chars !== ' ') {
-            return false;
+        const {editorState, onChange, suggestingMode, onCreateAddSuggestion} = this.props;
+
+        if (suggestingMode) {
+            onCreateAddSuggestion(chars);
+            return 'handled';
+        } else if (chars !== ' ') {
+            return 'not-handled';
         }
 
-        const {editorState, onChange} = this.props;
         const typeAfterCursor = getEntityTypeAfterCursor(editorState);
         const typeBeforeCursor = getEntityTypeBeforeCursor(editorState);
         const shouldBreakLink = typeAfterCursor !== 'LINK' && typeBeforeCursor === 'LINK';
@@ -227,10 +236,10 @@ export class Editor3Component extends React.Component {
 
             onChange(newEditorState);
 
-            return true;
+            return 'handled';
         }
 
-        return false;
+        return 'not-handled';
     }
 
     componentDidMount() {
@@ -338,7 +347,9 @@ Editor3Component.propTypes = {
     editorFormat: PropTypes.array,
     tabindex: PropTypes.number,
     dispatch: PropTypes.func,
-
+    suggestingMode: PropTypes.bool,
+    onCreateAddSuggestion: PropTypes.func,
+    onCreateDeleteSuggestion: PropTypes.func
 };
 
 Editor3Component.defaultProps = {
@@ -355,7 +366,8 @@ const mapStateToProps = (state) => ({
     activeHighlights: state.activeHighlights,
     locked: state.locked,
     editorFormat: state.editorFormat,
-    tabindex: state.tabindex
+    tabindex: state.tabindex,
+    suggestingMode: state.suggestingMode
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -364,6 +376,8 @@ const mapDispatchToProps = (dispatch) => ({
     dragDrop: (transfer, mediaType) => dispatch(actions.dragDrop(transfer, mediaType)),
     unlock: () => dispatch(actions.setLocked(false)),
     dispatch: (x) => dispatch(x),
+    onCreateAddSuggestion: (chars) => dispatch(actions.createAddSuggestion(chars)),
+    onCreateDeleteSuggestion: () => dispatch(actions.createDeleteSuggestion())
 });
 
 export const Editor3 = connect(mapStateToProps, mapDispatchToProps)(Editor3Component);
