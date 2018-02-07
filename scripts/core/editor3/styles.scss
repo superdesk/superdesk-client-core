@@ -277,12 +277,25 @@ $editor-styleButton-active-color:#5890ff;
 	min-height: 20px;
 
 	[data-block="true"] {
-		margin-bottom: 1.6em;
+        border-bottom: 1.5em solid transparent;
+
+        &.unstyled__block--over {
+            border-bottom-color: silver;
+        }
 	}
 
 	[data-block="true"]:last-child {
-		margin-bottom: 0.6em;
-	}
+        border-bottom-width: 0.6em;
+    }
+
+    .unstyled {
+        padding-top: 1.5em;
+    }
+
+    .unstyled--over {
+        padding-top: 0;
+        border-top: 1.5em solid silver;
+    }
 }
 
 .Editor3-hidePlaceholder .public-DraftEditorPlaceholder-root {

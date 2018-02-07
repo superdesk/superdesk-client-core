@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import BlockStyleButtons from './BlockStyleButtons';
 import InlineStyleButtons from './InlineStyleButtons';
 import TableControls from './TableControls';
+import StyleButton from './StyleButton';
 import {SelectionButton} from './SelectionButton';
 import {IconButton} from './IconButton';
 import {ToolbarPopup} from './ToolbarPopup';
@@ -105,6 +106,8 @@ class ToolbarComponent extends Component {
             addTable,
             insertMedia,
             allowsHighlights,
+            suggestingMode,
+            toggleSuggestingMode
         } = this.props;
 
         const has = (opt) => editorFormat.indexOf(opt) > -1;
@@ -168,6 +171,14 @@ class ToolbarComponent extends Component {
                         tooltip={gettext('Annotation')}
                     />
                 }
+                {allowsHighlights && has('suggestions') &&
+                    <StyleButton
+                        active={suggestingMode}
+                        label={'suggestions'}
+                        style={'suggestions'}
+                        onToggle={toggleSuggestingMode}
+                    />
+                }
 
                 <ToolbarPopup type={popup.type} data={popup.data} />
 
@@ -182,23 +193,26 @@ ToolbarComponent.propTypes = {
     allowsHighlights: PropTypes.bool,
     editorFormat: PropTypes.array,
     activeCell: PropTypes.any,
+    suggestingMode: PropTypes.bool,
     addTable: PropTypes.func,
     insertMedia: PropTypes.func,
     showPopup: PropTypes.func,
+    toggleSuggestingMode: PropTypes.func,
     popup: PropTypes.object,
     editorState: PropTypes.object,
     editorNode: PropTypes.object,
     scrollContainer: PropTypes.string
 };
 
-const mapStateToProps = ({editorFormat, activeCell, allowsHighlights, popup, editorState}) => ({
-    editorFormat, activeCell, allowsHighlights, popup, editorState
+const mapStateToProps = ({editorFormat, activeCell, allowsHighlights, popup, editorState, suggestingMode}) => ({
+    editorFormat, activeCell, allowsHighlights, popup, editorState, suggestingMode
 });
 
 const mapDispatchToProps = (dispatch) => ({
     insertMedia: () => dispatch(actions.insertMedia()),
     showPopup: (type, data) => dispatch(actions.showPopup(type, data)),
-    addTable: () => dispatch(actions.addTable())
+    addTable: () => dispatch(actions.addTable()),
+    toggleSuggestingMode: () => dispatch(actions.toggleSuggestingMode())
 });
 
 const Toolbar = connect(mapStateToProps, mapDispatchToProps)(ToolbarComponent);

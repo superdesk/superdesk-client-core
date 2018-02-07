@@ -14,14 +14,20 @@ import {fromHTML} from 'core/editor3/html';
  */
 export function handlePastedText(editorKey, text, html) {
     if (!html) {
-        return false;
+        const {suggestingMode, onCreateAddSuggestion} = this.props;
+
+        if (suggestingMode) {
+            onCreateAddSuggestion(text);
+            return 'handled';
+        }
+        return 'not-handled';
     }
 
     // If there are blocks that have been copied from the host editor, let the editor
     // handle the paste. The chance of having content both from the editor and from
     // outside it as a mix in the clipboard is impossible.
     if (HTMLComesFromEditor(html, editorKey)) {
-        return false;
+        return 'not-handled';
     }
 
     return ensureAtomicBlocks(this.props, html);
@@ -37,7 +43,7 @@ function ensureAtomicBlocks(props, html) {
     const hasAtomicBlocks = blockMap.some((block) => block.getType() === 'atomic');
 
     if (!hasAtomicBlocks) {
-        return false;
+        return 'not-handled';
     }
 
     let contentState = Modifier.splitBlock(editorState.getCurrentContent(), editorState.getSelection());
@@ -65,7 +71,7 @@ function ensureAtomicBlocks(props, html) {
 
     onChange(EditorState.push(editorState, contentState, 'insert-characters'));
 
-    return true;
+    return 'handled';
 }
 
 // Checks if the given html contains blocks coming from the editor with

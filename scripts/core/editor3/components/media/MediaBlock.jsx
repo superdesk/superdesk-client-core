@@ -20,6 +20,7 @@ export class MediaBlockComponent extends Component {
         this.onClickDelete = this.onClickDelete.bind(this);
         this.data = this.data.bind(this);
         this.onChange = this.onChange.bind(this);
+        this.onDragStart = this.onDragStart.bind(this);
     }
 
     /**
@@ -75,6 +76,10 @@ export class MediaBlockComponent extends Component {
         changeCaption(entityKey, target.value, target.placeholder);
     }
 
+    onDragStart(event) {
+        event.dataTransfer.setData('superdesk/editor3-block', this.props.block.getKey());
+    }
+
     render() {
         const {setLocked, showTitle} = this.props;
         const data = this.data();
@@ -83,7 +88,10 @@ export class MediaBlockComponent extends Component {
         const mediaType = data.type;
 
         return (
-            <div className="image-block sd-shadow--z1 image-block__remove" onClick={(e) => e.stopPropagation()}>
+
+            <div className="image-block image-block__remove sd-shadow--z1"
+                onClick={(e) => e.stopPropagation()}
+                draggable={true} onDragStart={this.onDragStart}>
                 <a className="btn btn--small btn--icon-only-circle pull-right" onClick={this.onClickDelete}>
                     <i className="icon-close-small" />
                 </a>
