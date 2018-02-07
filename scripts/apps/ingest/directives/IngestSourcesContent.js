@@ -13,6 +13,9 @@ export function IngestSourcesContent(ingestSources, gettext, notify, api, $locat
             $scope.feedingServices = [];
 
             $scope.fileTypes = ['text', 'picture', 'graphic', 'composite', 'video', 'audio'];
+            if (config.features && 'planning' in config.features && config.features.planning) {
+                $scope.fileTypes.push('event');
+            }
             $scope.minutes = [0, 1, 2, 3, 4, 5, 8, 10, 15, 30, 45];
             $scope.seconds = [0, 5, 10, 15, 30, 45];
             $scope.hours = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24];
