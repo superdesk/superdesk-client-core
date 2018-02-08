@@ -154,7 +154,12 @@ export class MediaBlockComponent extends Component {
 
                     <div>
                         {gettextCatalog.getString('Assign rights')}{' '}
-                        <strong>{getTranslationForAssignRights(data.usageterms, gettextCatalog) || gettextCatalog.getString('[No Value]')}</strong>
+                        <strong>
+                            {
+                                getTranslationForAssignRights(data.usageterms, gettextCatalog)
+                                || gettextCatalog.getString('[No Value]')
+                            }
+                        </strong>
                     </div>
 
                     <div>
