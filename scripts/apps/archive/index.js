@@ -118,15 +118,13 @@ angular.module('superdesk.apps.archive', [
                             return;
                         }
 
-                        var txt = gettext('Do you want to delete the item permanently?');
-                        var showConfirmation = $location.path() === '/workspace/personal';
+                        var txt = gettext('Are you sure you want to spike the item?');
 
                         if (get(privileges, 'privileges.planning') && data.item && data.item.assignment_id) {
                             txt = gettext('This item is linked to in-progress planning coverage, spike anyway?');
-                            showConfirmation = true;
                         }
 
-                        return $q.when(showConfirmation ? modal.confirm(txt) : 0)
+                        return modal.confirm(txt)
                             .then(() => spike.spike(data.item));
                     }],
                 filters: [{action: 'list', type: 'archive'}],
