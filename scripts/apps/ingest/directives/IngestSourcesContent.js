@@ -1,9 +1,28 @@
 import _ from 'lodash';
 
 IngestSourcesContent.$inject = ['ingestSources', 'gettext', 'notify', 'api', '$location',
-    'modal', '$filter', 'config', 'deployConfig'];
+    'modal', '$filter', 'config', 'deployConfig', 'privileges'];
+
+/**
+ * @ngdoc directive
+ * @module superdesk.apps.ingest
+ * @name sdIngestSourcesContent
+ *
+ * @requires ingestSources
+ * @requires gettext
+ * @requires notify
+ * @requires api
+ * @requires $location
+ * @requires modal
+ * @requires $filter
+ * @requires config
+ * @requires deployConfig
+ * @requires privileges
+ *
+ * @description Handles the management for Ingest Sources.
+ */
 export function IngestSourcesContent(ingestSources, gettext, notify, api, $location,
-    modal, $filter, config, deployConfig) {
+    modal, $filter, config, deployConfig, privileges) {
     return {
         template: require('../views/settings/ingest-sources-content.html'),
         link: function($scope) {
@@ -11,11 +30,40 @@ export function IngestSourcesContent(ingestSources, gettext, notify, api, $locat
             $scope.origProvider = null;
             $scope.feedParsers = [];
             $scope.feedingServices = [];
+            $scope.fileTypes = [
+                {
+                    type: 'text',
+                    icon: 'icon-text'
+                },
+                {
+                    type: 'picture',
+                    icon: 'icon-photo'
+                },
+                {
+                    type: 'graphic',
+                    icon: 'icon-graphic'
+                },
+                {
+                    type: 'composite',
+                    icon: 'icon-composite'
+                },
+                {
+                    type: 'video',
+                    icon: 'icon-video'
+                },
+                {
+                    type: 'audio',
+                    icon: 'icon-audio'
+                }
+            ];
 
-            $scope.fileTypes = ['text', 'picture', 'graphic', 'composite', 'video', 'audio'];
-            if (config.features && 'planning' in config.features && config.features.planning) {
-                $scope.fileTypes.push('event');
+            if (_.get(privileges, 'privileges.planning')) {
+                $scope.fileTypes.push({
+                    type: 'event',
+                    icon: 'icon-calendar'
+                });
             }
+
             $scope.minutes = [0, 1, 2, 3, 4, 5, 8, 10, 15, 30, 45];
             $scope.seconds = [0, 5, 10, 15, 30, 45];
             $scope.hours = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24];
