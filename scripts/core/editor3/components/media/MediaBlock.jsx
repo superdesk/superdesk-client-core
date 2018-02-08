@@ -4,6 +4,18 @@ import {connect} from 'react-redux';
 import * as actions from '../../actions';
 import Textarea from 'react-textarea-autosize';
 
+function getTranslationForAssignRights(value, gettextCatalog) {
+    if (value === 'single-usage') {
+        return gettextCatalog.getString('Single Usage');
+    } else if (value === 'time-restricted') {
+        return gettextCatalog.getString('Time Restricted');
+    } else if (value === 'indefinite-usage') {
+        return gettextCatalog.getString('Indefinite Usage');
+    } else {
+        return '';
+    }
+}
+
 /**
  * @ngdoc React
  * @module superdesk.core.editor3
@@ -138,6 +150,11 @@ export class MediaBlockComponent extends Component {
                     <div>
                         {gettextCatalog.getString('Copyright holder')}{' '}
                         <strong>{data.copyrightholder || gettextCatalog.getString('[No Value]')}</strong>
+                    </div>
+
+                    <div>
+                        {gettextCatalog.getString('Assign rights')}{' '}
+                        <strong>{getTranslationForAssignRights(data.usageterms, gettextCatalog) || gettextCatalog.getString('[No Value]')}</strong>
                     </div>
 
                     <div>
