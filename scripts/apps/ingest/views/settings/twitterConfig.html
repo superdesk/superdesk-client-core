@@ -25,7 +25,7 @@
 </div>
 <div class="field">
     <label for="twitter-screen_names" translate>twitter screen_names</label>
-    <input type="text" id="twitter-screen_names" placeholder="{{:: 'comma separated twitter screen names'|translate }}"
+    <input type="text" id="twitter-screen_names" placeholder="{{:: 'comma separated Screen Names or Hashtags, example: KathViner, EthanZ, #OpenSource'|translate }}"
       ng-model="provider.config.screen_names" required
       ng-change="$parent.setConfig(provider)">
     <div class="error" ng-show="error.code === 6200" translate>No Screen names specified</div>
