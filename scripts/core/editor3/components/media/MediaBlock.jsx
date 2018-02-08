@@ -126,19 +126,23 @@ export class MediaBlockComponent extends Component {
                     />
 
                     <div>
-                        {gettextCatalog.getString('Alt text')} <strong>{data.alt_text}</strong>
+                        {gettextCatalog.getString('Alt text')}{' '}
+                        <strong>{data.alt_text || gettextCatalog.getString('[No Value]')}</strong>
                     </div>
 
                     <div>
-                        {gettextCatalog.getString('Credit')} <strong>{data.byline}</strong>
+                        {gettextCatalog.getString('Credit')}{' '}
+                        <strong>{data.byline || gettextCatalog.getString('[No Value]')}</strong>
                     </div>
 
                     <div>
-                        {gettextCatalog.getString('Copyright holder')} <strong>{data.copyrightholder}</strong>
+                        {gettextCatalog.getString('Copyright holder')}{' '}
+                        <strong>{data.copyrightholder || gettextCatalog.getString('[No Value]')}</strong>
                     </div>
 
                     <div>
-                        {gettextCatalog.getString('Copyright notice')} <strong>{data.copyrightnotice}</strong>
+                        {gettextCatalog.getString('Copyright notice')}{' '}
+                        <strong>{data.copyrightnotice || gettextCatalog.getString('[No Value]')}</strong>
                     </div>
                 </div>
             </div>
