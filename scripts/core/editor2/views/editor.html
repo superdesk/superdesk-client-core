@@ -26,6 +26,7 @@
              config="vm.config"
              language="vm.language"
              ng-change="vm.commitChanges()"
+             ng-model-options="{debounce: 100}"
              ng-model="block.body">
         </div>
     </div>
