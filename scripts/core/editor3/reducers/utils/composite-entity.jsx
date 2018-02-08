@@ -11,7 +11,7 @@ import {Modifier} from 'draft-js';
  * with the type in types.
  */
 export function getEntityKey(content, key, types) {
-    if (key === null) {
+    if (key == null) {
         return null;
     }
 
@@ -24,7 +24,7 @@ export function getEntityKey(content, key, types) {
 
     if (crtType === 'COMPOSITE') {
         types.forEach((type) => {
-            if (entity.get(type) !== null) {
+            if (entity.get(type) != null) {
                 return entity.get(type);
             }
         });
@@ -46,7 +46,7 @@ export function getEntityKey(content, key, types) {
 export function getEntity(content, key, types) {
     const entityKey = getEntityKey(content, key, types);
 
-    if (entityKey === null) {
+    if (entityKey == null) {
         return null;
     }
 
@@ -73,7 +73,7 @@ export function setEntity(content, selection, key, type) {
     let newEntityKey;
     let crtType;
 
-    if (entity === null || entity.get('type') === type) {
+    if (entity == null || entity.get('type') === type) {
         return Modifier.applyEntity(content, selection, key);
     }
 
@@ -111,12 +111,12 @@ export function deleteEntity(content, selection, type) {
     const entity = entityKey ? content.getEntity(entityKey) : null;
     let data;
 
-    if (entity === null || entity.get('type') === type) {
+    if (entity == null || entity.get('type') === type) {
         return Modifier.applyEntity(content, selection, null);
     }
 
     data = entity.getData();
-    if (entity.get('type') === 'COMPOSITE' && data[type] !== null) {
+    if (entity.get('type') === 'COMPOSITE' && data[type] != null) {
         if (data.length() === 2) {
             // don't use anymore composite entity, set directly the remaining entity
             // TODO: clean unused composite entities

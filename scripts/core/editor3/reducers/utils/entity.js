@@ -11,7 +11,7 @@
 export function getEntityKeyByOffset(content, selection, offset) {
     const {block, newOffset} = getBlockAndOffset(content, selection, offset);
 
-    if (block === null) {
+    if (block == null) {
         return null;
     }
 
@@ -30,7 +30,7 @@ export function getEntityKeyByOffset(content, selection, offset) {
 export function getCharByOffset(content, selection, offset) {
     const {block, newOffset} = getBlockAndOffset(content, selection, offset);
 
-    if (block === null) {
+    if (block == null) {
         return null;
     }
 
@@ -50,13 +50,13 @@ const getBlockAndOffset = (content, selection, offset) => {
     let newOffset = selection.getStartOffset() + offset;
     let block = content.getBlockForKey(selection.getStartKey());
 
-    if (block === null) {
+    if (block == null) {
         return [null, null];
     }
 
     while (newOffset < 0) {
         block = content.getBlockBefore(block);
-        if (block === null) {
+        if (block == null) {
             return [null, null];
         }
         newOffset = block.getLength() - 1 + newOffset;
@@ -65,7 +65,7 @@ const getBlockAndOffset = (content, selection, offset) => {
     while (newOffset > block.getLength()) {
         newOffset = newOffset - block.getLength();
         block = content.getBlockAfter(block);
-        if (block === null) {
+        if (block == null) {
             return [null, null];
         }
     }
