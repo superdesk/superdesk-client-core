@@ -10,6 +10,7 @@ describe('content', () => {
     beforeEach(window.module('superdesk.apps.publish'));
     beforeEach(window.module('superdesk.apps.vocabularies'));
     beforeEach(window.module('superdesk.apps.searchProviders'));
+    beforeEach(window.module('superdesk.apps.authoring'));
 
     beforeEach(window.module(($provide) => {
         $provide.constant('config', {
@@ -302,6 +303,22 @@ describe('content', () => {
                 $rootScope.$digest();
 
                 expect(modal.confirm).not.toHaveBeenCalled();
+                expect(spike.spike).toHaveBeenCalled();
+            }));
+
+        it('spike action prompts user if item has unsaved changes',
+            inject((activityService, superdesk, autosave, confirm, $q, $rootScope, spike) => {
+                const item = {_id: 'foo', lock_user: 'foo'};
+
+                spyOn(autosave, 'get').and.returnValue($q.when());
+                spyOn(confirm, 'reopen').and.returnValue($q.reject());
+                spyOn(spike, 'spike');
+
+                activityService.start(superdesk.activities.spike, {data: {item: item}});
+                $rootScope.$digest();
+
+                expect(autosave.get).toHaveBeenCalled();
+                expect(confirm.reopen).toHaveBeenCalled();
                 expect(spike.spike).toHaveBeenCalled();
             }));
     });
