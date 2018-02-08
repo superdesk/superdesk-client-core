@@ -14,6 +14,11 @@ import {TableBlock} from './tables';
 const MediaComponent = (props) => {
     const {block, contentState} = props;
     const entityKey = block.getEntityAt(0);
+
+    if (!entityKey) {
+        return null;
+    }
+
     const type = contentState.getEntity(entityKey).getType();
 
     switch (type) {

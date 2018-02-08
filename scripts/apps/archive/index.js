@@ -43,6 +43,7 @@ angular.module('superdesk.apps.archive.directives', [
     .directive('sdExport', directive.Export)
     .directive('sdAssociatedItemMetadata', directive.AssociatedItemMetadata)
     .directive('sdMediaUsed', directive.MediaUsed)
+    .directive('sdPackageItemLabelsDropdown', directive.PackageItemLabelsDropdown)
     .service('familyService', svc.FamilyService)
     .service('dragitem', svc.DragItemService);
 
@@ -109,8 +110,8 @@ angular.module('superdesk.apps.archive', [
                 label: gettext('Spike Item'),
                 icon: 'trash',
                 monitor: true,
-                controller: ['spike', 'data', '$rootScope', 'modal', '$location', '$q', 'multi', 'config',
-                    function spikeActivity(spike, data, $rootScope, modal, $location, $q, multi, config) {
+                controller: ['spike', 'data', '$rootScope', 'modal', '$location', '$q', 'multi', 'privileges',
+                    function spikeActivity(spike, data, $rootScope, modal, $location, $q, multi, privileges) {
                         // For the sake of keyboard shortcut to work consistently,
                         // if the item is multi-selected, let multibar controller handle its spike
                         if (!data.item || multi.count > 0 && _.includes(multi.getIds(), data.item._id)) {
@@ -120,7 +121,7 @@ angular.module('superdesk.apps.archive', [
                         var txt = gettext('Do you want to delete the item permanently?');
                         var showConfirmation = $location.path() === '/workspace/personal';
 
-                        if (get(config, 'features.planning') && data.item && data.item.assignment_id) {
+                        if (get(privileges, 'privileges.planning') && data.item && data.item.assignment_id) {
                             txt = gettext('This item is linked to in-progress planning coverage, spike anyway?');
                             showConfirmation = true;
                         }
@@ -197,6 +198,26 @@ angular.module('superdesk.apps.archive', [
                 group: 'duplicate',
                 groupLabel: gettext('Duplicate'),
                 groupIcon: 'copy'
+            })
+            .activity('label', {
+                label: gettext('Set label in current package'),
+                priority: 30,
+                icon: 'label',
+                monitor: true,
+                list: false,
+                keyboardShortcut: 'ctrl+alt+l',
+                filters: [{action: 'list', type: 'archive'}],
+                group: 'labels',
+                dropdown: true,
+                templateUrl: 'scripts/apps/archive/views/package_item_labels_dropdown.html',
+                additionalCondition: ['authoring', 'item', 'vocabularies', 'authoringWorkspace', 'packages',
+                    function(authoring, item, vocabularies, authoringWorkspace, packages) {
+                        var openedItem = authoringWorkspace.getItem();
+
+                        return item.state !== 'killed' && !authoring.isContentApiItem(item) &&
+                            authoring.itemActions(item).set_label && openedItem && openedItem.type === 'composite' &&
+                            packages.isAdded(openedItem, item) && vocabularies.isInit();
+                    }]
             })
             .activity('createBroadcast', {
                 label: gettext('Create Broadcast'),

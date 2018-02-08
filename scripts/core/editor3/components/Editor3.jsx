@@ -8,8 +8,10 @@ import {
     Modifier,
     EditorState,
     getDefaultKeyBinding,
+    DefaultDraftBlockRenderMap,
 } from 'draft-js';
 
+import {Map} from 'immutable';
 import {connect} from 'react-redux';
 import Toolbar from './toolbar';
 import * as actions from '../actions';
@@ -21,6 +23,9 @@ import classNames from 'classnames';
 import {handlePastedText} from './handlePastedText';
 import {getEntityTypeAfterCursor, getEntityTypeBeforeCursor} from './links/entityUtils';
 import {HighlightsPopup} from './HighlightsPopup';
+import UnstyledBlock from './UnstyledBlock';
+import UnstyledWrapper from './UnstyledWrapper';
+import {isEditorBlockEvent} from './BaseUnstyledComponent';
 
 const VALID_MEDIA_TYPES = [
     'application/superdesk.item.picture',
@@ -117,6 +122,12 @@ export class Editor3Component extends React.Component {
      * @description If item is allowed process drop action.
      */
     onDragDrop(e) {
+        if (isEditorBlockEvent(e)) { // stop editor block drop propagating
+            e.preventDefault();
+            e.stopPropagation();
+            return;
+        }
+
         if (this.allowItem(e)) {
             // Firefox ignores the result of onDragOver and accept the item in all cases
             // Here will be tested again if the item is allowed
@@ -150,7 +161,7 @@ export class Editor3Component extends React.Component {
      * @description Handles key commands in the editor.
      */
     handleKeyCommand(command) {
-        const {editorState, onChange, singleLine} = this.props;
+        const {editorState, onChange, singleLine, suggestingMode, onCreateDeleteSuggestion} = this.props;
 
         if (singleLine && command === 'split-block') {
             return 'handled';
@@ -163,6 +174,11 @@ export class Editor3Component extends React.Component {
             newState = RichUtils.insertSoftNewline(editorState);
             break;
         case 'backspace': {
+            if (suggestingMode) {
+                onCreateDeleteSuggestion();
+                return 'handled';
+            }
+
             // This is a workaround for un/ordered-list-item, when it is deleted an empty
             // ordered list(just 1. is shown) it will delete the previous block if it exists
             // (for example a table and then imediately after the ordered list)
@@ -199,11 +215,15 @@ export class Editor3Component extends React.Component {
      * This logic stops that behavior.
      */
     handleBeforeInput(chars) {
-        if (chars !== ' ') {
-            return false;
+        const {editorState, onChange, suggestingMode, onCreateAddSuggestion} = this.props;
+
+        if (suggestingMode) {
+            onCreateAddSuggestion(chars);
+            return 'handled';
+        } else if (chars !== ' ') {
+            return 'not-handled';
         }
 
-        const {editorState, onChange} = this.props;
         const typeAfterCursor = getEntityTypeAfterCursor(editorState);
         const typeBeforeCursor = getEntityTypeBeforeCursor(editorState);
         const shouldBreakLink = typeAfterCursor !== 'LINK' && typeBeforeCursor === 'LINK';
@@ -216,21 +236,29 @@ export class Editor3Component extends React.Component {
 
             onChange(newEditorState);
 
-            return true;
+            return 'handled';
         }
 
-        return false;
+        return 'not-handled';
     }
 
     componentDidMount() {
-        const $node = $(ReactDOM.findDOMNode(this));
-
-        $node.on('dragover', this.onDragOver);
-        $node.on('drop dragdrop', this.onDragDrop);
+        $(this.div).on('dragover', this.onDragOver);
+        $(this.div).on('drop dragdrop', this.onDragDrop);
 
         // the editorKey is used to identify the source of pasted blocks
-        this.editorKey = this.refs.editor._editorKey;
-        this.editorNode = ReactDOM.findDOMNode(this.refs.editor);
+        this.editorKey = this.editor._editorKey;
+        this.editorNode = ReactDOM.findDOMNode(this.editor);
+    }
+
+    componentWillUnmount() {
+        $(this.div).off();
+    }
+
+    componentDidUpdate() {
+        if (window.hasOwnProperty('instgrm')) {
+            window.instgrm.Embeds.process();
+        }
     }
 
     render() {
@@ -254,8 +282,20 @@ export class Editor3Component extends React.Component {
             'read-only': readOnly
         });
 
+        const mediaEnabled = this.props.editorFormat.indexOf('media') !== -1;
+
+        const blockRenderMap = DefaultDraftBlockRenderMap.merge(Map(
+            mediaEnabled ? {
+                unstyled: {
+                    element: UnstyledBlock,
+                    aliasedElements: ['p'],
+                    wrapper: <UnstyledWrapper dispatch={this.props.dispatch} />,
+                }
+            } : {}
+        ));
+
         return (
-            <div className={cx}>
+            <div className={cx} ref={(div) => this.div = div}>
                 {showToolbar &&
                     <Toolbar
                         disabled={locked || readOnly}
@@ -275,6 +315,7 @@ export class Editor3Component extends React.Component {
                         handleKeyCommand={this.handleKeyCommand}
                         keyBindingFn={this.keyBindingFn}
                         handleBeforeInput={this.handleBeforeInput}
+                        blockRenderMap={blockRenderMap}
                         blockRendererFn={blockRenderer}
                         customStyleMap={customStyleMap}
                         onChange={onChange}
@@ -282,7 +323,7 @@ export class Editor3Component extends React.Component {
                         tabIndex={tabindex}
                         handlePastedText={handlePastedText.bind(this, this.editorKey)}
                         readOnly={locked || readOnly}
-                        ref="editor"
+                        ref={(editor) => this.editor = editor}
                     />
                 </div>
             </div>
@@ -304,7 +345,11 @@ Editor3Component.propTypes = {
     scrollContainer: PropTypes.string,
     singleLine: PropTypes.bool,
     editorFormat: PropTypes.array,
-    tabindex: PropTypes.number
+    tabindex: PropTypes.number,
+    dispatch: PropTypes.func,
+    suggestingMode: PropTypes.bool,
+    onCreateAddSuggestion: PropTypes.func,
+    onCreateDeleteSuggestion: PropTypes.func
 };
 
 Editor3Component.defaultProps = {
@@ -321,14 +366,18 @@ const mapStateToProps = (state) => ({
     activeHighlights: state.activeHighlights,
     locked: state.locked,
     editorFormat: state.editorFormat,
-    tabindex: state.tabindex
+    tabindex: state.tabindex,
+    suggestingMode: state.suggestingMode
 });
 
 const mapDispatchToProps = (dispatch) => ({
     onChange: (editorState) => dispatch(actions.changeEditorState(editorState)),
     onTab: (e) => dispatch(actions.handleEditorTab(e)),
     dragDrop: (transfer, mediaType) => dispatch(actions.dragDrop(transfer, mediaType)),
-    unlock: () => dispatch(actions.setLocked(false))
+    unlock: () => dispatch(actions.setLocked(false)),
+    dispatch: (x) => dispatch(x),
+    onCreateAddSuggestion: (chars) => dispatch(actions.createAddSuggestion(chars)),
+    onCreateDeleteSuggestion: () => dispatch(actions.createDeleteSuggestion())
 });
 
 export const Editor3 = connect(mapStateToProps, mapDispatchToProps)(Editor3Component);

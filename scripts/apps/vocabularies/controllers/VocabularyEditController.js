@@ -7,11 +7,10 @@ VocabularyEditController.$inject = [
     'api',
     'vocabularies',
     'metadata',
-    'cvSchema',
-    '$rootScope'
+    'cvSchema'
 ];
 
-export function VocabularyEditController($scope, gettext, notify, api, vocabularies, metadata, cvSchema, $rootScope) {
+export function VocabularyEditController($scope, gettext, notify, api, vocabularies, metadata, cvSchema) {
     var origVocabulary = _.cloneDeep($scope.vocabulary);
 
     $scope.idRegex = '^[a-zA-Z0-9-_]+$';

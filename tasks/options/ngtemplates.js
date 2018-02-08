@@ -71,8 +71,8 @@ module.exports = {
         src: __filename, // hack to make ngtemplate work
         options: {
             bootstrap: function() {
-                // get apps defined in config
-                var paths = getConfig().apps || [];
+                const config = getConfig();
+                const paths = config.importApps || config.apps || [];
 
                 if (!paths.length) {
                     return 'export default [];\r\n';

@@ -3,6 +3,7 @@
 describe('packaging', () => {
     beforeEach(window.module('superdesk.apps.packaging'));
     beforeEach(window.module('superdesk.apps.searchProviders'));
+    beforeEach(window.module('superdesk.apps.vocabularies'));
 
     describe('package-items-edit directive', () => {
         // ignore template

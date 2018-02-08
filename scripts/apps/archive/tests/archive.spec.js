@@ -243,10 +243,8 @@ describe('content', () => {
 
     describe('spike activity', () => {
         it('spike action prompts user of confirmation for in progress assignment',
-            inject(($rootScope, superdesk, activityService, config, modal, $q, spike) => {
-                config.features = {
-                    planning: 1
-                };
+            inject(($rootScope, superdesk, activityService, privileges, modal, $q, spike) => {
+                privileges.privileges = {planning: 1};
 
                 let item = {
                     _id: 'foo1',
@@ -268,10 +266,8 @@ describe('content', () => {
             }));
 
         it('spike action does not prompts user of confirmation if no assignment linked',
-            inject(($rootScope, superdesk, activityService, config, modal, $q, spike) => {
-                config.features = {
-                    planning: 1
-                };
+            inject(($rootScope, superdesk, activityService, privileges, modal, $q, spike) => {
+                privileges.privileges = {planning: 1};
 
                 let item = {
                     _id: 'foo1',
@@ -291,7 +287,7 @@ describe('content', () => {
             }));
 
         it('spike action does not prompts user if planning component not activated',
-            inject(($rootScope, superdesk, activityService, config, modal, $q, spike) => {
+            inject(($rootScope, superdesk, activityService, privileges, modal, $q, spike) => {
                 let item = {
                     _id: 'foo1',
                     _type: 'archive',

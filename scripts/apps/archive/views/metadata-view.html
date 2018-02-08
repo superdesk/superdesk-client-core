@@ -51,7 +51,7 @@
         </dl>
         <dl ng-repeat="cv in cvs track by cv._id" ng-if="item[cv.schema_field] | mergeWords:'name' : cv._id">
             <dt>{{ cv.display_name | translate }}</dt>
-            <dd>{{ item[cv.schema_field] | mergeWords:'name' : cv._id}}</dd>
+            <dd>{{ getLocaleName(item[cv.schema_field], cv._id) }}</dd>
         </dl>
         <dl ng-if="item.genre  && item.genre.length > 0 && !genreInCvs">
             <dt translate>Genre</dt>

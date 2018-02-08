@@ -1,6 +1,7 @@
-import {RichUtils, AtomicBlockUtils, EditorState} from 'draft-js';
+import {RichUtils, EditorState, SelectionState, Modifier} from 'draft-js';
 import * as entityUtils from '../components/links/entityUtils';
 import {onChange} from './editor3';
+import insertAtomicBlockWithoutEmptyLines from '../helpers/insertAtomicBlockWithoutEmptyLines';
 
 /**
  * @description Contains the list of toolbar related reducers.
@@ -19,6 +20,8 @@ const toolbar = (state = {}, action) => {
         return insertMedia(state, action.payload);
     case 'TOOLBAR_UPDATE_IMAGE':
         return updateImage(state, action.payload);
+    case 'TOOLBAR_REMOVE_BLOCK':
+        return removeBlock(state, action.payload);
     case 'TOOLBAR_APPLY_EMBED':
         return applyEmbed(state, action.payload);
     case 'TOOLBAR_SET_POPUP':
@@ -142,7 +145,7 @@ export const addMedia = (editorState, media) => {
     const contentStateWithEntity = contentState.createEntity('MEDIA', 'MUTABLE', {media});
     const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
 
-    return AtomicBlockUtils.insertAtomicBlock(
+    return insertAtomicBlockWithoutEmptyLines(
         editorState,
         entityKey,
         ' '
@@ -170,6 +173,34 @@ const updateImage = (state, {entityKey, media}) => {
 
 /**
  * @ngdoc method
+ * @name removeBlock
+ * @param {Object} data Contains the key from of block to remove
+ * @description Removes block from editor
+ */
+const removeBlock = (state, {blockKey}) => {
+    const {editorState} = state;
+    const contentState = editorState.getCurrentContent();
+
+    const targetRange = new SelectionState({
+        anchorKey: blockKey,
+        anchorOffset: 0,
+        focusKey: blockKey,
+        focusOffset: 1
+    });
+    let newContentState = Modifier.setBlockType(
+        contentState,
+        targetRange,
+        'unstyled'
+    );
+
+    newContentState = Modifier.removeRange(newContentState, targetRange, 'backward');
+    const newEditorState = EditorState.push(editorState, newContentState, 'remove-range');
+
+    return onChange(state, newEditorState);
+};
+
+/**
+ * @ngdoc method
  * @name applyEmbed
  * @param {Object|string} data oEmbed data, HTML string or Qumu widget config.
  * @description Applies the embed in the given oEmbed data to the active block.
@@ -182,7 +213,7 @@ const applyEmbed = (state, code) => {
     const contentStateWithEntity = contentState.createEntity('EMBED', 'MUTABLE', {data});
     const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
 
-    editorState = AtomicBlockUtils.insertAtomicBlock(
+    editorState = insertAtomicBlockWithoutEmptyLines(
         editorState,
         entityKey,
         ' '
@@ -200,3 +231,4 @@ const applyEmbed = (state, code) => {
 const setPopup = (state, {type, data}) => ({...state, popup: {type, data}});
 
 export default toolbar;
+

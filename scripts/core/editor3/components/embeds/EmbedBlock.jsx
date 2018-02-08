@@ -1,18 +1,26 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
+import {connect} from 'react-redux';
 import {QumuWidget} from './QumuWidget';
+import * as actions from '../../actions';
 
 /**
  * @ngdoc React
  * @module superdesk.core.editor3
- * @name EmbedBlock
+ * @name EmbedBlockComponent
  * @param {Object} block Information about the block where this component renders.
  * @description This component renders an embed block within the editor, using oEmbed data
  * retrieved from iframe.ly
  */
-export class EmbedBlock extends Component {
+export class EmbedBlockComponent extends Component {
+    constructor(props) {
+        super(props);
+
+        this.onClickDelete = this.onClickDelete.bind(this);
+    }
+
     /**
-     * @name EmbedBlock#runScripts
+     * @name EmbedBlockComponent#runScripts
      * @param {string} html
      * @description Runs and imports all the scripts in the given HTML.
      */
@@ -59,10 +67,21 @@ export class EmbedBlock extends Component {
         return data.html !== oldData.html;
     }
 
+    onClickDelete() {
+        const {block, removeBlock} = this.props;
+
+        removeBlock(block.getKey());
+    }
+
     embedBlock({html}) {
         this.runScripts(html);
 
-        return <div className="embed-block" dangerouslySetInnerHTML={{__html: html}} />;
+        return <div className="embed-block embed-block__remove">
+            <a className="btn btn--small btn--icon-only-circle pull-right" onClick={this.onClickDelete}>
+                <i className="icon-close-small" />
+            </a>
+            <div className="embed-block__wrapper" dangerouslySetInnerHTML={{__html: html}} />
+        </div>;
     }
 
     render() {
@@ -74,7 +93,14 @@ export class EmbedBlock extends Component {
     }
 }
 
-EmbedBlock.propTypes = {
+EmbedBlockComponent.propTypes = {
     block: PropTypes.object.isRequired,
-    contentState: PropTypes.object.isRequired
+    contentState: PropTypes.object.isRequired,
+    removeBlock: PropTypes.func.isRequired
 };
+
+const mapDispatchToProps = (dispatch) => ({
+    removeBlock: (blockKey) => dispatch(actions.removeBlock(blockKey))
+});
+
+export const EmbedBlock = connect(null, mapDispatchToProps)(EmbedBlockComponent);

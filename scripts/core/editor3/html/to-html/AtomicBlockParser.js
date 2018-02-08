@@ -24,6 +24,11 @@ export class AtomicBlockParser {
      */
     parse(contentBlock) {
         const entityKey = contentBlock.getEntityAt(0);
+
+        if (!entityKey) {
+            return;
+        }
+
         const entity = this.contentState.getEntity(entityKey);
         const data = entity.getData();
 

@@ -282,7 +282,7 @@ body, html {
     }
     //labels
     .field {
-        > label {
+        .field__label {
             @include text-normal();
             background: rgba(0, 0, 0, 0.4);
             @include border-radius(2px);
@@ -300,14 +300,14 @@ body, html {
             letter-spacing: 0.1em;
         }
         &.active {
-            > label {
+            .field__label {
                 background: $sd-blue;
                 @include transition(all ease 0.6s);
             }
         }
     }
     // inputs
-    .text-editor, input, select {
+    .text-editor, input, .field__select {
         border: 1px solid rgba(123, 123, 123, 0) !important;
         border-bottom-color: rgba(123, 123, 123, 0.30) !important;
         padding: 0;
@@ -322,19 +322,19 @@ body, html {
             margin-bottom: 9px;
         }
     }
-    select {
+    .field__select {
         -moz-appearance: none;
         -webkit-appearance: none;
     }
-    .text-editor:hover, .headline:hover, .abstract:hover, input:hover, select:hover {
+    .text-editor:hover, .headline:hover, .abstract:hover, input:hover, .field__select:hover {
         border-bottom-color: rgba(123, 123, 123, 0.60) !important;
         cursor: text;
     }
-    select:hover {
+    .field__select:hover {
         -moz-appearance: menulist-button;
         -webkit-appearance: menulist-button;
     }
-    .text-editor:focus, .headline:focus, .abstract:focus, input:focus, select:focus {
+    .text-editor:focus, .headline:focus, .abstract:focus, input:focus, .field__select:focus {
         //.box-shadow(none) !important;
         border-width: 1px !important;
         border-color: rgba(94, 169, 200, 0.3) !important;

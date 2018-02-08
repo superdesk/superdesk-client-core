@@ -789,4 +789,28 @@ function Monitoring() {
 
         return dropdownSelected;
     };
+
+    this.getPackageItem = function(index) {
+        var elemIndex = index ? index : 0;
+
+        return element.all(by.className('package-item__item-text-group')).get(elemIndex);
+    };
+
+    this.getPackageItemActionDropdown = function(index) {
+        var elemIndex = index ? index : 0;
+
+        return element.all(by.className('more-activity-toggle')).get(elemIndex);
+    };
+
+    this.getPackageItemLabelEntry = function() {
+        return element(by.partialLinkText('Set label in current package'));
+    };
+
+    this.getPackageItemLabelOption = function(index) {
+        return element.all(by.repeater('label in labels')).get(index);
+    };
+
+    this.getPackageItemLabel = function(index) {
+        return element.all(by.id('package-item-label')).get(index);
+    };
 }

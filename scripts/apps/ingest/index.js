@@ -205,4 +205,8 @@ angular.module('superdesk.apps.ingest', [
             label: 'Wufoo Forms',
             templateUrl: asset.templateUrl('apps/ingest/views/settings/wufoo.html')
         });
+        ingestSources.registerFeedingService('ritzau', {
+            label: 'Ritzau Webservice',
+            templateUrl: asset.templateUrl('apps/ingest/views/settings/ritzauConfig.html')
+        });
     }]);
