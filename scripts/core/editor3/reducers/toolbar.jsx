@@ -1,7 +1,11 @@
-import {RichUtils, EditorState, SelectionState, Modifier} from 'draft-js';
+import {RichUtils, EditorState, SelectionState, Modifier, CompositeDecorator} from 'draft-js';
+import ng from 'core/services/ng';
 import * as entityUtils from '../components/links/entityUtils';
 import {onChange} from './editor3';
 import insertAtomicBlockWithoutEmptyLines from '../helpers/insertAtomicBlockWithoutEmptyLines';
+import {LinkDecorator} from '../components/links';
+import {SpellcheckerDecorator} from '../components/spellchecker';
+import {SpaceDecorator} from '../components/spaces';
 
 /**
  * @description Contains the list of toolbar related reducers.
@@ -26,6 +30,8 @@ const toolbar = (state = {}, action) => {
         return applyEmbed(state, action.payload);
     case 'TOOLBAR_SET_POPUP':
         return setPopup(state, action.payload);
+    case 'TOOLBAR_TOGGLE_PARAGRAPH_MARK':
+        return toggleParagraphMark(state);
     default:
         return state;
     }
@@ -221,6 +227,38 @@ const applyEmbed = (state, code) => {
     );
 
     return onChange(state, editorState);
+};
+
+
+/**
+ * @ngdoc method
+ * @name toggleParagraphMark
+ * @param {Object} state
+ * @return {Object} returns new state
+ * @description Enable/Disable the paragraph marks
+ */
+const toggleParagraphMark = (state) => {
+    const {paragraphMark, editorState} = state;
+    const spellcheck = ng.get('spellcheck');
+    const decorators = [LinkDecorator];
+    const newParagraphMark = !paragraphMark;
+
+    if (state.spellcheckerEnabled || spellcheck.isAutoSpellchecker) {
+        decorators.push(SpellcheckerDecorator);
+    }
+    if (newParagraphMark) {
+        decorators.push(SpaceDecorator);
+    }
+
+    const newEditorState = EditorState.set(editorState, {
+        decorator: new CompositeDecorator(decorators)
+    });
+
+    return {
+        ...state,
+        editorState: newEditorState,
+        paragraphMark: newParagraphMark
+    };
 };
 
 /**

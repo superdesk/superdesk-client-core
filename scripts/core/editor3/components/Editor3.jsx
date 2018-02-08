@@ -349,7 +349,8 @@ Editor3Component.propTypes = {
     dispatch: PropTypes.func,
     suggestingMode: PropTypes.bool,
     onCreateAddSuggestion: PropTypes.func,
-    onCreateDeleteSuggestion: PropTypes.func
+    onCreateDeleteSuggestion: PropTypes.func,
+    paragraphMark: PropTypes.bool
 };
 
 Editor3Component.defaultProps = {
@@ -367,7 +368,8 @@ const mapStateToProps = (state) => ({
     locked: state.locked,
     editorFormat: state.editorFormat,
     tabindex: state.tabindex,
-    suggestingMode: state.suggestingMode
+    suggestingMode: state.suggestingMode,
+    paragraphMark: state.paragraphMark
 });
 
 const mapDispatchToProps = (dispatch) => ({

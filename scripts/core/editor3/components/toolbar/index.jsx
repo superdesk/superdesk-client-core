@@ -107,7 +107,9 @@ class ToolbarComponent extends Component {
             insertMedia,
             allowsHighlights,
             suggestingMode,
-            toggleSuggestingMode
+            toggleSuggestingMode,
+            paragraphMark,
+            toggleParagraphMark
         } = this.props;
 
         const has = (opt) => editorFormat.indexOf(opt) > -1;
@@ -180,6 +182,15 @@ class ToolbarComponent extends Component {
                     />
                 }
 
+                {has('paragraph mark') &&
+                    <StyleButton
+                        active={paragraphMark}
+                        label={'paragraph mark'}
+                        style={'paragraph mark'}
+                        onToggle={toggleParagraphMark}
+                    />
+                }
+
                 <ToolbarPopup type={popup.type} data={popup.data} />
 
                 {/* LinkToolbar must be the last node. */}
@@ -194,25 +205,42 @@ ToolbarComponent.propTypes = {
     editorFormat: PropTypes.array,
     activeCell: PropTypes.any,
     suggestingMode: PropTypes.bool,
+    paragraphMark: PropTypes.bool,
     addTable: PropTypes.func,
     insertMedia: PropTypes.func,
     showPopup: PropTypes.func,
     toggleSuggestingMode: PropTypes.func,
+    toggleParagraphMark: PropTypes.func,
     popup: PropTypes.object,
     editorState: PropTypes.object,
     editorNode: PropTypes.object,
     scrollContainer: PropTypes.string
 };
 
-const mapStateToProps = ({editorFormat, activeCell, allowsHighlights, popup, editorState, suggestingMode}) => ({
-    editorFormat, activeCell, allowsHighlights, popup, editorState, suggestingMode
+const mapStateToProps = ({
+    editorFormat,
+    activeCell,
+    allowsHighlights,
+    popup,
+    editorState,
+    suggestingMode,
+    paragraphMark
+}) => ({
+    editorFormat,
+    activeCell,
+    allowsHighlights,
+    popup,
+    editorState,
+    suggestingMode,
+    paragraphMark
 });
 
 const mapDispatchToProps = (dispatch) => ({
     insertMedia: () => dispatch(actions.insertMedia()),
     showPopup: (type, data) => dispatch(actions.showPopup(type, data)),
     addTable: () => dispatch(actions.addTable()),
-    toggleSuggestingMode: () => dispatch(actions.toggleSuggestingMode())
+    toggleSuggestingMode: () => dispatch(actions.toggleSuggestingMode()),
+    toggleParagraphMark: () => dispatch(actions.toggleParagraphMark())
 });
 
 const Toolbar = connect(mapStateToProps, mapDispatchToProps)(ToolbarComponent);

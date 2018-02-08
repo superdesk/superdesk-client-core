@@ -22,12 +22,17 @@ class UnstyledBlock extends BaseUnstyledComponent {
     }
 
     render() {
-        const {className} = this.props;
+        let {className, paragraphMark} = this.props;
         const divProps = Object.assign({}, this.props);
+
+        if (paragraphMark) {
+            className = `unstyled__block--paragraph ${className}`;
+        }
 
         // avoid react unknown prop warning
         delete divProps.dispatch;
         delete divProps.className;
+        delete divProps.paragraphMark;
 
         return (
             <div ref={(div) => this.div = div}
@@ -44,6 +49,11 @@ UnstyledBlock.propTypes = {
     children: PropTypes.object,
     dispatch: PropTypes.func.isRequired,
     className: PropTypes.string,
+    paragraphMark: PropTypes.bool,
 };
 
-export default connect()(UnstyledBlock);
+const mapStateToProps = (state) => ({
+    paragraphMark: state.paragraphMark
+});
+
+export default connect(mapStateToProps)(UnstyledBlock);

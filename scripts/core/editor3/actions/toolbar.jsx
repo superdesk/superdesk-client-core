@@ -143,6 +143,16 @@ export function removeBlock(blockKey) {
 
 /**
  * @ngdoc method
+ * @name toggleParagraphMark
+ * @return {String} action
+ * @description Toggles paragraph marks on body
+ */
+export function toggleParagraphMark() {
+    return {type: 'TOOLBAR_TOGGLE_PARAGRAPH_MARK'};
+}
+
+/**
+ * @ngdoc method
  * @name embed
  * @param {Object|string} oEmbed code, HTML string or Qumu widget config.
  * @return {Object}
