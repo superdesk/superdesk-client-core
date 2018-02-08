@@ -17,7 +17,7 @@ import Toolbar from './toolbar';
 import * as actions from '../actions';
 import {SpellcheckerDecorator} from './spellchecker';
 import {LinkDecorator} from './links';
-import {blockRenderer} from './blockRenderer';
+import {getBlockRenderer} from './blockRenderer';
 import {customStyleMap} from './customStyleMap';
 import classNames from 'classnames';
 import {handlePastedText} from './handlePastedText';
@@ -316,7 +316,7 @@ export class Editor3Component extends React.Component {
                         keyBindingFn={this.keyBindingFn}
                         handleBeforeInput={this.handleBeforeInput}
                         blockRenderMap={blockRenderMap}
-                        blockRendererFn={blockRenderer}
+                        blockRendererFn={getBlockRenderer({svc: this.props.svc})}
                         customStyleMap={customStyleMap}
                         onChange={onChange}
                         onTab={onTab}
@@ -349,7 +349,8 @@ Editor3Component.propTypes = {
     dispatch: PropTypes.func,
     suggestingMode: PropTypes.bool,
     onCreateAddSuggestion: PropTypes.func,
-    onCreateDeleteSuggestion: PropTypes.func
+    onCreateDeleteSuggestion: PropTypes.func,
+    svc: PropTypes.object.isRequired
 };
 
 Editor3Component.defaultProps = {
@@ -367,7 +368,8 @@ const mapStateToProps = (state) => ({
     locked: state.locked,
     editorFormat: state.editorFormat,
     tabindex: state.tabindex,
-    suggestingMode: state.suggestingMode
+    suggestingMode: state.suggestingMode,
+    svc: state.svc
 });
 
 const mapDispatchToProps = (dispatch) => ({

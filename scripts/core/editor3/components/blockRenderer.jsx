@@ -38,9 +38,12 @@ MediaComponent.propTypes = {
     contentState: PropTypes.object.isRequired
 };
 
-export function blockRenderer(block) {
-    return block.getType() !== 'atomic' ? null : {
-        component: MediaComponent,
-        editable: false
+export function getBlockRenderer(props) {
+    return function blockRenderer(block) {
+        return block.getType() !== 'atomic' ? null : {
+            component: MediaComponent,
+            editable: false,
+            props: props
+        };
     };
 }

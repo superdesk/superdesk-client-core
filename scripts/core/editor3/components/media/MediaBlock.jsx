@@ -87,6 +87,8 @@ export class MediaBlockComponent extends Component {
         const alt = data.alt_text || data.description_text || data.caption;
         const mediaType = data.type;
 
+        var {gettextCatalog} = this.props.blockProps.svc;
+
         return (
 
             <div className="image-block image-block__remove sd-shadow--z1"
@@ -122,6 +124,22 @@ export class MediaBlockComponent extends Component {
                         value={data.description_text}
                         onChange={this.onChange}
                     />
+
+                    <div>
+                        {gettextCatalog.getString('Alt text')} <strong>{data.alt_text}</strong>
+                    </div>
+
+                    <div>
+                        {gettextCatalog.getString('Credit')} <strong>{data.byline}</strong>
+                    </div>
+
+                    <div>
+                        {gettextCatalog.getString('Copyright holder')} <strong>{data.copyrightholder}</strong>
+                    </div>
+
+                    <div>
+                        {gettextCatalog.getString('Copyright notice')} <strong>{data.copyrightnotice}</strong>
+                    </div>
                 </div>
             </div>
         );
@@ -135,7 +153,8 @@ MediaBlockComponent.propTypes = {
     setLocked: PropTypes.func.isRequired,
     block: PropTypes.object.isRequired,
     contentState: PropTypes.object.isRequired,
-    showTitle: PropTypes.bool
+    showTitle: PropTypes.bool,
+    blockProps: PropTypes.object.isRequired
 };
 
 const mapStateToProps = (state) => ({
