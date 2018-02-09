@@ -108,8 +108,8 @@ class ToolbarComponent extends Component {
             allowsHighlights,
             suggestingMode,
             toggleSuggestingMode,
-            paragraphMark,
-            toggleParagraphMark
+            invisibles,
+            toggleInvisibles
         } = this.props;
 
         const has = (opt) => editorFormat.indexOf(opt) > -1;
@@ -182,12 +182,12 @@ class ToolbarComponent extends Component {
                     />
                 }
 
-                {has('paragraph mark') &&
+                {has('invisibles') &&
                     <StyleButton
-                        active={paragraphMark}
-                        label={'paragraph mark'}
-                        style={'paragraph mark'}
-                        onToggle={toggleParagraphMark}
+                        active={invisibles}
+                        label={'invisibles'}
+                        style={'invisibles'}
+                        onToggle={toggleInvisibles}
                     />
                 }
 
@@ -205,12 +205,12 @@ ToolbarComponent.propTypes = {
     editorFormat: PropTypes.array,
     activeCell: PropTypes.any,
     suggestingMode: PropTypes.bool,
-    paragraphMark: PropTypes.bool,
+    invisibles: PropTypes.bool,
     addTable: PropTypes.func,
     insertMedia: PropTypes.func,
     showPopup: PropTypes.func,
     toggleSuggestingMode: PropTypes.func,
-    toggleParagraphMark: PropTypes.func,
+    toggleInvisibles: PropTypes.func,
     popup: PropTypes.object,
     editorState: PropTypes.object,
     editorNode: PropTypes.object,
@@ -224,7 +224,7 @@ const mapStateToProps = ({
     popup,
     editorState,
     suggestingMode,
-    paragraphMark
+    invisibles
 }) => ({
     editorFormat,
     activeCell,
@@ -232,7 +232,7 @@ const mapStateToProps = ({
     popup,
     editorState,
     suggestingMode,
-    paragraphMark
+    invisibles
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -240,7 +240,7 @@ const mapDispatchToProps = (dispatch) => ({
     showPopup: (type, data) => dispatch(actions.showPopup(type, data)),
     addTable: () => dispatch(actions.addTable()),
     toggleSuggestingMode: () => dispatch(actions.toggleSuggestingMode()),
-    toggleParagraphMark: () => dispatch(actions.toggleParagraphMark())
+    toggleInvisibles: () => dispatch(actions.toggleInvisibles())
 });
 
 const Toolbar = connect(mapStateToProps, mapDispatchToProps)(ToolbarComponent);

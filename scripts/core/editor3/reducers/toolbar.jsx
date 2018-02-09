@@ -5,7 +5,7 @@ import {onChange} from './editor3';
 import insertAtomicBlockWithoutEmptyLines from '../helpers/insertAtomicBlockWithoutEmptyLines';
 import {LinkDecorator} from '../components/links';
 import {SpellcheckerDecorator} from '../components/spellchecker';
-import {SpaceDecorator} from '../components/spaces';
+import {SpaceDecorator} from '../components/invisibles';
 
 /**
  * @description Contains the list of toolbar related reducers.
@@ -30,8 +30,8 @@ const toolbar = (state = {}, action) => {
         return applyEmbed(state, action.payload);
     case 'TOOLBAR_SET_POPUP':
         return setPopup(state, action.payload);
-    case 'TOOLBAR_TOGGLE_PARAGRAPH_MARK':
-        return toggleParagraphMark(state);
+    case 'TOOLBAR_TOGGLE_INVISIBLES':
+        return toggleInvisibles(state);
     default:
         return state;
     }
@@ -232,21 +232,21 @@ const applyEmbed = (state, code) => {
 
 /**
  * @ngdoc method
- * @name toggleParagraphMark
+ * @name toggleInvisibles
  * @param {Object} state
  * @return {Object} returns new state
  * @description Enable/Disable the paragraph marks
  */
-const toggleParagraphMark = (state) => {
-    const {paragraphMark, editorState} = state;
+const toggleInvisibles = (state) => {
+    const {invisibles, editorState} = state;
     const spellcheck = ng.get('spellcheck');
     const decorators = [LinkDecorator];
-    const newParagraphMark = !paragraphMark;
+    const newInvisibles = !invisibles;
 
     if (state.spellcheckerEnabled || spellcheck.isAutoSpellchecker) {
         decorators.push(SpellcheckerDecorator);
     }
-    if (newParagraphMark) {
+    if (newInvisibles) {
         decorators.push(SpaceDecorator);
     }
 
@@ -257,7 +257,7 @@ const toggleParagraphMark = (state) => {
     return {
         ...state,
         editorState: newEditorState,
-        paragraphMark: newParagraphMark
+        invisibles: newInvisibles
     };
 };
 

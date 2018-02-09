@@ -143,12 +143,12 @@ export function removeBlock(blockKey) {
 
 /**
  * @ngdoc method
- * @name toggleParagraphMark
+ * @name toggleInvisibles
  * @return {String} action
  * @description Toggles paragraph marks on body
  */
-export function toggleParagraphMark() {
-    return {type: 'TOOLBAR_TOGGLE_PARAGRAPH_MARK'};
+export function toggleInvisibles() {
+    return {type: 'TOOLBAR_TOGGLE_INVISIBLES'};
 }
 
 /**
