@@ -1180,7 +1180,7 @@ angular.module('superdesk.apps.editor2', [
                             });
 
                             cancelTimeout();
-                            updateTimeout = $timeout(vm.updateModel, 800, false);
+                            updateTimeout = $timeout(vm.updateModel, 200, false);
                         });
                         scope.medium.subscribe('blur', () => {
                         // save latest know caret position
@@ -1277,7 +1277,7 @@ angular.module('superdesk.apps.editor2', [
                                 return;
                             }
                             cancelTimeout(event);
-                            updateTimeout = $timeout(vm.updateModel, 800, false);
+                            updateTimeout = $timeout(vm.updateModel, 200, false);
                         });
 
                         /**

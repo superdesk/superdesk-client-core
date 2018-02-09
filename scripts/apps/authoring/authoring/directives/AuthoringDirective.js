@@ -775,12 +775,8 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             };
 
             $scope.autosave = function(item, timeout) {
-                if (item !== $scope.item) {
-                    // keep items in sync
-                    $scope.item = item;
-                }
-
                 $scope.dirty = true;
+                angular.extend($scope.item, item); // make sure all changes are available
 
                 var autosavedItem = authoring.autosave($scope.item, $scope.origItem, timeout);
 
