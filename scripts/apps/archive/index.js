@@ -110,25 +110,7 @@ angular.module('superdesk.apps.archive', [
                 label: gettext('Spike Item'),
                 icon: 'trash',
                 monitor: true,
-                controller: ['spike', 'data', '$rootScope', 'modal', '$location', '$q', 'multi', 'privileges',
-                    function spikeActivity(spike, data, $rootScope, modal, $location, $q, multi, privileges) {
-                        // For the sake of keyboard shortcut to work consistently,
-                        // if the item is multi-selected, let multibar controller handle its spike
-                        if (!data.item || multi.count > 0 && _.includes(multi.getIds(), data.item._id)) {
-                            return;
-                        }
-
-                        var txt = gettext('Do you want to delete the item permanently?');
-                        var showConfirmation = $location.path() === '/workspace/personal';
-
-                        if (get(privileges, 'privileges.planning') && data.item && data.item.assignment_id) {
-                            txt = gettext('This item is linked to in-progress planning coverage, spike anyway?');
-                            showConfirmation = true;
-                        }
-
-                        return $q.when(showConfirmation ? modal.confirm(txt) : 0)
-                            .then(() => spike.spike(data.item));
-                    }],
+                controller: spikeActivity,
                 filters: [{action: 'list', type: 'archive'}],
                 action: 'spike',
                 keyboardShortcut: 'ctrl+shift+#',
@@ -373,3 +355,46 @@ angular.module('superdesk.apps.archive', [
             }
         });
     }]);
+
+spikeActivity.$inject = [
+    'spike',
+    'data',
+    'modal',
+    '$location',
+    '$q',
+    'multi',
+    'privileges',
+    'authoringWorkspace',
+    'confirm',
+    'autosave',
+];
+
+function spikeActivity(spike, data, modal, $location, $q, multi, privileges, authoringWorkspace, confirm, autosave) {
+    // For the sake of keyboard shortcut to work consistently,
+    // if the item is multi-selected, let multibar controller handle its spike
+    if (!data.item || multi.count > 0 && _.includes(multi.getIds(), data.item._id)) {
+        return;
+    }
+
+    if (data.item.lock_user) { // current user has the lock
+        return autosave.get(data.item)
+            .then(() => confirm.reopen())
+            .then(() => authoringWorkspace.edit(data.item))
+            .catch(_spike);
+    }
+
+    _spike();
+
+    function _spike() {
+        var txt = gettext('Do you want to delete the item permanently?');
+        var showConfirmation = $location.path() === '/workspace/personal';
+
+        if (get(privileges, 'privileges.planning') && data.item && data.item.assignment_id) {
+            txt = gettext('This item is linked to in-progress planning coverage, spike anyway?');
+            showConfirmation = true;
+        }
+
+        return $q.when(showConfirmation ? modal.confirm(txt) : 0)
+            .then(() => spike.spike(data.item));
+    }
+}
