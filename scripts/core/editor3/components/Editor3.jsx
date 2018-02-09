@@ -16,6 +16,7 @@ import {connect} from 'react-redux';
 import Toolbar from './toolbar';
 import * as actions from '../actions';
 import {SpellcheckerDecorator} from './spellchecker';
+import {SpaceDecorator} from './invisibles';
 import {LinkDecorator} from './links';
 import {blockRenderer} from './blockRenderer';
 import {customStyleMap} from './customStyleMap';
@@ -60,13 +61,16 @@ function getValidMediaType(event) {
  */
 export class Editor3Component extends React.Component {
     static getDecorator(disableSpellchecker) {
-        if (disableSpellchecker) {
-            return new CompositeDecorator([LinkDecorator]);
-        }
-        return new CompositeDecorator([
+        const decorators = [
             LinkDecorator,
-            SpellcheckerDecorator
-        ]);
+            SpaceDecorator
+        ];
+
+        if (!disableSpellchecker) {
+            decorators.push(SpellcheckerDecorator);
+        }
+
+        return new CompositeDecorator(decorators);
     }
 
     constructor(props) {

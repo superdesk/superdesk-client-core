@@ -280,18 +280,22 @@ $editor-styleButton-active-color:#5890ff;
 	[data-block="true"] {
         border-bottom: 1.5em solid transparent;
 
-        .space-component {
-            margin-left: .2em;
-        }
+        &.unstyled__block--invisibles {
+            .space-component {
+                margin-left: .2em;
+            }
 
-        .space-component::before {
-            content: '•';
-            color: $sd-blue;
-        }
+            .space-component::before {
+                content: '•';
+                color: $sd-blue;
+            }
 
-        &.unstyled__block--paragraph::after {
-            content: '¶';
-            color: $sd-blue;
+            &::after {
+                content: '\E690';
+                font-family: 'sd_icons';
+                font-size: 16px;
+                color: $sd-blue;
+            }
         }
 
         &.unstyled__block--over {

@@ -238,26 +238,11 @@ const applyEmbed = (state, code) => {
  * @description Enable/Disable the paragraph marks
  */
 const toggleInvisibles = (state) => {
-    const {invisibles, editorState} = state;
-    const spellcheck = ng.get('spellcheck');
-    const decorators = [LinkDecorator];
-    const newInvisibles = !invisibles;
-
-    if (state.spellcheckerEnabled || spellcheck.isAutoSpellchecker) {
-        decorators.push(SpellcheckerDecorator);
-    }
-    if (newInvisibles) {
-        decorators.push(SpaceDecorator);
-    }
-
-    const newEditorState = EditorState.set(editorState, {
-        decorator: new CompositeDecorator(decorators)
-    });
+    const {invisibles} = state;
 
     return {
         ...state,
-        editorState: newEditorState,
-        invisibles: newInvisibles
+        invisibles: !invisibles
     };
 };
 

@@ -26,7 +26,7 @@ class UnstyledBlock extends BaseUnstyledComponent {
         const divProps = Object.assign({}, this.props);
 
         if (invisibles) {
-            className = `unstyled__block--paragraph ${className}`;
+            className = `unstyled__block--invisibles ${className}`;
         }
 
         // avoid react unknown prop warning
