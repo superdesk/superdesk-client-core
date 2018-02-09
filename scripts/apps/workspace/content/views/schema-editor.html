@@ -100,6 +100,16 @@
                         <label translate>Show Image Title</label>
                         <div sd-check ng-model="model.editor[id].imageTitle"></div>
                     </div>
+
+                    <div class="field" ng-if="id === 'sms'">
+                        <label translate>Prefill the field with text from:</label>
+                        &nbsp;
+                        <select ng-model="model.editor[id].sourceField">
+                            <option value="" translate>Abstract</option>
+                            <option value="headline" translate>Headline</option>
+                        </select>
+                    </div>
+
                 </fieldset>
             </form>
 
