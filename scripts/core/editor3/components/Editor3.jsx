@@ -274,7 +274,6 @@ export class Editor3Component extends React.Component {
             tabindex,
             scrollContainer
         } = this.props;
-        const selection = editorState.getSelection();
 
         let cx = classNames({
             'Editor3-root Editor3-editor': true,
@@ -307,7 +306,7 @@ export class Editor3Component extends React.Component {
                     <HighlightsPopup
                         highlights={activeHighlights}
                         editorNode={this.editorNode}
-                        selection={selection}
+                        editorState={editorState}
                     />
                 }
                 <div className="focus-screen" onMouseDown={this.focus}>

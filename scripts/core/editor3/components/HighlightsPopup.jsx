@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {getVisibleSelectionRect, SelectionState} from 'draft-js';
+import {getVisibleSelectionRect, EditorState, Entity} from 'draft-js';
 import {render, unmountComponentAtNode} from 'react-dom';
 import PropTypes from 'prop-types';
 import {Provider} from 'react-redux';
@@ -75,12 +75,19 @@ export class HighlightsPopup extends Component {
         const {store} = this.context;
         const position = this.position();
 
+        var highlightsAndSuggestions = Object.keys(highlights).map((key) => ({type: key, value: highlights[key]}));
+        var suggestion = this.getSelectedSuggestionEntity();
+
+        if (suggestion !== null) {
+            highlightsAndSuggestions = [...highlightsAndSuggestions, {type: suggestion.getType(), value: suggestion}];
+        }
+
         // We need to create a new provider here because this component gets rendered
         // outside the editor tree and loses context.
         return (
             <Provider store={store}>
                 <div className="highlights-popup" style={position}>
-                    {Object.keys(highlights).map(this.createHighlight)}
+                    {highlightsAndSuggestions.map((obj, i) => this.createHighlight(obj.type, obj.value, i))}
                 </div>
             </Provider>
         );
@@ -96,9 +103,7 @@ export class HighlightsPopup extends Component {
      * inside the component method.
      * @returns {JSX}
      */
-    createHighlight(type, key) {
-        const h = this.props.highlights[type];
-
+    createHighlight(type, h, key) {
         const contents = () => {
             switch (type) {
             case 'ANNOTATION':
@@ -158,8 +163,8 @@ export class HighlightsPopup extends Component {
     }
 
     shouldComponentUpdate(nextProps) {
-        const nextSelection = nextProps.selection;
-        const {selection} = this.props;
+        const nextSelection = nextProps.editorState.getSelection();
+        const selection = this.props.editorState.getSelection();
 
         // only update the component if the cursor has moved
         return nextSelection.getAnchorOffset() !== selection.getAnchorOffset() ||
@@ -168,12 +173,48 @@ export class HighlightsPopup extends Component {
             Object.values(nextProps.highlights)[0] !== Object.values(this.props.highlights)[0];
     }
 
-    componentDidUpdate() {
-        const shouldRender = Object.keys(this.props.highlights).length > 0;
+    getSelectedSuggestionEntity() {
+        const {editorState} = this.props;
+        const selection = editorState.getSelection();
 
+        if (selection.isCollapsed() === false) {
+            return null;
+        }
+
+        var blockKey = selection.getAnchorKey();
+        var block = editorState.getCurrentContent().getBlockForKey(blockKey);
+        var entityKey = block.getEntityAt(selection.getAnchorOffset());
+
+        if (entityKey === null) {
+            return null;
+        }
+
+        return Entity.get(entityKey);
+    }
+
+    shouldRender() {
+        if (Object.keys(this.props.highlights).length > 0) {
+            return true;
+        }
+
+        var selectedSuggestionEntity = this.getSelectedSuggestionEntity();
+
+        if (selectedSuggestionEntity === null) {
+            return false;
+        }
+
+        var entityType = selectedSuggestionEntity.getType();
+
+        if (entityType === 'ADD_SUGGESTION' || entityType === 'DELETE_SUGGESTION') {
+            return true;
+        }
+
+        return false;
+    }
+    componentDidUpdate() {
         // Waiting one cycle allows the selection to be rendered in the browser
         // so that we can correctly retrieve its position.
-        setTimeout(() => shouldRender ? this.renderCustom() : this.unmountCustom(), 0);
+        setTimeout(() => this.shouldRender() ? this.renderCustom() : this.unmountCustom(), 0);
     }
 
     componentWillUnmount() {
@@ -192,7 +233,7 @@ HighlightsPopup.contextTypes = {
 };
 
 HighlightsPopup.propTypes = {
-    selection: PropTypes.instanceOf(SelectionState),
+    editorState: PropTypes.instanceOf(EditorState),
     editorNode: PropTypes.object,
     highlights: PropTypes.object
 };
