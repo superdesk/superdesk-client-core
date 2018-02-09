@@ -4,6 +4,18 @@ import {connect} from 'react-redux';
 import * as actions from '../../actions';
 import Textarea from 'react-textarea-autosize';
 
+function getTranslationForAssignRights(value, gettextCatalog) {
+    if (value === 'single-usage') {
+        return gettextCatalog.getString('Single Usage');
+    } else if (value === 'time-restricted') {
+        return gettextCatalog.getString('Time Restricted');
+    } else if (value === 'indefinite-usage') {
+        return gettextCatalog.getString('Indefinite Usage');
+    } else {
+        return '';
+    }
+}
+
 /**
  * @ngdoc React
  * @module superdesk.core.editor3
@@ -87,6 +99,8 @@ export class MediaBlockComponent extends Component {
         const alt = data.alt_text || data.description_text || data.caption;
         const mediaType = data.type;
 
+        var {gettextCatalog} = this.props.blockProps.svc;
+
         return (
 
             <div className="image-block image-block__remove sd-shadow--z1"
@@ -122,6 +136,36 @@ export class MediaBlockComponent extends Component {
                         value={data.description_text}
                         onChange={this.onChange}
                     />
+
+                    <div>
+                        {gettextCatalog.getString('Alt text')}{' '}
+                        <strong>{data.alt_text || gettextCatalog.getString('[No Value]')}</strong>
+                    </div>
+
+                    <div>
+                        {gettextCatalog.getString('Credit')}{' '}
+                        <strong>{data.byline || gettextCatalog.getString('[No Value]')}</strong>
+                    </div>
+
+                    <div>
+                        {gettextCatalog.getString('Copyright holder')}{' '}
+                        <strong>{data.copyrightholder || gettextCatalog.getString('[No Value]')}</strong>
+                    </div>
+
+                    <div>
+                        {gettextCatalog.getString('Assign rights')}{' '}
+                        <strong>
+                            {
+                                getTranslationForAssignRights(data.usageterms, gettextCatalog)
+                                || gettextCatalog.getString('[No Value]')
+                            }
+                        </strong>
+                    </div>
+
+                    <div>
+                        {gettextCatalog.getString('Copyright notice')}{' '}
+                        <strong>{data.copyrightnotice || gettextCatalog.getString('[No Value]')}</strong>
+                    </div>
                 </div>
             </div>
         );
@@ -135,7 +179,8 @@ MediaBlockComponent.propTypes = {
     setLocked: PropTypes.func.isRequired,
     block: PropTypes.object.isRequired,
     contentState: PropTypes.object.isRequired,
-    showTitle: PropTypes.bool
+    showTitle: PropTypes.bool,
+    blockProps: PropTypes.object.isRequired
 };
 
 const mapStateToProps = (state) => ({
