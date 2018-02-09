@@ -1,11 +1,7 @@
-import {RichUtils, EditorState, SelectionState, Modifier, CompositeDecorator} from 'draft-js';
-import ng from 'core/services/ng';
+import {RichUtils, EditorState, SelectionState, Modifier} from 'draft-js';
 import * as entityUtils from '../components/links/entityUtils';
 import {onChange} from './editor3';
 import insertAtomicBlockWithoutEmptyLines from '../helpers/insertAtomicBlockWithoutEmptyLines';
-import {LinkDecorator} from '../components/links';
-import {SpellcheckerDecorator} from '../components/spellchecker';
-import {SpaceDecorator} from '../components/invisibles';
 
 /**
  * @description Contains the list of toolbar related reducers.
