@@ -71,8 +71,13 @@
                     <div class="field article-type" ng-show="provider.feeding_service !== 'wufoo'">
                         <label for="provider-content-types" translate>Article Type(s)</label>
                         <div class="button-list">
-                            <a  href="" ng-repeat="fileType in fileTypes" title="{{fileType}}" ng-click="addOrRemoveFileType(fileType)" class="toggle-button" ng-class="{'toggle-button--active': hasFileType(fileType)}">
-                                <i class="toggle-button__icon filetype-icon-{{fileType}}"></i>
+                            <a  href=""
+                                ng-repeat="fileType in fileTypes"
+                                title="{{fileType.type}}"
+                                ng-click="addOrRemoveFileType(fileType.type)"
+                                class="toggle-button"
+                                ng-class="{'toggle-button--active': hasFileType(fileType.type)}">
+                                <i class="toggle-button__icon {{fileType.icon}}"></i>
                             </a>
                         </div>
                     </div>

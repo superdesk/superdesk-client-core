@@ -242,7 +242,7 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, editor, config, $q
             var serialized = self.serializeBlock();
 
             if (serialized !== self.model.$viewValue) {
-                self.model.$setViewValue(self.serializeBlock());
+                self.model.$setViewValue(serialized);
             }
         },
         /**

@@ -24,10 +24,8 @@ describe('Multi Action Bar', () => {
     }));
 
     it('spike action prompts user of confirmation for in progress assignment',
-        inject(($controller, $rootScope, config, multi, modal, $q, spike) => {
-            config.features = {
-                planning: 1
-            };
+        inject(($controller, $rootScope, privileges, multi, modal, $q, spike) => {
+            privileges.privileges = {planning: 1};
 
             let itemlist = [
                 {
@@ -64,10 +62,8 @@ describe('Multi Action Bar', () => {
         }));
 
     it('spike does not prompt as content not linked to in progress assignments',
-        inject(($controller, $rootScope, config, multi, modal, $q, spike) => {
-            config.features = {
-                planning: 1
-            };
+        inject(($controller, $rootScope, privileges, multi, modal, $q, spike) => {
+            privileges.privileges = {planning: 1};
 
             let itemlist = [
                 {
@@ -102,7 +98,7 @@ describe('Multi Action Bar', () => {
         }));
 
     it('spike does not prompt if planning component not activated',
-        inject(($controller, $rootScope, config, multi, modal, $q, spike) => {
+        inject(($controller, $rootScope, privileges, multi, modal, $q, spike) => {
             let itemlist = [
                 {
                     _id: 'foo1',

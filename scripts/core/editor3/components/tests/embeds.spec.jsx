@@ -1,7 +1,7 @@
 import React from 'react';
 import {shallow, mount} from 'enzyme';
 import mockStore, {embedBlockAndContent} from './utils';
-import {EmbedBlock} from '../embeds';
+import {EmbedBlockComponent as EmbedBlock} from '../embeds/EmbedBlock';
 import {EmbedInputComponent as EmbedInput} from '../embeds/EmbedInput';
 
 describe('editor3.components.embed-block', () => {
@@ -9,8 +9,8 @@ describe('editor3.components.embed-block', () => {
         const {block, contentState} = embedBlockAndContent();
         const wrapper = shallow(<EmbedBlock block={block} contentState={contentState} />);
 
-        expect(wrapper.find('.embed-block').html())
-            .toBe('<div class="embed-block"><h1>Embed Title</h1></div>');
+        expect(wrapper.find('.embed-block__wrapper').html())
+            .toBe('<div class="embed-block__wrapper"><h1>Embed Title</h1></div>');
     });
 });
 
