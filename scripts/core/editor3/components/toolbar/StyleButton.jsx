@@ -17,7 +17,7 @@ const StyleIcons = {
     'unordered list': 'icon-unordered-list',
     'ordered list': 'icon-ordered-list',
     suggestions: 'icon-multiedit',
-    invisibles: 'icon-question-sign'
+    invisibles: 'icon-paragraph'
 };
 
 const StyleTooltips = {
