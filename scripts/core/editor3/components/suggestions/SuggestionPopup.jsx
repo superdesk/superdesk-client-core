@@ -38,6 +38,9 @@ export class SuggestionPopup extends Component {
             return <div>loading...</div>;
         }
 
+        var gettextCatalog = ng.get('gettextCatalog');
+        const gettext = gettextCatalog.getString.bind(gettextCatalog);
+
         const {author} = this.state;
         const {date} = this.props.suggestion.data;
 
@@ -68,7 +71,7 @@ export class SuggestionPopup extends Component {
                         {gettext('Accept')}
                     </button>
                     <button className="btn btn--small btn--hollow">
-                        {gettext('Decline')}
+                        {gettext('Reject')}
                     </button>
                 </div>
             </div>
