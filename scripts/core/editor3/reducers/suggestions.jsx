@@ -11,6 +11,8 @@ const suggestions = (state = {}, action) => {
         return createAddSuggestion(state, action.payload);
     case 'CREATE_DELETE_SUGGESTION':
         return createDeleteSuggestion(state, action.payload);
+    case 'PASTE_ADD_SUGGESTION':
+        return pasteAddSuggestion(state, action.payload);
     default:
         return state;
     }
@@ -44,20 +46,12 @@ const toggleSuggestingMode = (state) => {
  */
 const createAddSuggestion = (state, {text, data}) => {
     let {editorState} = state;
-    const selection = editorState.getSelection();
-    const selectionLength = selection.getEndOffset() - selection.getStartOffset();
 
-    if (selectionLength !== 0) {
-        // if text is selected, apply delete suggestion for every selected character
-        editorState = changeEditorSelection(editorState, selectionLength, 0, false);
-        for (let i = 0; i < selectionLength; i++) {
-            editorState = setDeleteSuggestionForCharacter(editorState, data);
-        }
-    }
+    editorState = deleteCurrentSelection(editorState, data);
 
     for (let i = 0; i < text.length; i++) {
         // for every character from inserted text apply add suggestion
-        editorState = setAddSuggestionForCharacter(editorState, text[i], data);
+        editorState = setAddSuggestionForCharacter(editorState, data, text[i]);
     }
 
     return onChange(state, editorState, true);
@@ -77,24 +71,77 @@ const createDeleteSuggestion = (state, {data}) => {
     const selectionLength = selection.getEndOffset() - selection.getStartOffset();
 
     if (selectionLength === 0) {
-        editorState = setDeleteSuggestionForCharacter(editorState, data);
-    } else {
-        // if text is selected, apply delete suggestion for every selected character
-        editorState = changeEditorSelection(editorState, selectionLength, 0, false);
-        for (let i = 0; i < selectionLength; i++) {
-            editorState = setDeleteSuggestionForCharacter(editorState, data);
-        }
+        editorState = changeEditorSelection(editorState, -1, 0, false);
     }
+    editorState = deleteCurrentSelection(editorState, data);
 
     return onChange(state, editorState, true);
 };
 
+/**
+ * @ngdoc method
+ * @name pasteAddSuggestion
+ * @param {Object} state
+ * @param {Object} content - the suggestion added content
+ * @param {Object} data - info about the author of suggestion
+ * @return {Object} returns new state
+ * @description Add a new suggestion of type ADD based on content.
+ */
+const pasteAddSuggestion = (state, {content, data}) => {
+    const acceptedStyles = ['BOLD', 'ITALIC', 'UNDERLINE'];
+    let {editorState} = state;
+    const blockMap = content.getBlockMap();
+
+    editorState = deleteCurrentSelection(editorState, data);
+
+    blockMap.forEach((block) => {
+        if (block.getType() !== 'atomic') {
+            const text = block.getText();
+            const characterMetadataList = block.getCharacterList();
+            let inlineStyle;
+
+            characterMetadataList.forEach((characterMetadata, i) => {
+                inlineStyle = acceptedStyles.filter((style) => characterMetadata.hasStyle(style));
+                editorState = setAddSuggestionForCharacter(editorState, data, text[i], inlineStyle);
+            });
+        } else {
+            // TODO: insert block
+        }
+    });
+
+    return onChange(state, editorState, true);
+};
+
+/**
+ * @ngdoc method
+ * @name deleteCurrentSelection
+ * @param {Object} editorState
+ * @param {Object} data - info about the author of suggestion
+ * @return {Object} returns new state
+ * @description Set the delete suggestion for current editor selection.
+ */
+const deleteCurrentSelection = (editorState, data) => {
+    const selection = editorState.getSelection();
+    const selectionLength = selection.getEndOffset() - selection.getStartOffset();
+    let newState = editorState;
+
+    if (selectionLength !== 0) {
+        // if text is selected, apply delete suggestion for every selected character
+        newState = changeEditorSelection(newState, selectionLength, 0, false);
+        for (let i = 0; i < selectionLength; i++) {
+            newState = setDeleteSuggestionForCharacter(newState, data);
+        }
+    }
+
+    return newState;
+};
 
 /**
  * @ngdoc method
  * @name setAddSuggestionForCharacter
  * @param {Object} state
  * @param {String} text - the suggestion added text
+ * @param {Object} inlineStyle - the style for the text
  * @param {Object} data - info about the author of suggestion
  * @return {Object} returns new state
  * @description Set the add suggestion for current character.
@@ -107,8 +154,8 @@ const createDeleteSuggestion = (state, {data}) => {
  *   Not on suggestion mode:
  *   1. both are 'new suggestion' neighbors with the same user -> set same entity
  */
-const setAddSuggestionForCharacter = (editorState, text, data) => {
-    const inlineStyle = editorState.getCurrentInlineStyle();
+const setAddSuggestionForCharacter = (editorState, data, text, inlineStyle = null, entityKey = null) => {
+    const crtInlineStyle = inlineStyle || editorState.getCurrentInlineStyle();
     const {key: beforeKey, entity: beforeEntity} = getKeyAndEntityAtOffset(editorState, -1);
     const {key: currentKey, entity: currentEntity} = getKeyAndEntityAtOffset(editorState, 0);
     let selection = editorState.getSelection();
@@ -116,7 +163,7 @@ const setAddSuggestionForCharacter = (editorState, text, data) => {
     const currentChar = getCharByOffset(content, selection, 0);
     let newState = editorState;
 
-    if (currentChar === text && currentEntity !== null
+    if (currentChar === text && currentEntity != null
         && currentEntity.get('type') === 'DELETE_SUGGESTION'
         && currentEntity.get('data').author === data.author) {
         // if next character is the same as the new one and is delete suggestion -> reset entity
@@ -127,15 +174,15 @@ const setAddSuggestionForCharacter = (editorState, text, data) => {
     content = Modifier.insertText(content, selection, text);
     newState = EditorState.push(newState, content, 'insert-characters');
     newState = changeEditorSelection(newState, -1, 0, false);
-    newState = applyStyleForSuggestion(newState, inlineStyle, 'ADD_SUGGESTION');
+    newState = applyStyleForSuggestion(newState, crtInlineStyle, 'ADD_SUGGESTION');
     selection = newState.getSelection();
     content = newState.getCurrentContent();
 
-    if (beforeEntity !== null && beforeEntity.get('type') === 'ADD_SUGGESTION'
+    if (beforeEntity != null && beforeEntity.get('type') === 'ADD_SUGGESTION'
         && beforeEntity.get('data').author === data.author) {
         // if previous character is an add suggestion of the same user, set the same entity
         content = setEntity(content, selection, beforeKey, 'ADD_SUGGESTION');
-    } else if (currentEntity !== null && currentEntity.get('type') === 'ADD_SUGGESTION'
+    } else if (currentEntity != null && currentEntity.get('type') === 'ADD_SUGGESTION'
         && currentEntity.get('data').author === data.author) {
         // if next character is an add suggestion of the same user, set the same entity
         content = setEntity(content, selection, currentKey, 'ADD_SUGGESTION');
@@ -169,12 +216,12 @@ const setAddSuggestionForCharacter = (editorState, text, data) => {
 const setDeleteSuggestionForCharacter = (editorState, data) => {
     const {entity: currentEntity} = getKeyAndEntityAtOffset(editorState, -1);
 
-    if (currentEntity !== null && currentEntity.get('type') === 'DELETE_SUGGESTION') {
+    if (currentEntity != null && currentEntity.get('type') === 'DELETE_SUGGESTION') {
         // if current character is already marked as a delete suggestion, skip
         return changeEditorSelection(editorState, -1, -1, true);
     }
 
-    if (currentEntity !== null && currentEntity.get('type') === 'ADD_SUGGESTION' &&
+    if (currentEntity != null && currentEntity.get('type') === 'ADD_SUGGESTION' &&
         currentEntity.get('data').author === data.author) {
         // if current character already a suggestion of current user, delete the character
         return deleteCharacter(editorState);
@@ -347,7 +394,7 @@ const getKeyAndEntityAtOffset = (editorState, offset) => {
     let entity = null;
 
     tmpKey = getEntityKeyByOffset(content, selection, offset);
-    if (tmpKey !== null) {
+    if (tmpKey != null) {
         key = getEntityKey(content, tmpKey, types);
         entity = getEntity(content, tmpKey, types);
     }
