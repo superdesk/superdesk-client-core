@@ -267,7 +267,7 @@ describe('authoring', () => {
         browser.sleep(5000);
         monitoring.showMonitoring();
         expect(monitoring.getTextItem(2, 2)).toBe('item7');
-        monitoring.actionOnItem('Spike', 2, 2);
+        monitoring.actionOnItem('Spike', 2, 2, null, true);
         monitoring.showSpiked();
         expect(monitoring.getSpikedTextItem(0)).toBe('item7');
         monitoring.unspikeItem(0, 'Politic desk', 'Incoming Stage');

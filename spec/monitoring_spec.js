@@ -447,7 +447,7 @@ describe('monitoring', () => {
 
         monitoring.actionOnItem('Edit', 1, 2);
         authoring.close();
-        monitoring.actionOnItem('Spike', 1, 2);
+        monitoring.actionOnItem('Spike', 1, 2, null, true);
         expect(monitoring.getGroupItems(1).count()).toBe(3);
 
         monitoring.showSpiked();
@@ -469,7 +469,7 @@ describe('monitoring', () => {
         monitoring.openMonitoring();
 
         expect(monitoring.getGroupItems(0).count()).toBe(2);
-        monitoring.actionOnItem('Spike', 0, 0);
+        monitoring.actionOnItem('Spike', 0, 0, null, true);
         browser.sleep(100);
         expect(monitoring.getGroupItems(0).count()).toBe(1);
     });

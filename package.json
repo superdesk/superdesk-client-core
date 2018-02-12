@@ -139,7 +139,8 @@
   },
   "scripts": {
     "test": "grunt ci:travis",
-    "lint": "eslint --ext .js --ext .jsx scripts spec tasks *.js"
+    "lint": "eslint --ext .js --ext .jsx scripts spec tasks *.js",
+    "protractor": "protractor protractor.conf.js"
   },
   "engines": {
     "node": ">=6.6.0 <7.0.0",
