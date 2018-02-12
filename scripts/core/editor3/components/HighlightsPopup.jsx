@@ -149,21 +149,25 @@ export class HighlightsPopup extends Component {
      * @returns {JSX}
      */
     createHighlight(type, h, key) {
-        const contents = () => {
-            switch (type) {
-            case 'ANNOTATION':
-                return <AnnotationPopup annotation={h} />;
-            case 'COMMENT':
-                return <CommentPopup comment={h} />;
-            case 'DELETE_SUGGESTION':
-            case 'ADD_SUGGESTION':
-                return <SuggestionPopup suggestion={h} />;
-            default:
-                console.error('Invalid highlight type in HighlightsPopup.jsx: ', type);
-            }
-        };
-
-        return <Dropdown key={key} open={true}>{contents()}</Dropdown>;
+        switch (type) {
+        case 'ANNOTATION':
+            return (
+                <Dropdown key={key} open={true}>
+                    <AnnotationPopup annotation={h} />
+                </Dropdown>
+            );
+        case 'COMMENT':
+            return (
+                <Dropdown key={key} open={true}>
+                    <CommentPopup keyForDropdown={key} comment={h} />
+                </Dropdown>
+            );
+        case 'DELETE_SUGGESTION':
+        case 'ADD_SUGGESTION':
+            return <SuggestionPopup suggestion={h} />;
+        default:
+            console.error('Invalid highlight type in HighlightsPopup.jsx: ', type);
+        }
     }
 
     /**

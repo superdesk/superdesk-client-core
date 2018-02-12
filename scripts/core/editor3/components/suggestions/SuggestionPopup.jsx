@@ -3,7 +3,7 @@ import moment from 'moment';
 import {UserAvatar} from 'apps/users/components';
 import PropTypes from 'prop-types';
 import ng from 'core/services/ng';
-
+import {Dropdown} from 'core/ui/components';
 
 /**
  * @ngdoc React
@@ -35,10 +35,10 @@ export class SuggestionPopup extends Component {
     }
     render() {
         if (this.state.error !== null) {
-            return <div>{this.state.error}</div>;
+            return <Dropdown key={this.props.keyForDropdown} open={true}>{this.state.error}</Dropdown>;
         }
         if (this.state.author === null) {
-            return <div>loading...</div>;
+            return null;
         }
 
         var gettextCatalog = ng.get('gettextCatalog');
@@ -56,7 +56,7 @@ export class SuggestionPopup extends Component {
         };
 
         return (
-            <div>
+            <Dropdown key={this.props.keyForDropdown} open={true}>
                 <div className="highlights-popup__header">
                     <UserAvatar displayName={author.display_name} pictureUrl={author.picture_url} />
                     <div className="user-info">
@@ -77,12 +77,13 @@ export class SuggestionPopup extends Component {
                         {gettext('Reject')}
                     </button>
                 </div>
-            </div>
+            </Dropdown>
         );
     }
 }
 
 SuggestionPopup.propTypes = {
+    keyForDropdown: PropTypes.string,
     suggestion: PropTypes.shape({
         data: PropTypes.shape({
             author: PropTypes.string,
