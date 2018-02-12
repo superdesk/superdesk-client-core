@@ -6,6 +6,7 @@ import {Provider} from 'react-redux';
 
 import {Dropdown} from 'core/ui/components';
 import {CommentPopup} from './comments';
+import {SuggestionPopup} from './suggestions/SuggestionPopup';
 import {AnnotationPopup} from './annotations';
 
 // topPadding holds the number of pixels between the selection and the top side
@@ -110,6 +111,9 @@ export class HighlightsPopup extends Component {
                 return <AnnotationPopup annotation={h} />;
             case 'COMMENT':
                 return <CommentPopup comment={h} />;
+            case 'DELETE_SUGGESTION':
+            case 'ADD_SUGGESTION':
+                return <SuggestionPopup suggestion={h} />;
             default:
                 console.error('Invalid highlight type in HighlightsPopup.jsx: ', type);
             }

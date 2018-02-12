@@ -52,9 +52,8 @@ export function createDeleteSuggestion(suggestion) {
 const getSuggestionMetadata = () => {
     const data = {};
     const date = new Date();
-    const {user} = ng.get('session').identity;
 
-    data.author = user;
+    data.author = ng.get('session').identity._id;
     data.date = date;
 
     return data;
