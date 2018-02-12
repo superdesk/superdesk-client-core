@@ -355,7 +355,8 @@ Editor3Component.propTypes = {
     onCreateAddSuggestion: PropTypes.func,
     onCreateDeleteSuggestion: PropTypes.func,
     svc: PropTypes.object.isRequired,
-    invisibles: PropTypes.bool
+    invisibles: PropTypes.bool,
+    onPasteFromSuggestingMode: PropTypes.func,
 };
 
 Editor3Component.defaultProps = {
@@ -385,7 +386,8 @@ const mapDispatchToProps = (dispatch) => ({
     unlock: () => dispatch(actions.setLocked(false)),
     dispatch: (x) => dispatch(x),
     onCreateAddSuggestion: (chars) => dispatch(actions.createAddSuggestion(chars)),
-    onCreateDeleteSuggestion: () => dispatch(actions.createDeleteSuggestion())
+    onCreateDeleteSuggestion: () => dispatch(actions.createDeleteSuggestion()),
+    onPasteFromSuggestingMode: (content) => dispatch(actions.onPasteFromSuggestingMode(content))
 });
 
 export const Editor3 = connect(mapStateToProps, mapDispatchToProps)(Editor3Component);

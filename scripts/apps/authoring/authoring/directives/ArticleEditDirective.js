@@ -325,15 +325,18 @@ export function ArticleEditDirective(
                 return 1;
             };
 
-            scope.$watch('item.body_html', () => suggest.trigger(scope.item, scope.origItem));
+            scope.toggleSMS = () => {
+                const isMarked = _.get(scope, 'item.flags.marked_for_sms');
+                const field = _.get(scope, 'editor.sms.sourceField', 'abstract');
 
-            scope.$watch('item.flags.marked_for_sms', (isMarked) => {
                 if (isMarked) {
-                    scope.item.sms_message = scope.item.sms_message || scope.item.abstract || '';
+                    scope.item.sms_message = scope.item.sms_message || scope.item[field] || '';
                 } else if (scope.item) {
                     scope.item.sms_message = '';
                 }
-            });
+            };
+
+            scope.$watch('item.body_html', () => suggest.trigger(scope.item, scope.origItem));
 
             scope.$watch('item.profile', (profile) => {
                 if (profile) {

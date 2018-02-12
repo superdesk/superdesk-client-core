@@ -13,13 +13,20 @@ import {fromHTML} from 'core/editor3/html';
  * atomic blocks that need special handling in editor3.
  */
 export function handlePastedText(editorKey, text, html) {
-    if (!html) {
-        const {suggestingMode, onCreateAddSuggestion} = this.props;
+    const {suggestingMode, onCreateAddSuggestion, onPasteFromSuggestingMode} = this.props;
 
-        if (suggestingMode) {
+    if (suggestingMode) {
+        if (!html) {
             onCreateAddSuggestion(text);
-            return 'handled';
+        } else {
+            const pastedContent = fromHTML(html);
+
+            onPasteFromSuggestingMode(pastedContent);
         }
+        return 'handled';
+    }
+
+    if (!html) {
         return 'not-handled';
     }
 

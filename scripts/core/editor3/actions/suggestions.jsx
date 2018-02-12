@@ -35,10 +35,27 @@ export function createAddSuggestion(chars) {
  * @return {Object} action
  * @description add a new suggestion of type DELETE.
  */
-export function createDeleteSuggestion(suggestion) {
+export function createDeleteSuggestion() {
     return {
         type: 'CREATE_DELETE_SUGGESTION',
         payload: {data: getSuggestionMetadata()}
+    };
+}
+
+/**
+ * @ngdoc method
+ * @name onPasteFromSuggestingMode
+ * @param {Object} content, pasted editor content
+ * @return {Object} action
+ * @description add a new suggestion of type ADD based on pasted content.
+ */
+export function onPasteFromSuggestingMode(content) {
+    return {
+        type: 'PASTE_ADD_SUGGESTION',
+        payload: {
+            content: content,
+            data: getSuggestionMetadata()
+        }
     };
 }
 
