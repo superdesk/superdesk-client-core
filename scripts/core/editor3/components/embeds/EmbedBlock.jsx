@@ -77,7 +77,7 @@ export class EmbedBlockComponent extends Component {
         this.runScripts(html);
 
         return <div className="embed-block embed-block__remove">
-            <a className="btn btn--small btn--icon-only-circle pull-right" onClick={this.onClickDelete}>
+            <a className="btn btn--small btn--icon-only-circle" onClick={this.onClickDelete}>
                 <i className="icon-close-small" />
             </a>
             <div className="embed-block__wrapper" dangerouslySetInnerHTML={{__html: html}} />

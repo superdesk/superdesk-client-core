@@ -134,8 +134,12 @@ $editor-styleButton-active-color:#5890ff;
         position: relative;
         padding: 1rem;
 
-        &__remove .btn {
-            margin-bottom: 1rem;
+        &__remove {
+            text-align: right;
+
+            .btn {
+                margin-bottom: 1rem;
+            }
         }
     }
 
