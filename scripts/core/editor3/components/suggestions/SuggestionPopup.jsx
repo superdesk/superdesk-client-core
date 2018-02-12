@@ -44,12 +44,23 @@ export class SuggestionPopup extends Component {
         const fromNow = moment(date).calendar();
         const fullDate = moment(date).format('MMMM Do YYYY, h:mm:ss a');
 
+        const actionNames = {
+            ADD_SUGGESTION: gettext('Add'),
+            DELETE_SUGGESTION: gettext('Remove'),
+        };
+
         return (
-            <div className="highlights-popup__header">
-                <UserAvatar displayName={author.display_name} pictureUrl={author.picture_url} />
-                <div className="user-info">
-                    <div className="author-name">{author.display_name}</div>
-                    <div className="date" title={fullDate}>{fromNow}</div>
+            <div>
+                <div className="highlights-popup__header">
+                    <UserAvatar displayName={author.display_name} pictureUrl={author.picture_url} />
+                    <div className="user-info">
+                        <div className="author-name">{author.display_name}</div>
+                        <div className="date" title={fullDate}>{fromNow}</div>
+                    </div>
+                </div>
+                <div>
+                    <strong>{actionNames[this.props.suggestion.type]}: </strong>
+                    {this.props.suggestion.suggestionText}
                 </div>
                 <br />
                 <div>
@@ -71,7 +82,7 @@ SuggestionPopup.propTypes = {
             author: PropTypes.string,
             date: PropTypes.date
         }),
-        type: PropTypes.string,
-        mutability: PropTypes.string
+        suggestionText: PropTypes.string,
+        type: PropTypes.string
     })
 };

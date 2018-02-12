@@ -65,6 +65,44 @@ export class HighlightsPopup extends Component {
         return {top, left};
     }
 
+    getTextForEntityRange(editorState, entityKey) {
+        const selection = editorState.getSelection();
+
+        if (selection.isCollapsed() === false) {
+            throw new Error('Only collapsed selection supported');
+        }
+
+        var blockKey = selection.getAnchorKey();
+        var block = editorState.getCurrentContent().getBlockForKey(blockKey);
+
+        var from = null;
+        var to = null;
+
+        // check backwards
+        for (let i = selection.getAnchorOffset(); i >= 0; i--) {
+            let currentEntityKey = block.getEntityAt(i);
+
+            if (currentEntityKey === entityKey) {
+                from = i;
+            } else {
+                break;
+            }
+        }
+
+        // check forward
+        for (let i = selection.getAnchorOffset(); i < block.getLength(); i++) {
+            let currentEntityKey = block.getEntityAt(i);
+
+            if (currentEntityKey === entityKey) {
+                to = i;
+            } else {
+                break;
+            }
+        }
+
+        return block.getText().slice(from, to + 1);
+    }
+
     /**
      * @ngdoc method
      * @name HighlightsPopup#component
@@ -77,10 +115,16 @@ export class HighlightsPopup extends Component {
         const position = this.position();
 
         var highlightsAndSuggestions = Object.keys(highlights).map((key) => ({type: key, value: highlights[key]}));
-        var suggestion = this.getSelectedSuggestionEntity();
+        var suggestionEntityKey = this.getSelectedSuggestionEntityKey();
 
-        if (suggestion !== null) {
-            highlightsAndSuggestions = [...highlightsAndSuggestions, {type: suggestion.getType(), value: suggestion}];
+        if (suggestionEntityKey !== null) {
+            var suggestionEntity = Entity.get(suggestionEntityKey);
+            let suggestionText = this.getTextForEntityRange(this.props.editorState, suggestionEntityKey);
+
+            highlightsAndSuggestions = [
+                ...highlightsAndSuggestions,
+                {type: suggestionEntity.getType(), value: {...suggestionEntity.toJS(), suggestionText}}
+            ];
         }
 
         // We need to create a new provider here because this component gets rendered
@@ -177,7 +221,7 @@ export class HighlightsPopup extends Component {
             Object.values(nextProps.highlights)[0] !== Object.values(this.props.highlights)[0];
     }
 
-    getSelectedSuggestionEntity() {
+    getSelectedSuggestionEntityKey() {
         const {editorState} = this.props;
         const selection = editorState.getSelection();
 
@@ -193,7 +237,7 @@ export class HighlightsPopup extends Component {
             return null;
         }
 
-        return Entity.get(entityKey);
+        return entityKey;
     }
 
     shouldRender() {
@@ -201,11 +245,13 @@ export class HighlightsPopup extends Component {
             return true;
         }
 
-        var selectedSuggestionEntity = this.getSelectedSuggestionEntity();
+        var selectedSuggestionEntityKey = this.getSelectedSuggestionEntityKey();
 
-        if (selectedSuggestionEntity === null) {
+        if (selectedSuggestionEntityKey === null) {
             return false;
         }
+
+        var selectedSuggestionEntity = Entity.get(selectedSuggestionEntityKey);
 
         var entityType = selectedSuggestionEntity.getType();
 
