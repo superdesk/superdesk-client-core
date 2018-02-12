@@ -23,7 +23,7 @@ export class SuggestionPopup extends Component {
     }
     componentDidMount() {
         var gettextCatalog = ng.get('gettextCatalog');
-        const gettext = gettextCatalog.getString.bind(gettextCatalog)
+        const gettext = gettextCatalog.getString.bind(gettextCatalog);
 
         ng.get('api')('users').getById(this.props.suggestion.data.author)
             .then((author) => {
