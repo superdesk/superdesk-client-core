@@ -22,17 +22,20 @@ export class SuggestionPopup extends Component {
         };
     }
     componentDidMount() {
+        var gettextCatalog = ng.get('gettextCatalog');
+        const gettext = gettextCatalog.getString.bind(gettextCatalog)
+
         ng.get('api')('users').getById(this.props.suggestion.data.author)
             .then((author) => {
                 this.setState({author});
             })
             .catch((error) => {
-                this.setState({error});
+                this.setState({error: gettext('An error occured, please try again.')});
             });
     }
     render() {
         if (this.state.error !== null) {
-            return <div>ERROR: {this.state.error}</div>;
+            return <div>{this.state.error}</div>;
         }
         if (this.state.author === null) {
             return <div>loading...</div>;
