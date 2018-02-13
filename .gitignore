@@ -13,7 +13,6 @@ templates-cache.generated.js
 .env
 npm-debug.log
 index.html
-yarn.lock
 yarn-error.log
 
 # VIM related files

@@ -26,13 +26,6 @@ module.exports = function(grunt) {
         ]
     });
 
-    // Only load dgeni if the docs task is running. This is because dgeni-alive
-    // loads additional unneeded C code which pollutes other tasks even when not
-    // using it.
-    if (grunt.cli.tasks.indexOf('docs') > -1) {
-        grunt.loadNpmTasks('dgeni-alive');
-    }
-
     // Auto-load configuration
     require('load-grunt-config')(grunt, {
         config: config,
@@ -56,9 +49,6 @@ module.exports = function(grunt) {
         'copy:assets-ui-guide',
         'webpack-dev-server:ui-guide'
     ]);
-
-    // API docuemntation
-    grunt.registerTask('docs', ['dgeni-alive']);
 
     // Development server
     grunt.registerTask('server', [
