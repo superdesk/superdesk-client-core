@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
-import {getVisibleSelectionRect, SelectionState} from 'draft-js';
+import {getVisibleSelectionRect, EditorState, Entity} from 'draft-js';
 import {render, unmountComponentAtNode} from 'react-dom';
 import PropTypes from 'prop-types';
 import {Provider} from 'react-redux';
 
 import {Dropdown} from 'core/ui/components';
 import {CommentPopup} from './comments';
+import {SuggestionPopup} from './suggestions/SuggestionPopup';
 import {AnnotationPopup} from './annotations';
 
 // topPadding holds the number of pixels between the selection and the top side
@@ -64,6 +65,44 @@ export class HighlightsPopup extends Component {
         return {top, left};
     }
 
+    getTextForEntityRange(editorState, entityKey) {
+        const selection = editorState.getSelection();
+
+        if (selection.isCollapsed() === false) {
+            throw new Error('Only collapsed selection supported');
+        }
+
+        var blockKey = selection.getAnchorKey();
+        var block = editorState.getCurrentContent().getBlockForKey(blockKey);
+
+        var from = null;
+        var to = null;
+
+        // check backwards
+        for (let i = selection.getAnchorOffset(); i >= 0; i--) {
+            let currentEntityKey = block.getEntityAt(i);
+
+            if (currentEntityKey === entityKey) {
+                from = i;
+            } else {
+                break;
+            }
+        }
+
+        // check forward
+        for (let i = selection.getAnchorOffset(); i < block.getLength(); i++) {
+            let currentEntityKey = block.getEntityAt(i);
+
+            if (currentEntityKey === entityKey) {
+                to = i;
+            } else {
+                break;
+            }
+        }
+
+        return block.getText().slice(from, to + 1);
+    }
+
     /**
      * @ngdoc method
      * @name HighlightsPopup#component
@@ -75,12 +114,25 @@ export class HighlightsPopup extends Component {
         const {store} = this.context;
         const position = this.position();
 
+        var highlightsAndSuggestions = Object.keys(highlights).map((key) => ({type: key, value: highlights[key]}));
+        var suggestionEntityKey = this.getSelectedSuggestionEntityKey();
+
+        if (suggestionEntityKey !== null) {
+            var suggestionEntity = Entity.get(suggestionEntityKey);
+            let suggestionText = this.getTextForEntityRange(this.props.editorState, suggestionEntityKey);
+
+            highlightsAndSuggestions = [
+                ...highlightsAndSuggestions,
+                {type: suggestionEntity.getType(), value: {...suggestionEntity.toJS(), suggestionText}}
+            ];
+        }
+
         // We need to create a new provider here because this component gets rendered
         // outside the editor tree and loses context.
         return (
             <Provider store={store}>
                 <div className="highlights-popup" style={position}>
-                    {Object.keys(highlights).map(this.createHighlight)}
+                    {highlightsAndSuggestions.map((obj, i) => this.createHighlight(obj.type, obj.value, i))}
                 </div>
             </Provider>
         );
@@ -96,21 +148,26 @@ export class HighlightsPopup extends Component {
      * inside the component method.
      * @returns {JSX}
      */
-    createHighlight(type, key) {
-        const h = this.props.highlights[type];
-
-        const contents = () => {
-            switch (type) {
-            case 'ANNOTATION':
-                return <AnnotationPopup annotation={h} />;
-            case 'COMMENT':
-                return <CommentPopup comment={h} />;
-            default:
-                console.error('Invalid highlight type in HighlightsPopup.jsx: ', type);
-            }
-        };
-
-        return <Dropdown key={key} open={true}>{contents()}</Dropdown>;
+    createHighlight(type, h, key) {
+        switch (type) {
+        case 'ANNOTATION':
+            return (
+                <Dropdown key={key} open={true}>
+                    <AnnotationPopup annotation={h} />
+                </Dropdown>
+            );
+        case 'COMMENT':
+            return (
+                <Dropdown key={key} open={true}>
+                    <CommentPopup keyForDropdown={key} comment={h} />
+                </Dropdown>
+            );
+        case 'DELETE_SUGGESTION':
+        case 'ADD_SUGGESTION':
+            return <SuggestionPopup suggestion={h} />;
+        default:
+            console.error('Invalid highlight type in HighlightsPopup.jsx: ', type);
+        }
     }
 
     /**
@@ -158,8 +215,8 @@ export class HighlightsPopup extends Component {
     }
 
     shouldComponentUpdate(nextProps) {
-        const nextSelection = nextProps.selection;
-        const {selection} = this.props;
+        const nextSelection = nextProps.editorState.getSelection();
+        const selection = this.props.editorState.getSelection();
 
         // only update the component if the cursor has moved
         return nextSelection.getAnchorOffset() !== selection.getAnchorOffset() ||
@@ -168,12 +225,50 @@ export class HighlightsPopup extends Component {
             Object.values(nextProps.highlights)[0] !== Object.values(this.props.highlights)[0];
     }
 
-    componentDidUpdate() {
-        const shouldRender = Object.keys(this.props.highlights).length > 0;
+    getSelectedSuggestionEntityKey() {
+        const {editorState} = this.props;
+        const selection = editorState.getSelection();
 
+        if (selection.isCollapsed() === false) {
+            return null;
+        }
+
+        var blockKey = selection.getAnchorKey();
+        var block = editorState.getCurrentContent().getBlockForKey(blockKey);
+        var entityKey = block.getEntityAt(selection.getAnchorOffset());
+
+        if (entityKey === null) {
+            return null;
+        }
+
+        return entityKey;
+    }
+
+    shouldRender() {
+        if (Object.keys(this.props.highlights).length > 0) {
+            return true;
+        }
+
+        var selectedSuggestionEntityKey = this.getSelectedSuggestionEntityKey();
+
+        if (selectedSuggestionEntityKey === null) {
+            return false;
+        }
+
+        var selectedSuggestionEntity = Entity.get(selectedSuggestionEntityKey);
+
+        var entityType = selectedSuggestionEntity.getType();
+
+        if (entityType === 'ADD_SUGGESTION' || entityType === 'DELETE_SUGGESTION') {
+            return true;
+        }
+
+        return false;
+    }
+    componentDidUpdate() {
         // Waiting one cycle allows the selection to be rendered in the browser
         // so that we can correctly retrieve its position.
-        setTimeout(() => shouldRender ? this.renderCustom() : this.unmountCustom(), 0);
+        setTimeout(() => this.shouldRender() ? this.renderCustom() : this.unmountCustom(), 0);
     }
 
     componentWillUnmount() {
@@ -192,7 +287,7 @@ HighlightsPopup.contextTypes = {
 };
 
 HighlightsPopup.propTypes = {
-    selection: PropTypes.instanceOf(SelectionState),
+    editorState: PropTypes.instanceOf(EditorState),
     editorNode: PropTypes.object,
     highlights: PropTypes.object
 };
