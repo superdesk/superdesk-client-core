@@ -20,7 +20,7 @@ import {LinkDecorator} from './links';
 import {getBlockRenderer} from './blockRenderer';
 import {customStyleMap} from './customStyleMap';
 import classNames from 'classnames';
-import {handlePastedText} from './handlePastedText';
+import {handlePastedText, allowEditSuggestion} from './handlePastedText';
 import {getEntityTypeAfterCursor, getEntityTypeBeforeCursor} from './links/entityUtils';
 import {HighlightsPopup} from './HighlightsPopup';
 import UnstyledBlock from './UnstyledBlock';
@@ -81,6 +81,7 @@ export class Editor3Component extends React.Component {
         this.handleKeyCommand = this.handleKeyCommand.bind(this);
         this.handleBeforeInput = this.handleBeforeInput.bind(this);
         this.keyBindingFn = this.keyBindingFn.bind(this);
+        this.allowEditSuggestion = allowEditSuggestion.bind(this);
     }
 
     /**
@@ -173,9 +174,25 @@ export class Editor3Component extends React.Component {
         case 'soft-newline':
             newState = RichUtils.insertSoftNewline(editorState);
             break;
-        case 'backspace': {
+        case 'delete':
+            if (!this.allowEditSuggestion('delete')) {
+                return 'handled';
+            }
+
             if (suggestingMode) {
-                onCreateDeleteSuggestion();
+                onCreateDeleteSuggestion('delete');
+                return 'handled';
+            }
+
+            newState = RichUtils.handleKeyCommand(editorState, command);
+            break;
+        case 'backspace': {
+            if (!this.allowEditSuggestion('backspace')) {
+                return 'handled';
+            }
+
+            if (suggestingMode) {
+                onCreateDeleteSuggestion('backspace');
                 return 'handled';
             }
 
@@ -217,10 +234,48 @@ export class Editor3Component extends React.Component {
     handleBeforeInput(chars) {
         const {editorState, onChange, suggestingMode, onCreateAddSuggestion} = this.props;
 
+        if (!this.allowEditSuggestion('insert')) {
+            return 'handled';
+        }
+
         if (suggestingMode) {
             onCreateAddSuggestion(chars);
             return 'handled';
-        } else if (chars !== ' ') {
+        } else if (!this.allowEditSuggestion('backspace')) {
+            // there is a suggestion before the current position -> prevent the copy of
+            // suggestion entity and style
+            const styles = ['BOLD', 'ITALIC', 'UNDERLINE'];
+            const inlineStyle = editorState.getCurrentInlineStyle();
+            const selection = editorState.getSelection();
+            let newSelection = selection.merge({
+                anchorOffset: selection.getStartOffset(),
+                focusOffset: selection.getEndOffset() + chars.length,
+                isBackward: false
+            });
+            let newContentState = editorState.getCurrentContent();
+            let newEditorState;
+
+            newContentState = Modifier.insertText(newContentState, selection, chars);
+            inlineStyle.forEach((style) => {
+                if (styles.indexOf(style) !== -1) {
+                    newContentState = Modifier.applyInlineStyle(newContentState, newSelection, style);
+                }
+            });
+
+            newEditorState = EditorState.push(editorState, newContentState, 'insert-characters');
+
+            newSelection = selection.merge({
+                anchorOffset: selection.getStartOffset() + chars.length,
+                focusOffset: selection.getEndOffset() + chars.length,
+                isBackward: false
+            });
+            newEditorState = EditorState.forceSelection(newEditorState, newSelection);
+
+            onChange(newEditorState);
+            return 'handled';
+        }
+
+        if (chars !== ' ') {
             return 'not-handled';
         }
 
@@ -379,7 +434,7 @@ const mapDispatchToProps = (dispatch) => ({
     unlock: () => dispatch(actions.setLocked(false)),
     dispatch: (x) => dispatch(x),
     onCreateAddSuggestion: (chars) => dispatch(actions.createAddSuggestion(chars)),
-    onCreateDeleteSuggestion: () => dispatch(actions.createDeleteSuggestion()),
+    onCreateDeleteSuggestion: (action) => dispatch(actions.createDeleteSuggestion(action)),
     onPasteFromSuggestingMode: (content) => dispatch(actions.onPasteFromSuggestingMode(content))
 });
 

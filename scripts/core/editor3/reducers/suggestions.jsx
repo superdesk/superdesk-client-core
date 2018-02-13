@@ -1,7 +1,7 @@
 import {EditorState, Modifier, RichUtils} from 'draft-js';
 import {onChange} from './editor3';
-import {getEntityKeyByOffset, getCharByOffset,
-    getEntityKey, getEntity, setEntity, deleteEntity} from './utils';
+import {getEntityKeyByOffset, getCharByOffset} from '../helpers/entity';
+import {getEntityKey, getEntity, setEntity, deleteEntity} from '../helpers/composite-entity';
 
 const suggestions = (state = {}, action) => {
     switch (action.type) {
@@ -26,11 +26,10 @@ const suggestions = (state = {}, action) => {
  * @description Disable/enable the suggesting mode.
  */
 const toggleSuggestingMode = (state) => {
-    const {suggestingMode, editorState} = state;
-    const newState = resetDefaultSugestionStyle(editorState);
+    const {suggestingMode} = state;
 
     return {
-        ...onChange(state, newState),
+        ...state,
         suggestingMode: !suggestingMode
     };
 };
@@ -65,13 +64,17 @@ const createAddSuggestion = (state, {text, data}) => {
  * @return {Object} returns new state
  * @description Add a new suggestion of type DELETE.
  */
-const createDeleteSuggestion = (state, {data}) => {
+const createDeleteSuggestion = (state, {action, data}) => {
     let {editorState} = state;
     const selection = editorState.getSelection();
     const selectionLength = selection.getEndOffset() - selection.getStartOffset();
 
     if (selectionLength === 0) {
-        editorState = changeEditorSelection(editorState, -1, 0, false);
+        if (action === 'backspace') {
+            editorState = changeEditorSelection(editorState, -1, 0, false);
+        } else {
+            editorState = changeEditorSelection(editorState, 0, 1, false);
+        }
     }
     editorState = deleteCurrentSelection(editorState, data);
 
@@ -270,21 +273,6 @@ const applyStyleForSuggestion = (editorState, inlineStyle, type) => {
     });
 
     return RichUtils.toggleInlineStyle(newState, type);
-};
-
-/**
- * @ngdoc method
- * @name resetDefaultSugestionStyle
- * @param {Object} editorState
- * @return {Object} returns new state
- * @description Filter out suggestion related styles from current styles for next character.
- */
-const resetDefaultSugestionStyle = (editorState) => {
-    const types = ['DELETE_SUGGESTION', 'ADD_SUGGESTION'];
-    let inlineStyle = editorState.getCurrentInlineStyle();
-
-    inlineStyle = inlineStyle.filter((style) => types.indexOf(style) === -1);
-    return EditorState.setInlineStyleOverride(editorState, inlineStyle);
 };
 
 /**

@@ -35,10 +35,13 @@ export function createAddSuggestion(chars) {
  * @return {Object} action
  * @description add a new suggestion of type DELETE.
  */
-export function createDeleteSuggestion() {
+export function createDeleteSuggestion(action) {
     return {
         type: 'CREATE_DELETE_SUGGESTION',
-        payload: {data: getSuggestionMetadata()}
+        payload: {
+            action: action,
+            data: getSuggestionMetadata()
+        }
     };
 }
 
