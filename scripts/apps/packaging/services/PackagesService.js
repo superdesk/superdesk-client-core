@@ -123,17 +123,27 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
         };
     };
 
-    this.setItemLabel = function(item, label) {
-        var pkg = authoringWorkspace.getItem();
-
+    function setItemLabel(pkg, item, label) {
         _.forEach(pkg.groups, (group) => {
-            var ref = _.find(group.refs, {guid: item._id});
+            var ref = _.find(group.refs, {residRef: item._id});
 
             if (ref) {
                 ref.label = label ? label.qcode : null;
                 $rootScope.$broadcast('package:updateGroupRef', {ref: ref, group: group});
             }
         });
+    }
+
+    this.setItemLabel = function(item, label) {
+        var pkg = authoringWorkspace.getItem();
+
+        if (pkg._autosaved) {
+            autosave.get(pkg).then((autosavedPkg) => {
+                setItemLabel(autosavedPkg._autosave, item, label);
+            });
+        } else {
+            setItemLabel(pkg, item, label);
+        }
     };
 
     this.isSetItemLabel = function(item, label) {
