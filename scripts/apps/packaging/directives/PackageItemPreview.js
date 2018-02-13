@@ -83,7 +83,7 @@ export function PackageItemPreview(api, lock, superdesk, authoringWorkspace, $lo
             });
 
             scope.$on('item:label', (_e, data) => {
-                if (scope.data && scope.data._id === data.item.guid) {
+                if (scope.data && scope.data._id === data.item.residRef) {
                     scope.label = _.find(scope.labels, {qcode: data.item.label});
                 }
             });
