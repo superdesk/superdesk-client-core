@@ -103,10 +103,10 @@ export class MediaBlockComponent extends Component {
 
         return (
 
-            <div className="image-block image-block__remove sd-shadow--z1"
+            <div className="image-block"
                 onClick={(e) => e.stopPropagation()}
                 draggable={true} onDragStart={this.onDragStart}>
-                <a className="btn btn--small btn--icon-only-circle pull-right" onClick={this.onClickDelete}>
+                <a className="icn-btn image-block__remove" onClick={this.onClickDelete}>
                     <i className="icon-close-small" />
                 </a>
                 <div className="image-block__wrapper">
@@ -119,15 +119,117 @@ export class MediaBlockComponent extends Component {
                             value={data.headline}
                             onChange={this.onChange}
                         /> : null }
+                    
                     {mediaType === 'picture' &&
-                        <img src={rendition.href} alt={alt} onClick={this.onClick} />
+                        <div className="image-block__image">
+                            <div className="image-block__image-overlay">
+                                <div className="image-block__metadata image-block__metadata--top">
+                                    <span>
+                                        <em>{gettextCatalog.getString('Title:')}{' '}</em>
+                                        {data.headline || gettextCatalog.getString('[No Value]')}
+                                    </span>
+                                </div>
+                                <div className="image-block__icons-block">
+                                    <a className="image-block__image-edit" onClick={this.onClick}><i className="icon-pencil"></i></a>
+                                </div>
+                                <div className="image-block__metadata">
+                                    <span>
+                                        <em>{gettextCatalog.getString('Alt text:')}{' '}</em>
+                                        {data.alt_text || gettextCatalog.getString('[No Value]')}
+                                    </span>
+                                    <span>
+                                        <em>{gettextCatalog.getString('Credit:')}{' '}</em>
+                                        {data.byline || gettextCatalog.getString('[No Value]')}
+                                    </span>
+                                    <span>
+                                        <em>{gettextCatalog.getString('Copyright holder:')}{' '}</em>
+                                        {data.copyrightholder || gettextCatalog.getString('[No Value]')}
+                                    </span>
+                                    <span>
+                                        <em>{gettextCatalog.getString('Assign rights:')}{' '}</em>
+                                        {
+                                            getTranslationForAssignRights(data.usageterms, gettextCatalog)
+                                            || gettextCatalog.getString('[No Value]')
+                                        }
+                                    </span>
+                                    <span>
+                                        <em>{gettextCatalog.getString('Copyright notice:')}{' '}</em>
+                                        {data.copyrightnotice || gettextCatalog.getString('[No Value]')}
+                                    </span>
+                                </div>
+                            
+                            </div>
+                            <img src={rendition.href} alt={alt} />
+                        </div>
                     }
                     {mediaType === 'video' &&
-                        <video controls src={rendition.href} alt={alt} width="100%" height="100%" />
+                        <div className="image-block__image">
+                            <div className="image-block__image-overlay image-block__image-overlay--video">
+                                <div className="image-block__metadata image-block__metadata--top">
+                                    <span>
+                                        <em>{gettextCatalog.getString('Title:')}{' '}</em>
+                                        {data.headline || gettextCatalog.getString('[No Value]')}
+                                    </span>
+                                </div>
+                                <div className="image-block__icons-block"></div>
+                                <div className="image-block__metadata">
+                                    <span>
+                                        <em>{gettextCatalog.getString('Alt text:')}{' '}</em>
+                                        {data.alt_text || gettextCatalog.getString('[No Value]')}
+                                    </span>
+                                    <span>
+                                        <em>{gettextCatalog.getString('Credit:')}{' '}</em>
+                                        {data.byline || gettextCatalog.getString('[No Value]')}
+                                    </span>
+                                    <span>
+                                        <em>{gettextCatalog.getString('Copyright holder:')}{' '}</em>
+                                        {data.copyrightholder || gettextCatalog.getString('[No Value]')}
+                                    </span>
+                                    <span>
+                                        <em>{gettextCatalog.getString('Assign rights:')}{' '}</em>
+                                        {
+                                            getTranslationForAssignRights(data.usageterms, gettextCatalog)
+                                            || gettextCatalog.getString('[No Value]')
+                                        }
+                                    </span>
+                                    <span>
+                                        <em>{gettextCatalog.getString('Copyright notice:')}{' '}</em>
+                                        {data.copyrightnotice || gettextCatalog.getString('[No Value]')}
+                                    </span>
+                                </div>
+                            </div>
+                            <video controls src={rendition.href} alt={alt} width="100%" height="100%" />
+                        </div>
                     }
                     {mediaType === 'audio' &&
+                     <div>
                         <audio controls src={rendition.href} alt={alt} width="100%" height="100%" />
+
+                        <div className="image-block__metadata image-block__metadata--plain">
+                            <span>
+                                <em>{gettextCatalog.getString('Credit:')}{' '}</em>
+                                {data.byline || gettextCatalog.getString('[No Value]')}
+                            </span>
+                            <span>
+                                <em>{gettextCatalog.getString('Copyright holder:')}{' '}</em>
+                                {data.copyrightholder || gettextCatalog.getString('[No Value]')}
+                            </span>
+                            <span>
+                                <em>{gettextCatalog.getString('Assign rights:')}{' '}</em>
+                                {
+                                    getTranslationForAssignRights(data.usageterms, gettextCatalog)
+                                    || gettextCatalog.getString('[No Value]')
+                                }
+                            </span>
+                            <span>
+                                <em>{gettextCatalog.getString('Copyright notice:')}{' '}</em>
+                                {data.copyrightnotice || gettextCatalog.getString('[No Value]')}
+                            </span>
+                        </div>
+                    </div>
+
                     }
+                    
                     <Textarea
                         placeholder={gettext('Caption')}
                         onFocus={setLocked}
@@ -136,36 +238,6 @@ export class MediaBlockComponent extends Component {
                         value={data.description_text}
                         onChange={this.onChange}
                     />
-
-                    <div>
-                        {gettextCatalog.getString('Alt text')}{' '}
-                        <strong>{data.alt_text || gettextCatalog.getString('[No Value]')}</strong>
-                    </div>
-
-                    <div>
-                        {gettextCatalog.getString('Credit')}{' '}
-                        <strong>{data.byline || gettextCatalog.getString('[No Value]')}</strong>
-                    </div>
-
-                    <div>
-                        {gettextCatalog.getString('Copyright holder')}{' '}
-                        <strong>{data.copyrightholder || gettextCatalog.getString('[No Value]')}</strong>
-                    </div>
-
-                    <div>
-                        {gettextCatalog.getString('Assign rights')}{' '}
-                        <strong>
-                            {
-                                getTranslationForAssignRights(data.usageterms, gettextCatalog)
-                                || gettextCatalog.getString('[No Value]')
-                            }
-                        </strong>
-                    </div>
-
-                    <div>
-                        {gettextCatalog.getString('Copyright notice')}{' '}
-                        <strong>{data.copyrightnotice || gettextCatalog.getString('[No Value]')}</strong>
-                    </div>
                 </div>
             </div>
         );
