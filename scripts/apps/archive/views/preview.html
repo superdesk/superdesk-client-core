@@ -1,7 +1,7 @@
 <div>
     <div class="content-container">
 
-      <header class="preview-header" ng-class="{active: !toggleHeader}">
+      <header class="preview-header" ng-class="{active: toggleHeader}">
         <div class="preview-header__timestamp" title="{{userLookup[selected.preview.original_creator].display_name || selected.preview.original_creator}}">
             <label translate>Created</label><time sd-datetime data-date="selected.preview.firstcreated"></time>
             <label ng-if="selected.preview.original_creator" translate>by</label><b>{{userLookup[selected.preview.original_creator].display_name || selected.preview.original_creator}}</b>
@@ -59,7 +59,7 @@
           </div>
         </div>
 
-        <button class="preview-header__toggle" ng-class="{active: toggleHeader}" ng-click="toggleHeader = !toggleHeader" tabindex="-1"><i class="icon-chevron-up-thin"></i></button>
+        <button class="preview-header__toggle" ng-class="{active: toggleHeader}" ng-click="toggleHeader = !toggleHeader" tabindex="-1"><i class="icon-chevron-down-thin"></i></button>
       </header>
 
         <div class="composite-nav" ng-if="selected.preview.type === 'composite'">
@@ -116,13 +116,13 @@
             <div class="text abstract" ng-show="selected.preview.abstract" sd-html-preview="selected.preview.abstract"></div>
 
             <div class="text byline" ng-show="selected.preview.byline" sd-html-preview="selected.preview.byline"></div>
-            
+
             <div class="text dateline" ng-show="selected.preview.dateline" sd-html-preview="selected.preview.dateline.text"></div>
 
             <div class="text body-text" ng-show="selected.preview.body_html" sd-html-preview="selected.preview.body_html"></div>
 
             <div class="text body-footer" ng-show="selected.preview.body_footer" sd-html-preview="selected.preview.body_footer"></div>
-           
+
             <div class="text sign-off" ng-show="selected.preview.sign_off" sd-html-preview="selected.preview.sign_off"></div>
 
             <div class="composite-preview" ng-if="selected.preview.type === 'composite'">

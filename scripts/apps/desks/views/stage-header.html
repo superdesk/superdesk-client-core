@@ -3,7 +3,7 @@
             ng-if="agg.state.solo._id !== group._id"
             ng-class="{closed: !agg.getExpandedState(group._id)}"
             ng-click="agg.switchExpandedState(group._id)">
-        <i class="icon-chevron-down-thin"></i>
+        <i class="icon-chevron-up-thin"></i>
     </button>
     <span class="stage-header__name">
         <a href="" ng-show="agg.state.solo._id !== group._id" ng-click="agg.setSoloGroup(group)">
