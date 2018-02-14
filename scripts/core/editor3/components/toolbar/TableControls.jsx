@@ -32,9 +32,12 @@ const TableControlsComponent = ({
 
     return <div className="Editor3-controls table-controls">
         <StyleButton active={withHeader} label={'TH'} onToggle={toggleTableHead} />
-        <span className="Editor3-styleButton Editor3-styleButton--short" onClick={removeRow}><i className="icon-minus-sign" /></span>
-        <span className="Editor3-styleButton" onClick={addRowAfter}><i className="icon-plus-sign" /> row</span>
-        <span className="Editor3-styleButton Editor3-styleButton--short" onClick={removeCol}><i className="icon-minus-sign" /></span>
+        <span className="Editor3-styleButton Editor3-styleButton--short"
+            onClick={removeRow}><i className="icon-minus-sign" /></span>
+        <span className="Editor3-styleButton"
+            onClick={addRowAfter}><i className="icon-plus-sign" /> row</span>
+        <span className="Editor3-styleButton Editor3-styleButton--short"
+            onClick={removeCol}><i className="icon-minus-sign" /></span>
         <span className="Editor3-styleButton" onClick={addColAfter}><i className="icon-plus-sign" /> col</span>
     </div>;
 };
