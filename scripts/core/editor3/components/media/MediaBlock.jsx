@@ -119,7 +119,7 @@ export class MediaBlockComponent extends Component {
                             value={data.headline}
                             onChange={this.onChange}
                         /> : null }
-                    
+
                     {mediaType === 'picture' &&
                         <div className="image-block__image">
                             <div className="image-block__image-overlay">
@@ -130,7 +130,8 @@ export class MediaBlockComponent extends Component {
                                     </span>
                                 </div>
                                 <div className="image-block__icons-block">
-                                    <a className="image-block__image-edit" onClick={this.onClick}><i className="icon-pencil"></i></a>
+                                    <a className="image-block__image-edit"
+                                        onClick={this.onClick}><i className="icon-pencil"/></a>
                                 </div>
                                 <div className="image-block__metadata">
                                     <span>
@@ -157,7 +158,7 @@ export class MediaBlockComponent extends Component {
                                         {data.copyrightnotice || gettextCatalog.getString('[No Value]')}
                                     </span>
                                 </div>
-                            
+
                             </div>
                             <img src={rendition.href} alt={alt} />
                         </div>
@@ -171,7 +172,7 @@ export class MediaBlockComponent extends Component {
                                         {data.headline || gettextCatalog.getString('[No Value]')}
                                     </span>
                                 </div>
-                                <div className="image-block__icons-block"></div>
+                                <div className="image-block__icons-block" />
                                 <div className="image-block__metadata">
                                     <span>
                                         <em>{gettextCatalog.getString('Alt text:')}{' '}</em>
@@ -202,34 +203,34 @@ export class MediaBlockComponent extends Component {
                         </div>
                     }
                     {mediaType === 'audio' &&
-                     <div>
-                        <audio controls src={rendition.href} alt={alt} width="100%" height="100%" />
+                        <div>
+                            <audio controls src={rendition.href} alt={alt} width="100%" height="100%" />
 
-                        <div className="image-block__metadata image-block__metadata--plain">
-                            <span>
-                                <em>{gettextCatalog.getString('Credit:')}{' '}</em>
-                                {data.byline || gettextCatalog.getString('[No Value]')}
-                            </span>
-                            <span>
-                                <em>{gettextCatalog.getString('Copyright holder:')}{' '}</em>
-                                {data.copyrightholder || gettextCatalog.getString('[No Value]')}
-                            </span>
-                            <span>
-                                <em>{gettextCatalog.getString('Assign rights:')}{' '}</em>
-                                {
-                                    getTranslationForAssignRights(data.usageterms, gettextCatalog)
-                                    || gettextCatalog.getString('[No Value]')
-                                }
-                            </span>
-                            <span>
-                                <em>{gettextCatalog.getString('Copyright notice:')}{' '}</em>
-                                {data.copyrightnotice || gettextCatalog.getString('[No Value]')}
-                            </span>
+                            <div className="image-block__metadata image-block__metadata--plain">
+                                <span>
+                                    <em>{gettextCatalog.getString('Credit:')}{' '}</em>
+                                    {data.byline || gettextCatalog.getString('[No Value]')}
+                                </span>
+                                <span>
+                                    <em>{gettextCatalog.getString('Copyright holder:')}{' '}</em>
+                                    {data.copyrightholder || gettextCatalog.getString('[No Value]')}
+                                </span>
+                                <span>
+                                    <em>{gettextCatalog.getString('Assign rights:')}{' '}</em>
+                                    {
+                                        getTranslationForAssignRights(data.usageterms, gettextCatalog)
+                                            || gettextCatalog.getString('[No Value]')
+                                    }
+                                </span>
+                                <span>
+                                    <em>{gettextCatalog.getString('Copyright notice:')}{' '}</em>
+                                    {data.copyrightnotice || gettextCatalog.getString('[No Value]')}
+                                </span>
+                            </div>
                         </div>
-                    </div>
 
                     }
-                    
+
                     <Textarea
                         placeholder={gettext('Caption')}
                         onFocus={setLocked}
