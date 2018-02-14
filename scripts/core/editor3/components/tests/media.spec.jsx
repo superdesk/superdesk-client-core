@@ -41,7 +41,7 @@ describe('editor3.components.media-block', () => {
                 blockProps={servicesStub}
                 contentState={contentState} />);
 
-        wrapper.find('img').simulate('click');
+        wrapper.find('.image-block__image-edit').simulate('click');
 
         const entityKey = block.getEntityAt(0);
         const entity = contentState.getEntity(entityKey);

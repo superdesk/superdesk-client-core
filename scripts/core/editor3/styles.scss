@@ -11,6 +11,7 @@ $editor-neutral-color: rgba(123,123,123,0.8);
 
 $editor-styleButton-color:inherit;
 $editor-styleButton-active-color:#5890ff;
+$editor-styleButton-size: 3rem;
 
 .main-article .abstract div.Editor3-root div.link-toolbar {
 	font-size: 13px !important;
@@ -131,17 +132,202 @@ $editor-styleButton-active-color:#5890ff;
 	}
 
     .image-block, .embed-block {
+		cursor: default;
         position: relative;
-        padding: 1rem;
+		padding: 1.4rem 1rem 1rem;
+		border-radius: 2px;
+		box-shadow: 0 1px 6px rgba(0, 0, 0, 0.26), 0 0 1px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(123, 123, 123, 0.3) !important;
+		transition: 0.3s linear box-shadow;
+		&:hover {
+			box-shadow: 0 1px 8px rgba(0, 0, 0, 0.46), 0 0 1px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(123, 123, 123, 0.6) !important;
+			.image-block__remove {
+				visibility: visible;
+			}
+			.embed-block__remove {
+				visibility: visible;
+			}
+		}
+	}
+	.image-block__title, .image-block__description {
+		border: 1px solid rgba(123, 123, 123, 0);
+		border-bottom-color: rgba(123, 123, 123, 0.3);
+		padding: 0;
+		border-radius: 0;
+		background-color: transparent;
+		color: inherit;
+		font-size: 1.4rem;
+		resize: none;
+		-webkit-appearance: none;
+		-moz-appearance: none;
+		box-shadow: none !important;
+		outline: none;
+		padding: 0 0 0 0.2rem;
+		&:hover {
+			border-bottom-color: rgba(123, 123, 123, 0.6);
+		}
+		&:focus {
+			border-width: 1px !important;
+			border-color: rgba(94, 169, 200, 0.3) !important;
+			border-bottom-color: $sd-blue !important;
+			box-shadow: 0 1px 0 $sd-blue !important;
+		}
+	}
 
-        &__remove {
-            text-align: right;
+	.image-block__title {
+		margin-bottom: 1rem;
+		font-size: 1.6rem;
+		font-weight: 500;
+	}
+	.image-block__description {
+		margin-top: 1rem;
+		margin-bottom: 0.2rem;
+		font-weight: 300;
+	}
+	.image-block__remove, .embed-block__remove {
+		z-index: 6;
+		position: absolute;
+		top: -1rem;
+		right: -1rem;
+		box-shadow: 0 1px 6px rgba(0, 0, 0, 0.36), 0 0 1px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(123, 123, 123, 0.3) !important;
+		background-color: $white !important;
+		color: $sd-text;
+		visibility: hidden;
+		opacity: 1 !important;
+	}
+	.image-block__image {
+		position: relative;
+		background-color: rgb(37, 37, 37);
+		margin: 0 -1rem;
+		&:hover {
+			.image-block__image-overlay {
+				opacity: 1;
+			}
+		}
+		video, audio {
+			display: block;
+		}
+	}
+	.image-block__image-overlay {
+		position: absolute;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		display: flex;
+		flex-direction: column;
+		background-color: rgba(0, 0, 0, 0.5);
+		transition: 0.2s linear opacity;
+		z-index: 1;
+		opacity: 0;
+		&--video {
+			bottom: 30px;
+		}
+	}
+	.image-block__metadata {
+		padding: 0.4rem 0 0.2rem 0;
+		background: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.12) 2%,rgba(0,0,0,0.6) 100%);
+		color: $white;
+		font-family: "Roboto", Helvetica, Arial, sans-serif;
+		font-size: 1.3rem;
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		align-items: stretch;
+		align-content: flex-start;
+		z-index: 2;
+		transition: 0.2s linear opacity;
+		span {
+			width: 46%;
+			padding: 0.4rem 0.2rem 0;
+			margin: 0 2% 0.4rem 2%;
+			border-top: 1px dotted rgba(255, 255, 255, 0.65);
+			flex-grow: 1;
+			em {
+				font-style: normal;
+				color: rgba(255, 255, 255, 0.7);
+				font-weight: 300;
+				padding-right: 0.4rem;
+				font-size: 1.1rem;
+				text-transform: uppercase;
+				letter-spacing: 0.05em;
+			}
+		}
+		&--top {
+			padding: 0.2rem 0 0.6rem 0;
+			background: none;
+			background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%,rgba(0,0,0,0) 100%);
+			span {
+				padding-bottom: 0.4rem;
+				border-top: none;
+				//border-bottom: 1px dotted rgba(255, 255, 255, 0.65);
+			}
+		}
+		&--plain {
+			color: inherit;
+			background:none;
+			margin: 1rem 0;
+			span {
+				border-top: 1px dotted rgba(123, 123, 123, 0.5);
+				margin: 0 2% 0 2%;
+				padding: 0.4rem 0;
+				em {
+					color:inherit;
+					opacity:0.75;
+				}
+				&:nth-child(3), &:nth-child(4) {
+					border-bottom: 1px dotted rgba(123, 123, 123, 0.5);
+				}
+			}
+		}
+	}
+	.image-block__icons-block {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		flex-grow: 1;
+	}
+	.image-block__image-edit {
+		flex-grow: 0;
+		flex-shrink: 0;
+		color: $white;
+		width: 5.6rem;
+		height: 5.6rem;
+		border: 2px solid rgba(255, 255, 255, 0.5);
+		border-radius: 50%;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		transition: 0.2s linear all;
+		cursor: pointer;
+		text-decoration: none;
+		background-color: rgba(0, 0, 0, 0);
+		i {
+			color: $white;
+			height: 2.4rem;
+			width: 2.4rem;
+			font-size: 2.4rem;
+			line-height: 1;
+			opacity: 0.5;
+			transition: 0.2s linear all;
+		}
+		&:hover {
+			border-color: rgba(255, 255, 255, 1);
+			background-color: rgba(0, 0, 0, 0.4);
+			i {
+				opacity: 1;
+			}
+		}
+		&:active {
+			border-color: $sd-blue;
+			background-color: rgba(0, 0, 0, 0.6);
+			i {
+				color: $sd-blue;
+			}
+		}
+	}
 
-            .btn {
-                margin-bottom: 1rem;
-            }
-        }
-    }
 
 	.table-block {
 		&.table-header {
@@ -402,23 +588,26 @@ $editor-styleButton-active-color:#5890ff;
 	}
 }
 
+
 .Editor3-styleButton {
-	&.short {
-		padding-right: 2px;
-		margin-right: -10px;
+	&--short {
+		padding-right: 0.2rem;
+		margin-right: -1rem;
 	}
 	color: $editor-styleButton-color;
 	cursor: pointer;
 	margin: 0.4rem 0.2rem;
-	height: 3rem;
-	width: 3rem;
+	height: $editor-styleButton-size;
+	min-width: $editor-styleButton-size;
 	padding: 0.6rem;
 	display: inline-block;
-	border-radius: 50%;
+	border-radius: $editor-styleButton-size / 2;
 	text-align: center;
+	line-height: 1.6rem;
 	[class*="icon-"] {
 		color: inherit;
 		opacity: 0.5;
+		vertical-align: middle;
 	}
 	&:hover {
 		[class*="icon-"] {
@@ -661,6 +850,7 @@ $editor-styleButton-active-color:#5890ff;
 	}
 }
 
+
 // Theme specific overrides
 
 .sd-editor--theme-turquoise, .sd-editor--theme-military {
@@ -675,11 +865,27 @@ $editor-styleButton-active-color:#5890ff;
 	.Editor3-styleButton.Editor3-activeButton:hover {
 		color: #9c27b0;
 	}
+	.Editor3-root .Editor3-controls.floating-toolbar {
+		background-color: rgba(255, 255, 255, 0.85);
+	}
+	.DraftEditor-root {
+		a {
+			color: #9c27b0;
+		}
+	}
 }
 
 .sd-editor--theme-dark, .sd-editor--theme-blue {
 	.Editor3-styleButton.Editor3-activeButton,
 	.Editor3-styleButton.Editor3-activeButton:hover {
 		background-color: rgba(0, 0, 0, 0.3);
+	}
+	.Editor3-root .Editor3-controls.floating-toolbar {
+		background-color: rgba(51, 51, 51, 0.95);
+	}
+}
+.sd-editor--theme-blue {
+	.Editor3-root .Editor3-controls.floating-toolbar {
+		background-color: rgba(27, 68, 115, 0.95);
 	}
 }
