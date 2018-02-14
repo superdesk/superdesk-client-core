@@ -9,6 +9,7 @@ import {
     EditorState,
     getDefaultKeyBinding,
     DefaultDraftBlockRenderMap,
+    KeyBindingUtil,
 } from 'draft-js';
 
 import {Map} from 'immutable';
@@ -26,6 +27,7 @@ import {HighlightsPopup} from './HighlightsPopup';
 import UnstyledBlock from './UnstyledBlock';
 import UnstyledWrapper from './UnstyledWrapper';
 import {isEditorBlockEvent} from './BaseUnstyledComponent';
+import {acceptedInlineStyles} from '../helpers/inlineStyles';
 
 const VALID_MEDIA_TYPES = [
     'application/superdesk.item.picture',
@@ -153,6 +155,15 @@ export class Editor3Component extends React.Component {
             return 'soft-newline';
         }
 
+        if (keyCode === 88 && KeyBindingUtil.hasCommandModifier(e)) {
+            const {editorState} = this.props;
+            const selection = editorState.getSelection();
+
+            if (selection.getStartOffset() !== selection.getEndOffset()) {
+                return 'delete';
+            }
+        }
+
         return getDefaultKeyBinding(e);
     }
 
@@ -175,6 +186,7 @@ export class Editor3Component extends React.Component {
             newState = RichUtils.insertSoftNewline(editorState);
             break;
         case 'delete':
+            // prevent the edit of a suggestion after current position
             if (!this.allowEditSuggestion('delete')) {
                 return 'handled';
             }
@@ -187,6 +199,7 @@ export class Editor3Component extends React.Component {
             newState = RichUtils.handleKeyCommand(editorState, command);
             break;
         case 'backspace': {
+            // prevent the edit of a suggestion before current position
             if (!this.allowEditSuggestion('backspace')) {
                 return 'handled';
             }
@@ -244,7 +257,7 @@ export class Editor3Component extends React.Component {
         } else if (!this.allowEditSuggestion('backspace')) {
             // there is a suggestion before the current position -> prevent the copy of
             // suggestion entity and style
-            const styles = ['BOLD', 'ITALIC', 'UNDERLINE'];
+            // TODO: check again after custom style entity is done
             const inlineStyle = editorState.getCurrentInlineStyle();
             const selection = editorState.getSelection();
             let newSelection = selection.merge({
@@ -257,7 +270,7 @@ export class Editor3Component extends React.Component {
 
             newContentState = Modifier.insertText(newContentState, selection, chars);
             inlineStyle.forEach((style) => {
-                if (styles.indexOf(style) !== -1) {
+                if (acceptedInlineStyles.indexOf(style) !== -1) {
                     newContentState = Modifier.applyInlineStyle(newContentState, newSelection, style);
                 }
             });

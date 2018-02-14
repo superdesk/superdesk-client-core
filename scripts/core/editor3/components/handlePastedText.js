@@ -124,6 +124,7 @@ export function allowEditSuggestion(action) {
 
     if (selection.getStartOffset() !== selection.getEndOffset()) {
         for (let i = selection.getStartOffset(); i < selection.getEndOffset(); i++) {
+            // TODO: check again after custom style entity implementation is done
             const key = getEntityKey(content, getEntityKeyByOffset(content, selection, i), types);
 
             if (!allowEditForKey(content, key, suggestingMode)) {
@@ -136,10 +137,13 @@ export function allowEditSuggestion(action) {
 
     const keyBefore = getEntityKey(content, getEntityKeyByOffset(content, selection, -1), types);
     const keyAfter = getEntityKey(content, getEntityKeyByOffset(content, selection, 0), types);
+    const allowEditBefore = allowEditForKey(content, keyBefore, suggestingMode);
+    const editBefore = allowEditBefore && (action === 'backspace' || action === 'insert');
+    const allowEditAfter = allowEditForKey(content, keyAfter, suggestingMode);
+    const editAfter = allowEditAfter && (action === 'delete' || action === 'insert');
+    const editBetweenSuggestions = keyBefore != keyAfter && action === 'insert';
 
-    return allowEditForKey(content, keyBefore, suggestingMode) && (action === 'backspace' || action === 'insert') ||
-        allowEditForKey(content, keyAfter, suggestingMode) && (action === 'delete' || action === 'insert') ||
-        keyBefore != keyAfter && action === 'insert';
+    return editBefore || editAfter || editBetweenSuggestions;
 }
 
 // Check if the entity for current key allow the edit.
@@ -154,7 +158,7 @@ const allowEditForKey = (content, key, suggestingMode) => {
         return true;
     }
 
-    const {user} = ng.get('session').identity;
+    const user = ng.get('session').identity._id;
     const author = entity.get('data').author;
 
     return suggestingMode && author === user;
