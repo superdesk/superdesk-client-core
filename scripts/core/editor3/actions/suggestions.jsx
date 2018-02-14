@@ -45,6 +45,39 @@ export function createDeleteSuggestion(action) {
     };
 }
 
+
+/**
+ * @ngdoc method
+ * @name acceptSuggestion
+ * @param {Object} selection
+ * @return {Object} action
+ * @description accept the suggestions for the selection.
+ */
+export function acceptSuggestion(selection) {
+    return {
+        type: 'ACCEPT_SUGGESTION',
+        payload: {
+            selection: selection
+        }
+    };
+}
+
+/**
+ * @ngdoc method
+ * @name rejectSuggestion
+ * @param {Object} selection
+ * @return {Object} action
+ * @description reject the suggestions for the selection.
+ */
+export function rejectSuggestion(selection) {
+    return {
+        type: 'REJECT_SUGGESTION',
+        payload: {
+            selection: selection
+        }
+    };
+}
+
 /**
  * @ngdoc method
  * @name onPasteFromSuggestingMode

@@ -65,7 +65,7 @@ export class HighlightsPopup extends Component {
         return {top, left};
     }
 
-    getTextForEntityRange(editorState, entityKey) {
+    getRangeAndTextForEntityKey(editorState, entityKey) {
         const selection = editorState.getSelection();
 
         if (selection.isCollapsed() === false) {
@@ -100,7 +100,17 @@ export class HighlightsPopup extends Component {
             }
         }
 
-        return block.getText().slice(from, to + 1);
+        const newSelection = selection.merge({
+            anchorOffset: from,
+            focusOffset: to + 1,
+            isBackward: false
+        });
+        const suggestionText = block.getText().slice(from, to + 1);
+
+        return {
+            selection: newSelection,
+            suggestionText: suggestionText
+        };
     }
 
     /**
@@ -119,11 +129,13 @@ export class HighlightsPopup extends Component {
 
         if (suggestionEntityKey !== null) {
             var suggestionEntity = Entity.get(suggestionEntityKey);
-            let suggestionText = this.getTextForEntityRange(this.props.editorState, suggestionEntityKey);
+            const {selection, suggestionText} = this.getRangeAndTextForEntityKey(
+                this.props.editorState, suggestionEntityKey
+            );
 
             highlightsAndSuggestions = [
                 ...highlightsAndSuggestions,
-                {type: suggestionEntity.getType(), value: {...suggestionEntity.toJS(), suggestionText}}
+                {type: suggestionEntity.getType(), value: {...suggestionEntity.toJS(), suggestionText, selection}}
             ];
         }
 
@@ -164,7 +176,11 @@ export class HighlightsPopup extends Component {
             );
         case 'DELETE_SUGGESTION':
         case 'ADD_SUGGESTION':
-            return <SuggestionPopup suggestion={h} />;
+            return (
+                <Dropdown key={key} open={true}>
+                    <SuggestionPopup suggestion={h} />
+                </Dropdown>
+            );
         default:
             console.error('Invalid highlight type in HighlightsPopup.jsx: ', type);
         }
