@@ -25,6 +25,7 @@ export default function createEditorStore(props, isReact = false) {
 
     const dict = spellcheck.getDict();
     const content = getInitialContent(props);
+
     const decorators = Editor3.getDecorator(props.disableSpellchecker || !spellcheck.isAutoSpellchecker);
     const showToolbar = !props.singleLine && (props.editorFormat || []).length > 0;
     const onChangeValue = isReact ? props.onChange : _.debounce(onChange.bind(props), props.debounce);
@@ -47,6 +48,7 @@ export default function createEditorStore(props, isReact = false) {
         item: props.item,
         spellcheckerEnabled: !props.disableSpellchecker,
         suggestingMode: false,
+        invisibles: false,
         svc: props.svc
     }, applyMiddleware(thunk));
 

@@ -16,7 +16,8 @@ const StyleIcons = {
     quote: 'icon-quote',
     'unordered list': 'icon-unordered-list',
     'ordered list': 'icon-ordered-list',
-    suggestions: 'icon-multiedit'
+    suggestions: 'icon-multiedit',
+    invisibles: 'icon-paragraph'
 };
 
 const StyleTooltips = {
@@ -33,7 +34,8 @@ const StyleTooltips = {
     'unordered list': gettext('Unordered list'),
     'ordered list': gettext('Ordered list'),
     TH: gettext('Toggle Header'),
-    suggestions: gettext('Toggle Suggestions Mode')
+    suggestions: gettext('Toggle Suggestions Mode'),
+    invisibles: gettext('Toggle Non-Printing characters')
 };
 
 /**

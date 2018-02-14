@@ -107,7 +107,9 @@ class ToolbarComponent extends Component {
             insertMedia,
             allowsHighlights,
             suggestingMode,
-            toggleSuggestingMode
+            toggleSuggestingMode,
+            invisibles,
+            toggleInvisibles
         } = this.props;
 
         const has = (opt) => editorFormat.indexOf(opt) > -1;
@@ -180,6 +182,15 @@ class ToolbarComponent extends Component {
                     />
                 }
 
+                {has('invisibles') &&
+                    <StyleButton
+                        active={invisibles}
+                        label={'invisibles'}
+                        style={'invisibles'}
+                        onToggle={toggleInvisibles}
+                    />
+                }
+
                 <ToolbarPopup type={popup.type} data={popup.data} />
 
                 {/* LinkToolbar must be the last node. */}
@@ -194,25 +205,42 @@ ToolbarComponent.propTypes = {
     editorFormat: PropTypes.array,
     activeCell: PropTypes.any,
     suggestingMode: PropTypes.bool,
+    invisibles: PropTypes.bool,
     addTable: PropTypes.func,
     insertMedia: PropTypes.func,
     showPopup: PropTypes.func,
     toggleSuggestingMode: PropTypes.func,
+    toggleInvisibles: PropTypes.func,
     popup: PropTypes.object,
     editorState: PropTypes.object,
     editorNode: PropTypes.object,
     scrollContainer: PropTypes.string
 };
 
-const mapStateToProps = ({editorFormat, activeCell, allowsHighlights, popup, editorState, suggestingMode}) => ({
-    editorFormat, activeCell, allowsHighlights, popup, editorState, suggestingMode
+const mapStateToProps = ({
+    editorFormat,
+    activeCell,
+    allowsHighlights,
+    popup,
+    editorState,
+    suggestingMode,
+    invisibles
+}) => ({
+    editorFormat,
+    activeCell,
+    allowsHighlights,
+    popup,
+    editorState,
+    suggestingMode,
+    invisibles
 });
 
 const mapDispatchToProps = (dispatch) => ({
     insertMedia: () => dispatch(actions.insertMedia()),
     showPopup: (type, data) => dispatch(actions.showPopup(type, data)),
     addTable: () => dispatch(actions.addTable()),
-    toggleSuggestingMode: () => dispatch(actions.toggleSuggestingMode())
+    toggleSuggestingMode: () => dispatch(actions.toggleSuggestingMode()),
+    toggleInvisibles: () => dispatch(actions.toggleInvisibles())
 });
 
 const Toolbar = connect(mapStateToProps, mapDispatchToProps)(ToolbarComponent);

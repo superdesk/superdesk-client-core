@@ -22,12 +22,17 @@ class UnstyledBlock extends BaseUnstyledComponent {
     }
 
     render() {
-        const {className} = this.props;
+        let {className, invisibles} = this.props;
         const divProps = Object.assign({}, this.props);
+
+        if (invisibles) {
+            className = `unstyled__block--invisibles ${className}`;
+        }
 
         // avoid react unknown prop warning
         delete divProps.dispatch;
         delete divProps.className;
+        delete divProps.invisibles;
 
         return (
             <div ref={(div) => this.div = div}
@@ -44,6 +49,11 @@ UnstyledBlock.propTypes = {
     children: PropTypes.object,
     dispatch: PropTypes.func.isRequired,
     className: PropTypes.string,
+    invisibles: PropTypes.bool,
 };
 
-export default connect()(UnstyledBlock);
+const mapStateToProps = (state) => ({
+    invisibles: state.invisibles
+});
+
+export default connect(mapStateToProps)(UnstyledBlock);

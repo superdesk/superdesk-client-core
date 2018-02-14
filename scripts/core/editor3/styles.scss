@@ -283,6 +283,24 @@ $editor-styleButton-active-color:#5890ff;
 	[data-block="true"] {
         border-bottom: 1.5em solid transparent;
 
+        &.unstyled__block--invisibles {
+            .space-component {
+                margin-left: .2em;
+            }
+
+            .space-component::before {
+                content: '•';
+                color: $sd-blue;
+            }
+
+            &::after {
+                content: '\E690';
+                font-family: 'sd_icons';
+                font-size: 16px;
+                color: $sd-blue;
+            }
+        }
+
         &.unstyled__block--over {
             border-bottom-color: silver;
         }

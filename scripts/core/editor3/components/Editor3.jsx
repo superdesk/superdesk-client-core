@@ -17,6 +17,7 @@ import {connect} from 'react-redux';
 import Toolbar from './toolbar';
 import * as actions from '../actions';
 import {SpellcheckerDecorator} from './spellchecker';
+import {SpaceDecorator} from './invisibles';
 import {LinkDecorator} from './links';
 import {getBlockRenderer} from './blockRenderer';
 import {customStyleMap} from './customStyleMap';
@@ -62,13 +63,16 @@ function getValidMediaType(event) {
  */
 export class Editor3Component extends React.Component {
     static getDecorator(disableSpellchecker) {
-        if (disableSpellchecker) {
-            return new CompositeDecorator([LinkDecorator]);
-        }
-        return new CompositeDecorator([
+        const decorators = [
             LinkDecorator,
-            SpellcheckerDecorator
-        ]);
+            SpaceDecorator
+        ];
+
+        if (!disableSpellchecker) {
+            decorators.push(SpellcheckerDecorator);
+        }
+
+        return new CompositeDecorator(decorators);
     }
 
     constructor(props) {
@@ -417,8 +421,9 @@ Editor3Component.propTypes = {
     suggestingMode: PropTypes.bool,
     onCreateAddSuggestion: PropTypes.func,
     onCreateDeleteSuggestion: PropTypes.func,
+    svc: PropTypes.object.isRequired,
+    invisibles: PropTypes.bool,
     onPasteFromSuggestingMode: PropTypes.func,
-    svc: PropTypes.object.isRequired
 };
 
 Editor3Component.defaultProps = {
@@ -437,6 +442,7 @@ const mapStateToProps = (state) => ({
     editorFormat: state.editorFormat,
     tabindex: state.tabindex,
     suggestingMode: state.suggestingMode,
+    invisibles: state.invisibles,
     svc: state.svc
 });
 
