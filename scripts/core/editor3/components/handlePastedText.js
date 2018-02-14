@@ -1,6 +1,9 @@
 import {EditorState, Modifier, genKey, CharacterMetadata, ContentBlock} from 'draft-js';
 import {List, OrderedSet} from 'immutable';
 import {fromHTML} from 'core/editor3/html';
+import {getEntityKeyByOffset} from '../helpers/entity';
+import {getEntityKey} from '../helpers/composite-entity';
+import ng from 'core/services/ng';
 
 /**
  * @ngdoc method
@@ -14,6 +17,10 @@ import {fromHTML} from 'core/editor3/html';
  */
 export function handlePastedText(editorKey, text, html) {
     const {suggestingMode, onCreateAddSuggestion, onPasteFromSuggestingMode} = this.props;
+
+    if (!allowEditSuggestion('insert')) {
+        return 'handled';
+    }
 
     if (suggestingMode) {
         if (!html) {
@@ -101,3 +108,58 @@ const atomicBlock = (data, entity) => new ContentBlock({
     characterList: List([CharacterMetadata.create({entity})]),
     data: data
 });
+
+/**
+ * @ngdoc method
+ * @name allowEditSuggestion
+ * @param {string} operation - one of insert, backspace or delete
+ * @returns {Boolean} True if the current text don't contains a noneditable suggestion.
+ * @description Check if the current text don't contain a noneditable suggestion.
+ */
+export function allowEditSuggestion(action) {
+    const {suggestingMode, editorState} = this.props;
+    const content = editorState.getCurrentContent();
+    const selection = editorState.getSelection();
+    const types = ['DELETE_SUGGESTION', 'ADD_SUGGESTION'];
+
+    if (selection.getStartOffset() !== selection.getEndOffset()) {
+        for (let i = selection.getStartOffset(); i < selection.getEndOffset(); i++) {
+            // TODO: check again after custom style entity implementation is done
+            const key = getEntityKey(content, getEntityKeyByOffset(content, selection, i), types);
+
+            if (!allowEditForKey(content, key, suggestingMode)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    const keyBefore = getEntityKey(content, getEntityKeyByOffset(content, selection, -1), types);
+    const keyAfter = getEntityKey(content, getEntityKeyByOffset(content, selection, 0), types);
+    const allowEditBefore = allowEditForKey(content, keyBefore, suggestingMode);
+    const editBefore = allowEditBefore && (action === 'backspace' || action === 'insert');
+    const allowEditAfter = allowEditForKey(content, keyAfter, suggestingMode);
+    const editAfter = allowEditAfter && (action === 'delete' || action === 'insert');
+    const editBetweenSuggestions = keyBefore != keyAfter && action === 'insert';
+
+    return editBefore || editAfter || editBetweenSuggestions;
+}
+
+// Check if the entity for current key allow the edit.
+const allowEditForKey = (content, key, suggestingMode) => {
+    if (key == null) {
+        return true;
+    }
+
+    const entity = content.getEntity(key);
+
+    if (entity == null) {
+        return true;
+    }
+
+    const user = ng.get('session').identity._id;
+    const author = entity.get('data').author;
+
+    return suggestingMode && author === user;
+};

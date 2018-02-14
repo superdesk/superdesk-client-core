@@ -3,16 +3,7 @@ import PropTypes from 'prop-types';
 import StyleButton from './StyleButton';
 import * as actions from '../../actions';
 import {connect} from 'react-redux';
-
-/**
- * @type {Object}
- * @description Maps server 'editorFormat' options to Draft inline styles.
- */
-const inlineStyles = {
-    bold: 'BOLD',
-    italic: 'ITALIC',
-    underline: 'UNDERLINE'
-};
+import {inlineStyles} from '../../helpers/inlineStyles';
 
 /**
  * @ngdoc React

@@ -9,6 +9,7 @@ import {
     EditorState,
     getDefaultKeyBinding,
     DefaultDraftBlockRenderMap,
+    KeyBindingUtil,
 } from 'draft-js';
 
 import {Map} from 'immutable';
@@ -20,12 +21,13 @@ import {LinkDecorator} from './links';
 import {getBlockRenderer} from './blockRenderer';
 import {customStyleMap} from './customStyleMap';
 import classNames from 'classnames';
-import {handlePastedText} from './handlePastedText';
+import {handlePastedText, allowEditSuggestion} from './handlePastedText';
 import {getEntityTypeAfterCursor, getEntityTypeBeforeCursor} from './links/entityUtils';
 import {HighlightsPopup} from './HighlightsPopup';
 import UnstyledBlock from './UnstyledBlock';
 import UnstyledWrapper from './UnstyledWrapper';
 import {isEditorBlockEvent} from './BaseUnstyledComponent';
+import {acceptedInlineStyles} from '../helpers/inlineStyles';
 
 const VALID_MEDIA_TYPES = [
     'application/superdesk.item.picture',
@@ -81,6 +83,7 @@ export class Editor3Component extends React.Component {
         this.handleKeyCommand = this.handleKeyCommand.bind(this);
         this.handleBeforeInput = this.handleBeforeInput.bind(this);
         this.keyBindingFn = this.keyBindingFn.bind(this);
+        this.allowEditSuggestion = allowEditSuggestion.bind(this);
     }
 
     /**
@@ -152,6 +155,15 @@ export class Editor3Component extends React.Component {
             return 'soft-newline';
         }
 
+        if (keyCode === 88 && KeyBindingUtil.hasCommandModifier(e)) {
+            const {editorState} = this.props;
+            const selection = editorState.getSelection();
+
+            if (selection.getStartOffset() !== selection.getEndOffset()) {
+                return 'delete';
+            }
+        }
+
         return getDefaultKeyBinding(e);
     }
 
@@ -173,9 +185,27 @@ export class Editor3Component extends React.Component {
         case 'soft-newline':
             newState = RichUtils.insertSoftNewline(editorState);
             break;
-        case 'backspace': {
+        case 'delete':
+            // prevent the edit of a suggestion after current position
+            if (!this.allowEditSuggestion('delete')) {
+                return 'handled';
+            }
+
             if (suggestingMode) {
-                onCreateDeleteSuggestion();
+                onCreateDeleteSuggestion('delete');
+                return 'handled';
+            }
+
+            newState = RichUtils.handleKeyCommand(editorState, command);
+            break;
+        case 'backspace': {
+            // prevent the edit of a suggestion before current position
+            if (!this.allowEditSuggestion('backspace')) {
+                return 'handled';
+            }
+
+            if (suggestingMode) {
+                onCreateDeleteSuggestion('backspace');
                 return 'handled';
             }
 
@@ -217,10 +247,48 @@ export class Editor3Component extends React.Component {
     handleBeforeInput(chars) {
         const {editorState, onChange, suggestingMode, onCreateAddSuggestion} = this.props;
 
+        if (!this.allowEditSuggestion('insert')) {
+            return 'handled';
+        }
+
         if (suggestingMode) {
             onCreateAddSuggestion(chars);
             return 'handled';
-        } else if (chars !== ' ') {
+        } else if (!this.allowEditSuggestion('backspace')) {
+            // there is a suggestion before the current position -> prevent the copy of
+            // suggestion entity and style
+            // TODO: check again after custom style entity is done
+            const inlineStyle = editorState.getCurrentInlineStyle();
+            const selection = editorState.getSelection();
+            let newSelection = selection.merge({
+                anchorOffset: selection.getStartOffset(),
+                focusOffset: selection.getEndOffset() + chars.length,
+                isBackward: false
+            });
+            let newContentState = editorState.getCurrentContent();
+            let newEditorState;
+
+            newContentState = Modifier.insertText(newContentState, selection, chars);
+            inlineStyle.forEach((style) => {
+                if (acceptedInlineStyles.indexOf(style) !== -1) {
+                    newContentState = Modifier.applyInlineStyle(newContentState, newSelection, style);
+                }
+            });
+
+            newEditorState = EditorState.push(editorState, newContentState, 'insert-characters');
+
+            newSelection = selection.merge({
+                anchorOffset: selection.getStartOffset() + chars.length,
+                focusOffset: selection.getEndOffset() + chars.length,
+                isBackward: false
+            });
+            newEditorState = EditorState.forceSelection(newEditorState, newSelection);
+
+            onChange(newEditorState);
+            return 'handled';
+        }
+
+        if (chars !== ' ') {
             return 'not-handled';
         }
 
@@ -379,7 +447,7 @@ const mapDispatchToProps = (dispatch) => ({
     unlock: () => dispatch(actions.setLocked(false)),
     dispatch: (x) => dispatch(x),
     onCreateAddSuggestion: (chars) => dispatch(actions.createAddSuggestion(chars)),
-    onCreateDeleteSuggestion: () => dispatch(actions.createDeleteSuggestion()),
+    onCreateDeleteSuggestion: (action) => dispatch(actions.createDeleteSuggestion(action)),
     onPasteFromSuggestingMode: (content) => dispatch(actions.onPasteFromSuggestingMode(content))
 });
 
