@@ -1,5 +1,11 @@
 # Superdesk Client Changelog
 
+## [1.12.1] 2018-02-14
+
+### Fixed
+
+- Fix labels on stories in a package.
+
 ## [1.12.0] 2018-02-02
 
 ### Fixed
