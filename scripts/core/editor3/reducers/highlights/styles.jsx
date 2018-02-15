@@ -1,5 +1,6 @@
 import {EditorState, Modifier, SelectionState} from 'draft-js';
 import {getHighlights, highlightTypes} from '.';
+import {MULTIPLE_HIGHLIGHTS_STORAGE_KEY} from '../../constants';
 
 /**
  * @name redrawHighlights
@@ -71,15 +72,17 @@ export function applyInlineStyles(content, cursor = null) {
     }
 
     // find selected highlights
-    data.mapKeys((rawSelection, highlight) => {
-        const selection = new SelectionState(JSON.parse(rawSelection));
+    data
+        .filter((value, key) => key !== MULTIPLE_HIGHLIGHTS_STORAGE_KEY) // not a part of old highlights
+        .mapKeys((rawSelection, highlight) => {
+            const selection = new SelectionState(JSON.parse(rawSelection));
 
-        if (selectionIn(content, cursor, selection)) {
-            activeHighlights[highlight.type] = {selection: selection, data: highlight};
-        }
+            if (selectionIn(content, cursor, selection)) {
+                activeHighlights[highlight.type] = {selection: selection, data: highlight};
+            }
 
-        contentState = Modifier.applyInlineStyle(contentState, selection, highlight.type);
-    });
+            contentState = Modifier.applyInlineStyle(contentState, selection, highlight.type);
+        });
 
     // highlight them by applying the corresponding inline styles
     Object.keys(activeHighlights).forEach((type) => {
