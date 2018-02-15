@@ -266,7 +266,7 @@ describe('content', () => {
                 expect(spike.spike).toHaveBeenCalled();
             }));
 
-        it('spike action does not prompts user of confirmation if no assignment linked',
+        it('spike action does prompts user of confirmation if no assignment linked',
             inject(($rootScope, superdesk, activityService, privileges, modal, $q, spike) => {
                 privileges.privileges = {planning: 1};
 
@@ -283,11 +283,11 @@ describe('content', () => {
                 activityService.start(superdesk.activities.spike, {data: {item: item}});
                 $rootScope.$digest();
 
-                expect(modal.confirm).not.toHaveBeenCalled();
+                expect(modal.confirm).toHaveBeenCalledWith('Are you sure you want to spike the item?');
                 expect(spike.spike).toHaveBeenCalled();
             }));
 
-        it('spike action does not prompts user if planning component not activated',
+        it('spike action does prompts user if planning component not activated',
             inject(($rootScope, superdesk, activityService, privileges, modal, $q, spike) => {
                 let item = {
                     _id: 'foo1',
@@ -302,16 +302,17 @@ describe('content', () => {
                 activityService.start(superdesk.activities.spike, {data: {item: item}});
                 $rootScope.$digest();
 
-                expect(modal.confirm).not.toHaveBeenCalled();
+                expect(modal.confirm).toHaveBeenCalledWith('Are you sure you want to spike the item?');
                 expect(spike.spike).toHaveBeenCalled();
             }));
 
         it('spike action prompts user if item has unsaved changes',
-            inject((activityService, superdesk, autosave, confirm, $q, $rootScope, spike) => {
+            inject((activityService, superdesk, autosave, confirm, $q, $rootScope, spike, modal) => {
                 const item = {_id: 'foo', lock_user: 'foo'};
 
                 spyOn(autosave, 'get').and.returnValue($q.when());
                 spyOn(confirm, 'reopen').and.returnValue($q.reject());
+                spyOn(modal, 'confirm').and.returnValue($q.when());
                 spyOn(spike, 'spike');
 
                 activityService.start(superdesk.activities.spike, {data: {item: item}});
@@ -319,6 +320,7 @@ describe('content', () => {
 
                 expect(autosave.get).toHaveBeenCalled();
                 expect(confirm.reopen).toHaveBeenCalled();
+                expect(modal.confirm).toHaveBeenCalled();
                 expect(spike.spike).toHaveBeenCalled();
             }));
     });

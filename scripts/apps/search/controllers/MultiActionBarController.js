@@ -81,19 +81,21 @@ export function MultiActionBarController(
      * Multiple item spike
      */
     this.spikeItems = function() {
-        var txt = gettext('Do you want to delete these items permanently?');
-        var showConfirmation = $location.path() === '/workspace/personal';
+        let message = gettext('Are you sure you want to spike the items?');
+
+        if ($location.path() === '/workspace/personal') {
+            message = gettext('Do you want to delete the items permanently?');
+        }
 
         if (_.get(privileges, 'privileges.planning')) {
             var assignedItems = multi.getItems().filter((item) => item.assignment_id);
 
             if (assignedItems.length) {
-                showConfirmation = true;
-                txt = gettext('Some item/s are linked to in-progress planning coverage, spike anyway?');
+                message = gettext('Some item/s are linked to in-progress planning coverage, spike anyway?');
             }
         }
 
-        return $q.when(showConfirmation ? modal.confirm(txt) : 0)
+        return modal.confirm(message)
             .then(() => {
                 spike.spikeMultiple(multi.getItems());
                 $rootScope.$broadcast('item:spike');

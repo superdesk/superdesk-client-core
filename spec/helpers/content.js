@@ -2,6 +2,7 @@
 
 
 var nav = require('./utils').nav;
+var clickConfirm = require('./utils').clickConfirm;
 
 module.exports = new Content();
 
@@ -51,14 +52,18 @@ function Content() {
         }
     };
 
-    this.actionOnItem = function(action, item, useFullLinkText) {
+    this.actionOnItem = function(action, item, useFullLinkText, confirm) {
         var menu = this.openItemMenu(item);
 
         if (useFullLinkText) {
-            return menu.element(by.linkText(action)).click();
+            menu.element(by.linkText(action)).click();
         }
 
-        return menu.all(by.partialLinkText(action)).first().click();
+        menu.all(by.partialLinkText(action)).first().click();
+
+        if (confirm) {
+            clickConfirm();
+        }
     };
 
     this.editItem = function(item) {
@@ -140,6 +145,7 @@ function Content() {
 
     this.spikeItems = function() {
         element(by.css('[ng-click="action.spikeItems()"]')).click();
+        clickConfirm();
     };
 
     this.unspikeItems = function() {
