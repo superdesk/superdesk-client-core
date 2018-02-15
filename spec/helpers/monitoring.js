@@ -2,8 +2,7 @@
 
 
 var nav = require('./utils').nav,
-    waitFor = require('./utils').wait,
-    clickConfirm = require('./utils').clickConfirm;
+    waitFor = require('./utils').wait;
 
 module.exports = new Monitoring();
 
@@ -250,21 +249,16 @@ function Monitoring() {
      * @param {string} action
      * @param {number} group
      * @param {number} item
-     * @param {boolean} useFullLinkText
-     * @param {boolean} confirm Confirm action in modal.
      */
-    this.actionOnItem = function(action, group, item, useFullLinkText, confirm) {
+    this.actionOnItem = function(action, group, item, useFullLinkText) {
         var menu = this.openItemMenu(group, item);
 
         if (useFullLinkText) {
             menu.element(by.linkText(action)).click();
-        } else {
-            menu.all(by.partialLinkText(action)).first().click();
+            return;
         }
 
-        if (confirm) {
-            clickConfirm();
-        }
+        menu.all(by.partialLinkText(action)).first().click();
     };
 
     this.getMenuActionElement = function(action, group, item) {
@@ -316,8 +310,7 @@ function Monitoring() {
     };
 
     this.spikeMultipleItems = function() {
-        element(by.css('[ng-click="action.spikeItems()"]')).click();
-        clickConfirm();
+        return element(by.css('[ng-click="action.spikeItems()"]')).click();
     };
 
     this.unspikeMultipleItems = function() {

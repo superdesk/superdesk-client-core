@@ -1,4 +1,5 @@
 
+
 module.exports.route = route;
 module.exports.login = login;
 module.exports.open = openUrl;
@@ -18,7 +19,6 @@ module.exports.hover = hover;
 module.exports.waitHidden = waitHidden;
 module.exports.scrollToView = scrollToView;
 module.exports.screenshot = screenshot;
-module.exports.clickConfirm = clickConfirm;
 
 // construct url from uri and base url
 exports.constructUrl = function(base, uri) {
@@ -269,9 +269,4 @@ function screenshot(name) {
         stream.write(new Buffer(png, 'base64'));
         stream.end();
     });
-}
-
-function clickConfirm() {
-    element(by.className('modal__footer')).element(by.className('btn--primary'))
-        .click();
 }

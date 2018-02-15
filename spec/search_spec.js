@@ -191,9 +191,9 @@ describe('search', () => {
         globalSearch.openGlobalSearch();
         globalSearch.setListView();
         expect(globalSearch.getItems().count()).toBe(17);
-        content.actionOnItem('Spike Item', 2, null, true);
-        content.actionOnItem('Spike Item', 1, null, true);
-        content.actionOnItem('Spike Item', 0, null, true);
+        content.actionOnItem('Spike Item', 2);
+        content.actionOnItem('Spike Item', 1);
+        content.actionOnItem('Spike Item', 0);
         browser.sleep(200);
         expect(globalSearch.getItems().count()).toBe(14);
         globalSearch.openFilterPanel();
