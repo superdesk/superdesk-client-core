@@ -18,7 +18,7 @@ import ng from 'core/services/ng';
 export function handlePastedText(editorKey, text, html) {
     const {suggestingMode, onCreateAddSuggestion, onPasteFromSuggestingMode} = this.props;
 
-    if (!allowEditSuggestion('insert')) {
+    if (!this.allowEditSuggestion('insert')) {
         return 'handled';
     }
 

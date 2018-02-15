@@ -176,11 +176,7 @@ export class HighlightsPopup extends Component {
             );
         case 'DELETE_SUGGESTION':
         case 'ADD_SUGGESTION':
-            return (
-                <Dropdown key={key} open={true}>
-                    <SuggestionPopup suggestion={h} />
-                </Dropdown>
-            );
+            return <SuggestionPopup keyForDropdown={key} suggestion={h} />;
         default:
             console.error('Invalid highlight type in HighlightsPopup.jsx: ', type);
         }

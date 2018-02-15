@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import moment from 'moment';
 import ng from 'core/services/ng';
+import {Dropdown} from 'core/ui/components';
 import {UserAvatar} from 'apps/users/components';
 import {acceptSuggestion, rejectSuggestion} from '../../actions';
 
@@ -40,18 +41,16 @@ class Suggestion extends Component {
     }
 
     onAccept() {
-        // TODO: close widget
         this.props.acceptSuggestion(this.props.suggestion.selection);
     }
 
     onReject() {
-        // TODO: close widget
         this.props.rejectSuggestion(this.props.suggestion.selection);
     }
 
     render() {
         if (this.state.error !== null) {
-            return <div open={true}>{this.state.error}</div>;
+            return <Dropdown key={this.props.keyForDropdown} open={true}>{this.state.error}</Dropdown>;
         }
         if (this.state.author === null) {
             return null;
@@ -72,7 +71,7 @@ class Suggestion extends Component {
         };
 
         return (
-            <div>
+            <Dropdown key={this.props.keyForDropdown} open={true}>
                 <div className="highlights-popup__header">
                     <UserAvatar displayName={author.display_name} pictureUrl={author.picture_url} />
                     <div className="user-info">
@@ -93,12 +92,13 @@ class Suggestion extends Component {
                         {gettext('Reject')}
                     </button>
                 </div>
-            </div>
+            </Dropdown>
         );
     }
 }
 
 Suggestion.propTypes = {
+    keyForDropdown: PropTypes.number,
     suggestion: PropTypes.shape({
         data: PropTypes.shape({
             author: PropTypes.string,
