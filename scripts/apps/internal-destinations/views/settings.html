@@ -35,24 +35,23 @@
     <div class="modal__body">
         <form name="editForm">
             <fieldset>
-                <div class="field">
-                    <label ng-click="dest.active.is_active = !dest.active.is_active" class="right">
-                        {{ :: 'Active' | translate }}
-                        <span sd-switch ng-model="dest.active.is_active"></span>
-                    </label>
-                </div>
-                <div class="field">
-                    <label for="dest-name" translate>Destination name</label>
-                    <input id="dest-name" type="text" class="fullwidth-input" ng-model="dest.active.name" required>
+                <div class="sd-line-input">
+                    <label ng-click="dest.active.is_active = !dest.active.is_active" translate>Active</label> <span sd-switch ng-model="dest.active.is_active"></span>
                 </div>
 
-                <div class="field" sd-content-filter-select data-model="dest.active.filter"></div>
+                <div class="sd-line-input sd-line-input--required">
+                    <label for="dest-name" class="sd-line-input__label" translate>Destination name</label>
+                    <input id="dest-name" type="text" class="sd-line-input__input" ng-model="dest.active.name" required>
+                </div>
+
+                <div sd-content-filter-select data-model="dest.active.filter"></div>
 
                 <div sd-action-picker
                      data-desk="dest.active.desk"
                      data-stage="dest.active.stage"
                      data-macro="dest.active.macro"
-                     class="split"></div>
+                     data-required="{desk: true}"
+                ></div>
             </fieldset>
         </form>
     </div>

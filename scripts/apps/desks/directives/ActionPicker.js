@@ -1,12 +1,19 @@
+/**
+ * Action picker component
+ *
+ * Allows user to pick desk, stage and macro.
+ * If required is specified it should be an object with {desk, stage, macro} set to true if required.
+ */
 ActionPicker.$inject = ['desks', 'macros'];
 export function ActionPicker(desks, macros) {
     return {
         scope: {
             desk: '=',
             stage: '=',
-            macro: '='
+            macro: '=',
+            required: '='
         },
-        templateUrl: 'scripts/apps/desks/views/actionpicker.html',
+        template: require('../views/actionpicker.html'),
         link: function(scope, elem, attrs) {
             scope.desks = null;
             scope.deskStages = null;

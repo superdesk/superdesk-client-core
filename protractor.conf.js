@@ -4,7 +4,7 @@ var path = require('path');
 
 function getChromeOptions() {
     var chromeOptions = {
-        args: ['no-sandbox']
+        args: ['--no-sandbox']
     };
 
     if (process.env.CHROME_BIN) {

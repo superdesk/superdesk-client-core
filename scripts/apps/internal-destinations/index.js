@@ -24,29 +24,41 @@ function InternalDestinationsFactory(api) {
 
 InternalDestinationsController.$inject = ['internalDestinations', 'modal'];
 function InternalDestinationsController(internalDestinations, modal) {
+    this.error = null;
+
     this.create = () => {
         this.active = {is_active: false};
+        this.error = null;
     };
 
     this.edit = (dest) => {
         this.active = angular.extend({}, dest);
+        this.error = null;
     };
 
     this.remove = (dest) => {
-        modal.confirm(gettext('Please confirm you want to delete internal destination.')).then(
-            function runConfirmed() {
+        modal.confirm(gettext('Please confirm you want to delete internal destination.'))
+            .then(() => {
                 internalDestinations.remove(dest).then(this.load);
-            }
-        );
+            });
     };
 
     this.stopEdit = () => {
         this.active = null;
+        this.error = null;
     };
 
     this.save = (dest) => {
-        internalDestinations.save(dest).then(this.load);
-        this.stopEdit();
+        internalDestinations.save(dest)
+            .then(this.load)
+            .then(this.stopEdit)
+            .catch((reason) => {
+                if (reason.status === 400) {
+                    this.error = reason.data._issues;
+                } else {
+                    console.error(reason);
+                }
+            });
     };
 
     this.load = () => {
