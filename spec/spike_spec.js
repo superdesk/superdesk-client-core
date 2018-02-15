@@ -1,3 +1,6 @@
+/* eslint-disable newline-per-chained-call */
+
+
 var nav = require('./helpers/utils').nav,
     workspace = require('./helpers/pages').workspace,
     content = require('./helpers/pages').content,
@@ -14,16 +17,14 @@ describe('spike', () => {
 
         var personalCount;
 
-        content.getItems().count()
-            .then((count) => {
-                personalCount = count;
-            });
+        content.getItems().count().then((count) => {
+            personalCount = count;
+        });
 
-        content.actionOnItem('Spike Item', 0, null, true);
+        content.actionOnItem('Spike Item', 0);
 
         // check that there are less items than before
-        browser.wait(() => content.getItems().count()
-            .then((count) => count < personalCount), 3000);
+        browser.wait(() => content.getItems().count().then((count) => count < personalCount), 3000);
     });
 
     it('can spike and unspike multiple items', () => {
