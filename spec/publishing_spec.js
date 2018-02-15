@@ -5,16 +5,14 @@ var monitoring = require('./helpers/monitoring'),
     publishQueue = require('./helpers/publish_queue');
 
 describe('publishing', () => {
-    beforeEach(() => {
-        monitoring.openMonitoring();
+    beforeEach(monitoring.openMonitoring);
 
+    it('publish using HTTP Push delivery type and can preview content and search publish queue', () => {
         expect(monitoring.getTextItem(2, 0)).toBe('item5');
         monitoring.actionOnItem('Edit', 2, 0);
         authoring.publish();
-        publishQueue.openPublishQueue();
-    });
 
-    it('publish using HTTP Push delivery type and can preview content and search publish queue', () => {
+        publishQueue.openPublishQueue();
         expect(publishQueue.getHeadline(0).getText()).toMatch(/item5/);
         expect(publishQueue.getDestination(0).getText()).toMatch(/HTTP Push/);
 
