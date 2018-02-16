@@ -2,6 +2,7 @@ import {EditorState, Modifier, RichUtils} from 'draft-js';
 import {onChange} from './editor3';
 import {getEntityKeyByOffset, getCharByOffset} from '../helpers/entity';
 import {getEntityKey, getEntity, setEntity, deleteEntity} from '../helpers/composite-entity';
+import {acceptedInlineStyles} from '../helpers/inlineStyles';
 
 const suggestions = (state = {}, action) => {
     switch (action.type) {
@@ -13,6 +14,10 @@ const suggestions = (state = {}, action) => {
         return createDeleteSuggestion(state, action.payload);
     case 'PASTE_ADD_SUGGESTION':
         return pasteAddSuggestion(state, action.payload);
+    case 'ACCEPT_SUGGESTION':
+        return processSuggestion(state, action.payload, true);
+    case 'REJECT_SUGGESTION':
+        return processSuggestion(state, action.payload, false);
     default:
         return state;
     }
@@ -91,7 +96,6 @@ const createDeleteSuggestion = (state, {action, data}) => {
  * @description Add a new suggestion of type ADD based on content.
  */
 const pasteAddSuggestion = (state, {content, data}) => {
-    const acceptedStyles = ['BOLD', 'ITALIC', 'UNDERLINE'];
     let {editorState} = state;
     const blockMap = content.getBlockMap();
 
@@ -104,13 +108,65 @@ const pasteAddSuggestion = (state, {content, data}) => {
             let inlineStyle;
 
             characterMetadataList.forEach((characterMetadata, i) => {
-                inlineStyle = acceptedStyles.filter((style) => characterMetadata.hasStyle(style));
+                inlineStyle = acceptedInlineStyles.filter((style) => characterMetadata.hasStyle(style));
                 editorState = setAddSuggestionForCharacter(editorState, data, text[i], inlineStyle);
             });
         } else {
             // TODO: insert block
         }
     });
+
+    return onChange(state, editorState, true);
+};
+
+/**
+ * @ngdoc method
+ * @name processSuggestion
+ * @param {Object} state
+ * @param {Object} selection - the selection of suggestion
+ * @param {Boolean} accepted - the suggestion is accepted
+ * @return {Object} returns new state
+ * @description Accept or reject the suggestions in the selection.
+ */
+const processSuggestion = (state, {selection}, accepted) => {
+    const types = ['DELETE_SUGGESTION', 'ADD_SUGGESTION'];
+    const start = selection.getStartOffset();
+    const end = selection.getEndOffset();
+    let {editorState} = state;
+    let content = editorState.getCurrentContent();
+    let entityKey;
+    let entity;
+    let type;
+
+    for (let i = end - start - 1; i >= 0; i--) {
+        entityKey = getEntityKey(content, getEntityKeyByOffset(content, selection, i), types);
+        if (entityKey == null) {
+            continue;
+        }
+
+        entity = content.getEntity(entityKey);
+        if (entity == null) {
+            continue;
+        }
+        type = entity.get('type');
+
+        const applySuggestion = type === 'ADD_SUGGESTION' && accepted || type === 'DELETE_SUGGESTION' && !accepted;
+        const newSelection = selection.merge({
+            anchorOffset: start + i + (applySuggestion ? 0 : 1),
+            focusOffset: start + i + (applySuggestion ? 0 : 1),
+            isBackward: false
+        });
+
+        editorState = EditorState.acceptSelection(editorState, newSelection);
+
+        if (applySuggestion) {
+            // keep character and clean suggestion style and entity
+            editorState = resetSuggestion(editorState, type);
+        } else {
+            // delete current character
+            editorState = deleteCharacter(editorState);
+        }
+    }
 
     return onChange(state, editorState, true);
 };

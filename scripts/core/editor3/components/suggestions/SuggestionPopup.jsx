@@ -1,9 +1,11 @@
 import React, {Component} from 'react';
-import moment from 'moment';
-import {UserAvatar} from 'apps/users/components';
 import PropTypes from 'prop-types';
+import {connect} from 'react-redux';
+import moment from 'moment';
 import ng from 'core/services/ng';
 import {Dropdown} from 'core/ui/components';
+import {UserAvatar} from 'apps/users/components';
+import {acceptSuggestion, rejectSuggestion} from '../../actions';
 
 /**
  * @ngdoc React
@@ -13,14 +15,18 @@ import {Dropdown} from 'core/ui/components';
  * @description Displays author, date and suggestion text. Allows accepting or declining a suggestion.
  */
 
-export class SuggestionPopup extends Component {
+class Suggestion extends Component {
     constructor(props) {
         super(props);
         this.state = {
             author: null,
             error: null
         };
+
+        this.onAccept = this.onAccept.bind(this);
+        this.onReject = this.onReject.bind(this);
     }
+
     componentDidMount() {
         var gettextCatalog = ng.get('gettextCatalog');
         const gettext = gettextCatalog.getString.bind(gettextCatalog);
@@ -33,6 +39,15 @@ export class SuggestionPopup extends Component {
                 this.setState({error: gettext('An error occured, please try again.')});
             });
     }
+
+    onAccept() {
+        this.props.acceptSuggestion(this.props.suggestion.selection);
+    }
+
+    onReject() {
+        this.props.rejectSuggestion(this.props.suggestion.selection);
+    }
+
     render() {
         if (this.state.error !== null) {
             return <Dropdown key={this.props.keyForDropdown} open={true}>{this.state.error}</Dropdown>;
@@ -70,10 +85,10 @@ export class SuggestionPopup extends Component {
                 </div>
                 <br />
                 <div>
-                    <button className="btn btn--small btn--hollow">
+                    <button className="btn btn--small btn--hollow" onClick={this.onAccept}>
                         {gettext('Accept')}
                     </button>
-                    <button className="btn btn--small btn--hollow">
+                    <button className="btn btn--small btn--hollow" onClick={this.onReject}>
                         {gettext('Reject')}
                     </button>
                 </div>
@@ -82,14 +97,22 @@ export class SuggestionPopup extends Component {
     }
 }
 
-SuggestionPopup.propTypes = {
-    keyForDropdown: PropTypes.string,
+Suggestion.propTypes = {
+    keyForDropdown: PropTypes.number,
     suggestion: PropTypes.shape({
         data: PropTypes.shape({
             author: PropTypes.string,
             date: PropTypes.date
         }),
         suggestionText: PropTypes.string,
-        type: PropTypes.string
-    })
+        type: PropTypes.string,
+        selection: PropTypes.object
+    }),
+    acceptSuggestion: PropTypes.func,
+    rejectSuggestion: PropTypes.func
 };
+
+export const SuggestionPopup = connect(null, {
+    acceptSuggestion,
+    rejectSuggestion
+})(Suggestion);
