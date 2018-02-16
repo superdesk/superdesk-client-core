@@ -35,7 +35,7 @@
                     <input class="line-input" type="text" ng-model="item.usageterms" ng-disabled="!_editable" ng-change="autosave(item)">
                 </div>
             </li>
-            <li class="terms-box" ng-if="!$root.config.features.alchemy && !isRemovedField('keywords')">
+            <li class="terms-box" ng-if="schema.keywords && !$root.config.features.alchemy && !isRemovedField('keywords')">
                 <label translate>Keywords</label>
                 <div sd-meta-words-list data-item="item" data-field="keywords" data-change="autosave(item)" data-header="_editable" data-list="metadata.keywords" data-disabled="!_editable"></div>
             </li>
@@ -111,7 +111,7 @@
                      data-item="item"
                      data-unique="_id"
                      data-list="metadata.customSubscribers"
-                     ng-disabled="!_editable || !targetsEditable" 
+                     ng-disabled="!_editable || !targetsEditable"
                      data-change="autosave(item)"
                      data-field="target_subscribers"
                      data-header="true"
@@ -120,18 +120,18 @@
             </li>
             <li class="terms-box">
                 <label translate>Target Regions</label>
-                <div sd-meta-target 
-                    data-list="metadata.regions" 
+                <div sd-meta-target
+                    data-list="metadata.regions"
                     data-targets="item.target_regions"
-                    ng-disabled="!_editable || !targetsEditable" 
+                    ng-disabled="!_editable || !targetsEditable"
                     data-autosave="autosave(item)"></div>
             </li>
             <li class="terms-box">
                 <label translate>Target Types</label>
-                <div sd-meta-target 
-                    data-list="metadata.subscriberTypes" 
+                <div sd-meta-target
+                    data-list="metadata.subscriberTypes"
                     data-targets="item.target_types"
-                    ng-disabled="!_editable || !targetsEditable" 
+                    ng-disabled="!_editable || !targetsEditable"
                     data-autosave="autosave(item)"></div>
             </li>
         </ul>

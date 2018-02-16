@@ -117,6 +117,15 @@ function MetadataCtrl(
         }
     });
 
+    $scope.$watch('item.profile', (profile) => {
+        if (profile) {
+            content.getType(profile)
+                .then((type) => {
+                    $scope.schema = content.schema(type, $scope.item.type);
+                });
+        }
+    });
+
     function setTimeZone() {
         $scope.item.schedule_settings = {};
         if (!$scope.item.time_zone) {
