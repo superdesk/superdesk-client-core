@@ -155,7 +155,7 @@ export function TemplatesService(api, session, $q, gettext, preferencesService, 
 
         var deskCriteria = [
             {template_desks: {$exists: false}, is_public: true},
-            {template_desks: {$eq: []}, is_public: true}
+            {template_desks: [], is_public: true}
         ];
 
         if (desk) {

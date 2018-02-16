@@ -84,7 +84,7 @@ describe('templates', () => {
                 sort: 'template_name',
                 where: '{"$and":[{"$or":[{"$or":[' +
                 '{"template_desks":{"$exists":false},"is_public":true},' +
-                '{"template_desks":{"$eq":[]},"is_public":true}]},' +
+                '{"template_desks":[],"is_public":true}]},' +
                 '{"user":"foo","is_public":false}]}]}'
             });
         }));
@@ -95,7 +95,7 @@ describe('templates', () => {
                 page: 1,
                 sort: 'template_name',
                 where: '{"$and":[{"$or":[{"$or":[{"template_desks":{"$exists":false},"is_public":true},' +
-                       '{"template_desks":{"$eq":[]},"is_public":true}]},' +
+                       '{"template_desks":[],"is_public":true}]},' +
                        '{"user":"foo","is_public":false}],"template_type":"create"}]}'
             });
         }));
@@ -106,7 +106,7 @@ describe('templates', () => {
                 page: 2,
                 sort: 'template_name',
                 where: '{"$and":[{"$or":[{"$or":[{"template_desks":{"$exists":false},"is_public":true},' +
-                '{"template_desks":{"$eq":[]},"is_public":true},' +
+                '{"template_desks":[],"is_public":true},' +
                 '{"template_desks":{"$in":["desk1"]},"is_public":true}]},' +
                 '{"user":"foo","is_public":false}]}]}'
             });
@@ -118,7 +118,7 @@ describe('templates', () => {
                 max_results: 10,
                 sort: 'template_name',
                 where: '{"$and":[{"$or":[{"$or":[{"template_desks":{"$exists":false},"is_public":true},' +
-                '{"template_desks":{"$eq":[]},"is_public":true}]},' +
+                '{"template_desks":[],"is_public":true}]},' +
                 '{"user":"foo","is_public":false}],' +
                 '"template_name":{"$regex":"keyword","$options":"-i"}}]}'
             });
