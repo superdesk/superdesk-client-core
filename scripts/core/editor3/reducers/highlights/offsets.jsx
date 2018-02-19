@@ -2,6 +2,7 @@ import {SelectionState, EditorState} from 'draft-js';
 import DiffMatchPatch from 'diff-match-patch';
 import {Map} from 'immutable';
 import {getHighlights, replaceHighlights} from '.';
+import {MULTIPLE_HIGHLIGHTS_STORAGE_KEY} from '../../constants';
 
 /**
  * @name repositionHighlights
@@ -219,13 +220,15 @@ function flattenHighlights(oldState) {
 
     let flat = [];
 
-    data.mapKeys((rawSelection, data) => {
-        const s = new SelectionState(JSON.parse(rawSelection));
-        const start = absoluteOffset(content, s.getStartKey(), s.getStartOffset());
-        const end = absoluteOffset(content, s.getEndKey(), s.getEndOffset());
+    data
+        .filter((value, key) => key !== MULTIPLE_HIGHLIGHTS_STORAGE_KEY) // not a part of old highlights
+        .mapKeys((rawSelection, data) => {
+            const s = new SelectionState(JSON.parse(rawSelection));
+            const start = absoluteOffset(content, s.getStartKey(), s.getStartOffset());
+            const end = absoluteOffset(content, s.getEndKey(), s.getEndOffset());
 
-        flat.push({data, start, end});
-    });
+            flat.push({data, start, end});
+        });
 
     return flat;
 }

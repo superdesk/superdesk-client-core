@@ -1,22 +1,27 @@
 import React from 'react';
 import {shallow, mount} from 'enzyme';
-import {Editor3Component as Editor3} from '../Editor3';
+import {Editor3ComponentBase as Editor3} from '../Editor3Component';
 import {getBlockRenderer} from '../blockRenderer';
 import {EditorState} from 'draft-js';
 import mockStore from './utils';
 
 const editorState = EditorState.createEmpty();
+const stubForHighlights = {
+    highlights: {
+        styleMap: {}
+    }
+};
 
 describe('editor3.component', () => {
     it('should hide toolbar when disabled', () => {
-        const wrapper = shallow(<Editor3 showToolbar={false} editorState={editorState} />);
+        const wrapper = shallow(<Editor3 showToolbar={false} editorState={editorState} {...stubForHighlights} />);
 
         expect(wrapper.find('DraftEditor').length).toBe(1);
         expect(wrapper.find('.Editor3-controls').length).toBe(0);
     });
 
     it('should not accept dragging over invalid items', () => {
-        const wrapper = shallow(<Editor3 editorFormat={['media']} editorState={editorState} />);
+        const wrapper = shallow(<Editor3 editorFormat={['media']} editorState={editorState} {...stubForHighlights} />);
         const {onDragOver} = wrapper.instance();
         const makeEvent = (t) => ({originalEvent: {dataTransfer: {types: ['foo', t]}}});
 
@@ -40,7 +45,9 @@ describe('editor3.component', () => {
     });
 
     it('should not accept dragging when editor is readOnly', () => {
-        const wrapper = shallow(<Editor3 readOnly editorFormat={['media']} editorState={editorState} />);
+        const wrapper = shallow(
+            <Editor3 readOnly editorFormat={['media']} editorState={editorState} {...stubForHighlights} />
+        );
         const {onDragOver} = wrapper.instance();
         const makeEvent = (t) => ({originalEvent: {dataTransfer: {types: [t]}}});
 
@@ -56,7 +63,7 @@ describe('editor3.component', () => {
     });
 
     it('should not accept dragging when editor does not support images', () => {
-        const wrapper = shallow(<Editor3 editorState={editorState} />);
+        const wrapper = shallow(<Editor3 editorState={editorState} {...stubForHighlights} />);
         const {onDragOver} = wrapper.instance();
         const makeEvent = (t) => ({originalEvent: {dataTransfer: {types: [t]}}});
 
@@ -72,7 +79,9 @@ describe('editor3.component', () => {
     });
 
     it('should not accept dragging when editor is single line', () => {
-        const wrapper = shallow(<Editor3 singleLine editorFormat={['media']} editorState={editorState} />);
+        const wrapper = shallow(
+            <Editor3 singleLine editorFormat={['media']} editorState={editorState} {...stubForHighlights} />
+        );
         const {onDragOver} = wrapper.instance();
         const makeEvent = (t) => ({originalEvent: {dataTransfer: {types: [t]}}});
 
