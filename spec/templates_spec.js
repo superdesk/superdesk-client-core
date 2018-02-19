@@ -45,6 +45,7 @@ describe('templates', () => {
         expect(authoring.getBodyText()).toBe('This is body from the template');
         expect(authoring.getHeaderSluglineText()).toBe('Test Template');
         expect(authoring.getHeadlineText()).toBe('New Item');
+
         authoring.close();
         workspace.selectDesk('Politic Desk');
         authoring.createTextItemFromTemplate('new');
