@@ -1,5 +1,36 @@
 # Superdesk Client Changelog
 
+## [1.13.0] 2018-02-19
+
+### Fixed
+
+- Reload list of internal destinations on delete.
+- Fix UI issues in table toolbar for editor3.
+- Fix youtube embeds in editor3.
+- Reduce some internal timeouts in editor2.
+- Fixing the content type for event and adding event type based on planning privilege.
+- Preserve data when dragging and dropping an image item to body.
+- Make events valid content type for ingest.
+- Spike action should check for planning privilege to prompt the user.
+
+### Added
+
+- Add display non-printable characters feature to editor3.
+- Display widget for accepting/rejecting suggestions in editor3.
+- Add support for pasting content in suggestion mode.
+- Add twitter ingest config panel.
+- Add option to select source field for SMS.
+- Add image metadata fields to editor3.
+- Add config panel for Ritzau ingest.
+- Add support to create add/delete suggestions.
+- Add drag&drop support for moving media in editor3.
+- Add remove button to embed block in editor3.
+
+### Changed
+
+- Close item header by default in preview.
+- Ask for confirmation when spiking items.
+
 ## [1.12.0] 2018-02-02
 
 ### Fixed
