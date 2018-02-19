@@ -19,6 +19,7 @@ module.exports.hover = hover;
 module.exports.waitHidden = waitHidden;
 module.exports.scrollToView = scrollToView;
 module.exports.screenshot = screenshot;
+module.exports.acceptConfirm = acceptConfirm;
 
 // construct url from uri and base url
 exports.constructUrl = function(base, uri) {
@@ -269,4 +270,15 @@ function screenshot(name) {
         stream.write(new Buffer(png, 'base64'));
         stream.end();
     });
+}
+
+function acceptConfirm() {
+    element(by.className('modal__footer'))
+        .element(by.className('btn--primary'))
+        .click();
+
+    // wait for modal to disappear
+    browser.wait(protractor.ExpectedConditions.invisibilityOf(
+        element(by.className('modal__backdrop'))
+    ), 2000);
 }

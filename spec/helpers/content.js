@@ -1,7 +1,5 @@
-/* eslint-disable newline-per-chained-call */
-
-
 var nav = require('./utils').nav;
+var acceptConfirm = require('./utils').acceptConfirm;
 
 module.exports = new Content();
 
@@ -38,7 +36,8 @@ function Content() {
     };
 
     this.getItem = function(item) {
-        return this.getItems().filter(testHeadline).first();
+        return this.getItems().filter(testHeadline)
+            .first();
 
         function testHeadline(elem, index) {
             if (typeof item === 'number') {
@@ -51,14 +50,20 @@ function Content() {
         }
     };
 
-    this.actionOnItem = function(action, item, useFullLinkText) {
+    this.actionOnItem = function(action, item, useFullLinkText, confirm) {
         var menu = this.openItemMenu(item);
 
         if (useFullLinkText) {
-            return menu.element(by.linkText(action)).click();
+            menu.element(by.linkText(action)).click();
+        } else {
+            menu.all(by.partialLinkText(action))
+                .first()
+                .click();
         }
 
-        return menu.all(by.partialLinkText(action)).first().click();
+        if (confirm) {
+            acceptConfirm();
+        }
     };
 
     this.editItem = function(item) {
@@ -140,6 +145,7 @@ function Content() {
 
     this.spikeItems = function() {
         element(by.css('[ng-click="action.spikeItems()"]')).click();
+        acceptConfirm();
     };
 
     this.unspikeItems = function() {
@@ -165,7 +171,9 @@ function Content() {
     this.getItemType = function(itemType) {
         var itemTypeClass = 'filetype-icon-' + itemType;
 
-        return element(by.className('authoring-header__general-info')).all(by.className(itemTypeClass)).first();
+        return element(by.className('authoring-header__general-info'))
+            .all(by.className(itemTypeClass))
+            .first();
     };
 
     function send() {

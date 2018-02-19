@@ -1,8 +1,8 @@
 /* eslint-disable newline-per-chained-call */
 
-
 var nav = require('./utils').nav,
-    waitFor = require('./utils').wait;
+    waitFor = require('./utils').wait,
+    acceptConfirm = require('./utils').acceptConfirm;
 
 module.exports = new Monitoring();
 
@@ -249,16 +249,21 @@ function Monitoring() {
      * @param {string} action
      * @param {number} group
      * @param {number} item
+     * @param {boolean} useFullLinkText
+     * @param {boolean} confirm Accept confirmation dialog.
      */
-    this.actionOnItem = function(action, group, item, useFullLinkText) {
+    this.actionOnItem = function(action, group, item, useFullLinkText, confirm) {
         var menu = this.openItemMenu(group, item);
 
         if (useFullLinkText) {
             menu.element(by.linkText(action)).click();
-            return;
+        } else {
+            menu.all(by.partialLinkText(action)).first().click();
         }
 
-        menu.all(by.partialLinkText(action)).first().click();
+        if (confirm) {
+            acceptConfirm();
+        }
     };
 
     this.getMenuActionElement = function(action, group, item) {
@@ -310,7 +315,8 @@ function Monitoring() {
     };
 
     this.spikeMultipleItems = function() {
-        return element(by.css('[ng-click="action.spikeItems()"]')).click();
+        element(by.css('[ng-click="action.spikeItems()"]')).click();
+        acceptConfirm();
     };
 
     this.unspikeMultipleItems = function() {

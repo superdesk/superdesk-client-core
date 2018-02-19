@@ -21,7 +21,7 @@ describe('spike', () => {
             personalCount = count;
         });
 
-        content.actionOnItem('Spike Item', 0);
+        content.actionOnItem('Spike Item', 0, null, true);
 
         // check that there are less items than before
         browser.wait(() => content.getItems().count().then((count) => count < personalCount), 3000);

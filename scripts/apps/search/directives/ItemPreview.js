@@ -77,7 +77,7 @@ export function ItemPreview(asset, storage, desks, _, familyService, privileges)
                     }
 
                     // item is associated to an assignment
-                    scope.isAssigned = scope.item.assignment_id && _.get(privileges, 'privileges.planning');
+                    scope.isAssigned = _.get(scope, 'item.assignment_id') && _.get(privileges, 'privileges.planning');
 
                     if (scope.vm.current_tab === 'assignment' && !scope.isAssigned) {
                         scope.vm.current_tab = 'content';
