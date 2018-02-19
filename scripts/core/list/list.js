@@ -219,7 +219,7 @@ mod.directive('sdUpdowns', ['$location', 'keyboardManager', '$anchorScroll',
  */
 mod.directive('sdPagination', ['$location', 'asset', 'lodash', function($location, asset, _) {
     return {
-        templateUrl: asset.templateUrl('core/list/views/sdPagination.html'),
+        template: require('./views/sdPagination.html'),
         scope: {
             items: '='
         },

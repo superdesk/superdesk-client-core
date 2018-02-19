@@ -17,12 +17,13 @@ describe('Embed Code Handlers', () => {
         ctrl = $controller('SdAddEmbedController', {$scope: scope, $element: element});
     }));
 
-    it('match a twitter url', inject(($rootScope, $q, config, embedService) => {
+    it('match a twitter url', inject(($rootScope, $q, $httpBackend, config, embedService) => {
         ctrl.input = 'https://twitter.com/letzi83/status/764062125996113921';
         jasmine.createSpy(embedService, 'get').and.returnValue($q.when({
             meta: {site: 'Twitter'},
             html: 'embed'
         }));
+        $httpBackend.whenJSONP(/https:\/\/iframe\.ly\/api\/.*/).respond(400);
         ctrl.retrieveEmbed().then((d) => {
             expect(d).toEqual({
                 body: 'embed',

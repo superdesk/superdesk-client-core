@@ -6,21 +6,15 @@ dist: trusty
 
 addons:
   apt:
-    sources:
-        - google-chrome
     packages:
         - google-chrome-stable
 
 cache:
     directories:
-        - $HOME/.npm
+        - $HOME/.cache/yarn
 
 before_install:
-    - npm config set loglevel warn
-    - npm install -g grunt-cli
-
-install:
-    - npm install
+    - yarn global add grunt-cli
 
 script:
     - grunt ci:travis

@@ -102,14 +102,6 @@ module.exports = function makeConfig(grunt) {
                     ]
                 },
                 {
-                    test: /\.less$/,
-                    use: [
-                        'style-loader',
-                        'css-loader',
-                        'less-loader',
-                    ]
-                },
-                {
                     test: /\.scss$/,
                     use: [
                         'style-loader',
