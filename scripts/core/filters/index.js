@@ -1,3 +1,5 @@
+import {stripHtmlTags} from '../utils';
+
 export default angular.module('superdesk.core.filters', [])
     .filter('any', () => function(data, key) {
         return _.any(data, key);
@@ -215,7 +217,7 @@ export default angular.module('superdesk.core.filters', [])
 
         return cleanedValue.replace('_', ' ');
     })
-    .filter('trimHtmlTags', () => function(value) {
-        return value ? String(value).replace(/<[^>]+>/gm, '') : '';
+    .filter('stripHtmlTags', () => function(value) {
+        return stripHtmlTags(value);
     })
 ;
