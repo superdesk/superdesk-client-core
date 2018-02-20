@@ -1,4 +1,4 @@
-import {stripHtmlTags} from '../../../core/utils';
+import {stripHtmlTags} from 'core/utils';
 
 export const CONTENT_FIELDS_DEFAULTS = Object.freeze({
     headline: '',
