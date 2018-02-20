@@ -70,6 +70,10 @@ $editor-styleButton-size: 3rem;
 		}
 	}
 
+	audio {
+		width: 100%;
+	}
+
 
 	.Editor3-controls.floating-toolbar {
 		position: fixed;
@@ -713,6 +717,49 @@ $editor-styleButton-size: 3rem;
 	position: relative;
 	max-height: 250px;
 	overflow: visible;
+}
+
+.main-article {
+	.btn {
+		font-family: 'Roboto', Helvetica, sans-serif;
+	}
+	.sd-editor__default-input {
+		border: 1px solid rgba(123, 123, 123, 0.3);
+		border-bottom-color: rgba(123, 123, 123, 0.3);
+		padding: 0;
+		border-radius: 0;
+		background-color: transparent;
+		color: inherit;
+		font-size: 1.4rem;
+		resize: none;
+		-webkit-appearance: none;
+		-moz-appearance: none;
+		box-shadow: none !important;
+		outline: none;
+		padding: 0 0.3rem;
+		margin: 0.6rem 0;
+		&--embed {
+			font-size: 1.3rem;
+			font-family: 'Roboto', Helvetica, sans-serif;
+		}
+		&:hover {
+			border-bottom-color: rgba(123, 123, 123, 0.6);
+		}
+		&:focus {
+			border-width: 1px !important;
+			border-color: rgba(94, 169, 200, 0.3) !important;
+			border-bottom-color: $sd-blue !important;
+			box-shadow: 0 1px 0 $sd-blue !important;
+		}
+	}
+	.sd-editor__info-text {
+		font-size: 1.3rem;
+		font-family: 'Roboto', Helvetica, sans-serif;
+		font-weight: 300;
+		color: inherit;
+		opacity: 0.7;
+		margin: 0.6rem 0;
+	}
 }
 
 .highlights-popup {
