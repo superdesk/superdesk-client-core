@@ -125,7 +125,8 @@ export function allowEditSuggestion(action) {
     if (selection.getStartOffset() !== selection.getEndOffset()) {
         for (let i = selection.getStartOffset(); i < selection.getEndOffset(); i++) {
             // TODO: check again after custom style entity implementation is done
-            const key = getEntityKey(content, getEntityKeyByOffset(content, selection, i), types);
+            const tmpKey = getEntityKeyByOffset(content, selection, i - selection.getStartOffset());
+            const key = getEntityKey(content, tmpKey, types);
 
             if (!allowEditForKey(content, key, suggestingMode)) {
                 return false;
