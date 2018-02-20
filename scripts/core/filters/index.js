@@ -214,4 +214,8 @@ export default angular.module('superdesk.core.filters', [])
         var cleanedValue = value || '';
 
         return cleanedValue.replace('_', ' ');
-    });
+    })
+    .filter('trimHtmlTags', () => function(value) {
+        return value ? String(value).replace(/<[^>]+>/gm, '') : '';
+    })
+;
