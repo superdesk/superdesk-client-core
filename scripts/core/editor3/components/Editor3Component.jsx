@@ -176,6 +176,17 @@ export class Editor3ComponentBase extends React.Component {
             }
         }
 
+        if (KeyBindingUtil.hasCommandModifier(e)) {
+            const {editorFormat} = this.props;
+            const notAllowBold = keyCode === 66 && editorFormat.indexOf('bold') === -1;
+            const notAllowItalic = keyCode === 73 && editorFormat.indexOf('italic') === -1;
+            const notAllowUnderline = keyCode === 85 && editorFormat.indexOf('underline') === -1;
+
+            if (notAllowBold || notAllowItalic || notAllowUnderline) {
+                return '';
+            }
+        }
+
         return getDefaultKeyBinding(e);
     }
 
