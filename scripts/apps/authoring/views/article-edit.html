@@ -532,7 +532,7 @@
         data-item="item"
         data-tabindex="editor[field._id].order">
     </div>
-    <div class="sd-line-input__hint" ng-if="helper_text[field._id]">{{field.helper_text}}</div>
+    <div class="sd-editor__info-text" ng-if="helper_text[field._id]">{{field.helper_text}}</div>
 </div>
 
 <!-- custom date editor fields -->
@@ -545,7 +545,7 @@
 
     <label class="field__label">{{ field.display_name }}</label>
     <div sd-datepicker ng-model="item.extra[field._id]" data-format="YYYY-MM-DDT00:00:00+0000" data-on-change="autosave(item)"></div>
-    <div class="sd-line-input__hint" ng-if="helper_text[field._id]">{{field.helper_text}}</div>
+    <div class="sd-editor__info-text" ng-if="helper_text[field._id]">{{field.helper_text}}</div>
 </div>
 
 <div class="field" ng-repeat="field in fields track by field._id"
@@ -555,22 +555,33 @@
     class="sd-line-input"
     data-required="schema[field._id].required">
     <label class="field__label" translate>{{ field.display_name }}</label>
-    <button type="button" class="btn btn--primary pull-right"
+    <button type="button" class="btn btn--small pull-right"
         ng-click="processEmbed(field._id)" ng-show="isURL(item.extra[field._id].embed)" translate>Generate From URL
     </button>
-    <button id="preview-embed-btn" type="button" class="btn btn--primary pull-right" ng-click="previewEmbed(field._id)"
+    <button id="preview-embed-btn" type="button" class="btn btn--small pull-right" ng-click="previewEmbed(field._id)"
             ng-show="item.extra[field._id].embed && isValidEmbed[field._id] && !isPreviewOn(field._id)" translate>Preview
     </button>
-    <button id="hide-preview-embed-btn" type="button" class="btn btn--primary pull-right" ng-click="hideEmbedPreview(field._id)"
+    <button id="hide-preview-embed-btn" type="button" class="btn btn--small pull-right" ng-click="hideEmbedPreview(field._id)"
             ng-show="isPreviewOn(field._id)" translate>Hide Preview
     </button>
-    <textarea id="embed-field-{{ field._id }}" class="sd-line-input__input" type="text"
-        ng-change="validateEmbed(field._id)" ng-model="item.extra[field._id].embed"
+    <textarea id="embed-field-{{ field._id }}" type="text" 
+        class="sd-editor__default-input sd-editor__default-input--embed"
+        ng-change="validateEmbed(field._id)" 
+        ng-model="item.extra[field._id].embed"
+        sd-focus-element 
+        data-append-element=".field" 
+        data-append-class="active" 
+        sd-auto-height 
         sd-validation-error="error.extra[field._id].embed"></textarea>
-    <input type="text" class="sd-line-input__input" ng-model="item.extra[field._id].description"
-        sd-remove-tags ng-change="autosave(item)" placeholder="{{ 'Description' | translate }}">
+    <input type="text" class="sd-line-input__input" style="margin-bottom: 6px;" 
+        ng-model="item.extra[field._id].description"
+        sd-remove-tags ng-change="autosave(item)" 
+        sd-focus-element
+        data-append-element=".field" 
+        data-append-class="active" 
+        placeholder="{{ 'Description' | translate }}">
     <div id="embed-preview-{{ field._id }}" ng-show="embedPreviews[field._id]"></div>
-    <div class="sd-line-input__hint" ng-if="helper_text[field._id]">{{field.helper_text}}</div>
+    <div class="sd-editor__info-text" ng-if="helper_text[field._id]">{{field.helper_text}}</div>
 </div>
 
 <div class="field" ng-repeat="field in fields track by field._id"
@@ -600,5 +611,5 @@
              !!field.field_options.allowed_types.picture">
         </div>
     </div>
-    <div class="sd-line-input__hint" ng-if="helper_text[field._id]">{{field.helper_text}}</div>
+    <div class="sd-editor__info-text" ng-if="helper_text[field._id]">{{field.helper_text}}</div>
 </div>
