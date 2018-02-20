@@ -1,9 +1,9 @@
 UserEditDirective.$inject = ['api', 'gettext', 'notify', 'usersService', 'userList', 'session', 'lodash',
     'langmap', '$location', '$route', 'superdesk', 'features', 'asset', 'privileges',
-    'desks', 'keyboardManager', 'gettextCatalog', 'config', 'metadata'];
+    'desks', 'keyboardManager', 'gettextCatalog', 'config', 'metadata', 'deployConfig'];
 export function UserEditDirective(api, gettext, notify, usersService, userList, session, _,
     langmap, $location, $route, superdesk, features, asset, privileges, desks, keyboardManager,
-    gettextCatalog, config, metadata) {
+    gettextCatalog, config, metadata, deployConfig) {
     return {
         templateUrl: asset.templateUrl('apps/users/views/edit-form.html'),
         scope: {
@@ -25,6 +25,8 @@ export function UserEditDirective(api, gettext, notify, usersService, userList, 
 
             scope.dirty = false;
             scope.errorMessage = null;
+
+            scope.xmppEnabled = deployConfig.getSync('xmpp_auth');
 
             scope.$watch('origUser', () => {
                 scope.user = _.create(scope.origUser);
