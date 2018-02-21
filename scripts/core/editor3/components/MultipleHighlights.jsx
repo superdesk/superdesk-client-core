@@ -1,3 +1,6 @@
+// IMPORTANT NOTE: this component is agnostic about how highlights are persisted.
+// Do not add persistence related code in this file.
+
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -6,6 +9,8 @@ import {
 } from 'draft-js';
 
 import {getDraftCharacterListForSelection} from '../helpers/getDraftCharacterListForSelection';
+import {getDraftSelectionForEntireContent} from '../helpers/getDraftSelectionForEntireContent';
+import {clearInlineStyles} from '../helpers/clearInlineStyles';
 
 function getHighlightType(styleName) {
     var delimiterIndex = styleName.lastIndexOf('-');
@@ -18,29 +23,37 @@ function getHighlightType(styleName) {
 }
 
 export class MultipleHighlights extends React.Component {
-    // TODO: implement a configuration option to prevent modifying a highlight
+    // TODO: implement a configuration option to prevent modifying highlighted text
 
     constructor(props) {
         super(props);
 
-        this.state = {
-            highlightsStyleMap: {},
-            highlightsData: {},
-            lastHighlightIds: Object.keys(props.availableHighlights).reduce((obj, key) => {
-                obj[key] = 0;
+        this.state = this.props.initialState !== undefined && this.props.initialState !== null
+            ? this.getInitialState()
+            : {
+                highlightsStyleMap: {},
+                highlightsData: {},
+                lastHighlightIds: Object.keys(props.availableHighlights).reduce((obj, key) => {
+                    obj[key] = 0;
+                    return obj;
+                }, {})
+            };
+    }
+
+    getInitialState() {
+        const {initialState} = this.props;
+
+        return {
+            ...initialState,
+            highlightsStyleMap: Object.keys(initialState.highlightsData).reduce((obj, styleName) => {
+                obj[styleName] = this.props.availableHighlights[getHighlightType(styleName)];
                 return obj;
             }, {})
         };
     }
 
-    loadInitialState(state, callback) {
-        this.setState({
-            ...state,
-            highlightsStyleMap: Object.keys(state.highlightsData).reduce((obj, styleName) => {
-                obj[styleName] = this.props.availableHighlights[getHighlightType(styleName)];
-                return obj;
-            }, {})
-        }, callback);
+    highlightTypeValid(highlightType) {
+        return Object.keys(this.props.availableHighlights).includes(highlightType);
     }
 
     styleNameBelongsToHighlight(styleName) {
@@ -53,11 +66,27 @@ export class MultipleHighlights extends React.Component {
         return Object.keys(this.props.availableHighlights).includes(styleName.slice(0, delimiterIndex));
     }
 
+    getHighlightTypeFromStyleName(styleName) {
+        var delimiterIndex = styleName.lastIndexOf('-');
+
+        if (delimiterIndex === -1) {
+            throw new Error('Style name does not contain a highlight type');
+        }
+
+        var highlightType = styleName.slice(0, delimiterIndex);
+
+        if (this.highlightTypeValid(highlightType) === false) {
+            throw new Error(`Invalid highlight type '${highlightType}'`);
+        }
+
+        return highlightType;
+    }
+
     getHighlightData(styleName) {
         return this.state.highlightsData[styleName];
     }
 
-    canAddtHighlight(editorState, highlightType) {
+    canAddtHighlight(highlightType) {
         function characterHasAHighlightOfTheSameType(character) {
             if (
                 character.getStyle()
@@ -71,13 +100,13 @@ export class MultipleHighlights extends React.Component {
             return false;
         }
 
-        const selection = editorState.getSelection();
+        const selection = this.props.editorState.getSelection();
 
         if (selection.isCollapsed()) {
             return false;
         }
 
-        return getDraftCharacterListForSelection(editorState)
+        return getDraftCharacterListForSelection(this.props.editorState)
             .some(characterHasAHighlightOfTheSameType.bind(this)) === false;
     }
 
@@ -85,15 +114,15 @@ export class MultipleHighlights extends React.Component {
         let state = {...this.state};
 
         // in order to support changing highlight styles, styleMap is not exported
-        // instead it's constructed from `highlightsData` and `availableHighlights` on `loadInitialState`
+        // instead it's constructed from `highlightsData` and `availableHighlights` on `getInitialState`
         delete state.highlightsStyleMap;
         return state;
     }
 
-    addHighlight(editorState, highlightType, highlightData, callback) {
+    addHighlight(highlightType, highlightData) {
         // NICE-TO-HAVE: remove associated data when highlights are removed by deleting characters in the editor
 
-        const styleName = highlightType + '-' + this.state.lastHighlightIds[highlightType] + 1;
+        const styleName = highlightType + '-' + (this.state.lastHighlightIds[highlightType] + 1);
 
         this.setState({
             lastHighlightIds: {
@@ -106,11 +135,12 @@ export class MultipleHighlights extends React.Component {
             },
             highlightsData: {...this.state.highlightsData, [styleName]: highlightData}
         }, () => {
-            callback(
+            this.props.onHighlightChange(
                 RichUtils.toggleInlineStyle(
-                    editorState,
+                    this.props.editorState,
                     styleName
-                )
+                ),
+                this.exportState()
             );
         });
     }
@@ -133,34 +163,58 @@ export class MultipleHighlights extends React.Component {
             },
             highlightsStyleMap: nextHighlightsStyleMap,
             highlightsData: nextHighlightsData
+        }, () => {
+            this.props.onHighlightChange(
+                clearInlineStyles(
+                    this.props.editorState, getDraftSelectionForEntireContent(this.props.editorState), [styleName]
+                ),
+                this.exportState()
+            );
         });
     }
 
     updateHighlightData(styleName, nextData) {
-        if (this.state.highlightsData[styleName] !== undefined) {
+        if (this.state.highlightsData[styleName] === undefined) {
             throw new Error('Can\'t update a Highlight which doesn\'t exist.');
         }
 
         this.setState({
             highlightsData: {...this.state.highlightsData, [styleName]: nextData}
+        }, () => {
+            this.props.onHighlightChange(this.props.editorState, this.exportState());
         });
     }
 
     render() {
+        const propsExcludingOwn = Object.keys(this.props)
+            .filter((key) => (
+                key !== 'availableHighlights'
+                && key !== 'onHighlightChange'
+                && key !== 'initialState'
+                && key !== 'children'
+                // editorState must stay
+            ))
+            .reduce((obj, key) => {
+                obj[key] = this.props[key];
+                return obj;
+            }, {});
+
         const {children} = this.props;
 
         var childrenWithProps = React.Children.map(
             children, (child) =>
                 React.cloneElement(child, {
-                    highlights: {
+                    ...propsExcludingOwn,
+                    highlightsManager: {
                         styleMap: this.state.highlightsStyleMap,
-                        add: this.addHighlight.bind(this),
-                        remove: this.removeHighlight.bind(this),
+                        addHighlight: this.addHighlight.bind(this),
+                        removeHighlight: this.removeHighlight.bind(this),
                         getHighlightData: this.getHighlightData.bind(this),
                         updateHighlightData: this.updateHighlightData.bind(this),
                         canAddHighlight: this.canAddtHighlight.bind(this),
-                        loadInitialState: this.loadInitialState.bind(this),
                         exportState: this.exportState.bind(this),
+                        styleNameBelongsToHighlight: this.styleNameBelongsToHighlight.bind(this),
+                        getHighlightTypeFromStyleName: this.getHighlightTypeFromStyleName.bind(this),
                         availableHighlights: this.props.availableHighlights
                     }
                 })
@@ -171,6 +225,9 @@ export class MultipleHighlights extends React.Component {
 }
 
 MultipleHighlights.propTypes = {
-    children: PropTypes.node.isRequired,
+    editorState: PropTypes.object.isRequired,
     availableHighlights: PropTypes.object.isRequired,
+    onHighlightChange: PropTypes.func.isRequired,
+    initialState: PropTypes.object,
+    children: PropTypes.node.isRequired,
 };

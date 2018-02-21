@@ -191,7 +191,7 @@ class ToolbarComponent extends Component {
                     />
                 }
 
-                <ToolbarPopup type={popup.type} data={popup.data} />
+                <ToolbarPopup type={popup.type} data={popup.data} highlightsManager={this.props.highlightsManager} />
 
                 {/* LinkToolbar must be the last node. */}
                 <LinkToolbar onEdit={showPopup(PopupTypes.Link)} />
@@ -214,7 +214,8 @@ ToolbarComponent.propTypes = {
     popup: PropTypes.object,
     editorState: PropTypes.object,
     editorNode: PropTypes.object,
-    scrollContainer: PropTypes.string
+    scrollContainer: PropTypes.string,
+    highlightsManager: PropTypes.object.isRequired
 };
 
 const mapStateToProps = ({
