@@ -3,19 +3,28 @@
 
 <div class="loading" ng-if="loading"></div>
 
-<div id="main-container" ng-class="superdesk.flags" ng-if="!popup && superdesk.flags.workspace === true" ngf-drop="superdesk.openUpload($files)">
+<div id="main-container" ng-class="superdesk.flags" ng-if="!popup && superdesk.flags.workspace === true"
+    ngf-drop="superdesk.openUpload($files)"
+    ngf-model-options="{updateOn: 'drop'}"
+    >
     <div id="workspace-container" ng-view sd-splitter-widget></div>
     <div id="authoring-container" ng-if="superdesk.flags.workspace" sd-authoring-container></div>
     <div id="superdesk-workqueue" ng-if="superdesk.flags.workspace === true && superdesk.flags.workqueue === true" sd-workqueue></div>
     <div sd-item-preview-container></div>
 </div>
 
-<div id="main-container" ng-class="superdesk.flags" ng-if="popup" ngf-drop="superdesk.openUpload($files)">
+<div id="main-container" ng-class="superdesk.flags" ng-if="popup"
+    ngf-drop="superdesk.openUpload($files)"
+    ngf-model-options="{updateOn: 'drop'}"
+    >
     <div id="authoring-container" sd-authoring-container></div>
     <div sd-item-preview-container></div>
 </div>
 
-<div id="main-container" ng-class="superdesk.flags" ng-if="!popup && superdesk.flags.workspace === false" ngf-drop="return;" ng-view></div>
+<div id="main-container" ng-class="superdesk.flags" ng-if="!popup && superdesk.flags.workspace === false"
+    ngf-drop="return;"
+    ngf-model-options="{updateOn: 'drop'}"
+    ng-view></div>
 
 <div id="react-placeholder"></div>
 
