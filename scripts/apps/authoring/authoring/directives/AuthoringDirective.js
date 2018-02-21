@@ -850,6 +850,12 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 }
             };
 
+            // Clear the current embed value.
+            $scope.clearEmbed = (fieldId) => {
+                $scope.item.extra[fieldId].embed = '';
+                $scope.validateEmbed(fieldId);
+            };
+
             function refreshItem() {
                 authoring.open($scope.item._id, true)
                     .then((item) => {

@@ -555,6 +555,9 @@
     class="sd-line-input"
     data-required="schema[field._id].required">
     <label class="field__label" translate>{{ field.display_name }}</label>
+    <button id="clear-embed-btn" type="button" class="btn btn--small pull-right" ng-click="clearEmbed(field._id)"
+        ng-show="item.extra[field._id].embed" translate>Clear Embed
+    </button>
     <button type="button" class="btn btn--small pull-right"
         ng-click="processEmbed(field._id)" ng-show="isURL(item.extra[field._id].embed)" translate>Generate From URL
     </button>
