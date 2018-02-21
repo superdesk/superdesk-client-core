@@ -1,3 +1,5 @@
+import {stripHtmlTags} from 'core/utils';
+
 export const CONTENT_FIELDS_DEFAULTS = Object.freeze({
     headline: '',
     slugline: '',
@@ -99,10 +101,9 @@ export function filterDefaultValues(diff, orig) {
 export function stripHtmlRaw(content) {
     if (content) {
         var elem = document.createElement('div');
-        var htmlRegex = /(<([^>]+)>)/ig;
 
         elem.innerHTML = content;
-        return elem.textContent.replace(htmlRegex, '');
+        return stripHtmlTags(elem.textContent);
     }
     return '';
 }

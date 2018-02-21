@@ -63,8 +63,8 @@
 
         <form name="metadataForm">
             <div class="template-metadata">
-                <div ng-if="showDesks()">                    
-                    
+                <div ng-if="showDesks()">
+
                     <div for="template-desk" ng-if="template.template_type !== 'create'">
                         <div class="sd-line-input sd-line-input--is-select">
                             <label class="sd-line-input__label">{{:: 'Desk' | translate }}</label>
@@ -75,9 +75,9 @@
                                 <option ng-repeat="desk in desks._items track by desk._id" value="{{ desk._id }}"
                                 ng-selected="desk.selected">{{ :: desk.name }}</option>
                             </select>
-                        </div>                        
+                        </div>
                     </div>
-                    
+
                     <div for="template-desks" ng-if="template.template_type === 'create'" sd-toggle-box data-title="{{:: 'Desks' | translate }}" data-open="true">
                         <div class="multi-select" ng-if="template.template_type === 'create'">
                             <ul>
@@ -86,15 +86,15 @@
                                 </li>
                             </ul>
                         </div>
-                    </div>                    
+                    </div>
                 </div>
 
                 <div sd-toggle-box data-title="{{:: 'Metadata' | translate }}" data-open="false" id="template-editor-metadata">
                     <div class="field">
-                        <span sd-switch ng-model="item.flags.marked_for_not_publication"></span><label>Not For Publication</label>                        
+                        <span sd-switch ng-model="item.flags.marked_for_not_publication"></span><label>Not For Publication</label>
                     </div>
 
-                    <div class="field field--margin-double">                        
+                    <div class="field field--margin-double">
                         <span sd-switch ng-model="item.flags.marked_for_legal"></span><label translate>Legal</label>
                     </div>
 
@@ -167,7 +167,7 @@
                     <div ng-if="showScheduling() && template.schedule.is_active"
                              class="sd-line-input sd-line-input--is-select sd-line-input--required">
                         <label for="schedule-desk" class="sd-line-input__label" translate>Schedule Desk</label>
-                        <select id="schedule-desk" ng-model="template.schedule_desk" 
+                        <select id="schedule-desk" ng-model="template.schedule_desk"
                                 ng-change="updateStages(template.schedule_desk)" class="sd-line-input__select">
                             <option value="" translate>None</option>
                             <option ng-repeat="desk in desks._items track by desk._id" value="{{ desk._id }}"
