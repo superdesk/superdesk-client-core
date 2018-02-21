@@ -5,16 +5,6 @@ import {UserAvatar} from 'apps/users/components';
 import mentionsStyle from './mentionsStyle';
 import ng from 'core/services/ng';
 
-/**
- * @ngdoc React
- * @module superdesk.core.editor3
- * @name CommentInputBody
- * @param {Function} applyComment Called when a new comment is submitted. It receives the
- * comment body as a parameter.
- * @param {Function} hidePopups
- * @description CommentInputBody holds the dropdown that is used to enter the text for a
- * comment.
- */
 class CommentTextArea extends React.Component {
     constructor(props) {
         super(props);

@@ -3,6 +3,7 @@ import {getVisibleSelectionRect, EditorState, Entity} from 'draft-js';
 import {render, unmountComponentAtNode} from 'react-dom';
 import PropTypes from 'prop-types';
 import {Provider} from 'react-redux';
+import {List} from 'immutable';
 
 import {Dropdown} from 'core/ui/components';
 import {CommentPopup} from './comments';
@@ -139,12 +140,31 @@ export class HighlightsPopup extends Component {
             ];
         }
 
+        if (this.styleBasedHighlightsExist()) {
+            this.getInlineStyleForCollapsedSelection()
+                .filter(this.props.highlightsManager.styleNameBelongsToHighlight)
+                .forEach((styleName) => {
+                    const highlightType = this.props.highlightsManager.getHighlightTypeFromStyleName(styleName);
+
+                    highlightsAndSuggestions = [
+                        ...highlightsAndSuggestions,
+                        {
+                            type: highlightType,
+                            value: this.props.highlightsManager.getHighlightData(styleName), highlightId: styleName
+                        }
+                    ];
+                });
+        }
+
         // We need to create a new provider here because this component gets rendered
         // outside the editor tree and loses context.
         return (
             <Provider store={store}>
                 <div className="highlights-popup" style={position}>
-                    {highlightsAndSuggestions.map((obj, i) => this.createHighlight(obj.type, obj.value, i))}
+                    {
+                        highlightsAndSuggestions
+                            .map((obj, i) => this.createHighlight(obj.type, obj.value, i, obj.highlightId))
+                    }
                 </div>
             </Provider>
         );
@@ -160,7 +180,7 @@ export class HighlightsPopup extends Component {
      * inside the component method.
      * @returns {JSX}
      */
-    createHighlight(type, h, key) {
+    createHighlight(type, h, key, highlightId) {
         switch (type) {
         case 'ANNOTATION':
             return (
@@ -171,7 +191,12 @@ export class HighlightsPopup extends Component {
         case 'COMMENT':
             return (
                 <Dropdown key={key} open={true}>
-                    <CommentPopup keyForDropdown={key} comment={h} />
+                    <CommentPopup
+                        keyForDropdown={key}
+                        comment={h}
+                        highlightId={highlightId}
+                        highlightsManager={this.props.highlightsManager}
+                    />
                 </Dropdown>
             );
         case 'DELETE_SUGGESTION':
@@ -180,6 +205,11 @@ export class HighlightsPopup extends Component {
         default:
             console.error('Invalid highlight type in HighlightsPopup.jsx: ', type);
         }
+    }
+
+    styleBasedHighlightsExist() {
+        return this.getInlineStyleForCollapsedSelection()
+            .some(this.props.highlightsManager.styleNameBelongsToHighlight);
     }
 
     /**
@@ -230,11 +260,27 @@ export class HighlightsPopup extends Component {
         const nextSelection = nextProps.editorState.getSelection();
         const selection = this.props.editorState.getSelection();
 
-        // only update the component if the cursor has moved
-        return nextSelection.getAnchorOffset() !== selection.getAnchorOffset() ||
+        var cursorMoved = nextSelection.getAnchorOffset() !== selection.getAnchorOffset() ||
             nextSelection.getAnchorKey() !== selection.getAnchorKey() ||
             Object.keys(nextProps.highlights).length !== Object.keys(this.props.highlights).length ||
             Object.values(nextProps.highlights)[0] !== Object.values(this.props.highlights)[0];
+
+        return cursorMoved || this.props.hadHighlightsChanged(this.props.editorState, nextProps.editorState);
+    }
+
+    getInlineStyleForCollapsedSelection() {
+        const {editorState} = this.props;
+        const selection = editorState.getSelection();
+
+        if (selection.isCollapsed() === false) {
+            return List();
+        }
+
+        var blockKey = selection.getAnchorKey();
+        var block = editorState.getCurrentContent().getBlockForKey(blockKey);
+        var inlineStyle = block.getInlineStyleAt(selection.getAnchorOffset());
+
+        return inlineStyle;
     }
 
     getSelectedSuggestionEntityKey() {
@@ -257,7 +303,11 @@ export class HighlightsPopup extends Component {
     }
 
     shouldRender() {
-        if (Object.keys(this.props.highlights).length > 0) {
+        if (Object.keys(this.props.highlights).length > 0) { // TODO: remove after porting annotations
+            return true;
+        }
+
+        if (this.styleBasedHighlightsExist()) {
             return true;
         }
 
@@ -301,5 +351,7 @@ HighlightsPopup.contextTypes = {
 HighlightsPopup.propTypes = {
     editorState: PropTypes.instanceOf(EditorState),
     editorNode: PropTypes.object,
-    highlights: PropTypes.object
+    highlights: PropTypes.object,
+    highlightsManager: PropTypes.object.isRequired,
+    hadHighlightsChanged: PropTypes.func.isRequired,
 };

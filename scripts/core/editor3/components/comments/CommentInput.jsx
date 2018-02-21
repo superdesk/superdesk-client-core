@@ -2,15 +2,14 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {Dropdown} from 'core/ui/components';
 import {connect} from 'react-redux';
-import {applyComment, hidePopups} from '../../actions';
+import {applyHighlight as getCommentData, hidePopups} from '../../actions';
 import CommentTextArea from './CommentTextArea';
+import {highlightsConfig} from '../highlightsConfig';
 
 /**
  * @ngdoc React
  * @module superdesk.core.editor3
  * @name CommentInputBody
- * @param {Function} applyComment Called when a new comment is submitted. It receives the
- * comment body as a parameter.
  * @param {Function} hidePopups
  * @description CommentInputBody holds the dropdown that is used to enter the text for a
  * comment.
@@ -31,10 +30,27 @@ class CommentInputBody extends Component {
      */
     onSubmit() {
         const {msg} = this.state;
-        const {applyComment, hidePopups, data} = this.props;
+        const {hidePopups} = this.props;
+        const {highlightId} = this.props.data;
 
         if (msg !== '') {
-            applyComment(data.selection, {msg});
+            if (highlightId === undefined) {
+                this.props.highlightsManager.addHighlight(
+                    highlightsConfig.COMMENT.type,
+                    getCommentData(
+                        highlightsConfig.COMMENT.type,
+                        {}, // TODO: remove unused argument after porting annotations
+                        {msg: msg, replies: [], resolved: false}
+                    ).payload
+                );
+            } else {
+                var highlightData = this.props.highlightsManager.getHighlightData(highlightId);
+
+                this.props.highlightsManager.updateHighlightData(
+                    highlightId,
+                    {...highlightData, data: {...highlightData.data, msg}}
+                );
+            }
             hidePopups();
         }
     }
@@ -69,12 +85,11 @@ class CommentInputBody extends Component {
 }
 
 CommentInputBody.propTypes = {
-    applyComment: PropTypes.func,
     hidePopups: PropTypes.func,
-    data: PropTypes.object
+    data: PropTypes.object,
+    highlightsManager: PropTypes.object.isRequired
 };
 
 export const CommentInput = connect(null, {
-    applyComment,
     hidePopups
 })(CommentInputBody);

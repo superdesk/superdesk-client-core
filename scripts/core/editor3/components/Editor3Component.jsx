@@ -7,16 +7,13 @@ import {
     RichUtils,
     Modifier,
     EditorState,
-    SelectionState,
     getDefaultKeyBinding,
     DefaultDraftBlockRenderMap,
     KeyBindingUtil,
 } from 'draft-js';
 
 import {Map} from 'immutable';
-import {connect} from 'react-redux';
 import Toolbar from './toolbar';
-import * as actions from '../actions';
 import {SpellcheckerDecorator} from './spellchecker';
 import {SpaceDecorator} from './invisibles';
 import {LinkDecorator} from './links';
@@ -30,8 +27,6 @@ import UnstyledBlock from './UnstyledBlock';
 import UnstyledWrapper from './UnstyledWrapper';
 import {isEditorBlockEvent} from './BaseUnstyledComponent';
 import {acceptedInlineStyles} from '../helpers/inlineStyles';
-
-import {MULTIPLE_HIGHLIGHTS_STORAGE_KEY} from '../constants';
 
 const VALID_MEDIA_TYPES = [
     'application/superdesk.item.picture',
@@ -51,7 +46,6 @@ const VALID_MEDIA_TYPES = [
 function getValidMediaType(event) {
     return event.dataTransfer.types.find((mediaType) => VALID_MEDIA_TYPES.indexOf(mediaType) !== -1);
 }
-
 /**
  * @ngdoc React
  * @module superdesk.core.editor3
@@ -64,7 +58,7 @@ function getValidMediaType(event) {
  * @description Editor3 is a draft.js based editor that support customizable
  *  formatting, spellchecker and media files.
  */
-export class Editor3ComponentBase extends React.Component {
+export class Editor3Component extends React.Component {
     static getDecorator(disableSpellchecker) {
         const decorators = [
             LinkDecorator,
@@ -83,10 +77,6 @@ export class Editor3ComponentBase extends React.Component {
 
         this.editorKey = null;
         this.editorNode = undefined;
-
-        this.state = {
-            highlightsLoaded: false
-        };
 
         this.focus = this.focus.bind(this);
         this.allowItem = this.allowItem.bind(this);
@@ -345,23 +335,6 @@ export class Editor3ComponentBase extends React.Component {
         this.editorNode = this.editor === null ? undefined : ReactDOM.findDOMNode(this.editor);
     }
 
-    componentWillMount() {
-        var multipleHighlightsData = this.props.editorState
-            .getCurrentContent()
-            .getFirstBlock()
-            .getData()
-            .get(MULTIPLE_HIGHLIGHTS_STORAGE_KEY);
-
-        if (multipleHighlightsData !== undefined) {
-            this.props.highlights.loadInitialState(
-                multipleHighlightsData,
-                () => this.setState({highlightsLoaded: true})
-            );
-        } else {
-            this.setState({highlightsLoaded: true});
-        }
-    }
-
     componentWillUnmount() {
         $(this.div).off();
     }
@@ -372,29 +345,7 @@ export class Editor3ComponentBase extends React.Component {
         }
     }
 
-    onHighlightAdd(nextEditorState) {
-        let content = nextEditorState.getCurrentContent();
-        const firstBlockSelection = SelectionState.createEmpty(content.getFirstBlock().getKey());
-        const multipleHighlightsData = Map()
-            .set(MULTIPLE_HIGHLIGHTS_STORAGE_KEY, this.props.highlights.exportState());
-
-        content = Modifier.mergeBlockData(content, firstBlockSelection, multipleHighlightsData);
-
-        var editorStateWithHighlightsData = EditorState.push(nextEditorState, content, 'change-inline-style');
-
-        this.props.onChange(editorStateWithHighlightsData);
-    }
-
     render() {
-        if (this.state.highlightsLoaded !== true) {
-            // don't render the editor until highlights are loaded
-            // required to prevent https://github.com/facebook/draft-js/issues/999
-            return null;
-        }
-
-        // an example of how to add a highlight
-        // this.props.highlights.add(editorState, 'comment', {}, this.onHighlightAdd.bind(this))
-
         const {
             readOnly,
             locked,
@@ -433,6 +384,7 @@ export class Editor3ComponentBase extends React.Component {
                         disabled={locked || readOnly}
                         scrollContainer={scrollContainer}
                         editorNode={this.editorNode}
+                        highlightsManager={this.props.highlightsManager}
                     />
                 }
                 {highlightsEnabled &&
@@ -440,6 +392,8 @@ export class Editor3ComponentBase extends React.Component {
                         highlights={activeHighlights}
                         editorNode={this.editorNode}
                         editorState={editorState}
+                        highlightsManager={this.props.highlightsManager}
+                        hadHighlightsChanged={this.props.hadHighlightsChanged}
                     />
                 }
                 <div className="focus-screen" onMouseDown={this.focus}>
@@ -449,7 +403,7 @@ export class Editor3ComponentBase extends React.Component {
                         handleBeforeInput={this.handleBeforeInput}
                         blockRenderMap={blockRenderMap}
                         blockRendererFn={getBlockRenderer({svc: this.props.svc})}
-                        customStyleMap={{...customStyleMap, ...this.props.highlights.styleMap}}
+                        customStyleMap={{...customStyleMap, ...this.props.highlightsManager.styleMap}}
                         onChange={onChange}
                         onTab={onTab}
                         tabIndex={tabindex}
@@ -463,7 +417,7 @@ export class Editor3ComponentBase extends React.Component {
     }
 }
 
-Editor3ComponentBase.propTypes = {
+Editor3Component.propTypes = {
     readOnly: PropTypes.bool,
     locked: PropTypes.bool,
     showToolbar: PropTypes.bool,
@@ -483,40 +437,15 @@ Editor3ComponentBase.propTypes = {
     onCreateAddSuggestion: PropTypes.func,
     onCreateDeleteSuggestion: PropTypes.func,
     onPasteFromSuggestingMode: PropTypes.func,
-    svc: PropTypes.object.isRequired,
+    svc: PropTypes.object,
     invisibles: PropTypes.bool,
-    highlights: PropTypes.object.isRequired,
+    highlights: PropTypes.object,
+    hadHighlightsChanged: PropTypes.func,
+    highlightsManager: PropTypes.object
 };
 
-Editor3ComponentBase.defaultProps = {
+Editor3Component.defaultProps = {
     readOnly: false,
     singleLine: false,
     editorFormat: []
 };
-
-const mapStateToProps = (state) => ({
-    readOnly: state.readOnly,
-    showToolbar: state.showToolbar,
-    highlightsEnabled: state.allowsHighlights,
-    editorState: state.editorState,
-    activeHighlights: state.activeHighlights,
-    locked: state.locked,
-    editorFormat: state.editorFormat,
-    tabindex: state.tabindex,
-    suggestingMode: state.suggestingMode,
-    invisibles: state.invisibles,
-    svc: state.svc
-});
-
-const mapDispatchToProps = (dispatch) => ({
-    onChange: (editorState) => dispatch(actions.changeEditorState(editorState)),
-    onTab: (e) => dispatch(actions.handleEditorTab(e)),
-    dragDrop: (transfer, mediaType) => dispatch(actions.dragDrop(transfer, mediaType)),
-    unlock: () => dispatch(actions.setLocked(false)),
-    dispatch: (x) => dispatch(x),
-    onCreateAddSuggestion: (chars) => dispatch(actions.createAddSuggestion(chars)),
-    onCreateDeleteSuggestion: (action) => dispatch(actions.createDeleteSuggestion(action)),
-    onPasteFromSuggestingMode: (content) => dispatch(actions.onPasteFromSuggestingMode(content))
-});
-
-export const Editor3Component = connect(mapStateToProps, mapDispatchToProps)(Editor3ComponentBase);

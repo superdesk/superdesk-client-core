@@ -1,13 +1,13 @@
 import React from 'react';
 import {shallow, mount} from 'enzyme';
-import {Editor3ComponentBase as Editor3} from '../Editor3Component';
+import {Editor3Component as Editor3} from '../Editor3Component';
 import {getBlockRenderer} from '../blockRenderer';
 import {EditorState} from 'draft-js';
 import mockStore from './utils';
 
 const editorState = EditorState.createEmpty();
 const stubForHighlights = {
-    highlights: {
+    highlightsManager: {
         styleMap: {}
     }
 };
