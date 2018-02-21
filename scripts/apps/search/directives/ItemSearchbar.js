@@ -5,6 +5,7 @@ ItemSearchbar.$inject = ['$location', '$document', 'asset'];
  */
 export function ItemSearchbar($location, $document, asset) {
     return {
+        scope: true,
         templateUrl: asset.templateUrl('apps/search/views/item-searchbar.html'),
         link: function(scope, elem) {
             var ENTER = 13;

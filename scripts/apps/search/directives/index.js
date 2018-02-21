@@ -16,4 +16,4 @@ export {SavedSearches} from './SavedSearches';
 export {MultiActionBar} from './MultiActionBar';
 export {RawSearch} from './RawSearch';
 export {SearchFilters} from './SearchFilters';
-
+export {RepoDropdown} from './RepoDropdown';

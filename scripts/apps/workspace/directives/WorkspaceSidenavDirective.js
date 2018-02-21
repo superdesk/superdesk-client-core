@@ -38,7 +38,7 @@ export function WorkspaceSidenavDirective(superdeskFlags, $location, Keys, gette
             };
 
             scope.loadSearchShortcut = function(provider) {
-                $location.url('/search?repo=' + provider.source);
+                $location.url('/search?repo=' + (provider._id ? provider._id : provider.source));
                 $route.reload();
             };
 

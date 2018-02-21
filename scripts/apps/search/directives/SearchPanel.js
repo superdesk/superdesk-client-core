@@ -27,7 +27,8 @@ export function SearchPanel($location, desks, privileges, tags, asset, metadata,
             items: '=',
             desk: '=',
             repo: '=',
-            context: '='
+            context: '=',
+            toggleRepo: '=',
         },
         link: function(scope, element, attrs, controller) {
             scope.flags = controller.flags;

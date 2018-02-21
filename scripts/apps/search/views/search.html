@@ -2,8 +2,14 @@
   <header class="search-page-header">
       <div class="filter-trigger" title="{{ :: 'Filters' | translate }}" ng-click="flags.facets = !flags.facets" ng-class="{'filter-trigger--active': flags.facets}"><i class="icon-filter-large"></i></div>
 
-      <div sd-item-searchbar data-repo="repo" data-context="context" class="searchbar-flex-handler"></div>
+      <div sd-repo-dropdown class="sortbar-flex-handler"
+        data-providers="search.providers"
+        data-active-provider="search.activeProvider"
+        data-toggle-provider="search.toggleProvider"
+      ></div>
+      <div sd-item-searchbar data-context="context" class="searchbar-flex-handler"></div>
       <div sd-item-sortbar data-total="total_records" class="sortbar-flex-handler"></div>
+
       <div class="refresh-box">
           <button ng-if="showRefresh" class="navbtn" ng-click="refreshList()"
               tooltip="{{:: 'Refresh' | translate}}" tooltip-placement="left">
@@ -18,6 +24,10 @@
   </header>
 </div>
 <section sd-search-container class="search main-section search-page-container" ng-class="{'sidebar-open': flags.facets}">
-    <div sd-search-panel class="archive-sidebar" data-items="items" data-repo="repo" data-context="context" ng-if="flags.facets"></div>
+    <div sd-search-panel class="archive-sidebar" data-items="items"
+        data-repo="search.repo"
+        data-providers="search.providers"
+        data-toggle-repo="search.toggleRepo"
+        data-context="context" ng-if="flags.facets"></div>
     <div sd-search-results class="archive-content"></div>
 </section>

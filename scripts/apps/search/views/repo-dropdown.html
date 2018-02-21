@@ -1,0 +1,14 @@
+<div id="repo-dropdown" class="dropdown" dropdown>
+    <button class="dropdown__toggle navbtn navbtn--text-only" dropdown__toggle>
+        {{ activeProvider.name || 'Superdesk' }}
+        <span class="dropdown__caret"></span>
+    </button>
+    <ul class="dropdown__menu">
+        <li ng-class="{active: !activeProvider}">
+            <button ng-click="toggleProvider()">Superdesk</button>
+        </li>
+        <li ng-repeat="provider in providers track by provider._id"  ng-class="{active: provider._id === activeProvider._id}">
+            <button ng-click="toggleProvider(provider)">{{ provider.name }}</button>
+        </li>
+    </ul>
+</div>
