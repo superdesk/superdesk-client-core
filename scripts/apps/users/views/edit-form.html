@@ -168,9 +168,9 @@
                 </div>
             </div>
 
-            <div class="form__row" sd-info-item ng-hide="profileConfig.jid === false">
+            <div class="form__row" sd-info-item ng-hide="profileConfig.jid === false || !xmppEnabled">
                 <div class="sd-line-input">
-                    <label class="sd-line-input__label" for="jid">JID</label>
+                    <label class="sd-line-input__label" for="jid" translate>Jabber Identifier (JID)</label>
                     <input class="sd-line-input__input" type="text" name="jid" id="jid" ng-model="user.jid">
                 </div>
             </div>
