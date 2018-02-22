@@ -8,17 +8,16 @@ import _ from 'lodash';
  * @requires $rootscope
  * @requires $location
  * @requires desks
- * @requires storage
  * @requires config
  * @requires superdeskFlags
  * @requires search
  *
  * @description MonitoringController is responsible for providing functionalities in monitoring view of the application
  */
-MonitoringController.$inject = ['$rootScope', '$location', 'desks', 'storage', 'config', 'superdeskFlags',
-    'search', '$filter'];
-export function MonitoringController($rootScope, $location, desks, storage, config, superdeskFlags,
-    search, $filter) {
+MonitoringController.$inject = ['$rootScope', '$scope', '$location', 'desks', 'config', 'superdeskFlags',
+    'search', '$filter', 'preferencesService', '$q'];
+export function MonitoringController($rootScope, $scope, $location, desks, config, superdeskFlags,
+    search, $filter, preferencesService, $q) {
     this.state = {};
 
     this.preview = preview;
@@ -33,7 +32,16 @@ export function MonitoringController($rootScope, $location, desks, storage, conf
 
     this.hasSwimlaneView = config.features && config.features.swimlane ? 1 : 0;
     this.columnsLimit = null;
-    this.viewColumn = JSON.parse(storage.getItem('displaySwimlane'));
+
+    // init swimlane view using preferences - use session preferences if set, or fallback to user preferences
+    $q.all({
+        userPreference: preferencesService.get('monitoring:view'),
+        sessionPreference: preferencesService.get('monitoring:view:session'),
+    }).then(({userPreference, sessionPreference}) => {
+        console.info('prefs', userPreference, sessionPreference);
+        this.viewColumn = sessionPreference != null ? sessionPreference : userPreference.view === 'swimlane';
+        this.switchView(this.viewColumn);
+    });
 
     this.selectGroup = selectGroup;
     this.switchView = switchView;
@@ -63,8 +71,6 @@ export function MonitoringController($rootScope, $location, desks, storage, conf
     };
 
     var self = this;
-
-    self.switchView(self.viewColumn);
 
     function preview(item) {
         self.previewItem = item;
@@ -112,14 +118,16 @@ export function MonitoringController($rootScope, $location, desks, storage, conf
      * returns a columnsLimit a number or null for swimlane or list respectively.
      * @param {Boolean} viewColumn if set to true then function returns columnsLimit
      * for swimlane as per configuration.
+     * @param {Boolean} updateSession if set it will update user session setting.
      * @returns {Number|null} function returns columnsLimit null if viewColumn is false.
      */
-    function switchView(viewColumn) {
-        storage.setItem('displaySwimlane', viewColumn);
+    function switchView(viewColumn, updateSession) {
         self.viewColumn = viewColumn;
-
         self.columnsLimit = self.viewColumn ? config.features.swimlane.columnsLimit : null;
-
+        $scope.$broadcast('view:column', {viewColumn: self.viewColumn});
+        if (updateSession) {
+            preferencesService.update({'monitoring:view:session': viewColumn}, 'monitoring:view:session');
+        }
         return self.columnsLimit;
     }
 

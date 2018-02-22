@@ -11,14 +11,13 @@ export function MonitoringView($rootScope, authoringWorkspace, pageTitle, $timeo
         controllerAs: 'monitoring',
         scope: {
             type: '=',
-            state: '='
+            state: '=',
         },
         link: function(scope, elem) {
             var containerElem = elem.find('.content-list');
 
             pageTitle.setUrl(_.capitalize(gettext(scope.type)));
 
-            scope.viewColumn = scope.monitoring.viewColumn;
             scope.shouldRefresh = true;
 
             scope.workspaces = workspaces;
@@ -31,9 +30,7 @@ export function MonitoringView($rootScope, authoringWorkspace, pageTitle, $timeo
              * Toggle viewColumn to switch views between swimlane and list
              */
             scope.displayColumn = function() {
-                scope.viewColumn = !scope.viewColumn;
-                scope.monitoring.switchView(scope.viewColumn);
-                scope.$broadcast('view:column', {viewColumn: scope.viewColumn});
+                scope.monitoring.switchView(!scope.monitoring.viewColumn, true);
             };
 
             /**
@@ -55,7 +52,7 @@ export function MonitoringView($rootScope, authoringWorkspace, pageTitle, $timeo
                     });
                 }
 
-                if (scope.viewColumn && containerElem[0].scrollTop === 0) {
+                if (scope.monitoring.viewColumn && containerElem[0].scrollTop === 0) {
                     scope.refreshGroup(scope.group);
                 }
 
@@ -73,7 +70,7 @@ export function MonitoringView($rootScope, authoringWorkspace, pageTitle, $timeo
              * Trigger render in case user scrolls to the very end of list
              */
             function renderIfNeeded() {
-                if (scope.viewColumn && isListEnd(containerElem[0])) {
+                if (scope.monitoring.viewColumn && isListEnd(containerElem[0])) {
                     scheduleFetchNext();
                 }
             }

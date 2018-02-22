@@ -4,35 +4,48 @@ describe('monitoring', () => {
     beforeEach(window.module('superdesk.apps.vocabularies'));
     beforeEach(window.module('superdesk.apps.searchProviders'));
 
-    it('can switch between list and swimlane view', inject(($controller, $rootScope, storage, config) => {
-        config.features = {
-            swimlane: {columnsLimit: 4}
-        };
+    it('can switch between list and swimlane view',
+        inject(($controller, $rootScope, $q, preferencesService, config) => {
+            config.features = {
+                swimlane: {columnsLimit: 4}
+            };
 
-        var scope = $rootScope.$new(),
-            ctrl = $controller('Monitoring', {$scope: scope});
+            spyOn(preferencesService, 'update');
+            spyOn(preferencesService, 'get').and.callFake((name) => {
+                if (name === 'monitoring:view') {
+                    return $q.when({view: 'list'});
+                }
 
-        expect(ctrl.hasSwimlaneView).toBe(1);
+                return $q.when(null);
+            });
 
-        // Default will be list view
-        storage.clear();
-        expect(ctrl.viewColumn).toBe(null); // no swimlane
-        // display all groups for list view, i.e. limitTo: null when no swimlane
-        expect(ctrl.columnsLimit).toBe(null);
+            var scope = $rootScope.$new(),
+                ctrl = $controller('Monitoring', {$scope: scope});
 
-        // Switch to swimlane view, via switch view button or returning back to monitoring
-        // view while swimlane view was already ON
-        ctrl.switchView(true);
-        expect(storage.getItem('displaySwimlane')).toBe(true);
-        expect(ctrl.viewColumn).toBe(true); // swimlane
-        expect(ctrl.columnsLimit).toBe(4);
 
-        // Switch back to list view
-        ctrl.switchView(false);
-        expect(storage.getItem('displaySwimlane')).toBe(false);
-        expect(ctrl.viewColumn).toBe(false);
-        expect(ctrl.columnsLimit).toBe(null);
-    }));
+            expect(ctrl.hasSwimlaneView).toBe(1);
+            $rootScope.$digest();
+
+            expect(ctrl.viewColumn).toBe(false); // no swimlane
+            // display all groups for list view, i.e. limitTo: null when no swimlane
+            expect(ctrl.columnsLimit).toBe(null);
+
+            // Switch to swimlane view, via switch view button or returning back to monitoring
+            // view while swimlane view was already ON
+            ctrl.switchView(true, true);
+
+            expect(ctrl.viewColumn).toBe(true); // swimlane
+            expect(ctrl.columnsLimit).toBe(4);
+            expect(preferencesService.update).toHaveBeenCalledWith(
+                {'monitoring:view:session': true},
+                'monitoring:view:session'
+            );
+
+            // Switch back to list view
+            ctrl.switchView(false);
+            expect(ctrl.viewColumn).toBe(false);
+            expect(ctrl.columnsLimit).toBe(null);
+        }));
 
     it('can preview an item', inject(($controller, $rootScope) => {
         var scope = $rootScope.$new(),
