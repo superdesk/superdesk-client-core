@@ -22,7 +22,7 @@ export class ToolbarPopup extends Component {
 
         switch (type) {
         case PopupTypes.Annotation:
-            return <AnnotationInput data={data} />;
+            return <AnnotationInput data={data} highlightsManager={this.props.highlightsManager} />;
         case PopupTypes.Comment:
             return <CommentInput data={data} highlightsManager={this.props.highlightsManager} />;
         case PopupTypes.Link:

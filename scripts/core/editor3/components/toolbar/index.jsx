@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import {SelectionState} from 'draft-js';
 import PropTypes from 'prop-types';
 import BlockStyleButtons from './BlockStyleButtons';
 import InlineStyleButtons from './InlineStyleButtons';
@@ -13,8 +12,7 @@ import {LinkToolbar} from '../links';
 import classNames from 'classnames';
 import * as actions from '../../actions';
 import {PopupTypes} from '../../actions';
-import {getHighlights} from '../../reducers/highlights';
-import {selectionsOverlap} from '../../reducers/highlights/styles';
+import {highlightsConfig} from '../highlightsConfig';
 
 /**
  * @ngdoc React
@@ -29,7 +27,6 @@ class ToolbarComponent extends Component {
 
         this.scrollContainer = $(props.scrollContainer || window);
         this.onScroll = this.onScroll.bind(this);
-        this.canAnnotate = this.canAnnotate.bind(this);
 
         this.state = {
             // When true, the toolbar is floating at the top of the item. This
@@ -74,28 +71,7 @@ class ToolbarComponent extends Component {
         this.scrollContainer.off('scroll', this.onScroll);
     }
 
-    /**
-     * @ngdoc method
-     * @name Toolbar#canAnnotate
-     * @description canAnnotate is called as a precondition to the SelectionButton for creating
-     * an annotation. It returns true if the current selection does not overlap any annotation.
-     */
-    canAnnotate() {
-        const {editorState} = this.props;
-        const content = editorState.getCurrentContent();
-
-        return !getHighlights(content).some((highlight, rawSelection) => {
-            if (highlight.type !== 'ANNOTATION') {
-                return false;
-            }
-            return selectionsOverlap(
-                content,
-                editorState.getSelection(),
-                new SelectionState(JSON.parse(rawSelection))
-            );
-        });
-    }
-
+    /* eslint-disable complexity */
     render() {
         const {floating} = this.state;
         const {
@@ -159,6 +135,9 @@ class ToolbarComponent extends Component {
                 {allowsHighlights && has('comments') &&
                     <SelectionButton
                         onClick={showPopup(PopupTypes.Comment)}
+                        precondition={
+                            this.props.highlightsManager.canAddHighlight(highlightsConfig.COMMENT.type)
+                        }
                         key="comment-button"
                         iconName="comment"
                         tooltip={gettext('Comment')}
@@ -167,7 +146,9 @@ class ToolbarComponent extends Component {
                 {allowsHighlights && has('annotation') &&
                     <SelectionButton
                         onClick={showPopup(PopupTypes.Annotation)}
-                        precondition={this.canAnnotate()}
+                        precondition={
+                            this.props.highlightsManager.canAddHighlight(highlightsConfig.ANNOTATION.type)
+                        }
                         key="annotation-button"
                         iconName="pencil"
                         tooltip={gettext('Annotation')}

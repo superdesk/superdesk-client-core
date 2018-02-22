@@ -5,8 +5,7 @@ import ng from 'core/services/ng';
 import {Comment} from './Comment';
 import CommentTextArea from './CommentTextArea';
 
-import {applyHighlight as getCommentData} from '../../actions';
-import {highlightsConfig} from '../highlightsConfig';
+import {getAuthorInfo} from '../../actions';
 
 /**
  * @ngdoc React
@@ -69,11 +68,10 @@ export class CommentPopup extends Component {
                 data: {
                     ...commentData.data,
                     replies: commentData.data.replies.concat(
-                        getCommentData(
-                            highlightsConfig.COMMENT.type, // to be removed
-                            {}, // no need to save a selection
-                            {msg}
-                        ).payload.data
+                        {
+                            msg,
+                            ...getAuthorInfo()
+                        }
                     )
                 }
             });

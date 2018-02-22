@@ -44,7 +44,7 @@ export class HighlightsPopup extends Component {
         const {left: editorLeft} = this.props.editorNode.getBoundingClientRect();
         const rect = getVisibleSelectionRect(window);
         const maxHeight = $('div.auth-screen').height();
-        const numDropdowns = Object.keys(this.props.highlights).length;
+        const numDropdowns = this.props.highlightsManager.getHighlightsCount();
 
         let maxTop = maxHeight - 60/* top & bottom bar */ - 450/* max dropdown height */ * numDropdowns;
         let top = 150;
@@ -121,11 +121,11 @@ export class HighlightsPopup extends Component {
      * @returns {JSX}
      */
     component() {
-        const {highlights} = this.props;
         const {store} = this.context;
         const position = this.position();
 
-        var highlightsAndSuggestions = Object.keys(highlights).map((key) => ({type: key, value: highlights[key]}));
+        var highlightsAndSuggestions = [];
+
         var suggestionEntityKey = this.getSelectedSuggestionEntityKey();
 
         if (suggestionEntityKey !== null) {
@@ -185,7 +185,11 @@ export class HighlightsPopup extends Component {
         case 'ANNOTATION':
             return (
                 <Dropdown key={key} open={true}>
-                    <AnnotationPopup annotation={h} />
+                    <AnnotationPopup
+                        annotation={h}
+                        highlightId={highlightId}
+                        highlightsManager={this.props.highlightsManager}
+                    />
                 </Dropdown>
             );
         case 'COMMENT':
@@ -261,9 +265,7 @@ export class HighlightsPopup extends Component {
         const selection = this.props.editorState.getSelection();
 
         var cursorMoved = nextSelection.getAnchorOffset() !== selection.getAnchorOffset() ||
-            nextSelection.getAnchorKey() !== selection.getAnchorKey() ||
-            Object.keys(nextProps.highlights).length !== Object.keys(this.props.highlights).length ||
-            Object.values(nextProps.highlights)[0] !== Object.values(this.props.highlights)[0];
+            nextSelection.getAnchorKey() !== selection.getAnchorKey();
 
         return cursorMoved || this.props.hadHighlightsChanged(this.props.editorState, nextProps.editorState);
     }
@@ -303,10 +305,6 @@ export class HighlightsPopup extends Component {
     }
 
     shouldRender() {
-        if (Object.keys(this.props.highlights).length > 0) { // TODO: remove after porting annotations
-            return true;
-        }
-
         if (this.styleBasedHighlightsExist()) {
             return true;
         }
@@ -351,7 +349,6 @@ HighlightsPopup.contextTypes = {
 HighlightsPopup.propTypes = {
     editorState: PropTypes.instanceOf(EditorState),
     editorNode: PropTypes.object,
-    highlights: PropTypes.object,
     highlightsManager: PropTypes.object.isRequired,
     hadHighlightsChanged: PropTypes.func.isRequired,
 };

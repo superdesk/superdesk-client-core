@@ -3,22 +3,24 @@ import {UserAvatar} from 'apps/users/components';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import {connect} from 'react-redux';
-import {showPopup, deleteHighlight, PopupTypes} from '../../actions';
+import {showPopup, PopupTypes} from '../../actions';
 import {toHTML} from 'core/editor3';
 import {convertFromRaw} from 'draft-js';
 import ng from 'core/services/ng';
 
-const Annotation = ({annotation, deleteHighlight, showPopup}) => {
+const Annotation = ({annotation, showPopup, highlightId, highlightsManager}) => {
     const {author, avatar, date, msg, annotationType: type} = annotation.data;
     const fromNow = moment(date).calendar();
     const fullDate = moment(date).format('MMMM Do YYYY, h:mm:ss a');
     const html = toHTML(convertFromRaw(JSON.parse(msg)));
     const modal = ng.get('modal');
 
-    const onEdit = () => showPopup(PopupTypes.Annotation, {annotation});
+    const onEdit = () => showPopup(PopupTypes.Annotation, {annotation, highlightId});
     const onDelete = () => modal
         .confirm(gettext('The annotation will be deleted. Are you sure?'))
-        .then(() => deleteHighlight(annotation));
+        .then(() => {
+            highlightsManager.removeHighlight(highlightId);
+        });
 
     return (
         <div>
@@ -41,11 +43,11 @@ const Annotation = ({annotation, deleteHighlight, showPopup}) => {
 
 Annotation.propTypes = {
     showPopup: PropTypes.func,
-    deleteHighlight: PropTypes.func,
-    annotation: PropTypes.object
+    annotation: PropTypes.object,
+    highlightsManager: PropTypes.object.isRequired,
+    highlightId: PropTypes.string,
 };
 
 export const AnnotationPopup = connect(null, {
     showPopup,
-    deleteHighlight
 })(Annotation);

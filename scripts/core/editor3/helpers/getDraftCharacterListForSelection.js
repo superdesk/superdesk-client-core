@@ -22,10 +22,8 @@ function orderedMapGetRange(orderedMap, fromKey, toKey) {
     });
 }
 
-export function getDraftCharacterListForSelection(editorState) {
+export function getDraftCharacterListForSelection(editorState, selection) {
     // including all blocks
-
-    const selection = editorState.getSelection();
 
     if (selection.isCollapsed()) {
         return List();

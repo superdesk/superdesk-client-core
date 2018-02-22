@@ -83,6 +83,19 @@ export class MultipleHighlights extends React.Component {
         return highlightType;
     }
 
+    getHighlightsCount(highlightType) {
+        if (highlightType !== undefined) {
+            if (this.highlightTypeValid(highlightType) === false) {
+                throw new Error(`Invalid highlight type '${highlightType}'`);
+            }
+            return this.state.lastHighlightIds[highlightType];
+        } else {
+            // count highlights of all types
+            return Object.keys(this.state.lastHighlightIds)
+                .reduce((count, key) => count + this.state.lastHighlightIds[key], 0);
+        }
+    }
+
     getHighlightData(styleName) {
         return this.state.highlightsData[styleName];
     }
@@ -224,6 +237,7 @@ export class MultipleHighlights extends React.Component {
                         exportState: this.exportState.bind(this),
                         styleNameBelongsToHighlight: this.styleNameBelongsToHighlight.bind(this),
                         getHighlightTypeFromStyleName: this.getHighlightTypeFromStyleName.bind(this),
+                        getHighlightsCount: this.getHighlightsCount.bind(this),
                         availableHighlights: this.props.availableHighlights
                     }
                 })

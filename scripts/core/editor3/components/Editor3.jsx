@@ -75,7 +75,6 @@ const mapStateToProps = (state) => ({
     showToolbar: state.showToolbar,
     highlightsEnabled: state.allowsHighlights,
     editorState: state.editorState,
-    activeHighlights: state.activeHighlights,
     locked: state.locked,
     editorFormat: state.editorFormat,
     tabindex: state.tabindex,
