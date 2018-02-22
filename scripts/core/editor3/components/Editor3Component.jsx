@@ -173,6 +173,7 @@ export class Editor3Component extends React.Component {
             const notAllowUnderline = keyCode === 85 && editorFormat.indexOf('underline') === -1;
 
             if (notAllowBold || notAllowItalic || notAllowUnderline) {
+                e.preventDefault();
                 return '';
             }
         }
