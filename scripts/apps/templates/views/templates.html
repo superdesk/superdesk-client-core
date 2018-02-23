@@ -8,7 +8,7 @@
            <div class="dropdown" dropdown sd-dropdown-position>
              <button id="order_button" class="dropdown__toggle" dropdown__toggle>{{ filters[activeFilter].label | translate }} <b class="dropdown__caret"></b>
              </button>
-             <ul class="dropdown__menu" id="order_selector">
+             <ul class="dropdown__menu" id="order_selector" style="max-height: 400px;overflow-y: scroll;">
                 <li ng-repeat="f in filters track by $index" ng-class="{active: activeFilter === $index}">
                   <a href="" ng-click="filterBy($index)">{{ f.label | translate }}</a>
                 </li>
