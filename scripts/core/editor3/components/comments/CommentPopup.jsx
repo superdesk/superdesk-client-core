@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
 import ng from 'core/services/ng';
 
 import {Comment} from './Comment';
@@ -8,11 +7,6 @@ import CommentTextArea from './CommentTextArea';
 
 import {applyHighlight as getCommentData} from '../../actions';
 import {highlightsConfig} from '../highlightsConfig';
-
-import {
-    showPopup,
-    PopupTypes
-} from '../../actions/popups';
 
 /**
  * @ngdoc React
@@ -22,7 +16,7 @@ import {
  * @description CommentPopup renders the popup which displays the content of a comment along
  * with any replies.
  */
-class CommentPopupComponent extends Component {
+export class CommentPopup extends Component {
     constructor(props) {
         super(props);
 
@@ -51,7 +45,15 @@ class CommentPopupComponent extends Component {
 
         var commentData = highlightsManager.getHighlightData(highlightId);
 
-        if (this.state.index !== null) {
+        if (this.state.index === -1) {
+            highlightsManager.updateHighlightData(highlightId, {
+                ...commentData,
+                data: {
+                    ...commentData.data,
+                    msg: msg
+                }
+            });
+        } else if (this.state.index !== null) {
             highlightsManager.updateHighlightData(highlightId, {
                 ...commentData,
                 data: {
@@ -119,12 +121,12 @@ class CommentPopupComponent extends Component {
     }
 
     render() {
-        const {comment, highlightId} = this.props;
+        const {comment} = this.props;
         const {data} = comment;
-        const {replies, resolved, msg} = data;
+        const {replies, resolved} = data;
         const isAuthor = data.email === this.currentUser;
 
-        const onEdit = () => this.props.showPopup(PopupTypes.Comment, {msg, highlightId});
+        const onEdit = () => this.editReply(data, -1);
 
         const onDelete = () => ng.get('modal')
             .confirm(gettext('The comment will be deleted. Are you sure?'))
@@ -183,13 +185,8 @@ class CommentPopupComponent extends Component {
     }
 }
 
-CommentPopupComponent.propTypes = {
+CommentPopup.propTypes = {
     comment: PropTypes.object,
-    showPopup: PropTypes.func,
     highlightsManager: PropTypes.object.isRequired,
     highlightId: PropTypes.string,
 };
-
-export const CommentPopup = connect(null, {
-    showPopup,
-})(CommentPopupComponent);
