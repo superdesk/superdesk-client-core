@@ -381,6 +381,22 @@
     }
 }
 
+.content-item-preview {
+    .core-content {
+        .media-block, .embed-block {
+            margin: 2rem 0;
+        }
+        .media-block__description {
+            display: block;
+            padding: 0.5rem 0;
+            font-size: 1.3rem;
+            font-weight: 300;
+            opacity: 0.75;
+            border-bottom: 1px dotted rgba(123,123,123,0.4);
+        }
+    }
+}
+
 .metadata-view {
     div {
         border-bottom: 1px solid #e5e5e5;
