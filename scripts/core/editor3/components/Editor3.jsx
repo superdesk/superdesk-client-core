@@ -37,6 +37,7 @@ export class Editor3Base extends React.Component {
         return Editor3Component.getDecorator(disableSpellchecker);
     }
     onHighlightChange(nextEditorState, hightlightsState) {
+        const selection = nextEditorState.getSelection();
         let content = nextEditorState.getCurrentContent();
         const firstBlockSelection = SelectionState.createEmpty(content.getFirstBlock().getKey());
         const multipleHighlightsData = Map()
@@ -45,8 +46,9 @@ export class Editor3Base extends React.Component {
         content = Modifier.mergeBlockData(content, firstBlockSelection, multipleHighlightsData);
 
         var editorStateWithHighlightsData = EditorState.push(nextEditorState, content, 'change-inline-style');
+        const editorStateWithRestoredSelection = EditorState.forceSelection(editorStateWithHighlightsData, selection);
 
-        this.props.onChange(editorStateWithHighlightsData);
+        this.props.onChange(editorStateWithRestoredSelection);
     }
     render() {
         const initialState = getHighlightsData(this.props.editorState);
