@@ -10,6 +10,7 @@ import {
 
 import {getDraftCharacterListForSelection} from '../helpers/getDraftCharacterListForSelection';
 import {getDraftSelectionForEntireContent} from '../helpers/getDraftSelectionForEntireContent';
+import {expandDraftSelection} from '../helpers/expandDraftSelection';
 import {clearInlineStyles} from '../helpers/clearInlineStyles';
 
 function getHighlightType(styleName) {
@@ -100,13 +101,21 @@ export class MultipleHighlights extends React.Component {
             return false;
         }
 
-        const selection = this.props.editorState.getSelection();
-
-        if (selection.isCollapsed()) {
+        if (this.props.editorState.getSelection().isCollapsed()) {
             return false;
         }
 
-        return getDraftCharacterListForSelection(this.props.editorState)
+        // selection is expanded to include edges
+        // so you can't add a highlight right next to another
+        const selection = expandDraftSelection(
+            this.props.editorState.getSelection(),
+            this.props.editorState,
+            1,
+            1,
+            true
+        );
+
+        return getDraftCharacterListForSelection(this.props.editorState, selection)
             .some(characterHasAHighlightOfTheSameType.bind(this)) === false;
     }
 
