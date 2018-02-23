@@ -2,7 +2,7 @@ import {compact, trim, filter} from 'lodash';
 import {cleanHtml} from '../helpers';
 
 function getReadingTime(input, language) {
-    if (language && language.startsWith('jp')) {
+    if (language && language.startsWith('ja')) {
         return filter(input, (x) => trim(x)).length / 240; // 4 characters per minute
     }
 

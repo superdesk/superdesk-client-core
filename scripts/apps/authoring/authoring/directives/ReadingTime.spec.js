@@ -11,7 +11,7 @@ describe('sd-reading-time', () => {
         scope.$digest();
         expect(elem.text()).toBe('less than one minute read');
 
-        scope.language = 'jp';
+        scope.language = 'ja';
         scope.$digest();
         expect(elem.text()).toBe('2 min read');
 
