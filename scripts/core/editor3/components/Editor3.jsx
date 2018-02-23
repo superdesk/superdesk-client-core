@@ -20,44 +20,62 @@ const availableHighlights = Object.keys(highlightsConfig).reduce((obj, key) => {
     return obj;
 }, {});
 
-function getHighlightsData(editorState) {
-    return editorState
+function getHighlightsState(editorState) {
+    const highlightsState = editorState
         .getCurrentContent()
         .getFirstBlock()
         .getData()
         .get(MULTIPLE_HIGHLIGHTS_STORAGE_KEY);
+
+    return highlightsState || getInitialHighlightsState();
+}
+
+function setHighlightsState(editorState, hightlightsState) {
+    const selection = editorState.getSelection();
+    let content = editorState.getCurrentContent();
+    const firstBlockSelection = SelectionState.createEmpty(content.getFirstBlock().getKey());
+    const multipleHighlightsData = Map()
+        .set(MULTIPLE_HIGHLIGHTS_STORAGE_KEY, hightlightsState);
+
+    content = Modifier.mergeBlockData(content, firstBlockSelection, multipleHighlightsData);
+
+    let newEditorState = EditorState.push(editorState, content, 'change-inline-style');
+
+    return EditorState.forceSelection(newEditorState, selection);
+}
+
+function getInitialHighlightsState() {
+    return {
+        highlightsStyleMap: {},
+        highlightsData: {},
+        lastHighlightIds: Object.keys(availableHighlights).reduce((obj, key) => {
+            obj[key] = 0;
+            return obj;
+        }, {})
+    };
 }
 
 function hadHighlightsChanged(prevEditorState, nextEditorState) {
-    return getHighlightsData(prevEditorState) !== getHighlightsData(nextEditorState);
+    return getHighlightsState(prevEditorState) !== getHighlightsState(nextEditorState);
 }
 
 export class Editor3Base extends React.Component {
     static getDecorator(disableSpellchecker) {
         return Editor3Component.getDecorator(disableSpellchecker);
     }
-    onHighlightChange(nextEditorState, hightlightsState) {
-        const selection = nextEditorState.getSelection();
-        let content = nextEditorState.getCurrentContent();
-        const firstBlockSelection = SelectionState.createEmpty(content.getFirstBlock().getKey());
-        const multipleHighlightsData = Map()
-            .set(MULTIPLE_HIGHLIGHTS_STORAGE_KEY, hightlightsState);
+    onHighlightChange(editorState, hightlightsState) {
+        const newEditorState = setHighlightsState(editorState, hightlightsState);
 
-        content = Modifier.mergeBlockData(content, firstBlockSelection, multipleHighlightsData);
-
-        var editorStateWithHighlightsData = EditorState.push(nextEditorState, content, 'change-inline-style');
-        const editorStateWithRestoredSelection = EditorState.forceSelection(editorStateWithHighlightsData, selection);
-
-        this.props.onChange(editorStateWithRestoredSelection);
+        this.props.onChange(newEditorState);
     }
     render() {
-        const initialState = getHighlightsData(this.props.editorState);
         var props = {
             ...this.props,
             availableHighlights: availableHighlights,
             onHighlightChange: this.onHighlightChange.bind(this),
             hadHighlightsChanged: hadHighlightsChanged,
-            initialState: initialState
+            getHighlightsState: getHighlightsState,
+            setHighlightsState: setHighlightsState
         };
 
         return (
