@@ -6,8 +6,10 @@ import {forceUpdate} from '../actions';
 import {Editor3} from '../components/Editor3';
 import {EditorState, convertFromRaw, convertToRaw, ContentState} from 'draft-js';
 import {toHTML, fromHTML} from 'core/editor3/html';
-import {applyInlineStyles, removeInlineStyles, highlightTypes} from '../reducers/highlights';
 import {PopupTypes} from '../actions';
+
+// depended upon by find-and-replace.
+import {removeInlineStyles} from '../reducers/highlights';
 
 /**
  * @name createEditorStore
@@ -32,7 +34,6 @@ export default function createEditorStore(props, isReact = false) {
 
     const store = createStore(reducers, {
         editorState: EditorState.createWithContent(content, decorators),
-        activeHighlights: {},
         allowsHighlights: props.highlights,
         searchTerm: {pattern: '', index: -1, caseSensitive: false},
         popup: {type: PopupTypes.Hidden},
@@ -67,7 +68,7 @@ export default function createEditorStore(props, isReact = false) {
  * is bound to the controller, so 'this' points to controller attributes.
  */
 function onChange(content) {
-    const decorativeStyles = highlightTypes.concat(['HIGHLIGHT', 'HIGHLIGHT_STRONG']);
+    const decorativeStyles = ['HIGHLIGHT', 'HIGHLIGHT_STRONG'];
     const cleanedContent = removeInlineStyles(content, decorativeStyles);
 
     // sync controller to scope
@@ -97,7 +98,7 @@ function getInitialContent(props) {
         // suport for both regular and list wrapper versions of editor state
         var editorState = (props.editorState instanceof Array) ? props.editorState[0] : props.editorState;
 
-        return applyInlineStyles(convertFromRaw(editorState)).contentState;
+        return convertFromRaw(editorState);
     }
 
     // we have only HTML (possibly legacy editor2 or ingested item)

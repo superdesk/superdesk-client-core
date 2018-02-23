@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {Dropdown} from 'core/ui/components';
 import {connect} from 'react-redux';
-import {applyHighlight as getCommentData, hidePopups} from '../../actions';
+import {getAuthorInfo, hidePopups} from '../../actions';
 import CommentTextArea from './CommentTextArea';
 import {highlightsConfig} from '../highlightsConfig';
 
@@ -37,11 +37,14 @@ class CommentInputBody extends Component {
             if (highlightId === undefined) {
                 this.props.highlightsManager.addHighlight(
                     highlightsConfig.COMMENT.type,
-                    getCommentData(
-                        highlightsConfig.COMMENT.type,
-                        {}, // TODO: remove unused argument after porting annotations
-                        {msg: msg, replies: [], resolved: false}
-                    ).payload
+                    {
+                        data: {
+                            msg: msg,
+                            replies: [],
+                            resolved: false,
+                            ...getAuthorInfo()
+                        }
+                    }
                 );
             } else {
                 var highlightData = this.props.highlightsManager.getHighlightData(highlightId);

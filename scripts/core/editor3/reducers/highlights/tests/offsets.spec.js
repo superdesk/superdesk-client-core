@@ -1,5 +1,5 @@
 import {ContentState} from 'draft-js';
-import {keyAndOffset, absoluteOffset, shift} from '../offsets';
+import {keyAndOffset, shift} from '../offsets';// CAN OTHERS BE REMOVED?
 
 const blockArrayFromText = (...blocks) =>
     ContentState
@@ -27,29 +27,6 @@ describe('editor3.highlights.offsets', () => {
             8: [k(2), 1]
         }).forEach(([n, [key, offset]]) => {
             expect(keyAndOffset(contentState, parseInt(n, 10))).toEqual({key, offset});
-        });
-    });
-
-    it('absoluteOffset', () => {
-        const blocks = blockArrayFromText('0123', '456', '78');
-        const k = (i) => blocks[i].getKey();
-        const contentState = ContentState.createFromBlockArray(blocks);
-
-        // The array holds test cases. The first two items are the function input
-        // (block key and relative index) and the third item is the expected output
-        // (absolute index).
-        [
-            [k(0), 0, 0],
-            [k(0), 1, 1],
-            [k(0), 2, 2],
-            [k(0), 3, 3],
-            [k(1), 0, 4], // ie. on block 1, character 0 has absolute offset 4
-            [k(1), 1, 5],
-            [k(1), 2, 6],
-            [k(2), 0, 7],
-            [k(2), 1, 8]
-        ].forEach(([key, offset, n]) => {
-            expect(absoluteOffset(contentState, key, offset)).toBe(n);
         });
     });
 

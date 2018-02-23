@@ -4,12 +4,11 @@ import {Dropdown} from 'core/ui/components';
 import {Editor} from 'core/editor3';
 import {connect} from 'react-redux';
 import {convertToRaw} from 'draft-js';
+import {highlightsConfig} from '../highlightsConfig';
+import {getAuthorInfo} from '../../actions';
 
 import {
-    applyAnnotation,
-    updateHighlight as updateAnnotation,
     hidePopups,
-    deleteHighlight
 } from '../../actions';
 
 import ng from 'core/services/ng';
@@ -18,7 +17,6 @@ import ng from 'core/services/ng';
  * @ngdoc React
  * @module superdesk.core.editor3
  * @param {Function} hidePopups
- * @param {Function} applyAnnotation Receives value (generally SelectionState) and highlight data.
  * @description AnnotationInput is the popup containing the fields needed to fill in information
  * about an annotation.
  */
@@ -55,20 +53,31 @@ class AnnotationInputBody extends Component {
      */
     onSubmit() {
         const {body, type} = this.state;
-        const {updateAnnotation, applyAnnotation, hidePopups, data} = this.props;
-        const update = typeof data.annotation === 'object';
+        const {hidePopups} = this.props;
+        const {highlightId} = this.props.data;
 
         if (body !== '') {
-            if (update) {
-                data.annotation.data.annotationType = type;
-                data.annotation.data.msg = JSON.stringify(body);
+            const msg = JSON.stringify(body);
+            const annotationType = type;
 
-                updateAnnotation(data.annotation);
+            if (highlightId === undefined) {
+                this.props.highlightsManager.addHighlight(
+                    highlightsConfig.ANNOTATION.type,
+                    {
+                        data: {
+                            msg,
+                            annotationType,
+                            ...getAuthorInfo()
+                        }
+                    }
+                );
             } else {
-                applyAnnotation(data.selection, {
-                    msg: JSON.stringify(body),
-                    annotationType: type
-                });
+                var highlightData = this.props.highlightsManager.getHighlightData(highlightId);
+
+                this.props.highlightsManager.updateHighlightData(
+                    highlightId,
+                    {...highlightData, data: {...highlightData.data, msg, annotationType}}
+                );
             }
 
             hidePopups();
@@ -100,12 +109,14 @@ class AnnotationInputBody extends Component {
     }
 
     deleteAnnotation() {
-        const {annotation} = this.props.data;
-        const {deleteHighlight, hidePopups} = this.props;
+        const {highlightsManager, hidePopups} = this.props;
+        const {highlightId} = this.props.data;
 
         ng.get('modal')
             .confirm(gettext('The annotation will be deleted. Are you sure?'))
-            .then(() => deleteHighlight(annotation));
+            .then(() => {
+                highlightsManager.removeHighlight(highlightId);
+            });
 
         hidePopups();
     }
@@ -157,13 +168,11 @@ class AnnotationInputBody extends Component {
 }
 
 AnnotationInputBody.propTypes = {
-    updateAnnotation: PropTypes.func,
-    applyAnnotation: PropTypes.func,
     hidePopups: PropTypes.func,
-    deleteHighlight: PropTypes.func,
     data: PropTypes.object,
     language: PropTypes.string,
-    spellcheckerEnabled: PropTypes.bool
+    spellcheckerEnabled: PropTypes.bool,
+    highlightsManager: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -172,8 +181,5 @@ const mapStateToProps = (state) => ({
 });
 
 export const AnnotationInput = connect(mapStateToProps, {
-    applyAnnotation,
-    updateAnnotation,
-    deleteHighlight,
     hidePopups
 })(AnnotationInputBody);

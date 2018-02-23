@@ -2,7 +2,6 @@ import {Editor3} from '../components/Editor3';
 import {RichUtils, EditorState, AtomicBlockUtils, SelectionState} from 'draft-js';
 import {fromHTML} from 'core/editor3/html';
 import {addMedia} from './toolbar';
-import {updateHighlights} from './highlights';
 
 /**
  * @description Contains the list of editor related reducers.
@@ -71,18 +70,8 @@ export const forceUpdate = (state) => {
  */
 export const onChange = (state, newState, force = false) => {
     // TODO(x): Remove `force` once Draft v0.11.0 is in
-    let editorState = newState, activeHighlights = {};
+    let editorState = newState;
     let contentChanged = state.editorState.getCurrentContent() !== newState.getCurrentContent();
-
-    if (state.allowsHighlights) {
-        const selection = editorState.getSelection();
-        const inlineStyle = editorState.getCurrentInlineStyle();
-
-        ({editorState, activeHighlights} = updateHighlights(state.editorState, newState));
-        editorState = EditorState.acceptSelection(editorState, selection);
-
-        editorState = EditorState.setInlineStyleOverride(editorState, inlineStyle);
-    }
 
     if (contentChanged || force) {
         state.onChangeValue(editorState.getCurrentContent());
@@ -92,14 +81,12 @@ export const onChange = (state, newState, force = false) => {
         return forceUpdate({
             ...state,
             editorState,
-            activeHighlights
         });
     }
 
     return {
         ...state,
         editorState,
-        activeHighlights
     };
 };
 
