@@ -25,6 +25,7 @@ DateTimeService.$inject = ['moment', 'config'];
 function DateTimeService(moment, config) {
     var ISO_DATE_FORMAT = 'YYYY-MM-DD';
     var ISO_WEEK_FORMAT = 'YYYY-W';
+    var ISO_YEAR_FORMAT = 'YYYY';
 
     var LONG_FORMAT = config.longDateFormat || 'LLL';
     var TIME_FORMAT = config.shortTimeFormat || 'hh:mm';
@@ -74,7 +75,8 @@ function DateTimeService(moment, config) {
     }
 
     function isArchiveYear(a, b) {
-        return b.diff(a, 'years') >= 1;
+        return (config.ArchivedDateOnCalendarYear === 1) ?
+            a.format(ISO_YEAR_FORMAT) !== b.format(ISO_YEAR_FORMAT) : b.diff(a, 'years') >= 1;
     }
 }
 
