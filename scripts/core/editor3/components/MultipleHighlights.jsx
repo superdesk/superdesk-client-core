@@ -55,7 +55,7 @@ export class MultipleHighlights extends React.Component {
     }
 
     getHighlightsCount(highlightType, editorState) {
-        const {newHighlightsState} = this.initHighlights(editorState);
+        const {newHighlightsState} = this.getHighlights(editorState);
 
         if (highlightType !== undefined) {
             if (this.highlightTypeValid(highlightType) === false) {
@@ -70,13 +70,13 @@ export class MultipleHighlights extends React.Component {
     }
 
     getHighlightData(styleName, editorState) {
-        const {newHighlightsState} = this.initHighlights(editorState);
+        const {newHighlightsState} = this.getHighlights(editorState);
 
         return newHighlightsState.highlightsData[styleName];
     }
 
     canAddtHighlight(highlightType, editorState) {
-        const {newEditorState} = this.initHighlights(editorState);
+        const {newEditorState} = this.getHighlights(editorState);
 
         function characterHasAHighlightOfTheSameType(character) {
             if (
@@ -119,7 +119,7 @@ export class MultipleHighlights extends React.Component {
         return newEditorState;
     }
 
-    initHighlights(editorState) {
+    getHighlights(editorState) {
         const applyChanges = editorState === undefined;
         const newEditorState = editorState || this.props.editorState;
         const newHighlightsState = this.props.getHighlightsState(newEditorState);
@@ -153,7 +153,7 @@ export class MultipleHighlights extends React.Component {
 
 
     addHighlight(highlightType, highlightData, editorState) {
-        const {newEditorState, newHighlightsState, applyChanges} = this.initHighlights(editorState);
+        const {newEditorState, newHighlightsState, applyChanges} = this.getHighlights(editorState);
 
         return this.saveHighlights(
             this._addHighlight(newEditorState, newHighlightsState, highlightType, highlightData),
@@ -191,7 +191,7 @@ export class MultipleHighlights extends React.Component {
     }
 
     removeHighlight(styleName, editorState) {
-        const {newEditorState, newHighlightsState, applyChanges} = this.initHighlights(editorState);
+        const {newEditorState, newHighlightsState, applyChanges} = this.getHighlights(editorState);
 
         return this.saveHighlights(
             this._removeHighlight(newEditorState, newHighlightsState, styleName),
@@ -216,7 +216,7 @@ export class MultipleHighlights extends React.Component {
     }
 
     updateHighlightData(styleName, nextData, editorState) {
-        const {newEditorState, newHighlightsState, applyChanges} = this.initHighlights(editorState);
+        const {newEditorState, newHighlightsState, applyChanges} = this.getHighlights(editorState);
 
         return this.saveHighlights(
             this._updateHighlightData(newEditorState, newHighlightsState, styleName, nextData),
@@ -240,7 +240,7 @@ export class MultipleHighlights extends React.Component {
             }, {});
 
         const {children, editorState} = this.props;
-        const {newHighlightsState} = this.initHighlights(editorState);
+        const {newHighlightsState} = this.getHighlights(editorState);
 
         var childrenWithProps = React.Children.map(
             children, (child) =>
