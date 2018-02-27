@@ -1,1 +1,0 @@
-export const MULTIPLE_HIGHLIGHTS_STORAGE_KEY = 'multiple-highlights';
