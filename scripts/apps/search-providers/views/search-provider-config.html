@@ -47,6 +47,11 @@
                     </label>
                 </div>
 
+                <div class="field" ng-if="provider.search_provider.indexOf('scanpix') !== 0">
+                    <label for="provider-name" translate>Name</label>
+                    <input type="text" id="provider-name" ng-model="provider.name" required>
+                </div>
+
                 <div class="field">
                     <label for="provider-type" translate>Provider Type</label>
                     <select id="provider-type"

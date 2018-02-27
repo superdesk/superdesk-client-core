@@ -86,20 +86,7 @@ export function SearchResults(
 
             scope.flags = controller.flags;
             scope.selected = scope.selected || {};
-
-            scope.repo = {
-                ingest: true, archive: true,
-                published: true, archived: true,
-                search: 'local'
-            };
-
             scope.showHistoryTab = true;
-
-            if ($location.search().repo &&
-                !_.intersection($location.search().repo.split(','),
-                    ['archive', 'published', 'ingest', 'archived']).length) {
-                scope.repo.search = $location.search().repo;
-            }
 
             scope.context = 'search';
             scope.$on('item:deleted:archived', itemDelete);
@@ -168,7 +155,7 @@ export function SearchResults(
              */
             function queryItems(event, data) {
                 if (!nextUpdate) {
-                    if (scope.repo.search !== 'local' && !$location.search().q) {
+                    if (scope.search.repo.search !== 'local' && !$location.search().q && !(data && data.force)) {
                         return; // ignore updates with external content
                     }
 
@@ -241,6 +228,7 @@ export function SearchResults(
                     }
                 }, (error) => {
                     notify.error(gettext('Failed to run the query!'));
+                    console.error(error, getProvider(criteria));
                 })
                     .finally(() => {
                         scope.loading = false;
@@ -308,13 +296,18 @@ export function SearchResults(
                 if (criteria.repo && criteria.repo.indexOf(',') === -1) {
                     provider = criteria.repo;
                 }
-                if (scope.repo.search && scope.repo.search !== 'local') {
-                    provider = scope.repo.search;
+
+                if (scope.search.repo.search && scope.search.repo.search !== 'local') {
+                    provider = scope.search.repo.search;
                 }
 
                 if (isObjectId(provider)) {
                     criteria.repo = provider;
                     provider = 'search_providers_proxy';
+                }
+
+                if (provider === 'local') {
+                    provider = 'search';
                 }
 
                 return provider;

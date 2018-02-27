@@ -3,6 +3,7 @@ import './styles/search.scss';
 import * as svc from './services';
 import * as directive from './directives';
 import {MultiActionBarController} from './controllers';
+import {SearchController} from './controllers';
 
 angular.module('superdesk.apps.search.react', [
     'superdesk.apps.highlights',
@@ -55,6 +56,7 @@ angular.module('superdesk.apps.search', [
     .directive('sdSearchParameters', directive.SearchParameters)
     .directive('sdMultiActionBar', directive.MultiActionBar)
     .directive('sdRawSearch', directive.RawSearch)
+    .directive('sdRepoDropdown', directive.RepoDropdown)
 
     .config(['superdeskProvider', 'assetProvider', function(superdesk, asset) {
         superdesk.activity('/search', {
@@ -62,7 +64,9 @@ angular.module('superdesk.apps.search', [
             priority: 200,
             label: gettext('Search'),
             templateUrl: asset.templateUrl('apps/search/views/search.html'),
-            sideTemplateUrl: 'scripts/apps/workspace/views/workspace-sidenav.html'
+            sideTemplateUrl: 'scripts/apps/workspace/views/workspace-sidenav.html',
+            controller: SearchController,
+            controllerAs: 'search'
         });
     }])
 
