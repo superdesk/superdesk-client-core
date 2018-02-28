@@ -4,48 +4,24 @@ import {connect} from 'react-redux';
 
 import {Editor3Component} from './Editor3Component';
 import {MultipleHighlights} from './MultipleHighlights';
-import {highlightsConfig} from './highlightsConfig';
+import {getHighlightsState, setHighlightsState, availableHighlights} from '../helpers/highlights';
 import * as actions from '../actions';
-import {editor3DataKeys, getCustomDataFromEditor, setCustomDataForEditor} from '../helpers/editor3CustomData';
-
-function getInitialHighlightsState() {
-    return {
-        highlightsStyleMap: {},
-        highlightsData: {},
-        lastHighlightIds: Object.keys(availableHighlights).reduce((obj, key) => {
-            obj[key] = 0;
-            return obj;
-        }, {})
-    };
-}
-
-function getHighlightsState(editorState) {
-    return getCustomDataFromEditor(editorState, editor3DataKeys.MULTIPLE_HIGHLIGHTS)
-        || getInitialHighlightsState();
-}
-
-function setHighlightsState(editorState, hightlightsState) {
-    return setCustomDataForEditor(editorState, editor3DataKeys.MULTIPLE_HIGHLIGHTS, hightlightsState);
-}
 
 function hadHighlightsChanged(prevEditorState, nextEditorState) {
     return getHighlightsState(prevEditorState) !== getHighlightsState(nextEditorState);
 }
 
-const availableHighlights = Object.keys(highlightsConfig).reduce((obj, key) => {
-    obj[key] = highlightsConfig[key].draftStyleMap;
-    return obj;
-}, {});
-
 export class Editor3Base extends React.Component {
     static getDecorator(disableSpellchecker) {
         return Editor3Component.getDecorator(disableSpellchecker);
     }
+
     onHighlightChange(editorState, hightlightsState) {
         const newEditorState = setHighlightsState(editorState, hightlightsState);
 
         this.props.onChange(newEditorState);
     }
+
     render() {
         var props = {
             ...this.props,

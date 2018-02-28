@@ -4,7 +4,7 @@ import {Dropdown} from 'core/ui/components';
 import {connect} from 'react-redux';
 import {getAuthorInfo, hidePopups} from '../../actions';
 import CommentTextArea from './CommentTextArea';
-import {highlightsConfig} from '../highlightsConfig';
+import {highlightsConfig} from '../../highlightsConfig';
 
 /**
  * @ngdoc React

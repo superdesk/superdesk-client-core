@@ -270,8 +270,7 @@ export class Editor3Component extends React.Component {
             return 'handled';
         } else if (!this.allowEditSuggestion('backspace')) {
             // there is a suggestion before the current position -> prevent the copy of
-            // suggestion entity and style
-            // TODO: check again after custom style entity is done
+            // suggestion style
             const inlineStyle = editorState.getCurrentInlineStyle();
             const selection = editorState.getSelection();
             let newSelection = selection.merge({

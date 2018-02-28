@@ -1,8 +1,14 @@
 import {EditorState, Modifier, RichUtils} from 'draft-js';
 import {onChange} from './editor3';
-import {getEntityKeyByOffset, getCharByOffset} from '../helpers/entity';
-import {getEntityKey, getEntity, setEntity, deleteEntity} from '../helpers/composite-entity';
 import {acceptedInlineStyles} from '../helpers/inlineStyles';
+import {
+    getHighlightStyleAtOffset,
+    getCharByOffset,
+    getHighlightData,
+    addHighlightData,
+    deleteHighlight
+} from '../helpers/highlights';
+
 
 const suggestions = (state = {}, action) => {
     switch (action.type) {
@@ -83,6 +89,10 @@ const createDeleteSuggestion = (state, {action, data}) => {
     }
     editorState = deleteCurrentSelection(editorState, data);
 
+    if (selectionLength === 0 && action !== 'backspace') {
+        editorState = changeEditorSelection(editorState, 1, 1, false);
+    }
+
     return onChange(state, editorState, true);
 };
 
@@ -133,24 +143,18 @@ const processSuggestion = (state, {selection}, accepted) => {
     const start = selection.getStartOffset();
     const end = selection.getEndOffset();
     let {editorState} = state;
-    let content = editorState.getCurrentContent();
-    let entityKey;
-    let entity;
-    let type;
+    let style;
+    let data;
 
     for (let i = end - start - 1; i >= 0; i--) {
-        entityKey = getEntityKey(content, getEntityKeyByOffset(content, selection, i), types);
-        if (entityKey == null) {
+        style = getHighlightStyleAtOffset(editorState, types, selection, i);
+        data = getHighlightData(editorState, style);
+        if (data == null) {
             continue;
         }
 
-        entity = content.getEntity(entityKey);
-        if (entity == null) {
-            continue;
-        }
-        type = entity.get('type');
-
-        const applySuggestion = type === 'ADD_SUGGESTION' && accepted || type === 'DELETE_SUGGESTION' && !accepted;
+        const applySuggestion = data.type === 'ADD_SUGGESTION' && accepted ||
+            data.type === 'DELETE_SUGGESTION' && !accepted;
         const newSelection = selection.merge({
             anchorOffset: start + i + (applySuggestion ? 0 : 1),
             focusOffset: start + i + (applySuggestion ? 0 : 1),
@@ -161,7 +165,7 @@ const processSuggestion = (state, {selection}, accepted) => {
 
         if (applySuggestion) {
             // keep character and clean suggestion style and entity
-            editorState = resetSuggestion(editorState, type);
+            editorState = resetSuggestion(editorState, style);
         } else {
             // delete current character
             editorState = deleteCharacter(editorState);
@@ -215,42 +219,41 @@ const deleteCurrentSelection = (editorState, data) => {
  */
 const setAddSuggestionForCharacter = (editorState, data, text, inlineStyle = null, entityKey = null) => {
     const crtInlineStyle = inlineStyle || editorState.getCurrentInlineStyle();
-    const {key: beforeKey, entity: beforeEntity} = getKeyAndEntityAtOffset(editorState, -1);
-    const {key: currentKey, entity: currentEntity} = getKeyAndEntityAtOffset(editorState, 0);
+    const types = ['DELETE_SUGGESTION', 'ADD_SUGGESTION'];
     let selection = editorState.getSelection();
+    const beforeStyle = getHighlightStyleAtOffset(editorState, types, selection, -1);
+    const beforeData = getHighlightData(editorState, beforeStyle);
+    const currentStyle = getHighlightStyleAtOffset(editorState, types, selection, 0);
+    const currentData = getHighlightData(editorState, currentStyle);
     let content = editorState.getCurrentContent();
-    const currentChar = getCharByOffset(content, selection, 0);
+    const currentChar = getCharByOffset(editorState, selection, 0);
     let newState = editorState;
 
-    if (currentChar === text && currentEntity != null
-        && currentEntity.get('type') === 'DELETE_SUGGESTION'
-        && currentEntity.get('data').author === data.author) {
+    if (currentChar === text && currentData != null
+        && currentData.type === 'DELETE_SUGGESTION'
+        && currentData.author === data.author) {
         // if next character is the same as the new one and is delete suggestion -> reset entity
-        newState = resetSuggestion(newState, 'DELETE_SUGGESTION');
+        newState = resetSuggestion(newState, currentStyle);
         return newState;
     }
 
     content = Modifier.insertText(content, selection, text);
     newState = EditorState.push(newState, content, 'insert-characters');
     newState = changeEditorSelection(newState, -1, 0, false);
-    newState = applyStyleForSuggestion(newState, crtInlineStyle, 'ADD_SUGGESTION');
-    selection = newState.getSelection();
-    content = newState.getCurrentContent();
 
-    if (beforeEntity != null && beforeEntity.get('type') === 'ADD_SUGGESTION'
-        && beforeEntity.get('data').author === data.author) {
+    if (beforeData != null && beforeData.type === 'ADD_SUGGESTION'
+        && beforeData.author === data.author) {
         // if previous character is an add suggestion of the same user, set the same entity
-        content = setEntity(content, selection, beforeKey, 'ADD_SUGGESTION');
-    } else if (currentEntity != null && currentEntity.get('type') === 'ADD_SUGGESTION'
-        && currentEntity.get('data').author === data.author) {
+        newState = applyStyleForSuggestion(newState, crtInlineStyle, beforeStyle);
+    } else if (currentData != null && currentData.type === 'ADD_SUGGESTION'
+        && currentData.author === data.author) {
         // if next character is an add suggestion of the same user, set the same entity
-        content = setEntity(content, selection, currentKey, 'ADD_SUGGESTION');
+        newState = applyStyleForSuggestion(newState, crtInlineStyle, currentStyle);
     } else {
-        // create a new add entity
-        content = addNewSuggestionEntity(content, selection, 'ADD_SUGGESTION', data);
+        // create a new suggestion
+        newState = addHighlightData(newState, 'ADD_SUGGESTION', data);
     }
 
-    newState = EditorState.push(newState, content, 'insert-characters');
     newState = changeEditorSelection(newState, 1, 0, true);
 
     return newState;
@@ -273,40 +276,41 @@ const setAddSuggestionForCharacter = (editorState, data, text, inlineStyle = nul
  *   1. both are 'delete suggestion' neighbors with the same user -> set same entity
  */
 const setDeleteSuggestionForCharacter = (editorState, data) => {
-    const {entity: currentEntity} = getKeyAndEntityAtOffset(editorState, -1);
+    const types = ['DELETE_SUGGESTION', 'ADD_SUGGESTION'];
+    let selection = editorState.getSelection();
+    const currentStyle = getHighlightStyleAtOffset(editorState, types, selection, -1);
+    const currentData = getHighlightData(editorState, currentStyle);
 
-    if (currentEntity != null && currentEntity.get('type') === 'DELETE_SUGGESTION') {
+    if (currentData != null && currentData.type === 'DELETE_SUGGESTION') {
         // if current character is already marked as a delete suggestion, skip
         return changeEditorSelection(editorState, -1, -1, true);
     }
 
-    if (currentEntity != null && currentEntity.get('type') === 'ADD_SUGGESTION' &&
-        currentEntity.get('data').author === data.author) {
+    if (currentData != null && currentData.type === 'ADD_SUGGESTION' &&
+        currentData.author === data.author) {
         // if current character already a suggestion of current user, delete the character
         return deleteCharacter(editorState);
     }
 
-    const {key: beforeKey, entity: beforeEntity} = getKeyAndEntityAtOffset(editorState, -2);
-    const {key: afterKey, entity: afterEntity} = getKeyAndEntityAtOffset(editorState, 0);
+    const beforeStyle = getHighlightStyleAtOffset(editorState, types, selection, -2);
+    const beforeData = getHighlightData(editorState, beforeStyle);
+    const afterStyle = getHighlightStyleAtOffset(editorState, types, selection, 0);
+    const afterData = getHighlightData(editorState, afterStyle);
     let newState = changeEditorSelection(editorState, -1, 0, false);
-    let content = newState.getCurrentContent();
-    let selection = newState.getSelection();
 
-    if (beforeEntity != null && beforeEntity.get('type') === 'DELETE_SUGGESTION'
-        && beforeEntity.get('data').author === data.author) {
+    if (beforeData != null && beforeData.type === 'DELETE_SUGGESTION'
+        && beforeData.author === data.author) {
         // if previous character is a delete suggestion of the same user, set the same entity
-        content = setEntity(content, selection, beforeKey, 'DELETE_SUGGESTION');
-    } else if (afterEntity != null && afterEntity.get('type') === 'DELETE_SUGGESTION'
-        && afterEntity.get('data').author === data.author) {
+        newState = RichUtils.toggleInlineStyle(newState, beforeStyle);
+    } else if (afterData != null && afterData.type === 'DELETE_SUGGESTION'
+        && afterData.author === data.author) {
         // if next character is a delete suggestion of the same user, set the same entity
-        content = setEntity(content, selection, afterKey, 'DELETE_SUGGESTION');
+        newState = RichUtils.toggleInlineStyle(newState, afterStyle);
     } else {
-        // create a new delete entity
-        content = addNewSuggestionEntity(content, selection, 'DELETE_SUGGESTION', data);
+        // create a new suggestion
+        newState = addHighlightData(newState, 'DELETE_SUGGESTION', data);
     }
 
-    newState = EditorState.push(newState, content, 'apply-entity');
-    newState = RichUtils.toggleInlineStyle(newState, 'DELETE_SUGGESTION');
     return changeEditorSelection(newState, 0, -1, true);
 };
 
@@ -315,44 +319,36 @@ const setDeleteSuggestionForCharacter = (editorState, data) => {
  * @name applyStyleForSuggestion
  * @param {Object} editorState
  * @param {Objest} inlineStyle
- * @param {String} type
+ * @param {String} style
  * @return {Object} returns new state
  * @description Apply the style for current selection.
  */
-const applyStyleForSuggestion = (editorState, inlineStyle, type) => {
+const applyStyleForSuggestion = (editorState, inlineStyle, style) => {
     let newState = editorState;
 
     inlineStyle.forEach((style) => {
-        if (style !== 'ADD_SUGGESTION' && style !== 'DELETE_SUGGESTION') {
+        if (style.indexOf('ADD_SUGGESTION') === -1 && style.indexOf('DELETE_SUGGESTION') === -1) {
             newState = RichUtils.toggleInlineStyle(newState, style);
         }
     });
 
-    return RichUtils.toggleInlineStyle(newState, type);
+    return RichUtils.toggleInlineStyle(newState, style);
 };
 
 /**
  * @ngdoc method
  * @name resetSuggestion
  * @param {Object} editorState
- * @param {String} type
+ * @param {String} style
  * @return {Object} returns new state
  * @description For type suggestion reset both style and entity for
  * current character position.
  */
-const resetSuggestion = (editorState, type) => {
+const resetSuggestion = (editorState, style) => {
     let newState = editorState;
-    let selection;
-    let content;
 
     newState = changeEditorSelection(newState, 0, 1, false);
-    newState = RichUtils.toggleInlineStyle(newState, type);
-
-    content = newState.getCurrentContent();
-    selection = newState.getSelection();
-
-    content = deleteEntity(content, selection, type);
-    newState = EditorState.push(newState, content, 'apply-entity');
+    newState = deleteHighlight(newState, style);
     newState = changeEditorSelection(newState, 1, 0, false);
 
     return newState;
@@ -382,21 +378,6 @@ const deleteCharacter = (editorState) => {
 
 /**
  * @ngdoc method
- * @name deleteCharacter
- * @param {Object} editorState
- * @return {Object} returns new state
- * @description Create a new entity of specified type and associate
- * it to the current selection.
- */
-const addNewSuggestionEntity = (content, selection, type, data) => {
-    const newContent = content.createEntity(type, 'MUTABLE', data);
-    const key = newContent.getLastCreatedEntityKey();
-
-    return setEntity(newContent, selection, key, type);
-};
-
-/**
- * @ngdoc method
  * @name changeEditorSelection
  * @param {Object} editorState
  * @param {Integer} startOffset - the anchor offset relative to current start offset
@@ -418,32 +399,6 @@ const changeEditorSelection = (editorState, startOffset, endOffset, force) => {
     }
 
     return EditorState.acceptSelection(editorState, newSelection);
-};
-
-/**
- * @ngdoc method
- * @name getKeyAndEntityAtOffset
- * @param {Object} editorState
- * @param {Integer} offset - the offset relatively to current position
- * @return {Object} returns key and entity
- * specified position
- * @description Calculate the new position and return key and entity of suggestion type.
- */
-const getKeyAndEntityAtOffset = (editorState, offset) => {
-    const content = editorState.getCurrentContent();
-    const selection = editorState.getSelection();
-    const types = ['DELETE_SUGGESTION', 'ADD_SUGGESTION'];
-    let tmpKey = null;
-    let key = null;
-    let entity = null;
-
-    tmpKey = getEntityKeyByOffset(content, selection, offset);
-    if (tmpKey != null) {
-        key = getEntityKey(content, tmpKey, types);
-        entity = getEntity(content, tmpKey, types);
-    }
-
-    return {key, entity};
 };
 
 export default suggestions;

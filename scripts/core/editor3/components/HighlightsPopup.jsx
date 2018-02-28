@@ -9,6 +9,10 @@ import {Dropdown} from 'core/ui/components';
 import {CommentPopup} from './comments';
 import {SuggestionPopup} from './suggestions/SuggestionPopup';
 import {AnnotationPopup} from './annotations';
+import {
+    getHighlightStyle,
+    getRangeAndTextForStyle
+} from '../helpers/highlights';
 
 // topPadding holds the number of pixels between the selection and the top side
 // of the popup.
@@ -66,54 +70,6 @@ export class HighlightsPopup extends Component {
         return {top, left};
     }
 
-    getRangeAndTextForEntityKey(editorState, entityKey) {
-        const selection = editorState.getSelection();
-
-        if (selection.isCollapsed() === false) {
-            throw new Error('Only collapsed selection supported');
-        }
-
-        var blockKey = selection.getAnchorKey();
-        var block = editorState.getCurrentContent().getBlockForKey(blockKey);
-
-        var from = null;
-        var to = null;
-
-        // check backwards
-        for (let i = selection.getAnchorOffset(); i >= 0; i--) {
-            let currentEntityKey = block.getEntityAt(i);
-
-            if (currentEntityKey === entityKey) {
-                from = i;
-            } else {
-                break;
-            }
-        }
-
-        // check forward
-        for (let i = selection.getAnchorOffset(); i < block.getLength(); i++) {
-            let currentEntityKey = block.getEntityAt(i);
-
-            if (currentEntityKey === entityKey) {
-                to = i;
-            } else {
-                break;
-            }
-        }
-
-        const newSelection = selection.merge({
-            anchorOffset: from,
-            focusOffset: to + 1,
-            isBackward: false
-        });
-        const suggestionText = block.getText().slice(from, to + 1);
-
-        return {
-            selection: newSelection,
-            suggestionText: suggestionText
-        };
-    }
-
     /**
      * @ngdoc method
      * @name HighlightsPopup#component
@@ -123,34 +79,31 @@ export class HighlightsPopup extends Component {
     component() {
         const {store} = this.context;
         const position = this.position();
-
-        var highlightsAndSuggestions = [];
-
-        var suggestionEntityKey = this.getSelectedSuggestionEntityKey();
-
-        if (suggestionEntityKey !== null) {
-            var suggestionEntity = Entity.get(suggestionEntityKey);
-            const {selection, suggestionText} = this.getRangeAndTextForEntityKey(
-                this.props.editorState, suggestionEntityKey
-            );
-
-            highlightsAndSuggestions = [
-                ...highlightsAndSuggestions,
-                {type: suggestionEntity.getType(), value: {...suggestionEntity.toJS(), suggestionText, selection}}
-            ];
-        }
+        const types = ['DELETE_SUGGESTION', 'ADD_SUGGESTION'];
+        const suggestionStyle = getHighlightStyle(this.props.editorState, types);
+        let highlightsAndSuggestions = [];
 
         if (this.styleBasedHighlightsExist()) {
             this.getInlineStyleForCollapsedSelection()
                 .filter(this.props.highlightsManager.styleNameBelongsToHighlight)
                 .forEach((styleName) => {
                     const highlightType = this.props.highlightsManager.getHighlightTypeFromStyleName(styleName);
+                    let data = this.props.highlightsManager.getHighlightData(styleName);
+
+                    if (types.indexOf(highlightType) !== -1) {
+                        const {selection, suggestionText} = getRangeAndTextForStyle(
+                            this.props.editorState, suggestionStyle
+                        );
+
+                        data = {...data, suggestionText, selection};
+                    }
 
                     highlightsAndSuggestions = [
                         ...highlightsAndSuggestions,
                         {
                             type: highlightType,
-                            value: this.props.highlightsManager.getHighlightData(styleName), highlightId: styleName
+                            value: data,
+                            highlightId: styleName
                         }
                     ];
                 });

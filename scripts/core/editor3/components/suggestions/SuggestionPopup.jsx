@@ -31,7 +31,7 @@ class Suggestion extends Component {
         var gettextCatalog = ng.get('gettextCatalog');
         const gettext = gettextCatalog.getString.bind(gettextCatalog);
 
-        ng.get('api')('users').getById(this.props.suggestion.data.author)
+        ng.get('api')('users').getById(this.props.suggestion.author)
             .then((author) => {
                 this.setState({author});
             })
@@ -60,7 +60,7 @@ class Suggestion extends Component {
         const gettext = gettextCatalog.getString.bind(gettextCatalog);
 
         const {author} = this.state;
-        const {date} = this.props.suggestion.data;
+        const {date} = this.props.suggestion.date;
 
         const fromNow = moment(date).calendar();
         const fullDate = moment(date).format('MMMM Do YYYY, h:mm:ss a');
@@ -100,10 +100,8 @@ class Suggestion extends Component {
 Suggestion.propTypes = {
     keyForDropdown: PropTypes.number,
     suggestion: PropTypes.shape({
-        data: PropTypes.shape({
-            author: PropTypes.string,
-            date: PropTypes.date
-        }),
+        author: PropTypes.string,
+        date: PropTypes.date,
         suggestionText: PropTypes.string,
         type: PropTypes.string,
         selection: PropTypes.object
