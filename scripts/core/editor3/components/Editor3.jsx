@@ -25,7 +25,7 @@ function getHighlightsState(editorState) {
 }
 
 function setHighlightsState(editorState, hightlightsState) {
-    return setCustomDataForEditor(editorState, editor3DataKeys.MULTIPLE_HIGHLIGHTS_STORAGE_KEY, hightlightsState)
+    return setCustomDataForEditor(editorState, editor3DataKeys.MULTIPLE_HIGHLIGHTS_STORAGE_KEY, hightlightsState);
 }
 
 function hadHighlightsChanged(prevEditorState, nextEditorState) {

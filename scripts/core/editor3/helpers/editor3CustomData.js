@@ -7,7 +7,8 @@ import {
 } from 'draft-js';
 
 export const editor3DataKeys = {
-    MULTIPLE_HIGHLIGHTS_STORAGE_KEY: 'multiple-highlights'
+    MULTIPLE_HIGHLIGHTS_STORAGE_KEY: 'multiple-highlights',
+    RESOLVED_COMMENTS_HISTORY: 'resolved-comments'
 };
 
 export function keyValid(key) {

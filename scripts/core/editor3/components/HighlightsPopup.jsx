@@ -200,6 +200,8 @@ export class HighlightsPopup extends Component {
                         comment={h}
                         highlightId={highlightId}
                         highlightsManager={this.props.highlightsManager}
+                        onChange={this.props.onChange}
+                        editorState={this.props.editorState}
                     />
                 </Dropdown>
             );
@@ -350,5 +352,6 @@ HighlightsPopup.propTypes = {
     editorState: PropTypes.instanceOf(EditorState),
     editorNode: PropTypes.object,
     highlightsManager: PropTypes.object.isRequired,
+    onChange: PropTypes.func.isRequired,
     hadHighlightsChanged: PropTypes.func.isRequired,
 };
