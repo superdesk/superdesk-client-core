@@ -20,12 +20,12 @@ function getInitialHighlightsState() {
 }
 
 function getHighlightsState(editorState) {
-    return getCustomDataFromEditor(editorState, editor3DataKeys.MULTIPLE_HIGHLIGHTS_STORAGE_KEY)
+    return getCustomDataFromEditor(editorState, editor3DataKeys.MULTIPLE_HIGHLIGHTS)
         || getInitialHighlightsState();
 }
 
 function setHighlightsState(editorState, hightlightsState) {
-    return setCustomDataForEditor(editorState, editor3DataKeys.MULTIPLE_HIGHLIGHTS_STORAGE_KEY, hightlightsState);
+    return setCustomDataForEditor(editorState, editor3DataKeys.MULTIPLE_HIGHLIGHTS, hightlightsState);
 }
 
 function hadHighlightsChanged(prevEditorState, nextEditorState) {

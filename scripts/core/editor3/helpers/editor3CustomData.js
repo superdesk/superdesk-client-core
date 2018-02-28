@@ -7,8 +7,8 @@ import {
 } from 'draft-js';
 
 export const editor3DataKeys = {
-    MULTIPLE_HIGHLIGHTS_STORAGE_KEY: 'multiple-highlights',
-    RESOLVED_COMMENTS_HISTORY: 'resolved-comments'
+    MULTIPLE_HIGHLIGHTS: 'MULTIPLE_HIGHLIGHTS',
+    RESOLVED_COMMENTS_HISTORY: 'RESOLVED_COMMENTS_HISTORY'
 };
 
 export function keyValid(key) {
@@ -16,7 +16,7 @@ export function keyValid(key) {
 }
 
 export function setCustomDataForEditor(editorState, key, value) {
-    if (keyValid(key)) {
+    if (!keyValid(key)) {
         throw new Error(`Key '${key}' is not defined`);
     }
 
@@ -37,7 +37,7 @@ export function setCustomDataForEditor(editorState, key, value) {
 }
 
 export function getCustomDataFromEditor(editorState, key) {
-    if (keyValid(key)) {
+    if (!keyValid(key)) {
         throw new Error(`Key '${key}' is not defined`);
     }
 
