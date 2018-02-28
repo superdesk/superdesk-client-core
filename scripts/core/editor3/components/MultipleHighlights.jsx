@@ -182,7 +182,7 @@ export class MultipleHighlights extends React.Component {
         };
 
         const newEditorState = clearInlineStyles(
-            newEditorState,
+            editorState,
             getDraftSelectionForEntireContent(editorState),
             [styleName]
         );

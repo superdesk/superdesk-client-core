@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
+import {EditorState} from 'draft-js';
 import PropTypes from 'prop-types';
-import ng from 'core/services/ng';
 
+import ng from 'core/services/ng';
 import {Comment} from './Comment';
 import CommentTextArea from './CommentTextArea';
-
 import {getAuthorInfo} from '../../actions';
+import {editor3DataKeys, getCustomDataFromEditor, setCustomDataForEditor} from '../../helpers/editor3CustomData';
 
 /**
  * @ngdoc React
@@ -101,15 +102,32 @@ export class CommentPopup extends Component {
     resolveComment() {
         const {highlightsManager, highlightId} = this.props;
 
-        var commentData = highlightsManager.getHighlightData(highlightId);
+        const commentData = highlightsManager.getHighlightData(highlightId);
 
-        highlightsManager.updateHighlightData(highlightId, {
-            ...commentData,
+        const editorStateWithCommentRemoved = highlightsManager.removeHighlight(highlightId, this.props.editorState);
+
+        const resolvedCommentData = {
             data: {
                 ...commentData.data,
-                resolved: true
+                resolutionInfo: {
+                    resolverUserId: ng.get('session').identity._id,
+                    date: new Date()
+                }
             }
-        });
+        };
+
+        const allResolvedComments = getCustomDataFromEditor(
+            this.props.editorState,
+            editor3DataKeys.RESOLVED_COMMENTS_HISTORY
+        );
+
+        const editorStateWithResolvedCommentAdded = setCustomDataForEditor(
+            editorStateWithCommentRemoved,
+            editor3DataKeys.RESOLVED_COMMENTS_HISTORY,
+            (allResolvedComments || []).concat(resolvedCommentData)
+        );
+
+        this.props.onChange(editorStateWithResolvedCommentAdded);
     }
 
     removeComment() {
@@ -121,7 +139,7 @@ export class CommentPopup extends Component {
     render() {
         const {comment} = this.props;
         const {data} = comment;
-        const {replies, resolved} = data;
+        const {replies, resolutionInfo} = data;
         const isAuthor = data.email === this.currentUser;
 
         const onEdit = () => this.editReply(data, -1);
@@ -136,7 +154,7 @@ export class CommentPopup extends Component {
 
                 {isAuthor && <a className="btn btn--small btn--hollow" onClick={onEdit}>{gettext('Edit')}</a>}
                 {isAuthor && <a className="btn btn--small btn--hollow" onClick={onDelete}>{gettext('Delete')}</a>}
-                {!resolved && (
+                {resolutionInfo === null && (
                     <a
                         className="btn btn--small btn--hollow"
                         onClick={() => this.resolveComment()}>
@@ -186,5 +204,7 @@ export class CommentPopup extends Component {
 CommentPopup.propTypes = {
     comment: PropTypes.object,
     highlightsManager: PropTypes.object.isRequired,
+    onChange: PropTypes.func.isRequired,
+    editorState: PropTypes.instanceOf(EditorState),
     highlightId: PropTypes.string,
 };

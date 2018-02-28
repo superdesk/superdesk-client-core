@@ -41,7 +41,7 @@ class CommentInputBody extends Component {
                         data: {
                             msg: msg,
                             replies: [],
-                            resolved: false,
+                            resolutionInfo: null,
                             ...getAuthorInfo()
                         }
                     }

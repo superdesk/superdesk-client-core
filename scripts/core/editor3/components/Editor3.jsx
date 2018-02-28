@@ -1,48 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
-import {Map} from 'immutable';
 
 import {Editor3Component} from './Editor3Component';
 import {MultipleHighlights} from './MultipleHighlights';
 import {highlightsConfig} from './highlightsConfig';
 import * as actions from '../actions';
-import {MULTIPLE_HIGHLIGHTS_STORAGE_KEY} from '../constants';
-import {
-    SelectionState,
-    Modifier,
-    EditorState,
-} from 'draft-js';
-
-
-const availableHighlights = Object.keys(highlightsConfig).reduce((obj, key) => {
-    obj[key] = highlightsConfig[key].draftStyleMap;
-    return obj;
-}, {});
-
-function getHighlightsState(editorState) {
-    const highlightsState = editorState
-        .getCurrentContent()
-        .getFirstBlock()
-        .getData()
-        .get(MULTIPLE_HIGHLIGHTS_STORAGE_KEY);
-
-    return highlightsState || getInitialHighlightsState();
-}
-
-function setHighlightsState(editorState, hightlightsState) {
-    const selection = editorState.getSelection();
-    let content = editorState.getCurrentContent();
-    const firstBlockSelection = SelectionState.createEmpty(content.getFirstBlock().getKey());
-    const multipleHighlightsData = Map()
-        .set(MULTIPLE_HIGHLIGHTS_STORAGE_KEY, hightlightsState);
-
-    content = Modifier.mergeBlockData(content, firstBlockSelection, multipleHighlightsData);
-
-    let newEditorState = EditorState.push(editorState, content, 'change-inline-style');
-
-    return EditorState.forceSelection(newEditorState, selection);
-}
+import {editor3DataKeys, getCustomDataFromEditor, setCustomDataForEditor} from '../helpers/editor3CustomData';
 
 function getInitialHighlightsState() {
     return {
@@ -55,9 +19,23 @@ function getInitialHighlightsState() {
     };
 }
 
+function getHighlightsState(editorState) {
+    return getCustomDataFromEditor(editorState, editor3DataKeys.MULTIPLE_HIGHLIGHTS)
+        || getInitialHighlightsState();
+}
+
+function setHighlightsState(editorState, hightlightsState) {
+    return setCustomDataForEditor(editorState, editor3DataKeys.MULTIPLE_HIGHLIGHTS, hightlightsState);
+}
+
 function hadHighlightsChanged(prevEditorState, nextEditorState) {
     return getHighlightsState(prevEditorState) !== getHighlightsState(nextEditorState);
 }
+
+const availableHighlights = Object.keys(highlightsConfig).reduce((obj, key) => {
+    obj[key] = highlightsConfig[key].draftStyleMap;
+    return obj;
+}, {});
 
 export class Editor3Base extends React.Component {
     static getDecorator(disableSpellchecker) {

@@ -392,6 +392,7 @@ export class Editor3Component extends React.Component {
                         editorNode={this.editorNode}
                         editorState={editorState}
                         highlightsManager={this.props.highlightsManager}
+                        onChange={this.props.onChange}
                         hadHighlightsChanged={this.props.hadHighlightsChanged}
                     />
                 }
