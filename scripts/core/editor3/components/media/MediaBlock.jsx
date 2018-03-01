@@ -16,6 +16,10 @@ function getTranslationForAssignRights(value, gettextCatalog) {
     }
 }
 
+const DRAG_SCROLL_BUFFER = 150; // px
+const DRAG_SCROLL_BY = 50; // px
+const DRAG_SCROLL_TIMEOUT = 200; // ms
+
 /**
  * @ngdoc React
  * @module superdesk.core.editor3
@@ -33,6 +37,7 @@ export class MediaBlockComponent extends Component {
         this.data = this.data.bind(this);
         this.onChange = this.onChange.bind(this);
         this.onDragStart = this.onDragStart.bind(this);
+        this.onDrag = this.onDrag.bind(this);
     }
 
     /**
@@ -92,6 +97,30 @@ export class MediaBlockComponent extends Component {
         event.dataTransfer.setData('superdesk/editor3-block', this.props.block.getKey());
     }
 
+    componentDidMount() {
+        this.container = document.getElementsByClassName('page-content-container')[0];
+    }
+
+    componentWillUnmount() {
+        this.container = null;
+    }
+
+    onDrag(event) {
+        const y = event.pageY;
+
+        if (!this.scrollTimeout) {
+            this.scrollTimeout = setTimeout(() => {
+                if (y < DRAG_SCROLL_BUFFER) {
+                    this.container.scrollTop -= DRAG_SCROLL_BY;
+                } else if (y + DRAG_SCROLL_BUFFER > $(window).height()) {
+                    this.container.scrollTop += DRAG_SCROLL_BY;
+                }
+
+                this.scrollTimeout = null;
+            }, DRAG_SCROLL_TIMEOUT);
+        }
+    }
+
     render() {
         const {setLocked, showTitle} = this.props;
         const data = this.data();
@@ -105,7 +134,7 @@ export class MediaBlockComponent extends Component {
 
             <div className="image-block"
                 onClick={(e) => e.stopPropagation()}
-                draggable={true} onDragStart={this.onDragStart}>
+                draggable={true} onDragStart={this.onDragStart} onDrag={this.onDrag}>
                 <a className="icn-btn image-block__remove" onClick={this.onClickDelete}>
                     <i className="icon-close-small" />
                 </a>

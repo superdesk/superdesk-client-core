@@ -38,7 +38,6 @@ export function MonitoringController($rootScope, $scope, $location, desks, confi
         userPreference: preferencesService.get('monitoring:view'),
         sessionPreference: preferencesService.get('monitoring:view:session'),
     }).then(({userPreference, sessionPreference}) => {
-        console.info('prefs', userPreference, sessionPreference);
         this.viewColumn = sessionPreference != null ? sessionPreference : userPreference.view === 'swimlane';
         this.switchView(this.viewColumn);
     });
