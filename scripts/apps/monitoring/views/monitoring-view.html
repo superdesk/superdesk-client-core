@@ -54,7 +54,7 @@
         <div class="subnav__button-stack--square-buttons">
             <div class="refresh-box pull-right">
                 <button ng-if="monitoring.showRefresh &&
-                                        (monitoring.singleGroup || type === 'spike' || type === 'highlights' || viewColumn)"
+                                        (monitoring.singleGroup || type === 'spike' || type === 'highlights' || monitoring.viewColumn)"
                         ng-click="refreshGroup(monitoring.singleGroup)"
                         sd-tooltip="{{:: 'Refresh' | translate}}" flow="left" class="navbtn">
                     <i class="icon-repeat icon--blue"></i>
@@ -89,8 +89,8 @@
             <div sd-item-sortbar ng-if="!elementState || elementState === 'comfort'" class="sortbar-container"></div>
 
             <button id="switch-view-btn" ng-if="!monitoring.singleGroup && type === 'monitoring' && monitoring.hasSwimlaneView"
-                    class="navbtn swimlane-switch" ng-click="displayColumn()" ng-class="{'swimlane-switch--on': viewColumn}"
-                    sd-tooltip="{{ viewColumn ? 'Switch to List View' : 'Switch to Swimlane View' | translate }}"
+                    class="navbtn swimlane-switch" ng-click="displayColumn()" ng-class="{'swimlane-switch--on': monitoring.viewColumn}"
+                    sd-tooltip="{{ monitoring.viewColumn ? 'Switch to List View' : 'Switch to Swimlane View' | translate }}"
                     flow="left">
                 <i class="icon-th-list"></i>
             </button>
@@ -129,7 +129,7 @@
         <div class="preview-layout monitoring-preview-layout">
             <div class="content-list" ng-show="!aggregate.loading">
                 <!-- list view -->
-                <div ng-if="!viewColumn && type === 'monitoring'" class="list">
+                <div ng-if="!monitoring.viewColumn && type === 'monitoring'" class="list">
                     <div ng-if="(!monitoring.singleGroup || monitoring.isDeskChanged()) && type === 'monitoring'">
                         <div ng-repeat="group in aggregate.groups track by group._id"
                              sd-monitoring-group data-group="group"  data-num-items="group.max_items"
@@ -137,7 +137,7 @@
                     </div>
                 </div>
                 <!-- swimlane view -->
-                <div ng-if="viewColumn && type === 'monitoring'">
+                <div ng-if="monitoring.viewColumn && type === 'monitoring'">
                     <div class="sd-columns"
                          ng-if="(!monitoring.singleGroup || monitoring.isDeskChanged()) && type === 'monitoring'">
                         <div class="sd-column" ng-class="{active: isActiveGroup(group), inactive: !isActiveGroup(group)}"
