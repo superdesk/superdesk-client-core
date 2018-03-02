@@ -25,3 +25,5 @@ export const highlightsConfig = {
         }
     },
 };
+
+export const suggestionsTypes = ['DELETE_SUGGESTION', 'ADD_SUGGESTION'];

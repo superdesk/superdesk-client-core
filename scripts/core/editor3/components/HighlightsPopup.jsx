@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {getVisibleSelectionRect, EditorState, Entity} from 'draft-js';
+import {getVisibleSelectionRect, EditorState} from 'draft-js';
 import {render, unmountComponentAtNode} from 'react-dom';
 import PropTypes from 'prop-types';
 import {Provider} from 'react-redux';
@@ -9,10 +9,8 @@ import {Dropdown} from 'core/ui/components';
 import {CommentPopup} from './comments';
 import {SuggestionPopup} from './suggestions/SuggestionPopup';
 import {AnnotationPopup} from './annotations';
-import {
-    getHighlightStyle,
-    getRangeAndTextForStyle
-} from '../helpers/highlights';
+import {suggestionsTypes} from '../highlightsConfig';
+import * as Highlights from '../helpers/highlights';
 
 // topPadding holds the number of pixels between the selection and the top side
 // of the popup.
@@ -79,8 +77,8 @@ export class HighlightsPopup extends Component {
     component() {
         const {store} = this.context;
         const position = this.position();
-        const types = ['DELETE_SUGGESTION', 'ADD_SUGGESTION'];
-        const suggestionStyle = getHighlightStyle(this.props.editorState, types);
+        const {editorState} = this.props;
+        const suggestionStyle = Highlights.getHighlightStyleAtCurrentSelection(editorState, suggestionsTypes);
         let highlightsAndSuggestions = [];
 
         if (this.styleBasedHighlightsExist()) {
@@ -90,8 +88,8 @@ export class HighlightsPopup extends Component {
                     const highlightType = this.props.highlightsManager.getHighlightTypeFromStyleName(styleName);
                     let data = this.props.highlightsManager.getHighlightData(styleName);
 
-                    if (types.indexOf(highlightType) !== -1) {
-                        const {selection, suggestionText} = getRangeAndTextForStyle(
+                    if (suggestionsTypes.indexOf(highlightType) !== -1) {
+                        const {selection, suggestionText} = Highlights.getRangeAndTextForStyle(
                             this.props.editorState, suggestionStyle
                         );
 
@@ -218,11 +216,13 @@ export class HighlightsPopup extends Component {
     shouldComponentUpdate(nextProps) {
         const nextSelection = nextProps.editorState.getSelection();
         const selection = this.props.editorState.getSelection();
+        const hadHighlightsChanged = this.props.highlightsManager.hadHighlightsChanged(
+            this.props.editorState, nextProps.editorState);
 
         var cursorMoved = nextSelection.getAnchorOffset() !== selection.getAnchorOffset() ||
             nextSelection.getAnchorKey() !== selection.getAnchorKey();
 
-        return cursorMoved || this.props.hadHighlightsChanged(this.props.editorState, nextProps.editorState);
+        return cursorMoved || hadHighlightsChanged;
     }
 
     getInlineStyleForCollapsedSelection() {
@@ -240,41 +240,8 @@ export class HighlightsPopup extends Component {
         return inlineStyle;
     }
 
-    getSelectedSuggestionEntityKey() {
-        const {editorState} = this.props;
-        const selection = editorState.getSelection();
-
-        if (selection.isCollapsed() === false) {
-            return null;
-        }
-
-        var blockKey = selection.getAnchorKey();
-        var block = editorState.getCurrentContent().getBlockForKey(blockKey);
-        var entityKey = block.getEntityAt(selection.getAnchorOffset());
-
-        if (entityKey === null) {
-            return null;
-        }
-
-        return entityKey;
-    }
-
     shouldRender() {
         if (this.styleBasedHighlightsExist()) {
-            return true;
-        }
-
-        var selectedSuggestionEntityKey = this.getSelectedSuggestionEntityKey();
-
-        if (selectedSuggestionEntityKey === null) {
-            return false;
-        }
-
-        var selectedSuggestionEntity = Entity.get(selectedSuggestionEntityKey);
-
-        var entityType = selectedSuggestionEntity.getType();
-
-        if (entityType === 'ADD_SUGGESTION' || entityType === 'DELETE_SUGGESTION') {
             return true;
         }
 
@@ -306,5 +273,4 @@ HighlightsPopup.propTypes = {
     editorNode: PropTypes.object,
     highlightsManager: PropTypes.object.isRequired,
     onChange: PropTypes.func.isRequired,
-    hadHighlightsChanged: PropTypes.func.isRequired,
 };

@@ -60,7 +60,7 @@ class Suggestion extends Component {
         const gettext = gettextCatalog.getString.bind(gettextCatalog);
 
         const {author} = this.state;
-        const {date} = this.props.suggestion.date;
+        const {date} = this.props.suggestion;
 
         const fromNow = moment(date).calendar();
         const fullDate = moment(date).format('MMMM Do YYYY, h:mm:ss a');

@@ -392,7 +392,6 @@ export class Editor3Component extends React.Component {
                         editorState={editorState}
                         highlightsManager={this.props.highlightsManager}
                         onChange={this.props.onChange}
-                        hadHighlightsChanged={this.props.hadHighlightsChanged}
                     />
                 }
                 <div className="focus-screen" onMouseDown={this.focus}>
@@ -438,7 +437,6 @@ Editor3Component.propTypes = {
     svc: PropTypes.object,
     invisibles: PropTypes.bool,
     highlights: PropTypes.object,
-    hadHighlightsChanged: PropTypes.func,
     highlightsManager: PropTypes.object
 };
 

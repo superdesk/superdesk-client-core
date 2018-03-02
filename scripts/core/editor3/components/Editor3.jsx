@@ -4,32 +4,18 @@ import {connect} from 'react-redux';
 
 import {Editor3Component} from './Editor3Component';
 import {MultipleHighlights} from './MultipleHighlights';
-import {getHighlightsState, setHighlightsState, availableHighlights} from '../helpers/highlights';
 import * as actions from '../actions';
 
-function hadHighlightsChanged(prevEditorState, nextEditorState) {
-    return getHighlightsState(prevEditorState) !== getHighlightsState(nextEditorState);
-}
 
 export class Editor3Base extends React.Component {
     static getDecorator(disableSpellchecker) {
         return Editor3Component.getDecorator(disableSpellchecker);
     }
 
-    onHighlightChange(editorState, hightlightsState) {
-        const newEditorState = setHighlightsState(editorState, hightlightsState);
-
-        this.props.onChange(newEditorState);
-    }
-
     render() {
         var props = {
             ...this.props,
-            availableHighlights: availableHighlights,
-            onHighlightChange: this.onHighlightChange.bind(this),
-            hadHighlightsChanged: hadHighlightsChanged,
-            getHighlightsState: getHighlightsState,
-            setHighlightsState: setHighlightsState
+            onHighlightChange: this.props.onChange
         };
 
         return (

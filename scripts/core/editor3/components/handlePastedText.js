@@ -1,7 +1,8 @@
 import {EditorState, Modifier, genKey, CharacterMetadata, ContentBlock} from 'draft-js';
 import {List, OrderedSet} from 'immutable';
 import {fromHTML} from 'core/editor3/html';
-import {getHighlightDataAtOffset} from '../helpers/highlights';
+import * as Highlights from '../helpers/highlights';
+import {suggestionsTypes} from '../highlightsConfig';
 import ng from 'core/services/ng';
 
 /**
@@ -118,11 +119,11 @@ const atomicBlock = (data, entity) => new ContentBlock({
 export function allowEditSuggestion(action) {
     const {suggestingMode, editorState} = this.props;
     const selection = editorState.getSelection();
-    const types = ['DELETE_SUGGESTION', 'ADD_SUGGESTION'];
 
     if (selection.getStartOffset() !== selection.getEndOffset()) {
         for (let i = selection.getStartOffset(); i < selection.getEndOffset(); i++) {
-            const data = getHighlightDataAtOffset(editorState, types, selection, i - selection.getStartOffset());
+            const data = Highlights.getHighlightDataAtOffset(
+                editorState, suggestionsTypes, selection, i - selection.getStartOffset());
 
             if (!allowEditForData(data, suggestingMode)) {
                 return false;
@@ -132,8 +133,8 @@ export function allowEditSuggestion(action) {
         return true;
     }
 
-    const dataBefore = getHighlightDataAtOffset(editorState, types, selection, -1);
-    const dataAfter = getHighlightDataAtOffset(editorState, types, selection, 0);
+    const dataBefore = Highlights.getHighlightDataAtOffset(editorState, suggestionsTypes, selection, -1);
+    const dataAfter = Highlights.getHighlightDataAtOffset(editorState, suggestionsTypes, selection, 0);
     const allowEditBefore = allowEditForData(dataBefore, suggestingMode);
     const editBefore = allowEditBefore && (action === 'backspace' || action === 'insert');
     const allowEditAfter = allowEditForData(dataAfter, suggestingMode);
