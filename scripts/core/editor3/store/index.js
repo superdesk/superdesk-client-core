@@ -7,9 +7,23 @@ import {Editor3} from '../components/Editor3';
 import {EditorState, convertFromRaw, convertToRaw, ContentState} from 'draft-js';
 import {toHTML, fromHTML} from 'core/editor3/html';
 import {PopupTypes} from '../actions';
+import {editor3DataKeys, getCustomDataFromEditor, setCustomDataForEditor} from '../helpers/editor3CustomData';
+import {highlightsConfig} from '../components/highlightsConfig';
 
 // depended upon by find-and-replace.
 import {removeInlineStyles} from '../reducers/highlights';
+
+function addCommentsForServer(contentState) {
+    const editorState = EditorState.createWithContent(contentState);
+
+    const multipleHighlights = getCustomDataFromEditor(editorState, editor3DataKeys.MULTIPLE_HIGHLIGHTS);
+    const highlightsData = multipleHighlights === undefined ? {} : multipleHighlights['highlightsData'];
+    const comments = Object.keys(highlightsData)
+        .filter((key) => key.indexOf(highlightsConfig.COMMENT.type) === 0)
+        .map((key) => highlightsData[key]);
+
+    return setCustomDataForEditor(editorState, editor3DataKeys.__PUBLIC_API__comments, comments).getCurrentContent();
+}
 
 /**
  * @name createEditorStore
@@ -71,11 +85,13 @@ function onChange(content) {
     const decorativeStyles = ['HIGHLIGHT', 'HIGHLIGHT_STRONG'];
     const cleanedContent = removeInlineStyles(content, decorativeStyles);
 
+    const contentWithCommentsAdded = addCommentsForServer(cleanedContent);
+
     // sync controller to scope
     this.$scope.$apply(() => {
         // to avoid merge of dictionaries in backend, editorState is wrapped in a list
-        this.editorState = [convertToRaw(cleanedContent)];
-        this.value = toHTML(cleanedContent);
+        this.editorState = [convertToRaw(contentWithCommentsAdded)];
+        this.value = toHTML(contentWithCommentsAdded);
     });
 
     // call on change with scope updated
