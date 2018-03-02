@@ -41,17 +41,37 @@ function getHighlightType(styleName) {
     return styleName.slice(0, delimiterIndex);
 }
 
+/**
+ * @ngdoc method
+ * @name getHighlightsStyleMap
+ * @param {Object} editorState
+ * @return {Object}
+ * @description return the current highlights style map.
+ */
 export function getHighlightsStyleMap(editorState) {
     const highlightsState = getHighlightsState(editorState);
 
     return highlightsState.highlightsStyleMap;
 }
 
-
+/**
+ * @ngdoc method
+ * @name highlightTypeValid
+ * @param {String} highlightType
+ * @return {Boolean}
+ * @description return true if the highlightType is a valid highlight type for current editor.
+ */
 function highlightTypeValid(highlightType) {
     return Object.keys(availableHighlights).includes(highlightType);
 }
 
+/**
+ * @ngdoc method
+ * @name styleNameBelongsToHighlight
+ * @param {String} styleName
+ * @return {Boolean}
+ * @description return true if the styleName is a valid style for current editor.
+ */
 export function styleNameBelongsToHighlight(styleName) {
     var delimiterIndex = styleName.lastIndexOf('-');
 
@@ -62,6 +82,13 @@ export function styleNameBelongsToHighlight(styleName) {
     return Object.keys(availableHighlights).includes(styleName.slice(0, delimiterIndex));
 }
 
+/**
+ * @ngdoc method
+ * @name getHighlightTypeFromStyleName
+ * @param {String} styleName
+ * @return {String}
+ * @description return the highlight type for styleName.
+ */
 export function getHighlightTypeFromStyleName(styleName) {
     var delimiterIndex = styleName.lastIndexOf('-');
 
@@ -78,6 +105,14 @@ export function getHighlightTypeFromStyleName(styleName) {
     return highlightType;
 }
 
+/**
+ * @ngdoc method
+ * @name getHighlightsCount
+ * @param {Object} editorState
+ * @param {String} styleName
+ * @return {String}
+ * @description return the number of individual highlights.
+ */
 export function getHighlightsCount(editorState, highlightType) {
     const highlightsState = getHighlightsState(editorState);
 
@@ -93,6 +128,15 @@ export function getHighlightsCount(editorState, highlightType) {
     }
 }
 
+/**
+ * @ngdoc method
+ * @name canAddtHighlight
+ * @param {Object} editorState
+ * @param {String} highlightType
+ * @return {Boolean}
+ * @description return true if a highlight of type highlightType can be set
+ * for current selection
+ */
 export function canAddtHighlight(editorState, highlightType) {
     function characterHasAHighlightOfTheSameType(character) {
         if (
@@ -125,22 +169,6 @@ export function canAddtHighlight(editorState, highlightType) {
         .some(characterHasAHighlightOfTheSameType.bind(this)) === false;
 }
 
-function getHighlightTypeFromStyle(style) {
-    const delimiterIndex = style.lastIndexOf('-');
-
-    if (delimiterIndex === -1) {
-        null;
-    }
-
-    const type = style.slice(0, delimiterIndex);
-
-    if (Object.keys(availableHighlights).includes(type)) {
-        return type;
-    }
-
-    return null;
-}
-
 /**
  * @ngdoc method
  * @name getHighlightStyleAtOffset
@@ -148,7 +176,7 @@ function getHighlightTypeFromStyle(style) {
  * @param {List} types
  * @param {Object} selection
  * @param {Integer} offset
- * @description the entity key from the new possition specified by offset.
+ * @description the highlight style from the new possition specified by offset.
  */
 export function getHighlightStyleAtOffset(editorState, types, selection, offset) {
     const content = editorState.getCurrentContent();
@@ -162,17 +190,27 @@ export function getHighlightStyleAtOffset(editorState, types, selection, offset)
     let highlightStyle = null;
 
     inlineStyles.forEach((style) => {
-        const type = getHighlightTypeFromStyle(style);
+        if (styleNameBelongsToHighlight(style)) {
+            const type = getHighlightTypeFromStyleName(style);
 
-        if (type != null && types.indexOf(type) !== -1) {
-            highlightStyle = style;
+            if (type != null && types.indexOf(type) !== -1) {
+                highlightStyle = style;
+            }
         }
     });
 
     return highlightStyle;
 }
 
-export function getHighlightStyleAtCurrentSelection(editorState, types) {
+/**
+ * @ngdoc method
+ * @name getHighlightStyleAtCurrentPosition
+ * @param {Object} editorState
+ * @param {List} types
+ * @return {String}
+ * @description return the style of type for current character position.
+ */
+export function getHighlightStyleAtCurrentPosition(editorState, types) {
     const selection = editorState.getSelection();
 
     return getHighlightStyleAtOffset(editorState, types, selection, 0);
@@ -197,8 +235,8 @@ export function getHighlightData(editorState, style) {
  * @param {Object} content
  * @param {Object} selection
  * @param {Integer} offset
- * @return {String} entity key
- * @description the entity key from the new possition specified by offset.
+ * @return {Object}
+ * @description the highlight associated data from the new possition specified by offset.
  */
 export function getHighlightDataAtOffset(editorState, types, selection, offset) {
     const style = getHighlightStyleAtOffset(editorState, types, selection, offset);
@@ -219,7 +257,7 @@ export function getHighlightDataAtOffset(editorState, types, selection, offset) 
  * @param {String} type
  * @param {Object} data
  * @return {Object} new editor state
- * @description add a new highlight at the cussrnt selection.
+ * @description add a new highlight for the current selection.
  */
 export function addHighlight(editorState, type, data) {
     const highlightsState = getHighlightsState(editorState);
@@ -248,6 +286,15 @@ export function addHighlight(editorState, type, data) {
     return setHighlightsState(newEditorState, newHighlightsState);
 }
 
+/**
+ * @ngdoc method
+ * @name updateHighlightData
+ * @param {Object} editorState
+ * @param {String} styleName
+ * @param {Object} nextData
+ * @return {Object} new editor state
+ * @description update highlight data associated to given style.
+ */
 export function updateHighlightData(editorState, styleName, nextData) {
     const highlightsState = getHighlightsState(editorState);
 
@@ -266,6 +313,14 @@ export function updateHighlightData(editorState, styleName, nextData) {
     return setHighlightsState(editorState, newHighlightsState);
 }
 
+/**
+ * @ngdoc method
+ * @name removeHighlight
+ * @param {Object} editorState
+ * @param {String} styleName
+ * @return {Object} new editor state
+ * @description for current selection remove the highlight style and associated data.
+ */
 export function removeHighlight(editorState, styleName) {
     const highlightsState = getHighlightsState(editorState);
     const highlightType = getHighlightType(styleName);
@@ -306,10 +361,18 @@ export function hadHighlightsChanged(prevEditorState, nextEditorState) {
  * @param {Object} editorState
  * @param {String} style
  * @return {Object editorstate
- * @description the entity key from the new possition specified by offset.
+ * @description For current position reset the highlight style. If it was the last
+ * character with given style, delete the associated data too.
  */
-export function deleteHighlight(editorState, style) {
-    // TODO: delete the style re: data if it is not used anymore
+export function resetHighlightForCurrentCharacter(editorState, style) {
+    const type = getHighlightType(style);
+    const selection = editorState.getSelection();
+    const styleBefore = getHighlightStyleAtOffset(editorState, [type], selection, -1);
+    const styleAfter = getHighlightStyleAtOffset(editorState, [type], selection, 1);
+
+    if (styleBefore !== style && styleAfter !== style) {
+        return removeHighlight(editorState, style);
+    }
 
     return RichUtils.toggleInlineStyle(editorState, style);
 }
@@ -370,7 +433,13 @@ const getBlockAndOffset = (content, selection, offset) => {
     return {block, newOffset};
 };
 
-
+/**
+ * @ngdoc method
+ * @name getRangeAndTextForStyle
+ * @param {Object} editorState
+ * @param {String} style
+ * @return {Object} return a selection and text that are associated to given highlight style.
+ */
 export function getRangeAndTextForStyle(editorState, style) {
     const selection = editorState.getSelection();
 

@@ -78,7 +78,7 @@ export class HighlightsPopup extends Component {
         const {store} = this.context;
         const position = this.position();
         const {editorState} = this.props;
-        const suggestionStyle = Highlights.getHighlightStyleAtCurrentSelection(editorState, suggestionsTypes);
+        const suggestionStyle = Highlights.getHighlightStyleAtCurrentPosition(editorState, suggestionsTypes);
         let highlightsAndSuggestions = [];
 
         if (this.styleBasedHighlightsExist()) {

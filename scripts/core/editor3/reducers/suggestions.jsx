@@ -197,21 +197,18 @@ const deleteCurrentSelection = (editorState, data) => {
  * @ngdoc method
  * @name setAddSuggestionForCharacter
  * @param {Object} state
+ * @param {Object} data - info about the author of suggestion
  * @param {String} text - the suggestion added text
  * @param {Object} inlineStyle - the style for the text
- * @param {Object} data - info about the author of suggestion
  * @return {Object} returns new state
  * @description Set the add suggestion for current character.
  *   On suggestion mode:
- *   1. next neighbor is 'delete suggestion' with same user and the same char as added one -> reset delete entity
+ *   1. next neighbor is 'delete suggestion' with same user and the same char as added one -> reset related data
  *       1.1. if both neighbors are 'new suggestion' and has the same user -> concatenate them?
- *   2. at least one of neighbors is 'new suggestion' and has same user -> set the same entity
+ *   2. at least one of neighbors is 'new suggestion' and has same user -> set the same data
  *   3. other cases -> add new 'new suggestion'
- *       3.1 if the neighbors had the same entity -> split the entity/group?
- *   Not on suggestion mode:
- *   1. both are 'new suggestion' neighbors with the same user -> set same entity
  */
-const setAddSuggestionForCharacter = (editorState, data, text, inlineStyle = null, entityKey = null) => {
+const setAddSuggestionForCharacter = (editorState, data, text, inlineStyle = null) => {
     const crtInlineStyle = inlineStyle || editorState.getCurrentInlineStyle();
     let selection = editorState.getSelection();
     const beforeStyle = Highlights.getHighlightStyleAtOffset(editorState, suggestionsTypes, selection, -1);
@@ -225,7 +222,7 @@ const setAddSuggestionForCharacter = (editorState, data, text, inlineStyle = nul
     if (currentChar === text && currentData != null
         && currentData.type === 'DELETE_SUGGESTION'
         && currentData.author === data.author) {
-        // if next character is the same as the new one and is delete suggestion -> reset entity
+        // if next character is the same as the new one and is delete suggestion -> reset data
         newState = resetSuggestion(newState, currentStyle);
         return newState;
     }
@@ -236,11 +233,11 @@ const setAddSuggestionForCharacter = (editorState, data, text, inlineStyle = nul
 
     if (beforeData != null && beforeData.type === 'ADD_SUGGESTION'
         && beforeData.author === data.author) {
-        // if previous character is an add suggestion of the same user, set the same entity
+        // if previous character is an add suggestion of the same user, set the same data
         newState = applyStyleForSuggestion(newState, crtInlineStyle, beforeStyle);
     } else if (currentData != null && currentData.type === 'ADD_SUGGESTION'
         && currentData.author === data.author) {
-        // if next character is an add suggestion of the same user, set the same entity
+        // if next character is an add suggestion of the same user, set the same data
         newState = applyStyleForSuggestion(newState, crtInlineStyle, currentStyle);
     } else {
         // create a new suggestion
@@ -262,11 +259,8 @@ const setAddSuggestionForCharacter = (editorState, data, text, inlineStyle = nul
  *    On suggestion mode:
  *   1. if previous neighbor is 'new suggestion' with the same user -> delete char
  *       1.1. if both new neighbors are 'new suggestion' and has the same user -> concatenate them?
- *   2. at least one of neighbors is 'delete suggestion' and has same user -> set the same entity
+ *   2. at least one of neighbors is 'delete suggestion' and has same user -> set the same suggestion data
  *   3. other cases -> add new 'delete suggestion'
- *       3.1 if the neighbors had the same entity -> split the entity/group?
- *   Not on suggestion mode:
- *   1. both are 'delete suggestion' neighbors with the same user -> set same entity
  */
 const setDeleteSuggestionForCharacter = (editorState, data) => {
     let selection = editorState.getSelection();
@@ -292,11 +286,11 @@ const setDeleteSuggestionForCharacter = (editorState, data) => {
 
     if (beforeData != null && beforeData.type === 'DELETE_SUGGESTION'
         && beforeData.author === data.author) {
-        // if previous character is a delete suggestion of the same user, set the same entity
+        // if previous character is a delete suggestion of the same user, set the same data
         newState = RichUtils.toggleInlineStyle(newState, beforeStyle);
     } else if (afterData != null && afterData.type === 'DELETE_SUGGESTION'
         && afterData.author === data.author) {
-        // if next character is a delete suggestion of the same user, set the same entity
+        // if next character is a delete suggestion of the same user, set the same data
         newState = RichUtils.toggleInlineStyle(newState, afterStyle);
     } else {
         // create a new suggestion
@@ -333,14 +327,14 @@ const applyStyleForSuggestion = (editorState, inlineStyle, style) => {
  * @param {Object} editorState
  * @param {String} style
  * @return {Object} returns new state
- * @description For type suggestion reset both style and entity for
+ * @description For type suggestion reset both style and data for
  * current character position.
  */
 const resetSuggestion = (editorState, style) => {
     let newState = editorState;
 
     newState = changeEditorSelection(newState, 0, 1, false);
-    newState = Highlights.deleteHighlight(newState, style);
+    newState = Highlights.resetHighlightForCurrentCharacter(newState, style);
     newState = changeEditorSelection(newState, 1, 0, false);
 
     return newState;
