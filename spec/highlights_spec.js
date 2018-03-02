@@ -160,6 +160,7 @@ describe('highlights', () => {
             monitoring.actionOnItemSubmenu('Mark for highlight', 'Highlight three', 1, 2);
             monitoring.checkMarkedForHighlight('Highlight two', 1, 0);
             monitoring.checkMarkedForHighlight('Highlight three', 1, 2);
+            monitoring.closeHighlightsPopup();
 
             // mark for highlight in authoring
             monitoring.actionOnItem('Edit', 1, 1);
