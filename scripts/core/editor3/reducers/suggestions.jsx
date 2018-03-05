@@ -42,6 +42,27 @@ const toggleSuggestingMode = (state) => {
 
 /**
  * @ngdoc method
+ * @name saveEditorStatus
+ * @param {Object} state
+ * @param {Object} tmpEditorState
+ * @param {String} changeType
+ * @return {Object} returns new state
+ * @description Save the changes as a single change in undo stack.
+ */
+const saveEditorStatus = (state, tmpEditorState, changeType) => {
+    const {editorState} = state;
+    const content = tmpEditorState.getCurrentContent();
+    const selection = tmpEditorState.getSelection();
+    let newEditorState;
+
+    newEditorState = EditorState.push(editorState, content, changeType);
+    newEditorState = EditorState.forceSelection(newEditorState, selection);
+
+    return onChange(state, newEditorState);
+};
+
+/**
+ * @ngdoc method
  * @name createAddSuggestion
  * @param {Object} state
  * @param {String} text - the suggestion added text
@@ -59,7 +80,7 @@ const createAddSuggestion = (state, {text, data}) => {
         editorState = setAddSuggestionForCharacter(editorState, data, text[i]);
     }
 
-    return onChange(state, editorState, true);
+    return saveEditorStatus(state, editorState, 'insert-characters');
 };
 
 /**
@@ -88,7 +109,7 @@ const createDeleteSuggestion = (state, {action, data}) => {
         editorState = changeEditorSelection(editorState, 1, 1, false);
     }
 
-    return onChange(state, editorState, true);
+    return saveEditorStatus(state, editorState, 'change-inline-style');
 };
 
 /**
@@ -121,7 +142,7 @@ const pasteAddSuggestion = (state, {content, data}) => {
         }
     });
 
-    return onChange(state, editorState, true);
+    return saveEditorStatus(state, editorState, 'change-block-data');
 };
 
 /**
@@ -166,7 +187,7 @@ const processSuggestion = (state, {selection}, accepted) => {
         }
     }
 
-    return onChange(state, editorState, true);
+    return saveEditorStatus(state, editorState, 'change-block-data');
 };
 
 /**
