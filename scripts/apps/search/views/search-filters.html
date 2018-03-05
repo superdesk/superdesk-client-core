@@ -15,6 +15,19 @@
         </ul>
     </div>
 
+    <div sd-toggle-box data-title="{{ :: 'Languages' | translate }}" ng-hide="isEmpty('language')" data-open="true">
+        <ul class="filter-box">
+            <li ng-repeat="(code, count) in aggregations.language" ng-click="toggleFilter('language', code)">
+                <span class="sd-checkbox" ng-checked="hasFilter('language', code)"></span>
+                <span>{{ :: languageLabel[code] || code }} <i>{{ count }}</i></span>
+                <span class="icon-close-small pull-right remove-aggregate"
+                      title="{{ :: 'Remove' | translate }}"
+                      ng-if="repo.search === 'local'"
+                      ng-click="excludeFacet('language', code, $event)"></span>
+            </li>
+        </ul>
+    </div>
+
     <div sd-toggle-box data-title="{{:: 'Desks' | translate }}" ng-hide="isEmpty('desk')" data-open="true">
         <ul class="filter-box">
             <li ng-repeat="(key,value) in aggregations.desk" ng-click="toggleFilter('desk', value.id)">

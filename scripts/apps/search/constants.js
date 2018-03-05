@@ -13,7 +13,7 @@ export const PARAMETERS = Object.freeze({
     marked_desks: 'Marked Desks',
     ingest_provider: 'Provider',
     featuremedia: 'Associated Feature Media',
-    subscriber: 'Subscriber'
+    subscriber: 'Subscriber',
 });
 
 /**
@@ -28,7 +28,8 @@ export const EXCLUDE_FACETS = Object.freeze({
     notsource: 'Not Source',
     notpriority: 'Not Priority',
     notlegal: 'Not Legal',
-    notsms: 'Not Sms'
+    notsms: 'Not Sms',
+    notlanguage: 'Not Language',
 });
 
 /**

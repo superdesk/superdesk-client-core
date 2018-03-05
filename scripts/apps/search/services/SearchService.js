@@ -350,6 +350,10 @@ export function SearchService($location, gettext, config, session, multi,
             if (params.sms) {
                 query.post_filter({terms: {'flags.marked_for_sms': JSON.parse(params.sms)}});
             }
+
+            if (params.language) {
+                query.post_filter({terms: {language: JSON.parse(params.language)}});
+            }
         }
 
         /**
