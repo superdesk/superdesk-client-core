@@ -1,5 +1,35 @@
 # Superdesk Client Changelog
 
+## [1.14.0] 2018-03-05
+
+### Fixed
+
+- Fix position of custom text fields in preview.
+- Keep dropdown in the viewport.
+- Fix reply date on comment update.
+- Show JID field in user profile only if XMPP auth is enabled.
+- Fix time to read for japanese.
+- Fix the order of items in full preview.
+- Remove html tags from opened articles bar.
+- Avoid opening upload modal on paste to editor2.
+- Fix styles for editor3.
+- Prevent formating via keyboard shortcuts if it's disabled in field config.
+
+### Added
+
+- Add param to Ritzau ingest config to override the URL.
+- Remove the comment after it's resolved and put it to the comments history.
+- Add search provider dropdown to search top bar.
+- Add clear button to embed fields.
+- Initial version of multiple highlights.
+
+### Changed
+
+- Use preferences for monitoring swimlane/list view.
+- Preview pane CSS improvements.
+- Hide keywords in metadata if they are not enabled in content profile.
+- Update dependecies (angular, jquery, webpack).
+
 ## [1.13.0] 2018-02-19
 
 ### Fixed
