@@ -240,6 +240,7 @@ body, html {
         font-family: "Roboto", sans-serif;
     }
     .field {
+        max-width: 100%;
         margin-bottom: 20px;
         .full-preview {
             display: inline-block;
@@ -391,6 +392,9 @@ body, html {
         display: table;
         table-layout: fixed;
         margin: 10px 0;
+        &.item-association {
+            margin: 0;
+        }
     }
     figure img {
         display: block;
