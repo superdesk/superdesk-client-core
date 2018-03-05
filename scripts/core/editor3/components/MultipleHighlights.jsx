@@ -24,8 +24,8 @@ export class MultipleHighlights extends React.Component {
         this.props.onChange(editorState);
     }
 
-    canAddtHighlight(highlightType) {
-        return Highlights.canAddtHighlight(this.props.editorState, highlightType);
+    canAddHighlight(highlightType) {
+        return Highlights.canAddHighlight(this.props.editorState, highlightType);
     }
 
     getHighlightData(styleName) {
@@ -55,7 +55,7 @@ export class MultipleHighlights extends React.Component {
                         removeHighlight: this.removeHighlight.bind(this),
                         getHighlightData: this.getHighlightData.bind(this),
                         updateHighlightData: this.updateHighlightData.bind(this),
-                        canAddHighlight: this.canAddtHighlight.bind(this),
+                        canAddHighlight: this.canAddHighlight.bind(this),
                         styleNameBelongsToHighlight: Highlights.styleNameBelongsToHighlight,
                         getHighlightTypeFromStyleName: Highlights.getHighlightTypeFromStyleName,
                         getHighlightsCount: this.getHighlightsCount.bind(this),
