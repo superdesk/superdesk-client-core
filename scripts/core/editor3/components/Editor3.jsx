@@ -13,13 +13,8 @@ export class Editor3Base extends React.Component {
     }
 
     render() {
-        var props = {
-            ...this.props,
-            onHighlightChange: this.props.onChange
-        };
-
         return (
-            <MultipleHighlights {...props}>
+            <MultipleHighlights {...this.props}>
                 <Editor3Component />
             </MultipleHighlights>
         );

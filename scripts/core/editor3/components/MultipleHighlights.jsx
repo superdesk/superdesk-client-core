@@ -9,22 +9,19 @@ export class MultipleHighlights extends React.Component {
     addHighlight(highlightType, highlightData) {
         const editorState = Highlights.addHighlight(this.props.editorState, highlightType, highlightData);
 
-        this.props.onHighlightChange(editorState);
-        return editorState;
+        this.props.onChange(editorState);
     }
 
     removeHighlight(styleName) {
         const editorState = Highlights.removeHighlight(this.props.editorState, styleName);
 
-        this.props.onHighlightChange(editorState);
-        return editorState;
+        this.props.onChange(editorState);
     }
 
     updateHighlightData(styleName, nextData) {
         const editorState = Highlights.updateHighlightData(this.props.editorState, styleName, nextData);
 
-        this.props.onHighlightChange(editorState);
-        return editorState;
+        this.props.onChange(editorState);
     }
 
     canAddtHighlight(highlightType) {
@@ -42,7 +39,7 @@ export class MultipleHighlights extends React.Component {
     render() {
         const {children, editorState} = this.props;
         const propsExcludingOwn = Object.keys(this.props)
-            .filter((key) => (key !== 'onHighlightChange' && key !== 'children'))
+            .filter((key) => (key !== 'children'))
             .reduce((obj, key) => {
                 obj[key] = this.props[key];
                 return obj;
@@ -74,6 +71,6 @@ export class MultipleHighlights extends React.Component {
 
 MultipleHighlights.propTypes = {
     editorState: PropTypes.object.isRequired,
-    onHighlightChange: PropTypes.func.isRequired,
+    onChange: PropTypes.func.isRequired,
     children: PropTypes.node.isRequired,
 };
