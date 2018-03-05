@@ -22,6 +22,7 @@ angular.module('superdesk.apps.authoring', [
     'superdesk.apps.authoring.widgets',
     'superdesk.apps.authoring.metadata',
     'superdesk.apps.authoring.comments',
+    'superdesk.apps.authoring.inline-comments',
     'superdesk.apps.authoring.versioning',
     'superdesk.apps.authoring.versioning.versions',
     'superdesk.apps.authoring.versioning.history',

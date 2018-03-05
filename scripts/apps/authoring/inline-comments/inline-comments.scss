@@ -1,0 +1,56 @@
+.sd-widget.inline-comments {
+    .notification-list {
+        position: absolute;
+        bottom: 110px;
+        top: 0;
+        left: 0;
+        right: 0;
+        padding: 12px 12px;
+        height: auto;
+
+        li {
+            &.no-comments {
+                background-color: transparent;
+                box-shadow: none;
+                padding: 16% 0 0;
+                text-align: center;
+                color: #888;
+                h3 {
+                    font-weight: 400;
+                    margin: 12px 0 4px;
+                }
+                span {
+                    font-weight: 300;
+                }
+                .round-box {
+                    display: block;
+                    box-sizing: border-box;
+                    padding-top: 16px;
+                    height: 90px;
+                    width: 90px;
+                    background-color: #fff;
+                    border-radius: 50%;
+                    margin: 0 auto;
+                    box-shadow: 0 0 6px 1px rgba(0, 0, 0, 0.08);
+                }
+                i {
+                    display: block;
+                    width: 56px;
+                    height: 48px;
+                    opacity: 0.2;
+                    margin: 1.4rem auto 0 auto;
+                    font-size: 5.2rem;
+                }
+            }
+
+            .comment-replies {
+                .small {
+                    font-size: 11px;
+                    border-left: 5px solid #eaeaea;
+                    border-bottom: 1px solid #eaeaea;
+                    background: #fbfbfb;
+                }
+            }
+        }
+    }
+}
