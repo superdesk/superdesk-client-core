@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {getVisibleSelectionRect, EditorState, Entity} from 'draft-js';
+import {getVisibleSelectionRect, EditorState} from 'draft-js';
 import {render, unmountComponentAtNode} from 'react-dom';
 import PropTypes from 'prop-types';
 import {Provider} from 'react-redux';
@@ -9,6 +9,8 @@ import {Dropdown} from 'core/ui/components';
 import {CommentPopup} from './comments';
 import {SuggestionPopup} from './suggestions/SuggestionPopup';
 import {AnnotationPopup} from './annotations';
+import {suggestionsTypes} from '../highlightsConfig';
+import * as Highlights from '../helpers/highlights';
 
 // topPadding holds the number of pixels between the selection and the top side
 // of the popup.
@@ -66,54 +68,6 @@ export class HighlightsPopup extends Component {
         return {top, left};
     }
 
-    getRangeAndTextForEntityKey(editorState, entityKey) {
-        const selection = editorState.getSelection();
-
-        if (selection.isCollapsed() === false) {
-            throw new Error('Only collapsed selection supported');
-        }
-
-        var blockKey = selection.getAnchorKey();
-        var block = editorState.getCurrentContent().getBlockForKey(blockKey);
-
-        var from = null;
-        var to = null;
-
-        // check backwards
-        for (let i = selection.getAnchorOffset(); i >= 0; i--) {
-            let currentEntityKey = block.getEntityAt(i);
-
-            if (currentEntityKey === entityKey) {
-                from = i;
-            } else {
-                break;
-            }
-        }
-
-        // check forward
-        for (let i = selection.getAnchorOffset(); i < block.getLength(); i++) {
-            let currentEntityKey = block.getEntityAt(i);
-
-            if (currentEntityKey === entityKey) {
-                to = i;
-            } else {
-                break;
-            }
-        }
-
-        const newSelection = selection.merge({
-            anchorOffset: from,
-            focusOffset: to + 1,
-            isBackward: false
-        });
-        const suggestionText = block.getText().slice(from, to + 1);
-
-        return {
-            selection: newSelection,
-            suggestionText: suggestionText
-        };
-    }
-
     /**
      * @ngdoc method
      * @name HighlightsPopup#component
@@ -123,34 +77,31 @@ export class HighlightsPopup extends Component {
     component() {
         const {store} = this.context;
         const position = this.position();
-
-        var highlightsAndSuggestions = [];
-
-        var suggestionEntityKey = this.getSelectedSuggestionEntityKey();
-
-        if (suggestionEntityKey !== null) {
-            var suggestionEntity = Entity.get(suggestionEntityKey);
-            const {selection, suggestionText} = this.getRangeAndTextForEntityKey(
-                this.props.editorState, suggestionEntityKey
-            );
-
-            highlightsAndSuggestions = [
-                ...highlightsAndSuggestions,
-                {type: suggestionEntity.getType(), value: {...suggestionEntity.toJS(), suggestionText, selection}}
-            ];
-        }
+        const {editorState} = this.props;
+        const suggestionStyle = Highlights.getHighlightStyleAtCurrentPosition(editorState, suggestionsTypes);
+        let highlightsAndSuggestions = [];
 
         if (this.styleBasedHighlightsExist()) {
             this.getInlineStyleForCollapsedSelection()
                 .filter(this.props.highlightsManager.styleNameBelongsToHighlight)
                 .forEach((styleName) => {
                     const highlightType = this.props.highlightsManager.getHighlightTypeFromStyleName(styleName);
+                    let data = this.props.highlightsManager.getHighlightData(styleName);
+
+                    if (suggestionsTypes.indexOf(highlightType) !== -1) {
+                        const {selection, suggestionText} = Highlights.getRangeAndTextForStyle(
+                            this.props.editorState, suggestionStyle
+                        );
+
+                        data = {...data, suggestionText, selection};
+                    }
 
                     highlightsAndSuggestions = [
                         ...highlightsAndSuggestions,
                         {
                             type: highlightType,
-                            value: this.props.highlightsManager.getHighlightData(styleName), highlightId: styleName
+                            value: data,
+                            highlightId: styleName
                         }
                     ];
                 });
@@ -265,11 +216,13 @@ export class HighlightsPopup extends Component {
     shouldComponentUpdate(nextProps) {
         const nextSelection = nextProps.editorState.getSelection();
         const selection = this.props.editorState.getSelection();
+        const hadHighlightsChanged = this.props.highlightsManager.hadHighlightsChanged(
+            this.props.editorState, nextProps.editorState);
 
         var cursorMoved = nextSelection.getAnchorOffset() !== selection.getAnchorOffset() ||
             nextSelection.getAnchorKey() !== selection.getAnchorKey();
 
-        return cursorMoved || this.props.hadHighlightsChanged(this.props.editorState, nextProps.editorState);
+        return cursorMoved || hadHighlightsChanged;
     }
 
     getInlineStyleForCollapsedSelection() {
@@ -287,41 +240,8 @@ export class HighlightsPopup extends Component {
         return inlineStyle;
     }
 
-    getSelectedSuggestionEntityKey() {
-        const {editorState} = this.props;
-        const selection = editorState.getSelection();
-
-        if (selection.isCollapsed() === false) {
-            return null;
-        }
-
-        var blockKey = selection.getAnchorKey();
-        var block = editorState.getCurrentContent().getBlockForKey(blockKey);
-        var entityKey = block.getEntityAt(selection.getAnchorOffset());
-
-        if (entityKey === null) {
-            return null;
-        }
-
-        return entityKey;
-    }
-
     shouldRender() {
         if (this.styleBasedHighlightsExist()) {
-            return true;
-        }
-
-        var selectedSuggestionEntityKey = this.getSelectedSuggestionEntityKey();
-
-        if (selectedSuggestionEntityKey === null) {
-            return false;
-        }
-
-        var selectedSuggestionEntity = Entity.get(selectedSuggestionEntityKey);
-
-        var entityType = selectedSuggestionEntity.getType();
-
-        if (entityType === 'ADD_SUGGESTION' || entityType === 'DELETE_SUGGESTION') {
             return true;
         }
 
@@ -353,5 +273,4 @@ HighlightsPopup.propTypes = {
     editorNode: PropTypes.object,
     highlightsManager: PropTypes.object.isRequired,
     onChange: PropTypes.func.isRequired,
-    hadHighlightsChanged: PropTypes.func.isRequired,
 };

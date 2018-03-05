@@ -4,7 +4,7 @@ import {Dropdown} from 'core/ui/components';
 import {Editor} from 'core/editor3';
 import {connect} from 'react-redux';
 import {convertToRaw} from 'draft-js';
-import {highlightsConfig} from '../highlightsConfig';
+import {highlightsConfig} from '../../highlightsConfig';
 import {getAuthorInfo} from '../../actions';
 
 import {

@@ -7,6 +7,7 @@ import {Comment} from './Comment';
 import CommentTextArea from './CommentTextArea';
 import {getAuthorInfo} from '../../actions';
 import {editor3DataKeys, getCustomDataFromEditor, setCustomDataForEditor} from '../../helpers/editor3CustomData';
+import * as Highlights from '../../helpers/highlights';
 
 /**
  * @ngdoc React
@@ -104,7 +105,7 @@ export class CommentPopup extends Component {
 
         const commentData = highlightsManager.getHighlightData(highlightId);
 
-        const editorStateWithCommentRemoved = highlightsManager.removeHighlight(highlightId, this.props.editorState);
+        const editorStateWithCommentRemoved = Highlights.removeHighlight(this.props.editorState, highlightId);
 
         const resolvedCommentData = {
             data: {
