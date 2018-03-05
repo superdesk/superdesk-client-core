@@ -41,7 +41,6 @@ describe('marked desks', () => {
             // mark for desk in monitoring in list
             monitoring.actionOnItemSubmenu('Mark for desk', 'Sports Desk', 2, 0);
             monitoring.checkMarkedForDesk('Sports Desk', 2, 0);
-            monitoring.closeMarkedForDeskPopup();
 
             // mark for desk in monitoring in edit
             monitoring.actionOnItem('Edit', 2, 2);

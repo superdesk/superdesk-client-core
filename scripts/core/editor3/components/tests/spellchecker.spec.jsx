@@ -52,7 +52,6 @@ describe('editor3.components.spellchecker-decorator', () => {
 
         wrapper.simulate('contextmenu', new Event('contextmenu'));
         $rootScope.$apply();
-        wrapper.update();
 
         const ctxMenu = wrapper.find('SpellcheckerContextMenuComponent');
 
@@ -66,13 +65,11 @@ describe('editor3.components.spellchecker-decorator', () => {
 
         wrapper.simulate('contextmenu', new Event('contextmenu'));
         $rootScope.$apply();
-        wrapper.update();
 
         expect(wrapper.state().menuShowing).toBeTruthy();
         expect(wrapper.find('SpellcheckerContextMenuComponent').length).toBe(1);
 
         $(window).trigger('mousedown');
-        wrapper.update();
 
         expect(wrapper.state().menuShowing).toBeFalsy();
         expect(wrapper.find('SpellcheckerContextMenuComponent').length).toBe(0);
