@@ -46,7 +46,7 @@ class MultipleHighlightsTester extends React.Component {
             <MultipleHighlights
                 availableHighlights={availableHighlights}
                 editorState={this.state.editorState}
-                onHighlightChange={(editorState) => this.setState({editorState})}
+                onChange={(editorState) => this.setState({editorState})}
                 initialState={this.props.initialHighlightsState}
             >
                 <ChildComponent ref={(r) => this.childRef = r} />
