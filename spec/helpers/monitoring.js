@@ -618,15 +618,6 @@ function Monitoring() {
     };
 
     /**
-     * Close mark for highlights popup
-     */
-    this.closeHighlightsPopup = () => {
-        element(by.className('highlights-list-menu'))
-            .element(by.className('icon-close-small'))
-            .click();
-    };
-
-    /**
      * Check if on monitoring view an item from group is marked for desk
      * @param {string} desk
      * @param {number} group
@@ -642,14 +633,6 @@ function Monitoring() {
         expect(deskList.getText()).toContain(desk);
     };
 
-    /**
-     * Close marked for desk popup
-     */
-    this.closeMarkedForDeskPopup = () => {
-        element(by.className('highlights-list-menu'))
-            .element(by.className('icon-close-small'))
-            .click();
-    };
 
     /**
      * Check if on monitoring view an item from group is marked for highlight

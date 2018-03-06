@@ -22,7 +22,7 @@ describe('editor3.components.embed-input', () => {
     it('should render', () => {
         const {options} = mockStore();
         const noop = () => ({});
-        const wrapper = mount(<EmbedInput embedCode={noop} onCancel={noop} onSubmit={noop} />, options);
+        const wrapper = shallow(<EmbedInput embedCode={noop} onCancel={noop} onSubmit={noop} />, options);
 
         expect(wrapper.find('.icon-ok').length).toBe(1);
         expect(wrapper.find('.icon-close-small').length).toBe(1);
@@ -71,11 +71,10 @@ describe('editor3.components.embed-input', () => {
             responseJSON: {error: 'this is the error'}
         }));
 
-        wrapper.find('input').instance().value = 'http://will.fail';
+        wrapper.find('input').node.value = 'http://will.fail';
         wrapper.simulate('submit');
 
         $rootScope.$apply();
-        wrapper.update();
 
         expect(wrapper.state('error')).toBe('this is the error');
         expect(wrapper.find('.embed-dialog__error').text()).toBe('this is the error');
@@ -90,7 +89,7 @@ describe('editor3.components.embed-input', () => {
         spyOn($, 'ajax').and.returnValue($q.resolve('resolve-value'));
 
         wrapper.setState({error: 'some error'});
-        wrapper.find('input').instance().value = 'http://will.fail';
+        wrapper.find('input').node.value = 'http://will.fail';
         wrapper.simulate('submit');
 
         $rootScope.$apply();
