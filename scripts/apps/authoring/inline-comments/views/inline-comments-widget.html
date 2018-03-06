@@ -2,29 +2,29 @@
     <ul class="notification-list white">
         <li ng-repeat="item in items">
             <figure class="avatar">
-                <img sd-user-avatar data-user="item.data.user">
+                <img sd-user-avatar data-user="users[item.data.authorId]">
             </figure>
             <div class="content">
-                <div class="text" sd-comment-text data-comment="comment" data-name="{{item.data.user.display_name || item.data.user.username}}" data-text="{{item.data.msg}}"></div>
+                <div class="text" sd-comment-text data-comment="comment" data-name="{{users[item.data.authorId].display_name || users[item.data.authorId].username}}" data-text="{{item.data.msg}}"></div>
                 <span class="date" sd-reldate ng-model="item.data.date"></span>
             </div>
             <ul class="comment-replies">
                 <li class="small" ng-repeat="reply in item.data.replies">
                     <figure class="avatar">
-                        <img sd-user-avatar data-user="reply.user">
+                        <img sd-user-avatar data-user="users[reply.authorId]">
                     </figure>
                     <div class="content">
-                        <div class="text" sd-comment-text data-comment="comment" data-name="{{reply.user.display_name || reply.user.username}}" data-text="{{reply.msg}}"></div>
+                        <div class="text" sd-comment-text data-comment="comment" data-name="{{users[reply.authorId].display_name || users[reply.authorId].username}}" data-text="{{reply.msg}}"></div>
                         <span class="date" sd-reldate ng-model="reply.date"></span>
                     </div>
                 </li>
             </ul>
             <div class="resolution">
-                <span>Resolved by {{ item.data.resolutionInfo.user.display_name || item.data.resolutionInfo.user.username }} <span class="date" sd-reldate ng-model="item.data.resolutionInfo.date"></span></span>
+                <span>Resolved by {{ users[item.data.resolutionInfo.resolverUserId].display_name || users[item.data.resolutionInfo.resolverUserId].username }} <span class="date" sd-reldate ng-model="item.data.resolutionInfo.date"></span></span>
             </div>
         </li>
 
-        <li class="no-comments" ng-show="items.length === 0">
+        <li class="no-comments" ng-show="items.length === 0 || items === null">
             <div class="round-box">
                 <i class="big-icon--comments"></i>
             </div>

@@ -4,27 +4,15 @@ import {
 } from 'core/editor3/helpers/editor3CustomData';
 
 function getAllUserIdsFromComments(comments) {
-    const users = {};
+    const users = [];
 
     comments.forEach(({data}) => {
-        users[data.authorId] = null;
-        users[data.resolutionInfo.resolverUserId] = null;
-        data.replies.map((reply) => users[reply.authorId] = null);
+        users.push(data.authorId);
+        users.push(data.resolutionInfo.resolverUserId);
+        data.replies.map((reply) => users.push(reply.authorId));
     });
 
-    return Object.keys(users);
-}
-
-function injectUsersInComments(users, comments) {
-    return comments.map((comment) => {
-        comment.data.user = users[comment.data.authorId];
-        comment.data.resolutionInfo.user = users[comment.data.resolutionInfo.resolverUserId];
-        comment.data.replies = comment.data.replies.map((reply) => {
-            reply.user = users[reply.authorId];
-            return reply;
-        });
-        return comment;
-    });
+    return users.filter((value, index, self) => self.indexOf(value) === index);
 }
 
 function getUsersAsQueryArray(comments) {
@@ -56,9 +44,8 @@ function InlineCommentsCtrl($scope, api) {
 
     api.query('users', {where: JSON.stringify({$or: usersIds})})
         .then(({_items}) => {
-            const users = convertUsersArrayToObject(_items);
-
-            $scope.items = injectUsersInComments(users, comments);
+            $scope.users = convertUsersArrayToObject(_items);
+            $scope.items = comments;
         });
 }
 
