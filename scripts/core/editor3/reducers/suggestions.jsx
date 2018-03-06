@@ -128,27 +128,19 @@ const pasteAddSuggestion = (state, {content, data}) => {
 
 /**
  * @ngdoc method
- * @name processSuggestion
- * @param {Object} state
- * @param {Object} selection - the selection of suggestion
- * @param {Boolean} accepted - the suggestion is accepted
- * @return {Object} returns new state
- * @description Accept or reject the suggestions in the selection.
+ * @name saveToSuggestionsHistory
+ * @param {Object} editorState
+ * @param {Object} suggestion
+ * @param {Boolean} accepted
+ * @return {editorState} returns new state
  */
-const processSuggestion = (state, {suggestion}, accepted) => {
-    const {selection} = suggestion;
-    const start = selection.getStartOffset();
-    const end = selection.getEndOffset();
-    let {editorState} = state;
-    let style;
-    let data;
-
+function saveToSuggestionsHistory(editorState, suggestion, accepted) {
     const resolvedSuggestions = getCustomDataFromEditor(
         editorState,
         editor3DataKeys.RESOLVED_SUGGESTIONS_HISTORY
     ) || [];
 
-    editorState = setCustomDataForEditor(
+    return setCustomDataForEditor(
         editorState,
         editor3DataKeys.RESOLVED_SUGGESTIONS_HISTORY,
         resolvedSuggestions.concat({
@@ -165,6 +157,26 @@ const processSuggestion = (state, {suggestion}, accepted) => {
             }
         })
     );
+}
+
+/**
+ * @ngdoc method
+ * @name processSuggestion
+ * @param {Object} state
+ * @param {Object} suggestion
+ * @param {Boolean} accepted - the suggestion is accepted
+ * @return {Object} returns new state
+ * @description Accept or reject the suggestions in the selection.
+ */
+const processSuggestion = (state, {suggestion}, accepted) => {
+    const {selection} = suggestion;
+    const start = selection.getStartOffset();
+    const end = selection.getEndOffset();
+    let {editorState} = state;
+    let style;
+    let data;
+
+    editorState = saveToSuggestionsHistory(editorState, suggestion, accepted);
 
     for (let i = end - start - 1; i >= 0; i--) {
         style = Highlights.getHighlightStyleAtOffset(editorState, suggestionsTypes, selection, i);
