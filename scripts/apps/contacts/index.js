@@ -37,7 +37,7 @@ angular.module('superdesk.apps.contacts', [
     .directive('sdContactsSearchResults', directives.ContactsSearchResultsDirective)
     .directive('sdContactsSortBar', directives.ContactsSortBarDirective)
     .directive('sdContactsList', directives.ContactList)
-    .directive('sdContactEdit', directives.ContactEditDirective)
+    .directive('sdContactEditor', directives.ContactEditorDirective)
 
     .config(['apiProvider', function(apiProvider) {
         apiProvider.api('contacts', {

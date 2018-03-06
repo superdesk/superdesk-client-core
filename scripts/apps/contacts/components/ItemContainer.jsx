@@ -6,7 +6,7 @@ export class ItemContainer extends React.Component {
     constructor(props) {
         super(props);
 
-        this.init();
+        this.init(props);
     }
 
     getContactNumber(item, field) {
@@ -19,21 +19,21 @@ export class ItemContainer extends React.Component {
 
 
     getEmailValue(item) {
-        return item.email ? join(item.email, ', ') : null;
+        return item.contact_email ? join(item.contact_email, ', ') : null;
     }
 
-    init() {
-        const {gettextCatalog} = this.props.svc;
+    init(props) {
+        const {gettextCatalog} = props.svc;
         let value, title, altTitle;
         let item, key, _class, _link;
 
-        item = this.props.item;
-        key = this.props.field || null;
+        item = props.item;
+        key = props.field || null;
         _class = 'container';
         _link = _class + ' link';
 
         switch (key) {
-        case 'phone':
+        case 'contact_phone':
             value = this.getContactNumber(item, key);
             title = value && gettextCatalog.getString(this.getContactNumberTitle(item, key));
             break;
@@ -41,7 +41,7 @@ export class ItemContainer extends React.Component {
             value = this.getContactNumber(item, key);
             title = value && gettextCatalog.getString(this.getContactNumberTitle(item, key));
             break;
-        case 'email':
+        case 'contact_email':
             value = this.getEmailValue(item);
             _class = _link;
             break;
@@ -70,6 +70,12 @@ export class ItemContainer extends React.Component {
         };
 
         this.elemValue = value;
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.item !== this.props.item) {
+            this.init(nextProps);
+        }
     }
 
     render() {
