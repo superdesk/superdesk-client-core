@@ -48,14 +48,15 @@ function DeployConfigFactory(api, $q) {
          * Get sync
          *
          * @param {string} key
+         * @param {mixed} defaultValue
          * @return {mixed}
          */
-        getSync(key) {
+        getSync(key, defaultValue) {
             if (!this.config) {
-                return;
+                return defaultValue;
             }
 
-            return _.get(this.config, key);
+            return _.get(this.config, key, defaultValue);
         }
 
         /**
