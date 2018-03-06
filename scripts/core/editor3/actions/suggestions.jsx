@@ -53,11 +53,11 @@ export function createDeleteSuggestion(action) {
  * @return {Object} action
  * @description accept the suggestions for the selection.
  */
-export function acceptSuggestion(selection) {
+export function acceptSuggestion(suggestion) {
     return {
         type: 'ACCEPT_SUGGESTION',
         payload: {
-            selection: selection
+            suggestion: suggestion
         }
     };
 }
@@ -69,11 +69,11 @@ export function acceptSuggestion(selection) {
  * @return {Object} action
  * @description reject the suggestions for the selection.
  */
-export function rejectSuggestion(selection) {
+export function rejectSuggestion(suggestion) {
     return {
         type: 'REJECT_SUGGESTION',
         payload: {
-            selection: selection
+            suggestion: suggestion
         }
     };
 }

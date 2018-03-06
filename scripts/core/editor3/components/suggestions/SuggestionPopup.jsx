@@ -41,11 +41,11 @@ class Suggestion extends Component {
     }
 
     onAccept() {
-        this.props.acceptSuggestion(this.props.suggestion.selection);
+        this.props.acceptSuggestion(this.props.suggestion);
     }
 
     onReject() {
-        this.props.rejectSuggestion(this.props.suggestion.selection);
+        this.props.rejectSuggestion(this.props.suggestion);
     }
 
     render() {

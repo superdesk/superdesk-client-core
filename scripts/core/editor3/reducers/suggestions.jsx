@@ -3,6 +3,8 @@ import {onChange} from './editor3';
 import {acceptedInlineStyles} from '../helpers/inlineStyles';
 import {suggestionsTypes} from '../highlightsConfig';
 import * as Highlights from '../helpers/highlights';
+import {editor3DataKeys, getCustomDataFromEditor, setCustomDataForEditor} from '../helpers/editor3CustomData';
+import ng from 'core/services/ng';
 
 
 const suggestions = (state = {}, action) => {
@@ -133,12 +135,36 @@ const pasteAddSuggestion = (state, {content, data}) => {
  * @return {Object} returns new state
  * @description Accept or reject the suggestions in the selection.
  */
-const processSuggestion = (state, {selection}, accepted) => {
+const processSuggestion = (state, {suggestion}, accepted) => {
+    const {selection} = suggestion;
     const start = selection.getStartOffset();
     const end = selection.getEndOffset();
     let {editorState} = state;
     let style;
     let data;
+
+    const resolvedSuggestions = getCustomDataFromEditor(
+        editorState,
+        editor3DataKeys.RESOLVED_SUGGESTIONS_HISTORY
+    ) || [];
+
+    editorState = setCustomDataForEditor(
+        editorState,
+        editor3DataKeys.RESOLVED_SUGGESTIONS_HISTORY,
+        resolvedSuggestions.concat({
+            suggestionText: suggestion.suggestionText,
+            suggestionInfo: {
+                author: suggestion.author,
+                date: suggestion.date,
+                type: suggestion.type
+            },
+            resolutionInfo: {
+                resolverUserId: ng.get('session').identity._id,
+                date: new Date(),
+                accepted: accepted
+            }
+        })
+    );
 
     for (let i = end - start - 1; i >= 0; i--) {
         style = Highlights.getHighlightStyleAtOffset(editorState, suggestionsTypes, selection, i);
