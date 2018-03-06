@@ -323,7 +323,6 @@ export function updateHighlightData(editorState, styleName, nextData) {
  */
 export function removeHighlight(editorState, styleName) {
     const highlightsState = getHighlightsState(editorState);
-    const highlightType = getHighlightType(styleName);
 
     let nextHighlightsStyleMap = {...highlightsState.highlightsStyleMap};
 
@@ -334,10 +333,7 @@ export function removeHighlight(editorState, styleName) {
     delete nextHighlightsData[styleName];
 
     const newHighlightsState = {
-        lastHighlightIds: {
-            ...highlightsState.lastHighlightIds,
-            [highlightType]: highlightsState.lastHighlightIds[highlightType] - 1
-        },
+        lastHighlightIds: highlightsState.lastHighlightIds,
         highlightsStyleMap: nextHighlightsStyleMap,
         highlightsData: nextHighlightsData
     };
