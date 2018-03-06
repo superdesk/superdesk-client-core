@@ -42,6 +42,11 @@ function InlineCommentsCtrl($scope, api) {
 
     const usersIds = getUsersAsQueryArray(comments);
 
+    if (usersIds.length === 0) {
+        $scope.items = [];
+        return;
+    }
+
     api.query('users', {where: JSON.stringify({$or: usersIds})})
         .then(({_items}) => {
             $scope.users = convertUsersArrayToObject(_items);
