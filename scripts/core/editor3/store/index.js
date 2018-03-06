@@ -8,7 +8,7 @@ import {EditorState, convertFromRaw, convertToRaw, ContentState} from 'draft-js'
 import {toHTML, fromHTML} from 'core/editor3/html';
 import {PopupTypes} from '../actions';
 import {editor3DataKeys, getCustomDataFromEditor, setCustomDataForEditor} from '../helpers/editor3CustomData';
-import {highlightsConfig} from '../components/highlightsConfig';
+import {highlightsConfig} from '../highlightsConfig';
 
 // depended upon by find-and-replace.
 import {removeInlineStyles} from '../reducers/highlights';
