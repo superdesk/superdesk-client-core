@@ -38,3 +38,14 @@ To be able to track changes easily and keep our commit history human-readable, w
 * When your branch falls behind master, always use `git rebase master` instead of merge, to avoid commit message which reflect that you've done this operation.
 
 * Resort to only one commit per change. If your pull request is easier to review using multiple commits, do so, but squash before merging.
+
+
+### Guidelines
+
+#### Use "block body" style arrow functions if its return value is not used
+
+> When "block body" style arrow functions are used, and there is no `return` inside the curly brackets, it is guaranteed that the return value of the function is not used, so it makes it easier to remove the function when refactoring without having to search for calling functions and check whether they use the return value or not.
+
+Types of arrow functions:
+* "block body":  ` (x, y) => { return x + y; };` (no implicit return)
+* "concise body": `(x, y) =>  x + y` (uses implicit return)
