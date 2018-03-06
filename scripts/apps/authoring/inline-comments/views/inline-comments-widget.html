@@ -20,7 +20,7 @@
                 </li>
             </ul>
             <div class="resolution">
-                <span>Resolved by {{ users[item.data.resolutionInfo.resolverUserId].display_name || users[item.data.resolutionInfo.resolverUserId].username }} <span class="date" sd-reldate ng-model="item.data.resolutionInfo.date"></span></span>
+                <span>{{ :: 'Resolved by' | translate }} {{ users[item.data.resolutionInfo.resolverUserId].display_name || users[item.data.resolutionInfo.resolverUserId].username }} <span class="date" sd-reldate ng-model="item.data.resolutionInfo.date"></span></span>
             </div>
         </li>
 
