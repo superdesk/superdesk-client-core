@@ -3,7 +3,7 @@
 import React from 'react';
 import {mount} from 'enzyme';
 import PropTypes from 'prop-types';
-import {EditorState, ContentState, SelectionState, convertFromRaw} from 'draft-js';
+import {EditorState, ContentState, SelectionState} from 'draft-js';
 import {MultipleHighlights} from '../MultipleHighlights';
 
 const editorState = EditorState.createWithContent(
@@ -24,6 +24,7 @@ const selection = new SelectionState({
 
 const editorStateWithSelection = EditorState.acceptSelection(editorState, selection);
 const highlightData = {author: 'Dr. Seuss'};
+const highlightDataExpectedResponse = {author: 'Dr. Seuss', type: 'COMMENT'};
 const highlightDataUpdate = {firstMention: 1899};
 
 class ChildComponent extends React.Component {
@@ -84,7 +85,7 @@ describe('multipleHighlights.component', () => {
 
         expect(
             JSON.stringify(child.props.highlightsManager.getHighlightData(styleName))
-        ).toBe(JSON.stringify(highlightData));
+        ).toBe(JSON.stringify(highlightDataExpectedResponse));
 
         child.props.highlightsManager.updateHighlightData(styleName, highlightDataUpdate);
         expect(
@@ -103,61 +104,6 @@ describe('multipleHighlights.component', () => {
         expect(() => {
             child.props.highlightsManager.getHighlightData(styleName);
         }).toThrow();
-    });
-
-    it('should load initial highlights state', () => {
-        const editorState = EditorState.createWithContent(
-            convertFromRaw({
-                entityMap: {},
-                blocks: [
-                    {
-                        key: '8p98d',
-                        text: 'Don\'t cry because it\'s over, smile because it happened.',
-                        type: 'unstyled',
-                        depth: 0,
-                        inlineStyleRanges: [
-                            {
-                                offset: 29,
-                                length: 5,
-                                style: 'COMMENT-1'
-                            }
-                        ],
-                        entityRanges: [],
-                        data: {}
-                    }
-                ]
-            })
-        );
-        const highlightsData = {
-            highlightsData: {
-                'COMMENT-1': {
-                    author: 'Dr. Seuss'
-                }
-            },
-            lastHighlightIds: {
-                COMMENT: 1,
-                ANNOTATION: 0
-            }
-        };
-        const wrapper = mount(
-            (
-                <MultipleHighlightsTester
-                    editorState={editorState}
-                    initialHighlightsState={highlightsData}
-                />
-            )
-        );
-        const child = wrapper.instance().childRef;
-        const styleName = child.props.editorState
-            .getCurrentContent()
-            .getFirstBlock()
-            .getInlineStyleAt(29)
-            .first();
-
-        expect(styleName).toBe('COMMENT-1');
-        expect(
-            JSON.stringify(child.props.highlightsManager.getHighlightData(styleName))
-        ).toBe(JSON.stringify(highlightData));
     });
 
     it('should keep track of highlights count', () => {
