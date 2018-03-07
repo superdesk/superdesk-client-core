@@ -38,7 +38,8 @@ export function TagService($location, desks, userList, metadata, search,
         desk: 1,
         genre: 1,
         legal: 1,
-        sms: 1
+        sms: 1,
+        language: 1,
     };
 
     var cvs = search.cvs;
@@ -315,6 +316,19 @@ export function TagService($location, desks, userList, metadata, search,
                             value: selectedDesk});
                     });
                     break;
+
+                case 'language': {
+                    const selected = JSON.parse(type);
+                    const languages = metadata.values.languages || [];
+
+                    selected.forEach((code) => {
+                        tags.selectedFacets[key].push({
+                            label: (languages.find((l) => l.qcode === code) || {}).name || code,
+                            value: code,
+                        });
+                    });
+                    break;
+                }
 
                 case 'after':
                     var dateForType = {

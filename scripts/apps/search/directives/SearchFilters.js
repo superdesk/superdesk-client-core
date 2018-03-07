@@ -1,7 +1,7 @@
 import _ from 'lodash';
 
 class LinkFunction {
-    constructor(desks, tags, $location, scope, elem) {
+    constructor(desks, tags, $location, scope, elem, metadata) {
         this.scope = scope;
         this.elem = elem;
         this.tags = tags;
@@ -20,9 +20,19 @@ class LinkFunction {
             legal: this._legalMapper.bind(this),
             sms: this._legalMapper.bind(this),
             desk: this._deskMapper.bind(this),
-            defaultMapper: this._defaultMapper.bind(this)
+            defaultMapper: this._defaultMapper.bind(this),
         };
         this.init();
+        // fetch available languages
+        metadata.initialize()
+            .then(() => {
+                if (metadata.values.languages) {
+                    scope.languageLabel = {};
+                    metadata.values.languages.forEach((language) => {
+                        scope.languageLabel[language.qcode] = language.name;
+                    });
+                }
+            });
     }
 
 
@@ -50,7 +60,7 @@ class LinkFunction {
                 this._initAggregations();
 
                 let aggregationsKeys = ['type', 'category', 'genre', 'urgency',
-                    'priority', 'source', 'credit', 'desk', 'legal', 'sms'];
+                    'priority', 'source', 'credit', 'desk', 'legal', 'sms', 'language'];
 
                 _.each(aggregationsKeys, (key) => {
                     if (_.get(this.scope.items._aggregations, key)) {
@@ -165,7 +175,8 @@ class LinkFunction {
             priority: {},
             genre: {},
             legal: {},
-            sms: {}
+            sms: {},
+            language: {},
         };
     }
 
@@ -333,10 +344,10 @@ class LinkFunction {
         }
 
         const facet = this.scope.tags.selectedFacets[type];
-        const isDesk = type === 'desk' && _.find(facet, (f) => f.value === key);
-        const isCredit = type === 'credit' && _.find(facet, (f) => f.label === key);
+        const isValue = _.find(facet, (f) => f.value === key);
+        const isLabel = _.find(facet, (f) => f.label === key);
 
-        return isDesk || isCredit || facet.indexOf(key) >= 0;
+        return isValue || isLabel || facet.indexOf(key) >= 0;
     }
 }
 
@@ -351,11 +362,11 @@ class LinkFunction {
  * @description sd-search-filters handles filtering using aggregates in the
  * left hand side panel of Global search page, archive search page and content api search.
  */
-export function SearchFilters(desks, tags, $location) {
+export function SearchFilters(desks, tags, $location, metadata) {
     return {
         template: require('scripts/apps/search/views/search-filters.html'),
-        link: (scope, elem) => new LinkFunction(desks, tags, $location, scope, elem)
+        link: (scope, elem) => new LinkFunction(desks, tags, $location, scope, elem, metadata)
     };
 }
 
-SearchFilters.$inject = ['desks', 'tags', '$location'];
+SearchFilters.$inject = ['desks', 'tags', '$location', 'metadata'];
