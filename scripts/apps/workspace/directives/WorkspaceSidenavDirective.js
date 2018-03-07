@@ -1,18 +1,36 @@
 
-WorkspaceSidenavDirective.$inject = ['superdeskFlags', '$location', 'Keys', 'gettext', 'config',
+const HR_TEMPLATE = 'scripts/apps/workspace/views/workspace-sidenav-items-hr.html';
+const DEFAULT_TEMPLATE = 'scripts/apps/workspace/views/workspace-sidenav-items-default.html';
+
+WorkspaceSidenavDirective.$inject = ['superdeskFlags', '$location', 'workspaceMenu', 'Keys', 'gettext', 'config',
     '$route', 'api', '$filter', '$rootScope', 'workspaces', 'privileges', 'searchProviderService'];
-export function WorkspaceSidenavDirective(superdeskFlags, $location, Keys, gettext, config,
+export function WorkspaceSidenavDirective(superdeskFlags, $location, workspaceMenu, Keys, gettext, config,
     $route, api, $filter, $rootScope, workspaces, privileges, searchProviderService) {
     return {
-        templateUrl: 'scripts/apps/workspace/views/workspace-sidenav-items.html',
+        template: require('../views/workspace-sidenav-items.html'),
         link: function(scope, elem) {
-            scope.workspaceConfig = config.workspace || {};
+            let group = null;
 
+            scope.workspaceConfig = config.workspace || {}; // it's used in workspaceMenu.filter
+            scope.items = [];
+            workspaceMenu
+                .filter((item) => !item.if || scope.$eval(item.if, {privileges}))
+                .forEach((item) => {
+                    const itemGroup = item.group || group;
+
+                    if (itemGroup !== group) {
+                        scope.items.push({hr: 1});
+                        group = itemGroup;
+                    }
+
+                    scope.items.push(item);
+                });
 
             searchProviderService.getAllowedProviderTypes().then((providerTypes) => {
                 scope.providerLabels = searchProviderService.getProviderLabels(providerTypes);
             });
 
+            scope.getTemplateUrl = (item) => item.hr ? HR_TEMPLATE : (item.templateUrl || DEFAULT_TEMPLATE);
 
             // Filter extraItems based on privileges
             if (workspaces.extraItems) {

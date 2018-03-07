@@ -30,7 +30,8 @@ angular.module('superdesk.apps.monitoring', [
     'superdesk.core.api',
     'superdesk.apps.aggregate',
     'superdesk.apps.search',
-    'superdesk.core.ui'
+    'superdesk.core.ui',
+    'superdesk.apps.workspace.menu',
 ])
     .controller('Monitoring', ctrl.MonitoringController)
 
@@ -45,6 +46,7 @@ angular.module('superdesk.apps.monitoring', [
     .config(config.Monitoring)
     .config(config.SpikeMonitoring)
     .config(config.Personal)
+
 
     .filter('splitText', SplitFilter)
 

@@ -25,7 +25,8 @@ export default angular.module('superdesk.apps.highlights', [
     'superdesk.apps.desks',
     'superdesk.apps.packaging',
     'superdesk.core.activity',
-    'superdesk.core.api'
+    'superdesk.core.api',
+    'superdesk.apps.workspace.menu',
 ])
     .service('highlightsService', HighlightsService)
 
@@ -39,7 +40,7 @@ export default angular.module('superdesk.apps.highlights', [
     .directive('sdHighlightsConfigModal', directive.HighlightsConfigModal)
     .directive('sdHighlightLabel', directive.HighlightsLabel)
 
-    .config(['superdeskProvider', function(superdesk) {
+    .config(['superdeskProvider', 'workspaceMenuProvider', (superdesk, workspaceMenuProvider) => {
         superdesk
             .activity('mark.item', {
                 label: gettext('Mark for highlight'),
@@ -71,6 +72,14 @@ export default angular.module('superdesk.apps.highlights', [
                 topTemplateUrl: 'scripts/apps/dashboard/views/workspace-topnav.html',
                 sideTemplateUrl: 'scripts/apps/workspace/views/workspace-sidenav.html'
             });
+
+        workspaceMenuProvider.item({
+            href: '/workspace/highlights',
+            label: gettext('Highlights'),
+            templateUrl: 'scripts/apps/highlights/views/menu.html',
+            order: 300,
+            shortcut: 'ctrl+alt+h'
+        });
     }])
     .config(['apiProvider', function(apiProvider) {
         apiProvider.api('highlights', {

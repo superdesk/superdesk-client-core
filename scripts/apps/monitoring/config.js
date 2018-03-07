@@ -1,5 +1,5 @@
-Monitoring.$inject = ['superdeskProvider'];
-export function Monitoring(superdesk) {
+Monitoring.$inject = ['superdeskProvider', 'workspaceMenuProvider'];
+export function Monitoring(superdesk, workspaceMenuProvider) {
     superdesk
         .activity('/workspace/monitoring', {
             label: gettext('Monitoring'),
@@ -8,10 +8,20 @@ export function Monitoring(superdesk) {
             topTemplateUrl: 'scripts/apps/dashboard/views/workspace-topnav.html',
             sideTemplateUrl: 'scripts/apps/workspace/views/workspace-sidenav.html'
         });
+
+    workspaceMenuProvider.item(
+        {
+            icon: 'view',
+            href: '/workspace/monitoring',
+            label: gettext('Monitoring'),
+            shortcut: 'alt+m',
+            order: 200,
+        }
+    );
 }
 
-SpikeMonitoring.$inject = ['superdeskProvider'];
-export function SpikeMonitoring(superdesk) {
+SpikeMonitoring.$inject = ['superdeskProvider', 'workspaceMenuProvider'];
+export function SpikeMonitoring(superdesk, workspaceMenuProvider) {
     superdesk
         .activity('/workspace/spike-monitoring', {
             label: gettext('Spike Monitoring'),
@@ -20,13 +30,21 @@ export function SpikeMonitoring(superdesk) {
             topTemplateUrl: 'scripts/apps/dashboard/views/workspace-topnav.html',
             sideTemplateUrl: 'scripts/apps/workspace/views/workspace-sidenav.html'
         });
+
+    workspaceMenuProvider.item({
+        href: '/workspace/spike-monitoring',
+        label: gettext('Spike'),
+        shortcut: 'ctrl+alt+k',
+        icon: 'spike',
+        order: 600,
+    });
 }
 
 /**
  * Configure personal option from left menu
  */
-Personal.$inject = ['superdeskProvider'];
-export function Personal(superdesk) {
+Personal.$inject = ['superdeskProvider', 'workspaceMenuProvider'];
+export function Personal(superdesk, workspaceMenuProvider) {
     superdesk
         .activity('/workspace/personal', {
             label: gettext('Personal'),
@@ -35,4 +53,13 @@ export function Personal(superdesk) {
             topTemplateUrl: 'scripts/apps/dashboard/views/workspace-topnav.html',
             sideTemplateUrl: 'scripts/apps/workspace/views/workspace-sidenav.html'
         });
+
+    workspaceMenuProvider.item({
+        href: '/workspace/personal',
+        label: gettext('Personal'),
+        shortcut: 'alt+p',
+        icon: 'personal',
+        order: 800,
+        group: 'personal',
+    });
 }

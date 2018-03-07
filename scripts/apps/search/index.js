@@ -29,7 +29,8 @@ angular.module('superdesk.apps.search', [
     'superdesk.core.activity',
     'superdesk.core.list',
     'superdesk.core.keyboard',
-    'superdesk.apps.search.react'
+    'superdesk.apps.search.react',
+    'superdesk.apps.workspace.menu',
 ])
     .value('searchCommon', {meta: {}})
     .service('search', svc.SearchService)
@@ -58,17 +59,26 @@ angular.module('superdesk.apps.search', [
     .directive('sdRawSearch', directive.RawSearch)
     .directive('sdRepoDropdown', directive.RepoDropdown)
 
-    .config(['superdeskProvider', 'assetProvider', function(superdesk, asset) {
-        superdesk.activity('/search', {
-            description: gettext('Find live and archived content'),
-            priority: 200,
-            label: gettext('Search'),
-            templateUrl: asset.templateUrl('apps/search/views/search.html'),
-            sideTemplateUrl: 'scripts/apps/workspace/views/workspace-sidenav.html',
-            controller: SearchController,
-            controllerAs: 'search'
-        });
-    }])
+    .config(['superdeskProvider', 'assetProvider', 'workspaceMenuProvider',
+        (superdesk, asset, workspaceMenuProvider) => {
+            superdesk.activity('/search', {
+                description: gettext('Find live and archived content'),
+                priority: 200,
+                label: gettext('Search'),
+                templateUrl: asset.templateUrl('apps/search/views/search.html'),
+                sideTemplateUrl: 'scripts/apps/workspace/views/workspace-sidenav.html',
+                controller: SearchController,
+                controllerAs: 'search'
+            });
+
+            workspaceMenuProvider.item({
+                href: '/search',
+                label: gettext('Search'),
+                templateUrl: asset.templateUrl('apps/search/views/menu.html'),
+                order: 900,
+            });
+        }
+    ])
 
     .run(['keyboardManager', 'gettext', function(keyboardManager, gettext) {
         keyboardManager.register('Search', 'ctrl + 0', gettext('Show search modal'));

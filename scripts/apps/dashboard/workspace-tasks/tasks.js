@@ -358,7 +358,7 @@ function DeskStagesDirective() {
     };
 }
 
-angular.module('superdesk.apps.workspace.tasks', [])
+angular.module('superdesk.apps.workspace.tasks', ['superdesk.apps.workspace.menu'])
 
     .factory('StagesCtrl', StagesCtrlFactory)
 
@@ -369,7 +369,7 @@ angular.module('superdesk.apps.workspace.tasks', [])
     .controller('TasksController', TasksController)
     .service('tasks', TasksService)
 
-    .config(['superdeskProvider', function(superdesk) {
+    .config(['superdeskProvider', 'workspaceMenuProvider', function(superdesk, workspaceMenuProvider) {
         superdesk.activity('/workspace/tasks', {
             label: gettext('Workspace'),
             controller: TasksController,
@@ -395,5 +395,14 @@ angular.module('superdesk.apps.workspace.tasks', [])
                 }
             ],
             filters: [{action: superdesk.ACTION_EDIT, type: 'task'}]
+        });
+
+        workspaceMenuProvider.item({
+            href: '/workspace/tasks',
+            icon: 'tasks',
+            label: gettext('Tasks'),
+            shortcut: 'alt+t',
+            order: 400,
+            if: 'privileges.tasks && workspaceConfig.tasks',
         });
     }]);

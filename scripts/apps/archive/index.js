@@ -13,7 +13,7 @@ angular.module('superdesk.apps.archive.directives', [
     'superdesk.core.filters',
     'superdesk.apps.authoring',
     'superdesk.apps.ingest',
-    'superdesk.core.workflow'
+    'superdesk.core.workflow',
 ])
     .directive('sdItemLock', directive.ItemLock)
     .directive('sdItemState', directive.ItemState)
@@ -59,7 +59,8 @@ angular.module('superdesk.apps.archive', [
     'superdesk.apps.archive.directives',
     'superdesk.apps.dashboard',
     'superdesk.apps.dashboard.widgets.base',
-    'superdesk.apps.dashboard.widgets.relatedItem'
+    'superdesk.apps.dashboard.widgets.relatedItem',
+    'superdesk.apps.workspace.menu',
 ])
 
     .service('spike', svc.SpikeService)
@@ -70,7 +71,7 @@ angular.module('superdesk.apps.archive', [
     .controller('UploadAttachmentsController', ctrl.UploadAttachmentsController)
     .controller('ArchiveListController', ctrl.ArchiveListController)
 
-    .config(['superdeskProvider', function(superdesk) {
+    .config(['superdeskProvider', 'workspaceMenuProvider', function(superdesk, workspaceMenuProvider) {
         superdesk
             .activity('/workspace/content', {
                 label: gettext('Workspace'),
@@ -321,6 +322,14 @@ angular.module('superdesk.apps.archive', [
                     };
                 }]
             });
+
+        workspaceMenuProvider.item({
+            href: '/workspace/content',
+            label: gettext('Content'),
+            icon: 'archive',
+            if: 'workspaceConfig.content && privileges.archive',
+            order: 700,
+        });
     }])
 
     .config(['apiProvider', function(apiProvider) {
