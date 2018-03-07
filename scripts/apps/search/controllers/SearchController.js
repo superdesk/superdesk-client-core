@@ -29,13 +29,14 @@ export function SearchController($location, $filter, api) {
 
             // init selected/default provider
             if (this.providers.length) {
-                const selectedProvider = this.providers.find((provider) => provider._id === $location.search().repo);
+                const selectedProvider = this.providers.find((provider) =>
+                    provider.search_provider === $location.search().repo);
                 const defaultProvider = this.providers.find((provider) => provider.is_default);
 
                 this.activeProvider = selectedProvider || defaultProvider;
                 if (this.activeProvider) {
-                    this.repo.search = this.activeProvider._id;
-                    $location.search('repo', this.activeProvider._id);
+                    this.repo.search = this.activeProvider.search_provider;
+                    $location.search('repo', this.activeProvider.search_provider);
                     return;
                 }
             }
@@ -66,8 +67,8 @@ export function SearchController($location, $filter, api) {
     this.toggleProvider = (provider) => {
         this.activeProvider = provider || null;
         if (provider) {
-            $location.search('repo', provider._id);
-            this.repo = {search: provider._id};
+            $location.search('repo', provider.search_provider);
+            this.repo = {search: provider.search_provider};
         } else {
             $location.search('repo', null);
             resetInternalRepo();
