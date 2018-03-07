@@ -7,6 +7,7 @@ import {Editor3} from '../components/Editor3';
 import {EditorState, convertFromRaw, convertToRaw, ContentState} from 'draft-js';
 import {toHTML, fromHTML} from 'core/editor3/html';
 import {PopupTypes} from '../actions';
+import {initializeHighlights, prepareHighlightsForExport} from '../helpers/highlights';
 
 // depended upon by find-and-replace.
 import {removeInlineStyles} from '../reducers/highlights';
@@ -67,15 +68,18 @@ export default function createEditorStore(props, isReact = false) {
  * current content states and updates the values of the host controller. This function
  * is bound to the controller, so 'this' points to controller attributes.
  */
-function onChange(content) {
+function onChange(contentState) {
     const decorativeStyles = ['HIGHLIGHT', 'HIGHLIGHT_STRONG'];
-    const cleanedContent = removeInlineStyles(content, decorativeStyles);
+    const contentStateCleaned = removeInlineStyles(contentState, decorativeStyles);
+    const contentStateHighlightsReadyForExport = prepareHighlightsForExport(
+        EditorState.createWithContent(contentStateCleaned)
+    ).getCurrentContent();
 
     // sync controller to scope
     this.$scope.$apply(() => {
         // to avoid merge of dictionaries in backend, editorState is wrapped in a list
-        this.editorState = [convertToRaw(cleanedContent)];
-        this.value = toHTML(cleanedContent);
+        this.editorState = [convertToRaw(contentStateHighlightsReadyForExport)];
+        this.value = toHTML(contentStateHighlightsReadyForExport);
     });
 
     // call on change with scope updated
@@ -96,9 +100,11 @@ function getInitialContent(props) {
     // we have an editor state stored in the DB
     if (props.editorState) {
         // suport for both regular and list wrapper versions of editor state
-        var editorState = (props.editorState instanceof Array) ? props.editorState[0] : props.editorState;
+        var contentState = convertFromRaw(
+            (props.editorState instanceof Array) ? props.editorState[0] : props.editorState
+        );
 
-        return convertFromRaw(editorState);
+        return initializeHighlights(EditorState.createWithContent(contentState)).getCurrentContent();
     }
 
     // we have only HTML (possibly legacy editor2 or ingested item)

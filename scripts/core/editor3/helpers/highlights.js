@@ -484,3 +484,53 @@ export function getRangeAndTextForStyle(editorState, style) {
         suggestionText: suggestionText
     };
 }
+
+/**
+ * @ngdoc method
+ * @name applyHighlightsStyleMap
+ * @param {EditorState} editorState
+ * @return {EditorState}
+ * @description highlightsStyleMap is not stored on the server and needs to be generated
+ * If it were stored, changing highights' styles wouldn't be possible for already existing highlights
+ */
+function applyHighlightsStyleMap(editorState) {
+    const highlights = getCustomDataFromEditor(editorState, editor3DataKeys.MULTIPLE_HIGHLIGHTS);
+    const highlightsWithStyleMapApplied = {
+        ...highlights,
+        highlightsStyleMap: Object.keys(highlights.highlightsData).reduce((obj, styleName) => {
+            obj[styleName] = availableHighlights[getHighlightType(styleName)];
+            return obj;
+        }, {})
+    };
+
+    return setCustomDataForEditor(
+        editorState,
+        editor3DataKeys.MULTIPLE_HIGHLIGHTS,
+        highlightsWithStyleMapApplied
+    );
+}
+
+export const initializeHighlights = applyHighlightsStyleMap;
+
+/**
+ * @ngdoc method
+ * @name removeHighlightsStyleMap
+ * @param {EditorState} editorState
+ * @return {EditorState}
+ * @description highlightsStyleMap needs to be removed, since it's generated data
+ * and not removing it, might lead to old styles being used
+ */
+function removeHighlightsStyleMap(editorState) {
+    const highlights = getCustomDataFromEditor(editorState, editor3DataKeys.MULTIPLE_HIGHLIGHTS);
+    const nextHighlights = {...highlights};
+
+    delete nextHighlights['highlightsStyleMap'];
+
+    return setCustomDataForEditor(
+        editorState,
+        editor3DataKeys.MULTIPLE_HIGHLIGHTS,
+        nextHighlights
+    );
+}
+
+export const prepareHighlightsForExport = removeHighlightsStyleMap;
