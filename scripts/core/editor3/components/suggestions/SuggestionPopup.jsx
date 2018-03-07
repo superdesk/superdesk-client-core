@@ -50,7 +50,7 @@ class Suggestion extends Component {
 
     render() {
         if (this.state.error !== null) {
-            return <Dropdown key={this.props.keyForDropdown} open={true}>{this.state.error}</Dropdown>;
+            return <Dropdown open={true}>{this.state.error}</Dropdown>;
         }
         if (this.state.author === null) {
             return null;
@@ -71,7 +71,7 @@ class Suggestion extends Component {
         };
 
         return (
-            <Dropdown key={this.props.keyForDropdown} open={true}>
+            <Dropdown open={true}>
                 <div className="highlights-popup__header">
                     <UserAvatar displayName={author.display_name} pictureUrl={author.picture_url} />
                     <div className="user-info">
@@ -98,7 +98,6 @@ class Suggestion extends Component {
 }
 
 Suggestion.propTypes = {
-    keyForDropdown: PropTypes.number,
     suggestion: PropTypes.shape({
         author: PropTypes.string,
         date: PropTypes.date,

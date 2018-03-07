@@ -106,7 +106,6 @@ export class HighlightsPopup extends Component {
                     ];
                 });
         }
-
         // We need to create a new provider here because this component gets rendered
         // outside the editor tree and loses context.
         return (
@@ -114,7 +113,11 @@ export class HighlightsPopup extends Component {
                 <div className="highlights-popup" style={position}>
                     {
                         highlightsAndSuggestions
-                            .map((obj, i) => this.createHighlight(obj.type, obj.value, i, obj.highlightId))
+                            .map((obj, i) => (
+                                <div key={i}>
+                                    {this.createHighlight(obj.type, obj.value, obj.highlightId)}
+                                </div>
+                            ))
                     }
                 </div>
             </Provider>
@@ -125,17 +128,14 @@ export class HighlightsPopup extends Component {
      * @ngdoc method
      * @name HighlightsPopup#createHighlight
      * @param {String} type Highlight Type
-     * @param {*} key Key to use for componennt.
-     * @description Renders the active highlight of the given type and assigns it
-     * the given key. Used when iterating over the highlights in a mapping function
-     * inside the component method.
+     * @description Renders the active highlight of the given type
      * @returns {JSX}
      */
-    createHighlight(type, h, key, highlightId) {
+    createHighlight(type, h, highlightId) {
         switch (type) {
         case 'ANNOTATION':
             return (
-                <Dropdown key={key} open={true}>
+                <Dropdown open={true}>
                     <AnnotationPopup
                         annotation={h}
                         highlightId={highlightId}
@@ -145,9 +145,8 @@ export class HighlightsPopup extends Component {
             );
         case 'COMMENT':
             return (
-                <Dropdown key={key} open={true}>
+                <Dropdown open={true}>
                     <CommentPopup
-                        keyForDropdown={key}
                         comment={h}
                         highlightId={highlightId}
                         highlightsManager={this.props.highlightsManager}
@@ -158,7 +157,7 @@ export class HighlightsPopup extends Component {
             );
         case 'DELETE_SUGGESTION':
         case 'ADD_SUGGESTION':
-            return <SuggestionPopup keyForDropdown={key} suggestion={h} />;
+            return <SuggestionPopup suggestion={h} />;
         default:
             console.error('Invalid highlight type in HighlightsPopup.jsx: ', type);
         }
