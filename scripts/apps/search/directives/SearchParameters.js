@@ -30,7 +30,8 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
     return {
         scope: {
             repo: '=',
-            context: '='
+            context: '=',
+            providerType: '='
         },
         templateUrl: asset.templateUrl('apps/search/views/search-parameters.html'),
         link: function(scope, elem) {
