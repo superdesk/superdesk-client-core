@@ -30,6 +30,10 @@ function convertUsersArrayToObject(users) {
     return usersObj;
 }
 
+function getUsersFromAPI(api, query) {
+    return api.query('users', {where: JSON.stringify(query)});
+}
+
 InlineCommentsCtrl.$inject = ['$scope', 'api'];
 function InlineCommentsCtrl($scope, api) {
     const editorState = $scope.item.editor_state;
@@ -40,14 +44,14 @@ function InlineCommentsCtrl($scope, api) {
             editor3DataKeys.RESOLVED_COMMENTS_HISTORY
         ) || [];
 
-    const usersIds = getUsersAsQueryArray(comments);
-
-    if (usersIds.length === 0) {
+    if (comments.length === 0) {
         $scope.items = [];
         return;
     }
 
-    api.query('users', {where: JSON.stringify({$or: usersIds})})
+    const usersIds = getUsersAsQueryArray(comments);
+
+    getUsersFromAPI(api, {$or: usersIds})
         .then(({_items}) => {
             $scope.users = convertUsersArrayToObject(_items);
             $scope.items = comments;
