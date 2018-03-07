@@ -20,7 +20,7 @@ function addCommentsForServer(contentState) {
     const highlightsData = multipleHighlights === undefined ? {} : multipleHighlights['highlightsData'];
     const comments = Object.keys(highlightsData)
         .filter((key) => key.indexOf(highlightsConfig.COMMENT.type) === 0)
-        .map((key) => highlightsData[key]);
+        .map((key) => highlightsData[key].data);
 
     return setCustomDataForEditor(editorState, editor3DataKeys.__PUBLIC_API__comments, comments).getCurrentContent();
 }
