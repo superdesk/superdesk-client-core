@@ -305,6 +305,16 @@
     }
 }
 
+.monitoring {
+    .sd-grid-group {
+        box-shadow: none !important;
+        
+        .sd-grid-list {
+            margin: 1.4rem;
+        }
+    }
+}
+
 .notification-container {
     display: inline-flex !important;
     vertical-align: sub;

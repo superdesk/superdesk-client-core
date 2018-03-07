@@ -1,4 +1,4 @@
-<div class="monitoring" ng-controller="AggregateCtrl as aggregate">
+ <div class="monitoring" ng-controller="AggregateCtrl as aggregate">
     <div class="subnav">
         <div class="flat-searchbar monitoring-backlink" ng-if="monitoring.singleGroup">
             <div class="search-handler">
@@ -88,13 +88,27 @@
 
             <div sd-item-sortbar ng-if="!elementState || elementState === 'comfort'" class="sortbar-container"></div>
 
-            <button id="switch-view-btn" ng-if="!monitoring.singleGroup && type === 'monitoring' && monitoring.hasSwimlaneView"
-                    class="navbtn swimlane-switch" ng-click="displayColumn()" ng-class="{'swimlane-switch--on': monitoring.viewColumn}"
-                    sd-tooltip="{{ monitoring.viewColumn ? 'Switch to List View' : 'Switch to Swimlane View' | translate }}"
-                    flow="left">
-                <i class="icon-th-list"></i>
-            </button>
-
+            <div class="dropdown dropdown--align-right" dropdown ng-if="type === 'monitoring'">
+                <button class="navbtn dropdown__toggle" ng-class="{'swimlane-switch': monitoring.viewColumn}" dropdown__toggle><i ng-class="{'icon-th-list': !monitoring.view || monitoring.view === 'compact', 'icon-th': monitoring.view === 'photogrid'}"></i></button>
+                <ul class="dropdown__menu">
+                    <li>
+                        <button ng-click="switchView('compact')">
+                            <i class="icon-th-list"></i>{{'List View' | translate}}
+                        </button>
+                    </li>
+                    <li ng-if="!monitoring.singleGroup && type === 'monitoring' && monitoring.hasSwimlaneView">
+                        <button ng-click="switchView('compact', true)" class="swimlane-switch">
+                            <i class="icon-th-list"></i>{{'Swimlane View' | translate}}
+                        </button>
+                    </li>
+                    <li>
+                        <button ng-if="type !== 'spike'" ng-click="switchView('photogrid')">
+                            <i class="icon-th"></i>{{'Photo Grid View' | translate}}
+                        </button>
+                    </li>
+                </ul>
+            </div>
+            
             <div class="dropdown dropdown--align-right dropdown--compact-state" dropdown  ng-if="type === 'monitoring' || elementState === 'compact'">
                 <button class="navbtn dropdown__toggle" dropdown__toggle><i class="icon-dots-vertical"></i></button>
                 <ul class="dropdown__menu">
@@ -132,7 +146,7 @@
                 <div ng-if="!monitoring.viewColumn && type === 'monitoring'" class="list">
                     <div ng-if="(!monitoring.singleGroup || monitoring.isDeskChanged()) && type === 'monitoring'">
                         <div ng-repeat="group in aggregate.groups track by group._id"
-                             sd-monitoring-group data-group="group"  data-num-items="group.max_items"
+                             sd-monitoring-group data-group="group" data-num-items="group.max_items" data-view="view"
                              data-view-type="aggregate.isOutputType(group.type) ? group.type: 'monitoring'"></div>
                     </div>
                 </div>
@@ -142,7 +156,7 @@
                          ng-if="(!monitoring.singleGroup || monitoring.isDeskChanged()) && type === 'monitoring'">
                         <div class="sd-column" ng-class="{active: isActiveGroup(group), inactive: !isActiveGroup(group)}"
                              ng-repeat="group in aggregate.groups| limitTo:monitoring.columnsLimit track by group._id"
-                             sd-monitoring-group data-group="group" data-num-items="group.max_items"
+                             sd-monitoring-group data-group="group" data-num-items="group.max_items" data-view="view"
                              data-view-type="aggregate.isOutputType(group.type) ? group.type: 'monitoring'"
                              sd-header-resize>
                         </div>
@@ -158,16 +172,17 @@
                     </div>
                 </div>
                 <div ng-if="monitoring.singleGroup && !monitoring.isDeskChanged()" class="list">
-                    <div sd-monitoring-group class="single-group" data-group="monitoring.singleGroup" data-view-type="'single_monitoring'">
+                    <div sd-monitoring-group class="single-group" data-group="monitoring.singleGroup" data-view="view" data-view-type="'single_monitoring'">
                     </div>
                 </div>
                 <div ng-if="type === 'personal'" class="list">
-                    <div sd-monitoring-group data-group="{'type': 'personal', 'query': query, 'fileType': aggregate.getSelectedFileTypes()}">
+                    <div sd-monitoring-group data-view="view" data-group="{'type': 'personal', 'query': query, 'fileType': aggregate.getSelectedFileTypes()}">
                     </div>
                 </div>
                 <div ng-if="type === 'highlights' && !monitoring.highlightsDeskChanged()" class="list">
                     <div sd-monitoring-group class="single-group"
                          data-group="{'type': 'highlights', 'query': query, 'fileType': aggregate.getSelectedFileTypes()}"
+                         data-view="view"
                          data-view-type="'highlights'"></div>
                 </div>
             </div>

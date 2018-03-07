@@ -12,7 +12,7 @@ export function ItemUrgency(props) {
         return React.createElement(
             'span',
             {
-                className: 'urgency-label urgency-label--' + urgency,
+                className: 'badge sd-grid-item__footer-block-item urgency-label--' + urgency,
                 title: getSpecTitle(spec, gettextCatalog.getString('Urgency')),
                 style: getSpecStyle(spec),
                 key: 'urgency'
@@ -24,7 +24,7 @@ export function ItemUrgency(props) {
     return React.createElement(
         'span',
         {
-            className: 'urgency-label urgency-label--' + urgency,
+            className: 'badge sd-grid-item__footer-block-item urgency-label--' + urgency,
             title: gettextCatalog.getString('Urgency'),
             key: 'urgency'
         },

@@ -657,6 +657,19 @@ $sfbox_mediaMaxWidth : 172px;
     }
 }
 
+.sd-grid-list {
+    .item-right {
+        top: auto;
+        height: 31px;
+        .more-activity-toggle {
+            background: none;
+        }
+    }
+    .sd-grid-item__type-icn > i {
+        vertical-align: middle;
+    }
+}
+
 /* ====================================== */
   // media box list view
 

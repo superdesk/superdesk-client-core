@@ -9,6 +9,8 @@ import {
     ItemUrgency,
     MediaPreview,
     MediaInfo,
+    PhotoDeskPreview,
+    PhotoDeskInfo,
     GridTypeIcon,
     ListTypeIcon,
     ListPriority,
@@ -108,21 +110,19 @@ export class Item extends React.Component {
 
     render() {
         var item = this.props.item;
-        var contents = [
-            'div',
-            {
-                className: classNames(
-                    'media-box',
-                    'media-' + item.type,
-                    {
-                        locked: item.lock_user && item.lock_session,
-                        selected: this.props.flags.selected,
-                        archived: item.archived || item.created,
-                        gone: item.gone,
-                        actioning: this.state.actioning
-                    }
-                )
+        var classes = this.props.view === 'photogrid' ?
+            'sd-grid-item sd-grid-item--with-click' :
+            'media-box media-' + item.type;
 
+        var contents = [
+            'div', {
+                className: classNames(classes, {
+                    locked: item.lock_user && item.lock_session,
+                    selected: this.props.flags.selected,
+                    archived: item.archived || item.created,
+                    gone: item.gone,
+                    actioning: this.state.actioning
+                })
             }
         ];
 
@@ -164,6 +164,34 @@ export class Item extends React.Component {
                     React.createElement(ItemUrgency, angular.extend({svc: this.props.svc}, item)) : null,
                 broadcast({item: item}),
                 getActionsMenu()
+            );
+        } else if (this.props.view === 'photogrid') {
+            contents.push(
+                item.archiveError ? React.createElement(ErrorBox, {svc: this.props.svc}) : null,
+                React.createElement(PhotoDeskPreview, {
+                    item: item,
+                    desk: this.props.desk,
+                    onMultiSelect: this.props.onMultiSelect,
+                    swimlane: this.props.swimlane,
+                    svc: this.props.svc
+                }),
+                React.createElement(PhotoDeskInfo, {
+                    item: item,
+                    ingestProvider: this.props.ingestProvider,
+                    svc: this.props.svc
+                }),
+                React.createElement('div', {className: 'sd-grid-item__footer'},
+                    React.createElement('div',
+                        {className: 'sd-grid-item__footer-block sd-grid-item__footer-block--multi-l'},
+                        React.createElement(GridTypeIcon, {item: item, svc: this.props.svc, photoGrid: true}),
+                        item.priority ?
+                            React.createElement(ItemPriority, angular.extend({svc: this.props.svc}, item)) : null,
+                        item.urgency ?
+                            React.createElement(ItemUrgency, angular.extend({svc: this.props.svc}, item)) : null
+                    ),
+                    broadcast({item: item}),
+                    getActionsMenu()
+                )
             );
         } else {
             contents.push(
