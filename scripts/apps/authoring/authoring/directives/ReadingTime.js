@@ -1,16 +1,6 @@
 import {compact, trim, filter} from 'lodash';
 import {cleanHtml} from '../helpers';
 
-function getReadingTime(input, language) {
-    if (language && language.startsWith('ja')) {
-        return filter(input, (x) => trim(x)).length / 240; // 4 characters per minute
-    }
-
-    const numWords = compact(input.split(/\s+/)).length || 0;
-
-    return numWords / 250;
-}
-
 /**
  * @ngdoc directive
  * @module superdesk.apps.authoring
@@ -18,7 +8,7 @@ function getReadingTime(input, language) {
  * @description Display the estimated number of minutes needed to read an item.
  * @param {String} item text to estimate
  */
-export function ReadingTime() {
+export function ReadingTime(deployConfig) {
     return {
         scope: {
             item: '=',
@@ -45,4 +35,16 @@ export function ReadingTime() {
             });
         }
     };
+
+    function getReadingTime(input, language) {
+        if (language && language.startsWith('ja')) {
+            return filter(input, (x) => trim(x)).length / deployConfig.getSync('japanese_characters_per_minute', 600);
+        }
+
+        const numWords = compact(input.split(/\s+/)).length || 0;
+
+        return numWords / 250;
+    }
 }
+
+ReadingTime.$inject = ['deployConfig'];
