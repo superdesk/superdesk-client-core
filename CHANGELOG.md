@@ -1,5 +1,11 @@
 # Superdesk Client Changelog
 
+## [1.14.1] 2018-03-08
+
+### Fixed
+
+- Fix japanese time to read using server config for speed.
+
 ## [1.14.0] 2018-03-05
 
 ### Fixed
