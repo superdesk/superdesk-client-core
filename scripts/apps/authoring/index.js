@@ -1,5 +1,6 @@
 // styles
 import './comments/comments.scss';
+import './inline-comments/inline-comments.scss';
 import './metadata/metadata.scss';
 import './packages/packages.scss';
 import './styles/authoring.scss';
@@ -13,6 +14,7 @@ import './widgets/widgets-article.scss';
 import './authoring';
 import './widgets/widgets';
 import './comments/comments';
+import './inline-comments/inline-comments';
 import './attachments/attachments';
 import './versioning/versioning';
 import './versioning/versions/versions';
