@@ -1,11 +1,11 @@
 <div class="widget" ng-controller="InlineCommentsCtrl">
-    <ul class="notification-list white">
+    <ul class="notification-list white" ng-class="{ 'notification-list--empty' : items.length === 0 }">
         <li ng-repeat="item in items" class="item">
             <figure class="avatar">
                 <img sd-user-avatar data-user="users[item.data.authorId]">
             </figure>
             <div class="content">
-                <div class="text" sd-comment-text data-comment="comment" data-name="{{users[item.data.authorId].display_name || users[item.data.authorId].username}}" data-text="{{item.data.msg}}"></div>
+                <div class="text" sd-comment-text data-name="{{users[item.data.authorId].display_name || users[item.data.authorId].username}}" data-text="{{item.data.msg}}"></div>
                 <span class="date" sd-reldate ng-model="item.data.date"></span>
             </div>
             <ul class="comment-replies">

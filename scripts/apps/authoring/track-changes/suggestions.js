@@ -3,20 +3,19 @@ import {
     getCustomDataFromEditor
 } from 'core/editor3/helpers/editor3CustomData';
 
-function getAllUserIdsFromComments(comments) {
+function getAllUserIdsFromSuggestions(suggestions) {
     const users = [];
 
-    comments.forEach(({data}) => {
-        users.push(data.authorId);
-        users.push(data.resolutionInfo.resolverUserId);
-        data.replies.map((reply) => users.push(reply.authorId));
+    suggestions.forEach(({resolutionInfo, suggestionInfo}) => {
+        users.push(resolutionInfo.resolverUserId);
+        users.push(suggestionInfo.author);
     });
 
     return users.filter((value, index, self) => self.indexOf(value) === index);
 }
 
-function getUsersAsQueryArray(comments) {
-    return getAllUserIdsFromComments(comments)
+function getUsersAsQueryArray(suggestions) {
+    return getAllUserIdsFromSuggestions(suggestions)
         .map((key) => ({_id: key}));
 }
 
@@ -34,43 +33,56 @@ function getUsersFromAPI(api, query) {
     return api.query('users', {where: JSON.stringify(query)});
 }
 
-InlineCommentsCtrl.$inject = ['$scope', 'api'];
-function InlineCommentsCtrl($scope, api) {
+function getTypeText(type) {
+    switch (type) {
+    case 'ADD_SUGGESTION':
+        return 'Added';
+    case 'DELETE_SUGGESTION':
+        return 'Deleted';
+    default:
+        return '';
+    }
+}
+
+SuggestionsCtrl.$inject = ['$scope', 'api'];
+function SuggestionsCtrl($scope, api) {
     const editorState = $scope.item.editor_state;
 
-    const comments =
+    const suggestions =
         getCustomDataFromEditor(
             editorState,
-            editor3DataKeys.RESOLVED_COMMENTS_HISTORY
+            editor3DataKeys.RESOLVED_SUGGESTIONS_HISTORY
         ) || [];
 
-    if (comments.length === 0) {
+    if (suggestions.length === 0) {
         $scope.items = [];
         return;
     }
 
-    const usersIds = getUsersAsQueryArray(comments);
+    const usersIds = getUsersAsQueryArray(suggestions);
 
     getUsersFromAPI(api, {$or: usersIds})
         .then(({_items}) => {
             $scope.users = convertUsersArrayToObject(_items);
-            $scope.items = comments;
+            $scope.items = suggestions;
         });
+
+    $scope.getTypeText = getTypeText;
 }
 
 angular
-    .module('superdesk.apps.authoring.inline-comments', [
+    .module('superdesk.apps.authoring.track-changes.suggestions', [
         'superdesk.apps.authoring.widgets'
     ])
     .config([
         'authoringWidgetsProvider',
         function(authoringWidgetsProvider) {
-            authoringWidgetsProvider.widget('inline-comments', {
-                icon: 'comments',
-                label: gettext('Resolved Comments'),
+            authoringWidgetsProvider.widget('suggestions', {
+                icon: 'multiedit',
+                label: gettext('Suggesting'),
                 template:
-                'scripts/apps/authoring/inline-comments/views/inline-comments-widget.html',
-                order: 9,
+                'scripts/apps/authoring/track-changes/views/suggestions-widget.html',
+                order: 10,
                 side: 'right',
                 display: {
                     authoring: true,
@@ -85,4 +97,4 @@ angular
         }
     ])
 
-    .controller('InlineCommentsCtrl', InlineCommentsCtrl);
+    .controller('SuggestionsCtrl', SuggestionsCtrl);
