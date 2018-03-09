@@ -14,9 +14,8 @@ function getAllUserIdsFromSuggestions(suggestions) {
     return users.filter((value, index, self) => self.indexOf(value) === index);
 }
 
-function getUsersAsQueryArray(suggestions) {
-    return getAllUserIdsFromSuggestions(suggestions)
-        .map((key) => ({_id: key}));
+function filterUsers(users, ids) {
+    return users.filter((user) => ids.includes(user._id));
 }
 
 function convertUsersArrayToObject(users) {
@@ -27,10 +26,6 @@ function convertUsersArrayToObject(users) {
     });
 
     return usersObj;
-}
-
-function getUsersFromAPI(api, query) {
-    return api.query('users', {where: JSON.stringify(query)});
 }
 
 function getTypeText(type) {
@@ -44,8 +39,8 @@ function getTypeText(type) {
     }
 }
 
-SuggestionsCtrl.$inject = ['$scope', 'api'];
-function SuggestionsCtrl($scope, api) {
+SuggestionsCtrl.$inject = ['$scope', 'userList'];
+function SuggestionsCtrl($scope, userList) {
     const editorState = $scope.item.editor_state;
 
     const suggestions =
@@ -59,11 +54,11 @@ function SuggestionsCtrl($scope, api) {
         return;
     }
 
-    const usersIds = getUsersAsQueryArray(suggestions);
+    const userIds = getAllUserIdsFromSuggestions(suggestions);
 
-    getUsersFromAPI(api, {$or: usersIds})
-        .then(({_items}) => {
-            $scope.users = convertUsersArrayToObject(_items);
+    userList.getAll()
+        .then((users) => {
+            $scope.users = convertUsersArrayToObject(filterUsers(users, userIds));
             $scope.items = suggestions;
         });
 
