@@ -66,7 +66,7 @@ export function ContentProfileSchemaEditor(content, config) {
 
             scope.formattingOptionsEditor3 = [
                 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ordered list', 'unordered list', 'quote', 'media', 'link',
-                'embed', 'underline', 'italic', 'bold', 'table', 'invisibles'
+                'embed', 'underline', 'italic', 'bold', 'table', 'formatting marks'
             ];
 
             if (config.features.editorHighlights) {
