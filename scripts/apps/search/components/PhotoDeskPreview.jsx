@@ -11,7 +11,9 @@ function hasThumbnail(item) {
  */
 export function PhotoDeskPreview(props) {
     const item = props.item;
-    let preview;
+    const classType = 'sd-grid-item__type-icon filetype-icon-' + props.item.type;
+
+    let preview = <i className={classType} />;
 
     if (hasThumbnail(props.item)) {
         preview = <img src={item.renditions.thumbnail.href} />;

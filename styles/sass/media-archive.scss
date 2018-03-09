@@ -658,6 +658,9 @@ $sfbox_mediaMaxWidth : 172px;
 }
 
 .sd-grid-list {
+    .sd-grid-item {
+        height: 100%;
+    }
     .item-right {
         top: auto;
         height: 31px;
