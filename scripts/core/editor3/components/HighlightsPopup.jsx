@@ -12,10 +12,6 @@ import {AnnotationPopup} from './annotations';
 import {suggestionsTypes} from '../highlightsConfig';
 import * as Highlights from '../helpers/highlights';
 
-// topPadding holds the number of pixels between the selection and the top side
-// of the popup.
-const topPadding = 50;
-
 /**
  * @ngdoc react
  * @name HighlightsPopup
@@ -33,39 +29,28 @@ export class HighlightsPopup extends Component {
 
         this.onDocumentClick = this.onDocumentClick.bind(this);
         this.createHighlight = this.createHighlight.bind(this);
+        this.setHighlightsElelemtRef = this.setHighlightsElelemtRef.bind(this);
     }
 
-    /**
-     * @ngdoc method
-     * @name HighlightsPopup#position
-     * @description position returns the absolute top and left position that the popup
-     * needs to be displayed at, with regards to the current selection.
-     * @returns {Object} Object containing top and left in pixels.
-     */
     position() {
-        const {left: editorLeft} = this.props.editorNode.getBoundingClientRect();
-        const rect = getVisibleSelectionRect(window);
-        const maxHeight = $('div.auth-screen').height();
-        const numDropdowns = this.props.highlightsManager.getHighlightsCount();
+        const viewportHeight = $(window).innerHeight();
+        const popupHeight = $(this.highlightEl).innerHeight();
+        const selectionRect = getVisibleSelectionRect(window);
+        const bottomBarHeight = $('.opened-articles').innerHeight();
 
-        let maxTop = maxHeight - 60/* top & bottom bar */ - 450/* max dropdown height */ * numDropdowns;
-        let top = 150;
-        let left = editorLeft - 360;
+        const enoughSpaceAtTheBottom = viewportHeight - selectionRect.bottom - bottomBarHeight > popupHeight;
 
-        maxTop = maxTop < 60 ? 60 : maxTop;
-
-        if (rect === null || rect.top === 0 && rect.left === 0) {
-            // special case, happens when editor is out of focus,
-            // so we just reuse whatever the last value was.
-            top = this.lastTop;
+        if (enoughSpaceAtTheBottom) {
+            this.highlightEl.style.top = selectionRect.top + 'px';
         } else {
-            top = rect.top - topPadding;
+            this.highlightEl.style.top = (selectionRect.bottom - popupHeight) + 'px';
         }
 
-        top = top > maxTop ? maxTop : top; // don't cut off bottom side of dropdown.
-        this.lastTop = top; // if we lose rect, keep this for next time.
+        this.highlightEl.style.left = (this.props.editorNode.getBoundingClientRect().left - 360) + 'px';
+    }
 
-        return {top, left};
+    setHighlightsElelemtRef(ref) {
+        this.highlightEl = ref;
     }
 
     /**
@@ -76,7 +61,6 @@ export class HighlightsPopup extends Component {
      */
     component() {
         const {store} = this.context;
-        const position = this.position();
         const {editorState} = this.props;
         const suggestionStyle = Highlights.getHighlightStyleAtCurrentPosition(editorState, suggestionsTypes);
         let highlightsAndSuggestions = [];
@@ -110,7 +94,7 @@ export class HighlightsPopup extends Component {
         // outside the editor tree and loses context.
         return (
             <Provider store={store}>
-                <div className="highlights-popup" style={position}>
+                <div className="highlights-popup" ref={this.setHighlightsElelemtRef}>
                     {
                         highlightsAndSuggestions
                             .map((obj, i) => (
@@ -179,6 +163,8 @@ export class HighlightsPopup extends Component {
         render(this.component(), document.getElementById('react-placeholder'));
         document.addEventListener('click', this.onDocumentClick);
         this.rendered = true;
+
+        this.position();
     }
 
     /**
