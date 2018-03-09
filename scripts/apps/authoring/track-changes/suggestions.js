@@ -36,9 +36,9 @@ function getUsersFromAPI(api, query) {
 function getTypeText(type) {
     switch (type) {
     case 'ADD_SUGGESTION':
-        return 'Added';
+        return gettext('Added');
     case 'DELETE_SUGGESTION':
-        return 'Deleted';
+        return gettext('Deleted');
     default:
         return '';
     }
