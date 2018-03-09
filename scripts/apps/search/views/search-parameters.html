@@ -164,7 +164,7 @@
             </select>
         </div>
     </fieldset>
-    <fieldset ng-show="repo.search === 'aapmm'">
+    <fieldset ng-show="providerType === 'aapmm'">
         <div class="field">
             <label for="search-objectname">
                 {{:: 'Object Name (Slugline)' | translate}}
@@ -199,25 +199,19 @@
             </div>
         </div>
     </fieldset>
-    <fieldset ng-show="repo.search === 'paimg' || repo.search.indexOf('scanpix') === 0">
+    <fieldset ng-show="providerType === 'scanpix'">
         <div class="field">
             <label class="search-label" for="search-text" translate>Search</label>
             <div class="control">
                 <input type="text" ng-keypress="keyPressed($event)" id="search-text" ng-model="meta.text">
             </div>
-            <div ng-show="repo.search.indexOf('scanpix') === 0">
+            <div>
                 <label class="search-label" for="search-id" translate>Scanpix ID(s)</label>
                 <div class="control">
                     <input type="text" ng-keypress="keyPressed($event)" id="search-id" ng-model="meta.id">
                 </div>
             </div>
-            <div ng-show="repo.search === 'paimg'">
-                <label class="search-label" ng-show="repo.search === 'paimg'" for="search-starred" translate>Editor's Choice</label>
-                <div class="control">
-                    <input type="checkbox" id="search-starred" ng-model="meta.starred">
-                </div>
-            </div>
-            <div ng-if="repo.search.indexOf('scanpix') === 0" >
+            <div>
                 <div class="checkbox">
                     <label class="search-label">
                         <input type="checkbox" id="search-bw" ng-model="meta.bw">{{:: 'Black&White' | translate}}

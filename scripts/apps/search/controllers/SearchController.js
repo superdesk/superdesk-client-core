@@ -1,7 +1,7 @@
 import {intersection} from 'lodash';
 
-SearchController.$inject = ['$location', '$filter', 'api'];
-export function SearchController($location, $filter, api) {
+SearchController.$inject = ['$location', 'searchProviderService'];
+export function SearchController($location, searchProviderService) {
     const SUPERDESK = 'local';
     const INTERNAL = ['archive', 'published', 'ingest', 'archived'];
     const DEFAULT_CONFIG = {
@@ -23,20 +23,20 @@ export function SearchController($location, $filter, api) {
     }
 
     // init search providers
-    api.query('search_providers', {max_results: 200})
-        .then((result) => {
-            this.providers = $filter('sortByName')(result._items, 'search_provider');
+    searchProviderService.getActiveSearchProviders()
+        .then((providers) => {
+            this.providers = providers;
 
             // init selected/default provider
             if (this.providers.length) {
                 const selectedProvider = this.providers.find((provider) =>
-                    provider.search_provider === $location.search().repo);
+                    provider.search_provider === $location.search().repo || provider._id === $location.search().repo
+                );
                 const defaultProvider = this.providers.find((provider) => provider.is_default);
 
                 this.activeProvider = selectedProvider || defaultProvider;
                 if (this.activeProvider) {
-                    this.repo.search = this.activeProvider.search_provider;
-                    $location.search('repo', this.activeProvider.search_provider);
+                    this.toggleProvider(this.activeProvider);
                     return;
                 }
             }
@@ -66,9 +66,10 @@ export function SearchController($location, $filter, api) {
      */
     this.toggleProvider = (provider) => {
         this.activeProvider = provider || null;
+        this.providerType = provider ? provider.search_provider : null;
         if (provider) {
-            $location.search('repo', provider.search_provider);
-            this.repo = {search: provider.search_provider};
+            $location.search('repo', provider._id);
+            this.repo = {search: provider._id};
         } else {
             $location.search('repo', null);
             resetInternalRepo();

@@ -34,7 +34,11 @@
             <button id="filters-tab" type="button" class="tab-box__item" ng-class="{'tab-box__item--active': innerTab==='filters'}" ng-click="display('filters')" translate>Filters</button>
         </div>
 
-        <div sd-search-parameters ng-if="innerTab==='parameters'" data-repo="repo" data-context="context"></div>
+        <div sd-search-parameters ng-if="innerTab==='parameters'"
+            data-repo="repo"
+            data-context="context"
+            data-provider-type="providerType"
+        ></div>
 
         <div sd-search-filters ng-if="innerTab==='filters'"></div>
 
