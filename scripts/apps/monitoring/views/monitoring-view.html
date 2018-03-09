@@ -89,7 +89,7 @@
             <div sd-item-sortbar ng-if="!elementState || elementState === 'comfort'" class="sortbar-container"></div>
 
             <div class="dropdown dropdown--align-right" dropdown ng-if="type === 'monitoring'">
-                <button class="navbtn dropdown__toggle" ng-class="{'swimlane-switch': monitoring.viewColumn}" dropdown__toggle><i ng-class="{'icon-th-list': !monitoring.view || monitoring.view === 'compact', 'icon-th': monitoring.view === 'photogrid'}"></i></button>
+                <button class="navbtn dropdown__toggle" ng-class="{'swimlane-switch': monitoring.viewColumn}" dropdown__toggle><i ng-class="{'icon-th-list': !view || view === 'compact', 'icon-th': view === 'photogrid'}"></i></button>
                 <ul class="dropdown__menu">
                     <li>
                         <button ng-click="switchView('compact')">

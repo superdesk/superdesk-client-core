@@ -26,7 +26,6 @@ export function PhotoDeskInfo(props) {
             <time>{datetime.longFormat(item.versioncreated)}</time>
             <span className="sd-grid-item__slugline"
                 dangerouslySetInnerHTML={createMarkUp(item.headline || item.slugline || item.type)} />
-            <span className="sd-grid-item__slugline" dangerouslySetInnerHTML={createMarkUp(item.description_text)} />
             {source}
         </div>
     );
