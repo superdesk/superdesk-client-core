@@ -28,7 +28,7 @@ export class SelectBox extends React.Component {
         return React.createElement(
             'div',
             {
-                className: 'selectbox',
+                className: this.props.classes ? this.props.classes : 'selectbox',
                 title: isCheckAllowed(this.props.item) ? null : 'selection not allowed',
                 onClick: this.toggle
             },
@@ -43,5 +43,6 @@ export class SelectBox extends React.Component {
 
 SelectBox.propTypes = {
     item: PropTypes.any,
+    classes: PropTypes.string,
     onMultiSelect: PropTypes.func,
 };

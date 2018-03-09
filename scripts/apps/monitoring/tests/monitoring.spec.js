@@ -32,7 +32,7 @@ describe('monitoring', () => {
 
             // Switch to swimlane view, via switch view button or returning back to monitoring
             // view while swimlane view was already ON
-            ctrl.switchView(true, true);
+            ctrl.switchViewColumn(true, true);
 
             expect(ctrl.viewColumn).toBe(true); // swimlane
             expect(ctrl.columnsLimit).toBe(4);
@@ -42,7 +42,7 @@ describe('monitoring', () => {
             );
 
             // Switch back to list view
-            ctrl.switchView(false);
+            ctrl.switchViewColumn(false);
             expect(ctrl.viewColumn).toBe(false);
             expect(ctrl.columnsLimit).toBe(null);
         }));

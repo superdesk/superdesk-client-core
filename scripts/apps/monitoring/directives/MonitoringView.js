@@ -11,7 +11,7 @@ export function MonitoringView($rootScope, authoringWorkspace, pageTitle, $timeo
         controllerAs: 'monitoring',
         scope: {
             type: '=',
-            state: '=',
+            state: '='
         },
         link: function(scope, elem) {
             var containerElem = elem.find('.content-list');
@@ -19,6 +19,7 @@ export function MonitoringView($rootScope, authoringWorkspace, pageTitle, $timeo
             pageTitle.setUrl(_.capitalize(gettext(scope.type)));
 
             scope.shouldRefresh = true;
+            scope.view = 'compact';
 
             scope.workspaces = workspaces;
             scope.$watch('workspaces.active', (workspace) => {
@@ -28,9 +29,12 @@ export function MonitoringView($rootScope, authoringWorkspace, pageTitle, $timeo
 
             /**
              * Toggle viewColumn to switch views between swimlane and list
+             * @param {Boolean} value
+             * @param {Boolean} swimlane
              */
-            scope.displayColumn = function() {
-                scope.monitoring.switchView(!scope.monitoring.viewColumn, true);
+            scope.switchView = function(value, swimlane) {
+                scope.monitoring.switchViewColumn(swimlane, true);
+                scope.view = value;
             };
 
             /**

@@ -12,7 +12,7 @@ export function ItemPriority(props) {
         return React.createElement(
             'span',
             {
-                className: 'priority-label priority-label--' + priority,
+                className: 'badge badge--square sd-grid-item__footer-block-item priority-label--' + priority,
                 style: getSpecStyle(spec),
                 title: getSpecTitle(spec, gettextCatalog.getString('Priority')),
                 key: 'priority'
@@ -24,7 +24,7 @@ export function ItemPriority(props) {
     return React.createElement(
         'span',
         {
-            className: 'priority-label priority-label--' + priority,
+            className: 'badge badge--square sd-grid-item__footer-block-item priority-label--' + priority,
             title: gettextCatalog.getString('Priority'),
             key: 'priority'
         },

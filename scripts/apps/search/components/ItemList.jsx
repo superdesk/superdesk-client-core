@@ -447,8 +447,7 @@ export class ItemList extends React.Component {
             'ul',
             {
                 className: classNames(
-                    'list-view',
-                    this.state.view + '-view',
+                    this.state.view === 'photogrid' ? 'sd-grid-list' : this.state.view + '-view list-view',
                     {'list-without-items': isEmpty}
                 ),
                 onClick: this.closeActionsMenu
@@ -471,5 +470,5 @@ ItemList.propTypes = {
     markedDesksById: PropTypes.any,
     desksById: PropTypes.any,
     ingestProvidersById: PropTypes.any,
-    usersById: PropTypes.any,
+    usersById: PropTypes.any
 };

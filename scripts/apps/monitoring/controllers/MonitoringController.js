@@ -36,14 +36,15 @@ export function MonitoringController($rootScope, $scope, $location, desks, confi
     // init swimlane view using preferences - use session preferences if set, or fallback to user preferences
     $q.all({
         userPreference: preferencesService.get('monitoring:view'),
-        sessionPreference: preferencesService.get('monitoring:view:session'),
+        sessionPreference: preferencesService.get('monitoring:view:session')
     }).then(({userPreference, sessionPreference}) => {
-        this.viewColumn = sessionPreference != null ? sessionPreference : userPreference.view === 'swimlane';
-        this.switchView(this.viewColumn);
+        this.viewColumn = sessionPreference !== null ?
+            sessionPreference === 'swimlane' : userPreference.view === 'swimlane';
+        this.switchViewColumn(this.viewColumn);
     });
 
     this.selectGroup = selectGroup;
-    this.switchView = switchView;
+    this.switchViewColumn = switchViewColumn;
 
     this.queryParam = $location.search();
 
@@ -120,7 +121,7 @@ export function MonitoringController($rootScope, $scope, $location, desks, confi
      * @param {Boolean} updateSession if set it will update user session setting.
      * @returns {Number|null} function returns columnsLimit null if viewColumn is false.
      */
-    function switchView(viewColumn, updateSession) {
+    function switchViewColumn(viewColumn, updateSession) {
         self.viewColumn = viewColumn;
         self.columnsLimit = self.viewColumn ? config.features.swimlane.columnsLimit : null;
         $scope.$broadcast('view:column', {viewColumn: self.viewColumn});

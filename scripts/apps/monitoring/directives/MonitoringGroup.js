@@ -24,10 +24,9 @@ import _ from 'lodash';
  *   A directive that generates group/section on stages of a desk or saved search.
  */
 MonitoringGroup.$inject = ['cards', 'api', 'authoringWorkspace', '$timeout', 'superdesk', 'session',
-    'activityService', 'workflowService', 'keyboardManager', 'desks', 'search', 'multi',
-    'archiveService', '$rootScope', 'preferencesService'];
+    'activityService', 'desks', 'search', 'multi', 'archiveService', '$rootScope'];
 export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superdesk, session, activityService,
-    workflowService, keyboardManager, desks, search, multi, archiveService, $rootScope, preferencesService) {
+    desks, search, multi, archiveService, $rootScope) {
     let ITEM_HEIGHT = 57;
     let PAGE_SIZE = 25;
     let DEFAULT_GROUP_ITEMS = 10;
@@ -38,6 +37,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
         scope: {
             group: '=',
             numItems: '=',
+            view: '=',
             viewType: '=',
             forceLimited: '@'
         },
@@ -48,7 +48,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
             var containerElem = monitoring.viewColumn ? $(document).find('.content-list') : elem.find('.stage-content');
 
             ITEM_HEIGHT = search.singleLine ? 29 : 57;
-            scope.view = 'compact';
+
             scope.page = 1;
             scope.fetching = false;
             scope.previewingBroadcast = false;
