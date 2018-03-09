@@ -163,7 +163,7 @@ class ToolbarComponent extends Component {
                     />
                 }
 
-                {has('invisibles') &&
+                {has('formatting marks') &&
                     <StyleButton
                         active={invisibles}
                         label={'invisibles'}

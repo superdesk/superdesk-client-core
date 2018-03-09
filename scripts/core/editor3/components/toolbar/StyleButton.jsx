@@ -35,7 +35,7 @@ const StyleTooltips = {
     'ordered list': gettext('Ordered list'),
     TH: gettext('Toggle Header'),
     suggestions: gettext('Toggle Suggestions Mode'),
-    invisibles: gettext('Toggle Non-Printing characters')
+    invisibles: gettext('Toggle formatting marks')
 };
 
 /**
