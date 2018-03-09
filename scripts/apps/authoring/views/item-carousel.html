@@ -1,0 +1,20 @@
+<div class="sd-media-carousel">
+    <div class="sd-media-carousel__dialog">
+
+        <a ng-click="navPrev()" class="sd-media-carousel__nav-button sd-media-carousel__nav-button--prev-inner"></a>
+        <a ng-click="navNext()" class="sd-media-carousel__nav-button sd-media-carousel__nav-button--next-inner"></a>
+
+        <div class="sd-media-carousel__content owl-carousel" ng-transclude></div>
+
+        <div class="sd-media-carousel__thumb-strip" ng-show="items.length > 1">
+            <div class="sd-media-carousel__thumb-strip-item" ng-repeat="item in items">
+                <div class="sd-media-carousel__thumb sd-media-carousel__thumb--add" ng-click="upload()" ng-if="!item[item.fieldId]" data-rel="{{item.fieldId}}">
+                    <i class="icon-plus-sign"></i>
+                </div>
+                <div class="sd-media-carousel__thumb" ng-click="goTo($index+1)" ng-if="item[item.fieldId]">
+                    <img ng-src="{{item[item.fieldId].renditions.thumbnail.href}}">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

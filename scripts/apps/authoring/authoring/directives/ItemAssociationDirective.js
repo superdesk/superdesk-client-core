@@ -152,6 +152,10 @@ export function ItemAssociationDirective(superdesk, renditions, config, authorin
                 event.preventDefault();
                 event.stopPropagation();
 
+                return initUploadOnDrop(event);
+            });
+
+            function initUploadOnDrop(event, customRel) {
                 if (getSuperdeskType(event) === 'Files') {
                     if (scope.isMediaEditable()) {
                         const files = event.originalEvent.dataTransfer.files;
@@ -161,30 +165,29 @@ export function ItemAssociationDirective(superdesk, renditions, config, authorin
                     return;
                 }
 
-                getItem(event, getSuperdeskType(event))
-                    .then((item) => {
-                        if (!scope.editable) {
-                            return;
-                        }
+                getItem(event, getSuperdeskType(event)).then((item) => {
+                    if (!scope.editable) {
+                        return;
+                    }
 
-                        if (item.lock_user) {
-                            notify.error(gettext('Item is locked. Cannot associate media item.'));
-                            return;
-                        }
+                    if (item.lock_user) {
+                        notify.error(gettext('Item is locked. Cannot associate media item.'));
+                        return;
+                    }
 
-                        if (scope.isMediaEditable()) {
-                            scope.loading = true;
-                            renditions.ingest(item)
-                                .then(scope.edit)
-                                .finally(() => {
-                                    scope.loading = false;
-                                });
-                        } else {
-                            // update association in an item even if editing of metadata and crop not allowed.
-                            updateItemAssociation(item);
-                        }
-                    });
-            });
+                    if (scope.isMediaEditable()) {
+                        scope.loading = true;
+                        renditions.ingest(item)
+                            .then(scope.edit)
+                            .finally(() => {
+                                scope.loading = false;
+                            });
+                    } else {
+                        // update association in an item even if editing of metadata and crop not allowed.
+                        updateItemAssociation(item);
+                    }
+                });
+            }
 
 
             /**
@@ -325,6 +328,17 @@ export function ItemAssociationDirective(superdesk, renditions, config, authorin
                     uploadAndCropImages();
                 }
             };
+
+            scope.$on('init:upload', (event, data) => {
+                if (data && data.files) {
+                    if (data.rel) {
+                        scope.rel = data.rel;
+                    }
+                    return initUploadOnDrop(data.files);
+                }
+
+                return scope.upload();
+            });
         }
     };
 }

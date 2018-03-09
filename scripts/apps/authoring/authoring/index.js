@@ -65,6 +65,7 @@ angular.module('superdesk.apps.authoring', [
     .directive('sdAuthoringEmbedded', directive.AuthoringEmbeddedDirective)
     .directive('sdAuthoringHeader', directive.AuthoringHeaderDirective)
     .directive('sdItemAssociation', directive.ItemAssociationDirective)
+    .directive('sdItemCarousel', directive.ItemCarouselDirective)
     .directive('sdFullPreview', directive.FullPreviewDirective)
     .directive('sdRemoveTags', directive.RemoveTagsDirective)
     .directive('tansaScopeSync', directive.TansaScopeSyncDirective)
