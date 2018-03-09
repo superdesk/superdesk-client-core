@@ -63,7 +63,7 @@ export default function createEditorStore(props, isReact = false) {
 
 /**
  * @name onChange
- * @params {ContentState} content New editor content state.
+ * @params {ContentState} contentState New editor content state.
  * @description Triggered whenever the state of the editor changes. It takes the
  * current content states and updates the values of the host controller. This function
  * is bound to the controller, so 'this' points to controller attributes.
