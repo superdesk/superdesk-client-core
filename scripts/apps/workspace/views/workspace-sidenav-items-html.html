@@ -1,0 +1,6 @@
+<a href="#{{ :: item.href }}" ng-click="hideMonitoring(currentRoute.href === item.href, $event)"
+    title="{{ :: item.label }}" sd-hotkey="{{ item.hotkey }}" sd-hotkey-options="{global: true}"
+    class="sd-sidebar-menu__btn" ng-class="{'sd-sidebar-menu__btn--active': currentRoute.href === item.href}">
+    <i class="sd-sidebar-menu__main-icon big-icon--{{ item.icon }}"></i>
+    <i class="sd-sidebar-menu__helper-icon big-icon--chevron-left"></i>
+</a>

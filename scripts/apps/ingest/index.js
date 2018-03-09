@@ -26,7 +26,8 @@ angular.module('superdesk.apps.ingest', [
     'superdesk.apps.dashboard.widgets.base',
     'superdesk.apps.dashboard.widgets.ingeststats',
     'superdesk.apps.ingest.send',
-    'superdesk.config'
+    'superdesk.config',
+    'superdesk.apps.workspace.menu',
 ])
     .service('ingestSources', svc.IngestProviderService)
     .service('remove', svc.RemoveIngestedService)
@@ -48,7 +49,7 @@ angular.module('superdesk.apps.ingest', [
     .filter('insert', InsertFilter)
     .filter('scheduleFilter', ScheduleFilter)
 
-    .config(['superdeskProvider', function(superdesk) {
+    .config(['superdeskProvider', 'workspaceMenuProvider', function(superdesk, workspaceMenuProvider) {
         superdesk
             .activity('/workspace/ingest', {
                 label: gettext('Workspace'),
@@ -145,6 +146,15 @@ angular.module('superdesk.apps.ingest', [
                     return config.features.editFeaturedImage && !_.isNil(desks.getCurrentDeskId());
                 }]
             });
+
+        workspaceMenuProvider.item({
+            href: '/workspace/ingest',
+            icon: 'fetch',
+            label: gettext('Ingest'),
+            order: 1200,
+            group: 'ingest',
+            if: 'workspaceConfig.ingest && privileges.ingest',
+        });
     }])
 
     .config(['apiProvider', function(apiProvider) {

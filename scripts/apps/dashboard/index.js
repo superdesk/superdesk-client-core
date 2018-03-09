@@ -32,11 +32,11 @@ angular.module('superdesk.apps.dashboard', [
     'superdesk.apps.workspace.tasks',
     'superdesk.core.itemList',
     'superdesk.apps.legal_archive',
-    'superdesk.apps.workspace'
+    'superdesk.apps.workspace',
 ])
     .controller('DashboardController', DashboardController)
     .filter('wcodeFilter', () => (input, values) => _.pick(input, _.difference(_.keys(input), _.keys(values))))
-    .config(['superdeskProvider', function(superdesk) {
+    .config(['superdeskProvider', 'workspaceMenuProvider', function(superdesk, workspaceMenuProvider) {
         superdesk.activity('/workspace', {
             label: gettext('Workspace'),
             description: gettext('Customize your widgets and views'),
@@ -48,6 +48,14 @@ angular.module('superdesk.apps.dashboard', [
             priority: -1000,
             adminTools: false,
             category: superdesk.MENU_MAIN
+        });
+
+        workspaceMenuProvider.item({
+            icon: 'dashboard',
+            href: '/workspace',
+            label: gettext('Dashboard'),
+            shortcut: 'ctrl+alt+b',
+            order: 100,
         });
     }]);
 
