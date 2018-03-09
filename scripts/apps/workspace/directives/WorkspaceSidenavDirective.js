@@ -14,7 +14,7 @@ export function WorkspaceSidenavDirective(superdeskFlags, $location, workspaceMe
             scope.workspaceConfig = config.workspace || {}; // it's used in workspaceMenu.filter
             scope.items = [];
             workspaceMenu
-                .filter((item) => !item.if || scope.$eval(item.if, {privileges}))
+                .filter((item) => !item.if || scope.$eval(item.if))
                 .forEach((item) => {
                     const itemGroup = item.group || group;
 
