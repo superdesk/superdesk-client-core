@@ -194,6 +194,7 @@ const processSuggestion = (state, {suggestion}, accepted) => {
     const start = selection.getStartOffset();
     const end = selection.getEndOffset();
     let {editorState} = state;
+    const originalSelection = editorState.getSelection();
     let style;
     let data;
 
@@ -209,16 +210,18 @@ const processSuggestion = (state, {suggestion}, accepted) => {
         const applySuggestion = data.type === 'ADD_SUGGESTION' && accepted ||
             data.type === 'DELETE_SUGGESTION' && !accepted;
         const newSelection = selection.merge({
-            anchorOffset: start + i + (applySuggestion ? 0 : 1),
-            focusOffset: start + i + (applySuggestion ? 0 : 1),
+            anchorOffset: start + i,
+            focusOffset: start + i,
             isBackward: false
         });
 
         editorState = EditorState.acceptSelection(editorState, newSelection);
 
+        // keep character and clean suggestion style and entity
+        editorState = resetSuggestion(editorState, style);
+
         if (applySuggestion) {
-            // keep character and clean suggestion style and entity
-            editorState = resetSuggestion(editorState, style);
+            editorState = EditorState.acceptSelection(editorState, originalSelection);
         } else {
             // delete current character
             editorState = deleteCharacter(editorState);
