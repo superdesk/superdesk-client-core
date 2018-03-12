@@ -15,9 +15,8 @@ function getAllUserIdsFromComments(comments) {
     return users.filter((value, index, self) => self.indexOf(value) === index);
 }
 
-function getUsersAsQueryArray(comments) {
-    return getAllUserIdsFromComments(comments)
-        .map((key) => ({_id: key}));
+function filterUsers(users, ids) {
+    return users.filter((user) => ids.includes(user._id));
 }
 
 function convertUsersArrayToObject(users) {
@@ -30,12 +29,8 @@ function convertUsersArrayToObject(users) {
     return usersObj;
 }
 
-function getUsersFromAPI(api, query) {
-    return api.query('users', {where: JSON.stringify(query)});
-}
-
-InlineCommentsCtrl.$inject = ['$scope', 'api'];
-function InlineCommentsCtrl($scope, api) {
+InlineCommentsCtrl.$inject = ['$scope', 'userList'];
+function InlineCommentsCtrl($scope, userList) {
     const editorState = $scope.item.editor_state;
 
     const comments =
@@ -49,17 +44,17 @@ function InlineCommentsCtrl($scope, api) {
         return;
     }
 
-    const usersIds = getUsersAsQueryArray(comments);
+    const userIds = getAllUserIdsFromComments(comments);
 
-    getUsersFromAPI(api, {$or: usersIds})
-        .then(({_items}) => {
-            $scope.users = convertUsersArrayToObject(_items);
+    userList.getAll()
+        .then((users) => {
+            $scope.users = convertUsersArrayToObject(filterUsers(users, userIds));
             $scope.items = comments;
         });
 }
 
 angular
-    .module('superdesk.apps.authoring.inline-comments', [
+    .module('superdesk.apps.authoring.track-changes.inline-comments', [
         'superdesk.apps.authoring.widgets'
     ])
     .config([
@@ -69,7 +64,7 @@ angular
                 icon: 'comments',
                 label: gettext('Resolved Comments'),
                 template:
-                'scripts/apps/authoring/inline-comments/views/inline-comments-widget.html',
+                'scripts/apps/authoring/track-changes/views/inline-comments-widget.html',
                 order: 9,
                 side: 'right',
                 display: {

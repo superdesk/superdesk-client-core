@@ -1,0 +1,32 @@
+<div class="widget" ng-controller="SuggestionsCtrl">
+    <ul class="notification-list white" ng-class="{ 'notification-list--empty': items.length === 0 }">
+        <li class="item" ng-repeat="item in items">
+            <div class="accepted pull-right">
+                <span class="label label--success" ng-show="item.resolutionInfo.accepted" translate>Accepted</span>
+                <span class="label label--alert" ng-show="!item.resolutionInfo.accepted" translate>Rejected</span>
+            </div>
+            <figure class="avatar">
+                <img sd-user-avatar data-user="users[item.suggestionInfo.author]">
+            </figure>
+            <div>{{users[item.suggestionInfo.author].display_name || users[item.suggestionInfo.author].username}}</div>
+            <div class="date" sd-reldate ng-model="item.suggestionInfo.date"></div>
+            <div class="content">
+                <div class="text">
+                    <strong>{{getTypeText(item.suggestionInfo.type) | translate}}:</strong>
+                    <strong><em>"{{item.suggestionText}}"</em></strong>
+                </div>
+            </div>
+            <div class="resolution">
+                <span ng-show="item.resolutionInfo.accepted" translate>Accepted by</span>
+                <span ng-show="!item.resolutionInfo.accepted" translate>Rejected by</span>
+                <span>{{users[item.resolutionInfo.resolverUserId].display_name || users[item.resolutionInfo.resolverUserId].username}} <span class="date" sd-reldate ng-model="item.resolutionInfo.date"></span></span>
+            </div>
+        </li>
+        <li class="no-suggestions" ng-show="items.length === 0">
+            <div class="round-box">
+                <i class="big-icon--multiedit"></i>
+            </div>
+            <h3 translate>No suggestions have been resolved</h3>
+        </li>
+    </ul>
+</div>
