@@ -504,7 +504,13 @@ export function fieldhasUnresolvedSuggestions(rawState) {
  */
 function addCommentsForServer(editorState) {
     const multipleHighlights = getCustomDataFromEditor(editorState, editor3DataKeys.MULTIPLE_HIGHLIGHTS);
-    const highlightsData = multipleHighlights === undefined ? {} : multipleHighlights['highlightsData'];
+
+    if (multipleHighlights === undefined || multipleHighlights['highlightsData'] === undefined) {
+        return editorState;
+    }
+
+    const highlightsData = multipleHighlights['highlightsData'];
+
     const comments = Object.keys(highlightsData)
         .filter((key) => key.indexOf(highlightsConfig.COMMENT.type) === 0)
         .map((key) => highlightsData[key].data);
