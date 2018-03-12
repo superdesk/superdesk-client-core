@@ -267,7 +267,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
             function scheduleQuery(event, data) {
                 if (!queryTimeout) {
                     queryTimeout = $timeout(() => {
-                        queryItems(event, data, {auto: data.force ? 0 : 1});
+                        queryItems(event, data, {auto: (data && data.force) ? 0 : 1});
                         scope.$applyAsync(() => {
                             // ignore any updates requested in current $digest
                             queryTimeout = null;

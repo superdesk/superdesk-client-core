@@ -11,8 +11,8 @@
  * @description Provides set of methods to translate items to different languages
  */
 
-TranslationService.$inject = ['api', '$rootScope', 'notify', 'authoringWorkspace'];
-export function TranslationService(api, $rootScope, notify, authoringWorkspace) {
+TranslationService.$inject = ['api', '$rootScope', 'notify', 'authoringWorkspace', 'desks'];
+export function TranslationService(api, $rootScope, notify, authoringWorkspace, desks) {
     var service = {};
 
     /**
@@ -48,7 +48,8 @@ export function TranslationService(api, $rootScope, notify, authoringWorkspace) 
     service.set = function(item, language) {
         var params = {
             guid: item.guid,
-            language: language.language
+            language: language.language,
+            desk: desks.getCurrentDeskId(),
         };
 
         api.save('translate', params).then((item) => {
