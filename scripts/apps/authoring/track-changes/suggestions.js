@@ -73,7 +73,7 @@ angular
         'authoringWidgetsProvider',
         function(authoringWidgetsProvider) {
             authoringWidgetsProvider.widget('suggestions', {
-                icon: 'multiedit',
+                icon: 'suggestion',
                 label: gettext('Suggestions'),
                 template:
                 'scripts/apps/authoring/track-changes/views/suggestions-widget.html',
