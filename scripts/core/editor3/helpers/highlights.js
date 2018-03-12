@@ -495,6 +495,11 @@ export function getRangeAndTextForStyle(editorState, style) {
  */
 function applyHighlightsStyleMap(editorState) {
     const highlights = getCustomDataFromEditor(editorState, editor3DataKeys.MULTIPLE_HIGHLIGHTS);
+
+    if (highlights === undefined) {
+        return editorState;
+    }
+
     const highlightsWithStyleMapApplied = {
         ...highlights,
         highlightsStyleMap: Object.keys(highlights.highlightsData).reduce((obj, styleName) => {
