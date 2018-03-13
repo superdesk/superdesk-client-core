@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import {hasUnresolvedSuggestions} from '../../../../core/editor3/helpers/highlights';
+import {hasUnresolvedSuggestions} from 'core/editor3/helpers/highlights';
 
 SendItem.$inject = ['$q', 'api', 'desks', 'notify', 'authoringWorkspace',
     'superdeskFlags', '$location', 'macros', '$rootScope', 'deployConfig',
