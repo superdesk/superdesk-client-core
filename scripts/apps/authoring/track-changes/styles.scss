@@ -1,3 +1,5 @@
+@import '~variables.scss';
+
 .sd-widget.inline-comments, .sd-widget.suggestions {
     .notification-list {
         top: 0;
@@ -7,6 +9,18 @@
 
         .item {
             padding: 1rem;
+
+            .commented-text {
+                margin-bottom: 1rem;
+                color: $grayLight;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+
+                .text {
+                    font-weight: bold;
+                }
+            }
 
             .accepted {
                 margin-left: 1rem;

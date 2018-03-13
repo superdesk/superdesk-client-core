@@ -101,15 +101,17 @@ export class CommentPopup extends Component {
     }
 
     resolveComment() {
-        const {highlightsManager, highlightId} = this.props;
+        const {highlightsManager, highlightId, editorState} = this.props;
 
         const commentData = highlightsManager.getHighlightData(highlightId);
+        const {highlightedText} = Highlights.getRangeAndTextForStyle(editorState, highlightId);
 
-        const editorStateWithCommentRemoved = Highlights.removeHighlight(this.props.editorState, highlightId);
+        const editorStateWithCommentRemoved = Highlights.removeHighlight(editorState, highlightId);
 
         const resolvedCommentData = {
             data: {
                 ...commentData.data,
+                commentedText: highlightedText,
                 resolutionInfo: {
                     resolverUserId: ng.get('session').identity._id,
                     date: new Date()
@@ -118,7 +120,7 @@ export class CommentPopup extends Component {
         };
 
         const allResolvedComments = getCustomDataFromEditor(
-            this.props.editorState,
+            editorState,
             editor3DataKeys.RESOLVED_COMMENTS_HISTORY
         );
 
