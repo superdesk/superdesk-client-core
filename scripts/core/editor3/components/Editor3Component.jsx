@@ -84,6 +84,7 @@ export class Editor3Component extends React.Component {
         this.onDragDrop = this.onDragDrop.bind(this);
         this.handleKeyCommand = this.handleKeyCommand.bind(this);
         this.handleBeforeInput = this.handleBeforeInput.bind(this);
+        this.handleBeforeInputCombined = this.handleBeforeInputCombined.bind(this);
         this.keyBindingFn = this.keyBindingFn.bind(this);
         this.allowEditSuggestion = allowEditSuggestion.bind(this);
     }
@@ -179,6 +180,18 @@ export class Editor3Component extends React.Component {
         }
 
         return getDefaultKeyBinding(e);
+    }
+
+    handleBeforeInputCombined() {
+        const handlers = [this.handleBeforeInput];
+
+        for (let i = 0; i < handlers.length; i++) {
+            if (handlers[i].apply(this, arguments) === 'handled') {
+                return 'handled';
+            }
+        }
+
+        return 'not-handled';
     }
 
     /**
@@ -398,7 +411,7 @@ export class Editor3Component extends React.Component {
                     <Editor editorState={editorState}
                         handleKeyCommand={this.handleKeyCommand}
                         keyBindingFn={this.keyBindingFn}
-                        handleBeforeInput={this.handleBeforeInput}
+                        handleBeforeInput={this.handleBeforeInputCombined}
                         blockRenderMap={blockRenderMap}
                         blockRendererFn={getBlockRenderer({svc: this.props.svc})}
                         customStyleMap={{...customStyleMap, ...this.props.highlightsManager.styleMap}}
