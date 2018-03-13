@@ -1,11 +1,41 @@
 export default angular.module('superdesk.core.services.modal', ['superdesk-ui', 'superdesk.core.services.asset'])
     .service('modal', ['$q', '$modal', '$sce', 'asset', function($q, $modal, $sce, asset) {
-        this.confirm = function(
+        const defaults = {
+            bodyText: '',
+            headerText: gettext('Confirm'),
+            okText: gettext('OK'),
+            cancelText: gettext('Cancel'),
+            additionalCancelText: null
+        };
+
+        function confirmArgumentsList(
+            bodyText = defaults.bodyText,
+            headerText = defaults.headerText,
+            okText = defaults.okText,
+            cancelText = defaults.cancelText,
+            additionalCancelText = defaults.additionalCancelText
+        ) {
+            return confirmBase(bodyText, headerText, okText, cancelText, additionalCancelText);
+        }
+
+        function confirmConfigurationObject(options) {
+            const nextOptions = {...defaults, ...options};
+
+            return confirmBase(
+                nextOptions.bodyText,
+                nextOptions.headerText,
+                nextOptions.okText,
+                nextOptions.cancelText,
+                nextOptions.additionalCancelText
+            );
+        }
+
+        function confirmBase(
             bodyText,
-            headerText = gettext('Confirm'),
-            okText = gettext('OK'),
-            cancelText = gettext('Cancel'),
-            additionalCancelText = null
+            headerText,
+            okText,
+            cancelText,
+            additionalCancelText
         ) {
             var delay = $q.defer();
 
@@ -39,5 +69,13 @@ export default angular.module('superdesk.core.services.modal', ['superdesk-ui', 
             });
 
             return delay.promise;
+        }
+
+        this.confirm = function() {
+            if (typeof arguments[0] === 'object' && arguments.length === 1) {
+                return confirmConfigurationObject.apply(this, arguments);
+            } else {
+                return confirmArgumentsList.apply(this, arguments);
+            }
         };
     }]);
