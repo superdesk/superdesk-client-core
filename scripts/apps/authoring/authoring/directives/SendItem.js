@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import {hasUnresolvedSuggestions} from 'core/editor3/helpers/highlights';
+import {itemHasUnresolvedSuggestions} from '../helpers';
 
 SendItem.$inject = ['$q', 'api', 'desks', 'notify', 'authoringWorkspace',
     'superdeskFlags', '$location', 'macros', '$rootScope', 'deployConfig',
@@ -51,23 +51,7 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
             scope.$watch(send.getConfig, activateConfig);
 
             scope.publish = function() {
-                const draftjsFieldsHavingUnresolvedSuggestions = Object.keys(scope.item)
-                    .filter((key) => {
-                        const fieldValue = scope.item[key];
-                        const isDraftjsField = Array.isArray(fieldValue)
-                            && fieldValue.length === 1
-                            && typeof fieldValue[0].blocks === 'object';
-
-                        if (isDraftjsField === false) {
-                            return false;
-                        }
-
-                        const rawState = fieldValue[0];
-
-                        return hasUnresolvedSuggestions(rawState);
-                    });
-
-                if (draftjsFieldsHavingUnresolvedSuggestions.length > 0) {
+                if (itemHasUnresolvedSuggestions(scope.item)) {
                     modal.alert({
                         headerText: gettext('Resolving suggestions'),
                         bodyText: gettext('Article cannot be published. Please accept or reject all suggestions first.')

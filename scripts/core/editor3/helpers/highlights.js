@@ -539,7 +539,7 @@ function removeHighlightsStyleMap(editorState) {
     );
 }
 
-export function hasUnresolvedSuggestions(rawState) {
+export function fieldhasUnresolvedSuggestions(rawState) {
     const contentState = convertFromRaw(rawState);
     const editorState = EditorState.createWithContent(contentState);
     const highlights = getHighlightsState(editorState);
