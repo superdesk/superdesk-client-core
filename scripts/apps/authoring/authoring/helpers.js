@@ -1,4 +1,5 @@
 import {stripHtmlTags} from 'core/utils';
+import {fieldhasUnresolvedSuggestions} from 'core/editor3/helpers/highlights';
 
 export const CONTENT_FIELDS_DEFAULTS = Object.freeze({
     headline: '',
@@ -181,4 +182,23 @@ export function stripWhitespaces(item) {
             item[key] = removeWhitespaces(item[key]);
         }
     });
+}
+
+export function itemHasUnresolvedSuggestions(item) {
+    return Object.keys(item)
+        .filter((fieldName) => {
+            const fieldValue = item[fieldName];
+            const isDraftjsField = Array.isArray(fieldValue)
+                && fieldValue.length === 1
+                && typeof fieldValue[0].blocks === 'object';
+
+            if (isDraftjsField === false) {
+                return false;
+            }
+
+            const rawState = fieldValue[0];
+
+            return fieldhasUnresolvedSuggestions(rawState);
+        })
+        .length > 0;
 }

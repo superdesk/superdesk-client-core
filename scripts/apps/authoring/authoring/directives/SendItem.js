@@ -1,13 +1,14 @@
 import _ from 'lodash';
+import {itemHasUnresolvedSuggestions} from '../helpers';
 
 SendItem.$inject = ['$q', 'api', 'desks', 'notify', 'authoringWorkspace',
     'superdeskFlags', '$location', 'macros', '$rootScope', 'deployConfig',
     'authoring', 'send', 'editorResolver', 'confirm', 'archiveService',
-    'preferencesService', 'multi', 'datetimeHelper', 'config', 'privileges', 'storage'];
+    'preferencesService', 'multi', 'datetimeHelper', 'config', 'privileges', 'storage', 'modal'];
 export function SendItem($q, api, desks, notify, authoringWorkspace,
     superdeskFlags, $location, macros, $rootScope, deployConfig,
     authoring, send, editorResolver, confirm, archiveService,
-    preferencesService, multi, datetimeHelper, config, privileges, storage) {
+    preferencesService, multi, datetimeHelper, config, privileges, storage, modal) {
     return {
         scope: {
             item: '=',
@@ -50,6 +51,14 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
             scope.$watch(send.getConfig, activateConfig);
 
             scope.publish = function() {
+                if (itemHasUnresolvedSuggestions(scope.item)) {
+                    modal.alert({
+                        headerText: gettext('Resolving suggestions'),
+                        bodyText: gettext('Article cannot be published. Please accept or reject all suggestions first.')
+                    });
+                    return;
+                }
+
                 scope.loading = true;
                 var result = scope._publish();
 
