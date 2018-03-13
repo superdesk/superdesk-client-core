@@ -16,7 +16,7 @@ const StyleIcons = {
     quote: 'icon-quote',
     'unordered list': 'icon-unordered-list',
     'ordered list': 'icon-ordered-list',
-    suggestions: 'icon-multiedit',
+    suggestions: 'icon-suggestion',
     invisibles: 'icon-paragraph'
 };
 

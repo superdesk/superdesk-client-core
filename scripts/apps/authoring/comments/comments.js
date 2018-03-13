@@ -132,7 +132,7 @@ angular.module('superdesk.apps.authoring.comments', [
     .config(['authoringWidgetsProvider', function(authoringWidgetsProvider) {
         authoringWidgetsProvider
             .widget('comments', {
-                icon: 'comments',
+                icon: 'chat',
                 label: gettext('Comments'),
                 template: 'scripts/apps/authoring/comments/views/comments-widget.html',
                 order: 3,

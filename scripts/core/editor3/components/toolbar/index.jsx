@@ -150,7 +150,7 @@ class ToolbarComponent extends Component {
                             this.props.highlightsManager.canAddHighlight(highlightsConfig.ANNOTATION.type)
                         }
                         key="annotation-button"
-                        iconName="pencil"
+                        iconName="edit-line"
                         tooltip={gettext('Annotation')}
                     />
                 }

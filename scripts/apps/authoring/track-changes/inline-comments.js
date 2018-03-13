@@ -62,7 +62,7 @@ angular
         function(authoringWidgetsProvider) {
             authoringWidgetsProvider.widget('inline-comments', {
                 icon: 'comments',
-                label: gettext('Resolved Comments'),
+                label: gettext('Resolved Inline comments'),
                 template:
                 'scripts/apps/authoring/track-changes/views/inline-comments-widget.html',
                 order: 9,

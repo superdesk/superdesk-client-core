@@ -793,6 +793,15 @@ $rightfield-width:60px;
             .output-item-label, .urgency-label {
                 margin: 3px 0;
             }
+            .badge:nth-child(1) {
+                margin-bottom: 0.2rem;
+            }
+            .badge:nth-child(2) {
+                margin-top: 0.2rem;
+            }
+            .badge:only-child {
+                margin: 0;
+            }
             i, .priority-label {
                 clear: both;
                 margin: 3px 0;
