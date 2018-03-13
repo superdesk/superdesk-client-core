@@ -219,4 +219,8 @@ angular.module('superdesk.apps.ingest', [
             label: 'Ritzau Webservice',
             templateUrl: asset.templateUrl('apps/ingest/views/settings/ritzauConfig.html')
         });
+        ingestSources.registerFeedingService('ap', {
+            label: 'Associated Press Webservice',
+            templateUrl: asset.templateUrl('apps/ingest/views/settings/apConfig.html')
+        });
     }]);
