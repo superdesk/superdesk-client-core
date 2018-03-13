@@ -2,7 +2,7 @@ import {EditorState, Modifier, genKey, CharacterMetadata, ContentBlock} from 'dr
 import {List, OrderedSet} from 'immutable';
 import {fromHTML} from 'core/editor3/html';
 import * as Highlights from '../helpers/highlights';
-import {suggestionsTypes} from '../highlightsConfig';
+import {allSuggestionsTypes} from '../highlightsConfig';
 import ng from 'core/services/ng';
 
 /**
@@ -119,11 +119,15 @@ const atomicBlock = (data, entity) => new ContentBlock({
 export function allowEditSuggestion(action) {
     const {suggestingMode, editorState} = this.props;
     const selection = editorState.getSelection();
+    const noSelection = selection.getEndOffset() === selection.getStartOffset() &&
+        selection.getStartKey() === selection.getEndKey();
+    let newEditorState;
 
-    if (selection.getStartOffset() !== selection.getEndOffset()) {
-        for (let i = selection.getStartOffset(); i < selection.getEndOffset(); i++) {
-            const data = Highlights.getHighlightDataAtOffset(
-                editorState, suggestionsTypes, selection, i - selection.getStartOffset());
+    if (!noSelection) {
+        newEditorState = Highlights.initSelectionIterator(editorState);
+        while (Highlights.hasNextSelection(newEditorState, selection)) {
+            const data = Highlights.getHighlightDataAtCurrentPosition(
+                newEditorState, allSuggestionsTypes);
 
             if (!allowEditForData(data, suggestingMode)) {
                 return false;
@@ -133,8 +137,8 @@ export function allowEditSuggestion(action) {
         return true;
     }
 
-    const dataBefore = Highlights.getHighlightDataAtOffset(editorState, suggestionsTypes, selection, -1);
-    const dataAfter = Highlights.getHighlightDataAtOffset(editorState, suggestionsTypes, selection, 0);
+    const dataBefore = Highlights.getHighlightDataAtOffset(editorState, allSuggestionsTypes, selection, -1);
+    const dataAfter = Highlights.getHighlightDataAtOffset(editorState, allSuggestionsTypes, selection, 0);
     const allowEditBefore = allowEditForData(dataBefore, suggestingMode);
     const editBefore = allowEditBefore && (action === 'backspace' || action === 'insert');
     const allowEditAfter = allowEditForData(dataAfter, suggestingMode);

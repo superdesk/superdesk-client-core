@@ -9,7 +9,7 @@ import {Dropdown} from 'core/ui/components';
 import {CommentPopup} from './comments';
 import {SuggestionPopup} from './suggestions/SuggestionPopup';
 import {AnnotationPopup} from './annotations';
-import {suggestionsTypes} from '../highlightsConfig';
+import {allSuggestionsTypes} from '../highlightsConfig';
 import * as Highlights from '../helpers/highlights';
 
 /**
@@ -61,8 +61,6 @@ export class HighlightsPopup extends Component {
      */
     component() {
         const {store} = this.context;
-        const {editorState} = this.props;
-        const suggestionStyle = Highlights.getHighlightStyleAtCurrentPosition(editorState, suggestionsTypes);
         let highlightsAndSuggestions = [];
 
         if (this.styleBasedHighlightsExist()) {
@@ -72,12 +70,17 @@ export class HighlightsPopup extends Component {
                     const highlightType = this.props.highlightsManager.getHighlightTypeFromStyleName(styleName);
                     let data = this.props.highlightsManager.getHighlightData(styleName);
 
-                    if (suggestionsTypes.indexOf(highlightType) !== -1) {
+                    if (allSuggestionsTypes.indexOf(highlightType) !== -1) {
                         const {selection, highlightedText} = Highlights.getRangeAndTextForStyle(
-                            this.props.editorState, suggestionStyle
+                            this.props.editorState, styleName
                         );
 
-                        data = {...data, suggestionText: highlightedText, selection: selection};
+                        data = {
+                            ...data,
+                            suggestionText: highlightedText,
+                            selection: selection,
+                            styleName: styleName
+                        };
                     }
 
                     highlightsAndSuggestions = [
@@ -139,6 +142,9 @@ export class HighlightsPopup extends Component {
                     />
                 </Dropdown>
             );
+        case 'TOGGLE_BOLD_SUGGESTION':
+        case 'TOGGLE_ITALIC_SUGGESTION':
+        case 'TOGGLE_UNDERLINE_SUGGESTION':
         case 'DELETE_SUGGESTION':
         case 'ADD_SUGGESTION':
             return <SuggestionPopup suggestion={h} />;
@@ -213,14 +219,22 @@ export class HighlightsPopup extends Component {
     getInlineStyleForCollapsedSelection() {
         const {editorState} = this.props;
         const selection = editorState.getSelection();
+        const content = editorState.getCurrentContent();
 
         if (selection.isCollapsed() === false) {
             return List();
         }
 
-        var blockKey = selection.getAnchorKey();
-        var block = editorState.getCurrentContent().getBlockForKey(blockKey);
-        var inlineStyle = block.getInlineStyleAt(selection.getAnchorOffset());
+        var blockKey = selection.getStartKey();
+        var block = content.getBlockForKey(blockKey);
+        var offset = selection.getStartOffset();
+
+        if (block.getLength() === offset) {
+            block = content.getBlockAfter(block.getKey());
+            offset = 0;
+        }
+
+        var inlineStyle = block.getInlineStyleAt(offset);
 
         return inlineStyle;
     }

@@ -24,6 +24,27 @@ export const highlightsConfig = {
             textDecoration: 'line-through'
         }
     },
+    TOGGLE_BOLD_SUGGESTION: {
+        type: 'TOGGLE_BOLD_SUGGESTION',
+        draftStyleMap: {
+            backgroundColor: 'rgba(100, 235, 59, 0.2)'
+        }
+    },
+    TOGGLE_ITALIC_SUGGESTION: {
+        type: 'TOGGLE_ITALIC_SUGGESTION',
+        draftStyleMap: {
+            backgroundColor: 'rgba(100, 235, 59, 0.2)'
+        }
+    },
+    TOGGLE_UNDERLINE_SUGGESTION: {
+        type: 'TOGGLE_UNDERLINE_SUGGESTION',
+        draftStyleMap: {
+            backgroundColor: 'rgba(100, 235, 59, 0.2)'
+        }
+    }
 };
 
 export const suggestionsTypes = ['DELETE_SUGGESTION', 'ADD_SUGGESTION'];
+export const styleSuggestionsTypes = ['TOGGLE_BOLD_SUGGESTION', 'TOGGLE_ITALIC_SUGGESTION',
+    'TOGGLE_UNDERLINE_SUGGESTION'];
+export const allSuggestionsTypes = [...suggestionsTypes, ...styleSuggestionsTypes];

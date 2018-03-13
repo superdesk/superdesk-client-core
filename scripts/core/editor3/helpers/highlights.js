@@ -12,6 +12,27 @@ export const availableHighlights = Object.keys(highlightsConfig).reduce((obj, ke
     return obj;
 }, {});
 
+export function getTypeByInlineStyle(inlineStyle) {
+    const mapping = {
+        BOLD: 'TOGGLE_BOLD_SUGGESTION',
+        ITALIC: 'TOGGLE_ITALIC_SUGGESTION',
+        UNDERLINE: 'TOGGLE_UNDERLINE_SUGGESTION'
+    };
+
+    return mapping[inlineStyle];
+}
+
+export function getInlineStyleByType(type) {
+    const mapping = {
+        TOGGLE_BOLD_SUGGESTION: 'BOLD',
+        TOGGLE_ITALIC_SUGGESTION: 'ITALIC',
+        TOGGLE_UNDERLINE_SUGGESTION: 'UNDERLINE'
+    };
+
+    return mapping[type];
+}
+
+
 function getInitialHighlightsState() {
     return {
         highlightsStyleMap: {},
@@ -192,8 +213,7 @@ export function canAddHighlight(editorState, highlightType) {
  * @description the highlight style from the new possition specified by offset.
  */
 export function getHighlightStyleAtOffset(editorState, types, selection, offset) {
-    const content = editorState.getCurrentContent();
-    const {block, newOffset} = getBlockAndOffset(content, selection, offset);
+    const {block, newOffset} = getBlockAndOffset(editorState, selection, offset);
 
     if (block == null) {
         return null;
@@ -249,7 +269,8 @@ export function getHighlightData(editorState, style) {
 /**
  * @ngdoc method
  * @name getHighlightDataAtOffset
- * @param {Object} content
+ * @param {Object} editorState
+ * @param {Array} types
  * @param {Object} selection
  * @param {Integer} offset
  * @return {Object}
@@ -265,6 +286,20 @@ export function getHighlightDataAtOffset(editorState, types, selection, offset) 
     const highlightsState = getHighlightsState(editorState);
 
     return highlightsState.highlightsData[style];
+}
+
+/**
+ * @ngdoc method
+ * @name getHighlightDataAtCurrentPosition
+ * @param {Object} editorState
+ * @param {Array} types
+ * @return {Object}
+ * @description the highlight associated data from current position.
+ */
+export function getHighlightDataAtCurrentPosition(editorState, types) {
+    const selection = editorState.getSelection();
+
+    return getHighlightDataAtOffset(editorState, types, selection, 0);
 }
 
 /**
@@ -409,14 +444,108 @@ export function resetHighlightForCurrentCharacter(editorState, style) {
  * @description the char from the new possition specified by offset.
  */
 export function getCharByOffset(editorState, selection, offset) {
-    const content = editorState.getCurrentContent();
-    const {block, newOffset} = getBlockAndOffset(content, selection, offset);
+    const {block, newOffset} = getBlockAndOffset(editorState, selection, offset);
 
     if (block == null) {
         return null;
     }
 
     return block.getText()[newOffset];
+}
+
+/**
+ * @ngdoc method
+ * @name changeEditorSelection
+ * @param {Object} editorState
+ * @param {Integer} startOffset - the anchor offset relative to current start offset
+ * @param {Integer} endOffset - the focus offset relative to current end offset
+ * @param {Boolean} force - apply accept or force selection
+ * @return {Object} returns new state
+ * @description Change the current editor selection.
+ */
+export function changeEditorSelection(editorState, startOffset, endOffset, force) {
+    const startSelection = editorState.getSelection();
+    const endSelection = startSelection.merge({
+        anchorOffset: startSelection.getEndOffset(),
+        anchorKey: startSelection.getEndKey(),
+        focusOffset: startSelection.getEndOffset(),
+        focusKey: startSelection.getEndKey(),
+        isBackward: false
+    });
+    const {block: startBlock, newOffset: newStartOffset} = getBlockAndOffset(
+        editorState, startSelection, startOffset);
+    const {block: endBlock, newOffset: newEndOffset} = getBlockAndOffset(
+        editorState, endSelection, endOffset);
+
+    if (startBlock == null || endBlock == null) {
+        return editorState;
+    }
+
+    let newSelection = startSelection.merge({
+        anchorOffset: newStartOffset,
+        anchorKey: startBlock.getKey(),
+        focusOffset: newEndOffset,
+        focusKey: endBlock.getKey(),
+        isBackward: false
+    });
+
+    if (force) {
+        return EditorState.forceSelection(editorState, newSelection);
+    }
+
+    return EditorState.acceptSelection(editorState, newSelection);
+}
+
+/**
+ * @ngdoc method
+ * @name initSelectionIterator
+ * @param {Object} editorState
+ * @return {Object} returns new state
+ * @description Change selection to point at the beginning of existent selection.
+ */
+export function initSelectionIterator(editorState, backward = false) {
+    const selection = editorState.getSelection();
+    let newSelection;
+
+    if (backward) {
+        newSelection = selection.merge({
+            anchorOffset: selection.getEndOffset(),
+            anchorKey: selection.getEndKey(),
+            focusOffset: selection.getEndOffset(),
+            focusKey: selection.getEndKey(),
+            isBackward: false
+        });
+    } else {
+        newSelection = selection.merge({
+            anchorOffset: selection.getStartOffset(),
+            anchorKey: selection.getStartKey(),
+            focusOffset: selection.getStartOffset(),
+            focusKey: selection.getStartKey(),
+            isBackward: false
+        });
+    }
+
+    return EditorState.acceptSelection(editorState, newSelection);
+}
+
+/**
+ * @ngdoc method
+ * @name hasNextSelection
+ * @param {Object} editorState
+ * @param {Object} selection - the selection to compare with
+ * @return {Boolean} returns true if selection has the same end
+ * @description Check if the current selection and the received one has the same end/start.
+ */
+export function hasNextSelection(editorState, selection, backward = false) {
+    const crtSelection = editorState.getSelection();
+
+    if (backward) {
+        return selection.getStartOffset() !== crtSelection.getStartOffset() ||
+            selection.getStartKey() !== crtSelection.getStartKey();
+    } else {
+        return selection.getEndOffset() !== crtSelection.getEndOffset() ||
+            selection.getEndKey() !== crtSelection.getEndKey();
+    }
 }
 
 /**
@@ -480,41 +609,110 @@ export function getRangeAndTextForStyle(editorState, style) {
         throw new Error('Only collapsed selection supported');
     }
 
-    var blockKey = selection.getAnchorKey();
-    var block = editorState.getCurrentContent().getBlockForKey(blockKey);
-    var characterLists = block.getCharacterList();
-
-    var from = null;
-    var to = null;
+    const content = editorState.getCurrentContent();
+    let suggestionText = '';
+    let startBlock = content.getBlockForKey(selection.getStartKey());
+    let startOffset = selection.getStartOffset();
+    let endBlock = startBlock;
+    let endOffset = startOffset + 1;
+    let block;
+    let offset;
+    let characterMetadataList;
+    let characterMetadata;
+    let blockText;
+    let found;
+    let newBlock;
 
     // check backwards
-    for (let i = selection.getAnchorOffset(); i >= 0; i--) {
-        const characterList = characterLists.get(i);
+    block = startBlock;
+    offset = startOffset < block.getLength() ? startOffset : block.getLength() - 1;
+    newBlock = false;
 
-        if (characterList.hasStyle(style)) {
-            from = i;
+    while (block) {
+        found = false;
+        offset = (offset == null) ? (block.getLength() - 1) : offset;
+        characterMetadataList = block.getCharacterList();
+        blockText = block.getText();
+
+        for (let i = offset; i >= 0; i--) {
+            characterMetadata = characterMetadataList.get(i);
+
+            if (!characterMetadata.hasStyle(style)) {
+                continue;
+            }
+
+            if (newBlock) {
+                suggestionText = ' \\ ' + suggestionText;
+                newBlock = false;
+            }
+
+            suggestionText = blockText[i] + suggestionText;
+            startOffset = i;
+            startBlock = block;
+            found = true;
+        }
+
+        if (found) {
+            block = content.getBlockBefore(block.getKey());
+            offset = null;
+            newBlock = true;
         } else {
-            break;
+            block = null;
         }
     }
 
-    // check forward
-    for (let i = selection.getAnchorOffset(); i < block.getLength(); i++) {
-        const characterList = characterLists.get(i);
 
-        if (characterList.hasStyle(style)) {
-            to = i;
+    // check forward
+    block = endBlock;
+    offset = endOffset;
+    newBlock = false;
+
+    if (block.getLength() === offset) {
+        block = content.getBlockAfter(block.getKey());
+        offset = null;
+        newBlock = true;
+    }
+
+    while (block) {
+        found = false;
+        offset = offset == null ? 0 : offset;
+        characterMetadataList = block.getCharacterList();
+        blockText = block.getText();
+
+        for (let i = offset; i < block.getLength(); i++) {
+            characterMetadata = characterMetadataList.get(i);
+
+            if (!characterMetadata.hasStyle(style)) {
+                continue;
+            }
+
+            if (newBlock) {
+                suggestionText = suggestionText + ' \\ ';
+                newBlock = false;
+            }
+
+            suggestionText = suggestionText + blockText[i];
+            endOffset = i + 1;
+            endBlock = block;
+            found = true;
+        }
+
+        if (found) {
+            block = content.getBlockAfter(block.getKey());
+            offset = null;
+            newBlock = true;
         } else {
-            break;
+            block = null;
         }
     }
 
     const newSelection = selection.merge({
-        anchorOffset: from,
-        focusOffset: to + 1,
+        anchorOffset: startOffset,
+        anchorKey: startBlock.getKey(),
+        focusOffset: endOffset,
+        focusKey: endBlock.getKey(),
         isBackward: false
     });
-    const highlightedText = block.getText().slice(from, to + 1);
 
     return {
         selection: newSelection,

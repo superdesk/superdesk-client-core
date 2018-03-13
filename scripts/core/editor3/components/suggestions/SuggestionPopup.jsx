@@ -68,6 +68,9 @@ class Suggestion extends Component {
         const actionNames = {
             ADD_SUGGESTION: gettext('Add'),
             DELETE_SUGGESTION: gettext('Remove'),
+            TOGGLE_BOLD_SUGGESTION: gettext('Toggle bold'),
+            TOGGLE_ITALIC_SUGGESTION: gettext('Toggle italic'),
+            TOGGLE_UNDERLINE_SUGGESTION: gettext('Toggle underline')
         };
 
         return (
