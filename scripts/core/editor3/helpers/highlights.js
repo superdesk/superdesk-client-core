@@ -1,10 +1,11 @@
-import {RichUtils} from 'draft-js';
+import {RichUtils, EditorState, convertFromRaw} from 'draft-js';
 import {highlightsConfig} from '../highlightsConfig';
 import {editor3DataKeys, getCustomDataFromEditor, setCustomDataForEditor} from './editor3CustomData';
 import {getDraftCharacterListForSelection} from './getDraftCharacterListForSelection';
 import {getDraftSelectionForEntireContent} from './getDraftSelectionForEntireContent';
 import {expandDraftSelection} from './expandDraftSelection';
 import {clearInlineStyles} from './clearInlineStyles';
+import {suggestionsTypes} from '../highlightsConfig';
 
 export const availableHighlights = Object.keys(highlightsConfig).reduce((obj, key) => {
     obj[key] = highlightsConfig[key].draftStyleMap;
@@ -536,6 +537,16 @@ function removeHighlightsStyleMap(editorState) {
         editor3DataKeys.MULTIPLE_HIGHLIGHTS,
         nextHighlights
     );
+}
+
+export function fieldhasUnresolvedSuggestions(rawState) {
+    const contentState = convertFromRaw(rawState);
+    const editorState = EditorState.createWithContent(contentState);
+    const highlights = getHighlightsState(editorState);
+
+    return Object.keys(highlights.highlightsData)
+        .filter((key) => suggestionsTypes.find((suggestionType) => key.indexOf(suggestionType) === 0))
+        .length > 0;
 }
 
 export const prepareHighlightsForExport = removeHighlightsStyleMap;
