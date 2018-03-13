@@ -496,7 +496,7 @@ export function getRangeAndTextForStyle(editorState, style) {
 function applyHighlightsStyleMap(editorState) {
     const highlights = getCustomDataFromEditor(editorState, editor3DataKeys.MULTIPLE_HIGHLIGHTS);
 
-    if (highlights === undefined) {
+    if (highlights === undefined || highlights.highlightsData === undefined) {
         return editorState;
     }
 
