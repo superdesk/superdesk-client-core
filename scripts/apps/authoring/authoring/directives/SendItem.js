@@ -1,13 +1,14 @@
 import _ from 'lodash';
+import {hasUnresolvedSuggestions} from '../../../../core/editor3/helpers/highlights';
 
 SendItem.$inject = ['$q', 'api', 'desks', 'notify', 'authoringWorkspace',
     'superdeskFlags', '$location', 'macros', '$rootScope', 'deployConfig',
     'authoring', 'send', 'editorResolver', 'confirm', 'archiveService',
-    'preferencesService', 'multi', 'datetimeHelper', 'config', 'privileges', 'storage'];
+    'preferencesService', 'multi', 'datetimeHelper', 'config', 'privileges', 'storage', 'modal'];
 export function SendItem($q, api, desks, notify, authoringWorkspace,
     superdeskFlags, $location, macros, $rootScope, deployConfig,
     authoring, send, editorResolver, confirm, archiveService,
-    preferencesService, multi, datetimeHelper, config, privileges, storage) {
+    preferencesService, multi, datetimeHelper, config, privileges, storage, modal) {
     return {
         scope: {
             item: '=',
@@ -50,6 +51,30 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
             scope.$watch(send.getConfig, activateConfig);
 
             scope.publish = function() {
+                const draftjsFieldsHavingUnresolvedSuggestions = Object.keys(scope.item)
+                    .filter((key) => {
+                        const fieldValue = scope.item[key];
+                        const isDraftjsField = Array.isArray(fieldValue)
+                            && fieldValue.length === 1
+                            && typeof fieldValue[0].blocks === 'object';
+
+                        if (isDraftjsField === false) {
+                            return false;
+                        }
+
+                        const rawState = fieldValue[0];
+
+                        return hasUnresolvedSuggestions(rawState);
+                    });
+
+                if (draftjsFieldsHavingUnresolvedSuggestions.length > 0) {
+                    modal.alert({
+                        headerText: gettext('Resolving suggestions'),
+                        bodyText: gettext('Article cannot be published. Please accept or reject all suggestions first.')
+                    });
+                    return;
+                }
+
                 scope.loading = true;
                 var result = scope._publish();
 
