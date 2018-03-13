@@ -78,4 +78,8 @@ export default angular.module('superdesk.core.services.modal', ['superdesk-ui', 
                 return confirmArgumentsList.apply(this, arguments);
             }
         };
+
+        this.alert = function(options) {
+            return confirmConfigurationObject.call(this, {...options, cancelText: null});
+        };
     }]);
