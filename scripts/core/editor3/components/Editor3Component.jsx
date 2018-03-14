@@ -27,6 +27,7 @@ import UnstyledBlock from './UnstyledBlock';
 import UnstyledWrapper from './UnstyledWrapper';
 import {isEditorBlockEvent} from './BaseUnstyledComponent';
 import {acceptedInlineStyles} from '../helpers/inlineStyles';
+import {handleBeforeInputHighlights} from '../helpers/highlights';
 
 const VALID_MEDIA_TYPES = [
     'application/superdesk.item.picture',
@@ -85,6 +86,7 @@ export class Editor3Component extends React.Component {
         this.handleKeyCommand = this.handleKeyCommand.bind(this);
         this.handleBeforeInput = this.handleBeforeInput.bind(this);
         this.handleBeforeInputCombined = this.handleBeforeInputCombined.bind(this);
+        this.handleBeforeInputHighlightsBound = handleBeforeInputHighlights.bind(null, this.props.onChange);
         this.keyBindingFn = this.keyBindingFn.bind(this);
         this.allowEditSuggestion = allowEditSuggestion.bind(this);
     }
@@ -183,7 +185,7 @@ export class Editor3Component extends React.Component {
     }
 
     handleBeforeInputCombined() {
-        const handlers = [this.handleBeforeInput];
+        const handlers = [this.handleBeforeInput, this.handleBeforeInputHighlightsBound];
 
         for (let i = 0; i < handlers.length; i++) {
             if (handlers[i].apply(this, arguments) === 'handled') {
