@@ -9,7 +9,11 @@ import {
 export const editor3DataKeys = {
     MULTIPLE_HIGHLIGHTS: 'MULTIPLE_HIGHLIGHTS',
     RESOLVED_COMMENTS_HISTORY: 'RESOLVED_COMMENTS_HISTORY',
-    RESOLVED_SUGGESTIONS_HISTORY: 'RESOLVED_SUGGESTIONS_HISTORY'
+    RESOLVED_SUGGESTIONS_HISTORY: 'RESOLVED_SUGGESTIONS_HISTORY',
+
+    // required in order to expose commnets to the server, but not couple it
+    // with the client-side implementation of text-highlights
+    __PUBLIC_API__comments: '__PUBLIC_API__comments'
 };
 
 export function keyValid(key) {
