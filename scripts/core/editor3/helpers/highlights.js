@@ -486,6 +486,38 @@ export function getRangeAndTextForStyle(editorState, style) {
     };
 }
 
+export function fieldhasUnresolvedSuggestions(rawState) {
+    const contentState = convertFromRaw(rawState);
+    const editorState = EditorState.createWithContent(contentState);
+    const highlights = getHighlightsState(editorState);
+
+    return Object.keys(highlights.highlightsData)
+        .filter((key) => suggestionsTypes.find((suggestionType) => key.indexOf(suggestionType) === 0))
+        .length > 0;
+}
+
+/**
+ * @ngdoc method
+ * @name addCommentsForServer
+ * @param {EditorState} editorState
+ * @return {EditorState}
+ */
+function addCommentsForServer(editorState) {
+    const multipleHighlights = getCustomDataFromEditor(editorState, editor3DataKeys.MULTIPLE_HIGHLIGHTS);
+
+    if (multipleHighlights === undefined || multipleHighlights['highlightsData'] === undefined) {
+        return editorState;
+    }
+
+    const highlightsData = multipleHighlights['highlightsData'];
+
+    const comments = Object.keys(highlightsData)
+        .filter((key) => key.indexOf(highlightsConfig.COMMENT.type) === 0)
+        .map((key) => highlightsData[key].data);
+
+    return setCustomDataForEditor(editorState, editor3DataKeys.__PUBLIC_API__comments, comments);
+}
+
 /**
  * @ngdoc method
  * @name applyHighlightsStyleMap
@@ -539,14 +571,5 @@ function removeHighlightsStyleMap(editorState) {
     );
 }
 
-export function fieldhasUnresolvedSuggestions(rawState) {
-    const contentState = convertFromRaw(rawState);
-    const editorState = EditorState.createWithContent(contentState);
-    const highlights = getHighlightsState(editorState);
+export const prepareHighlightsForExport = (editorState) => addCommentsForServer(removeHighlightsStyleMap(editorState));
 
-    return Object.keys(highlights.highlightsData)
-        .filter((key) => suggestionsTypes.find((suggestionType) => key.indexOf(suggestionType) === 0))
-        .length > 0;
-}
-
-export const prepareHighlightsForExport = removeHighlightsStyleMap;
