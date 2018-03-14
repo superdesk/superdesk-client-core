@@ -3,7 +3,7 @@ import {highlightsConfig} from '../highlightsConfig';
 import {editor3DataKeys, getCustomDataFromEditor, setCustomDataForEditor} from './editor3CustomData';
 import {getDraftCharacterListForSelection} from './getDraftCharacterListForSelection';
 import {getDraftSelectionForEntireContent} from './getDraftSelectionForEntireContent';
-import {expandDraftSelection} from './expandDraftSelection';
+import {resizeDraftSelection} from './resizeDraftSelection';
 import {clearInlineStyles} from './clearInlineStyles';
 import {suggestionsTypes, changeSuggestionsTypes} from '../highlightsConfig';
 
@@ -202,7 +202,7 @@ export function canAddHighlight(editorState, highlightType) {
 
     // selection is expanded to include edges
     // so you can't add a highlight right next to another
-    const selection = expandDraftSelection(
+    const selection = resizeDraftSelection(
         editorState.getSelection(),
         editorState,
         1,

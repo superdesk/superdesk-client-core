@@ -76,7 +76,7 @@ function expandRight(selectionState, editorState, stretchRight, limitedToSingleB
     return expandRight(nextSelectionOnNextBlock, editorState, stretchRight - nextRight);
 }
 
-export function expandDraftSelection(selection, editorState, stretchLeft, stretchRight, limitedToSingleBlock) {
+export function resizeDraftSelection(selection, editorState, stretchLeft, stretchRight, limitedToSingleBlock) {
     const expandedLeft = expandLeft(selection, editorState, stretchLeft, limitedToSingleBlock);
 
     return expandRight(expandedLeft, editorState, stretchRight, limitedToSingleBlock);
