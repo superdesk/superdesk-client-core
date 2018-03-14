@@ -769,7 +769,7 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
                 }
             }
 
-            scope.selectTerm = function(term) {
+            scope.selectTerm = function(term, $event) {
                 if (term) {
                     addTerm(term);
 
@@ -777,6 +777,11 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
                         scope.termPath.forEach((term) => {
                             addTerm(term);
                         });
+                    }
+
+                    if ($event && $event.ctrlKey) {
+                        $event.stopPropagation();
+                        return;
                     }
 
                     scope.activeTerm = '';

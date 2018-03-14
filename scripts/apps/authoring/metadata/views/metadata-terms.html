@@ -42,7 +42,7 @@
                         </figure>
                         {{getLocaleName(term)}}
                         <i class="icon-chevron-right-thin"></i></button>
-                    <button ng-if="!tree[term[uniqueField]]" ng-click="selectTerm(term)">{{getLocaleName(term)}}</button>
+                    <button ng-if="!tree[term[uniqueField]]" ng-click="selectTerm(term, $event)">{{getLocaleName(term)}}</button>
                 </li>
             </ul>
         </li>
