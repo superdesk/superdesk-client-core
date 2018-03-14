@@ -161,7 +161,7 @@ export class Editor3Component extends React.Component {
             const {editorState} = this.props;
             const selection = editorState.getSelection();
 
-            if (selection.getStartOffset() !== selection.getEndOffset()) {
+            if (!selection.isCollapsed()) {
                 return 'delete';
             }
         }

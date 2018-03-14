@@ -667,7 +667,7 @@ export function getRangeAndTextForStyle(editorState, style) {
     offset = endOffset;
     newBlock = false;
 
-    if (block.getLength() === offset) {
+    if (block.getLength() === offset && offset !== 0) {
         block = content.getBlockAfter(block.getKey());
         offset = null;
         newBlock = true;

@@ -98,10 +98,8 @@ const createAddSuggestion = (state, {text, data}) => {
 const createDeleteSuggestion = (state, {action, data}) => {
     let {editorState} = state;
     const selection = editorState.getSelection();
-    const noSelection = selection.getEndOffset() === selection.getStartOffset() &&
-        selection.getStartKey() === selection.getEndKey();
 
-    if (noSelection) {
+    if (selection.isCollapsed()) {
         if (action === 'backspace') {
             editorState = Highlights.changeEditorSelection(editorState, -1, 0, false);
         } else {
@@ -111,7 +109,7 @@ const createDeleteSuggestion = (state, {action, data}) => {
 
     editorState = deleteCurrentSelection(editorState, data);
 
-    if (noSelection && action !== 'backspace') {
+    if (selection.isCollapsed() && action !== 'backspace') {
         editorState = Highlights.changeEditorSelection(editorState, 1, 1, false);
     }
 
@@ -131,14 +129,14 @@ const createChangeStyleSuggestion = (state, {style, data}) => {
     let {editorState} = state;
     const type = Highlights.getTypeByInlineStyle(style);
     const selection = editorState.getSelection();
-    let crtStyle;
+    let currentStyle;
 
     editorState = Highlights.initSelectionIterator(editorState);
     while (Highlights.hasNextSelection(editorState, selection)) {
-        crtStyle = Highlights.getHighlightStyleAtCurrentPosition(editorState, type);
+        currentStyle = Highlights.getHighlightStyleAtCurrentPosition(editorState, type);
 
-        if (crtStyle) {
-            editorState = resetSuggestion(editorState, crtStyle);
+        if (currentStyle) {
+            editorState = resetSuggestion(editorState, currentStyle);
         } else {
             editorState = Highlights.changeEditorSelection(editorState, 1, 1, false);
         }

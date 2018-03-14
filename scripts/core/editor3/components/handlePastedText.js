@@ -119,11 +119,9 @@ const atomicBlock = (data, entity) => new ContentBlock({
 export function allowEditSuggestion(action) {
     const {suggestingMode, editorState} = this.props;
     const selection = editorState.getSelection();
-    const noSelection = selection.getEndOffset() === selection.getStartOffset() &&
-        selection.getStartKey() === selection.getEndKey();
     let newEditorState;
 
-    if (!noSelection) {
+    if (!selection.isCollapsed()) {
         newEditorState = Highlights.initSelectionIterator(editorState);
         while (Highlights.hasNextSelection(newEditorState, selection)) {
             const data = Highlights.getHighlightDataAtCurrentPosition(

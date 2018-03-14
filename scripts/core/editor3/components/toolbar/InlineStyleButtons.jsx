@@ -22,7 +22,7 @@ export class InlineStyleButtonsComponent extends Component {
         const {editorState, suggestingMode, toggleInlineStyle, createChangeStyleSuggestion} = this.props;
         const selection = editorState.getSelection();
 
-        if (suggestingMode && selection.getStartOffset() !== selection.getEndOffset()) {
+        if (suggestingMode && !selection.isCollapsed()) {
             createChangeStyleSuggestion(type);
         } else {
             toggleInlineStyle(type);
