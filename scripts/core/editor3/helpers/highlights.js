@@ -595,38 +595,19 @@ const getBlockAndOffset = (content, selection, offset, startFromEnd = false) => 
     return {block, newOffset};
 };
 
-/**
- * @ngdoc method
- * @name getRangeAndTextForStyle
- * @param {Object} editorState
- * @param {String} style
- * @return {Object} return a selection and text that are associated to given highlight style.
- */
-export function getRangeAndTextForStyle(editorState, style) {
+function getLeftRangeAndTextForStyle(editorState, style) {
     const selection = editorState.getSelection();
-
-    if (selection.isCollapsed() === false) {
-        throw new Error('Only collapsed selection supported');
-    }
-
     const content = editorState.getCurrentContent();
-    let suggestionText = '';
     let startBlock = content.getBlockForKey(selection.getStartKey());
     let startOffset = selection.getStartOffset();
-    let endBlock = startBlock;
-    let endOffset = startOffset + 1;
-    let block;
-    let offset;
+    let startText = '';
+    let block = startBlock;
+    let offset = startOffset < block.getLength() ? startOffset : block.getLength() - 1;
     let characterMetadataList;
     let characterMetadata;
     let blockText;
     let found;
-    let newBlock;
-
-    // check backwards
-    block = startBlock;
-    offset = startOffset < block.getLength() ? startOffset : block.getLength() - 1;
-    newBlock = false;
+    let newBlock = false;
 
     while (block) {
         found = false;
@@ -642,11 +623,11 @@ export function getRangeAndTextForStyle(editorState, style) {
             }
 
             if (newBlock) {
-                suggestionText = ' \\ ' + suggestionText;
+                startText = ' \\ ' + startText;
                 newBlock = false;
             }
 
-            suggestionText = blockText[i] + suggestionText;
+            startText = blockText[i] + startText;
             startOffset = i;
             startBlock = block;
             found = true;
@@ -661,14 +642,30 @@ export function getRangeAndTextForStyle(editorState, style) {
         }
     }
 
+    return {startOffset, startBlock, startText};
+}
 
-    // check forward
-    block = endBlock;
-    offset = endOffset;
-    newBlock = false;
+function getRightRangeAndTextForStyle(editorState, style) {
+    const selection = editorState.getSelection();
+    const content = editorState.getCurrentContent();
+    let endText = '';
+    let endBlock = content.getBlockForKey(selection.getStartKey());
+    let endOffset = selection.getStartOffset() + 1;
+    let block = endBlock;
+    let offset = endOffset;
+    let characterMetadataList;
+    let characterMetadata;
+    let blockText;
+    let found;
+    let newBlock = false;
 
     if (block.getLength() === offset && offset !== 0) {
         block = content.getBlockAfter(block.getKey());
+
+        if (block == null) {
+            return {endOffset, endBlock, endText};
+        }
+
         offset = null;
         newBlock = true;
     }
@@ -687,11 +684,11 @@ export function getRangeAndTextForStyle(editorState, style) {
             }
 
             if (newBlock) {
-                suggestionText = suggestionText + ' \\ ';
+                endText = endText + ' \\ ';
                 newBlock = false;
             }
 
-            suggestionText = suggestionText + blockText[i];
+            endText = endText + blockText[i];
             endOffset = i + 1;
             endBlock = block;
             found = true;
@@ -706,6 +703,25 @@ export function getRangeAndTextForStyle(editorState, style) {
         }
     }
 
+    return {endOffset, endBlock, endText};
+}
+
+/**
+ * @ngdoc method
+ * @name getRangeAndTextForStyle
+ * @param {Object} editorState
+ * @param {String} style
+ * @return {Object} return a selection and text that are associated to given highlight style.
+ */
+export function getRangeAndTextForStyle(editorState, style) {
+    const selection = editorState.getSelection();
+
+    if (selection.isCollapsed() === false) {
+        throw new Error('Only collapsed selection supported');
+    }
+
+    const {startOffset, startBlock, startText} = getLeftRangeAndTextForStyle(editorState, style);
+    const {endOffset, endBlock, endText} = getRightRangeAndTextForStyle(editorState, style);
     const newSelection = selection.merge({
         anchorOffset: startOffset,
         anchorKey: startBlock.getKey(),
@@ -716,7 +732,7 @@ export function getRangeAndTextForStyle(editorState, style) {
 
     return {
         selection: newSelection,
-        highlightedText: highlightedText
+        highlightedText: startText + endText
     };
 }
 

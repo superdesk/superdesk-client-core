@@ -225,12 +225,18 @@ export class HighlightsPopup extends Component {
             return List();
         }
 
-        var blockKey = selection.getStartKey();
-        var block = content.getBlockForKey(blockKey);
-        var offset = selection.getStartOffset();
+        const blockKey = selection.getStartKey();
+        let block = content.getBlockForKey(blockKey);
+        let offset = selection.getStartOffset();
 
-        if (block.getLength() === offset && offset !== 0) {
-            block = content.getBlockAfter(block.getKey());
+        if (block.getLength() === offset) {
+            const nextBlock = content.getBlockAfter(block.getKey());
+
+            if (nextBlock == null) {
+                return List();
+            }
+
+            block = nextBlock;
             offset = 0;
         }
 
