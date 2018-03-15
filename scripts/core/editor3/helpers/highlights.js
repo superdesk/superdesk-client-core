@@ -478,11 +478,11 @@ export function getRangeAndTextForStyle(editorState, style) {
         focusOffset: to + 1,
         isBackward: false
     });
-    const suggestionText = block.getText().slice(from, to + 1);
+    const highlightedText = block.getText().slice(from, to + 1);
 
     return {
         selection: newSelection,
-        suggestionText: suggestionText
+        highlightedText: highlightedText
     };
 }
 

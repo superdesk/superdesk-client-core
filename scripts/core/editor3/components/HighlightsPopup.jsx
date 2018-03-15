@@ -73,11 +73,11 @@ export class HighlightsPopup extends Component {
                     let data = this.props.highlightsManager.getHighlightData(styleName);
 
                     if (suggestionsTypes.indexOf(highlightType) !== -1) {
-                        const {selection, suggestionText} = Highlights.getRangeAndTextForStyle(
+                        const {selection, highlightedText} = Highlights.getRangeAndTextForStyle(
                             this.props.editorState, suggestionStyle
                         );
 
-                        data = {...data, suggestionText, selection};
+                        data = {...data, suggestionText: highlightedText, selection: selection};
                     }
 
                     highlightsAndSuggestions = [
