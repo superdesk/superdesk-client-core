@@ -400,12 +400,22 @@ export function getCharByOffset(editorState, selection, offset) {
  * @param {Object} content
  * @param {Object} selection
  * @param {Integer} offset
+ * @param {Boolean} startFromEnd
  * @return {Object} return block and offset at new position
- * @description find the block and offset for the new position specified by offset.
+ * @description find the block and offset for the new position specified by offset starting
+ * from beggining of selection if startFromEnd is false or from end of selection otherwise.
  */
-const getBlockAndOffset = (content, selection, offset) => {
-    let newOffset = selection.getStartOffset() + offset;
-    let block = content.getBlockForKey(selection.getStartKey());
+const getBlockAndOffset = (content, selection, offset, startFromEnd = false) => {
+    let newOffset;
+    let block;
+
+    if (startFromEnd) {
+        newOffset = selection.getEndOffset() + offset;
+        block = content.getBlockForKey(selection.getEndKey());
+    } else {
+        newOffset = selection.getStartOffset() + offset;
+        block = content.getBlockForKey(selection.getStartKey());
+    }
 
     if (block == null) {
         return [null, null];
@@ -416,7 +426,7 @@ const getBlockAndOffset = (content, selection, offset) => {
         if (block == null) {
             return [null, null];
         }
-        newOffset = block.getLength() - 1 + newOffset;
+        newOffset = block.getLength() + newOffset;
     }
 
     while (newOffset > block.getLength()) {
