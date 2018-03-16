@@ -1,5 +1,5 @@
 import {stripHtmlTags} from 'core/utils';
-import {fieldhasUnresolvedSuggestions} from 'core/editor3/helpers/highlights';
+import {fieldHasUnresolvedSuggestions} from 'core/editor3/helpers/highlights';
 
 export const CONTENT_FIELDS_DEFAULTS = Object.freeze({
     headline: '',
@@ -198,7 +198,7 @@ export function itemHasUnresolvedSuggestions(item) {
 
             const rawState = fieldValue[0];
 
-            return fieldhasUnresolvedSuggestions(rawState);
+            return fieldHasUnresolvedSuggestions(rawState);
         })
         .length > 0;
 }

@@ -12,26 +12,37 @@ export const availableHighlights = Object.keys(highlightsConfig).reduce((obj, ke
     return obj;
 }, {});
 
-export function getTypeByInlineStyle(inlineStyle) {
-    const mapping = {
-        BOLD: 'TOGGLE_BOLD_SUGGESTION',
-        ITALIC: 'TOGGLE_ITALIC_SUGGESTION',
-        UNDERLINE: 'TOGGLE_UNDERLINE_SUGGESTION'
-    };
+const mapHighlightTypeToInlineStyle = Object.keys(highlightsConfig).reduce((obj, key) => {
+    if (highlightsConfig[key].type === 'STYLE') {
+        obj[key] = highlightsConfig[key].style;
+    }
+    return obj;
+}, {});
 
-    return mapping[inlineStyle];
+const mapInlineStyleToHighlightType = Object.keys(highlightsConfig).reduce((obj, key) => {
+    if (highlightsConfig[key].type === 'STYLE') {
+        obj[highlightsConfig[key].style] = key;
+    }
+    return obj;
+}, {});
+
+export function getTypeByInlineStyle(inlineStyle) {
+    return mapInlineStyleToHighlightType[inlineStyle];
 }
 
 export function getInlineStyleByType(type) {
-    const mapping = {
-        TOGGLE_BOLD_SUGGESTION: 'BOLD',
-        TOGGLE_ITALIC_SUGGESTION: 'ITALIC',
-        TOGGLE_UNDERLINE_SUGGESTION: 'UNDERLINE'
-    };
-
-    return mapping[type];
+    return mapHighlightTypeToInlineStyle[type];
 }
 
+export function getHighlightDescription(suggestionsType) {
+    const highlight = highlightsConfig[suggestionsType];
+
+    if (highlight != null && highlight.description) {
+        return highlight.description;
+    }
+
+    return suggestionsType;
+}
 
 function getInitialHighlightsState() {
     return {
@@ -736,7 +747,7 @@ export function getRangeAndTextForStyle(editorState, style) {
     };
 }
 
-export function fieldhasUnresolvedSuggestions(rawState) {
+export function fieldHasUnresolvedSuggestions(rawState) {
     const contentState = convertFromRaw(rawState);
     const editorState = EditorState.createWithContent(contentState);
     const highlights = getHighlightsState(editorState);

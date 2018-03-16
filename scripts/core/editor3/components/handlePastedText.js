@@ -2,7 +2,7 @@ import {EditorState, Modifier, genKey, CharacterMetadata, ContentBlock} from 'dr
 import {List, OrderedSet} from 'immutable';
 import {fromHTML} from 'core/editor3/html';
 import * as Highlights from '../helpers/highlights';
-import {allSuggestionsTypes} from '../highlightsConfig';
+import {suggestionsTypes} from '../highlightsConfig';
 import ng from 'core/services/ng';
 
 /**
@@ -125,7 +125,7 @@ export function allowEditSuggestion(action) {
         newEditorState = Highlights.initSelectionIterator(editorState);
         while (Highlights.hasNextSelection(newEditorState, selection)) {
             const data = Highlights.getHighlightDataAtCurrentPosition(
-                newEditorState, allSuggestionsTypes);
+                newEditorState, suggestionsTypes);
 
             if (!allowEditForData(data, suggestingMode)) {
                 return false;
@@ -135,8 +135,8 @@ export function allowEditSuggestion(action) {
         return true;
     }
 
-    const dataBefore = Highlights.getHighlightDataAtOffset(editorState, allSuggestionsTypes, selection, -1);
-    const dataAfter = Highlights.getHighlightDataAtOffset(editorState, allSuggestionsTypes, selection, 0);
+    const dataBefore = Highlights.getHighlightDataAtOffset(editorState, suggestionsTypes, selection, -1);
+    const dataAfter = Highlights.getHighlightDataAtOffset(editorState, suggestionsTypes, selection, 0);
     const allowEditBefore = allowEditForData(dataBefore, suggestingMode);
     const editBefore = allowEditBefore && (action === 'backspace' || action === 'insert');
     const allowEditAfter = allowEditForData(dataAfter, suggestingMode);

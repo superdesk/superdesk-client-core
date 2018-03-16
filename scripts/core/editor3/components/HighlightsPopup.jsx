@@ -9,7 +9,7 @@ import {Dropdown} from 'core/ui/components';
 import {CommentPopup} from './comments';
 import {SuggestionPopup} from './suggestions/SuggestionPopup';
 import {AnnotationPopup} from './annotations';
-import {allSuggestionsTypes} from '../highlightsConfig';
+import {suggestionsTypes} from '../highlightsConfig';
 import * as Highlights from '../helpers/highlights';
 
 /**
@@ -70,7 +70,7 @@ export class HighlightsPopup extends Component {
                     const highlightType = this.props.highlightsManager.getHighlightTypeFromStyleName(styleName);
                     let data = this.props.highlightsManager.getHighlightData(styleName);
 
-                    if (allSuggestionsTypes.indexOf(highlightType) !== -1) {
+                    if (suggestionsTypes.indexOf(highlightType) !== -1) {
                         const {selection, highlightedText} = Highlights.getRangeAndTextForStyle(
                             this.props.editorState, styleName
                         );
@@ -119,8 +119,7 @@ export class HighlightsPopup extends Component {
      * @returns {JSX}
      */
     createHighlight(type, h, highlightId) {
-        switch (type) {
-        case 'ANNOTATION':
+        if (type === 'ANNOTATION') {
             return (
                 <Dropdown open={true}>
                     <AnnotationPopup
@@ -130,7 +129,7 @@ export class HighlightsPopup extends Component {
                     />
                 </Dropdown>
             );
-        case 'COMMENT':
+        } else if (type === 'COMMENT') {
             return (
                 <Dropdown open={true}>
                     <CommentPopup
@@ -142,13 +141,9 @@ export class HighlightsPopup extends Component {
                     />
                 </Dropdown>
             );
-        case 'TOGGLE_BOLD_SUGGESTION':
-        case 'TOGGLE_ITALIC_SUGGESTION':
-        case 'TOGGLE_UNDERLINE_SUGGESTION':
-        case 'DELETE_SUGGESTION':
-        case 'ADD_SUGGESTION':
+        } else if (suggestionsTypes.indexOf(type) !== -1) {
             return <SuggestionPopup suggestion={h} />;
-        default:
+        } else {
             console.error('Invalid highlight type in HighlightsPopup.jsx: ', type);
         }
     }

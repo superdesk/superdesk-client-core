@@ -34,14 +34,5 @@ export const customStyleMap = {
 
     CODE: {
         backgroundColor: '#e6ffe6'
-    },
-
-    ADD_SUGGESTION: {
-        color: 'rgba(0, 180, 0, 1.0)'
-    },
-
-    DELETE_SUGGESTION: {
-        color: 'rgba(255, 0, 0, 1.0)',
-        textDecoration: 'line-through'
     }
 };

@@ -6,6 +6,7 @@ import ng from 'core/services/ng';
 import {Dropdown} from 'core/ui/components';
 import {UserAvatar} from 'apps/users/components';
 import {acceptSuggestion, rejectSuggestion} from '../../actions';
+import * as Highlights from '../../helpers/highlights';
 
 /**
  * @ngdoc React
@@ -65,13 +66,7 @@ class Suggestion extends Component {
         const fromNow = moment(date).calendar();
         const fullDate = moment(date).format('MMMM Do YYYY, h:mm:ss a');
 
-        const actionNames = {
-            ADD_SUGGESTION: gettext('Add'),
-            DELETE_SUGGESTION: gettext('Remove'),
-            TOGGLE_BOLD_SUGGESTION: gettext('Toggle bold'),
-            TOGGLE_ITALIC_SUGGESTION: gettext('Toggle italic'),
-            TOGGLE_UNDERLINE_SUGGESTION: gettext('Toggle underline')
-        };
+        const description = Highlights.getHighlightDescription(this.props.suggestion.type);
 
         return (
             <Dropdown open={true}>
@@ -83,7 +78,7 @@ class Suggestion extends Component {
                     </div>
                 </div>
                 <div>
-                    <strong>{actionNames[this.props.suggestion.type]}: </strong>
+                    <strong>{gettext(description)}: </strong>
                     {this.props.suggestion.suggestionText}
                 </div>
                 <br />
