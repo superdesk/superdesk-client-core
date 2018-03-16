@@ -518,6 +518,11 @@ function addCommentsForServer(editorState) {
     return setCustomDataForEditor(editorState, editor3DataKeys.__PUBLIC_API__comments, comments);
 }
 
+/**
+ * @ngdoc method
+ * @name handleBeforeInputHighlights
+ * @description prevents inheriting of highlight styles
+ */
 export function handleBeforeInputHighlights(onChange, chars, editorState) {
     const expandedSelection = expandDraftSelection(editorState.getSelection(), editorState, 1, 0);
     const previousCharacterStyles = getDraftCharacterListForSelection(editorState, expandedSelection)

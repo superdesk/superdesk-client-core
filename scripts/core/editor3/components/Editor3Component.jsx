@@ -85,8 +85,6 @@ export class Editor3Component extends React.Component {
         this.onDragDrop = this.onDragDrop.bind(this);
         this.handleKeyCommand = this.handleKeyCommand.bind(this);
         this.handleBeforeInput = this.handleBeforeInput.bind(this);
-        this.handleBeforeInputCombined = this.handleBeforeInputCombined.bind(this);
-        this.handleBeforeInputHighlightsBound = handleBeforeInputHighlights.bind(null, this.props.onChange);
         this.keyBindingFn = this.keyBindingFn.bind(this);
         this.allowEditSuggestion = allowEditSuggestion.bind(this);
     }
@@ -184,18 +182,6 @@ export class Editor3Component extends React.Component {
         return getDefaultKeyBinding(e);
     }
 
-    handleBeforeInputCombined() {
-        const handlers = [this.handleBeforeInput, this.handleBeforeInputHighlightsBound];
-
-        for (let i = 0; i < handlers.length; i++) {
-            if (handlers[i].apply(this, arguments) === 'handled') {
-                return 'handled';
-            }
-        }
-
-        return 'not-handled';
-    }
-
     /**
      * @ngdoc method
      * @name Editor3#handleKeyCommand
@@ -273,8 +259,8 @@ export class Editor3Component extends React.Component {
      * at the end of content, any character added will continue to be part of the link.
      * This logic stops that behavior.
      */
-    handleBeforeInput(chars) {
-        const {editorState, onChange, suggestingMode, onCreateAddSuggestion} = this.props;
+    handleBeforeInput(chars, editorState) {
+        const {onChange, suggestingMode, onCreateAddSuggestion} = this.props;
 
         if (!this.allowEditSuggestion('insert')) {
             return 'handled';
@@ -332,6 +318,10 @@ export class Editor3Component extends React.Component {
 
             onChange(newEditorState);
 
+            return 'handled';
+        }
+
+        if (handleBeforeInputHighlights(this.props.onChange, chars, editorState) === 'handled') {
             return 'handled';
         }
 
@@ -413,7 +403,7 @@ export class Editor3Component extends React.Component {
                     <Editor editorState={editorState}
                         handleKeyCommand={this.handleKeyCommand}
                         keyBindingFn={this.keyBindingFn}
-                        handleBeforeInput={this.handleBeforeInputCombined}
+                        handleBeforeInput={this.handleBeforeInput}
                         blockRenderMap={blockRenderMap}
                         blockRendererFn={getBlockRenderer({svc: this.props.svc})}
                         customStyleMap={{...customStyleMap, ...this.props.highlightsManager.styleMap}}
