@@ -418,13 +418,13 @@ const getBlockAndOffset = (content, selection, offset, startFromEnd = false) => 
     }
 
     if (block == null) {
-        return [null, null];
+        return {block: null, newOffset: null};
     }
 
     while (newOffset < 0) {
         block = content.getBlockBefore(block.getKey());
         if (block == null) {
-            return [null, null];
+            return {block: null, newOffset: null};
         }
         newOffset = block.getLength() + newOffset;
     }
@@ -433,7 +433,7 @@ const getBlockAndOffset = (content, selection, offset, startFromEnd = false) => 
         newOffset = newOffset - block.getLength();
         block = content.getBlockAfter(block.getKey());
         if (block == null) {
-            return [null, null];
+            return {block: null, newOffset: null};
         }
     }
 
