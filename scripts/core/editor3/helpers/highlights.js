@@ -203,10 +203,10 @@ export function canAddHighlight(editorState, highlightType) {
     // selection is expanded to include edges
     // so you can't add a highlight right next to another
     const selection = resizeDraftSelection(
+        1,
+        1,
         editorState.getSelection(),
         editorState,
-        1,
-        1,
         true
     );
 
