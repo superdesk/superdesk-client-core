@@ -406,6 +406,7 @@ export function getCharByOffset(editorState, selection, offset) {
  * from beggining of selection if startFromEnd is false or from end of selection otherwise.
  */
 const getBlockAndOffset = (content, selection, offset, startFromEnd = false) => {
+    const noValue = {block: null, newOffset: null};
     let newOffset;
     let block;
 
@@ -418,13 +419,13 @@ const getBlockAndOffset = (content, selection, offset, startFromEnd = false) => 
     }
 
     if (block == null) {
-        return {block: null, newOffset: null};
+        return noValue;
     }
 
     while (newOffset < 0) {
         block = content.getBlockBefore(block.getKey());
         if (block == null) {
-            return {block: null, newOffset: null};
+            return noValue;
         }
         newOffset = block.getLength() + newOffset;
     }
@@ -433,7 +434,7 @@ const getBlockAndOffset = (content, selection, offset, startFromEnd = false) => 
         newOffset = newOffset - block.getLength();
         block = content.getBlockAfter(block.getKey());
         if (block == null) {
-            return {block: null, newOffset: null};
+            return noValue;
         }
     }
 
