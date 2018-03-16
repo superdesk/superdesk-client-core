@@ -37,6 +37,17 @@
                 </div>
             </div>
 
+            <div ng-if="historyItem.operation === 'translate'">
+                <strong>{{ :: 'Translated by' | translate }}</strong> {{ :: historyItem.displayName }}
+                <em><time sd-absdate ng-model="historyItem._created"></time></em>
+                <span ng-if="historyItems[$index-1].version !== historyItem.version && historyItem.version !== 0" class="version">
+                    <span translate>version</span><span>: {{:: historyItem.version }}</span>
+                </span>
+                <div class="more-description" ng-if="historyItem.update.duplicate_id">
+                    <span translate>from</span>:<a href="" ng-click="open(historyItem.update.duplicate_id)"> {{ :: historyItem.update.duplicate_id }}</a>
+                </div>
+            </div>
+
             <div ng-if="historyItem.operation === 'duplicate'">
                 <strong>{{ :: 'Duplicate created by' | translate }}</strong> {{ :: historyItem.displayName }}
                 <em><time sd-absdate ng-model="historyItem._created"></time></em>
