@@ -502,7 +502,7 @@ export function fieldhasUnresolvedSuggestions(rawState) {
     const editorState = EditorState.createWithContent(contentState);
     const highlights = getHighlightsState(editorState);
 
-    return Object.keys(highlights.highlightsData)
+    return Object.keys(highlights.highlightsData || {})
         .filter((key) => suggestionsTypes.find((suggestionType) => key.indexOf(suggestionType) === 0))
         .length > 0;
 }
