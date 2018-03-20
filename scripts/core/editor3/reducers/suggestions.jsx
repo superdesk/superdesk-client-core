@@ -3,6 +3,7 @@ import {onChange} from './editor3';
 import {acceptedInlineStyles} from '../helpers/inlineStyles';
 import {changeSuggestionsTypes, styleSuggestionsTypes} from '../highlightsConfig';
 import * as Highlights from '../helpers/highlights';
+import {initSelectionIterator, hasNextSelection} from '../helpers/selectionIterator';
 import {editor3DataKeys, getCustomDataFromEditor, setCustomDataForEditor} from '../helpers/editor3CustomData';
 import ng from 'core/services/ng';
 
@@ -131,8 +132,8 @@ const createChangeStyleSuggestion = (state, {style, data}) => {
     const selection = editorState.getSelection();
     let currentStyle;
 
-    editorState = Highlights.initSelectionIterator(editorState);
-    while (Highlights.hasNextSelection(editorState, selection)) {
+    editorState = initSelectionIterator(editorState);
+    while (hasNextSelection(editorState, selection)) {
         currentStyle = Highlights.getHighlightStyleAtCurrentPosition(editorState, type);
 
         if (currentStyle) {
@@ -243,8 +244,8 @@ const processSuggestion = (state, {suggestion}, accepted) => {
         return saveEditorStatus(state, editorState, 'change-inline-style', true);
     }
 
-    editorState = Highlights.initSelectionIterator(editorState, true);
-    while (Highlights.hasNextSelection(editorState, selection, true)) {
+    editorState = initSelectionIterator(editorState, true);
+    while (hasNextSelection(editorState, selection, true)) {
         editorState = Highlights.changeEditorSelection(editorState, -1, -1, false);
         style = Highlights.getHighlightStyleAtCurrentPosition(editorState, changeSuggestionsTypes);
         data = Highlights.getHighlightData(editorState, style);
@@ -285,8 +286,8 @@ const deleteCurrentSelection = (editorState, data) => {
     const backward = true;
     let newState = editorState;
 
-    newState = Highlights.initSelectionIterator(newState, backward);
-    while (Highlights.hasNextSelection(newState, selection, backward)) {
+    newState = initSelectionIterator(newState, backward);
+    while (hasNextSelection(newState, selection, backward)) {
         newState = setDeleteSuggestionForCharacter(newState, data);
     }
 

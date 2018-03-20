@@ -2,6 +2,7 @@ import {EditorState, Modifier, genKey, CharacterMetadata, ContentBlock} from 'dr
 import {List, OrderedSet} from 'immutable';
 import {fromHTML} from 'core/editor3/html';
 import * as Highlights from '../helpers/highlights';
+import {initSelectionIterator, hasNextSelection} from '../helpers/selectionIterator';
 import {suggestionsTypes} from '../highlightsConfig';
 import ng from 'core/services/ng';
 
@@ -122,14 +123,16 @@ export function allowEditSuggestion(action) {
     let newEditorState;
 
     if (!selection.isCollapsed()) {
-        newEditorState = Highlights.initSelectionIterator(editorState);
-        while (Highlights.hasNextSelection(newEditorState, selection)) {
+        newEditorState = initSelectionIterator(editorState);
+        while (hasNextSelection(newEditorState, selection)) {
             const data = Highlights.getHighlightDataAtCurrentPosition(
                 newEditorState, suggestionsTypes);
 
             if (!allowEditForData(data, suggestingMode)) {
                 return false;
             }
+
+            newEditorState = Highlights.changeEditorSelection(newEditorState, 1, 1, false);
         }
 
         return true;

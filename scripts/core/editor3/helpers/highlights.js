@@ -475,24 +475,17 @@ export function getCharByOffset(editorState, selection, offset) {
  * @description Change the current editor selection.
  */
 export function changeEditorSelection(editorState, startOffset, endOffset, force) {
-    const startSelection = editorState.getSelection();
-    const endSelection = startSelection.merge({
-        anchorOffset: startSelection.getEndOffset(),
-        anchorKey: startSelection.getEndKey(),
-        focusOffset: startSelection.getEndOffset(),
-        focusKey: startSelection.getEndKey(),
-        isBackward: false
-    });
+    const selection = editorState.getSelection();
     const {block: startBlock, newOffset: newStartOffset} = getBlockAndOffset(
-        editorState, startSelection, startOffset);
+        editorState, selection, startOffset, false);
     const {block: endBlock, newOffset: newEndOffset} = getBlockAndOffset(
-        editorState, endSelection, endOffset);
+        editorState, selection, endOffset, true);
 
     if (startBlock == null || endBlock == null) {
         return editorState;
     }
 
-    let newSelection = startSelection.merge({
+    let newSelection = selection.merge({
         anchorOffset: newStartOffset,
         anchorKey: startBlock.getKey(),
         focusOffset: newEndOffset,
@@ -509,60 +502,8 @@ export function changeEditorSelection(editorState, startOffset, endOffset, force
 
 /**
  * @ngdoc method
- * @name initSelectionIterator
- * @param {Object} editorState
- * @return {Object} returns new state
- * @description Change selection to point at the beginning of existent selection.
- */
-export function initSelectionIterator(editorState, backward = false) {
-    const selection = editorState.getSelection();
-    let newSelection;
-
-    if (backward) {
-        newSelection = selection.merge({
-            anchorOffset: selection.getEndOffset(),
-            anchorKey: selection.getEndKey(),
-            focusOffset: selection.getEndOffset(),
-            focusKey: selection.getEndKey(),
-            isBackward: false
-        });
-    } else {
-        newSelection = selection.merge({
-            anchorOffset: selection.getStartOffset(),
-            anchorKey: selection.getStartKey(),
-            focusOffset: selection.getStartOffset(),
-            focusKey: selection.getStartKey(),
-            isBackward: false
-        });
-    }
-
-    return EditorState.acceptSelection(editorState, newSelection);
-}
-
-/**
- * @ngdoc method
- * @name hasNextSelection
- * @param {Object} editorState
- * @param {Object} selection - the selection to compare with
- * @return {Boolean} returns true if selection has the same end
- * @description Check if the current selection and the received one has the same end/start.
- */
-export function hasNextSelection(editorState, selection, backward = false) {
-    const crtSelection = editorState.getSelection();
-
-    if (backward) {
-        return selection.getStartOffset() !== crtSelection.getStartOffset() ||
-            selection.getStartKey() !== crtSelection.getStartKey();
-    } else {
-        return selection.getEndOffset() !== crtSelection.getEndOffset() ||
-            selection.getEndKey() !== crtSelection.getEndKey();
-    }
-}
-
-/**
- * @ngdoc method
  * @name getBlockAndOffset
- * @param {Object} content
+ * @param {Object} editorState
  * @param {Object} selection
  * @param {Integer} offset
  * @param {Boolean} startFromEnd
@@ -570,8 +511,9 @@ export function hasNextSelection(editorState, selection, backward = false) {
  * @description find the block and offset for the new position specified by offset starting
  * from beggining of selection if startFromEnd is false or from end of selection otherwise.
  */
-const getBlockAndOffset = (content, selection, offset, startFromEnd = false) => {
+const getBlockAndOffset = (editorState, selection, offset, startFromEnd = false) => {
     const noValue = {block: null, newOffset: null};
+    const content = editorState.getCurrentContent();
     let newOffset;
     let block;
 
