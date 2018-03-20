@@ -779,7 +779,7 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
                         });
                     }
 
-                    if ($event && $event.ctrlKey) {
+                    if ($event && ($event.ctrlKey || $event.metaKey)) {
                         $event.stopPropagation();
                         return;
                     }
