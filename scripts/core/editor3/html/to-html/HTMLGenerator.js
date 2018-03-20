@@ -124,6 +124,96 @@ export class HTMLGenerator {
 
     /**
      * @ngdoc method
+     * @name HTMLGenerator#isAnnotationStart
+     * @param {Array} annotations
+     * @param {Number} key
+     * @returns {Bool}
+     * @description Returns true if an annotation started at the current text index.
+     */
+    isAnnotationStart(annotations, key) {
+        if (annotations.length == 0) {
+            return false;
+        }
+        return annotations[0].offset == key;
+    }
+
+    /**
+     * @ngdoc method
+     * @name HTMLGenerator#isAnnotationEnd
+     * @param {Object} annotation
+     * @param {Number} key
+     * @returns {Bool}
+     * @description Returns true if an annotation ended at the current text index.
+     */
+    isAnnotationEnd(annotation, key) {
+        if (!annotation) {
+            return false;
+        }
+        return (annotation.offset + annotation.length - 1) === key;
+    }
+
+    /**
+     * @ngdoc method
+     * @name HTMLGenerator#getAnnotations
+     * @param {Object} contentBlock
+     * @returns {Array} annotations
+     * @description Returns an array of annotations sorted by offset.
+     */
+    getAnnotations(contentBlock) {
+        let ranges = contentBlock.getData().get('inlineStyleRanges');
+
+        if (!ranges) {
+            return [];
+        }
+        let annotations = _.filter(ranges, (range) => range.style && range.style.startsWith('ANNOTATION'));
+
+        return annotations.sort((a, b) => {
+            if (a.offset < b.offset) {
+                return -1;
+            }
+            if (a.offset == b.offset) {
+                return 0;
+            }
+            return 1;
+        });
+    }
+
+    /**
+     * @ngdoc method
+     * @name HTMLGenerator#getAnnotationStart
+     * @param {Object} annotation
+     * @param {Object} contentBlock
+     * @returns {String}
+     * @description Returns a string containing the HTML inserted before the annotated text.
+     */
+    getAnnotationStart(annotation, contentBlock) {
+        return '<span class="annotation-tag">';
+    }
+
+    /**
+     * @ngdoc method
+     * @name HTMLGenerator#getAnnotationEnd
+     * @param {Object} annotation
+     * @param {Object} contentBlock
+     * @returns {String}
+     * @description Returns a string containing the HTML inserted after the annotated text.
+     */
+    getAnnotationEnd(annotation, contentBlock) {
+        let data = contentBlock.getData().get('MULTIPLE_HIGHLIGHTS').highlightsData;
+
+        try {
+            let annotationData = data[annotation.style];
+            let message = JSON.parse(annotationData.data.msg);
+
+            return '</span><span class="annotation-toggle-icon"></span>' +
+                '<p class="annotation-content">' + message.blocks[0].text + '</p>';
+        } catch (e) {
+            return '';
+        }
+    }
+
+    /**
+     * @ngdoc method
      * @name HTMLGenerator#convertBlock
      * @param {Object} contentBlock
      * @param {string} id ID of current block
@@ -142,18 +232,33 @@ export class HTMLGenerator {
         const entityWrapper = new BlockEntityWrapper(this.contentState);
 
         let html = '';
+        let annotations = this.getAnnotations(contentBlock);
+        let annotation = null;
 
         contentBlock.getCharacterList()
             .forEach((charMeta, key) => {
                 const entityTags = entityWrapper.tags(charMeta.getEntity());
                 const styleTags = styleWrapper.tags(charMeta.getStyle());
 
-                html += styleTags + entityTags + text[key];
-            });
+                if (!annotation && this.isAnnotationStart(annotations, key)) {
+                    annotation = annotations.shift();
+                    html += this.getAnnotationStart(annotation, contentBlock);
+                }
 
+                html += styleTags + entityTags + text[key];
+
+                if (annotation && this.isAnnotationEnd(annotation, key)) {
+                    html += this.getAnnotationEnd(annotation, contentBlock);
+                    annotation = null;
+                }
+            });
         // apply left-over close tags
         html += entityWrapper.flush();
         html += styleWrapper.flush();
+
+        if (annotation) {
+            html += this.getAnnotationEnd(annotation);
+        }
 
         // get block wrapping tags (depth for lists)
         const depth = contentBlock.getDepth();

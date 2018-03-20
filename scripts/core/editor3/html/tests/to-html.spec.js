@@ -85,6 +85,53 @@ describe('core.editor3.html.to-html.HTMLGenerator', () => {
                 </li>
             </ul><p>abc</p>`.replace(/[\n\r\s]+/g, ''));
     });
+
+    it('should add anotation to HTML', () => {
+        const contentState = testUtils.blocksWithText([
+            // style, depth, text, data, inline style ranges
+            [
+                null, 0, 'lorem ipsum dolor',
+                {
+                    MULTIPLE_HIGHLIGHTS: {
+                        lastHighlightIds: {
+                            ANNOTATION: 2
+                        },
+                        highlightsData: {
+                            'ANNOTATION-1': {
+                                type: 'ANNOTATION',
+                                data: {
+                                    author: 'author 1',
+                                    date: '2018-03-06T16:46:17.906Z',
+                                    msg: '{"blocks":[{"key":"eecso","text":"Annotation 1","type":"unstyled",' +
+                                        '"depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}'
+                                }
+                            },
+                            'ANNOTATION-2': {
+                                type: 'ANNOTATION',
+                                data: {
+                                    author: 'author 2',
+                                    date: '2018-03-06T16:46:17.906Z',
+                                    msg: '{"blocks":[{"key":"d573","text":"Annotation 2","type":"unstyled",' +
+                                        '"depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}'
+                                }
+                            }
+                        }
+                    }
+                },
+                [{offset: 6, length: 5, style: 'ANNOTATION-1'}, {offset: 12, length: 5, style: 'ANNOTATION-2'}]
+            ]
+        ]);
+
+        const result = new HTMLGenerator(contentState).html();
+
+        expect(result).toBe('<p>lorem ' +
+            '<span class="annotation-tag">ipsum</span>' +
+            '<span class="annotation-toggle-icon"></span>' +
+            '<p class="annotation-content">Annotation 1</p> ' +
+            '<span class="annotation-tag">dolor</span>' +
+            '<span class="annotation-toggle-icon"></span>' +
+            '<p class="annotation-content">Annotation 2</p></p>'.replace(/[\n\r]+/g, ''));
+    });
 });
 
 describe('core.editor3.html.to-html.AtomicBlockParser', () => {
