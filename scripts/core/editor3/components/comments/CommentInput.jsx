@@ -78,8 +78,12 @@ class CommentInputBody extends Component {
                         onChange={this.onChange}
                     />
                     <div className="pull-right">
-                        <button className="btn btn--cancel" onClick={this.props.hidePopups}>{gettext('Cancel')}</button>
-                        <button className="btn btn--primary" onClick={this.onSubmit}>{gettext('Submit')}</button>
+                        <button className="btn btn--cancel" onClick={this.props.hidePopups}>
+                            {gettext('Cancel')}
+                        </button>
+                        <button className="btn btn--primary" onClick={this.onSubmit} disabled={!msg}>
+                            {gettext('Submit')}
+                        </button>
                     </div>
                 </Dropdown>
             </div>
