@@ -34,6 +34,7 @@
         <span class="stage" tooltip="{{deskName}} / {{ stage }}" tooltip-placement="bottom" ng-show="stage" ng-if="item._type === 'legal_archive'"><b>{{deskName}}</b> / {{ stage }}</span>
         <span sd-marked-item-title data-item="item" data-field="highlights"></span>
         <span sd-marked-item-title data-item="item" data-field="marked_desks"></span>
+        <span sd-assignment-icon data-item="item"/>
         <span class="label label--warning" ng-show="item._type !== 'archived' && stage.local_readonly"
           translate>Read-only</span>
     </div>

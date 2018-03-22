@@ -1,5 +1,6 @@
 // styles
 import './styles/related-item.scss';
+import './styles/assignment.scss';
 import {get} from 'lodash';
 
 // scripts
@@ -44,6 +45,7 @@ angular.module('superdesk.apps.archive.directives', [
     .directive('sdAssociatedItemMetadata', directive.AssociatedItemMetadata)
     .directive('sdMediaUsed', directive.MediaUsed)
     .directive('sdPackageItemLabelsDropdown', directive.PackageItemLabelsDropdown)
+    .directive('sdAssignmentIcon', directive.AssignmentIcon)
     .service('familyService', svc.FamilyService)
     .service('dragitem', svc.DragItemService);
 
