@@ -266,9 +266,9 @@ $sfbox_mediaMaxWidth : 172px;
             top: 0;
             right: 0;
             margin: 0;
-            padding: 1px 0 3px 5px;
-            background-color: #fff;
-
+            padding: 1px 2px 2px 2px;
+            background-color: rgba(255, 255, 255, 0.85);
+            border-radius: 0 0 0 2px;
             .sd-checkbox {
                 margin: 0;
             }
@@ -381,10 +381,6 @@ $sfbox_mediaMaxWidth : 172px;
         }
     }
     .type-icon {
-        position: absolute;
-        bottom: 4px;
-        left: 0px;
-        width: 32px;
         text-align: center;
         i {
             color: $grayLight;
@@ -604,23 +600,40 @@ $sfbox_mediaMaxWidth : 172px;
                         vertical-align: middle;
                         text-align: center;
                     }
-                                        i {
-                                            vertical-align: middle;
-                                        }
+                    i {
+                        vertical-align: middle;
+                    }
                 }
-                                .more-activity-dropdown {
-                                    li {
-                                        border-right: 0;
-                                    }
-                                }
+                .more-activity-dropdown {
+                    li {
+                        border-right: 0;
+                    }
+                }
             }
-
         }
 
-                .item-right {
-                    top: auto;
-                    height: 31px;
-                }
+        .more-activity-toggle {
+            background: none;
+        }
+        .media-box__footer {
+            margin: 6px 0;
+            position: relative;
+            display: flex;
+            align-content: center;
+            .type-icon {
+                height:16px;
+                margin-right: 6px;
+                flex-grow: 0;
+            }
+            .badge {
+                margin-right: 6px;
+            }
+            .item-right {
+                top: -2px;
+                height: 22px;
+                width: 32px;
+            }
+        }
     }
 }
 
