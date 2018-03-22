@@ -5,7 +5,7 @@ import {getDraftCharacterListForSelection} from './getDraftCharacterListForSelec
 import {getDraftSelectionForEntireContent} from './getDraftSelectionForEntireContent';
 import {expandDraftSelection} from './expandDraftSelection';
 import {clearInlineStyles} from './clearInlineStyles';
-import {suggestionsTypes} from '../highlightsConfig';
+import {suggestionsTypes, changeSuggestionsTypes} from '../highlightsConfig';
 
 export const availableHighlights = Object.keys(highlightsConfig).reduce((obj, key) => {
     obj[key] = highlightsConfig[key].draftStyleMap;
@@ -223,8 +223,8 @@ export function canAddHighlight(editorState, highlightType) {
  * @param {Integer} offset
  * @description the highlight style from the new possition specified by offset.
  */
-export function getHighlightStyleAtOffset(editorState, types, selection, offset) {
-    const {block, newOffset} = getBlockAndOffset(editorState, selection, offset);
+export function getHighlightStyleAtOffset(editorState, types, selection, offset, fromEnd = false) {
+    const {block, newOffset} = getBlockAndOffset(editorState, selection, offset, fromEnd);
 
     if (block == null) {
         return null;
@@ -275,6 +275,23 @@ export function getHighlightData(editorState, style) {
     }
 
     return highlightsState.highlightsData[style];
+}
+
+/**
+ * @ngdoc method
+ * @name getHighlightAuthor
+ * @param {Object} editorstate
+ * @return {String} style
+ * @description returns the author associated to the style.
+ */
+export function getHighlightAuthor(editorState, style) {
+    const data = getHighlightData(editorState, style);
+
+    if (data == null) {
+        return null;
+    }
+
+    return data.author;
 }
 
 /**
@@ -686,6 +703,79 @@ export function getRangeAndTextForStyle(editorState, style) {
     return {
         selection: newSelection,
         highlightedText: startText + endText
+    };
+}
+
+/**
+ * @ngdoc method
+ * @name isPeerHighlight
+ * @param {Object} editorState
+ * @param {String} style
+ * @param {String} type
+ * @param {String} author
+ * @return {Object} return true if the current suggestion is a complementary to type
+ * (one is ADD_SUGGESTION and one is DELETE_SUGGESTION) and they have the same author
+ */
+function isPeerHighlight(editorState, style, type, author) {
+    return style != null && getHighlightType(style) !== type
+        && getHighlightAuthor(editorState, style) === author;
+}
+
+/**
+ * @ngdoc method
+ * @name getSuggestionData
+ * @param {Object} editorState
+ * @param {String} style
+ * @return {Object} return the data associated with a suggestion; for replace suggestion returns
+ * both old text and the suggested text and the selection returned wrap both texts.
+ */
+export function getSuggestionData(editorState, styleName) {
+    const type = getHighlightType(styleName);
+    const {selection, highlightedText} = getRangeAndTextForStyle(editorState, styleName);
+    let data = {
+        ...getHighlightData(editorState, styleName),
+        suggestionText: highlightedText,
+        selection: selection,
+        styleName: styleName
+    };
+
+    if (changeSuggestionsTypes.indexOf(type) === -1) {
+        return data;
+    }
+
+    let peerStyleName = getHighlightStyleAtOffset(editorState, changeSuggestionsTypes, selection, 0, true);
+    let afterPeer = true;
+
+    if (!isPeerHighlight(editorState, peerStyleName, type, data.author)) {
+        peerStyleName = getHighlightStyleAtOffset(editorState, changeSuggestionsTypes, selection, -1, false);
+        if (!isPeerHighlight(editorState, peerStyleName, type, data.author)) {
+            return data;
+        }
+        afterPeer = false;
+    }
+
+    const peerRangeAndText = getRangeAndTextForStyle(editorState, peerStyleName);
+    const suggestionSelection = selection.merge({
+        anchorOffset: afterPeer ? selection.getStartOffset() : peerRangeAndText.selection.getStartOffset(),
+        anchorKey: afterPeer ? selection.getStartKey() : peerRangeAndText.selection.getStartKey(),
+        focusOffset: afterPeer ? peerRangeAndText.selection.getEndOffset() : selection.getEndOffset(),
+        focusKey: afterPeer ? peerRangeAndText.selection.getEndKey() : selection.getEndKey(),
+        isBackward: false
+    });
+
+    if (type === 'ADD_SUGGESTION') {
+        return {
+            ...data,
+            oldText: peerRangeAndText.highlightedText,
+            selection: suggestionSelection,
+        };
+    }
+
+    return {
+        ...data,
+        suggestionText: peerRangeAndText.highlightedText,
+        oldText: data.suggestionText,
+        selection: suggestionSelection
     };
 }
 

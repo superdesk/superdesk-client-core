@@ -62,25 +62,18 @@ export class HighlightsPopup extends Component {
     component() {
         const {store} = this.context;
         let highlightsAndSuggestions = [];
+        let data;
 
         if (this.styleBasedHighlightsExist()) {
             this.getInlineStyleForCollapsedSelection()
                 .filter(this.props.highlightsManager.styleNameBelongsToHighlight)
                 .forEach((styleName) => {
                     const highlightType = this.props.highlightsManager.getHighlightTypeFromStyleName(styleName);
-                    let data = this.props.highlightsManager.getHighlightData(styleName);
 
                     if (suggestionsTypes.indexOf(highlightType) !== -1) {
-                        const {selection, highlightedText} = Highlights.getRangeAndTextForStyle(
-                            this.props.editorState, styleName
-                        );
-
-                        data = {
-                            ...data,
-                            suggestionText: highlightedText,
-                            selection: selection,
-                            styleName: styleName
-                        };
+                        data = Highlights.getSuggestionData(this.props.editorState, styleName);
+                    } else {
+                        data = this.props.highlightsManager.getHighlightData(styleName);
                     }
 
                     highlightsAndSuggestions = [

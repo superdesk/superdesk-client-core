@@ -77,10 +77,24 @@ class Suggestion extends Component {
                         <div className="date" title={fromNow}>{fullDate}</div>
                     </div>
                 </div>
-                <div>
-                    <strong>{gettext(description)}: </strong>
-                    {this.props.suggestion.suggestionText}
-                </div>
+                {this.props.suggestion.oldText == null &&
+                    <div>
+                        <strong>{gettext(description)}: </strong>
+                        {this.props.suggestion.suggestionText}
+                    </div>
+                }
+                {this.props.suggestion.oldText != null &&
+                    <div>
+                        <div>
+                            <strong>{gettext('Replace')}: </strong>
+                            {this.props.suggestion.oldText}
+                        </div>
+                        <div>
+                            <strong>{gettext('with')}: </strong>
+                            {this.props.suggestion.suggestionText}
+                        </div>
+                    </div>
+                }
                 <br />
                 <div>
                     <button className="btn btn--small btn--hollow" onClick={this.onAccept}>
@@ -100,6 +114,7 @@ Suggestion.propTypes = {
         author: PropTypes.string,
         date: PropTypes.date,
         suggestionText: PropTypes.string,
+        oldText: PropTypes.string,
         type: PropTypes.string,
         selection: PropTypes.object
     }),
