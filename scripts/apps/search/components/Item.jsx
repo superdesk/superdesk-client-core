@@ -157,13 +157,15 @@ export class Item extends React.Component {
                     ingestProvider: this.props.ingestProvider,
                     svc: this.props.svc
                 }),
-                React.createElement(GridTypeIcon, {item: item, svc: this.props.svc}),
-                item.priority ?
-                    React.createElement(ItemPriority, angular.extend({svc: this.props.svc}, item)) : null,
-                item.urgency ?
-                    React.createElement(ItemUrgency, angular.extend({svc: this.props.svc}, item)) : null,
-                broadcast({item: item}),
-                getActionsMenu()
+                React.createElement('div', {className: 'media-box__footer'},
+                    React.createElement(GridTypeIcon, {item: item, svc: this.props.svc}),
+                    item.priority ?
+                        React.createElement(ItemPriority, angular.extend({svc: this.props.svc}, item)) : null,
+                    item.urgency ?
+                        React.createElement(ItemUrgency, angular.extend({svc: this.props.svc}, item)) : null,
+                    broadcast({item: item}),
+                    getActionsMenu()
+                )
             );
         } else if (this.props.view === 'photogrid') {
             contents.push(
