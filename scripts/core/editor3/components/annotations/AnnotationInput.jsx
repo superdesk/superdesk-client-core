@@ -28,15 +28,17 @@ class AnnotationInputBody extends Component {
         const editing = typeof data.annotation === 'object';
 
         let body = null;
+        let isEmpty = true;
         let annotationTypes = ng.get('metadata').values.annotation_types;
         let type = annotationTypes && annotationTypes.length > 0 ? annotationTypes[0].qcode : '';
 
         if (editing) {
             ({annotationType: type, msg: body} = data.annotation.data);
             body = JSON.parse(body);
+            isEmpty = false;
         }
 
-        this.state = {body, type, annotationTypes};
+        this.state = {body, type, annotationTypes, isEmpty};
         this.initialContent = body;
 
         this.onSubmit = this.onSubmit.bind(this);
@@ -91,7 +93,10 @@ class AnnotationInputBody extends Component {
      * @description onChange is triggered when the content of the editor changes.
      */
     onChange(content) {
-        this.setState({body: convertToRaw(content)});
+        this.setState({
+            body: convertToRaw(content),
+            isEmpty: content == null || !content.hasText()
+        });
     }
 
     /**
@@ -124,7 +129,7 @@ class AnnotationInputBody extends Component {
     render() {
         const {hidePopups, data, spellcheckerEnabled, language} = this.props;
         const {annotation} = data;
-        const {type, annotationTypes} = this.state;
+        const {type, annotationTypes, isEmpty} = this.state;
 
         return (
             <div className="annotation-input">
@@ -158,8 +163,12 @@ class AnnotationInputBody extends Component {
                                 onClick={this.deleteAnnotation}>
                                 {gettext('Delete')}
                             </button>}
-                        <button className="btn btn--cancel" onClick={hidePopups}>{gettext('Cancel')}</button>
-                        <button className="btn btn--primary" onClick={this.onSubmit}>{gettext('Submit')}</button>
+                        <button className="btn btn--cancel" onClick={hidePopups}>
+                            {gettext('Cancel')}
+                        </button>
+                        <button className="btn btn--primary" onClick={this.onSubmit} disabled={isEmpty}>
+                            {gettext('Submit')}
+                        </button>
                     </div>
                 </Dropdown>
             </div>

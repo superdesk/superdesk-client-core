@@ -188,7 +188,8 @@ export class CommentPopup extends Component {
                     />
 
                     <div className="comment-reply-buttons">
-                        <button className="btn btn--small btn--hollow btn-reply" onClick={() => this.postReply()}>
+                        <button className="btn btn--small btn--hollow btn-reply"
+                            onClick={() => this.postReply()} disabled={!this.state.reply}>
                             {this.state.index !== null ? gettext('Save') : gettext('Reply')}
                         </button>
 
