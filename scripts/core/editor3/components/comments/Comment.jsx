@@ -24,7 +24,7 @@ export const Comment = ({data, className, onEdit, onRemove}) => {
                 <UserAvatar displayName={author} pictureUrl={avatar} />
                 <div className="user-info">
                     <div className="author-name">{author}</div>
-                    <div className="date" title={fullDate}>{fromNow}</div>
+                    <div className="date" title={fromNow}>{fullDate}</div>
                 </div>
                 {onEdit && onRemove && (
                     <div className="highlights-popup__header__actions">

@@ -28,7 +28,7 @@ const Annotation = ({annotation, showPopup, highlightId, highlightsManager}) => 
                 <UserAvatar displayName={author} pictureUrl={avatar} />
                 <div className="user-info">
                     <div className="author-name">{author}</div>
-                    <div className="date" title={fullDate}>{fromNow}</div>
+                    <div className="date" title={fromNow}>{fullDate}</div>
                 </div>
             </div>
 
