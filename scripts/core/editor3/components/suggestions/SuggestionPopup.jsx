@@ -76,7 +76,7 @@ class Suggestion extends Component {
                     <UserAvatar displayName={author.display_name} pictureUrl={author.picture_url} />
                     <div className="user-info">
                         <div className="author-name">{author.display_name}</div>
-                        <div className="date" title={fullDate}>{fromNow}</div>
+                        <div className="date" title={fromNow}>{fullDate}</div>
                     </div>
                 </div>
                 <div>
