@@ -5,12 +5,44 @@ import {getDraftCharacterListForSelection} from './getDraftCharacterListForSelec
 import {getDraftSelectionForEntireContent} from './getDraftSelectionForEntireContent';
 import {expandDraftSelection} from './expandDraftSelection';
 import {clearInlineStyles} from './clearInlineStyles';
-import {suggestionsTypes} from '../highlightsConfig';
+import {suggestionsTypes, changeSuggestionsTypes} from '../highlightsConfig';
 
 export const availableHighlights = Object.keys(highlightsConfig).reduce((obj, key) => {
     obj[key] = highlightsConfig[key].draftStyleMap;
     return obj;
 }, {});
+
+const mapHighlightTypeToInlineStyle = Object.keys(highlightsConfig).reduce((obj, key) => {
+    if (highlightsConfig[key].type === 'STYLE') {
+        obj[key] = highlightsConfig[key].style;
+    }
+    return obj;
+}, {});
+
+const mapInlineStyleToHighlightType = Object.keys(highlightsConfig).reduce((obj, key) => {
+    if (highlightsConfig[key].type === 'STYLE') {
+        obj[highlightsConfig[key].style] = key;
+    }
+    return obj;
+}, {});
+
+export function getTypeByInlineStyle(inlineStyle) {
+    return mapInlineStyleToHighlightType[inlineStyle];
+}
+
+export function getInlineStyleByType(type) {
+    return mapHighlightTypeToInlineStyle[type];
+}
+
+export function getHighlightDescription(suggestionsType) {
+    const highlight = highlightsConfig[suggestionsType];
+
+    if (highlight != null && highlight.description) {
+        return highlight.description;
+    }
+
+    return suggestionsType;
+}
 
 function getInitialHighlightsState() {
     return {
@@ -191,9 +223,8 @@ export function canAddHighlight(editorState, highlightType) {
  * @param {Integer} offset
  * @description the highlight style from the new possition specified by offset.
  */
-export function getHighlightStyleAtOffset(editorState, types, selection, offset) {
-    const content = editorState.getCurrentContent();
-    const {block, newOffset} = getBlockAndOffset(content, selection, offset);
+export function getHighlightStyleAtOffset(editorState, types, selection, offset, fromEnd = false) {
+    const {block, newOffset} = getBlockAndOffset(editorState, selection, offset, fromEnd);
 
     if (block == null) {
         return null;
@@ -248,8 +279,26 @@ export function getHighlightData(editorState, style) {
 
 /**
  * @ngdoc method
+ * @name getHighlightAuthor
+ * @param {Object} editorstate
+ * @return {String} style
+ * @description returns the author associated to the style.
+ */
+export function getHighlightAuthor(editorState, style) {
+    const data = getHighlightData(editorState, style);
+
+    if (data == null) {
+        return null;
+    }
+
+    return data.author;
+}
+
+/**
+ * @ngdoc method
  * @name getHighlightDataAtOffset
- * @param {Object} content
+ * @param {Object} editorState
+ * @param {Array} types
  * @param {Object} selection
  * @param {Integer} offset
  * @return {Object}
@@ -265,6 +314,20 @@ export function getHighlightDataAtOffset(editorState, types, selection, offset) 
     const highlightsState = getHighlightsState(editorState);
 
     return highlightsState.highlightsData[style];
+}
+
+/**
+ * @ngdoc method
+ * @name getHighlightDataAtCurrentPosition
+ * @param {Object} editorState
+ * @param {Array} types
+ * @return {Object}
+ * @description the highlight associated data from current position.
+ */
+export function getHighlightDataAtCurrentPosition(editorState, types) {
+    const selection = editorState.getSelection();
+
+    return getHighlightDataAtOffset(editorState, types, selection, 0);
 }
 
 /**
@@ -409,8 +472,7 @@ export function resetHighlightForCurrentCharacter(editorState, style) {
  * @description the char from the new possition specified by offset.
  */
 export function getCharByOffset(editorState, selection, offset) {
-    const content = editorState.getCurrentContent();
-    const {block, newOffset} = getBlockAndOffset(content, selection, offset);
+    const {block, newOffset} = getBlockAndOffset(editorState, selection, offset);
 
     if (block == null) {
         return null;
@@ -421,8 +483,44 @@ export function getCharByOffset(editorState, selection, offset) {
 
 /**
  * @ngdoc method
+ * @name changeEditorSelection
+ * @param {Object} editorState
+ * @param {Integer} startOffset - the anchor offset relative to current start offset
+ * @param {Integer} endOffset - the focus offset relative to current end offset
+ * @param {Boolean} force - apply accept or force selection
+ * @return {Object} returns new state
+ * @description Change the current editor selection.
+ */
+export function changeEditorSelection(editorState, startOffset, endOffset, force) {
+    const selection = editorState.getSelection();
+    const {block: startBlock, newOffset: newStartOffset} = getBlockAndOffset(
+        editorState, selection, startOffset, false);
+    const {block: endBlock, newOffset: newEndOffset} = getBlockAndOffset(
+        editorState, selection, endOffset, true);
+
+    if (startBlock == null || endBlock == null) {
+        return editorState;
+    }
+
+    let newSelection = selection.merge({
+        anchorOffset: newStartOffset,
+        anchorKey: startBlock.getKey(),
+        focusOffset: newEndOffset,
+        focusKey: endBlock.getKey(),
+        isBackward: false
+    });
+
+    if (force) {
+        return EditorState.forceSelection(editorState, newSelection);
+    }
+
+    return EditorState.acceptSelection(editorState, newSelection);
+}
+
+/**
+ * @ngdoc method
  * @name getBlockAndOffset
- * @param {Object} content
+ * @param {Object} editorState
  * @param {Object} selection
  * @param {Integer} offset
  * @param {Boolean} startFromEnd
@@ -430,8 +528,9 @@ export function getCharByOffset(editorState, selection, offset) {
  * @description find the block and offset for the new position specified by offset starting
  * from beggining of selection if startFromEnd is false or from end of selection otherwise.
  */
-const getBlockAndOffset = (content, selection, offset, startFromEnd = false) => {
+const getBlockAndOffset = (editorState, selection, offset, startFromEnd = false) => {
     const noValue = {block: null, newOffset: null};
+    const content = editorState.getCurrentContent();
     let newOffset;
     let block;
 
@@ -466,6 +565,117 @@ const getBlockAndOffset = (content, selection, offset, startFromEnd = false) => 
     return {block, newOffset};
 };
 
+function getLeftRangeAndTextForStyle(editorState, style) {
+    const selection = editorState.getSelection();
+    const content = editorState.getCurrentContent();
+    let startBlock = content.getBlockForKey(selection.getStartKey());
+    let startOffset = selection.getStartOffset();
+    let startText = '';
+    let block = startBlock;
+    let offset = startOffset < block.getLength() ? startOffset : block.getLength() - 1;
+    let characterMetadataList;
+    let characterMetadata;
+    let blockText;
+    let found;
+    let newBlock = false;
+
+    while (block) {
+        found = false;
+        offset = (offset == null) ? (block.getLength() - 1) : offset;
+        characterMetadataList = block.getCharacterList();
+        blockText = block.getText();
+
+        for (let i = offset; i >= 0; i--) {
+            characterMetadata = characterMetadataList.get(i);
+
+            if (!characterMetadata.hasStyle(style)) {
+                continue;
+            }
+
+            if (newBlock) {
+                startText = ' \\ ' + startText;
+                newBlock = false;
+            }
+
+            startText = blockText[i] + startText;
+            startOffset = i;
+            startBlock = block;
+            found = true;
+        }
+
+        if (found) {
+            block = content.getBlockBefore(block.getKey());
+            offset = null;
+            newBlock = true;
+        } else {
+            block = null;
+        }
+    }
+
+    return {startOffset, startBlock, startText};
+}
+
+function getRightRangeAndTextForStyle(editorState, style) {
+    const selection = editorState.getSelection();
+    const content = editorState.getCurrentContent();
+    let endText = '';
+    let endBlock = content.getBlockForKey(selection.getStartKey());
+    let endOffset = selection.getStartOffset() + 1;
+    let block = endBlock;
+    let offset = endOffset;
+    let characterMetadataList;
+    let characterMetadata;
+    let blockText;
+    let found;
+    let newBlock = false;
+
+    if (block.getLength() === offset && offset !== 0) {
+        block = content.getBlockAfter(block.getKey());
+
+        if (block == null) {
+            return {endOffset, endBlock, endText};
+        }
+
+        offset = null;
+        newBlock = true;
+    }
+
+    while (block) {
+        found = false;
+        offset = offset == null ? 0 : offset;
+        characterMetadataList = block.getCharacterList();
+        blockText = block.getText();
+
+        for (let i = offset; i < block.getLength(); i++) {
+            characterMetadata = characterMetadataList.get(i);
+
+            if (!characterMetadata.hasStyle(style)) {
+                continue;
+            }
+
+            if (newBlock) {
+                endText = endText + ' \\ ';
+                newBlock = false;
+            }
+
+            endText = endText + blockText[i];
+            endOffset = i + 1;
+            endBlock = block;
+            found = true;
+        }
+
+        if (found) {
+            block = content.getBlockAfter(block.getKey());
+            offset = null;
+            newBlock = true;
+        } else {
+            block = null;
+        }
+    }
+
+    return {endOffset, endBlock, endText};
+}
+
 /**
  * @ngdoc method
  * @name getRangeAndTextForStyle
@@ -480,49 +690,96 @@ export function getRangeAndTextForStyle(editorState, style) {
         throw new Error('Only collapsed selection supported');
     }
 
-    var blockKey = selection.getAnchorKey();
-    var block = editorState.getCurrentContent().getBlockForKey(blockKey);
-    var characterLists = block.getCharacterList();
-
-    var from = null;
-    var to = null;
-
-    // check backwards
-    for (let i = selection.getAnchorOffset(); i >= 0; i--) {
-        const characterList = characterLists.get(i);
-
-        if (characterList.hasStyle(style)) {
-            from = i;
-        } else {
-            break;
-        }
-    }
-
-    // check forward
-    for (let i = selection.getAnchorOffset(); i < block.getLength(); i++) {
-        const characterList = characterLists.get(i);
-
-        if (characterList.hasStyle(style)) {
-            to = i;
-        } else {
-            break;
-        }
-    }
-
+    const {startOffset, startBlock, startText} = getLeftRangeAndTextForStyle(editorState, style);
+    const {endOffset, endBlock, endText} = getRightRangeAndTextForStyle(editorState, style);
     const newSelection = selection.merge({
-        anchorOffset: from,
-        focusOffset: to + 1,
+        anchorOffset: startOffset,
+        anchorKey: startBlock.getKey(),
+        focusOffset: endOffset,
+        focusKey: endBlock.getKey(),
         isBackward: false
     });
-    const highlightedText = block.getText().slice(from, to + 1);
 
     return {
         selection: newSelection,
-        highlightedText: highlightedText
+        highlightedText: startText + endText
     };
 }
 
-export function fieldhasUnresolvedSuggestions(rawState) {
+/**
+ * @ngdoc method
+ * @name isPeerHighlight
+ * @param {Object} editorState
+ * @param {String} style
+ * @param {String} type
+ * @param {String} author
+ * @return {Object} return true if the current suggestion is a complementary to type
+ * (one is ADD_SUGGESTION and one is DELETE_SUGGESTION) and they have the same author
+ */
+function isPeerHighlight(editorState, style, type, author) {
+    return style != null && getHighlightType(style) !== type
+        && getHighlightAuthor(editorState, style) === author;
+}
+
+/**
+ * @ngdoc method
+ * @name getSuggestionData
+ * @param {Object} editorState
+ * @param {String} style
+ * @return {Object} return the data associated with a suggestion; for replace suggestion returns
+ * both old text and the suggested text and the selection returned wrap both texts.
+ */
+export function getSuggestionData(editorState, styleName) {
+    const type = getHighlightType(styleName);
+    const {selection, highlightedText} = getRangeAndTextForStyle(editorState, styleName);
+    let data = {
+        ...getHighlightData(editorState, styleName),
+        suggestionText: highlightedText,
+        selection: selection,
+        styleName: styleName
+    };
+
+    if (changeSuggestionsTypes.indexOf(type) === -1) {
+        return data;
+    }
+
+    let peerStyleName = getHighlightStyleAtOffset(editorState, changeSuggestionsTypes, selection, 0, true);
+    let afterPeer = true;
+
+    if (!isPeerHighlight(editorState, peerStyleName, type, data.author)) {
+        peerStyleName = getHighlightStyleAtOffset(editorState, changeSuggestionsTypes, selection, -1, false);
+        if (!isPeerHighlight(editorState, peerStyleName, type, data.author)) {
+            return data;
+        }
+        afterPeer = false;
+    }
+
+    const peerRangeAndText = getRangeAndTextForStyle(editorState, peerStyleName);
+    const suggestionSelection = selection.merge({
+        anchorOffset: afterPeer ? selection.getStartOffset() : peerRangeAndText.selection.getStartOffset(),
+        anchorKey: afterPeer ? selection.getStartKey() : peerRangeAndText.selection.getStartKey(),
+        focusOffset: afterPeer ? peerRangeAndText.selection.getEndOffset() : selection.getEndOffset(),
+        focusKey: afterPeer ? peerRangeAndText.selection.getEndKey() : selection.getEndKey(),
+        isBackward: false
+    });
+
+    if (type === 'ADD_SUGGESTION') {
+        return {
+            ...data,
+            oldText: peerRangeAndText.highlightedText,
+            selection: suggestionSelection,
+        };
+    }
+
+    return {
+        ...data,
+        suggestionText: peerRangeAndText.highlightedText,
+        oldText: data.suggestionText,
+        selection: suggestionSelection
+    };
+}
+
+export function fieldHasUnresolvedSuggestions(rawState) {
     const contentState = convertFromRaw(rawState);
     const editorState = EditorState.createWithContent(contentState);
     const highlights = getHighlightsState(editorState);

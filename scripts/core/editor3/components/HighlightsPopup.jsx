@@ -61,23 +61,19 @@ export class HighlightsPopup extends Component {
      */
     component() {
         const {store} = this.context;
-        const {editorState} = this.props;
-        const suggestionStyle = Highlights.getHighlightStyleAtCurrentPosition(editorState, suggestionsTypes);
         let highlightsAndSuggestions = [];
+        let data;
 
         if (this.styleBasedHighlightsExist()) {
             this.getInlineStyleForCollapsedSelection()
                 .filter(this.props.highlightsManager.styleNameBelongsToHighlight)
                 .forEach((styleName) => {
                     const highlightType = this.props.highlightsManager.getHighlightTypeFromStyleName(styleName);
-                    let data = this.props.highlightsManager.getHighlightData(styleName);
 
                     if (suggestionsTypes.indexOf(highlightType) !== -1) {
-                        const {selection, highlightedText} = Highlights.getRangeAndTextForStyle(
-                            this.props.editorState, suggestionStyle
-                        );
-
-                        data = {...data, suggestionText: highlightedText, selection: selection};
+                        data = Highlights.getSuggestionData(this.props.editorState, styleName);
+                    } else {
+                        data = this.props.highlightsManager.getHighlightData(styleName);
                     }
 
                     highlightsAndSuggestions = [
@@ -116,8 +112,7 @@ export class HighlightsPopup extends Component {
      * @returns {JSX}
      */
     createHighlight(type, h, highlightId) {
-        switch (type) {
-        case 'ANNOTATION':
+        if (type === 'ANNOTATION') {
             return (
                 <Dropdown open={true}>
                     <AnnotationPopup
@@ -127,7 +122,7 @@ export class HighlightsPopup extends Component {
                     />
                 </Dropdown>
             );
-        case 'COMMENT':
+        } else if (type === 'COMMENT') {
             return (
                 <Dropdown open={true}>
                     <CommentPopup
@@ -139,10 +134,9 @@ export class HighlightsPopup extends Component {
                     />
                 </Dropdown>
             );
-        case 'DELETE_SUGGESTION':
-        case 'ADD_SUGGESTION':
+        } else if (suggestionsTypes.indexOf(type) !== -1) {
             return <SuggestionPopup suggestion={h} />;
-        default:
+        } else {
             console.error('Invalid highlight type in HighlightsPopup.jsx: ', type);
         }
     }
@@ -213,14 +207,28 @@ export class HighlightsPopup extends Component {
     getInlineStyleForCollapsedSelection() {
         const {editorState} = this.props;
         const selection = editorState.getSelection();
+        const content = editorState.getCurrentContent();
 
         if (selection.isCollapsed() === false) {
             return List();
         }
 
-        var blockKey = selection.getAnchorKey();
-        var block = editorState.getCurrentContent().getBlockForKey(blockKey);
-        var inlineStyle = block.getInlineStyleAt(selection.getAnchorOffset());
+        const blockKey = selection.getStartKey();
+        let block = content.getBlockForKey(blockKey);
+        let offset = selection.getStartOffset();
+
+        if (block.getLength() === offset) {
+            const nextBlock = content.getBlockAfter(block.getKey());
+
+            if (nextBlock == null) {
+                return List();
+            }
+
+            block = nextBlock;
+            offset = 0;
+        }
+
+        var inlineStyle = block.getInlineStyleAt(offset);
 
         return inlineStyle;
     }

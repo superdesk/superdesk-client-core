@@ -45,6 +45,22 @@ export function createDeleteSuggestion(action) {
     };
 }
 
+/**
+ * @ngdoc method
+ * @name createChangeStyleSuggestion
+ * @param {String} style
+ * @return {Object} action
+ * @description add a new suggestion of type change style.
+ */
+export function createChangeStyleSuggestion(style) {
+    return {
+        type: 'CREATE_CHANGE_STYLE_SUGGESTION',
+        payload: {
+            style: style,
+            data: getSuggestionMetadata()
+        }
+    };
+}
 
 /**
  * @ngdoc method

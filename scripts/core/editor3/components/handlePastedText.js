@@ -2,6 +2,7 @@ import {EditorState, Modifier, genKey, CharacterMetadata, ContentBlock} from 'dr
 import {List, OrderedSet} from 'immutable';
 import {fromHTML} from 'core/editor3/html';
 import * as Highlights from '../helpers/highlights';
+import {initSelectionIterator, hasNextSelection} from '../helpers/selectionIterator';
 import {suggestionsTypes} from '../highlightsConfig';
 import ng from 'core/services/ng';
 
@@ -119,15 +120,19 @@ const atomicBlock = (data, entity) => new ContentBlock({
 export function allowEditSuggestion(action) {
     const {suggestingMode, editorState} = this.props;
     const selection = editorState.getSelection();
+    let newEditorState;
 
-    if (selection.getStartOffset() !== selection.getEndOffset()) {
-        for (let i = selection.getStartOffset(); i < selection.getEndOffset(); i++) {
-            const data = Highlights.getHighlightDataAtOffset(
-                editorState, suggestionsTypes, selection, i - selection.getStartOffset());
+    if (!selection.isCollapsed()) {
+        newEditorState = initSelectionIterator(editorState);
+        while (hasNextSelection(newEditorState, selection)) {
+            const data = Highlights.getHighlightDataAtCurrentPosition(
+                newEditorState, suggestionsTypes);
 
             if (!allowEditForData(data, suggestingMode)) {
                 return false;
             }
+
+            newEditorState = Highlights.changeEditorSelection(newEditorState, 1, 1, false);
         }
 
         return true;
