@@ -552,9 +552,10 @@
     ng-if="field.field_type === 'embed'"
     sd-width="{{ editor[field._id].sdWidth || 'full' }}"
     order="{{ editor[field._id].order }}"
-    class="sd-line-input"
+    sd-validation-error="error[field._id.toLowerCase()]"
     data-required="schema[field._id].required">
     <label class="field__label" translate>{{ field.display_name }}</label>
+    <span>
     <button id="clear-embed-btn" type="button" class="btn btn--small pull-right" ng-click="clearEmbed(field._id)"
         ng-show="item.extra[field._id].embed" translate>Clear Embed
     </button>
@@ -567,6 +568,7 @@
     <button id="hide-preview-embed-btn" type="button" class="btn btn--small pull-right" ng-click="hideEmbedPreview(field._id)"
             ng-show="isPreviewOn(field._id)" translate>Hide Preview
     </button>
+    </span>
     <textarea id="embed-field-{{ field._id }}" type="text" 
         class="sd-editor__default-input sd-editor__default-input--embed"
         ng-change="validateEmbed(field._id)" 
