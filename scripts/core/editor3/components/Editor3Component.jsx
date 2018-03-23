@@ -26,7 +26,6 @@ import {HighlightsPopup} from './HighlightsPopup';
 import UnstyledBlock from './UnstyledBlock';
 import UnstyledWrapper from './UnstyledWrapper';
 import {isEditorBlockEvent} from './BaseUnstyledComponent';
-import {acceptedInlineStyles} from '../helpers/inlineStyles';
 import {handleBeforeInputHighlights} from '../helpers/highlights';
 
 const VALID_MEDIA_TYPES = [
