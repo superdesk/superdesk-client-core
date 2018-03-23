@@ -1,3 +1,8 @@
+// dummy function to make the highlights description accesible as keys for translation
+function gettext(text) {
+    return text;
+}
+
 export const highlightsConfig = {
     COMMENT: {
         type: 'COMMENT',
@@ -13,14 +18,14 @@ export const highlightsConfig = {
     },
     ADD_SUGGESTION: {
         type: 'CHANGE',
-        description: 'Add',
+        description: gettext('Add'),
         draftStyleMap: {
             color: 'rgba(0, 180, 0, 1.0)'
         }
     },
     DELETE_SUGGESTION: {
         type: 'CHANGE',
-        description: 'Remove',
+        description: gettext('Remove'),
         draftStyleMap: {
             color: 'rgba(255, 0, 0, 1.0)',
             textDecoration: 'line-through'
@@ -29,7 +34,7 @@ export const highlightsConfig = {
     TOGGLE_BOLD_SUGGESTION: {
         type: 'STYLE',
         style: 'BOLD',
-        description: 'Toggle bold',
+        description: gettext('Toggle bold'),
         draftStyleMap: {
             backgroundColor: 'rgba(100, 235, 59, 0.2)'
         }
@@ -37,7 +42,7 @@ export const highlightsConfig = {
     TOGGLE_ITALIC_SUGGESTION: {
         type: 'STYLE',
         style: 'ITALIC',
-        description: 'Toggle italic',
+        description: gettext('Toggle italic'),
         draftStyleMap: {
             backgroundColor: 'rgba(100, 235, 59, 0.2)'
         }
@@ -45,7 +50,7 @@ export const highlightsConfig = {
     TOGGLE_UNDERLINE_SUGGESTION: {
         type: 'STYLE',
         style: 'UNDERLINE',
-        description: 'Toggle underline',
+        description: gettext('Toggle underline'),
         draftStyleMap: {
             backgroundColor: 'rgba(100, 235, 59, 0.2)'
         }
@@ -53,10 +58,8 @@ export const highlightsConfig = {
 };
 
 export const changeSuggestionsTypes = ['DELETE_SUGGESTION', 'ADD_SUGGESTION'];
-export const styleSuggestionsTypes = Object.keys(highlightsConfig).reduce((list, key) => {
-    if (highlightsConfig[key].type === 'STYLE') {
-        list.push(key);
-    }
-    return list;
-}, []);
+export const styleSuggestionsTypes = Object.keys(highlightsConfig).filter(
+    (key) => highlightsConfig[key].type === 'STYLE'
+);
+
 export const suggestionsTypes = [...changeSuggestionsTypes, ...styleSuggestionsTypes];
