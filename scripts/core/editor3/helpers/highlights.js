@@ -270,8 +270,8 @@ export function getHighlightStyleAtCurrentPosition(editorState, types) {
 export function getHighlightData(editorState, style) {
     const highlightsState = getHighlightsState(editorState);
 
-    if (highlightsState.highlightsData[style] === undefined) {
-        throw new Error('Highlight doesn\'t exist.');
+    if (style == null) {
+        return null;
     }
 
     return highlightsState.highlightsData[style];
