@@ -42,10 +42,18 @@ export function setCustomDataForEditor(editorState, key, value) {
 }
 
 function getDataFromArrayState(editorStateArr, key) {
-    const editorState = editorStateArr[0];
-    const firstBlock = editorState.blocks[0];
+    let data = [];
 
-    return firstBlock.data[key];
+    // for each editor state we collect all data as one single array
+    editorStateArr.forEach((editorState) => {
+        const firstBlock = editorState.blocks[0];
+
+        if (firstBlock.data[key]) {
+            data = [...data, ...firstBlock.data[key]];
+        }
+    });
+
+    return data;
 }
 
 export function getCustomDataFromEditor(editorState, key) {
