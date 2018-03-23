@@ -74,6 +74,10 @@ function highlightTypeValid(highlightType) {
  * @description return true if the styleName is a valid style for current editor.
  */
 export function styleNameBelongsToHighlight(styleName) {
+    if (typeof styleName !== 'string') {
+        return false;
+    }
+
     var delimiterIndex = styleName.lastIndexOf('-');
 
     if (delimiterIndex === -1) {
@@ -91,6 +95,10 @@ export function styleNameBelongsToHighlight(styleName) {
  * @description return the highlight type for styleName.
  */
 export function getHighlightTypeFromStyleName(styleName) {
+    if (typeof styleName !== 'string') {
+        throw new Error('string expected');
+    }
+
     var delimiterIndex = styleName.lastIndexOf('-');
 
     if (delimiterIndex === -1) {
@@ -131,14 +139,18 @@ export function getHighlightsCount(editorState, highlightType) {
 
 /**
  * @ngdoc method
- * @name canAddtHighlight
+ * @name canAddHighlight
  * @param {Object} editorState
  * @param {String} highlightType
  * @return {Boolean}
  * @description return true if a highlight of type highlightType can be set
  * for current selection
  */
-export function canAddtHighlight(editorState, highlightType) {
+export function canAddHighlight(editorState, highlightType) {
+    if (highlightTypeValid(highlightType) !== true) {
+        return false;
+    }
+
     function characterHasAHighlightOfTheSameType(character) {
         if (
             character.getStyle()
@@ -227,6 +239,10 @@ export function getHighlightStyleAtCurrentPosition(editorState, types) {
 export function getHighlightData(editorState, style) {
     const highlightsState = getHighlightsState(editorState);
 
+    if (highlightsState.highlightsData[style] === undefined) {
+        throw new Error('Highlight doesn\'t exist.');
+    }
+
     return highlightsState.highlightsData[style];
 }
 
@@ -262,6 +278,11 @@ export function getHighlightDataAtOffset(editorState, types, selection, offset) 
  */
 export function addHighlight(editorState, type, data) {
     const highlightsState = getHighlightsState(editorState);
+
+    if (highlightTypeValid(type) !== true) {
+        throw new Error('Highlight type invalid');
+    }
+
     const styleName = type + '-' + (highlightsState.lastHighlightIds[type] + 1);
 
     const newHighlightsState = {
@@ -300,7 +321,7 @@ export function updateHighlightData(editorState, styleName, nextData) {
     const highlightsState = getHighlightsState(editorState);
 
     if (highlightsState.highlightsData[styleName] === undefined) {
-        throw new Error('Can\'t update a Highlight which doesn\'t exist.');
+        throw new Error('Highlight doesn\'t exist.');
     }
 
     const newHighlightsState = {
@@ -324,6 +345,10 @@ export function updateHighlightData(editorState, styleName, nextData) {
  */
 export function removeHighlight(editorState, styleName) {
     const highlightsState = getHighlightsState(editorState);
+
+    if (highlightsState.highlightsData[styleName] === undefined) {
+        return;
+    }
 
     let nextHighlightsStyleMap = {...highlightsState.highlightsStyleMap};
 
