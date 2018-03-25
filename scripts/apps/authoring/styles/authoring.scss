@@ -81,6 +81,9 @@
     flex-grow: 1;
     flex-shrink: 1;
     padding: 0 0 0 20px;
+    .assignment {
+        vertical-align: sub;
+    }
     .stage {
         font-size: 10px;
         @include text-light();
