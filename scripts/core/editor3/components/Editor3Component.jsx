@@ -26,7 +26,7 @@ import {HighlightsPopup} from './HighlightsPopup';
 import UnstyledBlock from './UnstyledBlock';
 import UnstyledWrapper from './UnstyledWrapper';
 import {isEditorBlockEvent} from './BaseUnstyledComponent';
-import {acceptedInlineStyles} from '../helpers/inlineStyles';
+import {handleBeforeInputHighlights} from '../helpers/highlights';
 
 const VALID_MEDIA_TYPES = [
     'application/superdesk.item.picture',
@@ -258,8 +258,8 @@ export class Editor3Component extends React.Component {
      * at the end of content, any character added will continue to be part of the link.
      * This logic stops that behavior.
      */
-    handleBeforeInput(chars) {
-        const {editorState, onChange, suggestingMode, onCreateAddSuggestion} = this.props;
+    handleBeforeInput(chars, editorState) {
+        const {onChange, suggestingMode, onCreateAddSuggestion} = this.props;
 
         if (!this.allowEditSuggestion('insert')) {
             return 'handled';
@@ -269,36 +269,9 @@ export class Editor3Component extends React.Component {
             onCreateAddSuggestion(chars);
             return 'handled';
         } else if (!this.allowEditSuggestion('backspace')) {
-            // there is a suggestion before the current position -> prevent the copy of
-            // suggestion style
-            const inlineStyle = editorState.getCurrentInlineStyle();
-            const selection = editorState.getSelection();
-            let newSelection = selection.merge({
-                anchorOffset: selection.getStartOffset(),
-                focusOffset: selection.getEndOffset() + chars.length,
-                isBackward: false
-            });
-            let newContentState = editorState.getCurrentContent();
-            let newEditorState;
-
-            newContentState = Modifier.insertText(newContentState, selection, chars);
-            inlineStyle.forEach((style) => {
-                if (acceptedInlineStyles.indexOf(style) !== -1) {
-                    newContentState = Modifier.applyInlineStyle(newContentState, newSelection, style);
-                }
-            });
-
-            newEditorState = EditorState.push(editorState, newContentState, 'insert-characters');
-
-            newSelection = selection.merge({
-                anchorOffset: selection.getStartOffset() + chars.length,
-                focusOffset: selection.getEndOffset() + chars.length,
-                isBackward: false
-            });
-            newEditorState = EditorState.forceSelection(newEditorState, newSelection);
-
-            onChange(newEditorState);
-            return 'handled';
+            if (handleBeforeInputHighlights(this.props.onChange, chars, editorState) === 'handled') {
+                return 'handled';
+            }
         }
 
         if (chars !== ' ') {
@@ -317,6 +290,10 @@ export class Editor3Component extends React.Component {
 
             onChange(newEditorState);
 
+            return 'handled';
+        }
+
+        if (handleBeforeInputHighlights(this.props.onChange, chars, editorState) === 'handled') {
             return 'handled';
         }
 

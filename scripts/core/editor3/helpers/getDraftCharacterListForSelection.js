@@ -1,5 +1,10 @@
 import {List} from 'immutable';
 
+/**
+ * @ngdoc method
+ * @name orderedMapGetRange
+ * @returns {OrderedMap}
+ */
 function orderedMapGetRange(orderedMap, fromKey, toKey) {
     let firstItemFound = false;
     let lastItemFound = false;
@@ -22,6 +27,11 @@ function orderedMapGetRange(orderedMap, fromKey, toKey) {
     });
 }
 
+/**
+ * @ngdoc method
+ * @name getDraftCharacterListForSelection
+ * @returns {List<CharacterMetadata>}
+ */
 export function getDraftCharacterListForSelection(editorState, selection) {
     // including all blocks
 

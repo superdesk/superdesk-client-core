@@ -1,4 +1,4 @@
-import {RichUtils, EditorState, convertFromRaw} from 'draft-js';
+import {RichUtils, EditorState, convertFromRaw, Modifier} from 'draft-js';
 import {highlightsConfig} from '../highlightsConfig';
 import {editor3DataKeys, getCustomDataFromEditor, setCustomDataForEditor} from './editor3CustomData';
 import {getDraftCharacterListForSelection} from './getDraftCharacterListForSelection';
@@ -809,6 +809,38 @@ function addCommentsForServer(editorState) {
         .map((key) => highlightsData[key].data);
 
     return setCustomDataForEditor(editorState, editor3DataKeys.__PUBLIC_API__comments, comments);
+}
+
+/**
+ * @ngdoc method
+ * @name handleBeforeInputHighlights
+ * @description prevents inheriting of highlight styles
+ */
+export function handleBeforeInputHighlights(onChange, chars, editorState) {
+    const expandedSelection = expandDraftSelection(editorState.getSelection(), editorState, 1, 0);
+    const previousCharacterStyles = getDraftCharacterListForSelection(editorState, expandedSelection)
+        .last()
+        .getStyle();
+
+    const stylesExcludingOwnedByHighlights = previousCharacterStyles.filter((styleName) =>
+        styleNameBelongsToHighlight(styleName) === false
+    );
+
+    if (previousCharacterStyles.size === stylesExcludingOwnedByHighlights.size) {
+        return 'not-handled';
+    }
+
+    const nextContentstate = Modifier.replaceText(
+        editorState.getCurrentContent(),
+        editorState.getSelection(),
+        chars,
+        stylesExcludingOwnedByHighlights
+    );
+    const nextEditorState = EditorState.push(editorState, nextContentstate, 'insert-characters');
+
+    onChange(nextEditorState);
+
+    return 'handled';
 }
 
 /**
