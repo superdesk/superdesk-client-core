@@ -274,6 +274,10 @@ export class Editor3Component extends React.Component {
             }
         }
 
+        if (handleBeforeInputHighlights(this.props.onChange, chars, editorState) === 'handled') {
+            return 'handled';
+        }
+
         if (chars !== ' ') {
             return 'not-handled';
         }
@@ -290,10 +294,6 @@ export class Editor3Component extends React.Component {
 
             onChange(newEditorState);
 
-            return 'handled';
-        }
-
-        if (handleBeforeInputHighlights(this.props.onChange, chars, editorState) === 'handled') {
             return 'handled';
         }
 
