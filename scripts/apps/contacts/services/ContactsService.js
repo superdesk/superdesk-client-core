@@ -17,8 +17,8 @@ export class ContactsService {
         this.$location = $location;
         this.sort = sort;
         this.sortOptions = [
-            {field: 'last_name', label: gettext('Person (Last Name)')},
-            {field: 'organisation', label: gettext('Organisation')},
+            {field: 'last_name', label: gettext('Person (Last Name)'), defaultDir: 'asc'},
+            {field: 'organisation', label: gettext('Organisation'), defaultDir: 'asc'},
             {field: '_created', label: gettext('Created')},
             {field: '_updated', label: gettext('Updated')}
         ];
