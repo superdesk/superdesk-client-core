@@ -56,8 +56,22 @@ function getInitialHighlightsState() {
 }
 
 function getHighlightsState(editorState) {
-    return getCustomDataFromEditor(editorState, editor3DataKeys.MULTIPLE_HIGHLIGHTS)
-        || getInitialHighlightsState();
+    const initialHighlightsState = getInitialHighlightsState();
+    const highlightsDataFromEditor = getCustomDataFromEditor(editorState, editor3DataKeys.MULTIPLE_HIGHLIGHTS);
+
+    if (highlightsDataFromEditor == null) {
+        return initialHighlightsState;
+    }
+
+    const dataFromEditorContainsRequiredKeys = Object.keys(initialHighlightsState)
+        .filter((key) => Object.keys(highlightsDataFromEditor).includes(key) === false)
+        .length === 0;
+
+    if (dataFromEditorContainsRequiredKeys === false) {
+        return initialHighlightsState;
+    }
+
+    return highlightsDataFromEditor;
 }
 
 function setHighlightsState(editorState, hightlightsState) {
