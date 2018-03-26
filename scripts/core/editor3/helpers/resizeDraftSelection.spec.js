@@ -88,28 +88,6 @@ describe('editor3.helpers.resizeDraftSelection', () => {
         }));
     });
 
-    it('should handle out of range values when expanding', () => {
-        const currentSelection = new SelectionState({
-            anchorKey: getKeyForNthBlock(1),
-            anchorOffset: 10,
-            focusKey: getKeyForNthBlock(1),
-            focusOffset: 15,
-            isBackward: false,
-            hasFocus: false
-        });
-
-        const nextSelection = resizeDraftSelection(20, 1000, currentSelection, editorState);
-
-        expect(selectionToJsonString(nextSelection)).toBe(toJsonString({
-            anchorKey: getKeyForNthBlock(1),
-            anchorOffset: 0,
-            focusKey: getKeyForNthBlock(4),
-            focusOffset: 27,
-            isBackward: false,
-            hasFocus: false
-        }));
-    });
-
     it('should shrink the selection within a block', () => {
         const currentSelection = new SelectionState({
             anchorKey: getKeyForNthBlock(2),
@@ -149,28 +127,6 @@ describe('editor3.helpers.resizeDraftSelection', () => {
             anchorOffset: 17,
             focusKey: getKeyForNthBlock(3),
             focusOffset: 21,
-            isBackward: false,
-            hasFocus: false
-        }));
-    });
-
-    it('should handle out of range values while shrinking', () => {
-        const currentSelection = new SelectionState({
-            anchorKey: getKeyForNthBlock(2),
-            anchorOffset: 7,
-            focusKey: getKeyForNthBlock(3),
-            focusOffset: 16,
-            isBackward: false,
-            hasFocus: false
-        });
-
-        const nextSelection = resizeDraftSelection(-40, -40, currentSelection, editorState);
-
-        expect(selectionToJsonString(nextSelection)).toBe(toJsonString({
-            anchorKey: getKeyForNthBlock(3),
-            anchorOffset: 16,
-            focusKey: getKeyForNthBlock(3),
-            focusOffset: 16,
             isBackward: false,
             hasFocus: false
         }));

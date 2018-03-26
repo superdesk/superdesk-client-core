@@ -528,7 +528,13 @@ export function changeEditorSelection(editorState, startOffset, endOffset, force
  * @description find the block and offset for the new position specified by offset starting
  * from beggining of selection if startFromEnd is false or from end of selection otherwise.
  */
-const getBlockAndOffset = (editorState, selection, offset, startFromEnd = false) => {
+export const getBlockAndOffset = (
+    editorState,
+    selection,
+    offset,
+    startFromEnd = false,
+    limitedToSingleBlock = false
+) => {
     const noValue = {block: null, newOffset: null};
     const content = editorState.getCurrentContent();
     let newOffset;
@@ -544,6 +550,14 @@ const getBlockAndOffset = (editorState, selection, offset, startFromEnd = false)
 
     if (block == null) {
         return noValue;
+    }
+
+    if (limitedToSingleBlock === true) {
+        const offsetWithinBlock = startFromEnd === true
+            ? Math.min(newOffset, block.getLength())
+            : Math.max(newOffset, 0);
+
+        return {block: block, newOffset: offsetWithinBlock};
     }
 
     while (newOffset < 0) {
@@ -817,7 +831,7 @@ function addCommentsForServer(editorState) {
  * @description prevents inheriting of highlight styles
  */
 export function handleBeforeInputHighlights(onChange, chars, editorState) {
-    const expandedSelection = expandDraftSelection(editorState.getSelection(), editorState, 1, 0);
+    const expandedSelection = resizeDraftSelection(editorState.getSelection(), editorState, 1, 0);
     const previousCharacterStyles = getDraftCharacterListForSelection(editorState, expandedSelection)
         .last()
         .getStyle();
