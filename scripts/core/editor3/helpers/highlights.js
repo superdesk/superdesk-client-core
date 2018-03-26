@@ -56,19 +56,19 @@ function getInitialHighlightsState() {
 }
 
 function getHighlightsState(editorState) {
-    const initialhighlightsState = getInitialHighlightsState();
+    const initialHighlightsState = getInitialHighlightsState();
     const highlightsDataFromEditor = getCustomDataFromEditor(editorState, editor3DataKeys.MULTIPLE_HIGHLIGHTS);
 
     if (highlightsDataFromEditor == null) {
-        return initialhighlightsState;
+        return initialHighlightsState;
     }
 
-    const dataFromEditorContainsRequiredKeys = Object.keys(initialhighlightsState)
+    const dataFromEditorContainsRequiredKeys = Object.keys(initialHighlightsState)
         .filter((key) => Object.keys(highlightsDataFromEditor).includes(key) === false)
         .length === 0;
 
     if (dataFromEditorContainsRequiredKeys === false) {
-        return initialhighlightsState;
+        return initialHighlightsState;
     }
 
     return highlightsDataFromEditor;
