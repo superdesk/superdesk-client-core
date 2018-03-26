@@ -845,16 +845,13 @@ function addCommentsForServer(editorState) {
  * @description prevents inheriting of highlight styles
  */
 export function handleBeforeInputHighlights(onChange, chars, editorState) {
-    const expandedSelection = resizeDraftSelection(editorState.getSelection(), editorState, 1, 0);
-    const previousCharacterStyles = getDraftCharacterListForSelection(editorState, expandedSelection)
-        .last()
-        .getStyle();
+    const currentInlineStyle = editorState.getCurrentInlineStyle();
 
-    const stylesExcludingOwnedByHighlights = previousCharacterStyles.filter((styleName) =>
+    const stylesExcludingOwnedByHighlights = currentInlineStyle.filter((styleName) =>
         styleNameBelongsToHighlight(styleName) === false
     );
 
-    if (previousCharacterStyles.size === stylesExcludingOwnedByHighlights.size) {
+    if (currentInlineStyle.size === stylesExcludingOwnedByHighlights.size) {
         return 'not-handled';
     }
 
