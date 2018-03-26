@@ -361,7 +361,7 @@ export class ProfileDetail extends React.Component {
                     <Row flex={true}>
                         {!this.state.displayOtherStateField && <SelectInput
                             field="contact_state"
-                            label={gettext('State')}
+                            label={gettext('State/Province or Region')}
                             value={get(contact, 'contact_state', '')}
                             onChange={onChange}
                             options={get(this.state, 'stateNames', [])}
@@ -371,13 +371,13 @@ export class ProfileDetail extends React.Component {
                         }
 
                         {this.state.displayOtherStateField && <LineInput readOnly={readOnly}>
-                            <Label text={gettext('state')} />
+                            <Label text={gettext('State/Province or Region')} />
                             <Input
                                 field="contact_state"
                                 value={get(contact, 'contact_state', '')}
                                 onChange={onChange}
                                 type="text"
-                                placeholder="State"
+                                placeholder="State/Province or Region"
                                 readOnly={readOnly} />
                         </LineInput>}
 
