@@ -5,8 +5,8 @@ export function resizeDraftSelection(stretchLeft, stretchRight, selection, edito
     const nextRight = getBlockAndOffset(editorState, selection, stretchRight, true, limitedToSingleBlock);
 
     return selection.merge({
-        anchorKey: nextLeft.block.getKey(),
-        focusKey: nextRight.block.getKey(),
+        anchorKey: selection.getIsBackward() ? nextRight.block.getKey() : nextLeft.block.getKey(),
+        focusKey: selection.getIsBackward() ? nextLeft.block.getKey() : nextRight.block.getKey(),
         anchorOffset: selection.getIsBackward() ? nextRight.offset : nextLeft.newOffset,
         focusOffset: selection.getIsBackward() ? nextLeft.offset : nextRight.newOffset
     });
