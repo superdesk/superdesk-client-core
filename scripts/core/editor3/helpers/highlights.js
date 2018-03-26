@@ -64,7 +64,7 @@ function getHighlightsState(editorState) {
     }
 
     const dataFromEditorContainsRequiredKeys = Object.keys(initialhighlightsState)
-        .filter((key) => Object.keys(getCustomDataFromEditor).includes(key) === false)
+        .filter((key) => Object.keys(highlightsDataFromEditor).includes(key) === false)
         .length === 0;
 
     if (dataFromEditorContainsRequiredKeys === false) {
