@@ -21,7 +21,7 @@ export class ProfileDetail extends React.Component {
         }
 
         this.state = {
-            jobTitles: metadata.values.contact_job_titles || [],
+            jobTitles: orderBy(metadata.values.contact_job_titles, 'name', 'asc') || [],
             stateNames: stateNames || [],
             phoneUsages: metadata.values.contact_phone_usage || [],
             mobileUsages: metadata.values.contact_mobile_usage || [],

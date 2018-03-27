@@ -40,7 +40,7 @@
                         <select ng-model="meta.job_title"
                                 name="job_title"
                                 id="job_title"
-                                ng-options="job.name as job.name for job in metadata.contact_job_titles">
+                                ng-options="job.name as job.name for job in metadata.contact_job_titles | orderBy:'name'">
                         </select>
                     </div>
                     <div class="field">
