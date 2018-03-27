@@ -22,10 +22,10 @@ export class Logger {
             }
         }
 
+        console.warn(message, data);
+
         if (Raven.isSetup()) {
             Raven.captureMessage(message, data);
-        } else {
-            console.warn('Error logging to Sentry is not configured. The error will not be sent: ', message, data);
         }
     }
 }
