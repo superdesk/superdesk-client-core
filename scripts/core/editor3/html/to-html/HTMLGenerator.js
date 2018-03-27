@@ -29,11 +29,11 @@ const BlockStyleTags = {
  * tables.
  */
 export class HTMLGenerator {
-    constructor(contentState, disabled = []) {
+    constructor(contentState, logger, disabled = []) {
         this.contentState = contentState;
         this.listTags = [];
         this.lastDepth = 0;
-        this.atomicBlockParser = new AtomicBlockParser(contentState, disabled);
+        this.atomicBlockParser = new AtomicBlockParser(contentState, logger, disabled);
         this.blocks = contentState.getBlocksAsArray();
 
         this.convertBlock = this.convertBlock.bind(this);

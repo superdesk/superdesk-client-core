@@ -7,8 +7,8 @@ import {HTMLParser} from './from-html';
  * @description Converts DraftJS ContentState to HTML.
  * @returns {string} HTML
  */
-export function toHTML(contentState) {
-    return new HTMLGenerator(contentState).html();
+export function toHTML(contentState, logger) {
+    return new HTMLGenerator(contentState, logger).html();
 }
 
 /**

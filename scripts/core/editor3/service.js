@@ -208,7 +208,7 @@ export class EditorService {
      * @description Gets the content of the editor as HTML.
      * @returns {string} HTML
      */
-    getHTML() {
+    getHTML(logger) {
         if (!ok()) {
             return '';
         }
@@ -217,7 +217,7 @@ export class EditorService {
         const content = state.editorState.getCurrentContent();
         const cleanedContent = clearHighlights(content).content;
 
-        return toHTML(cleanedContent);
+        return toHTML(cleanedContent, logger);
     }
 
     /**

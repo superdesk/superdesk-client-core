@@ -73,13 +73,14 @@ AuthoringDirective.$inject = [
     'compareVersions',
     'embedService',
     '$sce',
-    'mediaIdGenerator'
+    'mediaIdGenerator',
+    'logger'
 ];
 export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace, notify,
     gettext, desks, authoring, api, session, lock, privileges, content, $location,
     referrer, macros, $timeout, $q, modal, archiveService, confirm, reloadService,
     $rootScope, $interpolate, metadata, suggest, config, editorResolver, compareVersions,
-    embedService, $sce, mediaIdGenerator) {
+    embedService, $sce, mediaIdGenerator, logger) {
     return {
         link: function($scope, elem, attrs) {
             var _closing;
@@ -529,7 +530,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                     const editor = editorResolver.get();
 
                     if (editor && editor.version() === '3') {
-                        $('#editor3Tansa').html(editor.getHTML());
+                        $('#editor3Tansa').html(editor.getHTML(logger));
                     }
 
                     switch ($scope.item.language) {

@@ -79,7 +79,9 @@ function onChange(contentState) {
     this.$scope.$apply(() => {
         // to avoid merge of dictionaries in backend, editorState is wrapped in a list
         this.editorState = [convertToRaw(contentStateHighlightsReadyForExport)];
-        this.value = toHTML(contentStateHighlightsReadyForExport);
+        const logger = ng.get('logger');
+
+        this.value = toHTML(contentStateHighlightsReadyForExport, logger);
     });
 
     // call on change with scope updated

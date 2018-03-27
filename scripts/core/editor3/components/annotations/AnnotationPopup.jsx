@@ -12,7 +12,8 @@ const Annotation = ({annotation, showPopup, highlightId, highlightsManager}) => 
     const {author, avatar, date, msg, annotationType: type} = annotation.data;
     const fromNow = moment(date).calendar();
     const fullDate = moment(date).format('MMMM Do YYYY, h:mm:ss a');
-    const html = toHTML(convertFromRaw(JSON.parse(msg)));
+    const logger = ng.get('logger');
+    const html = toHTML(convertFromRaw(JSON.parse(msg)), logger);
     const modal = ng.get('modal');
 
     const onEdit = () => showPopup(PopupTypes.Annotation, {annotation, highlightId});
