@@ -258,7 +258,7 @@ export class ProfileDetail extends React.Component {
                     </Row>
 
                     <Row>
-                        <LineInput readOnly={readOnly}>
+                        <LineInput readOnly={readOnly} hint={gettext('e.g. http://www.website.com')}>
                             <Label text={gettext('website')} />
                             <Input
                                 field="website"
