@@ -1,6 +1,6 @@
 <figure class="item-association"
         ng-class="{'item-association--preview': related, 'item-association--loading': loading}"
-        ng-click="editable && isMediaEditable() && !related && upload()">
+        ng-click="editable && associations.isMediaEditable() && !related && upload()">
     <div ng-if="related && editable" class="close-overlay">
         <button class="btn btn--primary btn--icon-only-circle btn--hollow" ng-click="remove(related); $event.stopPropagation()">
             <i class="icon-close-small"></i>
@@ -9,17 +9,17 @@
     <video ng-if="related && related.type === 'video'" controls="controls">
         <source vsrc="{{ rendition.href}}"
                 ng-repeat="(key, rendition) in related.renditions"
-                ng-if="isVideo(rendition)" html5vfix>
+                ng-if="associations.isVideo(rendition)" html5vfix>
     </video>
     <audio ng-if="related && related.type === 'audio'" controls="controls">
         <source vsrc="{{ rendition.href}}"
                 ng-repeat="(key, rendition) in related.renditions"
-                ng-if="isAudio(rendition)" html5vfix>
+                ng-if="associations.isAudio(rendition)" html5vfix>
     </audio>
     <img ng-if="related && (related.type === 'picture' || related.type === 'graphic')"
          ng-src="{{ related.renditions.viewImage.href}}"
-         ng-class="{'not-editable': !isMediaEditable() || !editable}"
-         ng-click="isMediaEditable() && edit(related); $event.stopPropagation()">
+         ng-class="{'not-editable': !associations.isMediaEditable() || !editable}"
+         ng-click="associations.isMediaEditable() && associations.edit(this, related); $event.stopPropagation()">
 </figure>
 
 <div contenteditable="true"
