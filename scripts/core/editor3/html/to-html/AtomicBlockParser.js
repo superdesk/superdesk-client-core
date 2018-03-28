@@ -10,9 +10,10 @@ import {HTMLGenerator} from '.';
  * @param {Array=} disabled A set of disabled elements (ie. ['table'] will ignore tables.
  */
 export class AtomicBlockParser {
-    constructor(contentState, disabled = []) {
+    constructor(contentState, logger, disabled = []) {
         this.contentState = contentState;
         this.disabled = disabled;
+        this.logger = logger;
     }
 
     /**
@@ -40,7 +41,8 @@ export class AtomicBlockParser {
         case 'TABLE':
             return this.parseTable(data);
         default:
-            return '<p><b>Unimplemented or disabled atomic block</b></p>';
+            this.logger.logWarning(`Editor3: Cannot generate HTML for entity type of ${entity.getType()}`, data);
+            return '';
         }
     }
 
@@ -120,7 +122,7 @@ export class AtomicBlockParser {
                 ? convertFromRaw(cells[i][j])
                 : ContentState.createFromText('');
 
-            return new HTMLGenerator(cellContentState, ['table']).html();
+            return new HTMLGenerator(cellContentState, this.logger, ['table']).html();
         };
 
         let html = '<table>';
