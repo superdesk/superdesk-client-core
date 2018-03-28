@@ -1,13 +1,15 @@
 import {stripHtmlTags} from 'core/utils';
 import {fieldHasUnresolvedSuggestions} from 'core/editor3/helpers/highlights';
+
 import {initializeHighlights} from 'core/editor3/helpers/highlights';
 import {EditorState, convertFromRaw} from 'draft-js';
+import {META_FIELD_NAME} from 'core/editor3/helpers/fieldsMeta';
+
 
 export const CONTENT_FIELDS_DEFAULTS = Object.freeze({
     headline: '',
     slugline: '',
     body_html: '',
-    editor_state: undefined,
     abstract: '',
     anpa_take_key: null,
     byline: '',
@@ -50,7 +52,8 @@ export const CONTENT_FIELDS_DEFAULTS = Object.freeze({
     extra: {},
     attachments: null,
     semantics: null,
-    annotations: null
+    annotations: null,
+    [META_FIELD_NAME]: {}
 });
 
 export const DEFAULT_ACTIONS = Object.freeze({

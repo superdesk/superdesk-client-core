@@ -1,3 +1,5 @@
+import {FIELD_KEY_SEPARATOR} from 'core/editor3/helpers/fieldsMeta';
+
 /**
  * @ngdoc directive
  * @module superdesk.apps.authoring
@@ -68,6 +70,8 @@ export function ArticleEditDirective(
             var autopopulateByline = config.features && config.features.autopopulateByline;
 
             /* Start: Dateline related properties */
+
+            scope.FIELD_KEY_SEPARATOR = FIELD_KEY_SEPARATOR;
 
             scope.monthNames = {Jan: '0', Feb: '1', Mar: '2', Apr: '3', May: '4', Jun: '5',
                 Jul: '6', Aug: '7', Sep: '8', Oct: '9', Nov: '10', Dec: '11'};
