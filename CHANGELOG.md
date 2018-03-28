@@ -1,5 +1,36 @@
 # Superdesk Client Changelog
 
+## [1.15.0] 2018-03-28
+
+### Fixed
+
+- Handle errors when generating HTML from editor state.
+- Fix default sort of contacts.
+- Fix website on media contacts link.
+- Show if custom embed fields as required in authoring.
+- Display translate action in item history.
+- Prevent publishing of items with unresolved suggestions.
+- Scroll up/down while dragging media in editor3.
+
+### Added
+
+- Add icon for coverage in authoring and preview.
+- Allow selecting multiple terms from vocabulary without reopening.
+- Add ingest config panel for Associated Press.
+- New icons for comments/annotations/suggestions.
+- Add suggestions history widget to authoring.
+- Add photodesk view to monitoring.
+- Add API for workspace sidenav menu items.
+- Add carousel func to multi item media fields.
+- Add inline comments history widget to authoring.
+- Add language filter to search if languages are configured.
+- Add new contact form.
+- Add coding conventions.
+
+### Changed
+
+- Update react to v16.
+
 ## [1.14.0] 2018-03-05
 
 ### Fixed
