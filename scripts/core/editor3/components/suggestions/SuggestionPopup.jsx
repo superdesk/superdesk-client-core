@@ -67,6 +67,8 @@ class Suggestion extends Component {
         const fullDate = moment(date).format('MMMM Do YYYY, h:mm:ss a');
 
         const description = Highlights.getHighlightDescription(this.props.suggestion.type);
+        const blockStyleDescription = Highlights.getBlockStylesDescription(this.props.suggestion.blockType);
+        const space = blockStyleDescription != '' ? ' ' : '';
 
         return (
             <Dropdown open={true}>
@@ -79,7 +81,7 @@ class Suggestion extends Component {
                 </div>
                 {this.props.suggestion.oldText == null &&
                     <div>
-                        <strong>{gettext(description)}: </strong>
+                        <strong>{gettext(description) + space + gettext(blockStyleDescription)}: </strong>
                         {this.props.suggestion.suggestionText}
                     </div>
                 }
@@ -116,6 +118,7 @@ Suggestion.propTypes = {
         suggestionText: PropTypes.string,
         oldText: PropTypes.string,
         type: PropTypes.string,
+        blockType: PropTypes.string,
         selection: PropTypes.object
     }),
     acceptSuggestion: PropTypes.func,

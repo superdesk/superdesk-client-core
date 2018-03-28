@@ -64,6 +64,23 @@ export function createChangeStyleSuggestion(style) {
 
 /**
  * @ngdoc method
+ * @name createChangeBlockStyleSuggestion
+ * @param {String} type
+ * @return {Object} action
+ * @description add a new suggestion of type change block style.
+ */
+export function createChangeBlockStyleSuggestion(type) {
+    return {
+        type: 'CREATE_CHANGE_BLOCK_STYLE_SUGGESTION',
+        payload: {
+            blockType: type,
+            data: getSuggestionMetadata()
+        }
+    };
+}
+
+/**
+ * @ngdoc method
  * @name acceptSuggestion
  * @param {Object} selection
  * @return {Object} action

@@ -54,7 +54,26 @@ export const highlightsConfig = {
         draftStyleMap: {
             backgroundColor: 'rgba(100, 235, 59, 0.2)'
         }
+    },
+    BLOCK_STYLE_SUGGESTION: {
+        type: 'BLOCK',
+        description: gettext('Apply format'),
+        draftStyleMap: {
+            backgroundColor: 'rgba(100, 235, 59, 0.2)'
+        }
     }
+};
+
+export const blockStylesDescription = {
+    'header-one': 'H1',
+    'header-two': 'H2',
+    'header-three': 'H3',
+    'header-four': 'H4',
+    'header-five': 'H5',
+    'header-six': 'H6',
+    blockquote: gettext('quote'),
+    'unordered-list-item': gettext('unordered list'),
+    'ordered-list-item': gettext('ordered list')
 };
 
 export const changeSuggestionsTypes = ['DELETE_SUGGESTION', 'ADD_SUGGESTION'];
@@ -62,4 +81,4 @@ export const styleSuggestionsTypes = Object.keys(highlightsConfig).filter(
     (key) => highlightsConfig[key].type === 'STYLE'
 );
 
-export const suggestionsTypes = [...changeSuggestionsTypes, ...styleSuggestionsTypes];
+export const suggestionsTypes = [...changeSuggestionsTypes, ...styleSuggestionsTypes, 'BLOCK_STYLE_SUGGESTION'];
