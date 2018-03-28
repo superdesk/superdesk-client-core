@@ -1,6 +1,8 @@
 import {BlockEntityWrapper} from '.';
 import {BlockInlineStyleWrapper} from '.';
 import {AtomicBlockParser} from '.';
+import * as Highlights from '../../helpers/highlights';
+import {EditorState} from 'draft-js';
 
 /**
  * @type {Object}
@@ -31,6 +33,7 @@ const BlockStyleTags = {
 export class HTMLGenerator {
     constructor(contentState, logger, disabled = []) {
         this.contentState = contentState;
+        this.editorState = editorState;
         this.listTags = [];
         this.lastDepth = 0;
         this.atomicBlockParser = new AtomicBlockParser(contentState, logger, disabled);
@@ -134,7 +137,7 @@ export class HTMLGenerator {
         if (annotations.length == 0) {
             return false;
         }
-        return annotations[0].offset == key;
+        return annotations[0].start == key;
     }
 
     /**
@@ -149,7 +152,7 @@ export class HTMLGenerator {
         if (!annotation) {
             return false;
         }
-        return (annotation.offset + annotation.length - 1) === key;
+        return annotation.end === key;
     }
 
     /**
@@ -160,12 +163,26 @@ export class HTMLGenerator {
      * @description Returns an array of annotations sorted by offset.
      */
     getAnnotations(contentBlock) {
-        let ranges = contentBlock.getData().get('inlineStyleRanges');
+        let annotationIds = [];
+        let ranges = [];
+        let styleRanges = contentBlock.findStyleRanges((charMeta) => {
+            let annotations = charMeta.getStyle().filter((value, key, iter) => {
+                if (key.startsWith('ANNOTATION')) {
+                    annotationIds.push(key);
+                    return true;
+                }
+                return false;
+            });
+            return annotations.count() > 0;
+        }, (start, end) => {
+            ranges.push({start: start, end: end});
+        });
 
-        if (!ranges) {
-            return [];
-        }
-        let annotations = _.filter(ranges, (range) => range.style && range.style.startsWith('ANNOTATION'));
+        let annotations = [];
+
+        _.forEach(ranges, (range) => {
+            annotations.push({start: range.start, end: range.end, style: annotationIds.shift()})
+        });
 
         return annotations.sort((a, b) => {
             if (a.offset < b.offset) {
@@ -199,14 +216,18 @@ export class HTMLGenerator {
      * @description Returns a string containing the HTML inserted after the annotated text.
      */
     getAnnotationEnd(annotation, contentBlock) {
-        let data = contentBlock.getData().get('MULTIPLE_HIGHLIGHTS').highlightsData;
-
         try {
-            let annotationData = data[annotation.style];
+            let annotationData = Highlights.getHighlightData(this.editorState, annotation.style);
             let message = JSON.parse(annotationData.data.msg);
+            let text = '';
+            _.forEach(message.blocks, (block) => {
+                text += ' ' + block.text;
+            });
+
+            console.log('annotationData', annotationData);
 
             return '</span><span class="annotation-toggle-icon"></span>' +
-                '<p class="annotation-content">' + message.blocks[0].text + '</p>';
+                '<p class="annotation-content">' + text + '</p>';
         } catch (e) {
             return '';
         }
@@ -244,20 +265,19 @@ export class HTMLGenerator {
                     annotation = annotations.shift();
                     html += this.getAnnotationStart(annotation, contentBlock);
                 }
-
-                html += styleTags + entityTags + text[key];
-
                 if (annotation && this.isAnnotationEnd(annotation, key)) {
                     html += this.getAnnotationEnd(annotation, contentBlock);
                     annotation = null;
                 }
+
+                html += styleTags + entityTags + text[key];
             });
         // apply left-over close tags
         html += entityWrapper.flush();
         html += styleWrapper.flush();
 
         if (annotation) {
-            html += this.getAnnotationEnd(annotation);
+            html += this.getAnnotationEnd(annotation, contentBlock);
         }
 
         // get block wrapping tags (depth for lists)

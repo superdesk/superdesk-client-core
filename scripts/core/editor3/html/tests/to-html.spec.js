@@ -1,6 +1,6 @@
 import * as testUtils from '../../components/tests/utils';
 import {AtomicBlockParser} from '../to-html';
-import {ContentState, convertToRaw} from 'draft-js';
+import {EditorState, ContentState, convertToRaw} from 'draft-js';
 import {BlockInlineStyleWrapper, BlockEntityWrapper, HTMLGenerator} from '../to-html';
 import {OrderedSet as OS} from 'immutable';
 import {Logger} from 'core/services/logger';
@@ -121,8 +121,9 @@ describe('core.editor3.html.to-html.HTMLGenerator', () => {
                 [{offset: 6, length: 5, style: 'ANNOTATION-1'}, {offset: 12, length: 5, style: 'ANNOTATION-2'}]
             ]
         ]);
+        const editorState = EditorState.createWithContent(contentState);
 
-        const result = new HTMLGenerator(contentState).html();
+        const result = new HTMLGenerator(contentState, editorState).html();
 
         expect(result).toBe('<p>lorem ' +
             '<span class="annotation-tag">ipsum</span>' +
@@ -130,7 +131,7 @@ describe('core.editor3.html.to-html.HTMLGenerator', () => {
             '<p class="annotation-content">Annotation 1</p> ' +
             '<span class="annotation-tag">dolor</span>' +
             '<span class="annotation-toggle-icon"></span>' +
-            '<p class="annotation-content">Annotation 2</p></p>'.replace(/[\n\r]+/g, ''));
+            '<p class="annotation-content">Annotation 2</p></p>');
     });
 });
 

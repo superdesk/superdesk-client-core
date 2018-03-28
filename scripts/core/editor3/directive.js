@@ -138,23 +138,6 @@ class Editor3Directive {
     }
 
     initialize(config, $element, editor3, $scope, $rootScope, gettextCatalog) {
-        function copyInlineStyleRanges(directive) {
-            if (!directive.editorState) {
-                return;
-            }
-            let editorState = directive.editorState;
-
-            if (directive.editorState instanceof Array) {
-                editorState = directive.editorState[0];
-            }
-            if (editorState.blocks) {
-                editorState.blocks = editorState.blocks.map((block) => {
-                    block.data.inlineStyleRanges = block.inlineStyleRanges;
-                    return block;
-                });
-            }
-        }
-
         // defaults
         this.language = this.language || 'en';
         this.readOnly = this.readOnly || false;
@@ -169,8 +152,6 @@ class Editor3Directive {
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.svc = {gettextCatalog};
-
-        copyInlineStyleRanges(this);
 
         const store = createEditorStore(this);
 

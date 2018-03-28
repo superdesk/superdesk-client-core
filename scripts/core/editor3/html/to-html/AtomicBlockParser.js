@@ -7,11 +7,13 @@ import {HTMLGenerator} from '.';
  * @description AtomicBlockParser is a helper class for the HTMLGenerator. It parses
  * Editor3 atomic blocks (image, table, embed, etc.).
  * @param {Object} contentState
+ * @param {Object} editorState
  * @param {Array=} disabled A set of disabled elements (ie. ['table'] will ignore tables.
  */
 export class AtomicBlockParser {
     constructor(contentState, logger, disabled = []) {
         this.contentState = contentState;
+        this.editorState = editorState;
         this.disabled = disabled;
         this.logger = logger;
     }

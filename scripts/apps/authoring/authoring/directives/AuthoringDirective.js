@@ -194,37 +194,11 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 }
             };
 
-            function cleanEditorRanges(item) {
-                if (item.editor_state) {
-                    _.forEach(item.editor_state, (editorState) => {
-                        _.forEach(editorState.blocks, (block) => {
-                            if (block.data && block.data.inlineStyleRanges) {
-                                delete block.data.inlineStyleRanges;
-                            }
-                        });
-                    });
-                }
-            }
-
-            function restoreEditorRanges(item) {
-                if (item.editor_state) {
-                    _.forEach(item.editor_state, (editorState) => {
-                        _.forEach(editorState.blocks, (block) => {
-                            if (block.inlineStyleRanges) {
-                                block.data.inlineStyleRanges = block.inlineStyleRanges;
-                            }
-                        });
-                    });
-                }
-            }
-
             /**
              * Create a new version
              */
             $scope.save = function() {
-                cleanEditorRanges($scope.item);
                 return authoring.save($scope.origItem, $scope.item).then((res) => {
-                    restoreEditorRanges($scope.item);
                     $scope.dirty = false;
 
                     if (res.cropData) {
