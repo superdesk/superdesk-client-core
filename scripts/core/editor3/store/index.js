@@ -69,6 +69,12 @@ export default function createEditorStore(props, isReact = false) {
  * is bound to the controller, so 'this' points to controller attributes.
  */
 function onChange(contentState) {
+    const pathToValue = this.pathToValue;
+
+    if (pathToValue == null || pathToValue.length < 1) {
+        throw new Error('pathToValue is required');
+    }
+
     const decorativeStyles = ['HIGHLIGHT', 'HIGHLIGHT_STRONG'];
     const contentStateCleaned = removeInlineStyles(contentState, decorativeStyles);
     const contentStateHighlightsReadyForExport = prepareHighlightsForExport(

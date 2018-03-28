@@ -72,6 +72,12 @@ class Editor3Directive {
             value: '=',
 
             /**
+             * @type {String}
+             * @description required for editor3 to be able to set metadata for fields. Mainly editor_state
+             */
+            pathToValue: '=',
+
+            /**
              * @type {Boolean}
              * @description If true, editor is read-only.
              */
