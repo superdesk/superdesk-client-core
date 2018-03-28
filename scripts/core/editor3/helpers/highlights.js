@@ -5,7 +5,7 @@ import {getDraftCharacterListForSelection} from './getDraftCharacterListForSelec
 import {getDraftSelectionForEntireContent} from './getDraftSelectionForEntireContent';
 import {resizeDraftSelection} from './resizeDraftSelection';
 import {clearInlineStyles} from './clearInlineStyles';
-import {suggestionsTypes, changeSuggestionsTypes} from '../highlightsConfig';
+import {suggestionsTypes, changeSuggestionsTypes, blockStylesDescription} from '../highlightsConfig';
 
 export const availableHighlights = Object.keys(highlightsConfig).reduce((obj, key) => {
     obj[key] = highlightsConfig[key].draftStyleMap;
@@ -42,6 +42,14 @@ export function getHighlightDescription(suggestionsType) {
     }
 
     return suggestionsType;
+}
+
+export function getBlockStylesDescription(blockStyle) {
+    if (blockStyle == null || !(blockStyle in blockStylesDescription)) {
+        return '';
+    }
+
+    return blockStylesDescription[blockStyle];
 }
 
 function getInitialHighlightsState() {

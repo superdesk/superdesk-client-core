@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import StyleButton from './StyleButton';
 import * as actions from '../../actions';
@@ -26,42 +26,65 @@ const blockStyles = {
  * @name BlockStyleControl
  * @description Blocks style controls (h1, h2, h3, ...)
  */
-export const BlockStyleButtonsComponent = ({editorState, editorFormat, toggleBlockStyle}) => {
-    const selection = editorState.getSelection();
-    const blockStyleKeys = Object.keys(blockStyles);
-    const blockType = editorState
-        .getCurrentContent()
-        .getBlockForKey(selection.getStartKey())
-        .getType();
+export class BlockStyleButtonsComponent extends Component {
+    constructor(props) {
+        super(props);
 
-    return (
-        <span>
-            {blockStyleKeys.filter((type) => editorFormat.indexOf(type) > -1).map((type) =>
-                <StyleButton
-                    key={type}
-                    active={blockStyles[type] === blockType}
-                    label={type}
-                    onToggle={toggleBlockStyle}
-                    style={blockStyles[type]}
-                />
-            )}
-        </span>
-    );
-};
+        this.onToggle = this.onToggle.bind(this);
+    }
+
+    onToggle(type) {
+        const {suggestingMode, toggleBlockStyle, createChangeBlockStyleSuggestion} = this.props;
+
+        if (suggestingMode) {
+            createChangeBlockStyleSuggestion(type);
+        } else {
+            toggleBlockStyle(type);
+        }
+    }
+
+    render() {
+        const {editorState, editorFormat} = this.props;
+        const selection = editorState.getSelection();
+        const blockStyleKeys = Object.keys(blockStyles);
+        const blockType = editorState
+            .getCurrentContent()
+            .getBlockForKey(selection.getStartKey())
+            .getType();
+
+        return (
+            <span>
+                {blockStyleKeys.filter((type) => editorFormat.indexOf(type) > -1).map((type) =>
+                    <StyleButton
+                        key={type}
+                        active={blockStyles[type] === blockType}
+                        label={type}
+                        onToggle={this.onToggle}
+                        style={blockStyles[type]}
+                    />
+                )}
+            </span>
+        );
+    }
+}
 
 BlockStyleButtonsComponent.propTypes = {
     editorState: PropTypes.object,
+    suggestingMode: PropTypes.bool,
+    editorFormat: PropTypes.array,
     toggleBlockStyle: PropTypes.func,
-    editorFormat: PropTypes.array
+    createChangeBlockStyleSuggestion: PropTypes.func
 };
 
 const mapStateToProps = (state) => ({
     editorState: state.editorState,
-    editorFormat: state.editorFormat
+    editorFormat: state.editorFormat,
+    suggestingMode: state.suggestingMode
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    toggleBlockStyle: (blockType) => dispatch(actions.toggleBlockStyle(blockType))
+    toggleBlockStyle: (blockType) => dispatch(actions.toggleBlockStyle(blockType)),
+    createChangeBlockStyleSuggestion: (type) => dispatch(actions.createChangeBlockStyleSuggestion(type))
 });
 
 const BlockStyleButtons = connect(mapStateToProps, mapDispatchToProps)(BlockStyleButtonsComponent);

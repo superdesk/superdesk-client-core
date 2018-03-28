@@ -18,6 +18,8 @@ const suggestions = (state = {}, action) => {
         return createDeleteSuggestion(state, action.payload);
     case 'CREATE_CHANGE_STYLE_SUGGESTION':
         return createChangeStyleSuggestion(state, action.payload);
+    case 'CREATE_CHANGE_BLOCK_STYLE_SUGGESTION':
+        return createChangeBlockStyleSuggestion(state, action.payload);
     case 'PASTE_ADD_SUGGESTION':
         return pasteAddSuggestion(state, action.payload);
     case 'ACCEPT_SUGGESTION':
@@ -121,7 +123,7 @@ const createDeleteSuggestion = (state, {action, data}) => {
  * @ngdoc method
  * @name createAddSuggestion
  * @param {Object} state
- * @param {String} text - the suggestion added text
+ * @param {String} style - the suggestion style
  * @param {Object} data - info about the author of suggestion
  * @return {Object} returns new state
  * @description Add a new suggestion of type ADD.
@@ -129,25 +131,64 @@ const createDeleteSuggestion = (state, {action, data}) => {
 const createChangeStyleSuggestion = (state, {style, data}) => {
     let {editorState} = state;
     const type = Highlights.getTypeByInlineStyle(style);
+
+    editorState = applyStyleSuggestion(editorState, type);
+    editorState = RichUtils.toggleInlineStyle(editorState, style, data);
+
+    return saveEditorStatus(state, editorState, 'change-inline-style', true);
+};
+
+function applyStyleSuggestion(editorState, type, data) {
     const selection = editorState.getSelection();
+    let newEditorState = editorState;
     let currentStyle;
 
-    editorState = initSelectionIterator(editorState);
-    while (hasNextSelection(editorState, selection)) {
-        currentStyle = Highlights.getHighlightStyleAtCurrentPosition(editorState, type);
+    newEditorState = initSelectionIterator(newEditorState);
+    while (hasNextSelection(newEditorState, selection)) {
+        currentStyle = Highlights.getHighlightStyleAtCurrentPosition(newEditorState, type);
 
         if (currentStyle) {
-            editorState = resetSuggestion(editorState, currentStyle);
+            newEditorState = resetSuggestion(newEditorState, currentStyle);
         } else {
-            editorState = Highlights.changeEditorSelection(editorState, 1, 1, false);
+            newEditorState = Highlights.changeEditorSelection(newEditorState, 1, 1, false);
         }
     }
 
-    editorState = EditorState.acceptSelection(editorState, selection);
-    editorState = Highlights.addHighlight(editorState, type, data);
-    editorState = RichUtils.toggleInlineStyle(editorState, style);
+    newEditorState = EditorState.acceptSelection(newEditorState, selection);
+    newEditorState = Highlights.addHighlight(newEditorState, type, data);
 
-    return saveEditorStatus(state, editorState, 'change-inline-style', true);
+    return editorState;
+}
+
+/**
+ * @ngdoc method
+ * @name createChangeBlockStyleSuggestion
+ * @param {Object} state
+ * @param {String} blockType - the suggestion block type
+ * @param {Object} data - info about the author of suggestion
+ * @return {Object} returns new state
+ * @description Add a new suggestion of type ADD.
+ */
+const createChangeBlockStyleSuggestion = (state, {blockType, data}) => {
+    let {editorState} = state;
+    const content = editorState.getCurrentContent();
+    const selection = editorState.getSelection();
+    const block = content.getBlockForKey(selection.getStartKey());
+    const blockSelection = selection.merge({
+        anchorOffset: 0,
+        anchorKey: block.getKey(),
+        focusOffset: block.getLength(),
+        focusKey: block.getKey(),
+        isBackward: false
+    });
+    const type = 'BLOCK_STYLE_SUGGESTION';
+
+    editorState = EditorState.acceptSelection(editorState, blockSelection);
+    data['blockType'] = blockType;
+    editorState = applyStyleSuggestion(editorState, type, data);
+    editorState = RichUtils.toggleBlockType(editorState, blockType);
+
+    return saveEditorStatus(state, editorState, 'change-block-type', true);
 };
 
 /**
@@ -233,6 +274,15 @@ const processSuggestion = (state, {suggestion}, accepted) => {
 
     editorState = saveToSuggestionsHistory(editorState, suggestion, accepted);
     editorState = EditorState.acceptSelection(editorState, suggestion.selection);
+
+    if (suggestion.type === 'BLOCK_STYLE_SUGGESTION') {
+        editorState = Highlights.removeHighlight(editorState, suggestion.styleName);
+        if (!accepted) {
+            editorState = RichUtils.toggleBlockType(editorState, suggestion.blockType);
+        }
+
+        return saveEditorStatus(state, editorState, 'change-inline-style', true);
+    }
 
     if (styleSuggestionsTypes.indexOf(suggestion.type) !== -1) {
         editorState = Highlights.removeHighlight(editorState, suggestion.styleName);
