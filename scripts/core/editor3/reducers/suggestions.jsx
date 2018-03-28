@@ -256,9 +256,6 @@ const processSuggestion = (state, {suggestion}, accepted) => {
         const applySuggestion = data.type === 'ADD_SUGGESTION' && accepted ||
             data.type === 'DELETE_SUGGESTION' && !accepted;
 
-        // keep character and clean suggestion style and entity
-        editorState = resetSuggestion(editorState, style);
-
         if (applySuggestion) {
             // keep character and clean suggestion style and entity
             editorState = resetSuggestion(editorState, style);
