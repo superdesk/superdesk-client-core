@@ -5,6 +5,8 @@ export const fieldsMetaKeys = {
 // . is not a valid character for mongo key
 export const FIELD_KEY_SEPARATOR = '>';
 
+export const getFieldId = (contentKey) => contentKey.split(FIELD_KEY_SEPARATOR).slice(-1)[0];
+
 export const META_FIELD_NAME = 'fields_meta';
 
 const wrapper = {

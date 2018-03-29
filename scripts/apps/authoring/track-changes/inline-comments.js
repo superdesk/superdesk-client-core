@@ -3,7 +3,8 @@ import {
     getCustomDataFromEditorRawState
 } from 'core/editor3/helpers/editor3CustomData';
 
-import {fieldsMetaKeys, META_FIELD_NAME, getFieldMetadata} from 'core/editor3/helpers/fieldsMeta';
+import {getLabelForFieldId} from 'apps/workspace/helpers/getLabelForFieldId';
+import {fieldsMetaKeys, META_FIELD_NAME, getFieldMetadata, getFieldId} from 'core/editor3/helpers/fieldsMeta';
 
 function getAllUserIdsFromComments(comments) {
     const users = [];
@@ -31,12 +32,8 @@ function convertUsersArrayToObject(users) {
     return usersObj;
 }
 
-function getFieldName(contentKey) {
-    return contentKey; // TODO
-}
-
-InlineCommentsCtrl.$inject = ['$scope', 'userList'];
-function InlineCommentsCtrl($scope, userList) {
+InlineCommentsCtrl.$inject = ['$scope', 'userList', 'metadata', 'content'];
+function InlineCommentsCtrl($scope, userList, metadata, content) {
     const comments = Object.keys($scope.item[META_FIELD_NAME])
         .map((contentKey) => ({
             contentKey: contentKey,
@@ -45,7 +42,7 @@ function InlineCommentsCtrl($scope, userList) {
         .filter((obj) => obj[fieldsMetaKeys.draftjsState] != null)
         .map((obj) => (
             {
-                fieldName: getFieldName(obj.contentKey),
+                fieldName: getLabelForFieldId(getFieldId(obj.contentKey), content),
                 comments: getCustomDataFromEditorRawState(
                     obj[fieldsMetaKeys.draftjsState],
                     editor3DataKeys.RESOLVED_COMMENTS_HISTORY

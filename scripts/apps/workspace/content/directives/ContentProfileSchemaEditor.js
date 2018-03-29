@@ -1,5 +1,6 @@
-import {LABEL_MAP, HAS_FORMAT_OPTIONS} from 'apps/workspace/content/constants';
+import {HAS_FORMAT_OPTIONS} from 'apps/workspace/content/constants';
 import _ from 'lodash';
+import {getLabelForFieldId} from '../../helpers/getLabelForFieldId';
 
 /**
  * @ngdoc directive
@@ -70,24 +71,7 @@ export function ContentProfileSchemaEditor(content, config) {
                 'suggestions'
             ];
 
-            /**
-             * @description label returns the display name for a key.
-             */
-            scope.label = function(id) {
-                if (LABEL_MAP.hasOwnProperty(id)) {
-                    return LABEL_MAP[id];
-                }
-
-                if (scope.fields && scope.fields.hasOwnProperty(id)) {
-                    return scope.fields[id].display_name;
-                }
-
-                console.warn(`could not find label for ${id}. Please add it in ` +
-                    '(apps/workspace/content/content/directives/ContentProfileSchemaEditor).' +
-                    'ContentProfileSchemaEditor/labelMap');
-
-                return id.charAt(0).toUpperCase() + id.substr(1).toLowerCase();
-            };
+            scope.label = (id) => getLabelForFieldId(id, content);
 
             /**
              * @description Set form dirty

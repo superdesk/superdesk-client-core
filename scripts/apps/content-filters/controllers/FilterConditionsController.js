@@ -1,4 +1,4 @@
-import {LABEL_MAP} from 'apps/workspace/content/constants';
+import {getLabelForFieldId} from 'apps/workspace/helpers/getLabelForFieldId';
 /**
  * @ngdoc controller
  * @module superdesk.apps.content_filters
@@ -10,8 +10,8 @@ import {LABEL_MAP} from 'apps/workspace/content/constants';
  * @description Controller for the Filter Conditions tab, found on the Content Filters
  * settings page.
  */
-FilterConditionsController.$inject = ['$scope', 'contentFilters', 'notify', 'modal', '$filter'];
-export function FilterConditionsController($scope, contentFilters, notify, modal, $filter) {
+FilterConditionsController.$inject = ['$scope', 'contentFilters', 'notify', 'modal', '$filter', 'content'];
+export function FilterConditionsController($scope, contentFilters, notify, modal, $filter, content) {
     $scope.filterConditions = null;
     $scope.filterCondition = null;
     $scope.origFilterCondition = null;
@@ -20,7 +20,6 @@ export function FilterConditionsController($scope, contentFilters, notify, modal
     $scope.valueLookup = {};
     $scope.valueFieldLookup = {};
     $scope.loadedFilters = false;
-    var fieldsLabels = {};
 
     $scope.edit = function(fc) {
         $scope.origFilterCondition = fc || {};
@@ -60,17 +59,7 @@ export function FilterConditionsController($scope, contentFilters, notify, modal
     /**
      * @description label returns the display name for a key.
      */
-    $scope.label = (id) => {
-        if (LABEL_MAP.hasOwnProperty(id)) {
-            return LABEL_MAP[id];
-        }
-
-        if (fieldsLabels.hasOwnProperty(id)) {
-            return gettext(fieldsLabels[id]);
-        }
-
-        return gettext(id.charAt(0).toUpperCase() + id.substr(1).toLowerCase());
-    };
+    $scope.label = (id) => getLabelForFieldId(id, content);
 
     $scope.cancel = function() {
         $scope.origFilterCondition = null;
@@ -160,9 +149,6 @@ export function FilterConditionsController($scope, contentFilters, notify, modal
                 $scope.operatorLookup[param.field] = param.operators;
                 $scope.valueLookup[param.field] = param.values;
                 $scope.valueFieldLookup[param.field] = param.value_field;
-                if (param.hasOwnProperty('label')) {
-                    fieldsLabels[param.field] = param.label;
-                }
             });
             $scope.loadedFilters = true;
         });

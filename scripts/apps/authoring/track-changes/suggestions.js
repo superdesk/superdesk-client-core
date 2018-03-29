@@ -4,7 +4,8 @@ import {
 } from 'core/editor3/helpers/editor3CustomData';
 import * as Highlights from 'core/editor3/helpers/highlights';
 
-import {fieldsMetaKeys, META_FIELD_NAME, getFieldMetadata} from '../../../core/editor3/helpers/fieldsMeta';
+import {getLabelForFieldId} from 'apps/workspace/helpers/getLabelForFieldId';
+import {fieldsMetaKeys, META_FIELD_NAME, getFieldMetadata, getFieldId} from '../../../core/editor3/helpers/fieldsMeta';
 
 function getAllUserIdsFromSuggestions(suggestions) {
     const users = [];
@@ -39,12 +40,8 @@ function getLocalizedTypeText(type, blockType) {
     return gettext(description) + space + gettext(blockStyleDescription);
 }
 
-function getFieldName(contentKey) {
-    return contentKey; // TODO
-}
-
-SuggestionsCtrl.$inject = ['$scope', 'userList'];
-function SuggestionsCtrl($scope, userList) {
+SuggestionsCtrl.$inject = ['$scope', 'userList', 'content'];
+function SuggestionsCtrl($scope, userList, content) {
     const suggestions = Object.keys($scope.item[META_FIELD_NAME])
         .map((contentKey) => ({
             contentKey: contentKey,
@@ -53,7 +50,7 @@ function SuggestionsCtrl($scope, userList) {
         .filter((obj) => obj[fieldsMetaKeys.draftjsState] != null)
         .map((obj) => (
             {
-                fieldName: getFieldName(obj.contentKey),
+                fieldName: getLabelForFieldId(getFieldId(obj.contentKey), content),
                 suggestions: getCustomDataFromEditorRawState(
                     obj[fieldsMetaKeys.draftjsState],
                     editor3DataKeys.RESOLVED_SUGGESTIONS_HISTORY
