@@ -863,22 +863,17 @@
 
 .notification-list {
     margin: 0;
+    margin-bottom: 20px;
     list-style-type: none;
-    padding: 0 10px;
-    position: absolute;
-    overflow-y: auto;
-    bottom: 0;
-    top: 60px;
 
     li {
-        //border: 1px solid #393939;
         background: #393939;
         padding: 10px 5px;
         @include box-sizing(border-box);
         @include border-radius(2px);
         width: 100%;
         min-height: 45px;
-        margin:0 0 7px 0;
+        margin:10px 0;
         @include box-shadow(0 1px 3px 0 rgba(0,0,0,0.5));
 
         .content {

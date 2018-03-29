@@ -709,9 +709,6 @@ $slide-pane-width: 400px;
                 padding: 10px;
                 @include text-light();
             }
-            .notification-list {
-                right: 0; left: 0;
-            }
         }
     }
 }

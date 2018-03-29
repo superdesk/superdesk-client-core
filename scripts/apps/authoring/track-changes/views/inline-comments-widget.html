@@ -1,6 +1,7 @@
 <div class="widget" ng-controller="InlineCommentsCtrl">
-    <div class="notification-list white field" ng-repeat="commentObj in items" class="item">
-        <h4 class="field__label">{{commentObj.fieldName}}</h4>
+    <div class="notification-list notification-list-fix white field" ng-repeat="commentObj in items" class="item">
+        <h4 class="label label--large">{{commentObj.fieldName}}</h4>
+
         <ul ng-class="{ 'notification-list--empty' : items.length === 0 }">
             <li ng-repeat="item in commentObj.comments" class="item">
                 <figure class="avatar">
