@@ -243,6 +243,7 @@ function saveToSuggestionsHistory(editorState, suggestion, accepted) {
         editor3DataKeys.RESOLVED_SUGGESTIONS_HISTORY,
         resolvedSuggestions.concat({
             suggestionText: suggestion.suggestionText,
+            oldText: suggestion.oldText,
             suggestionInfo: {
                 author: suggestion.author,
                 date: suggestion.date,

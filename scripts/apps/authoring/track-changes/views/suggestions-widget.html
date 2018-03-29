@@ -10,9 +10,17 @@
             </figure>
             <div>{{users[item.suggestionInfo.author].display_name || users[item.suggestionInfo.author].username}}</div>
             <div class="date" sd-reldate ng-model="item.suggestionInfo.date"></div>
-            <div class="content">
+            <div class="content" ng-show="!item.oldText">
                 <div class="text">
                     <strong>{{getTypeText(item.suggestionInfo.type) | translate}}:</strong>
+                    <strong><em>"{{item.suggestionText}}"</em></strong>
+                </div>
+            </div>
+            <div class="content" ng-show="item.oldText">
+                <div class="text">
+                    <strong translate>Replace: </strong>
+                    <strong><em>"{{item.oldText}}"</em></strong>
+                    <strong translate>with: </strong>
                     <strong><em>"{{item.suggestionText}}"</em></strong>
                 </div>
             </div>
