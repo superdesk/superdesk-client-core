@@ -802,6 +802,7 @@ export function getSuggestionData(editorState, styleName) {
     if (type === 'ADD_SUGGESTION') {
         return {
             ...data,
+            type: 'REPLACE_SUGGESTION',
             oldText: peerRangeAndText.highlightedText,
             selection: suggestionSelection,
         };
@@ -809,6 +810,7 @@ export function getSuggestionData(editorState, styleName) {
 
     return {
         ...data,
+        type: 'REPLACE_SUGGESTION',
         suggestionText: peerRangeAndText.highlightedText,
         oldText: data.suggestionText,
         selection: suggestionSelection
