@@ -8,7 +8,7 @@
     ngf-model-options="{updateOn: 'drop'}"
     >
     <div id="workspace-container" ng-view sd-splitter-widget></div>
-    <div id="authoring-container" ng-if="superdesk.flags.workspace" sd-authoring-container></div>
+    <div id="authoring-container" ng-show="superdesk.flags.authoring" ng-if="superdesk.flags.workspace" sd-authoring-container></div>
     <div id="superdesk-workqueue" ng-if="superdesk.flags.workspace === true && superdesk.flags.workqueue === true" sd-workqueue></div>
     <div sd-item-preview-container></div>
 </div>
