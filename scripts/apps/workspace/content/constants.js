@@ -82,6 +82,7 @@ export const LABEL_MAP = Object.freeze({
     keywords: gettext('Keywords'),
     language: gettext('Language'),
     usageterms: gettext('Usage Terms'),
+    sms_message: gettext('SMS Message')
 });
 
 export const HAS_FORMAT_OPTIONS = Object.freeze({
