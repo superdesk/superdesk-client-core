@@ -37,7 +37,6 @@ module.exports = function(grunt) {
         features: {
             swimlane: {columnsLimit: 4},
             editor3: true,
-            editorHighlights: true,
             qumu: true
         },
         auth: {google: false},

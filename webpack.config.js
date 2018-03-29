@@ -207,10 +207,7 @@ function getDefaults(grunt) {
             useTansaProofing: false,
 
             // replace editor2
-            onlyEditor3: false,
-
-            // enable highlights (commenting and annotations) in editor3
-            editorHighlights: false
+            onlyEditor3: false
         },
 
         // tansa config

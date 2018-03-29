@@ -330,7 +330,6 @@ export class Editor3Component extends React.Component {
             editorState,
             onChange,
             onTab,
-            highlightsEnabled,
             tabindex,
             scrollContainer
         } = this.props;
@@ -363,14 +362,12 @@ export class Editor3Component extends React.Component {
                         highlightsManager={this.props.highlightsManager}
                     />
                 }
-                {highlightsEnabled &&
-                    <HighlightsPopup
-                        editorNode={this.editorNode}
-                        editorState={editorState}
-                        highlightsManager={this.props.highlightsManager}
-                        onChange={this.props.onChange}
-                    />
-                }
+                <HighlightsPopup
+                    editorNode={this.editorNode}
+                    editorState={editorState}
+                    highlightsManager={this.props.highlightsManager}
+                    onChange={this.props.onChange}
+                />
                 <div className="focus-screen" onMouseDown={this.focus}>
                     <Editor editorState={editorState}
                         handleKeyCommand={this.handleKeyCommand}
@@ -396,7 +393,6 @@ Editor3Component.propTypes = {
     readOnly: PropTypes.bool,
     locked: PropTypes.bool,
     showToolbar: PropTypes.bool,
-    highlightsEnabled: PropTypes.bool,
     editorState: PropTypes.object,
     onChange: PropTypes.func,
     unlock: PropTypes.func,

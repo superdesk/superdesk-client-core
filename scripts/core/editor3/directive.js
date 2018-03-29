@@ -45,12 +45,6 @@ class Editor3Directive {
             findReplaceTarget: '@',
 
             /**
-             * @type {Boolean}
-             * @description If true, allows inline highlights (commenting, annotating, etc.).
-             */
-            highlights: '@',
-
-            /**
              * @type {Object}
              * @description Editor format options that are enabled and should be displayed
              * in the toolbar.
@@ -154,7 +148,6 @@ class Editor3Directive {
         this.bindToValue = this.bindToValue || false;
         this.tabindex = this.tabindex || 0;
         this.showTitle = this.showTitle || false;
-        this.highlights = typeof this.highlights !== 'undefined' && config.features.editorHighlights;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.svc = {gettextCatalog};

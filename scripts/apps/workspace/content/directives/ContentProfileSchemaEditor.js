@@ -66,12 +66,9 @@ export function ContentProfileSchemaEditor(content, config) {
 
             scope.formattingOptionsEditor3 = [
                 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ordered list', 'unordered list', 'quote', 'media', 'link',
-                'embed', 'underline', 'italic', 'bold', 'table', 'formatting marks'
+                'embed', 'underline', 'italic', 'bold', 'table', 'formatting marks', 'annotation', 'comments',
+                'suggestions'
             ];
-
-            if (config.features.editorHighlights) {
-                scope.formattingOptionsEditor3.push('annotation', 'comments', 'suggestions');
-            }
 
             /**
              * @description label returns the display name for a key.
