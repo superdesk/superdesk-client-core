@@ -79,13 +79,13 @@ class Suggestion extends Component {
                         <div className="date" title={fromNow}>{fullDate}</div>
                     </div>
                 </div>
-                {this.props.suggestion.oldText == null &&
+                {this.props.suggestion.type !== 'REPLACE_SUGGESTION' &&
                     <div>
                         <strong>{gettext(description) + space + gettext(blockStyleDescription)}: </strong>
                         {this.props.suggestion.suggestionText}
                     </div>
                 }
-                {this.props.suggestion.oldText != null &&
+                {this.props.suggestion.type === 'REPLACE_SUGGESTION' &&
                     <div>
                         <div>
                             <strong>{gettext('Replace')}: </strong>
