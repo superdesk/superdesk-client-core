@@ -281,32 +281,6 @@ body, html {
         min-height: 2.7rem;
         padding: 2px 0 0 1px;
     }
-    //labels
-    .field {
-        .field__label {
-            @include text-normal();
-            background: rgba(0, 0, 0, 0.4);
-            @include border-radius(2px);
-            color: #fff;
-            display: inline-block;
-            padding: 2px 8px 1px;
-            font-size: 11px;
-            font-family: "Roboto", sans-serif;
-            line-height: 16px;
-            //height: 16px;
-            @include transition(all ease 0.2s);
-            opacity: 0.4;
-            text-transform: uppercase;
-            font-style: normal;
-            letter-spacing: 0.1em;
-        }
-        &.active {
-            .field__label {
-                background: $sd-blue;
-                @include transition(all ease 0.6s);
-            }
-        }
-    }
     // inputs
     .text-editor, input, .field__select {
         border: 1px solid rgba(123, 123, 123, 0) !important;
@@ -482,6 +456,34 @@ body, html {
     }
     .body {
         clear: left;
+    }
+}
+
+//labels
+.field {
+    .field__label {
+        @include text-normal();
+        background: rgba(0, 0, 0, 0.4);
+        @include border-radius(2px);
+        color: #fff;
+        display: inline-block;
+        padding: 2px 8px 1px;
+        margin-bottom: 15px;
+        font-size: 11px;
+        font-family: "Roboto", sans-serif;
+        line-height: 16px;
+        //height: 16px;
+        @include transition(all ease 0.2s);
+        opacity: 0.4;
+        text-transform: uppercase;
+        font-style: normal;
+        letter-spacing: 0.1em;
+    }
+    &.active {
+        .field__label {
+            background: $sd-blue;
+            @include transition(all ease 0.6s);
+        }
     }
 }
 

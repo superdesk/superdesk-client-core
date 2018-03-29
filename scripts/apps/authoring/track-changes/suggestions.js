@@ -1,8 +1,10 @@
 import {
     editor3DataKeys,
-    getCustomDataFromEditor
+    getCustomDataFromEditorRawState
 } from 'core/editor3/helpers/editor3CustomData';
 import * as Highlights from 'core/editor3/helpers/highlights';
+
+import {fieldsMetaKeys, META_FIELD_NAME, getFieldMetadata} from '../../../core/editor3/helpers/fieldsMeta';
 
 function getAllUserIdsFromSuggestions(suggestions) {
     const users = [];
@@ -37,22 +39,35 @@ function getLocalizedTypeText(type, blockType) {
     return gettext(description) + space + gettext(blockStyleDescription);
 }
 
+function getFieldName(contentKey) {
+    return contentKey; // TODO
+}
+
 SuggestionsCtrl.$inject = ['$scope', 'userList'];
 function SuggestionsCtrl($scope, userList) {
-    const editorState = $scope.item.editor_state;
-
-    const suggestions =
-        getCustomDataFromEditor(
-            editorState,
-            editor3DataKeys.RESOLVED_SUGGESTIONS_HISTORY
-        ) || [];
+    const suggestions = Object.keys($scope.item[META_FIELD_NAME])
+        .map((contentKey) => ({
+            contentKey: contentKey,
+            [fieldsMetaKeys.draftjsState]: getFieldMetadata($scope.item, contentKey, fieldsMetaKeys.draftjsState)
+        }))
+        .filter((obj) => obj[fieldsMetaKeys.draftjsState] != null)
+        .map((obj) => (
+            {
+                fieldName: getFieldName(obj.contentKey),
+                suggestions: getCustomDataFromEditorRawState(
+                    obj[fieldsMetaKeys.draftjsState],
+                    editor3DataKeys.RESOLVED_SUGGESTIONS_HISTORY
+                ) || []
+            }
+        ))
+        .filter((obj) => obj.suggestions.length > 0);
 
     if (suggestions.length === 0) {
         $scope.items = [];
         return;
     }
 
-    const userIds = getAllUserIdsFromSuggestions(suggestions);
+    const userIds = getAllUserIdsFromSuggestions([].concat(...suggestions.map((obj) => obj.suggestions)));
 
     userList.getAll()
         .then((users) => {

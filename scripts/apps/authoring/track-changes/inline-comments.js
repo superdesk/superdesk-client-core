@@ -1,7 +1,9 @@
 import {
     editor3DataKeys,
-    getCustomDataFromEditor
+    getCustomDataFromEditorRawState
 } from 'core/editor3/helpers/editor3CustomData';
+
+import {fieldsMetaKeys, META_FIELD_NAME, getFieldMetadata} from 'core/editor3/helpers/fieldsMeta';
 
 function getAllUserIdsFromComments(comments) {
     const users = [];
@@ -29,22 +31,35 @@ function convertUsersArrayToObject(users) {
     return usersObj;
 }
 
+function getFieldName(contentKey) {
+    return contentKey; // TODO
+}
+
 InlineCommentsCtrl.$inject = ['$scope', 'userList'];
 function InlineCommentsCtrl($scope, userList) {
-    const editorState = $scope.item.editor_state;
-
-    const comments =
-        getCustomDataFromEditor(
-            editorState,
-            editor3DataKeys.RESOLVED_COMMENTS_HISTORY
-        ) || [];
+    const comments = Object.keys($scope.item[META_FIELD_NAME])
+        .map((contentKey) => ({
+            contentKey: contentKey,
+            [fieldsMetaKeys.draftjsState]: getFieldMetadata($scope.item, contentKey, fieldsMetaKeys.draftjsState)
+        }))
+        .filter((obj) => obj[fieldsMetaKeys.draftjsState] != null)
+        .map((obj) => (
+            {
+                fieldName: getFieldName(obj.contentKey),
+                comments: getCustomDataFromEditorRawState(
+                    obj[fieldsMetaKeys.draftjsState],
+                    editor3DataKeys.RESOLVED_COMMENTS_HISTORY
+                ) || []
+            }
+        ))
+        .filter((obj) => obj.comments.length > 0);
 
     if (comments.length === 0) {
         $scope.items = [];
         return;
     }
 
-    const userIds = getAllUserIdsFromComments(comments);
+    const userIds = getAllUserIdsFromComments([].concat(...comments.map((obj) => obj.comments)));
 
     userList.getAll()
         .then((users) => {
