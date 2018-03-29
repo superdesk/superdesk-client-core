@@ -112,7 +112,9 @@ describe('core.editor3.html.to-html.HTMLGenerator', () => {
                                     author: 'author 2',
                                     date: '2018-03-06T16:46:17.906Z',
                                     msg: '{"blocks":[{"key":"d573","text":"Annotation 2","type":"unstyled",' +
-                                        '"depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}'
+                                        '"depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}},' +
+                                        '{"key":"fa37","text":"Line 2","type":"unstyled","depth":0,' +
+                                        '"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}'
                                 }
                             }
                         }
@@ -121,9 +123,7 @@ describe('core.editor3.html.to-html.HTMLGenerator', () => {
                 [{offset: 6, length: 5, style: 'ANNOTATION-1'}, {offset: 12, length: 5, style: 'ANNOTATION-2'}]
             ]
         ]);
-        const editorState = EditorState.createWithContent(contentState);
-
-        const result = new HTMLGenerator(contentState, editorState).html();
+        const result = new HTMLGenerator(contentState, EditorState.createWithContent(contentState)).html();
 
         expect(result).toBe('<p>lorem ' +
             '<span class="annotation-tag">ipsum</span>' +
@@ -131,7 +131,7 @@ describe('core.editor3.html.to-html.HTMLGenerator', () => {
             '<p class="annotation-content">Annotation 1</p> ' +
             '<span class="annotation-tag">dolor</span>' +
             '<span class="annotation-toggle-icon"></span>' +
-            '<p class="annotation-content">Annotation 2</p></p>');
+            '<p class="annotation-content">Annotation 2 Line 2</p></p>');
     });
 });
 

@@ -368,6 +368,7 @@ export function addHighlight(editorState, type, data) {
         throw new Error('Highlight type invalid');
     }
     let newIndex = 0;
+
     if (highlightsState.lastHighlightIds && _.has(highlightsState.lastHighlightIds, type)) {
         newIndex = highlightsState.lastHighlightIds[type] + 1;
     }

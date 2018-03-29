@@ -1,8 +1,8 @@
+import {EditorState} from 'draft-js';
 import {BlockEntityWrapper} from '.';
 import {BlockInlineStyleWrapper} from '.';
 import {AtomicBlockParser} from '.';
 import * as Highlights from '../../helpers/highlights';
-import {EditorState} from 'draft-js';
 
 /**
  * @type {Object}
@@ -33,7 +33,6 @@ const BlockStyleTags = {
 export class HTMLGenerator {
     constructor(contentState, logger, disabled = []) {
         this.contentState = contentState;
-        this.editorState = editorState;
         this.listTags = [];
         this.lastDepth = 0;
         this.atomicBlockParser = new AtomicBlockParser(contentState, logger, disabled);
@@ -42,6 +41,8 @@ export class HTMLGenerator {
         this.convertBlock = this.convertBlock.bind(this);
         this.getBlockTags = this.getBlockTags.bind(this);
         this.listTag = this.listTag.bind(this);
+        this.getAnnotationStart = this.getAnnotationStart.bind(this);
+        this.getAnnotationEnd = this.getAnnotationEnd.bind(this);
     }
 
     /**
@@ -127,107 +128,52 @@ export class HTMLGenerator {
 
     /**
      * @ngdoc method
-     * @name HTMLGenerator#isAnnotationStart
-     * @param {Array} annotations
-     * @param {Number} key
-     * @returns {Bool}
-     * @description Returns true if an annotation started at the current text index.
-     */
-    isAnnotationStart(annotations, key) {
-        if (annotations.length == 0) {
-            return false;
-        }
-        return annotations[0].start == key;
-    }
-
-    /**
-     * @ngdoc method
-     * @name HTMLGenerator#isAnnotationEnd
-     * @param {Object} annotation
-     * @param {Number} key
-     * @returns {Bool}
-     * @description Returns true if an annotation ended at the current text index.
-     */
-    isAnnotationEnd(annotation, key) {
-        if (!annotation) {
-            return false;
-        }
-        return annotation.end === key;
-    }
-
-    /**
-     * @ngdoc method
      * @name HTMLGenerator#getAnnotations
      * @param {Object} contentBlock
-     * @returns {Array} annotations
-     * @description Returns an array of annotations sorted by offset.
+     * @returns {Object} annotations
+     * @description Returns an object of annotations.
      */
     getAnnotations(contentBlock) {
-        let annotationIds = [];
-        let ranges = [];
-        let styleRanges = contentBlock.findStyleRanges((charMeta) => {
-            let annotations = charMeta.getStyle().filter((value, key, iter) => {
+        let annotations = {};
+
+        contentBlock.findStyleRanges((charMeta) => {
+            charMeta.getStyle().filter((value, key, iter) => {
                 if (key.startsWith('ANNOTATION')) {
-                    annotationIds.push(key);
-                    return true;
+                    annotations[key] = {openTag: this.getAnnotationStart, closeTag: this.getAnnotationEnd};
                 }
                 return false;
             });
-            return annotations.count() > 0;
-        }, (start, end) => {
-            ranges.push({start: start, end: end});
         });
 
-        let annotations = [];
-
-        _.forEach(ranges, (range) => {
-            annotations.push({start: range.start, end: range.end, style: annotationIds.shift()})
-        });
-
-        return annotations.sort((a, b) => {
-            if (a.offset < b.offset) {
-                return -1;
-            }
-            if (a.offset == b.offset) {
-                return 0;
-            }
-            return 1;
-        });
+        return annotations;
     }
 
     /**
      * @ngdoc method
      * @name HTMLGenerator#getAnnotationStart
-     * @param {Object} annotation
-     * @param {Object} contentBlock
      * @returns {String}
      * @description Returns a string containing the HTML inserted before the annotated text.
      */
-    getAnnotationStart(annotation, contentBlock) {
+    getAnnotationStart(style) {
         return '<span class="annotation-tag">';
     }
 
     /**
      * @ngdoc method
      * @name HTMLGenerator#getAnnotationEnd
-     * @param {Object} annotation
-     * @param {Object} contentBlock
      * @returns {String}
      * @description Returns a string containing the HTML inserted after the annotated text.
      */
-    getAnnotationEnd(annotation, contentBlock) {
+    getAnnotationEnd(style) {
         try {
-            let annotationData = Highlights.getHighlightData(this.editorState, annotation.style);
-            let message = JSON.parse(annotationData.data.msg);
+            let annotationData = Highlights.getHighlightData(EditorState.createWithContent(this.contentState), style);
             let text = '';
-            _.forEach(message.blocks, (block) => {
+
+            _.forEach(JSON.parse(annotationData.data.msg).blocks, (block) => {
                 text += ' ' + block.text;
             });
 
-            console.log('annotationData', annotationData);
-
-            return '</span><span class="annotation-toggle-icon"></span>' +
-                '<p class="annotation-content">' + text + '</p>';
+            return `</span><span class="annotation-toggle-icon"></span><p class="annotation-content">${text}</p>`;
         } catch (e) {
             return '';
         }
@@ -249,36 +195,21 @@ export class HTMLGenerator {
         }
 
         const text = contentBlock.getText();
-        const styleWrapper = new BlockInlineStyleWrapper();
+        const styleWrapper = new BlockInlineStyleWrapper(this.getAnnotations(contentBlock));
         const entityWrapper = new BlockEntityWrapper(this.contentState);
 
         let html = '';
-        let annotations = this.getAnnotations(contentBlock);
-        let annotation = null;
 
         contentBlock.getCharacterList()
             .forEach((charMeta, key) => {
                 const entityTags = entityWrapper.tags(charMeta.getEntity());
                 const styleTags = styleWrapper.tags(charMeta.getStyle());
 
-                if (!annotation && this.isAnnotationStart(annotations, key)) {
-                    annotation = annotations.shift();
-                    html += this.getAnnotationStart(annotation, contentBlock);
-                }
-                if (annotation && this.isAnnotationEnd(annotation, key)) {
-                    html += this.getAnnotationEnd(annotation, contentBlock);
-                    annotation = null;
-                }
-
                 html += styleTags + entityTags + text[key];
             });
         // apply left-over close tags
         html += entityWrapper.flush();
         html += styleWrapper.flush();
-
-        if (annotation) {
-            html += this.getAnnotationEnd(annotation, contentBlock);
-        }
 
         // get block wrapping tags (depth for lists)
         const depth = contentBlock.getDepth();
