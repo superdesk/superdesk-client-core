@@ -126,12 +126,8 @@ describe('core.editor3.html.to-html.HTMLGenerator', () => {
         const result = new HTMLGenerator(contentState, EditorState.createWithContent(contentState)).html();
 
         expect(result).toBe('<p>lorem ' +
-            '<span class="annotation-tag">ipsum</span>' +
-            '<span class="annotation-toggle-icon"></span>' +
-            '<p class="annotation-content">Annotation 1</p> ' +
-            '<span class="annotation-tag">dolor</span>' +
-            '<span class="annotation-toggle-icon"></span>' +
-            '<p class="annotation-content">Annotation 2 Line 2</p></p>');
+            '<span annotation-id="1">ipsum</span>' +
+            '<span annotation-id="2">dolor</span></p>');
     });
 });
 

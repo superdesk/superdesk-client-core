@@ -29,17 +29,18 @@ export class BlockInlineStyleWrapper {
 
     getTag(style, type) {
         let tag = this.inlineStyleTags[style];
+        let closingChar = type === 'close' ? '/' : '';
 
         if (tag !== null && typeof tag === 'object') {
             if (type === 'open' && _.has(tag, 'openTag')) {
                 return tag.openTag(style);
             }
-            if (type == 'close' && _.has(tag, 'closeTag')) {
+            if (type === 'close' && _.has(tag, 'closeTag')) {
                 return tag.closeTag(style);
             }
             return '';
         }
-        return `<${tag}>`;
+        return `<${closingChar}${tag}>`;
     }
 
     /**

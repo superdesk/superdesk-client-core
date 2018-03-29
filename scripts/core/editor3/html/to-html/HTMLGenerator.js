@@ -1,8 +1,6 @@
-import {EditorState} from 'draft-js';
 import {BlockEntityWrapper} from '.';
 import {BlockInlineStyleWrapper} from '.';
 import {AtomicBlockParser} from '.';
-import * as Highlights from '../../helpers/highlights';
 
 /**
  * @type {Object}
@@ -138,7 +136,7 @@ export class HTMLGenerator {
 
         contentBlock.findStyleRanges((charMeta) => {
             charMeta.getStyle().filter((value, key, iter) => {
-                if (key.startsWith('ANNOTATION')) {
+                if (key.startsWith('ANNOTATION-')) {
                     annotations[key] = {openTag: this.getAnnotationStart, closeTag: this.getAnnotationEnd};
                 }
                 return false;
@@ -155,7 +153,7 @@ export class HTMLGenerator {
      * @description Returns a string containing the HTML inserted before the annotated text.
      */
     getAnnotationStart(style) {
-        return '<span class="annotation-tag">';
+        return '<span annotation-id="' + style.split('-')[1] + '">';
     }
 
     /**
@@ -165,18 +163,7 @@ export class HTMLGenerator {
      * @description Returns a string containing the HTML inserted after the annotated text.
      */
     getAnnotationEnd(style) {
-        try {
-            let annotationData = Highlights.getHighlightData(EditorState.createWithContent(this.contentState), style);
-            let text = '';
-
-            _.forEach(JSON.parse(annotationData.data.msg).blocks, (block) => {
-                text += ' ' + block.text;
-            });
-
-            return `</span><span class="annotation-toggle-icon"></span><p class="annotation-content">${text}</p>`;
-        } catch (e) {
-            return '';
-        }
+        return '</span>';
     }
 
     /**
