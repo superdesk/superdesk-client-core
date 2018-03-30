@@ -35,7 +35,7 @@ export class AtomicBlockParser {
 
         switch (entity.getType()) {
         case 'MEDIA':
-            return this.parseImage(data);
+            return this.parseMedia(data);
         case 'EMBED':
             return this.parseEmbed(data);
         case 'TABLE':
@@ -70,13 +70,13 @@ export class AtomicBlockParser {
 
     /**
      * @ngdoc method
-     * @name AtomicBlockParser#parseImage
+     * @name AtomicBlockParser#parseMedia
      * @param {Object} data Entity data.
      * @returns {string} HTML
      * @description Returns the HTML representation of an atomic 'MEDIA' block having
      * the passed entity data.
      */
-    parseImage(data) {
+    parseMedia(data) {
         const {media} = data;
         const rendition = media.renditions.original || media.renditions.viewImage;
         const href = rendition.href;

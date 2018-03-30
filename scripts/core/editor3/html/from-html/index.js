@@ -31,7 +31,7 @@ import {
 export class HTMLParser {
     constructor(html) {
         this.tables = {};
-        this.images = {};
+        this.media = {};
         this.tree = $('<div></div>');
 
         this.createTree(html);
@@ -61,8 +61,8 @@ export class HTMLParser {
             $(node).replaceWith(`<figure>BLOCK_TABLE_${i}</figure>`);
         });
 
-        this.tree.find('.media-block').each((i, node) => {
-            this.images[i] = $(node).html();
+        this.tree.find('.media-block, img, audio, video').each((i, node) => {
+            this.media[i] = $(node)[0].outerHTML;
             $(node).replaceWith(`<figure>BLOCK_MEDIA_${i}</figure>`);
         });
     }
@@ -150,13 +150,13 @@ export class HTMLParser {
      */
     createMediaBlock(block) {
         const id = parseInt(block.getText().slice(12), 10);
-        const html = this.images[id];
+        const html = this.media[id];
         const node = $('<div />');
 
         node.html(html);
 
         let media = node.find('img');
-        let type = 'img';
+        let type = 'picture';
 
         if (!media) {
             media = node.find('video');
