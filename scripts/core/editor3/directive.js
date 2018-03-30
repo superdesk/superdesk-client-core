@@ -138,6 +138,10 @@ class Editor3Directive {
     }
 
     initialize(config, $element, editor3, $scope, $rootScope, gettextCatalog) {
+        if (this.item == null) {
+            throw new Error('Item must be provided in order to be able to save editor_state on it');
+        }
+
         // defaults
         this.language = this.language || 'en';
         this.readOnly = this.readOnly || false;
