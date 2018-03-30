@@ -1088,6 +1088,7 @@
             @include spinner-big();
             content: '';
             top: 50%;
+            left: 0;
             transform: translateY(-50%);
             position: absolute;
         }
@@ -1244,4 +1245,9 @@ feature-image {
 
 .image-carousel {
     max-width: 100%;
+}
+.sd-media-carousel {
+    &__thumb-strip-item {
+        transition: none;
+    }
 }

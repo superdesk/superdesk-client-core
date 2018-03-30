@@ -1,17 +1,71 @@
-<div class="sd-media-carousel">
+<figure class="item-association" ng-if="!carouselItems.length"
+    ng-class="{'item-association--preview': item[item.fieldId], 'item-association--loading': loading}"
+    ng-click="editable && associations.isMediaEditable() && !item[item.fieldId] && upload()">
+</figure>
+
+<div class="sd-media-carousel" ng-if="carouselItems.length">
     <div class="sd-media-carousel__dialog">
 
         <a ng-click="navPrev()" class="sd-media-carousel__nav-button sd-media-carousel__nav-button--prev-inner"></a>
         <a ng-click="navNext()" class="sd-media-carousel__nav-button sd-media-carousel__nav-button--next-inner"></a>
 
-        <div class="sd-media-carousel__content owl-carousel" ng-transclude></div>
+        <div class="sd-media-carousel__content owl-carousel">
+            <div class="sd-media-carousel__page" ng-repeat="item in carouselItems">
+                <figure class="item-association"
+                        ng-class="{'item-association--preview': item[item.fieldId], 'item-association--loading': loading}"
+                        ng-click="editable && associations.isMediaEditable() && !item[item.fieldId] && upload()">
 
-        <div class="sd-media-carousel__thumb-strip" ng-show="items.length > 1">
-            <div class="sd-media-carousel__thumb-strip-item" ng-repeat="item in items">
-                <div class="sd-media-carousel__thumb sd-media-carousel__thumb--add" ng-click="upload()" ng-if="!item[item.fieldId]" data-rel="{{item.fieldId}}">
-                    <i class="icon-plus-sign"></i>
+                    <div ng-if="item[item.fieldId] && editable" class="close-overlay">
+                        <button class="btn btn--primary btn--icon-only-circle btn--hollow" ng-click="remove(item); $event.stopPropagation()">
+                            <i class="icon-close-small"></i>
+                        </button>
+                    </div>
+                    <video ng-if="item[item.fieldId] && item[item.fieldId].type === 'video'" controls="controls">
+                        <source vsrc="{{rendition.href}}"
+                                ng-repeat="(key, rendition) in item[item.fieldId].renditions"
+                                ng-if="associations.isVideo(rendition)" html5vfix>
+                    </video>
+                    <audio ng-if="item[item.fieldId] && item[item.fieldId].type === 'audio'" controls="controls">
+                        <source vsrc="{{rendition.href}}"
+                                ng-repeat="(key, rendition) in item[item.fieldId].renditions"
+                                ng-if="associations.isAudio(rendition)" html5vfix>
+                    </audio>
+                    <img ng-if="item[item.fieldId] && (item[item.fieldId].type === 'picture' || item[item.fieldId].type === 'graphic')"
+                         ng-src="{{ item[item.fieldId].renditions.viewImage.href}}"
+                         ng-class="{'not-editable': !associations.isMediaEditable() || !editable}"
+                         ng-click="associations.isMediaEditable() && associations.edit(this, item[item.fieldId]); $event.stopPropagation()">
+                </figure>
+
+                <div contenteditable="true"
+                     sd-auto-height
+                     tansa-scope-sync
+                     ng-model="item[item.fieldId].headline"
+                     ng-model-options="{debounce: 1000}"
+                     ng-change="onchange()"
+                     ng-if="item[item.fieldId] && showTitle"
+                     class="sd-media-carousel__media-caption">
                 </div>
-                <div class="sd-media-carousel__thumb" ng-click="goTo($index+1)" ng-if="item[item.fieldId]">
+                <div contenteditable="true"
+                     sd-auto-height
+                     tansa-scope-sync
+                     ng-model="item[item.fieldId].description_text"
+                     ng-model-options="{debounce: 1000}"
+                     ng-change="onchange()"
+                     ng-if="item[item.fieldId]"
+                     class="sd-media-carousel__media-caption">
+                </div>
+
+                <div sd-item-crops
+                     data-item="item.associations[fieldVersion.fieldId]"
+                     ng-if="editor[field._id].showCrops && features.editFeaturedImage &&
+                                    !!field.field_options.allowed_types.picture">
+                </div>
+            </div>
+        </div>
+
+        <div class="sd-media-carousel__thumb-strip">
+            <div class="sd-media-carousel__thumb-strip-item" ng-repeat="item in carouselItems">
+                <div class="sd-media-carousel__thumb" ng-click="goTo($index)">
                     <img ng-src="{{item[item.fieldId].renditions.thumbnail.href}}">
                 </div>
             </div>
