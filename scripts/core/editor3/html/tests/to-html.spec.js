@@ -1,6 +1,6 @@
 import * as testUtils from '../../components/tests/utils';
 import {AtomicBlockParser} from '../to-html';
-import {EditorState, ContentState, convertToRaw} from 'draft-js';
+import {ContentState, convertToRaw, convertFromRaw} from 'draft-js';
 import {BlockInlineStyleWrapper, BlockEntityWrapper, HTMLGenerator} from '../to-html';
 import {OrderedSet as OS} from 'immutable';
 import {Logger} from 'core/services/logger';
@@ -87,46 +87,61 @@ describe('core.editor3.html.to-html.HTMLGenerator', () => {
     });
 
     it('should add anotation to HTML', () => {
-        const contentState = testUtils.blocksWithText([
-            // style, depth, text, data, inline style ranges
-            [
-                null, 0, 'lorem ipsum dolor',
-                {
+        const rawContentState = {
+            entityMap: {},
+            blocks: [{
+                inlineStyleRanges: [{
+                    length: 5,
+                    style: 'ANNOTATION-1',
+                    offset: 6
+                }, {
+                    length: 5,
+                    style: 'ANNOTATION-2',
+                    offset: 12
+                }],
+                data: {
                     MULTIPLE_HIGHLIGHTS: {
-                        lastHighlightIds: {
-                            ANNOTATION: 2
-                        },
+                        lastHighlightIds: {ANNOTATION: 2},
                         highlightsData: {
                             'ANNOTATION-1': {
-                                type: 'ANNOTATION',
                                 data: {
-                                    author: 'author 1',
-                                    date: '2018-03-06T16:46:17.906Z',
-                                    msg: '{"blocks":[{"key":"eecso","text":"Annotation 1","type":"unstyled",' +
-                                        '"depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}'
-                                }
+                                    email: 'admin@admin.ro',
+                                    date: '2018-03-30T14:57:53.172Z',
+                                    msg: '{"blocks":[{"key":"ejm11","text":"Annotation 1","type":"unstyled",' +
+                                        '"depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],' +
+                                        '"entityMap":{}}',
+                                    author: 'admin',
+                                    annotationType: 'regular',
+                                },
+                                type: 'ANNOTATION'
                             },
                             'ANNOTATION-2': {
-                                type: 'ANNOTATION',
                                 data: {
-                                    author: 'author 2',
-                                    date: '2018-03-06T16:46:17.906Z',
-                                    msg: '{"blocks":[{"key":"d573","text":"Annotation 2","type":"unstyled",' +
+                                    email: 'admin@admin.ro',
+                                    date: '2018-03-30T14:58:20.876Z',
+                                    msg: '{"blocks":[{"key":"9i73f","text":"Annotation 2","type":"unstyled",' +
                                         '"depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}},' +
-                                        '{"key":"fa37","text":"Line 2","type":"unstyled","depth":0,' +
-                                        '"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}'
-                                }
+                                        '{"key":"d3vb3","text":"Line 2","type":"unstyled","depth":0,' +
+                                        '"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}',
+                                    author: 'admin',
+                                    annotationType: 'regular',
+                                },
+                                type: 'ANNOTATION'
                             }
                         }
                     }
                 },
-                [{offset: 6, length: 5, style: 'ANNOTATION-1'}, {offset: 12, length: 5, style: 'ANNOTATION-2'}]
-            ]
-        ]);
-        const result = new HTMLGenerator(contentState, EditorState.createWithContent(contentState)).html();
+                text: 'lorem ipsum dolor',
+                type: 'unstyled',
+                depth: 0,
+                key: '2sso6',
+                entityRanges: []
+            }]
+        };
+        const result = new HTMLGenerator(convertFromRaw(rawContentState)).html();
 
         expect(result).toBe('<p>lorem ' +
-            '<span annotation-id="1">ipsum</span>' +
+            '<span annotation-id="1">ipsum</span> ' +
             '<span annotation-id="2">dolor</span></p>');
     });
 });

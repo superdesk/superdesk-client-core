@@ -48,6 +48,7 @@ export const CONTENT_FIELDS_DEFAULTS = Object.freeze({
     extra: {},
     attachments: null,
     semantics: null,
+    annotations: null
 });
 
 export const DEFAULT_ACTIONS = Object.freeze({

@@ -1,3 +1,5 @@
+import {convertFromRaw} from 'draft-js';
+import {toHTML} from 'core/editor3';
 import * as helpers from 'apps/authoring/authoring/helpers';
 
 /**
@@ -19,13 +21,14 @@ import * as helpers from 'apps/authoring/authoring/helpers';
  * @requires $injector
  * @requires moment
  * @requires config
+ * @requires logger
  *
  * @description Authoring Service is responsible for management of the actions on a story
  */
 AuthoringService.$inject = ['$q', '$location', 'api', 'lock', 'autosave', 'confirm', 'privileges',
-    'desks', 'superdeskFlags', 'notify', 'session', '$injector', 'moment', 'config'];
+    'desks', 'superdeskFlags', 'notify', 'session', '$injector', 'moment', 'config', 'logger'];
 export function AuthoringService($q, $location, api, lock, autosave, confirm, privileges, desks, superdeskFlags,
-    notify, session, $injector, moment, config) {
+    notify, session, $injector, moment, config, logger) {
     var self = this;
 
     // TODO: have to trap desk update event for refereshing users desks.
@@ -249,6 +252,35 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
     };
 
     /**
+     * Generate item annotations field
+     *
+     * @param {Object} item
+     */
+    this.generateAnnotations = (item) => {
+        if (item.editor_state && item.editor_state.length &&
+            item.editor_state[0].blocks && item.editor_state[0].blocks.length) {
+            let highlightsBlock = item.editor_state[0].blocks[0];
+
+            if (highlightsBlock.data && highlightsBlock.data.MULTIPLE_HIGHLIGHTS &&
+                highlightsBlock.data.MULTIPLE_HIGHLIGHTS.highlightsData) {
+                let annotations = [];
+
+                _.forEach(highlightsBlock.data.MULTIPLE_HIGHLIGHTS.highlightsData, (highlight, key) => {
+                    if (key.startsWith('ANNOTATION-')) {
+                        let annotation = {};
+
+                        annotation.id = key.split('-')[1];
+                        annotation.type = highlight.data.annotationType;
+                        annotation.body = toHTML(convertFromRaw(JSON.parse(highlight.data.msg)), logger);
+                        annotations.push(annotation);
+                    }
+                });
+                item.annotations = annotations;
+            }
+        }
+    };
+
+    /**
      * Autosave the changes
      *
      * @param {Object} item
@@ -265,6 +297,8 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
      * @param {Object} item
      */
     this.save = function saveAuthoring(origItem, item) {
+        this.generateAnnotations(item);
+
         var diff = helpers.extendItem({}, item);
         // Finding if all the keys are dirty for real
 

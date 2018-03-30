@@ -123,9 +123,6 @@ export function blocksWithText(list) {
         const depth = htmlData[1] || 0;
         const text = htmlData[2] || '';
         const data = htmlData[3] || {};
-        const inlineStyleRanges = htmlData[4] || [];
-
-        data.inlineStyleRanges = inlineStyleRanges;
 
         return new ContentBlock({
             type: type,
@@ -133,7 +130,6 @@ export function blocksWithText(list) {
             depth: depth,
             data: Map(data),
             text: text,
-            inlineStyleRanges: inlineStyleRanges,
             characterList: List(Repeat(CharacterMetadata.create({
                 style: OrderedSet([]),
                 entity: null
