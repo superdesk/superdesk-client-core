@@ -197,7 +197,7 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
             params = {where: {enabled: true}};
         }
 
-        params.max_results = 200;
+        params.max_results = 1000;
 
         // cache when fetching all types
         return api.query('content_types', params, !!includeDisabled).then((result) => {
@@ -333,7 +333,7 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
                         {service: {$exists: true}}
                     ]
                 },
-                max_results: 200
+                max_results: 1000
             })
                 .then((response) => {
                     self._fields = response._items;
