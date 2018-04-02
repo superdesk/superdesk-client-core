@@ -12,7 +12,7 @@
             <div class="date" sd-reldate ng-model="item.suggestionInfo.date"></div>
             <div class="content" ng-show="item.suggestionInfo.type!=='REPLACE_SUGGESTION'">
                 <div class="text">
-                    <strong>{{getTypeText(item.suggestionInfo.type) | translate}}:</strong>
+                    <strong>{{getLocalizedTypeText(item.suggestionInfo.type, item.suggestionInfo.blockType)}}:</strong>
                     <strong><em>"{{item.suggestionText}}"</em></strong>
                 </div>
             </div>

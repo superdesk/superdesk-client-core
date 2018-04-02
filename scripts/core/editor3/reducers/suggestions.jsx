@@ -132,8 +132,8 @@ const createChangeStyleSuggestion = (state, {style, data}) => {
     let {editorState} = state;
     const type = Highlights.getTypeByInlineStyle(style);
 
-    editorState = applyStyleSuggestion(editorState, type);
-    editorState = RichUtils.toggleInlineStyle(editorState, style, data);
+    editorState = applyStyleSuggestion(editorState, type, data);
+    editorState = RichUtils.toggleInlineStyle(editorState, style);
 
     return saveEditorStatus(state, editorState, 'change-inline-style', true);
 };
@@ -157,7 +157,7 @@ function applyStyleSuggestion(editorState, type, data) {
     newEditorState = EditorState.acceptSelection(newEditorState, selection);
     newEditorState = Highlights.addHighlight(newEditorState, type, data);
 
-    return editorState;
+    return newEditorState;
 }
 
 /**
@@ -173,19 +173,23 @@ const createChangeBlockStyleSuggestion = (state, {blockType, data}) => {
     let {editorState} = state;
     const content = editorState.getCurrentContent();
     const selection = editorState.getSelection();
-    const block = content.getBlockForKey(selection.getStartKey());
-    const blockSelection = selection.merge({
+    const firstBlock = content.getBlockForKey(selection.getStartKey());
+    const lastBlock = content.getBlockForKey(selection.getEndKey());
+    const blocksSelection = selection.merge({
         anchorOffset: 0,
-        anchorKey: block.getKey(),
-        focusOffset: block.getLength(),
-        focusKey: block.getKey(),
+        anchorKey: firstBlock.getKey(),
+        focusOffset: lastBlock.getLength(),
+        focusKey: lastBlock.getKey(),
         isBackward: false
     });
     const type = 'BLOCK_STYLE_SUGGESTION';
+    const newData = {
+        ...data,
+        blockType
+    };
 
-    editorState = EditorState.acceptSelection(editorState, blockSelection);
-    data['blockType'] = blockType;
-    editorState = applyStyleSuggestion(editorState, type, data);
+    editorState = EditorState.acceptSelection(editorState, blocksSelection);
+    editorState = applyStyleSuggestion(editorState, type, newData);
     editorState = RichUtils.toggleBlockType(editorState, blockType);
 
     return saveEditorStatus(state, editorState, 'change-block-type', true);
@@ -247,7 +251,8 @@ function saveToSuggestionsHistory(editorState, suggestion, accepted) {
             suggestionInfo: {
                 author: suggestion.author,
                 date: suggestion.date,
-                type: suggestion.type
+                type: suggestion.type,
+                blockType: suggestion.blockType
             },
             resolutionInfo: {
                 resolverUserId: ng.get('session').identity._id,
