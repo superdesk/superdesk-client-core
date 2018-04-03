@@ -125,6 +125,15 @@ angular.module('superdesk.apps.authoring', [
                     return authoring.itemActions(item).edit;
                 }]
             })
+            .activity('move.item', {
+                label: gettext('Send to'),
+                icon: 'share-alt',
+                controller: ['data', 'send', (data, send) => {
+                    send.allAs([data.item]);
+                }],
+                filters: [{action: 'list', type: 'archive'}],
+                permissions: {move: 1}
+            })
             .activity('kill.text', {
                 label: gettext('Kill item'),
                 priority: 100,
