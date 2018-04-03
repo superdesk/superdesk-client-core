@@ -28,18 +28,24 @@ export function ExtensionPointDirective(extensionPoints) {
                 extension.props.store.getState()[value] = scope.$parent.$eval(value);
             });
         }
+
         return React.createElement(extension.componentClass, extension.props);
     }
 
     return {
         link: function(scope, elem, attr) {
             var registeredExtensions = extensionPoints.get(attr.sdExtensionPoint);
-            var components = registeredExtensions.map((extension) => _buildCompoment(extension, scope));
+            var components = registeredExtensions.map((extension, index) => (
+                <span key={`${attr.sdExtensionPoint}-${index}`}>
+                    {_buildCompoment(extension, scope)}
+                </span>
+            ));
 
-            ReactDOM.render(
-                <span>{components}</span>,
-                elem[0]
-            );
+            ReactDOM.render(components, elem[0]);
+
+            scope.$on('$destroy', () => {
+                ReactDOM.unmountComponentAtNode(elem[0]);
+            });
         }
     };
 }
