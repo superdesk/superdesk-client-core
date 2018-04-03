@@ -132,7 +132,9 @@ angular.module('superdesk.apps.authoring', [
                     send.allAs([data.item]);
                 }],
                 filters: [{action: 'list', type: 'archive'}],
-                permissions: {move: 1}
+                additionalCondition: ['authoring', 'item', 'config', (authoring, item, config) =>
+                    authoring.itemActions(item).move
+                ]
             })
             .activity('kill.text', {
                 label: gettext('Kill item'),
