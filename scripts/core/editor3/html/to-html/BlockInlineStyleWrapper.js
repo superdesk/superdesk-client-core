@@ -22,8 +22,25 @@ const InlineStyleTags = {
  * character. See the tags method for additional information.
  */
 export class BlockInlineStyleWrapper {
-    constructor() {
+    constructor(customInlineStyleTags) {
         this.activeStyles = [];
+        this.inlineStyleTags = Object.assign({}, InlineStyleTags, customInlineStyleTags);
+    }
+
+    getTag(style, type) {
+        let tag = this.inlineStyleTags[style];
+        let closingChar = type === 'close' ? '/' : '';
+
+        if (tag !== null && typeof tag === 'object') {
+            if (type === 'open' && _.has(tag, 'openTag')) {
+                return tag.openTag(style);
+            }
+            if (type === 'close' && _.has(tag, 'closeTag')) {
+                return tag.closeTag(style);
+            }
+            return '';
+        }
+        return `<${closingChar}${tag}>`;
     }
 
     /**
@@ -40,12 +57,12 @@ export class BlockInlineStyleWrapper {
         }
 
         return styles.map((style) => {
-            const tag = InlineStyleTags[style];
+            const tag = this.getTag(style, 'open');
             const alreadyApplied = this.activeStyles.indexOf(style) > -1;
 
             if (tag && !alreadyApplied) {
                 this.activeStyles.push(style);
-                return `<${tag}>`;
+                return tag;
             }
 
             return '';
@@ -69,12 +86,12 @@ export class BlockInlineStyleWrapper {
             .filter((s) => styles.toArray().indexOf(s) === -1);
 
         return noLongerApplied.map((style) => {
-            const tag = InlineStyleTags[style];
+            const tag = this.getTag(style, 'close');
             const index = this.activeStyles.indexOf(style);
 
             this.activeStyles.splice(index, 1);
 
-            return `</${tag}>`;
+            return tag;
         }).join('');
     }
 
@@ -89,9 +106,9 @@ export class BlockInlineStyleWrapper {
 
         while (this.activeStyles.length > 0) {
             const style = this.activeStyles.pop();
-            const tag = InlineStyleTags[style];
+            const tag = this.getTag(style, 'close');
 
-            tags += `</${tag}>`;
+            tags += tag;
         }
 
         return tags;

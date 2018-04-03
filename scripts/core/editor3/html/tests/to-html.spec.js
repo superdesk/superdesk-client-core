@@ -1,6 +1,6 @@
 import * as testUtils from '../../components/tests/utils';
 import {AtomicBlockParser} from '../to-html';
-import {ContentState, convertToRaw} from 'draft-js';
+import {ContentState, convertToRaw, convertFromRaw} from 'draft-js';
 import {BlockInlineStyleWrapper, BlockEntityWrapper, HTMLGenerator} from '../to-html';
 import {OrderedSet as OS} from 'immutable';
 import {Logger} from 'core/services/logger';
@@ -84,6 +84,65 @@ describe('core.editor3.html.to-html.HTMLGenerator', () => {
                     </ul>
                 </li>
             </ul><p>abc</p>`.replace(/[\n\r\s]+/g, ''));
+    });
+
+    it('should add anotation to HTML', () => {
+        const rawContentState = {
+            entityMap: {},
+            blocks: [{
+                inlineStyleRanges: [{
+                    length: 5,
+                    style: 'ANNOTATION-1',
+                    offset: 6
+                }, {
+                    length: 5,
+                    style: 'ANNOTATION-2',
+                    offset: 12
+                }],
+                data: {
+                    MULTIPLE_HIGHLIGHTS: {
+                        lastHighlightIds: {ANNOTATION: 2},
+                        highlightsData: {
+                            'ANNOTATION-1': {
+                                data: {
+                                    email: 'admin@admin.ro',
+                                    date: '2018-03-30T14:57:53.172Z',
+                                    msg: '{"blocks":[{"key":"ejm11","text":"Annotation 1","type":"unstyled",' +
+                                        '"depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],' +
+                                        '"entityMap":{}}',
+                                    author: 'admin',
+                                    annotationType: 'regular',
+                                },
+                                type: 'ANNOTATION'
+                            },
+                            'ANNOTATION-2': {
+                                data: {
+                                    email: 'admin@admin.ro',
+                                    date: '2018-03-30T14:58:20.876Z',
+                                    msg: '{"blocks":[{"key":"9i73f","text":"Annotation 2","type":"unstyled",' +
+                                        '"depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}},' +
+                                        '{"key":"d3vb3","text":"Line 2","type":"unstyled","depth":0,' +
+                                        '"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}',
+                                    author: 'admin',
+                                    annotationType: 'regular',
+                                },
+                                type: 'ANNOTATION'
+                            }
+                        }
+                    }
+                },
+                text: 'lorem ipsum dolor',
+                type: 'unstyled',
+                depth: 0,
+                key: '2sso6',
+                entityRanges: []
+            }]
+        };
+        const result = new HTMLGenerator(convertFromRaw(rawContentState)).html();
+
+        expect(result).toBe('<p>lorem ' +
+            '<span annotation-id="1">ipsum</span> ' +
+            '<span annotation-id="2">dolor</span></p>');
     });
 });
 

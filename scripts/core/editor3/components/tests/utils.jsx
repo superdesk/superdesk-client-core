@@ -118,16 +118,17 @@ export function embedBlockAndContent() {
  * @returns {ContentState}
  */
 export function blocksWithText(list) {
-    return ContentState.createFromBlockArray(list.map((data) => {
-        const type = data[0] || 'unstyled';
-        const depth = data[1] || 0;
-        const text = data[2] || '';
+    return ContentState.createFromBlockArray(list.map((htmlData) => {
+        const type = htmlData[0] || 'unstyled';
+        const depth = htmlData[1] || 0;
+        const text = htmlData[2] || '';
+        const data = htmlData[3] || {};
 
         return new ContentBlock({
             type: type,
             key: genKey(),
             depth: depth,
-            data: Map({}),
+            data: Map(data),
             text: text,
             characterList: List(Repeat(CharacterMetadata.create({
                 style: OrderedSet([]),

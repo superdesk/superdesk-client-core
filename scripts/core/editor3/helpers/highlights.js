@@ -367,13 +367,17 @@ export function addHighlight(editorState, type, data) {
     if (highlightTypeValid(type) !== true) {
         throw new Error('Highlight type invalid');
     }
+    let newIndex = 0;
 
-    const styleName = type + '-' + (highlightsState.lastHighlightIds[type] + 1);
+    if (highlightsState.lastHighlightIds && _.has(highlightsState.lastHighlightIds, type)) {
+        newIndex = highlightsState.lastHighlightIds[type] + 1;
+    }
+    const styleName = type + '-' + newIndex;
 
     const newHighlightsState = {
         lastHighlightIds: {
             ...highlightsState.lastHighlightIds,
-            [type]: highlightsState.lastHighlightIds[type] + 1
+            [type]: newIndex
         },
         highlightsStyleMap: {
             ...highlightsState.highlightsStyleMap,
@@ -821,6 +825,10 @@ export function fieldHasUnresolvedSuggestions(rawState) {
     const contentState = convertFromRaw(rawState);
     const editorState = EditorState.createWithContent(contentState);
     const highlights = getHighlightsState(editorState);
+
+    if (!highlights.highlightsData) {
+        return false;
+    }
 
     return Object.keys(highlights.highlightsData || {})
         .filter((key) => suggestionsTypes.find((suggestionType) => key.indexOf(suggestionType) === 0))

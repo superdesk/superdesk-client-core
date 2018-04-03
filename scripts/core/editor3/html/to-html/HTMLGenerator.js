@@ -39,6 +39,8 @@ export class HTMLGenerator {
         this.convertBlock = this.convertBlock.bind(this);
         this.getBlockTags = this.getBlockTags.bind(this);
         this.listTag = this.listTag.bind(this);
+        this.getAnnotationStart = this.getAnnotationStart.bind(this);
+        this.getAnnotationEnd = this.getAnnotationEnd.bind(this);
     }
 
     /**
@@ -124,6 +126,48 @@ export class HTMLGenerator {
 
     /**
      * @ngdoc method
+     * @name HTMLGenerator#getAnnotations
+     * @param {Object} contentBlock
+     * @returns {Object} annotations
+     * @description Returns an object of annotations.
+     */
+    getAnnotations(contentBlock) {
+        let annotations = {};
+
+        contentBlock.findStyleRanges((charMeta) => {
+            charMeta.getStyle().filter((value, key, iter) => {
+                if (key.startsWith('ANNOTATION-')) {
+                    annotations[key] = {openTag: this.getAnnotationStart, closeTag: this.getAnnotationEnd};
+                }
+                return false;
+            });
+        });
+
+        return annotations;
+    }
+
+    /**
+     * @ngdoc method
+     * @name HTMLGenerator#getAnnotationStart
+     * @returns {String}
+     * @description Returns a string containing the HTML inserted before the annotated text.
+     */
+    getAnnotationStart(style) {
+        return '<span annotation-id="' + style.split('-')[1] + '">';
+    }
+
+    /**
+     * @ngdoc method
+     * @name HTMLGenerator#getAnnotationEnd
+     * @returns {String}
+     * @description Returns a string containing the HTML inserted after the annotated text.
+     */
+    getAnnotationEnd(style) {
+        return '</span>';
+    }
+
+    /**
+     * @ngdoc method
      * @name HTMLGenerator#convertBlock
      * @param {Object} contentBlock
      * @param {string} id ID of current block
@@ -138,7 +182,7 @@ export class HTMLGenerator {
         }
 
         const text = contentBlock.getText();
-        const styleWrapper = new BlockInlineStyleWrapper();
+        const styleWrapper = new BlockInlineStyleWrapper(this.getAnnotations(contentBlock));
         const entityWrapper = new BlockEntityWrapper(this.contentState);
 
         let html = '';
@@ -150,7 +194,6 @@ export class HTMLGenerator {
 
                 html += styleTags + entityTags + text[key];
             });
-
         // apply left-over close tags
         html += entityWrapper.flush();
         html += styleWrapper.flush();
