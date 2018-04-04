@@ -57,7 +57,7 @@ export const highlightsConfig = {
     },
     BLOCK_STYLE_SUGGESTION: {
         type: 'BLOCK',
-        description: gettext('Apply format'),
+        description: gettext('Toggle'),
         draftStyleMap: {
             backgroundColor: 'rgba(100, 235, 59, 0.2)'
         }

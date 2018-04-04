@@ -2,6 +2,7 @@ import {
     editor3DataKeys,
     getCustomDataFromEditor
 } from 'core/editor3/helpers/editor3CustomData';
+import * as Highlights from 'core/editor3/helpers/highlights';
 
 function getAllUserIdsFromSuggestions(suggestions) {
     const users = [];
@@ -28,15 +29,12 @@ function convertUsersArrayToObject(users) {
     return usersObj;
 }
 
-function getTypeText(type) {
-    switch (type) {
-    case 'ADD_SUGGESTION':
-        return gettext('Added');
-    case 'DELETE_SUGGESTION':
-        return gettext('Deleted');
-    default:
-        return '';
-    }
+function getLocalizedTypeText(type, blockType) {
+    const description = Highlights.getHighlightDescription(type);
+    const blockStyleDescription = Highlights.getBlockStylesDescription(blockType);
+    const space = blockStyleDescription != '' ? ' ' : '';
+
+    return gettext(description) + space + gettext(blockStyleDescription);
 }
 
 SuggestionsCtrl.$inject = ['$scope', 'userList'];
@@ -62,7 +60,7 @@ function SuggestionsCtrl($scope, userList) {
             $scope.items = suggestions;
         });
 
-    $scope.getTypeText = getTypeText;
+    $scope.getLocalizedTypeText = getLocalizedTypeText;
 }
 
 angular
