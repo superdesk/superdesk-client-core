@@ -26,7 +26,7 @@ import {HighlightsPopup} from './HighlightsPopup';
 import UnstyledBlock from './UnstyledBlock';
 import UnstyledWrapper from './UnstyledWrapper';
 import {isEditorBlockEvent} from './BaseUnstyledComponent';
-import {handleBeforeInputHighlights} from '../helpers/highlights';
+import {handleBeforeInputHighlights} from '../helpers/handleBeforeInputHighlights';
 
 const VALID_MEDIA_TYPES = [
     'application/superdesk.item.picture',
