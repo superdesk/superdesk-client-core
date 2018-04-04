@@ -1,6 +1,6 @@
-<div id="repo-dropdown" class="dropdown" dropdown>
+<div id="repo-dropdown" class="dropdown" dropdown ng-controller="SearchMenuController as search">
     <button class="dropdown__toggle navbtn navbtn--text-only" dropdown__toggle>
-        {{ activeProvider.name || 'Superdesk' }}
+        {{ search.providerLabel(activeProvider) || 'Superdesk' }}
         <span class="dropdown__caret"></span>
     </button>
     <ul class="dropdown__menu">
@@ -8,7 +8,7 @@
             <button ng-click="toggleProvider()">Superdesk</button>
         </li>
         <li ng-repeat="provider in providers track by provider._id"  ng-class="{active: provider._id === activeProvider._id}">
-            <button ng-click="toggleProvider(provider)">{{ provider.name }}</button>
+            <button ng-click="toggleProvider(provider)">{{ :: search.providerLabel(provider) }}</button>
         </li>
     </ul>
 </div>

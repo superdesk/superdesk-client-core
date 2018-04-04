@@ -1,4 +1,4 @@
-<div class="dropdown dropdown--dropright dropdown--hover highlights-dropdown" dropdown>
+<div class="dropdown dropdown--dropright dropdown--hover highlights-dropdown" dropdown ng-controller="SearchMenuController as search">
     <a href="#/search" class="dropdown__toggle sd-sidebar-menu__btn"
         title="{{ :: 'Search' | translate }}"
         sd-hotkey="ctrl+alt+f" sd-hotkey-options="{global: true}"
@@ -6,11 +6,14 @@
         <i class="sd-sidebar-menu__main-icon big-icon--global-search"></i>
         <i class="sd-sidebar-menu__helper-icon big-icon--chevron-left"></i>
     </a>
-    <ul ng-if="$root.config.features.searchShortcut && providers.length > 0" class="dropdown__menu pull-left">
-    <li ng-repeat="provider in providers track by provider._id">
-        <button ng-click="loadSearchShortcut(provider)">
-            {{:: provider.name || providerLabels[provider.source]}}
-        </button>
-    </li>
+    <ul ng-if="search.providers.length > 0" class="dropdown__menu pull-left">
+        <li>
+            <button ng-click="search.loadSearchShortcut()">Superdesk</button>
+        </li>
+        <li ng-repeat="provider in search.providers track by provider._id">
+            <button ng-click="search.loadSearchShortcut(provider)">
+                {{ :: search.providerLabel(provider) }}
+            </button>
+        </li>
     </ul>
 </div>
