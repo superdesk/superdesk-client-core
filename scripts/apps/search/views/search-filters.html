@@ -150,7 +150,7 @@
                             class="btn btn--mini" 
                             ng-class="{active: hasFilter('date','Last Month')}">{{'Last Month' | translate}}</button>
             </div>
-            <fieldset ng-show="repo.search === 'local' || providerType === 'scanpix' || repo.search === 'content-api'">
+            <fieldset ng-show="repo.search === 'local' || providerType.startsWith('scanpix') || repo.search === 'content-api'">
                 <div class="multiple">
                     <div class="field" sd-date-param data-location="afterfirstcreated">
                          <label for="created_after" translate>Created from</label>
@@ -161,7 +161,7 @@
                         <div sd-datepicker ng-model="date"></div>
                     </div>
                 </div>
-                <div class="multiple" ng-show="providerType === 'scanpix'">
+                <div class="multiple" ng-show="providerType.startsWith('scanpix')">
                     <div class="field" sd-date-param data-location="afterversioncreated">
                         <label for="modified_after" translate>Modified from</label>
                         <div sd-datepicker ng-model="date"></div>
