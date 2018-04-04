@@ -58,7 +58,7 @@ export function VocabularyConfigController($scope, $route, $routeParams, vocabul
     $scope.reloadList = () => {
         $scope.loading = true;
         vocabularies.getVocabularies().then((vocabularies) => {
-            $scope.vocabularies = vocabularies._items;
+            $scope.vocabularies = vocabularies;
             $scope.loading = false;
             setupActiveVocabulary();
         });

@@ -993,13 +993,13 @@ function MetadataService(api, subscribersService, config, vocabularies, $rootSco
             var self = this;
 
             return vocabularies.getAllActiveVocabularies().then((result) => {
-                _.each(result._items, (vocabulary) => {
+                _.each(result, (vocabulary) => {
                     self.values[vocabulary._id] = vocabulary.items;
                     if (_.has(vocabulary, 'helper_text')) {
                         self.helper_text[vocabulary._id] = vocabulary.helper_text;
                     }
                 });
-                self.cvs = result._items;
+                self.cvs = result;
                 self.values.regions = _.sortBy(self.values.geographical_restrictions,
                     (target) => target.value && target.value.toLowerCase() === 'all' ? '' : target.name
                 );
