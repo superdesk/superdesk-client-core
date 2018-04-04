@@ -152,6 +152,7 @@ export function UserPreferencesDirective(
                     'categories',
                     'desks',
                     'notifications',
+                    'planning'
                 ];
 
                 return _.indexOf(noShowCategories, preference.category) < 0;
@@ -184,7 +185,7 @@ export function UserPreferencesDirective(
                 // values object is undefined or any of the needed
                 // data buckets are missing in it
                 buckets = [
-                    'cities', 'categories', 'default_categories', 'locators'
+                    'cities', 'categories', 'default_categories', 'locators', 'calendars'
                 ];
 
                 initNeeded = buckets.some((bucketName) => {
@@ -263,6 +264,8 @@ export function UserPreferencesDirective(
                 if (scope.preferences['singleline:view']) {
                     search.updateSingleLineStatus(scope.preferences['singleline:view'].enabled);
                 }
+
+                scope.calendars = helperData.event_calendars;
 
                 scope.preferencesLoaded = true;
             }

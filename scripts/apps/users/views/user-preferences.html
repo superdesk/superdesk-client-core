@@ -116,6 +116,22 @@
                     </div>
                 </div>
             </li>
+            <li class="fieldset terms-box" ng-hide="privileges['planning'] !== 1">
+                <div class="legend">
+                    {{ :: preferences['planning:calendar'].category | translate}}
+                </div>
+                <div sd-info-item>
+                    <label>
+                        {{ :: preferences['planning:calendar'].label | translate}}
+                    </label>
+                    <span sd-meta-dropdown
+                          data-item="preferences['planning:calendar'].calendar"
+                          data-list="calendars"
+                          data-key="qcode"
+                          data-field="qcode"
+                          data-change="articleDefaultsChanged(item)"></span>
+                </div>
+            </li>
         </ul>
 
     </div>
