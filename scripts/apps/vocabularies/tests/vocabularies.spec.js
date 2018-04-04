@@ -8,7 +8,7 @@ describe('vocabularies', () => {
     it('can fetch vocabularies', inject((api, vocabularies, $q, $rootScope) => {
         var fixture = {foo: 'bar'};
 
-        spyOn(api, 'query').and.returnValue($q.when(fixture));
+        spyOn(api, 'getAll').and.returnValue($q.when(fixture));
         var result;
 
         vocabularies.getVocabularies().then(
@@ -17,7 +17,7 @@ describe('vocabularies', () => {
             }
         );
         $rootScope.$digest();
-        expect(api.query).toHaveBeenCalledWith('vocabularies', {where: {type: 'manageable'}, max_results: 200});
+        expect(api.getAll).toHaveBeenCalledWith('vocabularies', {where: {type: 'manageable'}});
         expect(result).toBe(fixture);
         expect(vocabularies.vocabularies).toBe(fixture);
     }));

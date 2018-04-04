@@ -15,7 +15,6 @@ import _ from 'lodash';
 VocabularyService.$inject = ['api', '$q', '$filter', '$rootScope'];
 export function VocabularyService(api, $q, $filter, $rootScope) {
     var self = this;
-    const MAX_RESULTS = 200;
 
     self.AllActiveVocabularies = null;
     self.vocabularies = null;
@@ -30,7 +29,7 @@ export function VocabularyService(api, $q, $filter, $rootScope) {
      */
     this.getAllActiveVocabularies = function() {
         if (_.isNil(self.AllActiveVocabularies)) {
-            return api.query('vocabularies', {max_results: MAX_RESULTS}).then(
+            return api.getAll('vocabularies').then(
                 (result) => {
                     self.AllActiveVocabularies = result;
                     return self.AllActiveVocabularies;
@@ -50,7 +49,7 @@ export function VocabularyService(api, $q, $filter, $rootScope) {
      */
     this.getVocabularies = function() {
         if (_.isNil(self.vocabularies)) {
-            return api.query('vocabularies', {where: {type: 'manageable'}, max_results: MAX_RESULTS}).then(
+            return api.getAll('vocabularies', {where: {type: 'manageable'}}).then(
                 (result) => {
                     result._items = $filter('sortByName')(result._items, 'display_name');
                     self.vocabularies = result;
@@ -80,7 +79,7 @@ export function VocabularyService(api, $q, $filter, $rootScope) {
      * @return {Promise} {Object} vocabulary
      */
     this.getVocabulary = function(vocabularyId) {
-        return self.getAllActiveVocabularies().then((vocabularies) => _.find(vocabularies._items, {_id: vocabularyId}));
+        return self.getAllActiveVocabularies().then((vocabularies) => _.find(vocabularies, {_id: vocabularyId}));
     };
 
     /**
@@ -93,7 +92,7 @@ export function VocabularyService(api, $q, $filter, $rootScope) {
      */
     this.getVocabularySync = function(vocabularyId) {
         if (self.AllActiveVocabularies) {
-            return _.find(self.AllActiveVocabularies._items, {_id: vocabularyId});
+            return _.find(self.AllActiveVocabularies, {_id: vocabularyId});
         }
     };
 

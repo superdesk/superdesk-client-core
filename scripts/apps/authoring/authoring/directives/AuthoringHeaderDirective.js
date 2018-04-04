@@ -134,11 +134,11 @@ export function AuthoringHeaderDirective(api, authoringWidgets, $rootScope, arch
                             return;
                         }
                         vocabularies.getVocabularies().then((vocabulariesColl) => {
-                            var vocabulary = _.find(vocabulariesColl._items, {_id: subjectName});
+                            var vocabulary = _.find(vocabulariesColl, {_id: subjectName});
 
                             if (vocabulary) {
                                 var qcode = _.keys(vocabulary.service).pop();
-                                var categoriesVocabulary = _.find(vocabulariesColl._items, {_id: 'categories'});
+                                var categoriesVocabulary = _.find(vocabulariesColl, {_id: 'categories'});
                                 var category = _.find(categoriesVocabulary.items, {qcode: qcode});
 
                                 if (category && _.findIndex(scope.item.anpa_category, {name: category.name}) === -1) {

@@ -41,7 +41,7 @@ describe('authoring', () => {
             spyOn(content, 'getType').and.returnValue($q.resolve('motoring'));
             spyOn(content, 'editor').and.returnValue({});
             spyOn(content, 'schema').and.returnValue(schema);
-            spyOn(vocabularies, 'getVocabularies').and.returnValue($q.when({_items: vocabulariesData}));
+            spyOn(vocabularies, 'getVocabularies').and.returnValue($q.when(vocabulariesData));
 
             var scope = $rootScope.$new();
 
