@@ -1,5 +1,7 @@
 import {stripHtmlTags} from 'core/utils';
 import {fieldHasUnresolvedSuggestions} from 'core/editor3/helpers/highlights';
+import {initializeHighlights} from 'core/editor3/helpers/highlights';
+import {EditorState, convertFromRaw} from 'draft-js';
 
 export const CONTENT_FIELDS_DEFAULTS = Object.freeze({
     headline: '',
@@ -199,7 +201,10 @@ export function itemHasUnresolvedSuggestions(item) {
 
             const rawState = fieldValue[0];
 
-            return fieldHasUnresolvedSuggestions(rawState);
+            const contentState = convertFromRaw(rawState);
+            const editorState = initializeHighlights(EditorState.createWithContent(contentState));
+
+            return fieldHasUnresolvedSuggestions(editorState);
         })
         .length > 0;
 }
