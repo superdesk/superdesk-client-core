@@ -864,14 +864,31 @@ function addCommentsForServer(editorState) {
  */
 export function handleBeforeInputHighlights(onChange, chars, editorState) {
     const selection = editorState.getSelection();
-    let {block, newOffset} = getBlockAndOffset(editorState, selection, -1);
 
-    if (block == null) {
-        ({block, newOffset} = getBlockAndOffset(editorState, selection, 1));
+    const {block: blockLeft, newOffset: newOffsetLeft} = getBlockAndOffset(editorState, selection, -1);
+    const {block: blockRight, newOffset: newOffsetRight} = getBlockAndOffset(editorState, selection, 1);
 
-        if (block == null) {
-            return 'not-handled';
-        }
+    const highlightsOnLeftExist = blockLeft != null
+        && blockLeft.getInlineStyleAt(newOffsetLeft).find(styleNameBelongsToHighlight) != null;
+
+    const highlightsOnRightExist = blockRight != null
+        && blockRight.getInlineStyleAt(newOffsetRight).find(styleNameBelongsToHighlight) != null;
+
+    if (highlightsOnLeftExist && highlightsOnRightExist) {
+        return 'not-handled';
+    }
+
+    let block = null;
+    let newOffset = null;
+
+    if (blockLeft != null) {
+        block = blockLeft;
+        newOffset = newOffsetLeft;
+    } else if (blockRight != null) {
+        block = blockRight;
+        newOffset = newOffsetRight;
+    } else {
+        return 'not-handled';
     }
 
     const characterStyles = block.getInlineStyleAt(newOffset);
