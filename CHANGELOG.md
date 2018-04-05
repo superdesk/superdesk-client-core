@@ -1,5 +1,11 @@
 # Superdesk Client Changelog
 
+## [1.14.2] 2018-04-05
+
+### Fixed
+
+- Fix blockquote html markup in NINJS.
+
 ## [1.14.1] 2018-03-08
 
 ### Fixed
