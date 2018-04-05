@@ -15,7 +15,7 @@ const BlockStyleTags = {
     'header-four': 'h4',
     'header-five': 'h5',
     'header-six': 'h6',
-    blockquote: 'quote',
+    blockquote: 'blockquote',
     'unordered-list-item': 'li',
     'ordered-list-item': 'li'
 };
