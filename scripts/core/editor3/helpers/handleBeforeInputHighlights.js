@@ -39,6 +39,8 @@ function getRelevantCharactersForCollapsedSelection(editorState, collapsedSelect
  * @description prevents inheriting of highlight styles
  */
 export function handleBeforeInputHighlights(onChange, chars, editorState) {
+    // see handleBeforeInputHighlights.spec.gif
+
     const selection = editorState.getSelection();
 
     const characterList = selection.isCollapsed()
