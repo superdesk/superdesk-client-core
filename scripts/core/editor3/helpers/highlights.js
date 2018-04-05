@@ -1,4 +1,4 @@
-import {RichUtils, EditorState, convertFromRaw, Modifier} from 'draft-js';
+import {RichUtils, EditorState, Modifier} from 'draft-js';
 import {highlightsConfig} from '../highlightsConfig';
 import {editor3DataKeys, getCustomDataFromEditor, setCustomDataForEditor} from './editor3CustomData';
 import {getDraftCharacterListForSelection} from './getDraftCharacterListForSelection';
@@ -807,9 +807,7 @@ export function getSuggestionData(editorState, styleName) {
     };
 }
 
-export function fieldHasUnresolvedSuggestions(rawState) {
-    const contentState = convertFromRaw(rawState);
-    const editorState = EditorState.createWithContent(contentState);
+export function fieldHasUnresolvedSuggestions(editorState) {
     const highlights = getHighlightsState(editorState);
 
     return Object.keys(highlights.highlightsData || {})
