@@ -77,6 +77,10 @@
         <div sd-toggle-box id="timezoneTimestamp" ng-if="mode === 'authoring' && showTimezone()" data-title="Timezone" data-open="true" data-style="dark">
             <div sd-timezone data-timezone="item.time_zone" class="timezone-input--dark"></div>
         </div>
+
+        <div sd-extension-point="authoring:publish"
+            ng-if="canPublishItem() && currentUserAction === vm.userActions.publish">
+        </div>
     </div>
 
     <div class="slide-pane__footer" sd-loading="loading" ng-show="currentUserAction === vm.userActions.send_to">
