@@ -197,11 +197,9 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
             params = {where: {enabled: true}};
         }
 
-        params.max_results = 1000;
-
         // cache when fetching all types
-        return api.query('content_types', params, !!includeDisabled).then((result) => {
-            self.types = result._items.sort((a, b) => b.priority - a.priority // with higher priority goes up
+        return api.getAll('content_types', params, !!includeDisabled).then((result) => {
+            self.types = result.sort((a, b) => b.priority - a.priority // with higher priority goes up
             );
             return self.types;
         }, (reason) => {
@@ -326,17 +324,16 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
         }
 
         if (!self._fieldsPromise) {
-            self._fieldsPromise = api.query('vocabularies', {
+            self._fieldsPromise = api.getAll('vocabularies', {
                 where: {
                     $or: [
                         {field_type: {$in: ['text', 'date', 'media', 'embed']}},
                         {service: {$exists: true}}
                     ]
-                },
-                max_results: 1000
+                }
             })
                 .then((response) => {
-                    self._fields = response._items;
+                    self._fields = response;
                     self._fieldsPromise = null;
                     return self._fields;
                 });

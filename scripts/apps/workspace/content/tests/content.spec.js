@@ -97,12 +97,12 @@ describe('superdesk.apps.workspace.content', () => {
         it('can fetch content types', inject((api, content, $rootScope, $q) => {
             var types = [{_id: 'foo'}];
 
-            spyOn(api, 'query').and.returnValue($q.when({_items: types}));
+            spyOn(api, 'getAll').and.returnValue($q.when(types));
             var success = jasmine.createSpy('ok');
 
             content.getTypes().then(success);
             $rootScope.$digest();
-            expect(api.query).toHaveBeenCalledWith('content_types', {where: {enabled: true}, max_results: 1000}, false);
+            expect(api.getAll).toHaveBeenCalledWith('content_types', {where: {enabled: true}}, false);
             expect(success).toHaveBeenCalledWith(types);
             expect(content.types).toBe(types);
         }));
@@ -141,7 +141,7 @@ describe('superdesk.apps.workspace.content', () => {
         it('can get content type', inject((api, content, $rootScope, $q) => {
             var type = {_id: 'foo'};
 
-            spyOn(api, 'query').and.returnValue($q.when({_items: []}));
+            spyOn(api, 'getAll').and.returnValue($q.when([]));
             spyOn(api, 'find').and.returnValue($q.when(type));
             var success = jasmine.createSpy('ok');
 
