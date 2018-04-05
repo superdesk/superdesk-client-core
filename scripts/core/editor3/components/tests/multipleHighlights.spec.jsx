@@ -6,26 +6,26 @@ import PropTypes from 'prop-types';
 import {EditorState, ContentState, SelectionState} from 'draft-js';
 import {MultipleHighlights} from '../MultipleHighlights';
 
-const editorState = EditorState.createWithContent(
-    ContentState.createFromText('Don\'t cry because it\'s over, smile because it happened.')
+const contentState = ContentState.createFromText(
+// eslint-disable-next-line indent
+`Not enjoyment, and not sorrow,
+Is our destined end or way;
+But to act, that each tomorrow
+Find us farther than today.`
 );
-const firstBlockKey = editorState
+
+const editorState = EditorState.createWithContent(contentState);
+
+const blockKeys = editorState
     .getCurrentContent()
-    .getFirstBlock()
-    .getKey();
+    .getBlocksAsArray()
+    .map((block) => block.getKey());
 
-const selection = new SelectionState({
-    anchorKey: firstBlockKey,
-    anchorOffset: 29,
-    focusKey: firstBlockKey,
-    focusOffset: 34,
-    isBackward: false
-});
+const getKeyForNthBlock = (n) => blockKeys[n - 1];
 
-const editorStateWithSelection = EditorState.acceptSelection(editorState, selection);
-const highlightData = {author: 'Dr. Seuss'};
-const highlightDataExpectedResponse = {author: 'Dr. Seuss', type: 'COMMENT'};
-const highlightDataUpdate = {firstMention: 1899};
+const highlightData = {author: 'Henry Wadsworth Longfellow'};
+const highlightDataExpectedResponse = {author: 'Henry Wadsworth Longfellow', type: 'COMMENT'};
+const highlightDataUpdate = {publishedIn: 1838};
 
 class ChildComponent extends React.Component {
     render() {
@@ -37,7 +37,7 @@ class MultipleHighlightsTester extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            editorState: props.editorState !== undefined ? props.editorState : editorStateWithSelection
+            editorState: props.editorState
 
         };
         this.childRef = null;
@@ -71,91 +71,123 @@ const availableHighlights = {
 };
 
 describe('multipleHighlights.component', () => {
-    it('should add, remove, and update highlights', () => {
-        const wrapper = mount(<MultipleHighlightsTester />);
+    var highlightsManager = null;
+    var getEditorState = null;
+
+    beforeEach(() => {
+        const selection = new SelectionState({
+            anchorKey: getKeyForNthBlock(1),
+            anchorOffset: 2,
+            focusKey: getKeyForNthBlock(1),
+            focusOffset: 13,
+            isBackward: false
+        });
+
+        const editorStateWithSelection = EditorState.acceptSelection(editorState, selection);
+        const wrapper = mount(<MultipleHighlightsTester editorState={editorStateWithSelection} />);
         const child = wrapper.instance().childRef;
 
-        child.props.highlightsManager.addHighlight('COMMENT', highlightData);
+        getEditorState = () => child.props.editorState;
+        highlightsManager = child.props.highlightsManager;
+    });
 
-        const styleName = child.props.editorState
+    it('should add, remove, and update highlights', () => {
+        highlightsManager.addHighlight('COMMENT', highlightData);
+
+        const styleName = getEditorState()
             .getCurrentContent()
             .getFirstBlock()
-            .getInlineStyleAt(29)
+            .getInlineStyleAt(2)
             .first();
 
         expect(
-            JSON.stringify(child.props.highlightsManager.getHighlightData(styleName))
+            JSON.stringify(highlightsManager.getHighlightData(styleName))
         ).toBe(JSON.stringify(highlightDataExpectedResponse));
 
-        child.props.highlightsManager.updateHighlightData(styleName, highlightDataUpdate);
+        highlightsManager.updateHighlightData(styleName, highlightDataUpdate);
         expect(
-            JSON.stringify(child.props.highlightsManager.getHighlightData(styleName))
+            JSON.stringify(highlightsManager.getHighlightData(styleName))
         ).toBe(JSON.stringify(highlightDataUpdate));
 
-        child.props.highlightsManager.removeHighlight(styleName);
+        highlightsManager.removeHighlight(styleName);
 
-        const styleNameAfterRemoval = child.props.editorState
+        const styleNameAfterRemoval = getEditorState()
             .getCurrentContent()
             .getFirstBlock()
-            .getInlineStyleAt(29)
+            .getInlineStyleAt(2)
             .first();
 
         expect(styleNameAfterRemoval).toBe(undefined);
         expect(() => {
-            child.props.highlightsManager.getHighlightData(styleName);
+            highlightsManager.getHighlightData(styleName);
         }).toThrow();
     });
 
     it('should keep track of highlights count', () => {
-        const wrapper = mount(<MultipleHighlightsTester />);
-        const child = wrapper.instance().childRef;
+        expect(highlightsManager.getHighlightsCount()).toBe(0);
+        highlightsManager.addHighlight('COMMENT', {});
 
-        expect(child.props.highlightsManager.getHighlightsCount()).toBe(0);
-        child.props.highlightsManager.addHighlight('COMMENT', {});
+        expect(highlightsManager.getHighlightsCount()).toBe(1);
+        highlightsManager.addHighlight('COMMENT', {});
 
-        expect(child.props.highlightsManager.getHighlightsCount()).toBe(1);
-        child.props.highlightsManager.addHighlight('COMMENT', {});
+        expect(highlightsManager.getHighlightsCount()).toBe(2);
+        expect(highlightsManager.getHighlightsCount('ANNOTATION')).toBe(0);
 
-        expect(child.props.highlightsManager.getHighlightsCount()).toBe(2);
-        expect(child.props.highlightsManager.getHighlightsCount('ANNOTATION')).toBe(0);
+        highlightsManager.addHighlight('ANNOTATION', {});
+        expect(highlightsManager.getHighlightsCount()).toBe(3);
+        expect(highlightsManager.getHighlightsCount('ANNOTATION')).toBe(1);
+        expect(highlightsManager.getHighlightsCount('COMMENT')).toBe(2);
 
-        child.props.highlightsManager.addHighlight('ANNOTATION', {});
-        expect(child.props.highlightsManager.getHighlightsCount()).toBe(3);
-        expect(child.props.highlightsManager.getHighlightsCount('ANNOTATION')).toBe(1);
-        expect(child.props.highlightsManager.getHighlightsCount('COMMENT')).toBe(2);
-
-        child.props.highlightsManager.addHighlight('ANNOTATION', {});
-        expect(child.props.highlightsManager.getHighlightsCount()).toBe(4);
-        expect(child.props.highlightsManager.getHighlightsCount('ANNOTATION')).toBe(2);
-        expect(child.props.highlightsManager.getHighlightsCount('COMMENT')).toBe(2);
+        highlightsManager.addHighlight('ANNOTATION', {});
+        expect(highlightsManager.getHighlightsCount()).toBe(4);
+        expect(highlightsManager.getHighlightsCount('ANNOTATION')).toBe(2);
+        expect(highlightsManager.getHighlightsCount('COMMENT')).toBe(2);
     });
 
     it('should throw an error when invalid actions are attempted', () => {
-        const wrapper = mount(<MultipleHighlightsTester />);
-        const child = wrapper.instance().childRef;
-
         expect(() => {
-            child.props.highlightsManager.addHighlight('invalid-highlight-type', {});
+            highlightsManager.addHighlight('invalid-highlight-type', {});
         }).toThrow();
 
         expect(() => {
-            child.props.highlightsManager.getHighlightTypeFromStyleName('invalid-highlight-type', {});
+            highlightsManager.getHighlightTypeFromStyleName('invalid-highlight-type', {});
         }).toThrow();
 
         expect(() => {
-            child.props.highlightsManager.getHighlightTypeFromStyleName({'not-even-a-string': true}, {});
+            highlightsManager.getHighlightTypeFromStyleName({'not-even-a-string': true}, {});
         }).toThrow();
 
         expect(() => {
-            child.props.highlightsManager.getHighlightsCount('invalid-highlight-type', {});
+            highlightsManager.getHighlightsCount('invalid-highlight-type', {});
         }).toThrow();
 
         expect(() => {
-            child.props.highlightsManager.getHighlightData('non-existent-highlight-id', {});
+            highlightsManager.getHighlightData('non-existent-highlight-id', {});
         }).toThrow();
 
         expect(() => {
-            child.props.highlightsManager.updateHighlightData('non-existent-highlight-id', {});
+            highlightsManager.updateHighlightData('non-existent-highlight-id', {});
         }).toThrow();
+    });
+
+    it('should only expand', () => {
+        expect(highlightsManager.getHighlightsCount()).toBe(0);
+        highlightsManager.addHighlight('COMMENT', {});
+
+        expect(highlightsManager.getHighlightsCount()).toBe(1);
+        highlightsManager.addHighlight('COMMENT', {});
+
+        expect(highlightsManager.getHighlightsCount()).toBe(2);
+        expect(highlightsManager.getHighlightsCount('ANNOTATION')).toBe(0);
+
+        highlightsManager.addHighlight('ANNOTATION', {});
+        expect(highlightsManager.getHighlightsCount()).toBe(3);
+        expect(highlightsManager.getHighlightsCount('ANNOTATION')).toBe(1);
+        expect(highlightsManager.getHighlightsCount('COMMENT')).toBe(2);
+
+        highlightsManager.addHighlight('ANNOTATION', {});
+        expect(highlightsManager.getHighlightsCount()).toBe(4);
+        expect(highlightsManager.getHighlightsCount('ANNOTATION')).toBe(2);
+        expect(highlightsManager.getHighlightsCount('COMMENT')).toBe(2);
     });
 });
