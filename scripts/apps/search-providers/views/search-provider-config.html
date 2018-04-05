@@ -47,7 +47,7 @@
                     </label>
                 </div>
 
-                <div class="field" ng-if="provider.search_provider.indexOf('scanpix') !== 0">
+                <div class="field" ng-if="provider.search_provider.indexOf('scanpix') < 0">
                     <label for="provider-name" translate>Name</label>
                     <input type="text" id="provider-name" ng-model="provider.name" required>
                 </div>
@@ -60,7 +60,7 @@
                     </select>
                 </div>
 
-                <div class="field" ng-if="provider.search_provider.indexOf('scanpix') !== 0">
+                <div class="field" ng-if="provider.search_provider.indexOf('scanpix') < 0">
                     <label for="provider-source" translate>Source</label>
                     <input type="text" id="provider-source" placeholder="{{ 'source of the search provider' | translate }}" ng-model="provider.source" required>
                 </div>

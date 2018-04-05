@@ -2,10 +2,10 @@
 const HR_TEMPLATE = 'scripts/apps/workspace/views/workspace-sidenav-items-hr.html';
 const DEFAULT_TEMPLATE = 'scripts/apps/workspace/views/workspace-sidenav-items-default.html';
 
-WorkspaceSidenavDirective.$inject = ['superdeskFlags', '$location', 'workspaceMenu', 'Keys', 'gettext', 'config',
-    '$route', 'api', '$filter', '$rootScope', 'workspaces', 'privileges', 'searchProviderService'];
-export function WorkspaceSidenavDirective(superdeskFlags, $location, workspaceMenu, Keys, gettext, config,
-    $route, api, $filter, $rootScope, workspaces, privileges, searchProviderService) {
+WorkspaceSidenavDirective.$inject = ['superdeskFlags', 'workspaceMenu', 'Keys', 'gettext', 'config',
+    '$rootScope', 'workspaces', 'privileges'];
+export function WorkspaceSidenavDirective(superdeskFlags, workspaceMenu, Keys, gettext, config,
+    $rootScope, workspaces, privileges) {
     return {
         template: require('../views/workspace-sidenav-items.html'),
         link: function(scope, elem) {
@@ -25,10 +25,6 @@ export function WorkspaceSidenavDirective(superdeskFlags, $location, workspaceMe
 
                     scope.items.push(item);
                 });
-
-            searchProviderService.getAllowedProviderTypes().then((providerTypes) => {
-                scope.providerLabels = searchProviderService.getProviderLabels(providerTypes);
-            });
 
             scope.getTemplateUrl = (item) => item.hr ? HR_TEMPLATE : (item.templateUrl || DEFAULT_TEMPLATE);
 
@@ -54,21 +50,6 @@ export function WorkspaceSidenavDirective(superdeskFlags, $location, workspaceMe
                     superdeskFlags.flags.hideMonitoring = false;
                 }
             };
-
-            scope.loadSearchShortcut = function(provider) {
-                $location.url('/search?repo=' + (provider._id || provider.search_provider || provider.source));
-                $route.reload();
-            };
-
-            /*
-             * Initialize the search providers
-             */
-            if ($rootScope.config && $rootScope.config.features && $rootScope.config.features.searchShortcut) {
-                api.search_providers.query({max_results: 200})
-                    .then((result) => {
-                        scope.providers = $filter('sortByName')(result._items, 'search_provider');
-                    });
-            }
 
             /*
              * By using keyboard shortcuts, change the current showed view

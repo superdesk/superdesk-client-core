@@ -4,6 +4,7 @@ import * as svc from './services';
 import * as directive from './directives';
 import {MultiActionBarController} from './controllers';
 import {SearchController} from './controllers';
+import SearchMenuController from './controllers/SearchMenuController';
 
 angular.module('superdesk.apps.search.react', [
     'superdesk.apps.highlights',
@@ -39,6 +40,7 @@ angular.module('superdesk.apps.search', [
     .service('sort', svc.SortService)
 
     .controller('MultiActionBar', MultiActionBarController)
+    .controller('SearchMenuController', SearchMenuController)
 
     .directive('sdSearchPanel', directive.SearchPanel)
     .directive('sdSearchTags', directive.SearchTags)

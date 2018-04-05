@@ -32,7 +32,8 @@ export function SearchController($location, searchProviderService) {
                 const selectedProvider = this.providers.find((provider) =>
                     provider.search_provider === $location.search().repo || provider._id === $location.search().repo
                 );
-                const defaultProvider = this.providers.find((provider) => provider.is_default);
+                const defaultProvider = $location.search().repo === undefined &&
+                                        this.providers.find((provider) => provider.is_default);
 
                 this.activeProvider = selectedProvider || defaultProvider;
                 if (this.activeProvider) {
@@ -71,7 +72,7 @@ export function SearchController($location, searchProviderService) {
             $location.search('repo', provider._id);
             this.repo = {search: provider._id};
         } else {
-            $location.search('repo', null);
+            $location.search('repo', '');
             resetInternalRepo();
         }
     };
