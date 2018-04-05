@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {renderContents, validateRequiredFormFields, replaceUrls} from '../../../contacts/helpers';
-import {FB_URL, IG_URL, MSG_REQUIRED} from '../../../contacts/constants';
+import {FB_URL, IG_URL} from '../../../contacts/constants';
 import {ContactProfile} from './ContactProfile';
 import {ActionBar} from './ActionBar';
 import {get, set, isEqual, cloneDeep, some, isEmpty, extend, each, omit, isNil} from 'lodash';
@@ -22,7 +22,6 @@ export class ContactFormContainer extends React.Component {
 
         this.save = this.save.bind(this);
         this.onChange = this.onChange.bind(this);
-        this.onChangeContactType = this.onChangeContactType.bind(this);
         this.validateForm = this.validateForm.bind(this);
     }
 
@@ -57,10 +56,6 @@ export class ContactFormContainer extends React.Component {
         case 'twitter':
             fieldValidationErrors[fieldName] = value.match(twitterPattern) || isEmpty(value) ? '' :
                 gettext('Please provide a valid twitter account');
-            break;
-        case 'first_name':
-        case 'last_name':
-            fieldValidationErrors[fieldName] = isEmpty(value) ? gettext(MSG_REQUIRED) : '';
             break;
         default:
             break;
@@ -129,16 +124,6 @@ export class ContactFormContainer extends React.Component {
             });
     }
 
-    onChangeContactType(e) {
-        const contactType = e.target.value;
-
-        this.setState({
-            currentContact: {
-                type: contactType,
-            }
-        });
-    }
-
     onChange(field, value, e) {
         const diff = cloneDeep(this.state.currentContact);
 
@@ -178,8 +163,7 @@ export class ContactFormContainer extends React.Component {
                 contact={get(this.state, 'currentContact', {})}
                 dirty={get(this.state, 'dirty', false)}
                 onChange={this.onChange} readOnly={readOnly}
-                errors={get(this.state, 'errors', {})}
-                onChangeContactType={this.onChangeContactType} />
+                errors={get(this.state, 'errors', {})} />
         );
 
         return (

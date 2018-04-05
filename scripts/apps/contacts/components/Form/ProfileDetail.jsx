@@ -4,7 +4,6 @@ import classNames from 'classnames';
 import {Row, LineInput, InputArray, MultiTextInput, Input, SelectInput, Toggle, ToggleBox,
     ContactNumberInput, Label} from './index';
 import {get, set, isEmpty, findKey, orderBy} from 'lodash';
-import {MSG_REQUIRED} from '../../../contacts/constants';
 import {validateMinRequiredField} from '../../../contacts/helpers';
 
 
@@ -71,12 +70,14 @@ export class ProfileDetail extends React.Component {
     }
 
     render() {
-        const {svc, contact, onChange, readOnly, errors, contactType, onChangeContactType} = this.props;
+        const {svc, contact, onChange, readOnly, errors, contactType} = this.props;
         const {gettext} = svc;
 
-        const alertInfo = (contact) => contactType === 'person' ? '\'first name, last name\'' : '\'organisation\'';
+        const contactLabel = contactType === 'person' ? gettext('Role') : gettext('Point of contact');
 
         let isRequired = get(this.state, 'requiredField', false);
+
+        const MSG_REQUIRED = gettext('This field is required.');
 
         return (
             <div className="details-info">
@@ -85,8 +86,8 @@ export class ProfileDetail extends React.Component {
                     <div className="sd-alert__container">
                         <div className="sd-alert sd-alert--hollow">
                             <span className="alert-info-msg">
-                                {gettext(`At minimum ${alertInfo(contact)} and at least one of
-                                 [mobile, phone, email, twitter, facebook, instagram] fields are required.`)}
+                                {gettext('Please specify \'first name, last name\' or  \'organisation\' or both, ' +
+                                    'and at least one of [mobile, phone, email, twitter, facebook, instagram] fields.')}
                             </span>
                         </div>
                     </div>
@@ -105,20 +106,6 @@ export class ProfileDetail extends React.Component {
                 }
 
                 <Row>
-                    <LineInput isSelect={true} readOnly={readOnly}>
-                        <Label text={gettext('Type')} />
-                        <select className="sd-line-input__select"
-                            value={contactType}
-                            onChange={onChangeContactType}
-                            disabled={readOnly || contact._id}
-                        >
-                            <option value="person">Person</option>
-                            <option value="organisation">Organisation</option>
-                        </select>
-                    </LineInput>
-                </Row>
-
-                <Row>
                     <LineInput readOnly={readOnly} hint={gettext('e.g. professor, commissioner')}>
                         <Label text={gettext('honorific')} />
                         <Input
@@ -131,44 +118,42 @@ export class ProfileDetail extends React.Component {
                     </LineInput>
                 </Row>
 
-                {contactType === 'person' &&
-                    <Row>
-                        <LineInput
-                            required={true}
-                            invalid={this.isFieldInvalid('first_name')}
-                            message={this.isFieldInvalid('first_name') ? gettext(MSG_REQUIRED) : ''}
-                            readOnly={readOnly}>
-                            <Label text={gettext('first name')} />
-                            <Input
-                                field="first_name"
-                                value={get(contact, 'first_name', '')}
-                                onChange={onChange}
-                                onBlur={this.onBlur}
-                                type="text"
-                                readOnly={readOnly}
-                                required={true} />
-                        </LineInput>
-                    </Row>
-                }
-
-                {contactType === 'person' &&
-                    <Row>
-                        <LineInput
+                <Row>
+                    <LineInput
+                        required={contactType === 'person'}
+                        invalid={contactType === 'person' && this.isFieldInvalid('first_name')}
+                        message={contactType === 'person' && this.isFieldInvalid('first_name') ?
+                            MSG_REQUIRED : ''}
+                        readOnly={readOnly}>
+                        <Label text={gettext('first name')} />
+                        <Input
+                            field="first_name"
+                            value={get(contact, 'first_name', '')}
+                            onChange={onChange}
+                            onBlur={this.onBlur}
+                            type="text"
                             readOnly={readOnly}
-                            required={true}
-                            invalid={this.isFieldInvalid('last_name')}
-                            message={this.isFieldInvalid('last_name') ? gettext(MSG_REQUIRED) : ''}>
-                            <Label text={gettext('last name')} />
-                            <Input
-                                field="last_name"
-                                value={get(contact, 'last_name', '')}
-                                onChange={onChange}
-                                onBlur={this.onBlur}
-                                type="text"
-                                readOnly={readOnly} />
-                        </LineInput>
-                    </Row>
-                }
+                            required={true} />
+                    </LineInput>
+                </Row>
+
+                <Row>
+                    <LineInput
+                        readOnly={readOnly}
+                        required={contactType === 'person'}
+                        invalid={contactType === 'person' && this.isFieldInvalid('last_name')}
+                        message={contactType === 'person' && this.isFieldInvalid('last_name') ?
+                            MSG_REQUIRED : ''}>
+                        <Label text={gettext('last name')} />
+                        <Input
+                            field="last_name"
+                            value={get(contact, 'last_name', '')}
+                            onChange={onChange}
+                            onBlur={this.onBlur}
+                            type="text"
+                            readOnly={readOnly} />
+                    </LineInput>
+                </Row>
 
                 <Row>
                     <LineInput
@@ -191,7 +176,7 @@ export class ProfileDetail extends React.Component {
                 <Row>
                     <SelectInput
                         field="job_title"
-                        label="Job title"
+                        label={contactLabel}
                         value={get(contact, 'job_title', '')}
                         onChange={onChange}
                         options={get(this.state, 'jobTitles', [])}
@@ -429,7 +414,6 @@ ProfileDetail.propTypes = {
     contact: PropTypes.object.isRequired,
     contactType: PropTypes.string,
     onChange: PropTypes.func,
-    onChangeContactType: PropTypes.func,
     readOnly: PropTypes.bool,
     errors: PropTypes.object,
 };

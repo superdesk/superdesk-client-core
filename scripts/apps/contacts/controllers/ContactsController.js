@@ -71,7 +71,7 @@ export class ContactsController {
     }
 
     createContact(type) {
-        this.$scope.preview({type: type});
+        this.$scope.preview({});
     }
 }
 ContactsController.$inject = ['$scope', '$location', 'pageTitle', 'gettext',

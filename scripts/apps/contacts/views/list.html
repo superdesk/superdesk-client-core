@@ -13,26 +13,7 @@
       </div>
       <div class="subnav__button-stack--square-buttons" ng-if="privileges.contacts"
         sd-tooltip="{{ :: 'Create contact' | translate }}" flow="left">
-         <div id="contacts-dropdown" class="dropdown strict" dropdown sd-tooltip="{{ :: 'Add Contacts' | translate }}" flow="left">
-            <button class="navbtn dropdown__toggle sd-create-btn" dropdown__toggle></button>
-            <ul class="dropdown__menu dropdown__menu--scrollable pull-right">
-              <li>
-                <div class="dropdown__menu-label" translate>
-                  Create New Contact
-                </div>
-              </li>
-              <li>
-                <button ng-click="createContact('organisation')">
-                  <i class="icon-globe"></i><span translate>Organisation</span>
-                </button>
-              </li>
-              <li>
-                <button ng-click="createContact('person')">
-                  <i class="icon-user"></i><span translate>Person</span>
-                </button>
-              </li>
-            </ul>
-        </div>
+         <button class="navbtn dropdown__toggle sd-create-btn" ng-click="createContact()" dropdown__toggle></button>
       </div>
   </header>
 </div>

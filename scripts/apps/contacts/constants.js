@@ -1,4 +1,3 @@
-
 /**
  * Default list of fields
  */
@@ -6,23 +5,24 @@ export const DEFAULT_LIST_CONFIG = {
     firstLine: [
         'ContactName',
         'JobTitle',
-        'OrgName',
-        'Notes',
         'Email',
         'Phone',
         'VersionCreated'
     ],
     secondLine: [
-        'State'
+        'OrgName',
+        'ContactLocation',
+        'SocialInfo'
+
     ],
     singleLine: [
         'ContactName',
         'JobTitle',
         'OrgName',
-        'Notes',
+        'ContactLocation',
         'Email',
         'Phone',
-        'State',
+        'SocialInfo',
         'VersionCreated'
     ]
 };
@@ -53,9 +53,6 @@ export const LOOKUP_FIELDS = [
 export const FB_URL = 'https://www.facebook.com/';
 export const IG_URL = 'https://www.instagram.com/';
 
-/**
- * Message to display for required field.
- */
-export const MSG_REQUIRED = 'This field is required.';
-
+export const TWITTER_URL = 'https://twitter.com/';
+export const MAP_URL = 'https://maps.google.com/maps?q=';
 export const MAILTO_URL = 'mailto://';

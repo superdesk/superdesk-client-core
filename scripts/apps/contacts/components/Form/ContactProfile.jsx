@@ -20,15 +20,14 @@ export class ContactProfile extends React.Component {
     }
 
     render() {
-        const {svc, contact, dirty, onChange, readOnly, errors, onChangeContactType} = this.props;
+        const {svc, contact, dirty, onChange, readOnly, errors} = this.props;
 
         return (
             <div className="profile-info">
                 <ProfileHeader contact={contact} svc={svc} dirty={dirty} onChange={onChange}
                     readOnly={readOnly} contactType={get(this.state, 'contactType', 'person')} />
                 <ProfileDetail contact={contact} svc={svc} onChange={onChange}
-                    readOnly={readOnly} errors={errors} contactType={get(this.state, 'contactType', 'person')}
-                    onChangeContactType={onChangeContactType} />
+                    readOnly={readOnly} errors={errors} contactType={get(this.state, 'contactType', 'person')} />
             </div>
         );
     }
@@ -40,6 +39,5 @@ ContactProfile.propTypes = {
     dirty: PropTypes.bool,
     readOnly: PropTypes.bool,
     onChange: PropTypes.func,
-    onChangeContactType: PropTypes.func,
     errors: PropTypes.object,
 };

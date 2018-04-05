@@ -60,8 +60,7 @@ export function renderContents(contents) {
 }
 
 export function getContactType(contact) {
-    return (contact.type === 'person' ||
-                contact.first_name !== undefined) ? 'person' : 'organisation';
+    return _.some([contact.first_name, contact.last_name], (v) => !_.isEmpty(v)) ? 'person' : 'organisation';
 }
 
 export function validateRequiredFormFields(contact) {

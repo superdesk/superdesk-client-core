@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {State, VersionCreated} from 'apps/contacts/components/fields';
+import {VersionCreated, SocialInfo} from 'apps/contacts/components/fields';
+import {getContactType} from '../../contacts/helpers';
+import classNames from 'classnames';
 
 /**
  * Contact footer - renders footer for contact card used in grid view
@@ -8,8 +10,13 @@ import {State, VersionCreated} from 'apps/contacts/components/fields';
 export const ContactFooter = ({item, svc}) => {
     const {gettextCatalog} = svc;
 
+    const cssClass = classNames(
+        'contact-footer',
+        {padded: getContactType(item) === 'organisation' || !item.organisation}
+    );
+
     return (
-        <div key="contact-footer">
+        <div key="contact-footer" className={cssClass}>
             <span className="update-info">
                 <dl>
                     <dt>{gettextCatalog.getString('updated:')}</dt>
@@ -18,7 +25,7 @@ export const ContactFooter = ({item, svc}) => {
                     </dd>
                 </dl>
             </span>
-            {item.contact_state && <h2><State item={item} svc={svc} /></h2>}
+            <SocialInfo item={item} svc={svc} />
         </div>
     );
 };
