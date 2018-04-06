@@ -8,7 +8,8 @@ export class IngestListController extends BaseListController {
         $scope.loading = false;
         $scope.repo = {
             ingest: true,
-            archive: false
+            archive: false,
+            search: 'local',
         };
         $scope.api = api.ingest;
         $rootScope.currentModule = 'ingest';

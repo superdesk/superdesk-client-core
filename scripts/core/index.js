@@ -25,6 +25,7 @@ import 'core/upload';
 import 'core/lang';
 import 'core/config';
 import 'core/loading';
+import 'core/form';
 
 import ng from 'core/services/ng';
 
@@ -59,6 +60,7 @@ let core = angular.module('superdesk.core', [
     'superdesk.core.workflow',
     'superdesk.core.loading',
     'superdesk.core.editor3',
+    'superdesk.core.form',
 
     'superdesk.core.services',
     'superdesk.core.directives',

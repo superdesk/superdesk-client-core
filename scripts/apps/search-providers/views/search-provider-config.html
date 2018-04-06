@@ -30,54 +30,65 @@
     <div class="modal__body">
         <form name="editForm">
             <fieldset>
-                <div class="field">
-                    <label class="right">
-                        {{:: 'Status' | translate }}
-                        <span title="{{ provider.is_closed ? 'Open' : 'Close'  | translate }}">
-                            <span sd-switch-inverted ng-model="provider.is_closed"></span>
-                        </span>
-                    </label>
-                </div>
-                <div class="field">
-                    <label class="right">
-                        {{:: 'Is Default' | translate }}
-                        <span tooltip="{{ provider.is_default ? 'Default' : ''  | translate }}" tooltip-placement="right">
-                            <span sd-check ng-model="provider.is_default"></span>
-                        </span>
-                    </label>
-                </div>
+                <div sd-form-switch-inverted
+                    id="provider-status"
+                    label="{{ :: 'Status' | translate }}"
+                    title="{{ provider.is_closed ? 'Open' : 'Close'  | translate }}"
+                    model="provider.is_closed">
+                ></div>
 
-                <div class="field" ng-if="!provider.search_provider.startsWith('scanpix')">
-                    <label for="provider-name" translate>Name</label>
-                    <input type="text" id="provider-name" ng-model="provider.name" required>
-                </div>
+                <div sd-form-checkbox
+                    label="{{ :: 'Is Default' | translate }}"
+                    title="{{ provider.is_default ? 'Default' : ''  | translate }}"
+                    model="provider.is_default"
+                ></div>
 
-                <div class="field">
-                    <label for="provider-type" translate>Provider Type</label>
-                    <select id="provider-type"
-                        ng-model="provider.search_provider"
-                        ng-options="type.search_provider as type.label for type in providerTypes" required>
-                    </select>
-                </div>
+                <div sd-form-checkbox
+                    label="{{ :: 'Open advanced search panel by default' | translate }}"
+                    model="provider.advanced_search"
+                ></div>
 
-                <div class="field" ng-if="!provider.search_provider.startsWith('scanpix')">
-                    <label for="provider-source" translate>Source</label>
-                    <input type="text" id="provider-source" placeholder="{{ 'source of the search provider' | translate }}" ng-model="provider.source" required>
-                </div>
+                <div sd-form-select
+                    id="provider-type"
+                    label="{{ :: 'Provider Type' | translate }}"
+                    model="provider.search_provider"
+                    options="providerTypesOptions"
+                    required="true"
+                ></div>
 
-                <div class="field" ng-if="provider.search_provider.startsWith('scanpix')">
+                <div sd-form-input ng-if="!provider.search_provider.startsWith('scanpix')"
+                    id="provider-name"
+                    label="{{ :: 'Name' | translate }}"
+                    model="provider.name"
+                    required="true"
+                ></div>
+
+                <div sd-form-input ng-if="!provider.search_provider.startsWith('scanpix')"
+                    id="provider-source"
+                    label="{{ :: 'Source' | translate }}"
+                    placeholder="{{ :: 'source of the search provider' | translate }}"
+                    model="provider.source"
+                    required="true"
+                ></div>
+
+                <div ng-if="provider.search_provider.startsWith('scanpix')">
                     <span ng-init="provider.source=provider.search_provider">
                 </div>
 
-                <div class="field">
-                    <label for="provider-username" translate>Username</label>
-                    <input type="text" id="provider-username" placeholder="{{ 'search provider username' | translate }}" ng-model="provider.config.username">
-                </div>
+                <div sd-form-input
+                    id="provider-username"
+                    label="{{ :: 'Username' | translate }}"
+                    placeholder="{{ :: 'search provider username' | translate }}"
+                    model="provider.config.username"
+                ></div>
 
-                <div class="field">
-                    <label for="provider-password" translate>Password</label>
-                    <input type="password" id="provider-password" placeholder="{{ 'search provider password' | translate }}" ng-model="provider.config.password">
-                </div>
+                <div sd-form-input
+                    type="password"
+                    id="provider-password"
+                    label="{{ :: 'Password' | translate }}"
+                    placeholder="{{ :: 'search provider password' | translate }}"
+                    model="provider.config.password"
+                ></div>
             </fieldset>
         </form>
     </div>

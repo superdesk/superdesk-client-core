@@ -15,7 +15,8 @@ export class ArchiveListController extends BaseListController {
         $scope.type = 'archive';
         $scope.repo = {
             ingest: false,
-            archive: true
+            archive: true,
+            search: 'local',
         };
         $scope.loading = false;
         $scope.spike = !!$location.search().spike;
