@@ -7,7 +7,7 @@
     </div>
 
     <div class="modal__body" sd-wizard data-name="desks" data-current-step="step.current" data-finish="cancel()">
-        <div sd-wizard-step data-title="{{ 'General' | translate }}" data-code="general">       
+        <div sd-wizard-step data-title="{{ 'General' | translate }}" data-code="general">
             <form sd-deskedit-basic name="generalStep" class="content desk-content">
                 <fieldset>
                     <div class="form__row form__row--flex">
@@ -43,7 +43,7 @@
                                 <span class="sd-line-input__hint" translate>The name of a Slack channel associated with this desk, the # is not required</span>
                             </div>
                         </div>
-                    </div>                    
+                    </div>
                     <div sd-content-expiry
                             data-item="desk.edit"
                             data-preview="false"
@@ -77,6 +77,29 @@
                                         {{ language.label | translate}}
                                     </option>
                                 </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form__row form__row--flex">
+                        <div class="form__row-item">
+                            <div class="sd-line-input">
+                                <label class="sd-line-input__label" translate>Default monitoring view</label>
+                                <p style="color: gray">
+                                <i class="icon-info-sign icon--blue"></i> You can choose the default content view of your desk. Use only if you want to override individual users' monitoring view preferences. Select "none" if you want to let users decide.
+                                </p>
+                                <div class="dropdown" dropdown>
+                                    <button class="btn btn--hollow dropdown__toggle" dropdown__toggle translate>
+                                        {{ monitoringViews[desk.edit.monitoring_default_view || ''].label }}
+                                        <span class="dropdown__caret"></span>
+                                    </button>
+                                    <ul class="dropdown__menu">
+                                        <li ng-repeat="(viewId, view) in monitoringViews">
+                                            <button ng-click="desk.edit.monitoring_default_view = viewId">
+                                                <i ng-if="view.icon" class="icon-{{view.icon}}" ng-style="{{viewId === 'swimlane'}} ? {transform: 'rotate(90deg)'} : {}"></i>{{ view.label | translate }}
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -118,7 +141,7 @@
                 </fieldset>
                 <span ng-show="message">{{ message}}</span>
                 <span class="alert-danger" ng-show="_errorLimits" translate>Character limit exceeded, desk can not be created/updated.</span>
-                <span class="alert-danger" ng-show="_error">{{ _errorMessage}}</span>                                     
+                <span class="alert-danger" ng-show="_error">{{ _errorMessage}}</span>
             </form>
             <div class="modal__footer" ng-if="step.current === 'general'">
                 <button id="next-general"
@@ -130,7 +153,7 @@
                         class="btn btn--primary"
                         ng-click="save(desk.edit, true)"
                         ng-disabled="!generalStep.$valid || _errorLimits || saving" translate>Done</button>
-            </div>           
+            </div>
         </div>
         <div sd-wizard-step data-title="{{ :: 'Stages' | translate }}" data-code="stages">
             <div sd-deskedit-stages class="content stages form-flat">
@@ -183,9 +206,9 @@
                             <div class="button-toolbar" ng-if="editStage && !editStage._id">
                                 <button class="btn"
                                         ng-click="cancel()" translate>Cancel</button>
-                                <button id="save-new-stage" 
-                                        class="btn btn--primary" 
-                                        ng-click="save()" 
+                                <button id="save-new-stage"
+                                        class="btn btn--primary"
+                                        ng-click="save()"
                                         ng-disabled="!enableSave()" translate>Save</button>
                             </div>
                             <div ng-show="message" class="sd-alert sd-alert--hollow sd-alert--alert">{{ message}}</div>
@@ -248,20 +271,20 @@
                         <div class="column column--mb24" ng-if="editStage">
                             <div class="list-row list-row--small" title="{{ editStage.default_incoming ? 'Global Read OFF is not allowed for Incoming stage' : null | translate }}">
                                 <span class="" ng-class="{'prevent-off' : editStage.default_incoming && editStage.is_visible}" sd-switch ng-model="editStage.is_visible"></span>
-                                <label>{{ :: 'Global Read' | translate }}</label>  
+                                <label>{{ :: 'Global Read' | translate }}</label>
                             </div>
                             <div class="list-row list-row--small">
                                 <span class="" sd-switch ng-model="editStage.local_readonly"></span>
-                                <label>{{ :: 'Local Read Only' | translate }}</label>     
+                                <label>{{ :: 'Local Read Only' | translate }}</label>
                             </div>
                             <div class="list-row list-row--small">
                                 <span class="" sd-switch ng-model="editStage.working_stage"></span>
-                                <label>{{:: 'Working Stage' | translate }}</label>                        
+                                <label>{{:: 'Working Stage' | translate }}</label>
                             </div>
                             <div class="list-row list-row--small">
                                 <span class="" ng-click="shouldVisible()" sd-switch ng-model="editStage.default_incoming"></span>
                                 <label>{{:: 'Incoming Stage' | translate }}</label>
-                                
+
                             </div>
                         </div>
                         <div class="form__row form__row--flex" ng-if="editStage">
@@ -317,8 +340,8 @@
                         </div>
                     </div>
                 </div>
-            </div>                
-            <div class="modal__footer" ng-if="step.current === 'stages'"> 
+            </div>
+            <div class="modal__footer" ng-if="step.current === 'stages'">
                 <button id="next-stages" class="btn btn--primary" ng-disabled="message != null || (editStage && editStage._id) || (editStage && !editStage._id)" ng-click="next()" translate>Continue</button>
                 <button id="done-stages" class="btn btn--primary" ng-disabled="message != null || (editStage && editStage._id) || (editStage && !editStage._id)" ng-click="next(true)" translate>Done</button>
             </div>
@@ -342,7 +365,7 @@
                     </div>
                 </div>
                 <span class="alert-danger" ng-show="_errorMessage">{{ _errorMessage}}</span>
-            </div>                
+            </div>
             <div class="modal__footer" ng-if="step.current === 'people'">
                 <button id="next-people"
                         class="btn btn--primary"
