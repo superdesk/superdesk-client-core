@@ -9,6 +9,7 @@
  */
 angular.module('superdesk.core.datetime.reldate', []).directive('sdReldate', [function() {
     return {
+        scope: {ngModel: '='},
         require: 'ngModel',
         template: '<time datetime="{{ datetime }}" title="{{ title }}">{{ reldate }}</time>',
         replate: true,

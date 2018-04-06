@@ -16,6 +16,9 @@ angular.module('superdesk.core.datetime.absdate', []).directive('sdAbsdate', ['g
         var DISPLAY_TODAY_FORMAT = '[' + gettextCatalog.getString('Today') + '], ';
 
         return {
+            scope: {
+                ngModel: '='
+            },
             require: 'ngModel',
             template: '<time datetime="{{ datetime }}">' +
                 '<span>{{ rday }}{{ rdate }}</span></time>',

@@ -18,7 +18,10 @@ function ReldateComplex(config, gettextCatalog) {
     var DISPLAY_TODAY_FORMAT = '[Today]';
 
     return {
-        scope: {useutc: '='},
+        scope: {
+            useutc: '=',
+            ngModel: '='
+        },
         require: 'ngModel',
         template: '<time datetime="{{ datetime }}">' +
             '<span>{{rday}}, &nbsp;{{ rdate }}</span></time>',
