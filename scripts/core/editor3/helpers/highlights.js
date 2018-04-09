@@ -436,7 +436,7 @@ export function removeHighlight(editorState, styleName) {
     const highlightsState = getHighlightsState(editorState);
 
     if (highlightsState.highlightsData[styleName] === undefined) {
-        return;
+        return editorState;
     }
 
     let nextHighlightsStyleMap = {...highlightsState.highlightsStyleMap};

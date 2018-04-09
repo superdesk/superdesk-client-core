@@ -230,19 +230,21 @@ const pasteAddSuggestion = (state, {content, data}) => {
 
 /**
  * @ngdoc method
- * @name saveToSuggestionsHistory
+ * @name moveToSuggestionsHistory
  * @param {Object} editorState
  * @param {Object} suggestion
  * @param {Boolean} accepted
  * @return {editorState} returns new state
  */
-function saveToSuggestionsHistory(editorState, suggestion, accepted) {
+function moveToSuggestionsHistory(editorState, suggestion, accepted) {
     const resolvedSuggestions = getCustomDataFromEditor(
         editorState,
         editor3DataKeys.RESOLVED_SUGGESTIONS_HISTORY
     ) || [];
 
-    return setCustomDataForEditor(
+    let nextEditorState = editorState;
+
+    nextEditorState = setCustomDataForEditor(
         editorState,
         editor3DataKeys.RESOLVED_SUGGESTIONS_HISTORY,
         resolvedSuggestions.concat({
@@ -261,6 +263,10 @@ function saveToSuggestionsHistory(editorState, suggestion, accepted) {
             }
         })
     );
+
+    nextEditorState = Highlights.removeHighlight(nextEditorState, suggestion.styleName);
+
+    return nextEditorState;
 }
 
 /**
@@ -278,11 +284,10 @@ const processSuggestion = (state, {suggestion}, accepted) => {
     let style;
     let data;
 
-    editorState = saveToSuggestionsHistory(editorState, suggestion, accepted);
     editorState = EditorState.acceptSelection(editorState, suggestion.selection);
 
     if (suggestion.type === 'BLOCK_STYLE_SUGGESTION') {
-        editorState = Highlights.removeHighlight(editorState, suggestion.styleName);
+        editorState = moveToSuggestionsHistory(editorState, suggestion, accepted);
         if (!accepted) {
             editorState = RichUtils.toggleBlockType(editorState, suggestion.blockType);
         }
@@ -291,7 +296,7 @@ const processSuggestion = (state, {suggestion}, accepted) => {
     }
 
     if (styleSuggestionsTypes.indexOf(suggestion.type) !== -1) {
-        editorState = Highlights.removeHighlight(editorState, suggestion.styleName);
+        editorState = moveToSuggestionsHistory(editorState, suggestion, accepted);
         if (!accepted) {
             style = Highlights.getInlineStyleByType(suggestion.type);
             editorState = RichUtils.toggleInlineStyle(editorState, style);
@@ -322,6 +327,8 @@ const processSuggestion = (state, {suggestion}, accepted) => {
             editorState = deleteCharacter(editorState);
         }
     }
+
+    editorState = moveToSuggestionsHistory(editorState, suggestion, accepted);
 
     return saveEditorStatus(state, editorState, 'change-block-data');
 };
