@@ -1,4 +1,5 @@
-import {RichUtils, EditorState, Modifier} from 'draft-js';
+import {RichUtils, EditorState} from 'draft-js';
+
 import {highlightsConfig} from '../highlightsConfig';
 import {editor3DataKeys, getCustomDataFromEditor, setCustomDataForEditor} from './editor3CustomData';
 import {getDraftCharacterListForSelection} from './getDraftCharacterListForSelection';
@@ -853,62 +854,6 @@ function addCommentsForServer(editorState) {
         .map((key) => highlightsData[key].data);
 
     return setCustomDataForEditor(editorState, editor3DataKeys.__PUBLIC_API__comments, comments);
-}
-
-/**
- * @ngdoc method
- * @name handleBeforeInputHighlights
- * @description prevents inheriting of highlight styles
- */
-export function handleBeforeInputHighlights(onChange, chars, editorState) {
-    const selection = editorState.getSelection();
-
-    const {block: blockLeft, newOffset: newOffsetLeft} = getBlockAndOffset(editorState, selection, -1);
-    const {block: blockRight, newOffset: newOffsetRight} = getBlockAndOffset(editorState, selection, 1);
-
-    const highlightsOnLeftExist = blockLeft != null
-        && blockLeft.getInlineStyleAt(newOffsetLeft).find(styleNameBelongsToHighlight) != null;
-
-    const highlightsOnRightExist = blockRight != null
-        && blockRight.getInlineStyleAt(newOffsetRight).find(styleNameBelongsToHighlight) != null;
-
-    if (highlightsOnLeftExist && highlightsOnRightExist) {
-        return 'not-handled';
-    }
-
-    let block = null;
-    let newOffset = null;
-
-    if (blockLeft != null) {
-        block = blockLeft;
-        newOffset = newOffsetLeft;
-    } else if (blockRight != null) {
-        block = blockRight;
-        newOffset = newOffsetRight;
-    } else {
-        return 'not-handled';
-    }
-
-    const characterStyles = block.getInlineStyleAt(newOffset);
-    const stylesExcludingOwnedByHighlights = characterStyles.filter((styleName) =>
-        styleNameBelongsToHighlight(styleName) === false
-    );
-
-    if (characterStyles.size === stylesExcludingOwnedByHighlights.size) {
-        return 'not-handled';
-    }
-
-    const nextContentstate = Modifier.replaceText(
-        editorState.getCurrentContent(),
-        editorState.getSelection(),
-        chars,
-        stylesExcludingOwnedByHighlights
-    );
-    const nextEditorState = EditorState.push(editorState, nextContentstate, 'insert-characters');
-
-    onChange(nextEditorState);
-
-    return 'handled';
 }
 
 /**
