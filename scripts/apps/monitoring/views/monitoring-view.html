@@ -20,7 +20,7 @@
         <div class="dropdown" dropdown ng-if="!monitoring.singleGroup && type === 'monitoring'">
             <button class="dropdown__toggle navbtn navbtn--text-only" dropdown-toggle>{{ :: 'Monitoring' | translate }} {{workspace.name}} <span class="dropdown__caret"></span></button>
             <ul class="dropdown__menu scrollable">
-                <li><div class="dropdown__menu-label">{{ :: 'Stages' | translate }}</div></li> 
+                <li><div class="dropdown__menu-label">{{ :: 'Stages' | translate }}</div></li>
                 <li ng-repeat="card in aggregate.cards">
                     <button class="label-group" ng-click="monitoring.viewSingleGroup(card,
                                             card.type === 'stage' ? card.type : 'single-stage')" translate>{{:: monitoring.getGroupLabel(card, aggregate.settings.type)}}</button>
@@ -108,13 +108,13 @@
                     </li>
                 </ul>
             </div>
-            
+
             <div class="dropdown dropdown--align-right dropdown--compact-state" dropdown  ng-if="type === 'monitoring' || elementState === 'compact'">
                 <button class="navbtn dropdown__toggle" dropdown__toggle><i class="icon-dots-vertical"></i></button>
                 <ul class="dropdown__menu">
                     <li ng-if="elementState === 'compact'"><span class="dropdown__menu-label">{{:: 'File types' | translate}}</span></li>
-                    <li ng-repeat="fileType in aggregate.fileTypes" 
-                        ng-click="aggregate.setFileType(fileType)" 
+                    <li ng-repeat="fileType in aggregate.fileTypes"
+                        ng-click="aggregate.setFileType(fileType)"
                         ng-class="{'dropdown__menu-item--active': aggregate.hasFileType(fileType)}"
                         ng-if="elementState === 'compact'" title="{{fileType| translate}}">
                         <button>

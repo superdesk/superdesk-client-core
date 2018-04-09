@@ -3,8 +3,8 @@
  *
  * it's a directive so that it can be put together with authoring into some container directive
  */
-MonitoringView.$inject = ['$rootScope', 'authoringWorkspace', 'pageTitle', '$timeout', 'workspaces'];
-export function MonitoringView($rootScope, authoringWorkspace, pageTitle, $timeout, workspaces) {
+MonitoringView.$inject = ['$rootScope', 'authoringWorkspace', 'pageTitle', '$timeout', 'workspaces', 'desks'];
+export function MonitoringView($rootScope, authoringWorkspace, pageTitle, $timeout, workspaces, desks) {
     return {
         templateUrl: 'scripts/apps/monitoring/views/monitoring-view.html',
         controller: 'Monitoring',
@@ -14,18 +14,38 @@ export function MonitoringView($rootScope, authoringWorkspace, pageTitle, $timeo
             state: '='
         },
         link: function(scope, elem) {
-            var containerElem = elem.find('.content-list');
+            const containerElem = elem.find('.content-list');
 
             pageTitle.setUrl(_.capitalize(gettext(scope.type)));
 
             scope.shouldRefresh = true;
-            scope.view = 'compact';
+            scope.view = 'compact'; // default view
 
             scope.workspaces = workspaces;
             scope.$watch('workspaces.active', (workspace) => {
                 scope.workspace = workspace;
             });
             workspaces.getActive();
+
+            scope.desks = desks;
+            scope.$watch(desks.getCurrentDesk.bind(desks), (currentDesk) => {
+                if (currentDesk && currentDesk.monitoring_default_view) {
+                    switch (currentDesk.monitoring_default_view) {
+                    case 'list':
+                        scope.view = 'compact';
+                        break;
+                    case 'swimlane':
+                        scope.switchView('compact', true);
+                        break;
+                    case 'photogrid':
+                        scope.view = 'photogrid';
+                        break;
+                    default:
+                        scope.view = 'compact';
+                        break;
+                    }
+                }
+            });
 
             /**
              * Toggle viewColumn to switch views between swimlane and list

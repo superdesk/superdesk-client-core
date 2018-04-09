@@ -23,6 +23,13 @@ export function DeskConfigModal(metadata, content, templates, api, deployConfig)
         require: '^sdDeskConfig',
         templateUrl: 'scripts/apps/desks/views/desk-config-modal.html',
         link: function(scope, elem, attrs, ctrl) {
+            scope.monitoringViews = {
+                '': {label: gettext('None')},
+                list: {label: gettext('List View'), icon: 'th-list'},
+                swimlane: {label: gettext('Swimlane View'), icon: 'th-list'},
+                photogrid: {label: gettext('Photo Grid View'), icon: 'th'}
+            };
+
             /*
              * Initialize metadata
              * @return {Object} metadata
