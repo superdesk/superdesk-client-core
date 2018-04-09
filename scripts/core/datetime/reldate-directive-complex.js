@@ -2,10 +2,10 @@
  * Display relative date in <time> element
  *
  * Usage:
- * <span sd-reldate-complex data-useutc="false" ng-model="user._created"></span>
+ * <span sd-reldate-complex data-useutc="false" datetime="user._created"></span>
  *
  * Params:
- * @param {object} ngModel - datetime string in utc
+ * @param {object} datetime - datetime string in utc
  * @param {boolean} useutc - if true vlues are converted to local datetime
  */
 ReldateComplex.$inject = ['config', 'gettextCatalog'];
@@ -19,23 +19,21 @@ function ReldateComplex(config, gettextCatalog) {
 
     return {
         scope: {
-            useutc: '=',
-            ngModel: '='
+            datetime: '=',
+            useutc: '='
         },
-        require: 'ngModel',
-        template: '<time datetime="{{ datetime }}">' +
-            '<span>{{rday}}, &nbsp;{{ rdate }}</span></time>',
+        template: '<time datetime="{{ datetimeIso }}"><span>{{rday}}, &nbsp;{{ rdate }}</span></time>',
         link: function(scope, element, attrs, ngModel) {
             var useutc = angular.isUndefined(scope.useutc) ? true : !!scope.useutc;
 
-            ngModel.$render = function() {
-                var date = moment.utc(ngModel.$viewValue);
-
-                scope.datetime = date.toISOString();
+            scope.$watch('datetime', (datetime) => {
+                var date = moment.utc(scope.datetime);
 
                 if (useutc) {
                     date.local(); // switch to local time zone
                 }
+
+                scope.datetimeIso = date.toISOString();
 
                 if (moment().format(COMPARE_FORMAT) === date.format(COMPARE_FORMAT)) {
                     scope.rday = gettextCatalog.getString(date.format(DISPLAY_TODAY_FORMAT));
@@ -44,7 +42,7 @@ function ReldateComplex(config, gettextCatalog) {
                 }
 
                 scope.rdate = date.format(DISPLAY_DATE_FORMAT);
-            };
+            });
         }
     };
 }

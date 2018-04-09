@@ -2,7 +2,7 @@
     <ul class="versions-list card-list">
         <li class="item" ng-class="{selected: selected === version}" ng-repeat="version in versions" ng-click="openVersion(version)" ng-disabled="dirty">
             <div class="header">
-                <time sd-absdate title="{{ :: version._created | date:'medium' }}" ng-model="version._created"></time>
+                <time sd-absdate title="{{ :: version._created | date:'medium' }}" datetime="version._created"></time>
                 <span class="user">{{ :: 'by' | translate }} {{ version.creator }}</span>
             </div>
             <h6 ng-class="{'no-title': !version.headline }">{{ :: version.headline || ('Untitled' | translate) }}</h6>

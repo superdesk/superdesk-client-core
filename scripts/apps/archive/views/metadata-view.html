@@ -86,16 +86,16 @@
         </dl>
         <dl ng-if="item.firstcreated">
             <dt translate>Created</dt>
-            <dd sd-reldate-complex ng-model="item.firstcreated"></dd>
+            <dd sd-reldate-complex datetime="item.firstcreated"></dd>
         </dl>
         <dl ng-if="item.versioncreated">
             <dt translate>Last updated</dt>
-            <dd sd-reldate-complex ng-model="item.versioncreated"></dd>
+            <dd sd-reldate-complex datetime="item.versioncreated"></dd>
         </dl>
 
         <dl ng-if="item.expiry">
             <dt translate>Expiry</dt>
-            <dd sd-reldate-complex ng-model="item.expiry"></dd>
+            <dd sd-reldate-complex datetime="item.expiry"></dd>
         </dl>
         <dl ng-if="item.original_id">
             <dt translate>Original ID</dt>
@@ -129,12 +129,12 @@
         </dl>
         <dl ng-if="item.embargo">
             <dt translate>Embargo Timestamp</dt>
-            <dd sd-reldate-complex data-useutc="false" ng-model="item.embargo"></dd>
+            <dd sd-reldate-complex data-useutc="false" datetime="item.embargo"></dd>
         </dl>
         <!-- publish schedule data -->
         <dl ng-if="item.publish_schedule">
             <dt translate>Publish Schedule</dt>
-            <dd sd-reldate-complex data-useutc="false" ng-model="item.publish_schedule"></dd>
+            <dd sd-reldate-complex data-useutc="false" datetime="item.publish_schedule"></dd>
         </dl>
         <dl ng-if="item.schedule_settings && (item.publish_schedule || item.embargo)">
             <dt translate>Time Zone</dt>
