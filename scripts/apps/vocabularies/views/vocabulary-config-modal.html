@@ -91,88 +91,9 @@
                     ng-disabled="!vocabulary.field_options.multiple_items.enabled">
             </div>
 
-            <div class="sd-line-input" ng-show="matchFieldTypeToTab('vocabularies', vocabulary.field_type)">
+            <div class="sd-line-input" ng-if="matchFieldTypeToTab('vocabularies', vocabulary.field_type)">
                 <label class="sd-line-input__label" translate>Items</label>
-
-                <table>
-                <thead>
-                <tr>
-                    <th ng-repeat="(key, value) in model" ng-if="!schema && key !== 'is_active'">
-                        <label ng-class="{'long-name': key === 'name'}">{{ :: key | translate}}</label>
-                    </th>
-                    <th ng-repeat="field in schemaFields" ng-if="schema">
-                        <label>{{ field.label || field.key | translate }}</label>
-                    </th>
-
-                    <th><label translate>Active</label></th>
-                    <th></th>
-                </tr>
-                </thead>
-
-                <!-- auto config -->
-                <tbody ng-if="!schema">
-                    <tr ng-repeat="item in vocabulary.items track by $index">
-                        <td ng-repeat="(key, value) in model"
-                            ng-if="key !== 'is_active'"
-                            ng-switch on="key">
-                            <input type="color" ng-model="item[key]" ng-disabled="!item.is_active" ng-switch-when="color">
-                            <input type="text" ng-class="{'long-name': key === 'name'}" ng-model="item[key]" ng-disabled="!item.is_active" ng-switch-default>
-                        </td>
-
-                        <td>
-                            <span class="vocabularyStatus" sd-switch ng-model="item.is_active" tooltip="{{ :: 'Enable / Disable' | translate }}" tooltip-placement="left"></span>
-                        </td>
-                        <td>
-                            <button ng-show="vocabulary.items.length > 1" ng-click="removeItem($index)"><i class="icon-close-small"></i></button>
-                        </td>
-                    </tr>
-                </tbody>
-
-                <!-- schema based config -->
-                <tbody ng-if="schema">
-                    <tr ng-repeat="item in vocabulary.items track by $index">
-                        <td ng-repeat="field in schemaFields" ng-switch on="field.type">
-                            <span sd-switch ng-model="item[field.key]" ng-switch-when="bool" tooltip="{{ :: 'Enable / Disable' | translate }}" tooltip-placement="left"></span>
-                            <input type="color"
-                                ng-model="item[field.key]"
-                                ng-disabled="!item.is_active"
-                                ng-switch-when="color">
-                            <input type="text"
-                                ng-model="item[field.key]"
-                                ng-disabled="!item.is_active"
-                                ng-maxlength="field.maxlength"
-                                placeholder="{{ field.maxlength }} {{ :: 'character limit' | translate }}"
-                                ng-switch-when="short">
-                            <textarea rows="3" cols="30"
-                                sd-vocabulary-object-field
-                                ng-model="item[field.key]"
-                                ng-model-options="{debounce: 200}"
-                                ng-disabled="!item.is_active"
-                                ng-switch-when="object">
-                            </textarea>
-                            <input type="text"
-                                ng-model="item[field.key]"
-                                ng-disabled="!item.is_active"
-                                ng-switch-default>
-                        </td>
-
-                        <td>
-                            <span class="vocabularyStatus" sd-switch ng-model="item.is_active" tooltip="{{ :: 'Enable / Disable' | translate }}" tooltip-placement="left"></span>
-                        </td>
-                        <td>
-                            <button ng-click="removeItem($index)"><i class="icon-close-small"></i></button>
-                        </td>
-                    </tr>
-                    <tr ng-show="!vocabulary.items.length">
-                        <td colspan="{{ schemaFields.length }}">
-                            <button class="btn" ng-click="addItem()" translate>Add Item</button>
-                        </td>
-                        <td>&nbsp;</td>
-                        <td>&nbsp;</td>
-                    </tr>
-                </tbody>
-
-                </table>
+                <div sd-vocabulary-config-modal-items></div>
             </div>
             <div ng-if="errorMessage" class="sd-line-input sd-line-input--invalid">
                 <p class="sd-line-input__message">{{ errorMessage }}</p>
