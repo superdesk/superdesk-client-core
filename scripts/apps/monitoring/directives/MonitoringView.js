@@ -28,9 +28,7 @@ export function MonitoringView($rootScope, authoringWorkspace, pageTitle, $timeo
             workspaces.getActive();
 
             scope.desks = desks;
-            scope.$watch('desks.desks', () => {
-                const currentDesk = scope.desks.getCurrentDesk();
-
+            scope.$watch(desks.getCurrentDesk.bind(desks), (currentDesk) => {
                 if (currentDesk && currentDesk.monitoring_default_view) {
                     switch (currentDesk.monitoring_default_view) {
                     case 'list':

@@ -24,10 +24,10 @@ export function DeskConfigModal(metadata, content, templates, api, deployConfig)
         templateUrl: 'scripts/apps/desks/views/desk-config-modal.html',
         link: function(scope, elem, attrs, ctrl) {
             scope.monitoringViews = {
-                '': {label: 'None'},
-                list: {label: 'List View', icon: 'th-list'},
-                swimlane: {label: 'Swimlane View', icon: 'th-list'},
-                photogrid: {label: 'Photo Grid View', icon: 'th'}
+                '': {label: gettext('None')},
+                list: {label: gettext('List View'), icon: 'th-list'},
+                swimlane: {label: gettext('Swimlane View'), icon: 'th-list'},
+                photogrid: {label: gettext('Photo Grid View'), icon: 'th'}
             };
 
             /*
