@@ -58,3 +58,4 @@ export const IG_URL = 'https://www.instagram.com/';
  */
 export const MSG_REQUIRED = 'This field is required.';
 
+export const MAILTO_URL = 'mailto://';
