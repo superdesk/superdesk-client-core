@@ -82,5 +82,13 @@ core.config(['$qProvider', ($qProvider) => $qProvider.errorOnUnhandledRejections
 core.config(['$compileProvider', ($compileProvider) => $compileProvider.preAssignBindingsEnabled(true)]);
 
 core.run(['$injector', ng.register]);
+core.run(['$document', ($document) => {
+    if (window.navigator.userAgent.toLowerCase().includes('firefox')) {
+        // workaround for firefox drag event not reporting mouse coordinates
+        $document.on('dragover', (event) => {
+            window.dragPageY = event.pageY;
+        });
+    }
+}]);
 
 export default core;

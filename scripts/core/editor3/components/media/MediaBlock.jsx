@@ -106,10 +106,17 @@ export class MediaBlockComponent extends Component {
     }
 
     onDrag(event) {
-        const y = event.pageY;
+        let y = event.pageY;
 
         if (!this.scrollTimeout) {
             this.scrollTimeout = setTimeout(() => {
+                // firefox does not provide pageY on drag event
+                // so there is a window listener which populates the value
+                // but it runs only after drag event so it must read it here
+                if (!y && window.dragPageY) {
+                    y = window.dragPageY;
+                }
+
                 if (y < DRAG_SCROLL_BUFFER) {
                     this.container.scrollTop -= DRAG_SCROLL_BY;
                 } else if (y + DRAG_SCROLL_BUFFER > $(window).height()) {
