@@ -347,6 +347,7 @@ const deleteCurrentSelection = (editorState, data) => {
     let newState = editorState;
 
     newState = initSelectionIterator(newState, backward);
+
     while (hasNextSelection(newState, selection, backward)) {
         newState = setDeleteSuggestionForCharacter(newState, data);
     }
@@ -436,7 +437,16 @@ const setDeleteSuggestionForCharacter = (editorState, data) => {
     if (currentData != null && currentData.type === 'ADD_SUGGESTION' &&
         currentData.author === data.author) {
         // if current character already a suggestion of current user, delete the character
-        return deleteCharacter(editorState);
+        let newState = deleteCharacter(editorState);
+
+        // also delete the suggestion if it was the last character of that suggestion
+        const textForHighlight = Highlights.getRangeAndTextForStyle(newState, currentStyle);
+
+        if (textForHighlight.highlightedText === '') {
+            newState = Highlights.removeHighlight(newState, currentStyle);
+        }
+
+        return newState;
     }
 
     const beforeStyle = Highlights.getHighlightStyleAtOffset(editorState, changeSuggestionsTypes, selection, -2);
