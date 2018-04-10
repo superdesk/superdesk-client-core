@@ -1,0 +1,19 @@
+<div class="sd-line-input"
+    ng-class="{
+        'sd-line-input--required': required,
+        'sd-line-input--invalid': ngModel.$touched && ngModel.$invalid,
+    }"
+>
+    <label
+        for="{{ id }}"
+        class="sd-line-input__label"
+    >{{ label }}</label>
+    <input
+        id="{{ id }}"
+        type="{{ type || 'text' }}"
+        class="sd-line-iput__input"
+        ng-model="model"
+        ng-required="required"
+        placeholder="{{ placeholder }}"
+    >
+</div>

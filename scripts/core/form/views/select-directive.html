@@ -1,0 +1,13 @@
+<div class="sd-line-input sd-line-input--is-select"
+    ng-class="{
+        'sd-line-input--required': required,
+        'sd-line-input--invalid': ngModel.$touched && ngModel.$invalid,
+    }"
+>
+    <label class="sd-line-input__label">{{ label }}</label>
+    <select class="sd-line-input__select"
+        ng-model="model"
+        ng-options="option.value as option.label for option in options"
+        ng-required="required"
+    ></select>
+</div>

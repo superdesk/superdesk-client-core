@@ -11,6 +11,7 @@ export default function SearchProviderConfigDirective(searchProviderService, get
                 $scope.providerTypes = providerTypes;
                 $scope.noProvidersAllowed = !$scope.providerTypes.length;
                 $scope.providerLabels = searchProviderService.getProviderLabels(providerTypes);
+                $scope.providerTypesOptions = providerTypes.map((t) => ({label: t.label, value: t.search_provider}));
             });
 
             /**
