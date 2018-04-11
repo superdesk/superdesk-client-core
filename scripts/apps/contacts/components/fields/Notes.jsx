@@ -5,7 +5,7 @@ import {truncate} from 'lodash';
 export const Notes = ({item, svc}) => {
     const {gettextCatalog} = svc;
     let notes = gettextCatalog.getString(item.notes);
-    let displayNotes = truncate(notes, {length: 250});
+    let displayNotes = truncate(notes, {length: 120});
 
     return (
         <div key="notes" className="item-notes">

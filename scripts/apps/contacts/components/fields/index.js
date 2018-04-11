@@ -7,3 +7,5 @@ export {Phone} from './Phone';
 export {Email} from './Email';
 export {OrgName} from './OrgName';
 export {Mobile} from './Mobile';
+export {ContactLocation} from './ContactLocation';
+export {SocialInfo} from './SocialInfo';

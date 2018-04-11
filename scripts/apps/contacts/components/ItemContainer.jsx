@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {find, join, map} from 'lodash';
-import {MAILTO_URL} from '../../contacts/constants';
+import {MAP_URL, TWITTER_URL, MAILTO_URL} from '../../contacts/constants';
+
 
 export class ItemContainer extends React.Component {
     constructor(props) {
@@ -35,11 +36,21 @@ export class ItemContainer extends React.Component {
         const {gettextCatalog} = props.svc;
         let value, title, altTitle;
         let item, key, _class, _link;
+        let addressInfo = [];
 
         item = props.item;
         key = props.field || null;
         _class = 'container';
         _link = _class + ' link';
+
+        item.contact_address && addressInfo.push(item.contact_address[0]);
+        item.locality && addressInfo.push(item.locality);
+        item.city && addressInfo.push(item.city);
+        item.contact_state && addressInfo.push(item.contact_state);
+        item.postcode && addressInfo.push(item.postcode);
+        item.country && addressInfo.push(item.country);
+
+        const contactAddress = addressInfo.join(', ');
 
         switch (key) {
         case 'contact_phone':
@@ -60,12 +71,19 @@ export class ItemContainer extends React.Component {
             _class = _link;
             break;
         case 'twitter':
-            value = item.twitter;
+            value = (<a href={`${TWITTER_URL}${item.twitter}`} target="_blank"><i className="icon-twitter" /></a>);
+            title = value && gettextCatalog.getString(`${TWITTER_URL}${item.twitter}`);
             _class = _link;
             break;
         case 'facebook':
-            value = (<a href={item.facebook} target="_blank">{item.facebook}</a>);
+            value = (<a href={item.facebook} target="_blank"><i className="icon-facebook" /></a>);
             title = value && gettextCatalog.getString(item.facebook);
+            _class = _link;
+            break;
+        case 'location':
+            value = contactAddress ? (<a href={`${MAP_URL}${contactAddress}`} target="_blank">
+                {contactAddress}</a>) : null;
+            title = value && gettextCatalog.getString(contactAddress);
             _class = _link;
             break;
         }

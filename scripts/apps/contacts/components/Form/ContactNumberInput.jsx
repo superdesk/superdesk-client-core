@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Row, LineInput, Input, SelectInput, Toggle, Label} from './';
-import {MSG_REQUIRED, KEYCODES} from '../../../contacts/constants';
+import {KEYCODES} from '../../../contacts/constants';
 import {gettext} from '../../../contacts/helpers';
 import {set, get, isEmpty} from 'lodash';
 
@@ -47,7 +47,8 @@ export class ContactNumberInput extends React.Component {
             <Row flex={true}>
                 <LineInput readOnly={readOnly}
                     invalid={this.isFieldInvalid(`${field}.number`, value['number'])}
-                    message={this.isFieldInvalid(`${field}.number`, value['number']) ? gettext(MSG_REQUIRED) : ''}>
+                    message={this.isFieldInvalid(`${field}.number`, value['number']) ?
+                        gettext('This field is required.') : ''}>
                     <Label text={gettext('Number')} />
                     <Input
                         field={`${field}.number`}

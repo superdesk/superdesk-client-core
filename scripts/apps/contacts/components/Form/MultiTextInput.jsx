@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Row, LineInput, Input} from './';
-import {MSG_REQUIRED, KEYCODES} from '../../../contacts/constants';
+import {KEYCODES} from '../../../contacts/constants';
+import {gettext} from '../../../contacts/helpers';
 import {isEmpty, get, set} from 'lodash';
 
 
@@ -26,7 +27,7 @@ export class MultiTextInput extends React.Component {
 
     isFieldInvalid(field, value, errors) {
         this.errorMessage = get(this.state.touched, field, false) &&
-            isEmpty(value) ? MSG_REQUIRED : get(errors, field, '');
+            isEmpty(value) ? gettext('This field is required.') : get(errors, field, '');
 
         return !isEmpty(this.errorMessage);
     }

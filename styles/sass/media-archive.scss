@@ -473,7 +473,7 @@ $sfbox_mediaMaxWidth : 172px;
         @include media-box-generic;
 
         &.contacts {
-            min-height: $sfbox_minHeight + 75; // 300px
+            min-height: $sfbox_minHeight + 45; // 270px
             min-width: $sfbox_minWidth * 2 + 73; // 425px
 
             .media {
@@ -494,14 +494,15 @@ $sfbox_mediaMaxWidth : 172px;
                 }
             }
 
-            .org-label {
-                @extend .state-label;
-                background-color: $state-color-default;
-                color: $white !important;
+            .media-info {
+                padding-left: 0.5rem;
+                h5 {
+                    padding: 0rem 0.5rem 0;
+                }
             }
 
             .item-info {
-                padding: 10px 10px 10px 10px;
+                padding: 6px 6px 6px 6px;
                 .container {
                     @include text-semibold();
                     color: #444;
@@ -511,25 +512,48 @@ $sfbox_mediaMaxWidth : 172px;
                     white-space: nowrap;
                     &.link {
                         color: $sd-blue-text;
-                        @include text-light();
+                        @include text-normal();
                         text-overflow: ellipsis;
                     }
                 }
             }
 
-            .update-info {
-                position: absolute;
-                bottom: 0px;
+            .contact-footer {
+                border-top: .1rem solid #e8e8e8;
+                margin-top: 25px;
+                margin-left: -5px;
+                margin-right: -5px;
+                
+                &.padded {
+                    margin-top: 45px !important;
+                }
+
+                .update-info {
+                    position: absolute;
+                    bottom: 0.6rem;
+                    padding-left: 0.5rem;
+                }
+
+                .social-info {
+                    position: absolute; 
+                    bottom: 10px;
+                    right: 0px;
+                    margin-right: 20px;
+                    span {
+                        padding-left: 10px; 
+                    }
+                }
             }
 
             .link {
                 color: $sd-blue-text;
-                @include text-light();
+                @include text-normal();
                 font-size: small;
             }
 
             .notes {
                 display: flex;
+                background: none;
             }
 
             .contact-name {
@@ -541,7 +565,7 @@ $sfbox_mediaMaxWidth : 172px;
                 overflow: hidden;
                 text-overflow: ellipsis;
                 margin: 0 5px 0 5px;
-                max-width: 390px;
+                max-width: 380px;
                 display: flex;
             }
         }
@@ -850,6 +874,7 @@ $rightfield-width:60px;
 
         
         &.contacts {
+            padding-left: 20px;
             .org-label {
                 @extend .state-label;
                 background-color: $state-color-default;
@@ -864,6 +889,26 @@ $rightfield-width:60px;
             }
             .contact-name {
                 @extend .keyword;
+            }
+
+            .item-info {
+                .social-info {
+                    position: absolute;
+                    right: 0px;
+                }
+
+                &.item-info-reduced-rowheight {
+                    .social-info {
+                        position: unset;
+                    }
+                }
+            }
+
+            i {
+                color: $grayLight;
+                width: 24px;
+                margin: 0;
+                padding: 0;
             }
         }
         
@@ -990,8 +1035,11 @@ $rightfield-width:60px;
                 white-space: nowrap;
                 &.link {
                     color: $sd-blue-text;
-                    @include text-light();
+                    @include text-normal();
                     text-overflow: inherit;
+                }
+                &.grow {
+                    flex-grow: 1;
                 }
             }
             .takekey {
