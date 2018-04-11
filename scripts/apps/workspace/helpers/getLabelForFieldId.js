@@ -1,11 +1,11 @@
 import {LABEL_MAP} from '../content/constants';
 
-export function getLabelForFieldId(id, content) {
+export function getLabelForFieldId(id, customFields) {
     if (LABEL_MAP.hasOwnProperty(id)) {
         return LABEL_MAP[id];
     }
 
-    const customField = content.allFields().find((obj) => obj._id === id);
+    const customField = customFields.find((obj) => obj._id === id);
 
     if (customField != null && customField.hasOwnProperty('display_name') && customField['display_name'].length > 0) {
         return customField['display_name'];
