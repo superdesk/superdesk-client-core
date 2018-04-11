@@ -32,6 +32,7 @@ angular.module('superdesk.apps.vocabularies', [
     .directive('sdVocabularyConfig', directive.VocabularyConfigDirective)
     .directive('sdVocabularyConfigModal', directive.VocabularyConfigModal)
     .directive('sdVocabularyObjectField', directive.VocabularyObjectField)
+    .directive('sdVocabularyConfigModalItems', directive.VocabularyConfigModalItems)
 
     .factory('cvSchema', SchemaFactory)
 
