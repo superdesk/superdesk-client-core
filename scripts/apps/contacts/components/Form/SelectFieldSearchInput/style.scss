@@ -1,0 +1,35 @@
+@import '~mixins.scss';
+@import '~variables.scss';
+
+.field-search__popup {
+    margin-top: 1px;
+
+    &-list {
+        li {
+            margin: 5px 0;
+        }
+
+        overflow-y: scroll;
+        max-height: 250px;
+    }
+
+    &-item {
+        margin: 5px;
+        padding: .3rem .8rem;
+        &:hover {
+            background: $sd-hover;
+        }
+
+        &--active {
+            background: $sd-hover;   
+        }
+    }
+
+    &-item-label {
+        padding-top: 5px;
+        display: inline-block;
+        width: 200px;
+        text-align: left;
+    }
+
+}

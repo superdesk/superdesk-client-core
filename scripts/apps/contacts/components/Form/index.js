@@ -14,3 +14,4 @@ export {Label} from './Label';
 export {Toggle} from './Toggle';
 export {ToggleBox} from './ToggleBox';
 export {ContactNumberInput} from './ContactNumberInput';
+export {SelectFieldSearchInput} from './SelectFieldSearchInput';

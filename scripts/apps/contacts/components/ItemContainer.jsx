@@ -25,7 +25,7 @@ export class ItemContainer extends React.Component {
         ));
 
         return map(emails, (email, i) => (
-            <span>
+            <span key={`emails-${i}`}>
                 {i > 0 && ', '}
                 {email}
             </span>

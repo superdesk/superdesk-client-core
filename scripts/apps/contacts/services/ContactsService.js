@@ -68,6 +68,23 @@ export class ContactsService {
         return this.api('contacts').query(param);
     }
 
+    /**
+      * @ngdoc method
+      * @name contacts#queryField
+      * @param {string} name of field in contacts collection
+      * @param {string} search text to query with in given field
+      * @returns {Promise}
+      * @public
+      * @description Requests a list of fields value suggestions from the server e.g.,
+      * in case of organisation field returns organisations suggestions if resolved.
+      */
+    queryField(field, text) {
+        switch (field) {
+        case 'organisation':
+            return this.api.get(`contacts/organisations?q=${text}`);
+        }
+    }
+
     /* Contact Form */
 
     /**

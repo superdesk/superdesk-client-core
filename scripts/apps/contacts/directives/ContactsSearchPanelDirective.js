@@ -1,8 +1,15 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
+import {SelectFieldSearchInput} from '../../contacts/components/Form';
+
 class LinkFunction {
-    constructor($location, scope, elem) {
+    constructor(contacts, $location, scope, elem) {
         this.scope = scope;
         this.elem = elem;
 
+        this.orgField = document.getElementById('org-field');
+
+        this.contacts = contacts;
         this.$location = $location;
         this.scope.searchItems = this.search.bind(this);
         this.scope.clear = this.clear.bind(this);
@@ -12,6 +19,7 @@ class LinkFunction {
         this.scope.toggle = {all: true};
 
         this.scope.keyPressed = this.keyPressed.bind(this);
+        this.scope.searchField = this.searchField.bind(this);
 
         this.init();
 
@@ -19,6 +27,11 @@ class LinkFunction {
             if (this.scope.query !== this.$location.search().q) {
                 this.init();
             }
+        });
+
+        this.scope.$on('$destroy', () => {
+            elem.off();
+            ReactDOM.unmountComponentAtNode(this.orgField);
         });
     }
 
@@ -32,7 +45,44 @@ class LinkFunction {
         this.scope.query = params.q;
         this.scope.flags = false;
         this.scope.meta = {};
+
+        this.scope.filteredList = {};
+        this.scope.filteredList['organisation'] = [];
+        this.renderSearchField('organisation');
+        this.scope.selectedItem = '';
     }
+
+    handleOnChange(field, value) {
+        this.scope.meta[field] = value;
+        this.renderSearchField(field);
+    }
+
+    renderSearchField(field) {
+        let fieldElement;
+        let fieldLabel;
+        let querySearch = false;
+
+        switch (field) {
+        case 'organisation':
+            fieldElement = this.orgField;
+            fieldLabel = gettext('Organisation');
+            querySearch = true;
+            break;
+        }
+
+        ReactDOM.render(
+            <SelectFieldSearchInput
+                field={field}
+                label={fieldLabel}
+                onChange={this.handleOnChange.bind(this)}
+                value={_.get(this.scope.meta, field, '')}
+                querySearch={querySearch}
+                onQuerySearch={((searchText) => this.scope.searchField(field, searchText))}
+                dataList={this.scope.filteredList[field]} />
+            , fieldElement
+        );
+    }
+
 
     /*
      * Get Query function build the query string
@@ -109,6 +159,19 @@ class LinkFunction {
         this.searchParameters();
     }
 
+    /*
+    * Get search input from field while typed and query the text input.
+    */
+    searchField(field, text) {
+        if (text) {
+            this.contacts.queryField(field, text).then((items) => {
+                this.scope.filteredList[field] = _.map(items._items, field);
+                this.scope.meta[field] = text;
+                this.renderSearchField(field);
+            });
+        }
+    }
+
     keyPressed(event) {
         const ENTER = 13;
 
@@ -138,11 +201,11 @@ class LinkFunction {
  * @description sd-contacts-search-panel operates the search panel that appears
  * to the left of the contacts search page
  */
-export function ContactsSearchPanelDirective($location) {
+export function ContactsSearchPanelDirective(contacts, $location) {
     return {
         template: require('scripts/apps/contacts/views/search-panel.html'),
-        link: (scope, elem) => new LinkFunction($location, scope, elem),
+        link: (scope, elem) => new LinkFunction(contacts, $location, scope, elem),
     };
 }
 
-ContactsSearchPanelDirective.$inject = ['$location'];
+ContactsSearchPanelDirective.$inject = ['contacts', '$location'];
