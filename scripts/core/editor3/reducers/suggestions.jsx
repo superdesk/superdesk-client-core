@@ -511,13 +511,14 @@ const resetSuggestion = (editorState, style) => {
  * @description Delete the current character.
  */
 const deleteCharacter = (editorState, style = null) => {
-    let content;
-    let selection;
-    let newState;
+    let newState = Highlights.changeEditorSelection(editorState, -1, 0, false);
+    let content = newState.getCurrentContent();
+    const selection = newState.getSelection();
+    const block = content.getBlockForKey(selection.getStartKey());
 
-    newState = Highlights.changeEditorSelection(editorState, -1, 0, false);
-    content = newState.getCurrentContent();
-    selection = newState.getSelection();
+    if (block.getLength() === 1) {
+        return deleteBlock(editorState, block.getKey());
+    }
 
     content = Modifier.removeRange(content, selection, 'forward');
 
@@ -533,6 +534,46 @@ const deleteCharacter = (editorState, style = null) => {
     }
 
     return newState;
+};
+
+const deleteBlock = (editorState, blockKey) => {
+    let content = editorState.getCurrentContent();
+    let block = content.getBlockBefore(blockKey);
+    let isAfter = false;
+
+    if (block == null) {
+        block = content.getBlockAfter(blockKey);
+        isAfter = true;
+    }
+
+    if (block != null) {
+        const blockMap = content.getBlockMap().delete(blockKey);
+        const selectionAfter = editorState.getSelection().merge({
+            anchorOffset: isAfter ? 0 : block.getLength(),
+            anchorKey: block.getKey(),
+            focusOffset: isAfter ? 0 : block.getLength(),
+            focusKey: block.getKey(),
+            isBackward: false
+        });
+
+        content = content.merge({
+            blockMap,
+            selectionAfter
+        });
+    } else {
+        block = content.getBlockForKey(blockKey);
+        const selection = editorState.getSelection().merge({
+            anchorOffset: 0,
+            anchorKey: block.getKey(),
+            focusOffset: block.getLength(),
+            focusKey: block.getKey(),
+            isBackward: false
+        });
+
+        content = Modifier.removeRange(content, selection, 'forward');
+    }
+
+    return EditorState.push(editorState, content, 'delete-character');
 };
 
 export default suggestions;
