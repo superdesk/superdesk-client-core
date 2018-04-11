@@ -437,16 +437,7 @@ const setDeleteSuggestionForCharacter = (editorState, data) => {
     if (currentData != null && currentData.type === 'ADD_SUGGESTION' &&
         currentData.author === data.author) {
         // if current character already a suggestion of current user, delete the character
-        let newState = deleteCharacter(editorState);
-
-        // also delete the suggestion if it was the last character of that suggestion
-        const textForHighlight = Highlights.getRangeAndTextForStyle(newState, currentStyle);
-
-        if (textForHighlight.highlightedText === '') {
-            newState = Highlights.removeHighlight(newState, currentStyle);
-        }
-
-        return newState;
+        return deleteCharacter(editorState, currentStyle);
     }
 
     const beforeStyle = Highlights.getHighlightStyleAtOffset(editorState, changeSuggestionsTypes, selection, -2);
@@ -515,10 +506,11 @@ const resetSuggestion = (editorState, style) => {
  * @ngdoc method
  * @name deleteCharacter
  * @param {Object} editorState
+ * @param {String} style - style of the current selection (optional)
  * @return {Object} returns new state
  * @description Delete the current character.
  */
-const deleteCharacter = (editorState) => {
+const deleteCharacter = (editorState, style = null) => {
     let content;
     let selection;
     let newState;
@@ -528,7 +520,19 @@ const deleteCharacter = (editorState) => {
     selection = newState.getSelection();
 
     content = Modifier.removeRange(content, selection, 'forward');
-    return EditorState.push(newState, content, 'backspace-character');
+
+    newState = EditorState.push(newState, content, 'backspace-character');
+
+    if (style) {
+        const textForHighlight = Highlights.getRangeAndTextForStyle(newState, style);
+
+        if (textForHighlight.highlightedText === '') {
+            // also delete the suggestion if it was the last character of that suggestion
+            newState = Highlights.removeHighlight(newState, style);
+        }
+    }
+
+    return newState;
 };
 
 export default suggestions;
