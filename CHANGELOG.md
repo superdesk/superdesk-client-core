@@ -1,5 +1,16 @@
 # Superdesk Client Changelog
 
+## [1.15.1] 2018-04-11
+
+### Fixed
+
+- Fix invalid HTML for blockquote.
+- Fix validating unresolved suggestions before publishing.
+
+### Changed
+
+- Show actual date instead of relative on inline comments history.
+
 ## [1.15.0] 2018-03-28
 
 ### Fixed
