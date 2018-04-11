@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {find, join, map} from 'lodash';
+import {MAILTO_URL} from '../../contacts/constants';
 
 export class ItemContainer extends React.Component {
     constructor(props) {
@@ -17,9 +18,17 @@ export class ItemContainer extends React.Component {
         return find(item[field], 'usage') ? join(map(item[field], 'usage'), ', ') : null;
     }
 
-
     getEmailValue(item) {
-        return item.contact_email ? join(item.contact_email, ', ') : null;
+        let emails = map(item.contact_email, (email) => (
+            <a href={`${MAILTO_URL}${email}`} title={`${email}`}>{email}</a>
+        ));
+
+        return map(emails, (email, i) => (
+            <span>
+                {i > 0 && ', '}
+                {email}
+            </span>
+        ));
     }
 
     init(props) {
@@ -42,7 +51,7 @@ export class ItemContainer extends React.Component {
             title = value && gettextCatalog.getString(this.getContactNumberTitle(item, key));
             break;
         case 'contact_email':
-            value = this.getEmailValue(item);
+            value = item.contact_email ? this.getEmailValue(item) : null;
             _class = _link;
             break;
         case 'website':
