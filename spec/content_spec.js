@@ -204,7 +204,7 @@ describe('content', () => {
         content.previewItem('item3');
         element(by.css('[ng-click="vm.current_tab = \'metadata\'"]')).click();
 
-        expect(element(by.model('item.embargo')).isDisplayed()).toBe(true);
+        expect(element(by.css('[datetime="item.embargo"]')).isDisplayed()).toBe(true);
 
         content.closePreview();
     });
