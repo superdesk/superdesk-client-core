@@ -67,8 +67,9 @@ export function openActionsMenu(elem, target, itemId) {
  *
  * @param {Object} elem React element
  * @param {Node} target DOM node
+ * @param {integer} zIndex z-index styling to be applied to the elem
  */
-export function renderToBody(elem, target) {
+export function renderToBody(elem, target, zIndex = 1000) {
     // first render it somewhere not visible
     menuHolderElem().style.zIndex = -1;
     var node = ReactDOM.findDOMNode(ReactDOM.render(elem, menuHolderElem()));
@@ -117,7 +118,7 @@ export function renderToBody(elem, target) {
     node.style.top = top.toFixed() + 'px';
     node.style.left = left.toFixed() + 'px';
     node.style.position = 'absolute';
-    menuHolderElem().style.zIndex = 1000;
+    menuHolderElem().style.zIndex = zIndex;
 }
 
 export function renderArea(area, itemProps, props) {
