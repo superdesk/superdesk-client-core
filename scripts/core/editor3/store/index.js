@@ -8,6 +8,7 @@ import {EditorState, convertFromRaw, convertToRaw, ContentState} from 'draft-js'
 import {toHTML, fromHTML} from 'core/editor3/html';
 import {PopupTypes} from '../actions';
 import {initializeHighlights, prepareHighlightsForExport} from '../helpers/highlights';
+import {fieldsMetaKeys, setFieldMetadata, getFieldMetadata, FIELD_KEY_SEPARATOR} from '../helpers/fieldsMeta';
 
 // depended upon by find-and-replace.
 import {removeInlineStyles} from '../reducers/highlights';
@@ -35,7 +36,6 @@ export default function createEditorStore(props, isReact = false) {
 
     const store = createStore(reducers, {
         editorState: EditorState.createWithContent(content, decorators),
-        allowsHighlights: props.highlights,
         searchTerm: {pattern: '', index: -1, caseSensitive: false},
         popup: {type: PopupTypes.Hidden},
         readOnly: props.readOnly,
@@ -69,20 +69,41 @@ export default function createEditorStore(props, isReact = false) {
  * is bound to the controller, so 'this' points to controller attributes.
  */
 function onChange(contentState) {
+    const pathToValue = this.pathToValue;
+
+    if (pathToValue == null || pathToValue.length < 1) {
+        throw new Error('pathToValue is required');
+    }
+
     const decorativeStyles = ['HIGHLIGHT', 'HIGHLIGHT_STRONG'];
     const contentStateCleaned = removeInlineStyles(contentState, decorativeStyles);
     const contentStateHighlightsReadyForExport = prepareHighlightsForExport(
         EditorState.createWithContent(contentStateCleaned)
     ).getCurrentContent();
 
-    // sync controller to scope
-    this.$scope.$apply(() => {
-        // to avoid merge of dictionaries in backend, editorState is wrapped in a list
-        this.editorState = [convertToRaw(contentStateHighlightsReadyForExport)];
-        const logger = ng.get('logger');
 
-        this.value = toHTML(contentStateHighlightsReadyForExport, logger);
-    });
+    setFieldMetadata(
+        this.item,
+        pathToValue,
+        fieldsMetaKeys.draftjsState,
+        convertToRaw(contentStateHighlightsReadyForExport)
+    );
+
+    // example: "extra.customField"
+    const pathToValueArray = pathToValue.split(FIELD_KEY_SEPARATOR);
+
+    let objectToUpdate = pathToValueArray.length < 2 ?
+        this.item :
+        pathToValueArray.slice(0, -1).reduce((obj, pathSegment) => {
+            const nextObj = obj[pathSegment];
+
+            return nextObj;
+        }, this.item);
+
+    const fieldName = pathToValueArray[pathToValueArray.length - 1];
+    const logger = ng.get('logger');
+
+    objectToUpdate[fieldName] = toHTML(contentStateHighlightsReadyForExport, logger);
 
     // call on change with scope updated
     this.$rootScope.$applyAsync(() => {
@@ -100,18 +121,26 @@ function onChange(contentState) {
  */
 function getInitialContent(props) {
     // we have an editor state stored in the DB
-    if (props.editorState) {
-        // suport for both regular and list wrapper versions of editor state
-        var contentState = convertFromRaw(
-            (props.editorState instanceof Array) ? props.editorState[0] : props.editorState
-        );
 
-        return initializeHighlights(EditorState.createWithContent(contentState)).getCurrentContent();
+    if (props.pathToValue == null || props.pathToValue.length < 1) {
+        // we have only HTML (possibly legacy editor2 or ingested item)
+        if (props.value) {
+            return fromHTML(props.value);
+        }
+
+        return ContentState.createFromText('');
     }
 
-    // we have only HTML (possibly legacy editor2 or ingested item)
-    if (props.value) {
-        return fromHTML(props.value);
+    const draftjsRawState = getFieldMetadata(
+        props.item,
+        props.pathToValue,
+        fieldsMetaKeys.draftjsState
+    );
+
+    if (draftjsRawState != null) {
+        let contentState = convertFromRaw(draftjsRawState);
+
+        return initializeHighlights(EditorState.createWithContent(contentState)).getCurrentContent();
     }
 
     return ContentState.createFromText('');

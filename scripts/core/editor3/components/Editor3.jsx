@@ -28,7 +28,6 @@ Editor3Base.propTypes = Editor3Component.propTypes = {
 const mapStateToProps = (state) => ({
     readOnly: state.readOnly,
     showToolbar: state.showToolbar,
-    highlightsEnabled: state.allowsHighlights,
     editorState: state.editorState,
     locked: state.locked,
     editorFormat: state.editorFormat,

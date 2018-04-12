@@ -45,12 +45,6 @@ class Editor3Directive {
             findReplaceTarget: '@',
 
             /**
-             * @type {Boolean}
-             * @description If true, allows inline highlights (commenting, annotating, etc.).
-             */
-            highlights: '@',
-
-            /**
              * @type {Object}
              * @description Editor format options that are enabled and should be displayed
              * in the toolbar.
@@ -70,6 +64,12 @@ class Editor3Directive {
              * @description HTML value of editor. Used by the outside world.
              */
             value: '=',
+
+            /**
+             * @type {String}
+             * @description required for editor3 to be able to set metadata for fields. Mainly editor_state
+             */
+            pathToValue: '=',
 
             /**
              * @type {Boolean}
@@ -138,6 +138,10 @@ class Editor3Directive {
     }
 
     initialize(config, $element, editor3, $scope, $rootScope, gettextCatalog) {
+        if (this.item == null) {
+            throw new Error('Item must be provided in order to be able to save editor_state on it');
+        }
+
         // defaults
         this.language = this.language || 'en';
         this.readOnly = this.readOnly || false;
@@ -148,7 +152,6 @@ class Editor3Directive {
         this.bindToValue = this.bindToValue || false;
         this.tabindex = this.tabindex || 0;
         this.showTitle = this.showTitle || false;
-        this.highlights = typeof this.highlights !== 'undefined' && config.features.editorHighlights;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.svc = {gettextCatalog};

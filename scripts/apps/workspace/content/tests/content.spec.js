@@ -295,6 +295,8 @@ describe('superdesk.apps.workspace.content', () => {
             spyOn(content, 'getTypeMetadata').and.returnValue($q.when({schema: content.contentProfileSchema,
                 editor: content.contentProfileEditor}));
 
+            spyOn(content, 'getCustomFields').and.returnValue($q.when([]));
+
             el.scope().$digest();
 
             var fields = el.find('li.schema-item');
@@ -309,6 +311,8 @@ describe('superdesk.apps.workspace.content', () => {
 
             spyOn(content, 'getTypeMetadata').and.returnValue($q.when({schema: content.contentProfileSchema,
                 editor: content.contentProfileEditor}));
+
+            spyOn(content, 'getCustomFields').and.returnValue($q.when([]));
 
             el.scope().$digest();
 

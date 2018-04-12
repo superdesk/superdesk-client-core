@@ -81,7 +81,6 @@ class ToolbarComponent extends Component {
             activeCell,
             addTable,
             insertMedia,
-            allowsHighlights,
             suggestingMode,
             toggleSuggestingMode,
             invisibles,
@@ -132,7 +131,7 @@ class ToolbarComponent extends Component {
                         iconName="table"
                     />
                 }
-                {allowsHighlights && has('comments') &&
+                {has('comments') &&
                     <SelectionButton
                         onClick={showPopup(PopupTypes.Comment)}
                         precondition={
@@ -143,7 +142,7 @@ class ToolbarComponent extends Component {
                         tooltip={gettext('Comment')}
                     />
                 }
-                {allowsHighlights && has('annotation') &&
+                {has('annotation') &&
                     <SelectionButton
                         onClick={showPopup(PopupTypes.Annotation)}
                         precondition={
@@ -154,7 +153,7 @@ class ToolbarComponent extends Component {
                         tooltip={gettext('Annotation')}
                     />
                 }
-                {allowsHighlights && has('suggestions') &&
+                {has('suggestions') &&
                     <StyleButton
                         active={suggestingMode}
                         label={'suggestions'}
@@ -182,7 +181,6 @@ class ToolbarComponent extends Component {
 
 ToolbarComponent.propTypes = {
     disabled: PropTypes.bool,
-    allowsHighlights: PropTypes.bool,
     editorFormat: PropTypes.array,
     activeCell: PropTypes.any,
     suggestingMode: PropTypes.bool,
@@ -202,7 +200,6 @@ ToolbarComponent.propTypes = {
 const mapStateToProps = ({
     editorFormat,
     activeCell,
-    allowsHighlights,
     popup,
     editorState,
     suggestingMode,
@@ -210,7 +207,6 @@ const mapStateToProps = ({
 }) => ({
     editorFormat,
     activeCell,
-    allowsHighlights,
     popup,
     editorState,
     suggestingMode,

@@ -288,13 +288,6 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
     };
 
     /**
-     * Get all custom fields
-     *
-     * @return {Array}
-     */
-    this.allFields = () => this._fields;
-
-    /**
      * Get profiles selected for given desk
      *
      * @param {Object} desk
@@ -341,6 +334,8 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
 
         return self._fieldsPromise;
     }
+
+    this.getCustomFields = getCustomFields;
 
     /**
      * Reset custom fields info

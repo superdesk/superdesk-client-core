@@ -1,7 +1,10 @@
 import {
     editor3DataKeys,
-    getCustomDataFromEditor
+    getCustomDataFromEditorRawState
 } from 'core/editor3/helpers/editor3CustomData';
+
+import {getLabelForFieldId} from 'apps/workspace/helpers/getLabelForFieldId';
+import {fieldsMetaKeys, META_FIELD_NAME, getFieldMetadata, getFieldId} from 'core/editor3/helpers/fieldsMeta';
 
 function getAllUserIdsFromComments(comments) {
     const users = [];
@@ -29,28 +32,39 @@ function convertUsersArrayToObject(users) {
     return usersObj;
 }
 
-InlineCommentsCtrl.$inject = ['$scope', 'userList'];
-function InlineCommentsCtrl($scope, userList) {
-    const editorState = $scope.item.editor_state;
+InlineCommentsCtrl.$inject = ['$scope', 'userList', 'metadata', 'content'];
+function InlineCommentsCtrl($scope, userList, metadata, content) {
+    content.getCustomFields().then((customFields) => {
+        const comments = Object.keys($scope.item[META_FIELD_NAME])
+            .map((contentKey) => ({
+                contentKey: contentKey,
+                [fieldsMetaKeys.draftjsState]: getFieldMetadata($scope.item, contentKey, fieldsMetaKeys.draftjsState)
+            }))
+            .filter((obj) => obj[fieldsMetaKeys.draftjsState] != null)
+            .map((obj) => (
+                {
+                    fieldName: getLabelForFieldId(getFieldId(obj.contentKey), customFields),
+                    comments: getCustomDataFromEditorRawState(
+                        obj[fieldsMetaKeys.draftjsState],
+                        editor3DataKeys.RESOLVED_COMMENTS_HISTORY
+                    ) || []
+                }
+            ))
+            .filter((obj) => obj.comments.length > 0);
 
-    const comments =
-        getCustomDataFromEditor(
-            editorState,
-            editor3DataKeys.RESOLVED_COMMENTS_HISTORY
-        ) || [];
+        if (comments.length === 0) {
+            $scope.items = [];
+            return;
+        }
 
-    if (comments.length === 0) {
-        $scope.items = [];
-        return;
-    }
+        const userIds = getAllUserIdsFromComments([].concat(...comments.map((obj) => obj.comments)));
 
-    const userIds = getAllUserIdsFromComments(comments);
-
-    userList.getAll()
-        .then((users) => {
-            $scope.users = convertUsersArrayToObject(filterUsers(users, userIds));
-            $scope.items = comments;
-        });
+        userList.getAll()
+            .then((users) => {
+                $scope.users = convertUsersArrayToObject(filterUsers(users, userIds));
+                $scope.items = comments;
+            });
+    });
 }
 
 angular
