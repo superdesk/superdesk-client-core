@@ -114,20 +114,12 @@ export class Item extends React.Component {
             'sd-grid-item sd-grid-item--with-click' :
             'media-box media-' + item.type;
 
-        let multiSelected = this.props.item.selected;
-
-        // If an item is both multi-selected and is active selection in the list
-        // remove the 'selected' styling class to distinguish it as the active item
-        if (this.props.item.selected && this.props.flags.selected) {
-            multiSelected = !multiSelected;
-        }
-
         var contents = [
             'div', {
                 className: classNames(classes, {
                     active: this.props.flags.selected,
                     locked: item.lock_user && item.lock_session,
-                    selected: this.props.flags.selected || multiSelected,
+                    selected: this.props.item.selected || this.props.flags.selected,
                     archived: item.archived || item.created,
                     gone: item.gone,
                     actioning: this.state.actioning
@@ -246,7 +238,7 @@ export class Item extends React.Component {
                 className: classNames(
                     'list-item-view',
                     {active: this.props.flags.selected},
-                    {selected: multiSelected}
+                    {selected: this.props.item.selected && !this.props.flags.selected}
                 ),
                 onMouseEnter: this.setHoverState,
                 onMouseLeave: this.unsetHoverState,
