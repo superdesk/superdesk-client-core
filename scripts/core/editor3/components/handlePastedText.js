@@ -1,10 +1,13 @@
-import {EditorState, Modifier, genKey, CharacterMetadata, ContentBlock} from 'draft-js';
+import {EditorState, ContentState, Modifier, genKey, CharacterMetadata, ContentBlock} from 'draft-js';
 import {List, OrderedSet} from 'immutable';
 import {fromHTML} from 'core/editor3/html';
 import * as Highlights from '../helpers/highlights';
 import {initSelectionIterator, hasNextSelection} from '../helpers/selectionIterator';
 import {suggestionsTypes} from '../highlightsConfig';
 import ng from 'core/services/ng';
+
+const HANDLED = 'handled';
+const NOT_HANDLED = 'not-handled';
 
 /**
  * @ngdoc method
@@ -17,35 +20,35 @@ import ng from 'core/services/ng';
  * atomic blocks that need special handling in editor3.
  */
 export function handlePastedText(editorKey, text, html) {
-    const {suggestingMode, onCreateAddSuggestion, onPasteFromSuggestingMode} = this.props;
+    const {suggestingMode, onPasteFromSuggestingMode} = this.props;
 
     if (!this.allowEditSuggestion('insert')) {
-        return 'handled';
+        return HANDLED;
+    }
+
+    if (!html && !text) {
+        return HANDLED;
     }
 
     if (suggestingMode) {
-        if (!html) {
-            onCreateAddSuggestion(text);
-        } else {
-            const pastedContent = fromHTML(html);
+        const content = html ? fromHTML(html) : ContentState.createFromText(text);
 
-            onPasteFromSuggestingMode(pastedContent);
-        }
-        return 'handled';
-    }
-
-    if (!html) {
-        return 'not-handled';
+        onPasteFromSuggestingMode(content);
+        return HANDLED;
     }
 
     // If there are blocks that have been copied from the host editor, let the editor
     // handle the paste. The chance of having content both from the editor and from
     // outside it as a mix in the clipboard is impossible.
     if (HTMLComesFromEditor(html, editorKey)) {
-        return 'not-handled';
+        return NOT_HANDLED;
     }
 
-    return ensureAtomicBlocks(this.props, html);
+    if (html) {
+        return ensureAtomicBlocks(this.props, html);
+    }
+
+    return NOT_HANDLED;
 }
 
 // Checks if there are atomic blocks in the paste content. If there are, we need to set
@@ -58,7 +61,7 @@ function ensureAtomicBlocks(props, html) {
     const hasAtomicBlocks = blockMap.some((block) => block.getType() === 'atomic');
 
     if (!hasAtomicBlocks) {
-        return 'not-handled';
+        return NOT_HANDLED;
     }
 
     let contentState = Modifier.splitBlock(editorState.getCurrentContent(), editorState.getSelection());
@@ -86,7 +89,7 @@ function ensureAtomicBlocks(props, html) {
 
     onChange(EditorState.push(editorState, contentState, 'insert-characters'));
 
-    return 'handled';
+    return HANDLED;
 }
 
 // Checks if the given html contains blocks coming from the editor with

@@ -1,4 +1,4 @@
-import {EditorState, Modifier, RichUtils} from 'draft-js';
+import {EditorState, Modifier, RichUtils, SelectionState} from 'draft-js';
 import {onChange} from './editor3';
 import {acceptedInlineStyles} from '../helpers/inlineStyles';
 import {changeSuggestionsTypes, styleSuggestionsTypes} from '../highlightsConfig';
@@ -197,6 +197,47 @@ const createChangeBlockStyleSuggestion = (state, {blockType, data}) => {
 };
 
 /**
+ * Sanitize given content state on paste
+ *
+ * @param {ContentState} content
+ * @returns {ContentState}
+ */
+function sanitizeContent(content) {
+    let output = content;
+
+    const ignoreStyle = (style) => acceptedInlineStyles.indexOf(style) === -1;
+    const getSelection = (block, start, end) => SelectionState.createEmpty(block.getKey()).merge({
+        anchorOffset: start,
+        focusOffset: end,
+    });
+
+    content.getBlockMap().forEach((block) => {
+        // remove extra styles
+        block.findStyleRanges(
+            (character) => character.getStyle().some(ignoreStyle),
+            (start, end) => {
+                const selection = getSelection(block, start, end);
+                const inlineStyle = block.getInlineStyleAt(start).find(ignoreStyle);
+
+                output = Modifier.removeInlineStyle(output, selection, inlineStyle);
+            }
+        );
+
+        // remove any entities
+        block.findEntityRanges(
+            () => true,
+            (start, end) => {
+                const selection = getSelection(block, start, end);
+
+                output = Modifier.applyEntity(output, selection, null);
+            }
+        );
+    });
+
+    return output;
+}
+
+/**
  * @ngdoc method
  * @name pasteAddSuggestion
  * @param {Object} state
@@ -207,26 +248,49 @@ const createChangeBlockStyleSuggestion = (state, {blockType, data}) => {
  */
 const pasteAddSuggestion = (state, {content, data}) => {
     let {editorState} = state;
-    const blockMap = content.getBlockMap();
+    const initialSelection = editorState.getSelection();
 
-    editorState = deleteCurrentSelection(editorState, data);
+    const beforeStyle = Highlights.getHighlightStyleAtOffset(editorState, changeSuggestionsTypes, initialSelection, -1);
+    const beforeData = beforeStyle != null ? Highlights.getHighlightData(editorState, beforeStyle) : null;
 
-    blockMap.forEach((block) => {
-        if (block.getType() !== 'atomic') {
-            const text = block.getText();
-            const characterMetadataList = block.getCharacterList();
-            let inlineStyle;
+    // add content to editor state
+    const mergedContent = Modifier.replaceWithFragment(
+        editorState.getCurrentContent(),
+        editorState.getSelection(),
+        sanitizeContent(content).getBlockMap()
+    );
 
-            characterMetadataList.forEach((characterMetadata, i) => {
-                inlineStyle = acceptedInlineStyles.filter((style) => characterMetadata.hasStyle(style));
-                editorState = setAddSuggestionForCharacter(editorState, data, text[i], inlineStyle);
-            });
-        } else {
-            // TODO: insert block
+    // push new content
+    editorState = EditorState.push(editorState, mergedContent, 'insert-fragment');
+
+    // store current selection for later
+    const finalSelection = editorState.getSelection();
+
+    // select pasted content
+    editorState = EditorState.acceptSelection(editorState, editorState.getSelection().merge(
+        initialSelection.isBackward ? {
+            isBackward: true,
+            anchorKey: finalSelection.anchorKey,
+            anchorOffset: finalSelection.anchorOffset,
+            focusKey: initialSelection.focusKey,
+            focusOffset: initialSelection.focusOffset,
+        } : {
+            anchorKey: initialSelection.anchorKey,
+            anchorOffset: initialSelection.anchorOffset,
         }
-    });
+    ));
 
-    return saveEditorStatus(state, editorState, 'change-block-data');
+    // apply highlights
+    if (beforeData != null && beforeData.type === 'ADD_SUGGESTION' && beforeData.author === data.author) {
+        editorState = RichUtils.toggleInlineStyle(editorState, beforeStyle);
+    } else {
+        editorState = Highlights.addHighlight(editorState, 'ADD_SUGGESTION', data);
+    }
+
+    // reset selection
+    editorState = EditorState.forceSelection(editorState, finalSelection);
+
+    return saveEditorStatus(state, editorState, 'change-block-type');
 };
 
 /**

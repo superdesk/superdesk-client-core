@@ -146,8 +146,6 @@ export function DesksFactory($q, api, preferencesService, userList, notify,
 
                     if (user) {
                         self.deskMembers[desk._id].push(user);
-                    } else {
-                        console.error('Desk user not found for desk: %s , user missing: %s', desk.name, member.user);
                     }
                 });
             });
