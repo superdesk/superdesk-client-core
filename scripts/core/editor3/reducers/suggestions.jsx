@@ -5,6 +5,7 @@ import {changeSuggestionsTypes, styleSuggestionsTypes} from '../highlightsConfig
 import * as Highlights from '../helpers/highlights';
 import {initSelectionIterator, hasNextSelection} from '../helpers/selectionIterator';
 import {editor3DataKeys, getCustomDataFromEditor, setCustomDataForEditor} from '../helpers/editor3CustomData';
+import * as Blocks from '../helpers/blocks';
 import ng from 'core/services/ng';
 
 
@@ -517,7 +518,8 @@ const deleteCharacter = (editorState, style = null) => {
     const block = content.getBlockForKey(selection.getStartKey());
 
     if (block.getLength() === 1) {
-        return deleteBlock(editorState, block.getKey());
+        // when only one character on block, delete the whole block
+        return Blocks.removeBlock(editorState, block.getKey());
     }
 
     content = Modifier.removeRange(content, selection, 'forward');
@@ -534,46 +536,6 @@ const deleteCharacter = (editorState, style = null) => {
     }
 
     return newState;
-};
-
-const deleteBlock = (editorState, blockKey) => {
-    let content = editorState.getCurrentContent();
-    let block = content.getBlockBefore(blockKey);
-    let isAfter = false;
-
-    if (block == null) {
-        block = content.getBlockAfter(blockKey);
-        isAfter = true;
-    }
-
-    if (block != null) {
-        const blockMap = content.getBlockMap().delete(blockKey);
-        const selectionAfter = editorState.getSelection().merge({
-            anchorOffset: isAfter ? 0 : block.getLength(),
-            anchorKey: block.getKey(),
-            focusOffset: isAfter ? 0 : block.getLength(),
-            focusKey: block.getKey(),
-            isBackward: false
-        });
-
-        content = content.merge({
-            blockMap,
-            selectionAfter
-        });
-    } else {
-        block = content.getBlockForKey(blockKey);
-        const selection = editorState.getSelection().merge({
-            anchorOffset: 0,
-            anchorKey: block.getKey(),
-            focusOffset: block.getLength(),
-            focusKey: block.getKey(),
-            isBackward: false
-        });
-
-        content = Modifier.removeRange(content, selection, 'forward');
-    }
-
-    return EditorState.push(editorState, content, 'delete-character');
 };
 
 export default suggestions;
