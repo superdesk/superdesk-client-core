@@ -32,16 +32,16 @@ export function MonitoringView($rootScope, authoringWorkspace, pageTitle, $timeo
                 if (currentDesk && currentDesk.monitoring_default_view) {
                     switch (currentDesk.monitoring_default_view) {
                     case 'list':
-                        scope.view = 'compact';
+                        scope.switchView('compact');
                         break;
                     case 'swimlane':
                         scope.switchView('compact', true);
                         break;
                     case 'photogrid':
-                        scope.view = 'photogrid';
+                        scope.switchView('photogrid');
                         break;
                     default:
-                        scope.view = 'compact';
+                        scope.switchView('compact'); // list by default
                         break;
                     }
                 }
