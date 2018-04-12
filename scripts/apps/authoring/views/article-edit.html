@@ -6,7 +6,7 @@
      sd-validation-error="error.headline"
      data-required="schema.headline.required">
 
-    <label class="field__label" translate>Headline</label>
+    <label class="field__label">{{label('headline')}}</label>
     <span ng-if="schema.headline.maxlength" sd-character-count data-item="item.headline" data-html="true" data-limit="schema.headline.maxlength"></span>
     <div id="title" class="headline"
          sd-text-editor
@@ -28,10 +28,11 @@
      sd-validation-error="error.headline"
      data-required="schema.headline.required">
 
-    <label class="field__label" translate>Headline</label>
+    <label class="field__label">{{label('headline')}}</label>
     <span ng-if="schema.headline.maxlength" sd-character-count data-item="item.headline" data-html="true" data-limit="schema.headline.maxlength"></span>
     <div id="title" class="headline"
          sd-editor3
+         data-path-to-value="'headline'"
          data-single-line="true"
          data-bind-to-value="compareView"
          data-language="item.language"
@@ -39,6 +40,7 @@
          data-on-change="autosave(item)"
          data-read-only="!_editable"
          data-disable-spellchecker="useTansaProofing()"
+         data-item="item"
          data-tabindex="editor.headline.order">
     </div>
 </div>
@@ -50,14 +52,14 @@
      sd-validation-error="error.sms"
      data-required="schema.sms.required">
 
-    <label class="field__label" ng-if="_editable" translate>SMS</label>
+    <label class="field__label" ng-if="_editable">{{label('sms')}}</label>
     <div ng-if="_editable">
         <span ng-if="_editable" sd-switch ng-model="item.flags.marked_for_sms" class="sms-switch" tabindex="{{editor.sms.order}}" ng-change="toggleSMS()"></span>
     </div>
 
     <div ng-if="item.flags.marked_for_sms" style="margin-top: 27px;">
         <span sd-character-count data-item="item.sms_message" data-html="true" data-limit="160"></span>
-        <label class="field__label" translate>SMS Message</label>
+        <label class="field__label">{{label('sms_message')}}</label>
         <input type="text" sd-remove-tags
                class="byline"
                id="sms_message"
@@ -80,7 +82,7 @@
      order="{{editor.feature_image.order}}"
      data-required="schema.feature_image.required">
 
-    <label class="field__label" translate>Featured Image</label>
+    <label class="field__label">{{label('feature_image')}}</label>
     <div sd-item-association
          data-item="item"
          data-rel="'featureimage'"
@@ -96,7 +98,7 @@
      sd-validation-error="error.feature_media"
      order="{{editor.feature_media.order}}"
      data-required="schema.feature_media.required">
-    <label class="field__label" translate>Featured Media</label>
+    <label class="field__label">{{label('feature_media')}}</label>
     <div sd-item-association
          data-allow-picture="true"
          data-allow-video="true"
@@ -125,7 +127,7 @@
      sd-validation-error="error.abstract"
      data-required="schema.abstract.required">
 
-    <label class="field__label" translate>Abstract</label>
+    <label class="field__label">{{label('abstract')}}</label>
     <span sd-character-count data-item="item.abstract" data-html="true" data-limit="schema.abstract.maxlength"></span>
     <span sd-word-count data-item="item.abstract" data-html="true"></span>
     <div id="abstract" class="abstract"
@@ -150,11 +152,12 @@
      sd-validation-error="error.abstract"
      data-required="schema.abstract.required">
 
-    <label class="field__label" translate>Abstract</label>
+    <label class="field__label">{{label('abstract')}}</label>
     <span sd-character-count data-item="item.abstract" data-html="true" data-limit="schema.abstract.maxlength"></span>
     <span sd-word-count data-item="item.abstract" data-html="true"></span>
     <div id="abstract" class="abstract"
          sd-editor3
+         data-path-to-value="'abstract'"
          data-editor-format="editor.abstract.formatOptions"
          data-bind-to-value="compareView"
          data-language="item.language"
@@ -162,6 +165,7 @@
          data-on-change="autosave(item)"
          data-read-only="!_editable"
          data-disable-spellchecker="useTansaProofing()"
+         data-item="item"
          data-tabindex="editor.abstract.order">
     </div>
 </div>
@@ -173,7 +177,7 @@
      sd-validation-error="error.byline"
      data-required="schema.byline.required">
 
-    <label class="field__label" translate>Byline</label>
+    <label class="field__label">{{label('byline')}}</label>
     <input type="text"
            sd-remove-tags
            class="byline"
@@ -198,7 +202,7 @@
      data-required="schema.dateline.required"
      sd-width="{{editor.dateline.sdWidth|| 'full'}}">
 
-    <label class="field__label" translate>Dateline</label>
+    <label class="field__label">{{label('dateline')}}</label>
     <div class="dateline">
         <div sd-meta-locators
              class="dateline-city"
@@ -257,7 +261,7 @@
      sd-validation-error="error.body_html"
      data-required="schema.body_html.required"
      sd-width="{{editor.body_html.sdWidth|| 'full'}}">
-    <label class="field__label" translate>Body</label>
+    <label class="field__label">{{label('body_html')}}</label>
     <span sd-reading-time data-item="item.body_html" data-html="true" data-language="item.language"></span>
     <span sd-character-count data-item="item.body_html" data-html="true"></span>
     <span sd-word-count data-item="item.body_html" data-html="true"></span>
@@ -287,18 +291,17 @@
      sd-width="{{editor.body_html.sdWidth|| 'full'}}"
      tansa-proofing="false">
 
-    <label class="field__label" translate>Body</label>
+    <label class="field__label">{{label('body_html')}}</label>
     <span sd-reading-time data-item="item.body_html" data-html="true" data-language="item.language"></span>
     <span sd-character-count data-item="item.body_html" data-html="true"></span>
     <span sd-word-count data-item="item.body_html" data-html="true"></span>
     <div id="bodyhtml"
          sd-editor3
+         data-path-to-value="'body_html'"
          data-find-replace-target
-         data-highlights
          data-bind-to-value="compareView"
          data-scroll-container=".page-content-container"
          data-editor-format="editor.body_html.formatOptions"
-         data-editor-state="item.editor_state"
          data-value="item.body_html"
          data-read-only="!_editable"
          data-on-change="autosave(item, 0)"
@@ -372,6 +375,7 @@
     <span ng-if="validator.description_text.maxlength" sd-character-count data-item="item.description_text" data-html="true" data-limit="validator.description_text.maxlength"></span>
     <div id="title" class="abstract"
          sd-editor3
+         data-path-to-value="'description_text'"
          data-editor-format="editor.description_text.formatOptions"
          data-bind-to-value="compareView"
          data-value="item.description_text"
@@ -390,7 +394,7 @@
      data-required="schema.footer.required"
      order="{{editor.footer.order}}"
      sd-width="{{editor.media_description.sdWidth|| 'full'}}">
-    <label class="field__label" translate>Helplines/Contact Information</label>
+    <label class="field__label"translate>Helplines/Contact Information</label>
     <select class="field__select" id="helplines"
             ng-model="extra.body_footer_value"
             ng-disabled="!_editable"
@@ -411,7 +415,7 @@
      sd-validation-error="error.body_footer"
      data-required="schema.body_footer.required"
      sd-width="{{editor.body_footer.sdWidth|| 'full'}}">
-    <label class="field__label" translate>Footer</label>
+    <label class="field__label">{{label('body_footer')}}</label>
     <div id="body_footer" class="body"
          sd-text-editor
          data-config="{disableToolbar: true, disableEditing: isPublished(item), tabindex: editor.body_footer.order, paste: {cleanPastedHTML: editor.body_footer.cleanPastedHTML}}"
@@ -434,9 +438,10 @@
      sd-validation-error="error.body_footer"
      data-required="schema.body_footer.required"
      sd-width="{{editor.body_footer.sdWidth|| 'full'}}">
-    <label class="field__label" translate>Footer</label>
+    <label class="field__label">{{label('body_footer')}}</label>
     <div id="body_footer" class="body"
          sd-editor3
+         data-path-to-value="'body_footer'"
          data-bind-to-value="compareView"
          data-editor-format="editor.body_footer.formatOptions"
          data-value="item.body_footer"
@@ -460,7 +465,7 @@
      sd-validation-error="error.sign_off"
      data-required="schema.sign_off.required"
      sd-width="{{editor.sign_off.sdWidth|| 'full'}}">
-    <label class="field__label" translate>Sign-Off</label>
+    <label class="field__label">{{label('sign_off')}}</label>
     <button id="sign-off-unlock" class="icn-btn btn-signOff" ng-click="changeSignOffEdit()" tabindex="{{editor.sign_off.order}}" title="Unlock edit Sign-Off" ng-if="_editable">
         <i class="icon-lock" ng-hide="editSignOff"></i>
         <i class="icon-unlocked" ng-show="editSignOff"></i>
@@ -494,7 +499,7 @@
     order="{{editor.usageterms.order}}"
     sd-validation-error="error.usageterms"
     data-required="schema.usageterms.required">
-  <label class="field__label" translate>Usage Terms</label>
+  <label class="field__label">{{label('usageterms')}}</label>
   <input type="text"
          sd-remove-tags
          class="usageterms"
@@ -521,6 +526,7 @@
     <span ng-if="schema[field._id].maxlength || schema[field._id].minlength" sd-character-count
         data-item="item.extra[field._id]" data-html="true" data-limit="schema[field._id].maxlength"></span>
     <div sd-editor3
+        data-path-to-value="'extra' + FIELD_KEY_SEPARATOR + field._id"
         data-single-line="field.field_options.single"
         data-value="item.extra[field._id]"
         data-bind-to-value="compareView"

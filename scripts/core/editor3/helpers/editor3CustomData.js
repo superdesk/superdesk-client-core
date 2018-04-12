@@ -4,6 +4,7 @@ import {
     SelectionState,
     Modifier,
     EditorState,
+    convertFromRaw
 } from 'draft-js';
 
 export const editor3DataKeys = {
@@ -41,21 +42,9 @@ export function setCustomDataForEditor(editorState, key, value) {
     return editorStateWithSelectionRestored;
 }
 
-function getDataFromArrayState(editorStateArr, key) {
-    const editorState = editorStateArr[0];
-    const firstBlock = editorState.blocks[0];
-
-    return firstBlock.data[key];
-}
-
 export function getCustomDataFromEditor(editorState, key) {
     if (!keyValid(key)) {
         throw new Error(`Key '${key}' is not defined`);
-    }
-
-    // If it's not a draftjs state, it's an array
-    if (Array.isArray(editorState)) {
-        return getDataFromArrayState(editorState, key);
     }
 
     return editorState
@@ -63,4 +52,8 @@ export function getCustomDataFromEditor(editorState, key) {
         .getFirstBlock()
         .getData()
         .get(key);
+}
+
+export function getCustomDataFromEditorRawState(rawState, key) {
+    return getCustomDataFromEditor(EditorState.createWithContent(convertFromRaw(rawState)), key);
 }

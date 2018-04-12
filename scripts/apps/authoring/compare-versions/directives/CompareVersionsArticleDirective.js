@@ -84,29 +84,34 @@ class LinkFunction {
      * in order to highlight the differences from oldItem
      */
     setVersionsDifference(item, oldItem) {
-        const fields = ['headline', 'abstract', 'body_footer', 'body_html', 'byline'];
+        this.content.getCustomFields().then((customFields) => {
+            const fields = ['headline', 'abstract', 'body_footer', 'body_html', 'byline'];
 
-        _.map(fields, (field) => {
-            if (item[field] || oldItem[field]) {
-                item[field] = this.highlightDifferences(item[field], oldItem[field]);
-            }
-        });
-
-        if (item.extra) {
-            _.map(this.content.allFields(), (field) => {
-                if (item.extra[field._id] || oldItem.extra[field._id]) {
-                    item.extra[field._id] = this.highlightDifferences(item.extra[field._id], oldItem.extra[field._id]);
+            _.map(fields, (field) => {
+                if (item[field] || oldItem[field]) {
+                    item[field] = this.highlightDifferences(item[field], oldItem[field]);
                 }
             });
-        }
 
-        if (item.associations && item.associations.featuremedia &&
-            oldItem.associations && oldItem.associations.featuremedia) {
-            item.associations.featuremedia.description_text = this.highlightDifferences(
-                item.associations.featuremedia.description_text,
-                oldItem.associations.featuremedia.description_text
-            );
-        }
+            if (item.extra) {
+                _.map(customFields, (field) => {
+                    if (item.extra[field._id] || oldItem.extra[field._id]) {
+                        item.extra[field._id] = this.highlightDifferences(
+                            item.extra[field._id],
+                            oldItem.extra[field._id]
+                        );
+                    }
+                });
+            }
+
+            if (item.associations && item.associations.featuremedia &&
+                oldItem.associations && oldItem.associations.featuremedia) {
+                item.associations.featuremedia.description_text = this.highlightDifferences(
+                    item.associations.featuremedia.description_text,
+                    oldItem.associations.featuremedia.description_text
+                );
+            }
+        });
     }
 
     /**

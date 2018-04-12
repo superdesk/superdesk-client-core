@@ -1,40 +1,44 @@
 <div class="widget" ng-controller="SuggestionsCtrl">
-    <ul class="notification-list white" ng-class="{ 'notification-list--empty': items.length === 0 }">
-        <li class="item" ng-repeat="item in items">
-            <div class="accepted pull-right">
-                <span class="label label--success" ng-show="item.resolutionInfo.accepted" translate>Accepted</span>
-                <span class="label label--alert" ng-show="!item.resolutionInfo.accepted" translate>Rejected</span>
-            </div>
-            <figure class="avatar">
-                <img sd-user-avatar data-user="users[item.suggestionInfo.author]">
-            </figure>
-            <div>{{users[item.suggestionInfo.author].display_name || users[item.suggestionInfo.author].username}}</div>
-            <div class="date" sd-absdate datetime="item.suggestionInfo.date"></div>
-            <div class="content" ng-show="item.suggestionInfo.type!=='REPLACE_SUGGESTION'">
-                <div class="text">
-                    <strong>{{getLocalizedTypeText(item.suggestionInfo.type, item.suggestionInfo.blockType)}}:</strong>
-                    <strong><em>"{{item.suggestionText}}"</em></strong>
+    <div class="notification-list white field" ng-repeat="annotationObj in items" class="item">
+        <h4 class="label label--large">{{annotationObj.fieldName}}</h4>
+
+        <ul ng-class="{ 'notification-list--empty': items.length === 0 }">
+            <li class="item" ng-repeat="item in annotationObj.suggestions">
+                <div class="accepted pull-right">
+                    <span class="label label--success" ng-show="item.resolutionInfo.accepted" translate>Accepted</span>
+                    <span class="label label--alert" ng-show="!item.resolutionInfo.accepted" translate>Rejected</span>
                 </div>
-            </div>
-            <div class="content" ng-show="item.suggestionInfo.type==='REPLACE_SUGGESTION'">
-                <div class="text">
-                    <strong translate>Replace: </strong>
-                    <strong><em>"{{item.oldText}}"</em></strong>
-                    <strong translate>with: </strong>
-                    <strong><em>"{{item.suggestionText}}"</em></strong>
+                <figure class="avatar">
+                    <img sd-user-avatar data-user="users[item.suggestionInfo.author]">
+                </figure>
+                <div>{{users[item.suggestionInfo.author].display_name || users[item.suggestionInfo.author].username}}</div>
+                <div class="date" sd-absdate datetime="item.suggestionInfo.date"></div>
+                <div class="content" ng-show="item.suggestionInfo.type!=='REPLACE_SUGGESTION'">
+                    <div class="text">
+                        <strong>{{getLocalizedTypeText(item.suggestionInfo.type, item.suggestionInfo.blockType)}}:</strong>
+                        <strong><em>"{{item.suggestionText}}"</em></strong>
+                    </div>
                 </div>
-            </div>
-            <div class="resolution">
-                <span ng-show="item.resolutionInfo.accepted" translate>Accepted by</span>
-                <span ng-show="!item.resolutionInfo.accepted" translate>Rejected by</span>
-                <span>{{users[item.resolutionInfo.resolverUserId].display_name || users[item.resolutionInfo.resolverUserId].username}} <span class="date" sd-absdate datetime="item.resolutionInfo.date"></span></span>
-            </div>
-        </li>
-        <li class="no-suggestions" ng-show="items.length === 0">
-            <div class="round-box">
-                <i class="big-icon--suggestion"></i>
-            </div>
-            <h3 translate>No suggestions have been resolved</h3>
-        </li>
-    </ul>
+                <div class="content" ng-show="item.suggestionInfo.type==='REPLACE_SUGGESTION'">
+                    <div class="text">
+                        <strong translate>Replace: </strong>
+                        <strong><em>"{{item.oldText}}"</em></strong>
+                        <strong translate>with: </strong>
+                        <strong><em>"{{item.suggestionText}}"</em></strong>
+                    </div>
+                </div>
+                <div class="resolution">
+                    <span ng-show="item.resolutionInfo.accepted" translate>Accepted by</span>
+                    <span ng-show="!item.resolutionInfo.accepted" translate>Rejected by</span>
+                    <span>{{users[item.resolutionInfo.resolverUserId].display_name || users[item.resolutionInfo.resolverUserId].username}} <span class="date" sd-absdate datetime="item.resolutionInfo.date"></span></span>
+                </div>
+            </li>
+            <li class="no-suggestions" ng-show="items.length === 0">
+                <div class="round-box">
+                    <i class="big-icon--suggestion"></i>
+                </div>
+                <h3 translate>No suggestions have been resolved</h3>
+            </li>
+        </ul>
+    </div>
 </div>

@@ -451,8 +451,7 @@ $editor-styleButton-size: 3rem;
 	cursor: text;
 	font-size: 16px;
 	line-height: 140%;
-	margin-top: 10px;
-        word-break: break-word;
+    word-break: break-word;
 }
 
 .Editor3-editor-single-line {
@@ -737,7 +736,6 @@ $editor-styleButton-size: 3rem;
 		box-shadow: none !important;
 		outline: none;
 		padding: 0 0.3rem;
-		margin: 0.6rem 0;
 		&--embed {
 			font-size: 1.3rem;
 			font-family: 'Roboto', Helvetica, sans-serif;

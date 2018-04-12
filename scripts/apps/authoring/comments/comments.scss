@@ -11,18 +11,7 @@
         background: $sd-background;
     }
 
-    .notification-list-box {
-        position: absolute;
-        top:12px;
-        bottom: $authoring-opened-articles + $scratchpad-closed;
-        left: 0; right: 0;
-    }
-
     .notification-list {
-        position: absolute;
-        bottom: 110px; top: 0; left: 0; right: 0;
-        padding: 0 12px;
-        height: auto;
         li {
           .date {
               margin-top: 3px !important;

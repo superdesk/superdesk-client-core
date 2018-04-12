@@ -62,6 +62,14 @@ export const LABEL_MAP = Object.freeze({
     priority: gettext('Priority'),
     urgency: gettext('Urgency'),
     anpa_category: gettext('Category'),
+    categories: gettext('Categories'),
+    desk: gettext('Desk'),
+    embargo: gettext('Embargo'),
+    footers: gettext('Footers'),
+    'package-story-labels': gettext('Package story labels'),
+    source: gettext('Source'),
+    stage: gettext('Stage'),
+    type: gettext('Type'),
     ingest_provider: gettext('Ingest Provider'),
     subject: gettext('Subject'),
     ednote: gettext('Editorial Note'),
@@ -82,6 +90,7 @@ export const LABEL_MAP = Object.freeze({
     keywords: gettext('Keywords'),
     language: gettext('Language'),
     usageterms: gettext('Usage Terms'),
+    sms_message: gettext('SMS Message')
 });
 
 export const HAS_FORMAT_OPTIONS = Object.freeze({

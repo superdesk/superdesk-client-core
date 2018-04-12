@@ -1,4 +1,4 @@
-import {LABEL_MAP} from 'apps/workspace/content/constants';
+import {getLabelForFieldId} from 'apps/workspace/helpers/getLabelForFieldId';
 /**
  * @ngdoc controller
  * @module superdesk.apps.content_filters
@@ -10,176 +10,164 @@ import {LABEL_MAP} from 'apps/workspace/content/constants';
  * @description Controller for the Filter Conditions tab, found on the Content Filters
  * settings page.
  */
-FilterConditionsController.$inject = ['$scope', 'contentFilters', 'notify', 'modal', '$filter'];
-export function FilterConditionsController($scope, contentFilters, notify, modal, $filter) {
-    $scope.filterConditions = null;
-    $scope.filterCondition = null;
-    $scope.origFilterCondition = null;
-    $scope.filterConditionParameters = null;
-    $scope.operatorLookup = {};
-    $scope.valueLookup = {};
-    $scope.valueFieldLookup = {};
-    $scope.loadedFilters = false;
-    var fieldsLabels = {};
-
-    $scope.edit = function(fc) {
-        $scope.origFilterCondition = fc || {};
-        $scope.filterCondition = _.create($scope.origFilterCondition);
-        $scope.filterCondition.values = [];
-
-        if ($scope.isListValue()) {
-            var values = $scope.filterCondition.value.split(',');
-            var allValues = $scope.valueLookup[$scope.filterCondition.field];
-            var valueField = $scope.valueFieldLookup[$scope.filterCondition.field];
-
-            _.each(values, (value) => {
-                var v = _.find(allValues, (val) => val[valueField].toString() === value);
-
-                $scope.filterCondition.values.push(v);
-            });
-        }
-    };
-
-    $scope.isListValue = function() {
-        return _.includes(['in', 'nin'], $scope.filterCondition.operator)
-            && $scope.valueLookup[$scope.filterCondition.field];
-    };
-
-    /**
-     * @ngdoc method
-     * @name FilterConditionsCtrl#isComparisonValue
-     * @public
-     * @description Checks if filter condition operator is one of the comparison operators
-     * @returns {Boolean}
-     */
-    $scope.isComparisonValue = function() {
-        return _.includes(['eq', 'ne', 'lt', 'lte', 'gt', 'gte'], $scope.filterCondition.operator)
-            && $scope.valueLookup[$scope.filterCondition.field];
-    };
-
-    /**
-     * @description label returns the display name for a key.
-     */
-    $scope.label = (id) => {
-        if (LABEL_MAP.hasOwnProperty(id)) {
-            return LABEL_MAP[id];
-        }
-
-        if (fieldsLabels.hasOwnProperty(id)) {
-            return gettext(fieldsLabels[id]);
-        }
-
-        return gettext(id.charAt(0).toUpperCase() + id.substr(1).toLowerCase());
-    };
-
-    $scope.cancel = function() {
-        $scope.origFilterCondition = null;
+FilterConditionsController.$inject = ['$scope', 'contentFilters', 'notify', 'modal', '$filter', 'content'];
+export function FilterConditionsController($scope, contentFilters, notify, modal, $filter, content) {
+    content.getCustomFields().then((customFields) => {
+        $scope.filterConditions = null;
         $scope.filterCondition = null;
-    };
+        $scope.origFilterCondition = null;
+        $scope.filterConditionParameters = null;
+        $scope.operatorLookup = {};
+        $scope.valueLookup = {};
+        $scope.valueFieldLookup = {};
+        $scope.loadedFilters = false;
 
-    $scope.save = function() {
-        $scope.filterCondition.value = getFilterValue();
-        delete $scope.filterCondition.values;
-        contentFilters.saveFilterCondition($scope.origFilterCondition, $scope.filterCondition)
-            .then(
-                () => {
-                    notify.success(gettext('Filter condition saved.'));
-                    $scope.cancel();
-                },
-                (response) => {
-                    if (angular.isDefined(response.data._issues)) {
-                        if (response.data._issues.name && response.data._issues.name.unique) {
-                            notify.error(gettext('Error: ' + gettext('Name needs to be unique')));
+        $scope.edit = function(fc) {
+            $scope.origFilterCondition = fc || {};
+            $scope.filterCondition = _.create($scope.origFilterCondition);
+            $scope.filterCondition.values = [];
+
+            if ($scope.isListValue()) {
+                var values = $scope.filterCondition.value.split(',');
+                var allValues = $scope.valueLookup[$scope.filterCondition.field];
+                var valueField = $scope.valueFieldLookup[$scope.filterCondition.field];
+
+                _.each(values, (value) => {
+                    var v = _.find(allValues, (val) => val[valueField].toString() === value);
+
+                    $scope.filterCondition.values.push(v);
+                });
+            }
+        };
+
+        $scope.isListValue = function() {
+            return _.includes(['in', 'nin'], $scope.filterCondition.operator)
+                && $scope.valueLookup[$scope.filterCondition.field];
+        };
+
+        /**
+         * @ngdoc method
+         * @name FilterConditionsCtrl#isComparisonValue
+         * @public
+         * @description Checks if filter condition operator is one of the comparison operators
+         * @returns {Boolean}
+         */
+        $scope.isComparisonValue = function() {
+            return _.includes(['eq', 'ne', 'lt', 'lte', 'gt', 'gte'], $scope.filterCondition.operator)
+                && $scope.valueLookup[$scope.filterCondition.field];
+        };
+
+        /**
+         * @description label returns the display name for a key.
+         */
+        $scope.label = (id) => getLabelForFieldId(id, customFields);
+
+        $scope.cancel = function() {
+            $scope.origFilterCondition = null;
+            $scope.filterCondition = null;
+        };
+
+        $scope.save = function() {
+            $scope.filterCondition.value = getFilterValue();
+            delete $scope.filterCondition.values;
+            contentFilters.saveFilterCondition($scope.origFilterCondition, $scope.filterCondition)
+                .then(
+                    () => {
+                        notify.success(gettext('Filter condition saved.'));
+                        $scope.cancel();
+                    },
+                    (response) => {
+                        if (angular.isDefined(response.data._issues)) {
+                            if (response.data._issues.name && response.data._issues.name.unique) {
+                                notify.error(gettext('Error: ' + gettext('Name needs to be unique')));
+                            } else {
+                                notify.error(gettext('Error: ' + JSON.stringify(response.data._issues)));
+                            }
+                        } else if (angular.isDefined(response.data._message)) {
+                            notify.error(gettext('Error: ' + response.data._message));
                         } else {
-                            notify.error(gettext('Error: ' + JSON.stringify(response.data._issues)));
+                            notify.error(gettext('Error: Failed to save filter condition.'));
                         }
-                    } else if (angular.isDefined(response.data._message)) {
+                    }
+                )
+                .then(fetchFilterConditions);
+        };
+
+        $scope.remove = function(filterCondition) {
+            modal.confirm(gettext('Are you sure you want to delete filter condition?'))
+                .then(() => contentFilters.remove(filterCondition))
+                .then((result) => {
+                    _.remove($scope.filterConditions, filterCondition);
+                }, (response) => {
+                    if (angular.isDefined(response.data._message)) {
                         notify.error(gettext('Error: ' + response.data._message));
                     } else {
-                        notify.error(gettext('Error: Failed to save filter condition.'));
+                        notify.error(gettext('There was an error. Filter condition cannot be deleted.'));
                     }
-                }
-            )
-            .then(fetchFilterConditions);
-    };
+                });
+        };
 
-    $scope.remove = function(filterCondition) {
-        modal.confirm(gettext('Are you sure you want to delete filter condition?'))
-            .then(() => contentFilters.remove(filterCondition))
-            .then((result) => {
-                _.remove($scope.filterConditions, filterCondition);
-            }, (response) => {
-                if (angular.isDefined(response.data._message)) {
-                    notify.error(gettext('Error: ' + response.data._message));
-                } else {
-                    notify.error(gettext('There was an error. Filter condition cannot be deleted.'));
-                }
-            });
-    };
+        var getFilterValue = function() {
+            if ($scope.isListValue()) {
+                var values = [];
 
-    var getFilterValue = function() {
-        if ($scope.isListValue()) {
-            var values = [];
-
-            _.each($scope.filterCondition.values, (value) => {
-                values.push(value[$scope.valueFieldLookup[$scope.filterCondition.field]]);
-            });
-            return values.join();
-        }
-
-        return $scope.filterCondition.value;
-    };
-
-    $scope.getFilterConditionSummary = function(filterCondition) {
-        var labels = [];
-
-        var values = filterCondition.value.split(',');
-
-        _.each(values, (value) => {
-            if ($scope.valueLookup[filterCondition.field]) {
-                var v = _.find($scope.valueLookup[filterCondition.field],
-                    (val) => val[$scope.valueFieldLookup[filterCondition.field]].toString() === value);
-
-                labels.push(v.name);
+                _.each($scope.filterCondition.values, (value) => {
+                    values.push(value[$scope.valueFieldLookup[$scope.filterCondition.field]]);
+                });
+                return values.join();
             }
-        });
 
-        var conditionValue = labels.length > 0 ? labels.join(', ') : filterCondition.value;
+            return $scope.filterCondition.value;
+        };
 
-        return '(' + filterCondition.field + ' ' + filterCondition.operator + ' ' + conditionValue + ')';
-    };
+        $scope.getFilterConditionSummary = function(filterCondition) {
+            var labels = [];
 
-    var fetchFilterConditions = function() {
-        contentFilters.getAllFilterConditions().then((_filterConditions) => {
-            $scope.filterConditions = $filter('sortByName')(_filterConditions);
-        });
+            var values = filterCondition.value.split(',');
 
-        contentFilters.getFilterConditionParameters().then((params) => {
-            $scope.filterConditionParameters = params;
-            _.each(params, (param) => {
-                $scope.operatorLookup[param.field] = param.operators;
-                $scope.valueLookup[param.field] = param.values;
-                $scope.valueFieldLookup[param.field] = param.value_field;
-                if (param.hasOwnProperty('label')) {
-                    fieldsLabels[param.field] = param.label;
+            _.each(values, (value) => {
+                if ($scope.valueLookup[filterCondition.field]) {
+                    var v = _.find($scope.valueLookup[filterCondition.field],
+                        (val) => val[$scope.valueFieldLookup[filterCondition.field]].toString() === value);
+
+                    labels.push(v.name);
                 }
             });
-            $scope.loadedFilters = true;
-        });
-    };
 
-    /**
-     * Triggered when the value of Field property changes and clears the existing values from the condition.
-     */
-    $scope.clearConditionValues = function() {
-        if ($scope.filterCondition.value) {
-            $scope.filterCondition.value = null;
-        }
+            var conditionValue = labels.length > 0 ? labels.join(', ') : filterCondition.value;
 
-        if ($scope.filterCondition.values && $scope.filterCondition.values.length > 0) {
-            $scope.filterCondition.values.length = 0;
-        }
-    };
+            return '(' + filterCondition.field + ' ' + filterCondition.operator + ' ' + conditionValue + ')';
+        };
 
-    fetchFilterConditions();
+        var fetchFilterConditions = function() {
+            contentFilters.getAllFilterConditions().then((_filterConditions) => {
+                $scope.filterConditions = $filter('sortByName')(_filterConditions);
+            });
+
+            contentFilters.getFilterConditionParameters().then((params) => {
+                $scope.filterConditionParameters = params;
+                _.each(params, (param) => {
+                    $scope.operatorLookup[param.field] = param.operators;
+                    $scope.valueLookup[param.field] = param.values;
+                    $scope.valueFieldLookup[param.field] = param.value_field;
+                });
+                $scope.loadedFilters = true;
+            });
+        };
+
+        /**
+         * Triggered when the value of Field property changes and clears the existing values from the condition.
+         */
+        $scope.clearConditionValues = function() {
+            if ($scope.filterCondition.value) {
+                $scope.filterCondition.value = null;
+            }
+
+            if ($scope.filterCondition.values && $scope.filterCondition.values.length > 0) {
+                $scope.filterCondition.values.length = 0;
+            }
+        };
+
+        fetchFilterConditions();
+    });
 }

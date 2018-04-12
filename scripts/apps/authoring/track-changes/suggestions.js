@@ -1,8 +1,11 @@
 import {
     editor3DataKeys,
-    getCustomDataFromEditor
+    getCustomDataFromEditorRawState
 } from 'core/editor3/helpers/editor3CustomData';
 import * as Highlights from 'core/editor3/helpers/highlights';
+
+import {getLabelForFieldId} from 'apps/workspace/helpers/getLabelForFieldId';
+import {fieldsMetaKeys, META_FIELD_NAME, getFieldMetadata, getFieldId} from '../../../core/editor3/helpers/fieldsMeta';
 
 function getAllUserIdsFromSuggestions(suggestions) {
     const users = [];
@@ -37,30 +40,41 @@ function getLocalizedTypeText(type, blockType) {
     return gettext(description) + space + gettext(blockStyleDescription);
 }
 
-SuggestionsCtrl.$inject = ['$scope', 'userList'];
-function SuggestionsCtrl($scope, userList) {
-    const editorState = $scope.item.editor_state;
+SuggestionsCtrl.$inject = ['$scope', 'userList', 'content'];
+function SuggestionsCtrl($scope, userList, content) {
+    content.getCustomFields().then((customFields) => {
+        const suggestions = Object.keys($scope.item[META_FIELD_NAME])
+            .map((contentKey) => ({
+                contentKey: contentKey,
+                [fieldsMetaKeys.draftjsState]: getFieldMetadata($scope.item, contentKey, fieldsMetaKeys.draftjsState)
+            }))
+            .filter((obj) => obj[fieldsMetaKeys.draftjsState] != null)
+            .map((obj) => (
+                {
+                    fieldName: getLabelForFieldId(getFieldId(obj.contentKey), customFields),
+                    suggestions: getCustomDataFromEditorRawState(
+                        obj[fieldsMetaKeys.draftjsState],
+                        editor3DataKeys.RESOLVED_SUGGESTIONS_HISTORY
+                    ) || []
+                }
+            ))
+            .filter((obj) => obj.suggestions.length > 0);
 
-    const suggestions =
-        getCustomDataFromEditor(
-            editorState,
-            editor3DataKeys.RESOLVED_SUGGESTIONS_HISTORY
-        ) || [];
+        if (suggestions.length === 0) {
+            $scope.items = [];
+            return;
+        }
 
-    if (suggestions.length === 0) {
-        $scope.items = [];
-        return;
-    }
+        const userIds = getAllUserIdsFromSuggestions([].concat(...suggestions.map((obj) => obj.suggestions)));
 
-    const userIds = getAllUserIdsFromSuggestions(suggestions);
+        userList.getAll()
+            .then((users) => {
+                $scope.users = convertUsersArrayToObject(filterUsers(users, userIds));
+                $scope.items = suggestions;
+            });
 
-    userList.getAll()
-        .then((users) => {
-            $scope.users = convertUsersArrayToObject(filterUsers(users, userIds));
-            $scope.items = suggestions;
-        });
-
-    $scope.getLocalizedTypeText = getLocalizedTypeText;
+        $scope.getLocalizedTypeText = getLocalizedTypeText;
+    });
 }
 
 angular
