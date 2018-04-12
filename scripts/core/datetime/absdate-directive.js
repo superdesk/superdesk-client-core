@@ -2,11 +2,12 @@
  * Display absolute date in <time> element
  *
  * Usage:
- * <span sd-absdate ng-model="user._created"></span>
+ * <span sd-absdate datetime="user._created"></span>
  *
  * Params:
- * param {object} ngModel - datetime string in utc
+ * @param {object} datetime - datetime string in utc
  */
+
 angular.module('superdesk.core.datetime.absdate', []).directive('sdAbsdate', ['gettextCatalog',
     function(gettextCatalog) {
         var COMPARE_FORMAT = 'YYYY-M-D';
@@ -16,16 +17,17 @@ angular.module('superdesk.core.datetime.absdate', []).directive('sdAbsdate', ['g
         var DISPLAY_TODAY_FORMAT = '[' + gettextCatalog.getString('Today') + '], ';
 
         return {
-            require: 'ngModel',
-            template: '<time datetime="{{ datetime }}">' +
-                '<span>{{ rday }}{{ rdate }}</span></time>',
-            link: function(scope, element, attrs, ngModel) {
-                ngModel.$render = function() {
-                    var date = moment.utc(ngModel.$viewValue);
-
-                    scope.datetime = date.toISOString();
+            scope: {
+                datetime: '='
+            },
+            template: '<time datetime="{{ datetimeIso }}"><span>{{ rday }}{{ rdate }}</span></time>',
+            link: function(scope) {
+                scope.$watch('datetime', (datetime) => {
+                    var date = moment.utc(scope.datetime);
 
                     date.local(); // switch to local time zone
+
+                    scope.datetimeIso = date.toISOString();
 
                     if (moment().format(COMPARE_FORMAT) === date.format(COMPARE_FORMAT)) {
                         scope.rday = date.format(DISPLAY_TODAY_FORMAT);
@@ -38,7 +40,7 @@ angular.module('superdesk.core.datetime.absdate', []).directive('sdAbsdate', ['g
                     } else {
                         scope.rdate = date.format(DISPLAY_DATE_FORMAT);
                     }
-                };
+                });
             }
         };
     }

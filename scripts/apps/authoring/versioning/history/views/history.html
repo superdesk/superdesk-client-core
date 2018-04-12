@@ -4,7 +4,7 @@
 
             <div ng-if="historyItem.operation === 'create'">
                 <strong>{{ :: 'Created by' | translate }}</strong> {{ :: historyItem.displayName }}
-                <em><time sd-absdate ng-model="historyItem._created"></time></em>
+                <em><time sd-absdate datetime="historyItem._created"></time></em>
                 <span ng-if="historyItems[$index-1].version !== historyItem.version && historyItem.version !== 0" class="version">
                     <span translate>version</span><span>: {{:: historyItem.version }}</span>
                 </span>
@@ -17,7 +17,7 @@
                 <strong ng-if="historyItem.update.operation === 'deschedule'">{{ :: 'Descheduled by' | translate }}</strong>
                 <strong ng-if="historyItem.update.operation !== 'deschedule'">{{ :: 'Updated by' | translate }}</strong>
                 {{ :: historyItem.displayName }}
-                <em><time sd-absdate ng-model="historyItem._created"></time></em>
+                <em><time sd-absdate datetime="historyItem._created"></time></em>
                 <span ng-if="historyItems[$index-1].version !== historyItem.version && historyItem.version !== 0" class="version">
                     <span translate>version</span><span>: {{:: historyItem.version }}</span>
                 </span>
@@ -28,7 +28,7 @@
 
             <div ng-if="historyItem.operation === 'duplicated_from'">
                 <strong>{{ :: 'Duplicated by' | translate }}</strong> {{ :: historyItem.displayName }}
-                <em><time sd-absdate ng-model="historyItem._created"></time></em>
+                <em><time sd-absdate datetime="historyItem._created"></time></em>
                 <span ng-if="historyItems[$index-1].version !== historyItem.version && historyItem.version !== 0" class="version">
                     <span translate>version</span><span>: {{:: historyItem.version }}</span>
                 </span>
@@ -39,7 +39,7 @@
 
             <div ng-if="historyItem.operation === 'translate'">
                 <strong>{{ :: 'Translated by' | translate }}</strong> {{ :: historyItem.displayName }}
-                <em><time sd-absdate ng-model="historyItem._created"></time></em>
+                <em><time sd-absdate datetime="historyItem._created"></time></em>
                 <span ng-if="historyItems[$index-1].version !== historyItem.version && historyItem.version !== 0" class="version">
                     <span translate>version</span><span>: {{:: historyItem.version }}</span>
                 </span>
@@ -50,7 +50,7 @@
 
             <div ng-if="historyItem.operation === 'duplicate'">
                 <strong>{{ :: 'Duplicate created by' | translate }}</strong> {{ :: historyItem.displayName }}
-                <em><time sd-absdate ng-model="historyItem._created"></time></em>
+                <em><time sd-absdate datetime="historyItem._created"></time></em>
                 <span ng-if="historyItems[$index-1].version !== historyItem.version && historyItem.version !== 0" class="version">
                     <span translate>version</span><span>: {{:: historyItem.version }}</span>
                 </span>
@@ -61,7 +61,7 @@
 
             <div ng-if="historyItem.operation === 'spike'">
                 <strong>{{ :: 'Spiked by' | translate }}</strong> {{ :: historyItem.displayName }}
-                <em><time sd-absdate ng-model="historyItem._created"></time></em>
+                <em><time sd-absdate datetime="historyItem._created"></time></em>
                 <span ng-if="historyItems[$index-1].version !== historyItem.version && historyItem.version !== 0" class="version">
                     <span translate>version</span><span>: {{:: historyItem.version }}</span>
                 </span>
@@ -75,7 +75,7 @@
                 <strong ng-if="historyItem.operation === 'move'">{{ :: 'Moved by' | translate }}</strong> 
                 <strong ng-if="historyItem.operation === 'fetch'">{{ :: 'Fetched by' | translate }}</strong> 
                 {{ :: historyItem.displayName }}
-                <em><time sd-absdate ng-model="historyItem._created"></time></em>
+                <em><time sd-absdate datetime="historyItem._created"></time></em>
                 <span ng-if="historyItems[$index-1].version !== historyItem.version && historyItem.version !== 0" class="version">
                     <span translate>version</span><span>: {{:: historyItem.version }}</span>
                 </span>
@@ -86,7 +86,7 @@
 
             <div ng-if="historyItem.operation === 'mark'">
                 <strong>{{ :: 'Marked by' | translate }}</strong> {{ :: historyItem.displayName }}
-                <em><time sd-absdate ng-model="historyItem._created"></time></em>
+                <em><time sd-absdate datetime="historyItem._created"></time></em>
                 <div ng-if="historyItems[$index-1].version !== historyItem.version && historyItem.version !== 0" class="version">
                     <span translate>version</span><span>: {{:: historyItem.version }}</span>
                 </div>
@@ -100,7 +100,7 @@
 
             <div ng-if="historyItem.operation === 'unmark'">
                 <strong>{{ :: 'Unmarked by' | translate }}</strong> {{ :: historyItem.displayName }}
-                <em><time sd-absdate ng-model="historyItem._created"></time></em>
+                <em><time sd-absdate datetime="historyItem._created"></time></em>
                 <div ng-if="historyItems[$index-1].version !== historyItem.version && historyItem.version !== 0" class="version">
                     <span translate>version</span><span>: {{:: historyItem.version }}</span>
                 </div>
@@ -114,7 +114,7 @@
 
             <div ng-if="historyItem.operation === 'export_highlight'">
                 <strong>{{ :: 'Exported by' | translate }}</strong> {{ :: historyItem.displayName }}
-                <em><time sd-absdate ng-model="historyItem._created"></time></em>
+                <em><time sd-absdate datetime="historyItem._created"></time></em>
                 <div ng-if="historyItems[$index-1].version !== historyItem.version && historyItem.version !== 0" class="version">
                     <span translate>version</span><span>: {{:: historyItem.version }}</span>
                 </div>
@@ -132,7 +132,7 @@
                 <strong ng-if="historyItem.operation === 'take'">{{ :: 'Take created by' | translate }}</strong> 
                 <strong ng-if="historyItem.operation === 'reopen'">{{ :: 'Reopened by' | translate }}</strong> 
                 {{ :: historyItem.displayName }}
-                <em><time sd-absdate ng-model="historyItem._created"></time></em>
+                <em><time sd-absdate datetime="historyItem._created"></time></em>
                 <span ng-if="historyItems[$index-1].version !== historyItem.version && historyItem.version !== 0" class="version">
                     <span translate>version</span><span>: {{:: historyItem.version }}</span>
                 </span>
@@ -146,7 +146,7 @@
 
             <div ng-if="historyItem.operation === 'unlink'">
                 <strong>{{ :: 'Unlinked by' | translate }}</strong> {{ :: historyItem.displayName }}
-                <em><time sd-absdate ng-model="historyItem._created"></time></em>
+                <em><time sd-absdate datetime="historyItem._created"></time></em>
                 <span ng-if="historyItems[$index-1].version !== historyItem.version && historyItem.version !== 0" class="version">
                     <span translate>version</span><span>: {{:: historyItem.version }}</span>
                 </span>
@@ -163,7 +163,7 @@
 
             <div ng-if="historyItem.operation === 'rewrite'">
                 <strong>{{ :: 'Rewritten by' | translate }}</strong> {{ :: historyItem.displayName }}
-                <em><time sd-absdate ng-model="historyItem._created"></time></em>
+                <em><time sd-absdate datetime="historyItem._created"></time></em>
                 <span ng-if="historyItems[$index-1].version !== historyItem.version && historyItem.version !== 0" class="version">
                     <span translate>version</span><span>: {{:: historyItem.version }}</span>
                 </span>
@@ -179,7 +179,7 @@
                 <strong ng-if="historyItem.operation === 'kill'">{{ :: 'Killed by' | translate }}</strong> 
                 <strong ng-if="historyItem.operation === 'resend'">{{ :: 'Resent by' | translate }}</strong> 
                 {{ :: historyItem.displayName }}
-                <em><time sd-absdate ng-model="historyItem._created"></time></em>
+                <em><time sd-absdate datetime="historyItem._created"></time></em>
                 <span ng-if="historyItems[$index-1].version !== historyItem.version && historyItem.version !== 0" class="version">
                     <span translate>version</span><span>: {{:: historyItem.version }}</span>
                 </span>

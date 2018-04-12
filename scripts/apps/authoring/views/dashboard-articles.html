@@ -11,7 +11,7 @@
                 <a class="card-box__full-click" ng-click="edit(article, $event)" ng-href="{{ :: link(article)}}"></a>
                 <span class="close cardbox__close" ng-click="closeItem(article)"><i class="icon-close-small icon--white"></i></span>
                 <div class="card-box__header card-box__header--padded-flex">
-                    <i title="{{article.type}}" class="filetype-icon-{{article.type}} icon--white"></i><time class="card-box__time-date card-box__time-date--reverse-color" sd-reldate-complex ng-model="article.versioncreated"></time>
+                    <i title="{{article.type}}" class="filetype-icon-{{article.type}} icon--white"></i><time class="card-box__time-date card-box__time-date--reverse-color" sd-reldate-complex datetime="article.versioncreated"></time>
                 </div>
 
 
