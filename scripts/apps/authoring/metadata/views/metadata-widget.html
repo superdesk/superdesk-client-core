@@ -86,7 +86,7 @@
             </li>
             <li ng-if="item.expiry">
                 <label translate>Expiry</label>
-                <div class="data" sd-reldate-complex ng-model="item.expiry"></div>
+                <div class="data" sd-reldate-complex datetime="item.expiry"></div>
             </li>
             <li class="auto">
                 <label translate>GUID</label>
@@ -148,7 +148,7 @@
                 </li>
                 <li ng-if="item.task.due_date" class="wider">
                     <label translate>Due date</label>
-                    <div class="data" sd-reldate-complex ng-model="item.task.due_date"></div>
+                    <div class="data" sd-reldate-complex datetime="item.task.due_date"></div>
                 </li>
                 <li ng-if="item.task.desk">
                     <label translate>Desk</label>

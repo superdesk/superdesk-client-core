@@ -9,7 +9,7 @@
                 <img sd-user-avatar data-user="users[item.suggestionInfo.author]">
             </figure>
             <div>{{users[item.suggestionInfo.author].display_name || users[item.suggestionInfo.author].username}}</div>
-            <div class="date" sd-absdate ng-model="item.suggestionInfo.date"></div>
+            <div class="date" sd-absdate datetime="item.suggestionInfo.date"></div>
             <div class="content" ng-show="item.suggestionInfo.type!=='REPLACE_SUGGESTION'">
                 <div class="text">
                     <strong>{{getLocalizedTypeText(item.suggestionInfo.type, item.suggestionInfo.blockType)}}:</strong>
@@ -27,7 +27,7 @@
             <div class="resolution">
                 <span ng-show="item.resolutionInfo.accepted" translate>Accepted by</span>
                 <span ng-show="!item.resolutionInfo.accepted" translate>Rejected by</span>
-                <span>{{users[item.resolutionInfo.resolverUserId].display_name || users[item.resolutionInfo.resolverUserId].username}} <span class="date" sd-absdate ng-model="item.resolutionInfo.date"></span></span>
+                <span>{{users[item.resolutionInfo.resolverUserId].display_name || users[item.resolutionInfo.resolverUserId].username}} <span class="date" sd-absdate datetime="item.resolutionInfo.date"></span></span>
             </div>
         </li>
         <li class="no-suggestions" ng-show="items.length === 0">
