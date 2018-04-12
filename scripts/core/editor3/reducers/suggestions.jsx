@@ -5,6 +5,7 @@ import {changeSuggestionsTypes, styleSuggestionsTypes} from '../highlightsConfig
 import * as Highlights from '../helpers/highlights';
 import {initSelectionIterator, hasNextSelection} from '../helpers/selectionIterator';
 import {editor3DataKeys, getCustomDataFromEditor, setCustomDataForEditor} from '../helpers/editor3CustomData';
+import * as Blocks from '../helpers/blocks';
 import ng from 'core/services/ng';
 
 
@@ -511,13 +512,15 @@ const resetSuggestion = (editorState, style) => {
  * @description Delete the current character.
  */
 const deleteCharacter = (editorState, style = null) => {
-    let content;
-    let selection;
-    let newState;
+    let newState = Highlights.changeEditorSelection(editorState, -1, 0, false);
+    let content = newState.getCurrentContent();
+    const selection = newState.getSelection();
+    const block = content.getBlockForKey(selection.getStartKey());
 
-    newState = Highlights.changeEditorSelection(editorState, -1, 0, false);
-    content = newState.getCurrentContent();
-    selection = newState.getSelection();
+    if (block.getLength() === 1) {
+        // when only one character on block, delete the whole block
+        return Blocks.removeBlock(editorState, block.getKey());
+    }
 
     content = Modifier.removeRange(content, selection, 'forward');
 

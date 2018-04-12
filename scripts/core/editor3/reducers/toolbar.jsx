@@ -1,7 +1,8 @@
-import {RichUtils, EditorState, SelectionState, Modifier} from 'draft-js';
+import {RichUtils, EditorState} from 'draft-js';
 import * as entityUtils from '../components/links/entityUtils';
 import {onChange} from './editor3';
 import insertAtomicBlockWithoutEmptyLines from '../helpers/insertAtomicBlockWithoutEmptyLines';
+import * as Blocks from '../helpers/blocks';
 
 /**
  * @description Contains the list of toolbar related reducers.
@@ -181,22 +182,7 @@ const updateImage = (state, {entityKey, media}) => {
  */
 const removeBlock = (state, {blockKey}) => {
     const {editorState} = state;
-    const contentState = editorState.getCurrentContent();
-
-    const targetRange = new SelectionState({
-        anchorKey: blockKey,
-        anchorOffset: 0,
-        focusKey: blockKey,
-        focusOffset: 1
-    });
-    let newContentState = Modifier.setBlockType(
-        contentState,
-        targetRange,
-        'unstyled'
-    );
-
-    newContentState = Modifier.removeRange(newContentState, targetRange, 'backward');
-    const newEditorState = EditorState.push(editorState, newContentState, 'remove-range');
+    const newEditorState = Blocks.removeBlock(editorState, blockKey);
 
     return onChange(state, newEditorState);
 };
