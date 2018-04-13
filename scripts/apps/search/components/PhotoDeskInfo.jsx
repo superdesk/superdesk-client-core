@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {createMarkUp} from '../helpers';
 import * as fields from '../components/fields';
-import {getAngularService} from '../../../core/utils';
+import ng from 'core/services/ng';
 import {connectPromiseResults} from '../../../core/helpers/ReactRenderAsync';
 import {getLabelForFieldId} from 'apps/workspace/helpers/getLabelForFieldId';
 
@@ -55,7 +55,7 @@ PhotoDeskInfoComponent.propTypes = {
     customFields: PropTypes.array
 };
 
-const getPromises = () => [getAngularService('content').getCustomFields()];
+const getPromises = () => [ng.get('content').getCustomFields()];
 const mapPromisesToProps = (customFields) => ({customFields});
 
 export const PhotoDeskInfo = connectPromiseResults(getPromises, mapPromisesToProps)(PhotoDeskInfoComponent);
