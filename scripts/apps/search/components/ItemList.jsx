@@ -12,7 +12,14 @@ export class ItemList extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {itemsList: [], itemsById: {}, selected: null, view: 'mgrid', narrow: false, bindedShortcuts: []};
+        this.state = {
+            itemsList: [],
+            itemsById: {},
+            selected: null,
+            view: 'compact',
+            narrow: false,
+            bindedShortcuts: []
+        };
 
         this.multiSelect = this.multiSelect.bind(this);
         this.select = this.select.bind(this);
@@ -447,7 +454,9 @@ export class ItemList extends React.Component {
             'ul',
             {
                 className: classNames(
-                    this.state.view === 'photogrid' ? 'sd-grid-list' : this.state.view + '-view list-view',
+                    this.state.view === 'photogrid' ?
+                        'sd-grid-list' :
+                        (this.state.view || 'compact') + '-view list-view',
                     {'list-without-items': isEmpty}
                 ),
                 onClick: this.closeActionsMenu
