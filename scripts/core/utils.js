@@ -3,3 +3,9 @@ export function stripHtmlTags(value) {
 
     return value ? String(value).replace(htmlRegex, '') : '';
 }
+
+export function getAngularService(name) {
+    return angular.element(document.body)
+        .injector()
+        .get(name);
+}

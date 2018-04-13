@@ -1,37 +1,61 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {createMarkUp} from '../helpers';
+import * as fields from '../components/fields';
+import {getAngularService} from '../../../core/utils';
+import {connectPromiseResults} from '../../../core/helpers/ReactRenderAsync';
+import {getLabelForFieldId} from 'apps/workspace/helpers/getLabelForFieldId';
+
+import {DEFAULT_GRID_VIEW_FIELDS_CONFIG} from 'apps/search/constants';
+
+/* globals __SUPERDESK_CONFIG__: true */
+const gridViewFieldsConfig = __SUPERDESK_CONFIG__.gridViewFields || DEFAULT_GRID_VIEW_FIELDS_CONFIG;
 
 /**
  * PhotoDesk Info - renders item metadata
  */
-export function PhotoDeskInfo(props) {
-    const {gettextCatalog, datetime} = props.svc;
+function PhotoDeskInfoComponent(props) {
+    const {datetime} = props.svc;
 
     const item = props.item;
-
-    let source;
-
-    if (item.source) {
-        source = (
-            <div className="sd-grid-item__content-block">
-                <span className="sd-grid-item__text-label">{gettextCatalog.getString('source')}</span>
-                <span className="sd-grid-item__text-strong">{item.source}</span>
-            </div>
-        );
-    }
 
     return (
         <div className="sd-grid-item__content">
             <time>{datetime.longFormat(item.versioncreated)}</time>
             <span className="sd-grid-item__slugline"
                 dangerouslySetInnerHTML={createMarkUp(item.headline || item.slugline || item.type)} />
-            {source}
+            {
+                gridViewFieldsConfig
+                    .map((fieldId) => {
+                        const value = typeof fields[fieldId] === 'function'
+                            ? fields[fieldId]({item: item, svc: props.svc})
+                            : item[fieldId] || (item.extra == null ? null : item.extra[fieldId]);
+
+                        if (value == null) {
+                            return null;
+                        }
+
+                        return (
+                            <div key={fieldId} className="sd-grid-item__content-block">
+                                <span className="sd-grid-item__text-label">
+                                    {getLabelForFieldId(fieldId, props.customFields)}:
+                                </span>
+                                <span className="sd-grid-item__text-strong">{value}</span>
+                            </div>
+                        );
+                    })
+            }
         </div>
     );
 }
 
-PhotoDeskInfo.propTypes = {
+PhotoDeskInfoComponent.propTypes = {
     svc: PropTypes.object.isRequired,
-    item: PropTypes.any
+    item: PropTypes.any,
+    customFields: PropTypes.array
 };
+
+const getPromises = () => [getAngularService('content').getCustomFields()];
+const mapPromisesToProps = (customFields) => ({customFields});
+
+export const PhotoDeskInfo = connectPromiseResults(getPromises, mapPromisesToProps)(PhotoDeskInfoComponent);
