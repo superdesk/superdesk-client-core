@@ -1,5 +1,51 @@
 # Superdesk Client Changelog
 
+## [1.16.0] 2018-04-13
+
+### Fixed
+
+- Fix paste performance on editor3 in suggestion mode.
+- Fix the reject suggestion that contain a list.
+- Fix absdate/reldate directives not having isolate scope.
+- Improve UI for Contant info cards.
+- Remove all suggestions when pressing DELETE key in suggestion mode.
+- Email link in media contacts should invoke mail agent.
+- Fix scrolling while dragging media in firefox on editor3.
+- Remove highlight object after resolving a suggestion.
+- Fix invalid HTML tag in generated html for blockquote.
+- Fix missing search parameters for scanpix.
+- Fix wrong permission checked for Send to action.
+- Fix validating unresolved suggestions on publishing.
+- Make search provider labels consistent.
+- Typing inside editor highlights should expand the highlight and not split it.
+- Fix missing vocabularies.
+- UI improvements for image carousel.
+- Fetch all content types and custom fields when needed.
+- Fix the conversion from html to draftjs.
+- Show correctly the replace suggestion on replace list.
+- Fix the reject suggestions on editor3.
+
+### Added
+
+- Add photo grid view to global search.
+- Allow custom z-index in three-dot-menu popup (planning).
+- Add search provider config for opening advanced search by default.
+- Add default view to desk settings.
+- Add default calendar to user preferences (planning).
+- Add `authoring:publish` extension point in send to panel.
+- Add tooltip to subject dropdown.
+- Add `Send to` to action menu.
+- Include annotations in html generated from editor3.
+- Hide authoring container if `flags.authoring` is `false`.
+- Add support for block style suggestions.
+
+### Changed
+
+- Make desk monitoring view setting use radio buttons instead of dropdown.
+- Make suggestions work on any custom text field.
+- Refactor vocabulary items UI using React.
+- Show absolute date on inline comments history.
+
 ## [1.15.0] 2018-03-28
 
 ### Fixed
