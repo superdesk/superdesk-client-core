@@ -1,5 +1,9 @@
 {
     "compilerOptions": {
-        "baseUrl": "./scripts",
-    }
+        "target": "es6",
+        "jsx": "preserve"
+    },
+    "exclude": [
+        "node_modules"
+    ]
 }
