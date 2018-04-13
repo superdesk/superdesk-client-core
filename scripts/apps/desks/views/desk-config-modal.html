@@ -87,19 +87,16 @@
                                 <p style="color: gray">
                                 <i class="icon-info-sign icon--blue"></i> {{ :: 'You can choose the default content view of your desk. Use only if you want to override individual users\' monitoring view preferences. Select "none" if you want to let users decide.' | translate }}
                                 </p>
-                                <div class="dropdown" dropdown>
-                                    <button class="btn btn--hollow dropdown__toggle" dropdown__toggle translate>
-                                        {{ monitoringViews[desk.edit.monitoring_default_view || ''].label }}
-                                        <span class="dropdown__caret"></span>
-                                    </button>
-                                    <ul class="dropdown__menu">
-                                        <li ng-repeat="(viewId, view) in monitoringViews">
-                                            <button ng-click="desk.edit.monitoring_default_view = viewId">
-                                                <i ng-if="view.icon" class="icon-{{view.icon}}" ng-style="{{viewId === 'swimlane'}} ? {transform: 'rotate(90deg)'} : {}"></i>{{ view.label }}
-                                            </button>
-                                        </li>
-                                    </ul>
-                                </div>
+                                <sd-check
+                                    ng-repeat="(viewId, view) in monitoringViews"
+                                    type="radio"
+                                    label-position="inside"
+                                    ng-model="desk.edit.monitoring_default_view"
+                                    ng-click="desk.edit.monitoring_default_view = viewId"
+                                    ng-value="{{viewId}}"
+                                    >
+                                    {{ view.label }}
+                                </sd-check>
                             </div>
                         </div>
                     </div>
