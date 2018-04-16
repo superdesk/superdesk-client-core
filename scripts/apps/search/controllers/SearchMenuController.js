@@ -3,6 +3,11 @@ SearchMenuController.$inject = ['$rootScope', '$filter', '$location', '$route', 
 export default function SearchMenuController($rootScope, $filter, $location, $route, searchProviderService, api) {
     let providerLabels = {};
 
+    const SUPERDESK_PROVIDER = {
+        _id: '',
+        name: 'Superdesk',
+    };
+
     /**
      * Activate search shortcut
      *
@@ -18,15 +23,29 @@ export default function SearchMenuController($rootScope, $filter, $location, $ro
     /**
      * Get provider label
      *
+     * Keep it undefined until there is some value so one time watch will work.
+     *
      * @param {Object} provider
      */
-    this.providerLabel = (provider) => provider && (provider.name || providerLabels[provider.source]) || '';
+    this.providerLabel = (provider) => provider && (provider.name || providerLabels[provider.source]) || undefined;
 
     // init search providers
     if ($rootScope.config && $rootScope.config.features && $rootScope.config.features.searchShortcut) {
-        api.search_providers.query({max_results: 200})
+        api.search_providers.query({max_results: 200, is_closed: {$ne: true}})
             .then((result) => {
                 this.providers = $filter('sortByName')(result._items, 'search_provider');
+
+                const defaultProvider = this.providers.find((provider) => provider.is_default);
+
+                if (defaultProvider) {
+                    this.providers = this.providers.filter((provider) => provider !== defaultProvider);
+                    this.providers.unshift(SUPERDESK_PROVIDER);
+                    this.providers.unshift(defaultProvider);
+                } else {
+                    this.providers.unshift(SUPERDESK_PROVIDER);
+                }
+
+                console.info('providers', this.providers);
             });
 
         searchProviderService.getAllowedProviderTypes()
