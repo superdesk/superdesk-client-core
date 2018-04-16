@@ -187,7 +187,8 @@ export class Editor3Component extends React.Component {
      * @description Handles key commands in the editor.
      */
     handleKeyCommand(command) {
-        const {editorState, onChange, singleLine, suggestingMode, onCreateDeleteSuggestion} = this.props;
+        const {editorState, onChange, singleLine, suggestingMode} = this.props;
+        const {onCreateSplitParagraphSuggestion, onCreateDeleteSuggestion} = this.props;
 
         if (singleLine && command === 'split-block') {
             return 'handled';
@@ -198,6 +199,20 @@ export class Editor3Component extends React.Component {
         switch (command) {
         case 'soft-newline':
             newState = RichUtils.insertSoftNewline(editorState);
+            break;
+        case 'split-block':
+            // prevent the edit of a suggestion after and before current position
+            if (!this.allowEditSuggestion('delete')
+                && !this.allowEditSuggestion('backspace')) {
+                return 'handled';
+            }
+
+            if (suggestingMode) {
+                onCreateSplitParagraphSuggestion();
+                return 'handled';
+            }
+
+            newState = RichUtils.handleKeyCommand(editorState, command);
             break;
         case 'delete':
             // prevent the edit of a suggestion after current position
@@ -407,6 +422,7 @@ Editor3Component.propTypes = {
     onCreateAddSuggestion: PropTypes.func,
     onCreateDeleteSuggestion: PropTypes.func,
     onPasteFromSuggestingMode: PropTypes.func,
+    onCreateSplitParagraphSuggestion: PropTypes.func,
     svc: PropTypes.object,
     invisibles: PropTypes.bool,
     highlights: PropTypes.object,

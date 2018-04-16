@@ -61,6 +61,13 @@ export const highlightsConfig = {
         draftStyleMap: {
             backgroundColor: 'rgba(100, 235, 59, 0.2)'
         }
+    },
+    SPLIT_PARAGRAPH_SUGGESTION: {
+        type: 'SPLIT',
+        description: gettext('Split paragraph'),
+        draftStyleMap: {
+            backgroundColor: 'rgba(100, 235, 59, 0.2)'
+        }
     }
 };
 
@@ -81,4 +88,9 @@ export const styleSuggestionsTypes = Object.keys(highlightsConfig).filter(
     (key) => highlightsConfig[key].type === 'STYLE'
 );
 
-export const suggestionsTypes = [...changeSuggestionsTypes, ...styleSuggestionsTypes, 'BLOCK_STYLE_SUGGESTION'];
+export const suggestionsTypes = [
+    ...changeSuggestionsTypes,
+    ...styleSuggestionsTypes,
+    'BLOCK_STYLE_SUGGESTION',
+    'SPLIT_PARAGRAPH_SUGGESTION'
+];

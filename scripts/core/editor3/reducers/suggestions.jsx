@@ -21,6 +21,8 @@ const suggestions = (state = {}, action) => {
         return createChangeStyleSuggestion(state, action.payload);
     case 'CREATE_CHANGE_BLOCK_STYLE_SUGGESTION':
         return createChangeBlockStyleSuggestion(state, action.payload);
+    case 'CREATE_SPLIT_PARAGRAPH_SUGGESTION':
+        return createSplitParagraphSuggestion(state, action.payload);
     case 'PASTE_ADD_SUGGESTION':
         return pasteAddSuggestion(state, action.payload);
     case 'ACCEPT_SUGGESTION':
@@ -168,7 +170,7 @@ function applyStyleSuggestion(editorState, type, data) {
  * @param {String} blockType - the suggestion block type
  * @param {Object} data - info about the author of suggestion
  * @return {Object} returns new state
- * @description Add a new suggestion of type ADD.
+ * @description Add a new suggestion of type change block style.
  */
 const createChangeBlockStyleSuggestion = (state, {blockType, data}) => {
     let {editorState} = state;
@@ -236,6 +238,42 @@ function sanitizeContent(content) {
 
     return output;
 }
+
+/**
+ * @ngdoc method
+ * @name createSplitParagraphSuggestion
+ * @param {Object} state
+ * @param {Object} data - info about the author of suggestion
+ * @return {Object} returns new state
+ * @description Add a new suggestion of type split block.
+ */
+const createSplitParagraphSuggestion = (state, {data}) => {
+    let {editorState} = state;
+    let content = editorState.getCurrentContent();
+    const selection = editorState.getSelection();
+
+    content = Modifier.splitBlock(content, selection);
+    const type = 'SPLIT_PARAGRAPH_SUGGESTION';
+    const block = content.getBlockAfter(selection.getStartKey());
+    let blockSelection = selection.merge({
+        anchorOffset: 0,
+        anchorKey: block.getKey(),
+        focusOffset: block.getLength(),
+        focusKey: block.getKey(),
+        isBackward: false
+    });
+
+    editorState = EditorState.push(editorState, content, 'split-block');
+    editorState = EditorState.acceptSelection(editorState, blockSelection);
+    editorState = applyStyleSuggestion(editorState, type, data);
+
+    blockSelection = blockSelection.merge({
+        focusOffset: 0
+    });
+    editorState = EditorState.acceptSelection(editorState, blockSelection);
+
+    return saveEditorStatus(state, editorState, 'change-inline-style', false);
+};
 
 /**
  * @ngdoc method
@@ -336,6 +374,38 @@ function moveToSuggestionsHistory(editorState, suggestion, accepted) {
 
 /**
  * @ngdoc method
+ * @name processSplitSuggestion
+ * @param {Object} state
+ * @param {Object} suggestion
+ * @param {Boolean} accepted - the suggestion is accepted
+ * @return {Object} returns new state
+ * @description Accept or reject the split suggestions in the selection.
+ */
+const processSplitSuggestion = (state, suggestion, accepted) => {
+    const {selection} = suggestion;
+    let {editorState} = state;
+
+    editorState = moveToSuggestionsHistory(editorState, suggestion, accepted);
+    if (!accepted) {
+        let content = editorState.getCurrentContent();
+        let block = content.getBlockBefore(selection.getStartKey());
+        let newSelection = selection.merge({
+            anchorOffset: 0,
+            anchorKey: selection.getStartKey(),
+            focusOffset: block.getLength(),
+            focusKey: block.getKey(),
+            isBackward: true
+        });
+
+        content = Modifier.removeRange(content, newSelection, 'backward');
+        editorState = EditorState.push(editorState, content, 'remove-range');
+    }
+
+    return saveEditorStatus(state, editorState, 'change-inline-style', false);
+};
+
+/**
+ * @ngdoc method
  * @name processSuggestion
  * @param {Object} state
  * @param {Object} suggestion
@@ -349,7 +419,11 @@ const processSuggestion = (state, {suggestion}, accepted) => {
     let style;
     let data;
 
-    editorState = EditorState.acceptSelection(editorState, suggestion.selection);
+    if (suggestion.type === 'SPLIT_PARAGRAPH_SUGGESTION') {
+        return processSplitSuggestion(state, suggestion, accepted);
+    }
+
+    editorState = EditorState.acceptSelection(editorState, selection);
 
     if (suggestion.type === 'BLOCK_STYLE_SUGGESTION') {
         editorState = moveToSuggestionsHistory(editorState, suggestion, accepted);

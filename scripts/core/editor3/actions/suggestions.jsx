@@ -81,6 +81,23 @@ export function createChangeBlockStyleSuggestion(type) {
 
 /**
  * @ngdoc method
+ * @name createSplitParagraphSuggestion
+ * @param {String} blockKey
+ * @param {String} blockOffset
+ * @return {Object} action
+ * @description add a new suggestion of type split paragraph.
+ */
+export function createSplitParagraphSuggestion(blockKey, blockOffset) {
+    return {
+        type: 'CREATE_SPLIT_PARAGRAPH_SUGGESTION',
+        payload: {
+            data: getSuggestionMetadata()
+        }
+    };
+}
+
+/**
+ * @ngdoc method
  * @name acceptSuggestion
  * @param {Object} selection
  * @return {Object} action
