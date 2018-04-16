@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {promiseAllObject} from 'core/utils';
 
 class ReactRenderAsync extends React.Component {
     constructor(props) {
@@ -11,11 +12,11 @@ class ReactRenderAsync extends React.Component {
         };
     }
     componentWillMount() {
-        Promise.all(this.props.promises)
-            .then((res) => {
+        promiseAllObject(this.props.promises)
+            .then((result) => {
                 this.setState({
                     loading: false,
-                    mappedProps: this.props.mapPromiseResultsToProps.apply(null, res)
+                    mappedProps: result
                 });
             })
             .catch((err) => {
@@ -33,20 +34,18 @@ class ReactRenderAsync extends React.Component {
 }
 
 ReactRenderAsync.propTypes = {
-    promises: PropTypes.array,
-    mapPromiseResultsToProps: PropTypes.func,
+    promises: PropTypes.object,
     component: PropTypes.func,
     originalProps: PropTypes.object,
 };
 
 /* eslint-disable react/no-multi-comp */
-export function connectPromiseResults(getPromises, mapPromiseResultToProps) {
+export function connectPromiseResults(getPromises) {
     return function(component) {
         return function connectPromiseComponent(props) {
             return (
                 <ReactRenderAsync
                     promises={getPromises()}
-                    mapPromiseResultsToProps={mapPromiseResultToProps}
                     component={component}
                     originalProps={props}
                 />
