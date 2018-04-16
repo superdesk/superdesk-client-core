@@ -6,7 +6,7 @@ import {getDraftCharacterListForSelection} from './getDraftCharacterListForSelec
 import {getDraftSelectionForEntireContent} from './getDraftSelectionForEntireContent';
 import {resizeDraftSelection} from './resizeDraftSelection';
 import {clearInlineStyles} from './clearInlineStyles';
-import {suggestionsTypes, changeSuggestionsTypes, blockStylesDescription} from '../highlightsConfig';
+import {changeSuggestionsTypes, blockStylesDescription} from '../highlightsConfig';
 
 export const availableHighlights = Object.keys(highlightsConfig).reduce((obj, key) => {
     obj[key] = highlightsConfig[key].draftStyleMap;
@@ -820,18 +820,6 @@ export function getSuggestionData(editorState, styleName) {
         oldText: data.suggestionText,
         selection: suggestionSelection
     };
-}
-
-export function fieldHasUnresolvedSuggestions(editorState) {
-    const highlights = getHighlightsState(editorState);
-
-    if (!highlights.highlightsData) {
-        return false;
-    }
-
-    return Object.keys(highlights.highlightsData || {})
-        .filter((key) => suggestionsTypes.find((suggestionType) => key.indexOf(suggestionType) === 0))
-        .length > 0;
 }
 
 /**

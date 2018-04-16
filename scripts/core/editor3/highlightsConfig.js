@@ -94,3 +94,8 @@ export const suggestionsTypes = [
     'BLOCK_STYLE_SUGGESTION',
     'SPLIT_PARAGRAPH_SUGGESTION'
 ];
+
+export const isSuggestion = (highlightId) => suggestionsTypes.find(
+    (suggestionType) => highlightId.indexOf(suggestionType) === 0
+) != null;
+

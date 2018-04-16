@@ -1,10 +1,7 @@
 import {stripHtmlTags} from 'core/utils';
-import {fieldHasUnresolvedSuggestions} from 'core/editor3/helpers/highlights';
-
-import {initializeHighlights} from 'core/editor3/helpers/highlights';
-import {EditorState, convertFromRaw} from 'draft-js';
-import {META_FIELD_NAME} from 'core/editor3/helpers/fieldsMeta';
-
+import {editor3DataKeys, getCustomDataFromEditorRawState} from 'core/editor3/helpers/editor3CustomData';
+import {META_FIELD_NAME, fieldsMetaKeys, getFieldMetadata} from 'core/editor3/helpers/fieldsMeta';
+import {isSuggestion} from 'core/editor3/highlightsConfig';
 
 export const CONTENT_FIELDS_DEFAULTS = Object.freeze({
     headline: '',
@@ -191,23 +188,17 @@ export function stripWhitespaces(item) {
 }
 
 export function itemHasUnresolvedSuggestions(item) {
-    return Object.keys(item)
-        .filter((fieldName) => {
-            const fieldValue = item[fieldName];
-            const isDraftjsField = Array.isArray(fieldValue)
-                && fieldValue.length === 1
-                && typeof fieldValue[0].blocks === 'object';
-
-            if (isDraftjsField === false) {
-                return false;
-            }
-
-            const rawState = fieldValue[0];
-
-            const contentState = convertFromRaw(rawState);
-            const editorState = initializeHighlights(EditorState.createWithContent(contentState));
-
-            return fieldHasUnresolvedSuggestions(editorState);
-        })
-        .length > 0;
+    return Object.keys(item[META_FIELD_NAME] || {})
+        .map((contentKey) => getFieldMetadata(item, contentKey, fieldsMetaKeys.draftjsState))
+        .filter((draftjsState) => draftjsState != null)
+        .map((draftjsState) => (
+            getCustomDataFromEditorRawState(
+                draftjsState,
+                editor3DataKeys.MULTIPLE_HIGHLIGHTS
+            )
+        ))
+        .find((highlights) => (
+            Object.keys(highlights.highlightsData || {})
+                .find((highlightId) => isSuggestion(highlightId)) != null
+        )) != null;
 }
