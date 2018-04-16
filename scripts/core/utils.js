@@ -6,8 +6,8 @@ export function stripHtmlTags(value) {
 }
 
 export const promiseAllObject = (promises) => new Promise((resolve, reject) => {
-    var keys = Object.keys(promises);
-    var promisesArray = keys.map((key) => promises[key]);
+    const keys = Object.keys(promises);
+    const promisesArray = keys.map((key) => promises[key]);
 
     return Promise.all(promisesArray)
         .then((promiseAllResults) => {
