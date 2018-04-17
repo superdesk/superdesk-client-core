@@ -363,7 +363,18 @@ export function getHighlightDataAtCurrentPosition(editorState, types) {
  * @description add a new highlight for the current selection.
  */
 export function addHighlight(editorState, type, data) {
-    const highlightsState = getHighlightsState(editorState);
+    var nextEditorState = editorState;
+
+    // restore focus lost after clicking a toolbar action or entering highlight data
+    // so the selection is visible after undo
+    nextEditorState = EditorState.acceptSelection(
+        editorState,
+        editorState.getSelection().merge({
+            hasFocus: true
+        })
+    );
+
+    const highlightsState = getHighlightsState(nextEditorState);
 
     if (highlightTypeValid(type) !== true) {
         throw new Error('Highlight type invalid');
@@ -393,7 +404,7 @@ export function addHighlight(editorState, type, data) {
         }
     };
 
-    const newEditorState = RichUtils.toggleInlineStyle(editorState, styleName);
+    const newEditorState = RichUtils.toggleInlineStyle(nextEditorState, styleName);
 
     return setHighlightsState(newEditorState, newHighlightsState);
 }
