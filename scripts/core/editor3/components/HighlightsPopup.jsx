@@ -218,14 +218,7 @@ export class HighlightsPopup extends Component {
         let offset = selection.getStartOffset();
 
         if (block.getLength() === offset) {
-            const nextBlock = content.getBlockAfter(block.getKey());
-
-            if (nextBlock == null) {
-                return List();
-            }
-
-            block = nextBlock;
-            offset = 0;
+            return List();
         }
 
         var inlineStyle = block.getInlineStyleAt(offset);
