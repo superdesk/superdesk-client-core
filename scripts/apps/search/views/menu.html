@@ -6,10 +6,7 @@
         <i class="sd-sidebar-menu__main-icon big-icon--global-search"></i>
         <i class="sd-sidebar-menu__helper-icon big-icon--chevron-left"></i>
     </a>
-    <ul ng-if="search.providers.length > 0" class="dropdown__menu pull-left">
-        <li>
-            <button ng-click="search.loadSearchShortcut()">Superdesk</button>
-        </li>
+    <ul ng-if="search.providers.length > 1" class="dropdown__menu pull-left">
         <li ng-repeat="provider in search.providers track by provider._id">
             <button ng-click="search.loadSearchShortcut(provider)">
                 {{ :: search.providerLabel(provider) }}
