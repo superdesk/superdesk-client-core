@@ -120,6 +120,15 @@ function onChange(contentState) {
  * use available HTML. If none are available, an empty ContentState is created.
  */
 function getInitialContent(props) {
+    // support standalone instance of editor3 which is not connected to item field
+    if (props.editorState != null) {
+        var contentState = convertFromRaw(
+            (props.editorState instanceof Array) ? props.editorState[0] : props.editorState
+        );
+
+        return initializeHighlights(EditorState.createWithContent(contentState)).getCurrentContent();
+    }
+
     // we have an editor state stored in the DB
 
     if (props.pathToValue == null || props.pathToValue.length < 1) {
