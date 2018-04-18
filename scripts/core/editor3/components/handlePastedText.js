@@ -6,6 +6,18 @@ import {initSelectionIterator, hasNextSelection} from '../helpers/selectionItera
 import {suggestionsTypes} from '../highlightsConfig';
 import ng from 'core/services/ng';
 
+function removeMediaFromHtml(htmlString) {
+    const element = document.createElement('div');
+
+    element.innerHTML = htmlString;
+
+    Array.from(element.querySelectorAll('img,audio,video')).forEach((mediaElement) => {
+        mediaElement.remove();
+    });
+
+    return element.innerHTML;
+}
+
 const HANDLED = 'handled';
 const NOT_HANDLED = 'not-handled';
 
@@ -19,7 +31,13 @@ const NOT_HANDLED = 'not-handled';
  * @description Handles pasting into the editor, in cases where the content contains
  * atomic blocks that need special handling in editor3.
  */
-export function handlePastedText(editorKey, text, html) {
+export function handlePastedText(editorKey, text, _html) {
+    var html = _html;
+
+    if (typeof html === 'string') {
+        html = removeMediaFromHtml(html);
+    }
+
     const {suggestingMode, onPasteFromSuggestingMode} = this.props;
 
     if (!this.allowEditSuggestion('insert')) {
