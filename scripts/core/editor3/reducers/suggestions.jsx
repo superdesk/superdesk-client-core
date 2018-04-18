@@ -6,6 +6,7 @@ import * as Highlights from '../helpers/highlights';
 import {initSelectionIterator, hasNextSelection} from '../helpers/selectionIterator';
 import {editor3DataKeys, getCustomDataFromEditor, setCustomDataForEditor} from '../helpers/editor3CustomData';
 import * as Blocks from '../helpers/blocks';
+import * as Links from '../helpers/links';
 import ng from 'core/services/ng';
 
 
@@ -25,6 +26,8 @@ const suggestions = (state = {}, action) => {
         return createSplitParagraphSuggestion(state, action.payload);
     case 'PASTE_ADD_SUGGESTION':
         return pasteAddSuggestion(state, action.payload);
+    case 'CREATE_LINK_SUGGESTION':
+        return createLinkSuggestion(state, action.payload);
     case 'ACCEPT_SUGGESTION':
         return processSuggestion(state, action.payload, true);
     case 'REJECT_SUGGESTION':
@@ -162,6 +165,22 @@ function applyStyleSuggestion(editorState, type, data) {
 
     return newEditorState;
 }
+
+/**
+ * @ngdoc method
+ * @name createLinkSuggestion
+ * @param {Object} state
+ * @param {Object} data - info about the suggestion (includes link object)
+ * @return {Object} returns new state
+ * @description Add a new suggestion of type ADD link to text
+ */
+const createLinkSuggestion = (state, {data}) => {
+    const {editorState} = state;
+    const stateWithLink = Links.createLink(editorState, data.link);
+    const newState = Highlights.addHighlight(stateWithLink, 'ADD_LINK_SUGGESTION', data);
+
+    return saveEditorStatus(state, newState, 'apply-entity');
+};
 
 /**
  * @ngdoc method
@@ -354,10 +373,7 @@ function moveToSuggestionsHistory(editorState, suggestion, accepted) {
             suggestionText: suggestion.suggestionText,
             oldText: suggestion.oldText,
             suggestionInfo: {
-                author: suggestion.author,
-                date: suggestion.date,
-                type: suggestion.type,
-                blockType: suggestion.blockType
+                ...suggestion
             },
             resolutionInfo: {
                 resolverUserId: ng.get('session').identity._id,
@@ -421,6 +437,11 @@ const processSuggestion = (state, {suggestion}, accepted) => {
 
     if (suggestion.type === 'SPLIT_PARAGRAPH_SUGGESTION') {
         return processSplitSuggestion(state, suggestion, accepted);
+    }
+
+    // If link it's rejected we remove the entity
+    if (suggestion.type === 'ADD_LINK_SUGGESTION' && !accepted) {
+        editorState = Links.removeLink(editorState);
     }
 
     editorState = EditorState.acceptSelection(editorState, selection);
