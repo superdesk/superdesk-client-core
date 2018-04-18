@@ -102,3 +102,8 @@ export const suggestionsTypes = [
     'SPLIT_PARAGRAPH_SUGGESTION',
     'ADD_LINK_SUGGESTION'
 ];
+
+export const isSuggestion = (highlightId) => suggestionsTypes.find(
+    (suggestionType) => highlightId.indexOf(suggestionType) === 0
+) != null;
+

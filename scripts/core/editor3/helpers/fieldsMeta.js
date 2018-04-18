@@ -16,6 +16,8 @@ const wrapper = {
     unwrap: (wrappedValue) => wrappedValue[0]
 };
 
+// Content key is similar to fieldName, except it supports nested objects
+// which have content keys like such "extra>customFieldName"
 export function getFieldMetadata(item, fieldKey, contentKey) {
     if (Object.keys(fieldsMetaKeys).includes(contentKey) === false) {
         throw new Error(`Invalid key '${contentKey}'`);
