@@ -33,11 +33,11 @@ export class BlockStyleButtonsComponent extends Component {
         this.onToggle = this.onToggle.bind(this);
     }
 
-    onToggle(type) {
+    onToggle(type, active) {
         const {suggestingMode, toggleBlockStyle, createChangeBlockStyleSuggestion} = this.props;
 
         if (suggestingMode) {
-            createChangeBlockStyleSuggestion(type);
+            createChangeBlockStyleSuggestion(type, active);
         } else {
             toggleBlockStyle(type);
         }
@@ -84,7 +84,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
     toggleBlockStyle: (blockType) => dispatch(actions.toggleBlockStyle(blockType)),
-    createChangeBlockStyleSuggestion: (type) => dispatch(actions.createChangeBlockStyleSuggestion(type))
+    createChangeBlockStyleSuggestion: (type, active) => dispatch(actions.createChangeBlockStyleSuggestion(type, active))
 });
 
 const BlockStyleButtons = connect(mapStateToProps, mapDispatchToProps)(BlockStyleButtonsComponent);

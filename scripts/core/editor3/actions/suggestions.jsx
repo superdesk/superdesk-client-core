@@ -49,15 +49,19 @@ export function createDeleteSuggestion(action) {
  * @ngdoc method
  * @name createChangeStyleSuggestion
  * @param {String} style
+ * @param {String} active, true if style was active
  * @return {Object} action
  * @description add a new suggestion of type change style.
  */
-export function createChangeStyleSuggestion(style) {
+export function createChangeStyleSuggestion(style, active) {
     return {
         type: 'CREATE_CHANGE_STYLE_SUGGESTION',
         payload: {
             style: style,
-            data: getSuggestionMetadata()
+            data: {
+                ...getSuggestionMetadata(),
+                originalStyle: active ? style : ''
+            }
         }
     };
 }
@@ -66,15 +70,19 @@ export function createChangeStyleSuggestion(style) {
  * @ngdoc method
  * @name createChangeBlockStyleSuggestion
  * @param {String} type
+ * @param {String} active, true if type was active
  * @return {Object} action
  * @description add a new suggestion of type change block style.
  */
-export function createChangeBlockStyleSuggestion(type) {
+export function createChangeBlockStyleSuggestion(type, active) {
     return {
         type: 'CREATE_CHANGE_BLOCK_STYLE_SUGGESTION',
         payload: {
             blockType: type,
-            data: getSuggestionMetadata()
+            data: {
+                ...getSuggestionMetadata(),
+                originalStyle: active ? type : ''
+            }
         }
     };
 }

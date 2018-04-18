@@ -18,12 +18,12 @@ export class InlineStyleButtonsComponent extends Component {
         this.onToggle = this.onToggle.bind(this);
     }
 
-    onToggle(type) {
+    onToggle(type, active) {
         const {editorState, suggestingMode, toggleInlineStyle, createChangeStyleSuggestion} = this.props;
         const selection = editorState.getSelection();
 
         if (suggestingMode && !selection.isCollapsed()) {
-            createChangeStyleSuggestion(type);
+            createChangeStyleSuggestion(type, active);
         } else {
             toggleInlineStyle(type);
         }
@@ -65,7 +65,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
     toggleInlineStyle: (type) => dispatch(actions.toggleInlineStyle(type)),
-    createChangeStyleSuggestion: (type) => dispatch(actions.createChangeStyleSuggestion(type))
+    createChangeStyleSuggestion: (type, active) => dispatch(actions.createChangeStyleSuggestion(type, active))
 });
 
 const InlineStyleButtons = connect(mapStateToProps, mapDispatchToProps)(InlineStyleButtonsComponent);
