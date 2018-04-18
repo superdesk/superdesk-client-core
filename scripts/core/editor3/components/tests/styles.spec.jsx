@@ -23,11 +23,11 @@ describe('editor3.components.toolbar', () => {
 
     it('(StyleButton) should call prop with style', () => {
         const toggleFn = jasmine.createSpy();
-        const wrapper = mount(<StyleButton onToggle={toggleFn} style={'my-style'} />);
+        const wrapper = mount(<StyleButton onToggle={toggleFn} style={'my-style'} active={true}/>);
 
         wrapper.simulate('mousedown');
 
-        expect(toggleFn).toHaveBeenCalledWith('my-style');
+        expect(toggleFn).toHaveBeenCalledWith('my-style', true);
     });
 
     it('(BlockStyleButtons) should render only given types', () => {

@@ -52,7 +52,7 @@ export default class StyleButton extends React.Component {
 
     onToggle(e) {
         e.preventDefault();
-        this.props.onToggle(this.props.style);
+        this.props.onToggle(this.props.style, this.props.active);
     }
 
     render() {

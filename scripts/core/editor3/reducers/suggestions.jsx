@@ -138,16 +138,17 @@ const createChangeStyleSuggestion = (state, {style, data}) => {
     let {editorState} = state;
     const type = Highlights.getTypeByInlineStyle(style);
 
-    editorState = applyStyleSuggestion(editorState, type, data);
+    editorState = applyStyleSuggestion(editorState, type, style, data);
     editorState = RichUtils.toggleInlineStyle(editorState, style);
 
     return saveEditorStatus(state, editorState, 'change-inline-style', true);
 };
 
-function applyStyleSuggestion(editorState, type, data) {
+function applyStyleSuggestion(editorState, type, style, data) {
     const selection = editorState.getSelection();
     let newEditorState = editorState;
     let currentStyle;
+    let changeStyle = true;
 
     newEditorState = initSelectionIterator(newEditorState);
     while (hasNextSelection(newEditorState, selection)) {
@@ -156,7 +157,20 @@ function applyStyleSuggestion(editorState, type, data) {
         if (currentStyle) {
             newEditorState = resetSuggestion(newEditorState, currentStyle);
         } else {
+            changeStyle = false;
             newEditorState = Highlights.changeEditorSelection(newEditorState, 1, 1, false);
+        }
+    }
+
+    if (changeStyle) {
+        const oldData = Highlights.getHighlightData(editorState, currentStyle);
+
+        if (oldData.originalStyle === style && data.originalStyle === '' ||
+            oldData.originalStyle === '' && data.originalStyle === style) {
+            // the style is toggled back, so no suggestion is added
+            return newEditorState;
+        } else {
+            data.originalStyle = oldData.originalStyle;
         }
     }
 
@@ -211,7 +225,7 @@ const createChangeBlockStyleSuggestion = (state, {blockType, data}) => {
     };
 
     editorState = EditorState.acceptSelection(editorState, blocksSelection);
-    editorState = applyStyleSuggestion(editorState, type, newData);
+    editorState = applyStyleSuggestion(editorState, type, blockType, newData);
     editorState = RichUtils.toggleBlockType(editorState, blockType);
 
     return saveEditorStatus(state, editorState, 'change-block-type', true);
