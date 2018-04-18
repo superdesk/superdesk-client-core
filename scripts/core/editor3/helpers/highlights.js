@@ -363,11 +363,9 @@ export function getHighlightDataAtCurrentPosition(editorState, types) {
  * @description add a new highlight for the current selection.
  */
 export function addHighlight(editorState, type, data) {
-    var nextEditorState = editorState;
-
     // restore focus lost after clicking a toolbar action or entering highlight data
     // so the selection is visible after undo
-    nextEditorState = EditorState.acceptSelection(
+    const nextEditorState = EditorState.acceptSelection(
         editorState,
         editorState.getSelection().merge({
             hasFocus: true
