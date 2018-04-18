@@ -2,6 +2,7 @@ import {RichUtils, EditorState} from 'draft-js';
 import * as entityUtils from '../components/links/entityUtils';
 import {onChange} from './editor3';
 import insertAtomicBlockWithoutEmptyLines from '../helpers/insertAtomicBlockWithoutEmptyLines';
+import * as Links from '../helpers/links';
 import * as Blocks from '../helpers/blocks';
 
 /**
@@ -81,14 +82,7 @@ const applyLink = (state, {link, entity}) => {
         return onChange(state, entityUtils.replaceSelectedEntityData(editorState, {link}), true);
     }
 
-    const contentState = editorState.getCurrentContent();
-    const contentStateWithEntity = contentState.createEntity('LINK', 'MUTABLE', {link});
-    const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
-    const stateAfterChange = RichUtils.toggleLink(
-        editorState,
-        editorState.getSelection(),
-        entityKey
-    );
+    const stateAfterChange = Links.createLink(editorState, link);
 
     return onChange(state, stateAfterChange);
 };
@@ -100,20 +94,7 @@ const applyLink = (state, {link, entity}) => {
  */
 const removeLink = (state) => {
     const {editorState} = state;
-    var stateAfterChange = editorState;
-
-    entityUtils.getSelectedEntityRange(editorState,
-        (start, end) => {
-            const selection = editorState.getSelection();
-            const entitySelection = selection.merge({
-                anchorOffset: start,
-                focusOffset: end,
-                isBackward: false
-            });
-
-            stateAfterChange = RichUtils.toggleLink(editorState, entitySelection, null);
-        }
-    );
+    const stateAfterChange = Links.removeLink(editorState);
 
     return onChange(state, stateAfterChange);
 };

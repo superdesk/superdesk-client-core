@@ -68,6 +68,13 @@ export const highlightsConfig = {
         draftStyleMap: {
             backgroundColor: 'rgba(100, 235, 59, 0.2)'
         }
+    },
+    ADD_LINK_SUGGESTION: {
+        type: 'ENTITY',
+        description: gettext('Add link'),
+        draftStyleMap: {
+            backgroundColor: 'rgba(100, 235, 59, 0.2)',
+        }
     }
 };
 
@@ -92,5 +99,6 @@ export const suggestionsTypes = [
     ...changeSuggestionsTypes,
     ...styleSuggestionsTypes,
     'BLOCK_STYLE_SUGGESTION',
-    'SPLIT_PARAGRAPH_SUGGESTION'
+    'SPLIT_PARAGRAPH_SUGGESTION',
+    'ADD_LINK_SUGGESTION'
 ];

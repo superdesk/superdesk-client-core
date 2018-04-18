@@ -147,6 +147,25 @@ export function onPasteFromSuggestingMode(content) {
 
 /**
  * @ngdoc method
+ * @name createLinkSuggestion
+ * @param {Object} link, object containing the link href
+ * @return {Object} action
+ * @description add a new suggestion of type ADD link to text
+ */
+export function createLinkSuggestion(link) {
+    return {
+        type: 'CREATE_LINK_SUGGESTION',
+        payload: {
+            data: {
+                ...getSuggestionMetadata(),
+                link
+            }
+        }
+    };
+}
+
+/**
+ * @ngdoc method
  * @name getSuggestionMetadata
  * @param {String} type
  * @return {Object} returns suggestion metadata

@@ -5,7 +5,7 @@ import {EditorState} from 'draft-js';
 import {getSelectedEntity} from './entityUtils';
 import {Dropdown, NavTabs} from 'core/ui/components';
 import {AttachmentList} from './AttachmentList';
-import {applyLink, hidePopups} from '../../actions';
+import {applyLink, hidePopups, createLinkSuggestion} from '../../actions';
 
 /**
  * @ngdoc React
@@ -58,6 +58,7 @@ export class LinkInputComponent extends Component {
      */
     onSubmit() {
         let val;
+        const {suggestingMode} = this.props;
 
         if (this.input) {
             val = {href: this.input.value};
@@ -69,7 +70,12 @@ export class LinkInputComponent extends Component {
             return;
         }
 
-        this.props.applyLink(val, this.entity);
+        if (suggestingMode) {
+            this.props.createLinkSuggestion(val);
+        } else {
+            this.props.applyLink(val, this.entity);
+        }
+
         this.props.hidePopups();
     }
 
@@ -139,15 +145,19 @@ LinkInputComponent.propTypes = {
     applyLink: PropTypes.func.isRequired,
     hidePopups: PropTypes.func.isRequired,
     data: PropTypes.object,
-    item: PropTypes.object
+    item: PropTypes.object,
+    createLinkSuggestion: PropTypes.func,
+    suggestingMode: PropTypes.bool
 };
 
 const mapStateToProps = (state) => ({
     item: state.item,
-    editorState: state.editorState
+    editorState: state.editorState,
+    suggestingMode: state.suggestingMode
 });
 
 export const LinkInput = connect(mapStateToProps, {
     applyLink,
-    hidePopups
+    hidePopups,
+    createLinkSuggestion
 })(LinkInputComponent);
