@@ -85,12 +85,13 @@ const saveEditorStatus = (state, tmpEditorState, changeType, restoreSelection = 
  */
 const createAddSuggestion = (state, {text, data}) => {
     let {editorState} = state;
+    const inlineStyle = editorState.getCurrentInlineStyle();
 
     editorState = deleteCurrentSelection(editorState, data);
 
     for (let i = 0; i < text.length; i++) {
         // for every character from inserted text apply add suggestion
-        editorState = setAddSuggestionForCharacter(editorState, data, text[i]);
+        editorState = setAddSuggestionForCharacter(editorState, data, text[i], inlineStyle);
     }
 
     return saveEditorStatus(state, editorState, 'insert-characters');
