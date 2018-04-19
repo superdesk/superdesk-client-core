@@ -13,7 +13,7 @@ import './styles/contacts.scss';
 angular.module('superdesk.apps.contacts', [
     'superdesk.core.api',
     'superdesk.apps.publish',
-    'superdesk.apps.search'
+    'superdesk.apps.search',
 ])
     .config(['superdeskProvider', function(superdesk) {
         superdesk
@@ -29,7 +29,7 @@ angular.module('superdesk.apps.contacts', [
                 filters: [],
                 reloadOnSearch: false,
                 features: {contacts: 1},
-                privileges: {view_contacts: 1}
+                privileges: {view_contacts: 1},
             });
     }])
     .service('contacts', services.ContactsService)
@@ -43,7 +43,7 @@ angular.module('superdesk.apps.contacts', [
         apiProvider.api('contacts', {
             type: 'http',
             backend: {
-                rel: 'contacts'
-            }
+                rel: 'contacts',
+            },
         });
     }]);

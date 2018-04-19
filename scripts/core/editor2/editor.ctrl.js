@@ -17,11 +17,11 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, editor, config, $q
             lowerAddEmbedIsExtended: undefined,
             showAndFocusLowerAddAnEmbedBox: function() {
                 self.lowerAddEmbedIsExtended = true;
-            }
+            },
         }, {
             body: '<p><br></p>',
             loading: false,
-            blockType: 'text'
+            blockType: 'text',
         }));
     }
     /**
@@ -109,7 +109,7 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, editor, config, $q
                             blockType: 'embed',
                             embedType: embedType,
                             association: association,
-                            body: ''
+                            body: '',
                         });
                     }
                     if (element.nodeValue.indexOf('EMBED END') > -1) {
@@ -279,7 +279,7 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, editor, config, $q
                     textBlockCtrl.updateModel();
                     // add new text block for the remaining text
                     return self.insertNewBlock(index, {
-                        body: after
+                        body: after,
                     }, true);
                 }
             })()).then(() => {
@@ -392,6 +392,6 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, editor, config, $q
                 return hash;
             }
             return String(Math.abs(hashCode(block.body))) + String(self.getBlockPosition(block));
-        }
+        },
     });
 }

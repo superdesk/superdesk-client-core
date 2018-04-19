@@ -20,8 +20,8 @@ export function DictionaryService(api, urls, session, Upload, $q) {
             where: {
                 $or: [
                     {user: {$exists: false}},
-                    {user: identity._id}
-                ]}
+                    {user: identity._id},
+                ]},
         })
             .then(success, error));
     };
@@ -62,7 +62,7 @@ export function DictionaryService(api, urls, session, Upload, $q) {
                 method: method,
                 data: sendData,
                 file: file,
-                headers: headers
+                headers: headers,
             }).then(success, error, progress);
         }, error);
     };
@@ -106,7 +106,7 @@ export function DictionaryService(api, urls, session, Upload, $q) {
                 [{$or: languageIds},
                     {is_active: 'true'},
                     {type: 'abbreviations'},
-                    {user: identity._id}]
+                    {user: identity._id}],
                 }}).then((items) => items._items);
         });
     }
@@ -130,7 +130,7 @@ export function DictionaryService(api, urls, session, Upload, $q) {
                 [{$or: languageIds},
                     {is_active: {$in: ['true', null]}},
                     {$or: [{type: {$exists: 0}}, {type: 'dictionary'}]},
-                    {$or: [{user: identity._id}, {user: {$exists: false}}]}]
+                    {$or: [{user: identity._id}, {user: {$exists: false}}]}],
                 }}).then((items) => $q.all(items._items.map(fetchItem)));
         });
 
@@ -150,9 +150,9 @@ export function DictionaryService(api, urls, session, Upload, $q) {
                 where: {
                     $and: [
                         {language_id: lang}, {user: identity._id},
-                        {$or: [{type: {$exists: 0}}, {type: 'dictionary'}]}
-                    ]
-                }
+                        {$or: [{type: {$exists: 0}}, {type: 'dictionary'}]},
+                    ],
+                },
             };
 
             return api.query('dictionaries', where)
@@ -160,7 +160,7 @@ export function DictionaryService(api, urls, session, Upload, $q) {
                     name: identity._id + ':' + lang,
                     content: {},
                     language_id: lang,
-                    user: identity._id
+                    user: identity._id,
                 });
         });
     }

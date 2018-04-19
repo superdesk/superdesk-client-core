@@ -19,6 +19,6 @@ export function associations(props) {
 associations.propTypes = {
     svc: PropTypes.any.isRequired,
     item: PropTypes.any,
-    openAuthoringView: PropTypes.func.isRequired
+    openAuthoringView: PropTypes.func.isRequired,
 };
 

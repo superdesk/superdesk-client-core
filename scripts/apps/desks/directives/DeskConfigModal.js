@@ -18,7 +18,7 @@ export function DeskConfigModal(metadata, content, templates, api, deployConfig)
             desk: '=',
             step: '=',
             desks: '=',
-            cancel: '&'
+            cancel: '&',
         },
         require: '^sdDeskConfig',
         templateUrl: 'scripts/apps/desks/views/desk-config-modal.html',
@@ -27,7 +27,7 @@ export function DeskConfigModal(metadata, content, templates, api, deployConfig)
                 '': {label: gettext('None')},
                 list: {label: gettext('List View'), icon: 'th-list'},
                 swimlane: {label: gettext('Swimlane View'), icon: 'th-list'},
-                photogrid: {label: gettext('Photo Grid View'), icon: 'th'}
+                photogrid: {label: gettext('Photo Grid View'), icon: 'th'},
             };
 
             /*
@@ -63,6 +63,6 @@ export function DeskConfigModal(metadata, content, templates, api, deployConfig)
                     });
                 }
             });
-        }
+        },
     };
 }

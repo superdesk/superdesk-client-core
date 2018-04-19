@@ -289,18 +289,18 @@ MediaBlockComponent.propTypes = {
     block: PropTypes.object.isRequired,
     contentState: PropTypes.object.isRequired,
     showTitle: PropTypes.bool,
-    blockProps: PropTypes.object.isRequired
+    blockProps: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
-    showTitle: state.showTitle
+    showTitle: state.showTitle,
 });
 
 const mapDispatchToProps = (dispatch) => ({
     cropImage: (entityKey, entityData) => dispatch(actions.cropImage(entityKey, entityData)),
     removeBlock: (blockKey) => dispatch(actions.removeBlock(blockKey)),
     changeCaption: (entityKey, newCaption, field) => dispatch(actions.changeImageCaption(entityKey, newCaption, field)),
-    setLocked: () => dispatch(actions.setLocked(true))
+    setLocked: () => dispatch(actions.setLocked(true)),
 });
 
 export const MediaBlock = connect(mapStateToProps, mapDispatchToProps)(MediaBlockComponent);

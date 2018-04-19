@@ -32,6 +32,6 @@ export function MultiMarkHighlightsDropdown(desks, highlightsService, multi) {
                     });
                 });
             }
-        }
+        },
     };
 }

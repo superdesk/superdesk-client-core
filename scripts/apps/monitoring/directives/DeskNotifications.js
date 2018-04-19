@@ -85,6 +85,6 @@ export function DeskNotifications(desks, deskNotifications, authoringWorkspace, 
             };
 
             init();
-        }
+        },
     };
 }

@@ -100,6 +100,6 @@ export function SaveSearch($location, asset, api, session, notify, gettext, $roo
 
                 return search;
             }
-        }
+        },
     };
 }

@@ -36,7 +36,7 @@ export function IngestRoutingFilter() {
     return {
         scope: {
             rule: '=',
-            filters: '=contentFilters'
+            filters: '=contentFilters',
         },
         templateUrl: 'scripts/apps/ingest/views/settings' +
                      '/ingest-routing-filter.html',
@@ -98,6 +98,6 @@ export function IngestRoutingFilter() {
                 scope.rule.filter = null;
                 scope.rule.filterName = null;
             };
-        }
+        },
     };
 }

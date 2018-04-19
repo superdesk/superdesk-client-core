@@ -5,7 +5,7 @@ function TasksService(desks, $rootScope, api, datetimeHelper) {
     this.statuses = [
         {_id: 'todo', name: gettext('To Do')},
         {_id: 'in_progress', name: gettext('In Progress')},
-        {_id: 'done', name: gettext('Done')}
+        {_id: 'done', name: gettext('Done')},
     ];
 
     this.save = function(orig, task) {
@@ -55,8 +55,8 @@ function TasksService(desks, $rootScope, api, datetimeHelper) {
             source: {
                 size: 200,
                 sort: [{_updated: 'desc'}],
-                filter: filter
-            }
+                filter: filter,
+            },
         });
     };
 }
@@ -99,17 +99,17 @@ function TasksController($scope, $timeout, api, notify, desks, tasks, $filter, a
         timeout = $timeout(() => {
             var filter = {bool: {
                 must: {
-                    term: {'task.desk': desks.getCurrentDeskId()}
+                    term: {'task.desk': desks.getCurrentDeskId()},
                 },
                 must_not: {
-                    terms: {state: ['published', 'spiked', 'corrected', 'killed']}
-                }
+                    terms: {state: ['published', 'spiked', 'corrected', 'killed']},
+                },
             }};
 
             var source = {source: {
                 size: 200,
                 sort: [{_updated: 'desc'}],
-                filter: filter
+                filter: filter,
             }};
 
             api.query('tasks', source).then((result) => {
@@ -124,8 +124,8 @@ function TasksController($scope, $timeout, api, notify, desks, tasks, $filter, a
     function fetchPublished() {
         var filter = {bool: {
             must: {
-                term: {'task.desk': desks.getCurrentDeskId()}
-            }
+                term: {'task.desk': desks.getCurrentDeskId()},
+            },
         }};
 
         api.query('published', {source: {filter: filter}})
@@ -148,7 +148,7 @@ function TasksController($scope, $timeout, api, notify, desks, tasks, $filter, a
 
         var filter = {
             schedule_desk: desks.getCurrentDeskId(),
-            next_run: {$gte: toServerTime(startTime), $lte: toServerTime(endTime)}
+            next_run: {$gte: toServerTime(startTime), $lte: toServerTime(endTime)},
         };
 
         api.query('content_templates', {where: filter, sort: 'next_run'}).then((results) => {
@@ -227,7 +227,7 @@ function TaskPreviewDirective(tasks, desks, notify, $filter) {
         templateUrl: 'scripts/apps/dashboard/workspace-tasks/views/task-preview.html',
         scope: {
             item: '=',
-            close: '&onclose'
+            close: '&onclose',
         },
         link: function(scope) {
             var _orig;
@@ -270,7 +270,7 @@ function TaskPreviewDirective(tasks, desks, notify, $filter) {
                     $filter('formatDateTimeString')(scope.task_details.due_time, 'HH:mm:ss') : null;
                 _orig = scope.item;
             };
-        }
+        },
     };
 }
 
@@ -282,7 +282,7 @@ function TaskKanbanBoardDirective() {
             items: '=',
             label: '@',
             cssClass: '@',
-            selected: '='
+            selected: '=',
         },
         link: function(scope) {
             scope.preview = function(item) {
@@ -290,7 +290,7 @@ function TaskKanbanBoardDirective() {
                     scope.selected.preview = item;
                 }
             };
-        }
+        },
     };
 }
 
@@ -303,7 +303,7 @@ function AssigneeViewDirective(desks) {
         scope: {
             task: '=',
             name: '=',
-            avatarSize: '@'
+            avatarSize: '@',
         },
         link: function(scope) {
             promise.then(function setItemAssigne() {
@@ -315,7 +315,7 @@ function AssigneeViewDirective(desks) {
                 scope.userName = user.display_name || null;
                 scope.user = user || null;
             });
-        }
+        },
     };
 }
 
@@ -354,7 +354,7 @@ function StagesCtrlFactory(desks) {
 
 function DeskStagesDirective() {
     return {
-        templateUrl: 'scripts/apps/dashboard/workspace-tasks/views/desk-stages.html'
+        templateUrl: 'scripts/apps/dashboard/workspace-tasks/views/desk-stages.html',
     };
 }
 
@@ -376,7 +376,7 @@ angular.module('superdesk.apps.workspace.tasks', ['superdesk.apps.workspace.menu
             templateUrl: 'scripts/apps/dashboard/workspace-tasks/views/workspace-tasks.html',
             topTemplateUrl: 'scripts/apps/dashboard/views/workspace-topnav.html',
             sideTemplateUrl: 'scripts/apps/workspace/views/workspace-sidenav.html',
-            filters: [{action: 'view', type: 'task'}]
+            filters: [{action: 'view', type: 'task'}],
         });
 
         superdesk.activity('pick.task', {
@@ -392,9 +392,9 @@ angular.module('superdesk.apps.workspace.tasks', ['superdesk.apps.workspace.menu
              */
                 function pickTask(data, superdesk) {
                     return superdesk.intent('edit', 'item', data.item);
-                }
+                },
             ],
-            filters: [{action: superdesk.ACTION_EDIT, type: 'task'}]
+            filters: [{action: superdesk.ACTION_EDIT, type: 'task'}],
         });
 
         workspaceMenuProvider.item({

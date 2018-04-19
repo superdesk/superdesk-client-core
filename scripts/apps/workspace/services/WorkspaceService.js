@@ -215,7 +215,7 @@ export function WorkspaceService(api, desks, session, preferences, $q) {
         return {
             user: session.identity._id,
             // [BC] use old user workspace
-            widgets: session.identity.workspace ? session.identity.workspace.widgets : []
+            widgets: session.identity.workspace ? session.identity.workspace.widgets : [],
         };
     }
 

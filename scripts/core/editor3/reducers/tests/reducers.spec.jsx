@@ -21,10 +21,10 @@ describe('editor3.reducers', () => {
 
         reducer({
             onChangeValue: onChangeValue,
-            editorState: EditorState.createEmpty()
+            editorState: EditorState.createEmpty(),
         }, {
             type: 'EDITOR_CHANGE_STATE',
-            payload: {editorState}
+            payload: {editorState},
         });
 
         expect(onChangeValue).toHaveBeenCalled();
@@ -35,12 +35,12 @@ describe('editor3.reducers', () => {
 
         const startState = {
             editorState: EditorState.createEmpty(),
-            onChangeValue: () => ({})
+            onChangeValue: () => ({}),
         };
 
         const {editorState} = reducer(startState, {
             type: 'EDITOR_DRAG_DROP',
-            payload: data
+            payload: data,
         });
 
         const contentState = editorState.getCurrentContent();
@@ -107,8 +107,8 @@ describe('editor3.reducers', () => {
             payload: {
                 index: -1,
                 pattern: 'banana',
-                caseSensitive: true
-            }
+                caseSensitive: true,
+            },
         });
 
         expect(state.searchTerm.index).toBe(-1);
@@ -124,7 +124,7 @@ describe('editor3.reducers', () => {
 
         const state = reducer(startState, {
             type: 'HIGHLIGHTS_CRITERIA',
-            payload: {caseSensitive: true, pattern: 'apple'}
+            payload: {caseSensitive: true, pattern: 'apple'},
         });
 
         expect(state.searchTerm.index).toBe(0);
@@ -198,7 +198,7 @@ describe('editor3.reducers', () => {
 
         const state = reducer(startState, {
             type: 'HIGHLIGHTS_REPLACE',
-            payload: 'kiwi'
+            payload: 'kiwi',
         });
 
         const text = state.editorState.getCurrentContent().getPlainText('\n');
@@ -214,7 +214,7 @@ describe('editor3.reducers', () => {
 
         const state = reducer(startState, {
             type: 'HIGHLIGHTS_REPLACE_ALL',
-            payload: 'kiwi'
+            payload: 'kiwi',
         });
 
         const text = state.editorState.getCurrentContent().getPlainText('\n');
@@ -229,13 +229,13 @@ describe('editor3.reducers', () => {
 
         const state = reducer({
             editorState: editorState,
-            onChangeValue: () => { /* no-op */ }
+            onChangeValue: () => { /* no-op */ },
         }, {
             type: 'SPELLCHECKER_REPLACE_WORD',
             payload: {
                 word: {text: 'efgh', offset: 5},
-                newWord: '1234'
-            }
+                newWord: '1234',
+            },
         });
 
         const text = state.editorState.getCurrentContent().getPlainText();
@@ -250,7 +250,7 @@ describe('editor3.reducers', () => {
         const selectionState = SelectionState.createEmpty(blockKey);
         const updatedSelection = selectionState.merge({
             focusKey: blockKey,
-            focusOffset: 4
+            focusOffset: 4,
         });
 
         const editorState = EditorState.createWithContent(contentState);
@@ -259,7 +259,7 @@ describe('editor3.reducers', () => {
         const state = reducer(
             {
                 editorState: selectedEditorState,
-                onChangeValue: jasmine.createSpy('onChangeValue')
+                onChangeValue: jasmine.createSpy('onChangeValue'),
             },
             applyLink({link: 'http://example.com'})
         );
@@ -274,7 +274,7 @@ describe('editor3.reducers', () => {
         const nextState = reducer(
             {
                 editorState: state.editorState,
-                onChangeValue: jasmine.createSpy('onChangeValue')
+                onChangeValue: jasmine.createSpy('onChangeValue'),
             },
             applyLink({link: 'http://foo.com'}, entity)
         );

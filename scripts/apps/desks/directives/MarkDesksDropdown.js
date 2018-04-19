@@ -22,11 +22,11 @@ export function MarkDesksDropdown(desks, $timeout, gettextCatalog, $injector) {
                     className: '',
                     noHighlightsLabel: gettextCatalog.getString('No available highlights'),
                     noDesksLabel: gettextCatalog.getString('No available desks'),
-                    noLanguagesLabel: gettextCatalog.getString('No available translations')
+                    noLanguagesLabel: gettextCatalog.getString('No available translations'),
                 });
 
                 ReactDOM.render(deskList, elem[0]);
             });
-        }
+        },
     };
 }

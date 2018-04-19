@@ -24,7 +24,7 @@ describe('core.editor3.html.to-html.HTMLGenerator', () => {
             ['unordered-list-item', 2, 'x'],
             ['unordered-list-item', 1, '7'],
             ['unordered-list-item', 1, '33'],
-            ['unordered-list-item', 0, '8']
+            ['unordered-list-item', 0, '8'],
         ]);
 
         const result = new HTMLGenerator(contentState, logger).html();
@@ -63,7 +63,7 @@ describe('core.editor3.html.to-html.HTMLGenerator', () => {
             ['unordered-list-item', 1, '2'],
             ['unordered-list-item', 2, '3'],
             ['unordered-list-item', 3, '4'],
-            ['unstyled', 0, 'abc']
+            ['unstyled', 0, 'abc'],
         ]);
 
         const result = new HTMLGenerator(contentState, logger).html();
@@ -93,11 +93,11 @@ describe('core.editor3.html.to-html.HTMLGenerator', () => {
                 inlineStyleRanges: [{
                     length: 5,
                     style: 'ANNOTATION-1',
-                    offset: 6
+                    offset: 6,
                 }, {
                     length: 5,
                     style: 'ANNOTATION-2',
-                    offset: 12
+                    offset: 12,
                 }],
                 data: {
                     MULTIPLE_HIGHLIGHTS: {
@@ -113,7 +113,7 @@ describe('core.editor3.html.to-html.HTMLGenerator', () => {
                                     author: 'admin',
                                     annotationType: 'regular',
                                 },
-                                type: 'ANNOTATION'
+                                type: 'ANNOTATION',
                             },
                             'ANNOTATION-2': {
                                 data: {
@@ -126,17 +126,17 @@ describe('core.editor3.html.to-html.HTMLGenerator', () => {
                                     author: 'admin',
                                     annotationType: 'regular',
                                 },
-                                type: 'ANNOTATION'
-                            }
-                        }
-                    }
+                                type: 'ANNOTATION',
+                            },
+                        },
+                    },
                 },
                 text: 'lorem ipsum dolor',
                 type: 'unstyled',
                 depth: 0,
                 key: '2sso6',
-                entityRanges: []
-            }]
+                entityRanges: [],
+            }],
         };
         const result = new HTMLGenerator(convertFromRaw(rawContentState)).html();
 
@@ -164,7 +164,7 @@ describe('core.editor3.html.to-html.AtomicBlockParser', () => {
 
     it('should correctly parse images without alt and description', () => {
         const {block, contentState} = testUtils.createBlockAndContent('MEDIA', {
-            media: {renditions: {original: {href: 'image_href'}}}
+            media: {renditions: {original: {href: 'image_href'}}},
         });
 
         const html = new AtomicBlockParser(contentState, logger).parse(block);
@@ -180,9 +180,9 @@ describe('core.editor3.html.to-html.AtomicBlockParser', () => {
                 numRows: 2,
                 cells: [
                     [cs('a'), undefined, cs('c')],
-                    [cs('d'), cs('e'), cs('f')]
-                ]
-            }
+                    [cs('d'), cs('e'), cs('f')],
+                ],
+            },
         });
 
         const html = new AtomicBlockParser(contentState, logger).parse(block);
@@ -197,8 +197,8 @@ describe('core.editor3.html.to-html.AtomicBlockParser', () => {
             data: {
                 numCols: 3,
                 numRows: 1,
-                cells: [[cs('a'), cs('b'), cs('c')]]
-            }
+                cells: [[cs('a'), cs('b'), cs('c')]],
+            },
         });
 
         const html = new AtomicBlockParser(contentState, logger).parse(block);
@@ -216,9 +216,9 @@ describe('core.editor3.html.to-html.AtomicBlockParser', () => {
                 cells: [
                     [cs('a'), undefined, cs('c')],
                     [cs('d'), cs('e'), cs('f')],
-                    [cs('g'), cs('h'), cs('i')]
-                ]
-            }
+                    [cs('g'), cs('h'), cs('i')],
+                ],
+            },
         });
 
         const html = new AtomicBlockParser(contentState, logger).parse(block);
@@ -235,8 +235,8 @@ describe('core.editor3.html.to-html.AtomicBlockParser', () => {
                 numCols: 3,
                 numRows: 1,
                 withHeader: true,
-                cells: [[cs('a'), cs('b'), cs('c')]]
-            }
+                cells: [[cs('a'), cs('b'), cs('c')]],
+            },
         });
 
         const html = new AtomicBlockParser(contentState, logger).parse(block);
@@ -249,8 +249,8 @@ describe('core.editor3.html.to-html.AtomicBlockParser', () => {
             data: {
                 numCols: 3,
                 numRows: 2,
-                cells: []
-            }
+                cells: [],
+            },
         });
 
         const html = new AtomicBlockParser(contentState, logger).parse(block);
@@ -285,7 +285,7 @@ describe('core.editor3.html.to-html.BlockEntityWrapper', () => {
         const ek = [ // entity keys
             contentState.createEntity('LINK', 'MUTABLE', {url: 'abc'}).getLastCreatedEntityKey(),
             contentState.createEntity('LINK', 'MUTABLE', {url: 'def'}).getLastCreatedEntityKey(),
-            contentState.createEntity('LINK', 'MUTABLE', {url: 'jkl'}).getLastCreatedEntityKey()
+            contentState.createEntity('LINK', 'MUTABLE', {url: 'jkl'}).getLastCreatedEntityKey(),
         ];
 
         const wrapper = new BlockEntityWrapper(contentState);

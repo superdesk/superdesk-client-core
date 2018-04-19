@@ -89,6 +89,6 @@ export function IngestRoutingAction(desks, macros, subscribersService, metadata,
             scope.removePublish = function(publishAction) {
                 _.remove(scope.rule.actions.publish, (p) => p === publishAction);
             };
-        }
+        },
     };
 }

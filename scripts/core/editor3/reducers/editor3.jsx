@@ -158,7 +158,7 @@ const setReadOnly = (state, readOnly) => ({
 const setCell = (state, {i, j, key}) => ({
     ...state,
     locked: true,
-    activeCell: {i, j, key}
+    activeCell: {i, j, key},
 });
 
 /**

@@ -11,5 +11,5 @@ export const Email = ({item, svc}) => (
 
 Email.propTypes = {
     item: PropTypes.object,
-    svc: PropTypes.object.isRequired
+    svc: PropTypes.object.isRequired,
 };

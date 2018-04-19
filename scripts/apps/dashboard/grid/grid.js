@@ -21,7 +21,7 @@ angular.module('superdesk.apps.dashboard.grid', [])
             status: '=',
             widgets: '=',
             save: '&',
-            configurable: '='
+            configurable: '=',
         },
         templateUrl: 'scripts/apps/dashboard/grid/views/grid.html',
         controller: ['$scope', function GridController($scope) {
@@ -57,7 +57,7 @@ angular.module('superdesk.apps.dashboard.grid', [])
                             row: sizes[0].row,
                             col: sizes[0].col,
                             sizex: sizes[0].size_x,
-                            sizey: sizes[0].size_y
+                            sizey: sizes[0].size_y,
                         });
                     }
                 });
@@ -73,8 +73,8 @@ angular.module('superdesk.apps.dashboard.grid', [])
                 draggable: {
                     stop: function(e, ui, $widget) {
                         scope.syncWidgets();
-                    }
-                }
+                    },
+                },
             }).data('gridster');
 
             scope.$watch('status', (status) => {
@@ -92,7 +92,7 @@ angular.module('superdesk.apps.dashboard.grid', [])
                 scope.gridster.destroy();
                 scope.gridster = null;
             });
-        }
+        },
     }))
     /**
      * sdGridItem is a widget wrapper. Adds resize/remove buttons.
@@ -134,5 +134,5 @@ angular.module('superdesk.apps.dashboard.grid', [])
 
                 sdGrid.resizeWidget(element, widget.sizex, widget.sizey);
             };
-        }
+        },
     }));

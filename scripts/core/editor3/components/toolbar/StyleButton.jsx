@@ -17,7 +17,7 @@ const StyleIcons = {
     'unordered list': 'icon-unordered-list',
     'ordered list': 'icon-ordered-list',
     suggestions: 'icon-suggestion',
-    invisibles: 'icon-paragraph'
+    invisibles: 'icon-paragraph',
 };
 
 const StyleTooltips = {
@@ -35,7 +35,7 @@ const StyleTooltips = {
     'ordered list': gettext('Ordered list'),
     TH: gettext('Toggle Header'),
     suggestions: gettext('Toggle Suggestions Mode'),
-    invisibles: gettext('Toggle formatting marks')
+    invisibles: gettext('Toggle formatting marks'),
 };
 
 /**
@@ -61,7 +61,7 @@ export default class StyleButton extends React.Component {
 
         const cx = classNames({
             'Editor3-styleButton': true,
-            'Editor3-activeButton': active
+            'Editor3-activeButton': active,
         });
 
         return (
@@ -76,5 +76,5 @@ StyleButton.propTypes = {
     onToggle: PropTypes.func,
     style: PropTypes.string,
     active: PropTypes.bool,
-    label: PropTypes.string
+    label: PropTypes.string,
 };

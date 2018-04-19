@@ -112,7 +112,7 @@ describe('desks service', () => {
     it('can get stages for given desk', inject((desks, api, $q, $rootScope) => {
         spyOn(api, 'query').and.returnValue($q.when({
             _items: [{desk: 'foo'}, {desk: 'bar'}],
-            _links: {}
+            _links: {},
         }));
 
         var stages;

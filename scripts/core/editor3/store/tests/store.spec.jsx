@@ -5,7 +5,7 @@ describe('editor3.store', () => {
         $provide.service('spellcheck', ($q) => ({
             setLanguage: jasmine.createSpy(),
             getDict: jasmine.createSpy().and.returnValue($q.when(null)),
-            isCorrectWord: jasmine.createSpy()
+            isCorrectWord: jasmine.createSpy(),
         }));
     }));
 
@@ -16,7 +16,7 @@ describe('editor3.store', () => {
             readOnly: false,
             trim: true,
             onChange: () => { /* no-op */ },
-            value: 'abc'
+            value: 'abc',
         });
 
         const state = store.getState();

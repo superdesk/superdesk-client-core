@@ -9,8 +9,8 @@ export function TemplateMenuController($modal) {
             resolve: {
                 item: function() {
                     return item;
-                }
-            }
+                },
+            },
         });
     }
 }

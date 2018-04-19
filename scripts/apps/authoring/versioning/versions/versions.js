@@ -70,7 +70,7 @@ function VersioningController($scope, authoring, desks, archiveService) {
 versioningVersionDirective.$inject = [];
 function versioningVersionDirective() {
     return {
-        templateUrl: 'scripts/apps/authoring/versioning/versions/views/versions.html'
+        templateUrl: 'scripts/apps/authoring/versioning/versions/views/versions.html',
     };
 }
 

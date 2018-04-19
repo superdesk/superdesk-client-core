@@ -96,6 +96,6 @@ export function UserMentioDirective(userList, desks, asset, $q) {
                     }
                 }
             );
-        }
+        },
     };
 }

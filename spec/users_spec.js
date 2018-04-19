@@ -16,8 +16,8 @@ describe('users', () => {
                 last_name: 'bar',
                 username: 'spam',
                 email: 'foo@bar.com',
-                sign_off: 'foobar'
-            }
+                sign_off: 'foobar',
+            },
         }, done);
     });
 

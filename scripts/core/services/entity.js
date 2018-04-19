@@ -134,7 +134,7 @@ export default angular.module('superdesk.core.services.entity', [])
              */
             replace: function() {
                 $location.replace();
-            }
+            },
         };
     }])
 

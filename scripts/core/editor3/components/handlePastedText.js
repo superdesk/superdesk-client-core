@@ -121,14 +121,14 @@ function HTMLComesFromEditor(html, editorKey) {
 
 // Returns an empty block.
 const emptyBlock = () => new ContentBlock({
-    key: genKey(), type: 'unstyled', text: '', characterList: List()
+    key: genKey(), type: 'unstyled', text: '', characterList: List(),
 });
 
 // Returns an atomic block with the given data, linked to the given entity key.
 const atomicBlock = (data, entity) => new ContentBlock({
     key: genKey(), type: 'atomic', text: ' ',
     characterList: List([CharacterMetadata.create({entity})]),
-    data: data
+    data: data,
 });
 
 /**

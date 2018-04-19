@@ -47,7 +47,7 @@ describe('ingest', () => {
                 config = {
                     desk: 'desk1',
                     stage: 'stage1',
-                    macro: 'macro1'
+                    macro: 'macro1',
                 };
 
             spyOn(api, 'save').and.returnValue($q.when({_created: 'now'}));
@@ -65,12 +65,12 @@ describe('ingest', () => {
                     guid: 1,
                     _type: 'externalsource',
                     fetch_endpoint: 'search_providers_proxy',
-                    ingest_provider: '123'
+                    ingest_provider: '123',
                 },
                 config = {
                     desk: 'desk1',
                     stage: 'stage1',
-                    macro: 'macro1'
+                    macro: 'macro1',
                 },
                 action = 'externalsourceTo';
 
@@ -128,7 +128,7 @@ describe('ingest', () => {
                 fakeDesks = {
                     getCurrentDeskId: function() {
                         return '1234';
-                    }
+                    },
                 };
 
                 expect(extraCondition(fakeDesks)).toBe(true);
@@ -143,7 +143,7 @@ describe('ingest', () => {
                 fakeDesks = {
                     getCurrentDeskId: function() {
                         return null;
-                    }
+                    },
                 };
 
                 expect(extraCondition(fakeDesks)).toBe(false);

@@ -29,7 +29,7 @@ const replaceWord = (state, {word, newWord}) => {
     const wordSelection = editorState.getSelection().merge({
         anchorOffset: word.offset,
         focusOffset: word.offset + word.text.length,
-        hasFocus: true
+        hasFocus: true,
     });
 
     var newState = Modifier.replaceText(editorState.getCurrentContent(), wordSelection, newWord);
@@ -66,7 +66,7 @@ const autoSpellchecker = (state, spellcheckerEnabled) => {
 
     return {
         ...onChange(state, newState, stateNotChanged),
-        spellcheckerEnabled
+        spellcheckerEnabled,
     };
 };
 

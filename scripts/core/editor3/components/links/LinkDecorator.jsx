@@ -58,7 +58,7 @@ class LinkComponent extends React.Component {
 LinkComponent.propTypes = {
     contentState: PropTypes.object.isRequired,
     entityKey: PropTypes.string.isRequired,
-    children: PropTypes.array.isRequired
+    children: PropTypes.array.isRequired,
 };
 
 export const LinkDecorator = {

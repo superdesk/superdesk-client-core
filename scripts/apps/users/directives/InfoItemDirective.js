@@ -4,6 +4,6 @@ export function InfoItemDirective() {
             element.addClass('item');
             element.find('input, select')
                 .addClass('info-value info-editable');
-        }
+        },
     };
 }

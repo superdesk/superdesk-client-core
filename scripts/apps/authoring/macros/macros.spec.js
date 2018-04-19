@@ -8,13 +8,13 @@ describe('macros', () => {
             group: 'area',
             label: 'Length feet-inches to metric',
             name: 'feet_inches_to_metric',
-            order: 1
+            order: 1,
         },
         {
             _etag: '2',
             description: 'Marco function to generate slugline story by desk',
             name: 'skeds_by_desk',
-            label: 'Skeds By Desk'
+            label: 'Skeds By Desk',
         },
         {
             _etag: '3',
@@ -22,8 +22,8 @@ describe('macros', () => {
             group: 'currency',
             label: 'Currency CNY to AUD',
             name: 'yuan_to_aud',
-            order: 2
-        }
+            order: 2,
+        },
     ];
 
     beforeEach(window.module('superdesk.apps.desks'));

@@ -135,7 +135,7 @@ function MultieditDropdownDirective(workqueue, multiEdit, $route) {
             scope.open = function() {
                 multiEdit.create(scope.queue);
             };
-        }
+        },
     };
 }
 
@@ -164,7 +164,7 @@ function MultieditDropdownInnerDirective(workqueue, multiEdit) {
             scope.open = function(_id) {
                 multiEdit.edit(_id, attrs.board);
             };
-        }
+        },
     };
 }
 
@@ -229,7 +229,7 @@ function MultieditArticleDirective(authoring, multiEdit, lock, $timeout) {
                     return authoring.isPublished(item);
                 }
             };
-        }
+        },
     };
 }
 
@@ -268,7 +268,7 @@ function MultieditFloatMenuDirective($document) {
                 var docHeight = $document.height();
                 var docWidth = $document.width();
                 var position = {
-                    right: docWidth - crdL
+                    right: docWidth - crdL,
                 };
 
                 if (docHeight - crdT < 400) {
@@ -280,7 +280,7 @@ function MultieditFloatMenuDirective($document) {
                 }
                 return position;
             }
-        }
+        },
     };
 }
 
@@ -302,6 +302,6 @@ angular.module('superdesk.apps.authoring.multiedit', ['superdesk.core.activity',
                 topTemplateUrl: 'scripts/apps/dashboard/views/workspace-topnav.html',
                 sideTemplateUrl: 'scripts/apps/workspace/views/workspace-sidenav.html',
                 controller: MultieditController,
-                filters: [{action: 'author', type: 'multiedit'}]
+                filters: [{action: 'author', type: 'multiedit'}],
             });
     }]);

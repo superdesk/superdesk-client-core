@@ -5,6 +5,6 @@ export function ActivityMessage(sdActivityMessage) {
         template: '{{display_message}}',
         link: function(scope, element, attrs) {
             scope.display_message = sdActivityMessage.format(scope.activity);
-        }
+        },
     };
 }

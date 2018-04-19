@@ -34,7 +34,7 @@ function SdAddEmbedController(embedService, $element, $timeout, $q, _,
                     }
                     return $q.when(embed).then((embed) => ({
                         body: embed,
-                        provider: data.provider_name || EMBED_PROVIDERS.custom
+                        provider: data.provider_name || EMBED_PROVIDERS.custom,
                     }));
                 });
             }
@@ -42,7 +42,7 @@ function SdAddEmbedController(embedService, $element, $timeout, $q, _,
                 var waitFor = [];
                 var embedBlock = {
                     body: self.input,
-                    provider: EMBED_PROVIDERS.custom
+                    provider: EMBED_PROVIDERS.custom,
                 };
 
                 function updateEmbedBlock(partialUpdate) {
@@ -99,7 +99,7 @@ function SdAddEmbedController(embedService, $element, $timeout, $q, _,
                 self.createFigureBlock({
                     embedType: embed.provider,
                     body: embed.body,
-                    association: embed.association
+                    association: embed.association,
                 });
                 // close the addEmbed form
                 self.toggle(true);
@@ -108,7 +108,7 @@ function SdAddEmbedController(embedService, $element, $timeout, $q, _,
         closeEmbed: function() {
             // put block back together on embed form close.
             self.toggle();
-        }
+        },
     });
 
     // toggle when the `extended` directive attribute changes

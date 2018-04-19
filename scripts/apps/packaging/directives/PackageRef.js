@@ -4,7 +4,7 @@ export function PackageRef(api, $rootScope) {
         templateUrl: 'scripts/apps/packaging/views/sd-package-ref.html',
         scope: {
             item: '=',
-            setitem: '&'
-        }
+            setitem: '&',
+        },
     };
 }

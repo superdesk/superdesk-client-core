@@ -12,5 +12,5 @@ export const ContactName = ({item}) => {
 };
 
 ContactName.propTypes = {
-    item: PropTypes.object
+    item: PropTypes.object,
 };

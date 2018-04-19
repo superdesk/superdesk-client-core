@@ -24,9 +24,9 @@ export function Widget(asset, $modal) {
                     templateUrl: 'scripts/apps/dashboard/views/configuration.html',
                     controller: ConfigController,
                     scope: scope,
-                    size: scope.widget.classes
+                    size: scope.widget.classes,
                 });
             };
-        }
+        },
     };
 }

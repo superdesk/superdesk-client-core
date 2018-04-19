@@ -15,7 +15,7 @@ angular.module('superdesk.apps.workspace.content', [
     'superdesk.core.menu',
     'superdesk.apps.archive',
     'superdesk.apps.templates',
-    'superdesk.apps.packaging'
+    'superdesk.apps.packaging',
 ])
     .service('content', ContentService)
 
@@ -35,7 +35,7 @@ angular.module('superdesk.apps.workspace.content', [
                 templateUrl: 'scripts/apps/workspace/content/views/profile-settings.html',
                 category: superdesk.MENU_SETTINGS,
                 priority: 100,
-                privileges: {content_type: 1}
+                privileges: {content_type: 1},
             });
     }])
     .run(['keyboardManager', 'gettext', function(keyboardManager, gettext) {

@@ -64,8 +64,8 @@ const replaceHighlight = (state, txt, all = false) => {
         searchTerm: {
             ...state.searchTerm,
             // if we replaced the occurrence, index decreases
-            index: contentChanged && !all ? index - 1 : index
-        }
+            index: contentChanged && !all ? index - 1 : index,
+        },
     };
 };
 
@@ -81,7 +81,7 @@ const findNext = (state) => {
 
     return render({
         ...state,
-        searchTerm: {...state.searchTerm, index}
+        searchTerm: {...state.searchTerm, index},
     });
 };
 
@@ -97,7 +97,7 @@ const findPrev = (state) => {
 
     return render({
         ...state,
-        searchTerm: {...state.searchTerm, index}
+        searchTerm: {...state.searchTerm, index},
     });
 };
 
@@ -116,7 +116,7 @@ const setCriteria = (state, {pattern, caseSensitive}) => {
 
     return render({
         ...state,
-        searchTerm: {pattern, caseSensitive, index}
+        searchTerm: {pattern, caseSensitive, index},
     });
 };
 
@@ -219,7 +219,7 @@ export const clearHighlights = (c, es = null) => {
 const createSelection = (key, start, end) =>
     SelectionState.createEmpty(key).merge({
         anchorOffset: start,
-        focusOffset: end
+        focusOffset: end,
     });
 
 /**

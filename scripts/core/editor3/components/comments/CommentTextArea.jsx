@@ -34,7 +34,7 @@ class CommentTextArea extends React.Component {
                     .map((d) => ({
                         id: d._id,
                         display: d.name,
-                        type: 'desk'
+                        type: 'desk',
                     }))
             )
         );
@@ -53,7 +53,7 @@ class CommentTextArea extends React.Component {
                 users._items.map((u) => ({
                     id: u._id,
                     display: u.display_name,
-                    type: 'user'
+                    type: 'user',
                 }))
             )
         );

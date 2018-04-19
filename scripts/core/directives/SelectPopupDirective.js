@@ -20,6 +20,6 @@ export default angular.module('superdesk.core.directives.selectPopup', ['superde
 
                     searchBox.focus();
                 };
-            }
+            },
         };
     }]);

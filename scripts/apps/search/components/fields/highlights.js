@@ -4,7 +4,7 @@ import {HighlightsInfo} from '../index';
 
 export function highlights(props) {
     return React.createElement(HighlightsInfo, angular.extend({
-        key: 'highlights'
+        key: 'highlights',
     }, props));
 }
 

@@ -22,7 +22,7 @@ export class ContactsController {
         this.$scope.openAdvanceSearch = false;
 
         this.$scope.selected = {
-            preview: null
+            preview: null,
         };
 
         this.$scope.setView = this.setView.bind(this);
@@ -34,8 +34,8 @@ export class ContactsController {
                 view: 'mgrid',
                 default: 'mgrid',
                 label: 'Users contacts view format',
-                type: 'string'
-            }
+                type: 'string',
+            },
         };
 
         preferencesService.get('contacts:view').then((result) => {

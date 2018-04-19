@@ -10,11 +10,11 @@ export function update(props) {
             {
                 className: 'provider',
                 key: 'update',
-                title: gettextCatalog.getString('correction sequence')
+                title: gettextCatalog.getString('correction sequence'),
             },
             $interpolate(
                 gettextCatalog.getString('Update {{ seq }}'))({
-                seq: props.item.correction_sequence
+                seq: props.item.correction_sequence,
             }
             )
         );

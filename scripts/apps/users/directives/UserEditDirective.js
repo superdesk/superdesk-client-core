@@ -10,7 +10,7 @@ export function UserEditDirective(api, gettext, notify, usersService, userList, 
             origUser: '=user',
             onsave: '&',
             oncancel: '&',
-            onupdate: '&'
+            onupdate: '&',
         },
         link: function(scope, elem) {
             metadata.initialize().then(() => {
@@ -75,7 +75,7 @@ export function UserEditDirective(api, gettext, notify, usersService, userList, 
             if (noBaseLanguage) {
                 scope.languages.unshift({
                     code: gettextCatalog.baseLanguage,
-                    nativeName: langmap[gettextCatalog.baseLanguage].nativeName
+                    nativeName: langmap[gettextCatalog.baseLanguage].nativeName,
                 });
             }
 
@@ -190,6 +190,6 @@ export function UserEditDirective(api, gettext, notify, usersService, userList, 
             });
 
             scope.profileConfig = _.get(config, 'profile', {});
-        }
+        },
     };
 }

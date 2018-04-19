@@ -228,7 +228,7 @@ export function TemplatesDirective(gettext, notify, api, templates, modal, desks
                     headline: '',
                     abstract: '',
                     byline: '',
-                    body_html: ''
+                    body_html: '',
                 };
                 $scope.template.template_desks = $scope.origTemplate.template_desks || [];
                 $scope.template_desk = $scope.template.template_desks.length > 0 ?
@@ -310,7 +310,7 @@ export function TemplatesDirective(gettext, notify, api, templates, modal, desks
             $scope.filters = [
                 {label: gettext('All'), value: 'All'},
                 {label: gettext('Personal'), value: 'Personal'},
-                {label: gettext('No Desk'), value: 'None'}
+                {label: gettext('No Desk'), value: 'None'},
             ];
 
             // holds the index of the active filter.
@@ -330,6 +330,6 @@ export function TemplatesDirective(gettext, notify, api, templates, modal, desks
             });
 
             fetchTemplates();
-        }
+        },
     };
 }

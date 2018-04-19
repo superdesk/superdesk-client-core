@@ -6,7 +6,7 @@ import {
     Entity,
     ContentState,
     convertFromHTML,
-    convertToRaw
+    convertToRaw,
 } from 'draft-js';
 
 /**
@@ -177,8 +177,8 @@ export class HTMLParser {
                 alt_text: alt,
                 description_text: txt,
                 renditions: {viewImage: {href}},
-                type: type
-            }
+                type: type,
+            },
         });
     }
 }
@@ -202,7 +202,7 @@ function atomicBlock(block, entityType, entityMutability, entityData) {
 
     const char = CharacterMetadata.create({
         style: OrderedSet([]),
-        entity: entityKey
+        entity: entityKey,
     });
 
     const characterList = List([char]);

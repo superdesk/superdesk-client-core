@@ -38,7 +38,7 @@ export const EXCLUDE_FACETS = Object.freeze({
 export const DEFAULT_LIST_CONFIG = {
     priority: [
         'priority',
-        'urgency'
+        'urgency',
     ],
     firstLine: [
         'wordcount',
@@ -48,7 +48,7 @@ export const DEFAULT_LIST_CONFIG = {
         'associations',
         'publish_queue_errors',
         'headline',
-        'versioncreated'
+        'versioncreated',
     ],
     secondLine: [
         'profile',
@@ -64,12 +64,12 @@ export const DEFAULT_LIST_CONFIG = {
         'provider',
         'expiry',
         'desk',
-        'fetchedDesk'
-    ]
+        'fetchedDesk',
+    ],
 };
 
 export const DEFAULT_GRID_VIEW_FIELDS_CONFIG = [
-    'source'
+    'source',
 ];
 
 /**
@@ -115,8 +115,8 @@ export const CORE_PROJECTED_FIELDS = {
         'byline',
         'copyrightholder',
         'copyrightnotice',
-        'usageterms'
-    ]
+        'usageterms',
+    ],
 };
 
 /**
@@ -137,5 +137,5 @@ export const UI_PROJECTED_FIELD_MAPPINGS = {
     versioncreator: 'version_creator',
     versioncreated: 'versioncreated',
     markedDesks: 'marked_desks',
-    queueError: 'error_message'
+    queueError: 'error_message',
 };

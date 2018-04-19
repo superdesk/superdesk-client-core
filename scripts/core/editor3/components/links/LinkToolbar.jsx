@@ -14,7 +14,7 @@ export class LinkToolbarComponent extends Component {
         const cx = classNames({
             dropdown: true,
             'link-toolbar': true,
-            'is-link': isLink
+            'is-link': isLink,
         });
 
         return <div className={cx}>
@@ -32,15 +32,15 @@ export class LinkToolbarComponent extends Component {
 LinkToolbarComponent.propTypes = {
     editorState: PropTypes.object,
     removeLink: PropTypes.func,
-    onEdit: PropTypes.func
+    onEdit: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({
-    editorState: state.editorState
+    editorState: state.editorState,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    removeLink: () => dispatch(actions.removeLink())
+    removeLink: () => dispatch(actions.removeLink()),
 });
 
 export const LinkToolbar = connect(mapStateToProps, mapDispatchToProps)(LinkToolbarComponent);

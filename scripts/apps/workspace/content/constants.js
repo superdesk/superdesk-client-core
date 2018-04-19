@@ -19,7 +19,7 @@ export const DEFAULT_SCHEMA = Object.freeze({
     dateline: {type: 'dict', required: false},
     sign_off: {type: 'string'},
     footer: {},
-    body_footer: {type: 'string'}
+    body_footer: {type: 'string'},
 });
 
 export const DEFAULT_EDITOR = Object.freeze({
@@ -38,18 +38,18 @@ export const DEFAULT_EDITOR = Object.freeze({
     abstract: {
         order: 13,
         formatOptions: ['bold', 'italic', 'underline', 'link'],
-        enabled: true
+        enabled: true,
     },
     byline: {order: 14, enabled: true},
     dateline: {order: 15, enabled: true},
     body_html: {
         order: 16,
         formatOptions: ['h2', 'bold', 'italic', 'underline', 'quote', 'link', 'embed', 'media'],
-        enabled: true
+        enabled: true,
     },
     footer: {order: 17, enabled: true},
     body_footer: {order: 18, enabled: true},
-    sign_off: {order: 19, enabled: true}
+    sign_off: {order: 19, enabled: true},
 });
 
 // labelMap maps schema entry keys to their display names.
@@ -90,27 +90,27 @@ export const LABEL_MAP = Object.freeze({
     keywords: gettext('Keywords'),
     language: gettext('Language'),
     usageterms: gettext('Usage Terms'),
-    sms_message: gettext('SMS Message')
+    sms_message: gettext('SMS Message'),
 });
 
 export const HAS_FORMAT_OPTIONS = Object.freeze({
     abstract: true,
     body_html: true,
     footer: true,
-    body_footer: true
+    body_footer: true,
 });
 
 export const CV_ALIAS = Object.freeze({
     locators: 'place',
-    categories: 'anpa_category'
+    categories: 'anpa_category',
 });
 
 export const EXTRA_SCHEMA_FIELDS = Object.freeze({
     feature_media: {},
-    media_description: {}
+    media_description: {},
 });
 
 export const EXTRA_EDITOR_FIELDS = Object.freeze({
     feature_media: {enabled: true},
-    media_description: {enabled: true}
+    media_description: {enabled: true},
 });

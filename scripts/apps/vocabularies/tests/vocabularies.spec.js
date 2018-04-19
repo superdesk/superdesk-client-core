@@ -47,7 +47,7 @@ describe('vocabularies', () => {
                 scope.vocabulary = {items: [
                     {foo: 'flareon', bar: 'beedrill', is_active: true},
                     {bar: 'bellsprout', spam: 'sandslash', is_active: true},
-                    {qux: 'quagsire', foo: 'frillish', corge: 'corfish', is_active: true}
+                    {qux: 'quagsire', foo: 'frillish', corge: 'corfish', is_active: true},
                 ]};
                 $controller('VocabularyEdit', {$scope: scope});
             }));
@@ -87,7 +87,7 @@ describe('vocabularies', () => {
 
                 $rootScope.$digest();
                 expect(api.save).toHaveBeenCalledWith('vocabularies', {
-                    items: [{foo: 'feraligatr', bar: 'bayleef', is_active: true}]
+                    items: [{foo: 'feraligatr', bar: 'bayleef', is_active: true}],
                 });
                 expect(metadata.initialize).toHaveBeenCalled();
             }));
@@ -124,7 +124,7 @@ describe('vocabularies', () => {
                 $rootScope.$digest();
 
                 expect(vocabularyLink).toEqual({
-                    items: [{foo: 'flareon', bar: 'beedrill', is_active: true}]
+                    items: [{foo: 'flareon', bar: 'beedrill', is_active: true}],
                 });
 
                 expect(scope.closeVocabulary).toHaveBeenCalled();

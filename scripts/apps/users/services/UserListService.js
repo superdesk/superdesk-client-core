@@ -42,8 +42,8 @@ export function UserListService(api, $q, $cacheFactory) {
                     {username: {$regex: search, $options: '-i'}},
                     {first_name: {$regex: search, $options: '-i'}},
                     {last_name: {$regex: search, $options: '-i'}},
-                    {email: {$regex: search, $options: '-i'}}
-                ]
+                    {email: {$regex: search, $options: '-i'}},
+                ],
             });
         }
 

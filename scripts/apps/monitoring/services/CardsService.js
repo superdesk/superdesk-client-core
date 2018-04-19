@@ -43,7 +43,7 @@ export function CardsService(api, search, session, desks, config) {
         case 'personal':
             query.filter({bool: {
                 must: {term: {original_creator: session.identity._id}},
-                must_not: {exists: {field: 'task.desk'}}
+                must_not: {exists: {field: 'task.desk'}},
             }});
             break;
 
@@ -53,7 +53,7 @@ export function CardsService(api, search, session, desks, config) {
 
         case 'highlights':
             query.filter({and: [
-                {term: {highlights: queryParam.highlight}}
+                {term: {highlights: queryParam.highlight}},
             ]});
             break;
 
@@ -66,7 +66,7 @@ export function CardsService(api, search, session, desks, config) {
 
             query.filter({and: [
                 {term: {'task.desk': deskId}},
-                {term: {state: 'scheduled'}}
+                {term: {state: 'scheduled'}},
             ]});
             break;
 
@@ -94,8 +94,8 @@ export function CardsService(api, search, session, desks, config) {
                     {term: {'task.last_authoring_desk': deskId}},
                     {and: [
                         {term: {'task.desk': deskId}},
-                        {terms: {state: states}}
-                    ]}
+                        {terms: {state: states}},
+                    ]},
                 ]});
             } else if (desk.desk_type === 'production') {
                 query.filter({and: [
@@ -109,7 +109,7 @@ export function CardsService(api, search, session, desks, config) {
         if (card.fileType) {
             var termsHighlightsPackage = {and: [
                 {bool: {must: {exists: {field: 'highlight'}}}},
-                {term: {type: 'composite'}}
+                {term: {type: 'composite'}},
             ]};
 
             var termsFileType = {terms: {type: JSON.parse(card.fileType)}};
@@ -118,14 +118,14 @@ export function CardsService(api, search, session, desks, config) {
             if (_.includes(JSON.parse(card.fileType), 'composite')) {
                 termsFileType = {and: [
                     {bool: {must_not: {exists: {field: 'highlight'}}}},
-                    {terms: {type: JSON.parse(card.fileType)}}
+                    {terms: {type: JSON.parse(card.fileType)}},
                 ]};
             }
 
             if (_.includes(JSON.parse(card.fileType), 'highlightsPackage')) {
                 query.filter({or: [
                     termsHighlightsPackage,
-                    termsFileType
+                    termsFileType,
                 ]});
             } else {
                 query.filter(termsFileType);

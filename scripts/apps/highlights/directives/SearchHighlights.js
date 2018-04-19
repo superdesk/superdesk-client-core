@@ -18,6 +18,6 @@ export function SearchHighlights(highlightsService) {
             highlightsService.get().then((result) => {
                 scope.highlights = result._items;
             });
-        }
+        },
     };
 }

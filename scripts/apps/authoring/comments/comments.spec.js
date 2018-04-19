@@ -7,8 +7,8 @@ describe('item comments', () => {
             this.$get = function() {
                 return {
                     item_comments: {
-                        query: function() { /* no-op */ }
-                    }
+                        query: function() { /* no-op */ },
+                    },
                 };
             };
         });
@@ -26,7 +26,7 @@ describe('item comments', () => {
         $rootScope.$apply();
 
         expect(api.item_comments.query).toHaveBeenCalledWith({
-            where: {item: 'test-id'}, embedded: {user: 1}
+            where: {item: 'test-id'}, embedded: {user: 1},
         });
     }));
 });

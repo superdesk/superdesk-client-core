@@ -5,7 +5,7 @@ export function RemoveTagsDirective() {
     return {
         require: 'ngModel',
         scope: {
-            model: '=ngModel'
+            model: '=ngModel',
         },
         link: function(scope, elem, attr, ngModel) {
             scope.$watch('model', () => {
@@ -13,6 +13,6 @@ export function RemoveTagsDirective() {
                     scope.model = helpers.stripHtmlRaw(scope.model);
                 }
             });
-        }
+        },
     };
 }

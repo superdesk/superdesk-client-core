@@ -107,6 +107,6 @@ export function ContentCreateDirective(api, desks, templates, content, authoring
             scope.createFromTemplate = function(template) {
                 content.createItemFromTemplate(template).then(edit);
             };
-        }
+        },
     };
 }

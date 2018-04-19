@@ -20,7 +20,7 @@ describe('sdIngestRoutingContent directive', () => {
         fakeTzData = {
             $promise: null,
             zones: {},
-            links: {}
+            links: {},
         };
         $provide.constant('tzdata', fakeTzData);
     }));
@@ -66,7 +66,7 @@ describe('sdIngestRoutingContent directive', () => {
             scope.contentFilters = [
                 {_id: 'filter_1', name: 'filter one'},
                 {_id: 'filter_2', name: 'filter two'},
-                {_id: 'filter_3', name: 'filter three'}
+                {_id: 'filter_3', name: 'filter three'},
             ];
         });
 

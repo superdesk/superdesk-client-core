@@ -35,7 +35,7 @@ export const SelectInput = ({
 
     const opts = options.map((opt) => ({
         key: get(opt, keyField),
-        label: get(opt, labelField)
+        label: get(opt, labelField),
     }));
 
     const onChangeHandler = (field, key) => {
@@ -83,7 +83,7 @@ SelectInput.propTypes = {
             PropTypes.string,
             PropTypes.object,
             PropTypes.number,
-        ])
+        ]),
     })).isRequired,
     keyField: PropTypes.string,
     labelField: PropTypes.string,

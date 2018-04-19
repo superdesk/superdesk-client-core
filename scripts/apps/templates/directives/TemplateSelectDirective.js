@@ -6,11 +6,11 @@ export function TemplateSelectDirective(api, desks, session, templates, notify, 
         templateUrl: 'scripts/apps/templates/views/sd-template-select.html',
         scope: {
             selectAction: '=',
-            open: '='
+            open: '=',
         },
         link: function(scope) {
             scope.options = {
-                templateName: null
+                templateName: null,
             };
 
             scope.close = function() {
@@ -52,6 +52,6 @@ export function TemplateSelectDirective(api, desks, session, templates, notify, 
             }
 
             scope.$watch('options.templateName', fetchTemplates);
-        }
+        },
     };
 }

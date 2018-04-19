@@ -35,7 +35,7 @@ describe('packaging', () => {
             function addItem(i) {
                 scope.$broadcast('package:addItems', {
                     group: 'main',
-                    items: [i]
+                    items: [i],
                 });
             }
         }));

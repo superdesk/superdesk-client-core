@@ -42,7 +42,7 @@ export class DesksDropdown extends React.Component {
             React.createElement('button', {
                 className: 'dropdown__toggle',
                 onMouseOver: this.toggle,
-                onMouseLeave: this.close
+                onMouseLeave: this.close,
             },
             React.createElement('i',
                 {className: 'icon-dots'})
@@ -63,7 +63,7 @@ export class DesksDropdown extends React.Component {
         var elem = React.createElement('div', {
             className: 'dropdown__menu more-activity-menu',
             onMouseOver: this.toggle,
-            onMouseLeave: this.close
+            onMouseLeave: this.close,
         }, React.createElement('ul', {}, desks));
 
         var icon = ReactDOM.findDOMNode(this).getElementsByClassName('dropdown__toggle')[0];

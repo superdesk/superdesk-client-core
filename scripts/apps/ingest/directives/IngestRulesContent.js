@@ -72,6 +72,6 @@ export function IngestRulesContent(api, gettext, notify, modal, $filter) {
             scope.reorder = function(start, end) {
                 scope.editRuleset.rules.splice(end, 0, scope.editRuleset.rules.splice(start, 1)[0]);
             };
-        }
+        },
     };
 }

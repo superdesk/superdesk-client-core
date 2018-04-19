@@ -10,7 +10,7 @@ angular.module('superdesk.apps.search.react', [
     'superdesk.apps.highlights',
     'superdesk.apps.translations',
     'superdesk.core.datetime',
-    'superdesk.apps.authoring.metadata'
+    'superdesk.apps.authoring.metadata',
 ])
     .service('monitoringState', svc.MonitoringState)
     .directive('sdItemsList', directive.ItemList);
@@ -70,7 +70,7 @@ angular.module('superdesk.apps.search', [
                 templateUrl: asset.templateUrl('apps/search/views/search.html'),
                 sideTemplateUrl: 'scripts/apps/workspace/views/workspace-sidenav.html',
                 controller: SearchController,
-                controllerAs: 'search'
+                controllerAs: 'search',
             });
 
             workspaceMenuProvider.item({
@@ -79,7 +79,7 @@ angular.module('superdesk.apps.search', [
                 templateUrl: asset.templateUrl('apps/search/views/menu.html'),
                 order: 900,
             });
-        }
+        },
     ])
 
     .run(['keyboardManager', 'gettext', function(keyboardManager, gettext) {

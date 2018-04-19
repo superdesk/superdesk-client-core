@@ -4,7 +4,7 @@ export function MediaRelated(superdesk) {
     return {
         scope: {
             item: '=',
-            relatedItems: '='
+            relatedItems: '=',
         },
         templateUrl: 'scripts/apps/archive/views/related-view.html',
         link: function(scope, elem) {
@@ -13,6 +13,6 @@ export function MediaRelated(superdesk) {
                     superdesk.intent('edit', 'item', item);
                 });
             };
-        }
+        },
     };
 }

@@ -8,7 +8,7 @@ export function priority(props) {
             ItemPriority,
             angular.extend({
                 key: 'priority',
-                svc: props.svc
+                svc: props.svc,
             }, props.item)
         ) : null;
 }

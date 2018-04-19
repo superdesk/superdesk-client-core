@@ -24,7 +24,7 @@ export class ContentAPISearchService {
             {field: 'urgency', label: gettext('Urgency')},
             {field: 'priority', label: gettext('Priority')},
             {field: 'slugline', label: gettext('Slugline')},
-            {field: 'service.name', label: gettext('Category')}
+            {field: 'service.name', label: gettext('Category')},
         ];
         this.search = search;
     }
@@ -44,7 +44,7 @@ export class ContentAPISearchService {
         if (params.subject) {
             filters.push({or: [
                 {terms: {'subject.code': JSON.parse(params.subject)}},
-                {terms: {'subject.parent': JSON.parse(params.subject)}}
+                {terms: {'subject.parent': JSON.parse(params.subject)}},
             ]});
         }
 
@@ -63,7 +63,7 @@ export class ContentAPISearchService {
                 category: 'service.name',
                 urgency: 'urgency',
                 source: 'source',
-                priority: 'priority'
+                priority: 'priority',
             }[key];
 
             if (termKey) {

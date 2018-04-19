@@ -11,17 +11,17 @@ describe('Content API Search', () => {
         $provide.constant('config', {
             model: {
                 timeformat: 'HH:mm:ss',
-                dateformat: 'DD/MM/YYYY'
+                dateformat: 'DD/MM/YYYY',
             },
             view: {
                 timeformat: 'HH:mm',
-                dateformat: 'MM/DD/YYYY'
+                dateformat: 'MM/DD/YYYY',
             },
             search: {
-                useDefaultTimezone: true
+                useDefaultTimezone: true,
             },
             defaultTimezone: 'UTC',
-            server: {url: undefined}
+            server: {url: undefined},
         });
     }));
 

@@ -50,6 +50,6 @@ export default angular.module('superdesk.core.directives.checkAll', [])
 
                     render(element, checked);
                 });
-            }
+            },
         };
     });

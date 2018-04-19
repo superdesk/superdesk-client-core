@@ -37,7 +37,7 @@ export function forceUpdate() {
 export function handleEditorTab(e) {
     return {
         type: 'EDITOR_TAB',
-        payload: e
+        payload: e,
     };
 }
 
@@ -71,7 +71,7 @@ export function dragDrop(transfer, mediaType) {
 export function setLocked(v) {
     return {
         type: 'EDITOR_SET_LOCKED',
-        payload: v
+        payload: v,
     };
 }
 
@@ -87,7 +87,7 @@ export function setLocked(v) {
 export function setReadOnly(v) {
     return {
         type: 'EDITOR_SET_READONLY',
-        payload: v
+        payload: v,
     };
 }
 
@@ -99,7 +99,7 @@ export function setReadOnly(v) {
 export function setActiveCell(i, j, key) {
     return {
         type: 'EDITOR_SET_CELL',
-        payload: {i, j, key}
+        payload: {i, j, key},
     };
 }
 
@@ -115,7 +115,7 @@ export function setActiveCell(i, j, key) {
 export function changeImageCaption(entityKey, newCaption, field) {
     return {
         type: 'EDITOR_CHANGE_IMAGE_CAPTION',
-        payload: {entityKey, newCaption, field}
+        payload: {entityKey, newCaption, field},
     };
 }
 
@@ -130,7 +130,7 @@ export function changeImageCaption(entityKey, newCaption, field) {
 export function setHTML(html) {
     return {
         type: 'EDITOR_SET_HTML',
-        payload: html
+        payload: html,
     };
 }
 

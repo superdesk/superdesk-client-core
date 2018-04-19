@@ -27,7 +27,7 @@ describe('workspace', () => {
 
         var ctrl = $controller('DashboardController', {
             dashboardWidgets: [{_id: 'foo', name: 'foo'}],
-            $scope: $rootScope.$new()
+            $scope: $rootScope.$new(),
         });
 
         $rootScope.$digest();

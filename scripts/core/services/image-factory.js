@@ -9,6 +9,6 @@ export default angular.module('superdesk.core.services.imageFactory', []).factor
     () => ({
         makeInstance: function() {
             return new Image();
-        }
+        },
     })
 );

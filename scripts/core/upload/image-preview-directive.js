@@ -7,7 +7,7 @@ angular.module('superdesk.core.upload.imagepreview', []).directive('sdImagePrevi
             sdImagePreview: '=',
             progressWidth: '=',
             width: '=?',
-            height: '=?'
+            height: '=?',
         },
         link: function(scope, elem) {
             function setProgress(val) {
@@ -46,6 +46,6 @@ angular.module('superdesk.core.upload.imagepreview', []).directive('sdImagePrevi
             scope.$on('$destroy', () => {
                 window.URL.revokeObjectURL(scope.sdImagePreview);
             });
-        }
+        },
     };
 }]);

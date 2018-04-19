@@ -15,7 +15,7 @@ class LinkFunction extends BaseSortBar {
             'scanpix(ntbtema)': true,
             'scanpix(ntbkultur)': true,
             'scanpix(desk)': true,
-            'scanpix(npk)': true
+            'scanpix(npk)': true,
         };
 
         super.getActive();
@@ -48,7 +48,7 @@ export function ItemSortbar(search, $location, sort) {
     return {
         scope: {total: '='},
         template: require('apps/search/views/item-sortbar.html'),
-        link: (scope, elem) => new LinkFunction(search, $location, sort, scope, elem)
+        link: (scope, elem) => new LinkFunction(search, $location, sort, scope, elem),
     };
 }
 

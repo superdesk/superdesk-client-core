@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-    closeActionsMenu
+    closeActionsMenu,
 } from '../helpers';
 
 export class HighlightsList extends React.Component {
@@ -92,7 +92,7 @@ export class HighlightsList extends React.Component {
                         {className: 'icon-close-small icon--white'}
                     )
                 )
-            )
+            ),
         ];
 
         return React.createElement(
@@ -100,7 +100,7 @@ export class HighlightsList extends React.Component {
             {
                 className: 'dropdown dropdown__menu highlights-list-menu open',
                 onMouseEnter: this.stopTimeout,
-                onMouseLeave: this.close
+                onMouseLeave: this.close,
             },
             items.concat(highlights.map(createHighlight))
         );
@@ -112,5 +112,5 @@ HighlightsList.propTypes = {
     scope: PropTypes.any.isRequired,
     item: PropTypes.any,
     highlights: PropTypes.any,
-    highlightsById: PropTypes.any
+    highlightsById: PropTypes.any,
 };

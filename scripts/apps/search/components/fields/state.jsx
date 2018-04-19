@@ -15,7 +15,7 @@ export function state(props) {
             'span', {
                 title: title,
                 className: 'state-label state-' + props.item.state,
-                key: 'state'
+                key: 'state',
             },
             $filter('removeLodash')(gettextCatalog.getString(props.item.state))
         );

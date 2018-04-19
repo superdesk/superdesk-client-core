@@ -12,6 +12,6 @@ export function UserDetailsPaneDirective($timeout) {
             scope.closePane = function() {
                 $('.user-details-pane').removeClass('open');
             };
-        }
+        },
     };
 }

@@ -30,8 +30,8 @@ describe('templates', () => {
                 is_public: false,
                 data: {
                     headline: 'foo',
-                    slugline: 'FOO'
-                }
+                    slugline: 'FOO',
+                },
             }, null);
         }));
 
@@ -85,7 +85,7 @@ describe('templates', () => {
                 where: '{"$and":[{"$or":[{"$or":[' +
                 '{"template_desks":{"$exists":false},"is_public":true},' +
                 '{"template_desks":[],"is_public":true}]},' +
-                '{"user":"foo","is_public":false}]}]}'
+                '{"user":"foo","is_public":false}]}]}',
             });
         }));
         it('can fetch templates using type parameter', inject((api, templates) => {
@@ -96,7 +96,7 @@ describe('templates', () => {
                 sort: 'template_name',
                 where: '{"$and":[{"$or":[{"$or":[{"template_desks":{"$exists":false},"is_public":true},' +
                        '{"template_desks":[],"is_public":true}]},' +
-                       '{"user":"foo","is_public":false}],"template_type":"create"}]}'
+                       '{"user":"foo","is_public":false}],"template_type":"create"}]}',
             });
         }));
         it('can fetch templates using desk parameter', inject((api, templates) => {
@@ -108,7 +108,7 @@ describe('templates', () => {
                 where: '{"$and":[{"$or":[{"$or":[{"template_desks":{"$exists":false},"is_public":true},' +
                 '{"template_desks":[],"is_public":true},' +
                 '{"template_desks":{"$in":["desk1"]},"is_public":true}]},' +
-                '{"user":"foo","is_public":false}]}]}'
+                '{"user":"foo","is_public":false}]}]}',
             });
         }));
         it('can fetch templates using keyword parameter', inject((api, templates) => {
@@ -120,7 +120,7 @@ describe('templates', () => {
                 where: '{"$and":[{"$or":[{"$or":[{"template_desks":{"$exists":false},"is_public":true},' +
                 '{"template_desks":[],"is_public":true}]},' +
                 '{"user":"foo","is_public":false}],' +
-                '"template_name":{"$regex":"keyword","$options":"-i"}}]}'
+                '"template_name":{"$regex":"keyword","$options":"-i"}}]}',
             });
         }));
         it('can fetch templates by id', inject((api, templates) => {
@@ -128,7 +128,7 @@ describe('templates', () => {
             expect(api.query).toHaveBeenCalledWith('content_templates', {
                 max_results: 10,
                 page: 1,
-                where: '{"_id":{"$in":[123,456]}}'
+                where: '{"_id":{"$in":[123,456]}}',
             });
         }));
         it('can add recent templates', inject((api, templates, preferencesService, $q, $rootScope) => {
@@ -138,22 +138,22 @@ describe('templates', () => {
             $rootScope.$digest();
             expect(preferencesService.update).toHaveBeenCalledWith({
                 'templates:recent': {
-                    desk1: ['template1']
-                }
+                    desk1: ['template1'],
+                },
             });
         }));
         it('can get recent templates', inject((api, templates, preferencesService, $q, $rootScope) => {
             spyOn(preferencesService, 'get').and.returnValue($q.when({
                 'templates:recent': {
-                    desk2: ['template2', 'template3']
-                }
+                    desk2: ['template2', 'template3'],
+                },
             }));
             templates.getRecentTemplates('desk2');
             $rootScope.$digest();
             expect(api.query).toHaveBeenCalledWith('content_templates', {
                 max_results: 10,
                 page: 1,
-                where: '{"_id":{"$in":["template2","template3"]}}'
+                where: '{"_id":{"$in":["template2","template3"]}}',
             });
         }));
 
@@ -173,7 +173,7 @@ describe('templates', () => {
                 page: 1,
                 max_results: 10,
                 sort: 'template_name',
-                where: '{"$and":[{"$or":[{"user":"foo"}]}]}'
+                where: '{"$and":[{"$or":[{"user":"foo"}]}]}',
             });
         }));
 
@@ -182,7 +182,7 @@ describe('templates', () => {
                 privileges.privileges.content_templates = 1;
                 spyOn(desks, 'fetchCurrentUserDesks').and.returnValue($q.when([
                     {_id: 'finance'},
-                    {_id: 'sports'}
+                    {_id: 'sports'},
                 ]));
 
                 templates.fetchAllTemplates();
@@ -197,11 +197,11 @@ describe('templates', () => {
                                 {user: 'foo'},
                                 {
                                     is_public: true,
-                                    template_desks: {$in: ['finance', 'sports']}
-                                }
-                            ]
-                        }]
-                    })
+                                    template_desks: {$in: ['finance', 'sports']},
+                                },
+                            ],
+                        }],
+                    }),
                 });
             }));
 
@@ -214,7 +214,7 @@ describe('templates', () => {
                     page: 1,
                     max_results: 50,
                     sort: 'template_name',
-                    where: '{"$and":[{"$or":[{"user":"foo"},{"is_public":true}]}]}'
+                    where: '{"$and":[{"$or":[{"user":"foo"},{"is_public":true}]}]}',
                 });
             }));
 
@@ -227,7 +227,7 @@ describe('templates', () => {
                     page: 1,
                     max_results: 50,
                     sort: 'template_name',
-                    where: '{"$and":[{"$or":[{"user":"foo"},{"is_public":true}],"template_type":"create"}]}'
+                    where: '{"$and":[{"$or":[{"user":"foo"},{"is_public":true}],"template_type":"create"}]}',
                 });
             }));
 
@@ -240,7 +240,7 @@ describe('templates', () => {
                     max_results: 50,
                     sort: 'template_name',
                     where: '{"$and":[{"$or":[{"user":"foo"}],' +
-                '"template_type":"create","template_name":{"$regex":"test","$options":"-i"}}]}'
+                '"template_type":"create","template_name":{"$regex":"test","$options":"-i"}}]}',
                 });
             }));
     });
@@ -254,7 +254,7 @@ describe('templates', () => {
                 spyOn(api, 'query').and.returnValue($q.when({_items: [
                     {_id: 'public1'},
                     {_id: 'public2'},
-                    {_id: 'private', is_public: false}
+                    {_id: 'private', is_public: false},
                 ], _meta: {total: 3}}));
                 var scope = $rootScope.$new();
 

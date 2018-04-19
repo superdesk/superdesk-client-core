@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-    closeActionsMenu
+    closeActionsMenu,
 } from '../helpers';
 
 /**
@@ -94,5 +94,5 @@ export class MarkedDesksList extends React.Component {
 MarkedDesksList.propTypes = {
     svc: PropTypes.object.isRequired,
     item: PropTypes.any,
-    markedDesksById: PropTypes.any
+    markedDesksById: PropTypes.any,
 };

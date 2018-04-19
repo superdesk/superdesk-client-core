@@ -75,7 +75,7 @@ export default function SuggestDirective(suggest) {
         template: require('./SuggestView.html'),
         controller: SuggestController,
         controllerAs: 'ctrl',
-        link: (scope, elem) => new LinkFunction(suggest, scope, elem)
+        link: (scope, elem) => new LinkFunction(suggest, scope, elem),
     };
 }
 

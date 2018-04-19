@@ -5,7 +5,7 @@ export function IngestUserDashboard(api, userList, privileges, config, moment) {
         templateUrl: 'scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html',
         scope: {
             item: '=',
-            setUserPreferences: '&'
+            setUserPreferences: '&',
         },
         link: function(scope) {
             function getCount() {
@@ -16,14 +16,14 @@ export function IngestUserDashboard(api, userList, privileges, config, moment) {
                                 filter: {
                                     and: [
                                         {term: {ingest_provider: scope.item._id}},
-                                        {range: {versioncreated: {gte: 'now-24h'}}}
-                                    ]
-                                }
-                            }
+                                        {range: {versioncreated: {gte: 'now-24h'}}},
+                                    ],
+                                },
+                            },
                         },
                         size: 0,
-                        from: 0
-                    }
+                        from: 0,
+                    },
                 };
 
                 api.ingest.query(criteria).then((result) => {
@@ -47,12 +47,12 @@ export function IngestUserDashboard(api, userList, privileges, config, moment) {
                 var criteria = {
                     max_results: 5,
                     sort: '[(\'_created\',-1)]',
-                    embedded: {user: 1}
+                    embedded: {user: 1},
                 };
 
                 var where = [
                     {resource: 'ingest_providers'},
-                    {'data.provider_id': scope.item._id}
+                    {'data.provider_id': scope.item._id},
                 ];
 
                 if (scope.item.log_messages === 'error') {
@@ -60,7 +60,7 @@ export function IngestUserDashboard(api, userList, privileges, config, moment) {
                 }
 
                 criteria.where = JSON.stringify({
-                    $and: where
+                    $and: where,
                 });
 
                 api.query('activity', criteria).then((result) => {
@@ -127,6 +127,6 @@ export function IngestUserDashboard(api, userList, privileges, config, moment) {
             scope.$on('ingest_provider:update', (evt, extras) => {
                 refreshItem(extras);
             });
-        }
+        },
     };
 }

@@ -16,7 +16,7 @@ export const removeBlock = (editorState, blockKey) => {
         anchorKey: blockKey,
         anchorOffset: 0,
         focusKey: blockKey,
-        focusOffset: block.getLength()
+        focusOffset: block.getLength(),
     });
 
     let newContentState = Modifier.setBlockType(

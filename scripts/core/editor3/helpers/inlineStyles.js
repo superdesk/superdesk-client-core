@@ -5,7 +5,7 @@
 export const inlineStyles = {
     bold: 'BOLD',
     italic: 'ITALIC',
-    underline: 'UNDERLINE'
+    underline: 'UNDERLINE',
 };
 
 export const acceptedInlineStyles = ['BOLD', 'ITALIC', 'UNDERLINE'];

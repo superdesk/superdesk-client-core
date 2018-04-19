@@ -43,6 +43,6 @@ export function AuthoringTopbarDirective(TranslationService) {
             scope.isTranslationAvailable = function() {
                 return TranslationService.checkAvailability(scope.item);
             };
-        }
+        },
     };
 }

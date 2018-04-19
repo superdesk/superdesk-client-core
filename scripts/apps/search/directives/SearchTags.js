@@ -114,6 +114,6 @@ export function SearchTags($location, tags, asset, metadata, desks, $rootScope) 
                     }
                 });
             };
-        }
+        },
     };
 }

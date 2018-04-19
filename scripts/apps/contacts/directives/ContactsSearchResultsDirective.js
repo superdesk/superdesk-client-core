@@ -132,7 +132,7 @@ class LinkFunction {
 export function ContactsSearchResultsDirective(contacts, search, notify, gettext, $location, $timeout) {
     return {
         template: require('scripts/apps/contacts/views/search-results.html'),
-        link: (scope, elem) => new LinkFunction(contacts, search, notify, gettext, $location, $timeout, scope, elem)
+        link: (scope, elem) => new LinkFunction(contacts, search, notify, gettext, $location, $timeout, scope, elem),
     };
 }
 

@@ -1,5 +1,5 @@
 ItemGlobalSearch.$inject = [
-    'session', 'api', 'notify', 'gettext', 'keyboardManager', 'asset', 'authoringWorkspace', 'authoring'
+    'session', 'api', 'notify', 'gettext', 'keyboardManager', 'asset', 'authoringWorkspace', 'authoring',
 ];
 
 /**
@@ -63,17 +63,17 @@ export function ItemGlobalSearch(
                     {should: [{term: {unique_name: scope.meta.unique_name}},
                         {term: {_id: scope.meta.unique_name}},
                         {term: {guid: scope.meta.unique_name}},
-                        {term: {item_id: scope.meta.unique_name}}
-                    ]}
-                    }
+                        {term: {item_id: scope.meta.unique_name}},
+                    ]},
+                    },
                 ];
                 var criteria = {
                     repo: 'archive,published,archived',
                     source: {
                         query: {filtered: {filter: {
-                            and: filter
-                        }}}
-                    }
+                            and: filter,
+                        }}},
+                    },
                 };
 
                 api.query('search', criteria).then((result) => {
@@ -110,6 +110,6 @@ export function ItemGlobalSearch(
                 reset();
                 scope.flags.enabled = false;
             }
-        }
+        },
     };
 }

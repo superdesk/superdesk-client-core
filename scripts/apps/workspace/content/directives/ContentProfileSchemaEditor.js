@@ -64,13 +64,13 @@ export function ContentProfileSchemaEditor(content, config) {
                     'justifyLeft', 'justifyCenter', 'justifyRight', 'justifyFull',
                     'outdent', 'indent', 'unordered list', 'ordered list', 'pre', 'quote',
                     'media', 'link', 'superscript', 'subscript', 'strikethrough',
-                    'underline', 'italic', 'bold', 'table'
+                    'underline', 'italic', 'bold', 'table',
                 ];
 
                 scope.formattingOptionsEditor3 = [
                     'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ordered list', 'unordered list', 'quote', 'media', 'link',
                     'embed', 'underline', 'italic', 'bold', 'table', 'formatting marks', 'annotation', 'comments',
-                    'suggestions'
+                    'suggestions',
                 ];
 
                 scope.label = (id) => getLabelForFieldId(id, customFields);
@@ -113,7 +113,7 @@ export function ContentProfileSchemaEditor(content, config) {
 
                     scope.schemaKeys.splice(scope.schemaKeys.indexOf(id), 1);
                     scope.schemaKeysDisabled.push({
-                        key: id, name: scope.model.editor[id].field_name || scope.label(id)
+                        key: id, name: scope.model.editor[id].field_name || scope.label(id),
                     });
                     scope.schemaKeysOrdering = _.clone(scope.schemaKeys);
 
@@ -173,6 +173,6 @@ export function ContentProfileSchemaEditor(content, config) {
                     });
                 };
             });
-        }
+        },
     };
 }

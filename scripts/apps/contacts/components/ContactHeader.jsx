@@ -15,5 +15,5 @@ export const ContactHeader = ({item}) => {
 };
 
 ContactHeader.propTypes = {
-    item: PropTypes.object
+    item: PropTypes.object,
 };

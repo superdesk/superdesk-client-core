@@ -11,7 +11,7 @@ describe('subscribers service', () => {
                 {name: 'sub-3', is_active: false},
                 {name: 'sub-4', is_active: true, is_targetable: false},
                 {name: 'sub-5', is_active: true}],
-            _links: {}
+            _links: {},
         }));
     }));
 

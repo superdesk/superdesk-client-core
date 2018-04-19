@@ -19,7 +19,7 @@
  */
 SubscribersDirective.$inject = [
     'gettext', 'notify', 'api', 'subscribersService', 'adminPublishSettingsService', 'modal',
-    'metadata', 'contentFilters', '$q', '$filter', 'products'
+    'metadata', 'contentFilters', '$q', '$filter', 'products',
 ];
 
 export function SubscribersDirective(
@@ -28,7 +28,7 @@ export function SubscribersDirective(
     return {
         scope: {
             subscribersList: '=',
-            hideHeader: '='
+            hideHeader: '=',
         },
         templateUrl: 'scripts/apps/publish/views/subscribers.html',
         link: function($scope) {
@@ -283,6 +283,6 @@ export function SubscribersDirective(
             if (!$scope.subscribersList) {
                 fetchSubscribers();
             }
-        }
+        },
     };
 }

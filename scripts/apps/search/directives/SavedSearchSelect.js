@@ -5,6 +5,6 @@ export function SavedSearchSelect(session, savedSearch) {
             savedSearch.getUserSavedSearches(session.identity).then((res) => {
                 scope.searches = res;
             });
-        }
+        },
     };
 }

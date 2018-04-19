@@ -43,7 +43,7 @@ export class ActionsMenu extends React.Component {
                     {
                         className: 'more-activity-toggle condensed dropdown__toggle',
                         onClick: this.toggle,
-                        onDoubleClick: this.stopEvent
+                        onDoubleClick: this.stopEvent,
                     },
                     React.createElement('i', {className: 'icon-dots-vertical'})
                 )
@@ -56,5 +56,5 @@ ActionsMenu.propTypes = {
     svc: PropTypes.object.isRequired,
     scope: PropTypes.any.isRequired,
     item: PropTypes.any,
-    onActioning: PropTypes.func
+    onActioning: PropTypes.func,
 };

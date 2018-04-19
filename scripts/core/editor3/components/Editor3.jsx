@@ -34,7 +34,7 @@ const mapStateToProps = (state) => ({
     tabindex: state.tabindex,
     suggestingMode: state.suggestingMode,
     invisibles: state.invisibles,
-    svc: state.svc
+    svc: state.svc,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -46,7 +46,7 @@ const mapDispatchToProps = (dispatch) => ({
     onCreateAddSuggestion: (chars) => dispatch(actions.createAddSuggestion(chars)),
     onCreateDeleteSuggestion: (action) => dispatch(actions.createDeleteSuggestion(action)),
     onPasteFromSuggestingMode: (content) => dispatch(actions.onPasteFromSuggestingMode(content)),
-    onCreateSplitParagraphSuggestion: () => dispatch(actions.createSplitParagraphSuggestion())
+    onCreateSplitParagraphSuggestion: () => dispatch(actions.createSplitParagraphSuggestion()),
 });
 
 export const Editor3 = connect(mapStateToProps, mapDispatchToProps)(Editor3Base);

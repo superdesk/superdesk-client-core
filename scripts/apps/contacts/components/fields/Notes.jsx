@@ -20,5 +20,5 @@ export const Notes = ({item, svc}) => {
 
 Notes.propTypes = {
     item: PropTypes.object,
-    svc: PropTypes.object.isRequired
+    svc: PropTypes.object.isRequired,
 };

@@ -6,7 +6,7 @@ export function MediaView(keyboardManager, packages) {
         scope: {
             items: '=',
             item: '=',
-            close: '&'
+            close: '&',
         },
         link: function(scope, elem) {
             var packageStack = [];
@@ -91,6 +91,6 @@ export function MediaView(keyboardManager, packages) {
             };
 
             setItem(scope.item);
-        }
+        },
     };
 }

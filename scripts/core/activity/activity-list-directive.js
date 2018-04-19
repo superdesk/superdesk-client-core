@@ -8,14 +8,14 @@ angular.module('superdesk.core.activity.list', [])
                     action: '@',
                     done: '&',
                     single: '=',
-                    preview: '@'
+                    preview: '@',
                 },
                 templateUrl: asset.templateUrl('core/activity/views/activity-list.html'),
                 link: function(scope, elem, attrs) {
                     scope.item.actioning = {};
 
                     var intent = {
-                        action: scope.action
+                        action: scope.action,
                     };
 
                     if (scope.type) {
@@ -93,6 +93,6 @@ angular.module('superdesk.core.activity.list', [])
                     };
 
                     scope.$watch('item', initializeActivities, true);
-                }
+                },
             };
         }]);

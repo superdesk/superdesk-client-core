@@ -42,7 +42,7 @@ export function ContentProfilesController($scope, $location, notify, content, mo
             if (active) {
                 $scope.editing = {
                     form: _.cloneDeep(active),
-                    original: active
+                    original: active,
                 };
             }
         }

@@ -10,23 +10,23 @@ describe('publish queue', () => {
             destinations: [
                 {
                     config: {
-                        recipients: 'test@aap.com.au'
+                        recipients: 'test@aap.com.au',
                     },
                     format: 'nitf',
                     delivery_type: 'email',
-                    name: 'test'
-                }
+                    name: 'test',
+                },
             ],
             is_active: true,
-            name: 'test'
-        }
+            name: 'test',
+        },
     ]};
 
     var providers = [
         {
             _id: '123',
-            name: 'Test Provider'
-        }
+            name: 'Test Provider',
+        },
     ];
 
     var publishQueue = {_items: [
@@ -39,11 +39,11 @@ describe('publish queue', () => {
             content_type: 'text',
             destination: {
                 config: {
-                    recipients: 'test@aap.com.au'
+                    recipients: 'test@aap.com.au',
                 },
                 format: 'nitf',
                 delivery_type: 'email',
-                name: 'test'
+                name: 'test',
             },
             headline: 'RL:Souths win but Dugan stars in NRL',
             item_id: 'tag:localhost:2015:a613f9b5-c7c4-4980-a3e8-0a90586ba59e',
@@ -53,7 +53,7 @@ describe('publish queue', () => {
             state: 'success',
             subscriber_id: '555045901d41c80c5804501a',
             transmit_started_at: '2015-05-19T04:18:23+0000',
-            unique_name: '#55861'
+            unique_name: '#55861',
         },
         {
             _created: '2015-05-19T05:13:29+0000',
@@ -64,11 +64,11 @@ describe('publish queue', () => {
             content_type: 'text',
             destination: {
                 config: {
-                    recipients: 'test@aap.com.au'
+                    recipients: 'test@aap.com.au',
                 },
                 format: 'nitf',
                 delivery_type: 'email',
-                name: 'test'
+                name: 'test',
             },
             headline: 'Angle Park Greyhound NSW TAB Divs 1-8 Monday',
             item_id: 'tag:localhost:2015:15982dd3-0ab2-4da1-b2a2-b8f322e8a612',
@@ -79,7 +79,7 @@ describe('publish queue', () => {
             subscriber_id: '555045901d41c80c5804501a',
             transmit_started_at: '2015-05-19T05:13:34+0000',
             unique_name: '#55860',
-            ingest_provider: '123'
+            ingest_provider: '123',
         },
         {
             _created: '2015-05-19T08:56:43+0000',
@@ -90,11 +90,11 @@ describe('publish queue', () => {
             content_type: 'text',
             destination: {
                 config: {
-                    recipients: 'test@aap.com.au'
+                    recipients: 'test@aap.com.au',
                 },
                 format: 'nitf',
                 delivery_type: 'email',
-                name: 'test'
+                name: 'test',
             },
             headline: 'NSW:Man quizzed over suspicious Sydney death',
             item_id: 'tag:localhost:2015:7466da05-56d2-47d4-a401-b79ed2af08a2',
@@ -104,11 +104,11 @@ describe('publish queue', () => {
             state: 'success',
             subscriber_id: '555045901d41c80c5804501a',
             transmit_started_at: '2015-05-19T08:56:49+0000',
-            unique_name: '#57537'
-        }
+            unique_name: '#57537',
+        },
     ],
     _meta: {
-        total: 3
+        total: 3,
     }};
 
     var $scope;
@@ -133,7 +133,7 @@ describe('publish queue', () => {
                 subscribersService: subscribersService,
                 ingestSouces: ingestSources,
                 $q: $q,
-                api: api
+                api: api,
             }
         );
     }));
@@ -278,7 +278,7 @@ describe('subscriber filter', () => {
     let subscribers = [
         {name: 'test all', subscriber_type: 'all'},
         {name: 'test wire', subscriber_type: 'wire'},
-        {name: 'digital', subscriber_type: 'digital'}
+        {name: 'digital', subscriber_type: 'digital'},
     ];
 
     let subscribersByFilter = null;

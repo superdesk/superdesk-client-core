@@ -8,13 +8,13 @@ describe('Workflow Service', () => {
             {
                 name: 'spike',
                 exclude_states: ['spiked', 'published', 'killed'],
-                privileges: ['spike']
+                privileges: ['spike'],
             },
             {
                 name: 'fetch_from_ingest',
                 include_states: ['ingested'],
-                privileges: ['fetch']
-            }
+                privileges: ['fetch'],
+            },
         ];
 
         workflowService.setActions(actions);

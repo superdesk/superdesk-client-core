@@ -27,5 +27,5 @@ export default class PackageGroup extends React.Component {
 PackageGroup.propTypes = {
     group: PropTypes.string,
     item: PropTypes.object,
-    packages: PropTypes.object
+    packages: PropTypes.object,
 };

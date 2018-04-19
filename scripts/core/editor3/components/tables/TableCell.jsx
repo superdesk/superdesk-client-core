@@ -102,7 +102,7 @@ export class TableCell extends Component {
                 const selection = editorState.getSelection();
                 const entitySelection = selection.merge({
                     anchorOffset: start,
-                    focusOffset: end
+                    focusOffset: end,
                 });
 
                 stateAfterChange = RichUtils.toggleLink(editorState, entitySelection, null);
@@ -145,5 +145,5 @@ TableCell.propTypes = {
     editorState: PropTypes.object.isRequired,
     readOnly: PropTypes.bool.isRequired,
     onChange: PropTypes.func.isRequired,
-    onFocus: PropTypes.func.isRequired
+    onFocus: PropTypes.func.isRequired,
 };

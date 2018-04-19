@@ -183,6 +183,6 @@ export function AuthoringHeaderDirective(api, authoringWidgets, $rootScope, arch
                     elem.find('#slugline').focus();
                 }
             });
-        }
+        },
     };
 }

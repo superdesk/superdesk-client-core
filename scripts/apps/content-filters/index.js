@@ -40,7 +40,7 @@ angular.module('superdesk.apps.content_filters', ['superdesk.apps.publish'])
             templateUrl: templateUrl,
             category: superdesk.MENU_SETTINGS,
             priority: -800,
-            privileges: {dictionaries: 1}
+            privileges: {dictionaries: 1},
         });
     }])
     .service('contentFilters', ContentFiltersService)

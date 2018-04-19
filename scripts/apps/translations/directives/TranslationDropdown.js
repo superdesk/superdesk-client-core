@@ -33,6 +33,6 @@ export function TranslationDropdown(TranslationService) {
             scope.translateItem = function(language) {
                 TranslationService.set(scope.item, language);
             };
-        }
+        },
     };
 }

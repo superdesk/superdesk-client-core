@@ -48,5 +48,5 @@ export default ({
 
     mention: {
         backgroundColor: '#cee4e5',
-    }
+    },
 });

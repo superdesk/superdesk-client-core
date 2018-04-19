@@ -14,6 +14,6 @@ export function CreateHighlightsButton(highlightsService, authoringWorkspace, pr
             };
 
             scope.hasMarkItemPrivilege = privileges.privileges.mark_for_highlights;
-        }
+        },
     };
 }

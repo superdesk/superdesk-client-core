@@ -2,14 +2,14 @@ import './world-clock.scss';
 import d3 from 'd3';
 
 angular.module('superdesk.apps.dashboard.world-clock', [
-    'superdesk.apps.dashboard', 'superdesk.core.datetime'
+    'superdesk.apps.dashboard', 'superdesk.core.datetime',
 ])
     .directive('sdWorldclock', [function() {
         return {
             templateUrl: 'scripts/apps/dashboard/world-clock/worldClock.html',
             replace: true,
             restrict: 'A',
-            controller: 'WorldClockController'
+            controller: 'WorldClockController',
         };
     }])
 
@@ -95,13 +95,13 @@ angular.module('superdesk.apps.dashboard.world-clock', [
                 h: d3.scale
                     .linear()
                     .domain([0, 11 + 59 / 60])
-                    .range([0, 2 * pi])
+                    .range([0, 2 * pi]),
             };
 
         return {
             scope: {
                 utc: '=',
-                tz: '@'
+                tz: '@',
             },
             link: function(scope, element, attrs) {
                 var width = 105,
@@ -157,7 +157,7 @@ angular.module('superdesk.apps.dashboard.world-clock', [
 
                     return [
                         {unit: 'h', val: parseInt(time[0], 10) + parseInt(time[1], 10) / 60, r: 0.5},
-                        {unit: 'm', val: parseInt(time[1], 10), r: 0.8}
+                        {unit: 'm', val: parseInt(time[1], 10), r: 0.8},
                     ];
                 }
 
@@ -195,7 +195,7 @@ angular.module('superdesk.apps.dashboard.world-clock', [
                         .style('stroke-width', 2)
                         .style('stroke', isDay ? dayClockhands : nightClockhands);
                 });
-            }
+            },
         };
     })
     .config(['dashboardWidgetsProvider', function(dashboardWidgets) {
@@ -212,6 +212,6 @@ angular.module('superdesk.apps.dashboard.world-clock', [
             template: 'scripts/apps/dashboard/world-clock/widget-worldclock.html',
             configurationTemplate: 'scripts/apps/dashboard/world-clock/configuration.html',
             configuration: {zones: ['Europe/London', 'Asia/Tokyo', 'Europe/Moscow']},
-            description: gettext('World clock widget')
+            description: gettext('World clock widget'),
         });
     }]);

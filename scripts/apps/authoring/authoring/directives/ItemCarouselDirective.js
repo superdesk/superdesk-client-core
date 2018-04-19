@@ -23,7 +23,7 @@ export function ItemCarouselDirective($timeout) {
             allowAudio: '<',
             save: '&',
             onchange: '&',
-            maxUploads: '='
+            maxUploads: '=',
         },
         transclude: true,
         templateUrl: 'scripts/apps/authoring/views/item-carousel.html',
@@ -118,7 +118,7 @@ export function ItemCarouselDirective($timeout) {
 
                 carousel = elem.find('.sd-media-carousel__content').owlCarousel({
                     items: 1,
-                    autoHeight: true
+                    autoHeight: true,
                 });
 
                 // Initialize sortable function for thumbnails
@@ -153,13 +153,13 @@ export function ItemCarouselDirective($timeout) {
                     },
                     update: function(event, ui) {
                         updated = true;
-                    }
+                    },
                 });
             }
 
             scope.$on('$destroy', () => {
                 elem.off('drop dragdrop dragover');
             });
-        }
+        },
     };
 }

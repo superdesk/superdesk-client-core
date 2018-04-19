@@ -47,7 +47,7 @@ export function TagService($location, desks, userList, metadata, search,
     function tag(label, value) {
         return {
             label: label,
-            value: value || label
+            value: value || label,
         };
     }
 
@@ -155,7 +155,7 @@ export function TagService($location, desks, userList, metadata, search,
             let subscriberName = _.get(subscribersService, 'subscribersLookup.' + index + '.name', ':Unknown');
 
             tags.selectedParameters.push(tag(value + ':' + subscriberName, value));
-        }
+        },
     };
 
     /**
@@ -216,7 +216,7 @@ export function TagService($location, desks, userList, metadata, search,
                 tags.removedFacets[key].push({
                     label: label,
                     displayValue: displayValue,
-                    value: facet
+                    value: facet,
                 });
             });
         });
@@ -334,7 +334,7 @@ export function TagService($location, desks, userList, metadata, search,
                     var dateForType = {
                         'now-24H': 'Last Day',
                         'now-1w': 'Last Week',
-                        'now-1M': 'Last Month'
+                        'now-1M': 'Last Month',
                     };
 
                     tags.selectedFacets.date = [dateForType[type]];
@@ -355,7 +355,7 @@ export function TagService($location, desks, userList, metadata, search,
                         afterfirstcreated: 'Created after',
                         beforefirstcreated: 'Created before',
                         afterversioncreated: 'Modified before',
-                        beforeversioncreated: 'Modified before'
+                        beforeversioncreated: 'Modified before',
                     };
 
                     const createdOrModified = (t) => Object.keys(prefixForType).indexOf(t) !== -1;
@@ -376,6 +376,6 @@ export function TagService($location, desks, userList, metadata, search,
 
     return {
         initSelectedFacets: initSelectedFacets,
-        removeFacet: removeFacet
+        removeFacet: removeFacet,
     };
 }

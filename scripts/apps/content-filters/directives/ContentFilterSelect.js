@@ -9,6 +9,6 @@ export function ContentFilterSelectDirective(contentFilters) {
                 .then((filters) => {
                     scope.filters = filters;
                 });
-        }
+        },
     };
 }

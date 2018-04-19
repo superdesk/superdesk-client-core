@@ -12,7 +12,7 @@ SearchResults.$inject = [
     '$rootScope',
     'config',
     'superdeskFlags',
-    'notify'
+    'notify',
 ];
 
 const HEX_REG_EXP = /[a-f0-9]{24}/;
@@ -57,14 +57,14 @@ export function SearchResults(
         'archive:view': {
             allowed: [
                 'mgrid',
-                'compact'
+                'compact',
             ],
             category: 'archive',
             view: 'mgrid',
             default: 'mgrid',
             label: 'Users archive view format',
-            type: 'string'
-        }
+            type: 'string',
+        },
     };
 
     return {
@@ -211,7 +211,7 @@ export function SearchResults(
                             newItems: items,
                             scopeItems: scope.items,
                             scrollTop: containerElem.scrollTop(),
-                            isItemPreviewing: isItemPreviewing
+                            isItemPreviewing: isItemPreviewing,
                         };
 
                         scope.showRefresh = search.canShowRefresh(_data);
@@ -248,14 +248,14 @@ export function SearchResults(
                     // item was spiked/unspikes from the list
                     extendItem(data.item, {
                         gone: true,
-                        _etag: data.item
+                        _etag: data.item,
                     });
                     queryItems(event, data);
                 } else if (data && data.from_stage) {
                     // item was moved from current stage
                     extendItem(data.item, {
                         gone: true,
-                        _etag: data.from_stage // this must change to make it re-render
+                        _etag: data.from_stage, // this must change to make it re-render
                     });
                     queryItems(event, data);
                 }
@@ -502,6 +502,6 @@ export function SearchResults(
             // init
             $rootScope.aggregations = 0;
             _queryItems();
-        }
+        },
     };
 }

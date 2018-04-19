@@ -196,11 +196,11 @@ export function MarkedItemTitle(desks, authoring, highlightsService, $filter, $l
     return {
         scope: {
             item: '=item',
-            markField: '@field'
+            markField: '@field',
         },
         template: require('scripts/apps/archive/views/marked_item_title.html'),
         link: (scope, elem) => new LinkFunction(desks, authoring,
-            highlightsService, $filter, $location, $timeout, scope, elem)
+            highlightsService, $filter, $location, $timeout, scope, elem),
     };
 }
 

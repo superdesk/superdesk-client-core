@@ -50,5 +50,5 @@ export const TextWithMentions = ({children, ...props}) => {
 };
 
 TextWithMentions.propTypes = {
-    children: PropTypes.string.isRequired
+    children: PropTypes.string.isRequired,
 };

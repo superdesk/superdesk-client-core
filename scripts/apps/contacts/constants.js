@@ -7,12 +7,12 @@ export const DEFAULT_LIST_CONFIG = {
         'JobTitle',
         'Email',
         'Phone',
-        'VersionCreated'
+        'VersionCreated',
     ],
     secondLine: [
         'OrgName',
         'ContactLocation',
-        'SocialInfo'
+        'SocialInfo',
 
     ],
     singleLine: [
@@ -23,8 +23,8 @@ export const DEFAULT_LIST_CONFIG = {
         'Email',
         'Phone',
         'SocialInfo',
-        'VersionCreated'
-    ]
+        'VersionCreated',
+    ],
 };
 
 export const KEYCODES = {
@@ -47,7 +47,7 @@ export const LOOKUP_FIELDS = [
     'contact_email',
     'twitter',
     'facebook',
-    'instagram'
+    'instagram',
 ];
 
 export const FB_URL = 'https://www.facebook.com/';

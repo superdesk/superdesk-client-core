@@ -81,8 +81,8 @@ export class HighlightsPopup extends Component {
                         {
                             type: highlightType,
                             value: data,
-                            highlightId: styleName
-                        }
+                            highlightId: styleName,
+                        },
                     ];
                 });
         }

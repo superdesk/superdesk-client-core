@@ -16,8 +16,8 @@ angular.module('superdesk.core.services.beta', ['superdesk.core.preferences'])
                         enabled: !$rootScope.beta,
                         label: 'Enable Feature Preview',
                         type: 'bool',
-                        category: 'feature'
-                    }
+                        category: 'feature',
+                    },
                 };
 
                 preferencesService.update(update, 'feature:preview').then(() => {
@@ -79,6 +79,6 @@ function BetaTemplateInterceptor($q, $templateCache, betaService) {
             }
 
             return response;
-        }
+        },
     };
 }

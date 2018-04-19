@@ -16,7 +16,7 @@ export default angular.module('superdesk.core.directives.sort', ['superdesk.core
         return {
             scope: {
                 label: '@',
-                field: '@'
+                field: '@',
             },
             templateUrl: asset.templateUrl('core/views/sdSort.html'),
             link: function(scope, element, attrs) {
@@ -40,6 +40,6 @@ export default angular.module('superdesk.core.directives.sort', ['superdesk.core
                 });
 
                 element.addClass('sortable');
-            }
+            },
         };
     }]);

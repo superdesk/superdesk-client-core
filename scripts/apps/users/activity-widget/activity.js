@@ -1,7 +1,7 @@
 angular.module('superdesk.apps.users.activity', [
     'superdesk.apps.users',
     'superdesk.apps.dashboard.widgets',
-    'superdesk.core.services.asset'
+    'superdesk.core.services.asset',
 ])
     .config(['dashboardWidgetsProvider', 'assetProvider', function(dashboardWidgets, asset) {
         dashboardWidgets.addWidget('activity', {
@@ -16,7 +16,7 @@ angular.module('superdesk.apps.users.activity', [
             configurationTemplate: asset.templateUrl('apps/users/activity-widget/configuration.html'),
             configuration: {maxItems: 5},
             description: 'Activity stream widget',
-            icon: 'stream'
+            icon: 'stream',
         });
     }])
     .controller('ActivityController', ['$scope', 'profileService',

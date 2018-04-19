@@ -10,14 +10,14 @@ export function ContentResults($location, preferencesService, packages, tags, as
         'archive:view': {
             allowed: [
                 'mgrid',
-                'compact'
+                'compact',
             ],
             category: 'archive',
             view: 'mgrid',
             default: 'mgrid',
             label: 'Users archive view format',
-            type: 'string'
-        }
+            type: 'string',
+        },
     };
 
     return {
@@ -79,6 +79,6 @@ export function ContentResults($location, preferencesService, packages, tags, as
             scope.generateTrackByIdentifier = function(item) {
                 return search.generateTrackByIdentifier(item);
             };
-        }
+        },
     };
 }

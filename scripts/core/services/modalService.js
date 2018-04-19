@@ -5,7 +5,7 @@ export default angular.module('superdesk.core.services.modal', ['superdesk-ui', 
             headerText: gettext('Confirm'),
             okText: gettext('OK'),
             cancelText: gettext('Cancel'),
-            additionalCancelText: null
+            additionalCancelText: null,
         };
 
         function confirmArgumentsList(
@@ -65,7 +65,7 @@ export default angular.module('superdesk.core.services.modal', ['superdesk-ui', 
                     $scope.close = function() {
                         $modalInstance.dismiss();
                     };
-                }]
+                }],
             });
 
             return delay.promise;

@@ -28,7 +28,7 @@ export default angular.module('superdesk.apps.profiling', [])
                 controller: ProfilingController,
                 category: superdesk.MENU_MAIN,
                 adminTools: false,
-                privileges: {profiling: 1}
+                privileges: {profiling: 1},
             });
     }])
 

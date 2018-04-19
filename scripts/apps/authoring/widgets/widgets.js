@@ -192,7 +192,7 @@ function AuthoringWidgetsDir(desks, commentsService, $injector) {
             };
 
             reload();
-        }
+        },
     };
 }
 

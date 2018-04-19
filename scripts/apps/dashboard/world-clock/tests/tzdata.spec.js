@@ -32,11 +32,11 @@ describe('tzdata factory', () => {
         var response = {
             zones: {
                 'Europe/Rome': ['1 - CET'],
-                'Australia/Sydney': ['10 ADN EST']
+                'Australia/Sydney': ['10 ADN EST'],
             },
             links: {
-                'Foo/Bar': []
-            }
+                'Foo/Bar': [],
+            },
         };
 
         tzdata.zones = null;
@@ -60,11 +60,11 @@ describe('tzdata factory', () => {
                     zones: {
                         'Europe/Rome': ['1 - CET'],
                         'Australia/Sydney': ['10 ADN EST'],
-                        'Pacific/Auckland': ['13 NZDT']
+                        'Pacific/Auckland': ['13 NZDT'],
                     },
                     links: {
-                        'Foo/Bar': []
-                    }
+                        'Foo/Bar': [],
+                    },
                 };
                 $httpBackend.whenGET(/.+/).respond(serverResponse);
 
@@ -83,11 +83,11 @@ describe('tzdata factory', () => {
                 zones: {
                     'Europe/Rome': ['1 - CET'],
                     'Australia/Sydney': ['10 ADN EST'],
-                    'Pacific/Auckland': ['13 NZDT']
+                    'Pacific/Auckland': ['13 NZDT'],
                 },
                 links: {
-                    'Foo/Bar': []
-                }
+                    'Foo/Bar': [],
+                },
             };
             $httpBackend.whenGET(/.+/).respond(serverResponse);
 
@@ -97,7 +97,7 @@ describe('tzdata factory', () => {
             result = tzdata.getTzNames();
             expect(result).toEqual([
                 'Australia/Sydney', 'Europe/Rome',
-                'Foo/Bar', 'Pacific/Auckland'
+                'Foo/Bar', 'Pacific/Auckland',
             ]);
         });
     });

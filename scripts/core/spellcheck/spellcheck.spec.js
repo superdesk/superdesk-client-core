@@ -7,14 +7,14 @@ describe('spellcheck', () => {
             f1: 1,
             '3d': 1,
             is: 1,
-            and: 1
+            and: 1,
         },
         USER_DICT = {
             _id: 'baz',
             user: 'foo',
             content: {
-                baz: 1
-            }
+                baz: 1,
+            },
         },
         LANG = 'en-US',
         errors = [];
@@ -34,7 +34,7 @@ describe('spellcheck', () => {
         spyOn(dictionaries, 'getActive').and.returnValue($q.when([
             {_id: 'foo', content: DICT},
             {_id: 'bar', content: {bar: 1}},
-            USER_DICT
+            USER_DICT,
         ]));
 
         spellcheck.setLanguage(LANG);

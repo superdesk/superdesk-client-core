@@ -24,5 +24,5 @@ GridTypeIcon.propTypes = {
     svc: PropTypes.object.isRequired,
     swimlane: PropTypes.any,
     item: PropTypes.any,
-    photoGrid: PropTypes.bool
+    photoGrid: PropTypes.bool,
 };

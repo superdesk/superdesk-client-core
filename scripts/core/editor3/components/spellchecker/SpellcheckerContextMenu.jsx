@@ -96,7 +96,7 @@ SpellcheckerContextMenuComponent.propTypes = {
     word: PropTypes.object,
     suggestions: PropTypes.array,
     replaceWord: PropTypes.func,
-    refreshWord: PropTypes.func
+    refreshWord: PropTypes.func,
 };
 
 /**
@@ -108,7 +108,7 @@ SpellcheckerContextMenuComponent.propTypes = {
  */
 const mapDispatchToProps = (dispatch) => ({
     refreshWord: (word) => setTimeout(() => dispatch(actions.refreshWord(word)), 0),
-    replaceWord: (word) => setTimeout(() => dispatch(actions.replaceWord(word)), 0)
+    replaceWord: (word) => setTimeout(() => dispatch(actions.replaceWord(word)), 0),
 });
 
 export const SpellcheckerContextMenu = connect(null, mapDispatchToProps)(SpellcheckerContextMenuComponent);

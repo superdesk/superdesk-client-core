@@ -39,7 +39,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
             numItems: '=',
             view: '=',
             viewType: '=',
-            forceLimited: '@'
+            forceLimited: '@',
         },
         link: function(scope, elem, attrs, ctrls) {
             var monitoring = ctrls[0];
@@ -131,7 +131,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                     // item was moved from current stage
                     extendItem(data.item, {
                         gone: true,
-                        _etag: data.from_stage // this must change to make it re-render
+                        _etag: data.from_stage, // this must change to make it re-render
                     });
                     scheduleQuery(event, data);
                 } else if (scope.group.type === 'deskOutput' && data &&
@@ -142,7 +142,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                     // item was spiked/unspiked from the list
                     extendItem(data.item, {
                         gone: true,
-                        _etag: data.item
+                        _etag: data.item,
                     });
                     scheduleQuery(event, data);
                 } else if (data && data.to_stage && data.to_stage === scope.group._id) {
@@ -419,7 +419,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                             newItems: items,
                             scopeItems: scope.items,
                             scrollTop: containerElem.scrollTop(),
-                            isItemPreviewing: itemPreviewing
+                            isItemPreviewing: itemPreviewing,
                         };
 
                         monitoring.showRefresh = scope.showRefresh = search.canShowRefresh(_data);
@@ -500,6 +500,6 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
             function viewSingleGroup(group, type) {
                 monitoring.viewSingleGroup(group, type);
             }
-        }
+        },
     };
 }

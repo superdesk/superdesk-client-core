@@ -24,7 +24,7 @@ describe('editor3.highlights.offsets', () => {
             5: [k(1), 1],
             6: [k(1), 2],
             7: [k(2), 0],
-            8: [k(2), 1]
+            8: [k(2), 1],
         }).forEach(([n, [key, offset]]) => {
             expect(keyAndOffset(contentState, parseInt(n, 10))).toEqual({key, offset});
         });
@@ -52,7 +52,7 @@ describe('editor3.highlights.offsets', () => {
             {start: 4, end: 6},
             {start: 7, end: 10},
             {start: 11, end: 16},
-            {start: 18, end: 21}
+            {start: 18, end: 21},
         ])).toBeTruthy();
     });
 
@@ -85,7 +85,7 @@ describe('editor3.highlights.offsets', () => {
             ['0123[4567]890[123]45', 3, 12, '0123[4567]890[1...23]45'],
             // edges:
             ['[012]3[4567]890[123]45', 2, 0, '..[012]3[4567]890[123]45'],
-            ['0123[4567]890[12345]', 3, 16, '0123[4567]890[12345]...']
+            ['0123[4567]890[12345]', 3, 16, '0123[4567]890[12345]...'],
         ].forEach(([a, n, offset, b]) => shiftTest('additions', expect, a, b, n, offset));
     });
 

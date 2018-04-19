@@ -6,5 +6,5 @@ export const Mobile = ({item, svc}) => <ItemContainer key="mobile" field="mobile
 
 Mobile.propTypes = {
     item: PropTypes.object,
-    svc: PropTypes.object.isRequired
+    svc: PropTypes.object.isRequired,
 };

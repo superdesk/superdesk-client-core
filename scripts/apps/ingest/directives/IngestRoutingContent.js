@@ -121,13 +121,13 @@ export function IngestRoutingContent(api, gettext, notify, modal, contentFilters
                     actions: {
                         fetch: [],
                         publish: [],
-                        exit: false
+                        exit: false,
                     },
                     schedule: {
                         day_of_week: ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'],
                         hour_of_day_from: '00:00:00',
-                        hour_of_day_to: '23:55:00'
-                    }
+                        hour_of_day_to: '23:55:00',
+                    },
                 };
 
                 scope.editScheme.rules.push(rule);
@@ -165,6 +165,6 @@ export function IngestRoutingContent(api, gettext, notify, modal, contentFilters
             scope.disableSchemeForm = function() {
                 return !scope.editScheme.name || scope.editScheme.rules.filter((rule) => !rule.name).length > 0;
             };
-        }
+        },
     };
 }

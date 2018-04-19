@@ -17,7 +17,7 @@ const blockStyles = {
     h6: 'header-six',
     quote: 'blockquote',
     'unordered list': 'unordered-list-item',
-    'ordered list': 'ordered-list-item'
+    'ordered list': 'ordered-list-item',
 };
 
 /**
@@ -73,18 +73,19 @@ BlockStyleButtonsComponent.propTypes = {
     suggestingMode: PropTypes.bool,
     editorFormat: PropTypes.array,
     toggleBlockStyle: PropTypes.func,
-    createChangeBlockStyleSuggestion: PropTypes.func
+    createChangeBlockStyleSuggestion: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({
     editorState: state.editorState,
     editorFormat: state.editorFormat,
-    suggestingMode: state.suggestingMode
+    suggestingMode: state.suggestingMode,
 });
 
 const mapDispatchToProps = (dispatch) => ({
     toggleBlockStyle: (blockType) => dispatch(actions.toggleBlockStyle(blockType)),
-    createChangeBlockStyleSuggestion: (type, active) => dispatch(actions.createChangeBlockStyleSuggestion(type, active))
+    createChangeBlockStyleSuggestion:
+        (type, active) => dispatch(actions.createChangeBlockStyleSuggestion(type, active)),
 });
 
 const BlockStyleButtons = connect(mapStateToProps, mapDispatchToProps)(BlockStyleButtonsComponent);

@@ -47,7 +47,7 @@ class LinkFunction {
 export function ContentAPISearchPanelDirective($location) {
     return {
         template: require('scripts/apps/content-api/views/search-panel.html'),
-        link: (scope, elem) => new LinkFunction($location, scope, elem)
+        link: (scope, elem) => new LinkFunction($location, scope, elem),
     };
 }
 

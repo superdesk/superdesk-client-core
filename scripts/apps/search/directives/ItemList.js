@@ -33,7 +33,7 @@ ItemList.$inject = [
     '$interpolate',
     'metadata',
     'storage',
-    'keyboardManager'
+    'keyboardManager',
 ];
 
 /**
@@ -131,7 +131,7 @@ export function ItemList(
         $interpolate: $interpolate,
         metadata: metadata,
         storage: storage,
-        keyboardManager: keyboardManager
+        keyboardManager: keyboardManager,
     };
 
     return {
@@ -143,7 +143,7 @@ export function ItemList(
 
             monitoringState.setState({
                 groups: groups.concat(scope.$id),
-                activeGroup: monitoringState.state.activeGroup || groupId
+                activeGroup: monitoringState.state.activeGroup || groupId,
             });
 
             scope.$watch(() => monitoringState.state.activeGroup, (activeGroup) => {
@@ -156,7 +156,7 @@ export function ItemList(
                 var itemList = React.createElement(ItemListComponent,
                     angular.extend({
                         svc: services,
-                        scope: scope
+                        scope: scope,
                     }, monitoringState.state));
 
                 var listComponent = ReactDOM.render(itemList, elem[0]);
@@ -271,7 +271,7 @@ export function ItemList(
                     listComponent.setState({
                         itemsList: itemsList,
                         itemsById: itemsById,
-                        view: scope.view
+                        view: scope.view,
                     }, () => {
                         scope.rendering = scope.loading = false;
                     });
@@ -299,7 +299,7 @@ export function ItemList(
                         lock_user: data.user,
                         lock_session: data.lock_session,
                         lock_time: data.lock_time,
-                        _etag: data._etag
+                        _etag: data._etag,
                     });
                 });
 
@@ -308,7 +308,7 @@ export function ItemList(
                         lock_user: null,
                         lock_session: null,
                         lock_time: null,
-                        _etag: data._etag
+                        _etag: data._etag,
                     });
                 });
 
@@ -337,7 +337,7 @@ export function ItemList(
                     listComponent.updateAllItems(data.item, {
                         sequence: null,
                         anpa_take_key: null,
-                        takes: undefined
+                        takes: undefined,
                     });
                 });
 
@@ -462,6 +462,6 @@ export function ItemList(
                     ReactDOM.unmountComponentAtNode(elem[0]);
                 });
             });
-        }
+        },
     };
 }

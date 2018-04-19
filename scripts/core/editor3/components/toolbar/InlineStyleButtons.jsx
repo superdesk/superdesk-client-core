@@ -54,18 +54,18 @@ InlineStyleButtonsComponent.propTypes = {
     editorFormat: PropTypes.array,
     suggestingMode: PropTypes.bool,
     toggleInlineStyle: PropTypes.func,
-    createChangeStyleSuggestion: PropTypes.func
+    createChangeStyleSuggestion: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({
     editorState: state.editorState,
     editorFormat: state.editorFormat,
-    suggestingMode: state.suggestingMode
+    suggestingMode: state.suggestingMode,
 });
 
 const mapDispatchToProps = (dispatch) => ({
     toggleInlineStyle: (type) => dispatch(actions.toggleInlineStyle(type)),
-    createChangeStyleSuggestion: (type, active) => dispatch(actions.createChangeStyleSuggestion(type, active))
+    createChangeStyleSuggestion: (type, active) => dispatch(actions.createChangeStyleSuggestion(type, active)),
 });
 
 const InlineStyleButtons = connect(mapStateToProps, mapDispatchToProps)(InlineStyleButtonsComponent);

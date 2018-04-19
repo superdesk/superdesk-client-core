@@ -107,5 +107,5 @@ WidgetItem.propTypes = {
     svc: PropTypes.object.isRequired,
     preview: PropTypes.func.isRequired,
     select: PropTypes.func.isRequired,
-    edit: PropTypes.func.isRequired
+    edit: PropTypes.func.isRequired,
 };

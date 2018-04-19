@@ -8,7 +8,7 @@ export function PieChartDashboard(colorSchemes) {
         scope: {
             terms: '=',
             theme: '@',
-            colors: '='
+            colors: '=',
         },
         link: function(scope, element, attrs) {
             var appendTarget = element[0];
@@ -19,7 +19,7 @@ export function PieChartDashboard(colorSchemes) {
                 blockWidth: 300,
                 blockHeight: 197,
                 mergeSpaceLeft: 60, // 30 + 2 + 20
-                mergeSpaceBottom: 99 // 30 + 2 + 20 + 47
+                mergeSpaceBottom: 99, // 30 + 2 + 20 + 47
             };
 
             var width = graphSettings.blockWidth * horizBlocks + graphSettings.mergeSpaceLeft * (horizBlocks - 1),
@@ -114,6 +114,6 @@ export function PieChartDashboard(colorSchemes) {
                     }
                 }
             });
-        }
+        },
     };
 }

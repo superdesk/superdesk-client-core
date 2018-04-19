@@ -5,7 +5,7 @@ export class Logger {
         if (config.raven && config.raven.dsn.length > 0) {
             Raven.config(config.raven.dsn, {
                 logger: 'javascript-client',
-                release: config.version
+                release: config.version,
             }).install();
         }
     }

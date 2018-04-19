@@ -17,7 +17,7 @@ WidgetGroup.$inject = [
     '$rootScope',
     'gettextCatalog',
     'datetime',
-    'metadata'
+    'metadata',
 ];
 
 export function WidgetGroup(search, api, superdesk, desks, cards, $timeout, $q,
@@ -36,7 +36,7 @@ export function WidgetGroup(search, api, superdesk, desks, cards, $timeout, $q,
         $rootScope: $rootScope,
         gettextCatalog: gettextCatalog,
         datetime: datetime,
-        metadata: metadata
+        metadata: metadata,
     };
 
     return {
@@ -48,7 +48,7 @@ export function WidgetGroup(search, api, superdesk, desks, cards, $timeout, $q,
             maxItems: '=?',
             selected: '=?',
             action: '&',
-            filter: '='
+            filter: '=',
         },
         link: function(scope, elem) {
             var criteria;
@@ -147,7 +147,7 @@ export function WidgetGroup(search, api, superdesk, desks, cards, $timeout, $q,
                             itemIds: scope.itemIds,
                             itemsById: scope.itemsById,
                             loading: false,
-                            selected: scope.selected
+                            selected: scope.selected,
                         });
                     });
             }
@@ -168,12 +168,12 @@ export function WidgetGroup(search, api, superdesk, desks, cards, $timeout, $q,
 
                 if (scope.itemsById[itemId]) {
                     angular.extend(item, {
-                        gone: gone
+                        gone: gone,
                     });
                     scope.itemsById[itemId] = item;
                     scope.updateList({
                         itemIds: scope.itemIds,
-                        itemsById: scope.itemsById
+                        itemsById: scope.itemsById,
                     });
                 } else if (schedule) {
                     scheduleQuery();
@@ -411,7 +411,7 @@ export function WidgetGroup(search, api, superdesk, desks, cards, $timeout, $q,
 
             scope.setLoading = function(loading) {
                 scope.updateList({
-                    loading: loading
+                    loading: loading,
                 });
             };
 
@@ -427,7 +427,7 @@ export function WidgetGroup(search, api, superdesk, desks, cards, $timeout, $q,
                     preview: scope.preview,
                     select: scope.select,
                     edit: scope.edit,
-                    updateCallback: scope.getUpdateCallback
+                    updateCallback: scope.getUpdateCallback,
                 }
             );
 
@@ -438,6 +438,6 @@ export function WidgetGroup(search, api, superdesk, desks, cards, $timeout, $q,
                 elem.off();
                 ReactDOM.unmountComponentAtNode(elem[0]);
             });
-        }
+        },
     };
 }

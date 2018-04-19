@@ -152,7 +152,7 @@ export function UserPreferencesDirective(
                     'categories',
                     'desks',
                     'notifications',
-                    'planning'
+                    'planning',
                 ];
 
                 return _.indexOf(noShowCategories, preference.category) < 0;
@@ -185,7 +185,7 @@ export function UserPreferencesDirective(
                 // values object is undefined or any of the needed
                 // data buckets are missing in it
                 buckets = [
-                    'cities', 'categories', 'default_categories', 'locators', 'calendars'
+                    'cities', 'categories', 'default_categories', 'locators', 'calendars',
                 ];
 
                 initNeeded = buckets.some((bucketName) => {
@@ -298,7 +298,7 @@ export function UserPreferencesDirective(
                 msg = [
                     'No preferred categories selected. Should you ',
                     'choose to proceed with your choice, a default ',
-                    'set of categories will be selected for you.'
+                    'set of categories will be selected for you.',
                 ].join('');
                 msg = gettext(msg);
 
@@ -345,6 +345,6 @@ export function UserPreferencesDirective(
                 });
                 return p;
             }
-        }
+        },
     };
 }

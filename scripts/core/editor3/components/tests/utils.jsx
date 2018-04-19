@@ -8,7 +8,7 @@ import {
     SelectionState,
     convertToRaw,
     CharacterMetadata,
-    genKey
+    genKey,
 } from 'draft-js';
 
 import insertAtomicBlockWithoutEmptyLines from '../../helpers/insertAtomicBlockWithoutEmptyLines';
@@ -25,14 +25,14 @@ export default function mockStore(state = {}) {
     const store = {
         subscribe: () => ({}),
         dispatch: () => ({}),
-        getState: () => state
+        getState: () => state,
     };
 
     const options = {
         context: {store},
         childContextTypes: {
-            store: PropTypes.object.isRequired
-        }
+            store: PropTypes.object.isRequired,
+        },
     };
 
     return {store, options};
@@ -54,7 +54,7 @@ export function stateWithLink() {
     const blockKey = contentState.getFirstBlock().getKey();
     const linkSelection = SelectionState.createEmpty(blockKey).merge({
         anchorOffset: 6,
-        focusOffset: 9
+        focusOffset: 9,
     });
 
     return RichUtils.toggleLink(
@@ -75,8 +75,8 @@ export function imageBlockAndContent() {
             alt_text: 'image_alt_text',
             headline: 'image_headline',
             description_text: 'image_description',
-            type: 'picture'
-        }
+            type: 'picture',
+        },
     });
 }
 
@@ -106,8 +106,8 @@ export function createBlockAndContent(type, data) {
 export function embedBlockAndContent() {
     return createBlockAndContent('EMBED', {
         data: {
-            html: '<h1>Embed Title</h1>'
-        }
+            html: '<h1>Embed Title</h1>',
+        },
     });
 }
 
@@ -132,8 +132,8 @@ export function blocksWithText(list) {
             text: text,
             characterList: List(Repeat(CharacterMetadata.create({
                 style: OrderedSet([]),
-                entity: null
-            }), text.length))
+                entity: null,
+            }), text.length)),
         });
     }));
 }
@@ -154,9 +154,9 @@ export function tableBlockAndContent(cells) {
             numRows: 2,
             cells: cells || [
                 [cs('a'), cs('b'), cs('c')],
-                [cs('d'), cs('e'), cs('f')]
-            ]
-        }
+                [cs('d'), cs('e'), cs('f')],
+            ],
+        },
     });
 }
 
@@ -175,6 +175,6 @@ export function cursorAtPosition(editorState, pos, n = 0) {
 
     return EditorState.forceSelection(editorState, SelectionState.createEmpty(blockKey).merge({
         anchorOffset: pos,
-        focusOffset: pos + n
+        focusOffset: pos + n,
     }));
 }

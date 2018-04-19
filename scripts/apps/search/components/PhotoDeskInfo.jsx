@@ -50,5 +50,5 @@ export function PhotoDeskInfo(props) {
 
 PhotoDeskInfo.propTypes = {
     svc: PropTypes.object.isRequired,
-    item: PropTypes.any
+    item: PropTypes.any,
 };

@@ -13,8 +13,8 @@ export function SortRules() {
 
                     scope.reorder(start, end);
                     scope.$apply();
-                }
+                },
             });
-        }
+        },
     };
 }

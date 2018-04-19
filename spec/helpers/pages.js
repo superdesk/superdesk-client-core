@@ -152,7 +152,7 @@ function IngestSettings() {
 
     // the main navigation tabs on the ingest settings page
     this.tabs = {
-        routingTab: element(by.buttonText('Ingest Routing'))
+        routingTab: element(by.buttonText('Ingest Routing')),
     };
 
     this.newSchemeBtn = element(by.partialButtonText('Add New'));
@@ -201,13 +201,13 @@ function IngestSettings() {
             thu: daysButonsBox.element(by.className('sd-checkbox--button-Thursday')),
             fri: daysButonsBox.element(by.className('sd-checkbox--button-Friday')),
             sat: daysButonsBox.element(by.className('sd-checkbox--button-Saturday')),
-            sun: daysButonsBox.element(by.className('sd-checkbox--button-Sunday'))
+            sun: daysButonsBox.element(by.className('sd-checkbox--button-Sunday')),
         },
 
         timezoneLabel: element(by.id('timezone')),
         timezoneDeleteBtn: element(by.css('[ng-click="clearSelectedTimeZone()"]')),
         timezoneInput: $('[term="tzSearchTerm"]').element(by.model('term')),
-        timezoneList: $('.item-list').all(by.tagName('li'))
+        timezoneList: $('.item-list').all(by.tagName('li')),
     };
 }
 

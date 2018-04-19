@@ -13,7 +13,7 @@ export function WordCount() {
         scope: {
             item: '=',
             html: '@',
-            countOnly: '@'
+            countOnly: '@',
         },
         template: '<span ng-if="!countOnly" class="char-count words" translate>{{numWords}} words</span>' +
                   '<span ng-if="countOnly" class="char-count words">{{numWords}}</span>',
@@ -33,6 +33,6 @@ export function WordCount() {
                 input = scope.html ? helpers.cleanHtml(input) : input;
                 scope.numWords = (input.match(WORD_PATTERN) || '').length;
             });
-        }
+        },
     };
 }

@@ -9,6 +9,6 @@ export function ItemProfileDirective(content) {
                     lookup[scope.profileId].label :
                     scope.profileId;
             });
-        }
+        },
     };
 }

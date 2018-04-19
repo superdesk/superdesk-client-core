@@ -147,8 +147,8 @@ export class ContactFormContainer extends React.Component {
         let contents = [
             'div',
             {
-                className: 'contactForm'
-            }
+                className: 'contactForm',
+            },
         ];
 
         if (!hideActionBar) {

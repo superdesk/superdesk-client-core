@@ -181,7 +181,7 @@ describe('authoring', () => {
         inject((api, $q, $rootScope, config, confirm) => {
             let item = {
                 _id: 'test',
-                headline: 'headline'
+                headline: 'headline',
             };
 
             let rewriteOf = {
@@ -190,14 +190,14 @@ describe('authoring', () => {
                 associations: {
                     featuremedia: {
 
-                    }
-                }
+                    },
+                },
             };
 
             let defered = $q.defer();
 
             config.features = {
-                editFeaturedImage: 1
+                editFeaturedImage: 1,
             };
 
             spyOn(api, 'find').and.returnValue($q.when({rewriteOf}));
@@ -214,7 +214,7 @@ describe('authoring', () => {
         inject((api, $q, $rootScope, config, confirm) => {
             let item = {
                 _id: 'test',
-                headline: 'headline'
+                headline: 'headline',
             };
 
             let rewriteOf = {
@@ -223,15 +223,15 @@ describe('authoring', () => {
                 associations: {
                     featuremedia: {
 
-                    }
-                }
+                    },
+                },
             };
 
             let defered = $q.defer();
 
             config.features = {
                 editFeaturedImage: 1,
-                confirmMediaOnUpdate: 1
+                confirmMediaOnUpdate: 1,
             };
 
             spyOn(api, 'find').and.returnValue($q.when({rewriteOf}));
@@ -249,7 +249,7 @@ describe('authoring', () => {
             let item = {
                 _id: 'test',
                 headline: 'headline',
-                rewrite_of: 'rewriteOf'
+                rewrite_of: 'rewriteOf',
             };
 
             let rewriteOf = {
@@ -258,15 +258,15 @@ describe('authoring', () => {
                 associations: {
                     featuremedia: {
 
-                    }
-                }
+                    },
+                },
             };
 
             let defered = $q.defer();
 
             config.features = {
                 editFeaturedImage: 1,
-                confirmMediaOnUpdate: 1
+                confirmMediaOnUpdate: 1,
             };
 
             spyOn(api, 'find').and.returnValue($q.when(rewriteOf));
@@ -289,23 +289,23 @@ describe('authoring', () => {
         inject((api, $q, $rootScope, config, confirm, authoring) => {
             let item = {
                 _id: 'test',
-                rewrite_of: 'rewriteOf'
+                rewrite_of: 'rewriteOf',
             };
 
             let rewriteOf = {
                 _id: 'rewriteOf',
                 associations: {
                     featuremedia: {
-                        test: 'test'
-                    }
-                }
+                        test: 'test',
+                    },
+                },
             };
 
             let defered = $q.defer();
 
             config.features = {
                 editFeaturedImage: 1,
-                confirmMediaOnUpdate: 1
+                confirmMediaOnUpdate: 1,
             };
 
             spyOn(api, 'find').and.returnValue($q.when(rewriteOf));
@@ -371,7 +371,7 @@ describe('authoring', () => {
             $controller(superdesk.activity('authoring').controller, {
                 $scope: $scope,
                 item: item,
-                action: action
+                action: action,
             });
             $compile(angular.element('<div sd-authoring-workspace><div sd-authoring></div></div>'))($scope);
         });
@@ -484,7 +484,7 @@ describe('authoring', () => {
                     _id: 1,
                     headline: 'test',
                     lock_user: 'user:1',
-                    state: 'submitted'
+                    state: 'submitted',
                 });
 
                 authoring.publishConfirmation(ITEM, edit, true, 'publish');
@@ -509,7 +509,7 @@ describe('authoring', () => {
                 _.extend(edit, {
                     task: {desk: null, stage: null, user: 1},
                     type: 'text',
-                    version: 1
+                    version: 1,
                 });
 
                 authoring.saveWorkConfirmation(ITEM, edit, true, 'User is disabled');
@@ -617,8 +617,8 @@ describe('cropImage', () => {
 
             metadata.values = {
                 crop_sizes: [
-                    {name: '4-3'}, {name: '16-9'}
-                ]
+                    {name: '4-3'}, {name: '16-9'},
+                ],
             };
 
             spyOn(metadata, 'initialize').and.returnValue(metaInit.promise);
@@ -630,7 +630,7 @@ describe('cropImage', () => {
             scope.item = {
                 type: 'picture',
                 renditions: {
-                }
+                },
             };
 
             metaInit.resolve();
@@ -645,8 +645,8 @@ describe('cropImage', () => {
                 type: 'picture',
                 renditions: {
                     '4-3': {
-                    }
-                }
+                    },
+                },
             };
 
             metaInit.resolve();
@@ -816,7 +816,7 @@ describe('authoring actions', () => {
                 _id: 'test',
                 state: 'draft',
                 flags: {marked_for_not_publication: false},
-                type: 'text'
+                type: 'text',
             };
 
             var userPrivileges = {
@@ -825,7 +825,7 @@ describe('authoring actions', () => {
                 spike: true,
                 unspike: true,
                 mark_for_highlights: true,
-                unlock: true
+                unlock: true,
             };
 
             privileges.setUserPrivileges(userPrivileges);
@@ -843,9 +843,9 @@ describe('authoring actions', () => {
                 flags: {marked_for_not_publication: false},
                 type: 'text',
                 task: {
-                    desk: 'desk1'
+                    desk: 'desk1',
                 },
-                _current_version: 1
+                _current_version: 1,
             };
 
             var userPrivileges = {
@@ -856,7 +856,7 @@ describe('authoring actions', () => {
                 mark_for_highlights: true,
                 mark_for_desks: true,
                 unlock: true,
-                publish: true
+                publish: true,
             };
 
             privileges.setUserPrivileges(userPrivileges);
@@ -876,9 +876,9 @@ describe('authoring actions', () => {
                 flags: {marked_for_not_publication: true},
                 type: 'text',
                 task: {
-                    desk: 'desk1'
+                    desk: 'desk1',
                 },
-                _current_version: 1
+                _current_version: 1,
             };
 
             var userPrivileges = {
@@ -888,7 +888,7 @@ describe('authoring actions', () => {
                 unspike: true,
                 mark_for_highlights: true,
                 unlock: true,
-                publish: true
+                publish: true,
             };
 
             privileges.setUserPrivileges(userPrivileges);
@@ -908,9 +908,9 @@ describe('authoring actions', () => {
                 type: 'composite',
                 highlight: 1,
                 task: {
-                    desk: 'desk1'
+                    desk: 'desk1',
                 },
-                _current_version: 1
+                _current_version: 1,
             };
 
             var userPrivileges = {
@@ -920,7 +920,7 @@ describe('authoring actions', () => {
                 unspike: true,
                 mark_for_highlights: true,
                 unlock: true,
-                publish: true
+                publish: true,
             };
 
             privileges.setUserPrivileges(userPrivileges);
@@ -939,9 +939,9 @@ describe('authoring actions', () => {
                 flags: {marked_for_not_publication: false},
                 type: 'text',
                 task: {
-                    desk: 'desk1'
+                    desk: 'desk1',
                 },
-                _current_version: 1
+                _current_version: 1,
             };
 
             var userPrivileges = {
@@ -951,7 +951,7 @@ describe('authoring actions', () => {
                 unspike: true,
                 mark_for_highlights: true,
                 unlock: true,
-                publish: false
+                publish: false,
             };
 
             privileges.setUserPrivileges(userPrivileges);
@@ -971,9 +971,9 @@ describe('authoring actions', () => {
                 flags: {marked_for_not_publication: false},
                 type: 'text',
                 task: {
-                    desk: 'desk3'
+                    desk: 'desk3',
                 },
-                _current_version: 2
+                _current_version: 2,
             };
 
             var userPrivileges = {
@@ -984,7 +984,7 @@ describe('authoring actions', () => {
                 mark_for_highlights: true,
                 mark_for_desks: false,
                 unlock: true,
-                archive: true
+                archive: true,
             };
 
             privileges.setUserPrivileges(userPrivileges);
@@ -1002,8 +1002,8 @@ describe('authoring actions', () => {
                 flags: {marked_for_not_publication: false},
                 type: 'text',
                 task: {
-                    desk: 'desk1'
-                }
+                    desk: 'desk1',
+                },
             };
 
             var userPrivileges = {
@@ -1012,7 +1012,7 @@ describe('authoring actions', () => {
                 spike: true,
                 unspike: true,
                 mark_for_highlights: true,
-                unlock: true
+                unlock: true,
             };
 
             privileges.setUserPrivileges(userPrivileges);
@@ -1030,14 +1030,14 @@ describe('authoring actions', () => {
                 type: 'text',
                 rewritten_by: 1,
                 task: {
-                    desk: 'desk1'
-                }
+                    desk: 'desk1',
+                },
             };
 
             var userPrivileges = {
                 archive: true,
                 rewrite: true,
-                unlock: true
+                unlock: true,
             };
 
             privileges.setUserPrivileges(userPrivileges);
@@ -1056,8 +1056,8 @@ describe('authoring actions', () => {
                 flags: {marked_for_not_publication: false},
                 type: 'text',
                 task: {
-                    desk: 'desk1'
-                }
+                    desk: 'desk1',
+                },
             };
 
             var userPrivileges = {
@@ -1066,7 +1066,7 @@ describe('authoring actions', () => {
                 spike: true,
                 unspike: true,
                 mark_for_highlights: true,
-                unlock: true
+                unlock: true,
             };
 
             privileges.setUserPrivileges(userPrivileges);
@@ -1085,7 +1085,7 @@ describe('authoring actions', () => {
                 flags: {marked_for_not_publication: false},
                 type: 'text',
                 task: {
-                    desk: 'desk1'
+                    desk: 'desk1',
                 },
                 _current_version: 10,
                 archive_item: {
@@ -1094,10 +1094,10 @@ describe('authoring actions', () => {
                     marked_for_not_publication: false,
                     type: 'text',
                     task: {
-                        desk: 'desk1'
+                        desk: 'desk1',
                     },
-                    _current_version: 10
-                }
+                    _current_version: 10,
+                },
             };
 
             var userPrivileges = {
@@ -1110,7 +1110,7 @@ describe('authoring actions', () => {
                 publish: true,
                 correct: true,
                 kill: true,
-                archive_broadcast: true
+                archive_broadcast: true,
             };
 
             privileges.setUserPrivileges(userPrivileges);
@@ -1130,7 +1130,7 @@ describe('authoring actions', () => {
                 flags: {marked_for_not_publication: false},
                 type: 'text',
                 task: {
-                    desk: 'desk1'
+                    desk: 'desk1',
                 },
                 _current_version: 10,
                 archive_item: {
@@ -1139,10 +1139,10 @@ describe('authoring actions', () => {
                     marked_for_not_publication: false,
                     type: 'text',
                     task: {
-                        desk: 'desk1'
+                        desk: 'desk1',
                     },
-                    _current_version: 10
-                }
+                    _current_version: 10,
+                },
             };
 
             var userPrivileges = {
@@ -1155,7 +1155,7 @@ describe('authoring actions', () => {
                 publish: true,
                 correct: true,
                 kill: true,
-                archive_broadcast: true
+                archive_broadcast: true,
             };
 
             privileges.setUserPrivileges(userPrivileges);
@@ -1181,7 +1181,7 @@ describe('authoring actions', () => {
                 flags: {marked_for_not_publication: false},
                 type: 'text',
                 task: {
-                    desk: 'desk1'
+                    desk: 'desk1',
                 },
                 _current_version: 10,
                 archive_item: {
@@ -1190,10 +1190,10 @@ describe('authoring actions', () => {
                     flags: {marked_for_not_publication: false},
                     type: 'text',
                     task: {
-                        desk: 'desk1'
+                        desk: 'desk1',
                     },
-                    _current_version: 10
-                }
+                    _current_version: 10,
+                },
             };
 
             var userPrivileges = {
@@ -1205,7 +1205,7 @@ describe('authoring actions', () => {
                 unlock: true,
                 publish: true,
                 correct: false,
-                kill: false
+                kill: false,
             };
 
             privileges.setUserPrivileges(userPrivileges);
@@ -1225,7 +1225,7 @@ describe('authoring actions', () => {
                 flags: {marked_for_not_publication: false},
                 type: 'text',
                 task: {
-                    desk: 'desk1'
+                    desk: 'desk1',
                 },
                 _current_version: 8,
                 archive_item: {
@@ -1234,10 +1234,10 @@ describe('authoring actions', () => {
                     flags: {marked_for_not_publication: false},
                     type: 'text',
                     task: {
-                        desk: 'desk1'
+                        desk: 'desk1',
                     },
-                    _current_version: 10
-                }
+                    _current_version: 10,
+                },
             };
 
             var userPrivileges = {
@@ -1249,7 +1249,7 @@ describe('authoring actions', () => {
                 unlock: true,
                 publish: true,
                 correct: true,
-                kill: true
+                kill: true,
             };
 
             privileges.setUserPrivileges(userPrivileges);
@@ -1267,7 +1267,7 @@ describe('authoring actions', () => {
                 flags: {marked_for_not_publication: false},
                 type: 'text',
                 task: {
-                    desk: 'desk1'
+                    desk: 'desk1',
                 },
                 _current_version: 8,
                 archive_item: {
@@ -1276,10 +1276,10 @@ describe('authoring actions', () => {
                     flags: {marked_for_not_publication: false},
                     type: 'text',
                     task: {
-                        desk: 'desk1'
+                        desk: 'desk1',
                     },
-                    _current_version: 8
-                }
+                    _current_version: 8,
+                },
             };
 
             var userPrivileges = {
@@ -1291,7 +1291,7 @@ describe('authoring actions', () => {
                 unlock: true,
                 publish: true,
                 correct: true,
-                kill: true
+                kill: true,
             };
 
             privileges.setUserPrivileges(userPrivileges);
@@ -1309,9 +1309,9 @@ describe('authoring actions', () => {
                 flags: {marked_for_not_publication: false},
                 type: 'text',
                 task: {
-                    desk: 'desk1'
+                    desk: 'desk1',
                 },
-                _current_version: 0
+                _current_version: 0,
             };
 
             var userPrivileges = {
@@ -1326,7 +1326,7 @@ describe('authoring actions', () => {
                 correct: true,
                 kill: true,
                 package_item: false,
-                move: true
+                move: true,
             };
 
             privileges.setUserPrivileges(userPrivileges);
@@ -1346,9 +1346,9 @@ describe('authoring actions', () => {
                 flags: {marked_for_not_publication: false},
                 type: 'text',
                 task: {
-                    desk: 'desk1'
+                    desk: 'desk1',
                 },
-                _current_version: 0
+                _current_version: 0,
             };
 
             var userPrivileges = {
@@ -1362,7 +1362,7 @@ describe('authoring actions', () => {
                 correct: true,
                 kill: true,
                 package_item: false,
-                move: true
+                move: true,
             };
 
             privileges.setUserPrivileges(userPrivileges);
@@ -1382,9 +1382,9 @@ describe('authoring actions', () => {
                 flags: {marked_for_not_publication: false},
                 type: 'text',
                 task: {
-                    desk: 'desk1'
+                    desk: 'desk1',
                 },
-                _current_version: 1
+                _current_version: 1,
             };
 
             var userPrivileges = {
@@ -1398,7 +1398,7 @@ describe('authoring actions', () => {
                 correct: true,
                 kill: true,
                 package_item: false,
-                move: false
+                move: false,
             };
 
             privileges.setUserPrivileges(userPrivileges);
@@ -1418,9 +1418,9 @@ describe('authoring actions', () => {
                 flags: {marked_for_not_publication: false},
                 type: 'text',
                 task: {
-                    desk: 'desk1'
+                    desk: 'desk1',
                 },
-                _current_version: 1
+                _current_version: 1,
             };
 
             var userPrivileges = {
@@ -1434,7 +1434,7 @@ describe('authoring actions', () => {
                 correct: true,
                 kill: true,
                 package_item: false,
-                move: true
+                move: true,
             };
 
             privileges.setUserPrivileges(userPrivileges);
@@ -1454,10 +1454,10 @@ describe('authoring actions', () => {
                 flags: {marked_for_not_publication: false},
                 type: 'text',
                 task: {
-                    desk: 'desk1'
+                    desk: 'desk1',
                 },
                 _current_version: 1,
-                embargo: Date()
+                embargo: Date(),
             };
 
             var userPrivileges = {
@@ -1471,7 +1471,7 @@ describe('authoring actions', () => {
                 correct: true,
                 kill: true,
                 package_item: true,
-                move: true
+                move: true,
             };
 
             privileges.setUserPrivileges(userPrivileges);
@@ -1490,10 +1490,10 @@ describe('authoring actions', () => {
                 flags: {marked_for_not_publication: false},
                 type: 'text',
                 task: {
-                    desk: 'desk1'
+                    desk: 'desk1',
                 },
                 _current_version: 1,
-                publish_schedule: Date()
+                publish_schedule: Date(),
             };
 
             var userPrivileges = {
@@ -1507,7 +1507,7 @@ describe('authoring actions', () => {
                 correct: true,
                 kill: true,
                 package_item: true,
-                move: true
+                move: true,
             };
 
             privileges.setUserPrivileges(userPrivileges);
@@ -1531,10 +1531,10 @@ describe('authoring actions', () => {
                 flags: {marked_for_not_publication: false},
                 type: 'text',
                 task: {
-                    desk: 'desk1'
+                    desk: 'desk1',
                 },
                 _current_version: 2,
-                publish_schedule: pastTimestamp
+                publish_schedule: pastTimestamp,
             };
 
             var userPrivileges = {
@@ -1548,7 +1548,7 @@ describe('authoring actions', () => {
                 correct: true,
                 kill: true,
                 package_item: true,
-                move: true
+                move: true,
             };
 
             privileges.setUserPrivileges(userPrivileges);
@@ -1568,7 +1568,7 @@ describe('authoring actions', () => {
                 flags: {marked_for_not_publication: false},
                 type: 'text',
                 task: {
-                    desk: 'desk1'
+                    desk: 'desk1',
                 },
                 _current_version: 10,
                 genre: [],
@@ -1578,11 +1578,11 @@ describe('authoring actions', () => {
                     flags: {marked_for_not_publication: false},
                     type: 'text',
                     task: {
-                        desk: 'desk1'
+                        desk: 'desk1',
                     },
                     _current_version: 10,
-                    genre: []
-                }
+                    genre: [],
+                },
             };
 
             var userPrivileges = {
@@ -1595,7 +1595,7 @@ describe('authoring actions', () => {
                 publish: true,
                 correct: true,
                 kill: true,
-                archive_broadcast: true
+                archive_broadcast: true,
             };
 
             privileges.setUserPrivileges(userPrivileges);
@@ -1615,7 +1615,7 @@ describe('authoring actions', () => {
                 flags: {marked_for_not_publication: false},
                 type: 'text',
                 task: {
-                    desk: 'desk1'
+                    desk: 'desk1',
                 },
                 _current_version: 10,
                 genre: [{name: 'Article', value: 'Article'}],
@@ -1625,11 +1625,11 @@ describe('authoring actions', () => {
                     flags: {marked_for_not_publication: false},
                     type: 'text',
                     task: {
-                        desk: 'desk1'
+                        desk: 'desk1',
                     },
                     _current_version: 10,
-                    genre: [{name: 'Article', value: 'Article'}]
-                }
+                    genre: [{name: 'Article', value: 'Article'}],
+                },
             };
 
             var userPrivileges = {
@@ -1642,7 +1642,7 @@ describe('authoring actions', () => {
                 publish: true,
                 correct: true,
                 kill: true,
-                archive_broadcast: true
+                archive_broadcast: true,
             };
 
             privileges.setUserPrivileges(userPrivileges);
@@ -1662,12 +1662,12 @@ describe('authoring actions', () => {
                 flags: {marked_for_not_publication: false},
                 type: 'text',
                 task: {
-                    desk: 'desk1'
+                    desk: 'desk1',
                 },
                 _current_version: 10,
                 genre: [
                     {name: 'Interview', value: 'Interview'},
-                    {name: 'Broadcast Script', value: 'Broadcast Script'}
+                    {name: 'Broadcast Script', value: 'Broadcast Script'},
                 ],
                 archive_item: {
                     _id: 'test',
@@ -1675,14 +1675,14 @@ describe('authoring actions', () => {
                     flags: {marked_for_not_publication: false},
                     type: 'text',
                     task: {
-                        desk: 'desk1'
+                        desk: 'desk1',
                     },
                     _current_version: 10,
                     genre: [
                         {name: 'Interview', value: 'Interview'},
-                        {name: 'Broadcast Script', value: 'Broadcast Script'}
-                    ]
-                }
+                        {name: 'Broadcast Script', value: 'Broadcast Script'},
+                    ],
+                },
             };
 
             var userPrivileges = {
@@ -1695,7 +1695,7 @@ describe('authoring actions', () => {
                 publish: true,
                 correct: true,
                 kill: true,
-                archive_broadcast: true
+                archive_broadcast: true,
             };
 
             privileges.setUserPrivileges(userPrivileges);
@@ -1715,8 +1715,8 @@ describe('authoring actions', () => {
                 flags: {marked_for_not_publication: false},
                 type: 'text',
                 task: {
-                    desk: 'desk1'
-                }
+                    desk: 'desk1',
+                },
             };
 
             var userPrivileges = {
@@ -1739,8 +1739,8 @@ describe('authoring actions', () => {
                 flags: {marked_for_not_publication: false},
                 type: 'composite',
                 task: {
-                    desk: 'desk1'
-                }
+                    desk: 'desk1',
+                },
             };
 
             var userPrivileges = {
@@ -1763,12 +1763,12 @@ describe('authoring actions', () => {
                 flags: {marked_for_not_publication: false},
                 type: 'text',
                 task: {
-                    desk: 'desk1'
+                    desk: 'desk1',
                 },
                 _current_version: 10,
                 rewritten_by: '123',
                 genre: [
-                    {name: 'Interview', value: 'Interview'}
+                    {name: 'Interview', value: 'Interview'},
                 ],
                 archive_item: {
                     _id: 'test',
@@ -1776,14 +1776,14 @@ describe('authoring actions', () => {
                     flags: {marked_for_not_publication: false},
                     type: 'text',
                     task: {
-                        desk: 'desk1'
+                        desk: 'desk1',
                     },
                     _current_version: 10,
                     rewritten_by: '123',
                     genre: [
-                        {name: 'Interview', value: 'Interview'}
-                    ]
-                }
+                        {name: 'Interview', value: 'Interview'},
+                    ],
+                },
             };
 
             var userPrivileges = {
@@ -1796,7 +1796,7 @@ describe('authoring actions', () => {
                 publish: true,
                 correct: true,
                 kill: true,
-                archive_broadcast: true
+                archive_broadcast: true,
             };
 
             privileges.setUserPrivileges(userPrivileges);
@@ -1814,13 +1814,13 @@ describe('authoring actions', () => {
                 _id: 'test',
                 type: 'text',
                 task: {
-                    desk: 'desk1'
-                }
+                    desk: 'desk1',
+                },
             };
 
             let userPrivileges = {
                 mark_for_highlights: true,
-                mark_for_desks: true
+                mark_for_desks: true,
             };
 
             privileges.setUserPrivileges(userPrivileges);
@@ -2035,7 +2035,7 @@ describe('authoring container directive', () => {
                 expect(api.save)
                     .toHaveBeenCalledWith('content_templates_apply', {}, {
                         template_name: 'kill',
-                        item: {_id: 'foo'}
+                        item: {_id: 'foo'},
                     }, {});
             }));
     });
@@ -2053,12 +2053,12 @@ describe('authoring themes', () => {
     var normalTheme = {
             cssClass: '',
             label: 'Default',
-            key: 'default'
+            key: 'default',
         },
         darkTheme = {
             cssClass: 'dark-theme-mono',
             label: 'Dark monospace',
-            key: 'dark-mono'
+            key: 'dark-mono',
         };
 
     it('can define normal theme', inject((authThemes) => {
@@ -2100,7 +2100,7 @@ describe('send item directive', () => {
             server: {url: undefined},
             iframely: {key: '123'},
             editor: {},
-            features: {onlyEditor3: false}
+            features: {onlyEditor3: false},
         });
     }));
 
@@ -2125,10 +2125,10 @@ describe('send item directive', () => {
             scope.item = {
                 _id: 'foo',
                 type: 'text',
-                state: 'in-progress'
+                state: 'in-progress',
             };
             var userPrivileges = {
-                embargo: false
+                embargo: false,
             };
 
             privileges.setUserPrivileges(userPrivileges);
@@ -2150,10 +2150,10 @@ describe('send item directive', () => {
             scope.item = {
                 _id: 'foo',
                 type: 'text',
-                state: 'in-progress'
+                state: 'in-progress',
             };
             var userPrivileges = {
-                embargo: true
+                embargo: true,
             };
 
             privileges.setUserPrivileges(userPrivileges);
@@ -2176,10 +2176,10 @@ describe('send item directive', () => {
                 _id: 'foo',
                 type: 'text',
                 state: 'in-progress',
-                embargo_date: Date()
+                embargo_date: Date(),
             };
             var userPrivileges = {
-                embargo: true
+                embargo: true,
             };
 
             privileges.setUserPrivileges(userPrivileges);
@@ -2202,7 +2202,7 @@ describe('send item directive', () => {
                 _id: 'foo',
                 type: 'text',
                 state: 'in-progress',
-                publish_schedule_date: Date()
+                publish_schedule_date: Date(),
             };
             scope.action = 'edit';
             elem = $compile('<div sd-send-item data-item="item" data-mode="authoring" ' +
@@ -2220,7 +2220,7 @@ describe('send item directive', () => {
             scope = $rootScope.$new();
             scope.item = {
                 _id: '123456',
-                type: 'text'
+                type: 'text',
             };
 
             var destination = {desk: '123', stage: '456'};
@@ -2239,7 +2239,7 @@ describe('send item directive', () => {
             preferencesService.get().then((prefs) => {
                 iscope.destination_last = {
                     desk: prefs.desk,
-                    stage: prefs.stage
+                    stage: prefs.stage,
                 };
             });
 
@@ -2260,9 +2260,9 @@ describe('send item directive', () => {
                 state: 'in-progress',
                 task: {
                     desk: '123',
-                    stage: '456'
+                    stage: '456',
                 },
-                _current_version: 1
+                _current_version: 1,
             };
             scope.action = 'edit';
             elem = $compile('<div sd-send-item data-item="item" data-orig="item" data-mode="authoring" ' +
@@ -2292,19 +2292,19 @@ describe('send item directive', () => {
             state: 'in-progress',
             task: {
                 desk: 'New Desk',
-                stage: 'New Stage'
+                stage: 'New Stage',
             },
             _current_version: 2,
             _etag: '1111',
-            _locked: true
+            _locked: true,
         };
 
         var selectedDesk = {
-            _id: 'New Desk', name: 'new desk'
+            _id: 'New Desk', name: 'new desk',
         };
 
         var selectedStage = {
-            _id: 'New Stage', name: 'new stage'
+            _id: 'New Stage', name: 'new stage',
         };
 
         beforeEach(inject(($q, $compile, $rootScope, api, editor) => {
@@ -2318,10 +2318,10 @@ describe('send item directive', () => {
                 state: 'in-progress',
                 task: {
                     desk: '123',
-                    stage: '456'
+                    stage: '456',
                 },
                 _current_version: 1,
-                _etag: '123'
+                _etag: '123',
             };
             scope.action = 'edit';
             scope.publish = function() {

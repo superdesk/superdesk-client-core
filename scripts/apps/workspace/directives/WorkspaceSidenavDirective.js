@@ -89,6 +89,6 @@ export function WorkspaceSidenavDirective(superdeskFlags, workspaceMenu, Keys, g
             if ($rootScope.popup) {
                 superdeskFlags.flags.hideMonitoring = true;
             }
-        }
+        },
     };
 }

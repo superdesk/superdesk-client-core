@@ -21,7 +21,7 @@ export function DictionaryConfigController($scope, dictionaries, gettext, sessio
     $scope.createDictionary = function() {
         $scope.dictionary = {is_active: 'true'};
         $scope.origDictionary = {
-            type: 'dictionary'
+            type: 'dictionary',
         };
     };
 
@@ -31,7 +31,7 @@ export function DictionaryConfigController($scope, dictionaries, gettext, sessio
                 is_active: 'true',
                 type: 'dictionary',
                 user: identity._id,
-                name: identity._id
+                name: identity._id,
             };
             $scope.origDictionary = {};
         });
@@ -48,7 +48,7 @@ export function DictionaryConfigController($scope, dictionaries, gettext, sessio
                 type: 'abbreviations',
                 user: identity._id,
                 name: identity._id,
-                content: {}
+                content: {},
             };
             $scope.origDictionary = {};
         });

@@ -31,6 +31,6 @@ export function RoleUnique(api, $q) {
             }
 
             ctrl.$asyncValidators.unique = testUnique;
-        }
+        },
     };
 }

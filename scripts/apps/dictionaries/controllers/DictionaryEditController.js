@@ -170,7 +170,7 @@ export function DictionaryEditController($scope, dictionaries, upload, gettext, 
     function init() {
         if ($scope.isAbbreviations()) {
             $scope.abbreviation = {
-                key: '', phrase: ''
+                key: '', phrase: '',
             };
 
             $scope.abbreviationKeys = _.sortBy(Object.keys($scope.dictionary.content));

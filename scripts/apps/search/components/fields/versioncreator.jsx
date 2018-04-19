@@ -10,5 +10,5 @@ export function versioncreator(props) {
 }
 
 versioncreator.propTypes = {
-    versioncreator: PropTypes.any
+    versioncreator: PropTypes.any,
 };

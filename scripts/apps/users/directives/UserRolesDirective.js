@@ -82,6 +82,6 @@ export function UserRolesDirective(api, gettext, notify, modal, $filter, _) {
             function confirm() {
                 return modal.confirm(gettext('Are you sure you want to delete user role?'));
             }
-        }
+        },
     };
 }

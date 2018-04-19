@@ -18,6 +18,6 @@ export function PasswordConfirmDirective() {
             scope.$watch('password', (password) => {
                 ctrl.$setValidity(NAME, isMatch(password, ctrl.$viewValue));
             });
-        }
+        },
     };
 }

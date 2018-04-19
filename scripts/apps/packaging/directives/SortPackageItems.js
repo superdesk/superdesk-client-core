@@ -14,7 +14,7 @@ export function SortPackageItems() {
 
                         return $('<li class="placeholder" style="height:' + height + 'px"></li>')[0];
                     },
-                    update: function() { /* no-op */ }
+                    update: function() { /* no-op */ },
                 },
                 start: function(event, ui) {
                     ui.item
@@ -42,7 +42,7 @@ export function SortPackageItems() {
                                 .data('start_index'),
 
                             group: ui.item
-                                .data('start_group')
+                                .data('start_group'),
                         };
                         var end = {
                             index: ui.item
@@ -52,7 +52,7 @@ export function SortPackageItems() {
 
                             group: ui.item
                                 .parent()
-                                .data('group')
+                                .data('group'),
                         };
 
                         ui.item.remove();
@@ -63,8 +63,8 @@ export function SortPackageItems() {
                 update: function(event, ui) {
                     updated = true;
                 },
-                cancel: '.fake'
+                cancel: '.fake',
             });
-        }
+        },
     };
 }

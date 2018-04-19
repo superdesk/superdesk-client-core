@@ -1,5 +1,5 @@
 export const fieldsMetaKeys = {
-    draftjsState: 'draftjsState'
+    draftjsState: 'draftjsState',
 };
 
 // . is not a valid character for mongo key
@@ -13,7 +13,7 @@ const wrapper = {
     // wrapping is performed, so backend API doesn't try to merge the keys of our value
 
     wrap: (value) => [value],
-    unwrap: (wrappedValue) => wrappedValue[0]
+    unwrap: (wrappedValue) => wrappedValue[0],
 };
 
 // Content key is similar to fieldName, except it supports nested objects
@@ -41,7 +41,7 @@ export function setFieldMetadata(item, fieldKey, contentKey, contentValue) {
 
     item[META_FIELD_NAME][fieldKey] = {
         ...item[META_FIELD_NAME][fieldKey],
-        [contentKey]: wrapper.wrap(contentValue)
+        [contentKey]: wrapper.wrap(contentValue),
     };
 }
 

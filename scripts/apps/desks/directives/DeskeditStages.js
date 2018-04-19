@@ -189,6 +189,6 @@ export function DeskeditStages(gettext, api, WizardHandler, tasks, $rootScope, d
                         }
                     });
             };
-        }
+        },
     };
 }

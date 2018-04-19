@@ -5,7 +5,7 @@ export function InlineMeta() {
             placeholder: '@',
             showmeta: '=',
             item: '=',
-            setmeta: '&'
-        }
+            setmeta: '&',
+        },
     };
 }

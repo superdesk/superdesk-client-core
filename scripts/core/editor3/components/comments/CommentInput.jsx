@@ -42,8 +42,8 @@ class CommentInputBody extends Component {
                             msg: msg,
                             replies: [],
                             resolutionInfo: null,
-                            ...getAuthorInfo()
-                        }
+                            ...getAuthorInfo(),
+                        },
                     }
                 );
             } else {
@@ -94,9 +94,9 @@ class CommentInputBody extends Component {
 CommentInputBody.propTypes = {
     hidePopups: PropTypes.func,
     data: PropTypes.object,
-    highlightsManager: PropTypes.object.isRequired
+    highlightsManager: PropTypes.object.isRequired,
 };
 
 export const CommentInput = connect(null, {
-    hidePopups
+    hidePopups,
 })(CommentInputBody);

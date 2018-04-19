@@ -12,14 +12,14 @@ describe('Multi Action Bar', () => {
         $provide.constant('config', {
             model: {
                 timeformat: 'HH:mm:ss',
-                dateformat: 'DD/MM/YYYY'
+                dateformat: 'DD/MM/YYYY',
             },
             view: {
                 timeformat: 'HH:mm',
-                dateformat: 'MM/DD/YYYY'
+                dateformat: 'MM/DD/YYYY',
             },
             defaultTimezone: 'Europe/London',
-            server: {url: undefined}
+            server: {url: undefined},
         });
     }));
 
@@ -33,14 +33,14 @@ describe('Multi Action Bar', () => {
                     _type: 'archive',
                     task: {desk: 'desk1', stage: 'stage1'},
                     type: 'text',
-                    assignment_id: 'as1'
+                    assignment_id: 'as1',
                 },
                 {
                     _id: 'foo2',
                     _type: 'archive',
                     task: {desk: 'desk1', stage: 'stage1'},
-                    type: 'text'
-                }
+                    type: 'text',
+                },
             ];
 
             spyOn(multi, 'getItems').and.returnValue(itemlist);
@@ -68,14 +68,14 @@ describe('Multi Action Bar', () => {
                     _id: 'foo1',
                     _type: 'archive',
                     task: {desk: 'desk1', stage: 'stage1'},
-                    type: 'text'
+                    type: 'text',
                 },
                 {
                     _id: 'foo2',
                     _type: 'archive',
                     task: {desk: 'desk1', stage: 'stage1'},
-                    type: 'text'
-                }
+                    type: 'text',
+                },
             ];
 
             spyOn(multi, 'getItems').and.returnValue(itemlist);

@@ -10,7 +10,7 @@ describe('Reload Service', () => {
     var USER = {
         _links: {self: {href: USER_URL}},
         _etag: '2',
-        _id: '1'
+        _id: '1',
     };
 
     var rootScope, reloadService, msg;
@@ -24,7 +24,7 @@ describe('Reload Service', () => {
             spyOn(session, 'getIdentity').and.returnValue($q.when({_links: {self: {href: USER_URL}}}));
             spyOn(desks, 'fetchUserDesks').and.returnValue($q.when([
                 {_id: '5567ff31102454c7bac47644', name: 'Desk One'},
-                {_id: '55394997102454b5ea111bd5', name: 'Desk Two'}
+                {_id: '55394997102454b5ea111bd5', name: 'Desk Two'},
             ]));
             spyOn(preferencesService, 'get').and.returnValue($q.when([]));
             spyOn(preferencesService, 'update');
@@ -43,8 +43,8 @@ describe('Reload Service', () => {
             event: 'desk_membership_revoked',
             extra: {
                 desk_id: '5567ff31102454c7bac47644',
-                user_ids: ['1']
-            }
+                user_ids: ['1'],
+            },
         };
 
         var reload = spyOn(reloadService, 'reload');
@@ -59,8 +59,8 @@ describe('Reload Service', () => {
             event: 'stage',
             extra: {
                 desk_id: '5567ff31102454c7bac47644',
-                user_ids: ['1']
-            }
+                user_ids: ['1'],
+            },
         };
         reloadService.activeDesk = '5567ff31102454c7bac47644';
 
@@ -69,7 +69,7 @@ describe('Reload Service', () => {
         rootScope.$broadcast('reload', msg);
         expect(reload).toHaveBeenCalledWith(Object({
             reload: true,
-            message: 'Stage is created/updated/deleted'
+            message: 'Stage is created/updated/deleted',
         }));
         expect(reloadService.result.reload).toBe(true);
     }));

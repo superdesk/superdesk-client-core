@@ -5,14 +5,14 @@ describe('superdesk ui', () => {
         $provide.constant('config', {
             model: {
                 timeformat: 'HH:mm:ss',
-                dateformat: 'DD/MM/YYYY'
+                dateformat: 'DD/MM/YYYY',
             },
             view: {
                 timeformat: 'HH:mm',
-                dateformat: 'MM/DD/YYYY'
+                dateformat: 'MM/DD/YYYY',
             },
             defaultTimezone: 'Europe/London',
-            server: {url: undefined}
+            server: {url: undefined},
         });
     }));
 
@@ -60,13 +60,13 @@ describe('superdesk ui', () => {
         beforeEach(window.module('superdesk.apps.ingest'));
         beforeEach(window.module(($provide) => {
             var childDirectives = [
-                'sdWeekdayPicker', 'sdTimepickerAlt', 'sdTypeahead'
+                'sdWeekdayPicker', 'sdTimepickerAlt', 'sdTypeahead',
             ];
 
             fakeTzData = {
                 $promise: null,
                 zones: {},
-                links: {}
+                links: {},
             };
             $provide.constant('tzdata', fakeTzData);
 
@@ -110,11 +110,11 @@ describe('superdesk ui', () => {
             var serverTzData = {
                 zones: {
                     'Europe/Rome': ['1 - CET'],
-                    'Australia/Sydney': ['10 ADN EST']
+                    'Australia/Sydney': ['10 ADN EST'],
                 },
                 links: {
-                    'Foo/Bar': []
-                }
+                    'Foo/Bar': [],
+                },
             };
 
             fakeTzData.zones = serverTzData.zones;
@@ -137,11 +137,11 @@ describe('superdesk ui', () => {
             var serverTzData = {
                 zones: {
                     'Europe/Rome': ['1 - CET'],
-                    'Australia/Sydney': ['10 ADN EST']
+                    'Australia/Sydney': ['10 ADN EST'],
                 },
                 links: {
-                    'Foo/Bar': []
-                }
+                    'Foo/Bar': [],
+                },
             };
 
             fakeTzData.zones = serverTzData.zones;
@@ -188,11 +188,11 @@ describe('superdesk ui', () => {
                 'search term',
             () => {
                 isoScope.timeZones = [
-                    'Foo/City', 'Asia/FooBar', 'EU_f/oo', 'bar_fOo', 'xyz'
+                    'Foo/City', 'Asia/FooBar', 'EU_f/oo', 'bar_fOo', 'xyz',
                 ];
                 isoScope.searchTimeZones('fOO');
                 expect(isoScope.matchingTimeZones).toEqual([
-                    'Foo/City', 'Asia/FooBar', 'bar_fOo'
+                    'Foo/City', 'Asia/FooBar', 'bar_fOo',
                 ]);
             }
             );

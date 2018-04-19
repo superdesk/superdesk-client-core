@@ -57,7 +57,7 @@ class LinkFunction {
 export function CompareVersionsDropdownInnerDirective(compareVersions) {
     return {
         template: require('scripts/apps/authoring/compare-versions/views/sd-compare-versions-inner-dropdown.html'),
-        link: (scope, elem, attrs) => new LinkFunction(compareVersions, scope, elem, attrs)
+        link: (scope, elem, attrs) => new LinkFunction(compareVersions, scope, elem, attrs),
     };
 }
 

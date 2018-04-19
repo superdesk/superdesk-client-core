@@ -47,7 +47,7 @@ export function SendService(desks, api, $q, notify, $injector, multi, $rootScope
             return api
                 .save(item.fetch_endpoint, {
                     guid: item.guid,
-                    desk: desks.getCurrentDeskId()
+                    desk: desks.getCurrentDeskId(),
                 }, null, null, {repo: item.ingest_provider})
                 .then(
                     (fetched) => {
@@ -121,7 +121,7 @@ export function SendService(desks, api, $q, notify, $injector, multi, $rootScope
             return api.save(item.fetch_endpoint, {
                 guid: item.guid,
                 desk: data.desk,
-                stage: data.stage
+                stage: data.stage,
             }, null, null, {repo: item.ingest_provider})
                 .then((fetched) => {
                     notify.success(gettext('Item Fetched.'));
@@ -143,7 +143,7 @@ export function SendService(desks, api, $q, notify, $injector, multi, $rootScope
 
         function getData(config) {
             var data = {
-                desk: config.desk
+                desk: config.desk,
             };
 
             if (config.stage) {

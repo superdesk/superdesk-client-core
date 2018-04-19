@@ -4,7 +4,7 @@ export function TransmissionDetailsDirective(api) {
         templateUrl: 'scripts/apps/authoring/versioning/history/views/publish_queue.html',
         scope: {
             item: '=',
-            type: '='
+            type: '=',
         },
         link: function(scope) {
             scope.transmitted_item = null;
@@ -36,7 +36,7 @@ export function TransmissionDetailsDirective(api) {
                     var criteria = {max_results: 20};
 
                     criteria.where = JSON.stringify({
-                        $and: [{item_id: scope.item.item_id}, {item_version: scope.item.version}]
+                        $and: [{item_id: scope.item.item_id}, {item_version: scope.item.version}],
                     });
 
                     var promise;
@@ -58,6 +58,6 @@ export function TransmissionDetailsDirective(api) {
                     });
                 }
             };
-        }
+        },
     };
 }

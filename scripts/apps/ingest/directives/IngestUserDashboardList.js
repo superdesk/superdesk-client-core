@@ -4,7 +4,7 @@ export function IngestUserDashboardList() {
         templateUrl: 'scripts/apps/ingest/views/dashboard/ingest-dashboard-widget-list.html',
         scope: {
             items: '=',
-            setUserPreferences: '&'
-        }
+            setUserPreferences: '&',
+        },
     };
 }

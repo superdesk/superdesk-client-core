@@ -7,7 +7,7 @@
 const InlineStyleTags = {
     BOLD: 'b',
     ITALIC: 'i',
-    UNDERLINE: 'u'
+    UNDERLINE: 'u',
 };
 
 /**

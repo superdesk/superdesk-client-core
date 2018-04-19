@@ -5,7 +5,7 @@ var config = {
     ONE_UPPER: /^(?=.*[A-Z])/g,
     ONE_NUMBER: /^(?=.*[0-9])/g,
     ONE_OTHER: /^(?=.*[^0-9^a-z^A-Z])/g,
-    MIN_STRENGTH: 3
+    MIN_STRENGTH: 3,
 };
 
 /**
@@ -39,7 +39,7 @@ function PasswordStrength(gettext, $interpolate) {
         {txt: gettext('Weak'), cls: 'red'},
         {txt: gettext('Better'), cls: 'yellow'},
         {txt: gettext('OK'), cls: 'green'},
-        {txt: gettext('Strong'), cls: 'green'}
+        {txt: gettext('Strong'), cls: 'green'},
     ];
 
     // helpText holds the text that will be shown when the user hovers over the
@@ -56,7 +56,7 @@ function PasswordStrength(gettext, $interpolate) {
     return {
         require: 'ngModel',
         scope: {
-            password: '=ngModel'
+            password: '=ngModel',
         },
         link: function($scope, el, attr, ngModel) {
             var indicator = angular.element(
@@ -68,7 +68,7 @@ function PasswordStrength(gettext, $interpolate) {
 
             indicator.find('.icon-question-sign').tooltip({
                 title: $interpolate(helpText)(config),
-                html: true
+                html: true,
             });
 
             ngModel.$error.weakPass = gettext('Password is too weak.');
@@ -100,7 +100,7 @@ function PasswordStrength(gettext, $interpolate) {
             updateStrength(ngModel.$modelValue || '');
             $scope.$watch('password', updateStrength);
             indicator.insertAfter(el);
-        }
+        },
     };
 }
 

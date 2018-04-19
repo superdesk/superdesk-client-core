@@ -34,6 +34,6 @@ export function RolesPrivilegesDirective(api, gettext, notify, $q, $filter) {
                     notify.error(gettext(handleError(response)));
                 });
             };
-        }
+        },
     };
 }

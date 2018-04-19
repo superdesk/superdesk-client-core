@@ -21,5 +21,5 @@ export function updated(props) {
 updated.propTypes = {
     svc: PropTypes.any.isRequired,
     item: PropTypes.any,
-    openAuthoringView: PropTypes.func
+    openAuthoringView: PropTypes.func,
 };

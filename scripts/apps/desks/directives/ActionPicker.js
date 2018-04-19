@@ -11,7 +11,7 @@ export function ActionPicker(desks, macros) {
             desk: '=',
             stage: '=',
             macro: '=',
-            required: '='
+            required: '=',
         },
         template: require('../views/actionpicker.html'),
         link: function(scope, elem, attrs) {
@@ -43,6 +43,6 @@ export function ActionPicker(desks, macros) {
                     updateMacros();
                 }
             });
-        }
+        },
     };
 }

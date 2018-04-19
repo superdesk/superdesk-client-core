@@ -5,10 +5,10 @@ export function DeskConfigController($scope, $controller, gettext, notify, desks
     $scope.modalActive = false;
     $scope.numberOfUsers = 3;
     $scope.step = {
-        current: null
+        current: null,
     };
     $scope.desk = {
-        edit: null
+        edit: null,
     };
 
     $scope.openDesk = function(step, desk) {

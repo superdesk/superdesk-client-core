@@ -26,7 +26,7 @@ export function DeskSelect(Keys, _, preferencesService) {
             allDesks: '=desks',
             selectedDesk: '=',
             defaultDesk: '=',
-            onChange: '&'
+            onChange: '&',
         },
         controller: DeskSelectController,
         controllerAs: 'ctrl',
@@ -184,6 +184,6 @@ export function DeskSelect(Keys, _, preferencesService) {
                     }
                 }
             });
-        }
+        },
     };
 }

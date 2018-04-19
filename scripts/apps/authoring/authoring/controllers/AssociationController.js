@@ -122,7 +122,7 @@ export function AssociationController(config, send, api, $q, superdesk,
             maxUploads: scope.maxUploads,
             allowPicture: scope.allowPicture,
             allowVideo: scope.allowVideo,
-            allowAudio: scope.allowAudio
+            allowAudio: scope.allowAudio,
         };
 
         superdesk.intent('upload', 'media', uploadData).then((images) => {

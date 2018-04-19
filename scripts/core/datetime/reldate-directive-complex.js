@@ -20,7 +20,7 @@ function ReldateComplex(config, gettextCatalog) {
     return {
         scope: {
             datetime: '=',
-            useutc: '='
+            useutc: '=',
         },
         template: '<time datetime="{{ datetimeIso }}"><span>{{rday}}, &nbsp;{{ rdate }}</span></time>',
         link: function(scope, element, attrs, ngModel) {
@@ -43,7 +43,7 @@ function ReldateComplex(config, gettextCatalog) {
 
                 scope.rdate = date.format(DISPLAY_DATE_FORMAT);
             });
-        }
+        },
     };
 }
 

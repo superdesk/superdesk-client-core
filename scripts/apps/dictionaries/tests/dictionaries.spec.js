@@ -17,7 +17,7 @@ describe('dictionaries', () => {
         expect(api.query).toHaveBeenCalledWith('dictionaries', {projection: {content: 0}, where: {
             $or: [
                 {user: {$exists: false}},
-                {user: 'foo'}
+                {user: 'foo'},
             ]}});
     }));
 
@@ -40,8 +40,8 @@ describe('dictionaries', () => {
             [{$or: [{language_id: LANG}]},
                 {is_active: {$in: ['true', null]}},
                 {$or: [{type: {$exists: 0}}, {type: 'dictionary'}]},
-                {$or: [{user: USER_ID}, {user: {$exists: false}}]}]
-            }
+                {$or: [{user: USER_ID}, {user: {$exists: false}}]}],
+            },
         });
         expect(api.find).toHaveBeenCalledWith('dictionaries', 1);
     }));
@@ -66,8 +66,8 @@ describe('dictionaries', () => {
                 [{$or: [{language_id: 'en-US'}, {language_id: 'en'}]},
                     {is_active: {$in: ['true', null]}},
                     {$or: [{type: {$exists: 0}}, {type: 'dictionary'}]},
-                    {$or: [{user: USER_ID}, {user: {$exists: false}}]}]
-                }
+                    {$or: [{user: USER_ID}, {user: {$exists: false}}]}],
+                },
             });
             expect(api.find).toHaveBeenCalledWith('dictionaries', 1);
         }));
@@ -82,9 +82,9 @@ describe('dictionaries', () => {
             where: {
                 $and: [
                     {language_id: 'en'}, {user: 'foo'},
-                    {$or: [{type: {$exists: 0}}, {type: 'dictionary'}]}
-                ]
-            }
+                    {$or: [{type: {$exists: 0}}, {type: 'dictionary'}]},
+                ],
+            },
         };
 
         expect(api.query).toHaveBeenCalledWith('dictionaries', where);
@@ -101,7 +101,7 @@ describe('dictionaries', () => {
             language_id: LANG,
             content: {test: 1},
             user: USER_ID,
-            name: USER_ID + ':' + LANG
+            name: USER_ID + ':' + LANG,
         });
     }));
 

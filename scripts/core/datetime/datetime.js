@@ -17,7 +17,7 @@ function DateTimeDirective(datetime, moment) {
                 elem.text(txt);
                 elem.attr('title', momentDate.format('LLLL'));
             }
-        }
+        },
     };
 }
 
@@ -44,7 +44,7 @@ function ShortDateDirective(config, moment) {
                     elem.attr('title', text);
                 }
             }
-        }
+        },
     };
 }
 
@@ -118,7 +118,7 @@ function DateTimeHelperService(moment, config) {
 
         return {
             date: momentTS.format(config.model.dateformat),
-            time: momentTS.format(config.model.timeformat)
+            time: momentTS.format(config.model.timeformat),
         };
     };
 
@@ -179,7 +179,7 @@ export default angular.module('superdesk.core.datetime', [
     'superdesk.core.datetime.groupdates',
     'superdesk.core.datetime.reldatecomplex',
     'superdesk.core.datetime.reldate',
-    'superdesk.core.translate'
+    'superdesk.core.translate',
 ])
     .config(['defaultConfigProvider', function(defaultConfig) {
         defaultConfig.set('shortTimeFormat', 'HH:mm'); // 24h format
@@ -232,7 +232,7 @@ export default angular.module('superdesk.core.datetime', [
             THU: gettext('Thursday'),
             FRI: gettext('Friday'),
             SAT: gettext('Saturday'),
-            SUN: gettext('Sunday')
+            SUN: gettext('Sunday'),
         });
     }])
 

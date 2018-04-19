@@ -16,6 +16,6 @@ export function SettingsView($route, superdesk, pageTitle) {
             } else {
                 pageTitle.setWorkspace(null);
             }
-        }
+        },
     };
 }

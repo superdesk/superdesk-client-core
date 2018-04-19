@@ -26,7 +26,7 @@ export default angular.module('superdesk.core.directives.switchInverted', [])
         template: [
             '<span class="sd-toggle">',
             '<span class="inner"></span>',
-            '</span>'
+            '</span>',
         ].join(''),
         link: function($scope, element, attrs, ngModel) {
             ngModel.$render = function() {
@@ -44,5 +44,5 @@ export default angular.module('superdesk.core.directives.switchInverted', [])
 
                 return false;
             });
-        }
+        },
     }));

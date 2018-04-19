@@ -1,5 +1,5 @@
 import {
-    SelectionState
+    SelectionState,
 } from 'draft-js';
 
 
@@ -11,6 +11,6 @@ export function getDraftSelectionForEntireContent(editorState) {
         anchorOffset: 0,
         focusKey: contentState.getLastBlock().getKey(),
         focusOffset: contentState.getLastBlock().getLength(),
-        isBackward: false
+        isBackward: false,
     });
 }

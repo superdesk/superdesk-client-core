@@ -11,7 +11,7 @@ export function addTable(numRows = 1, numCols = 2) {
 
     return {
         type: 'TOOLBAR_ADD_TABLE',
-        payload: {numRows, numCols, cells, withHeader}
+        payload: {numRows, numCols, cells, withHeader},
     };
 }
 

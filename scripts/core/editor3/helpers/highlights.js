@@ -60,7 +60,7 @@ function getInitialHighlightsState() {
         lastHighlightIds: Object.keys(availableHighlights).reduce((obj, key) => {
             obj[key] = 0;
             return obj;
-        }, {})
+        }, {}),
     };
 }
 
@@ -368,7 +368,7 @@ export function addHighlight(editorState, type, data) {
     var nextEditorState = EditorState.acceptSelection(
         editorState,
         editorState.getSelection().merge({
-            hasFocus: true
+            hasFocus: true,
         })
     );
 
@@ -387,19 +387,19 @@ export function addHighlight(editorState, type, data) {
     const newHighlightsState = {
         lastHighlightIds: {
             ...highlightsState.lastHighlightIds,
-            [type]: newIndex
+            [type]: newIndex,
         },
         highlightsStyleMap: {
             ...highlightsState.highlightsStyleMap,
-            [styleName]: availableHighlights[type]
+            [styleName]: availableHighlights[type],
         },
         highlightsData: {
             ...highlightsState.highlightsData,
             [styleName]: {
                 ...data,
-                type
-            }
-        }
+                type,
+            },
+        },
     };
 
     nextEditorState = RichUtils.toggleInlineStyle(nextEditorState, styleName);
@@ -433,8 +433,8 @@ export function updateHighlightData(editorState, styleName, nextData) {
         ...highlightsState,
         highlightsData: {
             ...highlightsState.highlightsData,
-            [styleName]: nextData
-        }
+            [styleName]: nextData,
+        },
     };
 
     return setHighlightsState(editorState, newHighlightsState);
@@ -466,7 +466,7 @@ export function removeHighlight(editorState, styleName) {
     const newHighlightsState = {
         lastHighlightIds: highlightsState.lastHighlightIds,
         highlightsStyleMap: nextHighlightsStyleMap,
-        highlightsData: nextHighlightsData
+        highlightsData: nextHighlightsData,
     };
 
     var newEditorState = clearInlineStyles(
@@ -555,7 +555,7 @@ export function changeEditorSelection(editorState, startOffset, endOffset, force
         anchorKey: startBlock.getKey(),
         focusOffset: newEndOffset,
         focusKey: endBlock.getKey(),
-        isBackward: false
+        isBackward: false,
     });
 
     if (force) {
@@ -759,12 +759,12 @@ export function getRangeAndTextForStyle(editorState, style) {
         anchorKey: startBlock.getKey(),
         focusOffset: endOffset,
         focusKey: endBlock.getKey(),
-        isBackward: false
+        isBackward: false,
     });
 
     return {
         selection: newSelection,
-        highlightedText: startText + endText
+        highlightedText: startText + endText,
     };
 }
 
@@ -798,7 +798,7 @@ export function getSuggestionData(editorState, styleName) {
         ...getHighlightData(editorState, styleName),
         suggestionText: highlightedText,
         selection: selection,
-        styleName: styleName
+        styleName: styleName,
     };
 
     if (changeSuggestionsTypes.indexOf(type) === -1) {
@@ -822,7 +822,7 @@ export function getSuggestionData(editorState, styleName) {
         anchorKey: afterPeer ? selection.getStartKey() : peerRangeAndText.selection.getStartKey(),
         focusOffset: afterPeer ? peerRangeAndText.selection.getEndOffset() : selection.getEndOffset(),
         focusKey: afterPeer ? peerRangeAndText.selection.getEndKey() : selection.getEndKey(),
-        isBackward: false
+        isBackward: false,
     });
 
     if (type === 'ADD_SUGGESTION') {
@@ -839,7 +839,7 @@ export function getSuggestionData(editorState, styleName) {
         type: 'REPLACE_SUGGESTION',
         suggestionText: peerRangeAndText.highlightedText,
         oldText: data.suggestionText,
-        selection: suggestionSelection
+        selection: suggestionSelection,
     };
 }
 
@@ -885,7 +885,7 @@ function applyHighlightsStyleMap(editorState) {
         highlightsStyleMap: Object.keys(highlights.highlightsData).reduce((obj, styleName) => {
             obj[styleName] = availableHighlights[getHighlightType(styleName)];
             return obj;
-        }, {})
+        }, {}),
     };
 
     return setCustomDataForEditor(

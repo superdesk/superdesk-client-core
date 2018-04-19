@@ -61,6 +61,6 @@ export function ItemLock(api, lock, privileges, desks) {
                     scope.$digest();
                 }
             });
-        }
+        },
     };
 }

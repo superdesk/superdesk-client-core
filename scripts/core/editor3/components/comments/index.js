@@ -3,5 +3,5 @@ import {CommentPopup} from './CommentPopup';
 
 export {
     CommentInput,
-    CommentPopup
+    CommentPopup,
 };

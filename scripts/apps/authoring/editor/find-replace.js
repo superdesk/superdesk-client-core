@@ -79,7 +79,7 @@ function FindReplaceDirective(editorResolver, macros) {
                 editor.setSettings({findreplace: null});
                 editor.render();
             });
-        }
+        },
     };
 }
 
@@ -102,7 +102,7 @@ angular.module('superdesk.apps.authoring.find-replace', ['superdesk.apps.authori
                     legalArchive: false,
                     archived: false,
                     picture: true,
-                    personal: true
-                }
+                    personal: true,
+                },
             });
     }]);

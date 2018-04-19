@@ -47,7 +47,7 @@ angular.module('superdesk.apps.dashboard', [
             sideTemplateUrl: 'scripts/apps/workspace/views/workspace-sidenav.html',
             priority: -1000,
             adminTools: false,
-            category: superdesk.MENU_MAIN
+            category: superdesk.MENU_MAIN,
         });
 
         workspaceMenuProvider.item({

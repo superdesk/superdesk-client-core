@@ -144,5 +144,5 @@ MenuItems.propTypes = {
     svc: PropTypes.object.isRequired,
     scope: PropTypes.any.isRequired,
     item: PropTypes.any,
-    onActioning: PropTypes.func
+    onActioning: PropTypes.func,
 };

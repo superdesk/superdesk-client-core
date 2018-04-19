@@ -43,7 +43,7 @@ export default angular.module('superdesk.core.directives.typeahead', [])
                 placeholder: '@',
                 tabindex: '=',
                 style: '=',
-                keepinput: '='
+                keepinput: '=',
             },
             controller: ['$scope', function($scope) {
                 $scope.hide = true;
@@ -203,7 +203,7 @@ export default angular.module('superdesk.core.directives.typeahead', [])
                         scope.active = null;
                     }
                 });
-            }
+            },
         };
     }])
     .directive('typeaheadItem', () => ({
@@ -234,5 +234,5 @@ export default angular.module('superdesk.core.directives.typeahead', [])
             scope.$on('$destroy', () => {
                 element.off();
             });
-        }
+        },
     }));

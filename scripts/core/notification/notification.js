@@ -23,14 +23,14 @@ function WebSocketProxy($rootScope, config, $interval, session, SESSION_EVENTS) 
         'desk_membership_revoked',
         'desk',
         'stage',
-        'stage_visibility_updated'
+        'stage_visibility_updated',
     ];
 
     var readyState = {
         CONNECTING: 0,
         OPEN: 1,
         CLOSING: 2,
-        CLOSED: 3
+        CLOSED: 3,
     };
 
     if (!config.server.ws) {
@@ -141,18 +141,18 @@ function ReloadService($window, $rootScope, session, desks, gettext, superdeskFl
         user_inactivated: 'User is inactivated',
         user_role_changed: 'User role is changed',
         user_type_changed: 'User type is changed',
-        user_privileges_revoked: 'User privileges are revoked'
+        user_privileges_revoked: 'User privileges are revoked',
     };
     var roleEvents = {
-        role_privileges_revoked: 'Role privileges are revoked'
+        role_privileges_revoked: 'Role privileges are revoked',
     };
     var deskEvents = {
         desk_membership_revoked: 'User removed from desk',
-        desk: 'Desk is deleted/updated'
+        desk: 'Desk is deleted/updated',
     };
     var stageEvents = {
         stage: 'Stage is created/updated/deleted',
-        stage_visibility_updated: 'Stage visibility change'
+        stage_visibility_updated: 'Stage visibility change',
     };
 
     $rootScope.$on('reload', (event, msg) => {
@@ -180,7 +180,7 @@ function ReloadService($window, $rootScope, session, desks, gettext, superdeskFl
     this.reloadIdentifier = function(msg) {
         var result = {
             reload: false,
-            message: null
+            message: null,
         };
 
         if (_.has(userEvents, msg.event) && !_.isNil(msg.extra.user_id) &&

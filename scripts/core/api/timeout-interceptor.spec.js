@@ -20,7 +20,7 @@ describe('timeout http interceptor', () => {
     xit('monitors requests and stop them after while', inject(($rootScope) => {
         var config = {
             method: 'GET',
-            url: 'test'
+            url: 'test',
         };
 
         expect($rootScope.serverStatus).toBe(0);
@@ -30,21 +30,21 @@ describe('timeout http interceptor', () => {
 
         service.responseError({
             status: null,
-            config: config
+            config: config,
         });
 
         expect($rootScope.serverStatus).toBe(1);
 
         service.responseError({
             status: null,
-            config: config
+            config: config,
         });
 
         expect($rootScope.serverStatus > 1).toBe(true);
 
         service.response({
             status: 200,
-            config: config
+            config: config,
         });
 
         expect($rootScope.serverStatus).toBe(0);

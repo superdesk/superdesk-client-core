@@ -56,7 +56,7 @@ export function UserListController($scope, $location, api, _) {
     function getCriteria() {
         var params = $location.search(),
             criteria = {
-                max_results: Number(params.max_results) || DEFAULT_SIZE
+                max_results: Number(params.max_results) || DEFAULT_SIZE,
             };
 
         criteria.where = initCriteria(params, $scope.userFilter);
@@ -82,8 +82,8 @@ export function UserListController($scope, $location, api, _) {
                 $or: [
                     {username: {$regex: search.q, $options: '-i'}},
                     {display_name: {$regex: search.q, $options: '-i'}},
-                    {email: {$regex: search.q, $options: '-i'}}
-                ]
+                    {email: {$regex: search.q, $options: '-i'}},
+                ],
             };
         }
 
@@ -145,7 +145,7 @@ export function UserListController($scope, $location, api, _) {
         {id: 'pending', label: gettext('Pending')},
         {id: 'inactive', label: gettext('Inactive')},
         {id: 'disabled', label: gettext('Disabled')},
-        {id: 'all', label: gettext('All')}
+        {id: 'all', label: gettext('All')},
     ];
 
     $scope.userFilter = null;

@@ -8,7 +8,7 @@ import ng from 'core/services/ng';
  */
 export function toggleSuggestingMode() {
     return {
-        type: 'TOGGLE_SUGGESTING_MODE'
+        type: 'TOGGLE_SUGGESTING_MODE',
     };
 }
 
@@ -24,8 +24,8 @@ export function createAddSuggestion(chars) {
         type: 'CREATE_ADD_SUGGESTION',
         payload: {
             text: chars,
-            data: getSuggestionMetadata()
-        }
+            data: getSuggestionMetadata(),
+        },
     };
 }
 
@@ -40,8 +40,8 @@ export function createDeleteSuggestion(action) {
         type: 'CREATE_DELETE_SUGGESTION',
         payload: {
             action: action,
-            data: getSuggestionMetadata()
-        }
+            data: getSuggestionMetadata(),
+        },
     };
 }
 
@@ -60,9 +60,9 @@ export function createChangeStyleSuggestion(style, active) {
             style: style,
             data: {
                 ...getSuggestionMetadata(),
-                originalStyle: active ? style : ''
-            }
-        }
+                originalStyle: active ? style : '',
+            },
+        },
     };
 }
 
@@ -81,9 +81,9 @@ export function createChangeBlockStyleSuggestion(type, active) {
             blockType: type,
             data: {
                 ...getSuggestionMetadata(),
-                originalStyle: active ? type : ''
-            }
-        }
+                originalStyle: active ? type : '',
+            },
+        },
     };
 }
 
@@ -99,8 +99,8 @@ export function createSplitParagraphSuggestion(blockKey, blockOffset) {
     return {
         type: 'CREATE_SPLIT_PARAGRAPH_SUGGESTION',
         payload: {
-            data: getSuggestionMetadata()
-        }
+            data: getSuggestionMetadata(),
+        },
     };
 }
 
@@ -115,8 +115,8 @@ export function acceptSuggestion(suggestion) {
     return {
         type: 'ACCEPT_SUGGESTION',
         payload: {
-            suggestion: suggestion
-        }
+            suggestion: suggestion,
+        },
     };
 }
 
@@ -131,8 +131,8 @@ export function rejectSuggestion(suggestion) {
     return {
         type: 'REJECT_SUGGESTION',
         payload: {
-            suggestion: suggestion
-        }
+            suggestion: suggestion,
+        },
     };
 }
 
@@ -148,8 +148,8 @@ export function onPasteFromSuggestingMode(content) {
         type: 'PASTE_ADD_SUGGESTION',
         payload: {
             content: content,
-            data: getSuggestionMetadata()
-        }
+            data: getSuggestionMetadata(),
+        },
     };
 }
 
@@ -166,9 +166,9 @@ export function createLinkSuggestion(link) {
         payload: {
             data: {
                 ...getSuggestionMetadata(),
-                link
-            }
-        }
+                link,
+            },
+        },
     };
 }
 

@@ -6,7 +6,7 @@ export function UserSelectList($filter, api) {
             onchoose: '&',
             onsearch: '&',
             displayUser: '@',
-            tabindex: '='
+            tabindex: '=',
         },
         templateUrl: 'scripts/apps/desks/views/user-select.html',
         link: function(scope, elem, attrs) {
@@ -26,8 +26,8 @@ export function UserSelectList($filter, api) {
                         {username: {$regex: scope.search, $options: '-i'}},
                         {first_name: {$regex: scope.search, $options: '-i'}},
                         {last_name: {$regex: scope.search, $options: '-i'}},
-                        {email: {$regex: scope.search, $options: '-i'}}
-                    ]
+                        {email: {$regex: scope.search, $options: '-i'}},
+                    ],
                 })})
                     .then((result) => {
                         scope.users = result;
@@ -113,6 +113,6 @@ export function UserSelectList($filter, api) {
 
                 return user.display_name;
             };
-        }
+        },
     };
 }

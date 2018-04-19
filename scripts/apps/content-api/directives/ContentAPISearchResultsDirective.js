@@ -135,7 +135,7 @@ class LinkFunction {
 export function ContentAPISearchResultsDirective(contentApiSearch, search, notify, gettext, $location) {
     return {
         template: require('scripts/apps/content-api/views/search-results.html'),
-        link: (scope, elem) => new LinkFunction(contentApiSearch, search, notify, gettext, $location, scope, elem)
+        link: (scope, elem) => new LinkFunction(contentApiSearch, search, notify, gettext, $location, scope, elem),
     };
 }
 

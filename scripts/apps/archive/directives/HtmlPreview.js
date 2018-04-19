@@ -11,6 +11,6 @@ export function HtmlPreview($sce) {
                     window.instgrm.Embeds.process();
                 }
             });
-        }
+        },
     };
 }

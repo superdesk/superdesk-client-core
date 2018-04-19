@@ -39,7 +39,7 @@ angular.module('superdesk.apps.authoring', [
     'superdesk.apps.notification',
     'contenteditable',
     'decipher.history',
-    'superdesk.config'
+    'superdesk.config',
 ])
 
     .service('authoring', svc.AuthoringService)
@@ -93,9 +93,9 @@ angular.module('superdesk.apps.authoring', [
                     }],
                     action: [function() {
                         return 'edit';
-                    }]
+                    }],
                 },
-                authoring: true
+                authoring: true,
             })
             .activity('edit.item', {
                 label: gettext('Edit'),
@@ -107,11 +107,11 @@ angular.module('superdesk.apps.authoring', [
                 }],
                 filters: [
                     {action: 'list', type: 'archive'},
-                    {action: 'edit', type: 'item'}
+                    {action: 'edit', type: 'item'},
                 ],
                 additionalCondition: ['authoring', 'item', function(authoring, item) {
                     return authoring.itemActions(item).edit;
-                }]
+                }],
             })
             .activity('edit.item.popup', {
                 label: gettext('Edit in new Window'),
@@ -124,7 +124,7 @@ angular.module('superdesk.apps.authoring', [
                 filters: [{action: 'list', type: 'archive'}],
                 additionalCondition: ['authoring', 'item', 'config', function(authoring, item, config) {
                     return authoring.itemActions(item).edit;
-                }]
+                }],
             })
             .activity('move.item', {
                 label: gettext('Send to'),
@@ -134,8 +134,8 @@ angular.module('superdesk.apps.authoring', [
                 }],
                 filters: [{action: 'list', type: 'archive'}],
                 additionalCondition: ['authoring', 'item', 'config', (authoring, item, config) =>
-                    authoring.itemActions(item).send
-                ]
+                    authoring.itemActions(item).send,
+                ],
             })
             .activity('kill.text', {
                 label: gettext('Kill item'),
@@ -149,7 +149,7 @@ angular.module('superdesk.apps.authoring', [
                         } else {
                             authoringWorkspace.kill(data.item);
                         }
-                    }
+                    },
                 ],
                 filters: [{action: 'list', type: 'archive'}, {action: 'list', type: 'archived'}],
                 additionalCondition: ['authoring', 'item', 'privileges', function(authoring, item, privileges) {
@@ -159,7 +159,7 @@ angular.module('superdesk.apps.authoring', [
 
                     return authoring.itemActions(item).kill;
                 }],
-                privileges: {kill: 1}
+                privileges: {kill: 1},
             })
             .activity('correct.text', {
                 label: gettext('Correct item'),
@@ -173,7 +173,7 @@ angular.module('superdesk.apps.authoring', [
                 additionalCondition: ['authoring', 'item', function(authoring, item) {
                     return authoring.itemActions(item).correct;
                 }],
-                privileges: {correct: 1}
+                privileges: {correct: 1},
             })
             .activity('view.item', {
                 label: gettext('Open'),
@@ -187,11 +187,11 @@ angular.module('superdesk.apps.authoring', [
                     {action: 'list', type: 'archive'},
                     {action: 'list', type: 'archived'},
                     {action: 'list', type: 'legal_archive'},
-                    {action: 'view', type: 'item'}
+                    {action: 'view', type: 'item'},
                 ],
                 additionalCondition: ['authoring', 'item', function(authoring, item) {
                     return authoring.itemActions(item).view;
-                }]
+                }],
             })
             .activity('view.item.popup', {
                 label: gettext('Open in new Window'),
@@ -204,11 +204,11 @@ angular.module('superdesk.apps.authoring', [
                 filters: [
                     {action: 'list', type: 'archive'},
                     {action: 'list', type: 'archived'},
-                    {action: 'list', type: 'legal_archive'}
+                    {action: 'list', type: 'legal_archive'},
                 ],
                 additionalCondition: ['authoring', 'item', 'config', function(authoring, item, config) {
                     return authoring.itemActions(item).view;
-                }]
+                }],
             })
             .activity('edit.crop', {
                 label: gettext('Edit Crop'),
@@ -216,7 +216,7 @@ angular.module('superdesk.apps.authoring', [
                 cssClass: 'modal--fullscreen',
                 controller: ctrl.ChangeImageController,
                 templateUrl: 'scripts/apps/authoring/views/change-image.html',
-                filters: [{action: 'edit', type: 'crop'}]
+                filters: [{action: 'edit', type: 'crop'}],
             })
             .activity('preview', {
                 href: '/preview/:_id',
@@ -228,24 +228,24 @@ angular.module('superdesk.apps.authoring', [
                 resolve: {
                     item: ['$route', 'api', function($route, api) {
                         return api.find('archive', $route.current.params._id);
-                    }]
-                }
+                    }],
+                },
             });
     }])
     .config(['apiProvider', function(apiProvider) {
         apiProvider.api('move', {
             type: 'http',
             backend: {
-                rel: 'move'
-            }
+                rel: 'move',
+            },
         });
     }])
     .config(['apiProvider', function(apiProvider) {
         apiProvider.api('content_templates_apply', {
             type: 'http',
             backend: {
-                rel: 'content_templates_apply'
-            }
+                rel: 'content_templates_apply',
+            },
         });
     }])
     .run(['keyboardManager', 'gettext', function(keyboardManager, gettext) {

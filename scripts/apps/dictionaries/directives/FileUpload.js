@@ -5,6 +5,6 @@ export function FileUpload() {
             element.bind('change', (event) => {
                 scope.$emit('fileSelected', {file: event.target.files[0]});
             });
-        }
+        },
     };
 }

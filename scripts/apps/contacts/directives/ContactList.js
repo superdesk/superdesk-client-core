@@ -12,7 +12,7 @@ ContactList.$inject = [
     'datetime',
     'Keys',
     'gettextCatalog',
-    '$rootScope'
+    '$rootScope',
 ];
 
 /**
@@ -48,7 +48,7 @@ export function ContactList(
         datetime: datetime,
         Keys: Keys,
         gettextCatalog: gettextCatalog,
-        $rootScope: $rootScope
+        $rootScope: $rootScope,
     };
 
     return {
@@ -58,7 +58,7 @@ export function ContactList(
             var itemList = React.createElement(ItemListComponent,
                 angular.extend({
                     svc: services,
-                    scope: scope
+                    scope: scope,
                 }));
 
             var listComponent = ReactDOM.render(itemList, elem[0]);
@@ -88,7 +88,7 @@ export function ContactList(
                 listComponent.setState({
                     itemsList: itemsList,
                     itemsById: itemsById,
-                    view: scope.view
+                    view: scope.view,
                 }, () => {
                     scope.rendering = scope.loading = false;
                 });
@@ -160,6 +160,6 @@ export function ContactList(
                 elem.off();
                 ReactDOM.unmountComponentAtNode(elem[0]);
             });
-        }
+        },
     };
 }

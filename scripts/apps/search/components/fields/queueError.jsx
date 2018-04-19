@@ -13,5 +13,5 @@ export function queueError(props) {
  * item: published item having queue errors
  */
 queueError.propTypes = {
-    item: PropTypes.any
+    item: PropTypes.any,
 };

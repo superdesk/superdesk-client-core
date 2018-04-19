@@ -2,7 +2,7 @@
 const DEFAULT_SCHEMA = {
     name: {},
     qcode: {},
-    parent: {}
+    parent: {},
 };
 
 VocabularyConfigController.$inject = ['$scope', '$route', '$routeParams', 'vocabularies', '$rootScope',
@@ -127,7 +127,7 @@ export function VocabularyConfigController($scope, $route, $routeParams, vocabul
                 items: [],
                 type: 'manageable',
                 schema: angular.extend({}, DEFAULT_SCHEMA),
-                service: {all: 1} // needed for vocabulary to be visible in content profile
+                service: {all: 1}, // needed for vocabulary to be visible in content profile
             };
         }
     }

@@ -64,6 +64,6 @@ export default angular.module('superdesk.core.notify', ['superdesk.core.translat
             templateUrl: 'scripts/core/notify/views/notify.html',
             link: function(scope, element, items) {
                 scope.messages = notify.messages;
-            }
+            },
         };
     }]);

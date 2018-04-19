@@ -15,7 +15,7 @@ export function ItemUrgency(props) {
                 className: 'badge sd-grid-item__footer-block-item urgency-label--' + urgency,
                 title: getSpecTitle(spec, gettextCatalog.getString('Urgency')),
                 style: getSpecStyle(spec),
-                key: 'urgency'
+                key: 'urgency',
             },
             getSpecValue(spec, urgency)
         );
@@ -26,7 +26,7 @@ export function ItemUrgency(props) {
         {
             className: 'badge sd-grid-item__footer-block-item urgency-label--' + urgency,
             title: gettextCatalog.getString('Urgency'),
-            key: 'urgency'
+            key: 'urgency',
         },
         urgency
     );
@@ -34,5 +34,5 @@ export function ItemUrgency(props) {
 
 ItemUrgency.propTypes = {
     svc: PropTypes.object.isRequired,
-    urgency: PropTypes.any
+    urgency: PropTypes.any,
 };

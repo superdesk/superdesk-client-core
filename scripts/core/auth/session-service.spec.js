@@ -1,8 +1,8 @@
 var SESSION = {
     token: 'abcd',
     _links: {
-        self: {href: 'delete_session_url'}
-    }
+        self: {href: 'delete_session_url'},
+    },
 };
 
 describe('session service', () => {
@@ -83,7 +83,7 @@ describe('session service', () => {
             session_preferences: ['session'],
             user_preferences: ['user'],
             workspace: ['workspace'],
-            allowed_actions: ['actions']
+            allowed_actions: ['actions'],
         });
         expect(session.identity.name).not.toBeUndefined();
         expect(session.identity.session_preferences).toBeUndefined();

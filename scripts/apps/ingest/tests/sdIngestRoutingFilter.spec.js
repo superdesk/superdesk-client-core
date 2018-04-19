@@ -38,7 +38,7 @@ describe('sdIngestRoutingFilter directive', () => {
         html = [
             '<div sd-ingest-routing-filter ',
             '    rule="rule" content-filters="contentFilters"',
-            '></div>'
+            '></div>',
         ].join('');
 
         $element = $compile(html)(parentScope);
@@ -70,7 +70,7 @@ describe('sdIngestRoutingFilter directive', () => {
 
             parentScopeValues = {
                 rule: {filter: 'bar'},
-                contentFilters: [{_id: 'foo'}, {_id: 'bar'}, {_id: 'baz'}]
+                contentFilters: [{_id: 'foo'}, {_id: 'bar'}, {_id: 'baz'}],
             };
 
             $element = compileDirective(parentScopeValues);
@@ -86,7 +86,7 @@ describe('sdIngestRoutingFilter directive', () => {
 
                 parentScopeValues = {
                     rule: {filter: null},
-                    contentFilters: [{_id: 'foo'}, {_id: 'bar'}, {_id: 'baz'}]
+                    contentFilters: [{_id: 'foo'}, {_id: 'bar'}, {_id: 'baz'}],
                 };
 
                 $element = compileDirective(parentScopeValues);
@@ -109,7 +109,7 @@ describe('sdIngestRoutingFilter directive', () => {
                 {id: 2, name: 'body contains "Foo+1" phrase'},
                 {id: 3, name: 'text items named Foo*'},
                 {id: 4, name: 'foooo1 in slugline'},
-                {id: 5, name: 'breaking foo+1 news stories'}
+                {id: 5, name: 'breaking foo+1 news stories'},
             ];
 
             scope.matchingFilters = [];

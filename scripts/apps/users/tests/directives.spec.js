@@ -7,7 +7,7 @@ var template = [
     '<input type="password" name="password" ng-model="user.password">',
     '<input type="password" name="passwordConfirm" ng-model="_confirm"',
     ' sd-password-confirm ng-model="passwordConfirm" data-password="user.password">',
-    '</form>'
+    '</form>',
 ].join(' ');
 
 describe('sdUserUnique Directive', () => {
@@ -22,12 +22,12 @@ describe('sdUserUnique Directive', () => {
                 query: function(criteria) {
                     if (criteria.where && criteria.where.username === 'foo') {
                         return $q.when({
-                            _items: [{_id: 9, username: 'foo'}]
+                            _items: [{_id: 9, username: 'foo'}],
                         });
                     }
 
                     return $q.when({_items: []});
-                }
+                },
             };
         });
     }));

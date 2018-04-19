@@ -7,7 +7,7 @@ export function versioncreated(props) {
         TimeElem, {
             date: props.item.versioncreated,
             key: 'versioncreated',
-            svc: props.svc
+            svc: props.svc,
         }
     );
 }

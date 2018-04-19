@@ -33,5 +33,5 @@ export default class HighlightBtn extends React.Component {
 HighlightBtn.propTypes = {
     highlight: PropTypes.object,
     item: PropTypes.object,
-    service: PropTypes.any
+    service: PropTypes.any,
 };

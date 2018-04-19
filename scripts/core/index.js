@@ -65,14 +65,14 @@ let core = angular.module('superdesk.core', [
     'superdesk.core.services',
     'superdesk.core.directives',
 
-    'superdesk.templates-cache'
+    'superdesk.templates-cache',
 ]);
 
 core.constant('lodash', _);
 
 core.config(['$routeProvider', ($routeProvider) => {
     $routeProvider.when('/', {
-        redirectTo: appConfig.defaultRoute
+        redirectTo: appConfig.defaultRoute,
     });
 }]);
 

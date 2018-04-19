@@ -5,7 +5,7 @@ export function ItemActionsMenu(superdesk, activityService, workflowService, arc
     return {
         scope: {
             item: '=',
-            active: '='
+            active: '=',
         },
         templateUrl: 'scripts/apps/monitoring/views/item-actions-menu.html',
         link: function(scope) {
@@ -107,6 +107,6 @@ export function ItemActionsMenu(superdesk, activityService, workflowService, arc
             function getType(item) {
                 return archiveService.getType(item);
             }
-        }
+        },
     };
 }

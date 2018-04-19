@@ -25,5 +25,5 @@ function spaceStrategy(contentBlock, callback, contentState) {
 
 export const SpaceDecorator = {
     strategy: spaceStrategy,
-    component: SpaceComponent
+    component: SpaceComponent,
 };

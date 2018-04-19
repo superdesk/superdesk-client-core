@@ -17,8 +17,8 @@ export default angular.module('superdesk.core.directives.droppable', [])
                     drop: function(event, ui) {
                         scope.update(dragDropService.item);
                         dragDropService.item = null;
-                    }
+                    },
                 });
-            }
+            },
         };
     }]);

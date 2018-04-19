@@ -17,7 +17,7 @@ angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
                     options: '=',
                     itemListOptions: '=',
                     actions: '=',
-                    loading: '='
+                    loading: '=',
                 },
                 templateUrl: 'scripts/core/itemList/views/relatedItem-list-widget.html',
                 link: function(scope, element, attrs) {
@@ -131,6 +131,6 @@ angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
                     scope.view = (item) => {
                         scope.selected = item;
                     };
-                }
+                },
             };
         }]);

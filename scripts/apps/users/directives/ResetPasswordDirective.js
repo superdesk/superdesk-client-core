@@ -19,6 +19,6 @@ export function ResetPasswordDirective(usersService, notify, gettext) {
                         scope.oldPasswordInvalid = true;
                     });
             };
-        }
+        },
     };
 }

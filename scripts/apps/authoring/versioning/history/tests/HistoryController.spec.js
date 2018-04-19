@@ -9,12 +9,12 @@ describe('archive-history', () => {
     beforeEach(inject((highlightsService, desks, $q, api, archiveService) => {
         const deskList = {
             123: {_id: '123', name: 'desk1'},
-            456: {_id: '456', name: 'desk2'}
+            456: {_id: '456', name: 'desk2'},
         };
 
         const userList = {
             1: {_id: '1', display_name: 'John'},
-            2: {_id: '2', display_name: 'Smith'}
+            2: {_id: '2', display_name: 'Smith'},
         };
 
         const version = {
@@ -22,12 +22,12 @@ describe('archive-history', () => {
             creator: 'John',
             state: 'corrected',
             operation: 'create',
-            _id_document: 123
+            _id_document: 123,
         };
 
         spyOn(highlightsService, 'get').and.returnValue($q.when({_items: [
             {_id: '1', name: 'Spotlight'},
-            {_id: '2', name: 'New'}
+            {_id: '2', name: 'New'},
         ]}));
 
         spyOn(desks, 'initialize').and.returnValue($q.when({}));
@@ -89,7 +89,7 @@ describe('archive-history', () => {
             const historyItem = {
                 version: 2,
                 user_id: 2,
-                item_id: 123
+                item_id: 123,
             };
 
             spyOn(api, 'query').and.returnValue($q.when({_items: [historyItem]}));
@@ -110,7 +110,7 @@ describe('archive-history', () => {
             const historyItem = {
                 version: 1,
                 user_id: 2,
-                item_id: 123
+                item_id: 123,
             };
 
             spyOn(api, 'query').and.returnValue($q.when({_items: [historyItem]}));
@@ -129,7 +129,7 @@ describe('archive-history', () => {
         inject(($controller, $rootScope, api, $q, archiveService, desks) => {
             const historyItem = {
                 version: 1,
-                item_id: 123
+                item_id: 123,
             };
 
             spyOn(api, 'query').and.returnValue($q.when({_items: [historyItem]}));

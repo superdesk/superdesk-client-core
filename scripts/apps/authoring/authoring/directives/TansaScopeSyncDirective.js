@@ -32,6 +32,6 @@ export function TansaScopeSyncDirective($rootScope) {
             }
 
             scope.$on('$destroy', deregisterTansa);
-        }
+        },
     };
 }

@@ -9,7 +9,7 @@ angular.module('superdesk.core.upload').directive('sdVideoCapture', [function() 
     return {
         scope: {
             sdVideoCapture: '=',
-            file: '='
+            file: '=',
         },
         link: function(scope, elem) {
             var localMediaStream = null,
@@ -21,7 +21,7 @@ angular.module('superdesk.core.upload').directive('sdVideoCapture', [function() 
 
             navigator.getMedia({
                 video: true,
-                audio: false
+                audio: false,
             }, (stream) => {
                 if (tooLate) {
                     stream.stop();
@@ -60,6 +60,6 @@ angular.module('superdesk.core.upload').directive('sdVideoCapture', [function() 
                     // no-op
                 }
             });
-        }
+        },
     };
 }]);

@@ -6,7 +6,7 @@ export function AuthoringEmbeddedDirective(api, notify, gettext, $filter, config
         templateUrl: 'scripts/apps/authoring/views/authoring.html',
         scope: {
             item: '=',
-            action: '='
+            action: '=',
         },
         link: function(scope) {
             function overrideEdnote(template) {
@@ -35,7 +35,7 @@ export function AuthoringEmbeddedDirective(api, notify, gettext, $filter, config
                 // task is required to get the desk name.
                 var fields = _.union(_.keys(helpers.CONTENT_FIELDS_DEFAULTS), ['_id', 'versioncreated', 'task']);
                 var item = {
-                    template_name: 'kill', item: _.pick(scope.item, fields)
+                    template_name: 'kill', item: _.pick(scope.item, fields),
                 };
 
                 api.save('content_templates_apply', {}, item, {}).then((result) => {
@@ -50,7 +50,7 @@ export function AuthoringEmbeddedDirective(api, notify, gettext, $filter, config
             } else if (scope.action === 'correct') {
                 deployConfig.all({
                     override: 'override_ednote_for_corrections',
-                    template: 'override_ednote_template'
+                    template: 'override_ednote_template',
                 }).then((config) => {
                     if (config.override) {
                         overrideEdnote(config.template);
@@ -62,6 +62,6 @@ export function AuthoringEmbeddedDirective(api, notify, gettext, $filter, config
             } else {
                 scope.origItem = scope.item;
             }
-        }
+        },
     };
 }

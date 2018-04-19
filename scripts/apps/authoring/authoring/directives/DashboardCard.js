@@ -9,6 +9,6 @@ export function DashboardCard() {
             if (newW < maxW) {
                 p.outerWidth(newW);
             }
-        }
+        },
     };
 }

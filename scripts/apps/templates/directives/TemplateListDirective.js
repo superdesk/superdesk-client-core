@@ -16,6 +16,6 @@ export function TemplateListDirective() {
                     scope.select(template);
                 }
             };
-        }
+        },
     };
 }

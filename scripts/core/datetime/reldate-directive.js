@@ -21,6 +21,6 @@ angular.module('superdesk.core.datetime.reldate', []).directive('sdReldate', [fu
                 scope.title = date.format('LLLL');
                 scope.reldate = date.fromNow();
             });
-        }
+        },
     };
 }]);

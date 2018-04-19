@@ -1,6 +1,6 @@
 import {
     Modifier,
-    EditorState
+    EditorState,
 } from 'draft-js';
 
 export function clearInlineStyles(editorState, selection, stylesArray) {

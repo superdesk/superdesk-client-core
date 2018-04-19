@@ -8,6 +8,6 @@ export function GridLayout() {
             scope.preview = function(item) {
                 scope.previewItem = item;
             };
-        }
+        },
     };
 }

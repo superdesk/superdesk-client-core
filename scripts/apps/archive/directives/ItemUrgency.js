@@ -6,7 +6,7 @@ export function ItemUrgency(metadata) {
         scope: {urgency: '='},
         template: [
             '<span ng-if="urgency" class="urgency-label urgency-label--{{ urgency }}" ',
-            'ng-style="{backgroundColor: color}" title="{{ \'Urgency\' | translate }}: {{ title }}">{{ short }}</span>'
+            'ng-style="{backgroundColor: color}" title="{{ \'Urgency\' | translate }}: {{ title }}">{{ short }}</span>',
         ].join(''),
         link: function(scope, elem) {
             scope.$watch('urgency', (urgency) => {
@@ -20,6 +20,6 @@ export function ItemUrgency(metadata) {
                     }
                 }
             });
-        }
+        },
     };
 }

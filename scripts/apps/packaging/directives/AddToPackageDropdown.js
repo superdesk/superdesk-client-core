@@ -8,6 +8,6 @@ export function AddToPackageDropdown(item, className, authoringWorkspace, packag
         package: authoringWorkspace.getItem(),
         api: api,
         packages: packages,
-        className: className
+        className: className,
     });
 }

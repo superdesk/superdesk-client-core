@@ -54,5 +54,5 @@ export class Associations extends React.Component {
 Associations.propTypes = {
     svc: PropTypes.any.isRequired,
     item: PropTypes.any,
-    openAuthoringView: PropTypes.func.isRequired
+    openAuthoringView: PropTypes.func.isRequired,
 };

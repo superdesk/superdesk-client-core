@@ -81,6 +81,6 @@ export function WorkspaceDropdownDirective(desks, workspaces, $route, preference
             }
 
             scope.$watch(() => workspaces.active, initialize, true);
-        }
+        },
     };
 }

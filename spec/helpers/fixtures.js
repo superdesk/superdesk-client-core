@@ -11,7 +11,7 @@ function resetApp(profile, callback) {
         uri: '/prepopulate',
         method: 'POST',
         timeout: 40000,
-        json: {profile: profile}
+        json: {profile: profile},
     }, (e, r, j) => {
         browser.params.token = null;
         callback(e, r, j);

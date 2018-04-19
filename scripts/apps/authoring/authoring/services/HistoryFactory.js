@@ -6,7 +6,7 @@ HistoryFactory.$inject = ['History', '$window', '$timeout'];
 export function HistoryFactory(History, $window, $timeout) {
     var KeyOperations = {
         ['Z'.charCodeAt(0)]: History.undo,
-        ['Y'.charCodeAt(0)]: History.redo
+        ['Y'.charCodeAt(0)]: History.redo,
     };
 
     return {
@@ -44,7 +44,7 @@ export function HistoryFactory(History, $window, $timeout) {
                 angular.element($window).unbind('keyup', onHistoryKeyup);
                 History.forget(scope, expression);
             });
-        }
+        },
     };
 }
 

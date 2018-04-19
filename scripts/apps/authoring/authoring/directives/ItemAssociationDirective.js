@@ -32,7 +32,7 @@ export function ItemAssociationDirective(renditions) {
             onchange: '&',
             showTitle: '<',
             save: '&',
-            maxUploads: '='
+            maxUploads: '=',
         },
         controller: ctrl.AssociationController,
         controllerAs: 'associations',
@@ -108,6 +108,6 @@ export function ItemAssociationDirective(renditions) {
                     ctrl.uploadAndCropImages(scope);
                 }
             };
-        }
+        },
     };
 }

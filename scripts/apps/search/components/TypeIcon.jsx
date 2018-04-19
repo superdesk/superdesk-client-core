@@ -13,7 +13,7 @@ export function TypeIcon(props) {
 
     return React.createElement('i', {
         className: 'filetype-icon-' + props.type,
-        title: `${gettextCatalog.getString('Article Type')}: ${props.type}`
+        title: `${gettextCatalog.getString('Article Type')}: ${props.type}`,
     });
 }
 

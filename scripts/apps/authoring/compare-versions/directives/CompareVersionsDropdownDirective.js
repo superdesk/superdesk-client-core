@@ -45,7 +45,7 @@ class LinkFunction {
 
                 this.scope.current = {
                     id: this.scope.item._id,
-                    version: this.scope.item._current_version
+                    version: this.scope.item._current_version,
                 };
                 // maintains the list of selected versions for creating boards, by default the currently opened article.
                 this.scope.queue = [this.scope.current];
@@ -105,7 +105,7 @@ export function CompareVersionsDropdownDirective(compareVersions, desks, archive
     return {
         template: require('scripts/apps/authoring/compare-versions/views/sd-compare-versions-dropdown.html'),
         link: (scope, elem) =>
-            new LinkFunction(compareVersions, desks, archiveService, scope, elem)
+            new LinkFunction(compareVersions, desks, archiveService, scope, elem),
     };
 }
 

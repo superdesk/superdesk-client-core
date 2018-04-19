@@ -16,5 +16,5 @@ export const SpaceComponent = (props) => {
 };
 
 SpaceComponent.propTypes = {
-    children: PropTypes.array.isRequired
+    children: PropTypes.array.isRequired,
 };

@@ -20,6 +20,6 @@ export function PackageHighlightsDropdown(desks, highlightsService, $location, $
                 $location.url('workspace/highlights?highlight=' + highlight._id);
                 $route.reload();
             };
-        }
+        },
     };
 }

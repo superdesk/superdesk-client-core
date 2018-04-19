@@ -5,20 +5,20 @@ var rootDir = path.dirname(path.dirname(__dirname));
 
 var src = [
     'scripts/**/*.html',
-    'scripts/**/*.svg'
+    'scripts/**/*.svg',
 ];
 
 var options = {
     htmlmin: {
         collapseWhitespace: true,
-        collapseBooleanAttributes: true
+        collapseBooleanAttributes: true,
     },
     bootstrap: function(module, script) {
         return '"use strict";' +
             'angular.module("superdesk.templates-cache")' +
             '.run([\'$templateCache\', function($templateCache) {' +
             script + ' }]);';
-    }
+    },
 };
 
 // get the superdesk.config.js configuration object
@@ -31,21 +31,21 @@ module.exports = {
         cwd: '<%= coreDir %>',
         dest: path.join(rootDir, 'templates-cache.generated.js'),
         src: src,
-        options: options
+        options: options,
     },
 
     'ui-guide': {
         cwd: '<%= coreDir %>',
         dest: 'docs/ui-guide/dist/templates-cache-docs.generated.js',
         src: src,
-        options: options
+        options: options,
     },
 
     dev: {
         cwd: '<%= coreDir %>',
         dest: path.join(rootDir, 'templates-cache.generated.js'),
         src: [],
-        options: {bootstrap: () => ''}
+        options: {bootstrap: () => ''},
     },
 
     index: {
@@ -58,8 +58,8 @@ module.exports = {
                 const buildIndex = require('../../index.html.js');
 
                 return buildIndex(features);
-            }
-        }
+            },
+        },
     },
 
     // gen-apps generates a file that imports all of the external node
@@ -85,7 +85,7 @@ module.exports = {
                 }
 
                 return data + '\r\n];\r\n';
-            }
-        }
-    }
+            },
+        },
+    },
 };

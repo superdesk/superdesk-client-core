@@ -6,8 +6,8 @@ describe('superdesk.core.api.allowed', () => {
         spyOn(api, 'get').and.returnValue($q.when({
             _items: [
                 {_id: 'resource.value', items: ['foo']},
-                {_id: 'another.value', items: ['bar']}
-            ]
+                {_id: 'another.value', items: ['bar']},
+            ],
         }));
     }));
 
@@ -27,7 +27,7 @@ describe('superdesk.core.api.allowed', () => {
             foo: 1,
             bar: 2,
             baz: 3,
-            foox: 4
+            foox: 4,
         };
 
         var filtered;

@@ -89,5 +89,5 @@ export const ContactInfo = ({item, svc}) => {
 
 ContactInfo.propTypes = {
     item: PropTypes.object,
-    svc: PropTypes.object.isRequired
+    svc: PropTypes.object.isRequired,
 };

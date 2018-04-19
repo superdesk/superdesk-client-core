@@ -95,7 +95,7 @@ export default function SearchProviderConfigDirective(searchProviderService, get
             };
 
             fetchSearchProviders();
-        }
+        },
     };
 }
 

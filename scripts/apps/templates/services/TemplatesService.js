@@ -42,7 +42,7 @@ export function TemplatesService(api, session, $q, gettext, preferencesService, 
         'associations',
         'sign_off',
         'sms_message',
-        'company_codes'
+        'company_codes',
     ];
 
     /**
@@ -62,7 +62,7 @@ export function TemplatesService(api, session, $q, gettext, preferencesService, 
     this.types = [
         {_id: KILL_TYPE, label: gettext('Kill')},
         {_id: CREATE_TYPE, label: gettext('Create')},
-        {_id: HIGHLIGHTS_TYPE, label: gettext('Highlights')}
+        {_id: HIGHLIGHTS_TYPE, label: gettext('Highlights')},
     ];
 
     /*
@@ -73,7 +73,7 @@ export function TemplatesService(api, session, $q, gettext, preferencesService, 
         var params = {
             page: page || 1,
             max_results: pageSize || PAGE_SIZE,
-            sort: 'template_name'
+            sort: 'template_name',
         };
 
         var criteria = {};
@@ -98,7 +98,7 @@ export function TemplatesService(api, session, $q, gettext, preferencesService, 
             criteria = desks.fetchCurrentUserDesks().then((desks) => {
                 _criteria.$or.push({
                     is_public: true,
-                    template_desks: {$in: desks.map((desk) => desk._id)}
+                    template_desks: {$in: desks.map((desk) => desk._id)},
                 });
 
                 return _criteria;
@@ -108,7 +108,7 @@ export function TemplatesService(api, session, $q, gettext, preferencesService, 
         return $q.when(criteria)
             .then((criteria) => {
                 params.where = JSON.stringify({
-                    $and: [criteria]
+                    $and: [criteria],
                 });
                 return params;
             })
@@ -118,7 +118,7 @@ export function TemplatesService(api, session, $q, gettext, preferencesService, 
     this.fetchTemplatesByDesk = function(desk) {
         let params = {
             sort: 'template_name',
-            max_results: 200
+            max_results: 200,
         };
 
         let deskCriteria = [
@@ -133,7 +133,7 @@ export function TemplatesService(api, session, $q, gettext, preferencesService, 
 
         if (!_.isEmpty(criteria)) {
             params.where = JSON.stringify({
-                $and: [criteria]
+                $and: [criteria],
             });
         }
 
@@ -144,7 +144,7 @@ export function TemplatesService(api, session, $q, gettext, preferencesService, 
         var params = {
             page: page || 1,
             max_results: pageSize || PAGE_SIZE,
-            sort: 'template_name'
+            sort: 'template_name',
         };
 
         var criteria = {};
@@ -155,7 +155,7 @@ export function TemplatesService(api, session, $q, gettext, preferencesService, 
 
         var deskCriteria = [
             {template_desks: {$exists: false}, is_public: true},
-            {template_desks: [], is_public: true}
+            {template_desks: [], is_public: true},
         ];
 
         if (desk) {
@@ -174,7 +174,7 @@ export function TemplatesService(api, session, $q, gettext, preferencesService, 
 
         if (!_.isEmpty(criteria)) {
             params.where = JSON.stringify({
-                $and: [criteria]
+                $and: [criteria],
             });
         }
 
@@ -189,7 +189,7 @@ export function TemplatesService(api, session, $q, gettext, preferencesService, 
         var params = {
             max_results: PAGE_SIZE,
             page: 1,
-            where: JSON.stringify({_id: {$in: templateIds}})
+            where: JSON.stringify({_id: {$in: templateIds}}),
         };
 
         return api.query('content_templates', params)

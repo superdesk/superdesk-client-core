@@ -9,7 +9,7 @@ export function UserListDirective(keyboardManager, usersService, asset) {
             users: '=',
             authorOnlyFilter: '=',
             selected: '=',
-            done: '='
+            done: '=',
         },
         link: function(scope, elem, attrs) {
             scope.active = function(user) {
@@ -67,6 +67,6 @@ export function UserListDirective(keyboardManager, usersService, asset) {
                     return _.findIndex(scope.users, (user) => user._id === scope.selected._id);
                 }
             }
-        }
+        },
     };
 }

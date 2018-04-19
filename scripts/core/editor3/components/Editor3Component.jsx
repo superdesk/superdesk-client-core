@@ -34,7 +34,7 @@ const VALID_MEDIA_TYPES = [
     'application/superdesk.item.video',
     'application/superdesk.item.audio',
     'text/html',
-    'Files'
+    'Files',
 ];
 
 /**
@@ -62,7 +62,7 @@ export class Editor3Component extends React.Component {
     static getDecorator(disableSpellchecker) {
         const decorators = [
             LinkDecorator,
-            SpaceDecorator
+            SpaceDecorator,
         ];
 
         if (!disableSpellchecker) {
@@ -346,13 +346,13 @@ export class Editor3Component extends React.Component {
             onChange,
             onTab,
             tabindex,
-            scrollContainer
+            scrollContainer,
         } = this.props;
 
         let cx = classNames({
             'Editor3-root Editor3-editor': true,
             'no-toolbar': !showToolbar,
-            'read-only': readOnly
+            'read-only': readOnly,
         });
 
         const mediaEnabled = this.props.editorFormat.indexOf('media') !== -1;
@@ -363,7 +363,7 @@ export class Editor3Component extends React.Component {
                     element: UnstyledBlock,
                     aliasedElements: ['p'],
                     wrapper: <UnstyledWrapper dispatch={this.props.dispatch} />,
-                }
+                },
             } : {}
         ));
 
@@ -426,11 +426,11 @@ Editor3Component.propTypes = {
     svc: PropTypes.object,
     invisibles: PropTypes.bool,
     highlights: PropTypes.object,
-    highlightsManager: PropTypes.object
+    highlightsManager: PropTypes.object,
 };
 
 Editor3Component.defaultProps = {
     readOnly: false,
     singleLine: false,
-    editorFormat: []
+    editorFormat: [],
 };

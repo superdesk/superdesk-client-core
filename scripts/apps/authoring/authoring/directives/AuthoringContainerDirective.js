@@ -36,6 +36,6 @@ export function AuthoringContainerDirective(authoring, authoringWorkspace) {
                     });
                 }
             });
-        }
+        },
     };
 }

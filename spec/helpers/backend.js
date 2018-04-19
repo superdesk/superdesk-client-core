@@ -76,8 +76,8 @@ function withToken(callback) {
             url: getBackendUrl('/auth_db'),
             json: {
                 username: browser.params.username,
-                password: browser.params.password
-            }
+                password: browser.params.password,
+            },
         }, (error, response, json) => {
             if (error) {
                 throw new Error(error);

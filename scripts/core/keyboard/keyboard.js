@@ -10,7 +10,7 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
         enter: 13,
         escape: 27,
         space: 32,
-        backspace: 8
+        backspace: 8,
     }))
 
     .constant('shiftNums', {
@@ -32,7 +32,7 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
         ',': '<',
         '.': '>',
         '/': '?',
-        '\\': '|'
+        '\\': '|',
     })
 
 // unbind all keyboard shortcuts when switching route
@@ -54,7 +54,7 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
             var ignoreNodes = {
                 INPUT: true,
                 TEXTAREA: true,
-                BUTTON: true
+                BUTTON: true,
             };
 
             $document.on('keydown', (e) => {
@@ -96,7 +96,7 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
                 inputDisabled: false,
                 target: $window.document,
                 keyCode: false,
-                global: false
+                global: false,
             },
             specialKeys = { // Special Keys - and their codes
                 esc: 27,
@@ -149,7 +149,7 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
                 f9: 120,
                 f10: 121,
                 f11: 122,
-                f12: 123
+                f12: 123,
             };
 
         // Store all keyboard combination shortcuts
@@ -222,20 +222,20 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
                 var modifiers = {
                     shift: {
                         wanted: false,
-                        pressed: !!e.shiftKey
+                        pressed: !!e.shiftKey,
                     },
                     ctrl: {
                         wanted: false,
-                        pressed: !!e.ctrlKey
+                        pressed: !!e.ctrlKey,
                     },
                     alt: {
                         wanted: false,
-                        pressed: !!e.altKey
+                        pressed: !!e.altKey,
                     },
                     meta: { // Meta is Mac specific
                         wanted: false,
-                        pressed: !!e.metaKey
-                    }
+                        pressed: !!e.metaKey,
+                    },
                 };
 
                 let computeKeys = () => {
@@ -300,7 +300,7 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
                 event: options.type,
                 _callback: callback,
                 opt: options,
-                label: lbl
+                label: lbl,
             };
 
             // Attach the function with the event
@@ -389,7 +389,7 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
                         elem.attr('title', hotkey);
                     }
                 }, 0, false);
-            }
+            },
         };
     }])
 
@@ -407,7 +407,7 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
                 }, {
                     global: true,
                     group: gettext('General'),
-                    description: gettext('Displays active keyboard shortcuts')
+                    description: gettext('Displays active keyboard shortcuts'),
                 });
 
                 keyboardManager.bind('alt+k', () => {
@@ -416,12 +416,12 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
                     global: true,
                     type: 'keyup',
                     group: gettext('General'),
-                    description: gettext('Displays active keyboard shortcuts')
+                    description: gettext('Displays active keyboard shortcuts'),
                 });
 
                 scope.close = function() {
                     scope.enabled = false;
                 };
-            }
+            },
         };
     }]);

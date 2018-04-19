@@ -3,7 +3,7 @@ import {
     EXCLUDE_FACETS,
     CORE_PROJECTED_FIELDS,
     UI_PROJECTED_FIELD_MAPPINGS,
-    DEFAULT_LIST_CONFIG
+    DEFAULT_LIST_CONFIG,
 } from 'apps/search/constants';
 
 import _ from 'lodash';
@@ -34,7 +34,7 @@ SearchService.$inject = [
     'preferencesService',
     'moment',
     'sort',
-    'deployConfig'
+    'deployConfig',
 ];
 export function SearchService($location, gettext, config, session, multi,
     preferencesService, moment, sortService, deployConfig) {
@@ -45,7 +45,7 @@ export function SearchService($location, gettext, config, session, multi,
         {field: 'anpa_category.name', label: gettext('ANPA Category')},
         {field: 'slugline.phrase', label: gettext('Slugline')},
         {field: 'priority', label: gettext('Priority')},
-        {field: 'genre.name', label: gettext('Genre')}
+        {field: 'genre.name', label: gettext('Genre')},
     ];
 
     var self = this;
@@ -132,7 +132,7 @@ export function SearchService($location, gettext, config, session, multi,
             case 'subject':
                 filters.push({or: [
                     {terms: {'subject.qcode': JSON.parse(params[key])}},
-                    {terms: {'subject.parent': JSON.parse(params[key])}}
+                    {terms: {'subject.parent': JSON.parse(params[key])}},
                 ]});
                 break;
             case 'company_codes':
@@ -164,7 +164,7 @@ export function SearchService($location, gettext, config, session, multi,
                 notpriority: 'priority',
                 notsource: 'source',
                 notlegal: 'flags.marked_for_legal',
-                notsms: 'flags.marked_for_sms'
+                notsms: 'flags.marked_for_sms',
             }[key];
 
             if (termKey) {
@@ -377,7 +377,7 @@ export function SearchService($location, gettext, config, session, multi,
 
             if (params.type) {
                 var type = {
-                    type: JSON.parse(params.type)
+                    type: JSON.parse(params.type),
                 };
 
                 query.post_filter({terms: type});
@@ -396,7 +396,7 @@ export function SearchService($location, gettext, config, session, multi,
             setParameters(filters, params);
             let criteria = {
                 query: {filtered: {filter: {and: filters}}},
-                sort: [_.zipObject([sort.field], [sort.dir])]
+                sort: [_.zipObject([sort.field], [sort.dir])],
             };
 
             if (postFilters.length > 0) {
@@ -422,7 +422,7 @@ export function SearchService($location, gettext, config, session, multi,
                 criteria.query.filtered.query = {query_string: {
                     query: queryString,
                     lenient: false,
-                    default_operator: 'AND'
+                    default_operator: 'AND',
                 }};
             }
 
@@ -704,8 +704,8 @@ export function SearchService($location, gettext, config, session, multi,
 
         itemCriteria.source.query.filtered.filter = {
             or: [
-                {term: {_id: itemId}}, {term: {item_id: itemId}}
-            ]
+                {term: {_id: itemId}}, {term: {item_id: itemId}},
+            ],
         };
         return itemCriteria;
     };

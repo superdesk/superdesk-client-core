@@ -14,5 +14,5 @@ export const SocialInfo = ({item, svc}) => (
 
 SocialInfo.propTypes = {
     item: PropTypes.object,
-    svc: PropTypes.object
+    svc: PropTypes.object,
 };

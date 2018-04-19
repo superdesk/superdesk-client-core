@@ -49,5 +49,5 @@ export default angular.module('superdesk.core.directives.avatar', [])
                     figure.prepend('<span>' + initials + '</span>');
                 }
             }
-        }
+        },
     }));

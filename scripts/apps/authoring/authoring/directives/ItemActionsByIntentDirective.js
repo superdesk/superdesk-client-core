@@ -14,7 +14,7 @@ import _ from 'lodash';
 ItemActionsByIntentDirective.$inject = [
     'superdesk',
     'activityService',
-    'workflowService'
+    'workflowService',
 ];
 export function ItemActionsByIntentDirective(superdesk, activityService, workflowService) {
     return {
@@ -61,6 +61,6 @@ export function ItemActionsByIntentDirective(superdesk, activityService, workflo
                     getMenuGroups();
                 }
             }, true);
-        }
+        },
     };
 }

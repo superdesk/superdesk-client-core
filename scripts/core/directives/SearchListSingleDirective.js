@@ -41,7 +41,7 @@ export default angular.module('superdesk.core.directives.searchListSingle', ['su
                 searchKey: '@',
                 criteria: '=',
                 disabledItems: '=',
-                selectedItem: '='
+                selectedItem: '=',
             },
             templateUrl: asset.templateUrl('core/views/sdSearchListSingle.html'),
             link: function(scope, element, attrs) {
@@ -52,6 +52,6 @@ export default angular.module('superdesk.core.directives.searchListSingle', ['su
                         scope.selectedItem = _.last(scope.selectedItems);
                     }
                 });
-            }
+            },
         };
     }]);

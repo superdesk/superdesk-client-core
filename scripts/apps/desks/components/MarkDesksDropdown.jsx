@@ -32,5 +32,5 @@ MarkDesksDropdown.propTypes = {
     className: PropTypes.string.isRequired,
     desks: PropTypes.object.isRequired,
     item: PropTypes.object.isRequired,
-    noDesksLabel: PropTypes.string.isRequired
+    noDesksLabel: PropTypes.string.isRequired,
 };

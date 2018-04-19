@@ -27,6 +27,6 @@ export function AssignmentIcon() {
             scope.$on('content:link', handleAssignmentLink);
             scope.$on('content:unlink', handleAssignmentLink);
             scope.$on('assignments:removed', handleAssignmentLink);
-        }
+        },
     };
 }

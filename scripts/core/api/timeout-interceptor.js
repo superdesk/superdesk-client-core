@@ -6,7 +6,7 @@ function TimeoutInterceptor($timeout, $q, $rootScope, request) {
     var TIMEOUT = 3000,
         TIMEOUT_MAX = 60000,
         STATUS = {
-            OK: 0
+            OK: 0,
         };
 
     var IS_VIEW_REGEXP = /\.html?$/;
@@ -47,7 +47,7 @@ function TimeoutInterceptor($timeout, $q, $rootScope, request) {
             $timeout.cancel(rejection.config.timeout);
             $rootScope.serverStatus = STATUS.OK;
             return $q.reject(rejection);
-        }
+        },
     };
 }
 

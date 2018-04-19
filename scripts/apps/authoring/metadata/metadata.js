@@ -2,7 +2,7 @@ import _ from 'lodash';
 
 MetadataCtrl.$inject = [
     '$scope', 'desks', 'metadata', 'privileges', 'datetimeHelper',
-    'preferencesService', 'config', 'moment', 'content'
+    'preferencesService', 'config', 'moment', 'content',
 ];
 function MetadataCtrl(
     $scope, desks, metadata, privileges, datetimeHelper,
@@ -227,7 +227,7 @@ function MetaTargetedPublishingDirective() {
             list: '=',
             disabled: '=ngDisabled',
             targets: '=',
-            autosave: '&'
+            autosave: '&',
         },
         templateUrl: 'scripts/apps/authoring/metadata/views/metadata-target-publishing.html',
         link: function(scope, elem) {
@@ -262,7 +262,7 @@ function MetaTargetedPublishingDirective() {
             scope.canAddTarget = function() {
                 return scope.disabled || !scope.target || scope.target === '';
             };
-        }
+        },
     };
 }
 
@@ -311,7 +311,7 @@ function MetadropdownFocusDirective(keyboardManager) {
                     keyboardManager.pop('up');
                 }
             });
-        }
+        },
     };
 }
 
@@ -328,7 +328,7 @@ function MetaDropdownDirective($filter) {
             change: '&',
             key: '@',
             tabindex: '=',
-            containingDirective: '@'
+            containingDirective: '@',
         },
         templateUrl: 'scripts/apps/authoring/metadata/views/metadata-dropdown.html',
         link: function(scope, elem) {
@@ -374,7 +374,7 @@ function MetaDropdownDirective($filter) {
                     }
                 }
             });
-        }
+        },
     };
 }
 
@@ -389,7 +389,7 @@ function MetaTagsDirective(api, $timeout) {
             field: '@',
             sourceField: '@',
             change: '&',
-            disabled: '='
+            disabled: '=',
         },
         templateUrl: 'scripts/apps/authoring/metadata/views/metadata-tags.html',
         link: function(scope, element) {
@@ -467,7 +467,7 @@ function MetaTagsDirective(api, $timeout) {
             };
 
             scope.refresh();
-        }
+        },
     };
 }
 
@@ -481,7 +481,7 @@ function MetaWordsListDirective() {
             list: '=',
             change: '&',
             header: '@',
-            style: '@'
+            style: '@',
         },
         template: require('./views/metadata-words-list.html'),
         link: function(scope, element) {
@@ -553,7 +553,7 @@ function MetaWordsListDirective() {
 
                 scope.change({item: scope.item});
             };
-        }
+        },
     };
 }
 
@@ -588,7 +588,7 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
             searchUnique: '@',
             setLanguage: '@',
             helperText: '@',
-            selectEntireCategory: '@'
+            selectEntireCategory: '@',
         },
         templateUrl: 'scripts/apps/authoring/metadata/views/metadata-terms.html',
         link: function(scope, elem, attrs) {
@@ -761,7 +761,7 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
                     }
 
                     t.push(angular.extend({}, term, {
-                        scheme: scope.cv ? scope.cv._id : null
+                        scheme: scope.cv ? scope.cv._id : null,
                     }));
 
                     o[scope.field] = t;
@@ -855,7 +855,7 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
 
                 return term.name;
             };
-        }
+        },
     };
 }
 
@@ -872,7 +872,7 @@ function MetaLocatorsDirective() {
             postprocessing: '&',
             header: '@',
             tabindex: '=',
-            keepinput: '='
+            keepinput: '=',
         },
 
         templateUrl: 'scripts/apps/authoring/metadata/views/metadata-locators.html',
@@ -965,7 +965,7 @@ function MetaLocatorsDirective() {
                 scope.postprocessing(selectedLocator);
                 scope.change(selectedLocator);
             };
-        }
+        },
     };
 }
 
@@ -977,13 +977,13 @@ function MetadataService(api, subscribersService, config, vocabularies, $rootSco
         cvs: [],
         search_cvs: config.search_cvs || [
             {id: 'subject', name: 'Subject', field: 'subject', list: 'subjectcodes'},
-            {id: 'companycodes', name: 'Company Codes', field: 'company_codes', list: 'company_codes'}
+            {id: 'companycodes', name: 'Company Codes', field: 'company_codes', list: 'company_codes'},
         ],
         search_config: config.search || {
             slugline: 1, headline: 1, unique_name: 1, story_text: 1, byline: 1,
             keywords: 1, creator: 1, from_desk: 1, to_desk: 1, spike: 1,
             scheduled: 1, company_codes: 1, ingest_provider: 1, marked_desks: 1,
-            featuremedia: 1
+            featuremedia: 1,
         },
         subjectScope: null,
         loaded: null,
@@ -1149,7 +1149,7 @@ function MetadataService(api, subscribersService, config, vocabularies, $rootSco
         },
         priorityByValue: function(value) {
             return this._priorityByValue[value] || null;
-        }
+        },
     };
 
     $rootScope.$on('subscriber:create', () => service.fetchSubscribers());
@@ -1161,7 +1161,7 @@ function MetadataService(api, subscribersService, config, vocabularies, $rootSco
 angular.module('superdesk.apps.authoring.metadata', [
     'superdesk.apps.authoring.widgets',
     'superdesk.apps.publish',
-    'vs-repeat'
+    'vs-repeat',
 ])
     .config(['authoringWidgetsProvider', function(authoringWidgetsProvider) {
         authoringWidgetsProvider
@@ -1179,8 +1179,8 @@ angular.module('superdesk.apps.authoring.metadata', [
                     legalArchive: true,
                     archived: true,
                     picture: true,
-                    personal: true
-                }
+                    personal: true,
+                },
             });
     }])
 

@@ -47,6 +47,6 @@ export function ResendItem(subscribersService, authoring, api, notify, gettext) 
             scope.cancel = function() {
                 scope.item = null;
             };
-        }
+        },
     };
 }

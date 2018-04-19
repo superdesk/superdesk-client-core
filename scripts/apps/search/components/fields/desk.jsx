@@ -8,7 +8,7 @@ export function desk(props) {
             item: props.item,
             desk: props.desk,
             key: 'desk',
-            svc: props.svc
+            svc: props.svc,
         });
     }
 }

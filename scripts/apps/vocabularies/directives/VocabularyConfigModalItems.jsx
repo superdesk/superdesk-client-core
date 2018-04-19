@@ -51,6 +51,6 @@ export function VocabularyConfigModalItems(gettext) {
                     component.setState({items});
                 }
             });
-        }
+        },
     };
 }

@@ -6,7 +6,7 @@ export function CharacterCount() {
         scope: {
             item: '=',
             limit: '=',
-            html: '@'
+            html: '@',
         },
         template: '<span class="char-count" ng-class="{error: limit && numChars > limit}"> ' +
                 gettext(' characters') + '</span>' +
@@ -23,6 +23,6 @@ export function CharacterCount() {
 
                 scope.numChars = input.length || 0;
             });
-        }
+        },
     };
 }

@@ -6,7 +6,7 @@ angular.module('superdesk.core.upload.crop', [])
                 file: '=',
                 cords: '=',
                 progressWidth: '=',
-                maxFileSize: '='
+                maxFileSize: '=',
             },
             link: function(scope, elem) {
                 var bounds, boundx, boundy;
@@ -27,7 +27,7 @@ angular.module('superdesk.core.upload.crop', [])
                         width: Math.round(rx * boundx) + 'px',
                         height: Math.round(ry * boundy) + 'px',
                         marginLeft: '-' + Math.round(rx * cordx) + 'px',
-                        marginTop: '-' + Math.round(ry * cordy) + 'px'
+                        marginTop: '-' + Math.round(ry * cordy) + 'px',
                     });
                 }
 
@@ -67,7 +67,7 @@ angular.module('superdesk.core.upload.crop', [])
                                 boxHeight: 225,
                                 setSelect: [0, 0, Math.min.apply(size), Math.min.apply(size)],
                                 allowSelect: false,
-                                onChange: updateScope
+                                onChange: updateScope,
                             }, function() {
                                 bounds = this.getBounds();
                                 boundx = bounds[0];
@@ -78,6 +78,6 @@ angular.module('superdesk.core.upload.crop', [])
                         img.src = src;
                     }
                 });
-            }
+            },
         };
     }]);

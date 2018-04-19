@@ -60,8 +60,8 @@ describe('sdDeskeditMacros directive', () => {
 
         scopeValues = {
             desk: {
-                edit: {name: 'Desk D'}
-            }
+                edit: {name: 'Desk D'},
+            },
         };
 
         $element = compileDirective(scopeValues);
@@ -79,8 +79,8 @@ describe('sdDeskeditMacros directive', () => {
 
             scopeValues = {
                 desk: {
-                    edit: {name: 'Desk D'}
-                }
+                    edit: {name: 'Desk D'},
+                },
             };
 
             $element = compileDirective(scopeValues);

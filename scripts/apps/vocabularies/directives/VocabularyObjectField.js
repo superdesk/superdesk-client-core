@@ -12,7 +12,7 @@ export function VocabularyObjectField() {
             ngModel.$parsers.push(parseJson);
             ngModel.$formatters.push(formatJson);
             ngModel.$validators.json = validateJson;
-        }
+        },
     };
 
     /**

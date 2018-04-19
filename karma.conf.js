@@ -12,7 +12,7 @@ module.exports = function(config) {
 
     config.set({
         frameworks: [
-            'jasmine'
+            'jasmine',
         ],
 
         plugins: [
@@ -20,12 +20,12 @@ module.exports = function(config) {
             'karma-chrome-launcher',
             'karma-ng-html2js-preprocessor',
             'karma-sourcemap-loader',
-            'karma-webpack'
+            'karma-webpack',
         ],
 
         preprocessors: {
             '**/*.html': ['ng-html2js'],
-            'scripts/tests.js': ['webpack', 'sourcemap']
+            'scripts/tests.js': ['webpack', 'sourcemap'],
         },
 
         webpack: webpackConfig,
@@ -35,18 +35,18 @@ module.exports = function(config) {
             modules: false,
             stats: false,
             debug: false,
-            progress: false
+            progress: false,
             // quiet: true
         },
 
         files: [
             'scripts/tests.js',
-            'scripts/**/*.html'
+            'scripts/**/*.html',
         ],
 
         ngHtml2JsPreprocessor: {
             stripPrefix: __dirname,
-            moduleName: 'superdesk.templates-cache'
+            moduleName: 'superdesk.templates-cache',
         },
 
         // test results reporter to use
@@ -68,6 +68,6 @@ module.exports = function(config) {
         singleRun: false,
 
         // Seams default 10s is not enough for CI sometime, so let's try 30s
-        browserNoActivityTimeout: 30000
+        browserNoActivityTimeout: 30000,
     });
 };

@@ -23,7 +23,7 @@ import * as directive from './directives';
 angular.module('superdesk.apps.dictionaries', [
     'vs-repeat',
     'superdesk.core.activity',
-    'superdesk.core.upload'
+    'superdesk.core.upload',
 ])
     .config(['superdeskProvider', function(superdesk) {
         superdesk.activity('/settings/dictionaries', {
@@ -32,7 +32,7 @@ angular.module('superdesk.apps.dictionaries', [
             templateUrl: 'scripts/apps/dictionaries/views/settings.html',
             category: superdesk.MENU_SETTINGS,
             priority: -800,
-            privileges: {dictionaries: 1}
+            privileges: {dictionaries: 1},
         });
     }])
     .service('dictionaries', DictionaryService)

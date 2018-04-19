@@ -7,7 +7,7 @@ export function fetchedDesk(props) {
         return React.createElement(FetchedDesksInfo, {
             item: props.item,
             key: 'desk',
-            svc: props.svc
+            svc: props.svc,
         });
     }
 }

@@ -3,7 +3,7 @@ FetchedDesks.$inject = ['desks', 'familyService', '$location', 'superdesk'];
 export function FetchedDesks(desks, familyService, $location, superdesk) {
     return {
         scope: {
-            item: '='
+            item: '=',
         },
         templateUrl: 'scripts/apps/archive/views/fetched-desks.html',
         link: function(scope, elem) {
@@ -25,6 +25,6 @@ export function FetchedDesks(desks, familyService, $location, superdesk) {
                     }
                 }
             };
-        }
+        },
     };
 }

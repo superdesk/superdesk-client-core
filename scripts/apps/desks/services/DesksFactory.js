@@ -61,7 +61,7 @@ export function DesksFactory($q, api, preferencesService, userList, notify,
 
         desks.active = {
             desk: desks.activeDeskId,
-            stage: desks.activeStageId
+            stage: desks.activeStageId,
         };
     }
 
@@ -240,7 +240,7 @@ export function DesksFactory($q, api, preferencesService, userList, notify,
                 setActive(this);
                 preferencesService.update({
                     'desk:last_worked': this.activeDeskId,
-                    'stage:items': []
+                    'stage:items': [],
                 }, 'desk:last_worked');
             }
         },
@@ -253,7 +253,7 @@ export function DesksFactory($q, api, preferencesService, userList, notify,
                 setActive(this);
                 preferencesService.update({
                     'desk:last_worked': this.activeDeskId,
-                    'stage:items': [this.activeStageId]
+                    'stage:items': [this.activeStageId],
                 }, 'desk:last_worked');
             }
         },
@@ -270,7 +270,7 @@ export function DesksFactory($q, api, preferencesService, userList, notify,
                 setActive(this);
                 preferencesService.update({
                     'desk:last_worked': this.activeDeskId,
-                    'stage:items': [this.activeStageId]
+                    'stage:items': [this.activeStageId],
                 }, 'desk:last_worked');
             }
         },
@@ -347,7 +347,7 @@ export function DesksFactory($q, api, preferencesService, userList, notify,
          */
         hasMarkItemPrivilege: function() {
             return !!privileges.privileges.mark_for_desks;
-        }
+        },
     };
 
     $rootScope.$on('desk', reset);

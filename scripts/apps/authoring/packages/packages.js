@@ -51,8 +51,8 @@ export default angular.module('superdesk.apps.authoring.packages', ['superdesk.a
                     legalArchive: false,
                     archived: false,
                     picture: true,
-                    personal: false
-                }
+                    personal: false,
+                },
             });
     }])
     .controller('PackagesWidgetCtrl', PackagesCtrl);

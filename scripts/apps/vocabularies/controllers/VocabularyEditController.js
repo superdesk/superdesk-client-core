@@ -7,7 +7,7 @@ VocabularyEditController.$inject = [
     'api',
     'vocabularies',
     'metadata',
-    'cvSchema'
+    'cvSchema',
 ];
 
 export function VocabularyEditController($scope, gettext, notify, api, vocabularies, metadata, cvSchema) {

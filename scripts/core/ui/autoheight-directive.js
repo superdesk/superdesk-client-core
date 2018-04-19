@@ -26,7 +26,7 @@ angular.module('superdesk.core.ui.autoheight', []).directive('sdAutoHeight', ['$
             $ta.css({
                 overflow: 'hidden',
                 'overflow-y': 'hidden',
-                'word-wrap': 'break-word'
+                'word-wrap': 'break-word',
             });
 
             // force text reflow
@@ -55,7 +55,7 @@ angular.module('superdesk.core.ui.autoheight', []).directive('sdAutoHeight', ['$
                     'line-height',
                     'text-transform',
                     'word-spacing',
-                    'text-indent'
+                    'text-indent',
                 ];
 
             // exit if elastic already applied (or is the mirror element)
@@ -70,7 +70,7 @@ angular.module('superdesk.core.ui.autoheight', []).directive('sdAutoHeight', ['$
 
             // set resize and apply elastic
             $ta.css({
-                resize: 'none'
+                resize: 'none',
             });
             $ta.attr('elastic', true);
 
@@ -91,7 +91,7 @@ angular.module('superdesk.core.ui.autoheight', []).directive('sdAutoHeight', ['$
                     height: parseInt(taStyle.getPropertyValue('border-top-width'), 10) +
                             parseInt(taStyle.getPropertyValue('padding-top'), 10) +
                             parseInt(taStyle.getPropertyValue('padding-bottom'), 10) +
-                            parseInt(taStyle.getPropertyValue('border-bottom-width'), 10)
+                            parseInt(taStyle.getPropertyValue('border-bottom-width'), 10),
                 };
                 minHeightValue = parseInt(taStyle.getPropertyValue('min-height'), 10);
                 heightValue = parseInt(taStyle.getPropertyValue('height'), 10);
@@ -198,6 +198,6 @@ angular.module('superdesk.core.ui.autoheight', []).directive('sdAutoHeight', ['$
                 $mirror.remove();
                 $win.unbind('resize', forceAdjust);
             });
-        }
+        },
     };
 }]);

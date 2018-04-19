@@ -147,17 +147,17 @@ LinkInputComponent.propTypes = {
     data: PropTypes.object,
     item: PropTypes.object,
     createLinkSuggestion: PropTypes.func,
-    suggestingMode: PropTypes.bool
+    suggestingMode: PropTypes.bool,
 };
 
 const mapStateToProps = (state) => ({
     item: state.item,
     editorState: state.editorState,
-    suggestingMode: state.suggestingMode
+    suggestingMode: state.suggestingMode,
 });
 
 export const LinkInput = connect(mapStateToProps, {
     applyLink,
     hidePopups,
-    createLinkSuggestion
+    createLinkSuggestion,
 })(LinkInputComponent);

@@ -17,7 +17,7 @@ import {
     ActionsMenu,
     ErrorBox,
     ProgressBar,
-    ListItemInfo
+    ListItemInfo,
 } from './index';
 import {closeActionsMenu} from '../helpers';
 
@@ -122,9 +122,9 @@ export class Item extends React.Component {
                     selected: this.props.item.selected || this.props.flags.selected,
                     archived: item.archived || item.created,
                     gone: item.gone,
-                    actioning: this.state.actioning
-                })
-            }
+                    actioning: this.state.actioning,
+                }),
+            },
         ];
 
         if (item._progress) {
@@ -139,7 +139,7 @@ export class Item extends React.Component {
                     item: item,
                     svc: this.props.svc,
                     scope: this.props.scope,
-                    onActioning: this.setActioningState
+                    onActioning: this.setActioningState,
                 }) : null;
         };
 
@@ -151,12 +151,12 @@ export class Item extends React.Component {
                     desk: this.props.desk,
                     onMultiSelect: this.props.onMultiSelect,
                     swimlane: this.props.swimlane,
-                    svc: this.props.svc
+                    svc: this.props.svc,
                 }),
                 React.createElement(MediaInfo, {
                     item: item,
                     ingestProvider: this.props.ingestProvider,
-                    svc: this.props.svc
+                    svc: this.props.svc,
                 }),
                 React.createElement('div', {className: 'media-box__footer'},
                     React.createElement(GridTypeIcon, {item: item, svc: this.props.svc}),
@@ -176,12 +176,12 @@ export class Item extends React.Component {
                     desk: this.props.desk,
                     onMultiSelect: this.props.onMultiSelect,
                     swimlane: this.props.swimlane,
-                    svc: this.props.svc
+                    svc: this.props.svc,
                 }),
                 React.createElement(PhotoDeskInfo, {
                     item: item,
                     ingestProvider: this.props.ingestProvider,
-                    svc: this.props.svc
+                    svc: this.props.svc,
                 }),
                 React.createElement('div', {className: 'sd-grid-item__footer'},
                     React.createElement('div',
@@ -206,12 +206,12 @@ export class Item extends React.Component {
                     item: item,
                     onMultiSelect: this.props.onMultiSelect,
                     swimlane: this.props.swimlane,
-                    svc: this.props.svc
+                    svc: this.props.svc,
                 }),
                 item.priority || item.urgency ? React.createElement(ListPriority, {
                     item: item,
                     svc: this.props.svc,
-                    scope: this.props.scope
+                    scope: this.props.scope,
                 }) : null,
                 React.createElement(ListItemInfo, {
                     item: item,
@@ -225,7 +225,7 @@ export class Item extends React.Component {
                     versioncreator: this.props.versioncreator,
                     narrow: this.props.narrow,
                     svc: this.props.svc,
-                    scope: this.props.scope
+                    scope: this.props.scope,
                 }),
                 getActionsMenu()
             );
@@ -245,7 +245,7 @@ export class Item extends React.Component {
                 onDragStart: this.onDragStart,
                 onClick: this.select,
                 onDoubleClick: this.dbClick,
-                draggable: true
+                draggable: true,
             },
             React.createElement.apply(null, contents)
         );
@@ -269,5 +269,5 @@ Item.propTypes = {
     onDbClick: PropTypes.any,
     onEdit: PropTypes.any,
     onSelect: PropTypes.any,
-    narrow: PropTypes.any
+    narrow: PropTypes.any,
 };

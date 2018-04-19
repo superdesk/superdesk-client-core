@@ -4,11 +4,11 @@ describe('family service', () => {
     var items = [
         {unique_id: 1, _id: 'z', family_id: 'family1', task: {desk: 'desk1'}},
         {unique_id: 2, _id: 'x', family_id: 'family1', task: {desk: 'desk2'}},
-        {unique_id: 3, _id: 'c', family_id: 'family2', task: {desk: 'desk3'}}
+        {unique_id: 3, _id: 'c', family_id: 'family2', task: {desk: 'desk3'}},
     ];
     var deskList = {
         desk1: {title: 'desk1'},
-        desk3: {title: 'desk3'}
+        desk3: {title: 'desk3'},
     };
 
     var userDesks = [{_id: 'desk1'}];
@@ -22,7 +22,7 @@ describe('family service', () => {
         beforeEach(window.module(($provide) => {
             $provide.service('desks', () => ({
                 deskLookup: deskList,
-                userDesks: userDesks
+                userDesks: userDesks,
             }));
         }));
 
@@ -119,15 +119,15 @@ describe('family service', () => {
                                 and: [
                                     {not: {term: {state: 'spiked'}}},
                                     {term: {event_id: 1}},
-                                    {not: {term: {type: 'composite'}}}
-                                ]
-                            }
-                        }
+                                    {not: {term: {type: 'composite'}}},
+                                ],
+                            },
+                        },
                     },
                     size: 200,
                     from: 0,
-                    sort: {versioncreated: 'asc'}
-                }
+                    sort: {versioncreated: 'asc'},
+                },
             };
 
             spyOn(api, 'query').and.returnValue($q.when());
@@ -147,18 +147,18 @@ describe('family service', () => {
                                     {not: {term: {state: 'spiked'}}},
                                     {not: {term: {event_id: 1}}},
                                     {not: {term: {type: 'composite'}}},
-                                    {not: {term: {last_published_version: 'false'}}}
-                                ]
+                                    {not: {term: {last_published_version: 'false'}}},
+                                ],
                             },
                             query: {
-                                query_string: {query: 'slugline.phrase:("test")', lenient: false}
-                            }
-                        }
+                                query_string: {query: 'slugline.phrase:("test")', lenient: false},
+                            },
+                        },
                     },
                     size: 200,
                     from: 0,
-                    sort: {firstcreated: 'asc'}
-                }
+                    sort: {firstcreated: 'asc'},
+                },
             };
 
             spyOn(api, 'query').and.returnValue($q.when());
@@ -178,18 +178,18 @@ describe('family service', () => {
                                     {not: {term: {state: 'spiked'}}},
                                     {not: {term: {event_id: 1}}},
                                     {not: {term: {type: 'composite'}}},
-                                    {not: {term: {last_published_version: 'false'}}}
-                                ]
+                                    {not: {term: {last_published_version: 'false'}}},
+                                ],
                             },
                             query: {
-                                match_phrase_prefix: {'slugline.phrase': 'test'}
-                            }
-                        }
+                                match_phrase_prefix: {'slugline.phrase': 'test'},
+                            },
+                        },
                     },
                     size: 200,
                     from: 0,
-                    sort: {firstcreated: 'asc'}
-                }
+                    sort: {firstcreated: 'asc'},
+                },
             };
 
             spyOn(api, 'query').and.returnValue($q.when());
@@ -210,18 +210,18 @@ describe('family service', () => {
                                     {not: {term: {event_id: 1}}},
                                     {not: {term: {type: 'composite'}}},
                                     {not: {term: {last_published_version: 'false'}}},
-                                    {range: {versioncreated: {gte: '48-h'}}}
-                                ]
+                                    {range: {versioncreated: {gte: '48-h'}}},
+                                ],
                             },
                             query: {
-                                match_phrase_prefix: {'slugline.phrase': 'test'}
-                            }
-                        }
+                                match_phrase_prefix: {'slugline.phrase': 'test'},
+                            },
+                        },
                     },
                     size: 200,
                     from: 0,
-                    sort: {firstcreated: 'asc'}
-                }
+                    sort: {firstcreated: 'asc'},
+                },
             };
 
             spyOn(api, 'query').and.returnValue($q.when());

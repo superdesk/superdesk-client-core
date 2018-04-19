@@ -6,6 +6,6 @@ export function PackageEdit(authoring) {
             scope.limits = authoring.limits;
             scope._editable = scope.origItem._editable;
             scope._isInPublishedStates = authoring.isPublished(scope.origItem);
-        }
+        },
     };
 }

@@ -93,7 +93,7 @@ export class ItemContainer extends React.Component {
         this.elemProps = {
             key: key,
             className: _class,
-            title: title ? title : altTitle
+            title: title ? title : altTitle,
         };
 
         this.elemValue = value;
@@ -117,5 +117,5 @@ export class ItemContainer extends React.Component {
 ItemContainer.propTypes = {
     item: PropTypes.object,
     svc: PropTypes.object.isRequired,
-    field: PropTypes.string
+    field: PropTypes.string,
 };

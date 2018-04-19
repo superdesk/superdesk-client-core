@@ -21,7 +21,7 @@ const TableControlsComponent = ({
     removeCol,
     activeCell,
     editorState,
-    toggleTableHead
+    toggleTableHead,
 }) => {
     const {key} = activeCell;
     const contentState = editorState.getCurrentContent();
@@ -49,7 +49,7 @@ TableControlsComponent.propTypes = {
     removeCol: PropTypes.func,
     activeCell: PropTypes.object.isRequired,
     editorState: PropTypes.object,
-    toggleTableHead: PropTypes.func
+    toggleTableHead: PropTypes.func,
 };
 
 const mapDispatchToProps = (dispatch) => ({
@@ -62,7 +62,7 @@ const mapDispatchToProps = (dispatch) => ({
 
 const mapStateToProps = (state) => ({
     activeCell: state.activeCell,
-    editorState: state.editorState
+    editorState: state.editorState,
 });
 
 const TableControls = connect(mapStateToProps, mapDispatchToProps)(TableControlsComponent);

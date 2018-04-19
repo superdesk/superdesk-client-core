@@ -6,7 +6,8 @@ export function ItemPriority(metadata) {
         scope: {priority: '='},
         template: [
             '<span ng-if="priority" class="priority-label priority-label--{{ priority }}" ',
-            'ng-style="{backgroundColor: color}" title="{{ \'Priority\' | translate }}: {{ title }}">{{ short }}</span>'
+            'ng-style="{backgroundColor: color}" title="{{ \'Priority\' | translate }}: {{ title }}">'
+            + '{{ short }}</span>',
         ].join(''),
         link: function(scope, elem) {
             scope.$watch('priority', (priority) => {
@@ -20,6 +21,6 @@ export function ItemPriority(metadata) {
                     }
                 }
             });
-        }
+        },
     };
 }

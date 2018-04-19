@@ -16,7 +16,7 @@ describe('authoring', () => {
                     _id: 'categories',
                     display_name: 'Categories',
                     type: 'manageable',
-                    items: [{is_active: true, name: 'Motoring', qcode: 'paservice:motoring'}]
+                    items: [{is_active: true, name: 'Motoring', qcode: 'paservice:motoring'}],
                 },
                 {
                     _id: 'subservice_motoring',
@@ -24,17 +24,17 @@ describe('authoring', () => {
                     type: 'manageable',
                     service: {'paservice:motoring': 1},
                     priority: 2,
-                    items: [{is_active: true, name: 'News', qcode: 'paservice:motoring:news'}]
-                }
+                    items: [{is_active: true, name: 'News', qcode: 'paservice:motoring:news'}],
+                },
             ];
             var schema = {
                 subject: {
                     mandatory_in_list: {
                         scheme: {
-                            subservice_motoring: 'subservice_motoring'
-                        }
-                    }
-                }
+                            subservice_motoring: 'subservice_motoring',
+                        },
+                    },
+                },
             };
 
             spyOn(archiveService, 'isLegal').and.returnValue(false);
@@ -74,9 +74,9 @@ describe('authoring', () => {
                     entityRanges: [],
                     data: {},
                     type: 'unstyled',
-                    text: 'lorem ipsum dolor'
-                }]
-            }]
+                    text: 'lorem ipsum dolor',
+                }],
+            }],
         };
         let updates = {
             editor_state: [{
@@ -97,8 +97,8 @@ describe('authoring', () => {
                                             '"depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],' +
                                             '"entityMap":{}}',
                                         author: 'admin',
-                                        annotationType: 'regular'
-                                    }
+                                        annotationType: 'regular',
+                                    },
                                 },
                                 'ANNOTATION-2': {
                                     type: 'ANNOTATION',
@@ -109,38 +109,38 @@ describe('authoring', () => {
                                             '{"key":"d3vb3","text":"Line 2","type":"unstyled","depth":0,' +
                                             '"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}',
                                         author: 'admin',
-                                        annotationType: 'regular'
-                                    }
-                                }
-                            }
-                        }
+                                        annotationType: 'regular',
+                                    },
+                                },
+                            },
+                        },
                     },
                     inlineStyleRanges: [{
                         offset: 6,
                         length: 5,
-                        style: 'ANNOTATION-1'
+                        style: 'ANNOTATION-1',
                     },
                     {
                         offset: 12,
                         length: 5,
-                        style: 'ANNOTATION-2'
+                        style: 'ANNOTATION-2',
                     }],
                     type: 'unstyled',
-                    text: 'lorem ipsum dolor'
-                }]
-            }]
+                    text: 'lorem ipsum dolor',
+                }],
+            }],
         };
 
         authoring.save(item, updates);
         expect(updates.annotations).toEqual([{
             body: '<p>Annotation 1</p>',
             type: 'regular',
-            id: '1'
+            id: '1',
         },
         {
             body: '<p>Annotation 2</p><p>Line 2</p>',
             type: 'regular',
-            id: '2'
+            id: '2',
         }]);
     }));
 

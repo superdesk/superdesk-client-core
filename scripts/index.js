@@ -34,7 +34,7 @@ body.ready(() => {
     angular.bootstrap(body, [
         'superdesk.config',
         'superdesk.core',
-        'superdesk.apps'
+        'superdesk.apps',
     ].concat(appConfig.apps || []), {strictDi: true});
 
     window.superdeskIsReady = true;

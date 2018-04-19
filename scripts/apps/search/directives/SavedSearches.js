@@ -1,6 +1,6 @@
 SavedSearches.$inject = [
     '$rootScope', 'api', 'session', 'modal', 'notify', 'gettext', 'asset',
-    '$location', 'desks', 'privileges', 'search', 'savedSearch'
+    '$location', 'desks', 'privileges', 'search', 'savedSearch',
 ];
 
 export function SavedSearches($rootScope, api, session, modal, notify, gettext, asset, $location,
@@ -84,6 +84,6 @@ export function SavedSearches($rootScope, api, session, modal, notify, gettext, 
                         });
                     });
             };
-        }
+        },
     };
 }

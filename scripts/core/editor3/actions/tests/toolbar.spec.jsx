@@ -3,11 +3,11 @@ import {cropImage, insertMedia} from '..';
 describe('editor3.actions.toolbar', () => {
     beforeEach(window.module(($provide) => {
         $provide.service('superdesk', ($q) => ({
-            intent: jasmine.createSpy().and.returnValue($q.when('media_list'))
+            intent: jasmine.createSpy().and.returnValue($q.when('media_list')),
         }));
 
         $provide.service('renditions', ($q) => ({
-            crop: jasmine.createSpy().and.returnValue($q.when('cropped_image'))
+            crop: jasmine.createSpy().and.returnValue($q.when('cropped_image')),
         }));
     }));
 
@@ -21,7 +21,7 @@ describe('editor3.actions.toolbar', () => {
         expect(renditions.crop).toHaveBeenCalledWith('image_data');
         expect(dispatch).toHaveBeenCalledWith({
             type: 'TOOLBAR_UPDATE_IMAGE',
-            payload: {entityKey: 'key', media: 'cropped_image'}
+            payload: {entityKey: 'key', media: 'cropped_image'},
         });
     }));
 
@@ -35,7 +35,7 @@ describe('editor3.actions.toolbar', () => {
         expect(superdesk.intent).toHaveBeenCalledWith('upload', 'media', undefined);
         expect(dispatch).toHaveBeenCalledWith({
             type: 'TOOLBAR_INSERT_MEDIA',
-            payload: 'media_list'
+            payload: 'media_list',
         });
     }));
 });

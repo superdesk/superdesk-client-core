@@ -37,7 +37,7 @@ class MultipleHighlightsTester extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            editorState: props.editorState
+            editorState: props.editorState,
 
         };
         this.childRef = null;
@@ -63,10 +63,10 @@ MultipleHighlightsTester.propTypes = {
 
 const availableHighlights = {
     COMMENT: {
-        backgroundColor: 'red'
+        backgroundColor: 'red',
     },
     ANNOTATION: {
-        backgroundColor: 'blue'
+        backgroundColor: 'blue',
     },
 };
 
@@ -80,7 +80,7 @@ describe('multipleHighlights.component', () => {
             anchorOffset: 2,
             focusKey: getKeyForNthBlock(1),
             focusOffset: 13,
-            isBackward: false
+            isBackward: false,
         });
 
         const editorStateWithSelection = EditorState.acceptSelection(editorState, selection);

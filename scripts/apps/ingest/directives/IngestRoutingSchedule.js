@@ -9,8 +9,8 @@ IngestRoutingSchedule.$inject = ['tzdata'];
 export function IngestRoutingSchedule(tzdata) {
     return {
         scope: {
-            rule: '=' // the routing rule whose schedule is being edited
+            rule: '=', // the routing rule whose schedule is being edited
         },
-        templateUrl: 'scripts/apps/ingest/views/settings/ingest-routing-schedule.html'
+        templateUrl: 'scripts/apps/ingest/views/settings/ingest-routing-schedule.html',
     };
 }

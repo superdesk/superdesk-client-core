@@ -20,7 +20,7 @@ export class ContactsService {
             {field: 'last_name', label: gettext('Person (Last Name)'), defaultDir: 'asc'},
             {field: 'organisation', label: gettext('Organisation'), defaultDir: 'asc'},
             {field: '_created', label: gettext('Created')},
-            {field: '_updated', label: gettext('Updated')}
+            {field: '_updated', label: gettext('Updated')},
         ];
         this.search = search;
         this.toggleStatus = this.toggleStatus.bind(this);

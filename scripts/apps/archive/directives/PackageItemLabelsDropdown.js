@@ -14,6 +14,6 @@ export function PackageItemLabelsDropdown(vocabularies, packages, authoringWorks
             };
 
             scope.isSetItemLabel = (label) => packages.isSetItemLabel(scope.item, label);
-        }
+        },
     };
 }

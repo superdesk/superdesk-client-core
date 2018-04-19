@@ -12,7 +12,7 @@ module.exports = function(grunt) {
         comDir: 'bower_components',
         coreDir: __dirname,
         poDir: 'po',
-        livereloadPort: 35729
+        livereloadPort: 35729,
     };
 
     grunt.initConfig(config);
@@ -22,14 +22,14 @@ module.exports = function(grunt) {
         config: path.join(__dirname, 'package'),
         pattern: [
             'grunt-*',
-            '@*/grunt-*'
-        ]
+            '@*/grunt-*',
+        ],
     });
 
     // Auto-load configuration
     require('load-grunt-config')(grunt, {
         config: config,
-        configPath: path.join(__dirname, 'tasks', 'options')
+        configPath: path.join(__dirname, 'tasks', 'options'),
     });
 
     // Linting tasks and alias
@@ -47,7 +47,7 @@ module.exports = function(grunt) {
         'ngtemplates:dev',
         'ngtemplates:ui-guide',
         'copy:assets-ui-guide',
-        'webpack-dev-server:ui-guide'
+        'webpack-dev-server:ui-guide',
     ]);
 
     // Development server
@@ -59,7 +59,7 @@ module.exports = function(grunt) {
         'copy:locales',
         'ngtemplates:gen-apps',
         'ngtemplates:dev',
-        'webpack-dev-server:start'
+        'webpack-dev-server:start',
     ]);
 
     // Production build
@@ -72,7 +72,7 @@ module.exports = function(grunt) {
             'copy:assets',
             'copy:locales',
             'ngtemplates:gen-apps',
-            'ngtemplates:core'
+            'ngtemplates:core',
         ]);
 
         // if we have "*.po" files in "superdesk/client"
@@ -83,14 +83,14 @@ module.exports = function(grunt) {
         if (grunt.file.expand('po/*.po').length && pkgName != 'superdesk-core') {
             grunt.task.run([
                 'nggettext_extract',
-                'nggettext_compile'
+                'nggettext_compile',
             ]);
         }
 
         grunt.task.run([
             'webpack:build',
             'filerev',
-            'usemin'
+            'usemin',
         ]);
     });
 

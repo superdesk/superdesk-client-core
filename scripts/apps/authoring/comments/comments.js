@@ -7,9 +7,9 @@ function CommentsService(api) {
     this.fetch = function(item) {
         var criteria = {
             where: {
-                item: item
+                item: item,
             },
-            embedded: {user: 1}
+            embedded: {user: 1},
         };
 
         return api.item_comments.query(criteria)
@@ -49,7 +49,7 @@ function CommentsCtrl($scope, $routeParams, commentsService) {
 
         commentsService.save({
             text: text,
-            item: $scope.item._id
+            item: $scope.item._id,
         }).then(reload);
     };
 
@@ -83,7 +83,7 @@ CommentTextDirective.$inject = ['$compile'];
 function CommentTextDirective($compile) {
     return {
         scope: {
-            comment: '='
+            comment: '=',
         },
         link: function(scope, element, attrs) {
             var html;
@@ -119,7 +119,7 @@ function CommentTextDirective($compile) {
             element.html('<p><b>' + attrs.name + '</b> : ' + html + '</p>');
 
             $compile(element.contents())(scope);
-        }
+        },
     };
 }
 
@@ -127,7 +127,7 @@ angular.module('superdesk.apps.authoring.comments', [
     'superdesk.apps.authoring.widgets',
     'mentio',
     'superdesk.core.api',
-    'superdesk.core.keyboard'
+    'superdesk.core.keyboard',
 ])
     .config(['authoringWidgetsProvider', function(authoringWidgetsProvider) {
         authoringWidgetsProvider
@@ -144,15 +144,15 @@ angular.module('superdesk.apps.authoring.comments', [
                     legalArchive: false,
                     archived: false,
                     picture: true,
-                    personal: true
-                }
+                    personal: true,
+                },
             });
     }])
 
     .config(['apiProvider', function(apiProvider) {
         apiProvider.api('item_comments', {
             type: 'http',
-            backend: {rel: 'item_comments'}
+            backend: {rel: 'item_comments'},
         });
     }])
 

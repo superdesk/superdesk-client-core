@@ -30,11 +30,11 @@ export class SelectBox extends React.Component {
             {
                 className: this.props.classes ? this.props.classes : 'selectbox',
                 title: isCheckAllowed(this.props.item) ? null : 'selection not allowed',
-                onClick: this.toggle
+                onClick: this.toggle,
             },
             React.createElement(
                 'span', {
-                    className: 'sd-checkbox' + (this.props.item.selected ? ' checked' : '')
+                    className: 'sd-checkbox' + (this.props.item.selected ? ' checked' : ''),
                 }
             )
         );

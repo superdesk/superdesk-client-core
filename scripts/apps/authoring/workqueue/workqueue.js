@@ -23,10 +23,10 @@ function WorkqueueService(session, api) {
                             bool: {
                                 must: [
                                     {term: {lock_user: identity._id}},
-                                    {terms: {lock_action: ['edit', 'correct', 'kill']}}
-                                ]
-                            }
-                        }
+                                    {terms: {lock_action: ['edit', 'correct', 'kill']}},
+                                ],
+                            },
+                        },
                     },
                     auto: 1,
                 };
@@ -65,7 +65,7 @@ WorkqueueCtrl.$inject = [
     'authoring',
     'autosave',
     'confirm',
-    'referrer'
+    'referrer',
 ];
 function WorkqueueCtrl($scope, $rootScope, $route, workqueue, authoringWorkspace, multiEdit,
     lock, $location, session, authoring, autosave, confirm, referrer) {
@@ -242,7 +242,7 @@ function WorkqueueCtrl($scope, $rootScope, $route, workqueue, authoringWorkspace
 function WorkqueueListDirective() {
     return {
         templateUrl: 'scripts/apps/authoring/views/opened-articles.html',
-        controller: 'Workqueue'
+        controller: 'Workqueue',
     };
 }
 
@@ -255,7 +255,7 @@ function ArticleDashboardDirective() {
             _closeItem: '&closeItem',
             _link: '&link',
             active: '=active',
-            items: '=items'
+            items: '=items',
         },
         link: function(scope, elem, attrs) {
             scope.closeItem = function(item) {
@@ -269,7 +269,7 @@ function ArticleDashboardDirective() {
             scope.link = function(item) {
                 scope._link({item: item});
             };
-        }
+        },
     };
 }
 
@@ -277,7 +277,7 @@ angular.module('superdesk.apps.authoring.workqueue', [
     'superdesk.core.activity',
     'superdesk.apps.notification',
     'superdesk.apps.authoring.multiedit',
-    'superdesk.apps.authoring.compare_versions'
+    'superdesk.apps.authoring.compare_versions',
 ])
     .service('workqueue', WorkqueueService)
     .controller('Workqueue', WorkqueueCtrl)

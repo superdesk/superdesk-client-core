@@ -10,7 +10,7 @@ export default angular.module('superdesk.core.translate', [
     'gettext',
     'superdesk.core.auth.session',
     'tmh.dynamicLocale',
-    'ngLocale'
+    'ngLocale',
 ])
     .config(['tmhDynamicLocaleProvider', (tmhDynamicLocaleProvider) => {
         tmhDynamicLocaleProvider.localeLocationPattern('locales/angular-locale_{{locale}}.js');

@@ -12,7 +12,7 @@ import * as services from './services';
 angular.module('superdesk.apps.content-api', [
     'superdesk.core.api',
     'superdesk.apps.publish',
-    'superdesk.apps.search'
+    'superdesk.apps.search',
 ])
     .config(['superdeskProvider', function(superdesk) {
         superdesk
@@ -27,7 +27,7 @@ angular.module('superdesk.apps.content-api', [
                 sideTemplateUrl: 'scripts/apps/workspace/views/workspace-sidenav.html',
                 filters: [],
                 reloadOnSearch: false,
-                privileges: {search_capi: 1}
+                privileges: {search_capi: 1},
             });
     }])
 
@@ -41,7 +41,7 @@ angular.module('superdesk.apps.content-api', [
         apiProvider.api('search_capi', {
             type: 'http',
             backend: {
-                rel: 'search_capi'
-            }
+                rel: 'search_capi',
+            },
         });
     }]);

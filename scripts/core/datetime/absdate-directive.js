@@ -18,7 +18,7 @@ angular.module('superdesk.core.datetime.absdate', []).directive('sdAbsdate', ['g
 
         return {
             scope: {
-                datetime: '='
+                datetime: '=',
             },
             template: '<time datetime="{{ datetimeIso }}"><span>{{ rday }}{{ rdate }}</span></time>',
             link: function(scope) {
@@ -41,7 +41,7 @@ angular.module('superdesk.core.datetime.absdate', []).directive('sdAbsdate', ['g
                         scope.rdate = date.format(DISPLAY_DATE_FORMAT);
                     }
                 });
-            }
+            },
         };
-    }
+    },
 ]);

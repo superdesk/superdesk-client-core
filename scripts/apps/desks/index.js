@@ -25,7 +25,7 @@ angular.module('superdesk.apps.desks', [
     'superdesk.apps.users',
     'superdesk.apps.authoring.widgets',
     'superdesk.apps.aggregate.widgets',
-    'superdesk.apps.aggregate'
+    'superdesk.apps.aggregate',
 ])
     .factory('desks', DesksFactory)
 
@@ -59,7 +59,7 @@ angular.module('superdesk.apps.desks', [
                 adminTools: false,
                 beta: true,
                 category: superdesk.MENU_MAIN,
-                privileges: {desks: 1}
+                privileges: {desks: 1},
             })
 
             .activity('/settings/desks', {
@@ -68,7 +68,7 @@ angular.module('superdesk.apps.desks', [
                 templateUrl: 'scripts/apps/desks/views/settings.html',
                 category: superdesk.MENU_SETTINGS,
                 priority: -800,
-                privileges: {desks: 1}
+                privileges: {desks: 1},
             })
 
             .activity('mark.desk', {
@@ -79,12 +79,12 @@ angular.module('superdesk.apps.desks', [
                 keyboardShortcut: 'ctrl+shift+!',
                 templateUrl: 'scripts/apps/desks/views/mark_desks_dropdown.html',
                 filters: [
-                    {action: 'list', type: 'archive'}
+                    {action: 'list', type: 'archive'},
                 ],
                 additionalCondition: ['authoring', 'item', function(authoring, item) {
                     return authoring.itemActions(item).mark_item_for_desks;
                 }],
-                group: 'highlights'
+                group: 'highlights',
             });
     }])
 
@@ -92,7 +92,7 @@ angular.module('superdesk.apps.desks', [
         apiProvider.api('desks', {
             type: 'http',
             backend: {
-                rel: 'desks'
-            }
+                rel: 'desks',
+            },
         });
     }]);

@@ -34,13 +34,13 @@ module.exports = function makeConfig(grunt) {
 
     return {
         entry: {
-            app: [path.join(__dirname, 'scripts', 'index')]
+            app: [path.join(__dirname, 'scripts', 'index')],
         },
 
         output: {
             path: path.join(process.cwd(), 'dist'),
             filename: '[name].bundle.js',
-            chunkFilename: '[id].bundle.js'
+            chunkFilename: '[id].bundle.js',
         },
 
         plugins: [
@@ -52,11 +52,11 @@ module.exports = function makeConfig(grunt) {
                 moment: 'moment',
                 // MediumEditor needs to be globally available, because
                 // its plugins will not be able to find it otherwise.
-                MediumEditor: 'medium-editor'
+                MediumEditor: 'medium-editor',
             }),
             new webpack.DefinePlugin({
-                __SUPERDESK_CONFIG__: JSON.stringify(sdConfig)
-            })
+                __SUPERDESK_CONFIG__: JSON.stringify(sdConfig),
+            }),
         ],
 
         resolve: {
@@ -64,7 +64,7 @@ module.exports = function makeConfig(grunt) {
                 __dirname,
                 path.join(__dirname, 'scripts'),
                 path.join(__dirname, 'styles', 'sass'),
-                'node_modules'
+                'node_modules',
             ],
             alias: {
                 'moment-timezone': 'moment-timezone/builds/moment-timezone-with-data-2012-2022',
@@ -73,9 +73,9 @@ module.exports = function makeConfig(grunt) {
                 'jquery-gridster': 'gridster/dist/jquery.gridster.min',
                 'external-apps': path.join(process.cwd(), 'dist', 'app-importer.generated.js'),
                 // ensure that react is loaded only once (3rd party apps can load more...)
-                react: path.resolve('./node_modules/react')
+                react: path.resolve('./node_modules/react'),
             },
-            extensions: ['.js', '.jsx']
+            extensions: ['.js', '.jsx'],
         },
 
         module: {
@@ -87,38 +87,38 @@ module.exports = function makeConfig(grunt) {
                     options: {
                         cacheDirectory: true,
                         presets: ['es2015', 'react'],
-                        plugins: ['transform-object-rest-spread']
-                    }
+                        plugins: ['transform-object-rest-spread'],
+                    },
                 },
                 {
                     test: /\.html$/,
-                    loader: 'html-loader'
+                    loader: 'html-loader',
                 },
                 {
                     test: /\.css$/,
                     use: [
                         'style-loader',
-                        'css-loader'
-                    ]
+                        'css-loader',
+                    ],
                 },
                 {
                     test: /\.scss$/,
                     use: [
                         'style-loader',
                         'css-loader',
-                        'sass-loader'
-                    ]
+                        'sass-loader',
+                    ],
                 },
                 {
                     test: /\.json$/,
-                    use: ['json-loader']
+                    use: ['json-loader'],
                 },
                 {
                     test: /\.(png|gif|jpeg|jpg|woff|woff2|eot|ttf|svg)(\?.*$|$)/,
-                    loader: 'file-loader'
-                }
-            ]
-        }
+                    loader: 'file-loader',
+                },
+            ],
+        },
     };
 };
 
@@ -138,40 +138,40 @@ function getDefaults(grunt) {
 
         // raven settings
         raven: {
-            dsn: process.env.SUPERDESK_RAVEN_DSN || ''
+            dsn: process.env.SUPERDESK_RAVEN_DSN || '',
         },
 
         // backend server URLs configuration
         server: {
             url: grunt.option('server') || process.env.SUPERDESK_URL || 'http://localhost:5000/api',
-            ws: grunt.option('ws') || process.env.SUPERDESK_WS_URL || 'ws://0.0.0.0:5100'
+            ws: grunt.option('ws') || process.env.SUPERDESK_WS_URL || 'ws://0.0.0.0:5100',
         },
 
         // iframely settings
         iframely: {
-            key: process.env.IFRAMELY_KEY || ''
+            key: process.env.IFRAMELY_KEY || '',
         },
 
         // google settings
         google: {
-            key: process.env.GOOGLE_KEY || ''
+            key: process.env.GOOGLE_KEY || '',
         },
 
         // settings for various analytics
         analytics: {
             piwik: {
                 url: process.env.PIWIK_URL || '',
-                id: process.env.PIWIK_SITE_ID || ''
+                id: process.env.PIWIK_SITE_ID || '',
             },
             ga: {
-                id: process.env.TRACKING_ID || ''
-            }
+                id: process.env.TRACKING_ID || '',
+            },
         },
 
         // editor configuration
         editor: {
             // if true, the editor will not have a toolbar
-            disableEditorToolbar: grunt.option('disableEditorToolbar')
+            disableEditorToolbar: grunt.option('disableEditorToolbar'),
         },
 
         // default timezone for the app
@@ -180,13 +180,13 @@ function getDefaults(grunt) {
         // model date and time formats
         model: {
             dateformat: 'DD/MM/YYYY',
-            timeformat: 'HH:mm:ss'
+            timeformat: 'HH:mm:ss',
         },
 
         // view formats for datepickers/timepickers
         view: {
             dateformat: process.env.VIEW_DATE_FORMAT || 'DD/MM/YYYY',
-            timeformat: process.env.VIEW_TIME_FORMAT || 'HH:mm'
+            timeformat: process.env.VIEW_TIME_FORMAT || 'HH:mm',
         },
 
         // if environment name is not set
@@ -207,15 +207,15 @@ function getDefaults(grunt) {
             useTansaProofing: false,
 
             // replace editor2
-            onlyEditor3: false
+            onlyEditor3: false,
         },
 
         // tansa config
         tansa: {
             profile: {
                 nb: 1,
-                nn: 2
-            }
+                nn: 2,
+            },
         },
 
         // workspace defaults
@@ -223,7 +223,7 @@ function getDefaults(grunt) {
             ingest: false,
             content: false,
             tasks: false,
-            analytics: false
+            analytics: false,
         },
 
         // ingest defaults
@@ -233,10 +233,10 @@ function getDefaults(grunt) {
                 show_ingest_count: true,
                 show_time: true,
                 log_messages: 'error',
-                show_status: true
+                show_status: true,
             },
             DEFAULT_SCHEDULE: {minutes: 5, seconds: 0},
             DEFAULT_IDLE_TIME: {hours: 0, minutes: 0},
-        }
+        },
     };
 }

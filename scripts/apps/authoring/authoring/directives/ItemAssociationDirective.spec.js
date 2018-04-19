@@ -13,25 +13,25 @@ describe('item association directive', () => {
         scope.item = item;
         scope.editable = true;
         config.features = {
-            editFeaturedImage: 1
+            editFeaturedImage: 1,
         };
 
         spyOn(renditions, 'ingest').and.returnValue($q.when({headline: 'foo',
             _type: 'externalsource',
             renditions: {
                 original: {
-                    mimetype: 'image/jpeg'
-                }
-            }
+                    mimetype: 'image/jpeg',
+                },
+            },
         }));
 
         spyOn(renditions, 'crop').and.returnValue($q.when({headline: 'foo',
             _type: 'externalsource',
             renditions: {
                 original: {
-                    mimetype: 'image/jpeg'
-                }
-            }
+                    mimetype: 'image/jpeg',
+                },
+            },
         }));
 
         elem = $compile(`<div sd-item-association
@@ -50,7 +50,7 @@ describe('item association directive', () => {
         scope.item.state = 'in_progress';
         event.originalEvent = {dataTransfer: {
             types: ['video'],
-            getData: () => angular.toJson({headline: 'foo', _type: 'externalsource'})
+            getData: () => angular.toJson({headline: 'foo', _type: 'externalsource'}),
         }};
 
         event.preventDefault = jasmine.createSpy('preventDefault');
@@ -74,7 +74,7 @@ describe('item association directive', () => {
         scope.item.state = 'published';
         event.originalEvent = {dataTransfer: {
             types: ['video'],
-            getData: () => angular.toJson({headline: 'foo', _type: 'externalsource'})
+            getData: () => angular.toJson({headline: 'foo', _type: 'externalsource'}),
         }};
 
         event.preventDefault = jasmine.createSpy('preventDefault');
@@ -97,12 +97,12 @@ describe('item association directive', () => {
             var event = new window.$.Event('drop');
 
             config.features = {
-                editFeaturedImage: 0
+                editFeaturedImage: 0,
             };
             scope.item.state = 'in_progress';
             event.originalEvent = {dataTransfer: {
                 types: ['image'],
-                getData: () => angular.toJson({headline: 'foo', _type: 'externalsource'})
+                getData: () => angular.toJson({headline: 'foo', _type: 'externalsource'}),
             }};
 
             event.preventDefault = jasmine.createSpy('preventDefault');
@@ -126,7 +126,7 @@ describe('item association directive', () => {
         scope.item.state = 'in_progress';
         event.originalEvent = {dataTransfer: {
             types: ['image'],
-            getData: () => angular.toJson({headline: 'foo', _type: 'externalsource', lock_user: 'foo'})
+            getData: () => angular.toJson({headline: 'foo', _type: 'externalsource', lock_user: 'foo'}),
         }};
 
         notify.error = jasmine.createSpy('error');

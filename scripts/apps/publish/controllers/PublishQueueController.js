@@ -7,7 +7,7 @@ PublishQueueController.$inject = [
     '$q',
     'notify',
     '$location',
-    'ingestSources'
+    'ingestSources',
 ];
 
 export function PublishQueueController($scope, subscribersService, api, $q, notify, $location, ingestSources) {
@@ -88,8 +88,8 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
             orTerms = {$or: [
                 {headline: {
                     $regex: $scope.searchQuery,
-                    $options: '-i'}
-                }, {unique_name: $scope.searchQuery}
+                    $options: '-i'},
+                }, {unique_name: $scope.searchQuery},
             ]};
         }
 
@@ -118,7 +118,7 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
 
         if (!_.isEmpty(andTerms)) {
             criteria.where = JSON.stringify({
-                $and: andTerms
+                $and: andTerms,
             });
         }
         return api.publish_queue.query(criteria);

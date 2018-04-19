@@ -50,7 +50,7 @@ export const CONTENT_FIELDS_DEFAULTS = Object.freeze({
     attachments: null,
     semantics: null,
     annotations: null,
-    [META_FIELD_NAME]: {}
+    [META_FIELD_NAME]: {},
 });
 
 export const DEFAULT_ACTIONS = Object.freeze({
@@ -74,7 +74,7 @@ export const DEFAULT_ACTIONS = Object.freeze({
     create_broadcast: false,
     add_to_current: false,
     resend: false,
-    set_label: true
+    set_label: true,
 });
 
 /**

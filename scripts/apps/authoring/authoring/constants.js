@@ -10,5 +10,5 @@ export const AUTHORING_MENU_GROUPS = [
     {_id: 'duplicate', label: gettext('Duplicate'), concate: true},
     {_id: 'packaging'},
     {_id: 'highlights'},
-    {_id: 'corrections'}
+    {_id: 'corrections'},
 ];
