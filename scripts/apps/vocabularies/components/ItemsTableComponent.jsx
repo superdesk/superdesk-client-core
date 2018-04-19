@@ -5,7 +5,7 @@ import ObjectEditor from './ObjectEditor';
 export default class ItemsTableComponent extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {items: []};
+        this.state = {items: [], itemsValidation: []};
     }
 
     getModelKeys() {
@@ -91,7 +91,7 @@ export default class ItemsTableComponent extends React.Component {
                     value={value}
                     disabled={disabled}
                     onChange={update}
-                    className={field.key === 'name' ? 'long-name' : ''}
+                    className={field.key === 'name' ? 'long-name sd-line-input__input' : 'sd-line-input__input'}
                 />
             );
         }
@@ -125,7 +125,7 @@ export default class ItemsTableComponent extends React.Component {
         return this.state.items.map((item, index) => (
             <tr key={index}>
                 {schemaFields.map((field) => (
-                    <td key={field.key}>
+                    <td key={field.key} className="sd-line-input sd-line-input--required">
                         {this.inputField(field, item)}
                     </td>
                 ))}

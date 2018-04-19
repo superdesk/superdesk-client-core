@@ -103,7 +103,7 @@
 
         <div class="modal__footer">
             <button id="save-edit-btn" type="submit" class="btn btn--primary pull-right" ng-click="save()"
-                    ng-disabled="!editForm.$dirty || editForm.$invalid" translate>Save
+                    ng-disabled="!editForm.$dirty || editForm.$invalid || !itemsValidation.valid" translate>Save
             </button>
             <button id="cancel-edit-btn" type="button" class="btn pull-right" ng-click="cancel()" translate>Cancel
             </button>

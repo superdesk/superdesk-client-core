@@ -8,6 +8,23 @@ export function VocabularyConfigModalItems(gettext) {
         require: '^^form',
         link: (scope, element, attr, ngForm) => {
             let component;
+            let itemsValidation = [];
+
+            function validateItem(item) {
+                return {name: !!item.name, qcode: !!item.qcode};
+            }
+
+            function validateItems(items) {
+                return items.map((_item) => validateItem(_item));
+            }
+
+            function validItems(itemsValidation) {
+                return _.reduce(itemsValidation, (result, value, key) => {
+                    let validItem = validateItem(value);
+
+                    return result && validItem.name && validItem.qcode;
+                });
+            }
 
             const update = (item, key, value) => {
                 const updates = {[key]: value};
@@ -15,9 +32,19 @@ export function VocabularyConfigModalItems(gettext) {
                 // sync scope
                 scope.$applyAsync(() => {
                     ngForm.$setDirty();
-                    scope.vocabulary.items = scope.vocabulary.items.map((_item) =>
-                        _item === item ? Object.assign({}, item, updates) : _item
-                    );
+                    let index = 0;
+
+                    scope.vocabulary.items = scope.vocabulary.items.map((_item) => {
+                        index++;
+                        if (_item === item) {
+                            let updated = Object.assign({}, item, updates);
+
+                            itemsValidation[index - 1] = validateItem(updated);
+                            scope.itemsValidation.valid = validItems(itemsValidation);
+                            return updated;
+                        }
+                        return _item;
+                    });
                 });
             };
 
@@ -48,7 +75,9 @@ export function VocabularyConfigModalItems(gettext) {
             // re-render on items changes
             scope.$watch('vocabulary.items', (items) => {
                 if (items && component) {
-                    component.setState({items});
+                    itemsValidation = validateItems(items);
+                    scope.itemsValidation.valid = validItems(itemsValidation);
+                    component.setState({items, itemsValidation});
                 }
             });
         }
