@@ -42,6 +42,13 @@ export function initSelectionIterator(editorState, backward = false) {
  */
 export function hasNextSelection(editorState, selection, backward = false) {
     const crtSelection = editorState.getSelection();
+    const content = editorState.getCurrentContent();
+    const startBlock = content.getBlockForKey(selection.getStartKey());
+    const endBlock = content.getBlockForKey(selection.getEndKey());
+
+    if (startBlock == null || endBlock == null) {
+        throw new Error('The following selection is invalid: ', selection);
+    }
 
     if (backward) {
         return selection.getStartOffset() !== crtSelection.getStartOffset() ||

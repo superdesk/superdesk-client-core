@@ -162,7 +162,7 @@ function applyStyleSuggestion(editorState, type, style, data) {
         }
     }
 
-    if (changeStyle) {
+    if (changeStyle && currentStyle != null) {
         const oldData = Highlights.getHighlightData(editorState, currentStyle);
 
         if (oldData.originalStyle === style && data.originalStyle === '' ||
