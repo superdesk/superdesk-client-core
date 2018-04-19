@@ -142,6 +142,7 @@ export function allowEditSuggestion(action) {
     const {suggestingMode, editorState} = this.props;
     const selection = editorState.getSelection();
     let newEditorState;
+    let tmpEditorState;
 
     if (!selection.isCollapsed()) {
         newEditorState = initSelectionIterator(editorState);
@@ -153,7 +154,11 @@ export function allowEditSuggestion(action) {
                 return false;
             }
 
-            newEditorState = Highlights.changeEditorSelection(newEditorState, 1, 1, false);
+            tmpEditorState = Highlights.changeEditorSelection(newEditorState, 1, 1, false);
+            if (tmpEditorState === newEditorState) {
+                break;
+            }
+            newEditorState = tmpEditorState;
         }
 
         return true;
