@@ -33,7 +33,7 @@ export function setCustomDataForEditor(editorState, key, value) {
 
     content = Modifier.mergeBlockData(content, firstBlockSelection, Map().set(key, value));
 
-    const editorStateWithDataSet = EditorState.push(editorState, content, 'change-inline-style');
+    const editorStateWithDataSet = EditorState.push(editorState, content, 'change-block-data');
     const editorStateWithSelectionRestored = EditorState.forceSelection(
         editorStateWithDataSet,
         currentSelectionToPreserve

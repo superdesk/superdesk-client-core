@@ -365,7 +365,7 @@ export function getHighlightDataAtCurrentPosition(editorState, types) {
 export function addHighlight(editorState, type, data) {
     // restore focus lost after clicking a toolbar action or entering highlight data
     // so the selection is visible after undo
-    const nextEditorState = EditorState.acceptSelection(
+    var nextEditorState = EditorState.acceptSelection(
         editorState,
         editorState.getSelection().merge({
             hasFocus: true
@@ -402,9 +402,15 @@ export function addHighlight(editorState, type, data) {
         }
     };
 
-    const newEditorState = RichUtils.toggleInlineStyle(nextEditorState, styleName);
+    nextEditorState = RichUtils.toggleInlineStyle(nextEditorState, styleName);
 
-    return setHighlightsState(newEditorState, newHighlightsState);
+    // prevent recording the changes to undo stack so user doesn't have to undo twice
+    // for the highlight to be completelly(both inline styles and related data) undone
+    nextEditorState = EditorState.set(nextEditorState, {allowUndo: false});
+    nextEditorState = setHighlightsState(nextEditorState, newHighlightsState);
+    nextEditorState = EditorState.set(nextEditorState, {allowUndo: true});
+
+    return nextEditorState;
 }
 
 /**
@@ -463,13 +469,19 @@ export function removeHighlight(editorState, styleName) {
         highlightsData: nextHighlightsData
     };
 
-    const newEditorState = clearInlineStyles(
+    var newEditorState = clearInlineStyles(
         editorState,
         getDraftSelectionForEntireContent(editorState),
         [styleName]
     );
 
-    return setHighlightsState(newEditorState, newHighlightsState);
+    // prevent recording the changes to undo stack so user doesn't have to undo twice
+    // for the highlight deletion to be completelly(both inline styles and related data) undone
+    newEditorState = EditorState.set(newEditorState, {allowUndo: false});
+    newEditorState = setHighlightsState(newEditorState, newHighlightsState);
+    newEditorState = EditorState.set(newEditorState, {allowUndo: true});
+
+    return newEditorState;
 }
 
 export function hadHighlightsChanged(prevEditorState, nextEditorState) {
