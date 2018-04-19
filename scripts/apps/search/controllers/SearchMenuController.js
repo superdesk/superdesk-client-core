@@ -14,7 +14,8 @@ export default function SearchMenuController($rootScope, $filter, $location, $ro
      * @param {Object} provider
      */
     this.loadSearchShortcut = (provider) => {
-        const repo = provider ? (provider._id || provider.search_provider || provider.source) : '';
+        const repo = provider === SUPERDESK_PROVIDER ?
+            '' : (provider._id || provider.search_provider || provider.source);
 
         $location.url('/search?repo=' + repo);
         $route.reload();
@@ -31,7 +32,7 @@ export default function SearchMenuController($rootScope, $filter, $location, $ro
 
     // init search providers
     if ($rootScope.config && $rootScope.config.features && $rootScope.config.features.searchShortcut) {
-        api.search_providers.query({max_results: 200, is_closed: {$ne: true}})
+        api.search_providers.query({max_results: 200, where: {is_closed: {$ne: true}}})
             .then((result) => {
                 this.providers = $filter('sortByName')(result._items, 'search_provider');
 
@@ -44,8 +45,6 @@ export default function SearchMenuController($rootScope, $filter, $location, $ro
                 } else {
                     this.providers.unshift(SUPERDESK_PROVIDER);
                 }
-
-                console.info('providers', this.providers);
             });
 
         searchProviderService.getAllowedProviderTypes()
