@@ -30,6 +30,6 @@ export function UserUniqueDirective($q, api) {
             }
 
             ctrl.$asyncValidators.unique = testUnique;
-        }
+        },
     };
 }

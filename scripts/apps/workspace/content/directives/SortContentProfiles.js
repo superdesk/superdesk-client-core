@@ -14,7 +14,7 @@ export function SortContentProfiles() {
 
                         return $('<li class="placeholder" style="height:' + height + 'px"></li>')[0];
                     },
-                    update: function() { /* no-op */ }
+                    update: function() { /* no-op */ },
                 },
                 start: function(event, ui) {
                     ui.item.data('start_index',
@@ -38,8 +38,8 @@ export function SortContentProfiles() {
                 },
                 update: function(event, ui) {
                     updated = true;
-                }
+                },
             });
-        }
+        },
     };
 }

@@ -28,7 +28,7 @@ export class AttachmentList extends Component {
             const filesize = FilesizeFilter()(file.media.length);
 
             const className = classNames('sd-list-item', {
-                'sd-list-item--active': file._id === this.props.selected
+                'sd-list-item--active': file._id === this.props.selected,
             });
 
             return (
@@ -62,5 +62,5 @@ export class AttachmentList extends Component {
 AttachmentList.propTypes = {
     item: PropTypes.object.isRequired,
     selected: PropTypes.string,
-    onClick: PropTypes.func
+    onClick: PropTypes.func,
 };

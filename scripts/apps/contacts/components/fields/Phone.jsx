@@ -11,5 +11,5 @@ export const Phone = ({item, svc}) => (
 
 Phone.propTypes = {
     item: PropTypes.object,
-    svc: PropTypes.object.isRequired
+    svc: PropTypes.object.isRequired,
 };

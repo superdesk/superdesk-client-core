@@ -21,7 +21,7 @@ class Suggestion extends Component {
         super(props);
         this.state = {
             author: null,
-            error: null
+            error: null,
         };
 
         this.onAccept = this.onAccept.bind(this);
@@ -119,13 +119,13 @@ Suggestion.propTypes = {
         oldText: PropTypes.string,
         type: PropTypes.string,
         blockType: PropTypes.string,
-        selection: PropTypes.object
+        selection: PropTypes.object,
     }),
     acceptSuggestion: PropTypes.func,
-    rejectSuggestion: PropTypes.func
+    rejectSuggestion: PropTypes.func,
 };
 
 export const SuggestionPopup = connect(null, {
     acceptSuggestion,
-    rejectSuggestion
+    rejectSuggestion,
 })(Suggestion);

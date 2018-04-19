@@ -20,13 +20,13 @@ angular.module('superdesk.core.auth.login', []).directive('sdLoginModal', [
                 deployConfig.all({
                     xmpp: 'xmpp_auth',
                     saml: 'saml_auth',
-                    google: 'google_auth'
+                    google: 'google_auth',
                 }).then((methods) => {
                     scope.methods = methods;
                 });
 
                 deployConfig.all({
-                    saml: 'saml_label'
+                    saml: 'saml_label',
                 }).then((labels) => {
                     scope.labels = labels;
                 });
@@ -99,6 +99,6 @@ angular.module('superdesk.core.auth.login', []).directive('sdLoginModal', [
                         scope.active = false;
                     }
                 });
-            }
+            },
         };
     }]);

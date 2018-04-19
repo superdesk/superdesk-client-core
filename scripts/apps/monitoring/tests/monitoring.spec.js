@@ -7,7 +7,7 @@ describe('monitoring', () => {
     it('can switch between list and swimlane view',
         inject(($controller, $rootScope, $q, preferencesService, config) => {
             config.features = {
-                swimlane: {columnsLimit: 4}
+                swimlane: {columnsLimit: 4},
             };
 
             spyOn(preferencesService, 'update');
@@ -109,12 +109,12 @@ describe('monitoring', () => {
             var criteria = cards.criteria(card);
 
             expect(criteria.source.query.filtered.filter.and).toContain({
-                term: {'task.stage': card._id}
+                term: {'task.stage': card._id},
             });
 
             criteria = cards.criteria(card, 'foo');
             expect(criteria.source.query.filtered.filter.and).toContain({
-                query: {query_string: {query: 'foo', lenient: false}}
+                query: {query_string: {query: 'foo', lenient: false}},
             });
         }));
 
@@ -127,8 +127,8 @@ describe('monitoring', () => {
             expect(criteria.source.query.filtered.filter.and).toContain({
                 bool: {
                     must: {term: {original_creator: session.identity._id}},
-                    must_not: {exists: {field: 'task.desk'}}
-                }
+                    must_not: {exists: {field: 'task.desk'}},
+                },
             });
         }));
 
@@ -146,10 +146,10 @@ describe('monitoring', () => {
             var criteria = cards.criteria(card);
 
             expect(criteria.source.query.filtered.filter.and).toContain({
-                term: {'task.desk': card._id}
+                term: {'task.desk': card._id},
             });
             expect(criteria.source.query.filtered.filter.and).toContain({
-                term: {state: 'spiked'}
+                term: {state: 'spiked'},
             });
         }));
 
@@ -160,7 +160,7 @@ describe('monitoring', () => {
             var criteria = cards.criteria(card, null, queryParam);
 
             expect(criteria.source.query.filtered.filter.and).toContain({
-                and: [{term: {highlights: queryParam.highlight}}]
+                and: [{term: {highlights: queryParam.highlight}}],
             });
         }));
 
@@ -204,14 +204,14 @@ describe('monitoring', () => {
             var criteria = cards.criteria(card);
 
             expect(criteria.source.query.filtered.filter.and).toContain({
-                terms: {type: ['text']}
+                terms: {type: ['text']},
             });
         }));
 
         it('can get criteria for saved search with search', inject((cards, session) => {
             session.identity = {_id: 'foo'};
             var card = {_id: '123', type: 'search', query: 'test',
-                search: {filter: {query: {q: 'foo', type: '[\"picture\"]'}}}
+                search: {filter: {query: {q: 'foo', type: '[\"picture\"]'}}},
             };
             var criteria = cards.criteria(card);
 
@@ -225,7 +225,7 @@ describe('monitoring', () => {
             var criteria = cards.criteria(card);
 
             expect(criteria.source.query.filtered.filter.and).toContain({
-                terms: {type: ['text']}
+                terms: {type: ['text']},
             });
         }));
 
@@ -235,7 +235,7 @@ describe('monitoring', () => {
             var criteria = cards.criteria(card);
 
             expect(criteria.source.query.filtered.filter.and).toContain({
-                terms: {type: ['text', 'picture']}
+                terms: {type: ['text', 'picture']},
             });
         }));
     });

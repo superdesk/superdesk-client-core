@@ -7,7 +7,7 @@ export function UserRoleItemListDirective(desks, usersService) {
             desk: '=',
             total: '=',
             online: '=',
-            privilege: '='
+            privilege: '=',
         },
         link: function(scope, elem) {
             scope.users = desks.deskMembers[scope.desk];
@@ -32,6 +32,6 @@ export function UserRoleItemListDirective(desks, usersService) {
             scope.closeEditUser = function() {
                 scope.user = null;
             };
-        }
+        },
     };
 }

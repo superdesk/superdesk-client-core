@@ -169,7 +169,7 @@ export function ConfirmDirtyService($window, $q, $filter, api, modal, gettextCat
                     defered.resolve({});
                     $modalInstance.dismiss();
                 };
-            }]
+            }],
         });
 
 

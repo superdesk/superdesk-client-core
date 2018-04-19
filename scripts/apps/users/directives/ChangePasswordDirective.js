@@ -22,6 +22,6 @@ export function ChangePasswordDirective(usersService, notify, gettext) {
                         scope.oldPasswordInvalid = true;
                     });
             };
-        }
+        },
     };
 }

@@ -4,7 +4,7 @@ export function SingleItem() {
         scope: {
             item: '=',
             contents: '=',
-            setitem: '&'
-        }
+            setitem: '&',
+        },
     };
 }

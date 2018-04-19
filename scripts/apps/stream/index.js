@@ -4,7 +4,7 @@ import {ActivityStream, ActivityMessage} from './directives';
 
 export default angular.module('superdesk.apps.stream', [
     'superdesk.core.activity',
-    'superdesk.core.services.asset'
+    'superdesk.core.services.asset',
 ])
     .controller('StreamController', StreamController)
 
@@ -18,6 +18,6 @@ export default angular.module('superdesk.apps.stream', [
             controller: 'StreamController',
             beta: true,
             templateUrl: asset.templateUrl('apps/stream/views/workspace-stream.html'),
-            topTemplateUrl: asset.templateUrl('apps/dashboard/views/workspace-topnav.html')
+            topTemplateUrl: asset.templateUrl('apps/dashboard/views/workspace-topnav.html'),
         });
     }]);

@@ -16,7 +16,7 @@ describe('sdDeskeditStages directive', () => {
     macrosFromServer = [
         {_id: 'foo', action_type: 'direct'},
         {_id: 'bar', action_type: 'direct'},
-        {_id: 'baz', action_type: 'interactive'}
+        {_id: 'baz', action_type: 'interactive'},
     ];
 
     beforeEach(window.module('superdesk.templates-cache'));
@@ -66,8 +66,8 @@ describe('sdDeskeditStages directive', () => {
 
         scopeValues = {
             desk: {
-                edit: {name: 'Desk D'}
-            }
+                edit: {name: 'Desk D'},
+            },
         };
 
         $element = compileDirective(scopeValues);
@@ -92,8 +92,8 @@ describe('sdDeskeditStages directive', () => {
 
         scopeValues = {
             desk: {
-                edit: {name: 'Desk D'}
-            }
+                edit: {name: 'Desk D'},
+            },
         };
 
         $element = compileDirective(scopeValues);

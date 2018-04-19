@@ -110,7 +110,7 @@ export function HistoryController(
         const criteria = {
             where: {item_id: item._id},
             max_results: 200,
-            sort: '[(\'_created\', 1)]'
+            sort: '[(\'_created\', 1)]',
         };
 
         if (item._type === 'legal_archive') {
@@ -139,7 +139,7 @@ export function HistoryController(
         displayName: version.creator,
         isPublished: ['published', 'corrected', 'killed'].includes(version.state),
         operation: version.operation,
-        item_id: version._id
+        item_id: version._id,
     });
 
     /**

@@ -21,7 +21,7 @@ import * as config from './config';
  */
 export default angular.module('superdesk.apps.users', [
     'superdesk.core.activity',
-    'superdesk.core.services.asset'
+    'superdesk.core.services.asset',
 ])
     .controller('UserEditController', UserEditController) // make it available to user.profile
 
@@ -87,7 +87,7 @@ angular.module('superdesk.apps.users.profile', ['superdesk.core.api', 'superdesk
             resolve: {
                 user: ['session', 'api', function(session, api) {
                     return session.getIdentity().then((identity) => api.get(identity._links.self.href));
-                }]
-            }
+                }],
+            },
         });
     }]);

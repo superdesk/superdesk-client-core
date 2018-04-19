@@ -15,6 +15,6 @@ export function ProviderMenu($location) {
                     scope.selected = search.provider;
                 }
             });
-        }
+        },
     };
 }

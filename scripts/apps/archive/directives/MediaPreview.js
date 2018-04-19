@@ -21,13 +21,13 @@ export function MediaPreview(api, $rootScope, desks, superdesk) {
             desks.initialize().then(() => {
                 scope.userLookup = desks.userLookup;
             });
-        }
+        },
     };
 }
 
 export function MediaPreviewWidget() {
     return {
         scope: {item: '='},
-        templateUrl: 'scripts/apps/archive/views/item-preview.html'
+        templateUrl: 'scripts/apps/archive/views/item-preview.html',
     };
 }

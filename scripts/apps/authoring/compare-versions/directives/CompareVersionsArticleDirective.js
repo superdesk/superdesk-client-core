@@ -251,7 +251,7 @@ export function CompareVersionsArticleDirective(compareVersions, content, lock, 
     return {
         template: require('scripts/apps/authoring/compare-versions/views/sd-compare-versions-article.html'),
         scope: {article: '=', compareWith: '=', focus: '='},
-        link: (scope, elem) => new LinkFunction(compareVersions, content, lock, $timeout, scope, elem)
+        link: (scope, elem) => new LinkFunction(compareVersions, content, lock, $timeout, scope, elem),
     };
 }
 

@@ -8,11 +8,11 @@ module.exports = {
                 'docs/<%= distDir %>',
                 'docs/ui-guide/<%= distDir %>',
                 'templates-cache.generated.js',
-                '!<%= distDir %>/.git*'
-            ]
-        }]
+                '!<%= distDir %>/.git*',
+            ],
+        }],
     },
     server: {
-        files: '<%= tmpDir %>'
-    }
+        files: '<%= tmpDir %>',
+    },
 };

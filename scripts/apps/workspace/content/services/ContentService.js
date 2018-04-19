@@ -37,7 +37,7 @@ ContentService.$inject = [
     '$q',
     '$rootScope',
     'session',
-    'deployConfig'
+    'deployConfig',
 ];
 export function ContentService(api, superdesk, templates, desks, packages, archiveService, notify, gettext,
     $filter, $q, $rootScope, session, deployConfig) {
@@ -48,7 +48,7 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
     function newItem(type) {
         return {
             type: type || TEXT_TYPE,
-            version: 0
+            version: 0,
         };
     }
 
@@ -144,7 +144,7 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
         var item = {
             type: TEXT_TYPE,
             profile: contentType._id,
-            version: 0
+            version: 0,
         };
 
         archiveService.addTaskToArticle(item);
@@ -321,9 +321,9 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
                 where: {
                     $or: [
                         {field_type: {$in: ['text', 'date', 'media', 'embed']}},
-                        {service: {$exists: true}}
-                    ]
-                }
+                        {service: {$exists: true}},
+                    ],
+                },
             })
                 .then((response) => {
                     self._fields = response;

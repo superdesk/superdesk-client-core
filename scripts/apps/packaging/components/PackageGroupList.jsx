@@ -28,7 +28,7 @@ export default class PackageGroupList extends React.Component {
                 group: group,
                 key: 'group-' + group,
                 item: this.props.item,
-                packages: this.props.packages
+                packages: this.props.packages,
             });
 
         return React.createElement(
@@ -44,5 +44,5 @@ PackageGroupList.propTypes = {
     api: PropTypes.func,
     item: PropTypes.object,
     className: PropTypes.any,
-    packages: PropTypes.object
+    packages: PropTypes.object,
 };

@@ -6,7 +6,7 @@ export function ProfilingController($scope, api) {
     $scope.profile_names = {
         rest: 'Rest',
         'publish:enqueue': 'Publish Enqueue',
-        'publish:transmit': 'Publish Transmit'
+        'publish:transmit': 'Publish Transmit',
     };
 
     /*

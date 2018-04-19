@@ -6,26 +6,26 @@ import {
     UserDeleteCommand,
     UserResolver,
     UserRolesController,
-    SessionsDeleteCommand
+    SessionsDeleteCommand,
 } from './controllers';
 
 API.$inject = ['apiProvider'];
 export function API(apiProvider) {
     apiProvider.api('users', {
         type: 'http',
-        backend: {rel: 'users'}
+        backend: {rel: 'users'},
     });
     apiProvider.api('roles', {
         type: 'http',
-        backend: {rel: 'roles'}
+        backend: {rel: 'roles'},
     });
     apiProvider.api('resetPassword', {
         type: 'http',
-        backend: {rel: 'reset_user_password'}
+        backend: {rel: 'reset_user_password'},
     });
     apiProvider.api('changePassword', {
         type: 'http',
-        backend: {rel: 'change_user_password'}
+        backend: {rel: 'change_user_password'},
     });
 }
 
@@ -43,11 +43,11 @@ export function Activities(superdesk, asset) {
             filters: [
                 {
                     action: superdesk.ACTION_PREVIEW,
-                    type: 'user'
+                    type: 'user',
                 },
-                {action: 'list', type: 'user'}
+                {action: 'list', type: 'user'},
             ],
-            privileges: {users: 1}
+            privileges: {users: 1},
         })
 
         .activity('/users/:_id', {
@@ -57,7 +57,7 @@ export function Activities(superdesk, asset) {
             templateUrl: asset.templateUrl('apps/users/views/edit.html'),
             resolve: {user: UserResolver},
             filters: [{action: 'detail', type: 'user'}],
-            privileges: {users: 1}
+            privileges: {users: 1},
         })
 
         .activity('/settings/user-roles', {
@@ -66,7 +66,7 @@ export function Activities(superdesk, asset) {
             controller: UserRolesController,
             category: superdesk.MENU_SETTINGS,
             priority: -500,
-            privileges: {roles: 1}
+            privileges: {roles: 1},
         })
 
         .activity('delete/user', {
@@ -77,13 +77,13 @@ export function Activities(superdesk, asset) {
             filters: [
                 {
                     action: superdesk.ACTION_EDIT,
-                    type: 'user'
-                }
+                    type: 'user',
+                },
             ],
             condition: function(data) {
                 return data.is_enabled;
             },
-            privileges: {users: 1}
+            privileges: {users: 1},
         })
 
         .activity('clear/sessions', {
@@ -94,11 +94,11 @@ export function Activities(superdesk, asset) {
             filters: [
                 {
                     action: superdesk.ACTION_EDIT,
-                    type: 'user'
-                }
+                    type: 'user',
+                },
             ],
             condition: (data) => data.is_enabled,
-            privileges: {users: 1}
+            privileges: {users: 1},
         })
 
         .activity('restore/user', {
@@ -108,11 +108,11 @@ export function Activities(superdesk, asset) {
             filters: [
                 {
                     action: superdesk.ACTION_EDIT,
-                    type: 'user'
-                }
+                    type: 'user',
+                },
             ],
             condition: (data) => !data.is_enabled,
-            privileges: {users: 1}
+            privileges: {users: 1},
         })
 
         .activity('edit.avatar', {
@@ -121,7 +121,7 @@ export function Activities(superdesk, asset) {
             cssClass: 'upload-avatar modal--large modal--z-index-fix',
             controller: ChangeAvatarController,
             templateUrl: asset.templateUrl('apps/users/views/change-avatar.html'),
-            filters: [{action: 'edit', type: 'avatar'}]
+            filters: [{action: 'edit', type: 'avatar'}],
         });
 }
 
@@ -130,22 +130,22 @@ export function Permissions(superdesk) {
     superdesk
         .permission('users-manage', {
             label: gettext('Manage users'),
-            permissions: {users: {write: true}}
+            permissions: {users: {write: true}},
         })
 
         .permission('users-read', {
             label: gettext('Read users'),
-            permissions: {users: {read: true}}
+            permissions: {users: {read: true}},
         })
 
         .permission('user-roles-manage', {
             label: gettext('Manage user roles'),
-            permissions: {user_roles: {write: true}}
+            permissions: {user_roles: {write: true}},
         })
 
         .permission('user-roles-read', {
             label: gettext('Read user roles'),
-            permissions: {user_roles: {read: true}}
+            permissions: {user_roles: {read: true}},
         });
 }
 
@@ -153,5 +153,5 @@ export var KeyboardShortcuts = ['keyboardManager', 'gettext',
     function(keyboardManager, gettext) {
         keyboardManager.register('Users', 'Up', gettext('Previous user'));
         keyboardManager.register('Users', 'Down', gettext('Next user'));
-    }
+    },
 ];

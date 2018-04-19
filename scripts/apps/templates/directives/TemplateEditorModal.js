@@ -39,6 +39,6 @@ export function TemplateEditorModal() {
                  */
                 scope.isDirty = (templateForm, metadataForm) => templateForm.$dirty || metadataForm.$dirty || _isDirty;
             });
-        }
+        },
     };
 }

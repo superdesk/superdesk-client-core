@@ -54,6 +54,6 @@ export function ThemeSelectDirective(authThemes) {
             };
 
             scope.closeModal = () => scope.modalEditorConfig = false;
-        }
+        },
     };
 }

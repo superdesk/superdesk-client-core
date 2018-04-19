@@ -15,5 +15,5 @@ export const IconButton = ({onClick, iconName, tooltip}) =>
 IconButton.propTypes = {
     onClick: PropTypes.func.isRequired,
     tooltip: PropTypes.string,
-    iconName: PropTypes.string.isRequired
+    iconName: PropTypes.string.isRequired,
 };

@@ -18,9 +18,9 @@ export default angular.module('superdesk.core.directives.select', ['superdesk.co
                     itemName: match[3],
                     source: $parse(match[4]),
                     viewMapper: $parse(match[2] || match[1]),
-                    modelMapper: $parse(match[1])
+                    modelMapper: $parse(match[1]),
                 };
-            }
+            },
         };
     }])
 
@@ -120,7 +120,7 @@ export default angular.module('superdesk.core.directives.select', ['superdesk.co
                             scope.items.push({
                                 label: parsedResult.viewMapper(local),
                                 model: parsedResult.modelMapper(local),
-                                checked: false
+                                checked: false,
                             });
                         }
                     }
@@ -249,6 +249,6 @@ export default angular.module('superdesk.core.directives.select', ['superdesk.co
                             selectMultiple(item);
                         }
                     };
-                }
+                },
             };
         }]);

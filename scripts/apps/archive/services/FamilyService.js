@@ -24,7 +24,7 @@ export function FamilyService(api, desks) {
     this.fetchItems = (familyId, excludeItem) => {
         let filter = [
             {not: {term: {state: 'spiked'}}},
-            {term: {family_id: familyId}}
+            {term: {family_id: familyId}},
         ];
 
         if (excludeItem) {
@@ -45,7 +45,7 @@ export function FamilyService(api, desks) {
     this.fetchMediaUsedItems = (mediaUniqueId) => {
         let filter = [
             {not: {term: {state: 'spiked'}}},
-            {term: {'associations.featuremedia.unique_id': mediaUniqueId}}
+            {term: {'associations.featuremedia.unique_id': mediaUniqueId}},
         ];
 
         return query(filter, 'versioncreated', 'desc');
@@ -67,11 +67,11 @@ export function FamilyService(api, desks) {
             repo: repo,
             source: {
                 query: {filtered: {filter: {
-                    and: filter
+                    and: filter,
                 }}},
                 size: 200,
-                from: 0
-            }
+                from: 0,
+            },
         };
 
         if (queryString) {
@@ -95,7 +95,7 @@ export function FamilyService(api, desks) {
         let filter = [
             {not: {term: {state: 'spiked'}}},
             {term: {event_id: item.event_id}},
-            {not: {term: {type: 'composite'}}}
+            {not: {term: {type: 'composite'}}},
         ];
 
         return query(filter, 'versioncreated', 'asc');
@@ -117,7 +117,7 @@ export function FamilyService(api, desks) {
             {not: {term: {state: 'spiked'}}},
             {not: {term: {event_id: eventId}}},
             {not: {term: {type: 'composite'}}},
-            {not: {term: {last_published_version: 'false'}}}
+            {not: {term: {last_published_version: 'false'}}},
         ];
 
         let queryString = null;
@@ -138,7 +138,7 @@ export function FamilyService(api, desks) {
             let dateQuery = {};
 
             dateQuery.versioncreated = {
-                gte: modificationDateAfter
+                gte: modificationDateAfter,
             };
             filter.push({range: dateQuery});
         }
@@ -156,8 +156,8 @@ export function FamilyService(api, desks) {
                     query_string: {
                         query: queryRelatedItem.join(' '),
                         lenient: false,
-                        default_operator: 'OR'
-                    }
+                        default_operator: 'OR',
+                    },
                 };
             }
 
@@ -165,8 +165,8 @@ export function FamilyService(api, desks) {
         case 'PREFIX': // phrase prefix
             queryString = {
                 match_phrase_prefix: {
-                    'slugline.phrase': sanitizedKeyword
-                }
+                    'slugline.phrase': sanitizedKeyword,
+                },
             };
             break;
         default:
@@ -174,8 +174,8 @@ export function FamilyService(api, desks) {
             queryString = {
                 query_string: {
                     query: 'slugline.phrase:("' + sanitizedKeyword + '")',
-                    lenient: false
-                }
+                    lenient: false,
+                },
             };
         }
 
@@ -208,7 +208,7 @@ export function FamilyService(api, desks) {
                                 count: 1,
                                 itemId: i._id,
                                 isUserDeskMember: _isMember,
-                                item: i
+                                item: i,
                             });
                         deskIdList.push(i.task.desk);
                     } else {

@@ -29,6 +29,6 @@ export default angular.module('superdesk.core.directives.withParams', [])
                 } else {
                     attrs.$set('href', attrs.href.trim() + locationParams.getQuery());
                 }
-            }
+            },
         };
     }]);

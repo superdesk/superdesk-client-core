@@ -21,13 +21,13 @@ describe('Embed Code Handlers', () => {
         ctrl.input = 'https://twitter.com/letzi83/status/764062125996113921';
         jasmine.createSpy(embedService, 'get').and.returnValue($q.when({
             meta: {site: 'Twitter'},
-            html: 'embed'
+            html: 'embed',
         }));
         $httpBackend.whenGET(/https:\/\/iframe\.ly\/api\/.*/).respond(400);
         ctrl.retrieveEmbed().then((d) => {
             expect(d).toEqual({
                 body: 'embed',
-                provider: 'Twitter'
+                provider: 'Twitter',
             });
         });
         $rootScope.$digest();
@@ -43,7 +43,7 @@ describe('Embed Code Handlers', () => {
         ctrl.retrieveEmbed().then((d) => {
             expect(d).toEqual({
                 body: ctrl.input,
-                provider: 'Twitter'
+                provider: 'Twitter',
             });
         });
         scope.$digest();
@@ -57,7 +57,7 @@ describe('Embed Code Handlers', () => {
         ctrl.retrieveEmbed().then((d) => {
             expect(d).toEqual({
                 body: ctrl.input,
-                provider: 'Custom'
+                provider: 'Custom',
             });
         });
         scope.$digest();
@@ -70,7 +70,7 @@ describe('Embed Code Handlers', () => {
             type: 'video',
             url: 'http://delivery.vidible.tv/video/redirect/56bb4688e4b0b6448ed479dd' +
             '?bcid=538612f0e4b00fbb8e898655&w=640&h=360',
-            width: 640
+            width: 640,
         };
 
         $httpBackend
@@ -80,7 +80,7 @@ describe('Embed Code Handlers', () => {
             expect(d).toEqual({
                 body: ctrl.input,
                 provider: 'Vidible',
-                association: apiResponse
+                association: apiResponse,
             });
         });
         $httpBackend.flush();

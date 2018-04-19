@@ -4,7 +4,7 @@ export function ActivityStream(asset, authoringWorkspace) {
         scope: {
             activities: '=',
             max_results: '=maxResults',
-            loadMore: '&'
+            loadMore: '&',
         },
         templateUrl: asset.templateUrl('apps/stream/views/activity-stream.html'),
         link: function(scope, element, attrs) {
@@ -13,7 +13,7 @@ export function ActivityStream(asset, authoringWorkspace) {
                     authoringWorkspace.edit({_id: activity.item}, 'edit');
                 }
             };
-        }
+        },
     };
 }
 

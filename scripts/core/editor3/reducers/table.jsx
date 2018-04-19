@@ -112,7 +112,7 @@ const addColAfter = (state) =>
                     }
 
                     return null;
-                }))
+                })),
     }));
 
 /**
@@ -160,7 +160,7 @@ const processCells = (state, fn) => {
     const entity = contentState.getEntity(entityKey);
     const {cells, numRows, numCols, withHeader} = entity.getData().data;
     const newContentState = contentState.mergeEntityData(entityKey, {
-        data: fn(cells, numCols, numRows, i, j, withHeader)
+        data: fn(cells, numCols, numRows, i, j, withHeader),
     });
     const newEditorState = EditorState.push(editorState, newContentState, 'change-block-data');
     const entityDataHasChanged = true;

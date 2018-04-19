@@ -11,7 +11,7 @@ export function ListItemInfo(props) {
             {className: 'item-info item-info-reduced-rowheight'},
             renderArea('singleLine', angular.extend({
                 svc: props.svc,
-                scope: props.scope
+                scope: props.scope,
             }, props), {className: 'line'})
         );
     }
@@ -21,16 +21,16 @@ export function ListItemInfo(props) {
         {className: classNames('item-info', {'item-info-reduced-rowheight': props.scope.singleLine})},
         renderArea('firstLine', angular.extend({
             svc: props.svc,
-            scope: props.scope
+            scope: props.scope,
         }, props), {className: 'line'}),
         renderArea('secondLine', angular.extend({
             svc: props.svc,
-            scope: props.scope
+            scope: props.scope,
         }, props), {className: 'line'})
     );
 }
 
 ListItemInfo.propTypes = {
     svc: PropTypes.object.isRequired,
-    scope: PropTypes.any.isRequired
+    scope: PropTypes.any.isRequired,
 };

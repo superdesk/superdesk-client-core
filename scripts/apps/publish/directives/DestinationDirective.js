@@ -4,7 +4,7 @@ export function DestinationDirective(adminPublishSettingsService) {
         templateUrl: 'scripts/apps/publish/views/destination.html',
         scope: {
             destination: '=',
-            actions: '='
+            actions: '=',
         },
         link: function($scope) {
             $scope.types = adminPublishSettingsService.getTransmissionServices();
@@ -14,6 +14,6 @@ export function DestinationDirective(adminPublishSettingsService) {
                     $scope.destination.config = angular.extend({}, $scope.types[type].config);
                 }
             });
-        }
+        },
     };
 }

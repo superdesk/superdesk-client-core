@@ -12,5 +12,5 @@ export function ErrorBox(props) {
 }
 
 ErrorBox.propTypes = {
-    svc: PropTypes.object.isRequired
+    svc: PropTypes.object.isRequired,
 };

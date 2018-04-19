@@ -15,12 +15,12 @@ angular.module('superdesk.apps.authoring.versioning', [])
                     legalArchive: true,
                     archived: false,
                     picture: true,
-                    personal: true
+                    personal: true,
                 },
                 afterClose: function(scope) {
                     if (scope && typeof scope.closePreview === 'function' && !scope._editable) {
                         scope.closePreview();
                     }
-                }
+                },
             });
     }]);

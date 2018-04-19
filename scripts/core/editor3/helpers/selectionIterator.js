@@ -17,7 +17,7 @@ export function initSelectionIterator(editorState, backward = false) {
             anchorKey: selection.getEndKey(),
             focusOffset: selection.getEndOffset(),
             focusKey: selection.getEndKey(),
-            isBackward: false
+            isBackward: false,
         });
     } else {
         newSelection = selection.merge({
@@ -25,7 +25,7 @@ export function initSelectionIterator(editorState, backward = false) {
             anchorKey: selection.getStartKey(),
             focusOffset: selection.getStartOffset(),
             focusKey: selection.getStartKey(),
-            isBackward: false
+            isBackward: false,
         });
     }
 

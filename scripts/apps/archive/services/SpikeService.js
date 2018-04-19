@@ -72,8 +72,8 @@ export function SpikeService($location, api, notify, gettext, send, $q, authorin
         var data = {
             task: {
                 desk: config.desk || null,
-                stage: config.stage || null
-            }
+                stage: config.stage || null,
+            },
         };
 
         return api.update(UNSPIKE_RESOURCE, item, data)

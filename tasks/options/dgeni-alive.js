@@ -4,13 +4,13 @@ module.exports = function(grunt) {
             packages: [
                 'dgeni-packages/base',
                 'dgeni-packages/jsdoc',
-                'dgeni-packages/ngdoc'
+                'dgeni-packages/ngdoc',
             ],
 
             serve: grunt.option('no-serve') ? null : {
                 port: 10000,
-                openBrowser: true // or command to run favorite browser
-            }
+                openBrowser: true, // or command to run favorite browser
+            },
         },
 
         api: {
@@ -22,10 +22,10 @@ module.exports = function(grunt) {
             src: [
                 'scripts/**/*.js',
                 'scripts/**/*.ngdoc',
-                '!**/test/**/*spec.js'
+                '!**/test/**/*spec.js',
             ],
 
-            templatePaths: ['docs/templates']
-        }
+            templatePaths: ['docs/templates'],
+        },
     };
 };

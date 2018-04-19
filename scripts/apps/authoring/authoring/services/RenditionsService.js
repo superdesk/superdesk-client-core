@@ -82,7 +82,7 @@ export function RenditionsService(metadata, $q, api, superdesk, _) {
                 showMetadataEditor: true,
                 isNew: isNew,
                 isAssociated: isAssociated,
-                editable: editable
+                editable: editable,
             })
                 .then((result) => {
                     let renditionNames = [];
@@ -129,7 +129,7 @@ export function RenditionsService(metadata, $q, api, superdesk, _) {
                                         width: image.width,
                                         height: image.height,
                                         media: image._id,
-                                        mimetype: image.item.mimetype
+                                        mimetype: image.item.mimetype,
                                     }
                                 );
                             });

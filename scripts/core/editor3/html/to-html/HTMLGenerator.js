@@ -17,7 +17,7 @@ const BlockStyleTags = {
     'header-six': 'h6',
     blockquote: 'blockquote',
     'unordered-list-item': 'li',
-    'ordered-list-item': 'li'
+    'ordered-list-item': 'li',
 };
 
 /**
@@ -53,7 +53,7 @@ export class HTMLGenerator {
     listTag(type) {
         return {
             'unordered-list-item': 'ul',
-            'ordered-list-item': 'ol'
+            'ordered-list-item': 'ol',
         }[type];
     }
 

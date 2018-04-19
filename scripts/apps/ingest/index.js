@@ -59,7 +59,7 @@ angular.module('superdesk.apps.ingest', [
                 category: '/workspace',
                 topTemplateUrl: 'scripts/apps/dashboard/views/workspace-topnav.html',
                 sideTemplateUrl: 'scripts/apps/workspace/views/workspace-sidenav.html',
-                privileges: {ingest: 1}
+                privileges: {ingest: 1},
             })
 
             .activity('/settings/ingest', {
@@ -67,7 +67,7 @@ angular.module('superdesk.apps.ingest', [
                 templateUrl: 'scripts/apps/ingest/views/settings/settings.html',
                 controller: ctrl.IngestSettingsController,
                 category: superdesk.MENU_SETTINGS,
-                privileges: {ingest_providers: 1}
+                privileges: {ingest_providers: 1},
             })
 
             .activity('/ingest_dashboard', {
@@ -77,7 +77,7 @@ angular.module('superdesk.apps.ingest', [
                 category: superdesk.MENU_MAIN,
                 priority: 100,
                 adminTools: true,
-                privileges: {ingest_providers: 1}
+                privileges: {ingest_providers: 1},
             })
 
             .activity('remove_ingested', {
@@ -90,7 +90,7 @@ angular.module('superdesk.apps.ingest', [
                 additionalCondition: ['remove', 'item', function(remove, item) {
                     return remove.canRemove(item);
                 }],
-                privileges: {fetch: 1}
+                privileges: {fetch: 1},
             })
 
             .activity('fetchAs', {
@@ -100,7 +100,7 @@ angular.module('superdesk.apps.ingest', [
                     return send.allAs([data.item]);
                 }],
                 filters: [{action: 'list', type: 'ingest'}],
-                privileges: {fetch: 1}
+                privileges: {fetch: 1},
             })
 
             .activity('archive', {
@@ -116,7 +116,7 @@ angular.module('superdesk.apps.ingest', [
                 additionalCondition: ['desks', function(desks) {
                     // fetching to 'personal' desk is not allowed
                     return !_.isNil(desks.getCurrentDeskId());
-                }]
+                }],
             })
 
             .activity('externalsourceTo', {
@@ -131,7 +131,7 @@ angular.module('superdesk.apps.ingest', [
                 additionalCondition: ['config', 'desks', function(config, desks) {
                     // Fetching to 'personal' desk is not allowed
                     return config.features.editFeaturedImage && !_.isNil(desks.getCurrentDeskId());
-                }]
+                }],
             })
 
             .activity('externalsource', {
@@ -144,7 +144,7 @@ angular.module('superdesk.apps.ingest', [
                 additionalCondition: ['config', 'desks', function(config, desks) {
                     // Fetching to 'personal' desk is not allowed
                     return config.features.editFeaturedImage && !_.isNil(desks.getCurrentDeskId());
-                }]
+                }],
             });
 
         workspaceMenuProvider.item({
@@ -160,19 +160,19 @@ angular.module('superdesk.apps.ingest', [
     .config(['apiProvider', function(apiProvider) {
         apiProvider.api('fetch', {
             type: 'http',
-            backend: {rel: 'fetch'}
+            backend: {rel: 'fetch'},
         });
         apiProvider.api('ingest', {
             type: 'http',
-            backend: {rel: 'ingest'}
+            backend: {rel: 'ingest'},
         });
         apiProvider.api('ingestProviders', {
             type: 'http',
-            backend: {rel: 'ingest_providers'}
+            backend: {rel: 'ingest_providers'},
         });
         apiProvider.api('activity', {
             type: 'http',
-            backend: {rel: 'activity'}
+            backend: {rel: 'activity'},
         });
     }])
 
@@ -184,43 +184,43 @@ angular.module('superdesk.apps.ingest', [
         // Map Ingest Feeding Services to config and form templates
         ingestSources.registerFeedingService('file', {
             label: 'File Feed',
-            templateUrl: asset.templateUrl('apps/ingest/views/settings/fileConfig.html')
+            templateUrl: asset.templateUrl('apps/ingest/views/settings/fileConfig.html'),
         });
         ingestSources.registerFeedingService('reuters_http', {
             label: 'Reuters Feed API',
             templateUrl: asset.templateUrl('apps/ingest/views/settings/reutersConfig.html'),
             config: {
                 url: 'http://rmb.reuters.com/rmd/rest/xml',
-                auth_url: 'https://commerce.reuters.com/rmd/rest/xml/login'
-            }
+                auth_url: 'https://commerce.reuters.com/rmd/rest/xml/login',
+            },
         });
         ingestSources.registerFeedingService('rss', {
             label: 'RSS',
-            templateUrl: asset.templateUrl('apps/ingest/views/settings/rssConfig.html')
+            templateUrl: asset.templateUrl('apps/ingest/views/settings/rssConfig.html'),
         });
         ingestSources.registerFeedingService('ftp', {
             label: 'FTP',
             templateUrl: asset.templateUrl('apps/ingest/views/settings/ftp-config.html'),
-            config: {passive: true}
+            config: {passive: true},
         });
         ingestSources.registerFeedingService('email', {
             label: 'Email',
-            templateUrl: asset.templateUrl('apps/ingest/views/settings/emailConfig.html')
+            templateUrl: asset.templateUrl('apps/ingest/views/settings/emailConfig.html'),
         });
         ingestSources.registerFeedingService('twitter', {
             label: 'Twitter',
-            templateUrl: asset.templateUrl('apps/ingest/views/settings/twitterConfig.html')
+            templateUrl: asset.templateUrl('apps/ingest/views/settings/twitterConfig.html'),
         });
         ingestSources.registerFeedingService('wufoo', {
             label: 'Wufoo Forms',
-            templateUrl: asset.templateUrl('apps/ingest/views/settings/wufoo.html')
+            templateUrl: asset.templateUrl('apps/ingest/views/settings/wufoo.html'),
         });
         ingestSources.registerFeedingService('ritzau', {
             label: 'Ritzau Webservice',
-            templateUrl: asset.templateUrl('apps/ingest/views/settings/ritzauConfig.html')
+            templateUrl: asset.templateUrl('apps/ingest/views/settings/ritzauConfig.html'),
         });
         ingestSources.registerFeedingService('ap', {
             label: 'Associated Press Webservice',
-            templateUrl: asset.templateUrl('apps/ingest/views/settings/apConfig.html')
+            templateUrl: asset.templateUrl('apps/ingest/views/settings/apConfig.html'),
         });
     }]);

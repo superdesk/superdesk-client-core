@@ -160,5 +160,5 @@ export class ArchiveListController extends BaseListController {
 
 ArchiveListController.$inject = [
     '$scope', '$injector', '$location', '$q', '$timeout', 'superdesk',
-    'session', 'api', 'desks', 'content', 'StagesCtrl', 'notify', 'multi', 'search'
+    'session', 'api', 'desks', 'content', 'StagesCtrl', 'notify', 'multi', 'search',
 ];

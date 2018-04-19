@@ -1,6 +1,6 @@
 import {
     editor3DataKeys,
-    getCustomDataFromEditorRawState
+    getCustomDataFromEditorRawState,
 } from 'core/editor3/helpers/editor3CustomData';
 
 import {getLabelForFieldId} from 'apps/workspace/helpers/getLabelForFieldId';
@@ -38,7 +38,7 @@ function InlineCommentsCtrl($scope, userList, metadata, content) {
         const comments = Object.keys($scope.item[META_FIELD_NAME])
             .map((contentKey) => ({
                 contentKey: contentKey,
-                [fieldsMetaKeys.draftjsState]: getFieldMetadata($scope.item, contentKey, fieldsMetaKeys.draftjsState)
+                [fieldsMetaKeys.draftjsState]: getFieldMetadata($scope.item, contentKey, fieldsMetaKeys.draftjsState),
             }))
             .filter((obj) => obj[fieldsMetaKeys.draftjsState] != null)
             .map((obj) => (
@@ -47,7 +47,7 @@ function InlineCommentsCtrl($scope, userList, metadata, content) {
                     comments: getCustomDataFromEditorRawState(
                         obj[fieldsMetaKeys.draftjsState],
                         editor3DataKeys.RESOLVED_COMMENTS_HISTORY
-                    ) || []
+                    ) || [],
                 }
             ))
             .filter((obj) => obj.comments.length > 0);
@@ -69,7 +69,7 @@ function InlineCommentsCtrl($scope, userList, metadata, content) {
 
 angular
     .module('superdesk.apps.authoring.track-changes.inline-comments', [
-        'superdesk.apps.authoring.widgets'
+        'superdesk.apps.authoring.widgets',
     ])
     .config([
         'authoringWidgetsProvider',
@@ -88,10 +88,10 @@ angular
                     legalArchive: false,
                     archived: false,
                     picture: true,
-                    personal: true
-                }
+                    personal: true,
+                },
             });
-        }
+        },
     ])
 
     .controller('InlineCommentsCtrl', InlineCommentsCtrl);

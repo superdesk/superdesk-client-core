@@ -45,6 +45,6 @@ angular.module('superdesk.core.activity.chooser', [])
                     scope.select = function(activity) {
                         scope.selected = activity;
                     };
-                }
+                },
             };
         }]);

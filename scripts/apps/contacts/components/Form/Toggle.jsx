@@ -24,7 +24,7 @@ export const Toggle = ({value, onChange, readOnly, className}) => {
         'sd-line-input__input',
         {
             checked: value,
-            disabled: readOnly
+            disabled: readOnly,
         },
         className
     );

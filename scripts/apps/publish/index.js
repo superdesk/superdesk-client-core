@@ -41,7 +41,7 @@ export default angular.module('superdesk.apps.publish', ['superdesk.apps.users',
                 controller: ctrl.AdminPublishSettingsController,
                 category: superdesk.MENU_SETTINGS,
                 privileges: {subscribers: 1},
-                priority: 2000
+                priority: 2000,
             })
 
             .activity('/publish_queue', {
@@ -50,29 +50,29 @@ export default angular.module('superdesk.apps.publish', ['superdesk.apps.users',
                 controller: ctrl.PublishQueueController,
                 category: superdesk.MENU_MAIN,
                 adminTools: false,
-                privileges: {publish_queue: 1}
+                privileges: {publish_queue: 1},
             });
     }])
 
     .config(['apiProvider', function(apiProvider) {
         apiProvider.api('subscribers', {
             type: 'http',
-            backend: {rel: 'subscribers'}
+            backend: {rel: 'subscribers'},
         });
         apiProvider.api('publish_queue', {
             type: 'http',
-            backend: {rel: 'publish_queue'}
+            backend: {rel: 'publish_queue'},
         });
         apiProvider.api('consistency', {
             type: 'http',
-            backend: {rel: 'consistency'}
+            backend: {rel: 'consistency'},
         });
         apiProvider.api('legal_publish_queue', {
             type: 'http',
-            backend: {rel: 'legal_publish_queue'}
+            backend: {rel: 'legal_publish_queue'},
         });
         apiProvider.api('io_errors', {
             type: 'http',
-            backend: {rel: 'io_errors'}
+            backend: {rel: 'io_errors'},
         });
     }]);

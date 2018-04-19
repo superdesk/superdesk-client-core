@@ -4,7 +4,7 @@ export function EditWorkspaceDirective(workspaces) {
         templateUrl: 'scripts/apps/workspace/views/edit-workspace-modal.html',
         scope: {
             workspace: '=',
-            done: '='
+            done: '=',
         },
         link: function(scope) {
             scope.workspaces = workspaces;
@@ -30,6 +30,6 @@ export function EditWorkspaceDirective(workspaces) {
             scope.cancel = function() {
                 scope.workspace = null;
             };
-        }
+        },
     };
 }

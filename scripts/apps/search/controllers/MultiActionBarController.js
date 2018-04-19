@@ -23,7 +23,7 @@ import _ from 'lodash';
 
 MultiActionBarController.$inject = [
     '$rootScope', 'multi', 'multiEdit', 'send', 'remove', 'modal', '$q', 'gettext',
-    'packages', 'superdesk', 'notify', 'spike', 'authoring', 'privileges', '$location'
+    'packages', 'superdesk', 'notify', 'spike', 'authoring', 'privileges', '$location',
 ];
 
 export function MultiActionBarController(

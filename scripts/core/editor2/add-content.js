@@ -12,7 +12,7 @@ angular.module('superdesk.apps.editor2.content', []).directive('sdAddContent', [
 
                 angular.extend(vm, {
                     textBlockCtrl: ctrls[1],
-                    sdEditorCtrl: ctrls[2]
+                    sdEditorCtrl: ctrls[2],
                 });
                 if (!vm.config.embeds) {
                     return;
@@ -31,7 +31,7 @@ angular.module('superdesk.apps.editor2.content', []).directive('sdAddContent', [
                     angular.element($window).off('resize', vm.updateState);
                     unbindListener();
                 });
-            }
+            },
         };
     }]);
 
@@ -88,7 +88,7 @@ function AddContentCtrl(scope, element, superdesk, editor, $timeout, config, $q)
         hide: function() {
             $timeout(() => {
                 elementHolder.css({
-                    display: 'none'
+                    display: 'none',
                 });
                 self.expanded = false;
             });
@@ -96,7 +96,7 @@ function AddContentCtrl(scope, element, superdesk, editor, $timeout, config, $q)
         show: function() {
             $timeout(() => {
                 elementHolder.css({
-                    display: 'block'
+                    display: 'block',
                 });
             });
         },
@@ -124,7 +124,7 @@ function AddContentCtrl(scope, element, superdesk, editor, $timeout, config, $q)
                         embedType: 'Image',
                         body: imgTag,
                         caption: image.description_text,
-                        association: image
+                        association: image,
                     })))).then((renderedImages) => {
                         self.sdEditorCtrl.splitAndInsert(self.textBlockCtrl, renderedImages);
                     });
@@ -138,7 +138,7 @@ function AddContentCtrl(scope, element, superdesk, editor, $timeout, config, $q)
                     return false;
                 }
                 self.sdEditorCtrl.splitAndInsert(self.textBlockCtrl, self.sdEditorCtrl.getCutBlock(true));
-            }
-        }
+            },
+        },
     });
 }

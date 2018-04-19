@@ -23,7 +23,7 @@ export function LegalArchiveService(api, $location, gettext, config, moment, sor
         {field: 'urgency', label: gettext('Urgency')},
         {field: 'anpa_category.name', label: gettext('Category')},
         {field: 'slugline', label: gettext('Slugline')},
-        {field: 'priority', label: gettext('Priority')}
+        {field: 'priority', label: gettext('Priority')},
     ];
 
     sortService.setSort('versioncreated', sortOptions);
@@ -32,7 +32,7 @@ export function LegalArchiveService(api, $location, gettext, config, moment, sor
     this.getCriteria = function() {
         var params = $location.search(),
             criteria = {
-                max_results: Number(params.max_results) || DEFAULT_PER_PAGE
+                max_results: Number(params.max_results) || DEFAULT_PER_PAGE,
             };
 
         if (params.q) {
@@ -93,7 +93,7 @@ export function LegalArchiveService(api, $location, gettext, config, moment, sor
             whereClause = JSON.stringify(where[0]);
         } else if (where.length > 0) {
             whereClause = JSON.stringify({
-                $and: where
+                $and: where,
             });
         }
 

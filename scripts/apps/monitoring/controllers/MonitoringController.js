@@ -36,7 +36,7 @@ export function MonitoringController($rootScope, $scope, $location, desks, confi
     // init swimlane view using preferences - use session preferences if set, or fallback to user preferences
     $q.all({
         userPreference: preferencesService.get('monitoring:view'),
-        sessionPreference: preferencesService.get('monitoring:view:session')
+        sessionPreference: preferencesService.get('monitoring:view:session'),
     }).then(({userPreference, sessionPreference}) => {
         this.viewColumn = sessionPreference !== null ?
             sessionPreference === 'swimlane' : userPreference.view === 'swimlane';

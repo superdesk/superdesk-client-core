@@ -20,7 +20,7 @@ describe('editor3.components.spellchecker-decorator', () => {
 
     beforeEach(window.module(($provide) => {
         $provide.service('spellcheck', ($q) => ({
-            suggest: jasmine.createSpy().and.returnValue($q.when(['this', 'tish', 'fish']))
+            suggest: jasmine.createSpy().and.returnValue($q.when(['this', 'tish', 'fish'])),
         }));
     }));
 
@@ -83,12 +83,12 @@ describe('editor3.components.spellchecker-context-menu', () => {
     const suggestions = [
         {value: 'one', key: 'oneKey'},
         {value: 'two', key: 'twoKey'},
-        {value: 'three', key: 'threeKey'}
+        {value: 'three', key: 'threeKey'},
     ];
 
     beforeEach(window.module(($provide) => {
         $provide.service('spellcheck', ($q) => ({
-            addWord: jasmine.createSpy().and.returnValue(null)
+            addWord: jasmine.createSpy().and.returnValue(null),
         }));
     }));
 
@@ -160,7 +160,7 @@ describe('editor3.components.spellchecker-context-menu', () => {
 
         expect(replaceWord).toHaveBeenCalledWith({
             word: {text: 'abc'},
-            newWord: 'oneKey'
+            newWord: 'oneKey',
         });
     }));
 });

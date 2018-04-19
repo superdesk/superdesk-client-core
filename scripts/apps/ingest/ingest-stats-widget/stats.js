@@ -17,9 +17,9 @@ angular.module('superdesk.apps.dashboard.widgets.ingeststats', [])
             configuration: {
                 source: 'provider',
                 colorScheme: 'superdesk',
-                updateInterval: 5
+                updateInterval: 5,
             },
-            description: 'Displaying news ingest statistics. You can switch color themes or graph sources.'
+            description: 'Displaying news ingest statistics. You can switch color themes or graph sources.',
         });
     }])
     .controller('IngestStatsController', ['$scope', '$timeout', 'api',

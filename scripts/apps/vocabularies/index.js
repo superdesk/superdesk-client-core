@@ -22,7 +22,7 @@ import * as directive from './directives';
  */
 angular.module('superdesk.apps.vocabularies', [
     'superdesk.core.activity',
-    'superdesk.apps.authoring.metadata'
+    'superdesk.apps.authoring.metadata',
 ])
     .service('vocabularies', VocabularyService)
 
@@ -42,6 +42,6 @@ angular.module('superdesk.apps.vocabularies', [
             templateUrl: 'scripts/apps/vocabularies/views/settings.html',
             category: superdesk.MENU_SETTINGS,
             priority: -800,
-            privileges: {vocabularies: 1}
+            privileges: {vocabularies: 1},
         });
     }]);

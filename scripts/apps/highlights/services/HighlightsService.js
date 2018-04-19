@@ -36,9 +36,9 @@ export function HighlightsService(api, $q, $cacheFactory, packages, privileges) 
         if (desk) {
             criteria = {where: {$or: [
                 {desks: desk},
-                {desks: {$size: 0}}
-            ]
-            }
+                {desks: {$size: 0}},
+            ],
+            },
             };
         }
 
@@ -100,7 +100,7 @@ export function HighlightsService(api, $q, $cacheFactory, packages, privileges) 
     service.createEmptyHighlight = function(highlight) {
         var pkgDefaults = {
             headline: highlight.name,
-            highlight: highlight._id
+            highlight: highlight._id,
         };
 
         var group = null;

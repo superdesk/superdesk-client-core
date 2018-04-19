@@ -3,12 +3,12 @@
  */
 function SourcesDirective() {
     var typeMap = {
-        'video/mpeg': 'video/mp4'
+        'video/mpeg': 'video/mp4',
     };
 
     return {
         scope: {
-            renditions: '='
+            renditions: '=',
         },
         link: function(scope, elem, attrs) {
             function pause() {
@@ -34,7 +34,7 @@ function SourcesDirective() {
             });
 
             scope.$on('$destroy', pause);
-        }
+        },
     };
 }
 
@@ -51,7 +51,7 @@ function FileValidatorDirective() {
 
                 return !value || !attrs.accept || isAcceptedFileType(value, attrs.accept);
             };
-        }
+        },
     };
 }
 
@@ -61,7 +61,7 @@ angular.module('superdesk.core.upload', [
     'superdesk.core.upload.crop',
     'superdesk.core.upload.imagecrop',
     'superdesk.core.upload.imagepreview',
-    'superdesk.core.upload.upload'
+    'superdesk.core.upload.upload',
 ])
     .directive('sdSources', SourcesDirective)
     .directive('sdFileTypeValidator', FileValidatorDirective);

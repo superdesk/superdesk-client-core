@@ -26,5 +26,5 @@ export default angular.module('superdesk.core.directives.throttle', [])
                     ngModel.$setViewValue(element.val());
                 });
             }, interval));
-        }
+        },
     }));

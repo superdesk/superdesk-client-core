@@ -52,7 +52,7 @@ function UserNotificationsService(
         var criteria = {
             where: getFilter(),
             max_results: 8,
-            embedded: {user: 1}
+            embedded: {user: 1},
         };
 
         return api.query('activity', criteria)
@@ -159,7 +159,7 @@ function DeskNotificationsService($rootScope, api, session) {
             where: getFilter(),
             embedded: {
                 item: 1,
-                user: 1
+                user: 1,
             },
             max_results: 20,
         };
@@ -243,7 +243,7 @@ function MarkAsReadDirective(userNotifications, $timeout) {
             scope.$on('$destroy', () => {
                 $timeout.cancel(timeout);
             });
-        }
+        },
     };
 }
 
@@ -269,6 +269,6 @@ angular.module('superdesk.core.menu.notifications', ['superdesk.core.services.as
                     scope.onNotificationClick = function(notification) {
                         $rootScope.$broadcast('notification:click', {notification});
                     };
-                }
+                },
             };
         }]);

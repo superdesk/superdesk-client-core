@@ -69,8 +69,8 @@ class AnnotationInputBody extends Component {
                         data: {
                             msg,
                             annotationType,
-                            ...getAuthorInfo()
-                        }
+                            ...getAuthorInfo(),
+                        },
                     }
                 );
             } else {
@@ -95,7 +95,7 @@ class AnnotationInputBody extends Component {
     onChange(content) {
         this.setState({
             body: convertToRaw(content),
-            isEmpty: content == null || !content.hasText()
+            isEmpty: content == null || !content.hasText(),
         });
     }
 
@@ -186,9 +186,9 @@ AnnotationInputBody.propTypes = {
 
 const mapStateToProps = (state) => ({
     language: state.item.language,
-    spellcheckerEnabled: state.spellcheckerEnabled
+    spellcheckerEnabled: state.spellcheckerEnabled,
 });
 
 export const AnnotationInput = connect(mapStateToProps, {
-    hidePopups
+    hidePopups,
 })(AnnotationInputBody);

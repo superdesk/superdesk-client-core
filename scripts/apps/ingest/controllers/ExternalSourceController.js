@@ -16,7 +16,7 @@ ExternalSourceController.$inject = ['api', 'data', 'desks', 'notify', 'gettext']
 export function ExternalSourceController(api, data, desks, notify, gettext) {
     return api.save(data.item.fetch_endpoint, {
         guid: data.item.guid,
-        desk: desks.getCurrentDeskId()
+        desk: desks.getCurrentDeskId(),
     }, null, null, {repo: data.item.ingest_provider})
         .then((response) => {
             data.item = response;

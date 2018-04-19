@@ -97,10 +97,10 @@ export function ArchiveService(desks, session, api, $q, search, $location, confi
                 bool: {
                     must_not: [
                         {bool: {must: [{term: {_id: item._id}}, {term: {_type: 'archive'}}]}},
-                        {bool: {must: [{term: {item_id: item._id}}, {term: {_type: 'published'}}]}}
+                        {bool: {must: [{term: {item_id: item._id}}, {term: {_type: 'published'}}]}},
                     ],
-                    must: [{term: {type: item.type}}]
-                }
+                    must: [{term: {type: item.type}}],
+                },
             };
 
             if (_.get(item, 'genre[0].qcode')) {

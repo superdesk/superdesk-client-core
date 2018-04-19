@@ -38,7 +38,7 @@ export function IngestProviderService(api, $q, preferencesService, $filter, sear
                 let merged = services.concat(
                     _.map(result._items, (item) => {
                         let mappedService = _.find(servicesMap, {
-                            feeding_service: item.feeding_service
+                            feeding_service: item.feeding_service,
                         });
 
                         return mappedService ? mappedService : item;
@@ -102,7 +102,7 @@ export function IngestProviderService(api, $q, preferencesService, $filter, sear
                 feeding_service: name,
                 label: props.label ? props.label : name,
                 templateUrl: props.templateUrl ? props.templateUrl : '',
-                config: props.config ? props.config : null
+                config: props.config ? props.config : null,
             });
         },
         fetchAllFeedingServicesAllowed: function(criteria) {
@@ -143,7 +143,7 @@ export function IngestProviderService(api, $q, preferencesService, $filter, sear
             });
 
             return deferred.promise;
-        }
+        },
     };
 
     return service;

@@ -6,7 +6,7 @@ describe('workqueue', () => {
     angular.module('mock.route', ['ngRoute'])
         .config(($routeProvider) => {
             $routeProvider.when('/mock', {
-                template: ''
+                template: '',
             });
         });
 
@@ -28,10 +28,10 @@ describe('workqueue', () => {
                     bool: {
                         must: [
                             {term: {lock_user: USER_ID}},
-                            {terms: {lock_action: ['edit', 'correct', 'kill']}}
-                        ]
-                    }
-                }
+                            {terms: {lock_action: ['edit', 'correct', 'kill']}},
+                        ],
+                    },
+                },
             },
             auto: 1,
         };

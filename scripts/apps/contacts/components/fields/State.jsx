@@ -19,5 +19,5 @@ export const State = ({item, svc}) => {
 
 State.propTypes = {
     item: PropTypes.object,
-    svc: PropTypes.object.isRequired
+    svc: PropTypes.object.isRequired,
 };

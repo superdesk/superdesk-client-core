@@ -15,7 +15,7 @@ describe('content filters', () => {
                 $location: $location,
                 $window: $window,
                 notify: notify,
-                contentFilters: contentFilters
+                contentFilters: contentFilters,
             }
         );
     }));

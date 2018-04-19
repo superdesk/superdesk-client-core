@@ -8,7 +8,7 @@ import {HighlightsList} from './index';
 import {
     closeActionsMenu,
     openActionsMenu,
-    isCheckAllowed
+    isCheckAllowed,
 } from '../helpers';
 
 export class HighlightsInfo extends React.Component {
@@ -88,7 +88,7 @@ export class HighlightsInfo extends React.Component {
             'div',
             {
                 className: 'highlights-box',
-                onClick: this.toggle
+                onClick: this.toggle,
             },
             highlights.length ? React.createElement(
                 'div',
@@ -100,8 +100,8 @@ export class HighlightsInfo extends React.Component {
                         className: classNames({
                             'icon-star': highlights.length === 1,
                             'icon-multi-star': highlights.length > 1,
-                            red: hasActiveHighlight
-                        })
+                            red: hasActiveHighlight,
+                        }),
                     })
                 )
             ) : null
@@ -114,7 +114,7 @@ export class HighlightsInfo extends React.Component {
             highlights: this.getHighlights(),
             highlightsById: this.props.highlightsById,
             svc: this.props.svc,
-            scope: this.props.scope
+            scope: this.props.scope,
         });
 
         var icon = ReactDOM.findDOMNode(this).getElementsByClassName('icon-star')[0] ||

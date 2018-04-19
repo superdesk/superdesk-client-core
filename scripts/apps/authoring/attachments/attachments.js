@@ -91,7 +91,7 @@ AttachmentsController.$inject = [
     'gettext',
     'deployConfig',
     'urls',
-    'lock'
+    'lock',
 ];
 
 AttachmentsFactory.$inject = ['api'];
@@ -175,8 +175,8 @@ const config = (awp) =>
             legalArchive: false,
             archived: false,
             picture: true,
-            personal: true
-        }
+            personal: true,
+        },
     });
 
 angular.module('superdesk.apps.authoring.attachments', [

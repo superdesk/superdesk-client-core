@@ -15,5 +15,5 @@ export function Dropdown(props) {
 Dropdown.propTypes = {
     open: PropTypes.bool,
     children: PropTypes.node,
-    className: PropTypes.string
+    className: PropTypes.string,
 };

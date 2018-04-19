@@ -83,6 +83,6 @@ export function SearchPanel($location, desks, privileges, tags, asset, metadata,
             scope.isAdmin = function() {
                 return session.identity.user_type === 'administrator';
             };
-        }
+        },
     };
 }

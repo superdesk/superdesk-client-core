@@ -157,7 +157,7 @@ export default class CompareVersionsService {
                 this.create([{
                     id: item._id,
                     version: item._current_version,
-                    author: this.desks.userLookup[item.version_creator]
+                    author: this.desks.userLookup[item.version_creator],
                 }]);
             });
     }

@@ -31,6 +31,6 @@ export function PreviewFormattedDirective(api, config, notify, storage) {
                     scope.selectedFormatter = JSON.stringify(scope.previewFormatters[0]);
                 }
             });
-        }
+        },
     };
 }

@@ -14,5 +14,5 @@ export class QumuWidget extends Component {
 }
 
 QumuWidget.propTypes = {
-    code: PropTypes.object
+    code: PropTypes.object,
 };

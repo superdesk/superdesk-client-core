@@ -11,7 +11,7 @@ describe('desk select directive', () => {
         scope.desks = [
             {_id: 'foo', name: 'Foo'},
             {_id: 'sports', name: 'Sports'},
-            {_id: 'fin', name: 'Finance'}
+            {_id: 'fin', name: 'Finance'},
         ];
 
         scope.selectDesk = function(desk) {

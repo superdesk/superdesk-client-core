@@ -17,7 +17,7 @@ import * as ctrl from './controllers';
 angular.module('superdesk.apps.templates', [
     'superdesk.core.activity',
     'superdesk.apps.authoring',
-    'superdesk.core.preferences'
+    'superdesk.core.preferences',
 ])
     .service('templates', TemplatesService)
 
@@ -37,6 +37,6 @@ angular.module('superdesk.apps.templates', [
             templateUrl: 'scripts/apps/templates/views/settings.html',
             controller: ctrl.TemplatesSettingsController,
             category: superdesk.MENU_SETTINGS,
-            priority: 2000
+            priority: 2000,
         });
     }]);

@@ -43,7 +43,7 @@ export default angular.module('superdesk.core.directives.searchList', ['superdes
      */
     .directive('sdSearchList', ['asset', 'api', function(asset, api) {
         var defaults = {
-            pageSize: 25
+            pageSize: 25,
         };
 
         return {
@@ -57,7 +57,7 @@ export default angular.module('superdesk.core.directives.searchList', ['superdes
                 disabledItems: '=',
                 selectedItems: '=',
                 selectedItemsHelperTemplate: '=',
-                selectedItemsHelperData: '='
+                selectedItemsHelperData: '=',
             },
             templateUrl: asset.templateUrl('core/views/sdSearchList.html'),
             link: function(scope, element, attrs) {
@@ -83,7 +83,7 @@ export default angular.module('superdesk.core.directives.searchList', ['superdes
                     }
                     api[scope.endpoint].query(_.assign({}, criteria, {
                         max_results: scope.pageSize,
-                        page: scope.page
+                        page: scope.page,
                     }))
                         .then((result) => {
                             var pageSize = scope.pageSize || defaults.pageSize;
@@ -124,6 +124,6 @@ export default angular.module('superdesk.core.directives.searchList', ['superdes
                         _.findIndex(scope.disabledItems, (i) => i._id === item._id) !== -1
                         : false;
                 };
-            }
+            },
         };
     }]);

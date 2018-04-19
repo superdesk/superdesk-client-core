@@ -43,13 +43,13 @@ export function MediaPreview(props) {
             React.createElement(ItemContainer, {
                 item: item,
                 desk: props.desk,
-                svc: props.svc
+                svc: props.svc,
             })
         ),
         React.createElement(SelectBox, {
             item: item,
             onMultiSelect: props.onMultiSelect,
-            svc: props.svc
+            svc: props.svc,
         })
     );
 }
@@ -58,5 +58,5 @@ MediaPreview.propTypes = {
     svc: PropTypes.object.isRequired,
     onMultiSelect: PropTypes.func,
     desk: PropTypes.any,
-    item: PropTypes.any
+    item: PropTypes.any,
 };

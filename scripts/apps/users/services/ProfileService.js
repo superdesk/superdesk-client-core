@@ -14,7 +14,7 @@ export function ProfileService(api) {
         var q = {
             where: {user: user._id},
             sort: '[(\'_created\',-1)]',
-            embedded: {user: 1}
+            embedded: {user: 1},
         };
 
         if (maxResults) {
@@ -41,7 +41,7 @@ export function ProfileService(api) {
         var q = {
             sort: '[(\'_created\',-1)]',
             where: {user: {$exists: true}, item: {$exists: true}},
-            embedded: {user: 1}
+            embedded: {user: 1},
         };
 
         if (maxResults) {

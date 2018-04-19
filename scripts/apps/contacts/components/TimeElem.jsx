@@ -13,5 +13,5 @@ export const TimeElem = ({svc, date}) => {
 
 TimeElem.propTypes = {
     svc: PropTypes.object.isRequired,
-    date: PropTypes.any
+    date: PropTypes.any,
 };

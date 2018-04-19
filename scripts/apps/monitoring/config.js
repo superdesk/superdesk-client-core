@@ -6,7 +6,7 @@ export function Monitoring(superdesk, workspaceMenuProvider) {
             priority: 100,
             templateUrl: 'scripts/apps/monitoring/views/monitoring.html',
             topTemplateUrl: 'scripts/apps/dashboard/views/workspace-topnav.html',
-            sideTemplateUrl: 'scripts/apps/workspace/views/workspace-sidenav.html'
+            sideTemplateUrl: 'scripts/apps/workspace/views/workspace-sidenav.html',
         });
 
     workspaceMenuProvider.item(
@@ -28,7 +28,7 @@ export function SpikeMonitoring(superdesk, workspaceMenuProvider) {
             priority: 100,
             templateUrl: 'scripts/apps/monitoring/views/spike-monitoring.html',
             topTemplateUrl: 'scripts/apps/dashboard/views/workspace-topnav.html',
-            sideTemplateUrl: 'scripts/apps/workspace/views/workspace-sidenav.html'
+            sideTemplateUrl: 'scripts/apps/workspace/views/workspace-sidenav.html',
         });
 
     workspaceMenuProvider.item({
@@ -51,7 +51,7 @@ export function Personal(superdesk, workspaceMenuProvider) {
             priority: 100,
             templateUrl: 'scripts/apps/monitoring/views/personal.html',
             topTemplateUrl: 'scripts/apps/dashboard/views/workspace-topnav.html',
-            sideTemplateUrl: 'scripts/apps/workspace/views/workspace-sidenav.html'
+            sideTemplateUrl: 'scripts/apps/workspace/views/workspace-sidenav.html',
         });
 
     workspaceMenuProvider.item({

@@ -15,5 +15,5 @@ export const OrgName = ({item}) => (
 );
 
 OrgName.propTypes = {
-    item: PropTypes.object
+    item: PropTypes.object,
 };

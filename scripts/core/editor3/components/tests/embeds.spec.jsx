@@ -68,7 +68,7 @@ describe('editor3.components.embed-input', () => {
         const wrapper = mount(<EmbedInput hidePopups={noop} embed={noop} />, options);
 
         spyOn($, 'ajax').and.returnValue($q.reject({
-            responseJSON: {error: 'this is the error'}
+            responseJSON: {error: 'this is the error'},
         }));
 
         wrapper.find('input').instance().value = 'http://will.fail';

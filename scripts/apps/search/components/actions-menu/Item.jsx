@@ -117,10 +117,10 @@ export default class Item extends React.Component {
                         'a',
                         {
                             className: 'dropdown__toggle',
-                            title: gettextCatalog.getString(activity.label)
+                            title: gettextCatalog.getString(activity.label),
                         },
                         activity.icon ? React.createElement('i', {
-                            className: 'icon-' + activity.icon
+                            className: 'icon-' + activity.icon,
                         }, '') : null,
                         gettextCatalog.getString(activity.label)
                     ),
@@ -129,7 +129,7 @@ export default class Item extends React.Component {
                         className: 'dropdown__menu upward ' + this.state.position,
                         noHighlightsLabel: gettextCatalog.getString('No available highlights'),
                         noDesksLabel: gettextCatalog.getString('No available desks'),
-                        noLanguagesLabel: gettextCatalog.getString('No available translations')
+                        noLanguagesLabel: gettextCatalog.getString('No available translations'),
                     }) : null
                 )
             );
@@ -142,10 +142,10 @@ export default class Item extends React.Component {
                 'a',
                 {title: gettextCatalog.getString(activity.label), onClick: this.run},
                 React.createElement('i', {
-                    className: 'icon-' + activity.icon
+                    className: 'icon-' + activity.icon,
                 }),
                 React.createElement('span', {
-                    style: {display: 'inline'}
+                    style: {display: 'inline'},
                 }, gettextCatalog.getString(activity.label))
             )
         );
@@ -157,5 +157,5 @@ Item.propTypes = {
     scope: PropTypes.any.isRequired,
     item: PropTypes.any,
     activity: PropTypes.any,
-    onActioning: PropTypes.func
+    onActioning: PropTypes.func,
 };

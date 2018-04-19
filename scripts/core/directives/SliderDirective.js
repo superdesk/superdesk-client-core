@@ -22,7 +22,7 @@ export default angular.module('superdesk.core.directives.slider', [])
             field: '@',
             disabled: '=',
             invert: '=',
-            update: '&'
+            update: '&',
         },
         link: function(scope, element, attrs, controller) {
             scope.$watch('list', (list) => {
@@ -64,7 +64,7 @@ export default angular.module('superdesk.core.directives.slider', [])
 
                         scope.update({
                             item: scope.invert ? scope.list[Math.abs(ui.value) - 1] : scope.list[ui.value] - 1,
-                            field: scope.field
+                            field: scope.field,
                         });
                     },
                     start: function() {
@@ -74,8 +74,8 @@ export default angular.module('superdesk.core.directives.slider', [])
                     stop: function() {
                         $(this).find('.ui-slider-thumb')
                             .removeClass('ui-slider-thumb-active');
-                    }
+                    },
                 });
             });
-        }
+        },
     }));

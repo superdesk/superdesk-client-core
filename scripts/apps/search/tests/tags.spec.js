@@ -3,7 +3,7 @@
 describe('Tag Service', () => {
     var deskList = {
         123: {_id: '123', name: 'desk1'},
-        456: {_id: '456', name: 'desk2'}
+        456: {_id: '456', name: 'desk2'},
     };
 
     var fakeMetadata;
@@ -21,7 +21,7 @@ describe('Tag Service', () => {
     beforeEach(window.module(($provide) => {
         fakeMetadata = {
             values: {subjectcodes: []},
-            fetchSubjectcodes: jasmine.createSpy()
+            fetchSubjectcodes: jasmine.createSpy(),
         };
 
         $provide.value('metadata', fakeMetadata);
@@ -110,7 +110,7 @@ describe('Tag Service', () => {
 
         $location.search([
             'type=["text","composite"]',
-            'q=slugline:(FBI) (Obama) (Australia)'
+            'q=slugline:(FBI) (Obama) (Australia)',
         ].join('&'));
         $rootScope.$apply();
 
@@ -132,11 +132,11 @@ describe('Tag Service', () => {
 
         desks.deskLookup = {
             from: {
-                name: 'National'
+                name: 'National',
             },
             to: {
-                name: 'Sport'
-            }
+                name: 'Sport',
+            },
         };
 
         $location.search('from_desk', 'from-authoring');
@@ -164,7 +164,7 @@ describe('Tag Service', () => {
 
         var user = {
             _id: '123',
-            display_name: 'Test User'
+            display_name: 'Test User',
         };
 
         spyOn(userList, 'getUser').and.returnValue($q.when(user));
@@ -222,7 +222,7 @@ describe('Tag Service', () => {
     it('create tags for ingest provider', inject(($location, $rootScope, $q, tags, desks, ingestSources) => {
         var providers = [{
             name: 'Test Provider',
-            _id: 123
+            _id: 123,
         }];
 
         ingestSources.providersLookup = _.keyBy(providers, '_id');
@@ -258,7 +258,7 @@ describe('Tag Service', () => {
         expect(tagsList.removedFacets.notsource.length).toEqual(2);
         expect(tagsList.removedFacets.notsource).toEqual([
             {label: 'Not Source', displayValue: 'REUTERS', value: 'REUTERS'},
-            {label: 'Not Source', displayValue: 'NTB', value: 'NTB'}
+            {label: 'Not Source', displayValue: 'NTB', value: 'NTB'},
         ]);
     }));
 
@@ -295,7 +295,7 @@ describe('Tag Service', () => {
         expect(tagsList.removedFacets.notcategory.length).toEqual(2);
         expect(tagsList.removedFacets.notcategory).toEqual([
             {label: 'Not Category', displayValue: 'International Sports', value: 'International Sports'},
-            {label: 'Not Category', displayValue: 'Domestic Sports', value: 'Domestic Sports'}
+            {label: 'Not Category', displayValue: 'Domestic Sports', value: 'Domestic Sports'},
         ]);
     }));
 
@@ -314,7 +314,7 @@ describe('Tag Service', () => {
         expect(tagsList.removedFacets.noturgency.length).toEqual(2);
         expect(tagsList.removedFacets.noturgency).toEqual([
             {label: 'Not Urgency', displayValue: '1', value: '1'},
-            {label: 'Not Urgency', displayValue: '2', value: '2'}
+            {label: 'Not Urgency', displayValue: '2', value: '2'},
         ]);
     }));
 });

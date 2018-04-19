@@ -237,7 +237,7 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
                     self.groups.push({
                         _id: currentDesk._id + ':scheduled',
                         type: 'scheduledDeskOutput',
-                        header: currentDesk.name
+                        header: currentDesk.name,
                     });
                 }
             }
@@ -435,7 +435,7 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
                     selected: true,
                     type: item.type,
                     max_items: item.max_items || defaultMaxItems,
-                    order: index
+                    order: index,
                 };
                 if (item.type === 'stage') {
                     var stage = self.stageLookup[item._id];
@@ -444,7 +444,7 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
                         _id: stage._id,
                         selected: true,
                         type: 'desk',
-                        order: 0
+                        order: 0,
                     };
                 } else if (desks.isOutputType(item.type)) {
                     var deskId = item._id.substring(0, item._id.indexOf(':'));
@@ -453,7 +453,7 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
                         _id: item._id,
                         selected: true,
                         type: 'desk',
-                        order: 0
+                        order: 0,
                     };
                 }
             });

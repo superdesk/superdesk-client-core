@@ -6,5 +6,5 @@ export const VersionCreated = ({item, svc}) => <TimeElem key="version-created" d
 
 VersionCreated.propTypes = {
     item: PropTypes.object,
-    svc: PropTypes.object.isRequired
+    svc: PropTypes.object.isRequired,
 };

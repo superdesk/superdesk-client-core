@@ -74,7 +74,7 @@ AuthoringDirective.$inject = [
     'embedService',
     '$sce',
     'mediaIdGenerator',
-    'logger'
+    'logger',
 ];
 export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace, notify,
     gettext, desks, authoring, api, session, lock, privileges, content, $location,
@@ -1070,6 +1070,6 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             $scope.closePreview();
             macros.setupShortcuts($scope);
             initEmbedFieldsValidation();
-        }
+        },
     };
 }

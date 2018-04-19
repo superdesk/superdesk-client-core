@@ -28,6 +28,6 @@ angular.module('superdesk.apps.authoring.compare_versions',
                 topTemplateUrl: 'scripts/apps/dashboard/views/workspace-topnav.html',
                 sideTemplateUrl: 'scripts/apps/workspace/views/workspace-sidenav.html',
                 controller: CompareVersionsController,
-                filters: [{action: 'author', type: 'compare-versions'}]
+                filters: [{action: 'author', type: 'compare-versions'}],
             });
     }]);

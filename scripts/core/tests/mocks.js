@@ -16,32 +16,32 @@ angular.module('superdesk.mocks', [])
         editor: {},
         model: {
             dateformat: 'DD/MM/YYYY',
-            timeformat: 'HH:mm:ss'
+            timeformat: 'HH:mm:ss',
         },
         iframely: {key: ''},
         validatorMediaMetadata: {
             headline: {
-                required: true
+                required: true,
             },
             alt_text: {
-                required: true
+                required: true,
             },
             description_text: {
-                required: true
+                required: true,
             },
             copyrightholder: {
-                required: false
+                required: false,
             },
             byline: {
-                required: false
+                required: false,
             },
             usageterms: {
-                required: false
+                required: false,
             },
             copyrightnotice: {
-                required: false
-            }
-        }
+                required: false,
+            },
+        },
     })
     .service('features', () => { /* no-op */ })
     .service('preferencesService', function($q) {

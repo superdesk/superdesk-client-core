@@ -14,7 +14,7 @@ export function SortGroups() {
 
                         return $('<li class="placeholder" style="height:' + height + 'px"></li>')[0];
                     },
-                    update: function() { /* no-op */ }
+                    update: function() { /* no-op */ },
                 },
                 start: function(event, ui) {
                     ui.item
@@ -29,13 +29,13 @@ export function SortGroups() {
                     if (updated) {
                         updated = false;
                         var start = {
-                            index: ui.item.data('start_index')
+                            index: ui.item.data('start_index'),
                         };
                         var end = {
                             index: ui.item
                                 .parent()
                                 .find('li.sort-item')
-                                .index(ui.item)
+                                .index(ui.item),
                         };
 
                         scope.reorder(start, end, ui.item);
@@ -46,8 +46,8 @@ export function SortGroups() {
                 update: function(event, ui) {
                     updated = true;
                 },
-                cancel: '.fake'
+                cancel: '.fake',
             });
-        }
+        },
     };
 }

@@ -25,5 +25,5 @@ export const UserAvatar = ({displayName, pictureUrl, ...rest}) =>
 
 UserAvatar.propTypes = {
     displayName: PropTypes.string.isRequired,
-    pictureUrl: PropTypes.string
+    pictureUrl: PropTypes.string,
 };

@@ -78,7 +78,7 @@ angular.module('superdesk.apps.monitoring', [
 angular.module('superdesk.apps.aggregate', [
     'superdesk.apps.authoring.widgets',
     'superdesk.apps.desks',
-    'superdesk.apps.workspace'
+    'superdesk.apps.workspace',
 ])
     .controller('AggregateCtrl', ctrl.AggregateCtrl)
     .directive('sdAggregateSettings', directive.AggregateSettings)

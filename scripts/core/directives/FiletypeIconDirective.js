@@ -29,5 +29,5 @@ export default angular.module('superdesk.core.directives.filetypeIcon', [])
                 element.attr('title', `${gettextCatalog.getString('Article Type')}: ${item.type}`);
                 element.addClass(cls);
             }
-        }
+        },
     })]);

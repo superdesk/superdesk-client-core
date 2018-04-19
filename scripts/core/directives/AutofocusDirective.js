@@ -8,5 +8,5 @@ export default angular.module('superdesk.core.directives.autofocus', [])
     .directive('sdAutoFocus', () => ({
         link: function($scope, element, attrs) {
             element.focus();
-        }
+        },
     }));

@@ -20,7 +20,7 @@ export default angular.module('superdesk.apps.settings', [])
             category: superdesk.MENU_MAIN,
             priority: 1000,
             adminTools: true,
-            _settings: 1
+            _settings: 1,
         });
     }])
 

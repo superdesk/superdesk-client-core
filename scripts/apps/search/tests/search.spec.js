@@ -231,7 +231,7 @@ describe('search service', () => {
             newItems: newItems,
             scopeItems: scopeItems,
             scrollTop: scrollTop,
-            isItemPreviewing: isItemPreviewing
+            isItemPreviewing: isItemPreviewing,
         };
     }
 
@@ -297,25 +297,25 @@ describe('sdSearchPanel directive', () => {
         $provide.constant('config', {
             model: {
                 timeformat: 'HH:mm:ss',
-                dateformat: 'DD/MM/YYYY'
+                dateformat: 'DD/MM/YYYY',
             },
             view: {
                 timeformat: 'HH:mm',
-                dateformat: 'MM/DD/YYYY'
+                dateformat: 'MM/DD/YYYY',
             },
             defaultTimezone: 'Europe/London',
-            server: {url: undefined}
+            server: {url: undefined},
         });
 
         fakeApi = {
             ingestProviders: {
-                query: jasmine.createSpy()
-            }
+                query: jasmine.createSpy(),
+            },
         };
 
         fakeMetadata = {
             values: {subjectcodes: []},
-            fetchSubjectcodes: jasmine.createSpy()
+            fetchSubjectcodes: jasmine.createSpy(),
         };
 
         $provide.value('metadata', fakeMetadata);
@@ -354,7 +354,7 @@ describe('sdSearchPanel directive', () => {
         html = [
             '<div sd-search-container>',
             '    <div sd-search-panel></div>',
-            '</div>'
+            '</div>',
         ].join('');
 
         scope = $rootScope.$new();
@@ -379,8 +379,8 @@ describe('sdSearchPanel directive', () => {
                     day: {buckets: []},
                     week: {buckets: []},
                     month: {buckets: []},
-                    stage: {buckets: []}
-                }
+                    stage: {buckets: []},
+                },
             };
         });
 
@@ -388,11 +388,11 @@ describe('sdSearchPanel directive', () => {
             isoScope.desk = null;
 
             isoScope.items._aggregations.desk.buckets = [
-                {doc_count: 123, key: 'abc123'}
+                {doc_count: 123, key: 'abc123'},
             ];
 
             desks.deskLookup = {
-                otherDesk: {} // desk abc123 not present in deskLookup
+                otherDesk: {}, // desk abc123 not present in deskLookup
             };
 
             try {
@@ -407,11 +407,11 @@ describe('sdSearchPanel directive', () => {
             isoScope.desk = null;
 
             isoScope.items._aggregations.desk.buckets = [
-                {doc_count: 123, key: 'abc123'}
+                {doc_count: 123, key: 'abc123'},
             ];
 
             desks.deskLookup = {
-                otherDesk: {} // desk abc123 not present in deskLookup
+                otherDesk: {}, // desk abc123 not present in deskLookup
             };
 
             spyOn(console, 'warn');
@@ -430,7 +430,7 @@ describe('sdSearchPanel directive', () => {
 describe('sort service', () => {
     let sortOptions = [
         {field: 'versioncreated', label: gettext('Updated')},
-        {field: 'urgency', label: gettext('Urgency')}
+        {field: 'urgency', label: gettext('Urgency')},
     ];
 
 

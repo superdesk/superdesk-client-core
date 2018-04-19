@@ -62,6 +62,6 @@ export function ItemSearchbar($location, $document, asset) {
             scope.$on('$destroy', () => {
                 $document.unbind('click', closeOnClick);
             });
-        }
+        },
     };
 }

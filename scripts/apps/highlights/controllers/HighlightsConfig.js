@@ -12,7 +12,7 @@ export function HighlightsConfig($scope, highlightsService, desks, api, gettext,
 
     var limits = {
         group: 45,
-        highlight: 40
+        highlight: 40,
     };
 
     $scope.limits = limits;
@@ -79,7 +79,7 @@ export function HighlightsConfig($scope, highlightsService, desks, api, gettext,
         return _.map($scope.desks, (d) => ({
             _id: d._id,
             name: d.name,
-            included: isIncluded(arr, d._id)
+            included: isIncluded(arr, d._id),
         }));
     }
 

@@ -4,7 +4,7 @@ import {
     SelectionState,
     Modifier,
     EditorState,
-    convertFromRaw
+    convertFromRaw,
 } from 'draft-js';
 
 export const editor3DataKeys = {
@@ -14,7 +14,7 @@ export const editor3DataKeys = {
 
     // required in order to expose commnets to the server, but not couple it
     // with the client-side implementation of text-highlights
-    __PUBLIC_API__comments: '__PUBLIC_API__comments'
+    __PUBLIC_API__comments: '__PUBLIC_API__comments',
 };
 
 export function keyValid(key) {

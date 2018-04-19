@@ -28,7 +28,7 @@ function ShadowDirective($timeout) {
             });
 
             $timeout(shadowTimeout, 1, false);
-        }
+        },
     };
 }
 
@@ -50,7 +50,7 @@ CreateButtonDirective.$inject = [];
 function CreateButtonDirective() {
     return {
         restrict: 'C',
-        template: '<i class="icon-plus-large"></i><span class="circle"></span>'
+        template: '<i class="icon-plus-large"></i><span class="circle"></span>',
     };
 }
 
@@ -64,7 +64,7 @@ function AutofocusDirective() {
                 element.val('').focus();
                 element.val(value);
             });
-        }
+        },
     };
 }
 
@@ -96,7 +96,7 @@ function AutoexpandDirective() {
             element.on('keyup change', () => {
                 resize();
             });
-        }
+        },
     };
 }
 
@@ -212,7 +212,7 @@ function DropdownFocus(Keys) {
                     inputField.off('keyup');
                 }
             });
-        }
+        },
     };
 }
 
@@ -256,7 +256,7 @@ function DatepickerWrapper() {
                 event.preventDefault();
                 event.stopPropagation();
             });
-        }
+        },
     };
 }
 
@@ -274,7 +274,7 @@ function DatepickerDirective($document) {
             dt: '=ngModel',
             disabled: '=ngDisabled',
             format: '@',
-            onChange: '&'
+            onChange: '&',
         },
         templateUrl: 'scripts/core/ui/views/sd-datepicker.html',
         link: function(scope, element) {
@@ -309,7 +309,7 @@ function DatepickerDirective($document) {
             scope.$on('$destroy', () => {
                 $document.off('click', handleDatePicker);
             });
-        }
+        },
     };
 }
 
@@ -324,7 +324,7 @@ function DatepickerInnerDirective($compile, $document, popupService, datetimeHel
         require: 'ngModel',
         scope: {
             open: '=opened',
-            dtFormat: '=format'
+            dtFormat: '=format',
         },
         link: function(scope, element, attrs, ctrl) {
             var VIEW_DATE_FORMAT = config.view.dateformat;
@@ -359,7 +359,7 @@ function DatepickerInnerDirective($compile, $document, popupService, datetimeHel
                 }
                 ctrl.$setViewValue({
                     dpdate: scope.date,
-                    viewdate: moment(scope.date).format(VIEW_DATE_FORMAT)
+                    viewdate: moment(scope.date).format(VIEW_DATE_FORMAT),
                 });
                 ctrl.$render();
                 scope.close();
@@ -394,7 +394,7 @@ function DatepickerInnerDirective($compile, $document, popupService, datetimeHel
 
                 return {
                     dpdate: dpdate,
-                    viewdate: viewdate
+                    viewdate: viewdate,
                 };
             });
 
@@ -432,7 +432,7 @@ function DatepickerInnerDirective($compile, $document, popupService, datetimeHel
                 $popupWrapper.remove();
                 element.unbind('keydown', scope.keydown);
             });
-        }
+        },
     };
 }
 
@@ -442,7 +442,7 @@ function TimepickerDirective($document) {
         scope: {
             tt: '=ngModel',
             style: '@',
-            disabled: '=ngDisabled'
+            disabled: '=ngDisabled',
         },
         templateUrl: 'scripts/core/ui/views/sd-timepicker.html',
         link: function(scope, element) {
@@ -470,7 +470,7 @@ function TimepickerDirective($document) {
             scope.$on('$destroy', () => {
                 $document.off('click', handleTimePicker);
             });
-        }
+        },
     };
 }
 
@@ -482,7 +482,7 @@ function TimepickerInnerDirective($compile, $document, popupService, datetimeHel
 
     return {
         scope: {
-            open: '=opened'
+            open: '=opened',
         },
         require: 'ngModel',
         link: function(scope, element, attrs, ctrl) {
@@ -548,7 +548,7 @@ function TimepickerInnerDirective($compile, $document, popupService, datetimeHel
 
                 return {
                     tptime: tptime,
-                    viewtime: viewtime
+                    viewtime: viewtime,
                 };
             });
 
@@ -586,7 +586,7 @@ function TimepickerInnerDirective($compile, $document, popupService, datetimeHel
                 $popupWrapper.remove();
                 element.unbind('keydown', scope.keydown);
             });
-        }
+        },
     };
 }
 
@@ -596,7 +596,7 @@ function TimezoneDirective(tzdata, config, $timeout) {
         templateUrl: 'scripts/core/ui/views/sd-timezone.html',
         scope: {
             timezone: '=',
-            style: '@'
+            style: '@',
         },
         link: function(scope, el) {
             scope.timeZones = []; // all time zones to choose from
@@ -662,7 +662,7 @@ function TimezoneDirective(tzdata, config, $timeout) {
                 }, 0, false);
                 delete scope.timezone;
             };
-        }
+        },
     };
 }
 
@@ -674,7 +674,7 @@ function TimepickerPopupDirective($timeout, config) {
             open: '=',
             select: '&',
             keydown: '&',
-            time: '='
+            time: '=',
         },
         link: function(scope, element) {
             var MODEL_TIME_FORMAT = config.model.timeformat;
@@ -730,7 +730,7 @@ function TimepickerPopupDirective($timeout, config) {
             scope.cancel = function() {
                 scope.select();
             };
-        }
+        },
     };
 }
 
@@ -804,7 +804,7 @@ function WeekdayPickerDirective(weekdays) {
                     scope.model.push(day);
                 }
             };
-        }
+        },
     };
 }
 
@@ -886,15 +886,15 @@ function splitterWidget(superdesk, $timeout) {
                     superdesk.headerWidth = superdesk.stageWidth = stage.outerWidth();
 
                     ui.element.css({
-                        width: superdesk.monitoringWidth
+                        width: superdesk.monitoringWidth,
                     });
 
                     header.css({
-                        width: superdesk.headerWidth
+                        width: superdesk.headerWidth,
                     });
-                }
+                },
             });
-        }
+        },
     };
 }
 
@@ -937,7 +937,7 @@ function HeaderResizeDirective($rootScope, $timeout, $window, workspaces) {
             scope.$on('$destroy', () => {
                 window.off('resize', resize);
             });
-        }
+        },
     };
 }
 
@@ -954,7 +954,7 @@ function mediaQuery($window, authoringWorkspace) {
     return {
         scope: {
             minWidth: '=',
-            maxWidth: '='
+            maxWidth: '=',
         },
         link: function(scope, elem) {
             var window = angular.element($window);
@@ -991,7 +991,7 @@ function mediaQuery($window, authoringWorkspace) {
             scope.$on('$destroy', () => {
                 window.off('resize', resize);
             });
-        }
+        },
     };
 }
 
@@ -1023,7 +1023,7 @@ function focusElement() {
             element.on('blur', () => {
                 element.closest(dataAppendElement).removeClass(dataClass);
             });
-        }
+        },
     };
 }
 
@@ -1075,7 +1075,7 @@ function validationDirective(gettextCatalog) {
                     elem.removeClass('sd-invalid').addClass('sd-valid');
                 }
             });
-        }
+        },
     };
 }
 
@@ -1100,7 +1100,7 @@ function MultipleEmailsValidation() {
 
                 return emails.every(testEmail);
             };
-        }
+        },
     };
 }
 
@@ -1118,8 +1118,8 @@ function LoadingDirective() {
             '<div>',
             '<div ng-transclude></div>',
             '<div class="loading-overlay" ng-class="{active: loading}" style="opacity: 0.5;"></div>',
-            '</div>'
-        ].join('')
+            '</div>',
+        ].join(''),
     };
 }
 
@@ -1131,7 +1131,7 @@ function multiSelectDirective() {
             list: '=',
             change: '&',
             output: '@',
-            disabled: '='
+            disabled: '=',
         },
         templateUrl: 'scripts/core/ui/views/sd-multi-select.html',
         link: function(scope) {
@@ -1190,7 +1190,7 @@ function multiSelectDirective() {
 
                 scope.activeList = true;
             };
-        }
+        },
     };
 }
 
@@ -1204,7 +1204,7 @@ function multiSelectDirective() {
 export default angular.module('superdesk.core.ui', [
     'superdesk.config',
     'superdesk.core.datetime',
-    'superdesk.core.ui.autoheight'
+    'superdesk.core.ui.autoheight',
 ])
 
     .config(['defaultConfigProvider', function(defaultConfig) {

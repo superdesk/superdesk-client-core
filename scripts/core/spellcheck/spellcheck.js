@@ -316,7 +316,7 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _, pref
                     errors.push({
                         word: dblSpace,
                         index: currentOffset + dblSpacesMatch.index + 1,
-                        sentenceWord: false
+                        sentenceWord: false,
                     });
                 }
 
@@ -328,7 +328,7 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _, pref
                         errors.push({
                             word: word,
                             index: currentOffset + match.index,
-                            sentenceWord: isSentenceWord
+                            sentenceWord: isSentenceWord,
                         });
                     }
                 }
@@ -351,7 +351,7 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _, pref
 
         return api.save('spellcheck', {
             word: word,
-            language_id: lang
+            language_id: lang,
         }).then((result) => {
             var allDict = getDict();
             var wordFoundInDict = _.pick(allDict.content, (value, key) => {
@@ -467,7 +467,7 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _, pref
         updates[PREFERENCES_KEY] = {
             type: 'bool',
             enabled: status,
-            default: true
+            default: true,
         };
 
         preferencesService.update(updates, PREFERENCES_KEY);

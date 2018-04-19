@@ -1,6 +1,6 @@
 import {
     editor3DataKeys,
-    getCustomDataFromEditorRawState
+    getCustomDataFromEditorRawState,
 } from 'core/editor3/helpers/editor3CustomData';
 import * as Highlights from 'core/editor3/helpers/highlights';
 
@@ -46,7 +46,7 @@ function SuggestionsCtrl($scope, userList, content) {
         const suggestions = Object.keys($scope.item[META_FIELD_NAME])
             .map((contentKey) => ({
                 contentKey: contentKey,
-                [fieldsMetaKeys.draftjsState]: getFieldMetadata($scope.item, contentKey, fieldsMetaKeys.draftjsState)
+                [fieldsMetaKeys.draftjsState]: getFieldMetadata($scope.item, contentKey, fieldsMetaKeys.draftjsState),
             }))
             .filter((obj) => obj[fieldsMetaKeys.draftjsState] != null)
             .map((obj) => (
@@ -55,7 +55,7 @@ function SuggestionsCtrl($scope, userList, content) {
                     suggestions: getCustomDataFromEditorRawState(
                         obj[fieldsMetaKeys.draftjsState],
                         editor3DataKeys.RESOLVED_SUGGESTIONS_HISTORY
-                    ) || []
+                    ) || [],
                 }
             ))
             .filter((obj) => obj.suggestions.length > 0);
@@ -79,7 +79,7 @@ function SuggestionsCtrl($scope, userList, content) {
 
 angular
     .module('superdesk.apps.authoring.track-changes.suggestions', [
-        'superdesk.apps.authoring.widgets'
+        'superdesk.apps.authoring.widgets',
     ])
     .config([
         'authoringWidgetsProvider',
@@ -98,10 +98,10 @@ angular
                     legalArchive: false,
                     archived: false,
                     picture: true,
-                    personal: true
-                }
+                    personal: true,
+                },
             });
-        }
+        },
     ])
 
     .controller('SuggestionsCtrl', SuggestionsCtrl);

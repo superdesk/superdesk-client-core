@@ -5,6 +5,6 @@ export default function CheckboxDirective() {
             label: '@',
             model: '=',
         },
-        template: require('./views/checkbox-directive.html')
+        template: require('./views/checkbox-directive.html'),
     };
 }

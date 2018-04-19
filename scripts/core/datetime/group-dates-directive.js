@@ -42,6 +42,6 @@ angular.module('superdesk.core.datetime.groupdates', []).directive('sdGroupDates
                     lastDate = date;
                 }
             };
-        }
+        },
     };
 }]);

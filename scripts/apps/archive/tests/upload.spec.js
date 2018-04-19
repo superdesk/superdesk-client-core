@@ -66,12 +66,12 @@ describe('Upload controller', () => {
             method: 'POST',
             url: UPLOAD_URL,
             data: {media: files[0]},
-            headers: api.archive.getHeaders()
+            headers: api.archive.getHeaders(),
         });
 
         upload.defer.notify({
             total: 100,
-            loaded: 50
+            loaded: 50,
         });
 
         $rootScope.$digest();
@@ -140,7 +140,7 @@ describe('Upload controller', () => {
                 method: 'POST',
                 url: UPLOAD_URL,
                 data: {media: files[0]},
-                headers: api.archive.getHeaders()
+                headers: api.archive.getHeaders(),
             });
         }));
 });

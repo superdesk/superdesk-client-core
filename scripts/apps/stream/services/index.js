@@ -16,6 +16,6 @@ export function ActivityMessageService(gettextCatalog) {
                 }
             }
             return displayMessage;
-        }
+        },
     };
 }

@@ -17,6 +17,6 @@ export function AddPackageDropdown($rootScope, api, packages, authoringWorkspace
             scope.select = function(group) {
                 packages.addPackageGroupItem(group, scope.item);
             };
-        }
+        },
     };
 }

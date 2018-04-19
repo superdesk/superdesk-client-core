@@ -100,7 +100,7 @@ export function FilterSearchController($scope, contentFilters, notify, $filter) 
             var inputs = {
                 field: $scope.filterCondition.field,
                 operator: $scope.filterCondition.operator,
-                value: $scope.filterCondition.value
+                value: $scope.filterCondition.value,
             };
 
             $scope.loading = true;

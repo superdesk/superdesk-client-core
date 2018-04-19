@@ -13,7 +13,7 @@ UserPrivilegesDirective.$inject = ['api', 'gettext', 'notify', 'userList', '$q']
 export function UserPrivilegesDirective(api, gettext, notify, userList, $q) {
     return {
         scope: {
-            user: '='
+            user: '=',
         },
         templateUrl: 'scripts/apps/users/views/user-privileges.html',
         link: function(scope) {
@@ -92,6 +92,6 @@ export function UserPrivilegesDirective(api, gettext, notify, userList, $q) {
 
                 scope.userPrivileges.$setPristine();
             };
-        }
+        },
     };
 }

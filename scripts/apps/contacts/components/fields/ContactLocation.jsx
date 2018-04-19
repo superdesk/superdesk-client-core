@@ -24,5 +24,5 @@ export const ContactLocation = ({item, svc}) => {
 
 ContactLocation.propTypes = {
     item: PropTypes.object,
-    svc: PropTypes.object
+    svc: PropTypes.object,
 };

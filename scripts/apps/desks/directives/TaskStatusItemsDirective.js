@@ -5,7 +5,7 @@ export function TaskStatusItemsDirective(search, api, desks) {
         scope: {
             status: '=',
             desk: '=',
-            total: '='
+            total: '=',
         },
         link: function(scope, elem) {
             scope.users = desks.userLookup;
@@ -14,7 +14,7 @@ export function TaskStatusItemsDirective(search, api, desks) {
 
             query.filter({and: [
                 {term: {'task.status': scope.status}},
-                {term: {'task.desk': scope.desk}}
+                {term: {'task.desk': scope.desk}},
             ]});
             query.size(10);
             var criteria = {source: query.getCriteria()};
@@ -29,6 +29,6 @@ export function TaskStatusItemsDirective(search, api, desks) {
                 }, () => {
                     scope.loading = false;
                 });
-        }
+        },
     };
 }

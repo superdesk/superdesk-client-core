@@ -14,7 +14,7 @@ describe('PermissionsService', () => {
     var testPermissions = {
         testResource_1: {read: true},
         testResource_2: {write: true},
-        testResource_3: {read: true, write: true}
+        testResource_3: {read: true, write: true},
     };
 
     beforeEach(() => {
@@ -27,7 +27,7 @@ describe('PermissionsService', () => {
 
     it('can succeed checking role', () => {
         permissionsService.isRoleAllowed(testPermissions, {
-            permissions: testPermissions
+            permissions: testPermissions,
         }).then((result) => {
             expect(result).toBe(true);
         });
@@ -37,8 +37,8 @@ describe('PermissionsService', () => {
         permissionsService.isRoleAllowed(testPermissions, {
             permissions: {
                 testResource_1: {read: true},
-                testResource_3: {write: true}
-            }
+                testResource_3: {write: true},
+            },
         }).then((result) => {
             expect(result).toBe(false);
         });
@@ -52,7 +52,7 @@ describe('PermissionsService', () => {
             .respond(200, {permissions: testPermissions});
 
         permissionsService.isUserAllowed(testPermissions, {
-            role: 'testRoleId'
+            role: 'testRoleId',
         }).then((isAllowed) => {
             result = isAllowed;
         });
@@ -70,7 +70,7 @@ describe('PermissionsService', () => {
             .respond(200, {permissions: {testResource_1: {read: true}}});
 
         permissionsService.isUserAllowed(testPermissions, {
-            role: 'testRoleId'
+            role: 'testRoleId',
         }).then((isAllowed) => {
             result = isAllowed;
         });

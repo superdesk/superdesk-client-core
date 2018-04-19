@@ -13,7 +13,7 @@ export default angular.module('superdesk.apps.legal_archive', [
     'superdesk.core.datetime',
     'superdesk.core.activity',
     'superdesk.core.api',
-    'superdesk.apps.search'
+    'superdesk.apps.search',
 ])
     .service('legal', LegalArchiveService)
     .directive('sdLegalItemSortbar', LegalItemSortbar)
@@ -21,12 +21,12 @@ export default angular.module('superdesk.apps.legal_archive', [
     .config(['apiProvider', function(apiProvider) {
         apiProvider.api('legal_archive', {
             type: 'http',
-            backend: {rel: 'legal_archive'}
+            backend: {rel: 'legal_archive'},
         });
 
         apiProvider.api('legal_archive_versions', {
             type: 'http',
-            backend: {rel: 'legal_archive_versions'}
+            backend: {rel: 'legal_archive_versions'},
         });
     }])
 
@@ -44,6 +44,6 @@ export default angular.module('superdesk.apps.legal_archive', [
                 reloadOnSearch: false,
                 filters: [],
                 privileges: {legal_archive: 1},
-                features: {legal_archive: 1}
+                features: {legal_archive: 1},
             });
     }]);

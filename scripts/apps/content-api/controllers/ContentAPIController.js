@@ -18,11 +18,11 @@ export class ContentAPIController {
         pageTitle.setUrl(gettext('Content API Search'));
 
         this.$scope.flags = {
-            hideActions: true
+            hideActions: true,
         };
 
         this.$scope.selected = {
-            preview: null
+            preview: null,
         };
 
         this.$scope.setView = this.setView.bind(this);
@@ -34,8 +34,8 @@ export class ContentAPIController {
                 view: 'mgrid',
                 default: 'mgrid',
                 label: 'Users archive view format',
-                type: 'string'
-            }
+                type: 'string',
+            },
         };
 
         preferencesService.get('archive:view').then((result) => {

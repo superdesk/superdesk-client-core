@@ -42,12 +42,12 @@ describe('sdUserPrivileges directive', () => {
 
         fakeEndpoints.privileges = {
             query: jasmine.createSpy('privileges_query')
-                .and.returnValue(queryDeferred.promise)
+                .and.returnValue(queryDeferred.promise),
         };
 
         fakeEndpoints.roles = {
             getById: jasmine.createSpy('get_roles_by_user_id')
-                .and.returnValue(getByIdDeferred.promise)
+                .and.returnValue(getByIdDeferred.promise),
         };
 
         var user = {_id: 1, role: '€d1t0r', privileges: [{name: 'foo'}, {name: 'bar'}]};
@@ -93,8 +93,8 @@ describe('sdUserPrivileges directive', () => {
         scopeValues = {
             user: {
                 privileges: userPrivileges,
-                role: '€d1t0r'
-            }
+                role: '€d1t0r',
+            },
         };
 
         $element = compileDirective(scopeValues);
@@ -106,8 +106,8 @@ describe('sdUserPrivileges directive', () => {
             var serverResponse = {
                 _items: [
                     {name: 'role_foo'},
-                    {name: 'role_bar'}
-                ]
+                    {name: 'role_bar'},
+                ],
             };
 
             expect(fakeEndpoints.privileges.query).toHaveBeenCalled();
@@ -125,8 +125,8 @@ describe('sdUserPrivileges directive', () => {
             var serverResponse = {
                 name: '€d1t0r',
                 privileges: [
-                    {name: 'create_content'}, {name: 'edit_content'}
-                ]
+                    {name: 'create_content'}, {name: 'edit_content'},
+                ],
             };
 
             queryDeferred.resolve(serverResponse);
@@ -160,7 +160,7 @@ describe('sdUserPrivileges directive', () => {
         it('saves user\'s privileges', () => {
             var userJohn = {
                 name: 'John Doe',
-                privileges: [{name: 'can_edit'}]
+                privileges: [{name: 'can_edit'}],
             };
 
             isoScope.user = userJohn;
@@ -171,7 +171,7 @@ describe('sdUserPrivileges directive', () => {
                 'users',
                 userJohn,
                 {
-                    privileges: [{name: 'can_edit'}]
+                    privileges: [{name: 'can_edit'}],
                 }
             );
         });
@@ -180,7 +180,7 @@ describe('sdUserPrivileges directive', () => {
             () => {
                 isoScope.user = {
                     name: 'John Doe',
-                    privileges: [{name: 'manager'}, {name: 'reviewer'}]
+                    privileges: [{name: 'manager'}, {name: 'reviewer'}],
                 };
 
                 isoScope.origPrivileges = [{name: 'editor'}];

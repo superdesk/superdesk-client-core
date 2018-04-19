@@ -9,6 +9,6 @@ export function getAuthorInfo() {
         author,
         email,
         date,
-        avatar
+        avatar,
     };
 }

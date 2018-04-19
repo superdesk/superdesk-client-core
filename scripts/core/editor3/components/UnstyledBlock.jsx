@@ -53,7 +53,7 @@ UnstyledBlock.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-    invisibles: state.invisibles
+    invisibles: state.invisibles,
 });
 
 export default connect(mapStateToProps)(UnstyledBlock);

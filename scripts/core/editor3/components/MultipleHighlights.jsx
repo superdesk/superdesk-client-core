@@ -60,8 +60,8 @@ export class MultipleHighlights extends React.Component {
                         getHighlightTypeFromStyleName: Highlights.getHighlightTypeFromStyleName,
                         getHighlightsCount: this.getHighlightsCount.bind(this),
                         hadHighlightsChanged: Highlights.hadHighlightsChanged,
-                        availableHighlights: Highlights.availableHighlights
-                    }
+                        availableHighlights: Highlights.availableHighlights,
+                    },
                 })
         );
 

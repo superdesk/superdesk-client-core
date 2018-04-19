@@ -12,10 +12,10 @@ export function PackageItemProxy($compile) {
             id: '=',
             item: '=',
             setitem: '&',
-            mode: '='
+            mode: '=',
         },
         link: function(scope, elem) {
             elem.append($compile(template)(scope));
-        }
+        },
     };
 }

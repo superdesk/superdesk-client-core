@@ -8,7 +8,7 @@
 export function replaceWord(word) {
     return {
         type: 'SPELLCHECKER_REPLACE_WORD',
-        payload: word
+        payload: word,
     };
 }
 
@@ -23,7 +23,7 @@ export function replaceWord(word) {
 export function refreshWord(word) {
     return {
         type: 'SPELLCHECKER_REFRESH_WORD',
-        payload: word
+        payload: word,
     };
 }
 
@@ -37,6 +37,6 @@ export function refreshWord(word) {
 export function setAutoSpellchecker(enabled) {
     return {
         type: 'SPELLCHECKER_AUTO',
-        payload: enabled
+        payload: enabled,
     };
 }

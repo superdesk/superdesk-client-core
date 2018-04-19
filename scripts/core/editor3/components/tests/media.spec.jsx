@@ -7,9 +7,9 @@ import Textarea from 'react-textarea-autosize';
 var servicesStub = {
     svc: {
         gettextCatalog: {
-            getString: (s) => s
-        }
-    }
+            getString: (s) => s,
+        },
+    },
 };
 
 describe('editor3.components.media-block', () => {

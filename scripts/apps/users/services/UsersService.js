@@ -37,7 +37,7 @@ export function UsersService(api, $q, notify) {
         return api.changePassword.create({
             username: user.username,
             old_password: oldPassword,
-            new_password: newPassword
+            new_password: newPassword,
         });
     };
 

@@ -51,7 +51,7 @@ export default angular.module('superdesk.core.directives', [
     'superdesk.core.directives.typeahead',
     'superdesk.core.directives.slider',
     'superdesk.core.directives.avatar',
-    'superdesk.core.directives.withParams'
+    'superdesk.core.directives.withParams',
 ])
 
     .directive('sdPhoneHomeModal', PhoneHomeModalDirective)

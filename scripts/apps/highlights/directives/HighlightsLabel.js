@@ -7,6 +7,6 @@ export function HighlightsLabel(desks, highlightsService) {
             highlightsService.get(desks.getCurrentDeskId()).then((result) => {
                 scope.highlightItem = _.find(result._items, {_id: scope.highlight_id});
             });
-        }
+        },
     };
 }

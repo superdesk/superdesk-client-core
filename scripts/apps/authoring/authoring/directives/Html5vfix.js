@@ -6,6 +6,6 @@ export function Html5vfix() {
         restrict: 'A',
         link: function(scope, element, attr) {
             attr.$set('src', attr.vsrc);
-        }
+        },
     };
 }

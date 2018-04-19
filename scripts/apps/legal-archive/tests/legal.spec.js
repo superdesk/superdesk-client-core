@@ -12,14 +12,14 @@ describe('legal archive service', () => {
         $provide.constant('config', {
             model: {
                 timeformat: 'HH:mm:ss',
-                dateformat: 'DD/MM/YYYY'
+                dateformat: 'DD/MM/YYYY',
             },
             view: {
                 timeformat: 'HH:mm',
-                dateformat: 'MM/DD/YYYY'
+                dateformat: 'MM/DD/YYYY',
             },
             defaultTimezone: 'UTC',
-            server: {url: undefined}
+            server: {url: undefined},
         });
     }));
 
@@ -42,7 +42,7 @@ describe('legal archive service', () => {
         criteria = legal.getCriteria();
         expect(criteria.where).toBe(angular.toJson({$and: [
             {_id: '123'},
-            {headline: {$regex: 'test', $options: '-i'}}
+            {headline: {$regex: 'test', $options: '-i'}},
         ]}));
 
         legal.updateSearchQuery({published_after: '06/16/2015'});
@@ -62,7 +62,7 @@ describe('legal archive service', () => {
         expect(criteria.where).toBe('{"$and":[' + [
             '{"_id":"123"}',
             '{"headline":{"$regex":"test","$options":"-i"}}',
-            '{"versioncreated":{"$gte":"2015-06-16T00:00:00+0000"}}'
+            '{"versioncreated":{"$gte":"2015-06-16T00:00:00+0000"}}',
         ].join(',') + ']}');
     }));
 
@@ -73,7 +73,7 @@ describe('legal archive service', () => {
             {field: 'urgency', label: gettext('Urgency')},
             {field: 'anpa_category.name', label: gettext('Category')},
             {field: 'slugline', label: gettext('Slugline')},
-            {field: 'priority', label: gettext('Priority')}
+            {field: 'priority', label: gettext('Priority')},
         ];
 
         sort.setSort('urgency', sortOptions);

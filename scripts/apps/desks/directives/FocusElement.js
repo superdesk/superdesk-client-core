@@ -6,6 +6,6 @@ export function FocusElement() {
                     angular.element(document.querySelector(attrs.target)).focus();
                 });
             });
-        }
+        },
     };
 }

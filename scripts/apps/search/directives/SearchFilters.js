@@ -99,7 +99,7 @@ class LinkFunction {
         _.each(this.scope.items._aggregations[key].buckets, (bucketCount) => {
             this.scope.aggregations[key][bucketCount.key] = {
                 count: bucketCount.doc_count,
-                qcode: bucketCount.qcode
+                qcode: bucketCount.qcode,
             };
         });
     }
@@ -143,7 +143,7 @@ class LinkFunction {
             if (typeof lookedUpDesk === 'undefined') {
                 var msg = [
                     'Desk (key: ', bucketCount.key, ') not found in ',
-                    'deskLookup, probable storage inconsistency.'
+                    'deskLookup, probable storage inconsistency.',
                 ].join('');
 
                 console.warn(msg);
@@ -152,7 +152,7 @@ class LinkFunction {
 
             this.scope.aggregations[key][lookedUpDesk.name] = {
                 count: bucketCount.doc_count,
-                id: bucketCount.key
+                id: bucketCount.key,
             };
         });
     }
@@ -365,7 +365,7 @@ class LinkFunction {
 export function SearchFilters(desks, tags, $location, metadata) {
     return {
         template: require('scripts/apps/search/views/search-filters.html'),
-        link: (scope, elem) => new LinkFunction(desks, tags, $location, scope, elem, metadata)
+        link: (scope, elem) => new LinkFunction(desks, tags, $location, scope, elem, metadata),
     };
 }
 

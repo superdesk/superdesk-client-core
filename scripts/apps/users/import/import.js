@@ -50,6 +50,6 @@ angular.module('superdesk.apps.users.import', ['superdesk.core.activity', 'super
                 controller: UserImportController,
                 templateUrl: 'scripts/apps/users/import/views/import-user.html',
                 filters: [{action: 'create', type: 'user'}],
-                features: {import_profile: 1}
+                features: {import_profile: 1},
             });
     }]);

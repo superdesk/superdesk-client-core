@@ -26,13 +26,13 @@ describe('text editor', () => {
             $viewValue: text,
             $setViewValue: function(value) {
                 this.$viewValue = value;
-            }
+            },
         };
         scope.medium = {
             exportSelection: function() {
                 return {start: 0, end: 0};
             },
-            importSelection: function(pos) { /* no-op */ }
+            importSelection: function(pos) { /* no-op */ },
         };
         document.body.appendChild(scope.node);
         spyOn(scope.model, '$setViewValue').and.callThrough();
@@ -117,7 +117,7 @@ describe('text editor', () => {
         var abbreviations = {
             IMF: 'International Monetory Fund',
             WHO: 'World Health Organisation',
-            UN: 'United Nations'
+            UN: 'United Nations',
         };
 
         spyOn(spellcheck, 'getAbbreviationsDict').and.returnValue($q.when(abbreviations));

@@ -38,7 +38,7 @@ export function removeLink(editorState) {
             const entitySelection = selection.merge({
                 anchorOffset: start,
                 focusOffset: end,
-                isBackward: false
+                isBackward: false,
             });
 
             stateAfterChange = RichUtils.toggleLink(editorState, entitySelection, null);

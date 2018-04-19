@@ -116,7 +116,7 @@ class LinkFunction {
 export function Export(api, config, multi, notify, storage, session, urls) {
     return {
         templateUrl: 'scripts/apps/archive/views/export.html',
-        link: (scope) => new LinkFunction(api, config, multi, notify, storage, session, urls, scope)
+        link: (scope) => new LinkFunction(api, config, multi, notify, storage, session, urls, scope),
     };
 }
 

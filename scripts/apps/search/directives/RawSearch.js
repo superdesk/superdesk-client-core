@@ -31,6 +31,6 @@ export function RawSearch(asset, $location) {
             function rawQuery() {
                 $location.search('raw', scope.rawquery || null);
             }
-        }
+        },
     };
 }

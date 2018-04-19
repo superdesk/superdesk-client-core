@@ -278,7 +278,7 @@ export default angular.module('superdesk.core.preferences', ['superdesk.core.not
                     USER_PREFERENCES,
                     SESSION_PREFERENCES,
                     ACTIVE_PRIVILEGES,
-                    ACTIONS
+                    ACTIONS,
                 ], (key) => {
                     if (_.isNil(preferences[key])) {
                         preferences[key] = {};

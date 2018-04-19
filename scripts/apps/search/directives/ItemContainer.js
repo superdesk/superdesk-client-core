@@ -2,7 +2,7 @@ ItemContainer.$inject = ['desks'];
 export function ItemContainer(desks) {
     return {
         scope: {
-            item: '='
+            item: '=',
         },
         template: '<span class="location-desk-label">{{item.label}}</span> {{item.value}}',
         link: function(scope, elem) {
@@ -22,6 +22,6 @@ export function ItemContainer(desks) {
                     scope.item.value = 'archived';
                 }
             }
-        }
+        },
     };
 }

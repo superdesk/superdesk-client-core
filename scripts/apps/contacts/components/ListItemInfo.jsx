@@ -26,5 +26,5 @@ export const ListItemInfo = (props) => {
 
 ListItemInfo.propTypes = {
     svc: PropTypes.object.isRequired,
-    scope: PropTypes.any.isRequired
+    scope: PropTypes.any.isRequired,
 };

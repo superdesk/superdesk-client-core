@@ -9,17 +9,17 @@ module.exports = function(grunt) {
             webpack: webpackConfig,
             contentBase: [
                 path.join(process.cwd(), 'dist'),
-                path.dirname(path.dirname(__dirname))
+                path.dirname(path.dirname(__dirname)),
             ],
             port: 9000,
             host: '0.0.0.0',
             headers: {
-                'Cache-Control': 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0'
-            }
+                'Cache-Control': 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0',
+            },
         },
 
         start: {
-            webpack: {devtool: 'eval'}
+            webpack: {devtool: 'eval'},
         },
 
         'ui-guide': {
@@ -28,15 +28,15 @@ module.exports = function(grunt) {
             port: 9100,
             webpack: {
                 entry: {
-                    docs: ['webpack-dev-server/client?http://localhost:9100/', 'docs/ui-guide/index']
+                    docs: ['webpack-dev-server/client?http://localhost:9100/', 'docs/ui-guide/index'],
                 },
                 output: {
                     path: path.join(process.cwd(), 'docs/ui-guide/dist'),
-                    publicPath: 'docs/dist'
+                    publicPath: 'docs/dist',
                 },
                 devtool: 'eval',
-                debug: true
-            }
-        }
+                debug: true,
+            },
+        },
     };
 };

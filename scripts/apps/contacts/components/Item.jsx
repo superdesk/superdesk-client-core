@@ -52,10 +52,10 @@ export class Item extends React.Component {
                 className: classNames(
                     'media-box contacts',
                     {
-                        selected: flags.selected
+                        selected: flags.selected,
                     }
-                )
-            }
+                ),
+            },
         ];
 
         if (view === 'mgrid') {
@@ -93,5 +93,5 @@ Item.propTypes = {
     item: PropTypes.object,
     flags: PropTypes.object,
     view: PropTypes.string,
-    onSelect: PropTypes.func
+    onSelect: PropTypes.func,
 };

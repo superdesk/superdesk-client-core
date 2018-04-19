@@ -15,33 +15,33 @@ describe('Preferences Service', () => {
                     category: 'archive',
                     allowed: [
                         'mgrid',
-                        'compact'
+                        'compact',
                     ],
-                    view: 'mgrid'
+                    view: 'mgrid',
                 },
                 'feature:preview': {
                     default: false,
                     type: 'bool',
                     category: 'feature',
                     enabled: true,
-                    label: 'test'
+                    label: 'test',
                 },
                 'email:notification': {
                     default: true,
                     category: 'notifications',
                     enabled: true,
                     type: 'bool',
-                    label: 'Send notifications via email'
-                }
+                    label: 'Send notifications via email',
+                },
             },
             session_preferences: {
                 'desk:items': [],
                 'pinned:items': [],
                 'scratchpad:items': [
                     '/archive/urn:newsml:a0cca6c9-fe94-46ed-9ce7-aab9361ff6b8',
-                    '/archive/urn:newsml:a0cca6c9-fe94-46ed-9ce7-aab9361ff6b8'
-                ]
-            }
+                    '/archive/urn:newsml:a0cca6c9-fe94-46ed-9ce7-aab9361ff6b8',
+                ],
+            },
         };
 
     var testUncachedPreferences = {user_preferences: {'feature:preview': {enabled: false}}};
@@ -52,8 +52,8 @@ describe('Preferences Service', () => {
             enabled: false,
             label: 'Test Label',
             type: 'bool',
-            category: 'feature'
-        }
+            category: 'feature',
+        },
     };
 
     beforeEach(inject((api, $q) => {

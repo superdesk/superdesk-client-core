@@ -6,7 +6,7 @@ export const Label = ({text, row, light, className}) => (!text ? null : (
     <label className={classNames({
         'sd-line-input__label': !row,
         'form-label': row,
-        'form-label--light': row && light
+        'form-label--light': row && light,
     }, className)}>
         {text}
     </label>

@@ -10,7 +10,7 @@ describe('content expiry', () => {
             scope.expiryMinutes = 4320;
             scope.expiryContext = context;
             scope.item = {
-                content_expiry: contentExpiry
+                content_expiry: contentExpiry,
             };
 
             elem = $compile(`<div sd-content-expiry

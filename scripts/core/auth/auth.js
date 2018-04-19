@@ -32,7 +32,7 @@ function AuthExpiredInterceptor(session, $q, $injector, $browser, config, _) {
             }
 
             return $q.reject(response);
-        }
+        },
     };
 }
 
@@ -123,7 +123,7 @@ angular.module('superdesk.core.auth.session', [])
     .constant('SESSION_EVENTS', {
         LOGIN: 'login',
         LOGOUT: 'logout',
-        IDENTITY_LOADED: 'identity_loaded'
+        IDENTITY_LOADED: 'identity_loaded',
     });
 
 /**
@@ -142,7 +142,7 @@ export default angular.module('superdesk.core.auth', [
     'superdesk.core.auth.auth',
     'superdesk.core.auth.basic',
     'superdesk.core.auth.login',
-    'superdesk.core.auth.interceptor'
+    'superdesk.core.auth.interceptor',
 ])
     .config(['$httpProvider', 'superdeskProvider', 'assetProvider', function($httpProvider, superdesk, asset) {
         $httpProvider.interceptors.push('AuthExpiredInterceptor');
@@ -151,27 +151,27 @@ export default angular.module('superdesk.core.auth', [
             .activity('/reset-password/', {
                 controller: ResetPassworController,
                 templateUrl: asset.templateUrl('core/auth/reset-password.html'),
-                auth: false
+                auth: false,
             });
         superdesk
             .activity('/secure-login/', {
                 controller: SecureLoginController,
                 templateUrl: asset.templateUrl('core/auth/secure-login.html'),
-                auth: false
+                auth: false,
             });
     }])
     .config(['apiProvider', function(apiProvider) {
         apiProvider.api('resetPassword', {
             type: 'http',
             backend: {
-                rel: 'reset_user_password'
-            }
+                rel: 'reset_user_password',
+            },
         });
         apiProvider.api('auth', {
             type: 'http',
             backend: {
-                rel: 'auth'
-            }
+                rel: 'auth',
+            },
         });
     }])
 

@@ -21,6 +21,6 @@ export function RatioCalc($window) {
             scope.$on('$destroy', () => {
                 win.unbind('resize', ratioOnResize);
             });
-        }
+        },
     };
 }

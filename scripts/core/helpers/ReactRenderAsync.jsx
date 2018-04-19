@@ -8,7 +8,7 @@ class ReactRenderAsync extends React.Component {
 
         this.state = {
             loading: true,
-            mappedProps: {}
+            mappedProps: {},
         };
     }
     componentWillMount() {
@@ -16,7 +16,7 @@ class ReactRenderAsync extends React.Component {
             .then((result) => {
                 this.setState({
                     loading: false,
-                    mappedProps: result
+                    mappedProps: result,
                 });
             })
             .catch((err) => {

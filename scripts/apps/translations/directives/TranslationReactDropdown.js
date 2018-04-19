@@ -48,7 +48,7 @@ export function TranslationReactDropdown(item, className, TranslationService, no
             return React.createElement(
                 'button', {
                     disabled: isCurrentLang,
-                    onClick: this.markTranslate
+                    onClick: this.markTranslate,
                 },
                 language.label
             );
@@ -57,7 +57,7 @@ export function TranslationReactDropdown(item, className, TranslationService, no
 
     TranslateBtn.propTypes = {
         item: PropTypes.object,
-        language: PropTypes.object
+        language: PropTypes.object,
     };
 
     /*

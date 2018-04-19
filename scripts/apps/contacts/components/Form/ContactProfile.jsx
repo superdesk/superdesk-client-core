@@ -9,13 +9,13 @@ export class ContactProfile extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            contactType: 'person'
+            contactType: 'person',
         };
     }
 
     componentWillReceiveProps(nextProps) {
         this.setState({
-            contactType: getContactType(nextProps.contact)
+            contactType: getContactType(nextProps.contact),
         });
     }
 

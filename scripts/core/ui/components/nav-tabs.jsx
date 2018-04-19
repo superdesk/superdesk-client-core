@@ -18,7 +18,7 @@ export class NavTabs extends React.Component {
     render() {
         const tabs = this.props.tabs.map((tab) => {
             const className = classNames('nav-tabs__tab', {
-                'nav-tabs__tab--active': this.state.tab === tab
+                'nav-tabs__tab--active': this.state.tab === tab,
             });
 
             return (
@@ -40,5 +40,5 @@ export class NavTabs extends React.Component {
 
 NavTabs.propTypes = {
     tabs: PropTypes.array.isRequired,
-    active: PropTypes.number
+    active: PropTypes.number,
 };

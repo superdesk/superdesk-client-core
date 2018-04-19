@@ -19,7 +19,7 @@ export function AggregateSettings(desks, workspaces, session, preferencesService
             settings: '=',
             currentStep: '=',
             displayOnlyCurrentStep: '=',
-            columnsLimit: '='
+            columnsLimit: '=',
         },
         link: function(scope, elem) {
             var PREFERENCES_KEY = 'agg:view';
@@ -83,7 +83,7 @@ export function AggregateSettings(desks, workspaces, session, preferencesService
              */
             scope.setCurrentStep = function() {
                 scope.step = {
-                    current: scope.currentStep || 'desks'
+                    current: scope.currentStep || 'desks',
                 };
             };
 
@@ -256,7 +256,7 @@ export function AggregateSettings(desks, workspaces, session, preferencesService
                         groups.push({
                             _id: item._id,
                             type: item.type,
-                            max_items: item.max_items
+                            max_items: item.max_items,
                         });
                     }
                 });
@@ -310,6 +310,6 @@ export function AggregateSettings(desks, workspaces, session, preferencesService
                     scope.onclose();
                 }
             };
-        }
+        },
     };
 }

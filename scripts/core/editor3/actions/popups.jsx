@@ -10,7 +10,7 @@ export const PopupTypes = {
     Annotation: 'ANNOTATION',
     Comment: 'COMMENT',
     Link: 'LINK',
-    Embed: 'EMBED'
+    Embed: 'EMBED',
 };
 
 /**
@@ -24,7 +24,7 @@ export const PopupTypes = {
 export function showPopup(type, data) {
     return {
         type: 'TOOLBAR_SET_POPUP',
-        payload: {type, data}
+        payload: {type, data},
     };
 }
 

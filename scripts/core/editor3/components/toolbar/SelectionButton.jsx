@@ -21,7 +21,7 @@ const SelectionButtonComponent = ({editorState, onClick, tooltip, iconName, prec
     const clickHandler = () => {
         if (!inactive) {
             onClick({
-                selection: editorState.getSelection()
+                selection: editorState.getSelection(),
             });
         }
     };
@@ -40,16 +40,16 @@ SelectionButtonComponent.propTypes = {
     editorState: PropTypes.object.isRequired,
     tooltip: PropTypes.string,
     precondition: PropTypes.bool,
-    onClick: PropTypes.func.isRequired
+    onClick: PropTypes.func.isRequired,
 };
 
 SelectionButtonComponent.defaultProps = {
-    precondition: true
+    precondition: true,
 };
 
 const mapStateToProps = (state) => ({
     editorState: state.editorState,
-    options: state.editorFormat
+    options: state.editorFormat,
 });
 
 export const SelectionButton = connect(mapStateToProps, null)(SelectionButtonComponent);

@@ -7,23 +7,23 @@ module.exports = {
             {
                 cwd: process.cwd(),
                 src: './index.html',
-                dest: '<%= distDir %>/index.html'
-            }
-        ]
+                dest: '<%= distDir %>/index.html',
+            },
+        ],
     },
     config: {
         files: [
             {
                 cwd: process.cwd(),
                 src: path.join(appRoot, 'scripts', 'config.js'),
-                dest: '<%= distDir %>/config.js'
+                dest: '<%= distDir %>/config.js',
             },
             {
                 cwd: process.cwd(),
                 src: 'config.js',
-                dest: '<%= distDir %>/config.js'
+                dest: '<%= distDir %>/config.js',
             },
-        ]
+        ],
     },
     assets: {
         files: [
@@ -32,9 +32,9 @@ module.exports = {
                 dot: true,
                 cwd: '<%= coreDir %>',
                 dest: '<%= distDir %>',
-                src: ['images/**/*', 'scripts/**/*.{json,svg}']
-            }
-        ]
+                src: ['images/**/*', 'scripts/**/*.{json,svg}'],
+            },
+        ],
     },
     locales: {
         files: [
@@ -44,9 +44,9 @@ module.exports = {
                 src: ['node_modules/angular-i18n/angular-locale_*.js'],
                 dest: '<%= distDir %>/locales/',
                 flatten: true,
-                filter: 'isFile'
-            }
-        ]
+                filter: 'isFile',
+            },
+        ],
     },
     'assets-ui-guide': {
         files: [
@@ -55,13 +55,13 @@ module.exports = {
                 dot: true,
                 cwd: '<%= coreDir %>',
                 dest: 'docs/ui-guide/dist',
-                src: ['images/**/*']
+                src: ['images/**/*'],
             },
             {
                 cwd: process.cwd(),
                 src: path.join(appRoot, 'docs/ui-guide/index.html'),
-                dest: path.join(appRoot, 'docs/ui-guide/dist/index.html')
-            }
-        ]
-    }
+                dest: path.join(appRoot, 'docs/ui-guide/dist/index.html'),
+            },
+        ],
+    },
 };

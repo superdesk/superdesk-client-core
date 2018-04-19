@@ -118,8 +118,8 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
                 'usageterms',
                 'copyrightnotice',
                 'poi',
-                'renditions'
-            ])
+                'renditions',
+            ]),
         });
     };
 
@@ -157,7 +157,7 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
             isAoISelectionModeEnabled: show === undefined || show,
             areaOfInterestData: {},
             loaderForAoI: false,
-            isAoIDirty: false
+            isAoIDirty: false,
         });
     };
 
@@ -194,7 +194,7 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
     $scope.saveAreaOfInterest = function(croppingData) {
         let [width, height] = [
             croppingData.CropRight - croppingData.CropLeft,
-            croppingData.CropBottom - croppingData.CropTop
+            croppingData.CropBottom - croppingData.CropTop,
         ];
         let validCrop = true;
 
@@ -215,7 +215,7 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
                     href: result.href,
                     width: result.width,
                     height: result.height,
-                    media: result._id
+                    media: result._id,
                 });
                 $scope.data.isDirty = true;
                 return api.save('picture_renditions', {item: result.item, no_custom_crops: true}).then((item) => {

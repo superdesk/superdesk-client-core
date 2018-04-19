@@ -6,6 +6,6 @@ export default function SwitchInvertedDirective() {
             label: '@',
             model: '=',
         },
-        template: require('./views/switch-inverted-directive.html')
+        template: require('./views/switch-inverted-directive.html'),
     };
 }

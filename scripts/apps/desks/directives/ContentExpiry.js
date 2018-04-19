@@ -14,7 +14,7 @@ export function ContentExpiry() {
             preview: '=',
             header: '@',
             expiryMinutes: '=',
-            expiryContext: '@'
+            expiryContext: '@',
         },
         link: function(scope, elem, attrs) {
             let expiryfield = attrs.expiryfield;
@@ -25,7 +25,7 @@ export function ContentExpiry() {
                 hours: 0,
                 minutes: 0,
                 header: 'Content Expiry',
-                actualExpiry: null
+                actualExpiry: null,
             };
 
             scope.$watch('item', () => {
@@ -92,7 +92,7 @@ export function ContentExpiry() {
 
                 scope.contentExpiry.actualExpiry = {
                     text: text,
-                    expiry: expiry
+                    expiry: expiry,
                 };
             }
 
@@ -115,6 +115,6 @@ export function ContentExpiry() {
                 }
                 getActualExpiry();
             };
-        }
+        },
     };
 }

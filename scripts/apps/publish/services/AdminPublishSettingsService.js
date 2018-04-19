@@ -18,12 +18,12 @@ export function AdminPublishSettingsService(api) {
                 delivery_type: name,
                 label: props.label ? props.label : name,
                 templateUrl: props.templateUrl ? props.templateUrl : '',
-                config: props.config ? props.config : null
+                config: props.config ? props.config : null,
             };
         },
         getTransmissionServices: function() {
             return this.transmissionServicesMap;
-        }
+        },
     };
 
     return service;

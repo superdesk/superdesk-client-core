@@ -15,7 +15,7 @@ angular.module('superdesk.core.auth.session').service('session', [
             'session_preferences',
             'user_preferences',
             'allowed_actions',
-            'workspace'
+            'workspace',
         ];
         var defer;
 

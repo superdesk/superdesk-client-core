@@ -141,7 +141,7 @@ class LinkFunction {
 export function ContactsSearchPanelDirective($location) {
     return {
         template: require('scripts/apps/contacts/views/search-panel.html'),
-        link: (scope, elem) => new LinkFunction($location, scope, elem)
+        link: (scope, elem) => new LinkFunction($location, scope, elem),
     };
 }
 

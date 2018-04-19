@@ -19,7 +19,7 @@ import * as svc from './services';
  * @description Superdesk authoring application module.
  */
 angular.module('superdesk.apps.translations', [
-    'superdesk.core.api'
+    'superdesk.core.api',
 ])
 
     .service('TranslationService', svc.TranslationService)
@@ -35,10 +35,10 @@ angular.module('superdesk.apps.translations', [
                 keyboardShortcut: 'ctrl+t',
                 templateUrl: 'scripts/apps/translations/views/TranslationDropdownTemplate.html',
                 filters: [
-                    {action: 'list', type: 'archive'}
+                    {action: 'list', type: 'archive'},
                 ],
                 additionalCondition: ['TranslationService', 'item', function(TranslationService, item) {
                     return TranslationService.checkAvailability(item);
-                }]
+                }],
             });
     }]);

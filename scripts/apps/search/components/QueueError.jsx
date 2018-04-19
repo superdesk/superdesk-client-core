@@ -21,5 +21,5 @@ export class QueueError extends React.Component {
 }
 
 QueueError.propTypes = {
-    item: PropTypes.object.isRequired
+    item: PropTypes.object.isRequired,
 };

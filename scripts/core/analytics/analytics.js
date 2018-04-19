@@ -45,7 +45,7 @@ function GoogleTracking(config) {
     this.track = function(activity) {
         ga('send', 'pageview', {
             page: activity._id,
-            title: activity.label
+            title: activity.label,
         });
     };
 }

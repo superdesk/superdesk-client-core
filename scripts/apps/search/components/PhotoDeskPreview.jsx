@@ -31,5 +31,5 @@ export function PhotoDeskPreview(props) {
 PhotoDeskPreview.propTypes = {
     svc: PropTypes.object.isRequired,
     onMultiSelect: PropTypes.func,
-    item: PropTypes.any
+    item: PropTypes.any,
 };

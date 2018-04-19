@@ -2,7 +2,7 @@ SuperdeskFlagsService.$inject = ['config'];
 function SuperdeskFlagsService(config) {
     this.flags = {
         menu: false,
-        notifications: false
+        notifications: false,
     };
 
     angular.extend(this.flags, config.ui);
@@ -19,7 +19,7 @@ angular.module('superdesk.core.menu', [
     'superdesk.core.menu.notifications',
     'superdesk.core.privileges',
     'superdesk.core.services.asset',
-    'superdesk.core.api'
+    'superdesk.core.api',
 ])
 
     .service('superdeskFlags', SuperdeskFlagsService)
@@ -38,7 +38,7 @@ angular.module('superdesk.core.menu', [
         return {
             templateUrl: asset.templateUrl('core/menu/views/superdesk-view.html'),
             controller: SuperdeskViewController,
-            controllerAs: 'superdesk'
+            controllerAs: 'superdesk',
         };
     }])
 
@@ -128,7 +128,7 @@ angular.module('superdesk.core.menu', [
                     scope.closeAbout = function() {
                         scope.aboutActive = false;
                     };
-                }
+                },
             };
         }])
     .directive('sdAbout', ['asset', 'config', 'api', function(asset, config, api) {
@@ -144,6 +144,6 @@ angular.module('superdesk.core.menu', [
                 scope.version = config.version;
                 scope.year = (new Date()).getUTCFullYear();
                 scope.releaseDate = config.releaseDate;
-            }
+            },
         };
     }]);

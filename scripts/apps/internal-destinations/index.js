@@ -81,6 +81,6 @@ angular.module('superdesk.apps.internal-destinations', [])
                 controller: InternalDestinationsController,
                 controllerAs: 'dest',
                 category: superdeskProvider.MENU_SETTINGS,
-                privileges: {publish: 1}
+                privileges: {publish: 1},
             });
     }]);

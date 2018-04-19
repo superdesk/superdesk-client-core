@@ -52,13 +52,13 @@ export function PackageItemsEdit(packages, notify, $rootScope) {
                     groups.push({
                         role: 'grpRole:NEP',
                         refs: _.map(viewValue.list, (r) => ({idRef: r.id})),
-                        id: 'root'
+                        id: 'root',
                     });
                     _.each(viewValue.list, (l) => {
                         groups.push({
                             id: l.id,
                             role: 'grpRole:' + l.id,
-                            refs: l.items
+                            refs: l.items,
                         });
                     });
                 }
@@ -74,7 +74,7 @@ export function PackageItemsEdit(packages, notify, $rootScope) {
 
                 var firstLevelGroups = _.map(root.refs, (group) => ({
                     id: group.idRef,
-                    items: []
+                    items: [],
                 }));
 
                 _.each(firstLevelGroups, (group) => {
@@ -135,6 +135,6 @@ export function PackageItemsEdit(packages, notify, $rootScope) {
             function isAdded(item) {
                 return scope.list.some((group) => group.items.some((i) => i.residRef === item._id));
             }
-        }
+        },
     };
 }

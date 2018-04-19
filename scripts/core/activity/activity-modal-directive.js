@@ -26,6 +26,6 @@ angular.module('superdesk.core.activity.modal', [])
                         });
                     }
                 });
-            }
+            },
         };
     }]);

@@ -23,7 +23,7 @@ import {PackagesService} from './services';
 angular.module('superdesk.apps.packaging', [
     'superdesk.core.api',
     'superdesk.core.activity',
-    'superdesk.apps.authoring'
+    'superdesk.apps.authoring',
 ])
     .service('packages', PackagesService)
 
@@ -48,7 +48,7 @@ angular.module('superdesk.apps.packaging', [
                 filters: [{action: 'create', type: 'package'}],
                 condition: function(item) {
                     return item ? item.state !== 'killed' : true;
-                }
+                },
             })
 
             .activity('packageitem', {
@@ -63,7 +63,7 @@ angular.module('superdesk.apps.packaging', [
                         !($rootScope.config && $rootScope.config.features
                         && $rootScope.config.features.hideCreatePackage);
                 }],
-                group: 'packaging'
+                group: 'packaging',
             })
 
             .activity('addtopackage', {
@@ -82,7 +82,7 @@ angular.module('superdesk.apps.packaging', [
                         return pkg && pkg.type === 'composite' && pkg._id !== item._id
                             && actions.add_to_current && !added;
                     }],
-                group: 'packaging'
+                group: 'packaging',
             })
 
             .activity('combineinpackage', {
@@ -99,7 +99,7 @@ angular.module('superdesk.apps.packaging', [
                         return openItem && openItem.type !== 'composite' && openItem._id !== item._id &&
                             actions.add_to_current;
                     }],
-                group: 'packaging'
+                group: 'packaging',
             });
     }])
 

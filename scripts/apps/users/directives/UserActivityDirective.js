@@ -5,7 +5,7 @@ export function UserActivityDirective(profileService, asset) {
         replace: true,
         templateUrl: asset.templateUrl('apps/users/views/activity-feed.html'),
         scope: {
-            user: '='
+            user: '=',
         },
         link: function(scope, element, attrs) {
             var page = 1;
@@ -27,6 +27,6 @@ export function UserActivityDirective(profileService, asset) {
                     scope.max_results += maxResults;
                 });
             };
-        }
+        },
     };
 }

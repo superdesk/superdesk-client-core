@@ -15,6 +15,6 @@ export function DraggableItem(dragitem) {
                     elem.off('dragstart');
                 });
             }
-        }
+        },
     };
 }

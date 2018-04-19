@@ -11,7 +11,7 @@ const testItems = [
         attachements: 'attachements',
         links: 'links',
         comments: ['a', 'b'],
-        body_html: 'body'
+        body_html: 'body',
     }, {
         _id: 2,
         slugline: 'slugline2',
@@ -24,8 +24,8 @@ const testItems = [
         attachements: 'attachements2',
         links: 'links2',
         comments: ['a2', 'b2'],
-        body_html: 'body2'
-    }
+        body_html: 'body2',
+    },
 ];
 
 describe('suggest', () => {

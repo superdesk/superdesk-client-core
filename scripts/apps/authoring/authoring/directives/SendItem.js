@@ -18,7 +18,7 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
             _editable: '=editable',
             _publish: '&publish',
             _action: '=action',
-            mode: '@'
+            mode: '@',
         },
         controller: function() {
             this.userActions = {send_to: 'send_to', publish: 'publish',
@@ -54,7 +54,9 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                 if (itemHasUnresolvedSuggestions(scope.item)) {
                     modal.alert({
                         headerText: gettext('Resolving suggestions'),
-                        bodyText: gettext('Article cannot be published. Please accept or reject all suggestions first.')
+                        bodyText: gettext(
+                            'Article cannot be published. Please accept or reject all suggestions first.'
+                        ),
                     });
                     return;
                 }
@@ -298,7 +300,7 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                         desk: deskId,
                         stage: stageId,
                         macro: scope.selectedMacro ? scope.selectedMacro.name : null,
-                        open: open
+                        open: open,
                     });
                 } else if (scope.mode === 'ingest') {
                     return sendIngest(deskId, stageId, scope.selectedMacro, open);
@@ -573,7 +575,7 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                     .then((_task) => {
                         scope.task = _task;
                         api.save('tasks', scope.task, {
-                            task: _.extend(scope.task.task, {desk: deskId, stage: stageId})
+                            task: _.extend(scope.task.task, {desk: deskId, stage: stageId}),
                         });
                     })
                     .then(() => {
@@ -603,7 +605,7 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                 return send.oneAs(scope.item, {
                     desk: deskId,
                     stage: stageId,
-                    macro: macro ? macro.name : macro
+                    macro: macro ? macro.name : macro,
                 }).then((finalItem) => {
                     notify.success(gettext('Item fetched.'));
                     if (open) {
@@ -637,12 +639,12 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                         if (result) {
                             scope.destination_last.send_to = {
                                 desk: result.desk,
-                                stage: result.stage
+                                stage: result.stage,
                             };
 
                             scope.destination_last.duplicate_to = {
                                 desk: result.desk,
-                                stage: result.stage
+                                stage: result.stage,
                             };
                         }
                     });
@@ -794,6 +796,6 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
 
             // update actions on item save
             scope.$watch('orig._current_version', initializeItemActions);
-        }
+        },
     };
 }

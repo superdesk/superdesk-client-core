@@ -9,7 +9,7 @@ export function AssociatedItemMetadata() {
         templateUrl: 'scripts/apps/archive/views/metadata-associateditem-view.html',
         scope: {
             association: '=',
-            title: '@'
-        }
+            title: '@',
+        },
     };
 }

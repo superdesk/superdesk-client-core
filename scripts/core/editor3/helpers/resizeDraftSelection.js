@@ -14,6 +14,6 @@ export function resizeDraftSelection(stretchLeft, stretchRight, selection, edito
         anchorKey: selection.getIsBackward() ? nextRightBlockKey : nextLeftBlockKey,
         focusKey: selection.getIsBackward() ? nextLeftBlockKey : nextRightBlockKey,
         anchorOffset: selection.getIsBackward() ? nextRightOffset : nextLeftOffset,
-        focusOffset: selection.getIsBackward() ? nextLeftOffset : nextRightOffset
+        focusOffset: selection.getIsBackward() ? nextLeftOffset : nextRightOffset,
     });
 }

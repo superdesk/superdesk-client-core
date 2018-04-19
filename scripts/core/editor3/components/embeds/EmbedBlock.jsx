@@ -95,11 +95,11 @@ export class EmbedBlockComponent extends Component {
 EmbedBlockComponent.propTypes = {
     block: PropTypes.object.isRequired,
     contentState: PropTypes.object.isRequired,
-    removeBlock: PropTypes.func.isRequired
+    removeBlock: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({
-    removeBlock: (blockKey) => dispatch(actions.removeBlock(blockKey))
+    removeBlock: (blockKey) => dispatch(actions.removeBlock(blockKey)),
 });
 
 export const EmbedBlock = connect(null, mapDispatchToProps)(EmbedBlockComponent);

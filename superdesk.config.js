@@ -10,34 +10,34 @@ module.exports = function(grunt) {
         defaultRoute: '/workspace',
         validatorMediaMetadata: {
             headline: {
-                required: true
+                required: true,
             },
             alt_text: {
-                required: true
+                required: true,
             },
             archive_description: {
-                required: false
+                required: false,
             },
             description_text: {
-                required: true
+                required: true,
             },
             copyrightholder: {
-                required: false
+                required: false,
             },
             byline: {
-                required: false
+                required: false,
             },
             usageterms: {
-                required: false
+                required: false,
             },
             copyrightnotice: {
-                required: false
-            }
+                required: false,
+            },
         },
         features: {
             swimlane: {columnsLimit: 4},
             editor3: true,
-            qumu: true
+            qumu: true,
         },
         auth: {google: false},
         ingest: {
@@ -46,10 +46,10 @@ module.exports = function(grunt) {
                 show_ingest_count: true,
                 show_time: true,
                 log_messages: 'error',
-                show_status: true
+                show_status: true,
             },
             DEFAULT_SCHEDULE: {minutes: 5, seconds: 0},
             DEFAULT_IDLE_TIME: {hours: 0, minutes: 0},
-        }
+        },
     };
 };

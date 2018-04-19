@@ -30,8 +30,8 @@ var HTTP_API = {
     },
     backend: {
         rel: 'users',
-        headers: {'X-Filter': 'User.*'}
-    }
+        headers: {'X-Filter': 'User.*'},
+    },
 };
 
 function doConfig($provide) {
@@ -135,7 +135,7 @@ describe('API Provider', () => {
 
             $httpBackend.expectPOST(USERS_URL, userData).respond(200, {
                 _status: 'ERR',
-                _issues: {first_name: {required: 1}}
+                _issues: {first_name: {required: 1}},
             });
 
             var test = null;
@@ -173,7 +173,7 @@ describe('API Provider', () => {
                 _links: {self: {href: USER_PATH}},
                 _id: 2,
                 username: 'test',
-                Avatar: {href: 'test'}
+                Avatar: {href: 'test'},
             };
 
             $httpBackend.expectPATCH(USER_URL, {username: 'test', Avatar: {href: 'test'}}).respond(200);
@@ -325,8 +325,8 @@ describe('API Provider', () => {
             $httpBackend.whenGET(SERVER_URL).respond(200, {
                 _links: {child: [
                     {title: 'users', href: '/users'},
-                    {title: 'workspace', href: '/users/<regex():user_id>/workspace'}
-                ]}
+                    {title: 'workspace', href: '/users/<regex():user_id>/workspace'},
+                ]},
             });
         }));
 

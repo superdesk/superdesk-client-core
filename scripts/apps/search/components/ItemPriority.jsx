@@ -15,7 +15,7 @@ export function ItemPriority(props) {
                 className: 'badge badge--square sd-grid-item__footer-block-item priority-label--' + priority,
                 style: getSpecStyle(spec),
                 title: getSpecTitle(spec, gettextCatalog.getString('Priority')),
-                key: 'priority'
+                key: 'priority',
             },
             getSpecValue(spec, priority)
         );
@@ -26,7 +26,7 @@ export function ItemPriority(props) {
         {
             className: 'badge badge--square sd-grid-item__footer-block-item priority-label--' + priority,
             title: gettextCatalog.getString('Priority'),
-            key: 'priority'
+            key: 'priority',
         },
         priority
     );
@@ -34,5 +34,5 @@ export function ItemPriority(props) {
 
 ItemPriority.propTypes = {
     svc: PropTypes.object.isRequired,
-    priority: PropTypes.any
+    priority: PropTypes.any,
 };

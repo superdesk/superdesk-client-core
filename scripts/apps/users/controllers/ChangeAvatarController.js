@@ -3,7 +3,7 @@ export function ChangeAvatarController($scope, upload, session, urls, beta, gett
     $scope.methods = [
         {id: 'upload', label: gettext('Upload from computer')},
         {id: 'photo', label: gettext('Take a picture')},
-        {id: 'globe', label: gettext('Use a Web URL')}
+        {id: 'globe', label: gettext('Use a Web URL')},
     ];
 
     beta.isBeta().then((beta) => {
@@ -43,7 +43,7 @@ export function ChangeAvatarController($scope, upload, session, urls, beta, gett
         return urls.resource('upload').then((uploadUrl) => upload.start({
             url: uploadUrl,
             method: 'POST',
-            data: form
+            data: form,
         }).then((response) => {
             if (response.data._status === 'ERR') {
                 notify.error(gettext('There was a problem with your upload'));

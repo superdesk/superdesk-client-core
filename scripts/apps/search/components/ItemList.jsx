@@ -18,7 +18,7 @@ export class ItemList extends React.Component {
             selected: null,
             view: 'compact',
             narrow: false,
-            bindedShortcuts: []
+            bindedShortcuts: [],
         };
 
         this.multiSelect = this.multiSelect.bind(this);
@@ -296,7 +296,7 @@ export class ItemList extends React.Component {
         const {scope} = this.props;
         const {Keys, monitoringState} = this.props.svc;
         const KEY_CODES = Object.freeze({
-            X: 'X'.charCodeAt(0)
+            X: 'X'.charCodeAt(0),
         });
 
         var diff;
@@ -445,7 +445,7 @@ export class ItemList extends React.Component {
                 versioncreator: this.modifiedUserName(item.version_creator),
                 narrow: this.state.narrow,
                 svc: this.props.svc,
-                scope: scope
+                scope: scope,
             });
         }.bind(this);
         var isEmpty = !this.state.itemsList.length;
@@ -459,7 +459,7 @@ export class ItemList extends React.Component {
                         (this.state.view || 'compact') + '-view list-view',
                     {'list-without-items': isEmpty}
                 ),
-                onClick: this.closeActionsMenu
+                onClick: this.closeActionsMenu,
             },
             isEmpty && !scope.loading ?
                 React.createElement(
@@ -479,5 +479,5 @@ ItemList.propTypes = {
     markedDesksById: PropTypes.any,
     desksById: PropTypes.any,
     ingestProvidersById: PropTypes.any,
-    usersById: PropTypes.any
+    usersById: PropTypes.any,
 };

@@ -204,7 +204,7 @@ const toggleInvisibles = (state) => {
 
     return {
         ...state,
-        invisibles: !invisibles
+        invisibles: !invisibles,
     };
 };
 

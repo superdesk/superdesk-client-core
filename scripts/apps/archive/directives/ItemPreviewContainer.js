@@ -15,6 +15,6 @@ export function ItemPreviewContainer() {
             scope.close = function() {
                 scope.item = null;
             };
-        }
+        },
     };
 }

@@ -3,7 +3,7 @@ describe('products filter', () => {
         {name: 'test'},
         {name: 'test both', product_type: 'both'},
         {name: 'test api', product_type: 'api'},
-        {name: 'direct', product_type: 'direct'}
+        {name: 'direct', product_type: 'direct'},
     ];
 
     let productsByFilter = null;

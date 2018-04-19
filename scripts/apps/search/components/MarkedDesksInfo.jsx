@@ -7,7 +7,7 @@ import {MarkedDesksList} from './index';
 import {
     closeActionsMenu,
     openActionsMenu,
-    isCheckAllowed
+    isCheckAllowed,
 } from '../helpers';
 
 /**
@@ -72,7 +72,7 @@ export class MarkedDesksInfo extends React.Component {
             item: this.props.item,
             desks: this.getMarkedDesks(),
             markedDesksById: this.props.markedDesksById,
-            svc: this.props.svc
+            svc: this.props.svc,
         });
 
         var icon = ReactDOM.findDOMNode(this).getElementsByClassName('icon-bell')[0] ||

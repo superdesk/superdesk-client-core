@@ -94,7 +94,7 @@ function EditorService(spellcheck, $q, _, renditionsService, utils) {
         Z: 'Z'.charCodeAt(0),
         UP: 38,
         DOWN: 40,
-        F3: 114
+        F3: 114,
     });
 
     this.ARROWS = Object.freeze({
@@ -105,7 +105,7 @@ function EditorService(spellcheck, $q, _, renditionsService, utils) {
         37: 1, // left
         38: 1, // up
         39: 1, // right
-        40: 1 // down
+        40: 1, // down
     });
 
     this.META = Object.freeze({
@@ -115,7 +115,7 @@ function EditorService(spellcheck, $q, _, renditionsService, utils) {
         20: 1, // caps lock
         91: 1, // left meta in webkit
         93: 1, // right meta in webkit
-        224: 1 // meta in firefox
+        224: 1, // meta in firefox
     });
 
     /**
@@ -521,7 +521,7 @@ function EditorService(spellcheck, $q, _, renditionsService, utils) {
         '  </div>',
         angular.isDefined(description) ?
             '  <div class="embed--link__description">' + description + '</div>' : '',
-        '</div>'
+        '</div>',
     ].join('\n');
 
     this.generateMediaTag = function(data) {
@@ -588,7 +588,7 @@ function EditorService(spellcheck, $q, _, renditionsService, utils) {
                     html.push('/>');
                     return html.join(' ');
                 });
-            }
+            },
         };
 
         mediaTypes.graphic = mediaTypes.picture;
@@ -622,7 +622,7 @@ function SdTextEditorBlockEmbedController($timeout, editor, renditions, config) 
         saveEmbedCode: function() {
             // update the block's model
             angular.extend(self.model, {
-                body: self.embedCode
+                body: self.embedCode,
             });
             // on change callback
             self.onBlockChange();
@@ -681,13 +681,13 @@ function SdTextEditorBlockEmbedController($timeout, editor, renditions, config) 
                 .finally(() => {
                     self.model.loading = false;
                 });
-        }
+        },
     });
     $timeout(() => {
         angular.extend(self, {
             embedCode: self.model.body,
             caption: self.model.caption,
-            title: self.model.association.headline
+            title: self.model.association.headline,
         });
     });
 }
@@ -699,14 +699,14 @@ angular.module('superdesk.apps.editor2', [
     'superdesk.apps.editor2.utils',
     'superdesk.apps.spellcheck',
     'superdesk.apps.authoring',
-    'angular-embed'
+    'angular-embed',
 ])
     .service('editor', EditorService)
     .constant('EMBED_PROVIDERS', { // see http://noembed.com/#supported-sites
         custom: 'Custom',
         twitter: 'Twitter',
         youtube: 'YouTube',
-        vidible: 'Vidible'
+        vidible: 'Vidible',
     })
     .directive('sdAddEmbed', ['$timeout', function($timeout) {
         return {
@@ -720,7 +720,7 @@ angular.module('superdesk.apps.editor2', [
                 var vm = controllers[0];
 
                 angular.extend(vm, {
-                    editorCtrl: controllers[1]
+                    editorCtrl: controllers[1],
                 });
                 // listen to the escape touch to close the field when pressed
                 element.bind('keyup', (e) => {
@@ -730,7 +730,7 @@ angular.module('superdesk.apps.editor2', [
                         });
                     }
                 });
-            }
+            },
         };
     }])
     .directive('sdTextEditorDropZone', ['embedService', 'EMBED_PROVIDERS', 'editor', '$timeout', '$q',
@@ -832,7 +832,7 @@ angular.module('superdesk.apps.editor2', [
 
                             paragraph.removeClass(dragOverClass);
                         });
-                }
+                },
             };
         }])
     .directive('sdTextEditor', ['$timeout', 'lodash', function($timeout, _) {
@@ -872,7 +872,7 @@ angular.module('superdesk.apps.editor2', [
                         }
                     }, 250, false);
                 });
-            }
+            },
         };
     }])
     .directive('sdTextEditorBlockEmbed', () =>
@@ -881,7 +881,7 @@ angular.module('superdesk.apps.editor2', [
             templateUrl: 'scripts/core/editor2/views/block-embed.html',
             controllerAs: 'vm',
             bindToController: true,
-            controller: SdTextEditorBlockEmbedController
+            controller: SdTextEditorBlockEmbedController,
         })
     )
     .directive('sdTextEditorBlockText', ['editor', 'spellcheck', '$timeout',
@@ -895,7 +895,7 @@ angular.module('superdesk.apps.editor2', [
                     align: 'left',
                     sticky: true,
                     stickyTopOffset: TOP_OFFSET,
-                    updateOnEmptySelection: true
+                    updateOnEmptySelection: true,
                 },
                 paste: {
                     // Both are disabled because it overwrites the `ctrl`+`v` binding
@@ -909,15 +909,15 @@ angular.module('superdesk.apps.editor2', [
                     placeholderText: gettextCatalog.getString(
                         'Paste or type a full link'
                     ),
-                    linkValidation: true
+                    linkValidation: true,
                 },
                 anchorPreview: {
-                    showWhenToolbarIsVisible: true
+                    showWhenToolbarIsVisible: true,
                 },
                 placeholder: false,
                 disableReturn: false,
                 spellcheck: false,
-                targetBlank: true
+                targetBlank: true,
             };
 
             if (config.editor) {
@@ -978,7 +978,7 @@ angular.module('superdesk.apps.editor2', [
 
                 return {
                     line: lines,
-                    column: column
+                    column: column,
                 };
             }
 
@@ -1033,8 +1033,8 @@ angular.module('superdesk.apps.editor2', [
                             contentDefault: '<b>' + gettextCatalog.getString('H1') + '</b>',
                             classList: ['custom-class-h1'],
                             attrs: {
-                                'data-custom-attr': 'attr-value-h1'
-                            }
+                                'data-custom-attr': 'attr-value-h1',
+                            },
                         },
 
                         h2: {
@@ -1045,8 +1045,8 @@ angular.module('superdesk.apps.editor2', [
                             contentDefault: '<b>' + gettextCatalog.getString('H2') + '</b>',
                             classList: ['custom-class-h2'],
                             attrs: {
-                                'data-custom-attr': 'attr-value-h2'
-                            }
+                                'data-custom-attr': 'attr-value-h2',
+                            },
                         },
 
                         bold: {
@@ -1054,14 +1054,14 @@ angular.module('superdesk.apps.editor2', [
                             action: 'bold',
                             aria: gettextCatalog.getString('bold'),
                             tagNames: ['b'],
-                            contentDefault: '<b>' + gettextCatalog.getString('B') + '</b>'
+                            contentDefault: '<b>' + gettextCatalog.getString('B') + '</b>',
                         },
 
                         underline: {
                             name: 'underline',
                             action: 'underline',
                             aria: gettextCatalog.getString('underline'),
-                            tagNames: ['u']
+                            tagNames: ['u'],
                         },
 
                         italic: {
@@ -1069,20 +1069,20 @@ angular.module('superdesk.apps.editor2', [
                             action: 'italic',
                             aria: gettextCatalog.getString('italic'),
                             tagNames: ['i'],
-                            contentDefault: '<b>' + gettextCatalog.getString('I') + '</b>'
+                            contentDefault: '<b>' + gettextCatalog.getString('I') + '</b>',
                         },
 
                         quote: {
                             name: 'quote',
                             action: 'append-blockquote',
-                            aria: gettextCatalog.getString('quote')
+                            aria: gettextCatalog.getString('quote'),
                         },
 
                         removeFormat: {
                             name: 'removeFormat',
                             action: 'removeFormat',
-                            aria: gettextCatalog.getString('remove formatting')
-                        }
+                            aria: gettextCatalog.getString('remove formatting'),
+                        },
                     }[format] || format);
                 }
 
@@ -1103,7 +1103,7 @@ angular.module('superdesk.apps.editor2', [
 
                     angular.extend(vm, {
                         block: scope.sdTextEditorBlockText,
-                        sdEditorCtrl: sdTextEditor
+                        sdEditorCtrl: sdTextEditor,
                     });
                     vm.block = scope.sdTextEditorBlockText;
                     var editorElem;
@@ -1125,7 +1125,7 @@ angular.module('superdesk.apps.editor2', [
                                 if (editorConfig.toolbar.buttons.indexOf('table') !== -1
                                     && angular.isDefined(MediumEditorTable)) {
                                     editorConfig.extensions.table = new MediumEditorTable({
-                                        aria: gettextCatalog.getString('insert table')
+                                        aria: gettextCatalog.getString('insert table'),
                                     });
                                 }
                             }
@@ -1321,7 +1321,7 @@ angular.module('superdesk.apps.editor2', [
                                 if (scope.sentenceWord) {
                                     suggestions.push({
                                         key: scope.replaceWord[0].toUpperCase() + scope.replaceWord.slice(1),
-                                        value: scope.replaceWord[0].toUpperCase() + scope.replaceWord.slice(1)
+                                        value: scope.replaceWord[0].toUpperCase() + scope.replaceWord.slice(1),
                                     });
 
                                     scope.suggestions = suggestions.filter((suggestion) =>
@@ -1452,14 +1452,14 @@ angular.module('superdesk.apps.editor2', [
                                 var mediaType = {
                                     picture: 'Image',
                                     graphic: 'Image',
-                                    video: 'Video'
+                                    video: 'Video',
                                 };
                                 var imageBlock = {
                                     blockType: 'embed',
                                     embedType: mediaType[media.type],
                                     caption: media.description_text,
                                     loading: true,
-                                    association: media
+                                    association: media,
                                 };
 
                                 self.sdEditorCtrl.splitAndInsert(self, imageBlock).then((block) => {
@@ -1475,15 +1475,15 @@ angular.module('superdesk.apps.editor2', [
                                             angular.extend(block, {
                                                 body: imgTag,
                                                 association: media,
-                                                loading: false
+                                                loading: false,
                                             });
                                             $timeout(self.sdEditorCtrl.commitChanges);
                                         });
                                     });
                                 });
-                            }
+                            },
                         });
-                    }]
+                    }],
             };
         }])
     .run(['embedService', 'iframelyService', function(embedService, iframelyService) {
@@ -1492,7 +1492,7 @@ angular.module('superdesk.apps.editor2', [
         var playBuzzEmbed = [
             '<script type="text/javascript" src="$_LOADER"></script>',
             '<div class="pb_feed" data-game="$_URL" data-recommend="false" ',
-            'data-game-info="false" data-comments="false" data-shares="false" ></div>'
+            'data-game-info="false" data-comments="false" data-shares="false" ></div>',
         ].join('');
 
         embedService.registerHandler({
@@ -1506,13 +1506,13 @@ angular.module('superdesk.apps.editor2', [
                             .replace('$_URL', url.match(playBuzzPattern)[1]);
                         return result;
                     });
-            }
+            },
         });
         var samdeskEmbed = [
             '<script>(function(d, s, id) { var fjs = d.getElementsByTagName(s)[0];',
             'var js = d.createElement(s); js.id = id; js.src = \'https://embed.samdesk.io/js/2/embed.js\';',
             'fjs.parentNode.insertBefore(js, fjs); }(document, \'script\', \'sam-embed-js\'));</script>',
-            '<div class="sam-embed" data-href="embed.samdesk.io/embed/$_ID"></div>'
+            '<div class="sam-embed" data-href="embed.samdesk.io/embed/$_ID"></div>',
         ].join('');
         var samDeskPattern = 'https?://embed.samdesk.io/(?:embed|preview)/(.+)';
 
@@ -1526,9 +1526,9 @@ angular.module('superdesk.apps.editor2', [
                     provider_name: 'SAMDesk',
                     html: embed,
                     url: url,
-                    type: 'rich'
+                    type: 'rich',
                 };
-            }
+            },
         });
     }])
     .config(['embedServiceProvider', 'iframelyServiceProvider', '$injector',
@@ -1647,7 +1647,7 @@ function EditorUtilsFactory() {
                         word: match[0],
                         index: nodeOffset + match.index,
                         title: diff[match[0]] || '',
-                        active: isActive
+                        active: isActive,
                     });
 
                     offset = match.index + match[0].length;
@@ -1754,7 +1754,7 @@ function EditorUtilsFactory() {
             }
 
             return start;
-        }
+        },
     };
 }
 

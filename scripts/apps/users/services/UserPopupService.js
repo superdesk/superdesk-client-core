@@ -25,7 +25,7 @@ export function UserPopupService($compile, $timeout, userList) {
 
         box.css({
             left: position.left + el.outerWidth() - box.outerWidth() / 2,
-            top: position.top + el.outerHeight()
+            top: position.top + el.outerHeight(),
         });
 
         // get data

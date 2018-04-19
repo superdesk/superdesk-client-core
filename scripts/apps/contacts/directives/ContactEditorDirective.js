@@ -14,7 +14,7 @@ ContactEditorDirective.$inject = [
     '$filter',
     'Keys',
     '$rootScope',
-    'lodash'
+    'lodash',
 ];
 
 export function ContactEditorDirective(
@@ -41,7 +41,7 @@ export function ContactEditorDirective(
     return {
         scope: {
             origContact: '=contact',
-            oncancel: '&'
+            oncancel: '&',
         },
         link: function(scope, elem) {
             scope.onSave = function() {
@@ -72,7 +72,7 @@ export function ContactEditorDirective(
 
                 contactFormComponent.setState({
                     originalContact: origContact,
-                    currentContact: origContact
+                    currentContact: origContact,
                 });
             });
 
@@ -81,6 +81,6 @@ export function ContactEditorDirective(
                 elem.off();
                 ReactDOM.unmountComponentAtNode(elem[0]);
             });
-        }
+        },
     };
 }

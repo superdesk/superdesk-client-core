@@ -5,7 +5,7 @@ export function PackageItem() {
             id: '=',
             item: '=',
             setitem: '&',
-            mode: '='
-        }
+            mode: '=',
+        },
     };
 }

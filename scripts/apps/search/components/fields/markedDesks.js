@@ -4,7 +4,7 @@ import {MarkedDesksInfo} from '../index';
 
 export function markedDesks(props) {
     return React.createElement(MarkedDesksInfo, angular.extend({
-        key: 'markedDesks'
+        key: 'markedDesks',
     }, props));
 }
 

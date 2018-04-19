@@ -6,5 +6,5 @@ export const JobTitle = ({item}) => (
 );
 
 JobTitle.propTypes = {
-    item: PropTypes.object
+    item: PropTypes.object,
 };

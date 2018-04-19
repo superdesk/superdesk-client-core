@@ -23,7 +23,7 @@ export function ContactsSortBarDirective(contacts, sort) {
     return {
         scope: {total: '='},
         template: require('apps/search/views/item-sortbar.html'),
-        link: (scope, elem) => new LinkFunction(contacts, sort, scope, elem)
+        link: (scope, elem) => new LinkFunction(contacts, sort, scope, elem),
     };
 }
 

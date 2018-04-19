@@ -71,7 +71,7 @@ function URLResolver($http, $q, $log, config) {
         return $http({
             method: 'GET',
             url: baseUrl,
-            cache: true
+            cache: true,
         }).then((response) => {
             _links = {};
 

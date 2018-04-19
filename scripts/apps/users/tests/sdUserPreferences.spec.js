@@ -23,7 +23,7 @@ describe('sdUserPreferences directive', () => {
 
         // patch session service
         session.identity = {
-            dateline_source: 'AAP'
+            dateline_source: 'AAP',
         };
 
         // mock preferencesService's fetched data
@@ -31,27 +31,27 @@ describe('sdUserPreferences directive', () => {
             'dateline:located': {
                 label: 'Located',
                 category: 'article_defaults',
-                located: null
+                located: null,
             },
             'categories:preferred': {
-                selected: {}
+                selected: {},
             },
             'desks:preferred': {
-                selected: {}
+                selected: {},
             },
             'article:default:place': {
                 label: 'Place',
                 category: 'article_defaults',
-                place: ''
-            }
+                place: '',
+            },
         };
 
         metadata.values = {
             categories: [
                 {name: 'Domestic Sport', qcode: 't'},
-                {name: 'Politics', qcode: 'p'}
+                {name: 'Politics', qcode: 'p'},
             ],
-            default_categories: [{qcode: 'x'}, {qcode: 'y'}]
+            default_categories: [{qcode: 'x'}, {qcode: 'y'}],
         };
 
         spyOn(preferencesService, 'get').and.returnValue($q.when(fetchedPreferences));
@@ -73,7 +73,7 @@ describe('sdUserPreferences directive', () => {
             scope.categories,
             [
                 {name: 'Domestic Sport', qcode: 't', selected: false},
-                {name: 'Politics', qcode: 'p', selected: false}
+                {name: 'Politics', qcode: 'p', selected: false},
             ]
         )).toBe(true);
     });
@@ -112,7 +112,7 @@ describe('sdUserPreferences directive', () => {
 
             scope.categories = [
                 {name: 'Advisories', qcode: 'v', selected: false},
-                {name: 'Stockset', qcode: 'q', selected: true}
+                {name: 'Stockset', qcode: 'q', selected: true},
             ];
 
             scope.save();
@@ -143,7 +143,7 @@ describe('sdUserPreferences directive', () => {
                 {qcode: 'a', selected: false},
                 {qcode: 'b', selected: false},
                 {qcode: 'c', selected: false},
-                {qcode: 'd', selected: false}
+                {qcode: 'd', selected: false},
             ];
 
             scope.save();
@@ -173,7 +173,7 @@ describe('sdUserPreferences directive', () => {
             // no categories have been selected by the user
             scope.categories = [
                 {name: 'Advisories', qcode: 'v', selected: false},
-                {name: 'Stockset', qcode: 'q', selected: false}
+                {name: 'Stockset', qcode: 'q', selected: false},
             ];
 
             scope.save();
@@ -193,7 +193,7 @@ describe('sdUserPreferences directive', () => {
                 {qcode: '1', selected: false},
                 {qcode: '2', selected: true},
                 {qcode: '3', selected: false},
-                {qcode: '4', selected: false}
+                {qcode: '4', selected: false},
             ];
         });
 
@@ -217,7 +217,7 @@ describe('sdUserPreferences directive', () => {
                 {qcode: 'a', selected: true},
                 {qcode: 'b', selected: true},
                 {qcode: 'c', selected: false},
-                {qcode: 'd', selected: true}
+                {qcode: 'd', selected: true},
             ];
         });
 
@@ -241,7 +241,7 @@ describe('sdUserPreferences directive', () => {
                 {qcode: 'a', selected: true},
                 {qcode: 'b', selected: true},
                 {qcode: 'c', selected: false},
-                {qcode: 'd', selected: true}
+                {qcode: 'd', selected: true},
             ];
             scope.defaultCategories = {};
         });

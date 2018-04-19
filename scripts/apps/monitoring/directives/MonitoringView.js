@@ -11,7 +11,7 @@ export function MonitoringView($rootScope, authoringWorkspace, pageTitle, $timeo
         controllerAs: 'monitoring',
         scope: {
             type: '=',
-            state: '='
+            state: '=',
         },
         link: function(scope, elem) {
             const containerElem = elem.find('.content-list');
@@ -140,6 +140,6 @@ export function MonitoringView($rootScope, authoringWorkspace, pageTitle, $timeo
                     }
                 }
             });
-        }
+        },
     };
 }

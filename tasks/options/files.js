@@ -8,5 +8,5 @@ exports.scripts = [
     '<%= appDir %>/docs/**/*.js',
     path.join(root, 'spec/**/*.js'),
     path.join(root, 'tasks/**/*.js'),
-    path.join(root, 'scripts/**/*.js')
+    path.join(root, 'scripts/**/*.js'),
 ];

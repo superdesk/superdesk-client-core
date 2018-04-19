@@ -42,7 +42,7 @@ describe('users api', () => {
 
         expect(resource.replace).toHaveBeenCalledWith('pwd_url', {
             old_pwd: 'old',
-            new_pwd: 'new'
+            new_pwd: 'new',
         });
     }));
 });
@@ -60,7 +60,7 @@ describe('userlist service', () => {
                 },
                 getById: function() {
                     return $q.when({_id: 1});
-                }
+                },
             };
         });
     }));
@@ -120,15 +120,15 @@ describe('mentio directive', () => {
 
     var deskList = {
         desk1: {title: 'desk1'},
-        desk3: {title: 'desk3'}
+        desk3: {title: 'desk3'},
     };
 
     var deskItems = {
-        _items: [{name: 'desk1'}, {name: 'desk3'}]
+        _items: [{name: 'desk1'}, {name: 'desk3'}],
     };
 
     var userDesks = {
-        _items: [{_id: 'desk1'}]
+        _items: [{_id: 'desk1'}],
     };
 
     beforeEach(window.module(($provide) => {
@@ -137,7 +137,7 @@ describe('mentio directive', () => {
                 query: function() {
                     return $q.when({_items: [{_id: 1, username: 'moo'},
                         {_id: 2, username: 'foo'}, {_id: 3, username: 'fast'}]});
-                }
+                },
             };
         });
 
@@ -147,7 +147,7 @@ describe('mentio directive', () => {
             desks: deskItems,
             initialize: function() {
                 return $q.when([]);
-            }
+            },
         }));
     }));
 
@@ -185,7 +185,7 @@ describe('user edit form', () => {
                 return $q.when(
                     {who: 'cares', this: 'is', totaly: 'fake'}
                 );
-            }
+            },
         }));
     }));
 
@@ -196,7 +196,7 @@ describe('user edit form', () => {
                 _id: 1,
                 _readonly: {first_name: true, last_name: true, email: true},
                 is_active: true,
-                need_activation: false
+                need_activation: false,
             };
 
             scope.user = user;
@@ -218,7 +218,7 @@ describe('user edit form', () => {
             scope.user = {
                 _id: 1,
                 is_active: true,
-                need_activation: false
+                need_activation: false,
             };
 
             var elm = $compile('<div sd-user-edit data-user="user"></div>')(scope);

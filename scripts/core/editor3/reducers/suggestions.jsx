@@ -49,7 +49,7 @@ const toggleSuggestingMode = (state) => {
 
     return {
         ...state,
-        suggestingMode: !suggestingMode
+        suggestingMode: !suggestingMode,
     };
 };
 
@@ -216,12 +216,12 @@ const createChangeBlockStyleSuggestion = (state, {blockType, data}) => {
         anchorKey: firstBlock.getKey(),
         focusOffset: lastBlock.getLength(),
         focusKey: lastBlock.getKey(),
-        isBackward: false
+        isBackward: false,
     });
     const type = 'BLOCK_STYLE_SUGGESTION';
     const newData = {
         ...data,
-        blockType
+        blockType,
     };
 
     editorState = EditorState.acceptSelection(editorState, blocksSelection);
@@ -293,7 +293,7 @@ const createSplitParagraphSuggestion = (state, {data}) => {
         anchorKey: block.getKey(),
         focusOffset: block.getLength(),
         focusKey: block.getKey(),
-        isBackward: false
+        isBackward: false,
     });
 
     editorState = EditorState.push(editorState, content, 'split-block');
@@ -301,7 +301,7 @@ const createSplitParagraphSuggestion = (state, {data}) => {
     editorState = applyStyleSuggestion(editorState, type, data);
 
     blockSelection = blockSelection.merge({
-        focusOffset: 0
+        focusOffset: 0,
     });
     editorState = EditorState.acceptSelection(editorState, blockSelection);
 
@@ -387,13 +387,13 @@ function moveToSuggestionsHistory(editorState, suggestion, accepted) {
             suggestionText: suggestion.suggestionText,
             oldText: suggestion.oldText,
             suggestionInfo: {
-                ...suggestion
+                ...suggestion,
             },
             resolutionInfo: {
                 resolverUserId: ng.get('session').identity._id,
                 date: new Date(),
-                accepted: accepted
-            }
+                accepted: accepted,
+            },
         })
     );
 
@@ -424,7 +424,7 @@ const processSplitSuggestion = (state, suggestion, accepted) => {
             anchorKey: selection.getStartKey(),
             focusOffset: block.getLength(),
             focusKey: block.getKey(),
-            isBackward: true
+            isBackward: true,
         });
 
         content = Modifier.removeRange(content, newSelection, 'backward');

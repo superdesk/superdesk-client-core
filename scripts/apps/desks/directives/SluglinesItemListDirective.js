@@ -3,7 +3,7 @@ export function SluglinesItemListDirective(api) {
     return {
         templateUrl: 'scripts/apps/desks/views/slugline-items.html',
         scope: {
-            desk: '='
+            desk: '=',
         },
         link: function(scope, elem) {
             scope.items = [];
@@ -14,6 +14,6 @@ export function SluglinesItemListDirective(api) {
                 .finally(() => {
                     scope.loading = false;
                 });
-        }
+        },
     };
 }

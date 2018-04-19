@@ -35,7 +35,7 @@ const MediaComponent = (props) => {
 
 MediaComponent.propTypes = {
     block: PropTypes.object.isRequired,
-    contentState: PropTypes.object.isRequired
+    contentState: PropTypes.object.isRequired,
 };
 
 export function getBlockRenderer(props) {
@@ -43,7 +43,7 @@ export function getBlockRenderer(props) {
         return block.getType() !== 'atomic' ? null : {
             component: MediaComponent,
             editable: false,
-            props: props
+            props: props,
         };
     };
 }

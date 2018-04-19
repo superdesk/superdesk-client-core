@@ -30,19 +30,19 @@ export class ListTypeIcon extends React.Component {
             {
                 className: classNames('list-field type-icon'),
                 onMouseEnter: this.setHover,
-                onMouseLeave: this.unsetHover
+                onMouseLeave: this.unsetHover,
             },
             showSelect ?
                 React.createElement(SelectBox, {
                     item: this.props.item,
-                    onMultiSelect: this.props.onMultiSelect
+                    onMultiSelect: this.props.onMultiSelect,
                 }) :
                 React.createElement(
                     TypeIcon,
                     {
                         type: this.props.item.type,
                         highlight: this.props.item.highlight,
-                        svc: this.props.svc
+                        svc: this.props.svc,
                     }
                 )
         );
@@ -52,5 +52,5 @@ export class ListTypeIcon extends React.Component {
 ListTypeIcon.propTypes = {
     svc: PropTypes.object.isRequired,
     onMultiSelect: PropTypes.func,
-    item: PropTypes.any
+    item: PropTypes.any,
 };

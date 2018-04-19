@@ -35,7 +35,7 @@ function uuid(a) {
 export function toggleBlockStyle(blockType) {
     return {
         type: 'TOOLBAR_TOGGLE_BLOCK_STYLE',
-        payload: blockType
+        payload: blockType,
     };
 }
 
@@ -49,7 +49,7 @@ export function toggleBlockStyle(blockType) {
 export function toggleInlineStyle(inlineStyle) {
     return {
         type: 'TOOLBAR_TOGGLE_INLINE_STYLE',
-        payload: inlineStyle
+        payload: inlineStyle,
     };
 }
 
@@ -63,7 +63,7 @@ export function toggleInlineStyle(inlineStyle) {
 export function applyLink(link, entity = null) {
     return {
         type: 'TOOLBAR_APPLY_LINK',
-        payload: {link, entity}
+        payload: {link, entity},
     };
 }
 
@@ -92,7 +92,7 @@ export function insertMedia(files) {
         superdesk.intent('upload', 'media', files).then((media) => {
             dispatch({
                 type: 'TOOLBAR_INSERT_MEDIA',
-                payload: media
+                payload: media,
             });
         });
     };
@@ -117,8 +117,8 @@ export function cropImage(entityKey, entityData) {
                 type: 'TOOLBAR_UPDATE_IMAGE',
                 payload: {
                     entityKey: entityKey,
-                    media: cropped
-                }
+                    media: cropped,
+                },
             });
         });
     };
@@ -136,8 +136,8 @@ export function removeBlock(blockKey) {
     return {
         type: 'TOOLBAR_REMOVE_BLOCK',
         payload: {
-            blockKey
-        }
+            blockKey,
+        },
     };
 }
 
@@ -161,7 +161,7 @@ export function toggleInvisibles() {
 export function embed(code) {
     return {
         type: 'TOOLBAR_APPLY_EMBED',
-        payload: parseEmbed(code)
+        payload: parseEmbed(code),
     };
 }
 
@@ -185,7 +185,7 @@ function parseEmbed(code) {
         json5.parse(configString),
         {
             selector: `#qumu-${uuid()}`,
-            qumuWidget: true
+            qumuWidget: true,
         }
     ); // Qumu widget
 }

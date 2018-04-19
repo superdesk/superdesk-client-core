@@ -9,7 +9,7 @@ describe('Superdesk service', () => {
             return 'test';
         },
         filters: [intent],
-        category: 'superdesk.core.menu.main'
+        category: 'superdesk.core.menu.main',
     };
 
     angular.module('superdesk.core.activity.test', ['superdesk.core.activity'])
@@ -23,13 +23,13 @@ describe('Superdesk service', () => {
             provider.activity('missingFeatureActivity', {
                 category: superdeskProvider.MENU_MAIN,
                 features: {missing: 1},
-                filters: [{action: 'test', type: 'features'}]
+                filters: [{action: 'test', type: 'features'}],
             });
 
             provider.activity('missingPrivilegeActivity', {
                 category: superdeskProvider.MENU_MAIN,
                 privileges: {missing: 1},
-                filters: [{action: 'test', type: 'privileges'}]
+                filters: [{action: 'test', type: 'privileges'}],
             });
         });
 

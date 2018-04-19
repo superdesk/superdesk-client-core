@@ -27,14 +27,14 @@ describe('authoring ChangeImageController', () => {
                 item: {
                     renditions: {
                         '4-3': {width: 796, height: 600},
-                        original: {width: 2599, height: 1494}
-                    }
+                        original: {width: 2599, height: 1494},
+                    },
                 },
                 isNew: true,
                 showMetadataEditor: false,
-                renditions: [{name: '4-3', width: 800, height: 600}]
-            }
-        }
+                renditions: [{name: '4-3', width: 800, height: 600}],
+            },
+        },
     };
 
     describe('saveAreaOfInterest', () => {
@@ -44,7 +44,7 @@ describe('authoring ChangeImageController', () => {
                 CropRight: 10,
                 CropLeft: 10,
                 CropTop: 10,
-                CropBottom: 10
+                CropBottom: 10,
             };
 
             ChangeImageController(scope, gettext, notify, modal, _, api, $rootScope, config, $q);
@@ -60,7 +60,7 @@ describe('authoring ChangeImageController', () => {
                 CropRight: 2500,
                 CropLeft: 0,
                 CropTop: 0,
-                CropBottom: 1400
+                CropBottom: 1400,
             };
 
             spyOn(api, 'save').and.returnValue($q.when({}));
@@ -77,7 +77,7 @@ describe('authoring ChangeImageController', () => {
                 CropRight: 2500,
                 CropLeft: 0,
                 CropTop: 0,
-                CropBottom: 1400
+                CropBottom: 1400,
             };
 
             spyOn(api, 'save').and.returnValue($q.reject({data: {_message: 'Failed to call picture_crop.'}}));
@@ -100,7 +100,7 @@ describe('authoring ChangeImageController', () => {
                 CropRight: 2500,
                 CropLeft: 0,
                 CropTop: 0,
-                CropBottom: 1400
+                CropBottom: 1400,
             };
 
             spyOn(api, 'save').and.callFake((resource, dest, diff, parent, params) => {
@@ -110,7 +110,7 @@ describe('authoring ChangeImageController', () => {
                         width: 100,
                         height: 100,
                         _id: 1,
-                        item: {renditions: {original: {}}}
+                        item: {renditions: {original: {}}},
                     });
                 }
                 return $q.reject({data: {_message: 'Failed to call picture_renditions.'}});
@@ -136,7 +136,7 @@ describe('authoring ChangeImageController', () => {
                 CropRight: 2500,
                 CropLeft: 0,
                 CropTop: 0,
-                CropBottom: 1400
+                CropBottom: 1400,
             };
 
             spyOn(api, 'save').and.callFake((resource, dest, diff, parent, params) => {
@@ -146,11 +146,11 @@ describe('authoring ChangeImageController', () => {
                         width: 100,
                         height: 100,
                         _id: 1,
-                        item: {renditions: {original: {}}}
+                        item: {renditions: {original: {}}},
                     });
                 }
                 return $q.when({
-                    renditions: {}
+                    renditions: {},
                 });
             });
 

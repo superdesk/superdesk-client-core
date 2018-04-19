@@ -77,8 +77,8 @@ describe('superdesk.apps.workspace.content', () => {
                 data: {
                     slugline: 'test_slugline',
                     body_html: 'test_body_html',
-                    irrelevantData: 'yes'
-                }
+                    irrelevantData: 'yes',
+                },
             }).then(done);
 
             $rootScope.$digest();
@@ -90,7 +90,7 @@ describe('superdesk.apps.workspace.content', () => {
                 template: 'template1',
                 type: 'text',
                 version: 0,
-                byline: 'user1'
+                byline: 'user1',
             });
         }));
 
@@ -111,7 +111,7 @@ describe('superdesk.apps.workspace.content', () => {
             spyOn(content, 'getTypes').and.returnValue($q.when([
                 {_id: 'foo'},
                 {_id: 'bar'},
-                {_id: 'baz'}
+                {_id: 'baz'},
             ]));
 
             var profiles;
@@ -162,7 +162,7 @@ describe('superdesk.apps.workspace.content', () => {
                 profile: type._id,
                 type: 'text',
                 version: 0,
-                task: {desk: 'sports', stage: 'inbox', user: 'foo'}
+                task: {desk: 'sports', stage: 'inbox', user: 'foo'},
             });
         }));
 
@@ -218,7 +218,7 @@ describe('superdesk.apps.workspace.content', () => {
         it('can filter custom fields per profile', inject((content) => {
             content._fields = [
                 {_id: 'foo'},
-                {_id: 'bar'}
+                {_id: 'bar'},
             ];
 
             const fields = content.fields({editor: {foo: {enabled: true}}});
@@ -245,7 +245,7 @@ describe('superdesk.apps.workspace.content', () => {
         it('should notify appropriate error when created profile is not unique', inject((
             notify, $controller, content, $q, $rootScope) => {
             spyOn(content, 'createProfile').and.returnValue($q.reject({
-                data: {_issues: {label: {unique: 1}}}
+                data: {_issues: {label: {unique: 1}}},
             }));
             var errorFn = spyOn(notify, 'error');
             var scope = $rootScope.$new();
@@ -259,7 +259,7 @@ describe('superdesk.apps.workspace.content', () => {
         it('should log appropriate error when created profile is unique', inject((
             notify, $controller, content, $q, $rootScope) => {
             spyOn(content, 'createProfile').and.returnValue($q.reject({
-                data: {_issues: {label: {other_error: 1}}}
+                data: {_issues: {label: {other_error: 1}}},
             }));
             var errorFn = spyOn(notify, 'error');
             var scope = $rootScope.$new();
@@ -289,7 +289,7 @@ describe('superdesk.apps.workspace.content', () => {
 
         it('render correctly all fields', inject((content, $q) => {
             var el = compile({
-                model: {}
+                model: {},
             });
 
             spyOn(content, 'getTypeMetadata').and.returnValue($q.when({schema: content.contentProfileSchema,
@@ -306,7 +306,7 @@ describe('superdesk.apps.workspace.content', () => {
 
         it('should dirty parent form when toggling fields', inject((content, $q) => {
             var el = compile({
-                model: {}
+                model: {},
             });
 
             spyOn(content, 'getTypeMetadata').and.returnValue($q.when({schema: content.contentProfileSchema,

@@ -18,14 +18,14 @@ describe('MetadataWidgetCtrl controller', () => {
         $provide.constant('config', {
             model: {
                 timeformat: 'HH:mm:ss',
-                dateformat: 'DD/MM/YYYY'
+                dateformat: 'DD/MM/YYYY',
             },
             view: {
                 timeformat: 'HH:mm',
-                dateformat: 'MM/DD/YYYY'
+                dateformat: 'MM/DD/YYYY',
             },
             defaultTimezone: 'Europe/London',
-            server: {url: undefined}
+            server: {url: undefined},
         });
     }));
 
@@ -43,7 +43,7 @@ describe('MetadataWidgetCtrl controller', () => {
         scope = $rootScope.$new();
         scope.item = {
             publish_schedule: '2015-08-01T15:12:34+0000',
-            schedule_settings: {time_zone: 'Europe/Prague'}
+            schedule_settings: {time_zone: 'Europe/Prague'},
         };
         $controller('MetadataWidgetCtrl', {$scope: scope});
     }));
@@ -56,14 +56,14 @@ describe('MetadataWidgetCtrl controller', () => {
     it('initializes the list of categories to pick from in scope', () => {
         var userPrefs = {
             'categories:preferred': {
-                selected: {a: true, b: false, c: true, d: true}
-            }
+                selected: {a: true, b: false, c: true, d: true},
+            },
         };
 
         metadata.values = {
             categories: [
-                {qcode: 'a'}, {qcode: 'b'}, {qcode: 'c'}, {qcode: 'd'}
-            ]
+                {qcode: 'a'}, {qcode: 'b'}, {qcode: 'c'}, {qcode: 'd'},
+            ],
         };
 
         // set the 'd' category to be already assigned to the article
@@ -83,8 +83,8 @@ describe('MetadataWidgetCtrl controller', () => {
     it('can pupulate list of categories for new users', () => {
         metadata.values = {
             categories: [
-                {qcode: 'a'}, {qcode: 'b'}, {qcode: 'c'}, {qcode: 'd'}
-            ]
+                {qcode: 'a'}, {qcode: 'b'}, {qcode: 'c'}, {qcode: 'd'},
+            ],
         };
 
         metaInit.resolve();
@@ -124,7 +124,7 @@ describe('metadata terms directive', () => {
         {name: 'test-ttt', qcode: '444', parent: '111'},
         {name: 'test-xyz', qcode: '211', parent: '222'},
         {name: 'test-foo', qcode: '212', parent: '222'},
-        {name: 'test-bar', qcode: '213', parent: '222'}
+        {name: 'test-bar', qcode: '213', parent: '222'},
     ];
     itemSubjects = [{name: 'b', qcode: '456', parent: '123'}, {name: 'test', qcode: '111'}];
 
@@ -156,10 +156,10 @@ describe('metadata terms directive', () => {
         var iScope;
         var scopeValues = {
             item: {
-                company_codes: itemCompanyCodes
+                company_codes: itemCompanyCodes,
             },
             _editable: true,
-            availableCompanyCodes: availableCompanyCodes
+            availableCompanyCodes: availableCompanyCodes,
         };
 
         var elm = compileDirective(elmHtml, scopeValues);
@@ -180,10 +180,10 @@ describe('metadata terms directive', () => {
         var iScope;
         var scopeValues = {
             item: {
-                anpa_category: itemCategories
+                anpa_category: itemCategories,
             },
             _editable: true,
-            availableCategories: availableCategories
+            availableCategories: availableCategories,
         };
 
         var elm = compileDirective(elmHtml, scopeValues);
@@ -204,10 +204,10 @@ describe('metadata terms directive', () => {
         var iScope;
         var scopeValues = {
             item: {
-                anpa_category: itemCategories
+                anpa_category: itemCategories,
             },
             _editable: true,
-            availableCategories: availableCategories
+            availableCategories: availableCategories,
         };
 
         var elm = compileDirective(elmHtml, scopeValues);
@@ -228,10 +228,10 @@ describe('metadata terms directive', () => {
         var iScope;
         var scopeValues = {
             item: {
-                anpa_category: itemCategories
+                anpa_category: itemCategories,
             },
             _editable: true,
-            availableCategories: availableCategories
+            availableCategories: availableCategories,
         };
 
         var elm = compileDirective(elmHtml, scopeValues);
@@ -257,10 +257,10 @@ describe('metadata terms directive', () => {
         var iScope;
         var scopeValues = {
             item: {
-                anpa_category: itemCategories
+                anpa_category: itemCategories,
             },
             _editable: true,
-            availableCategories: availableCategories
+            availableCategories: availableCategories,
         };
 
         var elm = compileDirective(elmHtml, scopeValues);
@@ -283,7 +283,7 @@ describe('metadata terms directive', () => {
         var scopeValues = {
             item: {},
             _editable: true,
-            availableCategories: availableCategories
+            availableCategories: availableCategories,
         };
 
         var elm = compileDirective(elmHtml, scopeValues);
@@ -305,10 +305,10 @@ describe('metadata terms directive', () => {
         var iScope;
         var scopeValues = {
             item: {
-                anpa_category: itemCategories
+                anpa_category: itemCategories,
             },
             _editable: true,
-            availableCategories: availableCategories
+            availableCategories: availableCategories,
         };
 
         var elm = compileDirective(elmHtml, scopeValues);
@@ -329,10 +329,10 @@ describe('metadata terms directive', () => {
         var iScope;
         var scopeValues = {
             item: {
-                subjects: itemSubjects
+                subjects: itemSubjects,
             },
             _editable: true,
-            subjects: subjects
+            subjects: subjects,
         };
 
         var elm = compileDirective(elmHtml, scopeValues);
@@ -352,10 +352,10 @@ describe('metadata terms directive', () => {
         var iScope;
         var scopeValues = {
             item: {
-                subjects: itemSubjects
+                subjects: itemSubjects,
             },
             _editable: true,
-            subjects: subjects
+            subjects: subjects,
         };
 
         var elm = compileDirective(elmHtml, scopeValues);
@@ -375,10 +375,10 @@ describe('metadata terms directive', () => {
         var iScope;
         var scopeValues = {
             item: {
-                subjects: itemSubjects
+                subjects: itemSubjects,
             },
             _editable: true,
-            subjects: subjects
+            subjects: subjects,
         };
 
         var elm = compileDirective(elmHtml, scopeValues);
@@ -401,13 +401,13 @@ describe('metadata terms directive', () => {
         var iScope;
         var scopeValues = {
             item: {
-                subjects: itemSubjects
+                subjects: itemSubjects,
             },
             _editable: true,
-            subjects: subjects
+            subjects: subjects,
         };
         var event = {
-            stopPropagation: function() { /* no-op */ }
+            stopPropagation: function() { /* no-op */ },
         };
 
         var elm = compileDirective(elmHtml, scopeValues);
@@ -436,7 +436,7 @@ describe('dateline dropdown', () => {
             tz: 'Australia/Sydney',
             dateline: 'city',
             country: 'Australia',
-            country_code: 'AU'
+            country_code: 'AU',
         },
         {
             alt_name: '',
@@ -447,8 +447,8 @@ describe('dateline dropdown', () => {
             tz: 'Australia/Sydney',
             dateline: 'city',
             country: 'Australia',
-            country_code: 'AU'
-        }
+            country_code: 'AU',
+        },
     ];
 
     beforeEach(window.module('superdesk.templates-cache'));
@@ -478,11 +478,11 @@ describe('dateline dropdown', () => {
                 dateline: {
                     located: {
 
-                    }
-                }
+                    },
+                },
             },
             _editable: true,
-            cities: cities
+            cities: cities,
         };
 
         var elm = compileDirective(elmHtml, scopeValues);
@@ -507,11 +507,11 @@ describe('dateline dropdown', () => {
                 dateline: {
                     located: {
 
-                    }
-                }
+                    },
+                },
             },
             _editable: true,
-            cities: cities
+            cities: cities,
         };
 
         var elm = compileDirective(elmHtml, scopeValues);

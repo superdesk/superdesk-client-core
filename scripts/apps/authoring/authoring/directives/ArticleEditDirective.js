@@ -38,7 +38,7 @@ ArticleEditDirective.$inject = [
     'history',
     '$interpolate',
     'suggest',
-    'renditions'
+    'renditions',
 ];
 export function ArticleEditDirective(
     autosave,
@@ -82,7 +82,7 @@ export function ArticleEditDirective(
 
                 scope.dateline = {
                     month: '',
-                    day: ''
+                    day: '',
                 };
 
                 scope.preview = function(item) {
@@ -170,7 +170,7 @@ export function ArticleEditDirective(
 
                         item.dateline.text = $filter('formatDatelineText')(item.dateline.located,
                             $interpolate('{{ month | translate }}')({
-                                month: _.findKey(scope.monthNames, (m) => m === scope.dateline.month)
+                                month: _.findKey(scope.monthNames, (m) => m === scope.dateline.month),
                             }),
                             scope.dateline.day, item.source);
                     }
@@ -262,7 +262,7 @@ export function ArticleEditDirective(
 
                         scope.item.dateline.text = $filter('formatDatelineText')(scope.item.dateline.located,
                             $interpolate('{{ month | translate }}')({
-                                month: _.findKey(scope.monthNames, (m) => m === scope.dateline.month)
+                                month: _.findKey(scope.monthNames, (m) => m === scope.dateline.month),
                             }),
                             scope.dateline.day, scope.item.dateline.source);
 
@@ -364,6 +364,6 @@ export function ArticleEditDirective(
 
                 scope.extra = {}; // placeholder for fields not part of item
             });
-        }
+        },
     };
 }

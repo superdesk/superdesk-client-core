@@ -23,7 +23,7 @@ function ListItemDirectiveFactory() {
                     itemScope.$destroy();
                 }
             }
-        }
+        },
     };
 }
 
@@ -41,7 +41,7 @@ mod.directive('sdListView', ['$location', 'keyboardManager', 'asset', function($
         scope: {
             select: '&',
             extras: '=',
-            items: '='
+            items: '=',
         },
         replace: true,
         transclude: true,
@@ -103,7 +103,7 @@ mod.directive('sdListView', ['$location', 'keyboardManager', 'asset', function($
                 fetchSelectedItem($location.search()._id);
                 elem.find('.list-view').focus();
             });
-        }
+        },
     };
 }]);
 
@@ -127,7 +127,7 @@ mod.directive('sdSearchbar', ['$location', 'asset', function($location, asset) {
                 scope.search();
                 input.focus();
             };
-        }
+        },
     };
 }]);
 
@@ -140,7 +140,7 @@ mod.directive('sdUpdowns', ['$location', 'keyboardManager', '$anchorScroll',
             template: '<div ng-transclude></div>',
             scope: {
                 items: '=',
-                select: '&'
+                select: '&',
             },
             link: function(scope, elem, attrs) {
                 var UP = -1,
@@ -201,10 +201,10 @@ mod.directive('sdUpdowns', ['$location', 'keyboardManager', '$anchorScroll',
                     fetchSelectedItem($location.search()._id);
                     elem.find('.list-view').focus();
                 });
-            }
+            },
 
         };
-    }
+    },
 ]);
 
 /**
@@ -221,7 +221,7 @@ mod.directive('sdPagination', ['$location', 'asset', 'lodash', function($locatio
     return {
         template: require('./views/sdPagination.html'),
         scope: {
-            items: '='
+            items: '=',
         },
         link: function(scope, element, attrs) {
             const SIZE = 25;
@@ -267,7 +267,7 @@ mod.directive('sdPagination', ['$location', 'asset', 'lodash', function($locatio
                 scope.setPage(0);
                 $location.search('max_results', !_.isNil(pagesize) ? pagesize : SIZE);
             };
-        }
+        },
     };
 }]);
 
@@ -278,8 +278,8 @@ mod.directive('sdPaginationAlt', ['asset', function(asset) {
         templateUrl: asset.templateUrl('core/list/views/sdPaginationAlt.html'),
         scope: {
             page: '=',
-            maxPage: '='
-        }
+            maxPage: '=',
+        },
     };
 }]);
 

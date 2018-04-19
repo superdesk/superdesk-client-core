@@ -24,14 +24,14 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
             description_text: item.description_text || '',
             state: 'draft',
             type: 'composite',
-            version: 0
+            version: 0,
         };
         var groups = [{
             role: 'grpRole:NEP',
             refs: [{idRef: idRef}],
-            id: 'root'
+            id: 'root',
         },
-        getGroupFor(null, idRef)
+        getGroupFor(null, idRef),
         ];
 
         newPackage = setDefaults(newPackage, defaults);
@@ -54,10 +54,10 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
                 {
                     role: 'grpRole:NEP',
                     refs: [{idRef: idRef}],
-                    id: 'root'
+                    id: 'root',
                 },
-                getGroupFor(null, idRef)
-            ]
+                getGroupFor(null, idRef),
+            ],
         };
 
         newPackage = setDefaults(newPackage, defaults);
@@ -81,7 +81,7 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
             targetGroup = {
                 id: groupId,
                 refs: [],
-                role: 'grpRole:' + groupId
+                role: 'grpRole:' + groupId,
             };
             origGroups.push(targetGroup);
         }
@@ -119,7 +119,7 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
             location: 'archive',
             slugline: item.slugline || '',
             renditions: item.renditions || {},
-            itemClass: item.type ? 'icls:' + item.type : ''
+            itemClass: item.type ? 'icls:' + item.type : '',
         };
     };
 
@@ -195,13 +195,13 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
                 residRef: item._id,
                 location: 'archive',
                 slugline: item.slugline || '',
-                renditions: item.renditions || {}
+                renditions: item.renditions || {},
             });
         }
         return {
             refs: refs,
             id: idRef,
-            role: 'grpRole:' + idRef
+            role: 'grpRole:' + idRef,
         };
     }
 

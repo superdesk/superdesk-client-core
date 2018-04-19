@@ -13,7 +13,7 @@ export function ReadingTime(deployConfig) {
         scope: {
             item: '=',
             html: '@',
-            language: '='
+            language: '=',
         },
         template: '<span ng-if="readingTime==0" class="char-count reading-time" translate>' +
             'less than one minute read</span>' +
@@ -33,7 +33,7 @@ export function ReadingTime(deployConfig) {
 
                 scope.readingTime = readingTimeMinutes;
             });
-        }
+        },
     };
 
     function getReadingTime(input, language) {

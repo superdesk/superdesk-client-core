@@ -4,7 +4,7 @@ import {
     ContentBlock,
     Modifier,
     EditorState,
-    genKey
+    genKey,
 } from 'draft-js';
 
 const Immutable = require('immutable');
@@ -21,7 +21,7 @@ function getInsertionTarget(contentState, selectionState) {
     if (afterSplit.getBlockForKey(afterSplit.getSelectionBefore().getAnchorKey()).getText().length < 1) {
         return {
             contentState: afterRemoval,
-            selectionState: targetSelection
+            selectionState: targetSelection,
         };
     }
 
@@ -29,7 +29,7 @@ function getInsertionTarget(contentState, selectionState) {
 
     return {
         contentState: afterSplit,
-        selectionState: insertionTarget
+        selectionState: insertionTarget,
     };
 }
 
@@ -53,7 +53,7 @@ function insertAtomicBlockWithoutEmptyLines(editorState, entityKey, character) {
             key: genKey(),
             type: 'unstyled',
             text: '',
-            characterList: List()
+            characterList: List(),
         }));
     }
 
@@ -61,7 +61,7 @@ function insertAtomicBlockWithoutEmptyLines(editorState, entityKey, character) {
         key: genKey(),
         type: 'atomic',
         text: character,
-        characterList: List(Repeat(charData, character.length))
+        characterList: List(Repeat(charData, character.length)),
     }));
 
     if (
@@ -76,7 +76,7 @@ function insertAtomicBlockWithoutEmptyLines(editorState, entityKey, character) {
             key: genKey(),
             type: 'unstyled',
             text: '',
-            characterList: List()
+            characterList: List(),
         }));
     }
 
@@ -86,7 +86,7 @@ function insertAtomicBlockWithoutEmptyLines(editorState, entityKey, character) {
 
     var newContent = withAtomicBlock.merge({
         selectionBefore: selectionState,
-        selectionAfter: withAtomicBlock.getSelectionAfter().set('hasFocus', true)
+        selectionAfter: withAtomicBlock.getSelectionAfter().set('hasFocus', true),
     });
 
     return EditorState.push(editorState, newContent, 'insert-fragment');

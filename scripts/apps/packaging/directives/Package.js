@@ -17,7 +17,7 @@ export function Package() {
         templateUrl: 'scripts/apps/packaging/views/sd-package.html',
         scope: {
             item: '=',
-            setitem: '&'
+            setitem: '&',
         },
         link: function(scope, elem, attrs) {
             scope.mode = attrs.mode || 'tree';
@@ -29,6 +29,6 @@ export function Package() {
                     );
                 }
             });
-        }
+        },
     };
 }

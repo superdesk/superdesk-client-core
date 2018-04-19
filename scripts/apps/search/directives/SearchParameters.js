@@ -22,7 +22,7 @@ import _ from 'lodash';
 SearchParameters.$inject = [
     '$location', 'asset', 'tags', 'metadata',
     'searchCommon', 'desks', 'userList',
-    'ingestSources', 'subscribersService'
+    'ingestSources', 'subscribersService',
 ];
 
 export function SearchParameters($location, asset, tags, metadata, common, desks,
@@ -31,7 +31,7 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
         scope: {
             repo: '=',
             context: '=',
-            providerType: '='
+            providerType: '=',
         },
         templateUrl: asset.templateUrl('apps/search/views/search-parameters.html'),
         link: function(scope, elem) {
@@ -219,7 +219,7 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
 
                             if (match) {
                                 scope.selecteditems[cv.id].push(angular.extend(match, {
-                                    scheme: cv.id
+                                    scheme: cv.id,
                                 }));
                                 scope.fields[cv.id].push(match);
                             }
@@ -403,6 +403,6 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
                     delete scope.fields[type];
                 }
             };
-        }
+        },
     };
 }

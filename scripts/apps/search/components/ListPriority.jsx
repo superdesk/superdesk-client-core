@@ -6,8 +6,8 @@ import {renderArea} from '../helpers';
 export function ListPriority(props) {
     var css = {
         className: classNames('list-field urgency', {
-            'urgency-reduced-rowheight': props.scope.singleLine
-        })
+            'urgency-reduced-rowheight': props.scope.singleLine,
+        }),
     };
 
     return renderArea('priority', props, css) || React.createElement('div', css);
@@ -15,5 +15,5 @@ export function ListPriority(props) {
 
 ListPriority.propTypes = {
     svc: PropTypes.object.isRequired,
-    scope: PropTypes.any.isRequired
+    scope: PropTypes.any.isRequired,
 };

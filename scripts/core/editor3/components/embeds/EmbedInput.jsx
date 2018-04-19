@@ -95,7 +95,7 @@ export class EmbedInputComponent extends Component {
 
         $.ajax({
             url: `//iframe.ly/api/oembed?callback=?&url=${value}&api_key=${apiKey}&omit_script=true&iframe=true`,
-            dataType: 'json'
+            dataType: 'json',
         })
             .then((data) => data.type === 'link' ? $.Deferred().reject() : data)
             .then(this.processSuccess, this.processError);
@@ -142,10 +142,10 @@ export class EmbedInputComponent extends Component {
 
 EmbedInputComponent.propTypes = {
     embed: PropTypes.func.isRequired,
-    hidePopups: PropTypes.func.isRequired
+    hidePopups: PropTypes.func.isRequired,
 };
 
 export const EmbedInput = connect(null, {
     embed,
-    hidePopups
+    hidePopups,
 })(EmbedInputComponent);

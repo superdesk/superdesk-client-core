@@ -8,6 +8,6 @@ export function UserInfoDirective(userPopup) {
             }, () => {
                 userPopup.close();
             });
-        }
+        },
     };
 }

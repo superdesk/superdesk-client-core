@@ -106,7 +106,7 @@ describe('Image Crop', () => {
                 jcropApi = {
                     setOptions: function() { /* no-op */ },
                     tellSelect: function() { /* no-op */ },
-                    destroy: function() { /* no-op */ }
+                    destroy: function() { /* no-op */ },
                 };
 
                 scope.$digest();

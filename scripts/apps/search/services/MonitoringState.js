@@ -67,7 +67,7 @@ export function MonitoringState($q, $rootScope, ingestSources, desks, highlights
                 // populates cache for mark for highlights activity dropdown
                 deskHighlights: highlightsService.get(desks.getCurrentDeskId()),
 
-                metadata: metadata.initialize()
+                metadata: metadata.initialize(),
             });
         }
 

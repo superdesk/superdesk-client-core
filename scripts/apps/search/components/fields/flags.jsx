@@ -11,7 +11,7 @@ export function flags(props) {
                 'div', {
                     className: 'state-label not-for-publication',
                     title: gettext('Not For Publication'),
-                    key: 'not-for-publication'
+                    key: 'not-for-publication',
                 }, gettext('Not For Publication'))
             : null,
         flags.marked_for_legal ?
@@ -19,7 +19,7 @@ export function flags(props) {
                 'div', {
                     className: 'state-label legal',
                     title: gettext('Legal'),
-                    key: 'legal'
+                    key: 'legal',
                 }, gettext('Legal'))
             : null,
         flags.marked_for_sms ?
@@ -28,7 +28,7 @@ export function flags(props) {
                     className: 'state-label sms',
                     key: 'sms'},
                 gettext('Sms'))
-            : null
+            : null,
     ].filter(angular.identity);
 
     return elems.length ? React.createElement('div', {key: 'flags'}, elems) : null;

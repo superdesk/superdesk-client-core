@@ -23,9 +23,9 @@ export default angular.module('superdesk.core.directives.sortable', [])
                     },
                     update: function(event, ui) {
                         scope.update();
-                    }
+                    },
                 });
                 element.disableSelection();
-            }
+            },
         };
     }]);

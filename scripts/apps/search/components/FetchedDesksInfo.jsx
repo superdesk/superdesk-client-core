@@ -57,7 +57,7 @@ export class FetchedDesksInfo extends React.Component {
 
         items.push(React.createElement('dt', {
             key: 'dt',
-            style: {paddingRight: '5px'}
+            style: {paddingRight: '5px'},
         }, gettext('fetched in')));
 
         if (this.state.desks.length) {
@@ -74,7 +74,7 @@ export class FetchedDesksInfo extends React.Component {
                     key: 'dd2',
                     desks: this.state.desks,
                     openDesk: this.openDesk,
-                    svc: this.props.svc
+                    svc: this.props.svc,
                 }));
             }
         }

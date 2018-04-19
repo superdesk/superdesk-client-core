@@ -4,7 +4,7 @@ export function ArchivedItemKill(authoring, api, notify, gettext) {
     return {
         templateUrl: 'scripts/apps/archive/views/archived-kill.html',
         scope: {
-            item: '='
+            item: '=',
         },
         link: function(scope, elem, attr) {
             scope._editable = true;
@@ -47,6 +47,6 @@ export function ArchivedItemKill(authoring, api, notify, gettext) {
             scope.cancel = function() {
                 scope.item = null;
             };
-        }
+        },
     };
 }

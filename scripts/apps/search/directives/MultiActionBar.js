@@ -87,6 +87,6 @@ export function MultiActionBar(asset, multi, authoringWorkspace, superdesk, keyb
                     scope.action.spikeItems();
                 }
             });
-        }
+        },
     };
 }

@@ -50,12 +50,12 @@ export default angular.module('superdesk.apps.highlights', [
                 keyboardShortcut: 'ctrl+shift+^',
                 templateUrl: 'scripts/apps/highlights/views/mark_highlights_dropdown.html',
                 filters: [
-                    {action: 'list', type: 'archive'}
+                    {action: 'list', type: 'archive'},
                 ],
                 additionalCondition: ['authoring', 'item', function(authoring, item) {
                     return authoring.itemActions(item).mark_item_for_highlight;
                 }],
-                group: 'highlights'
+                group: 'highlights',
             })
             .activity('/settings/highlights', {
                 label: gettext('Highlights'),
@@ -63,14 +63,14 @@ export default angular.module('superdesk.apps.highlights', [
                 templateUrl: 'scripts/apps/highlights/views/settings.html',
                 category: superdesk.MENU_SETTINGS,
                 priority: -800,
-                privileges: {highlights: 1}
+                privileges: {highlights: 1},
             })
             .activity('/workspace/highlights', {
                 label: gettext('Highlights View'),
                 priority: 100,
                 templateUrl: 'scripts/apps/monitoring/views/highlights-view.html',
                 topTemplateUrl: 'scripts/apps/dashboard/views/workspace-topnav.html',
-                sideTemplateUrl: 'scripts/apps/workspace/views/workspace-sidenav.html'
+                sideTemplateUrl: 'scripts/apps/workspace/views/workspace-sidenav.html',
             });
 
         workspaceMenuProvider.item({
@@ -78,20 +78,20 @@ export default angular.module('superdesk.apps.highlights', [
             label: gettext('Highlights'),
             templateUrl: 'scripts/apps/highlights/views/menu.html',
             order: 300,
-            shortcut: 'ctrl+alt+h'
+            shortcut: 'ctrl+alt+h',
         });
     }])
     .config(['apiProvider', function(apiProvider) {
         apiProvider.api('highlights', {
             type: 'http',
-            backend: {rel: 'highlights'}
+            backend: {rel: 'highlights'},
         });
         apiProvider.api('markForHighlights', {
             type: 'http',
-            backend: {rel: 'marked_for_highlights'}
+            backend: {rel: 'marked_for_highlights'},
         });
         apiProvider.api('generate_highlights', {
             type: 'http',
-            backend: {rel: 'generate_highlights'}
+            backend: {rel: 'generate_highlights'},
         });
     }]);

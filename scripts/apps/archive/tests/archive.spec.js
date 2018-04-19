@@ -16,14 +16,14 @@ describe('content', () => {
         $provide.constant('config', {
             model: {
                 timeformat: 'HH:mm:ss',
-                dateformat: 'DD/MM/YYYY'
+                dateformat: 'DD/MM/YYYY',
             },
             view: {
                 timeformat: 'HH:mm',
-                dateformat: 'MM/DD/YYYY'
+                dateformat: 'MM/DD/YYYY',
             },
             defaultTimezone: 'Europe/London',
-            server: {url: undefined}
+            server: {url: undefined},
         });
     }));
 
@@ -237,7 +237,7 @@ describe('content', () => {
             expect(api.save).toHaveBeenCalledWith('duplicate', {}, {
                 desk: 'sports',
                 type: 'archive',
-                item_id: 'foo'
+                item_id: 'foo',
             }, data.item);
         }));
     });
@@ -252,7 +252,7 @@ describe('content', () => {
                     _type: 'archive',
                     task: {desk: 'desk1', stage: 'stage1'},
                     type: 'text',
-                    assignment_id: 'as1'
+                    assignment_id: 'as1',
                 };
 
                 spyOn(modal, 'confirm').and.returnValue($q.when({}));
@@ -274,7 +274,7 @@ describe('content', () => {
                     _id: 'foo1',
                     _type: 'archive',
                     task: {desk: 'desk1', stage: 'stage1'},
-                    type: 'text'
+                    type: 'text',
                 };
 
                 spyOn(modal, 'confirm').and.returnValue($q.when({}));
@@ -293,7 +293,7 @@ describe('content', () => {
                     _id: 'foo1',
                     _type: 'archive',
                     task: {desk: 'desk1', stage: 'stage1'},
-                    type: 'text'
+                    type: 'text',
                 };
 
                 spyOn(modal, 'confirm').and.returnValue($q.when({}));

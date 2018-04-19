@@ -29,7 +29,7 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
                     method: 'POST',
                     url: url,
                     data: {media: item.file},
-                    headers: api.archive.getHeaders()
+                    headers: api.archive.getHeaders(),
                 });
                 item.upload.then((response) => {
                     if (response.data._issues) {
@@ -74,7 +74,7 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
         var item = {
             file: file,
             meta: meta,
-            progress: 0
+            progress: 0,
         };
 
         item.cssType = item.file.type.split('/')[0];
@@ -132,7 +132,7 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
                             byline: fileMeta.byline,
                             headline: fileMeta.headline,
                             description_text: fileMeta.caption,
-                            copyrightnotice: fileMeta.copyright
+                            copyrightnotice: fileMeta.copyright,
                         });
                     });
                 });
@@ -150,7 +150,7 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
                 }
 
                 initFile(file, {
-                    byline: $scope.currentUser.byline // initialize meta.byline from user profile
+                    byline: $scope.currentUser.byline, // initialize meta.byline from user profile
                 });
             }
         });

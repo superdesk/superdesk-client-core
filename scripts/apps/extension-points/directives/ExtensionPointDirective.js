@@ -46,6 +46,6 @@ export function ExtensionPointDirective(extensionPoints) {
             scope.$on('$destroy', () => {
                 ReactDOM.unmountComponentAtNode(elem[0]);
             });
-        }
+        },
     };
 }

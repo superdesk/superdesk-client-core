@@ -11,6 +11,6 @@ import {ManageContentFiltersController} from 'apps/content-filters/controllers';
 export function ManageFiltersTab() {
     return {
         templateUrl: 'scripts/apps/content-filters/views/manage-filters.html',
-        controller: ManageContentFiltersController
+        controller: ManageContentFiltersController,
     };
 }

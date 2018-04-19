@@ -25,6 +25,6 @@ export function DeskeditMacros(macros, WizardHandler) {
             scope.save = function() {
                 WizardHandler.wizard('desks').finish();
             };
-        }
+        },
     };
 }

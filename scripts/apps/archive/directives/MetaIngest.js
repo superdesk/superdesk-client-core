@@ -3,7 +3,7 @@ MetaIngest.$inject = ['ingestSources'];
 export function MetaIngest(ingestSources) {
     return {
         scope: {
-            item: '='
+            item: '=',
         },
         template: '{{ name }}',
         link: function(scope) {
@@ -18,6 +18,6 @@ export function MetaIngest(ingestSources) {
                     }
                 });
             }
-        }
+        },
     };
 }

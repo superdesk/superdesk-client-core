@@ -51,8 +51,8 @@ export class CommentPopup extends Component {
                 ...commentData,
                 data: {
                     ...commentData.data,
-                    msg: msg
-                }
+                    msg: msg,
+                },
             });
         } else if (this.state.index !== null) {
             highlightsManager.updateHighlightData(highlightId, {
@@ -61,8 +61,8 @@ export class CommentPopup extends Component {
                     ...commentData.data,
                     replies: commentData.data.replies.map(
                         (reply, i) => i === this.state.index ? {...reply, msg} : reply
-                    )
-                }
+                    ),
+                },
             });
         } else {
             highlightsManager.updateHighlightData(highlightId, {
@@ -72,10 +72,10 @@ export class CommentPopup extends Component {
                     replies: commentData.data.replies.concat(
                         {
                             msg,
-                            ...getAuthorInfo()
+                            ...getAuthorInfo(),
                         }
-                    )
-                }
+                    ),
+                },
             });
         }
 
@@ -95,8 +95,8 @@ export class CommentPopup extends Component {
             ...commentData,
             data: {
                 ...commentData.data,
-                replies: commentData.data.replies.filter((reply, i) => i !== removeAtIndex)
-            }
+                replies: commentData.data.replies.filter((reply, i) => i !== removeAtIndex),
+            },
         });
     }
 
@@ -114,9 +114,9 @@ export class CommentPopup extends Component {
                 commentedText: highlightedText,
                 resolutionInfo: {
                     resolverUserId: ng.get('session').identity._id,
-                    date: new Date()
-                }
-            }
+                    date: new Date(),
+                },
+            },
         };
 
         const allResolvedComments = getCustomDataFromEditor(

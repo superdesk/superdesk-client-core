@@ -61,6 +61,6 @@ export function DeskeditPeople(gettext, WizardHandler, desks, $rootScope) {
                         scope.message = null;
                     });
             };
-        }
+        },
     };
 }

@@ -12,5 +12,5 @@ export const ListTypeIcon = ({item}) => {
 };
 
 ListTypeIcon.propTypes = {
-    item: PropTypes.object
+    item: PropTypes.object,
 };

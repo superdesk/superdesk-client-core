@@ -59,7 +59,7 @@ export function SubscribersService(api, $q, $filter) {
                     });
             }
             return this.fetched;
-        }
+        },
     };
 
     return service;

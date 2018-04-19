@@ -52,7 +52,7 @@ export function ProductsFactory($q, api, contentFilters, $filter) {
         initialize: function() {
             return this.fetchProducts()
                 .then(angular.bind(this, this.fetchContentFilters));
-        }
+        },
     };
 
     return productsService;

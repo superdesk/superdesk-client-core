@@ -1,5 +1,5 @@
 export default angular.module('superdesk.core.upload.imagecrop', [
-    'superdesk.core.translate'
+    'superdesk.core.translate',
 ])
 
     .directive('sdImageCropView', [function() {
@@ -7,7 +7,7 @@ export default angular.module('superdesk.core.upload.imagecrop', [
             scope: {
                 src: '=',
                 cropData: '=',
-                original: '='
+                original: '=',
             },
             template: '<img ng-src="{{ src }}"/><div class="crop-box"></div>',
             link: function(scope, elem) {
@@ -16,7 +16,7 @@ export default angular.module('superdesk.core.upload.imagecrop', [
                 var $img = elem.find('img');
 
                 elem.css({
-                    position: 'relative'
+                    position: 'relative',
                 });
                 scope.$watch('src', () => {
                     img = new Image();
@@ -25,7 +25,7 @@ export default angular.module('superdesk.core.upload.imagecrop', [
                             position: 'absolute',
                             top: 0,
                             left: 0,
-                            'z-index': 1000
+                            'z-index': 1000,
                         });
                         updateCropBox();
                     };
@@ -47,11 +47,11 @@ export default angular.module('superdesk.core.upload.imagecrop', [
                             'border-top-width': cTop + 'px',
                             'border-left-width': cLeft + 'px',
                             'border-bottom-width': cBottom + 'px',
-                            'border-right-width': cRight + 'px'
+                            'border-right-width': cRight + 'px',
                         });
                     }
                 }
-            }
+            },
         };
     }])
 
@@ -82,7 +82,7 @@ export default angular.module('superdesk.core.upload.imagecrop', [
                     onChange: '&',
                     original: '=',
                     rendition: '=',
-                    showMinSizeError: '='
+                    showMinSizeError: '=',
                 },
                 link: function(scope, elem) {
                     var img, cropData, selectionWidth, selectionHeight, jcropApi;
@@ -117,7 +117,7 @@ export default angular.module('superdesk.core.upload.imagecrop', [
                             angular.extend(scope.cropData, nextData);
                             scope.onChange({
                                 renditionName: scope.rendition && scope.rendition.name || undefined,
-                                cropData: nextData
+                                cropData: nextData,
                             });
                         }
                     }
@@ -133,7 +133,7 @@ export default angular.module('superdesk.core.upload.imagecrop', [
                             CropLeft: Math.round(Math.min(cords.x, cords.x2)),
                             CropRight: Math.round(Math.max(cords.x, cords.x2)),
                             CropTop: Math.round(Math.min(cords.y, cords.y2)),
-                            CropBottom: Math.round(Math.max(cords.y, cords.y2))
+                            CropBottom: Math.round(Math.max(cords.y, cords.y2)),
                         };
                     }
 
@@ -149,7 +149,7 @@ export default angular.module('superdesk.core.upload.imagecrop', [
                                 cropImage.CropLeft,
                                 cropImage.CropTop,
                                 cropImage.CropRight,
-                                cropImage.CropBottom
+                                cropImage.CropBottom,
                             ];
                         }
                     }
@@ -168,7 +168,7 @@ export default angular.module('superdesk.core.upload.imagecrop', [
                                 cropData.CropLeft,
                                 cropData.CropTop,
                                 cropData.CropRight,
-                                cropData.CropBottom
+                                cropData.CropBottom,
                             ]);
                         }
                     }, true);
@@ -184,7 +184,7 @@ export default angular.module('superdesk.core.upload.imagecrop', [
                                     cropData.CropLeft,
                                     cropData.CropTop,
                                     cropData.CropRight,
-                                    cropData.CropBottom
+                                    cropData.CropBottom,
                                 ]);
                             }
                         }
@@ -192,12 +192,12 @@ export default angular.module('superdesk.core.upload.imagecrop', [
 
                     scope.$on('poiUpdate', (e, point) => {
                         angular.element('.crop-area.thumbnails').css({
-                            height: angular.element('.crop-area.thumbnails').height()
+                            height: angular.element('.crop-area.thumbnails').height(),
                         });
 
                         var center = {
                             x: point.x * scope.original.width,
-                            y: point.y * scope.original.height
+                            y: point.y * scope.original.height,
                         };
 
                         // query current crop selection values
@@ -223,7 +223,7 @@ export default angular.module('superdesk.core.upload.imagecrop', [
                             CropLeft: Math.round(center.x - selectionWidth / 2),
                             CropTop: Math.round(center.y - selectionHeight / 2),
                             CropRight: Math.round(center.x + selectionWidth / 2),
-                            CropBottom: Math.round(center.y + selectionHeight / 2)
+                            CropBottom: Math.round(center.y + selectionHeight / 2),
                         };
 
                         angular.extend(cropData, crop);
@@ -232,7 +232,7 @@ export default angular.module('superdesk.core.upload.imagecrop', [
                                 cropData.CropLeft,
                                 cropData.CropTop,
                                 cropData.CropRight,
-                                cropData.CropBottom
+                                cropData.CropBottom,
                             ]);
                         });
                     });
@@ -278,7 +278,7 @@ export default angular.module('superdesk.core.upload.imagecrop', [
                                 jcropApi = self;
                                 // define onSelect once Jcrop initialized
                                 jcropApi.setOptions({
-                                    onSelect: updateScope
+                                    onSelect: updateScope,
                                 });
 
                                 // Make initial crops selection available for new image.
@@ -301,7 +301,7 @@ export default angular.module('superdesk.core.upload.imagecrop', [
                                 ' (it is {{ img.width }}x{{ img.height }}).')
                             )({
                                 r: rendition,
-                                img: img
+                                img: img,
                             });
 
                             elem.append('<p class="error">' + text);
@@ -336,7 +336,7 @@ export default angular.module('superdesk.core.upload.imagecrop', [
                             jcropApi.destroy();
                         }
                     });
-                }
+                },
             };
         }])
     .directive('imageonload', () => ({
@@ -346,14 +346,14 @@ export default angular.module('superdesk.core.upload.imagecrop', [
             // call the function that was passed
                 scope.$apply(attrs.imageonload);
             });
-        }
+        },
     }))
     .directive('sdImagePoint', ['$window', 'lodash', function($window, _) {
         return {
             scope: {
                 src: '=',
                 poi: '=',
-                onChange: '&'
+                onChange: '&',
             },
             templateUrl: 'scripts/apps/authoring/views/image-point.html',
             bindToController: true,
@@ -368,14 +368,14 @@ export default angular.module('superdesk.core.upload.imagecrop', [
                             self.onChange();
                             $rootScope.$broadcast('poiUpdate', self.poi);
                         }
-                    }
+                    },
                 });
             }],
             link: function(scope, element, attrs, vm) {
             // init directive element style
                 element.css({
                     position: 'relative',
-                    display: 'block'
+                    display: 'block',
                 });
                 var circleRadius = 30 / 2;
                 var lineThickness = 2;
@@ -394,29 +394,29 @@ export default angular.module('superdesk.core.upload.imagecrop', [
 
                     $poiContainer.css({
                         width: img.width,
-                        height: img.height
+                        height: img.height,
                     });
                     $poiCursor.css({
                         left: leftOffset,
-                        top: topOffset
+                        top: topOffset,
                     });
                     $poiLeft.css({
                         width: leftOffset,
-                        top: horizontalTopffset
+                        top: horizontalTopffset,
                     });
                     $poiRight.css({
                         width: img.width - (leftOffset + 2 * circleRadius),
                         top: horizontalTopffset,
-                        left: leftOffset + 2 * circleRadius
+                        left: leftOffset + 2 * circleRadius,
                     });
                     $poiTop.css({
                         height: topOffset,
-                        left: verticalLeftOffset
+                        left: verticalLeftOffset,
                     });
                     $poiBottom.css({
                         height: img.height - (topOffset + 2 * circleRadius),
                         left: verticalLeftOffset,
-                        top: topOffset + 2 * circleRadius
+                        top: topOffset + 2 * circleRadius,
                     });
                 }
                 function updateWhenImageIsReady() {
@@ -436,7 +436,7 @@ export default angular.module('superdesk.core.upload.imagecrop', [
                         function updatePOIModel(e) {
                             var newPoi = {
                                 x: Math.round(e.offsetX * 100 / $img.width) / 100,
-                                y: Math.round(e.offsetY * 100 / $img.height) / 100
+                                y: Math.round(e.offsetY * 100 / $img.height) / 100,
                             };
 
                             // refresh the points
@@ -491,6 +491,6 @@ export default angular.module('superdesk.core.upload.imagecrop', [
                 scope.$on('$destroy', () => {
                     angular.element($window).off('resize', updateWhenImageIsReady);
                 });
-            }
+            },
         };
     }]);

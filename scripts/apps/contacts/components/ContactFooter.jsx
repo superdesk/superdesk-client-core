@@ -32,5 +32,5 @@ export const ContactFooter = ({item, svc}) => {
 
 ContactFooter.propTypes = {
     item: PropTypes.object,
-    svc: PropTypes.object.isRequired
+    svc: PropTypes.object.isRequired,
 };

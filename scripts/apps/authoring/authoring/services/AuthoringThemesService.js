@@ -9,64 +9,64 @@ export function AuthoringThemesService(storage, preferencesService) {
         theme: 'default',
         headline: 'medium',
         abstract: 'medium',
-        body: 'medium'
+        body: 'medium',
     };
 
     service.availableThemes = {
         fonts: [
             {
                 label: 'Sans-serif (Roboto)',
-                key: 'sans'
+                key: 'sans',
             },
             {
                 label: 'Serif (Merriweather)',
-                key: 'serif'
+                key: 'serif',
             },
             {
                 label: 'Monospace (Roboto Mono)',
-                key: 'mono'
+                key: 'mono',
             },
         ],
         colors: [
             {
                 label: 'Default',
-                key: 'default'
+                key: 'default',
             },
             {
                 label: 'Dark',
-                key: 'dark'
+                key: 'dark',
             },
             {
                 label: 'Blue',
-                key: 'blue'
+                key: 'blue',
             },
             {
                 label: 'Turquoise',
-                key: 'turquoise'
+                key: 'turquoise',
             },
             {
                 label: 'Military',
-                key: 'military'
+                key: 'military',
             },
             {
                 label: 'Natural',
-                key: 'natural'
-            }
+                key: 'natural',
+            },
         ],
         sizes: [
             {
                 label: 'S',
-                key: 'small'
+                key: 'small',
             },
             {
                 label: 'M',
-                key: 'medium'
+                key: 'medium',
             },
             {
                 label: 'L',
-                key: 'large'
-            }
-        ]
+                key: 'large',
+            },
+        ],
     };
 
     service.get = function(key) {

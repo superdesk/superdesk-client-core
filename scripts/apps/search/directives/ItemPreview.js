@@ -39,7 +39,7 @@ export function ItemPreview(asset, storage, desks, _, familyService, privileges)
             openLightbox: '=',
             openSingleItem: '=',
             hideActionsMenu: '=',
-            showHistoryTab: '='
+            showHistoryTab: '=',
         },
         controller: function() {
             this.current_tab = 'content';
@@ -149,6 +149,6 @@ export function ItemPreview(asset, storage, desks, _, familyService, privileges)
                     scope.vm.current_tab = 'content';
                 }
             }
-        }
+        },
     };
 }

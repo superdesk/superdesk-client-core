@@ -133,7 +133,7 @@ class Editor3Directive {
              * @type {Boolean}
              * @description Show image title.
              */
-            showTitle: '=?'
+            showTitle: '=?',
         };
     }
 

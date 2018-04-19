@@ -45,7 +45,7 @@ function APIProvider() {
         const CACHE_TTL = 100;
 
         var endpoints = {
-            http: HttpEndpointFactory
+            http: HttpEndpointFactory,
         };
 
         function isOK(response) {
@@ -89,7 +89,7 @@ function APIProvider() {
 
                     cache[key] = {
                         now: now,
-                        promise: promise
+                        promise: promise,
                     };
 
                     return promise;
@@ -107,7 +107,7 @@ function APIProvider() {
                     _created: 1,
                     _etag: 1,
                     _links: 1,
-                    _id: keepId ? 0 : 1
+                    _id: keepId ? 0 : 1,
                 },
                 cleanData = {};
 
@@ -205,7 +205,7 @@ function APIProvider() {
                 url: item._links ? urls.item(item._links.self.href) : this.url(),
                 data: diff ? clean(diff, !item._links) : clean(item, !item._links),
                 params: params,
-                headers: getHeaders(item)
+                headers: getHeaders(item),
             }).then((data) => {
                 angular.extend(item, diff || {});
                 angular.extend(item, data);
@@ -224,7 +224,7 @@ function APIProvider() {
             return http({
                 method: 'PUT',
                 url: this.url(item._id),
-                data: clean(item)
+                data: clean(item),
             });
         };
 
@@ -242,7 +242,7 @@ function APIProvider() {
                 method: 'GET',
                 url: this.url(),
                 params: params,
-                cache: cache
+                cache: cache,
             });
         };
 
@@ -291,7 +291,7 @@ function APIProvider() {
                 method: 'GET',
                 url: this.url(_id),
                 params: params,
-                cache: cache
+                cache: cache,
             });
         };
 
@@ -310,7 +310,7 @@ function APIProvider() {
                 method: 'DELETE',
                 url: urls.item(item._links.self.href),
                 params: params,
-                headers: getHeaders(item)
+                headers: getHeaders(item),
             });
         };
 
@@ -343,7 +343,7 @@ function APIProvider() {
                 method: 'DELETE',
                 url: url,
                 params: params,
-                headers: getHeaders(item)
+                headers: getHeaders(item),
             });
         };
 
@@ -361,7 +361,7 @@ function APIProvider() {
                 url: getResourceUrl(resource, item, item._id),
                 data: updates,
                 params: params,
-                headers: getHeaders(item)
+                headers: getHeaders(item),
             });
         };
 
@@ -394,7 +394,7 @@ function APIProvider() {
             return http({
                 method: 'GET',
                 url: urls.item(url),
-                params: params
+                params: params,
             });
         };
 

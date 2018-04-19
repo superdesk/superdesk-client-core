@@ -10,12 +10,12 @@ function ErrorHttpInterceptorFactory($q) {
                     extra: {
                         status: rejection.status,
                         request: rejection.config,
-                        response: rejection.data
-                    }
+                        response: rejection.data,
+                    },
                 });
             }
             return $q.reject(rejection);
-        }
+        },
     };
 }
 
@@ -31,7 +31,7 @@ angular.module('superdesk.core.error', [])
         if (config.raven && config.raven.dsn) {
             Raven.config(config.raven.dsn, {
                 logger: 'javascript-client',
-                release: config.version
+                release: config.version,
             }).install();
 
             $httpProvider.interceptors.push(ErrorHttpInterceptorFactory);

@@ -43,7 +43,7 @@ Comment.propTypes = {
         author: PropTypes.string,
         date: PropTypes.date,
         avatar: PropTypes.string,
-        msg: PropTypes.string
+        msg: PropTypes.string,
     }),
     className: PropTypes.string,
     onEdit: PropTypes.func,

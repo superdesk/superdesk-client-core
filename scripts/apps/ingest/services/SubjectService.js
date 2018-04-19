@@ -39,7 +39,7 @@ export function SubjectService(api) {
                     .then(angular.bind(this, this.process));
             }
             return this.fetched;
-        }
+        },
     };
 
     return service;

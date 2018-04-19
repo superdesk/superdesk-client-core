@@ -18,12 +18,12 @@ export function ProductionTestController($scope, contentFilters, notify, $locati
         DOWN = 1,
         MOVES = {
             38: UP,
-            40: DOWN
+            40: DOWN,
         };
 
     $scope.resultType = [
         {id: 'Matching', value: 'true'},
-        {id: 'Non-Matching', value: 'false'}
+        {id: 'Non-Matching', value: 'false'},
     ];
 
     $scope.model = {selectedType: 'true'};

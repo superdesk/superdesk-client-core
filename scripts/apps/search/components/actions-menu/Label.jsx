@@ -9,7 +9,7 @@ export default function Label(props) {
         'li',
         null,
         React.createElement('div', {
-            className: 'dropdown__menu-label'
+            className: 'dropdown__menu-label',
         }, gettextCatalog.getString(props.label),
         props.label === 'Actions' ? React.createElement(
             'button',
@@ -28,5 +28,5 @@ export default function Label(props) {
 Label.propTypes = {
     svc: PropTypes.object.isRequired,
     label: PropTypes.any,
-    item: PropTypes.object
+    item: PropTypes.object,
 };

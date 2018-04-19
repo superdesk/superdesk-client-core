@@ -63,7 +63,7 @@ export function MediaInfo(props) {
             {className: 'fetched-desk', key: 4},
             React.createElement(FetchedDesksInfo, {
                 item: item,
-                svc: props.svc
+                svc: props.svc,
             })
         ));
     }

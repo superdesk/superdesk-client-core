@@ -33,34 +33,34 @@ export function IngestSourcesContent(ingestSources, gettext, notify, api, $locat
             $scope.fileTypes = [
                 {
                     type: 'text',
-                    icon: 'icon-text'
+                    icon: 'icon-text',
                 },
                 {
                     type: 'picture',
-                    icon: 'icon-photo'
+                    icon: 'icon-photo',
                 },
                 {
                     type: 'graphic',
-                    icon: 'icon-graphic'
+                    icon: 'icon-graphic',
                 },
                 {
                     type: 'composite',
-                    icon: 'icon-composite'
+                    icon: 'icon-composite',
                 },
                 {
                     type: 'video',
-                    icon: 'icon-video'
+                    icon: 'icon-video',
                 },
                 {
                     type: 'audio',
-                    icon: 'icon-audio'
-                }
+                    icon: 'icon-audio',
+                },
             ];
 
             if (_.get(privileges, 'privileges.planning')) {
                 $scope.fileTypes.push({
                     type: 'event',
-                    icon: 'icon-calendar'
+                    icon: 'icon-calendar',
                 });
             }
 
@@ -74,7 +74,7 @@ export function IngestSourcesContent(ingestSources, gettext, notify, api, $locat
             // XXX: have this somewhere in config? probably better
             $scope.contentFields = [
                 'body_text', 'guid', 'published_parsed',
-                'summary', 'title', 'updated_parsed'
+                'summary', 'title', 'updated_parsed',
             ];
 
             // a list of data field names currently *not* selected in any
@@ -396,6 +396,6 @@ export function IngestSourcesContent(ingestSources, gettext, notify, api, $locat
             }
 
             $scope.$on('$locationChangeSuccess', fetchProviders);
-        }
+        },
     };
 }

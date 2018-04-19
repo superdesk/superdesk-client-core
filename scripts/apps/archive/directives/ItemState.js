@@ -3,7 +3,7 @@ export function ItemState() {
         templateUrl: 'scripts/apps/archive/views/item-state.html',
         scope: {
             state: '=',
-            embargo: '='
-        }
+            embargo: '=',
+        },
     };
 }

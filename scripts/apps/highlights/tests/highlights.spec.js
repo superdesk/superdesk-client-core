@@ -16,7 +16,7 @@ describe('highlights', () => {
 
             spyOn(highlightsService, 'get').and.returnValue($q.when({_items: [
                 {_id: '1', name: 'Spotlight'},
-                {_id: '2', name: 'New'}
+                {_id: '2', name: 'New'},
             ]}));
 
             scope = $rootScope.$new();
@@ -71,7 +71,7 @@ describe('highlights', () => {
                 auto_insert: 'now/d',
                 desks: [],
                 groups: ['main'],
-                name: 'Today highlight'
+                name: 'Today highlight',
             };
 
             highlightsService.saveConfig(config, configEdit);
@@ -85,7 +85,7 @@ describe('highlights', () => {
                 auto_insert: 'now/d',
                 desks: [],
                 groups: ['main'],
-                name: 'Today highlight'
+                name: 'Today highlight',
             };
 
             highlightsService.removeConfig(config);
@@ -97,7 +97,7 @@ describe('highlights', () => {
                 auto_insert: 'now-1h',
                 desks: [],
                 groups: ['main'],
-                name: 'Hourly highlight'
+                name: 'Hourly highlight',
             };
 
             expect(highlightsService.isInDateRange(post, 0)).toEqual(true);

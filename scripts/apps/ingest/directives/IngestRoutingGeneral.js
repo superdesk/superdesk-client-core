@@ -3,7 +3,7 @@ export function IngestRoutingGeneral(weekdays, desks, macros) {
     return {
         scope: {
             rule: '=',
-            removeAction: '='
+            removeAction: '=',
         },
         templateUrl: 'scripts/apps/ingest/views/settings/ingest-routing-general.html',
         link: function(scope) {
@@ -27,6 +27,6 @@ export function IngestRoutingGeneral(weekdays, desks, macros) {
                     scope.macroLookup[macro.name] = macro;
                 });
             });
-        }
+        },
     };
 }

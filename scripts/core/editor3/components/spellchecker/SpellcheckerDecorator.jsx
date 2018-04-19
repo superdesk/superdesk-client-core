@@ -16,7 +16,7 @@ class SpellcheckerError extends Component {
 
         this.state = {
             menuShowing: false,
-            suggestions: []
+            suggestions: [],
         };
 
         this.showContextMenu = this.showContextMenu.bind(this);
@@ -85,12 +85,12 @@ class SpellcheckerError extends Component {
 }
 
 SpellcheckerError.propTypes = {
-    children: PropTypes.array
+    children: PropTypes.array,
 };
 
 export const SpellcheckerDecorator = {
     strategy: spellcheckStrategy,
-    component: SpellcheckerError
+    component: SpellcheckerError,
 };
 
 /**

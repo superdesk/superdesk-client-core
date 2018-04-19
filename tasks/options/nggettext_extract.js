@@ -15,6 +15,6 @@ module.exports = {
                 '../superdesk-planning/index.js',
                 '../superdesk-planning/client/**/*.{html,js,jsx}',
             ],
-        }
+        },
     },
 };

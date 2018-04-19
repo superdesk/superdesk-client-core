@@ -1,6 +1,6 @@
 angular.module('superdesk.apps.dashboard.widgets.relatedItem', [
     'superdesk.apps.dashboard.widgets.base',
-    'superdesk.apps.authoring.widgets'
+    'superdesk.apps.authoring.widgets',
 ])
     .controller('relatedItemController', RelatedItemController)
     .config(['authoringWidgetsProvider', function(authoringWidgets) {
@@ -17,7 +17,7 @@ angular.module('superdesk.apps.dashboard.widgets.relatedItem', [
                 legalArchive: false,
                 archived: false,
                 picture: false,
-                personal: false
+                personal: false,
             },
             requiredFields: ['slugline'],
             configurationTemplate: 'scripts/apps/archive/related-item-widget/relatedItem-configuration.html',
@@ -26,8 +26,8 @@ angular.module('superdesk.apps.dashboard.widgets.relatedItem', [
             needUnlock: true,
             configuration: {
                 sluglineMatch: 'EXACT',
-                modificationDateAfter: 'today'
-            }
+                modificationDateAfter: 'today',
+            },
         });
     }]);
 
@@ -46,7 +46,7 @@ RelatedItemController.$inject = [
     'familyService',
     'gettext',
     'moment',
-    'content'
+    'content',
 ];
 
 function RelatedItemController(
@@ -75,7 +75,7 @@ function RelatedItemController(
         page: 1,
         modificationDateAfter: storage.getItem('modificationDateAfter') === 'today' ? today() :
             storage.getItem('modificationDateAfter') || today(),
-        sluglineMatch: storage.getItem('sluglineMatch') || 'EXACT'
+        sluglineMatch: storage.getItem('sluglineMatch') || 'EXACT',
     };
     $scope.options = {
         pinEnabled: true,
@@ -85,7 +85,7 @@ function RelatedItemController(
         pinMode: 'archive',
         related: true,
         itemTypes: ['text', 'composite'],
-        sort: [{versioncreated: 'desc'}]
+        sort: [{versioncreated: 'desc'}],
     };
 
     $scope.loading = true;
@@ -160,7 +160,7 @@ function RelatedItemController(
             icon: 'icon-expand',
             condition: function(item) {
                 return item.type !== 'composite';
-            }
+            },
         },
         update: {
             title: 'Associate as update',
@@ -191,7 +191,7 @@ function RelatedItemController(
                 var canBeRewritten = authoring.itemActions(item).re_write;
 
                 return canBeRewritten && canBeRewrite && userHasPermission;
-            }
+            },
         },
         open: {
             title: 'Open',
@@ -204,8 +204,8 @@ function RelatedItemController(
             icon: 'icon-external',
             condition: function(item) {
                 return true;
-            }
-        }
+            },
+        },
     };
 
     BaseWidgetController.call(this, $scope);

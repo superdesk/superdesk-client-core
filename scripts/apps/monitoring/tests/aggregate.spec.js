@@ -54,7 +54,7 @@ describe('aggregate widget', () => {
                 },
                 shouldUpdate: function() {
                     return true;
-                }
+                },
             });
         }));
 
@@ -71,14 +71,14 @@ describe('aggregate widget', () => {
                 total: 1,
                 cards: [
                     {_id: 1, max_items: 10, query: null, fileType: null,
-                        header: 'Test Group', subheader: 'Sub header', type: 'stage'}
-                ]
+                        header: 'Test Group', subheader: 'Sub header', type: 'stage'},
+                ],
             };
 
             var elemStr = [
                 '<div ng-repeat="group in agg.cards">',
                 '<div sd-widget-group data-stage="group" data-filter="group.query" data-total="total"></div>',
-                '</div>'
+                '</div>',
             ].join('');
 
             $compile(elemStr)(scope);

@@ -20,12 +20,12 @@ describe('WorldClockConfigController', () => {
         fakeTzdata = {
             $promise: getTzdataDeferred.promise,
             zones: {},
-            links: {}
+            links: {},
         };
 
         $controller('WorldClockConfigController', {
             $scope: scope,
-            tzdata: fakeTzdata
+            tzdata: fakeTzdata,
         });
     }));
 
@@ -38,11 +38,11 @@ describe('WorldClockConfigController', () => {
         serverTzdata = {
             zones: {
                 'Europe/Rome': ['1 - CET'],
-                'Australia/Sydney': ['10 ADN EST']
+                'Australia/Sydney': ['10 ADN EST'],
             },
             links: {
-                'Foo/Bar': []
-            }
+                'Foo/Bar': [],
+            },
         };
 
         fakeTzdata.zones = serverTzdata.zones;

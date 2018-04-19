@@ -36,7 +36,7 @@ export function CreateTemplateController(item, templates, api, desks, $q, notify
             template_type: self.type,
             template_desks: self.is_public ? [self.desk] : null,
             is_public: self.is_public,
-            data: templates.pickItemData(item)
+            data: templates.pickItemData(item),
         };
 
         var template = self.template ? self.template : data;

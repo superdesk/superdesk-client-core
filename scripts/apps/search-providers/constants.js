@@ -6,5 +6,5 @@ export const providerTypes = {
     'scanpix(ntbtema)': 'ScanPix (ntbtema)',
     'scanpix(ntbkultur)': 'ScanPix (ntbkultur)',
     'scanpix(desk)': 'ScanPix (desk)',
-    'scanpix(npk)': 'ScanPix (npk)'
+    'scanpix(npk)': 'ScanPix (npk)',
 };

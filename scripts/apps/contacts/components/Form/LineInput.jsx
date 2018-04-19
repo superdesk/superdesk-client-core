@@ -16,7 +16,7 @@ export const LineInput = ({
     labelLeftAuto,
     hint,
     message,
-    className
+    className,
 }) => (
     <div className={classNames(
         'sd-line-input',
@@ -71,7 +71,7 @@ export const LineInputDefaultProps = {
     noLabel: false,
     withButton: false,
     labelLeft: false,
-    labelLeftAuto: false
+    labelLeftAuto: false,
 };
 
 LineInput.propTypes = {

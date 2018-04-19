@@ -74,7 +74,7 @@ function MacrosService(api, notify) {
         return api.save('macros', {
             macro: macro.name,
             item: item,
-            commit: !!commit
+            commit: !!commit,
         }).then((res) => res, (err) => {
             if (angular.isDefined(err.data._message)) {
                 notify.error(gettext('Error: ' + err.data._message));
@@ -294,7 +294,7 @@ function MacrosReplaceDirective(editorResolver) {
             }
 
             init(scope.diff);
-        }
+        },
     };
 }
 
@@ -309,7 +309,7 @@ angular.module('superdesk.apps.authoring.macros', [
     'superdesk.core.api',
     'superdesk.core.notify',
     'superdesk.apps.authoring.widgets',
-    'superdesk.apps.authoring.autosave'
+    'superdesk.apps.authoring.autosave',
 ])
 
     .service('macros', MacrosService)
@@ -332,7 +332,7 @@ angular.module('superdesk.apps.authoring.macros', [
                     legalArchive: false,
                     archived: false,
                     picture: true,
-                    personal: true
-                }
+                    personal: true,
+                },
             });
     }]);

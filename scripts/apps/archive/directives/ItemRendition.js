@@ -3,7 +3,7 @@ export function ItemRendition() {
         templateUrl: 'scripts/apps/archive/views/item-rendition.html',
         scope: {
             item: '=',
-            rendition: '@'
+            rendition: '@',
         },
         link: function(scope, elem, attrs) {
             scope.$watch('item.renditions[rendition].href', (href) => {
@@ -38,6 +38,6 @@ export function ItemRendition() {
                     img.src = href;
                 }
             });
-        }
+        },
     };
 }

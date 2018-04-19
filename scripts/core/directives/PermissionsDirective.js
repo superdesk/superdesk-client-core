@@ -33,7 +33,7 @@ export default angular.module('superdesk.core.directives.permissions', [])
                 model: '=',
                 permission: '@',
                 role: '=',
-                user: '='
+                user: '=',
             },
             link: function(scope, element, attrs) {
                 scope.model = false;
@@ -52,6 +52,6 @@ export default angular.module('superdesk.core.directives.permissions', [])
                         });
                     }
                 }
-            }
+            },
         };
     }]);

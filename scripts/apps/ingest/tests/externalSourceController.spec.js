@@ -5,14 +5,14 @@ describe('externalSourceController', () => {
         item: {
             guid: '20170310001299871860',
             fetch_endpoint: 'search_providers_proxy',
-            ingest_provider: '58bf76e71d41c8aa1e9f8e91'
-        }
+            ingest_provider: '58bf76e71d41c8aa1e9f8e91',
+        },
     };
 
     const userDesks = [
         {_id: '58bf87211d41c8aa21c572487', name: 'Sports'},
         {_id: '70db87211d41c8aa21c573468', name: 'Finance'},
-        {_id: '69ca87211d41c8aa21c572359', name: 'News'}
+        {_id: '69ca87211d41c8aa21c572359', name: 'News'},
     ];
 
     beforeEach(() => {
@@ -51,7 +51,7 @@ describe('externalSourceController', () => {
             externalSourceData.item.fetch_endpoint,
             {
                 guid: externalSourceData.item.guid,
-                desk: userDesks[2]._id
+                desk: userDesks[2]._id,
             },
             null, null, {repo: externalSourceData.item.ingest_provider}
         );
@@ -70,7 +70,7 @@ describe('externalSourceController', () => {
             externalSourceData.item.fetch_endpoint,
             {
                 guid: externalSourceData.item.guid,
-                desk: userDesks[1]._id
+                desk: userDesks[1]._id,
             },
             null, null, {repo: externalSourceData.item.ingest_provider}
         );
@@ -86,7 +86,7 @@ describe('externalSourceController', () => {
             externalSourceData.item.fetch_endpoint,
             {
                 guid: externalSourceData.item.guid,
-                desk: userDesks[0]._id
+                desk: userDesks[0]._id,
             },
             null, null, {repo: externalSourceData.item.ingest_provider}
         );

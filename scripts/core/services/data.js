@@ -193,7 +193,7 @@ export default angular.module('superdesk.core.services.data', [])
                         where: {},
                         sort: [],
                         filters: [],
-                        ttl: 0
+                        ttl: 0,
                     }, params);
 
                     // main loop - update when query criteria change

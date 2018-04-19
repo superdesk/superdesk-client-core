@@ -51,7 +51,7 @@ export default function createEditorStore(props, isReact = false) {
         spellcheckerEnabled: !props.disableSpellchecker,
         suggestingMode: false,
         invisibles: false,
-        svc: props.svc
+        svc: props.svc,
     }, applyMiddleware(thunk));
 
 

@@ -5,7 +5,7 @@ export function PackageItemPreview(api, lock, superdesk, authoringWorkspace, $lo
     return {
         scope: {
             item: '=',
-            readonly: '@'
+            readonly: '@',
         },
         templateUrl: 'scripts/apps/packaging/views/sd-package-item-preview.html',
         link: function(scope, elem) {
@@ -101,6 +101,6 @@ export function PackageItemPreview(api, lock, superdesk, authoringWorkspace, $lo
             scope.open = function(item) {
                 authoringWorkspace.open(item);
             };
-        }
+        },
     };
 }

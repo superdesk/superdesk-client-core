@@ -94,7 +94,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         session.getIdentity()
             .then((user) => {
                 var updates = {
-                    desk_id: desks.getCurrentDeskId() || item.task.desk
+                    desk_id: desks.getCurrentDeskId() || item.task.desk,
                 };
 
                 return api.save('archive_rewrite', {}, updates, item);

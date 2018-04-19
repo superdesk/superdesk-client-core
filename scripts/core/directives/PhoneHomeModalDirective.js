@@ -30,6 +30,6 @@ export function PhoneHomeModalDirective(serverConfig, api, session) {
         scope: true,
         template: template,
         controller: PhoneController,
-        controllerAs: 'phone'
+        controllerAs: 'phone',
     };
 }

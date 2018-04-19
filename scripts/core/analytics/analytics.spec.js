@@ -2,7 +2,7 @@ describe('analytics', () => {
     beforeEach(window.module('superdesk.core.analytics'));
     beforeEach(window.module(($provide) => {
         $provide.constant('config', {
-            analytics: {piwik: {}, ga: {}}
+            analytics: {piwik: {}, ga: {}},
         });
     }));
 
@@ -11,7 +11,7 @@ describe('analytics', () => {
 
         var activity = {
             _id: 'test',
-            label: 'test'
+            label: 'test',
         };
 
         // mimic route change event

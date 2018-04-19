@@ -3,7 +3,7 @@ export default angular.module('superdesk.core.directives.confirm', [])
         return {
             scope: {
                 msg: '@sdConfirm',
-                confirmAction: '&'
+                confirmAction: '&',
             },
             link: function(scope, element, attrs) {
                 element.click((e) => {
@@ -11,6 +11,6 @@ export default angular.module('superdesk.core.directives.confirm', [])
                         scope.confirmAction();
                     }
                 });
-            }
+            },
         };
     }]);

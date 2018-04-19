@@ -15,6 +15,6 @@ export function SearchContainer() {
                         this.flags.facets = !!activeProvider.advanced_search;
                     }
                 });
-            }]
+            }],
     };
 }

@@ -6,7 +6,7 @@ var constants = {
     ACTION_EDIT: 'edit',
     ACTION_LIST: 'list',
     ACTION_VIEW: 'view',
-    ACTION_PREVIEW: 'preview'
+    ACTION_PREVIEW: 'preview',
 };
 
 /**
@@ -88,7 +88,7 @@ function SuperdeskProvider($routeProvider, _) {
             privileges: {},
             condition: function(item) {
                 return true;
-            }
+            },
         }, activityData);
 
         var actionless = _.find(activity.filters, (filter) => !filter.action);
@@ -290,7 +290,7 @@ function SuperdeskProvider($routeProvider, _) {
                         action: action,
                         type: type,
                         data: data,
-                        id: id
+                        id: id,
                     };
 
                     var self = this;
@@ -299,7 +299,7 @@ function SuperdeskProvider($routeProvider, _) {
                         $rootScope.$broadcast([
                             'intent',
                             intent.action || '*',
-                            intent.type || '*'
+                            intent.type || '*',
                         ].join(':'), intent);
                         return $q.reject();
                     });
@@ -357,7 +357,7 @@ function SuperdeskProvider($routeProvider, _) {
 
                         return menu;
                     });
-                }
+                },
             }, constants);
         }];
 }
@@ -382,7 +382,7 @@ angular.module('superdesk.core.activity', [
 
     'superdesk.core.activity.chooser',
     'superdesk.core.activity.list',
-    'superdesk.core.activity.modal'
+    'superdesk.core.activity.modal',
 ])
     .constant('lodash', window._)
     .constant('langmap', langmap)
@@ -472,7 +472,7 @@ angular.module('superdesk.core.activity', [
                         activityStack.push({
                             defer: defer,
                             activity: activity,
-                            locals: locals
+                            locals: locals,
                         });
 
                         return defer.promise;
@@ -642,7 +642,7 @@ angular.module('superdesk.core.activity', [
 ActivityItemDirective.$inject = ['asset'];
 function ActivityItemDirective(asset) {
     return {
-        templateUrl: asset.templateUrl('core/activity/views/activity-item.html')
+        templateUrl: asset.templateUrl('core/activity/views/activity-item.html'),
     };
 }
 
@@ -652,6 +652,6 @@ function ActivityItemDropdownDirective(asset) {
         templateUrl: asset.templateUrl('core/activity/views/activity-dropdown-item.html'),
         link: function(scope, elem, attr) {
             scope.group = attr.group;
-        }
+        },
     };
 }

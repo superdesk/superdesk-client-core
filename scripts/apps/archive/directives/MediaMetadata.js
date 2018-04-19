@@ -3,7 +3,7 @@ MediaMetadata.$inject = ['userList', 'archiveService', 'metadata'];
 export function MediaMetadata(userList, archiveService, metadata) {
     return {
         scope: {
-            item: '='
+            item: '=',
         },
         templateUrl: 'scripts/apps/archive/views/metadata-view.html',
         link: function(scope, elem) {
@@ -53,6 +53,6 @@ export function MediaMetadata(userList, archiveService, metadata) {
 
                 return term.name;
             };
-        }
+        },
     };
 }

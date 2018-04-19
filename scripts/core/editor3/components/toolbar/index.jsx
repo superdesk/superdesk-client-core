@@ -32,7 +32,7 @@ class ToolbarComponent extends Component {
             // When true, the toolbar is floating at the top of the item. This
             // helps the toolbar continue to be visible when it goes out of view
             // because of scrolling.
-            floating: false
+            floating: false,
         };
     }
 
@@ -84,7 +84,7 @@ class ToolbarComponent extends Component {
             suggestingMode,
             toggleSuggestingMode,
             invisibles,
-            toggleInvisibles
+            toggleInvisibles,
         } = this.props;
 
         const has = (opt) => editorFormat.indexOf(opt) > -1;
@@ -93,7 +93,7 @@ class ToolbarComponent extends Component {
         const cx = classNames({
             'Editor3-controls': true,
             'floating-toolbar': floating,
-            disabled: disabled
+            disabled: disabled,
         });
 
         return activeCell !== null ? <TableControls /> :
@@ -194,7 +194,7 @@ ToolbarComponent.propTypes = {
     editorState: PropTypes.object,
     editorNode: PropTypes.object,
     scrollContainer: PropTypes.string,
-    highlightsManager: PropTypes.object.isRequired
+    highlightsManager: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = ({
@@ -203,14 +203,14 @@ const mapStateToProps = ({
     popup,
     editorState,
     suggestingMode,
-    invisibles
+    invisibles,
 }) => ({
     editorFormat,
     activeCell,
     popup,
     editorState,
     suggestingMode,
-    invisibles
+    invisibles,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -218,7 +218,7 @@ const mapDispatchToProps = (dispatch) => ({
     showPopup: (type, data) => dispatch(actions.showPopup(type, data)),
     addTable: () => dispatch(actions.addTable()),
     toggleSuggestingMode: () => dispatch(actions.toggleSuggestingMode()),
-    toggleInvisibles: () => dispatch(actions.toggleInvisibles())
+    toggleInvisibles: () => dispatch(actions.toggleInvisibles()),
 });
 
 const Toolbar = connect(mapStateToProps, mapDispatchToProps)(ToolbarComponent);

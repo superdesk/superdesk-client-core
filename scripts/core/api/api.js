@@ -11,7 +11,7 @@ angular.module('superdesk.core.api', [
     'superdesk.core.api.request',
     'superdesk.core.api.urls',
     'superdesk.core.api.timeout',
-    'superdesk.core.api.allowed'
+    'superdesk.core.api.allowed',
 ])
 
     .config(['$httpProvider', function($httpProvider) {

@@ -80,7 +80,7 @@ function HttpEndpointFactory($http, $q, urls, _) {
                 _created: 1,
                 _etag: 1,
                 _links: 1,
-                _id: keepId ? 0 : 1
+                _id: keepId ? 0 : 1,
             },
             cleanData = {};
 
@@ -121,7 +121,7 @@ function HttpEndpointFactory($http, $q, urls, _) {
         return http({
             method: 'GET',
             url: urls.item(url),
-            cache: cache
+            cache: cache,
         }).then((response) => response.data);
     };
 
@@ -144,7 +144,7 @@ function HttpEndpointFactory($http, $q, urls, _) {
                 method: 'GET',
                 url: url,
                 params: params,
-                cache: cache
+                cache: cache,
             }).then((response) => response.data);
         }, this));
     };
@@ -165,7 +165,7 @@ function HttpEndpointFactory($http, $q, urls, _) {
             params: params,
             url: getUrl(this),
             headers: getHeaders(this),
-            cache: cache
+            cache: cache,
         }).then((response) => response.data);
     };
 
@@ -196,7 +196,7 @@ function HttpEndpointFactory($http, $q, urls, _) {
             url: urls.item(url),
             data: clean(diff2, !item._links),
             params: params,
-            headers: getHeaders(this, item)
+            headers: getHeaders(this, item),
         }).then((response) => {
             _.extend(item, response.data);
             return item;
@@ -219,7 +219,7 @@ function HttpEndpointFactory($http, $q, urls, _) {
             method: 'POST',
             url: getUrl(this),
             data: itemData,
-            headers: getHeaders(this)
+            headers: getHeaders(this),
         }).then((response) => {
             delete response.data._status;
             _.extend(itemData, response.data);
@@ -260,7 +260,7 @@ function HttpEndpointFactory($http, $q, urls, _) {
             method: 'PUT',
             url: urls.item(dest),
             data: item,
-            headers: getHeaders(this, item)
+            headers: getHeaders(this, item),
         }).then((response) => {
             _.extend(item, response.data);
             return item;
@@ -282,7 +282,7 @@ function HttpEndpointFactory($http, $q, urls, _) {
         return http({
             method: 'DELETE',
             url: urls.item(item._links.self.href),
-            headers: getHeaders(this, item)
+            headers: getHeaders(this, item),
         }).then(null, (response) => response.status === 404 ? $q.when(response) : $q.reject(response));
     };
 

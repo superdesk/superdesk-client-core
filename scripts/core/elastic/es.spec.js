@@ -20,7 +20,7 @@ describe('elastic query builder', () => {
     it('generates filtered query when using filter', inject((es) => {
         var filters = [
             {term: {type: 'picture'}},
-            {term: {provider: 'foo'}}
+            {term: {provider: 'foo'}},
         ];
 
         var body = es({}, filters);

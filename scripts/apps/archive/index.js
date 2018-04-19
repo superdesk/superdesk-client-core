@@ -83,9 +83,9 @@ angular.module('superdesk.apps.archive', [
                 topTemplateUrl: 'scripts/apps/dashboard/views/workspace-topnav.html',
                 sideTemplateUrl: 'scripts/apps/workspace/views/workspace-sidenav.html',
                 filters: [
-                    {action: 'view', type: 'content'}
+                    {action: 'view', type: 'content'},
                 ],
-                privileges: {archive: 1}
+                privileges: {archive: 1},
             })
             .activity('upload.media', {
                 label: gettext('Upload media'),
@@ -94,9 +94,9 @@ angular.module('superdesk.apps.archive', [
                 controller: ctrl.UploadController,
                 templateUrl: 'scripts/apps/archive/views/upload.html',
                 filters: [
-                    {action: 'upload', type: 'media'}
+                    {action: 'upload', type: 'media'},
                 ],
-                privileges: {archive: 1}
+                privileges: {archive: 1},
             })
             .activity('upload.attachments', {
                 label: gettext('Attach files'),
@@ -105,9 +105,9 @@ angular.module('superdesk.apps.archive', [
                 controller: ctrl.UploadAttachmentsController,
                 templateUrl: 'scripts/apps/archive/views/upload-attachments.html',
                 filters: [
-                    {action: 'upload', type: 'attachments'}
+                    {action: 'upload', type: 'attachments'},
                 ],
-                privileges: {archive: 1}
+                privileges: {archive: 1},
             })
             .activity('spike', {
                 label: gettext('Spike Item'),
@@ -121,7 +121,7 @@ angular.module('superdesk.apps.archive', [
                     return authoring.itemActions(item).spike &&
                         (item.lock_user === null || angular.isUndefined(item.lock_user) ||
                         item.lock_user === session.identity._id);
-                }]
+                }],
             })
             .activity('unspike', {
                 label: gettext('Unspike Item'),
@@ -137,7 +137,7 @@ angular.module('superdesk.apps.archive', [
                 action: 'unspike',
                 additionalCondition: ['authoring', 'item', function(authoring, item) {
                     return authoring.itemActions(item).unspike;
-                }]
+                }],
             })
             .activity('duplicateInPlace', {
                 label: gettext('Duplicate in place'),
@@ -146,7 +146,7 @@ angular.module('superdesk.apps.archive', [
                 controller: ctrl.DuplicateController,
                 filters: [
                     {action: 'list', type: 'archive'},
-                    {action: 'list', type: 'archived'}
+                    {action: 'list', type: 'archived'},
                 ],
                 keyboardShortcut: 'ctrl+alt+d',
                 privileges: {duplicate: 1},
@@ -158,7 +158,7 @@ angular.module('superdesk.apps.archive', [
                 }],
                 group: 'duplicate',
                 groupLabel: gettext('Duplicate'),
-                groupIcon: 'copy'
+                groupIcon: 'copy',
             })
             .activity('duplicateTo', {
                 label: gettext('Duplicate To'),
@@ -169,7 +169,7 @@ angular.module('superdesk.apps.archive', [
                 }],
                 filters: [
                     {action: 'list', type: 'archive'},
-                    {action: 'list', type: 'archived'}
+                    {action: 'list', type: 'archived'},
                 ],
                 keyboardShortcut: 'ctrl+alt+r',
                 privileges: {duplicate: 1},
@@ -182,7 +182,7 @@ angular.module('superdesk.apps.archive', [
                 }],
                 group: 'duplicate',
                 groupLabel: gettext('Duplicate'),
-                groupIcon: 'copy'
+                groupIcon: 'copy',
             })
             .activity('label', {
                 label: gettext('Set label in current package'),
@@ -202,7 +202,7 @@ angular.module('superdesk.apps.archive', [
                         return item.state !== 'killed' && !authoring.isContentApiItem(item) &&
                             authoring.itemActions(item).set_label && openedItem && openedItem.type === 'composite' &&
                             packages.isAdded(openedItem, item) && vocabularies.isInit();
-                    }]
+                    }],
             })
             .activity('createBroadcast', {
                 label: gettext('Create Broadcast'),
@@ -224,7 +224,7 @@ angular.module('superdesk.apps.archive', [
                 },
                 additionalCondition: ['authoring', 'item', function(authoring, item) {
                     return authoring.itemActions(item).create_broadcast;
-                }]
+                }],
             })
             .activity('copy', {
                 label: gettext('Copy'),
@@ -251,7 +251,7 @@ angular.module('superdesk.apps.archive', [
                 },
                 additionalCondition: ['authoring', 'item', function(authoring, item) {
                     return authoring.itemActions(item).copy;
-                }]
+                }],
             })
             .activity('resend', {
                 label: gettext('Resend item'),
@@ -265,7 +265,7 @@ angular.module('superdesk.apps.archive', [
                 additionalCondition: ['authoring', 'item', function(authoring, item) {
                     return authoring.itemActions(item).resend;
                 }],
-                privileges: {resend: 1}
+                privileges: {resend: 1},
             })
             .activity('rewrite', {
                 label: gettext('Update'),
@@ -281,7 +281,7 @@ angular.module('superdesk.apps.archive', [
                 }],
                 controller: ['data', 'authoring', function(data, authoring) {
                     authoring.rewrite(data.item);
-                }]
+                }],
             })
             .activity('unlinkRewrite', {
                 label: gettext('Unlink update'),
@@ -297,7 +297,7 @@ angular.module('superdesk.apps.archive', [
                 }],
                 controller: ['data', 'authoring', function(data, authoring) {
                     authoring.unlink(data.item);
-                }]
+                }],
             })
             .activity('export', {
                 label: gettext('Export'),
@@ -322,7 +322,7 @@ angular.module('superdesk.apps.archive', [
                         $scope.export = false;
                         $scope.reject();
                     };
-                }]
+                }],
             });
 
         workspaceMenuProvider.item({
@@ -338,32 +338,32 @@ angular.module('superdesk.apps.archive', [
         apiProvider.api('copy', {
             type: 'http',
             backend: {
-                rel: 'copy'
-            }
+                rel: 'copy',
+            },
         });
         apiProvider.api('duplicate', {
             type: 'http',
             backend: {
-                rel: 'duplicate'
-            }
+                rel: 'duplicate',
+            },
         });
         apiProvider.api('notification', {
             type: 'http',
             backend: {
-                rel: 'notification'
-            }
+                rel: 'notification',
+            },
         });
         apiProvider.api('archive', {
             type: 'http',
             backend: {
-                rel: 'archive'
-            }
+                rel: 'archive',
+            },
         });
         apiProvider.api('archive_rewrite', {
             type: 'http',
             backend: {
-                rel: 'archive_rewrite'
-            }
+                rel: 'archive_rewrite',
+            },
         });
     }]);
 

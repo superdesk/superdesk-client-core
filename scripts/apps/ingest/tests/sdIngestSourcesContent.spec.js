@@ -14,11 +14,11 @@ describe('sdIngestSourcesContent directive', () => {
         $provide.constant('config', {
             model: {
                 timeformat: 'HH:mm:ss',
-                dateformat: 'DD/MM/YYYY'
+                dateformat: 'DD/MM/YYYY',
             },
             view: {
                 timeformat: 'HH:mm',
-                dateformat: 'MM/DD/YYYY'
+                dateformat: 'MM/DD/YYYY',
             },
             defaultTimezone: 'Europe/London',
             server: {url: undefined},
@@ -28,11 +28,11 @@ describe('sdIngestSourcesContent directive', () => {
                     show_ingest_count: true,
                     show_time: true,
                     log_messages: 'error',
-                    show_status: true
+                    show_status: true,
                 },
                 DEFAULT_SCHEDULE: {minutes: 5, seconds: 0},
                 DEFAULT_IDLE_TIME: {hours: 0, minutes: 0},
-            }
+            },
         });
     }));
 
@@ -42,7 +42,7 @@ describe('sdIngestSourcesContent directive', () => {
 
         templateUrl = [
             'scripts', 'apps/ingest', 'views',
-            'settings', 'ingest-sources-content.html'
+            'settings', 'ingest-sources-content.html',
         ].join('/');
 
         // since the directive does not modify the DOM, we can just
@@ -58,7 +58,7 @@ describe('sdIngestSourcesContent directive', () => {
     it('initializes the list of available field names in scope', () => {
         expect(scope.contentFields).toEqual([
             'body_text', 'guid', 'published_parsed',
-            'summary', 'title', 'updated_parsed'
+            'summary', 'title', 'updated_parsed',
         ]);
     });
 
@@ -71,7 +71,7 @@ describe('sdIngestSourcesContent directive', () => {
     () => {
         expect(scope.fieldsNotSelected).toEqual([
             'body_text', 'guid', 'published_parsed',
-            'summary', 'title', 'updated_parsed'
+            'summary', 'title', 'updated_parsed',
         ]);
     }
     );
@@ -81,21 +81,21 @@ describe('sdIngestSourcesContent directive', () => {
 
         beforeEach(() => {
             scope.provider = {
-                config: {}
+                config: {},
             };
             fakeProvider = {
                 config: {
                     auth_required: true,
                     username: 'user',
-                    password: 'password'
-                }
+                    password: 'password',
+                },
             };
         });
 
         it('stores provider configuration in scope', () => {
             scope.setRssConfig(fakeProvider);
             expect(scope.provider.config).toEqual({
-                auth_required: true, username: 'user', password: 'password'
+                auth_required: true, username: 'user', password: 'password',
             });
         });
 
@@ -105,7 +105,7 @@ describe('sdIngestSourcesContent directive', () => {
             fakeProvider.config.auth_required = false;
             scope.setRssConfig(fakeProvider);
             expect(scope.provider.config).toEqual({
-                auth_required: false, username: null, password: null
+                auth_required: false, username: null, password: null,
             });
         }
         );
@@ -119,9 +119,9 @@ describe('sdIngestSourcesContent directive', () => {
                 config: {
                     field_aliases: [
                         {foo2: 'bar2'},
-                        {foo5: 'bar5'}
-                    ]
-                }
+                        {foo5: 'bar5'},
+                    ],
+                },
             };
             scope.contentFields = ['foo', 'foo2', 'foo3', 'foo4', 'foo5'];
         });
@@ -133,7 +133,7 @@ describe('sdIngestSourcesContent directive', () => {
             scope.edit(fakeProvider);
             expect(scope.fieldAliases).toEqual([
                 {fieldName: 'foo2', alias: 'bar2'},
-                {fieldName: 'foo5', alias: 'bar5'}
+                {fieldName: 'foo5', alias: 'bar5'},
             ]);
         }
         );
@@ -153,7 +153,7 @@ describe('sdIngestSourcesContent directive', () => {
         it('appends a new item to the list of field aliases', () => {
             scope.fieldAliases = [
                 {fieldName: 'foo', alias: 'bar'},
-                {fieldName: 'foo2', alias: 'bar2'}
+                {fieldName: 'foo2', alias: 'bar2'},
             ];
 
             scope.addFieldAlias();
@@ -161,7 +161,7 @@ describe('sdIngestSourcesContent directive', () => {
             expect(scope.fieldAliases).toEqual([
                 {fieldName: 'foo', alias: 'bar'},
                 {fieldName: 'foo2', alias: 'bar2'},
-                {fieldName: null, alias: ''}
+                {fieldName: null, alias: ''},
             ]);
         });
     });
@@ -171,7 +171,7 @@ describe('sdIngestSourcesContent directive', () => {
             scope.fieldAliases = [
                 {fieldName: 'foo', alias: 'bar'},
                 {fieldName: 'foo2', alias: 'bar2'},
-                {fieldName: 'foo3', alias: 'bar3'}
+                {fieldName: 'foo3', alias: 'bar3'},
             ];
         });
 
@@ -180,7 +180,7 @@ describe('sdIngestSourcesContent directive', () => {
                 scope.removeFieldAlias(1);
                 expect(scope.fieldAliases).toEqual([
                     {fieldName: 'foo', alias: 'bar'},
-                    {fieldName: 'foo3', alias: 'bar3'}
+                    {fieldName: 'foo3', alias: 'bar3'},
                 ]);
             }
         );
@@ -219,7 +219,7 @@ describe('sdIngestSourcesContent directive', () => {
             scope.fieldAliases = [
                 {fieldName: 'field_1', alias: 'alias_1'},
                 {fieldName: 'field_4', alias: 'alias_4'},
-                {fieldName: null, alias: 'whatever'}
+                {fieldName: null, alias: 'whatever'},
             ];
             scope.fieldSelectionChanged();
 
@@ -259,20 +259,20 @@ describe('sdIngestSourcesContent directive', () => {
             deferredSave = $q.defer();
 
             api.ingestProviders = {
-                save: jasmine.createSpy().and.returnValue(deferredSave.promise)
+                save: jasmine.createSpy().and.returnValue(deferredSave.promise),
             };
 
             scope.provider = {
                 config: {
-                    field_aliases: [{headline: 'title'}]
-                }
+                    field_aliases: [{headline: 'title'}],
+                },
             };
         }));
 
         it('updates field aliases in provider configuration', () => {
             scope.fieldAliases = [
                 {fieldName: 'foo', alias: 'bar'},
-                {fieldName: 'foo2', alias: 'bar2'}
+                {fieldName: 'foo2', alias: 'bar2'},
             ];
             scope.save();
             expect(scope.provider.config.field_aliases).toEqual(
@@ -286,7 +286,7 @@ describe('sdIngestSourcesContent directive', () => {
             scope.fieldAliases = [
                 {fieldName: 'headline', alias: ''},
                 {fieldName: null, alias: 'some_alias'},
-                {fieldName: null, alias: ''}
+                {fieldName: null, alias: ''},
             ];
             scope.save();
             expect(scope.provider.config.field_aliases).toEqual([]);

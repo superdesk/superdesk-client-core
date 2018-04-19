@@ -63,10 +63,10 @@ class LinkFunction {
 export function MediaUsed(superdesk, api, familyService) {
     return {
         scope: {
-            item: '=item'
+            item: '=item',
         },
         template: require('scripts/apps/archive/views/media-used-view.html'),
-        link: (scope, elem) => new LinkFunction(superdesk, api, familyService, scope)
+        link: (scope, elem) => new LinkFunction(superdesk, api, familyService, scope),
     };
 }
 

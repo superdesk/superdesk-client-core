@@ -66,7 +66,7 @@ export default angular.module('superdesk.core.services.server', [])
                     method: method.toLowerCase(),
                     url: url,
                     params: params,
-                    cache: false
+                    cache: false,
                 };
 
                 if (method === 'PATCH') {
@@ -202,7 +202,7 @@ export default angular.module('superdesk.core.services.server', [])
                     'embedded',
                     'where',
                     'q',
-                    'df'
+                    'df',
                 ]));
 
                 if ('sort' in params) {
@@ -298,6 +298,6 @@ export default angular.module('superdesk.core.services.server', [])
                     {},
                     item
                 );
-            }
+            },
         };
     }]);

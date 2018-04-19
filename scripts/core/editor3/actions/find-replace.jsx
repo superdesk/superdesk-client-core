@@ -28,7 +28,7 @@ export function findPrev() {
 export function replace(withTxt) {
     return {
         type: 'HIGHLIGHTS_REPLACE',
-        payload: withTxt
+        payload: withTxt,
     };
 }
 
@@ -42,7 +42,7 @@ export function replace(withTxt) {
 export function replaceAll(withTxt) {
     return {
         type: 'HIGHLIGHTS_REPLACE_ALL',
-        payload: withTxt
+        payload: withTxt,
     };
 }
 
@@ -63,6 +63,6 @@ export function renderHighlights() {
 export function setHighlightCriteria(opts) {
     return {
         type: 'HIGHLIGHTS_CRITERIA',
-        payload: opts
+        payload: opts,
     };
 }

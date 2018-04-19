@@ -117,7 +117,7 @@ export class TableBlockComponent extends Component {
 
         let cx = classNames({
             'table-block': true,
-            'table-header': withHeader
+            'table-header': withHeader,
         });
 
         return (
@@ -149,17 +149,17 @@ TableBlockComponent.propTypes = {
     readOnly: PropTypes.bool.isRequired,
     editorState: PropTypes.object.isRequired,
     setActiveCell: PropTypes.func.isRequired,
-    parentOnChange: PropTypes.func.isRequired
+    parentOnChange: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({
     parentOnChange: (editorState, force) => dispatch(actions.changeEditorState(editorState, force)),
-    setActiveCell: (i, j, key) => dispatch(actions.setActiveCell(i, j, key))
+    setActiveCell: (i, j, key) => dispatch(actions.setActiveCell(i, j, key)),
 });
 
 const mapStateToProps = (state) => ({
     editorState: state.editorState,
-    readOnly: state.readOnly
+    readOnly: state.readOnly,
 });
 
 export const TableBlock = connect(mapStateToProps, mapDispatchToProps)(TableBlockComponent);

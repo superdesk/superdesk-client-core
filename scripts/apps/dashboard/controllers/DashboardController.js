@@ -103,7 +103,7 @@ export function DashboardController($scope, desks, dashboardWidgets, api, sessio
                 'col',
                 'row',
                 'active',
-                'multiple_id'
+                'multiple_id',
             ]));
     }
 

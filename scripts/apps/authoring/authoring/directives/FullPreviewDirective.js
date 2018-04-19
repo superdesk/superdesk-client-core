@@ -3,7 +3,7 @@ export function FullPreviewDirective(api, $timeout, config, content, $sce) {
     return {
         scope: {
             item: '=',
-            closeAction: '='
+            closeAction: '=',
         },
         templateUrl: 'scripts/apps/authoring/views/full-preview.html',
         link: function(scope, elem, attr, ctrl) {
@@ -66,6 +66,6 @@ export function FullPreviewDirective(api, $timeout, config, content, $sce) {
 
                 return term.name;
             };
-        }
+        },
     };
 }

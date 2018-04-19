@@ -23,7 +23,7 @@ function SearchProviderSettingsController($scope, privileges) { /* no-op */ }
  */
 export default angular.module('superdesk.apps.searchProviders', [
     'superdesk.core.activity',
-    'superdesk.core.api'
+    'superdesk.core.api',
 ])
     .value('providerTypes', providerTypes)
     .directive('sdSearchProviderConfig', SearchProviderConfigDirective)
@@ -37,13 +37,13 @@ export default angular.module('superdesk.apps.searchProviders', [
                 controller: SearchProviderSettingsController,
                 category: superdesk.MENU_SETTINGS,
                 privileges: {search_providers: 1},
-                priority: 2000
+                priority: 2000,
             });
     }])
 
     .config(['apiProvider', function(apiProvider) {
         apiProvider.api('search_providers', {
             type: 'http',
-            backend: {rel: 'search_providers'}
+            backend: {rel: 'search_providers'},
         });
     }]);
