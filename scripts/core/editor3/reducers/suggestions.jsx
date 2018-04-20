@@ -148,6 +148,7 @@ const createChangeStyleSuggestion = (state, {style, data}) => {
 function applyStyleSuggestion(editorState, type, style, data) {
     const selection = editorState.getSelection();
     let newEditorState = editorState;
+    let tmpEditorState;
     let currentStyle;
     let changeStyle = true;
 
@@ -156,11 +157,16 @@ function applyStyleSuggestion(editorState, type, style, data) {
         currentStyle = Highlights.getHighlightStyleAtCurrentPosition(newEditorState, type);
 
         if (currentStyle) {
-            newEditorState = resetSuggestion(newEditorState, currentStyle);
+            tmpEditorState = resetSuggestion(newEditorState, currentStyle);
         } else {
             changeStyle = false;
-            newEditorState = Highlights.changeEditorSelection(newEditorState, 1, 1, false);
+            tmpEditorState = Highlights.changeEditorSelection(newEditorState, 1, 1, false);
         }
+
+        if (tmpEditorState === newEditorState) {
+            break;
+        }
+        newEditorState = tmpEditorState;
     }
 
     if (changeStyle && currentStyle != null) {
@@ -447,6 +453,7 @@ const processSplitSuggestion = (state, suggestion, accepted) => {
 const processSuggestion = (state, {suggestion}, accepted) => {
     const {selection} = suggestion;
     let {editorState} = state;
+    let tmpEditorState;
     let style;
     let data;
 
@@ -494,13 +501,18 @@ const processSuggestion = (state, {suggestion}, accepted) => {
 
         if (applySuggestion) {
             // keep character and clean suggestion style and entity
-            editorState = resetSuggestion(editorState, style);
-            editorState = Highlights.changeEditorSelection(editorState, -1, -1, false);
+            tmpEditorState = resetSuggestion(editorState, style);
+            tmpEditorState = Highlights.changeEditorSelection(tmpEditorState, -1, -1, false);
         } else {
             // delete current character
-            editorState = Highlights.changeEditorSelection(editorState, 1, 1, false);
-            editorState = deleteCharacter(editorState);
+            tmpEditorState = Highlights.changeEditorSelection(editorState, 1, 1, false);
+            tmpEditorState = deleteCharacter(tmpEditorState);
         }
+
+        if (tmpEditorState === editorState) {
+            break;
+        }
+        editorState = tmpEditorState;
     }
 
     editorState = moveToSuggestionsHistory(editorState, suggestion, accepted);
@@ -519,15 +531,20 @@ const processSuggestion = (state, {suggestion}, accepted) => {
 const deleteCurrentSelection = (editorState, data) => {
     const selection = editorState.getSelection();
     const backward = true;
-    let newState = editorState;
+    let newEditorState = editorState;
+    let tmpEditorState;
 
-    newState = initSelectionIterator(newState, backward);
+    newEditorState = initSelectionIterator(newEditorState, backward);
 
-    while (hasNextSelection(newState, selection, backward)) {
-        newState = setDeleteSuggestionForCharacter(newState, data);
+    while (hasNextSelection(newEditorState, selection, backward)) {
+        tmpEditorState = setDeleteSuggestionForCharacter(newEditorState, data);
+        if (tmpEditorState === newEditorState) {
+            break;
+        }
+        newEditorState = tmpEditorState;
     }
 
-    return newState;
+    return newEditorState;
 };
 
 /**
