@@ -66,6 +66,13 @@ export function UsersService(api, $q, notify) {
     };
 
     /**
+     * Test if user is of type support
+     */
+    usersService.isSupport = function isSupport(user) {
+        return user && user.is_support;
+    };
+
+    /**
      * Toggle user status
      */
     usersService.toggleStatus = function toggleStatus(user, active) {

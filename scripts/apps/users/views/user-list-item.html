@@ -1,4 +1,4 @@
-<li ng-repeat="user in users track by user._id"
+<li ng-repeat="user in userList track by user._id"
     ng-click="select(user)"
     ng-show="!authorOnlyFilter || authorOnlyFilter && user.is_author"
     ng-class="{selected: user._id === selected._id, 'inactive' : !user.is_enabled || !user.is_active}">
@@ -35,5 +35,5 @@
     </div>
 </li>
 
-<li class="alert alert-info" ng-show="users.length == null"><p translate>Loading...</p></li>
-<li class="alert alert-info" ng-show="users.length == 0"><p translate>Oops! There are no items.</p></li>
+<li class="alert alert-info" ng-if="userList.length == null"><p translate>Loading...</p></li>
+<li class="alert alert-info" ng-if="userList.length == 0"><p translate>Oops! There are no items.</p></li>
