@@ -40,12 +40,22 @@ export default class ItemsTableComponent extends React.Component {
         return <tr>{fields}</tr>;
     }
 
-    inputField(field, item) {
+    inputField(field, item, index) {
         const value = item[field.key] || '';
         const disabled = !item.is_active;
         const update = (event) => {
             this.props.update(item, field.key, event.target.value);
         };
+        const required = this.state.itemsValidation.length && _.has(this.state.itemsValidation[index], field.key);
+        const valid = !required || this.state.itemsValidation[index][field.key];
+        let className = 'sd-line-input';
+
+        if (required) {
+            className += ' sd-line-input--required';
+        }
+        if (!valid) {
+            className += ' sd-line-input--invalid';
+        }
 
         switch (field.type) {
         case 'bool':
@@ -87,12 +97,14 @@ export default class ItemsTableComponent extends React.Component {
 
         default:
             return (
-                <input type="text"
-                    value={value}
-                    disabled={disabled}
-                    onChange={update}
-                    className={field.key === 'name' ? 'long-name sd-line-input__input' : 'sd-line-input__input'}
-                />
+                <div className={className}>
+                    <input type="text"
+                        value={value}
+                        disabled={disabled}
+                        onChange={update}
+                        className={field.key === 'name' ? 'long-name sd-line-input__input' : 'sd-line-input__input'}
+                    />
+                </div>
             );
         }
     }
@@ -125,8 +137,8 @@ export default class ItemsTableComponent extends React.Component {
         return this.state.items.map((item, index) => (
             <tr key={index}>
                 {schemaFields.map((field) => (
-                    <td key={field.key} className="sd-line-input sd-line-input--required">
-                        {this.inputField(field, item)}
+                    <td key={field.key}>
+                        {this.inputField(field, item, index)}
                     </td>
                 ))}
                 {this.toggleActiveButton(item)}

@@ -11,18 +11,28 @@ export function VocabularyConfigModalItems(gettext) {
             let itemsValidation = [];
 
             function validateItem(item) {
-                return {name: !!item.name, qcode: !!item.qcode};
+                let itemValidation = {};
+
+                if (scope.vocabulary.schema.qcode) {
+                    itemValidation.qcode = !!item.qcode;
+                }
+                if (scope.vocabulary.schema.name) {
+                    itemValidation.name = !!item.name;
+                }
+                return itemValidation;
+            }
+
+            function validItem(itemValidation) {
+                return itemValidation.name && itemValidation.qcode;
             }
 
             function validateItems(items) {
-                return items.map((_item) => validateItem(_item));
-            }
+                scope.itemsValidation.valid = true;
+                itemsValidation = items.map((_item) => {
+                    let itemValidation = validateItem(_item);
 
-            function validItems(itemsValidation) {
-                return _.reduce(itemsValidation, (result, value, key) => {
-                    let validItem = validateItem(value);
-
-                    return result && validItem.name && validItem.qcode;
+                    scope.itemsValidation.valid = scope.itemsValidation.valid && validItem(itemValidation);
+                    return itemValidation;
                 });
             }
 
@@ -40,7 +50,8 @@ export function VocabularyConfigModalItems(gettext) {
                             let updated = Object.assign({}, item, updates);
 
                             itemsValidation[index - 1] = validateItem(updated);
-                            scope.itemsValidation.valid = validItems(itemsValidation);
+                            scope.itemsValidation.valid = scope.itemsValidation.valid &&
+                                validItem(itemsValidation[index - 1]);
                             return updated;
                         }
                         return _item;
@@ -75,8 +86,7 @@ export function VocabularyConfigModalItems(gettext) {
             // re-render on items changes
             scope.$watch('vocabulary.items', (items) => {
                 if (items && component) {
-                    itemsValidation = validateItems(items);
-                    scope.itemsValidation.valid = validItems(itemsValidation);
+                    validateItems(items);
                     component.setState({items, itemsValidation});
                 }
             });
