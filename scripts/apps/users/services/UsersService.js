@@ -19,9 +19,9 @@ export function UsersService(api, $q, notify) {
     usersService.save = function save(user, data) {
         return api.save('users', user, data)
             .then((updates) => {
-                angular.extend(user, data);
-                angular.extend(user, updates);
-                return user;
+                let newUser = _.assign({}, user, data, updates)
+ 
+                return newUser;
             });
     };
 
