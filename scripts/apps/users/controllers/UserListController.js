@@ -23,7 +23,7 @@ export function UserListController($scope, $location, api, _, session, usersServ
     };
 
     $scope.$on('intent:create:user', function createUser() {
-        // fallback if there is no other activity
+    // fallback if there is no other activity
         $scope.preview({});
     });
 
@@ -75,14 +75,28 @@ export function UserListController($scope, $location, api, _, session, usersServ
     }
 
     function initCriteria(search, filter) {
-        var query = {};
+        let query = {};
+        const canSeeSupportUsers = usersService.isSupport(session.identity);
+
+        if (!canSeeSupportUsers) {
+            query.is_support = {$ne: true};
+        }
 
         if (search.q) {
             query = {
                 $or: [
-                    {username: {$regex: search.q, $options: '-i'}},
-                    {display_name: {$regex: search.q, $options: '-i'}},
-                    {email: {$regex: search.q, $options: '-i'}},
+                    {
+                        username: {$regex: search.q, $options: '-i'},
+                        is_support: {$ne: !canSeeSupportUsers},
+                    },
+                    {
+                        display_name: {$regex: search.q, $options: '-i'},
+                        is_support: {$ne: !canSeeSupportUsers},
+                    },
+                    {
+                        email: {$regex: search.q, $options: '-i'},
+                        is_support: {$ne: !canSeeSupportUsers},
+                    },
                 ],
             };
         }
@@ -115,15 +129,6 @@ export function UserListController($scope, $location, api, _, session, usersServ
             query.is_enabled = true;
             query.needs_activation = false;
             break;
-        }
-
-        if (!usersService.isSupport(session.identity)) {
-            // If user is not support type, they can't see support users
-            query.$or = [
-                ...query.$or || [],
-                {is_support: false},
-                {is_support: null},
-            ];
         }
 
         return JSON.stringify(query);
