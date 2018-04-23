@@ -188,7 +188,11 @@ export class Editor3Component extends React.Component {
      */
     handleKeyCommand(command) {
         const {editorState, onChange, singleLine, suggestingMode} = this.props;
-        const {onCreateSplitParagraphSuggestion, onCreateDeleteSuggestion} = this.props;
+        const {
+            onCreateSplitParagraphSuggestion,
+            onCreateDeleteSuggestion,
+            onCreateChangeStyleSuggestion,
+        } = this.props;
 
         if (singleLine && command === 'split-block') {
             return 'handled';
@@ -197,6 +201,20 @@ export class Editor3Component extends React.Component {
         let newState;
 
         switch (command) {
+        case 'bold':
+        case 'italic':
+        case 'underline':
+            if (suggestingMode) {
+                const style = command.toUpperCase();
+                const inlineStyles = editorState.getCurrentInlineStyle();
+                const active = inlineStyles.has(style);
+
+                onCreateChangeStyleSuggestion(style, active);
+                return 'handled';
+            }
+
+            newState = RichUtils.handleKeyCommand(editorState, command);
+            break;
         case 'soft-newline':
             newState = RichUtils.insertSoftNewline(editorState);
             break;
@@ -423,6 +441,7 @@ Editor3Component.propTypes = {
     onCreateDeleteSuggestion: PropTypes.func,
     onPasteFromSuggestingMode: PropTypes.func,
     onCreateSplitParagraphSuggestion: PropTypes.func,
+    onCreateChangeStyleSuggestion: PropTypes.func,
     svc: PropTypes.object,
     invisibles: PropTypes.bool,
     highlights: PropTypes.object,

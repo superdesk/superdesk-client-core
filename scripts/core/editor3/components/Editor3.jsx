@@ -47,6 +47,7 @@ const mapDispatchToProps = (dispatch) => ({
     onCreateDeleteSuggestion: (action) => dispatch(actions.createDeleteSuggestion(action)),
     onPasteFromSuggestingMode: (content) => dispatch(actions.onPasteFromSuggestingMode(content)),
     onCreateSplitParagraphSuggestion: () => dispatch(actions.createSplitParagraphSuggestion()),
+    onCreateChangeStyleSuggestion: (type, active) => dispatch(actions.createChangeStyleSuggestion(type, active)),
 });
 
 export const Editor3 = connect(mapStateToProps, mapDispatchToProps)(Editor3Base);
