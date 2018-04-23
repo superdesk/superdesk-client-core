@@ -25,15 +25,6 @@ export function UserListDirective(keyboardManager, usersService, asset, session)
                 bindKeys();
             };
 
-            scope.$watch('users', (users) => {
-                // If user is not support type, they can't see support users
-                if (users && !usersService.isSupport(session.identity)) {
-                    scope.userList = users.filter((u) => !usersService.isSupport(u));
-                } else {
-                    scope.userList = users;
-                }
-            });
-
             scope.$watch('selected', (selected) => {
                 if (_.isNil(selected)) {
                     bindKeys();

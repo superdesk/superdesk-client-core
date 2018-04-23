@@ -58,8 +58,8 @@ describe('users', () => {
         });
 
         it('can list users', () => {
-            expect(element.all(by.repeater('user in userList')).count()).toBe(6);
-            expect(element(by.repeater('user in userList').row(0).column('username')).getText())
+            expect(element.all(by.repeater('user in users')).count()).toBe(6);
+            expect(element(by.repeater('user in users').row(0).column('username')).getText())
                 .toBe('test_user');
         });
 
@@ -68,15 +68,15 @@ describe('users', () => {
 
             expect(online.getText()).toBe('Online');
             online.click();
-            expect(element.all(by.repeater('user in userList')).count()).toBe(3);
-            expect(element(by.repeater('user in userList').row(0).column('username')).getText())
+            expect(element.all(by.repeater('user in users')).count()).toBe(3);
+            expect(element(by.repeater('user in users').row(0).column('username')).getText())
                 .toBe('test_user');
-            expect(element(by.repeater('user in userList').row(1).column('username')).getText())
+            expect(element(by.repeater('user in users').row(1).column('username')).getText())
                 .toBe('admin');
         });
 
         it('can disable user', () => {
-            var user = element.all(by.repeater('userList')).first(),
+            var user = element.all(by.repeater('users')).first(),
                 activity = user.element(by.className('icon-trash'));
 
             user.waitReady()
@@ -108,7 +108,7 @@ describe('users', () => {
                 }, 5000);
             }).then(() => {
                 browser.wait(() => {
-                    var elem = element.all(by.repeater('userList')).first().element(by.className('disabled-label'));
+                    var elem = element.all(by.repeater('users')).first().element(by.className('disabled-label'));
 
                     return elem.isDisplayed();
                 }, 5000);
@@ -122,7 +122,7 @@ describe('users', () => {
         });
 
         it('can open user detail', () => {
-            element.all(by.repeater('userList')).first().click();
+            element.all(by.repeater('users')).first().click();
             expect(modelValue('user.display_name'))
                 .toBe('first name last name');
             $('#open-user-profile').waitReady()
@@ -145,7 +145,7 @@ describe('users', () => {
         beforeEach((done) => {
             nav('/users')
                 .then(() =>
-                    element(by.repeater('user in userList').row(0)
+                    element(by.repeater('user in users').row(0)
                         .column('username'))
                         .waitReady())
                 .then((elem) => elem.click())
@@ -334,7 +334,7 @@ describe('users', () => {
         it('while pre-viewing and user clicks on create new user', () => {
             var buttonCreate = element(by.className('sd-create-btn'));
 
-            element.all(by.repeater('userList')).first().click();
+            element.all(by.repeater('users')).first().click();
 
             buttonCreate.click();
             expect(element(by.id('user_default_desk')).isPresent()).toBe(false);

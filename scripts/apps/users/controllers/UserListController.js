@@ -1,5 +1,5 @@
-UserListController.$inject = ['$scope', '$location', 'api', 'lodash'];
-export function UserListController($scope, $location, api, _) {
+UserListController.$inject = ['$scope', '$location', 'api', 'lodash', 'session', 'usersService'];
+export function UserListController($scope, $location, api, _, session, usersService) {
     var DEFAULT_SIZE = 25;
 
     $scope.selected = {user: null};
@@ -115,6 +115,15 @@ export function UserListController($scope, $location, api, _) {
             query.is_enabled = true;
             query.needs_activation = false;
             break;
+        }
+
+        if (!usersService.isSupport(session.identity)) {
+            // If user is not support type, they can't see support users
+            query.$or = [
+                ...query.$or || [],
+                {is_support: false},
+                {is_support: null},
+            ];
         }
 
         return JSON.stringify(query);
