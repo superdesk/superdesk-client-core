@@ -108,7 +108,7 @@ describe('users', () => {
                 }, 5000);
             }).then(() => {
                 browser.wait(() => {
-                    var elem = element.all(by.repeater('users')).first().element(by.className('disabled-label'));
+                    var elem = element.all(by.repeater('userList')).first().element(by.className('disabled-label'));
 
                     return elem.isDisplayed();
                 }, 5000);
@@ -334,7 +334,7 @@ describe('users', () => {
         it('while pre-viewing and user clicks on create new user', () => {
             var buttonCreate = element(by.className('sd-create-btn'));
 
-            element.all(by.repeater('users')).first().click();
+            element.all(by.repeater('userList')).first().click();
 
             buttonCreate.click();
             expect(element(by.id('user_default_desk')).isPresent()).toBe(false);
