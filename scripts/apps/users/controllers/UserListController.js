@@ -75,7 +75,7 @@ export function UserListController($scope, $location, api, _, session, usersServ
     }
 
     function initCriteria(search, filter) {
-        let query = {};
+        const query = {};
         const canSeeSupportUsers = usersService.isSupport(session.identity);
 
         if (!canSeeSupportUsers) {
@@ -83,22 +83,11 @@ export function UserListController($scope, $location, api, _, session, usersServ
         }
 
         if (search.q) {
-            query = {
-                $or: [
-                    {
-                        username: {$regex: search.q, $options: '-i'},
-                        is_support: {$ne: !canSeeSupportUsers},
-                    },
-                    {
-                        display_name: {$regex: search.q, $options: '-i'},
-                        is_support: {$ne: !canSeeSupportUsers},
-                    },
-                    {
-                        email: {$regex: search.q, $options: '-i'},
-                        is_support: {$ne: !canSeeSupportUsers},
-                    },
-                ],
-            };
+            query.$or = [
+                {username: {$regex: search.q, $options: '-i'}},
+                {display_name: {$regex: search.q, $options: '-i'}},
+                {email: {$regex: search.q, $options: '-i'}},
+            ];
         }
 
         switch (filter) {
