@@ -1,7 +1,7 @@
 import _ from 'lodash';
 
-UserListDirective.$inject = ['keyboardManager', 'usersService', 'asset'];
-export function UserListDirective(keyboardManager, usersService, asset) {
+UserListDirective.$inject = ['keyboardManager', 'usersService', 'asset', 'session'];
+export function UserListDirective(keyboardManager, usersService, asset, session) {
     return {
         templateUrl: asset.templateUrl('apps/users/views/user-list-item.html'),
         scope: {

@@ -1,5 +1,5 @@
-UserListController.$inject = ['$scope', '$location', 'api', 'lodash'];
-export function UserListController($scope, $location, api, _) {
+UserListController.$inject = ['$scope', '$location', 'api', 'lodash', 'session', 'usersService'];
+export function UserListController($scope, $location, api, _, session, usersService) {
     var DEFAULT_SIZE = 25;
 
     $scope.selected = {user: null};
@@ -23,7 +23,7 @@ export function UserListController($scope, $location, api, _) {
     };
 
     $scope.$on('intent:create:user', function createUser() {
-        // fallback if there is no other activity
+    // fallback if there is no other activity
         $scope.preview({});
     });
 
@@ -75,16 +75,19 @@ export function UserListController($scope, $location, api, _) {
     }
 
     function initCriteria(search, filter) {
-        var query = {};
+        const query = {};
+        const canSeeSupportUsers = usersService.isSupport(session.identity);
+
+        if (!canSeeSupportUsers) {
+            query.is_support = {$ne: true};
+        }
 
         if (search.q) {
-            query = {
-                $or: [
-                    {username: {$regex: search.q, $options: '-i'}},
-                    {display_name: {$regex: search.q, $options: '-i'}},
-                    {email: {$regex: search.q, $options: '-i'}},
-                ],
-            };
+            query.$or = [
+                {username: {$regex: search.q, $options: '-i'}},
+                {display_name: {$regex: search.q, $options: '-i'}},
+                {email: {$regex: search.q, $options: '-i'}},
+            ];
         }
 
         switch (filter) {
