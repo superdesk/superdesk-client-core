@@ -22,7 +22,7 @@ describe('users api', () => {
         var user = {UserName: 'foo', FirstName: 'a'},
             data = {FirstName: 'foo', LastName: 'bar'};
 
-        spyOn(api, 'save').and.returnValue($q.when({}));
+        spyOn(api, 'save').and.returnValue($q.when({UserName: 'foo', FirstName: 'foo', LastName: 'bar'}));
 
         usersService.save(user, data);
 
