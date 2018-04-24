@@ -1,10 +1,7 @@
 import {EditorState, ContentState, Modifier, genKey, CharacterMetadata, ContentBlock} from 'draft-js';
 import {List, OrderedSet} from 'immutable';
 import {fromHTML} from 'core/editor3/html';
-import * as Highlights from '../helpers/highlights';
-import {initSelectionIterator, hasNextSelection} from '../helpers/selectionIterator';
-import {suggestionsTypes} from '../highlightsConfig';
-import ng from 'core/services/ng';
+import * as Suggestions from '../helpers/suggestions';
 
 function removeMediaFromHtml(htmlString) {
     const element = document.createElement('div');
@@ -38,17 +35,18 @@ export function handlePastedText(editorKey, text, _html) {
         html = removeMediaFromHtml(html);
     }
 
-    const {suggestingMode, onPasteFromSuggestingMode} = this.props;
-
-    if (!this.allowEditSuggestion('insert')) {
-        return HANDLED;
-    }
+    const {editorState, suggestingMode, onPasteFromSuggestingMode} = this.props;
 
     if (!html && !text) {
         return HANDLED;
     }
 
     if (suggestingMode) {
+        if (!Suggestions.allowEditSuggestionOnLeft(editorState)
+            && !Suggestions.allowEditSuggestionOnRight(editorState)) {
+            return HANDLED;
+        }
+
         const content = html ? fromHTML(html) : ContentState.createFromText(text);
 
         onPasteFromSuggestingMode(content);
@@ -130,59 +128,3 @@ const atomicBlock = (data, entity) => new ContentBlock({
     characterList: List([CharacterMetadata.create({entity})]),
     data: data,
 });
-
-/**
- * @ngdoc method
- * @name allowEditSuggestion
- * @param {string} operation - one of insert, backspace or delete
- * @returns {Boolean} True if the current text don't contains a noneditable suggestion.
- * @description Check if the current text don't contain a noneditable suggestion.
- */
-export function allowEditSuggestion(action) {
-    const {suggestingMode, editorState} = this.props;
-    const selection = editorState.getSelection();
-    let newEditorState;
-    let tmpEditorState;
-
-    if (!selection.isCollapsed()) {
-        newEditorState = initSelectionIterator(editorState);
-        while (hasNextSelection(newEditorState, selection)) {
-            const data = Highlights.getHighlightDataAtCurrentPosition(
-                newEditorState, suggestionsTypes);
-
-            if (!allowEditForData(data, suggestingMode)) {
-                return false;
-            }
-
-            tmpEditorState = Highlights.changeEditorSelection(newEditorState, 1, 1, false);
-            if (tmpEditorState === newEditorState) {
-                break;
-            }
-            newEditorState = tmpEditorState;
-        }
-
-        return true;
-    }
-
-    const dataBefore = Highlights.getHighlightDataAtOffset(editorState, suggestionsTypes, selection, -1);
-    const dataAfter = Highlights.getHighlightDataAtOffset(editorState, suggestionsTypes, selection, 0);
-    const allowEditBefore = allowEditForData(dataBefore, suggestingMode);
-    const editBefore = allowEditBefore && (action === 'backspace' || action === 'insert');
-    const allowEditAfter = allowEditForData(dataAfter, suggestingMode);
-    const editAfter = allowEditAfter && (action === 'delete' || action === 'insert');
-    const editBetweenSuggestions = dataBefore !== dataAfter && action === 'insert';
-
-    return editBefore || editAfter || editBetweenSuggestions;
-}
-
-// Check if the current allow the edit.
-const allowEditForData = (data, suggestingMode) => {
-    if (data == null) {
-        return true;
-    }
-
-    const user = ng.get('session').identity._id;
-    const author = data.author;
-
-    return suggestingMode && author === user;
-};

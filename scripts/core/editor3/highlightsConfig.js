@@ -103,7 +103,6 @@ export const suggestionsTypes = [
     'ADD_LINK_SUGGESTION',
 ];
 
-export const isSuggestion = (highlightId) => suggestionsTypes.find(
+export const isSuggestion = (highlightId) => suggestionsTypes.some(
     (suggestionType) => highlightId.indexOf(suggestionType) === 0
-) != null;
-
+);

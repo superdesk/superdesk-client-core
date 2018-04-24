@@ -4,6 +4,7 @@ import StyleButton from './StyleButton';
 import * as actions from '../../actions';
 import {connect} from 'react-redux';
 import {inlineStyles} from '../../helpers/inlineStyles';
+import * as Suggestions from '../../helpers/suggestions';
 
 /**
  * @ngdoc React
@@ -23,6 +24,11 @@ export class InlineStyleButtonsComponent extends Component {
         const selection = editorState.getSelection();
 
         if (suggestingMode && !selection.isCollapsed()) {
+            if (!Suggestions.allowEditSuggestionOnLeft(editorState)
+                && !Suggestions.allowEditSuggestionOnRight(editorState)) {
+                return;
+            }
+
             createChangeStyleSuggestion(type, active);
         } else {
             toggleInlineStyle(type);
