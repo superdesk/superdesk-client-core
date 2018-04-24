@@ -1,7 +1,7 @@
 import {EditorState} from 'draft-js';
 import * as Highlights from './highlights';
 import {suggestionsTypes} from '../highlightsConfig';
-import {initSelectionIterator, hasNextSelection} from '../helpers/selectionIterator';
+import {initSelectionIterator, hasNextSelection} from '../helpers/selection';
 import ng from 'core/services/ng';
 
 /**
