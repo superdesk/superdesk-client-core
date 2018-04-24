@@ -23,7 +23,7 @@ export function getFieldMetadata(item, fieldKey, contentKey) {
         throw new Error(`Invalid key '${contentKey}'`);
     }
 
-    if (item[META_FIELD_NAME] == null || item[META_FIELD_NAME][fieldKey] == null) {
+    if (item == null || item[META_FIELD_NAME] == null || item[META_FIELD_NAME][fieldKey] == null) {
         return null;
     }
 

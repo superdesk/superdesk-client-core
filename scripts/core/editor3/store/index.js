@@ -129,17 +129,6 @@ function getInitialContent(props) {
         return initializeHighlights(EditorState.createWithContent(contentState)).getCurrentContent();
     }
 
-    // we have an editor state stored in the DB
-
-    if (props.pathToValue == null || props.pathToValue.length < 1) {
-        // we have only HTML (possibly legacy editor2 or ingested item)
-        if (props.value) {
-            return fromHTML(props.value);
-        }
-
-        return ContentState.createFromText('');
-    }
-
     const draftjsRawState = getFieldMetadata(
         props.item,
         props.pathToValue,
@@ -150,6 +139,12 @@ function getInitialContent(props) {
         let contentState = convertFromRaw(draftjsRawState);
 
         return initializeHighlights(EditorState.createWithContent(contentState)).getCurrentContent();
+    }
+
+    if (props.value) {
+        console.info('html', props.value);
+        // we have only HTML (possibly legacy editor2 or ingested item)
+        return fromHTML(props.value);
     }
 
     return ContentState.createFromText('');
