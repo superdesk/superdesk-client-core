@@ -363,14 +363,11 @@ export function getHighlightDataAtCurrentPosition(editorState, types) {
  * @description add a new highlight for the current selection.
  */
 export function addHighlight(editorState, type, data) {
-    // restore focus lost after clicking a toolbar action or entering highlight data
-    // so the selection is visible after undo
-    var nextEditorState = EditorState.acceptSelection(
-        editorState,
-        editorState.getSelection().merge({
-            hasFocus: true,
-        })
-    );
+    var nextEditorState = editorState;
+
+    const initialSelection = nextEditorState.getSelection().merge({
+        hasFocus: true,
+    });
 
     const highlightsState = getHighlightsState(nextEditorState);
 
@@ -407,7 +404,25 @@ export function addHighlight(editorState, type, data) {
     // prevent recording the changes to undo stack so user doesn't have to undo twice
     // for the highlight to be completelly(both inline styles and related data) undone
     nextEditorState = EditorState.set(nextEditorState, {allowUndo: false});
+
     nextEditorState = setHighlightsState(nextEditorState, newHighlightsState);
+
+    // make sure the cursor is at the right position after undo
+    // it used to always end up at the position 0 of the first block
+    // when undoing after changing block data with `allowUndo` set to false
+    nextEditorState = EditorState.push(
+        nextEditorState,
+        nextEditorState.getCurrentContent().set('selectionBefore', initialSelection),
+        'change-block-data'
+    );
+
+    // restore focus lost after clicking a toolbar action or entering highlight data OR pushing editorState
+    // so the selection is visible after undo
+    nextEditorState = EditorState.acceptSelection(
+        nextEditorState,
+        initialSelection
+    );
+
     nextEditorState = EditorState.set(nextEditorState, {allowUndo: true});
 
     return nextEditorState;
