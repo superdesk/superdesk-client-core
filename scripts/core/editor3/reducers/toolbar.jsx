@@ -4,6 +4,7 @@ import {onChange} from './editor3';
 import insertAtomicBlockWithoutEmptyLines from '../helpers/insertAtomicBlockWithoutEmptyLines';
 import * as Links from '../helpers/links';
 import * as Blocks from '../helpers/blocks';
+import {removeFormatFromState} from '../helpers/removeFormat';
 
 /**
  * @description Contains the list of toolbar related reducers.
@@ -18,6 +19,8 @@ const toolbar = (state = {}, action) => {
         return applyLink(state, action.payload);
     case 'TOOLBAR_REMOVE_LINK':
         return removeLink(state);
+    case 'TOOLBAR_REMOVE_FORMAT':
+        return removeFormat(state);
     case 'TOOLBAR_INSERT_MEDIA':
         return insertMedia(state, action.payload);
     case 'TOOLBAR_UPDATE_IMAGE':
@@ -97,6 +100,19 @@ const removeLink = (state) => {
     const stateAfterChange = Links.removeLink(editorState);
 
     return onChange(state, stateAfterChange);
+};
+
+/*
+ * @ngdoc method
+ * @name removeFormat
+ * @description Set all blocks in selection to unstyled except atomic blocks
+ *              and remove inline styles
+ */
+const removeFormat = (state) => {
+    const {editorState} = state;
+    const stateWithoutFormat = removeFormatFromState(editorState);
+
+    return onChange(state, stateWithoutFormat);
 };
 
 /**

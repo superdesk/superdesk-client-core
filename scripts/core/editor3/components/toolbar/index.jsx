@@ -85,6 +85,7 @@ class ToolbarComponent extends Component {
             toggleSuggestingMode,
             invisibles,
             toggleInvisibles,
+            removeFormat,
         } = this.props;
 
         const has = (opt) => editorFormat.indexOf(opt) > -1;
@@ -129,6 +130,15 @@ class ToolbarComponent extends Component {
                         onClick={addTable}
                         tooltip={gettext('Table')}
                         iconName="table"
+                    />
+                }
+                {has('remove format') &&
+                    <SelectionButton
+                        onClick={removeFormat}
+                        precondition={!suggestingMode}
+                        key="remove-format-button"
+                        iconName="ban-circle"
+                        tooltip={gettext('Remove format')}
                     />
                 }
                 {has('comments') &&
@@ -190,6 +200,7 @@ ToolbarComponent.propTypes = {
     showPopup: PropTypes.func,
     toggleSuggestingMode: PropTypes.func,
     toggleInvisibles: PropTypes.func,
+    removeFormat: PropTypes.func,
     popup: PropTypes.object,
     editorState: PropTypes.object,
     editorNode: PropTypes.object,
@@ -219,6 +230,7 @@ const mapDispatchToProps = (dispatch) => ({
     addTable: () => dispatch(actions.addTable()),
     toggleSuggestingMode: () => dispatch(actions.toggleSuggestingMode()),
     toggleInvisibles: () => dispatch(actions.toggleInvisibles()),
+    removeFormat: () => dispatch(actions.removeFormat()),
 });
 
 const Toolbar = connect(mapStateToProps, mapDispatchToProps)(ToolbarComponent);

@@ -77,6 +77,10 @@ export function removeLink() {
     return {type: 'TOOLBAR_REMOVE_LINK'};
 }
 
+export function removeFormat() {
+    return {type: 'TOOLBAR_REMOVE_FORMAT'};
+}
+
 /**
  * @ngdoc method
  * @name insertMedia
