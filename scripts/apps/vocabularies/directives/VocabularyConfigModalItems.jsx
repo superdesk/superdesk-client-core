@@ -13,12 +13,9 @@ export function VocabularyConfigModalItems(gettext) {
             function validateItem(item) {
                 let itemValidation = {};
 
-                if (scope.vocabulary.schema.qcode) {
-                    itemValidation.qcode = !!item.qcode;
-                }
-                if (scope.vocabulary.schema.name) {
-                    itemValidation.name = !!item.name;
-                }
+                _.forEach(scope.vocabulary.schema, (desc, field) => {
+                    itemValidation[field] = !desc.required || !!item[field];
+                });
                 return itemValidation;
             }
 
