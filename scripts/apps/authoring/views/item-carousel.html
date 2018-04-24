@@ -15,25 +15,114 @@
                         ng-class="{'item-association--preview': item[item.fieldId], 'item-association--loading': loading}"
                         ng-click="editable && associations.isMediaEditable() && !item[item.fieldId] && upload()">
 
-                    <div ng-if="item[item.fieldId] && editable" class="close-overlay">
-                        <button class="btn btn--primary btn--icon-only-circle btn--hollow" ng-click="remove(item); $event.stopPropagation()">
-                            <i class="icon-close-small"></i>
-                        </button>
+                    <a ng-if="item[item.fieldId] && editable" class="item-association__remove-item" ng-click="remove(item); $event.stopPropagation()">
+                        <i class="icon-close-small"/>
+                    </a>
+                    <!-- video -->
+                    <div class="item-association__video-container" ng-if="item[item.fieldId] && item[item.fieldId].type === 'video'">
+                        <div class="item-association__image-overlay" ng-if="item[item.fieldId]">
+                            <div class="item-association__metadata item-association__metadata--top">
+                                <span>
+                                    <em>{{:: 'Title:' | translate}}</em>
+                                    {{item[item.fieldId].headline || ('[No Value]' | translate)}}
+                                </span>
+                            </div>
+                            <div class="item-association__icons-block">
+                                <!-- Leave this block to push the content below -->
+                            </div>
+                            <div class="item-association__metadata">
+                                <span>
+                                    <em>{{:: 'Alt text:' | translate}}</em>
+                                    {{item[item.fieldId].alt_text || ('[No Value]' | translate)}}
+                                </span>
+                                <span>
+                                    <em>{{:: 'Credit:' | translate}}</em>
+                                    {{item[item.fieldId].byline || ('[No Value]' | translate)}}
+                                </span>
+                                <span>
+                                    <em>{{:: 'Copyright holder:' | translate}}</em>
+                                    {{item[item.fieldId].copyrightholder || ('[No Value]' | translate)}}
+                                </span>
+                                <span>
+                                    <em>{{:: 'Assign rights:' | translate}}</em>
+                                    {{item[item.fieldId].usageterms || ('[No Value]' | translate)}}
+                                </span>
+                                <span>
+                                    <em>{{:: 'Copyright notice:' | translate}}</em>
+                                    {{item[item.fieldId].copyrightnotice || ('[No Value]' | translate)}}
+                                </span>
+                            </div>
+                        </div>
+                        <video controls="controls">
+                            <source vsrc="{{rendition.href}}"
+                                    ng-repeat="(key, rendition) in item[item.fieldId].renditions"
+                                    ng-if="associations.isVideo(rendition)" html5vfix>
+                        </video>
                     </div>
-                    <video ng-if="item[item.fieldId] && item[item.fieldId].type === 'video'" controls="controls">
-                        <source vsrc="{{rendition.href}}"
-                                ng-repeat="(key, rendition) in item[item.fieldId].renditions"
-                                ng-if="associations.isVideo(rendition)" html5vfix>
-                    </video>
-                    <audio ng-if="item[item.fieldId] && item[item.fieldId].type === 'audio'" controls="controls">
-                        <source vsrc="{{rendition.href}}"
-                                ng-repeat="(key, rendition) in item[item.fieldId].renditions"
-                                ng-if="associations.isAudio(rendition)" html5vfix>
-                    </audio>
-                    <img ng-if="item[item.fieldId] && (item[item.fieldId].type === 'picture' || item[item.fieldId].type === 'graphic')"
-                         ng-src="{{ item[item.fieldId].renditions.viewImage.href}}"
-                         ng-class="{'not-editable': !associations.isMediaEditable() || !editable}"
-                         ng-click="associations.isMediaEditable() && associations.edit(this, item[item.fieldId]); $event.stopPropagation()">
+                    <!-- audio -->
+                    <div class="item-association__audio-container" ng-if="item[item.fieldId] && item[item.fieldId].type === 'audio'" >
+                        <audio controls="controls">
+                            <source vsrc="{{rendition.href}}"
+                                    ng-repeat="(key, rendition) in item[item.fieldId].renditions"
+                                    ng-if="associations.isAudio(rendition)" html5vfix>
+                        </audio>
+                        <div class="item-association__metadata item-association__metadata--plain">
+                            <span>
+                                <em>{{:: 'Credit:' | translate}}</em>
+                                {{item[item.fieldId].byline || ('[No Value]' | translate)}}
+                            </span>
+                            <span>
+                                <em>{{:: 'Copyright holder:' | translate}}</em>
+                                {{item[item.fieldId].copyrightholder || ('[No Value]' | translate)}}
+                            </span>
+                            <span>
+                                <em>{{:: 'Assign rights:' | translate}}</em>
+                                {{item[item.fieldId].usageterms || ('[No Value]' | translate)}}
+                            </span>
+                            <span>
+                                <em>{{:: 'Copyright notice:' | translate}}</em>
+                                {{item[item.fieldId].copyrightnotice || ('[No Value]' | translate)}}
+                            </span>
+                        </div>
+                    </div>
+                    <!-- image -->
+                    <div class="item-association__image-container" ng-if="item[item.fieldId] && (item[item.fieldId].type === 'picture' || item[item.fieldId].type === 'graphic')">
+                        <div class="item-association__image-overlay" ng-if="item[item.fieldId]">
+                            <div class="item-association__metadata item-association__metadata--top">
+                                <span>
+                                    <em>{{:: 'Title:' | translate}}</em>
+                                    {{item[item.fieldId].headline || ('[No Value]' | translate)}}
+                                </span>
+                            </div>
+                            <div class="item-association__icons-block">
+                                <a class="item-association__image-action" ng-click="associations.isMediaEditable() && associations.edit(this, item[item.fieldId]); $event.stopPropagation()"><i class="icon-pencil"/></a>
+                            </div>
+                            <div class="item-association__metadata">
+                                <span>
+                                    <em>{{:: 'Alt text:' | translate}}</em>
+                                    {{item[item.fieldId].alt_text || ('[No Value]' | translate)}}
+                                </span>
+                                <span>
+                                    <em>{{:: 'Credit:' | translate}}</em>
+                                    {{item[item.fieldId].byline || ('[No Value]' | translate)}}
+                                </span>
+                                <span>
+                                    <em>{{:: 'Copyright holder:' | translate}}</em>
+                                    {{item[item.fieldId].copyrightholder || ('[No Value]' | translate)}}
+                                </span>
+                                <span>
+                                    <em>{{:: 'Assign rights:' | translate}}</em>
+                                    {{item[item.fieldId].usageterms || ('[No Value]' | translate)}}
+                                </span>
+                                <span>
+                                    <em>{{:: 'Copyright notice:' | translate}}</em>
+                                    {{item[item.fieldId].copyrightnotice || ('[No Value]' | translate)}}
+                                </span>
+                            </div>
+                        </div>
+                        <img ng-src="{{ item[item.fieldId].renditions.viewImage.href}}"
+                        ng-class="{'not-editable': !associations.isMediaEditable() || !editable}">
+                    </div>
                 </figure>
 
                 <div contenteditable="true"
@@ -65,8 +154,15 @@
 
         <div class="sd-media-carousel__thumb-strip">
             <div class="sd-media-carousel__thumb-strip-item" ng-repeat="item in carouselItems">
-                <div class="sd-media-carousel__thumb" ng-click="goTo($index)">
+                <div class="sd-media-carousel__thumb" ng-click="goTo($index)" ng-if="item[item.fieldId] && item[item.fieldId].type === 'picture'">
                     <img ng-src="{{item[item.fieldId].renditions.thumbnail.href}}">
+                </div>
+                <div class="sd-media-carousel__thumb" ng-click="goTo($index)" ng-if="item[item.fieldId] && item[item.fieldId].type === 'audio'">
+                    <i class="icon--2x icon-audio"></i>
+                </div>
+                <div class="sd-media-carousel__thumb" ng-click="goTo($index)" ng-if="item[item.fieldId] && item[item.fieldId].type === 'video'">
+                    <i class="icon--2x icon-video" ng-if="!item[item.fieldId].renditions.thumbnail"></i>
+                    <img ng-if="item[item.fieldId] && item[item.fieldId].renditions.thumbnail" ng-src="{{item[item.fieldId].renditions.thumbnail.href}}">
                 </div>
             </div>
         </div>

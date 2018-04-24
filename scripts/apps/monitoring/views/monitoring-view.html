@@ -89,21 +89,21 @@
             <div sd-item-sortbar ng-if="!elementState || elementState === 'comfort'" class="sortbar-container"></div>
 
             <div class="dropdown dropdown--align-right" dropdown ng-if="type === 'monitoring'">
-                <button class="navbtn dropdown__toggle" ng-class="{'swimlane-switch': monitoring.viewColumn}" dropdown__toggle><i ng-class="{'icon-th-list': !view || view === 'compact', 'icon-th': view === 'photogrid'}"></i></button>
+                <button class="navbtn dropdown__toggle" dropdown__toggle><i ng-class="{'icon-list-view': !monitoring.viewColumn && (!view || view === 'compact'), 'icon-grid-view': view === 'photogrid', 'icon-kanban-view': monitoring.viewColumn}"></i></button>
                 <ul class="dropdown__menu">
                     <li>
                         <button ng-click="switchView('compact')">
-                            <i class="icon-th-list"></i>{{'List View' | translate}}
+                            <i class="icon-list-view"></i>{{'List View' | translate}}
                         </button>
                     </li>
                     <li ng-if="!monitoring.singleGroup && type === 'monitoring' && monitoring.hasSwimlaneView">
-                        <button ng-click="switchView('compact', true)" class="swimlane-switch">
-                            <i class="icon-th-list"></i>{{'Swimlane View' | translate}}
+                        <button ng-click="switchView('compact', true)">
+                            <i class="icon-kanban-view"></i>{{'Swimlane View' | translate}}
                         </button>
                     </li>
                     <li>
                         <button ng-if="type !== 'spike'" ng-click="switchView('photogrid')">
-                            <i class="icon-th"></i>{{'Photo Grid View' | translate}}
+                            <i class="icon-grid-view"></i>{{'Photo Grid View' | translate}}
                         </button>
                     </li>
                 </ul>

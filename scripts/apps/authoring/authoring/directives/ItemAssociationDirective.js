@@ -73,6 +73,7 @@ export function ItemAssociationDirective(renditions) {
 
                 // update item associations on drop
                 elem.on('drop dragdrop', (event) => {
+                    elem.find('figure').removeClass(dragOverClass);
                     event.preventDefault();
                     event.stopPropagation();
 

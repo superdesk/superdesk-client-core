@@ -30,7 +30,7 @@ function GlobalSearch() {
      * @return {promise}
      */
     this.setListView = function() {
-        var list = element(by.css('i.icon-th-list'));
+        var list = element(by.css('i.icon-list-view'));
 
         return list.isDisplayed()
             .then((isVisible) => {

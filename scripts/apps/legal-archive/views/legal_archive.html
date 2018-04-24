@@ -9,8 +9,8 @@
     <div sd-legal-item-sortbar ng-if="elementState !== 'compact'" class="sortbar-container"></div>
 
     <div class="view-select">
-        <button tooltip="{{ :: 'switch to grid view' | translate }}" tooltip-placement="left"  ng-show="view !== 'mgrid'" ng-click="setview('mgrid')"><i class="icon-th"></i></button>
-        <button tooltip="{{ :: 'switch to list view' | translate }}" tooltip-placement="left"  ng-show="view !== 'compact'" ng-click="setview('compact')"><i class="icon-th-list"></i></button>
+        <button tooltip="{{ :: 'switch to grid view' | translate }}" tooltip-placement="left"  ng-show="view !== 'mgrid'" ng-click="setview('mgrid')"><i class="icon-grid-view"></i></button>
+        <button tooltip="{{ :: 'switch to list view' | translate }}" tooltip-placement="left"  ng-show="view !== 'compact'" ng-click="setview('compact')"><i class="icon-list-view"></i></button>
     </div>
 
     <div class="button-stack right-stack" ng-if="elementState === 'compact'">

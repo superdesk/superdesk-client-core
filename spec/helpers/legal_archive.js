@@ -14,7 +14,7 @@ function LegalArchive() {
 
     this.open = function() {
         return nav('/legal_archive').then(() => {
-            var list = element(by.className('icon-th-list'));
+            var list = element(by.className('icon-list-view'));
 
             return list.isDisplayed().then((isVisible) => {
                 if (isVisible) {

@@ -1,42 +1,134 @@
-<figure class="item-association"
-        ng-class="{'item-association--preview': related, 'item-association--loading': loading}"
-        ng-click="editable && associations.isMediaEditable() && !related && upload()">
-    <div ng-if="related && editable" class="close-overlay">
-        <button class="btn btn--primary btn--icon-only-circle btn--hollow" ng-click="remove(related); $event.stopPropagation()">
-            <i class="icon-close-small"></i>
-        </button>
-    </div>
-    <video ng-if="related && related.type === 'video'" controls="controls">
-        <source vsrc="{{ rendition.href}}"
-                ng-repeat="(key, rendition) in related.renditions"
-                ng-if="associations.isVideo(rendition)" html5vfix>
-    </video>
-    <audio ng-if="related && related.type === 'audio'" controls="controls">
-        <source vsrc="{{ rendition.href}}"
-                ng-repeat="(key, rendition) in related.renditions"
-                ng-if="associations.isAudio(rendition)" html5vfix>
-    </audio>
-    <img ng-if="related && (related.type === 'picture' || related.type === 'graphic')"
-         ng-src="{{ related.renditions.viewImage.href}}"
-         ng-class="{'not-editable': !associations.isMediaEditable() || !editable}"
-         ng-click="associations.isMediaEditable() && associations.edit(this, related); $event.stopPropagation()">
-</figure>
+<div class="" ng-class="{'sd-media-carousel__content': related}">
+    <figure class="item-association"
+            ng-class="{'item-association--preview': related, 'item-association--loading': loading}"
+            ng-click="editable && associations.isMediaEditable() && !related && upload()">
+        <a ng-if="related && editable" class="item-association__remove-item" ng-click="remove(related); $event.stopPropagation()">
+            <i class="icon-close-small"/>
+        </a>
+        <!-- video -->
+        <div class="item-association__video-container" ng-if="related && related.type === 'video'">
+            <div class="item-association__image-overlay">
+                <div class="item-association__metadata item-association__metadata--top">
+                    <span>
+                        <em>{{:: 'Title:' | translate}}</em>
+                        {{related.headline || ('[No Value]' | translate)}}
+                    </span>
+                </div>
+                <div class="item-association__icons-block">
+                    <!-- Leave this block to push the content below -->
+                </div>
+                <div class="item-association__metadata">
+                    <span>
+                        <em>{{:: 'Alt text:' | translate}}</em>
+                        {{related.alt_text || ('[No Value]' | translate)}}
+                    </span>
+                    <span>
+                        <em>{{:: 'Credit:' | translate}}</em>
+                        {{related.byline || ('[No Value]' | translate)}}
+                    </span>
+                    <span>
+                        <em>{{:: 'Copyright holder:' | translate}}</em>
+                        {{related.copyrightholder || ('[No Value]' | translate)}}
+                    </span>
+                    <span>
+                        <em>{{:: 'Assign rights:' | translate}}</em>
+                        {{related.usageterms || ('[No Value]' | translate)}}
+                    </span>
+                    <span>
+                        <em>{{:: 'Copyright notice:' | translate}}</em>
+                        {{related.copyrightnotice || ('[No Value]' | translate)}}
+                    </span>
+                </div>
+            </div>
+            <video controls="controls">
+                <source vsrc="{{ rendition.href}}"
+                        ng-repeat="(key, rendition) in related.renditions"
+                        ng-if="associations.isVideo(rendition)" html5vfix>
+            </video>
+        </div>
+        <!-- audio -->
+        <div class="item-association__audio-container" ng-if="related && related.type === 'audio'" >
+            <audio controls="controls">
+                <source vsrc="{{ rendition.href}}"
+                        ng-repeat="(key, rendition) in related.renditions"
+                        ng-if="associations.isAudio(rendition)" html5vfix>
+            </audio>
+            <div class="item-association__metadata item-association__metadata--plain">
+                <span>
+                    <em>{{:: 'Credit:' | translate}}</em>
+                    {{related.byline || ('[No Value]' | translate)}}
+                </span>
+                <span>
+                    <em>{{:: 'Copyright holder:' | translate}}</em>
+                    {{related.copyrightholder || ('[No Value]' | translate)}}
+                </span>
+                <span>
+                    <em>{{:: 'Assign rights:' | translate}}</em>
+                    {{related.usageterms || ('[No Value]' | translate)}}
+                </span>
+                <span>
+                    <em>{{:: 'Copyright notice:' | translate}}</em>
+                    {{related.copyrightnotice || ('[No Value]' | translate)}}
+                </span>
+            </div>
+        </div>
+        <!-- image -->
+        <div class="item-association__image-container" ng-if="related && (related.type === 'picture' || related.type === 'graphic')">
+            <div class="item-association__image-overlay">
+                <div class="item-association__metadata item-association__metadata--top">
+                    <span>
+                        <em>{{:: 'Title:' | translate}}</em>
+                        {{related.headline || ('[No Value]' | translate)}}
+                    </span>
+                </div>
+                <div class="item-association__icons-block">
+                    <a ng-if="related && editable" class="item-association__image-action" ng-click="associations.isMediaEditable() && associations.edit(this, related); $event.stopPropagation()"><i class="icon-pencil"/></a>
+                </div>
+                <div class="item-association__metadata" ng-if="related.type === 'picture' || related.type === 'graphic'">
+                    <span>
+                        <em>{{:: 'Alt text:' | translate}}</em>
+                        {{related.alt_text || ('[No Value]' | translate)}}
+                    </span>
+                    <span>
+                        <em>{{:: 'Credit:' | translate}}</em>
+                        {{related.byline || ('[No Value]' | translate)}}
+                    </span>
+                    <span>
+                        <em>{{:: 'Copyright holder:' | translate}}</em>
+                        {{related.copyrightholder || ('[No Value]' | translate)}}
+                    </span>
+                    <span>
+                        <em>{{:: 'Assign rights:' | translate}}</em>
+                        {{related.usageterms || ('[No Value]' | translate)}}
+                    </span>
+                    <span>
+                        <em>{{:: 'Copyright notice:' | translate}}</em>
+                        {{related.copyrightnotice || ('[No Value]' | translate)}}
+                    </span>
+                </div>
+            </div>
+            <img ng-src="{{ related.renditions.viewImage.href}}"
+            ng-class="{'not-editable': !associations.isMediaEditable() || !editable}"
+            ng-click="associations.isMediaEditable() && associations.edit(this, related); $event.stopPropagation()">
+        </div>
+    </figure>
 
-<div contenteditable="true"
-     sd-auto-height
-     tansa-scope-sync
-     ng-model="related.headline"
-     ng-model-options="{debounce: 1000}"
-     ng-change="onchange()"
-     ng-if="related && showTitle"
-     class="sd-media-carousel__media-caption">
-</div>
-<div contenteditable="true"
-     sd-auto-height
-     tansa-scope-sync
-     ng-model="related.description_text"
-     ng-model-options="{debounce: 1000}"
-     ng-change="onchange()"
-     ng-if="related"
-     class="sd-media-carousel__media-caption">
+    <div contenteditable="true"
+        sd-auto-height
+        tansa-scope-sync
+        ng-model="related.headline"
+        ng-model-options="{debounce: 1000}"
+        ng-change="onchange()"
+        ng-if="related && showTitle"
+        class="sd-media-carousel__media-caption">
+    </div>
+    <div contenteditable="true"
+        sd-auto-height
+        tansa-scope-sync
+        ng-model="related.description_text"
+        ng-model-options="{debounce: 1000}"
+        ng-change="onchange()"
+        ng-if="related"
+        class="sd-media-carousel__media-caption">
+    </div>
 </div>

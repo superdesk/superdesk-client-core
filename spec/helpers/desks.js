@@ -170,7 +170,7 @@ function Desks() {
     };
 
     this.close = function() {
-        element(by.className('close')).click();
+        element(by.className('close-modal')).click();
     };
 
     /**
