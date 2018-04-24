@@ -8,6 +8,10 @@ const InlineStyleTags = {
     BOLD: 'b',
     ITALIC: 'i',
     UNDERLINE: 'u',
+    PREFORMATTED: 'pre',
+    STRIKETHROUGH: 's',
+    SUBSCRIPT: 'sub',
+    SUPERSCRIPT: 'sup',
 };
 
 /**
@@ -40,6 +44,7 @@ export class BlockInlineStyleWrapper {
             }
             return '';
         }
+
         return `<${closingChar}${tag}>`;
     }
 

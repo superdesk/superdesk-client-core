@@ -23,6 +23,7 @@ describe('Embed Code Handlers', () => {
             meta: {site: 'Twitter'},
             html: 'embed',
         }));
+        $httpBackend.whenJSONP(/https:\/\/iframe\.ly\/api\/.*/).respond(400);
         $httpBackend.whenGET(/https:\/\/iframe\.ly\/api\/.*/).respond(400);
         ctrl.retrieveEmbed().then((d) => {
             expect(d).toEqual({

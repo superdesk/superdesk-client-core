@@ -6,6 +6,9 @@ export const inlineStyles = {
     bold: 'BOLD',
     italic: 'ITALIC',
     underline: 'UNDERLINE',
+    subscript: 'SUBSCRIPT',
+    superscript: 'SUPERSCRIPT',
+    strikethrough: 'STRIKETHROUGH',
 };
 
-export const acceptedInlineStyles = ['BOLD', 'ITALIC', 'UNDERLINE'];
+export const acceptedInlineStyles = Object.values(inlineStyles);

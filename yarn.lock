@@ -169,9 +169,9 @@ angular-dynamic-locale@0.1.32:
   version "0.1.32"
   resolved "https://registry.yarnpkg.com/angular-dynamic-locale/-/angular-dynamic-locale-0.1.32.tgz#d07fea75281f25ba94a5be5b46df2a02c5e35836"
 
-angular-embed@superdesk/angular-embed#b2b4a69:
+angular-embed@superdesk/angular-embed#27a3238:
   version "2.1.1"
-  resolved "https://codeload.github.com/superdesk/angular-embed/tar.gz/b2b4a699fa296327728b73b442387dde8af24d35"
+  resolved "https://codeload.github.com/superdesk/angular-embed/tar.gz/27a3238d994546f92cc83d524e782cb1760307bc"
 
 angular-embedly@Urigo/angular-embedly#0.0.8:
   version "0.0.8"
@@ -2652,6 +2652,23 @@ double-ended-queue@^2.1.0-0:
   version "2.1.0-0"
   resolved "https://registry.yarnpkg.com/double-ended-queue/-/double-ended-queue-2.1.0-0.tgz#103d3527fd31528f40188130c841efdd78264e5c"
 
+draft-js-import-element@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/draft-js-import-element/-/draft-js-import-element-1.2.1.tgz#9a6a56d74690d48d35d8d089564e6d710b4926eb"
+  dependencies:
+    draft-js-utils "^1.2.0"
+    synthetic-dom "^1.2.0"
+
+draft-js-import-html@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/draft-js-import-html/-/draft-js-import-html-1.2.1.tgz#88adb8ce5dbe1a5a777663b1893cee6a35239eaa"
+  dependencies:
+    draft-js-import-element "^1.2.1"
+
+draft-js-utils@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/draft-js-utils/-/draft-js-utils-1.2.0.tgz#f5cb23eb167325ffed3d79882fdc317721d2fd12"
+
 draft-js@0.10.5:
   version "0.10.5"
   resolved "https://registry.yarnpkg.com/draft-js/-/draft-js-0.10.5.tgz#bfa9beb018fe0533dbb08d6675c371a6b08fa742"
@@ -4526,6 +4543,10 @@ immediate@~3.0.5:
   version "3.0.6"
   resolved "https://registry.yarnpkg.com/immediate/-/immediate-3.0.6.tgz#9db1dbd0faf8de6fbe0f5dd5e56bb606280de69b"
 
+immutable@^3.8.2:
+  version "3.8.2"
+  resolved "https://registry.yarnpkg.com/immutable/-/immutable-3.8.2.tgz#c2439951455bb39913daf281376f1530e104adf3"
+
 immutable@~3.7.4:
   version "3.7.6"
   resolved "https://registry.yarnpkg.com/immutable/-/immutable-3.7.6.tgz#13b4d3cb12befa15482a26fe1b2ebae640071e4b"
@@ -5057,7 +5078,7 @@ jquery.gridster@dustmoo/gridster.js#c306335397816beceb74e4a176067baef34a0359:
   dependencies:
     jquery "~1.5"
 
-jquery@3.3.1:
+jquery@3.3.1, jquery@>=1.8.3:
   version "3.3.1"
   resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.3.1.tgz#958ce29e81c9790f31be7792df5d4d95fc57fbca"
 
@@ -6676,6 +6697,12 @@ osenv@0, osenv@^0.1.4:
   dependencies:
     os-homedir "^1.0.0"
     os-tmpdir "^1.0.0"
+
+owl.carousel@2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/owl.carousel/-/owl.carousel-2.2.0.tgz#f3598d01e60757bc107b2b3c61231b1140cf360c"
+  dependencies:
+    jquery ">=1.8.3"
 
 p-finally@^1.0.0:
   version "1.0.0"
@@ -8843,18 +8870,18 @@ substyle@^6.0.0:
     prop-types "^15.5.8"
     warning "^2.1.0"
 
-superdesk-code-style@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/superdesk-code-style/-/superdesk-code-style-1.0.0.tgz#40d49e00de175a7c0b55e0e1daaf3276f09a719f"
+superdesk-code-style@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/superdesk-code-style/-/superdesk-code-style-1.1.1.tgz#7f8509402bc051c384c1bf154cf8ea30dd98bcc9"
   dependencies:
     eslint "^4.11.0"
     eslint-plugin-angular "^3.1.1"
     eslint-plugin-jasmine "^2.9.1"
     eslint-plugin-react "^7.5.1"
 
-superdesk-ui-framework@superdesk/superdesk-ui-framework#5dcf11f:
+superdesk-ui-framework@superdesk/superdesk-ui-framework#2c553a7:
   version "1.0.1"
-  resolved "https://codeload.github.com/superdesk/superdesk-ui-framework/tar.gz/5dcf11fa761860d318a6c8cc83981fd2dc839df5"
+  resolved "https://codeload.github.com/superdesk/superdesk-ui-framework/tar.gz/2c553a747dc596c446ba90c64dbc0fb309e7c514"
 
 supports-color@^0.2.0:
   version "0.2.0"
@@ -8910,6 +8937,10 @@ syntax-error@^1.1.1:
   resolved "https://registry.yarnpkg.com/syntax-error/-/syntax-error-1.4.0.tgz#2d9d4ff5c064acb711594a3e3b95054ad51d907c"
   dependencies:
     acorn-node "^1.2.0"
+
+synthetic-dom@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/synthetic-dom/-/synthetic-dom-1.2.0.tgz#f3589aafe2b5e299f337bb32973a9be42dd5625e"
 
 table@4.0.2:
   version "4.0.2"

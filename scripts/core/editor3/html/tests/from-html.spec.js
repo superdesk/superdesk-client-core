@@ -24,7 +24,7 @@ describe('core.editor3.html.from-html', () => {
 
         expect(blocks.length).toBe(3);
 
-        expect(blocks[0].getText()).toBe('some text ');
+        expect(blocks[0].getText()).toBe('some text');
         expect(blocks[0].getType()).toBe('unstyled');
         expect(blocks[1].getText()).toBe('some header');
         expect(blocks[1].getType()).toBe('header-two');
@@ -73,5 +73,20 @@ describe('core.editor3.html.from-html', () => {
             row.forEach((cell, j) =>
                 expect(convertFromRaw(data.cells[i][j]).getPlainText(''))
                     .toEqual(expected[i][j])));
+    });
+
+    it('should parse editor2 inline styles', () => {
+        const {blocks} = blocksFor('<sub>1</sub><sup>2</sup><strike>3</strike>');
+
+        expect(blocks[0].text).toBe('123');
+        expect(blocks[0].getInlineStyleAt(0).toArray()).toEqual(['SUBSCRIPT']);
+        expect(blocks[0].getInlineStyleAt(1).toArray()).toEqual(['SUPERSCRIPT']);
+        expect(blocks[0].getInlineStyleAt(2).toArray()).toEqual(['STRIKETHROUGH']);
+    });
+
+    it('should parse editor2 block styles', () => {
+        const {blocks} = blocksFor('<pre>text</pre>');
+
+        expect(blocks[0].type).toBe('code-block');
     });
 });

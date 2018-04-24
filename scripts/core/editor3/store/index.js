@@ -142,7 +142,6 @@ function getInitialContent(props) {
     }
 
     if (props.value) {
-        console.info('html', props.value);
         // we have only HTML (possibly legacy editor2 or ingested item)
         return fromHTML(props.value);
     }
