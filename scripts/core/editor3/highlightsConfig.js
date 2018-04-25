@@ -106,3 +106,5 @@ export const suggestionsTypes = [
 export const isSuggestion = (highlightId) => suggestionsTypes.some(
     (suggestionType) => highlightId.indexOf(suggestionType) === 0
 );
+
+export const isComment = (highlightId) => highlightId.startsWith(highlightsConfig.COMMENT.type);

@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import {itemHasUnresolvedSuggestions} from '../helpers';
+import {itemHasUnresolvedSuggestions, itemHasUnresolvedComments} from '../helpers';
 
 SendItem.$inject = ['$q', 'api', 'desks', 'notify', 'authoringWorkspace',
     'superdeskFlags', '$location', 'macros', '$rootScope', 'deployConfig',
@@ -21,8 +21,12 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
             mode: '@',
         },
         controller: function() {
-            this.userActions = {send_to: 'send_to', publish: 'publish',
-                duplicate_to: 'duplicate_to', externalsource_to: 'externalsource_to'};
+            this.userActions = {
+                send_to: 'send_to',
+                publish: 'publish',
+                duplicate_to: 'duplicate_to',
+                externalsource_to: 'externalsource_to',
+            };
         },
         controllerAs: 'vm',
         templateUrl: 'scripts/apps/authoring/views/send-item.html',
@@ -50,6 +54,18 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
             scope.$watch('item', activateItem);
             scope.$watch(send.getConfig, activateConfig);
 
+            function performPublish() {
+                scope.loading = true;
+                var result = scope._publish();
+
+                return $q
+                    .resolve(result)
+                    .then(null, (e) => $q.reject(false))
+                    .finally(() => {
+                        scope.loading = false;
+                    });
+            }
+
             scope.publish = function() {
                 if (itemHasUnresolvedSuggestions(scope.item)) {
                     modal.alert({
@@ -61,13 +77,23 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                     return;
                 }
 
-                scope.loading = true;
-                var result = scope._publish();
-
-                return $q.resolve(result).then(null, (e) => $q.reject(false))
-                    .finally(() => {
-                        scope.loading = false;
+                if (itemHasUnresolvedComments(scope.item)) {
+                    modal.confirm({
+                        bodyText: gettext(
+                            'This article contains unresolved comments.'
+                            + 'Click on Cancel to go back to editing to'
+                            + 'resolve those comments or OK to ignore and proceed with publishing'
+                        ),
+                        headerText: gettext('Resolving comments'),
+                        okText: gettext('Ok'),
+                        cancelText: gettext('Cancel'),
+                    }).then((ok) => {
+                        ok && performPublish();
                     });
+                    return;
+                }
+
+                return performPublish();
             };
 
             function activateConfig(config, oldConfig) {
@@ -91,7 +117,8 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
 
             function activate() {
                 if (scope.isActive) {
-                    desks.initialize()
+                    desks
+                        .initialize()
                         .then(fetchDesks)
                         .then(initialize)
                         .then(setDesksAndStages);

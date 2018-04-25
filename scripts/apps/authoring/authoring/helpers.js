@@ -1,6 +1,6 @@
 import {stripHtmlTags} from 'core/utils';
 import {META_FIELD_NAME, fieldsMetaKeys, getFieldMetadata} from 'core/editor3/helpers/fieldsMeta';
-import {isSuggestion} from 'core/editor3/highlightsConfig';
+import {isSuggestion, isComment} from 'core/editor3/highlightsConfig';
 
 export const CONTENT_FIELDS_DEFAULTS = Object.freeze({
     headline: '',
@@ -190,13 +190,21 @@ export function stripWhitespaces(item) {
 /**
  * Check if the item has at least one style of type suggestion
  */
-export function itemHasUnresolvedSuggestions(item) {
+export function itemHasUnresolvedHighlight(item, isHighlightFn) {
     return Object.keys(item[META_FIELD_NAME] || {})
         .map((contentKey) => getFieldMetadata(item, contentKey, fieldsMetaKeys.draftjsState))
         .filter((draftjsState) => draftjsState != null)
         .some((draftjsState) => (draftjsState.blocks || [])
             .some((block) => (block.inlineStyleRanges || [])
-                .some((inlineStyleRange) => isSuggestion(inlineStyleRange.style))
+                .some((inlineStyleRange) => isHighlightFn(inlineStyleRange.style))
             )
         );
+}
+
+export function itemHasUnresolvedSuggestions(item) {
+    return itemHasUnresolvedHighlight(item, isSuggestion);
+}
+
+export function itemHasUnresolvedComments(item) {
+    return itemHasUnresolvedHighlight(item, isComment);
 }
