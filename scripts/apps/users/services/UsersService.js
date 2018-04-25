@@ -17,12 +17,10 @@ export function UsersService(api, $q, notify) {
      * @returns {Promise}
      */
     usersService.save = function save(user, data) {
-        return api.save('users', user, data)
-            .then((updates) => {
-                angular.extend(user, data);
-                angular.extend(user, updates);
-                return user;
-            });
+        return api.save('users', user, data).then((result) => {
+            _.assign(user, result);
+            return result;
+        });
     };
 
     /**
