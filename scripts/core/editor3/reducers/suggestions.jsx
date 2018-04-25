@@ -595,6 +595,7 @@ const setAddSuggestionForCharacter = (editorState, data, text, inlineStyle = nul
         newState = applyStyleForSuggestion(newState, crtInlineStyle, currentStyle);
     } else {
         // create a new suggestion
+        newState = applyStylesForCurrentSelection(newState, crtInlineStyle);
         newState = Highlights.addHighlight(newState, 'ADD_SUGGESTION', data);
     }
 
@@ -673,6 +674,25 @@ const applyStyleForSuggestion = (editorState, inlineStyle, style) => {
     });
 
     return RichUtils.toggleInlineStyle(newState, style);
+};
+
+/**
+ * @ngdoc method
+ * @name applyStylesForCurrentSelection
+ * @param {Object} editorState
+ * @param {Objest} inlineStyle
+ * @return {Object} returns new state
+ * @description Apply only formatting styles from inlineStyle for current selection.
+ */
+const applyStylesForCurrentSelection = (editorState, inlineStyle) => {
+    let newState = editorState;
+
+    inlineStyle.filter((style) => acceptedInlineStyles.indexOf(style) !== -1)
+        .forEach((style) => {
+            newState = RichUtils.toggleInlineStyle(newState, style);
+        });
+
+    return newState;
 };
 
 /**
