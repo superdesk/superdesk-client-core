@@ -114,6 +114,8 @@ export function VocabularyEditController($scope, gettext, notify, api, vocabular
             ));
     }
 
+    $scope.itemsValidation = {valid: true};
+
     /**
      * Remove item from vocabulary items
      *

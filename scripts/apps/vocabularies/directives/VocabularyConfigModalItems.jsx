@@ -8,6 +8,30 @@ export function VocabularyConfigModalItems(gettext) {
         require: '^^form',
         link: (scope, element, attr, ngForm) => {
             let component;
+            let itemsValidation = [];
+
+            function validateItem(item) {
+                let itemValidation = {};
+
+                _.forEach(scope.vocabulary.schema, (desc, field) => {
+                    itemValidation[field] = !desc.required || !!item[field];
+                });
+                return itemValidation;
+            }
+
+            function validItem(itemValidation) {
+                return itemValidation.name && itemValidation.qcode;
+            }
+
+            function validateItems(items) {
+                scope.itemsValidation.valid = true;
+                itemsValidation = items.map((_item) => {
+                    let itemValidation = validateItem(_item);
+
+                    scope.itemsValidation.valid = scope.itemsValidation.valid && validItem(itemValidation);
+                    return itemValidation;
+                });
+            }
 
             const update = (item, key, value) => {
                 const updates = {[key]: value};
@@ -15,9 +39,20 @@ export function VocabularyConfigModalItems(gettext) {
                 // sync scope
                 scope.$applyAsync(() => {
                     ngForm.$setDirty();
-                    scope.vocabulary.items = scope.vocabulary.items.map((_item) =>
-                        _item === item ? Object.assign({}, item, updates) : _item
-                    );
+                    let index = 0;
+
+                    scope.vocabulary.items = scope.vocabulary.items.map((_item) => {
+                        index++;
+                        if (_item === item) {
+                            let updated = Object.assign({}, item, updates);
+
+                            itemsValidation[index - 1] = validateItem(updated);
+                            scope.itemsValidation.valid = scope.itemsValidation.valid &&
+                                validItem(itemsValidation[index - 1]);
+                            return updated;
+                        }
+                        return _item;
+                    });
                 });
             };
 
@@ -48,7 +83,8 @@ export function VocabularyConfigModalItems(gettext) {
             // re-render on items changes
             scope.$watch('vocabulary.items', (items) => {
                 if (items && component) {
-                    component.setState({items});
+                    validateItems(items);
+                    component.setState({items, itemsValidation});
                 }
             });
         },
