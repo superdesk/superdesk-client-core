@@ -137,7 +137,7 @@ class ToolbarComponent extends Component {
                         onClick={removeFormat}
                         precondition={!suggestingMode}
                         key="remove-format-button"
-                        iconName="ban-circle"
+                        iconName="clear-format"
                         tooltip={gettext('Remove format')}
                     />
                 }
