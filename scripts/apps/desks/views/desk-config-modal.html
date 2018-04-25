@@ -1,9 +1,9 @@
 <div sd-modal data-model="modalActive" class="modal--tabs modal--large sd-wizard">
 
-    <div class="modal__header">
-        <a href="" class="close" ng-click="cancel()"><i class="icon-close-small"></i></a>
+    <div class="modal__header modal__header--flex">
         <h3 class="modal__heading" ng-show="!desk.edit._id" translate>Add New Desk</h3>
         <h3 class="modal__heading" ng-show="desk.edit._id" translate>Edit "{{desk.edit.name}}" Desk</h3>
+        <a href="" class="icn-btn close-modal" ng-click="cancel()"><i class="icon-close-small"></i></a>
     </div>
 
     <div class="modal__body" sd-wizard data-name="desks" data-current-step="step.current" data-finish="cancel()">
@@ -80,13 +80,14 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form__row form__row--flex">
+                    <div class="form__row">
                         <div class="form__row-item">
-                            <div class="sd-line-input">
-                                <label class="sd-line-input__label" translate>Default monitoring view</label>
-                                <p style="color: gray">
-                                <i class="icon-info-sign icon--blue"></i> {{ :: 'You can choose the default content view of your desk. Use only if you want to override individual users\' monitoring view preferences. Select "none" if you want to let users decide.' | translate }}
-                                </p>
+                            <label class="form-label form-label--marg-b10" translate>Default monitoring view</label>
+                            <div class="sd-alert sd-alert--hollow sd-alert--small sd-alert--marg-b12">
+                                <i class="icon-info-sign icon--blue icon--2x sd-alert__icon"></i>
+                               <span>{{ :: 'You can choose the default content view of your desk. Use only if you want to override individual users\' monitoring view preferences. Select "none" if you want to let users decide.' | translate }}</span>
+                            </div>
+                            <div>
                                 <sd-check
                                     ng-repeat="(viewId, view) in monitoringViews"
                                     type="radio"
@@ -94,45 +95,40 @@
                                     ng-model="desk.edit.monitoring_default_view"
                                     ng-click="desk.edit.monitoring_default_view = viewId"
                                     ng-value="{{viewId}}"
+                                    data-icon="{{view.icon}}"
                                     >
                                     {{ view.label }}
                                 </sd-check>
                             </div>
                         </div>
                     </div>
-                    <div class="form__row form__row--flex">
-                        <div class="form__row-item" style="padding-bottom: 1.4rem;">
-                            <label translate class="form-label">SERVICE</label>
-                            <div sd-meta-terms
-                                class="data"
-                                data-item="desk.edit.desk_metadata"
-                                data-field="anpa_category"
-                                data-unique="qcode"
-                                data-list="metadata.categories"
-                                data-header="true">
-                            </div>
+                    <div class="form__row">
+                        <label translate class="form-label form-label--marg-b10">Service</label>
+                        <div sd-meta-terms
+                            class="data"
+                            data-item="desk.edit.desk_metadata"
+                            data-field="anpa_category"
+                            data-unique="qcode"
+                            data-list="metadata.categories"
+                            data-header="true">
                         </div>
                     </div>
-                    <div class="form__row form__row--flex">
-                        <div class="form__row-item">
-                            <div class="sd-line-input sd-line-input--is-select">
-                                <label class="sd-line-input__label" translate>Default Content Template</label>
-                                <select ng-model="desk.edit.default_content_template"
-                                        ng-options="template._id as template.template_name for template in templates" class="sd-line-input__select">
-                                    <option value=""></option>
-                                </select>
-                            </div>
+                    <div class="form__row">
+                        <div class="sd-line-input sd-line-input--is-select">
+                            <label class="sd-line-input__label" translate>Default Content Template</label>
+                            <select ng-model="desk.edit.default_content_template"
+                                    ng-options="template._id as template.template_name for template in templates" class="sd-line-input__select">
+                                <option value=""></option>
+                            </select>
                         </div>
                     </div>
-                    <div class="form__row form__row--flex" ng-show="profiles.length">
-                        <div class="form__row-item">
-                            <div class="sd-line-input sd-line-input--is-select">
-                                <label class="sd-line-input__label" translate>Default Content Profile</label>
-                                <select ng-model="desk.edit.default_content_profile"
-                                        ng-options="profile._id as profile.label for profile in profiles | orderBy: 'label'" class="sd-line-input__select">
-                                    <option value=""></option>
-                                </select>
-                            </div>
+                    <div class="form__row" ng-show="profiles.length">
+                        <div class="sd-line-input sd-line-input--is-select">
+                            <label class="sd-line-input__label" translate>Default Content Profile</label>
+                            <select ng-model="desk.edit.default_content_profile"
+                                    ng-options="profile._id as profile.label for profile in profiles | orderBy: 'label'" class="sd-line-input__select">
+                                <option value=""></option>
+                            </select>
                         </div>
                     </div>
                 </fieldset>

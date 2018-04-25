@@ -25,9 +25,9 @@ export function DeskConfigModal(metadata, content, templates, api, deployConfig)
         link: function(scope, elem, attrs, ctrl) {
             scope.monitoringViews = {
                 '': {label: gettext('None')},
-                list: {label: gettext('List View'), icon: 'th-list'},
-                swimlane: {label: gettext('Swimlane View'), icon: 'th-list'},
-                photogrid: {label: gettext('Photo Grid View'), icon: 'th'},
+                list: {label: gettext('List View'), icon: 'list-view'},
+                swimlane: {label: gettext('Swimlane View'), icon: 'kanban-view'},
+                photogrid: {label: gettext('Photo Grid View'), icon: 'grid-view'},
             };
 
             /*
