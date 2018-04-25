@@ -217,7 +217,12 @@ const createChangeBlockStyleSuggestion = (state, {blockType, data}) => {
     const content = editorState.getCurrentContent();
     const selection = editorState.getSelection();
     const firstBlock = content.getBlockForKey(selection.getStartKey());
-    const lastBlock = content.getBlockForKey(selection.getEndKey());
+    let lastBlock = content.getBlockForKey(selection.getEndKey());
+
+    if (selection.getEndOffset() === 0 && selection.getStartKey() !== selection.getEndKey()) {
+        lastBlock = content.getBlockBefore(selection.getEndKey());
+    }
+
     const blocksSelection = selection.merge({
         anchorOffset: 0,
         anchorKey: firstBlock.getKey(),
