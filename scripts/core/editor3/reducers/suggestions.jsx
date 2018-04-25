@@ -3,7 +3,7 @@ import {onChange} from './editor3';
 import {acceptedInlineStyles} from '../helpers/inlineStyles';
 import {changeSuggestionsTypes, styleSuggestionsTypes} from '../highlightsConfig';
 import * as Highlights from '../helpers/highlights';
-import {initSelectionIterator, hasNextSelection} from '../helpers/selectionIterator';
+import {initSelectionIterator, hasNextSelection} from '../helpers/selection';
 import {editor3DataKeys, getCustomDataFromEditor, setCustomDataForEditor} from '../helpers/editor3CustomData';
 import * as Blocks from '../helpers/blocks';
 import * as Links from '../helpers/links';
