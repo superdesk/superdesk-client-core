@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import StyleButton from './StyleButton';
 import * as actions from '../../actions';
 import {connect} from 'react-redux';
+import * as Suggestions from '../../helpers/suggestions';
 
 /**
  * @type {Object}
@@ -34,9 +35,15 @@ export class BlockStyleButtonsComponent extends Component {
     }
 
     onToggle(type, active) {
-        const {suggestingMode, toggleBlockStyle, createChangeBlockStyleSuggestion} = this.props;
+        const {editorState, suggestingMode, toggleBlockStyle, createChangeBlockStyleSuggestion} = this.props;
 
         if (suggestingMode) {
+            // select the whole paragraph(s) and then check if
+            // no other user has a suggestion on that selection
+            if (!Suggestions.allowEditSuggestionOnBlock(editorState)) {
+                return;
+            }
+
             createChangeBlockStyleSuggestion(type, active);
         } else {
             toggleBlockStyle(type);

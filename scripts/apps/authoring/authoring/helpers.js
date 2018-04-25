@@ -1,5 +1,4 @@
 import {stripHtmlTags} from 'core/utils';
-import {editor3DataKeys, getCustomDataFromEditorRawState} from 'core/editor3/helpers/editor3CustomData';
 import {META_FIELD_NAME, fieldsMetaKeys, getFieldMetadata} from 'core/editor3/helpers/fieldsMeta';
 import {isSuggestion} from 'core/editor3/highlightsConfig';
 
@@ -187,18 +186,17 @@ export function stripWhitespaces(item) {
     });
 }
 
+
+/**
+ * Check if the item has at least one style of type suggestion
+ */
 export function itemHasUnresolvedSuggestions(item) {
     return Object.keys(item[META_FIELD_NAME] || {})
         .map((contentKey) => getFieldMetadata(item, contentKey, fieldsMetaKeys.draftjsState))
         .filter((draftjsState) => draftjsState != null)
-        .map((draftjsState) => (
-            getCustomDataFromEditorRawState(
-                draftjsState,
-                editor3DataKeys.MULTIPLE_HIGHLIGHTS
+        .some((draftjsState) => (draftjsState.blocks || [])
+            .some((block) => (block.inlineStyleRanges || [])
+                .some((inlineStyleRange) => isSuggestion(inlineStyleRange.style))
             )
-        ))
-        .find((highlights) => (
-            Object.keys(highlights.highlightsData || {})
-                .find((highlightId) => isSuggestion(highlightId)) != null
-        )) != null;
+        );
 }

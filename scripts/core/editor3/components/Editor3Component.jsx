@@ -20,13 +20,14 @@ import {LinkDecorator} from './links';
 import {getBlockRenderer} from './blockRenderer';
 import {customStyleMap} from './customStyleMap';
 import classNames from 'classnames';
-import {handlePastedText, allowEditSuggestion} from './handlePastedText';
+import {handlePastedText} from './handlePastedText';
 import {getEntityTypeAfterCursor, getEntityTypeBeforeCursor} from './links/entityUtils';
 import {HighlightsPopup} from './HighlightsPopup';
 import UnstyledBlock from './UnstyledBlock';
 import UnstyledWrapper from './UnstyledWrapper';
 import {isEditorBlockEvent} from './BaseUnstyledComponent';
 import {handleBeforeInputHighlights} from '../helpers/handleBeforeInputHighlights';
+import * as Suggestions from '../helpers/suggestions';
 
 const VALID_MEDIA_TYPES = [
     'application/superdesk.item.picture',
@@ -85,7 +86,6 @@ export class Editor3Component extends React.Component {
         this.handleKeyCommand = this.handleKeyCommand.bind(this);
         this.handleBeforeInput = this.handleBeforeInput.bind(this);
         this.keyBindingFn = this.keyBindingFn.bind(this);
-        this.allowEditSuggestion = allowEditSuggestion.bind(this);
     }
 
     /**
@@ -205,6 +205,12 @@ export class Editor3Component extends React.Component {
         case 'italic':
         case 'underline':
             if (suggestingMode) {
+                // prevent to change other user suggestion
+                if (!Suggestions.allowEditSuggestionOnLeft(editorState)
+                    && !Suggestions.allowEditSuggestionOnRight(editorState)) {
+                    return 'handled';
+                }
+
                 const style = command.toUpperCase();
                 const inlineStyles = editorState.getCurrentInlineStyle();
                 const active = inlineStyles.has(style);
@@ -219,13 +225,13 @@ export class Editor3Component extends React.Component {
             newState = RichUtils.insertSoftNewline(editorState);
             break;
         case 'split-block':
-            // prevent the edit of a suggestion after and before current position
-            if (!this.allowEditSuggestion('delete')
-                && !this.allowEditSuggestion('backspace')) {
-                return 'handled';
-            }
-
             if (suggestingMode) {
+                // prevent to change other user suggestion
+                if (!Suggestions.allowEditSuggestionOnLeft(editorState)
+                    && !Suggestions.allowEditSuggestionOnRight(editorState)) {
+                    return 'handled';
+                }
+
                 onCreateSplitParagraphSuggestion();
                 return 'handled';
             }
@@ -233,12 +239,12 @@ export class Editor3Component extends React.Component {
             newState = RichUtils.handleKeyCommand(editorState, command);
             break;
         case 'delete':
-            // prevent the edit of a suggestion after current position
-            if (!this.allowEditSuggestion('delete')) {
-                return 'handled';
-            }
-
             if (suggestingMode) {
+                // prevent to change other user suggestion that is after current position
+                if (!Suggestions.allowEditSuggestionOnRight(editorState)) {
+                    return 'handled';
+                }
+
                 onCreateDeleteSuggestion('delete');
                 return 'handled';
             }
@@ -246,12 +252,12 @@ export class Editor3Component extends React.Component {
             newState = RichUtils.handleKeyCommand(editorState, command);
             break;
         case 'backspace': {
-            // prevent the edit of a suggestion before current position
-            if (!this.allowEditSuggestion('backspace')) {
-                return 'handled';
-            }
-
             if (suggestingMode) {
+                // prevent to change other user suggestion that is before current position
+                if (!Suggestions.allowEditSuggestionOnLeft(editorState)) {
+                    return 'handled';
+                }
+
                 onCreateDeleteSuggestion('backspace');
                 return 'handled';
             }
@@ -294,17 +300,14 @@ export class Editor3Component extends React.Component {
     handleBeforeInput(chars, editorState) {
         const {onChange, suggestingMode, onCreateAddSuggestion} = this.props;
 
-        if (!this.allowEditSuggestion('insert')) {
-            return 'handled';
-        }
-
         if (suggestingMode) {
-            onCreateAddSuggestion(chars);
-            return 'handled';
-        } else if (!this.allowEditSuggestion('backspace')) {
-            if (handleBeforeInputHighlights(this.props.onChange, chars, editorState) === 'handled') {
+            if (!Suggestions.allowEditSuggestionOnLeft(editorState)
+                && !Suggestions.allowEditSuggestionOnRight(editorState)) {
                 return 'handled';
             }
+
+            onCreateAddSuggestion(chars);
+            return 'handled';
         }
 
         if (handleBeforeInputHighlights(this.props.onChange, chars, editorState) === 'handled') {
