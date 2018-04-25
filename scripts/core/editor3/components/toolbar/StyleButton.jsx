@@ -18,12 +18,16 @@ const StyleIcons = {
     'ordered list': 'icon-ordered-list',
     suggestions: 'icon-suggestion',
     invisibles: 'icon-paragraph',
+    pre: 'icon-preformatted',
+    subscript: 'icon-subscript',
+    superscript: 'icon-superscript',
 };
 
 const StyleTooltips = {
     bold: gettext('Bold (Ctrl+B)'),
     italic: gettext('Italic (Ctrl+I)'),
     underline: gettext('Underline (Ctrl+U)'),
+    strikethrough: gettext('Strikethrough'),
     h1: gettext('H1'),
     h2: gettext('H2'),
     h3: gettext('H3'),
@@ -36,6 +40,9 @@ const StyleTooltips = {
     TH: gettext('Toggle Header'),
     suggestions: gettext('Toggle Suggestions Mode'),
     invisibles: gettext('Toggle formatting marks'),
+    pre: gettext('Preformatted text'),
+    subscript: gettext('Subscript'),
+    superscript: gettext('Superscript'),
 };
 
 /**

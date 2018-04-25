@@ -109,6 +109,10 @@ export function ContentProfileSchemaEditor(content, config) {
                     'annotation',
                     'comments',
                     'suggestions',
+                    'pre',
+                    'superscript',
+                    'subscript',
+                    'strikethrough',
                 ];
 
                 scope.label = (id) => getLabelForFieldId(id, customFields);

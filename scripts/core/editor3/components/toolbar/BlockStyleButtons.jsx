@@ -19,6 +19,7 @@ const blockStyles = {
     quote: 'blockquote',
     'unordered list': 'unordered-list-item',
     'ordered list': 'ordered-list-item',
+    pre: 'code-block',
 };
 
 /**

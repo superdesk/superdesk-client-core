@@ -55,6 +55,30 @@ export const highlightsConfig = {
             backgroundColor: 'rgba(100, 235, 59, 0.2)',
         },
     },
+    TOGGLE_SUBSCRIPT_SUGGESTION: {
+        type: 'STYLE',
+        style: 'SUBSCRIPT',
+        description: gettext('Toggle subscript'),
+        draftStyleMap: {
+            backgroundColor: 'rgba(100, 235, 59, 0.2)',
+        },
+    },
+    TOGGLE_SUPERSCRIPT_SUGGESTION: {
+        type: 'STYLE',
+        style: 'SUPERSCRIPT',
+        description: gettext('Toggle superscript'),
+        draftStyleMap: {
+            backgroundColor: 'rgba(100, 235, 59, 0.2)',
+        },
+    },
+    TOGGLE_STRIKETHROUGH_SUGGESTION: {
+        type: 'STYLE',
+        style: 'STRIKETHROUGH',
+        description: gettext('Toggle strikethrough'),
+        draftStyleMap: {
+            backgroundColor: 'rgba(100, 235, 59, 0.2)',
+        },
+    },
     BLOCK_STYLE_SUGGESTION: {
         type: 'BLOCK',
         description: gettext('Toggle'),
@@ -88,6 +112,7 @@ export const blockStylesDescription = {
     blockquote: gettext('quote'),
     'unordered-list-item': gettext('unordered list'),
     'ordered-list-item': gettext('ordered list'),
+    'code-block': gettext('preformatted'),
 };
 
 export const changeSuggestionsTypes = ['DELETE_SUGGESTION', 'ADD_SUGGESTION'];

@@ -1,4 +1,6 @@
 import {List, OrderedSet, fromJS} from 'immutable';
+import {stateFromHTML} from 'draft-js-import-html';
+import {inlineStyles} from '../../helpers/inlineStyles';
 
 import {
     ContentBlock,
@@ -8,6 +10,13 @@ import {
     convertFromHTML,
     convertToRaw,
 } from 'draft-js';
+
+const elementStyles = {
+    sub: inlineStyles.subscript,
+    sup: inlineStyles.superscript,
+    strike: inlineStyles.strikethrough,
+    s: inlineStyles.strikethrough,
+};
 
 /**
  * @ngdoc class
@@ -74,12 +83,14 @@ export class HTMLParser {
      * @returns {ContentState} contentState
      */
     contentState() {
-        const {contentBlocks, entityMap} = convertFromHTML(this.tree.html());
         const processBlock = this.processBlock.bind(this);
+        const contentState = stateFromHTML(this.tree.html(), {
+            elementStyles,
+        });
 
         return ContentState.createFromBlockArray(
-            contentBlocks.map(processBlock),
-            entityMap
+            contentState.getBlocksAsArray().map(processBlock),
+            contentState.getEntityMap()
         );
     }
 

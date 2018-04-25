@@ -28,11 +28,20 @@ export const customStyleMap = {
     },
 
     STRIKETHROUGH: {
-        backgroundColor: '#ffe6e6',
         textDecoration: 'line-through',
     },
 
     CODE: {
         backgroundColor: '#e6ffe6',
+    },
+
+    SUBSCRIPT: {
+        verticalAlign: 'sub',
+        fontSize: 'smaller',
+    },
+
+    SUPERSCRIPT: {
+        verticalAlign: 'super',
+        fontSize: 'smaller',
     },
 };

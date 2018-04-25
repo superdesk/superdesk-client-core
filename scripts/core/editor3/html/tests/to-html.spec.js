@@ -275,6 +275,10 @@ describe('core.editor3.html.to-html.BlockInlineStyleWrapper', () => {
 
         expect(wrapper.flush()).toEqual('</u></i>');
         expect(wrapper.flush()).toEqual('');
+
+        expect(wrapper.tags(OS(['SUBSCRIPT']))).toEqual('<sub>');
+        expect(wrapper.tags(OS(['SUPERSCRIPT']))).toEqual('</sub><sup>');
+        expect(wrapper.tags(OS(['STRIKETHROUGH']))).toEqual('</sup><s>');
     });
 });
 

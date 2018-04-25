@@ -18,6 +18,7 @@ const BlockStyleTags = {
     blockquote: 'blockquote',
     'unordered-list-item': 'li',
     'ordered-list-item': 'li',
+    'code-block': 'pre',
 };
 
 /**
