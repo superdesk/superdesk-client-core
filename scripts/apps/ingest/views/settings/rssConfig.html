@@ -34,7 +34,9 @@
         placeholder="{{:: 'Password'|translate }}"
         ng-model="provider.config.password"
         ng-required="provider.config.auth_required"
-        ng-change="$parent.setConfig(provider)">
+        ng-change="$parent.setConfig(provider)"
+        autocomplete="new-password"
+        >
   </div>
 </fieldset>
 
