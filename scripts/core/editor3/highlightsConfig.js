@@ -119,12 +119,12 @@ export const changeSuggestionsTypes = ['DELETE_SUGGESTION', 'ADD_SUGGESTION'];
 export const styleSuggestionsTypes = Object.keys(highlightsConfig).filter(
     (key) => highlightsConfig[key].type === 'STYLE'
 );
+export const blockSuggestionTypes = ['BLOCK_STYLE_SUGGESTION', 'SPLIT_PARAGRAPH_SUGGESTION'];
 
 export const suggestionsTypes = [
     ...changeSuggestionsTypes,
     ...styleSuggestionsTypes,
-    'BLOCK_STYLE_SUGGESTION',
-    'SPLIT_PARAGRAPH_SUGGESTION',
+    ...blockSuggestionTypes,
     'ADD_LINK_SUGGESTION',
 ];
 
