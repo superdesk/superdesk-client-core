@@ -96,6 +96,9 @@ angular.module('superdesk.apps.archive', [
                 filters: [
                     {action: 'upload', type: 'media'},
                 ],
+                additionalCondition: ['$location', function($location) {
+                    return $location.path() !== '/planning';
+                }],
                 privileges: {archive: 1},
             })
             .activity('upload.attachments', {
