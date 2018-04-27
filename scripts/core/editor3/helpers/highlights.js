@@ -354,6 +354,33 @@ export function getHighlightDataAtCurrentPosition(editorState, types) {
 }
 
 /**
+ * Get list of characters for current selection - handling single block for now
+ *
+ * @param {EditorState} editorState
+ * @returns {List}
+ */
+function getSelectedCharacters(editorState) {
+    const content = editorState.getCurrentContent();
+    const selection = editorState.getSelection();
+    const block = content.getBlockForKey(selection.anchorKey);
+
+    return block.getCharacterList().slice(selection.anchorOffset, selection.focusOffset);
+}
+
+/**
+ * Test if current selection has given type style applied
+ *
+ * @param {EditorState} editorState
+ * @param {String} type
+ * @returns {Boolean}
+ */
+function selectionHasType(editorState, type) {
+    const characters = getSelectedCharacters(editorState);
+
+    return characters.every((character) => character.getStyle().some((style) => style.indexOf(type) === 0));
+}
+
+/**
  * @ngdoc method
  * @name addHighlight
  * @param {Object} editorState
@@ -362,8 +389,8 @@ export function getHighlightDataAtCurrentPosition(editorState, types) {
  * @return {Object} new editor state
  * @description add a new highlight for the current selection.
  */
-export function addHighlight(editorState, type, data) {
-    var nextEditorState = editorState;
+export function addHighlight(editorState, type, data, single = false) {
+    let nextEditorState = editorState;
 
     const initialSelection = nextEditorState.getSelection().merge({
         hasFocus: true,
@@ -374,6 +401,11 @@ export function addHighlight(editorState, type, data) {
     if (highlightTypeValid(type) !== true) {
         throw new Error('Highlight type invalid');
     }
+
+    if (single && selectionHasType(editorState, type)) {
+        return editorState;
+    }
+
     let newIndex = 0;
 
     if (highlightsState.lastHighlightIds && _.has(highlightsState.lastHighlightIds, type)) {

@@ -471,6 +471,11 @@ const processSuggestion = (state, {suggestion}, accepted) => {
         editorState = Links.removeLink(editorState);
     }
 
+    // remove link if remove link is accepted
+    if (suggestion.type === 'REMOVE_LINK_SUGGESTION' && accepted) {
+        editorState = Links.removeLink(editorState);
+    }
+
     editorState = EditorState.acceptSelection(editorState, selection);
 
     if (suggestion.type === 'BLOCK_STYLE_SUGGESTION') {

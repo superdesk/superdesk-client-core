@@ -4,6 +4,7 @@ import {onChange} from './editor3';
 import insertAtomicBlockWithoutEmptyLines from '../helpers/insertAtomicBlockWithoutEmptyLines';
 import * as Links from '../helpers/links';
 import * as Blocks from '../helpers/blocks';
+import * as Highlights from '../helpers/highlights';
 import {removeFormatFromState} from '../helpers/removeFormat';
 
 /**
@@ -96,10 +97,29 @@ const applyLink = (state, {link, entity}) => {
  * @description Removes the link on the entire entity under the cursor.
  */
 const removeLink = (state) => {
-    const {editorState} = state;
-    const stateAfterChange = Links.removeLink(editorState);
+    let {editorState} = state;
+    const selection = editorState.getSelection(); // save for later
 
-    return onChange(state, stateAfterChange);
+    if (state.suggestingMode) {
+        const content = editorState.getCurrentContent();
+        const block = content.getBlockForKey(selection.anchorKey);
+        const entity = block.getEntityAt(selection.anchorOffset);
+
+        block.findEntityRanges((characterMeta) => characterMeta.getEntity() === entity,
+            (start, end) => {
+                editorState = EditorState.acceptSelection(editorState, selection.merge({
+                    anchorOffset: start,
+                    focusOffset: end,
+                }));
+                editorState = Highlights.addHighlight(editorState, 'REMOVE_LINK_SUGGESTION', null, true);
+                editorState = EditorState.push(editorState, editorState.getCurrentContent(), 'apply-entity');
+                editorState = EditorState.acceptSelection(editorState, selection);
+            });
+    } else {
+        editorState = Links.removeLink(editorState);
+    }
+
+    return onChange(state, editorState);
 };
 
 /*
