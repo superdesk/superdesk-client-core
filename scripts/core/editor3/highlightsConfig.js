@@ -107,6 +107,11 @@ export const highlightsConfig = {
         description: gettext('Remove link'),
         draftStyleMap: ENTITY_STYLE_MAP,
     },
+    CHANGE_LINK_SUGGESTION: {
+        type: 'ENTITY',
+        description: gettext('Edit link'),
+        draftStyleMap: ENTITY_STYLE_MAP,
+    },
 };
 
 export const blockStylesDescription = {
@@ -134,6 +139,7 @@ export const suggestionsTypes = [
     'SPLIT_PARAGRAPH_SUGGESTION',
     'ADD_LINK_SUGGESTION',
     'REMOVE_LINK_SUGGESTION',
+    'CHANGE_LINK_SUGGESTION',
 ];
 
 export const isSuggestion = (highlightId) => suggestionsTypes.some(

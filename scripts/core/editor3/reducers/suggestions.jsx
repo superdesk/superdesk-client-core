@@ -8,6 +8,7 @@ import {editor3DataKeys, getCustomDataFromEditor, setCustomDataForEditor} from '
 import * as Blocks from '../helpers/blocks';
 import * as Links from '../helpers/links';
 import ng from 'core/services/ng';
+import {replaceSelectedEntityData} from '../components/links/entityUtils';
 
 
 const suggestions = (state = {}, action) => {
@@ -474,6 +475,10 @@ const processSuggestion = (state, {suggestion}, accepted) => {
     // remove link if remove link is accepted
     if (suggestion.type === 'REMOVE_LINK_SUGGESTION' && accepted) {
         editorState = Links.removeLink(editorState);
+    }
+
+    if (suggestion.type === 'CHANGE_LINK_SUGGESTION' && accepted) {
+        editorState = replaceSelectedEntityData(editorState, {link: suggestion.to});
     }
 
     editorState = EditorState.acceptSelection(editorState, selection);

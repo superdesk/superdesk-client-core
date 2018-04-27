@@ -80,16 +80,51 @@ const toggleInlineStyle = (state, inlineStyle) => {
  * entity is specified, it applies the link to that entity instead.
  */
 const applyLink = (state, {link, entity}) => {
-    const {editorState} = state;
+    let {editorState} = state;
 
     if (entity) {
-        return onChange(state, entityUtils.replaceSelectedEntityData(editorState, {link}), true);
+        if (state.suggestingMode) {
+            editorState = highlightEntity(editorState, 'CHANGE_LINK_SUGGESTION',
+                {to: link, from: entity.getData().link});
+            return onChange(state, editorState);
+        } else {
+            return onChange(state, entityUtils.replaceSelectedEntityData(editorState, {link}), true);
+        }
     }
 
-    const stateAfterChange = Links.createLink(editorState, link);
-
-    return onChange(state, stateAfterChange);
+    editorState = Links.createLink(editorState, link);
+    return onChange(state, editorState);
 };
+
+/**
+ * Highlight current entity
+ *
+ * @param {EditorState} initialState
+ * @param {String} type
+ * @param {Object} data
+ * @param {Boolean} single
+ * @returns {EditorState}
+ */
+function highlightEntity(initialState, type, data, single) {
+    let editorState = initialState;
+    const selection = editorState.getSelection();
+    const content = editorState.getCurrentContent();
+    const block = content.getBlockForKey(selection.getStartKey());
+    const entity = block.getEntityAt(selection.getStartOffset());
+
+    block.findEntityRanges((characterMeta) => characterMeta.getEntity() === entity,
+        (start, end) => {
+            editorState = EditorState.acceptSelection(editorState, selection.merge({
+                isBackward: false,
+                anchorOffset: start,
+                focusOffset: end,
+            }));
+            editorState = Highlights.addHighlight(editorState, type, data, single);
+            editorState = EditorState.push(editorState, editorState.getCurrentContent(), 'apply-entity');
+            editorState = EditorState.acceptSelection(editorState, selection);
+        });
+    return editorState;
+}
 
 /**
  * @ngdoc method
@@ -98,23 +133,9 @@ const applyLink = (state, {link, entity}) => {
  */
 const removeLink = (state) => {
     let {editorState} = state;
-    const selection = editorState.getSelection(); // save for later
 
     if (state.suggestingMode) {
-        const content = editorState.getCurrentContent();
-        const block = content.getBlockForKey(selection.anchorKey);
-        const entity = block.getEntityAt(selection.anchorOffset);
-
-        block.findEntityRanges((characterMeta) => characterMeta.getEntity() === entity,
-            (start, end) => {
-                editorState = EditorState.acceptSelection(editorState, selection.merge({
-                    anchorOffset: start,
-                    focusOffset: end,
-                }));
-                editorState = Highlights.addHighlight(editorState, 'REMOVE_LINK_SUGGESTION', null, true);
-                editorState = EditorState.push(editorState, editorState.getCurrentContent(), 'apply-entity');
-                editorState = EditorState.acceptSelection(editorState, selection);
-            });
+        editorState = highlightEntity(editorState, 'REMOVE_LINK_SUGGESTION', null, true);
     } else {
         editorState = Links.removeLink(editorState);
     }

@@ -354,20 +354,6 @@ export function getHighlightDataAtCurrentPosition(editorState, types) {
 }
 
 /**
- * Get list of characters for current selection - handling single block for now
- *
- * @param {EditorState} editorState
- * @returns {List}
- */
-function getSelectedCharacters(editorState) {
-    const content = editorState.getCurrentContent();
-    const selection = editorState.getSelection();
-    const block = content.getBlockForKey(selection.anchorKey);
-
-    return block.getCharacterList().slice(selection.anchorOffset, selection.focusOffset);
-}
-
-/**
  * Test if current selection has given type style applied
  *
  * @param {EditorState} editorState
@@ -375,7 +361,7 @@ function getSelectedCharacters(editorState) {
  * @returns {Boolean}
  */
 function selectionHasType(editorState, type) {
-    const characters = getSelectedCharacters(editorState);
+    const characters = getDraftCharacterListForSelection(editorState, editorState.getSelection());
 
     return characters.every((character) => character.getStyle().some((style) => style.indexOf(type) === 0));
 }
