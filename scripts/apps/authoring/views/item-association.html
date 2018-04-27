@@ -3,7 +3,7 @@
             ng-class="{'item-association--preview': related, 'item-association--loading': loading}"
             ng-click="editable && associations.isMediaEditable() && !related && upload()">
         <a ng-if="related && editable" class="item-association__remove-item" ng-click="remove(related); $event.stopPropagation()">
-            <i class="icon-close-small"/>
+            <i class="icon-close-small"></i>
         </a>
         <!-- video -->
         <div class="item-association__video-container" ng-if="related && related.type === 'video'">
@@ -82,7 +82,7 @@
                     </span>
                 </div>
                 <div class="item-association__icons-block">
-                    <a ng-if="related && editable" class="item-association__image-action" ng-click="associations.isMediaEditable() && associations.edit(this, related); $event.stopPropagation()"><i class="icon-pencil"/></a>
+                    <a ng-if="related && editable" class="item-association__image-action" ng-click="associations.isMediaEditable() && associations.edit(this, related); $event.stopPropagation()"><i class="icon-pencil"></i></a>
                 </div>
                 <div class="item-association__metadata" ng-if="related.type === 'picture' || related.type === 'graphic'">
                     <span>
