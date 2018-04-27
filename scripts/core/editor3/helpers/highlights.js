@@ -628,11 +628,11 @@ export const getBlockAndOffset = (
         if (block == null) {
             return noValue;
         }
-        newOffset = block.getLength() + newOffset;
+        newOffset = block.getLength() + newOffset + 1;
     }
 
     while (newOffset > block.getLength()) {
-        newOffset = newOffset - block.getLength();
+        newOffset = newOffset - block.getLength() - 1;
         block = content.getBlockAfter(block.getKey());
         if (block == null) {
             return noValue;
