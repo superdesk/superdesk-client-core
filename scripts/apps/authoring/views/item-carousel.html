@@ -16,7 +16,7 @@
                         ng-click="editable && associations.isMediaEditable() && !item[item.fieldId] && upload()">
 
                     <a ng-if="item[item.fieldId] && editable" class="item-association__remove-item" ng-click="remove(item); $event.stopPropagation()">
-                        <i class="icon-close-small"/>
+                        <i class="icon-close-small"></i>
                     </a>
                     <!-- video -->
                     <div class="item-association__video-container" ng-if="item[item.fieldId] && item[item.fieldId].type === 'video'">
@@ -95,7 +95,7 @@
                                 </span>
                             </div>
                             <div class="item-association__icons-block">
-                                <a class="item-association__image-action" ng-click="associations.isMediaEditable() && associations.edit(this, item[item.fieldId]); $event.stopPropagation()"><i class="icon-pencil"/></a>
+                                <a class="item-association__image-action" ng-click="associations.isMediaEditable() && associations.edit(this, item[item.fieldId]); $event.stopPropagation()"><i class="icon-pencil"></i></a>
                             </div>
                             <div class="item-association__metadata">
                                 <span>

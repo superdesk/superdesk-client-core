@@ -1442,6 +1442,20 @@ feature-image {
         }
     }
 }
+.field.media-item {
+    video, audio, img {
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25), 0 0 1px 1px rgba(0, 0, 0, 0.12);
+        max-width: 100%;
+    }
+    video {
+        display: block;
+    }
+    audio {
+        width: 100%;
+        display: block;
+        border-radius: 6px; 
+    }
+}
 
 // Styling for formatted preview popup
 // -------------------------------------------------------------
