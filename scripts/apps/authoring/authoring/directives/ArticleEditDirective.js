@@ -280,8 +280,13 @@ export function ArticleEditDirective(
                  */
                 scope.applyCrop = function() {
                     scope.mediaLoading = true;
-                    return renditions.crop(scope.item, false)
+                    return renditions.crop(scope.item, false, true, false, 'crop', true)
                         .then((picture) => {
+                            // update _etag code if it is changes by media_edit in meanwhile
+                            if (scope.item._etag !== scope.origItem._etag) {
+                                scope.origItem._etag = scope.item._etag;
+                            }
+
                             if (authoring.isPublished(scope.item)) {
                                 mainEditScope.dirty = true;
 

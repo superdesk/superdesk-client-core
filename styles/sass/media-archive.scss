@@ -438,25 +438,6 @@ $sfbox_mediaMaxWidth : 172px;
     }
 }
 
-@mixin actioning($big: true) {
-    background-color: fade(#f7f7f7, 20%);
-    border-color: fade(#cfcfcf, 20%);
-    &:before {
-        content: '';
-        zoom: .7;
-        top: 50%;
-        transform: translateY(-50%);
-        position: absolute;
-        z-index: 1;
-        @if $big {
-            @include spinner-big();
-        }
-        @else {
-            @include spinner-alt();
-        }
-    }
-}
-
 .mgrid-view, #scratchpad {
     .media-box {
         .action {
@@ -1364,32 +1345,41 @@ $modalMaxImageHeight : 250px;
 }
 
 .cropItems{
-    li{
-        display: inline-block;
-        max-width: 47%;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+    grid-gap: 1.6rem;
+    margin: 1rem 0;
+    padding-bottom: 2.5rem;
+    border-bottom: 1px dotted rgba(123, 123, 123, 0.5);
 
-        &:nth-child(2n){
-            float: right;
-
-            figure.media {
-                 img{
-                    float: right;
-                }
-            }
+    .cropItems__item {
+        text-align: center;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1), 0 1px 5px rgba(0, 0, 0, 0.16);
+        display: flex;
+        flex-direction: column;
+        img {
+            display: block;
         }
-
-        figure.media {
-            @media only screen and (min-width : 1630px) {
-                 img{
-                    max-height: 170px;
-                }
-            }
-            @media only screen and (max-width : 1630px) {
-                 img{
-                    max-height: 140px;
-                }
-            }
+        figure {
+            display: block;
+            margin: 0;
         }
+    }
+    .cropItems__item-rendition {
+        flex-grow: 1;
+        background-color: rgba(0,0,0,0.75);
+        display: flex;
+        align-items: center;
+    }
+
+    .cropItems__item-label {
+        display: block;
+        padding: 0.6rem 0;
+        opacity: 0.7;
+        font-family: 'Roboto';
+        font-size: 1.3rem;
+        flex-grow: 0;
+        flex-shrink: 0;
     }
 }
 

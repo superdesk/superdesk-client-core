@@ -19,7 +19,7 @@ export function PhotoDeskInfoComponent(props) {
     return (
         <div className="sd-grid-item__content">
             <time>{datetime.longFormat(item.versioncreated)}</time>
-            <span className="sd-grid-item__slugline"
+            <span className="sd-grid-item__title sd-grid-item--element-grow"
                 dangerouslySetInnerHTML={createMarkUp(item.headline || item.slugline || item.type)} />
             {
                 gridViewFieldsConfig

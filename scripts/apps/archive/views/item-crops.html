@@ -1,9 +1,12 @@
-<ul class="cropItems">
-    <li ng-repeat="crop in crop_sizes track by crop.name" ng-if="item.renditions[crop.name]">
-        <span>{{ :: crop.name | translate }}<span>
-        <div class="rendition"
-            sd-item-rendition
-            data-item="item"
-            data-rendition="{{ :: crop.name }}"></div>
-    </li>
-</ul>
+<div sd-toggle-box data-title="Show/hide crops" data-open="true" data-style="circle toggle-box--marg-b10" ng-show="item.hasCrops">
+    <div class="cropItems">
+        <div ng-repeat="crop in crop_sizes track by crop.name" ng-if="item.renditions[crop.name]" class="cropItems__item">
+            <div class="rendition cropItems__item-rendition"
+                sd-item-rendition
+                data-item="item"
+                data-rendition="{{ :: crop.name }}">
+            </div>
+            <span class="cropItems__item-label">{{ :: crop.name | translate }}</span>
+        </div>
+    </div>
+</div>

@@ -61,7 +61,8 @@ export function RenditionsService(metadata, $q, api, superdesk, _) {
      *  @param {boolean} isAssociated to indicate if picture is isAssociated or not
      *  @return {promise} returns the modified picture item
      */
-    this.crop = function(picture, isNew = true, editable = true, isAssociated = false) {
+    this.crop = function(picture, isNew = true, editable = true, isAssociated = false,
+        defaultTab = false, showMetadata = false) {
         let clonedPicture = _.extend({}, picture);
 
         clonedPicture.renditions = _.cloneDeep(clonedPicture.renditions);
@@ -83,6 +84,8 @@ export function RenditionsService(metadata, $q, api, superdesk, _) {
                 isNew: isNew,
                 isAssociated: isAssociated,
                 editable: editable,
+                defaultTab: defaultTab,
+                showMetadata: showMetadata,
             })
                 .then((result) => {
                     let renditionNames = [];

@@ -22,12 +22,12 @@ import _ from 'lodash';
  */
 
 MultiActionBarController.$inject = [
-    '$rootScope', 'multi', 'multiEdit', 'send', 'remove', 'modal', '$q', 'gettext',
+    '$rootScope', 'multi', 'multiEdit', 'multiImageEdit', 'send', 'remove', 'modal', '$q', 'gettext',
     'packages', 'superdesk', 'notify', 'spike', 'authoring', 'privileges', '$location',
 ];
 
 export function MultiActionBarController(
-    $rootScope, multi, multiEdit, send, remove, modal, $q, gettext,
+    $rootScope, multi, multiEdit, multiImageEdit, send, remove, modal, $q, gettext,
     packages, superdesk, notify, spike, authoring, privileges, $location
 ) {
     this.send = function() {
@@ -60,6 +60,10 @@ export function MultiActionBarController(
     this.multiedit = function() {
         multiEdit.create(multi.getIds());
         multiEdit.open();
+    };
+
+    this.multiImageEdit = function() {
+        multiImageEdit.edit(multi.getItems());
     };
 
     this.createPackage = function() {

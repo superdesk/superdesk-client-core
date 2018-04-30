@@ -1,0 +1,107 @@
+$jcrop-handle-size: 12px;
+$jcrop-handle-offset: -6px;
+
+$jcrop-handle-size-small: 8px;
+$jcrop-handle-offset-small: -4px;
+
+.sd-photo-preview {
+    .jcrop-handle {
+        opacity: 1 !important;
+        background-color: #333333;
+        border: 1px #eeeeee solid;
+        width: $jcrop-handle-size;
+        height: $jcrop-handle-size;
+        font-size: 1px;
+        border-radius: 50%;
+    }
+    .jcrop-handle.ord-n {
+        margin-left: $jcrop-handle-offset;
+        margin-top: $jcrop-handle-offset;
+    }
+    .jcrop-handle.ord-s {
+        margin-bottom: $jcrop-handle-offset;
+        margin-left: $jcrop-handle-offset;
+    }
+    .jcrop-handle.ord-e {
+        margin-right: $jcrop-handle-offset;
+        margin-top: $jcrop-handle-offset;
+    }
+    .jcrop-handle.ord-w {
+        margin-left: $jcrop-handle-offset;
+        margin-top: $jcrop-handle-offset;
+    }
+    .jcrop-handle.ord-nw {
+        margin-left: $jcrop-handle-offset;
+        margin-top: $jcrop-handle-offset;
+    }
+    .jcrop-handle.ord-ne {
+        margin-right: $jcrop-handle-offset;
+        margin-top: $jcrop-handle-offset;
+    }
+    .jcrop-handle.ord-se {
+        margin-bottom: $jcrop-handle-offset;
+        margin-right: $jcrop-handle-offset;
+    }
+    .jcrop-handle.ord-sw {
+        margin-bottom: $jcrop-handle-offset;
+        margin-left: $jcrop-handle-offset;
+    }
+    .sd-grid-item {
+        .jcrop-handle {
+            width: $jcrop-handle-size-small;
+            height: $jcrop-handle-size-small;
+        }
+        .jcrop-handle.ord-n {
+            margin-left: $jcrop-handle-offset-small;
+            margin-top: $jcrop-handle-offset-small;
+        }
+        .jcrop-handle.ord-s {
+            margin-bottom: $jcrop-handle-offset-small;
+            margin-left: $jcrop-handle-offset-small;
+        }
+        .jcrop-handle.ord-e {
+            margin-right: $jcrop-handle-offset-small;
+            margin-top: $jcrop-handle-offset-small;
+        }
+        .jcrop-handle.ord-w {
+            margin-left: $jcrop-handle-offset-small;
+            margin-top: $jcrop-handle-offset-small;
+        }
+        .jcrop-handle.ord-nw {
+            margin-left: $jcrop-handle-offset-small;
+            margin-top: $jcrop-handle-offset-small;
+        }
+        .jcrop-handle.ord-ne {
+            margin-right: $jcrop-handle-offset-small;
+            margin-top: $jcrop-handle-offset-small;
+        }
+        .jcrop-handle.ord-se {
+            margin-bottom: $jcrop-handle-offset-small;
+            margin-right: $jcrop-handle-offset-small;
+        }
+        .jcrop-handle.ord-sw {
+            margin-bottom: $jcrop-handle-offset-small;
+            margin-left: $jcrop-handle-offset-small;
+        }
+    }
+      
+
+    .jcrop-dark {
+        .jcrop-handle {
+            opacity: 1 !important;
+            background-color: rgba(205, 205, 205, 0.5);
+            border-color: white;
+            border-radius: 50%;
+        }
+        .jcrop-vline, .jcrop-hline {
+            background: rgba(255, 255, 255, 0.3);
+            opacity: 1;
+        }
+
+        .jcrop-handle.ord-n, .jcrop-handle.ord-s, .jcrop-handle.ord-e, .jcrop-handle.ord-w {
+            //opacity: 0.3 !important;
+            display: none;
+          }
+    }
+}
+

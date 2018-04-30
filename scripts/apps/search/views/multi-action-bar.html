@@ -23,6 +23,9 @@
     </div>
 
     <div class="pull-right" ng-if="type === 'archive' && (!elementState || elementState === 'comfort')">
+        <button class="navbtn strict" ng-if="activity['edit.item']" ng-click="action.multiImageEdit()" title="{{ :: 'Edit metadata' | translate }}">
+            <i class="big-icon--annotation"></i>
+        </button>
         <button class="navbtn strict" ng-if="activity['export']" ng-click="openExport()" title="{{ :: 'Export' | translate }}">
             <i class="icon-download"></i>
             <div sd-export ng-if="export"></div>

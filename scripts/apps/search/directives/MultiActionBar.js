@@ -1,5 +1,5 @@
-MultiActionBar.$inject = ['asset', 'multi', 'authoringWorkspace', 'superdesk', 'keyboardManager', 'config'];
-export function MultiActionBar(asset, multi, authoringWorkspace, superdesk, keyboardManager, config) {
+MultiActionBar.$inject = ['asset', 'multi', 'authoringWorkspace', 'superdesk', 'keyboardManager'];
+export function MultiActionBar(asset, multi, authoringWorkspace, superdesk, keyboardManager) {
     return {
         controller: 'MultiActionBar',
         controllerAs: 'action',
