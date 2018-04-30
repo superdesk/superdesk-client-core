@@ -36,6 +36,11 @@
 
     <div class="modal__body">
         <form name="editForm" sd-wizard data-name="ingestSources" data-current-step="step.current" data-finish="cancel()">
+            <!-- XXX: The dummy text and password inputs below are here to avoid autocompletion in Firefox, as autocomplete="off" is not working
+                      and without it, superdesk login/password will be used as default /o\ (cf. SDESK-2745) -->
+            <input type="text" style="display:none">
+            <input type="password" style="display:none">
+
             <fieldset>
                 <div sd-wizard-step data-title="{{ 'General' | translate }}" data-code="general">
                     <div class="field">

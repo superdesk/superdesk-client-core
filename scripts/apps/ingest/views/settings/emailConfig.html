@@ -21,7 +21,9 @@
     <label for="email-server-password" translate>Password</label>
     <input type="password" id="email-user=password" placeholder="{{:: 'Email Password'|translate }}"
       ng-model="provider.config.password" required
-      ng-change="$parent.setConfig(provider)">
+      ng-change="$parent.setConfig(provider)"
+      autocomplete="new-password"
+      >
     <div class="error" ng-show="error.code === 6000" translate>Authentication error.</div>
 </div>
 <div class="field">

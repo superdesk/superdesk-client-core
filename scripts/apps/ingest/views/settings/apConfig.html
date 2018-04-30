@@ -4,7 +4,7 @@
 </div>
 <div class="field">
     <label for="ap_password" translate>Password</label>
-    <input type="password" id="ap_password" placeholder="{{:: 'password'|translate }}" ng-model="provider.config.password" required ng-change="$parent.setConfig(provider)">
+    <input type="password" id="ap_password" placeholder="{{:: 'password'|translate }}" ng-model="provider.config.password" required ng-change="$parent.setConfig(provider)" autocomplete="new-password">
 </div>
 <div class="field">
     <label for="ap_idList" translate>idList</label>
