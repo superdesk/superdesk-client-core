@@ -1,6 +1,6 @@
-import {EditorState, Modifier, RichUtils, SelectionState} from 'draft-js';
+import {EditorState, Modifier, RichUtils} from 'draft-js';
 import {onChange} from './editor3';
-import {acceptedInlineStyles} from '../helpers/inlineStyles';
+import {acceptedInlineStyles, sanitizeContent} from '../helpers/inlineStyles';
 import {changeSuggestionsTypes, styleSuggestionsTypes} from '../highlightsConfig';
 import * as Highlights from '../helpers/highlights';
 import {initSelectionIterator, hasNextSelection} from '../helpers/selection';
@@ -243,46 +243,6 @@ const createChangeBlockStyleSuggestion = (state, {blockType, data}) => {
     return saveEditorStatus(state, editorState, 'change-block-type', true);
 };
 
-/**
- * Sanitize given content state on paste
- *
- * @param {ContentState} content
- * @returns {ContentState}
- */
-function sanitizeContent(content) {
-    let output = content;
-
-    const ignoreStyle = (style) => acceptedInlineStyles.indexOf(style) === -1;
-    const getSelection = (block, start, end) => SelectionState.createEmpty(block.getKey()).merge({
-        anchorOffset: start,
-        focusOffset: end,
-    });
-
-    content.getBlockMap().forEach((block) => {
-        // remove extra styles
-        block.findStyleRanges(
-            (character) => character.getStyle().some(ignoreStyle),
-            (start, end) => {
-                const selection = getSelection(block, start, end);
-                const inlineStyle = block.getInlineStyleAt(start).find(ignoreStyle);
-
-                output = Modifier.removeInlineStyle(output, selection, inlineStyle);
-            }
-        );
-
-        // remove any entities
-        block.findEntityRanges(
-            () => true,
-            (start, end) => {
-                const selection = getSelection(block, start, end);
-
-                output = Modifier.applyEntity(output, selection, null);
-            }
-        );
-    });
-
-    return output;
-}
 
 /**
  * @ngdoc method

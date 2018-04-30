@@ -2572,6 +2572,10 @@ dns-txt@^2.0.2:
   dependencies:
     buffer-indexof "^1.0.0"
 
+docs-soap@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/docs-soap/-/docs-soap-1.2.0.tgz#052fcbc955f4dfad190dbfa2cca7b6bac72b3a63"
+
 doctrine@^2.0.2, doctrine@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/doctrine/-/doctrine-2.1.0.tgz#5cd01fc101621b42c4cd7f5d1a66243716d3f39d"
@@ -8882,6 +8886,20 @@ superdesk-code-style@^1.1.1:
 superdesk-ui-framework@superdesk/superdesk-ui-framework#2c553a7:
   version "1.0.1"
   resolved "https://codeload.github.com/superdesk/superdesk-ui-framework/tar.gz/2c553a747dc596c446ba90c64dbc0fb309e7c514"
+  dependencies:
+    angular "1.6.6"
+    angular-animate "1.6.6"
+    classnames "^2.2.5"
+    jquery "^3.1.1"
+    jquery-ui "^1.12.1"
+    lodash "^4.17.4"
+    prop-types "^15.6.0"
+    react "^15.6.1"
+    react-bootstrap "^0.31.2"
+    react-dom "^15.6.1"
+    react-redux "^5.0.6"
+    redux "^3.7.2"
+    redux-form "^7.0.4"
 
 supports-color@^0.2.0:
   version "0.2.0"
