@@ -1,7 +1,7 @@
 import {EditorState, Modifier, RichUtils} from 'draft-js';
 import {onChange} from './editor3';
 import {acceptedInlineStyles, sanitizeContent} from '../helpers/inlineStyles';
-import {changeSuggestionsTypes, styleSuggestionsTypes} from '../highlightsConfig';
+import {changeSuggestionsTypes, styleSuggestionsTypes, blockSuggestionTypes} from '../highlightsConfig';
 import * as Highlights from '../helpers/highlights';
 import {initSelectionIterator, hasNextSelection} from '../helpers/selection';
 import {editor3DataKeys, getCustomDataFromEditor, setCustomDataForEditor} from '../helpers/editor3CustomData';
@@ -270,7 +270,7 @@ const createSplitParagraphSuggestion = (state, {data}) => {
 
     editorState = EditorState.push(editorState, content, 'split-block');
     editorState = EditorState.acceptSelection(editorState, blockSelection);
-    editorState = applyStyleSuggestion(editorState, type, data);
+    editorState = Highlights.addHighlight(editorState, type, data);
 
     blockSelection = blockSelection.merge({
         focusOffset: 0,
@@ -549,18 +549,18 @@ const setAddSuggestionForCharacter = (editorState, data, text, inlineStyle = nul
     content = Modifier.insertText(content, selection, text);
     newState = EditorState.push(newState, content, 'insert-characters');
     newState = Highlights.changeEditorSelection(newState, -1, 0, false);
+    newState = applyStyleForSuggestion(newState, crtInlineStyle);
 
     if (beforeData != null && beforeData.type === 'ADD_SUGGESTION'
         && beforeData.author === data.author) {
         // if previous character is an add suggestion of the same user, set the same data
-        newState = applyStyleForSuggestion(newState, crtInlineStyle, beforeStyle);
+        newState = RichUtils.toggleInlineStyle(newState, beforeStyle);
     } else if (currentData != null && currentData.type === 'ADD_SUGGESTION'
         && currentData.author === data.author) {
         // if next character is an add suggestion of the same user, set the same data
-        newState = applyStyleForSuggestion(newState, crtInlineStyle, currentStyle);
+        newState = RichUtils.toggleInlineStyle(newState, currentStyle);
     } else {
         // create a new suggestion
-        newState = applyStylesForCurrentSelection(newState, crtInlineStyle);
         newState = Highlights.addHighlight(newState, 'ADD_SUGGESTION', data);
     }
 
@@ -629,33 +629,29 @@ const setDeleteSuggestionForCharacter = (editorState, data) => {
  * @return {Object} returns new state
  * @description Apply the style for current selection.
  */
-const applyStyleForSuggestion = (editorState, inlineStyle, style) => {
-    let newState = editorState;
-
-    inlineStyle.forEach((style) => {
-        if (style.indexOf('ADD_SUGGESTION') === -1 && style.indexOf('DELETE_SUGGESTION') === -1) {
-            newState = RichUtils.toggleInlineStyle(newState, style);
-        }
-    });
-
-    return RichUtils.toggleInlineStyle(newState, style);
-};
-
-/**
- * @ngdoc method
- * @name applyStylesForCurrentSelection
- * @param {Object} editorState
- * @param {Objest} inlineStyle
- * @return {Object} returns new state
- * @description Apply only formatting styles from inlineStyle for current selection.
- */
-const applyStylesForCurrentSelection = (editorState, inlineStyle) => {
+const applyStyleForSuggestion = (editorState, inlineStyle) => {
     let newState = editorState;
 
     inlineStyle.filter((style) => acceptedInlineStyles.indexOf(style) !== -1)
         .forEach((style) => {
             newState = RichUtils.toggleInlineStyle(newState, style);
         });
+
+    const nextInlineStyle = Highlights.getHighlightStyleAtCurrentPosition(
+        newState, styleSuggestionsTypes, true, false);
+
+    if (nextInlineStyle == null) {
+        return newState;
+    }
+
+    inlineStyle.forEach((style) => {
+        const type = Highlights.getHighlightTypeFromStyleName(style);
+
+        if (styleSuggestionsTypes.indexOf(type) !== -1 && nextInlineStyle.indexOf(style) !== -1 ||
+            blockSuggestionTypes.indexOf(type) !== -1) {
+            newState = RichUtils.toggleInlineStyle(newState, style);
+        }
+    });
 
     return newState;
 };

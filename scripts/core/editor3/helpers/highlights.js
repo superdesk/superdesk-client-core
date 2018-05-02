@@ -244,9 +244,11 @@ export function canAddHighlight(editorState, highlightType) {
  * @param {List} types
  * @param {Object} selection
  * @param {Integer} offset
+ * @param {Boolean} fromEnd - if true start from end of the selection
+ * @param {Boolean} firstFound - if true return first style found otherwise return all styles found
  * @description the highlight style from the new possition specified by offset.
  */
-export function getHighlightStyleAtOffset(editorState, types, selection, offset, fromEnd = false) {
+export function getHighlightStyleAtOffset(editorState, types, selection, offset, fromEnd = false, firstFound = true) {
     const {block, newOffset} = getBlockAndOffset(editorState, selection, offset, fromEnd);
 
     if (block == null) {
@@ -254,14 +256,18 @@ export function getHighlightStyleAtOffset(editorState, types, selection, offset,
     }
 
     const inlineStyles = block.getInlineStyleAt(newOffset);
-    let highlightStyle = null;
+    let highlightStyle = firstFound ? null : [];
 
     inlineStyles.forEach((style) => {
         if (styleNameBelongsToHighlight(style)) {
             const type = getHighlightTypeFromStyleName(style);
 
-            if (type != null && types.indexOf(type) !== -1) {
-                highlightStyle = style;
+            if (type != null && types.indexOf(type) !== -1 && type !== style) {
+                if (firstFound) {
+                    highlightStyle = highlightStyle || style;
+                } else {
+                    highlightStyle.push(style);
+                }
             }
         }
     });
@@ -274,13 +280,15 @@ export function getHighlightStyleAtOffset(editorState, types, selection, offset,
  * @name getHighlightStyleAtCurrentPosition
  * @param {Object} editorState
  * @param {List} types
+ * @param {Boolean} fromEnd - if true start from end of the selection
+ * @param {Boolean} firstFound - if true return first style found otherwise return all styles found
  * @return {String}
  * @description return the style of type for current character position.
  */
-export function getHighlightStyleAtCurrentPosition(editorState, types) {
+export function getHighlightStyleAtCurrentPosition(editorState, types, fromEnd = false, firstFound = true) {
     const selection = editorState.getSelection();
 
-    return getHighlightStyleAtOffset(editorState, types, selection, 0);
+    return getHighlightStyleAtOffset(editorState, types, selection, 0, fromEnd, firstFound);
 }
 
 /**
