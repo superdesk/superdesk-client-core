@@ -70,7 +70,7 @@ export class LinkInputComponent extends Component {
             return;
         }
 
-        if (suggestingMode) {
+        if (suggestingMode && !this.entity) {
             this.props.createLinkSuggestion(val);
         } else {
             this.props.applyLink(val, this.entity);

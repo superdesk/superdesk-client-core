@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
+import {get} from 'lodash';
 import moment from 'moment';
 import ng from 'core/services/ng';
 import {Dropdown} from 'core/ui/components';
@@ -70,6 +71,48 @@ class Suggestion extends Component {
         const blockStyleDescription = Highlights.getBlockStylesDescription(this.props.suggestion.blockType);
         const space = blockStyleDescription != '' ? ' ' : '';
 
+        let content;
+
+        switch (this.props.suggestion.type) {
+        case 'REPLACE_SSUGGESTION':
+            content = (
+                <div>
+                    <div>
+                        <strong>{gettext('Replace')}: </strong>
+                        {this.props.suggestion.oldText}
+                    </div>
+                    <div>
+                        <strong>{gettext('with')}: </strong>
+                        {this.props.suggestion.suggestionText}
+                    </div>
+                </div>
+            );
+            break;
+
+        case 'CHANGE_LINK_SUGGESTION':
+            content = (
+                <div>
+                    <div>
+                        <strong>{gettext('Replace link')}: </strong>
+                        {get(this.props.suggestion, 'from.href', '')}
+                    </div>
+                    <div>
+                        <strong>{gettext('with')}: </strong>
+                        {get(this.props.suggestion, 'to.href', '')}
+                    </div>
+                </div>
+            );
+            break;
+
+        default:
+            content = (
+                <div>
+                    <strong>{gettext(description) + space + gettext(blockStyleDescription)}: </strong>
+                    {this.props.suggestion.suggestionText}
+                </div>
+            );
+        }
+
         return (
             <Dropdown open={true}>
                 <div className="highlights-popup__header">
@@ -79,24 +122,7 @@ class Suggestion extends Component {
                         <div className="date" title={fromNow}>{fullDate}</div>
                     </div>
                 </div>
-                {this.props.suggestion.type !== 'REPLACE_SUGGESTION' &&
-                    <div>
-                        <strong>{gettext(description) + space + gettext(blockStyleDescription)}: </strong>
-                        {this.props.suggestion.suggestionText}
-                    </div>
-                }
-                {this.props.suggestion.type === 'REPLACE_SUGGESTION' &&
-                    <div>
-                        <div>
-                            <strong>{gettext('Replace')}: </strong>
-                            {this.props.suggestion.oldText}
-                        </div>
-                        <div>
-                            <strong>{gettext('with')}: </strong>
-                            {this.props.suggestion.suggestionText}
-                        </div>
-                    </div>
-                }
+                {content}
                 <br />
                 <div>
                     <button className="btn btn--small btn--hollow" onClick={this.onAccept}>

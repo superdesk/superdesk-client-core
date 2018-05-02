@@ -3,6 +3,10 @@ function gettext(text) {
     return text;
 }
 
+const ENTITY_STYLE_MAP = {
+    backgroundColor: 'rgba(100, 235, 59, 0.2)',
+};
+
 export const highlightsConfig = {
     COMMENT: {
         type: 'COMMENT',
@@ -96,9 +100,17 @@ export const highlightsConfig = {
     ADD_LINK_SUGGESTION: {
         type: 'ENTITY',
         description: gettext('Add link'),
-        draftStyleMap: {
-            backgroundColor: 'rgba(100, 235, 59, 0.2)',
-        },
+        draftStyleMap: ENTITY_STYLE_MAP,
+    },
+    REMOVE_LINK_SUGGESTION: {
+        type: 'ENTITY',
+        description: gettext('Remove link'),
+        draftStyleMap: ENTITY_STYLE_MAP,
+    },
+    CHANGE_LINK_SUGGESTION: {
+        type: 'ENTITY',
+        description: gettext('Edit link'),
+        draftStyleMap: ENTITY_STYLE_MAP,
     },
 };
 
@@ -126,6 +138,8 @@ export const suggestionsTypes = [
     ...styleSuggestionsTypes,
     ...blockSuggestionTypes,
     'ADD_LINK_SUGGESTION',
+    'REMOVE_LINK_SUGGESTION',
+    'CHANGE_LINK_SUGGESTION',
 ];
 
 export const isSuggestion = (highlightId) => suggestionsTypes.some(
