@@ -77,7 +77,7 @@ export default angular.module('superdesk.apps.highlights', [
             href: '/workspace/highlights',
             label: gettext('Highlights'),
             templateUrl: 'scripts/apps/highlights/views/menu.html',
-            order: 300,
+            order: 400,
             shortcut: 'ctrl+alt+h',
         });
     }])
