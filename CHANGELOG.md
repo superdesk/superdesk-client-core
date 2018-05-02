@@ -1,5 +1,49 @@
 # Superdesk Client Changelog
 
+## [1.17.0] 2018-05-02
+
+### Fixed
+
+- On insert in editor mode don't split already existing suggestions.
+- Pasted text won't include disabled styles in editor3. 
+- Disable autocompletion on password fields in feeding services config.
+- Video preview size is too big in the editor.
+- Fix editor3 freezing on del at the end of paragraph.
+- Don't open media popup when drag&drop happens when planning is enabled.
+- On multiple block selections don't apply the block style to blocks without any character selected.
+- Allow editing of suggestions in edit mode.
+- Empty qcode was not checked for when editing vocabulary items.
+- Fix cursor position after undoing comments/annotations.
+- Fix html import when switching content profile from editor2 to editor3.
+- Prevent infinite loops in highlights processing.
+- On add suggestion add new characters using current style.
+- Once undo/redo is aplied to comment/annotation text the same option cannot be applied again.
+- Show highlight popup only if the cursor is inside highlighted text.
+- Fix unresolved suggestions validation on publishing.
+- Fix issues on preview for spiked items.
+- Restore focus before adding a highlight so selection is visible on undo.
+- Fix search providers menu showing closed providers.
+- Extract strings for translations from jsx files.
+
+### Added
+
+- Support edit/remove link suggestions.
+- Add missing format options to editor3 (subscript, superdeskcript, strikethrough, preformatted).
+- Warn user when publishing an item with unresolved comments.
+- Add button to remove all formating to editor3 toolbar.
+- Handle suggestions when using ctrl+i/b/u keys in suggestion mode. 
+- Only support users can see support users.
+- Support add link suggestion.
+- Support standalone editor3 not connected to an item.
+- Add config option for field in grid view.
+- Add support for split paragraph suggestion.
+
+### Changed
+
+- Change email address field validation not to be case sensitive.
+- On style suggestion remove the suggestion when toggled again.
+- Disable pasting media in editor3.
+
 ## [1.16.0] 2018-04-13
 
 ### Fixed
