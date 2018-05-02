@@ -2,6 +2,7 @@ import {EditorState, ContentState, Modifier, genKey, CharacterMetadata, ContentB
 import {List, OrderedSet} from 'immutable';
 import {fromHTML} from 'core/editor3/html';
 import * as Suggestions from '../helpers/suggestions';
+import {sanitizeContent, inlineStyles} from '../helpers/inlineStyles';
 
 function removeMediaFromHtml(htmlString) {
     const element = document.createElement('div');
@@ -23,13 +24,13 @@ const NOT_HANDLED = 'not-handled';
  * @name handlePastedText
  * @param {string} editorKey
  * @param {string} text Text content of paste.
- * @param {string=} html HTML content of paste.
+ * @param {string=} _html HTML content of paste.
  * @returns {Boolean} True if this method took paste into its own hands.
  * @description Handles pasting into the editor, in cases where the content contains
  * atomic blocks that need special handling in editor3.
  */
 export function handlePastedText(editorKey, text, _html) {
-    var html = _html;
+    let html = _html;
 
     if (typeof html === 'string') {
         html = removeMediaFromHtml(html);
@@ -61,7 +62,7 @@ export function handlePastedText(editorKey, text, _html) {
     }
 
     if (html) {
-        return ensureAtomicBlocks(this.props, html);
+        return processPastedHtml(this.props, html);
     }
 
     return NOT_HANDLED;
@@ -70,22 +71,33 @@ export function handlePastedText(editorKey, text, _html) {
 // Checks if there are atomic blocks in the paste content. If there are, we need to set
 // the 'atomic' block type using the Modifier tool and add these entities to the
 // contentState.
-function ensureAtomicBlocks(props, html) {
-    const {onChange, editorState} = props;
+function processPastedHtml(props, html) {
+    const {onChange, editorState, editorFormat} = props;
     const pastedContent = fromHTML(html);
     const blockMap = pastedContent.getBlockMap();
     const hasAtomicBlocks = blockMap.some((block) => block.getType() === 'atomic');
+    const acceptedInlineStyles =
+        Object.keys(inlineStyles)
+            .filter((style) => editorFormat.includes(style))
+            .map((style) => inlineStyles[style]);
 
-    if (!hasAtomicBlocks) {
+    if (!hasAtomicBlocks && acceptedInlineStyles.length === Object.keys(inlineStyles).length) {
+        // If we are not changing atomic blocks nor removing styles
+        // we let draftjs handle the paste
         return NOT_HANDLED;
     }
 
-    let contentState = Modifier.splitBlock(editorState.getCurrentContent(), editorState.getSelection());
-    let selection = contentState.getSelectionAfter();
+    let contentState = editorState.getCurrentContent();
+    let selection = editorState.getSelection();
     let blocks = [];
 
+    if (hasAtomicBlocks) {
+        contentState = Modifier.splitBlock(editorState.getCurrentContent(), editorState.getSelection());
+        selection = contentState.getSelectionAfter();
+    }
+
     blockMap.forEach((block) => {
-        if (block.getType() !== 'atomic') {
+        if (!hasAtomicBlocks || block.getType() !== 'atomic') {
             return blocks.push(block);
         }
 
@@ -100,10 +112,14 @@ function ensureAtomicBlocks(props, html) {
         );
     });
 
-    contentState = Modifier.setBlockType(contentState, selection, 'atomic');
-    contentState = Modifier.replaceWithFragment(contentState, selection, OrderedSet(blocks));
+    if (hasAtomicBlocks) {
+        contentState = Modifier.setBlockType(contentState, selection, 'atomic');
+    }
 
-    onChange(EditorState.push(editorState, contentState, 'insert-characters'));
+    contentState = Modifier.replaceWithFragment(contentState, selection, OrderedSet(blocks));
+    contentState = sanitizeContent(contentState, acceptedInlineStyles);
+
+    onChange(EditorState.push(editorState, contentState, 'insert-fragment'));
 
     return HANDLED;
 }

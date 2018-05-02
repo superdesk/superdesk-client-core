@@ -1,5 +1,6 @@
 import {List, OrderedSet, fromJS} from 'immutable';
 import {stateFromHTML} from 'draft-js-import-html';
+import docsSoap from 'docs-soap';
 import {inlineStyles} from '../../helpers/inlineStyles';
 
 import {
@@ -53,7 +54,9 @@ export class HTMLParser {
      * the tree to be parsed by the DraftJS's convertor.
      */
     createTree(html) {
-        this.tree.html(html);
+        const _html = docsSoap.default(html); // Needed for Google docs
+
+        this.tree.html(_html);
         this.pruneNodes();
     }
 
