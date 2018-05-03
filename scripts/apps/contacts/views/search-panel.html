@@ -28,13 +28,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="field">
-                        <label for="search-org" translate>Organisation</label>
-                        <div class="control">
-                            <input type="text" id="search-org" ng-keypress="keyPressed($event)"
-                                ng-model="meta.organisation">
-                        </div>
-                    </div>
+                    <div id="org-field"></div>
                     <div class="field">
                         <label for="search-job_title" translate>Job Title</label>
                         <select ng-model="meta.job_title"
@@ -47,7 +41,7 @@
                         <label for="search-postcode" translate>Email</label>
                         <div class="control">
                             <input type="text" id="search-email" ng-keypress="keyPressed($event)"
-                                ng-model="meta.email">
+                                ng-model="meta.contact_email">
                         </div>
                     </div>
                     <div class="field">
@@ -68,7 +62,7 @@
                         <label for="search-state" translate>State</label>
                         <div class="control">
                             <input type="text" id="search-state" ng-keypress="keyPressed($event)"
-                                ng-model="meta.state">
+                                ng-model="meta.contact_state">
                         </div>
                     </div>
                     <div class="field">

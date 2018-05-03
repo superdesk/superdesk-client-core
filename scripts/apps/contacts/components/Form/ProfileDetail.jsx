@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import {Row, LineInput, InputArray, MultiTextInput, Input, SelectInput, Toggle, ToggleBox,
-    ContactNumberInput, Label} from './index';
-import {get, set, isEmpty, findKey, orderBy} from 'lodash';
+    ContactNumberInput, Label, SelectFieldSearchInput} from './index';
+import {get, set, isEmpty, findKey, orderBy, map} from 'lodash';
 import {validateMinRequiredField} from '../../../contacts/helpers';
 
 
@@ -27,11 +27,15 @@ export class ProfileDetail extends React.Component {
             displayOtherStateField: this.shouldDisplayOtherState(props) || false,
             requiredField: !validateMinRequiredField(contact) || false,
             touched: {},
+            organisations: [],
+            orgValue: get(contact, 'organisation', ''),
         };
 
         this.changeOtherStateField = this.changeOtherStateField.bind(this);
         this.onBlur = this.onBlur.bind(this);
         this.isFieldInvalid = this.isFieldInvalid.bind(this);
+        this.getSearchResult = this.getSearchResult.bind(this);
+        this.handleOrgChange = this.handleOrgChange.bind(this);
     }
 
     onBlur(e) {
@@ -43,7 +47,7 @@ export class ProfileDetail extends React.Component {
     }
 
     isFieldInvalid(field) {
-        return this.state.touched[field] && _.isEmpty(this.props.contact[field]);
+        return this.state.touched[field] && isEmpty(this.props.contact[field]);
     }
 
     changeOtherStateField(e) {
@@ -58,6 +62,31 @@ export class ProfileDetail extends React.Component {
             !findKey(metadata.values.contact_states, (m) => m.qcode === contact.contact_state);
     }
 
+    getSearchResult(field, text) {
+        const {svc} = this.props;
+        const {contacts} = svc;
+
+        if (text) {
+            contacts.queryField(field, text).then((items) => {
+                switch (field) {
+                case 'organisation':
+                    this.setState({
+                        organisations: map(items._items, field),
+                        orgValue: text,
+                    });
+                }
+            });
+        }
+    }
+
+
+    handleOrgChange(field, value) {
+        this.setState({
+            orgValue: value,
+        });
+        this.props.onChange(field, value);
+    }
+
     componentWillReceiveProps(nextProps) {
         if (nextProps.contact !== this.props.contact) {
             let displayOtherState = this.shouldDisplayOtherState(nextProps);
@@ -65,6 +94,7 @@ export class ProfileDetail extends React.Component {
             this.setState({
                 displayOtherStateField: displayOtherState,
                 requiredField: !validateMinRequiredField(nextProps.contact) || false,
+                orgValue: get(nextProps.contact, 'organisation', ''),
             });
         }
     }
@@ -155,23 +185,39 @@ export class ProfileDetail extends React.Component {
                     </LineInput>
                 </Row>
 
-                <Row>
-                    <LineInput
-                        readOnly={readOnly}
-                        required={contactType === 'organisation'}
-                        invalid={contactType === 'organisation' && this.isFieldInvalid('organisation')}
-                        message={(contactType === 'organisation' && this.isFieldInvalid('organisation')) ?
-                            MSG_REQUIRED : ''}>
-                        <Label text={gettext('organisation')} />
-                        <Input
+                {contactType === 'organisation' &&
+                    <Row>
+                        <LineInput
+                            readOnly={readOnly}
+                            required={contactType === 'organisation'}
+                            invalid={contactType === 'organisation' && this.isFieldInvalid('organisation')}
+                            message={(contactType === 'organisation' && this.isFieldInvalid('organisation')) ?
+                                MSG_REQUIRED : ''}>
+                            <Label text={gettext('organisation')} />
+                            <Input
+                                field="organisation"
+                                value={get(contact, 'organisation', '')}
+                                onChange={onChange}
+                                onBlur={this.onBlur}
+                                type="text"
+                                readOnly={readOnly} />
+                        </LineInput>
+                    </Row>
+                }
+
+                {contactType === 'person' &&
+                    <Row>
+                        <SelectFieldSearchInput
                             field="organisation"
-                            value={get(contact, 'organisation', '')}
-                            onChange={onChange}
-                            onBlur={this.onBlur}
-                            type="text"
+                            label={gettext('Organisation')}
+                            value={this.state.orgValue}
+                            onChange={this.handleOrgChange}
+                            querySearch={true}
+                            onQuerySearch={((text) => this.getSearchResult('organisation', text))}
+                            dataList={this.state.organisations}
                             readOnly={readOnly} />
-                    </LineInput>
-                </Row>
+                    </Row>
+                }
 
                 <Row>
                     <SelectInput

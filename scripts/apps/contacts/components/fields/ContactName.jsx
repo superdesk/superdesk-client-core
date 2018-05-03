@@ -5,7 +5,7 @@ export const ContactName = ({item}) => {
     let displayContact = item.first_name ? `${item.first_name} ${item.last_name}` : item.organisation;
 
     return (
-        <span key="contact-name" className="contact-name">
+        <span key={`contact-name-${item._id}`} className="contact-name">
             {displayContact}
         </span>
     );
