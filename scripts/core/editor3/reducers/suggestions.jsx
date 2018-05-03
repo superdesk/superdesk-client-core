@@ -417,6 +417,18 @@ const processSplitSuggestion = (state, suggestion, accepted) => {
  * @description Accept or reject the suggestions in the selection.
  */
 const processSuggestion = (state, {suggestion}, accepted) => {
+    if (accepted === true || accepted === false) {
+        // after clicking accept/reject editor focus is lost
+        // restore the focus so undo stack is correct
+        // and pop up can be positioned properly on undo SDFID-401
+        state.editorState = EditorState.acceptSelection(
+            state.editorState,
+            state.editorState.getSelection().merge({
+                hasFocus: true,
+            })
+        );
+    }
+
     const {selection} = suggestion;
     let {editorState} = state;
     let tmpEditorState;
