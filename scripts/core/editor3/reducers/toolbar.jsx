@@ -63,12 +63,27 @@ const toggleBlockStyle = (state, blockType) => {
  */
 const toggleInlineStyle = (state, inlineStyle) => {
     const {editorState} = state;
-    const stateAfterChange = RichUtils.toggleInlineStyle(
+
+    let stateAfterChange = RichUtils.toggleInlineStyle(
         editorState,
         inlineStyle
     );
 
+    // Check if there was a suggestions to toggle that style
+    stateAfterChange = handleExistingInlineStyleSuggestionOnToggle(stateAfterChange, inlineStyle);
+
     return onChange(state, stateAfterChange);
+};
+
+const handleExistingInlineStyleSuggestionOnToggle = (editorState, inlineStyle) => {
+    const type = Highlights.getTypeByInlineStyle(inlineStyle);
+    const highlightName = Highlights.getHighlightStyleAtCurrentPosition(editorState, type);
+
+    if (highlightName) {
+        return Highlights.removeHighlight(editorState, highlightName);
+    }
+
+    return editorState;
 };
 
 /**
@@ -274,4 +289,3 @@ const toggleInvisibles = (state) => {
 const setPopup = (state, {type, data}) => ({...state, popup: {type, data}});
 
 export default toolbar;
-
