@@ -5,4 +5,4 @@ export {
     initSelectionIterator,
     hasNextSelection,
 } from './selectionIterator';
-
+export {collapseSelection} from './collapseSelection';

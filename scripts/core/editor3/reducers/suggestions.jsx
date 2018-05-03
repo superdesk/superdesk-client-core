@@ -9,6 +9,7 @@ import * as Blocks from '../helpers/blocks';
 import * as Links from '../helpers/links';
 import ng from 'core/services/ng';
 import {replaceSelectedEntityData} from '../components/links/entityUtils';
+import {collapseSelection} from '../helpers/selection';
 
 
 const suggestions = (state = {}, action) => {
@@ -296,6 +297,12 @@ const pasteAddSuggestion = (state, {content, data}) => {
 
     const beforeStyle = Highlights.getHighlightStyleAtOffset(editorState, changeSuggestionsTypes, initialSelection, -1);
     const beforeData = beforeStyle != null ? Highlights.getHighlightData(editorState, beforeStyle) : null;
+
+    // if text is selected mark it as removed and collapse the selection before replacing
+    if (!initialSelection.isCollapsed()) {
+        editorState = deleteCurrentSelection(editorState, data);
+        editorState = EditorState.acceptSelection(editorState, collapseSelection(initialSelection));
+    }
 
     // add content to editor state
     const mergedContent = Modifier.replaceWithFragment(
