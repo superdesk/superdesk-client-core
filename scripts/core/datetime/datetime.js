@@ -75,7 +75,7 @@ function DateTimeService(moment, config) {
     }
 
     function isArchiveYear(a, b) {
-        return (config.ArchivedDateOnCalendarYear === 1) ?
+        return config.ArchivedDateOnCalendarYear === 1 ?
             a.format(ISO_YEAR_FORMAT) !== b.format(ISO_YEAR_FORMAT) : b.diff(a, 'years') >= 1;
     }
 }
