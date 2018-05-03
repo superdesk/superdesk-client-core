@@ -77,7 +77,7 @@ class CommentInputBody extends Component {
                         value={msg}
                         onChange={this.onChange}
                     />
-                    <div className="pull-right">
+                    <div className="pull-right" style={{paddingTop: 20}}>
                         <button className="btn btn--cancel" onClick={this.props.hidePopups}>
                             {gettext('Cancel')}
                         </button>

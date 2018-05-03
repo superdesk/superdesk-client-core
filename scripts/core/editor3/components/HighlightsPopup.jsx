@@ -1,11 +1,10 @@
 import React, {Component} from 'react';
-import {getVisibleSelectionRect, EditorState} from 'draft-js';
+import {EditorState} from 'draft-js';
 import {render, unmountComponentAtNode} from 'react-dom';
 import PropTypes from 'prop-types';
 import {Provider} from 'react-redux';
 import {List} from 'immutable';
 
-import {Dropdown} from 'core/ui/components';
 import {CommentPopup} from './comments';
 import {SuggestionPopup} from './suggestions/SuggestionPopup';
 import {AnnotationPopup} from './annotations';
@@ -25,32 +24,8 @@ export class HighlightsPopup extends Component {
     constructor(props) {
         super(props);
 
-        this.lastTop = 150;
-
         this.onDocumentClick = this.onDocumentClick.bind(this);
         this.createHighlight = this.createHighlight.bind(this);
-        this.setHighlightsElelemtRef = this.setHighlightsElelemtRef.bind(this);
-    }
-
-    position() {
-        const viewportHeight = $(window).innerHeight();
-        const popupHeight = $(this.highlightEl).innerHeight();
-        const selectionRect = getVisibleSelectionRect(window);
-        const bottomBarHeight = $('.opened-articles').innerHeight();
-
-        const enoughSpaceAtTheBottom = viewportHeight - selectionRect.bottom - bottomBarHeight > popupHeight;
-
-        if (enoughSpaceAtTheBottom) {
-            this.highlightEl.style.top = selectionRect.top + 'px';
-        } else {
-            this.highlightEl.style.top = (selectionRect.bottom - popupHeight) + 'px';
-        }
-
-        this.highlightEl.style.left = (this.props.editorNode.getBoundingClientRect().left - 360) + 'px';
-    }
-
-    setHighlightsElelemtRef(ref) {
-        this.highlightEl = ref;
     }
 
     /**
@@ -90,7 +65,7 @@ export class HighlightsPopup extends Component {
         // outside the editor tree and loses context.
         return (
             <Provider store={store}>
-                <div className="highlights-popup" ref={this.setHighlightsElelemtRef}>
+                <div>
                     {
                         highlightsAndSuggestions
                             .map((obj, i) => (
@@ -114,28 +89,31 @@ export class HighlightsPopup extends Component {
     createHighlight(type, h, highlightId) {
         if (type === 'ANNOTATION') {
             return (
-                <Dropdown open={true}>
-                    <AnnotationPopup
-                        annotation={h}
-                        highlightId={highlightId}
-                        highlightsManager={this.props.highlightsManager}
-                    />
-                </Dropdown>
+                <AnnotationPopup
+                    annotation={h}
+                    highlightId={highlightId}
+                    highlightsManager={this.props.highlightsManager}
+                    editorNode={this.props.editorNode}
+                />
             );
         } else if (type === 'COMMENT') {
             return (
-                <Dropdown open={true}>
-                    <CommentPopup
-                        comment={h}
-                        highlightId={highlightId}
-                        highlightsManager={this.props.highlightsManager}
-                        onChange={this.props.onChange}
-                        editorState={this.props.editorState}
-                    />
-                </Dropdown>
+                <CommentPopup
+                    comment={h}
+                    highlightId={highlightId}
+                    highlightsManager={this.props.highlightsManager}
+                    onChange={this.props.onChange}
+                    editorState={this.props.editorState}
+                    editorNode={this.props.editorNode}
+                />
             );
         } else if (suggestionsTypes.indexOf(type) !== -1) {
-            return <SuggestionPopup suggestion={h} />;
+            return (
+                <SuggestionPopup
+                    suggestion={h}
+                    editorNode={this.props.editorNode}
+                />
+            );
         } else {
             console.error('Invalid highlight type in HighlightsPopup.jsx: ', type);
         }
@@ -154,11 +132,19 @@ export class HighlightsPopup extends Component {
      * clicks occur outside of it.
      */
     renderCustom() {
-        render(this.component(), document.getElementById('react-placeholder'));
-        document.addEventListener('click', this.onDocumentClick);
-        this.rendered = true;
+        // force unmount the existing component so it's rendered again instead of being updated
+        // when updating there are issues with positioning caused by
+        // not being to determine the position of selected text
+        // which may or may not be related to the implementation of draftjs' getVisibleSelectionRect
+        render(<div />, document.getElementById('react-placeholder'));
 
-        this.position();
+        render(this.component(), document.getElementById('react-placeholder'));
+        document.addEventListener('click', this.onDocumentClick, {
+            // required in order to prevent closing the popup when you click an element which is INSIDE the popup
+            // but is being removed after clicking
+            capture: true,
+        });
+        this.rendered = true;
     }
 
     /**
@@ -183,7 +169,7 @@ export class HighlightsPopup extends Component {
     onDocumentClick(e) {
         const t = $(e.target);
         const {editorNode} = this.props;
-        const onPopup = t.closest('.highlights-popup').length || t.closest('.mentions-input__suggestions').length;
+        const onPopup = t.closest('.editor-popup').length || t.closest('.mentions-input__suggestions').length;
         const onEditor = t.closest(editorNode).length;
 
         if (!onPopup && !onEditor) {

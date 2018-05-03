@@ -11,7 +11,7 @@
                     <div class="text" sd-comment-text data-name="{{users[item.data.authorId].display_name || users[item.data.authorId].username}}" data-text="{{item.data.msg}}"></div>
                     <span class="date" sd-absdate datetime="item.data.date"></span>
                 </div>
-                <ul class="comment-replies">
+                <ul>
                     <li class="small" ng-repeat="reply in item.data.replies">
                         <figure class="avatar">
                             <img sd-user-avatar data-user="users[reply.authorId]">
