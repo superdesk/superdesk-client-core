@@ -97,7 +97,7 @@ class ToolbarComponent extends Component {
             disabled: disabled,
         });
 
-        return activeCell !== null ? <TableControls /> :
+        return activeCell !== null ? <TableControls className={cx} /> :
             <div className={cx}>
                 {/* Styles */}
                 <BlockStyleButtons />
