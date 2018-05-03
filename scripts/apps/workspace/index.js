@@ -46,7 +46,7 @@ angular.module('superdesk.apps.workspace', [
             label: gettext('Assignments'),
             shortcut: 'ctrl+alt+a',
             if: 'privileges.planning && workspaceConfig.assignments',
-            order: 500,
+            order: 300,
         });
 
         workspaceMenuProvider.item({

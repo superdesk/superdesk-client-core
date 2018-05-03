@@ -402,7 +402,7 @@ angular.module('superdesk.apps.workspace.tasks', ['superdesk.apps.workspace.menu
             icon: 'tasks',
             label: gettext('Tasks'),
             shortcut: 'alt+t',
-            order: 400,
+            order: 500,
             if: 'privileges.tasks && workspaceConfig.tasks',
         });
     }]);
