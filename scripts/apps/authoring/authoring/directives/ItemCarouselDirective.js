@@ -54,9 +54,11 @@ export function ItemCarouselDirective($timeout) {
                     carousel.trigger('destroy.owl.carousel');
                 }
 
-                const carouselImages = Array.from(document.querySelectorAll(`${carouselContainerSelector} img`));
+                const carouselImages = Array.from(elem.get(0).querySelectorAll(`${carouselContainerSelector} img`));
                 const carouselAudiosAndVideos = Array.from(
-                    document.querySelectorAll(`${carouselContainerSelector} video, ${carouselContainerSelector} audio`)
+                    elem.get(0).querySelectorAll(
+                        `${carouselContainerSelector} video, ${carouselContainerSelector} audio`
+                    )
                 );
 
                 if (items.length < 1 || (carouselImages.length < 1 && carouselAudiosAndVideos.length < 1)) {
