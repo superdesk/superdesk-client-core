@@ -2,6 +2,10 @@
 
 import 'owl.carousel';
 import * as ctrl from '../controllers';
+import {waitForImagesToLoad, waitForAudioAndVideoToLoadMetadata} from 'core/helpers/waitForMediaToBeReady';
+
+
+const carouselContainerSelector = '.sd-media-carousel__content';
 
 /**
  * @ngdoc directive
@@ -46,19 +50,25 @@ export function ItemCarouselDirective($timeout) {
                 scope.carouselItems = _.sortBy(_.filter(items, (item) => item[item.fieldId]),
                     [(item) => item[item.fieldId].order]);
 
-                // On first opening, wait a little for image size to be calculated
-                let interval = 500;
-
                 if (carousel) {
-                    interval = 0;
                     carousel.trigger('destroy.owl.carousel');
                 }
 
-                if (items.length > 1) {
-                    $timeout(() => {
-                        initCarousel();
-                    }, interval, false);
+                const carouselImages = Array.from(document.querySelectorAll(`${carouselContainerSelector} img`));
+                const carouselAudiosAndVideos = Array.from(
+                    document.querySelectorAll(`${carouselContainerSelector} video, ${carouselContainerSelector} audio`)
+                );
+
+                if (items.length < 1 || (carouselImages.length < 1 && carouselAudiosAndVideos.length < 1)) {
+                    return;
                 }
+
+                Promise.all([
+                    waitForImagesToLoad(carouselImages),
+                    waitForAudioAndVideoToLoadMetadata(carouselAudiosAndVideos),
+                ]).then(() => {
+                    initCarousel();
+                });
             });
 
             /*
@@ -116,7 +126,7 @@ export function ItemCarouselDirective($timeout) {
             function initCarousel() {
                 let updated = false;
 
-                carousel = elem.find('.sd-media-carousel__content').owlCarousel({
+                carousel = elem.find(carouselContainerSelector).owlCarousel({
                     items: 1,
                     autoHeight: true,
                 });
