@@ -112,6 +112,26 @@ describe('vocabularies', () => {
                     expect(metadata.initialize).toHaveBeenCalled();
                 }));
 
+            it('validate vocabulary', inject((api, $q, $rootScope, metadata, $compile) => {
+                scope.vocabulary = {_id: 'foo', display_name: 'Foo', items: []};
+                scope.vocabulary.schema = {name: {required: true}, qcode: {required: true}, other: {}};
+
+                $compile('<form><div sd-vocabulary-config-modal-items></div></form>')(scope);
+                scope.$digest();
+
+                scope.vocabulary.items[0] = {name: null, is_active: true};
+                scope.$digest();
+                expect(scope.itemsValidation.valid).toBe(false);
+
+                scope.vocabulary.items[0] = {name: null, qcode: 'bar', is_active: true};
+                scope.$digest();
+                expect(scope.itemsValidation.valid).toBe(false);
+
+                scope.vocabulary.items[0] = {name: 'foo', qcode: 'bar', is_active: true};
+                scope.$digest();
+                expect(scope.itemsValidation.valid).toBe(true);
+            }));
+
             it('can cancel editing vocabulary', inject((api, $q, $rootScope, metadata) => {
                 var vocabularyLink = scope.vocabulary;
 

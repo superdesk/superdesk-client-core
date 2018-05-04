@@ -20,10 +20,11 @@ export function VocabularyConfigModalItems(gettext) {
             }
 
             function validItem(itemValidation) {
-                return itemValidation.name && itemValidation.qcode;
+                return _.every(scope.vocabulary.schema, (schema, schemaId) =>
+                    !schema.required || itemValidation[schemaId]);
             }
 
-            function validateItems(items) {
+            const validateItems = (items) => {
                 scope.itemsValidation.valid = true;
                 itemsValidation = items.map((_item) => {
                     let itemValidation = validateItem(_item);
@@ -31,7 +32,7 @@ export function VocabularyConfigModalItems(gettext) {
                     scope.itemsValidation.valid = scope.itemsValidation.valid && validItem(itemValidation);
                     return itemValidation;
                 });
-            }
+            };
 
             const update = (item, key, value) => {
                 const updates = {[key]: value};
@@ -81,7 +82,7 @@ export function VocabularyConfigModalItems(gettext) {
             });
 
             // re-render on items changes
-            scope.$watch('vocabulary.items', (items) => {
+            scope.$watchCollection('vocabulary.items', (items) => {
                 if (items && component) {
                     validateItems(items);
                     component.setState({items, itemsValidation});
