@@ -152,6 +152,7 @@ export function ArticleEditDirective(
                  */
                 scope.updateDateline = function(item, city) {
                     if (city === '') {
+                        item.dateline.date = null;
                         item.dateline.located = null;
                         item.dateline.text = '';
 
