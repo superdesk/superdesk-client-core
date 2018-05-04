@@ -115,118 +115,205 @@
         height: $nav-height;
         float: left;
     }
-        .dropdown {
-            position: relative;
-            float: left;
-            &.navbtn, button {
-                @include box-shadow(none);
-                border: none;
-                width: auto;
-                .name {
-                    display: block;
-                    float: left;
-                    min-width: 155px;
-                    max-width: 200px;
-                    overflow: hidden;
-                    white-space: nowrap;
-                    text-overflow: ellipsis;
-                    text-align: left;
-                    text-transform: uppercase;
-                }
-            }
-            &.open {
-                .dropdown__toggle {
-                    background-color: $white;
-                    color: #5aa1bf;
-                    .dropdown__caret {
-                        border-top-color: #595959;
-                    }
-                    &.workspace {
-                        background-color: $white;
-                        color: $purple;
-                    }
-                }
-            }
-            .dropdown__toggle {
-                background-color: $sd-blue;
-                color: $white;
-                padding: 0 15px;
-                font-size: 12px;
+    .dropdown {
+        position: relative;
+        float: left;
+        &.navbtn, button {
+            @include box-shadow(none);
+            border: none;
+            width: auto;
+            .name {
+                display: block;
+                float: left;
+                min-width: 155px;
+                max-width: 200px;
                 overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                text-align: left;
+                text-transform: uppercase;
+            }
+        }
+        &.open {
+            .dropdown__toggle {
+                background-color: $white;
+                color: #5aa1bf;
                 .dropdown__caret {
-                    border-top-color: $white;
+                    border-top-color: #595959;
                 }
                 &.workspace {
-                    background-color: $purple;
+                    background-color: $white;
+                    color: $purple;
+                }
+                &.desk--closed {
+                    background-color: $white;
+                    color: $red;
                 }
             }
-            .dropdown__menu {
-                min-width: 295px;
-                max-height: 550px;
-                overflow: auto;
+        }
+        .dropdown__toggle {
+            background-color: $sd-blue;
+            color: $white;
+            padding: 0 15px;
+            font-size: 12px;
+            overflow: hidden;
+            .dropdown__caret {
+                border-top-color: $white;
+            }
+            &.workspace {
+                background-color: $purple;
+            }
+            &.desk--closed {
+                background-color: $red;
+            }
+        }
+        .dropdown__menu {
+            min-width: 295px;
+            max-height: 550px;
+            overflow: auto;
+            margin: 0;
+            padding: 0;
+            z-index: 4;
+            .dropdown__menu-label {
+                font-size: 10px;
+                color: $grayLight;
+                padding: 5px 15px;
+                margin-top: 9px;
+                border-top: 1px solid #ebebeb;
+                &:first-of-type {
+                    margin-top: 0;
+                    border-top: 0;
+                }
+            }
+            .no-desk {
+                width: 100%;
+                background-color: $white;
+                color: $grayLight;
+                border: none;
+                height: auto;
+                font-size: 12px;
+                line-height: 1.3em;
                 margin: 0;
-                padding: 0;
-                z-index: 4;
-                .dropdown__menu-label {
-                    font-size: 10px;
-                    color: $grayLight;
-                    padding: 5px 15px;
+                padding: 10px 15px;
+                border-radius: 0;
+            }
+            button {
+                width: 100%;
+                background-color: $white;
+                color: $sd-blue-text;
+                border: none;
+                height: auto;
+                font-size: 12px;
+                line-height: 1.3em;
+                margin: 0;
+                padding: 10px 15px;
+                border-radius: 0;
+                text-transform: uppercase;
+                position: relative;
+                &[disabled] {
+                    &:hover {
+                        cursor: default;
+                        background-color: $white;
+                    }
+                }
+                &.action-btn {
+                    font-size: 13px;
                     margin-top: 9px;
+                    padding: 12px 15px;
+                    text-transform: none;
+                    color: #757676;
                     border-top: 1px solid #ebebeb;
-                    &:first-of-type {
-                        margin-top: 0;
-                        border-top: 0;
-                    }
                 }
-                .no-desk {
-                    width: 100%;
-                    background-color: $white;
-                    color: $grayLight;
-                    border: none;
-                    height: auto;
-                    font-size: 12px;
-                    line-height: 1.3em;
-                    margin: 0;
-                    padding: 10px 15px;
-                    border-radius: 0;
+                &:hover {
+                    background-color: #eef5f8;
                 }
+            }
+            .workspace-item {
                 button {
-                    width: 100%;
-                    background-color: $white;
-                    color: $sd-blue-text;
-                    border: none;
-                    height: auto;
-                    font-size: 12px;
-                    line-height: 1.3em;
-                    margin: 0;
-                    padding: 10px 15px;
-                    border-radius: 0;
-                    text-transform: uppercase;
-                    &[disabled] {
-                        &:hover {
-                            cursor: default;
-                            background-color: $white;
-                        }
-                    }
-                    &.action-btn {
-                        font-size: 13px;
-                        margin-top: 9px;
-                        padding: 12px 15px;
+                    color: $purple;
+                }
+            }
+            .desk-item--closed, .desk-item--receiving {
+                button {
+                    &::after {
+                        font-family: 'sd_icons';
+                        position: absolute;
+                        right: 8px;
+                        top: 9px;
+                        width: 16px;
+                        height: 16px;
+                        line-height: 16px;
+                        font-size: 16px;
+                        font-family: 'sd_icons';
+                        font-style: normal;
+                        font-weight: normal;
+                        font-variant: normal;
                         text-transform: none;
-                        color: #757676;
-                        border-top: 1px solid #ebebeb;
+                        -webkit-font-smoothing: antialiased;
+                        -moz-osx-font-smoothing: grayscale;
+                    }
+                }
+            }
+            .desk-item--closed {
+                button {
+                    color: $red;
+                    background-color: rgba(229, 28, 35, 0.08);
+                    &::after {
+                        content: "\e625";
+                        color: $red;
                     }
                     &:hover {
-                        background-color: #eef5f8;
+                        background-color: rgba(229, 28, 35, 0.16);
                     }
                 }
-                .workspace-item {
-                    button {
-                        color: $purple;
+            }
+            .desk-item--receiving {
+                button {
+                    &::after {
+                        content: "\e624";
+                        color: $green;
                     }
                 }
             }
         }
+    }
+    .top-menu__content-block {
+        display: flex;
+        align-items: center;
+        &--right {
+            margin-left: auto;
+            float: right;
+        }
+    }
+    .top-menu__info {
+        display: inline-flex;
+        height: 30px;
+        padding: 0 20px;
+        background-color: rgba(0,0,0,0.5);
+        line-height: 1;
+        color: $white;
+        font-size: 12px;
+        border-radius: 15px;
+        align-items: center;
+    }
+    .top-menu__info-label {
+        font-weight: 300;
+        color: rgba(255, 255, 255, 0.5);
+        padding-right: 5px;
+    }
+    .top-menu__info-text {
+        font-weight: 400;
+    }
+    .top-menu__info-icon {
+        margin-right: 6px;
+        color: inherit;
+        &--green {
+            color: $green;
+        }
+        &--red {
+            color: $red;
+        }
+    }
 }
 
 #side-menu {

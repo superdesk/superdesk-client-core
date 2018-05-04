@@ -1,28 +1,31 @@
 <div>
   <div id="top-menu" ng-class="{'menu-open': flags.menu, 'test-environment': isTestEnvironment}" data-text="{{environmentName}}">
-      <div class="nav pull-left">
+      <div class="pull-left">
         <button class="collapse-nav pull-left" ng-click="toggleMenu()">
           <i class="icon-collapse icon--white"></i>
         </button>
-
         <p class="sd-top-menu__header" ng-if="currentRoute.category !== 'superdesk.core.menu.settings'"
           ng-hide="currentRoute.topTemplateUrl">{{ currentRoute.label | translate}}</p>
         <p class="sd-top-menu__header" ng-if="currentRoute.category === 'superdesk.core.menu.settings'"
           ng-hide="currentRoute.topTemplateUrl">{{ "Settings" | translate}}</p>
         <div class="top-nav pull-left" ng-include="currentRoute.topTemplateUrl"></div>
       </div>
-
-      <div class="nav pull-right">
-          <button class="current-user pull-right" ng-click="toggleNotifications()">
-              <span id="unread-count" class="badge badge--primary" ng-show="notifications.unread">{{ notifications.unread }}</span>
-              <figure class="avatar">
-                <img sd-user-avatar data-user="currentUser" alt="{{currentUser.display_name || currentUser.username }}">
-              </figure>
-          </button>
-          <button ng-if="privileges.feature_preview" ng-click="toggleBeta()" class="beta-switch pull-right">
-              <span class="stable" ng-hide="beta" title="{{ :: 'Switch to feature preview' | translate }}">stable</span>
-              <span class="beta" ng-show="beta" sd-tooltip="{{ :: 'Turn off feature preview' | translate }}" flow="down">feature preview</span>
-          </button>
+      <div class="top-menu__content-block top-menu__content-block--right">
+        <!-- <div class="top-menu__info">
+          <i class="icon-download top-menu__info-icon top-menu__info-icon--green"></i>
+          <span class="top-menu__info-label">Routed from:</span>
+          <span class="top-menu__info-text">Sports desk</span>
+        </div> -->
+        <button ng-if="privileges.feature_preview" ng-click="toggleBeta()" class="beta-switch">
+            <span class="stable" ng-hide="beta" title="{{ :: 'Switch to feature preview' | translate }}">stable</span>
+            <span class="beta" ng-show="beta" sd-tooltip="{{ :: 'Turn off feature preview' | translate }}" flow="down">feature preview</span>
+        </button>
+        <button class="current-user" ng-click="toggleNotifications()">
+            <span id="unread-count" class="badge badge--primary" ng-show="notifications.unread">{{ notifications.unread }}</span>
+            <figure class="avatar">
+              <img sd-user-avatar data-user="currentUser" alt="{{currentUser.display_name || currentUser.username }}">
+            </figure>
+        </button>
       </div>
   </div>
 
