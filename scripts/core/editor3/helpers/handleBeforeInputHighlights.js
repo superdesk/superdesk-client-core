@@ -16,7 +16,10 @@ import {styleNameBelongsToHighlight} from './highlights';
  */
 function getRelevantCharactersForCollapsedSelection(editorState, collapsedSelection) {
     let characters = List();
-    const resizedSelection = resizeDraftSelection(1, 1, collapsedSelection, editorState, false);
+    const selectionAtTheStartOfTheLine = editorState.getSelection().getStartOffset() === 0;
+    const resizeLeft = selectionAtTheStartOfTheLine ? 2 : 1; // SDESK-2861
+
+    const resizedSelection = resizeDraftSelection(resizeLeft, 1, collapsedSelection, editorState, false);
     const resizeLeftFailed = collapsedSelection.getStartOffset() === resizedSelection.getStartOffset();
     const resizeRightFailed = collapsedSelection.getEndOffset() === resizedSelection.getEndOffset();
 
