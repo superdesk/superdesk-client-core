@@ -6,7 +6,9 @@ import {getDraftCharacterListForSelection} from './getDraftCharacterListForSelec
 import {getDraftSelectionForEntireContent} from './getDraftSelectionForEntireContent';
 import {resizeDraftSelection} from './resizeDraftSelection';
 import {clearInlineStyles} from './clearInlineStyles';
-import {changeSuggestionsTypes, blockStylesDescription} from '../highlightsConfig';
+import {changeSuggestionsTypes, blockStylesDescription, blockChangeSuggestionTypes} from '../highlightsConfig';
+
+export const paragraphSeparator = 'π';
 
 export const availableHighlights = Object.keys(highlightsConfig).reduce((obj, key) => {
     obj[key] = highlightsConfig[key].draftStyleMap;
@@ -669,6 +671,7 @@ export const getBlockAndOffset = (
 };
 
 function getLeftRangeAndTextForStyle(editorState, style) {
+    const type = getHighlightTypeFromStyleName(style);
     const selection = editorState.getSelection();
     const content = editorState.getCurrentContent();
     let startBlock = content.getBlockForKey(selection.getStartKey());
@@ -681,6 +684,14 @@ function getLeftRangeAndTextForStyle(editorState, style) {
     let blockText;
     let found;
     let newBlock = false;
+
+    if (blockChangeSuggestionTypes.indexOf(type) !== -1) {
+        startText = block.getText()
+            .substring(0, startOffset)
+            .replace(/ + paragraphSeparator + /g, '') + ' \\ ';
+
+        return {startOffset, startBlock, startText};
+    }
 
     while (block) {
         found = false;
@@ -719,6 +730,7 @@ function getLeftRangeAndTextForStyle(editorState, style) {
 }
 
 function getRightRangeAndTextForStyle(editorState, style) {
+    const type = getHighlightTypeFromStyleName(style);
     const selection = editorState.getSelection();
     const content = editorState.getCurrentContent();
     let endText = '';
@@ -731,6 +743,20 @@ function getRightRangeAndTextForStyle(editorState, style) {
     let blockText;
     let found;
     let newBlock = false;
+
+    if (blockChangeSuggestionTypes.indexOf(type) !== -1) {
+        endText = block.getText()
+            .substring(endOffset)
+            .replace(/ +paragraphSeparator + /g, '');
+
+        if (endText === '') {
+            block = content.getBlockAfter(block.getKey());
+            endText = block.getText()
+                .replace(/ + paragraphSeparator + /g, '');
+        }
+
+        return {endOffset, endBlock, endText};
+    }
 
     if (block.getLength() === offset && offset !== 0) {
         block = content.getBlockAfter(block.getKey());

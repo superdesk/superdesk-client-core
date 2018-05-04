@@ -46,7 +46,7 @@ export function hasNextSelection(editorState, selection, backward = false) {
     const startBlock = content.getBlockForKey(selection.getStartKey());
     const endBlock = content.getBlockForKey(selection.getEndKey());
 
-    if (startBlock == null || endBlock == null) {
+    if (startBlock == null && backward || endBlock == null && !backward) {
         throw new Error('The following selection is invalid: ', selection);
     }
 
