@@ -22,6 +22,7 @@ const TableControlsComponent = ({
     activeCell,
     editorState,
     toggleTableHead,
+    className,
 }) => {
     const {key} = activeCell;
     const contentState = editorState.getCurrentContent();
@@ -30,7 +31,7 @@ const TableControlsComponent = ({
     const entity = contentState.getEntity(entityKey);
     const {withHeader} = entity.getData().data;
 
-    return <div className="Editor3-controls table-controls">
+    return <div className={'table-controls ' + className}>
         <StyleButton active={withHeader} label={'TH'} onToggle={toggleTableHead} />
         <span className="Editor3-styleButton Editor3-styleButton--short"
             onClick={removeRow}><i className="icon-minus-sign" /></span>
@@ -50,6 +51,7 @@ TableControlsComponent.propTypes = {
     activeCell: PropTypes.object.isRequired,
     editorState: PropTypes.object,
     toggleTableHead: PropTypes.func,
+    className: PropTypes.string,
 };
 
 const mapDispatchToProps = (dispatch) => ({
