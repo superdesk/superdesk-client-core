@@ -74,7 +74,7 @@ class Suggestion extends Component {
         let content;
 
         switch (this.props.suggestion.type) {
-        case 'REPLACE_SSUGGESTION':
+        case 'REPLACE_SUGGESTION':
             content = (
                 <div>
                     <div>
