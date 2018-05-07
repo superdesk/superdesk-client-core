@@ -41,7 +41,9 @@ export function ItemCarouselDirective($timeout) {
                     return false;
                 }
 
-                scope.rel = _.find(items, (item) => !item[item.fieldId]).fieldId;
+                let field = _.find(items, (item) => !item[item.fieldId]);
+
+                scope.rel = field ? field.fieldId : null;
 
                 scope.carouselItems = _.sortBy(_.filter(items, (item) => item[item.fieldId]),
                     [(item) => item[item.fieldId].order]);
