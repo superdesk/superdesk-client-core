@@ -179,7 +179,7 @@ export function createLinkSuggestion(link) {
  * @return {Object} returns suggestion metadata
  * @description Creates data structure with info about current user and current date.
  */
-const getSuggestionMetadata = () => {
+export const getSuggestionMetadata = () => {
     const data = {};
     const date = new Date();
 

@@ -6,6 +6,7 @@ import * as Links from '../helpers/links';
 import * as Blocks from '../helpers/blocks';
 import * as Highlights from '../helpers/highlights';
 import {removeFormatFromState} from '../helpers/removeFormat';
+import {getSuggestionMetadata} from '../actions/suggestions';
 
 /**
  * @description Contains the list of toolbar related reducers.
@@ -150,7 +151,7 @@ const removeLink = (state) => {
     let {editorState} = state;
 
     if (state.suggestingMode) {
-        editorState = highlightEntity(editorState, 'REMOVE_LINK_SUGGESTION', null, true);
+        editorState = highlightEntity(editorState, 'REMOVE_LINK_SUGGESTION', getSuggestionMetadata(), true);
     } else {
         editorState = Links.removeLink(editorState);
     }
