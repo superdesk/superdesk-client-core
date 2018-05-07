@@ -50,26 +50,30 @@ export function ItemCarouselDirective($timeout) {
                 scope.carouselItems = _.sortBy(_.filter(items, (item) => item[item.fieldId]),
                     [(item) => item[item.fieldId].order]);
 
-                if (carousel) {
-                    carousel.trigger('destroy.owl.carousel');
-                }
+                setTimeout(() => {
+                    // waiting for angular to render items
 
-                const carouselImages = Array.from(elem.get(0).querySelectorAll(`${carouselContainerSelector} img`));
-                const carouselAudiosAndVideos = Array.from(
-                    elem.get(0).querySelectorAll(
-                        `${carouselContainerSelector} video, ${carouselContainerSelector} audio`
-                    )
-                );
+                    if (carousel) {
+                        carousel.trigger('destroy.owl.carousel');
+                    }
 
-                if (items.length < 1 || (carouselImages.length < 1 && carouselAudiosAndVideos.length < 1)) {
-                    return;
-                }
+                    const carouselImages = Array.from(elem.get(0).querySelectorAll(`${carouselContainerSelector} img`));
+                    const carouselAudiosAndVideos = Array.from(
+                        elem.get(0).querySelectorAll(
+                            `${carouselContainerSelector} video, ${carouselContainerSelector} audio`
+                        )
+                    );
 
-                Promise.all([
-                    waitForImagesToLoad(carouselImages),
-                    waitForAudioAndVideoToLoadMetadata(carouselAudiosAndVideos),
-                ]).then(() => {
-                    initCarousel();
+                    if (items.length < 1 || (carouselImages.length + carouselAudiosAndVideos.length < 1)) {
+                        return;
+                    }
+
+                    Promise.all([
+                        waitForImagesToLoad(carouselImages),
+                        waitForAudioAndVideoToLoadMetadata(carouselAudiosAndVideos),
+                    ]).then(() => {
+                        initCarousel();
+                    });
                 });
             });
 
