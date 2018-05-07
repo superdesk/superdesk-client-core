@@ -669,6 +669,14 @@ Profile page styles
       .line-input {
         text-align: left;
       }
+      .dropdown__toggle {
+        .dropdown__caret {
+          position: absolute;
+          top: 50%;
+          right: 3px;
+          margin-top: -3px;
+        }
+      }
     }
 
     input[type="checkbox"] {
