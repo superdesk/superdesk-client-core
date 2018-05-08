@@ -6,9 +6,9 @@ import {getDraftCharacterListForSelection} from './getDraftCharacterListForSelec
 import {getDraftSelectionForEntireContent} from './getDraftSelectionForEntireContent';
 import {resizeDraftSelection} from './resizeDraftSelection';
 import {clearInlineStyles} from './clearInlineStyles';
-import {changeSuggestionsTypes, blockStylesDescription, blockChangeSuggestionTypes} from '../highlightsConfig';
+import {changeSuggestionsTypes, blockStylesDescription, paragraphSuggestionTypes} from '../highlightsConfig';
 
-export const paragraphSeparator = 'π';
+export const paragraphSeparator = '¶';
 
 export const availableHighlights = Object.keys(highlightsConfig).reduce((obj, key) => {
     obj[key] = highlightsConfig[key].draftStyleMap;
@@ -685,10 +685,9 @@ function getLeftRangeAndTextForStyle(editorState, style) {
     let found;
     let newBlock = false;
 
-    if (blockChangeSuggestionTypes.indexOf(type) !== -1) {
+    if (paragraphSuggestionTypes.indexOf(type) !== -1) {
         startText = block.getText()
-            .substring(0, startOffset)
-            .replace(/ + paragraphSeparator + /g, '') + ' \\ ';
+            .substring(0, startOffset) + ' \\ ';
 
         return {startOffset, startBlock, startText};
     }
@@ -744,15 +743,13 @@ function getRightRangeAndTextForStyle(editorState, style) {
     let found;
     let newBlock = false;
 
-    if (blockChangeSuggestionTypes.indexOf(type) !== -1) {
+    if (paragraphSuggestionTypes.indexOf(type) !== -1) {
         endText = block.getText()
-            .substring(endOffset)
-            .replace(/ +paragraphSeparator + /g, '');
+            .substring(endOffset);
 
         if (endText === '') {
             block = content.getBlockAfter(block.getKey());
-            endText = block.getText()
-                .replace(/ + paragraphSeparator + /g, '');
+            endText = block.getText();
         }
 
         return {endOffset, endBlock, endText};

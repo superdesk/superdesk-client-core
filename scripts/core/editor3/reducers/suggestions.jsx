@@ -1,7 +1,8 @@
 import {EditorState, Modifier, RichUtils} from 'draft-js';
 import {onChange} from './editor3';
 import {acceptedInlineStyles, sanitizeContent} from '../helpers/inlineStyles';
-import {changeSuggestionsTypes, styleSuggestionsTypes, blockSuggestionTypes} from '../highlightsConfig';
+import {changeSuggestionsTypes, styleSuggestionsTypes,
+    blockSuggestionTypes, paragraphSuggestionTypes} from '../highlightsConfig';
 import * as Highlights from '../helpers/highlights';
 import {initSelectionIterator, hasNextSelection} from '../helpers/selection';
 import {editor3DataKeys, getCustomDataFromEditor, setCustomDataForEditor} from '../helpers/editor3CustomData';
@@ -245,6 +246,27 @@ const createChangeBlockStyleSuggestion = (state, {blockType, data}) => {
     return saveEditorStatus(state, editorState, 'change-block-type', true);
 };
 
+
+/**
+ * @ngdoc method
+ * @name isMergeParagraph
+ * @param {Object} editorState
+ * @param {Object} data - info about the author of suggestion
+ * @return {Object} returns true if there is a merge paragraph suggestion for the same user
+ * @description Check if at current position there is a merge paragraph suggestion.
+ */
+const isMergeParagraph = (editorState, data) => {
+    const suggestionStyle = Highlights.getHighlightStyleAtCurrentPosition(editorState, ['MERGE_PARAGRAPHS_SUGGESTION']);
+
+    if (suggestionStyle == null) {
+        return false;
+    }
+
+    const suggestionAuthor = Highlights.getHighlightAuthor(editorState, suggestionStyle);
+
+    return suggestionAuthor != null && suggestionAuthor === data.author;
+};
+
 /**
  * @ngdoc method
  * @name createSplitParagraphSuggestion
@@ -256,23 +278,48 @@ const createChangeBlockStyleSuggestion = (state, {blockType, data}) => {
 const createSplitParagraphSuggestion = (state, {data}) => {
     const type = 'SPLIT_PARAGRAPH_SUGGESTION';
     let {editorState} = state;
+    const isMergeParagraphAfter = isMergeParagraph(editorState, data);
+    const checkState = Highlights.changeEditorSelection(editorState, -1, -1, false);
+    const isMergeParagraphBefore = isMergeParagraph(checkState, data);
     let selection = editorState.getSelection();
     let content = Modifier.splitBlock(editorState.getCurrentContent(), selection);
     const firstBlock = content.getBlockForKey(selection.getStartKey());
     const secondBlock = content.getBlockAfter(selection.getStartKey());
 
-    selection = selection.merge({
-        anchorOffset: firstBlock.getLength(),
-        anchorKey: firstBlock.getKey(),
-        focusOffset: firstBlock.getLength(),
-        focusKey: firstBlock.getKey(),
-        isBackward: false,
-    });
-    content = Modifier.insertText(content, selection, Highlights.paragraphSeparator);
-    editorState = EditorState.push(editorState, content, 'insert-characters');
-    editorState = EditorState.acceptSelection(editorState, selection);
-    editorState = Highlights.changeEditorSelection(editorState, 0, 1, false);
-    editorState = Highlights.addHighlight(editorState, type, data);
+    if (isMergeParagraphBefore || isMergeParagraphAfter) {
+        if (isMergeParagraphBefore) {
+            selection = selection.merge({
+                anchorOffset: firstBlock.getLength() - 1,
+                anchorKey: firstBlock.getKey(),
+                focusOffset: firstBlock.getLength(),
+                focusKey: firstBlock.getKey(),
+                isBackward: false,
+            });
+        } else {
+            selection = selection.merge({
+                anchorOffset: 0,
+                anchorKey: secondBlock.getKey(),
+                focusOffset: 1,
+                focusKey: secondBlock.getKey(),
+                isBackward: false,
+            });
+        }
+        content = Modifier.removeRange(content, selection, 'backward');
+        editorState = EditorState.push(editorState, content, 'remove-range');
+    } else {
+        selection = selection.merge({
+            anchorOffset: firstBlock.getLength(),
+            anchorKey: firstBlock.getKey(),
+            focusOffset: firstBlock.getLength(),
+            focusKey: firstBlock.getKey(),
+            isBackward: false,
+        });
+        content = Modifier.insertText(content, selection, Highlights.paragraphSeparator);
+        editorState = EditorState.push(editorState, content, 'insert-characters');
+        editorState = EditorState.acceptSelection(editorState, selection);
+        editorState = Highlights.changeEditorSelection(editorState, 0, 1, false);
+        editorState = Highlights.addHighlight(editorState, type, data);
+    }
 
     selection = selection.merge({
         anchorOffset: 0,
@@ -635,6 +682,26 @@ const setAddSuggestionForCharacter = (editorState, data, text, inlineStyle = nul
 
 /**
  * @ngdoc method
+ * @name isSplitParagraph
+ * @param {Object} editorState
+ * @param {Object} data - info about the author of suggestion
+ * @return {Object} returns true if there is a split paragraph suggestion for the same user
+ * @description Check if at current position there is a split paragraph suggestion.
+ */
+const isSplitParagraph = (editorState, data) => {
+    const suggestionStyle = Highlights.getHighlightStyleAtCurrentPosition(editorState, ['SPLIT_PARAGRAPH_SUGGESTION']);
+
+    if (suggestionStyle == null) {
+        return false;
+    }
+
+    const suggestionAuthor = Highlights.getHighlightAuthor(editorState, suggestionStyle);
+
+    return suggestionAuthor != null && suggestionAuthor === data.author;
+};
+
+/**
+ * @ngdoc method
  * @name setMergeParagraphSuggestion
  * @param {Object} editorState
  * @param {Object} data - info about the author of suggestion
@@ -643,16 +710,25 @@ const setAddSuggestionForCharacter = (editorState, data, text, inlineStyle = nul
  */
 const setMergeParagraphSuggestion = (editorState, data) => {
     const type = 'MERGE_PARAGRAPHS_SUGGESTION';
-    let newState = Highlights.changeEditorSelection(editorState, -1, 0, false);
+    const checkState = Highlights.changeEditorSelection(editorState, -2, 0, false);
+    const deleteSplitSuggestion = isSplitParagraph(checkState, data);
+    const offset = deleteSplitSuggestion ? -1 : 0;
+    let newState = Highlights.changeEditorSelection(editorState, offset - 1, 0, false);
     let content = newState.getCurrentContent();
     let selection = newState.getSelection();
 
-    content = Modifier.replaceText(content, selection, Highlights.paragraphSeparator);
-    newState = EditorState.push(newState, content, 'insert-characters');
-    newState = Highlights.changeEditorSelection(newState, -1, 0, false);
-    newState = Highlights.addHighlight(newState, type, data);
+    if (deleteSplitSuggestion) {
+        content = Modifier.removeRange(content, selection, 'backward');
+        newState = EditorState.push(newState, content, 'remove-range');
+    } else {
+        content = Modifier.replaceText(content, selection, Highlights.paragraphSeparator);
+        newState = EditorState.push(newState, content, 'insert-characters');
+        newState = Highlights.changeEditorSelection(newState, -1, 0, false);
+        newState = Highlights.addHighlight(newState, type, data);
+        Highlights.changeEditorSelection(newState, 0, -1, false);
+    }
 
-    return Highlights.changeEditorSelection(newState, 0, -1, false);
+    return newState;
 };
 
 /**
@@ -670,12 +746,20 @@ const setMergeParagraphSuggestion = (editorState, data) => {
  */
 const setDeleteSuggestionForCharacter = (editorState, data) => {
     let selection = editorState.getSelection();
-    const currentStyle = Highlights.getHighlightStyleAtOffset(editorState, changeSuggestionsTypes, selection, -1);
-    const currentData = currentStyle != null ? Highlights.getHighlightData(editorState, currentStyle) : null;
 
     if (selection.getStartOffset() === 0) {
         return setMergeParagraphSuggestion(editorState, data);
     }
+
+    const paragraphStyle = Highlights.getHighlightStyleAtOffset(editorState, paragraphSuggestionTypes, selection, -1);
+
+    if (paragraphStyle != null) {
+        // if current character is marked as paragraph suggestion, skip
+        return Highlights.changeEditorSelection(editorState, -1, -1, true);
+    }
+
+    const currentStyle = Highlights.getHighlightStyleAtOffset(editorState, changeSuggestionsTypes, selection, -1);
+    const currentData = currentStyle != null ? Highlights.getHighlightData(editorState, currentStyle) : null;
 
     if (currentData != null && currentData.type === 'DELETE_SUGGESTION') {
         // if current character is already marked as a delete suggestion, skip

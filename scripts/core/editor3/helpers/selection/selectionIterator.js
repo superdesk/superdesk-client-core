@@ -51,10 +51,10 @@ export function hasNextSelection(editorState, selection, backward = false) {
     }
 
     if (backward) {
-        return selection.getStartOffset() !== crtSelection.getStartOffset() ||
+        return selection.getStartOffset() < crtSelection.getStartOffset() ||
             selection.getStartKey() !== crtSelection.getStartKey();
     } else {
-        return selection.getEndOffset() !== crtSelection.getEndOffset() ||
+        return selection.getEndOffset() > crtSelection.getEndOffset() ||
             selection.getEndKey() !== crtSelection.getEndKey();
     }
 }

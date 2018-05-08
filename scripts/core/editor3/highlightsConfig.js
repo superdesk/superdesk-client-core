@@ -96,7 +96,7 @@ export const highlightsConfig = {
         draftStyleMap: {
             color: 'rgba(0, 180, 0, 1.0)',
             fontWeight: 'bold',
-            fontSize: '1.4em',
+            fontFamily: 'sans-serif',
         },
     },
     MERGE_PARAGRAPHS_SUGGESTION: {
@@ -106,7 +106,7 @@ export const highlightsConfig = {
             color: 'rgba(255, 0, 0, 1.0)',
             textDecoration: 'line-through',
             fontWeight: 'bold',
-            fontSize: '1.4em',
+            fontFamily: 'sans-serif',
         },
     },
     ADD_LINK_SUGGESTION: {
@@ -147,7 +147,7 @@ export const blockSuggestionTypes = [
     'BLOCK_STYLE_SUGGESTION',
 ];
 
-export const blockChangeSuggestionTypes = [
+export const paragraphSuggestionTypes = [
     'SPLIT_PARAGRAPH_SUGGESTION',
     'MERGE_PARAGRAPHS_SUGGESTION',
 ];
@@ -156,7 +156,7 @@ export const suggestionsTypes = [
     ...changeSuggestionsTypes,
     ...styleSuggestionsTypes,
     ...blockSuggestionTypes,
-    ...blockChangeSuggestionTypes,
+    ...paragraphSuggestionTypes,
     'ADD_LINK_SUGGESTION',
     'REMOVE_LINK_SUGGESTION',
     'CHANGE_LINK_SUGGESTION',
