@@ -71,9 +71,7 @@ export function ItemCarouselDirective($timeout) {
                     Promise.all([
                         waitForImagesToLoad(carouselImages),
                         waitForAudioAndVideoToLoadMetadata(carouselAudiosAndVideos),
-                    ]).then(() => {
-                        initCarousel();
-                    });
+                    ]).then(initCarousel);
                 });
             });
 
