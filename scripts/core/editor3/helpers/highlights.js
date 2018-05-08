@@ -687,7 +687,7 @@ function getLeftRangeAndTextForStyle(editorState, style) {
 
     if (paragraphSuggestionTypes.indexOf(type) !== -1) {
         startText = block.getText()
-            .substring(0, startOffset) + ' \\ ';
+            .substring(0, startOffset) + paragraphSeparator;
 
         return {startOffset, startBlock, startText};
     }
@@ -706,7 +706,7 @@ function getLeftRangeAndTextForStyle(editorState, style) {
             }
 
             if (newBlock) {
-                startText = ' \\ ' + startText;
+                startText = paragraphSeparator + startText;
                 newBlock = false;
             }
 
@@ -780,7 +780,7 @@ function getRightRangeAndTextForStyle(editorState, style) {
             }
 
             if (newBlock) {
-                endText = endText + ' \\ ';
+                endText = endText + paragraphSeparator;
                 newBlock = false;
             }
 
