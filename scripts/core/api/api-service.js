@@ -207,6 +207,7 @@ function APIProvider() {
                 params: params,
                 headers: getHeaders(item),
             }).then((data) => {
+                delete data._type;
                 angular.extend(item, diff || {});
                 angular.extend(item, data);
                 return item;

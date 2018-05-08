@@ -346,13 +346,14 @@ describe('API Provider', () => {
             var user = {_id: 1, _links: {self: {href: USER_PATH}}, name: 'foo', _etag: ETAG};
             var diff = {name: 'bar'};
 
-            $httpBackend.expectPATCH(USER_URL, diff, testEtagHeader).respond(200, {name: 'bar'});
+            $httpBackend.expectPATCH(USER_URL, diff, testEtagHeader).respond(200, {name: 'bar', _type: 'user'});
 
             api('users').save(user, diff);
 
             $httpBackend.flush();
 
             expect(user.name).toBe('bar');
+            expect(_.has(user, '_type')).toBe(false);
         }));
 
         it('can query resource', inject((api, $httpBackend) => {
