@@ -686,6 +686,7 @@ $editor-styleButton-size: 3rem;
 
 .mentions-input {
 	width: 300px;
+	max-width: 100%;
 	margin-bottom: 10px;
 
 	&__suggestions__item {
@@ -764,102 +765,6 @@ $editor-styleButton-size: 3rem;
 		margin: 0.6rem 0;
 	}
 }
-
-.highlights-popup {
-	position: fixed;
-	top: 0;
-	left: 0;
-	z-index: 1000;
-	width: 330px;
-
-	.dropdown a:not(.btn) { color: $sd-blue; }
-	.dropdown__menu {
-		width: 330px;
-		padding: 15px;
-		position: relative;
-	}
-
-	.comment-replies {
-		margin: 10px 0;
-		max-height: 180px;
-		overflow-y: scroll;
-
-		.small {
-			font-size: 11px;
-			border-left: 5px solid #eaeaea;
-			border-bottom: 1px solid #eaeaea;
-			background: #fbfbfb;
-			padding: 10px 0 5px 10px;
-		}
-
-		.highlights-popup__header {
-			padding: 0 0 5px;
-            position: relative;
-
-
-            .highlights-popup__header__actions {
-                position: absolute;
-                top: 0;
-                right: 0;
-            }
-		}
-	}
-
-	.comment-reply-input {
-
-		.comment-reply-buttons {
-			height: 1%;
-			overflow: hidden;
-			.btn-reply {
-				margin: 5px 0 0;
-				float: right;
-			}
-		}
-	}
-
-	&__header {
-		float: left;
-		padding: 0 0 15px;
-		width: 100%;
-
-		.user-avatar figure {
-			margin: 1px 8px 0 0;
-		}
-
-		.user-info {
-			.author-name {
-				font-weight: bold;
-			}
-
-			.date {
-				color: $gray;
-				font-size: 11px;
-				line-height: 13px;
-			}
-		}
-	}
-
-	&__body {
-		a {
-			color: #5d9bc0;
-		}
-		clear: both;
-		white-space: pre-wrap;
-	}
-
-	&__html {
-		margin: 10px 0;
-		p:last-child {
-			margin-bottom: 0;
-		}
-	}
-
-	&__type {
-		font-size: 1.1rem;
-	}
-}
-
-
 
 // Link input dropdown
 .dropdown--link-input {

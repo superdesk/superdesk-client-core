@@ -1,12 +1,25 @@
 export default ({
     input: {
+        margin: 0,
+
         control: {
             backgroundColor: '#fff',
             fontWeight: 'normal',
+            width: '100%',
+            margin: 0,
         },
 
         input: {
             margin: 0,
+        },
+
+        '&singleLine': {
+            input: {
+                height: '100%',
+            },
+            control: {
+                padding: '4px 0',
+            },
         },
 
         '&multiLine': {

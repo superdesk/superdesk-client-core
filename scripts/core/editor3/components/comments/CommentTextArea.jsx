@@ -84,7 +84,10 @@ class CommentTextArea extends React.Component {
                     style={mentionsStyle.input}
                     className="mentions-input"
                     markup="@[__display__](__type__:__id__)"
-                    placeholder={gettext('Type your comment...')}
+                    placeholder={this.props.placeholder || gettext('Type your comment...')}
+                    onFocus={this.props.onFocus}
+                    onBlur={this.props.onBlur}
+                    singleLine={this.props.singleLine}
                 >
                     <Mention
                         trigger="@"
@@ -112,6 +115,10 @@ class CommentTextArea extends React.Component {
 CommentTextArea.propTypes = {
     value: PropTypes.string,
     onChange: PropTypes.func.isRequired,
+    placeholder: PropTypes.string,
+    onFocus: PropTypes.func,
+    onBlur: PropTypes.func,
+    singleLine: PropTypes.bool,
 };
 
 export default CommentTextArea;

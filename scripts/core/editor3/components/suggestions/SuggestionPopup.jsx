@@ -5,9 +5,10 @@ import {get} from 'lodash';
 import moment from 'moment';
 import ng from 'core/services/ng';
 import {Dropdown} from 'core/ui/components';
-import {UserAvatar} from 'apps/users/components';
 import {acceptSuggestion, rejectSuggestion} from '../../actions';
 import * as Highlights from '../../helpers/highlights';
+import {HighlightsPopupPresentation} from '../HighlightsPopupPresentation';
+import {UserAvatar} from 'apps/users/components/UserAvatar';
 
 /**
  * @ngdoc React
@@ -64,8 +65,8 @@ class Suggestion extends Component {
         const {author} = this.state;
         const {date} = this.props.suggestion;
 
-        const fromNow = moment(date).calendar();
-        const fullDate = moment(date).format('MMMM Do YYYY, h:mm:ss a');
+        const relativeDateString = moment(date).calendar();
+        const absoluteDateString = moment(date).format('MMMM Do YYYY, h:mm:ss a');
 
         const description = Highlights.getHighlightDescription(this.props.suggestion.type);
         const blockStyleDescription = Highlights.getBlockStylesDescription(this.props.suggestion.blockType);
@@ -114,25 +115,34 @@ class Suggestion extends Component {
         }
 
         return (
-            <Dropdown open={true}>
-                <div className="highlights-popup__header">
-                    <UserAvatar displayName={author.display_name} pictureUrl={author.picture_url} />
-                    <div className="user-info">
-                        <div className="author-name">{author.display_name}</div>
-                        <div className="date" title={fromNow}>{fullDate}</div>
+            <HighlightsPopupPresentation
+                editorNode={this.props.editorNode}
+                isRoot={true}
+                header={(
+                    <div>
+                        <UserAvatar displayName={author.display_name} pictureUrl={author.picture_url} />
+                        <p className="editor-popup__author-name">{author.display_name}</p>
+                        <time className="editor-popup__time" title={relativeDateString}>{absoluteDateString}</time>
                     </div>
-                </div>
-                {content}
-                <br />
-                <div>
-                    <button className="btn btn--small btn--hollow" onClick={this.onAccept}>
-                        {gettext('Accept')}
-                    </button>
-                    <button className="btn btn--small btn--hollow" onClick={this.onReject}>
-                        {gettext('Reject')}
-                    </button>
-                </div>
-            </Dropdown>
+                )}
+                availableActions={[]}
+                content={null}
+                scrollableContent={(
+                    <div style={{background: '#fff', padding: '1.6rem', paddingBottom: '1rem'}}>
+                        {content}
+                    </div>
+                )}
+                stickyFooter={(
+                    <div>
+                        <button className="btn btn--small btn--hollow" onClick={this.onAccept}>
+                            {gettext('Accept')}
+                        </button>
+                        <button className="btn btn--small btn--hollow" onClick={this.onReject}>
+                            {gettext('Reject')}
+                        </button>
+                    </div>
+                )}
+            />
         );
     }
 }
@@ -149,6 +159,7 @@ Suggestion.propTypes = {
     }),
     acceptSuggestion: PropTypes.func,
     rejectSuggestion: PropTypes.func,
+    editorNode: PropTypes.object,
 };
 
 export const SuggestionPopup = connect(null, {
