@@ -610,7 +610,7 @@ describe('authoring', () => {
     });
 
     describe('carousel directive', () => {
-        it('initializes the related item identifer', inject(($rootScope, $compile) => {
+        it('initializes the current related item identifer', inject(($rootScope, $compile) => {
             let scope = $rootScope.$new();
             let elem = $compile('<div sd-item-carousel data-item="item" data-items="items"></div>')(scope);
 
