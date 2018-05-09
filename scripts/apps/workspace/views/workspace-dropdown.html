@@ -8,15 +8,13 @@
 
     <ul id="select-desk-menu" class="dropdown__menu" role="menu">
         <li class="dropdown__menu-label"><div translate>DESKS</div></li>
-        <li class="desk-item" ng-repeat="desk in desks track by desk._id">
-            <button ng-click="selectDesk(desk)"
-                    ng-disabled="desk._id === selected._id">
-                {{ :: desk.name }}
-            </button>
+        <li class="desk-item" ng-repeat="desk in desks track by desk._id" id="desk-item-{{ :: desk._id }}">
+            <button
+                ng-click="selectDesk(desk)"
+                ng-disabled="desk._id === selected._id"
+            >{{ :: desk.name }}</button>
         </li>
         <li class="desk-item" ng-show="desks.length === 0"><i class="no-desk">No Desks Assigned</i></li>
-        
-
 
         <li class="dropdown__menu-label"><div translate>CUSTOM WORKSPACES</div></li>
         <li class="workspace-item" ng-repeat="workspace in wsList track by workspace._id">

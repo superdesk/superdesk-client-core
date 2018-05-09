@@ -11,11 +11,7 @@
         <div class="top-nav pull-left" ng-include="currentRoute.topTemplateUrl"></div>
       </div>
       <div class="top-menu__content-block top-menu__content-block--right">
-        <!-- <div class="top-menu__info">
-          <i class="icon-download top-menu__info-icon top-menu__info-icon--green"></i>
-          <span class="top-menu__info-label">Routed from:</span>
-          <span class="top-menu__info-text">Sports desk</span>
-        </div> -->
+        <div sd-top-menu-info-placeholder></div>
         <button ng-if="privileges.feature_preview" ng-click="toggleBeta()" class="beta-switch">
             <span class="stable" ng-hide="beta" title="{{ :: 'Switch to feature preview' | translate }}">stable</span>
             <span class="beta" ng-show="beta" sd-tooltip="{{ :: 'Turn off feature preview' | translate }}" flow="down">feature preview</span>
