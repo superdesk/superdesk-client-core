@@ -1,7 +1,8 @@
 import {EditorState, Modifier, RichUtils} from 'draft-js';
 import {onChange} from './editor3';
 import {acceptedInlineStyles, sanitizeContent} from '../helpers/inlineStyles';
-import {changeSuggestionsTypes, styleSuggestionsTypes, blockSuggestionTypes} from '../highlightsConfig';
+import {changeSuggestionsTypes, styleSuggestionsTypes,
+    blockSuggestionTypes, paragraphSuggestionTypes} from '../highlightsConfig';
 import * as Highlights from '../helpers/highlights';
 import {initSelectionIterator, hasNextSelection} from '../helpers/selection';
 import {editor3DataKeys, getCustomDataFromEditor, setCustomDataForEditor} from '../helpers/editor3CustomData';
@@ -248,6 +249,26 @@ const createChangeBlockStyleSuggestion = (state, {blockType, data}) => {
 
 /**
  * @ngdoc method
+ * @name isMergeParagraph
+ * @param {Object} editorState
+ * @param {Object} data - info about the author of suggestion
+ * @return {Object} returns true if there is a merge paragraph suggestion for the same user
+ * @description Check if at current position there is a merge paragraph suggestion.
+ */
+const isMergeParagraph = (editorState, data) => {
+    const suggestionStyle = Highlights.getHighlightStyleAtCurrentPosition(editorState, ['MERGE_PARAGRAPHS_SUGGESTION']);
+
+    if (suggestionStyle == null) {
+        return false;
+    }
+
+    const suggestionAuthor = Highlights.getHighlightAuthor(editorState, suggestionStyle);
+
+    return suggestionAuthor != null && suggestionAuthor === data.author;
+};
+
+/**
+ * @ngdoc method
  * @name createSplitParagraphSuggestion
  * @param {Object} state
  * @param {Object} data - info about the author of suggestion
@@ -255,29 +276,59 @@ const createChangeBlockStyleSuggestion = (state, {blockType, data}) => {
  * @description Add a new suggestion of type split block.
  */
 const createSplitParagraphSuggestion = (state, {data}) => {
-    let {editorState} = state;
-    let content = editorState.getCurrentContent();
-    const selection = editorState.getSelection();
-
-    content = Modifier.splitBlock(content, selection);
     const type = 'SPLIT_PARAGRAPH_SUGGESTION';
-    const block = content.getBlockAfter(selection.getStartKey());
-    let blockSelection = selection.merge({
+    let {editorState} = state;
+    const isMergeParagraphAfter = isMergeParagraph(editorState, data);
+    const checkState = Highlights.changeEditorSelection(editorState, -1, -1, false);
+    const isMergeParagraphBefore = isMergeParagraph(checkState, data);
+    let selection = editorState.getSelection();
+    let content = Modifier.splitBlock(editorState.getCurrentContent(), selection);
+    const firstBlock = content.getBlockForKey(selection.getStartKey());
+    const secondBlock = content.getBlockAfter(selection.getStartKey());
+
+    if (isMergeParagraphBefore || isMergeParagraphAfter) {
+        if (isMergeParagraphBefore) {
+            selection = selection.merge({
+                anchorOffset: firstBlock.getLength() - 1,
+                anchorKey: firstBlock.getKey(),
+                focusOffset: firstBlock.getLength(),
+                focusKey: firstBlock.getKey(),
+                isBackward: false,
+            });
+        } else {
+            selection = selection.merge({
+                anchorOffset: 0,
+                anchorKey: secondBlock.getKey(),
+                focusOffset: 1,
+                focusKey: secondBlock.getKey(),
+                isBackward: false,
+            });
+        }
+        content = Modifier.removeRange(content, selection, 'backward');
+        editorState = EditorState.push(editorState, content, 'remove-range');
+    } else {
+        selection = selection.merge({
+            anchorOffset: firstBlock.getLength(),
+            anchorKey: firstBlock.getKey(),
+            focusOffset: firstBlock.getLength(),
+            focusKey: firstBlock.getKey(),
+            isBackward: false,
+        });
+        content = Modifier.insertText(content, selection, Highlights.paragraphSeparator);
+        editorState = EditorState.push(editorState, content, 'insert-characters');
+        editorState = EditorState.acceptSelection(editorState, selection);
+        editorState = Highlights.changeEditorSelection(editorState, 0, 1, false);
+        editorState = Highlights.addHighlight(editorState, type, data);
+    }
+
+    selection = selection.merge({
         anchorOffset: 0,
-        anchorKey: block.getKey(),
-        focusOffset: block.getLength(),
-        focusKey: block.getKey(),
+        anchorKey: secondBlock.getKey(),
+        focusOffset: 0,
+        focusKey: secondBlock.getKey(),
         isBackward: false,
     });
-
-    editorState = EditorState.push(editorState, content, 'split-block');
-    editorState = EditorState.acceptSelection(editorState, blockSelection);
-    editorState = Highlights.addHighlight(editorState, type, data);
-
-    blockSelection = blockSelection.merge({
-        focusOffset: 0,
-    });
-    editorState = EditorState.acceptSelection(editorState, blockSelection);
+    editorState = EditorState.acceptSelection(editorState, selection);
 
     return saveEditorStatus(state, editorState, 'change-inline-style', false);
 };
@@ -384,32 +435,59 @@ function moveToSuggestionsHistory(editorState, suggestion, accepted) {
 
 /**
  * @ngdoc method
- * @name processSplitSuggestion
+ * @name processSplitBlockSuggestion
  * @param {Object} state
  * @param {Object} suggestion
  * @param {Boolean} accepted - the suggestion is accepted
  * @return {Object} returns new state
  * @description Accept or reject the split suggestions in the selection.
  */
-const processSplitSuggestion = (state, suggestion, accepted) => {
+const processSplitBlockSuggestion = (state, suggestion, accepted) => {
     const {selection} = suggestion;
     let {editorState} = state;
 
     editorState = moveToSuggestionsHistory(editorState, suggestion, accepted);
-    if (!accepted) {
-        let content = editorState.getCurrentContent();
-        let block = content.getBlockBefore(selection.getStartKey());
-        let newSelection = selection.merge({
-            anchorOffset: 0,
-            anchorKey: selection.getStartKey(),
-            focusOffset: block.getLength(),
-            focusKey: block.getKey(),
-            isBackward: true,
-        });
+    let content = editorState.getCurrentContent();
+    let block = content.getBlockAfter(selection.getStartKey());
+    let newSelection = selection.merge({
+        anchorOffset: selection.getStartOffset(),
+        anchorKey: selection.getStartKey(),
+        focusOffset: accepted ? selection.getEndOffset() : 0,
+        focusKey: accepted ? selection.getEndKey() : block.getKey(),
+        isBackward: false,
+    });
 
-        content = Modifier.removeRange(content, newSelection, 'backward');
-        editorState = EditorState.push(editorState, content, 'remove-range');
+    content = Modifier.removeRange(content, newSelection, 'backward');
+    editorState = EditorState.push(editorState, content, 'remove-range');
+
+    return saveEditorStatus(state, editorState, 'change-inline-style', false);
+};
+
+/**
+ * @ngdoc method
+ * @name processMergeBlocksSuggestion
+ * @param {Object} state
+ * @param {Object} suggestion
+ * @param {Boolean} accepted - the suggestion is accepted
+ * @return {Object} returns new state
+ * @description Accept or reject the merge suggestions in the selection.
+ */
+const processMergeBlocksSuggestion = (state, suggestion, accepted) => {
+    const {selection} = suggestion;
+    let {editorState} = state;
+    const crtSelection = editorState.getSelection();
+
+    editorState = moveToSuggestionsHistory(editorState, suggestion, accepted);
+    let content = editorState.getCurrentContent();
+
+    content = Modifier.removeRange(content, selection, 'backward');
+
+    if (!accepted) {
+        content = Modifier.splitBlock(content, crtSelection);
     }
+
+    editorState = EditorState.push(editorState, content, 'remove-range');
+    editorState = EditorState.acceptSelection(editorState, crtSelection, false);
 
     return saveEditorStatus(state, editorState, 'change-inline-style', false);
 };
@@ -443,7 +521,11 @@ const processSuggestion = (state, {suggestion}, accepted) => {
     let data;
 
     if (suggestion.type === 'SPLIT_PARAGRAPH_SUGGESTION') {
-        return processSplitSuggestion(state, suggestion, accepted);
+        return processSplitBlockSuggestion(state, suggestion, accepted);
+    }
+
+    if (suggestion.type === 'MERGE_PARAGRAPHS_SUGGESTION') {
+        return processMergeBlocksSuggestion(state, suggestion, accepted);
     }
 
     // If link it's rejected we remove the entity
@@ -600,6 +682,57 @@ const setAddSuggestionForCharacter = (editorState, data, text, inlineStyle = nul
 
 /**
  * @ngdoc method
+ * @name isSplitParagraph
+ * @param {Object} editorState
+ * @param {Object} data - info about the author of suggestion
+ * @return {Object} returns true if there is a split paragraph suggestion for the same user
+ * @description Check if at current position there is a split paragraph suggestion.
+ */
+const isSplitParagraph = (editorState, data) => {
+    const suggestionStyle = Highlights.getHighlightStyleAtCurrentPosition(editorState, ['SPLIT_PARAGRAPH_SUGGESTION']);
+
+    if (suggestionStyle == null) {
+        return false;
+    }
+
+    const suggestionAuthor = Highlights.getHighlightAuthor(editorState, suggestionStyle);
+
+    return suggestionAuthor != null && suggestionAuthor === data.author;
+};
+
+/**
+ * @ngdoc method
+ * @name setMergeParagraphSuggestion
+ * @param {Object} editorState
+ * @param {Object} data - info about the author of suggestion
+ * @return {Object} returns new state
+ * @description Set the merge paragraph suggestion for current adjacent blocks.
+ */
+const setMergeParagraphSuggestion = (editorState, data) => {
+    const type = 'MERGE_PARAGRAPHS_SUGGESTION';
+    const checkState = Highlights.changeEditorSelection(editorState, -2, 0, false);
+    const deleteSplitSuggestion = isSplitParagraph(checkState, data);
+    const offset = deleteSplitSuggestion ? -1 : 0;
+    let newState = Highlights.changeEditorSelection(editorState, offset - 1, 0, false);
+    let content = newState.getCurrentContent();
+    let selection = newState.getSelection();
+
+    if (deleteSplitSuggestion) {
+        content = Modifier.removeRange(content, selection, 'backward');
+        newState = EditorState.push(newState, content, 'remove-range');
+    } else {
+        content = Modifier.replaceText(content, selection, Highlights.paragraphSeparator);
+        newState = EditorState.push(newState, content, 'insert-characters');
+        newState = Highlights.changeEditorSelection(newState, -1, 0, false);
+        newState = Highlights.addHighlight(newState, type, data);
+        Highlights.changeEditorSelection(newState, 0, -1, false);
+    }
+
+    return newState;
+};
+
+/**
+ * @ngdoc method
  * @name createDeleteSuggestion
  * @param {Object} state
  * @param {Object} data - info about the author of suggestion
@@ -613,6 +746,18 @@ const setAddSuggestionForCharacter = (editorState, data, text, inlineStyle = nul
  */
 const setDeleteSuggestionForCharacter = (editorState, data) => {
     let selection = editorState.getSelection();
+
+    if (selection.getStartOffset() === 0) {
+        return setMergeParagraphSuggestion(editorState, data);
+    }
+
+    const paragraphStyle = Highlights.getHighlightStyleAtOffset(editorState, paragraphSuggestionTypes, selection, -1);
+
+    if (paragraphStyle != null) {
+        // if current character is marked as paragraph suggestion, skip
+        return Highlights.changeEditorSelection(editorState, -1, -1, true);
+    }
+
     const currentStyle = Highlights.getHighlightStyleAtOffset(editorState, changeSuggestionsTypes, selection, -1);
     const currentData = currentStyle != null ? Highlights.getHighlightData(editorState, currentStyle) : null;
 

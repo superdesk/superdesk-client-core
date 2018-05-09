@@ -94,7 +94,19 @@ export const highlightsConfig = {
         type: 'SPLIT',
         description: gettext('Split paragraph'),
         draftStyleMap: {
-            backgroundColor: 'rgba(100, 235, 59, 0.2)',
+            color: 'rgba(0, 180, 0, 1.0)',
+            fontWeight: 'bold',
+            fontFamily: 'sans-serif',
+        },
+    },
+    MERGE_PARAGRAPHS_SUGGESTION: {
+        type: 'MERGE',
+        description: gettext('Merge paragraphs'),
+        draftStyleMap: {
+            color: 'rgba(255, 0, 0, 1.0)',
+            textDecoration: 'line-through',
+            fontWeight: 'bold',
+            fontFamily: 'sans-serif',
         },
     },
     ADD_LINK_SUGGESTION: {
@@ -131,15 +143,24 @@ export const changeSuggestionsTypes = ['DELETE_SUGGESTION', 'ADD_SUGGESTION'];
 export const styleSuggestionsTypes = Object.keys(highlightsConfig).filter(
     (key) => highlightsConfig[key].type === 'STYLE'
 );
-export const blockSuggestionTypes = ['BLOCK_STYLE_SUGGESTION', 'SPLIT_PARAGRAPH_SUGGESTION'];
+export const blockSuggestionTypes = [
+    'BLOCK_STYLE_SUGGESTION',
+];
+
+export const paragraphSuggestionTypes = [
+    'SPLIT_PARAGRAPH_SUGGESTION',
+    'MERGE_PARAGRAPHS_SUGGESTION',
+];
 
 export const suggestionsTypes = [
     ...changeSuggestionsTypes,
     ...styleSuggestionsTypes,
     ...blockSuggestionTypes,
+    ...paragraphSuggestionTypes,
     'ADD_LINK_SUGGESTION',
     'REMOVE_LINK_SUGGESTION',
     'CHANGE_LINK_SUGGESTION',
+
 ];
 
 export const isSuggestion = (highlightId) => suggestionsTypes.some(

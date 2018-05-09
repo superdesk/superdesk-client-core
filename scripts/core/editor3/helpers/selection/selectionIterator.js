@@ -41,20 +41,20 @@ export function initSelectionIterator(editorState, backward = false) {
  * @description Check if the current selection and the received one has the same end/start.
  */
 export function hasNextSelection(editorState, selection, backward = false) {
-    const crtSelection = editorState.getSelection();
+    const currentSelection = editorState.getSelection();
     const content = editorState.getCurrentContent();
     const startBlock = content.getBlockForKey(selection.getStartKey());
     const endBlock = content.getBlockForKey(selection.getEndKey());
 
-    if (startBlock == null || endBlock == null) {
+    if (startBlock == null && backward || endBlock == null && !backward) {
         throw new Error('The following selection is invalid: ', selection);
     }
 
     if (backward) {
-        return selection.getStartOffset() !== crtSelection.getStartOffset() ||
-            selection.getStartKey() !== crtSelection.getStartKey();
+        return selection.getStartOffset() < currentSelection.getStartOffset() ||
+            selection.getStartKey() !== currentSelection.getStartKey();
     } else {
-        return selection.getEndOffset() !== crtSelection.getEndOffset() ||
-            selection.getEndKey() !== crtSelection.getEndKey();
+        return selection.getEndOffset() > currentSelection.getEndOffset() ||
+            selection.getEndKey() !== currentSelection.getEndKey();
     }
 }

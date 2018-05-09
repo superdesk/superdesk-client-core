@@ -6,7 +6,9 @@ import {getDraftCharacterListForSelection} from './getDraftCharacterListForSelec
 import {getDraftSelectionForEntireContent} from './getDraftSelectionForEntireContent';
 import {resizeDraftSelection} from './resizeDraftSelection';
 import {clearInlineStyles} from './clearInlineStyles';
-import {changeSuggestionsTypes, blockStylesDescription} from '../highlightsConfig';
+import {changeSuggestionsTypes, blockStylesDescription, paragraphSuggestionTypes} from '../highlightsConfig';
+
+export const paragraphSeparator = '¶';
 
 export const availableHighlights = Object.keys(highlightsConfig).reduce((obj, key) => {
     obj[key] = highlightsConfig[key].draftStyleMap;
@@ -669,6 +671,7 @@ export const getBlockAndOffset = (
 };
 
 function getLeftRangeAndTextForStyle(editorState, style) {
+    const type = getHighlightTypeFromStyleName(style);
     const selection = editorState.getSelection();
     const content = editorState.getCurrentContent();
     let startBlock = content.getBlockForKey(selection.getStartKey());
@@ -681,6 +684,13 @@ function getLeftRangeAndTextForStyle(editorState, style) {
     let blockText;
     let found;
     let newBlock = false;
+
+    if (paragraphSuggestionTypes.indexOf(type) !== -1) {
+        startText = block.getText()
+            .substring(0, startOffset) + paragraphSeparator;
+
+        return {startOffset, startBlock, startText};
+    }
 
     while (block) {
         found = false;
@@ -696,7 +706,7 @@ function getLeftRangeAndTextForStyle(editorState, style) {
             }
 
             if (newBlock) {
-                startText = ' \\ ' + startText;
+                startText = paragraphSeparator + startText;
                 newBlock = false;
             }
 
@@ -719,6 +729,7 @@ function getLeftRangeAndTextForStyle(editorState, style) {
 }
 
 function getRightRangeAndTextForStyle(editorState, style) {
+    const type = getHighlightTypeFromStyleName(style);
     const selection = editorState.getSelection();
     const content = editorState.getCurrentContent();
     let endText = '';
@@ -731,6 +742,18 @@ function getRightRangeAndTextForStyle(editorState, style) {
     let blockText;
     let found;
     let newBlock = false;
+
+    if (paragraphSuggestionTypes.indexOf(type) !== -1) {
+        endText = block.getText()
+            .substring(endOffset);
+
+        if (endText === '') {
+            block = content.getBlockAfter(block.getKey());
+            endText = block.getText();
+        }
+
+        return {endOffset, endBlock, endText};
+    }
 
     if (block.getLength() === offset && offset !== 0) {
         block = content.getBlockAfter(block.getKey());
@@ -757,7 +780,7 @@ function getRightRangeAndTextForStyle(editorState, style) {
             }
 
             if (newBlock) {
-                endText = endText + ' \\ ';
+                endText = endText + paragraphSeparator;
                 newBlock = false;
             }
 
