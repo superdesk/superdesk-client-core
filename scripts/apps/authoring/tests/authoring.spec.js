@@ -599,6 +599,35 @@ describe('authoring', () => {
                 expect(orig._current_version).toBe(2);
             }));
     });
+
+    describe('media identifer generator service', () => {
+        it('generates media field identifer', inject((mediaIdGenerator) => {
+            expect(mediaIdGenerator.getFieldVersionName('media1')).toBe('media1');
+            expect(mediaIdGenerator.getFieldVersionName('media1', 1)).toBe('media1--1');
+            expect(mediaIdGenerator.getFieldParts('media1')).toEqual(['media1', null]);
+            expect(mediaIdGenerator.getFieldParts('media1--1')).toEqual(['media1', 1]);
+        }));
+    });
+
+    describe('carousel directive', () => {
+        it('initializes the current related item identifer', inject(($rootScope, $compile) => {
+            let scope = $rootScope.$new();
+            let elem = $compile('<div sd-item-carousel data-item="item" data-items="items"></div>')(scope);
+
+            scope.$digest();
+            let iscope = elem.isolateScope();
+
+            scope.item = {guid: 'item1', associations: {'media1--1': {guid: 'foo', type: 'picture'}}};
+            scope.items = [{fieldId: 'media1--1', 'media1--1': {guid: 'foo', type: 'picture'}}];
+            scope.$digest();
+            expect(iscope.rel).toBe(null);
+
+            scope.item = {guid: 'item1', associations: {'media1--1': null}};
+            scope.items = [{fieldId: 'media1--1', 'media1--1': null}];
+            scope.$digest();
+            expect(iscope.rel).toBe('media1--1');
+        }));
+    });
 });
 
 describe('cropImage', () => {

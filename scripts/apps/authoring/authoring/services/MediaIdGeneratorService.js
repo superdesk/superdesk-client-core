@@ -12,7 +12,8 @@ export function MediaIdGeneratorService($q, api) {
      * @param {Integer} lastVersion
      * @return {String}
      */
-    this.getFieldVersionName = (rootField, lastVersion) => rootField + '--' + lastVersion;
+    this.getFieldVersionName = (rootField, lastVersion) =>
+        lastVersion === null || lastVersion === undefined ? rootField : rootField + '--' + lastVersion;
 
     /**
      * @ngdoc method
