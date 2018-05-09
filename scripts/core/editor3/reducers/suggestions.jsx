@@ -178,6 +178,10 @@ function applyStyleSuggestion(editorState, type, style, data) {
         if (oldData.originalStyle === style && data.originalStyle === '' ||
             oldData.originalStyle === '' && data.originalStyle === style) {
             // the style is toggled back, so no suggestion is added
+
+            // restore the selection
+            newEditorState = EditorState.acceptSelection(newEditorState, selection);
+
             return newEditorState;
         } else {
             data.originalStyle = oldData.originalStyle;
