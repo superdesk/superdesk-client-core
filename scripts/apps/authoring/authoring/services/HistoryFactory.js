@@ -23,7 +23,13 @@ export function HistoryFactory(History, $window, $timeout) {
             };
             var onHistoryKeydown = function(event) {
                 onHistoryKey(event, () => {
-                    event.preventDefault();
+                    const editor2FieldsExist = document.querySelector('[sd-text-editor]') != null;
+
+                    if (editor2FieldsExist) {
+                        // preventing default generally breaks undo via ctrl+z for native inputs/textareas,
+                        // but is required for editor2
+                        event.preventDefault();
+                    }
                     // action is on keydown becuase command key (event.metakey) on OSX is not detected on keyup events
                     // for some reason.
                     scope.$apply(() => {
