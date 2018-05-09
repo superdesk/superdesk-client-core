@@ -32,7 +32,7 @@ export class NavTabs extends React.Component {
         return (
             <div>
                 <ul className="nav-tabs nav-tabs--small">{tabs}</ul>
-                <div className="nav-tabs__content">{this.state.tab.render()}</div>
+                <div>{this.state.tab.render()}</div>
             </div>
         );
     }

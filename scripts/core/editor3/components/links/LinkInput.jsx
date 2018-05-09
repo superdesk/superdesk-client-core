@@ -33,7 +33,8 @@ export class LinkInputComponent extends Component {
         }
 
         this.activeTab = 0;
-        this.state = {};
+
+        let selectedAttachment;
 
         if (props.data) {
             // if a value has been passed, it is safe to assume that it
@@ -42,9 +43,14 @@ export class LinkInputComponent extends Component {
 
             if (props.data.attachment) {
                 this.activeTab = 1;
-                this.state = {selected: props.data.attachment};
+                selectedAttachment = props.data.attachment;
             }
         }
+
+        this.state = {
+            url: this.props.data ? this.props.data.href || '' : '',
+            selected: selectedAttachment,
+        };
 
         this.onSubmit = this.onSubmit.bind(this);
         this.onKeyUp = this.onKeyUp.bind(this);
@@ -61,7 +67,7 @@ export class LinkInputComponent extends Component {
         const {suggestingMode} = this.props;
 
         if (this.input) {
-            val = {href: this.input.value};
+            val = {href: this.state.url};
         } else {
             val = {attachment: this.state.selected};
         }
@@ -105,12 +111,6 @@ export class LinkInputComponent extends Component {
         return (
             <Dropdown open={true} className="dropdown--link-input">
                 <NavTabs tabs={this.tabs} active={this.activeTab} />
-                <div className="dropdown__menu-footer dropdown__menu-footer--align-right">
-                    <button className="btn btn--cancel"
-                        onClick={this.props.hidePopups}>{gettext('Cancel')}</button>
-                    <button className="btn btn--primary"
-                        onClick={this.onSubmit}>{gettext('Insert')}</button>
-                </div>
             </Dropdown>
         );
     }
@@ -122,13 +122,23 @@ export class LinkInputComponent extends Component {
 
         return (
             <form onSubmit={this.onSubmit} className="link-input" onKeyUp={this.onKeyUp}>
-                <div className="sd-line-input">
+                <div style={{padding: '3.4rem 2rem'}}>
                     <input type="url"
                         ref={setInput}
                         className="sd-line-input__input"
-                        defaultValue={this.props.data ? this.props.data.href : null}
+                        value={this.state.url}
+                        onChange={(e) => {
+                            this.setState({url: e.target.value});
+                        }}
                         placeholder={gettext('Insert URL')}
                     />
+                </div>
+                <div className="dropdown__menu-footer dropdown__menu-footer--align-right">
+                    <button className="btn btn--cancel"
+                        onClick={this.props.hidePopups}>{gettext('Cancel')}</button>
+                    <button className="btn btn--primary" type="submit" disabled={this.state.url.length < 1}>
+                        {gettext('Insert')}
+                    </button>
                 </div>
             </form>
         );
@@ -136,7 +146,17 @@ export class LinkInputComponent extends Component {
 
     renderAttachment() {
         this.input = null;
-        return <AttachmentList item={this.props.item} onClick={this.selectAttachment} selected={this.state.selected} />;
+        return (
+            <div>
+                <AttachmentList item={this.props.item} onClick={this.selectAttachment} selected={this.state.selected} />
+                <div className="dropdown__menu-footer dropdown__menu-footer--align-right">
+                    <button className="btn btn--cancel"
+                        onClick={this.props.hidePopups}>{gettext('Cancel')}</button>
+                    <button className="btn btn--primary" disabled={this.state.selected == null}
+                        onClick={this.onSubmit}>{gettext('Insert')}</button>
+                </div>
+            </div>
+        )
     }
 }
 
