@@ -50,7 +50,7 @@ export function ItemCarouselDirective($timeout) {
                 scope.carouselItems = _.sortBy(_.filter(items, (item) => item[item.fieldId]),
                     [(item) => item[item.fieldId].order]);
 
-                setTimeout(() => {
+                scope.$applyAsync(() => {
                     // waiting for angular to render items
 
                     if (carousel) {
