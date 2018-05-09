@@ -15,6 +15,12 @@ import {applyLink, hidePopups, createLinkSuggestion} from '../../actions';
  * @param {string} data The default value for the input.
  * @description This components holds the input form for entering a new URL.
  */
+
+const linkTypes = {
+    href: 'href',
+    attachement: 'attachement',
+};
+
 export class LinkInputComponent extends Component {
     constructor(props) {
         super(props);
@@ -62,14 +68,16 @@ export class LinkInputComponent extends Component {
      * @name LinkInput#onSubmit
      * @description Callback when submitting the form.
      */
-    onSubmit() {
+    onSubmit(linkType) {
         let val;
         const {suggestingMode} = this.props;
 
-        if (this.input) {
+        if (linkType === linkTypes.href) {
             val = {href: this.state.url};
-        } else {
+        } else if (linkType === linkTypes.attachement) {
             val = {attachment: this.state.selected};
+        } else {
+            throw new Error('link type not recognized');
         }
 
         if (!val.href && !val.attachment) {
@@ -98,8 +106,8 @@ export class LinkInputComponent extends Component {
     }
 
     componentDidMount() {
-        if (this.refs.input) {
-            this.refs.input.focus();
+        if (this.inputElement != null) {
+            this.inputElement.focus();
         }
     }
 
@@ -116,15 +124,17 @@ export class LinkInputComponent extends Component {
     }
 
     renderURL() {
-        const setInput = (input) => {
-            this.input = input;
-        };
-
         return (
-            <form onSubmit={this.onSubmit} className="link-input" onKeyUp={this.onKeyUp}>
+            <form
+                onSubmit={() => {
+                    this.onSubmit(linkTypes.href);
+                }}
+                className="link-input" onKeyUp={this.onKeyUp}>
                 <div style={{padding: '3.4rem 2rem'}}>
                     <input type="url"
-                        ref={setInput}
+                        ref={(el) => {
+                            this.inputElement = el;
+                        }}
                         className="sd-line-input__input"
                         value={this.state.url}
                         onChange={(e) => {
@@ -145,18 +155,23 @@ export class LinkInputComponent extends Component {
     }
 
     renderAttachment() {
-        this.input = null;
         return (
             <div>
                 <AttachmentList item={this.props.item} onClick={this.selectAttachment} selected={this.state.selected} />
                 <div className="dropdown__menu-footer dropdown__menu-footer--align-right">
                     <button className="btn btn--cancel"
                         onClick={this.props.hidePopups}>{gettext('Cancel')}</button>
-                    <button className="btn btn--primary" disabled={this.state.selected == null}
-                        onClick={this.onSubmit}>{gettext('Insert')}</button>
+                    <button
+                        className="btn btn--primary"
+                        disabled={this.state.selected == null}
+                        onClick={() => {
+                            this.onSubmit(linkTypes.attachement);
+                        }}>
+                        {gettext('Insert')}
+                    </button>
                 </div>
             </div>
-        )
+        );
     }
 }
 
