@@ -477,10 +477,15 @@ $editor-styleButton-size: 3rem;
                 margin-left: .2em;
             }
 
-            .space-component::before {
+            .space-component > span::before {
                 content: '•';
                 color: $sd-blue;
-            }
+			}
+
+			.space-component > span[style^="color"]::before {
+				color: inherit; // let it inherit suggestions color
+				padding-left: .2em;
+			}
 
             &::after {
                 content: '\E690';
@@ -507,6 +512,12 @@ $editor-styleButton-size: 3rem;
         padding-top: 0;
         border-top: 1.5em solid silver;
     }
+}
+
+.space-component {
+	[style^="color"] { // used for suggestions
+		background-color: rgba(0, 180, 0, 0.2);
+	}
 }
 
 .Editor3-hidePlaceholder .public-DraftEditorPlaceholder-root {
