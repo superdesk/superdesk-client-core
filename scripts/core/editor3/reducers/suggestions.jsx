@@ -359,6 +359,7 @@ const pasteAddSuggestion = (state, {content, data}) => {
         editorState = EditorState.acceptSelection(editorState, collapseSelection(initialSelection));
     }
 
+    const firstBlock = editorState.getCurrentContent().getFirstBlock();
     // add content to editor state
     const mergedContent = Modifier.replaceWithFragment(
         editorState.getCurrentContent(),
@@ -371,20 +372,31 @@ const pasteAddSuggestion = (state, {content, data}) => {
 
     // store current selection for later
     const finalSelection = editorState.getSelection();
+    const newSelection = initialSelection.merge({
+        anchorKey: initialSelection.getEndKey(),
+        anchorOffset: initialSelection.getEndOffset(),
+        focusKey: finalSelection.getStartKey(),
+        focusOffset: finalSelection.getStartOffset(),
+        hasFocus: true,
+        isBackward: false
+    });
+
+    // for the first block recover the initial block data because on replaceWithFragment the block data is
+    // replaced with the data from pasted fragment
+    if (firstBlock != null && initialSelection.getStartKey() === firstBlock.getKey()) {
+        const newSelection = initialSelection.merge({
+            anchorKey: firstBlock.getKey(),
+            anchorOffset: 0,
+            focusKey: firstBlock.getKey(),
+            focusOffset: 0,
+        });
+        const newContent = Modifier.mergeBlockData(mergedContent, newSelection, firstBlock.getData());
+
+        editorState = EditorState.push(editorState, newContent, 'change-block-data');
+    }
 
     // select pasted content
-    editorState = EditorState.acceptSelection(editorState, editorState.getSelection().merge(
-        initialSelection.isBackward ? {
-            isBackward: true,
-            anchorKey: finalSelection.anchorKey,
-            anchorOffset: finalSelection.anchorOffset,
-            focusKey: initialSelection.focusKey,
-            focusOffset: initialSelection.focusOffset,
-        } : {
-            anchorKey: initialSelection.anchorKey,
-            anchorOffset: initialSelection.anchorOffset,
-        }
-    ));
+    editorState = EditorState.acceptSelection(editorState, newSelection);
 
     // apply highlights
     if (beforeData != null && beforeData.type === 'ADD_SUGGESTION' && beforeData.author === data.author) {
