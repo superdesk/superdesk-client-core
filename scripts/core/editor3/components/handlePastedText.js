@@ -110,10 +110,26 @@ function processPastedHtml(props, html) {
         contentState = Modifier.setBlockType(contentState, selection, 'atomic');
     }
 
-    contentState = Modifier.replaceWithFragment(contentState, selection, OrderedSet(blocks));
-    contentState = sanitizeContent(contentState, acceptedInlineStyles);
+    let nextEditorState = EditorState.push(
+        editorState,
+        Modifier.replaceWithFragment(contentState, selection, OrderedSet(blocks)),
+        'insert-fragment'
+    );
 
-    onChange(EditorState.push(editorState, contentState, 'insert-fragment'));
+    const selectionAfterInsert = nextEditorState.getSelection();
+
+    nextEditorState = EditorState.set(nextEditorState, {allowUndo: false});
+
+    nextEditorState = sanitizeContent(nextEditorState, acceptedInlineStyles);
+
+    nextEditorState = EditorState.forceSelection(
+        nextEditorState,
+        selectionAfterInsert
+    );
+
+    nextEditorState = EditorState.set(nextEditorState, {allowUndo: true});
+
+    onChange(nextEditorState);
 
     return HANDLED;
 }

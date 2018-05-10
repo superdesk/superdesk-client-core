@@ -1,4 +1,4 @@
-import {SelectionState, Modifier} from 'draft-js';
+import {EditorState, SelectionState, Modifier} from 'draft-js';
 
 /**
  * @type {Object}
@@ -22,8 +22,10 @@ export const acceptedInlineStyles = Object.values(inlineStyles);
  * @param {Array} inlineStyles
  * @returns {ContentState}
  */
-export function sanitizeContent(content, inlineStyles = acceptedInlineStyles) {
-    let output = content;
+
+export function sanitizeContent(editorState, inlineStyles = acceptedInlineStyles) {
+    let contentState = editorState.getCurrentContent();
+
 
     const ignoreStyle = (style) => inlineStyles.indexOf(style) === -1;
     const getSelection = (block, start, end) => SelectionState.createEmpty(block.getKey()).merge({
@@ -31,7 +33,9 @@ export function sanitizeContent(content, inlineStyles = acceptedInlineStyles) {
         focusOffset: end,
     });
 
-    content.getBlockMap().forEach((block) => {
+    let nextEditorState = editorState;
+
+    contentState.getBlockMap().forEach((block) => {
         // remove extra styles
         block.findStyleRanges(
             (character) => character.getStyle().some(ignoreStyle),
@@ -39,21 +43,35 @@ export function sanitizeContent(content, inlineStyles = acceptedInlineStyles) {
                 const selection = getSelection(block, start, end);
                 const inlineStyle = block.getInlineStyleAt(start).find(ignoreStyle);
 
-                output = Modifier.removeInlineStyle(output, selection, inlineStyle);
+                contentState = Modifier.removeInlineStyle(contentState, selection, inlineStyle);
             }
         );
+    });
 
+    nextEditorState = EditorState.push(
+        nextEditorState,
+        contentState,
+        'change-inline-style'
+    );
+
+    contentState.getBlockMap().forEach((block) => {
         // remove any entities
         block.findEntityRanges(
             () => true,
             (start, end) => {
                 const selection = getSelection(block, start, end);
 
-                output = Modifier.applyEntity(output, selection, null);
+                contentState = Modifier.applyEntity(contentState, selection, null);
             }
         );
     });
 
-    return output;
+    nextEditorState = EditorState.push(
+        nextEditorState,
+        contentState,
+        'apply-entity'
+    );
+
+    return nextEditorState;
 }
 
