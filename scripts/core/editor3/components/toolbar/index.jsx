@@ -94,7 +94,7 @@ class ToolbarComponent extends Component {
         const cx = classNames({
             'Editor3-controls': true,
             'floating-toolbar': floating,
-            disabled: disabled,
+            disabled: disabled && activeCell === null,
         });
 
         return activeCell !== null ? <TableControls className={cx} /> :
