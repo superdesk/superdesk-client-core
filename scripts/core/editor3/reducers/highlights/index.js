@@ -1,1 +1,0 @@
-export {removeInlineStyles} from './styles';

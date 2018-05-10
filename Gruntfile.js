@@ -38,6 +38,7 @@ module.exports = function(grunt) {
     // Test runner tasks and CI
     grunt.registerTask('test', ['ngtemplates:dev', 'karma:unit']);
     grunt.registerTask('ci', ['test', 'hint']);
+    grunt.registerTask('unit', ['test']);
     grunt.registerTask('ci:travis', ['ngtemplates:dev', 'karma:travis', 'hint']);
     grunt.registerTask('bamboo', ['karma:bamboo']);
 

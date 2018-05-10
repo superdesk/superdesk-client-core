@@ -11,7 +11,7 @@ import {initializeHighlights, prepareHighlightsForExport} from '../helpers/highl
 import {fieldsMetaKeys, setFieldMetadata, getFieldMetadata, FIELD_KEY_SEPARATOR} from '../helpers/fieldsMeta';
 
 // depended upon by find-and-replace.
-import {removeInlineStyles} from '../reducers/highlights';
+import {removeInlineStyles} from '../helpers/removeFormat';
 
 /**
  * @name createEditorStore

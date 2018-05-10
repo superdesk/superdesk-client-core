@@ -1,16 +1,43 @@
-import {Modifier, EditorState, ContentBlock, ContentState} from 'draft-js';
+import {Modifier, SelectionState, EditorState, ContentBlock, ContentState} from 'draft-js';
 import {acceptedInlineStyles} from '../helpers/inlineStyles';
 import {blockInsideSelection} from '../helpers/selection';
 
+/**
+ * @name removeInlineStyle
+ * @description Returns a new content state with all the styles indicated in `styles`
+ * removed.
+ * @param {ContentState} content
+ * @param {Array<string>} styles Styles to remove.
+ * @returns {ContentState}
+ */
+export function removeInlineStyles(content, styles) {
+    let contentState = content;
+    let filterFn = (c) => styles.some((s) => c.hasStyle(s));
+
+    contentState.getBlocksAsArray().forEach((b) => {
+        b.findStyleRanges(filterFn,
+            (start, end) => {
+                const empty = SelectionState.createEmpty(b.getKey());
+                const selection = empty.merge({anchorOffset: start, focusOffset: end});
+
+                styles.forEach((s) => {
+                    contentState = Modifier.removeInlineStyle(contentState, selection, s);
+                });
+            });
+    });
+
+    return contentState;
+}
+
 /*
  * @ngdoc method
- * @name removeInlineStyles
+ * @name removeInlineStylesForSelection
  * @param {Object} content ContentState
  * @param {Object} selection SelectionState
  * @description Remove all inline styles from selection
  * @return {Object} ContentState
  */
-export function removeInlineStyles(content, selection) {
+export function removeInlineStylesForSelection(content, selection) {
     const contentWithoutStyles = acceptedInlineStyles.reduce(
         (newContentState, style) =>
             Modifier.removeInlineStyle(newContentState, selection, style),
@@ -61,7 +88,7 @@ export function removeBlockStyles(editorState, content, selection, keepTypes) {
  */
 export function removeFormatFromState(editorState) {
     const selection = editorState.getSelection();
-    const contentWithoutInlineStyles = removeInlineStyles(
+    const contentWithoutInlineStyles = removeInlineStylesForSelection(
         editorState.getCurrentContent(),
         selection
     );
