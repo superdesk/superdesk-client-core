@@ -40,6 +40,7 @@ const elementStyles = {
  */
 export class HTMLParser {
     constructor(html) {
+        this.figures = {};
         this.tables = {};
         this.media = {};
         this.tree = $('<div></div>');
@@ -68,6 +69,11 @@ export class HTMLParser {
      * about the HTML that was extracted.
      */
     pruneNodes() {
+        this.tree.find('figure').each((i, node) => {
+            this.figures[i] = $(node).html();
+            $(node).replaceWith(`<figure>BLOCK_FIGURE_${i}></figure>`);
+        });
+
         this.tree.find('table').each((i, node) => {
             this.tables[i] = $(node).html();
             $(node).replaceWith(`<figure>BLOCK_TABLE_${i}</figure>`);
@@ -136,8 +142,9 @@ export class HTMLParser {
      */
     processBlock(block) {
         const isAtomic = block.getType() === 'atomic';
-        const isTable = block.getText().indexOf('BLOCK_TABLE_') === 0;
-        const isMedia = block.getText().indexOf('BLOCK_MEDIA_') === 0;
+        const isTable = block.getText().startsWith('BLOCK_TABLE_');
+        const isMedia = block.getText().startsWith('BLOCK_MEDIA_');
+        const isFigure = block.getText().startsWith('BLOCK_FIGURE_');
 
         if (isAtomic && isTable) {
             return this.createTableBlock(block);
@@ -147,7 +154,26 @@ export class HTMLParser {
             return this.createMediaBlock(block);
         }
 
+        if (isAtomic && isFigure) {
+            return this.createFigureBlock(block);
+        }
+
         return block;
+    }
+
+    /**
+     * Create atomic block for embeds
+     *
+     * @param {ContentBlock} block
+     * @returns {ContentBlock}
+     */
+    createFigureBlock(block) {
+        const id = this.getBlockId(block);
+        const html = this.figures[id];
+
+        return atomicBlock(block, 'EMBED', 'MUTABLE', {
+            data: {html: html},
+        });
     }
 
     /**
@@ -158,7 +184,7 @@ export class HTMLParser {
      * @returns {ContentBlock} The fully restored table block.
      */
     createTableBlock(block) {
-        const id = parseInt(block.getText().slice(12), 10);
+        const id = this.getBlockId(block);
         const tableHTML = this.tables[id];
         const tableNode = $('<table></table>');
 
@@ -186,6 +212,19 @@ export class HTMLParser {
     }
 
     /**
+     * Get block id from block text
+     *
+     * @param {ContentBlock} block
+     * @returns {number}
+     */
+    getBlockId(block) {
+        return parseInt(block.getText()
+            .split('_')
+            .pop(),
+        10);
+    }
+
+    /**
      * @name HTMLParser#createMediaBlock
      * @param {ContentBlock} block
      * @description Takes an unprocessed atomic block (that is assumed to be a
@@ -193,7 +232,7 @@ export class HTMLParser {
      * @returns {ContentBlock} The restored image block.
      */
     createMediaBlock(block) {
-        const id = parseInt(block.getText().slice(12), 10);
+        const id = this.getBlockId(block);
         const html = this.media[id];
         const node = $('<div />');
 
