@@ -99,7 +99,7 @@ describe('editor3.components.link-input', () => {
                 onSubmit={() => ({})}
                 hidePopups={() => ({})} />);
 
-        expect(wrapper.find('input').props().defaultValue).toBe(value.href);
+        expect(wrapper.find('input').props().value).toBe(value.href);
     });
 
     it('should call onCancel prop when "x" button is clicked', () => {

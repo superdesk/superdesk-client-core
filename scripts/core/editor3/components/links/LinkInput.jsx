@@ -15,6 +15,12 @@ import {applyLink, hidePopups, createLinkSuggestion} from '../../actions';
  * @param {string} data The default value for the input.
  * @description This components holds the input form for entering a new URL.
  */
+
+const linkTypes = {
+    href: 'href',
+    attachement: 'attachement',
+};
+
 export class LinkInputComponent extends Component {
     constructor(props) {
         super(props);
@@ -33,7 +39,8 @@ export class LinkInputComponent extends Component {
         }
 
         this.activeTab = 0;
-        this.state = {};
+
+        let selectedAttachment;
 
         if (props.data) {
             // if a value has been passed, it is safe to assume that it
@@ -42,9 +49,14 @@ export class LinkInputComponent extends Component {
 
             if (props.data.attachment) {
                 this.activeTab = 1;
-                this.state = {selected: props.data.attachment};
+                selectedAttachment = props.data.attachment;
             }
         }
+
+        this.state = {
+            url: this.props.data ? this.props.data.href || '' : '',
+            selected: selectedAttachment,
+        };
 
         this.onSubmit = this.onSubmit.bind(this);
         this.onKeyUp = this.onKeyUp.bind(this);
@@ -56,14 +68,16 @@ export class LinkInputComponent extends Component {
      * @name LinkInput#onSubmit
      * @description Callback when submitting the form.
      */
-    onSubmit() {
+    onSubmit(linkType) {
         let val;
         const {suggestingMode} = this.props;
 
-        if (this.input) {
-            val = {href: this.input.value};
-        } else {
+        if (linkType === linkTypes.href) {
+            val = {href: this.state.url};
+        } else if (linkType === linkTypes.attachement) {
             val = {attachment: this.state.selected};
+        } else {
+            throw new Error('link type not recognized');
         }
 
         if (!val.href && !val.attachment) {
@@ -92,8 +106,8 @@ export class LinkInputComponent extends Component {
     }
 
     componentDidMount() {
-        if (this.refs.input) {
-            this.refs.input.focus();
+        if (this.inputElement != null) {
+            this.inputElement.focus();
         }
     }
 
@@ -105,38 +119,59 @@ export class LinkInputComponent extends Component {
         return (
             <Dropdown open={true} className="dropdown--link-input">
                 <NavTabs tabs={this.tabs} active={this.activeTab} />
-                <div className="dropdown__menu-footer dropdown__menu-footer--align-right">
-                    <button className="btn btn--cancel"
-                        onClick={this.props.hidePopups}>{gettext('Cancel')}</button>
-                    <button className="btn btn--primary"
-                        onClick={this.onSubmit}>{gettext('Insert')}</button>
-                </div>
             </Dropdown>
         );
     }
 
     renderURL() {
-        const setInput = (input) => {
-            this.input = input;
-        };
-
         return (
-            <form onSubmit={this.onSubmit} className="link-input" onKeyUp={this.onKeyUp}>
-                <div className="sd-line-input">
+            <form
+                onSubmit={() => {
+                    this.onSubmit(linkTypes.href);
+                }}
+                className="link-input" onKeyUp={this.onKeyUp}>
+                <div style={{padding: '3.4rem 2rem'}}>
                     <input type="url"
-                        ref={setInput}
+                        ref={(el) => {
+                            this.inputElement = el;
+                        }}
                         className="sd-line-input__input"
-                        defaultValue={this.props.data ? this.props.data.href : null}
+                        value={this.state.url}
+                        onChange={(e) => {
+                            this.setState({url: e.target.value});
+                        }}
                         placeholder={gettext('Insert URL')}
                     />
+                </div>
+                <div className="dropdown__menu-footer dropdown__menu-footer--align-right">
+                    <button className="btn btn--cancel"
+                        onClick={this.props.hidePopups}>{gettext('Cancel')}</button>
+                    <button className="btn btn--primary" type="submit" disabled={this.state.url.length < 1}>
+                        {gettext('Insert')}
+                    </button>
                 </div>
             </form>
         );
     }
 
     renderAttachment() {
-        this.input = null;
-        return <AttachmentList item={this.props.item} onClick={this.selectAttachment} selected={this.state.selected} />;
+        return (
+            <div>
+                <AttachmentList item={this.props.item} onClick={this.selectAttachment} selected={this.state.selected} />
+                <div className="dropdown__menu-footer dropdown__menu-footer--align-right">
+                    <button className="btn btn--cancel"
+                        onClick={this.props.hidePopups}>{gettext('Cancel')}</button>
+                    <button
+                        className="btn btn--primary"
+                        disabled={this.state.selected == null}
+                        onClick={() => {
+                            this.onSubmit(linkTypes.attachement);
+                        }}>
+                        {gettext('Insert')}
+                    </button>
+                </div>
+            </div>
+        );
     }
 }
 
