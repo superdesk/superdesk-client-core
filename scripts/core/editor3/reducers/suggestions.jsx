@@ -5,7 +5,8 @@ import {changeSuggestionsTypes, styleSuggestionsTypes,
     blockSuggestionTypes, paragraphSuggestionTypes} from '../highlightsConfig';
 import * as Highlights from '../helpers/highlights';
 import {initSelectionIterator, hasNextSelection} from '../helpers/selection';
-import {editor3DataKeys, getCustomDataFromEditor, setCustomDataForEditor} from '../helpers/editor3CustomData';
+import {editor3DataKeys, getCustomDataFromEditor, setCustomDataForEditor,
+    getAllCustomDataFromEditor, setAllCustomDataForEditor} from '../helpers/editor3CustomData';
 import * as Blocks from '../helpers/blocks';
 import * as Links from '../helpers/links';
 import ng from 'core/services/ng';
@@ -348,6 +349,7 @@ const createSplitParagraphSuggestion = (state, {data}) => {
  */
 const pasteAddSuggestion = (state, {content, data}) => {
     let {editorState} = state;
+    const customData = getAllCustomDataFromEditor(editorState);
     const initialSelection = editorState.getSelection();
 
     const beforeStyle = Highlights.getHighlightStyleAtOffset(editorState, changeSuggestionsTypes, initialSelection, -1);
@@ -359,7 +361,6 @@ const pasteAddSuggestion = (state, {content, data}) => {
         editorState = EditorState.acceptSelection(editorState, collapseSelection(initialSelection));
     }
 
-    const firstBlock = editorState.getCurrentContent().getFirstBlock();
     // add content to editor state
     const mergedContent = Modifier.replaceWithFragment(
         editorState.getCurrentContent(),
@@ -378,22 +379,12 @@ const pasteAddSuggestion = (state, {content, data}) => {
         focusKey: finalSelection.getStartKey(),
         focusOffset: finalSelection.getStartOffset(),
         hasFocus: true,
-        isBackward: false
+        isBackward: false,
     });
 
     // for the first block recover the initial block data because on replaceWithFragment the block data is
     // replaced with the data from pasted fragment
-    if (firstBlock != null && initialSelection.getStartKey() === firstBlock.getKey()) {
-        const newSelection = initialSelection.merge({
-            anchorKey: firstBlock.getKey(),
-            anchorOffset: 0,
-            focusKey: firstBlock.getKey(),
-            focusOffset: 0,
-        });
-        const newContent = Modifier.mergeBlockData(mergedContent, newSelection, firstBlock.getData());
-
-        editorState = EditorState.push(editorState, newContent, 'change-block-data');
-    }
+    editorState = setAllCustomDataForEditor(editorState, customData);
 
     // select pasted content
     editorState = EditorState.acceptSelection(editorState, newSelection);

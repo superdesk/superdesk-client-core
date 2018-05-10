@@ -21,17 +21,13 @@ export function keyValid(key) {
     return Object.keys(editor3DataKeys).includes(key);
 }
 
-export function setCustomDataForEditor(editorState, key, value) {
-    if (!keyValid(key)) {
-        throw new Error(`Key '${key}' is not defined`);
-    }
-
+export function setAllCustomDataForEditor(editorState, value) {
     const currentSelectionToPreserve = editorState.getSelection();
 
     let content = editorState.getCurrentContent();
     const firstBlockSelection = SelectionState.createEmpty(content.getFirstBlock().getKey());
 
-    content = Modifier.mergeBlockData(content, firstBlockSelection, Map().set(key, value));
+    content = Modifier.mergeBlockData(content, firstBlockSelection, value);
 
     const editorStateWithDataSet = EditorState.push(editorState, content, 'change-block-data');
     const editorStateWithSelectionRestored = EditorState.forceSelection(
@@ -40,6 +36,22 @@ export function setCustomDataForEditor(editorState, key, value) {
     );
 
     return editorStateWithSelectionRestored;
+}
+
+export function getAllCustomDataFromEditor(editorState) {
+    return editorState
+        .getCurrentContent()
+        .getFirstBlock()
+        .getData()
+        .filter((value, key) => keyValid(key));
+}
+
+export function setCustomDataForEditor(editorState, key, value) {
+    if (!keyValid(key)) {
+        throw new Error(`Key '${key}' is not defined`);
+    }
+
+    return setAllCustomDataForEditor(editorState, Map().set(key, value));
 }
 
 export function getCustomDataFromEditor(editorState, key) {
