@@ -87,14 +87,44 @@ export class HTMLParser {
      */
     contentState() {
         const processBlock = this.processBlock.bind(this);
-        const contentState = stateFromHTML(this.tree.html(), {
+        let contentState = stateFromHTML(this.tree.html(), {
             elementStyles,
         });
+
+        contentState = this.processLinks(contentState);
 
         return ContentState.createFromBlockArray(
             contentState.getBlocksAsArray().map(processBlock),
             contentState.getEntityMap()
         );
+    }
+
+    /**
+     * Convert link entity data to editor3 format
+     *
+     * @param {ContentState} initialState
+     * @returns {ContentState}
+     */
+    processLinks(initialState) {
+        let contentState = initialState;
+
+        contentState.getBlocksAsArray().forEach((block) => {
+            block.findEntityRanges((characterMetadata) => characterMetadata.getEntity(), (start, end) => {
+                const key = block.getEntityAt(start);
+
+                if (key != null) {
+                    const entity = contentState.getEntity(key);
+
+                    if (entity.type === 'LINK') {
+                        contentState = contentState.replaceEntityData(key, {
+                            link: {href: entity.getData().url},
+                        });
+                    }
+                }
+            });
+        });
+
+        return contentState;
     }
 
     /**
