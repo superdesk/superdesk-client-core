@@ -19,13 +19,13 @@ export const acceptedInlineStyles = Object.values(inlineStyles);
  * Sanitize given content state on paste
  *
  * @param {ContentState} content
- * @param {Array} acceptedInlineStyles
+ * @param {Array} inlineStyles
  * @returns {ContentState}
  */
-export function sanitizeContent(content, acceptedInlineStyles = acceptedInlineStyles) {
+export function sanitizeContent(content, inlineStyles = acceptedInlineStyles) {
     let output = content;
 
-    const ignoreStyle = (style) => acceptedInlineStyles.indexOf(style) === -1;
+    const ignoreStyle = (style) => inlineStyles.indexOf(style) === -1;
     const getSelection = (block, start, end) => SelectionState.createEmpty(block.getKey()).merge({
         anchorOffset: start,
         focusOffset: end,
