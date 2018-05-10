@@ -5,7 +5,8 @@ import {changeSuggestionsTypes, styleSuggestionsTypes,
     blockSuggestionTypes, paragraphSuggestionTypes} from '../highlightsConfig';
 import * as Highlights from '../helpers/highlights';
 import {initSelectionIterator, hasNextSelection} from '../helpers/selection';
-import {editor3DataKeys, getCustomDataFromEditor, setCustomDataForEditor} from '../helpers/editor3CustomData';
+import {editor3DataKeys, getCustomDataFromEditor, setCustomDataForEditor,
+    getAllCustomDataFromEditor, setAllCustomDataForEditor} from '../helpers/editor3CustomData';
 import * as Blocks from '../helpers/blocks';
 import * as Links from '../helpers/links';
 import ng from 'core/services/ng';
@@ -348,6 +349,7 @@ const createSplitParagraphSuggestion = (state, {data}) => {
  */
 const pasteAddSuggestion = (state, {content, data}) => {
     let {editorState} = state;
+    const customData = getAllCustomDataFromEditor(editorState);
     const initialSelection = editorState.getSelection();
 
     const beforeStyle = Highlights.getHighlightStyleAtOffset(editorState, changeSuggestionsTypes, initialSelection, -1);
@@ -371,20 +373,21 @@ const pasteAddSuggestion = (state, {content, data}) => {
 
     // store current selection for later
     const finalSelection = editorState.getSelection();
+    const newSelection = initialSelection.merge({
+        anchorKey: initialSelection.getEndKey(),
+        anchorOffset: initialSelection.getEndOffset(),
+        focusKey: finalSelection.getStartKey(),
+        focusOffset: finalSelection.getStartOffset(),
+        hasFocus: true,
+        isBackward: false,
+    });
+
+    // for the first block recover the initial block data because on replaceWithFragment the block data is
+    // replaced with the data from pasted fragment
+    editorState = setAllCustomDataForEditor(editorState, customData);
 
     // select pasted content
-    editorState = EditorState.acceptSelection(editorState, editorState.getSelection().merge(
-        initialSelection.isBackward ? {
-            isBackward: true,
-            anchorKey: finalSelection.anchorKey,
-            anchorOffset: finalSelection.anchorOffset,
-            focusKey: initialSelection.focusKey,
-            focusOffset: initialSelection.focusOffset,
-        } : {
-            anchorKey: initialSelection.anchorKey,
-            anchorOffset: initialSelection.anchorOffset,
-        }
-    ));
+    editorState = EditorState.acceptSelection(editorState, newSelection);
 
     // apply highlights
     if (beforeData != null && beforeData.type === 'ADD_SUGGESTION' && beforeData.author === data.author) {
