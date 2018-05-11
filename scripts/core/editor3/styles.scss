@@ -466,34 +466,34 @@ $editor-styleButton-size: 3rem;
 	padding: 10px 15px 0 15px;
 }
 
+.Editor3-editor.unstyled__block--invisibles {
+	.space-component {
+		margin-left: .2em;
+	}
+
+	.space-component > span::before {
+		content: '•';
+		color: $sd-blue;
+	}
+
+	.space-component > span[style^="color"]::before {
+		color: inherit; // let it inherit suggestions color
+		padding-left: .2em;
+	}
+
+	[data-block]:after {
+		content: '\E690';
+		font-family: 'sd_icons';
+		font-size: 16px;
+		color: $sd-blue;
+	}
+}
+
 .Editor3-editor .public-DraftEditor-content {
 	min-height: 20px;
 
 	[data-block="true"] {
         border-bottom: 1.5em solid transparent;
-
-        &.unstyled__block--invisibles {
-            .space-component {
-                margin-left: .2em;
-            }
-
-            .space-component > span::before {
-                content: '•';
-                color: $sd-blue;
-			}
-
-			.space-component > span[style^="color"]::before {
-				color: inherit; // let it inherit suggestions color
-				padding-left: .2em;
-			}
-
-            &::after {
-                content: '\E690';
-                font-family: 'sd_icons';
-                font-size: 16px;
-                color: $sd-blue;
-            }
-        }
 
         &.unstyled__block--over {
             border-bottom-color: silver;
