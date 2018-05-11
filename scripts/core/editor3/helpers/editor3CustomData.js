@@ -30,7 +30,7 @@ export function setAllCustomDataForEditor(editorState, value) {
     content = Modifier.mergeBlockData(content, firstBlockSelection, value);
 
     const editorStateWithDataSet = EditorState.push(editorState, content, 'change-block-data');
-    const editorStateWithSelectionRestored = EditorState.forceSelection(
+    const editorStateWithSelectionRestored = EditorState.acceptSelection(
         editorStateWithDataSet,
         currentSelectionToPreserve
     );
