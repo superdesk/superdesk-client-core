@@ -349,9 +349,7 @@ const createSplitParagraphSuggestion = (state, {data}) => {
  */
 const pasteAddSuggestion = (state, {content, data}) => {
     let {editorState} = state;
-    const customData = getAllCustomDataFromEditor(editorState);
     const initialSelection = editorState.getSelection();
-
     const beforeStyle = Highlights.getHighlightStyleAtOffset(editorState, changeSuggestionsTypes, initialSelection, -1);
     const beforeData = beforeStyle != null ? Highlights.getHighlightData(editorState, beforeStyle) : null;
 
@@ -360,6 +358,9 @@ const pasteAddSuggestion = (state, {content, data}) => {
         editorState = deleteCurrentSelection(editorState, data);
         editorState = EditorState.acceptSelection(editorState, collapseSelection(initialSelection));
     }
+
+    // only get it now after adding delete suggestions
+    const customData = getAllCustomDataFromEditor(editorState);
 
     // add content to editor state
     const mergedContent = Modifier.replaceWithFragment(
@@ -374,8 +375,8 @@ const pasteAddSuggestion = (state, {content, data}) => {
     // store current selection for later
     const finalSelection = editorState.getSelection();
     const newSelection = initialSelection.merge({
-        anchorKey: initialSelection.getEndKey(),
-        anchorOffset: initialSelection.getEndOffset(),
+        anchorKey: initialSelection.getStartKey(),
+        anchorOffset: initialSelection.getStartOffset(),
         focusKey: finalSelection.getStartKey(),
         focusOffset: finalSelection.getStartOffset(),
         hasFocus: true,
