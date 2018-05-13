@@ -1,0 +1,83 @@
+<div ng-repeat="field in currentFeedingService.fields track by field.id">
+    <div class="field" ng-if="field.type === 'text'" ng-show="isConfigFieldVisible(field)">
+        <label for="{{getConfigFieldId(field.id)}}" translate>{{ field.label | translate }}</label>
+        <input type="{{field.type}}" id="{{getConfigFieldId(field.id)}}" placeholder="{{:: field.placeholder | translate}}"
+            ng-model="provider.config[field.id]" ng-required="isConfigFieldRequired(field)" ng-change="$parent.setConfig(provider)"
+            ng-show="isConfigFieldVisible(field)">
+        <div sd-ingest-config-errors></div>
+    </div>
+
+    <div class="field" ng-if="field.type === 'password'" ng-show="isConfigFieldVisible(field)">
+        <label for="{{getConfigFieldId(field.id)}}" translate>{{ field.label | translate }}</label>
+        <input type="password" id="{{getConfigFieldId(field.id)}}" placeholder="{{:: field.placeholder | translate}}"
+            ng-model="provider.config[field.id]" ng-required="isConfigFieldRequired(field)" ng-change="$parent.setConfig(provider)"
+            ng-show="isConfigFieldVisible(field)" autocomplete="new-password">
+        <div sd-ingest-config-errors></div>
+    </div>
+
+    <div class="field" ng-if="field.type === 'boolean'" ng-show="isConfigFieldVisible(field)">
+        <label for="{{getConfigFieldId(field.id)}}" translate>{{ field.label | translate }}</label>
+        <span sd-switch id="{{getConfigFieldId(field.id)}}" ng-model="provider.config[field.id]"
+            ng-required="isConfigFieldRequired(field)"></span>
+        <div sd-ingest-config-errors></div>
+    </div>
+
+
+    <fieldset class="separated rss-config" ng-if="field.type === 'tuple-multivalue'">
+      <legend translate>{{ field.label | translate }}</legend>
+
+      <div ng-show="provider.config[field.id].length == 0">
+        {{:: field.empty_label|translate }}
+      </div>
+
+      <div class="multiple header" ng-show="fieldAliases[field.id].length > 0">
+        <div class="field">
+          <label translate>{{ field.first_field_label|translate}}</label>
+        </div>
+        <div class="field">
+          <label translate>{{ field.second_field_label|translate}}</label>
+        </div>
+        <div class="field empty"></div>
+      </div>
+
+      <div class="multiple" ng-repeat="item in fieldAliases[field.id]">
+        <div class="field">
+          <select
+              ng-options="fieldName for fieldName in
+                          (availableFieldOptions(field.id, item.fieldName) | orderBy)"
+              ng-model="item.fieldName"
+              ng-change="fieldSelectionChanged(field)">
+          </select>
+        </div>
+
+        <div class="field">
+          <input type="text"
+              placeholder="{{:: field.second_field_placeholder|translate }}"
+              ng-model="item.alias">
+        </div>
+
+        <button
+            type="button"
+            class="btn btn--small"
+            ng-click="removeFieldAlias(field.id, $index)"
+            tooltip="{{:: field.remove_label|translate}}"
+            tooltip-placement="bottom"
+            tooltip-popup-delay="500">
+          <i class="icon-close-small"></i>
+        </button>
+      </div>
+
+      <div ng-show="!fieldAliases[field.id] || fieldAliases[field.id].length < field.first_field_options.length">
+        <button
+            type="button"
+            class="btn btn--primary btn--small"
+            ng-click="addFieldAlias(field.id)"
+            tooltip="{{:: field.add_label|translate}}"
+            tooltip-placement="right"
+            tooltip-popup-delay="500">
+          <i class="svg-icon-plus"></i>
+        </button>
+      </div>
+
+    </fieldset>
+</div>

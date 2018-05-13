@@ -29,25 +29,17 @@ export function IngestProviderService(api, $q, preferencesService, $filter, sear
             });
     };
 
-    var _getAllFeedingServicesAllowed = function(criteria = {}, page = 1, services = [], servicesMap = []) {
+    var _getAllFeedingServicesAllowed = function(criteria = {}, page = 1, services = []) {
         return api.query('feeding_services_allowed', _.extend({max_results: 200, page: page}, criteria))
             .then((result) => {
                 let pg = page;
                 // if we have a registered service map for the service return that instead
                 // of default result from api
-                let merged = services.concat(
-                    _.map(result._items, (item) => {
-                        let mappedService = _.find(servicesMap, {
-                            feeding_service: item.feeding_service,
-                        });
-
-                        return mappedService ? mappedService : item;
-                    })
-                );
+                let merged = services.concat(result._items);
 
                 if (result._links.next) {
                     pg++;
-                    return _getAllFeedingServicesAllowed(criteria, pg, merged, servicesMap);
+                    return _getAllFeedingServicesAllowed(criteria, pg, merged);
                 }
                 return $filter('sortByName')(merged, 'label');
             });
@@ -64,7 +56,6 @@ export function IngestProviderService(api, $q, preferencesService, $filter, sear
     };
 
     var service = {
-        feedingServicesMap: [],
         providers: null,
         providersLookup: {},
         fetched: null,
@@ -95,20 +86,8 @@ export function IngestProviderService(api, $q, preferencesService, $filter, sear
 
             return this.fetched;
         },
-        registerFeedingService: function(name, props) {
-            var self = this;
-
-            self.feedingServicesMap.push({
-                feeding_service: name,
-                label: props.label ? props.label : name,
-                templateUrl: props.templateUrl ? props.templateUrl : '',
-                config: props.config ? props.config : null,
-            });
-        },
         fetchAllFeedingServicesAllowed: function(criteria) {
-            var self = this;
-
-            return _getAllFeedingServicesAllowed(criteria, 1, [], self.feedingServicesMap);
+            return _getAllFeedingServicesAllowed(criteria, 1, []);
         },
         fetchAllIngestProviders: function(criteria) {
             return _getAllIngestProviders(criteria);

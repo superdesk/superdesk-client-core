@@ -45,6 +45,8 @@ angular.module('superdesk.apps.ingest', [
     .directive('sdUserIngestDashboardDropDown', directive.IngestUserDashboardDropdown)
     .directive('sdUserIngestDashboardList', directive.IngestUserDashboardList)
     .directive('sdUserIngestDashboard', directive.IngestUserDashboard)
+    .directive('sdIngestProviderConfig', directive.IngestProviderConfig)
+    .directive('sdIngestConfigErrors', directive.IngestConfigErrors)
 
     .filter('insert', InsertFilter)
     .filter('scheduleFilter', ScheduleFilter)
@@ -178,49 +180,4 @@ angular.module('superdesk.apps.ingest', [
 
     .run(['remove', (remove) => {
         remove.fetchProviders();
-    }])
-
-    .run(['ingestSources', 'asset', (ingestSources, asset) => {
-        // Map Ingest Feeding Services to config and form templates
-        ingestSources.registerFeedingService('file', {
-            label: 'File Feed',
-            templateUrl: asset.templateUrl('apps/ingest/views/settings/fileConfig.html'),
-        });
-        ingestSources.registerFeedingService('reuters_http', {
-            label: 'Reuters Feed API',
-            templateUrl: asset.templateUrl('apps/ingest/views/settings/reutersConfig.html'),
-            config: {
-                url: 'http://rmb.reuters.com/rmd/rest/xml',
-                auth_url: 'https://commerce.reuters.com/rmd/rest/xml/login',
-            },
-        });
-        ingestSources.registerFeedingService('rss', {
-            label: 'RSS',
-            templateUrl: asset.templateUrl('apps/ingest/views/settings/rssConfig.html'),
-        });
-        ingestSources.registerFeedingService('ftp', {
-            label: 'FTP',
-            templateUrl: asset.templateUrl('apps/ingest/views/settings/ftp-config.html'),
-            config: {passive: true},
-        });
-        ingestSources.registerFeedingService('email', {
-            label: 'Email',
-            templateUrl: asset.templateUrl('apps/ingest/views/settings/emailConfig.html'),
-        });
-        ingestSources.registerFeedingService('twitter', {
-            label: 'Twitter',
-            templateUrl: asset.templateUrl('apps/ingest/views/settings/twitterConfig.html'),
-        });
-        ingestSources.registerFeedingService('wufoo', {
-            label: 'Wufoo Forms',
-            templateUrl: asset.templateUrl('apps/ingest/views/settings/wufoo.html'),
-        });
-        ingestSources.registerFeedingService('ritzau', {
-            label: 'Ritzau Webservice',
-            templateUrl: asset.templateUrl('apps/ingest/views/settings/ritzauConfig.html'),
-        });
-        ingestSources.registerFeedingService('ap', {
-            label: 'Associated Press Webservice',
-            templateUrl: asset.templateUrl('apps/ingest/views/settings/apConfig.html'),
-        });
     }]);

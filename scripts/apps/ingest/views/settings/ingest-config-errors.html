@@ -1,0 +1,3 @@
+<div ng-repeat="(errorCode, errorMessage) in field.errors">
+    <div class="error" ng-show="error.code == errorCode" translate>{{errorMessage|translate}}</div>
+</div>

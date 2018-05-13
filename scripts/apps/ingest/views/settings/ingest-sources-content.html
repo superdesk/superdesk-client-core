@@ -66,7 +66,7 @@
                         <select id="provider-feeding-service" ng-change="initProviderConfig()" required ng-model="provider.feeding_service" ng-options="fs.feeding_service as fs.label for fs in feedingServices"></select>
                     </div>
 
-                    <div class="field" ng-show="provider.feeding_service !== 'wufoo'">
+                    <div class="field" ng-show="isFieldEnabled('feed_parser')">
                         <label for="provider-feed-parser" translate>Feed Parser</label>
                         <select id="provider-feed-parser" ng-model="provider.feed_parser" ng-options="fp.feed_parser as fp.label for fp in feedParsers">
                             <option value=""></option>
@@ -130,7 +130,7 @@
                     <div class="field credentials">
                         <div class="error" ng-show="error" translate>An error occured when testing config.</div>
 
-                        <div ng-include="getConfigTemplateUrl()"></div>
+                        <div sd-ingest-provider-config></div>
                     </div>
 
                     <div class="field">

@@ -5,11 +5,10 @@
 * @module sdIngestSourcesContent directive tests
 */
 describe('sdIngestSourcesContent directive', () => {
-    var scope;
+    var scope, directiveElement;
 
     beforeEach(window.module('superdesk.apps.searchProviders'));
     beforeEach(window.module('superdesk.apps.ingest'));
-
     beforeEach(window.module(($provide) => {
         $provide.constant('config', {
             model: {
@@ -36,224 +35,184 @@ describe('sdIngestSourcesContent directive', () => {
         });
     }));
 
-    beforeEach(inject(($compile, $rootScope, $templateCache) => {
-        var html,
-            templateUrl;
+    beforeEach(inject(($compile, $rootScope, $templateCache, ingestSources, $q) => {
+        spyOn(ingestSources, 'fetchAllFeedingServicesAllowed').and.returnValue($q.when([{
+            feeding_service: 'rss',
+            label: 'RSS',
+            fields: [
+                {
+                    id: 'text_field', type: 'text', label: 'Text Field',
+                },
+                {
+                    id: 'password_field', type: 'password', label: 'Password Field',
+                },
+                {
+                    id: 'field_aliases', type: 'tuple-multivalue', label: 'Content Field Aliases',
+                    first_field_options: ['foo1', 'foo2', 'foo3', 'foo4'],
+                },
+                {
+                    id: 'auth_required', type: 'boolean',
+                },
+                {
+                    id: 'username', type: 'text', show_expression: '{auth_required}',
+                },
+            ],
+        }]));
 
-        templateUrl = [
-            'scripts', 'apps/ingest', 'views',
+        var templateUrl = [
+            'scripts', 'apps', 'ingest', 'views',
             'settings', 'ingest-sources-content.html',
         ].join('/');
 
-        // since the directive does not modify the DOM, we can just
-        // give it any kind of template
-        $templateCache.put(templateUrl, '<div>whatever</div>');
-
+        $templateCache.put(templateUrl, '<div sd-ingest-provider-config></div>');
         scope = $rootScope.$new();
-        html = '<div sd-ingest-sources-content></div>';
-        $compile(html)(scope);
+        directiveElement = $compile('<form><div sd-ingest-sources-content></div></form>')(scope);
         scope.$digest();
     }));
-
-    it('initializes the list of available field names in scope', () => {
-        expect(scope.contentFields).toEqual([
-            'body_text', 'guid', 'published_parsed',
-            'summary', 'title', 'updated_parsed',
-        ]);
-    });
-
-    it('initializes field aliases in scope to an empty list', () => {
-        expect(scope.fieldAliases).toEqual([]);
-    });
-
-    it('initializes the list of field names without aliases to all ' +
-       'content fields',
-    () => {
-        expect(scope.fieldsNotSelected).toEqual([
-            'body_text', 'guid', 'published_parsed',
-            'summary', 'title', 'updated_parsed',
-        ]);
-    }
-    );
-
-    describe('setRssConfig() method', () => {
-        var fakeProvider;
-
-        beforeEach(() => {
-            scope.provider = {
-                config: {},
-            };
-            fakeProvider = {
-                config: {
-                    auth_required: true,
-                    username: 'user',
-                    password: 'password',
-                },
-            };
-        });
-
-        it('stores provider configuration in scope', () => {
-            scope.setRssConfig(fakeProvider);
-            expect(scope.provider.config).toEqual({
-                auth_required: true, username: 'user', password: 'password',
-            });
-        });
-
-        it('removes username and password from provider config if ' +
-           'authenticationration is not required',
-        () => {
-            fakeProvider.config.auth_required = false;
-            scope.setRssConfig(fakeProvider);
-            expect(scope.provider.config).toEqual({
-                auth_required: false, username: null, password: null,
-            });
-        }
-        );
-    });
 
     describe('edit() method', () => {
         var fakeProvider;
 
         beforeEach(() => {
             fakeProvider = {
+                feeding_service: 'rss',
                 config: {
                     field_aliases: [
                         {foo2: 'bar2'},
-                        {foo5: 'bar5'},
+                        {foo4: 'bar4'},
                     ],
                 },
             };
-            scope.contentFields = ['foo', 'foo2', 'foo3', 'foo4', 'foo5'];
         });
 
-        it('updates the list of field name aliases to match ' +
-           'provider\'s configuration',
-        () => {
-            scope.fieldAliases = [{fieldName: 'body', alias: 'content'}];
+        it('updates the list of field name aliases to match provider\'s configuration', () => {
             scope.edit(fakeProvider);
-            expect(scope.fieldAliases).toEqual([
+            expect(scope.fieldAliases).toEqual({field_aliases: [
                 {fieldName: 'foo2', alias: 'bar2'},
-                {fieldName: 'foo5', alias: 'bar5'},
-            ]);
-        }
-        );
+                {fieldName: 'foo4', alias: 'bar4'},
+            ]});
+        });
 
-        it('updates the list of field names that don\'t have an alias set',
-            () => {
-                scope.fieldsNotSelected = [];
-                scope.edit(fakeProvider);
-                expect(scope.fieldsNotSelected).toEqual(
-                    ['foo', 'foo3', 'foo4']
-                );
-            }
-        );
+        it('updates the list of field names that don\'t have an alias set', () => {
+            scope.edit(fakeProvider);
+            expect(scope.fieldsNotSelected).toEqual(
+                {field_aliases: ['foo1', 'foo3']}
+            );
+        });
+
+        it('should contain configuration fields', () => {
+            scope.edit(fakeProvider);
+            scope.$digest();
+            var found = directiveElement.find('input[id="rss-text_field"]');
+
+            expect(found.length).toEqual(1);
+            expect(found[0].type).toEqual('text');
+
+            found = directiveElement.find('input[id="rss-password_field"]');
+            expect(found.length).toEqual(1);
+            expect(found[0].type).toEqual('password');
+
+            found = directiveElement.find('select[ng-model="item.fieldName"]');
+            expect(found.length).toEqual(2);
+            expect(found[0].value).toEqual('string:foo2');
+            expect(found[1].value).toEqual('string:foo4');
+
+            found = directiveElement.find('input[ng-model="item.alias"]');
+            expect(found.length).toEqual(2);
+            expect(found[0].type).toEqual('text');
+            expect(found[1].type).toEqual('text');
+
+            found = directiveElement.find('span[id="rss-auth_required"]');
+            expect(found.length).toEqual(1);
+
+            found = directiveElement.find('input[id="rss-username"]');
+            expect(found.length).toEqual(1);
+            expect(found[0].type).toEqual('text');
+            expect(scope.isConfigFieldVisible({show_expression: '{auth_required}'})).toBeFalsy();
+
+            fakeProvider.config.auth_required = true;
+            scope.$digest();
+            found = directiveElement.find('input[id="rss-username"]');
+            expect(found.length).toEqual(1);
+            expect(scope.isConfigFieldVisible({show_expression: '{auth_required}'})).toBe(true);
+        });
     });
 
     describe('addFieldAlias() method', () => {
         it('appends a new item to the list of field aliases', () => {
-            scope.fieldAliases = [
-                {fieldName: 'foo', alias: 'bar'},
+            scope.fieldAliases = {field_aliases: [
+                {fieldName: 'foo1', alias: 'bar1'},
                 {fieldName: 'foo2', alias: 'bar2'},
-            ];
+            ]};
 
-            scope.addFieldAlias();
+            scope.addFieldAlias('field_aliases');
 
-            expect(scope.fieldAliases).toEqual([
-                {fieldName: 'foo', alias: 'bar'},
+            expect(scope.fieldAliases).toEqual({field_aliases: [
+                {fieldName: 'foo1', alias: 'bar1'},
                 {fieldName: 'foo2', alias: 'bar2'},
                 {fieldName: null, alias: ''},
-            ]);
+            ]});
         });
     });
 
-    describe('removeFieldAlias() method', () => {
+    describe('removeFieldAlias() and fieldSelectionChanged() methods', () => {
         beforeEach(() => {
-            scope.fieldAliases = [
-                {fieldName: 'foo', alias: 'bar'},
+            scope.fieldAliases = {field_aliases: [
+                {fieldName: 'foo1', alias: 'bar1'},
                 {fieldName: 'foo2', alias: 'bar2'},
                 {fieldName: 'foo3', alias: 'bar3'},
-            ];
+            ]};
+            scope.fieldsNotSelected = {field_aliases: ['foo4']};
         });
 
-        it('removes an item at given index from the list of field aliases',
-            () => {
-                scope.removeFieldAlias(1);
-                expect(scope.fieldAliases).toEqual([
-                    {fieldName: 'foo', alias: 'bar'},
-                    {fieldName: 'foo3', alias: 'bar3'},
-                ]);
-            }
-        );
+        it('removes an item at given index from the list of field aliases', () => {
+            scope.removeFieldAlias('field_aliases', 1);
+            expect(scope.fieldAliases).toEqual({field_aliases: [
+                {fieldName: 'foo1', alias: 'bar1'},
+                {fieldName: 'foo3', alias: 'bar3'},
+            ]});
+        });
 
-        it('adds removed items\'s selected field name to the list of ' +
-           'not selected fields',
-        () => {
-            scope.fieldsNotSelected = ['field_x'];
-            scope.removeFieldAlias(1);
-            expect(scope.fieldsNotSelected).toEqual(['field_x', 'foo2']);
-        }
-        );
+        it('adds removed items\'s selected field name to the list of not selected fields', () => {
+            scope.removeFieldAlias('field_aliases', 1);
+            expect(scope.fieldsNotSelected).toEqual({field_aliases: ['foo4', 'foo2']});
+        });
 
         it('does not modify the list of not selected fields if removed ' +
-           'alias item did not have a field name selected',
-        () => {
-            scope.fieldsNotSelected = ['field_x'];
-            scope.fieldAliases[1].fieldName = null;
+           'alias item did not have a field name selected', () => {
+            scope.fieldAliases.field_aliases[1].fieldName = null;
+            scope.fieldSelectionChanged({
+                id: 'field_aliases', type: 'tuple-multivalue', label: 'Content Field Aliases',
+                first_field_options: ['foo1', 'foo2', 'foo3', 'foo4'],
+            });
+            expect(scope.fieldsNotSelected).toEqual({field_aliases: ['foo2', 'foo4']});
 
-            scope.removeFieldAlias(1);
+            scope.removeFieldAlias('field_aliases', 1);
 
-            expect(scope.fieldsNotSelected).toEqual(['field_x']);
-        }
-        );
-    });
-
-    describe('fieldSelectionChanged() method', () => {
-        beforeEach(() => {
-            scope.contentFields = ['field_1', 'field_2', 'field_3', 'field_4'];
-        });
-
-        it('updates the list of fields not selected', () => {
-            scope.fieldsNotSelected = ['field_2'];
-
-            // let's say an alias for field_3 gets removed:
-            scope.fieldAliases = [
-                {fieldName: 'field_1', alias: 'alias_1'},
-                {fieldName: 'field_4', alias: 'alias_4'},
-                {fieldName: null, alias: 'whatever'},
-            ];
-            scope.fieldSelectionChanged();
-
-            expect(scope.fieldsNotSelected).toEqual(['field_2', 'field_3']);
+            expect(scope.fieldsNotSelected).toEqual({field_aliases: ['foo2', 'foo4']});
         });
     });
 
     describe('availableFieldOptions() method', () => {
         beforeEach(() => {
-            scope.contentFields = ['field_1', 'field_2', 'field_3', 'field_4'];
-            scope.fieldsNotSelected = ['field_1', 'field_3'];
+            scope.fieldsNotSelected = {field_aliases: ['foo1', 'foo3']};
         });
 
-        it('returns only the field names currently not selected if no field ' +
-           'name is given',
-        () => {
-            var fieldNames = scope.availableFieldOptions(null);
+        it('returns only the field names currently not selected if no field name is given', () => {
+            var fieldNames = scope.availableFieldOptions('field_aliases', null);
 
-            expect(fieldNames).toEqual(['field_1', 'field_3']);
-        }
-        );
+            expect(fieldNames).toEqual(['foo1', 'foo3']);
+        });
 
-        it('returns field names currently not selected ' +
-           'plus the given field name',
-        () => {
-            var fieldNames = scope.availableFieldOptions('field_4');
+        it('returns field names currently not selected plus the given field name', () => {
+            var fieldNames = scope.availableFieldOptions('field_aliases', 'foo4');
 
-            expect(fieldNames).toEqual(['field_1', 'field_3', 'field_4']);
-        }
-        );
+            expect(fieldNames).toEqual(['foo1', 'foo3', 'foo4']);
+        });
     });
 
     describe('save() method', () => {
-        var deferredSave;
+        var deferredSave, fakeProvider;
 
         beforeEach(inject(($q, api) => {
             deferredSave = $q.defer();
@@ -262,35 +221,30 @@ describe('sdIngestSourcesContent directive', () => {
                 save: jasmine.createSpy().and.returnValue(deferredSave.promise),
             };
 
-            scope.provider = {
-                config: {
-                    field_aliases: [{headline: 'title'}],
-                },
-            };
+            fakeProvider = {feeding_service: 'rss', config: {}};
         }));
 
         it('updates field aliases in provider configuration', () => {
-            scope.fieldAliases = [
-                {fieldName: 'foo', alias: 'bar'},
+            scope.edit(fakeProvider);
+            scope.fieldAliases = {field_aliases: [
+                {fieldName: 'foo1', alias: 'bar1'},
                 {fieldName: 'foo2', alias: 'bar2'},
-            ];
+            ]};
             scope.save();
             expect(scope.provider.config.field_aliases).toEqual(
-                [{foo: 'bar'}, {foo2: 'bar2'}]
+                [{foo1: 'bar1'}, {foo2: 'bar2'}]
             );
         });
 
-        it('does not add field aliases with missing data to ' +
-           ' provider configuration',
-        () => {
-            scope.fieldAliases = [
-                {fieldName: 'headline', alias: ''},
+        it('does not add field aliases with missing data to provider configuration', () => {
+            scope.edit(fakeProvider);
+            scope.fieldAliases = {field_aliases: [
+                {fieldName: 'foo1', alias: ''},
                 {fieldName: null, alias: 'some_alias'},
                 {fieldName: null, alias: ''},
-            ];
+            ]};
             scope.save();
             expect(scope.provider.config.field_aliases).toEqual([]);
-        }
-        );
+        });
     });
 });
