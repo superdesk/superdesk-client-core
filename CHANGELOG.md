@@ -1,5 +1,37 @@
 # Superdesk Client Changelog
 
+## [1.18.0] 2018-05-14
+
+### Fixed
+
+- Feature media is not visible right after upload.
+- Always handle pasted html in editor3 to be consistent.
+- Fix turning on formatting marks reverts text selection in editor3.
+- Fix importing embeds from editor2 to editor3.
+- Fix importing links from editor2 to editor3.
+- Fix paste suggestion on first block in editor3.
+- Fix editor3 issues on pasting text from buffer into custom fields or body.
+- Fix pasting of formatted text in suggestion mode.
+- Fix `ctrl+z` not working in image caption field.
+- Link insert button should not be active if no action is taken.
+- Make h1-h6 formatting work consistently in abstract and body fields.
+- Error on adding media to custom media field.
+- Add metadata to remove link suggestion.
+- Set background color for suggested spaces.
+- Fix stretching of text-highlights into another line.
+- Error on editing and saving certain CVs.
+- Wait for media loaded event in multi items media fields before rendering carousel.
+- Fix editor3 table toolbar position.
+- Keep selected text when pasting in suggestion mode.
+- Fix editor3 popup position on undo.
+- When toggling style on editing remove suggestion if any.
+
+### Added
+
+- Add support for merge paragraph suggestion.
+- Implement new design for editor3 popups.
+- Provide type-ahead search for contact organisation.
+
 ## [1.17.0] 2018-05-02
 
 ### Fixed
