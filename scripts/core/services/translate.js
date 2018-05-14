@@ -33,6 +33,12 @@ export default angular.module('superdesk.core.translate', [
                     gettextCatalog.setCurrentLanguage(gettextCatalog.baseLanguage);
                 }
 
+                // load translations - do it async in order to avoid digest errors on missing translations
+                setTimeout(() => {
+                    gettextCatalog.loadRemote('languages/' + gettextCatalog.currentLanguage + '.json');
+                    gettextCatalog.loadRemote('languages/planning/' + gettextCatalog.currentLanguage + '.json');
+                }, 100);
+
                 // set locale for date/time management
                 moment.locale(gettextCatalog.currentLanguage);
                 // set locale for angular-i18n
