@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
 
 import BaseUnstyledComponent from './BaseUnstyledComponent';
 
@@ -26,7 +25,6 @@ class UnstyledBlock extends BaseUnstyledComponent {
         const divProps = Object.assign({}, this.props);
 
         // avoid react unknown prop warning
-        delete divProps.dispatch;
         delete divProps.className;
         delete divProps.invisibles;
 
@@ -43,10 +41,9 @@ class UnstyledBlock extends BaseUnstyledComponent {
 
 UnstyledBlock.propTypes = {
     children: PropTypes.object,
-    dispatch: PropTypes.func.isRequired,
     className: PropTypes.string,
 };
 
-// mapping state to props might not work well for this component
+// mapping state to props in `connect` might not work well for this component
 // it was removed to fix SDESK-2886
-export default connect()(UnstyledBlock);
+export default UnstyledBlock;
