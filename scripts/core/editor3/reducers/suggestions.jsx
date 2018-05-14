@@ -366,7 +366,9 @@ const pasteAddSuggestion = (state, {content, data}) => {
     const mergedContent = Modifier.replaceWithFragment(
         editorState.getCurrentContent(),
         editorState.getSelection(),
-        sanitizeContent(content).getBlockMap()
+        sanitizeContent(EditorState.createWithContent(content))
+            .getCurrentContent()
+            .getBlockMap()
     );
 
     // push new content
