@@ -81,12 +81,6 @@ function processPastedHtml(props, html) {
             .filter((style) => editorFormat.includes(style))
             .map((style) => inlineStyles[style]);
 
-    if (!hasAtomicBlocks && acceptedInlineStyles.length === Object.keys(inlineStyles).length) {
-        // If we are not changing atomic blocks nor removing styles
-        // we let draftjs handle the paste
-        return NOT_HANDLED;
-    }
-
     let contentState = editorState.getCurrentContent();
     let selection = editorState.getSelection();
     let blocks = [];
