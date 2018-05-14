@@ -374,6 +374,7 @@ export class Editor3Component extends React.Component {
             'Editor3-root Editor3-editor': true,
             'no-toolbar': !showToolbar,
             'read-only': readOnly,
+            'unstyled__block--invisibles': this.props.invisibles,
         });
 
         const mediaEnabled = this.props.editorFormat.indexOf('media') !== -1;
