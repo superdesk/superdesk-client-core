@@ -1,5 +1,6 @@
 /* global _ */
 
+
 /**
  * @ngdoc controller
  * @module superdesk.apps.authoring
@@ -126,7 +127,7 @@ export function AssociationController(config, send, api, $q, superdesk,
         };
 
         superdesk.intent('upload', 'media', uploadData).then((images) => {
-            // open the view to edit the PoI and the cropping areas
+            // open the view to edit the point of interest and the cropping areas
             if (images) {
                 scope.$applyAsync(() => {
                     var [rootField, index] = mediaIdGenerator.getFieldParts(scope.rel);
@@ -165,6 +166,7 @@ export function AssociationController(config, send, api, $q, superdesk,
 
         data[rel] = updated;
         scope.item.associations = angular.extend({}, scope.item.associations, data);
+        scope.rel = rel;
         if (!authoring.isPublished(scope.item) && updated) {
             var promise = scope.save();
 
