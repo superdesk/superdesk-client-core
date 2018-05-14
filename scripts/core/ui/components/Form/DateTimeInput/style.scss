@@ -1,0 +1,19 @@
+@import '~superdesk-ui-framework/app/styles/variables/_colors.scss';
+
+.date-time-input__row {
+    &--required {
+        .form-label::after {
+            color: $red;
+            content: "*";
+            vertical-align: top;
+            font-size: 1.2rem;
+            padding-left: 0.3rem;
+        }
+    }
+
+    &--invalid {
+        .form-label {
+            color: $red;
+        }
+    }
+}

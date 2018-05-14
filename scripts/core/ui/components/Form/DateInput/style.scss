@@ -1,0 +1,98 @@
+@import '~superdesk-ui-framework/app/styles/_mixins.scss';
+@import '~superdesk-ui-framework/app/styles/_variables.scss';
+
+.date-popup {
+    width: 260px;
+
+    &__header {
+        width: 100%;
+    }
+
+    &__header-row {
+        display: flex;
+        flex-direction: row;
+
+        .btn {
+            flex: 1;
+            padding: 4px 6px;
+            font-size: 11px;
+
+            &--mode {
+                flex: 2;
+            }
+        }
+
+        &--tools {
+            margin-top: 5px;
+            .btn {
+                background: none;
+                &:hover, &:focus {
+                    @include box-shadow(0, 0, 0, 0, rgba(0,0,0,.25));
+                    background: none;
+                }
+            }
+        }
+    }
+
+    &__content {
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 0;
+            td, th {
+                padding: 1px;
+                border: 0;
+            }
+
+            thead {
+                tr {
+                    th {
+                        .btn {
+                            background: none;
+                            padding: 0;
+                        }
+                        small {
+                            @include text-semibold();
+                        }
+                    }
+                }
+            }
+            tbody {
+                tr:first-child td {
+                    padding-top: 5px;
+                }
+                td {
+                    padding: 0 2px;
+                    .btn {
+                        width: 100% !important;
+                        min-width: 28px !important;
+                        min-height: 28px !important;
+                        padding: 0;
+                        background: none;
+                        color: #333;
+                        @include box-shadow(0, 0, 0, 0, rgba(0,0,0,.25));
+                        .text-muted {
+                            color: #999;
+                        }
+                        &:hover, &.active {
+                            color: #333;
+                            @include box-shadow(0, 0, 1px, 0, $sd-blue, true);
+                            background: $sd-hover;
+                        }
+
+                        &.btn--primary, &.btn--primary.active {
+                            //selected date
+                            color: #fff;
+                            background: $sd-blue;
+                            .text-muted {
+                                color: #fff;
+                            }
+                        }
+
+
+                    }
+                }
+            }
+        }
+    }
+}

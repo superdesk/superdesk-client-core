@@ -1,0 +1,143 @@
+@import '~superdesk-ui-framework/app/styles/_mixins.scss';
+@import '~superdesk-ui-framework/app/styles/_variables.scss';
+
+.Select {
+	&__dropdownToggle {
+  		width: 24px;
+        height: 24px;
+        background-color: $sd-blue;
+        @include opacity(50);
+        border-radius: 2px;
+        padding: 0;
+        i {
+            margin-bottom: 2px;
+        }
+        &:hover:enabled, &:focus:enabled {
+            @include opacity(100);
+        }
+  	}
+}
+
+.Select__button {
+	background-color: $sd-blue;
+}
+
+.Select__popup {
+    z-index: 2000;
+    width: 280px;
+    @include border-box();
+
+    &__search {
+        margin-top: 15px;
+    }
+
+    &__category {
+        &:hover .Select__popup__parent {
+        	display: none;
+        }
+
+        &:hover .Select__popup__parent--choose {
+			display: block;
+        }
+    }
+
+    &__list {
+    	li {margin: 5px 0;}
+    	span, i { float: left; text-align: left; }
+		overflow-y: scroll;
+		overflow-x: hidden;
+		max-height: 200px;
+		padding: 5px 10px;
+    }
+
+    &__item {
+    	margin: 5px;
+        button {
+            width: 100%;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+		&:hover {
+			background: $sd-hover;	
+		}
+
+		&--active {
+			background: $sd-hover;
+		}
+    }
+
+    &__parent {
+	    display: block;
+	    vertical-align: top;
+        position: relative;
+        font-size: 12px;
+        color: #000;
+        background-color: rgba(0,0,0,0.05);
+        margin-right: 3px;
+        margin-bottom: 3px;
+        padding: 3px 10px;
+        cursor: pointer;
+        border-radius: 2px;
+        @include transition(color, .2s, ease);
+        max-width: 200px;
+
+        &--choose {
+        	background-color: rgba(0,0,0,0.05);
+        	margin-right: 3px;
+	        margin-bottom: 3px;
+	        padding: 3px 10px;
+			display: none;
+		}
+	}
+
+	// SearchBar related styling customisations
+    .search-handler {
+        padding: 0;
+        height: 47px;
+        box-shadow: inset 0px -7px 10px -7px rgba(0, 0, 0, 0.5) !important;
+
+        .backlink {
+            cursor: pointer;
+            margin-left: 5px;
+        }
+    }
+
+    .trigger-icon {
+    	margin-top: 0;
+    }
+
+    .search-close {
+    	height: 30px;
+    }
+}
+
+.SearchBar--narrow {
+	margin: 0;
+}
+
+.SearchBar.extended {
+    @extend .SearchBar--narrow;
+}
+
+// Required to make the SelectMetaTermsInput the same as the
+// UI prototype
+.select__meta-terms {
+    div.sd-line-input__input {
+        border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+        height: auto;
+        min-height: 3rem;
+        padding-left: 2.8rem;
+    }
+
+    &--disabled {
+        div.sd-line-input__input {
+            padding-left: 0;
+        }
+    }
+}
+
+.sd-line-input__plus-btn--disabled {
+    background-color: rgba(0, 0, 0, 0.1) !important;
+    cursor: default !important;
+}

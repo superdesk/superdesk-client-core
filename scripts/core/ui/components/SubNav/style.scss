@@ -1,0 +1,11 @@
+@import '~superdesk-ui-framework/app/styles/_variables.scss';
+
+.sliding-toolbar__info-tools {
+    a { cursor: pointer; }
+}
+
+.dropdown {
+    .dropdown__menu-item--disabled {
+        color: $grayLight;
+    }
+}

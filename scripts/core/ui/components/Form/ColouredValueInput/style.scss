@@ -1,0 +1,32 @@
+@import '~superdesk-ui-framework/app/styles/_mixins.scss';
+@import '~superdesk-ui-framework/app/styles/_variables.scss';
+
+.select-coloured-value {
+    &__input {
+        padding-top: 4px;
+        height: 2.4rem;
+        font-size: 1.4rem;
+
+        span {
+            vertical-align: middle;
+        }
+    }
+
+    &__popup {
+        width: 200px;
+
+        button {
+            padding: .6rem 1.6rem;
+            width: 100%;
+            text-align: left;
+
+            &:hover {
+                background: $sd-hover;
+            }
+        }
+
+        &--activeElement {
+            background: $sd-hover;
+        }
+    }
+}
