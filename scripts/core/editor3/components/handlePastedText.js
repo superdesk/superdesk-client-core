@@ -3,6 +3,7 @@ import {List, OrderedSet} from 'immutable';
 import {fromHTML} from 'core/editor3/html';
 import * as Suggestions from '../helpers/suggestions';
 import {sanitizeContent, inlineStyles} from '../helpers/inlineStyles';
+import {getAllCustomDataFromEditor, setAllCustomDataForEditor} from '../helpers/editor3CustomData';
 
 function removeMediaFromHtml(htmlString) {
     const element = document.createElement('div');
@@ -81,6 +82,7 @@ function processPastedHtml(props, html) {
             .filter((style) => editorFormat.includes(style))
             .map((style) => inlineStyles[style]);
 
+    const customData = getAllCustomDataFromEditor(editorState);
     let contentState = editorState.getCurrentContent();
     let selection = editorState.getSelection();
     let blocks = [];
@@ -128,6 +130,10 @@ function processPastedHtml(props, html) {
     );
 
     nextEditorState = EditorState.set(nextEditorState, {allowUndo: true});
+
+    // for the first block recover the initial block data because on replaceWithFragment the block data is
+    // replaced with the data from pasted fragment
+    nextEditorState = setAllCustomDataForEditor(nextEditorState, customData);
 
     onChange(nextEditorState);
 
