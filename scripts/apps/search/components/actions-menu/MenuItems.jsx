@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import Label from './Label';
 import Divider from './Divider';
 import Item from './Item';
+import SubmenuDropdown from './SubmenuDropdown';
 import {AUTHORING_MENU_GROUPS} from '../../../authoring/authoring/constants';
 import {closeActionsMenu, menuHolderElem} from '../../helpers';
 
@@ -86,24 +87,15 @@ export default class MenuItems extends React.Component {
                         <Divider key={`group-divider-${group._id}`} />
                     );
                 } else if (group.concate) {
-                    var submenu = [];
-
-                    actions[group._id].forEach((action) =>
-                        submenu.push(createAction(action)));
+                    const submenu = actions[group._id].map((action) => createAction(action));
 
                     menu.push(
                         <li key={`group-label-${group._id}`}>
-                            <div className="dropdown dropdown--noarrow">
-                                <a className="dropdown__toggle"
-                                    title={gettextCatalog.getString(group.label)}>
-                                    {actions[group._id][0].icon &&
-                                    <i className={`icon-${actions[group._id][0].icon}`} />}
-                                    {gettextCatalog.getString(group.label)}
-                                </a>
-                                <ul className="dropdown__menu dropdown__menu--submenu-left">
-                                    {submenu}
-                                </ul>
-                            </div>
+                            <SubmenuDropdown
+                                label={gettextCatalog.getString(group.label)}
+                                submenu={submenu}
+                                icon={actions[group._id][0].icon}
+                            />
                         </li>
                     );
                     return null;

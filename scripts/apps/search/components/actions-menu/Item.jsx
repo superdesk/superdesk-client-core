@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
+import {LEFT_SIDEBAR_WIDTH} from 'core/ui/constants';
 
 import {closeActionsMenu} from '../../helpers';
 
@@ -56,10 +57,9 @@ export default class Item extends React.Component {
 
     setPosition() {
         var targetRect = ReactDOM.findDOMNode(this).getBoundingClientRect();
-        var LEFT_BAR_WIDTH = 48;
         var BUFFER = 250;
 
-        if (targetRect.left < LEFT_BAR_WIDTH + BUFFER) {
+        if (targetRect.left < LEFT_SIDEBAR_WIDTH + BUFFER) {
             this.setState({position: 'dropdown__menu--submenu-right'});
         } else {
             this.setState({position: 'dropdown__menu--submenu-left'});
