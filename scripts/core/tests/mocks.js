@@ -42,6 +42,7 @@ angular.module('superdesk.mocks', [])
                 required: false,
             },
         },
+        profileLanguages: ['en', 'de_DE'],
     })
     .service('features', () => { /* no-op */ })
     .service('preferencesService', function($q) {

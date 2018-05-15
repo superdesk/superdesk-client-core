@@ -122,4 +122,4 @@ You can disable certain content profile fields. Set value to `false` in order to
 - `langOverride` - allows to override some labels in the UI (breaking, not recommended). It should be an object containing keys for language identifier and values as objects mapping labels to their translation. Example value: `{'en': {'Category':'Service'}}` would display _Service_ in place of _Category_ for the english (_en_) version.
 - `validatorMediaMetadata`: `object` - describes a fields that are required for media items (images/video). If the field is present in the object then it is displayed.
 - `infoRemovedFields`: `object` - contains fields that should be removed from metadata editing
-
+- `profileLanguages` - list of languages available in user profile

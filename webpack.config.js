@@ -238,5 +238,21 @@ function getDefaults(grunt) {
             DEFAULT_SCHEDULE: {minutes: 5, seconds: 0},
             DEFAULT_IDLE_TIME: {hours: 0, minutes: 0},
         },
+
+        // list of languages available in user profile
+        profileLanguages: [
+            'en',
+            'el',
+            'en_GB',
+            'es',
+            'da',
+            'ar',
+            'de_DE',
+            'ru_RU',
+            'nb',
+            'uk_UA',
+            'pt_BR',
+            'pl',
+        ],
     };
 }
