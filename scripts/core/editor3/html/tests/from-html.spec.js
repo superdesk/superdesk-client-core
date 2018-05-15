@@ -1,4 +1,4 @@
-import {HTMLParser} from '../from-html';
+import {getContentStateFromHtml} from '../from-html';
 import {convertFromRaw} from 'draft-js';
 
 /**
@@ -8,7 +8,7 @@ import {convertFromRaw} from 'draft-js';
  * resulting from the conversion of the given HTML.
  */
 function blocksFor(html) {
-    const contentState = new HTMLParser(html).contentState();
+    const contentState = getContentStateFromHtml(html);
     const blocks = contentState.getBlockMap().toArray();
 
     return {contentState, blocks};

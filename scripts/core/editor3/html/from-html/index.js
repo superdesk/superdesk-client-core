@@ -38,7 +38,7 @@ const elementStyles = {
  * This "small hack" allows us to use a reliable HTML convertor provided by DraftJS, as
  * well as accommodate Editor3 custom atomic blocks.
  */
-export class HTMLParser {
+class HTMLParser {
     constructor(html) {
         this.figures = {};
         this.tables = {};
@@ -70,8 +70,16 @@ export class HTMLParser {
      */
     pruneNodes() {
         this.tree.find('figure').each((i, node) => {
-            this.figures[i] = $(node).html();
-            $(node).replaceWith(`<figure>BLOCK_FIGURE_${i}></figure>`);
+            if (node.querySelector('img, video') != null) {
+                // editor2 support
+                // assume media
+                this.media[i] = $(node)[0].outerHTML;
+                $(node).replaceWith(`<figure>BLOCK_MEDIA_${i}</figure>`);
+            } else {
+                // assume embed
+                this.figures[i] = $(node).html();
+                $(node).replaceWith(`<figure>BLOCK_FIGURE_${i}></figure>`);
+            }
         });
 
         this.tree.find('table').each((i, node) => {
@@ -253,7 +261,11 @@ export class HTMLParser {
 
         const href = media.attr('src');
         const alt = media.attr('alt');
-        const txt = node.find('.media-block__description').text();
+
+        const editor3description = node.find('.media-block__description').text();
+        const editor2description = node.find('figcaption').text();
+
+        const txt = editor3description || editor2description;
 
         return atomicBlock(block, 'MEDIA', 'MUTABLE', {
             media: {
@@ -264,6 +276,10 @@ export class HTMLParser {
             },
         });
     }
+}
+
+export function getContentStateFromHtml(html) {
+    return new HTMLParser(html).contentState();
 }
 
 /**

@@ -1,6 +1,6 @@
 import {EditorState, ContentState, Modifier, genKey, CharacterMetadata, ContentBlock} from 'draft-js';
 import {List, OrderedSet} from 'immutable';
-import {fromHTML} from 'core/editor3/html';
+import {getContentStateFromHtml} from '../html/from-html';
 import * as Suggestions from '../helpers/suggestions';
 import {sanitizeContent, inlineStyles} from '../helpers/inlineStyles';
 import {getAllCustomDataFromEditor, setAllCustomDataForEditor} from '../helpers/editor3CustomData';
@@ -49,7 +49,7 @@ export function handlePastedText(editorKey, text, _html) {
             return HANDLED;
         }
 
-        const content = html ? fromHTML(html) : ContentState.createFromText(text);
+        const content = html ? getContentStateFromHtml(html) : ContentState.createFromText(text);
 
         onPasteFromSuggestingMode(content);
         return HANDLED;
@@ -74,7 +74,7 @@ export function handlePastedText(editorKey, text, _html) {
 // contentState.
 function processPastedHtml(props, html) {
     const {onChange, editorState, editorFormat} = props;
-    const pastedContent = fromHTML(html);
+    const pastedContent = getContentStateFromHtml(html);
     const blockMap = pastedContent.getBlockMap();
     const hasAtomicBlocks = blockMap.some((block) => block.getType() === 'atomic');
     const acceptedInlineStyles =
