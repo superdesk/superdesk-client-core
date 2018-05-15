@@ -784,7 +784,10 @@ const setDeleteSuggestionForCharacter = (editorState, data) => {
 
     const beforeStyle = Highlights.getHighlightStyleAtOffset(editorState, changeSuggestionsTypes, selection, -2);
     const beforeData = beforeStyle != null ? Highlights.getHighlightData(editorState, beforeStyle) : null;
-    const afterStyle = Highlights.getHighlightStyleAtOffset(editorState, changeSuggestionsTypes, selection, 0);
+    const afterParagraphStyle = Highlights.getHighlightStyleAtOffset(
+        editorState, paragraphSuggestionTypes, selection, 0);
+    const offset = afterParagraphStyle == null ? 0 : 1;
+    const afterStyle = Highlights.getHighlightStyleAtOffset(editorState, changeSuggestionsTypes, selection, offset);
     const afterData = afterStyle != null ? Highlights.getHighlightData(editorState, afterStyle) : null;
     let newState = Highlights.changeEditorSelection(editorState, -1, 0, false);
 
