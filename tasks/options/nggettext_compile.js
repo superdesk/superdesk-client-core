@@ -1,7 +1,17 @@
 module.exports = {
     all: {
-        files: {
-            '<%= coreDir %>/scripts/core/lang/lang.generated.js': '<%= poDir %>/*.po',
+        options: {
+            format: 'json',
         },
+        files: [
+            {
+                expand: true,
+                dot: true,
+                cwd: '<%= coreDir %>/po',
+                dest: '<%= distDir %>/languages',
+                src: ['**/*.po'],
+                ext: ['.json'],
+            },
+        ],
     },
 };

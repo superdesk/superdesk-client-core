@@ -60,15 +60,18 @@ export function UserEditDirective(api, gettext, notify, usersService, userList, 
             // get available translation languages
             var noBaseLanguage = true;
 
-            scope.languages = _.map(gettextCatalog.strings, (translation, lang) => {
+            scope.languages = config.profileLanguages.map((lang) => {
                 if (lang === gettextCatalog.baseLanguage) {
                     noBaseLanguage = false;
                 }
-                var langCode = lang.replace('_', '-');
+
+                const langCode = lang.replace('_', '-');
 
                 if (langmap[langCode]) {
                     return {code: lang, nativeName: langmap[langCode].nativeName};
                 }
+
+                return {code: lang, nativeName: lang};
             });
 
             // add baseLanguage if needed

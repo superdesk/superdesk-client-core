@@ -58,6 +58,7 @@ module.exports = function(grunt) {
         'copy:index',
         'copy:config',
         'copy:locales',
+        'nggettext_compile',
         'ngtemplates:gen-apps',
         'ngtemplates:dev',
         'webpack-dev-server:start',
@@ -72,6 +73,7 @@ module.exports = function(grunt) {
             'copy:config',
             'copy:assets',
             'copy:locales',
+            'nggettext_compile',
             'ngtemplates:gen-apps',
             'ngtemplates:core',
         ]);

@@ -1,0 +1,1783 @@
+# Translators:
+# Helen Vogt <helen.vogt@ntb.no>, 2018
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Last-Translator: Helen Vogt <helen.vogt@ntb.no>, 2018\n"
+"Language-Team: Norwegian Bokmål (https://www.transifex.com/sourcefabric/teams/6584/nb/)\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: nb\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: client/components/Assignments/AssignmentItem/index.jsx:146
+#: client/components/Assignments/AssignmentPreviewContainer/AssignmentPreviewHeader.jsx:114
+msgid "'not scheduled yet'"
+msgstr "´ikke tidfestet ennå´"
+
+#: client/actions/planning/api.js:910
+msgid "1 item was not included in the export."
+msgstr "1 element ble ikke eksportert"
+
+#: client/components/Main/ActionsSubnavDropdown.jsx:15
+msgid "Actions"
+msgstr "Handlinger"
+
+#: client/constants/planning.js:76
+msgid "Add As Event"
+msgstr "Legg til som hendelse"
+
+#: client/components/ContactEditor/index.jsx:81
+#: client/components/fields/ContactField.jsx:180
+msgid "Add Contact"
+msgstr "Legg til kontakt"
+
+#: client/components/Agendas/ManageAgendasModal.jsx:63
+msgid "Add New Agenda"
+msgstr "Legg til ny arbeidsliste"
+
+#: client/components/Events/EventEditor/index.jsx:252
+msgid "Add a file"
+msgstr "Last opp en fil"
+
+#: client/components/Events/EventEditor/index.jsx:271
+msgid "Add a link"
+msgstr "Legg til en lenke"
+
+#: client/components/Planning/PlanningItem.jsx:155
+msgid "Add as coverage"
+msgstr "Legg til som dekning"
+
+#: client/constants/planning.js:92
+msgid "Add coverage"
+msgstr "Legg til dekning"
+
+#: index.js:28
+msgid "Add to Planning"
+msgstr "Legg til i planer"
+
+#: client/components/Coverages/CoverageEditor/index.jsx:75
+msgid "Add to workflow"
+msgstr "Aktiver oppdrag"
+
+#: client/components/Main/SearchPanel.jsx:101
+msgid "Advanced filters"
+msgstr "Avanserte filtre"
+
+#: client/components/Events/RecurringRulesInput/EndsInput.jsx:66
+msgid "After"
+msgstr "Etter"
+
+#: client/components/Assignments/AssignmentPreviewContainer/PlanningPreview.jsx:19
+#: client/components/Planning/PlanningEditor/index.jsx:368
+#: client/components/Planning/PlanningPreviewContent.jsx:93
+msgid "Agenda"
+msgstr "Arbeidsliste"
+
+#: client/actions/planning/ui.js:399
+msgid "Agenda assigned to the planning item."
+msgstr "Planelementet ble tilordnet arbeidsliste"
+
+#: client/components/Main/AgendaSubnavDropdown.jsx:72
+msgid "Agenda:"
+msgstr "Arbeidsliste:"
+
+#: client/components/Agendas/AgendaList.jsx:28
+#: client/components/Main/AgendaSubnavDropdown.jsx:73
+msgid "Agendas"
+msgstr "Arbeidslister"
+
+#: client/components/Assignments/FiltersBar.jsx:20
+msgid "All"
+msgstr "Alle"
+
+#: client/components/Events/CalendarSubnavDropdown.jsx:51
+#: client/components/Events/CalendarSubnavDropdown.jsx:61
+msgid "All Calendars"
+msgstr "Alle kalendre"
+
+#: client/actions/planning/ui.js:449
+msgid "All Coverage has been cancelled"
+msgstr "All dekning er avlyst"
+
+#: client/components/Events/EventScheduleInput/index.jsx:265
+msgid "All Day"
+msgstr "Hele dagen"
+
+#: client/components/Main/AgendaSubnavDropdown.jsx:60
+msgid "All Planning"
+msgstr "Alle planer"
+
+#: client/components/Main/AgendaSubnavDropdown.jsx:50
+msgid "All Planning Items"
+msgstr "Alle planelementer"
+
+#: client/actions/planning/api.js:941
+msgid "Article was created."
+msgstr "Meny er eksportert"
+
+#: client/components/Coverages/CoverageEditor/CoverageFormHeader.jsx:66
+msgid "Assign"
+msgstr "Tildel"
+
+#: client/constants/planning.js:87
+msgid "Assign to agenda"
+msgstr "Tildel arbeidsliste"
+
+#: client/utils/index.js:430
+msgid "Assigned"
+msgstr "Tildelt"
+
+#: client/components/Assignments/AssignmentPreviewContainer/AssignmentPreviewHeader.jsx:102
+#: client/components/Assignments/AssignmentPreviewContainer/AssignmentPreviewHeader.jsx:84
+msgid "Assigned by {{name}}"
+msgstr "Tildelt av {{name}}"
+
+#: client/components/Assignments/FiltersBar.jsx:30
+msgid "Assigned to me"
+msgstr "Tildelt meg"
+
+#: client/components/Assignments/AssignmentPreviewContainer/AssignmentPreviewHeader.jsx:92
+msgid "Assigned:"
+msgstr "Tildelt:"
+
+#: client/components/Assignments/AssignmentItem/index.jsx:161
+msgid "Assigned: {{ displayName }}"
+msgstr "Tildelt: {{ displayName }}"
+
+#: client/components/Coverages/CoveragePreview.jsx:65
+msgid "Assignee"
+msgstr "Tildelt"
+
+#: client/components/Coverages/CoverageEditor/CoverageFormHeader.jsx:113
+#: client/components/Coverages/CoverageItem.jsx:96
+msgid "Assignee:"
+msgstr "Tildelt:"
+
+#: client/apps/Assignments/AssignmentPreview.jsx:39 client/utils/index.js:556
+msgid "Assignment"
+msgstr "Oppdrag"
+
+#: client/components/Assignments/AssignmentEditor.jsx:207
+msgid "Assignment Priority"
+msgstr "Oppdragets viktighet"
+
+#: client/apps/Assignments/AssignmentPreview.jsx:115
+msgid "Assignment locked"
+msgstr "Oppdrag låst"
+
+#: client/actions/assignments/ui.js:414
+msgid "Assignment priority has been updated."
+msgstr "Oppdragets viktighet er oppdatert"
+
+#: client/components/Assignments/SubNavBar.jsx:36
+#: client/controllers/AssignmentController.js:30 index.js:21
+msgid "Assignments"
+msgstr "Oppdrag"
+
+#: client/components/Planning/PlanningEditor/index.jsx:439
+#: client/components/Planning/PlanningPreviewContent.jsx:135
+msgid "Associated Event"
+msgstr "Tilknyttet hendelse"
+
+#: client/components/Events/EventEditor/index.jsx:242
+#: client/components/Events/EventPreviewContent.jsx:240
+msgid "Attached Files"
+msgstr "Vedlegg"
+
+#: client/components/Assignments/AssignmentPreviewContainer/EventPreview.jsx:84
+msgid "Attachments"
+msgstr "Vedlegg"
+
+#: client/utils/index.js:568
+msgid "Audio"
+msgstr "Audio"
+
+#: client/components/Assignments/AssignmentHistory.jsx:65
+msgid "Availability reverted by"
+msgstr "Leveringsstatus endret av"
+
+#: client/components/Events/CalendarSubnavDropdown.jsx:82
+msgid "Calendar:"
+msgstr "Kalender:"
+
+#: client/components/Events/CalendarSubnavDropdown.jsx:84
+#: client/components/Events/EventEditor/index.jsx:165
+#: client/components/Events/EventPreviewContent.jsx:158
+msgid "Calendars"
+msgstr "Kalendre"
+
+#: client/components/AddToPlanningModal/index.jsx:56
+#: client/components/Assignments/AssignmentPopup/index.jsx:75
+#: client/components/FulFilAssignmentModal/index.jsx:57
+#: client/components/ItemActionConfirmation/modal.jsx:140
+#: client/components/Main/ItemEditor/EditorHeader.jsx:158
+#: client/components/SortItemsModal/index.jsx:62
+#: client/components/UI/Form/DateInput/DateInputPopup.jsx:216
+#: client/components/UI/SubNav/SlidingToolBar.jsx:13
+#: client/constants/events.js:58
+msgid "Cancel"
+msgstr "Avbryt"
+
+#: client/constants/planning.js:69
+msgid "Cancel all coverage"
+msgstr "Avlys all dekning"
+
+#: client/components/ItemActionConfirmation/forms/cancelEventForm.jsx:111
+msgid "Cancel all recurring events or just this one?"
+msgstr "Avlys alle forekomster, eller kun denne?"
+
+#: client/components/ItemActionConfirmation/modal.jsx:71
+msgid "Cancel an event"
+msgstr "Avlys en hendelse"
+
+#: client/components/Coverages/CoverageEditor/index.jsx:67
+msgid "Cancel coverage"
+msgstr "Avlys dekning"
+
+#: client/constants/planning.js:63
+msgid "Cancel planning"
+msgstr "Avlys planer"
+
+#: client/utils/index.js:419 client/utils/index.js:465
+msgid "Cancelled"
+msgstr "Avlyst"
+
+#: client/components/Assignments/AssignmentHistory.jsx:61
+#: client/components/Events/EventHistory.jsx:62
+#: client/components/Planning/PlanningHistory.jsx:63
+msgid "Cancelled by"
+msgstr "Avlyst av"
+
+#: client/actions/main.js:391
+msgid "Cannot load more data as filter type is not selected."
+msgstr "Kan ikke hente mer data siden filter ikke er valgt."
+
+#: client/actions/main.js:412
+msgid "Cannot load more data. Failed to run the query."
+msgstr "Kan ikke hente mer data. Kunne ikke utføre søket."
+
+#: client/actions/main.js:433
+msgid "Cannot search as filter type is not selected."
+msgstr "Kan ikke søke siden filter ikke er valgt."
+
+#: client/components/AdvancedSearch/index.jsx:167
+#: client/components/Assignments/AssignmentPreviewContainer/AssignmentPreview.jsx:50
+#: client/components/Events/EventEditor/index.jsx:203
+#: client/components/Events/EventPreviewContent.jsx:215
+#: client/components/Planning/PlanningEditor/index.jsx:400
+#: client/components/Planning/PlanningPreviewContent.jsx:109
+msgid "Category"
+msgstr "Stoffgruppe"
+
+#: client/components/Main/SearchPanel.jsx:110
+msgid "Clear"
+msgstr "Nullstill"
+
+#: client/components/Main/SubNavBar.jsx:27
+msgid "Clear Filters"
+msgstr "Nullstill søk"
+
+#: client/components/UI/Form/DateTimeInput/index.jsx:70
+msgid "Clear date and time"
+msgstr "Nullstill dato og klokkeslett"
+
+#: client/components/Main/ItemEditor/EditorHeader.jsx:158
+#: client/components/ModalWithForm/index.jsx:102
+msgid "Close"
+msgstr "Lukk"
+
+#: client/constants/assignments.js:45
+msgid "Complete Assignment"
+msgstr "Fullfør oppdrag"
+
+#: client/utils/index.js:447
+msgid "Completed"
+msgstr "Fullført"
+
+#: client/components/Assignments/AssignmentHistory.jsx:59
+msgid "Completed by"
+msgstr "Fullført av"
+
+#: client/utils/index.js:566
+msgid "Composite"
+msgstr "Composite"
+
+#: client/constants/assignments.js:65
+msgid "Confirm Availability"
+msgstr "Levert"
+
+#: client/components/Events/EventEditor/index.jsx:181
+#: client/components/Events/EventPreviewContent.jsx:178
+msgid "Contact"
+msgstr "Kontakt"
+
+#: client/components/ContactInfoContainer/index.jsx:51
+msgid "Contact Details"
+msgstr "Kontaktinformasjon"
+
+#: client/apps/Assignments/AssignmentPreview.jsx:47
+#: client/components/Main/ItemEditor/Editor.jsx:55
+#: client/components/Main/ItemPreview/PreviewPanel.jsx:34
+msgid "Content"
+msgstr "Innhold"
+
+#: client/components/Assignments/AssignmentHistory.jsx:63
+msgid "Content Unlinked and Spiked by"
+msgstr "Innhold fjernet og slettet av "
+
+#: client/components/Assignments/AssignmentHistory.jsx:57
+msgid "Content linked by"
+msgstr "Innhold lenket opp av "
+
+#: client/apps/Assignments/AssignmentPreview.jsx:114
+msgid "Content locked"
+msgstr "Innhold låst"
+
+#: client/components/Assignments/AssignmentHistory.jsx:56
+msgid "Content unlinked by"
+msgstr "Innholdslink fjernet av "
+
+#: client/constants/events.js:82
+msgid "Convert to recurring event"
+msgstr "Endre til gjentakende hendelse"
+
+#: client/actions/planning/ui.js:404
+msgid "Could not obtain lock on the planning item."
+msgstr "Kunne ikke låse planelementet"
+
+#: client/actions/planning/ui.js:532
+msgid "Could not save the planning item."
+msgstr "Kunne ikke lagre planelementet"
+
+#: client/actions/planning/ui.js:529
+msgid "Could not unlock the planning item."
+msgstr "Kunne ikke låse opp planelementet"
+
+#: client/components/Assignments/AssignmentEditor.jsx:183
+msgid "Coverage Provider"
+msgstr "Dekning levert av "
+
+#: client/components/Coverages/CoverageEditor/CoverageFormHeader.jsx:122
+#: client/components/Coverages/CoveragePreview.jsx:71
+msgid "Coverage Provider:"
+msgstr "Dekning levert av:"
+
+#: client/components/Coverages/CoverageEditor/CoverageForm.jsx:187
+#: client/components/Coverages/CoveragePreview.jsx:102
+msgid "Coverage Status"
+msgstr "Dekningsstatus"
+
+#: client/components/AdvancedSearch/index.jsx:214
+#: client/components/Coverages/CoverageEditor/CoverageForm.jsx:117
+msgid "Coverage Type"
+msgstr "Dekningstype"
+
+#: client/components/Planning/PlanningHistory.jsx:56
+msgid "Coverage created by"
+msgstr "Dekning opprettet av"
+
+#: client/components/Planning/PlanningHistory.jsx:60
+msgid "Coverage deleted by"
+msgstr "Dekning slettet av"
+
+#: client/components/Coverages/CoverageAddButton.jsx:40
+msgid "Coverage type"
+msgstr "Dekningstype"
+
+#: client/components/Planning/PlanningHistory.jsx:58
+msgid "Coverage updated by"
+msgstr "Dekning oppdatert av"
+
+#: client/components/Coverages/CoverageArrayInput.jsx:41
+#: client/components/Planning/PlanningPreviewContent.jsx:145
+msgid "Coverages"
+msgstr "Dekning"
+
+#: client/components/Main/ItemEditor/EditorHeader.jsx:206
+msgid "Create"
+msgstr "Opprett"
+
+#: client/constants/events.js:53
+msgid "Create Planning Item"
+msgstr "Lag planelement"
+
+#: client/components/Main/ItemEditor/EditorHeader.jsx:217
+msgid "Create and publish"
+msgstr "Opprett og publiser"
+
+#: client/components/Main/CreateNewSubnavDropdown.jsx:26
+msgid "Create new"
+msgstr "Lag ny"
+
+#: client/components/Coverages/CoverageAddButton.jsx:46
+msgid "Create new coverage"
+msgstr "Lag ny dekning"
+
+#: client/components/Main/CreateNewSubnavDropdown.jsx:31
+msgid "Create new item"
+msgstr "Lag nytt element"
+
+#: client/components/Main/CreateNewSubnavDropdown.jsx:31
+msgid "Create new planning item"
+msgstr "Lag nytt planelement"
+
+#: client/components/MultiSelectActions.jsx:143
+msgid "Create planning"
+msgstr "Lag planer"
+
+#: client/components/Assignments/AssignmentHistory.jsx:54
+#: client/components/Events/EventHistory.jsx:52
+#: client/components/Planning/PlanningHistory.jsx:51
+msgid "Created by"
+msgstr "Opprettet av"
+
+#: client/components/Events/EventScheduleSummary/index.jsx:27
+msgid "Current Date"
+msgstr "Dagens dato"
+
+#: client/components/Events/RepeatEventSummary/index.jsx:103
+msgid "Current Repeat Summary"
+msgstr "Gjentakelser oppsummert"
+
+#: client/components/Events/EventScheduleSummary/index.jsx:27
+#: client/components/Events/RecurringRulesInput/EndsInput.jsx:120
+msgid "Date"
+msgstr "Dato"
+
+#: client/components/AdvancedSearch/index.jsx:269
+msgid "Date Filters"
+msgstr "Datofiltre"
+
+#: client/components/Assignments/AssignmentPreviewContainer/EventPreview.jsx:33
+#: client/components/Assignments/AssignmentPreviewContainer/PlanningPreview.jsx:37
+#: client/components/Events/EventEditor/index.jsx:139
+#: client/components/Events/EventMetadata/index.jsx:112
+#: client/components/Events/EventPreviewContent.jsx:146
+#: client/components/Planning/PlanningEditor/index.jsx:354
+#: client/components/Planning/PlanningPreviewContent.jsx:83
+msgid "Description"
+msgstr "Beskrivelse"
+
+#: client/components/MultiSelectActions.jsx:196
+msgid "Deselect All"
+msgstr "Velg bort alle"
+
+#: client/components/Assignments/AssignmentEditor.jsx:165
+#: client/components/Coverages/CoveragePreview.jsx:59
+msgid "Desk"
+msgstr "Desk"
+
+#: client/components/Assignments/AssignmentPreviewContainer/AssignmentPreviewHeader.jsx:74
+#: client/components/Coverages/CoverageEditor/CoverageFormHeader.jsx:105
+#: client/components/Coverages/CoverageIcon.jsx:25
+#: client/components/Coverages/CoverageItem.jsx:78
+#: client/components/ItemActionConfirmation/forms/editPriorityForm.jsx:82
+#: client/components/ItemActionConfirmation/forms/updateAssignmentForm.jsx:122
+msgid "Desk:"
+msgstr "Desk:"
+
+#: client/components/Events/EventEditor/index.jsx:186
+#: client/components/Events/EventPreviewContent.jsx:207
+#: client/components/Planning/PlanningEditor/index.jsx:376
+#: client/components/Planning/PlanningPreviewContent.jsx:96
+msgid "Details"
+msgstr "Detaljer"
+
+#: client/utils/planning.js:653
+msgid "Disabled"
+msgstr "Av"
+
+#: client/actions/agenda.js:141
+msgid "Do you want to add these  events to the planning list ?"
+msgstr "Vil du legge disse hendelsene til arbeidslisten?"
+
+#: client/actions/agenda.js:140
+msgid "Do you want to add this event to the planning list ?"
+msgstr "Vil du legge denne hendelsen til arbeidslisten?"
+
+#: client/actions/multiSelect.js:79
+msgid "Do you want to spike  item(s) ?"
+msgstr "Vil du slette element(er)?"
+
+#: client/actions/multiSelect.js:97
+msgid "Do you want to unspike  item(s) ?"
+msgstr "Vil du gjenopprette element(er)?"
+
+#: client/components/SortItemsModal/index.jsx:64
+msgid "Done"
+msgstr "Ferdig"
+
+#: client/utils/index.js:386
+msgid "Draft"
+msgstr "Kladd"
+
+#: client/components/Coverages/CoverageEditor/CoverageForm.jsx:198
+#: client/components/Coverages/CoveragePreview.jsx:104
+msgid "Due"
+msgstr "Leveres"
+
+#: client/components/Assignments/AssignmentItem/index.jsx:139
+msgid "Due Date"
+msgstr "Leveringsdato"
+
+#: client/components/Assignments/AssignmentPreviewContainer/AssignmentPreviewHeader.jsx:110
+#: client/components/Coverages/CoverageIcon.jsx:37
+#: client/components/ItemActionConfirmation/forms/editPriorityForm.jsx:107
+#: client/components/ItemActionConfirmation/forms/updateAssignmentForm.jsx:98
+msgid "Due:"
+msgstr "Leveres:"
+
+#: client/components/Coverages/CoverageEditor/index.jsx:54
+#: client/constants/events.js:48 client/constants/planning.js:58
+msgid "Duplicate"
+msgstr "Dupliser"
+
+#: client/components/Coverages/CoverageEditor/index.jsx:59
+msgid "Duplicate As"
+msgstr "Dupliser som"
+
+#: client/components/Events/EventHistory.jsx:58
+#: client/components/Planning/PlanningHistory.jsx:61
+msgid "Duplicate created by"
+msgstr "Duplikat opprettet av"
+
+#: client/components/Events/EventHistory.jsx:59
+#: client/components/Planning/PlanningHistory.jsx:62
+msgid "Duplicated by"
+msgstr "Duplisert av "
+
+#: client/components/Assignments/AssignmentPreviewContainer/AssignmentPreview.jsx:70
+#: client/components/Assignments/AssignmentPreviewContainer/EventPreview.jsx:73
+#: client/components/Assignments/AssignmentPreviewContainer/PlanningPreview.jsx:43
+#: client/components/Coverages/CoverageEditor/CoverageForm.jsx:158
+#: client/components/Coverages/CoveragePreview.jsx:89
+#: client/components/Events/EventEditor/index.jsx:235
+#: client/components/Events/EventPreviewContent.jsx:235
+#: client/components/Planning/PlanningEditor/index.jsx:384
+#: client/components/Planning/PlanningPreviewContent.jsx:99
+msgid "Ed Note"
+msgstr "Til red"
+
+#: client/components/Main/ItemEditor/EditorHeader.jsx:226
+#: client/constants/events.js:95 client/constants/planning.js:81
+msgid "Edit"
+msgstr "Rediger"
+
+#: client/constants/assignments.js:49
+msgid "Edit Priority"
+msgstr "Rediger viktighet"
+
+#: client/views/eventEmailConfig.html:37
+msgid "Email Filter"
+msgstr "Email Filter"
+
+#: client/views/eventEmailConfig.html:21
+msgid "Email Password"
+msgstr "Email Password"
+
+#: client/views/eventEmailConfig.html:2 client/views/eventEmailConfig.html:3
+msgid "Email Server"
+msgstr "Email Server"
+
+#: client/views/eventEmailConfig.html:8 client/views/eventEmailConfig.html:9
+msgid "Email Server Port"
+msgstr "Email Server Port"
+
+#: client/views/eventEmailConfig.html:15
+msgid "Email User"
+msgstr "Email User"
+
+#: client/views/eventEmailConfig.html:27
+msgid "Email mailbox"
+msgstr "Email mailbox"
+
+#: client/validators/events.js:30
+msgid "End date should be after start date"
+msgstr "Sluttdato må være etter startdato"
+
+#: client/validators/events.js:28
+msgid "End time should be after start time"
+msgstr "Slutt-tid på være etter start-tid"
+
+#: client/components/Events/RecurringRulesInput/index.jsx:72
+#: client/components/ItemActionConfirmation/forms/updateEventRepetitions.jsx:125
+msgid "Ends"
+msgstr "Slutter"
+
+#: client/components/Assignments/AssignmentPreviewContainer/index.jsx:137
+#: client/components/Main/CreateNewSubnavDropdown.jsx:17
+#: client/components/Main/ItemEditor/EditorHeader.jsx:140
+#: client/utils/index.js:552
+msgid "Event"
+msgstr "Hendelse"
+
+#: client/views/eventFileConfig.html:2
+msgid "Event File Server Folder"
+msgstr "Event File Server Folder"
+
+#: client/actions/events/ui.js:459
+msgid "Event duplicated"
+msgstr "Hendelse duplisert"
+
+#: client/actions/events/ui.js:273
+msgid "Event has been cancelled"
+msgstr "Hendelsen er avlyst"
+
+#: client/actions/events/ui.js:288
+msgid "Event has been postponed"
+msgstr "Hendelsen er utsatt"
+
+#: client/actions/events/ui.js:426
+msgid "Event has been rescheduled"
+msgstr "Hendelsen har fått ny dato"
+
+#: client/actions/events/ui.js:490
+msgid "Event repetitions updated"
+msgstr "Forekomster er oppdatert"
+
+#: client/actions/events/ui.js:475
+msgid "Event time has been updated"
+msgstr "Tidspunktet er oppdatert"
+
+#: client/components/ItemActionConfirmation/forms/rescheduleEventForm.jsx:142
+msgid "Event will be changed to a multi-day event!"
+msgstr "Endres til hendelse over flere dager"
+
+#: client/components/Main/FiltersBox.jsx:29
+msgid "Events & Planning"
+msgstr "Kalender & planer"
+
+#: client/components/Main/FiltersBox.jsx:33
+msgid "Events only"
+msgstr "Kalender"
+
+#: client/components/AdvancedSearch/index.jsx:111
+msgid "Exclude spike"
+msgstr "Utelat slettede"
+
+#: client/components/MultiSelectActions.jsx:90
+msgid "Export as article"
+msgstr "Lag meny"
+
+#: client/components/Events/EventEditor/index.jsx:260
+#: client/components/Events/EventPreviewContent.jsx:256
+msgid "External Links"
+msgstr "Eksterne lenker"
+
+#: client/actions/planning/ui.js:453
+msgid "Failed to cancel all coverage!"
+msgstr "Kunne ikke slette all dekning"
+
+#: client/actions/events/ui.js:277
+msgid "Failed to cancel the Event!"
+msgstr "Kunne ikke slette hendelsen"
+
+#: client/actions/planning/ui.js:435
+msgid "Failed to cancel the Planning Item!"
+msgstr "Kunne ikke slette planelementet"
+
+#: client/components/Main/ItemEditor/Editor.jsx:429
+msgid "Failed to create!"
+msgstr "Kunne ikke opprette!"
+
+#: client/controllers/AssignmentPreviewController.js:54
+#: client/controllers/AssignmentPreviewController.js:78
+#: client/controllers/AssignmentPreviewController.js:82
+msgid "Failed to fetch assignment information."
+msgstr "Kunne ikke hente oppdragsinformasjon"
+
+#: client/actions/events/ui.js:436
+msgid "Failed to load duplicated Event."
+msgstr "Kunne ikke duplisere hendelsen"
+
+#: client/actions/main.js:62
+msgid "Failed to lock the item"
+msgstr "Kunne ikke låse elementet"
+
+#: client/actions/events/ui.js:292
+msgid "Failed to postpone the Event!"
+msgstr "Kunne ikke utsette hendelsen"
+
+#: client/actions/main.js:241
+msgid "Failed to publish the {{ itemType }}"
+msgstr "Kunne ikke publisere {{ itemType }}"
+
+#: client/actions/main.js:222
+msgid "Failed to publish, could not find the item type!"
+msgstr "Kunne ikke publisere, fant ikke hendelsestype"
+
+#: client/actions/events/ui.js:447
+msgid "Failed to reschedule the Event!"
+msgstr "Kunne ikke endre dato for hendelsen"
+
+#: client/actions/assignments/ui.js:499
+msgid "Failed to revert the assignment."
+msgstr "Kunne ikke angre oppdraget"
+
+#: client/actions/main.js:378
+msgid "Failed to run the query."
+msgstr "Kunne ikke utføre søket"
+
+#: client/actions/main.js:463
+msgid "Failed to run the query.."
+msgstr "Kunne ikke utføre søket.."
+
+#: client/actions/assignments/ui.js:419
+msgid "Failed to save the assignment."
+msgstr "Kunne ikke lagre oppdraget"
+
+#: client/actions/main.js:151
+msgid "Failed to save the {{ itemType }}"
+msgstr "Kunne ikke lagre {{ itemType }}"
+
+#: client/components/Main/ItemEditor/Editor.jsx:428
+msgid "Failed to save!"
+msgstr "Kunne ikke lagre!"
+
+#: client/actions/main.js:124
+msgid "Failed to save, could not find the item {{itemType}}!"
+msgstr "Kunne ikke lagre, kunne ikke finne {{itemType}}!"
+
+#: client/actions/events/ui.js:206 client/actions/events/ui.js:223
+msgid "Failed to spike the event(s)"
+msgstr "Kunne ikke slette hendelse(r)"
+
+#: client/actions/assignments/ui.js:691
+msgid "Failed to unlock the Assignment"
+msgstr "Kunne ikke låse opp oppdraget"
+
+#: client/actions/main.js:195
+msgid "Failed to unpublish the {{ itemType }}"
+msgstr "Kunne ikke avpublisere {{ itemType }} "
+
+#: client/actions/main.js:178
+msgid "Failed to unpublish, could not find the item type!"
+msgstr "Kunne ikke avpublisere!"
+
+#: client/actions/events/ui.js:494
+msgid "Failed to update Event repetitions"
+msgstr "Kunne ikke oppdatere forekomstene"
+
+#: client/actions/events/ui.js:479
+msgid "Failed to update the Event time!"
+msgstr "Kunne ikke oppdatere tidspunktet"
+
+#: client/views/eventHttpConfig.html:2
+msgid "Feed URL"
+msgstr "Feed URL"
+
+#: client/views/eventEmailConfig.html:36
+msgid "Filter"
+msgstr "Filter"
+
+#: client/views/eventEmailConfig.html:32
+msgid "Formatted Email Parser"
+msgstr "Formatted Email Parser"
+
+#: client/components/AdvancedSearch/index.jsx:234
+#: client/components/Assignments/AssignmentPreviewContainer/EventPreview.jsx:40
+#: client/components/Events/EventScheduleInput/index.jsx:221
+#: client/components/ItemActionConfirmation/forms/updateTimeForm.jsx:159
+msgid "From"
+msgstr "Fra"
+
+#: client/components/Assignments/AssignmentPreviewContainer/index.jsx:99
+#: index.js:54
+msgid "Fulfil Assignment"
+msgstr "Utfør oppdraget"
+
+#: client/components/Assignments/AssignmentPreviewContainer/AssignmentPreview.jsx:60
+#: client/components/Coverages/CoverageEditor/CoverageForm.jsx:135
+#: client/components/Coverages/CoveragePreview.jsx:101
+msgid "Genre"
+msgstr "Stofftype"
+
+#: client/utils/index.js:564
+msgid "Graphic"
+msgstr "Grafikk"
+
+#: client/components/Events/EventItemWithPlanning.jsx:28
+msgid "Hide"
+msgstr "Skjul"
+
+#: client/components/Main/ItemEditor/Editor.jsx:56
+#: client/components/Main/ItemPreview/PreviewPanel.jsx:39
+msgid "History"
+msgstr "Historikk"
+
+#: client/components/UI/Form/DateInput/DateInputPopup.jsx:168
+msgid "In 2 days"
+msgstr "Om 2 dager"
+
+#: client/utils/index.js:435
+msgid "In Progress"
+msgstr "Under arbeid"
+
+#: client/components/AdvancedSearch/index.jsx:115
+msgid "Include spike"
+msgstr "Inkluder slettede"
+
+#: client/components/Events/EventHistory.jsx:66 client/utils/index.js:396
+msgid "Ingested"
+msgstr "Importert"
+
+#: client/components/Assignments/AssignmentPreviewContainer/AssignmentPreview.jsx:75
+#: client/components/Assignments/AssignmentPreviewContainer/PlanningPreview.jsx:49
+#: client/components/Coverages/CoverageEditor/CoverageForm.jsx:178
+#: client/components/Coverages/CoveragePreview.jsx:93
+#: client/components/Events/EventEditor/index.jsx:228
+#: client/components/Events/EventPreviewContent.jsx:230
+#: client/components/Planning/PlanningEditor/index.jsx:361
+#: client/components/Planning/PlanningPreviewContent.jsx:88
+msgid "Internal Note"
+msgstr "Intern beskjed"
+
+#: client/components/InternalNoteLabel/index.jsx:33
+msgid "Internal Note:"
+msgstr "Intern beskjed:"
+
+#: client/utils/index.js:570
+msgid "Item"
+msgstr "Element"
+
+#: client/apps/Assignments/AssignmentPreview.jsx:51
+msgid "Item History"
+msgstr "Element-historikk"
+
+#: client/controllers/AddToPlanningController.js:198
+#: client/controllers/FulfilAssignmentController.js:153
+msgid "Item Unlocked"
+msgstr "Elementet er låst opp"
+
+#: client/controllers/FulfilAssignmentController.js:48
+msgid "Item already linked to a Planning item"
+msgstr "Elementet er allerede knyttet til et planelement"
+
+#: client/controllers/AddToPlanningController.js:87
+#: client/controllers/FulfilAssignmentController.js:54
+#: client/controllers/UnlinkAssignmentController.js:39
+msgid "Item already locked."
+msgstr "Elementet er allerede låst"
+
+#: client/controllers/UnlinkAssignmentController.js:28
+msgid "Item not linked to a Planning item."
+msgstr "Elementet er ikke knyttet til et planelement"
+
+#: client/components/Coverages/CoveragePreview.jsx:91
+msgid "Keyword"
+msgstr "Nøkkelord"
+
+#: client/components/Assignments/AssignmentPreviewContainer/AssignmentPreview.jsx:65
+#: client/components/Coverages/CoverageEditor/CoverageForm.jsx:167
+msgid "Keywords"
+msgstr "Nøkkelord"
+
+#: client/utils/index.js:408
+msgid "Killed"
+msgstr "Fjernet"
+
+#: client/components/Planning/PlanningHistory.jsx:73
+msgid "Killed by"
+msgstr "Fjernet av "
+
+#: client/components/AdvancedSearch/index.jsx:277
+msgid "Last 24 hrs"
+msgstr "Siste 24 t"
+
+#: client/components/Assignments/AssignmentPreviewContainer/EventPreview.jsx:105
+msgid "Links"
+msgstr "Lenker"
+
+#: client/components/Main/ListPanel.jsx:87
+msgid "Loading"
+msgstr "Laster"
+
+#: client/components/AdvancedSearch/index.jsx:149
+#: client/components/Assignments/AssignmentPreviewContainer/EventPreview.jsx:53
+#: client/components/Events/EventEditor/index.jsx:174
+#: client/components/Events/EventMetadata/index.jsx:101
+#: client/components/Events/EventPreviewContent.jsx:164
+msgid "Location"
+msgstr "Sted"
+
+#: client/components/Assignments/AssignmentPreviewContainer/EventPreview.jsx:67
+#: client/components/Events/EventEditor/index.jsx:221
+#: client/components/Events/EventPreviewContent.jsx:225
+msgid "Long Description"
+msgstr "Mer informasjon"
+
+#: client/views/eventEmailConfig.html:26
+msgid "Mailbox"
+msgstr "Mailbox"
+
+#: client/components/Agendas/ManageAgendasModal.jsx:53
+msgid "Manage Agendas"
+msgstr "Administrer arbeidslister"
+
+#: client/components/Main/ActionsSubnavDropdown.jsx:8
+msgid "Manage agendas"
+msgstr "Administrer arbeidslister"
+
+#: client/constants/events.js:76
+msgid "Mark as Postponed"
+msgstr "Merk som utsatt"
+
+#: client/validators/events.js:67
+msgid "Must be greater than 1"
+msgstr "Må være større enn 1"
+
+#: client/validators/events.js:47
+msgid "Must be greater than starting date"
+msgstr "Må være etter startdato"
+
+#: client/validators/events.js:65
+msgid "Must be less than"
+msgstr "Må være mindre enn"
+
+#: client/components/Agendas/EditAgenda.jsx:81
+msgid "Must contain at least one character"
+msgstr "Må inneholde minst en bokstav"
+
+#: client/components/AdvancedSearch/index.jsx:133
+#: client/components/Assignments/AssignmentPreviewContainer/EventPreview.jsx:27
+#: client/components/Events/EventEditor/index.jsx:132
+#: client/components/Events/EventMetadata/index.jsx:97
+#: client/components/Events/EventPreviewContent.jsx:140
+#: client/components/ItemActionConfirmation/forms/cancelEventForm.jsx:81
+#: client/components/ItemActionConfirmation/forms/convertToRecurringEventForm.jsx:102
+#: client/components/ItemActionConfirmation/forms/postponeEventForm.jsx:54
+#: client/components/ItemActionConfirmation/forms/publishEventsForm.jsx:76
+#: client/components/ItemActionConfirmation/forms/rescheduleEventForm.jsx:107
+#: client/components/ItemActionConfirmation/forms/spikeEventForm.jsx:73
+#: client/components/ItemActionConfirmation/forms/unspikeEventForm.jsx:72
+#: client/components/ItemActionConfirmation/forms/updateEventRepetitions.jsx:92
+#: client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.jsx:72
+#: client/components/ItemActionConfirmation/forms/updateTimeForm.jsx:132
+msgid "Name"
+msgstr "Infolinje"
+
+#: client/components/Main/AgendaSubnavDropdown.jsx:46
+#: client/components/Main/AgendaSubnavDropdown.jsx:58
+msgid "No Agenda Assigned"
+msgstr "Ikke lagt til arbeidsliste"
+
+#: client/components/Agendas/AgendaNameList.jsx:8
+msgid "No Agenda Assigned."
+msgstr "Ikke lagt til arbeidsliste"
+
+#: client/components/Events/CalendarSubnavDropdown.jsx:46
+#: client/components/Events/CalendarSubnavDropdown.jsx:59
+msgid "No Calendar Assigned"
+msgstr "Ikke lagt i kalender"
+
+#: client/components/Assignments/AssignmentPreviewContainer/EventPreview.jsx:99
+#: client/components/Events/EventPreviewContent.jsx:252
+msgid "No attached files added."
+msgstr "Ingen vedlegg lastet opp"
+
+#: client/components/Events/EventPreviewContent.jsx:100
+msgid "No calendars assigned."
+msgstr "Ikke lagt i noen kalender"
+
+#: client/components/Assignments/AssignmentPreviewContainer/EventPreview.jsx:119
+#: client/components/Events/EventPreviewContent.jsx:265
+msgid "No external links added."
+msgstr "Ingen lenker"
+
+#: client/components/Events/EventEditor/index.jsx:285
+#: client/components/Events/EventPreviewContent.jsx:272
+msgid "No related planning items."
+msgstr "Ingen tilknyttede planer"
+
+#: client/components/UI/Form/SelectUserInput/SelectUserPopup.jsx:101
+msgid "No users found"
+msgstr "Ingen brukere funnet"
+
+#: client/components/ItemActionConfirmation/forms/cancelEventForm.jsx:95
+#: client/components/ItemActionConfirmation/forms/publishEventsForm.jsx:90
+#: client/components/ItemActionConfirmation/forms/spikeEventForm.jsx:87
+#: client/components/ItemActionConfirmation/forms/unspikeEventForm.jsx:86
+#: client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.jsx:86
+#: client/components/ItemActionConfirmation/forms/updateTimeForm.jsx:148
+msgid "No. of Events"
+msgstr "Antall hendelser"
+
+#: client/components/UI/Form/ColouredValueInput/ColouredValuePopup.jsx:91
+#: client/components/UI/Form/ColouredValueInput/index.jsx:68
+#: client/components/UI/Form/ColouredValueInput/index.jsx:80
+msgid "None"
+msgstr "Ingen"
+
+#: client/components/Planning/PlanningEditor/index.jsx:429
+#: client/components/Planning/PlanningPreviewContent.jsx:132
+msgid "Not for Publication"
+msgstr "Ikke for publisering"
+
+#: client/components/Assignments/AssignmentPopup/index.jsx:69
+#: client/components/ItemActionConfirmation/modal.jsx:72
+#: client/components/Main/ItemEditor/Editor.jsx:432
+msgid "OK"
+msgstr "OK"
+
+#: client/components/Assignments/AssignmentPreviewContainer/EventPreview.jsx:78
+#: client/components/Events/EventEditor/index.jsx:146
+#: client/components/Events/EventMetadata/index.jsx:110
+#: client/components/Events/EventPreviewContent.jsx:151
+msgid "Occurrence Status"
+msgstr "Status forekomster"
+
+#: client/components/Agendas/ManageAgendasModal.jsx:90
+msgid "Ok"
+msgstr "OK"
+
+#: client/components/Events/RecurringRulesInput/EndsInput.jsx:99
+msgid "On"
+msgstr "På"
+
+#: client/components/AdvancedSearch/index.jsx:225
+msgid "Only Published"
+msgstr "Bare publiserte"
+
+#: client/actions/planning/api.js:943
+msgid "Open"
+msgstr "Åpen"
+
+#: client/constants/assignments.js:61
+msgid "Open Coverage"
+msgstr "Åpen dekning"
+
+#: client/views/eventEmailConfig.html:20
+msgid "Password"
+msgstr "Passord"
+
+#: client/utils/events.js:492
+msgid "Past Events"
+msgstr "Tidligere hendelser"
+
+#: client/utils/index.js:560
+msgid "Picture"
+msgstr "Bilde"
+
+#: client/components/Assignments/AssignmentPreviewContainer/AssignmentPreview.jsx:45
+#: client/components/Events/EventEditor/index.jsx:194
+#: client/components/Events/EventPreviewContent.jsx:210
+#: client/components/Planning/PlanningEditor/index.jsx:391
+#: client/components/Planning/PlanningPreviewContent.jsx:104
+msgid "Place"
+msgstr "Sted"
+
+#: client/components/Assignments/AssignmentPreviewContainer/index.jsx:118
+#: client/components/Main/ItemEditor/EditorHeader.jsx:148
+#: client/controllers/PlanningController.js:37 index.js:13 index.js:14
+msgid "Planning"
+msgstr "Planelegging"
+
+#: client/components/Planning/PlanningEditor/index.jsx:342
+#: client/components/Planning/PlanningPreviewContent.jsx:78
+msgid "Planning Date"
+msgstr "Plandato"
+
+#: client/components/Main/CreateNewSubnavDropdown.jsx:9
+#: client/utils/index.js:554
+msgid "Planning Item"
+msgstr "Planelement"
+
+#: client/actions/planning/ui.js:431
+msgid "Planning Item has been cancelled"
+msgstr "Planelementet er fjernet"
+
+#: client/components/ItemActionConfirmation/forms/cancelEventForm.jsx:102
+#: client/components/ItemActionConfirmation/forms/postponeEventForm.jsx:69
+#: client/components/ItemActionConfirmation/forms/rescheduleEventForm.jsx:123
+msgid "Planning Items"
+msgstr "Planelementer"
+
+#: client/actions/planning/ui.js:415
+msgid "Planning duplicated"
+msgstr "Planelement duplisert"
+
+#: client/components/Events/EventHistory.jsx:57
+msgid "Planning item created by"
+msgstr "Planelement opprettet av "
+
+#: client/components/Main/FiltersBox.jsx:37
+msgid "Planning only"
+msgstr "Planer"
+
+#: client/components/ItemActionConfirmation/modal.jsx:86
+msgid "Postpone"
+msgstr "Utsett"
+
+#: client/components/ItemActionConfirmation/modal.jsx:85
+msgid "Postpone an event"
+msgstr "Utsett en hendelse"
+
+#: client/utils/index.js:424
+msgid "Postponed"
+msgstr "Utsatt"
+
+#: client/components/Events/EventHistory.jsx:65
+#: client/components/Planning/PlanningHistory.jsx:65
+msgid "Postponed by"
+msgstr "Utsatt av "
+
+#: client/components/ItemActionConfirmation/forms/editPriorityForm.jsx:117
+#: client/components/ItemActionConfirmation/forms/updateAssignmentForm.jsx:108
+msgid "Priority"
+msgstr "Viktighet"
+
+#: client/components/ItemActionConfirmation/forms/editPriorityForm.jsx:98
+msgid "Provider:"
+msgstr "Leverandør:"
+
+#: client/components/ItemActionConfirmation/modal.jsx:100
+#: client/components/Main/ItemEditor/EditorHeader.jsx:168
+#: client/constants/events.js:93
+msgid "Publish"
+msgstr "Publiser"
+
+#: client/components/ItemActionConfirmation/modal.jsx:55
+#: client/components/ItemActionConfirmation/modal.jsx:99
+msgid "Publish Event"
+msgstr "Publiser hendelse"
+
+#: client/components/ItemActionConfirmation/forms/publishEventsForm.jsx:58
+msgid "Publish all recurring events or just this one?"
+msgstr "Publiser alle forekomster, eller bare denne?"
+
+#: client/utils/index.js:458
+msgid "Published"
+msgstr "Publisert"
+
+#: client/components/Events/EventHistory.jsx:60
+#: client/components/Planning/PlanningHistory.jsx:69
+msgid "Published by"
+msgstr "Publisert av "
+
+#: client/components/ItemActionConfirmation/forms/cancelEventForm.jsx:118
+msgid "Reason for Event cancellation:"
+msgstr "Årsak til avlysning"
+
+#: client/components/ItemActionConfirmation/forms/postponeEventForm.jsx:40
+msgid "Reason for Event postponement:"
+msgstr "Årsak til utsettelse"
+
+#: client/components/ItemActionConfirmation/forms/cancelPlanningCoveragesForm.jsx:41
+msgid "Reason for cancelling all coverage:"
+msgstr "Årsak til avlyst dekning"
+
+#: client/components/ItemActionConfirmation/forms/cancelPlanningCoveragesForm.jsx:42
+msgid "Reason for cancelling the planning item:"
+msgstr "Årsak til avlysning"
+
+#: client/components/ItemActionConfirmation/forms/rescheduleEventForm.jsx:93
+msgid "Reason for rescheduling this event:"
+msgstr "Årsak til endring"
+
+#: client/components/Coverages/CoverageEditor/CoverageFormHeader.jsx:139
+#: client/constants/assignments.js:41
+msgid "Reassign"
+msgstr "Omgjør"
+
+#: client/components/ItemIcon.jsx:84
+msgid "Recurring"
+msgstr "Gjentas"
+
+#: client/components/Events/EventPreviewContent.jsx:268
+msgid "Related Planning Items"
+msgstr "Tilknyttede planer"
+
+#: client/constants/assignments.js:57
+msgid "Remove Assignment"
+msgstr "Fjern oppdrag"
+
+#: client/components/Coverages/CoverageEditor/index.jsx:84
+msgid "Remove coverage"
+msgstr "Fjern dekning"
+
+#: client/components/SortItemsModal/index.jsx:52
+msgid "Reorder Items"
+msgstr "Sorter elementene på nytt"
+
+#: client/components/Events/EventScheduleInput/index.jsx:257
+msgid "Repeat"
+msgstr "Gjenta"
+
+#: client/components/Events/RecurringRulesInput/index.jsx:49
+msgid "Repeat Every"
+msgstr "Gjenta hver"
+
+#: client/components/Events/RecurringRulesInput/index.jsx:60
+msgid "Repeat On"
+msgstr "Gjenta den"
+
+#: client/components/Events/RepeatEventSummary/index.jsx:104
+msgid "Repeat Summary"
+msgstr "Oversikt over gjentakelser"
+
+#: client/components/Events/RecurringRulesInput/index.jsx:40
+msgid "Repeats"
+msgstr "Gjentakelser"
+
+#: client/components/Events/EventHistory.jsx:68
+msgid "Repetitions Updated"
+msgstr "Gjentakelser oppdatert"
+
+#: client/validators/events.js:105 client/validators/events.js:51
+#: client/validators/events.js:55 client/validators/events.js:60
+#: client/validators/index.js:90
+msgid "Required"
+msgstr "Kreves"
+
+#: client/components/ItemActionConfirmation/modal.jsx:81
+#: client/constants/events.js:70
+msgid "Reschedule"
+msgstr "Ny dato"
+
+#: client/components/ItemActionConfirmation/modal.jsx:80
+msgid "Reschedule an event"
+msgstr "Flytt en hendelse"
+
+#: client/utils/index.js:414
+msgid "Rescheduled"
+msgstr "Flyttet"
+
+#: client/utils/index.js:375
+msgid "Rescheduled From"
+msgstr "Flyttet fra"
+
+#: client/components/Events/EventHistory.jsx:63
+#: client/components/Events/EventHistory.jsx:64
+#: client/components/Planning/PlanningHistory.jsx:64
+msgid "Rescheduled by"
+msgstr "Flyttet av"
+
+#: client/constants/assignments.js:69
+msgid "Revert Availability"
+msgstr "Ikke levert"
+
+#: client/components/ItemActionConfirmation/modal.jsx:45
+#: client/components/Main/ItemEditor/EditorHeader.jsx:196
+#: client/components/ModalWithForm/index.jsx:108
+msgid "Save"
+msgstr "Lagre"
+
+#: client/components/Main/ItemEditor/EditorHeader.jsx:168
+msgid "Save & Publish"
+msgstr "Lagre & publiser"
+
+#: client/components/ItemActionConfirmation/modal.jsx:53
+msgid "Save & Publish Event"
+msgstr "Lagre & publiser hendelse"
+
+#: client/components/Main/ItemEditor/EditorHeader.jsx:177
+msgid "Save & Unpublish"
+msgstr "Lagre & avpubliser"
+
+#: client/components/ItemActionConfirmation/modal.jsx:56
+msgid "Save Event"
+msgstr "Lagre hendelse"
+
+#: client/utils/index.js:401
+msgid "Scheduled"
+msgstr "Tidfestet"
+
+#: client/components/Main/SearchPanel.jsx:115
+msgid "Search"
+msgstr "Søk"
+
+#: client/components/Main/AgendaSubnavDropdown.jsx:65
+msgid "Select Agenda"
+msgstr "Velg arbeidsliste"
+
+#: client/components/Events/CalendarSubnavDropdown.jsx:77
+msgid "Select Calendar"
+msgstr "Velg kalender"
+
+#: client/components/MultiSelectActions.jsx:199
+msgid "Select all /"
+msgstr "Velg alle /"
+
+#: client/components/FulFilAssignmentModal/index.jsx:43
+msgid "Select an Assignment"
+msgstr "Velg et oppdrag"
+
+#: client/components/AddToPlanningModal/index.jsx:42
+msgid "Select an existing Planning Item or create a new one"
+msgstr "Velg et eksisterende planelement eller opprett et nytt"
+
+#: client/components/ItemActionConfirmation/forms/updateEventRepetitions.jsx:99
+msgid "Series Start Date"
+msgstr "Startdato for serie"
+
+#: client/components/Events/EventItemWithPlanning.jsx:28
+msgid "Show"
+msgstr "Vis"
+
+#: client/components/Location/index.jsx:32
+msgid "Show on map"
+msgstr "Vis på kart"
+
+#: client/components/AdvancedSearch/index.jsx:141
+#: client/components/Assignments/AssignmentPreviewContainer/AssignmentPreview.jsx:39
+#: client/components/Assignments/AssignmentPreviewContainer/PlanningPreview.jsx:30
+#: client/components/Coverages/CoverageEditor/CoverageForm.jsx:148
+#: client/components/Coverages/CoveragePreview.jsx:87
+#: client/components/Events/EventEditor/index.jsx:124
+#: client/components/Events/EventPreviewContent.jsx:134
+#: client/components/ItemActionConfirmation/forms/cancelEventForm.jsx:74
+#: client/components/ItemActionConfirmation/forms/convertToRecurringEventForm.jsx:95
+#: client/components/ItemActionConfirmation/forms/postponeEventForm.jsx:47
+#: client/components/ItemActionConfirmation/forms/publishEventsForm.jsx:69
+#: client/components/ItemActionConfirmation/forms/rescheduleEventForm.jsx:100
+#: client/components/ItemActionConfirmation/forms/spikeEventForm.jsx:66
+#: client/components/ItemActionConfirmation/forms/unspikeEventForm.jsx:65
+#: client/components/ItemActionConfirmation/forms/updateEventRepetitions.jsx:85
+#: client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.jsx:65
+#: client/components/ItemActionConfirmation/forms/updateTimeForm.jsx:125
+#: client/components/Planning/PlanningEditor/index.jsx:334
+#: client/components/Planning/PlanningPreviewContent.jsx:72
+msgid "Slugline"
+msgstr "Stikkord"
+
+#: client/components/ItemActionConfirmation/forms/editPriorityForm.jsx:73
+#: client/components/ItemActionConfirmation/forms/updateAssignmentForm.jsx:88
+msgid "Slugline:"
+msgstr "Stikkord:"
+
+#: client/components/AdvancedSearch/index.jsx:185
+msgid "Source"
+msgstr "Kilde"
+
+#: client/components/ItemActionConfirmation/modal.jsx:62
+#: client/components/MultiSelectActions.jsx:151
+#: client/components/MultiSelectActions.jsx:97 client/constants/events.js:38
+#: client/constants/planning.js:48
+msgid "Spike"
+msgstr "Slett"
+
+#: client/components/AdvancedSearch/index.jsx:259
+msgid "Spike State"
+msgstr "Slettestatus"
+
+#: client/components/ItemActionConfirmation/forms/spikeEventForm.jsx:96
+msgid "Spike all recurring events or just this one?"
+msgstr "Slett alle forekomster, eller bare denne?"
+
+#: client/components/ItemActionConfirmation/modal.jsx:61
+msgid "Spike an event"
+msgstr "Slett en hendelse"
+
+#: client/utils/index.js:391
+msgid "Spiked"
+msgstr "Slettet"
+
+#: client/components/Events/EventHistory.jsx:54
+#: client/components/Planning/PlanningHistory.jsx:53
+msgid "Spiked by"
+msgstr "Slettet av"
+
+#: client/components/AdvancedSearch/index.jsx:122
+msgid "Spiked only"
+msgstr "Kun slettede"
+
+#: client/constants/assignments.js:53
+msgid "Start Working"
+msgstr "Start jobben"
+
+#: client/components/Coverages/CoverageIcon.jsx:34
+msgid "Status:"
+msgstr "Status:"
+
+#: client/components/Coverages/CoverageIcon.jsx:25
+msgid "Status: Unassigned"
+msgstr "Status: Ikke tildelt"
+
+#: client/components/AdvancedSearch/index.jsx:176
+#: client/components/Assignments/AssignmentPreviewContainer/AssignmentPreview.jsx:55
+#: client/components/Events/EventEditor/index.jsx:212
+#: client/components/Events/EventPreviewContent.jsx:220
+#: client/components/Planning/PlanningEditor/index.jsx:409
+#: client/components/Planning/PlanningPreviewContent.jsx:114
+msgid "Subject"
+msgstr "Tema"
+
+#: client/utils/index.js:441
+msgid "Submitted"
+msgstr "Levert"
+
+#: client/components/Assignments/AssignmentHistory.jsx:60
+msgid "Submitted by"
+msgstr "Levert av"
+
+#: client/utils/index.js:558
+msgid "Text"
+msgstr "Tekst"
+
+#: client/actions/assignments/notifications.js:253
+msgid "The Assignment you were viewing was removed."
+msgstr "Oppdraget du ser på er fjernet"
+
+#: client/actions/events/notifications.js:119
+msgid "The Event was spiked"
+msgstr "Hendelsen ble slettet"
+
+#: client/actions/events/notifications.js:146
+msgid "The Event was unspiked"
+msgstr "Hendelsen ble gjenopprettet"
+
+#: client/actions/planning/ui.js:28
+msgid "The Planning Item(s) has been spiked."
+msgstr "Planelement(er) er slettet"
+
+#: client/actions/planning/ui.js:50
+msgid "The Planning Item(s) has been unspiked."
+msgstr "Planelement(er) er gjenopprettet"
+
+#: client/actions/planning/notifications.js:177
+msgid "The Planning item was spiked"
+msgstr "Planelementet er slettet"
+
+#: client/actions/planning/notifications.js:204
+msgid "The Planning item was unspiked"
+msgstr "Planelementet er gjenopprettet"
+
+#: client/actions/assignments/ui.js:496
+msgid "The assignment has been reverted."
+msgstr "Oppdraget er tilbakekalt"
+
+#: client/actions/assignments/ui.js:413
+msgid "The assignment was reassigned."
+msgstr "Oppdraget er omgjort"
+
+#: client/actions/events/ui.js:201
+msgid "The event(s) have been spiked"
+msgstr "Hendelse(r) slettet"
+
+#: client/actions/events/ui.js:218
+msgid "The event(s) have been unspiked"
+msgstr "Hendelse(r) gjenopprettet"
+
+#: client/components/ItemActionConfirmation/forms/spikeEventForm.jsx:103
+msgid "The following Events are in use and will not be spiked:"
+msgstr "Disse hendelsene er i bruk og vil ikke bli slettet:"
+
+#: client/controllers/AddToPlanningController.js:199
+#: client/controllers/FulfilAssignmentController.js:154
+msgid "The item was unlocked by \"\""
+msgstr "Elementet ble låst opp av **"
+
+#: client/actions/main.js:231
+msgid "The {{ itemType }} has been published"
+msgstr "{{ itemType }} er publisert"
+
+#: client/actions/main.js:142
+msgid "The {{ itemType }} has been saved"
+msgstr "{{ itemType }} er lagret"
+
+#: client/actions/main.js:186
+msgid "The {{ itemType }} has been unpublished"
+msgstr "{{ itemType }} er avpublisert"
+
+#: client/components/Agendas/AgendaList.jsx:24
+msgid "There are no"
+msgstr "Det er ingen"
+
+#: client/components/Assignments/AssignmentGroupList.jsx:145
+msgid "There are no assignments {{ groupName }}"
+msgstr "Det er ingen oppdrag  {{ groupName }}"
+
+#: client/actions/planning/ui.js:33
+msgid "There was a problem, Planning item not spiked!"
+msgstr "Det oppsto et problem: Planelement ikke slettet."
+
+#: client/actions/planning/ui.js:54
+msgid "There was a problem, Planning item not unspiked!"
+msgstr "Det oppsto et problem: Planelement ikke gjenopprettet."
+
+#: client/actions/planning/api.js:951
+msgid "There was an error when exporting."
+msgstr "Det oppsto en feil under eksporten."
+
+#: client/components/ItemActionConfirmation/UpdateMethodSelection.jsx:24
+msgid "This event is a recurring event!"
+msgstr "Dette er en gjentakende hendelse!"
+
+#: client/validators/events.js:10 client/validators/events.js:14
+#: client/validators/events.js:15 client/validators/events.js:9
+#: client/validators/profile.js:25
+msgid "This field is required"
+msgstr "Feltet må fylles ut"
+
+#: client/components/ItemActionConfirmation/forms/postponeEventForm.jsx:77
+msgid "This will also postpone the following planning items"
+msgstr "Følgende planelementer vil også bli utsatt"
+
+#: client/components/ItemActionConfirmation/UpdateMethodSelection.jsx:48
+msgid "This will also {{action}} the following events"
+msgstr "Dette vil også {{action}} følgende hendelser"
+
+#: client/components/ItemActionConfirmation/UpdateMethodSelection.jsx:37
+msgid "This will also {{action}} the following planning items"
+msgstr "Dette vil også {{action}} følgende planelementer"
+
+#: client/components/ItemActionConfirmation/forms/rescheduleEventForm.jsx:131
+msgid "This will mark as rescheduled the following planning items"
+msgstr "Følgende planelementer vil bli markert som flyttet"
+
+#: client/components/AdvancedSearch/index.jsx:246
+#: client/components/Assignments/AssignmentPreviewContainer/EventPreview.jsx:46
+#: client/components/Events/EventScheduleInput/index.jsx:233
+#: client/components/ItemActionConfirmation/forms/updateTimeForm.jsx:173
+msgid "To"
+msgstr "Til"
+
+#: client/components/AdvancedSearch/index.jsx:273
+#: client/components/UI/Form/DateInput/DateInputPopup.jsx:160
+msgid "Today"
+msgstr "I dag"
+
+#: client/components/UI/Form/DateInput/DateInputPopup.jsx:164
+msgid "Tomorrow"
+msgstr "I morgen"
+
+#: client/validators/profile.js:22
+msgid "Too long"
+msgstr "For lang"
+
+#: client/validators/profile.js:20
+msgid "Too many"
+msgstr "For mange"
+
+#: client/validators/profile.js:27
+msgid "Too short"
+msgstr "For kort"
+
+#: client/components/Coverages/CoveragePreview.jsx:95
+msgid "Type"
+msgstr "Type"
+
+#: client/components/Assignments/AssignmentPreviewContainer/AssignmentPreviewHeader.jsx:120
+msgid "Type: {{type}}"
+msgstr "Type: {{type}}"
+
+#: client/components/Events/EventHistory.jsx:61
+msgid "Un-published by"
+msgstr "Avpublisert av"
+
+#: client/components/Coverages/CoverageEditor/CoverageFormHeader.jsx:60
+#: client/components/Coverages/CoverageItem.jsx:71
+msgid "Unassigned"
+msgstr "Ikke tildelt"
+
+#: index.js:80
+msgid "Unlink as Coverage"
+msgstr "Kutt forbindelse til dekning"
+
+#: client/components/LockContainer/LockContainerPopup.jsx:41
+msgid "Unlock"
+msgstr "Lås opp"
+
+#: client/components/ItemActionConfirmation/modal.jsx:100
+#: client/components/Main/ItemEditor/EditorHeader.jsx:177
+msgid "Unpublish"
+msgstr "Avpubliser"
+
+#: client/components/ItemActionConfirmation/forms/publishEventsForm.jsx:59
+msgid "Unpublish all recurring events or just this one?"
+msgstr "Avpubliser alle forekomster, eller bare denne?"
+
+#: client/components/ItemActionConfirmation/modal.jsx:67
+#: client/components/MultiSelectActions.jsx:107
+#: client/components/MultiSelectActions.jsx:160 client/constants/events.js:43
+#: client/constants/planning.js:53
+msgid "Unspike"
+msgstr "Gjenopprett"
+
+#: client/components/ItemActionConfirmation/forms/unspikeEventForm.jsx:95
+msgid "Unspike all recurring events or just this one?"
+msgstr "Gjenopprett alle forekomster, eller bare denne?"
+
+#: client/components/ItemActionConfirmation/modal.jsx:66
+msgid "Unspike an event"
+msgstr "Gjenopprett en hendelse"
+
+#: client/components/Events/EventHistory.jsx:55
+#: client/components/Planning/PlanningHistory.jsx:54
+msgid "Unspiked by"
+msgstr "Gjenopprettet av"
+
+#: client/components/Main/ItemEditor/EditorHeader.jsx:186
+msgid "Update"
+msgstr "Oppdater"
+
+#: client/components/ItemActionConfirmation/modal.jsx:94
+msgid "Update Event Repetitions"
+msgstr "Oppdater gjentakelser"
+
+#: client/components/ItemActionConfirmation/modal.jsx:95
+#: client/constants/events.js:88
+msgid "Update Repetitions"
+msgstr "Oppdater gjentakelser"
+
+#: client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.jsx:95
+#: client/components/ItemActionConfirmation/forms/updateTimeForm.jsx:198
+msgid "Update all recurring events or just this one?"
+msgstr "Oppdater alle forekomster, eller bare denne?"
+
+#: client/components/ItemActionConfirmation/modal.jsx:76
+#: client/constants/events.js:64
+msgid "Update time"
+msgstr "Oppdater klokkeslett"
+
+#: client/components/Events/EventHistory.jsx:76
+msgid "Updated Fields:"
+msgstr "Oppdaterte felt:"
+
+#: client/components/Assignments/AssignmentHistory.jsx:55
+#: client/components/Events/EventHistory.jsx:53
+#: client/components/Planning/PlanningHistory.jsx:52
+msgid "Updated by"
+msgstr "Oppdatert av"
+
+#: client/components/AdvancedSearch/index.jsx:195
+#: client/components/Assignments/AssignmentPreviewContainer/PlanningPreview.jsx:55
+#: client/components/Planning/PlanningEditor/index.jsx:418
+#: client/services/PlanningStoreService.js:134
+msgid "Urgency"
+msgstr "HAST"
+
+#: client/components/Assignments/AssignmentEditor.jsx:195
+#: client/views/eventEmailConfig.html:14
+msgid "User"
+msgstr "Bruker"
+
+#: client/components/Coverages/CoverageIcon.jsx:36
+#: client/components/ItemActionConfirmation/forms/editPriorityForm.jsx:90
+msgid "User:"
+msgstr "Bruker:"
+
+#: client/utils/index.js:562
+msgid "Video"
+msgstr "Video"
+
+#: client/components/Planning/PlanningHistory.jsx:95
+msgid "View duplicate planning item"
+msgstr "Vis duplisert planelement"
+
+#: client/components/Planning/PlanningHistory.jsx:105
+msgid "View original planning item"
+msgstr "Vis opprinnelig planelement"
+
+#: client/components/AdvancedSearch/index.jsx:281
+msgid "Week"
+msgstr "Uke"
+
+#: client/components/AdvancedSearch/index.jsx:205
+msgid "Without Coverage"
+msgstr "Uten dekning"
+
+#: client/components/Assignments/AssignmentHistory.jsx:58
+msgid "Work started by"
+msgstr "Jobb påbegynt av"
+
+#: client/components/AdvancedSearch/index.jsx:158
+msgid "Workflow State"
+msgstr "Status arbeidsflyt"
+
+#: client/controllers/FulfilAssignmentController.js:39
+msgid "[SLUGLINE] is a required field"
+msgstr "[SLUGLINE] kreves"
+
+#: client/components/Agendas/ManageAgendasModal.jsx:72
+msgid "active"
+msgstr "aktiv"
+
+#: client/components/Agendas/AgendaList.jsx:24
+msgid "agendas"
+msgstr "arbeidslister"
+
+#: client/constants/planning.js:106
+msgid "audio"
+msgstr "audio"
+
+#: client/actions/agenda.js:203
+msgid "created  planning item."
+msgstr "opprettet planelement"
+
+#: client/actions/agenda.js:194
+msgid "created / planning item(s)"
+msgstr "opprettet / planelement(er)"
+
+#: client/components/RelatedPlannings/index.jsx:50
+msgid "created by"
+msgstr "opprettet av"
+
+#: client/components/Agendas/ManageAgendasModal.jsx:77
+msgid "disabled"
+msgstr "av"
+
+#: client/views/eventHttpConfig.html:3
+msgid "feed url"
+msgstr "feed url"
+
+#: client/utils/tests/index_test.js:200
+msgid "foo"
+msgstr "foo"
+
+#: client/components/ItemActionConfirmation/forms/rescheduleEventForm.jsx:146
+msgid "from {{from}} to {{to}}"
+msgstr "fra {{from}} til {{to}}"
+
+#: client/components/RelatedPlannings/index.jsx:32
+msgid "in agenda"
+msgstr "i arbeidsliste"
+
+#: client/components/Events/EventItemWithPlanning.jsx:27
+msgid "item"
+msgstr "element"
+
+#: client/components/Events/EventItemWithPlanning.jsx:27
+msgid "items"
+msgstr "elementer"
+
+#: client/constants/planning.js:105
+msgid "live_video"
+msgstr "live_video"
+
+#: client/views/eventFileConfig.html:3
+msgid "path to folder"
+msgstr "path to folder"
+
+#: client/constants/planning.js:107
+msgid "picture"
+msgstr "bilde"
+
+#: client/components/Events/EventItemWithPlanning.jsx:29
+msgid "planning"
+msgstr "planer"
+
+#: client/components/ItemActionConfirmation/forms/publishEventsForm.jsx:102
+msgid "publish"
+msgstr "publiser"
+
+#: client/constants/planning.js:103
+msgid "text"
+msgstr "tekst"
+
+#: client/components/ItemActionConfirmation/forms/publishEventsForm.jsx:102
+msgid "unpublish"
+msgstr "avpubliser"
+
+#: client/constants/planning.js:104
+msgid "video"
+msgstr "video"
+
+#: client/actions/planning/api.js:912
+msgid "{{ count }} items were not included in the export."
+msgstr "{{ count }} elementer ble ikke eksportert"
+
+#: client/actions/main.js:135
+msgid "{{ itemType }} created"
+msgstr "{{ itemType }} opprettet"

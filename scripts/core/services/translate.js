@@ -20,17 +20,25 @@ export default angular.module('superdesk.core.translate', [
         function(gettextCatalog, config, $location, $rootScope, SESSION_EVENTS, tmhDynamicLocale) {
             $rootScope.$on(SESSION_EVENTS.IDENTITY_LOADED, (event) => {
                 if ($rootScope.$root.currentUser
-                    && gettextCatalog.strings.hasOwnProperty($rootScope.$root.currentUser.language)) {
+                    && config.profileLanguages.includes($rootScope.$root.currentUser.language)) {
                     // if the current logged in user has a saved language preference that is available
                     gettextCatalog.setCurrentLanguage($rootScope.$root.currentUser.language);
                 } else if (config.language) {
                     gettextCatalog.setCurrentLanguage(config.language);
-                } else if (gettextCatalog.strings.hasOwnProperty(window.navigator.language)) {
+                } else if (config.profileLanguages.includes(window.navigator.language)) {
                     // no saved preference but browser language is available
                     gettextCatalog.setCurrentLanguage(window.navigator.language);
                 } else {
                     // no other options available go with baseLanguage
                     gettextCatalog.setCurrentLanguage(gettextCatalog.baseLanguage);
+                }
+
+                // load translations - do it async in order to avoid digest errors on missing translations
+                if (gettextCatalog.currentLanguage !== 'en') {
+                    setTimeout(() => {
+                        gettextCatalog.loadRemote('languages/' + gettextCatalog.currentLanguage + '.json');
+                        gettextCatalog.loadRemote('languages/planning/' + gettextCatalog.currentLanguage + '.json');
+                    }, 100);
                 }
 
                 // set locale for date/time management
