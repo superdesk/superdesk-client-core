@@ -1083,6 +1083,12 @@ angular.module('superdesk.apps.editor2', [
                             action: 'removeFormat',
                             aria: gettextCatalog.getString('remove formatting'),
                         },
+
+                        link: {
+                            name: 'anchor',
+                            action: 'createLink',
+                            aria: gettextCatalog.getString('link'),
+                        },
                     }[format] || format);
                 }
 
