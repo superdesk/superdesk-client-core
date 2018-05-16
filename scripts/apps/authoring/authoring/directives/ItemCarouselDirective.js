@@ -7,6 +7,8 @@ import {waitForImagesToLoad, waitForAudioAndVideoToLoadMetadata} from 'core/help
 
 const carouselContainerSelector = '.sd-media-carousel__content';
 
+let previousItemsString = null;
+
 /**
  * @ngdoc directive
  * @module superdesk.apps.authoring
@@ -14,7 +16,6 @@ const carouselContainerSelector = '.sd-media-carousel__content';
  *
  * @requires $timeout
  */
-
 ItemCarouselDirective.$inject = ['$timeout'];
 export function ItemCarouselDirective($timeout) {
     return {
@@ -41,9 +42,14 @@ export function ItemCarouselDirective($timeout) {
              * otherwise carousel height is messed up
              */
             scope.$watch('items', (items) => {
-                if (!items) {
+                const itemsString = JSON.stringify(items);
+
+                // Don't execute if there are no items or they are the same as before
+                if (!items || previousItemsString === itemsString) {
                     return false;
                 }
+
+                previousItemsString = itemsString;
 
                 let field = _.find(items, (item) => !item[item.fieldId]);
 
