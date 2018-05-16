@@ -19,7 +19,6 @@ export function ItemCarouselDirective($timeout) {
     return {
         scope: {
             items: '=',
-            previousItemsRendered: '=?',
             item: '=',
             editable: '<',
             allowPicture: '<',
@@ -35,6 +34,7 @@ export function ItemCarouselDirective($timeout) {
         controllerAs: 'associations',
         link: function(scope, elem, attr, ctrl) {
             let carousel;
+            let previousItemsString;
 
             /*
              * Initialize carousel after all content is loaded
@@ -44,11 +44,11 @@ export function ItemCarouselDirective($timeout) {
                 const itemsString = angular.toJson(items);
 
                 // Don't execute if there are no items or they are the same as before
-                if (!items || scope.previousItemsRendered === itemsString) {
+                if (!items || previousItemsString === itemsString) {
                     return false;
                 }
 
-                scope.previousItemsRendered = itemsString;
+                previousItemsString = itemsString;
 
                 let field = _.find(items, (item) => !item[item.fieldId]);
 
