@@ -411,7 +411,7 @@ export class Editor3Component extends React.Component {
                         keyBindingFn={this.keyBindingFn}
                         handleBeforeInput={this.handleBeforeInput}
                         blockRenderMap={blockRenderMap}
-                        blockRendererFn={getBlockRenderer({svc: this.props.svc})}
+                        blockRendererFn={getBlockRenderer({svc: this.props.svc, dispatch: this.props.dispatch})}
                         customStyleMap={{...customStyleMap, ...this.props.highlightsManager.styleMap}}
                         onChange={onChange}
                         onTab={onTab}

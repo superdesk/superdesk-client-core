@@ -242,39 +242,8 @@ class HTMLParser {
     createMediaBlock(block) {
         const id = this.getBlockId(block);
         const html = this.media[id];
-        const node = $('<div />');
 
-        node.html(html);
-
-        let media = node.find('img');
-        let type = 'picture';
-
-        if (!media) {
-            media = node.find('video');
-            type = 'video';
-        }
-
-        if (!media) {
-            media = node.find('audio');
-            type = 'audio';
-        }
-
-        const href = media.attr('src');
-        const alt = media.attr('alt');
-
-        const editor3description = node.find('.media-block__description').text();
-        const editor2description = node.find('figcaption').text();
-
-        const txt = editor3description || editor2description;
-
-        return atomicBlock(block, 'MEDIA', 'MUTABLE', {
-            media: {
-                alt_text: alt,
-                description_text: txt,
-                renditions: {viewImage: {href}},
-                type: type,
-            },
-        });
+        return atomicBlock(block, 'MEDIA', 'MUTABLE', {html});
     }
 }
 

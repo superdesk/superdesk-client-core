@@ -1,4 +1,5 @@
 import {insertMedia} from './toolbar';
+import ng from 'core/services/ng';
 
 /**
  * @ngdoc method
@@ -12,6 +13,36 @@ export function changeEditorState(editorState, force) {
     return {
         type: 'EDITOR_CHANGE_STATE',
         payload: {editorState, force},
+    };
+}
+
+export function loadMediaById(entityId, href, itemSpecificMediaProperties) {
+    const mediaId = href.substring(href.lastIndexOf('/') + 1, href.lastIndexOf('.'));
+
+    return function(dispatch) {
+        ng.getService('api')
+            .then((api) => {
+                api.get('media_references', {where: {media_id: mediaId}, max_results: 1})
+                    .then((mediaReferencesResponse) => {
+                        const mediaItemId = mediaReferencesResponse._items[0].item_id;
+
+                        api.get('archive', {where: {_id: mediaItemId}})
+                            .then((archiveResponse) => {
+                                const mediaObjectFromServerJson = archiveResponse._items[0];
+
+                                dispatch({
+                                    type: 'LOAD_MEDIA_BY_ID',
+                                    payload: {
+                                        entityId: entityId,
+                                        mediaJson: {
+                                            ...mediaObjectFromServerJson,
+                                            ...itemSpecificMediaProperties,
+                                        },
+                                    },
+                                });
+                            });
+                    });
+            });
     };
 }
 

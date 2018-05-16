@@ -22,6 +22,10 @@
     padding: 10px;
 }
 
+.inline-loading-spinner {
+    @include spinner-big();
+}
+
 // Toggling content
 .hide {
     display: none;
