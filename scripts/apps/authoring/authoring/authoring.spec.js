@@ -66,69 +66,90 @@ describe('authoring', () => {
             word_count: 3,
             slugline: 'item5',
             body_html: '<p>lorem ipsum dolor</p>',
-            editor_state: [{
-                entityMap: {},
-                blocks: [{
-                    depth: 0,
-                    key: '2sso6',
-                    entityRanges: [],
-                    data: {},
-                    type: 'unstyled',
-                    text: 'lorem ipsum dolor',
-                }],
-            }],
         };
         let updates = {
-            editor_state: [{
-                entityMap: {},
-                blocks: [{
-                    depth: 0,
-                    key: '2sso6',
-                    entityRanges: [],
-                    data: {
-                        MULTIPLE_HIGHLIGHTS: {
-                            lastHighlightIds: {ANNOTATION: 2},
-                            highlightsData: {
-                                'ANNOTATION-1': {
-                                    type: 'ANNOTATION',
-                                    data: {
-                                        date: '2018-03-30T14:57:53.172Z',
-                                        msg: '{"blocks":[{"key":"ejm11","text":"Annotation 1","type":"unstyled",' +
-                                            '"depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],' +
-                                            '"entityMap":{}}',
-                                        author: 'admin',
-                                        annotationType: 'regular',
-                                    },
-                                },
-                                'ANNOTATION-2': {
-                                    type: 'ANNOTATION',
-                                    data: {
-                                        date: '2018-03-30T14:58:20.876Z',
-                                        msg: '{"blocks":[{"key":"9i73f","text":"Annotation 2","type":"unstyled",' +
-                                            '"depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}},' +
-                                            '{"key":"d3vb3","text":"Line 2","type":"unstyled","depth":0,' +
-                                            '"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}',
-                                        author: 'admin',
-                                        annotationType: 'regular',
+            fields_meta: {
+                body_html: {
+                    draftjsState: [{
+                        entityMap: {},
+                        blocks: [{
+                            depth: 0,
+                            key: '2sso6',
+                            entityRanges: [],
+                            data: {
+                                MULTIPLE_HIGHLIGHTS: {
+                                    lastHighlightIds: {ANNOTATION: 2},
+                                    highlightsData: {
+                                        'ANNOTATION-1': {
+                                            type: 'ANNOTATION',
+                                            data: {
+                                                date: '2018-03-30T14:57:53.172Z',
+                                                msg: angular.toJson({
+                                                    blocks: [{
+                                                        key: 'ejm11',
+                                                        text: 'Annotation 1',
+                                                        type: 'unstyled',
+                                                        depth: 0,
+                                                        inlineStyleRanges: [],
+                                                        entityRanges: [],
+                                                        data: {},
+                                                    }],
+                                                    entityMap: {},
+                                                }),
+                                                author: 'admin',
+                                                annotationType: 'regular',
+                                            },
+                                        },
+                                        'ANNOTATION-2': {
+                                            type: 'ANNOTATION',
+                                            data: {
+                                                date: '2018-03-30T14:58:20.876Z',
+                                                msg: angular.toJson({
+                                                    blocks: [
+                                                        {
+                                                            key: '9i73f',
+                                                            text: 'Annotation 2',
+                                                            type: 'unstyled',
+                                                            depth: 0,
+                                                            inlineStyleRanges: [],
+                                                            entityRanges: [],
+                                                            data: {},
+                                                        },
+                                                        {
+                                                            key: 'd3vb3',
+                                                            text: 'Line 2',
+                                                            type: 'unstyled',
+                                                            depth: 0,
+                                                            inlineStyleRanges: [],
+                                                            entityRanges: [],
+                                                            data: {},
+                                                        },
+                                                    ],
+                                                    entityMap: {},
+                                                }),
+                                                author: 'admin',
+                                                annotationType: 'regular',
+                                            },
+                                        },
                                     },
                                 },
                             },
-                        },
-                    },
-                    inlineStyleRanges: [{
-                        offset: 6,
-                        length: 5,
-                        style: 'ANNOTATION-1',
-                    },
-                    {
-                        offset: 12,
-                        length: 5,
-                        style: 'ANNOTATION-2',
+                            inlineStyleRanges: [{
+                                offset: 6,
+                                length: 5,
+                                style: 'ANNOTATION-1',
+                            },
+                            {
+                                offset: 12,
+                                length: 5,
+                                style: 'ANNOTATION-2',
+                            }],
+                            type: 'unstyled',
+                            text: 'lorem ipsum dolor',
+                        }],
                     }],
-                    type: 'unstyled',
-                    text: 'lorem ipsum dolor',
-                }],
-            }],
+                },
+            },
         };
 
         authoring.save(item, updates);

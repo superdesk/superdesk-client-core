@@ -1,6 +1,7 @@
 import {convertFromRaw} from 'draft-js';
 import {toHTML} from 'core/editor3';
 import * as helpers from 'apps/authoring/authoring/helpers';
+import {fieldsMetaKeys, getFieldMetadata} from 'core/editor3/helpers/fieldsMeta';
 
 /**
  * @ngdoc service
@@ -257,9 +258,10 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
      * @param {Object} item
      */
     this.generateAnnotations = (item) => {
-        if (item.editor_state && item.editor_state.length &&
-            item.editor_state[0].blocks && item.editor_state[0].blocks.length) {
-            let highlightsBlock = item.editor_state[0].blocks[0];
+        const state = getFieldMetadata(item, 'body_html', fieldsMetaKeys.draftjsState);
+
+        if (state) {
+            let highlightsBlock = state.blocks[0];
 
             if (highlightsBlock.data && highlightsBlock.data.MULTIPLE_HIGHLIGHTS &&
                 highlightsBlock.data.MULTIPLE_HIGHLIGHTS.highlightsData) {
