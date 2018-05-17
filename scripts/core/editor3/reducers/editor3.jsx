@@ -28,8 +28,6 @@ const editor3 = (state = {}, action) => {
         return setHTML(state, action.payload);
     case 'EDITOR_MOVE_BLOCK':
         return moveBlock(state, action.payload);
-    case 'LOAD_MEDIA_BY_ID':
-        return handleLoadMediaById(state, action.payload);
     default:
         return state;
     }
@@ -238,24 +236,6 @@ function moveBlock(state, {block, dest, insertionMode}) {
     );
 
     return onChange(state, withMovedAtomicBlock);
-}
-
-
-function forceDraftJsRerender(editorState) {
-    return EditorState.forceSelection(editorState, editorState.getSelection());
-}
-
-function handleLoadMediaById(state, payload) {
-    return {
-        ...state,
-        editorState: forceDraftJsRerender(
-            EditorState.push(
-                state.editorState,
-                state.editorState.getCurrentContent().replaceEntityData(payload.entityId, {media: payload.mediaJson}),
-                'apply-entity'
-            )
-        ),
-    };
 }
 
 export default editor3;

@@ -39,13 +39,14 @@ const elementStyles = {
  * well as accommodate Editor3 custom atomic blocks.
  */
 class HTMLParser {
-    constructor(html) {
+    constructor(html, associations) {
         this.figures = {};
         this.tables = {};
         this.media = {};
         this.tree = $('<div></div>');
 
         this.createTree(html);
+        this.associations = associations;
     }
 
     /**
@@ -71,9 +72,8 @@ class HTMLParser {
     pruneNodes() {
         this.tree.find('figure').each((i, node) => {
             if (node.querySelector('img, video') != null) {
-                // editor2 support
-                // assume media
-                this.media[i] = $(node)[0].outerHTML;
+                // editor2 media support
+                this.media[i] = node.parentNode.outerHTML;
                 $(node).replaceWith(`<figure>BLOCK_MEDIA_${i}</figure>`);
             } else {
                 // assume embed
@@ -236,19 +236,28 @@ class HTMLParser {
      * @name HTMLParser#createMediaBlock
      * @param {ContentBlock} block
      * @description Takes an unprocessed atomic block (that is assumed to be a
-     * an image block) and processes it.
+     * an media block) and processes it.
      * @returns {ContentBlock} The restored image block.
      */
     createMediaBlock(block) {
         const id = this.getBlockId(block);
         const html = this.media[id];
 
-        return atomicBlock(block, 'MEDIA', 'MUTABLE', {html});
+        // editor2 media support
+        const embedId = html.match(/<!-- EMBED START (?:Image|Video) {id: "([a-z0-9]*?)"} -->/)[1];
+
+        return atomicBlock(block, 'MEDIA', 'MUTABLE', {
+            media: this.associations[embedId],
+        });
     }
 }
 
-export function getContentStateFromHtml(html) {
-    return new HTMLParser(html).contentState();
+/**
+ * @param {string} html
+ * @param {Object} associations (optional)
+ */
+export function getContentStateFromHtml(html, associations) {
+    return new HTMLParser(html, associations).contentState();
 }
 
 /**

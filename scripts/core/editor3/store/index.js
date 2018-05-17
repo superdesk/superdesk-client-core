@@ -144,7 +144,7 @@ function getInitialContent(props) {
 
     if (props.value) {
         // we have only HTML (possibly legacy editor2 or ingested item)
-        return getContentStateFromHtml(props.value);
+        return getContentStateFromHtml(props.value, props.item.associations);
     }
 
     return ContentState.createFromText('');
