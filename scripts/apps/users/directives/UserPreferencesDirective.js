@@ -153,6 +153,7 @@ export function UserPreferencesDirective(
                     'desks',
                     'notifications',
                     'planning',
+                    'cvs',
                 ];
 
                 return _.indexOf(noShowCategories, preference.category) < 0;

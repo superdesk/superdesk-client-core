@@ -26,15 +26,44 @@
                 </ul>
             </div>
         </li>
-        <li class="levelup" ng-if="activeTerm">
+
+        <li class="levelup" ng-if="activeTerm && !preferredView">
             <i class="backlink" ng-click="openParent(activeTerm, $event)"></i>
             <button ng-click="allowEntireCat && selectTerm(activeTerm)">
                 <b class="category">{{getLocaleName(activeTerm)}}</b>
                 <b class="category-hover" ng-if="allowEntireCat">{{ :: "Choose entire category" | translate }}</b>
             </button>
         </li>
+
         <li class="main-list" ng-if="activeTree.length && !activeList && header" ng-class="{active: activeTerm}" ng-hide="allSelected">
-            <ul vs-repeat vs-scroll-parent=".main-list">
+            <ul ng-if="userPreferredItems.length">
+                <li>
+                    <button ng-click="setPreferredView('user', $event)"><b translate>User</b></button>
+                </li>
+                <li ng-if="preferredView === 'user'" ng-repeat="term in userPreferredItems track by term[uniqueField]">
+                    <button ng-click="selectTerm(term)">
+                        {{ getLocaleName(term) }}
+                    </button>
+                </li>
+            </ul>
+            <ul ng-if="deskPreferredItems.length">
+                <li>
+                    <button ng-click="setPreferredView('desk', $event)"><b translate>Desk</b></button>
+                </li>
+                <li ng-if="preferredView === 'desk'" ng-repeat="term in deskPreferredItems track by term[uniqueField]">
+                    <button ng-click="selectTerm(term)">
+                        {{ getLocaleName(term) }}
+                    </button>
+                </li>
+            </ul>
+            <ul ng-if="userPreferredItems.length || deskPreferredItems.length">
+                <li>
+                    <button ng-click="setPreferredView(null, $event)">
+                        <b translate>All</b>
+                    </button>
+                </li>
+            </ul>
+            <ul vs-repeat vs-scroll-parent=".main-list" ng-if="!preferredView">
                 <li ng-repeat="term in activeTree track by term[uniqueField]">
                     <button ng-if="tree[term[uniqueField]]" class="nested-toggle" ng-click="openTree(term, $event)" title="{{getLocaleName(term)}}">
                         <figure ng-if="term.user" class="avatar">

@@ -1,9 +1,11 @@
 import _ from 'lodash';
+import PreferedCvItemsConfigDirective from './PreferedCvItemsConfigDirective';
 
 MetadataCtrl.$inject = [
     '$scope', 'desks', 'metadata', 'privileges', 'datetimeHelper',
     'preferencesService', 'config', 'moment', 'content',
 ];
+
 function MetadataCtrl(
     $scope, desks, metadata, privileges, datetimeHelper,
     preferencesService, config, moment, content) {
@@ -569,8 +571,8 @@ function MetaWordsListDirective() {
  * @param {Boolean} selectEntireCategory - to allow a whole category to be selected (i.e. field without parent)
  *
  */
-MetaTermsDirective.$inject = ['metadata', '$filter', '$timeout'];
-function MetaTermsDirective(metadata, $filter, $timeout) {
+MetaTermsDirective.$inject = ['metadata', '$filter', '$timeout', 'preferencesService', 'desks'];
+function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, desks) {
     return {
         scope: {
             item: '=',
@@ -650,6 +652,7 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
                 scope.tree = tree;
                 scope.activeTree = tree.null;
                 scope.combinedList = _.union(scope.list, scope.item[scope.field] ? scope.item[scope.field] : []);
+                setPreferredItems();
             });
 
             scope.$watch('item[field]', (selected) => {
@@ -855,6 +858,45 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
 
                 return term.name;
             };
+
+            scope.setPreferredView = (view, $event) => {
+                scope.preferredView = view;
+                $event.stopPropagation();
+
+                if (scope.activeTerm) {
+                    scope.openParent({}, $event);
+                }
+            };
+
+            function setPreferredItems() {
+                scope.preferredView = null;
+                scope.userPreferredItems = [];
+                scope.deskPreferredItems = [];
+                if (_.get(scope, 'cv._id')) {
+                    preferencesService.get('cvs:preferred_items').then((prefered) => {
+                        const userPrefs = _.get(prefered, 'value', {});
+                        const deskPrefs = _.get(desks.getCurrentDesk(), 'preferred_cv_items', {});
+
+                        scope.userPreferredItems = getPreferredItems(userPrefs);
+                        scope.deskPreferredItems = getPreferredItems(deskPrefs);
+
+                        if (scope.userPreferredItems.length) {
+                            scope.preferredView = 'user';
+                        } else if (scope.deskPreferredItems.length) {
+                            scope.preferredView = 'desk';
+                        }
+                    });
+                }
+            }
+
+            function getPreferredItems(prefs) {
+                const preferredItems = _.get(prefs, scope.cv._id, []);
+
+                return preferredItems
+                    .map((preferedItem) =>
+                        scope.list.find((item) => item[scope.uniqueField] === preferedItem[scope.uniqueField]))
+                    .filter((item) => item != null); // filter out items missing in cv
+            }
         },
     };
 }
@@ -1192,4 +1234,6 @@ angular.module('superdesk.apps.authoring.metadata', [
     .directive('sdMetaDropdown', MetaDropdownDirective)
     .directive('sdMetaWordsList', MetaWordsListDirective)
     .directive('sdMetadropdownFocus', MetadropdownFocusDirective)
-    .directive('sdMetaLocators', MetaLocatorsDirective);
+    .directive('sdMetaLocators', MetaLocatorsDirective)
+    .directive('sdPreferedCvItemsConfig', PreferedCvItemsConfigDirective)
+;

@@ -134,6 +134,7 @@ describe('metadata terms directive', () => {
     beforeEach(window.module('superdesk.apps.publish'));
     beforeEach(window.module('superdesk.apps.authoring.metadata'));
     beforeEach(window.module('superdesk.apps.vocabularies'));
+    beforeEach(window.module('superdesk.apps.desks'));
 
     beforeEach(inject((_$rootScope_, _$compile_) => {
         $rootScope = _$rootScope_;

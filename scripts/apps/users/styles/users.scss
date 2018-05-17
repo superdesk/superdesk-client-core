@@ -679,6 +679,13 @@ Profile page styles
       }
     }
 
+    .prefered-cv-items {
+        .dropdown {
+            float: left;
+            width: auto;
+        }
+    }
+
     input[type="checkbox"] {
         margin-right: 0.5em;
     }

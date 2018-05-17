@@ -131,6 +131,10 @@
                             </select>
                         </div>
                     </div>
+                    <fieldset class="form__row">
+                        <legend translate>Preferred values for vocabularies</legend>
+                        <div sd-prefered-cv-items-config ng-model="desk.edit.preferred_cv_items" />
+                    </fieldset>
                 </fieldset>
                 <span ng-show="message">{{ message}}</span>
                 <span class="alert-danger" ng-show="_errorLimits" translate>Character limit exceeded, desk can not be created/updated.</span>
@@ -371,6 +375,7 @@
                     ng-disabled="message != null || saving" translate>Done</button>
             </div>
         </div>
+
         <div sd-wizard-step data-title="{{ 'Macros' | translate }}" data-code="macros">
             <div class="content macros" sd-deskedit-macros>
                 <ul class="pills-list">

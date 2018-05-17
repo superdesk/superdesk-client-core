@@ -36,6 +36,7 @@ export default angular.module('superdesk.core.preferences', ['superdesk.core.not
                     'singleline:view': 1,
                     'contacts:view': 1,
                     'monitoring:view': 1,
+                    'cvs:preferred_items': 1,
                 },
                 preferences,
                 preferencesPromise;
