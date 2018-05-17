@@ -1,0 +1,89 @@
+@import '~superdesk-ui-framework/app/styles/_variables.scss';
+@import '~superdesk-ui-framework/app/styles/_mixins.scss';
+
+time.Datetime {
+    padding-left: 0;
+}
+
+.link {
+    cursor: pointer !important;
+}
+
+.no-padding {
+	padding: 0 !important;
+}
+
+.sd-line-input {
+    &--no-border-bottom {
+        .sd-line-input__input {
+            border-bottom: none !important;
+        }
+    }
+
+    &--is-select {
+        cursor: pointer !important;
+    }
+}
+
+.sd-list-item {
+    &--margin {
+        margin: 0.8rem;
+    }
+}
+
+.sd-list-item-group {
+    &--vertical-scroll {
+        overflow-y: auto;
+    }
+}
+
+.terms-list {
+    &--disabled {
+        li {
+            cursor: not-allowed !important;
+            &:hover {
+                color: $black;
+                background-color: rgba(0,0,0,0.05);
+            }
+        }
+    }
+}
+
+.sd-list-item__row--padding-b5 {
+    padding-bottom: 5px !important;
+}
+
+.sd-collapse-box--invalid {
+    .sd-collapse-box__header {
+        border: 1px solid $red;
+    }
+}
+
+.sd-collapse-box--autoFocus {
+    &:focus {
+        background-color: #f4f4f4;
+    }
+}
+
+.sd-collapse-box {
+    @extend .sd-collapse-box--autoFocus
+}
+
+.sd-collapse-box__content-wrapper--no-max-height {
+    max-height: initial !important;
+}
+
+.sd-collapse-box__content-wraper {
+    @extend .sd-collapse-box__content-wrapper--no-max-height;
+}
+
+// This is used so the action-menu is visible
+// when using tab to select an sd-list-item
+.sd-list-item:focus-within {
+    .sd-list-item__action-menu {
+        padding: 0 0.6rem;
+        width: auto;
+        overflow: visible;
+        opacity: 1;
+    }
+}

@@ -1,0 +1,48 @@
+@import '~superdesk-ui-framework/app/styles/_mixins.scss';
+@import '~superdesk-ui-framework/app/styles/_variables.scss';
+
+.user-search__popup {
+    margin-top: 1px;
+
+    &-list {
+        li {
+            margin: 5px 0;
+        }
+
+        overflow-y: scroll;
+        max-height: 250px;
+    }
+
+    &-item {
+        margin: 5px;
+        &:hover {
+            background: $sd-hover;
+        }
+
+        button {
+            width: 100%;
+            text-align: left;
+        }
+
+        &--active {
+            background: $sd-hover;   
+        }
+    }
+
+    &-item-label {
+        padding-top: 5px;
+        display: inline-block;
+        width: 200px;
+        text-align: left;
+    }
+
+    &-user {
+        display: inline-block;
+        margin: 10px 0;
+    	width: 100%;
+
+    	button {
+    		float: right;
+    	}
+    }
+}

@@ -1,0 +1,39 @@
+@import '~superdesk-ui-framework/app/styles/variables/_colors.scss';
+
+.toggle-box {
+    .toggle-box__header--focus {
+        &:focus{
+            background: $sd-hover;
+        }
+    }
+
+    &__content--hidden {
+        display: none;
+    }
+
+    &--invalid {
+        .toggle-box {
+            &__chevron {
+                background-color: $red;
+            }
+            &__label {
+                color: $red;
+            }
+            &__line {
+                background-color: $red;
+            }
+        }
+    }
+
+    .toggle-box__header {
+        @extend .toggle-box__header--focus;
+    }
+
+    &--no-margin {
+        margin: 0 !important;
+    }
+
+    &--padding-top {
+        padding-top: 25px;
+    }
+}
