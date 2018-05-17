@@ -103,8 +103,8 @@ describe('editor3.blockRenderer', () => {
     });
 
     it('should return null as component for unrecognised blocks', () => {
-        const block = {getType: () => 'atomic', getData: () => ({}), getEntityAt: () => 'entity_key'};
-        const contentState = {getEntity: () => ({getType: () => 'not an image'})};
+        const block = {getType: () => 'atomic', getEntityAt: () => 'entity_key'};
+        const contentState = {getEntity: () => ({getType: () => 'not an image', getData: () => ({})})};
         const {component, editable} = getBlockRenderer()(block);
 
         expect(component({block, contentState})).toBe(null);

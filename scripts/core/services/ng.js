@@ -35,7 +35,6 @@ export default new class ProviderService {
         return new Promise((resolve, reject) => {
             function checkNow() {
                 if ($injector != null) {
-                    console.log('zz');
                     window.clearInterval(interval);
                     resolve($injector.get(name));
                     return true;
