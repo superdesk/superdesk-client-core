@@ -32,7 +32,6 @@ describe('suggest', () => {
     beforeEach(window.module('superdesk.core.api'));
     beforeEach(window.module('superdesk.apps.authoring.autosave'));
     beforeEach(window.module('superdesk.apps.authoring.suggest'));
-    beforeEach(window.module('superdesk.core.services.logger'));
 
     it('should initialize as inactive', inject((suggest) => {
         expect(suggest.active).toBe(false);
@@ -44,7 +43,7 @@ describe('suggest', () => {
         expect(suggest.active).toBe(true);
     }));
 
-    it('should not autosave on trigger when inactive', inject((suggest, autosave, logger) => {
+    it('should not autosave on trigger when inactive', inject((suggest, autosave) => {
         spyOn(autosave, 'save');
 
         suggest.setActive(false);
@@ -53,7 +52,7 @@ describe('suggest', () => {
         expect(autosave.save).not.toHaveBeenCalled();
     }));
 
-    it('should autosave on trigger when active', inject((suggest, autosave, $q, logger) => {
+    it('should autosave on trigger when active', inject((suggest, autosave, $q) => {
         spyOn(autosave, 'save').and.returnValue($q.reject());
 
         suggest.setActive(true);
@@ -63,7 +62,7 @@ describe('suggest', () => {
         expect(autosave.save).toHaveBeenCalledWith(testItems[0], testItems[1], 0);
     }));
 
-    it('should get suggestions when triggered', inject((suggest, autosave, $q, api, $rootScope, logger) => {
+    it('should get suggestions when triggered', inject((suggest, autosave, $q, api, $rootScope) => {
         let item = testItems[0];
 
         spyOn(autosave, 'save').and.returnValue($q.when(item));
@@ -79,7 +78,7 @@ describe('suggest', () => {
     }));
 
     it('should get suggestion of first item in array when triggered',
-        inject((suggest, autosave, $q, api, $rootScope, logger) => {
+        inject((suggest, autosave, $q, api, $rootScope) => {
             let item = testItems[0];
 
             spyOn(autosave, 'save').and.returnValue($q.when(testItems));
@@ -95,7 +94,7 @@ describe('suggest', () => {
         })
     );
 
-    it('should trigger listeners on success', inject((suggest, autosave, $q, api, $rootScope, logger) => {
+    it('should trigger listeners on success', inject((suggest, autosave, $q, api, $rootScope) => {
         let item = testItems[0];
         let response = null;
 
