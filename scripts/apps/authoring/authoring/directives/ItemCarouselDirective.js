@@ -14,7 +14,6 @@ const carouselContainerSelector = '.sd-media-carousel__content';
  *
  * @requires $timeout
  */
-
 ItemCarouselDirective.$inject = ['$timeout'];
 export function ItemCarouselDirective($timeout) {
     return {
@@ -35,15 +34,21 @@ export function ItemCarouselDirective($timeout) {
         controllerAs: 'associations',
         link: function(scope, elem, attr, ctrl) {
             let carousel;
+            let previousItemsString;
 
             /*
              * Initialize carousel after all content is loaded
              * otherwise carousel height is messed up
              */
             scope.$watch('items', (items) => {
-                if (!items) {
+                const itemsString = angular.toJson(items);
+
+                // Don't execute if there are no items or they are the same as before
+                if (!items || previousItemsString === itemsString) {
                     return false;
                 }
+
+                previousItemsString = itemsString;
 
                 let field = _.find(items, (item) => !item[item.fieldId]);
 
