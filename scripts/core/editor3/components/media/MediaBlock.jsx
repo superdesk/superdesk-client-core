@@ -165,10 +165,14 @@ export class MediaBlockComponent extends Component {
                                         {data.headline || gettextCatalog.getString('[No Value]')}
                                     </span>
                                 </div>
-                                <div className="image-block__icons-block">
-                                    <a className="image-block__image-edit"
-                                        onClick={this.onClick}><i className="icon-pencil"/></a>
-                                </div>
+                                {
+                                    data.source !== 'Superdesk' ? null : (
+                                        <div className="image-block__icons-block">
+                                            <a className="image-block__image-edit"
+                                                onClick={this.onClick}><i className="icon-pencil"/></a>
+                                        </div>
+                                    )
+                                }
                                 <div className="image-block__metadata">
                                     <span>
                                         <em>{gettextCatalog.getString('Alt text:')}{' '}</em>
