@@ -43,10 +43,11 @@ class HTMLParser {
         this.figures = {};
         this.tables = {};
         this.media = {};
+        this.associations = associations;
+
         this.tree = $('<div></div>');
 
         this.createTree(html);
-        this.associations = associations;
     }
 
     /**
@@ -72,14 +73,31 @@ class HTMLParser {
     pruneNodes() {
         this.tree.find('figure').each((i, node) => {
             if (node.querySelector('img, video') != null) {
-                // editor2 media support
-                this.media[i] = node.parentNode.outerHTML;
-                $(node).replaceWith(`<figure>BLOCK_MEDIA_${i}</figure>`);
-            } else {
-                // assume embed
-                this.figures[i] = $(node).html();
-                $(node).replaceWith(`<figure>BLOCK_FIGURE_${i}></figure>`);
+                try {
+                    // editor2 media support
+
+                    const lineAfterFigureClosingTag = node.parentElement.innerHTML.slice(
+                        node.parentElement.innerHTML.indexOf(node.outerHTML) + node.outerHTML.length + 1
+                    ).match(/.+\n/)[0];
+
+                    const embedId = lineAfterFigureClosingTag
+                        .match(/<!-- EMBED END (?:Image|Video) {id: "([a-z0-9]*?)"} -->/)[1];
+
+                    $(node).replaceWith(`<figure>BLOCK_MEDIA_${i}</figure>`);
+
+                    this.media[i] = {
+                        media: this.associations[embedId],
+                    };
+
+                    return;
+                } catch (e) {
+                    // continue
+                }
             }
+
+            // assume embed
+            this.figures[i] = $(node).html();
+            $(node).replaceWith(`<figure>BLOCK_FIGURE_${i}></figure>`);
         });
 
         this.tree.find('table').each((i, node) => {
@@ -241,14 +259,9 @@ class HTMLParser {
      */
     createMediaBlock(block) {
         const id = this.getBlockId(block);
-        const html = this.media[id];
+        const mediaJson = this.media[id];
 
-        // editor2 media support
-        const embedId = html.match(/<!-- EMBED START (?:Image|Video) {id: "([a-z0-9]*?)"} -->/)[1];
-
-        return atomicBlock(block, 'MEDIA', 'MUTABLE', {
-            media: this.associations[embedId],
-        });
+        return atomicBlock(block, 'MEDIA', 'MUTABLE', mediaJson);
     }
 }
 
