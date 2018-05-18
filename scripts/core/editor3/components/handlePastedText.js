@@ -129,11 +129,12 @@ function processPastedHtml(props, html) {
         selectionAfterInsert
     );
 
-    nextEditorState = EditorState.set(nextEditorState, {allowUndo: true});
-
     // for the first block recover the initial block data because on replaceWithFragment the block data is
     // replaced with the data from pasted fragment
     nextEditorState = setAllCustomDataForEditor(nextEditorState, customData);
+
+    // bring 'undo stack' back
+    nextEditorState = EditorState.set(nextEditorState, {allowUndo: true});
 
     onChange(nextEditorState);
 
