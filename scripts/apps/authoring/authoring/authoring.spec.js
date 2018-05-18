@@ -152,17 +152,18 @@ describe('authoring', () => {
             },
         };
 
-        authoring.save(item, updates);
-        expect(updates.annotations).toEqual([{
-            body: '<p>Annotation 1</p>',
-            type: 'regular',
-            id: '1',
-        },
-        {
-            body: '<p>Annotation 2</p><p>Line 2</p>',
-            type: 'regular',
-            id: '2',
-        }]);
+        authoring.autosave(item, updates).then(() => {
+            expect(item.annotations).toEqual([{
+                body: '<p>Annotation 1</p>',
+                type: 'regular',
+                id: '1',
+            },
+            {
+                body: '<p>Annotation 2</p><p>Line 2</p>',
+                type: 'regular',
+                id: '2',
+            }]);
+        });
     }));
 
     describe('authoring workspace', () => {
