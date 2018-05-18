@@ -1,19 +1,15 @@
 import * as helpers from 'apps/authoring/authoring/helpers';
-import {convertFromRaw} from 'draft-js';
-import {toHTML} from 'core/editor3';
-import {fieldsMetaKeys, getFieldMetadata} from 'core/editor3/helpers/fieldsMeta';
 
 const RESOURCE = 'archive_autosave',
     AUTOSAVE_TIMEOUT = 3000;
 
-let $q, $timeout, api, logger;
+let $q, $timeout, api;
 
 export class AutosaveService {
-    constructor(_$q, _$timeout, _api, _logger) {
+    constructor(_$q, _$timeout, _api) {
         $q = _$q;
         $timeout = _$timeout;
         api = _api;
-        logger = _logger;
 
         this.timeouts = {};
     }
@@ -50,8 +46,6 @@ export class AutosaveService {
 
         this.stop(item);
 
-        this.generateAnnotations(item);
-
         let id = item._id;
 
         this.timeouts[id] = $timeout(() => {
@@ -65,36 +59,6 @@ export class AutosaveService {
         }, timeout, false);
 
         return this.timeouts[id];
-    }
-
-    /**
-     * Generate item annotations field
-     *
-     * @param {Object} item
-     */
-    generateAnnotations(item) {
-        const state = getFieldMetadata(item, 'body_html', fieldsMetaKeys.draftjsState);
-
-        if (state) {
-            let highlightsBlock = state.blocks[0];
-
-            if (highlightsBlock.data && highlightsBlock.data.MULTIPLE_HIGHLIGHTS &&
-                highlightsBlock.data.MULTIPLE_HIGHLIGHTS.highlightsData) {
-                let annotations = [];
-
-                _.forEach(highlightsBlock.data.MULTIPLE_HIGHLIGHTS.highlightsData, (highlight, key) => {
-                    if (key.startsWith('ANNOTATION-')) {
-                        let annotation = {};
-
-                        annotation.id = key.split('-')[1];
-                        annotation.type = highlight.data.annotationType;
-                        annotation.body = toHTML(convertFromRaw(JSON.parse(highlight.data.msg)), logger);
-                        annotations.push(annotation);
-                    }
-                });
-                item.annotations = annotations;
-            }
-        }
     }
 
     /**
@@ -123,4 +87,4 @@ export class AutosaveService {
     }
 }
 
-AutosaveService.$inject = ['$q', '$timeout', 'api', 'logger'];
+AutosaveService.$inject = ['$q', '$timeout', 'api'];
