@@ -1,5 +1,4 @@
 import {HTMLGenerator} from './to-html';
-import {HTMLParser} from './from-html';
 
 /**
  * @name toHTML
@@ -9,14 +8,4 @@ import {HTMLParser} from './from-html';
  */
 export function toHTML(contentState, logger) {
     return new HTMLGenerator(contentState, logger).html();
-}
-
-/**
- * @name fromHTML
- * @param {String} html
- * @description Converts DraftJS ContentState to HTML.
- * @returns {ContentState} DraftJS ContentState
- */
-export function fromHTML(html) {
-    return new HTMLParser(html).contentState();
 }

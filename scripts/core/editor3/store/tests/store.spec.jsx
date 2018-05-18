@@ -17,6 +17,7 @@ describe('editor3.store', () => {
             trim: true,
             onChange: () => { /* no-op */ },
             value: 'abc',
+            item: {},
         });
 
         const state = store.getState();

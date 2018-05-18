@@ -5,7 +5,8 @@ import {EditorState} from 'draft-js';
 
 import {Editor3} from './components';
 import createEditorStore from './store';
-import {fromHTML} from './html';
+import {getContentStateFromHtml} from './html/from-html';
+
 import {changeEditorState, setReadOnly} from './actions';
 
 /**
@@ -163,7 +164,7 @@ class Editor3Directive {
             const text = (newValue || '')
                 .replace(/<ins/g, '<code')
                 .replace(/<\/ins>/g, '</code>');
-            const content = fromHTML(text);
+            const content = getContentStateFromHtml(text);
             const state = store.getState();
             const editorState = EditorState.push(state.editorState, content, 'insert-characters');
 

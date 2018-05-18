@@ -27,4 +27,4 @@ export default angular.module('superdesk.core.editor3', ['superdesk.apps.spellch
 
 // Editor as a React Component.
 export {Editor} from './react';
-export {toHTML, fromHTML} from './html';
+export {toHTML} from './html';

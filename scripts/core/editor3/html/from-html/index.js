@@ -38,11 +38,13 @@ const elementStyles = {
  * This "small hack" allows us to use a reliable HTML convertor provided by DraftJS, as
  * well as accommodate Editor3 custom atomic blocks.
  */
-export class HTMLParser {
-    constructor(html) {
+class HTMLParser {
+    constructor(html, associations) {
         this.figures = {};
         this.tables = {};
         this.media = {};
+        this.associations = associations;
+
         this.tree = $('<div></div>');
 
         this.createTree(html);
@@ -70,6 +72,30 @@ export class HTMLParser {
      */
     pruneNodes() {
         this.tree.find('figure').each((i, node) => {
+            if (node.querySelector('img, video') != null) {
+                try {
+                    // editor2 media support
+
+                    const lineAfterFigureClosingTag = node.parentElement.innerHTML.slice(
+                        node.parentElement.innerHTML.indexOf(node.outerHTML) + node.outerHTML.length + 1
+                    ).match(/.+\n/)[0];
+
+                    const embedId = lineAfterFigureClosingTag
+                        .match(/<!-- EMBED END (?:Image|Video) {id: "([a-z0-9]*?)"} -->/)[1];
+
+                    $(node).replaceWith(`<figure>BLOCK_MEDIA_${i}</figure>`);
+
+                    this.media[i] = {
+                        media: this.associations[embedId],
+                    };
+
+                    return;
+                } catch (e) {
+                    // continue
+                }
+            }
+
+            // assume embed
             this.figures[i] = $(node).html();
             $(node).replaceWith(`<figure>BLOCK_FIGURE_${i}></figure>`);
         });
@@ -228,42 +254,23 @@ export class HTMLParser {
      * @name HTMLParser#createMediaBlock
      * @param {ContentBlock} block
      * @description Takes an unprocessed atomic block (that is assumed to be a
-     * an image block) and processes it.
+     * an media block) and processes it.
      * @returns {ContentBlock} The restored image block.
      */
     createMediaBlock(block) {
         const id = this.getBlockId(block);
-        const html = this.media[id];
-        const node = $('<div />');
+        const mediaJson = this.media[id];
 
-        node.html(html);
-
-        let media = node.find('img');
-        let type = 'picture';
-
-        if (!media) {
-            media = node.find('video');
-            type = 'video';
-        }
-
-        if (!media) {
-            media = node.find('audio');
-            type = 'audio';
-        }
-
-        const href = media.attr('src');
-        const alt = media.attr('alt');
-        const txt = node.find('.media-block__description').text();
-
-        return atomicBlock(block, 'MEDIA', 'MUTABLE', {
-            media: {
-                alt_text: alt,
-                description_text: txt,
-                renditions: {viewImage: {href}},
-                type: type,
-            },
-        });
+        return atomicBlock(block, 'MEDIA', 'MUTABLE', mediaJson);
     }
+}
+
+/**
+ * @param {string} html
+ * @param {Object} associations (optional)
+ */
+export function getContentStateFromHtml(html, associations) {
+    return new HTMLParser(html, associations).contentState();
 }
 
 /**

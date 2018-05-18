@@ -5,7 +5,8 @@ import ng from 'core/services/ng';
 import {forceUpdate} from '../actions';
 import {Editor3} from '../components/Editor3';
 import {EditorState, convertFromRaw, convertToRaw, ContentState} from 'draft-js';
-import {toHTML, fromHTML} from 'core/editor3/html';
+import {toHTML} from 'core/editor3/html';
+import {getContentStateFromHtml} from '../html/from-html';
 import {PopupTypes} from '../actions';
 import {initializeHighlights, prepareHighlightsForExport} from '../helpers/highlights';
 import {fieldsMetaKeys, setFieldMetadata, getFieldMetadata, FIELD_KEY_SEPARATOR} from '../helpers/fieldsMeta';
@@ -143,7 +144,7 @@ function getInitialContent(props) {
 
     if (props.value) {
         // we have only HTML (possibly legacy editor2 or ingested item)
-        return fromHTML(props.value);
+        return getContentStateFromHtml(props.value, props.item.associations);
     }
 
     return ContentState.createFromText('');

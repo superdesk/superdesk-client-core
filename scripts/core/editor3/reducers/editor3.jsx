@@ -1,6 +1,6 @@
 import {Editor3} from '../components/Editor3';
 import {RichUtils, EditorState, AtomicBlockUtils, SelectionState} from 'draft-js';
-import {fromHTML} from 'core/editor3/html';
+import {getContentStateFromHtml} from '../html/from-html';
 import {addMedia} from './toolbar';
 
 /**
@@ -198,7 +198,7 @@ const changeImageCaption = (state, {entityKey, newCaption, field}) => {
  */
 const setHTML = (state, html) => {
     const decorator = Editor3.getDecorator();
-    const content = fromHTML(html);
+    const content = getContentStateFromHtml(html);
     const editorState = EditorState.createWithContent(content, decorator);
 
     return onChange(state, editorState);

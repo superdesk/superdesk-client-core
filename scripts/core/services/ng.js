@@ -30,4 +30,29 @@ export default new class ProviderService {
 
         return $injector.get(name);
     }
+
+    getService(name) {
+        return new Promise((resolve, reject) => {
+            function checkNow() {
+                if ($injector != null) {
+                    window.clearInterval(interval);
+                    resolve($injector.get(name));
+                    return true;
+                }
+            }
+
+            let interval;
+
+            if (checkNow() === true) {
+                // make sure it doesn't register an interval if it resolves on the first go
+                return;
+            }
+
+            interval = setInterval(checkNow, 100);
+            setTimeout(() => {
+                clearInterval(interval);
+                reject('timed out while trying to resolve a service');
+            }, 1000 * 60);
+        });
+    }
 }();
