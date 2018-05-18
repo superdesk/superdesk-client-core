@@ -62,6 +62,36 @@ export default function createEditorStore(props, isReact = false) {
 }
 
 /**
+ * Generate item annotations field
+ *
+ * @param {Object} item
+ */
+function generateAnnotations(item, logger) {
+    const state = getFieldMetadata(item, 'body_html', fieldsMetaKeys.draftjsState);
+
+    if (state) {
+        let highlightsBlock = state.blocks[0];
+
+        if (highlightsBlock.data && highlightsBlock.data.MULTIPLE_HIGHLIGHTS &&
+            highlightsBlock.data.MULTIPLE_HIGHLIGHTS.highlightsData) {
+            let annotations = [];
+
+            _.forEach(highlightsBlock.data.MULTIPLE_HIGHLIGHTS.highlightsData, (highlight, key) => {
+                if (key.startsWith('ANNOTATION-')) {
+                    let annotation = {};
+
+                    annotation.id = key.split('-')[1];
+                    annotation.type = highlight.data.annotationType;
+                    annotation.body = toHTML(convertFromRaw(JSON.parse(highlight.data.msg)), logger);
+                    annotations.push(annotation);
+                }
+            });
+            item.annotations = annotations;
+        }
+    }
+}
+
+/**
  * @name onChange
  * @params {ContentState} contentState New editor content state.
  * @description Triggered whenever the state of the editor changes. It takes the
@@ -104,6 +134,8 @@ function onChange(contentState) {
     const logger = ng.get('logger');
 
     objectToUpdate[fieldName] = toHTML(contentStateHighlightsReadyForExport, logger);
+
+    generateAnnotations(this.item, logger);
 
     // call on change with scope updated
     this.$rootScope.$applyAsync(() => {
