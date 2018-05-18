@@ -111,7 +111,11 @@ const createAddSuggestion = (state, {text, data}) => {
  */
 const createDeleteSuggestion = (state, {action, data}) => {
     let {editorState} = state;
-    const selection = editorState.getSelection();
+    let selection = editorState.getSelection();
+    let content = editorState.getCurrentContent();
+    let lastBlock = content.getBlockForKey(selection.getEndKey());
+    const afterSectionLength = lastBlock.getLength() - selection.getEndOffset();
+    const nextBlock = content.getBlockAfter(selection.getEndKey());
 
     if (selection.isCollapsed()) {
         if (action === 'backspace') {
@@ -123,8 +127,27 @@ const createDeleteSuggestion = (state, {action, data}) => {
 
     editorState = deleteCurrentSelection(editorState, data);
 
-    if (selection.isCollapsed() && action !== 'backspace') {
-        editorState = Highlights.changeEditorSelection(editorState, 1, 1, false);
+    if (action !== 'backspace') {
+        if (selection.isCollapsed()) {
+            editorState = Highlights.changeEditorSelection(editorState, 1, 1, false);
+        } else {
+            content = editorState.getCurrentContent();
+
+            if (nextBlock != null) {
+                lastBlock = content.getBlockBefore(nextBlock.getKey());
+            } else {
+                lastBlock = content.getLastBlock();
+            }
+
+            selection = selection.merge({
+                anchorKey: lastBlock.getKey(),
+                anchorOffset: lastBlock.getLength() - afterSectionLength,
+                focusKey: lastBlock.getKey(),
+                focusOffset: lastBlock.getLength() - afterSectionLength,
+            });
+
+            editorState = EditorState.acceptSelection(editorState, selection);
+        }
     }
 
     return saveEditorStatus(state, editorState, 'change-inline-style');
@@ -618,16 +641,16 @@ const deleteCurrentSelection = (editorState, data) => {
     const selection = editorState.getSelection();
     const backward = true;
     let newEditorState = editorState;
-    let tmpEditorState;
+    let oldEditorState;
 
     newEditorState = initSelectionIterator(newEditorState, backward);
 
     while (hasNextSelection(newEditorState, selection, backward)) {
-        tmpEditorState = setDeleteSuggestionForCharacter(newEditorState, data);
-        if (tmpEditorState === newEditorState) {
+        oldEditorState = setDeleteSuggestionForCharacter(newEditorState, data);
+        if (oldEditorState === newEditorState) {
             break;
         }
-        newEditorState = tmpEditorState;
+        newEditorState = oldEditorState;
     }
 
     return newEditorState;
