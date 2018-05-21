@@ -43,7 +43,11 @@
                     ng-model="vocabulary.helper_text"
                     ng-maxlength="120">
                 <div class="sd-line-input__message"
-                    ng-show="vocabularyForm.$error.maxlength">The helper text must not exceed 120 characters.</div>
+                    ng-show="vocabularyForm.$error.maxlength" translate>The helper text must not exceed 120 characters.</div>
+            </div>
+
+            <div class="sd-line-input" ng-if="matchFieldTypeToTab('vocabularies', vocabulary.field_type)">
+                <sd-check ng-model="vocabulary.preffered_items">{{ :: 'Available in user/desk preferences' | translate }}</sd-check>
             </div>
 
             <div class="sd-line-input" ng-show="matchFieldTypeToTab('text-fields', vocabulary.field_type)">

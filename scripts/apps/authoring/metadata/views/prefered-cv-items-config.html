@@ -1,0 +1,17 @@
+<div class="prefered-cv-items form__row" ng-repeat="cv in cvs track by cv._id">
+    <div class="sd-line-input">
+        <label class="sd-line-input__label">{{ :: cv.display_name }}</label>
+        <div sd-meta-terms
+            class="sd-line-input__select"
+            data-item="updates"
+            data-field="{{ cv._id }}"
+            data-list="cv.items"
+            data-unique="qcode"
+            data-header="true"
+            data-change="updateModel()"
+        />
+    </div>
+</div>
+<div ng-show="cvs.length === 0" class="sd-alert sd-alert--hollow">
+    <p translate>There are no vocabularies configured.</p>
+</div>

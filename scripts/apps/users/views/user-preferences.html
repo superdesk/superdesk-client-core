@@ -8,6 +8,7 @@
     <div class="preferences form-flat inner-content" ng-init="val = true">
         <div class="title" translate>User settings</div>
         <ul>
+            
             <li class="fieldset" ng-repeat="(id, p) in preferences track by id"
                 ng-if="showCategory(p)">
                 <div class="legend">{{ p.category | translate }}</div>
@@ -132,7 +133,11 @@
                           data-change="articleDefaultsChanged(item)"></span>
                 </div>
             </li>
-        </ul>
 
+            <li class="fieldset terms-box" ng-if="profileConfig.desks !== false">
+                <div class="legend" translate>Preferred values for vocabularies</div>
+                <div sd-info-item sd-prefered-cv-items-config ng-model="preferences['cvs:preferred_items'].value"></div>
+            </li>
+        </ul>
     </div>
 </form>
