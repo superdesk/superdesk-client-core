@@ -11,6 +11,7 @@ import {
     DefaultDraftBlockRenderMap,
     KeyBindingUtil,
 } from 'draft-js';
+import {getVisibleSelectionRect} from 'draft-js';
 
 import {Map} from 'immutable';
 import Toolbar from './toolbar';
@@ -413,7 +414,18 @@ export class Editor3Component extends React.Component {
                         blockRenderMap={blockRenderMap}
                         blockRendererFn={getBlockRenderer({svc: this.props.svc})}
                         customStyleMap={{...customStyleMap, ...this.props.highlightsManager.styleMap}}
-                        onChange={onChange}
+                        onChange={(...args) => {
+                            // in order to position the popup component we need to know the position of editor selection
+                            // even when it's not focused, or another input is focused
+
+                            const selectionRect = getVisibleSelectionRect(window);
+
+                            if (selectionRect != null) {
+                                this.editorNode.dataset.editorSelectionRect = JSON.stringify(selectionRect);
+                            }
+
+                            onChange(...args);
+                        }}
                         onTab={onTab}
                         tabIndex={tabindex}
                         handlePastedText={handlePastedText.bind(this, this.editorKey)}
