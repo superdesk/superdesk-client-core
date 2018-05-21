@@ -9,9 +9,8 @@ import ng from 'core/services/ng';
 import {HighlightsPopupPresentation} from '../HighlightsPopupPresentation';
 import {UserAvatar} from 'apps/users/components/UserAvatar';
 
-const Annotation = ({annotation, editorNode, showPopup, highlightId, highlightsManager}) => {
+const Annotation = ({annotation, editorNode, showPopup, highlightId, highlightsManager, annotationTypes}) => {
     const {author, avatar, date, msg, annotationType} = annotation.data;
-    const annotationTypes = ng.get('metadata').values.annotation_types;
     const {name: type} = annotationTypes.find((t) => t.qcode === annotationType);
     const relativeDateString = moment(date).calendar();
     const absoluteDateString = moment(date).format('MMMM Do YYYY, h:mm:ss a');
@@ -74,8 +73,13 @@ Annotation.propTypes = {
     highlightsManager: PropTypes.object.isRequired,
     highlightId: PropTypes.string,
     editorNode: PropTypes.object,
+    annotationTypes: PropTypes.array,
 };
 
-export const AnnotationPopup = connect(null, {
+const mapStateToProps = (state) => ({
+    annotationTypes: state.annotationTypes,
+});
+
+export const AnnotationPopup = connect(mapStateToProps, {
     showPopup,
 })(Annotation);
