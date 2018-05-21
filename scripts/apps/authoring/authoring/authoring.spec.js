@@ -1,3 +1,6 @@
+import {onChange} from 'core/editor3/store/index';
+import {convertFromRaw} from 'draft-js';
+
 describe('authoring', () => {
     beforeEach(window.module('superdesk.apps.vocabularies'));
     beforeEach(window.module('superdesk.apps.archive'));
@@ -56,113 +59,31 @@ describe('authoring', () => {
         }));
 
     it('generates annotations field from the editor state', inject((authoring) => {
-        let item = {
-            operation: 'update',
-            state: 'in_progress',
-            type: 'text',
-            unique_name: '#12',
-            guid: 'urn:newsml:localhost:5000:2018-03-30T03:43:18.405058:c311c880-ca45-4d58-9148-cce1ddd034be',
-            unique_id: 12,
-            word_count: 3,
-            slugline: 'item5',
-            body_html: '<p>lorem ipsum dolor</p>',
-        };
-        let updates = {
-            fields_meta: {
-                body_html: {
-                    draftjsState: [{
-                        entityMap: {},
-                        blocks: [{
-                            depth: 0,
-                            key: '2sso6',
-                            entityRanges: [],
-                            data: {
-                                MULTIPLE_HIGHLIGHTS: {
-                                    lastHighlightIds: {ANNOTATION: 2},
-                                    highlightsData: {
-                                        'ANNOTATION-1': {
-                                            type: 'ANNOTATION',
-                                            data: {
-                                                date: '2018-03-30T14:57:53.172Z',
-                                                msg: angular.toJson({
-                                                    blocks: [{
-                                                        key: 'ejm11',
-                                                        text: 'Annotation 1',
-                                                        type: 'unstyled',
-                                                        depth: 0,
-                                                        inlineStyleRanges: [],
-                                                        entityRanges: [],
-                                                        data: {},
-                                                    }],
-                                                    entityMap: {},
-                                                }),
-                                                author: 'admin',
-                                                annotationType: 'regular',
-                                            },
-                                        },
-                                        'ANNOTATION-2': {
-                                            type: 'ANNOTATION',
-                                            data: {
-                                                date: '2018-03-30T14:58:20.876Z',
-                                                msg: angular.toJson({
-                                                    blocks: [
-                                                        {
-                                                            key: '9i73f',
-                                                            text: 'Annotation 2',
-                                                            type: 'unstyled',
-                                                            depth: 0,
-                                                            inlineStyleRanges: [],
-                                                            entityRanges: [],
-                                                            data: {},
-                                                        },
-                                                        {
-                                                            key: 'd3vb3',
-                                                            text: 'Line 2',
-                                                            type: 'unstyled',
-                                                            depth: 0,
-                                                            inlineStyleRanges: [],
-                                                            entityRanges: [],
-                                                            data: {},
-                                                        },
-                                                    ],
-                                                    entityMap: {},
-                                                }),
-                                                author: 'admin',
-                                                annotationType: 'regular',
-                                            },
-                                        },
-                                    },
-                                },
-                            },
-                            inlineStyleRanges: [{
-                                offset: 6,
-                                length: 5,
-                                style: 'ANNOTATION-1',
-                            },
-                            {
-                                offset: 12,
-                                length: 5,
-                                style: 'ANNOTATION-2',
-                            }],
-                            type: 'unstyled',
-                            text: 'lorem ipsum dolor',
-                        }],
-                    }],
+        // eslint-disable-next-line max-len
+        var contentStateRaw = {blocks: [{key: 'ak77o', text: 'test', type: 'unstyled', depth: 0, inlineStyleRanges: [{offset: 1, length: 2, style: 'ANNOTATION-1'}], entityRanges: [], data: {MULTIPLE_HIGHLIGHTS: {highlightsData: {'ANNOTATION-1': {data: {msg: '{"blocks":[{"key":"7f13c","text":"123","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}', email: 'a@a.com', annotationType: 'regular:001', authorId: '59c222237300870c9a7863b2', date: '2018-05-21T04:14:45.074Z', author: 'Andrew Powers', avatar: 'https://sd-master.test.superdesk.org/api/upload-raw/2018022710028/e5bc36e933881f6ad79962a085844b8616aecea0a87908db20033ac129d88cf2.jpg'}, type: 'ANNOTATION'}}, lastHighlightIds: {SPLIT_PARAGRAPH_SUGGESTION: 0, DELETE_SUGGESTION: 0, TOGGLE_BOLD_SUGGESTION: 0, MERGE_PARAGRAPHS_SUGGESTION: 0, ADD_SUGGESTION: 0, ADD_LINK_SUGGESTION: 0, ANNOTATION: 1, COMMENT: 0, BLOCK_STYLE_SUGGESTION: 0, TOGGLE_SUPERSCRIPT_SUGGESTION: 0, TOGGLE_SUBSCRIPT_SUGGESTION: 0, TOGGLE_UNDERLINE_SUGGESTION: 0, TOGGLE_STRIKETHROUGH_SUGGESTION: 0, CHANGE_LINK_SUGGESTION: 0, TOGGLE_ITALIC_SUGGESTION: 0, REMOVE_LINK_SUGGESTION: 0}, highlightsStyleMap: {'ANNOTATION-1': {borderBottom: '4px solid rgba(100, 205, 0, 0.6)'}}}, __PUBLIC_API__comments: []}}], entityMap: {}};
+        var contentState = convertFromRaw(contentStateRaw);
+
+        var context = {
+            pathToValue: 'body_html',
+            item: {
+                body_html: '<p>t<span annotation-id="1">es</span>t</p>',
+                fields_meta: {
+                    body_html: {
+                        draftjsState: [contentStateRaw],
+                    },
+                },
+            },
+            $rootScope: {
+                $applyAsync: () => {
+                    expect(JSON.stringify(context.item.annotations))
+                        .toEqual('[{"id":"1","type":"regular:001","body":"<p>123</p>"}]');
                 },
             },
         };
 
-        authoring.save(item, updates);
-        expect(updates.annotations).toEqual([{
-            body: '<p>Annotation 1</p>',
-            type: 'regular',
-            id: '1',
-        },
-        {
-            body: '<p>Annotation 2</p><p>Line 2</p>',
-            type: 'regular',
-            id: '2',
-        }]);
+        spyOn(context.$rootScope, '$applyAsync');
+        onChange.call(context, contentState);
+        expect(context.$rootScope.$applyAsync).toHaveBeenCalled();
     }));
 
     describe('authoring workspace', () => {
