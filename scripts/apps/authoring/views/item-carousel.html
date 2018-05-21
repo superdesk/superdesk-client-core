@@ -165,6 +165,9 @@
                     <img ng-if="item[item.fieldId] && item[item.fieldId].renditions.thumbnail" ng-src="{{item[item.fieldId].renditions.thumbnail.href}}">
                 </div>
             </div>
+            <div class="sd-media-carousel__thumb sd-media-carousel__thumb--add" ng-click="upload()" data-rel="{{item.fieldId}}" ng-if="carouselItems.length < maxUploads">
+                <i class="icon-plus-sign"></i>
+            </div>
         </div>
     </div>
 </div>
