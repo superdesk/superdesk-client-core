@@ -34,6 +34,7 @@ export default function createEditorStore(props, isReact = false) {
     const decorators = Editor3.getDecorator(props.disableSpellchecker || !spellcheck.isAutoSpellchecker);
     const showToolbar = !props.singleLine && (props.editorFormat || []).length > 0;
     const onChangeValue = isReact ? props.onChange : _.debounce(onChange.bind(props), props.debounce);
+    const annotationTypes = ng.get('metadata').values.annotation_types || [];
 
     const store = createStore(reducers, {
         editorState: EditorState.createWithContent(content, decorators),
@@ -53,6 +54,7 @@ export default function createEditorStore(props, isReact = false) {
         suggestingMode: false,
         invisibles: false,
         svc: props.svc,
+        annotationTypes: annotationTypes,
     }, applyMiddleware(thunk));
 
 
