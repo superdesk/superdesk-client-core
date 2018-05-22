@@ -1,5 +1,13 @@
 # Superdesk Client Changelog
 
+## [1.18.1] 2018-05-22
+
+### Fixed
+
+- Use annotation type names in annotations popup.
+- Fix `item.annotations` not updated on correction.
+- Fix missing `item.annotations` on save. 
+
 ## [1.18.0] 2018-05-14
 
 ### Fixed
