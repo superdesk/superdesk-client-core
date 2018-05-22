@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {getVisibleSelectionRect} from 'draft-js';
 
 export class HighlightsPopupPresentation extends Component {
     constructor(props) {
