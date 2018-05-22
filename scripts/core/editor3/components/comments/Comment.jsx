@@ -87,7 +87,7 @@ export class Comment extends Component {
                                             className="comment-box__input"
                                             value={this.state.editModeValue}
                                             onChange={(event, value) => this.setState({editModeValue: value})}
-                                            singleLine={true}
+                                            singleLine={false}
                                         />
 
                                         <div

@@ -2,11 +2,20 @@
     "compilerOptions": {
         "module": "commonjs",
         "target": "es6",
-        "jsx": "preserve"
+        "jsx": "preserve",
+        "paths": {
+            "apps/*": [
+                "./scripts/apps/*",
+            ],
+            "core/*": [
+                "./scripts/core/*",
+            ],
+        },
+        "baseUrl": ".",
     },
     "exclude": [
         "node_modules",
         "bower_components",
-        "po"
+        "po",
     ]
 }
