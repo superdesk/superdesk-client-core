@@ -195,10 +195,22 @@ class HTMLParser {
      */
     createFigureBlock(block) {
         const id = this.getBlockId(block);
-        const html = this.figures[id];
+
+        var htmlElement = document.createElement('div');
+
+        htmlElement.innerHTML = this.figures[id];
+
+        // capturing description from editor2
+        const descriptionElement = htmlElement.querySelector('figcaption');
+        const descriptionText = descriptionElement != null ? descriptionElement.innerText : '';
+
+        if (descriptionElement != null) {
+            descriptionElement.remove();
+        }
 
         return atomicBlock(block, 'EMBED', 'MUTABLE', {
-            data: {html: html},
+            data: {html: htmlElement.innerHTML},
+            description: descriptionText,
         });
     }
 

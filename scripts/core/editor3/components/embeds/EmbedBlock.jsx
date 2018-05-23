@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
+import Textarea from 'react-textarea-autosize';
 import {connect} from 'react-redux';
 import {QumuWidget} from './QumuWidget';
 import * as actions from '../../actions';
@@ -17,6 +18,7 @@ export class EmbedBlockComponent extends Component {
         super(props);
 
         this.onClickDelete = this.onClickDelete.bind(this);
+        this.onChangeDescription = this.onChangeDescription.bind(this);
     }
 
     /**
@@ -48,13 +50,21 @@ export class EmbedBlockComponent extends Component {
         });
     }
 
+    onChangeDescription(event) {
+        const {block} = this.props;
+        const entityKey = block.getEntityAt(0);
+
+        this.props.mergeEntityDataByKey(entityKey, {
+            description: event.target.value,
+        });
+    }
+
     data() {
         const {block, contentState} = this.props;
         const entityKey = block.getEntityAt(0);
         const entity = contentState.getEntity(entityKey);
-        const {data} = entity.getData();
 
-        return data;
+        return entity.getData();
     }
 
     shouldComponentUpdate(nextProps) {
@@ -73,22 +83,34 @@ export class EmbedBlockComponent extends Component {
         removeBlock(block.getKey());
     }
 
-    embedBlock({html}) {
+    embedBlock(embed) {
+        const html = embed.data.html;
+
         this.runScripts(html);
         return <div className="embed-block">
             <a className="icn-btn embed-block__remove" onClick={this.onClickDelete}>
                 <i className="icon-close-small" />
             </a>
             <div className="embed-block__wrapper" dangerouslySetInnerHTML={{__html: html}} />
+
+            <Textarea
+                placeholder={gettext('Description')}
+                onFocus={this.props.setLocked}
+                onClick={this.props.setLocked}
+                className="image-block__description"
+                value={embed.description || ''}
+                onChange={this.onChangeDescription}
+            />
         </div>;
     }
 
     render() {
-        const data = this.data();
+        const embed = this.data();
+        const {data} = embed;
 
         return data.qumuWidget
             ? <QumuWidget code={data} />
-            : this.embedBlock(data);
+            : this.embedBlock(embed);
     }
 }
 
@@ -96,10 +118,15 @@ EmbedBlockComponent.propTypes = {
     block: PropTypes.object.isRequired,
     contentState: PropTypes.object.isRequired,
     removeBlock: PropTypes.func.isRequired,
+    mergeEntityDataByKey: PropTypes.func.isRequired,
+    setLocked: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({
     removeBlock: (blockKey) => dispatch(actions.removeBlock(blockKey)),
+    setLocked: () => dispatch(actions.setLocked(true)),
+    mergeEntityDataByKey: (entityKey, valuesToMerge) =>
+        dispatch(actions.mergeEntityDataByKey(entityKey, valuesToMerge)),
 });
 
 export const EmbedBlock = connect(null, mapDispatchToProps)(EmbedBlockComponent);

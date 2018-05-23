@@ -119,6 +119,13 @@ export function changeImageCaption(entityKey, newCaption, field) {
     };
 }
 
+export function mergeEntityDataByKey(entityKey, valuesToMerge) {
+    return {
+        type: 'MERGE_ENTITY_DATA_BY_KEY',
+        payload: {entityKey, valuesToMerge},
+    };
+}
+
 /**
  * @ngdoc method
  * @name setHTML

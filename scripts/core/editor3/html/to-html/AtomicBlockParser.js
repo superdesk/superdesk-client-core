@@ -54,7 +54,7 @@ export class AtomicBlockParser {
      * @description Returns the HTML representation of an atomic 'EMBED' block having
      * the passed entity data.
      */
-    parseEmbed({data}) {
+    parseEmbed({data, description}) {
         if (data.qumuWidget) {
             return `
                 <div class="embed-block">
@@ -65,7 +65,11 @@ export class AtomicBlockParser {
             `;
         }
 
-        return `<div class="embed-block">${data.html}</div>`;
+        const descriptionHtml = typeof description === 'string' && description.length > 0
+            ? `<p>${description}</p>`
+            : '';
+
+        return `<div class="embed-block">${data.html}${descriptionHtml}</div>`;
     }
 
     /**
