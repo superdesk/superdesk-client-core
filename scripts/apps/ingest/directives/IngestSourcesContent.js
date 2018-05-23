@@ -1,7 +1,5 @@
 import _ from 'lodash';
 
-var safeEval = require('safe-eval');
-
 IngestSourcesContent.$inject = ['ingestSources', 'gettext', 'notify', 'api', '$location',
     'modal', '$filter', 'config', 'deployConfig', 'privileges'];
 
@@ -124,6 +122,14 @@ export function IngestSourcesContent(ingestSources, gettext, notify, api, $locat
                 $scope.feedParsers = result;
             });
 
+            /**
+            * Returns the result of evaluation of a given expression. Identifiers enclosed in {}
+            * are replaced with the values of corresponding fields.
+            *
+            * @method evalExpression
+            * @param {String} expression
+            * @return {Boolean}
+            */
             function evalExpression(expression) {
                 if (!$scope.currentFeedingService) {
                     return false;
@@ -135,9 +141,16 @@ export function IngestSourcesContent(ingestSources, gettext, notify, api, $locat
 
                     toEvaluate = toEvaluate.replace(regExp, $scope.provider.config[field.id]);
                 });
-                return safeEval(toEvaluate);
+                return $scope.$eval(toEvaluate);
             }
 
+            /**
+            * Returns true if the feeding service configuration field was required
+            *
+            * @method isConfigFieldRequired
+            * @param {Object} field
+            * @return {Boolean}
+            */
             $scope.isConfigFieldRequired = (field) => {
                 if (field.required) {
                     return true;
@@ -148,6 +161,13 @@ export function IngestSourcesContent(ingestSources, gettext, notify, api, $locat
                 return false;
             };
 
+            /**
+            * Returns true if the feeding service configuration field was visible
+            *
+            * @method isConfigFieldVisible
+            * @param {Object} field
+            * @return {Boolean}
+            */
             $scope.isConfigFieldVisible = (field) => {
                 if (!field.show_expression) {
                     return true;
@@ -155,6 +175,13 @@ export function IngestSourcesContent(ingestSources, gettext, notify, api, $locat
                 return evalExpression(field.show_expression);
             };
 
+            /**
+            * Returns the configuration field HTML identifier
+            *
+            * @method getConfigFieldId
+            * @param {String} fieldId
+            * @return {String}
+            */
             $scope.getConfigFieldId = (fieldId) => {
                 if (!$scope.provider.feeding_service) {
                     return null;
@@ -162,6 +189,11 @@ export function IngestSourcesContent(ingestSources, gettext, notify, api, $locat
                 return $scope.provider.feeding_service + '-' + fieldId;
             };
 
+            /**
+            * Fetches the list of errors for the current feeding service
+            *
+            * @method fetchSourceErrors
+            */
             $scope.fetchSourceErrors = function() {
                 if ($scope.provider && $scope.provider.feeding_service) {
                     return api('io_errors').query({source_type: $scope.provider.feeding_service})
@@ -172,6 +204,12 @@ export function IngestSourcesContent(ingestSources, gettext, notify, api, $locat
                 }
             };
 
+            /**
+            * Removed the given ingest provider
+            *
+            * @method remove
+            * @param {Object} provider
+            */
             $scope.remove = function(provider) {
                 modal.confirm(gettext('Are you sure you want to delete Ingest Source?')).then(
                     function removeIngestProviderChannel() {
@@ -204,7 +242,7 @@ export function IngestSourcesContent(ingestSources, gettext, notify, api, $locat
                 }
 
                 _.forEach($scope.currentFeedingService.fields, (field) => {
-                    if (field.type != 'tuple-multivalue') {
+                    if (field.type != 'mapping') {
                         return;
                     }
                     let aliases = angular.isDefined($scope.origProvider.config)
@@ -222,7 +260,7 @@ export function IngestSourcesContent(ingestSources, gettext, notify, api, $locat
                             {fieldName: fieldName, alias: aliasObj[fieldName]});
                     });
 
-                    $scope.fieldsNotSelected[field.id] = field.first_field_options.filter(
+                    $scope.fieldsNotSelected[field.id] = field.first_field_options.values.filter(
                         (fieldName) => !(fieldName in aliasObj)
                     );
                 });
@@ -293,7 +331,7 @@ export function IngestSourcesContent(ingestSources, gettext, notify, api, $locat
                     }
                 });
 
-                $scope.fieldsNotSelected[field.id] = field.first_field_options.filter(
+                $scope.fieldsNotSelected[field.id] = field.first_field_options.values.filter(
                     (fieldName) => !(fieldName in selectedFields)
                 );
             };
@@ -326,7 +364,7 @@ export function IngestSourcesContent(ingestSources, gettext, notify, api, $locat
 
             $scope.save = function() {
                 _.forEach($scope.currentFeedingService.fields, (field) => {
-                    if (field.type !== 'tuple-multivalue') {
+                    if (field.type !== 'mapping') {
                         return;
                     }
                     let newAliases = [];
@@ -402,8 +440,9 @@ export function IngestSourcesContent(ingestSources, gettext, notify, api, $locat
              * @param {string} fieldName
              * @return boolean
              */
-            $scope.isFieldEnabled = (fieldName) => $scope.currentFeedingService.force_values &&
-                !(fieldName in $scope.currentFeedingService.force_values);
+            $scope.isFieldEnabled = (fieldName) => $scope.currentFeedingService &&
+                (!$scope.currentFeedingService.force_values ||
+                 !(fieldName in $scope.currentFeedingService.force_values));
 
             var forcedValues = [];
 

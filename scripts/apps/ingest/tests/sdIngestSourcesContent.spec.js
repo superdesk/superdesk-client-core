@@ -47,8 +47,8 @@ describe('sdIngestSourcesContent directive', () => {
                     id: 'password_field', type: 'password', label: 'Password Field',
                 },
                 {
-                    id: 'field_aliases', type: 'tuple-multivalue', label: 'Content Field Aliases',
-                    first_field_options: ['foo1', 'foo2', 'foo3', 'foo4'],
+                    id: 'field_aliases', type: 'mapping', label: 'Content Field Aliases',
+                    first_field_options: {values: ['foo1', 'foo2', 'foo3', 'foo4']},
                 },
                 {
                     id: 'auth_required', type: 'boolean',
@@ -182,8 +182,8 @@ describe('sdIngestSourcesContent directive', () => {
            'alias item did not have a field name selected', () => {
             scope.fieldAliases.field_aliases[1].fieldName = null;
             scope.fieldSelectionChanged({
-                id: 'field_aliases', type: 'tuple-multivalue', label: 'Content Field Aliases',
-                first_field_options: ['foo1', 'foo2', 'foo3', 'foo4'],
+                id: 'field_aliases', type: 'mapping', label: 'Content Field Aliases',
+                first_field_options: {values: ['foo1', 'foo2', 'foo3', 'foo4']},
             });
             expect(scope.fieldsNotSelected).toEqual({field_aliases: ['foo2', 'foo4']});
 
