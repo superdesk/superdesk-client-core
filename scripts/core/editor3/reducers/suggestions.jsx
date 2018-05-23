@@ -7,11 +7,9 @@ import * as Highlights from '../helpers/highlights';
 import {initSelectionIterator, hasNextSelection} from '../helpers/selection';
 import {editor3DataKeys, getCustomDataFromEditor, setCustomDataForEditor,
     getAllCustomDataFromEditor, setAllCustomDataForEditor} from '../helpers/editor3CustomData';
-import * as Blocks from '../helpers/blocks';
 import * as Links from '../helpers/links';
 import ng from 'core/services/ng';
 import {replaceSelectedEntityData} from '../components/links/entityUtils';
-import {collapseSelection} from '../helpers/selection';
 
 
 const suggestions = (state = {}, action) => {
@@ -112,10 +110,6 @@ const createAddSuggestion = (state, {text, data}) => {
 const createDeleteSuggestion = (state, {action, data}) => {
     let {editorState} = state;
     let selection = editorState.getSelection();
-    let content = editorState.getCurrentContent();
-    let lastBlock = content.getBlockForKey(selection.getEndKey());
-    const afterSectionLength = lastBlock.getLength() - selection.getEndOffset();
-    const nextBlock = content.getBlockAfter(selection.getEndKey());
 
     if (selection.isCollapsed()) {
         if (action === 'backspace') {
@@ -125,30 +119,7 @@ const createDeleteSuggestion = (state, {action, data}) => {
         }
     }
 
-    editorState = deleteCurrentSelection(editorState, data);
-
-    if (action !== 'backspace') {
-        if (selection.isCollapsed()) {
-            editorState = Highlights.changeEditorSelection(editorState, 1, 1, false);
-        } else {
-            content = editorState.getCurrentContent();
-
-            if (nextBlock != null) {
-                lastBlock = content.getBlockBefore(nextBlock.getKey());
-            } else {
-                lastBlock = content.getLastBlock();
-            }
-
-            selection = selection.merge({
-                anchorKey: lastBlock.getKey(),
-                anchorOffset: lastBlock.getLength() - afterSectionLength,
-                focusKey: lastBlock.getKey(),
-                focusOffset: lastBlock.getLength() - afterSectionLength,
-            });
-
-            editorState = EditorState.acceptSelection(editorState, selection);
-        }
-    }
+    editorState = deleteCurrentSelection(editorState, data, action);
 
     return saveEditorStatus(state, editorState, 'change-inline-style');
 };
@@ -379,7 +350,6 @@ const pasteAddSuggestion = (state, {content, data}) => {
     // if text is selected mark it as removed and collapse the selection before replacing
     if (!initialSelection.isCollapsed()) {
         editorState = deleteCurrentSelection(editorState, data);
-        editorState = EditorState.acceptSelection(editorState, collapseSelection(initialSelection));
     }
 
     // only get it now after adding delete suggestions
@@ -547,11 +517,9 @@ const processSuggestion = (state, {suggestion}, accepted) => {
         );
     }
 
-    const {selection} = suggestion;
+    let {selection} = suggestion;
     let {editorState} = state;
-    let tmpEditorState;
     let style;
-    let data;
 
     if (suggestion.type === 'SPLIT_PARAGRAPH_SUGGESTION') {
         return processSplitBlockSuggestion(state, suggestion, accepted);
@@ -596,38 +564,232 @@ const processSuggestion = (state, {suggestion}, accepted) => {
         return saveEditorStatus(state, editorState, 'change-inline-style', true);
     }
 
-    editorState = initSelectionIterator(editorState, true);
-    while (hasNextSelection(editorState, selection, true)) {
-        editorState = Highlights.changeEditorSelection(editorState, -1, -1, false);
-        style = Highlights.getHighlightStyleAtCurrentPosition(editorState, changeSuggestionsTypes);
-        if (style == null) {
-            continue;
-        }
-        data = Highlights.getHighlightData(editorState, style);
+    editorState = EditorState.acceptSelection(editorState, selection);
+    editorState = applyChangeSuggestion(editorState, accepted);
 
-        const applySuggestion = data.type === 'ADD_SUGGESTION' && accepted ||
-            data.type === 'DELETE_SUGGESTION' && !accepted;
-
-        if (applySuggestion) {
-            // keep character and clean suggestion style and entity
-            tmpEditorState = resetSuggestion(editorState, style);
-            tmpEditorState = Highlights.changeEditorSelection(tmpEditorState, -1, -1, false);
-        } else {
-            // delete current character
-            tmpEditorState = Highlights.changeEditorSelection(editorState, 1, 1, false);
-            tmpEditorState = deleteCharacter(tmpEditorState);
-        }
-
-        if (tmpEditorState === editorState) {
-            break;
-        }
-        editorState = tmpEditorState;
-    }
+    selection = editorState.getSelection();
+    selection = selection.merge({
+        anchorOffset: selection.getEndOffset(),
+        anchorKey: selection.getEndKey(),
+        focusOffset: selection.getEndOffset(),
+        focusKey: selection.getEndKey(),
+        isBackward: false,
+    });
+    editorState = EditorState.acceptSelection(editorState, selection);
 
     editorState = moveToSuggestionsHistory(editorState, suggestion, accepted);
 
     return saveEditorStatus(state, editorState, 'change-block-data');
 };
+
+/**
+ * @ngdoc method
+ * @name applyChangeSuggestion
+ * @param {Object} editorState
+ * @param {Boolean} accepted - the suggestion is accepted
+ * @return {Object} returns new state
+ * @description Accept or reject the change suggestions in current editor selection.
+ */
+const applyChangeSuggestion = (editorState, accepted) => {
+    let suggestionTypes = [...changeSuggestionsTypes, ...paragraphSuggestionTypes];
+    let selection = editorState.getSelection();
+    let content = editorState.getCurrentContent();
+    let lastBlock = content.getBlockForKey(selection.getEndKey());
+    const afterSectionLength = lastBlock.getLength() - selection.getEndOffset();
+    const nextBlock = content.getBlockAfter(selection.getEndKey());
+    let newEditorState;
+    let oldEditorState;
+    let style;
+    let data;
+
+    newEditorState = removeDeleteParagraphSuggestions(editorState);
+
+    newEditorState = initSelectionIterator(newEditorState, true);
+    while (hasNextSelection(newEditorState, selection, true)) {
+        oldEditorState = newEditorState;
+        newEditorState = Highlights.changeEditorSelection(newEditorState, -1, -1, false);
+
+        style = Highlights.getHighlightStyleAtCurrentPosition(newEditorState, suggestionTypes);
+        if (style == null) {
+            continue;
+        }
+
+        data = Highlights.getHighlightData(newEditorState, style);
+
+        if (paragraphSuggestionTypes.indexOf(data.type) !== -1) {
+            // delete any paragraph suggestion
+            newEditorState = deleteCharacter(newEditorState, style);
+
+            if (newEditorState === oldEditorState) {
+                break;
+            }
+
+            continue;
+        }
+
+        const applySuggestion = data.type === 'ADD_SUGGESTION' && accepted ||
+            data.type === 'DELETE_SUGGESTION' && !accepted;
+
+        let {selection: newSelection} = Highlights.getRangeAndTextForStyle(newEditorState, style);
+
+        newEditorState = Highlights.removeHighlight(newEditorState, style);
+
+        if (!applySuggestion) {
+            // delete current selection
+            const content = newEditorState.getCurrentContent();
+            const newContent = Modifier.removeRange(content, newSelection, 'forward');
+
+            newEditorState = EditorState.push(newEditorState, newContent, 'backspace-character');
+        }
+
+        newSelection = newSelection.merge({
+            anchorOffset: newSelection.getStartOffset(),
+            anchorKey: newSelection.getStartKey(),
+            focusOffset: newSelection.getStartOffset(),
+            focusKey: newSelection.getStartKey(),
+            isBackward: false,
+        });
+
+        newEditorState = EditorState.acceptSelection(newEditorState, newSelection);
+
+        if (newEditorState === oldEditorState) {
+            break;
+        }
+    }
+
+    content = newEditorState.getCurrentContent();
+    if (nextBlock != null) {
+        lastBlock = content.getBlockBefore(nextBlock.getKey());
+    } else {
+        lastBlock = content.getLastBlock();
+    }
+
+    selection = selection.merge({
+        anchorKey: selection.getStartKey(),
+        anchorOffset: selection.getStartOffset(),
+        focusKey: lastBlock.getKey(),
+        focusOffset: lastBlock.getLength() - afterSectionLength,
+        isBackward: false,
+    });
+
+    return EditorState.acceptSelection(newEditorState, selection);
+};
+
+/**
+ * @ngdoc method
+ * @name addDeleteParagraphSuggestions
+ * @param {Object} editorState
+ * @param {Object} data - info about the author of suggestion
+ * @return {Object} returns new state
+ * @description Add delete paragraph suggestion for every empty block.
+ */
+const addDeleteParagraphSuggestions = (editorState, data) => {
+    const selection = editorState.getSelection();
+    let newEditorState = editorState;
+    let content = editorState.getCurrentContent();
+    let block = content.getBlockForKey(selection.getStartKey());
+    let offset = 0;
+    let changed = false;
+
+    while (block != null) {
+        if (block.getLength() === 0 && block.getType() !== 'atomic') {
+            const newSelection = selection.merge({
+                anchorOffset: 0,
+                anchorKey: block.getKey(),
+                focusOffset: 0,
+                focusKey: block.getKey(),
+                isBackward: false,
+            });
+
+            content = Modifier.insertText(content, newSelection, Highlights.paragraphSeparator);
+            newEditorState = EditorState.push(newEditorState, content, 'insert-characters');
+            newEditorState = EditorState.acceptSelection(newEditorState, newSelection);
+            newEditorState = Highlights.changeEditorSelection(newEditorState, 0, 1, false);
+            newEditorState = Highlights.addHighlight(newEditorState, 'DELETE_EMPTY_PARAGRAPH_SUGGESTION', data);
+
+            content = newEditorState.getCurrentContent();
+            changed = true;
+        }
+
+        if (block.getKey() === selection.getEndKey()) {
+            if (block.getLength() === 0) {
+                offset = 1;
+            }
+            break;
+        }
+
+        block = content.getBlockAfter(block.getKey());
+    }
+
+    if (!changed) {
+        return editorState;
+    }
+
+    newEditorState = EditorState.acceptSelection(newEditorState, selection);
+
+    return Highlights.changeEditorSelection(newEditorState, 0, offset, false);
+};
+
+/**
+ * @ngdoc method
+ * @name removeDeleteParagraphSuggestions
+ * @param {Object} editorState
+ * @return {Object} returns new state
+ * @description Remove all delete paragraph suggestions.
+ */
+const removeDeleteParagraphSuggestions = (editorState) => {
+    const selection = editorState.getSelection();
+    let content = editorState.getCurrentContent();
+    let block = content.getBlockForKey(selection.getStartKey());
+    let offset = 0;
+    let changed = false;
+    let newEditorState;
+
+    while (block != null) {
+        const key = block.getKey();
+        const checkBlock = block.getLength() === 1 && block.getType() !== 'atomic';
+        const checkMiddleBlock = key !== selection.getStartKey() && key !== selection.getEndKey();
+        const checkFirstBlock = key === selection.getStartKey() && selection.getStartOffset() === 0;
+        const checkLastBlock = key === selection.getEndKey() && selection.getEndOffset() === 1;
+
+        if (checkBlock && (checkMiddleBlock || checkFirstBlock || checkLastBlock)) {
+            const newSelection = selection.merge({
+                anchorOffset: 0,
+                anchorKey: block.getKey(),
+                focusOffset: 1,
+                focusKey: block.getKey(),
+                isBackward: false,
+            });
+
+            newEditorState = EditorState.acceptSelection(editorState, newSelection);
+
+            const style = Highlights.getHighlightStyleAtCurrentPosition(
+                newEditorState, ['DELETE_EMPTY_PARAGRAPH_SUGGESTION']);
+
+            if (style != null) {
+                content = Modifier.removeRange(content, newSelection, 'forward');
+                changed = true;
+                offset = checkLastBlock ? -1 : 0;
+            }
+        }
+
+        if (block.getKey() === selection.getEndKey()) {
+            break;
+        }
+
+        block = content.getBlockAfter(block.getKey());
+    }
+
+    if (!changed) {
+        return editorState;
+    }
+
+    newEditorState = EditorState.push(editorState, content, 'backspace-character');
+    newEditorState = EditorState.acceptSelection(newEditorState, selection);
+
+    return Highlights.changeEditorSelection(newEditorState, 0, offset, false);
+};
+
 
 /**
  * @ngdoc method
@@ -637,24 +799,54 @@ const processSuggestion = (state, {suggestion}, accepted) => {
  * @return {Object} returns new state
  * @description Set the delete suggestion for current editor selection.
  */
-const deleteCurrentSelection = (editorState, data) => {
-    const selection = editorState.getSelection();
-    const backward = true;
-    let newEditorState = editorState;
-    let oldEditorState;
+const deleteCurrentSelection = (editorState, data, action = 'delete') => {
+    let selection = editorState.getSelection();
+    let newEditorState;
 
-    newEditorState = initSelectionIterator(newEditorState, backward);
-
-    while (hasNextSelection(newEditorState, selection, backward)) {
-        oldEditorState = setDeleteSuggestionForCharacter(newEditorState, data);
-        if (oldEditorState === newEditorState) {
-            break;
-        }
-        newEditorState = oldEditorState;
+    if (selection.isCollapsed()) {
+        return editorState;
     }
 
-    return newEditorState;
+    const content = editorState.getCurrentContent();
+    const block = content.getBlockForKey(selection.getStartKey());
+
+    if (selection.getEndOffset() === 0 && selection.getStartOffset() === block.getLength()) {
+        newEditorState = setMergeParagraphSuggestion(editorState, data);
+        if (action !== 'delete') {
+            return newEditorState;
+        }
+
+        return Highlights.changeEditorSelection(newEditorState, 1, 1, false);
+    }
+
+    if (selection.getStartKey() === selection.getEndKey() &&
+        selection.getStartOffset() === selection.getEndOffset() - 1) {
+        newEditorState = Highlights.changeEditorSelection(editorState, 1, 0, false);
+        newEditorState = setDeleteSuggestionForCharacter(newEditorState, data);
+        if (action !== 'delete') {
+            return newEditorState;
+        }
+
+        return Highlights.changeEditorSelection(newEditorState, 1, 1, false);
+    }
+
+    // if there are insert or delete suggestion, reject them and then set delete suggestion
+    newEditorState = applyChangeSuggestion(editorState, false);
+    newEditorState = addDeleteParagraphSuggestions(newEditorState, data);
+
+    selection = newEditorState.getSelection();
+    selection = selection.merge({
+        anchorOffset: action === 'delete' ? selection.getEndOffset() : selection.getStartOffset(),
+        anchorKey: action === 'delete' ? selection.getEndKey() : selection.getStartKey(),
+        focusOffset: action === 'delete' ? selection.getEndOffset() : selection.getStartOffset(),
+        focusKey: action === 'delete' ? selection.getEndKey() : selection.getStartKey(),
+        isBackward: false,
+    });
+
+    newEditorState = Highlights.addHighlight(newEditorState, 'DELETE_SUGGESTION', data);
+    return EditorState.acceptSelection(newEditorState, selection, false);
 };
+
 
 /**
  * @ngdoc method
@@ -746,7 +938,7 @@ const setMergeParagraphSuggestion = (editorState, data) => {
     const checkState = Highlights.changeEditorSelection(editorState, -2, 0, false);
     const deleteSplitSuggestion = isSplitParagraph(checkState, data);
     const offset = deleteSplitSuggestion ? -1 : 0;
-    let newState = Highlights.changeEditorSelection(editorState, offset - 1, 0, false);
+    let newState = Highlights.changeEditorSelection(editorState, offset, 0, false);
     let content = newState.getCurrentContent();
     let selection = newState.getSelection();
 
@@ -758,7 +950,7 @@ const setMergeParagraphSuggestion = (editorState, data) => {
         newState = EditorState.push(newState, content, 'insert-characters');
         newState = Highlights.changeEditorSelection(newState, -1, 0, false);
         newState = Highlights.addHighlight(newState, type, data);
-        Highlights.changeEditorSelection(newState, 0, -1, false);
+        newState = Highlights.changeEditorSelection(newState, 0, -1, false);
     }
 
     return newState;
@@ -779,10 +971,6 @@ const setMergeParagraphSuggestion = (editorState, data) => {
  */
 const setDeleteSuggestionForCharacter = (editorState, data) => {
     let selection = editorState.getSelection();
-
-    if (selection.getStartOffset() === 0) {
-        return setMergeParagraphSuggestion(editorState, data);
-    }
 
     const paragraphStyle = Highlights.getHighlightStyleAtOffset(editorState, paragraphSuggestionTypes, selection, -1);
 
@@ -897,15 +1085,8 @@ const deleteCharacter = (editorState, style = null) => {
     let newState = Highlights.changeEditorSelection(editorState, -1, 0, false);
     let content = newState.getCurrentContent();
     const selection = newState.getSelection();
-    const block = content.getBlockForKey(selection.getStartKey());
-
-    if (block.getLength() === 1) {
-        // when only one character on block, delete the whole block
-        return Blocks.removeBlock(editorState, block.getKey());
-    }
 
     content = Modifier.removeRange(content, selection, 'forward');
-
     newState = EditorState.push(newState, content, 'backspace-character');
 
     if (style) {
