@@ -23,11 +23,15 @@ describe('vocabularies', () => {
     }));
 
     describe('config controller', () => {
-        it('can sync changes in the list', inject(($controller, $rootScope) => {
-            const scope = $rootScope.$new();
+        var scope;
 
-            scope.vocabularies = [{_id: 'foo', display_name: 'Foo'}];
+        beforeEach(inject(($rootScope) => {
+            scope = $rootScope.$new();
+        }));
+
+        it('can sync changes in the list', inject(($controller) => {
             $controller('VocabularyConfig', {$scope: scope});
+            scope.vocabularies = [{_id: 'foo', display_name: 'Foo'}];
 
             scope.updateVocabulary({_id: 'foo', display_name: 'Bar'});
             expect(scope.vocabularies.length).toBe(1);
@@ -35,6 +39,13 @@ describe('vocabularies', () => {
 
             scope.updateVocabulary({_id: 'new', display_name: 'New'});
             expect(scope.vocabularies.length).toBe(2);
+        }));
+
+        it('sets the type of name and qcode values to string', inject(($controller) => {
+            scope.vocabulary = {_id: 'foo', display_name: 'Foo', items: [{name: 0, qcode: 0}, {name: 1, qcode: 1}]};
+            $controller('VocabularyEdit', {$scope: scope});
+            scope.save();
+            expect(scope.vocabulary.items).toEqual([{name: '0', qcode: '0'}, {name: '1', qcode: '1'}]);
         }));
     });
 
