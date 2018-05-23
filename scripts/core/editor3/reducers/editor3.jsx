@@ -22,6 +22,8 @@ const editor3 = (state = {}, action) => {
         return dragDrop(state, action.payload);
     case 'EDITOR_SET_CELL':
         return setCell(state, action.payload);
+    case 'MERGE_ENTITY_DATA_BY_KEY':
+        return mergeEntityDataByKey(state, action.payload.entityKey, action.payload.valuesToMerge);
     case 'EDITOR_CHANGE_IMAGE_CAPTION':
         return changeImageCaption(state, action.payload);
     case 'EDITOR_SET_HTML':
@@ -160,6 +162,17 @@ const setCell = (state, {i, j, key}) => ({
     locked: true,
     activeCell: {i, j, key},
 });
+
+const mergeEntityDataByKey = (state, entityKey, valuesToMerge) => {
+    const {editorState} = state;
+    const contentState = editorState.getCurrentContent();
+
+    const newContentState = contentState.mergeEntityData(entityKey, valuesToMerge);
+    const newEditorState = EditorState.push(editorState, newContentState, 'change-block-data');
+    const entityDataHasChanged = true;
+
+    return onChange(state, newEditorState, entityDataHasChanged);
+};
 
 /**
  * @ngdoc method
