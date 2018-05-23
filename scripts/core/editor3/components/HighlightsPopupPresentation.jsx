@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {getVisibleSelectionRect} from 'draft-js';
 
 export class HighlightsPopupPresentation extends Component {
     constructor(props) {
@@ -15,11 +14,18 @@ export class HighlightsPopupPresentation extends Component {
         });
     }
     position() {
+        const {editorNode} = this.props;
+
         const element = this.highlightsPopupRootElement;
         const mainFlexElement = this.highlightsPopupMainFlexElement;
-        const selectionRect = getVisibleSelectionRect(window);
 
-        if (element == null || mainFlexElement == null || selectionRect == null) {
+        if (editorNode == null || element == null || mainFlexElement == null) {
+            return;
+        }
+
+        const selectionRect = JSON.parse(editorNode.dataset.editorSelectionRect);
+
+        if (selectionRect == null) {
             return;
         }
 

@@ -87,22 +87,25 @@ export class Comment extends Component {
                                             className="comment-box__input"
                                             value={this.state.editModeValue}
                                             onChange={(event, value) => this.setState({editModeValue: value})}
-                                            singleLine={true}
+                                            singleLine={false}
                                         />
 
                                         <div
-                                            className="comment-box__reply-toolbar comment-box__reply-toolbar--active">
-
+                                            className={
+                                                'comment-box__button-toolbar'
+                                                + ' comment-box__button-toolbar--right'
+                                                + ' comment-box__button-toolbar--small'
+                                            }>
+                                            <button onClick={(event) => {
+                                                this.cancelEditing(event);
+                                            }} className="btn btn--icon-only btn--hollow">
+                                                <i className="icon-close-small" />
+                                            </button>
                                             <button onClick={() => {
                                                 this.props.updateComment(this.state.editModeValue);
                                                 this.cancelEditing();
-                                            }} className="btn btn--primary">
-                                                {gettext('Confirm')}
-                                            </button>
-                                            <button onClick={(event) => {
-                                                this.cancelEditing(event);
-                                            }} className="btn">
-                                                {gettext('Cancel')}
+                                            }} className="btn btn--primary btn--icon-only">
+                                                <i className="icon-ok" />
                                             </button>
                                         </div>
                                     </div>

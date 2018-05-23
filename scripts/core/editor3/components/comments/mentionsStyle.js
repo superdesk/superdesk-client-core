@@ -28,14 +28,15 @@ export default ({
             },
 
             highlighter: {
-                padding: 9,
+                padding: '3px',
+                paddingTop: '4px',
                 overflowY: 'hidden',
             },
 
             input: {
-                padding: 9,
-                minHeight: 63,
-                maxHeight: 200,
+                padding: '3px',
+                paddingTop: '4px',
+                maxHeight: 63, // 3 lines
                 overflowY: 'scroll',
                 outline: 0,
                 border: 0,

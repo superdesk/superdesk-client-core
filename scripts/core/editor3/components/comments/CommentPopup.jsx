@@ -188,7 +188,7 @@ export class CommentPopup extends Component {
                                 onFocus={() => {
                                     this.setState({replyFieldFocused: true});
                                 }}
-                                singleLine={true}
+                                singleLine={false}
                                 placeholder={'Reply'}
                             />
                             {
