@@ -51,6 +51,17 @@ export function VocabularyEditController($scope, gettext, notify, api, vocabular
         $scope.errorMessage = null;
         delete $scope.vocabulary._deleted;
 
+        if ($scope.vocabulary.items) {
+            _.forEach($scope.vocabulary.items, (item) => {
+                if (_.has(item, 'name') && item.name !== null && typeof item.name === 'number') {
+                    item.name = item.name.toString();
+                }
+                if (_.has(item, 'qcode') && item.qcode !== null && typeof item.qcode === 'number') {
+                    item.qcode = item.qcode.toString();
+                }
+            });
+        }
+
         if ($scope.vocabulary._id === 'crop_sizes') {
             var activeItems = _.filter($scope.vocabulary.items, (o) => o.is_active);
 
