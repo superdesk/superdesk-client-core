@@ -4,7 +4,7 @@ import Textarea from 'react-textarea-autosize';
 import {connect} from 'react-redux';
 import {QumuWidget} from './QumuWidget';
 import * as actions from '../../actions';
-import {connectServices} from 'core/helpers/ReactRenderAsync';
+import ng from 'core/services/ng';
 
 /**
  * @ngdoc React
@@ -69,7 +69,7 @@ export class EmbedBlockComponent extends Component {
     editEmbedHtml() {
         const embed = this.data();
         const entityKey = this.getEntityKey();
-        const {modal} = this.props;
+        const modal = ng.get('modal');
 
         modal.prompt(gettext('Edit embed'), embed.data.html)
             .then((html) => {
@@ -143,7 +143,6 @@ EmbedBlockComponent.propTypes = {
     removeBlock: PropTypes.func.isRequired,
     mergeEntityDataByKey: PropTypes.func.isRequired,
     setLocked: PropTypes.func.isRequired,
-    modal: PropTypes.object.isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({
@@ -153,6 +152,4 @@ const mapDispatchToProps = (dispatch) => ({
         dispatch(actions.mergeEntityDataByKey(entityKey, valuesToMerge)),
 });
 
-const EmbedBlockComponentWithServices = connectServices(EmbedBlockComponent, ['modal']);
-
-export const EmbedBlock = connect(null, mapDispatchToProps)(EmbedBlockComponentWithServices);
+export const EmbedBlock = connect(null, mapDispatchToProps)(EmbedBlockComponent);

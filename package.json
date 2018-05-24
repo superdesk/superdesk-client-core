@@ -133,6 +133,7 @@
   },
   "scripts": {
     "test": "grunt ci:travis",
+    "debug-unit-tests": "karma start karma.conf.js --browsers=Chrome",
     "unit": "grunt unit",
     "lint": "eslint --ext .js --ext .jsx scripts spec tasks *.js",
     "start-test-server": "cd test-server && python3 -m venv env && . env/bin/activate && pip install -Ur requirements.txt && honcho start",
