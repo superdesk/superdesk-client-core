@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {promiseAllObject} from 'core/utils';
+import ng from 'core/services/ng';
 
 class ReactRenderAsync extends React.Component {
     constructor(props) {
@@ -52,4 +53,16 @@ export function connectPromiseResults(getPromises) {
             );
         };
     };
+}
+
+export function connectServices(component, services) {
+    return connectPromiseResults(() => {
+        let promisesObject = {};
+
+        services.forEach((serviceName) => {
+            promisesObject[serviceName] = ng.getService(serviceName);
+        });
+
+        return promisesObject;
+    })(component);
 }
