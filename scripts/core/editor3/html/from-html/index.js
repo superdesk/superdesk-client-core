@@ -1,6 +1,6 @@
 import {List, OrderedSet, fromJS} from 'immutable';
 import {stateFromHTML} from 'draft-js-import-html';
-import docsSoap from 'docs-soap';
+import docsSoap from '@pablopunk/docs-soap';
 import {inlineStyles} from '../../helpers/inlineStyles';
 
 import {
