@@ -10,3 +10,5 @@ export {SortRules} from './SortRules';
 export {IngestUserDashboard} from './IngestUserDashboard';
 export {IngestUserDashboardList} from './IngestUserDashboardList';
 export {IngestUserDashboardDropdown} from './IngestUserDashboardDropdown';
+export {IngestProviderConfig} from './IngestProviderConfig';
+export {IngestConfigErrors} from './IngestConfigErrors';

@@ -1,6 +1,0 @@
-<div class="field">
-    <label translate>Server Folder</label>
-    <input type="text" placeholder="{{ 'path to folder'|translate }}" ng-model="provider.config.path" required ng-change="$parent.setConfig(provider)">
-    <div class="error" ng-show="error.code === 3003" translate>Path not found on server.</div>
-    <div class="error" ng-show="error.code === 3004" translate>Path should be directory.</div>
-</div>
