@@ -150,6 +150,9 @@ $editor-styleButton-size: 3rem;
 			.embed-block__remove {
 				visibility: visible;
 			}
+			.embed-block__edit {
+				visibility: visible;
+			}
 		}
 	}
 	.image-block__title, .image-block__description {
@@ -187,7 +190,7 @@ $editor-styleButton-size: 3rem;
 		margin-bottom: 0.2rem;
 		font-weight: 300;
 	}
-	.image-block__remove, .embed-block__remove {
+	.image-block__remove, .embed-block__remove, .embed-block__edit {
 		z-index: 6;
 		position: absolute;
 		top: -1rem;
@@ -198,6 +201,11 @@ $editor-styleButton-size: 3rem;
 		visibility: hidden;
 		opacity: 1 !important;
 	}
+
+	.embed-block__edit {
+		top: 3rem;
+	}
+	
 	.image-block__image {
 		position: relative;
 		background-color: rgb(37, 37, 37);
