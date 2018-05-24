@@ -82,8 +82,9 @@ function generateAnnotations(item, logger) {
                 if (key.startsWith('ANNOTATION-')) {
                     let annotation = {};
 
-                    annotation.id = key.split('-')[1];
-                    annotation.type = highlight.data.annotationType;
+                    const annotationIdString = key.split('-')[1];
+
+                    annotation.id = parseInt(annotationIdString, 10);
                     annotation.body = toHTML(convertFromRaw(JSON.parse(highlight.data.msg)), logger);
                     annotations.push(annotation);
                 }
