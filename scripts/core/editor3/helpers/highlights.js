@@ -693,6 +693,11 @@ function getLeftRangeAndTextForStyle(editorState, style) {
     }
 
     while (block) {
+        if (block.getLength() === 0) {
+            block = content.getBlockBefore(block.getKey());
+            continue;
+        }
+
         found = false;
         offset = (offset == null) ? (block.getLength() - 1) : offset;
         characterMetadataList = block.getCharacterList();
@@ -767,6 +772,11 @@ function getRightRangeAndTextForStyle(editorState, style) {
     }
 
     while (block) {
+        if (block.getLength() === 0) {
+            block = content.getBlockAfter(block.getKey());
+            continue;
+        }
+
         found = false;
         offset = offset == null ? 0 : offset;
         characterMetadataList = block.getCharacterList();

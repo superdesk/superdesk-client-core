@@ -109,6 +109,16 @@ export const highlightsConfig = {
             fontFamily: 'sans-serif',
         },
     },
+    DELETE_EMPTY_PARAGRAPH_SUGGESTION: {
+        type: 'DELETE',
+        description: gettext('Delete empty paragraphs'),
+        draftStyleMap: {
+            color: 'rgba(255, 0, 0, 1.0)',
+            textDecoration: 'line-through',
+            fontWeight: 'bold',
+            fontFamily: 'sans-serif',
+        },
+    },
     ADD_LINK_SUGGESTION: {
         type: 'ENTITY',
         description: gettext('Add link'),
@@ -160,7 +170,6 @@ export const suggestionsTypes = [
     'ADD_LINK_SUGGESTION',
     'REMOVE_LINK_SUGGESTION',
     'CHANGE_LINK_SUGGESTION',
-
 ];
 
 export const isSuggestion = (highlightId) => suggestionsTypes.some(
