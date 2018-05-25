@@ -1,5 +1,11 @@
 # Superdesk Client Changelog
 
+## [1.18.2] 2018-05-25
+
+### Fixed
+
+- Fix `item.annotation.id` type to be integer.
+
 ## [1.18.1] 2018-05-22
 
 ### Fixed
