@@ -45,7 +45,7 @@ angular.module('superdesk.apps.workspace', [
             icon: 'tasks',
             label: gettext('Assignments'),
             shortcut: 'ctrl+alt+a',
-            if: 'privileges.planning && workspaceConfig.assignments',
+            if: 'workspaceConfig.assignments',
             order: 300,
         });
 
