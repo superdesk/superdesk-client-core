@@ -42,19 +42,19 @@
                 <sd-check ng-model="user.is_author" name="user_author" id="user_author">{{ 'Author'|translate }}</sd-check>
             </div>
 
-            <div class="form__row" sd-info-item ng-show="user._id">
+            <div class="form__row field__full_name" sd-info-item ng-show="user._id">
                 <div class="sd-line-input sd-line-input--disabled">
                     <label class="sd-line-input__label" for="display-name" translate>full name</label>
                     <input class="sd-line-input__input" type="text" name="fullName" id="display-name" ng-model="user.display_name" disabled>
                 </div>
             </div>
 
-            <div class="form__row" sd-info-item ng-show="user._id">
+            <div class="form__row field__member_since" sd-info-item ng-show="user._id">
                 <label class="form-label" for="created" translate>member since</label>
                 <span id="created" class="info-value date-time" sd-reldate datetime="user._created"></span>
             </div>
 
-            <div class="form__row" sd-info-item>
+            <div class="form__row field__first_name" sd-info-item>
                 <div class="sd-line-input sd-line-input--required">
                     <label class="sd-line-input__label" for="first-name" translate>first name</label>
                     <input class="sd-line-input__input" type="text" name="first_name" id="first-name" ng-model="user.first_name" required ng-readonly="user._readonly && user._readonly.first_name">
@@ -62,7 +62,7 @@
                 </div>
             </div>
 
-            <div class="form__row" sd-info-item>
+            <div class="form__row field__last_name" sd-info-item>
                 <div class="sd-line-input sd-line-input--required">
                     <label class="sd-line-input__label" for="last-name" translate>last name</label>
                     <input class="sd-line-input__input" type="text" name="last_name" id="last-name" ng-model="user.last_name" required ng-readonly="user._readonly && user._readonly.last_name">
@@ -70,7 +70,7 @@
                 </div>
             </div>
 
-            <div class="form__row" sd-info-item>
+            <div class="form__row field__username" sd-info-item>
                 <div class="sd-line-input sd-line-input--required">
                     <label class="sd-line-input__label" for="username" translate>username</label>
                     <input class="sd-line-input__input" type="text" name="username" id="username"
@@ -109,7 +109,7 @@
                 </div>
             </div>
 
-            <div class="form__row" sd-info-item>
+            <div class="form__row field__email" sd-info-item>
                 <div class="sd-line-input sd-line-input--required">
                     <label class="sd-line-input__label" for="email" translate>email</label>
                     <input class="sd-line-input__input" type="email" name="email" id="email"
@@ -130,7 +130,7 @@
                 </div>
             </div>
 
-            <div sd-info-item class="user_role form__row">
+            <div sd-info-item class="user_role field__language form__row">
                 <div class="sd-line-input sd-line-input--is-select">
                     <label class="sd-line-input__label" for="user_language" translate>Language</label>
                     <select class="sd-line-input__select" ng-focus="focused()" ng-model="user.language" name="user_language" id="user_language" ng-options="lang.code as lang.nativeName for lang in languages"></select>
@@ -140,7 +140,7 @@
                 </div>
             </div>
 
-            <div sd-info-item class="user_role form__row">
+            <div sd-info-item class="user_role field__role form__row">
                 <div class="sd-line-input sd-line-input--is-select">
                     <label class="sd-line-input__label" for="user_role" translate>Role</label>
                     <select class="sd-line-input__select"
@@ -154,14 +154,14 @@
                 </div>
             </div>
 
-            <div sd-info-item class="user_role form__row" ng-if="userDesks && userDesks.length > 0">
+            <div sd-info-item class="user_role field__default_desk form__row" ng-if="userDesks && userDesks.length > 0">
                 <div class="sd-line-input sd-line-input--is-select">
                     <label class="sd-line-input__label" for="user_default_desk" translate>Default Desk</label>
                     <select class="sd-line-input__select" ng-model="user.desk" name="user_default_desk" id="user_default_desk" ng-options="desk._id as desk.name for desk in userDesks"></select>
                 </div>
             </div>
 
-            <div class="form__row" sd-info-item ng-hide="profileConfig.phone === false">
+            <div class="form__row field__phone_number" sd-info-item ng-hide="profileConfig.phone === false">
                 <div class="sd-line-input">
                     <label class="sd-line-input__label" for="phone" translate>phone number</label>
                     <input class="sd-line-input__input" type="text" name="phone" id="phone" ng-model="user.phone">
@@ -255,12 +255,12 @@
                         <input name="old" type="password" ng-model="oldPwd" required>
                         <p sd-valid-error ng-show="oldPasswordInvalid">sorry, but this is not the original password.</p>
                     </div>
-        
+
                     <div class="field">
                         <label translate>new</label>
                         <input sd-password-strength name="new" type="password" ng-model="newPwd" required>
                     </div>
-        
+
                     <div class="field">
                         <label translate>confirm</label>
                         <input name="confirm" type="password" ng-model="_confirm" required
