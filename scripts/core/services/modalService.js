@@ -1,3 +1,8 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+import {ModalPrompt} from 'core/ui/components/Modal/ModalPrompt';
+
 export default angular.module('superdesk.core.services.modal', ['superdesk-ui', 'superdesk.core.services.asset'])
     .service('modal', ['$q', '$modal', '$sce', 'asset', function($q, $modal, $sce, asset) {
         const defaults = {
@@ -81,5 +86,50 @@ export default angular.module('superdesk.core.services.modal', ['superdesk-ui', 
 
         this.alert = function(options) {
             return confirmConfigurationObject.call(this, {...options, cancelText: null});
+        };
+
+        this.createCustomModal = function() {
+            return new Promise((resolve) => {
+                $modal.open({
+                    template: '<div id="custom-modal-placeholder"></div>',
+                    controller: ['$scope', '$modalInstance', function($scope, $modalInstance) {
+                        resolve({
+                            openModal: (reactComponent) => {
+                                setTimeout(() => {
+                                    ReactDOM.render(
+                                        reactComponent,
+                                        document.querySelector('#custom-modal-placeholder')
+                                    );
+                                });
+                            },
+                            closeModal: () => {
+                                $modalInstance.close();
+                                ReactDOM.unmountComponentAtNode(
+                                    document.querySelector('#custom-modal-placeholder')
+                                );
+                            },
+                        });
+                    }],
+                });
+            });
+        };
+
+        this.prompt = function(title, initialValue) {
+            return new Promise((resolve, reject) => {
+                this.createCustomModal()
+                    .then(({openModal, closeModal}) => {
+                        openModal(
+                            <ModalPrompt
+                                title={title}
+                                initialValue={initialValue}
+                                onSubmit={(value) => {
+                                    closeModal();
+                                    resolve(value);
+                                }}
+                                close={closeModal}
+                            />
+                        );
+                    });
+            });
         };
     }]);

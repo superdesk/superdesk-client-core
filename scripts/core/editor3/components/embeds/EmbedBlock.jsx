@@ -4,6 +4,7 @@ import Textarea from 'react-textarea-autosize';
 import {connect} from 'react-redux';
 import {QumuWidget} from './QumuWidget';
 import * as actions from '../../actions';
+import ng from 'core/services/ng';
 
 /**
  * @ngdoc React
@@ -18,6 +19,7 @@ export class EmbedBlockComponent extends Component {
         super(props);
 
         this.onClickDelete = this.onClickDelete.bind(this);
+        this.editEmbedHtml = this.editEmbedHtml.bind(this);
         this.onChangeDescription = this.onChangeDescription.bind(this);
     }
 
@@ -50,26 +52,44 @@ export class EmbedBlockComponent extends Component {
         });
     }
 
-    onChangeDescription(event) {
+    getEntityKey() {
         const {block} = this.props;
-        const entityKey = block.getEntityAt(0);
+
+        return block.getEntityAt(0);
+    }
+
+    onChangeDescription(event) {
+        const entityKey = this.getEntityKey();
 
         this.props.mergeEntityDataByKey(entityKey, {
             description: event.target.value,
         });
     }
 
+    editEmbedHtml() {
+        const embed = this.data();
+        const entityKey = this.getEntityKey();
+        const modal = ng.get('modal');
+
+        modal.prompt(gettext('Edit embed'), embed.data.html)
+            .then((html) => {
+                this.props.mergeEntityDataByKey(entityKey, {
+                    data: {...embed.data, html},
+                });
+            });
+    }
+
     data() {
-        const {block, contentState} = this.props;
-        const entityKey = block.getEntityAt(0);
+        const {contentState} = this.props;
+        const entityKey = this.getEntityKey();
         const entity = contentState.getEntity(entityKey);
 
         return entity.getData();
     }
 
     shouldComponentUpdate(nextProps) {
-        const {block, contentState} = nextProps;
-        const entityKey = block.getEntityAt(0);
+        const {contentState} = nextProps;
+        const entityKey = this.getEntityKey();
         const entity = contentState.getEntity(entityKey);
         const {data} = entity.getData();
         const oldData = this.data();
@@ -90,6 +110,9 @@ export class EmbedBlockComponent extends Component {
         return <div className="embed-block">
             <a className="icn-btn embed-block__remove" onClick={this.onClickDelete}>
                 <i className="icon-close-small" />
+            </a>
+            <a className="icn-btn embed-block__edit" onClick={this.editEmbedHtml}>
+                <i className="icon-pencil" />
             </a>
             <div className="embed-block__wrapper" dangerouslySetInnerHTML={{__html: html}} />
 

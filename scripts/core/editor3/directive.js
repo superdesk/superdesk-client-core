@@ -9,6 +9,7 @@ import {getContentStateFromHtml} from './html/from-html';
 
 import {changeEditorState, setReadOnly} from './actions';
 
+import ng from 'core/services/ng';
 /**
  * @ngdoc directive
  * @module superdesk.core.editor3
@@ -190,12 +191,15 @@ class Editor3Directive {
 
         $scope.$on('$destroy', () => editor3.removeSpellcheckerStore(storeIndex));
 
-        ReactDOM.render(
-            <Provider store={store}>
-                <Editor3
-                    scrollContainer={this.scrollContainer}
-                    singleLine={this.singleLine} />
-            </Provider>, $element.get(0)
-        );
+        ng.waitForServicesToBeAvailable()
+            .then(() => {
+                ReactDOM.render(
+                    <Provider store={store}>
+                        <Editor3
+                            scrollContainer={this.scrollContainer}
+                            singleLine={this.singleLine} />
+                    </Provider>, $element.get(0)
+                );
+            });
     }
 }
