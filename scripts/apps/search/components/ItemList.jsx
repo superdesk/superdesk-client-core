@@ -193,7 +193,7 @@ export class ItemList extends React.Component {
         }
 
         if (item._type === 'externalsource') {
-            superdesk.intent('list', 'externalsource', {item: item})
+            superdesk.intent('list', 'externalsource', {item: item}, 'fetch-externalsource')
                 .then((archiveItem) => {
                     archiveItem.guid = archiveItem._id; // fix item guid to match new item _id
                     scope.$applyAsync(() => {
