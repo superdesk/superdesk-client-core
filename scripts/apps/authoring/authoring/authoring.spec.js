@@ -76,12 +76,12 @@ describe('authoring', () => {
             $rootScope: {
                 $applyAsync: () => {
                     expect(JSON.stringify(context.item.annotations))
-                        .toEqual('[{"id":"1","type":"regular:001","body":"<p>123</p>"}]');
+                        .toEqual('[{"id":1,"type":"regular:001","body":"<p>123</p>"}]');
                 },
             },
         };
 
-        spyOn(context.$rootScope, '$applyAsync');
+        spyOn(context.$rootScope, '$applyAsync').and.callThrough();
         onChange.call(context, contentState);
         expect(context.$rootScope.$applyAsync).toHaveBeenCalled();
     }));
