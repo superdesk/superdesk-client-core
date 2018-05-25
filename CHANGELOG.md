@@ -1,5 +1,11 @@
 # Superdesk Client Changelog
 
+## [1.18.3] 2018-05-25
+
+### Fixed
+
+- Fix missing annotation type.
+
 ## [1.18.2] 2018-05-25
 
 ### Fixed
