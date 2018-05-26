@@ -172,18 +172,19 @@
                 </div>
             </div>
 
-            <div ng-if="['publish', 'correct', 'kill', 'resend'].includes(historyItem.operation)">
+            <div ng-if="['publish', 'correct', 'kill', 'resend', 'takedown'].includes(historyItem.operation)">
                 <strong ng-if="historyItem.operation === 'publish' && historyItem.update.state === 'scheduled'">{{ :: 'Scheduled by' | translate }}</strong>
                 <strong ng-if="historyItem.operation === 'publish' && historyItem.update.state !== 'scheduled'">{{ :: 'Published by' | translate }}</strong>
                 <strong ng-if="historyItem.operation === 'correct'">{{ :: 'Corrected by' | translate }}</strong>
-                <strong ng-if="historyItem.operation === 'kill'">{{ :: 'Killed by' | translate }}</strong> 
+                <strong ng-if="historyItem.operation === 'kill'">{{ :: 'Killed by' | translate }}</strong>
+                <strong ng-if="historyItem.operation === 'takedown'">{{ :: 'Recalled by' | translate }}</strong>
                 <strong ng-if="historyItem.operation === 'resend'">{{ :: 'Resent by' | translate }}</strong> 
                 {{ :: historyItem.displayName }}
                 <em><time sd-absdate datetime="historyItem._created"></time></em>
                 <span ng-if="historyItems[$index-1].version !== historyItem.version && historyItem.version !== 0" class="version">
                     <span translate>version</span><span>: {{:: historyItem.version }}</span>
                 </span>
-                <div ng-if="historyItem.operation === 'publish' && historyItem.update.state !== 'scheduled'"
+                <div ng-if="['publish', 'correct', 'kill', 'takedown'].includes(historyItem.operation) && historyItem.update.state !== 'scheduled'"
                      sd-transmission-details data-item="historyItem" data-type="item._type" class="queued"></div>
             </div>
             

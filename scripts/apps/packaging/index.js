@@ -47,7 +47,7 @@ angular.module('superdesk.apps.packaging', [
                 controller: ctrl.CreatePackageCtrl,
                 filters: [{action: 'create', type: 'package'}],
                 condition: function(item) {
-                    return item ? item.state !== 'killed' : true;
+                    return item ? (item.state !== 'killed' && item.state !== 'recalled') : true;
                 },
             })
 

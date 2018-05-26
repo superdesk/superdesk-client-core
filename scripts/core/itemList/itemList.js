@@ -120,7 +120,8 @@ angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
                  * @param {object} item
                  * @description Checks if an item is in published state
                  */
-                    scope.isPublished = (item) => _.includes(['published', 'killed', 'scheduled', 'corrected'],
+                    scope.isPublished = (item) => _.includes(
+                        ['published', 'killed', 'scheduled', 'corrected', 'recalled'],
                         item.state);
 
                     scope.$watchGroup(['options.item.slugline', 'options.existingRelations'], setProcessedItems);

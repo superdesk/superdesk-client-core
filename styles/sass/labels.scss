@@ -193,7 +193,8 @@ $priority-label-color-6 : #c0c9a1;
     &.state-published {
         @include state-color($state-color-green);
     }
-    &.state-spiked, 
+    &.state-spiked,
+    &.state-recalled,
     &.state-killed {
         @include state-color($state-color-red);
     }

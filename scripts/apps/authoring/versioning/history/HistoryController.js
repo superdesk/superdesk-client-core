@@ -137,7 +137,7 @@ export function HistoryController(
     const processVersion = (version) => ({
         version: version._current_version,
         displayName: version.creator,
-        isPublished: ['published', 'corrected', 'killed'].includes(version.state),
+        isPublished: ['published', 'corrected', 'killed', 'recalled'].includes(version.state),
         operation: version.operation,
         item_id: version._id,
     });
@@ -155,7 +155,7 @@ export function HistoryController(
         h.displayName = h.user_id ? desks.userLookup[h.user_id].display_name : 'System';
         h.desk = historyDesk ? desks.deskLookup[historyDesk].name : null;
         h.stage = historyStage ? desks.stageLookup[historyStage].name : null;
-        h.isPublished = ['publish', 'correct', 'kill', 'resend'].includes(h.operation);
+        h.isPublished = ['publish', 'correct', 'kill', 'resend', 'takedown'].includes(h.operation);
         h.fieldsUpdated = h.update ? Object.keys(h.update).join(', ') : null;
     };
 
@@ -169,7 +169,7 @@ export function HistoryController(
         h.displayName = h.user_id ? h.user_id : 'System';
         h.desk = _.get(h, 'update.task.desk');
         h.stage = _.get(h, 'update.task.stage');
-        h.isPublished = ['publish', 'correct', 'kill', 'resend'].includes(h.operation);
+        h.isPublished = ['publish', 'correct', 'kill', 'resend', 'takedown'].includes(h.operation);
         h.fieldsUpdated = h.update ? Object.keys(h.update).join(', ') : null;
     };
 

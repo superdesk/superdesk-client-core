@@ -74,6 +74,7 @@ export const DEFAULT_ACTIONS = Object.freeze({
     add_to_current: false,
     resend: false,
     set_label: true,
+    takedown: false,
 });
 
 /**

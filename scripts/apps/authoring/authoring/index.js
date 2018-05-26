@@ -145,7 +145,7 @@ angular.module('superdesk.apps.authoring', [
                 controller: ['data', 'authoringWorkspace', 'api', '$rootScope',
                     function(data, authoringWorkspace, api, $rootScope) {
                         if (data.item._type === 'archived') {
-                            $rootScope.$broadcast('open:archived_kill', data.item);
+                            $rootScope.$broadcast('open:archived_kill', data.item, 'kill');
                         } else {
                             authoringWorkspace.kill(data.item);
                         }
@@ -160,6 +160,30 @@ angular.module('superdesk.apps.authoring', [
                     return authoring.itemActions(item).kill;
                 }],
                 privileges: {kill: 1},
+            })
+            .activity('takedown.text', {
+                label: gettext('Takedown item'),
+                priority: 100,
+                icon: 'kill',
+                group: 'corrections',
+                controller: ['data', 'authoringWorkspace', 'api', '$rootScope',
+                    function(data, authoringWorkspace, api, $rootScope) {
+                        if (data.item._type === 'archived') {
+                            $rootScope.$broadcast('open:archived_kill', data.item, 'takedown');
+                        } else {
+                            authoringWorkspace.takedown(data.item);
+                        }
+                    },
+                ],
+                filters: [{action: 'list', type: 'archive'}, {action: 'list', type: 'archived'}],
+                additionalCondition: ['authoring', 'item', 'privileges', function(authoring, item, privileges) {
+                    if (item._type === 'archived') {
+                        return privileges.privileges.archived && item.type === 'text';
+                    }
+
+                    return authoring.itemActions(item).takedown;
+                }],
+                privileges: {takedown: 1},
             })
             .activity('correct.text', {
                 label: gettext('Correct item'),
