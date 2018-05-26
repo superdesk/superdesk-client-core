@@ -29,7 +29,8 @@ export function getSpecValue(spec, value) {
  */
 export function isCheckAllowed(item) {
     return !(item._type === 'items' || item._type === 'externalsource' ||
-            item.state === 'killed' || item._type === 'published' && !item.last_published_version);
+            item.state === 'killed' || item.state === 'recalled' ||
+        item._type === 'published' && !item.last_published_version);
 }
 
 export function createMarkUp(html) {

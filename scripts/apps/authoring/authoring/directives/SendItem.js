@@ -225,7 +225,7 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                 return scope.item && archiveService.getType(scope.item) !== 'ingest' &&
                     scope.item.type !== 'composite' && !scope.item.embargo_date && !scope.item.embargo_time &&
                     !authoring.isTakeItem(scope.item) &&
-                    ['published', 'killed', 'corrected'].indexOf(scope.item.state) === -1;
+                    ['published', 'killed', 'corrected', 'recalled'].indexOf(scope.item.state) === -1;
             };
 
             /**

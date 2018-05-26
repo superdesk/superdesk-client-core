@@ -483,7 +483,7 @@ preferencesService, moment, sortService, deployConfig) {
         }
 
         if (params.ignoreKilled) {
-            this.filter({not: {term: {state: 'killed'}}});
+            this.filter({not: {terms: {state: ['killed', 'recalled']}}});
         }
 
         if (params.onlyLastPublished) {

@@ -323,7 +323,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 }
 
                 if (item.publish_schedule_date || item.publish_schedule_time) {
-                    if (_.includes(['published', 'killed', 'corrected'], item.state)) {
+                    if (_.includes(['published', 'killed', 'corrected', 'recalled'], item.state)) {
                         return true;
                     }
 
@@ -356,7 +356,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
 
                 if (!_.get(config, 'features.confirmMediaOnUpdate') ||
                     !_.get(config, 'features.editFeaturedImage') ||
-                    !rewriteOf || _.includes(['kill', 'correct'], $scope.action) ||
+                    !rewriteOf || _.includes(['kill', 'correct', 'takedown'], $scope.action) ||
                     $scope.item.associations && $scope.item.associations.featuremedia) {
                     return $q.when(true);
                 }
@@ -785,6 +785,8 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                     authoringWorkspace.correct($scope.item);
                 } else if (action === 'kill') {
                     authoringWorkspace.kill($scope.item);
+                } else if (action === 'takedown') {
+                    authoringWorkspace.takedown($scope.item);
                 } else if (action === 'rewrite') {
                     authoring.rewrite($scope.item);
                 }
