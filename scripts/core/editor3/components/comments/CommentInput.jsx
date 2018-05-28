@@ -48,10 +48,11 @@ class CommentInputBody extends Component {
                 );
             } else {
                 var highlightData = this.props.highlightsManager.getHighlightData(highlightId);
+                const date = new Date();
 
                 this.props.highlightsManager.updateHighlightData(
                     highlightId,
-                    {...highlightData, data: {...highlightData.data, msg}}
+                    {...highlightData, data: {...highlightData.data, msg, date}}
                 );
             }
             hidePopups();
