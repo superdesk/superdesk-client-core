@@ -114,7 +114,7 @@ function NotifyConnectionService($rootScope, notify, gettext, $timeout, session)
     });
 
     $rootScope.$on('vocabularies:updated', (event, data) => {
-        if (!data.user || data.user !== session.identity._id) {
+        if (!data || !data.user || data.user !== session.identity._id) {
             self.message = gettext(data.vocabulary +
                 ' vocabulary has been updated. Please re-login to see updated vocabulary values');
             $timeout(() => {
