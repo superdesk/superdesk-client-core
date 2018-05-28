@@ -75,10 +75,11 @@ class AnnotationInputBody extends Component {
                 );
             } else {
                 var highlightData = this.props.highlightsManager.getHighlightData(highlightId);
+                const date = new Date();
 
                 this.props.highlightsManager.updateHighlightData(
                     highlightId,
-                    {...highlightData, data: {...highlightData.data, msg, annotationType}}
+                    {...highlightData, data: {...highlightData.data, msg, annotationType, date}}
                 );
             }
 
