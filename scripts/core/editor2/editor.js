@@ -10,6 +10,7 @@
 import MediumEditor from 'medium-editor';
 import MediumEditorTable from 'medium-editor-tables';
 import _ from 'lodash';
+import {get} from 'lodash';
 
 import './customAnchor';
 
@@ -687,7 +688,9 @@ function SdTextEditorBlockEmbedController($timeout, editor, renditions, config) 
         angular.extend(self, {
             embedCode: self.model.body,
             caption: self.model.caption,
-            title: self.model.association.headline,
+
+            // model.association has no value when embed source is not superdesk
+            title: get(self, 'model.association.headline', ''),
         });
     });
 }
