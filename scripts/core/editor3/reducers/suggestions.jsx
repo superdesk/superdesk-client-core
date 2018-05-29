@@ -618,6 +618,7 @@ const applyChangeSuggestion = (editorState, accepted) => {
 
         if (paragraphSuggestionTypes.indexOf(data.type) !== -1) {
             // delete any paragraph suggestion
+            newEditorState = Highlights.changeEditorSelection(newEditorState, 1, 1, false);
             newEditorState = deleteCharacter(newEditorState, style);
 
             if (newEditorState === oldEditorState) {

@@ -35,7 +35,7 @@ function getEditorStateWithDeleteSuggestion(author, date, startOffset, endOffset
 }
 
 
-describe('editor3.reducers.suggestion.CREATE_ADD_SUGGESTION', () => {
+describe('editor3.reducers.suggestion.CREATE_DELETE_SUGGESTION', () => {
     it('CREATE_DELETE_SUGGESTION - backspace one character', () => {
         const date = new Date();
         const result = reducer({
