@@ -157,7 +157,13 @@ function applyStyleSuggestion(editorState, type, style, data) {
         if (currentStyle) {
             tmpEditorState = resetSuggestion(newEditorState, currentStyle);
         } else {
-            changeStyle = false;
+            const currentSelection = newEditorState.getSelection();
+            const content = newEditorState.getCurrentContent();
+            const block = content.getBlockForKey(currentSelection.getStartKey());
+
+            if (block.getLength() !== currentSelection.getStartOffset()) {
+                changeStyle = false;
+            }
             tmpEditorState = Highlights.changeEditorSelection(newEditorState, 1, 1, false);
         }
 

@@ -543,8 +543,11 @@ export function hadHighlightsChanged(prevEditorState, nextEditorState) {
 export function resetHighlightForCurrentCharacter(editorState, style) {
     const type = getHighlightType(style);
     const selection = editorState.getSelection();
+    const content = editorState.getCurrentContent();
+    const block = content.getBlockForKey(selection.getStartKey());
+    const offset = selection.getStartOffset() === block.getLength() - 1 ? 1 : 0;
     const styleBefore = getHighlightStyleAtOffset(editorState, [type], selection, -1);
-    const styleAfter = getHighlightStyleAtOffset(editorState, [type], selection, 1);
+    const styleAfter = getHighlightStyleAtOffset(editorState, [type], selection, 1 + offset);
 
     if (styleBefore !== style && styleAfter !== style) {
         return removeHighlight(editorState, style);
