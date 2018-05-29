@@ -1197,6 +1197,20 @@ function MetadataService(api, subscribersService, config, vocabularies, $rootSco
     $rootScope.$on('subscriber:create', () => service.fetchSubscribers());
     $rootScope.$on('subscriber:update', () => service.fetchSubscribers());
 
+    // add new cvs to the list when created
+    $rootScope.$on('vocabularies:created', (event, data) => {
+        api.find('vocabularies', data.vocabulary_id).then((cv) => {
+            service.cvs = service.cvs.concat([cv]);
+        });
+    });
+
+    // update cv on change
+    $rootScope.$on('vocabularies:updated', (event, data) => {
+        api.find('vocabularies', data.vocabulary_id).then((cv) => {
+            service.cvs = service.cvs.map((_cv) => _cv._id === cv._id ? cv : _cv);
+        });
+    });
+
     return service;
 }
 
