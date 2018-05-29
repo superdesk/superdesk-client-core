@@ -7,7 +7,7 @@ import {getLabelForFieldId} from 'apps/workspace/helpers/getLabelForFieldId';
 
 import {DEFAULT_GRID_VIEW_FIELDS_CONFIG} from 'apps/search/constants';
 
-const customFieldsNotSupportedHere = {};
+const customFieldsNotSupportedHere = [];
 
 /**
  * PhotoDesk Info - renders item metadata
