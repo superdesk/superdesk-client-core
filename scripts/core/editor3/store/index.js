@@ -8,8 +8,18 @@ import {EditorState, convertFromRaw, convertToRaw, ContentState} from 'draft-js'
 import {toHTML} from 'core/editor3/html';
 import {getContentStateFromHtml} from '../html/from-html';
 import {PopupTypes} from '../actions';
-import {initializeHighlights, prepareHighlightsForExport} from '../helpers/highlights';
 import {fieldsMetaKeys, setFieldMetadata, getFieldMetadata, FIELD_KEY_SEPARATOR} from '../helpers/fieldsMeta';
+import {getUniqueStyleNamesInDraftSelection} from '../helpers/getUniqueStyleNamesInDraftSelection';
+import {getDraftSelectionForEntireContent} from '../helpers/getDraftSelectionForEntireContent';
+import {highlightsConfig} from '../highlightsConfig';
+
+import {
+    initializeHighlights,
+    prepareHighlightsForExport,
+    styleNameBelongsToHighlight,
+    getHighlightTypeFromStyleName,
+    getHighlightData,
+} from '../helpers/highlights';
 
 // depended upon by find-and-replace.
 import {removeInlineStyles} from '../helpers/removeFormat';
@@ -70,29 +80,30 @@ export default function createEditorStore(props, isReact = false) {
  * @param {Object} item
  */
 function generateAnnotations(item, logger) {
-    const state = getFieldMetadata(item, 'body_html', fieldsMetaKeys.draftjsState);
+    const contentStateRaw = getFieldMetadata(item, 'body_html', fieldsMetaKeys.draftjsState);
 
-    if (state) {
-        let highlightsBlock = state.blocks[0];
+    if (contentStateRaw) {
+        const contentState = convertFromRaw(contentStateRaw);
+        const editorState = initializeHighlights(EditorState.createWithContent(contentState));
 
-        if (highlightsBlock.data && highlightsBlock.data.MULTIPLE_HIGHLIGHTS &&
-            highlightsBlock.data.MULTIPLE_HIGHLIGHTS.highlightsData) {
-            let annotations = [];
+        const allStyleNames = getUniqueStyleNamesInDraftSelection(
+            editorState,
+            getDraftSelectionForEntireContent(editorState)
+        );
 
-            _.forEach(highlightsBlock.data.MULTIPLE_HIGHLIGHTS.highlightsData, (highlight, key) => {
-                if (key.startsWith('ANNOTATION-')) {
-                    let annotation = {};
+        item.annotations = allStyleNames
+            .filter(styleNameBelongsToHighlight)
+            .filter((highlightId) => getHighlightTypeFromStyleName(highlightId) === highlightsConfig.ANNOTATION.type)
+            .map((highlightId) => {
+                const highlightObject = getHighlightData(editorState, highlightId);
+                const annotationIdString = highlightId.split('-')[1];
 
-                    const annotationIdString = key.split('-')[1];
-
-                    annotation.id = parseInt(annotationIdString, 10);
-                    annotation.type = highlight.data.annotationType;
-                    annotation.body = toHTML(convertFromRaw(JSON.parse(highlight.data.msg)), logger);
-                    annotations.push(annotation);
-                }
+                return {
+                    id: parseInt(annotationIdString, 10),
+                    type: highlightObject.data.annotationType,
+                    body: toHTML(convertFromRaw(JSON.parse(highlightObject.data.msg)), logger),
+                };
             });
-            item.annotations = annotations;
-        }
     }
 }
 
