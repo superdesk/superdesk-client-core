@@ -13,10 +13,8 @@ function prepareRawContent(rawContent) {
     };
 
     let newRawContent = {
-        ...{
-            blocks: [],
-            entityMap: {},
-        },
+        blocks: [],
+        entityMap: {},
         ...rawContent,
     };
 
