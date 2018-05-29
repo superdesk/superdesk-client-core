@@ -19,14 +19,8 @@ module.exports = function makeConfig(grunt) {
     // such as 'babel' or 'eslint'. This is to avoid including node_modules into
     // these loaders, but not node modules that are superdesk apps.
     const shouldExclude = function(p) {
-        if (p.startsWith(__dirname) === false) {
-            // exclude code outside of project directory
-            // useful when symlinking node_modules
-            return true;
-        }
-
         // don't exclude anything outside node_modules
-        if (p.startsWith(`${__dirname}/node_modules`) === false) {
+        if (p.indexOf('node_modules') === -1) {
             return false;
         }
 
