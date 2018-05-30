@@ -139,3 +139,21 @@ export function addBlockStyleSuggestion(editorState, blockType, date = new Date(
 
     return result.editorState;
 }
+
+export function addSplitParagraphSuggestion(editorState, date = new Date(), author = 'author_id') {
+    const result = reducer({
+        editorState: editorState,
+        suggestingMode: true,
+        onChangeValue: () => ({}),
+    }, {
+        type: 'CREATE_SPLIT_PARAGRAPH_SUGGESTION',
+        payload: {
+            data: {
+                date: date,
+                author: author,
+            },
+        },
+    });
+
+    return result.editorState;
+}
