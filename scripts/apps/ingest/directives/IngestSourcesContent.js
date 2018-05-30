@@ -268,6 +268,12 @@ export function IngestSourcesContent(ingestSources, gettext, notify, api, $locat
                 });
             }
 
+            /**
+             * Edit the given provider.
+             *
+
+             * @method edit
+             */
             $scope.edit = function(provider) {
                 $scope.origProvider = provider || {};
                 $scope.provider = _.create($scope.origProvider);
@@ -364,6 +370,11 @@ export function IngestSourcesContent(ingestSources, gettext, notify, api, $locat
                 return fieldNames;
             };
 
+            /**
+             * Saves the ingest provider.
+             *
+             * @method save
+             */
             $scope.save = function() {
                 _.forEach($scope.currentFeedingService.fields, (field) => {
                     if (field.type !== 'mapping') {
@@ -437,19 +448,6 @@ export function IngestSourcesContent(ingestSources, gettext, notify, api, $locat
             };
 
             /**
-             * Return true if given field is enabled. False if the field was forced to a certain value.
-             *
-             * @param {string} fieldName
-             * @return boolean
-             */
-            $scope.isFieldEnabled = (fieldName) => $scope.currentFeedingService &&
-                (!$scope.currentFeedingService.restricted_values ||
-                 !_.has($scope.currentFeedingService.restricted_values, fieldName) ||
-                 $scope.currentFeedingService.restricted_values[fieldName].length > 1);
-
-            var restrictedValuesFields = [];
-
-            /**
              * Initializes the configuration for the selected feeding service.
              */
             $scope.initProviderConfig = function() {
@@ -463,24 +461,14 @@ export function IngestSourcesContent(ingestSources, gettext, notify, api, $locat
 
                 initTupleFields();
 
-                if (restrictedValuesFields.length) {
-                    _.forEach(restrictedValuesFields, (fieldName) => {
-                        $scope.provider[fieldName] = null;
-                    });
-                    restrictedValuesFields = [];
-                }
+                $scope.provider.feed_parser = null;
                 $scope.feedParsers = angular.copy($scope.allFeedParsers);
-                if ($scope.currentFeedingService) {
-                    _.forEach($scope.currentFeedingService.restricted_values, (values, field) => {
-                        restrictedValuesFields.push(field);
-                        if ($scope.currentFeedingService.restricted_values[field].length === 1) {
-                            $scope.provider[field] = $scope.currentFeedingService.restricted_values[field][0];
-                        }
-                        if (field === 'feed_parser') {
-                            $scope.feedParsers = _.filter($scope.feedParsers, (feedParser) =>
-                                values.includes(feedParser.feed_parser));
-                        }
-                    });
+                if ($scope.currentFeedingService && $scope.currentFeedingService.parser_restricted_values) {
+                    if ($scope.currentFeedingService.parser_restricted_values.length === 1) {
+                        $scope.provider.feed_parser = $scope.currentFeedingService.parser_restricted_values[0];
+                    }
+                    $scope.feedParsers = _.filter($scope.feedParsers, (feedParser) =>
+                        $scope.currentFeedingService.parser_restricted_values.includes(feedParser.feed_parser));
                 }
             };
 

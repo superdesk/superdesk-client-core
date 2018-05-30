@@ -104,10 +104,10 @@ describe('sdIngestSourcesContent directive', () => {
             scope.provider = {feeding_service: 'service1'};
             scope.feedingServices = [{
                 feeding_service: 'service1',
-                restricted_values: {feed_parser: ['parser1']},
+                parser_restricted_values: ['parser1'],
             }, {
                 feeding_service: 'service2',
-                restricted_values: {feed_parser: ['parser1', 'parser2']},
+                parser_restricted_values: ['parser1', 'parser2'],
             }];
             scope.allFeedParsers = [{feed_parser: 'parser1'}, {feed_parser: 'parser2'}, {feed_parser: 'parser3'}];
 
