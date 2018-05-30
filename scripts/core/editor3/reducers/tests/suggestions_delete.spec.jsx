@@ -36,7 +36,7 @@ function getEditorStateWithDeleteSuggestion(author, date, startOffset, endOffset
 
 
 describe('editor3.reducers.suggestion.CREATE_DELETE_SUGGESTION', () => {
-    it('CREATE_DELETE_SUGGESTION - backspace one character', () => {
+    it('should suggest a character delete by using backspace key', () => {
         const date = new Date();
         const result = reducer({
             editorState: getInitialEditorState(),
@@ -76,7 +76,7 @@ describe('editor3.reducers.suggestion.CREATE_DELETE_SUGGESTION', () => {
         });
     });
 
-    it('CREATE_DELETE_SUGGESTION - delete one character', () => {
+    it('should suggest a character delete by using delete key', () => {
         const date = new Date();
         const result = reducer({
             editorState: getInitialEditorState(),
@@ -116,7 +116,7 @@ describe('editor3.reducers.suggestion.CREATE_DELETE_SUGGESTION', () => {
         });
     });
 
-    it('CREATE_DELETE_SUGGESTION - backspace at beginning', () => {
+    it('should not add suggestion when backspace a character at beginning of the paragraph', () => {
         const date = new Date();
         const result = reducer({
             editorState: getInitialEditorState(0, 0),
@@ -146,7 +146,7 @@ describe('editor3.reducers.suggestion.CREATE_DELETE_SUGGESTION', () => {
         }
     });
 
-    it('CREATE_DELETE_SUGGESTION - delete at end', () => {
+    it('should not add suggestion when delete a character at the end of the paragraph', () => {
         const date = new Date();
         const result = reducer({
             editorState: getInitialEditorState(4, 4),
@@ -176,7 +176,7 @@ describe('editor3.reducers.suggestion.CREATE_DELETE_SUGGESTION', () => {
         }
     });
 
-    it('CREATE_DELETE_SUGGESTION - backspace selected text', () => {
+    it('should add new suggestion when backspace a selected text', () => {
         const date = new Date();
         const result = reducer({
             editorState: getInitialEditorState(1, 3),
@@ -216,7 +216,7 @@ describe('editor3.reducers.suggestion.CREATE_DELETE_SUGGESTION', () => {
         });
     });
 
-    it('CREATE_DELETE_SUGGESTION - delete selected text', () => {
+    it('should add new suggestion when delete a selected text', () => {
         const date = new Date();
         const result = reducer({
             editorState: getInitialEditorState(1, 3),
@@ -257,7 +257,7 @@ describe('editor3.reducers.suggestion.CREATE_DELETE_SUGGESTION', () => {
     });
 
 
-    it('CREATE_DELETE_SUGGESTION - backspace with the same author before an existing delete suggestion', () => {
+    it('should extend old suggestion when backspace before an existing suggestion with the same author', () => {
         const date = new Date();
         const result = reducer({
             editorState: getEditorStateWithDeleteSuggestion('author_id', date, 1, 3),
@@ -297,7 +297,7 @@ describe('editor3.reducers.suggestion.CREATE_DELETE_SUGGESTION', () => {
         });
     });
 
-    it('CREATE_DELETE_SUGGESTION - delete with the same author after an existing delete suggestion', () => {
+    it('should extend suggestion when delete with the same author after an existing delete suggestion', () => {
         const date = new Date();
         const result = reducer({
             editorState: getEditorStateWithDeleteSuggestion('author_id', date, 1, 3, 'delete'),
@@ -337,7 +337,7 @@ describe('editor3.reducers.suggestion.CREATE_DELETE_SUGGESTION', () => {
         });
     });
 
-    it('CREATE_DELETE_SUGGESTION - backspace with different author before an existing delete suggestion', () => {
+    it('should add new suggestion when backspace with different author before an existing delete suggestion', () => {
         const date = new Date();
         const result = reducer({
             editorState: getEditorStateWithDeleteSuggestion('author_id1', date, 1, 3),
@@ -379,7 +379,7 @@ describe('editor3.reducers.suggestion.CREATE_DELETE_SUGGESTION', () => {
         });
     });
 
-    it('CREATE_DELETE_SUGGESTION - delete with different author after an existing delete suggestion', () => {
+    it('should add a new suggestion when delete with different author after an existing delete suggestion', () => {
         const date = new Date();
         const result = reducer({
             editorState: getEditorStateWithDeleteSuggestion('author_id1', date, 1, 3, 'delete'),
@@ -421,7 +421,7 @@ describe('editor3.reducers.suggestion.CREATE_DELETE_SUGGESTION', () => {
         });
     });
 
-    it('CREATE_DELETE_SUGGESTION - backspace with the same author after an existing delete suggestion', () => {
+    it('should extend suggestion when backspace with the same author after an existing delete suggestion', () => {
         const date = new Date();
         const result = reducer({
             editorState: getEditorStateWithDeleteSuggestion('author_id', date, 1, 3, 'delete'),
@@ -455,7 +455,7 @@ describe('editor3.reducers.suggestion.CREATE_DELETE_SUGGESTION', () => {
         }
     });
 
-    it('CREATE_DELETE_SUGGESTION - delete with the same author before an existing delete suggestion', () => {
+    it('should extend old suggestion when delete with the same author before an existing delete suggestion', () => {
         const date = new Date();
         const result = reducer({
             editorState: getEditorStateWithDeleteSuggestion('author_id', date, 1, 3),

@@ -2,7 +2,7 @@ import * as Highlights from '../../helpers/highlights';
 import * as Setup from './suggestion_setup';
 
 describe('editor3.reducers.suggestion.DELETE_BLOCKS_SUGGESTION', () => {
-    it('DELETE_BLOCKS_SUGGESTION - backspace blocks', () => {
+    it('should create only one suggestion when backspace a selection on multiple blocks', () => {
         const rawContent = {
             blocks: [
                 {key: '4vu4i', text: 'paragraph1'},
@@ -52,7 +52,7 @@ describe('editor3.reducers.suggestion.DELETE_BLOCKS_SUGGESTION', () => {
         });
     });
 
-    it('DELETE_BLOCKS_SUGGESTION - delete blocks', () => {
+    it('should create only one suggestion when delete a selection on multiple blocks', () => {
         const rawContent = {
             blocks: [
                 {key: '4vu4i', text: 'paragraph1'},
@@ -102,7 +102,7 @@ describe('editor3.reducers.suggestion.DELETE_BLOCKS_SUGGESTION', () => {
         });
     });
 
-    it('DELETE_BLOCKS_SUGGESTION - delete blocks with one empty paragraph', () => {
+    it('should add ¶ for empty block when delete blocks with one empty paragraph, ', () => {
         const rawContent = {
             blocks: [
                 {key: '4vu4i', text: 'paragraph1'},
@@ -124,7 +124,7 @@ describe('editor3.reducers.suggestion.DELETE_BLOCKS_SUGGESTION', () => {
             ['DELETE_EMPTY_PARAGRAPH_SUGGESTION-1', 'DELETE_SUGGESTION-1']);
     });
 
-    it('DELETE_BLOCKS_SUGGESTION - delete list with one empty item', () => {
+    it('should add  ¶ for empty block when delete list with one empty item,', () => {
         const rawContent = {
             blocks: [
                 {key: '4vu4i', text: 'one', type: 'ordered-list-item'},
@@ -147,7 +147,7 @@ describe('editor3.reducers.suggestion.DELETE_BLOCKS_SUGGESTION', () => {
             ['DELETE_EMPTY_PARAGRAPH_SUGGESTION-1', 'DELETE_SUGGESTION-1']);
     });
 
-    it('DELETE_BLOCKS_SUGGESTION - delete paragraph with one empty item at beginning', () => {
+    it('should add ¶ for first block when delete paragraph with one empty item at beginning', () => {
         const rawContent = {
             blocks: [
                 {key: '4vu4i', text: ''},
@@ -169,7 +169,7 @@ describe('editor3.reducers.suggestion.DELETE_BLOCKS_SUGGESTION', () => {
             ['DELETE_EMPTY_PARAGRAPH_SUGGESTION-1', 'DELETE_SUGGESTION-1']);
     });
 
-    it('DELETE_BLOCKS_SUGGESTION - delete paragraph with one empty item at the end', () => {
+    it('should add ¶ is added for last block when delete paragraph with one empty item at the end', () => {
         const rawContent = {
             blocks: [
                 {key: '4vu4i', text: 'one'},
@@ -190,7 +190,7 @@ describe('editor3.reducers.suggestion.DELETE_BLOCKS_SUGGESTION', () => {
             ['DELETE_EMPTY_PARAGRAPH_SUGGESTION-1', 'DELETE_SUGGESTION-1']);
     });
 
-    it('DELETE_BLOCKS_SUGGESTION - overwrite an already added delete suggestion', () => {
+    it('should overwrite an already added delete suggestion', () => {
         const rawContent = {
             blocks: [
                 {key: '4vu4i', text: 'paragraph1'},
@@ -234,7 +234,7 @@ describe('editor3.reducers.suggestion.DELETE_BLOCKS_SUGGESTION', () => {
         });
     });
 
-    it('DELETE_BLOCKS_SUGGESTION - overwrite already existing delete suggestion with one empty paragraph', () => {
+    it('should overwrite already existing delete suggestion with one empty paragraph', () => {
         const rawContent = {
             blocks: [
                 {key: '4vu4i', text: 'paragraph1'},
@@ -260,7 +260,7 @@ describe('editor3.reducers.suggestion.DELETE_BLOCKS_SUGGESTION', () => {
             ['DELETE_EMPTY_PARAGRAPH_SUGGESTION-2', 'DELETE_SUGGESTION-2']);
     });
 
-    it('DELETE_BLOCKS_SUGGESTION - overwrite already existing merge suggestion', () => {
+    it('should overwrite already existing merge suggestion', () => {
         const rawContent = {
             blocks: [
                 {key: '4vu4i', text: 'paragraph1'},
@@ -286,7 +286,7 @@ describe('editor3.reducers.suggestion.DELETE_BLOCKS_SUGGESTION', () => {
         expect(content.getPlainText()).toEqual('paragraph1paragraph2\nparagraph3');
     });
 
-    it('DELETE_BLOCKS_SUGGESTION - overwrite already existing insert suggestion', () => {
+    it('should overwrite already existing insert suggestion', () => {
         const rawContent = {
             blocks: [
                 {key: '4vu4i', text: 'paragraph1'},

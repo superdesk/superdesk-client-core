@@ -2,7 +2,7 @@ import * as Highlights from '../../helpers/highlights';
 import * as Setup from './suggestion_setup';
 
 describe('editor3.reducers.suggestion.CREATE_CHANGE_STYLE_SUGGESTION', () => {
-    it('CREATE_CHANGE_STYLE_SUGGESTION - set BOLD suggestion', () => {
+    it('should set BOLD suggestion, a new suggestion is added', () => {
         const rawContent = {
             blocks: [
                 {key: '4vu4i', text: 'paragraph1'},
@@ -53,7 +53,7 @@ describe('editor3.reducers.suggestion.CREATE_CHANGE_STYLE_SUGGESTION', () => {
         });
     });
 
-    it('CREATE_CHANGE_STYLE_SUGGESTION - set BOLD suggestion for a bold text', () => {
+    it('should set BOLD suggestion for a bold text, the BOLD style not present anymore for selected text', () => {
         const rawContent = {
             blocks: [
                 {key: '4vu4i', text: 'paragraph1', inlineStyleRanges: [{length: 10, offset: 0, style: 'BOLD'}]},
@@ -104,7 +104,7 @@ describe('editor3.reducers.suggestion.CREATE_CHANGE_STYLE_SUGGESTION', () => {
         });
     });
 
-    it('CREATE_CHANGE_STYLE_SUGGESTION - set BOLD suggestion 2 times', () => {
+    it('should set BOLD suggestion 2 times, no suggestion is added', () => {
         const rawContent = {
             blocks: [
                 {key: '4vu4i', text: 'paragraph1'},
@@ -141,7 +141,7 @@ describe('editor3.reducers.suggestion.CREATE_CHANGE_STYLE_SUGGESTION', () => {
         }
     });
 
-    it('CREATE_CHANGE_STYLE_SUGGESTION - set BOLD partially overlapping suggestions', () => {
+    it('should overwrite overlapped section when set 2 BOLD overlapped suggestions', () => {
         const rawContent = {
             blocks: [
                 {key: '4vu4i', text: 'paragraph1'},
@@ -181,7 +181,7 @@ describe('editor3.reducers.suggestion.CREATE_CHANGE_STYLE_SUGGESTION', () => {
         }
     });
 
-    it('CREATE_CHANGE_STYLE_SUGGESTION - set BOLD and Italic suggestions', () => {
+    it('should create 2 suggestions when set BOLD and Italic suggestions', () => {
         const rawContent = {
             blocks: [
                 {key: '4vu4i', text: 'paragraph1'},
