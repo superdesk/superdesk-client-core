@@ -3,7 +3,7 @@ import * as Highlights from '../../helpers/highlights';
 import reducer from '../suggestions';
 
 describe('editor3.reducers.suggestion.CREATE_ADD_SUGGESTION', () => {
-    it('CREATE_ADD_SUGGESTION - insert text on empty content', () => {
+    it('should suggest new text on empty content', () => {
         const initialEditorState = EditorState.createEmpty();
         const date = new Date();
 
@@ -38,7 +38,7 @@ describe('editor3.reducers.suggestion.CREATE_ADD_SUGGESTION', () => {
         });
     });
 
-    it('CREATE_ADD_SUGGESTION - insert text on middle of existing text', () => {
+    it('should suggest text on the middle of existing text', () => {
         const content = ContentState.createFromText('initial');
         const initialEditorState = EditorState.createWithContent(content);
         const selection = initialEditorState.getSelection().merge({
@@ -82,7 +82,7 @@ describe('editor3.reducers.suggestion.CREATE_ADD_SUGGESTION', () => {
         });
     });
 
-    it('CREATE_ADD_SUGGESTION - insert text adjacent to the same user insert suggestion', () => {
+    it('should extend suggestion when suggest text adjacent to the same user insert suggestion', () => {
         const date = new Date();
 
         const initialState = reducer({
@@ -132,7 +132,7 @@ describe('editor3.reducers.suggestion.CREATE_ADD_SUGGESTION', () => {
     });
 
 
-    it('CREATE_ADD_SUGGESTION - insert text adjacent to the different user insert suggestion', () => {
+    it('should create new suggestion when insert text adjacent to the different user insert suggestion', () => {
         const date = new Date();
 
         const initialState = reducer({

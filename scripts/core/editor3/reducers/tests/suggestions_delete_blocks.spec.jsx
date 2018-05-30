@@ -1,108 +1,8 @@
-import {EditorState, convertFromRaw} from 'draft-js';
 import * as Highlights from '../../helpers/highlights';
-import reducer from '../suggestions';
-
-function prepareRawContent(rawContent) {
-    const defaultBlock = {
-        entityRanges: [],
-        inlineStyleRanges: [],
-        depth: 0,
-        type: 'unstyled',
-        text: '',
-        data: {},
-    };
-
-    let newRawContent = {
-        blocks: [],
-        entityMap: {},
-        ...rawContent,
-    };
-
-    let blocks = newRawContent.blocks.map((block) => ({
-        ...defaultBlock,
-        ...block,
-    }));
-
-    newRawContent.blocks = blocks;
-
-    return newRawContent;
-}
-
-function getInitialEditorState(rawContent) {
-    const content = convertFromRaw(prepareRawContent(rawContent));
-
-    return EditorState.createWithContent(content);
-}
-
-function applySelection(editorState, startBlockIndex, startOffset, endBlockIndex, endOffset) {
-    const content = editorState.getCurrentContent();
-    let startBlock = content.getFirstBlock();
-    let endBlock = content.getLastBlock();
-    let block = startBlock;
-    let index = 0;
-
-    while (block != null) {
-        if (index === startBlockIndex) {
-            startBlock = block;
-        }
-        if (index === endBlockIndex) {
-            endBlock = block;
-        }
-        block = content.getBlockAfter(block.getKey());
-        index++;
-    }
-
-    const selection = editorState.getSelection().merge({
-        anchorOffset: startOffset == null ? 0 : startOffset,
-        anchorKey: startBlock.getKey(),
-        focusOffset: endOffset == null ? endBlock.getLength() : endOffset,
-        focusKey: endBlock.getKey(),
-        isBackward: false,
-    });
-
-    return EditorState.acceptSelection(editorState, selection);
-}
-
-function addDeleteSuggestion(editorState, action, date) {
-    const result = reducer({
-        editorState: editorState,
-        suggestingMode: true,
-        onChangeValue: () => ({}),
-    }, {
-        type: 'CREATE_DELETE_SUGGESTION',
-        payload: {
-            action: action,
-            data: {
-                date: date == null ? new Date() : date,
-                author: 'author_id',
-            },
-        },
-    });
-
-    return result.editorState;
-}
-
-function addInsertSuggestion(editorState, text, date) {
-    const result = reducer({
-        editorState: editorState,
-        suggestingMode: true,
-        onChangeValue: () => ({}),
-    }, {
-        type: 'CREATE_ADD_SUGGESTION',
-        payload: {
-            text: text,
-            data: {
-                date: date == null ? new Date() : date,
-                author: 'author_id',
-            },
-        },
-    });
-
-    return result.editorState;
-}
+import * as Setup from './suggestion_setup';
 
 describe('editor3.reducers.suggestion.DELETE_BLOCKS_SUGGESTION', () => {
-    it('DELETE_BLOCKS_SUGGESTION - backspace blocks', () => {
+    it('should create only one suggestion when backspace a selection on multiple blocks', () => {
         const rawContent = {
             blocks: [
                 {key: '4vu4i', text: 'paragraph1'},
@@ -111,10 +11,10 @@ describe('editor3.reducers.suggestion.DELETE_BLOCKS_SUGGESTION', () => {
             entityMap: {},
         };
         const date = new Date();
-        let editorState = getInitialEditorState(rawContent);
+        let editorState = Setup.getInitialEditorState(rawContent);
 
-        editorState = applySelection(editorState, 0, 4, 1, 6);
-        editorState = addDeleteSuggestion(editorState, 'backspace', date);
+        editorState = Setup.applySelection(editorState, 0, 4, 1, 6);
+        editorState = Setup.addDeleteSuggestion(editorState, 'backspace', date);
 
         const selection = editorState.getSelection();
         const content = editorState.getCurrentContent();
@@ -152,7 +52,7 @@ describe('editor3.reducers.suggestion.DELETE_BLOCKS_SUGGESTION', () => {
         });
     });
 
-    it('DELETE_BLOCKS_SUGGESTION - delete blocks', () => {
+    it('should create only one suggestion when delete a selection on multiple blocks', () => {
         const rawContent = {
             blocks: [
                 {key: '4vu4i', text: 'paragraph1'},
@@ -161,10 +61,10 @@ describe('editor3.reducers.suggestion.DELETE_BLOCKS_SUGGESTION', () => {
             entityMap: {},
         };
         const date = new Date();
-        let editorState = getInitialEditorState(rawContent);
+        let editorState = Setup.getInitialEditorState(rawContent);
 
-        editorState = applySelection(editorState, 0, 4, 1, 6);
-        editorState = addDeleteSuggestion(editorState, 'delete', date);
+        editorState = Setup.applySelection(editorState, 0, 4, 1, 6);
+        editorState = Setup.addDeleteSuggestion(editorState, 'delete', date);
 
         const selection = editorState.getSelection();
         const content = editorState.getCurrentContent();
@@ -202,7 +102,7 @@ describe('editor3.reducers.suggestion.DELETE_BLOCKS_SUGGESTION', () => {
         });
     });
 
-    it('DELETE_BLOCKS_SUGGESTION - delete blocks with one empty paragraph', () => {
+    it('should add ¶ for empty block when delete blocks with one empty paragraph, ', () => {
         const rawContent = {
             blocks: [
                 {key: '4vu4i', text: 'paragraph1'},
@@ -211,10 +111,10 @@ describe('editor3.reducers.suggestion.DELETE_BLOCKS_SUGGESTION', () => {
             ],
             entityMap: {},
         };
-        let editorState = getInitialEditorState(rawContent);
+        let editorState = Setup.getInitialEditorState(rawContent);
 
-        editorState = applySelection(editorState, 0, 4, 2, 6);
-        editorState = addDeleteSuggestion(editorState, 'delete');
+        editorState = Setup.applySelection(editorState, 0, 4, 2, 6);
+        editorState = Setup.addDeleteSuggestion(editorState, 'delete');
 
         const content = editorState.getCurrentContent();
         const secondBlock = content.getBlockAfter(content.getFirstBlock().getKey());
@@ -224,7 +124,7 @@ describe('editor3.reducers.suggestion.DELETE_BLOCKS_SUGGESTION', () => {
             ['DELETE_EMPTY_PARAGRAPH_SUGGESTION-1', 'DELETE_SUGGESTION-1']);
     });
 
-    it('DELETE_BLOCKS_SUGGESTION - delete list with one empty item', () => {
+    it('should add  ¶ for empty block when delete list with one empty item,', () => {
         const rawContent = {
             blocks: [
                 {key: '4vu4i', text: 'one', type: 'ordered-list-item'},
@@ -233,10 +133,10 @@ describe('editor3.reducers.suggestion.DELETE_BLOCKS_SUGGESTION', () => {
             ],
             entityMap: {},
         };
-        let editorState = getInitialEditorState(rawContent);
+        let editorState = Setup.getInitialEditorState(rawContent);
 
-        editorState = applySelection(editorState, 0, 1, 2, 3);
-        editorState = addDeleteSuggestion(editorState, 'delete');
+        editorState = Setup.applySelection(editorState, 0, 1, 2, 3);
+        editorState = Setup.addDeleteSuggestion(editorState, 'delete');
 
         const content = editorState.getCurrentContent();
         const firstBlock = content.getFirstBlock();
@@ -247,7 +147,7 @@ describe('editor3.reducers.suggestion.DELETE_BLOCKS_SUGGESTION', () => {
             ['DELETE_EMPTY_PARAGRAPH_SUGGESTION-1', 'DELETE_SUGGESTION-1']);
     });
 
-    it('DELETE_BLOCKS_SUGGESTION - delete paragraph with one empty item at beginning', () => {
+    it('should add ¶ for first block when delete paragraph with one empty item at beginning', () => {
         const rawContent = {
             blocks: [
                 {key: '4vu4i', text: ''},
@@ -256,10 +156,10 @@ describe('editor3.reducers.suggestion.DELETE_BLOCKS_SUGGESTION', () => {
             ],
             entityMap: {},
         };
-        let editorState = getInitialEditorState(rawContent);
+        let editorState = Setup.getInitialEditorState(rawContent);
 
-        editorState = applySelection(editorState);
-        editorState = addDeleteSuggestion(editorState, 'delete');
+        editorState = Setup.applySelection(editorState);
+        editorState = Setup.addDeleteSuggestion(editorState, 'delete');
 
         const content = editorState.getCurrentContent();
         const firstBlock = content.getFirstBlock();
@@ -269,7 +169,7 @@ describe('editor3.reducers.suggestion.DELETE_BLOCKS_SUGGESTION', () => {
             ['DELETE_EMPTY_PARAGRAPH_SUGGESTION-1', 'DELETE_SUGGESTION-1']);
     });
 
-    it('DELETE_BLOCKS_SUGGESTION - delete paragraph with one empty item at the end', () => {
+    it('should add ¶ is added for last block when delete paragraph with one empty item at the end', () => {
         const rawContent = {
             blocks: [
                 {key: '4vu4i', text: 'one'},
@@ -278,10 +178,10 @@ describe('editor3.reducers.suggestion.DELETE_BLOCKS_SUGGESTION', () => {
             ],
             entityMap: {},
         };
-        let editorState = getInitialEditorState(rawContent);
+        let editorState = Setup.getInitialEditorState(rawContent);
 
-        editorState = applySelection(editorState);
-        editorState = addDeleteSuggestion(editorState, 'delete');
+        editorState = Setup.applySelection(editorState);
+        editorState = Setup.addDeleteSuggestion(editorState, 'delete');
         const content = editorState.getCurrentContent();
         const lastBlock = content.getLastBlock();
 
@@ -290,7 +190,7 @@ describe('editor3.reducers.suggestion.DELETE_BLOCKS_SUGGESTION', () => {
             ['DELETE_EMPTY_PARAGRAPH_SUGGESTION-1', 'DELETE_SUGGESTION-1']);
     });
 
-    it('DELETE_BLOCKS_SUGGESTION - overwrite an already added delete suggestion', () => {
+    it('should overwrite an already added delete suggestion', () => {
         const rawContent = {
             blocks: [
                 {key: '4vu4i', text: 'paragraph1'},
@@ -299,13 +199,13 @@ describe('editor3.reducers.suggestion.DELETE_BLOCKS_SUGGESTION', () => {
             entityMap: {},
         };
         const date = new Date();
-        let editorState = getInitialEditorState(rawContent);
+        let editorState = Setup.getInitialEditorState(rawContent);
 
-        editorState = applySelection(editorState, 0, 4, 1, 6);
-        editorState = addDeleteSuggestion(editorState, 'backspace');
+        editorState = Setup.applySelection(editorState, 0, 4, 1, 6);
+        editorState = Setup.addDeleteSuggestion(editorState, 'backspace');
 
-        editorState = applySelection(editorState, 0, 2, 1, 8);
-        editorState = addDeleteSuggestion(editorState, 'backspace', date);
+        editorState = Setup.applySelection(editorState, 0, 2, 1, 8);
+        editorState = Setup.addDeleteSuggestion(editorState, 'backspace', date);
 
         const content = editorState.getCurrentContent();
         let block = content.getFirstBlock();
@@ -334,7 +234,7 @@ describe('editor3.reducers.suggestion.DELETE_BLOCKS_SUGGESTION', () => {
         });
     });
 
-    it('DELETE_BLOCKS_SUGGESTION - overwrite already existing delete suggestion with one empty paragraph', () => {
+    it('should overwrite already existing delete suggestion with one empty paragraph', () => {
         const rawContent = {
             blocks: [
                 {key: '4vu4i', text: 'paragraph1'},
@@ -343,13 +243,13 @@ describe('editor3.reducers.suggestion.DELETE_BLOCKS_SUGGESTION', () => {
             ],
             entityMap: {},
         };
-        let editorState = getInitialEditorState(rawContent);
+        let editorState = Setup.getInitialEditorState(rawContent);
 
-        editorState = applySelection(editorState, 0, 4, 2, 3);
-        editorState = addDeleteSuggestion(editorState, 'delete');
+        editorState = Setup.applySelection(editorState, 0, 4, 2, 3);
+        editorState = Setup.addDeleteSuggestion(editorState, 'delete');
 
-        editorState = applySelection(editorState, 0, 2, 2, 6);
-        editorState = addDeleteSuggestion(editorState, 'delete');
+        editorState = Setup.applySelection(editorState, 0, 2, 2, 6);
+        editorState = Setup.addDeleteSuggestion(editorState, 'delete');
 
         const content = editorState.getCurrentContent();
         const firstBlock = content.getFirstBlock();
@@ -360,7 +260,7 @@ describe('editor3.reducers.suggestion.DELETE_BLOCKS_SUGGESTION', () => {
             ['DELETE_EMPTY_PARAGRAPH_SUGGESTION-2', 'DELETE_SUGGESTION-2']);
     });
 
-    it('DELETE_BLOCKS_SUGGESTION - overwrite already existing merge suggestion', () => {
+    it('should overwrite already existing merge suggestion', () => {
         const rawContent = {
             blocks: [
                 {key: '4vu4i', text: 'paragraph1'},
@@ -369,24 +269,24 @@ describe('editor3.reducers.suggestion.DELETE_BLOCKS_SUGGESTION', () => {
             ],
             entityMap: {},
         };
-        let editorState = getInitialEditorState(rawContent);
+        let editorState = Setup.getInitialEditorState(rawContent);
 
-        editorState = applySelection(editorState, 1, 0, 1, 0);
-        editorState = addDeleteSuggestion(editorState, 'backspace');
+        editorState = Setup.applySelection(editorState, 1, 0, 1, 0);
+        editorState = Setup.addDeleteSuggestion(editorState, 'backspace');
 
         let content = editorState.getCurrentContent();
 
         expect(content.getPlainText()).toEqual('paragraph1¶paragraph2\nparagraph3');
 
-        editorState = applySelection(editorState, 0, 2, 1, 6);
-        editorState = addDeleteSuggestion(editorState, 'backspace');
+        editorState = Setup.applySelection(editorState, 0, 2, 1, 6);
+        editorState = Setup.addDeleteSuggestion(editorState, 'backspace');
 
         content = editorState.getCurrentContent();
 
         expect(content.getPlainText()).toEqual('paragraph1paragraph2\nparagraph3');
     });
 
-    it('DELETE_BLOCKS_SUGGESTION - overwrite already existing insert suggestion', () => {
+    it('should overwrite already existing insert suggestion', () => {
         const rawContent = {
             blocks: [
                 {key: '4vu4i', text: 'paragraph1'},
@@ -395,17 +295,17 @@ describe('editor3.reducers.suggestion.DELETE_BLOCKS_SUGGESTION', () => {
             ],
             entityMap: {},
         };
-        let editorState = getInitialEditorState(rawContent);
+        let editorState = Setup.getInitialEditorState(rawContent);
 
-        editorState = applySelection(editorState, 1, 4, 1, 4);
-        editorState = addInsertSuggestion(editorState, 'graph2');
+        editorState = Setup.applySelection(editorState, 1, 4, 1, 4);
+        editorState = Setup.addInsertSuggestion(editorState, 'graph2');
 
         let content = editorState.getCurrentContent();
 
         expect(content.getPlainText()).toEqual('paragraph1\nparagraph2\nparagraph3');
 
-        editorState = applySelection(editorState, 0, 2, 2, 6);
-        editorState = addDeleteSuggestion(editorState, 'delete');
+        editorState = Setup.applySelection(editorState, 0, 2, 2, 6);
+        editorState = Setup.addDeleteSuggestion(editorState, 'delete');
 
         content = editorState.getCurrentContent();
 
