@@ -171,9 +171,10 @@ export class HighlightsPopup extends Component {
         const {editorNode} = this.props;
         const onPopup = t.closest('.editor-popup').length || t.closest('.mentions-input__suggestions').length;
         const onEditor = t.closest(editorNode).length;
+        const onModal = t.closest('.modal__dialog');
 
-        if (!onPopup && !onEditor) {
-            // if the click occurred outside the editor and the popup we close it
+        if (!onPopup && !onEditor && !onModal) {
+            // if the click occurred outside the editor, the popup and the modal, we close it
             this.unmountCustom();
         }
     }
