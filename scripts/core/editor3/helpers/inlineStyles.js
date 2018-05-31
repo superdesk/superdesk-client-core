@@ -54,18 +54,6 @@ export function sanitizeContent(editorState, inlineStyles = acceptedInlineStyles
         'change-inline-style'
     );
 
-    contentState.getBlockMap().forEach((block) => {
-        // remove any entities
-        block.findEntityRanges(
-            () => true,
-            (start, end) => {
-                const selection = getSelection(block, start, end);
-
-                contentState = Modifier.applyEntity(contentState, selection, null);
-            }
-        );
-    });
-
     nextEditorState = EditorState.push(
         nextEditorState,
         contentState,
