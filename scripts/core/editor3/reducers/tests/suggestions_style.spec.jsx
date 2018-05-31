@@ -53,7 +53,7 @@ describe('editor3.reducers.suggestion.CREATE_CHANGE_STYLE_SUGGESTION', () => {
         });
     });
 
-    it('should set BOLD suggestion for a bold text, the BOLD style not present anymore for selected text', () => {
+    it('should reset BOLD type when set BOLD suggestion for a bold text', () => {
         const rawContent = {
             blocks: [
                 {key: '4vu4i', text: 'paragraph1', inlineStyleRanges: [{length: 10, offset: 0, style: 'BOLD'}]},
@@ -141,7 +141,7 @@ describe('editor3.reducers.suggestion.CREATE_CHANGE_STYLE_SUGGESTION', () => {
         }
     });
 
-    it('should overwrite overlapped section when set 2 BOLD overlapped suggestions', () => {
+    it('should partially overwrite BOLD suggestion when a new partially overlapped BOLD suggestions is set', () => {
         const rawContent = {
             blocks: [
                 {key: '4vu4i', text: 'paragraph1'},
