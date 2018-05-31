@@ -1,6 +1,5 @@
 import {List, OrderedSet, fromJS} from 'immutable';
 import docsSoap from 'docs-soap';
-import {inlineStyles} from '../../helpers/inlineStyles';
 
 import {
     ContentBlock,
@@ -10,13 +9,6 @@ import {
     convertFromHTML,
     convertToRaw,
 } from 'draft-js';
-
-const elementStyles = {
-    sub: inlineStyles.subscript,
-    sup: inlineStyles.superscript,
-    strike: inlineStyles.strikethrough,
-    s: inlineStyles.strikethrough,
-};
 
 /**
  * @ngdoc class

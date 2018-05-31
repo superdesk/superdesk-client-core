@@ -16,11 +16,7 @@ function blocksFor(html) {
 
 describe('core.editor3.html.from-html', () => {
     it('should parse simple HTML', () => {
-        const {blocks} = blocksFor(`
-            <div>some text</div>
-            <h2>some header</h2>
-            <p>some paragraph</p>
-        `);
+        const {blocks} = blocksFor('<div>some text</div><h2>some header</h2><p>some paragraph</p>');
 
         expect(blocks.length).toBe(3);
 
