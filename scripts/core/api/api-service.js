@@ -108,6 +108,7 @@ function APIProvider() {
                     _etag: 1,
                     _links: 1,
                     _id: keepId ? 0 : 1,
+                    _type: 1,
                 },
                 cleanData = {};
 
