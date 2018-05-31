@@ -11,7 +11,9 @@ function getAllUserIdsFromComments(comments) {
 
     comments.forEach(({data}) => {
         users.push(data.authorId);
-        users.push(data.resolutionInfo.resolverUserId);
+        if (data.resolutionInfo) {
+            users.push(data.resolutionInfo.resolverUserId);
+        }
         data.replies.map((reply) => users.push(reply.authorId));
     });
 
@@ -32,38 +34,73 @@ function convertUsersArrayToObject(users) {
     return usersObj;
 }
 
+function getCommentsFromField(customFields, resolved = true) {
+    if (resolved) {
+        return (obj) => ({
+            fieldName: getLabelForFieldId(getFieldId(obj.contentKey), customFields),
+            comments: getCustomDataFromEditorRawState(
+                obj[fieldsMetaKeys.draftjsState],
+                editor3DataKeys.RESOLVED_COMMENTS_HISTORY
+            ) || [],
+        });
+    } else {
+        return (obj) => ({
+            fieldName: getLabelForFieldId(getFieldId(obj.contentKey), customFields),
+            comments: Object.values(getCustomDataFromEditorRawState(
+                obj[fieldsMetaKeys.draftjsState],
+                editor3DataKeys.MULTIPLE_HIGHLIGHTS
+            ).highlightsData || {}).filter((h) => h.type === 'COMMENT'),
+        });
+    }
+}
+
 InlineCommentsCtrl.$inject = ['$scope', 'userList', 'metadata', 'content'];
 function InlineCommentsCtrl($scope, userList, metadata, content) {
     content.getCustomFields().then((customFields) => {
-        const comments = Object.keys($scope.item[META_FIELD_NAME])
+        $scope.resolvedFilter = 'RESOLVED';
+
+        const editors = Object.keys($scope.item[META_FIELD_NAME])
             .map((contentKey) => ({
                 contentKey: contentKey,
-                [fieldsMetaKeys.draftjsState]: getFieldMetadata($scope.item, contentKey, fieldsMetaKeys.draftjsState),
+                [fieldsMetaKeys.draftjsState]: getFieldMetadata(
+                    $scope.item,
+                    contentKey,
+                    fieldsMetaKeys.draftjsState
+                ),
             }))
-            .filter((obj) => obj[fieldsMetaKeys.draftjsState] != null)
-            .map((obj) => (
-                {
-                    fieldName: getLabelForFieldId(getFieldId(obj.contentKey), customFields),
-                    comments: getCustomDataFromEditorRawState(
-                        obj[fieldsMetaKeys.draftjsState],
-                        editor3DataKeys.RESOLVED_COMMENTS_HISTORY
-                    ) || [],
-                }
-            ))
+            .filter((obj) => obj[fieldsMetaKeys.draftjsState] != null);
+
+        const resolvedComments = editors
+            .map(getCommentsFromField(customFields))
             .filter((obj) => obj.comments.length > 0);
 
-        if (comments.length === 0) {
-            $scope.items = [];
+        const unresolvedComments = editors
+            .map(getCommentsFromField(customFields, false))
+            .filter((obj) => obj.comments.length > 0);
+
+        if (unresolvedComments.length === 0 && resolvedComments.length === 0) {
+            $scope.items = {
+                RESOLVED: [],
+                UNRESOLVED: [],
+            };
             return;
         }
 
-        const userIds = getAllUserIdsFromComments([].concat(...comments.map((obj) => obj.comments)));
+        const allComments = []
+            .concat(...resolvedComments.map((obj) => obj.comments))
+            .concat(...unresolvedComments.map((obj) => obj.comments));
 
-        userList.getAll()
-            .then((users) => {
-                $scope.users = convertUsersArrayToObject(filterUsers(users, userIds));
-                $scope.items = comments;
-            });
+        const userIds = getAllUserIdsFromComments(allComments);
+
+        const comments = {
+            RESOLVED: resolvedComments,
+            UNRESOLVED: unresolvedComments,
+        };
+
+        userList.getAll().then((users) => {
+            $scope.users = convertUsersArrayToObject(filterUsers(users, userIds));
+            $scope.items = comments;
+        });
     });
 }
 
@@ -76,7 +113,7 @@ angular
         function(authoringWidgetsProvider) {
             authoringWidgetsProvider.widget('inline-comments', {
                 icon: 'comments',
-                label: gettext('Resolved Inline comments'),
+                label: gettext('Inline comments'),
                 template:
                 'scripts/apps/authoring/track-changes/views/inline-comments-widget.html',
                 order: 9,
