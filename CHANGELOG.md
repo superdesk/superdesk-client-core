@@ -1,5 +1,45 @@
 # Superdesk Client Changelog
 
+## [1.19.0] 2018-05-31
+
+### Fixed
+
+- Pasting links swaps the order of lines in editor3.
+- Cannot paste table into editor3.
+- Don't close highlights popup when clicking on a modal.
+- Refactor generation of annotations to not include removed annotations.
+- Fix photo desk configurable fields data type.
+- Add classes to fields in user management which should be hidden in liveblog.
+- Make new vocabularies available in `metadata.cvs`.
+- Description of embed not visible in editor2.
+- Text annotations do not show last updated time.
+- Fix fetching of external item on double click in search.
+- Fix pasting from Google Docs on Windows to editor3.
+- Fix delete of multiple paragraphs in editor3.
+- Display and edit embeds from editor2 in editor3.
+- Apply new ui format to suggesting inline comments annotations widget.
+- Fix undo issue when pasting html to editor3.
+- Don't reload carousel if items don't change.
+- Display and edit images from editor2 in editor3.
+- Update angular embed to latest version.
+- Fix duplicate sub-menu position in grid view.
+- Add norwegian planning translation.
+- On delete multiple paragraphs create a single delete suggestion.
+- Fix creating links in editor2.
+
+### Added
+
+- Edit embed codes in editor3.
+- Add plus button to add media to carousel.
+- Add preferred cv values to user profile/desk settings.
+- Add unit tests for editor3.
+
+### Changed
+
+- Show assignment page to all users if planning is enabled.
+- Feeding service labels and fields should be set server side.
+- Move planning UI components to core.
+
 ## [1.18.0] 2018-05-14
 
 ### Fixed
