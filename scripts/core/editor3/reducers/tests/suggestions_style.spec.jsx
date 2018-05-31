@@ -53,7 +53,7 @@ describe('editor3.reducers.suggestion.CREATE_CHANGE_STYLE_SUGGESTION', () => {
         });
     });
 
-    it('should reset BOLD type when set BOLD suggestion for a bold text', () => {
+    it('should create TOGGLE_BOLD_SUGGESTION when toggling BOLD on text which was already bold', () => {
         const rawContent = {
             blocks: [
                 {key: '4vu4i', text: 'paragraph1', inlineStyleRanges: [{length: 10, offset: 0, style: 'BOLD'}]},

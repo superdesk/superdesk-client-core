@@ -871,6 +871,7 @@ function isPeerHighlight(editorState, style, type, author) {
 export function getSuggestionData(editorState, styleName) {
     const type = getHighlightType(styleName);
     const {selection, highlightedText} = getRangeAndTextForStyle(editorState, styleName);
+
     let data = {
         ...getHighlightData(editorState, styleName),
         suggestionText: highlightedText,
@@ -893,7 +894,25 @@ export function getSuggestionData(editorState, styleName) {
         afterPeer = false;
     }
 
-    const peerRangeAndText = getRangeAndTextForStyle(editorState, peerStyleName);
+    const beforeSelection = selection.merge({
+        anchorOffset: selection.getStartOffset(),
+        anchorKey: selection.getStartKey(),
+        focusOffset: selection.getStartOffset(),
+        focusKey: selection.getStartKey(),
+        isBackward: false,
+    });
+    const afterSelection = selection.merge({
+        anchorOffset: selection.getEndOffset(),
+        anchorKey: selection.getEndKey(),
+        focusOffset: selection.getEndOffset(),
+        focusKey: selection.getEndKey(),
+        isBackward: false,
+    });
+    const beforeEditorState = EditorState.acceptSelection(editorState, beforeSelection);
+    const afterEditorState = EditorState.acceptSelection(editorState, afterSelection);
+
+    const peerRangeAndText = getRangeAndTextForStyle(afterPeer ? afterEditorState : beforeEditorState, peerStyleName);
+
     const suggestionSelection = selection.merge({
         anchorOffset: afterPeer ? selection.getStartOffset() : peerRangeAndText.selection.getStartOffset(),
         anchorKey: afterPeer ? selection.getStartKey() : peerRangeAndText.selection.getStartKey(),
