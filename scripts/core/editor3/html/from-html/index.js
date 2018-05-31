@@ -1,5 +1,4 @@
 import {List, OrderedSet, fromJS} from 'immutable';
-import {stateFromHTML} from 'draft-js-import-html';
 import docsSoap from 'docs-soap';
 import {inlineStyles} from '../../helpers/inlineStyles';
 
@@ -119,9 +118,13 @@ class HTMLParser {
      */
     contentState() {
         const processBlock = this.processBlock.bind(this);
-        let contentState = stateFromHTML(this.tree.html(), {
-            elementStyles,
-        });
+
+        const conversionResult = convertFromHTML(this.tree.html());
+
+        let contentState = ContentState.createFromBlockArray(
+            conversionResult.contentBlocks,
+            conversionResult.entityMap
+        );
 
         contentState = this.processLinks(contentState);
 
