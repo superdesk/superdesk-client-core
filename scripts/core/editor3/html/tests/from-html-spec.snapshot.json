@@ -1,0 +1,214 @@
+{
+    "blocks": [
+        {
+            "key": "34qq6",
+            "text": "Giraffes",
+            "type": "unstyled",
+            "depth": 0,
+            "inlineStyleRanges": [
+                {
+                    "offset": 0,
+                    "length": 8,
+                    "style": "ITALIC"
+                }
+            ],
+            "entityRanges": [],
+            "data": {}
+        },
+        {
+            "key": "2fi1s",
+            "text": "Don’t like bananas that much\n",
+            "type": "unstyled",
+            "depth": 0,
+            "inlineStyleRanges": [
+                {
+                    "offset": 0,
+                    "length": 10,
+                    "style": "UNDERLINE"
+                },
+                {
+                    "offset": 11,
+                    "length": 7,
+                    "style": "UNDERLINE"
+                },
+                {
+                    "offset": 6,
+                    "length": 4,
+                    "style": "SUPERSCRIPT"
+                },
+                {
+                    "offset": 19,
+                    "length": 4,
+                    "style": "SUBSCRIPT"
+                },
+                {
+                    "offset": 19,
+                    "length": 4,
+                    "style": "STRIKETHROUGH"
+                },
+                {
+                    "offset": 24,
+                    "length": 4,
+                    "style": "STRIKETHROUGH"
+                },
+                {
+                    "offset": 24,
+                    "length": 4,
+                    "style": "BOLD"
+                }
+            ],
+            "entityRanges": [
+                {
+                    "offset": 11,
+                    "length": 7,
+                    "key": 0
+                }
+            ],
+            "data": {}
+        },
+        {
+            "key": "5r86t",
+            "text": " ",
+            "type": "atomic",
+            "depth": 0,
+            "inlineStyleRanges": [],
+            "entityRanges": [
+                {
+                    "offset": 0,
+                    "length": 1,
+                    "key": 1
+                }
+            ],
+            "data": {}
+        }
+    ],
+    "entityMap": {
+        "0": {
+            "type": "LINK",
+            "mutability": "MUTABLE",
+            "data": {
+                "link": {
+                    "href": "https://en.wikipedia.org/wiki/Banana"
+                }
+            }
+        },
+        "1": {
+            "type": "TABLE",
+            "mutability": "MUTABLE",
+            "data": {
+                "data": {
+                    "numRows": 2,
+                    "numCols": 3,
+                    "cells": [
+                        [
+                            {
+                                "blocks": [
+                                    {
+                                        "key": "cj45e",
+                                        "text": "q",
+                                        "type": "unstyled",
+                                        "depth": 0,
+                                        "inlineStyleRanges": [
+                                            {
+                                                "offset": 0,
+                                                "length": 1,
+                                                "style": "BOLD"
+                                            }
+                                        ],
+                                        "entityRanges": [],
+                                        "data": {}
+                                    }
+                                ],
+                                "entityMap": {}
+                            },
+                            {
+                                "blocks": [
+                                    {
+                                        "key": "fa6i0",
+                                        "text": "w",
+                                        "type": "unstyled",
+                                        "depth": 0,
+                                        "inlineStyleRanges": [
+                                            {
+                                                "offset": 0,
+                                                "length": 1,
+                                                "style": "ITALIC"
+                                            }
+                                        ],
+                                        "entityRanges": [],
+                                        "data": {}
+                                    }
+                                ],
+                                "entityMap": {}
+                            },
+                            {
+                                "blocks": [
+                                    {
+                                        "key": "ckcbs",
+                                        "text": "e",
+                                        "type": "unstyled",
+                                        "depth": 0,
+                                        "inlineStyleRanges": [
+                                            {
+                                                "offset": 0,
+                                                "length": 1,
+                                                "style": "UNDERLINE"
+                                            }
+                                        ],
+                                        "entityRanges": [],
+                                        "data": {}
+                                    }
+                                ],
+                                "entityMap": {}
+                            }
+                        ],
+                        [
+                            {
+                                "blocks": [
+                                    {
+                                        "key": "34qam",
+                                        "text": "a",
+                                        "type": "unstyled",
+                                        "depth": 0,
+                                        "inlineStyleRanges": [],
+                                        "entityRanges": [],
+                                        "data": {}
+                                    }
+                                ],
+                                "entityMap": {}
+                            },
+                            {
+                                "blocks": [
+                                    {
+                                        "key": "24bgb",
+                                        "text": "s",
+                                        "type": "unstyled",
+                                        "depth": 0,
+                                        "inlineStyleRanges": [],
+                                        "entityRanges": [],
+                                        "data": {}
+                                    }
+                                ],
+                                "entityMap": {}
+                            },
+                            {
+                                "blocks": [
+                                    {
+                                        "key": "bkf82",
+                                        "text": "d",
+                                        "type": "unstyled",
+                                        "depth": 0,
+                                        "inlineStyleRanges": [],
+                                        "entityRanges": [],
+                                        "data": {}
+                                    }
+                                ],
+                                "entityMap": {}
+                            }
+                        ]
+                    ]
+                }
+            }
+        }
+    }
+}
