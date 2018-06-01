@@ -32,6 +32,7 @@ describe('archived', () => {
         expect(authoring.edit_button.isDisplayed()).toBe(false);
         expect(authoring.edit_correct_button.isDisplayed()).toBe(false);
         expect(authoring.edit_kill_button.isDisplayed()).toBe(false);
+        expect(authoring.edit_takedown_button.isDisplayed()).toBe(false);
         expect(authoring.navbarMenuBtn.isPresent()).toBe(false);
         expect(authoring.sendToButton.isDisplayed()).toBe(false);
         authoring.showInfo();

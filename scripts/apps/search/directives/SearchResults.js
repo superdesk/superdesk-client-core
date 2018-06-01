@@ -475,8 +475,9 @@ export function SearchResults(
 
             scope.$on('key:v', toggleView);
 
-            scope.$on('open:archived_kill', (evt, item) => {
+            scope.$on('open:archived_kill', (evt, item, action) => {
                 scope.selected.archived_kill = item;
+                scope.selected.archived_kill_action = action;
             });
 
             scope.$on('open:resend', (evt, item) => {

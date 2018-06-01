@@ -18,7 +18,10 @@
              data-mode="monitoring">
         </div>
 
-        <div sd-archived-item-kill ng-if="selected.archived_kill" data-item="selected.archived_kill"></div>
+        <div sd-archived-item-kill
+             ng-if="selected.archived_kill"
+             data-item="selected.archived_kill"
+             data-action="selected.archived_kill_action"></div>
         <div sd-resend-item data-item="selected.resend"></div>
     </div>
 </div>

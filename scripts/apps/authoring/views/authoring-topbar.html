@@ -80,12 +80,17 @@
       <button class="btn btn--primary" ng-if="item._type !== 'legal_archive'"
         ng-show="(action === 'view' || !item._editable) && itemActions.correct"
         ng-click="openAction('correct')"
-        translate>Edit and Correct</button>
+        translate>Correct</button>
+
+      <button class="btn btn--primary" ng-if="item._type !== 'legal_archive'"
+        ng-show="(action === 'view' || !item._editable) && itemActions.takedown"
+        ng-click="openAction('takedown')"
+        translate>Takedown</button>
 
       <button class="btn btn--primary" ng-if="item._type !== 'legal_archive'"
         ng-show="(action === 'view' || !item._editable) && itemActions.kill"
         ng-click="openAction('kill')"
-        translate>Edit and Kill</button>
+        translate>Kill</button>
 
         <button class="btn btn--close"
                 id="closeAuthoringBtn"
@@ -138,6 +143,14 @@
                 ng-disabled="canSendAndPublish()"
                 ng-click="publish()"
                 translate>Send Kill</button>
+
+        <button class="btn btn--primary" type="submit"
+                id="send-takedown-btn"
+                ng-if="action === 'takedown'"
+                ng-show="_editable"
+                ng-disabled="canSendAndPublish()"
+                ng-click="publish()"
+                translate>Send Takedown</button>
 
         <button class="btn btn--close"
                 id="cancelAuthoringBtn"

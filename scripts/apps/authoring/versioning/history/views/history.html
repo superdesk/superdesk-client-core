@@ -162,10 +162,11 @@
                 </div>
             </div>
 
-            <div ng-if="['publish', 'correct', 'kill', 'resend'].includes(historyItem.operation)">
+            <div ng-if="['publish', 'correct', 'kill', 'resend', 'takedown'].includes(historyItem.operation)">
                 <strong ng-if="historyItem.operation === 'publish'">{{ :: 'Published by' | translate }}</strong>
                 <strong ng-if="historyItem.operation === 'correct'">{{ :: 'Corrected by' | translate }}</strong>
-                <strong ng-if="historyItem.operation === 'kill'">{{ :: 'Killed by' | translate }}</strong> 
+                <strong ng-if="historyItem.operation === 'kill'">{{ :: 'Killed by' | translate }}</strong>
+                <strong ng-if="historyItem.operation === 'takedown'">{{ :: 'Recalled by' | translate }}</strong>
                 <strong ng-if="historyItem.operation === 'resend'">{{ :: 'Resent by' | translate }}</strong> 
                 {{ :: historyItem.displayName }}
                 <em><time sd-absdate ng-model="historyItem._created"></time></em>

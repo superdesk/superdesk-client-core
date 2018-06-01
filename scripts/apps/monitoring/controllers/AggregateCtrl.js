@@ -514,8 +514,9 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
         return {'max-height': maxHeight.toString() + 'px'};
     };
 
-    $scope.$on('open:archived_kill', (evt, item) => {
+    $scope.$on('open:archived_kill', (evt, item, action) => {
         $scope.archived_kill = item;
+        $scope.archived_kill_action = action;
     });
 
     $scope.$on('open:resend', (evt, item) => {

@@ -33,7 +33,7 @@ function WidgetsManagerCtrl($scope, $routeParams, authoringWidgets, archiveServi
         } else if (archiveService.isPersonal(item)) {
             display = 'personal';
         } else {
-            display = item.state === 'killed' ? 'killedItem' : 'authoring';
+            display = item.state === 'killed' || item.state === 'recalled' ? 'killedItem' : 'authoring';
             if (item.type === 'composite') {
                 display = 'packages';
             }

@@ -18,8 +18,9 @@ function Authoring() {
     this.save_button = element(by.buttonText('Save'));
     this.edit_button = element(by.id('Edit'));
     this.update_button = element(by.buttonText('Update'));
-    this.edit_correct_button = element(by.buttonText('Edit and Correct'));
-    this.edit_kill_button = element(by.buttonText('Edit and Kill'));
+    this.edit_correct_button = element(by.buttonText('Correct'));
+    this.edit_kill_button = element(by.buttonText('Kill'));
+    this.edit_takedown_button = element(by.buttonText('Takedown'));
 
     this.navbarMenuBtn = element(by.css('.dropdown__toggle.sd-create-btn'));
     this.newPlainArticleLink = element(by.id('create_text_article'));
@@ -58,6 +59,7 @@ function Authoring() {
 
     this.send_kill_button = element(by.id('send-kill-btn'));
     this.send_correction_button = element(by.id('send-correction-btn'));
+    this.send_takedown_button = element(by.id('send-takedown-btn'));
 
     /**
      * Find all file type icons in the item's info icons box matching the
@@ -782,7 +784,7 @@ function Authoring() {
 
     this.isPublishedState = function() {
         return this.getItemState().getText()
-            .then((state) => ['published', 'corrected', 'killed'].indexOf(state.toLowerCase()) !== -1);
+            .then((state) => ['published', 'corrected', 'killed', 'recalled'].indexOf(state.toLowerCase()) !== -1);
     };
 
     this.getSubjectMetadataDropdownOpened = function() {

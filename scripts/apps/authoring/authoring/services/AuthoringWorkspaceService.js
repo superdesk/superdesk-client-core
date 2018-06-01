@@ -116,6 +116,15 @@ export function AuthoringWorkspaceService($location, superdeskFlags, authoring, 
     };
 
     /**
+     * Takedown an item
+     *
+     * @param {Object} item
+     */
+    this.takedown = function(item) {
+        self.edit(item, 'takedown');
+    };
+
+    /**
      * Correct an item
      *
      * @param {Object} item

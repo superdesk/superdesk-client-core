@@ -1001,6 +1001,34 @@ describe('authoring actions', () => {
             allowedActions(itemActions, ['view', 'export']);
         }));
 
+    it('can only view the item if the item is recalled',
+        inject((privileges, desks, authoring, $q, $rootScope) => {
+            var item = {
+                _id: 'test',
+                state: 'recalled',
+                flags: {marked_for_not_publication: false},
+                type: 'text',
+                task: {
+                    desk: 'desk1',
+                },
+            };
+
+            var userPrivileges = {
+                duplicate: true,
+                mark_item: false,
+                spike: true,
+                unspike: true,
+                mark_for_highlights: true,
+                unlock: true,
+            };
+
+            privileges.setUserPrivileges(userPrivileges);
+            $rootScope.$digest();
+            var itemActions = authoring.itemActions(item);
+
+            allowedActions(itemActions, ['view', 'export']);
+        }));
+
     it('cannot create an update for a rewritten story ',
         inject((privileges, desks, authoring, $q, $rootScope) => {
             var item = {
@@ -1164,7 +1192,7 @@ describe('authoring actions', () => {
                 'export']);
         }));
 
-    it('Can perform correction or kill on published item',
+    it('Can perform correction or kill or takedown on published item',
         inject((privileges, desks, authoring, $q, $rootScope) => {
             var item = {
                 _id: 'test',
@@ -1197,7 +1225,8 @@ describe('authoring actions', () => {
                 publish: true,
                 correct: true,
                 kill: true,
-                archive_broadcast: true
+                archive_broadcast: true,
+                takedown: true,
             };
 
             privileges.setUserPrivileges(userPrivileges);
@@ -1206,7 +1235,7 @@ describe('authoring actions', () => {
 
             allowedActions(itemActions, ['new_take', 'duplicate', 'view', 'add_to_current',
                 'mark_item_for_highlight', 'package_item', 'multi_edit', 'correct', 'kill', 're_write',
-                'create_broadcast', 'resend', 'export']);
+                'create_broadcast', 'resend', 'export', 'takedown']);
         }));
 
     it('Can perform resend on rewritten item',
@@ -1259,7 +1288,7 @@ describe('authoring actions', () => {
                 'package_item', 'multi_edit', 'correct', 'kill', 'create_broadcast', 'resend', 'export']);
         }));
 
-    it('Cannot perform correction or kill on published item without privileges',
+    it('Cannot perform correction or kill or takedown on published item without privileges',
         inject((privileges, desks, authoring, $q, $rootScope) => {
             var item = {
                 _id: 'test',
@@ -1291,7 +1320,8 @@ describe('authoring actions', () => {
                 unlock: true,
                 publish: true,
                 correct: false,
-                kill: false
+                kill: false,
+                takedown: false,
             };
 
             privileges.setUserPrivileges(userPrivileges);
