@@ -30,12 +30,12 @@ export function AuthoringEmbeddedDirective(api, notify, gettext, $filter, config
                         .replace('{slugline}', scope.item.slugline || '');
                 }
             }
-            if (scope.action === 'kill') {
+            if (scope.action === 'kill' || scope.action === 'takedown') {
                 // kill template is applied on the item.
                 // task is required to get the desk name.
                 var fields = _.union(_.keys(helpers.CONTENT_FIELDS_DEFAULTS), ['_id', 'versioncreated', 'task']);
                 var item = {
-                    template_name: 'kill', item: _.pick(scope.item, fields),
+                    template_name: scope.action, item: _.pick(scope.item, fields),
                 };
 
                 api.save('content_templates_apply', {}, item, {}).then((result) => {

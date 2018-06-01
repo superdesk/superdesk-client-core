@@ -157,7 +157,8 @@ angular.module('superdesk.apps.archive', [
                     return item.lock_user === null || angular.isUndefined(item.lock_user);
                 },
                 additionalCondition: ['authoring', 'item', function(authoring, item) {
-                    return authoring.itemActions(item).duplicate;
+                    return authoring.itemActions(item).duplicate &&
+                        (item.state !== 'killed' || item.state !== 'recalled');
                 }],
                 group: 'duplicate',
                 groupLabel: gettext('Duplicate'),
@@ -180,8 +181,8 @@ angular.module('superdesk.apps.archive', [
                     return item.lock_user === null || angular.isUndefined(item.lock_user);
                 },
                 additionalCondition: ['authoring', 'item', function(authoring, item) {
-                    return item.state !== 'killed' && !authoring.isContentApiItem(item) &&
-                    (authoring.itemActions(item).duplicate || authoring.itemActions(item).view);
+                    return (item.state !== 'killed' || item.state !== 'recalled') &&
+                        !authoring.isContentApiItem(item) && authoring.itemActions(item).duplicate;
                 }],
                 group: 'duplicate',
                 groupLabel: gettext('Duplicate'),
@@ -202,8 +203,9 @@ angular.module('superdesk.apps.archive', [
                     function(authoring, item, vocabularies, authoringWorkspace, packages) {
                         var openedItem = authoringWorkspace.getItem();
 
-                        return item.state !== 'killed' && !authoring.isContentApiItem(item) &&
-                            authoring.itemActions(item).set_label && openedItem && openedItem.type === 'composite' &&
+                        return (item.state !== 'killed' || item.state !== 'recalled') &&
+                            !authoring.isContentApiItem(item) && authoring.itemActions(item).set_label &&
+                            openedItem && openedItem.type === 'composite' &&
                             packages.isAdded(openedItem, item) && vocabularies.isInit();
                     }],
             })

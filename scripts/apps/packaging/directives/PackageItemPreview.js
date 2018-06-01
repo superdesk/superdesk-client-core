@@ -50,7 +50,7 @@ export function PackageItemPreview(api, lock, superdesk, authoringWorkspace, $lo
                         }
                         scope.isLocked = lock.isLocked(scope.data);
                         scope.isPublished = _.includes(['published', 'corrected'], scope.data.state);
-                        scope.isKilled = scope.data.state === 'killed';
+                        scope.isKilled = (scope.data.state === 'killed' || scope.data.state === 'recalled');
                     }, (response) => {
                         scope.error = true;
                     });

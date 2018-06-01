@@ -193,7 +193,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
      * Removes certain properties which are irrelevant for publish actions depending on the orig.item.state.
      * If not removed the API will throw errors.
      */
-    this.cleanUpdatesBeforePublishing = function(original, updates) {
+    this.cleanUpdatesBeforePublishing = function(original, updates, action = 'publish') {
         if (!updates.publish_schedule) {
             delete updates.publish_schedule;
         }
@@ -206,6 +206,11 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         // Remove sign off from update (if it is not mapped), it will get the publishing user appended in the backend
         if (updates.sign_off && !(config.user && config.user.sign_off_mapping)) {
             delete updates.sign_off;
+        }
+
+        // for kill and take down action dateline is not required
+        if (action === 'kill' || action === 'takedown') {
+            delete updates.dateline;
         }
 
         helpers.stripHtml(updates);
@@ -225,7 +230,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
     this.publish = function publish(orig, diff, action = 'publish') {
         let extDiff = helpers.extendItem({}, diff);
 
-        this.cleanUpdatesBeforePublishing(orig, extDiff);
+        this.cleanUpdatesBeforePublishing(orig, extDiff, action);
         helpers.filterDefaultValues(extDiff, orig);
         var endpoint = 'archive_' + action;
 
@@ -338,7 +343,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
      * @param {Object} item
      */
     this.isPublished = function isPublished(item) {
-        return _.includes(['published', 'killed', 'scheduled', 'corrected'], item.state);
+        return _.includes(['published', 'killed', 'scheduled', 'corrected', 'recalled'], item.state);
     };
 
     /**
@@ -381,7 +386,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         var action = angular.extend({}, helpers.DEFAULT_ACTIONS);
         var itemOnReadOnlyStage = item && item.task && item.task.stage && desks.isReadOnlyStage(item.task.stage);
         var isUndefinedOperation = angular.isUndefined(currentItem) || angular.isUndefined(userPrivileges);
-        const isKilledItem = (item) => _.get(item, 'state') === 'killed';
+        const isKilledItem = (item) => _.get(item, 'state') === 'killed' || _.get(item, 'state') === 'recalled';
 
         action = this._updateActionsForContentApi(currentItem, action);
 
@@ -461,7 +466,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         !this.isPublished(item) && !_.isNil(item.rewrite_of) && _.isNil(item.rewritten_by);
 
     this._isReadOnly = function(item) {
-        return _.includes(['spiked', 'scheduled', 'killed'], item.state);
+        return _.includes(['spiked', 'scheduled', 'killed', 'recalled'], item.state);
     };
 
     this._updatePublished = function(currentItem, action) {
@@ -477,6 +482,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         } else if (isPublishedOrCorrected) {
             action.kill = userPrivileges.kill && lockedByMe && !isReadOnlyState;
             action.correct = userPrivileges.correct && lockedByMe && !isReadOnlyState;
+            action.takedown = userPrivileges.takedown && lockedByMe && !isReadOnlyState;
         }
     };
 
@@ -512,7 +518,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
             (!currentItem.rewrite_of || currentItem.rewrite_of && this.isPublished(currentItem));
 
         action.resend = _.includes(['text'], currentItem.type) &&
-            _.includes(['published', 'corrected', 'killed'], currentItem.state);
+            _.includes(['published', 'corrected', 'killed', 'recalled'], currentItem.state);
 
         // mark item for highlights
         action.mark_item_for_highlight = currentItem.task && currentItem.task.desk &&
@@ -523,7 +529,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
             !isReadOnlyState && userPrivileges.mark_for_desks && currentItem.type === 'text';
 
         // allow all stories to be packaged if it doesn't have Embargo
-        action.package_item = !_.includes(['spiked', 'scheduled', 'killed'], currentItem.state) &&
+        action.package_item = !_.includes(['spiked', 'scheduled', 'killed', 'recalled'], currentItem.state) &&
             !currentItem.embargo && (this.isPublished(currentItem) || !currentItem.publish_schedule);
 
         action.create_broadcast = _.includes(['published', 'corrected'], currentItem.state) &&
@@ -544,9 +550,9 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
             // in production
 
             action.duplicate = userPrivileges.duplicate &&
-                !_.includes(['spiked', 'killed'], currentItem.state);
+                !_.includes(['spiked', 'killed', 'recalled'], currentItem.state);
 
-            action.add_to_current = !_.includes(['spiked', 'scheduled', 'killed'], currentItem.state);
+            action.add_to_current = !_.includes(['spiked', 'scheduled', 'killed', 'recalled'], currentItem.state);
 
             var desk = _.find(self.userDesks, {_id: currentItem.task.desk});
 

@@ -487,7 +487,7 @@ export function SearchService($location, gettext, config, session, multi,
         }
 
         if (params.ignoreKilled) {
-            this.filter({not: {term: {state: 'killed'}}});
+            this.filter({not: {terms: {state: ['killed', 'recalled']}}});
         }
 
         if (params.onlyLastPublished) {

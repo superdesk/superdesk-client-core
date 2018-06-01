@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 ArchivedItemKill.$inject = ['authoring', 'api', 'notify', 'gettext'];
 
 export function ArchivedItemKill(authoring, api, notify, gettext) {
@@ -5,6 +7,7 @@ export function ArchivedItemKill(authoring, api, notify, gettext) {
         templateUrl: 'scripts/apps/archive/views/archived-kill.html',
         scope: {
             item: '=',
+            action: '=',
         },
         link: function(scope, elem, attr) {
             scope._editable = true;
@@ -14,7 +17,7 @@ export function ArchivedItemKill(authoring, api, notify, gettext) {
             api.remove(itemToDelete, {}, 'archived').then(
                 (response) => {
                     var fields = _.union(_.keys(authoring.getContentFieldDefaults()), ['_id', 'versioncreated']);
-                    var itemForTemplate = {template_name: 'kill', item: _.pick(scope.item, fields)};
+                    var itemForTemplate = {template_name: scope.action, item: _.pick(scope.item, fields)};
 
                     api.save('content_templates_apply', {}, itemForTemplate, {}).then((result) => {
                         itemForTemplate = _.pick(result, _.keys(authoring.getContentFieldDefaults()));
@@ -24,6 +27,7 @@ export function ArchivedItemKill(authoring, api, notify, gettext) {
                                 scope.item[key] = value;
                             }
                         });
+                        scope.item['operation'] = scope.action;
                     }, (err) => {
                         notify.error(gettext('Failed to apply kill template to the item.'));
                     });
@@ -37,7 +41,7 @@ export function ArchivedItemKill(authoring, api, notify, gettext) {
             );
 
             scope.kill = function() {
-                api.save('archived', scope.item, _.pick(scope.item, ['headline', 'abstract', 'body_html']))
+                api.save('archived', scope.item, _.pick(scope.item, ['headline', 'abstract', 'body_html', 'operation']))
                     .then((response) => {
                         notify.success(gettext('Item has been killed.'));
                         scope.cancel();

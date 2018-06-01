@@ -83,10 +83,10 @@ export function CardsService(api, search, session, desks, config) {
     function filterQueryByDeskType(query, card) {
         var deskId = card._id.substring(0, card._id.indexOf(':'));
         var desk = desks.deskLookup ? desks.deskLookup[deskId] : null;
-        var states = ['scheduled', 'published', 'corrected', 'killed'];
+        var states = ['scheduled', 'published', 'corrected', 'killed', 'recalled'];
 
         if (config.monitoring && config.monitoring.scheduled) {
-            states = ['published', 'corrected', 'killed'];
+            states = ['published', 'corrected', 'killed', 'recalled'];
         }
         if (desk) {
             if (desk.desk_type === 'authoring') {
