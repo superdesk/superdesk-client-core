@@ -131,7 +131,7 @@
     "superdesk-code-style": "^1.1.1"
   },
   "scripts": {
-    "test": "grunt ci:travis",
+    "test": "echo 'testabc123' && grunt ci:travis && echo 'testabc321'",
     "debug-unit-tests": "karma start karma.conf.js --browsers=Chrome",
     "unit": "grunt unit",
     "lint": "eslint --ext .js --ext .jsx scripts spec tasks *.js",
