@@ -36,7 +36,7 @@ describe('editor3.reducers.suggestion.CREATE_SPLIT_PARAGRAPH_SUGGESTION', () => 
         });
     });
 
-    it('should not add suggestion when before it there is a merge suggestion', () => {
+    it('should not add suggestion when there is a merge suggestion before it', () => {
         const rawContent = {
             blocks: [
                 {key: '4vu4i', text: 'paragraph1'},
