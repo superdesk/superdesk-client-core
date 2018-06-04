@@ -13,9 +13,6 @@ cache:
     directories:
         - $HOME/.cache/yarn
 
-before_install:
-    - yarn global add grunt-cli
-
 script:
-    - grunt ci:travis
-    - grunt build
+    - npm run test
+    - npm run build
