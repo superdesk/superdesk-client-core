@@ -1,6 +1,10 @@
 @import '~variables.scss';
 
 .sd-widget.inline-comments, .sd-widget.suggestions {
+    .form__row {
+        display: flex;
+        justify-content: center;
+    }
     .notification-list {
         .item {
             padding: 1rem;

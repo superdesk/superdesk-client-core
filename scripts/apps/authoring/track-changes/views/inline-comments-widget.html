@@ -1,44 +1,48 @@
 <div class="widget" ng-controller="InlineCommentsCtrl">
-    <div class="notification-list notification-list-fix white field" ng-repeat="commentObj in items" class="item">
-        <h4 class="label label--large">{{commentObj.fieldName}}</h4>
-
-        <ul ng-class="{ 'notification-list--empty' : items.length === 0 }">
-            <li ng-repeat="item in commentObj.comments" class="item">
-                <figure class="avatar">
-                    <img sd-user-avatar data-user="users[item.data.authorId]">
-                </figure>
-                <div class="content">
-                    <div class="text" sd-comment-text data-name="{{users[item.data.authorId].display_name || users[item.data.authorId].username}}" data-text="{{item.data.msg}}"></div>
-                    <span class="date" sd-absdate datetime="item.data.date"></span>
-                </div>
-                <ul>
-                    <li class="small" ng-repeat="reply in item.data.replies">
-                        <figure class="avatar">
-                            <img sd-user-avatar data-user="users[reply.authorId]">
-                        </figure>
-                        <div class="content">
-                            <div class="text" sd-comment-text data-comment="comment" data-name="{{users[reply.authorId].display_name || users[reply.authorId].username}}" data-text="{{reply.msg}}"></div>
-                            <span class="date" sd-absdate datetime="reply.date"></span>
-                        </div>
-                    </li>
-                </ul>
-                <div ng-show="!!item.data.commentedText" class="commented-text">
-                    <div translate>Selected text:</div>
-                    <span class="text" title="{{ item.data.commentedText }}">
-                        "{{ item.data.commentedText }}"
-                    </span>
-                </div>
-                <div class="resolution">
-                    <span>{{ :: 'Resolved by' | translate }} {{ users[item.data.resolutionInfo.resolverUserId].display_name || users[item.data.resolutionInfo.resolverUserId].username }} <span class="date" sd-absdate datetime="item.data.resolutionInfo.date"></span></span>
-                </div>
-            </li>
-    
-            <li class="no-comments" ng-show="items.length === 0">
-                <div class="round-box">
-                    <i class="big-icon--comments"></i>
-                </div>
-                <h3 translate>No comments have been posted</h3>
-            </li>
-        </ul>
+    <div class="form__row">
+        <sd-check ng-model="resolvedFilter" type="radio" ng-value="UNRESOLVED" label-position="inside">{{ :: 'Unresolved' | translate }}</sd-check>
+        <sd-check ng-model="resolvedFilter" type="radio" ng-value="RESOLVED" label-position="inside">{{ :: 'Resolved' | translate }}</sd-check>
     </div>
+    <ul ng-class="{ 'notification-list--empty' : items[resolvedFilter].length === 0 }">
+        <li ng-repeat="commentObj in items[resolvedFilter]">
+            <h4 class="label label--large">{{commentObj.fieldName}}</h4>
+            <ul class="notification-list notification-list-fix white field" >
+                <li ng-repeat="item in commentObj.comments" class="item">
+                    <figure class="avatar">
+                        <img sd-user-avatar data-user="users[item.data.authorId]">
+                    </figure>
+                    <div class="content">
+                        <div class="text" sd-comment-text data-name="{{users[item.data.authorId].display_name || users[item.data.authorId].username}}" data-text="{{item.data.msg}}"></div>
+                        <span class="date" sd-absdate datetime="item.data.date"></span>
+                    </div>
+                    <ul>
+                        <li class="small" ng-repeat="reply in item.data.replies">
+                            <figure class="avatar">
+                                <img sd-user-avatar data-user="users[reply.authorId]">
+                            </figure>
+                            <div class="content">
+                                <div class="text" sd-comment-text data-comment="comment" data-name="{{users[reply.authorId].display_name || users[reply.authorId].username}}" data-text="{{reply.msg}}"></div>
+                                <span class="date" sd-absdate datetime="reply.date"></span>
+                            </div>
+                        </li>
+                    </ul>
+                    <div ng-show="!!item.data.commentedText" class="commented-text">
+                        <div translate>Selected text:</div>
+                        <span class="text" title="{{ item.data.commentedText }}">
+                            "{{ item.data.commentedText }}"
+                        </span>
+                    </div>
+                    <div class="resolution" ng-if="item.data.resolutionInfo">
+                        <span>{{ :: 'Resolved by' | translate }} {{ users[item.data.resolutionInfo.resolverUserId].display_name || users[item.data.resolutionInfo.resolverUserId].username }} <span class="date" sd-absdate datetime="item.data.resolutionInfo.date"></span></span>
+                    </div>
+                </li>
+            </ul>
+        </li>
+        <li class="no-comments" ng-show="items[resolvedFilter].length === 0">
+            <div class="round-box">
+                <i class="big-icon--comments"></i>
+            </div>
+            <h3 translate>No comments have been posted</h3>
+        </li>
+    </ul>
 </div>
