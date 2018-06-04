@@ -8,7 +8,6 @@ import {initSelectionIterator, hasNextSelection} from '../helpers/selection';
 import {editor3DataKeys, getCustomDataFromEditor, setCustomDataForEditor,
     getAllCustomDataFromEditor, setAllCustomDataForEditor} from '../helpers/editor3CustomData';
 import * as Links from '../helpers/links';
-import ng from 'core/services/ng';
 import {replaceSelectedEntityData} from '../components/links/entityUtils';
 
 
@@ -408,11 +407,12 @@ const pasteAddSuggestion = (state, {content, data}) => {
  * @ngdoc method
  * @name moveToSuggestionsHistory
  * @param {Object} editorState
+ * @param {Object} data - info about the author
  * @param {Object} suggestion
  * @param {Boolean} accepted
  * @return {editorState} returns new state
  */
-function moveToSuggestionsHistory(editorState, suggestion, accepted) {
+function moveToSuggestionsHistory(editorState, data, suggestion, accepted) {
     const resolvedSuggestions = getCustomDataFromEditor(
         editorState,
         editor3DataKeys.RESOLVED_SUGGESTIONS_HISTORY
@@ -430,8 +430,8 @@ function moveToSuggestionsHistory(editorState, suggestion, accepted) {
                 ...suggestion,
             },
             resolutionInfo: {
-                resolverUserId: ng.get('session').identity._id,
-                date: new Date(),
+                resolverUserId: data.author,
+                date: data.date,
                 accepted: accepted,
             },
         })
@@ -446,16 +446,17 @@ function moveToSuggestionsHistory(editorState, suggestion, accepted) {
  * @ngdoc method
  * @name processSplitBlockSuggestion
  * @param {Object} state
+ * @param {Object} data - info about the author
  * @param {Object} suggestion
  * @param {Boolean} accepted - the suggestion is accepted
  * @return {Object} returns new state
  * @description Accept or reject the split suggestions in the selection.
  */
-const processSplitBlockSuggestion = (state, suggestion, accepted) => {
+const processSplitBlockSuggestion = (state, data, suggestion, accepted) => {
     const {selection} = suggestion;
     let {editorState} = state;
 
-    editorState = moveToSuggestionsHistory(editorState, suggestion, accepted);
+    editorState = moveToSuggestionsHistory(editorState, data, suggestion, accepted);
     let content = editorState.getCurrentContent();
     let block = content.getBlockAfter(selection.getStartKey());
     let newSelection = selection.merge({
@@ -476,17 +477,18 @@ const processSplitBlockSuggestion = (state, suggestion, accepted) => {
  * @ngdoc method
  * @name processMergeBlocksSuggestion
  * @param {Object} state
+ * @param {Object} data - info about the author
  * @param {Object} suggestion
  * @param {Boolean} accepted - the suggestion is accepted
  * @return {Object} returns new state
  * @description Accept or reject the merge suggestions in the selection.
  */
-const processMergeBlocksSuggestion = (state, suggestion, accepted) => {
+const processMergeBlocksSuggestion = (state, data, suggestion, accepted) => {
     const {selection} = suggestion;
     let {editorState} = state;
     const crtSelection = editorState.getSelection();
 
-    editorState = moveToSuggestionsHistory(editorState, suggestion, accepted);
+    editorState = moveToSuggestionsHistory(editorState, data, suggestion, accepted);
     let content = editorState.getCurrentContent();
 
     content = Modifier.removeRange(content, selection, 'backward');
@@ -505,12 +507,13 @@ const processMergeBlocksSuggestion = (state, suggestion, accepted) => {
  * @ngdoc method
  * @name processSuggestion
  * @param {Object} state
+ * @param {Object} data - info about the author
  * @param {Object} suggestion
  * @param {Boolean} accepted - the suggestion is accepted
  * @return {Object} returns new state
  * @description Accept or reject the suggestions in the selection.
  */
-const processSuggestion = (state, {suggestion}, accepted) => {
+const processSuggestion = (state, {data, suggestion}, accepted) => {
     if (accepted === true || accepted === false) {
         // after clicking accept/reject editor focus is lost
         // restore the focus so undo stack is correct
@@ -528,11 +531,11 @@ const processSuggestion = (state, {suggestion}, accepted) => {
     let style;
 
     if (suggestion.type === 'SPLIT_PARAGRAPH_SUGGESTION') {
-        return processSplitBlockSuggestion(state, suggestion, accepted);
+        return processSplitBlockSuggestion(state, data, suggestion, accepted);
     }
 
     if (suggestion.type === 'MERGE_PARAGRAPHS_SUGGESTION') {
-        return processMergeBlocksSuggestion(state, suggestion, accepted);
+        return processMergeBlocksSuggestion(state, data, suggestion, accepted);
     }
 
     // If link it's rejected we remove the entity
@@ -552,7 +555,7 @@ const processSuggestion = (state, {suggestion}, accepted) => {
     editorState = EditorState.acceptSelection(editorState, selection);
 
     if (suggestion.type === 'BLOCK_STYLE_SUGGESTION') {
-        editorState = moveToSuggestionsHistory(editorState, suggestion, accepted);
+        editorState = moveToSuggestionsHistory(editorState, data, suggestion, accepted);
         if (!accepted) {
             editorState = RichUtils.toggleBlockType(editorState, suggestion.blockType);
         }
@@ -561,7 +564,7 @@ const processSuggestion = (state, {suggestion}, accepted) => {
     }
 
     if (styleSuggestionsTypes.indexOf(suggestion.type) !== -1) {
-        editorState = moveToSuggestionsHistory(editorState, suggestion, accepted);
+        editorState = moveToSuggestionsHistory(editorState, data, suggestion, accepted);
         if (!accepted) {
             style = Highlights.getInlineStyleByType(suggestion.type);
             editorState = RichUtils.toggleInlineStyle(editorState, style);

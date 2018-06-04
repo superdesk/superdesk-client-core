@@ -157,3 +157,30 @@ export function addSplitParagraphSuggestion(editorState, date = new Date(), auth
 
     return result.editorState;
 }
+
+export function processSuggestion(editorState, type, accepted, date = new Date(), author = 'author_id') {
+    const result = reducer({
+        editorState: editorState,
+        suggestingMode: true,
+        onChangeValue: () => ({}),
+    }, {
+        type: accepted ? 'ACCEPT_SUGGESTION' : 'REJECT_SUGGESTION',
+        payload: {
+            suggestion: {
+                selection: editorState.getSelection(),
+                type: type,
+                date: date,
+                author: 'author suggestion',
+                styleName: type + '-1',
+                blockType: 'H1',
+                originalStyle: '',
+            },
+            data: {
+                date: date,
+                author: author,
+            },
+        },
+    });
+
+    return result.editorState;
+}
