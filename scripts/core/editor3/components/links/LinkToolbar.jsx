@@ -21,7 +21,11 @@ export class LinkToolbarComponent extends Component {
             {!isLink ? <span>&nbsp;</span> :
                 <span>
                     {gettext('Link controls:')}
-                    {link && link.href ? <a href={link.href} target="_blank">{gettext('Open')}</a> : null}
+                    {
+                        link && link.href
+                            ? <a href={link.href} target="_blank" rel="noopener noreferrer">{gettext('Open')}</a>
+                            : null
+                    }
                     <a onClick={() => onEdit(link)}>{gettext('Edit')}</a>
                     <a onClick={removeLink}>{gettext('Delete')}</a>
                 </span>}

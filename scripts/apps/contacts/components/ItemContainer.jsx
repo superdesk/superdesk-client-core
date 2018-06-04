@@ -66,22 +66,32 @@ export class ItemContainer extends React.Component {
             _class = _link;
             break;
         case 'website':
-            value = (<a href={item.website} target="_blank">{item.website}</a>);
+            value = (<a href={item.website} target="_blank" rel="noopener noreferrer">{item.website}</a>);
             title = value && gettextCatalog.getString(item.website);
             _class = _link;
             break;
         case 'twitter':
-            value = (<a href={`${TWITTER_URL}${item.twitter}`} target="_blank"><i className="icon-twitter" /></a>);
+            value = (
+                <a
+                    href={`${TWITTER_URL}${item.twitter}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    <i className="icon-twitter" />
+                </a>
+            );
             title = value && gettextCatalog.getString(`${TWITTER_URL}${item.twitter}`);
             _class = _link;
             break;
         case 'facebook':
-            value = (<a href={item.facebook} target="_blank"><i className="icon-facebook" /></a>);
+            value = (
+                <a href={item.facebook} target="_blank" rel="noopener noreferrer"><i className="icon-facebook" /></a>
+            );
             title = value && gettextCatalog.getString(item.facebook);
             _class = _link;
             break;
         case 'location':
-            value = contactAddress ? (<a href={`${MAP_URL}${contactAddress}`} target="_blank">
+            value = contactAddress ? (<a href={`${MAP_URL}${contactAddress}`} target="_blank" rel="noopener noreferrer">
                 {contactAddress}</a>) : null;
             title = value && gettextCatalog.getString(contactAddress);
             _class = _link;
