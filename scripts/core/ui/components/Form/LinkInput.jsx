@@ -106,7 +106,7 @@ export class LinkInput extends React.Component {
             <Row>
                 <LineInput noMargin={true}>
                     <Label text={this.state.title} />
-                    <a href={this.getAbsoulteURL(value)} target="_blank">{value}</a>
+                    <a href={this.getAbsoulteURL(value)} target="_blank" rel="noopener noreferrer">{value}</a>
                 </LineInput>
             </Row>
         ) : (
@@ -128,7 +128,12 @@ export class LinkInput extends React.Component {
                     />
 
                     {showLink && iframelyKey && (
-                        <a href={this.getAbsoulteURL(value)} target="_blank">{this.state.title}</a>
+                        <a
+                            href={this.getAbsoulteURL(value)}
+                            target="_blank" rel="noopener noreferrer"
+                        >
+                            {this.state.title}
+                        </a>
                     )}
 
                     <span className="sd-line-input__icon-bottom-right">

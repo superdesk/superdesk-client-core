@@ -69,7 +69,7 @@ export class FileInput extends React.Component {
             <Row key={index} noPadding>
                 {get(val, 'media') && (<LineInput noMargin={true}>
                     <Label text={`${val.media.content_type} (${Math.round(val.media.length / 1024)}kB)`} />
-                    <a href={createLink(val)} target="_blank">
+                    <a href={createLink(val)} target="_blank" rel="noopener noreferrer">
                         {val.media.name}
                     </a>
                 </LineInput>)}
@@ -81,7 +81,7 @@ export class FileInput extends React.Component {
                         <a className="icn-btn sd-line-input__icon-right" onClick={this.onRemove.bind(null, index)}>
                             <i className="icon-trash" />
                         </a>
-                        <a href={createLink(val)} target="_blank" onFocus={onFocus}>
+                        <a href={createLink(val)} target="_blank" rel="noopener noreferrer" onFocus={onFocus}>
                             {val.media.name}&nbsp;
                             ({Math.round(val.media.length / 1024)}kB)
                         </a>
