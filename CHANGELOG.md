@@ -1,5 +1,15 @@
 # Superdesk Client Changelog
 
+## [1.19.1] 2018-06-05
+
+### Fixed
+
+- Fix ingest settings ui html markup.
+
+### Changed
+
+- Update nb translation.
+
 ## [1.19.0] 2018-05-31
 
 ### Fixed
