@@ -2,9 +2,9 @@
 // ---------------------------------------------
 .sd-typeahead {
     position: relative;
-	list-style-type: none;
+    list-style-type: none;
     .item-list {
-		z-index: 9999;
+        z-index: 9999;
         min-width: 190px;
         width: 100%;
         height:auto;
@@ -20,15 +20,10 @@
         z-index: 1;
         font-size: 12px;
         li {
-            padding: 5px 10px;
             @include box-sizing(border-box);
             width: 100%;
             &:hover {
                 cursor: pointer;
-            }
-            &.active {
-                background-color: #5ea9c8;
-                color: #fff;
             }
             .country_state_info {
                 padding-left:  10px;
@@ -38,6 +33,10 @@
             em {
                 font-size: 11px;
             }
+        }
+
+        button.greyout {
+            opacity: .5;
         }
     }
 }
