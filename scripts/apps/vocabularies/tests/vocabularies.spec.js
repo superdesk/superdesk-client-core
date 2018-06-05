@@ -1,3 +1,8 @@
+import React from 'react';
+import ReactTestUtils from 'react-dom/test-utils';
+import TestRenderer from 'react-test-renderer';
+import ItemsTableComponent from '../components/ItemsTableComponent';
+
 describe('vocabularies', () => {
     beforeEach(window.module('superdesk.apps.publish'));
     beforeEach(window.module('superdesk.apps.vocabularies'));
@@ -112,7 +117,7 @@ describe('vocabularies', () => {
                     expect(metadata.initialize).toHaveBeenCalled();
                 }));
 
-            it('validate vocabulary', inject((api, $q, $rootScope, metadata, $compile) => {
+            it('validate vocabulary', inject(($compile) => {
                 scope.vocabulary = {_id: 'foo', display_name: 'Foo', items: []};
                 scope.vocabulary.schema = {name: {required: true}, qcode: {required: true}, other: {}};
 
@@ -130,6 +135,29 @@ describe('vocabularies', () => {
                 scope.vocabulary.items[0] = {name: 'foo', qcode: 'bar', is_active: true};
                 scope.$digest();
                 expect(scope.itemsValidation.valid).toBe(true);
+            }));
+
+            it('convert values for qcode having integer type', inject(($compile) => {
+                let items = [{name: 'foo', qcode: '1'}];
+                let itemsValidation = [{'name': true, 'qcode': true}];
+                let schema = {name: {required: true}, qcode: {type: 'integer'}};
+                let schemaFields = [{key: "name", required: true}, {key: "qcode", type: "integer"}];
+                let component;
+                let updatedValue;
+                const update = (item, key, value) => {
+                    updatedValue = value;
+                };
+                const testRenderer = TestRenderer.create(<ItemsTableComponent ref={(ref) => component = ref}
+                    model={{name: null, qcode: null}}
+                    schema={schema}
+                    schemaFields={schemaFields}
+                    gettext={() => ''}
+                    remove={() => {}}
+                    update={update} />);
+
+                component.setState({items, itemsValidation});
+                ReactTestUtils.Simulate.change(testRenderer.root.findByProps({type: 'number'}), {target: {value: '2'}});
+                expect(updatedValue).toBe(2);
             }));
 
             it('can cancel editing vocabulary', inject((api, $q, $rootScope, metadata) => {
