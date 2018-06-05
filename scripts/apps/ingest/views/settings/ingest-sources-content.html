@@ -66,7 +66,7 @@
                         <select id="provider-feeding-service" ng-change="initProviderConfig()" required ng-model="provider.feeding_service" ng-options="fs.feeding_service as fs.label for fs in feedingServices"></select>
                     </div>
 
-                    <div class="field" ng-show="isFieldEnabled('feed_parser')">
+                    <div class="field" ng-show="feedParsers.length > 1">
                         <label for="provider-feed-parser" translate>Feed Parser</label>
                         <select id="provider-feed-parser" ng-model="provider.feed_parser" ng-options="fp.feed_parser as fp.label for fp in feedParsers">
                             <option value=""></option>

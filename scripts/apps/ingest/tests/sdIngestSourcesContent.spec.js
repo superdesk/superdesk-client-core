@@ -100,6 +100,27 @@ describe('sdIngestSourcesContent directive', () => {
             );
         });
 
+        it('should initialize provider configuration', () => {
+            scope.provider = {feeding_service: 'service1'};
+            scope.feedingServices = [{
+                feeding_service: 'service1',
+                parser_restricted_values: ['parser1'],
+            }, {
+                feeding_service: 'service2',
+                parser_restricted_values: ['parser1', 'parser2'],
+            }];
+            scope.allFeedParsers = [{feed_parser: 'parser1'}, {feed_parser: 'parser2'}, {feed_parser: 'parser3'}];
+
+            scope.initProviderConfig();
+            expect(scope.provider.feed_parser).toEqual('parser1');
+            expect(scope.feedParsers).toEqual([{feed_parser: 'parser1'}]);
+
+            scope.provider = {feeding_service: 'service2'};
+            scope.initProviderConfig();
+            expect(scope.provider.feed_parser).toBe(null);
+            expect(scope.feedParsers).toEqual([{feed_parser: 'parser1'}, {feed_parser: 'parser2'}]);
+        });
+
         it('should contain configuration fields', () => {
             scope.edit(fakeProvider);
             scope.$digest();
