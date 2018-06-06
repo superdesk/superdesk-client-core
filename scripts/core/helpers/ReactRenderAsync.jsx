@@ -12,7 +12,7 @@ class ReactRenderAsync extends React.Component {
             mappedProps: {},
         };
     }
-    componentWillMount() {
+    componentDidMount() {
         promiseAllObject(this.props.promises)
             .then((result) => {
                 this.setState({

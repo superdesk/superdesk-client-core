@@ -7,11 +7,6 @@ describe('editor3.store', () => {
             getDict: jasmine.createSpy().and.returnValue($q.when(null)),
             isCorrectWord: jasmine.createSpy(),
         }));
-        $provide.service('metadata', ($q) => ({
-            values: {
-                annotation_types: [],
-            },
-        }));
     }));
 
     it('should initialize with correct values', inject((spellcheck) => {
