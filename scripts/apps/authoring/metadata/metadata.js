@@ -680,6 +680,14 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
             };
 
             scope.openTree = function(term, $event) {
+                if ($event.altKey) {
+                    let activeTree = scope.tree[term ? term[scope.uniqueField] : null];
+
+                    return angular.forEach(activeTree, (term) => {
+                        scope.selectTerm(term, $event);
+                    });
+                }
+
                 scope.activeTerm = term;
                 scope.termPath.push(term);
                 scope.activeTree = scope.tree[term ? term[scope.uniqueField] : null];
@@ -689,6 +697,8 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
                 });
                 scope.activeList = false;
             };
+
+            scope.isSelected = (term) => !!_.find(scope.item[scope.field], term);
 
             scope.activeList = false;
             scope.selectedTerm = '';

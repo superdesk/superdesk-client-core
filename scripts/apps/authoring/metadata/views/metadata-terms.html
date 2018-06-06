@@ -41,7 +41,7 @@
                     <button ng-click="setPreferredView('user', $event)"><b translate>User</b></button>
                 </li>
                 <li ng-if="preferredView === 'user'" ng-repeat="term in userPreferredItems track by term[uniqueField]">
-                    <button ng-click="selectTerm(term)">
+                    <button ng-click="selectTerm(term)" ng-class="{'greyout': isSelected(term)}" ng-disabled="isSelected(term)">
                         {{ getLocaleName(term) }}
                     </button>
                 </li>
@@ -51,7 +51,7 @@
                     <button ng-click="setPreferredView('desk', $event)"><b translate>Desk</b></button>
                 </li>
                 <li ng-if="preferredView === 'desk'" ng-repeat="term in deskPreferredItems track by term[uniqueField]">
-                    <button ng-click="selectTerm(term)">
+                    <button ng-click="selectTerm(term)" ng-class="{'greyout': isSelected(term)}" ng-disabled="isSelected(term)">
                         {{ getLocaleName(term) }}
                     </button>
                 </li>
@@ -71,7 +71,9 @@
                         </figure>
                         {{getLocaleName(term)}}
                         <i class="icon-chevron-right-thin"></i></button>
-                    <button ng-if="!tree[term[uniqueField]]" ng-click="selectTerm(term, $event)" title="{{getLocaleName(term)}}">{{getLocaleName(term)}}</button>
+                    <button ng-if="!tree[term[uniqueField]]" ng-click="selectTerm(term, $event)" title="{{getLocaleName(term)}}" ng-class="{'greyout': isSelected(term)}" ng-disabled="isSelected(term)">
+                        {{getLocaleName(term)}}
+                    </button>
                 </li>
             </ul>
         </li>
