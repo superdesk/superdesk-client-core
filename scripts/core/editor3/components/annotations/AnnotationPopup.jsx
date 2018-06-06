@@ -81,12 +81,8 @@ Annotation.propTypes = {
 };
 
 const AnnotationWithDependenciesLoaded = connectPromiseResults(() => ({
-    annotationTypes: new Promise((resolve) => {
-        ng.get('metadata').initialize()
-            .then(() => {
-                resolve(ng.get('metadata').values.annotation_types);
-            });
-    }),
+    annotationTypes: ng.get('metadata').initialize()
+        .then(() => ng.get('metadata').values.annotation_types),
 }))(Annotation);
 
 export const AnnotationPopup = connect(

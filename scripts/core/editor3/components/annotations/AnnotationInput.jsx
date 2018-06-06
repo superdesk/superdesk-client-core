@@ -188,12 +188,8 @@ const mapStateToProps = (state) => ({
 });
 
 const AnnotationInputBodyWithDependenciesLoaded = connectPromiseResults(() => ({
-    annotationTypes: new Promise((resolve) => {
-        ng.get('metadata').initialize()
-            .then(() => {
-                resolve(ng.get('metadata').values.annotation_types);
-            });
-    }),
+    annotationTypes: ng.get('metadata').initialize()
+        .then(() => ng.get('metadata').values.annotation_types),
 }))(AnnotationInputBody);
 
 export const AnnotationInput = connect(mapStateToProps, {
