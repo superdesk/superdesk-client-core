@@ -5,7 +5,7 @@ import {EditorState} from 'draft-js';
 import {getSelectedEntity} from './entityUtils';
 import {Dropdown, NavTabs} from 'core/ui/components';
 import {AttachmentList} from './AttachmentList';
-import {applyLink, hidePopups, createLinkSuggestion} from '../../actions';
+import {applyLink, hidePopups, createLinkSuggestion, changeLinkSuggestion} from '../../actions';
 
 /**
  * @ngdoc React
@@ -69,25 +69,29 @@ export class LinkInputComponent extends Component {
      * @description Callback when submitting the form.
      */
     onSubmit(linkType) {
-        let val;
-        const {suggestingMode} = this.props;
+        let link;
+        const {suggestingMode, createLinkSuggestion, applyLink, changeLinkSuggestion} = this.props;
 
         if (linkType === linkTypes.href) {
-            val = {href: this.state.url};
+            link = {href: this.state.url};
         } else if (linkType === linkTypes.attachement) {
-            val = {attachment: this.state.selected};
+            link = {attachment: this.state.selected};
         } else {
             throw new Error('link type not recognized');
         }
 
-        if (!val.href && !val.attachment) {
+        if (!link.href && !link.attachment) {
             return;
         }
 
-        if (suggestingMode && !this.entity) {
-            this.props.createLinkSuggestion(val);
+        if (suggestingMode) {
+            if (this.entity) {
+                changeLinkSuggestion(link, this.entity);
+            } else {
+                createLinkSuggestion(link);
+            }
         } else {
-            this.props.applyLink(val, this.entity);
+            applyLink(link, this.entity);
         }
 
         this.props.hidePopups();
@@ -181,8 +185,9 @@ LinkInputComponent.propTypes = {
     hidePopups: PropTypes.func.isRequired,
     data: PropTypes.object,
     item: PropTypes.object,
-    createLinkSuggestion: PropTypes.func,
     suggestingMode: PropTypes.bool,
+    createLinkSuggestion: PropTypes.func,
+    changeLinkSuggestion: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({
@@ -195,4 +200,5 @@ export const LinkInput = connect(mapStateToProps, {
     applyLink,
     hidePopups,
     createLinkSuggestion,
+    changeLinkSuggestion,
 })(LinkInputComponent);

@@ -7,8 +7,25 @@ import * as actions from '../../actions';
 import {getSelectedEntityType, getSelectedEntityData} from '../links/entityUtils';
 
 export class LinkToolbarComponent extends Component {
+    constructor(props) {
+        super(props);
+
+        this.onRemove = this.onRemove.bind(this);
+    }
+
+    /**
+     * @ngdoc method
+     * @name LinkToolbar#onSubmit
+     * @description Callback when delete link.
+     */
+    onRemove(linkType) {
+        const {suggestingMode, removeLinkSuggestion, removeLink} = this.props;
+
+        suggestingMode ? removeLinkSuggestion() : removeLink();
+    }
+
     render() {
-        const {editorState, onEdit, removeLink} = this.props;
+        const {editorState, onEdit} = this.props;
         const {link} = getSelectedEntityData(editorState);
         const isLink = getSelectedEntityType(editorState) === 'LINK';
         const cx = classNames({
@@ -27,7 +44,7 @@ export class LinkToolbarComponent extends Component {
                             : null
                     }
                     <a onClick={() => onEdit(link)}>{gettext('Edit')}</a>
-                    <a onClick={removeLink}>{gettext('Delete')}</a>
+                    <a onClick={this.onRemove}>{gettext('Delete')}</a>
                 </span>}
         </div>;
     }
@@ -35,16 +52,20 @@ export class LinkToolbarComponent extends Component {
 
 LinkToolbarComponent.propTypes = {
     editorState: PropTypes.object,
+    suggestingMode: PropTypes.bool,
     removeLink: PropTypes.func,
+    removeLinkSuggestion: PropTypes.func,
     onEdit: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({
     editorState: state.editorState,
+    suggestingMode: state.suggestingMode,
 });
 
 const mapDispatchToProps = (dispatch) => ({
     removeLink: () => dispatch(actions.removeLink()),
+    removeLinkSuggestion: () => dispatch(actions.removeLinkSuggestion()),
 });
 
 export const LinkToolbar = connect(mapStateToProps, mapDispatchToProps)(LinkToolbarComponent);

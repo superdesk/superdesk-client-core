@@ -6,7 +6,6 @@ import * as Links from '../helpers/links';
 import * as Blocks from '../helpers/blocks';
 import * as Highlights from '../helpers/highlights';
 import {removeFormatFromState} from '../helpers/removeFormat';
-import {getSuggestionMetadata} from '../actions/suggestions';
 
 /**
  * @description Contains the list of toolbar related reducers.
@@ -99,48 +98,12 @@ const applyLink = (state, {link, entity}) => {
     let {editorState} = state;
 
     if (entity) {
-        if (state.suggestingMode) {
-            editorState = highlightEntity(editorState, 'CHANGE_LINK_SUGGESTION',
-                {to: link, from: entity.getData().link});
-            return onChange(state, editorState);
-        } else {
-            return onChange(state, entityUtils.replaceSelectedEntityData(editorState, {link}), true);
-        }
+        return onChange(state, entityUtils.replaceSelectedEntityData(editorState, {link}), true);
     }
 
     editorState = Links.createLink(editorState, link);
     return onChange(state, editorState);
 };
-
-/**
- * Highlight current entity
- *
- * @param {EditorState} initialState
- * @param {String} type
- * @param {Object} data
- * @param {Boolean} single
- * @returns {EditorState}
- */
-function highlightEntity(initialState, type, data, single) {
-    let editorState = initialState;
-    const selection = editorState.getSelection();
-    const content = editorState.getCurrentContent();
-    const block = content.getBlockForKey(selection.getStartKey());
-    const entity = block.getEntityAt(selection.getStartOffset());
-
-    block.findEntityRanges((characterMeta) => characterMeta.getEntity() === entity,
-        (start, end) => {
-            editorState = EditorState.acceptSelection(editorState, selection.merge({
-                isBackward: false,
-                anchorOffset: start,
-                focusOffset: end,
-            }));
-            editorState = Highlights.addHighlight(editorState, type, data, single);
-            editorState = EditorState.push(editorState, editorState.getCurrentContent(), 'apply-entity');
-            editorState = EditorState.acceptSelection(editorState, selection);
-        });
-    return editorState;
-}
 
 /**
  * @ngdoc method
@@ -150,12 +113,7 @@ function highlightEntity(initialState, type, data, single) {
 const removeLink = (state) => {
     let {editorState} = state;
 
-    if (state.suggestingMode) {
-        editorState = highlightEntity(editorState, 'REMOVE_LINK_SUGGESTION', getSuggestionMetadata(), true);
-    } else {
-        editorState = Links.removeLink(editorState);
-    }
-
+    editorState = Links.removeLink(editorState);
     return onChange(state, editorState);
 };
 
