@@ -6,11 +6,8 @@ import {connect} from 'react-redux';
 import {convertToRaw} from 'draft-js';
 import {highlightsConfig} from '../../highlightsConfig';
 import {getAuthorInfo} from '../../actions';
-
-import {
-    hidePopups,
-} from '../../actions';
-
+import {connectPromiseResults} from 'core/helpers/ReactRenderAsync';
+import {hidePopups} from '../../actions';
 import ng from 'core/services/ng';
 
 /**
@@ -24,12 +21,11 @@ class AnnotationInputBody extends Component {
     constructor(props) {
         super(props);
 
-        const {data} = props;
+        const {data, annotationTypes} = props;
         const editing = typeof data.annotation === 'object';
 
         let body = null;
         let isEmpty = true;
-        let annotationTypes = ng.get('metadata').values.annotation_types;
         let type = annotationTypes && annotationTypes.length > 0 ? annotationTypes[0].qcode : '';
 
         if (editing) {
@@ -38,7 +34,7 @@ class AnnotationInputBody extends Component {
             isEmpty = false;
         }
 
-        this.state = {body, type, annotationTypes, isEmpty};
+        this.state = {body, type, isEmpty};
         this.initialContent = body;
 
         this.onSubmit = this.onSubmit.bind(this);
@@ -128,9 +124,9 @@ class AnnotationInputBody extends Component {
     }
 
     render() {
-        const {hidePopups, data, spellcheckerEnabled, language} = this.props;
+        const {hidePopups, data, spellcheckerEnabled, language, annotationTypes} = this.props;
         const {annotation} = data;
-        const {type, annotationTypes, isEmpty} = this.state;
+        const {type, isEmpty} = this.state;
 
         return (
             <div className="annotation-input">
@@ -183,6 +179,7 @@ AnnotationInputBody.propTypes = {
     language: PropTypes.string,
     spellcheckerEnabled: PropTypes.bool,
     highlightsManager: PropTypes.object.isRequired,
+    annotationTypes: PropTypes.array.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -190,6 +187,15 @@ const mapStateToProps = (state) => ({
     spellcheckerEnabled: state.spellcheckerEnabled,
 });
 
+const AnnotationInputBodyWithDependenciesLoaded = connectPromiseResults(() => ({
+    annotationTypes: new Promise((resolve) => {
+        ng.get('metadata').initialize()
+            .then(() => {
+                resolve(ng.get('metadata').values.annotation_types);
+            });
+    }),
+}))(AnnotationInputBody);
+
 export const AnnotationInput = connect(mapStateToProps, {
     hidePopups,
-})(AnnotationInputBody);
+})(AnnotationInputBodyWithDependenciesLoaded);
