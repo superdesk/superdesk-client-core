@@ -3,6 +3,7 @@ import _ from 'lodash';
 VocabularyEditController.$inject = [
     '$scope',
     'gettext',
+    '$interpolate',
     'notify',
     'api',
     'vocabularies',
@@ -10,7 +11,7 @@ VocabularyEditController.$inject = [
     'cvSchema',
 ];
 
-export function VocabularyEditController($scope, gettext, notify, api, vocabularies, metadata, cvSchema) {
+export function VocabularyEditController($scope, gettext, $interpolate, notify, api, vocabularies, metadata, cvSchema) {
     var origVocabulary = _.cloneDeep($scope.vocabulary);
 
     $scope.idRegex = '^[a-zA-Z0-9-_]+$';
@@ -28,6 +29,12 @@ export function VocabularyEditController($scope, gettext, notify, api, vocabular
             if (angular.isDefined(response.data._issues['validator exception'])) {
                 notify.error(gettext('Error: ' +
                                      response.data._issues['validator exception']));
+            } else if (angular.isDefined(response.data._issues.error) &&
+                       response.data._issues.error.required_field) {
+                let params = response.data._issues.params;
+
+                notify.error($interpolate(gettext(
+                    'Required {{field}} in item {{item}}'))({field: params.field, item: params.item}));
             } else {
                 $scope.issues = response.data._issues;
                 notify.error(gettext('Error. Vocabulary not saved.'));
