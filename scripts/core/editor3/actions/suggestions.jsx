@@ -116,6 +116,7 @@ export function acceptSuggestion(suggestion) {
         type: 'ACCEPT_SUGGESTION',
         payload: {
             suggestion: suggestion,
+            data: getSuggestionMetadata(),
         },
     };
 }
@@ -132,6 +133,7 @@ export function rejectSuggestion(suggestion) {
         type: 'REJECT_SUGGESTION',
         payload: {
             suggestion: suggestion,
+            data: getSuggestionMetadata(),
         },
     };
 }
