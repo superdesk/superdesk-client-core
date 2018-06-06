@@ -1,0 +1,13 @@
+@import '~variables.scss';
+
+sup.annotation-id {
+    color: $sd-blue;
+}
+
+.annotations {
+    .annotation-body {
+        p {
+            display: inline;
+        }
+    }
+}
