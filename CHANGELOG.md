@@ -1,5 +1,11 @@
 # Superdesk Client Changelog
 
+## [1.19.2] 2018-06-06
+
+### Fixed
+
+- Fixed abstract font size in editor2.
+
 ## [1.19.1] 2018-06-05
 
 ### Fixed
