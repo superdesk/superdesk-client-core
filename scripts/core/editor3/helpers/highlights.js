@@ -1040,7 +1040,7 @@ export function highlightEntity(initialState, type, data, single) {
                 focusOffset: end,
             }));
             editorState = addHighlight(editorState, type, data, single);
-            editorState = EditorState.push(editorState, editorState.getCurrentContent(), 'apply-entity');
+            editorState = EditorState.push(editorState, editorState.getCurrentContent(), 'change-block-data');
             editorState = EditorState.acceptSelection(editorState, selection);
         });
     return editorState;
