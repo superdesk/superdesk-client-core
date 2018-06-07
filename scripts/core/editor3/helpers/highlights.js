@@ -1016,3 +1016,32 @@ function removeHighlightsStyleMap(editorState) {
 
 export const prepareHighlightsForExport = (editorState) => addCommentsForServer(removeHighlightsStyleMap(editorState));
 
+/**
+ * Highlight current entity
+ *
+ * @param {EditorState} initialState
+ * @param {String} type
+ * @param {Object} data
+ * @param {Boolean} single
+ * @returns {EditorState}
+ */
+export function highlightEntity(initialState, type, data, single) {
+    let editorState = initialState;
+    const selection = editorState.getSelection();
+    const content = editorState.getCurrentContent();
+    const block = content.getBlockForKey(selection.getStartKey());
+    const entity = block.getEntityAt(selection.getStartOffset());
+
+    block.findEntityRanges((characterMeta) => characterMeta.getEntity() === entity,
+        (start, end) => {
+            editorState = EditorState.acceptSelection(editorState, selection.merge({
+                isBackward: false,
+                anchorOffset: start,
+                focusOffset: end,
+            }));
+            editorState = addHighlight(editorState, type, data, single);
+            editorState = EditorState.push(editorState, editorState.getCurrentContent(), 'change-block-data');
+            editorState = EditorState.acceptSelection(editorState, selection);
+        });
+    return editorState;
+}

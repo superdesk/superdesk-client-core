@@ -1,12 +1,16 @@
 import {EditorState, Modifier, RichUtils} from 'draft-js';
 import {onChange} from './editor3';
 import {acceptedInlineStyles, sanitizeContent} from '../helpers/inlineStyles';
-import {changeSuggestionsTypes, styleSuggestionsTypes,
-    blockSuggestionTypes, paragraphSuggestionTypes} from '../highlightsConfig';
+import {
+    changeSuggestionsTypes, styleSuggestionsTypes,
+    blockSuggestionTypes, paragraphSuggestionTypes,
+} from '../highlightsConfig';
 import * as Highlights from '../helpers/highlights';
 import {initSelectionIterator, hasNextSelection} from '../helpers/selection';
-import {editor3DataKeys, getCustomDataFromEditor, setCustomDataForEditor,
-    getAllCustomDataFromEditor, setAllCustomDataForEditor} from '../helpers/editor3CustomData';
+import {
+    editor3DataKeys, getCustomDataFromEditor, setCustomDataForEditor,
+    getAllCustomDataFromEditor, setAllCustomDataForEditor,
+} from '../helpers/editor3CustomData';
 import * as Links from '../helpers/links';
 import {replaceSelectedEntityData} from '../components/links/entityUtils';
 
@@ -29,6 +33,10 @@ const suggestions = (state = {}, action) => {
         return pasteAddSuggestion(state, action.payload);
     case 'CREATE_LINK_SUGGESTION':
         return createLinkSuggestion(state, action.payload);
+    case 'CHANGE_LINK_SUGGESTION':
+        return changeLinkSuggestion(state, action.payload);
+    case 'REMOVE_LINK_SUGGESTION':
+        return removeLinkSuggestion(state, action.payload);
     case 'ACCEPT_SUGGESTION':
         return processSuggestion(state, action.payload, true);
     case 'REJECT_SUGGESTION':
@@ -206,6 +214,46 @@ const createLinkSuggestion = (state, {data}) => {
     const {editorState} = state;
     const stateWithLink = Links.createLink(editorState, data.link);
     const newState = Highlights.addHighlight(stateWithLink, 'ADD_LINK_SUGGESTION', data);
+
+    return saveEditorStatus(state, newState, 'apply-entity');
+};
+
+/**
+ * @ngdoc method
+ * @name changeLinkSuggestion
+ * @param {Object} state
+ * @param {Object} data - info about the suggestion
+ * @param {Object} link - the new link
+ * @param {Object} entity - the link entity
+ * @return {Object} returns new state
+ * @description Add a new suggestion of type CHANGE link
+ */
+const changeLinkSuggestion = (state, {data, link, entity}) => {
+    const {editorState} = state;
+    let newState = Highlights.highlightEntity(editorState, 'CHANGE_LINK_SUGGESTION',
+        {
+            ...data,
+            to: link,
+            from: entity.getData().link,
+        }
+    );
+
+    newState = replaceSelectedEntityData(newState, {link});
+
+    return saveEditorStatus(state, newState, 'apply-entity');
+};
+
+/**
+ * @ngdoc method
+ * @name changeLinkSuggestion
+ * @param {Object} state
+ * @param {Object} data - info about the suggestion
+ * @return {Object} returns new state
+ * @description Add a new suggestion of type CHANGE link
+ */
+const removeLinkSuggestion = (state, {data}) => {
+    const {editorState} = state;
+    const newState = Highlights.highlightEntity(editorState, 'REMOVE_LINK_SUGGESTION', data, true);
 
     return saveEditorStatus(state, newState, 'apply-entity');
 };
@@ -539,17 +587,35 @@ const processSuggestion = (state, {data, suggestion}, accepted) => {
     }
 
     // If link it's rejected we remove the entity
-    if (suggestion.type === 'ADD_LINK_SUGGESTION' && !accepted) {
-        editorState = Links.removeLink(editorState);
+    if (suggestion.type === 'ADD_LINK_SUGGESTION') {
+        editorState = moveToSuggestionsHistory(editorState, data, suggestion, accepted);
+
+        if (!accepted) {
+            editorState = Links.removeLink(editorState);
+        }
+
+        return saveEditorStatus(state, editorState, 'apply-entity', true);
     }
 
     // remove link if remove link is accepted
-    if (suggestion.type === 'REMOVE_LINK_SUGGESTION' && accepted) {
-        editorState = Links.removeLink(editorState);
+    if (suggestion.type === 'REMOVE_LINK_SUGGESTION') {
+        editorState = moveToSuggestionsHistory(editorState, data, suggestion, accepted);
+
+        if (accepted) {
+            editorState = Links.removeLink(editorState);
+        }
+
+        return saveEditorStatus(state, editorState, 'apply-entity', true);
     }
 
-    if (suggestion.type === 'CHANGE_LINK_SUGGESTION' && accepted) {
-        editorState = replaceSelectedEntityData(editorState, {link: suggestion.to});
+    if (suggestion.type === 'CHANGE_LINK_SUGGESTION') {
+        editorState = moveToSuggestionsHistory(editorState, data, suggestion, accepted);
+
+        if (!accepted) {
+            editorState = replaceSelectedEntityData(editorState, {link: suggestion.from});
+        }
+
+        return saveEditorStatus(state, editorState, 'apply-entity', true);
     }
 
     editorState = EditorState.acceptSelection(editorState, selection);

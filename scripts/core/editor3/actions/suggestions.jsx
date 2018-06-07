@@ -176,6 +176,40 @@ export function createLinkSuggestion(link) {
 
 /**
  * @ngdoc method
+ * @name removeLinkSuggestion
+ * @return {Object} action
+ * @description add a new suggestion of type REMOVE link
+ */
+export function removeLinkSuggestion() {
+    return {
+        type: 'REMOVE_LINK_SUGGESTION',
+        payload: {
+            data: getSuggestionMetadata(),
+        },
+    };
+}
+
+/**
+ * @ngdoc method
+ * @name changeLinkSuggestion
+ * @param {Object} link, object containing the link href
+ * @param {Object} entity - the link entity
+ * @return {Object} action
+ * @description add a new suggestion of type CAHNGE link
+ */
+export function changeLinkSuggestion(link, entity) {
+    return {
+        type: 'CHANGE_LINK_SUGGESTION',
+        payload: {
+            data: getSuggestionMetadata(),
+            link: link,
+            entity: entity,
+        },
+    };
+}
+
+/**
+ * @ngdoc method
  * @name getSuggestionMetadata
  * @param {String} type
  * @return {Object} returns suggestion metadata
