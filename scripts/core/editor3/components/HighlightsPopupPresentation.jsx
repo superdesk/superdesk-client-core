@@ -7,7 +7,21 @@ export class HighlightsPopupPresentation extends Component {
         this.state = {
             actionsDropdownOpen: false,
         };
+        this.animationTimer = null;
         this.position = this.position.bind(this);
+        this.positionOnNextAnimationFrame = this.positionOnNextAnimationFrame.bind(this);
+    }
+    positionOnNextAnimationFrame() {
+        if (this.animationTimer != null) {
+            window.cancelAnimationFrame(this.animationTimer);
+        }
+
+        const {position} = this;
+
+        this.animationTimer = window.requestAnimationFrame(() => {
+            this.animationTimer = null;
+            position();
+        });
     }
     toggleActionsDropdown() {
         this.setState({
@@ -40,44 +54,33 @@ export class HighlightsPopupPresentation extends Component {
         const paddingTop = 4;
         const paddingBottom = 4;
         const viewportHeight = $(window).innerHeight();
+        const remainingSpaceAtTheBottomOfSelectedText = viewportHeight - selectionRect.top;
 
-        const remainingSpaceAtTheTopOfSelectedText = selectionRect.top;
-        const remainingSpaceAtTheBottomOfSelectedText = viewportHeight - selectionRect.bottom;
-
-        if (remainingSpaceAtTheTopOfSelectedText > remainingSpaceAtTheBottomOfSelectedText) {
-            // apply lowest possible bottom value only if text-highlight extended horizontally would intersect the popup
-            element.style.bottom = (
-                remainingSpaceAtTheBottomOfSelectedText > element.offsetHeight
-                    ? remainingSpaceAtTheBottomOfSelectedText
-                    : paddingBottom
-            ) + 'px';
-            mainFlexElement.style['max-height'] = (
-                viewportHeight
-                - parseInt(element.style.bottom, 10)
-                - paddingTop
-            ) + 'px';
-        } else {
-            // apply highest possible top value only if text-highlight extended horizontally would intersect the popup
-            element.style.top = (
-                remainingSpaceAtTheTopOfSelectedText > element.offsetHeight
-                    ? remainingSpaceAtTheTopOfSelectedText
-                    : paddingTop
-            ) + 'px';
-            mainFlexElement.style['max-height'] = (
-                viewportHeight
-                - parseInt(element.style.top, 10)
-                - paddingBottom
-            ) + 'px';
-        }
+        element.style.bottom = (
+            remainingSpaceAtTheBottomOfSelectedText > element.offsetHeight
+                ? Math.max(remainingSpaceAtTheBottomOfSelectedText - element.offsetHeight, paddingBottom)
+                : paddingBottom
+        ) + 'px';
+        mainFlexElement.style['max-height'] = (
+            viewportHeight
+            - parseInt(element.style.bottom, 10)
+            - paddingTop
+        ) + 'px';
     }
     componentDidMount() {
         this.position();
 
-        // repositioning while typing required to maximize popup height
-        window.addEventListener('keydown', this.position);
+        window.addEventListener('keydown', this.positionOnNextAnimationFrame);
+        window.addEventListener('resize', this.positionOnNextAnimationFrame);
+        window.addEventListener('click', this.positionOnNextAnimationFrame);
+    }
+    componentDidUpdate() {
+        this.position();
     }
     componentWillUnmount() {
-        window.removeEventListener('keydown', this.position);
+        window.removeEventListener('keydown', this.positionOnNextAnimationFrame);
+        window.removeEventListener('resize', this.positionOnNextAnimationFrame);
+        window.removeEventListener('click', this.positionOnNextAnimationFrame);
     }
     render() {
         const {availableActions} = this.props;
