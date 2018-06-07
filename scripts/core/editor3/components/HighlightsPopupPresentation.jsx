@@ -7,6 +7,7 @@ export class HighlightsPopupPresentation extends Component {
         this.state = {
             actionsDropdownOpen: false,
         };
+        this.position = this.position.bind(this);
     }
     toggleActionsDropdown() {
         this.setState({
@@ -29,8 +30,10 @@ export class HighlightsPopupPresentation extends Component {
             return;
         }
 
+        // reset calculated values so new calculation can be performed
         element.style.top = '';
         element.style.bottom = '';
+        mainFlexElement.style['max-height'] = '';
 
         element.style.left = (this.props.editorNode.getBoundingClientRect().left - 360) + 'px';
 
@@ -69,6 +72,12 @@ export class HighlightsPopupPresentation extends Component {
     }
     componentDidMount() {
         this.position();
+
+        // repositioning while typing required to maximize popup height
+        window.addEventListener('keydown', this.position);
+    }
+    componentWillUnmount() {
+        window.removeEventListener('keydown', this.position);
     }
     render() {
         const {availableActions} = this.props;
