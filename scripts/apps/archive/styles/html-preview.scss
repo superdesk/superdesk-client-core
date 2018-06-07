@@ -1,13 +1,24 @@
 @import '~variables.scss';
 
+.html-preview {
+    .annotation-text {
+        border-bottom: 1px dotted;
+    }
+}
+
 sup.annotation-id {
     color: $sd-blue;
 }
 
 .annotations {
+    margin-top: 1em;
     .annotation-body {
         p {
             display: inline;
         }
+    }
+    .simple-list {
+        list-style: none;
+        padding: 0;
     }
 }

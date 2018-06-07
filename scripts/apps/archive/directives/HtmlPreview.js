@@ -1,14 +1,26 @@
 import {getCustomMetadata} from 'core/editor3/helpers/editor3CustomData';
 import {META_FIELD_NAME} from '../../../core/editor3/helpers/fieldsMeta';
 import {highlightsConfig} from '../../../core/editor3/highlightsConfig';
+import ng from 'core/services/ng';
+
+function getAnnotationTypesAsync(scope) {
+    ng.get('metadata').initialize()
+        .then(() => {
+            const annotationTypes = ng.get('metadata').values.annotation_types;
+
+            // Use label instead of qcode
+            scope.annotations = scope.annotations.map((a) => ({
+                ...a,
+                type_label: gettext(annotationTypes.find((t) => t.qcode === a.type).name),
+            }));
+        });
+}
 
 function getAllAnnotations(item) {
     const annotations = [];
 
     for (const field in item[META_FIELD_NAME]) {
-        annotations.push(
-            ...getCustomMetadata(item, field, highlightsConfig.ANNOTATION.type)
-        );
+        annotations.push(...getCustomMetadata(item, field, highlightsConfig.ANNOTATION.type));
     }
 
     return annotations;
@@ -54,6 +66,8 @@ export function HtmlPreview($sce, $timeout) {
                         ...a,
                         body: $sce.trustAsHtml(a.body),
                     }));
+
+                    getAnnotationTypesAsync(scope);
                 }
             });
 
