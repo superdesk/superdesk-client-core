@@ -34,25 +34,35 @@ export class HighlightsPopupPresentation extends Component {
 
         element.style.left = (this.props.editorNode.getBoundingClientRect().left - 360) + 'px';
 
-        const paddingTop = 60;
-        const paddingBottom = 40;
+        const paddingTop = 4;
+        const paddingBottom = 4;
         const viewportHeight = $(window).innerHeight();
 
         const remainingSpaceAtTheTopOfSelectedText = selectionRect.top;
         const remainingSpaceAtTheBottomOfSelectedText = viewportHeight - selectionRect.bottom;
 
         if (remainingSpaceAtTheTopOfSelectedText > remainingSpaceAtTheBottomOfSelectedText) {
-            element.style.bottom = remainingSpaceAtTheBottomOfSelectedText + 'px';
+            // apply lowest possible bottom value only if text-highlight extended horizontally would intersect the popup
+            element.style.bottom = (
+                remainingSpaceAtTheBottomOfSelectedText > element.offsetHeight
+                    ? remainingSpaceAtTheBottomOfSelectedText
+                    : paddingBottom
+            ) + 'px';
             mainFlexElement.style['max-height'] = (
                 viewportHeight
-                - remainingSpaceAtTheBottomOfSelectedText
+                - parseInt(element.style.bottom, 10)
                 - paddingTop
             ) + 'px';
         } else {
-            element.style.top = remainingSpaceAtTheTopOfSelectedText + 'px';
+            // apply highest possible top value only if text-highlight extended horizontally would intersect the popup
+            element.style.top = (
+                remainingSpaceAtTheTopOfSelectedText > element.offsetHeight
+                    ? remainingSpaceAtTheTopOfSelectedText
+                    : paddingTop
+            ) + 'px';
             mainFlexElement.style['max-height'] = (
                 viewportHeight
-                - remainingSpaceAtTheTopOfSelectedText
+                - parseInt(element.style.top, 10)
                 - paddingBottom
             ) + 'px';
         }
