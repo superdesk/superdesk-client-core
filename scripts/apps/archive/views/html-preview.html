@@ -1,5 +1,5 @@
 <div class="html-preview" ng-bind-html="html"></div>
-<div class="annotations" sd-toggle-box="" data-title="Annotations" data-open="true" ng-if="annotations.length > 0">
+<div class="annotations" sd-toggle-box="" data-title="{{ :: 'Annotations' | translate }}" data-open="true" ng-if="annotations.length > 0">
     <ul>
         <li ng-repeat="annotation in annotations" class="annotation-body">
             <sup class="annotation-id">{{annotation.id}}</sup> <span ng-bind-html="annotation.body"></span>
