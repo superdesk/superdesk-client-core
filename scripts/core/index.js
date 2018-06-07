@@ -1,3 +1,4 @@
+import 'core/polyfills';
 import 'core/activity';
 import 'core/analytics';
 import 'core/api';
