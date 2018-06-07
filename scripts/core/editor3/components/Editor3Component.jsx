@@ -158,11 +158,13 @@ export class Editor3Component extends React.Component {
             return 'soft-newline';
         }
 
+        // ctrl + X
         if (keyCode === 88 && KeyBindingUtil.hasCommandModifier(e)) {
             const {editorState} = this.props;
             const selection = editorState.getSelection();
 
             if (!selection.isCollapsed()) {
+                document.execCommand('copy'); // add selected text to clipboard
                 return 'delete';
             }
         }
