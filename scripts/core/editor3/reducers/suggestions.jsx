@@ -396,13 +396,14 @@ const createSplitParagraphSuggestion = (state, {data}) => {
  */
 const pasteAddSuggestion = (state, {content, data}) => {
     let {editorState} = state;
-    const initialSelection = editorState.getSelection();
-    const beforeStyle = Highlights.getHighlightStyleAtOffset(editorState, changeSuggestionsTypes, initialSelection, -1);
+    let selection = editorState.getSelection();
+    const beforeStyle = Highlights.getHighlightStyleAtOffset(editorState, changeSuggestionsTypes, selection, -1);
     const beforeData = beforeStyle != null ? Highlights.getHighlightData(editorState, beforeStyle) : null;
 
     // if text is selected mark it as removed and collapse the selection before replacing
-    if (!initialSelection.isCollapsed()) {
+    if (!selection.isCollapsed()) {
         editorState = deleteCurrentSelection(editorState, data);
+        selection = editorState.getSelection();
     }
 
     // only get it now after adding delete suggestions
@@ -422,9 +423,9 @@ const pasteAddSuggestion = (state, {content, data}) => {
 
     // store current selection for later
     const finalSelection = editorState.getSelection();
-    const newSelection = initialSelection.merge({
-        anchorKey: initialSelection.getStartKey(),
-        anchorOffset: initialSelection.getStartOffset(),
+    const newSelection = selection.merge({
+        anchorKey: selection.getStartKey(),
+        anchorOffset: selection.getStartOffset(),
         focusKey: finalSelection.getStartKey(),
         focusOffset: finalSelection.getStartOffset(),
         hasFocus: true,

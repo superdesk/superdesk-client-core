@@ -28,6 +28,10 @@ function prepareRawContent(rawContent) {
     return newRawContent;
 }
 
+export function getInitiaContent(rawContent) {
+    return convertFromRaw(prepareRawContent(rawContent));
+}
+
 export function getInitialEditorState(rawContent) {
     const content = convertFromRaw(prepareRawContent(rawContent));
 
@@ -275,4 +279,27 @@ export function removeLinkSuggestion(editorState, date = new Date(), author = 'a
 
 export function addLink(editorState, link = 'http://www.sourcefabric.org') {
     return Links.createLink(editorState, link);
+}
+
+
+export function addPasteSuggestion(editorState, content, date = new Date(), author = 'author_id') {
+    const result = reducer(
+        {
+            editorState: editorState,
+            suggestingMode: true,
+            onChangeValue: () => ({}),
+        },
+        {
+            type: 'PASTE_ADD_SUGGESTION',
+            payload: {
+                data: {
+                    date: date,
+                    author: author,
+                },
+                content: content,
+            },
+        }
+    );
+
+    return result.editorState;
 }
