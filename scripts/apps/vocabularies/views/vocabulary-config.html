@@ -35,7 +35,7 @@
     <div class="sd-page__content">
       <div ng-if="loading" class="loading-overlay" ng-class="{active: loading}" style="opacity: 0.5;"></div>
         <ul class="pills-list">
-          <li ng-repeat="vocabulary in vocabularies" ng-if="matchFieldTypeToTab(tab, vocabulary.field_type)">
+          <li ng-repeat="vocabulary in vocabularies | orderBy:'display_name|translate'" ng-if="matchFieldTypeToTab(tab, vocabulary.field_type)">
             <h6>{{ vocabulary.display_name | translate }}</h6>&nbsp;
             <em><strong ng-show="!vocabulary.field_type">({{ vocabulary.items.length }})</strong></em>
             <div class="actions">
