@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {get} from 'lodash';
 
 export function state(props) {
     const {$filter, gettextCatalog, datetime} = props.svc;
@@ -8,7 +9,11 @@ export function state(props) {
         var title = $filter('removeLodash')(props.item.state);
 
         if (props.item.state === 'scheduled') {
-            title = gettextCatalog.getString('Scheduled on ') + datetime.longFormat(props.item.publish_schedule);
+            const scheduled = get(props.item, 'archive_item.schedule_settings.utc_publish_schedule');
+
+            if (scheduled) {
+                title = gettextCatalog.getString('Scheduled on ') + datetime.longFormat(scheduled);
+            }
         }
 
         return React.createElement(
