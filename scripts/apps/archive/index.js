@@ -1,6 +1,7 @@
 // styles
 import './styles/related-item.scss';
 import './styles/assignment.scss';
+import './styles/html-preview.scss';
 import {get} from 'lodash';
 
 // scripts

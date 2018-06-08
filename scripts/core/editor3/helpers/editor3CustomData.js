@@ -1,11 +1,24 @@
 import {Map} from 'immutable';
-
 import {
     SelectionState,
     Modifier,
     EditorState,
     convertFromRaw,
 } from 'draft-js';
+import {fieldsMetaKeys, getFieldMetadata} from './fieldsMeta';
+import {
+    getDraftSelectionForEntireContent,
+} from './getDraftSelectionForEntireContent';
+import {
+    getHighlightData,
+    getHighlightTypeFromStyleName,
+    initializeHighlights,
+    styleNameBelongsToHighlight,
+} from './highlights';
+import {
+    getUniqueStyleNamesInDraftSelection,
+} from './getUniqueStyleNamesInDraftSelection';
+import {toHTML} from '..';
 
 export const editor3DataKeys = {
     MULTIPLE_HIGHLIGHTS: 'MULTIPLE_HIGHLIGHTS',
@@ -68,4 +81,36 @@ export function getCustomDataFromEditor(editorState, key) {
 
 export function getCustomDataFromEditorRawState(rawState, key) {
     return getCustomDataFromEditor(EditorState.createWithContent(convertFromRaw(rawState)), key);
+}
+
+export function getCustomMetadata(item, field, highlightType, logger = {}) {
+    const contentStateRaw = getFieldMetadata(item, field, fieldsMetaKeys.draftjsState);
+
+    if (contentStateRaw) {
+        const contentState = convertFromRaw(contentStateRaw);
+        const editorState = initializeHighlights(EditorState.createWithContent(contentState));
+
+        const allStyleNames = getUniqueStyleNamesInDraftSelection(
+            editorState,
+            getDraftSelectionForEntireContent(editorState)
+        );
+
+        const annotations = allStyleNames
+            .filter(styleNameBelongsToHighlight)
+            .filter((h) => getHighlightTypeFromStyleName(h) === highlightType)
+            .map((h) => {
+                const obj = getHighlightData(editorState, h);
+                const annotationId = parseInt(h.split('-')[1], 10);
+
+                return {
+                    id: annotationId,
+                    type: obj.data.annotationType,
+                    body: toHTML(convertFromRaw(JSON.parse(obj.data.msg)), logger),
+                };
+            });
+
+        return annotations;
+    }
+
+    return [];
 }

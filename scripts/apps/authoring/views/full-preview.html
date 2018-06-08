@@ -139,7 +139,7 @@
                 <div class="abstract" order="{{editor.abstract.order}}" ng-if="!editor.abstract.hideOnPrint" sd-html-preview="item.abstract"></div>
                 <div class="byline" order="{{editor.byline.order}}" ng-if="!editor.byline.hideOnPrint">{{item.byline}}</div>
                 <div class="body preview-editor" order="{{editor.dateline.order}}" ng-if="!editor.dateline.hideOnPrint">{{item.dateline.located.city}}</div>
-                <div class="body preview-editor" order="{{editor.body_html.order}}" ng-if="!editor.body_html.hideOnPrint" sd-html-preview="item.body_html"></div>
+                <div class="body preview-editor" order="{{editor.body_html.order}}" ng-if="!editor.body_html.hideOnPrint" sd-html-preview="item.body_html" item="item"></div>
                 <div class="body preview-editor" order="{{editor.body_footer.order}}" ng-if="!editor.body_footer.hideOnPrint" sd-html-preview="item.body_footer"></div>
                 <div class="body preview-editor" order="{{editor.sign_off.order}}" ng-if="!editor.sign_off.hideOnPrint">{{item.sign_off}}</div>
             </div>
