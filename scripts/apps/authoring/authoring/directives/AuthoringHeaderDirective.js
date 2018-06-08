@@ -1,13 +1,14 @@
 AuthoringHeaderDirective.$inject = ['api', 'authoringWidgets', '$rootScope', 'archiveService', 'metadata',
-    'content', 'lodash', 'authoring', 'vocabularies', '$timeout', 'config', 'moment'];
+    'content', 'lodash', 'authoring', 'vocabularies', '$timeout', 'config', 'moment', 'features'];
 export function AuthoringHeaderDirective(api, authoringWidgets, $rootScope, archiveService, metadata, content,
-    lodash, authoring, vocabularies, $timeout, config, moment) {
+    lodash, authoring, vocabularies, $timeout, config, moment, features) {
     return {
         templateUrl: 'scripts/apps/authoring/views/authoring-header.html',
         require: '?^sdAuthoringWidgets',
         link: function(scope, elem, attrs, WidgetsManagerCtrl) {
             scope.contentType = null;
             scope.displayCompanyCodes = null;
+            scope.features = features;
 
             scope.shouldDisplayUrgency = function() {
                 return !(scope.editor.urgency || {}).service ||

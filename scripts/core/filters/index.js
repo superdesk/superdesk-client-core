@@ -220,4 +220,7 @@ export default angular.module('superdesk.core.filters', [])
     .filter('stripHtmlTags', () => function(value) {
         return stripHtmlTags(value);
     })
+    .filter('join', () => function(value, separator = ', ') {
+        return value.filter(angular.identity).join(separator);
+    })
 ;

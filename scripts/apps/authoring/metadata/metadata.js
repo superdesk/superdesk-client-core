@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import PreferedCvItemsConfigDirective from './PreferedCvItemsConfigDirective';
+import MetaPlaceDirective from './MetaPlaceDirective';
 
 MetadataCtrl.$inject = [
     '$scope', 'desks', 'metadata', 'privileges', 'datetimeHelper',
@@ -1260,4 +1261,5 @@ angular.module('superdesk.apps.authoring.metadata', [
     .directive('sdMetadropdownFocus', MetadropdownFocusDirective)
     .directive('sdMetaLocators', MetaLocatorsDirective)
     .directive('sdPreferedCvItemsConfig', PreferedCvItemsConfigDirective)
+    .directive('sdMetaPlace', MetaPlaceDirective)
 ;
