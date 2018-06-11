@@ -37,9 +37,13 @@ export function showPopup(type, data) {
         dispatch(action);
 
         if (type === PopupTypes.Hidden) {
-            document.querySelector(
-                `#Editor3-${currentState.popup.data.editorId} > div > div > div > .public-DraftEditor-content`
-            ).focus();
+            setTimeout(() => {
+                // wait for changes to get saved before focusing the editor
+                // otherwise it will overwrite new changes with old ones
+                document.querySelector(
+                    `#Editor3-${currentState.popup.data.editorId} > div > div > div > .public-DraftEditor-content`
+                ).focus();
+            });
         }
     };
 }
