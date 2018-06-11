@@ -106,12 +106,18 @@ export class EmbedBlockComponent extends Component {
     embedBlock(embed) {
         const html = embed.data.html;
 
+        // If event is not stopped, editor selection drops to start of the content
+        const stopEvent = (originalFunction) => (event) => {
+            event.stopPropagation();
+            originalFunction(event);
+        };
+
         this.runScripts(html);
         return <div className="embed-block">
-            <a className="icn-btn embed-block__remove" onClick={this.onClickDelete}>
+            <a className="icn-btn embed-block__remove" onMouseDown={stopEvent(this.onClickDelete)}>
                 <i className="icon-close-small" />
             </a>
-            <a className="icn-btn embed-block__edit" onClick={this.editEmbedHtml}>
+            <a className="icn-btn embed-block__edit" onMouseDown={stopEvent(this.editEmbedHtml)}>
                 <i className="icon-pencil" />
             </a>
             <div className="embed-block__wrapper" dangerouslySetInnerHTML={{__html: html}} />
