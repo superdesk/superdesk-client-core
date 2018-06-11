@@ -1,5 +1,19 @@
+function isLinkExternal(href) {
+    try {
+        return new URL(href).host !== window.location.host;
+    } catch (e) {
+        // will throw if string is not a valid link
+        return false;
+    }
+}
+
 document.addEventListener('click', (event) => {
-    if (event.target.tagName === 'A' && new URL(event.target.href).host !== window.location.host) {
+    if (
+        event != null
+        && event.target != null
+        && event.target.tagName === 'A'
+        && isLinkExternal(event.target.href)
+    ) {
         event.preventDefault();
         event.stopPropagation();
 
