@@ -5,6 +5,7 @@ import * as actions from '../../actions';
 import {connect} from 'react-redux';
 import {inlineStyles} from '../../helpers/inlineStyles';
 import * as Suggestions from '../../helpers/suggestions';
+import {getCurrentAuthor} from '../../helpers/author';
 
 /**
  * @ngdoc React
@@ -20,12 +21,13 @@ export class InlineStyleButtonsComponent extends Component {
     }
 
     onToggle(type, active) {
+        const author = getCurrentAuthor();
         const {editorState, suggestingMode, toggleInlineStyle, createChangeStyleSuggestion} = this.props;
         const selection = editorState.getSelection();
 
         if (suggestingMode && !selection.isCollapsed()) {
-            if (!Suggestions.allowEditSuggestionOnLeft(editorState)
-                && !Suggestions.allowEditSuggestionOnRight(editorState)) {
+            if (!Suggestions.allowEditSuggestionOnLeft(editorState, author)
+                && !Suggestions.allowEditSuggestionOnRight(editorState, author)) {
                 return;
             }
 

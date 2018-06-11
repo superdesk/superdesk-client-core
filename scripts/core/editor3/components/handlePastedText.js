@@ -4,6 +4,7 @@ import {getContentStateFromHtml} from '../html/from-html';
 import * as Suggestions from '../helpers/suggestions';
 import {sanitizeContent, inlineStyles} from '../helpers/inlineStyles';
 import {getAllCustomDataFromEditor, setAllCustomDataForEditor} from '../helpers/editor3CustomData';
+import {getCurrentAuthor} from '../helpers/author';
 
 function removeMediaFromHtml(htmlString) {
     const element = document.createElement('div');
@@ -31,6 +32,7 @@ const NOT_HANDLED = 'not-handled';
  * atomic blocks that need special handling in editor3.
  */
 export function handlePastedText(editorKey, text, _html) {
+    const author = getCurrentAuthor();
     let html = _html;
 
     if (typeof html === 'string') {
@@ -44,8 +46,8 @@ export function handlePastedText(editorKey, text, _html) {
     }
 
     if (suggestingMode) {
-        if (!Suggestions.allowEditSuggestionOnLeft(editorState)
-            && !Suggestions.allowEditSuggestionOnRight(editorState)) {
+        if (!Suggestions.allowEditSuggestionOnLeft(editorState, author)
+            && !Suggestions.allowEditSuggestionOnRight(editorState, author)) {
             return HANDLED;
         }
 
