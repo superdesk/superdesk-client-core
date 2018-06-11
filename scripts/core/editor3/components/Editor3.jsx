@@ -23,6 +23,7 @@ export class Editor3Base extends React.Component {
 
 Editor3Base.propTypes = Editor3Component.propTypes = {
     onChange: PropTypes.func,
+    id: PropTypes.string,
 };
 
 const mapStateToProps = (state) => ({

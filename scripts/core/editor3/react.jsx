@@ -31,7 +31,7 @@ export class Editor extends Component {
 
         return (
             <Provider store={this.store}>
-                <Editor3 scrollContainer={scrollContainer} singleLine={singleLine} />
+                <Editor3 id={this.props.id} scrollContainer={scrollContainer} singleLine={singleLine} />
             </Provider>
         );
     }
@@ -51,6 +51,8 @@ Editor.defaultProps = {
 };
 
 Editor.propTypes = {
+    id: PropTypes.string.isRequired,
+
     // If set, it will be used to make sure the toolbar is always
     // visible when scrolling. If not set, window object is used as reference.
     // Any valid jQuery selector will do.
