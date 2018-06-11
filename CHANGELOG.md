@@ -1,5 +1,29 @@
 # Superdesk Client Changelog
 
+## [1.20.0] 2018-06-11
+
+### Fixed
+
+- Fix schedule time tooltip in item lists.
+- Add selected text to clipboard on ctrl+x in editor3.
+- Display error message when required field is missing in metadata settings.
+- When clicking on a link in annotations a new window should open the destination url.
+- Editor3 crash when clicking on annotation after reloading the page with article opened.
+- Show "with" value on multiple blocks replace suggestion.
+
+### Added
+
+- Show annotations on item print preview.
+- Use autocomplete for places field if available.
+- Add unresolved comments to sidebar comments widget.
+- Add unit tests for editor3.
+
+### Changed
+
+- Order vocabularies by name in metadata settings.
+- UI improvements for `sd-typeahead` component.
+- It should be possible to restrict feed parsers for certain services.
+
 ## [1.19.0] 2018-05-31
 
 ### Fixed
