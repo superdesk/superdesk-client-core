@@ -20,9 +20,7 @@ const SelectionButtonComponent = ({editorState, onClick, tooltip, iconName, prec
 
     const clickHandler = () => {
         if (!inactive) {
-            onClick({
-                selection: editorState.getSelection(),
-            });
+            onClick(editorState.getSelection());
         }
     };
 

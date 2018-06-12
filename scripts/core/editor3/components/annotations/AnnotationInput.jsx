@@ -124,7 +124,7 @@ class AnnotationInputBody extends Component {
     }
 
     render() {
-        const {hidePopups, data, spellcheckerEnabled, language, annotationTypes} = this.props;
+        const {hidePopups, data, spellcheckerEnabled, language, annotationTypes, parentEditorId} = this.props;
         const {annotation} = data;
         const {type, isEmpty} = this.state;
 
@@ -146,6 +146,7 @@ class AnnotationInputBody extends Component {
                     <div className="sd-line-input">
                         <label className="sd-line-input__label">Annotation Body</label>
                         <Editor
+                            id={parentEditorId + '__annotations-input'}
                             onChange={this.onChange}
                             editorFormat={['bold', 'italic', 'underline', 'link']}
                             editorState={this.initialContent}
@@ -180,6 +181,7 @@ AnnotationInputBody.propTypes = {
     spellcheckerEnabled: PropTypes.bool,
     highlightsManager: PropTypes.object.isRequired,
     annotationTypes: PropTypes.array.isRequired,
+    parentEditorId: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = (state) => ({

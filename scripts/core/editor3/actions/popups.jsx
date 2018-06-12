@@ -22,9 +22,29 @@ export const PopupTypes = {
  * @return {Object}
  */
 export function showPopup(type, data) {
-    return {
-        type: 'TOOLBAR_SET_POPUP',
-        payload: {type, data},
+    if (type !== PopupTypes.Hidden && data.editorId == null) {
+        throw Error('editorId required');
+    }
+
+    return function(dispatch, getState) {
+        const currentState = getState();
+
+        const action = {
+            type: 'TOOLBAR_SET_POPUP',
+            payload: {type, data},
+        };
+
+        dispatch(action);
+
+        if (type === PopupTypes.Hidden) {
+            setTimeout(() => {
+                // wait for changes to get saved before focusing the editor
+                // otherwise it will overwrite new changes with old ones
+                document.querySelector(
+                    `#Editor3-${currentState.popup.data.editorId} > div > div > div > .public-DraftEditor-content`
+                ).focus();
+            });
+        }
     };
 }
 
