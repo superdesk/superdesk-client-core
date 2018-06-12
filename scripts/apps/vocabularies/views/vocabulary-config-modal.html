@@ -27,9 +27,9 @@
                     ng-show="issues._id.indexOf('regex') >= 0" translate>ID must contain only letters, digits and characters -, _.</div>
             </div>
 
-            <div class="sd-line-input sd-line-input--required">
+            <div class="sd-line-input sd-line-input--required sd-line-input--boxed">
                 <label for="cv_display_name" class="sd-line-input__label" translate>Name</label>
-                <input id="cv_display_name"
+                <input id="cv_display_name" class="sd-line-input__input"
                     type="text"
                     ng-model="vocabulary.display_name"
                     required>
@@ -95,8 +95,8 @@
                     ng-disabled="!vocabulary.field_options.multiple_items.enabled">
             </div>
 
-            <div class="sd-line-input" ng-if="matchFieldTypeToTab('vocabularies', vocabulary.field_type)">
-                <label class="sd-line-input__label" translate>Items</label>
+            <div class="vocabulary-items__wrapper" ng-if="matchFieldTypeToTab('vocabularies', vocabulary.field_type)">
+                <h3 class="sd-line-input__label" translate>Items</h3>
                 <div sd-vocabulary-config-modal-items></div>
             </div>
             <div ng-if="errorMessage" class="sd-line-input sd-line-input--invalid">

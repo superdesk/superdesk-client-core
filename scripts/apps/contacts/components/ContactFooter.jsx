@@ -11,19 +11,15 @@ export const ContactFooter = ({item, svc}) => {
     const {gettextCatalog} = svc;
 
     const cssClass = classNames(
-        'contact-footer',
+        'sd-grid-item__footer sd-grid-item__footer--padded',
         {padded: getContactType(item) === 'organisation' || !item.organisation}
     );
 
     return (
         <div key="contact-footer" className={cssClass}>
             <span className="update-info">
-                <dl>
-                    <dt>{gettextCatalog.getString('updated:')}</dt>
-                    <dd>
-                        <VersionCreated item={item} svc={svc} />
-                    </dd>
-                </dl>
+                <span className="sd-grid-item__text-label">{gettextCatalog.getString('Updated:')}</span>
+                <VersionCreated item={item} svc={svc} />
             </span>
             <SocialInfo item={item} svc={svc} />
         </div>

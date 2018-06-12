@@ -50,7 +50,9 @@ export class Item extends React.Component {
             'div',
             {
                 className: classNames(
-                    'media-box contacts',
+                    this.props.view === 'photogrid' ?
+                        'sd-grid-item sd-grid-item--with-click' :
+                        'media-box contacts',
                     {
                         selected: flags.selected,
                     }
@@ -58,7 +60,7 @@ export class Item extends React.Component {
             },
         ];
 
-        if (view === 'mgrid') {
+        if (view === 'photogrid') {
             contents.push(
                 <ContactHeader item={item} svc={svc} />,
                 <ContactInfo item={item} svc={svc} />,

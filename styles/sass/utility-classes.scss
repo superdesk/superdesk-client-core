@@ -76,3 +76,26 @@
 .discreet {
     color: #AAAAAA;
 }
+
+
+ul.list-view.list-without-items {
+    li {
+        line-height: 38px;
+        text-align: center;
+        color: #999;
+    }
+}
+
+.sd-grid-list.list-without-items {
+    li {
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1), 0 1px 5px rgba(0, 0, 0, 0.16);
+        display: flex;
+        line-height: 38px;
+        align-content: center;
+        justify-content: center;
+        text-align: center;
+        color: #999;
+        border-radius: 3px;
+    }
+
+}
