@@ -26,7 +26,7 @@
                             </div>
                         </li>
                     </ul>
-                    <div ng-show="!!item.data.commentedText" class="commented-text">
+                    <div ng-if="!!item.data.commentedText" class="commented-text">
                         <div translate>Selected text:</div>
                         <span class="text" title="{{ item.data.commentedText }}">
                             "{{ item.data.commentedText }}"

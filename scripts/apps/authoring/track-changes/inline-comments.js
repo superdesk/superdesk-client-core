@@ -1,10 +1,18 @@
 import {
+    META_FIELD_NAME,
+    fieldsMetaKeys,
+    getFieldId,
+    getFieldMetadata,
+} from 'core/editor3/helpers/fieldsMeta';
+import {
     editor3DataKeys,
     getCustomDataFromEditorRawState,
 } from 'core/editor3/helpers/editor3CustomData';
-
 import {getLabelForFieldId} from 'apps/workspace/helpers/getLabelForFieldId';
-import {fieldsMetaKeys, META_FIELD_NAME, getFieldMetadata, getFieldId} from 'core/editor3/helpers/fieldsMeta';
+import {
+    getRangeAndTextForStyleInRawState,
+} from 'core/editor3/helpers/highlights';
+import {highlightsConfig} from 'core/editor3/highlightsConfig';
 
 function getAllUserIdsFromComments(comments) {
     const users = [];
@@ -38,19 +46,36 @@ function getCommentsFromField(customFields, resolved = true) {
     if (resolved) {
         return (obj) => ({
             fieldName: getLabelForFieldId(getFieldId(obj.contentKey), customFields),
-            comments: getCustomDataFromEditorRawState(
-                obj[fieldsMetaKeys.draftjsState],
-                editor3DataKeys.RESOLVED_COMMENTS_HISTORY
-            ) || [],
+            comments:
+        getCustomDataFromEditorRawState(
+            obj[fieldsMetaKeys.draftjsState],
+            editor3DataKeys.RESOLVED_COMMENTS_HISTORY
+        ) || [],
         });
     } else {
-        return (obj) => ({
-            fieldName: getLabelForFieldId(getFieldId(obj.contentKey), customFields),
-            comments: Object.values(getCustomDataFromEditorRawState(
-                obj[fieldsMetaKeys.draftjsState],
-                editor3DataKeys.MULTIPLE_HIGHLIGHTS
-            ).highlightsData || {}).filter((h) => h.type === 'COMMENT'),
-        });
+        return (obj) => {
+            const highlightsObject =
+        getCustomDataFromEditorRawState(
+            obj[fieldsMetaKeys.draftjsState],
+            editor3DataKeys.MULTIPLE_HIGHLIGHTS
+        ).highlightsData || {};
+
+            for (const id in highlightsObject) {
+                // Add id to highlight so we can retrieve data from the state
+                highlightsObject[id].highlightId = id;
+            }
+
+            const fieldId = getFieldId(obj.contentKey);
+            const fieldLabel = getLabelForFieldId(fieldId, customFields);
+
+            return {
+                fieldName: fieldLabel,
+                fieldId: fieldId,
+                comments: Object.values(highlightsObject).filter(
+                    (h) => h.type === highlightsConfig.COMMENT.type
+                ),
+            };
+        };
     }
 }
 
@@ -74,7 +99,7 @@ function InlineCommentsCtrl($scope, userList, metadata, content) {
             .map(getCommentsFromField(customFields))
             .filter((obj) => obj.comments.length > 0);
 
-        const unresolvedComments = editors
+        let unresolvedComments = editors
             .map(getCommentsFromField(customFields, false))
             .filter((obj) => obj.comments.length > 0);
 
@@ -85,6 +110,48 @@ function InlineCommentsCtrl($scope, userList, metadata, content) {
             };
             return;
         }
+
+        unresolvedComments = unresolvedComments.map(({fieldId, comments, ...rest}) => {
+            const editor = editors.find((e) => e.contentKey === fieldId);
+            const rawEditorState = editor[fieldsMetaKeys.draftjsState];
+
+            const stylesInEditorObject = {};
+
+            for (const {inlineStyleRanges} of rawEditorState.blocks) {
+                for (const {style} of inlineStyleRanges) {
+                    stylesInEditorObject[style] = true;
+                }
+            }
+
+            const stylesInEditor = Object.keys(stylesInEditorObject);
+
+            const currentCommentsInEditor = [];
+
+            for (const style of stylesInEditor) {
+                const comment = comments.find((c) => c.highlightId === style);
+
+                if (comment) {
+                    const {highlightedText} = getRangeAndTextForStyleInRawState(rawEditorState, comment.highlightId);
+
+                    currentCommentsInEditor.push({
+                        ...comment,
+                        data: {
+                            ...comment.data,
+                            commentedText: highlightedText,
+                        },
+                    });
+                }
+            }
+
+            return {
+                ...rest,
+                fieldId: fieldId,
+                comments: currentCommentsInEditor,
+            };
+        });
+
+        // After orphan comments have been filtered out, array could be empty
+        unresolvedComments = unresolvedComments.filter((o) => o.comments.length > 0);
 
         const allComments = []
             .concat(...resolvedComments.map((obj) => obj.comments))
@@ -115,7 +182,7 @@ angular
                 icon: 'comments',
                 label: gettext('Inline comments'),
                 template:
-                'scripts/apps/authoring/track-changes/views/inline-comments-widget.html',
+          'scripts/apps/authoring/track-changes/views/inline-comments-widget.html',
                 order: 9,
                 side: 'right',
                 display: {
