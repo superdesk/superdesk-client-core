@@ -76,12 +76,22 @@ class CommentTextArea extends React.Component {
     }
 
     render() {
+        const mentionsInputStyle = typeof this.props.maxHeight !== 'number'
+            ? mentionsStyle.input
+            : {...mentionsStyle.input, '&multiLine': {
+                ...mentionsStyle.input['&multiLine'],
+                input: {
+                    ...mentionsStyle.input['&multiLine'].input,
+                    maxHeight: this.props.maxHeight,
+                },
+            }};
+
         return (
             <div className="comment-textarea">
                 <MentionsInput
                     value={this.props.value}
                     onChange={this.props.onChange}
-                    style={mentionsStyle.input}
+                    style={mentionsInputStyle}
                     className="mentions-input"
                     markup="@[__display__](__type__:__id__)"
                     placeholder={this.props.placeholder || gettext('Type your comment...')}
@@ -119,6 +129,7 @@ CommentTextArea.propTypes = {
     onFocus: PropTypes.func,
     onBlur: PropTypes.func,
     singleLine: PropTypes.bool,
+    maxHeight: PropTypes.number,
 };
 
 export default CommentTextArea;

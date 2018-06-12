@@ -190,6 +190,7 @@ export class CommentPopup extends Component {
                                 }}
                                 singleLine={false}
                                 placeholder={'Reply'}
+                                maxHeight={189} // 10 lines
                             />
                             {
                                 this.state.replyFieldFocused !== true ? null : (

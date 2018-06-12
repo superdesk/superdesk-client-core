@@ -36,7 +36,6 @@ export default ({
             input: {
                 padding: '3px',
                 paddingTop: '4px',
-                maxHeight: 63, // 3 lines
                 overflowY: 'scroll',
                 outline: 0,
                 border: 0,

@@ -7,6 +7,21 @@ export class HighlightsPopupPresentation extends Component {
         this.state = {
             actionsDropdownOpen: false,
         };
+        this.animationTimer = null;
+        this.position = this.position.bind(this);
+        this.positionOnNextAnimationFrame = this.positionOnNextAnimationFrame.bind(this);
+    }
+    positionOnNextAnimationFrame() {
+        if (this.animationTimer != null) {
+            window.cancelAnimationFrame(this.animationTimer);
+        }
+
+        const {position} = this;
+
+        this.animationTimer = window.requestAnimationFrame(() => {
+            this.animationTimer = null;
+            position();
+        });
     }
     toggleActionsDropdown() {
         this.setState({
@@ -29,36 +44,43 @@ export class HighlightsPopupPresentation extends Component {
             return;
         }
 
+        // reset calculated values so new calculation can be performed
         element.style.top = '';
         element.style.bottom = '';
+        mainFlexElement.style['max-height'] = '';
 
         element.style.left = (this.props.editorNode.getBoundingClientRect().left - 360) + 'px';
 
-        const paddingTop = 60;
-        const paddingBottom = 40;
+        const paddingTop = 4;
+        const paddingBottom = 4;
         const viewportHeight = $(window).innerHeight();
+        const remainingSpaceAtTheBottomOfSelectedText = viewportHeight - selectionRect.top;
 
-        const remainingSpaceAtTheTopOfSelectedText = selectionRect.top;
-        const remainingSpaceAtTheBottomOfSelectedText = viewportHeight - selectionRect.bottom;
-
-        if (remainingSpaceAtTheTopOfSelectedText > remainingSpaceAtTheBottomOfSelectedText) {
-            element.style.bottom = remainingSpaceAtTheBottomOfSelectedText + 'px';
-            mainFlexElement.style['max-height'] = (
-                viewportHeight
-                - remainingSpaceAtTheBottomOfSelectedText
-                - paddingTop
-            ) + 'px';
-        } else {
-            element.style.top = remainingSpaceAtTheTopOfSelectedText + 'px';
-            mainFlexElement.style['max-height'] = (
-                viewportHeight
-                - remainingSpaceAtTheTopOfSelectedText
-                - paddingBottom
-            ) + 'px';
-        }
+        element.style.bottom = (
+            remainingSpaceAtTheBottomOfSelectedText > element.offsetHeight
+                ? Math.max(remainingSpaceAtTheBottomOfSelectedText - element.offsetHeight, paddingBottom)
+                : paddingBottom
+        ) + 'px';
+        mainFlexElement.style['max-height'] = (
+            viewportHeight
+            - parseInt(element.style.bottom, 10)
+            - paddingTop
+        ) + 'px';
     }
     componentDidMount() {
         this.position();
+
+        window.addEventListener('keydown', this.positionOnNextAnimationFrame);
+        window.addEventListener('resize', this.positionOnNextAnimationFrame);
+        window.addEventListener('click', this.positionOnNextAnimationFrame);
+    }
+    componentDidUpdate() {
+        this.position();
+    }
+    componentWillUnmount() {
+        window.removeEventListener('keydown', this.positionOnNextAnimationFrame);
+        window.removeEventListener('resize', this.positionOnNextAnimationFrame);
+        window.removeEventListener('click', this.positionOnNextAnimationFrame);
     }
     render() {
         const {availableActions} = this.props;
