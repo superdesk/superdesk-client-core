@@ -14,14 +14,18 @@ const stubForHighlights = {
 
 describe('editor3.component', () => {
     it('should hide toolbar when disabled', () => {
-        const wrapper = shallow(<Editor3 id="test-id" showToolbar={false} editorState={editorState} {...stubForHighlights} />);
+        const wrapper = shallow(
+            <Editor3 id="test-id" showToolbar={false} editorState={editorState} {...stubForHighlights} />
+        );
 
         expect(wrapper.find('DraftEditor').length).toBe(1);
         expect(wrapper.find('.Editor3-controls').length).toBe(0);
     });
 
     it('should not accept dragging over invalid items', () => {
-        const wrapper = shallow(<Editor3 id="test-id" editorFormat={['media']} editorState={editorState} {...stubForHighlights} />);
+        const wrapper = shallow(
+            <Editor3 id="test-id" editorFormat={['media']} editorState={editorState} {...stubForHighlights} />
+        );
         const {onDragOver} = wrapper.instance();
         const makeEvent = (t) => ({originalEvent: {dataTransfer: {types: ['foo', t]}}});
 
