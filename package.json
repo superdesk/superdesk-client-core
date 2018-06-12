@@ -57,7 +57,7 @@
     "d3": "3.5.17",
     "diff-match-patch": "1.0.0",
     "docs-soap": "tomaskikutis/docs-soap#convert-tables",
-    "draft-js": "tomaskikutis/draft-js#add-subscript-superscript",
+    "draft-js": "tomaskikutis/draft-js#fix-cursor-position-when-focusing-programatically",
     "exif-js": "2.3.0",
     "file-loader": "1.1.11",
     "git-rev-sync": "1.10.0",
