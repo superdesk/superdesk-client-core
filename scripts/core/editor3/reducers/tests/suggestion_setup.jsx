@@ -67,7 +67,7 @@ export function applySelection(editorState, startBlockIndex, startOffset, endBlo
     return EditorState.acceptSelection(editorState, selection);
 }
 
-export function addDeleteSuggestion(editorState, action, date = new Date()) {
+export function addDeleteSuggestion(editorState, action, date = new Date(), author = 'author_id') {
     const result = reducer(
         {
             editorState: editorState,
@@ -80,7 +80,7 @@ export function addDeleteSuggestion(editorState, action, date = new Date()) {
                 action: action,
                 data: {
                     date: date,
-                    author: 'author_id',
+                    author: author,
                 },
             },
         }
@@ -89,7 +89,7 @@ export function addDeleteSuggestion(editorState, action, date = new Date()) {
     return result.editorState;
 }
 
-export function addInsertSuggestion(editorState, text, date = new Date()) {
+export function addInsertSuggestion(editorState, text, date = new Date(), author = 'author_id') {
     const result = reducer(
         {
             editorState: editorState,
@@ -102,7 +102,7 @@ export function addInsertSuggestion(editorState, text, date = new Date()) {
                 text: text,
                 data: {
                     date: date,
-                    author: 'author_id',
+                    author: author,
                 },
             },
         }

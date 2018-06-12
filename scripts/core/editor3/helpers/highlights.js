@@ -337,8 +337,8 @@ export function getHighlightAuthor(editorState, style) {
  * @return {Object}
  * @description the highlight associated data from the new possition specified by offset.
  */
-export function getHighlightDataAtOffset(editorState, types, selection, offset) {
-    const style = getHighlightStyleAtOffset(editorState, types, selection, offset);
+export function getHighlightDataAtOffset(editorState, types, selection, offset, fromEnd = false) {
+    const style = getHighlightStyleAtOffset(editorState, types, selection, offset, fromEnd);
 
     if (style == null) {
         return null;
