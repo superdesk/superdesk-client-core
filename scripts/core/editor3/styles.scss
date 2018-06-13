@@ -523,8 +523,12 @@ $editor-styleButton-size: 3rem;
 }
 
 .space-component {
-	[style^="color"] { // used for suggestions
+	&.add-suggestion {
 		background-color: rgba(0, 180, 0, 0.2);
+	}
+
+	&.delete-suggestion {
+		background-color: rgba(255, 0, 0, 0.2);
 	}
 }
 
