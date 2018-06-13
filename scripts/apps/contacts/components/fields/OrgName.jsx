@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
  */
 export const OrgName = ({item}) => (
     <div key="org-name" className="container">
-        {item.first_name && item.organisation && <i className="icon-globe" />}
+        {item.first_name && item.organisation && <i className="icon-business" />}
         {
             item.first_name && item.organisation &&
                 <span>{item.organisation}</span>

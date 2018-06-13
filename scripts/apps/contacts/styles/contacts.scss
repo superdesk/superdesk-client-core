@@ -218,3 +218,40 @@
         }   
     }
 }
+
+.contact__type-icon {
+    position: absolute;
+    top: 1.8rem;
+    left: 1rem;
+    background: #67afa1;
+    height: 3.4rem;
+    width: 3.4rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    i {
+        color: $white;
+    }
+}
+
+.contact-header__container {
+    padding-left: 4.4rem;
+    min-height: 3.7rem;
+    margin-top: 0.5rem;
+    h3 {
+        font-size: 1.6rem;
+        line-height: 120%;
+        font-weight: 500;
+    }
+    .item-info {
+        opacity: 0.85;
+        font-weight: 300;
+    }
+}
+.contacts-list__holder {
+    padding: 2rem;
+    .sd-grid-list--small-margin {
+        margin: 0;
+    }
+}

@@ -1,22 +1,22 @@
-<ul>
+<ul class="search-tags__list">
     <li ng-repeat="(type,keys) in tags.selectedFacets">
-        <div ng-repeat="key in keys">
-            <span>{{type| translate}}:</span>{{key.label || key}}<button ng-click="removeFilter(type, key.value || key)"><i class="icon-close-small icon--white"></i></button>
+        <div ng-repeat="key in keys" class="tag-label tag-label--highlight2">
+            <span>{{type| translate}}:</span>{{key.label || key}}<button class="tag-label__remove" ng-click="removeFilter(type, key.value || key)"><i class="icon-close-small"></i></button>
         </div>
     </li>
     <li ng-repeat="(type,keys) in tags.removedFacets">
-        <div ng-repeat="key in keys">
-            <span>{{key.label | translate}}:</span>{{key.displayValue}}<button ng-click="removeFilter(type, key.value)"><i class="icon-close-small icon--white"></i></button>
+        <div ng-repeat="key in keys" class="tag-label tag-label--highlight2">
+            <span>{{key.label | translate}}:</span>{{key.displayValue}}<button class="tag-label__remove" ng-click="removeFilter(type, key.value)"><i class="icon-close-small"></i></button>
         </div>
     </li>
     <li ng-repeat="parameter in tags.selectedParameters">
-        <div>
-            <span>{{parameter.label}}</span><button ng-click="removeParameter(parameter.value)"><i class="icon-close-small icon--white"></i></button>
+        <div class="tag-label tag-label--highlight1">
+            <span>{{parameter.label}}</span><button class="tag-label__remove" ng-click="removeParameter(parameter.value)"><i class="icon-close-small"></i></button>
         </div>
     </li>
     <li ng-repeat="parameter in tags.selectedKeywords">
-        <div>
-            <span>{{parameter}}</span><button ng-click="removeParameter(parameter)"><i class="icon-close-small icon--white"></i></button>
+        <div class="tag-label tag-label--highlight1">
+            <span>{{parameter}}</span><button class="tag-label__remove" ng-click="removeParameter(parameter)"><i class="icon-close-small"></i></button>
         </div>
     </li>
 </ul>

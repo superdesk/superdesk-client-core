@@ -85,7 +85,7 @@ describe('search', () => {
         globalSearch.goButton.click();
         expect(globalSearch.getItems().count()).toBe(1);
         expect(element.all(by.repeater('parameter in tags.selectedParameters')).count()).toBe(1);
-        element(by.css('.icon-close-small.icon--white')).click();
+        element(by.css('.tag-label__remove')).click();
         expect(globalSearch.getItems().count()).toBe(14);
 
         // can search by original creator
@@ -300,7 +300,7 @@ describe('search', () => {
         expect(globalSearch.getItem(0).element(by.className('state-scheduled')).isDisplayed()).toBe(true);
         expect(globalSearch.getItem(0).element(by.className('state-scheduled')).getText()).toEqual('SCHEDULED');
         expect(element.all(by.repeater('key in keys')).count()).toBe(1);
-        element(by.css('.icon-close-small.icon--white')).click();
+        element(by.css('.tag-label__remove')).click();
         expect(globalSearch.getItems().count()).toBe(14);
     });
 

@@ -8,7 +8,7 @@ export const Notes = ({item, svc}) => {
     let displayNotes = truncate(notes, {length: 120});
 
     return (
-        <div key="notes" className="item-notes">
+        <div key="notes">
             {notes &&
                 <span title={notes}>
                     {displayNotes}
