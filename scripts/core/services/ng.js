@@ -64,4 +64,12 @@ export default new class ProviderService {
                 });
         });
     }
+    getServices(names) {
+        return new Promise((resolve, reject) => {
+            this.waitForServicesToBeAvailable()
+                .then(() => {
+                    resolve(names.map((name) => $injector.get(name)));
+                });
+        });
+    }
 }();

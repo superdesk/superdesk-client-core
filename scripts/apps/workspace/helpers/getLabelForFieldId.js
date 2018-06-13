@@ -1,19 +1,35 @@
 import {LABEL_MAP} from '../content/constants';
+import ng from 'core/services/ng';
 
-export function getLabelForFieldId(id, customFields) {
-    if (LABEL_MAP.hasOwnProperty(id)) {
-        return LABEL_MAP[id];
-    }
+export const getLabelNameResolver = () => ng.getServices(['gettext', 'content'])
+    .then((services) => {
+        const [gettext, content] = services;
 
-    const customField = customFields.find((obj) => obj._id === id);
+        return content.getCustomFields()
+            .then((customFields) => [gettext, customFields]);
+    })
+    .then((res) => {
+        const [gettext, customFields] = res;
 
-    if (customField != null && customField.hasOwnProperty('display_name') && customField['display_name'].length > 0) {
-        return customField['display_name'];
-    }
+        return (fieldId) => {
+            if (LABEL_MAP.hasOwnProperty(fieldId)) {
+                return LABEL_MAP[fieldId];
+            }
 
-    console.warn(`could not find label for ${id}. Please add it in ` +
-        '(apps/workspace/content/content/directives/ContentProfileSchemaEditor).' +
-        'ContentProfileSchemaEditor/labelMap');
+            const customField = customFields.find((obj) => obj._id === fieldId);
 
-    return id.charAt(0).toUpperCase() + id.substr(1).toLowerCase();
-}
+            if (
+                customField != null
+                && customField.hasOwnProperty('display_name')
+                && customField['display_name'].length > 0
+            ) {
+                return customField['display_name'];
+            }
+
+            console.warn(`could not find label for ${fieldId}. Please add it in ` +
+                '(apps/workspace/content/content/directives/ContentProfileSchemaEditor).' +
+                'ContentProfileSchemaEditor/labelMap');
+
+            return fieldId.charAt(0).toUpperCase() + fieldId.substr(1).toLowerCase();
+        };
+    });
