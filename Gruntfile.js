@@ -64,6 +64,10 @@ module.exports = function(grunt) {
         'webpack-dev-server:start',
     ]);
 
+    // gettext
+    grunt.registerTask('gettext:extract', ['nggettext_extract']);
+    grunt.registerTask('gettext:compile', ['nggettext_compile']);
+
     // Production build
     grunt.registerTask('build', '', () => {
         grunt.task.run([
