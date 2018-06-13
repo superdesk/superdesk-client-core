@@ -225,4 +225,70 @@ describe('editor3.reducers.suggestion.PASTE_ADD_SUGGESTION', () => {
             type: 'DELETE_SUGGESTION',
         });
     });
+
+    it('should delete new suggested selected text and insert new text when text is pasted', () => {
+        const rawContentPaste = {
+            blocks: [
+                {key: '4vu4i', text: 'ppppp'},
+            ],
+            entityMap: {},
+        };
+        const pastedContent = Setup.getInitiaContent(rawContentPaste);
+        const rawContent = {
+            blocks: [
+                {key: '4vu4i', text: 'paragraph'},
+            ],
+            entityMap: {},
+        };
+        const date = new Date();
+        let editorState = Setup.getInitialEditorState(rawContent);
+
+        editorState = Setup.applySelection(editorState, 0, 4, 0, 4);
+        editorState = Setup.addInsertSuggestion(editorState, 'nnnn', date);
+        editorState = Setup.applySelection(editorState, 0, 2, 0, 6);
+        editorState = Setup.addPasteSuggestion(editorState, pastedContent, date);
+
+        const selection = editorState.getSelection();
+        const content = editorState.getCurrentContent();
+
+        expect(content.getPlainText()).toEqual('parapppppnngraph');
+        expect(selection.getStartOffset()).toEqual(9);
+        expect(selection.getStartKey()).toEqual(content.getFirstBlock().getKey());
+        expect(selection.getEndOffset()).toEqual(9);
+        expect(selection.getEndKey()).toEqual(content.getFirstBlock().getKey());
+
+        let block = content.getFirstBlock();
+
+        for (let i = 0; i < 16; i++) {
+            if (i < 2) {
+                expect(block.getInlineStyleAt(i).toJS()).toEqual([]);
+            } else if (i < 4) {
+                expect(block.getInlineStyleAt(i).toJS()).toEqual(['DELETE_SUGGESTION-1']);
+            } else if (i < 9) {
+                expect(block.getInlineStyleAt(i).toJS()).toEqual(['ADD_SUGGESTION-2']);
+            } else if (i < 11) {
+                expect(block.getInlineStyleAt(i).toJS()).toEqual(['ADD_SUGGESTION-1']);
+            } else {
+                expect(block.getInlineStyleAt(i).toJS()).toEqual([]);
+            }
+        }
+
+        expect(Highlights.getHighlightData(editorState, 'ADD_SUGGESTION-1')).toEqual({
+            date: date,
+            author: 'author_id',
+            type: 'ADD_SUGGESTION',
+        });
+
+        expect(Highlights.getHighlightData(editorState, 'DELETE_SUGGESTION-1')).toEqual({
+            date: date,
+            author: 'author_id',
+            type: 'DELETE_SUGGESTION',
+        });
+
+        expect(Highlights.getHighlightData(editorState, 'ADD_SUGGESTION-2')).toEqual({
+            date: date,
+            author: 'author_id',
+            type: 'ADD_SUGGESTION',
+        });
+    });
 });

@@ -707,9 +707,12 @@ const applyChangeSuggestion = (editorState, accepted) => {
         const applySuggestion = data.type === 'ADD_SUGGESTION' && accepted ||
             data.type === 'DELETE_SUGGESTION' && !accepted;
 
-        let {selection: newSelection} = Highlights.getRangeAndTextForStyle(newEditorState, style);
+        let {selection: newSelection} = Highlights.getRangeAndTextForStyle(newEditorState, style, true);
 
-        newEditorState = Highlights.removeHighlight(newEditorState, style);
+        newEditorState = EditorState.acceptSelection(newEditorState, newSelection);
+        newEditorState = Highlights.changeEditorSelection(newEditorState, 0, 1, false);
+        newSelection = newEditorState.getSelection();
+        newEditorState = Highlights.resetHighlightForCurrentSelection(newEditorState, style);
 
         if (!applySuggestion) {
             // delete current selection
@@ -1144,7 +1147,7 @@ const resetSuggestion = (editorState, style) => {
     let newState = editorState;
 
     newState = Highlights.changeEditorSelection(newState, 0, 1, false);
-    newState = Highlights.resetHighlightForCurrentCharacter(newState, style);
+    newState = Highlights.resetHighlightForCurrentSelection(newState, style);
     newState = Highlights.changeEditorSelection(newState, 1, 0, false);
 
     return newState;

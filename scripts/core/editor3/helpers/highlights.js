@@ -533,21 +533,21 @@ export function hadHighlightsChanged(prevEditorState, nextEditorState) {
 
 /**
  * @ngdoc method
- * @name deleteHighlight
+ * @name resetHighlightForCurrentSelection
  * @param {Object} editorState
  * @param {String} style
- * @return {Object editorstate
- * @description For current position reset the highlight style. If it was the last
- * character with given style, delete the associated data too.
+ * @return {Object} editor state
+ * @description For current selection reset the highlight style. If it was the last
+ * selection with given style, delete the associated data too.
  */
-export function resetHighlightForCurrentCharacter(editorState, style) {
+export function resetHighlightForCurrentSelection(editorState, style) {
     const type = getHighlightType(style);
     const selection = editorState.getSelection();
     const content = editorState.getCurrentContent();
     const block = content.getBlockForKey(selection.getStartKey());
     const offset = selection.getStartOffset() === block.getLength() - 1 ? 1 : 0;
     const styleBefore = getHighlightStyleAtOffset(editorState, [type], selection, -1);
-    const styleAfter = getHighlightStyleAtOffset(editorState, [type], selection, 1 + offset);
+    const styleAfter = getHighlightStyleAtOffset(editorState, [type], selection, offset, true);
 
     if (styleBefore !== style && styleAfter !== style) {
         return removeHighlight(editorState, style);
@@ -822,7 +822,7 @@ function getRightRangeAndTextForStyle(editorState, style) {
  * @param {String} style
  * @return {Object} return a selection and text that are associated to given highlight style.
  */
-export function getRangeAndTextForStyle(editorState, style) {
+export function getRangeAndTextForStyle(editorState, style, leftOnly = false) {
     const selection = editorState.getSelection();
 
     if (selection.isCollapsed() === false) {
@@ -834,14 +834,14 @@ export function getRangeAndTextForStyle(editorState, style) {
     const newSelection = selection.merge({
         anchorOffset: startOffset,
         anchorKey: startBlock.getKey(),
-        focusOffset: endOffset,
-        focusKey: endBlock.getKey(),
+        focusOffset: leftOnly ? selection.getEndOffset() : endOffset,
+        focusKey: leftOnly ? selection.getEndKey() : endBlock.getKey(),
         isBackward: false,
     });
 
     return {
         selection: newSelection,
-        highlightedText: startText + endText,
+        highlightedText: leftOnly ? startText + endText[0] : startText + endText,
     };
 }
 
