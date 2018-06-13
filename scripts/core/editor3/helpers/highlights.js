@@ -850,7 +850,7 @@ export function getRangeAndTextForStyleInRawState(rawEditorState, highlightId) {
     for (const {inlineStyleRanges, text} of rawEditorState.blocks) {
         for (const {offset, length, style} of inlineStyleRanges) {
             if (style === highlightId) {
-                const textRange = text.substring(offset, length);
+                const textRange = text.substring(offset, offset + length);
 
                 highlightedText = highlightedText.length > 0
                     ? highlightedText = `${highlightedText}${paragraphSeparator}${textRange}`
