@@ -57,12 +57,7 @@ export default new class ProviderService {
     }
 
     getService(name) {
-        return new Promise((resolve, reject) => {
-            this.waitForServicesToBeAvailable()
-                .then(() => {
-                    resolve($injector.get(name));
-                });
-        });
+        return this.getServices([name]).then((res) => res[0]);
     }
     getServices(names) {
         return new Promise((resolve, reject) => {
