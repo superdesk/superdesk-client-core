@@ -46,19 +46,17 @@ function getCommentsFromField(customFields, resolved = true) {
     if (resolved) {
         return (obj) => ({
             fieldName: getLabelForFieldId(getFieldId(obj.contentKey), customFields),
-            comments:
-        getCustomDataFromEditorRawState(
-            obj[fieldsMetaKeys.draftjsState],
-            editor3DataKeys.RESOLVED_COMMENTS_HISTORY
-        ) || [],
+            comments: getCustomDataFromEditorRawState(
+                obj[fieldsMetaKeys.draftjsState],
+                editor3DataKeys.RESOLVED_COMMENTS_HISTORY
+            ) || [],
         });
     } else {
         return (obj) => {
-            const highlightsObject =
-        getCustomDataFromEditorRawState(
-            obj[fieldsMetaKeys.draftjsState],
-            editor3DataKeys.MULTIPLE_HIGHLIGHTS
-        ).highlightsData || {};
+            const highlightsObject = getCustomDataFromEditorRawState(
+                obj[fieldsMetaKeys.draftjsState],
+                editor3DataKeys.MULTIPLE_HIGHLIGHTS
+            ).highlightsData || {};
 
             for (const id in highlightsObject) {
                 // Add id to highlight so we can retrieve data from the state
