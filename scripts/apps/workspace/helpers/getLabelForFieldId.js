@@ -1,9 +1,10 @@
-import {LABEL_MAP} from '../content/constants';
+import {GET_LABEL_MAP} from '../content/constants';
 import ng from 'core/services/ng';
 
-export const getLabelNameResolver = () => ng.getServices(['gettext', 'content'])
+export const getLabelNameResolver = () => ng.getServices(['gettextCatalog', 'content'])
     .then((services) => {
-        const [gettext, content] = services;
+        const [gettextCatalog, content] = services;
+        const gettext = (str) => gettextCatalog.getString(str);
 
         return content.getCustomFields()
             .then((customFields) => [gettext, customFields]);
@@ -11,9 +12,11 @@ export const getLabelNameResolver = () => ng.getServices(['gettext', 'content'])
     .then((res) => {
         const [gettext, customFields] = res;
 
+        const labelMap = GET_LABEL_MAP(gettext);
+
         return (fieldId) => {
-            if (LABEL_MAP.hasOwnProperty(fieldId)) {
-                return LABEL_MAP[fieldId];
+            if (labelMap.hasOwnProperty(fieldId)) {
+                return labelMap[fieldId];
             }
 
             const customField = customFields.find((obj) => obj._id === fieldId);
