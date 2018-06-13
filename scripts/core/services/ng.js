@@ -32,12 +32,16 @@ export default new class ProviderService {
         return $injector.get(name);
     }
 
+    waitForServicesToBeAvailable() {
+        return waitUntil(() => $injector != null);
+    }
+
     getService(name) {
         return this.getServices([name]).then((res) => res[0]);
     }
     getServices(names) {
         return new Promise((resolve, reject) => {
-            waitUntil(() => $injector != null)
+            this.waitForServicesToBeAvailable()
                 .then(() => {
                     resolve(names.map((name) => $injector.get(name)));
                 });
