@@ -1,3 +1,4 @@
+import {waitUntil} from 'core/helpers/waitUtil';
 
 
 describe('authoring', () => {
@@ -640,7 +641,7 @@ describe('cropImage', () => {
     beforeEach(window.module('superdesk.core.editor3'));
     beforeEach(window.module('superdesk.apps.editor2'));
 
-    it('can change button label for apply/edit crop',
+    it('can change button label for apply/edit crop', (done) => {
         inject(($rootScope, $compile, $q, metadata, content) => {
             var metaInit = $q.defer();
 
@@ -665,7 +666,7 @@ describe('cropImage', () => {
             metaInit.resolve();
             scope.$digest();
 
-            expect(scope.item.hasCrops).toBe(false);
+            expect(scope.item.hasCrops).not.toBe(true);
 
             elem = $compile('<div sd-article-edit></div>')($rootScope.$new());
             scope = elem.scope();
@@ -679,10 +680,16 @@ describe('cropImage', () => {
             };
 
             metaInit.resolve();
-            scope.$digest();
 
-            expect(scope.item.hasCrops).toBe(true);
-        }));
+            waitUntil(() => {
+                scope.$digest();
+                return scope.item.hasCrops === true;
+            }).then(() => {
+                done();
+                expect(scope.item.hasCrops).toBe(true);
+            });
+        });
+    });
 });
 
 describe('autosave', () => {

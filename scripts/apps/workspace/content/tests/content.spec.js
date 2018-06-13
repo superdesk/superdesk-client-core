@@ -1,4 +1,5 @@
 
+import {waitUntil} from 'core/helpers/waitUtil';
 
 describe('superdesk.apps.workspace.content', () => {
     beforeEach(window.module('superdesk.mocks'));
@@ -287,43 +288,55 @@ describe('superdesk.apps.workspace.content', () => {
             };
         }));
 
-        it('render correctly all fields', inject((content, $q) => {
-            var el = compile({
-                model: {},
+        it('render correctly all fields', (done) => {
+            inject((content, $q) => {
+                var el = compile({
+                    model: {},
+                });
+
+                spyOn(content, 'getTypeMetadata').and.returnValue($q.when({schema: content.contentProfileSchema,
+                    editor: content.contentProfileEditor}));
+
+                spyOn(content, 'getCustomFields').and.returnValue($q.when([]));
+
+                waitUntil(() => {
+                    el.scope().$digest();
+                    return el.find('li.schema-item').length > 0;
+                }).then(() => {
+                    done();
+                    var fields = el.find('li.schema-item');
+
+                    expect(fields.length).toBe(Object.keys(content.contentProfileEditor).length);
+                });
             });
+        });
 
-            spyOn(content, 'getTypeMetadata').and.returnValue($q.when({schema: content.contentProfileSchema,
-                editor: content.contentProfileEditor}));
+        it('should dirty parent form when toggling fields', (done) => {
+            inject((content, $q) => {
+                var el = compile({
+                    model: {},
+                });
 
-            spyOn(content, 'getCustomFields').and.returnValue($q.when([]));
+                spyOn(content, 'getTypeMetadata').and.returnValue($q.when({schema: content.contentProfileSchema,
+                    editor: content.contentProfileEditor}));
 
-            el.scope().$digest();
+                spyOn(content, 'getCustomFields').and.returnValue($q.when([]));
 
-            var fields = el.find('li.schema-item');
+                waitUntil(() => {
+                    el.scope().$digest();
+                    return el.find('li').length > 0;
+                }).then(() => {
+                    done();
+                    var fields = el.find('li');
+                    var form = el.controller('form');
 
-            expect(fields.length).toBe(Object.keys(content.contentProfileEditor).length);
-        }));
-
-        it('should dirty parent form when toggling fields', inject((content, $q) => {
-            var el = compile({
-                model: {},
+                    expect(form.$dirty).toBeFalsy();
+                    $(fields[0])
+                        .find('#remove-item')
+                        .click();
+                    expect(form.$dirty).toBeTruthy();
+                });
             });
-
-            spyOn(content, 'getTypeMetadata').and.returnValue($q.when({schema: content.contentProfileSchema,
-                editor: content.contentProfileEditor}));
-
-            spyOn(content, 'getCustomFields').and.returnValue($q.when([]));
-
-            el.scope().$digest();
-
-            var fields = el.find('li');
-            var form = el.controller('form');
-
-            expect(form.$dirty).toBeFalsy();
-            $(fields[0])
-                .find('#remove-item')
-                .click();
-            expect(form.$dirty).toBeTruthy();
-        }));
+        });
     });
 });

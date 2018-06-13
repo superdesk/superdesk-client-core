@@ -1,3 +1,4 @@
+import {waitUntil} from 'core/helpers/waitUtil';
 let $injector = null;
 
 /**
@@ -31,37 +32,12 @@ export default new class ProviderService {
         return $injector.get(name);
     }
 
-    waitForServicesToBeAvailable() {
-        return new Promise((resolve, reject) => {
-            function checkNow() {
-                if ($injector != null) {
-                    window.clearInterval(interval);
-                    resolve();
-                    return true;
-                }
-            }
-
-            let interval;
-
-            if (checkNow() === true) {
-                // make sure it doesn't register an interval if it resolves on the first go
-                return;
-            }
-
-            interval = setInterval(checkNow, 100);
-            setTimeout(() => {
-                clearInterval(interval);
-                reject('timed out while trying to resolve a service');
-            }, 1000 * 60);
-        });
-    }
-
     getService(name) {
         return this.getServices([name]).then((res) => res[0]);
     }
     getServices(names) {
         return new Promise((resolve, reject) => {
-            this.waitForServicesToBeAvailable()
+            waitUntil(() => $injector != null)
                 .then(() => {
                     resolve(names.map((name) => $injector.get(name)));
                 });
