@@ -2,7 +2,7 @@ MediaPreview.$inject = ['api', '$rootScope', 'desks', 'superdesk'];
 
 export function MediaPreview(api, $rootScope, desks, superdesk) {
     return {
-        templateUrl: 'scripts/apps/archive/views/preview.html',
+        template: require('../views/preview.html'),
         link: function(scope) {
             scope.previewRewriteStory = function() {
                 return api.find('archive', scope.item.rewrite_id).then((item) => {
