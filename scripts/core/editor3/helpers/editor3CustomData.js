@@ -83,6 +83,20 @@ export function getCustomDataFromEditorRawState(rawState, key) {
     return getCustomDataFromEditor(EditorState.createWithContent(convertFromRaw(rawState)), key);
 }
 
+export function getAnnotations(item, field, highlightType, logger = {}) {
+    const highlights = getCustomMetadata(item, field, highlightType, logger);
+
+    return highlights.map(({styleName, obj}) => {
+        const annotationId = parseInt(styleName.split('-')[1], 10);
+
+        return {
+            id: annotationId,
+            type: obj.data.annotationType,
+            body: toHTML(convertFromRaw(JSON.parse(obj.data.msg)), logger),
+        };
+    });
+}
+
 export function getCustomMetadata(item, field, highlightType, logger = {}) {
     const contentStateRaw = getFieldMetadata(item, field, fieldsMetaKeys.draftjsState);
 
@@ -95,21 +109,13 @@ export function getCustomMetadata(item, field, highlightType, logger = {}) {
             getDraftSelectionForEntireContent(editorState)
         );
 
-        const annotations = allStyleNames
+        return allStyleNames
             .filter(styleNameBelongsToHighlight)
             .filter((h) => getHighlightTypeFromStyleName(h) === highlightType)
-            .map((h) => {
-                const obj = getHighlightData(editorState, h);
-                const annotationId = parseInt(h.split('-')[1], 10);
-
-                return {
-                    id: annotationId,
-                    type: obj.data.annotationType,
-                    body: toHTML(convertFromRaw(JSON.parse(obj.data.msg)), logger),
-                };
-            });
-
-        return annotations;
+            .map((styleName) => ({
+                styleName: styleName,
+                obj: getHighlightData(editorState, styleName),
+            }));
     }
 
     return [];

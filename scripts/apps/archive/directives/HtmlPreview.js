@@ -1,4 +1,4 @@
-import {getCustomMetadata} from 'core/editor3/helpers/editor3CustomData';
+import {getAnnotations} from 'core/editor3/helpers/editor3CustomData';
 import {META_FIELD_NAME} from '../../../core/editor3/helpers/fieldsMeta';
 import {highlightsConfig} from '../../../core/editor3/highlightsConfig';
 import ng from 'core/services/ng';
@@ -20,7 +20,7 @@ function getAllAnnotations(item) {
     const annotations = [];
 
     for (const field in item[META_FIELD_NAME]) {
-        annotations.push(...getCustomMetadata(item, field, highlightsConfig.ANNOTATION.type));
+        annotations.push(...getAnnotations(item, field, highlightsConfig.ANNOTATION.type));
     }
 
     return annotations;

@@ -9,7 +9,7 @@ import {Editor3} from '../components/Editor3';
 import {PopupTypes, forceUpdate} from '../actions';
 import {fieldsMetaKeys, setFieldMetadata, getFieldMetadata, FIELD_KEY_SEPARATOR} from '../helpers/fieldsMeta';
 import {getContentStateFromHtml} from '../html/from-html';
-import {getCustomMetadata} from '../helpers/editor3CustomData';
+import {getAnnotations} from '../helpers/editor3CustomData';
 import {highlightsConfig} from '../highlightsConfig';
 import {
     initializeHighlights,
@@ -72,7 +72,7 @@ export default function createEditorStore(props, isReact = false) {
  * @param {Object} item
  */
 function generateAnnotations(item, logger) {
-    item.annotations = getCustomMetadata(item, 'body_html', highlightsConfig.ANNOTATION.type, logger);
+    item.annotations = getAnnotations(item, 'body_html', highlightsConfig.ANNOTATION.type, logger);
 }
 
 /**
