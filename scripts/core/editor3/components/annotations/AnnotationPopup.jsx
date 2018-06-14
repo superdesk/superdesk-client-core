@@ -12,7 +12,15 @@ import {connectPromiseResults} from 'core/helpers/ReactRenderAsync';
 
 class Annotation extends Component {
     render() {
-        const {annotation, editorNode, showPopup, highlightId, highlightsManager, annotationTypes, editorId} = this.props;
+        const {
+            annotation,
+            editorNode,
+            showPopup,
+            highlightId,
+            highlightsManager,
+            annotationTypes,
+            editorId,
+        } = this.props;
         const {author, avatar, date, msg, annotationType} = annotation.data;
         const {name: type} = annotationTypes.find((t) => t.qcode === annotationType);
         const relativeDateString = moment(date).calendar();
