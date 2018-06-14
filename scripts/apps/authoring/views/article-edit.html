@@ -1,7 +1,6 @@
 <div class="field"
      sd-width="{{editor.headline.sdWidth|| 'full'}}"
      ng-if="schema.headline && !(features.onlyEditor3 || editor.body_html.editor3)"
-     ng-class="{'limit-error': item.headline.length > schema.headline.maxlength}"
      order="{{editor.headline.order}}"
      sd-validation-error="error.headline"
      data-required="schema.headline.required">
@@ -23,7 +22,6 @@
 <div class="field"
      sd-width="{{editor.headline.sdWidth|| 'full'}}"
      ng-if="schema.headline && (features.onlyEditor3 || editor.body_html.editor3)"
-     ng-class="{'limit-error': item.headline.length > schema.headline.maxlength}"
      order="{{editor.headline.order}}"
      sd-validation-error="error.headline"
      data-required="schema.headline.required">
@@ -122,7 +120,6 @@
 
 <div class="field abstract"
      sd-width="{{editor.abstract.sdWidth|| 'full'}}"
-     ng-class="{'limit-error': item.abstract.length > schema.abstract.maxlength}"
      ng-if="schema.abstract && !(features.onlyEditor3 || editor.body_html.editor3) && !isMediaType"
      order="{{editor.abstract.order}}"
      sd-validation-error="error.abstract"
@@ -147,7 +144,6 @@
 
 <div class="field abstract"
      sd-width="{{editor.abstract.sdWidth|| 'full'}}"
-     ng-class="{'limit-error': item.abstract.length > schema.abstract.maxlength}"
      ng-if="schema.abstract && (features.onlyEditor3 || editor.body_html.editor3)"
      order="{{editor.abstract.order}}"
      sd-validation-error="error.abstract"
