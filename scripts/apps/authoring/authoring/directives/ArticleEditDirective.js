@@ -1,5 +1,5 @@
 import {FIELD_KEY_SEPARATOR} from 'core/editor3/helpers/fieldsMeta';
-import {getLabelForFieldId} from 'apps/workspace/helpers/getLabelForFieldId';
+import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
 
 /**
  * @ngdoc directive
@@ -58,7 +58,7 @@ export function ArticleEditDirective(
     return {
         templateUrl: 'scripts/apps/authoring/views/article-edit.html',
         link: function(scope, elem) {
-            content.getCustomFields().then((customFields) => {
+            getLabelNameResolver().then((getLabelForFieldId) => {
                 scope.toggleDetails = true;
                 scope.errorMessage = null;
                 scope.contentType = null;
@@ -71,7 +71,7 @@ export function ArticleEditDirective(
                 var mainEditScope = scope.$parent.$parent;
                 var autopopulateByline = config.features && config.features.autopopulateByline;
 
-                scope.label = (id) => getLabelForFieldId(id, customFields);
+                scope.label = (id) => getLabelForFieldId(id);
 
                 scope.FIELD_KEY_SEPARATOR = FIELD_KEY_SEPARATOR;
 

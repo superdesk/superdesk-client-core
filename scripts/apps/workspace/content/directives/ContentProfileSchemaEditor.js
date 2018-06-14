@@ -1,6 +1,6 @@
 import {HAS_FORMAT_OPTIONS} from 'apps/workspace/content/constants';
 import _ from 'lodash';
-import {getLabelForFieldId} from '../../helpers/getLabelForFieldId';
+import {getLabelNameResolver} from '../../helpers/getLabelForFieldId';
 
 /**
  * @ngdoc directive
@@ -22,7 +22,9 @@ export function ContentProfileSchemaEditor(content, config) {
         link: function(scope, elem, attr, form) {
             scope.loading = true;
 
-            content.getCustomFields().then((customFields) => {
+            Promise.all([content.getCustomFields(), getLabelNameResolver()]).then((res) => {
+                const [customFields, getLabelForFieldId] = res;
+
                 scope.model.schema = angular.extend({}, content.contentProfileSchema);
                 scope.model.editor = angular.extend({}, content.contentProfileEditor);
                 scope.schemaKeys = null;
@@ -115,7 +117,7 @@ export function ContentProfileSchemaEditor(content, config) {
                     'strikethrough',
                 ];
 
-                scope.label = (id) => getLabelForFieldId(id, customFields);
+                scope.label = (id) => getLabelForFieldId(id);
 
                 /**
                  * @description Set form dirty

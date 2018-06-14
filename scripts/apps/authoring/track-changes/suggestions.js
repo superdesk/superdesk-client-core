@@ -4,7 +4,7 @@ import {
 } from 'core/editor3/helpers/editor3CustomData';
 import * as Highlights from 'core/editor3/helpers/highlights';
 
-import {getLabelForFieldId} from 'apps/workspace/helpers/getLabelForFieldId';
+import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
 import {fieldsMetaKeys, META_FIELD_NAME, getFieldMetadata, getFieldId} from '../../../core/editor3/helpers/fieldsMeta';
 
 function getAllUserIdsFromSuggestions(suggestions) {
@@ -42,7 +42,7 @@ function getLocalizedTypeText(type, blockType) {
 
 SuggestionsCtrl.$inject = ['$scope', 'userList', 'content'];
 function SuggestionsCtrl($scope, userList, content) {
-    content.getCustomFields().then((customFields) => {
+    getLabelNameResolver().then((getLabelForFieldId) => {
         const suggestions = Object.keys($scope.item[META_FIELD_NAME])
             .map((contentKey) => ({
                 contentKey: contentKey,
@@ -51,7 +51,7 @@ function SuggestionsCtrl($scope, userList, content) {
             .filter((obj) => obj[fieldsMetaKeys.draftjsState] != null)
             .map((obj) => (
                 {
-                    fieldName: getLabelForFieldId(getFieldId(obj.contentKey), customFields),
+                    fieldName: getLabelForFieldId(getFieldId(obj.contentKey)),
                     suggestions: getCustomDataFromEditorRawState(
                         obj[fieldsMetaKeys.draftjsState],
                         editor3DataKeys.RESOLVED_SUGGESTIONS_HISTORY

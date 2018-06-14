@@ -3,7 +3,7 @@ import {
     getCustomDataFromEditorRawState,
 } from 'core/editor3/helpers/editor3CustomData';
 
-import {getLabelForFieldId} from 'apps/workspace/helpers/getLabelForFieldId';
+import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
 import {fieldsMetaKeys, META_FIELD_NAME, getFieldMetadata, getFieldId} from 'core/editor3/helpers/fieldsMeta';
 
 function getAllUserIdsFromComments(comments) {
@@ -34,10 +34,10 @@ function convertUsersArrayToObject(users) {
     return usersObj;
 }
 
-function getCommentsFromField(customFields, resolved = true) {
+function getCommentsFromField(getLabelForFieldId, resolved = true) {
     if (resolved) {
         return (obj) => ({
-            fieldName: getLabelForFieldId(getFieldId(obj.contentKey), customFields),
+            fieldName: getLabelForFieldId(getFieldId(obj.contentKey)),
             comments: getCustomDataFromEditorRawState(
                 obj[fieldsMetaKeys.draftjsState],
                 editor3DataKeys.RESOLVED_COMMENTS_HISTORY
@@ -45,7 +45,7 @@ function getCommentsFromField(customFields, resolved = true) {
         });
     } else {
         return (obj) => ({
-            fieldName: getLabelForFieldId(getFieldId(obj.contentKey), customFields),
+            fieldName: getLabelForFieldId(getFieldId(obj.contentKey)),
             comments: Object.values(getCustomDataFromEditorRawState(
                 obj[fieldsMetaKeys.draftjsState],
                 editor3DataKeys.MULTIPLE_HIGHLIGHTS
@@ -56,7 +56,7 @@ function getCommentsFromField(customFields, resolved = true) {
 
 InlineCommentsCtrl.$inject = ['$scope', 'userList', 'metadata', 'content'];
 function InlineCommentsCtrl($scope, userList, metadata, content) {
-    content.getCustomFields().then((customFields) => {
+    getLabelNameResolver().then((getLabelForFieldId) => {
         $scope.resolvedFilter = 'RESOLVED';
 
         const editors = Object.keys($scope.item[META_FIELD_NAME])
@@ -71,11 +71,11 @@ function InlineCommentsCtrl($scope, userList, metadata, content) {
             .filter((obj) => obj[fieldsMetaKeys.draftjsState] != null);
 
         const resolvedComments = editors
-            .map(getCommentsFromField(customFields))
+            .map(getCommentsFromField(getLabelForFieldId))
             .filter((obj) => obj.comments.length > 0);
 
         const unresolvedComments = editors
-            .map(getCommentsFromField(customFields, false))
+            .map(getCommentsFromField(getLabelForFieldId, false))
             .filter((obj) => obj.comments.length > 0);
 
         if (unresolvedComments.length === 0 && resolvedComments.length === 0) {
