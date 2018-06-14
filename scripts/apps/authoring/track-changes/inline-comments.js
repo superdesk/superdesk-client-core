@@ -102,7 +102,9 @@ function InlineCommentsCtrl($scope, userList, metadata, content) {
                 fieldName: getLabelForFieldId(getFieldId(contentKey)),
                 comments: comments,
             };
-        });
+        })
+            .filter((obj) => obj.comments.length > 0);
+
 
         const allComments = []
             .concat(...resolvedComments.map((obj) => obj.comments))
