@@ -240,7 +240,7 @@ a:hover {
         z-index: 1;
         @include transition(right ease 0.2s);
         .shadow-list-holder {
-            padding: 10px 20px;
+            padding: 20px;
         }
         > header {
             background-color:$sd-background;

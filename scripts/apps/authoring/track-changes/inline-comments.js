@@ -8,12 +8,12 @@ import {
     editor3DataKeys,
     getCustomDataFromEditorRawState,
 } from 'core/editor3/helpers/editor3CustomData';
-import {getLabelForFieldId} from 'apps/workspace/helpers/getLabelForFieldId';
 import {
     getRangeAndTextForStyleInRawState,
 } from 'core/editor3/helpers/highlights';
 import {highlightsConfig} from 'core/editor3/highlightsConfig';
 import {getCustomMetadata} from 'core/editor3/helpers/editor3CustomData';
+import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
 
 function getAllUserIdsFromComments(comments) {
     const users = [];
@@ -43,9 +43,9 @@ function convertUsersArrayToObject(users) {
     return usersObj;
 }
 
-function getCommentsFromField(customFields) {
+function getCommentsFromField(getLabelForFieldId) {
     return (obj) => ({
-        fieldName: getLabelForFieldId(getFieldId(obj.contentKey), customFields),
+        fieldName: getLabelForFieldId(getFieldId(obj.contentKey)),
         comments: getCustomDataFromEditorRawState(
             obj[fieldsMetaKeys.draftjsState],
             editor3DataKeys.RESOLVED_COMMENTS_HISTORY
@@ -55,7 +55,7 @@ function getCommentsFromField(customFields) {
 
 InlineCommentsCtrl.$inject = ['$scope', 'userList', 'metadata', 'content'];
 function InlineCommentsCtrl($scope, userList, metadata, content) {
-    content.getCustomFields().then((customFields) => {
+    getLabelNameResolver().then((getLabelForFieldId) => {
         $scope.resolvedFilter = 'RESOLVED';
 
         const editors = Object.keys($scope.item[META_FIELD_NAME])
@@ -70,7 +70,7 @@ function InlineCommentsCtrl($scope, userList, metadata, content) {
             .filter((obj) => obj[fieldsMetaKeys.draftjsState] != null);
 
         const resolvedComments = editors
-            .map(getCommentsFromField(customFields))
+            .map(getCommentsFromField(getLabelForFieldId))
             .filter((obj) => obj.comments.length > 0);
 
         const unresolvedComments = Object.keys($scope.item[META_FIELD_NAME]).map((contentKey) => {
@@ -99,7 +99,7 @@ function InlineCommentsCtrl($scope, userList, metadata, content) {
 
             return {
                 fieldId: contentKey,
-                fieldName: getLabelForFieldId(contentKey, customFields),
+                fieldName: getLabelForFieldId(getFieldId(contentKey)),
                 comments: comments,
             };
         });

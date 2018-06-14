@@ -11,7 +11,7 @@ export class ItemList extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {itemsList: [], itemsById: {}, selected: null, view: 'mgrid'};
+        this.state = {itemsList: [], itemsById: {}, selected: null, view: 'photogrid'};
 
         this.select = this.select.bind(this);
         this.setSelectedItem = this.setSelectedItem.bind(this);
@@ -134,8 +134,9 @@ export class ItemList extends React.Component {
         var isEmpty = !this.state.itemsList.length;
 
         var cssClass = classNames(
-            'list-view',
-            this.state.view + '-view',
+            this.state.view === 'photogrid' ?
+                'sd-grid-list sd-grid-list--large sd-grid-list--small-margin' :
+                (this.state.view || 'compact') + '-view list-view',
             {'list-without-items': isEmpty}
         );
 

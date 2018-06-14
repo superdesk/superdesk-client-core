@@ -463,13 +463,18 @@ export function IngestSourcesContent(ingestSources, gettext, notify, api, $locat
 
                 $scope.provider.feed_parser = null;
                 $scope.feedParsers = angular.copy($scope.allFeedParsers);
-                if ($scope.currentFeedingService && $scope.currentFeedingService.parser_restricted_values &&
-                    $scope.currentFeedingService.parser_restricted_values.length) {
-                    if ($scope.currentFeedingService.parser_restricted_values.length === 1) {
-                        $scope.provider.feed_parser = $scope.currentFeedingService.parser_restricted_values[0];
+
+                if ($scope.currentFeedingService) {
+                    if ($scope.currentFeedingService.parser_restricted_values &&
+                        $scope.currentFeedingService.parser_restricted_values.length) {
+                        if ($scope.currentFeedingService.parser_restricted_values.length === 1) {
+                            $scope.provider.feed_parser = $scope.currentFeedingService.parser_restricted_values[0];
+                        }
+                        $scope.feedParsers = _.filter($scope.feedParsers, (feedParser) =>
+                            $scope.currentFeedingService.parser_restricted_values.includes(feedParser.feed_parser));
+                    } else if ($scope.currentFeedingService.parser_restricted_values === null) {
+                        $scope.feedParsers = [];
                     }
-                    $scope.feedParsers = _.filter($scope.feedParsers, (feedParser) =>
-                        $scope.currentFeedingService.parser_restricted_values.includes(feedParser.feed_parser));
                 }
             };
 

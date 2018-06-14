@@ -12,7 +12,7 @@ export function state(props) {
             const scheduled = get(props.item, 'archive_item.schedule_settings.utc_publish_schedule');
 
             if (scheduled) {
-                title = gettextCatalog.getString('Scheduled on ') + datetime.longFormat(scheduled);
+                title = gettextCatalog.getString('Scheduled for') + ' ' + datetime.longFormat(scheduled);
             }
         }
 

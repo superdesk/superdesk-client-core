@@ -455,7 +455,7 @@ export class ItemList extends React.Component {
             {
                 className: classNames(
                     this.state.view === 'photogrid' ?
-                        'sd-grid-list' :
+                        'sd-grid-list sd-grid-list--no-margin' :
                         (this.state.view || 'compact') + '-view list-view',
                     {'list-without-items': isEmpty}
                 ),

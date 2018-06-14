@@ -76,7 +76,7 @@ export function handlePastedText(editorKey, text, _html) {
 // contentState.
 function processPastedHtml(props, html) {
     const {onChange, editorState, editorFormat} = props;
-    const pastedContent = getContentStateFromHtml(html);
+    let pastedContent = getContentStateFromHtml(html);
     const blockMap = pastedContent.getBlockMap();
     const hasAtomicBlocks = blockMap.some((block) => block.getType() === 'atomic');
     const acceptedInlineStyles =
@@ -84,7 +84,6 @@ function processPastedHtml(props, html) {
             .filter((style) => editorFormat.includes(style))
             .map((style) => inlineStyles[style]);
 
-    const customData = getAllCustomDataFromEditor(editorState);
     let contentState = editorState.getCurrentContent();
     let selection = editorState.getSelection();
     let blocks = [];
@@ -93,6 +92,9 @@ function processPastedHtml(props, html) {
         contentState = Modifier.splitBlock(editorState.getCurrentContent(), editorState.getSelection());
         selection = contentState.getSelectionAfter();
     }
+
+    pastedContent = sanitizeContent(EditorState.createWithContent(pastedContent), acceptedInlineStyles)
+        .getCurrentContent();
 
     blockMap.forEach((block) => {
         if (!hasAtomicBlocks || block.getType() !== 'atomic') {
@@ -121,22 +123,20 @@ function processPastedHtml(props, html) {
     );
 
     const selectionAfterInsert = nextEditorState.getSelection();
-
-    nextEditorState = EditorState.set(nextEditorState, {allowUndo: false});
-
-    nextEditorState = sanitizeContent(nextEditorState, acceptedInlineStyles);
-
-    nextEditorState = EditorState.forceSelection(
-        nextEditorState,
-        selectionAfterInsert
-    );
+    const customData = getAllCustomDataFromEditor(editorState);
 
     // for the first block recover the initial block data because on replaceWithFragment the block data is
     // replaced with the data from pasted fragment
     nextEditorState = setAllCustomDataForEditor(nextEditorState, customData);
 
-    // bring 'undo stack' back
-    nextEditorState = EditorState.set(nextEditorState, {allowUndo: true});
+    // reset undo stack
+    nextEditorState = EditorState.push(
+        editorState,
+        nextEditorState.getCurrentContent(),
+        'insert-fragment'
+    );
+
+    nextEditorState = EditorState.forceSelection(nextEditorState, selectionAfterInsert);
 
     onChange(nextEditorState);
 

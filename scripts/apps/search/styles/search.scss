@@ -205,37 +205,24 @@
 
 
 .search-tags {
-    @include clearfix();
-    padding: 10px 20px 0;
-    li {
-        div {
-            line-height: 26px;
-            background: $sd-blue;
-            @include border-radius(3px);
-            padding: 0px 0px 0px 5px;
-            color: $white;
-            margin: 0 5px 5px 0;
-            float: left;
-            span {
-                color: darken($white,10%);
-                margin-right: 5px;
-                text-transform: capitalize;
-            }
-            button {
-                background: none;
-                border: 0;
-                height: 26px;
-                margin-left: 5px;
-                @include border-radius(0 3px 3px 0);
-                i {
-                    @include opacity(70);
-                    margin-top: 3px;
-                }
-                &:hover {
-                    @include opacity(100);
-                    background: darken($sd-blue, 10%);
-                }
-            }
+    padding: 0 20px 0;
+    position: relative;
+    z-index: 2;
+    box-shadow: 0 1px 1px 0 rgba(0,0,0,0.12);
+    background-color: rgba(255, 255, 255, 0.5);
+    .search-tags__list {
+        display: inline; 
+        li {
+            display: inline;
+        }
+    }
+    .tag-label {
+        line-height: 1.8rem;
+        margin: 11px 5px 11px 0;
+        span {
+            text-transform: capitalize;
+            opacity: 0.75;
+            margin-right: 0.5rem
         }
     }
 }

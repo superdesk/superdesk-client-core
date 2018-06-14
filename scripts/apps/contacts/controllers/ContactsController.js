@@ -29,17 +29,17 @@ export class ContactsController {
         this.$scope.preview = this.preview.bind(this);
         this.preferencesUpdate = {
             'contacts:view': {
-                allowed: ['mgrid', 'compact'],
+                allowed: ['photogrid', 'compact'],
                 category: 'contacts',
-                view: 'mgrid',
-                default: 'mgrid',
+                view: 'photogrid',
+                default: 'photogrid',
                 label: 'Users contacts view format',
                 type: 'string',
             },
         };
 
         preferencesService.get('contacts:view').then((result) => {
-            this.$scope.view = result.view ? result.view : 'mgrid';
+            this.$scope.view = result.view ? result.view : 'photogrid';
         });
 
         metadata.initialize().then(() => {
@@ -55,7 +55,7 @@ export class ContactsController {
      * @description Sets the view to be List or Grid
      */
     setView(view) {
-        this.$scope.view = view || 'mgrid';
+        this.$scope.view = view || 'photogrid';
         this.preferencesUpdate['contacts:view'].view = this.$scope.view;
         this.preferencesService.update(this.preferencesUpdate, 'contacts:view');
     }

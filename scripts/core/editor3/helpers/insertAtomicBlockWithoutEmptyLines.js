@@ -6,6 +6,7 @@ import {
     EditorState,
     genKey,
 } from 'draft-js';
+import {getAllCustomDataFromEditor, setAllCustomDataForEditor} from './editor3CustomData';
 
 const Immutable = require('immutable');
 
@@ -82,6 +83,8 @@ function insertAtomicBlockWithoutEmptyLines(editorState, entityKey, character) {
 
     var fragment = BlockMapBuilder.createFromArray(fragmentArray);
 
+    const customData = getAllCustomDataFromEditor(editorState);
+
     var withAtomicBlock = Modifier.replaceWithFragment(asAtomicBlock, target.selectionState, fragment);
 
     var newContent = withAtomicBlock.merge({
@@ -89,7 +92,13 @@ function insertAtomicBlockWithoutEmptyLines(editorState, entityKey, character) {
         selectionAfter: withAtomicBlock.getSelectionAfter().set('hasFocus', true),
     });
 
-    return EditorState.push(editorState, newContent, 'insert-fragment');
+    let newEditorState = EditorState.push(editorState, newContent, 'insert-fragment');
+
+    // for the first block recover the initial block data because on replaceWithFragment the block data is
+    // replaced with the data from pasted fragment
+    newEditorState = setAllCustomDataForEditor(newEditorState, customData);
+
+    return EditorState.push(editorState, newEditorState.getCurrentContent(), 'insert-fragment');
 }
 
 module.exports = insertAtomicBlockWithoutEmptyLines;

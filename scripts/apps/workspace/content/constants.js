@@ -53,7 +53,7 @@ export const DEFAULT_EDITOR = Object.freeze({
 });
 
 // labelMap maps schema entry keys to their display names.
-export const LABEL_MAP = Object.freeze({
+export const GET_LABEL_MAP = (gettext) => ({
     headline: gettext('Headline'),
     slugline: gettext('Slugline'),
     genre: gettext('Genre'),

@@ -1,4 +1,4 @@
-import {getLabelForFieldId} from 'apps/workspace/helpers/getLabelForFieldId';
+import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
 /**
  * @ngdoc controller
  * @module superdesk.apps.content_filters
@@ -12,7 +12,7 @@ import {getLabelForFieldId} from 'apps/workspace/helpers/getLabelForFieldId';
  */
 FilterConditionsController.$inject = ['$scope', 'contentFilters', 'notify', 'modal', '$filter', 'content'];
 export function FilterConditionsController($scope, contentFilters, notify, modal, $filter, content) {
-    content.getCustomFields().then((customFields) => {
+    getLabelNameResolver().then((getLabelForFieldId) => {
         $scope.filterConditions = null;
         $scope.filterCondition = null;
         $scope.origFilterCondition = null;
@@ -60,7 +60,7 @@ export function FilterConditionsController($scope, contentFilters, notify, modal
         /**
          * @description label returns the display name for a key.
          */
-        $scope.label = (id) => getLabelForFieldId(id, customFields);
+        $scope.label = (id) => getLabelForFieldId(id);
 
         $scope.cancel = function() {
             $scope.origFilterCondition = null;

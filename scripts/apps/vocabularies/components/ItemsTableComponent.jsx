@@ -48,7 +48,7 @@ export default class ItemsTableComponent extends React.Component {
         };
         const required = this.state.itemsValidation.length && _.has(this.state.itemsValidation[index], field.key);
         const valid = !required || this.state.itemsValidation[index][field.key];
-        let className = 'sd-line-input';
+        let className = 'sd-line-input sd-line-input--no-margin sd-line-input--no-label sd-line-input--boxed';
 
         if (required) {
             className += ' sd-line-input--required';
@@ -163,7 +163,7 @@ export default class ItemsTableComponent extends React.Component {
     removeItemButton(index, disabled) {
         return (
             <td>
-                <button disabled={!!disabled} onClick={() => this.props.remove(index)}>
+                <button className="icn-btn" disabled={!!disabled} onClick={() => this.props.remove(index)}>
                     <i className="icon-close-small" />
                 </button>
             </td>
