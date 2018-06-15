@@ -202,7 +202,7 @@ const removeBlock = (state, {blockKey}) => {
 /**
  * @ngdoc method
  * @name applyEmbed
- * @param {Object|string} data oEmbed data, HTML string or Qumu widget config.
+ * @param {Object|string} data oEmbed data, HTML string.
  * @description Applies the embed in the given oEmbed data to the active block.
  */
 const applyEmbed = (state, code) => {

@@ -1,29 +1,4 @@
 import ng from 'core/services/ng';
-import json5 from 'json5';
-
-// String identifying embed codes that are Qumu widgets.
-const QumuString = 'KV.widget({';
-
-// https://gist.github.com/jed/982883
-function uuid(a) {
-    return a // if the placeholder was passed, return
-        ? ( // a random number from 0 to 15
-            a ^ // unless b is 8,
-        Math.random() // in which case
-        * 16 // a random number from
-        >> a / 4 // 8 to 11
-        ).toString(16) // in hexadecimal
-        : ( // or otherwise a concatenated string:
-            [1e7] + // 10000000 +
-        -1e3 + // -1000 +
-        -4e3 + // -4000 +
-        -8e3 + // -80000000 +
-        -1e11 // -100000000000,
-        ).replace( // replacing
-            /[018]/g, // zeroes, ones, and eights with
-            uuid // random hex digits
-        );
-}
 
 /**
  * @ngdoc method
@@ -158,38 +133,13 @@ export function toggleInvisibles() {
 /**
  * @ngdoc method
  * @name embed
- * @param {Object|string} oEmbed code, HTML string or Qumu widget config.
+ * @param {Object|string} oEmbed code, HTML string.
  * @return {Object}
  * @description Dispatches the action to use the given oEmbed data for media embedding.
  */
 export function embed(code) {
     return {
         type: 'TOOLBAR_APPLY_EMBED',
-        payload: parseEmbed(code),
+        payload: code,
     };
-}
-
-// Parses the embed code and processes a potential Qumu widget string.
-function parseEmbed(code) {
-    if (typeof code !== 'string') {
-        return code; // oEmbed code
-    }
-
-    const {features} = ng.get('config');
-    const isQumuWidget = features.qumu && code.indexOf(QumuString) > -1;
-
-    if (!isQumuWidget) {
-        return code; // HTML string
-    }
-
-    const startIndex = code.indexOf(QumuString) + QumuString.length - 1;
-    const configString = code.slice(startIndex, code.lastIndexOf('}') + 1);
-
-    return _.extend(
-        json5.parse(configString),
-        {
-            selector: `#qumu-${uuid()}`,
-            qumuWidget: true,
-        }
-    ); // Qumu widget
 }
