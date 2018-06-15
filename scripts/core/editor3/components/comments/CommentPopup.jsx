@@ -171,7 +171,7 @@ export class CommentPopup extends Component {
                                     data={reply}
                                     updateComment={(msg) => this.editReply(comment, i, msg)}
                                     onRemove={() => removeReplyPromise(i)}
-                                    isAuthor={isAuthor}
+                                    isAuthor={reply.email === this.currentUser}
                                     isReply={true}
                                 />
                             ))}
