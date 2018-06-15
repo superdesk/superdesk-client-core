@@ -64,11 +64,7 @@ export function handlePastedText(editorKey, text, _html) {
         return NOT_HANDLED;
     }
 
-    if (html) {
-        return processPastedHtml(this.props, html);
-    }
-
-    return NOT_HANDLED;
+    return processPastedHtml(this.props, html || text);
 }
 
 // Checks if there are atomic blocks in the paste content. If there are, we need to set
