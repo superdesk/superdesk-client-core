@@ -51,6 +51,14 @@ class Suggestion extends Component {
         this.props.rejectSuggestion(this.props.suggestion);
     }
 
+    truncateText(text) {
+        if (text != null && text.length > 40) {
+            return text.substr(0, 25) + '...' + text.substr(-15);
+        }
+
+        return text;
+    }
+
     render() {
         if (this.state.error !== null) {
             return <Dropdown open={true}>{this.state.error}</Dropdown>;
@@ -63,7 +71,7 @@ class Suggestion extends Component {
         const gettext = gettextCatalog.getString.bind(gettextCatalog);
 
         const {author} = this.state;
-        const {date} = this.props.suggestion;
+        const {date, suggestionText, oldText} = this.props.suggestion;
 
         const relativeDateString = moment(date).calendar();
         const absoluteDateString = moment(date).format('MMMM Do YYYY, h:mm:ss a');
@@ -80,11 +88,11 @@ class Suggestion extends Component {
                 <div>
                     <div>
                         <strong>{gettext('Replace')}: </strong>
-                        {this.props.suggestion.oldText}
+                        {this.truncateText(oldText)}
                     </div>
                     <div>
                         <strong>{gettext('with')}: </strong>
-                        {this.props.suggestion.suggestionText}
+                        {this.truncateText(suggestionText)}
                     </div>
                 </div>
             );
@@ -109,7 +117,7 @@ class Suggestion extends Component {
             content = (
                 <div>
                     <strong>{gettext(description) + space + gettext(blockStyleDescription)}: </strong>
-                    {this.props.suggestion.suggestionText}
+                    {this.truncateText(suggestionText)}
                 </div>
             );
         }
