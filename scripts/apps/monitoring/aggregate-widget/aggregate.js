@@ -1,7 +1,7 @@
 angular.module('superdesk.apps.aggregate.widgets', ['superdesk.apps.aggregate', 'superdesk.apps.dashboard.widgets'])
     .config(['dashboardWidgetsProvider', function(dashboardWidgets) {
         dashboardWidgets.addWidget('aggregate', {
-            label: 'Monitoring',
+            label: 'Monitor',
             multiple: true,
             icon: 'archive',
             max_sizex: 2,
@@ -12,9 +12,10 @@ angular.module('superdesk.apps.aggregate.widgets', ['superdesk.apps.aggregate', 
             thumbnail: 'scripts/apps/monitoring/aggregate-widget/thumbnail.svg',
             template: 'scripts/apps/monitoring/aggregate-widget/aggregate-widget.html',
             configurationTemplate: 'scripts/apps/monitoring/aggregate-widget/configuration.html',
-            description: 'This widget allows you to create literally any content view you may need in Superdesk,' +
-                    ' be it production or ingest. All you need is to select a desk, its stages or a saved search.' +
-                    ' Name your view once you are done. Enjoy!',
+            description: 'Set up different monitors to follow any topics from ingest or production, desk outputs or ' +
+                    'any part of the workflow. All you need is to give it a sensible name, select a saved search or ' +
+                    'dek or its workflow stages. Monitor anything, anywhere, anytime. You can have as many Monitor ' +
+                    'widgets as you wish.',
             custom: true,
         });
     }]);
