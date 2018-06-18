@@ -258,9 +258,49 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
 
     /**
     * @ngdoc method
+    * @name ChangeImageController#rotateImage
+    * @public
+    * @description Rotate image
+    */
+    $scope.rotateImage = (direction) => {
+        switch (direction) {
+        case 'left':
+            $scope.controls.rotate = $scope.controls.rotate - 90;
+            break;
+
+        case 'right':
+            $scope.controls.rotate = $scope.controls.rotate + 90;
+            break;
+        }
+
+        return $scope.controls.isDirty = true;
+    };
+
+    /**
+    * @ngdoc method
+    * @name ChangeImageController#flipImage
+    * @public
+    * @description Flip image
+    */
+    $scope.flipImage = (direction) => {
+        switch (direction) {
+        case 'horizontal':
+            $scope.controls.fliph = $scope.controls.fliph + 180;
+            break;
+
+        case 'vertical':
+            $scope.controls.flipv = $scope.controls.flipv + 180;
+            break;
+        }
+
+        return $scope.controls.isDirty = true;
+    };
+
+    /**
+    * @ngdoc method
     * @name ChangeImageController#applyImageChanges
     * @public
-    * @description Based on the new Area of Interest save the original image and crops.
+    * @description Apply image modifications
     */
     $scope.applyImageChanges = () => {
         let flip = 'none',
