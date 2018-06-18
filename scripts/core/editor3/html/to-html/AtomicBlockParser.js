@@ -1,5 +1,6 @@
 import {ContentState, convertFromRaw} from 'draft-js';
 import {HTMLGenerator} from '.';
+import {isQumuWidget, postProccessQumuEmbed} from '../../components/embeds/QumuWidget';
 
 /**
  * @ngdoc class
@@ -55,21 +56,13 @@ export class AtomicBlockParser {
      * the passed entity data.
      */
     parseEmbed({data, description}) {
-        if (data.qumuWidget) {
-            return `
-                <div class="embed-block">
-                    <script src="https://video.fidelity.tv/widgets/1/application.js"></script>
-                    <script>KV.widget(${JSON.stringify(data)});</script>
-                    <div id="${data.selector.slice(1)}"></div>
-                </div>
-            `;
-        }
-
+        let {html} = data;
         const descriptionHtml = typeof description === 'string' && description.length > 0
             ? `<p>${description}</p>`
             : '';
+        const finalHtml = isQumuWidget(html) ? postProccessQumuEmbed(html) : data.html;
 
-        return `<div class="embed-block">${data.html}${descriptionHtml}</div>`;
+        return `<div class="embed-block">${finalHtml}${descriptionHtml}</div>`;
     }
 
     /**

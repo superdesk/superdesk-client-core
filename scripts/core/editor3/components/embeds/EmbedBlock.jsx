@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import Textarea from 'react-textarea-autosize';
 import {connect} from 'react-redux';
-import {QumuWidget} from './QumuWidget';
+import {QumuWidget, isQumuWidget} from './QumuWidget';
 import * as actions from '../../actions';
 import ng from 'core/services/ng';
 
@@ -103,8 +103,10 @@ export class EmbedBlockComponent extends Component {
         removeBlock(block.getKey());
     }
 
-    embedBlock(embed) {
+    render() {
+        const embed = this.data();
         const html = embed.data.html;
+        const isQumu = isQumuWidget(html);
 
         // If event is not stopped, editor selection drops to start of the content
         const stopEvent = (originalFunction) => (event) => {
@@ -112,34 +114,35 @@ export class EmbedBlockComponent extends Component {
             originalFunction(event);
         };
 
-        this.runScripts(html);
-        return <div className="embed-block">
-            <a className="icn-btn embed-block__remove" onMouseDown={stopEvent(this.onClickDelete)}>
-                <i className="icon-close-small" />
-            </a>
-            <a className="icn-btn embed-block__edit" onMouseDown={stopEvent(this.editEmbedHtml)}>
-                <i className="icon-pencil" />
-            </a>
-            <div className="embed-block__wrapper" dangerouslySetInnerHTML={{__html: html}} />
+        if (isQumu !== true) {
+            this.runScripts(html);
+        }
 
-            <Textarea
-                placeholder={gettext('Description')}
-                onFocus={this.props.setLocked}
-                onClick={this.props.setLocked}
-                className="image-block__description"
-                value={embed.description || ''}
-                onChange={this.onChangeDescription}
-            />
-        </div>;
-    }
+        return (
+            <div className="embed-block">
+                <a className="icn-btn embed-block__remove" onMouseDown={stopEvent(this.onClickDelete)}>
+                    <i className="icon-close-small" />
+                </a>
+                <a className="icn-btn embed-block__edit" onMouseDown={stopEvent(this.editEmbedHtml)}>
+                    <i className="icon-pencil" />
+                </a>
 
-    render() {
-        const embed = this.data();
-        const {data} = embed;
+                {
+                    isQumu
+                        ? <QumuWidget html={html} />
+                        : <div className="embed-block__wrapper" dangerouslySetInnerHTML={{__html: html}} />
+                }
 
-        return data.qumuWidget
-            ? <QumuWidget code={data} />
-            : this.embedBlock(embed);
+                <Textarea
+                    placeholder={gettext('Description')}
+                    onFocus={this.props.setLocked}
+                    onClick={this.props.setLocked}
+                    className="image-block__description"
+                    value={embed.description || ''}
+                    onChange={this.onChangeDescription}
+                />
+            </div>
+        );
     }
 }
 
