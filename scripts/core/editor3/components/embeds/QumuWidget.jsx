@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import json5 from 'json5';
 import ng from 'core/services/ng';
-import {uuid} from 'core/helpers/generic';
+import {uuid} from 'core/helpers/uuid';
 
 // String identifying embed codes that are Qumu widgets.
 const QumuString = 'KV.widget';
