@@ -19,6 +19,7 @@ export function UserEditDirective(api, gettext, notify, usersService, userList, 
             scope.privileges = privileges.privileges;
             scope.features = features;
             scope.usernamePattern = usersService.usernamePattern;
+            scope.twitterPattern = usersService.twitterPattern;
             scope.phonePattern = usersService.phonePattern;
             scope.signOffPattern = usersService.signOffPattern;
             scope.hideSignOff = config.user && config.user.sign_off_mapping;

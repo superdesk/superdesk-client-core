@@ -8,6 +8,7 @@ export function UsersService(api, $q, notify) {
     usersService.usernamePattern = /^[A-Za-z0-9_.'-]+$/;
     usersService.phonePattern = /^(?:(?:0?[1-9][0-9]{8})|(?:(?:\+|00)[1-9][0-9]{9,11}))$/;
     usersService.signOffPattern = /^[a-zA-Z0-9]+$/;
+    usersService.twitterPattern = /^@([A-Za-z0-9_]{1,15}$)/;
 
     /**
      * Save user with given data
