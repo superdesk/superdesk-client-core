@@ -46,9 +46,9 @@ export function PhotoDeskInfoComponent(props) {
     );
 }
 
-export const PhotoDeskInfo = connectPromiseResults({
+export const PhotoDeskInfo = connectPromiseResults(() => ({
     getLabelForFieldId: getLabelNameResolver(),
-})(PhotoDeskInfoComponent);
+}))(PhotoDeskInfoComponent);
 
 PhotoDeskInfoComponent.propTypes = {
     svc: PropTypes.object.isRequired,
