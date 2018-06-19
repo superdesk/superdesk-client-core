@@ -43,11 +43,13 @@ export class Comment extends Component {
         const absoluteDateString = moment(date).format('MMMM Do YYYY, h:mm:ss a');
         const relativeDateString = moment(date).calendar();
 
+        const isRoot = this.props.isReply === false;
+
         return (
             <HighlightsPopupPresentation
                 className={isReply ? 'comment-box__reply-item' : ''}
                 editorNode={this.props.editorNode}
-                isRoot={this.props.isReply === false}
+                isRoot={isRoot}
                 header={(
                     <div>
                         <UserAvatar displayName={author} pictureUrl={avatar} />
@@ -88,6 +90,7 @@ export class Comment extends Component {
                                             value={this.state.editModeValue}
                                             onChange={(event, value) => this.setState({editModeValue: value})}
                                             singleLine={false}
+                                            maxHeight={isRoot === true ? 300 : undefined}
                                         />
 
                                         <div
