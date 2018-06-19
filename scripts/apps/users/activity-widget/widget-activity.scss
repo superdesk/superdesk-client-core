@@ -8,12 +8,12 @@
     .activity-holder {
         position: absolute;
         left: 0; right: 0; top: 0; bottom: 0;
+        background-color: #fafafa;
         .shadow-list-holder {
             padding: 0 10px;
         }
     }
     .activity-log {
-        margin: 0 -10px;
         li.with-date {
             margin-top: 25px;
             .date {
@@ -32,6 +32,22 @@
         li:hover {
             @include box-shadow(none);
         }
+    }
+
+    .activity-load-more {
+        margin: 14px 0 12px;
+    }
+
+    .activity-log ul li.activity .activity-content {
+        p {
+            font-weight: 300;
+            font-size: 12px;
+            b {
+                font-weight: 600;
+            }
+        }
+        
+
     }
 
 }

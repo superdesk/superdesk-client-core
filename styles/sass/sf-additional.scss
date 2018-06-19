@@ -272,14 +272,7 @@
 }
 
 .monitoring-backlink{
-    button {
-        margin-top: 1px;
-        padding: 10px 10px 10px 14px;
-    }
-    i.backlink {
-
-    }
-    .separator-handler{
+    .separator-handler {
         margin-top: 0;
         margin-right: 10px;
     }
@@ -767,32 +760,59 @@
 
 // Back screen button
 // ---------------------------------------------
-.backlink {
-    background: transparent url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNiIgaGVpZ2h0PSIyNiIgdmlld0JveD0iMCAwIDI2IDI2IiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCAyNiAyNiI+PHBhdGggZmlsbD0iIzdjN2M3YyIgZD0ibTUuMjkyIDEyLjI5NGw2LTZjLjM4OS0uMzg5IDEuMDI1LS4zODkgMS40MTQgMCAuMzg5LjM4OS4zODkgMS4wMjUgMCAxLjQxNGwtNC4yOTMgNC4yOTNoMTIuNTg2Yy41NTIgMCAxIC40NDggMSAxIDAgLjU1Mi0uNDQ4IDEtMSAxaC0xMi41ODZsNC4yOTIgNC4yOTJjLjM4OS4zODkuMzg5IDEuMDI1IDAgMS40MTRzLTEuMDI1LjM4OS0xLjQxNCAwYzAgMC01Ljk5OS01Ljk5Ni02LTUuOTk4LS4zODgtLjM4OS0uMzg4LTEuMDI1LjAwMDEtMS40MTQiLz48L3N2Zz4=) no-repeat;
-    padding-left: 30px;
-    text-decoration: none;
+.backlink, a.backlink {
+    text-decoration: none !important;
     color: $sd-text;
-    display: inline-block;
     border:0;
     @include transition(all ease 0.2s);
-    vertical-align: middle;
-    height: 28px;
-    line-height: 24px;
-    margin-top: -5px;
     text-transform: uppercase;
     font-size: 12px;
     font-weight: 500;
+    display: inline-flex;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    &:before {
+        font-family: 'sd_icons';
+        font-weight: normal;
+        font-style: normal;
+        content: "\e677";
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        font-size: 16px;
+        flex-grow: 0;
+        margin: -1px 8px 0 0;
+        text-decoration: none !important;
+        @include transition(all ease 0.2s);
+        opacity: 0.7;
+    }
     &.white {
-        background: transparent url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNiIgaGVpZ2h0PSIyNiIgdmlld0JveD0iMCAwIDI2IDI2IiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCAyNiAyNiI+PHBhdGggZmlsbD0iI2ZmZiIgZD0ibTUuMjkyIDEyLjI5NGw2LTZjLjM4OS0uMzg5IDEuMDI1LS4zODkgMS40MTQgMCAuMzg5LjM4OS4zODkgMS4wMjUgMCAxLjQxNGwtNC4yOTMgNC4yOTNoMTIuNTg2Yy41NTIgMCAxIC40NDggMSAxIDAgLjU1Mi0uNDQ4IDEtMSAxaC0xMi41ODZsNC4yOTIgNC4yOTJjLjM4OS4zODkuMzg5IDEuMDI1IDAgMS40MTRzLTEuMDI1LjM4OS0xLjQxNCAwYzAgMC01Ljk5OS01Ljk5Ni02LTUuOTk4LS4zODgtLjM4OS0uMzg4LTEuMDI1LjAwMDEtMS40MTQiLz48L3N2Zz4=) no-repeat;
+        color: $white;
     }
     &:hover {
-        background-position: -5px 0;
-        text-decoration: none;
-        color: $sd-text;
         color: $sd-blue;
+        text-decoration: none !important;
+        &:before {
+            text-decoration: none !important;
+            margin: -1px 10px 0 -2px;
+            opacity: 1;
+        }
     }
-
 }
+.stage-header__name {
+    a {
+        @include transition(all ease 0.2s);
+    }
+}
+
+.widget-content {
+    .stage-header__name {
+        a {
+            text-decoration: none !important;
+        }
+    }
+}
+
 
 
 // Activity log
@@ -852,8 +872,6 @@
 .activity-load-more {
     width: 100%;
     font-size: 12px;
-    font-weight: bold;
-    padding: 8px;
     margin: 20px 0;
 }
 
@@ -1729,6 +1747,9 @@
             opacity: 0.8;
         }
     }
+    &--small {
+        padding: 10px 14px 10px 25px;
+    }
 }
 .draggable-list.serial-decimal {
     list-style-type: decimal !important;
@@ -1828,4 +1849,18 @@
         flex-grow: 0;
         flex-shrink: 0;
     }
+}
+
+.modal__close.icn-btn {
+    margin: 0 -0.6rem 0;
+    border: 0;
+    padding: .6rem;
+    opacity: 0.4;
+    &:hover {
+        opacity: 0.8;
+    }
+    &:active {
+        opacity: 1;
+    }
+
 }

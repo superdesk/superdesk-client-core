@@ -80,13 +80,19 @@ export class WidgetItem extends React.Component {
                 </div>
                 { this.props.allowed && !this.item.gone ?
                     <div className="content-item__action">
-                        <button onMouseDown={this.preview} title={this.props.svc.gettextCatalog.getString('Preview')}>
-                            <i className="icon-external"/>
-                        </button>
+                        { this.item.type !== 'composite' ?
+                            <button className="icn-btn" onMouseDown={this.preview}
+                                title={this.props.svc.gettextCatalog.getString('Preview')}>
+                                <i className="icon-external"/>
+                            </button>
+                            :
+                            ''
+                        }
                         { this.props.customMonitoringWidget ?
                             ''
                             :
-                            <button onMouseDown={this.edit} title={this.props.svc.gettextCatalog.getString('Edit')}>
+                            <button className="icn-btn" onMouseDown={this.edit}
+                                title={this.props.svc.gettextCatalog.getString('Edit')}>
                                 <i className="icon-pencil"/>
                             </button>
                         }
