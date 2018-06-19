@@ -151,6 +151,7 @@
                                 data-boxed="true"
                                 data-required="validator.usageterms.required"
                                 data-label="{{:: 'Assign Rights' | translate}}"
+                                data-transclude="true"
                                 data-maxlength="validator.copyrightholder.maxlength">
                                 <select class="sd-line-input__select" ng-model="metadata.usageterms" ng-change="onChange('usageterms')" ng-blur="onBlur()" ng-disabled="!images.length">
                                     <option translate value=""></option> <!-- not selected / blank option -->
@@ -175,7 +176,6 @@
                                 data-placeholder="{{placeholder['copyrightnotice']}}">
                             </sd-line-input>
                         </div>
-
                     </div>
                 </div>
             </div>
