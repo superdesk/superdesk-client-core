@@ -53,8 +53,10 @@ export class LinkInputComponent extends Component {
             }
         }
 
+        const initialValue = 'https://';
+
         this.state = {
-            url: this.props.data ? this.props.data.href || '' : '',
+            url: this.props.data ? this.props.data.href || initialValue : initialValue,
             selected: selectedAttachment,
         };
 
