@@ -1,6 +1,10 @@
 
 import {debounce, omit, get} from 'lodash';
 
+function getCode(item) {
+    return get(item, 'code', get(item, 'qcode'));
+}
+
 MetaPlaceDirective.$inject = ['api'];
 export default function MetaPlaceDirective(api) {
     return {
@@ -34,7 +38,7 @@ export default function MetaPlaceDirective(api) {
             }, 1000);
 
             scope.selectTerm = (term) => {
-                if (!get(term, 'code')) { // when search is in progress and user hits enter this gets called
+                if (!getCode(term)) { // when search is in progress and user hits enter this gets called
                     return;
                 }
 
@@ -45,7 +49,7 @@ export default function MetaPlaceDirective(api) {
                 }
 
 
-                if (!scope.item[scope.field].find((item) => item.code === term.code)) {
+                if (!scope.item[scope.field].find((item) => getCode(item) === getCode(term))) {
                     scope.$applyAsync(() => {
                         scope.item[scope.field] = scope.item[scope.field].concat([term]);
                         scope.change({item: scope.item, field: scope.field});
@@ -55,7 +59,7 @@ export default function MetaPlaceDirective(api) {
 
             scope.removeTerm = (term) => {
                 scope.$applyAsync(() => {
-                    scope.item[scope.field] = scope.item[scope.field].filter((item) => term.code !== item.code);
+                    scope.item[scope.field] = scope.item[scope.field].filter((item) => getCode(term) !== getCode(item));
                     scope.change({item: scope.item, field: scope.field});
                 });
             };
