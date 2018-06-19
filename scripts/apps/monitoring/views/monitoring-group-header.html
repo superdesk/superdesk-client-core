@@ -3,7 +3,7 @@
     <div class="stage-header">
         <div class="stage-header__name" ng-if="group.header && group.subheader && viewType !== 'single_monitoring'">
             <a href="" ng-click="viewSingleGroup(group, 'desk')">{{ :: group.header }}</a>
-            <span>/</span>
+            <span class="stage-header__separator">/</span>
             <a href="" ng-click="viewSingleGroup(group, 'stage')">{{ :: group.subheader }} {{ :: group.type | translate }}</a>
         </div>
         <!-- Desk output stages-->
@@ -33,7 +33,7 @@
     <div class="stage-header" ng-if="group.header && group.subheader && viewType !== 'single_monitoring'">
         <div class="stage-header__name">
             <a href="" ng-click="viewSingleGroup(group, 'desk')">{{ :: group.header }}</a>
-            <span class="group-divider">/</span>
+            <span class="stage-header__separator">/</span>
             <a href="" ng-click="viewSingleGroup(group, 'stage')">{{ :: group.subheader }}</a>  
         </div>
         <span class="stage-header__number label-total">{{ total || '0' }}</span>

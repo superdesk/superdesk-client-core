@@ -17,5 +17,6 @@ angular.module('superdesk.apps.aggregate.widgets', ['superdesk.apps.aggregate', 
                     'desk or its workflow stages. Monitor anything, anywhere, anytime. You can have as many Monitor ' +
                     'widgets as you wish.',
             custom: true,
+            removeHeader: true,
         });
     }]);

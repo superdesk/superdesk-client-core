@@ -28,7 +28,7 @@
     <div class="slide-pane__content">
         <div sd-toggle-box
              ng-if="showSendButtonAndDestination()"
-             data-title="{{ :: 'Destination' | translate }}"
+             data-title="{{ currentUserAction === vm.userActions.publish ? 'From' : 'Destination' | translate }}"
              data-open="true" data-style="dark">
             <div sd-desk-select
                 data-desks="desks"
