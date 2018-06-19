@@ -130,7 +130,7 @@ class AnnotationInputBody extends Component {
 
         return (
             <div className="annotation-input">
-                <Dropdown open={true}>
+                <Dropdown open={true} scrollable={false}>
                     {annotationTypes &&
                         <div className="sd-line-input sd-line-input--is-select">
                             <label className="sd-line-input__label">Annotation Type</label>

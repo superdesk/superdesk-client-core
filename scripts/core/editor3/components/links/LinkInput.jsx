@@ -53,8 +53,10 @@ export class LinkInputComponent extends Component {
             }
         }
 
+        const initialValue = 'https://';
+
         this.state = {
-            url: this.props.data ? this.props.data.href || '' : '',
+            url: this.props.data ? this.props.data.href || initialValue : initialValue,
             selected: selectedAttachment,
         };
 
@@ -112,6 +114,13 @@ export class LinkInputComponent extends Component {
     componentDidMount() {
         if (this.inputElement != null) {
             this.inputElement.focus();
+
+            const savedValue = this.inputElement.value;
+
+            // re-apply the value so cursor is at the end, not the start
+            // related https://stackoverflow.com/q/511088/1175593
+            this.inputElement.value = '';
+            this.inputElement.value = savedValue;
         }
     }
 

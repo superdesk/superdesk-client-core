@@ -190,7 +190,7 @@ class ToolbarComponent extends Component {
                 />
 
                 {/* LinkToolbar must be the last node. */}
-                <LinkToolbar onEdit={() => showPopup(PopupTypes.Link, {editorId})} />
+                <LinkToolbar onEdit={(link) => showPopup(PopupTypes.Link, {...link, editorId})} />
             </div>;
     }
 }
