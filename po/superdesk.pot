@@ -64,7 +64,7 @@ msgstr ""
 msgid "'must be of list type'\""
 msgstr ""
 
-#: ../superdesk-planning/client/components/Assignments/AssignmentItem/index.jsx:149
+#: ../superdesk-planning/client/components/Assignments/AssignmentItem/index.jsx:162
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/AssignmentPreviewHeader.jsx:117
 msgid "'not scheduled yet'"
 msgstr ""
@@ -75,6 +75,10 @@ msgstr ""
 
 #: scripts/core/ui/views/sd-timezone.html:12
 msgid "(no matches)"
+msgstr ""
+
+#: ../superdesk-planning/client/components/Events/EventItemWithPlanning.jsx:27
+msgid "({{ count }}) {{ action }} planning item(s)"
 msgstr ""
 
 #: scripts/apps/products/views/products-config-modal.html:28
@@ -113,7 +117,7 @@ msgstr ""
 msgid "--- Not selected ---"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/planning/api.js:927
+#: ../superdesk-planning/client/actions/planning/api.js:920
 msgid "1 item was not included in the export."
 msgstr ""
 
@@ -271,10 +275,10 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/AdvancedSearch/index.jsx:167
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/AssignmentPreview.jsx:50
-#: ../superdesk-planning/client/components/Events/EventEditor/index.jsx:281
-#: ../superdesk-planning/client/components/Events/EventPreviewContent.jsx:214
-#: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:458
-#: ../superdesk-planning/client/components/Planning/PlanningPreviewContent.jsx:121
+#: ../superdesk-planning/client/components/Events/EventEditor/index.jsx:276
+#: ../superdesk-planning/client/components/Events/EventPreviewContent.jsx:216
+#: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:449
+#: ../superdesk-planning/client/components/Planning/PlanningPreviewContent.jsx:122
 #: scripts/apps/authoring/views/authoring-header.html:249
 #: scripts/apps/content-filters/views/production-test-view.html:23
 #: scripts/apps/search/services/SearchService.js:45
@@ -285,7 +289,7 @@ msgstr ""
 msgid "ANPA Take Key"
 msgstr ""
 
-#: scripts/apps/authoring/views/article-edit.html:336
+#: scripts/apps/authoring/views/article-edit.html:332
 msgid "APPLY CROPS"
 msgstr ""
 
@@ -323,7 +327,7 @@ msgid "Abstract example"
 msgstr ""
 
 #: scripts/apps/dashboard/views/workspace.html:9
-#: scripts/core/editor3/components/suggestions/SuggestionPopup.jsx:138
+#: scripts/core/editor3/components/suggestions/SuggestionPopup.jsx:146
 msgid "Accept"
 msgstr ""
 
@@ -345,6 +349,7 @@ msgstr ""
 msgid "Action"
 msgstr ""
 
+#: ../superdesk-planning/client/components/ItemActionsMenu/ActionsMenuPopup.jsx:43
 #: ../superdesk-planning/client/components/ItemActionsMenu/index.jsx:49
 #: ../superdesk-planning/client/components/Main/ActionsSubnavDropdown.jsx:15
 #: ../superdesk-planning/client/components/Main/ActionsSubnavDropdown.jsx:18
@@ -390,7 +395,7 @@ msgstr ""
 msgid "Add"
 msgstr ""
 
-#: ../superdesk-planning/client/constants/planning.js:54
+#: ../superdesk-planning/client/constants/planning.js:53
 msgid "Add As Event"
 msgstr ""
 
@@ -506,7 +511,7 @@ msgstr ""
 msgid "Add This Widget"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Events/EventEditor/index.jsx:359
+#: ../superdesk-planning/client/components/Events/EventEditor/index.jsx:362
 msgid "Add a link"
 msgstr ""
 
@@ -526,7 +531,7 @@ msgstr ""
 msgid "Add content slugline"
 msgstr ""
 
-#: ../superdesk-planning/client/constants/planning.js:76
+#: ../superdesk-planning/client/constants/planning.js:75
 msgid "Add coverage"
 msgstr ""
 
@@ -538,7 +543,7 @@ msgstr ""
 msgid "Add items"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Events/EventEditor/index.jsx:162
+#: ../superdesk-planning/client/components/Events/EventEditor/index.jsx:157
 #: scripts/core/editor3/highlightsConfig.js:124
 msgid "Add link"
 msgstr ""
@@ -563,6 +568,14 @@ msgstr ""
 msgid "Add task description"
 msgstr ""
 
+#: ../superdesk-planning/client/actions/agenda.js:139
+msgid "Add these  events to the planning list?"
+msgstr ""
+
+#: ../superdesk-planning/client/actions/agenda.js:138
+msgid "Add this event to the planning list?"
+msgstr ""
+
 #: scripts/apps/dashboard/workspace-tasks/views/task-preview.html:56
 msgid "Add title"
 msgstr ""
@@ -584,7 +597,7 @@ msgstr ""
 msgid "Add to dictionary"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Coverages/CoverageEditor/index.jsx:78
+#: ../superdesk-planning/client/components/Coverages/CoverageEditor/index.jsx:77
 msgid "Add to workflow"
 msgstr ""
 
@@ -614,8 +627,9 @@ msgid "After"
 msgstr ""
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/PlanningPreview.jsx:19
-#: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:419
-#: ../superdesk-planning/client/components/Planning/PlanningPreviewContent.jsx:105
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/createPlanningForm.jsx:38
+#: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:410
+#: ../superdesk-planning/client/components/Planning/PlanningPreviewContent.jsx:106
 msgid "Agenda"
 msgstr ""
 
@@ -629,10 +643,6 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Main/AgendaSubnavDropdown.jsx:72
 msgid "Agenda: {{ name }}"
-msgstr ""
-
-#: ../superdesk-planning/client/components/Agendas/AgendaList.jsx:28
-msgid "Agendas"
 msgstr ""
 
 #: scripts/apps/authoring/metadata/views/metadata-terms.html:62
@@ -661,6 +671,10 @@ msgstr ""
 #: ../superdesk-planning/client/components/Main/AgendaSubnavDropdown.jsx:20
 #: ../superdesk-planning/client/components/Main/AgendaSubnavDropdown.jsx:60
 msgid "All Planning Items"
+msgstr ""
+
+#: ../superdesk-planning/client/components/Events/EventDateTime.jsx:18
+msgid "All day"
 msgstr ""
 
 #: scripts/core/menu/notifications/views/notifications.html:41
@@ -721,12 +735,12 @@ msgstr ""
 msgid "An error occured, please try again."
 msgstr ""
 
-#: scripts/core/editor3/components/annotations/AnnotationPopup.jsx:57
+#: scripts/core/editor3/components/annotations/AnnotationPopup.jsx:65
 #: scripts/core/editor3/components/toolbar/index.jsx:164
 msgid "Annotation"
 msgstr ""
 
-#: scripts/core/editor3/components/annotations/AnnotationPopup.jsx:60
+#: scripts/core/editor3/components/annotations/AnnotationPopup.jsx:68
 msgid "Annotation type"
 msgstr ""
 
@@ -855,7 +869,7 @@ msgstr ""
 msgid "Article cannot be published. Please accept or reject all suggestions first."
 msgstr ""
 
-#: ../superdesk-planning/client/actions/planning/api.js:957
+#: ../superdesk-planning/client/actions/planning/api.js:950
 msgid "Article was created."
 msgstr ""
 
@@ -889,7 +903,7 @@ msgstr ""
 msgid "Assign rights:"
 msgstr ""
 
-#: ../superdesk-planning/client/constants/planning.js:71
+#: ../superdesk-planning/client/constants/planning.js:70
 msgid "Assign to agenda"
 msgstr ""
 
@@ -906,11 +920,15 @@ msgstr ""
 msgid "Assigned desks"
 msgstr ""
 
+#: ../superdesk-planning/client/components/Planning/PlanningHistory.jsx:60
+msgid "Assigned to agenda '{{ agenda }}'"
+msgstr ""
+
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/AssignmentPreviewHeader.jsx:95
 msgid "Assigned:"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Assignments/AssignmentItem/index.jsx:164
+#: ../superdesk-planning/client/components/Assignments/AssignmentItem/index.jsx:177
 msgid "Assigned: {{ displayName }}"
 msgstr ""
 
@@ -952,6 +970,10 @@ msgstr ""
 msgid "Assignment priority has been updated."
 msgstr ""
 
+#: ../superdesk-planning/client/components/Coverages/CoverageHistory.jsx:94
+msgid "Assignment removed"
+msgstr ""
+
 #: ../superdesk-planning/client/components/Assignments/SubNavBar.jsx:36
 #: ../superdesk-planning/client/controllers/AssignmentController.js:30
 #: ../superdesk-planning/index.js:21
@@ -963,9 +985,9 @@ msgstr ""
 msgid "Associated"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:514
+#: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:498
 #: ../superdesk-planning/client/components/Planning/PlanningMenuPanel/index.jsx:41
-#: ../superdesk-planning/client/components/Planning/PlanningPreviewContent.jsx:164
+#: ../superdesk-planning/client/components/Planning/PlanningPreviewContent.jsx:151
 msgid "Associated Event"
 msgstr ""
 
@@ -978,8 +1000,8 @@ msgstr ""
 msgid "Attach files"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Events/EventEditor/index.jsx:325
-#: ../superdesk-planning/client/components/Events/EventPreviewContent.jsx:239
+#: ../superdesk-planning/client/components/Events/EventEditor/index.jsx:326
+#: ../superdesk-planning/client/components/Events/EventPreviewContent.jsx:245
 msgid "Attached Files"
 msgstr ""
 
@@ -1173,8 +1195,8 @@ msgstr ""
 msgid "Calendar: {{ name }}"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Events/EventEditor/index.jsx:236
-#: ../superdesk-planning/client/components/Events/EventPreviewContent.jsx:172
+#: ../superdesk-planning/client/components/Events/EventEditor/index.jsx:231
+#: ../superdesk-planning/client/components/Events/EventPreviewContent.jsx:174
 msgid "Calendars"
 msgstr ""
 
@@ -1186,11 +1208,12 @@ msgstr ""
 msgid "Can be associated as an update"
 msgstr ""
 
+#: ../superdesk-planning/client/components/Agendas/EditAgenda.jsx:103
 #: ../superdesk-planning/client/components/Assignments/AssignmentPopup/index.jsx:75
 #: ../superdesk-planning/client/components/ConfirmationModal.jsx:60
 #: ../superdesk-planning/client/components/FulFilAssignmentModal/index.jsx:55
 #: ../superdesk-planning/client/components/IgnoreCancelSaveModal.jsx:152
-#: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:154
+#: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:160
 #: ../superdesk-planning/client/components/Main/ItemEditor/EditorHeader.jsx:226
 #: ../superdesk-planning/client/components/SortItemsModal/index.jsx:62
 #: ../superdesk-planning/client/components/UI/Form/DateInput/DateInputPopup.jsx:242
@@ -1243,7 +1266,7 @@ msgstr ""
 #: scripts/apps/search/views/save-search.html:28
 #: scripts/apps/templates/views/create-template.html:39
 #: scripts/apps/templates/views/template-editor-modal.html:192
-#: scripts/apps/users/views/edit-form.html:274
+#: scripts/apps/users/views/edit-form.html:318
 #: scripts/apps/users/views/edit-form.html:4
 #: scripts/apps/users/views/settings-roles.html:56
 #: scripts/apps/users/views/user-preferences.html:5
@@ -1273,7 +1296,7 @@ msgstr ""
 msgid "Cancel Selection"
 msgstr ""
 
-#: ../superdesk-planning/client/constants/planning.js:47
+#: ../superdesk-planning/client/constants/planning.js:46
 msgid "Cancel all coverage"
 msgstr ""
 
@@ -1281,15 +1304,15 @@ msgstr ""
 msgid "Cancel all recurring events or just this one?"
 msgstr ""
 
-#: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:73
+#: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:74
 msgid "Cancel an event"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Coverages/CoverageEditor/index.jsx:70
+#: ../superdesk-planning/client/components/Coverages/CoverageEditor/index.jsx:69
 msgid "Cancel coverage"
 msgstr ""
 
-#: ../superdesk-planning/client/constants/planning.js:41
+#: ../superdesk-planning/client/constants/planning.js:40
 msgid "Cancel planning"
 msgstr ""
 
@@ -1298,29 +1321,25 @@ msgstr ""
 msgid "Cancelled"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Planning/PlanningHistory.jsx:63
-msgid "Cancelled by"
-msgstr ""
-
 #: ../superdesk-planning/client/validators/events.js:159
 msgid "Cannot end with \".\""
 msgstr ""
 
-#: ../superdesk-planning/client/actions/main.js:616
+#: ../superdesk-planning/client/actions/main.js:657
 msgid "Cannot load more data as filter type is not selected."
 msgstr ""
 
-#: ../superdesk-planning/client/actions/main.js:637
+#: ../superdesk-planning/client/actions/main.js:678
 msgid "Cannot load more data. Failed to run the query."
 msgstr ""
 
-#: ../superdesk-planning/client/actions/main.js:658
+#: ../superdesk-planning/client/actions/main.js:699
 msgid "Cannot search as filter type is not selected."
 msgstr ""
 
 #: scripts/apps/archive/views/metadata-associateditem-view.html:7
-#: scripts/apps/authoring/views/article-edit.html:356
-#: scripts/apps/authoring/views/article-edit.html:377
+#: scripts/apps/authoring/views/article-edit.html:352
+#: scripts/apps/authoring/views/article-edit.html:373
 #: scripts/core/editor3/components/media/MediaBlock.jsx:275
 msgid "Caption"
 msgstr ""
@@ -1404,7 +1423,7 @@ msgstr ""
 msgid "Clear Edge"
 msgstr ""
 
-#: scripts/apps/authoring/views/article-edit.html:571
+#: scripts/apps/authoring/views/article-edit.html:567
 msgid "Clear Embed"
 msgstr ""
 
@@ -1515,6 +1534,7 @@ msgid "Complete Assignment"
 msgstr ""
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.jsx:64
+#: ../superdesk-planning/client/constants/assignments.js:76
 #: ../superdesk-planning/client/utils/index.js:466
 msgid "Completed"
 msgstr ""
@@ -1576,18 +1596,18 @@ msgstr ""
 msgid "Connection string"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Events/EventPreviewContent.jsx:192
+#: ../superdesk-planning/client/components/Events/EventPreviewContent.jsx:194
 msgid "Contact"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Events/EventEditor/index.jsx:253
-#: ../superdesk-planning/client/components/Events/EventMenuPanel/index.jsx:34
+#: ../superdesk-planning/client/components/Events/EventEditor/index.jsx:248
+#: ../superdesk-planning/client/components/Events/EventMenuPanel/index.jsx:36
 msgid "Contacts"
 msgstr ""
 
 #: ../superdesk-planning/client/apps/Assignments/AssignmentPreview.jsx:47
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.jsx:87
-#: ../superdesk-planning/client/components/Main/ItemEditor/Editor.jsx:63
+#: ../superdesk-planning/client/components/Main/ItemEditor/Editor.jsx:65
 #: ../superdesk-planning/client/components/Main/ItemPreview/PreviewPanel.jsx:34
 #: scripts/apps/archive/index.js:336
 #: scripts/apps/content-filters/views/production-test-view.html:52
@@ -1663,6 +1683,10 @@ msgstr ""
 msgid "Content linked"
 msgstr ""
 
+#: ../superdesk-planning/client/components/Coverages/CoverageHistory.jsx:69
+msgid "Content linked to coverage"
+msgstr ""
+
 #: ../superdesk-planning/client/apps/Assignments/AssignmentPreview.jsx:114
 msgid "Content locked"
 msgstr ""
@@ -1672,6 +1696,7 @@ msgid "Content types"
 msgstr ""
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.jsx:90
+#: ../superdesk-planning/client/components/Coverages/CoverageHistory.jsx:74
 msgid "Content unlinked"
 msgstr ""
 
@@ -1683,7 +1708,7 @@ msgstr ""
 msgid "Convert to recurring event"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Events/EventHistory.jsx:140
+#: ../superdesk-planning/client/components/Events/EventHistory.jsx:72
 msgid "Converted to recurring event"
 msgstr ""
 
@@ -1785,14 +1810,22 @@ msgstr ""
 msgid "Coverage Provider:"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageForm.jsx:189
+#: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageForm.jsx:188
 #: ../superdesk-planning/client/components/Coverages/CoveragePreview.jsx:116
 msgid "Coverage Status"
 msgstr ""
 
 #: ../superdesk-planning/client/components/AdvancedSearch/index.jsx:214
-#: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageForm.jsx:119
+#: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageForm.jsx:118
 msgid "Coverage Type"
+msgstr ""
+
+#: ../superdesk-planning/client/components/Coverages/CoverageHistory.jsx:82
+msgid "Coverage added to workflow"
+msgstr ""
+
+#: ../superdesk-planning/client/components/Coverages/CoverageHistory.jsx:29
+msgid "Coverage assigned"
 msgstr ""
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.jsx:67
@@ -1800,33 +1833,54 @@ msgstr ""
 msgid "Coverage availability"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Planning/PlanningHistory.jsx:56
-msgid "Coverage created by"
+#: ../superdesk-planning/client/components/Coverages/CoverageHistory.jsx:86
+msgid "Coverage availability confirmed"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Planning/PlanningHistory.jsx:60
-msgid "Coverage deleted by"
+#: ../superdesk-planning/client/components/Coverages/CoverageHistory.jsx:90
+msgid "Coverage availability reverted"
+msgstr ""
+
+#: ../superdesk-planning/client/components/Coverages/CoverageHistory.jsx:65
+msgid "Coverage cancelled"
+msgstr ""
+
+#: ../superdesk-planning/client/components/Coverages/CoverageHistory.jsx:102
+msgid "Coverage completed"
+msgstr ""
+
+#: ../superdesk-planning/client/components/Coverages/CoverageHistory.jsx:61
+msgid "Coverage edited"
+msgstr ""
+
+#: ../superdesk-planning/client/components/Coverages/CoverageHistory.jsx:22
+msgid "Coverage of type {{ type }} created"
+msgstr ""
+
+#: ../superdesk-planning/client/components/Coverages/CoverageHistory.jsx:78
+msgid "Coverage priority modified"
 msgstr ""
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.jsx:51
 msgid "Coverage re-assigned to"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Coverages/CoverageAddButton.jsx:19
-msgid "Coverage type"
+#: ../superdesk-planning/client/components/Coverages/CoverageHistory.jsx:27
+msgid "Coverage reassigned"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Planning/PlanningHistory.jsx:58
-msgid "Coverage updated by"
+#: ../superdesk-planning/client/components/Coverages/CoverageHistory.jsx:49
+msgid "Coverage removed"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Coverages/CoverageArrayInput.jsx:43
+#: ../superdesk-planning/client/components/Coverages/CoverageArrayInput.jsx:42
 #: ../superdesk-planning/client/components/Planning/PlanningMenuPanel/index.jsx:57
-#: ../superdesk-planning/client/components/Planning/PlanningPreviewContent.jsx:174
+#: ../superdesk-planning/client/components/Planning/PlanningPreviewContent.jsx:161
 msgid "Coverages"
 msgstr ""
 
 #: ../superdesk-planning/client/components/IgnoreCancelSaveModal.jsx:126
+#: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:108
 #: ../superdesk-planning/client/components/Main/ItemEditor/EditorHeader.jsx:275
 #: scripts/apps/archive/views/list.html:8
 #: scripts/apps/highlights/views/create_highlights_button_directive.html:2
@@ -1894,7 +1948,7 @@ msgstr ""
 msgid "Create new Workspace"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Coverages/CoverageAddButton.jsx:25
+#: ../superdesk-planning/client/components/Coverages/CoverageAddButton/index.jsx:44
 msgid "Create new coverage"
 msgstr ""
 
@@ -1903,6 +1957,10 @@ msgstr ""
 #: scripts/apps/workspace/content/index.js:42
 #: scripts/apps/workspace/content/views/sd-content-create.html:2
 msgid "Create new item"
+msgstr ""
+
+#: ../superdesk-planning/client/components/Main/ListPanel.jsx:104
+msgid "Create new items or change your search filters"
 msgstr ""
 
 #: ../superdesk-planning/client/components/Main/CreateNewSubnavDropdown.jsx:36
@@ -1922,7 +1980,9 @@ msgstr ""
 msgid "Create user"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Events/EventHistory.jsx:92
+#: ../superdesk-planning/client/components/AuditInformation/index.jsx:38
+#: ../superdesk-planning/client/components/Events/EventHistory.jsx:23
+#: ../superdesk-planning/client/components/Planning/PlanningHistory.jsx:19
 #: scripts/apps/archive/views/metadata-view.html:88
 #: scripts/apps/archive/views/preview.html:6
 #: scripts/apps/authoring/suggest/SuggestView.html:21
@@ -1941,7 +2001,6 @@ msgstr ""
 msgid "Created Ingest Channel {{name}}"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Planning/PlanningHistory.jsx:51
 #: scripts/apps/authoring/versioning/history/views/history.html:6
 msgid "Created by"
 msgstr ""
@@ -1951,8 +2010,12 @@ msgstr ""
 msgid "Created from"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Events/EventHistory.jsx:152
+#: ../superdesk-planning/client/components/Events/EventHistory.jsx:84
 msgid "Created from 'update repetitions'"
+msgstr ""
+
+#: ../superdesk-planning/client/components/Planning/PlanningHistory.jsx:23
+msgid "Created from content by"
 msgstr ""
 
 #: scripts/apps/authoring/versioning/history/views/history.html:127
@@ -2076,6 +2139,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Events/EventScheduleSummary/index.jsx:27
 #: ../superdesk-planning/client/components/Events/RecurringRulesInput/EndsInput.jsx:120
+#: ../superdesk-planning/client/components/UI/Form/DateInput/index.jsx:145
 #: scripts/core/lang/missing-translations-strings.js:26
 msgid "Date"
 msgstr ""
@@ -2128,7 +2192,7 @@ msgid "Default monitoring view"
 msgstr ""
 
 #: scripts/core/editor3/components/annotations/AnnotationInput.jsx:162
-#: scripts/core/editor3/components/annotations/AnnotationPopup.jsx:49
+#: scripts/core/editor3/components/annotations/AnnotationPopup.jsx:57
 #: scripts/core/editor3/components/comments/Comment.jsx:65
 #: scripts/core/editor3/components/links/LinkToolbar.jsx:47
 msgid "Delete"
@@ -2178,18 +2242,18 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/EventPreview.jsx:33
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/PlanningPreview.jsx:37
-#: ../superdesk-planning/client/components/Events/EventEditor/index.jsx:207
+#: ../superdesk-planning/client/components/Events/EventEditor/index.jsx:202
 #: ../superdesk-planning/client/components/Events/EventMetadata/index.jsx:140
-#: ../superdesk-planning/client/components/Events/EventPreviewContent.jsx:160
-#: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:403
-#: ../superdesk-planning/client/components/Planning/PlanningPreviewContent.jsx:95
+#: ../superdesk-planning/client/components/Events/EventPreviewContent.jsx:162
+#: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:394
+#: ../superdesk-planning/client/components/Planning/PlanningPreviewContent.jsx:96
 #: scripts/apps/archive/views/metadata-associateditem-view.html:11
 #: scripts/apps/archive/views/metadata-view.html:212
 #: scripts/apps/archive/views/upload.html:50
 #: scripts/apps/archive/views/upload.html:56
 #: scripts/apps/authoring/attachments/attachments.html:75
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:142
-#: scripts/apps/authoring/views/article-edit.html:599
+#: scripts/apps/authoring/views/article-edit.html:595
 #: scripts/apps/authoring/views/change-image.html:86
 #: scripts/apps/authoring/views/change-image.html:91
 #: scripts/apps/authoring/views/change-image.html:97
@@ -2198,7 +2262,7 @@ msgstr ""
 #: scripts/apps/workspace/content/views/profile-settings.html:69
 #: scripts/apps/workspace/content/views/profile-settings.html:99
 #: scripts/core/editor2/views/block-embed.html:30
-#: scripts/core/editor3/components/embeds/EmbedBlock.jsx:126
+#: scripts/core/editor3/components/embeds/EmbedBlock.jsx:137
 msgid "Description"
 msgstr ""
 
@@ -2306,16 +2370,15 @@ msgstr ""
 msgid "Destinations"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Events/EventEditor/index.jsx:260
-#: ../superdesk-planning/client/components/Events/EventMenuPanel/EventLinks.jsx:13
-#: ../superdesk-planning/client/components/Events/EventPreviewContent.jsx:206
-#: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:428
-#: ../superdesk-planning/client/components/Planning/PlanningPreviewContent.jsx:108
+#: ../superdesk-planning/client/components/Events/EventEditor/index.jsx:255
+#: ../superdesk-planning/client/components/Events/EventPreviewContent.jsx:208
+#: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:419
+#: ../superdesk-planning/client/components/Planning/PlanningPreviewContent.jsx:109
 #: scripts/apps/archive/views/media-view.html:58
 msgid "Details"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Events/EventMenuPanel/index.jsx:37
+#: ../superdesk-planning/client/components/Events/EventMenuPanel/index.jsx:39
 #: ../superdesk-planning/client/components/Planning/PlanningMenuPanel/index.jsx:38
 msgid "Details..."
 msgstr ""
@@ -2370,7 +2433,7 @@ msgstr ""
 msgid "Disable user"
 msgstr ""
 
-#: ../superdesk-planning/client/utils/planning.js:698
+#: ../superdesk-planning/client/utils/planning.js:719
 #: scripts/apps/users/controllers/UserListController.js:150
 msgid "Disabled"
 msgstr ""
@@ -2396,14 +2459,6 @@ msgstr ""
 msgid "Do you want to add an image to this update?"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/agenda.js:139
-msgid "Do you want to add these  events to the planning list ?"
-msgstr ""
-
-#: ../superdesk-planning/client/actions/agenda.js:138
-msgid "Do you want to add this event to the planning list ?"
-msgstr ""
-
 #: scripts/apps/archive/index.js:409
 msgid "Do you want to delete the item permanently?"
 msgstr ""
@@ -2420,7 +2475,7 @@ msgstr ""
 msgid "Do you want to remove Abbreviation?"
 msgstr ""
 
-#: scripts/apps/users/views/edit-form.html:235
+#: scripts/apps/users/views/edit-form.html:279
 msgid "Do you want to reset the password for user {{ user.full_name}} ?"
 msgstr ""
 
@@ -2461,7 +2516,7 @@ msgstr ""
 msgid "Drag Your Files Here"
 msgstr ""
 
-#: ../superdesk-planning/client/components/UI/Form/FileInput.jsx:135
+#: ../superdesk-planning/client/components/UI/Form/FileInput.jsx:137
 #: scripts/core/ui/components/Form/FileInput.jsx:126
 msgid "Drag files here or"
 msgstr ""
@@ -2474,13 +2529,13 @@ msgstr ""
 msgid "Drop it here"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageForm.jsx:200
+#: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageForm.jsx:199
 #: ../superdesk-planning/client/components/Coverages/CoveragePreview.jsx:118
 #: scripts/apps/dashboard/workspace-tasks/views/workspace-tasks.html:75
 msgid "Due"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Assignments/AssignmentItem/index.jsx:142
+#: ../superdesk-planning/client/components/Assignments/AssignmentItem/index.jsx:155
 msgid "Due Date"
 msgstr ""
 
@@ -2500,16 +2555,16 @@ msgstr ""
 msgid "Due:"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Coverages/CoverageEditor/index.jsx:57
+#: ../superdesk-planning/client/components/Coverages/CoverageEditor/index.jsx:56
 #: ../superdesk-planning/client/constants/events.js:40
-#: ../superdesk-planning/client/constants/planning.js:36
+#: ../superdesk-planning/client/constants/planning.js:35
 #: scripts/apps/archive/index.js:165
 #: scripts/apps/archive/index.js:189
 #: scripts/apps/authoring/authoring/constants.js:10
 msgid "Duplicate"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Coverages/CoverageEditor/index.jsx:62
+#: ../superdesk-planning/client/components/Coverages/CoverageEditor/index.jsx:61
 msgid "Duplicate As"
 msgstr ""
 
@@ -2526,11 +2581,11 @@ msgstr ""
 msgid "Duplicate an item"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Events/EventHistory.jsx:156
+#: ../superdesk-planning/client/components/Events/EventHistory.jsx:88
+#: ../superdesk-planning/client/components/Planning/PlanningHistory.jsx:64
 msgid "Duplicate created"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Planning/PlanningHistory.jsx:61
 #: scripts/apps/authoring/versioning/history/views/history.html:52
 msgid "Duplicate created by"
 msgstr ""
@@ -2539,11 +2594,11 @@ msgstr ""
 msgid "Duplicate in place"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Events/EventHistory.jsx:160
+#: ../superdesk-planning/client/components/Events/EventHistory.jsx:92
+#: ../superdesk-planning/client/components/Planning/PlanningHistory.jsx:68
 msgid "Duplicated"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Planning/PlanningHistory.jsx:62
 #: scripts/apps/authoring/versioning/history/views/history.html:30
 msgid "Duplicated by"
 msgstr ""
@@ -2560,7 +2615,7 @@ msgstr ""
 msgid "ED. NOTE"
 msgstr ""
 
-#: scripts/apps/authoring/views/article-edit.html:337
+#: scripts/apps/authoring/views/article-edit.html:333
 msgid "EDIT CROPS"
 msgstr ""
 
@@ -2587,12 +2642,12 @@ msgstr ""
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/AssignmentPreview.jsx:70
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/EventPreview.jsx:73
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/PlanningPreview.jsx:43
-#: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageForm.jsx:160
+#: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageForm.jsx:159
 #: ../superdesk-planning/client/components/Coverages/CoveragePreview.jsx:103
-#: ../superdesk-planning/client/components/Events/EventEditor/index.jsx:317
-#: ../superdesk-planning/client/components/Events/EventPreviewContent.jsx:234
-#: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:440
-#: ../superdesk-planning/client/components/Planning/PlanningPreviewContent.jsx:111
+#: ../superdesk-planning/client/components/Events/EventEditor/index.jsx:318
+#: ../superdesk-planning/client/components/Events/EventPreviewContent.jsx:239
+#: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:431
+#: ../superdesk-planning/client/components/Planning/PlanningPreviewContent.jsx:112
 #: scripts/apps/archive/views/metadata-associateditem-view.html:19
 msgid "Ed Note"
 msgstr ""
@@ -2604,7 +2659,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/Main/ItemEditor/EditorHeader.jsx:293
 #: ../superdesk-planning/client/components/Tooltips.jsx:10
 #: ../superdesk-planning/client/constants/events.js:92
-#: ../superdesk-planning/client/constants/planning.js:59
+#: ../superdesk-planning/client/constants/planning.js:58
 #: ../superdesk-planning/client/constants/tooltips.js:5
 #: scripts/apps/authoring/attachments/attachments.html:29
 #: scripts/apps/authoring/authoring/index.js:101
@@ -2615,7 +2670,7 @@ msgstr ""
 #: scripts/apps/templates/views/templates.html:35
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:6
 #: scripts/apps/workspace/content/views/profile-settings.html:28
-#: scripts/core/editor3/components/annotations/AnnotationPopup.jsx:44
+#: scripts/core/editor3/components/annotations/AnnotationPopup.jsx:52
 #: scripts/core/editor3/components/comments/Comment.jsx:60
 #: scripts/core/editor3/components/links/LinkToolbar.jsx:46
 msgid "Edit"
@@ -2748,7 +2803,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Main/ItemEditor/EditorHeader.jsx:352
 #: ../superdesk-planning/client/constants/events.js:98
-#: ../superdesk-planning/client/constants/planning.js:65
+#: ../superdesk-planning/client/constants/planning.js:64
 #: ../superdesk-planning/client/constants/tooltips.js:12
 msgid "Edit in popup"
 msgstr ""
@@ -2800,7 +2855,8 @@ msgstr ""
 msgid "Edit {{(isAbbreviations() ? 'Abbreviations' : '') | translate}} Dictionary"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Events/EventHistory.jsx:96
+#: ../superdesk-planning/client/components/Events/EventHistory.jsx:27
+#: ../superdesk-planning/client/components/Planning/PlanningHistory.jsx:27
 msgid "Edited"
 msgstr ""
 
@@ -2847,6 +2903,10 @@ msgstr ""
 
 #: scripts/apps/users/config.js:105
 msgid "Enable user"
+msgstr ""
+
+#: ../superdesk-planning/client/components/Agendas/EditAgenda.jsx:128
+msgid "Enabled"
 msgstr ""
 
 #: scripts/apps/ingest/views/settings/ingest-routing-schedule.html:12
@@ -2976,7 +3036,7 @@ msgstr ""
 #: scripts/apps/users/controllers/UserDeleteCommand.js:20
 #: scripts/apps/users/controllers/UserEnableCommand.js:15
 #: scripts/apps/users/controllers/UserEnableCommand.js:17
-#: scripts/apps/users/directives/UserEditDirective.js:146
+#: scripts/apps/users/directives/UserEditDirective.js:147
 #: scripts/apps/users/directives/UserRolesDirective.js:60
 #: scripts/apps/vocabularies/controllers/VocabularyEditController.js:30
 msgid "Error:"
@@ -3061,76 +3121,78 @@ msgstr ""
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/index.jsx:137
 #: ../superdesk-planning/client/components/ItemIcon.jsx:23
 #: ../superdesk-planning/client/components/Main/CreateNewSubnavDropdown.jsx:21
+#: ../superdesk-planning/client/utils/history.js:75
 #: ../superdesk-planning/client/utils/index.js:593
 msgid "Event"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Events/EventHistory.jsx:112
+#: ../superdesk-planning/client/components/Events/EventHistory.jsx:43
+#: ../superdesk-planning/client/components/Planning/PlanningHistory.jsx:43
 msgid "Event Cancelled"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Main/ItemEditor/Editor.jsx:116
-#: ../superdesk-planning/client/components/Main/ItemPreview/PreviewPanel.jsx:67
+#: ../superdesk-planning/client/components/Main/ItemEditor/Editor.jsx:128
+#: ../superdesk-planning/client/components/Main/ItemPreview/PreviewPanel.jsx:72
 msgid "Event Details"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Events/EventHistory.jsx:116
+#: ../superdesk-planning/client/components/Events/EventHistory.jsx:47
+#: ../superdesk-planning/client/components/Planning/PlanningHistory.jsx:51
 msgid "Event Postponed"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Events/EventHistory.jsx:108
+#: ../superdesk-planning/client/components/Events/EventHistory.jsx:39
+#: ../superdesk-planning/client/components/Planning/PlanningHistory.jsx:39
 msgid "Event Rescheduled"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Events/EventHistory.jsx:120
+#: ../superdesk-planning/client/components/Events/EventHistory.jsx:51
 msgid "Event Rescheduled from"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/events/ui.js:128
+#: ../superdesk-planning/client/components/Coverages/CoverageHistory.jsx:57
+msgid "Event cancelled"
+msgstr ""
+
+#: ../superdesk-planning/client/actions/events/ui.js:127
 msgid "Event has been cancelled"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/events/ui.js:143
+#: ../superdesk-planning/client/actions/events/ui.js:142
 msgid "Event has been postponed"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/events/ui.js:246
+#: ../superdesk-planning/client/actions/events/ui.js:245
 msgid "Event has been rescheduled"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Events/EventHistory.jsx:72
-msgid "Event posted"
+#: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/EventPreview.jsx:27
+#: ../superdesk-planning/client/components/Events/EventEditor/index.jsx:194
+#: ../superdesk-planning/client/components/Events/EventPreviewContent.jsx:156
+msgid "Event name"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Events/EventHistory.jsx:65
-msgid "Event re-posted"
-msgstr ""
-
-#: ../superdesk-planning/client/components/Events/EventHistory.jsx:144
+#: ../superdesk-planning/client/components/Events/EventHistory.jsx:76
 msgid "Event repetitions modified"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/events/ui.js:397
+#: ../superdesk-planning/client/actions/events/ui.js:396
 msgid "Event repetitions updated"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Events/EventHistory.jsx:100
+#: ../superdesk-planning/client/components/Events/EventHistory.jsx:31
 msgid "Event spiked"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/events/ui.js:382
+#: ../superdesk-planning/client/actions/events/ui.js:381
 msgid "Event time has been updated"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Events/EventHistory.jsx:136
+#: ../superdesk-planning/client/components/Events/EventHistory.jsx:68
 msgid "Event time modified"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Events/EventHistory.jsx:60
-msgid "Event unposted"
-msgstr ""
-
-#: ../superdesk-planning/client/components/Events/EventHistory.jsx:104
+#: ../superdesk-planning/client/components/Events/EventHistory.jsx:35
 msgid "Event unspiked"
 msgstr ""
 
@@ -3206,8 +3268,8 @@ msgstr ""
 msgid "Exposure time"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Events/EventEditor/index.jsx:345
-#: ../superdesk-planning/client/components/Events/EventPreviewContent.jsx:255
+#: ../superdesk-planning/client/components/Events/EventEditor/index.jsx:347
+#: ../superdesk-planning/client/components/Events/EventPreviewContent.jsx:264
 msgid "External Links"
 msgstr ""
 
@@ -3223,6 +3285,10 @@ msgstr ""
 msgid "FTP Server URL"
 msgstr ""
 
+#: scripts/apps/users/views/edit-form.html:226
+msgid "Facebook"
+msgstr ""
+
 #: scripts/apps/archive/directives/ArchivedItemKill.js:32
 #: scripts/apps/authoring/authoring/directives/AuthoringEmbeddedDirective.js:48
 msgid "Failed to apply kill template to the item."
@@ -3236,7 +3302,7 @@ msgstr ""
 msgid "Failed to cancel all coverage!"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/events/ui.js:132
+#: ../superdesk-planning/client/actions/events/ui.js:131
 msgid "Failed to cancel the Event!"
 msgstr ""
 
@@ -3264,15 +3330,15 @@ msgstr ""
 msgid "Failed to get item."
 msgstr ""
 
-#: ../superdesk-planning/client/actions/events/ui.js:256
+#: ../superdesk-planning/client/actions/events/ui.js:255
 msgid "Failed to load duplicated Event."
 msgstr ""
 
-#: ../superdesk-planning/client/actions/autosave.js:23
+#: ../superdesk-planning/client/actions/autosave.js:33
 msgid "Failed to load {{ itemType }} autosaves."
 msgstr ""
 
-#: ../superdesk-planning/client/actions/main.js:90
+#: ../superdesk-planning/client/actions/main.js:109
 msgid "Failed to lock the item"
 msgstr ""
 
@@ -3280,15 +3346,15 @@ msgstr ""
 msgid "Failed to lock the item, could not determine item type!"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/main.js:275
+#: ../superdesk-planning/client/actions/main.js:316
 msgid "Failed to post the {{ itemType }}"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/main.js:256
+#: ../superdesk-planning/client/actions/main.js:297
 msgid "Failed to post, could not find the item type!"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/events/ui.js:147
+#: ../superdesk-planning/client/actions/events/ui.js:146
 msgid "Failed to postpone the Event!"
 msgstr ""
 
@@ -3296,7 +3362,7 @@ msgstr ""
 msgid "Failed to publish and continue."
 msgstr ""
 
-#: ../superdesk-planning/client/actions/autosave.js:206
+#: ../superdesk-planning/client/actions/autosave.js:210
 msgid "Failed to remove autosave. Not found"
 msgstr ""
 
@@ -3304,7 +3370,7 @@ msgstr ""
 msgid "Failed to remove link:"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/events/ui.js:267
+#: ../superdesk-planning/client/actions/events/ui.js:266
 msgid "Failed to reschedule the Event!"
 msgstr ""
 
@@ -3318,11 +3384,11 @@ msgstr ""
 msgid "Failed to run the query!"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/main.js:603
+#: ../superdesk-planning/client/actions/main.js:644
 msgid "Failed to run the query."
 msgstr ""
 
-#: ../superdesk-planning/client/actions/main.js:688
+#: ../superdesk-planning/client/actions/main.js:729
 msgid "Failed to run the query.."
 msgstr ""
 
@@ -3342,15 +3408,15 @@ msgstr ""
 msgid "Failed to save the assignment."
 msgstr ""
 
-#: ../superdesk-planning/client/actions/autosave.js:147
+#: ../superdesk-planning/client/actions/autosave.js:151
 msgid "Failed to save the autosave item."
 msgstr ""
 
-#: ../superdesk-planning/client/actions/main.js:185
+#: ../superdesk-planning/client/actions/main.js:226
 msgid "Failed to save the {{ itemType }}"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/main.js:156
+#: ../superdesk-planning/client/actions/main.js:183
 msgid "Failed to save, could not find the item {{itemType}}!"
 msgstr ""
 
@@ -3358,8 +3424,8 @@ msgstr ""
 msgid "Failed to send and publish."
 msgstr ""
 
-#: ../superdesk-planning/client/actions/events/ui.js:61
-#: ../superdesk-planning/client/actions/events/ui.js:78
+#: ../superdesk-planning/client/actions/events/ui.js:60
+#: ../superdesk-planning/client/actions/events/ui.js:77
 msgid "Failed to spike the event(s)"
 msgstr ""
 
@@ -3371,19 +3437,19 @@ msgstr ""
 msgid "Failed to unlock the item. Lock not found!"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/main.js:229
+#: ../superdesk-planning/client/actions/main.js:270
 msgid "Failed to unpost the {{ itemType }}"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/main.js:212
+#: ../superdesk-planning/client/actions/main.js:253
 msgid "Failed to unpost, could not find the item type!"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/events/ui.js:401
+#: ../superdesk-planning/client/actions/events/ui.js:400
 msgid "Failed to update Event repetitions"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/events/ui.js:386
+#: ../superdesk-planning/client/actions/events/ui.js:385
 msgid "Failed to update the Event time!"
 msgstr ""
 
@@ -3472,7 +3538,7 @@ msgstr ""
 msgid "File types"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Events/EventMenuPanel/index.jsx:40
+#: ../superdesk-planning/client/components/Events/EventMenuPanel/EventFiles.jsx:19
 msgid "Files"
 msgstr ""
 
@@ -3591,6 +3657,10 @@ msgstr ""
 msgid "Formatters"
 msgstr ""
 
+#: ../superdesk-planning/client/components/UI/Form/DateInput/DayPicker.jsx:101
+msgid "Fri"
+msgstr ""
+
 #: ../superdesk-planning/client/components/Events/RepeatEventSummary/index.jsx:34
 #: scripts/core/datetime/datetime.js:233
 msgid "Friday"
@@ -3647,7 +3717,7 @@ msgstr ""
 msgid "General info"
 msgstr ""
 
-#: scripts/apps/authoring/views/article-edit.html:574
+#: scripts/apps/authoring/views/article-edit.html:570
 msgid "Generate From URL"
 msgstr ""
 
@@ -3656,7 +3726,7 @@ msgid "Generate token"
 msgstr ""
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/AssignmentPreview.jsx:60
-#: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageForm.jsx:137
+#: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageForm.jsx:136
 #: ../superdesk-planning/client/components/Coverages/CoveragePreview.jsx:115
 #: scripts/apps/archive/views/metadata-view.html:57
 #: scripts/apps/authoring/views/full-preview.html:44
@@ -3774,7 +3844,7 @@ msgstr ""
 msgid "Helper text"
 msgstr ""
 
-#: scripts/apps/authoring/views/article-edit.html:401
+#: scripts/apps/authoring/views/article-edit.html:397
 msgid "Helplines/Contact Information"
 msgstr ""
 
@@ -3782,7 +3852,7 @@ msgstr ""
 msgid "Hidden recipients (blind carbon copy)"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Events/EventItemWithPlanning.jsx:28
+#: ../superdesk-planning/client/components/Events/EventItemWithPlanning.jsx:29
 msgid "Hide"
 msgstr ""
 
@@ -3790,7 +3860,7 @@ msgstr ""
 msgid "Hide Date"
 msgstr ""
 
-#: scripts/apps/authoring/views/article-edit.html:580
+#: scripts/apps/authoring/views/article-edit.html:576
 msgid "Hide Preview"
 msgstr ""
 
@@ -3830,7 +3900,7 @@ msgstr ""
 msgid "Highlights/Summary List Management"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Main/ItemEditor/Editor.jsx:64
+#: ../superdesk-planning/client/components/Main/ItemEditor/Editor.jsx:66
 #: ../superdesk-planning/client/components/Main/ItemPreview/PreviewPanel.jsx:39
 #: scripts/apps/authoring/versioning/versioning.js:6
 msgid "History"
@@ -3923,6 +3993,7 @@ msgstr ""
 msgid "In 2 days"
 msgstr ""
 
+#: ../superdesk-planning/client/constants/assignments.js:72
 #: ../superdesk-planning/client/utils/index.js:454
 #: scripts/apps/dashboard/workspace-tasks/tasks.js:7
 msgid "In Progress"
@@ -3971,6 +4042,7 @@ msgstr ""
 msgid "Info"
 msgstr ""
 
+#: ../superdesk-planning/client/components/AuditInformation/index.jsx:23
 #: scripts/apps/ingest/index.js:155
 #: scripts/apps/ingest/index.js:68
 #: scripts/apps/ingest/views/settings/settings.html:3
@@ -4027,7 +4099,7 @@ msgstr ""
 msgid "Ingest provider sequence"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Events/EventHistory.jsx:88
+#: ../superdesk-planning/client/components/Events/EventHistory.jsx:19
 #: ../superdesk-planning/client/utils/index.js:415
 msgid "Ingested"
 msgstr ""
@@ -4045,6 +4117,10 @@ msgstr ""
 msgid "Insert URL"
 msgstr ""
 
+#: scripts/apps/users/views/edit-form.html:239
+msgid "Instagram"
+msgstr ""
+
 #: scripts/apps/authoring/authoring/index.js:282
 msgid "Instant Spellchecking, when automatic spellchecking turned off"
 msgstr ""
@@ -4056,12 +4132,12 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/AssignmentPreview.jsx:75
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/PlanningPreview.jsx:49
-#: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageForm.jsx:180
+#: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageForm.jsx:179
 #: ../superdesk-planning/client/components/Coverages/CoveragePreview.jsx:107
-#: ../superdesk-planning/client/components/Events/EventEditor/index.jsx:309
-#: ../superdesk-planning/client/components/Events/EventPreviewContent.jsx:229
-#: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:411
-#: ../superdesk-planning/client/components/Planning/PlanningPreviewContent.jsx:100
+#: ../superdesk-planning/client/components/Events/EventEditor/index.jsx:310
+#: ../superdesk-planning/client/components/Events/EventPreviewContent.jsx:234
+#: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:402
+#: ../superdesk-planning/client/components/Planning/PlanningPreviewContent.jsx:101
 msgid "Internal Note"
 msgstr ""
 
@@ -4235,7 +4311,7 @@ msgid "Keyword"
 msgstr ""
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/AssignmentPreview.jsx:65
-#: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageForm.jsx:169
+#: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageForm.jsx:168
 #: scripts/apps/archive/views/metadata-view.html:21
 #: scripts/apps/content-filters/views/production-test-view.html:21
 #: scripts/apps/search/views/search-parameters.html:77
@@ -4256,7 +4332,6 @@ msgstr ""
 msgid "Killed"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Planning/PlanningHistory.jsx:73
 #: scripts/apps/authoring/versioning/history/views/history.html:179
 msgid "Killed by"
 msgstr ""
@@ -4398,7 +4473,7 @@ msgid "Linked by"
 msgstr ""
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/EventPreview.jsx:105
-#: ../superdesk-planning/client/components/Events/EventMenuPanel/index.jsx:43
+#: ../superdesk-planning/client/components/Events/EventMenuPanel/EventLinks.jsx:19
 msgid "Links"
 msgstr ""
 
@@ -4455,9 +4530,9 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/AdvancedSearch/index.jsx:149
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/EventPreview.jsx:53
-#: ../superdesk-planning/client/components/Events/EventEditor/index.jsx:246
+#: ../superdesk-planning/client/components/Events/EventEditor/index.jsx:241
 #: ../superdesk-planning/client/components/Events/EventMetadata/index.jsx:129
-#: ../superdesk-planning/client/components/Events/EventPreviewContent.jsx:178
+#: ../superdesk-planning/client/components/Events/EventPreviewContent.jsx:180
 msgid "Location"
 msgstr ""
 
@@ -4484,8 +4559,8 @@ msgid "Log Messages"
 msgstr ""
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/EventPreview.jsx:67
-#: ../superdesk-planning/client/components/Events/EventEditor/index.jsx:301
-#: ../superdesk-planning/client/components/Events/EventPreviewContent.jsx:224
+#: ../superdesk-planning/client/components/Events/EventEditor/index.jsx:302
+#: ../superdesk-planning/client/components/Events/EventPreviewContent.jsx:229
 msgid "Long Description"
 msgstr ""
 
@@ -4701,6 +4776,10 @@ msgstr ""
 msgid "Modified:"
 msgstr ""
 
+#: ../superdesk-planning/client/components/UI/Form/DateInput/DayPicker.jsx:97
+msgid "Mon"
+msgstr ""
+
 #: ../superdesk-planning/client/components/Events/RepeatEventSummary/index.jsx:30
 #: scripts/core/datetime/datetime.js:229
 msgid "Monday"
@@ -4820,10 +4899,8 @@ msgid "NTB Currency Macro"
 msgstr ""
 
 #: ../superdesk-planning/client/components/AdvancedSearch/index.jsx:133
-#: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/EventPreview.jsx:27
-#: ../superdesk-planning/client/components/Events/EventEditor/index.jsx:199
+#: ../superdesk-planning/client/components/Agendas/EditAgenda.jsx:117
 #: ../superdesk-planning/client/components/Events/EventMetadata/index.jsx:125
-#: ../superdesk-planning/client/components/Events/EventPreviewContent.jsx:154
 #: ../superdesk-planning/client/components/IgnoreCancelSaveModal.jsx:50
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/cancelEventForm.jsx:85
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/convertToRecurringEventForm.jsx:102
@@ -4837,8 +4914,8 @@ msgstr ""
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateEventRepetitions.jsx:92
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.jsx:72
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateTimeForm.jsx:132
-#: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:382
-#: ../superdesk-planning/client/components/Planning/PlanningPreviewContent.jsx:85
+#: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:373
+#: ../superdesk-planning/client/components/Planning/PlanningPreviewContent.jsx:86
 #: scripts/apps/content-filters/views/manage-filter-conditions.html:36
 #: scripts/apps/content-filters/views/manage-filters.html:39
 #: scripts/apps/ingest/views/settings/ingest-routing-general.html:13
@@ -4908,6 +4985,10 @@ msgstr ""
 msgid "No Desk"
 msgstr ""
 
+#: ../superdesk-planning/client/components/Main/ListPanel.jsx:103
+msgid "No Event or Planning items found"
+msgstr ""
+
 #: scripts/apps/highlights/views/search_highlights_dropdown_directive.html:6
 msgid "No Filter"
 msgstr ""
@@ -4925,7 +5006,7 @@ msgid "No Templates found."
 msgstr ""
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/EventPreview.jsx:99
-#: ../superdesk-planning/client/components/Events/EventPreviewContent.jsx:251
+#: ../superdesk-planning/client/components/Events/EventPreviewContent.jsx:259
 msgid "No attached files added."
 msgstr ""
 
@@ -4955,7 +5036,7 @@ msgstr ""
 msgid "No available translations"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Events/EventPreviewContent.jsx:116
+#: ../superdesk-planning/client/components/Events/EventPreviewContent.jsx:118
 msgid "No calendars assigned."
 msgstr ""
 
@@ -4972,7 +5053,7 @@ msgid "No comments so far."
 msgstr ""
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/EventPreview.jsx:119
-#: ../superdesk-planning/client/components/Events/EventPreviewContent.jsx:264
+#: ../superdesk-planning/client/components/Events/EventPreviewContent.jsx:275
 msgid "No external links added."
 msgstr ""
 
@@ -5013,7 +5094,7 @@ msgstr ""
 msgid "No of calls"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Events/EventPreviewContent.jsx:283
+#: ../superdesk-planning/client/components/Events/EventPreviewContent.jsx:294
 msgid "No related planning items."
 msgstr ""
 
@@ -5105,16 +5186,16 @@ msgstr ""
 msgid "Not been transmitted to any subscriber"
 msgstr ""
 
-#: ../superdesk-planning/client/validators/profile.js:31
+#: ../superdesk-planning/client/validators/profile.js:53
 msgid "Not enough"
 msgstr ""
 
-#: ../superdesk-planning/client/validators/profile.js:32
+#: ../superdesk-planning/client/validators/profile.js:54
 msgid "Not enough {{ name }}"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:503
-#: ../superdesk-planning/client/components/Planning/PlanningPreviewContent.jsx:161
+#: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:487
+#: ../superdesk-planning/client/components/Planning/PlanningPreviewContent.jsx:148
 msgid "Not for Publication"
 msgstr ""
 
@@ -5151,7 +5232,7 @@ msgid "Number of items"
 msgstr ""
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentPopup/index.jsx:69
-#: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:74
+#: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:75
 #: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:125
 #: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:138
 #: scripts/apps/authoring/macros/views/macros-replace.html:3
@@ -5166,9 +5247,9 @@ msgid "Object Name (Slugline)"
 msgstr ""
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/EventPreview.jsx:78
-#: ../superdesk-planning/client/components/Events/EventEditor/index.jsx:215
+#: ../superdesk-planning/client/components/Events/EventEditor/index.jsx:210
 #: ../superdesk-planning/client/components/Events/EventMetadata/index.jsx:138
-#: ../superdesk-planning/client/components/Events/EventPreviewContent.jsx:165
+#: ../superdesk-planning/client/components/Events/EventPreviewContent.jsx:167
 msgid "Occurrence Status"
 msgstr ""
 
@@ -5228,7 +5309,7 @@ msgstr ""
 msgid "Oops! There are no items."
 msgstr ""
 
-#: ../superdesk-planning/client/actions/planning/api.js:959
+#: ../superdesk-planning/client/actions/planning/api.js:952
 #: scripts/apps/authoring/authoring/index.js:203
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:166
 #: scripts/core/editor3/components/links/LinkToolbar.jsx:43
@@ -5311,7 +5392,7 @@ msgstr ""
 
 #: scripts/apps/archive/views/item-preview.html:24
 #: scripts/apps/archive/views/preview.html:97
-#: scripts/apps/authoring/views/article-edit.html:331
+#: scripts/apps/authoring/views/article-edit.html:327
 #: scripts/apps/authoring/views/change-image.html:138
 #: scripts/apps/authoring/views/change-image.html:24
 msgid "Original"
@@ -5441,9 +5522,13 @@ msgstr ""
 msgid "Password was changed. You can login using your new password."
 msgstr ""
 
-#: ../superdesk-planning/client/utils/events.js:448
-#: ../superdesk-planning/client/utils/events.js:462
+#: ../superdesk-planning/client/utils/events.js:449
+#: ../superdesk-planning/client/utils/events.js:463
 msgid "Past Events"
+msgstr ""
+
+#: ../superdesk-planning/client/components/UI/Form/LinkInput.jsx:128
+msgid "Paste link"
 msgstr ""
 
 #: scripts/core/editor2/editor.js:912
@@ -5513,10 +5598,10 @@ msgid "Picture"
 msgstr ""
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/AssignmentPreview.jsx:45
-#: ../superdesk-planning/client/components/Events/EventEditor/index.jsx:271
-#: ../superdesk-planning/client/components/Events/EventPreviewContent.jsx:209
-#: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:448
-#: ../superdesk-planning/client/components/Planning/PlanningPreviewContent.jsx:116
+#: ../superdesk-planning/client/components/Events/EventEditor/index.jsx:266
+#: ../superdesk-planning/client/components/Events/EventPreviewContent.jsx:211
+#: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:439
+#: ../superdesk-planning/client/components/Planning/PlanningPreviewContent.jsx:117
 #: scripts/apps/archive/views/metadata-view.html:61
 #: scripts/apps/authoring/views/full-preview.html:65
 #: scripts/apps/workspace/content/constants.js:61
@@ -5535,6 +5620,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/ItemIcon.jsx:30
 #: ../superdesk-planning/client/components/ItemIcon.jsx:37
 #: ../superdesk-planning/client/controllers/PlanningController.js:36
+#: ../superdesk-planning/client/utils/history.js:75
 #: ../superdesk-planning/index.js:13
 #: ../superdesk-planning/index.js:14
 #: scripts/apps/users/views/user-preferences.html:121
@@ -5542,15 +5628,19 @@ msgstr ""
 msgid "Planning"
 msgstr ""
 
+#: ../superdesk-planning/client/components/Planning/PlanningHistory.jsx:47
+msgid "Planning Cancelled"
+msgstr ""
+
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/spikePlanningForm.jsx:43
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/unspikePlanningForm.jsx:42
-#: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:390
-#: ../superdesk-planning/client/components/Planning/PlanningPreviewContent.jsx:90
+#: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:381
+#: ../superdesk-planning/client/components/Planning/PlanningPreviewContent.jsx:91
 msgid "Planning Date"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Main/ItemEditor/Editor.jsx:117
-#: ../superdesk-planning/client/components/Main/ItemPreview/PreviewPanel.jsx:68
+#: ../superdesk-planning/client/components/Main/ItemEditor/Editor.jsx:129
+#: ../superdesk-planning/client/components/Main/ItemPreview/PreviewPanel.jsx:73
 msgid "Planning Details"
 msgstr ""
 
@@ -5573,11 +5663,16 @@ msgstr ""
 msgid "Planning Management"
 msgstr ""
 
+#: ../superdesk-planning/client/components/Coverages/CoverageHistory.jsx:53
+#: ../superdesk-planning/client/components/Planning/PlanningHistory.jsx:55
+msgid "Planning cancelled"
+msgstr ""
+
 #: ../superdesk-planning/client/actions/planning/ui.js:220
 msgid "Planning duplicated"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Events/EventHistory.jsx:132
+#: ../superdesk-planning/client/components/Events/EventHistory.jsx:64
 msgid "Planning item created"
 msgstr ""
 
@@ -5622,6 +5717,7 @@ msgid "Please provide a valid email address"
 msgstr ""
 
 #: scripts/apps/contacts/components/Form/ContactFormContainer.jsx:58
+#: scripts/apps/users/views/edit-form.html:263
 msgid "Please provide a valid twitter account"
 msgstr ""
 
@@ -5668,7 +5764,7 @@ msgstr ""
 msgid "Populate Abstract"
 msgstr ""
 
-#: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:102
+#: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:103
 #: ../superdesk-planning/client/components/Main/ItemEditor/EditorHeader.jsx:237
 #: ../superdesk-planning/client/constants/events.js:90
 #: scripts/apps/authoring/comments/views/comments-widget.html:27
@@ -5679,8 +5775,8 @@ msgstr ""
 msgid "Post Code"
 msgstr ""
 
-#: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:101
-#: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:57
+#: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:102
+#: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:58
 msgid "Post Event"
 msgstr ""
 
@@ -5699,24 +5795,16 @@ msgstr ""
 msgid "Posted"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Planning/PlanningHistory.jsx:69
-msgid "Posted by"
-msgstr ""
-
-#: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:88
+#: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:89
 msgid "Postpone"
 msgstr ""
 
-#: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:87
+#: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:88
 msgid "Postpone an event"
 msgstr ""
 
 #: ../superdesk-planning/client/utils/index.js:443
 msgid "Postponed"
-msgstr ""
-
-#: ../superdesk-planning/client/components/Planning/PlanningHistory.jsx:65
-msgid "Postponed by"
 msgstr ""
 
 #: scripts/apps/users/views/edit.html:20
@@ -5744,7 +5832,7 @@ msgstr ""
 msgid "Preserve Desk"
 msgstr ""
 
-#: scripts/apps/authoring/views/article-edit.html:577
+#: scripts/apps/authoring/views/article-edit.html:573
 #: scripts/apps/authoring/views/authoring-topbar.html:117
 #: scripts/apps/authoring/views/authoring.html:23
 #: scripts/apps/search/components/WidgetItem.jsx:83
@@ -6140,7 +6228,7 @@ msgstr ""
 msgid "Refreshing..."
 msgstr ""
 
-#: scripts/core/editor3/components/suggestions/SuggestionPopup.jsx:141
+#: scripts/core/editor3/components/suggestions/SuggestionPopup.jsx:149
 msgid "Reject"
 msgstr ""
 
@@ -6162,12 +6250,12 @@ msgstr ""
 msgid "Related Items"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Events/EventEditor/index.jsx:370
-#: ../superdesk-planning/client/components/Events/EventPreviewContent.jsx:269
+#: ../superdesk-planning/client/components/Events/EventEditor/index.jsx:373
+#: ../superdesk-planning/client/components/Events/EventPreviewContent.jsx:280
 msgid "Related Planning Items"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Events/EventMenuPanel/index.jsx:46
+#: ../superdesk-planning/client/components/Events/EventMenuPanel/index.jsx:50
 msgid "Related Plannings"
 msgstr ""
 
@@ -6227,7 +6315,7 @@ msgstr ""
 msgid "Remove configuration"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Coverages/CoverageEditor/index.jsx:87
+#: ../superdesk-planning/client/components/Coverages/CoverageEditor/index.jsx:86
 msgid "Remove coverage"
 msgstr ""
 
@@ -6335,12 +6423,12 @@ msgstr ""
 msgid "Repeats"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Events/EventHistory.jsx:148
+#: ../superdesk-planning/client/components/Events/EventHistory.jsx:80
 msgid "Repetitions updated"
 msgstr ""
 
 #: scripts/apps/authoring/editor/views/find-replace.html:30
-#: scripts/core/editor3/components/suggestions/SuggestionPopup.jsx:82
+#: scripts/core/editor3/components/suggestions/SuggestionPopup.jsx:90
 msgid "Replace"
 msgstr ""
 
@@ -6348,7 +6436,7 @@ msgstr ""
 msgid "Replace All"
 msgstr ""
 
-#: scripts/core/editor3/components/suggestions/SuggestionPopup.jsx:97
+#: scripts/core/editor3/components/suggestions/SuggestionPopup.jsx:105
 msgid "Replace link"
 msgstr ""
 
@@ -6390,12 +6478,12 @@ msgstr ""
 msgid "Required {{field}} in item {{item}}"
 msgstr ""
 
-#: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:83
+#: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:84
 #: ../superdesk-planning/client/constants/events.js:67
 msgid "Reschedule"
 msgstr ""
 
-#: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:82
+#: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:83
 msgid "Reschedule an event"
 msgstr ""
 
@@ -6405,10 +6493,6 @@ msgstr ""
 
 #: ../superdesk-planning/client/utils/index.js:394
 msgid "Rescheduled From"
-msgstr ""
-
-#: ../superdesk-planning/client/components/Planning/PlanningHistory.jsx:64
-msgid "Rescheduled by"
 msgstr ""
 
 #: scripts/apps/archive/views/resend-configuration.html:25
@@ -6468,6 +6552,10 @@ msgstr ""
 
 #: scripts/apps/products/views/product-test.html:15
 msgid "Result Type"
+msgstr ""
+
+#: ../superdesk-planning/client/components/GeoLookupInput/AddGeoLookupResultsPopUp.jsx:95
+msgid "Results (Search again)"
 msgstr ""
 
 #: ../superdesk-planning/client/constants/assignments.js:61
@@ -6587,13 +6675,19 @@ msgstr ""
 msgid "SUBJECT"
 msgstr ""
 
+#: ../superdesk-planning/client/components/UI/Form/DateInput/DayPicker.jsx:102
+msgid "Sat"
+msgstr ""
+
 #: ../superdesk-planning/client/components/Events/RepeatEventSummary/index.jsx:35
 #: scripts/core/datetime/datetime.js:234
 msgid "Saturday"
 msgstr ""
 
+#: ../superdesk-planning/client/components/Agendas/EditAgenda.jsx:107
+#: ../superdesk-planning/client/components/Agendas/EditAgenda.jsx:69
 #: ../superdesk-planning/client/components/IgnoreCancelSaveModal.jsx:123
-#: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:47
+#: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:48
 #: ../superdesk-planning/client/components/Main/ItemEditor/EditorHeader.jsx:256
 #: ../superdesk-planning/client/components/ModalWithForm/index.jsx:111
 #: scripts/apps/archive/views/upload.html:109
@@ -6643,7 +6737,7 @@ msgstr ""
 msgid "Save & Post"
 msgstr ""
 
-#: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:55
+#: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:56
 msgid "Save & Post Event"
 msgstr ""
 
@@ -6668,7 +6762,7 @@ msgstr ""
 msgid "Save Changes?"
 msgstr ""
 
-#: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:58
+#: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:59
 msgid "Save Event"
 msgstr ""
 
@@ -6689,19 +6783,19 @@ msgstr ""
 msgid "Save as template"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/events/ui.js:190
+#: ../superdesk-planning/client/actions/events/ui.js:189
 msgid "Save changes before cancelling the Event?"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/events/ui.js:203
+#: ../superdesk-planning/client/actions/events/ui.js:202
 msgid "Save changes before postponing the Event?"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/events/ui.js:215
+#: ../superdesk-planning/client/actions/events/ui.js:214
 msgid "Save changes before rescheduling the Event?"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/events/ui.js:178
+#: ../superdesk-planning/client/actions/events/ui.js:177
 msgid "Save changes before updating the Event's time?"
 msgstr ""
 
@@ -6716,7 +6810,7 @@ msgstr ""
 msgid "Save current item"
 msgstr ""
 
-#: scripts/apps/users/views/edit-form.html:275
+#: scripts/apps/users/views/edit-form.html:319
 msgid "Save password"
 msgstr ""
 
@@ -6740,7 +6834,7 @@ msgstr ""
 #: scripts/apps/desks/directives/DeskeditBasic.js:41
 #: scripts/apps/desks/directives/DeskeditPeople.js:39
 #: scripts/apps/desks/directives/DeskeditStages.js:110
-#: scripts/apps/users/directives/UserEditDirective.js:118
+#: scripts/apps/users/directives/UserEditDirective.js:119
 #: scripts/core/notify/notify.js:51
 msgid "Saving..."
 msgstr ""
@@ -6799,6 +6893,8 @@ msgid "Scheme rules"
 msgstr ""
 
 #: ../superdesk-planning/client/components/Main/SearchPanel.jsx:115
+#: ../superdesk-planning/client/components/UI/SearchBar/index.jsx:84
+#: ../superdesk-planning/client/components/UI/SearchField/index.jsx:59
 #: scripts/apps/contacts/views/search-panel.html:102
 #: scripts/apps/contacts/views/search-panel.html:4
 #: scripts/apps/content-api/views/search-panel.html:23
@@ -6823,6 +6919,10 @@ msgstr ""
 #: scripts/core/list/views/searchbar.html:4
 #: scripts/core/views/sdSearchList.html:43
 msgid "Search"
+msgstr ""
+
+#: ../superdesk-planning/client/components/GeoLookupInput/AddGeoLookupResultsPopUp.jsx:95
+msgid "Search External"
 msgstr ""
 
 #: scripts/apps/search-providers/directive.js:74
@@ -6902,8 +7002,8 @@ msgstr ""
 msgid "Select Workspace"
 msgstr ""
 
-#: ../superdesk-planning/client/components/MultiSelectActions.jsx:205
-msgid "Select all /"
+#: ../superdesk-planning/client/components/MultiSelectActions.jsx:206
+msgid "Select all"
 msgstr ""
 
 #: scripts/apps/users/views/user-preferences.html:76
@@ -7077,7 +7177,7 @@ msgstr ""
 msgid "Short"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Events/EventItemWithPlanning.jsx:28
+#: ../superdesk-planning/client/components/Events/EventItemWithPlanning.jsx:29
 msgid "Show"
 msgstr ""
 
@@ -7162,10 +7262,10 @@ msgstr ""
 #: ../superdesk-planning/client/components/AdvancedSearch/index.jsx:141
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/AssignmentPreview.jsx:39
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/PlanningPreview.jsx:30
-#: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageForm.jsx:150
+#: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageForm.jsx:149
 #: ../superdesk-planning/client/components/Coverages/CoveragePreview.jsx:101
-#: ../superdesk-planning/client/components/Events/EventEditor/index.jsx:190
-#: ../superdesk-planning/client/components/Events/EventPreviewContent.jsx:148
+#: ../superdesk-planning/client/components/Events/EventEditor/index.jsx:185
+#: ../superdesk-planning/client/components/Events/EventPreviewContent.jsx:150
 #: ../superdesk-planning/client/components/IgnoreCancelSaveModal.jsx:43
 #: ../superdesk-planning/client/components/IgnoreCancelSaveModal.jsx:84
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/cancelEventForm.jsx:78
@@ -7180,8 +7280,8 @@ msgstr ""
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateEventRepetitions.jsx:85
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.jsx:65
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateTimeForm.jsx:125
-#: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:373
-#: ../superdesk-planning/client/components/Planning/PlanningPreviewContent.jsx:79
+#: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:364
+#: ../superdesk-planning/client/components/Planning/PlanningPreviewContent.jsx:80
 #: scripts/apps/archive/views/metadata-view.html:5
 #: scripts/apps/authoring/views/full-preview.html:25
 #: scripts/apps/content-api/services/ContentAPISearchService.js:26
@@ -7306,8 +7406,8 @@ msgstr ""
 msgid "Spell Checker"
 msgstr ""
 
-#: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:108
-#: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:64
+#: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:114
+#: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:65
 #: ../superdesk-planning/client/components/MultiSelectActions.jsx:103
 #: ../superdesk-planning/client/components/MultiSelectActions.jsx:157
 #: ../superdesk-planning/client/constants/events.js:30
@@ -7333,7 +7433,7 @@ msgstr ""
 msgid "Spike all recurring events or just this one?"
 msgstr ""
 
-#: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:63
+#: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:64
 msgid "Spike an event"
 msgstr ""
 
@@ -7345,15 +7445,16 @@ msgstr ""
 msgid "Spike item(s)"
 msgstr ""
 
-#: ../superdesk-planning/client/constants/planning.js:26
+#: ../superdesk-planning/client/constants/planning.js:25
 msgid "Spike planning"
 msgstr ""
 
-#: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:106
+#: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:112
 #: ../superdesk-planning/client/components/Tooltips.jsx:5
 msgid "Spike planning item"
 msgstr ""
 
+#: ../superdesk-planning/client/components/Planning/PlanningHistory.jsx:31
 #: ../superdesk-planning/client/utils/index.js:410
 #: scripts/apps/dashboard/workspace-tasks/views/desk-stages.html:17
 msgid "Spiked"
@@ -7367,7 +7468,6 @@ msgstr ""
 msgid "Spiked Items"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Planning/PlanningHistory.jsx:53
 #: scripts/apps/authoring/versioning/history/views/history.html:63
 msgid "Spiked by"
 msgstr ""
@@ -7490,10 +7590,10 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/AdvancedSearch/index.jsx:176
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/AssignmentPreview.jsx:55
-#: ../superdesk-planning/client/components/Events/EventEditor/index.jsx:291
-#: ../superdesk-planning/client/components/Events/EventPreviewContent.jsx:219
-#: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:468
-#: ../superdesk-planning/client/components/Planning/PlanningPreviewContent.jsx:127
+#: ../superdesk-planning/client/components/Events/EventEditor/index.jsx:286
+#: ../superdesk-planning/client/components/Events/EventPreviewContent.jsx:222
+#: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:459
+#: ../superdesk-planning/client/components/Planning/PlanningPreviewContent.jsx:128
 #: scripts/apps/authoring/views/full-preview.html:55
 #: scripts/apps/workspace/content/constants.js:74
 msgid "Subject"
@@ -7551,6 +7651,10 @@ msgstr ""
 
 #: scripts/apps/ingest/views/settings/ingest-routing-general.html:7
 msgid "Summary"
+msgstr ""
+
+#: ../superdesk-planning/client/components/UI/Form/DateInput/DayPicker.jsx:96
+msgid "Sun"
 msgstr ""
 
 #: ../superdesk-planning/client/components/Events/RepeatEventSummary/index.jsx:36
@@ -7746,7 +7850,7 @@ msgstr ""
 msgid "Text"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/assignments/notifications.js:253
+#: ../superdesk-planning/client/actions/assignments/notifications.js:256
 msgid "The Assignment you were viewing was removed."
 msgstr ""
 
@@ -7766,11 +7870,11 @@ msgstr ""
 msgid "The Planning Item(s) has been unspiked."
 msgstr ""
 
-#: ../superdesk-planning/client/actions/planning/notifications.js:180
+#: ../superdesk-planning/client/actions/planning/notifications.js:185
 msgid "The Planning item was spiked"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/planning/notifications.js:207
+#: ../superdesk-planning/client/actions/planning/notifications.js:212
 msgid "The Planning item was unspiked"
 msgstr ""
 
@@ -7783,7 +7887,7 @@ msgid "The activation token is not valid.<br>"
 msgstr ""
 
 #: scripts/core/editor3/components/annotations/AnnotationInput.jsx:118
-#: scripts/core/editor3/components/annotations/AnnotationPopup.jsx:26
+#: scripts/core/editor3/components/annotations/AnnotationPopup.jsx:34
 msgid "The annotation will be deleted. Are you sure?"
 msgstr ""
 
@@ -7807,11 +7911,11 @@ msgstr ""
 msgid "The event has been killed."
 msgstr ""
 
-#: ../superdesk-planning/client/actions/events/ui.js:56
+#: ../superdesk-planning/client/actions/events/ui.js:55
 msgid "The event(s) have been spiked"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/events/ui.js:73
+#: ../superdesk-planning/client/actions/events/ui.js:72
 msgid "The event(s) have been unspiked"
 msgstr ""
 
@@ -7856,15 +7960,15 @@ msgstr ""
 msgid "The vocabulary is used in the following content types:"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/main.js:265
+#: ../superdesk-planning/client/actions/main.js:306
 msgid "The {{ itemType }} has been posted"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/main.js:176
+#: ../superdesk-planning/client/actions/main.js:217
 msgid "The {{ itemType }} has been saved"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/main.js:220
+#: ../superdesk-planning/client/actions/main.js:261
 msgid "The {{ itemType }} has been unposted"
 msgstr ""
 
@@ -7881,11 +7985,11 @@ msgstr ""
 msgid "There are items locked or not published. Do you want to continue?"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Agendas/AgendaList.jsx:24
-msgid "There are no"
+#: ../superdesk-planning/client/components/ItemActionsMenu/ActionsMenuPopup.jsx:76
+msgid "There are no actions available."
 msgstr ""
 
-#: ../superdesk-planning/client/components/Assignments/AssignmentGroupList.jsx:140
+#: ../superdesk-planning/client/components/Assignments/AssignmentGroupList.jsx:141
 msgid "There are no assignments {{ groupName }}"
 msgstr ""
 
@@ -7899,6 +8003,10 @@ msgstr ""
 
 #: scripts/apps/authoring/metadata/views/prefered-cv-items-config.html:17
 msgid "There are no vocabularies configured."
+msgstr ""
+
+#: ../superdesk-planning/client/components/Agendas/AgendaList.jsx:24
+msgid "There are no {{ status }} agendas"
 msgstr ""
 
 #: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:83
@@ -7980,7 +8088,7 @@ msgstr ""
 msgid "There was an error archiving this item"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/planning/api.js:970
+#: ../superdesk-planning/client/actions/planning/api.js:963
 msgid "There was an error when exporting."
 msgstr ""
 
@@ -7988,7 +8096,7 @@ msgstr ""
 msgid "There was an error when saving the contact."
 msgstr ""
 
-#: scripts/apps/users/directives/UserEditDirective.js:142
+#: scripts/apps/users/directives/UserEditDirective.js:143
 msgid "There was an error when saving the user account."
 msgstr ""
 
@@ -8057,7 +8165,7 @@ msgstr ""
 #: ../superdesk-planning/client/validators/events.js:15
 #: ../superdesk-planning/client/validators/events.js:16
 #: ../superdesk-planning/client/validators/events.js:9
-#: ../superdesk-planning/client/validators/profile.js:27
+#: ../superdesk-planning/client/validators/profile.js:49
 #: scripts/core/ui/ui.js:1042
 msgid "This field is required"
 msgstr ""
@@ -8113,11 +8221,16 @@ msgstr ""
 msgid "This will mark as rescheduled the following planning items"
 msgstr ""
 
+#: ../superdesk-planning/client/components/UI/Form/DateInput/DayPicker.jsx:100
+msgid "Thu"
+msgstr ""
+
 #: ../superdesk-planning/client/components/Events/RepeatEventSummary/index.jsx:33
 #: scripts/core/datetime/datetime.js:232
 msgid "Thursday"
 msgstr ""
 
+#: ../superdesk-planning/client/components/UI/Form/TimeInput/index.jsx:125
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:79
 msgid "Time"
 msgstr ""
@@ -8173,6 +8286,7 @@ msgstr ""
 msgid "To Desk"
 msgstr ""
 
+#: ../superdesk-planning/client/constants/assignments.js:68
 #: scripts/apps/dashboard/workspace-tasks/tasks.js:6
 msgid "To Do"
 msgstr ""
@@ -8251,19 +8365,19 @@ msgstr ""
 msgid "Tomorrow"
 msgstr ""
 
-#: ../superdesk-planning/client/validators/profile.js:23
+#: ../superdesk-planning/client/validators/profile.js:45
 msgid "Too long"
 msgstr ""
 
-#: ../superdesk-planning/client/validators/profile.js:20
+#: ../superdesk-planning/client/validators/profile.js:42
 msgid "Too many"
 msgstr ""
 
-#: ../superdesk-planning/client/validators/profile.js:21
+#: ../superdesk-planning/client/validators/profile.js:43
 msgid "Too many {{ name }}"
 msgstr ""
 
-#: ../superdesk-planning/client/validators/profile.js:34
+#: ../superdesk-planning/client/validators/profile.js:56
 msgid "Too short"
 msgstr ""
 
@@ -8310,6 +8424,10 @@ msgstr ""
 msgid "Trying to reconnect...<br>Please wait."
 msgstr ""
 
+#: ../superdesk-planning/client/components/UI/Form/DateInput/DayPicker.jsx:98
+msgid "Tue"
+msgstr ""
+
 #: ../superdesk-planning/client/components/Events/RepeatEventSummary/index.jsx:31
 #: scripts/core/datetime/datetime.js:230
 msgid "Tuesday"
@@ -8317,6 +8435,10 @@ msgstr ""
 
 #: scripts/core/menu/views/menu.html:17
 msgid "Turn off feature preview"
+msgstr ""
+
+#: scripts/apps/users/views/edit-form.html:252
+msgid "Twitter"
 msgstr ""
 
 #: ../superdesk-planning/client/components/Coverages/CoveragePreview.jsx:109
@@ -8329,6 +8451,7 @@ msgstr ""
 msgid "Type your comment..."
 msgstr ""
 
+#: ../superdesk-planning/client/components/Assignments/AssignmentItem/index.jsx:120
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/AssignmentPreviewHeader.jsx:123
 msgid "Type: {{type}}"
 msgstr ""
@@ -8439,7 +8562,7 @@ msgstr ""
 msgid "Unordered list"
 msgstr ""
 
-#: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:102
+#: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:103
 #: ../superdesk-planning/client/components/Main/ItemEditor/EditorHeader.jsx:247
 msgid "Unpost"
 msgstr ""
@@ -8452,8 +8575,8 @@ msgstr ""
 msgid "Unresolved"
 msgstr ""
 
-#: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:114
-#: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:69
+#: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:120
+#: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:70
 #: ../superdesk-planning/client/components/MultiSelectActions.jsx:113
 #: ../superdesk-planning/client/components/MultiSelectActions.jsx:166
 #: ../superdesk-planning/client/constants/events.js:35
@@ -8470,7 +8593,7 @@ msgstr ""
 msgid "Unspike all recurring events or just this one?"
 msgstr ""
 
-#: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:68
+#: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:69
 msgid "Unspike an event"
 msgstr ""
 
@@ -8478,16 +8601,19 @@ msgstr ""
 msgid "Unspike event"
 msgstr ""
 
-#: ../superdesk-planning/client/constants/planning.js:31
+#: ../superdesk-planning/client/constants/planning.js:30
 msgid "Unspike planning"
 msgstr ""
 
-#: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:112
+#: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:118
 #: ../superdesk-planning/client/components/Tooltips.jsx:6
 msgid "Unspike planning item"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Planning/PlanningHistory.jsx:54
+#: ../superdesk-planning/client/components/Planning/PlanningHistory.jsx:35
+msgid "Unspiked"
+msgstr ""
+
 #: scripts/apps/authoring/versioning/history/views/history.html:74
 msgid "Unspiked by"
 msgstr ""
@@ -8520,11 +8646,11 @@ msgstr ""
 msgid "Update Cycle:"
 msgstr ""
 
-#: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:96
+#: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:97
 msgid "Update Event Repetitions"
 msgstr ""
 
-#: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:97
+#: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:98
 #: ../superdesk-planning/client/constants/events.js:85
 msgid "Update Repetitions"
 msgstr ""
@@ -8539,7 +8665,7 @@ msgstr ""
 msgid "Update every"
 msgstr ""
 
-#: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:78
+#: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:79
 #: ../superdesk-planning/client/constants/events.js:61
 msgid "Update time"
 msgstr ""
@@ -8548,8 +8674,9 @@ msgstr ""
 msgid "Update {{ seq }}"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Events/EventHistory.jsx:55
-#: ../superdesk-planning/client/components/Events/EventHistory.jsx:77
+#: ../superdesk-planning/client/components/AuditInformation/index.jsx:47
+#: ../superdesk-planning/client/utils/history.js:116
+#: ../superdesk-planning/client/utils/history.js:94
 #: scripts/apps/archive/views/item-preview.html:12
 #: scripts/apps/archive/views/metadata-view.html:192
 #: scripts/apps/archive/views/preview.html:42
@@ -8567,11 +8694,10 @@ msgstr ""
 msgid "Updated"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Events/EventHistory.jsx:200
+#: ../superdesk-planning/client/components/Events/EventHistory.jsx:117
 msgid "Updated Fields:"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Planning/PlanningHistory.jsx:52
 #: scripts/apps/authoring/versioning/history/views/history.html:18
 msgid "Updated by"
 msgstr ""
@@ -8598,7 +8724,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/AdvancedSearch/index.jsx:195
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/PlanningPreview.jsx:55
-#: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:491
+#: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:475
 #: ../superdesk-planning/client/services/PlanningStoreService.js:138
 #: scripts/apps/archive/views/metadata-view.html:9
 #: scripts/apps/authoring/views/authoring-header.html:233
@@ -8700,7 +8826,7 @@ msgstr ""
 msgid "User was not found, sorry."
 msgstr ""
 
-#: scripts/apps/users/directives/UserEditDirective.js:140
+#: scripts/apps/users/directives/UserEditDirective.js:141
 msgid "User was not found. The account might have been deleted."
 msgstr ""
 
@@ -8765,7 +8891,7 @@ msgstr ""
 msgid "View an item"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Planning/PlanningHistory.jsx:95
+#: ../superdesk-planning/client/components/Planning/PlanningHistory.jsx:108
 msgid "View duplicate planning item"
 msgstr ""
 
@@ -8777,7 +8903,7 @@ msgstr ""
 msgid "View name"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Planning/PlanningHistory.jsx:105
+#: ../superdesk-planning/client/components/Planning/PlanningHistory.jsx:118
 msgid "View original planning item"
 msgstr ""
 
@@ -8826,6 +8952,10 @@ msgstr ""
 msgid "Weak"
 msgstr ""
 
+#: ../superdesk-planning/client/components/UI/Form/DateInput/DayPicker.jsx:99
+msgid "Wed"
+msgstr ""
+
 #: ../superdesk-planning/client/components/Events/RepeatEventSummary/index.jsx:32
 #: scripts/core/datetime/datetime.js:231
 msgid "Wednesday"
@@ -8862,6 +8992,10 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.jsx:94
 msgid "Work started"
+msgstr ""
+
+#: ../superdesk-planning/client/components/Coverages/CoverageHistory.jsx:98
+msgid "Work started on coverage"
 msgstr ""
 
 #: ../superdesk-planning/client/components/AdvancedSearch/index.jsx:158
@@ -9012,7 +9146,7 @@ msgstr ""
 msgid "admin"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Agendas/AgendaList.jsx:24
+#: ../superdesk-planning/client/components/Agendas/AgendaList.jsx:28
 msgid "agendas"
 msgstr ""
 
@@ -9032,6 +9166,10 @@ msgstr ""
 msgid "and"
 msgstr ""
 
+#: ../superdesk-planning/client/components/Coverages/CoverageHistory.jsx:42
+msgid "and '{{ user }}'"
+msgstr ""
+
 #: scripts/core/lang/missing-translations-strings.js:8
 msgid "archive"
 msgstr ""
@@ -9049,7 +9187,7 @@ msgstr ""
 msgid "at"
 msgstr ""
 
-#: ../superdesk-planning/client/constants/planning.js:90
+#: ../superdesk-planning/client/constants/planning.js:89
 #: scripts/apps/archive/controllers/UploadController.js:101
 #: scripts/core/lang/missing-translations-strings.js:4
 msgid "audio"
@@ -9068,14 +9206,16 @@ msgstr ""
 msgid "bold"
 msgstr ""
 
-#: ../superdesk-planning/client/components/UI/Form/FileInput.jsx:136
+#: ../superdesk-planning/client/components/UI/Form/FileInput.jsx:138
 #: scripts/core/ui/components/Form/FileInput.jsx:127
 msgid "browse"
 msgstr ""
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.jsx:43
-#: ../superdesk-planning/client/components/Events/EventHistory.jsx:126
-#: ../superdesk-planning/client/components/Events/EventHistory.jsx:171
+#: ../superdesk-planning/client/components/AuditInformation/index.jsx:38
+#: ../superdesk-planning/client/components/AuditInformation/index.jsx:47
+#: ../superdesk-planning/client/components/Events/EventHistory.jsx:57
+#: ../superdesk-planning/client/utils/history.js:64
 #: scripts/apps/archive/views/preview.html:7
 #: scripts/apps/authoring/suggest/SuggestView.html:23
 #: scripts/apps/authoring/suggest/SuggestView.html:71
@@ -9121,7 +9261,7 @@ msgstr ""
 msgid "composite"
 msgstr ""
 
-#: scripts/apps/users/views/edit-form.html:265
+#: scripts/apps/users/views/edit-form.html:309
 msgid "confirm"
 msgstr ""
 
@@ -9154,11 +9294,11 @@ msgstr ""
 msgid "create"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/agenda.js:204
+#: ../superdesk-planning/client/actions/agenda.js:202
 msgid "created  planning item."
 msgstr ""
 
-#: ../superdesk-planning/client/actions/agenda.js:195
+#: ../superdesk-planning/client/actions/agenda.js:193
 msgid "created / planning item(s)"
 msgstr ""
 
@@ -9175,7 +9315,7 @@ msgstr ""
 msgid "created user {{user}}"
 msgstr ""
 
-#: scripts/apps/users/views/edit-form.html:254
+#: scripts/apps/users/views/edit-form.html:298
 msgid "current"
 msgstr ""
 
@@ -9244,6 +9384,10 @@ msgstr ""
 msgid "e.g. @cityofsydney"
 msgstr ""
 
+#: scripts/apps/users/views/edit-form.html:260
+msgid "e.g. @superdeskman"
+msgstr ""
+
 #: scripts/apps/contacts/components/Form/ProfileDetail.jsx:360
 msgid "e.g. Rhodes, CBD"
 msgstr ""
@@ -9264,6 +9408,14 @@ msgstr ""
 msgid "e.g. professor, commissioner"
 msgstr ""
 
+#: scripts/apps/users/views/edit-form.html:233
+msgid "e.g. superdeskman from https://www.facebook.com/superdeskman"
+msgstr ""
+
+#: scripts/apps/users/views/edit-form.html:246
+msgid "e.g. superdeskman from https://www.instagram.com/superdeskman"
+msgstr ""
+
 #: scripts/apps/contacts/components/Form/ProfileDetail.jsx:236
 #: scripts/apps/users/views/edit-form.html:114
 msgid "email"
@@ -9277,6 +9429,14 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.js:5
 msgid "error"
+msgstr ""
+
+#: ../superdesk-planning/client/components/MultiSelectActions.jsx:40
+msgid "event"
+msgstr ""
+
+#: ../superdesk-planning/client/components/MultiSelectActions.jsx:40
+msgid "events"
 msgstr ""
 
 #: scripts/apps/publish/views/ftp-config.html:29
@@ -9350,6 +9510,10 @@ msgstr ""
 msgid "for \"{{settings.desk.name}}\" Desk"
 msgstr ""
 
+#: ../superdesk-planning/client/components/Coverages/CoverageHistory.jsx:39
+msgid "for '{{ desk }}'"
+msgstr ""
+
 #: scripts/apps/authoring/versioning/history/views/history.html:97
 msgid "for desk"
 msgstr ""
@@ -9362,6 +9526,10 @@ msgstr ""
 #: scripts/apps/authoring/versioning/history/views/history.html:47
 #: scripts/apps/authoring/versioning/history/views/history.html:69
 msgid "from"
+msgstr ""
+
+#: ../superdesk-planning/client/components/Coverages/CoverageHistory.jsx:25
+msgid "from content"
 msgstr ""
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.jsx:90
@@ -9482,16 +9650,8 @@ msgstr ""
 msgid "italic"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Events/EventItemWithPlanning.jsx:27
-msgid "item"
-msgstr ""
-
 #: scripts/apps/archive/related-item-widget/relatedItem.js:155
 msgid "item metadata associated."
-msgstr ""
-
-#: ../superdesk-planning/client/components/Events/EventItemWithPlanning.jsx:27
-msgid "items"
 msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.js:7
@@ -9519,7 +9679,7 @@ msgstr ""
 msgid "linked to"
 msgstr ""
 
-#: ../superdesk-planning/client/constants/planning.js:89
+#: ../superdesk-planning/client/constants/planning.js:88
 msgid "live_video"
 msgstr ""
 
@@ -9592,7 +9752,7 @@ msgstr ""
 msgid "months"
 msgstr ""
 
-#: scripts/apps/users/views/edit-form.html:260
+#: scripts/apps/users/views/edit-form.html:304
 msgid "new"
 msgstr ""
 
@@ -9689,13 +9849,17 @@ msgstr ""
 msgid "phone number"
 msgstr ""
 
-#: ../superdesk-planning/client/constants/planning.js:91
+#: ../superdesk-planning/client/constants/planning.js:90
 #: scripts/core/lang/missing-translations-strings.js:4
 msgid "picture"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Events/EventItemWithPlanning.jsx:29
-msgid "planning"
+#: ../superdesk-planning/client/components/MultiSelectActions.jsx:44
+msgid "planning item"
+msgstr ""
+
+#: ../superdesk-planning/client/components/MultiSelectActions.jsx:44
+msgid "planning items"
 msgstr ""
 
 #: scripts/apps/users/views/edit-form.html:123
@@ -9712,6 +9876,10 @@ msgstr ""
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.jsx:370
 msgid "postcode"
+msgstr ""
+
+#: ../superdesk-planning/client/utils/history.js:111
+msgid "posted"
 msgstr ""
 
 #: scripts/core/editor3/highlightsConfig.js:149
@@ -9758,6 +9926,10 @@ msgstr ""
 #: scripts/core/editor2/editor.js:1081
 #: scripts/core/editor3/highlightsConfig.js:146
 msgid "quote"
+msgstr ""
+
+#: ../superdesk-planning/client/utils/history.js:104
+msgid "re-posted"
 msgstr ""
 
 #: scripts/core/editor2/editor.js:1087
@@ -9923,7 +10095,7 @@ msgstr ""
 msgid "switch to list view"
 msgstr ""
 
-#: ../superdesk-planning/client/constants/planning.js:87
+#: ../superdesk-planning/client/constants/planning.js:86
 #: scripts/core/lang/missing-translations-strings.js:4
 msgid "text"
 msgstr ""
@@ -9935,6 +10107,10 @@ msgstr ""
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.jsx:81
 #: scripts/apps/authoring/versioning/history/views/history.html:83
 msgid "to"
+msgstr ""
+
+#: ../superdesk-planning/client/components/Coverages/CoverageHistory.jsx:38
+msgid "to '{{ desk }}'"
 msgstr ""
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.jsx:73
@@ -9957,6 +10133,10 @@ msgstr ""
 msgid "unpost"
 msgstr ""
 
+#: ../superdesk-planning/client/utils/history.js:99
+msgid "unposted"
+msgstr ""
+
 #: ../superdesk-planning/client/components/Events/RepeatEventSummary/index.jsx:120
 msgid "until"
 msgstr ""
@@ -9965,6 +10145,7 @@ msgstr ""
 msgid "update"
 msgstr ""
 
+#: ../superdesk-planning/client/components/Agendas/AgendaItem.jsx:15
 #: scripts/apps/search/components/MediaInfo.jsx:27
 msgid "updated"
 msgstr ""
@@ -9989,7 +10170,7 @@ msgstr ""
 msgid "usage"
 msgstr ""
 
-#: scripts/apps/users/directives/UserEditDirective.js:124
+#: scripts/apps/users/directives/UserEditDirective.js:125
 msgid "user saved."
 msgstr ""
 
@@ -10037,7 +10218,7 @@ msgstr ""
 msgid "version"
 msgstr ""
 
-#: ../superdesk-planning/client/constants/planning.js:88
+#: ../superdesk-planning/client/constants/planning.js:87
 #: scripts/apps/archive/controllers/UploadController.js:96
 #: scripts/core/lang/missing-translations-strings.js:4
 msgid "video"
@@ -10067,8 +10248,8 @@ msgstr ""
 msgid "weeks"
 msgstr ""
 
-#: scripts/core/editor3/components/suggestions/SuggestionPopup.jsx:101
-#: scripts/core/editor3/components/suggestions/SuggestionPopup.jsx:86
+#: scripts/core/editor3/components/suggestions/SuggestionPopup.jsx:109
+#: scripts/core/editor3/components/suggestions/SuggestionPopup.jsx:94
 msgid "with"
 msgstr ""
 
@@ -10096,8 +10277,12 @@ msgstr ""
 msgid "{{ ::group._id }}"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/planning/api.js:929
+#: ../superdesk-planning/client/actions/planning/api.js:922
 msgid "{{ count }} items were not included in the export."
+msgstr ""
+
+#: ../superdesk-planning/client/components/MultiSelectActions.jsx:47
+msgid "{{ count }} {{ type }} selected"
 msgstr ""
 
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:337
@@ -10116,8 +10301,8 @@ msgstr ""
 msgid "{{ field }} time is required!"
 msgstr ""
 
-#: scripts/apps/authoring/views/article-edit.html:569
-#: scripts/apps/authoring/views/article-edit.html:610
+#: scripts/apps/authoring/views/article-edit.html:565
+#: scripts/apps/authoring/views/article-edit.html:606
 msgid "{{ field.display_name }}"
 msgstr ""
 
@@ -10125,7 +10310,7 @@ msgstr ""
 msgid "{{ field.label | translate }}"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/main.js:167
+#: ../superdesk-planning/client/actions/main.js:198
 msgid "{{ itemType }} created"
 msgstr ""
 
@@ -10146,15 +10331,15 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: ../superdesk-planning/client/validators/assignments.jsx:7
-#: ../superdesk-planning/client/validators/profile.js:28
+#: ../superdesk-planning/client/validators/profile.js:50
 msgid "{{ name }} is a required field"
 msgstr ""
 
-#: ../superdesk-planning/client/validators/profile.js:24
+#: ../superdesk-planning/client/validators/profile.js:46
 msgid "{{ name }} is too long"
 msgstr ""
 
-#: ../superdesk-planning/client/validators/profile.js:35
+#: ../superdesk-planning/client/validators/profile.js:57
 msgid "{{ name }} is too short"
 msgstr ""
 
