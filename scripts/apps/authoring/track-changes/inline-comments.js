@@ -1,10 +1,19 @@
 import {
+    META_FIELD_NAME,
+    fieldsMetaKeys,
+    getFieldId,
+    getFieldMetadata,
+} from 'core/editor3/helpers/fieldsMeta';
+import {
     editor3DataKeys,
     getCustomDataFromEditorRawState,
 } from 'core/editor3/helpers/editor3CustomData';
-
+import {
+    getRangeAndTextForStyleInRawState,
+} from 'core/editor3/helpers/highlights';
+import {highlightsConfig} from 'core/editor3/highlightsConfig';
+import {getCustomMetadata} from 'core/editor3/helpers/editor3CustomData';
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
-import {fieldsMetaKeys, META_FIELD_NAME, getFieldMetadata, getFieldId} from 'core/editor3/helpers/fieldsMeta';
 
 function getAllUserIdsFromComments(comments) {
     const users = [];
@@ -34,24 +43,14 @@ function convertUsersArrayToObject(users) {
     return usersObj;
 }
 
-function getCommentsFromField(getLabelForFieldId, resolved = true) {
-    if (resolved) {
-        return (obj) => ({
-            fieldName: getLabelForFieldId(getFieldId(obj.contentKey)),
-            comments: getCustomDataFromEditorRawState(
-                obj[fieldsMetaKeys.draftjsState],
-                editor3DataKeys.RESOLVED_COMMENTS_HISTORY
-            ) || [],
-        });
-    } else {
-        return (obj) => ({
-            fieldName: getLabelForFieldId(getFieldId(obj.contentKey)),
-            comments: Object.values(getCustomDataFromEditorRawState(
-                obj[fieldsMetaKeys.draftjsState],
-                editor3DataKeys.MULTIPLE_HIGHLIGHTS
-            ).highlightsData || {}).filter((h) => h.type === 'COMMENT'),
-        });
-    }
+function getCommentsFromField(getLabelForFieldId) {
+    return (obj) => ({
+        fieldName: getLabelForFieldId(getFieldId(obj.contentKey)),
+        comments: getCustomDataFromEditorRawState(
+            obj[fieldsMetaKeys.draftjsState],
+            editor3DataKeys.RESOLVED_COMMENTS_HISTORY
+        ) || [],
+    });
 }
 
 InlineCommentsCtrl.$inject = ['$scope', 'userList', 'metadata', 'content'];
@@ -74,17 +73,38 @@ function InlineCommentsCtrl($scope, userList, metadata, content) {
             .map(getCommentsFromField(getLabelForFieldId))
             .filter((obj) => obj.comments.length > 0);
 
-        const unresolvedComments = editors
-            .map(getCommentsFromField(getLabelForFieldId, false))
+        const unresolvedComments = Object.keys($scope.item[META_FIELD_NAME]).map((contentKey) => {
+            const rawEditorState = getFieldMetadata(
+                $scope.item,
+                contentKey,
+                fieldsMetaKeys.draftjsState
+            );
+
+            const comments = getCustomMetadata($scope.item, contentKey, highlightsConfig.COMMENT.type)
+                .map((highlight) => {
+                    const highlightId = highlight.styleName;
+                    const highlightWithCommentTextAdded = {
+                        ...highlight.obj,
+                        data: {
+                            ...highlight.obj.data,
+                            commentedText: getRangeAndTextForStyleInRawState(
+                                rawEditorState,
+                                highlightId
+                            ).highlightedText,
+                        },
+                    };
+
+                    return {...highlightWithCommentTextAdded, highlightId: highlightId};
+                });
+
+            return {
+                fieldId: contentKey,
+                fieldName: getLabelForFieldId(getFieldId(contentKey)),
+                comments: comments,
+            };
+        })
             .filter((obj) => obj.comments.length > 0);
 
-        if (unresolvedComments.length === 0 && resolvedComments.length === 0) {
-            $scope.items = {
-                RESOLVED: [],
-                UNRESOLVED: [],
-            };
-            return;
-        }
 
         const allComments = []
             .concat(...resolvedComments.map((obj) => obj.comments))
@@ -115,7 +135,7 @@ angular
                 icon: 'comments',
                 label: gettext('Inline comments'),
                 template:
-                'scripts/apps/authoring/track-changes/views/inline-comments-widget.html',
+          'scripts/apps/authoring/track-changes/views/inline-comments-widget.html',
                 order: 9,
                 side: 'right',
                 display: {

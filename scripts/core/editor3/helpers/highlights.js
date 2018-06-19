@@ -1,5 +1,4 @@
 import {RichUtils, EditorState} from 'draft-js';
-
 import {highlightsConfig} from '../highlightsConfig';
 import {editor3DataKeys, getCustomDataFromEditor, setCustomDataForEditor} from './editor3CustomData';
 import {getDraftCharacterListForSelection} from './getDraftCharacterListForSelection';
@@ -843,6 +842,24 @@ export function getRangeAndTextForStyle(editorState, style, leftOnly = false) {
         selection: newSelection,
         highlightedText: leftOnly ? startText + endText[0] : startText + endText,
     };
+}
+
+export function getRangeAndTextForStyleInRawState(rawEditorState, highlightId) {
+    let highlightedText = '';
+
+    for (const {inlineStyleRanges, text} of rawEditorState.blocks) {
+        for (const {offset, length, style} of inlineStyleRanges) {
+            if (style === highlightId) {
+                const textRange = text.substring(offset, offset + length);
+
+                highlightedText = highlightedText.length > 0
+                    ? highlightedText = `${highlightedText}${paragraphSeparator}${textRange}`
+                    : highlightedText = textRange;
+            }
+        }
+    }
+
+    return {highlightedText};
 }
 
 /**
