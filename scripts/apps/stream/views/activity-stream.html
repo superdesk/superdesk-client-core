@@ -8,18 +8,18 @@
                 </figure>
                 <span ng-if="activity.name != 'user:mention' && activity.name != 'desk:mention'">
                        <div class="activity-content">
-                        <p><b>{{ :: activity.user_name || 'System' }}</b> <span sd-activity-message data-activity="activity"></span></p>
+                        <p><b>{{activity.user_name || 'System' }}</b> <span sd-activity-message data-activity="activity"></span></p>
                     </div>
                     <div class="activity-date"><time sd-datetime data-date="activity._created"></time></div>
                 </span>
                 <span ng-if="activity.name == 'user:mention' || activity.name == 'desk:mention'">
                     <div class="activity-content">
-                        <p><b>{{ :: activity.user_name || 'System' }}</b>
+                        <p><b>{{activity.user_name || 'System' }}</b>
                             <span>{{activity.name == 'user:mention'? 'mentioned you' : 'commented on' | translate}}</span>
                             <i>
                                 <a ng-click="openArticle(activity)"
-                                   title="{{ :: activity.item_slugline }}">{{ :: activity.item_slugline }}</a>
-                            </i>:<br>{{ :: activity.data.comment }}</p>
+                                   title="{{activity.item_slugline }}">{{activity.item_slugline }}</a>
+                            </i>:<br>{{activity.data.comment }}</p>
                     </div>
                     <div class="activity-date"><time sd-datetime date-date="activity._created"></time></div>
                 </span>

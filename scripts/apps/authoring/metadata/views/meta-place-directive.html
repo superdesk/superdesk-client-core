@@ -13,7 +13,7 @@
         >
             <ul class="item-list">
                 <li typeahead-item="t" ng-repeat="t in terms track by t.code"j>
-                    <button>{{ :: t.name }} ({{ :: [t.state, t.country_code] | join }})
+                    <button>{{t.name }} ({{[t.state, t.country_code] | join }})
                         <span ng-if="t.feature_class === 'A'">
                             <small ng-show="t.state" class="label label--hollow" translate>state, region, ...</small>
                             <small ng-show="!t.state" class="label label--hollow" translate>country</small>
@@ -29,8 +29,8 @@
     <ul>
         <li ng-if="!disabled" class="pull-left"
             ng-repeat="t in item[field] track by t.code"
-            ng-click="removeTerm(t)">{{ :: t.name }} <i class="icon-close-small"></i></li>
+            ng-click="removeTerm(t)">{{t.name }} <i class="icon-close-small"></i></li>
         <li ng-if="disabled" class="pull-left disabled"
-            ng-repeat="t in item[field] track by t.code">{{ :: t.name }}</li>
+            ng-repeat="t in item[field] track by t.code">{{t.name }}</li>
     </ul>
 </div>

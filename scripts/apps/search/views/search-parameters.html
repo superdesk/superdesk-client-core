@@ -4,14 +4,14 @@
             <div class="field" ng-if="search_config.slugline">
                 <label for="search-slugline">
                 <label for="search-slugline">
-                    {{:: 'Slugline' | translate}}
+                    {{'Slugline' | translate}}
                 </label>
                 <input type="text" ng-keypress="keyPressed($event)" id="search-slugline" ng-model="meta.slugline">
             </div>
 
             <div class="field" ng-if="search_config.headline">
                 <label for="search-headline">
-                    {{:: 'Headline' | translate}}
+                    {{'Headline' | translate}}
                 </label>
                 <input type="text" ng-keypress="keyPressed($event)" id="search-headline" ng-model="meta.headline">
             </div>
@@ -19,7 +19,7 @@
 
         <div class="field" ng-if="search_config.story_text">
             <label for="search-storytext">
-                {{:: 'Story Text' | translate}}
+                {{'Story Text' | translate}}
             </label>
             <div class="control">
                 <input type="text" ng-keypress="keyPressed($event)" id="search-storytext" ng-model="meta.body_html">
@@ -29,13 +29,13 @@
         <div class="multiple">
             <div class="field" ng-if="search_config.unique_name">
                 <label for="search-storyname">
-                    {{:: 'Unique Name' | translate}}
+                    {{'Unique Name' | translate}}
                 </label>
                 <input type="text" ng-keypress="keyPressed($event)" id="search-storyname" ng-model="fields.unique_name">
             </div>
             <div class="field" ng-if="search_config.byline">
                 <label for="search-byline">
-                    {{:: 'Byline' | translate}}
+                    {{'Byline' | translate}}
                 </label>
                 <input type="text" ng-keypress="keyPressed($event)" id="search-byline" ng-model="meta.byline">
             </div>
@@ -58,7 +58,7 @@
         </div>
         <div class="field" ng-if="search_config.marked_desks">
             <label for="search-marked-desks">
-                {{:: 'Marked Desks' | translate}}
+                {{'Marked Desks' | translate}}
             </label>
             <div id="search-marked-desks">
                 <div id="marked-desks" sd-meta-terms
@@ -74,7 +74,7 @@
 
         <div class="field keywords" ng-if="search_config.keywords">
             <label for="search-keywords">
-                {{:: 'Keywords' | translate}}
+                {{'Keywords' | translate}}
             </label>
             <div id="search-keywords"
                  sd-meta-words-list
@@ -88,7 +88,7 @@
         <div class="multiple">
             <div class="field" ng-if="search_config.from_desk">
                 <label for="from-desk">
-                    {{:: 'From Desk' | translate}}
+                    {{'From Desk' | translate}}
                 </label>
                 <select
                     id="from-desk" name="from-desk"
@@ -99,7 +99,7 @@
             </div>
             <div class="field" ng-if="search_config.to_desk">
                 <label for="to-desk">
-                    {{:: 'To Desk' | translate}}
+                    {{'To Desk' | translate}}
                 </label>
                 <select
                     id="to-desk" name="to-desk"
@@ -112,7 +112,7 @@
 
         <div class="field" ng-if="repo.archive && search_config.creator">
             <label for="search-creator">
-                {{:: 'Creator' | translate}}
+                {{'Creator' | translate}}
             </label>
             <select id="search-creator"
                     ng-model="fields.original_creator"
@@ -124,18 +124,18 @@
 
         <div class="field" ng-if="search_config.spike">
             <label for="spike-options">
-                {{:: 'Spiked Content' | translate}}
+                {{'Spiked Content' | translate}}
             </label>
             <select id="spike-options" name="spike-options" ng-model="fields.spike">
-                <option value="exclude" label="{{:: 'Exclude spiked content' | translate }}"></option>
-                <option value="include" label="{{:: 'Include spiked content' | translate }}"></option>
-                <option value="only" label="{{:: 'Spiked only content' | translate }}"></option>
+                <option value="exclude" label="{{'Exclude spiked content' | translate }}"></option>
+                <option value="include" label="{{'Include spiked content' | translate }}"></option>
+                <option value="only" label="{{'Spiked only content' | translate }}"></option>
             </select>
         </div>
 
         <div class="field" ng-if="search_config.featuremedia">
             <label for="search-featuremedia">
-            {{:: 'Feature Media' | translate}}
+            {{'Feature Media' | translate}}
             </label>
             <span sd-switch ng-model="fields.featuremedia"></span>
         </div>
@@ -143,7 +143,7 @@
         <div class="multiple" ng-if="search_config.ingest_provider">
             <div class="field">
                 <label for="search-ingest-provider">
-                    {{:: 'Provider' | translate}}
+                    {{'Provider' | translate}}
                 </label>
                 <select id="search-ingest-provider"
                         ng-model='fields.ingest_provider'
@@ -155,7 +155,7 @@
 
         <div class="field" ng-if="isContentApi() && search_config.subscribers">
             <label for="search-subscriber">
-                {{:: 'Subscriber' | translate}}
+                {{'Subscriber' | translate}}
             </label>
             <select id="search-subscriber"
                     ng-model='fields.subscriber'
@@ -167,7 +167,7 @@
     <fieldset ng-show="providerType === 'aapmm'">
         <div class="field">
             <label for="search-objectname">
-                {{:: 'Object Name (Slugline)' | translate}}
+                {{'Object Name (Slugline)' | translate}}
             </label>
             <div class="control">
                 <input type="text" ng-keypress="keyPressed($event)" id="search-objectname" ng-model="meta.objectname">
@@ -175,7 +175,7 @@
         </div>
         <div class="field">
             <label for="search-description">
-                {{:: 'Description' | translate}}
+                {{'Description' | translate}}
             </label>
             <div class="control">
                 <input type="text" ng-keypress="keyPressed($event)" id="search-description" ng-model="meta.description_text">
@@ -183,7 +183,7 @@
         </div>
             <div class="field">
             <label for="search-aapkeyword">
-                {{:: 'AAP Image Keyword' | translate}}
+                {{'AAP Image Keyword' | translate}}
             </label>
             <div class="control">
                 <input type="text" ng-keypress="keyPressed($event)" id="search-aapkeyword" ng-model="meta.aapkeyword">
@@ -192,7 +192,7 @@
         <div>
             <div class="field">
             <label for="search-keywords">
-                {{:: 'Keywords'}}
+                {{'Keywords'}}
             </label>
             <div class="control">
                 <input type="text" ng-keypress="keyPressed($event)" id="search-keywords" ng-model="meta.keywords">
@@ -214,12 +214,12 @@
             <div>
                 <div class="checkbox">
                     <label class="search-label">
-                        <input type="checkbox" id="search-bw" ng-model="meta.bw">{{:: 'Black&White' | translate}}
+                        <input type="checkbox" id="search-bw" ng-model="meta.bw">{{'Black&White' | translate}}
                     </label>
                 </div>
                 <div class="checkbox">
                     <label class="search-label">
-                        <input type="checkbox" id="search-clear_edge" ng-model="meta.clear_edge">{{:: 'Clear Edge' | translate}}
+                        <input type="checkbox" id="search-clear_edge" ng-model="meta.clear_edge">{{'Clear Edge' | translate}}
                     </label>
                 </div>
             </div>

@@ -29,7 +29,7 @@
     </div>
 
     <div class="subnav__authoring-topbar" ng-class="{'enable-overflow': item.highlights || item._type === 'archived'}">
-        <span ng-if="item._type === 'archived'" class="stage" ng-style="{'overflow': 'visible'}" tooltip="{{:: 'Archived from' | translate}} {{deskName}} / {{ stage.name}}" tooltip-placement="bottom" ng-show="stage"><b>{{:: 'Archived from' | translate}} {{deskName}}</b> / {{ stage.name }}</span>
+        <span ng-if="item._type === 'archived'" class="stage" ng-style="{'overflow': 'visible'}" tooltip="{{'Archived from' | translate}} {{deskName}} / {{ stage.name}}" tooltip-placement="bottom" ng-show="stage"><b>{{'Archived from' | translate}} {{deskName}}</b> / {{ stage.name }}</span>
         <span ng-if="item._type !== 'archived'" class="stage" tooltip="{{deskName}} / {{ stage.name }}" tooltip-placement="bottom" ng-show="stage" ng-if="item._type !== 'legal_archive'"><b>{{deskName}}</b> / {{ stage.name }}</span>
         <span class="stage" tooltip="{{deskName}} / {{ stage }}" tooltip-placement="bottom" ng-show="stage" ng-if="item._type === 'legal_archive'"><b>{{deskName}}</b> / {{ stage }}</span>
         <span sd-marked-item-title data-item="item" data-field="highlights"></span>
@@ -43,7 +43,7 @@
       <div class="subnav__button-stack subnav__button-stack--custom-buttons" ng-if="$root.config.features.customAuthoringTopbar" ng-show="_editable && itemActions.save && action === 'edit'">
         <button class="btn btn--custom"
                 ng-click="saveAndContinue(sendToNextStage, false)"
-                title="{{ :: 'To Desk' | translate }}">
+                title="{{'To Desk' | translate }}">
                 <span class="btn__text" translate>To Desk</span>
                 <span class="btn__text--short" translate>T D</span>
         </button>
@@ -51,16 +51,16 @@
                 type="submit"
                 ng-if="canPublishOnDesk()"
                 ng-click="saveAndContinue(publish, true)"
-                title="{{ :: 'Publish' | translate }}">
+                title="{{'Publish' | translate }}">
                 <span class="btn__text" translate>Publish</span>
                 <span class="btn__text--short" translate>P</span>
         </button>
         <button class="btn btn--custom btn--publish-plus"
                 ng-if="canPublishOnDesk()"
                 ng-click="saveAndContinue(publishAndContinue, true)"
-                title="{{ :: 'Publish and Continue' | translate }}">
-                <span class="btn__text">{{ :: 'Publish and Continue' | translate }}</span>
-                <span class="btn__text--short">{{ :: 'P & C' | translate }}</span>
+                title="{{'Publish and Continue' | translate }}">
+                <span class="btn__text">{{'Publish and Continue' | translate }}</span>
+                <span class="btn__text--short">{{'P & C' | translate }}</span>
         </button>
       </div>
     </div>
@@ -99,7 +99,7 @@
                 id="closeAuthoringBtn"
                 ng-click="close()"
                 ng-if="action !== 'correct' && action !== 'kill'"
-                title="{{ :: 'Close' | translate }}"
+                title="{{'Close' | translate }}"
                 sd-hotkey="ctrl+shift+e"
                 sd-hotkey-options="{global: true}">
             <span class="btn__text" translate>Close</span><i class="icon-close-small btn__text--alt-icon"></i>
@@ -165,7 +165,7 @@
     <div class="subnav__button-stack subnav__button-stack--square-buttons">
         <button class="navbtn strict"
                 ng-if="!isLocked() && _editable"
-                title="{{ :: 'Minimize' | translate }}"
+                title="{{'Minimize' | translate }}"
                 ng-click="minimize()">
             <i class="big-icon--minimize"></i>
         </button>
@@ -173,7 +173,7 @@
         <div id="authoring-extra-dropdown"
              ng-if="item._type !== 'legal_archive' && item._type !== 'archived' && !highlight && item.state !== 'spiked'"
              class="dropdown pull-left strict" dropdown>
-            <button id="more-actions" class="navbtn dropdown__toggle" title="{{ :: 'More actions' | translate }}" dropdown__toggle>
+            <button id="more-actions" class="navbtn dropdown__toggle" title="{{'More actions' | translate }}" dropdown__toggle>
                 <i class="icon-dots-vertical"></i>
             </button>
             <div class="dropdown__menu pull-right">
@@ -205,7 +205,7 @@
                     <li>
                     <div class="dropdown multiedit-toggle" dropdown>
                       <button class="dropdown__toggle" dropdown__toggle>
-                        {{ :: 'Multiedit' | translate }}
+                        {{'Multiedit' | translate }}
                       </button>
                       <ul class="dropdown__menu dropdown__menu--submenu-left" sd-multiedit-dropdown></ul>
                     </div>
@@ -229,7 +229,7 @@
                   <li ng-if="itemActions.mark_item_for_highlight">
                     <div class="dropdown highlights-toggle" dropdown>
                       <button class="dropdown__toggle" dropdown__toggle>
-                        {{ :: 'Highlights' | translate }}
+                        {{'Highlights' | translate }}
                       </button>
                       <ul class="dropdown__menu dropdown__menu--submenu-left" sd-mark-highlights-dropdown></ul>
                     </div>
@@ -237,7 +237,7 @@
                   <li ng-if="itemActions.mark_item_for_desks">
                     <div class="dropdown marks-toggle" dropdown>
                       <button class="dropdown__toggle" dropdown__toggle>
-                        {{ :: 'Desks' | translate }}
+                        {{'Desks' | translate }}
                       </button>
                       <ul class="dropdown__menu dropdown__menu--submenu-left" sd-mark-desks-dropdown></ul>
                     </div>
@@ -252,7 +252,7 @@
                   <li>
                     <div class="dropdown highlights-toggle" dropdown>
                       <button class="dropdown__toggle" dropdown__toggle>
-                        {{ :: 'Translate item to' | translate }}
+                        {{'Translate item to' | translate }}
                       </button>
                       <ul class="dropdown__menu dropdown__menu--submenu-left" sd-translation-dropdown></ul>
                     </div>
@@ -297,7 +297,7 @@
 
         <button id="send-to-btn" ng-show="_editable"
             ng-if="action !== 'correct' && action !== 'kill'"
-            class="navbtn navbtn--highlighted" sd-tooltip="{{ :: 'Send to / Publish' | translate }}" flow="left"
+            class="navbtn navbtn--highlighted" sd-tooltip="{{'Send to / Publish' | translate }}" flow="left"
             ng-click="views.send = !views.send"
             ng-class="{'active': views.send}">
             <i class="big-icon--send-to big-icon--white"></i>

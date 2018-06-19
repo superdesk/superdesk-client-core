@@ -15,8 +15,8 @@
                     </div>
 
                     <div class="actions">
-                        <button ng-click="edit(filterCondition)" title="{{:: 'Edit Filter Condition' | translate }}"><i class="icon-pencil"></i></button>
-                        <button ng-click="remove(filterCondition)" title="{{:: 'Remove Filter Condition' | translate }}"><i class="icon-trash"></i></button>
+                        <button ng-click="edit(filterCondition)" title="{{'Edit Filter Condition' | translate }}"><i class="icon-pencil"></i></button>
+                        <button ng-click="remove(filterCondition)" title="{{'Remove Filter Condition' | translate }}"><i class="icon-trash"></i></button>
                     </div>
                 </div>
             </li>
@@ -43,7 +43,7 @@
                         <div class="sd-line-input sd-line-input--is-select sd-line-input--required">
                             <label class="sd-line-input__label" translate>Field</label>
                             <select class="sd-line-input__select" required ng-model="filterCondition.field" ng-change="clearConditionValues()">
-                                <option value="{{parameter.field}}" ng-selected="parameter.field === filterCondition.field" ng-repeat="parameter in filterConditionParameters | orderBy: 'field' track by $index">{{:: label(parameter.field) }}</option>
+                                <option value="{{parameter.field}}" ng-selected="parameter.field === filterCondition.field" ng-repeat="parameter in filterConditionParameters | orderBy: 'field' track by $index">{{label(parameter.field) }}</option>
                             </select>
                         </div>
                     </div>
@@ -61,7 +61,7 @@
                         <div class="sd-line-input sd-line-input--is-select sd-line-input--required" ng-if="isComparisonValue()">
                             <label class="sd-line-input__label" translate>Values</label>
                             <select class="sd-line-input__select" required ng-model="filterCondition.value" ng-if="isComparisonValue()">
-                                <option value="{{v[valueFieldLookup[filterCondition.field]]}}" ng-selected="v[valueFieldLookup[filterCondition.field]] === filterCondition.value" ng-repeat="v in valueLookup[filterCondition.field] | orderBy: 'name'">{{:: v.name}}</option>
+                                <option value="{{v[valueFieldLookup[filterCondition.field]]}}" ng-selected="v[valueFieldLookup[filterCondition.field]] === filterCondition.value" ng-repeat="v in valueLookup[filterCondition.field] | orderBy: 'name'">{{v.name}}</option>
                             </select>
                         </div>
                         <div class="sd-line-input sd-line-input--required" ng-if="!isListValue() && !isComparisonValue()" >

@@ -3,15 +3,15 @@
         <li ng-repeat="item in items">
             <button ng-click="toggle({id: item._id, version: item._current_version}); $event.stopPropagation();" ng-class="{disabled: item._current_version === current.version}">
                 <span class="headline" ng-show="item.headline">{{ item.headline }}</span>
-                <span ng-show="!item.headline">{{ :: 'Untitled' | translate }}</span>
+                <span ng-show="!item.headline">{{'Untitled' | translate }}</span>
                 <i class="icon-ok" ng-show="isSelected({id: item._id, version: item._current_version})"></i>
                 <span class="desk-details">
-                    <span ng-show='item.desk'>{{ :: 'desk:' | translate }} {{item.desk}}</span>
-                    <span ng-show='item.stage'>{{ :: 'stage:' | translate }} {{item.stage}}
+                    <span ng-show='item.desk'>{{'desk:' | translate }} {{item.desk}}</span>
+                    <span ng-show='item.stage'>{{'stage:' | translate }} {{item.stage}}
                     </span>
                 </span>
-                <em>{{ :: 'version' | translate }}: {{ item._current_version }}</em>
-                <span class="state-label state-{{ :: item.state}}">{{ :: item.state | translate }}</span>
+                <em>{{'version' | translate }}: {{ item._current_version }}</em>
+                <span class="state-label state-{{item.state}}">{{item.state | translate }}</span>
             </button>
         </li>
         <li ng-if="items.length === 0"><button translate>NO SUGGESTIONS.</button></li>

@@ -13,8 +13,8 @@
                     <h6 id="providerType">{{ providerLabels[provider.search_provider] }}</h6>
                     <span class="label offProvider" ng-if="provider.is_closed" translate>Closed</span>
                     <div class="actions">
-                        <button ng-click="edit(provider)" title="{{:: 'Edit Search Provider' | translate }}"><i class="icon-pencil"></i></button>
-                        <button ng-click="remove(provider)" ng-show="!provider.last_item_update" title="{{:: 'Remove Search Provider' | translate }}"><i class="icon-trash"></i></button>
+                        <button ng-click="edit(provider)" title="{{'Edit Search Provider' | translate }}"><i class="icon-pencil"></i></button>
+                        <button ng-click="remove(provider)" ng-show="!provider.last_item_update" title="{{'Remove Search Provider' | translate }}"><i class="icon-trash"></i></button>
                     </div>
                 </div>
             </li>
@@ -32,25 +32,25 @@
             <fieldset>
                 <div sd-form-switch-inverted
                     id="provider-status"
-                    label="{{ :: 'Status' | translate }}"
+                    label="{{'Status' | translate }}"
                     title="{{ provider.is_closed ? 'Open' : 'Close'  | translate }}"
                     model="provider.is_closed">
                 ></div>
 
                 <div sd-form-checkbox
-                    label="{{ :: 'Is Default' | translate }}"
+                    label="{{'Is Default' | translate }}"
                     title="{{ provider.is_default ? 'Default' : ''  | translate }}"
                     model="provider.is_default"
                 ></div>
 
                 <div sd-form-checkbox
-                    label="{{ :: 'Open advanced search panel by default' | translate }}"
+                    label="{{'Open advanced search panel by default' | translate }}"
                     model="provider.advanced_search"
                 ></div>
 
                 <div sd-form-select
                     id="provider-type"
-                    label="{{ :: 'Provider Type' | translate }}"
+                    label="{{'Provider Type' | translate }}"
                     model="provider.search_provider"
                     options="providerTypesOptions"
                     required="true"
@@ -58,15 +58,15 @@
 
                 <div sd-form-input ng-if="!provider.search_provider.startsWith('scanpix')"
                     id="provider-name"
-                    label="{{ :: 'Name' | translate }}"
+                    label="{{'Name' | translate }}"
                     model="provider.name"
                     required="true"
                 ></div>
 
                 <div sd-form-input ng-if="!provider.search_provider.startsWith('scanpix')"
                     id="provider-source"
-                    label="{{ :: 'Source' | translate }}"
-                    placeholder="{{ :: 'source of the search provider' | translate }}"
+                    label="{{'Source' | translate }}"
+                    placeholder="{{  'source of the search provider' | translate }}"
                     model="provider.source"
                     required="true"
                 ></div>
@@ -77,16 +77,16 @@
 
                 <div sd-form-input
                     id="provider-username"
-                    label="{{ :: 'Username' | translate }}"
-                    placeholder="{{ :: 'search provider username' | translate }}"
+                    label="{{'Username' | translate }}"
+                    placeholder="{{'search provider username' | translate }}"
                     model="provider.config.username"
                 ></div>
 
                 <div sd-form-input
                     type="password"
                     id="provider-password"
-                    label="{{ :: 'Password' | translate }}"
-                    placeholder="{{ :: 'search provider password' | translate }}"
+                    label="{{'Password' | translate }}"
+                    placeholder="{{'search provider password' | translate }}"
                     model="provider.config.password"
                 ></div>
             </fieldset>

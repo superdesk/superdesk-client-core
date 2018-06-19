@@ -2,17 +2,17 @@
     <button id="selected-desk" data-toggle="dropdown" class="dropdown__toggle {{workspaceType}} pull-left">
         <span class="name" ng-if="selected.name">{{ selected.name | uppercase }}</span>
         <span class="name" ng-if="!selected" translate>Select Workspace</span>
-        <span class="name" ng-if="selected && !selected.name && workspaceType">{{ :: 'Untitled' | translate }}</span>
+        <span class="name" ng-if="selected && !selected.name && workspaceType">{{'Untitled' | translate }}</span>
         <span class="dropdown__caret"></span>
     </button>
 
     <ul id="select-desk-menu" class="dropdown__menu" role="menu">
         <li class="dropdown__menu-label"><div translate>DESKS</div></li>
-        <li class="desk-item" ng-repeat="desk in desks track by desk._id" id="desk-item-{{ :: desk._id }}">
+        <li class="desk-item" ng-repeat="desk in desks track by desk._id" id="desk-item-{{desk._id }}">
             <button
                 ng-click="selectDesk(desk)"
                 ng-disabled="desk._id === selected._id"
-            >{{ :: desk.name }}</button>
+            >{{desk.name }}</button>
         </li>
         <li class="desk-item" ng-show="desks.length === 0"><i class="no-desk">No Desks Assigned</i></li>
 
@@ -20,15 +20,15 @@
         <li class="workspace-item" ng-repeat="workspace in wsList track by workspace._id">
             <button ng-click="selectWorkspace(workspace)"
                     ng-disabled="workspace._id === selected._id">
-                {{ :: workspace.name }}
-                <span ng-if="!workspace.name">{{ :: 'Untitled' | translate }}</span>
+                {{workspace.name }}
+                <span ng-if="!workspace.name">{{'Untitled' | translate }}</span>
             </button>
         </li>
         <li>
             <button class="action-btn" ng-click="createWorkspace()">
                 <i class="icon-plus-sign icon--blue"></i>
                 <span class="circle"></span>
-                {{ :: 'CREATE NEW WORKSPACE' | translate }}
+                {{'CREATE NEW WORKSPACE' | translate }}
             </button>
         </li>
     </ul>

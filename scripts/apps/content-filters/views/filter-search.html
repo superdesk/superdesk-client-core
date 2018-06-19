@@ -8,7 +8,7 @@
                             <div class="sd-line-input sd-line-input--is-select">
                                 <label class="sd-line-input__label" translate>Field</label>
                                 <select class="sd-line-input__select" ng-change="resetValues()" required ng-model="filterCondition.field">
-                                    <option value="{{parameter.field}}" ng-selected="parameter.field === filterCondition.field" ng-repeat="parameter in filterConditionParameters | orderBy: 'field' track by $index">{{:: parameter.field}}</option>
+                                    <option value="{{parameter.field}}" ng-selected="parameter.field === filterCondition.field" ng-repeat="parameter in filterConditionParameters | orderBy: 'field' track by $index">{{parameter.field}}</option>
                                 </select>
                             </div>
                         </div>
@@ -16,7 +16,7 @@
                             <div class="sd-line-input sd-line-input--is-select">
                                 <label class="sd-line-input__label" translate>Operator</label>
                                 <select class="sd-line-input__select" ng-change="resetValues()" required ng-model="filterCondition.operator" >
-                                    <option value="{{operator}}" ng-selected="operator === filterCondition.operator" ng-repeat="operator in operatorLookup[filterCondition.field] track by $index">{{:: operator | translate}}</option>
+                                    <option value="{{operator}}" ng-selected="operator === filterCondition.operator" ng-repeat="operator in operatorLookup[filterCondition.field] track by $index">{{operator | translate}}</option>
                                 </select>
                             </div>
                         </div>

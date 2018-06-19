@@ -9,20 +9,20 @@
     <div sd-legal-item-sortbar ng-if="elementState !== 'compact'" class="sortbar-container"></div>
 
     <div class="view-select">
-        <button tooltip="{{ :: 'switch to grid view' | translate }}" tooltip-placement="left"  ng-show="view !== 'mgrid'" ng-click="setview('mgrid')"><i class="icon-grid-view"></i></button>
-        <button tooltip="{{ :: 'switch to list view' | translate }}" tooltip-placement="left"  ng-show="view !== 'compact'" ng-click="setview('compact')"><i class="icon-list-view"></i></button>
+        <button tooltip="{{'switch to grid view' | translate }}" tooltip-placement="left"  ng-show="view !== 'mgrid'" ng-click="setview('mgrid')"><i class="icon-grid-view"></i></button>
+        <button tooltip="{{'switch to list view' | translate }}" tooltip-placement="left"  ng-show="view !== 'compact'" ng-click="setview('compact')"><i class="icon-list-view"></i></button>
     </div>
 
     <div class="button-stack right-stack" ng-if="elementState === 'compact'">
         <div class="dropdown dropdown--align-right dropdown--compact-state" dropdown>
             <button class="navbtn dropdown__toggle" dropdown__toggle><i class="icon-dots-vertical"></i></button>
             <ul class="dropdown__menu">
-                <li><span class="dropdown__menu-label">{{:: 'Pagination' | translate}}</span></li>
+                <li><span class="dropdown__menu-label">{{'Pagination' | translate}}</span></li>
                 <li>
                     <span sd-pagination data-items="items"></span>
                 </li>
                 <li class="dropdown__menu-divider"></li>
-                <li><span class="dropdown__menu-label">{{:: 'Sorting' | translate}}</span></li>
+                <li><span class="dropdown__menu-label">{{'Sorting' | translate}}</span></li>
                 <li>
                     <span sd-legal-item-sortbar></span>
                 </li>
@@ -45,33 +45,33 @@
                 <form>
                     <fieldset>
                         <div class="field">
-                            <label for="search-story-id">{{:: 'GUID' | translate}}</label>
+                            <label for="search-story-id">{{'GUID' | translate}}</label>
                             <div class="control">
                                 <input type="text" id="search-story-id" ng-model="criteria._id" tabindex="1">
                             </div>
                         </div>
                         <div class="field">
-                            <label for="search-unique-id">{{:: 'Unique Name' | translate}}</label>
+                            <label for="search-unique-id">{{'Unique Name' | translate}}</label>
                             <div class="control">
                                 <input type="text" id="search-unique-id" ng-model="criteria.unique_name" tabindex="1">
                             </div>
                         </div>
                         <div class="field">
-                            <label for="search-headline">{{:: 'Headline' | translate}}</label>
+                            <label for="search-headline">{{'Headline' | translate}}</label>
                             <div class="control">
                                 <input type="text" id="search-headline" ng-model="criteria.headline" tabindex="2">
                             </div>
                         </div>
 
                         <div class="field">
-                            <label for="search-slugline">{{:: 'Slugline' | translate}}</label>
+                            <label for="search-slugline">{{'Slugline' | translate}}</label>
                             <div class="control">
                                 <input type="text" id="search-slugline" ng-model="criteria.slugline" tabindex="3">
                             </div>
                         </div>
 
                         <div class="field">
-                            <label for="search-storytext">{{:: 'Story Text' | translate}}</label>
+                            <label for="search-storytext">{{'Story Text' | translate}}</label>
                             <div class="control">
                                 <input type="text" id="search-storytext" ng-model="criteria.body_html" tabindex="4">
                             </div>

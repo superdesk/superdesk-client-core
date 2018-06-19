@@ -28,7 +28,7 @@
     <div class="slide-pane__content">
         <div sd-toggle-box
              ng-if="showSendButtonAndDestination()"
-             data-title="{{ :: 'Destination' | translate }}"
+             data-title="{{'Destination' | translate }}"
              data-open="true" data-style="dark">
             <div sd-desk-select
                 data-desks="desks"
@@ -42,14 +42,14 @@
                             ng-class="{active: stage._id === selectedStage._id}"
                             ng-disabled="mode !== 'spike' && stage._id === item.task.stage"
                             ng-click="selectStage(stage)">
-                        {{::stage.name}}
+                        {{stage.name}}
                     </button>
                 </li>
             </ul>
         </div>
 
         <div sd-toggle-box id="embargoTimestamp" ng-if="mode === 'authoring' && showEmbargo()" data-title="Embargo" data-open="true" data-style="dark">
-            <label class="label--lite">{{ :: 'Embargo' | translate }}</label>
+            <label class="label--lite">{{'Embargo' | translate }}</label>
             <ul class="btn-list">
                 <li class="datepicker-input--dark">
                     <div sd-datepicker ng-model="item.embargo_date"></div>
@@ -58,11 +58,11 @@
                     <div sd-timepicker ng-model="item.embargo_time"></div>
                 </li>
             </ul>
-            <a class="toggle-box__button" ng-click="item.embargo_date=null; item.embargo_time=null;" sd-hotkey="ctrl+shift+x"><i class="icon-remove-sign icon--white"></i>{{ :: 'Clear embargo' | translate }}</a>
+            <a class="toggle-box__button" ng-click="item.embargo_date=null; item.embargo_time=null;" sd-hotkey="ctrl+shift+x"><i class="icon-remove-sign icon--white"></i>{{'Clear embargo' | translate }}</a>
         </div>
 
         <div sd-toggle-box id="publishScheduleTimestamp" ng-if="mode === 'authoring' && showPublishSchedule()" data-title="{{ 'Publishing Schedule' | translate }}" data-open="true" data-style="dark">
-            <label class="label--lite">{{ :: 'Publish Schedule' | translate }}</label>
+            <label class="label--lite">{{'Publish Schedule' | translate }}</label>
             <ul class="btn-list">
                 <li class="datepicker-input--dark">
                     <div sd-datepicker ng-model="item.publish_schedule_date" ng-disabled="!_editable"></div>
@@ -71,7 +71,7 @@
                     <div sd-timepicker ng-model="item.publish_schedule_time" ng-disabled="!_editable"></div>
                 </li>
             </ul>
-            <a class="toggle-box__button" ng-click="item.publish_schedule_date=null; item.publish_schedule_time=null;" sd-hotkey="ctrl+shift+x"><i class="icon-remove-sign icon--white"></i>{{ :: 'Clear schedule' | translate }}</a>
+            <a class="toggle-box__button" ng-click="item.publish_schedule_date=null; item.publish_schedule_time=null;" sd-hotkey="ctrl+shift+x"><i class="icon-remove-sign icon--white"></i>{{'Clear schedule' | translate }}</a>
         </div>
 
         <div sd-toggle-box id="timezoneTimestamp" ng-if="mode === 'authoring' && showTimezone()" data-title="Timezone" data-open="true" data-style="dark">

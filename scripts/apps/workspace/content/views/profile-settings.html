@@ -3,11 +3,11 @@
         <h2 class="sd-page__page-heading" translate>Content Profiles</h2>
     </div>
     <div class="sd-page__header">
-        <sd-check ng-model="active_only" label-position="inside" type="radio" style="margin-left: 0;">{{:: 'All'| translate}}</sd-check>                
-        <sd-check ng-model="active_only" ng-value="true" label-position="inside" type="radio" ng-checked="true">{{:: 'Active only'| translate}}</sd-check>
+        <sd-check ng-model="active_only" label-position="inside" type="radio" style="margin-left: 0;">{{'All'| translate}}</sd-check>                
+        <sd-check ng-model="active_only" ng-value="true" label-position="inside" type="radio" ng-checked="true">{{'Active only'| translate}}</sd-check>
         <span class="sd-page__element-grow"></span>
         <button id="add-new-content-profile" class="btn btn--primary" ng-click="ctrl.toggleCreate()" data-close="cancel()">
-            <i class="icon-plus-sign icon--white"></i>{{ :: 'Add New' | translate }}
+            <i class="icon-plus-sign icon--white"></i>{{'Add New' | translate }}
         </button>
     </div>
 
@@ -25,8 +25,8 @@
                         <ul class="dropdown__menu more-activity-menu pull-right">
                             <li><div class="dropdown__menu-label" translate>Actions</div></li>
                             <li class="dropdown__menu-divider"></li>
-                            <li><button ng-click="ctrl.toggleEdit(type)" title="{{:: 'Edit Content Profile' | translate }}"><i class="icon-pencil"></i>{{:: 'Edit'| translate}}</button></li>
-                            <li><button ng-click="ctrl.delete(type)" ng-disabled="type.is_used" title="{{:: type.is_used ? 'Sorry, but profile is in use.' : 'Remove Content Profile' | translate }}"><i class="icon-trash"></i>{{:: 'Remove'| translate}}</button></li>
+                            <li><button ng-click="ctrl.toggleEdit(type)" title="{{'Edit Content Profile' | translate }}"><i class="icon-pencil"></i>{{'Edit'| translate}}</button></li>
+                            <li><button ng-click="ctrl.delete(type)" ng-disabled="type.is_used" title="{{type.is_used ? 'Sorry, but profile is in use.' : 'Remove Content Profile' | translate }}"><i class="icon-trash"></i>{{'Remove'| translate}}</button></li>
                         </ul>
                     </div>
                     <div class="card-box__heading">{{ type.label}}</div>
@@ -82,7 +82,7 @@
 <!-- Edit profile modal -->
 <div sd-modal class="modal--large" data-model="!!editing" data-close="ctrl.toggleEdit()">
     <div class="modal__header"> <a href="" class="close" ng-click="ctrl.toggleEdit()"><i class="icon-close-small"></i></a>
-        <h3 class="modal__heading">{{ :: 'Editing' | translate }} "{{ editing.form.label}}"</h3>
+        <h3 class="modal__heading">{{'Editing' | translate }} "{{ editing.form.label}}"</h3>
     </div>
     <div class="modal__body">
         <form name="editForm">
@@ -101,10 +101,10 @@
                     </div>
                 </div>
                 <div class="field">
-                    <span ng-model="editing.form.enabled" sd-switch></span><label>{{:: 'Active' | translate }}</label>
+                    <span ng-model="editing.form.enabled" sd-switch></span><label>{{'Active' | translate }}</label>
                 </div>
                 <div class="field" ng-if="withEditor3">
-                    <span ng-model="editing.form.editor.body_html.editor3" sd-switch></span><label>{{:: 'Editor3' | translate }}</label>
+                    <span ng-model="editing.form.editor.body_html.editor3" sd-switch></span><label>{{'Editor3' | translate }}</label>
                 </div>
                 <div class="field">
                     <sd-content-schema-editor data-model="editing.form"></sd-content-schema-editor>

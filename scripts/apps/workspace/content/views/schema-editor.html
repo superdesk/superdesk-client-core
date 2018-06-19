@@ -4,7 +4,7 @@
         <li class="schema-item" ng-repeat="id in schemaKeys track by id">
 
             <div class="dropdown dropdown--add-more dropdown--add-more__top dropdown-terms" dropdown>
-                <button class="btn btn--primary btn--icon-only-circle" sd-tooltip="{{ :: 'Add Field' | translate }}" flow="right" ng-click="search = ''" dropdown__toggle>
+                <button class="btn btn--primary btn--icon-only-circle" sd-tooltip="{{'Add Field' | translate }}" flow="right" ng-click="search = ''" dropdown__toggle>
                     <i class="icon-plus-large"></i>
                 </button>
                 <ul class="dropdown__menu nested-menu">
@@ -22,7 +22,7 @@
             </div>
 
             <div class="header">
-                <span class="title">{{ :: model.editor[id].field_name|| label(id) | translate}}</span>
+                <span class="title">{{model.editor[id].field_name|| label(id) | translate}}</span>
                 <button class="btn btn--icon-only btn--text-only pull-right" id="remove-item" ng-click="remove(id)">
                     <i class="icon-close-small"></i>
                 </button>
@@ -49,9 +49,9 @@
                         <label translate>Length</label>
                         <div class="controls">
                             <span translate>min</span>:
-                            <input placeholder="{{ :: 'Not set' | translate }}" type="number" class="input-small line-input" ng-model="model.schema[id].minlength" min="0" />
+                            <input placeholder="{{'Not set' | translate }}" type="number" class="input-small line-input" ng-model="model.schema[id].minlength" min="0" />
                             <span translate>max</span>:
-                            <input placeholder="{{ :: 'Not set' | translate }}" type="number" class="input-small line-input" ng-model="model.schema[id].maxlength" min="0" />
+                            <input placeholder="{{'Not set' | translate }}" type="number" class="input-small line-input" ng-model="model.schema[id].maxlength" min="0" />
                             <span class="error"
                                   ng-show="model.schema[id].minlength > model.schema[id].maxlength && model.schema[id].maxlength"
                                   translate>Min length shouldn't be bigger than max length.</span>
@@ -75,7 +75,7 @@
                         <div sd-check ng-model="model.editor[id].cleanPastedHTML"></div>
                     </div>
 
-                    <div class="field" ng-if=":: hasFormatOptions(id)">
+                    <div class="field" ng-if="hasFormatOptions(id)">
                         <label translate>Format options</label>
                         <div class="controls" ng-if="model.editor.body_html.editor3"
                              sd-multi-select
@@ -114,7 +114,7 @@
             </form>
 
             <div class="dropdown dropdown--add-more dropdown--add-more__bottom dropdown-terms" dropdown>
-                <button class="btn btn--primary btn--icon-only-circle" sd-tooltip="{{ :: 'Add Field' | translate }}" flow="right" ng-click="search = ''" dropdown__toggle>
+                <button class="btn btn--primary btn--icon-only-circle" sd-tooltip="{{'Add Field' | translate }}" flow="right" ng-click="search = ''" dropdown__toggle>
                     <i class="icon-plus-large"></i>
                 </button>
                 <ul class="dropdown__menu nested-menu">

@@ -10,7 +10,7 @@
         <div class="field">
             <label translate>Filter</label>
             <div ng-show="rule.filter">
-                <label class="title">{{ :: 'Name' | translate }}:</label> {{rule.filterName}}
+                <label class="title">{{'Name' | translate }}:</label> {{rule.filterName}}
             </div>
             <div ng-show="!rule.filter">
                 <span translate>[none]</span>
@@ -20,19 +20,19 @@
         <div class="field">
             <label translate>Action</label>
             <div ng-show="rule.actions.fetch">
-                <label class="title">{{ :: 'Fetch' | translate }}:</label>
+                <label class="title">{{'Fetch' | translate }}:</label>
                 <span class="list-item" ng-repeat="fetchAction in rule.actions.fetch">
                     - {{deskLookup[fetchAction.desk].name}} / {{stageLookup[fetchAction.stage].name}} / {{macroLookup[fetchAction.macro].label}}
                 </span>
             </div>
             <div ng-show="rule.actions.publish">
-                <label class="title">{{ :: 'Publish' | translate }}:</label>
+                <label class="title">{{'Publish' | translate }}:</label>
                 <span class="list-item" ng-repeat="publishAction in rule.actions.publish">
                     - {{deskLookup[publishAction.desk].name}} / {{stageLookup[publishAction.stage].name}}
                 </span>
             </div>
             <div>
-                <label class="title">{{ :: 'Exit' | translate }}:</label>
+                <label class="title">{{'Exit' | translate }}:</label>
                 <span ng-show="rule.actions.exit" translate>On</span>
                 <span ng-hide="rule.actions.exit" translate>Off</span>
             </div>
@@ -41,17 +41,17 @@
         <div class="field">
             <label translate>Schedule</label>
             <div ng-show="rule.schedule.day_of_week">
-                <label class="title">{{ :: 'Days' | translate }}</label>
+                <label class="title">{{'Days' | translate }}</label>
                 <span class="list-item" ng-repeat="day in rule.schedule.day_of_week">
                     - {{dayLookup[day]| translate}}
                 </span>
             </div>
             <div>
-                <label class="title">{{ :: 'Start time' | translate }}:</label>
+                <label class="title">{{'Start time' | translate }}:</label>
                 <span>{{rule.schedule.hour_of_day_from}}</span>
             </div>
             <div>
-                <label class="title">{{ :: 'End time' | translate }}:</label>
+                <label class="title">{{'End time' | translate }}:</label>
                 <span>{{rule.schedule.hour_of_day_to}}</span>
             </div>
         </div>

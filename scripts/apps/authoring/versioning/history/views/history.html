@@ -3,152 +3,152 @@
         <li class="item" ng-repeat="historyItem in historyItems">
 
             <div ng-if="historyItem.operation === 'create'">
-                <strong>{{ :: 'Created by' | translate }}</strong> {{ :: historyItem.displayName }}
+                <strong>{{'Created by' | translate }}</strong> {{historyItem.displayName }}
                 <em><time sd-absdate datetime="historyItem._created"></time></em>
                 <span ng-if="historyItems[$index-1].version !== historyItem.version && historyItem.version !== 0" class="version">
-                    <span translate>version</span><span>: {{:: historyItem.version }}</span>
+                    <span translate>version</span><span>: {{historyItem.version }}</span>
                 </span>
                 <div class="more-description" ng-if="historyItem.desk">
-                    <span translate>on</span> <span> {{:: historyItem.desk }} / {{ :: historyItem.stage }}</span>
+                    <span translate>on</span> <span> {{historyItem.desk }} / {{historyItem.stage }}</span>
                 </div>
             </div>
 
             <div ng-if="historyItem.operation === 'update'">
-                <strong ng-if="historyItem.update.operation === 'deschedule'">{{ :: 'Descheduled by' | translate }}</strong>
-                <strong ng-if="historyItem.update.operation !== 'deschedule'">{{ :: 'Updated by' | translate }}</strong>
-                {{ :: historyItem.displayName }}
+                <strong ng-if="historyItem.update.operation === 'deschedule'">{{'Descheduled by' | translate }}</strong>
+                <strong ng-if="historyItem.update.operation !== 'deschedule'">{{'Updated by' | translate }}</strong>
+                {{historyItem.displayName }}
                 <em><time sd-absdate datetime="historyItem._created"></time></em>
                 <span ng-if="historyItems[$index-1].version !== historyItem.version && historyItem.version !== 0" class="version">
-                    <span translate>version</span><span>: {{:: historyItem.version }}</span>
+                    <span translate>version</span><span>: {{historyItem.version }}</span>
                 </span>
                 <div class="more-description" ng-if="historyItem.fieldsUpdated">
-                    <span translate>updated fields</span>:<span> {{ :: historyItem.fieldsUpdated }}</span>
+                    <span translate>updated fields</span>:<span> {{historyItem.fieldsUpdated }}</span>
                 </div>
             </div>
 
             <div ng-if="historyItem.operation === 'duplicated_from'">
-                <strong>{{ :: 'Duplicated by' | translate }}</strong> {{ :: historyItem.displayName }}
+                <strong>{{'Duplicated by' | translate }}</strong> {{historyItem.displayName }}
                 <em><time sd-absdate datetime="historyItem._created"></time></em>
                 <span ng-if="historyItems[$index-1].version !== historyItem.version && historyItem.version !== 0" class="version">
-                    <span translate>version</span><span>: {{:: historyItem.version }}</span>
+                    <span translate>version</span><span>: {{historyItem.version }}</span>
                 </span>
                 <div class="more-description" ng-if="historyItem.update.duplicate_id">
-                    <span translate>from</span>:<a href="" ng-click="open(historyItem.update.duplicate_id)"> {{ :: historyItem.update.duplicate_id }}</a>
+                    <span translate>from</span>:<a href="" ng-click="open(historyItem.update.duplicate_id)"> {{historyItem.update.duplicate_id }}</a>
                 </div>
             </div>
 
             <div ng-if="historyItem.operation === 'translate'">
-                <strong>{{ :: 'Translated by' | translate }}</strong> {{ :: historyItem.displayName }}
+                <strong>{{'Translated by' | translate }}</strong> {{historyItem.displayName }}
                 <em><time sd-absdate datetime="historyItem._created"></time></em>
                 <span ng-if="historyItems[$index-1].version !== historyItem.version && historyItem.version !== 0" class="version">
-                    <span translate>version</span><span>: {{:: historyItem.version }}</span>
+                    <span translate>version</span><span>: {{historyItem.version }}</span>
                 </span>
                 <div class="more-description" ng-if="historyItem.update.duplicate_id">
-                    <span translate>from</span>:<a href="" ng-click="open(historyItem.update.duplicate_id)"> {{ :: historyItem.update.duplicate_id }}</a>
+                    <span translate>from</span>:<a href="" ng-click="open(historyItem.update.duplicate_id)"> {{historyItem.update.duplicate_id }}</a>
                 </div>
             </div>
 
             <div ng-if="historyItem.operation === 'duplicate'">
-                <strong>{{ :: 'Duplicate created by' | translate }}</strong> {{ :: historyItem.displayName }}
+                <strong>{{'Duplicate created by' | translate }}</strong> {{historyItem.displayName }}
                 <em><time sd-absdate datetime="historyItem._created"></time></em>
                 <span ng-if="historyItems[$index-1].version !== historyItem.version && historyItem.version !== 0" class="version">
-                    <span translate>version</span><span>: {{:: historyItem.version }}</span>
+                    <span translate>version</span><span>: {{historyItem.version }}</span>
                 </span>
                 <div class="more-description" ng-if="historyItem.update.duplicate_id">
-                    <span translate>duplicate id</span>:<a href="" ng-click="open(historyItem.update.duplicate_id)">  {{:: historyItem.update.duplicate_id }}</a>
+                    <span translate>duplicate id</span>:<a href="" ng-click="open(historyItem.update.duplicate_id)">  {{historyItem.update.duplicate_id }}</a>
                 </div>
             </div>
 
             <div ng-if="historyItem.operation === 'spike'">
-                <strong>{{ :: 'Spiked by' | translate }}</strong> {{ :: historyItem.displayName }}
+                <strong>{{'Spiked by' | translate }}</strong> {{historyItem.displayName }}
                 <em><time sd-absdate datetime="historyItem._created"></time></em>
                 <span ng-if="historyItems[$index-1].version !== historyItem.version && historyItem.version !== 0" class="version">
-                    <span translate>version</span><span>: {{:: historyItem.version }}</span>
+                    <span translate>version</span><span>: {{historyItem.version }}</span>
                 </span>
                 <div class="more-description" ng-if="historyItem.desk">
-                    <span translate>from</span> <span> {{:: historyItem.desk }} / {{ :: historyItem.stage }}</span>
+                    <span translate>from</span> <span> {{historyItem.desk }} / {{historyItem.stage }}</span>
                 </div>
             </div>
 
             <div ng-if="['unspike', 'move', 'fetch'].includes(historyItem.operation)">
-                <strong ng-if="historyItem.operation === 'unspike'">{{ :: 'Unspiked by' | translate }}</strong> 
-                <strong ng-if="historyItem.operation === 'move'">{{ :: 'Moved by' | translate }}</strong> 
-                <strong ng-if="historyItem.operation === 'fetch'">{{ :: 'Fetched by' | translate }}</strong> 
-                {{ :: historyItem.displayName }}
+                <strong ng-if="historyItem.operation === 'unspike'">{{'Unspiked by' | translate }}</strong> 
+                <strong ng-if="historyItem.operation === 'move'">{{'Moved by' | translate }}</strong> 
+                <strong ng-if="historyItem.operation === 'fetch'">{{'Fetched by' | translate }}</strong> 
+                {{historyItem.displayName }}
                 <em><time sd-absdate datetime="historyItem._created"></time></em>
                 <span ng-if="historyItems[$index-1].version !== historyItem.version && historyItem.version !== 0" class="version">
-                    <span translate>version</span><span>: {{:: historyItem.version }}</span>
+                    <span translate>version</span><span>: {{historyItem.version }}</span>
                 </span>
                 <div class="more-description" ng-if="historyItem.desk">
-                    <span translate>to</span> <span> {{:: historyItem.desk }} / {{ :: historyItem.stage }}</span>
+                    <span translate>to</span> <span> {{historyItem.desk }} / {{historyItem.stage }}</span>
                 </div>
             </div>
 
             <div ng-if="historyItem.operation === 'mark'">
-                <strong>{{ :: 'Marked by' | translate }}</strong> {{ :: historyItem.displayName }}
+                <strong>{{'Marked by' | translate }}</strong> {{historyItem.displayName }}
                 <em><time sd-absdate datetime="historyItem._created"></time></em>
                 <div ng-if="historyItems[$index-1].version !== historyItem.version && historyItem.version !== 0" class="version">
-                    <span translate>version</span><span>: {{:: historyItem.version }}</span>
+                    <span translate>version</span><span>: {{historyItem.version }}</span>
                 </div>
                 <span class="more-description" ng-if="historyItem.update.highlight_id">
-                    <span translate>for highlight</span><span>: {{:: highlightsById[historyItem.update.highlight_id].name || historyItem.update.highlight_name }}</span>
+                    <span translate>for highlight</span><span>: {{highlightsById[historyItem.update.highlight_id].name || historyItem.update.highlight_name }}</span>
                 </span>
                 <div class="more-description" ng-if="historyItem.update.desk_id">
-                    <span translate>for desk</span><span>: {{:: deskLookup[historyItem.update.desk_id].name }}</span>
+                    <span translate>for desk</span><span>: {{deskLookup[historyItem.update.desk_id].name }}</span>
                 </div>
             </div>
 
             <div ng-if="historyItem.operation === 'unmark'">
-                <strong>{{ :: 'Unmarked by' | translate }}</strong> {{ :: historyItem.displayName }}
+                <strong>{{'Unmarked by' | translate }}</strong> {{historyItem.displayName }}
                 <em><time sd-absdate datetime="historyItem._created"></time></em>
                 <div ng-if="historyItems[$index-1].version !== historyItem.version && historyItem.version !== 0" class="version">
-                    <span translate>version</span><span>: {{:: historyItem.version }}</span>
+                    <span translate>version</span><span>: {{historyItem.version }}</span>
                 </div>
                 <span class="more-description" ng-if="historyItem.update.highlight_id">
-                    <span translate>removed highlight</span><span>: {{:: highlightsById[historyItem.update.highlight_id].name  || historyItem.update.highlight_name }}</span>
+                    <span translate>removed highlight</span><span>: {{highlightsById[historyItem.update.highlight_id].name  || historyItem.update.highlight_name }}</span>
                 </span>
                 <div class="more-description" ng-if="historyItem.update.desk_id">
-                    <span translate>removed desk</span><span>: {{:: deskLookup[historyItem.update.desk_id].name }}</span>
+                    <span translate>removed desk</span><span>: {{deskLookup[historyItem.update.desk_id].name }}</span>
                 </div>
             </div>
 
             <div ng-if="historyItem.operation === 'export_highlight'">
-                <strong>{{ :: 'Exported by' | translate }}</strong> {{ :: historyItem.displayName }}
+                <strong>{{'Exported by' | translate }}</strong> {{historyItem.displayName }}
                 <em><time sd-absdate datetime="historyItem._created"></time></em>
                 <div ng-if="historyItems[$index-1].version !== historyItem.version && historyItem.version !== 0" class="version">
-                    <span translate>version</span><span>: {{:: historyItem.version }}</span>
+                    <span translate>version</span><span>: {{historyItem.version }}</span>
                 </div>
                 <span class="more-description" ng-if="historyItem.update.highlight_id">
-                    <span class="more-description" translate>from highlight</span><span>: {{:: highlightsById[historyItem.update.highlight_id].name  || historyItem.update.highlight_name }}</span>
+                    <span class="more-description" translate>from highlight</span><span>: {{highlightsById[historyItem.update.highlight_id].name  || historyItem.update.highlight_name }}</span>
                 </span>
             </div>
 
             <div ng-if="historyItem.operation === 'create_highlight' && historyItem.update.highlight_id">
-                    <span class="more-description" translate>Created from highlight</span><span>: {{:: highlightsById[historyItem.update.highlight_id].name  || historyItem.update.highlight_name }}</span>
+                    <span class="more-description" translate>Created from highlight</span><span>: {{highlightsById[historyItem.update.highlight_id].name  || historyItem.update.highlight_name }}</span>
             </div>
 
             <div ng-if="['link', 'take', 'reopen'].includes(historyItem.operation)">
-                <strong ng-if="historyItem.operation === 'link'">{{ :: 'Linked by' | translate }}</strong> 
-                <strong ng-if="historyItem.operation === 'take'">{{ :: 'Take created by' | translate }}</strong> 
-                <strong ng-if="historyItem.operation === 'reopen'">{{ :: 'Reopened by' | translate }}</strong> 
-                {{ :: historyItem.displayName }}
+                <strong ng-if="historyItem.operation === 'link'">{{'Linked by' | translate }}</strong> 
+                <strong ng-if="historyItem.operation === 'take'">{{'Take created by' | translate }}</strong> 
+                <strong ng-if="historyItem.operation === 'reopen'">{{'Reopened by' | translate }}</strong> 
+                {{historyItem.displayName }}
                 <em><time sd-absdate datetime="historyItem._created"></time></em>
                 <span ng-if="historyItems[$index-1].version !== historyItem.version && historyItem.version !== 0" class="version">
-                    <span translate>version</span><span>: {{:: historyItem.version }}</span>
+                    <span translate>version</span><span>: {{historyItem.version }}</span>
                 </span>
                 <div class="more-description" ng-if="historyItem.update.rewrite_of">
-                    <span translate>as rewrite of</span>:<a href="" ng-click="open(historyItem.update.rewrite_of)">  {{:: historyItem.update.rewrite_of }}</a>
+                    <span translate>as rewrite of</span>:<a href="" ng-click="open(historyItem.update.rewrite_of)">  {{historyItem.update.rewrite_of }}</a>
                 </div>
                 <div class="more-description" ng-if="historyItem.update.linked_to">
-                    <span translate>linked to</span>:<a href="" ng-click="open(historyItem.update.linked_to)"> {{:: historyItem.update.linked_to }}</a>
+                    <span translate>linked to</span>:<a href="" ng-click="open(historyItem.update.linked_to)"> {{historyItem.update.linked_to }}</a>
                 </div>
             </div>
 
             <div ng-if="historyItem.operation === 'unlink'">
-                <strong>{{ :: 'Unlinked by' | translate }}</strong> {{ :: historyItem.displayName }}
+                <strong>{{'Unlinked by' | translate }}</strong> {{historyItem.displayName }}
                 <em><time sd-absdate datetime="historyItem._created"></time></em>
                 <span ng-if="historyItems[$index-1].version !== historyItem.version && historyItem.version !== 0" class="version">
-                    <span translate>version</span><span>: {{:: historyItem.version }}</span>
+                    <span translate>version</span><span>: {{historyItem.version }}</span>
                 </span>
                 <div class="more-description" ng-if="historyItem.update.hasOwnProperty('rewrite_of')">
                     <span translate>Rewrite link is removed</span>
@@ -162,27 +162,27 @@
             </div>
 
             <div ng-if="historyItem.operation === 'rewrite'">
-                <strong>{{ :: 'Rewritten by' | translate }}</strong> {{ :: historyItem.displayName }}
+                <strong>{{'Rewritten by' | translate }}</strong> {{historyItem.displayName }}
                 <em><time sd-absdate datetime="historyItem._created"></time></em>
                 <span ng-if="historyItems[$index-1].version !== historyItem.version && historyItem.version !== 0" class="version">
-                    <span translate>version</span><span>: {{:: historyItem.version }}</span>
+                    <span translate>version</span><span>: {{historyItem.version }}</span>
                 </span>
                 <div class="more-description" ng-if="historyItem.update.rewritten_by">
-                    <span translate>rewrite id</span>:<a href="" ng-click="open(historyItem.update.rewritten_by)"> {{:: historyItem.update.rewritten_by }}</a>
+                    <span translate>rewrite id</span>:<a href="" ng-click="open(historyItem.update.rewritten_by)"> {{historyItem.update.rewritten_by }}</a>
                 </div>
             </div>
 
             <div ng-if="['publish', 'correct', 'kill', 'resend', 'takedown'].includes(historyItem.operation)">
-                <strong ng-if="historyItem.operation === 'publish' && historyItem.update.state === 'scheduled'">{{ :: 'Scheduled by' | translate }}</strong>
-                <strong ng-if="historyItem.operation === 'publish' && historyItem.update.state !== 'scheduled'">{{ :: 'Published by' | translate }}</strong>
-                <strong ng-if="historyItem.operation === 'correct'">{{ :: 'Corrected by' | translate }}</strong>
-                <strong ng-if="historyItem.operation === 'kill'">{{ :: 'Killed by' | translate }}</strong>
-                <strong ng-if="historyItem.operation === 'takedown'">{{ :: 'Recalled by' | translate }}</strong>
-                <strong ng-if="historyItem.operation === 'resend'">{{ :: 'Resent by' | translate }}</strong> 
-                {{ :: historyItem.displayName }}
+                <strong ng-if="historyItem.operation === 'publish' && historyItem.update.state === 'scheduled'">{{'Scheduled by' | translate }}</strong>
+                <strong ng-if="historyItem.operation === 'publish' && historyItem.update.state !== 'scheduled'">{{'Published by' | translate }}</strong>
+                <strong ng-if="historyItem.operation === 'correct'">{{'Corrected by' | translate }}</strong>
+                <strong ng-if="historyItem.operation === 'kill'">{{'Killed by' | translate }}</strong>
+                <strong ng-if="historyItem.operation === 'takedown'">{{'Recalled by' | translate }}</strong>
+                <strong ng-if="historyItem.operation === 'resend'">{{'Resent by' | translate }}</strong> 
+                {{historyItem.displayName }}
                 <em><time sd-absdate datetime="historyItem._created"></time></em>
                 <span ng-if="historyItems[$index-1].version !== historyItem.version && historyItem.version !== 0" class="version">
-                    <span translate>version</span><span>: {{:: historyItem.version }}</span>
+                    <span translate>version</span><span>: {{historyItem.version }}</span>
                 </span>
                 <div ng-if="['publish', 'correct', 'kill', 'takedown'].includes(historyItem.operation) && historyItem.update.state !== 'scheduled'"
                      sd-transmission-details data-item="historyItem" data-type="item._type" class="queued"></div>

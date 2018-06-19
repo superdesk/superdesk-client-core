@@ -2,7 +2,7 @@
     <div class="main-list" 
         ng-class="{wrap: agg.selected && !$root.config.features.customMonitoringWidget, 'custom-widget': $root.config.features.customMonitoringWidget}">
         <div class="search-box">
-            <input type="text" placeholder="{{ :: 'Search' | translate }}"
+            <input type="text" placeholder="{{'Search' | translate }}"
                    ng-model="query"
                    ng-model-options="{debounce: 500}"
                    ng-change="agg.search(query)">

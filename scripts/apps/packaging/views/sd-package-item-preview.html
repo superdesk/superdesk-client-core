@@ -1,7 +1,7 @@
-<div class="package-item item {{ :: data.type }}" ng-class="{locked: isLocked, published: isPublished, killed: isKilled}">
+<div class="package-item item {{data.type }}" ng-class="{locked: isLocked, published: isPublished, killed: isKilled}">
   <div class="package-item__drag-handle"></div>
   <figure class="package-item__icon-holder" ng-if="data.type === 'composite' || data.type === 'text'">
-    <i class="filetype-icon-large-{{ :: data.type }}"></i>
+    <i class="filetype-icon-large-{{data.type }}"></i>
   </figure>
 
   <div class="package-item__thumb-holder" ng-if="data.type !== 'composite' && data.type !== 'text'">
@@ -15,9 +15,9 @@
 
   <div class="package-item__item-text-group">
     <div class="package-item__item-headline">
-      <div ng-show=":: data.headline || data.slugline || data.description_text">{{ :: data.headline || data.slugline || data.description_text}}</div>
-	  <div ng-show=":: data.anpa_take_key">{{ :: data.anpa_take_key}}</div>
-      <div ng-hide=":: data.headline || data.slugline || data.description_text" translate>Blank headline received</div>
+      <div ng-show="data.headline || data.slugline || data.description_text">{{data.headline || data.slugline || data.description_text}}</div>
+	  <div ng-show="data.anpa_take_key">{{data.anpa_take_key}}</div>
+      <div ng-hide="data.headline || data.slugline || data.description_text" translate>Blank headline received</div>
     </div>
     <div>
       <span ng-if="label" class="state-label state-in_progress" translate>label: <b>{{label.name}}</b></span></span>

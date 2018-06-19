@@ -14,9 +14,9 @@
                 <span ng-if="filter.is_archived_filter" class="label label--warning label--hollow">Archived Block</span>
                 <span ng-if="filter.api_block" class="label label--warning label--hollow">Block API</span>
                 <div class="actions">
-                    <button ng-click="productionTest(filter)" title="{{:: 'Test Filter Against Content' | translate }}"><i class="icon-ok"></i></button>
-                    <button ng-click="editFilter(filter)" title="{{:: 'Edit Content Filter' | translate }}"><i class="icon-pencil"></i></button>
-                    <button ng-click="remove(filter)" title="{{:: 'Remove Content Filter' | translate }}"><i class="icon-trash"></i></button>
+                    <button ng-click="productionTest(filter)" title="{{'Test Filter Against Content' | translate }}"><i class="icon-ok"></i></button>
+                    <button ng-click="editFilter(filter)" title="{{'Edit Content Filter' | translate }}"><i class="icon-pencil"></i></button>
+                    <button ng-click="remove(filter)" title="{{'Remove Content Filter' | translate }}"><i class="icon-trash"></i></button>
                 </div>
             </div>
         </li>
@@ -27,7 +27,7 @@
 <!-- Modal - -->
     <div sd-modal data-model="contentFilter" data-close="close()" class="modal--large content-filter-modal">
         <div class="modal__header"> <a href="" class="close" ng-click="close()"><i class="icon-close-small"></i></a>
-            <h3 class="modal__heading" ng-show="contentFilter._id"><span translate>Edit Content Filter</span> <span>"{{:: origContentFilter.name }}"</span></h3>
+            <h3 class="modal__heading" ng-show="contentFilter._id"><span translate>Edit Content Filter</span> <span>"{{origContentFilter.name }}"</span></h3>
             <h3 class="modal__heading" translate ng-hide="contentFilter._id">Add New Content Filter</h3>
         </div>
         <div class="modal__body">
@@ -45,14 +45,14 @@
 
                     <div class="form__row">
                         <div class="list-row list-row--small">
-                            <span ng-model="contentFilter.is_global" sd-switch title="{{ contentFilter.is_global ? 'Global Block Enabled' : 'Global Block Disabled'  | translate }}"></span><label>{{:: 'Global Block' | translate }}</label>
+                            <span ng-model="contentFilter.is_global" sd-switch title="{{ contentFilter.is_global ? 'Global Block Enabled' : 'Global Block Disabled'  | translate }}"></span><label>{{'Global Block' | translate }}</label>
                         </div>
                         <div class="list-row list-row--small">
-                            <span ng-model="contentFilter.is_archived_filter" sd-switch title="{{ contentFilter.is_archived_filter ? 'Archived Block Enabled' : 'Archived Block Disabled'  | translate }}"></span><label>{{:: 'Archived Block' | translate }}</label>
+                            <span ng-model="contentFilter.is_archived_filter" sd-switch title="{{ contentFilter.is_archived_filter ? 'Archived Block Enabled' : 'Archived Block Disabled'  | translate }}"></span><label>{{'Archived Block' | translate }}</label>
                             
                         </div>
                         <div class="list-row list-row--small">
-                            <span ng-model="contentFilter.api_block" sd-switch title="{{ contentFilter.api_block ? 'API Block Enabled' : 'API Block Disabled' | translate }}"></span><label>{{:: 'Block API' | translate }}</label>
+                            <span ng-model="contentFilter.api_block" sd-switch title="{{ contentFilter.api_block ? 'API Block Enabled' : 'API Block Disabled' | translate }}"></span><label>{{'Block API' | translate }}</label>
                             
                         </div>
                     </div>
@@ -72,7 +72,7 @@
                                         <label class="sd-line-input__label">Filter Preview</label>
                                         <select class="sd-line-input__select" ng-model="filterRow.selected">
                                             <option value=""></option>
-                                            <option value="{{filter._id}}" ng-repeat="filter in filterConditions track by filter._id">{{:: filter.name}}</option>
+                                            <option value="{{filter._id}}" ng-repeat="filter in filterConditions track by filter._id">{{filter.name}}</option>
                                         </select>
                                     </div>
                                     <button class="btn" type="button" ng-click="addFilter(filterRow, 'fc')" translate>Add</button>
@@ -84,7 +84,7 @@
                                         <label class="sd-line-input__label">Content Preview</label>
                                         <select class="sd-line-input__select" ng-model="filterRow.selected">
                                             <option value=""></option>
-                                            <option ng-if="filter._id!==contentFilter._id" value="{{filter._id}}" ng-repeat="filter in contentFilters track by filter._id">{{:: filter.name}}</option>
+                                            <option ng-if="filter._id!==contentFilter._id" value="{{filter._id}}" ng-repeat="filter in contentFilters track by filter._id">{{filter.name}}</option>
                                         </select>
                                     </div>
                                     <button class="btn" type="button" ng-click="addFilter(filterRow, 'pf')" translate>Add</button>

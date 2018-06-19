@@ -8,7 +8,7 @@
         select="selectTimeZone(item)"
         always-visible="tzSearchTerm"
         placeholder="ie. Europe/London">
-        <li typeahead-item="tz" ng-repeat="tz in matchingTimeZones track by tz">{{ ::tz}}</li>
+        <li typeahead-item="tz" ng-repeat="tz in matchingTimeZones track by tz">{{ tz}}</li>
         <li ng-show="tzSearchTerm && matchingTimeZones.length === 0"
             class="no-match"
             translate>(no matches)
@@ -23,7 +23,7 @@
     <li class="pull-left">
         <div id="timezone" class="name right-pad">{{timezone}}</div>
         <div class="actions">
-            <button title="{{:: 'Clear' | translate }}" ng-click="clearSelectedTimeZone()">
+            <button title="{{'Clear' | translate }}" ng-click="clearSelectedTimeZone()">
                 <i class="icon-remove-sign"></i>
             </button>
         </div>

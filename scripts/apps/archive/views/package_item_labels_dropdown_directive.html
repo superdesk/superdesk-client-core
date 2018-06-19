@@ -1,15 +1,15 @@
 <ul>
     <li ng-if="labels.length">
         <button option="No label" ng-click="setItemLabel(null);" class="remove">
-            <i class="icon-remove"></i>-- {{::'No label'|translate}} --
+            <i class="icon-remove"></i>-- {{'No label'|translate}} --
         </button>
     </li>
     <li ng-if="labels.length" ng-repeat="label in labels track by label.qcode">
         <button ng-disabled="isSetItemLabel(label)" option="{{ label.name }}" ng-click="setItemLabel(label);">
-             <i class="icon-label"></i>{{ :: label.name | translate }}
+             <i class="icon-label"></i>{{label.name | translate }}
         </button>
     </li>
     <li ng-if="!labels.length">
-       <button ng-disabled="true">{{::'No available labels'|translate}}</button>
+       <button ng-disabled="true">{{'No available labels'|translate}}</button>
     </li>
 </ul>

@@ -1,5 +1,5 @@
 <div class="filter-content" ng-class="{pull: showSaveSearch}">
-    <div sd-toggle-box data-title="{{:: 'Content types' | translate }}" ng-hide="isEmpty('type')" data-open="true">
+    <div sd-toggle-box data-title="{{'Content types' | translate }}" ng-hide="isEmpty('type')" data-open="true">
         <ul class="filter-box content-type-filters">
             <li ng-repeat="(key,value) in aggregations.type" ng-click="toggleFilter('type', key)" ng-class="{checked: hasFilter('type',key)}">
                 <span class="hover-box">
@@ -8,53 +8,53 @@
                 </span>
                 <span>{{ key | translate}} <i>{{ value }}</i></span>
                 <span class="icon-close-small pull-right remove-aggregate"
-                      title="{{ :: 'Remove' | translate }}"
+                      title="{{'Remove' | translate }}"
                       ng-if="repo.search === 'local'"
                       ng-click="excludeFacet('type', key, $event)"></span>
             </li>
         </ul>
     </div>
 
-    <div sd-toggle-box data-title="{{ :: 'Languages' | translate }}" ng-hide="isEmpty('language')" data-open="true">
+    <div sd-toggle-box data-title="{{'Languages' | translate }}" ng-hide="isEmpty('language')" data-open="true">
         <ul class="filter-box">
             <li ng-repeat="(code, count) in aggregations.language" ng-click="toggleFilter('language', code)">
                 <span class="sd-checkbox" ng-checked="hasFilter('language', code)"></span>
-                <span>{{ :: languageLabel[code] || code }} <i>{{ count }}</i></span>
+                <span>{{languageLabel[code] || code }} <i>{{ count }}</i></span>
                 <span class="icon-close-small pull-right remove-aggregate"
-                      title="{{ :: 'Remove' | translate }}"
+                      title="{{'Remove' | translate }}"
                       ng-if="repo.search === 'local'"
                       ng-click="excludeFacet('language', code, $event)"></span>
             </li>
         </ul>
     </div>
 
-    <div sd-toggle-box data-title="{{:: 'Desks' | translate }}" ng-hide="isEmpty('desk')" data-open="true">
+    <div sd-toggle-box data-title="{{'Desks' | translate }}" ng-hide="isEmpty('desk')" data-open="true">
         <ul class="filter-box">
             <li ng-repeat="(key,value) in aggregations.desk" ng-click="toggleFilter('desk', value.id)">
                 <span class="sd-checkbox" ng-checked="hasFilter('desk', value.id)"></span>
                 <span>{{ key | translate}} <i>{{ value.count }}</i></span>
                 <span class="icon-close-small pull-right remove-aggregate"
-                      title="{{ :: 'Remove' | translate }}"
+                      title="{{'Remove' | translate }}"
                       ng-if="repo.search === 'local'"
                       ng-click="excludeFacet('desk', value.id, $event)"></span>
             </li>
         </ul>
     </div>
 
-    <div sd-toggle-box data-title="{{:: 'Sources' | translate }}" ng-hide="isEmpty('source')" data-open="true">
+    <div sd-toggle-box data-title="{{'Sources' | translate }}" ng-hide="isEmpty('source')" data-open="true">
         <ul class="filter-box">
             <li ng-repeat="(key,value) in aggregations.source" ng-click="toggleFilter('source', key)">
                 <span class="sd-checkbox" ng-checked="hasFilter('source',key)"></span>
                 <span>{{ key | translate}} <i>{{ value }}</i></span>
                 <span class="icon-close-small pull-right remove-aggregate"
-                      title="{{ :: 'Remove' | translate }}"
+                      title="{{'Remove' | translate }}"
                       ng-if="repo.search === 'local'"
                       ng-click="excludeFacet('source', key, $event)"></span>
             </li>
         </ul>
     </div>
 
-    <div sd-toggle-box data-title="{{:: 'Credits' | translate }}" ng-hide="isEmpty('credit')" data-open="true">
+    <div sd-toggle-box data-title="{{'Credits' | translate }}" ng-hide="isEmpty('credit')" data-open="true">
         <ul class="filter-box">
             <li ng-repeat="(key,value) in aggregations.credit" ng-click="toggleFilter('credit', key)">
                 <span class="sd-checkbox" ng-checked="hasFilter('credit', key)"></span>
@@ -63,13 +63,13 @@
         </ul>
     </div>
 
-    <div sd-toggle-box data-title="{{:: 'Services' | translate }}" ng-hide="isEmpty('category')" data-open="true">
+    <div sd-toggle-box data-title="{{'Services' | translate }}" ng-hide="isEmpty('category')" data-open="true">
         <ul class="filter-box">
             <li ng-repeat="(key,value) in aggregations.category" ng-click="toggleFilter('category', key)">
                 <span class="sd-checkbox" ng-checked="hasFilter('category',key)"></span>
                 <span>{{ key | translate}} <i>{{ value }}</i></span>
                 <span class="icon-close-small pull-right remove-aggregate"
-                      title="{{ :: 'Remove' | translate }}"
+                      title="{{'Remove' | translate }}"
                       ng-if="repo.search === 'local'"
                       ng-click="excludeFacet('category', key, $event)"></span>
             </li>
@@ -77,67 +77,67 @@
     </div>
 
 
-    <div sd-toggle-box data-title="{{:: 'Genres' | translate }}" ng-hide="isEmpty('genre')" data-open="true">
+    <div sd-toggle-box data-title="{{'Genres' | translate }}" ng-hide="isEmpty('genre')" data-open="true">
         <ul class="filter-box">
             <li ng-repeat="(key,value) in aggregations.genre" ng-click="toggleFilter('genre', key)">
                 <span class="sd-checkbox" ng-checked="hasFilter('genre',key)"></span>
                 <span>{{ key | translate}} <i>{{ value }}</i></span>
                 <span class="icon-close-small pull-right remove-aggregate"
-                      title="{{ :: 'Remove' | translate }}"
+                      title="{{'Remove' | translate }}"
                       ng-if="repo.search === 'local'"
                       ng-click="excludeFacet('genre', key, $event)"></span>
             </li>
         </ul>
     </div>
 
-    <div sd-toggle-box data-title="{{:: 'Urgency' | translate }}" ng-hide="isEmpty('urgency')" data-open="true">
+    <div sd-toggle-box data-title="{{'Urgency' | translate }}" ng-hide="isEmpty('urgency')" data-open="true">
         <ul class="filter-box">
             <li ng-repeat="(key,value) in aggregations.urgency" ng-click="toggleFilter('urgency', key)">
                 <span class="sd-checkbox" ng-checked="hasFilter('urgency',key)"></span>
                 <span>{{ key | translate}} <i>{{ value }}</i></span>
                 <span class="icon-close-small pull-right remove-aggregate"
-                      title="{{ :: 'Remove' | translate }}"
+                      title="{{'Remove' | translate }}"
                       ng-if="repo.search === 'local'"
                       ng-click="excludeFacet('urgency', key, $event)"></span>
             </li>
         </ul>
     </div>
 
-    <div sd-toggle-box data-title="{{:: 'Priority' | translate }}" ng-hide="isEmpty('priority')" data-open="true">
+    <div sd-toggle-box data-title="{{'Priority' | translate }}" ng-hide="isEmpty('priority')" data-open="true">
         <ul class="filter-box">
             <li ng-repeat="(key,value) in aggregations.priority" ng-click="toggleFilter('priority', key)">
                 <span class="sd-checkbox" ng-checked="hasFilter('priority',key)"></span>
                 <span>{{ key | translate}} <i>{{ value }}</i></span>
                 <span class="icon-close-small pull-right remove-aggregate"
-                      title="{{ :: 'Remove' | translate }}"
+                      title="{{'Remove' | translate }}"
                       ng-if="repo.search === 'local'"
                       ng-click="excludeFacet('priority', key, $event)"></span>
             </li>
         </ul>
     </div>
 
-    <div sd-toggle-box data-title="{{:: 'Flags' | translate }}" ng-hide="isEmpty('legal') && isEmpty('sms')" data-open="true">
+    <div sd-toggle-box data-title="{{'Flags' | translate }}" ng-hide="isEmpty('legal') && isEmpty('sms')" data-open="true">
         <ul class="filter-box">
             <li ng-click="toggleFilter('legal', 'true')" ng-hide="isEmpty('legal')">
                 <span class="sd-checkbox" ng-checked="hasFilter('legal', 'true')"></span>
-                <span>{{:: 'Legal' | translate}} <i>{{ aggregations.legal.count }}</i></span>
+                <span>{{'Legal' | translate}} <i>{{ aggregations.legal.count }}</i></span>
                 <span class="icon-close-small pull-right remove-aggregate"
-                      title="{{ :: 'Remove' | translate }}"
+                      title="{{'Remove' | translate }}"
                       ng-if="repo.search === 'local'"
                       ng-click="excludeFacet('legal', 'true', $event)"></span>
             </li>
             <li ng-click="toggleFilter('sms', 'true')" ng-hide="isEmpty('sms')">
                 <span class="sd-checkbox" ng-checked="hasFilter('sms', 'true')"></span>
-                <span>{{:: 'Sms' | translate}} <i>{{ aggregations.sms.count }}</i></span>
+                <span>{{'Sms' | translate}} <i>{{ aggregations.sms.count }}</i></span>
                 <span class="icon-close-small pull-right remove-aggregate"
-                      title="{{ :: 'Remove' | translate }}"
+                      title="{{'Remove' | translate }}"
                       ng-if="repo.search === 'local'"
                       ng-click="excludeFacet('sms', 'true', $event)"></span>
             </li>
         </ul>
     </div>
 
-    <div sd-toggle-box data-title="{{:: 'Dates' | translate }}" data-open="true">
+    <div sd-toggle-box data-title="{{'Dates' | translate }}" data-open="true">
         <form class="date-filter">
             <div class="predefined-dates">
                     <button ng-click="toggleFilter('date', 'Last Day')" 
@@ -187,7 +187,7 @@
        </form>
     </div>
 
-    <div sd-toggle-box data-title="{{:: 'Scheduled' | translate }}" data-open="true" ng-show="search_config.scheduled">
+    <div sd-toggle-box data-title="{{'Scheduled' | translate }}" data-open="true" ng-show="search_config.scheduled">
         <form class="date-filter">
             <div class="predefined-dates">
                 <button id="search_scheduled_24h" ng-click="toggleFilter('date', 'Scheduled Last Day')" class="btn btn--mini" 

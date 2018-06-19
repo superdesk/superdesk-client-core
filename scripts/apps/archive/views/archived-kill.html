@@ -1,7 +1,7 @@
 <div sd-modal data-model="item">
     <div class="modal__header">
         <a href="" class="close" ng-click="cancel()"><i class="icon-close-small"></i></a>
-        <h3 class="modal__heading">{{ :: action === 'kill' && 'Kill Item' || 'Takedown Item' | translate}}</h3>
+        <h3 class="modal__heading">{{action === 'kill' && 'Kill Item' || 'Takedown Item' | translate}}</h3>
     </div>
 
     <div class="modal__body">
@@ -14,6 +14,6 @@
 
     <div class="modal__footer">
         <button class="btn" ng-click="cancel()" translate>Cancel</button>
-        <button class="btn btn--primary" ng-click="kill()" >{{ :: action === 'kill' && 'Kill' || 'Takedown' | translate}}</button>
+        <button class="btn btn--primary" ng-click="kill()" >{{action === 'kill' && 'Kill' || 'Takedown' | translate}}</button>
     </div>
 </div>

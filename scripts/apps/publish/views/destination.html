@@ -11,7 +11,7 @@
             <i class="field-info pull-right">*</i>
             <select id="destination-format" class="input" required ng-model="destination.format">
                 <option value=""></option>
-                <option value="{{format.qcode}}" ng-selected="format.qcode === destination.format" ng-repeat="format in $parent.formats track by format.qcode">{{:: format.name | translate}}</option>
+                <option value="{{format.qcode}}" ng-selected="format.qcode === destination.format" ng-repeat="format in $parent.formats track by format.qcode">{{format.name | translate}}</option>
             </select>
         </div>
 
@@ -27,7 +27,7 @@
 
         <div class="field" ng-if="actions">
             <button type="button" class="btn" ng-class="{'btn--primary' : action.label === 'Save'}" ng-repeat="action in actions" ng-click="action.fn(destination)">
-                <span>{{:: action.label | translate}}</span>
+                <span>{{action.label | translate}}</span>
             </button>
         </div>
     </fieldset>

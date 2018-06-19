@@ -15,14 +15,14 @@
                 <fieldset>
                     <div class="field">
                         <label class="right">
-                            {{ :: 'Active' | translate }}
+                            {{'Active' | translate }}
                             <span sd-switch ng-model="dictionary.is_active"></span>
                         </label>
                     </div>
                     <div class="field">
                         <label for="dict-name" translate>Dictionary name</label>
                         <input id="dict-name" type="text" ng-if="!dictionary.user" ng-model="dictionary.name" required>
-                        <div ng-if="dictionary.user">{{ :: (!isAbbreviations() ? 'Personal' : 'Abbreviations') | translate}}</div>
+                        <div ng-if="dictionary.user">{{(!isAbbreviations() ? 'Personal' : 'Abbreviations') | translate}}</div>
                     </div>
                     <div class="field">
                         <label for="dict-lang-code" translate>Language code</label>
@@ -49,7 +49,7 @@
 
             <ng-form ng-if="dictionary._id && !isAbbreviations()">
                 <fieldset>
-                    <label for="words-search">{{ :: 'Search' | translate }} (<span translate translate-n="wordsCount" translate-plural="{{ $count}} words">{{ wordsCount}} word</span>)</label>
+                    <label for="words-search">{{'Search' | translate }} (<span translate translate-n="wordsCount" translate-plural="{{ $count}} words">{{ wordsCount}} word</span>)</label>
                     <div class="multiple">
                         <div class="field">
                             <input id="words-search"
@@ -69,7 +69,7 @@
                     <ul vs-repeat class="words-list" ng-show="words.length">
                         {{words.length}}
                         <li ng-repeat="word in words track by word">
-                            {{ :: word}}
+                            {{word}}
                             <button class="btn btn--small btn--icon-only btn--hollow pull-right"
                                     ng-click="removeWord(word, search)">
                                 <i class="icon-trash"></i>
@@ -96,10 +96,10 @@
                 <div class="divider"></div>
                 <div class="abbreviations-list" ng-if="abbreviationKeys.length">
                     <div class="field abbreviations-field">
-                        <label>{{ :: 'Abbreviation' | translate}}</label>
+                        <label>{{'Abbreviation' | translate}}</label>
                     </div>
                     <div class="field abbreviations-field">
-                        <label>{{ :: 'Phrase' | translate}}</label>
+                        <label>{{'Phrase' | translate}}</label>
                     </div>
                     <div ng-repeat="key in abbreviationKeys track by key">
                         <div class="field abbreviations-field">

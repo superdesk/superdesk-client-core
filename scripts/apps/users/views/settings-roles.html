@@ -2,7 +2,7 @@
     <div class="sd-page__header">
         <span class="sd-page__element-grow"></span>
         <button class="btn btn--primary" ng-click="edit({})">
-            <i class="icon-plus-sign icon--white"></i> {{:: 'Add New' | translate}}
+            <i class="icon-plus-sign icon--white"></i> {{'Add New' | translate}}
         </button>
     </div>
 
@@ -13,8 +13,8 @@
                     <h6>{{role.name}}</h6>
                     <span class="label label--primary label--hollow" ng-if="role.is_default" translate>default</span>
                     <div class="actions">
-                        <button ng-click="edit(role)" title="{{:: 'Edit role' | translate }}"><i class="icon-pencil"></i></button>
-                        <button ng-click="remove(role)" title="{{:: 'Remove role' | translate }}"><i class="icon-trash"></i></button>
+                        <button ng-click="edit(role)" title="{{'Edit role' | translate }}"><i class="icon-pencil"></i></button>
+                        <button ng-click="remove(role)" title="{{'Remove role' | translate }}"><i class="icon-trash"></i></button>
                     </div>
                 </div>
             </li>
@@ -47,7 +47,7 @@
                                 </div>
                             </div>
                             <div class="form__row">
-                                <sd-check ng-model="editRole.is_default" id="is_default" ng-disabled="defaultRole">{{:: 'Set as default' | translate }}</sd-check>
+                                <sd-check ng-model="editRole.is_default" id="is_default" ng-disabled="defaultRole">{{'Set as default' | translate }}</sd-check>
                             </div>
                         </fieldset>
                     </form>

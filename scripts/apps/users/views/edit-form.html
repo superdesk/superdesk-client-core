@@ -38,8 +38,8 @@
         <!-- General Tab content -->
         <div class="details-info" ng-show="!tab || tab === 'general'">
             <div sd-info-item class="user_type form__row" ng-if="privileges.users && isNetworkSubscription()" style="margin-bottom: 20px;">
-                <sd-check ng-true-value="administrator" ng-false-value="user" ng-model="user.user_type" name="user_type" id="user_type">{{ :: 'Administrator'|translate }}</sd-check>
-                <sd-check ng-model="user.is_author" name="user_author" id="user_author">{{ :: 'Author'|translate }}</sd-check>
+                <sd-check ng-true-value="administrator" ng-false-value="user" ng-model="user.user_type" name="user_type" id="user_type">{{'Administrator'|translate }}</sd-check>
+                <sd-check ng-model="user.is_author" name="user_author" id="user_author">{{'Author'|translate }}</sd-check>
             </div>
 
             <div class="form__row field__full_name" sd-info-item ng-show="user._id">
@@ -135,7 +135,7 @@
                     <label class="sd-line-input__label" for="user_language" translate>Language</label>
                     <select class="sd-line-input__select" ng-focus="focused()" ng-model="user.language" name="user_language" id="user_language" ng-options="lang.code as lang.nativeName for lang in languages"></select>
                     <div class="sd-line-input__hint">
-                        <a href="https://www.transifex.com/projects/p/superdesk/" target="_blank" class="sd-blue">{{ :: "Help us translate Superdesk" | translate }}</a>
+                        <a href="https://www.transifex.com/projects/p/superdesk/" target="_blank" class="sd-blue">{{"Help us translate Superdesk" | translate }}</a>
                     </div>
                 </div>
             </div>
@@ -216,40 +216,40 @@
 
             <div sd-info-item class="form__row" ng-if="privileges.users">
                 <div class="sd-line-input">
-                    <label class="sd-line-input__label" for="biography">{{ :: 'Biography'|translate }}</label>
+                    <label class="sd-line-input__label" for="biography">{{'Biography'|translate }}</label>
                     <textarea class="sd-line-input__input" id="biography" sd-auto-height ng-model="user.biography" ng-disabled="!user.is_author"></textarea>
                 </div>
             </div>
 
             <div sd-info-item class="form__row" ng-if="privileges.users">
                 <div class="sd-line-input">
-                    <label class="sd-line-input__label" for="facebook">{{ :: 'Facebook'|translate }}</label>
+                    <label class="sd-line-input__label" for="facebook">{{'Facebook'|translate }}</label>
                     <input id="facebook"
                            type="text"
                            name="facebook"
                            class="sd-line-input__input"
                            ng-model="user.facebook"
                            ng-disabled="!user.is_author">
-                    <div class="sd-line-input__hint">{{ :: 'e.g. superdeskman from https://www.facebook.com/superdeskman'|translate }}</div>
+                    <div class="sd-line-input__hint">{{'e.g. superdeskman from https://www.facebook.com/superdeskman'|translate }}</div>
                 </div>
             </div>
 
             <div sd-info-item class="form__row" ng-if="privileges.users">
                 <div class="sd-line-input">
-                    <label class="sd-line-input__label" for="instagram">{{ :: 'Instagram'|translate }}</label>
+                    <label class="sd-line-input__label" for="instagram">{{'Instagram'|translate }}</label>
                     <input id="instagram"
                            type="text"
                            name="instagram"
                            class="sd-line-input__input"
                            ng-model="user.instagram"
                            ng-disabled="!user.is_author">
-                    <div class="sd-line-input__hint">{{ :: 'e.g. superdeskman from https://www.instagram.com/superdeskman'|translate }}</div>
+                    <div class="sd-line-input__hint">{{'e.g. superdeskman from https://www.instagram.com/superdeskman'|translate }}</div>
                 </div>
             </div>
 
             <div sd-info-item class="form__row" ng-if="privileges.users">
                 <div class="sd-line-input">
-                    <label class="sd-line-input__label" for="twitter">{{ :: 'Twitter'|translate }}</label>
+                    <label class="sd-line-input__label" for="twitter">{{'Twitter'|translate }}</label>
                     <input id="twitter"
                            type="text"
                            name="twitter"
@@ -257,7 +257,7 @@
                            ng-model="user.twitter"
                            ng-disabled="!user.is_author"
                            ng-pattern="twitterPattern">
-                    <div class="sd-line-input__hint">{{ :: 'e.g. @superdeskman'|translate }}</div>
+                    <div class="sd-line-input__hint">{{'e.g. @superdeskman'|translate }}</div>
                     <div class="sd-line-input__message--add-padding" ng-show="userForm.twitter.$error.pattern" sd-valid-info>
                         <i class="icon-info-sign-warning"></i>
                         <span translate>Please provide a valid twitter account</span>

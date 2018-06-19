@@ -1,6 +1,6 @@
 <div class="dropdown dropdown--dropright dropdown--hover highlights-dropdown" dropdown ng-controller="SearchMenuController as search">
     <a href="#/search" class="dropdown__toggle sd-sidebar-menu__btn"
-        title="{{ :: 'Search' | translate }}"
+        title="{{'Search' | translate }}"
         sd-hotkey="ctrl+alt+f" sd-hotkey-options="{global: true}"
         ng-click="hideMonitoring(currentRoute.href === '/search', $event)">
         <i class="sd-sidebar-menu__main-icon big-icon--global-search"></i>
@@ -9,7 +9,7 @@
     <ul ng-if="search.providers.length > 1" class="dropdown__menu pull-left">
         <li ng-repeat="provider in search.providers track by provider._id">
             <button ng-click="search.loadSearchShortcut(provider)">
-                {{ :: search.providerLabel(provider) }}
+                {{search.providerLabel(provider) }}
             </button>
         </li>
     </ul>

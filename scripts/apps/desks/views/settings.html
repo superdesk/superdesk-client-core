@@ -5,7 +5,7 @@
     <div class="sd-page__header">
         <span class="sd-page__element-grow"></span>
         <button id="add-new-desk" class="btn btn--primary" ng-click="openDesk('general')">
-            <i class="icon-plus-sign icon--white"></i> {{ :: 'Add New' | translate }}
+            <i class="icon-plus-sign icon--white"></i> {{'Add New' | translate }}
         </button>
     </div>
 
@@ -21,9 +21,9 @@
                         <ul class="dropdown__menu more-activity-menu pull-right">
                             <li><div class="dropdown__menu-label" translate>Actions</div></li>
                             <li class="dropdown__menu-divider"></li>
-                            <li><button ng-click="openDesk('general', desk)" title="{{:: 'Edit desk'| translate }}"><i class="icon-pencil"></i>{{:: 'Edit'| translate}}</button></li>
-                            <li><button ng-click="openMonitoringSettings(desk)" title="{{:: 'Monitoring settings'| translate }}"><i class="icon-settings"></i>{{:: 'Monitoring settings'| translate}}</button></li>
-                            <li><button ng-click="remove(desk)" title="{{:: 'Remove desk'| translate }}"><i class="icon-trash"></i>{{:: 'Remove'| translate}}</button></li>
+                            <li><button ng-click="openDesk('general', desk)" title="{{'Edit desk'| translate }}"><i class="icon-pencil"></i>{{'Edit'| translate}}</button></li>
+                            <li><button ng-click="openMonitoringSettings(desk)" title="{{'Monitoring settings'| translate }}"><i class="icon-settings"></i>{{'Monitoring settings'| translate}}</button></li>
+                            <li><button ng-click="remove(desk)" title="{{'Remove desk'| translate }}"><i class="icon-trash"></i>{{'Remove'| translate}}</button></li>
                         </ul>
                     </div>
                     <div class="card-box__heading">{{ desk.name }}</div>
@@ -31,26 +31,26 @@
                 <div class="card-box__content">
                     <ul class="card-box__content-list">
                         <li>
-                            <h4>{{ :: 'Stages' | translate }}<span class="label">{{getDeskStages(desk).length}}</span></h4>
+                            <h4>{{'Stages' | translate }}<span class="label">{{getDeskStages(desk).length}}</span></h4>
                             <span ng-repeat="stage in getDeskStages(desk) track by stage._id" class="card-box__content-list-inline-span">{{stage.name}}<span ng-if="$index < getDeskStages(desk).length-1">,&nbsp;</span></span>
                         </li>
                         <li>
-                            <h4>{{ :: 'People' | translate }}<span class="label">{{getDeskUsers(desk).length}}</span></h4>
+                            <h4>{{'People' | translate }}<span class="label">{{getDeskUsers(desk).length}}</span></h4>
                             <span ng-repeat="user in getDeskUsers(desk) track by user._id" ng-if="$index < numberOfUsers" class="card-box__content-list-inline-span">
                                 {{user.display_name}}<span ng-if="$index < getDeskUsers(desk).length-1">,&nbsp;</span>
                                 <span ng-if="getDeskUsers(desk).length > numberOfUsers && $index === numberOfUsers-1"
                                         ng-click="openDesk('people', desk)"
                                         class="button__view-all">
-                                    ... {{ :: 'view all' | translate }}
+                                    ... {{'view all' | translate }}
                                 </span>
                             </span>
                         </li>
                         <li class="card-box__content-list-item--inline">
-                            <h4>{{ :: 'Desk Type' | translate }}</h4>
+                            <h4>{{'Desk Type' | translate }}</h4>
                             <span>{{ desk.desk_type | translate }}</span>
                         </li>
                         <li class="card-box__content-list-item--inline" ng-if="desk.desk_language">
-                            <h4>{{ :: 'Language' | translate }}</h4>
+                            <h4>{{'Language' | translate }}</h4>
                             <span>{{ desk.desk_language | translate }}</span>
                         </li>
                     </ul>

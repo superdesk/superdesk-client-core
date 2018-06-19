@@ -6,16 +6,16 @@
 <div sd-modal data-model="modalEditorConfig" class="modal--x-large">
     <div class="modal__header">
         <button class="modal__close pull-right icn-btn" ng-click="closeModal()"><i class="icon-close-small"></i></button>
-        <h3 class="modal__heading">{{ :: 'Configure Editor themes' | translate }}</h3>
+        <h3 class="modal__heading">{{'Configure Editor themes' | translate }}</h3>
     </div>
     <div class="modal__body modal__body--no-padding">
         <div class="sd-column-box--2">
             <div class="sd-column-box__main-column sd-column-box__main-column--left sd-column-box__main-column--padded">
 
-                <h2 class="modal__body-heading"><span class="badge badge--success">&nbsp;</span>{{ :: 'Default Theme' | translate }}</h2>
+                <h2 class="modal__body-heading"><span class="badge badge--success">&nbsp;</span>{{'Default Theme' | translate }}</h2>
                 <div class="form__row">
                     <div class="sd-line-input sd-line-input--no-margin sd-line-input--is-select">
-                        <label class="sd-line-input__label">{{ :: 'Font' | translate }}</label>
+                        <label class="sd-line-input__label">{{'Font' | translate }}</label>
                         <select class="sd-line-input__select" ng-model="themePref.font">
                             <option ng-repeat="font in themes.fonts track by font.key" ng-value="font.key">{{font.label}}</option>
                         </select>
@@ -33,27 +33,27 @@
 
                 <div class="theme-preview sd-editor--theme-{{themePref.theme}} sd-editor--font-{{themePref.font}} sd-editor--headline-{{themePref.headline}} sd-editor--abstract-{{themePref.abstract}} sd-editor--body-{{themePref.body}}">
                     <div class="theme-preview__block">
-                        <label class="theme-preview__label">{{ :: 'Headline' | translate }}</label>
+                        <label class="theme-preview__label">{{'Headline' | translate }}</label>
                         <div class="theme-preview__text-field text-field__headline">
-                            {{ :: 'This is the headline' | translate }}
+                            {{'This is the headline' | translate }}
                         </div>
                         <div class="theme-preview__button-bar">
                             <sd-check type="radio" ng-repeat="size in themes.sizes track by size.key" ng-model="themePref['headline']" label-position="inside" ng-value="{{size.key}}">{{size.label}}</sd-check>
                         </div>
                     </div>
                     <div class="theme-preview__block">
-                        <label class="theme-preview__label">{{ :: 'Abstract' | translate }}</label>
+                        <label class="theme-preview__label">{{'Abstract' | translate }}</label>
                         <div class="theme-preview__text-field text-field__abstract">
-                            {{ :: 'Abstract example' | translate }}. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Fusce id purus. Phasellus ullamcorper…
+                            {{'Abstract example' | translate }}. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Fusce id purus. Phasellus ullamcorper…
                         </div>
                         <div class="theme-preview__button-bar">
                             <sd-check type="radio" ng-repeat="size in themes.sizes track by size.key" ng-model="themePref['abstract']" label-position="inside" ng-value="{{size.key}}">{{size.label}}</sd-check>
                         </div>
                     </div>
                     <div class="theme-preview__block">
-                        <label class="theme-preview__label">{{ :: 'Body' | translate }}</label>
+                        <label class="theme-preview__label">{{'Body' | translate }}</label>
                         <div class="theme-preview__text-field text-field__body">
-                            {{ :: 'Body text example' | translate }}. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Fusce id purus. Phasellus ullamcorper…
+                            {{'Body text example' | translate }}. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Fusce id purus. Phasellus ullamcorper…
                         </div>
                         <div class="theme-preview__button-bar">
                             <sd-check type="radio" ng-repeat="size in themes.sizes track by size.key" ng-model="themePref['body']" label-position="inside" ng-value="{{size.key}}">{{size.label}}</sd-check>
@@ -63,10 +63,10 @@
             </div>
 
             <div class="sd-column-box__main-column sd-column-box__main-column--right sd-column-box__main-column--padded">
-                <h2 class="modal__body-heading modal__body-heading--inactive"><span class="badge badge--light">&nbsp;</span>{{ :: 'Proofread Theme' | translate }}</h2>
+                <h2 class="modal__body-heading modal__body-heading--inactive"><span class="badge badge--light">&nbsp;</span>{{'Proofread Theme' | translate }}</h2>
                 <div class="form__row">
                     <div class="sd-line-input sd-line-input--no-margin sd-line-input--is-select">
-                        <label class="sd-line-input__label">{{ :: 'Font' | translate }}</label>
+                        <label class="sd-line-input__label">{{'Font' | translate }}</label>
                         <select class="sd-line-input__select" ng-model="proofreadThemePref.font">
                             <option ng-repeat="font in themes.fonts track by font.key" ng-value="font.key">{{font.label}}</option>
                         </select>
@@ -84,27 +84,27 @@
 
                 <div class="theme-preview sd-editor--theme-{{proofreadThemePref.theme}} sd-editor--font-{{proofreadThemePref.font}} sd-editor--headline-{{proofreadThemePref.headline}} sd-editor--abstract-{{proofreadThemePref.abstract}} sd-editor--body-{{proofreadThemePref.body}}">
                     <div class="theme-preview__block">
-                        <label class="theme-preview__label">{{ :: 'Headline' | translate }}</label>
+                        <label class="theme-preview__label">{{'Headline' | translate }}</label>
                         <div class="theme-preview__text-field text-field__headline">
-                            {{ :: 'This is the headline' | translate }}
+                            {{'This is the headline' | translate }}
                         </div>
                         <div class="theme-preview__button-bar">
                             <sd-check type="radio" ng-repeat="size in themes.sizes track by size.key" ng-model="proofreadThemePref['headline']" label-position="inside" ng-value="{{size.key}}">{{size.label}}</sd-check>
                         </div>
                     </div>
                     <div class="theme-preview__block">
-                        <label class="theme-preview__label">{{ :: 'Abstract' | translate }}</label>
+                        <label class="theme-preview__label">{{'Abstract' | translate }}</label>
                         <div class="theme-preview__text-field text-field__abstract">
-                            {{ :: 'Abstract example' | translate }}. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Fusce id purus. Phasellus ullamcorper…
+                            {{'Abstract example' | translate }}. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Fusce id purus. Phasellus ullamcorper…
                         </div>
                         <div class="theme-preview__button-bar">
                             <sd-check type="radio" ng-repeat="size in themes.sizes track by size.key" ng-model="proofreadThemePref['abstract']" label-position="inside" ng-value="{{size.key}}">{{size.label}}</sd-check>
                         </div>
                     </div>
                     <div class="theme-preview__block">
-                        <label class="theme-preview__label">{{ :: 'Body' | translate }}</label>
+                        <label class="theme-preview__label">{{'Body' | translate }}</label>
                         <div class="theme-preview__text-field text-field__body">
-                            {{ :: 'Body text example' | translate }}. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Fusce id purus. Phasellus ullamcorper…
+                            {{'Body text example' | translate }}. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Fusce id purus. Phasellus ullamcorper…
                         </div>
                         <div class="theme-preview__button-bar">
                             <sd-check type="radio" ng-repeat="size in themes.sizes track by size.key" ng-model="proofreadThemePref['body']" label-position="inside" ng-value="{{size.key}}">{{size.label}}</sd-check>
@@ -115,8 +115,8 @@
         </div>
     </div>
     <div class="modal__footer">
-        <button class="btn" ng-click="closeModal()">{{ :: 'Cancel' | translate }}</button>
-        <button class="btn btn--primary" ng-click="saveTheme()">{{ :: 'Save' | translate }}</button>
+        <button class="btn" ng-click="closeModal()">{{'Cancel' | translate }}</button>
+        <button class="btn btn--primary" ng-click="saveTheme()">{{'Save' | translate }}</button>
     </div>
 </div>
 <!-- END Editor configuration modal -->

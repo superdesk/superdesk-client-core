@@ -20,7 +20,7 @@
                             data-close-action="closeFullPreview"></div>
                         <button class="preview-toggle icn-btn"
                             ng-if="item.type === 'text'"
-                            title="{{:: 'Preview' | translate}}"
+                            title="{{'Preview' | translate}}"
                             ng-click="openFullPreview($event)"
                             ng-href="{{fullPreviewUrl}}">
                             <i class="icon-preview-mode"></i>
@@ -30,7 +30,7 @@
                     <button class="proofread-toggle icn-btn"
                         ng-class="{active: proofread}"
                         ng-click="proofread = !proofread"
-                        title="{{:: 'Toggle theme' | translate}}">
+                        title="{{'Toggle theme' | translate}}">
                         <i class="icon-adjust"></i>
                     </button>
                     <span sd-theme-select

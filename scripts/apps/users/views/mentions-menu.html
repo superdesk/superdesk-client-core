@@ -4,11 +4,11 @@
             <figure class="avatar small">
                 <img sd-user-avatar data-user="user" alt="user.item.display_name">
             </figure>
-        <span class="name" >{{:: user.item.display_name }}</span>
+        <span class="name" >{{user.item.display_name }}</span>
         </div>
         <div ng-if="user.type == 'desk'">
             <i class="icon-tasks" title="Desk"></i>
-            <span class="name" >{{:: user.item.name }}</span>
+            <span class="name" >{{user.item.name }}</span>
         </div>
     </li>
 </ul>

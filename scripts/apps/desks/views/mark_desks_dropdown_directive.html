@@ -1,10 +1,10 @@
 <ul>
     <li ng-if="desks.length" ng-repeat="d in desks track by d._id">
         <button ng-disabled="isMarked(d)" option="{{ d.name }}" ng-click="markItem(d);">
-             <i class="icon-bell"></i>{{ :: d.name | translate }}
+             <i class="icon-bell"></i>{{d.name | translate }}
         </button>
     </li>
     <li ng-if="!desks.length">
-       <button ng-disabled="true">{{::'No available desks'|translate}}</button>
+       <button ng-disabled="true">{{'No available desks'|translate}}</button>
     </li>
 </ul>

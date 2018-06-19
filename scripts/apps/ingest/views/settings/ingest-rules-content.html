@@ -11,8 +11,8 @@
                 <div class="header">
                     <div class="name">{{ruleset.name}}</div>
                     <div class="actions">
-                        <button ng-click="edit(ruleset)" title="{{:: 'Edit rule set' | translate }}"><i class="icon-pencil"></i></button>
-                        <button ng-click="remove(ruleset)" title="{{:: 'Remove rule set' | translate }}"><i class="icon-trash"></i></button>
+                        <button ng-click="edit(ruleset)" title="{{'Edit rule set' | translate }}"><i class="icon-pencil"></i></button>
+                        <button ng-click="remove(ruleset)" title="{{'Remove rule set' | translate }}"><i class="icon-trash"></i></button>
                     </div>
                 </div>
             </li>
@@ -29,7 +29,7 @@
     <form name="rulesetForm" class="modal__body">
         <div class="modal__body-header modal__body-header--add-padding">
             <input type="text" class="input-xlarge" placeholder="{{ 'Rule set name'|translate }}" ng-model="editRuleset.name" required>
-            <button class="btn btn--primary pull-right" ng-disabled="!rulesetForm.$valid" ng-click="addRule()"><i class="icon-plus-large"></i> {{:: 'Add rule' | translate}}</button>
+            <button class="btn btn--primary pull-right" ng-disabled="!rulesetForm.$valid" ng-click="addRule()"><i class="icon-plus-large"></i> {{'Add rule' | translate}}</button>
         </div>
         <div class="modal__body-content">
             <div sd-sortrules>

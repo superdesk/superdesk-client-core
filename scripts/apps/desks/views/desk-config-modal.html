@@ -85,7 +85,7 @@
                             <label class="form-label form-label--marg-b10" translate>Default monitoring view</label>
                             <div class="sd-alert sd-alert--hollow sd-alert--small sd-alert--marg-b12">
                                 <i class="icon-info-sign icon--blue icon--2x sd-alert__icon"></i>
-                               <span>{{ :: 'You can choose the default content view of your desk. Use only if you want to override individual users\' monitoring view preferences. Select "none" if you want to let users decide.' | translate }}</span>
+                               <span>{{'You can choose the default content view of your desk. Use only if you want to override individual users\' monitoring view preferences. Select "none" if you want to let users decide.' | translate }}</span>
                             </div>
                             <div>
                                 <sd-check
@@ -152,7 +152,7 @@
                         ng-disabled="!generalStep.$valid || _errorLimits || saving" translate>Done</button>
             </div>
         </div>
-        <div sd-wizard-step data-title="{{ :: 'Stages' | translate }}" data-code="stages">
+        <div sd-wizard-step data-title="{{'Stages' | translate }}" data-code="stages">
             <div sd-deskedit-stages class="content stages form-flat">
                 <div class="grid grid--padding-fix">
                     <div class="grid__item grid__item--col-5">
@@ -225,9 +225,9 @@
                         </div>
                         <div ng-if="selected && !editStage" class="column">
                             <div class="list-row list-row--dotted" ng-if="selected.working_stage || selected.default_incoming">
-                                <span ng-if="selected.working_stage">{{:: 'Working Stage' | translate}}</span>
+                                <span ng-if="selected.working_stage">{{'Working Stage' | translate}}</span>
                                 <span ng-if="selected.working_stage && selected.default_incoming">, </span>
-                                <span ng-if="selected.default_incoming">{{:: 'Incoming Stage' | translate}}</span>
+                                <span ng-if="selected.default_incoming">{{'Incoming Stage' | translate}}</span>
                             </div>
                             <div class="list-row list-row--dotted list-row--flex" ng-if="selected.is_visible">
                                 <span class="text-label list-row__item list-row__item--grow" translate>Global Read: </span>
@@ -268,26 +268,26 @@
                         <div class="column column--mb24" ng-if="editStage">
                             <div class="list-row list-row--small" title="{{ editStage.default_incoming ? 'Global Read OFF is not allowed for Incoming stage' : null | translate }}">
                                 <span class="" ng-class="{'prevent-off' : editStage.default_incoming && editStage.is_visible}" sd-switch ng-model="editStage.is_visible"></span>
-                                <label>{{ :: 'Global Read' | translate }}</label>
+                                <label>{{'Global Read' | translate }}</label>
                             </div>
                             <div class="list-row list-row--small">
                                 <span class="" sd-switch ng-model="editStage.local_readonly"></span>
-                                <label>{{ :: 'Local Read Only' | translate }}</label>
+                                <label>{{'Local Read Only' | translate }}</label>
                             </div>
                             <div class="list-row list-row--small">
                                 <span class="" sd-switch ng-model="editStage.working_stage"></span>
-                                <label>{{:: 'Working Stage' | translate }}</label>
+                                <label>{{'Working Stage' | translate }}</label>
                             </div>
                             <div class="list-row list-row--small">
                                 <span class="" ng-click="shouldVisible()" sd-switch ng-model="editStage.default_incoming"></span>
-                                <label>{{:: 'Incoming Stage' | translate }}</label>
+                                <label>{{'Incoming Stage' | translate }}</label>
 
                             </div>
                         </div>
                         <div class="form__row form__row--flex" ng-if="editStage">
                             <div class="form__row-item">
                                 <div class="sd-line-input">
-                                    <label class="sd-line-input__label">{{ :: 'Stage description' | translate }}</label>
+                                    <label class="sd-line-input__label">{{'Stage description' | translate }}</label>
                                     <textarea class="sd-line-input__input" ng-model="editStage.description"></textarea>
                                 </div>
                             </div>
@@ -304,7 +304,7 @@
                             <div class="form__row form__row--flex">
                                 <div class="form__row-item">
                                     <div class="sd-line-input sd-line-input--is-select">
-                                        <label class="sd-line-input__label">{{ :: 'Incoming Rule' | translate }}</label>
+                                        <label class="sd-line-input__label">{{'Incoming Rule' | translate }}</label>
                                         <select ng-model="editStage.incoming_macro" class="sd-line-input__select">
                                             <option value=""></option>
                                             <option ng-repeat="macro in macros" ng-selected="editStage.incoming_macro === macro.name" value="{{macro.name}}">{{macro.label}}</option>
@@ -315,7 +315,7 @@
                             <div class="form__row form__row--flex">
                                 <div class="form__row-item">
                                     <div class="sd-line-input sd-line-input--is-select">
-                                        <label class="sd-line-input__label">{{ :: 'Moved onto stage Rule' | translate }}</label>
+                                        <label class="sd-line-input__label">{{'Moved onto stage Rule' | translate }}</label>
                                         <select ng-model="editStage.onstage_macro" class="sd-line-input__select">
                                             <option value=""></option>
                                             <option ng-repeat="macro in macros" ng-selected="editStage.onstage_macro === macro.name" value="{{macro.name}}">{{macro.label}}</option>
@@ -326,7 +326,7 @@
                             <div class="form__row form__row--flex">
                                 <div class="form__row-item">
                                     <div class="sd-line-input sd-line-input--is-select">
-                                        <label class="sd-line-input__label">{{ :: 'Outgoing Rule' | translate }}</label>
+                                        <label class="sd-line-input__label">{{'Outgoing Rule' | translate }}</label>
                                         <select ng-model="editStage.outgoing_macro" class="sd-line-input__select">
                                             <option value=""></option>
                                             <option ng-repeat="macro in macros" ng-selected="editStage.outgoing_macro === macro.name" value="{{macro.name}}">{{macro.label}}</option>
@@ -353,7 +353,7 @@
                         <ul class="pills-list">
                             <li ng-repeat="user in deskMembers| orderBy: 'display_name' track by user._id" ng-class="{'inactive' : !user.is_enabled || !user.is_active}">
                                 <figure class="avatar"><img sd-user-avatar data-user="user"></figure>
-                                <h5>{{:: user.display_name}}</h5> <span class="user-email">{{:: user.email}}</span>
+                                <h5>{{user.display_name}}</h5> <span class="user-email">{{user.email}}</span>
                                 <div class="actions">
                                     <button ng-click="remove(user)"><i class="icon-close-small"></i></button>
                                 </div>
@@ -380,9 +380,9 @@
             <div class="content macros" sd-deskedit-macros>
                 <ul class="pills-list">
                     <li ng-repeat="macro in macros" class="clearfix">
-                        <h6 class="pull-left">{{:: macro.name}}</h6>
+                        <h6 class="pull-left">{{macro.name}}</h6>
                         <div class="label-group label-group--right">
-                            <span class="label label--hollow">{{:: macro.access_type}}</span><span class="label label--hollow">{{:: macro.action_type}}</span>
+                            <span class="label label--hollow">{{macro.access_type}}</span><span class="label label--hollow">{{macro.action_type}}</span>
                         </div>
                     </li>
                 </ul>

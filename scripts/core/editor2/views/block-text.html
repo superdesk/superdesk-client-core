@@ -11,7 +11,7 @@
         sd-focus-element
         data-append-element=".field"
         data-append-class="active"
-        placeholder="{{ ::'Add content here' | translate }}"
+        placeholder="{{ 'Add content here' | translate }}"
         ng-show="type=='text' || !type"
         spellcheck="false">
     </div>
@@ -20,7 +20,7 @@
     </code>
 
     <ul class="dropdown__menu dropdown__menu--suggestions">
-        <li ng-repeat="word in suggestions"><button ng-click="replace(word.key)">{{ :: word.value }}</button></li>
+        <li ng-repeat="word in suggestions"><button ng-click="replace(word.key)">{{word.value }}</button></li>
         <li ng-show="suggestions.length === 0"><button translate>SORRY, NO SUGGESTIONS.</button></li>
         <li class="dropdown__menu-divider"></li>
         <li><button ng-click="addWordToDictionary()" translate>Add to dictionary</button></li>

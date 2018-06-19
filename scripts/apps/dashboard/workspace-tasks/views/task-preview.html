@@ -1,5 +1,5 @@
 <header>
-    <p class="pull-left">{{ :: 'Created on' | translate}} <span sd-reldate-complex datetime="task._created"></span> {{ :: 'by' | translate}} {{ users[task.original_creator].display_name }}</p>
+    <p class="pull-left">{{'Created on' | translate}} <span sd-reldate-complex datetime="task._created"></span> {{'by' | translate}} {{ users[task.original_creator].display_name }}</p>
     <button ng-click="close()" class="icn-btn close-preview">
         <i class="icon-close-small"></i>
     </button>
@@ -53,9 +53,9 @@
         <div ng-if="editmode" sd-assignee-box data-desk-id="task_details.desk" data-user-id="task_details.user"></div>
 
         <div ng-if="!editmode" class="title">{{ task.slugline }}</div>
-        <textarea ng-if="editmode" class="title" sd-auto-height ng-model="task.slugline" placeholder="{{ :: 'Add title' | translate }}" required></textarea>
+        <textarea ng-if="editmode" class="title" sd-auto-height ng-model="task.slugline" placeholder="{{'Add title' | translate }}" required></textarea>
 
-        <textarea ng-if="editmode" class="description" sd-auto-height ng-model="task.description_text" placeholder="{{ :: 'Add description' | translate }}"></textarea>
+        <textarea ng-if="editmode" class="description" sd-auto-height ng-model="task.description_text" placeholder="{{'Add description' | translate }}"></textarea>
         <div ng-if="!editmode" class="description">{{ task.description_text }}</div>
     </form>
 

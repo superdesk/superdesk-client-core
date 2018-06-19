@@ -20,7 +20,7 @@
             </thead>
             <tbody>
                 <tr ng-repeat="p in privileges track by p.name">
-                    <td class="name">{{ :: p.label | translate }}</td>
+                    <td class="name">{{p.label | translate }}</td>
                     <td>
                         <input type="checkbox" ng-true-value="1" ng-false-value="0"
                                ng-model="user.privileges[p.name]"
@@ -30,7 +30,7 @@
                                ng-disabled="true"
                                ng-if="role.privileges[p.name]" />
                     </td>
-                    <td><span ng-if="role.privileges[p.name]" class="label">{{:: role.name | translate }}</span></td>
+                    <td><span ng-if="role.privileges[p.name]" class="label">{{role.name | translate }}</span></td>
                     <td class="blank-field"></td>
                 </tr>
             </tbody>

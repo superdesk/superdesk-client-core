@@ -1,7 +1,7 @@
 <div class="widget" ng-controller="InlineCommentsCtrl">
     <div class="form__row">
-        <sd-check ng-model="resolvedFilter" type="radio" ng-value="UNRESOLVED" label-position="inside">{{ :: 'Unresolved' | translate }}</sd-check>
-        <sd-check ng-model="resolvedFilter" type="radio" ng-value="RESOLVED" label-position="inside">{{ :: 'Resolved' | translate }}</sd-check>
+        <sd-check ng-model="resolvedFilter" type="radio" ng-value="UNRESOLVED" label-position="inside">{{'Unresolved' | translate }}</sd-check>
+        <sd-check ng-model="resolvedFilter" type="radio" ng-value="RESOLVED" label-position="inside">{{'Resolved' | translate }}</sd-check>
     </div>
     <ul ng-class="{ 'notification-list--empty' : items[resolvedFilter].length === 0 }">
         <li ng-repeat="commentObj in items[resolvedFilter]">
@@ -33,7 +33,7 @@
                         </span>
                     </div>
                     <div class="resolution" ng-if="item.data.resolutionInfo">
-                        <span>{{ :: 'Resolved by' | translate }} {{ users[item.data.resolutionInfo.resolverUserId].display_name || users[item.data.resolutionInfo.resolverUserId].username }} <span class="date" sd-absdate datetime="item.data.resolutionInfo.date"></span></span>
+                        <span>{{'Resolved by' | translate }} {{ users[item.data.resolutionInfo.resolverUserId].display_name || users[item.data.resolutionInfo.resolverUserId].username }} <span class="date" sd-absdate datetime="item.data.resolutionInfo.date"></span></span>
                     </div>
                 </li>
             </ul>

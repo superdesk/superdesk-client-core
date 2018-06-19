@@ -2,15 +2,15 @@
     <h3 class="page-nav-title"><span translate>Dashboard</span> {{ dashboard.current.name | translate}}</h3>
 
     <div class="subnav__button-stack--square-buttons">
-        <button ng-if="configurable" class="navbtn" ng-click="dashboard.edit = true" ng-show="dashboard.widgets.length && !dashboard.edit" sd-tooltip="{{ :: 'Rearrange widgets' | translate }}" flow="left">
+        <button ng-if="configurable" class="navbtn" ng-click="dashboard.edit = true" ng-show="dashboard.widgets.length && !dashboard.edit" sd-tooltip="{{'Rearrange widgets' | translate }}" flow="left">
             <i class="icon-switches"></i>
         </button>
 
-        <button class="navbtn navbtn--blue" ng-click="dashboard.save()" ng-show="dashboard.edit" sd-tooltip="{{ :: 'Accept' | translate }}" flow="left">
+        <button class="navbtn navbtn--blue" ng-click="dashboard.save()" ng-show="dashboard.edit" sd-tooltip="{{'Accept' | translate }}" flow="left">
             <i class="svg-icon-ok inverse"></i>
         </button>
 
-        <div sd-tooltip="{{ :: 'Add widget' | translate }}" flow="left" ng-show="!dashboard.edit" >
+        <div sd-tooltip="{{'Add widget' | translate }}" flow="left" ng-show="!dashboard.edit" >
             <button ng-if="configurable" class="navbtn sd-create-btn" ng-disabled="dashboard.edit" ng-click="dashboard.add = true"></button>
         </div>
         <div class="dropdown__menu pull-right" sd-multiedit-dropdown ng-if="dashboard.current.name !== 'personal' && dashboard.current._id && !dashboard.current.desk"></div>
@@ -68,8 +68,8 @@
         <div class="modal__body-content">
             <ul class="widget-list">
                 <li ng-repeat="widget in dashboard.availableWidgets" ng-click="dashboard.selectWidget(widget)" ng-class="{selected: dashboard.isSelected(widget)}" class="widget {{ widget._id }}">
-                <div class="thumbnail"><img ng-src="{{ :: widget.thumbnail }}"></div>
-                <div class="title">{{ :: widget.label | translate}}</div>
+                <div class="thumbnail"><img ng-src="{{widget.thumbnail }}"></div>
+                <div class="title">{{widget.label | translate}}</div>
                 </li>
             </ul>
         </div>
@@ -84,11 +84,11 @@
         </div>
         <div class="modal__body-content widget-detail">
             <div class="thumbnail-box {{ dashboard.selectedWidget._id }}">
-                <img ng-src="{{ :: dashboard.selectedWidget.thumbnail }}">
+                <img ng-src="{{dashboard.selectedWidget.thumbnail }}">
             </div>
             <div class="content-box">
-                <div class="title">{{ :: dashboard.selectedWidget.label | translate }}</div>
-                <div class="description">{{ :: dashboard.selectedWidget.description | translate }}</div>
+                <div class="title">{{dashboard.selectedWidget.label | translate }}</div>
+                <div class="description">{{dashboard.selectedWidget.description | translate }}</div>
                 <button class="btn btn--primary btn--large"
                     ng-click="dashboard.addWidget(dashboard.selectedWidget)"
                     ng-disabled="!dashboard.selectedWidget"

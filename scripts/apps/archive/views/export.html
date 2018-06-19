@@ -7,9 +7,9 @@
     <div class="modal__body" ng-loading="loading">
         <div class="form__row">
             <div class="sd-line-input sd-line-input--is-select">
-                <label class="sd-line-input__label">{{ :: 'Formatters' | translate }}</label>
+                <label class="sd-line-input__label">{{'Formatters' | translate }}</label>
                 <select selected="selectedFormatter" ng-model="selectedFormatter" class="sd-line-input__select">
-                    <option value="{{formatter}}" ng-repeat="formatter in exportFormatters">{{:: formatter.name}}</option>
+                    <option value="{{formatter}}" ng-repeat="formatter in exportFormatters">{{formatter.name}}</option>
                 </select>
             </div>
         </div>
@@ -20,10 +20,10 @@
 
         <div class="form__row">
             <div ng-if="failures" class="sd-line-input sd-line-input--invalid">
-                <div class="sd-line-input__message">{{ :: failures + ' items failed.' | translate }}</div>
+                <div class="sd-line-input__message">{{failures + ' items failed.' | translate }}</div>
             </div>
             <div ng-if="error">
-                <div class="sd-line-input__message">{{ :: err_msg | translate }}</div>
+                <div class="sd-line-input__message">{{err_msg | translate }}</div>
             </div>
             <a id='exportDownloadLink' href="" ng-show="!error"></a>
         </div>

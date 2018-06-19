@@ -1,6 +1,6 @@
 <div class="subnav subnav--absolute">
     <h3 class="subnav__page-title" translate>Users</h3>
-    <div class="subnav__button-stack--square-buttons" sd-tooltip="{{ :: 'Create user' | translate }}" flow="left">
+    <div class="subnav__button-stack--square-buttons" sd-tooltip="{{'Create user' | translate }}" flow="left">
         <button class="navbtn sd-create-btn" ng-click="createUser()"></button>
     </div>
 </div>
@@ -11,8 +11,8 @@
             <div class="subnav">
                 <div sd-searchbar></div>
                 <div class="button-list button-list--padded">
-                    <button type="button" class="toggle-button" ng-click="authorOnlyFilter=!authorOnlyFilter" ng-class="{'toggle-button--active': !authorOnlyFilter}">{{:: 'All user types' | translate}}</button>
-                    <button type="button" class="toggle-button" ng-click="authorOnlyFilter=!authorOnlyFilter" ng-class="{'toggle-button--active': authorOnlyFilter}">{{:: 'Authors only' | translate}}</button>
+                    <button type="button" class="toggle-button" ng-click="authorOnlyFilter=!authorOnlyFilter" ng-class="{'toggle-button--active': !authorOnlyFilter}">{{'All user types' | translate}}</button>
+                    <button type="button" class="toggle-button" ng-click="authorOnlyFilter=!authorOnlyFilter" ng-class="{'toggle-button--active': authorOnlyFilter}">{{'Authors only' | translate}}</button>
                 </div>
                 <div class="sd-line-input sd-line-input--is-select sd-line-input--no-label sd-line-input--no-margin" style="min-width:100px; margin:0 40px;">
                     <select id="user-filter" class="sd-line-input__select" 

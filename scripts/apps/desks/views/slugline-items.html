@@ -1,13 +1,13 @@
 <div class="item-group" ng-if="!items.length">
     <div ng-if="loading" class="item-group__loading"></div>
     <div ng-if="!loading && !items.length" class="item-group__no-items">
-        {{:: 'No items published' |translate }}
+        {{'No items published' |translate }}
     </div>
 </div>
 
 <div class="item-group" ng-if="!loading && items.length" ng-repeat="item_group in items">
     <div class="item-group__header">
-        <div class="item-group__name">{{ :: item_group.place}}</div>
+        <div class="item-group__name">{{item_group.place}}</div>
         <span class="badge badge--light pull-right">{{ item_group.items.length }}</span>
     </div>
     <div class="item-group__content">
@@ -15,13 +15,13 @@
             <li ng-repeat="item in item_group.items" class="slugline-item">
                 <div class="slugline-item__row slugline-item__row--main">
                     <time sd-datetime data-date="item.versioncreated" class="pull-right"></time>
-                    <span class="slugline">{{::item.slugline}}</span>
+                    <span class="slugline">{{item.slugline}}</span>
                 </div>
                 <div ng-show="item.old_sluglines.length !== 0" class="slugline-item__row">
-                    <span class="oldslugline">{{::item.old_sluglines}}</span>
+                    <span class="oldslugline">{{item.old_sluglines}}</span>
                 </div>
                 <div class="slugline-item__row">
-                    <span class="headline">{{::item.headline}}</span>
+                    <span class="headline">{{item.headline}}</span>
                 </div>
             </li>
         </ul>

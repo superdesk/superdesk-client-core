@@ -7,7 +7,7 @@
     <ul class="dropdown__menu">
         <li ng-show="filter"><span translate>filter: "{{ filter }}"</span></li>
         <li ng-repeat="desk in desks | orderBy:deskPreferenceOrdering track by desk._id">
-            <button ng-click="onChange({desk: desk})" sd-desk-select-item>{{ :: desk.name }}</button>
+            <button ng-click="onChange({desk: desk})" sd-desk-select-item>{{desk.name }}</button>
         </li>
     </ul>
 </div>

@@ -5,7 +5,7 @@
     </button>
     <ul class="dropdown__menu">
         <li ng-repeat="provider in search.providers track by provider._id"  ng-class="{active: isActive(provider)}">
-            <button ng-click="toggleProvider(provider._id ? provider : null)">{{ :: search.providerLabel(provider) }}</button>
+            <button ng-click="toggleProvider(provider._id ? provider : null)">{{search.providerLabel(provider) }}</button>
         </li>
     </ul>
 </div>

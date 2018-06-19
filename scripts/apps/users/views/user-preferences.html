@@ -13,7 +13,7 @@
                 ng-if="showCategory(p)">
                 <div class="legend">{{ p.category | translate }}</div>
                 <div sd-info-item>
-                    <label>{{ :: p.label | translate }}</label>
+                    <label>{{p.label | translate }}</label>
                     <span ng-hide="p.allowed" sd-switch ng-model="p.enabled"></span>
                     <span ng-show="p.allowed">
                         <sd-check ng-repeat="i in p.allowed" ng-model="p.view" type="radio" ng-value="{{i}}">{{ i | translate }}</sd-check>
@@ -24,15 +24,15 @@
             <li class="fieldset">
                 <div class="legend" translate>Notifications</div>
                 <div sd-info-item>
-                    <label>{{ :: preferences['email:notification'].label | translate }}</label>
+                    <label>{{preferences['email:notification'].label | translate }}</label>
                     <span ng-hide="preferences['email:notification'].allowed" sd-switch ng-model="preferences['email:notification'].enabled"></span>
                 </div>
                 <div sd-info-item>
-                    <label>{{ :: preferences['desktop:notification'].label | translate }}</label>
+                    <label>{{preferences['desktop:notification'].label | translate }}</label>
                     <span ng-hide="preferences['desktop:notification'].allowed" sd-switch ng-model="preferences['desktop:notification'].enabled"></span>
                 </div>
                 <div sd-info-item ng-hide="!$root.config.features.slackNotifications">
-                    <label>{{ :: preferences['slack:notification'].label | translate }}</label>
+                    <label>{{preferences['slack:notification'].label | translate }}</label>
                     <span ng-hide="preferences['slack:notification'].allowed" sd-switch ng-model="preferences['slack:notification'].enabled"></span>
                 </div>
             </li>
@@ -42,7 +42,7 @@
                 <div class="legend" translate>Dateline</div>
 
                 <div sd-info-item ng-if="preferencesLoaded === true" ng-hide="profileConfig.located === false">
-                    <label>{{ :: preferences['dateline:located'].label | translate}}</label>
+                    <label>{{preferences['dateline:located'].label | translate}}</label>
                     <span sd-meta-locators data-list="cities" data-item="preferences['dateline:located']" data-field="located"
                           data-postprocessing="changeDatelinePreview(item, city)" data-keepinput="true"></span>
                 </div>
@@ -52,7 +52,7 @@
                 </div>
 
                 <div sd-info-item ng-if="preferencesLoaded === true" ng-hide="profileConfig.place === false">
-                    <label>{{ :: preferences['article:default:place'].label | translate}}</label>
+                    <label>{{preferences['article:default:place'].label | translate}}</label>
                     <span sd-meta-dropdown data-item="preferences['article:default:place']"
                           data-field="place" data-list="locators" data-change="articleDefaultsChanged(item)"></span>
                 </div>
@@ -60,12 +60,12 @@
 
             <li class="fieldset" ng-hide="profileConfig.category === false">
                 <div class="legend">
-                    {{ :: preferences['categories:preferred'].category | translate }}
+                    {{preferences['categories:preferred'].category | translate }}
                 </div>
 
                 <div sd-info-item>
                     <label>
-                        {{ :: preferences['categories:preferred'].label | translate}}
+                        {{preferences['categories:preferred'].label | translate}}
                     </label>
                     <p class="discreet" translate>
                         By selecting the categories you are interested in, the system will only display these in a menu for setting the content item's categories (along with any of its existing categories).
@@ -73,36 +73,36 @@
 
                     <div class="actions">
                         <a ng-click="checkAll()"
-                           title="{{:: 'Select all categories' | translate}}"
+                           title="{{'Select all categories' | translate}}"
                            translate>all</a> |
 
                         <a ng-click="checkNone()"
-                           title="{{:: 'Clear all selected' | translate}}"
+                           title="{{'Clear all selected' | translate}}"
                            translate>none</a> |
 
                         <a ng-click="checkDefault()"
-                           title="{{:: 'Select default categories only' | translate}}"
+                           title="{{'Select default categories only' | translate}}"
                            translate>default</a>
                     </div>
 
                     <div ng-repeat="cat in categories track by cat.qcode">
                         <input
                             type="checkbox"
-                            name="categories" id="cat_{{::cat.qcode}}"
+                            name="categories" id="cat_{{cat.qcode}}"
                             value="{{cat.qcode}}" ng-model="cat.selected" />
-                        <label for="cat_{{::cat.qcode}}">
-                            {{:: cat.name | translate}}</label>
+                        <label for="cat_{{cat.qcode}}">
+                            {{cat.name | translate}}</label>
                     </div>
                 </div>
             </li>
 
             <li class="fieldset" ng-hide="profileConfig.desks === false">
                 <div class="legend">
-                    {{ :: preferences['desks:preferred'].category | translate }}
+                    {{preferences['desks:preferred'].category | translate }}
                 </div>
                 <div sd-info-item>
                     <label>
-                        {{ :: preferences['desks:preferred'].label | translate}}
+                        {{preferences['desks:preferred'].label | translate}}
                     </label>
                     <p class="discreet" translate>
                         By selecting the desks as your preferred desks, they appear first in the order when sending or publishing items.

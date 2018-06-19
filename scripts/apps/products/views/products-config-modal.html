@@ -48,13 +48,13 @@
                             <label translate class="right">Content Filter</label>
                             <select class="input" ng-model="product.edit.content_filter.filter_id">
                                 <option value=""></option>
-                                <option value="{{filter._id}}" ng-selected="filter._id === product.edit.content_filter.filter_id" ng-repeat="filter in contentFilters track by filter._id">{{:: filter.name}}</option>
+                                <option value="{{filter._id}}" ng-selected="filter._id === product.edit.content_filter.filter_id" ng-repeat="filter in contentFilters track by filter._id">{{filter.name}}</option>
                             </select>
                         </div>
                         <div class="field" ng-if="product.edit.content_filter.filter_id">
                             <label translate>Content Filter Type</label>
-                            <sd-check ng-model="product.edit.content_filter.filter_type" type="radio" ng-value="permitting">{{ :: 'Permitting' | translate }}</sd-check>
-                            <sd-check ng-model="product.edit.content_filter.filter_type" type="radio" ng-value="blocking">{{ :: 'Blocking' | translate }}</sd-check>
+                            <sd-check ng-model="product.edit.content_filter.filter_type" type="radio" ng-value="permitting">{{'Permitting' | translate }}</sd-check>
+                            <sd-check ng-model="product.edit.content_filter.filter_type" type="radio" ng-value="blocking">{{'Blocking' | translate }}</sd-check>
                         </div>
                         <div class="field">
                             <label for="geoRestrictions" translate>Target Regions</label>
@@ -67,7 +67,7 @@
                 <div ng-if="tab === 'subscribers'" class="nav-tabs__pane">
                     <div ng-repeat="subscriber in subscribers| orderBy:name" class="field">
                         <span ng-if="subscriber.products.indexOf(product.edit._id) >= 0">
-                            {{::subscriber.name}}
+                            {{subscriber.name}}
                         </span>
                     </div>
                 </div>

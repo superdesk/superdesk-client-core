@@ -6,11 +6,11 @@
     <ul class="dropdown__menu pull-left">
         <li><div class="dropdown__menu-label" translate>Choose highlight list</div></li>
         <li ng-if="hasHighlights" ng-repeat="h in highlights track by h._id">
-            <button option="{{ :: h.name }}" ng-click="listHighlight(h);" title="{{ :: h.name }}">
-                {{ :: h.label | translate }}</button>
+            <button option="{{h.name }}" ng-click="listHighlight(h);" title="{{h.name }}">
+                {{h.label | translate }}</button>
         </li>
         <li ng-if="!hasHighlights">
-            <button ng-disabled="true">{{::'No available highlights'|translate}}</button>
+            <button ng-disabled="true">{{'No available highlights'|translate}}</button>
         </li>
     </ul>
 </div>

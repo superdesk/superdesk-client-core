@@ -5,15 +5,15 @@
     <div class="attachments-list">
         <ul ng-if="files">
             <li ng-repeat="file in files track by file._id" class="sd-list-item sd-shadow--z1">
-                <div class="sd-list-item__column sd-list-item__column--no-border" title="{{ :: file.mimetype }}">
-                    <i class="big-icon--{{ :: file.mimetype | fileicon }}"></i>
+                <div class="sd-list-item__column sd-list-item__column--no-border" title="{{file.mimetype }}">
+                    <i class="big-icon--{{file.mimetype | fileicon }}"></i>
                 </div>
                 <div class="sd-list-item__column sd-list-item__column--grow">
                     <div class="sd-list-item__row">
                         <h4>{{ file.title }}</h4>
                     </div>
                     <div class="sd-list-item__row">
-                        <h5>{{ :: file.filename }} ({{ :: file.media.length | filesize }})</h5>
+                        <h5>{{file.filename }} ({{file.media.length | filesize }})</h5>
                     </div>
                     <div class="sd-list-item__row">
                         <div class="description">{{ file.description }}</div>
@@ -22,15 +22,15 @@
                 <div class="sd-list-item__action-menu sd-list-item__action-menu--direction-row">
                     <button class="dropdown__toggle"
                         ng-click="ctrl.download(file)"
-                        title="{{ :: 'Download' | translate }}"><i class="icon-download"></i></button>
+                        title="{{'Download' | translate }}"><i class="icon-download"></i></button>
                     <button class="dropdown__toggle"
                         ng-if="!ctrl.isLocked"
                         ng-click="ctrl.startEdit(file)"
-                        title="{{ :: 'Edit' | translate }}"><i class="icon-pencil"></i></button>
+                        title="{{'Edit' | translate }}"><i class="icon-pencil"></i></button>
                     <button class="dropdown__toggle"
                         ng-if="!ctrl.isLocked"
                         ng-click="ctrl.removeFile(file)"
-                        title="{{ :: 'Remove' | translate }}"><i class="icon-trash"></i></button>
+                        title="{{'Remove' | translate }}"><i class="icon-trash"></i></button>
                 </div>
             </li>
         </ul>
@@ -50,7 +50,7 @@
         <a class="btn btn--hollow"
             ngf-select="ctrl.selectFiles($files)"
             ngf-multiple="true">
-            {{ :: 'Attach files' | translate }}
+            {{'Attach files' | translate }}
         </a>
     </div>
 

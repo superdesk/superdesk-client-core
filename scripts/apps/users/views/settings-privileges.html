@@ -11,7 +11,7 @@
                     <tr>
                         <th class="name"></th>
                         <th ng-repeat="role in roles">
-                            {{ :: role.name | translate }}
+                            {{role.name | translate }}
                             <span class="label label--primary" ng-if="role.is_default" translate>default</span>
                         </th>
                         <th class="blank-field"></th>
@@ -19,7 +19,7 @@
                 </thead>
                 <tbody>
                     <tr ng-repeat="p in privileges">
-                        <td class="name">{{ :: p.label | translate }}</td>
+                        <td class="name">{{p.label | translate }}</td>
                         <td ng-repeat="role in roles">
                             <input type="checkbox" ng-true-value="1" ng-false-value="0" ng-model="role.privileges[p.name]">
                         </td>

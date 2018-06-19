@@ -12,7 +12,7 @@
         </div>
         <span class="sd-page__element-grow"></span>
         <button class="btn btn--primary" ng-click="newProduct()">
-            <i class="icon-plus-sign icon--white"></i>{{ :: 'Add New' | translate }}
+            <i class="icon-plus-sign icon--white"></i>{{'Add New' | translate }}
         </button>
     </div>
 
@@ -21,8 +21,8 @@
             <li ng-repeat="product in products| productsBy:search as filtered_products track by product._id" class="clearfix">
                 <h6>{{ product.name}}</h6> <i>[{{ product.product_type || 'both' }}]</i>
                 <div class="actions">
-                    <button ng-click="edit(product)" title="{{:: 'Edit product' | translate }}"><i class="icon-pencil"></i></button>
-                    <button ng-click="remove(product)" title="{{:: 'Remove product' | translate }}"><i class="icon-trash"></i></button>
+                    <button ng-click="edit(product)" title="{{'Edit product' | translate }}"><i class="icon-pencil"></i></button>
+                    <button ng-click="remove(product)" title="{{'Remove product' | translate }}"><i class="icon-trash"></i></button>
                 </div>
             </li>
             <li ng-show="products.length > 0 && !filtered_products.length"><h6 translate>No Products Found</h6></li>

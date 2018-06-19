@@ -1,18 +1,18 @@
 <div class="subnav subnav--absolute">
   <header class="search-page-header">
       <div class="filter-trigger"
-           title="{{ :: 'Filters' | translate }}"
+           title="{{'Filters' | translate }}"
            ng-click="openAdvanceSearch = !openAdvanceSearch"
            ng-class="{'filter-trigger--active': openAdvanceSearch}"
       ><i class="icon-filter-large"></i></div>
       <div sd-item-searchbar class="searchbar-flex-handler"></div>
       <div sd-contacts-sort-bar data-total="total" class="sortbar-flex-handler"></div>
       <div class="view-select">
-          <button title="{{ :: 'Switch to grid view' | translate }}" ng-show="view !== 'photogrid'" ng-click="setView('photogrid')"><i class="icon-th"></i></button>
-          <button title="{{ :: 'Switch to list view' | translate }}" ng-show="view !== 'compact'" ng-click="setView('compact')"><i class="icon-th-list"></i></button>
+          <button title="{{'Switch to grid view' | translate }}" ng-show="view !== 'photogrid'" ng-click="setView('photogrid')"><i class="icon-th"></i></button>
+          <button title="{{'Switch to list view' | translate }}" ng-show="view !== 'compact'" ng-click="setView('compact')"><i class="icon-th-list"></i></button>
       </div>
       <div ng-if="privileges.contacts"
-        sd-tooltip="{{ :: 'Create contact' | translate }}" flow="left">
+        sd-tooltip="{{'Create contact' | translate }}" flow="left">
          <button class="navbtn dropdown__toggle sd-create-btn" ng-click="createContact()" dropdown__toggle></button>
       </div>
   </header>
