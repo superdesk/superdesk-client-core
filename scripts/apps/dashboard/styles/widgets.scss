@@ -7,7 +7,7 @@
 .sd-widget {
     &.ingest, &.archive, &.related-item, &.aggregate, &.package-manager, &.packages {
         .widget-header {
-            z-index: 1;
+            z-index: 2;
             background: $white;
             box-sizing: border-box;
 
@@ -30,24 +30,65 @@
                 color: $grayLight;
             }
         }
+        .search-box__content {
+            position: relative;
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+            height: 100%;
+            transition: opacity ease-in-out 0.2s;
+            opacity: 1;
+        }
+        .search-cancel {
+            position: absolute;
+            height: 24px;
+            width: 24px;
+            padding: 4px;
+            right: 6px;
+            margin: 0;
+            top: 5px;
+            transition: opacity ease-in-out 0.2s;
+            opacity: 0.5;
+            &:hover {
+                opacity: 1;
+            }
+            &:active {
+                i {
+                    color: $sd-blue;
+                }
+            }
+        }
 
         .search-box {
-            position: absolute;
-            left: 0; right: 0; top: 0;
-            height: $nav-height - 10px;
-            border-bottom: 1px solid #dcdcdc;
-            background: $white url(~images/search-icon.png) no-repeat 10px 10px;
-            @include border-box();
+            transition: all ease-in-out 0.2s;
+            height: 34px;
+            box-shadow: 0 1px 2px 0 rgba(0,0,0,0.12);
+            background-color: $white;
+            flex-shrink: 0;
+            flex-grow: 0;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            z-index: 1;
             input {
-                position: absolute;
-                width: calc(100% - 38px);
-                height: $nav-height - 10px - 1;
-                border: 0 !important;
-                left: $nav-height - 10px;
-                right: 30px;
-                top:0px;
+                transition: all ease-in-out 0.16s;
+                flex-grow: 1;
+                height: 100%;
+                background-color: rgba(123, 123, 123, 0);
+                border-width: 0 0 1px 0 !important;
+                border-bottom: 1px solid rgba(0, 0, 0, 0) !important;
+                border-radius: 0;
+                padding: 0 30px 0 0.8rem;
+                margin: 0;
+                box-shadow: none;
+                &:hover {
+                    border-bottom: 1px solid rgba(0, 0, 0, 0) !important;
+                    box-shadow: none;
+                    background-color: rgba(123, 123, 123, 0.06);
+                }
                 &:focus {
-                    @include box-shadow(none !important);
+                    border-bottom: 1px solid $sd-blue !important;
+                    background-color: rgba(123, 123, 123, 0);
                 }
             }
             &.blank {
@@ -65,11 +106,19 @@
                 right: 0px;
                 top: 6px;
             }
-            button {
-                position: absolute;
-                top: 5px;
-                right: 5px;
+            &--hidden {
+                height:0;
+                box-shadow: 0 1px 0 0 rgba(123,123,123,0.2), 0 1px 2px 0 rgba(0,0,0,0.2);
+                .search-box__content {
+                    opacity: 0;
+                }
+
             }
+        }
+        .content-list-holder {
+            position: static;
+            flex-grow: 1;
+            overflow-y: auto;
         }
 
 
@@ -278,15 +327,24 @@
         }
         .main-list {
             position: absolute;
-            left: 0; right: 0; bottom: 0; top: 33px;
+            left: 0;
+            right: 0; 
+            bottom: 0; 
+            top: 38px;
             width: 100%;
             @include transition(all ease 0.2s);
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
             &.wrap {
                 left: -100%;
                 right: auto;
+                overflow: hidden;
                 .scroll-shadow {
                     display: none;
+                }
+                .content-list-holder {
+                    overflow: hidden !important;
                 }
             }
             &.custom-widget {
@@ -294,18 +352,22 @@
             }
         }
         .preview {
+            //display: none;
             position: absolute;
-            left: 0; width: 100%; bottom: 0; top: 33px;
+            left: 0; 
+            width: 100%; 
+            bottom: 0; 
+            top: 38px;
             @include transition(all ease 0.2s);
             &.custom-widget {
                 top: 50%;
             }
             .nav {
-                height: 36px;
-                @include border-box();
+                height: 34px;
+                display: flex;
+                align-items: center;
                 background: #f4f4f4;
-                line-height: 36px;
-                padding: 4px 10px;
+                padding: 0 10px;
                 border-bottom: 1px solid #e7e7e7;
             }
             .open, .associate {
