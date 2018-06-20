@@ -61,6 +61,7 @@ angular.module('superdesk.core.upload', [
     'superdesk.core.upload.crop',
     'superdesk.core.upload.imagecrop',
     'superdesk.core.upload.imagepreview',
+    'superdesk.core.upload.imagemodify',
     'superdesk.core.upload.upload',
 ])
     .directive('sdSources', SourcesDirective)

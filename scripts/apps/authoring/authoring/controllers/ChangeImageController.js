@@ -21,6 +21,21 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
     $scope.validator = config.validatorMediaMetadata;
     let sizes = {};
 
+    const DEFAULT_CONTROLS = {
+        brightness: 1,
+        contrast: 1,
+        saturation: 1,
+        rotate: 0,
+        fliph: 0,
+        flipv: 0,
+        isDirty: false,
+    };
+
+    $scope.controls = angular.copy(DEFAULT_CONTROLS);
+
+    $scope.showMetadata = $scope.data.showMetadata;
+    $scope.nav = $scope.data.defaultTab || 'view';
+
     $scope.data.renditions.forEach((rendition) => {
         let original = $scope.data.item.renditions.original;
         // only extend the item renditions if the original image can fit the rendition dimensions
@@ -55,7 +70,7 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
      * @returns {Boolean}
      */
     $scope.saveIsEnabled = function() {
-        return $scope.data.isDirty || $scope.isNew;
+        return !$scope.controls.isDirty && ($scope.data.isDirty || $scope.isNew);
     };
 
     /**
@@ -119,6 +134,7 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
                 'copyrightnotice',
                 'poi',
                 'renditions',
+                '_etag',
             ]),
         });
     };
@@ -156,7 +172,7 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
         angular.extend($scope, {
             isAoISelectionModeEnabled: show === undefined || show,
             areaOfInterestData: {},
-            loaderForAoI: false,
+            showLoader: false,
             isAoIDirty: false,
         });
     };
@@ -208,7 +224,7 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
             return;
         }
 
-        $scope.loaderForAoI = true;
+        $scope.showLoader = true;
         api.save('picture_crop', {item: $scope.data.item, crop: croppingData})
             .then((result) => {
                 angular.extend(result.item.renditions.original, {
@@ -236,9 +252,94 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
                     notify.error(gettext('There was an error. Failed to save the area of interest.'));
                 }
 
-                $scope.loaderForAoI = false;
+                $scope.showLoader = false;
             });
     };
+
+    /**
+    * @ngdoc method
+    * @name ChangeImageController#rotateImage
+    * @public
+    * @description Rotate image
+    */
+    $scope.rotateImage = (direction) => {
+        switch (direction) {
+        case 'left':
+            $scope.controls.rotate = $scope.controls.rotate - 90;
+            break;
+
+        case 'right':
+            $scope.controls.rotate = $scope.controls.rotate + 90;
+            break;
+        }
+
+        return $scope.controls.isDirty = true;
+    };
+
+    /**
+    * @ngdoc method
+    * @name ChangeImageController#flipImage
+    * @public
+    * @description Flip image
+    */
+    $scope.flipImage = (direction) => {
+        switch (direction) {
+        case 'horizontal':
+            $scope.controls.fliph = $scope.controls.fliph + 180;
+            break;
+
+        case 'vertical':
+            $scope.controls.flipv = $scope.controls.flipv + 180;
+            break;
+        }
+
+        return $scope.controls.isDirty = true;
+    };
+
+    /**
+    * @ngdoc method
+    * @name ChangeImageController#applyImageChanges
+    * @public
+    * @description Apply image modifications
+    */
+    $scope.applyImageChanges = () => {
+        let flip = 'none',
+            flipH = Math.abs($scope.controls.fliph / 180 % 2),
+            flipV = Math.abs($scope.controls.flipv / 180 % 2);
+
+        if (flipH === 1 && flipV === 1) {
+            flip = 'both';
+        } else if (flipH === 1 && flipV === 0) {
+            flip = 'horizontal';
+        } else if (flipH === 0 && flipV === 1) {
+            flip = 'vertical';
+        }
+
+        $scope.loaderForMediaEdit = true;
+        return api.save('media_editor', {item: $scope.data.item, edit: {
+            brightness: $scope.controls.brightness,
+            contrast: $scope.controls.contrast,
+            saturation: $scope.controls.saturation,
+            rotate: -$scope.controls.rotate,
+            flip: flip,
+
+        }}).then((result) => {
+            $scope.data.item.renditions = result.renditions;
+            $scope.data.item._etag = result._etag;
+            $scope.data.metadata = $scope.data.item;
+            $scope.controls = angular.copy(DEFAULT_CONTROLS);
+            $scope.data.isDirty = true;
+            $scope.loaderForMediaEdit = false;
+        });
+    };
+
+    /**
+    * @ngdoc method
+    * @name ChangeImageController#cancelImageChanges
+    * @public
+    * @description Cancel image changes and set values back to default
+    */
+    $scope.cancelImageChanges = () => $scope.controls = angular.copy(DEFAULT_CONTROLS);
 
     /**
     * @ngdoc method

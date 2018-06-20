@@ -36,6 +36,7 @@ angular.module('superdesk.apps.search', [
     .value('searchCommon', {meta: {}})
     .service('search', svc.SearchService)
     .service('savedSearch', svc.SavedSearchService)
+    .service('multiImageEdit', svc.MultiImageEditService)
     .service('tags', svc.TagService)
     .service('sort', svc.SortService)
 

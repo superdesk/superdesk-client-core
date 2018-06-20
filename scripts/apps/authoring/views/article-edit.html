@@ -323,9 +323,9 @@
      sd-width="{{editor.media.sdWidth|| 'full'}}">
 
     <div ng-if="item.type == 'picture' || item.type == 'graphic'" class="full-preview" sd-ratio-calc>
-        <div>
-            <span translate>Original</span>
+        <div class="media-item__item">
             <div sd-item-rendition data-item="item" data-rendition="baseImage" ng-click="preview(item);"></div>
+            <span class="media-item__item-label" translate>Original ({{item.renditions.original.width}} x {{item.renditions.original.height}} px)</span>
         </div>
         <div sd-item-crops data-item="item"></div>
         <button id="btnCrop" class="btn btn--medium pull-right" ng-click="applyCrop()" ng-if="metadata.crop_sizes && _editable">
