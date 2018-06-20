@@ -1,6 +1,6 @@
 <div sd-modal data-model="template" data-close="cancel()" class="modal--fill template-editor-modal">
     <div class="modal__header"> <a href="" class="close" ng-click="cancel()"><i class="icon-close-small"></i></a>
-        <h3 class="modal__heading" ng-show="template._id">{{ :: 'Edit Template'}}: <span>{{ origTemplate.template_name}}</span></h3>
+        <h3 class="modal__heading" ng-show="template._id">{{'Edit Template'}}: <span>{{ origTemplate.template_name}}</span></h3>
         <h3 class="modal__heading" ng-hide="template._id" translate>Add New Template</h3>
     </div>
 
@@ -13,7 +13,7 @@
             <div class="template-header">
                 <div sd-validation-error="error.template_name" data-required="true"
                         class="authoring-header__item" sd-width="full">
-                    <input type="text" id="template-name" class="line-input" name="name" ng-model="template.template_name" placeholder="{{ :: 'Template name' | translate }}" required data-field="template_name" ng-disabled="template.template_name && template.template_type === 'kill'" ng-maxlength="40">
+                    <input type="text" id="template-name" class="line-input" name="name" ng-model="template.template_name" placeholder="{{'Template name' | translate }}" required data-field="template_name" ng-disabled="template.template_name && template.template_type === 'kill'" ng-maxlength="40">
                 </div>
                 <div class="error" ng-show="templateForm.name.$error.maxlength" translate>Please use less than 40 characters</div>
 
@@ -67,18 +67,18 @@
 
                     <div for="template-desk" ng-if="template.template_type !== 'create'">
                         <div class="sd-line-input sd-line-input--is-select">
-                            <label class="sd-line-input__label">{{:: 'Desk' | translate }}</label>
+                            <label class="sd-line-input__label">{{'Desk' | translate }}</label>
                             <select id="template-desk" ng-if="template.template_type !== 'create'"
                                 ng-model="template_desk" ng-change="setTemplateDesks(template_desk)"
                                 class="sd-line-input__select">
                                 <option value="" translate>None</option>
                                 <option ng-repeat="desk in desks._items track by desk._id" value="{{ desk._id }}"
-                                ng-selected="desk.selected">{{ :: desk.name }}</option>
+                                ng-selected="desk.selected">{{desk.name }}</option>
                             </select>
                         </div>
                     </div>
 
-                    <div for="template-desks" ng-if="template.template_type === 'create'" sd-toggle-box data-title="{{:: 'Desks' | translate }}" data-open="true">
+                    <div for="template-desks" ng-if="template.template_type === 'create'" sd-toggle-box data-title="{{'Desks' | translate }}" data-open="true">
                         <div class="multi-select" ng-if="template.template_type === 'create'">
                             <ul>
                                 <li ng-repeat="desk in desks._items track by desk._id">
@@ -89,7 +89,7 @@
                     </div>
                 </div>
 
-                <div sd-toggle-box data-title="{{:: 'Metadata' | translate }}" data-open="false" id="template-editor-metadata">
+                <div sd-toggle-box data-title="{{'Metadata' | translate }}" data-open="false" id="template-editor-metadata">
                     <div class="field">
                         <span sd-switch ng-model="item.flags.marked_for_not_publication"></span><label>Not For Publication</label>
                     </div>
@@ -144,7 +144,7 @@
                     <div class="toggle-box">
                         <div class="toggle-box__header">
                             <span class="toggle-box__chevron" sd-switch ng-model="template.schedule.is_active"></span>
-                            <div class="toggle-box__label">{{ :: 'Automatically create item' | translate }}</div>
+                            <div class="toggle-box__label">{{'Automatically create item' | translate }}</div>
                             <div class="toggle-box__line"></div>
                         </div>
                     </div>
@@ -171,7 +171,7 @@
                                 ng-change="updateStages(template.schedule_desk)" class="sd-line-input__select">
                             <option value="" translate>None</option>
                             <option ng-repeat="desk in desks._items track by desk._id" value="{{ desk._id }}"
-                                ng-selected="desk._id === template.schedule_desk">{{ :: desk.name }}</option>
+                                ng-selected="desk._id === template.schedule_desk">{{desk.name }}</option>
                         </select>
                     </div>
                     <div ng-if="showStages() && template.schedule.is_active"
@@ -179,7 +179,7 @@
                         <label for="template-stage" class="sd-line-input__label" translate>Schedule Stage</label>
                         <select id="template-stage" ng-model="template.schedule_stage" class="sd-line-input__select">
                             <option ng-repeat="stage in stages track by stage._id" value="{{ stage._id }}"
-                                ng-selected="stage._id === template.schedule_stage">{{ :: stage.name }}</option>
+                                ng-selected="stage._id === template.schedule_stage">{{stage.name }}</option>
                         </select>
                     </div>
                 </div>

@@ -2,7 +2,7 @@
     <div sd-typeahead items="words" term="selectedTerm" search="search(term)" select="select(item)" data-disabled="disabled" data-style="style">
         <ul>
             <li typeahead-item="t" ng-repeat="t in words">
-                {{ :: t.name}}
+                {{t.name}}
             </li>
         </ul>
     </div>

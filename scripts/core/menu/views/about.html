@@ -2,18 +2,18 @@
   <div class="modal__header modal__header--about">
     <h3 class="modal__header-sd-logo">Superdesk</h3>
     <div class="btn-group pull-right">
-      <button ng-click="closeAbout()" title="{{ :: 'Close' | translate }}" class="modal__close"><i class="icon-close-small"></i></button>
+      <button ng-click="closeAbout()" title="{{'Close' | translate }}" class="modal__close"><i class="icon-close-small"></i></button>
     </div>
   </div>
 
   <div class="modal__body">
     <div class="about-content">
       <span class="sf-logo"></span>
-      <h4>Superdesk {{ :: version }}</span></h4>
-      <h5 ng-if="build_rev && build_rev !== ''">Superdesk rev. <a href="https://github.com/superdesk/superdesk/commit/{{ :: build_rev }}" rel="noopener noreferrer">{{ :: build_rev }}</a></h5>
-      <h5 ng-if="build_rev_core && build_rev_core !== ''">Superdesk core rev. <a href="https://github.com/superdesk/superdesk-core/commit/{{ :: build_rev_core }}" rel="noopener noreferrer">{{ :: build_rev_core }}</a></h5>
-      <h5 ng-if="build_rev_client && build_rev_client !== ''">Superdesk client rev. <a href="https://github.com/superdesk/superdesk-client-core/commit/{{ :: build_rev_client }}" rel="noopener noreferrer">{{ :: build_rev_client }}</a></h5>
-      <p class="date-released"><span ng-show="releaseDate">Released on</span> {{ :: releaseDate }}</p>
+      <h4>Superdesk {{version }}</span></h4>
+      <h5 ng-if="build_rev && build_rev !== ''">Superdesk rev. <a href="https://github.com/superdesk/superdesk/commit/{{build_rev }}" rel="noopener noreferrer">{{build_rev }}</a></h5>
+      <h5 ng-if="build_rev_core && build_rev_core !== ''">Superdesk core rev. <a href="https://github.com/superdesk/superdesk-core/commit/{{build_rev_core }}" rel="noopener noreferrer">{{build_rev_core }}</a></h5>
+      <h5 ng-if="build_rev_client && build_rev_client !== ''">Superdesk client rev. <a href="https://github.com/superdesk/superdesk-client-core/commit/{{build_rev_client }}" rel="noopener noreferrer">{{build_rev_client }}</a></h5>
+      <p class="date-released"><span ng-show="releaseDate">Released on</span> {{releaseDate }}</p>
       <p>
         <a href="https://www.superdesk.org" target="_blank"><b>Superdesk</b></a> is an open source end-to-end news creation, production, curation, distribution and publishing platform maintained by <a href="http://sourcefabric.org">Sourcefabric z.u.</a>, a nonprofit organisation whose primary purpose is to make the best possible software for journalism.
       </p>

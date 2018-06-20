@@ -3,7 +3,7 @@
         ng-class="{'toggle-button--active': !stages.selected && !spike && !published}"
         style="max-width:{{100/(stages.stages.length + 3)}}%"
         ng-if="stages.stages.length">
-        {{:: 'Any' | translate}}
+        {{'Any' | translate}}
     </a>
     <a href="" ng-repeat="stage in stages.stages" ng-click="stageSelect(stage)" class="toggle-button"
         ng-class="{'toggle-button--active': stage == stages.selected && !spike && !published}"
@@ -14,11 +14,11 @@
     <a href="" ng-if="type === 'archive'" ng-click="toggleSpike()" class="toggle-button"
         ng-class="{'toggle-button--active': spike}"
         style="max-width:{{100/(stages.stages.length + 3)}}%">
-        {{:: 'Spiked' | translate}}
+        {{'Spiked' | translate}}
     </a>
     <a href="" ng-if="type === 'archive' && stages.stages.length" ng-click="togglePublished()" class="toggle-button"
         ng-class="{'toggle-button--active': published}"
         style="max-width:{{100/(stages.stages.length + 3)}}%">
-        {{:: 'Published' | translate}}
+        {{'Published' | translate}}
     </a>
 </div>

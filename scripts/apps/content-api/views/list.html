@@ -1,14 +1,14 @@
 <div class="subnav subnav--absolute">
   <header class="search-page-header">
       <div class="filter-trigger"
-           title="{{ :: 'Filters' | translate }}"
+           title="{{'Filters' | translate }}"
            ng-click="flags.facets = !flags.facets" ng-class="{'filter-trigger--active': flags.facets}"
       ><i class="icon-filter-large"></i></div>
       <div sd-item-searchbar data-repo="repo" data-context="context" class="searchbar-flex-handler"></div>
       <div sd-content-api-sort-bar data-total="total" class="sortbar-flex-handler"></div>
       <div class="view-select">
-          <button title="{{ :: 'Switch to grid view' | translate }}" ng-show="view !== 'mgrid'" ng-click="setView('mgrid')"><i class="icon-th"></i></button>
-          <button title="{{ :: 'Switch to list view' | translate }}" ng-show="view !== 'compact'" ng-click="setView('compact')"><i class="icon-th-list"></i></button>
+          <button title="{{'Switch to grid view' | translate }}" ng-show="view !== 'mgrid'" ng-click="setView('mgrid')"><i class="icon-th"></i></button>
+          <button title="{{'Switch to list view' | translate }}" ng-show="view !== 'compact'" ng-click="setView('compact')"><i class="icon-th-list"></i></button>
       </div>
   </header>
 </div>

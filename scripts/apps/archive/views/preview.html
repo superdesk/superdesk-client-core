@@ -42,7 +42,7 @@
               <span class="state-label updated" ng-if="selected.preview.rewritten_by" translate>Updated</span>
             </div>
             <div class="preview-header__flex-row preview-header__flex-row--single-line">
-              <span ng-if="item._type === 'archived'" class="stage" tooltip="{{:: 'Archived from' | translate}} {{deskName}} / {{ stage }}" tooltip-placement="bottom" ng-show="stage"><b>{{:: 'Archived from' | translate}} {{deskName}}</b> / {{ stage }}</span>
+              <span ng-if="item._type === 'archived'" class="stage" tooltip="{{'Archived from' | translate}} {{deskName}} / {{ stage }}" tooltip-placement="bottom" ng-show="stage"><b>{{'Archived from' | translate}} {{deskName}}</b> / {{ stage }}</span>
               <span ng-if="item._type !== 'archived'" class="stage" tooltip="{{deskName}} / {{ stage }}" tooltip-placement="bottom" ng-show="stage"><b>{{deskName}}</b> / {{ stage }}</span>
             </div>
           </div>
@@ -76,7 +76,7 @@
 
         <div id="locked" class="clearfix" sd-item-lock data-item="selected.preview"></div>
 
-        <div class="rewrite" ng-if="selected.preview.rewrite_id">{{ :: 'This story has been rewritten by: ' | translate }}<a ng-click="previewRewriteStory()"
+        <div class="rewrite" ng-if="selected.preview.rewrite_id">{{'This story has been rewritten by: ' | translate }}<a ng-click="previewRewriteStory()"
             class="open-item"><i class="icon-external"></i></a></div>
 
         <p class="title preview-headline"

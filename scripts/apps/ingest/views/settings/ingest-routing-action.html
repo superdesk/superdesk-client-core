@@ -16,7 +16,7 @@
         <li class="pull-left" ng-repeat="fetchAction in rule.actions.fetch">
             {{ getActionString(fetchAction)}}
             <div class="actions">
-                <button ng-click="removeFetch(fetchAction)" title="{{:: 'Remove fetch action' | translate }}"><i class="icon-trash"></i></button>
+                <button ng-click="removeFetch(fetchAction)" title="{{'Remove fetch action' | translate }}"><i class="icon-trash"></i></button>
             </div>
         </li>
     </ul>
@@ -59,7 +59,7 @@
         <li class="pill-small pull-left" ng-repeat="publishAction in rule.actions.publish">
             {{ getActionString(publishAction)}}
             <div class="actions">
-                <button ng-click="removePublish(publishAction)" title="{{:: 'Remove publish action' | translate }}"><i class="icon-trash"></i></button>
+                <button ng-click="removePublish(publishAction)" title="{{'Remove publish action' | translate }}"><i class="icon-trash"></i></button>
             </div>
         </li>
     </ul>

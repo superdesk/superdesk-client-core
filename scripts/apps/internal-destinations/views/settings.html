@@ -3,11 +3,11 @@
         <h2 class="sd-page__page-heading" translate>Internal Destinations</h2>
     </div>
     <div class="sd-page__header">
-        <sd-check type="radio" ng-model="active_only" label-position="inside" style="margin-left: 0;">{{:: 'All'| translate}}</sd-check>
-        <sd-check type="radio" ng-model="active_only" label-position="inside" ng-value="true" ng-checked="true">{{:: 'Active only'| translate}}</sd-check>
+        <sd-check type="radio" ng-model="active_only" label-position="inside" style="margin-left: 0;">{{'All'| translate}}</sd-check>
+        <sd-check type="radio" ng-model="active_only" label-position="inside" ng-value="true" ng-checked="true">{{'Active only'| translate}}</sd-check>
         <span class="sd-page__element-grow"></span>
         <button class="btn btn--primary" ng-click="dest.create()">
-            <i class="icon-plus-sign icon--white"></i>{{ :: 'Add New' | translate }}
+            <i class="icon-plus-sign icon--white"></i>{{'Add New' | translate }}
         </button>
     </div>
     <div class="sd-page__content">
@@ -17,8 +17,8 @@
                 class="clearfix">
                 <h6>{{ destination.name}}</h6>
                 <div class="actions">
-                    <button ng-click="dest.edit(destination)" title="{{:: 'Edit' | translate }}"><i class="icon-pencil"></i></button>
-                    <button ng-click="dest.remove(destination)" title="{{:: 'Remove' | translate }}"><i class="icon-trash"></i></button>
+                    <button ng-click="dest.edit(destination)" title="{{'Edit' | translate }}"><i class="icon-pencil"></i></button>
+                    <button ng-click="dest.remove(destination)" title="{{'Remove' | translate }}"><i class="icon-trash"></i></button>
                 </div>
             </li>
             <li ng-show="dest.destinations.length === 0" translate>There are no destinations defined.</li>

@@ -1,12 +1,12 @@
 <div class="field">
     <label for="recipients" translate>Recipients</label>
     <i class="field-info" translate>*at least one visible or hidden recipient needed</i>
-    <input type="text" id="recipients" placeholder="{{:: 'Recipients (visible to everybody)'|translate }}"
+    <input type="text" id="recipients" placeholder="{{'Recipients (visible to everybody)'|translate }}"
       ng-model="destination.config.recipients"
       ng-change="$parent.setConfig(provider)"
       ng-required="!(destination.config.recipients.length || destination.config.recipients_bcc.length)">
     <label for="recipients" translate>Recipients (Bcc, hidden)</label>
-    <input type="text" id="recipients_bcc" placeholder="{{:: 'Hidden recipients (blind carbon copy)'|translate }}"
+    <input type="text" id="recipients_bcc" placeholder="{{'Hidden recipients (blind carbon copy)'|translate }}"
       ng-model="destination.config.recipients_bcc"
       ng-change="$parent.setConfig(provider)"
       ng-required="!(destination.config.recipients.length || destination.config.recipients_bcc.length)">

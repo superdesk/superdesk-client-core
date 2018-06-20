@@ -6,13 +6,13 @@
             <div class="panel-search sd-shadow--z2">
                 <div class="form__row">
                     <div class="sd-line-input">
-                        <label class="sd-line-input__label">{{ :: 'Story GUID' | translate }}</label>
+                        <label class="sd-line-input__label">{{'Story GUID' | translate }}</label>
                         <input class="sd-line-input__input" type="text" id="story-id" required ng-model="articleId">
                     </div>
                 </div>
                 <div class="form__row">
                     <div class="sd-line-input sd-line-input--is-select">
-                        <label class="sd-line-input__label">{{ :: 'Result Type' | translate }}</label>
+                        <label class="sd-line-input__label">{{'Result Type' | translate }}</label>
                         <select class="sd-line-input__select" ng-model="resultType">
                             <option value="All">All</option>
                             <option value="Match">Match</option>
@@ -32,7 +32,7 @@
                     <li ng-repeat="product in filteredProducts" class="{{testLookup[product._id].matched ? 'match':'no-match'}}">
                         <h6>{{ product.name }} [{{ product.product_type || 'both'}}]</h6>
                         <div class="actions">
-                            <button ng-click="edit(product)" title="{{:: 'Edit product' | translate }}"><i class="icon-pencil"></i></button>
+                            <button ng-click="edit(product)" title="{{'Edit product' | translate }}"><i class="icon-pencil"></i></button>
                         </div>
                         <div ng-if="testLookup[product._id]">
                             <br />

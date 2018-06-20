@@ -13,8 +13,8 @@
       <div class="top-menu__content-block top-menu__content-block--right">
         <div sd-top-menu-info-placeholder></div>
         <button ng-if="privileges.feature_preview" ng-click="toggleBeta()" class="beta-switch">
-            <span class="stable" ng-hide="beta" title="{{ :: 'Switch to feature preview' | translate }}">stable</span>
-            <span class="beta" ng-show="beta" sd-tooltip="{{ :: 'Turn off feature preview' | translate }}" flow="down">feature preview</span>
+            <span class="stable" ng-hide="beta" title="{{'Switch to feature preview' | translate }}">stable</span>
+            <span class="beta" ng-show="beta" sd-tooltip="{{'Turn off feature preview' | translate }}" flow="down">feature preview</span>
         </button>
         <button class="current-user" ng-click="toggleNotifications()">
             <span id="unread-count" class="badge badge--primary" ng-show="notifications.unread">{{ notifications.unread }}</span>
@@ -32,12 +32,12 @@
     <div class="content">
       <ul>
         <li ng-repeat="item in menu | filter:{ adminTools: false } | orderBy:'priority'" ng-class="{active: item.isActive}">
-          <a ng-href="#{{ :: item.href }}" title="{{ :: item.description | translate }}">{{ :: item.label | translate }}</a>
+          <a ng-href="#{{item.href }}" title="{{item.description | translate }}">{{item.label | translate }}</a>
         </li>
         <li class="main-menu_group-header" translate ng-if="adminOptions.length > 0">Admin tools</li>
         <li ng-repeat="item in menu | filter:{ adminTools: true } | orderBy:'priority' as adminOptions" ng-class="{active: item.isActive}">
-          <a ng-href="#{{ :: item.href }}" title="{{ :: item.description | translate }}">
-            {{ :: item.label | translate }}
+          <a ng-href="#{{item.href }}" title="{{item.description | translate }}">
+            {{item.label | translate }}
             <sup class="btn-toggle-label" ng-if="item.betaMark">Beta</sup>
           </a>
         </li>

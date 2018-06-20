@@ -1,19 +1,19 @@
-<a title="{{ :: activity.label | translate }}"
-    ng-href="{{ :: $root.link(activity._id, item) }}"
-    ng-if=":: !activity.dropdown"
+<a title="{{activity.label | translate }}"
+    ng-href="{{$root.link(activity._id, item) }}"
+    ng-if="!activity.dropdown"
     ng-click="run(activity, $event)">
-    <i class="icon-{{ :: activity.icon }} {{!activity.monitor|| !item.actioning[activity._id] || 'actioning'}}" ng-show=":: activity.icon"></i>
-    <span>{{ :: activity.label | translate }}</span>
+    <i class="icon-{{activity.icon }} {{!activity.monitor|| !item.actioning[activity._id] || 'actioning'}}" ng-show="activity.icon"></i>
+    <span>{{activity.label | translate }}</span>
 </a>
-<div ng-if=":: activity.dropdown"
+<div ng-if="activity.dropdown"
      class="dropdown dropdown--noarrow"
      ng-class="{open: dropdownOpen}"
      ng-mouseenter="dropdownOpen=true"
      ng-mouseleave="dropdownOpen=false"
      dropdown>
-    <a class="dropdown__toggle" title="{{ :: activity.label | translate }}" dropdown__toggle>
-        <i class="icon-{{ :: activity.icon }}" ng-show=":: activity.icon"></i>
-        <span>{{ :: activity.label | translate }}</span>
+    <a class="dropdown__toggle" title="{{activity.label | translate }}" dropdown__toggle>
+        <i class="icon-{{activity.icon }}" ng-show="activity.icon"></i>
+        <span>{{activity.label | translate }}</span>
     </a>
     <ul class="dropdown__menu dropdown__menu--submenu-left">
         <div ng-include="activity.templateUrl"></div>

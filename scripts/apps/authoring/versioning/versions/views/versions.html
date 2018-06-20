@@ -2,17 +2,17 @@
     <ul class="versions-list card-list">
         <li class="item" ng-class="{selected: selected === version}" ng-repeat="version in versions" ng-click="openVersion(version)" ng-disabled="dirty">
             <div class="header">
-                <time sd-absdate title="{{ :: version._created | date:'medium' }}" datetime="version._created"></time>
-                <span class="user">{{ :: 'by' | translate }} {{ version.creator }}</span>
+                <time sd-absdate title="{{version._created | date:'medium' }}" datetime="version._created"></time>
+                <span class="user">{{'by' | translate }} {{ version.creator }}</span>
             </div>
-            <h6 ng-class="{'no-title': !version.headline }">{{ :: version.headline || ('Untitled' | translate) }}</h6>
+            <h6 ng-class="{'no-title': !version.headline }">{{version.headline || ('Untitled' | translate) }}</h6>
             <div class="desk-details">
-                <span ng-show='version.desk'>{{ :: 'desk:' | translate }} {{version.desk}}</span>
-                <span class="pull-right" ng-show='version.stage'>{{ :: 'stage:' | translate }} {{version.stage}}</span>
+                <span ng-show='version.desk'>{{'desk:' | translate }} {{version.desk}}</span>
+                <span class="pull-right" ng-show='version.stage'>{{'stage:' | translate }} {{version.stage}}</span>
             </div>
             <div class="footer">
-                <em>{{ :: 'version' | translate }}: {{ version._current_version }}</em>
-                <div class="state-label state-{{ :: version.state}}">{{ :: version.state | translate }}</div>
+                <em>{{'version' | translate }}: {{ version._current_version }}</em>
+                <div class="state-label state-{{version.state}}">{{version.state | translate }}</div>
                 <button class="btn btn--light btn--mini pull-right"
                     ng-show="canRevert && !$first && !dirty"
                     ng-click="revert(version)"

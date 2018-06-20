@@ -8,7 +8,7 @@
         <li>
             <div sd-typeahead items="list" term="selectedTerm" search="searchTerms(term)" select="selectItem(item)" data-disabled="disabled">
                 <ul class="item-list" vs-repeat vs-scroll-parent=".item-list" ng-if="activeList">
-                    <li typeahead-item="t" ng-repeat="t in terms"><button>{{ :: t}}</button></li>
+                    <li typeahead-item="t" ng-repeat="t in terms"><button>{{t}}</button></li>
                 </ul>
             </div>
         </li>
@@ -16,7 +16,7 @@
         <li class="main-list" ng-if="!activeList">
             <ul vs-repeat vs-scroll-parent=".main-list">
                 <li ng-repeat="item in list">
-                    <button ng-click="selectItem(item)">{{ :: item}}</button>
+                    <button ng-click="selectItem(item)">{{item}}</button>
                 </li>
             </ul>
         </li>
@@ -25,6 +25,6 @@
 
 <ul class="terms-list" ng-if="selectedItems.length">
     <li class="pull-left" ng-repeat="item in selectedItems" ng-click="removeItem(item)">
-        {{ :: item}} <i class="icon-close-small"></i>
+        {{item}} <i class="icon-close-small"></i>
     </li>
 </ul>

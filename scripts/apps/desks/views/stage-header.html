@@ -7,11 +7,11 @@
     </button>
     <span class="stage-header__name">
         <a href="" ng-show="agg.state.solo._id !== group._id" ng-click="agg.setSoloGroup(group)">
-            {{ :: group.header }} <span ng-show="group.subheader">/ {{ :: group.subheader }} </span> {{ :: group.type | translate }}
+            {{group.header }} <span ng-show="group.subheader">/ {{group.subheader }} </span> {{group.type | translate }}
         </a>
         <a href="" ng-click="agg.setSoloGroup()" ng-show="agg.state.solo._id === group._id">
             <i class="backlink"></i>
-            {{ :: group.header }} <span ng-show="group.subheader">/ {{ :: group.subheader }} </span> {{ :: group.type | translate }}
+            {{group.header }} <span ng-show="group.subheader">/ {{group.subheader }} </span> {{group.type | translate }}
         </a>
     </span>
     <div class="stage-header__line" ng-if="agg.state.solo._id !== group._id"></div>

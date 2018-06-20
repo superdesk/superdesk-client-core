@@ -11,7 +11,7 @@
         </ul>
     </div>
     <div ng-show="groupedList">
-        <div sd-toggle-box data-title="{{:: 'quick list' | translate }}" data-open="true">
+        <div sd-toggle-box data-title="{{'quick list' | translate }}" data-open="true">
             <ul class="link-list" sd-loading="loading">
                 <li ng-repeat="macro in quickList | orderBy:'label'">
                     <button class="btn" ng-click="call(macro)">{{ macro.label | translate }}</button>
@@ -19,7 +19,7 @@
             </ul>
         </div>
         <div ng-repeat="(key,value) in orderedGroupedMacros">
-            <div sd-toggle-box data-title="{{:: key | translate }}"
+            <div sd-toggle-box data-title="{{key | translate }}"
                 ng-click="setGroupStatus(key)" data-open="{{getGroupStatus(key)}}">
                 <ul class="link-list" sd-loading="loading">
                     <li ng-repeat="macro in value">
@@ -28,7 +28,7 @@
                 </ul>
             </div>
         </div>
-        <div sd-toggle-box data-title="{{:: 'miscellaneous' | translate }}"
+        <div sd-toggle-box data-title="{{'miscellaneous' | translate }}"
             ng-click="setGroupStatus('miscellaneous')" data-open="{{getGroupStatus('miscellaneous')}}">
             <ul class="link-list" sd-loading="loading">
                 <li ng-repeat="macro in miscMacros | orderBy:'label'">

@@ -5,7 +5,7 @@
                 <div class="flat-searchbar" ng-class="{extended: queueSearch}">
                     <div class="search-handler" >
                         <label for="search-input" class="trigger-icon" ng-click="queueSearch = !queueSearch"><i class="icon-search"></i></label>
-                        <input id="search-input" type="text" placeholder="{{ :: 'Search' | translate }}" ng-model="query" ng-model-options="{debounce: 500}" ng-change="search(query)">
+                        <input id="search-input" type="text" placeholder="{{'Search' | translate }}" ng-model="query" ng-model-options="{debounce: 500}" ng-change="search(query)">
                         <button class="search-close" ng-click="search(query = null)" ng-class="{visible: query}"><i class="icon-close-small"></i></button>
                     </div>
                 </div>
@@ -53,7 +53,7 @@
                         <ul class="dropdown__menu">
                             <li><a href="" ng-click="filterPublishQueue(null, 'status')" translate>None</a></li>
                             <li ng-repeat="status in publish_queue_statuses track by $index">
-                                <a href="" ng-click="filterPublishQueue(status, 'status')">{{ :: status | translate}}</a>
+                                <a href="" ng-click="filterPublishQueue(status, 'status')">{{status | translate}}</a>
                             </li>
                         </ul>
                     </div>
@@ -62,20 +62,20 @@
                 <div sd-pagination-alt class="pagination-box subnav__element-grow" data-page="page" data-max-page="maxPage"></div>
 
                 <div class="refresh-box">
-                    <span >{{ :: 'Last refreshed at' | translate}}: {{ lastRefreshedAt | date:'dd-MM-yyyy HH:mm:ss' }}</span>
-                    <button class="navbtn" ng-click="reload()" tooltip="{{:: 'Refresh' | translate}}" tooltip-placement="left"><i class="icon-refresh"></i></button>
+                    <span >{{'Last refreshed at' | translate}}: {{ lastRefreshedAt | date:'dd-MM-yyyy HH:mm:ss' }}</span>
+                    <button class="navbtn" ng-click="reload()" tooltip="{{'Refresh' | translate}}" tooltip-placement="left"><i class="icon-refresh"></i></button>
                 </div>
 
                 <div class="multi-action-bar" ng-show="multiSelectCount > 0">
-                    <button class="btn" ng-click="cancelSelection(false)" ng-show="multiSelectCount > 0">{{ :: 'Cancel Selection' | translate}}</button>
+                    <button class="btn" ng-click="cancelSelection(false)" ng-show="multiSelectCount > 0">{{'Cancel Selection' | translate}}</button>
                     <span id="multi-select-count"
                             ng-show="multiSelectCount > 0"
                             translate
                             translate-n="multiSelectCount"
                             translate-plural="{{ multiSelectCount }} Items selected">{{ multiSelectCount}} Item selected
                     </span>
-                    <button class="btn btn--primary pull-right" ng-click="scheduleToSend()" ng-show="multiSelectCount > 0 && showResendBtn">{{ :: 'Resend' | translate}}</button>
-                    <button class="btn btn--primary pull-right" ng-click="cancelSend()" ng-show="multiSelectCount > 0 && showCancelBtn">{{ :: 'Cancel' | translate}}</button>
+                    <button class="btn btn--primary pull-right" ng-click="scheduleToSend()" ng-show="multiSelectCount > 0 && showResendBtn">{{'Resend' | translate}}</button>
+                    <button class="btn btn--primary pull-right" ng-click="cancelSend()" ng-show="multiSelectCount > 0 && showCancelBtn">{{'Cancel' | translate}}</button>
                 </div>
             </header>
 
@@ -123,10 +123,10 @@
                                 <td class="align-right">{{queue_item.state}}</td>
                                 <td class="align-right">{{queue_item.error_message}}</td>
                                 <td class="align-right" ng-if="queue_item.state === 'pending' || queue_item.state === 'retrying'">
-                                    <button class="btn btn--small" ng-click="cancelSend(queue_item); $event.stopPropagation()">{{ :: 'Cancel' | translate}}</button>
+                                    <button class="btn btn--small" ng-click="cancelSend(queue_item); $event.stopPropagation()">{{'Cancel' | translate}}</button>
                                 </td>
                                 <td class="align-right" ng-if="queue_item.state === 'success' || queue_item.state === 'failed' || queue_item.state === 'canceled'">
-                                    <button class="btn btn--small" ng-click="scheduleToSend(queue_item); $event.stopPropagation()">{{ :: 'Resend' | translate}}</button>
+                                    <button class="btn btn--small" ng-click="scheduleToSend(queue_item); $event.stopPropagation()">{{'Resend' | translate}}</button>
                                 </td>
                             </tr>
                         </tbody>

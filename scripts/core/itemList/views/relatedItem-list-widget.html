@@ -1,7 +1,7 @@
 <div class="main-list" ng-class="{wrap: selected, 'existing-items': !options.searchEnabled}" sd-loading="loading">
 
     <div class="search-box" ng-class="{blank: related}" ng-show="options.searchEnabled">
-        <input type="text" placeholder="{{ :: 'Search' | translate }}" ng-keypress="($event.which === 13)?refresh():null"
+        <input type="text" placeholder="{{'Search' | translate }}" ng-keypress="($event.which === 13)?refresh():null"
             ng-model="itemListOptions.keyword">
         <button id="search-related-items" type="button" class="btn" ng-click="refresh()" ng-disabled="!hasKeywords()" translate>Search</button>
     </div>
@@ -16,7 +16,7 @@
                         <div class="dropdown__menu pull-right">
                             <ul>
                                  <li ng-repeat="action in actions">
-                                    <button id="{{action.title | translate}}" ng-if="action.condition(item)" ng-click="action.method(item)">{{ :: action.title | translate }}</button>
+                                    <button id="{{action.title | translate}}" ng-if="action.condition(item)" ng-click="action.method(item)">{{action.title | translate }}</button>
                                 </li>
                             </ul>
                         </div>
@@ -27,9 +27,9 @@
                         <div class="content">
                             <span class="keyword" ng-if="item.slugline">
                                 <span class="relate-item-label" ng-if="options.searchEnabled && actions.update && actions.update.condition(item)"
-                                      ng-class="{'update-item': actions.update && actions.update.condition(item)}" title="{{ :: 'Can be associated as an update' | translate }}">U</span>
+                                      ng-class="{'update-item': actions.update && actions.update.condition(item)}" title="{{'Can be associated as an update' | translate }}">U</span>
                                 <span class="relate-item-label" ng-if="options.searchEnabled && actions.addTake && actions.addTake.condition(item)"
-                                      ng-class="{'take-item': actions.addTake && actions.addTake.condition(item)}" title="{{ :: 'Can be associated as a take' | translate }}">T</span>
+                                      ng-class="{'take-item': actions.addTake && actions.addTake.condition(item)}" title="{{'Can be associated as a take' | translate }}">T</span>
                                 {{ item.slugline }}</span>
                             <span class="headline">{{item.headline || item.type}}</span>
                             <span class="takekey">{{item.anpa_take_key}}</span>
@@ -40,9 +40,9 @@
                             <span ng-if="item.flags.marked_for_sms" class="state-label sms" translate>Sms</span>
                             <span ng-if="item.rewritten_by" class="state-label updated" translate>Updated</span>
                             <span class="headline">
-                                <span ng-if="item.task.desk">{{ :: 'desk:' | translate }} {{deskName(item)}}</span>
-                                <span ng-if="item.task.stage" class="pull-right">{{ :: 'stage:' | translate }} {{deskStage(item)}}</span>
-                                <span class="headline" ng-show="item.genre  && item.genre.length > 0">{{ :: 'genre:' | translate }} {{ item.genre | mergeWords:'name'}}</span>
+                                <span ng-if="item.task.desk">{{'desk:' | translate }} {{deskName(item)}}</span>
+                                <span ng-if="item.task.stage" class="pull-right">{{'stage:' | translate }} {{deskStage(item)}}</span>
+                                <span class="headline" ng-show="item.genre  && item.genre.length > 0">{{'genre:' | translate }} {{ item.genre | mergeWords:'name'}}</span>
                             </span>
                         </div>
 

@@ -23,19 +23,19 @@
                         </figure>
                         <div class="content" ng-if="notification.name == 'notify'">
                             <time sd-datetime data-date="notification._created"></time>
-                            <p class="text"><b>{{:: notification.user_name }}</b> <span translate>commented on</span> <i><a ng-href="#/authoring/{{ notification.item }}?_id={{ notification.item }}&comments={{ notification.data.comment_id }}" title="{{ notification.item_slugline }}">{{ :: notification.item_slugline }}</a></i>:<br>{{:: notification.data.comment }}</p>
+                            <p class="text"><b>{{notification.user_name }}</b> <span translate>commented on</span> <i><a ng-href="#/authoring/{{ notification.item }}?_id={{ notification.item }}&comments={{ notification.data.comment_id }}" title="{{ notification.item_slugline }}">{{notification.item_slugline }}</a></i>:<br>{{notification.data.comment }}</p>
                         </div>
                         <div class="content" ng-if="notification.name == 'user:mention'">
                             <time sd-datetime data-date="notification._created"></time>
-                            <p class="text"><b>{{:: notification.user_name }}</b> <span translate>mentioned you</span> <i>
+                            <p class="text"><b>{{notification.user_name }}</b> <span translate>mentioned you</span> <i>
                                 <a title="{{ notification.item_slugline }}" ng-click="openArticle(notification)">
-                                    {{:: notification.item_slugline}}
-                                </a></i>:<br>{{:: notification.data.comment }}</p>
+                                    {{notification.item_slugline}}
+                                </a></i>:<br>{{notification.data.comment }}</p>
                         </div>
                         <div class="content" ng-if="notification.name != 'notify' && notification.name != 'user:mention'"
                             ng-click="onNotificationClick(notification)">
                             <time sd-datetime data-date="notification._created"></time>
-                            <p class="text"><b>{{:: notification.user_name || "System" }}</b>: <span sd-activity-message data-activity="notification"></span></p>
+                            <p class="text"><b>{{notification.user_name || "System" }}</b>: <span sd-activity-message data-activity="notification"></span></p>
                         </div>
                     </li>
                     <div class="info" ng-show="notifications._items.length === 0" translate>All good so far.</div>

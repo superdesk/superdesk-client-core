@@ -11,7 +11,7 @@
         </div>
         <span class="sd-page__element-grow"></span>
         <button id="addSubscriber" class="btn btn--primary" ng-click="edit()">
-            <i class="icon-plus-sign icon-/white"></i>{{ :: 'Add New' | translate }}
+            <i class="icon-plus-sign icon-/white"></i>{{'Add New' | translate }}
         </button>
     </div>
 
@@ -22,7 +22,7 @@
                     <h6 id="subscriberName">{{ subscriber.name }}</h6>
                     <span class="label offProvider" ng-if="!subscriber.is_active" translate>Not Active</span>
                     <div class="actions">
-                        <button ng-click="edit(subscriber)" title="{{:: 'Edit Subscriber' | translate }}"><i class="icon-pencil"></i></button>
+                        <button ng-click="edit(subscriber)" title="{{'Edit Subscriber' | translate }}"><i class="icon-pencil"></i></button>
                     </div>
                 </div>
             </li>
@@ -45,7 +45,7 @@
                         <div class="field">
                             <i class="field-info pull-right" translate>* mandatory fields</i>                            
                                 <span title="{{ subscriber.is_active ? 'Deactivate' : 'Activate' | translate }}">
-                                    <span sd-switch ng-model="subscriber.is_active"></span><label>{{:: 'Status' | translate }}</label>
+                                    <span sd-switch ng-model="subscriber.is_active"></span><label>{{'Status' | translate }}</label>
                                 </span>                        
                         </div>
 
@@ -88,7 +88,7 @@
 
                         <div class="field">                            
                                 <span title="{{ subscriber.is_targetable ? 'Deactivate' : 'Activate' | translate }}">
-                                    <span sd-switch ng-model="subscriber.is_targetable"></span><label>{{:: 'Targetable by users' | translate }}</label>
+                                    <span sd-switch ng-model="subscriber.is_targetable"></span><label>{{'Targetable by users' | translate }}</label>
                                 </span>
                         </div>
 
@@ -137,7 +137,7 @@
                 <div sd-wizard-step data-title="{{ 'Critical Errors' | translate }}" data-code="critical-errors">
                     <div class="content">
                         <div ng-repeat="(key, val) in all_errors" class="field">                            
-                            <span sd-switch ng-model="subscriber.critical_errors[key]"></span><label>{{::key}}: {{::val}}</label>
+                            <span sd-switch ng-model="subscriber.critical_errors[key]"></span><label>{{key}}: {{val}}</label>
                         </div>
                     </div>
                 </div>
@@ -147,14 +147,14 @@
                         <div class="horizontal">
                             <div class="roles-list">
                                 <div ng-repeat="gf in globalFilters track by gf._id" class="field">                                    
-                                    <span sd-switch ng-model="subscriber.global_filters[gf._id]"></span><label>{{:: gf.name}}</label>
+                                    <span sd-switch ng-model="subscriber.global_filters[gf._id]"></span><label>{{gf.name}}</label>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div sd-wizard-step data-title="{{ :: 'Content API' | translate }}" data-code="content-api">
+                <div sd-wizard-step data-title="{{'Content API' | translate }}" data-code="content-api">
                     <div class="content">
                         <div class="field">
                             <label translate>Products</label>
@@ -173,11 +173,11 @@
                             <ul class="pills-list">
                                 <li ng-repeat="token in tokens.tokens track by token._id" class="field clearfix">
                                     <div class="header">
-                                        <h6><code contenteditable="true" spellcheck="false">{{ :: token._id}}</code></h6>
-                                        <small class="badge">{{ :: 'expires:' | translate }} <time sd-datetime data-date="token.expiry" data-from-now="true"></time></small>
+                                        <h6><code contenteditable="true" spellcheck="false">{{token._id}}</code></h6>
+                                        <small class="badge">{{'expires:' | translate }} <time sd-datetime data-date="token.expiry" data-from-now="true"></time></small>
                                     </div>
                                     <div class="actions">
-                                        <button ng-click="tokens.revoke(token)" title="{{ :: 'Revoke' | translate }}">
+                                        <button ng-click="tokens.revoke(token)" title="{{'Revoke' | translate }}">
                                             <i class="icon-trash"></i>
                                         </button>
                                     </div>
@@ -192,18 +192,18 @@
                     </div>
                 </div>
 
-                <div sd-wizard-step data-title="{{ :: 'Content API Tokens' | translate }}" data-code="content-tokens">
+                <div sd-wizard-step data-title="{{'Content API Tokens' | translate }}" data-code="content-tokens">
                     <div class="content">
                         <div ng-controller="SubscriberTokenCtrl as tokens">
                             <h3 translate>Authentication Token</h3>
                             <ul class="pills-list">
                                 <li ng-repeat="token in tokens.tokens track by token._id" class="field clearfix">
                                     <div class="header">
-                                        <h6><code contenteditable="true" spellcheck="false">{{ :: token._id}}</code></h6>
-                                        <small class="badge">{{ :: 'expires:' | translate }} <time sd-datetime data-date="token.expiry" data-from-now="true"></time></small>
+                                        <h6><code contenteditable="true" spellcheck="false">{{token._id}}</code></h6>
+                                        <small class="badge">{{'expires:' | translate }} <time sd-datetime data-date="token.expiry" data-from-now="true"></time></small>
                                     </div>
                                     <div class="actions">
-                                        <button ng-click="tokens.revoke(token)" title="{{ :: 'Revoke' | translate }}">
+                                        <button ng-click="tokens.revoke(token)" title="{{'Revoke' | translate }}">
                                             <i class="icon-trash"></i>
                                         </button>
                                     </div>
@@ -216,7 +216,7 @@
                             </ul>
 
                             <fieldset ng-show="tokens.tokens.length < 5">
-                                <select class="input-small" ng-model="tokens.ttl" title="{{ :: 'Token expiry' | translate }}">
+                                <select class="input-small" ng-model="tokens.ttl" title="{{'Token expiry' | translate }}">
                                     <option value="7" translate>1 week</option>
                                     <option value="14" translate>2 weeks</option>
                                     <option value="30" translate>1 month</option>

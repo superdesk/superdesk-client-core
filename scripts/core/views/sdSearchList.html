@@ -2,7 +2,7 @@
     <button ng-disabled="!editable" type="button" class="search-list-button" ng-click="open = !open">
         <span ng-show="selectedItems.length === 0" translate>Select</span>
         <span ng-show="selectedItems.length === 1">{{selectedItems[0][labelKey]}}</span>
-        <span ng-show="selectedItems.length > 1">{{selectedItems.length}} {{:: 'selected'|translate}}</span>
+        <span ng-show="selectedItems.length > 1">{{selectedItems.length}} {{'selected'|translate}}</span>
         <span class="dropdown__caret"></span>
     </button>
     <div ng-show="open" class="search-list-content">
@@ -12,7 +12,7 @@
                 <div ng-show="maxSelectedItems !== 1">
                     <label>
                         <span translate>Selected items</span>
-                        ({{selectedItems.length}} {{::'of'|translate}}
+                        ({{selectedItems.length}} {{'of'|translate}}
                         <span ng-show="maxSelectedItems">{{maxSelectedItems}}</span>
                         <span ng-hide="maxSelectedItems" translate>many</span>)
                     </label>
@@ -40,7 +40,7 @@
                         <label>{{page | translate}}/{{maxPage | translate}}</label>
                         <button type="button" ng-disabled="page === maxPage" ng-click="page = page + 1">&gt;</i></button>
                     </span>
-                     <input type="text" placeholder="{{ :: 'Search' | translate }}"
+                     <input type="text" placeholder="{{'Search' | translate }}"
                         ng-model="keyword"
                         ng-model-options="{debounce: 500}">
                 </div>

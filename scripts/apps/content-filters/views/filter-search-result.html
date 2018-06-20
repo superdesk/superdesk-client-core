@@ -10,7 +10,7 @@
         <tbody>
             <tr ng-repeat="fc in searchResult.filter_conditions track by fc._id">
                 <td class="column-width">
-                    {{:: fc.name }}
+                    {{fc.name }}
                 </td>
             </tr>
         </tbody>
@@ -27,7 +27,7 @@
         <tbody>
             <tr ng-repeat="cf in searchResult.content_filters track by cf._id">
                 <td class="column-width">
-                    {{:: cf.name }}
+                    {{cf.name }}
                     <i ng-if="cf.is_global">[Global]</i>
                 </td>
             </tr>

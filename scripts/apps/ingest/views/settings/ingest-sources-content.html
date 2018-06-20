@@ -17,9 +17,9 @@
                         <span translate>Last updated</span> {{ provider.last_updated | reldate }}
                     </div>
                     <div class="actions">
-                        <button ng-click="gotoIngest(provider.source)" title="{{:: 'Go to items' | translate }}"><i class="icon-external"></i></button>
-                        <button ng-click="edit(provider)" title="{{:: 'Edit source' | translate }}"><i class="icon-pencil"></i></button>
-                        <button ng-click="remove(provider)" ng-show="!provider.last_item_update" title="{{:: 'Remove source' | translate }}"><i class="icon-trash"></i></button>
+                        <button ng-click="gotoIngest(provider.source)" title="{{'Go to items' | translate }}"><i class="icon-external"></i></button>
+                        <button ng-click="edit(provider)" title="{{'Edit source' | translate }}"><i class="icon-pencil"></i></button>
+                        <button ng-click="remove(provider)" ng-show="!provider.last_item_update" title="{{'Remove source' | translate }}"><i class="icon-trash"></i></button>
                     </div>
                 </div>
             </li>
@@ -45,7 +45,7 @@
                 <div sd-wizard-step data-title="{{ 'General' | translate }}" data-code="general">
                     <div class="field">
                         <label class="right">
-                            {{:: 'Status' | translate }}
+                            {{'Status' | translate }}
                             <span sd-switch-inverted ng-model="provider.is_closed" tooltip="{{ provider.is_closed ? 'Open' : 'Close' | translate }}" tooltip-placement="right"></span>
                         </label>
                     </div>
@@ -122,7 +122,7 @@
 
                     <div class="field">
                         <label class="right">
-                            {{:: 'Allow Remove Ingested Items' | translate }}
+                            {{'Allow Remove Ingested Items' | translate }}
                             <span sd-switch ng-model="provider.allow_remove_ingested"></span>
                         </label>
                     </div>
@@ -151,25 +151,25 @@
                 <div sd-wizard-step data-title="{{ 'Notification' | translate }}" data-code="notification">
                     <div class="field">
                         <label>
-                            {{ :: 'Update' | translate}}
+                            {{'Update' | translate}}
                             <span sd-switch ng-model="provider.notifications.on_update"></span>
                         </label>
                     </div>
                     <div class="field">
                         <label>
-                            {{ :: 'Close' | translate}}
+                            {{'Close' | translate}}
                             <span sd-switch ng-model="provider.notifications.on_close"></span>
                         </label>
                     </div>
                     <div class="field">
                         <label>
-                            {{ :: 'Open' | translate}}
+                            {{'Open' | translate}}
                             <span sd-switch ng-model="provider.notifications.on_open"></span>
                         </label>
                     </div>
                     <div class="field">
                         <label>
-                            {{ :: 'Error' | translate}}
+                            {{'Error' | translate}}
                             <span sd-switch ng-model="provider.notifications.on_error"></span>
                         </label>
                     </div>

@@ -5,7 +5,7 @@
 <li ng-if="!defaultTemplate">
     <button id="create_text_article" ng-click="create()">
         <i class="icon-plus-sign icon--blue"></i>
-        {{ :: 'Plain text' | translate }}
+        {{'Plain text' | translate }}
     </button>
 </li>
 
@@ -19,7 +19,7 @@
 <li ng-if="item">
     <button id="package_item" ng-click="createPackage(item)">
         <i class="icon-plus-sign icon--blue"></i>
-        {{ :: 'Package current item' | translate }}
+        {{'Package current item' | translate }}
     </button>
 </li>
 
@@ -31,7 +31,7 @@
 
 <li ng-repeat="template in contentTemplates | orderBy:'template_name'">
     <button ng-click="createFromTemplate(template)">
-        <i class="icon-plus-sign icon--blue"></i> {{ :: template.template_name }}
+        <i class="icon-plus-sign icon--blue"></i> {{template.template_name }}
     </button>
 </li>
 
@@ -48,13 +48,13 @@
 <li ng-if="canCreatePackage() && !$root.config.features.hideCreatePackage">
     <button id="create_package"  ng-click="createPackage()">
         <i class="icon-package-plus"></i>
-        {{ :: 'Create Package' | translate }}
+        {{'Create Package' | translate }}
     </button>
 </li>
 
 <li ng-if="openUpload">
     <button ng-click="openUpload()" id="start-upload-btn">
-        <i class="icon-upload"></i> {{ :: 'Upload Media' | translate }}
+        <i class="icon-upload"></i> {{'Upload Media' | translate }}
     </button>
 </li>
 

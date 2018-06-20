@@ -1,9 +1,9 @@
 <ul class="cropItems">
     <li ng-repeat="crop in crop_sizes track by crop.name" ng-if="item.renditions[crop.name]">
-        <span>{{ :: crop.name | translate }}<span>
+        <span>{{crop.name | translate }}<span>
         <div class="rendition"
             sd-item-rendition
             data-item="item"
-            data-rendition="{{ :: crop.name }}"></div>
+            data-rendition="{{crop.name }}"></div>
     </li>
 </ul>

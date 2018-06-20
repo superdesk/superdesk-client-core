@@ -1,14 +1,14 @@
 <div class="field">
     <label for="connection-string" translate>Connection string</label>
     <i class="field-info pull-right">*</i>
-    <input type="text" id="connection-string" placeholder="{{:: 'Connection string'|translate }}"
+    <input type="text" id="connection-string" placeholder="{{'Connection string'|translate }}"
       ng-model="destination.config.connection_string" required
       ng-change="$parent.setConfig(connection_string)">
 </div>
 <div class="field">
     <label for="stored-procedure" translate>Stored Procedure</label>
     <i class="field-info pull-right">*</i>
-    <input type="text" id="stored-procedure" placeholder="{{:: 'Stored Procedure'|translate }}"
+    <input type="text" id="stored-procedure" placeholder="{{'Stored Procedure'|translate }}"
       ng-model="destination.config.stored_procedure" required
       ng-change="$parent.setConfig(stored_procedure)">
 </div>

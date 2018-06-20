@@ -1,7 +1,7 @@
 <div class="authoring-header__holder" ng-controller="MetadataWidgetCtrl" ng-if="loaded">
     <div class="authoring-header__general-info">
         <div>
-            <i class="filetype-icon-{{ :: item.type}}" title="{{'Article Type'| translate }}: {{ item.type}}"></i>
+            <i class="filetype-icon-{{item.type}}" title="{{'Article Type'| translate }}: {{ item.type}}"></i>
         </div>
         <div ng-if="item.profile && !change_profile">
             <label translate>PROFILE</label>
@@ -44,7 +44,7 @@
         </div>
         <div ng-if="item.broadcast.master_id">
             <label ng-class="{'broadcast-status': item.broadcast.status !== ''}" title="{{item.broadcast.status| translate}}"><span translate>MASTER</span><b ng-if="item.broadcast.status"> !</b></label>
-            <div class="data"><a id="preview-master" ng-click="previewMasterStory()" title="{{ :: 'Preview master story' | translate }}" ng-app=""class="open-item">
+            <div class="data"><a id="preview-master" ng-click="previewMasterStory()" title="{{'Preview master story' | translate }}" ng-app=""class="open-item">
                     <i class="icon-external"></i>
                 </a></div>
         </div>
@@ -230,7 +230,7 @@
                      data-field="urgency"
                      data-list="metadata.urgency"
                      data-icon="urgency-label urgency-label-"
-                     data-label= "{{ :: 'Urgency' | translate }}"
+                     data-label= "{{'Urgency' | translate }}"
                      ng-disabled="!_editable"
                      data-key="qcode"
                      data-change="autosave(item)"
@@ -374,7 +374,7 @@
                  data-field="authors"
                  data-unique="_id"
                  data-list="metadata.authors"
-                 data-label= "{{ :: 'Add author' | translate }}"
+                 data-label= "{{'Add author' | translate }}"
                  ng-disabled="!_editable"
                  data-header="true"
                  data-change="autosave(item)"

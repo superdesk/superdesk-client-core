@@ -10,9 +10,9 @@
 
         <div class="form__row form__row--flex">
             <div class="sd-line-input sd-line-input--is-select">
-                <label class="sd-line-input__label">{{ :: 'Formatters' | translate }}</label>
+                <label class="sd-line-input__label">{{'Formatters' | translate }}</label>
                 <select ng-model="selectedFormatter" class="sd-line-input__select">
-                    <option value="{{formatter}}" ng-repeat="formatter in previewFormatters">{{:: formatter.name}}</option>
+                    <option value="{{formatter}}" ng-repeat="formatter in previewFormatters">{{formatter.name}}</option>
                 </select>                
             </div>
             <button class="btn btn--primary" ng-click="format(selectedFormatter)" translate>Format</button>

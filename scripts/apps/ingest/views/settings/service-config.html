@@ -1,7 +1,7 @@
 <div ng-repeat="field in currentFeedingService.fields track by field.id">
     <div class="field" ng-if="field.type === 'text'" ng-show="isConfigFieldVisible(field)">
         <label for="{{getConfigFieldId(field.id)}}">{{ field.label | translate }}</label>
-        <input type="{{field.type}}" id="{{getConfigFieldId(field.id)}}" placeholder="{{:: field.placeholder | translate}}"
+        <input type="{{field.type}}" id="{{getConfigFieldId(field.id)}}" placeholder="{{field.placeholder | translate}}"
             ng-model="provider.config[field.id]" ng-required="isConfigFieldRequired(field)" ng-change="$parent.setConfig(provider)"
             ng-show="isConfigFieldVisible(field)">
         <div sd-ingest-config-errors></div>
@@ -9,7 +9,7 @@
 
     <div class="field" ng-if="field.type === 'password'" ng-show="isConfigFieldVisible(field)">
         <label for="{{getConfigFieldId(field.id)}}">{{ field.label | translate }}</label>
-        <input type="password" id="{{getConfigFieldId(field.id)}}" placeholder="{{:: field.placeholder | translate}}"
+        <input type="password" id="{{getConfigFieldId(field.id)}}" placeholder="{{field.placeholder | translate}}"
             ng-model="provider.config[field.id]" ng-required="isConfigFieldRequired(field)" ng-change="$parent.setConfig(provider)"
             ng-show="isConfigFieldVisible(field)" autocomplete="new-password">
         <div sd-ingest-config-errors></div>
@@ -27,7 +27,7 @@
       <legend translate>{{ field.label | translate }}</legend>
 
       <div ng-show="provider.config[field.id].length == 0">
-        {{:: field.empty_label|translate }}
+        {{field.empty_label|translate }}
       </div>
 
       <div class="multiple header" ng-show="fieldAliases[field.id].length > 0">
@@ -52,7 +52,7 @@
 
         <div class="field">
           <input type="text"
-              placeholder="{{:: field.second_field_options.placeholder|translate }}"
+              placeholder="{{field.second_field_options.placeholder|translate }}"
               ng-model="item.alias">
         </div>
 
@@ -60,7 +60,7 @@
             type="button"
             class="btn btn--small"
             ng-click="removeFieldAlias(field.id, $index)"
-            tooltip="{{:: field.remove_mapping_label|translate}}"
+            tooltip="{{field.remove_mapping_label|translate}}"
             tooltip-placement="bottom"
             tooltip-popup-delay="500">
           <i class="icon-close-small"></i>
@@ -72,7 +72,7 @@
             type="button"
             class="btn btn--primary btn--small"
             ng-click="addFieldAlias(field.id)"
-            tooltip="{{:: field.add_mapping_label|translate}}"
+            tooltip="{{field.add_mapping_label|translate}}"
             tooltip-placement="right"
             tooltip-popup-delay="500">
           <i class="svg-icon-plus"></i>

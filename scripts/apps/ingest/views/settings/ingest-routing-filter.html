@@ -8,7 +8,7 @@
 <div class="field">
     <div sd-typeahead ng-show="showNewFilter" items="matchingFilters" term="filterSearchTerm" search="searchFilters(term)" select="selectFilter(item); showNewFilter = false">
         <li typeahead-item="filter" ng-repeat="filter in matchingFilters track by filter._id">
-            {{::filter.name}}
+            {{filter.name}}
         </li>
     </div>
 
@@ -16,7 +16,7 @@
         <li class="pull-left">
             {{selectedFilter.name}}
             <div class="actions">
-                <button ng-click="clearSelectedFilter()" title="{{:: 'Remove filter' | translate }}">
+                <button ng-click="clearSelectedFilter()" title="{{'Remove filter' | translate }}">
                     <i class="icon-trash"></i>
                 </button>
             </div>

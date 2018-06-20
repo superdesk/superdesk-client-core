@@ -2,9 +2,9 @@
     <div>
         <div class="board-article-header">
             <div class="board-article-header__metadata">
-                <span class="board-article-header__metadata-label">{{ :: 'version' | translate }}: </span>
+                <span class="board-article-header__metadata-label">{{'version' | translate }}: </span>
                 <span class="board-article-header__metadata-content"> {{ item._current_version }}</span>
-                <span class="board-article-header__metadata-label">{{ :: 'author' | translate }}: </span>
+                <span class="board-article-header__metadata-label">{{'author' | translate }}: </span>
                 <span class="board-article-header__metadata-content">{{ item.author.display_name }}</span>
             </div>
             <div class="state-label state-{{item.state}}">{{item.state}}</div>

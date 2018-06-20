@@ -34,13 +34,13 @@
                         </ul>
                     </div>
                 </div>
-                <div class="field" title="{{ :: 'When creating a highlights package' | translate }}">
+                <div class="field" title="{{'When creating a highlights package' | translate }}">
                     <label translate>Automatically insert items from</label>
                     <select ng-model="configEdit.auto_insert">
-                        <option value="{{ :: auto.day }}" ng-selected="configEdit.auto_insert === auto.day" translate>Today</option>
-                        <option value="{{ :: auto.week }}" ng-selected="configEdit.auto_insert === auto.week" translate>This week</option>
+                        <option value="{{auto.day }}" ng-selected="configEdit.auto_insert === auto.day" translate>Today</option>
+                        <option value="{{auto.week }}" ng-selected="configEdit.auto_insert === auto.week" translate>This week</option>
                         <option ng-repeat="hour in hours"
-                            value="{{ :: getHourVal(hour) }}"
+                            value="{{getHourVal(hour) }}"
                             ng-selected="configEdit.auto_insert === getHourVal(hour)"><span translate>Last</span> {{ hour }} <span translate>hours</span></option>
                     </select>
                 </div>

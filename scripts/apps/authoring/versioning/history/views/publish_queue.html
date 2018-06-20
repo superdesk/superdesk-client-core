@@ -1,9 +1,9 @@
 <div>
     <a ng-href="" ng-if="!show_transmission_details" ng-click="showOrHideTransmissionDetails()">
-        <i class="icon-plus-small true"></i> {{ :: 'Show sent/queued items' | translate }}
+        <i class="icon-plus-small true"></i> {{'Show sent/queued items' | translate }}
     </a>
     <a ng-href="" ng-if="show_transmission_details" ng-click="showOrHideTransmissionDetails()">
-        <i class="icon-minus-small true"></i> {{ :: 'Hide sent/queued items' | translate }}
+        <i class="icon-minus-small true"></i> {{'Hide sent/queued items' | translate }}
     </a>
     <ul ng-if="show_transmission_details && queuedItems.length === 0">
         <li class="alert-danger">
@@ -13,13 +13,13 @@
     <ul ng-if="show_transmission_details && queuedItems.length > 0">
         <li ng-repeat="queuedItem in queuedItems track by queuedItem._id" ng-click="showFormattedItem(queuedItem)">
             <div ng-if="queuedItem.state !== 'error'">
-                {{ :: 'Sent/Queued as' | translate }} <b>{{ queuedItem.unique_name }}</b>
-                {{ :: 'on' | translate }} {{ queuedItem.destination.name }} {{ :: 'at' | translate }}
+                {{'Sent/Queued as' | translate }} <b>{{ queuedItem.unique_name }}</b>
+                {{'on' | translate }} {{ queuedItem.destination.name }} {{'at' | translate }}
                 <em><time sd-absdate datetime="queuedItem.completed_at"></time></em>
             </div>
             <div ng-if="queuedItem.state === 'error'">
-                {{ :: 'Error sending as' | translate }} <b>{{ queuedItem.unique_name }}</b>
-                {{ :: 'on' | translate }} {{ queuedItem.destination.name }} {{ :: 'at' | translate }}
+                {{'Error sending as' | translate }} <b>{{ queuedItem.unique_name }}</b>
+                {{'on' | translate }} {{ queuedItem.destination.name }} {{'at' | translate }}
                 <em><time sd-absdate datetime="queuedItem.completed_at"></time></em>
             </div>
         </li>

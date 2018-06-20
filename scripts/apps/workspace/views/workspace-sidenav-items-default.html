@@ -1,6 +1,6 @@
 <a class="sd-sidebar-menu__btn"
-    title="{{ :: item.label | translate }}"
-    ng-href="#{{ :: item.href }}"
+    title="{{item.label | translate }}"
+    ng-href="#{{item.href }}"
     ng-click="hideMonitoring(currentRoute.href === item.href, $event)"
     sd-hotkey="{{ item.shortcut }}" sd-hotkey-options="{global: true}"
     ng-class="{'sd-sidebar-menu__btn--active': currentRoute.href === item.href}">

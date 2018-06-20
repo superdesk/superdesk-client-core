@@ -1,19 +1,19 @@
 <div class="field">
     <label class="right">
-        {{ :: 'Package individual items' | translate }}
+        {{'Package individual items' | translate }}
         <span sd-check ng-model="destination.config.packaged"  tooltip="{{ destination.config.packaged ? 'Package individual items' : '' | translate }}" tooltip-placement="right"></span>
     </label>
 </div>
 <div class="field">
     <label for="resource_url" translate>Resource URL</label>
     <i class="field-info pull-right">*</i>
-    <input type="text" id="resource_url" placeholder="{{ :: 'Resource URL'|translate }}" ng-model="destination.config.resource_url" required ng-change="$parent.setConfig(destination)">
+    <input type="text" id="resource_url" placeholder="{{'Resource URL'|translate }}" ng-model="destination.config.resource_url" required ng-change="$parent.setConfig(destination)">
 </div>
 <div class="field">
     <label for="assets_url" translate>Assets URL</label>
-    <input type="text" id="assets_url" placeholder="{{ :: 'Assets URL'|translate }}" ng-model="destination.config.assets_url" ng-change="$parent.setConfig(destination)">
+    <input type="text" id="assets_url" placeholder="{{'Assets URL'|translate }}" ng-model="destination.config.assets_url" ng-change="$parent.setConfig(destination)">
 </div>
 <div class="field">
     <label for="secret_token" translate>Secret Token</label>
-    <input type="text" id="secret_token" placeholder="{{ :: 'Secret Token'|translate }}" ng-model="destination.config.secret_token" ng-change="$parent.setConfig(destination)">
+    <input type="text" id="secret_token" placeholder="{{'Secret Token'|translate }}" ng-model="destination.config.secret_token" ng-change="$parent.setConfig(destination)">
 </div>

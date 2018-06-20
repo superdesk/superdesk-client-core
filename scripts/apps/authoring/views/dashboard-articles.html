@@ -1,14 +1,14 @@
 <div sd-modal data-model="active" data-close="closeDashboard()"
     class="modal--fullscreen animate-zoom__from-bottom-left">
     <div class="modal__header">
-        <button ng-click="closeDashboard()" title="{{ :: 'Close'|translate}}" class="modal__close pull-right animate-slide-in__from-right"><i class="icon-close-thick"></i></button>
+        <button ng-click="closeDashboard()" title="{{'Close'|translate}}" class="modal__close pull-right animate-slide-in__from-right"><i class="icon-close-thick"></i></button>
         <h3 class="modal__heading" translate>Currently working on</h3>        
     </div>
 
     <div class="modal__body">
         <div class="flex-grid box wrap-items small-2 medium-3 large-5 xlarge-6">
             <div class="flex-item card-box card-box--with-click card-box--flex" ng-repeat="article in items track by article._id"  ng-class="{active: article === active}">
-                <a class="card-box__full-click" ng-click="edit(article, $event)" ng-href="{{ :: link(article)}}"></a>
+                <a class="card-box__full-click" ng-click="edit(article, $event)" ng-href="{{link(article)}}"></a>
                 <span class="close cardbox__close" ng-click="closeItem(article)"><i class="icon-close-small icon--white"></i></span>
                 <div class="card-box__header card-box__header--padded-flex">
                     <i title="{{article.type}}" class="filetype-icon-{{article.type}} icon--white"></i><time class="card-box__time-date card-box__time-date--reverse-color" sd-reldate-complex datetime="article.versioncreated"></time>
@@ -18,7 +18,7 @@
                 <div class="card-box__article-header">
 
                     <h4 ng-show="article.headline">{{ article.headline}}</h4>
-                    <h4 ng-show="!article.headline">{{ :: 'Untitled' | translate }}</h4>
+                    <h4 ng-show="!article.headline">{{'Untitled' | translate }}</h4>
                 </div>
                 <div class="card-box__content card-box__content--article">
 
