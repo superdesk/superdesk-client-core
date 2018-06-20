@@ -28,9 +28,9 @@
 <div class="terms-list" ng-if="item[field].length">
     <ul>
         <li ng-if="!disabled" class="pull-left"
-            ng-repeat="t in item[field] track by t.code"
-            ng-click="removeTerm(t)">{{ :: t.name }} <i class="icon-close-small"></i></li>
+            ng-repeat="t in item[field]"
+            ng-click="removeTerm(t)">{{ t.name }} <i class="icon-close-small"></i></li>
         <li ng-if="disabled" class="pull-left disabled"
-            ng-repeat="t in item[field] track by t.code">{{ :: t.name }}</li>
+            ng-repeat="t in item[field]">{{ t.name }}</li>
     </ul>
 </div>
