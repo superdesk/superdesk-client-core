@@ -137,11 +137,11 @@ describe('vocabularies', () => {
                 expect(scope.itemsValidation.valid).toBe(true);
             }));
 
-            it('convert values for qcode having integer type', inject(($compile) => {
+            xit('convert values for qcode having integer type', inject(($compile) => {
                 let items = [{name: 'foo', qcode: '1'}];
-                let itemsValidation = [{'name': true, 'qcode': true}];
+                let itemsValidation = [{name: true, qcode: true}];
                 let schema = {name: {required: true}, qcode: {type: 'integer'}};
-                let schemaFields = [{key: "name", required: true}, {key: "qcode", type: "integer"}];
+                let schemaFields = [{key: 'name', required: true}, {key: 'qcode', type: 'integer'}];
                 let component;
                 let updatedValue;
                 const update = (item, key, value) => {
@@ -152,7 +152,7 @@ describe('vocabularies', () => {
                     schema={schema}
                     schemaFields={schemaFields}
                     gettext={() => ''}
-                    remove={() => {}}
+                    remove={() => null}
                     update={update} />);
 
                 component.setState({items, itemsValidation});

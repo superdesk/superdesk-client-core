@@ -44,7 +44,7 @@ export default class ItemsTableComponent extends React.Component {
         const value = item[field.key] || '';
         const disabled = !item.is_active;
         const update = (event) => {
-            let value = field.type === 'integer' ? parseInt(event.target.value) : event.target.value;
+            let value = field.type === 'integer' ? parseInt(event.target.value, 10) : event.target.value;
 
             this.props.update(item, field.key, value);
         };
