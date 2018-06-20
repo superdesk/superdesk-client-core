@@ -62,14 +62,14 @@ describe('editor3', () => {
         bodyEditor.sendKeys(ctrlA);
         bodyEditor.toolbar.bold();
         bodyEditor.toolbar.link();
-        bodyEditor.toolbar.linkInput.sendKeys('http://example.com/');
+        bodyEditor.toolbar.linkInput.sendKeys('example.com/');
         bodyEditor.toolbar.linkSaveButton.click();
 
         const body = getPreviewBody();
 
         expect(body.element(by.tagName('b')).getText()).toBe('body text');
         expect(body.element(by.tagName('a')).getText()).toBe('body text');
-        expect(body.element(by.tagName('a')).getAttribute('href')).toBe('http://example.com/');
+        expect(body.element(by.tagName('a')).getAttribute('href')).toBe('https://example.com/');
     });
 
     it('can add tables', () => {

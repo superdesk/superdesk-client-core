@@ -1,156 +1,333 @@
-<div class="modal__header">
-    <h3 ng-if="!isAoISelectionModeEnabled" class="modal__heading pull-left">{{ :: data.editable ? activity.label : 'View Crop' | translate }}</h3>
-    <h3 ng-if="isAoISelectionModeEnabled" class="modal__heading pull-left" translate>Select Area of Interest</h3>
-    <div class="pull-right">
-        <button type="button"
-        class="btn"
-        ng-disabled="isAoISelectionModeEnabled"
-        ng-click="close()"
-        translate>Cancel</button>
-        <button type="button"
-        class="btn btn--primary"
-        ng-click="done()"
-        ng-disabled="!saveIsEnabled() || isAoISelectionModeEnabled"
-        ng-if="data.editable"
-        translate>Save</button>
+<div class="modal__header modal__header--flex">
+    <h3 class="modal__heading modal__heading--no-grow" ng-if="!nav || nav === 'view'">{{ :: activity.label }}</h3>
+    <h3 class="modal__heading modal__heading--no-grow" ng-if="nav === 'image-edit'">{{ :: 'Edit image' | translate }}</h3>
+    <h3 class="modal__heading modal__heading--no-grow" ng-if="nav === 'crop'">{{ :: 'Edit Crops' | translate }}</h3>
+
+    <div class="modal__header-buttons  modal__header-buttons--center modal__header-element-grow button-nav">
+        <button class="button-nav__btn" ng-click="nav = 'view'; showMetadata = true" ng-class="{'button-nav__btn--active' : !nav || nav === 'view'}" ng-disabled="controls.isDirty || isAoISelectionModeEnabled" translate>Details</button>
+        <button class="button-nav__btn" ng-click="nav = 'image-edit'; showMetadata = true" ng-show="data.editable" ng-class="{'button-nav__btn--active': nav === 'image-edit'}" ng-disabled="controls.isDirty || isAoISelectionModeEnabled" translate>Edit image</button>
+        <button class="button-nav__btn" ng-click="nav = 'crop'; showMetadata = false" ng-show="data.editable" ng-class="{'button-nav__btn--active': nav === 'crop'}" ng-disabled="controls.isDirty || isAoISelectionModeEnabled" translate>Edit crops</button>
+    </div>
+
+    <div class="modal__header-buttons modal__header-buttons--right">
+        <button class="btn btn--ui-dark btn--hollow" ng-click="close()" ng-disabled="controls.isDirty || isAoISelectionModeEnabled">{{ 'Close' | translate }}</button>
+        <!--<button class="btn btn--primary btn--hollow" ng-click="save()" ng-disabled="!saveIsEnabled() || isAoISelectionModeEnabled">{{ 'Save' | translate }}</button>-->
+        <button class="btn btn--primary btn--hollow" ng-click="done(true)" ng-disabled="!saveIsEnabled() || isAoISelectionModeEnabled">{{ 'Save & Close' | translate }}</button>
     </div>
 </div>
 
-<div class="modal__body modal-body__flex">
-    <div class="modal-body__flex-top">
-        <div class="modal-body__flex-main">
-            <div ng-if="!selectedRendition">
-                <label ng-if="!isAoISelectionModeEnabled" class="field-label">
-                    <span translate>Original</span>
-                    <span class="size">
-                        {{ data.item.renditions.original.width }} x {{ data.item.renditions.original.height }}
-                    </span>
-                </label>
-                <label ng-if="isAoISelectionModeEnabled" class="field-label">
-                    <span translate>New size</span>
-                    <span class="size">
-                        {{ areaOfInterestData.CropRight - areaOfInterestData.CropLeft }}
-                        x {{ areaOfInterestData.CropBottom - areaOfInterestData.CropTop }}
-                    </span>
-                </label>
-                <sd-image-point
-                    ng-show="!isAoISelectionModeEnabled"
-                    data-src="data.item.renditions.viewImage.href"
-                    data-poi="data.poi"
-                    data-on-change="data.isDirty = true">
-                </sd-image-point>
-                <div class="modal-body__flex-loader" ng-if="loaderForAoI"></div>
-                <div sd-image-crop
-                    data-show-min-size-error="true"
-                    data-src="data.item.renditions.viewImage.href"
-                    data-original="data.item.renditions.original"
-                    data-crop-data="areaOfInterestData"
-                    data-on-change="enableSaveAreaOfInterest()"
-                    ng-if="isAoISelectionModeEnabled && !loaderForAoI">
-                </div>
-                <div ng-if="isAoISelectionModeEnabled && !loaderForAoI">
-                    <button class="btn" ng-click="showAreaOfInterestView(false)" translate>Cancel</button>
-                    <button class="btn btn--primary"
-                            ng-click="saveAreaOfInterest(areaOfInterestData)"
-                            ng-disabled="!isAoIDirty"
-                            translate>Save</button>
-                </div>
-                <button class="btn"
-                        ng-click="showAreaOfInterestView()"
-                        ng-if="data.showAoISelectionButton && !isAoISelectionModeEnabled && data.editable"
-                        translate>Select the area of interest</button>
-            </div>
-            <div class="crop-area selected" ng-if="selectedRendition">
-                <label class="field-label">{{ selectedRendition.name }}</label>
-                <div sd-image-crop
-                    data-show-Min-Size-Error="true"
-                    data-src="data.item.renditions.viewImage.href"
-                    data-original="data.item.renditions.original"
-                    data-rendition="selectedRendition"
-                    data-crop-data="data.cropData[selectedRendition.name]"
-                    data-on-change="onChange(renditionName, cropData)">
+<div class="modal__body modal__body--no-padding">
+    <div class="sd-column-box--2">
+        <div class="sd-column-box__main-column sd-column-box__main-column--photo-preview">
+            <a class="sd-photo-preview__slide-in-button" ng-show="!showMetadata" ng-click="showMetadata = !showMetadata" data-sd-tooltip="Open metadata" data-flow="left">
+                <i class="icon-backward-thin"></i>
+            </a>
+            <div class="sd-photo-preview" ng-if="!nav || nav === 'view'">
+                <div class="sd-photo-preview__image">
+                    <img ng-src="{{data.item.renditions.original.href}}">
                 </div>
             </div>
-        </div>
-        <div class="modal-body__flex-sidebar modal-body__flex-metadata"
-             ng-class="{'modal-body__flex--disabled': isAoISelectionModeEnabled}"
-             ng-if="data.showMetadataEditor">
-            <div class="header" translate>Metadata</div>
 
-            <div ng-class="{'sd-line-input--required':validator.headline.required}" class="sd-line-input" ng-if="validator.headline">
-                <lable class="sd-line-input__label" translate>Title</lable>
-                <div ng-model="data.metadata.headline" ng-change="data.isDirty = true" contenteditable="{{ data.editable }}" class="contenteditable-input"></div>
-                <div class="sd-line-input__char-count" ng-if="validator.headline.maxlength" sd-character-count data-item="data.metadata.headline" data-limit="validator.headline.maxlength" data-html="true"></div>
-            </div>
-            <div ng-class="{'sd-line-input--required':validator.description_text.required}" class="sd-line-input" ng-if="validator.description_text">
-                <label class="sd-line-input__label" translate>Description</label>
-                <textarea ng-model="data.metadata.description_text" ng-change="data.isDirty = true" contenteditable="{{ data.editable }}" class="abstract contenteditable-input"></textarea>
-                <div class="sd-line-input__char-count" ng-if="validator.description_text.maxlength" sd-character-count data-item="data.metadata.description_text" data-limit="validator.description_text.maxlength" data-html="true"></div>
-            </div>
-            <div class="sd-line-input" ng-if="!data.isAssociated && validator.archive_description">
-                <label class="sd-line-input__label" translate>Description</label>
-                <div ng-model="data.metadata.archive_description" ng-change="data.isDirty = true" contenteditable="{{ data.editable }}"
-                class="contenteditable-input"></div>
-                <div class="sd-line-input__char-count" ng-if="validator.archive_description.maxlength" sd-character-count data-item="data.metadata.archive_description" data-limit="validator.archive_description.maxlength" data-html="true"></div>
-            </div>
-            <div ng-if="data.isAssociated && validator.archive_description">
-                <label translate>Description</label>
-                <div>{{ data.metadata.archive_description }}</div>
-            </div>
-            <div ng-class="{'sd-line-input--required':validator.alt_text.required}" class="sd-line-input" ng-if="validator.alt_text">
-                <label class="sd-line-input__label" translate>Alt Text</label>
-                <input class="sd-line-input__input" ng-model="data.metadata.alt_text" ng-change="data.isDirty = true" contenteditable="{{ data.editable }}" type="text">
-                <div class="sd-line-input__char-count" ng-if="validator.alt_text.maxlength" sd-character-count data-item="data.metadata.alt_text" data-limit="validator.alt_text.maxlength" data-html="true"></div>
-            </div>
-            <div ng-class="{'sd-line-input--required':validator.byline.required}" class="sd-line-input" ng-if="validator.byline">
-                <label class="sd-line-input__label" translate>Credit</label>
-                <input class="sd-line-input__input" ng-model="data.metadata.byline" ng-change="data.isDirty = true" contenteditable="{{ data.editable }}" type="text">
-            </div>
-            <div ng-class="{'sd-line-input--required':validator.copyrightholder.required}" class="sd-line-input" ng-if="validator.copyrightholder">
-                <label class="sd-line-input__label" translate>Copyright holder</label>
-                <input class="sd-line-input__input" ng-model="data.metadata.copyrightholder" ng-change="data.isDirty = true" contenteditable="{{ data.editable }}" type="text">
-            </div>
-            <div ng-class="{'sd-line-input--required':validator.usageterms.required}" class="sd-line-input sd-line-input--is-select" ng-if="validator.usageterms">
-                <label class="sd-line-input__label" translate>Assign Rights</label>
-                <select class="sd-line-input__select" ng-model="data.metadata.usageterms" ng-change="data.isDirty = true" ng-disabled="!data.editable">
-                    <option translate value=""></option> <!-- not selected / blank option -->
-                    <option translate value="single-usage">Single Usage</option>
-                    <option translate value="time-restricted">Time Restricted</option>
-                    <option translate value="indefinite-usage">Indefinite Usage</option>
-                </select>
-            </div>
-            <div ng-class="{'sd-line-input--required':validator.copyrightnotice.required}" class="sd-line-input" ng-if="validator.copyrightnotice">
-                <label class="sd-line-input__label" translate>Copyright notice</label>
-                <input class="sd-line-input__input"  ng-model="data.metadata.copyrightnotice" ng-change="data.isDirty = true" contenteditable="{{ data.editable }}" type="text">
-            </div>
-        </div>
-    </div><!-- end flex top -->
+            <div class="sd-photo-preview sd-photo-preview__edit-mode" ng-if="nav === 'image-edit'">
+                <div class="sd-photo-preview__image sd-photo-preview__image--no-flex" ng-class="{'actioning': loaderForAoI || loaderForMediaEdit}">
 
-    <div class="modal-body__flex-bottom" ng-class="{'modal-body__flex--disabled': isAoISelectionModeEnabled}">
-        <div class="crop-area__thumbnails">
-            <ul>
-                <li ng-click="selectRendition()" ng-class="{active: selectedRendition === null}">
+                    <div sd-image-crop
+                         data-show-min-size-error="true"
+                         data-src="data.item.renditions.viewImage.href"
+                         data-original="data.item.renditions.original"
+                         data-crop-data="areaOfInterestData"
+                         data-on-change="enableSaveAreaOfInterest()"
+                         ng-if="isAoISelectionModeEnabled && !loaderForAoI">
+                    </div>
+
+                    <sd-image-modify
+                        data-src="data.item.renditions.original.href"
+                        data-brightness="controls.brightness"
+                        data-contrast="controls.contrast"
+                        data-saturate="controls.saturation"
+                        data-rotate="controls.rotate"
+                        data-fliph="controls.fliph"
+                        data-flipv="controls.flipv"
+                        ng-class="{'disable-transition' : !controls.isDirty}"
+                        ng-if="!isAoISelectionModeEnabled && !loaderForAoI">
+                    </sd-image-modify>
+
+                </div>
+            </div>
+            <div class="sd-photo-preview sd-photo-preview__edit-mode" ng-if="nav === 'crop'">
+                <div class="sd-photo-preview__image--with-strip" ng-if="!selectedRendition">
                     <sd-image-point
                         data-src="data.item.renditions.viewImage.href"
                         data-poi="data.poi"
                         data-on-change="data.isDirty = true">
                     </sd-image-point>
-                    <label class="field-label" translate>Original</label>
-                </li>
-                <li ng-repeat="rendition in data.renditions track by rendition.name" ng-click="selectRendition(rendition)" ng-class="{active: rendition === selectedRendition}">
-                    <div sd-image-crop
-                        data-show-Min-Size-Error="true"
-                        data-src="data.item.renditions.viewImage.href"
-                        data-original="data.item.renditions.original"
-                        data-rendition="rendition"
-                        data-crop-init="data.item.renditions[rendition.name]"
-                        data-crop-data="data.cropData[rendition.name]"
-                        data-on-change="onChange(renditionName, cropData)">
+                    <div>
+                        <label class="sd-photo-preview__label">
+                            <span translate>Original</span>
+                            <span class="size">
+                                {{ data.item.renditions.original.width}} x {{ data.item.renditions.original.height}}
+                            </span>
+                        </label>
                     </div>
-                    <label class="field-label">{{ rendition.name }}</label>
-                </li>
-            </ul>
-        </div>
-    </div><!-- end flex bottom -->
+                </div>
+                <div class="crop-area selected sd-photo-preview__image--with-strip" ng-if="selectedRendition">
+                    <div sd-image-crop
+                         data-show-Min-Size-Error="true"
+                         data-src="data.item.renditions.viewImage.href"
+                         data-original="data.item.renditions.original"
+                         data-rendition="selectedRendition"
+                         data-crop-data="data.cropData[selectedRendition.name]"
+                         data-on-change="onChange(renditionName, cropData)">
+                    </div>
+                    <div>
+                        <label class="sd-photo-preview__label">{{ selectedRendition.name}}</label>
+                    </div>
+                </div>
 
+                <div class="sd-photo-preview__thumb-strip">
+                    <div class="sd-grid-list dark-ui">
+
+                        <div class="sd-grid-item sd-grid-item--with-click" ng-click="selectRendition()" ng-class="{active: selectedRendition === null}">
+                            <div class="sd-grid-item__thumb">
+                                <sd-image-point
+                                    data-src="data.item.renditions.viewImage.href"
+                                    data-poi="data.poi"
+                                    data-on-change="data.isDirty = true">
+                                </sd-image-point>
+                            </div>
+                            <div class="sd-grid-item__content">
+                                <span translate>Original</span>
+                            </div>
+                        </div>
+
+                        <div class="sd-grid-item sd-grid-item--with-click sd-grid-item--overflow-v" ng-repeat="rendition in data.renditions track by rendition.name" ng-click="selectRendition(rendition)" ng-class="{active: rendition === selectedRendition}">
+                            <div class="sd-grid-item__thumb">
+                                <div sd-image-crop
+                                     data-show-Min-Size-Error="true"
+                                     data-src="data.item.renditions.viewImage.href"
+                                     data-original="data.item.renditions.original"
+                                     data-rendition="rendition"
+                                     data-crop-init="data.item.renditions[rendition.name]"
+                                     data-crop-data="data.cropData[rendition.name]"
+                                     data-on-change="onChange(renditionName, cropData)">
+                                </div>
+                            </div>
+                            <div class="sd-grid-item__content">
+                                <span>{{rendition.name}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="sd-column-box__slide-in-column sd-column-box__slide-in-column--large sd-column-box__slide-in-column--dark-ui" ng-class="{'sd-column-box__slide-in-column--closed' : !showMetadata}">
+            <div class="sd-column-box__slide-in-column-inner sd-slide-in-panel">
+                <div class="sd-slide-in-panel__header">
+                    <h3 class="sd-slide-in-panel__heading" ng-if="nav !== 'image-edit'" translate>Metadata</h3>
+                    <h3 class="sd-slide-in-panel__heading" ng-if="nav === 'image-edit'" translate>Controls</h3>
+                    <a class="icn-btn sd-slide-in-panel__close" sd-tooltip="Close details" flow="top" ng-click="showMetadata = !showMetadata"><i class="icon-close-small"></i></a>
+                </div>
+                <div class="sd-slide-in-panel__content" ng-if="nav !== 'image-edit'">
+                    <div class="sd-slide-in-panel__content-block sd-slide-in-panel__content-block--first">
+                        <div class="form__row" ng-if="validator.headline">
+                            <sd-line-input
+                                ng-model="data.metadata.headline"
+                                data-dark="true"
+                                data-boxed="true"
+                                data-required="validator.headline.required"
+                                data-label="{{:: 'Title' | translate}}"
+                                data-disabled="!data.editable"
+                                data-onchange="data.isDirty = true"
+                                data-maxlength="validator.headline.maxlength">
+                            </sd-line-input>
+
+                        </div>
+                        <div class="form__row" ng-if="validator.description_text">
+                            <sd-line-input
+                                ng-model="data.metadata.description_text"
+                                data-dark="true"
+                                data-boxed="true"
+                                data-required="validator.description_text.required"
+                                data-label="{{:: 'Description' | translate}}"
+                                data-disabled="!data.editable"
+                                data-onchange="data.isDirty = true"
+                                data-maxlength="validator.description_text.maxlength">
+                            </sd-line-input>
+
+                        </div>
+                        <div class="form__row" ng-if="!data.isAssociated && validator.archive_description">
+                            <sd-line-input
+                                ng-model="data.metadata.archive_description"
+                                data-dark="true"
+                                data-boxed="true"
+                                data-required="validator.archive_description.required"
+                                data-label="{{:: 'Description' | translate}}"
+                                data-disabled="!data.editable"
+                                data-onchange="data.isDirty = true"
+                                data-maxlength="validator.archive_description.maxlength">
+                            </sd-line-input>
+
+                        </div>
+                        <div class="form__row" ng-if="data.isAssociated && validator.archive_description">
+                            <sd-line-input
+                                ng-model="data.metadata.archive_description"
+                                data-dark="true"
+                                data-boxed="true"
+                                data-required="false"
+                                data-label="{{:: 'Description' | translate}}"
+                                data-disabled="true">
+                            </sd-line-input>
+
+                        </div>
+                        <div class="form__row" ng-if="validator.alt_text">
+                            <sd-line-input
+                                ng-model="data.metadata.alt_text"
+                                data-dark="true"
+                                data-boxed="true"
+                                data-required="validator.alt_text.required"
+                                data-label="{{:: 'Alt Text' | translate}}"
+                                data-disabled="!data.editable"
+                                data-onchange="data.isDirty = true"
+                                data-maxlength="validator.alt_text.maxlength">
+                            </sd-line-input>
+
+                        </div>
+                        <div class="form__row" ng-if="validator.byline">
+                            <sd-line-input
+                                ng-model="data.metadata.byline"
+                                data-dark="true"
+                                data-boxed="true"
+                                data-required="validator.byline.required"
+                                data-label="{{:: 'Credit' | translate}}"
+                                data-disabled="!data.editable"
+                                data-onchange="data.isDirty = true">
+                            </sd-line-input>
+
+                        </div>
+                        <div class="form__row" ng-if="validator.copyrightholder">
+                            <sd-line-input
+                                ng-model="data.metadata.copyrightholder"
+                                data-dark="true"
+                                data-boxed="true"
+                                data-required="validator.copyrightholder.required"
+                                data-label="{{:: 'Copyright holder' | translate}}"
+                                data-disabled="!data.editable"
+                                data-onchange="data.isDirty = true">
+                            </sd-line-input>
+
+                        </div>
+                        <div class="form__row" ng-if="validator.usageterms">
+                            <sd-line-input
+                                data-dark="true"
+                                data-boxed="true"
+                                data-transclude="true"
+                                data-required="validator.copyrightnotice.required"
+                                data-label="{{:: 'Assign Rights' | translate}}">
+                                <select class="sd-line-input__select" ng-model="data.metadata.usageterms" ng-change="data.isDirty = true" ng-disabled="!data.editable">
+                                    <option translate value=""></option> <!-- not selected / blank option -->
+                                    <option translate value="single-usage">Single Usage</option>
+                                    <option translate value="time-restricted">Time Restricted</option>
+                                    <option translate value="indefinite-usage">Indefinite Usage</option>
+                                </select>
+                            </sd-line-input>
+
+                        </div>
+                        <div class="form__row" ng-if="validator.copyrightnotice">
+                            <sd-line-input
+                                ng-model="data.metadata.copyrightnotice"
+                                data-dark="true"
+                                data-boxed="true"
+                                data-required="validator.copyrightnotice.required"
+                                data-label="{{:: 'Copyright notice' | translate}}"
+                                data-disabled="!data.editable"
+                                data-onchange="data.isDirty = true"
+                                data-maxlength="validator.copyrightnotice.maxlength">
+                            </sd-line-input>
+   
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sd-slide-in-panel__content" ng-if="nav === 'image-edit'">
+                    <div class="sd-slide-in-panel__content-block sd-slide-in-panel__content-block--first">
+
+                        <div class="modal__sliding-toolbar" ng-if="isAoISelectionModeEnabled && !loaderForAoI">
+                            <div class="sliding-toolbar__inner"></div>
+                            <a class="btn" ng-click="showAreaOfInterestView(false)" translate>Cancel</a>
+                            <a class="btn btn--primary" ng-click="saveAreaOfInterest(areaOfInterestData)" ng-disabled="!isAoIDirty" translate>Confirm crop</a>
+                        </div>
+                        
+                        <div class="modal__sliding-toolbar" ng-if="controls.isDirty">
+                            <div class="sliding-toolbar__inner"></div>
+                            <a class="btn" ng-click="cancelImageChanges()" translate>Cancel</a>
+                            <a class="btn btn--primary" ng-click="applyImageChanges()" translate>Apply</a>
+                        </div>
+
+                        <h3 class="sd-slide-in-panel__heading sd-slide-in-panel__heading--marg-b16" translate>Change image settings</h3>
+                        <div class="form__row">
+                            <button class="btn btn--ui-dark btn--hollow btn--icon-only btn--large" ng-click="showAreaOfInterestView()" ng-class="{'btn--active' : isAoISelectionModeEnabled}" sd-tooltip="Crop" ng-disabled="controls.isDirty"><i class="icon-crop icon--white"></i></button>
+                            <button class="btn btn--ui-dark btn--hollow btn--icon-only btn--large" ng-click="rotateImage('left')" sd-tooltip="Rotate left" ng-disabled="isAoISelectionModeEnabled"><i class="icon-rotate-left icon--white"></i></button>
+                            <button class="btn btn--ui-dark btn--hollow btn--icon-only btn--large" ng-click="rotateImage('right')" sd-tooltip="Rotate right" ng-disabled="isAoISelectionModeEnabled"><i class="icon-rotate-right icon--white"></i></button>
+                            <button class="btn btn--ui-dark btn--hollow btn--icon-only btn--large" ng-click="flipImage('horizontal')" sd-tooltip="Flip horizotal" ng-disabled="isAoISelectionModeEnabled"><i class="icon-flip-horizontal icon--white"></i></button>
+                            <button class="btn btn--ui-dark btn--hollow btn--icon-only btn--large" ng-click="flipImage('vertical')" sd-tooltip="Flip vertical" ng-disabled="isAoISelectionModeEnabled"><i class="icon-flip-vertical icon--white"></i></button>
+                        </div>
+                    </div>
+                    <div class="sd-slide-in-panel__content-block" ng-if="isAoISelectionModeEnabled">
+                        <div class="form__row form__row--flex">
+                            <div class="form__row-item">
+                                <div class="sd-line-input sd-line-input--dark-ui sd-line-input--boxed sd-line-input--indent-l30">
+                                    <span class="sd-line-input__info-left">W</span>
+                                    <label class="sd-line-input__label" translate>Image size</label>
+                                    <input class="sd-line-input__input sd-line-input__input--center" type="number" value="{{ areaOfInterestData.CropRight - areaOfInterestData.CropLeft}}">
+                                </div>
+                            </div>
+                            <div class="form__row-item form__row-item--no-grow">
+                                <span>x</span>
+                            </div>
+                            <div class="form__row-item">
+                                <div class="sd-line-input sd-line-input--dark-ui sd-line-input--boxed sd-line-input--indent-l30">
+                                    <span class="sd-line-input__info-left">H</span>
+                                    <input class="sd-line-input__input sd-line-input__input--center" type="number" value="{{ areaOfInterestData.CropBottom - areaOfInterestData.CropTop}}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex-grid flex-grid--boxed-small flex-grid--wrap-items flex-grid--small-2">
+                            <button class="btn btn--hollow btn--ui-dark btn--large" translate>Original</button>
+                            <button class="btn btn--hollow btn--ui-dark btn--large">16 : 9</button>
+                            <button class="btn btn--hollow btn--ui-dark btn--large">4 : 3</button>
+                            <button class="btn btn--hollow btn--ui-dark btn--large">3 : 2</button>
+                        </div>
+                    </div>
+                    <div class="sd-slide-in-panel__content-block" ng-if="!isAoISelectionModeEnabled">
+                        <h3 class="sd-slide-in-panel__heading sd-slide-in-panel__heading--marg-b20" translate>Adjust colors</h3>
+                        <div class="form__row form__row--small-padding">
+                            <div class="form-label__container">
+                                <label class="form-label" translate>Brigtness</label>
+                                <span class="form-label__info-block">{{controls.brightness * 100 - 100 | number:0}}%</span>
+                            </div>
+                            <input type="range" class="sd-slider__range" min="0" max="2" step=".05" ng-model="controls.brightness" ng-dblclick="controls.brightness = 1" ng-change="controls.isDirty = true">
+                        </div>
+                        <div class="form__row form__row--small-padding">
+                            <div class="form-label__container">
+                                <label class="form-label" translate>Contrast</label>
+                                <span class="form-label__info-block">{{controls.contrast * 100 - 100 | number:0}}%</span>
+                            </div>
+                            <input type="range" class="sd-slider__range" min=".5" max="1.5" step=".05" ng-model="controls.contrast" ng-dblclick="controls.contrast = 1" ng-change="controls.isDirty = true">
+                        </div>
+                        <div class="form__row form__row--small-padding">
+                            <div class="form-label__container">
+                                <label class="form-label" translate>Saturation</label>
+                                <span class="form-label__info-block">{{controls.saturation * 100 - 100 | number:0}}%</span>
+                            </div>
+                            <input type="range" class="sd-slider__range" min="0" max="2" step=".05" ng-model="controls.saturation" ng-dblclick="controls.saturation = 1" ng-change="controls.isDirty = true">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
 </div>

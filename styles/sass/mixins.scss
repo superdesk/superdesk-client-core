@@ -401,3 +401,22 @@ $enable-transitions: true !default;
     transition: $transition;
   }
 }
+
+@mixin actioning($big: true) {
+    background-color: fade(#f7f7f7, 20%);
+    border-color: fade(#cfcfcf, 20%);
+    &:before {
+        content: '';
+        zoom: .7;
+        top: 50%;
+        transform: translateY(-50%);
+        position: absolute;
+        z-index: 1;
+        @if $big {
+            @include spinner-big();
+        }
+        @else {
+            @include spinner-alt();
+        }
+    }
+}
