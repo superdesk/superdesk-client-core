@@ -19,6 +19,34 @@ import {
     getUniqueStyleNamesInDraftSelection,
 } from './getUniqueStyleNamesInDraftSelection';
 import {toHTML} from '..';
+import {highlightsConfig} from '../highlightsConfig';
+
+function getCustomMetadataFromContentState(contentState, highlightType) {
+    const editorState = initializeHighlights(EditorState.createWithContent(contentState));
+
+    const allStyleNames = getUniqueStyleNamesInDraftSelection(
+        editorState,
+        getDraftSelectionForEntireContent(editorState)
+    );
+
+    return allStyleNames
+        .filter(styleNameBelongsToHighlight)
+        .filter((h) => getHighlightTypeFromStyleName(h) === highlightType)
+        .map((styleName) => ({
+            styleName: styleName,
+            obj: getHighlightData(editorState, styleName),
+        }));
+}
+
+function getAnnotationsFromHighlights(highlights, logger) {
+    return highlights.map(({styleName, obj}, index) => ({
+        styleName: styleName,
+        id: index + 1, // count from 1
+        index: index + 1, // count from 1
+        type: obj.data.annotationType,
+        body: toHTML(convertFromRaw(JSON.parse(obj.data.msg)), logger),
+    }));
+}
 
 export const editor3DataKeys = {
     MULTIPLE_HIGHLIGHTS: 'MULTIPLE_HIGHLIGHTS',
@@ -83,39 +111,25 @@ export function getCustomDataFromEditorRawState(rawState, key) {
     return getCustomDataFromEditor(EditorState.createWithContent(convertFromRaw(rawState)), key);
 }
 
-export function getAnnotations(item, field, highlightType, logger = {}) {
-    const highlights = getCustomMetadata(item, field, highlightType, logger);
+export function getAnnotationsFromItem(item, field, logger = {}) {
+    const highlights = getCustomMetadata(item, field, highlightsConfig.ANNOTATION.type, logger);
 
-    return highlights.map(({styleName, obj}) => {
-        const annotationId = parseInt(styleName.split('-')[1], 10);
-
-        return {
-            id: annotationId,
-            type: obj.data.annotationType,
-            body: toHTML(convertFromRaw(JSON.parse(obj.data.msg)), logger),
-        };
-    });
+    return getAnnotationsFromHighlights(highlights, logger);
 }
 
-export function getCustomMetadata(item, field, highlightType, logger = {}) {
+export function getAnnotationsFromContentState(contentState, logger = {}) {
+    const highlights = getCustomMetadataFromContentState(contentState, highlightsConfig.ANNOTATION.type);
+
+    return getAnnotationsFromHighlights(highlights, logger);
+}
+
+export function getCustomMetadata(item, field, highlightType) {
     const contentStateRaw = getFieldMetadata(item, field, fieldsMetaKeys.draftjsState);
 
     if (contentStateRaw) {
         const contentState = convertFromRaw(contentStateRaw);
-        const editorState = initializeHighlights(EditorState.createWithContent(contentState));
 
-        const allStyleNames = getUniqueStyleNamesInDraftSelection(
-            editorState,
-            getDraftSelectionForEntireContent(editorState)
-        );
-
-        return allStyleNames
-            .filter(styleNameBelongsToHighlight)
-            .filter((h) => getHighlightTypeFromStyleName(h) === highlightType)
-            .map((styleName) => ({
-                styleName: styleName,
-                obj: getHighlightData(editorState, styleName),
-            }));
+        return getCustomMetadataFromContentState(contentState, highlightType);
     }
 
     return [];

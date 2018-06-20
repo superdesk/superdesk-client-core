@@ -1,6 +1,7 @@
 import {BlockEntityWrapper} from '.';
 import {BlockInlineStyleWrapper} from '.';
 import {AtomicBlockParser} from '.';
+import {getAnnotationsFromContentState} from 'core/editor3/helpers/editor3CustomData';
 
 /**
  * @type {Object}
@@ -42,6 +43,12 @@ export class HTMLGenerator {
         this.listTag = this.listTag.bind(this);
         this.getAnnotationStart = this.getAnnotationStart.bind(this);
         this.getAnnotationEnd = this.getAnnotationEnd.bind(this);
+
+        this.annotationIndexesByStyleName = getAnnotationsFromContentState(contentState)
+            .reduce((obj, annotation) => {
+                obj[annotation.styleName] = annotation.index;
+                return obj;
+            }, {});
     }
 
     /**
@@ -153,8 +160,8 @@ export class HTMLGenerator {
      * @returns {String}
      * @description Returns a string containing the HTML inserted before the annotated text.
      */
-    getAnnotationStart(style) {
-        return '<span annotation-id="' + style.split('-')[1] + '">';
+    getAnnotationStart(styleName) {
+        return '<span annotation-id="' + this.annotationIndexesByStyleName[styleName] + '">';
     }
 
     /**

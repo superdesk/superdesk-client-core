@@ -1,6 +1,7 @@
 import {EditorState, convertFromRaw, convertToRaw, ContentState} from 'draft-js';
 import {createStore, applyMiddleware} from 'redux';
 import thunk from 'redux-thunk';
+import {pick} from 'lodash';
 
 import {toHTML} from 'core/editor3/html';
 import ng from 'core/services/ng';
@@ -9,14 +10,18 @@ import {Editor3} from '../components/Editor3';
 import {PopupTypes, forceUpdate} from '../actions';
 import {fieldsMetaKeys, setFieldMetadata, getFieldMetadata, FIELD_KEY_SEPARATOR} from '../helpers/fieldsMeta';
 import {getContentStateFromHtml} from '../html/from-html';
-import {getAnnotations} from '../helpers/editor3CustomData';
-import {highlightsConfig} from '../highlightsConfig';
+import {getAnnotationsFromItem} from '../helpers/editor3CustomData';
 import {
     initializeHighlights,
     prepareHighlightsForExport,
 } from '../helpers/highlights';
 import {removeInlineStyles} from '../helpers/removeFormat';
 import reducers from '../reducers';
+
+export const ignoreInternalAnnotationFields = (annotations) =>
+    annotations.map(
+        (annotation) => pick(annotation, ['id', 'type', 'body'])
+    );
 
 /**
  * @name createEditorStore
@@ -72,7 +77,9 @@ export default function createEditorStore(props, isReact = false) {
  * @param {Object} item
  */
 function generateAnnotations(item, logger) {
-    item.annotations = getAnnotations(item, 'body_html', highlightsConfig.ANNOTATION.type, logger);
+    item.annotations = ignoreInternalAnnotationFields(
+        getAnnotationsFromItem(item, 'body_html', logger)
+    );
 }
 
 /**

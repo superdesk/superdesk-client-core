@@ -1,0 +1,120 @@
+{
+    "blocks": [
+        {
+            "key": "bstbu",
+            "text": "test 1",
+            "type": "unstyled",
+            "depth": 0,
+            "inlineStyleRanges": [
+                {
+                    "offset": 0,
+                    "length": 6,
+                    "style": "ANNOTATION-3"
+                }
+            ],
+            "entityRanges": [],
+            "data": {
+                "MULTIPLE_HIGHLIGHTS": {
+                    "lastHighlightIds": {
+                        "COMMENT": 0,
+                        "ANNOTATION": 4,
+                        "ADD_SUGGESTION": 0,
+                        "DELETE_SUGGESTION": 0,
+                        "TOGGLE_BOLD_SUGGESTION": 0,
+                        "TOGGLE_ITALIC_SUGGESTION": 0,
+                        "TOGGLE_UNDERLINE_SUGGESTION": 0,
+                        "TOGGLE_SUBSCRIPT_SUGGESTION": 0,
+                        "TOGGLE_SUPERSCRIPT_SUGGESTION": 0,
+                        "TOGGLE_STRIKETHROUGH_SUGGESTION": 0,
+                        "BLOCK_STYLE_SUGGESTION": 0,
+                        "SPLIT_PARAGRAPH_SUGGESTION": 0,
+                        "MERGE_PARAGRAPHS_SUGGESTION": 0,
+                        "DELETE_EMPTY_PARAGRAPH_SUGGESTION": 0,
+                        "ADD_LINK_SUGGESTION": 0,
+                        "REMOVE_LINK_SUGGESTION": 0,
+                        "CHANGE_LINK_SUGGESTION": 0
+                    },
+                    "highlightsData": {
+                        "ANNOTATION-1": {
+                            "data": {
+                                "msg": "{\"blocks\":[{\"key\":\"fjtvo\",\"text\":\"a1\",\"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}",
+                                "annotationType": "regular",
+                                "authorId": "5acb79292e03ed5d2a84bbd6",
+                                "author": "first name last name",
+                                "email": "a@a.com",
+                                "date": "2018-06-20T07:04:55.266Z",
+                                "avatar": null
+                            },
+                            "type": "ANNOTATION"
+                        },
+                        "ANNOTATION-3": {
+                            "data": {
+                                "msg": "{\"blocks\":[{\"key\":\"frm6e\",\"text\":\"a3\",\"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}",
+                                "annotationType": "regular",
+                                "authorId": "5acb79292e03ed5d2a84bbd6",
+                                "author": "first name last name",
+                                "email": "a@a.com",
+                                "date": "2018-06-20T07:05:11.056Z",
+                                "avatar": null
+                            },
+                            "type": "ANNOTATION"
+                        },
+                        "ANNOTATION-4": {
+                            "data": {
+                                "msg": "{\"blocks\":[{\"key\":\"f4ign\",\"text\":\"a2\",\"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}",
+                                "annotationType": "regular",
+                                "authorId": "5acb79292e03ed5d2a84bbd6",
+                                "author": "first name last name",
+                                "email": "a@a.com",
+                                "date": "2018-06-20T07:06:43.575Z",
+                                "avatar": null
+                            },
+                            "type": "ANNOTATION"
+                        }
+                    }
+                },
+                "__PUBLIC_API__comments": []
+            }
+        },
+        {
+            "key": "6pcq5",
+            "text": "test 2",
+            "type": "unstyled",
+            "depth": 0,
+            "inlineStyleRanges": [
+                {
+                    "offset": 0,
+                    "length": 6,
+                    "style": "ANNOTATION-1"
+                }
+            ],
+            "entityRanges": [],
+            "data": {}
+        },
+        {
+            "key": "18ljt",
+            "text": "test 3",
+            "type": "unstyled",
+            "depth": 0,
+            "inlineStyleRanges": [
+                {
+                    "offset": 0,
+                    "length": 6,
+                    "style": "ANNOTATION-4"
+                }
+            ],
+            "entityRanges": [],
+            "data": {}
+        },
+        {
+            "key": "43eiq",
+            "text": "767843f",
+            "type": "unstyled",
+            "depth": 0,
+            "inlineStyleRanges": [],
+            "entityRanges": [],
+            "data": {}
+        }
+    ],
+    "entityMap": {}
+}

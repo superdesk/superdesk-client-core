@@ -1,0 +1,23 @@
+[
+    {
+        "styleName": "ANNOTATION-3",
+        "id": 1,
+        "index": 1,
+        "type": "regular",
+        "body": "<p>a3</p>"
+    },
+    {
+        "styleName": "ANNOTATION-1",
+        "id": 2,
+        "index": 2,
+        "type": "regular",
+        "body": "<p>a1</p>"
+    },
+    {
+        "styleName": "ANNOTATION-4",
+        "id": 3,
+        "index": 3,
+        "type": "regular",
+        "body": "<p>a2</p>"
+    }
+]
