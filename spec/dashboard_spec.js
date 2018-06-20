@@ -3,7 +3,7 @@
 var dashboard = require('./helpers/dashboard'),
     workspace = require('./helpers/workspace'),
     authoring = require('./helpers/authoring'),
-    monitoring = require('./helpers/monitoring');
+    monitor = require('./helpers/monitoring');
 
 describe('dashboard', () => {
     beforeEach(() => {
@@ -13,7 +13,7 @@ describe('dashboard', () => {
     it('add a widget to a desk', () => {
         expect(dashboard.getWidgets().count()).toBe(0);
         dashboard.showDashboardSettings();
-        dashboard.addWidget('monitoring');
+        dashboard.addWidget('monitor');
         dashboard.doneAction();
         expect(dashboard.getWidgets().count()).toBe(1);
         workspace.selectDesk('Sports Desk');
@@ -22,10 +22,10 @@ describe('dashboard', () => {
         expect(dashboard.getWidgets().count()).toBe(1);
     });
 
-    it('add multiple monitoring widgets', () => {
+    it('add multiple monitor widgets', () => {
         dashboard.showDashboardSettings();
-        dashboard.addWidget('monitoring');
-        dashboard.addWidget('monitoring');
+        dashboard.addWidget('monitor');
+        dashboard.addWidget('monitor');
         dashboard.doneAction();
         expect(dashboard.getWidgets().count()).toBe(2);
         expect(dashboard.getGroups(0).count()).toBe(6);
@@ -36,14 +36,14 @@ describe('dashboard', () => {
         expect(dashboard.getTextItem(1, 3, 2)).toBe('item6');
 
         dashboard.showMonitoringSettings(0);
-        monitoring.toggleDesk(0);
-        monitoring.toggleDesk(1);
-        monitoring.toggleStage(1, 2);
-        monitoring.toggleStage(1, 4);
-        monitoring.nextStages();
-        monitoring.nextSearches();
-        monitoring.nextReorder();
-        monitoring.saveSettings();
+        monitor.toggleDesk(0);
+        monitor.toggleDesk(1);
+        monitor.toggleStage(1, 2);
+        monitor.toggleStage(1, 4);
+        monitor.nextStages();
+        monitor.nextSearches();
+        monitor.nextReorder();
+        monitor.saveSettings();
 
         // TODO
         // this second saving is needed for passing tests on CI,
@@ -51,7 +51,7 @@ describe('dashboard', () => {
         // there is can be issue with first saving...
         // Same thing was in line 74, so probably someone got this before too
         dashboard.showMonitoringSettings(0);
-        monitoring.saveSettings();
+        monitor.saveSettings();
 
         expect(dashboard.getTextItem(0, 0, 0)).toBe('item3');
         expect(dashboard.getTextItem(0, 1, 0)).toBe('item4');
@@ -61,25 +61,25 @@ describe('dashboard', () => {
 
     it('configure a label for the view', () => {
         dashboard.showDashboardSettings();
-        dashboard.addWidget('monitoring'); // the monitoring widget
+        dashboard.addWidget('monitor'); // the monitor widget
         dashboard.doneAction();
 
         dashboard.showMonitoringSettings(0);
-        monitoring.setLabel('test');
-        monitoring.nextStages();
-        monitoring.nextSearches();
-        monitoring.nextReorder();
-        monitoring.saveSettings();
+        monitor.setLabel('test');
+        monitor.nextStages();
+        monitor.nextSearches();
+        monitor.nextReorder();
+        monitor.saveSettings();
 
         dashboard.showMonitoringSettings(0);
-        monitoring.saveSettings();
+        monitor.saveSettings();
 
         expect(dashboard.getWidgetLabel(0)).toBe('test');
     });
 
-    it('search in monitoring widget', () => {
+    it('search in monitor widget', () => {
         dashboard.showDashboardSettings();
-        dashboard.addWidget('monitoring'); // the monitoring widget
+        dashboard.addWidget('monitor'); // the monitor widget
         dashboard.doneAction();
         expect(dashboard.getWidgets().count()).toBe(1);
         expect(dashboard.getGroupItems(0, 2).count()).toBe(4);
@@ -88,27 +88,27 @@ describe('dashboard', () => {
         expect(dashboard.getTextItem(0, 2, 0)).toBe('item7');
     });
 
-    it('can display desk output in monitoring widget when an item gets published', () => {
-        monitoring.openMonitoring();
+    it('can display desk output in monitor widget when an item gets published', () => {
+        monitor.openMonitoring();
 
-        expect(monitoring.getTextItem(3, 2)).toBe('item6');
-        monitoring.actionOnItem('Edit', 3, 2);
+        expect(monitor.getTextItem(3, 2)).toBe('item6');
+        monitor.actionOnItem('Edit', 3, 2);
         authoring.publish();
         browser.sleep(300);
 
         dashboard.openDashboard();
         dashboard.showDashboardSettings();
-        dashboard.addWidget('monitoring'); // the monitoring widget
+        dashboard.addWidget('monitor'); // the monitor widget
         dashboard.doneAction();
         expect(dashboard.getTextItem(0, 5, 0)).toBe('item6');
     });
 
-    it('can display \'not for publication\' state in monitoring widget for such item', () => {
-        monitoring.openMonitoring();
+    it('can display \'not for publication\' state in monitor widget for such item', () => {
+        monitor.openMonitoring();
 
-        expect(monitoring.getTextItem(3, 2)).toBe('item6');
+        expect(monitor.getTextItem(3, 2)).toBe('item6');
 
-        monitoring.actionOnItem('Edit', 3, 2);
+        monitor.actionOnItem('Edit', 3, 2);
         authoring.showInfo();
         authoring.toggleNotForPublication();
         authoring.save();
@@ -116,7 +116,7 @@ describe('dashboard', () => {
 
         dashboard.openDashboard();
         dashboard.showDashboardSettings();
-        dashboard.addWidget('monitoring'); // the monitoring widget
+        dashboard.addWidget('monitor'); // the monitor widget
         dashboard.doneAction();
         expect(dashboard.getTextItem(0, 3, 0)).toBe('item6');
 
