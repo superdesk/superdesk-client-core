@@ -56,17 +56,17 @@ export function FullPreviewDirective(api, $timeout, config, content, $sce) {
 
             /**
              * @ngdoc method
-             * @name existsMedia
+             * @name mediaExists
              * @private
              * @description Check if there is any association for fieldId
              */
-            scope.existsMedia = function(associations, fieldId) {
+            scope.mediaExists = function(associations, fieldId) {
                 return _.size(scope.getMediaItems(associations, fieldId));
             };
 
             /**
              * @ngdoc method
-             * @name existsMedia
+             * @name getMediaItems
              * @private
              * @description Return all associations for fieldId
              */
