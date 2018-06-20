@@ -140,6 +140,8 @@ export function ItemCarouselDirective($timeout) {
                 carousel = elem.find(carouselContainerSelector).owlCarousel({
                     items: 1,
                     autoHeight: true,
+                    mouseDrag: false, // disable mouse & touch drag to allow contenteditable
+                    touchDrag: false,
                 });
 
                 // Initialize sortable function for thumbnails
