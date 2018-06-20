@@ -170,7 +170,8 @@ function Dashboard() {
      * @return {promise} item element
      */
     this.getSearchTextBox = function(widget) {
-        return this.getWidget(widget).element(by.css('.search-box input'));
+        this.getWidget(widget).element(by.css('.widget-header__search-button')).click();
+        return this.getWidget(widget).element(by.css('.search-box__content input'));
     };
 
     /**
