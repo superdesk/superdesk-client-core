@@ -54,6 +54,28 @@ export function FullPreviewDirective(api, $timeout, config, content, $sce) {
                 return false;
             };
 
+            /**
+             * @ngdoc method
+             * @name mediaExists
+             * @private
+             * @description Check if there is any association for fieldId
+             */
+            scope.mediaExists = function(associations, fieldId) {
+                return _.size(scope.getMediaItems(associations, fieldId));
+            };
+
+            /**
+             * @ngdoc method
+             * @name getMediaItems
+             * @private
+             * @description Return all associations for fieldId
+             */
+            scope.getMediaItems = function(associations, fieldId) {
+                var result = _.filter(associations, (association, key) => key.indexOf(fieldId) !== -1);
+
+                return result;
+            };
+
             scope.getLocaleName = function(term) {
                 if (!term) {
                     return 'None';

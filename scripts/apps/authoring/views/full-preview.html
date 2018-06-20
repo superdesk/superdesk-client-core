@@ -119,7 +119,7 @@
                 <div class="headline" order="{{editor.headline.order}}" ng-if="!editor.headline.hideOnPrint">{{item.headline}}</div>
                 <!-- custom media and embed fields -->
                 <div ng-repeat="field in fields track by field._id"
-                    ng-if="(field.field_type === 'media' && item.associations[field._id] || field.field_type === 'embed' && item.extra[field._id]) && !editor[field._id].hideOnPrint"
+                    ng-if="(field.field_type === 'media' && mediaExists(item.associations, field._id) || field.field_type === 'embed' && item.extra[field._id]) && !editor[field._id].hideOnPrint"
                     order="{{editor[field._id].order}}"
                     class="body preview-editor">
                     <div class="preview-label">
@@ -128,8 +128,10 @@
                     <div ng-if="field.field_type === 'embed' && !hide_images" ng-bind-html="getHtml(item.extra[field._id].embed)">
                     </div>
                     <div ng-if="field.field_type === 'media' && !hide_images" class="association">
-                        <img src="{{item.associations[field._id].renditions.viewImage.href}}" ng-if="!hide_images">
-                        <p><i class="icon-picture" ng-if="hide_images"></i>{{item.associations[field._id].description_text}}</p>
+                        <div ng-repeat="(mediaId, media) in getMediaItems(item.associations, field._id) track by mediaId">
+                            <img src="{{media.renditions.viewImage.href}}" ng-if="!hide_images">
+                            <p><i class="icon-picture" ng-if="hide_images"></i>{{media.description_text}}</p>
+                        </div>
                     </div>
                 </div>
                 <div order="{{editor.feature_media.order}}" ng-if="!editor.feature_media.hideOnPrint" class="association">
