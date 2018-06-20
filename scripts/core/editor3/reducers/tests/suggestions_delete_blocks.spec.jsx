@@ -311,4 +311,41 @@ describe('editor3.reducers.suggestion.DELETE_BLOCKS_SUGGESTION', () => {
 
         expect(content.getPlainText()).toEqual('paragraph1\npara\nparagraph3');
     });
+
+    it('should not delete insert suggestion if part of it is deleted', () => {
+        const rawContent = {
+            blocks: [
+                {key: '739sm', text: 'paraph1'},
+                {key: '9d99u', text: 'paragraph2'},
+            ],
+            entityMap: {},
+        };
+        let editorState = Setup.getInitialEditorState(rawContent);
+
+        editorState = Setup.applySelection(editorState, 0, 4, 0, 4);
+        editorState = Setup.addInsertSuggestion(editorState, 'gra');
+
+        let content = editorState.getCurrentContent();
+
+        expect(content.getPlainText()).toEqual('paragraph1\nparagraph2');
+
+        editorState = Setup.applySelection(editorState, 0, 5, 1, 6);
+        editorState = Setup.addDeleteSuggestion(editorState, 'delete');
+
+        content = editorState.getCurrentContent();
+
+        expect(content.getPlainText()).toEqual('paragph1\nparagraph2');
+
+        let block = content.getFirstBlock();
+
+        for (let i = 0; i < 8; i++) {
+            if (i < 4) {
+                expect(block.getInlineStyleAt(i).toJS()).toEqual([]);
+            } else if (i < 5) {
+                expect(block.getInlineStyleAt(i).toJS()).toEqual(['ADD_SUGGESTION-1']);
+            } else {
+                expect(block.getInlineStyleAt(i).toJS()).toEqual(['DELETE_SUGGESTION-1']);
+            }
+        }
+    });
 });

@@ -709,8 +709,15 @@ const applyChangeSuggestion = (editorState, accepted) => {
 
         let {selection: newSelection} = Highlights.getRangeAndTextForStyle(newEditorState, style, true);
 
+        let offset = 0;
+
+        if (selection.getStartKey() === newSelection.getStartKey() &&
+            selection.getStartOffset() > newSelection.getStartOffset()) {
+            offset = selection.getStartOffset() - newSelection.getStartOffset();
+        }
+
         newEditorState = EditorState.acceptSelection(newEditorState, newSelection);
-        newEditorState = Highlights.changeEditorSelection(newEditorState, 0, 1, false);
+        newEditorState = Highlights.changeEditorSelection(newEditorState, offset, 1, false);
         newSelection = newEditorState.getSelection();
         newEditorState = Highlights.resetHighlightForCurrentSelection(newEditorState, style);
 
