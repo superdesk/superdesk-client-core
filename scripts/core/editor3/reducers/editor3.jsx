@@ -49,11 +49,17 @@ export const forceUpdate = (state) => {
     const content = editorState.getCurrentContent();
     const selection = editorState.getSelection();
     const decorator = editorState.getDecorator(!spellcheckerEnabled);
-    const newState = EditorState.createWithContent(content, decorator);
+    let newState = EditorState.createWithContent(content, decorator);
+
+    newState = EditorState.acceptSelection(newState, selection);
+    newState = EditorState.set(newState, {
+        undoStack: editorState.getUndoStack(),
+        redoStack: editorState.getRedoStack(),
+    });
 
     return {
         ...state,
-        editorState: EditorState.acceptSelection(newState, selection),
+        editorState: newState,
     };
 };
 
