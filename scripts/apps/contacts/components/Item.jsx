@@ -75,7 +75,10 @@ export class Item extends React.Component {
 
         let cssClass = classNames(
             'list-item-view',
-            {active: flags.selected}
+            {
+                active: flags.selected,
+                inactive: !item.is_active,
+            }
         );
 
         return (
