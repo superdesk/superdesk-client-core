@@ -1,9 +1,9 @@
 UserEditDirective.$inject = ['api', 'gettext', 'notify', 'usersService', 'userList', 'session', 'lodash',
     'langmap', '$location', '$route', 'superdesk', 'features', 'asset', 'privileges',
-    'desks', 'keyboardManager', 'gettextCatalog', 'config', 'metadata', 'deployConfig'];
+    'desks', 'keyboardManager', 'gettextCatalog', 'config', 'metadata', 'deployConfig', 'modal'];
 export function UserEditDirective(api, gettext, notify, usersService, userList, session, _,
     langmap, $location, $route, superdesk, features, asset, privileges, desks, keyboardManager,
-    gettextCatalog, config, metadata, deployConfig) {
+    gettextCatalog, config, metadata, deployConfig, modal) {
     return {
         templateUrl: asset.templateUrl('apps/users/views/edit-form.html'),
         scope: {
@@ -115,48 +115,69 @@ export function UserEditDirective(api, gettext, notify, usersService, userList, 
             }
 
             scope.save = function() {
-                scope.error = null;
-                notify.info(gettext('Saving...'));
-                return usersService.save(scope.origUser, scope.user)
-                    .then((response) => {
-                        scope.origUser = response;
-                        resetUser(scope.origUser);
-                        notify.pop();
-                        notify.success(gettext('user saved.'));
-                        scope.onsave({user: scope.origUser});
+                new Promise((resolve) => {
+                    if (scope.user.language === scope.origUser.language) {
+                        resolve(false);
+                    } else {
+                        modal.confirm(
+                            gettext('Do you want to reload the page now?'),
+                            gettext('The page needs to be reloaded to change the language')
+                        )
+                            .then(() => {
+                                resolve(true);
+                            });
+                    }
+                })
+                    .then((reloadPage) => {
+                        scope.error = null;
+                        notify.info(gettext('Saving...'));
+                        return usersService.save(scope.origUser, scope.user)
+                            .then((response) => {
+                                scope.origUser = response;
+                                resetUser(scope.origUser);
+                                notify.pop();
+                                notify.success(gettext('user saved.'));
+                                scope.onsave({user: scope.origUser});
 
-                        if (scope.user._id === session.identity._id) {
-                            session.updateIdentity(scope.origUser);
-                        }
-
-                        userList.clearCache();
-                    }, (response) => {
-                        notify.pop();
-                        if (response.status === 404) {
-                            if ($location.path() === '/users/') {
-                                $route.reload();
-                            } else {
-                                $location.path('/users/');
-                            }
-                            notify.error(gettext('User was not found. The account might have been deleted.'));
-                        } else {
-                            var errorMessage = gettext('There was an error when saving the user account. ');
-
-                            if (response.data && response.data._issues) {
-                                if (angular.isDefined(response.data._issues['validator exception'])) {
-                                    errorMessage = gettext('Error: ' + response.data._issues['validator exception']);
+                                if (scope.user._id === session.identity._id) {
+                                    session.updateIdentity(scope.origUser);
                                 }
 
-                                scope.error = response.data._issues;
-                                scope.error.message = errorMessage;
+                                userList.clearCache();
 
-                                for (var field in response.data._issues) {
-                                    validateField(response, field);
+                                if (reloadPage === true) {
+                                    window.location.reload();
                                 }
-                            }
+                            }, (response) => {
+                                notify.pop();
+                                if (response.status === 404) {
+                                    if ($location.path() === '/users/') {
+                                        $route.reload();
+                                    } else {
+                                        $location.path('/users/');
+                                    }
+                                    notify.error(gettext('User was not found. The account might have been deleted.'));
+                                } else {
+                                    var errorMessage = gettext('There was an error when saving the user account. ');
 
-                            notify.error(errorMessage);
-                        }
+                                    if (response.data && response.data._issues) {
+                                        if (angular.isDefined(response.data._issues['validator exception'])) {
+                                            errorMessage = gettext(
+                                                'Error: ' + response.data._issues['validator exception']
+                                            );
+                                        }
+
+                                        scope.error = response.data._issues;
+                                        scope.error.message = errorMessage;
+
+                                        for (var field in response.data._issues) {
+                                            validateField(response, field);
+                                        }
+                                    }
+
+                                    notify.error(errorMessage);
+                                }
+                            });
                     });
             };
 
