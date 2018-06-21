@@ -1,5 +1,4 @@
 import _ from 'lodash';
-import {itemHasUnresolvedSuggestions, itemHasUnresolvedComments} from '../helpers';
 
 SendItem.$inject = ['$q', 'api', 'desks', 'notify', 'authoringWorkspace',
     'superdeskFlags', '$location', 'macros', '$rootScope', 'deployConfig',
@@ -54,7 +53,7 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
             scope.$watch('item', activateItem);
             scope.$watch(send.getConfig, activateConfig);
 
-            function performPublish() {
+            scope.publish = function() {
                 scope.loading = true;
                 var result = scope._publish();
 
@@ -64,36 +63,6 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                     .finally(() => {
                         scope.loading = false;
                     });
-            }
-
-            scope.publish = function() {
-                if (itemHasUnresolvedSuggestions(scope.item)) {
-                    modal.alert({
-                        headerText: gettext('Resolving suggestions'),
-                        bodyText: gettext(
-                            'Article cannot be published. Please accept or reject all suggestions first.'
-                        ),
-                    });
-                    return;
-                }
-
-                if (itemHasUnresolvedComments(scope.item)) {
-                    modal.confirm({
-                        bodyText: gettext(
-                            'This article contains unresolved comments.'
-                            + 'Click on Cancel to go back to editing to'
-                            + 'resolve those comments or OK to ignore and proceed with publishing'
-                        ),
-                        headerText: gettext('Resolving comments'),
-                        okText: gettext('Ok'),
-                        cancelText: gettext('Cancel'),
-                    }).then((ok) => {
-                        ok && performPublish();
-                    });
-                    return;
-                }
-
-                return performPublish();
             };
 
             function activateConfig(config, oldConfig) {

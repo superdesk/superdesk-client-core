@@ -565,6 +565,36 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
              * in $scope.
              */
             $scope.publish = function(continueOnPublish) {
+                if (helpers.itemHasUnresolvedSuggestions($scope.item)) {
+                    modal.alert({
+                        headerText: gettext('Resolving suggestions'),
+                        bodyText: gettext(
+                            'Article cannot be published. Please accept or reject all suggestions first.'
+                        ),
+                    });
+                    return;
+                }
+
+                if (helpers.itemHasUnresolvedComments($scope.item)) {
+                    modal.confirm({
+                        bodyText: gettext(
+                            'This article contains unresolved comments.'
+                            + 'Click on Cancel to go back to editing to'
+                            + 'resolve those comments or OK to ignore and proceed with publishing'
+                        ),
+                        headerText: gettext('Resolving comments'),
+                        okText: gettext('Ok'),
+                        cancelText: gettext('Cancel'),
+                    }).then((ok) => {
+                        ok && performPublish();
+                    });
+                    return;
+                }
+
+                return performPublish();
+            };
+
+            function performPublish() {
                 if (validatePublishScheduleAndEmbargo($scope.item) && validateForPublish($scope.item)) {
                     var message = 'publish';
 
@@ -589,7 +619,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 }
 
                 return false;
-            };
+            }
 
             $scope.showCustomButtons = function(item) {
                 return item.task && item.task.desk && item.state !== 'draft' || $scope.dirty;
