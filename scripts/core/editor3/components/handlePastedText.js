@@ -5,6 +5,7 @@ import * as Suggestions from '../helpers/suggestions';
 import {sanitizeContent, inlineStyles} from '../helpers/inlineStyles';
 import {getAllCustomDataFromEditor, setAllCustomDataForEditor} from '../helpers/editor3CustomData';
 import {getCurrentAuthor} from '../helpers/author';
+import {htmlComesFromDraftjsEditor} from '../helpers/htmlComesFromDraftjsEditor';
 
 function removeMediaFromHtml(htmlString) {
     const element = document.createElement('div');
@@ -24,14 +25,13 @@ const NOT_HANDLED = 'not-handled';
 /**
  * @ngdoc method
  * @name handlePastedText
- * @param {string} editorKey
  * @param {string} text Text content of paste.
  * @param {string=} _html HTML content of paste.
  * @returns {Boolean} True if this method took paste into its own hands.
  * @description Handles pasting into the editor, in cases where the content contains
  * atomic blocks that need special handling in editor3.
  */
-export function handlePastedText(editorKey, text, _html) {
+export function handlePastedText(text, _html) {
     const author = getCurrentAuthor();
     let html = _html;
 
@@ -57,10 +57,7 @@ export function handlePastedText(editorKey, text, _html) {
         return HANDLED;
     }
 
-    // If there are blocks that have been copied from the host editor, let the editor
-    // handle the paste. The chance of having content both from the editor and from
-    // outside it as a mix in the clipboard is impossible.
-    if (HTMLComesFromEditor(html, editorKey)) {
+    if (htmlComesFromDraftjsEditor(html)) {
         return NOT_HANDLED;
     }
 
@@ -137,15 +134,6 @@ function processPastedHtml(props, html) {
     onChange(nextEditorState);
 
     return HANDLED;
-}
-
-// Checks if the given html contains blocks coming from the editor with
-function HTMLComesFromEditor(html, editorKey) {
-    const tree = $('<div></div>');
-
-    tree.html(html);
-
-    return $(tree).find(`[data-block="true"][data-editor="${editorKey}"]`).length > 0;
 }
 
 // Returns an empty block.

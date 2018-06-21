@@ -436,7 +436,7 @@ export class Editor3Component extends React.Component {
                         }}
                         onTab={onTab}
                         tabIndex={tabindex}
-                        handlePastedText={handlePastedText.bind(this, this.editorKey)}
+                        handlePastedText={handlePastedText.bind(this)}
                         readOnly={locked || readOnly}
                         ref={(editor) => this.handleRefs(editor)}
                     />
