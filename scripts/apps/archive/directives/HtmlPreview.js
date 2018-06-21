@@ -1,6 +1,5 @@
-import {getAnnotations} from 'core/editor3/helpers/editor3CustomData';
-import {META_FIELD_NAME} from '../../../core/editor3/helpers/fieldsMeta';
-import {highlightsConfig} from '../../../core/editor3/highlightsConfig';
+import {getAnnotationsFromItem} from 'core/editor3/helpers/editor3CustomData';
+import {META_FIELD_NAME} from 'core/editor3/helpers/fieldsMeta';
 import ng from 'core/services/ng';
 
 function getAnnotationTypesAsync(scope) {
@@ -20,7 +19,7 @@ function getAllAnnotations(item) {
     const annotations = [];
 
     for (const field in item[META_FIELD_NAME]) {
-        annotations.push(...getAnnotations(item, field, highlightsConfig.ANNOTATION.type));
+        annotations.push(...getAnnotationsFromItem(item, field));
     }
 
     return annotations;
