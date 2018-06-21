@@ -168,24 +168,19 @@
 .swimlane {
     .stage-header {
         background-color: $sd-background;
-        height: 37px;
+        height: 36px;
         margin: 0 3px;
         border-bottom: 4px solid #4d4d4d;
+        padding: 12px 0 4px;
         .stage-header__name {
             flex-grow: 1;
-            box-sizing: border-box;
-            padding-top: 14px;
             @include text-overflow();
         }
         .stage-header__number {
-            margin-top: 16px;
             margin-left: 3px;
         }
-        .stage-header__notification {
-            margin-top: 13px;
-        }
         .stage-header__refresh {
-            margin: 13px 0 0 3px;
+            margin: 0 0 0 3px;
         }
     }
 }

@@ -1,11 +1,18 @@
 <div class="widget-container" ng-controller="AggregateCtrl as agg" ng-init="agg.setWidget(widget)">
+    <div class="widget-header" style="margin-top: 3px;" ng-init="!searchOpen">
+        <button class="widget-header__search-button" ng-click="searchOpen = !searchOpen; agg.search(); query = ''" ng-class="{'widget-header__search-button--active': searchOpen}"><i class="icon-search"></i></button>
+        <div class="widget-title">{{ widget.configuration.label || widget.label | translate}}</div>
+    </div>
     <div class="main-list" 
         ng-class="{wrap: agg.selected && !$root.config.features.customMonitoringWidget, 'custom-widget': $root.config.features.customMonitoringWidget}">
-        <div class="search-box">
-            <input type="text" placeholder="{{ :: 'Search' | translate }}"
-                   ng-model="query"
-                   ng-model-options="{debounce: 500}"
-                   ng-change="agg.search(query)">
+        <div class="search-box" ng-class="{'search-box--hidden': !searchOpen}">
+            <form class="search-box__content">
+                <button type="reset" class="search-cancel" ng-click="agg.search()" ng-if="query"><i class="icon-remove-sign"></i></button>
+                <input type="text" placeholder="{{ :: 'Search' | translate }}"
+                    ng-model="query"
+                    ng-model-options="{debounce: 500}"
+                    ng-change="agg.search(query)">
+            </form>
         </div>
 
         <div class="content-list-holder">

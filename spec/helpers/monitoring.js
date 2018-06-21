@@ -471,10 +471,6 @@ function Monitoring() {
         element(by.css('[ng-click="setPersonalInfo()"]')).click();
     };
 
-    this.switchGlobalSearchOn = function() {
-        element(by.model('showGlobalSavedSearches')).click();
-    };
-
     this.toggleGlobalSearch = function(search) {
         this.getGlobalSearch(search).element(by.css('[ng-click="setSearchInfo(search._id)"]')).click();
     };

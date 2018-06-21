@@ -236,7 +236,6 @@ describe('monitoring', () => {
         browser.sleep(500);
         monitoring.showMonitoringSettings();
         monitoring.nextStages();
-        monitoring.switchGlobalSearchOn();
         monitoring.toggleGlobalSearch(3);
         expect(monitoring.getGlobalSearchText(3)).toBe('global saved search other user by first name1 last name1');
         monitoring.togglePrivateSearch(1);
@@ -671,7 +670,7 @@ describe('monitoring', () => {
         monitoring.toggleStage(0, 4);
         monitoring.nextStages();
         monitoring.nextSearches();
-        monitoring.moveOrderItem(0, 1);
+        monitoring.moveOrderItem(1, 0);
         monitoring.nextReorder();
 
         monitoring.saveSettings();

@@ -40,41 +40,63 @@
         background: #444;
     }
     .widget-header {
-        height: 29px;
-        border-bottom: 1px solid #e7e7e7;
-        line-height: 29px;
+        display: flex;
+        align-items: center;
+        height: 34px;
+        box-shadow: 0 1px 0 0 rgba(0,0,0,.12);
         position: relative;
-        box-sizing: border-box;
-        .widget-icon {
-            width:34px; height: 29px;
-            text-align: center;
-            display: inline-block;
+        z-index: 2;
+        .widget-title {
+            color: #333;
+            padding-left: 8px;
+
+        }
+    }
+    .widget-header__search-button {
+        display: flex;
+        align-items: center;
+        width: 36px;
+        justify-content: center;
+        height: 100%;
+        border-right: 1px solid rgba(123, 123, 123, 0.2);
+        transition: all ease-in-out 0.1s;
+        i {
+            opacity: 0.5;
+            transition: all ease-in-out 0.1s;
+        }
+        &:hover {
             i {
-                vertical-align: middle;
-                color: $gray;
-                margin-top: -3px;
+                opacity: 1;
+                //transition: all ease-in-out 0.1s;
             }
         }
-        .widget-title {
-            line-height: 29px;
-            color: #333;
-            position: absolute;
-            left: 34px;
-            right: 40px;
-            top:0;
-            bottom: 0;
+        &:active {
+            i {
+                opacity: 1;
+                color: $sd-blue;
+                //transition: all ease-in-out 0.1s;
+            }
         }
-
+        &--active {
+            background-color:  $sd-blue;
+            i {
+                opacity: 0.5;
+                color: $white;
+            }
+        }
     }
     .widget-content {
         position: absolute;
-        left:0; right: 0; bottom: 0; top:33px;
+        left:0;
+        right: 0; 
+        bottom: 0; 
+        top: 38px;
         overflow-y: hidden;
         .activity-list.card-list>li {
-            @include box-shadow(0 1px 0 0 rgba(0,0,0,.12));
-            @include border-radius(0);
+            box-shadow: 0 1px 4px 0 rgba(0,0,0,.12), 0 0 1px 0 rgba(0,0,0,.2);
+            @include border-radius(2px);
             &:hover {
-                @include box-shadow(0 1px 0 0 rgba(0,0,0,.12) !important);
+                box-shadow: 0 1px 4px 0 rgba(0,0,0,.12), 0 0 1px 0 rgba(0,0,0,.2);
             }
         }
     }
@@ -84,26 +106,13 @@
     }
     .widget-settings {
         position: absolute;
-        top : 3px;
-        right: 0;
+        top : 6px;
+        right: 4px;
         line-height: 14px;
-        width: 29px;
-        height: 29px;
+        width: 28px;
+        height: 28px;
         text-align: center;
-        z-index: 1;
-        .single-btn {
-            width: 21px;
-            height: 21px;
-            display: block;
-            margin-top: 2px;
-            @include border-radius(2px);
-            &:hover {
-                background: #aaa;
-            }
-            i {
-                margin-top: 2px;
-            }
-        }
+        z-index: 3;
         .dropdown__toggle {
             margin-top: 4px;
             i {
@@ -139,6 +148,23 @@
                 @include opacity(40);
             }
         }
+    }
+
+    ::-webkit-scrollbar {
+        border-left: 4px solid $background-main !important;
+        border-right: 1px solid $background-main !important;
+        width: 8px !important;
+        background: $background-main !important;
+    }
+    ::-webkit-scrollbar-track {
+        background: $background-main !important;
+        border-left: 3px solid $background-main !important;
+        &:hover {
+            background: rgba(0,0,0,.05) !important;
+        }
+    }
+    ::-webkit-scrollbar-thumb {
+        border-left: 3px solid $background-main !important;
     }
 }
 
