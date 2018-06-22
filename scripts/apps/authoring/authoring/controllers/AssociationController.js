@@ -196,7 +196,8 @@ export function AssociationController(config, send, api, $q, superdesk,
 
         if (item.renditions && item.renditions.original && self.isImage(item.renditions.original)) {
             scope.loading = true;
-            return renditions.crop(item, {isNew: false, editable: scope.editable, isAssociated: true})
+            return renditions.crop(item, {isNew: false, editable: scope.editable, isAssociated: true,
+                defaultTab: 'crop', showMetadata: true})
                 .then((rendition) => {
                     self.updateItemAssociation(scope, rendition, customRel, callback);
                 })
