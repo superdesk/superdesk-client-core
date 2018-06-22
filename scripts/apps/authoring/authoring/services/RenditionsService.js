@@ -80,7 +80,7 @@ export function RenditionsService(metadata, $q, api, superdesk, _) {
                 poi: clonedPicture.poi || {x: 0.5, y: 0.5},
                 showAoISelectionButton: true,
                 showMetadataEditor: true,
-                isNew: options.isNew || true,
+                isNew: 'isNew' in options ? options.isNew : true,
                 isAssociated: options.isAssociated || false,
                 editable: options.editable || true,
                 defaultTab: options.defaultTab || false,
