@@ -38,6 +38,12 @@ describe('users', () => {
             userPrefs.setLang('Deutsch');
             browser.wait(() => userPrefs.btnSave.isDisplayed(), 3000);
             userPrefs.btnSave.click();
+
+            browser.sleep(500); // wait for modal
+            // click modal confirm to reload
+            element(by.css('.modal__dialog .btn--primary')).click();
+            browser.sleep(2000); // wait for reload
+
             element(by.css('[ng-hide="currentRoute.topTemplateUrl"]')).getText().then((text) => {
                 expect(text).toEqual('Mein Profil');
             });
