@@ -8,8 +8,8 @@
       <div sd-item-searchbar class="searchbar-flex-handler"></div>
       <div sd-contacts-sort-bar data-total="total" class="sortbar-flex-handler"></div>
       <div class="view-select">
-          <button title="{{ :: 'Switch to grid view' | translate }}" ng-show="view !== 'photogrid'" ng-click="setView('photogrid')"><i class="icon-th"></i></button>
-          <button title="{{ :: 'Switch to list view' | translate }}" ng-show="view !== 'compact'" ng-click="setView('compact')"><i class="icon-th-list"></i></button>
+          <button sd-tooltip="{{ :: 'Switch to grid view' | translate }}" flow="left" ng-show="view !== 'photogrid'" ng-click="setView('photogrid')"><i class="icon-th"></i></button>
+          <button sd-tooltip="{{ :: 'Switch to list view' | translate }}" flow="left" ng-show="view !== 'compact'" ng-click="setView('compact')"><i class="icon-th-list"></i></button>
       </div>
       <div ng-if="privileges.contacts"
         sd-tooltip="{{ :: 'Create contact' | translate }}" flow="left">

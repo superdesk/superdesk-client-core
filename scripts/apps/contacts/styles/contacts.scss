@@ -233,6 +233,7 @@
     i {
         color: $white;
     }
+    z-index: 1;
 }
 
 .contact-header__container {
@@ -253,5 +254,11 @@
     padding: 2rem;
     .sd-grid-list--small-margin {
         margin: 0;
+    }
+
+    .list-item-view {
+        &.inactive {
+            opacity: 0.5;
+        }
     }
 }
