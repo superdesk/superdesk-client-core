@@ -7,7 +7,7 @@
 
      <!-- picture preview -->
     <div class="full-preview" ng-if="item.type == 'picture' || item.type == 'graphic'" sd-ratio-calc>
-        <div class="rendition" sd-item-rendition data-item="item" data-ratio="ratio" data-rendition="viewImage"></div>
+        <div class="rendition" sd-item-rendition data-item="item" data-ratio="ratio" data-rendition="original"></div>
     </div>
 
     <!-- text preview -->
@@ -25,9 +25,6 @@
     <div class="full-preview composite" ng-show="item.type == 'composite'">
         <div sd-package data-item="item" data-mode="flat" data-setitem="setitem({selected: selected})"></div>
     </div>
-
+    
     <div class="lightbox-caption">{{ item.headline }}</div>
-
 </div>
-
-

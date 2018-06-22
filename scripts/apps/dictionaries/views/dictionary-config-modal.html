@@ -1,9 +1,9 @@
 <form name="editForm">
     <div sd-modal data-model="dictionary" data-close="cancel()">
-        <div class="modal__header">
-            <a href="" class="close" ng-click="cancel()"><i class="icon-close-small"></i></a>
+        <div class="modal__header modal__header--flex">
             <h3 class="modal__heading" ng-show="!dictionary._id" translate>Add New {{(isAbbreviations() ? 'Abbreviations' : '') | translate}} Dictionary</h3>
             <h3 class="modal__heading" ng-show="dictionary._id" translate>Edit {{(isAbbreviations() ? 'Abbreviations' : '') | translate}} Dictionary</h3>
+            <a href="" class="icn-btn close" ng-click="cancel()"><i class="icon-close-small"></i></a>
         </div>
 
         <div class="modal__body">
@@ -13,36 +13,35 @@
 
             <ng-form name="dictionaryForm">
                 <fieldset>
-                    <div class="field">
-                        <label class="right">
-                            {{ :: 'Active' | translate }}
-                            <span sd-switch ng-model="dictionary.is_active"></span>
-                        </label>
+                    <div class="form__row">
+                        <span sd-switch ng-model="dictionary.is_active"></span>
+                        <label>{{ :: 'Active' | translate }}</label>
                     </div>
-                    <div class="field">
-                        <label for="dict-name" translate>Dictionary name</label>
-                        <input id="dict-name" type="text" ng-if="!dictionary.user" ng-model="dictionary.name" required>
-                        <div ng-if="dictionary.user">{{ :: (!isAbbreviations() ? 'Personal' : 'Abbreviations') | translate}}</div>
+                    <div class="sd-line-input sd-line-input--required sd-line-input--boxed" ng-class="{'sd-line-input--invalid' : _errorUniqueness && !dictionary.user}">
+                        <label for="dict-name" class="sd-line-input__label">{{'Dictionary name' | translate}}</label>
+                        <input id="dict-name" class="sd-line-input__input" type="text" ng-if="!dictionary.user" ng-model="dictionary.name" required>
+                        <input class="sd-line-input__input" type="text" ng-if="dictionary.user" value="{{ :: (!isAbbreviations() ? 'Personal' : 'Abbreviations') | translate}}" disabled>
+                        <div ng-show="_errorUniqueness && !dictionary.user" class="sd-line-input__message"><span translate>Dictionary with name "{{ dictionary.name}}" already exists.</span></div>
                     </div>
-                    <div class="field">
-                        <label for="dict-lang-code" translate>Language code</label>
-                        <input id="dict-lang-code" type="text" ng-model="dictionary.language_id" required>
+                    <div class="sd-line-input sd-line-input--required" ng-class="{'sd-line-input--invalid' : _errorUniqueness && dictionary.user}">
+                        <label class="sd-line-input__label" for="dict-lang-code">{{'Language code' | translate}}</label>
+                        <input class="sd-line-input__input" id="dict-lang-code" type="text" ng-model="dictionary.language_id" required>
+                        <div ng-show="_errorUniqueness && dictionary.user" class="sd-line-input__message"><span translate>Personal dictionary for language "{{ dictionary.language_id}}" already exists.</span></div>
                     </div>
-                    <div class="field" ng-if="!isAbbreviations()">
-                        <label for="dict-file" translate>Dictionary file</label>
+                    <div class="sd-line-input" ng-if="!isAbbreviations()">
+                        <label class="sd-line-input__label" for="dict-file">{{'Dictionary file' | translate}}</label>
                         <input id="dict-file"
                                name="upload"
                                type="file"
+                               class="sd-line-input__input"
                                accept="text/plain"
                                file-upload
                                ng-model="file"
                                sd-file-type-validator>
-                        <div class="error" ng-show="editForm.$error.fileType" translate>Please use plain text dictionary.</div>
+                        <div class="sd-line-input__message error" ng-show="editForm.$error.fileType">{{'Please use plain text dictionary. | translate'}}</div>
                     </div>
                 </fieldset>
                 <p ng-if="message">{{ message}}</p>
-                <span ng-show="_errorUniqueness && !dictionary.user"><span translate>Dictionary with name "{{ dictionary.name}}" already exists.</span></span>
-                <span ng-show="_errorUniqueness && dictionary.user"><span translate>Personal dictionary for language "{{ dictionary.language_id}}" already exists.</span></span>
                 <p ng-show="_errorLimits" translate>Character limit exceeded, dictionary can not be created/updated.</p>
                 <span ng-show="_error" translate>There was a problem, dictionary not created/updated.</span>
             </ng-form>
@@ -50,14 +49,15 @@
             <ng-form ng-if="dictionary._id && !isAbbreviations()">
                 <fieldset>
                     <label for="words-search">{{ :: 'Search' | translate }} (<span translate translate-n="wordsCount" translate-plural="{{ $count}} words">{{ wordsCount}} word</span>)</label>
-                    <div class="multiple">
-                        <div class="field">
-                            <input id="words-search"
-                                   type="text"
-                                   ng-model="search"
-                                   ng-model-options="{debounce: 500}"
-                                   ng-change="filterWords(search)"
-                                   />
+                    <div class="form__row form__row--flex form__row--no-padding">
+                        <div class="sd-line-input sd-line-input--no-label sd-line-input--no-margin">
+                                <input id="words-search"
+                                type="text"
+                                class="sd-line-input__input"
+                                ng-model="search"
+                                ng-model-options="{debounce: 500}"
+                                ng-change="filterWords(search)"
+                                />
                         </div>
                         <button class="btn flex-field no-shrink"
                                 type="submit"
@@ -70,7 +70,7 @@
                         {{words.length}}
                         <li ng-repeat="word in words track by word">
                             {{ :: word}}
-                            <button class="btn btn--small btn--icon-only btn--hollow pull-right"
+                            <button class="icn-btn"
                                     ng-click="removeWord(word, search)">
                                 <i class="icon-trash"></i>
                             </button>
@@ -79,36 +79,43 @@
                 </fieldset>
             </ng-form>
             <ng-form name="abbreviationsForm" ng-if="isAbbreviations()">
-                <fieldset>
-                    <div class="field">
-                        <label for="abbreviation" translate>Abbreviation</label>
-                        <input id="abbreviation" type="text" ng-model="abbreviation.key" required>
+                <fieldset class="form__block form__block--light">
+                    <div class="sd-line-input">
+                        <label class="sd-line-input__label" for="abbreviation" translate>Abbreviation</label>
+                        <input class="sd-line-input__input" id="abbreviation" type="text" ng-model="abbreviation.key" required>
                     </div>
-                    <div class="field">
-                        <label for="phrase" translate>Phrase</label>
-                        <input id="phrase" type="text" ng-model="abbreviation.phrase" required>
+                    <div class="sd-line-input">
+                        <label class="sd-line-input__label" for="phrase" translate>Phrase</label>
+                        <input class="sd-line-input__input" id="phrase" type="text" ng-model="abbreviation.phrase" required>
                     </div>
-                    <button class="btn flex-field no-shrink"
-                            ng-click="addAbbreviation()"
-                            ng-disabled="abbreviationsForm.$invalid"
-                            translate>ADD ABBREVIATION</button>
+                    <div class="sd-text__right">
+                        <button class="btn btn--hollow btn--"
+                                ng-click="addAbbreviation()"
+                                ng-disabled="abbreviationsForm.$invalid"
+                                translate>Add Abbreviation</button>
+                    </div>
+
                 </fieldset>
-                <div class="divider"></div>
+                
                 <div class="abbreviations-list" ng-if="abbreviationKeys.length">
-                    <div class="field abbreviations-field">
-                        <label>{{ :: 'Abbreviation' | translate}}</label>
-                    </div>
-                    <div class="field abbreviations-field">
-                        <label>{{ :: 'Phrase' | translate}}</label>
-                    </div>
-                    <div ng-repeat="key in abbreviationKeys track by key">
-                        <div class="field abbreviations-field">
-                            <label class="case-sensitive">{{key}}</label>
+                    <div class="abbreviations-list__item abbreviations-list__item--heading">
+                        <div class="abbreviations-field">
+                            <label>{{ :: 'Abbreviation' | translate}}</label>
                         </div>
-                        <div class="field abbreviations-field">
-                            <input type="text" ng-model="dictionary.content[key]" >
+                        <div class="abbreviations-field">
+                            <label>{{ :: 'Phrase' | translate}}</label>
                         </div>
-                        <button class="btn btn--light btn--mini pull-right"
+                    </div>
+                    <div class="abbreviations-list__item" ng-repeat="key in abbreviationKeys track by key">
+                        <div class="abbreviations-field abbreviations-field--abbreviation">
+                            <label>{{key}}</label>
+                        </div>
+                        <div class="abbreviations-field abbreviations-field--grow">
+                            <div class="sd-line-input sd-line-input--no-margin sd-line-input--no-label sd-line-input--boxed sd-line-input--required">
+                                <input type="text" ng-model="dictionary.content[key]" class="long-name sd-line-input__input">
+                            </div>
+                        </div>
+                        <button class="icn-btn"
                                 ng-click="removeAbbreviation(key)">
                             <i class="icon-small icon-trash"></i>
                         </button>

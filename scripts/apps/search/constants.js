@@ -70,9 +70,6 @@ export const DEFAULT_LIST_CONFIG = {
 
 export const DEFAULT_GRID_VIEW_FIELDS_CONFIG = [
     'source',
-    'usageterms',
-
-
 ];
 
 /**
