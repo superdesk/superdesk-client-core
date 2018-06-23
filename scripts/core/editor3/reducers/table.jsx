@@ -1,6 +1,7 @@
-import {EditorState} from 'draft-js';
+import {EditorState, Modifier} from 'draft-js';
 import {onChange} from './editor3';
 import insertAtomicBlockWithoutEmptyLines from '../helpers/insertAtomicBlockWithoutEmptyLines';
+import {createBlockSelection} from '../helpers/selection';
 
 /**
  * @description Contains the list of table related reducers.
@@ -156,16 +157,26 @@ const processCells = (state, fn) => {
     const {i, j, key} = activeCell;
     const contentState = editorState.getCurrentContent();
     const block = contentState.getBlockForKey(key);
-    const entityKey = block.getEntityAt(0);
-    const entity = contentState.getEntity(entityKey);
-    const {cells, numRows, numCols, withHeader} = entity.getData().data;
-    const newContentState = contentState.mergeEntityData(entityKey, {
-        data: fn(cells, numCols, numRows, i, j, withHeader),
-    });
+    const {cells, numRows, numCols, withHeader} = getData(contentState, block);
+    const data = fn(cells, numCols, numRows, i, j, withHeader);
+    const selection = createBlockSelection(editorState, block);
+    const newContentState = Modifier.setBlockData(contentState, selection, {data: JSON.stringify(data)});
     const newEditorState = EditorState.push(editorState, newContentState, 'change-block-data');
     const entityDataHasChanged = true;
 
     return onChange(state, newEditorState, entityDataHasChanged);
+};
+
+const getData = (contentState, block) => {
+    const entityKey = block.getEntityAt(0);
+    const entity = contentState.getEntity(entityKey);
+    const {data} = entity.getData();
+
+    if (block.getData().get('data')) {
+        return JSON.parse(block.getData().get('data'));
+    }
+
+    return data;
 };
 
 /**

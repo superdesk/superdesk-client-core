@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {getSelectedEntityType, getSelectedEntityRange} from '../links/entityUtils';
-import {Editor, RichUtils, getDefaultKeyBinding} from 'draft-js';
+import {Editor, EditorState, RichUtils, getDefaultKeyBinding} from 'draft-js';
 
 /**
  * @ngdoc React
@@ -30,11 +30,33 @@ export class TableCell extends Component {
      * @description DraftJS key binding function.
      */
     keyBindingFn(e) {
+        if (e.ctrlKey && e.key === 'z') {
+            return 'parent-undo';
+        }
+
         if (e.ctrlKey && e.key === 'l') {
             return 'toggle-link';
         }
 
         return getDefaultKeyBinding(e);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        const {editorState} = this.state;
+        const selection = editorState.getSelection();
+
+        if (selection == null || !selection.getHasFocus()) {
+            this.setState({
+                editorState: nextProps.editorState,
+            });
+            return;
+        }
+
+        const nextEditorState = EditorState.forceSelection(nextProps.editorState, selection);
+
+        this.setState({
+            editorState: nextEditorState,
+        });
     }
 
     /**
@@ -46,6 +68,12 @@ export class TableCell extends Component {
     handleKeyCommand(command) {
         const {editorState} = this.state;
         let newState;
+
+        if (command === 'parent-undo') {
+            this.props.onUndo();
+
+            return 'handled';
+        }
 
         if (command === 'toggle-link') {
             newState = getSelectedEntityType(this.state.editorState) === 'LINK'
@@ -119,8 +147,10 @@ export class TableCell extends Component {
      * @description Triggered on changes to the cell's state.
      */
     onChange(editorState) {
-        this.setState({editorState});
-        this.props.onChange(editorState);
+        this.setState(
+            {editorState},
+            () => this.props.onChange(editorState)
+        );
     }
 
     render() {
@@ -145,5 +175,6 @@ TableCell.propTypes = {
     editorState: PropTypes.object.isRequired,
     readOnly: PropTypes.bool.isRequired,
     onChange: PropTypes.func.isRequired,
+    onUndo: PropTypes.func.isRequired,
     onFocus: PropTypes.func.isRequired,
 };

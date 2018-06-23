@@ -6,3 +6,4 @@ export {
     hasNextSelection,
 } from './selectionIterator';
 export {collapseSelection} from './collapseSelection';
+export {createBlockSelection} from './createBlockSelection';
