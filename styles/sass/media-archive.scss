@@ -681,7 +681,10 @@ $sfbox_mediaMaxWidth : 172px;
     }
     .item-right {
         top: auto;
-        height: 31px;
+        height: 1.8rem;
+        width: 2.4rem;
+        margin-right: 1rem;
+        position: relative;
         .more-activity-toggle {
             background: none;
         }

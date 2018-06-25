@@ -1,48 +1,50 @@
 <div sd-modal data-model="modalActive" data-close="cancel()">
-
-    <div class="modal__header">
-        <a href="" class="close" ng-click="cancel()"><i class="icon-close-small"></i></a>
+    <div class="modal__header modal__header--flex">
         <h3 class="modal__heading" ng-show="!configEdit._id" translate>Create highlight configuration</h3>
         <h3 class="modal__heading" ng-show="configEdit._id" translate>Edit "{{configEdit.name}}" highlight</h3>
+        <a href="" class="close icn-btn" ng-click="cancel()"><i class="icon-close-small"></i></a>
     </div>
     <div class="modal__body">
         <form name="highlightForm">
             <fieldset>
-                <span class="pull-right" sd-character-count data-item="configEdit.name" data-limit="limits.highlight"></span>
-                <div class="field">
-                    <label translate>Configuration name</label>
-                    <input type="text" class="fullwidth-input" ng-model="configEdit.name"  ng-keyup="handleEdit($event);" required>
-                    <p ng-show="_errorLimits" translate>Character limit exceeded, highlight can not be created/updated.</p>
-                    <span ng-show="_errorUniqueness"><span translate>Highlight with name</span> "{{ configEdit.name }}" <span translate>already exists</span>.</span>
+                <div class="sd-line-input sd-line-input--required sd-line-input--boxed" ng-class="{'sd-line-input--invalid' : _errorUniqueness || _errorLimits}">
+                        <label class="sd-line-input__label">{{'Configuration name' | translate}}</label>
+                        <input class="sd-line-input__input" type="text"  ng-model="configEdit.name"  ng-keyup="handleEdit($event);" required>
+                        <div class="sd-line-input__char-count" sd-character-count data-item="configEdit.name" data-limit="limits.highlight"></div>
+                        <div ng-show="_errorLimits" class="sd-line-input__message sd-line-input__message--with-char-count"><span translate>Character limit exceeded, highlight can not be created/updated.</span></div>
+                        <div ng-show="_errorUniqueness" class="sd-line-input__message"><span translate>Highlight with name</span> "{{ configEdit.name }}" <span translate>already exists</span>.</div>
+                    </div>
+
+                <div class="sd-line-input sd-line-input--is-select">
+                    <label class="sd-line-input__label">{{'Template' | translate}}</label>
+                    <select class="sd-line-input__select"ng-model="configEdit.template" name="template" id="template">
+                            <option id="default" value="" ng-selected="!configEdit.template" translate>default template</option>
+                            <option id="{{template.template_name}}" ng-repeat="template in templates" value="{{template._id}}" ng-selected="configEdit.template === template._id">{{ template.template_name }}</option>
+                    </select>
                 </div>
-                <div class="field">
-                    <label translate>Template</label>
-                    <select ng-model="configEdit.template" name="template" id="template">
-                         <option id="default" value="" ng-selected="!configEdit.template" translate>default template</option>
-                         <option id="{{template.template_name}}" ng-repeat="template in templates" value="{{template._id}}" ng-selected="configEdit.template === template._id"
-                         >{{ template.template_name }}</option>
-                     </select>
-                </div>
-                <div class="field">
-                    <label translate>Assigned desks</label>
+
+                <div class="form__row">
+                    <label class="form-label form__row-label">{{'Assigned desks' | translate}}</label>
                     <div class="multi-select">
-                        <ul>
-                            <li ng-repeat="desk in assignedDesks">
+                        <ul class="simple-list simple-list--dotted simple-list--no-padding">
+                            <li ng-repeat="desk in assignedDesks" class="simple-list__item">
                                 <span sd-check ng-model="desk.included"></span>
                                 <span class="text" ng-click="desk.included = !desk.included">{{desk.name}}</span>
                             </li>
                         </ul>
                     </div>
                 </div>
-                <div class="field" title="{{ :: 'When creating a highlights package' | translate }}">
-                    <label translate>Automatically insert items from</label>
-                    <select ng-model="configEdit.auto_insert">
+
+                <div class="sd-line-input sd-line-input--is-select" title="{{ :: 'When creating a highlights package' | translate }}">
+                    <label class="sd-line-input__label">{{'Automatically insert items from' | translate}}</label>
+                    <select class="sd-line-input__select" ng-model="configEdit.auto_insert">
                         <option value="{{ :: auto.day }}" ng-selected="configEdit.auto_insert === auto.day" translate>Today</option>
                         <option value="{{ :: auto.week }}" ng-selected="configEdit.auto_insert === auto.week" translate>This week</option>
                         <option ng-repeat="hour in hours"
                             value="{{ :: getHourVal(hour) }}"
                             ng-selected="configEdit.auto_insert === getHourVal(hour)"><span translate>Last</span> {{ hour }} <span translate>hours</span></option>
                     </select>
+                    <span class="sd-line-input__hint">{{ :: 'When creating a highlights package' | translate }}</span>
                 </div>
             </fieldset>
             <p ng-if="message">{{ message }}</p>

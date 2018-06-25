@@ -135,16 +135,19 @@ input[type="submit"] {
 }
 
 // Set the height of select and file controls to match text inputs
-select,
-input[type="file"] {
+select {
     height: 28px; /* In IE7, the height of the select element cannot be changed by height, only font-size */
     line-height: 28px;
 }
+input[type="file"] {
+    height: 28px;
+    padding-top: 4px;
+    font-size: 13px;
+}
+
 
 // Reset line-height for IE
-input[type="file"] {
-    line-height: 18px \9;
-}
+
 
 // Chrome on Linux and Mobile Safari need background-color
 select {
@@ -672,9 +675,10 @@ form, ng-form {
     label {
         font-size: 11px;
         @include text-semibold();
-        color: $grayLight;
+        color: $grayText;
         text-transform: uppercase;
         height: 18px;
+        letter-spacing: 0.08em;
         &.inline-label {
             color: #333;
             text-transform: none;
@@ -683,6 +687,7 @@ form, ng-form {
             display: inline-block;
             margin-right: 20px;
             font-weight: 400;
+            letter-spacing: normal;
         }
     }
 }
