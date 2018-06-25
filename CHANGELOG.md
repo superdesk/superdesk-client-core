@@ -1,5 +1,52 @@
 # Superdesk Client Changelog
 
+## [1.21.0] 2018-06-25
+
+### Fixed
+
+- Support undo on table editing.
+- Esc key does not exit any of the modals.
+- Format is removed when subscript or superdesk is copied and pasted to editor3.
+- Show multi media items on item preview.
+- Disable drag for mouse and touch on media carousel.
+- Handle places with qcode in geonames places component.
+- Display commented text on unresolved comments inside widget.
+- It is not possible to edit video embed code.
+- Fix photo grid view.
+- Prevent the reset of custom data on paste.
+- Allow comment author to edit his reply.
+- Truncate content in suggestion widget.
+- Fix missing expand icon in preview.
+- Change background color for spaces in remove suggestions to red.
+- Improve visibility of the word character count in authoring.
+- Fix annotations editing.
+- Fix labels in the editor not being translatable.
+- Fix removing of insert suggestion when part of the inserted text is deleted.
+- Fix scheduled label text in item lists.
+- Fix reset highlight data on regular paste in editor3.
+- After pressing submit/cancel when editing embed code the cursor jumps to the beginning of the body.
+- Improve positioning of editor popups.
+
+### Added
+
+- Add width config to metadata settings.
+- Create tooltips for organisation and personal media contacts icons.
+- Add image editor UI.
+- Add new fields to authors profile.
+- Configure feed parser restrictions for certain feed services in ingest.
+
+### Changed
+
+- Settings page UI improvements.
+- Dashboard widgets UI improvements.
+- On correction if there are any suggestions inform user and let him confirm the action.
+- Improve numbering and showing annotations in the preview.
+- Rename Monitoring widget to Monitor.
+- Update Norwegian translation.
+- Update pot file for superdesk.
+- Media Contants UI refactoring.
+- Update UI framework version.
+
 ## [1.20.0] 2018-06-11
 
 ### Fixed
