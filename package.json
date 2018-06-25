@@ -33,7 +33,7 @@
     "angular-dynamic-locale": "0.1.32",
     "angular-embed": "superdesk/angular-embed#d75968e",
     "angular-embedly": "Urigo/angular-embedly#0.0.8",
-    "angular-gettext": "2.3.10",
+    "angular-gettext": "tomaskikutis/angular-gettext#master",
     "angular-history": "decipherinc/angular-history#v0.8.0",
     "angular-i18n": "1.6.9",
     "angular-mocks": "1.6.9",
