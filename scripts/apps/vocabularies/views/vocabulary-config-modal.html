@@ -5,7 +5,7 @@
 
             <h3 class="modal__heading" ng-show="vocabulary._id"><span translate>Edit</span> {{ vocabulary.display_name | translate }}</h3>
             <h3 class="modal__heading" ng-show="!vocabulary._id"><span translate>Create</span></h3>
-        </div>       
+        </div>
         <div class="modal__body">
             <ng-form name="vocabularyForm" class="vocabularyForm">
 
@@ -33,6 +33,14 @@
                     type="text"
                     ng-model="vocabulary.display_name"
                     required>
+            </div>
+
+            <div class="sd-line-input sd-line-input--boxed">
+                <label for="cv_popup_width" class="sd-line-input__label" translate>Width of the popup window (in pixels)</label>
+                <input id="cv_popup_width" class="sd-line-input__input"
+                    type="number"
+                    min="1"
+                    ng-model="vocabulary.popup_width">
             </div>
 
             <div class="sd-line-input" ng-class="{'sd-line-input--invalid': vocabularyForm.$error.maxlength}">
