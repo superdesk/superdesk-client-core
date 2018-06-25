@@ -428,7 +428,7 @@ export class Editor3Component extends React.Component {
 
                             const selectionRect = getVisibleSelectionRect(window);
 
-                            if (selectionRect != null) {
+                            if (this.editorNode != null && selectionRect != null) {
                                 this.editorNode.dataset.editorSelectionRect = JSON.stringify(selectionRect);
                             }
 

@@ -5,7 +5,8 @@ import * as actions from '../../actions';
 import {connect} from 'react-redux';
 import {TableCell} from '.';
 import {LinkDecorator} from '../links/LinkDecorator';
-import {ContentState, EditorState, CompositeDecorator, convertToRaw, convertFromRaw} from 'draft-js';
+import {Modifier, ContentState, EditorState, CompositeDecorator, convertToRaw, convertFromRaw} from 'draft-js';
+import {createBlockSelection} from '../../helpers/selection';
 
 /**
  * @ngdoc React
@@ -36,16 +37,19 @@ export class TableBlockComponent extends Component {
      * block.
      */
     setCell(row, col, cellState) {
-        const cellContentState = cellState.getCurrentContent();
-        const data = this.data();
         const {block, contentState, editorState, parentOnChange} = this.props;
         const entityKey = block.getEntityAt(0);
+        const cellContentState = cellState.getCurrentContent();
+        const data = this.data();
+        let forceUpdate = true;
 
         if (!data.cells[row]) {
             data.cells[row] = [];
         }
 
-        let forceUpdate = true;
+        if (JSON.stringify(data.cells[row][col]) === JSON.stringify(convertToRaw(cellContentState))) {
+            return;
+        }
 
         if (data.cells[row][col]) {
             forceUpdate = convertFromRaw(data.cells[row][col]).getPlainText() !== cellContentState.getPlainText();
@@ -53,14 +57,16 @@ export class TableBlockComponent extends Component {
 
         data.cells[row][col] = convertToRaw(cellContentState);
 
-        const updatedContentState = contentState.replaceEntityData(entityKey, {data});
-        const updatedEditorState = EditorState.push(
+        const lastChangeType = cellState.getLastChangeType();
+        const selection = createBlockSelection(editorState, block);
+        const newContentState = Modifier.setBlockData(contentState, selection, {data: JSON.stringify(data)});
+        const newStateState = EditorState.push(
             editorState,
-            updatedContentState,
-            'apply-entity'
+            newContentState.replaceEntityData(entityKey, {data}),
+            lastChangeType
         );
 
-        parentOnChange(updatedEditorState, forceUpdate);
+        parentOnChange(newStateState, forceUpdate);
     }
 
     /**
@@ -97,6 +103,10 @@ export class TableBlockComponent extends Component {
         const entity = contentState.getEntity(entityKey);
         const {data} = entity.getData();
 
+        if (block.getData().get('data')) {
+            return JSON.parse(block.getData().get('data'));
+        }
+
         return data;
     }
 
@@ -110,6 +120,13 @@ export class TableBlockComponent extends Component {
     // onMouseDown is used in the main editor to set focus and stop table editing
     onMouseDown(event) {
         event.stopPropagation();
+    }
+
+    onUndo() {
+        const {editorState, parentOnChange} = this.props;
+        const newEditorState = EditorState.undo(editorState);
+
+        parentOnChange(newEditorState, false);
     }
 
     render() {
@@ -132,6 +149,7 @@ export class TableBlockComponent extends Component {
                                         readOnly={this.props.readOnly}
                                         editorState={this.getCell(i, j)}
                                         onChange={this.setCell.bind(this, i, j)}
+                                        onUndo={this.onUndo.bind(this)}
                                         onFocus={this.onFocus.bind(this, i, j)} />
                                 )}
                             </tr>
