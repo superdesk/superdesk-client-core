@@ -33,11 +33,9 @@ export default angular.module('superdesk.core.translate', [
                     gettextCatalog.setCurrentLanguage(gettextCatalog.baseLanguage);
                 }
 
-                // load translations - do it async in order to avoid digest errors on missing translations
+                // load translations synchronously(blocking) in order to prevent caching of default strings
                 if (gettextCatalog.currentLanguage !== 'en') {
-                    setTimeout(() => {
-                        gettextCatalog.loadRemote('languages/' + gettextCatalog.currentLanguage + '.json');
-                    }, 100);
+                    gettextCatalog.loadRemoteSync('languages/' + gettextCatalog.currentLanguage + '.json');
                 }
 
                 // set locale for date/time management
