@@ -37,7 +37,6 @@ export default angular.module('superdesk.core.translate', [
                 if (gettextCatalog.currentLanguage !== 'en') {
                     setTimeout(() => {
                         gettextCatalog.loadRemote('languages/' + gettextCatalog.currentLanguage + '.json');
-                        gettextCatalog.loadRemote('languages/planning/' + gettextCatalog.currentLanguage + '.json');
                     }, 100);
                 }
 
