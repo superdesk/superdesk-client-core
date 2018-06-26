@@ -1,3 +1,4 @@
+export {type} from './type';
 export {headline} from './headline';
 export {slugline} from './slugline';
 export {wordcount} from './wordcount';
