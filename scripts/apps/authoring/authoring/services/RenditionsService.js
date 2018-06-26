@@ -75,13 +75,11 @@ export function RenditionsService(metadata, $q, api, superdesk, _) {
             }
 
             const cropOptions = { // default options
-                ...{
-                    isNew: true,
-                    isAssociated: false,
-                    editable: true,
-                    defaultTab: false,
-                    showMetadata: false,
-                },
+                isNew: true,
+                isAssociated: false,
+                editable: true,
+                defaultTab: false,
+                showMetadata: false,
                 ...options,
             };
 
