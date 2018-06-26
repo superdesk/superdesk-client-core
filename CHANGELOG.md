@@ -1,5 +1,12 @@
 # Superdesk Client Changelog
 
+## [1.21.1] 2018-06-26
+
+### Fixed
+
+- Correcty assign default crop options to fix editing media in body.
+- Make links in editor2 blue again.
+
 ## [1.21.0] 2018-06-25
 
 ### Fixed
