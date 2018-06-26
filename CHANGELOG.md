@@ -1,5 +1,13 @@
 # Superdesk Client Changelog
 
+## [1.20.2] 2018-06-26
+
+### Fixed
+
+- Fixed selected item styles in dropdown.
+- Fixed missing confirm info when spiking.
+- Fixed old translations used in planning.
+
 ## [1.20.1] 2018-06-26
 
 ### Fixed
