@@ -262,7 +262,7 @@ describe('content', () => {
                 $rootScope.$digest();
 
                 expect(modal.confirm).toHaveBeenCalledWith('This item is linked to in-progress ' +
-                    'planning coverage, spike anyway?');
+                    'planning coverage, spike anyway?', 'Confirm');
                 expect(spike.spike).toHaveBeenCalled();
             }));
 
@@ -283,7 +283,7 @@ describe('content', () => {
                 activityService.start(superdesk.activities.spike, {data: {item: item}});
                 $rootScope.$digest();
 
-                expect(modal.confirm).toHaveBeenCalledWith('Are you sure you want to spike the item?');
+                expect(modal.confirm).toHaveBeenCalledWith('Are you sure you want to spike the item?', 'Confirm');
                 expect(spike.spike).toHaveBeenCalled();
             }));
 
@@ -302,7 +302,7 @@ describe('content', () => {
                 activityService.start(superdesk.activities.spike, {data: {item: item}});
                 $rootScope.$digest();
 
-                expect(modal.confirm).toHaveBeenCalledWith('Are you sure you want to spike the item?');
+                expect(modal.confirm).toHaveBeenCalledWith('Are you sure you want to spike the item?', 'Confirm');
                 expect(spike.spike).toHaveBeenCalled();
             }));
 
