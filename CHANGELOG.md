@@ -1,5 +1,13 @@
 # Superdesk Client Changelog
 
+## [1.20.1] 2018-06-26
+
+### Fixed
+
+- Fix link color in editor2.
+- Update Norwegian translation.
+- Update UI framework.
+
 ## [1.20.0] 2018-06-11
 
 ### Fixed
