@@ -25,6 +25,9 @@
             &:hover {
                 cursor: pointer;
             }
+            &.active button {
+                background-color: #c8e4ee !important;
+            }
             .country_state_info {
                 padding-left:  10px;
                 font-size: 12px;
