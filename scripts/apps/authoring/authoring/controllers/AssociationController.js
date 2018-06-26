@@ -203,7 +203,7 @@ export function AssociationController(config, send, api, $q, superdesk,
             isAssociated: true,
             defaultTab: 'crop',
             showMetadata: true,
-        }
+        };
 
         if (item.renditions && item.renditions.original && self.isImage(item.renditions.original)) {
             scope.loading = true;
