@@ -384,9 +384,11 @@ spikeActivity.$inject = [
     'authoringWorkspace',
     'confirm',
     'autosave',
+    'gettextCatalog',
 ];
 
-function spikeActivity(spike, data, modal, $location, $q, multi, privileges, authoringWorkspace, confirm, autosave) {
+function spikeActivity(spike, data, modal, $location, $q, multi, privileges,
+    authoringWorkspace, confirm, autosave, gettextCatalog) {
     // For the sake of keyboard shortcut to work consistently,
     // if the item is multi-selected, let multibar controller handle its spike
     if (!data.item || multi.count > 0 && _.includes(multi.getIds(), data.item._id)) {
@@ -403,17 +405,17 @@ function spikeActivity(spike, data, modal, $location, $q, multi, privileges, aut
     _spike();
 
     function _spike() {
-        let message = gettext('Are you sure you want to spike the item?');
+        let message = gettextCatalog.getString('Are you sure you want to spike the item?');
 
         if ($location.path() === '/workspace/personal') {
-            message = gettext('Do you want to delete the item permanently?');
+            message = gettextCatalog.getString('Do you want to delete the item permanently?');
         }
 
         if (get(privileges, 'privileges.planning') && data.item && data.item.assignment_id) {
-            message = gettext('This item is linked to in-progress planning coverage, spike anyway?');
+            message = gettextCatalog.getString('This item is linked to in-progress planning coverage, spike anyway?');
         }
 
-        return modal.confirm(message)
+        return modal.confirm(message, gettextCatalog.getString('Confirm'))
             .then(() => spike.spike(data.item));
     }
 }
