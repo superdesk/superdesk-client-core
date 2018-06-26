@@ -1,6 +1,5 @@
-import {Editor3} from '../components/Editor3';
 import {RichUtils, EditorState, AtomicBlockUtils, SelectionState} from 'draft-js';
-import {getContentStateFromHtml} from '../html/from-html';
+import {setTansaHtml} from '../helpers/tansa';
 import {addMedia} from './toolbar';
 
 /**
@@ -26,8 +25,8 @@ const editor3 = (state = {}, action) => {
         return mergeEntityDataByKey(state, action.payload.entityKey, action.payload.valuesToMerge);
     case 'EDITOR_CHANGE_IMAGE_CAPTION':
         return changeImageCaption(state, action.payload);
-    case 'EDITOR_SET_HTML':
-        return setHTML(state, action.payload);
+    case 'EDITOR_SET_HTML_FROM_TANSA':
+        return setHtmlFromTansa(state, action.payload);
     case 'EDITOR_MOVE_BLOCK':
         return moveBlock(state, action.payload);
     default:
@@ -209,18 +208,17 @@ const changeImageCaption = (state, {entityKey, newCaption, field}) => {
 
 /**
  * @ngdoc method
- * @name setHTML
+ * @name setHtmlForTansa
  * @param {string} html
  * @description Replaces the current editor content with the given HTML. This is used
  * by the Tansa spellchecker to apply a corrected text.
  * @returns {Object}
  */
-const setHTML = (state, html) => {
-    const decorator = Editor3.getDecorator();
-    const content = getContentStateFromHtml(html);
-    const editorState = EditorState.createWithContent(content, decorator);
+const setHtmlFromTansa = (state, html) => {
+    const {editorState} = state;
+    const newEditorState = setTansaHtml(editorState, html);
 
-    return onChange(state, editorState);
+    return onChange(state, newEditorState);
 };
 
 /**

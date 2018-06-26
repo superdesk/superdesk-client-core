@@ -128,15 +128,14 @@ export function mergeEntityDataByKey(entityKey, valuesToMerge) {
 
 /**
  * @ngdoc method
- * @name setHTML
+ * @name setHtmlFromTansa
  * @param {string} html
- * @description Replaces the current editor content with the given HTML. This is used
- * by the Tansa spellchecker to apply a corrected text.
+ * @description For every block from editor content merge the changes received from Tansa.
  * @returns {Object}
  */
-export function setHTML(html) {
+export function setHtmlFromTansa(html) {
     return {
-        type: 'EDITOR_SET_HTML',
+        type: 'EDITOR_SET_HTML_FROM_TANSA',
         payload: html,
     };
 }

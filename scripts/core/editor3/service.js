@@ -2,6 +2,7 @@ import * as action from './actions';
 import {forEachMatch} from './reducers/find-replace';
 import {toHTML} from './html';
 import {clearHighlights} from './reducers/find-replace';
+import {getTansaHtml} from './helpers/tansa';
 
 /**
  * @type {Object} Redux stores
@@ -222,12 +223,29 @@ export class EditorService {
 
     /**
      * @ngdoc method
-     * @name editor3#setHTML
-     * @param {string} html
-     * @description Replaces the content of the editor with the given HTML.
+     * @name editor3#getHtmlForTansa
+     * @description Gets the content of the editor as custom(simplified) html for Tansa.
+     * @returns {string} HTML
      */
-    setHTML(html) {
-        ok() && store.dispatch(action.setHTML(html));
+    getHtmlForTansa() {
+        if (!ok()) {
+            return '';
+        }
+
+        const state = store.getState();
+        const editorState = {state};
+
+        return getTansaHtml(editorState);
+    }
+
+    /**
+     * @ngdoc method
+     * @name editor3#setHtmlFromTansa
+     * @param {string} html
+     * @description For every block from editor content merge the changes received from tansa.
+     */
+    setHtmlFromTansa(html) {
+        ok() && store.dispatch(action.setHtmlFromTansa(html));
     }
 }
 
