@@ -66,8 +66,10 @@ export class MediaBlockComponent extends Component {
         const {block, cropImage, contentState} = this.props;
         const entityKey = block.getEntityAt(0);
         const entity = contentState.getEntity(entityKey);
+        const data = entity.getData();
+        const isImage = data.media.type === 'picture';
 
-        cropImage(entityKey, entity.getData());
+        cropImage(entityKey, data, {isNew: false, editable: isImage});
     }
 
     /**
@@ -216,6 +218,14 @@ export class MediaBlockComponent extends Component {
                                     </span>
                                 </div>
                                 <div className="image-block__icons-block" />
+                                {
+                                    data.source !== 'Superdesk' ? null : (
+                                        <div className="image-block__icons-block">
+                                            <a className="image-block__image-edit"
+                                                onClick={this.onClick}><i className="icon-pencil"/></a>
+                                        </div>
+                                    )
+                                }
                                 <div className="image-block__metadata">
                                     <span>
                                         <em>{gettextCatalog.getString('Alt text:')}{' '}</em>
@@ -304,7 +314,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    cropImage: (entityKey, entityData) => dispatch(actions.cropImage(entityKey, entityData)),
+    cropImage: (entityKey, entityData, options) => dispatch(actions.cropImage(entityKey, entityData, options)),
     removeBlock: (blockKey) => dispatch(actions.removeBlock(blockKey)),
     changeCaption: (entityKey, newCaption, field) => dispatch(actions.changeImageCaption(entityKey, newCaption, field)),
     setLocked: () => dispatch(actions.setLocked(true)),
