@@ -137,7 +137,10 @@ export function AssociationController(config, send, api, $q, superdesk,
                         if (imagesWithIds.length > 0) {
                             var imageWithId = imagesWithIds.shift();
 
-                            self.edit(scope, imageWithId.image, imageWithId.id, editNextFile);
+                            self.edit(scope, imageWithId.image, {
+                                customRel: imageWithId.id,
+                                isNew: true,
+                            }, editNextFile);
                         }
                     }
 
@@ -186,27 +189,34 @@ export function AssociationController(config, send, api, $q, superdesk,
      * @description Opens the item for edit.
      * @param {Object} scope Directive scope
      * @param {Object} item Item to be edited
-     * @param {Object} customRel Custom relation string
+     * @param {Object} options { isNew: Boolean, customRel: String }
      * @param {Function} callback Callback function
      */
-    this.edit = function(scope, item, customRel, callback = null) {
+    this.edit = function(scope, item, options = {}, callback = null) {
         if (!self.isMediaEditable()) {
             return;
         }
 
+        const cropOptions = {
+            isNew: 'isNew' in options ? options.isNew : false,
+            editable: scope.editable,
+            isAssociated: true,
+            defaultTab: 'crop',
+            showMetadata: true,
+        }
+
         if (item.renditions && item.renditions.original && self.isImage(item.renditions.original)) {
             scope.loading = true;
-            return renditions.crop(item, {isNew: false, editable: scope.editable, isAssociated: true,
-                defaultTab: 'crop', showMetadata: true})
+            return renditions.crop(item, cropOptions)
                 .then((rendition) => {
-                    self.updateItemAssociation(scope, rendition, customRel, callback);
+                    self.updateItemAssociation(scope, rendition, options.customRel, callback);
                 })
                 .finally(() => {
                     scope.loading = false;
                 });
         }
 
-        self.updateItemAssociation(scope, item, customRel, callback);
+        self.updateItemAssociation(scope, item, options.customRel, callback);
     };
 
     /**
