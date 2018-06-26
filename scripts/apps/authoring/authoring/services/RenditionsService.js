@@ -74,17 +74,26 @@ export function RenditionsService(metadata, $q, api, superdesk, _) {
                 withRatio = self.renditions;
             }
 
+            const cropOptions = { // default options
+                isNew: true,
+                isAssociated: false,
+                editable: true,
+                defaultTab: false,
+                showMetadata: false,
+                ...options,
+            };
+
             return superdesk.intent('edit', 'crop', {
                 item: clonedPicture,
                 renditions: withRatio,
                 poi: clonedPicture.poi || {x: 0.5, y: 0.5},
                 showAoISelectionButton: true,
                 showMetadataEditor: true,
-                isNew: 'isNew' in options ? options.isNew : true,
-                isAssociated: options.isAssociated || false,
-                editable: options.editable || true,
-                defaultTab: options.defaultTab || false,
-                showMetadata: options.showMetadata || false,
+                isNew: cropOptions.isNew,
+                isAssociated: cropOptions.isAssociated,
+                editable: cropOptions.editable,
+                defaultTab: cropOptions.defaultTab,
+                showMetadata: cropOptions.showMetadata,
             })
                 .then((result) => {
                     let renditionNames = [];

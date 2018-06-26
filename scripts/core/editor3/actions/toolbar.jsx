@@ -91,7 +91,7 @@ export function cropImage(entityKey, entityData) {
     const {media} = entityData;
 
     return (dispatch) => {
-        renditions.crop(media).then((cropped) => {
+        renditions.crop(media, {isNew: false}).then((cropped) => {
             dispatch({
                 type: 'TOOLBAR_UPDATE_IMAGE',
                 payload: {
