@@ -89,11 +89,7 @@ export function RenditionsService(metadata, $q, api, superdesk, _) {
                 poi: clonedPicture.poi || {x: 0.5, y: 0.5},
                 showAoISelectionButton: true,
                 showMetadataEditor: true,
-                isNew: cropOptions.isNew,
-                isAssociated: cropOptions.isAssociated,
-                editable: cropOptions.editable,
-                defaultTab: cropOptions.defaultTab,
-                showMetadata: cropOptions.showMetadata,
+                ...cropOptions,
             })
                 .then((result) => {
                     let renditionNames = [];
