@@ -16,10 +16,15 @@
         </div>
 
         <div class="field">
+            <label for="preview-endpoint-url" class="pull-left" translate>Preview endpoint URL</label>
+            <input type="url" id="preview-endpoint-url" class="input" ng-model="destination.preview_endpoint_url" />
+        </div>
+
+        <div class="field">
             <label for="destination-delivery-type" class="pull-left" translate>Delivery type</label>
             <i class="field-info pull-right">*</i>
             <select id="destination-delivery-type" required ng-model="destination.delivery_type" ng-options="key as val.label for (key, val) in types"></select>
-        </div>
+        </div>        
 
         <div class="field credentials">
             <div ng-include="types[destination.delivery_type].templateUrl"></div>
