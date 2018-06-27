@@ -189,7 +189,7 @@ export function AssociationController(config, send, api, $q, superdesk,
      * @description Opens the item for edit.
      * @param {Object} scope Directive scope
      * @param {Object} item Item to be edited
-     * @param {Object} options { isNew: Boolean, customRel: String }
+     * @param {Object} options { isNew: Boolean, customRel: String, hideTabs: Array }
      * @param {Function} callback Callback function
      */
     this.edit = function(scope, item, options = {}, callback = null) {
@@ -199,6 +199,7 @@ export function AssociationController(config, send, api, $q, superdesk,
 
         const cropOptions = {
             isNew: 'isNew' in options ? options.isNew : false,
+            hideTabs: 'hideTabs' in options ? options.hideTabs : false,
             editable: scope.editable,
             isAssociated: true,
             defaultTab: 'crop',

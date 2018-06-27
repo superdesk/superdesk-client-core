@@ -35,6 +35,7 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
 
     $scope.showMetadata = $scope.data.showMetadata;
     $scope.nav = $scope.data.defaultTab || 'view';
+    $scope.hideTabs = $scope.data.hideTabs || [];
 
     $scope.data.renditions.forEach((rendition) => {
         let original = $scope.data.item.renditions.original;
