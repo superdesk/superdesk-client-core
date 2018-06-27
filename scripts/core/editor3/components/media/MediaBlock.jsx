@@ -67,9 +67,8 @@ export class MediaBlockComponent extends Component {
         const entityKey = block.getEntityAt(0);
         const entity = contentState.getEntity(entityKey);
         const data = entity.getData();
-        const isImage = data.media.type === 'picture';
 
-        cropImage(entityKey, data, {isNew: false, editable: isImage});
+        cropImage(entityKey, data, {isNew: false});
     }
 
     /**

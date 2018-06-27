@@ -87,7 +87,7 @@ export function insertMedia(files) {
  * @description Displays the external crop image dialog and returns the crop image
  * action using data from the provided entity.
  */
-export function cropImage(entityKey, entityData, options) {
+export function cropImage(entityKey, entityData, options = {}) {
     const renditions = ng.get('renditions');
     const {media} = entityData;
 
