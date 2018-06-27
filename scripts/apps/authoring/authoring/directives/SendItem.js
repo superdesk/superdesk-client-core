@@ -1,13 +1,19 @@
 import _ from 'lodash';
+import React from 'react';
+import {Modal} from '../../../../core/ui/components/Modal/Modal';
+import {ModalHeader} from '../../../../core/ui/components/Modal/ModalHeader';
+import {ModalBody} from '../../../../core/ui/components/Modal/ModalBody';
+import {ModalFooter} from '../../../../core/ui/components/Modal/ModalFooter';
+
 
 SendItem.$inject = ['$q', 'api', 'desks', 'notify', 'authoringWorkspace',
     'superdeskFlags', '$location', 'macros', '$rootScope', 'deployConfig',
     'authoring', 'send', 'editorResolver', 'confirm', 'archiveService',
-    'preferencesService', 'multi', 'datetimeHelper', 'config', 'privileges', 'storage', 'modal'];
+    'preferencesService', 'multi', 'datetimeHelper', 'config', 'privileges', 'storage', 'modal', 'gettext'];
 export function SendItem($q, api, desks, notify, authoringWorkspace,
     superdeskFlags, $location, macros, $rootScope, deployConfig,
     authoring, send, editorResolver, confirm, archiveService,
-    preferencesService, multi, datetimeHelper, config, privileges, storage, modal) {
+    preferencesService, multi, datetimeHelper, config, privileges, storage, modal, gettext) {
     return {
         scope: {
             item: '=',
@@ -43,6 +49,7 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
             scope.beforeSend = scope._beforeSend || $q.when;
             scope.destination_last = {send_to: null, publish: null, duplicate_to: null};
             scope.origItem = angular.extend({}, scope.item);
+            scope.subscribersWithPreviewConfigured = [];
 
             // key for the storing last desk/stage in the user preferences for send action.
             var PREFERENCE_KEY = 'destination:active';
@@ -86,6 +93,23 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
 
             function activate() {
                 if (scope.isActive) {
+                    api.query('subscribers')
+                        .then((res) => {
+                            const allSubscribers = res['_items'];
+
+                            scope.subscribersWithPreviewConfigured = allSubscribers
+                                .map(
+                                    (subscriber) => {
+                                        subscriber.destinations = subscriber.destinations.filter(
+                                            (destination) => typeof destination.preview_endpoint_url === 'string'
+                                                && destination.preview_endpoint_url.length > 0
+                                        );
+
+                                        return subscriber;
+                                    }
+                                )
+                                .filter((subscriber) => subscriber.destinations.length > 0);
+                        });
                     desks
                         .initialize()
                         .then(fetchDesks)
@@ -93,6 +117,53 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                         .then(setDesksAndStages);
                 }
             }
+
+            scope.preview = function() {
+                modal.createCustomModal()
+                    .then(({openModal, closeModal}) => {
+                        openModal(
+                            <Modal>
+                                <ModalHeader>{gettext('Select preview target')}</ModalHeader>
+                                <ModalBody>
+                                    <ul>
+                                        {
+                                            scope.subscribersWithPreviewConfigured.map((subscriber, i) => (
+                                                <li key={i}>
+                                                    <strong>{subscriber.name}</strong>
+                                                    <ul>
+                                                        {
+                                                            subscriber.destinations.map((destination, j) => (
+                                                                <li key={j} style={{
+                                                                    display: 'flex',
+                                                                    alignItems: 'center',
+                                                                    justifyContent: 'space-between',
+                                                                    margin: '4px 0',
+                                                                }}>
+                                                                    <span>{destination.name}</span>
+                                                                    <button
+                                                                        className="btn btn--primary btn--small"
+                                                                        onClick={() => {
+                                                                            console.log('fff');
+                                                                        }}
+                                                                    >
+                                                                        {gettext('preview')}
+                                                                    </button>
+                                                                </li>
+                                                            ))
+                                                        }
+                                                    </ul>
+                                                </li>
+                                            ))
+                                        }
+                                    </ul>
+                                </ModalBody>
+                                <ModalFooter>
+                                    <button className="btn" onClick={closeModal}>{gettext('Cancel')}</button>
+                                </ModalFooter>
+                            </Modal>
+                        );
+                    });
+            };
 
             scope.close = function() {
                 if (scope.mode === 'monitoring') {

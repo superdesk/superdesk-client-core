@@ -158,6 +158,15 @@
                     publish from
                 </button>
             </li>
+            <li class="full-width" ng-if="subscribersWithPreviewConfigured.length > 0">
+                <button type="button"
+                        class="btn btn--large btn--primary btn--hollow btn--expanded"
+                        ng-click="preview()"
+                        translate
+                        >
+                    Preview
+                </button>
+            </li>
             <li class="full-width" ng-if="canSendItem() && canPublishItem()">
                 <button type="submit"
                         class="btn btn--large btn--highlight btn--expanded"
