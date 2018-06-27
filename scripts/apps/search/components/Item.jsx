@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
+import {PhotoDeskFooter} from './PhotoDeskFooter';
 
 import {broadcast} from './fields';
 
@@ -183,18 +184,11 @@ export class Item extends React.Component {
                     ingestProvider: this.props.ingestProvider,
                     svc: this.props.svc,
                 }),
-                React.createElement('div', {className: 'sd-grid-item__footer'},
-                    React.createElement('div',
-                        {className: 'sd-grid-item__footer-block sd-grid-item__footer-block--multi-l'},
-                        React.createElement(GridTypeIcon, {item: item, svc: this.props.svc, photoGrid: true}),
-                        item.priority ?
-                            React.createElement(ItemPriority, angular.extend({svc: this.props.svc}, item)) : null,
-                        item.urgency ?
-                            React.createElement(ItemUrgency, angular.extend({svc: this.props.svc}, item)) : null
-                    ),
-                    broadcast({item: item}),
-                    getActionsMenu()
-                ),
+                React.createElement(PhotoDeskFooter, {
+                    item: item,
+                    svc: this.props.svc,
+                    getActionsMenu: getActionsMenu,
+                }),
                 React.createElement('div',
                     {className: 'sd-grid-item__state-border'}
                 )
