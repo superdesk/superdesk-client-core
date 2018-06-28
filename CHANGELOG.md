@@ -1,5 +1,11 @@
 # Superdesk Client Changelog
 
+## [1.21.2] 2018-06-28
+
+### Fixed
+
+- Fix upload on custom media field.
+
 ## [1.21.1] 2018-06-26
 
 ### Fixed
