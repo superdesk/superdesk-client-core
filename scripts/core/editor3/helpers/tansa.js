@@ -50,6 +50,7 @@ export function setTansaHtml(editorState, html) {
     let content = editorState.getCurrentContent();
     const blockMap = content.getBlockMap();
     const htmlElement = document.createElement('div');
+    const diffMatchPatch = new DiffMatchPatch();
 
     htmlElement.innerHTML = html;
 
@@ -65,7 +66,7 @@ export function setTansaHtml(editorState, html) {
         } else {
             const newText = getTextFromTag(htmlElement, 'text', key);
 
-            content = updateText(editorState, content, block, newText);
+            content = updateText(editorState, content, block, newText, diffMatchPatch);
         }
     });
 
@@ -151,9 +152,8 @@ function updateMedia(content, block, newDescription, newAlt, newHeadline) {
  * @param {String} text
  * @returns {ContentState}
  */
-function updateText(editorState, content, block, newText) {
+function updateText(editorState, content, block, newText, diffMatchPatch) {
     const text = block.getText();
-    const diffMatchPatch = new DiffMatchPatch();
     let newContent = content;
     let offset = 0;
     let diffs;
