@@ -233,7 +233,7 @@ export class EditorService {
         }
 
         const state = store.getState();
-        const editorState = {state};
+        const {editorState} = state;
 
         return getTansaHtml(editorState);
     }
