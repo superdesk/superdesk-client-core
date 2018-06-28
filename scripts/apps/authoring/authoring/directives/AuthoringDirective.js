@@ -530,7 +530,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                     const editor = editorResolver.get();
 
                     if (editor && editor.version() === '3') {
-                        $('#editor3Tansa').html(editor.getHTML(logger));
+                        $('#editor3Tansa').html(editor.getHtmlForTansa());
                     }
 
                     switch ($scope.item.language) {
@@ -556,7 +556,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 const editor = editorResolver.get();
 
                 if (editor && editor.version() === '3') {
-                    editor.setHTML($('#editor3Tansa').html());
+                    editor.setHtmlFromTansa($('#editor3Tansa').html());
                 }
             }
 
