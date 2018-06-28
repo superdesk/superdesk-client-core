@@ -24,7 +24,8 @@
             </a>
             <div class="sd-photo-preview" ng-if="!nav || nav === 'view'">
                 <div class="sd-photo-preview__image">
-                    <img ng-src="{{data.item.renditions.original.href}}">
+                    <img ng-if="data.item.type === 'image'" ng-src="{{data.item.renditions.original.href}}">
+                    <video controls ng-if="data.item.type === 'video'" ng-src="{{data.item.renditions.original.href}}">
                 </div>
             </div>
 
