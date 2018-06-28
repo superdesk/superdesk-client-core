@@ -44,7 +44,7 @@ function MacrosService(api, notify) {
 
     /**
      * Returns all frontend macros for a given desk if includeBackend is false or none
-     * If includeBackend is true then results will include the backend macros for hat desk
+     * If includeBackend is true then results will include the backend macros for that desk
      *
      * @param {string} desk
      * @param {bool} includeBackend

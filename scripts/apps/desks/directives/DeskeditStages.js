@@ -18,7 +18,7 @@ export function DeskeditStages(gettext, api, WizardHandler, tasks, $rootScope, d
                     scope.macros = _.reject(macros, {action_type: 'interactive'});
                 });
             } else {
-                macros.get().then((macros) => {
+                macros.get(true).then((macros) => {
                     scope.macros = _.reject(macros, {action_type: 'interactive'});
                 });
             }

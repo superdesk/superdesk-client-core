@@ -133,7 +133,7 @@ describe('desks', () => {
         desks.stageDescriptionElement().sendKeys('Test Desk A Stage A Description');
 
         // Make sure the macros have loaded
-        expect(desks.getStageMacros().count()).toBe(3);
+        expect(desks.getStageMacros().count()).toBe(4);
 
         // Now set the stage macros
         desks.setStageIncomingMacro('populate_abstract');
