@@ -44,7 +44,9 @@ export default class ItemsTableComponent extends React.Component {
         const value = item[field.key] || '';
         const disabled = !item.is_active;
         const update = (event) => {
-            this.props.update(item, field.key, event.target.value);
+            let value = field.type === 'integer' ? parseInt(event.target.value, 10) : event.target.value;
+
+            this.props.update(item, field.key, value);
         };
         const required = this.state.itemsValidation.length && _.has(this.state.itemsValidation[index], field.key);
         const valid = !required || this.state.itemsValidation[index][field.key];
@@ -94,6 +96,18 @@ export default class ItemsTableComponent extends React.Component {
                 />
             );
         }
+
+        case 'integer':
+            return (
+                <div className={className}>
+                    <input type="number"
+                        value={value}
+                        disabled={disabled}
+                        onChange={update}
+                        className={field.key === 'name' ? 'long-name sd-line-input__input' : 'sd-line-input__input'}
+                    />
+                </div>
+            );
 
         default:
             return (

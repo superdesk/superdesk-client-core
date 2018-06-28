@@ -1,3 +1,7 @@
+import React from 'react';
+import ItemsTableComponent from '../components/ItemsTableComponent';
+import {mount} from 'enzyme';
+
 describe('vocabularies', () => {
     beforeEach(window.module('superdesk.apps.publish'));
     beforeEach(window.module('superdesk.apps.vocabularies'));
@@ -112,7 +116,7 @@ describe('vocabularies', () => {
                     expect(metadata.initialize).toHaveBeenCalled();
                 }));
 
-            it('validate vocabulary', inject((api, $q, $rootScope, metadata, $compile) => {
+            it('validate vocabulary', inject(($compile) => {
                 scope.vocabulary = {_id: 'foo', display_name: 'Foo', items: []};
                 scope.vocabulary.schema = {name: {required: true}, qcode: {required: true}, other: {}};
 
@@ -130,6 +134,40 @@ describe('vocabularies', () => {
                 scope.vocabulary.items[0] = {name: 'foo', qcode: 'bar', is_active: true};
                 scope.$digest();
                 expect(scope.itemsValidation.valid).toBe(true);
+            }));
+
+            it('convert values for qcode having integer type', inject(($compile) => {
+                let items = [{name: 'foo', qcode: '1'}];
+                let itemsValidation = [{name: true, qcode: true}];
+                let schema = {name: {required: true}, qcode: {type: 'integer'}};
+                let schemaFields = [{key: 'name', required: true}, {key: 'qcode', type: 'integer'}];
+                let updatedValue;
+                const update = (item, key, value) => {
+                    updatedValue = value;
+                };
+
+                const wrapper = mount(
+                    (
+                        <ItemsTableComponent
+                            model={{name: null, qcode: null}}
+                            schema={schema}
+                            schemaFields={schemaFields}
+                            gettext={() => ''}
+                            remove={() => null}
+                            update={update}
+                        />
+                    )
+                );
+
+                const instance = wrapper.instance();
+
+                instance.setState({items, itemsValidation});
+                wrapper.update();
+
+                const fakeEvent = {target: {value: '2'}};
+
+                wrapper.find('input[type="number"]').simulate('change', fakeEvent);
+                expect(updatedValue).toBe(2);
             }));
 
             it('can cancel editing vocabulary', inject((api, $q, $rootScope, metadata) => {
