@@ -6,23 +6,38 @@ import {ModalHeader} from 'core/ui/components/Modal/ModalHeader';
 import {ModalBody} from 'core/ui/components/Modal/ModalBody';
 import {ModalFooter} from 'core/ui/components/Modal/ModalFooter';
 
+function getFormattedDocument(url) {
+    return new Promise((resolve) => {
+        var xhr = new XMLHttpRequest();
+
+        xhr.addEventListener('load', function() {
+            resolve({
+                fomattedDocument: this.responseText,
+                documentContentType: this.getResponseHeader('content-type'),
+            });
+        });
+
+        xhr.open('GET', url);
+        xhr.send();
+    });
+}
+
 export class PreviewModal extends React.Component {
     openPreviewForItem(subscriberId, format, endpointUrl) {
-        const {api, documentId, gettext} = this.props;
+        const {urls, documentId, gettext} = this.props;
 
         const nextWindow = window.open();
 
         nextWindow.document.body.innerText = gettext('Loading preview');
 
-        api.get('format-document', {
-            subscriber_id: subscriberId,
-            formatter: format,
-            document_id: documentId,
-        }).then((formattedDocument) => {
+        const url = urls.item('format-document-for-preview')
+            + `?subscriber_id=${subscriberId}&formatter=${format}&document_id=${documentId}`;
+
+        getFormattedDocument(url).then(({fomattedDocument, documentContentType}) => {
             var xhr = new XMLHttpRequest();
 
             xhr.open('POST', endpointUrl);
-            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.setRequestHeader('Content-Type', documentContentType);
             xhr.onreadystatechange = function() {
                 if (xhr.readyState === 4) {
                     if (xhr.status === 200) {
@@ -37,7 +52,7 @@ export class PreviewModal extends React.Component {
                     }
                 }
             };
-            xhr.send(JSON.stringify(formattedDocument));
+            xhr.send(fomattedDocument);
         });
     }
     render() {
@@ -94,7 +109,7 @@ export class PreviewModal extends React.Component {
 PreviewModal.propTypes = {
     subscribersWithPreviewConfigured: PropTypes.array.isRequired,
     documentId: PropTypes.string.isRequired,
-    api: PropTypes.func.isRequired,
+    urls: PropTypes.object.isRequired,
     closeModal: PropTypes.func.isRequired,
     gettext: PropTypes.func.isRequired,
 };

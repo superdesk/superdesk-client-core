@@ -6,11 +6,11 @@ import {PreviewModal} from '../previewModal';
 SendItem.$inject = ['$q', 'api', 'desks', 'notify', 'authoringWorkspace',
     'superdeskFlags', '$location', 'macros', '$rootScope', 'deployConfig',
     'authoring', 'send', 'editorResolver', 'confirm', 'archiveService',
-    'preferencesService', 'multi', 'datetimeHelper', 'config', 'privileges', 'storage', 'modal', 'gettext'];
+    'preferencesService', 'multi', 'datetimeHelper', 'config', 'privileges', 'storage', 'modal', 'gettext', 'urls'];
 export function SendItem($q, api, desks, notify, authoringWorkspace,
     superdeskFlags, $location, macros, $rootScope, deployConfig,
     authoring, send, editorResolver, confirm, archiveService,
-    preferencesService, multi, datetimeHelper, config, privileges, storage, modal, gettext) {
+    preferencesService, multi, datetimeHelper, config, privileges, storage, modal, gettext, urls) {
     return {
         scope: {
             item: '=',
@@ -122,7 +122,7 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                             <PreviewModal
                                 subscribersWithPreviewConfigured={scope.subscribersWithPreviewConfigured}
                                 documentId={scope.item._id}
-                                api={api}
+                                urls={urls}
                                 closeModal={closeModal}
                                 gettext={gettext}
                             />
