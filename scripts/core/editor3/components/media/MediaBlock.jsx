@@ -223,7 +223,6 @@ export class MediaBlockComponent extends Component {
                                         {data.headline || gettextCatalog.getString('[No Value]')}
                                     </span>
                                 </div>
-                                <div className="image-block__icons-block" />
                                 {
                                     data.source !== 'Superdesk' ? null : (
                                         <div className="image-block__icons-block">
@@ -264,7 +263,6 @@ export class MediaBlockComponent extends Component {
                     {mediaType === 'audio' &&
                         <div>
                             <audio controls src={rendition.href} alt={alt} width="100%" height="100%" />
-
                             <div className="image-block__metadata image-block__metadata--plain">
                                 <span>
                                     <em>{gettextCatalog.getString('Credit:')}{' '}</em>
