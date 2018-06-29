@@ -88,6 +88,10 @@ function setHighlightsState(editorState, hightlightsState) {
     return setCustomDataForEditor(editorState, editor3DataKeys.MULTIPLE_HIGHLIGHTS, hightlightsState);
 }
 
+export function isHighlightType(styleName) {
+    return styleName.lastIndexOf('-') !== -1;
+}
+
 function getHighlightType(styleName) {
     var delimiterIndex = styleName.lastIndexOf('-');
 
