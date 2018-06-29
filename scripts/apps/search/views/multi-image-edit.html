@@ -1,12 +1,12 @@
 <div class="modal__header modal__header--flex">
-    <h3 class="modal__heading modal__heading--no-grow">{{ :: 'Edit metadata' | translate }}</h3>
+    <h3 class="modal__heading modal__heading--no-grow" translate>Edit metadata</h3>
 
     <div class="modal__header-buttons  modal__header-buttons--center modal__header-element-grow button-nav"></div>
 
     <div class="modal__header-buttons modal__header-buttons--right">
-        <button class="btn btn--ui-dark btn--hollow" ng-click="$close()">{{ 'Close' | translate }}</button>
-        <button class="btn btn--primary btn--hollow" ng-click="save()" ng-disabled="!isDirty()">{{ 'Save' | translate }}</button>
-        <button class="btn btn--primary btn--hollow" ng-click="save(true)" ng-disabled="!isDirty()">{{ 'Save & Close' | translate }}</button>
+        <button class="btn btn--ui-dark btn--hollow" ng-click="close()" translate>Close</button>
+        <button class="btn btn--primary btn--hollow" ng-click="save()" ng-disabled="!isDirty()" translate>Save</button>
+        <button class="btn btn--primary btn--hollow" ng-click="save(true)" ng-disabled="!isDirty()" translate>'Save & Close</button>
     </div>
 </div>
 
@@ -29,7 +29,7 @@
                                 <p class="sd-grid-item__title">{{image.headline}}</p>
                                 <p class="sd-grid-item--element-grow sd-grid-item__text-light">{{image.description_text}}</p>
                                 <div class="sd-grid-item__content-block">
-                                    <span class="sd-grid-item__text-label">Copyright:</span>
+                                    <span class="sd-grid-item__text-label" translate>Copyright:</span>
                                     <span class="sd-grid-item__text-strong">{{image.copyrightnotice}}</span>
                                 </div>
                             </div>
