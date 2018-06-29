@@ -1,9 +1,6 @@
 import _ from 'lodash';
 import React from 'react';
-import {Modal} from '../../../../core/ui/components/Modal/Modal';
-import {ModalHeader} from '../../../../core/ui/components/Modal/ModalHeader';
-import {ModalBody} from '../../../../core/ui/components/Modal/ModalBody';
-import {ModalFooter} from '../../../../core/ui/components/Modal/ModalFooter';
+import {PreviewModal} from '../previewModal';
 
 
 SendItem.$inject = ['$q', 'api', 'desks', 'notify', 'authoringWorkspace',
@@ -122,45 +119,13 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                 modal.createCustomModal()
                     .then(({openModal, closeModal}) => {
                         openModal(
-                            <Modal>
-                                <ModalHeader>{gettext('Select preview target')}</ModalHeader>
-                                <ModalBody>
-                                    <ul>
-                                        {
-                                            scope.subscribersWithPreviewConfigured.map((subscriber, i) => (
-                                                <li key={i}>
-                                                    <strong>{subscriber.name}</strong>
-                                                    <ul>
-                                                        {
-                                                            subscriber.destinations.map((destination, j) => (
-                                                                <li key={j} style={{
-                                                                    display: 'flex',
-                                                                    alignItems: 'center',
-                                                                    justifyContent: 'space-between',
-                                                                    margin: '4px 0',
-                                                                }}>
-                                                                    <span>{destination.name}</span>
-                                                                    <button
-                                                                        className="btn btn--primary btn--small"
-                                                                        onClick={() => {
-                                                                            console.log('fff');
-                                                                        }}
-                                                                    >
-                                                                        {gettext('preview')}
-                                                                    </button>
-                                                                </li>
-                                                            ))
-                                                        }
-                                                    </ul>
-                                                </li>
-                                            ))
-                                        }
-                                    </ul>
-                                </ModalBody>
-                                <ModalFooter>
-                                    <button className="btn" onClick={closeModal}>{gettext('Cancel')}</button>
-                                </ModalFooter>
-                            </Modal>
+                            <PreviewModal
+                                subscribersWithPreviewConfigured={scope.subscribersWithPreviewConfigured}
+                                documentId={scope.item._id}
+                                api={api}
+                                closeModal={closeModal}
+                                gettext={gettext}
+                            />
                         );
                     });
             };
