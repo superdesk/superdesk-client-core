@@ -88,10 +88,6 @@ function setHighlightsState(editorState, hightlightsState) {
     return setCustomDataForEditor(editorState, editor3DataKeys.MULTIPLE_HIGHLIGHTS, hightlightsState);
 }
 
-export function isHighlightType(styleName) {
-    return styleName.lastIndexOf('-') !== -1;
-}
-
 function getHighlightType(styleName) {
     var delimiterIndex = styleName.lastIndexOf('-');
 
@@ -172,6 +168,23 @@ export function getHighlightTypeFromStyleName(styleName) {
     }
 
     return highlightType;
+}
+
+/**
+ * @ngdoc method
+ * @name isHighlightStyle
+ * @param {String} styleName
+ * @return {Boolean}
+ * @description return true if styleName coresponds to a valid type.
+ */
+export function isHighlightStyle(styleName) {
+    let delimiterIndex = styleName.lastIndexOf('-');
+
+    if (delimiterIndex === -1) {
+        return false;
+    }
+
+    return highlightTypeValid(styleName.slice(0, delimiterIndex));
 }
 
 /**

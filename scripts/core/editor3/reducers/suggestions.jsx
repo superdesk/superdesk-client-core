@@ -1130,7 +1130,7 @@ const applyStyleForSuggestion = (editorState, inlineStyle) => {
     }
 
     inlineStyle.forEach((style) => {
-        const type = Highlights.isHighlightType(style) ? Highlights.getHighlightTypeFromStyleName(style) : null;
+        const type = Highlights.isHighlightStyle(style) ? Highlights.getHighlightTypeFromStyleName(style) : null;
 
         if (type != null && styleSuggestionsTypes.indexOf(type) !== -1 && nextInlineStyle.indexOf(style) !== -1 ||
             blockSuggestionTypes.indexOf(type) !== -1) {
