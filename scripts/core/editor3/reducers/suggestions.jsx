@@ -92,9 +92,13 @@ const saveEditorStatus = (state, tmpEditorState, changeType, restoreSelection = 
  * @return {Object} returns new state
  * @description Add a new suggestion of type ADD.
  */
-const createAddSuggestion = (state, {text, data}) => {
+export const createAddSuggestion = (state, {text, data}, selection = null) => {
     let {editorState} = state;
     const inlineStyle = editorState.getCurrentInlineStyle();
+
+    if (selection) {
+        editorState = EditorState.acceptSelection(editorState, selection);
+    }
 
     editorState = deleteCurrentSelection(editorState, data);
 

@@ -1,6 +1,8 @@
 import {EditorState, Modifier} from 'draft-js';
 import {onChange} from './editor3';
 import {Editor3} from '../components/Editor3';
+import {createAddSuggestion} from './suggestions';
+import {getSuggestionMetadata} from '../actions/suggestions';
 
 const spellchecker = (state = {}, action) => {
     switch (action.type) {
@@ -24,19 +26,68 @@ const spellchecker = (state = {}, action) => {
  * @description Replace the current word with the new selected one
  */
 const replaceWord = (state, {word, newWord}) => {
-    const {editorState} = state;
+    const {editorState, suggestingMode} = state;
 
-    const wordSelection = editorState.getSelection().merge({
-        anchorOffset: word.offset,
-        focusOffset: word.offset + word.text.length,
-        hasFocus: true,
-    });
+    if (word.text === newWord) {
+        return onChange(state, editorState, true);
+    }
 
-    var newState = Modifier.replaceText(editorState.getCurrentContent(), wordSelection, newWord);
+    if (suggestingMode) {
+        const data = getSuggestionMetadata();
+        const wordSelection = editorState.getSelection().merge({
+            anchorOffset: word.offset,
+            focusOffset: word.offset + word.text.length,
+            hasFocus: true,
+        });
 
-    newState = EditorState.push(editorState, newState, 'spellcheck-change');
+        return createAddSuggestion(state, {text: newWord, data: data}, wordSelection);
+    } else {
+        const selection = editorState.getSelection();
+        const newSelection = selection.merge({hasFocus: true});
+        let newContent = editorState.getCurrentContent();
+        const block = newContent.getBlockForKey(selection.getStartKey());
+        const length = word.text.length < newWord.length ? word.text.length : newWord.length;
 
-    return onChange(state, newState);
+        for (let i = 0; i < length; i++) {
+            const characterSelection = selection.merge({
+                anchorOffset: word.offset + i,
+                focusOffset: word.offset + i + 1,
+                hasFocus: true,
+            });
+            const inlineStyle = block.getInlineStyleAt(word.offset + i);
+
+            newContent = Modifier.replaceText(newContent, characterSelection, newWord[i], inlineStyle);
+        }
+
+        if (word.text.length < newWord.length) {
+            // insert remaining text
+            const insertSelection = selection.merge({
+                anchorOffset: word.offset + word.text.length,
+                focusOffset: word.offset + newWord.length,
+            });
+            const text = newWord.substring(word.offset + word.text.length);
+            const inlineStyle = block.getInlineStyleAt(word.offset + word.text.length - 1);
+
+            newContent = Modifier.replaceText(newContent, insertSelection, text, inlineStyle);
+        }
+
+        if (word.text.length > newWord.length) {
+            // delete extra text
+            const deleteSelection = selection.merge({
+                anchorOffset: word.offset + newWord.length,
+                focusOffset: word.offset + word.text.length,
+
+            });
+
+            newContent = Modifier.replaceText(newContent, deleteSelection, '');
+        }
+
+        let newState = EditorState.push(editorState, newContent, 'spellcheck-change');
+
+        newState = EditorState.acceptSelection(newState, newSelection);
+
+        return onChange(state, newState);
+    }
 };
 
 /**
