@@ -269,11 +269,25 @@ export function TemplatesDirective(gettext, notify, api, templates, modal, desks
             });
 
             function setupContentType(type) {
-                $scope.schema = content.schema(type, $scope.item.type);
-                $scope.editor = content.editor(type, $scope.item.type);
+                if (type) {
+                    $scope.schema = content.schema(type, $scope.item.type);
+                    $scope.editor = content.editor(type, $scope.item.type);
+                }
             }
 
             $scope.remove = function(template) {
+                const desks = _.filter($scope.desks._items, (desk) =>
+                    desk.default_content_template === template._id);
+
+                const deskNames = desks.map((desk) => desk.name).join(', ');
+
+                if (deskNames) {
+                    return notify.error(
+                        gettext('This is a default template of the following desk(s):') +
+                        ` ${deskNames}. ` +
+                        gettext('Please change the default templates first.'));
+                }
+
                 modal.confirm(gettext('Are you sure you want to delete the template?'))
                     .then(() => api.remove(template))
                     .then((result) => {
