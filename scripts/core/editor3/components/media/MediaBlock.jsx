@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
+import ng from 'core/services/ng';
 import * as actions from '../../actions';
 import Textarea from 'react-textarea-autosize';
 
@@ -134,6 +135,8 @@ export class MediaBlockComponent extends Component {
         const rendition = data.renditions.viewImage || data.renditions.original;
         const alt = data.alt_text || data.description_text || data.caption;
         const mediaType = data.type;
+        const {features} = ng.get('config');
+        const editable = data._type !== 'externalsource' || _.get(features, 'editFeaturedImage', true);
 
         var {gettextCatalog} = this.props.blockProps.svc;
 
@@ -166,7 +169,7 @@ export class MediaBlockComponent extends Component {
                                     </span>
                                 </div>
                                 {
-                                    data.source !== 'Superdesk' ? null : (
+                                    editable && (
                                         <div className="image-block__icons-block">
                                             <a className="image-block__image-edit"
                                                 onClick={this.onClick}><i className="icon-pencil"/></a>
