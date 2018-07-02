@@ -72,12 +72,16 @@ export const DEFAULT_GRID_VIEW_FIELDS_CONFIG = [
     'source',
 ];
 
-export const DEFAULT_GRID_VIEW_FOOTER_CONFIG = [
-    'type',
-    'priority',
-    'urgency',
-    'broadcast',
-];
+export const DEFAULT_GRID_VIEW_FOOTER_CONFIG = {
+    left: [
+        'type',
+        'urgency',
+        'broadcast',
+    ],
+    right: [
+        'priority',
+    ],
+};
 
 /**
  * Core list of fields that has to be returned in search results

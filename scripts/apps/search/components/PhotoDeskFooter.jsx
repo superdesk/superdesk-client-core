@@ -9,17 +9,37 @@ export function PhotoDeskFooter(props) {
     const {item, svc} = props;
     const gridViewFooterFieldsConfig = _.get(svc.config, 'gridViewFooterFields', DEFAULT_GRID_VIEW_FOOTER_CONFIG);
 
+    const fieldsLeft = gridViewFooterFieldsConfig.left;
+    const fieldsRight = gridViewFooterFieldsConfig.right;
+
     return (
         <div className="sd-grid-item__footer">
-            <div className="sd-grid-item__footer-block sd-grid-item__footer-block--multi-l">
-                <PhotoDeskFields
-                    fieldsConfig={gridViewFooterFieldsConfig}
-                    item={item}
-                    svc={svc}
-                    labelMode="never-with-custom-renderer"
-                    itemClassName="sd-grid-item__footer-block-item"
-                />
-            </div>
+            {
+                Array.isArray(fieldsLeft) === true && fieldsLeft.length > 0 ? (
+                    <div className="sd-grid-item__footer-block sd-grid-item__footer-block--multi-l">
+                        <PhotoDeskFields
+                            fieldsConfig={fieldsLeft}
+                            item={item}
+                            svc={svc}
+                            labelMode="never-with-custom-renderer"
+                            itemClassName="sd-grid-item__footer-block-item"
+                        />
+                    </div>
+                ) : null
+            }
+            {
+                Array.isArray(fieldsRight) === true && fieldsRight.length > 0 ? (
+                    <div className="sd-grid-item__footer-block sd-grid-item__footer-block--multi-l">
+                        <PhotoDeskFields
+                            fieldsConfig={fieldsRight}
+                            item={item}
+                            svc={svc}
+                            labelMode="never-with-custom-renderer"
+                            itemClassName="sd-grid-item__footer-block-item"
+                        />
+                    </div>
+                ) : null
+            }
             {
                 props.getActionsMenu == null ? null : props.getActionsMenu()
             }
