@@ -32,12 +32,12 @@
             </div>
         </div>
 
-        <div class="camera" ng-if="active.id == 'camera' && !preview.url">
+        <div class="camera" ng-if="active.id == 'photo' && !preview.url">
             <label translate>Click to capture using camera. Be sure that you allow camera accessibility.</label>
             <video autoplay sd-video-capture="preview.url" data-file="preview.img"></video>
         </div>
 
-        <div class="web" ng-if="active.id == 'web' && (!preview.cords || progress.width)">
+        <div class="web" ng-if="active.id == 'globe' && (!preview.cords || progress.width)">
             <label translate>Enter web url</label>
             <input type="url" ng-model="url" ng-change="preview.url = url">
             <label translate ng-if="url">Provided image URL is not valid.</label>
