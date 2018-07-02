@@ -172,6 +172,23 @@ export function getHighlightTypeFromStyleName(styleName) {
 
 /**
  * @ngdoc method
+ * @name isHighlightStyle
+ * @param {String} styleName
+ * @return {Boolean}
+ * @description return true if styleName coresponds to a valid type.
+ */
+export function isHighlightStyle(styleName) {
+    let delimiterIndex = styleName.lastIndexOf('-');
+
+    if (delimiterIndex === -1) {
+        return false;
+    }
+
+    return highlightTypeValid(styleName.slice(0, delimiterIndex));
+}
+
+/**
+ * @ngdoc method
  * @name getHighlightsCount
  * @param {Object} editorState
  * @param {String} styleName
