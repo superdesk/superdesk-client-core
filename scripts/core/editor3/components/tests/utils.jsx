@@ -71,7 +71,7 @@ export function stateWithLink() {
 export function imageBlockAndContent() {
     return createBlockAndContent('MEDIA', {
         media: {
-            source: 'Superdesk', // make sure edit icon is visible
+            _type: 'archive', // make sure edit icon is visible
             renditions: {original: {href: 'image_href'}},
             alt_text: 'image_alt_text',
             headline: 'image_headline',
