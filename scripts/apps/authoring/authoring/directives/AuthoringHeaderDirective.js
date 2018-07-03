@@ -157,6 +157,7 @@ export function AuthoringHeaderDirective(api, authoringWidgets, $rootScope, arch
 
             metadata.initialize().then(() => {
                 scope.helper_text = metadata.helper_text;
+                scope.popup_width = metadata.popup_width;
 
                 scope.$watch('item.anpa_category', (services) => {
                     var qcodes = _.map(services, 'qcode');

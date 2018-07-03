@@ -1027,6 +1027,7 @@ function MetadataService(api, subscribersService, config, vocabularies, $rootSco
     var service = {
         values: {},
         helper_text: {},
+        popup_width: {},
         cvs: [],
         search_cvs: config.search_cvs || [
             {id: 'subject', name: 'Subject', field: 'subject', list: 'subjectcodes'},
@@ -1050,6 +1051,9 @@ function MetadataService(api, subscribersService, config, vocabularies, $rootSco
                     self.values[vocabulary._id] = vocabulary.items;
                     if (_.has(vocabulary, 'helper_text')) {
                         self.helper_text[vocabulary._id] = vocabulary.helper_text;
+                    }
+                    if (_.has(vocabulary, 'popup_width')) {
+                        self.popup_width[vocabulary._id] = vocabulary.popup_width;
                     }
                 });
                 self.cvs = result;
