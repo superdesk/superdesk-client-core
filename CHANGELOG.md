@@ -1,5 +1,11 @@
 # Superdesk Client Changelog
 
+## [1.21.3] 2018-07-03
+
+### Fixed
+
+- Allow images from external sources to be editable.
+
 ## [1.21.2] 2018-06-28
 
 ### Fixed
