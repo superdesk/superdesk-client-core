@@ -33,7 +33,7 @@ export function PhotoDeskFieldsComponent(props) {
                         <span className="sd-grid-item__text-strong">{value}</span>
                     </span>
                 )
-                : <span key={i}>{value}</span>;
+                : <span className="sd-grid-item__footer-block-item" key={i}>{value}</span>;
         });
 }
 
