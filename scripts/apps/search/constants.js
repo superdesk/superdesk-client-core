@@ -76,10 +76,10 @@ export const DEFAULT_GRID_VIEW_FOOTER_CONFIG = {
     left: [
         'type',
         'urgency',
-        'broadcast',
+        'priority',
     ],
     right: [
-        'priority',
+        'state',
     ],
 };
 

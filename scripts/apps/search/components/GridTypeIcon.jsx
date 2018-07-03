@@ -6,7 +6,7 @@ import classNames from 'classnames';
 export function GridTypeIcon(props) {
     if (props.photoGrid) {
         return React.createElement('span',
-            {className: classNames('sd-grid-item__type-icn sd-grid-item__footer-block-item',
+            {className: classNames('sd-grid-item__type-icn',
                 {swimlane: props.swimlane}
             )},
             React.createElement(TypeIcon, {type: props.item.type, svc: props.svc})

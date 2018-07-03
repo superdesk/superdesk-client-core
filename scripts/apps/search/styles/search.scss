@@ -378,3 +378,26 @@
         }
     }
 }
+
+.sd-grid-item__footer {
+    overflow: hidden;
+    .sd-grid-item__footer-block--multi-r {
+        overflow: hidden;
+        .sd-grid-item__footer-block-item {
+            flex-shrink: 1 !important;
+            overflow: hidden;
+        }
+    }
+    .sd-grid-item__footer-block-item {
+        flex-grow: 0;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        .state-label {
+            margin: 0 auto;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    }
+}

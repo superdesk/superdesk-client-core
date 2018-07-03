@@ -22,20 +22,20 @@ export function PhotoDeskFooter(props) {
                             item={item}
                             svc={svc}
                             labelMode="never-with-custom-renderer"
-                            itemClassName="sd-grid-item__footer-block-item"
+                            itemClassName=""
                         />
                     </div>
                 ) : null
             }
             {
                 Array.isArray(fieldsRight) === true && fieldsRight.length > 0 ? (
-                    <div className="sd-grid-item__footer-block sd-grid-item__footer-block--multi-l">
+                    <div className="sd-grid-item__footer-block sd-grid-item__footer-block--multi-r">
                         <PhotoDeskFields
                             fieldsConfig={fieldsRight}
                             item={item}
                             svc={svc}
                             labelMode="never-with-custom-renderer"
-                            itemClassName="sd-grid-item__footer-block-item"
+                            itemClassName=""
                         />
                     </div>
                 ) : null
