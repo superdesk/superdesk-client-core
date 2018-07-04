@@ -505,22 +505,45 @@ $editor-styleButton-size: 3rem;
         border-bottom: 1.5em solid transparent;
 
         &.unstyled__block--over {
-            border-bottom-color: silver;
-        }
+            border-bottom-color: scale-color($blue, $alpha: -70%);
+		}
+		&:only-child {
+			border-bottom-width: 0.6em;
+		}
 	}
-
-	[data-block="true"]:last-child {
-        border-bottom-width: 0.6em;
+	h1, h2, h3, h4, h5, h6 {
+		z-index: 1;
+		&[data-block="true"] {
+			border-bottom-width: 0.5em;
+		}
 	}
-
-    .unstyled {
-        padding-top: 1.5em;
+    .unstyled  {
+        padding-top: 0.4em;
+	}
+    .unstyled:first-child {
+        padding-top: 0.6em;
+	}
+	.unstyled:last-child {
+        padding-bottom: 1em;
     }
 
     .unstyled--over {
         padding-top: 0;
-        border-top: 1.5em solid silver;
-    }
+        border-top: 1.5em solid scale-color($blue, $alpha: -70%);
+	}
+
+	.unstyled {
+		+ h3, + h4, + h5, + h6 {
+			&[data-block="true"] {
+				padding-top: .4em;
+			}
+		}
+		+ h1, + h2 {
+			&[data-block="true"] {
+				padding-top: 0.2em;
+			}
+		}
+	}
 }
 
 .space-component {
