@@ -133,122 +133,15 @@
                 </div>
                 <div class="sd-slide-in-panel__content" ng-if="nav !== 'image-edit'">
                     <div class="sd-slide-in-panel__content-block sd-slide-in-panel__content-block--first">
-                        <div class="form__row" ng-if="validator.headline">
-                            <sd-line-input
-                                ng-model="data.metadata.headline"
-                                data-dark="true"
-                                data-boxed="true"
-                                data-required="validator.headline.required"
-                                data-label="{{:: 'Title' | translate}}"
-                                data-disabled="!data.editable"
-                                data-onchange="data.isDirty = true"
-                                data-maxlength="validator.headline.maxlength">
-                            </sd-line-input>
-
-                        </div>
-                        <div class="form__row" ng-if="validator.description_text">
-                            <sd-line-input
-                                ng-model="data.metadata.description_text"
-                                data-dark="true"
-                                data-boxed="true"
-                                data-required="validator.description_text.required"
-                                data-label="{{:: 'Description' | translate}}"
-                                data-disabled="!data.editable"
-                                data-onchange="data.isDirty = true"
-                                data-maxlength="validator.description_text.maxlength">
-                            </sd-line-input>
-
-                        </div>
-                        <div class="form__row" ng-if="!data.isAssociated && validator.archive_description">
-                            <sd-line-input
-                                ng-model="data.metadata.archive_description"
-                                data-dark="true"
-                                data-boxed="true"
-                                data-required="validator.archive_description.required"
-                                data-label="{{:: 'Description' | translate}}"
-                                data-disabled="!data.editable"
-                                data-onchange="data.isDirty = true"
-                                data-maxlength="validator.archive_description.maxlength">
-                            </sd-line-input>
-
-                        </div>
-                        <div class="form__row" ng-if="data.isAssociated && validator.archive_description">
-                            <sd-line-input
-                                ng-model="data.metadata.archive_description"
-                                data-dark="true"
-                                data-boxed="true"
-                                data-required="false"
-                                data-label="{{:: 'Description' | translate}}"
-                                data-disabled="true">
-                            </sd-line-input>
-
-                        </div>
-                        <div class="form__row" ng-if="validator.alt_text">
-                            <sd-line-input
-                                ng-model="data.metadata.alt_text"
-                                data-dark="true"
-                                data-boxed="true"
-                                data-required="validator.alt_text.required"
-                                data-label="{{:: 'Alt Text' | translate}}"
-                                data-disabled="!data.editable"
-                                data-onchange="data.isDirty = true"
-                                data-maxlength="validator.alt_text.maxlength">
-                            </sd-line-input>
-
-                        </div>
-                        <div class="form__row" ng-if="validator.byline">
-                            <sd-line-input
-                                ng-model="data.metadata.byline"
-                                data-dark="true"
-                                data-boxed="true"
-                                data-required="validator.byline.required"
-                                data-label="{{:: 'Credit' | translate}}"
-                                data-disabled="!data.editable"
-                                data-onchange="data.isDirty = true">
-                            </sd-line-input>
-
-                        </div>
-                        <div class="form__row" ng-if="validator.copyrightholder">
-                            <sd-line-input
-                                ng-model="data.metadata.copyrightholder"
-                                data-dark="true"
-                                data-boxed="true"
-                                data-required="validator.copyrightholder.required"
-                                data-label="{{:: 'Copyright holder' | translate}}"
-                                data-disabled="!data.editable"
-                                data-onchange="data.isDirty = true">
-                            </sd-line-input>
-
-                        </div>
-                        <div class="form__row" ng-if="validator.usageterms">
-                            <sd-line-input
-                                data-dark="true"
-                                data-boxed="true"
-                                data-transclude="true"
-                                data-required="validator.copyrightnotice.required"
-                                data-label="{{:: 'Assign Rights' | translate}}">
-                                <select class="sd-line-input__select" ng-model="data.metadata.usageterms" ng-change="data.isDirty = true" ng-disabled="!data.editable">
-                                    <option translate value=""></option> <!-- not selected / blank option -->
-                                    <option translate value="single-usage">Single Usage</option>
-                                    <option translate value="time-restricted">Time Restricted</option>
-                                    <option translate value="indefinite-usage">Indefinite Usage</option>
-                                </select>
-                            </sd-line-input>
-
-                        </div>
-                        <div class="form__row" ng-if="validator.copyrightnotice">
-                            <sd-line-input
-                                ng-model="data.metadata.copyrightnotice"
-                                data-dark="true"
-                                data-boxed="true"
-                                data-required="validator.copyrightnotice.required"
-                                data-label="{{:: 'Copyright notice' | translate}}"
-                                data-disabled="!data.editable"
-                                data-onchange="data.isDirty = true"
-                                data-maxlength="validator.copyrightnotice.maxlength">
-                            </sd-line-input>
-
-                        </div>
+                        <div sd-media-metadata-editor 
+                            data-item="data.metadata"
+                            data-validator="validator"
+                            data-dark="true"
+                            data-boxed="true"
+                            data-on-change="data.isDirty = true"
+                            data-disabled="!data.editable"
+                            data-associated="data.isAssociated"
+                        ></div>
                     </div>
                 </div>
 
