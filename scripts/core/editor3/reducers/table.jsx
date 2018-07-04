@@ -1,7 +1,8 @@
-import {EditorState, Modifier} from 'draft-js';
+import {EditorState, Modifier, RichUtils} from 'draft-js';
 import {onChange} from './editor3';
 import insertAtomicBlockWithoutEmptyLines from '../helpers/insertAtomicBlockWithoutEmptyLines';
 import {createBlockSelection} from '../helpers/selection';
+import {getCell, setCell, getData} from '../helpers/table';
 
 /**
  * @description Contains the list of table related reducers.
@@ -20,6 +21,8 @@ const table = (state = {}, action) => {
         return removeCol(state);
     case 'TOOLBAR_TABLE_HEADER':
         return toggleTableHeader(state);
+    case 'TOOLBAR_TABLE_STYLE':
+        return toggleTableStyle(state, action.payload);
     default:
         return state;
     }
@@ -157,8 +160,8 @@ const processCells = (state, fn) => {
     const {i, j, key} = activeCell;
     const contentState = editorState.getCurrentContent();
     const block = contentState.getBlockForKey(key);
-    const {cells, numRows, numCols, withHeader} = getData(contentState, block);
-    const data = fn(cells, numCols, numRows, i, j, withHeader);
+    const {cells, numRows, numCols, withHeader, currentStyle} = getData(editorState, block);
+    const data = fn(cells, numCols, numRows, i, j, withHeader, currentStyle);
     const selection = createBlockSelection(editorState, block);
     const newContentState = Modifier.setBlockData(contentState, selection, {data: JSON.stringify(data)});
     const newEditorState = EditorState.push(editorState, newContentState, 'change-block-data');
@@ -167,25 +170,30 @@ const processCells = (state, fn) => {
     return onChange(state, newEditorState, entityDataHasChanged);
 };
 
-const getData = (contentState, block) => {
-    const entityKey = block.getEntityAt(0);
-    const entity = contentState.getEntity(entityKey);
-    const {data} = entity.getData();
-
-    if (block.getData().get('data')) {
-        return JSON.parse(block.getData().get('data'));
-    }
-
-    return data;
-};
-
 /**
  * @ngdoc method
  * @name toggleTableHeader
  * @description Toggles the table's header.
  */
 const toggleTableHeader = (state) =>
-    processCells(state, (cells, numCols, numRows, i, j, withHeader) =>
-        ({cells: cells, numRows: numRows, numCols: numCols, withHeader: !withHeader}));
+    processCells(state, (cells, numCols, numRows, i, j, withHeader, currentStyle) =>
+        ({cells: cells, numRows: numRows, numCols: numCols, withHeader: !withHeader, currentStyle: currentStyle}));
+
+/**
+ * @ngdoc method
+ * @name toggleTableStyle
+ * @description Toggles the table's style.
+ */
+const toggleTableStyle = (state, inlineStyle) =>
+    processCells(
+        state,
+        (cells, numCols, numRows, i, j, withHeader, currentStyle) => {
+            const data = {cells, numRows, numCols, withHeader, currentStyle};
+            const cellStateEditor = getCell(data, i, j);
+            const newCellEditorState = RichUtils.toggleInlineStyle(cellStateEditor, inlineStyle);
+
+            return setCell(data, i, j, newCellEditorState);
+        }
+    );
 
 export default table;

@@ -60,3 +60,15 @@ export function removeCol() {
 export function toggleTableHeader() {
     return {type: 'TOOLBAR_TABLE_HEADER'};
 }
+
+/**
+ * @ngdoc method
+ * @name toggleTableStyle
+ * @description Toggles the style on current cell.
+ */
+export function toggleTableStyle(inlineStyle) {
+    return {
+        type: 'TOOLBAR_TABLE_STYLE',
+        payload: inlineStyle,
+    };
+}

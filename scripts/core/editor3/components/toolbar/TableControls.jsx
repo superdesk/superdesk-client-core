@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import StyleButton from './StyleButton';
 import * as actions from '../../actions';
+import {inlineStyles} from '../../helpers/inlineStyles';
+import {getData, getCell} from '../../helpers/table';
 
 /**
  * @ngdoc React
@@ -21,15 +23,18 @@ const TableControlsComponent = ({
     removeCol,
     activeCell,
     editorState,
+    editorFormat,
     toggleTableHead,
+    toggleTableStyle,
     className,
 }) => {
-    const {key} = activeCell;
+    const {i, j, key} = activeCell;
     const contentState = editorState.getCurrentContent();
     const block = contentState.getBlockForKey(key);
-    const entityKey = block.getEntityAt(0);
-    const entity = contentState.getEntity(entityKey);
-    const {withHeader} = entity.getData().data;
+    const data = getData(editorState, block);
+    const {withHeader} = data;
+    const cellEditorState = getCell(data, i, j);
+    const currentStyle = cellEditorState.getCurrentInlineStyle();
 
     return <div className={'table-controls ' + className}>
         <StyleButton active={withHeader} label={'TH'} onToggle={toggleTableHead} />
@@ -40,6 +45,17 @@ const TableControlsComponent = ({
         <span className="Editor3-styleButton Editor3-styleButton--short"
             onClick={removeCol}><i className="icon-minus-sign" /></span>
         <span className="Editor3-styleButton" onClick={addColAfter}><i className="icon-plus-sign" /> col</span>
+        {editorFormat.filter((type) => type in inlineStyles)
+            .map((type) =>
+                <StyleButton
+                    key={type}
+                    active={currentStyle.has(inlineStyles[type])}
+                    label={type}
+                    onToggle={toggleTableStyle}
+                    style={inlineStyles[type]}
+                />
+            )
+        }
     </div>;
 };
 
@@ -50,7 +66,9 @@ TableControlsComponent.propTypes = {
     removeCol: PropTypes.func,
     activeCell: PropTypes.object.isRequired,
     editorState: PropTypes.object,
+    editorFormat: PropTypes.array,
     toggleTableHead: PropTypes.func,
+    toggleTableStyle: PropTypes.func,
     className: PropTypes.string,
 };
 
@@ -60,11 +78,13 @@ const mapDispatchToProps = (dispatch) => ({
     removeRow: () => dispatch(actions.removeRow()),
     removeCol: () => dispatch(actions.removeCol()),
     toggleTableHead: () => dispatch(actions.toggleTableHeader()),
+    toggleTableStyle: (inlineStyle) => dispatch(actions.toggleTableStyle(inlineStyle)),
 });
 
 const mapStateToProps = (state) => ({
     activeCell: state.activeCell,
     editorState: state.editorState,
+    editorFormat: state.editorFormat,
 });
 
 const TableControls = connect(mapStateToProps, mapDispatchToProps)(TableControlsComponent);

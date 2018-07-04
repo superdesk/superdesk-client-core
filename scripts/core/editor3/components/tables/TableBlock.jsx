@@ -4,9 +4,8 @@ import classNames from 'classnames';
 import * as actions from '../../actions';
 import {connect} from 'react-redux';
 import {TableCell} from '.';
-import {LinkDecorator} from '../links/LinkDecorator';
-import {Modifier, ContentState, EditorState, CompositeDecorator, convertToRaw, convertFromRaw} from 'draft-js';
-import {createBlockSelection} from '../../helpers/selection';
+import {EditorState} from 'draft-js';
+import {getCell, setCell, getData, setData} from '../../helpers/table';
 
 /**
  * @ngdoc React
@@ -22,8 +21,7 @@ export class TableBlockComponent extends Component {
         super(props);
 
         this.setCell = this.setCell.bind(this);
-        this.getCell = this.getCell.bind(this);
-        this.data = this.data.bind(this);
+        this.getData = this.getData.bind(this);
         this.onFocus = this.onFocus.bind(this);
     }
 
@@ -32,63 +30,16 @@ export class TableBlockComponent extends Component {
      * @name TableBlockComponent#setCell
      * @param {Number} row The row of the cell in the table
      * @param {Number} col The column of the cell in the table
-     * @param {Object} cellState The state of the editor within the cell
+     * @param {Object} cellEditorState The state of the editor within the cell
      * @description Updates data about this cell inside the entity for this atomic
      * block.
      */
-    setCell(row, col, cellState) {
-        const {block, contentState, editorState, parentOnChange} = this.props;
-        const entityKey = block.getEntityAt(0);
-        const cellContentState = cellState.getCurrentContent();
-        const data = this.data();
-        let forceUpdate = true;
+    setCell(row, col, cellEditorState) {
+        const {block, editorState, parentOnChange} = this.props;
+        const newData = setCell(this.getData(), row, col, cellEditorState);
+        const newEditorState = setData(editorState, block, newData);
 
-        if (!data.cells[row]) {
-            data.cells[row] = [];
-        }
-
-        if (JSON.stringify(data.cells[row][col]) === JSON.stringify(convertToRaw(cellContentState))) {
-            return;
-        }
-
-        if (data.cells[row][col]) {
-            forceUpdate = convertFromRaw(data.cells[row][col]).getPlainText() !== cellContentState.getPlainText();
-        }
-
-        data.cells[row][col] = convertToRaw(cellContentState);
-
-        const lastChangeType = cellState.getLastChangeType();
-        const selection = createBlockSelection(editorState, block);
-        const newContentState = Modifier.setBlockData(contentState, selection, {data: JSON.stringify(data)});
-        const newStateState = EditorState.push(
-            editorState,
-            newContentState.replaceEntityData(entityKey, {data}),
-            lastChangeType
-        );
-
-        parentOnChange(newStateState, forceUpdate);
-    }
-
-    /**
-     * @ngdoc method
-     * @name TableBlockComponent#getCell
-     * @param {Number} row The row of the cell in the table
-     * @param {Number} col The column of the cell in the table
-     * @description Retrieves the content state of the cell at row/col.
-     */
-    getCell(row, col) {
-        const {cells} = this.data();
-        const decorator = new CompositeDecorator([LinkDecorator]);
-
-        let editorState;
-
-        if (!cells[row] || !cells[row][col]) {
-            editorState = EditorState.createWithContent(ContentState.createFromText(''), decorator);
-        } else {
-            editorState = EditorState.createWithContent(convertFromRaw(cells[row][col]), decorator);
-        }
-
-        return editorState;
+        parentOnChange(newEditorState, newData.forceUpdate);
     }
 
     /**
@@ -97,17 +48,10 @@ export class TableBlockComponent extends Component {
      * @description Returns the data contained in the entity of this atomic block.
      * @return {Object}
      */
-    data() {
-        const {block, contentState} = this.props;
-        const entityKey = block.getEntityAt(0);
-        const entity = contentState.getEntity(entityKey);
-        const {data} = entity.getData();
+    getData() {
+        const {block, editorState} = this.props;
 
-        if (block.getData().get('data')) {
-            return JSON.parse(block.getData().get('data'));
-        }
-
-        return data;
+        return getData(editorState, block);
     }
 
     onFocus(i, j, event) {
@@ -130,7 +74,8 @@ export class TableBlockComponent extends Component {
     }
 
     render() {
-        const {numRows, numCols, withHeader} = this.data();
+        const data = this.getData();
+        const {numRows, numCols, withHeader} = data;
 
         let cx = classNames({
             'table-block': true,
@@ -147,7 +92,7 @@ export class TableBlockComponent extends Component {
                                     <TableCell
                                         key={`cell-${i}-${j}-${numRows}-${numCols}`}
                                         readOnly={this.props.readOnly}
-                                        editorState={this.getCell(i, j)}
+                                        editorState={getCell(data, i, j)}
                                         onChange={this.setCell.bind(this, i, j)}
                                         onUndo={this.onUndo.bind(this)}
                                         onFocus={this.onFocus.bind(this, i, j)} />
@@ -163,7 +108,6 @@ export class TableBlockComponent extends Component {
 
 TableBlockComponent.propTypes = {
     block: PropTypes.object.isRequired,
-    contentState: PropTypes.object.isRequired,
     readOnly: PropTypes.bool.isRequired,
     editorState: PropTypes.object.isRequired,
     setActiveCell: PropTypes.func.isRequired,

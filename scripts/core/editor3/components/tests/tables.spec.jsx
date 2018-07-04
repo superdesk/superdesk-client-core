@@ -13,7 +13,7 @@ describe('editor3.component.table-block', () => {
                 contentState={contentState}
                 block={block}
                 setActiveCell={() => { /* no-op */ }}
-                editorState={{}}
+                editorState={EditorState.createWithContent(contentState)}
                 parentOnChange={() => { /* no-op */ }}
                 readOnly={false} />
         );
@@ -29,7 +29,7 @@ describe('editor3.component.table-block', () => {
                 contentState={contentState}
                 block={block}
                 setActiveCell={() => { /* no-op */ }}
-                editorState={{}}
+                editorState={EditorState.createWithContent(contentState)}
                 parentOnChange={() => { /* no-op */ }}
                 readOnly={true} />
         );
