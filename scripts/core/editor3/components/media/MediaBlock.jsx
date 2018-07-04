@@ -224,7 +224,7 @@ export class MediaBlockComponent extends Component {
                                     </span>
                                 </div>
                                 {
-                                    data.source !== 'Superdesk' ? null : (
+                                    editable && (
                                         <div className="image-block__icons-block">
                                             <a className="image-block__image-edit"
                                                 onClick={this.onClick}><i className="icon-pencil"/></a>
