@@ -29,22 +29,21 @@ class BaseUnstyledComponent extends React.Component {
         if (block) {
             event.preventDefault();
             event.stopPropagation();
-            this.setState({over: false});
             this.props.dispatch(moveBlock(block, this.getDropBlockKey(), this.dropInsertionMode));
         }
+
+        this.setState({over: false});
     }
 
     onDragOver(event) {
-        if (isEditorBlockEvent(event)) {
-            if (this.leaveTimeout) {
-                clearTimeout(this.leaveTimeout);
-                this.leaveTimeout = null;
-            }
-
-            event.preventDefault();
-            event.stopPropagation();
-            this.setState({over: true});
+        if (this.leaveTimeout) {
+            clearTimeout(this.leaveTimeout);
+            this.leaveTimeout = null;
         }
+
+        event.preventDefault();
+        event.stopPropagation();
+        this.setState({over: true});
     }
 
     onDragLeave(event) {
