@@ -66,8 +66,16 @@ export class MediaBlockComponent extends Component {
         const {block, cropImage, contentState} = this.props;
         const entityKey = block.getEntityAt(0);
         const entity = contentState.getEntity(entityKey);
+        const data = entity.getData();
+        const isImage = data.media.type === 'picture';
+        const isNew = false;
+        let hideTabs = [];
 
-        cropImage(entityKey, entity.getData());
+        if (!isImage) {
+            hideTabs = ['crop', 'image-edit'];
+        }
+
+        cropImage(entityKey, data, {isNew, hideTabs});
     }
 
     /**
@@ -215,7 +223,14 @@ export class MediaBlockComponent extends Component {
                                         {data.headline || gettextCatalog.getString('[No Value]')}
                                     </span>
                                 </div>
-                                <div className="image-block__icons-block" />
+                                {
+                                    editable && (
+                                        <div className="image-block__icons-block">
+                                            <a className="image-block__image-edit"
+                                                onClick={this.onClick}><i className="icon-pencil"/></a>
+                                        </div>
+                                    )
+                                }
                                 <div className="image-block__metadata">
                                     <span>
                                         <em>{gettextCatalog.getString('Alt text:')}{' '}</em>
@@ -248,7 +263,6 @@ export class MediaBlockComponent extends Component {
                     {mediaType === 'audio' &&
                         <div>
                             <audio controls src={rendition.href} alt={alt} width="100%" height="100%" />
-
                             <div className="image-block__metadata image-block__metadata--plain">
                                 <span>
                                     <em>{gettextCatalog.getString('Credit:')}{' '}</em>
@@ -304,7 +318,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    cropImage: (entityKey, entityData) => dispatch(actions.cropImage(entityKey, entityData)),
+    cropImage: (entityKey, entityData, options) => dispatch(actions.cropImage(entityKey, entityData, options)),
     removeBlock: (blockKey) => dispatch(actions.removeBlock(blockKey)),
     changeCaption: (entityKey, newCaption, field) => dispatch(actions.changeImageCaption(entityKey, newCaption, field)),
     setLocked: () => dispatch(actions.setLocked(true)),

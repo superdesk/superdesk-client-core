@@ -18,7 +18,7 @@ describe('editor3.actions.toolbar', () => {
 
         $rootScope.$apply(); // settles promise
 
-        expect(renditions.crop).toHaveBeenCalledWith('image_data', {isNew: false});
+        expect(renditions.crop).toHaveBeenCalledWith('image_data', {});
         expect(dispatch).toHaveBeenCalledWith({
             type: 'TOOLBAR_UPDATE_IMAGE',
             payload: {entityKey: 'key', media: 'cropped_image'},

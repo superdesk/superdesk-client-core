@@ -74,11 +74,13 @@ export function RenditionsService(metadata, $q, api, superdesk, _) {
                 withRatio = self.renditions;
             }
 
-            const cropOptions = { // default options
+            // Merge options with defauts
+            const cropOptions = {
                 isNew: true,
                 isAssociated: false,
                 editable: true,
                 defaultTab: false,
+                hideTabs: [],
                 showMetadata: false,
                 ...options,
             };

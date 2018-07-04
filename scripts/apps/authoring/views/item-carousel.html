@@ -28,7 +28,7 @@
                                 </span>
                             </div>
                             <div class="item-association__icons-block">
-                                <!-- Leave this block to push the content below -->
+                                <a class="item-association__image-action" ng-click="associations.isMediaEditable() && associations.edit(this, item[item.fieldId]); $event.stopPropagation()"><i class="icon-pencil"></i></a>
                             </div>
                             <div class="item-association__metadata">
                                 <span>

@@ -4,9 +4,9 @@
     <h3 class="modal__heading modal__heading--no-grow" ng-if="nav === 'crop'">{{ :: 'Edit Crops' | translate }}</h3>
 
     <div class="modal__header-buttons  modal__header-buttons--center modal__header-element-grow button-nav">
-        <button class="button-nav__btn" ng-click="nav = 'view'; showMetadata = true" ng-class="{'button-nav__btn--active' : !nav || nav === 'view'}" ng-disabled="controls.isDirty || isAoISelectionModeEnabled" translate>Details</button>
-        <button class="button-nav__btn" ng-click="nav = 'image-edit'; showMetadata = true" ng-show="data.editable" ng-class="{'button-nav__btn--active': nav === 'image-edit'}" ng-disabled="controls.isDirty || isAoISelectionModeEnabled" translate>Edit image</button>
-        <button class="button-nav__btn" ng-click="nav = 'crop'; showMetadata = false" ng-show="data.editable" ng-class="{'button-nav__btn--active': nav === 'crop'}" ng-disabled="controls.isDirty || isAoISelectionModeEnabled" translate>Edit crops</button>
+        <button class="button-nav__btn" ng-click="nav = 'view'; showMetadata = true" ng-class="{'button-nav__btn--active' : !nav || nav === 'view'}" ng-show="!hideTabs.includes('view')" ng-disabled="controls.isDirty || isAoISelectionModeEnabled" translate>Details</button>
+        <button class="button-nav__btn" ng-click="nav = 'image-edit'; showMetadata = true" ng-show="data.editable && !hideTabs.includes('image-edit')" ng-class="{'button-nav__btn--active': nav === 'image-edit'}" ng-disabled="controls.isDirty || isAoISelectionModeEnabled" translate>Edit image</button>
+        <button class="button-nav__btn" ng-click="nav = 'crop'; showMetadata = false" ng-show="data.editable && !hideTabs.includes('crop')" ng-class="{'button-nav__btn--active': nav === 'crop'}" ng-disabled="controls.isDirty || isAoISelectionModeEnabled" translate>Edit crops</button>
     </div>
 
     <div class="modal__header-buttons modal__header-buttons--right">
@@ -24,7 +24,8 @@
             </a>
             <div class="sd-photo-preview" ng-if="!nav || nav === 'view'">
                 <div class="sd-photo-preview__image">
-                    <img ng-src="{{data.item.renditions.original.href}}">
+                    <img ng-if="data.item.type === 'image'" ng-src="{{data.item.renditions.original.href}}">
+                    <video controls ng-if="data.item.type === 'video'" ng-src="{{data.item.renditions.original.href}}">
                 </div>
             </div>
 
@@ -246,7 +247,7 @@
                                 data-onchange="data.isDirty = true"
                                 data-maxlength="validator.copyrightnotice.maxlength">
                             </sd-line-input>
-   
+
                         </div>
                     </div>
                 </div>
@@ -259,7 +260,7 @@
                             <a class="btn" ng-click="showAreaOfInterestView(false)" translate>Cancel</a>
                             <a class="btn btn--primary" ng-click="saveAreaOfInterest(areaOfInterestData)" ng-disabled="!isAoIDirty" translate>Confirm crop</a>
                         </div>
-                        
+
                         <div class="modal__sliding-toolbar" ng-if="controls.isDirty">
                             <div class="sliding-toolbar__inner"></div>
                             <a class="btn" ng-click="cancelImageChanges()" translate>Cancel</a>

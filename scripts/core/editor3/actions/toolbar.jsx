@@ -82,16 +82,17 @@ export function insertMedia(files) {
  * @name cropImage
  * @param {String} entityKey
  * @param {Object} entityData
+ * @param {Object} options
  * @return {String} action
  * @description Displays the external crop image dialog and returns the crop image
  * action using data from the provided entity.
  */
-export function cropImage(entityKey, entityData) {
+export function cropImage(entityKey, entityData, options = {}) {
     const renditions = ng.get('renditions');
     const {media} = entityData;
 
     return (dispatch) => {
-        renditions.crop(media, {isNew: false}).then((cropped) => {
+        renditions.crop(media, options).then((cropped) => {
             dispatch({
                 type: 'TOOLBAR_UPDATE_IMAGE',
                 payload: {
