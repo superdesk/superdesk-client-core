@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {getSelectedEntityType, getSelectedEntityRange} from '../links/entityUtils';
+import {OrderedSet} from 'immutable';
 import {Editor, EditorState, RichUtils, getDefaultKeyBinding} from 'draft-js';
+import {getSelectedEntityType, getSelectedEntityRange} from '../links/entityUtils';
+import {customStyleMap} from '../customStyleMap';
 
 /**
  * @ngdoc React
@@ -52,7 +54,10 @@ export class TableCell extends Component {
             return;
         }
 
-        const nextEditorState = EditorState.forceSelection(nextProps.editorState, selection);
+        const currentStyle = nextProps.editorState.getCurrentInlineStyle();
+        let nextEditorState = EditorState.forceSelection(nextProps.editorState, selection);
+
+        nextEditorState = EditorState.setInlineStyleOverride(nextEditorState, OrderedSet(currentStyle));
 
         this.setState({
             editorState: nextEditorState,
@@ -147,6 +152,10 @@ export class TableCell extends Component {
      * @description Triggered on changes to the cell's state.
      */
     onChange(editorState) {
+        if (editorState.getLastChangeType() == null) {
+            return;
+        }
+
         this.setState(
             {editorState},
             () => this.props.onChange(editorState)
@@ -162,6 +171,7 @@ export class TableCell extends Component {
                 <Editor
                     onFocus={onFocus}
                     editorState={editorState}
+                    customStyleMap={customStyleMap}
                     handleKeyCommand={this.handleKeyCommand}
                     readOnly={readOnly}
                     onChange={this.onChange}
