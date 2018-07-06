@@ -198,14 +198,15 @@ export function AssociationController(config, send, api, $q, superdesk,
         }
 
         const isImage = self.isImage(item.renditions.original);
+        const defaultTab = isImage ? 'crop' : 'view';
 
         const cropOptions = {
             isNew: 'isNew' in options ? options.isNew : false,
             hideTabs: isImage ? [] : ['crop', 'image-edit'],
             editable: scope.editable,
             isAssociated: true,
-            defaultTab: isImage ? 'crop' : 'view',
-            showMetadata: true,
+            defaultTab: 'defaultTab' in options ? options.defaultTab : defaultTab,
+            showMetadata: 'showMetadata' in options ? options.showMetadata : true,
         };
 
         if (item.renditions && item.renditions.original) {

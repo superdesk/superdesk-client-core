@@ -46,6 +46,7 @@ describe('editor3.components.media-block', () => {
         const entityKey = block.getEntityAt(0);
         const entity = contentState.getEntity(entityKey);
 
-        expect(cropImage).toHaveBeenCalledWith(entityKey, entity.getData(), {isNew: false, hideTabs: []});
+        expect(cropImage).toHaveBeenCalledWith(entityKey, entity.getData(),
+            {isNew: false, hideTabs: [], showMetadata: true});
     });
 });
