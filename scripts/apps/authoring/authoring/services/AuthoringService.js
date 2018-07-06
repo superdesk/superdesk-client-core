@@ -501,7 +501,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
 
         action.spike = currentItem.state !== 'spiked' && userPrivileges.spike;
 
-        action.send = currentItem._current_version > 0 && userPrivileges.move;
+        action.send = currentItem._current_version > 0 && userPrivileges.move && lockedByMe;
     };
 
     this._getCurrentItem = function(item) {
