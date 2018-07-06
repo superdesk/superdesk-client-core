@@ -182,8 +182,8 @@ $editor-styleButton-size: 3rem;
 	}
 
 	.image-block__title {
-		margin-bottom: 1rem;
-		font-size: 1.6rem;
+		margin-bottom: 1.6rem;
+		font-size: 1.5rem;
 		font-weight: 500;
 	}
 	.image-block__description {
@@ -278,7 +278,7 @@ $editor-styleButton-size: 3rem;
 		&--plain {
 			color: inherit;
 			background:none;
-			margin: 1rem 0;
+			margin: 1rem -2%;
 			span {
 				border-top: 1px dotted rgba(123, 123, 123, 0.5);
 				margin: 0 2% 0 2%;
@@ -292,6 +292,10 @@ $editor-styleButton-size: 3rem;
 				}
 			}
 		}
+	}
+	.image-block__action-bar {
+		text-align: right;
+		padding: 0.6rem 0 0;
 	}
 	.image-block__icons-block {
 		display: flex;

@@ -69,13 +69,14 @@ export class MediaBlockComponent extends Component {
         const data = entity.getData();
         const isImage = data.media.type === 'picture';
         const isNew = false;
+        const showMetadata = true;
         let hideTabs = [];
 
         if (!isImage) {
             hideTabs = ['crop', 'image-edit'];
         }
 
-        cropImage(entityKey, data, {isNew, hideTabs});
+        cropImage(entityKey, data, {isNew, hideTabs, showMetadata});
     }
 
     /**
@@ -215,53 +216,49 @@ export class MediaBlockComponent extends Component {
                         </div>
                     }
                     {mediaType === 'video' &&
-                        <div className="image-block__image">
-                            <div className="image-block__image-overlay image-block__image-overlay--video">
-                                <div className="image-block__metadata image-block__metadata--top">
-                                    <span>
-                                        <em>{gettextCatalog.getString('Title:')}{' '}</em>
-                                        {data.headline || gettextCatalog.getString('[No Value]')}
-                                    </span>
-                                </div>
-                                {
-                                    editable && (
-                                        <div className="image-block__icons-block">
-                                            <a className="image-block__image-edit"
-                                                onClick={this.onClick}><i className="icon-pencil"/></a>
-                                        </div>
-                                    )
-                                }
-                                <div className="image-block__metadata">
-                                    <span>
-                                        <em>{gettextCatalog.getString('Alt text:')}{' '}</em>
-                                        {data.alt_text || gettextCatalog.getString('[No Value]')}
-                                    </span>
-                                    <span>
-                                        <em>{gettextCatalog.getString('Credit:')}{' '}</em>
-                                        {data.byline || gettextCatalog.getString('[No Value]')}
-                                    </span>
-                                    <span>
-                                        <em>{gettextCatalog.getString('Copyright holder:')}{' '}</em>
-                                        {data.copyrightholder || gettextCatalog.getString('[No Value]')}
-                                    </span>
-                                    <span>
-                                        <em>{gettextCatalog.getString('Assign rights:')}{' '}</em>
-                                        {
-                                            getTranslationForAssignRights(data.usageterms, gettextCatalog)
-                                            || gettextCatalog.getString('[No Value]')
-                                        }
-                                    </span>
-                                    <span>
-                                        <em>{gettextCatalog.getString('Copyright notice:')}{' '}</em>
-                                        {data.copyrightnotice || gettextCatalog.getString('[No Value]')}
-                                    </span>
-                                </div>
-                            </div>
+                        <div>
+                            <Textarea
+                                placeholder={gettext('Title')}
+                                onFocus={setLocked}
+                                onClick={setLocked}
+                                className="image-block__title"
+                                value={data.headline}
+                                onChange={this.onChange}
+                            />
                             <video controls src={rendition.href} alt={alt} width="100%" height="100%" />
+                            <div className="image-block__metadata image-block__metadata--plain">
+                                <span>
+                                    <em>{gettextCatalog.getString('Credit:')}{' '}</em>
+                                    {data.byline || gettextCatalog.getString('[No Value]')}
+                                </span>
+                                <span>
+                                    <em>{gettextCatalog.getString('Copyright holder:')}{' '}</em>
+                                    {data.copyrightholder || gettextCatalog.getString('[No Value]')}
+                                </span>
+                                <span>
+                                    <em>{gettextCatalog.getString('Assign rights:')}{' '}</em>
+                                    {
+                                        getTranslationForAssignRights(data.usageterms, gettextCatalog)
+                                        || gettextCatalog.getString('[No Value]')
+                                    }
+                                </span>
+                                <span>
+                                    <em>{gettextCatalog.getString('Copyright notice:')}{' '}</em>
+                                    {data.copyrightnotice || gettextCatalog.getString('[No Value]')}
+                                </span>
+                            </div>
                         </div>
                     }
                     {mediaType === 'audio' &&
                         <div>
+                            <Textarea
+                                placeholder={gettext('Title')}
+                                onFocus={setLocked}
+                                onClick={setLocked}
+                                className="image-block__title"
+                                value={data.headline}
+                                onChange={this.onChange}
+                            />
                             <audio controls src={rendition.href} alt={alt} width="100%" height="100%" />
                             <div className="image-block__metadata image-block__metadata--plain">
                                 <span>
@@ -284,6 +281,7 @@ export class MediaBlockComponent extends Component {
                                     {data.copyrightnotice || gettextCatalog.getString('[No Value]')}
                                 </span>
                             </div>
+
                         </div>
 
                     }
@@ -296,6 +294,12 @@ export class MediaBlockComponent extends Component {
                         value={data.description_text}
                         onChange={this.onChange}
                     />
+                    {(mediaType === 'audio' || mediaType === 'video') &&
+                        <div className="image-block__action-bar">
+                            <a className="btn btn--hollow btn--small"
+                                onClick={this.onClick}><span translate>Edit metadata</span></a>
+                        </div>
+                    }
                 </div>
             </div>
         );

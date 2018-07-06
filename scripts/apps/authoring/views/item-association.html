@@ -71,6 +71,9 @@
                     {{related.copyrightnotice || ('[No Value]' | translate)}}
                 </span>
             </div>
+            <div class="item-association__action-bar" ng-if="related && editable">
+                <a class="btn btn--hollow btn--small" ng-click="associations.isMediaEditable() && associations.edit(this, related); $event.stopPropagation()"><span translate>Edit metadata</span></a>
+            </div>
         </div>
         <!-- image -->
         <div class="item-association__image-container" ng-if="related && (related.type === 'picture' || related.type === 'graphic')">
@@ -82,7 +85,9 @@
                     </span>
                 </div>
                 <div class="item-association__icons-block">
-                    <a ng-if="related && editable" class="item-association__image-action" ng-click="associations.isMediaEditable() && associations.edit(this, related); $event.stopPropagation()"><i class="icon-pencil"></i></a>
+                    <a ng-if="related && editable" class="item-association__image-action" ng-click="associations.isMediaEditable() && associations.edit(this, related, {defaultTab: 'view'}); $event.stopPropagation()" sd-tooltip="Edit metadata"><i class="icon-pencil"></i></a>
+                    <a ng-if="related && editable" class="item-association__image-action" ng-click="associations.isMediaEditable() && associations.edit(this, related, {defaultTab: 'image-edit'}); $event.stopPropagation()" sd-tooltip="Edit image"><i class="icon-switches"></i></a>
+                    <a ng-if="related && editable" class="item-association__image-action" ng-click="associations.isMediaEditable() && associations.edit(this, related, {defaultTab: 'crop', showMetadata: false}); $event.stopPropagation()" sd-tooltip="Edit crops"><i class="icon-crop"></i></a>
                 </div>
                 <div class="item-association__metadata" ng-if="related.type === 'picture' || related.type === 'graphic'">
                     <span>
@@ -108,26 +113,28 @@
                 </div>
             </div>
             <img ng-src="{{ related.renditions.viewImage.href}}"
-            ng-class="{'not-editable': !associations.isMediaEditable() || !editable}"
-            ng-click="associations.isMediaEditable() && associations.edit(this, related); $event.stopPropagation()">
+                 ng-class="{'not-editable': !associations.isMediaEditable() || !editable}"
+                 ng-click="associations.isMediaEditable() && associations.edit(this, related); $event.stopPropagation()">
         </div>
     </figure>
 
-    <div contenteditable="true"
+    <div contenteditable="{{editable}}"
         sd-auto-height
         tansa-scope-sync
         ng-model="related.headline"
         ng-model-options="{debounce: 1000}"
         ng-change="onchange()"
+        sd-placeholder="Add title"
         ng-if="related && showTitle"
-        class="sd-media-carousel__media-caption">
+        class="sd-media-carousel__media-title">
     </div>
-    <div contenteditable="true"
+    <div contenteditable="{{editable}}"
         sd-auto-height
         tansa-scope-sync
         ng-model="related.description_text"
         ng-model-options="{debounce: 1000}"
         ng-change="onchange()"
+        sd-placeholder="Add caption"
         ng-if="related"
         class="sd-media-carousel__media-caption">
     </div>

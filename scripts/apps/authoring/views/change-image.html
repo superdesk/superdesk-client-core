@@ -11,7 +11,6 @@
 
     <div class="modal__header-buttons modal__header-buttons--right">
         <button class="btn btn--ui-dark btn--hollow" ng-click="close()" ng-disabled="controls.isDirty || isAoISelectionModeEnabled">{{ 'Close' | translate }}</button>
-        <!--<button class="btn btn--primary btn--hollow" ng-click="save()" ng-disabled="!saveIsEnabled() || isAoISelectionModeEnabled">{{ 'Save' | translate }}</button>-->
         <button class="btn btn--primary btn--hollow" ng-click="done(true)" ng-disabled="!saveIsEnabled() || isAoISelectionModeEnabled">{{ 'Save & Close' | translate }}</button>
     </div>
 </div>
@@ -24,8 +23,9 @@
             </a>
             <div class="sd-photo-preview" ng-if="!nav || nav === 'view'">
                 <div class="sd-photo-preview__image">
-                    <img ng-if="data.item.type === 'image'" ng-src="{{data.item.renditions.original.href}}">
-                    <video controls ng-if="data.item.type === 'video'" ng-src="{{data.item.renditions.original.href}}">
+                    <img ng-if="data.item.type === 'picture' || data.item.type === 'image'" ng-src="{{data.item.renditions.original.href}}">
+                    <video controls ng-if="data.item.type === 'video'" ng-src="{{data.item.renditions.original.href}}"></video>
+                    <audio controls ng-if="data.item.type === 'audio'" ng-src="{{data.item.renditions.original.href}}"></audio>
                 </div>
             </div>
 
