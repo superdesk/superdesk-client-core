@@ -26,3 +26,5 @@ export {associations} from './associations';
 export {queueError} from './queueError';
 export {assignment} from './assignment';
 export {language} from './language';
+export {copyright} from './copyright';
+export {usageterms} from './usageterms';
