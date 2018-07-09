@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {OrderedSet} from 'immutable';
-import {Editor, EditorState, RichUtils, getDefaultKeyBinding} from 'draft-js';
+import {Editor, RichUtils, getDefaultKeyBinding} from 'draft-js';
 import {getSelectedEntityType, getSelectedEntityRange} from '../links/entityUtils';
 import {customStyleMap} from '../customStyleMap';
 
@@ -19,6 +18,7 @@ export class TableCell extends Component {
         super(props);
 
         this.onChange = this.onChange.bind(this);
+        this.onFocus = this.onFocus.bind(this);
         this.handleKeyCommand = this.handleKeyCommand.bind(this);
         this.keyBindingFn = this.keyBindingFn.bind(this);
 
@@ -44,23 +44,8 @@ export class TableCell extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        const {editorState} = this.state;
-        const selection = editorState.getSelection();
-
-        if (selection == null || !selection.getHasFocus()) {
-            this.setState({
-                editorState: nextProps.editorState,
-            });
-            return;
-        }
-
-        const currentStyle = nextProps.editorState.getCurrentInlineStyle();
-        let nextEditorState = EditorState.forceSelection(nextProps.editorState, selection);
-
-        nextEditorState = EditorState.setInlineStyleOverride(nextEditorState, OrderedSet(currentStyle));
-
         this.setState({
-            editorState: nextEditorState,
+            editorState: nextProps.editorState,
         });
     }
 
@@ -152,24 +137,36 @@ export class TableCell extends Component {
      * @description Triggered on changes to the cell's state.
      */
     onChange(editorState) {
-        if (editorState.getLastChangeType() == null) {
+        const selection = editorState.getSelection();
+
+        if (!selection.getHasFocus()) {
+            this.setState({editorState});
+
             return;
         }
 
-        this.setState(
-            {editorState},
+        this.setState({editorState},
             () => this.props.onChange(editorState)
         );
     }
 
+    onFocus(event) {
+        const {editorState} = this.state;
+        const selection = editorState.getSelection();
+        const currentStyle = editorState.getCurrentInlineStyle().toArray();
+
+        event.stopPropagation();
+        this.props.onFocus(currentStyle, selection);
+    }
+
     render() {
         const {editorState} = this.state;
-        const {onFocus, readOnly} = this.props;
+        const {readOnly} = this.props;
 
         return (
             <td onClick={(event) => event.stopPropagation()}>
                 <Editor
-                    onFocus={onFocus}
+                    onFocus={this.onFocus}
                     editorState={editorState}
                     customStyleMap={customStyleMap}
                     handleKeyCommand={this.handleKeyCommand}
