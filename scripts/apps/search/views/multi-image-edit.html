@@ -55,127 +55,15 @@
                         <div class="sd-alert sd-alert--hollow sd-alert--primary sd-alert--small" style="margin: -1rem 0 3rem;">
                             <span translate>Currently editing: {{images.length}} items</span>
                         </div>
-                        <div class="form__row" ng-if="validator.headline">
-                            <sd-line-input
-                                ng-model="metadata.headline"
-                                data-dark="true"
-                                data-boxed="true"
-                                data-required="validator.headline.required"
-                                data-label="{{:: 'Title' | translate}}"
-                                data-disabled="!images.length"
-                                data-onchange="onChange('headline')"
-                                data-onblur="onBlur()"
-                                data-maxlength="validator.headline.maxlength"
-                                data-placeholder="{{placeholder['headline']}}">
-                            </sd-line-input>
-                        </div>
-
-                        <div class="form__row" ng-if="validator.description_text">
-                            <sd-line-input
-                                ng-model="metadata.description_text"
-                                data-dark="true"
-                                data-boxed="true"
-                                data-required="validator.description_text.required"
-                                data-label="{{:: 'Description' | translate}}"
-                                data-disabled="!images.length"
-                                data-onchange="onChange('description_text')"
-                                data-onblur="onBlur()"
-                                data-maxlength="validator.description_text.maxlength"
-                                data-placeholder="{{placeholder['description_text']}}">
-                            </sd-line-input>
-                        </div>
-
-                        <div class="form__row" ng-if="validator.archive_description">
-                            <sd-line-input
-                                ng-model="metadata.archive_description"
-                                data-dark="true"
-                                data-boxed="true"
-                                data-required="validator.archive_description.required"
-                                data-label="{{:: 'Description' | translate}}"
-                                data-disabled="!images.length"
-                                data-onchange="onChange('archive_description')"
-                                data-onblur="onBlur()"
-                                data-maxlength="validator.archive_description.maxlength"
-                                data-placeholder="{{placeholder['archive_description']}}">
-                            </sd-line-input>
-                        </div>
-
-                        <div class="form__row" ng-if="validator.alt_text">
-                            <sd-line-input
-                                ng-model="metadata.alt_text"
-                                data-dark="true"
-                                data-boxed="true"
-                                data-required="validator.alt_text.required"
-                                data-label="{{:: 'Description' | translate}}"
-                                data-disabled="!images.length"
-                                data-onchange="onChange('alt_text')"
-                                data-onblur="onBlur()"
-                                data-maxlength="validator.alt_text.maxlength"
-                                data-placeholder="{{placeholder['alt_text']}}">
-                            </sd-line-input>
-                        </div>
-
-                        <div class="form__row" ng-if="validator.byline">
-                            <sd-line-input
-                                ng-model="metadata.byline"
-                                data-dark="true"
-                                data-boxed="true"
-                                data-required="validator.byline.required"
-                                data-label="{{:: 'Credit' | translate}}"
-                                data-disabled="!images.length"
-                                data-onchange="onChange('byline')"
-                                data-onblur="onBlur()"
-                                data-maxlength="validator.byline.maxlength"
-                                data-placeholder="{{placeholder['byline']}}">
-                            </sd-line-input>
-                        </div>
-
-                        <div class="form__row" ng-if="validator.copyrightholder">
-                            <sd-line-input
-                                ng-model="metadata.copyrightholder"
-                                data-dark="true"
-                                data-boxed="true"
-                                data-required="validator.copyrightholder.required"
-                                data-label="{{:: 'Copyright holder' | translate}}"
-                                data-disabled="!images.length"
-                                data-onchange="onChange('copyrightholder')"
-                                data-onblur="onBlur()"
-                                data-maxlength="validator.copyrightholder.maxlength"
-                                data-placeholder="{{placeholder['copyrightholder']}}">
-                            </sd-line-input>
-                        </div>
-
-                        <div class="form__row" ng-if="validator.usageterms">
-                            <sd-line-input
-                                data-dark="true"
-                                data-boxed="true"
-                                data-required="validator.usageterms.required"
-                                data-label="{{:: 'Assign Rights' | translate}}"
-                                data-transclude="true"
-                                data-maxlength="validator.copyrightholder.maxlength">
-                                <select class="sd-line-input__select" ng-model="metadata.usageterms" ng-change="onChange('usageterms')" ng-blur="onBlur()" ng-disabled="!images.length">
-                                    <option translate value=""></option> <!-- not selected / blank option -->
-                                    <option translate value="single-usage">Single Usage</option>
-                                    <option translate value="time-restricted">Time Restricted</option>
-                                    <option translate value="indefinite-usage">Indefinite Usage</option>
-                                </select>
-                            </sd-line-input>
-                        </div>
-
-                        <div class="form__row" ng-if="validator.copyrightnotice">
-                            <sd-line-input
-                                ng-model="metadata.copyrightnotice"
-                                data-dark="true"
-                                data-boxed="true"
-                                data-required="validator.copyrightnotice.required"
-                                data-label="{{:: 'Copyright notice' | translate}}"
-                                data-disabled="!images.length"
-                                data-onchange="onChange('copyrightnotice')"
-                                data-onblur="onBlur()"
-                                data-maxlength="validator.copyrightnotice.maxlength"
-                                data-placeholder="{{placeholder['copyrightnotice']}}">
-                            </sd-line-input>
-                        </div>
+                        <div sd-media-metadata-editor
+                            data-item="metadata"
+                            data-validator="validator"
+                            data-dark="true"
+                            data-boxed="true"
+                            data-on-blur="onBlur()"
+                            data-on-change="onChange(key)"
+                            data-placeholder="placeholder"
+                        ></div>
                     </div>
                 </div>
             </div>

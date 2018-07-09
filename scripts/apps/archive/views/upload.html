@@ -41,54 +41,18 @@
                         <div class="bar" style="width:{{ item.progress }}%"></div>
                     </div>
 
-                    <div ng-if="validator.headline" class="row">
-                        <label ng-class="{'label-asterisk':validator.headline.required}" translate>Title</label>
-                        <input type="text" ng-model="item.meta.headline" />
-                    </div>
-                    <div class="other-info">
-                        <div class="row" ng-if="validator.description_text">
-                            <label ng-class="{'label-asterisk':validator.description_text.required}" translate>Description</label>
-                            <textarea sd-auto-height
-                                ng-model="item.meta.description_text"
-                                class="contenteditable-input"></textarea>
-                        </div>
-                        <div class="row" ng-if="validator.archive_description">
-                            <label translate>Description</label>
-                            <textarea sd-auto-height ng-model="item.meta.archive_description" class="contenteditable-input"></textarea>
-                        </div>
-                        <div class="row" ng-if="validator.alt_text">
-                            <label ng-class="{'label-asterisk':validator.alt_text.required}" translate>Alt text</label>
-                            <textarea sd-auto-height ng-model="item.meta.alt_text" class="contenteditable-input"></textarea>
-                        </div>
-                        <div class="row" ng-if="validator.byline">
-                            <label ng-class="{'label-asterisk':validator.byline.required}" translate>Credit</label>
-                            <input type="text" ng-model="item.meta.byline" />
-                        </div>
-                        <div class="row" ng-if="validator.copyrightholder">
-                            <label ng-class="{'label-asterisk':validator.copyrightholder.required}" translate>Copyright holder</label>
-                            <textarea sd-auto-height ng-model="item.meta.copyrightholder" class="contenteditable-input"></textarea>
-                        </div>
-                        <div class="row" ng-if="validator.usageterms">
-                            <label ng-class="{'label-asterisk':validator.usageterms.required}">
-                                <span translate>Assign Rights</span>
-                            </label>
-                            <select ng-model="item.meta.usageterms">
-                                <option translate value="">--- Not selected ---</option> <!-- not selected / blank option -->
-                                <option translate value="single-usage">Single Usage</option>
-                                <option translate value="time-restricted">Time Restricted</option>
-                                <option translate value="indefinite-usage">Indefinite Usage</option>
-                            </select>
-                        </div>
-                        <div class="row" ng-if="validator.copyrightnotice">
-                            <label ng-class="{'label-asterisk':validator.copyrightnotice.required}" translate>Copyright notice</label>
-                            <textarea sd-auto-height ng-model="item.meta.copyrightnotice" class="contenteditable-input"></textarea>
-                        </div>
-                        <div class="row" ng-if="item.cssType === 'image'">
-                            <label><span translate>Dimensions</span></label>
-                            <span>{{ item.width }} x {{ item.height }}</span>
-                        </div>
-                    </div>
+                        <div sd-media-metadata-editor
+                            data-item="item.meta"
+                            data-validator="validator"
+                        ></div>
 
+                        <div class="form__row" ng-if="item.cssType === 'image'">
+                            <div class="sd-line-input">
+                                <label class="sd-line-input__label"><span translate>Dimensions</span></label>
+                                <span>{{ item.width }} x {{ item.height }}</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </li>
         </ul>

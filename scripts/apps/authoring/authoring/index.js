@@ -5,7 +5,8 @@ import * as directive from './directives';
 import * as ctrl from './controllers';
 import * as filter from './filters';
 
-import 'apps/authoring/suggest';
+import '../suggest';
+import mediaModule from '../media';
 
 angular.module('superdesk.apps.authoring.autosave', []).service('autosave', svc.AutosaveService);
 
@@ -40,6 +41,7 @@ angular.module('superdesk.apps.authoring', [
     'contenteditable',
     'decipher.history',
     'superdesk.config',
+    mediaModule.name,
 ])
 
     .service('authoring', svc.AuthoringService)
