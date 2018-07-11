@@ -68,7 +68,7 @@ const addRowAfter = (state) =>
             }
         });
 
-        return {cells, numRows, numCols, withHeader};
+        return {data: {cells, numRows, numCols, withHeader}};
     });
 
 /**
@@ -85,7 +85,7 @@ const removeRow = (state) =>
             numRows -= 1;
         }
 
-        return {cells, numRows, numCols, withHeader};
+        return {data: {cells, numRows, numCols, withHeader}};
     });
 
 /**
@@ -95,28 +95,30 @@ const removeRow = (state) =>
  */
 const addColAfter = (state) =>
     processCells(state, (cells, numCols, numRows, i, j, withHeader) => ({
-        numRows: numRows,
-        numCols: numCols + 1,
-        withHeader: withHeader,
-        cells: cells.map((_, ii) =>
-            Array.from(new Array(numCols + 1))
-                .map((_, jj) => {
-                    if (jj === j + 1) {
+        data: {
+            numRows: numRows,
+            numCols: numCols + 1,
+            withHeader: withHeader,
+            cells: cells.map((_, ii) =>
+                Array.from(new Array(numCols + 1))
+                    .map((_, jj) => {
+                        if (jj === j + 1) {
+                            return null;
+                        }
+
+                        let orig = jj;
+
+                        if (jj > j + 1) {
+                            orig -= 1;
+                        }
+
+                        if (cells[ii] && cells[ii][orig]) {
+                            return cells[ii][orig];
+                        }
+
                         return null;
-                    }
-
-                    let orig = jj;
-
-                    if (jj > j + 1) {
-                        orig -= 1;
-                    }
-
-                    if (cells[ii] && cells[ii][orig]) {
-                        return cells[ii][orig];
-                    }
-
-                    return null;
-                })),
+                    })),
+        },
     }));
 
 /**
@@ -137,7 +139,7 @@ const removeCol = (state) =>
             });
         }
 
-        return {cells, numRows, numCols, withHeader};
+        return {data: {cells, numRows, numCols, withHeader}};
     });
 
 /**
@@ -157,17 +159,30 @@ const processCells = (state, fn) => {
         return state;
     }
 
-    const {i, j, key} = activeCell;
+    const {i, j, key, currentStyle, selection} = activeCell;
     const contentState = editorState.getCurrentContent();
     const block = contentState.getBlockForKey(key);
-    const {cells, numRows, numCols, withHeader, currentStyle} = getData(editorState, block);
-    const data = fn(cells, numCols, numRows, i, j, withHeader, currentStyle);
-    const selection = createBlockSelection(editorState, block);
-    const newContentState = Modifier.setBlockData(contentState, selection, {data: JSON.stringify(data)});
+    const {cells, numRows, numCols, withHeader} = getData(editorState, block);
+    const {data, newCurrentStyle} = fn(cells, numCols, numRows, i, j, withHeader, currentStyle, selection);
+    const blockSelection = createBlockSelection(editorState, block);
+    const newContentState = Modifier.setBlockData(contentState, blockSelection, {data: JSON.stringify(data)});
     const newEditorState = EditorState.push(editorState, newContentState, 'change-block-data');
     const entityDataHasChanged = true;
 
-    return onChange(state, newEditorState, entityDataHasChanged);
+    if (newCurrentStyle != null) {
+        const newState = {
+            ...state,
+            activeCell: {
+                ...activeCell,
+                currentStyle: newCurrentStyle,
+                selection: selection,
+            },
+        };
+
+        return onChange(newState, newEditorState, entityDataHasChanged);
+    } else {
+        return onChange(state, newEditorState, entityDataHasChanged);
+    }
 };
 
 /**
@@ -187,12 +202,17 @@ const toggleTableHeader = (state) =>
 const toggleTableStyle = (state, inlineStyle) =>
     processCells(
         state,
-        (cells, numCols, numRows, i, j, withHeader, currentStyle) => {
-            const data = {cells, numRows, numCols, withHeader, currentStyle};
-            const cellStateEditor = getCell(data, i, j);
+        (cells, numCols, numRows, i, j, withHeader, currentStyle, selection) => {
+            const data = {cells, numRows, numCols, withHeader};
+            const cellStateEditor = getCell(data, i, j, currentStyle, selection);
             const newCellEditorState = RichUtils.toggleInlineStyle(cellStateEditor, inlineStyle);
+            const newCurrentStyle = newCellEditorState.getCurrentInlineStyle().toArray();
+            const newData = setCell(data, i, j, newCellEditorState).data;
 
-            return setCell(data, i, j, newCellEditorState);
+            return {
+                data: newData,
+                newCurrentStyle: newCurrentStyle,
+            };
         }
     );
 

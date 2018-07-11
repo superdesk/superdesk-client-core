@@ -11,9 +11,9 @@ import {createBlockSelection} from './selection';
  * @param {Number} col The column of the cell in the table
  * @description Retrieves the content state of the cell at row/col.
  */
-export function getCell(data, row, col) {
+export function getCell(data, row, col, currentStyle, selection) {
     const decorator = new CompositeDecorator([LinkDecorator]);
-    const {cells, currentStyle} = data;
+    const {cells} = data;
     let cellEditorState;
 
     if (!cells[row] || !cells[row][col]) {
@@ -22,7 +22,20 @@ export function getCell(data, row, col) {
         cellEditorState = EditorState.createWithContent(convertFromRaw(cells[row][col]), decorator);
     }
 
-    if (currentStyle) {
+    if (selection != null) {
+        const {anchorKey, focusKey} = selection;
+        const cellContentState = cellEditorState.getCurrentContent();
+        const anchorBlock = cellContentState.getBlockForKey(anchorKey);
+        const focusBlock = cellContentState.getBlockForKey(focusKey);
+
+        if (anchorBlock != null && focusBlock != null) {
+            const newSelection = cellEditorState.getSelection().merge({...selection});
+
+            cellEditorState = EditorState.forceSelection(cellEditorState, newSelection);
+        }
+    }
+
+    if (currentStyle != null) {
         cellEditorState = EditorState.setInlineStyleOverride(cellEditorState, OrderedSet(currentStyle));
     }
 
@@ -40,22 +53,21 @@ export function getCell(data, row, col) {
  */
 export function setCell(data, row, col, cellEditorState) {
     const cellContentState = cellEditorState.getCurrentContent();
-
-    data.forceUpdate = true;
+    let needUpdate = true;
+    let forceUpdate = true;
 
     if (!data.cells[row]) {
         data.cells[row] = [];
     }
 
     if (data.cells[row][col]) {
-        data.forceUpdate = convertFromRaw(data.cells[row][col]).getPlainText() !== cellContentState.getPlainText();
+        needUpdate = JSON.stringify(data.cells[row][col]) !== JSON.stringify(convertToRaw(cellContentState));
+        forceUpdate = convertFromRaw(data.cells[row][col]).getPlainText() !== cellContentState.getPlainText();
     }
 
     data.cells[row][col] = convertToRaw(cellContentState);
-    data.currentStyle = cellEditorState.getCurrentInlineStyle().toArray();
-    data.lastChange = cellEditorState.getLastChangeType();
 
-    return data;
+    return {data, needUpdate, forceUpdate};
 }
 
 /**
@@ -87,7 +99,7 @@ export function getData(editorState, block) {
  * @description Returns the data contained in the entity of this atomic block.
  * @return {Object}
  */
-export function setData(editorState, block, data) {
+export function setData(editorState, block, data, lastChangeType) {
     const contentState = editorState.getCurrentContent();
     const entityKey = block.getEntityAt(0);
     const selection = createBlockSelection(editorState, block);
@@ -96,6 +108,6 @@ export function setData(editorState, block, data) {
     return EditorState.push(
         editorState,
         newContentState.replaceEntityData(entityKey, {data}),
-        data.lastChangeType
+        lastChangeType
     );
 }
