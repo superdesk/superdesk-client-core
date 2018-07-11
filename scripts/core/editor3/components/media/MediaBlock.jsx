@@ -139,13 +139,19 @@ export class MediaBlockComponent extends Component {
     }
 
     render() {
-        const {setLocked, showTitle} = this.props;
+        const {setLocked, showTitle, readOnly} = this.props;
         const data = this.data();
         const rendition = data.renditions.viewImage || data.renditions.original;
         const alt = data.alt_text || data.description_text || data.caption;
         const mediaType = data.type;
         const {features} = ng.get('config');
-        const editable = data._type !== 'externalsource' || _.get(features, 'editFeaturedImage', true);
+
+        const editable =
+            !readOnly &&
+            (data._type !== 'externalsource'
+            || _.get(features, 'editFeaturedImage', true));
+
+        const removable = !readOnly;
 
         var {gettextCatalog} = this.props.blockProps.svc;
 
@@ -154,9 +160,13 @@ export class MediaBlockComponent extends Component {
             <div className="image-block"
                 onClick={(e) => e.stopPropagation()}
                 draggable={true} onDragStart={this.onDragStart} onDrag={this.onDrag}>
-                <a className="icn-btn image-block__remove" onClick={this.onClickDelete}>
-                    <i className="icon-close-small" />
-                </a>
+                {
+                    removable && (
+                        <a className="icn-btn image-block__remove" onClick={this.onClickDelete}>
+                            <i className="icon-close-small" />
+                        </a>
+                    )
+                }
                 <div className="image-block__wrapper">
                     {showTitle ?
                         <Textarea
@@ -314,10 +324,12 @@ MediaBlockComponent.propTypes = {
     block: PropTypes.object.isRequired,
     contentState: PropTypes.object.isRequired,
     showTitle: PropTypes.bool,
+    readOnly: PropTypes.bool,
     blockProps: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
+    readOnly: state.readOnly,
     showTitle: state.showTitle,
 });
 
