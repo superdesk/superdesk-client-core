@@ -206,8 +206,9 @@ const removeBlock = (state, {blockKey}) => {
  * @description Applies the embed in the given oEmbed data to the active block.
  */
 const applyEmbed = (state, code) => {
-    var {editorState} = state;
+    let {editorState} = state;
 
+    const selection = editorState.getSelection();
     const contentState = state.editorState.getCurrentContent();
     const data = typeof code === 'string' ? {html: code} : code;
     const contentStateWithEntity = contentState.createEntity('EMBED', 'MUTABLE', {data});
@@ -218,6 +219,8 @@ const applyEmbed = (state, code) => {
         entityKey,
         ' '
     );
+
+    editorState = EditorState.acceptSelection(editorState, selection);
 
     return onChange(state, editorState);
 };
