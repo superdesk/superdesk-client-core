@@ -13,7 +13,7 @@ export function ChangePasswordDirective(usersService, notify, gettext) {
              * @param {string} newPassword
              */
             scope.changePassword = function(oldPassword, newPassword) {
-                return usersService.changePassword(scope.user, oldPassword, newPassword)
+                return usersService.changePassword(scope.user.username, oldPassword, newPassword)
                     .then((response) => {
                         scope.oldPasswordInvalid = false;
                         notify.success(gettext('The password has been changed.'), 3000);

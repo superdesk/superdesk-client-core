@@ -6,7 +6,7 @@
             <img src="/images/superdesk-logo.svg" width="290" alt="Superdesk Logo">
         </div>
 
-        <div class="form-handler">
+        <div class="form-handler" ng-show="!changePassword">
             <figure class="avatar" style="background-image:url('{{ identity.Avatar.href || 'images/avatar_200.png' }}')" ng-show="identity.Avatar"></figure>
             <form name="loginForm" ng-submit="authenticate()">
                 <fieldset class="inputs">
@@ -60,6 +60,35 @@
                 <a href="/#/reset-password/" class="text" ng-show="features.reset_user_password" translate>Forgot password?</a>
             </div>
 
+        </div>
+
+        <div class="form-handler" ng-show="changePassword">
+            <figure class="avatar" style="background-image:url('{{ identity.Avatar.href || 'images/avatar_200.png' }}')" ng-show="identity.Avatar"></figure>
+            <div class="error-handler">
+                <p class="error" translate>Your password has expired. Please change your password.</p>
+            </div>
+            <form name="changePasswordForm" ng-submit="changeUserPassword()">
+                <fieldset class="inputs">
+                    <input type="password" sd-password-strength name="password" ng-model="password" placeholder="{{ 'Enter new password'|translate }}" class="fullwidth-input" required />
+                </fieldset>
+                <fieldset class="inputs">
+                    <input type="password" name="passwordConfirm" ng-model="passwordConfirm" placeholder="{{ 'Confirm new password'|translate }}" class="fullwidth-input" sd-password-confirm data-password="password" required />
+                    <i ng-show="changePasswordForm.passwordConfirm.$error.required" class="required-asteriks">*</i>
+                    <div ng-show="changePasswordForm.passwordConfirm.$error.confirm" sd-valid-info>
+                        <i class="icon-info-sign-warning"></i>
+                        <span translate>passwords must be same</span>
+                    </div>
+                </fieldset>
+                <fieldset class="buttons">
+                    <button type="submit" ng-disabled="isLoading || changePasswordForm.$invalid"  class="btn btn--sd-green">
+                        {{ 'Change password' | translate }}
+                        <div class="spinner" ng-show="isLoading">
+                        <div class="dot1"></div>
+                        <div class="dot2"></div>
+                        </div>
+                    </button>
+                </fieldset>
+            </form>
         </div>
     </div>
 </div>
