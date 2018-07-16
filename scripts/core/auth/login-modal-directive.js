@@ -9,13 +9,16 @@ angular.module('superdesk.core.auth.login', []).directive('sdLoginModal', [
     'features',
     'config',
     'deployConfig',
+    'usersService',
+    'notify',
     '$route',
-    function(session, auth, features, config, deployConfig, $route) {
+    function(session, auth, features, config, deployConfig, usersService, notify, $route) {
         return {
             replace: true,
             template: require('./login-modal.html'),
             link: function(scope, element, attrs) {
                 scope.features = features;
+                scope.changePassword = false;
 
                 deployConfig.all({
                     xmpp: 'xmpp_auth',
@@ -41,10 +44,36 @@ angular.module('superdesk.core.auth.login', []).directive('sdLoginModal', [
                             reloadRoute();
                         }, (rejection) => {
                             scope.isLoading = false;
+
+                            if (rejection.data._issues.password_is_expired) {
+                                scope.changePassword = true;
+                                scope.oldPassword = scope.password;
+                                scope.password = null;
+                                scope.passwordConfirm = null;
+                            }
+
                             scope.loginError = rejection.status;
                             if (scope.loginError === 401) {
                                 scope.password = null;
                             }
+                        });
+                };
+
+                scope.changeUserPassword = function() {
+                    scope.isLoading = true;
+
+                    usersService.changePassword(scope.username, scope.oldPassword, scope.password)
+                        .then(() => {
+                            scope.isLoading = false;
+                            scope.changePassword = false;
+                            scope.password = null;
+                            scope.loginError = null;
+                            notify.success(gettext('The password has been changed.'), 3000);
+                        }, (response) => {
+                            scope.isLoading = false;
+                            scope.changePassword = null;
+                            scope.passwordConfirm = null;
+                            notify.success(gettext('Failed to change the password.'), 3000);
                         });
                 };
 
