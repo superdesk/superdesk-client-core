@@ -1,3 +1,3 @@
 gunicorn==19.7.1
 honcho==1.0.1
-superdesk-core==1.21.1
+superdesk-core==1.22
