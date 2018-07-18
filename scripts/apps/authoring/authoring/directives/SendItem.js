@@ -116,18 +116,27 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
             }
 
             scope.preview = function() {
-                modal.createCustomModal()
-                    .then(({openModal, closeModal}) => {
-                        openModal(
-                            <PreviewModal
-                                subscribersWithPreviewConfigured={scope.subscribersWithPreviewConfigured}
-                                documentId={scope.item._id}
-                                urls={urls}
-                                closeModal={closeModal}
-                                gettext={gettext}
-                            />
-                        );
+                if (scope.$parent.save_enabled() === true) {
+                    modal.alert({
+                        headerText: gettext('Preview'),
+                        bodyText: gettext(
+                            'In order to preview the item, save the changes first.'
+                        ),
                     });
+                } else {
+                    modal.createCustomModal()
+                        .then(({openModal, closeModal}) => {
+                            openModal(
+                                <PreviewModal
+                                    subscribersWithPreviewConfigured={scope.subscribersWithPreviewConfigured}
+                                    documentId={scope.item._id}
+                                    urls={urls}
+                                    closeModal={closeModal}
+                                    gettext={gettext}
+                                />
+                            );
+                        });
+                }
             };
 
             scope.close = function() {
