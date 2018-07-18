@@ -61,7 +61,7 @@ describe('item association directive', () => {
         $rootScope.$digest();
         expect(renditions.ingest).toHaveBeenCalled();
         expect(renditions.crop).toHaveBeenCalled();
-        expect(scope.onChange).not.toHaveBeenCalled();
+        expect(scope.onChange).toHaveBeenCalled();
         expect(scope.save).toHaveBeenCalled();
         expect(event.preventDefault).toHaveBeenCalled();
         expect(event.stopPropagation).toHaveBeenCalled();
@@ -92,7 +92,7 @@ describe('item association directive', () => {
         expect(scope.item.associations.featured.headline).toBe('foo');
     }));
 
-    it('cannot trigger onchange handler on drop when feature media is not editable',
+    it('trigger onchange handler on drop when feature media is not editable',
         inject(($rootScope, renditions, config) => {
             var event = new window.$.Event('drop');
 
@@ -113,8 +113,7 @@ describe('item association directive', () => {
             $rootScope.$digest();
             expect(renditions.ingest).not.toHaveBeenCalled();
             expect(renditions.crop).not.toHaveBeenCalled();
-            expect(scope.onChange).not.toHaveBeenCalled();
-            expect(scope.save).toHaveBeenCalled();
+            expect(scope.onChange).toHaveBeenCalled();
             expect(event.preventDefault).toHaveBeenCalled();
             expect(event.stopPropagation).toHaveBeenCalled();
             expect(scope.item.associations.featured.headline).toBe('foo');
