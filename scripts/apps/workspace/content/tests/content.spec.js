@@ -289,7 +289,7 @@ describe('superdesk.apps.workspace.content', () => {
         }));
 
         it('render correctly all fields', (done) => {
-            inject((content, $q) => {
+            inject((content, vocabularies, $q) => {
                 var el = compile({
                     model: {},
                 });
@@ -298,6 +298,7 @@ describe('superdesk.apps.workspace.content', () => {
                     editor: content.contentProfileEditor}));
 
                 spyOn(content, 'getCustomFields').and.returnValue($q.when([]));
+                spyOn(vocabularies, 'getAllActiveVocabularies').and.returnValue($q.when([]));
 
                 waitUntil(() => {
                     el.scope().$digest();
@@ -312,7 +313,7 @@ describe('superdesk.apps.workspace.content', () => {
         });
 
         it('should dirty parent form when toggling fields', (done) => {
-            inject((content, $q) => {
+            inject((content, vocabularies, $q) => {
                 var el = compile({
                     model: {},
                 });
@@ -321,6 +322,7 @@ describe('superdesk.apps.workspace.content', () => {
                     editor: content.contentProfileEditor}));
 
                 spyOn(content, 'getCustomFields').and.returnValue($q.when([]));
+                spyOn(vocabularies, 'getAllActiveVocabularies').and.returnValue($q.when([]));
 
                 waitUntil(() => {
                     el.scope().$digest();
