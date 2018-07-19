@@ -132,10 +132,10 @@ export class CollapseBox extends React.Component {
                         </div>
                     </div>
                 ) || (
-                    <div className="sd-collapse-box__header">
-                        {this.props.collapsedItem}
-                    </div>
-                )}
+                        <div className="sd-collapse-box__header">
+                            {this.props.collapsedItem}
+                        </div>
+                    )}
             </div>
         );
     }

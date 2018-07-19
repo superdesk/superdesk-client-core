@@ -12,15 +12,7 @@ import {connectPromiseResults} from 'core/helpers/ReactRenderAsync';
 
 class Annotation extends Component {
     render() {
-        const {
-            annotation,
-            editorNode,
-            showPopup,
-            highlightId,
-            highlightsManager,
-            annotationTypes,
-            editorId,
-        } = this.props;
+        const {annotation, editorNode, showPopup, highlightId, highlightsManager, annotationTypes} = this.props;
         const {author, avatar, date, msg, annotationType} = annotation.data;
         const {name: type} = annotationTypes.find((t) => t.qcode === annotationType);
         const relativeDateString = moment(date).calendar();
@@ -29,7 +21,7 @@ class Annotation extends Component {
         const html = toHTML(convertFromRaw(JSON.parse(msg)), logger);
         const modal = ng.get('modal');
 
-        const onEdit = () => showPopup(PopupTypes.Annotation, {annotation, highlightId, editorId});
+        const onEdit = () => showPopup(PopupTypes.Annotation, {annotation, highlightId});
         const onDelete = () => modal
             .confirm(gettext('The annotation will be deleted. Are you sure?'))
             .then(() => {
@@ -86,7 +78,6 @@ Annotation.propTypes = {
     highlightId: PropTypes.string,
     editorNode: PropTypes.object,
     annotationTypes: PropTypes.array.isRequired,
-    editorId: PropTypes.string.isRequired,
 };
 
 const AnnotationWithDependenciesLoaded = connectPromiseResults(() => ({
