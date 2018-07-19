@@ -30,7 +30,6 @@ class Editor3Directive {
         this.controller = ['config', '$element', 'editor3', '$scope', '$rootScope', 'gettextCatalog', this.initialize];
 
         this.bindToController = {
-            editorId: '=',
             /**
              * @type {String}
              * @description If set, it will be used to make sure the toolbar is always
@@ -197,7 +196,6 @@ class Editor3Directive {
                 ReactDOM.render(
                     <Provider store={store}>
                         <Editor3
-                            id={this.editorId}
                             scrollContainer={this.scrollContainer}
                             singleLine={this.singleLine} />
                     </Provider>, $element.get(0)

@@ -86,11 +86,10 @@ class ToolbarComponent extends Component {
             invisibles,
             toggleInvisibles,
             removeFormat,
-            showPopup,
-            editorId,
         } = this.props;
 
         const has = (opt) => editorFormat.indexOf(opt) > -1;
+        const showPopup = (type) => (data) => this.props.showPopup(type, data);
 
         const cx = classNames({
             'Editor3-controls': true,
@@ -107,14 +106,14 @@ class ToolbarComponent extends Component {
                 {/* Formatting options */}
                 {has('link') &&
                     <SelectionButton
-                        onClick={(selection) => showPopup(PopupTypes.Link, {selection, editorId})}
+                        onClick={showPopup(PopupTypes.Link)}
                         iconName="link"
                         tooltip={gettext('Link')}
                     />
                 }
                 {has('embed') &&
                     <IconButton
-                        onClick={() => showPopup(PopupTypes.Embed, {editorId})}
+                        onClick={showPopup(PopupTypes.Embed)}
                         iconName="code"
                         tooltip="Embed"
                     />
@@ -144,7 +143,7 @@ class ToolbarComponent extends Component {
                 }
                 {has('comments') &&
                     <SelectionButton
-                        onClick={(selection) => showPopup(PopupTypes.Comment, {selection, editorId})}
+                        onClick={showPopup(PopupTypes.Comment)}
                         precondition={
                             this.props.highlightsManager.canAddHighlight(highlightsConfig.COMMENT.type)
                         }
@@ -155,7 +154,7 @@ class ToolbarComponent extends Component {
                 }
                 {has('annotation') &&
                     <SelectionButton
-                        onClick={(selection) => showPopup(PopupTypes.Annotation, {selection, editorId})}
+                        onClick={showPopup(PopupTypes.Annotation)}
                         precondition={
                             this.props.highlightsManager.canAddHighlight(highlightsConfig.ANNOTATION.type)
                         }
@@ -182,15 +181,10 @@ class ToolbarComponent extends Component {
                     />
                 }
 
-                <ToolbarPopup
-                    editorId={editorId}
-                    type={popup.type}
-                    data={popup.data}
-                    highlightsManager={this.props.highlightsManager}
-                />
+                <ToolbarPopup type={popup.type} data={popup.data} highlightsManager={this.props.highlightsManager} />
 
                 {/* LinkToolbar must be the last node. */}
-                <LinkToolbar onEdit={(link) => showPopup(PopupTypes.Link, {...link, editorId})} />
+                <LinkToolbar onEdit={(link) => showPopup(PopupTypes.Link, {...link})} />
             </div>;
     }
 }
@@ -210,7 +204,6 @@ ToolbarComponent.propTypes = {
     popup: PropTypes.object,
     editorState: PropTypes.object,
     editorNode: PropTypes.object,
-    editorId: PropTypes.string.isRequired,
     scrollContainer: PropTypes.string,
     highlightsManager: PropTypes.object.isRequired,
 };

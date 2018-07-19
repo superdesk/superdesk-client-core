@@ -337,8 +337,7 @@ export class SelectFieldPopup extends React.Component {
                                     </div>
                                 </button>
                             </div>
-                        )
-                        || (
+                        ) || (
                             <SearchBar
                                 onSearch={this.filterSearchResults}
                                 minLength={1}
