@@ -35,13 +35,11 @@ const table = (state = {}, action) => {
  * @description Adds a table into the content.
  */
 const addTable = (state, data) => {
-    var {editorState} = state;
-
     const contentState = state.editorState.getCurrentContent();
     const contentStateWithEntity = contentState.createEntity('TABLE', 'MUTABLE', {data});
     const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
 
-    editorState = insertAtomicBlockWithoutEmptyLines(
+    const {editorState} = insertAtomicBlockWithoutEmptyLines(
         editorState,
         entityKey,
         ' '

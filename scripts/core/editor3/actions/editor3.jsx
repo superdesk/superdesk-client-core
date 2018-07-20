@@ -46,16 +46,17 @@ export function handleEditorTab(e) {
  * @name dragDrop
  * @param {DataTransfer} transfer
  * @return {String} mediaType
+ * @return {String} blockKey
  * @description Creates the editor drop action.
  */
-export function dragDrop(transfer, mediaType) {
+export function dragDrop(transfer, mediaType, blockKey = null) {
     if (mediaType === 'Files') {
         return insertMedia(transfer.files);
     }
 
     return {
         type: 'EDITOR_DRAG_DROP',
-        payload: transfer.getData(mediaType),
+        payload: {data: transfer.getData(mediaType), blockKey: blockKey},
     };
 }
 

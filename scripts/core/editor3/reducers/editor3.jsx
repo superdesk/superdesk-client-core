@@ -78,6 +78,7 @@ export const forceUpdate = (state) => {
 export const onChange = (state, newState, force = false) => {
     // TODO(x): Remove `force` once Draft v0.11.0 is in
     let editorState = newState;
+
     let contentChanged = state.editorState.getCurrentContent() !== newState.getCurrentContent();
 
     if (contentChanged || force) {
@@ -118,9 +119,9 @@ const onTab = (state, e) => {
  * @return {Object} New state
  * @description Handles the dragdrop event over the editor.
  */
-const dragDrop = (state, data) => {
+const dragDrop = (state, {data, blockKey}) => {
     const media = JSON.parse(data);
-    const editorState = addMedia(state.editorState, media);
+    const editorState = addMedia(state.editorState, media, blockKey);
 
     return onChange(state, editorState);
 };
@@ -228,13 +229,15 @@ const setHtmlFromTansa = (state, html) => {
  * @param {String} block
  * @param {String} dest
  * @param {String} insertionMode before|after
+ * @param {Bool} returnState Returns state without calling onChange
  * @return {Object}
  */
-function moveBlock(state, {block, dest, insertionMode}) {
+export function moveBlock(state, {block, dest, insertionMode, returnState = false}) {
     const {editorState} = state;
     const contentState = editorState.getCurrentContent();
 
     switch (true) {
+    case block === dest:
     case !contentState.getBlockForKey(dest):
     case !contentState.getBlockForKey(block):
     case dest === contentState.getKeyBefore(block) && insertionMode === 'after':
@@ -251,6 +254,10 @@ function moveBlock(state, {block, dest, insertionMode}) {
         targetRange,
         insertionMode
     );
+
+    if (returnState) {
+        return {...state, editorState: withMovedAtomicBlock};
+    }
 
     return onChange(state, withMovedAtomicBlock);
 }

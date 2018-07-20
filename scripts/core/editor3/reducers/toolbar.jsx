@@ -6,6 +6,7 @@ import * as Links from '../helpers/links';
 import * as Blocks from '../helpers/blocks';
 import * as Highlights from '../helpers/highlights';
 import {removeFormatFromState} from '../helpers/removeFormat';
+import {moveBlock} from './editor3';
 
 /**
  * @description Contains the list of toolbar related reducers.
@@ -134,13 +135,14 @@ const removeFormat = (state) => {
  * @ngdoc method
  * @name insertMedia
  * @param {Array} files List of media files to be inserted into document.
+ * @param {String} moveKey Block key
  * @description Inserts a list of media files into the document.
  */
-const insertMedia = (state, files = []) => {
-    var {editorState} = state;
+const insertMedia = (state, {files = [], moveKey = null}) => {
+    let {editorState} = state;
 
     files.forEach((file) => {
-        editorState = addMedia(editorState, file);
+        editorState = addMedia(editorState, file, moveKey);
     });
 
     return onChange(state, editorState);
@@ -151,20 +153,35 @@ const insertMedia = (state, files = []) => {
  * @name addMedia
  * @param {Object} editorState Editor state to add the media to.
  * @param {Object} media Media data.
+ * @param {String} moveKey Block key where the media is going to
  * @returns {Object} New editor state with media inserted as atomic block.
  * @description Inserts the given media into the given editor state's content and returns
  * the updated editor state.
  */
-export const addMedia = (editorState, media) => {
+export const addMedia = (editorState, media, moveKey = null) => {
     const contentState = editorState.getCurrentContent();
     const contentStateWithEntity = contentState.createEntity('MEDIA', 'MUTABLE', {media});
     const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
 
-    return insertAtomicBlockWithoutEmptyLines(
+    let {editorState: stateWithBlock, blockKey: newBlockKey} = insertAtomicBlockWithoutEmptyLines(
         editorState,
         entityKey,
         ' '
     );
+
+    if (moveKey) {
+        stateWithBlock = moveBlock(
+            {editorState: stateWithBlock},
+            {
+                block: newBlockKey,
+                dest: moveKey,
+                insertionMode: 'after',
+                returnState: true,
+            }
+        ).editorState;
+    }
+
+    return stateWithBlock;
 };
 
 /**
@@ -206,14 +223,12 @@ const removeBlock = (state, {blockKey}) => {
  * @description Applies the embed in the given oEmbed data to the active block.
  */
 const applyEmbed = (state, code) => {
-    var {editorState} = state;
-
     const contentState = state.editorState.getCurrentContent();
     const data = typeof code === 'string' ? {html: code} : code;
     const contentStateWithEntity = contentState.createEntity('EMBED', 'MUTABLE', {data});
     const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
 
-    editorState = insertAtomicBlockWithoutEmptyLines(
+    const {editorState} = insertAtomicBlockWithoutEmptyLines(
         editorState,
         entityKey,
         ' '
