@@ -36,6 +36,30 @@ class ToolbarComponent extends Component {
         };
     }
 
+    shouldComponentUpdate(nextProps) {
+        if (nextProps.popup.type === 'NONE' && this.props.popup.type !== 'NONE') {
+            // restoring editor focus after closing the popup
+
+            setTimeout(() => { // wait for render
+                const {editorWrapperElement} = this.props;
+
+                if (editorWrapperElement instanceof Element !== true) {
+                    return;
+                }
+
+                const draftjsContentEditable = editorWrapperElement.querySelector('.public-DraftEditor-content');
+
+                if (draftjsContentEditable instanceof Element !== true) {
+                    return;
+                }
+
+                draftjsContentEditable.focus();
+            });
+        }
+
+        return true;
+    }
+
     /**
      * @ngdoc method
      * @name Toolbar#onScroll
@@ -206,6 +230,7 @@ ToolbarComponent.propTypes = {
     editorNode: PropTypes.object,
     scrollContainer: PropTypes.string,
     highlightsManager: PropTypes.object.isRequired,
+    editorWrapperElement: PropTypes.object,
 };
 
 const mapStateToProps = ({

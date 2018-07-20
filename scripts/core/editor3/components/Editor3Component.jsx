@@ -404,6 +404,7 @@ export class Editor3Component extends React.Component {
                         scrollContainer={scrollContainer}
                         editorNode={this.editorNode}
                         highlightsManager={this.props.highlightsManager}
+                        editorWrapperElement={this.div}
                     />
                 }
                 <HighlightsPopup
