@@ -116,15 +116,9 @@ export function MultiActionBarController(
         multi.reset();
     };
 
-    this.canEditMetadata = function() {
-        var canEdit = true;
-
-        multi.getItems().forEach((item) => {
-            canEdit = canEdit && !item.lock_user && ['picture', 'video', 'audio'].indexOf(item.type) !== -1;
-        });
-
-        return canEdit;
-    };
+    this.canEditMetadata = () => multi.getItems().every(
+        (item) => !item.lock_user && ['picture', 'video', 'audio'].includes(item.type)
+    );
 
     this.canPackageItems = function() {
         var canPackage = true;
