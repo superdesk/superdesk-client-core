@@ -267,7 +267,7 @@ describe('content filters', () => {
         contentFilters.selectFilterCondition('Body Condition');
         contentFilters.addFilterCondition();
         expect(contentFilters.previewField.getAttribute('value'))
-            .toEqual('[(desk eq "Politic Desk") AND (body_html startswith "Help")]');
+            .toEqual('[(Desk eq "Politic Desk") AND (Body HTML startswith "Help")]');
         contentFilters.save();
 
         // create a content filter with OR
@@ -279,7 +279,7 @@ describe('content filters', () => {
         contentFilters.selectFilterConditionOnStatement('Body Condition', 2);
         contentFilters.addFilterCondition();
         expect(contentFilters.previewField.getAttribute('value'))
-            .toEqual('[(desk eq "Politic Desk")] OR [(body_html startswith "Help")]');
+            .toEqual('[(Desk eq "Politic Desk")] OR [(Body HTML startswith "Help")]');
         contentFilters.save();
 
         // create a content filter with a filter condition and content filter
@@ -292,7 +292,7 @@ describe('content filters', () => {
         contentFilters.addContentFilter();
         /* eslint-disable max-len */
         expect(contentFilters.previewField.getAttribute('value'))
-            .toEqual('[[(desk eq "Politic Desk")] OR [(body_html startswith "Help")] AND (desk eq "Politic Desk")] OR [[(desk eq "Politic Desk")] OR [(body_html startswith "Help")]]');
+            .toEqual('[[(Desk eq "Politic Desk")] OR [(Body HTML startswith "Help")] AND (Desk eq "Politic Desk")] OR [[(Desk eq "Politic Desk")] OR [(Body HTML startswith "Help")]]');
         contentFilters.save();
     });
 });

@@ -1,17 +1,16 @@
 import {GET_LABEL_MAP} from '../content/constants';
 import ng from 'core/services/ng';
 
-export const getLabelNameResolver = () => ng.getServices(['gettextCatalog', 'content'])
+export const getLabelNameResolver = () => ng.getServices(['gettextCatalog', 'vocabularies'])
     .then((services) => {
-        const [gettextCatalog, content] = services;
+        const [gettextCatalog, vocabularies] = services;
         const gettext = (str) => gettextCatalog.getString(str);
 
-        return content.getCustomFields()
-            .then((customFields) => [gettext, customFields]);
+        return vocabularies.getAllActiveVocabularies()
+            .then((vocabularies) => [gettext, vocabularies]);
     })
     .then((res) => {
-        const [gettext, customFields] = res;
-
+        const [gettext, vocabularies] = res;
         const labelMap = GET_LABEL_MAP(gettext);
 
         return (fieldId) => {
@@ -19,14 +18,14 @@ export const getLabelNameResolver = () => ng.getServices(['gettextCatalog', 'con
                 return labelMap[fieldId];
             }
 
-            const customField = customFields.find((obj) => obj._id === fieldId);
+            const field = vocabularies.find((obj) => obj._id === fieldId);
 
             if (
-                customField != null
-                && customField.hasOwnProperty('display_name')
-                && customField['display_name'].length > 0
+                field != null
+                && field.hasOwnProperty('display_name')
+                && field['display_name'].length > 0
             ) {
-                return customField['display_name'];
+                return field['display_name'];
             }
 
             console.warn(`could not find label for ${fieldId}. Please add it in ` +
