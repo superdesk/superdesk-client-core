@@ -227,14 +227,18 @@ export class MediaBlockComponent extends Component {
                     }
                     {mediaType === 'video' &&
                         <div>
-                            <Textarea
-                                placeholder={gettext('Title')}
-                                onFocus={setLocked}
-                                onClick={setLocked}
-                                className="image-block__title"
-                                value={data.headline}
-                                onChange={this.onChange}
-                            />
+                            {
+                                showTitle === true ? null : (
+                                    <Textarea
+                                        placeholder={gettext('Title')}
+                                        onFocus={setLocked}
+                                        onClick={setLocked}
+                                        className="image-block__title"
+                                        value={data.headline}
+                                        onChange={this.onChange}
+                                    />
+                                )
+                            }
                             <video controls src={rendition.href} alt={alt} width="100%" height="100%" />
                             <div className="image-block__metadata image-block__metadata--plain">
                                 <span>
@@ -261,14 +265,19 @@ export class MediaBlockComponent extends Component {
                     }
                     {mediaType === 'audio' &&
                         <div>
-                            <Textarea
-                                placeholder={gettext('Title')}
-                                onFocus={setLocked}
-                                onClick={setLocked}
-                                className="image-block__title"
-                                value={data.headline}
-                                onChange={this.onChange}
-                            />
+                            {
+                                showTitle === true ? null : (
+                                    <Textarea
+                                        placeholder={gettext('Title')}
+                                        onFocus={setLocked}
+                                        onClick={setLocked}
+                                        className="image-block__title"
+                                        value={data.headline}
+                                        onChange={this.onChange}
+                                    />
+                                )
+                            }
+
                             <audio controls src={rendition.href} alt={alt} width="100%" height="100%" />
                             <div className="image-block__metadata image-block__metadata--plain">
                                 <span>
