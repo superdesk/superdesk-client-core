@@ -33,7 +33,7 @@
                     required>
             </div>
 
-            <div class="sd-line-input sd-line-input--boxed" ng-if="vocabulary.service || vocabulary._id === 'categories'">
+            <div class="sd-line-input sd-line-input--boxed" ng-if="vocabulary.service && vocabulary.field_type === null || vocabulary._id === 'categories'">
                 <label for="cv_popup_width" class="sd-line-input__label" translate>Width of the popup window (in pixels)</label>
                 <input id="cv_popup_width" class="sd-line-input__input"
                     type="number"

@@ -116,6 +116,10 @@ export function MultiActionBarController(
         multi.reset();
     };
 
+    this.canEditMetadata = () => multi.getItems().every(
+        (item) => !item.lock_user && ['picture', 'video', 'audio'].includes(item.type)
+    );
+
     this.canPackageItems = function() {
         var canPackage = true;
 

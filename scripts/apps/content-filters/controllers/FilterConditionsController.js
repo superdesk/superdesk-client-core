@@ -135,8 +135,9 @@ export function FilterConditionsController($scope, contentFilters, notify, modal
             });
 
             var conditionValue = labels.length > 0 ? labels.join(', ') : filterCondition.value;
+            var itemLabel = $scope.label(filterCondition.field);
 
-            return '(' + filterCondition.field + ' ' + filterCondition.operator + ' ' + conditionValue + ')';
+            return '(' + itemLabel + ' ' + filterCondition.operator + ' ' + conditionValue + ')';
         };
 
         var fetchFilterConditions = function() {

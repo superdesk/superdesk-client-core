@@ -657,7 +657,7 @@ const processSuggestion = (state, {data, suggestion}, accepted) => {
     });
     editorState = EditorState.acceptSelection(editorState, selection);
 
-    editorState = moveToSuggestionsHistory(editorState, suggestion, accepted);
+    editorState = moveToSuggestionsHistory(editorState, data, suggestion, accepted);
 
     return saveEditorStatus(state, editorState, 'change-block-data');
 };

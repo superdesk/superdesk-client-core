@@ -24,6 +24,8 @@ class BaseUnstyledComponent extends React.Component {
     }
 
     onDrop(event) {
+        this.setState({over: false});
+
         const block = getEditorBlock(event);
 
         if (block) {
@@ -31,8 +33,6 @@ class BaseUnstyledComponent extends React.Component {
             event.stopPropagation();
             this.props.dispatch(moveBlock(block, this.getDropBlockKey(), this.dropInsertionMode));
         }
-
-        this.setState({over: false});
     }
 
     onDragOver(event) {
@@ -68,7 +68,7 @@ class BaseUnstyledComponent extends React.Component {
 }
 
 BaseUnstyledComponent.propTypes = {
-    dispatch: PropTypes.func,
+    dispatch: PropTypes.func.isRequired,
 };
 
 export default BaseUnstyledComponent;
