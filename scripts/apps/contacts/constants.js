@@ -57,3 +57,7 @@ export const IG_URL = 'https://www.instagram.com/';
 export const TWITTER_URL = 'https://twitter.com/';
 export const MAP_URL = 'https://maps.google.com/maps?q=';
 export const MAILTO_URL = 'mailto://';
+export const FILTER_FIELDS = {
+    PRIVACY_LEVEL: 'public',
+    STATUS: 'is_active',
+};

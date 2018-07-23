@@ -72,27 +72,6 @@
                                 ng-model="meta.country">
                         </div>
                     </div>
-                    <div class="field multiple">
-                        <div class="field">
-                            <label class="search-all" translate>All</label>
-                            <div class="control">
-                                <input type="checkbox" id="search-all" ng-keypress="keyPressed($event)"
-                                    ng-model="toggle.all">
-                            </div>
-                        </div>
-                        <div class="field"
-                            title="{{ toggle.all ? 'uncheck all to enable switch' : null | translate }}">
-                            <label for="search-public" translate>Public</label>
-                            <span sd-switch ng-model="meta.public" 
-                                ng-class="{'prevent-switch': toggle.all}"></span>
-                        </div>
-                        <div class="field"
-                            title="{{ toggle.all ? 'uncheck all to enable switch' : null | translate }}">
-                            <label for="search-active" translate>Active</label>
-                            <span sd-switch ng-model="meta.is_active"
-                                ng-class="{'prevent-switch': toggle.all}"></span>
-                        </div>
-                    </div>
                 </fieldset>
             </form>
         </div>
