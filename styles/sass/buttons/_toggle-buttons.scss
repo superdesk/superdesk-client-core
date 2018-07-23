@@ -109,6 +109,9 @@ $checkBtnColorActive: #78909C;
         cursor: pointer;
         background: lighten($checkBtnColor, 5%);
     }
+    &.focus, &:focus {
+        outline: 2px solid $sd-blue;
+    }
     &.active, &:active {
         background: $checkBtnColorActive;
         @include box-shadow (inset 0 3px 0 0 rgba(0,0,0,0.2));
