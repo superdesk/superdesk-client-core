@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {omit} from 'lodash';
 
 import BaseUnstyledComponent from './BaseUnstyledComponent';
 
@@ -22,18 +23,15 @@ class UnstyledBlock extends BaseUnstyledComponent {
 
     render() {
         let {className} = this.props;
-        const divProps = Object.assign({}, this.props);
 
-        // avoid react unknown prop warning
-        delete divProps.className;
-        delete divProps.invisibles;
+        const propsToTransfer = omit(this.props, ['className', 'invisibles', 'dispatch']);
 
         return (
             <div ref={(div) => this.div = div}
-                {...divProps}
+                {...propsToTransfer}
                 className={className + (this.state.over ? ' unstyled__block--over' : ' unstyled__block')}
             >
-                {divProps.children}
+                {this.props.children}
             </div>
         );
     }
@@ -42,6 +40,7 @@ class UnstyledBlock extends BaseUnstyledComponent {
 UnstyledBlock.propTypes = {
     children: PropTypes.object,
     className: PropTypes.string,
+    dispatch: PropTypes.func.isRequired,
 };
 
 // mapping state to props in `connect` might not work well for this component

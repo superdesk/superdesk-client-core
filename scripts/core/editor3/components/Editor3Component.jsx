@@ -389,7 +389,7 @@ export class Editor3Component extends React.Component {
         const blockRenderMap = DefaultDraftBlockRenderMap.merge(Map(
             mediaEnabled ? {
                 unstyled: {
-                    element: UnstyledBlock,
+                    element: (props) => <UnstyledBlock {...props} dispatch={this.props.dispatch} />,
                     aliasedElements: ['p'],
                     wrapper: <UnstyledWrapper dispatch={this.props.dispatch} />,
                 },
