@@ -338,15 +338,15 @@ export class SelectFieldPopup extends React.Component {
                                 </button>
                             </div>
                         ) || (
-                                <SearchBar
-                                    onSearch={this.filterSearchResults}
-                                    minLength={1}
-                                    extendOnOpen={true}
-                                    ref={(node) => this.dom.search = node}
-                                    timeout={100}
-                                    allowCollapsed={false}
-                                />
-                            )}
+                            <SearchBar
+                                onSearch={this.filterSearchResults}
+                                minLength={1}
+                                extendOnOpen={true}
+                                ref={(node) => this.dom.search = node}
+                                timeout={100}
+                                allowCollapsed={false}
+                            />
+                        )}
                     </div>
                     <ul className="dropdown-menu Select__popup__list" ref={(node) => this.dom.list = node}>
                         {this.state.filteredList.map((opt, index) => (
