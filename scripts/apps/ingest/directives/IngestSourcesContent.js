@@ -413,8 +413,25 @@ export function IngestSourcesContent(ingestSources, gettext, notify, api, $locat
                     });
             };
 
-            $scope.gotoIngest = function(source) {
-                $location.path('/search').search({repo: 'ingest', source: angular.toJson([source])});
+            $scope.gotoIngest = function(provider) {
+                const contentTypes = provider.content_types;
+
+                // the list contains always 'preformatted' item
+                if (contentTypes.length === 2 && contentTypes.includes('event')) {
+                    const searchParams = {
+                        page: 1,
+                        advancedSearch: {
+                            source: [{
+                                id: provider._id,
+                                name: provider.name,
+                            }],
+                        },
+                    };
+
+                    $location.path('/planning').search({filter: 'EVENTS', searchParams: angular.toJson(searchParams)});
+                } else {
+                    $location.path('/search').search({repo: 'ingest', source: angular.toJson([provider.source])});
+                }
             };
 
             /**
