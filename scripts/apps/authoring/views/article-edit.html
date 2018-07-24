@@ -585,14 +585,16 @@
         data-append-element=".field" 
         data-append-class="active" 
         sd-auto-height 
-        sd-validation-error="error.extra[field._id].embed"></textarea>
+        sd-validation-error="error.extra[field._id].embed"
+        tabindex="{{editor[field._id].order}}"></textarea>
     <input type="text" class="sd-line-input__input" style="margin-bottom: 6px;" 
         ng-model="item.extra[field._id].description"
         sd-remove-tags ng-change="autosave(item)" 
         sd-focus-element
         data-append-element=".field" 
         data-append-class="active" 
-        placeholder="{{ 'Description' | translate }}">
+        placeholder="{{ 'Description' | translate }}"
+        tabindex="{{editor[field._id].order}}">
     <div id="embed-preview-{{ field._id }}" ng-show="embedPreviews[field._id]"></div>
     <div class="sd-editor__info-text" ng-if="helper_text[field._id]">{{field.helper_text}}</div>
 </div>
