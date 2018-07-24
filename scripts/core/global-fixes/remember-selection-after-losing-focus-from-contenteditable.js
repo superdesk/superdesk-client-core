@@ -9,13 +9,7 @@ import {isElementInViewport} from '../helpers/dom';
 // Using a WeakMap also removes the need to generate ids and automatically garbage collects.
 let savedSelections = new WeakMap();
 
-function tryRestoringSelection(elementReceivingFocus) {
-    const savedSelectionRanges = savedSelections.get(elementReceivingFocus);
-
-    if (Array.isArray(savedSelectionRanges) !== true || savedSelectionRanges.length < 1) {
-        return;
-    }
-
+function restoreSelection(savedSelectionRanges) {
     // `parentElement` is used because `startContainer` is a text node and doesn't have the method `scrollIntoView`
     const elementToScrollIntoView = savedSelectionRanges[0].startContainer.parentElement;
 
@@ -54,13 +48,17 @@ function updateSelectionPosition() {
 }
 
 HTMLElement.prototype.focus = (function(originalFocus) {
-    return function() {
+    return function(...args) {
         // `this` refers to DOM Element receiving focus
+        const savedSelectionRanges = savedSelections.get(this);
 
-        if (this.getAttribute('contenteditable') === 'true') {
-            tryRestoringSelection(this);
+        const savedSelectionExists = Array.isArray(savedSelectionRanges) === true
+            && savedSelectionRanges.length > 0;
+
+        if (this.getAttribute('contenteditable') === 'true' && savedSelectionExists) {
+            restoreSelection(savedSelectionRanges);
         } else {
-            originalFocus.apply(this, arguments);
+            originalFocus.call(this, ...args);
         }
     };
 })(HTMLElement.prototype.focus);

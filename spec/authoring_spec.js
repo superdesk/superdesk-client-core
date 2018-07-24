@@ -52,7 +52,6 @@ describe('authoring', () => {
             authoring.writeText(protractor.Key.UP);
         }
         authoring.writeText(protractor.Key.ENTER);
-        authoring.writeText(protractor.Key.UP);
         authoring.addEmbed('Embed at position 15');
         authoring.blockContains(0, (body1 + body2).replace(/\n$/, ''));
         authoring.blockContains(2, body3.replace(/\n$/, ''));
