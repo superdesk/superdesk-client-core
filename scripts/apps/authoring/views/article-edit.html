@@ -617,7 +617,7 @@
          data-allow-video="!!field.field_options.allowed_types.video"
          data-allow-audio="!!field.field_options.allowed_types.audio"
          data-max-uploads="maxUploads(field.field_options)"
-         tabindex="{{editor[field._id].order}}">
+         data-tabindex="editor[field._id].order">
     </div>
     <div class="sd-editor__info-text" ng-if="helper_text[field._id]">{{field.helper_text}}</div>
 </div>

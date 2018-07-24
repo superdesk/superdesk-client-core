@@ -20,6 +20,7 @@ export function ItemCarouselDirective($timeout) {
         scope: {
             items: '=',
             item: '=',
+            tabindex: '<',
             editable: '<',
             allowPicture: '<',
             allowVideo: '<',
