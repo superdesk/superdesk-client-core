@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import {isSuperdeskContent} from 'apps/workspace/helpers/isSuperdeskContent';
 
 PublishQueueController.$inject = [
     '$scope',
@@ -279,11 +280,18 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
     function previewItem() {
         var queueItem = _.find($scope.publish_queue, {_id: $location.search()._id}) || null;
 
+        $scope.selected.extensionPoint = false;
+
         if (queueItem) {
-            api.archive.getById(queueItem.item_id, {version: queueItem.item_version})
-                .then((item) => {
-                    $scope.selected.preview = item;
-                });
+            if (isSuperdeskContent(queueItem.content_type)) {
+                api.archive.getById(queueItem.item_id, {version: queueItem.item_version})
+                    .then((item) => {
+                        $scope.selected.preview = item;
+                    });
+            } else {
+                $scope.selected.preview = queueItem;
+                $scope.selected.extensionPoint = true;
+            }
         } else {
             $scope.selected.preview = null;
         }
