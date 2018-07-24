@@ -89,7 +89,7 @@
          data-onchange="autosave(item)"
          data-save="save()"
          data-show-title="editor.feature_image.imageTitle"
-         tabindex="{{editor.feature_image.order}}">
+         data-tabindex="editor.feature_image.order">
     </div>
 </div>
 <div ng-if="schema.feature_media" class="field"
@@ -108,7 +108,7 @@
          data-onchange="autosave(item)"
          data-save="save()"
          data-show-title="editor.feature_media.imageTitle"
-         tabindex="{{editor.feature_media.order}}">
+         data-tabindex="editor.feature_media.order">
     </div>
     <div sd-item-crops
          data-item="item.associations['featuremedia']"

@@ -26,6 +26,7 @@ export function ItemAssociationDirective(renditions) {
             rel: '=',
             item: '=',
             editable: '<',
+            tabindex: '<',
             allowPicture: '<',
             allowVideo: '<',
             allowAudio: '<',
