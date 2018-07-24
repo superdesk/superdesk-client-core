@@ -552,7 +552,7 @@
     sd-validation-error="error[field._id.toLowerCase()]">
 
     <label class="field__label">{{ field.display_name }}</label>
-    <div sd-datepicker ng-model="item.extra[field._id]" data-format="YYYY-MM-DDT00:00:00+0000" data-on-change="autosave(item)"></div>
+    <div sd-datepicker data-tabindex="editor[field._id].order" ng-model="item.extra[field._id]" data-format="YYYY-MM-DDT00:00:00+0000" data-on-change="autosave(item)"></div>
     <div class="sd-editor__info-text" ng-if="helper_text[field._id]">{{field.helper_text}}</div>
 </div>
 

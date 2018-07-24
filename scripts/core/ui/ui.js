@@ -273,6 +273,7 @@ function DatepickerDirective($document) {
         scope: {
             dt: '=ngModel',
             disabled: '=ngDisabled',
+            tabindex: '=',
             format: '@',
             onChange: '&',
         },
