@@ -16,6 +16,24 @@ describe('authoring', () => {
         monitoring.openMonitoring();
     });
 
+    it('contenteditable remembers caret position after losing focus', () => {
+        // implemented here remember-selection-after-losing-focus-from-contenteditable.js
+
+        monitoring.actionOnItem('Edit', 2, 0);
+        authoring.cleanBodyHtmlElement();
+        authoring.writeText('hello');
+
+        // lose focus on purpose
+        browser.executeScript(
+            `var a = document.createElement("input");
+            document.body.appendChild(a);
+            a.focus();`
+        );
+
+        authoring.writeText(' world');
+        authoring.blockContains(0, 'hello world');
+    });
+
     it('add an embed and respect the order', () => {
         // try with same block content
         monitoring.actionOnItem('Edit', 2, 0);
