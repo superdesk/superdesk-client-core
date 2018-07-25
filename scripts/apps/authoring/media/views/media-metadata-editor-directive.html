@@ -9,8 +9,8 @@
         data-onchange="onChange({key: 'headline'})"
         data-onblur="onBlur()"
         data-maxlength="validator.headline.maxlength"
-        data-placeholder="{{ placeholder.headline }}"
-    ></sd-line-input>
+        data-placeholder="{{ placeholder.headline }}">
+    </sd-line-input>
 </div>
 
 <div class="form__row" ng-if="validator.description_text">
@@ -18,14 +18,15 @@
         ng-model="item.description_text"
         data-dark="dark"
         data-boxed="boxed"
+        data-textarea="true"
         data-required="validator.description_text.required"
         data-label="{{:: 'Description' | translate}}"
         data-disabled="disabled"
         data-onblur="onBlur()"
         data-onchange="onChange({key: 'description_text'})"
         data-maxlength="validator.description_text.maxlength"
-        data-placeholder="{{ placeholder.description_text }}"
-    ></sd-line-input>
+        data-placeholder="{{ placeholder.description_text }}">
+    </sd-line-input>
 </div>
 
 <div class="form__row" ng-if="validator.archive_description">
@@ -33,6 +34,7 @@
         ng-model="item.archive_description"
         data-dark="dark"
         data-boxed="boxed"
+        data-textarea="true"
         data-required="validator.archive_description.required"
         data-label="{{:: 'Description' | translate}}"
         data-disabled="disabled || associated"
@@ -54,8 +56,8 @@
         data-onchange="onChange({key: 'alt_text'})"
         data-onblur="onBlur()"
         data-maxlength="validator.alt_text.maxlength"
-        data-placeholder="{{ placeholder.alt_text }}"
-    ></sd-line-input>
+        data-placeholder="{{ placeholder.alt_text }}">
+    </sd-line-input>
 </div>
 
 <div class="form__row" ng-if="validator.byline">
@@ -68,8 +70,8 @@
         data-disabled="disabled"
         data-onchange="onChange({key: 'byline'})"
         data-onblur="onBlur()"
-        data-placeholder="{{ placeholder.byline }}"
-    ></sd-line-input>
+        data-placeholder="{{ placeholder.byline }}">
+    </sd-line-input>
 </div>
 
 <div class="form__row" ng-if="validator.copyrightholder">
@@ -82,8 +84,8 @@
         data-disabled="disabled"
         data-onblur="onBlur()"
         data-onchange="onChange({key: 'copyrightholder'})"
-        data-placeholder="{{ placeholder.copyrightholder }}"
-    ></sd-line-input>
+        data-placeholder="{{ placeholder.copyrightholder }}">
+    </sd-line-input>
 </div>
 
 <div class="form__row" ng-if="validator.usageterms">
@@ -93,8 +95,7 @@
         data-transclude="true"
         data-required="validator.copyrightnotice.required"
         data-label="{{:: 'Assign Rights' | translate}}"
-        data-placeholder="{{ placeholder.usageterms }}"
-    >
+        data-placeholder="{{ placeholder.usageterms }}">
         <select class="sd-line-input__select"
             ng-model="item.usageterms"
             ng-blur="onBlur()"
@@ -119,6 +120,6 @@
         data-onblur="onBlur()"
         data-onchange="onChange({key: 'copyrightnotice'})"
         data-maxlength="validator.copyrightnotice.maxlength"
-        data-placeholder="{{ placeholder.copyrightnotice }}"
-    ></sd-line-input>
+        data-placeholder="{{ placeholder.copyrightnotice }}">
+    </sd-line-input>
 </div>
