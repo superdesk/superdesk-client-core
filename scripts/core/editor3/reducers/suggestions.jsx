@@ -962,16 +962,7 @@ const setAddSuggestionForCharacter = (editorState, data, text, inlineStyle = nul
     const currentStyle = Highlights.getHighlightStyleAtOffset(editorState, changeSuggestionsTypes, selection, 0);
     const currentData = currentStyle != null ? Highlights.getHighlightData(editorState, currentStyle) : null;
     let content = editorState.getCurrentContent();
-    const currentChar = Highlights.getCharByOffset(editorState, selection, 0);
     let newState = editorState;
-
-    if (currentChar === text && currentData != null
-        && currentData.type === 'DELETE_SUGGESTION'
-        && currentData.author === data.author) {
-        // if next character is the same as the new one and is delete suggestion -> reset data
-        newState = resetSuggestion(newState, currentStyle);
-        return newState;
-    }
 
     content = Modifier.insertText(content, selection, text);
     newState = EditorState.push(newState, content, 'insert-characters');
