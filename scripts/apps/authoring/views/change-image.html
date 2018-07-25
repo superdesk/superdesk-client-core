@@ -175,7 +175,7 @@
                                 <div class="sd-line-input sd-line-input--dark-ui sd-line-input--boxed sd-line-input--indent-l30">
                                     <span class="sd-line-input__info-left">W</span>
                                     <label class="sd-line-input__label" translate>Image size</label>
-                                    <input class="sd-line-input__input sd-line-input__input--center" type="number" value="{{ areaOfInterestData.CropRight - areaOfInterestData.CropLeft}}">
+                                    <input ng-model="areaOfInterestData.CropRight" ng-change="resizeImage()" class="sd-line-input__input sd-line-input__input--center" type="number">
                                 </div>
                             </div>
                             <div class="form__row-item form__row-item--no-grow">
@@ -184,15 +184,15 @@
                             <div class="form__row-item">
                                 <div class="sd-line-input sd-line-input--dark-ui sd-line-input--boxed sd-line-input--indent-l30">
                                     <span class="sd-line-input__info-left">H</span>
-                                    <input class="sd-line-input__input sd-line-input__input--center" type="number" value="{{ areaOfInterestData.CropBottom - areaOfInterestData.CropTop}}">
+                                    <input ng-model="areaOfInterestData.CropBottom" class="sd-line-input__input sd-line-input__input--center" type="number">
                                 </div>
                             </div>
                         </div>
                         <div class="flex-grid flex-grid--boxed-small flex-grid--wrap-items flex-grid--small-2">
-                            <button class="btn btn--hollow btn--ui-dark btn--large" translate>Original</button>
-                            <button class="btn btn--hollow btn--ui-dark btn--large">16 : 9</button>
-                            <button class="btn btn--hollow btn--ui-dark btn--large">4 : 3</button>
-                            <button class="btn btn--hollow btn--ui-dark btn--large">3 : 2</button>
+                            <button class="btn btn--hollow btn--ui-dark btn--large" ng-click="setRatio()" translate>Original</button>
+                            <button class="btn btn--hollow btn--ui-dark btn--large" ng-click="setRatio('16:9')" >16 : 9</button>
+                            <button class="btn btn--hollow btn--ui-dark btn--large" ng-click="setRatio('4:3')" >4 : 3</button>
+                            <button class="btn btn--hollow btn--ui-dark btn--large" ng-click="setRatio('3:2')" >3 : 2</button>
                         </div>
                     </div>
                     <div class="sd-slide-in-panel__content-block" ng-if="!isAoISelectionModeEnabled">
