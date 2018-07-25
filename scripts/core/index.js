@@ -1,4 +1,5 @@
-import 'core/polyfills';
+import 'core/global-fixes';
+
 import 'core/activity';
 import 'core/analytics';
 import 'core/api';

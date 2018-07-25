@@ -30,7 +30,6 @@
     <span ng-if="schema.headline.maxlength" sd-character-count data-item="item.headline" data-html="true" data-limit="schema.headline.maxlength"></span>
     <div id="title" class="headline"
          sd-editor3
-         data-editor-id="'headline'"
          data-path-to-value="'headline'"
          data-single-line="true"
          data-bind-to-value="compareView"
@@ -154,7 +153,6 @@
     <span sd-word-count data-item="item.abstract" data-html="true"></span>
     <div id="abstract" class="abstract"
          sd-editor3
-         data-editor-id="'item-abstract'"
          data-path-to-value="'abstract'"
          data-editor-format="editor.abstract.formatOptions"
          data-bind-to-value="compareView"
@@ -295,7 +293,6 @@
     <span sd-word-count data-item="item.body_html" data-html="true"></span>
     <div id="bodyhtml"
          sd-editor3
-         data-editor-id="'item-body_html'"
          data-path-to-value="'body_html'"
          data-find-replace-target
          data-bind-to-value="compareView"
@@ -374,7 +371,6 @@
     <span ng-if="validator.description_text.maxlength" sd-character-count data-item="item.description_text" data-html="true" data-limit="validator.description_text.maxlength"></span>
     <div id="title" class="abstract"
          sd-editor3
-         data-editor-id="'item-description_text'"
          data-path-to-value="'description_text'"
          data-editor-format="editor.description_text.formatOptions"
          data-bind-to-value="compareView"
@@ -441,7 +437,6 @@
     <label class="field__label">{{label('body_footer')}}</label>
     <div id="body_footer" class="body"
          sd-editor3
-         data-editor-id="'item-body_footer'"
          data-path-to-value="'body_footer'"
          data-bind-to-value="compareView"
          data-editor-format="editor.body_footer.formatOptions"
@@ -527,7 +522,6 @@
     <span ng-if="schema[field._id].maxlength || schema[field._id].minlength" sd-character-count
         data-item="item.extra[field._id]" data-html="true" data-limit="schema[field._id].maxlength"></span>
     <div sd-editor3
-        data-editor-id="'extra' + FIELD_KEY_SEPARATOR + field._id"
         data-path-to-value="'extra' + FIELD_KEY_SEPARATOR + field._id"
         data-single-line="field.field_options.single"
         data-value="item.extra[field._id]"

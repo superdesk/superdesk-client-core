@@ -397,14 +397,14 @@ export class Editor3Component extends React.Component {
         ));
 
         return (
-            <div id={'Editor3-' + this.props.id} className={cx} ref={(div) => this.div = div}>
+            <div className={cx} ref={(div) => this.div = div}>
                 {showToolbar &&
                     <Toolbar
                         disabled={locked || readOnly}
                         scrollContainer={scrollContainer}
                         editorNode={this.editorNode}
                         highlightsManager={this.props.highlightsManager}
-                        editorId={this.props.id}
+                        editorWrapperElement={this.div}
                     />
                 }
                 <HighlightsPopup
@@ -412,7 +412,6 @@ export class Editor3Component extends React.Component {
                     editorState={editorState}
                     highlightsManager={this.props.highlightsManager}
                     onChange={this.props.onChange}
-                    editorId={this.props.id}
                 />
                 <div className="focus-screen" onMouseDown={this.focus}>
                     <Editor editorState={editorState}
@@ -447,7 +446,6 @@ export class Editor3Component extends React.Component {
 }
 
 Editor3Component.propTypes = {
-    id: PropTypes.string.isRequired,
     readOnly: PropTypes.bool,
     locked: PropTypes.bool,
     showToolbar: PropTypes.bool,

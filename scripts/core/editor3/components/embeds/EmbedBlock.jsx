@@ -108,22 +108,16 @@ export class EmbedBlockComponent extends Component {
         const html = embed.data.html;
         const isQumu = isQumuWidget(html);
 
-        // If event is not stopped, editor selection drops to start of the content
-        const stopEvent = (originalFunction) => (event) => {
-            event.stopPropagation();
-            originalFunction(event);
-        };
-
         if (isQumu !== true) {
             this.runScripts(html);
         }
 
         return (
             <div className="embed-block">
-                <a className="icn-btn embed-block__remove" onMouseDown={stopEvent(this.onClickDelete)}>
+                <a className="icn-btn embed-block__remove" onMouseDown={this.onClickDelete}>
                     <i className="icon-close-small" />
                 </a>
-                <a className="icn-btn embed-block__edit" onMouseDown={stopEvent(this.editEmbedHtml)}>
+                <a className="icn-btn embed-block__edit" onMouseDown={this.editEmbedHtml}>
                     <i className="icon-pencil" />
                 </a>
 
