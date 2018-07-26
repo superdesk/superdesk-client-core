@@ -116,7 +116,7 @@
                     <div class="preview-data" sd-short-date ng-if="field.field_type === 'date'" data-date="item.extra[field._id]"></div>
                     <div class="preview-data preview-editor" ng-if="field.field_type === 'text'" ng-bind-html="getHtml(item.extra[field._id])"></div>
                 </div>
-                <div class="headline" order="{{editor.headline.order}}" ng-if="!editor.headline.hideOnPrint">{{item.headline}}</div>
+                <div class="headline" order="{{editor.headline.order}}" ng-if="!editor.headline.hideOnPrint">{{item.headline | stripHtmlTags}}</div>
                 <!-- custom media and embed fields -->
                 <div ng-repeat="field in fields track by field._id"
                     ng-if="(field.field_type === 'media' && mediaExists(item.associations, field._id) || field.field_type === 'embed' && item.extra[field._id]) && !editor[field._id].hideOnPrint"
