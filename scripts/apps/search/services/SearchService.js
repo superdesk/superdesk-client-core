@@ -7,7 +7,7 @@ import {
 } from 'apps/search/constants';
 
 import _ from 'lodash';
-
+import {dateFilters} from '../directives/SearchFilters';
 /**
  * @ngdoc service
  * @module superdesk.apps.search
@@ -283,36 +283,6 @@ export function SearchService($location, gettext, config, session, multi,
             });
         }
 
-        function buildRangeFilter(params, query) {
-            // created & modified date filters
-            let hasParams = params.beforefirstcreated || params.afterfirstcreated ||
-                params.beforeversioncreated || params.afterversioncreated;
-
-            if (!hasParams) {
-                return;
-            }
-
-            var range = {firstcreated: {}, versioncreated: {}};
-
-            if (params.beforefirstcreated) {
-                range.firstcreated.lte = formatDate(params.beforefirstcreated, midnightSuffix);
-            }
-
-            if (params.afterfirstcreated) {
-                range.firstcreated.gte = formatDate(params.afterfirstcreated, zeroHourSuffix);
-            }
-
-            if (params.beforeversioncreated) {
-                range.versioncreated.lte = formatDate(params.beforeversioncreated, midnightSuffix);
-            }
-
-            if (params.afterversioncreated) {
-                range.versioncreated.gte = formatDate(params.afterversioncreated, zeroHourSuffix);
-            }
-
-            query.post_filter({range: range});
-        }
-
         function buildGeneralFilters(params, query) {
             if (params.urgency) {
                 query.post_filter({terms: {urgency: JSON.parse(params.urgency)}});
@@ -362,14 +332,34 @@ export function SearchService($location, gettext, config, session, multi,
           * @param {Object} query - Query object
           */
         function buildFilters(params, query) {
-            buildRangeFilter(params, query);
+            // date filters start
+            var facetrange = {};
 
-            if (params.after) {
-                var facetrange = {firstcreated: {}};
+            dateFilters.forEach(({fieldname}) => {
+                if (params[fieldname] != null) {
+                    // handle predefined ranges
+                    facetrange[fieldname] = {gte: formatDate(params[fieldname], zeroHourSuffix)};
+                } else {
+                    // handle manual ranges
+                    if (params[fieldname + 'to'] != null) {
+                        if (facetrange[fieldname] == null) {
+                            facetrange[fieldname] = {};
+                        }
+                        facetrange[fieldname].lte = formatDate(params[fieldname + 'to'], midnightSuffix);
+                    }
+                    if (params[fieldname + 'from'] != null) {
+                        if (facetrange[fieldname] == null) {
+                            facetrange[fieldname] = {};
+                        }
+                        facetrange[fieldname].gte = formatDate(params[fieldname + 'from'], zeroHourSuffix);
+                    }
+                }
+            });
 
-                facetrange.firstcreated.gte = params.after;
+            if (Object.keys(facetrange).length > 0) {
                 query.post_filter({range: facetrange});
             }
+            // date filters end
 
             if (params.scheduled_after) {
                 query.post_filter({range: {'schedule_settings.utc_publish_schedule': {gte: params.scheduled_after}}});

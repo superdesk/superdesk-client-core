@@ -1,4 +1,5 @@
 import {PARAMETERS, EXCLUDE_FACETS} from 'apps/search/constants';
+import {dateFilters} from '../directives/SearchFilters';
 /**
  * @ngdoc service
  * @module superdesk.apps.search
@@ -228,9 +229,12 @@ export function TagService($location, desks, userList, metadata, search,
      * @param {String} key
      */
     function removeFacet(type, key) {
-        if (String(key).indexOf('Last') >= 0 || String(key).indexOf('after') >= 0
-            || String(key).indexOf('before') >= 0) {
-            removeDateFacet(type);
+        const dateFilter = dateFilters.find(
+            ({labelBlock, labelFrom, labelTo}) => [labelBlock, labelFrom, labelTo].includes(type)
+        );
+
+        if (dateFilter != null) {
+            removeDateFacet(type, dateFilter);
         } else {
             var search = $location.search();
 
@@ -257,17 +261,24 @@ export function TagService($location, desks, userList, metadata, search,
      * @name tags#initSelectedFacets
      * @private
      * @param {String} key
+     * @param {Object} dateFilter
      * @description Removes the date search related tags by modifying the $location.search
      */
-    function removeDateFacet(key) {
-        var search = $location.search();
+    function removeDateFacet(key, dateFilter) {
+        if (dateFilter != null) {
+            const {fieldname} = dateFilter;
 
-        if (search[key]) {
+            if (key === dateFilter.labelFrom) {
+                $location.search(fieldname + 'from', null);
+            } else if (key === dateFilter.labelTo) {
+                $location.search(fieldname + 'to', null);
+            } else {
+                $location.search(fieldname, null);
+            }
+        } else if (search[key]) {
             $location.search(key, null);
         } else if (key === 'scheduledDate') {
             $location.search('scheduled_after', null);
-        } else {
-            $location.search('after', null);
         }
     }
 
@@ -299,15 +310,15 @@ export function TagService($location, desks, userList, metadata, search,
             initParameters(tags.currentSearch);
             initExcludedFacets(tags.currentSearch);
 
+            /* eslint-disable complexity */
             _.forEach(tags.currentSearch, (type, key) => {
                 if (key === 'q' || EXCLUDE_FACETS[key]) {
                     return;
                 }
 
-                tags.selectedFacets[key] = [];
+                if (key === 'desk') {
+                    tags.selectedFacets[key] = [];
 
-                switch (key) {
-                case 'desk':
                     var selectedDesks = JSON.parse(type);
 
                     _.forEach(selectedDesks, (selectedDesk) => {
@@ -315,9 +326,9 @@ export function TagService($location, desks, userList, metadata, search,
                             label: desks.deskLookup[selectedDesk].name,
                             value: selectedDesk});
                     });
-                    break;
+                } else if (key === 'language') {
+                    tags.selectedFacets[key] = [];
 
-                case 'language': {
                     const selected = JSON.parse(type);
                     const languages = metadata.values.languages || [];
 
@@ -327,46 +338,42 @@ export function TagService($location, desks, userList, metadata, search,
                             value: code,
                         });
                     });
-                    break;
-                }
-
-                case 'after':
+                } else if (dateFilters.some(({fieldname}) => fieldname === key)) {
                     var dateForType = {
                         'now-24H': 'Last Day',
                         'now-1w': 'Last Week',
                         'now-1M': 'Last Month',
                     };
 
-                    tags.selectedFacets.date = [dateForType[type]];
-                    break;
 
-                case 'scheduled_after':
+                    const dateFilter = dateFilters.find(({fieldname}) => fieldname === key);
+
+                    tags.selectedFacets[dateFilter.labelBlock] = [dateForType[type]];
+                } else if (key === 'scheduled_after') {
                     tags.selectedFacets.scheduledDate = ['Scheduled in the Last Day'];
 
                     if (type === 'now-8H') {
                         tags.selectedFacets.scheduledDate = ['Scheduled in the Last 8 Hours'];
                     }
-                    break;
-                case 'creditqcode':
+                } else if (key === 'creditqcode') {
                     tags.selectedFacets.credit = JSON.parse(type);
-                    break;
-                default: {
-                    const prefixForType = {
-                        afterfirstcreated: 'Created after',
-                        beforefirstcreated: 'Created before',
-                        afterversioncreated: 'Modified before',
-                        beforeversioncreated: 'Modified before',
-                    };
+                } else {
+                    const dateFilter = dateFilters.find(
+                        ({fieldname}) => key === fieldname + 'from' || key === fieldname + 'to'
+                    );
 
-                    const createdOrModified = (t) => Object.keys(prefixForType).indexOf(t) !== -1;
+                    if (dateFilter != null) {
+                        // remove predefined filters like 'last day', 'last week'
+                        $location.search(dateFilter.fieldname, null);
 
-                    if (createdOrModified(key)) {
-                        $location.search('after', null);
-                        tags.selectedFacets[key] = [`${prefixForType[key]} ${type}`];
+                        if (key === dateFilter.fieldname + 'to') {
+                            tags.selectedFacets[dateFilter.labelTo] = [type];
+                        } else {
+                            tags.selectedFacets[dateFilter.labelFrom] = [type];
+                        }
                     } else if (FacetKeys[key]) {
                         tags.selectedFacets[key] = JSON.parse(type);
                     }
-                }
                 }
             });
 

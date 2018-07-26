@@ -137,37 +137,28 @@
         </ul>
     </div>
 
-    <div sd-toggle-box data-title="{{:: 'Dates' | translate }}" data-open="true">
+    <div ng-repeat="dateFilter in dateFilters" sd-toggle-box data-title="{{:: dateFilter.labelBlock }}" data-open="false">
         <form class="date-filter">
             <div class="predefined-dates">
-                    <button ng-click="toggleFilter('date', 'Last Day')" 
-                            class="btn btn--mini" 
-                            ng-class="{active: hasFilter('date','Last Day')}">{{'Last Day' | translate}}</button>
-                    <button ng-click="toggleFilter('date', 'Last Week')" 
-                            class="btn btn--mini" 
-                            ng-class="{active: hasFilter('date','Last Week')}">{{'Last Week' | translate}}</button>
-                    <button ng-click="toggleFilter('date', 'Last Month')" 
-                            class="btn btn--mini" 
-                            ng-class="{active: hasFilter('date','Last Month')}">{{'Last Month' | translate}}</button>
+                <button ng-click="toggleFilter('date', 'Last Day', dateFilter.fieldname)" 
+                        class="btn btn--mini" 
+                        ng-class="{active: hasFilter(dateFilter.labelBlock,'Last Day'), 'btn--primary': hasFilter(dateFilter.labelBlock,'Last Day')}">{{'Last Day' | translate}}</button>
+                <button ng-click="toggleFilter('date', 'Last Week', dateFilter.fieldname)" 
+                        class="btn btn--mini" 
+                        ng-class="{active: hasFilter(dateFilter.labelBlock,'Last Week'),'btn--primary': hasFilter(dateFilter.labelBlock,'Last Week')}">{{'Last Week' | translate}}</button>
+                <button ng-click="toggleFilter('date', 'Last Month', dateFilter.fieldname)" 
+                        class="btn btn--mini" 
+                        ng-class="{active: hasFilter(dateFilter.labelBlock,'Last Month'), 'btn--primary': hasFilter(dateFilter.labelBlock,'Last Month')}">{{'Last Month' | translate}}</button>
             </div>
+
             <fieldset ng-show="repo.search === 'local' || providerType.startsWith('scanpix') || repo.search === 'content-api' || providerType === 'aapmm'">
                 <div class="multiple">
-                    <div class="field" sd-date-param data-location="afterfirstcreated">
-                         <label for="created_after" translate>Created from</label>
+                    <div class="field" sd-date-param data-location="{{dateFilter.fieldname}}from">
+                        <label>{{dateFilter.labelFrom}}</label>
                         <div sd-datepicker ng-model="date"></div>
                     </div>
-                    <div class="field" sd-date-param data-location="beforefirstcreated">
-                        <label for="created_before" translate>Created until</label>
-                        <div sd-datepicker ng-model="date"></div>
-                    </div>
-                </div>
-                <div class="multiple" ng-show="providerType.startsWith('scanpix')">
-                    <div class="field" sd-date-param data-location="afterversioncreated">
-                        <label for="modified_after" translate>Modified from</label>
-                        <div sd-datepicker ng-model="date"></div>
-                    </div>
-                    <div class="field" sd-date-param data-location="beforeversioncreated">
-                        <label for="modified_before" translate>Modified until</label>
+                    <div class="field" sd-date-param data-location="{{dateFilter.fieldname}}to">
+                        <label>{{dateFilter.labelTo}}</label>
                         <div sd-datepicker ng-model="date"></div>
                     </div>
                 </div>
