@@ -6,21 +6,13 @@ import {ModalHeader} from 'core/ui/components/Modal/ModalHeader';
 import {ModalBody} from 'core/ui/components/Modal/ModalBody';
 import {ModalFooter} from 'core/ui/components/Modal/ModalFooter';
 
-function getFormattedDocument(url) {
-    return new Promise((resolve) => {
-        var xhr = new XMLHttpRequest();
-
-        xhr.addEventListener('load', function() {
-            resolve({
-                fomattedDocument: this.responseText,
-                documentContentType: this.getResponseHeader('content-type'),
-            });
-        });
-
-        xhr.open('GET', url);
-        xhr.send();
-    });
-}
+const getFormattedDocument = (url) => fetch(url).then(
+    (response) => response.text()
+        .then((responseText) => ({
+            fomattedDocument: responseText,
+            documentContentType: response.headers.get('content-type'),
+        }))
+);
 
 export class PreviewModal extends React.Component {
     openPreviewForItem(subscriberId, format, endpointUrl) {
@@ -34,25 +26,27 @@ export class PreviewModal extends React.Component {
             + `?subscriber_id=${subscriberId}&formatter=${format}&document_id=${documentId}`;
 
         getFormattedDocument(url).then(({fomattedDocument, documentContentType}) => {
-            var xhr = new XMLHttpRequest();
+            const headers = new Headers();
 
-            xhr.open('POST', endpointUrl);
-            xhr.setRequestHeader('Content-Type', documentContentType);
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === 4) {
-                    if (xhr.status === 200) {
-                        nextWindow.document.body.innerHTML = this.responseText;
+            headers.append('Content-Type', documentContentType);
+
+            fetch(endpointUrl, {
+                method: 'POST',
+                mode: 'cors',
+                body: fomattedDocument,
+                headers: headers,
+            })
+                .then((res) => res.text().then((responseText) => {
+                    if (res.status === 200) {
+                        nextWindow.document.body.innerHTML = responseText;
                     } else {
-                        nextWindow.document.body.innerText =
-                            gettext(
-                                'An error occured while trying to preview the item.'
-                                + ' Ensure correct preview endpoint is configured or contact endpoint maintainers.'
-                            )
-                            + '\n\n' + this.responseText;
+                        nextWindow.document.body.innerHTML =
+                            `<h1>${gettext('An error occured while trying to preview the item.')}</h1>`
+                            + `<p>${gettext('Ensure correct preview endpoint is configured'
+                                + ' or contact endpoint maintainers.')}</p>`
+                            + '<br /><br />' + responseText;
                     }
-                }
-            };
-            xhr.send(fomattedDocument);
+                }));
         });
     }
     render() {
