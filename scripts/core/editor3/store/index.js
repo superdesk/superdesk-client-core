@@ -85,11 +85,12 @@ function generateAnnotations(item, logger) {
 /**
  * @name onChange
  * @params {ContentState} contentState New editor content state.
+ * @params {Boolean} plainText If this is true, the editor content will be text instead of html
  * @description Triggered whenever the state of the editor changes. It takes the
  * current content states and updates the values of the host controller. This function
  * is bound to the controller, so 'this' points to controller attributes.
  */
-export function onChange(contentState) {
+export function onChange(contentState, {plainText = false}) {
     const pathToValue = this.pathToValue;
 
     if (pathToValue == null || pathToValue.length < 1) {
@@ -124,9 +125,12 @@ export function onChange(contentState) {
     const fieldName = pathToValueArray[pathToValueArray.length - 1];
     const logger = ng.get('logger');
 
-    objectToUpdate[fieldName] = toHTML(contentStateHighlightsReadyForExport, logger);
-
-    generateAnnotations(this.item, logger);
+    if (plainText) {
+        objectToUpdate[fieldName] = contentStateHighlightsReadyForExport.getPlainText();
+    } else {
+        objectToUpdate[fieldName] = toHTML(contentStateHighlightsReadyForExport, logger);
+        generateAnnotations(this.item, logger);
+    }
 
     // call on change with scope updated
     this.$rootScope.$applyAsync(() => {

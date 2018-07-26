@@ -120,6 +120,8 @@ export function stripHtml(item) {
             item[key] = stripHtmlRaw(item[key]);
         }
     });
+
+    return item;
 }
 
 /**
