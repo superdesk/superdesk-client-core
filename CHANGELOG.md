@@ -1,5 +1,11 @@
 # Superdesk Client Changelog
 
+## [1.22.1] 2018-07-26
+
+### Fixed
+
+- Use langOverride after translations are loaded.
+
 ## [1.22.0] 2018-07-17
 
 ### Fixed
