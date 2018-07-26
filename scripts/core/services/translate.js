@@ -1,4 +1,5 @@
 require('angular-dynamic-locale');
+import {addLangOverride} from 'core/lang';
 
 /**
  * Translate module
@@ -37,6 +38,9 @@ export default angular.module('superdesk.core.translate', [
                 if (gettextCatalog.currentLanguage !== 'en') {
                     gettextCatalog.loadRemoteSync('languages/' + gettextCatalog.currentLanguage + '.json');
                 }
+
+                // add lang override strings
+                $rootScope.$applyAsync(() => addLangOverride(gettextCatalog, gettextCatalog.currentLanguage));
 
                 // set locale for date/time management
                 moment.locale(gettextCatalog.currentLanguage);
