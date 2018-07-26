@@ -313,7 +313,7 @@ class LinkFunction {
                 this.$location.search(fieldname, 'now-24H');
             } else if (key === 'Last Week') {
                 this.$location.search(fieldname, 'now-1w');
-            } else if ( key === 'Last Month') {
+            } else if (key === 'Last Month') {
                 this.$location.search(fieldname, 'now-1M');
             }
         } else if (key === 'Scheduled Last Day') {
