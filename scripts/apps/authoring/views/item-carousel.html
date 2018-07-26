@@ -1,7 +1,7 @@
-<figure class="item-association" ng-if="!carouselItems.length"
+<button tabindex="{{tabindex}}" class="item-association" ng-if="!carouselItems.length"
     ng-class="{'item-association--preview': item[item.fieldId], 'item-association--loading': loading}"
     ng-click="editable && associations.isMediaEditable() && !item[item.fieldId] && upload()">
-</figure>
+</button>
 
 <div class="sd-media-carousel" ng-if="carouselItems.length">
     <div class="sd-media-carousel__dialog">
