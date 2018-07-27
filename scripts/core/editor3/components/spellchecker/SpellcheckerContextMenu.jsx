@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import * as actions from '../../actions';
 import ng from 'core/services/ng';
-import {StickElementsWithTracking} from 'core/helpers/dom';
+import {StickElementsWithTracking} from 'core/helpers/dom/stickElementsWithTracking';
 
 /**
  * @ngdoc React

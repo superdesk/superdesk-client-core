@@ -1,44 +1,3 @@
-export function querySelectorParent(element, selector) {
-    var currentParent = element.parentElement;
-
-    while (currentParent != null && currentParent.matches(selector) === false) {
-        currentParent = currentParent.parentElement;
-    }
-
-    return currentParent;
-}
-
-export function isElementInViewport(element) {
-    var rect = element.getBoundingClientRect();
-
-    return rect.top >= 0
-        && rect.left >= 0
-        && rect.bottom <= (window.innerHeight || document.documentElement.clientHeight)
-        && rect.right <= (window.innerWidth || document.documentElement.clientWidth);
-}
-
-export class OnEveryAnimationFrame {
-    // only use this with callbacks which are not resource intensive(<5ms)
-    // don't forget to `destroy` when finished
-
-    constructor(callback) {
-        this.lastTimer = 0; // dummy value for initial check
-        this.loop(callback);
-    }
-    loop(callback) {
-        callback();
-        if (this.lastTimer != null) {
-            this.lastTimer = window.requestAnimationFrame(() => {
-                this.loop(callback);
-            });
-        }
-    }
-    destroy() {
-        window.cancelAnimationFrame(this.lastTimer);
-        this.lastTimer = null;
-    }
-}
-
 export function stickElements(target, source, preferredPosition) {
     const targetRect = target.getBoundingClientRect();
 
@@ -103,21 +62,4 @@ export function stickElements(target, source, preferredPosition) {
         x: source.style.left === '' ? 'right' : 'left',
         y: source.style.top === '' ? 'top' : 'bottom',
     };
-}
-
-export class StickElementsWithTracking {
-    constructor(target, source) {
-        let preferredPosition = {};
-
-        this.animationManager = new OnEveryAnimationFrame(() => {
-            const selectedPosition = stickElements(target, source, preferredPosition);
-
-            if (Object.keys(preferredPosition).length < 1) {
-                preferredPosition = selectedPosition;
-            }
-        });
-    }
-    destroy() {
-        this.animationManager.destroy();
-    }
 }
