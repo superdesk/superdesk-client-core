@@ -90,7 +90,7 @@ function generateAnnotations(item, logger) {
  * current content states and updates the values of the host controller. This function
  * is bound to the controller, so 'this' points to controller attributes.
  */
-export function onChange(contentState, {plainText = false}) {
+export function onChange(contentState, {plainText = false} = {}) {
     const pathToValue = this.pathToValue;
 
     if (pathToValue == null || pathToValue.length < 1) {
