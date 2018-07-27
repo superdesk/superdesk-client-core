@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import * as actions from '../../actions';
 import ng from 'core/services/ng';
+import {StickElementsWithTracking} from 'core/helpers/dom';
 
 /**
  * @ngdoc React
@@ -66,12 +67,21 @@ export class SpellcheckerContextMenuComponent extends Component {
         refreshWord(word);
     }
 
+    componentDidMount() {
+        this.stickyElementTracker = new StickElementsWithTracking(this.props.targetElement, this.dropdownElement);
+    }
+    componentWillUnmount() {
+        this.stickyElementTracker.destroy();
+    }
+
     render() {
         const {suggestions} = this.props;
 
         return (
-            <div className={'dropdown open suggestions-dropdown'}>
-                <ul className={'dropdown__menu'}>
+            <div className={'dropdown open suggestions-dropdown'}
+                ref={(el) => this.dropdownElement = el}
+                style={{zIndex: 999, border: 'solid transparent', borderWidth: '6px 0'}}>
+                <ul className={'dropdown__menu'} style={{position: 'static'}}>
                     {suggestions.length === 0 ? <li><button>SORRY, NO SUGGESTIONS.</button></li>
                         : suggestions.map((suggestion, index) =>
                             <li key={index}>
@@ -97,6 +107,7 @@ SpellcheckerContextMenuComponent.propTypes = {
     suggestions: PropTypes.array,
     replaceWord: PropTypes.func,
     refreshWord: PropTypes.func,
+    targetElement: PropTypes.object,
 };
 
 /**
