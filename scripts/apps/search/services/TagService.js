@@ -1,5 +1,5 @@
 import {PARAMETERS, EXCLUDE_FACETS} from 'apps/search/constants';
-import {dateFilters} from '../directives/SearchFilters';
+import {getDateFilters} from '../directives/SearchFilters';
 /**
  * @ngdoc service
  * @module superdesk.apps.search
@@ -18,9 +18,9 @@ import {dateFilters} from '../directives/SearchFilters';
  * @description Provides set of methods to manipulate with tags in search bar
  */
 TagService.$inject = ['$location', 'desks', 'userList', 'metadata', 'search',
-    'ingestSources', 'gettextCatalog', 'subscribersService', '$q'];
+    'ingestSources', 'gettextCatalog', 'subscribersService', '$q', 'gettext'];
 export function TagService($location, desks, userList, metadata, search,
-    ingestSources, gettextCatalog, subscribersService, $q) {
+    ingestSources, gettextCatalog, subscribersService, $q, gettext) {
     var tags = {};
 
     tags.selectedFacets = {};
@@ -229,7 +229,7 @@ export function TagService($location, desks, userList, metadata, search,
      * @param {String} key
      */
     function removeFacet(type, key) {
-        const dateFilter = dateFilters.find(
+        const dateFilter = getDateFilters(gettext).find(
             ({labelBlock, labelFrom, labelTo}) => [labelBlock, labelFrom, labelTo].includes(type)
         );
 
@@ -277,8 +277,6 @@ export function TagService($location, desks, userList, metadata, search,
             }
         } else if (search[key]) {
             $location.search(key, null);
-        } else if (key === 'scheduledDate') {
-            $location.search('scheduled_after', null);
         }
     }
 
@@ -310,6 +308,8 @@ export function TagService($location, desks, userList, metadata, search,
             initParameters(tags.currentSearch);
             initExcludedFacets(tags.currentSearch);
 
+            const dateFilters = getDateFilters(gettext);
+
             /* eslint-disable complexity */
             _.forEach(tags.currentSearch, (type, key) => {
                 if (key === 'q' || EXCLUDE_FACETS[key]) {
@@ -340,21 +340,15 @@ export function TagService($location, desks, userList, metadata, search,
                     });
                 } else if (dateFilters.some(({fieldname}) => fieldname === key)) {
                     var dateForType = {
+                        'now-8H': 'Last 8 Hours',
                         'now-24H': 'Last Day',
                         'now-1w': 'Last Week',
                         'now-1M': 'Last Month',
                     };
 
-
                     const dateFilter = dateFilters.find(({fieldname}) => fieldname === key);
 
                     tags.selectedFacets[dateFilter.labelBlock] = [dateForType[type]];
-                } else if (key === 'scheduled_after') {
-                    tags.selectedFacets.scheduledDate = ['Scheduled in the Last Day'];
-
-                    if (type === 'now-8H') {
-                        tags.selectedFacets.scheduledDate = ['Scheduled in the Last 8 Hours'];
-                    }
                 } else if (key === 'creditqcode') {
                     tags.selectedFacets.credit = JSON.parse(type);
                 } else {

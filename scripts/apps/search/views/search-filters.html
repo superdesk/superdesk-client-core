@@ -1,4 +1,4 @@
-<div class="filter-content" ng-class="{pull: showSaveSearch}">
+<div class="filter-content" ng-class="{pull: showSaveSearch}" style="width:100%">
     <div sd-toggle-box data-title="{{:: 'Content types' | translate }}" ng-hide="isEmpty('type')" data-open="true">
         <ul class="filter-box content-type-filters">
             <li ng-repeat="(key,value) in aggregations.type" ng-click="toggleFilter('type', key)" ng-class="{checked: hasFilter('type',key)}">
@@ -137,21 +137,16 @@
         </ul>
     </div>
 
-    <div ng-repeat="dateFilter in dateFilters" sd-toggle-box data-title="{{:: dateFilter.labelBlock }}" data-open="false">
+    <div ng-repeat="dateFilter in dateFilters" sd-toggle-box data-title="{{:: dateFilter.labelBlock }}" data-open="false" ng-if="dateFilter.isEnabled(search_config)">
         <form class="date-filter">
             <div class="predefined-dates">
-                <button ng-click="toggleFilter('date', 'Last Day', dateFilter.fieldname)" 
+                <button ng-repeat="predefinedFilter in dateFilter.predefinedFilters"
+                        ng-click="toggleFilter('date', predefinedFilter.key, dateFilter.fieldname)" 
                         class="btn btn--mini" 
-                        ng-class="{active: hasFilter(dateFilter.labelBlock,'Last Day'), 'btn--primary': hasFilter(dateFilter.labelBlock,'Last Day')}">{{'Last Day' | translate}}</button>
-                <button ng-click="toggleFilter('date', 'Last Week', dateFilter.fieldname)" 
-                        class="btn btn--mini" 
-                        ng-class="{active: hasFilter(dateFilter.labelBlock,'Last Week'),'btn--primary': hasFilter(dateFilter.labelBlock,'Last Week')}">{{'Last Week' | translate}}</button>
-                <button ng-click="toggleFilter('date', 'Last Month', dateFilter.fieldname)" 
-                        class="btn btn--mini" 
-                        ng-class="{active: hasFilter(dateFilter.labelBlock,'Last Month'), 'btn--primary': hasFilter(dateFilter.labelBlock,'Last Month')}">{{'Last Month' | translate}}</button>
+                        ng-class="{active: hasFilter(dateFilter.labelBlock, predefinedFilter.key), 'btn--primary': hasFilter(dateFilter.labelBlock, predefinedFilter.key)}">{{predefinedFilter.label}}</button>
             </div>
 
-            <fieldset ng-show="repo.search === 'local' || providerType.startsWith('scanpix') || repo.search === 'content-api' || providerType === 'aapmm'">
+            <fieldset ng-show="(dateFilter.labelFrom != null && dateFilter.labelTo != null) && (repo.search === 'local' || providerType.startsWith('scanpix') || repo.search === 'content-api' || providerType === 'aapmm')">
                 <div class="multiple">
                     <div class="field" sd-date-param data-location="{{dateFilter.fieldname}}from">
                         <label>{{dateFilter.labelFrom}}</label>
@@ -164,16 +159,5 @@
                 </div>
             </fieldset>
        </form>
-    </div>
-
-    <div sd-toggle-box data-title="{{:: 'Scheduled' | translate }}" data-open="true" ng-show="search_config.scheduled">
-        <form class="date-filter">
-            <div class="predefined-dates">
-                <button id="search_scheduled_24h" ng-click="toggleFilter('date', 'Scheduled Last Day')" class="btn btn--mini" 
-                    ng-class="{active: hasFilter('date','Scheduled Last Day')}">{{'Last 24 Hours' | translate}}</button>
-                <button id="search_scheduled_8h" ng-click="toggleFilter('date', 'Scheduled Last 8Hrs')" class="btn btn--mini" 
-                    ng-class="{active: hasFilter('date','Scheduled Last 8Hrs')}">{{'Last 8 Hours' | translate}}</button>
-            </div>
-        </form>
     </div>
 </div>

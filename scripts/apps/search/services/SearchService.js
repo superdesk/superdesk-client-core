@@ -7,7 +7,7 @@ import {
 } from 'apps/search/constants';
 
 import _ from 'lodash';
-import {dateFilters} from '../directives/SearchFilters';
+import {getDateFilters} from '../directives/SearchFilters';
 /**
  * @ngdoc service
  * @module superdesk.apps.search
@@ -335,7 +335,7 @@ export function SearchService($location, gettext, config, session, multi,
             // date filters start
             var facetrange = {};
 
-            dateFilters.forEach(({fieldname}) => {
+            getDateFilters(gettext).forEach(({fieldname}) => {
                 if (params[fieldname] != null) {
                     // handle predefined ranges
                     facetrange[fieldname] = {gte: formatDate(params[fieldname], zeroHourSuffix)};
@@ -360,10 +360,6 @@ export function SearchService($location, gettext, config, session, multi,
                 query.post_filter({range: facetrange});
             }
             // date filters end
-
-            if (params.scheduled_after) {
-                query.post_filter({range: {'schedule_settings.utc_publish_schedule': {gte: params.scheduled_after}}});
-            }
 
             if (params.type) {
                 var type = {

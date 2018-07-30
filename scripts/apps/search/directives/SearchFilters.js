@@ -1,23 +1,85 @@
 import _ from 'lodash';
 
-export const dateFilters = [
+export const getDateFilters = (gettext) => [
     {
         labelBlock: gettext('Date created'),
         labelFrom: gettext('Created from'),
         labelTo: gettext('Created to'),
         fieldname: 'firstcreated',
+        predefinedFilters: [
+            {
+                key: 'Last Day',
+                label: gettext('Last Day'),
+            },
+            {
+                key: 'Last Week',
+                label: gettext('Last Week'),
+            },
+            {
+                key: 'Last Month',
+                label: gettext('Last Month'),
+            },
+        ],
+        isEnabled: () => true,
     },
     {
         labelBlock: gettext('Date modified'),
         labelFrom: gettext('Modified from'),
         labelTo: gettext('Modified to'),
         fieldname: 'versioncreated',
+        predefinedFilters: [
+            {
+                key: 'Last Day',
+                label: gettext('Last Day'),
+            },
+            {
+                key: 'Last Week',
+                label: gettext('Last Week'),
+            },
+            {
+                key: 'Last Month',
+                label: gettext('Last Month'),
+            },
+        ],
+        isEnabled: () => true,
     },
     {
         labelBlock: gettext('Date published'),
         labelFrom: gettext('Published from'),
         labelTo: gettext('Published to'),
         fieldname: 'firstpublished',
+        predefinedFilters: [
+            {
+                key: 'Last Day',
+                label: gettext('Last Day'),
+            },
+            {
+                key: 'Last Week',
+                label: gettext('Last Week'),
+            },
+            {
+                key: 'Last Month',
+                label: gettext('Last Month'),
+            },
+        ],
+        isEnabled: () => true,
+    },
+    {
+        labelBlock: gettext('Date scheduled'),
+        labelFrom: null,
+        labelTo: null,
+        fieldname: 'schedule_settings.utc_publish_schedule',
+        predefinedFilters: [
+            {
+                key: 'Last 24 Hours',
+                label: gettext('Last 24 Hours'),
+            },
+            {
+                key: 'Last 8 Hours',
+                label: gettext('Last 8 Hours'),
+            },
+        ],
+        isEnabled: (searchConfig) => searchConfig.scheduled,
     },
 ];
 
@@ -34,7 +96,7 @@ class LinkFunction {
         this.scope.removeFilter = this.removeFilter.bind(this);
         this.scope.setFilter = this.setFilter.bind(this);
         this.scope.isEmpty = this.isEmpty.bind(this);
-        this.scope.dateFilters = dateFilters;
+        this.scope.dateFilters = getDateFilters(gettext);
         this.aggregationsMapper = {
             genre: this._categoryMapper.bind(this),
             category: this._categoryMapper.bind(this),
@@ -309,20 +371,17 @@ class LinkFunction {
             this.$location.search(fieldname + 'from', null);
             this.$location.search(fieldname + 'to', null);
 
-            if (key === 'Last Day') {
+            if (key === 'Last 8 Hours') {
+                this.$location.search(fieldname, 'now-8H');
+            } else if (key === 'Last Day' || key === 'Last 24 Hours') {
                 this.$location.search(fieldname, 'now-24H');
             } else if (key === 'Last Week') {
                 this.$location.search(fieldname, 'now-1w');
             } else if (key === 'Last Month') {
                 this.$location.search(fieldname, 'now-1M');
             }
-        } else if (key === 'Scheduled Last Day') {
-            this.$location.search('scheduled_after', 'now-24H');
-        } else if (key === 'Scheduled Last 8Hrs') {
-            this.$location.search('scheduled_after', 'now-8H');
         } else {
             this.$location.search(fieldname, null);
-            this.$location.search('scheduled_after', null);
         }
     }
 
