@@ -126,6 +126,13 @@
 
             <div class="text sign-off" ng-show="selected.preview.sign_off" sd-html-preview="selected.preview.sign_off"></div>
 
+            <!-- custom date and text fields -->
+            <div ng-repeat="field in fields track by field._id" order="{{editor[field._id].order}}"
+              ng-if="selected.preview.extra[field._id] && (field.field_type === 'text' || field.field_type === 'date')">
+              <div class="text body-text" sd-short-date ng-if="field.field_type === 'date'" data-date="selected.preview.extra[field._id]"></div>
+              <div class="text body-text" ng-if="field.field_type === 'text'" sd-html-preview="selected.preview.extra[field._id]"></div>
+            </div>
+
             <div class="composite-preview" ng-if="selected.preview.type === 'composite'">
                 <div sd-package data-item="selected.preview" data-setitem="openSingleItem(selected)"></div>
             </div>
