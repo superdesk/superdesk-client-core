@@ -3,7 +3,7 @@
 // in a correct place their `focus` prototype method is overwritten and selection position is tracked
 // on every mouse and keyboard event.
 
-import {isElementInViewport} from '../helpers/dom';
+import {isElementInViewport} from '../helpers/dom/isElementInViewport';
 
 // DOM Elements are used as keys in order not to have to set attributes which might not work well with React
 // Using a WeakMap also removes the need to generate ids and automatically garbage collects.
