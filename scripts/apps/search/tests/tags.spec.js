@@ -90,7 +90,7 @@ describe('Tag Service', () => {
     it('can populate date facet from location', inject(($location, tags, $rootScope, desks, $q) => {
         var members = null;
 
-        $location.search('after=now-1M');
+        $location.search(`language=${encodeURI('["en"]')}`);
         $rootScope.$apply();
 
         spyOn(desks, 'initialize').and.returnValue($q.when({deskLookup: deskList}));
@@ -101,8 +101,8 @@ describe('Tag Service', () => {
             });
 
         $rootScope.$digest();
-        expect(members.selectedFacets.date.length).toBe(1);
-        expect(members.selectedFacets.date[0]).toBe('Last Month');
+        expect(members.selectedFacets.language.length).toBe(1);
+        expect(members.selectedFacets.language[0].value).toBe('en');
     }));
 
     it('can populate complete filters from location', inject(($location, tags, $rootScope, desks, $q) => {

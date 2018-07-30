@@ -1,7 +1,90 @@
 import _ from 'lodash';
 
+export const getDateFilters = (gettext) => [
+    {
+        labelBlock: gettext('Date created'),
+        labelFrom: gettext('Created from'),
+        labelTo: gettext('Created to'),
+        fieldname: 'firstcreated',
+        predefinedFilters: [
+            {
+                key: 'Last Day',
+                label: gettext('Last Day'),
+            },
+            {
+                key: 'Last Week',
+                label: gettext('Last Week'),
+            },
+            {
+                key: 'Last Month',
+                label: gettext('Last Month'),
+            },
+        ],
+        isEnabled: () => true,
+    },
+    {
+        labelBlock: gettext('Date modified'),
+        labelFrom: gettext('Modified from'),
+        labelTo: gettext('Modified to'),
+        fieldname: 'versioncreated',
+        predefinedFilters: [
+            {
+                key: 'Last Day',
+                label: gettext('Last Day'),
+            },
+            {
+                key: 'Last Week',
+                label: gettext('Last Week'),
+            },
+            {
+                key: 'Last Month',
+                label: gettext('Last Month'),
+            },
+        ],
+        isEnabled: () => true,
+    },
+    {
+        labelBlock: gettext('Date published'),
+        labelFrom: gettext('Published from'),
+        labelTo: gettext('Published to'),
+        fieldname: 'firstpublished',
+        predefinedFilters: [
+            {
+                key: 'Last Day',
+                label: gettext('Last Day'),
+            },
+            {
+                key: 'Last Week',
+                label: gettext('Last Week'),
+            },
+            {
+                key: 'Last Month',
+                label: gettext('Last Month'),
+            },
+        ],
+        isEnabled: () => true,
+    },
+    {
+        labelBlock: gettext('Date scheduled'),
+        labelFrom: null,
+        labelTo: null,
+        fieldname: 'schedule_settings.utc_publish_schedule',
+        predefinedFilters: [
+            {
+                key: 'Last 24 Hours',
+                label: gettext('Last 24 Hours'),
+            },
+            {
+                key: 'Last 8 Hours',
+                label: gettext('Last 8 Hours'),
+            },
+        ],
+        isEnabled: (searchConfig) => searchConfig.scheduled,
+    },
+];
+
 class LinkFunction {
-    constructor(desks, tags, $location, scope, elem, metadata) {
+    constructor(desks, tags, $location, scope, elem, metadata, gettext) {
         this.scope = scope;
         this.elem = elem;
         this.tags = tags;
@@ -13,6 +96,7 @@ class LinkFunction {
         this.scope.removeFilter = this.removeFilter.bind(this);
         this.scope.setFilter = this.setFilter.bind(this);
         this.scope.isEmpty = this.isEmpty.bind(this);
+        this.scope.dateFilters = getDateFilters(gettext);
         this.aggregationsMapper = {
             genre: this._categoryMapper.bind(this),
             category: this._categoryMapper.bind(this),
@@ -186,12 +270,13 @@ class LinkFunction {
      * @name sdSearchFilters#toggleFilter
      * @param {String} type - facet type
      * @param {String} key - facet value
+     * @param {String?} fieldname
      */
-    toggleFilter(type, key) {
+    toggleFilter(type, key, fieldname) {
         if (this.hasFilter(type, key)) {
             this.removeFilter(type, key);
         } else if (type === 'date') {
-            this.setDateFilter(key);
+            this.setDateFilter(key, fieldname);
         } else {
             this.setFilter(type, key);
         }
@@ -278,33 +363,25 @@ class LinkFunction {
      * @description Set location url for date filters
      * @param {string} key Date key
      */
-    setDateFilter(key) {
+    setDateFilter(key, fieldname) {
         // Clean other date filters
-        this.$location.search('afterfirstcreated', null);
-        this.$location.search('beforefirstcreated', null);
-        this.$location.search('afterversioncreated', null);
-        this.$location.search('beforeversioncreated', null);
 
-        switch (key) {
-        case 'Last Day':
-            this.$location.search('after', 'now-24H');
-            break;
-        case 'Last Week':
-            this.$location.search('after', 'now-1w');
-            break;
-        case 'Last Month':
-            this.$location.search('after', 'now-1M');
-            break;
-        case 'Scheduled Last Day':
-            this.$location.search('scheduled_after', 'now-24H');
-            break;
-        case 'Scheduled Last 8Hrs':
-            this.$location.search('scheduled_after', 'now-8H');
-            break;
+        if (fieldname != null) {
+            this.$location.search(fieldname, null);
+            this.$location.search(fieldname + 'from', null);
+            this.$location.search(fieldname + 'to', null);
 
-        default:
-            this.$location.search('after', null);
-            this.$location.search('scheduled_after', null);
+            if (key === 'Last 8 Hours') {
+                this.$location.search(fieldname, 'now-8H');
+            } else if (key === 'Last Day' || key === 'Last 24 Hours') {
+                this.$location.search(fieldname, 'now-24H');
+            } else if (key === 'Last Week') {
+                this.$location.search(fieldname, 'now-1w');
+            } else if (key === 'Last Month') {
+                this.$location.search(fieldname, 'now-1M');
+            }
+        } else {
+            this.$location.search(fieldname, null);
         }
     }
 
@@ -362,11 +439,11 @@ class LinkFunction {
  * @description sd-search-filters handles filtering using aggregates in the
  * left hand side panel of Global search page, archive search page and content api search.
  */
-export function SearchFilters(desks, tags, $location, metadata) {
+export function SearchFilters(desks, tags, $location, metadata, gettext) {
     return {
         template: require('scripts/apps/search/views/search-filters.html'),
-        link: (scope, elem) => new LinkFunction(desks, tags, $location, scope, elem, metadata),
+        link: (scope, elem) => new LinkFunction(desks, tags, $location, scope, elem, metadata, gettext),
     };
 }
 
-SearchFilters.$inject = ['desks', 'tags', '$location', 'metadata'];
+SearchFilters.$inject = ['desks', 'tags', '$location', 'metadata', 'gettext'];
