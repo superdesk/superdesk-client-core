@@ -81,7 +81,9 @@ export const onChange = (state, newState, force = false) => {
     let contentChanged = state.editorState.getCurrentContent() !== newState.getCurrentContent();
 
     if (contentChanged || force) {
-        state.onChangeValue(editorState.getCurrentContent(), {plainText: !state.showToolbar});
+        const plainText = (state.editorFormat || []).length === 0;
+
+        state.onChangeValue(editorState.getCurrentContent(), {plainText});
     }
 
     if (force) {
