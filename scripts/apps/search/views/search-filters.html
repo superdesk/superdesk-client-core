@@ -137,7 +137,12 @@
         </ul>
     </div>
 
-    <div ng-repeat="dateFilter in dateFilters" sd-toggle-box data-title="{{:: dateFilter.labelBlock }}" data-open="false" ng-if="dateFilter.isEnabled(search_config)">
+    <!-- ID only needed for E2E test -->
+    <div ng-repeat="dateFilter in dateFilters"
+        sd-toggle-box data-title="{{:: dateFilter.labelBlock }}"
+        data-open="false"
+        id="filter-{{dateFilter.fieldname}}"
+        ng-if="dateFilter.isEnabled(search_config)">
         <form class="date-filter">
             <div class="predefined-dates">
                 <button ng-repeat="predefinedFilter in dateFilter.predefinedFilters"
