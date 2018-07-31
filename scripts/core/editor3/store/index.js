@@ -23,6 +23,8 @@ export const ignoreInternalAnnotationFields = (annotations) =>
         (annotation) => pick(annotation, ['id', 'type', 'body'])
     );
 
+export const isEditorPlainText = (props) => props.singleLine || (props.editorFormat || []).length === 0;
+
 /**
  * @name createEditorStore
  * @description Returns a new redux store.
@@ -41,7 +43,8 @@ export default function createEditorStore(props, isReact = false) {
     const content = getInitialContent(props);
 
     const decorators = Editor3.getDecorator(props.disableSpellchecker || !spellcheck.isAutoSpellchecker);
-    const showToolbar = !props.singleLine && (props.editorFormat || []).length > 0;
+    const showToolbar = !isEditorPlainText(props);
+
     const onChangeValue = isReact ? props.onChange : _.debounce(onChange.bind(props), props.debounce);
 
     const store = createStore(reducers, {

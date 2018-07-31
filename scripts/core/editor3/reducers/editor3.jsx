@@ -1,6 +1,7 @@
 import {RichUtils, EditorState, AtomicBlockUtils, SelectionState} from 'draft-js';
 import {setTansaHtml} from '../helpers/tansa';
 import {addMedia} from './toolbar';
+import {isEditorPlainText} from '../store';
 
 /**
  * @description Contains the list of editor related reducers.
@@ -81,7 +82,7 @@ export const onChange = (state, newState, force = false) => {
     let contentChanged = state.editorState.getCurrentContent() !== newState.getCurrentContent();
 
     if (contentChanged || force) {
-        const plainText = (state.editorFormat || []).length === 0;
+        const plainText = isEditorPlainText(state);
 
         state.onChangeValue(editorState.getCurrentContent(), {plainText});
     }
