@@ -10,15 +10,16 @@
  * @requires lodash
  * @requires api
  * @requires $rootScope
- * @requires config
+ * @requires deployConfig
  *
  * @description Controller is responsible for cropping pictures and setting Point of Interest for an image.
  */
-ChangeImageController.$inject = ['$scope', 'gettext', 'notify', 'modal', 'lodash', 'api', '$rootScope', 'config', '$q'];
-export function ChangeImageController($scope, gettext, notify, modal, _, api, $rootScope, config, $q) {
+ChangeImageController.$inject = ['$scope', 'gettext', 'notify', 'modal', 'lodash', 'api', '$rootScope',
+    'deployConfig', '$q'];
+export function ChangeImageController($scope, gettext, notify, modal, _, api, $rootScope, deployConfig, $q) {
     $scope.data = $scope.locals.data;
     $scope.data.cropData = {};
-    $scope.validator = config.validatorMediaMetadata;
+    $scope.validator = deployConfig.getSync('validator_media_metadata');
     let sizes = {};
 
     const DEFAULT_CONTROLS = {

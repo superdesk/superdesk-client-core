@@ -5,6 +5,7 @@ beforeEach(window.module('superdesk.mocks'));
 beforeEach(window.module('superdesk.core.auth.session'));
 beforeEach(window.module('superdesk.core.services.storage'));
 
+
 /**
  * Mock services that call server on init and thus would require mocking all the time
  */
@@ -19,29 +20,6 @@ angular.module('superdesk.mocks', [])
             timeformat: 'HH:mm:ss',
         },
         iframely: {key: ''},
-        validatorMediaMetadata: {
-            headline: {
-                required: true,
-            },
-            alt_text: {
-                required: true,
-            },
-            description_text: {
-                required: true,
-            },
-            copyrightholder: {
-                required: false,
-            },
-            byline: {
-                required: false,
-            },
-            usageterms: {
-                required: false,
-            },
-            copyrightnotice: {
-                required: false,
-            },
-        },
         profileLanguages: ['en', 'de_DE'],
     })
     .service('features', () => { /* no-op */ })

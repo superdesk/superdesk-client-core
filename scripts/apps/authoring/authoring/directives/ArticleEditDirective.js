@@ -13,6 +13,7 @@ import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
  * @requires superdesk
  * @requires content
  * @requires config
+ * @requires deployConfig
  * @requires session
  * @requires gettext
  * @requires history
@@ -33,6 +34,7 @@ ArticleEditDirective.$inject = [
     'superdesk',
     'content',
     'config',
+    'deployConfig',
     'session',
     'gettext',
     'history',
@@ -48,6 +50,7 @@ export function ArticleEditDirective(
     superdesk,
     content,
     config,
+    deployConfig,
     session,
     gettext,
     history,
@@ -65,7 +68,7 @@ export function ArticleEditDirective(
                 scope.canListEditSignOff = config.user && config.user.sign_off_mapping;
                 scope.editSignOff = false;
                 scope.mediaLoading = false;
-                scope.validator = config.validatorMediaMetadata;
+                scope.validator = deployConfig.getSync('validator_media_metadata');
                 scope.features = config.features;
 
                 var mainEditScope = scope.$parent.$parent;
