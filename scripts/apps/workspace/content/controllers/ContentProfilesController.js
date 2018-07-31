@@ -22,10 +22,12 @@ export function ContentProfilesController($scope, $location, notify, content, mo
      * @returns {Promise}
      * @private
      */
-    function refreshList() {
+    function refreshList(callEditActive) {
         return content.getTypes(true).then((types) => {
             self.items = types;
-            editActive();
+            if (callEditActive) {
+                editActive();
+            }
         });
     }
 
@@ -44,6 +46,13 @@ export function ContentProfilesController($scope, $location, notify, content, mo
                     form: _.cloneDeep(active),
                     original: active,
                 };
+
+                content.getTypeMetadata(active._id).then((type) => {
+                    $scope.editing = {
+                        form: _.cloneDeep(type),
+                        original: _.cloneDeep(type),
+                    };
+                });
             }
         }
     }
@@ -105,7 +114,7 @@ export function ContentProfilesController($scope, $location, notify, content, mo
      */
     this.save = function() {
         var onSuccess = function(resp) {
-            refreshList();
+            refreshList(true);
             self.toggleCreate();
             return resp;
         };
@@ -130,7 +139,7 @@ export function ContentProfilesController($scope, $location, notify, content, mo
         });
 
         content.updateProfile(e.original, diff)
-            .then(refreshList, reportError)
+            .then(refreshList.bind(this, false), reportError)
             .then(this.toggleEdit.bind(this, null));
     };
 
@@ -140,10 +149,10 @@ export function ContentProfilesController($scope, $location, notify, content, mo
     this.delete = function(item) {
         modal.confirm('Are you sure you want to delete this profile?').then(() => {
             content.removeProfile(item)
-                .then(refreshList, reportError)
+                .then(refreshList.bind(this, false), reportError)
                 .then(this.toggleEdit.bind(this, null));
         });
     };
 
-    refreshList();
+    refreshList(false);
 }
