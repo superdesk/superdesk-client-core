@@ -125,9 +125,18 @@ const removeLink = (state) => {
  */
 const removeFormat = (state) => {
     const {editorState} = state;
+    const selection = editorState.getSelection();
     const stateWithoutFormat = removeFormatFromState(editorState);
+    const newSelection = selection.merge({
+        anchorOffset: selection.getEndOffset(),
+        anchorKey: selection.getEndKey(),
+        focusOffset: selection.getEndOffset(),
+        focusKey: selection.getEndKey(),
+        isBackward: false,
+        hasFocus: true,
+    });
 
-    return onChange(state, stateWithoutFormat);
+    return onChange(state, EditorState.acceptSelection(stateWithoutFormat, newSelection));
 };
 
 /**
