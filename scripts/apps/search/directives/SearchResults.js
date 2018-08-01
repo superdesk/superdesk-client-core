@@ -81,8 +81,13 @@ export function SearchResults(
             scope.previewingBroadcast = false;
             superdeskFlags.flags.previewing = false;
 
-            var criteria = search.query($location.search()).getCriteria(true),
-                oldQuery = _.omit($location.search(), '_id');
+            // allow controller overwrite getSearch
+            const getSearch = typeof scope.search.getSearch === 'function'
+                ? scope.search.getSearch
+                : () => $location.search();
+
+            var criteria = search.query(getSearch()).getCriteria(true),
+                oldQuery = _.omit(getSearch(), '_id');
 
             scope.flags = controller.flags;
             scope.selected = scope.selected || {};
@@ -133,7 +138,7 @@ export function SearchResults(
             });
 
             scope.$watch(function getSearchParams() {
-                return _.omit($location.search(), ['_id', 'item', 'action']);
+                return _.omit(getSearch(), ['_id', 'item', 'action']);
             }, (newValue, oldValue) => {
                 if (newValue !== oldValue) {
                     scope.refreshList();
@@ -160,7 +165,7 @@ export function SearchResults(
              */
             function queryItems(event, data) {
                 if (!nextUpdate) {
-                    if (scope.search.repo.search !== 'local' && !$location.search().q && !(data && data.force)) {
+                    if (scope.search.repo.search !== 'local' && !getSearch().q && !(data && data.force)) {
                         return; // ignore updates with external content
                     }
 
@@ -178,7 +183,7 @@ export function SearchResults(
              * Function for fetching total items and filling scope for the first time.
              */
             function _queryItems(event, data) {
-                criteria = search.query($location.search()).getCriteria(true);
+                criteria = search.query(getSearch()).getCriteria(true);
                 criteria.source.size = 50;
                 var originalQuery;
 
@@ -340,13 +345,13 @@ export function SearchResults(
                             scope.loading = false;
                         });
                 } else {
-                    var query = _.omit($location.search(), '_id');
+                    var query = _.omit(getSearch(), '_id');
 
                     if (!_.isEqual(_.omit(query, 'page'), _.omit(oldQuery, 'page'))) {
                         $location.search('page', null);
                     }
 
-                    criteria = search.query($location.search()).getCriteria(true);
+                    criteria = search.query(getSearch()).getCriteria(true);
                     criteria.source.from = 0;
                     criteria.source.size = 50;
                     criteria.aggregations = $rootScope.aggregations;
