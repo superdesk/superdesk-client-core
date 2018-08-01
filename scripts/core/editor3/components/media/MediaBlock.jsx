@@ -181,7 +181,7 @@ export class MediaBlockComponent extends Component {
                     {mediaType === 'picture' &&
                         <div className="image-block__image">
                             <div className="image-block__image-overlay">
-                                <div className="image-block__metadata image-block__metadata--top">
+                                <div className="image-block__metadata image-block__metadata--top-overlay">
                                     <span>
                                         <em>{gettextCatalog.getString('Title:')}{' '}</em>
                                         {data.headline || gettextCatalog.getString('[No Value]')}
@@ -195,7 +195,7 @@ export class MediaBlockComponent extends Component {
                                         </div>
                                     )
                                 }
-                                <div className="image-block__metadata">
+                                <div className="image-block__metadata image-block__metadata--bottom-overlay">
                                     <span>
                                         <em>{gettextCatalog.getString('Alt text:')}{' '}</em>
                                         {data.alt_text || gettextCatalog.getString('[No Value]')}
@@ -240,7 +240,7 @@ export class MediaBlockComponent extends Component {
                                 )
                             }
                             <video controls src={rendition.href} alt={alt} width="100%" height="100%" />
-                            <div className="image-block__metadata image-block__metadata--plain">
+                            <div className="image-block__metadata image-block__metadata--side-marg0">
                                 <span>
                                     <em>{gettextCatalog.getString('Credit:')}{' '}</em>
                                     {data.byline || gettextCatalog.getString('[No Value]')}
@@ -279,7 +279,7 @@ export class MediaBlockComponent extends Component {
                             }
 
                             <audio controls src={rendition.href} alt={alt} width="100%" height="100%" />
-                            <div className="image-block__metadata image-block__metadata--plain">
+                            <div className="image-block__metadata image-block__metadata--side-marg0">
                                 <span>
                                     <em>{gettextCatalog.getString('Credit:')}{' '}</em>
                                     {data.byline || gettextCatalog.getString('[No Value]')}
