@@ -99,6 +99,11 @@ export function SearchResults(
             scope.$on('item:duplicate', queryItems);
             scope.$on('item:translate', queryItems);
 
+
+            // used by superdesk-fi
+            // eslint-disable-next-line no-unneeded-ternary
+            scope.showtags = attr.showtags === 'false' ? false : true;
+
             scope.$on('ingest:update', (event, args) => {
                 if (!scope.showRefresh) {
                     queryItems(event, args);
