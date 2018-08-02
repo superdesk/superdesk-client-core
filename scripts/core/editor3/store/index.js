@@ -23,6 +23,8 @@ export const ignoreInternalAnnotationFields = (annotations) =>
         (annotation) => pick(annotation, ['id', 'type', 'body'])
     );
 
+export const isEditorPlainText = (props) => props.singleLine || (props.editorFormat || []).length === 0;
+
 /**
  * @name createEditorStore
  * @description Returns a new redux store.
@@ -41,7 +43,8 @@ export default function createEditorStore(props, isReact = false) {
     const content = getInitialContent(props);
 
     const decorators = Editor3.getDecorator(props.disableSpellchecker || !spellcheck.isAutoSpellchecker);
-    const showToolbar = !props.singleLine && (props.editorFormat || []).length > 0;
+    const showToolbar = !isEditorPlainText(props);
+
     const onChangeValue = isReact ? props.onChange : _.debounce(onChange.bind(props), props.debounce);
 
     const store = createStore(reducers, {
@@ -85,11 +88,12 @@ function generateAnnotations(item, logger) {
 /**
  * @name onChange
  * @params {ContentState} contentState New editor content state.
+ * @params {Boolean} plainText If this is true, the editor content will be text instead of html
  * @description Triggered whenever the state of the editor changes. It takes the
  * current content states and updates the values of the host controller. This function
  * is bound to the controller, so 'this' points to controller attributes.
  */
-export function onChange(contentState) {
+export function onChange(contentState, {plainText = false} = {}) {
     const pathToValue = this.pathToValue;
 
     if (pathToValue == null || pathToValue.length < 1) {
@@ -124,9 +128,12 @@ export function onChange(contentState) {
     const fieldName = pathToValueArray[pathToValueArray.length - 1];
     const logger = ng.get('logger');
 
-    objectToUpdate[fieldName] = toHTML(contentStateHighlightsReadyForExport, logger);
-
-    generateAnnotations(this.item, logger);
+    if (plainText) {
+        objectToUpdate[fieldName] = contentStateHighlightsReadyForExport.getPlainText();
+    } else {
+        objectToUpdate[fieldName] = toHTML(contentStateHighlightsReadyForExport, logger);
+        generateAnnotations(this.item, logger);
+    }
 
     // call on change with scope updated
     this.$rootScope.$applyAsync(() => {
