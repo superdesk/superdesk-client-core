@@ -35,7 +35,7 @@ describe('editor3.actions.toolbar', () => {
         expect(superdesk.intent).toHaveBeenCalledWith('upload', 'media', undefined);
         expect(dispatch).toHaveBeenCalledWith({
             type: 'TOOLBAR_INSERT_MEDIA',
-            payload: {files: 'media_list'},
+            payload: {files: 'media_list', moveKey: null},
         });
     }));
 });
