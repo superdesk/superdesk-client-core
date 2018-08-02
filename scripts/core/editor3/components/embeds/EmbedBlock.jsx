@@ -58,10 +58,17 @@ export class EmbedBlockComponent extends Component {
         return block.getEntityAt(0);
     }
 
+    getBlockKey() {
+        const {block} = this.props;
+
+        return block.getKey();
+    }
+
     onChangeDescription(event) {
         const entityKey = this.getEntityKey();
+        const blockKey = this.getBlockKey();
 
-        this.props.mergeEntityDataByKey(entityKey, {
+        this.props.mergeEntityDataByKey(blockKey, entityKey, {
             description: event.target.value,
         });
     }
@@ -69,11 +76,12 @@ export class EmbedBlockComponent extends Component {
     editEmbedHtml() {
         const embed = this.data();
         const entityKey = this.getEntityKey();
+        const blockKey = this.getBlockKey();
         const modal = ng.get('modal');
 
         modal.prompt(gettext('Edit embed'), embed.data.html)
             .then((html) => {
-                this.props.mergeEntityDataByKey(entityKey, {
+                this.props.mergeEntityDataByKey(blockKey, entityKey, {
                     data: {...embed.data, html},
                 });
             });
@@ -151,8 +159,8 @@ EmbedBlockComponent.propTypes = {
 const mapDispatchToProps = (dispatch) => ({
     removeBlock: (blockKey) => dispatch(actions.removeBlock(blockKey)),
     setLocked: () => dispatch(actions.setLocked(true)),
-    mergeEntityDataByKey: (entityKey, valuesToMerge) =>
-        dispatch(actions.mergeEntityDataByKey(entityKey, valuesToMerge)),
+    mergeEntityDataByKey: (blockKey, entityKey, valuesToMerge) =>
+        dispatch(actions.mergeEntityDataByKey(blockKey, entityKey, valuesToMerge)),
 });
 
 export const EmbedBlock = connect(null, mapDispatchToProps)(EmbedBlockComponent);

@@ -119,10 +119,10 @@ export function changeImageCaption(entityKey, newCaption, field) {
     };
 }
 
-export function mergeEntityDataByKey(entityKey, valuesToMerge) {
+export function mergeEntityDataByKey(blockKey, entityKey, valuesToMerge) {
     return {
         type: 'MERGE_ENTITY_DATA_BY_KEY',
-        payload: {entityKey, valuesToMerge},
+        payload: {blockKey, entityKey, valuesToMerge},
     };
 }
 
