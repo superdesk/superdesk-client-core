@@ -34,6 +34,10 @@ module.exports = function(grunt) {
                 required: false,
             },
         },
+        view: {
+            timeformat: 'HH:mm',
+            dateformat: 'DD.MM.YYYY',
+        },
         features: {
             swimlane: {columnsLimit: 4},
             editor3: true,
