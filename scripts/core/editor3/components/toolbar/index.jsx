@@ -208,7 +208,7 @@ class ToolbarComponent extends Component {
                 <ToolbarPopup type={popup.type} data={popup.data} highlightsManager={this.props.highlightsManager} />
 
                 {/* LinkToolbar must be the last node. */}
-                <LinkToolbar onEdit={(link) => showPopup(PopupTypes.Link, {...link})} />
+                <LinkToolbar onEdit={showPopup(PopupTypes.Link)} />
             </div>;
     }
 }
