@@ -20,7 +20,8 @@ export class TableBlockComponent extends Component {
     constructor(props) {
         super(props);
 
-        this.setCell = this.setCell.bind(this);
+        this.onCellChange = this.onCellChange.bind(this);
+        this.getCellEditorState = this.getCellEditorState.bind(this);
         this.getData = this.getData.bind(this);
         this.onFocus = this.onFocus.bind(this);
     }
@@ -34,12 +35,25 @@ export class TableBlockComponent extends Component {
      * @description Updates data about this cell inside the entity for this atomic
      * block.
      */
-    setCell(row, col, cellEditorState) {
-        const {block, editorState, parentOnChange} = this.props;
-        const newData = setCell(this.getData(), row, col, cellEditorState);
-        const newEditorState = setData(editorState, block, newData);
+    onCellChange(row, col, cellEditorState) {
+        const lastChangeType = cellEditorState.getLastChangeType();
+        const {block, setActiveCell, editorState, parentOnChange} = this.props;
+        const {data, needUpdate, forceUpdate} = setCell(this.getData(), row, col, cellEditorState);
+        const newEditorState = setData(editorState, block, data, lastChangeType);
+        const currentStyle = cellEditorState.getCurrentInlineStyle().toArray();
+        const selection = cellEditorState.getSelection();
 
-        parentOnChange(newEditorState, newData.forceUpdate);
+        if (needUpdate) {
+            parentOnChange(newEditorState, forceUpdate);
+        }
+
+        setActiveCell(row, col, block.key, currentStyle, selection.toJS());
+    }
+
+    getCellEditorState(data, i, j) {
+        const {currentStyle, selection} = this.props.activeCell || {};
+
+        return getCell(data, i, j, currentStyle, selection);
     }
 
     /**
@@ -54,11 +68,11 @@ export class TableBlockComponent extends Component {
         return getData(editorState, block);
     }
 
-    onFocus(i, j, event) {
+    onFocus(i, j, currentStyle, selection) {
         const {setActiveCell, block} = this.props;
+        const newSelection = selection.merge({hasFocus: true});
 
-        event.stopPropagation();
-        setActiveCell(i, j, block.key);
+        setActiveCell(i, j, block.key, currentStyle, newSelection.toJS());
     }
 
     // onMouseDown is used in the main editor to set focus and stop table editing
@@ -92,8 +106,8 @@ export class TableBlockComponent extends Component {
                                     <TableCell
                                         key={`cell-${i}-${j}-${numRows}-${numCols}`}
                                         readOnly={this.props.readOnly}
-                                        editorState={getCell(data, i, j)}
-                                        onChange={this.setCell.bind(this, i, j)}
+                                        editorState={this.getCellEditorState(data, i, j)}
+                                        onChange={this.onCellChange.bind(this, i, j)}
                                         onUndo={this.onUndo.bind(this)}
                                         onFocus={this.onFocus.bind(this, i, j)} />
                                 )}
@@ -110,18 +124,22 @@ TableBlockComponent.propTypes = {
     block: PropTypes.object.isRequired,
     readOnly: PropTypes.bool.isRequired,
     editorState: PropTypes.object.isRequired,
+    activeCell: PropTypes.object,
     setActiveCell: PropTypes.func.isRequired,
     parentOnChange: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({
     parentOnChange: (editorState, force) => dispatch(actions.changeEditorState(editorState, force)),
-    setActiveCell: (i, j, key) => dispatch(actions.setActiveCell(i, j, key)),
+    setActiveCell: (i, j, key, currentStyle, selection) => dispatch(
+        actions.setActiveCell(i, j, key, currentStyle, selection)
+    ),
 });
 
 const mapStateToProps = (state) => ({
     editorState: state.editorState,
     readOnly: state.readOnly,
+    activeCell: state.activeCell,
 });
 
 export const TableBlock = connect(mapStateToProps, mapDispatchToProps)(TableBlockComponent);

@@ -1,6 +1,7 @@
 import {RichUtils, EditorState, AtomicBlockUtils, SelectionState} from 'draft-js';
 import {setTansaHtml} from '../helpers/tansa';
 import {addMedia} from './toolbar';
+import {isEditorPlainText} from '../store';
 
 /**
  * @description Contains the list of editor related reducers.
@@ -22,7 +23,7 @@ const editor3 = (state = {}, action) => {
     case 'EDITOR_SET_CELL':
         return setCell(state, action.payload);
     case 'MERGE_ENTITY_DATA_BY_KEY':
-        return mergeEntityDataByKey(state, action.payload.entityKey, action.payload.valuesToMerge);
+        return mergeEntityDataByKey(state, action.payload);
     case 'EDITOR_CHANGE_IMAGE_CAPTION':
         return changeImageCaption(state, action.payload);
     case 'EDITOR_SET_HTML_FROM_TANSA':
@@ -50,11 +51,11 @@ export const forceUpdate = (state) => {
     const decorator = editorState.getDecorator(!spellcheckerEnabled);
     let newState = EditorState.createWithContent(content, decorator);
 
-    newState = EditorState.acceptSelection(newState, selection);
     newState = EditorState.set(newState, {
         undoStack: editorState.getUndoStack(),
         redoStack: editorState.getRedoStack(),
     });
+    newState = EditorState.forceSelection(newState, selection);
 
     return {
         ...state,
@@ -82,7 +83,9 @@ export const onChange = (state, newState, force = false) => {
     let contentChanged = state.editorState.getCurrentContent() !== newState.getCurrentContent();
 
     if (contentChanged || force) {
-        state.onChangeValue(editorState.getCurrentContent());
+        const plainText = isEditorPlainText(state);
+
+        state.onChangeValue(editorState.getCurrentContent(), {plainText});
     }
 
     if (force) {
@@ -163,20 +166,32 @@ const setReadOnly = (state, readOnly) => ({
  * @return {Object} New state
  * @description Sets the currently being edited (active) table cell.
  */
-const setCell = (state, {i, j, key}) => ({
+const setCell = (state, {i, j, key, currentStyle, selection}) => ({
     ...state,
     locked: true,
-    activeCell: {i, j, key},
+    activeCell: {i, j, key, currentStyle, selection},
 });
 
-const mergeEntityDataByKey = (state, entityKey, valuesToMerge) => {
+const mergeEntityDataByKey = (state, {blockKey, entityKey, valuesToMerge}) => {
     const {editorState} = state;
+    const selection = editorState.getSelection();
     const contentState = editorState.getCurrentContent();
-
-    const newContentState = contentState.mergeEntityData(entityKey, valuesToMerge);
-    const newEditorState = EditorState.push(editorState, newContentState, 'change-block-data');
     const entityDataHasChanged = true;
+    const newContentState = contentState.mergeEntityData(entityKey, valuesToMerge);
+    const newBlockKey = newContentState.getKeyAfter(blockKey) || blockKey;
+    const newBlock = newContentState.getBlockBefore(blockKey);
+    const newSelection = selection.merge({
+        anchorOffset: newBlock != null ? newBlock.getLength() : 0,
+        anchorKey: newBlock != null ? newBlock.getKey() : newBlockKey,
+        focusOffset: newBlock != null ? newBlock.getLength() : 0,
+        focusKey: newBlock != null ? newBlock.getKey() : newBlockKey,
+        isBackward: false,
+        hasFocus: true,
+    });
 
+    let newEditorState = EditorState.push(editorState, newContentState, 'change-block-data');
+
+    newEditorState = EditorState.forceSelection(newEditorState, newSelection);
     return onChange(state, newEditorState, entityDataHasChanged);
 };
 

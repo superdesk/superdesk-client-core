@@ -28,13 +28,13 @@ const TableControlsComponent = ({
     toggleTableStyle,
     className,
 }) => {
-    const {i, j, key} = activeCell;
+    const {i, j, key, currentStyle, selection} = activeCell;
     const contentState = editorState.getCurrentContent();
     const block = contentState.getBlockForKey(key);
     const data = getData(editorState, block);
     const {withHeader} = data;
-    const cellEditorState = getCell(data, i, j);
-    const currentStyle = cellEditorState.getCurrentInlineStyle();
+    const cellEditorState = getCell(data, i, j, currentStyle, selection);
+    const currentInlineStyle = cellEditorState.getCurrentInlineStyle();
 
     return <div className={'table-controls ' + className}>
         <StyleButton active={withHeader} label={'TH'} onToggle={toggleTableHead} />
@@ -49,7 +49,7 @@ const TableControlsComponent = ({
             .map((type) =>
                 <StyleButton
                     key={type}
-                    active={currentStyle.has(inlineStyles[type])}
+                    active={currentInlineStyle.has(inlineStyles[type])}
                     label={type}
                     onToggle={toggleTableStyle}
                     style={inlineStyles[type]}

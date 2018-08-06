@@ -164,13 +164,13 @@ export function AssociationController(config, send, api, $q, superdesk,
      * @param {String} customRel association identifier
      * @param {Function} callback to call after save
      */
-    this.updateItemAssociation = function(scope, updated, customRel, callback = null) {
+    this.updateItemAssociation = function(scope, updated, customRel, callback = null, autosave = false) {
         let data = {}, rel = customRel || scope.rel;
 
         data[rel] = updated;
         scope.item.associations = angular.extend({}, scope.item.associations, data);
         scope.rel = rel;
-        if (!authoring.isPublished(scope.item) && updated) {
+        if (!authoring.isPublished(scope.item) && updated && !autosave) {
             var promise = scope.save();
 
             if (callback) {
@@ -251,6 +251,7 @@ export function AssociationController(config, send, api, $q, superdesk,
                 return;
             }
 
+            self.updateItemAssociation(scope, item, null, null, true);
             if (self.isMediaEditable()) {
                 scope.loading = true;
                 renditions.ingest(item)
@@ -258,9 +259,6 @@ export function AssociationController(config, send, api, $q, superdesk,
                     .finally(() => {
                         scope.loading = false;
                     });
-            } else {
-                // update association in an item even if editing of metadata and crop not allowed.
-                self.updateItemAssociation(scope, item);
             }
         });
     };

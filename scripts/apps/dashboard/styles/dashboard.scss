@@ -465,7 +465,7 @@ Add new widget modal
     display: flex;
     flex-flow: row wrap;
     li {
-        width: calc(#{50%} - #{40px});
+        width: calc(#{33%} - #{40px});
         margin: 20px;
         padding: 0;
         @include box-shadow (0 1px 4px 0 rgba(0,0,0,0.2));
@@ -477,6 +477,8 @@ Add new widget modal
             @include border-radius(2px 2px 0 0);
             position: relative;
             padding-top: 6px;
+            min-height: 177px;
+            background-color: #dadada;
             &::before {
                 content: "";
                 position: absolute;
@@ -536,6 +538,16 @@ Add new widget modal
                     background-color: $widget_activity;
                 }
             }
+            &.routing {
+                .thumbnail {
+                    background-color: $widget_routing;
+                }
+            }
+            &.analytics {
+                .thumbnail {
+                    background-color: $widget_analytics;
+                }
+            }
             // selected
             &.selected {
                 cursor: default;
@@ -570,7 +582,6 @@ Add new widget modal
     display: flex;
     .thumbnail-box {
         position: relative;
-        // width: 350px;
         width: calc(#{60%} - #{30px});
         margin-right: 30px;
         @include box-shadow (0 1px 4px 0 rgba(0,0,0,0.2));
@@ -606,27 +617,30 @@ Add new widget modal
         &.activity {
             background-color: $widget_activity;
         }
+        &.routing {
+            background-color: $widget_routing;
+        }
+        &.analytics {
+            background-color: $widget_analytics;
+        }
     }
     .content-box {
         display: flex;
-        flex-flow: row wrap;
+        flex-direction: column;
         align-items: flex-start;
-        // width: 220px;
         width: calc(#{40%});
         .title {
             font-size: 30px;
             line-height: 110%;
             font-weight: 700;
-            padding: 4px 0 20px;
+            padding: 0 0 20px;
             width: 100%;
         }
         .description {
             font-size: 14px;
             width: 100%;
             margin-bottom: 20px;
-        }
-        button {
-            align-self: flex-end;
+            flex-grow: 1;
         }
     }
 }

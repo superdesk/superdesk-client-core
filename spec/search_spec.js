@@ -292,9 +292,16 @@ describe('search', () => {
         globalSearch.openFilterPanel();
         globalSearch.openParameters();
         globalSearch.toggleSearchTabs('filters');
-        var scheduleDay = element(by.id('search_scheduled_24h'));
+
+        const scheduleFilter = element(by.css('#filter-schedule_settings\\.utc_publish_schedule .toggle-box__header'));
+
+        scrollToView(scheduleFilter);
+        scheduleFilter.click();
+
+        var scheduleDay = element(by.buttonText('Last 24 Hours'));
 
         scrollToView(scheduleDay);
+
         scheduleDay.click();
         expect(globalSearch.getItems().count()).toBe(1);
         expect(globalSearch.getItem(0).element(by.className('state-scheduled')).isDisplayed()).toBe(true);

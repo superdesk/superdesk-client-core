@@ -114,7 +114,7 @@
                         <label translate>{{field.display_name}}</label>
                     </div>
                     <div class="preview-data" sd-short-date ng-if="field.field_type === 'date'" data-date="item.extra[field._id]"></div>
-                    <div class="preview-data" ng-if="field.field_type === 'text'" ng-bind-html="getHtml(item.extra[field._id])"></div>
+                    <div class="preview-data preview-editor" ng-if="field.field_type === 'text'" ng-bind-html="getHtml(item.extra[field._id])"></div>
                 </div>
                 <div class="headline" order="{{editor.headline.order}}" ng-if="!editor.headline.hideOnPrint">{{item.headline}}</div>
                 <!-- custom media and embed fields -->

@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {omit} from 'lodash';
 import {connect} from 'react-redux';
 
 import BaseUnstyledComponent from './BaseUnstyledComponent';
@@ -23,20 +24,15 @@ class UnstyledBlock extends BaseUnstyledComponent {
 
     render() {
         let {className} = this.props;
-        const divProps = Object.assign({}, this.props);
 
-        // avoid react unknown prop warning
-        delete divProps.className;
-        delete divProps.invisibles;
-        delete divProps.dispatch;
-        delete divProps.editorProps;
+        const propsToTransfer = omit(this.props, ['className', 'invisibles', 'dispatch', 'editorProps']);
 
         return (
             <div ref={(div) => this.div = div}
-                {...divProps}
+                {...propsToTransfer}
                 className={className + (this.state.over ? ' unstyled__block--over' : ' unstyled__block')}
             >
-                {divProps.children}
+                {this.props.children}
             </div>
         );
     }

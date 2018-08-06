@@ -1,7 +1,7 @@
 // // MODALS
 // // ------
 
-// Modal fixes 
+// Modal fixes
 .modal__wrapper {
     display: flex;
     flex-direction: column;
@@ -209,13 +209,10 @@ $split-modal-sidebar : 200px;
                 margin-bottom: 10px;
             }
             .preview-label {
-                float: left;
                 min-width: 100px;
                 vertical-align: top;
             }
             .preview-data {
-                float: left;
-                max-width: 640px;
                 span {
                     font-size: 12px;
                     color: #000;
@@ -277,7 +274,7 @@ $split-modal-sidebar : 200px;
                     margin-right: 10px;
                 }
             }
-            figure {
+            figure, .media-block {
                 display: none !important;
             }
         }

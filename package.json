@@ -1,6 +1,6 @@
 {
   "name": "superdesk-core",
-  "version": "1.21.0",
+  "version": "1.22.0",
   "license": "AGPL-3.0",
   "repository": {
     "type": "git",
@@ -57,7 +57,7 @@
     "d3": "3.5.17",
     "diff-match-patch": "1.0.0",
     "docs-soap": "tomaskikutis/docs-soap#convert-tables",
-    "draft-js": "tomaskikutis/draft-js#fix-cursor-position-when-focusing-programatically",
+    "draft-js": "tomaskikutis/draft-js#add-subscript-superscript",
     "exif-js": "2.3.0",
     "file-loader": "1.1.11",
     "git-rev-sync": "1.10.0",
@@ -106,7 +106,7 @@
     "sass-loader": "6.0.6",
     "shortid": "2.2.8",
     "style-loader": "0.20.2",
-    "superdesk-ui-framework": "superdesk/superdesk-ui-framework#5a10b1c",
+    "superdesk-ui-framework": "^1.1.0",
     "webpack": "3.11.0",
     "webpack-dev-server": "2.11.1"
   },

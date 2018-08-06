@@ -135,9 +135,15 @@
             </div>
         </div>
         <div sd-item-preview data-item="selected.preview"
+            ng-if="selected.preview && !selected.extensionPoint"
             data-hide-actions-menu="true"
             data-show-history-tab="true"
             data-close="preview(null)">
+        </div>
+        <div sd-extension-point="publish_queue:preview"
+             data-item="selected.preview"
+             class="open-preview"
+             ng-if="selected.preview && selected.extensionPoint">
         </div>
     </div>
 </section>

@@ -93,7 +93,11 @@ describe('editor3.components.spellchecker-context-menu', () => {
     }));
 
     it('should correctly render no suggestions', () => {
-        const wrapper = shallow(<SpellcheckerContextMenu suggestions={[]} />);
+        const element = document.createElement('div');// required for positioning
+
+        document.body.appendChild(element);
+
+        const wrapper = mount(<SpellcheckerContextMenu targetElement={element} suggestions={[]} />);
         const buttons = wrapper.find('button');
 
         expect(buttons.first().text()).toBe('SORRY, NO SUGGESTIONS.');
@@ -102,7 +106,11 @@ describe('editor3.components.spellchecker-context-menu', () => {
     });
 
     it('should correctly render with suggestions', () => {
-        const wrapper = shallow(<SpellcheckerContextMenu suggestions={suggestions} />);
+        const element = document.createElement('div');// required for positioning
+
+        document.body.appendChild(element);
+
+        const wrapper = mount(<SpellcheckerContextMenu targetElement={element} suggestions={suggestions} />);
         const buttons = wrapper.find('button');
 
         expect(buttons.at(0).text()).toBe('one');
@@ -111,9 +119,14 @@ describe('editor3.components.spellchecker-context-menu', () => {
     });
 
     it('should add word to dictionary when requested', inject((spellcheck) => {
+        const element = document.createElement('div');// required for positioning
+
+        document.body.appendChild(element);
+
         const refreshWord = jasmine.createSpy();
-        const wrapper = shallow(
+        const wrapper = mount(
             <SpellcheckerContextMenu
+                targetElement={element}
                 word={{text: 'abc'}}
                 refreshWord={refreshWord}
                 suggestions={[]} />
@@ -129,9 +142,14 @@ describe('editor3.components.spellchecker-context-menu', () => {
     }));
 
     it('should ignore word when requested', inject((spellcheck) => {
+        const element = document.createElement('div');// required for positioning
+
+        document.body.appendChild(element);
+
         const refreshWord = jasmine.createSpy();
-        const wrapper = shallow(
+        const wrapper = mount(
             <SpellcheckerContextMenu
+                targetElement={element}
                 word={{text: 'abc'}}
                 refreshWord={refreshWord}
                 suggestions={[]} />);
@@ -146,9 +164,14 @@ describe('editor3.components.spellchecker-context-menu', () => {
     }));
 
     it('should replace word when requested', inject((spellcheck) => {
+        const element = document.createElement('div');// required for positioning
+
+        document.body.appendChild(element);
+
         const replaceWord = jasmine.createSpy();
-        const wrapper = shallow(
+        const wrapper = mount(
             <SpellcheckerContextMenu
+                targetElement={element}
                 word={{text: 'abc'}}
                 replaceWord={replaceWord}
                 suggestions={suggestions} />);

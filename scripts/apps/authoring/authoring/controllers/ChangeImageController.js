@@ -336,6 +336,56 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
 
     /**
     * @ngdoc method
+    * @name ChangeImageController#setRatio
+    * @public
+    * @description Set image ratio
+    */
+    $scope.setRatio = (ratio) => {
+        const originalImage = $scope.data.metadata.renditions.original;
+
+        let sizeW, sizeH;
+
+        switch (ratio) {
+        case '16:9':
+            sizeW = originalImage.width - (originalImage.height * 16 / 9);
+            sizeH = originalImage.height - (originalImage.width * 9 / 16);
+            break;
+
+        case '4:3':
+            sizeW = originalImage.width - (originalImage.height * 4 / 3);
+            sizeH = originalImage.height - (originalImage.width * 3 / 4);
+            break;
+
+        case '3:2':
+            sizeW = originalImage.width - (originalImage.height * 3 / 2);
+            sizeH = originalImage.height - (originalImage.width * 2 / 3);
+            break;
+
+        default:
+            sizeW = 0; sizeH = 0;
+        }
+
+        $scope.areaOfInterestData.CropTop = sizeH > 0 ? Math.round(sizeH / 2) : 0;
+        $scope.areaOfInterestData.CropBottom = sizeH > 0 ?
+            originalImage.height - Math.round(sizeH / 2) :
+            originalImage.height;
+        $scope.areaOfInterestData.CropLeft = sizeW > 0 ? Math.round(sizeW / 2) : 0;
+        $scope.areaOfInterestData.CropRight = sizeW > 0 ?
+            originalImage.width - Math.round(sizeW / 2) :
+            originalImage.width;
+    };
+
+    $scope.resizeImage = (image) => {
+        const originalImage = $scope.data.metadata.renditions.original;
+
+        $scope.areaOfInterestData.CropTop = originalImage.height - image.height / 2;
+        $scope.areaOfInterestData.CropBottom = originalImage.height - (originalImage.height - image.height / 2);
+        $scope.areaOfInterestData.CropLeft = originalImage.width - image.width / 2;
+        $scope.areaOfInterestData.CropRight = originalImage.width - (originalImage.width - image.width / 2);
+    };
+
+    /**
+    * @ngdoc method
     * @name ChangeImageController#cancelImageChanges
     * @public
     * @description Cancel image changes and set values back to default

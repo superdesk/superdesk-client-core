@@ -24,6 +24,8 @@ class BaseUnstyledComponent extends React.Component {
     }
 
     onDrop(event) {
+        this.setState({over: false});
+
         event.preventDefault();
         event.stopPropagation();
 
@@ -38,8 +40,6 @@ class BaseUnstyledComponent extends React.Component {
 
             this.props.dispatch(dragDrop(dataTransfer, mediaType, blockKey));
         }
-
-        this.setState({over: false});
     }
 
     onDragOver(event) {
@@ -75,7 +75,7 @@ class BaseUnstyledComponent extends React.Component {
 }
 
 BaseUnstyledComponent.propTypes = {
-    dispatch: PropTypes.func,
+    dispatch: PropTypes.func.isRequired,
     editorProps: PropTypes.object,
 };
 

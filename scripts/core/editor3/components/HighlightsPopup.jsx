@@ -94,7 +94,6 @@ export class HighlightsPopup extends Component {
                     highlightId={highlightId}
                     highlightsManager={this.props.highlightsManager}
                     editorNode={this.props.editorNode}
-                    editorId={this.props.editorId}
                 />
             );
         } else if (type === 'COMMENT') {
@@ -244,7 +243,6 @@ HighlightsPopup.contextTypes = {
 
 HighlightsPopup.propTypes = {
     editorState: PropTypes.instanceOf(EditorState),
-    editorId: PropTypes.string.isRequired,
     editorNode: PropTypes.object,
     highlightsManager: PropTypes.object.isRequired,
     onChange: PropTypes.func.isRequired,

@@ -126,9 +126,18 @@ const removeLink = (state) => {
  */
 const removeFormat = (state) => {
     const {editorState} = state;
+    const selection = editorState.getSelection();
     const stateWithoutFormat = removeFormatFromState(editorState);
+    const newSelection = selection.merge({
+        anchorOffset: selection.getEndOffset(),
+        anchorKey: selection.getEndKey(),
+        focusOffset: selection.getEndOffset(),
+        focusKey: selection.getEndKey(),
+        isBackward: false,
+        hasFocus: true,
+    });
 
-    return onChange(state, stateWithoutFormat);
+    return onChange(state, EditorState.acceptSelection(stateWithoutFormat, newSelection));
 };
 
 /**
@@ -223,16 +232,19 @@ const removeBlock = (state, {blockKey}) => {
  * @description Applies the embed in the given oEmbed data to the active block.
  */
 const applyEmbed = (state, code) => {
+    const selection = state.editorState.getSelection();
     const contentState = state.editorState.getCurrentContent();
     const data = typeof code === 'string' ? {html: code} : code;
     const contentStateWithEntity = contentState.createEntity('EMBED', 'MUTABLE', {data});
     const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
 
-    const {editorState} = insertAtomicBlockWithoutEmptyLines(
-        editorState,
+    let {editorState} = insertAtomicBlockWithoutEmptyLines(
+        state.editorState,
         entityKey,
         ' '
     );
+
+    editorState = EditorState.acceptSelection(editorState, selection);
 
     return onChange(state, editorState);
 };

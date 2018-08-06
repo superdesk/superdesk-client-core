@@ -1,13 +1,16 @@
 import _ from 'lodash';
+import React from 'react';
+import {PreviewModal} from '../previewModal';
+
 
 SendItem.$inject = ['$q', 'api', 'desks', 'notify', 'authoringWorkspace',
     'superdeskFlags', '$location', 'macros', '$rootScope', 'deployConfig',
     'authoring', 'send', 'editorResolver', 'confirm', 'archiveService',
-    'preferencesService', 'multi', 'datetimeHelper', 'config', 'privileges', 'storage', 'modal'];
+    'preferencesService', 'multi', 'datetimeHelper', 'config', 'privileges', 'storage', 'modal', 'gettext', 'urls'];
 export function SendItem($q, api, desks, notify, authoringWorkspace,
     superdeskFlags, $location, macros, $rootScope, deployConfig,
     authoring, send, editorResolver, confirm, archiveService,
-    preferencesService, multi, datetimeHelper, config, privileges, storage, modal) {
+    preferencesService, multi, datetimeHelper, config, privileges, storage, modal, gettext, urls) {
     return {
         scope: {
             item: '=',
@@ -43,6 +46,7 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
             scope.beforeSend = scope._beforeSend || $q.when;
             scope.destination_last = {send_to: null, publish: null, duplicate_to: null};
             scope.origItem = angular.extend({}, scope.item);
+            scope.subscribersWithPreviewConfigured = [];
 
             // key for the storing last desk/stage in the user preferences for send action.
             var PREFERENCE_KEY = 'destination:active';
@@ -86,6 +90,23 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
 
             function activate() {
                 if (scope.isActive) {
+                    api.query('subscribers')
+                        .then((res) => {
+                            const allSubscribers = res['_items'];
+
+                            scope.subscribersWithPreviewConfigured = allSubscribers
+                                .map(
+                                    (subscriber) => {
+                                        subscriber.destinations = subscriber.destinations.filter(
+                                            (destination) => typeof destination.preview_endpoint_url === 'string'
+                                                && destination.preview_endpoint_url.length > 0
+                                        );
+
+                                        return subscriber;
+                                    }
+                                )
+                                .filter((subscriber) => subscriber.destinations.length > 0);
+                        });
                     desks
                         .initialize()
                         .then(fetchDesks)
@@ -93,6 +114,30 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                         .then(setDesksAndStages);
                 }
             }
+
+            scope.preview = function() {
+                if (scope.$parent.save_enabled() === true) {
+                    modal.alert({
+                        headerText: gettext('Preview'),
+                        bodyText: gettext(
+                            'In order to preview the item, save the changes first.'
+                        ),
+                    });
+                } else {
+                    modal.createCustomModal()
+                        .then(({openModal, closeModal}) => {
+                            openModal(
+                                <PreviewModal
+                                    subscribersWithPreviewConfigured={scope.subscribersWithPreviewConfigured}
+                                    documentId={scope.item._id}
+                                    urls={urls}
+                                    closeModal={closeModal}
+                                    gettext={gettext}
+                                />
+                            );
+                        });
+                }
+            };
 
             scope.close = function() {
                 if (scope.mode === 'monitoring') {

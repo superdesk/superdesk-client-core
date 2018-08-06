@@ -30,7 +30,6 @@
     <span ng-if="schema.headline.maxlength" sd-character-count data-item="item.headline" data-html="true" data-limit="schema.headline.maxlength"></span>
     <div id="title" class="headline"
          sd-editor3
-         data-editor-id="'headline'"
          data-path-to-value="'headline'"
          data-single-line="true"
          data-bind-to-value="compareView"
@@ -89,7 +88,7 @@
          data-onchange="autosave(item)"
          data-save="save()"
          data-show-title="editor.feature_image.imageTitle"
-         tabindex="{{editor.feature_image.order}}">
+         data-tabindex="editor.feature_image.order">
     </div>
 </div>
 <div ng-if="schema.feature_media" class="field"
@@ -108,7 +107,7 @@
          data-onchange="autosave(item)"
          data-save="save()"
          data-show-title="editor.feature_media.imageTitle"
-         tabindex="{{editor.feature_media.order}}">
+         data-tabindex="editor.feature_media.order">
     </div>
     <div sd-item-crops
          data-item="item.associations['featuremedia']"
@@ -154,7 +153,6 @@
     <span sd-word-count data-item="item.abstract" data-html="true"></span>
     <div id="abstract" class="abstract"
          sd-editor3
-         data-editor-id="'item-abstract'"
          data-path-to-value="'abstract'"
          data-editor-format="editor.abstract.formatOptions"
          data-bind-to-value="compareView"
@@ -295,7 +293,6 @@
     <span sd-word-count data-item="item.body_html" data-html="true"></span>
     <div id="bodyhtml"
          sd-editor3
-         data-editor-id="'item-body_html'"
          data-path-to-value="'body_html'"
          data-find-replace-target
          data-bind-to-value="compareView"
@@ -326,8 +323,28 @@
         <div class="media-item__item">
             <div sd-item-rendition data-item="item" data-rendition="baseImage" ng-click="preview(item);"></div>
             <span class="media-item__item-label" translate>Original ({{item.renditions.original.width}} x {{item.renditions.original.height}} px)</span>
+            <div class="media-container__metadata media-container__metadata--image">
+                <span>
+                    <em>{{:: 'Credit:' | translate}}</em>
+                    {{item.byline || ('[No Value]' | translate)}}
+                </span>
+                <span>
+                    <em>{{:: 'Copyright holder:' | translate}}</em>
+                    {{item.copyrightholder || ('[No Value]' | translate)}}
+                </span>
+                <span>
+                    <em>{{:: 'Assign rights:' | translate}}</em>
+                    {{item.usageterms || ('[No Value]' | translate)}}
+                </span>
+                <span>
+                    <em>{{:: 'Copyright notice:' | translate}}</em>
+                    {{item.copyrightnotice || ('[No Value]' | translate)}}
+                </span>
+            </div>
         </div>
-        <div sd-item-crops data-item="item"></div>
+        <div sd-item-crops data-item="item">
+            
+        </div>
         <button id="btnCrop" class="btn btn--medium pull-right" ng-click="applyCrop()" ng-if="metadata.crop_sizes && _editable">
             <span ng-if="!item.hasCrops" translate>APPLY CROPS</span>
             <span ng-if="item.hasCrops" translate>EDIT CROPS</span>
@@ -335,11 +352,56 @@
     </div>
 
     <div ng-if="item.type == 'audio'">
-        <audio controls="controls" sd-sources data-renditions="item.renditions"></audio>
+        <div class="media-container">
+            <audio controls="controls" sd-sources data-renditions="item.renditions"></audio>
+            <div class="media-container__metadata">
+                <span>
+                    <em>{{:: 'Credit:' | translate}}</em>
+                    {{item.byline || ('[No Value]' | translate)}}
+                </span>
+                <span>
+                    <em>{{:: 'Copyright holder:' | translate}}</em>
+                    {{item.copyrightholder || ('[No Value]' | translate)}}
+                </span>
+                <span>
+                    <em>{{:: 'Assign rights:' | translate}}</em>
+                    {{item.usageterms || ('[No Value]' | translate)}}
+                </span>
+                <span>
+                    <em>{{:: 'Copyright notice:' | translate}}</em>
+                    {{item.copyrightnotice || ('[No Value]' | translate)}}
+                </span>
+            </div>
+            <div class="media-container__action-bar" ng-if="_editable">
+                <a class="btn btn--hollow btn--small" ng-click=" "><span translate>Edit metadata</span></a>
+            </div>
+        </div>
     </div>
-
     <div ng-if="item.type == 'video'">
-        <video controls="controls" sd-sources data-renditions="item.renditions"></video>
+        <div class="media-container">
+            <video controls="controls" sd-sources data-renditions="item.renditions"></video>
+            <div class="media-container__metadata">
+                <span>
+                    <em>{{:: 'Credit:' | translate}}</em>
+                    {{item.byline || ('[No Value]' | translate)}}
+                </span>
+                <span>
+                    <em>{{:: 'Copyright holder:' | translate}}</em>
+                    {{item.copyrightholder || ('[No Value]' | translate)}}
+                </span>
+                <span>
+                    <em>{{:: 'Assign rights:' | translate}}</em>
+                    {{item.usageterms || ('[No Value]' | translate)}}
+                </span>
+                <span>
+                    <em>{{:: 'Copyright notice:' | translate}}</em>
+                    {{item.copyrightnotice || ('[No Value]' | translate)}}
+                </span>
+            </div>
+            <div class="media-container__action-bar" ng-if="_editable">
+                <a class="btn btn--hollow btn--small" ng-click=" "><span translate>Edit metadata</span></a>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -374,7 +436,6 @@
     <span ng-if="validator.description_text.maxlength" sd-character-count data-item="item.description_text" data-html="true" data-limit="validator.description_text.maxlength"></span>
     <div id="title" class="abstract"
          sd-editor3
-         data-editor-id="'item-description_text'"
          data-path-to-value="'description_text'"
          data-editor-format="editor.description_text.formatOptions"
          data-bind-to-value="compareView"
@@ -441,7 +502,6 @@
     <label class="field__label">{{label('body_footer')}}</label>
     <div id="body_footer" class="body"
          sd-editor3
-         data-editor-id="'item-body_footer'"
          data-path-to-value="'body_footer'"
          data-bind-to-value="compareView"
          data-editor-format="editor.body_footer.formatOptions"
@@ -527,7 +587,6 @@
     <span ng-if="schema[field._id].maxlength || schema[field._id].minlength" sd-character-count
         data-item="item.extra[field._id]" data-html="true" data-limit="schema[field._id].maxlength"></span>
     <div sd-editor3
-        data-editor-id="'extra' + FIELD_KEY_SEPARATOR + field._id"
         data-path-to-value="'extra' + FIELD_KEY_SEPARATOR + field._id"
         data-single-line="field.field_options.single"
         data-value="item.extra[field._id]"
@@ -552,7 +611,7 @@
     sd-validation-error="error[field._id.toLowerCase()]">
 
     <label class="field__label">{{ field.display_name }}</label>
-    <div sd-datepicker ng-model="item.extra[field._id]" data-format="YYYY-MM-DDT00:00:00+0000" data-on-change="autosave(item)"></div>
+    <div sd-datepicker data-tabindex="editor[field._id].order" ng-model="item.extra[field._id]" data-format="YYYY-MM-DDT00:00:00+0000" data-on-change="autosave(item)"></div>
     <div class="sd-editor__info-text" ng-if="helper_text[field._id]">{{field.helper_text}}</div>
 </div>
 
@@ -585,14 +644,16 @@
         data-append-element=".field" 
         data-append-class="active" 
         sd-auto-height 
-        sd-validation-error="error.extra[field._id].embed"></textarea>
+        sd-validation-error="error.extra[field._id].embed"
+        tabindex="{{editor[field._id].order}}"></textarea>
     <input type="text" class="sd-line-input__input" style="margin-bottom: 6px;" 
         ng-model="item.extra[field._id].description"
         sd-remove-tags ng-change="autosave(item)" 
         sd-focus-element
         data-append-element=".field" 
         data-append-class="active" 
-        placeholder="{{ 'Description' | translate }}">
+        placeholder="{{ 'Description' | translate }}"
+        tabindex="{{editor[field._id].order}}">
     <div id="embed-preview-{{ field._id }}" ng-show="embedPreviews[field._id]"></div>
     <div class="sd-editor__info-text" ng-if="helper_text[field._id]">{{field.helper_text}}</div>
 </div>
@@ -615,7 +676,7 @@
          data-allow-video="!!field.field_options.allowed_types.video"
          data-allow-audio="!!field.field_options.allowed_types.audio"
          data-max-uploads="maxUploads(field.field_options)"
-         tabindex="{{editor[field._id].order}}">
+         data-tabindex="editor[field._id].order">
     </div>
     <div class="sd-editor__info-text" ng-if="helper_text[field._id]">{{field.helper_text}}</div>
 </div>

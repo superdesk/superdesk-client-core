@@ -38,7 +38,7 @@ describe('users api', () => {
 
         spyOn(resource, 'replace');
 
-        usersService.changePassword(user, 'old', 'new');
+        usersService.changePassword(user.username, 'old', 'new');
 
         expect(resource.replace).toHaveBeenCalledWith('pwd_url', {
             old_pwd: 'old',

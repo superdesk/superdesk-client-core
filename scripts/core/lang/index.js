@@ -1,14 +1,18 @@
 /* globals __SUPERDESK_CONFIG__: true */
+
+import {get} from 'lodash';
+
 const appConfig = __SUPERDESK_CONFIG__;
+const LANG_OVERRIDE = appConfig.langOverride || {};
 
-let lang = appConfig.langOverride;
-
-if (Object.keys(lang).length > 0) {
-    angular.module('gettext').run(['gettextCatalog', (catalog) => {
-        for (let k of Object.keys(lang)) {
-            catalog.setStrings(k, lang[k]);
-        }
-    }]);
+/**
+ * Add langOverride strings to catalog for given language
+ *
+ * @param {gettextCatalog} catalog
+ * @param {String} lang
+ */
+export function addLangOverride(catalog, lang) {
+    catalog.setStrings(lang, get(LANG_OVERRIDE, lang, {}));
 }
 
 /**

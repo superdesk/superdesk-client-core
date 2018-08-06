@@ -23,7 +23,7 @@
     </div>
 
     <div class="pull-right" ng-if="type === 'archive' && (!elementState || elementState === 'comfort')">
-        <button class="navbtn strict" ng-if="activity['edit.item']" ng-click="action.multiImageEdit()" title="{{ :: 'Edit metadata' | translate }}">
+        <button class="navbtn strict" ng-if="action.canEditMetadata() && activity['edit.item']" ng-click="action.multiImageEdit()" title="{{ :: 'Edit metadata' | translate }}">
             <i class="big-icon--annotation"></i>
         </button>
         <button class="navbtn strict" ng-if="activity['export']" ng-click="openExport()" title="{{ :: 'Export' | translate }}">
@@ -82,6 +82,9 @@
                 </li>
 
                 <li ng-if="type === 'archive'">
+                    <button ng-if="action.canEditMetadata() && activity['edit.item']" ng-click="action.multiImageEdit()">
+                        <i class="icon-edit-line"></i><span>{{ :: 'Edit metadata' | translate }}</span>
+                    </button>
                     <button ng-if="activity['export']" ng-click="openExport()">
                         <i class="icon-download"></i><span>{{ :: 'Export' | translate }}</span>
                         <div sd-export ng-if="export"></div>
@@ -97,6 +100,9 @@
                     </button>
                     <button id="send-to-btn" ng-if="activity['edit.item']" ng-click="action.sendAs()">
                         <i class="icon-expand-thin"></i><span>{{ :: 'Send to' | translate }}</span>
+                    </button>
+                    <button id="publish-btn" ng-if="activity['edit.item']" ng-click="action.publish()">
+                        <i class="icon-ok"></i><span>{{ :: 'Publish' | translate }}</span>
                     </button>
                 </li>
 

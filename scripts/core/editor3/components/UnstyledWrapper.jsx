@@ -36,7 +36,7 @@ class UnstyledWrapper extends BaseUnstyledComponent {
 }
 
 UnstyledWrapper.propTypes = {
-    dispatch: PropTypes.func,
+    dispatch: PropTypes.func.isRequired,
     children: PropTypes.array,
     editorProps: PropTypes.object,
 };

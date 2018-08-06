@@ -97,10 +97,10 @@ export function setReadOnly(v) {
  * @name setActiveCell
  * @description Sets the active table and cell inside the editor.
  */
-export function setActiveCell(i, j, key) {
+export function setActiveCell(i, j, key, currentStyle, selection) {
     return {
         type: 'EDITOR_SET_CELL',
-        payload: {i, j, key},
+        payload: {i, j, key, currentStyle, selection},
     };
 }
 
@@ -120,10 +120,10 @@ export function changeImageCaption(entityKey, newCaption, field) {
     };
 }
 
-export function mergeEntityDataByKey(entityKey, valuesToMerge) {
+export function mergeEntityDataByKey(blockKey, entityKey, valuesToMerge) {
     return {
         type: 'MERGE_ENTITY_DATA_BY_KEY',
-        payload: {entityKey, valuesToMerge},
+        payload: {blockKey, entityKey, valuesToMerge},
     };
 }
 

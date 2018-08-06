@@ -416,6 +416,9 @@ $slide-pane-width: 400px;
             margin-bottom: 20px;
             .dropdown__toggle, .dropdown__menu {
                 width: 100%;
+                &.focus, &:focus {
+                    outline: 2px solid $sd-blue;
+                }
             }
         }
     }

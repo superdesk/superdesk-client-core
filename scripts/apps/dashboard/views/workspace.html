@@ -56,15 +56,13 @@
     </div>
 </div>
 
-<div sd-modal data-model="dashboard.add" class="modal--large modal--tabs">
-    <div class="modal__header">
-        <button class="modal__close pull-right" ng-click="dashboard.add = false"><i class="icon-close-small"></i></button>
-        <h3 class="modal__heading" translate>Add new widget</h3>        
+<div sd-modal data-model="dashboard.add" class="modal--large modal--x-large modal--tabs">
+    <div class="modal__header modal__header--flex">
+        <h3 class="modal__heading" translate>Add new widget</h3>
+        <button class="modal__close icn-btn" ng-click="dashboard.add = false"><i class="icon-close-small"></i></button>        
     </div>
 
     <div class="modal__body" ng-if="!dashboard.selectedWidget">
-        <div class="modal__body-header modal__body-header--add-padding">            
-        </div>
         <div class="modal__body-content">
             <ul class="widget-list">
                 <li ng-repeat="widget in dashboard.availableWidgets" ng-click="dashboard.selectWidget(widget)" ng-class="{selected: dashboard.isSelected(widget)}" class="widget {{ widget._id }}">
@@ -74,12 +72,12 @@
             </ul>
         </div>
         <div class="modal__body-footer" ng-if="!dashboard.selectedWidget">
-            <button class="btn btn--primary" ng-click="dashboard.add = false" translate>Done</button>
+            <button class="btn btn--primary btn--large" ng-click="dashboard.add = false" translate>Done</button>
         </div>
     </div>
 
     <div class="modal__body" ng-if="dashboard.selectedWidget">
-        <div class="modal__body-header modal__body-header--add-padding">
+        <div class="modal__body-header modal__body-header--flex modal__body-header--add-padding">
             <button class="backlink" ng-click="dashboard.selectWidget()" translate>Back</button>
         </div>
         <div class="modal__body-content widget-detail">

@@ -1,9 +1,19 @@
-MediaPreview.$inject = ['api', '$rootScope', 'desks', 'superdesk'];
+MediaPreview.$inject = ['api', '$rootScope', 'desks', 'superdesk', 'content'];
 
-export function MediaPreview(api, $rootScope, desks, superdesk) {
+export function MediaPreview(api, $rootScope, desks, superdesk, content) {
     return {
         template: require('../views/preview.html'),
         link: function(scope) {
+            if (scope.selected.preview.profile) {
+                content.getType(scope.selected.preview.profile)
+                    .then((type) => {
+                        scope.editor = content.editor(type);
+                        scope.fields = content.fields(type);
+                    });
+            } else {
+                scope.editor = content.editor();
+            }
+
             scope.previewRewriteStory = function() {
                 return api.find('archive', scope.item.rewrite_id).then((item) => {
                     $rootScope.$broadcast('broadcast:preview', {item: item});

@@ -1,7 +1,23 @@
+import ReactDOM from 'react-dom';
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import ng from 'core/services/ng';
 import {SpellcheckerContextMenu} from './SpellcheckerContextMenu';
+
+function getElementForPortal() {
+    const existingElement = document.querySelector('.spellchecker-suggestions');
+
+    if (existingElement != null) {
+        return existingElement;
+    } else {
+        const newElement = document.createElement('div');
+
+        newElement.classList.add('spellchecker-suggestions');
+        document.body.appendChild(newElement);
+
+        return newElement;
+    }
+}
 
 /**
  * @ngdoc React
@@ -74,9 +90,19 @@ class SpellcheckerError extends Component {
         const word = {text: children[0].props.text, offset: children[0].props.start};
 
         return (
-            <span className="word-typo" onContextMenu={this.showContextMenu(word.text)}>
+            <span
+                className="word-typo"
+                onContextMenu={this.showContextMenu(word.text)}
+                ref={(el) => this.wordTypoElement = el}>
                 {menuShowing ?
-                    <SpellcheckerContextMenu suggestions={suggestions} word={word} />
+                    ReactDOM.createPortal(
+                        <SpellcheckerContextMenu
+                            targetElement={this.wordTypoElement}
+                            suggestions={suggestions}
+                            word={word}
+                        />,
+                        getElementForPortal()
+                    )
                     : null}
                 {this.props.children}
             </span>

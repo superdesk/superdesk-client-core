@@ -642,7 +642,7 @@ describe('cropImage', () => {
     beforeEach(window.module('superdesk.apps.editor2'));
 
     it('can change button label for apply/edit crop', (done) => {
-        inject(($rootScope, $compile, $q, metadata, content) => {
+        inject(($rootScope, $compile, $q, metadata, vocabularies) => {
             var metaInit = $q.defer();
 
             metadata.values = {
@@ -652,7 +652,7 @@ describe('cropImage', () => {
             };
 
             spyOn(metadata, 'initialize').and.returnValue(metaInit.promise);
-            spyOn(content, 'getCustomFields').and.returnValue($q.when([]));
+            spyOn(vocabularies, 'getAllActiveVocabularies').and.returnValue($q.when([]));
 
             var elem = $compile('<div sd-article-edit></div>')($rootScope.$new());
             var scope = elem.scope();

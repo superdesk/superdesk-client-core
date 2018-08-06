@@ -46,27 +46,27 @@ $done-color :           #288001;
 
 // Item state colors (borders & backgrounds)
 // -------------------------
-$state-border--locked: rgb(229, 28, 35);
-$state-border--published: rgb(94, 141, 50);
-$item-background-published: lighten($state-border--published, 60%);
-$state-border--killed: rgb(48, 48, 48);
-$item-background-killed: rgb(255, 249, 248);
+$state-border--locked:          rgb(229, 28, 35);
+$state-border--published:       rgb(94, 141, 50);
+$state-border--killed:          rgb(48, 48, 48);
+$item-background-killed:        rgb(255, 249, 248);
+$item-background-published:     lighten($state-border--published, 60%);
 
 // Links
 // -------------------------
-$linkColor:             #5d9bc0;
-$linkColorHover:        lighten($linkColor, 15%);
+$linkColor:                     #5d9bc0;
+$linkColorHover:                lighten($linkColor, 15%);
 
 // Typography
 // -------------------------
-$headingsColor:         inherit; // empty to use BS default, $textColor
+$headingsColor:                 inherit; // empty to use BS default, $textColor
 
 // Tables
 // -------------------------
-$tableBackground:                   transparent; // overall background-color
-$tableBackgroundAccent:             #f9f9f9; // for striping
-$tableBackgroundHover:              #f5f5f5; // for hover
-$tableBorder:                       #ddd; // table and cell border
+$tableBackground:               transparent; // overall background-color
+$tableBackgroundAccent:         #f9f9f9; // for striping
+$tableBackgroundHover:          #f5f5f5; // for hover
+$tableBorder:                   #ddd; // table and cell border
 
 // Forms
 // -------------------------
@@ -84,90 +84,93 @@ $dropdownLinkBackgroundHover:   $sd-hover;
 
 // Input placeholder text color
 // -------------------------
-$placeholderText:         $grayLight;
+$placeholderText:               $grayLight;
 
 // Hr border color
 // -------------------------
-$hrBorder: rgba(123,123,123,0.4);
+$hrBorder:                      rgba(123,123,123,0.4);
 
 // Navbar
 // -------------------------
-$navbarBackground:                $grayDarker;
-$navbarBackgroundHighlight:       $grayDark;
+$navbarBackground:              $grayDarker;
+$navbarBackgroundHighlight:     $grayDark;
 
-$navbarText:                      $grayLight;
-$navbarLinkColor:                 $grayLight;
-$navbarLinkColorHover:            $white;
-$navbarLinkColorActive:           $navbarLinkColorHover;
-$navbarLinkBackgroundHover:       transparent;
-$navbarLinkBackgroundActive:      $navbarBackground;
+$navbarText:                    $grayLight;
+$navbarLinkColor:               $grayLight;
+$navbarLinkColorHover:          $white;
+$navbarLinkColorActive:         $navbarLinkColorHover;
+$navbarLinkBackgroundHover:     transparent;
+$navbarLinkBackgroundActive:    $navbarBackground;
 
 // Form states and alerts
 // -------------------------
-$warningText:             #c09853;
-$warningBackground:       #fcf8e3;
-$warningBorder:           darken(adjust-hue($warningBackground, -10), 3%);
+$warningText:          #c09853;
+$warningBackground:    #fcf8e3;
+$warningBorder:        darken(adjust-hue($warningBackground, -10), 3%);
 
-$errorText:               #b94a48;
-$errorBackground:         #f2dede;
-$errorBorder:             darken(adjust-hue($errorBackground, -10), 3%);
+$errorText:            #b94a48;
+$errorBackground:      #f2dede;
+$errorBorder:          darken(adjust-hue($errorBackground, -10), 3%);
 
-$successText:             #468847;
-$successBackground:       #dff0d8;
-$successBorder:           darken(adjust-hue($successBackground, -10), 5%);
+$successText:          #468847;
+$successBackground:    #dff0d8;
+$successBorder:        darken(adjust-hue($successBackground, -10), 5%);
 
-$infoText:                #3a87ad;
-$infoBackground:          #d9edf7;
-$infoBorder:              darken(adjust-hue($infoBackground, -10), 7%);
+$infoText:             #3a87ad;
+$infoBackground:       #d9edf7;
+$infoBorder:           darken(adjust-hue($infoBackground, -10), 7%);
 
 // Theme
 // -------------------------
-$background-main: $sd-background;
+$background-main:      $sd-background;
 
 // Tablists and Tabpanes
 // -------------------------
-$tablist-background:          #a1a1a1;
+$tablist-background:   #a1a1a1;
 
-$tabpane-background:          #f5f5f5;
-$tabpane-border:              #7c7c7c;
+$tabpane-background:   #f5f5f5;
+$tabpane-border:       #7c7c7c;
 
-$sidebar-background:    #dedede;
-$archive-sidebar-bg: #ededed;
+$sidebar-background:   #dedede;
+$archive-sidebar-bg:   #ededed;
 
 //State colors
-$state-color-default: rgb(140, 140, 140);
-$state-color-blue: rgb(93, 155, 192);
-$state-color-green: rgb(94, 141, 50);
-$state-color-yellow: rgb(210, 168, 0);
-$state-color-orange: rgb(218, 114, 0);
-$state-color-navy: rgb(0, 0, 128);
-$state-color-magenta: rgb(139, 0, 139);
-$state-color-red: rgb(190, 22, 0);
-$state-color-embargo: rgb(255, 51, 129);
+$state-color-default:  rgb(140, 140, 140);
+$state-color-blue:     rgb(93, 155, 192);
+$state-color-green:    rgb(94, 141, 50);
+$state-color-yellow:   rgb(210, 168, 0);
+$state-color-orange:   rgb(218, 114, 0);
+$state-color-navy:     rgb(0, 0, 128);
+$state-color-magenta:  rgb(139, 0, 139);
+$state-color-red:      rgb(190, 22, 0);
+$state-color-embargo:  rgb(255, 51, 129);
 
 //Box shadows
 $block-shadow-depth-1: 0px 1px 2px 0 rgba(0, 0, 0, 0.12);
 $block-shadow-depth-2: 0px 1px 4px 0 rgba(0, 0, 0, 0.2);
 
 // Widgets
-$widget_world-clock:           #03a9f4;
-$widget_ingest-stats:          #00bcd4;
-$widget_aggregate:             #8bc34a;
-$widget_archive:               #3f51b5;
-$widget_ingest:                #673ab7;
-$widget_activity:              #009688;
+$widget_archive:       #3f51b5;
+$widget_world-clock:   #03a9f4;
+$widget_ingest-stats:  #00bcd4;
+$widget_activity:      #009688;
+$widget_aggregate:     #8bc34a;
+$widget_misc:          #c4c422;
+$widget_routing:       #e55028;
+$widget_analytics:     #d62776;
+$widget_ingest:        #673ab7;
 
 // Monitoring view
-$subnav-authoring:             #dedede;
-$embeded-auth-shadow:          inset 7px 0px 9px -5px rgba(0,0,0,.25);
+$subnav-authoring:     #dedede;
+$embeded-auth-shadow:  inset 7px 0px 9px -5px rgba(0,0,0,.25);
 
 // Monitoring view
-$subnav-authoring:              #dedede;
-$embeded-auth-shadow:           inset 7px 0px 9px -5px rgba(0,0,0,.25);
+$subnav-authoring:     #dedede;
+$embeded-auth-shadow:  inset 7px 0px 9px -5px rgba(0,0,0,.25);
 
 // Custom button colors
-$btn-custom-hover:                  #404040;
-$btn-publish:                       #01579b;
-$btn-publish-hover:                 #012c4f;
-$btn-publish-plus:                  #623b7a;
-$btn-publish-plus-hover:            #392246;
+$btn-custom-hover:         #404040;
+$btn-publish:              #01579b;
+$btn-publish-hover:        #012c4f;
+$btn-publish-plus:         #623b7a;
+$btn-publish-plus-hover:   #392246;

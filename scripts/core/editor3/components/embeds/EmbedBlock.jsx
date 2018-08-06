@@ -58,10 +58,17 @@ export class EmbedBlockComponent extends Component {
         return block.getEntityAt(0);
     }
 
+    getBlockKey() {
+        const {block} = this.props;
+
+        return block.getKey();
+    }
+
     onChangeDescription(event) {
         const entityKey = this.getEntityKey();
+        const blockKey = this.getBlockKey();
 
-        this.props.mergeEntityDataByKey(entityKey, {
+        this.props.mergeEntityDataByKey(blockKey, entityKey, {
             description: event.target.value,
         });
     }
@@ -69,11 +76,12 @@ export class EmbedBlockComponent extends Component {
     editEmbedHtml() {
         const embed = this.data();
         const entityKey = this.getEntityKey();
+        const blockKey = this.getBlockKey();
         const modal = ng.get('modal');
 
         modal.prompt(gettext('Edit embed'), embed.data.html)
             .then((html) => {
-                this.props.mergeEntityDataByKey(entityKey, {
+                this.props.mergeEntityDataByKey(blockKey, entityKey, {
                     data: {...embed.data, html},
                 });
             });
@@ -108,22 +116,16 @@ export class EmbedBlockComponent extends Component {
         const html = embed.data.html;
         const isQumu = isQumuWidget(html);
 
-        // If event is not stopped, editor selection drops to start of the content
-        const stopEvent = (originalFunction) => (event) => {
-            event.stopPropagation();
-            originalFunction(event);
-        };
-
         if (isQumu !== true) {
             this.runScripts(html);
         }
 
         return (
             <div className="embed-block">
-                <a className="icn-btn embed-block__remove" onMouseDown={stopEvent(this.onClickDelete)}>
+                <a className="icn-btn embed-block__remove" onMouseDown={this.onClickDelete}>
                     <i className="icon-close-small" />
                 </a>
-                <a className="icn-btn embed-block__edit" onMouseDown={stopEvent(this.editEmbedHtml)}>
+                <a className="icn-btn embed-block__edit" onMouseDown={this.editEmbedHtml}>
                     <i className="icon-pencil" />
                 </a>
 
@@ -157,8 +159,8 @@ EmbedBlockComponent.propTypes = {
 const mapDispatchToProps = (dispatch) => ({
     removeBlock: (blockKey) => dispatch(actions.removeBlock(blockKey)),
     setLocked: () => dispatch(actions.setLocked(true)),
-    mergeEntityDataByKey: (entityKey, valuesToMerge) =>
-        dispatch(actions.mergeEntityDataByKey(entityKey, valuesToMerge)),
+    mergeEntityDataByKey: (blockKey, entityKey, valuesToMerge) =>
+        dispatch(actions.mergeEntityDataByKey(blockKey, entityKey, valuesToMerge)),
 });
 
 export const EmbedBlock = connect(null, mapDispatchToProps)(EmbedBlockComponent);

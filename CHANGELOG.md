@@ -1,5 +1,40 @@
 # Superdesk Client Changelog
 
+## [1.22.0] 2018-07-17
+
+### Fixed
+
+- Fix cursor reset when an embed is edited.
+- Disable media editing when item is locked.
+- Fix drop event not handling regular files on editor3.
+- Disable send to menu action when item is locked.
+- Reduce line spacing before h5 in editor3.
+- Fix `popup_width` handling in metadata.
+- Fix `isLinkExternal` with data protocol.
+- Preserve highlights on spellchecker changes.
+- Fix user avatar modal.
+- Fix adding insert suggestion on superscript text.
+- Fix macros listing on desk creation.
+- Apply Tansa spellchecker on media description.
+- Remove local path from ftp destination config.
+- Hamburger menu is not translated after changing the language.
+
+### Added
+
+- Add support for password expiry after given period.
+- Add fields for copyright and usageterms to lists.
+- Support inline styles on tables.
+- Allow editing of video metadata.
+- Add confirmation when closing media editing with unsaved changes.
+- Check if template is set as default before removing it.
+- Specify qcode type in vocabulary schema.
+- Add preview endpoint URL to subscriber configuration.
+- Add RTL languages support to the editor.
+
+### Changed
+
+- Make grid item content fully configurable.
+
 ## [1.21.0] 2018-06-25
 
 ### Fixed
