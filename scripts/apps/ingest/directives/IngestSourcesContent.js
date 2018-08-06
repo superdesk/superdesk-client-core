@@ -416,8 +416,7 @@ export function IngestSourcesContent(ingestSources, gettext, notify, api, $locat
             $scope.gotoIngest = function(provider) {
                 const contentTypes = provider.content_types;
 
-                // the list contains always 'preformatted' item
-                if (contentTypes.length === 2 && contentTypes.includes('event')) {
+                if (contentTypes.length === 1 && contentTypes.includes('event')) {
                     const searchParams = {
                         page: 1,
                         advancedSearch: {
