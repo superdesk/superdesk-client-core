@@ -19,5 +19,9 @@ export const transmissionTypes = {
     http_push: {
         label: 'HTTP Push',
         templateUrl: 'scripts/apps/publish/views/http-push-config.html'
+    },
+    socket: {
+        label: 'Socket',
+        templateUrl: 'scripts/apps/publish/views/socket-config.html'
     }
 };

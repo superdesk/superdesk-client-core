@@ -1,0 +1,10 @@
+<div class="field">
+    <label for="socket_address" translate>Socket Server Address</label>
+    <i class="field-info pull-right">*</i>
+    <input type="text" id="socket_address" placeholder="{{ :: 'Socket Server Address'|translate }}" ng-model="destination.config.address" required ng-change="$parent.setConfig(destination)">
+</div>
+<div class="field">
+    <label for="socket_port" translate="Port"></label>
+    <i class="field-info pull-right">*</i>
+    <input type="text" id="socket_port" placeholder="{{ :: 'Socket Server Port'|translate }}" ng-model="destination.config.port" required ng-change="$parent.setConfig(destination)">
+</div>
