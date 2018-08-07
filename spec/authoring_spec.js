@@ -16,24 +16,6 @@ describe('authoring', () => {
         monitoring.openMonitoring();
     });
 
-    it('contenteditable remembers caret position after losing focus', () => {
-        // implemented here remember-selection-after-losing-focus-from-contenteditable.js
-
-        monitoring.actionOnItem('Edit', 2, 0);
-        authoring.cleanBodyHtmlElement();
-        authoring.writeText('hello');
-
-        // lose focus on purpose
-        browser.executeScript(
-            `var a = document.createElement("input");
-            document.body.appendChild(a);
-            a.focus();`
-        );
-
-        authoring.writeText(' world');
-        authoring.blockContains(0, 'hello world');
-    });
-
     it('add an embed and respect the order', () => {
         // try with same block content
         monitoring.actionOnItem('Edit', 2, 0);
@@ -70,6 +52,7 @@ describe('authoring', () => {
             authoring.writeText(protractor.Key.UP);
         }
         authoring.writeText(protractor.Key.ENTER);
+        authoring.writeText(protractor.Key.UP);
         authoring.addEmbed('Embed at position 15');
         authoring.blockContains(0, (body1 + body2).replace(/\n$/, ''));
         authoring.blockContains(2, body3.replace(/\n$/, ''));
