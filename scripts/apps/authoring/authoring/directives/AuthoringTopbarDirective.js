@@ -7,12 +7,14 @@
  *
  * @description Generates authoring subnav bar
  */
-AuthoringTopbarDirective.$inject = ['TranslationService'];
-export function AuthoringTopbarDirective(TranslationService) {
+AuthoringTopbarDirective.$inject = ['TranslationService', 'privileges'];
+export function AuthoringTopbarDirective(TranslationService, privileges) {
     return {
         templateUrl: 'scripts/apps/authoring/views/authoring-topbar.html',
         link: function(scope) {
             scope.saveDisabled = false;
+
+            scope.userHasPrivileges = privileges.userHasPrivileges;
 
             /*
              * Save item
