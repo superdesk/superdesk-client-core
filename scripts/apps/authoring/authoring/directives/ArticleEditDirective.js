@@ -305,7 +305,7 @@ export function ArticleEditDirective(
                         .finally(() => {
                             scope.mediaLoading = false;
                         });
-                }
+                };
 
                 /**
                  * @ngdoc method
@@ -314,7 +314,7 @@ export function ArticleEditDirective(
                  * @description Opens the Change Image Controller to modify the image metadata and crops.
                  */
                 scope.applyCrop = function() {
-                    return this.editMedia({crop: true})
+                    return this.editMedia({crop: true});
                 };
 
                 /**
