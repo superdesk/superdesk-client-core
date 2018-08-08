@@ -338,9 +338,64 @@ export function SearchService($location, gettext, config, session, multi,
             getDateFilters(gettext).forEach(({fieldname}) => {
                 if (params[fieldname] != null) {
                     // handle predefined ranges
-                    facetrange[fieldname] = {gte: formatDate(params[fieldname], zeroHourSuffix)};
+
+                    const VIEW_DATE_FORMAT = config.view.dateformat;
+                    const dateRange = params[fieldname];
+                    const now = new Date();
+
+                    if (dateRange === 'now-1M') {
+                        const firstDayOfLastMonth = moment(
+                            new Date(now.getFullYear(), now.getMonth() - 1, 1)
+                        ).format(VIEW_DATE_FORMAT);
+
+                        const lastDayOfLastMonth = moment(
+                            new Date(now.getFullYear(), now.getMonth(), 0)
+                        ).format(VIEW_DATE_FORMAT);
+
+                        facetrange[fieldname] = {
+                            gte: formatDate(firstDayOfLastMonth, zeroHourSuffix),
+                            lte: formatDate(lastDayOfLastMonth, zeroHourSuffix),
+                        };
+                    } else if (dateRange === 'now-1w') {
+                        const startingDayInt = parseInt(config.startingDay, 10);
+                        const compensateForZeroIndexedWeekDays = 1;
+
+                        const firstDayOfLastWeek = moment(
+                            new Date(
+                                now.getFullYear(),
+                                now.getMonth(),
+                                now.getDate()
+                                - (now.getDay() + compensateForZeroIndexedWeekDays - startingDayInt)
+                                - 6
+                            )
+                        ).format(VIEW_DATE_FORMAT);
+
+                        const lastDayOfLastWeek = moment(
+                            new Date(
+                                now.getFullYear(),
+                                now.getMonth(),
+                                now.getDate()
+                                - (now.getDay() + compensateForZeroIndexedWeekDays - startingDayInt)
+                            )
+                        ).format(VIEW_DATE_FORMAT);
+
+                        facetrange[fieldname] = {
+                            gte: formatDate(firstDayOfLastWeek, zeroHourSuffix),
+                            lte: formatDate(lastDayOfLastWeek, zeroHourSuffix),
+                        };
+                    } else if (dateRange === 'now-24H') {
+                        const yesterday = moment(
+                            new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1)
+                        ).format(VIEW_DATE_FORMAT);
+
+                        facetrange[fieldname] = {
+                            gte: formatDate(yesterday, zeroHourSuffix),
+                            lte: formatDate(yesterday, zeroHourSuffix),
+                        };
+                    }
                 } else {
                     // handle manual ranges
+
                     if (params[fieldname + 'to'] != null) {
                         if (facetrange[fieldname] == null) {
                             facetrange[fieldname] = {};
