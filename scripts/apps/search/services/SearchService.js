@@ -343,7 +343,7 @@ export function SearchService($location, gettext, config, session, multi,
                     const dateRange = params[fieldname];
                     const now = new Date();
 
-                    if (dateRange === 'now-1M') {
+                    if (dateRange === 'last_month') {
                         const firstDayOfLastMonth = moment(
                             new Date(now.getFullYear(), now.getMonth() - 1, 1)
                         ).format(VIEW_DATE_FORMAT);
@@ -356,7 +356,7 @@ export function SearchService($location, gettext, config, session, multi,
                             gte: formatDate(firstDayOfLastMonth, zeroHourSuffix),
                             lte: formatDate(lastDayOfLastMonth, zeroHourSuffix),
                         };
-                    } else if (dateRange === 'now-1w') {
+                    } else if (dateRange === 'last_week') {
                         const startingDayInt = parseInt(config.startingDay, 10);
                         const compensateForZeroIndexedWeekDays = 1;
 
@@ -383,7 +383,7 @@ export function SearchService($location, gettext, config, session, multi,
                             gte: formatDate(firstDayOfLastWeek, zeroHourSuffix),
                             lte: formatDate(lastDayOfLastWeek, zeroHourSuffix),
                         };
-                    } else if (dateRange === 'now-24H') {
+                    } else if (dateRange === 'last_day') {
                         const yesterday = moment(
                             new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1)
                         ).format(VIEW_DATE_FORMAT);

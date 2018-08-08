@@ -373,12 +373,14 @@ class LinkFunction {
 
             if (key === 'Last 8 Hours') {
                 this.$location.search(fieldname, 'now-8H');
-            } else if (key === 'Last Day' || key === 'Last 24 Hours') {
+            } else if (key === 'Last 24 Hours') {
                 this.$location.search(fieldname, 'now-24H');
+            } else if (key === 'Last Day') {
+                this.$location.search(fieldname, 'last_day');
             } else if (key === 'Last Week') {
-                this.$location.search(fieldname, 'now-1w');
+                this.$location.search(fieldname, 'last_week');
             } else if (key === 'Last Month') {
-                this.$location.search(fieldname, 'now-1M');
+                this.$location.search(fieldname, 'last_month');
             }
         } else {
             this.$location.search(fieldname, null);
