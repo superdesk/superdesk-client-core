@@ -286,10 +286,7 @@ export function ArticleEditDirective(
                     return renditions.crop(scope.item,
                         {isNew: false, editable: true, isAssociated: false, defaultTab: defaultTab, showMetadata: true})
                         .then((picture) => {
-                            // update _etag code if it is changes by media_edit in meanwhile
-                            if (scope.item._etag !== scope.origItem._etag) {
-                                scope.origItem._etag = scope.item._etag;
-                            }
+                            scope.item._etag = picture._etag;
 
                             if (authoring.isPublished(scope.item)) {
                                 mainEditScope.dirty = true;
