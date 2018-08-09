@@ -46,7 +46,4 @@ UnstyledBlock.propTypes = {
 
 // mapping state to props in `connect` might not work well for this component
 // it was removed to fix SDESK-2886
-// still, we need `connect` to get dispatch as a prop
-const Unstyled = connect()(UnstyledBlock);
-
-export default Unstyled;
+export default UnstyledBlock;
