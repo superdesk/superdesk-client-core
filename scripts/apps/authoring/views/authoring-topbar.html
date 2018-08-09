@@ -75,22 +75,22 @@
         ng-click="deschedule()"
         translate>Deschedule</button>
 
-      <button class="btn btn--primary" ng-if="item._type !== 'legal_archive' && !isLocked()"
+      <button class="btn btn--primary" ng-if="item._type !== 'legal_archive' && !isLocked() && userHasPrivileges({rewrite: 1}) === true"
         ng-show="(action === 'view' || !item._editable) && itemActions.re_write"
         ng-click="openAction('rewrite')"
         translate>Update</button>
 
-      <button class="btn btn--primary" ng-if="item._type !== 'legal_archive'"
+      <button class="btn btn--primary" ng-if="item._type !== 'legal_archive' && userHasPrivileges({correct: 1}) === true"
         ng-show="(action === 'view' || !item._editable) && itemActions.correct"
         ng-click="openAction('correct')"
         translate>Correct</button>
 
-      <button class="btn btn--primary" ng-if="item._type !== 'legal_archive'"
+      <button class="btn btn--primary" ng-if="item._type !== 'legal_archive' && userHasPrivileges({takedown: 1}) === true"
         ng-show="(action === 'view' || !item._editable) && itemActions.takedown"
         ng-click="openAction('takedown')"
         translate>Takedown</button>
 
-      <button class="btn btn--primary" ng-if="item._type !== 'legal_archive'"
+      <button class="btn btn--primary" ng-if="item._type !== 'legal_archive' && userHasPrivileges({kill: 1}) === true"
         ng-show="(action === 'view' || !item._editable) && itemActions.kill"
         ng-click="openAction('kill')"
         translate>Kill</button>

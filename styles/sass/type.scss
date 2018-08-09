@@ -107,6 +107,18 @@ ul {
   margin: 0;
   padding: 0;
 }
+
+// would be better to avoid applying the reset above instead of faking defaults
+.html-preview {
+  ul {
+    list-style-type: disc;
+    padding-left: 40px;
+    margin-top: 1em;
+    margin-bottom: 1em;
+  }
+}
+
+
 ol {
   list-style: decimal;
 }

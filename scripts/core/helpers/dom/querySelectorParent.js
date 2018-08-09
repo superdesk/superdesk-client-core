@@ -1,9 +1,3 @@
-export function querySelectorParent(element, selector) {
-    var currentParent = element.parentElement;
+import {findParent} from './findParent';
 
-    while (currentParent != null && currentParent.matches(selector) === false) {
-        currentParent = currentParent.parentElement;
-    }
-
-    return currentParent;
-}
+export const querySelectorParent = (element, selector) => findParent(element, (el) => el.matches(selector), false);

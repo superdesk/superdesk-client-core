@@ -210,7 +210,10 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
              * any item opened for authoring (utilising, 'broadcast:preview' with {item: null})
              */
             function shouldClosePanel(event, data) {
-                if (scope.config && _.includes(scope.config.itemIds, data.item) || _.isNil(data.item)) {
+                if (
+                    (scope.config != null && data != null && _.includes(scope.config.itemIds, data.item))
+                    || (data == null || data.item == null)
+                ) {
                     scope.close();
                 }
             }

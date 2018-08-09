@@ -1,5 +1,48 @@
 # Superdesk Client Changelog
 
+## [1.23.0] 2018-08-07
+
+### Fixed
+
+- Dragging an item to custom media field with multiple items enabled adds the item twice.
+- Cannot edit links or attachments.
+- Description line for custom vocabulary has drifted from the parent control in authoring UI.
+- Fix required config on subject field in content profile editor.
+- After embed editing move the cursor right before the edited embed.
+- Strip html tags from headline.
+- Add close button to 3 dots menu in sidebar preview.
+- After clear format action set the cursor after the selected text.
+- Improve single media items display.
+- UI problems on add to dictionary dialog when select all is applied to the text.
+- Dashboard widget modal UI improvements.
+- Improvements and bug fixes for multi metadata editor.
+- Tab sequence is broken in authoring ignoring the order from content profile.
+- Fix required highlight for custom fields.
+- Disable recovery of deletes characters when the same characters are added.
+- Fix events preview for event type ingest sources.
+- After pressing submit or cancel when editing embed code focus jumps to the beginning of the body.
+- Hide media blocks in preview when hide images is on.
+- Restrict popup width field to categories and cvs.
+- Unable to move images within the body.
+- Add missing data to suggestion history.
+- Fix console error in `password-strength` directive.
+- Audio and video title is displayed twice if show title is set in content profile.
+- Activate metadata editing only for media files.
+- Display field names instead of ids in filter conditions editor.
+- Activate save button after an image is dragged on feature media field.
+
+### Added
+
+- Show custom text and custom date fields in sidebar preview.
+- Support for publish date filtering in search.
+- Add Preview API support.
+- Added aspect ratio buttons to media fields.
+
+### Changed
+
+- Use semver for superdesk ui framework.
+- Modified `extensionpoint` directive to call a callback.
+
 ## [1.22.0] 2018-07-17
 
 ### Fixed
