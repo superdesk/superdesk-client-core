@@ -5,13 +5,13 @@ module.exports = function(grunt) {
 
     config.progress = !grunt.option('webpack-no-progress');
     config.devtool = grunt.option('webpack-devtool') || 'cheap-source-map';
+    config.optimization = {minimize: true};
 
     return {
         options: config,
         build: {
             plugins: config.plugins.concat(
-                new webpack.DefinePlugin({'process.env': {NODE_ENV: JSON.stringify('production')}}),
-                new webpack.optimize.UglifyJsPlugin({sourceMap: true})
+                new webpack.DefinePlugin({'process.env': {NODE_ENV: JSON.stringify('production')}})
             ),
         },
     };
