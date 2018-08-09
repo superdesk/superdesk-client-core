@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {omit} from 'lodash';
-import {connect} from 'react-redux';
 
 import BaseUnstyledComponent from './BaseUnstyledComponent';
 
