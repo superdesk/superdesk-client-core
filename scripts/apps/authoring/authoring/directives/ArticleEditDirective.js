@@ -274,19 +274,19 @@ export function ArticleEditDirective(
 
                 /**
                  * @ngdoc method
-                 * @name sdArticleEdit#applycrop
+                 * @name sdArticleEdit#editMedia
                  *
-                 * @description Opens the Change Image Controller to modify the image metadata and crops.
+                 * @description Opens the Change Image Controller to modify the image metadata.
                  */
-                scope.applyCrop = function() {
+                scope.editMedia = function({crop = false} = {}) {
                     scope.mediaLoading = true;
+
+                    const defaultTab = crop ? 'crop' : 'view';
+
                     return renditions.crop(scope.item,
-                        {isNew: false, editable: true, isAssociated: false, defaultTab: 'crop', showMetadata: true})
+                        {isNew: false, editable: true, isAssociated: false, defaultTab: defaultTab, showMetadata: true})
                         .then((picture) => {
-                            // update _etag code if it is changes by media_edit in meanwhile
-                            if (scope.item._etag !== scope.origItem._etag) {
-                                scope.origItem._etag = scope.item._etag;
-                            }
+                            scope.item._etag = picture._etag;
 
                             if (authoring.isPublished(scope.item)) {
                                 mainEditScope.dirty = true;
@@ -302,6 +302,16 @@ export function ArticleEditDirective(
                         .finally(() => {
                             scope.mediaLoading = false;
                         });
+                };
+
+                /**
+                 * @ngdoc method
+                 * @name sdArticleEdit#applycrop
+                 *
+                 * @description Opens the Change Image Controller to modify the image metadata and crops.
+                 */
+                scope.applyCrop = function() {
+                    return this.editMedia({crop: true});
                 };
 
                 /**

@@ -203,7 +203,7 @@ export function AssociationController(config, send, api, $q, superdesk,
         const cropOptions = {
             isNew: 'isNew' in options ? options.isNew : false,
             hideTabs: isImage ? [] : ['crop', 'image-edit'],
-            editable: scope.editable,
+            editable: !!scope.editable,
             isAssociated: true,
             defaultTab: 'defaultTab' in options ? options.defaultTab : defaultTab,
             showMetadata: 'showMetadata' in options ? options.showMetadata : true,
