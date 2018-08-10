@@ -3,6 +3,7 @@
         "scripts"
     ],
     "compilerOptions": {
+        "baseUrl": "scripts",
         "sourceMap": true,
         "allowJs": true,
         "allowSyntheticDefaultImports":true,
