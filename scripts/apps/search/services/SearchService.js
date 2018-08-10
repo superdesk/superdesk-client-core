@@ -392,6 +392,9 @@ export function SearchService($location, gettext, config, session, multi,
                             gte: formatDate(yesterday, zeroHourSuffix),
                             lte: formatDate(yesterday, zeroHourSuffix),
                         };
+                    } else {
+                        // handle last x hours for date scheduled
+                        facetrange[fieldname] = {gte: formatDate(params[fieldname], zeroHourSuffix)};
                     }
                 } else {
                     // handle manual ranges

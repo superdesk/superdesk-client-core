@@ -341,6 +341,7 @@ export function TagService($location, desks, userList, metadata, search,
                 } else if (dateFilters.some(({fieldname}) => fieldname === key)) {
                     var dateForType = {
                         'now-8H': 'Last 8 Hours',
+                        'now-24H': 'Last 24 hours',
                         last_day: 'Last Day',
                         last_week: 'Last Week',
                         last_month: 'Last Month',
