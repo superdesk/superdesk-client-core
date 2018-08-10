@@ -41,7 +41,7 @@
     "angular-resource": "1.6.9",
     "angular-route": "1.6.9",
     "angular-vs-repeat": "1.1.7",
-    "ts-loader": "4.4.2",
+    "ts-loader": "3.5.0",
     "typescript": "3.0.1",
     "webpack-fix-default-import-plugin": "1.0.3",
     "bootstrap": "3.3.7",
@@ -100,7 +100,7 @@
     "shortid": "2.2.8",
     "style-loader": "0.20.2",
     "superdesk-ui-framework": "^1.1.0",
-    "webpack": "4.16.5",
+    "webpack": "3.11.0",
     "webpack-dev-server": "2.11.1"
   },
   "devDependencies": {

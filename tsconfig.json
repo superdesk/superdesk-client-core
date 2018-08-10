@@ -1,4 +1,7 @@
 {
+    "include": [
+        "scripts/*"
+    ],
     "compilerOptions": {
         "sourceMap": true,
         "allowJs": true,
