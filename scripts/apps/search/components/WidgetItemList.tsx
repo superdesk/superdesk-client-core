@@ -16,7 +16,16 @@ import {WidgetItem} from './index';
  * @param {Function} updateCallback The callback function for component state update
  * @description This component is the list of items from a monitoring widget group.
  */
-export class WidgetItemList extends React.Component {
+export class WidgetItemList extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
+    
+    
+ 
+    
+    
+
     constructor(props) {
         super(props);
         this.state = {itemIds: [], itemsById: {}, loading: true, selected: null};
@@ -45,7 +54,7 @@ export class WidgetItemList extends React.Component {
         }
 
         return (
-            <div tabIndex="0">
+            <div tabIndex={0}>
                 <ul className="inline-content-items">
                     {
                         this.state.itemIds.map((itemId) => {

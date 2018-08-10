@@ -4,7 +4,12 @@ import {
     closeActionsMenu,
 } from '../helpers';
 
-export class HighlightsList extends React.Component {
+export class HighlightsList extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
+    timeout: any;
+
     constructor(props) {
         super(props);
 

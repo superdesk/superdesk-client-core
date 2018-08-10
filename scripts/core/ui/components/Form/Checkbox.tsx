@@ -7,7 +7,7 @@ import classNames from 'classnames';
  * @name Checkbox
  * @description Component to show checkbox input in styles including radiobutton
  */
-export const Checkbox = ({
+export const Checkbox:React.StatelessComponent<any> = ({
     field,
     value,
     checkedValue,

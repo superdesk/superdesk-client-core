@@ -14,7 +14,15 @@ import {
 /**
  * Contact Item component
  */
-export class Item extends React.Component {
+export class Item extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
+    svc: any;
+ 
+    
+    
+
     constructor(props) {
         super(props);
 
@@ -46,7 +54,7 @@ export class Item extends React.Component {
     render() {
         const {item, svc, flags, view, scope} = this.props;
 
-        let contents = [
+        let contents:any = [
             'div',
             {
                 className: classNames(

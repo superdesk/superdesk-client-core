@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export const ModalBody = (props) => (
+export const ModalBody:React.StatelessComponent<any> = (props) => (
     <div className="modal__body">
         {props.children}
     </div>

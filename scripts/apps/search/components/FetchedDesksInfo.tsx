@@ -2,7 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {DesksDropdown} from './index';
 
-export class FetchedDesksInfo extends React.Component {
+export class FetchedDesksInfo extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
+    
+    
+ 
+    
+    
+
     constructor(props) {
         super(props);
 

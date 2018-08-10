@@ -1,8 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ObjectEditor from './ObjectEditor';
+import {has} from 'lodash';
 
-export default class ItemsTableComponent extends React.Component {
+export default class ItemsTableComponent extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
     constructor(props) {
         super(props);
         this.state = {items: [], itemsValidation: []};
@@ -40,7 +44,7 @@ export default class ItemsTableComponent extends React.Component {
         return <tr>{fields}</tr>;
     }
 
-    inputField(field, item, index) {
+    inputField(field, item, index?) {
         const value = item[field.key] || '';
         const disabled = !item.is_active;
         const update = (event) => {
@@ -48,7 +52,7 @@ export default class ItemsTableComponent extends React.Component {
 
             this.props.update(item, field.key, value);
         };
-        const required = this.state.itemsValidation.length && _.has(this.state.itemsValidation[index], field.key);
+        const required = this.state.itemsValidation.length && has(this.state.itemsValidation[index], field.key);
         const valid = !required || this.state.itemsValidation[index][field.key];
         let className = 'sd-line-input sd-line-input--no-margin sd-line-input--no-label sd-line-input--boxed';
 
@@ -174,7 +178,7 @@ export default class ItemsTableComponent extends React.Component {
         );
     }
 
-    removeItemButton(index, disabled) {
+    removeItemButton(index, disabled?) {
         return (
             <td>
                 <button className="icn-btn" disabled={!!disabled} onClick={() => this.props.remove(index)}>

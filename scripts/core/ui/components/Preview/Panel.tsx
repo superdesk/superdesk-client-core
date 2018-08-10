@@ -7,7 +7,7 @@ import classNames from 'classnames';
  * @name Panel
  * @description Panel Component to be used in a preview pane
  */
-export const Panel = ({children, className}) => (
+export const Panel:React.StatelessComponent<any> = ({children, className}) => (
     <div
         className={classNames(
             'sd-preview-panel',

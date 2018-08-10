@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export function updated(props) {
+export const updated:React.StatelessComponent<any> = (props) => {
     const {gettextCatalog} = props.svc;
 
     var openItem = function(event) {

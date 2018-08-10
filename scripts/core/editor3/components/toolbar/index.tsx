@@ -21,7 +21,12 @@ import {highlightsConfig} from '../../highlightsConfig';
  * @param {boolean} disabled Disables clicking on the toolbar, if true.
  * @description Holds the editor's toolbar.
  */
-class ToolbarComponent extends Component {
+class ToolbarComponent extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
+    scrollContainer: any;
+
     constructor(props) {
         super(props);
 
@@ -250,7 +255,7 @@ const mapStateToProps = ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    insertMedia: () => dispatch(actions.insertMedia()),
+    insertMedia: () => dispatch(actions.insertMedia([])),
     showPopup: (type, data) => dispatch(actions.showPopup(type, data)),
     addTable: () => dispatch(actions.addTable()),
     toggleSuggestingMode: () => dispatch(actions.toggleSuggestingMode()),

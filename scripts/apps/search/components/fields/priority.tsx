@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {ItemPriority} from '../index';
 
-export function priority(props) {
+export const priority:React.StatelessComponent<any> = (props) => {
     return props.item.priority ?
         React.createElement(
             ItemPriority,

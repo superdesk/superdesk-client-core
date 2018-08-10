@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export function embargo(props) {
+export const embargo:React.StatelessComponent<any> = (props) => {
     const {gettext} = props.svc;
 
     if (props.item.embargo) {

@@ -9,7 +9,7 @@ import './style.scss';
  * @name Button
  * @description Button Component for a NavBar
  */
-export const Button = ({
+export const Button:React.StatelessComponent<any> = ({
     className,
     onClick,
     icon,

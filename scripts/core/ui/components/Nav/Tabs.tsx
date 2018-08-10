@@ -8,7 +8,7 @@ import classNames from 'classnames';
  * @name Tabs
  * @description Tabs Component for a NavBar
  */
-export const Tabs = ({tabs, active, setActive, className, darkUi}) => (
+export const Tabs:React.StatelessComponent<any> = ({tabs, active, setActive, className, darkUi}) => (
     <ul className={classNames(
         'nav-tabs',
         {'nav-tabs--ui-dark': darkUi},

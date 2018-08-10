@@ -17,7 +17,16 @@ import './style.scss';
  * @name SelectTagInput
  * @description Component to select tags like Keyword of a news story
  */
-export class SelectTagInput extends React.Component {
+export class SelectTagInput extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
+    
+    
+ 
+    
+    
+
     constructor(props) {
         super(props);
 
@@ -124,7 +133,7 @@ export class SelectTagInput extends React.Component {
                     <LineInput noMargin={true} invalid={invalid} required={required}>
                         <Label text={label} />
 
-                        <div className="sd-line-input__input" readOnly={readOnly}>
+                        <div className="sd-line-input__input">
                             {get(value, 'length', 0) > 0 && (
                                 <TermsList terms={value} onClick={this.removeTag} />
                             )}

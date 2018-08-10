@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
+import {forEach} from 'lodash';
 
 import {HighlightsList} from './index';
 
@@ -11,7 +12,10 @@ import {
     isCheckAllowed,
 } from '../helpers';
 
-export class HighlightsInfo extends React.Component {
+export class HighlightsInfo extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
     constructor(props) {
         super(props);
 
@@ -44,7 +48,7 @@ export class HighlightsInfo extends React.Component {
         var highlightStatuses = {};
         var highlightsById = this.props.highlightsById;
 
-        _.forEach(highlights, (highlight) => {
+        forEach(highlights, (highlight) => {
             var hours = $filter('hoursFromNow')(item.versioncreated);
 
             highlightStatuses[highlight] = highlightsService.isInDateRange(

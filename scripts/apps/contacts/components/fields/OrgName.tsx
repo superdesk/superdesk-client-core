@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 /**
  * Org Name - to display organisation name of user contact
  */
-export const OrgName = ({item}) => (
+export const OrgName:React.StatelessComponent<any> = ({item}) => (
     <div key="org-name" className="container">
         {item.first_name && item.organisation && <i className="icon-business" />}
         {

@@ -12,15 +12,13 @@ import BaseUnstyledComponent from './BaseUnstyledComponent';
  * atom block after current block.
  */
 class UnstyledBlock extends BaseUnstyledComponent {
+    getDropBlockKey: any;    
+
     constructor(props) {
         super(props);
         this.dropInsertionMode = 'after';
+        this.getDropBlockKey = () => this.props.children['key']
     }
-
-    getDropBlockKey() {
-        return this.props.children.key;
-    }
-
     render() {
         let {className} = this.props;
 

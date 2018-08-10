@@ -8,7 +8,12 @@ import {LEFT_SIDEBAR_WIDTH} from 'core/ui/constants';
  * When added to dom it checks its position and if it goes too far left
  * it will toggle the class to stay on the right side.
  */
-export default class Submenu extends React.Component {
+export default class Submenu extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
+    element: HTMLElement;
+
     constructor(props) {
         super(props);
         this.state = {position: 'left'};
@@ -17,7 +22,7 @@ export default class Submenu extends React.Component {
     componentDidMount() {
         const rect = this.element.getBoundingClientRect();
 
-        if (rect.x <= LEFT_SIDEBAR_WIDTH) {
+        if (rect.left <= LEFT_SIDEBAR_WIDTH) {
             this.setState({position: 'right'});
         }
     }

@@ -9,7 +9,7 @@ function hasThumbnail(item) {
 /**
  * Media Preview - renders item thumbnail
  */
-export function PhotoDeskPreview(props) {
+export const PhotoDeskPreview:React.StatelessComponent<any> = (props) => {
     const item = props.item;
     const classType = 'sd-grid-item__type-icon filetype-icon-' + props.item.type;
 

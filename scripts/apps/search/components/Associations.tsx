@@ -10,7 +10,16 @@ import {TypeIcon} from './index';
  * @param {function} openAuthoringView Open the associated item in view mode.
  * @description Creates an icon for the associated item.
  */
-export class Associations extends React.Component {
+export class Associations extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
+    
+    
+ 
+    
+    
+
     constructor(props) {
         super(props);
 

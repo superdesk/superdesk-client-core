@@ -7,7 +7,7 @@ import {isEmpty, findKey} from 'lodash';
 /**
  * Media Contact Info - renders contact's information
  */
-export const ContactInfo = ({item, svc}) => {
+export const ContactInfo:React.StatelessComponent<any> = ({item, svc}) => {
     let meta = [];
     let info = [];
 

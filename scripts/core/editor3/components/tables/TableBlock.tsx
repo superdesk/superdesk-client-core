@@ -16,7 +16,10 @@ import {getCell, setCell, getData, setData} from '../../helpers/table';
  * @param setActiveCell {Function} When called, sets the parent (main) editor to read only.
  * @description Handles a cell in the table, as well as the containing editor.
  */
-export class TableBlockComponent extends Component {
+export class TableBlockComponent extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
     constructor(props) {
         super(props);
 
@@ -51,7 +54,7 @@ export class TableBlockComponent extends Component {
     }
 
     getCellEditorState(data, i, j) {
-        const {currentStyle, selection} = this.props.activeCell || {};
+        const {currentStyle, selection}: any = this.props.activeCell || {};
 
         return getCell(data, i, j, currentStyle, selection);
     }
@@ -142,4 +145,4 @@ const mapStateToProps = (state) => ({
     activeCell: state.activeCell,
 });
 
-export const TableBlock = connect(mapStateToProps, mapDispatchToProps)(TableBlockComponent);
+export const TableBlock:React.StatelessComponent<any> = connect(mapStateToProps, mapDispatchToProps)(TableBlockComponent);

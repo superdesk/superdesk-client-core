@@ -7,7 +7,7 @@ import classNames from 'classnames';
  * @name SubHeader
  * @description SubHeader of a side panel
  */
-export const SubHeader = ({children, className}) => (
+export const SubHeader:React.StatelessComponent<any> = ({children, className}) => (
     <div className={classNames(
         'side-panel__header',
         className

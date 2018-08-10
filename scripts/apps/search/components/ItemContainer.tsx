@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export function ItemContainer(props) {
+export const ItemContainer:React.StatelessComponent<any> = (props) => {
     const {gettext} = props.svc;
     const {gettextCatalog} = props.svc;
 

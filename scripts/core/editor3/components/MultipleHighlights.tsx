@@ -5,7 +5,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import * as Highlights from '../helpers/highlights';
 
-export class MultipleHighlights extends React.Component {
+export class MultipleHighlights extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
+    
+    
+ 
+    
+    
+
     addHighlight(highlightType, highlightData) {
         const editorState = Highlights.addHighlight(this.props.editorState, highlightType, highlightData);
 
@@ -46,7 +55,7 @@ export class MultipleHighlights extends React.Component {
             }, {});
 
         var childrenWithProps = React.Children.map(
-            children, (child) =>
+            children, (child:any) =>
                 React.cloneElement(child, {
                     ...propsExcludingOwn,
                     highlightsManager: {

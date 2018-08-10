@@ -7,7 +7,7 @@ import classNames from 'classnames';
  * @name Footer
  * @description Footer Component of a side panel
  */
-export const Footer = ({children, className}) => (
+export const Footer:React.StatelessComponent<any> = ({children, className}) => (
     <div className={classNames(
         'side-panel__footer',
         className

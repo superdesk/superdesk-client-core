@@ -11,7 +11,12 @@ import './style.scss';
  * @name ToggleBox
  * @description ToggleBox used to open/close a set of details
  */
-export class ToggleBox extends React.Component {
+export class ToggleBox extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
+    dom: any;
+
     constructor(props) {
         super(props);
         this.state = {isOpen: this.props.isOpen};

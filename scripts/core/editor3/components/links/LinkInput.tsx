@@ -21,7 +21,15 @@ const linkTypes = {
     attachement: 'attachement',
 };
 
-export class LinkInputComponent extends Component {
+export class LinkInputComponent extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
+    entity: any;
+    tabs: any;
+    activeTab: any;
+    inputElement: any;
+
     constructor(props) {
         super(props);
 
@@ -205,7 +213,7 @@ const mapStateToProps = (state) => ({
     suggestingMode: state.suggestingMode,
 });
 
-export const LinkInput = connect(mapStateToProps, {
+export const LinkInput:React.StatelessComponent<any> = connect(mapStateToProps, {
     applyLink,
     hidePopups,
     createLinkSuggestion,

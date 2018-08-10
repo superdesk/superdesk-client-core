@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {
     closeActionsMenu,
 } from '../helpers';
+import {isString, map} from 'lodash';
 
 /**
  * @ngdoc React
@@ -13,7 +14,12 @@ import {
  * @param {Object} markedDesksById the dict of deskId and desk object
  * @description Creates a list of desks that is used for marking a story for a desk
  */
-export class MarkedDesksList extends React.Component {
+export class MarkedDesksList extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
+    timeout: any;
+
     constructor(props) {
         super(props);
 
@@ -59,8 +65,8 @@ export class MarkedDesksList extends React.Component {
 
     render() {
         const {desks} = this.props.svc;
-        var markedDesks = _.isString(this.props.item.marked_desks[0]) ?
-            this.props.item.marked_desks : _.map(this.props.item.marked_desks, 'desk_id');
+        var markedDesks = isString(this.props.item.marked_desks[0]) ?
+            this.props.item.marked_desks : map(this.props.item.marked_desks, 'desk_id');
         var markedDesksById = this.props.markedDesksById || {};
 
         return (

@@ -25,7 +25,12 @@ function LinkStrategy(contentBlock, callback, contentState) {
  * @param {Object} props
  * @description The link decorator.
  */
-class LinkComponent extends React.Component {
+class LinkComponent extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
+    link: any;
+    
     constructor(props) {
         super(props);
 

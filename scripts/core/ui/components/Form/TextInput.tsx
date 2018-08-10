@@ -9,7 +9,7 @@ import {get} from 'lodash';
  * @name TextInput
  * @description Component to recieve text input in
  */
-export const TextInput = ({
+export const TextInput:React.StatelessComponent<any> = ({
     field,
     label,
     value,

@@ -1,6 +1,6 @@
 // see https://iframely.com/docs/reactjs and https://gist.github.com/nleush/7e7775c9709eb3bdb6e6
 export function loadIframelyEmbedJs() {
-    var iframely = window.iframely = window.iframely || {};
+    var iframely = window['iframely'] = window['iframely'] || {};
     var widgets = iframely.widgets = iframely.widgets || {};
 
     if (widgets.load) {

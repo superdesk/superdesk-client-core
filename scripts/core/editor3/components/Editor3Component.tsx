@@ -62,9 +62,17 @@ function getValidMediaType(event) {
  * @description Editor3 is a draft.js based editor that support customizable
  *  formatting, spellchecker and media files.
  */
-export class Editor3Component extends React.Component {
+export class Editor3Component extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
+    editorKey: any;
+    editorNode: any;
+    div: any;
+    editor: any;
+
     static getDecorator(disableSpellchecker) {
-        const decorators = [
+        const decorators: any = [
             LinkDecorator,
             SpaceDecorator,
         ];
@@ -361,7 +369,7 @@ export class Editor3Component extends React.Component {
 
     componentDidUpdate() {
         if (window.hasOwnProperty('instgrm')) {
-            window.instgrm.Embeds.process();
+            window['instgrm'].Embeds.process();
         }
     }
 

@@ -12,7 +12,12 @@ import {Menu, Label, Divider, Dropdown as DropMenu} from '../Dropdown';
  * @name Dropdown
  * @description Dropdown of a Sub Nav bar
  */
-export class Dropdown extends React.Component {
+export class Dropdown extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
+    inToggle: any;
+
     constructor(props) {
         super(props);
         this.state = {open: false};

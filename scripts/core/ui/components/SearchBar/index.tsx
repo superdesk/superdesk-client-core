@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import DebounceInput from 'react-debounce-input';
+import {DebounceInput} from 'react-debounce-input';
 import {isNil, uniqueId} from 'lodash';
 import './style.scss';
 
@@ -9,7 +9,12 @@ import './style.scss';
  * @name SearchBar
  * @description Component to search by debounced input to fetch results from backend
  */
-export default class SearchBar extends React.Component {
+export default class SearchBar extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
+    dom: any;
+
     constructor(props) {
         super(props);
         this.state = {

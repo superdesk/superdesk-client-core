@@ -5,7 +5,10 @@ import {closeActionsMenu, renderToBody} from '../helpers';
 
 var closeTimeout;
 
-export class DesksDropdown extends React.Component {
+export class DesksDropdown extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
     constructor(props) {
         super(props);
         this.state = {open: false};

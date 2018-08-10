@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {getSpecStyle, getSpecTitle, getSpecValue} from '../helpers';
 
-export function ItemUrgency(props) {
+export const ItemUrgency:React.StatelessComponent<any> = (props) => {
     const {metadata, gettextCatalog} = props.svc;
 
     var urgency = props.urgency || 3;

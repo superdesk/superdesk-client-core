@@ -5,7 +5,12 @@ import {LEFT_SIDEBAR_WIDTH} from 'core/ui/constants';
 
 import {closeActionsMenu} from '../../helpers';
 
-export default class Item extends React.Component {
+export default class Item extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
+    closeTimeout: any;
+
     constructor(props) {
         super(props);
 

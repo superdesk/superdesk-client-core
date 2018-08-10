@@ -8,7 +8,7 @@ import classNames from 'classnames';
  * @description Main dropdown component
  */
 
-export const Dropdown = ({children, className, isOpen, alignRight, dropUp}) => (
+export const Dropdown:React.StatelessComponent<any> = ({children, className, isOpen, alignRight, dropUp}) => (
     <div
         className={classNames(
             'dropdown',

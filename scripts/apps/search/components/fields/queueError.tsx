@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {QueueError} from '../index';
 
-export function queueError(props) {
+export const queueError:React.StatelessComponent<any> = (props) => {
     return <QueueError
         item={props.item}
         key="queueError"

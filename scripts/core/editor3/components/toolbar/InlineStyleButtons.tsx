@@ -13,7 +13,10 @@ import {getCurrentAuthor} from '../../helpers/author';
  * @name InlineStyleButtons
  * @description Inline style functional component, will manage the inline style related toolbar buttons
  */
-export class InlineStyleButtonsComponent extends Component {
+export class InlineStyleButtonsComponent extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
     constructor(props) {
         super(props);
 

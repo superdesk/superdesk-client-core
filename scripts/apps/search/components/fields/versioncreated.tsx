@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {TimeElem} from '../index';
 
-export function versioncreated(props) {
+export const versioncreated:React.StatelessComponent<any> = (props) => {
     return React.createElement(
         TimeElem, {
             date: props.item.versioncreated,

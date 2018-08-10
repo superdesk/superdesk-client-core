@@ -10,7 +10,15 @@ import PropTypes from 'prop-types';
  * @param {Object} desk desksService
  * @description Represents a button for given item to be marked for the given desk
  */
-export class MarkBtn extends React.Component {
+export class MarkBtn extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
+    item: any;
+    desk: any;
+    desks: any;
+    isMarked: any;
+
     constructor(props) {
         super(props);
         this.item = props.item;

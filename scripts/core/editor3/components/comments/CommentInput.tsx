@@ -14,7 +14,10 @@ import {highlightsConfig} from '../../highlightsConfig';
  * @description CommentInputBody holds the dropdown that is used to enter the text for a
  * comment.
  */
-class CommentInputBody extends Component {
+class CommentInputBody extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
     constructor(props) {
         super(props);
         this.state = {msg: props.data.msg || ''};
@@ -98,6 +101,6 @@ CommentInputBody.propTypes = {
     highlightsManager: PropTypes.object.isRequired,
 };
 
-export const CommentInput = connect(null, {
+export const CommentInput:React.StatelessComponent<any> = connect(null, {
     hidePopups,
 })(CommentInputBody);

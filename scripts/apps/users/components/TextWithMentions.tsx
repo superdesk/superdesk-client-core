@@ -11,7 +11,7 @@ const mentionRegexp = /@\[([^\]]+)\]\((desk|user):([^\)]+)\)/g;
  * @name TextWithMentions
  * @description Displays a text containing mentions.
  */
-export const TextWithMentions = ({children, ...props}) => {
+export const TextWithMentions:React.StatelessComponent<any> = ({children, ...props}) => {
     const msg = children;
     const n = msg.length;
 

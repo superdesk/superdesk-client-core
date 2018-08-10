@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import DebounceInput from 'react-debounce-input';
+import {DebounceInput} from 'react-debounce-input';
 import {uniqueId} from 'lodash';
 import {KEYCODES} from '../constants';
 import {onEventCapture} from '../utils';
@@ -10,7 +10,10 @@ import {onEventCapture} from '../utils';
  * @name SearchField
  * @description Input Field Component with search capabiities
  */
-export default class SearchField extends React.Component {
+export default class SearchField extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
     constructor(props) {
         super(props);
         this.state = {
@@ -39,7 +42,7 @@ export default class SearchField extends React.Component {
         );
     }
 
-    onSearchClick(event) {
+    onSearchClick() {
         this.setState(() => this.props.onSearchClick());
     }
 

@@ -7,7 +7,7 @@ import classNames from 'classnames';
 /**
  * Contact footer - renders footer for contact card used in grid view
  */
-export const ContactFooter = ({item, svc}) => {
+export const ContactFooter:React.StatelessComponent<any> = ({item, svc}) => {
     const {gettextCatalog} = svc;
 
     const cssClass = classNames(

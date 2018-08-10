@@ -10,7 +10,7 @@ import {IconButton} from '../';
  * @name Tools
  * @description Header tools of a side panel
  */
-export const Tools = ({className, tools, children, topTools}) => (
+export const Tools:React.StatelessComponent<any> = ({className, tools, children, topTools}) => (
     <div
         className={classNames(
             {

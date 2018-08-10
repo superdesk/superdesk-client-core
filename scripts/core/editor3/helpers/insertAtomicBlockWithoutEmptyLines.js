@@ -101,4 +101,4 @@ function insertAtomicBlockWithoutEmptyLines(editorState, entityKey, character) {
     return EditorState.push(editorState, newEditorState.getCurrentContent(), 'insert-fragment');
 }
 
-module.exports = insertAtomicBlockWithoutEmptyLines;
+export default insertAtomicBlockWithoutEmptyLines;

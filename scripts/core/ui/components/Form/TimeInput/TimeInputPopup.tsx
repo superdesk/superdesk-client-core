@@ -15,7 +15,13 @@ import './style.scss';
  * @name TimeInputPopup
  * @description Main Popup Component of TimePicker
  */
-export class TimeInputPopup extends React.Component {
+export class TimeInputPopup extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
+    hours: any;
+    minutes: any;
+
     constructor(props) {
         super(props);
         this.state = {

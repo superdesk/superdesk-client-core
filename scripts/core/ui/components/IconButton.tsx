@@ -12,7 +12,7 @@ import {Icon} from './';
  * @name IconButton
  * @description Icon with Button component
  */
-const IconButton = ({
+const IconButton:React.StatelessComponent<any> = ({
     onClick,
     tabIndex,
     onKeyDown,
@@ -23,7 +23,7 @@ const IconButton = ({
     className,
     label,
     ...props
-}) => {
+}: any) => {
     const handleKeyDown = (event) => {
         if (event.keyCode === KEYCODES.ENTER) {
             onEventCapture(event);

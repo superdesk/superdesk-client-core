@@ -7,7 +7,7 @@ import classNames from 'classnames';
  * @name ContentBlockInner
  * @description Inner Component to hold content block of a side panel
  */
-export const ContentBlockInner = ({children, className, right, grow}) => (
+export const ContentBlockInner:React.StatelessComponent<any> = ({children, className, right, grow}) => (
     <div
         className={classNames(
             'side-panel__content-block-inner',

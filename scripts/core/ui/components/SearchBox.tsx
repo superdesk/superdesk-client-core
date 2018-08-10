@@ -8,7 +8,16 @@ import {KEYCODES} from './constants';
  * @name SearchBox
  * @description Search box with input to search
  */
-class SearchBox extends React.Component {
+class SearchBox extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
+    
+    
+ 
+    
+    
+
     constructor(props) {
         super(props);
         this.state = {inputValue: this.props.value};

@@ -15,7 +15,16 @@ import './style.scss';
  * @name SelectTagPopup
  * @description Popup component to SelectTagInput
  */
-export class SelectTagPopup extends React.Component {
+export class SelectTagPopup extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
+    
+    
+ 
+    
+    
+
     constructor(props) {
         super(props);
 

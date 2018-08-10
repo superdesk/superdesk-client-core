@@ -1,14 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
-import Label from './Label';
+import {Label} from './Label';
 import Divider from './Divider';
 import Item from './Item';
 import SubmenuDropdown from './SubmenuDropdown';
 import {AUTHORING_MENU_GROUPS} from '../../../authoring/authoring/constants';
 import {closeActionsMenu, menuHolderElem} from '../../helpers';
 
-export default class MenuItems extends React.Component {
+export default class MenuItems extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
     constructor(props) {
         super(props);
 

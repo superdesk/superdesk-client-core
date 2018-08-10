@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import ng from 'core/services/ng';
 import * as actions from '../../actions';
 import Textarea from 'react-textarea-autosize';
+import {get} from 'lodash';
 
 function getTranslationForAssignRights(value, gettextCatalog) {
     if (value === 'single-usage') {
@@ -29,7 +30,13 @@ const DRAG_SCROLL_TIMEOUT = 200; // ms
  * @param {Object} block Information about the block where this component renders.
  * @description This component renders an image block within the editor.
  */
-export class MediaBlockComponent extends Component {
+export class MediaBlockComponent extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
+    container: any;
+    scrollTimeout: any;
+
     constructor(props) {
         super(props);
 
@@ -123,8 +130,8 @@ export class MediaBlockComponent extends Component {
                 // firefox does not provide pageY on drag event
                 // so there is a window listener which populates the value
                 // but it runs only after drag event so it must read it here
-                if (!y && window.dragPageY) {
-                    y = window.dragPageY;
+                if (!y && window['dragPageY']) {
+                    y = window['dragPageY'];
                 }
 
                 if (y < DRAG_SCROLL_BUFFER) {
@@ -149,7 +156,7 @@ export class MediaBlockComponent extends Component {
         const editable =
             !readOnly &&
             (data._type !== 'externalsource'
-            || _.get(features, 'editFeaturedImage', true));
+            || get(features, 'editFeaturedImage', true));
 
         const removable = !readOnly;
 
@@ -239,7 +246,7 @@ export class MediaBlockComponent extends Component {
                                     />
                                 )
                             }
-                            <video controls src={rendition.href} alt={alt} width="100%" height="100%" />
+                            <video controls src={rendition.href} width="100%" height="100%" />
                             <div className="image-block__metadata image-block__metadata--side-marg0">
                                 <span>
                                     <em>{gettextCatalog.getString('Credit:')}{' '}</em>
@@ -278,7 +285,7 @@ export class MediaBlockComponent extends Component {
                                 )
                             }
 
-                            <audio controls src={rendition.href} alt={alt} width="100%" height="100%" />
+                            <audio controls src={rendition.href} style={{width: '100%', height: '100%'}} />
                             <div className="image-block__metadata image-block__metadata--side-marg0">
                                 <span>
                                     <em>{gettextCatalog.getString('Credit:')}{' '}</em>
@@ -316,7 +323,7 @@ export class MediaBlockComponent extends Component {
                     {(mediaType === 'audio' || mediaType === 'video') &&
                         <div className="image-block__action-bar">
                             <a className="btn btn--hollow btn--small"
-                                onClick={this.onClick}><span translate>Edit metadata</span></a>
+                                onClick={this.onClick}><span>{gettext('Edit metadata')}</span></a>
                         </div>
                     }
                 </div>
@@ -349,4 +356,4 @@ const mapDispatchToProps = (dispatch) => ({
     setLocked: () => dispatch(actions.setLocked(true)),
 });
 
-export const MediaBlock = connect(mapStateToProps, mapDispatchToProps)(MediaBlockComponent);
+export const MediaBlock:React.StatelessComponent<any> = connect(mapStateToProps, mapDispatchToProps)(MediaBlockComponent);

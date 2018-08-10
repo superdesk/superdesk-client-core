@@ -16,7 +16,10 @@ import {PopupTypes} from '../../actions';
  * @description ToolbarPopupComponent renders the popup specified by the type property and passes it
  * the onCancel value along with the given prop data.
  */
-export class ToolbarPopup extends Component {
+export class ToolbarPopup extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
     render() {
         const {type, data} = this.props;
 

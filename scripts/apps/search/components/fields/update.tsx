@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export function update(props) {
+export const update:React.StatelessComponent<any> = (props) => {
     const {$interpolate, gettextCatalog} = props.svc;
 
     if (props.item.correction_sequence) {

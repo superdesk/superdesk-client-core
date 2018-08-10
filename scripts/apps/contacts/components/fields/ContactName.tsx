@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export const ContactName = ({item}) => {
+export const ContactName:React.StatelessComponent<any> = ({item}) => {
     let displayContact = item.first_name ? `${item.first_name} ${item.last_name}` : item.organisation;
 
     return (

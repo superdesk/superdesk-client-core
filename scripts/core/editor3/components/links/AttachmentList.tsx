@@ -5,7 +5,10 @@ import classNames from 'classnames';
 import ng from 'core/services/ng';
 import {FileiconFilter, FilesizeFilter} from 'core/ui/ui';
 
-export class AttachmentList extends Component {
+export class AttachmentList extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
     constructor(props) {
         super(props);
         this.state = {};

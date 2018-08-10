@@ -18,7 +18,10 @@ import {UserAvatar} from 'apps/users/components/UserAvatar';
  * @description Displays author, date and suggestion text. Allows accepting or declining a suggestion.
  */
 
-class Suggestion extends Component {
+class Suggestion extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
     constructor(props) {
         super(props);
         this.state = {
@@ -158,7 +161,7 @@ class Suggestion extends Component {
 Suggestion.propTypes = {
     suggestion: PropTypes.shape({
         author: PropTypes.string,
-        date: PropTypes.date,
+        date: PropTypes.any,
         suggestionText: PropTypes.string,
         oldText: PropTypes.string,
         type: PropTypes.string,
@@ -170,7 +173,7 @@ Suggestion.propTypes = {
     editorNode: PropTypes.object,
 };
 
-export const SuggestionPopup = connect(null, {
+export const SuggestionPopup:React.StatelessComponent<any> = connect(null, {
     acceptSuggestion,
     rejectSuggestion,
 })(Suggestion);

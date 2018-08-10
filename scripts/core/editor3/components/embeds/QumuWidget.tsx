@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import json5 from 'json5';
 import ng from 'core/services/ng';
 import {uuid} from 'core/helpers/uuid';
+import {extend} from 'lodash'
 
 // String identifying embed codes that are Qumu widgets.
 const QumuString = 'KV.widget';
@@ -10,7 +11,7 @@ const QumuString = 'KV.widget';
 function getQumuData(html) {
     const configString = getQumuConfigString(html);
 
-    return _.extend(
+    return extend(
         json5.parse(configString),
         {
             selector: `#qumu-${uuid()}`,
@@ -29,7 +30,12 @@ export function postProccessQumuEmbed(html) {
     return htmlWithDataReplaced + `<div id="${data.selector.slice(1)}"></div>`;
 }
 
-export class QumuWidget extends Component {
+export class QumuWidget extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
+    qumuData: any;
+
     shouldComponentUpdate(nextProps) {
         return this.props.html !== nextProps.html;
     }

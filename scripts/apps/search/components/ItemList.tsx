@@ -8,7 +8,14 @@ import {isCheckAllowed, closeActionsMenu, bindMarkItemShortcut} from '../helpers
 /**
  * Item list component
  */
-export class ItemList extends React.Component {
+export class ItemList extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
+    closeActionsMenu: any;
+    updateTimeout: any;
+    selectedCom: any;
+
     constructor(props) {
         super(props);
 
@@ -76,7 +83,7 @@ export class ItemList extends React.Component {
         this.setState({narrow: setNarrow});
     }
 
-    select(item, event) {
+    select(item, event?) {
         const {$timeout} = this.props.svc;
         const {scope} = this.props;
 

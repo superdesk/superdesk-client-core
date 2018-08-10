@@ -10,7 +10,7 @@ describe('editor3.components.spellchecker-decorator', () => {
     function getWrapper() {
         // to avoid React warning about 'text' prop, we need to create a custom
         // component as the child.
-        const CC = () => <span />;
+        const CC:any = () => <span />;
         const children = [<CC key={0} text="tihs" start={3} />];
         const {options} = mockStore();
 
@@ -18,14 +18,14 @@ describe('editor3.components.spellchecker-decorator', () => {
         return mount(<SpellcheckerError children={children} />, options);
     }
 
-    beforeEach(window.module(($provide) => {
+    beforeEach(window['module'](($provide) => {
         $provide.service('spellcheck', ($q) => ({
             suggest: jasmine.createSpy().and.returnValue($q.when(['this', 'tish', 'fish'])),
         }));
     }));
 
     it('should render children', inject(() => {
-        const children = [<span key={0} text="tihs" start={3} />];
+        const children:any = [<span key={0} data-text="tihs" data-start={3} />];
         // eslint-disable-next-line react/no-children-prop
         const wrapper = shallow(<SpellcheckerError children={children} />);
 
@@ -86,7 +86,7 @@ describe('editor3.components.spellchecker-context-menu', () => {
         {value: 'three', key: 'threeKey'},
     ];
 
-    beforeEach(window.module(($provide) => {
+    beforeEach(window['module'](($provide) => {
         $provide.service('spellcheck', ($q) => ({
             addWord: jasmine.createSpy().and.returnValue(null),
         }));

@@ -10,7 +10,7 @@ import './style.scss';
  * @name Toggle
  * @description Toggle component used to togle check/uncheck status
  */
-export default function Toggle({value, onChange, readOnly, onFocus, className}) {
+export const Toggle:React.StatelessComponent<any> = ({value, onChange, readOnly, onFocus, className}) => {
     const handleKeyDown = (event) => {
         if (event.keyCode === KEYCODES.ENTER) {
             onEventCapture(event);

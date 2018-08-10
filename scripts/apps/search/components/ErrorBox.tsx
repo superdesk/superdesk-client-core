@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export function ErrorBox(props) {
+export const ErrorBox:React.StatelessComponent<any> = (props) => {
     const {gettextCatalog} = props.svc;
 
     return React.createElement('div', {className: 'error-box'},

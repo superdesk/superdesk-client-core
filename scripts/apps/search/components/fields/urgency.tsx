@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {ItemUrgency} from '../index';
 
-export function urgency(props) {
+export const urgency:React.StatelessComponent<any> = (props) => {
     return props.item.urgency ?
         React.createElement(
             ItemUrgency,

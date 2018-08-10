@@ -16,7 +16,13 @@ import {StickElementsWithTracking} from 'core/helpers/dom/stickElementsWithTrack
  * @description The context menu for correction spellcheck errors. Contains a list of suggestions
  * and 'Add to dictionary' and 'Ignore word' actions.
  */
-export class SpellcheckerContextMenuComponent extends Component {
+export class SpellcheckerContextMenuComponent extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
+    stickyElementTracker: any;
+    dropdownElement: any;
+
     constructor(props) {
         super(props);
 
@@ -122,4 +128,4 @@ const mapDispatchToProps = (dispatch) => ({
     replaceWord: (word) => setTimeout(() => dispatch(actions.replaceWord(word)), 0),
 });
 
-export const SpellcheckerContextMenu = connect(null, mapDispatchToProps)(SpellcheckerContextMenuComponent);
+export const SpellcheckerContextMenu:React.StatelessComponent<any> = connect(null, mapDispatchToProps)(SpellcheckerContextMenuComponent);

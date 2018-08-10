@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import {renderArea} from '../helpers';
 
-export function ListPriority(props) {
+export const ListPriority:React.StatelessComponent<any> = (props) => {
     var css = {
         className: classNames('list-field urgency', {
             'urgency-reduced-rowheight': props.scope.singleLine,

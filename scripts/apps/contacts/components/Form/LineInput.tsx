@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
-export const LineInput = ({
+export const LineInput:React.StatelessComponent<any> = ({
     children,
     required,
     invalid,

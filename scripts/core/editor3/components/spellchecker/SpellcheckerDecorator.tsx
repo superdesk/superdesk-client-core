@@ -26,7 +26,12 @@ function getElementForPortal() {
  * @param {Array} children the children prop of the component
  * @description This is the component that decorates spellchecker typos.
  */
-class SpellcheckerError extends Component {
+class SpellcheckerError extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
+    wordTypoElement: any;
+
     constructor(props) {
         super(props);
 

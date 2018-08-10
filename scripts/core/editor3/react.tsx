@@ -2,8 +2,8 @@ import React, {Component} from 'react';
 import createEditorStore from './store';
 import {Editor3} from './components';
 import {Provider} from 'react-redux';
-import {PropTypes} from 'prop-types';
-import {ng} from 'core/services/ng';
+import PropTypes from 'prop-types';
+import ng from 'core/services/ng';
 
 /* eslint-disable react/no-unused-prop-types */
 
@@ -12,7 +12,12 @@ import {ng} from 'core/services/ng';
  * @name Editor
  * @description Editor as a React component.
  */
-export class Editor extends Component {
+export class Editor extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
+    store: any;
+
     constructor(props) {
         super(props);
 

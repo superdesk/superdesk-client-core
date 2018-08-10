@@ -14,7 +14,10 @@ const getFormattedDocument = (url) => fetch(url).then(
         }))
 );
 
-export class PreviewModal extends React.Component {
+export class PreviewModal extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
     openPreviewForItem(subscriberId, format, endpointUrl) {
         const {urls, documentId, gettext} = this.props;
 

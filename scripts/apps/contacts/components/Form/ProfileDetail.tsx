@@ -7,7 +7,10 @@ import {get, set, isEmpty, findKey, orderBy, map} from 'lodash';
 import {validateMinRequiredField} from '../../../contacts/helpers';
 
 
-export class ProfileDetail extends React.Component {
+export class ProfileDetail extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
     constructor(props) {
         super(props);
         const {svc, contact} = props;

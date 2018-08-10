@@ -20,7 +20,13 @@ import * as Highlights from '../../helpers/highlights';
 
 const initialCommentsState = {reply: '', index: null, replyFieldFocused: false};
 
-export class CommentPopup extends Component {
+export class CommentPopup extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
+    currentUser: any;
+    addReplyEl: any;
+
     constructor(props) {
         super(props);
 

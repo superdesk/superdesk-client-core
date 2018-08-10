@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {Row} from './';
 import {cloneDeep} from 'lodash';
 
-export const InputArray = ({
+export const InputArray:React.StatelessComponent<any> = ({
     field,
     value,
     onChange,

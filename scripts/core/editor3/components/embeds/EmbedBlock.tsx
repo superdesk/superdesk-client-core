@@ -14,7 +14,10 @@ import ng from 'core/services/ng';
  * @description This component renders an embed block within the editor, using oEmbed data
  * retrieved from iframe.ly
  */
-export class EmbedBlockComponent extends Component {
+export class EmbedBlockComponent extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
     constructor(props) {
         super(props);
 
@@ -163,4 +166,4 @@ const mapDispatchToProps = (dispatch) => ({
         dispatch(actions.mergeEntityDataByKey(blockKey, entityKey, valuesToMerge)),
 });
 
-export const EmbedBlock = connect(null, mapDispatchToProps)(EmbedBlockComponent);
+export const EmbedBlock:React.StatelessComponent<any> = connect(null, mapDispatchToProps)(EmbedBlockComponent);

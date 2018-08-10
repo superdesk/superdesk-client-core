@@ -7,7 +7,7 @@ import {KEYCODES} from '../../constants';
 import {gettext, scrollListItemIfNeeded, onEventCapture} from '../../utils';
 
 import {Popup, Content} from '../../Popup';
-import {UserAvatar} from '../../../';
+import {UserAvatar} from 'apps/users/components/UserAvatar';
 
 import './style.scss';
 
@@ -16,7 +16,12 @@ import './style.scss';
  * @name SelectUserPopup
  * @description Pop-up component of SelectUserList
  */
-export class SelectUserPopup extends React.Component {
+export class SelectUserPopup extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
+    dom: any;
+
     constructor(props) {
         super(props);
         this.onKeyDown = this.onKeyDown.bind(this);

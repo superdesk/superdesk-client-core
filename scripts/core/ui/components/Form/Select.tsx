@@ -6,13 +6,13 @@ import PropTypes from 'prop-types';
  * @name Select
  * @description Component to select a list from dropdown
  */
-export const Select = ({field, value, onChange, options, readOnly, clearable, autoFocus, onFocus, refNode}) => (
+export const Select:React.StatelessComponent<any> = ({field, value, onChange, options, readOnly, clearable, autoFocus, onFocus, refNode}) => (
     <select
         className="sd-line-input__select"
         value={value}
         onChange={(e) => onChange(field, e.target.value)}
         name={field}
-        disabled={readOnly ? 'disabled' : ''}
+        disabled={readOnly ? true : false}
         autoFocus={autoFocus}
         ref={refNode}
         onFocus={onFocus}

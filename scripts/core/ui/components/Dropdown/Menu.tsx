@@ -8,7 +8,7 @@ import classNames from 'classnames';
  * @description Menu container of dropdown component
  */
 
-export const Menu = ({children, className, isOpen, alignRight, scrollable}) => (
+export const Menu:React.StatelessComponent<any> = ({children, className, isOpen, alignRight, scrollable}) => (
     !isOpen ? null :
         <ul
             className={classNames(

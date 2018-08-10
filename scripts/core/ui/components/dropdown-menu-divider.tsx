@@ -1,5 +1,5 @@
 import React from 'react';
 
-export function DropdownMenuDivider() {
+export const DropdownMenuDivider:React.StatelessComponent<any> = () => {
     return <div className="dropdown__menu-divider" />;
 }

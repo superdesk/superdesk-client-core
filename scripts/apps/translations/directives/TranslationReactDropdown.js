@@ -26,6 +26,12 @@ export function TranslationReactDropdown(item, className, TranslationService, no
      * @return {React} Language button
      */
     class TranslateBtn extends React.Component {
+    props: any;
+    state: any;
+ 
+    static propTypes: any;
+    static defaultProps: any
+
         constructor(props) {
             super(props);
             this.markTranslate = this.markTranslate.bind(this);

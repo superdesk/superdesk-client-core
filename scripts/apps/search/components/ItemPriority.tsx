@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {getSpecStyle, getSpecTitle, getSpecValue} from '../helpers';
 
-export function ItemPriority(props) {
+export const ItemPriority:React.StatelessComponent<any> = (props) => {
     const {metadata, gettextCatalog} = props.svc;
 
     var priority = props.priority || 3;

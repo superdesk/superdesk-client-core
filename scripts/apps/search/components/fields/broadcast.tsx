@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export function broadcast(props) {
+export const broadcast:React.StatelessComponent<any> = (props) => {
     var broadcast = props.item.broadcast || {};
 
     if (broadcast.status) {

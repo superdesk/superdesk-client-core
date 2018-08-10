@@ -13,7 +13,10 @@ import {customStyleMap} from '../customStyleMap';
  * @param onFocus {Function}
  * @description Handles a cell in the table, as well as the containing editor.
  */
-export class TableCell extends Component {
+export class TableCell extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
     constructor(props) {
         super(props);
 

@@ -7,7 +7,7 @@ import classNames from 'classnames';
  * @name Row
  * @description Row Component in a list of item where each item is a row
  */
-export const Row = ({children, classes, paddingBottom}) => (
+export const Row:React.StatelessComponent<any> = ({children, classes, paddingBottom}) => (
     <div className={classNames(
         'sd-list-item__row',
         classes,

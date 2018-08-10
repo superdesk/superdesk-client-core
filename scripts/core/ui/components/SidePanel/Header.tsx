@@ -7,7 +7,7 @@ import classNames from 'classnames';
  * @name Header
  * @description Header Component of a side panel
  */
-export const Header = ({children, className, darkBlue, darker}) => (
+export const Header:React.StatelessComponent<any> = ({children, className, darkBlue, darker}) => (
     <div className={classNames(
         'side-panel__header',
         {

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export function flags(props) {
+export const flags:React.StatelessComponent<any> = (props) => {
     const {gettext} = props.svc;
 
     var flags = props.item.flags || {};

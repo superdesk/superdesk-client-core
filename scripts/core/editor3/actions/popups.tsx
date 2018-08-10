@@ -21,7 +21,7 @@ export const PopupTypes = {
  * given data attached.
  * @return {Object}
  */
-export function showPopup(type, data) {
+export function showPopup(type, data?) {
     return {
         type: 'TOOLBAR_SET_POPUP',
         payload: {type, data},

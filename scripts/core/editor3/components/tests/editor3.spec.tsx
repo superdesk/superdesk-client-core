@@ -99,13 +99,13 @@ describe('editor3.component', () => {
 
 describe('editor3.blockRenderer', () => {
     it('should return null for non-atomic blocks', () => {
-        expect(getBlockRenderer()({getType: () => 'non-atomic'})).toBe(null);
+        expect(getBlockRenderer({})({getType: () => 'non-atomic'})).toBe(null);
     });
 
     it('should return null as component for unrecognised blocks', () => {
         const block = {getType: () => 'atomic', getEntityAt: () => 'entity_key'};
         const contentState = {getEntity: () => ({getType: () => 'not an image'})};
-        const {component, editable} = getBlockRenderer()(block);
+        const {component, editable} = getBlockRenderer({})(block);
 
         expect(component({block, contentState})).toBe(null);
         expect(editable).toEqual(false);
@@ -114,7 +114,7 @@ describe('editor3.blockRenderer', () => {
     it('should return non-null as component for recognised blocks', () => {
         const block = {getType: () => 'atomic', getEntityAt: () => 'entity_key'};
         const contentState = {getEntity: () => ({getType: () => 'EMBED', getData: () => ({data: {html: 'abc'}})})};
-        const component = getBlockRenderer()(block).component({block, contentState});
+        const component = getBlockRenderer({})(block).component({block, contentState});
         const {options} = mockStore();
 
         expect(component).not.toBe(null);

@@ -1,4 +1,4 @@
-import {DesksReactDropdown} from './DesksReactDropdown.jsx';
+import {DesksReactDropdown} from './DesksReactDropdown';
 import ReactDOM from 'react-dom';
 
 /**

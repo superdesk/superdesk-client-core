@@ -12,7 +12,12 @@ import {IconButton} from './';
  * @name CollapseBox
  * @description CollapseBox which has a closed and open view of an item
  */
-export class CollapseBox extends React.Component {
+export class CollapseBox extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
+    dom: any;
+
     constructor(props) {
         super(props);
         this.state = {isOpen: this.props.isOpen};

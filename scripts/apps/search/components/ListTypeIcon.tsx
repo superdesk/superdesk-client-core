@@ -3,7 +3,16 @@ import PropTypes from 'prop-types';
 import {TypeIcon, SelectBox} from './index';
 import classNames from 'classnames';
 
-export class ListTypeIcon extends React.Component {
+export class ListTypeIcon extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
+    
+    
+ 
+    
+    
+
     constructor(props) {
         super(props);
         this.state = {hover: false};

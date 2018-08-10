@@ -3,7 +3,16 @@ import PropTypes from 'prop-types';
 import {promiseAllObject} from 'core/utils';
 import ng from 'core/services/ng';
 
-class ReactRenderAsync extends React.Component {
+class ReactRenderAsync extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
+    
+    
+ 
+    
+    
+
     constructor(props) {
         super(props);
 

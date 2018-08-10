@@ -3,12 +3,13 @@ import PropTypes from 'prop-types';
 import {createMarkUp} from '../helpers';
 import {PhotoDeskFields} from './PhotoDeskFields';
 import {DEFAULT_GRID_VIEW_FIELDS_CONFIG} from 'apps/search/constants';
+import {get} from 'lodash';
 
-export function PhotoDeskInfo(props) {
+export const PhotoDeskInfo:React.StatelessComponent<any> = (props) => {
     const {datetime} = props.svc;
     const {item, svc} = props;
 
-    const gridViewFieldsConfig = _.get(svc.config, 'gridViewFields', DEFAULT_GRID_VIEW_FIELDS_CONFIG);
+    const gridViewFieldsConfig = get(svc.config, 'gridViewFields', DEFAULT_GRID_VIEW_FIELDS_CONFIG);
 
     return (
         <div className="sd-grid-item__content">

@@ -8,7 +8,14 @@ import {onEventCapture, scrollListItemIfNeeded} from '../../../../contacts/helpe
 
 import './style.scss';
 
-export class SelectFieldPopup extends React.Component {
+export class SelectFieldPopup extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
+    dom: {
+        itemList: any
+    }
+
     constructor(props) {
         super(props);
         this.onKeyDown = this.onKeyDown.bind(this);

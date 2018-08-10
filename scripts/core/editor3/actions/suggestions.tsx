@@ -95,7 +95,7 @@ export function createChangeBlockStyleSuggestion(type, active) {
  * @return {Object} action
  * @description add a new suggestion of type split paragraph.
  */
-export function createSplitParagraphSuggestion(blockKey, blockOffset) {
+export function createSplitParagraphSuggestion() {
     return {
         type: 'CREATE_SPLIT_PARAGRAPH_SUGGESTION',
         payload: {
@@ -216,7 +216,7 @@ export function changeLinkSuggestion(link, entity) {
  * @description Creates data structure with info about current user and current date.
  */
 export const getSuggestionMetadata = () => {
-    const data = {};
+    const data: any = {};
     const date = new Date();
 
     data.author = ng.get('session').identity._id;

@@ -6,6 +6,6 @@ import React from 'react';
  * @description Divider to separate options in a dropdown
  */
 
-export const Divider = () => (
+export const Divider:React.StatelessComponent<any> = () => (
     <li className="dropdown__menu-divider" />
 );

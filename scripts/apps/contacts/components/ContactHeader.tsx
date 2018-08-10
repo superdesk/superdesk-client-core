@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 /**
  * Contact header - renders header for contact card used in grid view
  */
-export const ContactHeader = ({item}) => {
+export const ContactHeader:React.StatelessComponent<any> = ({item}) => {
     const typeTooltip = item.first_name ? gettext('Person Contact') : gettext('Organisation Contact');
 
     const contactIcon = item.first_name ?

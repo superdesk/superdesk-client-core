@@ -1,11 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import moment from 'moment';
+import * as momentAlias from 'moment';
 import {Popup, Content, Header, Footer} from '../../Popup';
 import {Button} from '../../';
 import {DayPicker} from './DayPicker';
 import {MonthPicker} from './MonthPicker';
 import {YearPicker} from './YearPicker';
+
+const moment:any = momentAlias;
 
 import {gettext} from '../../utils';
 
@@ -16,7 +18,16 @@ import './style.scss';
  * @name DateInputPopup
  * @description Main Popup Component of DatePicker
  */
-export class DateInputPopup extends React.Component {
+export class DateInputPopup extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
+    
+    
+ 
+    
+    
+
     constructor(props) {
         super(props);
         const currentDate = moment();
@@ -125,7 +136,7 @@ export class DateInputPopup extends React.Component {
     getStartingYearForYearPicker(date) {
         const yearRange = this.props.yearRange || 20;
 
-        return parseInt((date.year() - 1) / yearRange, 10) * yearRange + 1;
+        return parseInt(`${(date.year() - 1) / yearRange}`, 10) * yearRange + 1;
     }
 
     getModeTitle(date, mode) {

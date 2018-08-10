@@ -5,7 +5,10 @@ import PropTypes from 'prop-types';
  * Creates specific highlight button in list
  * @return {React} Language button
  */
-export default class HighlightBtn extends React.Component {
+export default class HighlightBtn extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
     constructor(props) {
         super(props);
         this.markHighlight = this.markHighlight.bind(this);

@@ -14,7 +14,12 @@ import {KEYCODES} from '../../constants';
  * @name SelectFieldPopup
  * @description Popup component for SelectMetaTermsInput
  */
-export class SelectFieldPopup extends React.Component {
+export class SelectFieldPopup extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
+    dom: any;
+
     constructor(props) {
         super(props);
 
@@ -47,7 +52,7 @@ export class SelectFieldPopup extends React.Component {
             switch (event.keyCode) {
             case KEYCODES.ENTER:
                 onEventCapture(event);
-                this.handleEnterKey(event);
+                this.handleEnterKey();
                 break;
             case KEYCODES.DOWN:
                 onEventCapture(event);
@@ -55,7 +60,7 @@ export class SelectFieldPopup extends React.Component {
                 break;
             case KEYCODES.UP:
                 onEventCapture(event);
-                this.handleUpArrowKey(event);
+                this.handleUpArrowKey();
                 break;
             case KEYCODES.LEFT:
                 onEventCapture(event);
@@ -149,7 +154,7 @@ export class SelectFieldPopup extends React.Component {
      * @name SelectFieldPopup#getFilteredOptionList
      * @description getFilteredOptionList method to filter options list based on search text input
      */
-    getFilteredOptionList(currentParent, searchList) {
+    getFilteredOptionList(currentParent?, searchList?) {
         if (this.props.multiLevel) {
             let filteredList;
 

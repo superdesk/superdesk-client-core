@@ -20,7 +20,13 @@ import * as Highlights from '../helpers/highlights';
  * also handles positioning the popup relative to the editor's position and hiding
  * it when a user clicks outside the editor/popup context.
  */
-export class HighlightsPopup extends Component {
+export class HighlightsPopup extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+    static contextTypes: any;
+
+    rendered: any;
+
     constructor(props) {
         super(props);
 

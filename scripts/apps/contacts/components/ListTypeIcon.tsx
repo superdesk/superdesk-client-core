@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export const ListTypeIcon = ({item}) => {
+export const ListTypeIcon:React.StatelessComponent<any> = ({item}) => {
     const iconClass = item.first_name ? 'icon-user' : 'icon-business';
     const typeTooltip = item.first_name ? gettext('Person Contact') : gettext('Organisation Contact');
 

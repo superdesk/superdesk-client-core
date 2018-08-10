@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import {PhotoDeskFooter} from './PhotoDeskFooter';
+import {get} from 'lodash';
 
 import {broadcast} from './fields';
 
@@ -25,7 +26,16 @@ import {closeActionsMenu} from '../helpers';
 /**
  * Item component
  */
-export class Item extends React.Component {
+export class Item extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
+    
+    
+ 
+    
+    
+
     constructor(props) {
         super(props);
 
@@ -115,7 +125,7 @@ export class Item extends React.Component {
             'sd-grid-item sd-grid-item--with-click' :
             'media-box media-' + item.type;
 
-        var contents = [
+        var contents:any = [
             'div', {
                 className: classNames(classes, {
                     active: this.props.flags.selected,
@@ -135,7 +145,7 @@ export class Item extends React.Component {
         const getActionsMenu = () => {
             const {scope} = this.props;
 
-            return !_.get(scope, 'flags.hideActions') && this.state.hover && !item.gone ? React.createElement(
+            return !get(scope, 'flags.hideActions') && this.state.hover && !item.gone ? React.createElement(
                 ActionsMenu, {
                     item: item,
                     svc: this.props.svc,

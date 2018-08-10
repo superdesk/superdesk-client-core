@@ -5,7 +5,13 @@ import {UserAvatar} from 'apps/users/components';
 import mentionsStyle from './mentionsStyle';
 import ng from 'core/services/ng';
 
-class CommentTextArea extends React.Component {
+class CommentTextArea extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
+    userList: any;
+    desks: any;
+
     constructor(props) {
         super(props);
         this.suggestUser = this.suggestUser.bind(this);

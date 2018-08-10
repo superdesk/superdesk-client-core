@@ -7,7 +7,7 @@ import classNames from 'classnames';
  * @name Column
  * @description Column Component of a list item
  */
-export const Column = ({children, grow, border, noPadding, hasCheck, checked}) => (
+export const Column:React.StatelessComponent<any> = ({children, grow, border, noPadding, hasCheck, checked}) => (
     <div className={classNames(
         'sd-list-item__column',
         {

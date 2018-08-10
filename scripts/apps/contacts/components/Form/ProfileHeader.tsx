@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import {Toggle} from './index';
 import {get} from 'lodash';
 
-export const ProfileHeader = ({svc, contact, onChange, readOnly, contactType}) => {
+export const ProfileHeader:React.StatelessComponent<any> = ({svc, contact, onChange, readOnly, contactType}) => {
     const {gettext} = svc;
 
     const displayName = contact.first_name ? contact.first_name + ' ' + contact.last_name : contact.organisation;

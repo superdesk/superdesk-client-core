@@ -8,7 +8,7 @@ import {get} from 'lodash';
  * @name TermsList
  * @description Displays a list of terms: subject, categories
  */
-const TermsList = ({terms, displayField, onClick, readOnly}) => (
+const TermsList:React.StatelessComponent<any> = ({terms, displayField, onClick, readOnly}) => (
     <div className={classNames(
         'terms-list',
         {'terms-list--disabled': readOnly}

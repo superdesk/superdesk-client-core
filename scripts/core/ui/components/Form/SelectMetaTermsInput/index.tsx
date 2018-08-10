@@ -14,7 +14,12 @@ import './style.scss';
  * @name SelectMetaTermsInput
  * @description Component to select metadata terms like Subjects/Category
  */
-export class SelectMetaTermsInput extends React.Component {
+export class SelectMetaTermsInput extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
+    addBtn: any;
+
     constructor(props) {
         super(props);
         this.state = {

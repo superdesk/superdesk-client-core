@@ -14,7 +14,16 @@ import {ColouredValuePopup} from './ColouredValuePopup';
  * @name ColouredValueInput
  * @description Component to show color coded values. Eg. Urgency / Priority
  */
-export class ColouredValueInput extends React.Component {
+export class ColouredValueInput extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
+    
+    
+ 
+    
+    
+
     constructor(props) {
         super(props);
         this.state = {openPopup: false};

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import moment from 'moment';
+import * as momentAlias from 'moment';
 import {LineInput, Label, Input} from '../';
 import {IconButton} from '../../';
 import {DateInputPopup} from './DateInputPopup';
@@ -8,12 +8,19 @@ import {KEYCODES} from '../../constants';
 import {onEventCapture} from '../../utils';
 import './style.scss';
 
+const moment:any = momentAlias;
+
 /**
  * @ngdoc react
  * @name DateInput
  * @description Component to pick dates in calendar view
  */
-export class DateInput extends React.Component {
+export class DateInput extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
+    dom: any;    
+
     constructor(props) {
         super(props);
         this.state = {

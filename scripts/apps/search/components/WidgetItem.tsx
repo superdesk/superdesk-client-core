@@ -19,7 +19,12 @@ import {ItemUrgency, TypeIcon} from './index';
  * @param {Function} edit The callback function on item edit
  * @description This component is a row in monitoring widget item list.
  */
-export class WidgetItem extends React.Component {
+export class WidgetItem extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
+    item: any;
+
     constructor(props) {
         super(props);
         this.item = props.item;

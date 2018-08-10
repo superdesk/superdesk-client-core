@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {TypeIcon} from './index';
 import classNames from 'classnames';
 
-export function GridTypeIcon(props) {
+export const GridTypeIcon:React.StatelessComponent<any> = (props) => {
     if (props.photoGrid) {
         return React.createElement('span',
             {className: classNames('sd-grid-item__type-icn',

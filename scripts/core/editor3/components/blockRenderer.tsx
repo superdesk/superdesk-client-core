@@ -11,7 +11,7 @@ import {TableBlock} from './tables';
  * @param {Object} block The block being rendered.
  * @description Media block renderer component.
  */
-const MediaComponent = (props) => {
+const MediaComponent:React.StatelessComponent<any> = (props) => {
     const {block, contentState} = props;
     const entityKey = block.getEntityAt(0);
 

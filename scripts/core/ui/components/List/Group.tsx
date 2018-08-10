@@ -7,7 +7,7 @@ import classNames from 'classnames';
  * @name Group
  * @description Component to group a list of items
  */
-export const Group = ({
+export const Group:React.StatelessComponent<any> = ({
     className,
     children,
     spaceBetween,

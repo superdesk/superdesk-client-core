@@ -4,7 +4,13 @@ import {find, join, map} from 'lodash';
 import {MAP_URL, TWITTER_URL, MAILTO_URL} from '../../contacts/constants';
 
 
-export class ItemContainer extends React.Component {
+export class ItemContainer extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
+    elemProps: any;
+    elemValue: any;
+
     constructor(props) {
         super(props);
 

@@ -8,7 +8,7 @@ import './style.scss';
  * @name DateTime
  * @description DateTime component to display text formatted date and time
  */
-function DateTime({date, withTime, withDate, withYear, dateFormat, timeFormat, padLeft}) {
+export const DateTime:React.StatelessComponent<any> = ({date, withTime, withDate, withYear, dateFormat, timeFormat, padLeft}) => {
     let format = withYear ? dateFormat : dateFormat.replace(/y/gi, '');
     let dateTimeFormat = [
         withDate ? format : null,

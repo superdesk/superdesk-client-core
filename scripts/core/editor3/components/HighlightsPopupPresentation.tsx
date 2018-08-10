@@ -1,7 +1,14 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
-export class HighlightsPopupPresentation extends Component {
+export class HighlightsPopupPresentation extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+    
+    animationTimer: any;
+    highlightsPopupRootElement: any;
+    highlightsPopupMainFlexElement: any;
+
     constructor(props) {
         super(props);
         this.state = {
@@ -85,7 +92,7 @@ export class HighlightsPopupPresentation extends Component {
     render() {
         const {availableActions} = this.props;
 
-        const actionsDropdownStyles = this.state.actionsDropdownOpen !== true ? {} : {
+        const actionsDropdownStyles:any = this.state.actionsDropdownOpen !== true ? {} : {
             display: 'block',
             position: 'absolute',
             width: 'auto',

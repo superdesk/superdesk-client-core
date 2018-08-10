@@ -7,7 +7,7 @@ import classNames from 'classnames';
  * @name Subnav
  * @description Main Sub Nav component
  */
-export const SubNav = ({children, className, darkBlue, darker}) => (
+export const SubNav:React.StatelessComponent<any> = ({children, className, darkBlue, darker}) => (
     <div
         className={classNames(
             'subnav',

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export function versioncreator(props) {
+export const versioncreator:React.StatelessComponent<any> = (props) => {
     return React.createElement(
         'span',
         {className: 'version-creator', key: 'versioncreator'},

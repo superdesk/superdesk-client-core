@@ -4,7 +4,14 @@ import classNames from 'classnames';
 import {KEYCODES} from '../../../contacts/constants';
 import {onEventCapture} from '../../../contacts/helpers';
 
-export class ToggleBox extends React.Component {
+export class ToggleBox extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
+    dom: {
+        node: any
+    }
+
     constructor(props) {
         super(props);
         this.state = {isOpen: this.props.isOpen};

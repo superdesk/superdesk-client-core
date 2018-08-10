@@ -11,7 +11,12 @@ import './style.scss';
  * @name FileInput
  * @description Component to sattach files as input
  */
-export class FileInput extends React.Component {
+export class FileInput extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
+    dom: any;
+
     constructor(props) {
         super(props);
         this.dom = {fileInput: null};

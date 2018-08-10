@@ -15,7 +15,7 @@ describe('editor3.components.embed-block', () => {
 });
 
 describe('editor3.components.embed-input', () => {
-    beforeEach(window.module(($provide) => {
+    beforeEach(window['module'](($provide) => {
         $provide.constant('config', {iframely: {key: 'key'}});
     }));
 

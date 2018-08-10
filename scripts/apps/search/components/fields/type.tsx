@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {TypeIcon} from '../index';
 
-export function type(props) {
+export const type:React.StatelessComponent<any> = (props) => {
     if (props.item.type == null) {
         return null;
     }

@@ -12,7 +12,12 @@ import './style.scss';
  * @name Popup
  * @description Main Popup Component which holds the entire popup
  */
-export default class Popup extends React.Component {
+export default class Popup extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
+    dom: any;
+
     constructor(props) {
         super(props);
 
@@ -178,7 +183,7 @@ Popup.propTypes = {
     inheritWidth: PropTypes.bool,
 };
 
-PropTypes.defaultProps = {
+Popup.defaultProps = {
     workspaceId: 'main-container',
     noPadding: false,
     inheritWidth: false,

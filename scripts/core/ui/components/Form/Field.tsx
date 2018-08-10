@@ -9,7 +9,16 @@ import {Row} from './Row';
  * @name Field
  * @description Component to encapsulate an input component in a form as a Field
  */
-export class Field extends React.Component {
+export class Field extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
+    
+    
+ 
+    
+    
+
     constructor(props) {
         super(props);
 

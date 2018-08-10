@@ -6,7 +6,10 @@ import classNames from 'classnames';
 import * as actions from '../../actions';
 import {getSelectedEntityType, getSelectedEntityData} from '../links/entityUtils';
 
-export class LinkToolbarComponent extends Component {
+export class LinkToolbarComponent extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
     constructor(props) {
         super(props);
 
@@ -68,4 +71,4 @@ const mapDispatchToProps = (dispatch) => ({
     removeLinkSuggestion: () => dispatch(actions.removeLinkSuggestion()),
 });
 
-export const LinkToolbar = connect(mapStateToProps, mapDispatchToProps)(LinkToolbarComponent);
+export const LinkToolbar:React.StatelessComponent<any> = connect(mapStateToProps, mapDispatchToProps)(LinkToolbarComponent);

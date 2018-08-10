@@ -8,7 +8,16 @@ import {ModalHeader} from './ModalHeader';
 import {ModalBody} from './ModalBody';
 import {ModalFooter} from './ModalFooter';
 
-export class ModalPrompt extends React.Component {
+export class ModalPrompt extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
+    
+    
+ 
+    
+    
+
     constructor(props) {
         super(props);
 

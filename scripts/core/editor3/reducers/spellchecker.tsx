@@ -111,7 +111,8 @@ const refreshWord = (state, word) => replaceWord(state, {word: word, newWord: wo
  */
 const autoSpellchecker = (state, spellcheckerEnabled) => {
     const {editorState} = state;
-    const decorator = Editor3.getDecorator(!spellcheckerEnabled);
+    const Editor3Alias:any = Editor3;
+    const decorator = Editor3Alias.getDecorator(!spellcheckerEnabled);
     const newState = EditorState.set(editorState, {decorator});
     const stateNotChanged = false;
 

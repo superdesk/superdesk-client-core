@@ -38,7 +38,7 @@ export function getInitialEditorState(rawContent) {
     return EditorState.createWithContent(content);
 }
 
-export function applySelection(editorState, startBlockIndex, startOffset, endBlockIndex, endOffset) {
+export function applySelection(editorState, startBlockIndex?, startOffset?, endBlockIndex?, endOffset?) {
     const content = editorState.getCurrentContent();
     let startBlock = content.getFirstBlock();
     let endBlock = content.getLastBlock();
@@ -67,7 +67,7 @@ export function applySelection(editorState, startBlockIndex, startOffset, endBlo
     return EditorState.acceptSelection(editorState, selection);
 }
 
-export function addDeleteSuggestion(editorState, action, date = new Date(), author = 'author_id') {
+export function addDeleteSuggestion(editorState, action?, date = new Date(), author = 'author_id') {
     const result = reducer(
         {
             editorState: editorState,

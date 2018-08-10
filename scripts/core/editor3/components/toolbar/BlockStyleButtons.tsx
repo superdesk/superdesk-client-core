@@ -29,7 +29,10 @@ const blockStyles = {
  * @name BlockStyleControl
  * @description Blocks style controls (h1, h2, h3, ...)
  */
-export class BlockStyleButtonsComponent extends Component {
+export class BlockStyleButtonsComponent extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
     constructor(props) {
         super(props);
 

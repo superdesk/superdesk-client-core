@@ -11,7 +11,10 @@ import {MarkBtn} from 'apps/desks/components';
  * @param {Object} desks desksService
  * @description Represents a list item per given item and desk
  */
-export class MarkedDeskItem extends React.Component {
+export class MarkedDeskItem extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
     render() {
         return (
             <li key={'desk-' + this.props.desk._id}>

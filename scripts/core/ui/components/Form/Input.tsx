@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
  * @name Input
  * @description Text input component
  */
-export const Input = ({
+export const Input:React.StatelessComponent<any> = ({
     field,
     type,
     value,

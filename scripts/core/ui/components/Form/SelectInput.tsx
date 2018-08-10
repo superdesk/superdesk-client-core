@@ -8,7 +8,7 @@ import {get} from 'lodash';
  * @name SelectInput
  * @description Component to select a list from dropdown with field label
  */
-export const SelectInput = ({
+export const SelectInput:React.StatelessComponent<any> = ({
     field,
     label,
     value,

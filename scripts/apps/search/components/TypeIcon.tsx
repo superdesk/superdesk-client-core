@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 /**
  * Type icon component
  */
-export function TypeIcon(props) {
+export const TypeIcon:React.StatelessComponent<any> = (props) => {
     const {gettextCatalog} = props.svc;
 
     if (props.type === 'composite' && props.highlight) {

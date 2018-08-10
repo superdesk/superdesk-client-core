@@ -2,7 +2,7 @@ import React from 'react';
 import {get} from 'lodash';
 import PropTypes from 'prop-types';
 
-export const SpaceComponent = (props) => {
+export const SpaceComponent:React.StatelessComponent<any> = (props) => {
     const spanProps = {...props};
     const styleSet = get(props, 'children.0.props.styleSet');
     let className = 'space-component';

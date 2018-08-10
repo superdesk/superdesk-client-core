@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export function ProgressBar(props) {
+export const ProgressBar:React.StatelessComponent<any> = (props) => {
     return React.createElement('div', {
         className: 'archiving-progress',
         style: {width: props.completed + '%'},

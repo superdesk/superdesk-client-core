@@ -10,7 +10,10 @@ import {HighlightsPopupPresentation} from '../HighlightsPopupPresentation';
 import {UserAvatar} from 'apps/users/components/UserAvatar';
 import {connectPromiseResults} from 'core/helpers/ReactRenderAsync';
 
-class Annotation extends Component {
+class Annotation extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
     render() {
         const {annotation, editorNode, showPopup, highlightId, highlightsManager, annotationTypes} = this.props;
         const {author, avatar, date, msg, annotationType} = annotation.data;
@@ -85,7 +88,7 @@ const AnnotationWithDependenciesLoaded = connectPromiseResults(() => ({
         .then(() => ng.get('metadata').values.annotation_types),
 }))(Annotation);
 
-export const AnnotationPopup = connect(
+export const AnnotationPopup:React.StatelessComponent<any> = connect(
     () => ({}),
     {showPopup}
 )(AnnotationWithDependenciesLoaded);

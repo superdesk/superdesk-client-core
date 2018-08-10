@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export function expiry(props) {
+export const expiry:React.StatelessComponent<any> = (props) => {
     const {gettext, datetime} = props.svc;
 
     if (props.item.is_spiked) {

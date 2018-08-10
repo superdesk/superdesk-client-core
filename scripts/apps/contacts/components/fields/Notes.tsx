@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {truncate} from 'lodash';
 
-export const Notes = ({item, svc}) => {
+export const Notes:React.StatelessComponent<any> = ({item, svc}) => {
     const {gettextCatalog} = svc;
     let notes = gettextCatalog.getString(item.notes);
     let displayNotes = truncate(notes, {length: 120});

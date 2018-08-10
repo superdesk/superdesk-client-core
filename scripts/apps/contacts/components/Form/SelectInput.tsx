@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {LineInput, Label, Select} from './';
 import {get, isObject} from 'lodash';
 
-export const SelectInput = ({
+export const SelectInput:React.StatelessComponent<any> = ({
     field,
     label,
     value,

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {closeActionsMenu} from '../../helpers';
 
-export default function Label(props) {
+export const Label:React.StatelessComponent<any> = (props) => {
     const {gettextCatalog} = props.svc;
 
     return React.createElement(

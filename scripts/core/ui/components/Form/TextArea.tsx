@@ -10,7 +10,13 @@ import './style.scss';
  * @name TextArea
  * @description Auto-resizing component to multi-line text input
  */
-export class TextArea extends React.Component {
+export class TextArea extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
+    dom: any;
+    delayedResize: any;
+
     constructor(props) {
         super(props);
         this.dom = {input: null};

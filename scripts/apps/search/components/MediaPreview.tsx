@@ -10,7 +10,7 @@ function hasThumbnail(item) {
 /**
  * Media Preview - renders item thumbnail
  */
-export function MediaPreview(props) {
+export const MediaPreview:React.StatelessComponent<any> = (props) => {
     var item = props.item;
     var headline = item.headline || item.slugline || item.type;
     // headline could contains html tags hence stripping for tooltips

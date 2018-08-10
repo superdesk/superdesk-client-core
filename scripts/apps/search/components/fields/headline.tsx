@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {createMarkUp} from '../../helpers';
 
-export function headline(props) {
+export const headline:React.StatelessComponent<any> = (props) => {
     var headline = props.item.headline ? props.item.headline : props.item.type;
 
     return React.createElement(

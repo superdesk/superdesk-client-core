@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {get} from 'lodash';
 
-export function state(props) {
+export const state:React.StatelessComponent<any> = (props) => {
     const {$filter, gettextCatalog, datetime} = props.svc;
 
     if (props.item.state !== undefined && props.item.state !== null) {

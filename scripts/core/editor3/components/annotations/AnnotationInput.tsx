@@ -17,7 +17,12 @@ import ng from 'core/services/ng';
  * @description AnnotationInput is the popup containing the fields needed to fill in information
  * about an annotation.
  */
-class AnnotationInputBody extends Component {
+class AnnotationInputBody extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
+    initialContent: any;
+
     constructor(props) {
         super(props);
 
@@ -192,6 +197,6 @@ const AnnotationInputBodyWithDependenciesLoaded = connectPromiseResults(() => ({
         .then(() => ng.get('metadata').values.annotation_types),
 }))(AnnotationInputBody);
 
-export const AnnotationInput = connect(mapStateToProps, {
+export const AnnotationInput:React.StatelessComponent<any> = connect(mapStateToProps, {
     hidePopups,
 })(AnnotationInputBodyWithDependenciesLoaded);

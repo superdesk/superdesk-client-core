@@ -2,7 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import {Row, LineInput, Label, Input} from '../';
-import {UserAvatar} from '../../../';
+import {UserAvatar} from 'apps/users/components/UserAvatar';
+
 import {SelectUserPopup} from './SelectUserPopup';
 import {KEYCODES} from '../../constants';
 import {onEventCapture} from '../../utils';
@@ -12,7 +13,10 @@ import {onEventCapture} from '../../utils';
  * @name SelectUserInput
  * @description Component to select users from a list
  */
-export class SelectUserInput extends React.Component {
+export class SelectUserInput extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
     constructor(props) {
         super(props);
 

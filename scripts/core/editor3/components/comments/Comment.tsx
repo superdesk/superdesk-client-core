@@ -15,7 +15,10 @@ import {UserAvatar} from 'apps/users/components/UserAvatar';
  * additional class.
  */
 
-export class Comment extends Component {
+export class Comment extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
     constructor(props) {
         super(props);
         this.state = {
@@ -24,7 +27,7 @@ export class Comment extends Component {
             editModeValue: this.props.data.msg,
         };
     }
-    cancelEditing(event) {
+    cancelEditing(event?) {
         this.setState({
             editMode: false,
             editModeValue: this.props.data.msg,
@@ -131,7 +134,7 @@ export class Comment extends Component {
 Comment.propTypes = {
     data: PropTypes.shape({
         author: PropTypes.string,
-        date: PropTypes.date,
+        date: PropTypes.any,
         avatar: PropTypes.string,
         msg: PropTypes.string,
     }),

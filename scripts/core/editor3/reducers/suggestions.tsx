@@ -185,7 +185,7 @@ function applyStyleSuggestion(editorState, type, style, data) {
     }
 
     if (changeStyle && currentStyle != null) {
-        const oldData = Highlights.getHighlightData(editorState, currentStyle);
+        const oldData:any = Highlights.getHighlightData(editorState, currentStyle);
 
         if (oldData.originalStyle === style && data.originalStyle === '' ||
             oldData.originalStyle === '' && data.originalStyle === style) {
@@ -239,7 +239,8 @@ const changeLinkSuggestion = (state, {data, link, entity}) => {
             ...data,
             to: link,
             from: entity.getData().link,
-        }
+        },
+        undefined
     );
 
     newState = replaceSelectedEntityData(newState, {link});
@@ -402,7 +403,7 @@ const pasteAddSuggestion = (state, {content, data}) => {
     let {editorState} = state;
     let selection = editorState.getSelection();
     const beforeStyle = Highlights.getHighlightStyleAtOffset(editorState, changeSuggestionsTypes, selection, -1);
-    const beforeData = beforeStyle != null ? Highlights.getHighlightData(editorState, beforeStyle) : null;
+    const beforeData:any = beforeStyle != null ? Highlights.getHighlightData(editorState, beforeStyle) : null;
 
     // if text is selected mark it as removed and collapse the selection before replacing
     if (!selection.isCollapsed()) {
@@ -958,9 +959,9 @@ const setAddSuggestionForCharacter = (editorState, data, text, inlineStyle = nul
     const crtInlineStyle = inlineStyle || editorState.getCurrentInlineStyle();
     let selection = editorState.getSelection();
     const beforeStyle = Highlights.getHighlightStyleAtOffset(editorState, changeSuggestionsTypes, selection, -1);
-    const beforeData = beforeStyle != null ? Highlights.getHighlightData(editorState, beforeStyle) : null;
+    const beforeData:any = beforeStyle != null ? Highlights.getHighlightData(editorState, beforeStyle) : null;
     const currentStyle = Highlights.getHighlightStyleAtOffset(editorState, changeSuggestionsTypes, selection, 0);
-    const currentData = currentStyle != null ? Highlights.getHighlightData(editorState, currentStyle) : null;
+    const currentData:any = currentStyle != null ? Highlights.getHighlightData(editorState, currentStyle) : null;
     let content = editorState.getCurrentContent();
     let newState = editorState;
 
@@ -1062,7 +1063,7 @@ const setDeleteSuggestionForCharacter = (editorState, data) => {
     }
 
     const currentStyle = Highlights.getHighlightStyleAtOffset(editorState, changeSuggestionsTypes, selection, -1);
-    const currentData = currentStyle != null ? Highlights.getHighlightData(editorState, currentStyle) : null;
+    const currentData:any = currentStyle != null ? Highlights.getHighlightData(editorState, currentStyle) : null;
 
     if (currentData != null && currentData.type === 'DELETE_SUGGESTION') {
         // if current character is already marked as a delete suggestion, skip
@@ -1076,12 +1077,12 @@ const setDeleteSuggestionForCharacter = (editorState, data) => {
     }
 
     const beforeStyle = Highlights.getHighlightStyleAtOffset(editorState, changeSuggestionsTypes, selection, -2);
-    const beforeData = beforeStyle != null ? Highlights.getHighlightData(editorState, beforeStyle) : null;
+    const beforeData:any = beforeStyle != null ? Highlights.getHighlightData(editorState, beforeStyle) : null;
     const afterParagraphStyle = Highlights.getHighlightStyleAtOffset(
         editorState, paragraphSuggestionTypes, selection, 0);
     const offset = afterParagraphStyle == null ? 0 : 1;
     const afterStyle = Highlights.getHighlightStyleAtOffset(editorState, changeSuggestionsTypes, selection, offset);
-    const afterData = afterStyle != null ? Highlights.getHighlightData(editorState, afterStyle) : null;
+    const afterData:any = afterStyle != null ? Highlights.getHighlightData(editorState, afterStyle) : null;
     let newState = Highlights.changeEditorSelection(editorState, -1, 0, false);
 
     if (beforeData != null && beforeData.type === 'DELETE_SUGGESTION'

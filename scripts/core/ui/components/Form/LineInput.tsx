@@ -7,7 +7,7 @@ import classNames from 'classnames';
  * @name LineInput
  * @description Component to style input component in a line-input style
  */
-export const LineInput = ({
+export const LineInput:React.StatelessComponent<any> = ({
     children,
     required,
     invalid,

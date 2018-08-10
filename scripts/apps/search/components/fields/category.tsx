@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export function category(props) {
+export const category:React.StatelessComponent<any> = (props) => {
     var anpa = props.item.anpa_category || {};
 
     if (anpa.name) {

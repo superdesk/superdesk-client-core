@@ -19,7 +19,16 @@ import {
  * @param {Object} markedDesksById the dict of deskId and desk object
  * @description Creates a list of desks that is used for marking a story for a desk
  */
-export class MarkedDesksInfo extends React.Component {
+export class MarkedDesksInfo extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
+    
+    
+ 
+    
+    
+
     constructor(props) {
         super(props);
 

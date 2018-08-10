@@ -5,7 +5,6 @@ import {values} from 'lodash';
 import {ICON_COLORS} from '../constants';
 
 import {Column} from './Column';
-import {ItemIcon} from '../../';
 import {Checkbox} from '../Form';
 
 /**
@@ -13,7 +12,7 @@ import {Checkbox} from '../Form';
  * @name ItemType
  * @description Component to show item type - generally left of the item with select checkbox
  */
-export const ItemType = ({hasCheck, checked, onCheckToggle, item, color}) => (
+export const ItemType:React.StatelessComponent<any> = ({hasCheck, checked, onCheckToggle}) => (
     <Column hasCheck={hasCheck} checked={checked} >
         {hasCheck && (
             <div className="sd-list-item__checkbox-container">
@@ -22,7 +21,6 @@ export const ItemType = ({hasCheck, checked, onCheckToggle, item, color}) => (
                 }}/>
             </div>
         )}
-        <ItemIcon item={item} color={color}/>
     </Column>
 );
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export function provider(props) {
+export const provider:React.StatelessComponent<any> = (props) => {
     var provider = props.ingestProvider ? props.ingestProvider.source : '';
 
     if (props.item.source) {

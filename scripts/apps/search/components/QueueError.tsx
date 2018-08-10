@@ -8,7 +8,16 @@ import PropTypes from 'prop-types';
  * @param {Object} item published item having error state
  * @description Creates an icon for the published items that have been failed to enqueue.
  */
-export class QueueError extends React.Component {
+export class QueueError extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
+    
+    
+ 
+    
+    
+
     render() {
         if (this.props.item.queue_state && this.props.item.queue_state === 'error') {
             return (

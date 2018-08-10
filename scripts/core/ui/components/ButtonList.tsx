@@ -10,7 +10,12 @@ import {onEventCapture} from './utils';
  * @name ButtonList
  * @description List of buttons
  */
-class ButtonList extends React.PureComponent {
+class ButtonList extends React.PureComponent<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
+    dom: any;
+
     constructor(props) {
         super(props);
         this.dom = {

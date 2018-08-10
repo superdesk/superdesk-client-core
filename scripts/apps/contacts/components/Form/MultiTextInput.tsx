@@ -6,7 +6,12 @@ import {gettext} from '../../../contacts/helpers';
 import {isEmpty, get, set} from 'lodash';
 
 
-export class MultiTextInput extends React.Component {
+export class MultiTextInput extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
+    errorMessage: any;
+
     constructor(props) {
         super(props);
         this.state = {

@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
  * @name Panel
  * @description Main panel of a slide-in panel
  */
-export const Panel = ({children}) => (
+export const Panel:React.StatelessComponent<any> = ({children}) => (
     <div className="sd-column-box__slide-in-column-inner sd-slide-in-panel">
         {children}
     </div>

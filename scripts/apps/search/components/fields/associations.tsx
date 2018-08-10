@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {Associations} from '../index';
 
-export function associations(props) {
+export const associations:React.StatelessComponent<any> = (props) => {
     return <Associations
         svc={props.svc}
         item={props.item}

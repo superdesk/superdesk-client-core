@@ -16,7 +16,12 @@ const GenericError = gettext('This URL could not be embedded.');
  * @name EmbedInputComponent
  * @description The dialog displayed when an embed URL is entered.
  */
-export class EmbedInputComponent extends Component {
+export class EmbedInputComponent extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
+    txt: any;
+
     constructor(props) {
         super(props);
 
@@ -49,7 +54,7 @@ export class EmbedInputComponent extends Component {
      * @description Processes the success XHR response from the iframe.ly request. Dispatches
      * the action that embeds the response into the editor.
      */
-    processSuccess(data, status) {
+    processSuccess(data) {
         this.props.embed(data);
         this.onCancel();
     }
@@ -62,7 +67,7 @@ export class EmbedInputComponent extends Component {
      * @description Processes the error XHR response from the iframe.ly request. Sets the state
      * to erroneous, which should be shown in the UI.
      */
-    processError(data = {}, status) {
+    processError(data:any = {}, status) {
         const {responseJSON} = data;
         const hasMessage = responseJSON && responseJSON.error;
         const is404 = !hasMessage && data.status === 404;
@@ -145,7 +150,7 @@ EmbedInputComponent.propTypes = {
     hidePopups: PropTypes.func.isRequired,
 };
 
-export const EmbedInput = connect(null, {
+export const EmbedInput:React.StatelessComponent<any> = connect(null, {
     embed,
     hidePopups,
 })(EmbedInputComponent);

@@ -7,7 +7,7 @@ import classNames from 'classnames';
  * @name Content
  * @description Component to hold contents of a side panel
  */
-export const Content = ({children, className, flex}) => (
+export const Content:React.StatelessComponent<any> = ({children, className, flex}) => (
     <div
         className={classNames(
             'side-panel__content',

@@ -27,13 +27,21 @@ const highlightData = {author: 'Henry Wadsworth Longfellow'};
 const highlightDataExpectedResponse = {author: 'Henry Wadsworth Longfellow', type: 'COMMENT'};
 const highlightDataUpdate = {publishedIn: 1838};
 
-class ChildComponent extends React.Component {
+class ChildComponent extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
     render() {
         return <div />;
     }
 }
 
-class MultipleHighlightsTester extends React.Component {
+class MultipleHighlightsTester extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
+    childRef: any;
+
     constructor(props) {
         super(props);
         this.state = {

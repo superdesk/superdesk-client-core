@@ -5,7 +5,10 @@ import {KEYCODES} from '../../../contacts/constants';
 import {gettext} from '../../../contacts/helpers';
 import {set, get, isEmpty} from 'lodash';
 
-export class ContactNumberInput extends React.Component {
+export class ContactNumberInput extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
     constructor(props) {
         super(props);
         this.state = {

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 
-export const Row = ({children, flex, noPadding, halfWidth, className}) => (
+export const Row:React.StatelessComponent<any> = ({children, flex, noPadding, halfWidth, className}) => (
     <div className={classNames(
         'form__row',
         {

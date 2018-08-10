@@ -12,7 +12,10 @@ import {MarkedDeskItem} from 'apps/desks/components';
  * @param {String} noDesksLabel the label to be visible when there's no desk
  * @description Creates a list of desks that is used for marking a story for a desk
  */
-export class MarkDesksDropdown extends React.Component {
+export class MarkDesksDropdown extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
     render() {
         const items = this.props.desks.desks._items;
 
@@ -21,7 +24,7 @@ export class MarkDesksDropdown extends React.Component {
                 {items.length ?
                     items.map((d) => <MarkedDeskItem key={d._id}
                         desk={d} item={this.props.item} desks={this.props.desks}/>)
-                    : <li><button disabled="true">{this.props.noDesksLabel}</button></li>}
+                    : <li><button disabled>{this.props.noDesksLabel}</button></li>}
             </ul>
         );
     }

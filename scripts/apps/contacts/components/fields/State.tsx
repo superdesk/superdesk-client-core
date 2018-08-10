@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export const State = ({item, svc}) => {
+export const State:React.StatelessComponent<any> = ({item, svc}) => {
     const {gettextCatalog} = svc;
     let cssClass = item.contact_state ? 'state-label' : null;
 

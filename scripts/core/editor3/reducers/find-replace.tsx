@@ -3,15 +3,15 @@ import {SelectionState, Modifier, EditorState} from 'draft-js';
 const findReplace = (state = {}, action) => {
     switch (action.type) {
     case 'HIGHLIGHTS_FIND_NEXT':
-        return findNext(state, action.payload);
+        return findNext(state);
     case 'HIGHLIGHTS_FIND_PREV':
-        return findPrev(state, action.payload);
+        return findPrev(state,);
     case 'HIGHLIGHTS_REPLACE':
         return replaceHighlight(state, action.payload);
     case 'HIGHLIGHTS_REPLACE_ALL':
         return replaceHighlight(state, action.payload, true);
     case 'HIGHLIGHTS_RENDER':
-        return render(state, action.payload);
+        return render(state);
     case 'HIGHLIGHTS_CRITERIA':
         return setCriteria(state, action.payload);
     default:

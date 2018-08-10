@@ -10,7 +10,7 @@ import './style.scss';
  * @name SlidingToolBar
  * @description Top sliding toolbar of a Sub Nav bar
  */
-export const SlidingToolBar = ({hide, innerInfo, innerTools, tools, onCancel}) => (
+export const SlidingToolBar:React.StatelessComponent<any> = ({hide, innerInfo, innerTools, tools, onCancel}) => (
     <div className={classNames(
         'subnav__sliding-toolbar',
         {'ng-hide': hide})} >
@@ -31,4 +31,4 @@ SlidingToolBar.propTypes = {
     tools: PropTypes.node,
 };
 
-SlidingToolBar.defaultProp = {hide: true};
+SlidingToolBar.defaultProps = {hide: true};

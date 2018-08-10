@@ -15,7 +15,12 @@ import './style.scss';
  * @name LinkInput
  * @description Component to attach links as input
  */
-export class LinkInput extends React.Component {
+export class LinkInput extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
+    errorTitle: any;
+
     constructor(props) {
         super(props);
         this.state = {title: props.value};

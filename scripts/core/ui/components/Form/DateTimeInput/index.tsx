@@ -1,17 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import moment from 'moment';
+import * as momentAlias from 'moment';
 import {Row, DateInput, TimeInput, Field} from '..';
 import './style.scss';
 import Button from '../../Button';
 import {gettext} from '../../utils';
+
+const moment:any = momentAlias;
 
 /**
  * @ngdoc react
  * @name DateTimeInput
  * @description One Component packaging DatePicker and TimePicker to pick date and time
  */
-export const DateTimeInput = ({
+export const DateTimeInput:React.StatelessComponent<any> = ({
     field,
     label,
     value,

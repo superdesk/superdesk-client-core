@@ -1,12 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import DebounceInput from 'react-debounce-input';
+import {DebounceInput} from 'react-debounce-input';
 import {Row, LineInput, Label} from '../';
 import {SelectFieldPopup} from './SelectFieldPopup';
 import {isEmpty} from 'lodash';
 
 
-export class SelectFieldSearchInput extends React.Component {
+export class SelectFieldSearchInput extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
     constructor(props) {
         super(props);
 

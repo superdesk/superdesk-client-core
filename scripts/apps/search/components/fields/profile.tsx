@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export function profile(props) {
+export const profile:React.StatelessComponent<any> = (props) => {
     if (props.item.profile) {
         return React.createElement(
             'div',

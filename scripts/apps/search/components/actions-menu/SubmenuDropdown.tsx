@@ -5,7 +5,16 @@ import Submenu from './Submenu';
 /**
  * Submenu within item actions.
  */
-export default class SubmenuDropdown extends React.Component {
+export default class SubmenuDropdown extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
+    
+    
+ 
+    
+    
+
     constructor(props) {
         super(props);
         this.state = {open: false};

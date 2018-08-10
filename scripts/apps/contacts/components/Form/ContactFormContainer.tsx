@@ -7,7 +7,10 @@ import {ActionBar} from './ActionBar';
 import {get, set, isEqual, cloneDeep, some, isEmpty, extend, each, omit, isNil} from 'lodash';
 
 
-export class ContactFormContainer extends React.Component {
+export class ContactFormContainer extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
     constructor(props) {
         super(props);
 
@@ -78,7 +81,7 @@ export class ContactFormContainer extends React.Component {
 
         notify.info(gettext('Saving...'));
 
-        let diff = {};
+        let diff:any = {};
 
         each(this.state.currentContact, (value, key) => {
             if (!isEqual(origContact[key], value)) {
@@ -144,7 +147,7 @@ export class ContactFormContainer extends React.Component {
 
         const readOnly = !get(privileges, 'privileges.contacts', false);
 
-        let contents = [
+        let contents:any = [
             'div',
             {
                 className: 'contactForm',

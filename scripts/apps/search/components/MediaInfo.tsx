@@ -6,7 +6,7 @@ import {FetchedDesksInfo} from './index';
 /**
  * Media Info - renders item metadata
  */
-export function MediaInfo(props) {
+export const MediaInfo:React.StatelessComponent<any> = (props) => {
     const {gettextCatalog, gettext, datetime} = props.svc;
 
     var item = props.item;

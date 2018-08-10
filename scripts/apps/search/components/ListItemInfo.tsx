@@ -4,7 +4,7 @@ import classNames from 'classnames';
 
 import {renderArea} from '../helpers';
 
-export function ListItemInfo(props) {
+export const ListItemInfo:React.StatelessComponent<any> = (props) => {
     if (props.scope.singleLine) {
         return React.createElement(
             'div',

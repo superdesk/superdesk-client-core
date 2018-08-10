@@ -1,9 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import ItemsTableComponent from '../components/ItemsTableComponent';
+import {forEach, every} from 'lodash';
 
-VocabularyConfigModalItems.$inject = ['gettext'];
-export function VocabularyConfigModalItems(gettext) {
+
+export const VocabularyConfigModalItems:any = (gettext) => {
     return {
         require: '^^form',
         link: (scope, element, attr, ngForm) => {
@@ -13,14 +14,14 @@ export function VocabularyConfigModalItems(gettext) {
             function validateItem(item) {
                 let itemValidation = {};
 
-                _.forEach(scope.vocabulary.schema, (desc, field) => {
+                forEach(scope.vocabulary.schema, (desc, field) => {
                     itemValidation[field] = !desc.required || !!item[field];
                 });
                 return itemValidation;
             }
 
             function validItem(itemValidation) {
-                return _.every(scope.vocabulary.schema, (schema, schemaId) =>
+                return every(scope.vocabulary.schema, (schema, schemaId) =>
                     !schema.required || itemValidation[schemaId]);
             }
 
@@ -91,3 +92,5 @@ export function VocabularyConfigModalItems(gettext) {
         },
     };
 }
+
+VocabularyConfigModalItems.$inject = ['gettext'];

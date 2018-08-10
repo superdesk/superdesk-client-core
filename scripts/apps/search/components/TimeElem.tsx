@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export function TimeElem(props) {
+export const TimeElem:React.StatelessComponent<any> = (props) => {
     const {datetime} = props.svc;
 
     return React.createElement(

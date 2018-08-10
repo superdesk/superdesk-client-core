@@ -16,12 +16,15 @@ import './style.scss';
  * @name ColouredValuePopup
  * @description Popup component to show color coded options
  */
-export class ColouredValuePopup extends React.PureComponent {
+export class ColouredValuePopup extends React.PureComponent<any, any> {
     constructor(props) {
         super(props);
         this.onKeyDown = this.onKeyDown.bind(this);
         this.state = {activeIndex: -1};
     }
+
+    static propTypes: any;
+    static defaultProps: any;
 
     /**
      * @ngdoc method

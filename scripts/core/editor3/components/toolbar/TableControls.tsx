@@ -16,7 +16,7 @@ import {getData, getCell} from '../../helpers/table';
  * @param {Function} removeCol
  * @description Holds the toolbar for table operations.
  */
-const TableControlsComponent = ({
+const TableControlsComponent:React.StatelessComponent<any> = ({
     addRowAfter,
     addColAfter,
     removeRow,

@@ -14,7 +14,15 @@ export function getEditorBlock(event) {
 }
 
 
-class BaseUnstyledComponent extends React.Component {
+class BaseUnstyledComponent extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
+    getDropBlockKey: any;
+    dropInsertionMode: any;
+    leaveTimeout: any;
+    div: any;
+
     constructor(props) {
         super(props);
         this.onDrop = this.onDrop.bind(this);

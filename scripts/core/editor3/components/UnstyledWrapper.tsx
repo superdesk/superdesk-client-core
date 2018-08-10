@@ -9,13 +9,12 @@ import BaseUnstyledComponent from './BaseUnstyledComponent';
  * above first unstyled block.
  */
 class UnstyledWrapper extends BaseUnstyledComponent {
+    getDropBlockKey: any;
+
     constructor(props) {
         super(props);
         this.dropInsertionMode = 'before';
-    }
-
-    getDropBlockKey() {
-        return this.props.children[0].key;
+        this.getDropBlockKey = () => this.props.children[0].key;
     }
 
     render() {

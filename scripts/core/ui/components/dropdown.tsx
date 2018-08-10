@@ -2,7 +2,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export function Dropdown(props) {
+export const Dropdown:React.StatelessComponent<any> = (props) => {
     const className = props.open ? 'dropdown open ' + props.className : 'dropdown ' + props.className;
 
     let childClassNames = ['dropdown__menu'];

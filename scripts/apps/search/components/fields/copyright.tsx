@@ -1,11 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-/**
- * Copyright info field
- * @param {Object} props
- */
-export function copyright({item}) {
+export const copyright:React.StatelessComponent<any> = ({item}) => {
     if (item.copyrightholder) {
         const title = item.usageterms || item.copyrightnotice || '';
 

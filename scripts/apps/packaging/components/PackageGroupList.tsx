@@ -2,7 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import PackageGroup from './PackageGroup';
 
-export default class PackageGroupList extends React.Component {
+export default class PackageGroupList extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
+    
+    
+ 
+    
+    
+
     constructor(props) {
         super(props);
         this.state = {groups: []};

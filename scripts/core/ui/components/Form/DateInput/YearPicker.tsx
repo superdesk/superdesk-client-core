@@ -12,7 +12,7 @@ import './style.scss';
  * @name YearPicker
  * @description Component to Pick years of DatePicker
  */
-export const YearPicker = ({selectedDate, onChange, startingYear, yearRange}) => {
+export const YearPicker:React.StatelessComponent<any> = ({selectedDate, onChange, startingYear, yearRange}) => {
     const yRange = yearRange || 20;
     const years = range(startingYear, startingYear + yRange); // plus one to include the last number as welln
     const rows = chunk(years, 5);

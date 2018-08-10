@@ -146,7 +146,7 @@ export function blocksWithText(list) {
  * @param {Array<Array>=} cells
  * @returns {Object} Keys 'block' and 'contentState'
  */
-export function tableBlockAndContent(cells) {
+export function tableBlockAndContent(cells?) {
     const cs = (txt) => convertToRaw(ContentState.createFromText(txt));
 
     return createBlockAndContent('TABLE', {

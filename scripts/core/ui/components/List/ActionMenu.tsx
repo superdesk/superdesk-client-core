@@ -7,7 +7,7 @@ import classNames from 'classnames';
  * @name ActionMenu
  * @description Component to encapsulate three-dot action menu in list a item
  */
-export const ActionMenu = ({children, row}) => (
+export const ActionMenu:React.StatelessComponent<any> = ({children, row}) => (
     <div className={classNames('sd-list-item__action-menu',
         {'sd-list-item__action-menu--direction-row': row})}>
         {children}

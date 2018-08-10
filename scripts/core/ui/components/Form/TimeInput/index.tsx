@@ -1,18 +1,25 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import moment from 'moment';
+import * as momentAlias from 'moment';
 import {LineInput, Label, Input} from '../';
 import {TimeInputPopup} from './TimeInputPopup';
 import {IconButton} from '../../';
 import {KEYCODES} from '../../constants';
 import './style.scss';
 
+const moment:any = momentAlias;
+
 /**
  * @ngdoc react
  * @name TimeInput
  * @description Component to pick time in hours and minutes
  */
-export class TimeInput extends React.Component {
+export class TimeInput extends React.Component<any, any> {
+    static propTypes: any;
+    static defaultProps: any;
+
+    dom: any;
+
     constructor(props) {
         super(props);
         this.state = {
