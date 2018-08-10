@@ -15,6 +15,15 @@ if (appConfig.features.useTansaProofing) {
 
 let body = angular.element('body');
 
+function initializeConfigDefaults(config) {
+    const sunday = '0';
+
+    return {
+        ...config,
+        startingDay: config.startingDay != null ? config.startingDay : sunday,
+    };
+}
+
 body.ready(() => {
     // update config via config.js
     if (window.superdeskConfig) {
@@ -23,7 +32,7 @@ body.ready(() => {
 
     // non-mock app configuration must live here to allow tests to override
     // since tests do not import this file.
-    angular.module('superdesk.config').constant('config', appConfig);
+    angular.module('superdesk.config').constant('config', initializeConfigDefaults(appConfig));
 
     /**
      * @ngdoc module

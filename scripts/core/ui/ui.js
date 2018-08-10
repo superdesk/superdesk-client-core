@@ -316,9 +316,8 @@ function DatepickerDirective($document) {
 
 DatepickerInnerDirective.$inject = ['$compile', '$document', 'popupService', 'datetimeHelper', 'config', 'moment'];
 function DatepickerInnerDirective($compile, $document, popupService, datetimeHelper, config, moment) {
-    var startingDay = config.startingDay || '0';
     var popupTpl = '<div sd-datepicker-wrapper ng-model="date">' +
-        '<div datepicker format-day="d" starting-day="' + startingDay + '" show-weeks="false"></div>' +
+        '<div datepicker format-day="d" starting-day="' + config.startingDay + '" show-weeks="false"></div>' +
     '</div>';
 
     return {
