@@ -2,14 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {Associations} from '../index';
 
-export const associations:React.StatelessComponent<any> = (props) => {
-    return <Associations
-        svc={props.svc}
-        item={props.item}
-        openAuthoringView={props.openAuthoringView}
-        key="associations"
-    />;
-}
+export const associations:React.StatelessComponent<any> = (props) => <Associations
+    svc={props.svc}
+    item={props.item}
+    openAuthoringView={props.openAuthoringView}
+    key="associations"
+/>;
 
 /*
  * item: item having associations

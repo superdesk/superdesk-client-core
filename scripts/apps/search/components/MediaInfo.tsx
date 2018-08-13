@@ -69,7 +69,7 @@ export const MediaInfo:React.StatelessComponent<any> = (props) => {
     }
 
     return React.createElement('div', {className: 'media-info'}, info);
-}
+};
 
 MediaInfo.propTypes = {
     svc: PropTypes.object.isRequired,

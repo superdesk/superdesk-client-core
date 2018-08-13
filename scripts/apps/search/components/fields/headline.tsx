@@ -10,7 +10,7 @@ export const headline:React.StatelessComponent<any> = (props) => {
         {className: 'item-heading', key: 'headline',
             dangerouslySetInnerHTML: createMarkUp(headline)}
     );
-}
+};
 
 headline.propTypes = {
     item: PropTypes.any,

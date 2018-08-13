@@ -11,7 +11,7 @@ export const expiry:React.StatelessComponent<any> = (props) => {
             gettext('expires') + ' ' + datetime.shortFormat(props.item.expiry)
         );
     }
-}
+};
 
 expiry.propTypes = {
     svc: PropTypes.any.isRequired,

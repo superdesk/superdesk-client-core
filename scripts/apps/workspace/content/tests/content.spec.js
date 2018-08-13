@@ -337,7 +337,8 @@ describe('superdesk.apps.workspace.content', () => {
                         .find('#remove-item')
                         .click();
                     expect(form.$dirty).toBeTruthy();
-                });
+                })
+                    .catch(done.fail);
             });
         });
     });

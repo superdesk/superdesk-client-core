@@ -14,7 +14,7 @@ export const type:React.StatelessComponent<any> = (props) => {
             <TypeIcon type={type} highlight={highlight} svc={props.svc} />
         </span>
     );
-}
+};
 
 type.propTypes = {
     svc: PropTypes.any.isRequired,

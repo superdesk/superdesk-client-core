@@ -41,7 +41,7 @@ export const Toggle:React.StatelessComponent<any> = ({value, onChange, readOnly,
             <span className="inner"/>
         </button>
     );
-}
+};
 
 Toggle.propTypes = {
     value: PropTypes.bool,

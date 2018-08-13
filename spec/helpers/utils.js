@@ -233,7 +233,7 @@ function waitHidden(elem, time) {
                 !isPresent ? true : elem.isDisplayed()
                     .then((isDisplayed) => !isDisplayed)
             )
-        , time || 1000);
+    , time || 1000);
 }
 
 

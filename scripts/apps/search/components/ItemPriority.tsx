@@ -30,7 +30,7 @@ export const ItemPriority:React.StatelessComponent<any> = (props) => {
         },
         priority
     );
-}
+};
 
 ItemPriority.propTypes = {
     svc: PropTypes.object.isRequired,

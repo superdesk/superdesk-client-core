@@ -24,7 +24,7 @@ export const PhotoDeskInfo:React.StatelessComponent<any> = (props) => {
             />
         </div>
     );
-}
+};
 
 PhotoDeskInfo.propTypes = {
     svc: PropTypes.object.isRequired,

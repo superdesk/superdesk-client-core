@@ -11,7 +11,7 @@ export const embargo:React.StatelessComponent<any> = (props) => {
             gettext('embargo')
         );
     }
-}
+};
 
 embargo.propTypes = {
     svc: PropTypes.any.isRequired,

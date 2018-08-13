@@ -12,7 +12,7 @@ export const Select:React.StatelessComponent<any> = ({field, value, onChange, op
         value={value}
         onChange={(e) => onChange(field, e.target.value)}
         name={field}
-        disabled={readOnly ? true : false}
+        disabled={!!readOnly}
         autoFocus={autoFocus}
         ref={refNode}
         onFocus={onFocus}

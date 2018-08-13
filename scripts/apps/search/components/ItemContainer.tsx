@@ -32,7 +32,7 @@ export const ItemContainer:React.StatelessComponent<any> = (props) => {
         ),
         value
     );
-}
+};
 
 ItemContainer.propTypes = {
     svc: PropTypes.object.isRequired,

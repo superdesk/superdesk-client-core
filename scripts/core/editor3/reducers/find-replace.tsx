@@ -5,7 +5,7 @@ const findReplace = (state = {}, action) => {
     case 'HIGHLIGHTS_FIND_NEXT':
         return findNext(state);
     case 'HIGHLIGHTS_FIND_PREV':
-        return findPrev(state,);
+        return findPrev(state);
     case 'HIGHLIGHTS_REPLACE':
         return replaceHighlight(state, action.payload);
     case 'HIGHLIGHTS_REPLACE_ALL':

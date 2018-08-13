@@ -16,7 +16,7 @@ export const updated:React.StatelessComponent<any> = (props) => {
             gettextCatalog.getString('Updated')
         );
     }
-}
+};
 
 updated.propTypes = {
     svc: PropTypes.any.isRequired,

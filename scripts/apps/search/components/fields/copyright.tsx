@@ -14,7 +14,7 @@ export const copyright:React.StatelessComponent<any> = ({item}) => {
     }
 
     return null;
-}
+};
 
 copyright.propTypes = {
     item: PropTypes.object.isRequired,

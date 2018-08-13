@@ -9,7 +9,7 @@ export const ErrorBox:React.StatelessComponent<any> = (props) => {
             gettextCatalog.getString('There was an error archiving this item')),
         React.createElement('div', {className: 'buttons'})
     );
-}
+};
 
 ErrorBox.propTypes = {
     svc: PropTypes.object.isRequired,

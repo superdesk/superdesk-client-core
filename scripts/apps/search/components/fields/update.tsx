@@ -19,7 +19,7 @@ export const update:React.StatelessComponent<any> = (props) => {
             )
         );
     }
-}
+};
 
 update.propTypes = {
     svc: PropTypes.any.isRequired,

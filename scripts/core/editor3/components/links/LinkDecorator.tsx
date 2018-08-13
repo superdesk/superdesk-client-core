@@ -30,7 +30,7 @@ class LinkComponent extends React.Component<any, any> {
     static defaultProps: any;
 
     link: any;
-    
+
     constructor(props) {
         super(props);
 

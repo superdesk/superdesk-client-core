@@ -12,6 +12,6 @@ export const language:React.StatelessComponent<any> = ({item}) => {
             {get(item, 'language')}
         </span>
     );
-}
+};
 
 language.propTypes = {item: PropTypes.object.isRequired};

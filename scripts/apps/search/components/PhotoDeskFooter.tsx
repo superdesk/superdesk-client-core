@@ -45,7 +45,7 @@ export const PhotoDeskFooter:React.StatelessComponent<any> = (props) => {
             }
         </div>
     );
-}
+};
 
 PhotoDeskFooter.propTypes = {
     svc: PropTypes.object.isRequired,

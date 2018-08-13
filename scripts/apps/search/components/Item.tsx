@@ -30,11 +30,6 @@ export class Item extends React.Component<any, any> {
     static propTypes: any;
     static defaultProps: any;
 
-    
-    
- 
-    
-    
 
     constructor(props) {
         super(props);

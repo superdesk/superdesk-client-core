@@ -8,7 +8,7 @@ export const takekey:React.StatelessComponent<any> = (props) => {
         return React.createElement('span', {className: 'takekey', key: 'takekey'},
             gettextCatalog.getString(props.item.anpa_take_key));
     }
-}
+};
 
 takekey.propTypes = {
     svc: PropTypes.any.isRequired,

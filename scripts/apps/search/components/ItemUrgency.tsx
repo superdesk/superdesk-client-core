@@ -30,7 +30,7 @@ export const ItemUrgency:React.StatelessComponent<any> = (props) => {
         },
         urgency
     );
-}
+};
 
 ItemUrgency.propTypes = {
     svc: PropTypes.object.isRequired,

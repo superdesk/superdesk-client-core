@@ -32,7 +32,7 @@ export const flags:React.StatelessComponent<any> = (props) => {
     ].filter(angular.identity);
 
     return elems.length ? React.createElement('div', {key: 'flags'}, elems) : null;
-}
+};
 
 flags.propTypes = {
     svc: PropTypes.any.isRequired,

@@ -16,7 +16,7 @@ export const assignment:React.StatelessComponent<any> = ({item, svc}) => {
             <i className="icon-calendar" />
         </span>
     );
-}
+};
 
 assignment.propTypes = {
     item: PropTypes.object.isRequired,

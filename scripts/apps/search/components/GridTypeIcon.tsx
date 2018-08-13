@@ -18,7 +18,7 @@ export const GridTypeIcon:React.StatelessComponent<any> = (props) => {
         {className: classNames('type-icon', {swimlane: props.swimlane})},
         React.createElement(TypeIcon, {type: props.item.type, svc: props.svc})
     );
-}
+};
 
 GridTypeIcon.propTypes = {
     svc: PropTypes.object.isRequired,

@@ -7,7 +7,7 @@ export const category:React.StatelessComponent<any> = (props) => {
     if (anpa.name) {
         return React.createElement('div', {className: 'category', key: 'category'}, anpa.name);
     }
-}
+};
 
 category.propTypes = {
     item: PropTypes.any,

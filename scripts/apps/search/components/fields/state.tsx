@@ -25,7 +25,7 @@ export const state:React.StatelessComponent<any> = (props) => {
             $filter('removeLodash')(gettextCatalog.getString(props.item.state))
         );
     }
-}
+};
 
 state.propTypes = {
     svc: PropTypes.any.isRequired,

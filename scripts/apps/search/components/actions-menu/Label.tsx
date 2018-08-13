@@ -23,7 +23,7 @@ export const Label:React.StatelessComponent<any> = (props) => {
         ) : null
         )
     );
-}
+};
 
 Label.propTypes = {
     svc: PropTypes.object.isRequired,

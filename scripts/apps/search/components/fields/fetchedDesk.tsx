@@ -10,7 +10,7 @@ export const fetchedDesk:React.StatelessComponent<any> = (props) => {
             svc: props.svc,
         });
     }
-}
+};
 
 fetchedDesk.propTypes = {
     svc: PropTypes.object.isRequired,

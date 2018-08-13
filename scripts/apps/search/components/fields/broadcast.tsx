@@ -11,7 +11,7 @@ export const broadcast:React.StatelessComponent<any> = (props) => {
             '!'
         );
     }
-}
+};
 
 broadcast.propTypes = {
     item: PropTypes.any,

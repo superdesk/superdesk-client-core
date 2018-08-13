@@ -16,7 +16,7 @@ export const Dropdown:React.StatelessComponent<any> = (props) => {
             <div className={childClassNames.join(' ')}>{props.children}</div>
         </div>
     );
-}
+};
 
 Dropdown.propTypes = {
     open: PropTypes.bool,

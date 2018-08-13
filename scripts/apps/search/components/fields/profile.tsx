@@ -11,7 +11,7 @@ export const profile:React.StatelessComponent<any> = (props) => {
                 props.item.profile
         );
     }
-}
+};
 
 profile.propTypes = {
     item: PropTypes.any,

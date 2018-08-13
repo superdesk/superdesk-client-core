@@ -19,9 +19,6 @@ export class Item extends React.Component<any, any> {
     static defaultProps: any;
 
     svc: any;
- 
-    
-    
 
     constructor(props) {
         super(props);

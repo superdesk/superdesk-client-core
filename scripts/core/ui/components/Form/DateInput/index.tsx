@@ -19,7 +19,7 @@ export class DateInput extends React.Component<any, any> {
     static propTypes: any;
     static defaultProps: any;
 
-    dom: any;    
+    dom: any;
 
     constructor(props) {
         super(props);

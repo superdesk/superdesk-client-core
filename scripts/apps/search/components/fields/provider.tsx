@@ -10,7 +10,7 @@ export const provider:React.StatelessComponent<any> = (props) => {
     if (provider) {
         return React.createElement('span', {className: 'provider', key: 'provider'}, provider);
     }
-}
+};
 
 provider.propTypes = {
     item: PropTypes.any,

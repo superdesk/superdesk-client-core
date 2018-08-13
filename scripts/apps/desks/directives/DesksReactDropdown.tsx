@@ -14,10 +14,8 @@
 import React from 'react';
 import {MarkDesksDropdown} from 'apps/desks/components';
 
-export const DesksReactDropdown:any = (item, className, desks, noDesksLabel) => {
-    return (
-        <MarkDesksDropdown className={className} desks={desks} item={item} noDesksLabel={noDesksLabel}/>
-    );
-}
+export const DesksReactDropdown:any = (item, className, desks, noDesksLabel) => (
+    <MarkDesksDropdown className={className} desks={desks} item={item} noDesksLabel={noDesksLabel}/>
+);
 
 DesksReactDropdown.$inject = ['item', 'className', 'desks', 'noDesksLabel'];

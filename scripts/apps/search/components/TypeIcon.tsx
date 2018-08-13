@@ -15,7 +15,7 @@ export const TypeIcon:React.StatelessComponent<any> = (props) => {
         className: 'filetype-icon-' + props.type,
         title: `${gettextCatalog.getString('Article Type')}: ${props.type}`,
     });
-}
+};
 
 TypeIcon.propTypes = {
     svc: PropTypes.object.isRequired,

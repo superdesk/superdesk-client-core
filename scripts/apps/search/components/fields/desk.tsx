@@ -11,7 +11,7 @@ export const desk:React.StatelessComponent<any> = (props) => {
             svc: props.svc,
         });
     }
-}
+};
 
 desk.propTypes = {
     svc: PropTypes.object.isRequired,

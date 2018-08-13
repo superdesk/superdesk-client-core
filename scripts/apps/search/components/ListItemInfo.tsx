@@ -28,7 +28,7 @@ export const ListItemInfo:React.StatelessComponent<any> = (props) => {
             scope: props.scope,
         }, props), {className: 'line'})
     );
-}
+};
 
 ListItemInfo.propTypes = {
     svc: PropTypes.object.isRequired,

@@ -26,7 +26,7 @@ export const PhotoDeskPreview:React.StatelessComponent<any> = (props) => {
                 onMultiSelect={props.onMultiSelect} svc={props.svc}/>
         </div>
     );
-}
+};
 
 PhotoDeskPreview.propTypes = {
     svc: PropTypes.object.isRequired,

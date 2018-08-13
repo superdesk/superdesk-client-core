@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 export class HighlightsPopupPresentation extends React.Component<any, any> {
     static propTypes: any;
     static defaultProps: any;
-    
+
     animationTimer: any;
     highlightsPopupRootElement: any;
     highlightsPopupMainFlexElement: any;

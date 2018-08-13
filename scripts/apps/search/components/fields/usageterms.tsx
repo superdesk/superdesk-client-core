@@ -15,7 +15,7 @@ export const usageterms:React.StatelessComponent<any> = ({item}) => {
     }
 
     return null;
-}
+};
 
 usageterms.propTypes = {
     item: PropTypes.object.isRequired,

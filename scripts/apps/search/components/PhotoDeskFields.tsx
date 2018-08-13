@@ -35,7 +35,7 @@ export const PhotoDeskFieldsComponent:React.StatelessComponent<any> = (props) =>
                 )
                 : <span className="sd-grid-item__footer-block-item" key={i}>{value}</span>;
         });
-}
+};
 
 export const PhotoDeskFields:React.StatelessComponent<any> = connectPromiseResults(() => ({
     getLabelForFieldId: getLabelNameResolver(),

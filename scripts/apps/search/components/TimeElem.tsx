@@ -9,7 +9,7 @@ export const TimeElem:React.StatelessComponent<any> = (props) => {
         {title: datetime.longFormat(props.date)},
         datetime.shortFormat(props.date)
     );
-}
+};
 
 TimeElem.propTypes = {
     svc: PropTypes.object.isRequired,

@@ -11,7 +11,7 @@ export const ListPriority:React.StatelessComponent<any> = (props) => {
     };
 
     return renderArea('priority', props, css) || React.createElement('div', css);
-}
+};
 
 ListPriority.propTypes = {
     svc: PropTypes.object.isRequired,

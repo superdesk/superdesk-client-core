@@ -21,7 +21,7 @@ export const DateTime:React.StatelessComponent<any> = ({date, withTime, withDate
     >
         {moment(date).format(dateTimeFormat)}
     </time>;
-}
+};
 
 DateTime.defaultProps = {
     withTime: true,

@@ -52,7 +52,7 @@ export const MediaPreview:React.StatelessComponent<any> = (props) => {
             svc: props.svc,
         })
     );
-}
+};
 
 MediaPreview.propTypes = {
     svc: PropTypes.object.isRequired,
