@@ -19,7 +19,11 @@ function getQumuData(html) {
     );
 }
 
-export const isQumuWidget = (html) => ng.get('config').features.qumu && html.includes(QumuString);
+export const isQumuWidget = (html) => {
+    const config = ng.get('config');
+
+    return config.features != null && config.features.qumu && html.includes(QumuString);
+};
 const getQumuConfigString = (html) => html.slice(html.indexOf('{'), html.lastIndexOf('}') + 1);
 
 export function postProccessQumuEmbed(html) {
