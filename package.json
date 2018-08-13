@@ -104,11 +104,12 @@
     "webpack-dev-server": "2.11.1"
   },
   "devDependencies": {
-    "@types/react": "^16.4.9",
     "@types/lodash": "^4.14.116",
+    "@types/react": "^16.4.9",
     "btoa": "^1.1.2",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
+    "eslint": "^5.3.0",
     "grunt-eslint": "^20.1.0",
     "grunt-karma": "^2.0.0",
     "jasmine-core": "^2.99.1",
@@ -123,14 +124,15 @@
     "react-addons-test-utils": "^15.6.0",
     "react-test-renderer": "^16.2.0",
     "request": "^2.83.0",
-    "superdesk-code-style": "^1.1.1"
+    "superdesk-code-style": "^1.1.1",
+    "typescript-eslint-parser": "^18.0.0"
   },
   "scripts": {
     "test": "grunt ci:travis",
     "debug-unit-tests": "karma start karma.conf.js --browsers=Chrome",
     "unit": "grunt unit",
     "build": "grunt build",
-    "lint": "eslint --ext .js --ext .jsx scripts spec tasks *.js",
+    "lint": "eslint --ext .js --ext .jsx --ext .tsx scripts spec tasks *.js",
     "start-test-server": "cd test-server && python3 -m venv env && . env/bin/activate && pip install -Ur requirements.txt && honcho start",
     "protractor": "protractor protractor.conf.js",
     "webdriver-manager": "webdriver-manager"

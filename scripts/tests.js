@@ -9,6 +9,6 @@ import Adapter from 'enzyme-adapter-react-16';
 
 Enzyme.configure({adapter: new Adapter()});
 
-var testsContext = require.context('.', true, /.spec.jsx?$/);
+var testsContext = require.context('.', true, /.spec.[t|j]sx?$/);
 
 testsContext.keys().forEach(testsContext);
