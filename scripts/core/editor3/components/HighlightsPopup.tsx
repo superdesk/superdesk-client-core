@@ -121,7 +121,7 @@ export class HighlightsPopup extends React.Component<any, any> {
                 />
             );
         } else {
-            console.error('Invalid highlight type in HighlightsPopup.jsx: ', type);
+            console.error('Invalid highlight type in HighlightsPopup: ', type);
         }
     }
 
