@@ -40,7 +40,7 @@ const addTable = (state, data) => {
     const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
 
     const {editorState} = insertAtomicBlockWithoutEmptyLines(
-        editorState,
+        state.editorState,
         entityKey,
         ' '
     );
