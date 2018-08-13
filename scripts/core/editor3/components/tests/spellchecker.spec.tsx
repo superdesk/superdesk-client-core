@@ -25,13 +25,15 @@ describe('editor3.components.spellchecker-decorator', () => {
     }));
 
     it('should render children', inject(() => {
-        const children:any = [<span key={0} data-text="tihs" data-start={3} />];
-        // eslint-disable-next-line react/no-children-prop
-        const wrapper = shallow(<SpellcheckerError children={children} />);
+        const wrapper = shallow(
+            <SpellcheckerError>
+                <strong>hello </strong>
+                <strong>world</strong>
+            </SpellcheckerError>
+        );
 
-        expect(wrapper.find({text: 'tihs'}).length).toBe(1);
-        expect(wrapper.find({text: 'tihs'}).key()).toBe('0');
-        expect(wrapper.find({text: 'tihs'}).prop('start')).toBe(3);
+        expect(wrapper.find('strong').length).toBe(2);
+        expect(wrapper.text()).toBe('hello world');
     }));
 
     it('should obtain correct state when context menu is triggered', inject((spellcheck, $rootScope) => {

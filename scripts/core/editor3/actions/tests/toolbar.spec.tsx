@@ -28,7 +28,7 @@ describe('editor3.actions.toolbar', () => {
     it('insertMedia', inject((superdesk, $rootScope) => {
         const dispatch = jasmine.createSpy('dispatcher');
 
-        insertMedia([])(dispatch);
+        insertMedia()(dispatch);
 
         $rootScope.$apply();
 

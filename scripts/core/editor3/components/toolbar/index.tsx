@@ -255,7 +255,7 @@ const mapStateToProps = ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    insertMedia: () => dispatch(actions.insertMedia([])),
+    insertMedia: () => dispatch(actions.insertMedia()),
     showPopup: (type, data) => dispatch(actions.showPopup(type, data)),
     addTable: () => dispatch(actions.addTable()),
     toggleSuggestingMode: () => dispatch(actions.toggleSuggestingMode()),
