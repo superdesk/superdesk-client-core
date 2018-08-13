@@ -7,7 +7,9 @@ import classNames from 'classnames';
  * @name SidePanel
  * @description SidePanel Component used usually for Advanced Search panels
  */
-export const SidePanel:React.StatelessComponent<any> = ({children, shadowRight, shadowLeft, transparent, className}) => (
+export const SidePanel:React.StatelessComponent<any> = (
+    {children, shadowRight, shadowLeft, transparent, className}
+) => (
     <div className={classNames(
         'side-panel',
         {'side-panel--shadow-right': shadowRight},

@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import classNames from 'classnames';
@@ -71,4 +71,7 @@ const mapDispatchToProps = (dispatch) => ({
     removeLinkSuggestion: () => dispatch(actions.removeLinkSuggestion()),
 });
 
-export const LinkToolbar:React.StatelessComponent<any> = connect(mapStateToProps, mapDispatchToProps)(LinkToolbarComponent);
+export const LinkToolbar:React.StatelessComponent<any> = connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(LinkToolbarComponent);

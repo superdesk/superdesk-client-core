@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import BlockStyleButtons from './BlockStyleButtons';
 import InlineStyleButtons from './InlineStyleButtons';

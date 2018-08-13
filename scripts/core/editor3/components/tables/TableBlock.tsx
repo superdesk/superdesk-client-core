@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import * as actions from '../../actions';
@@ -145,4 +145,7 @@ const mapStateToProps = (state) => ({
     activeCell: state.activeCell,
 });
 
-export const TableBlock:React.StatelessComponent<any> = connect(mapStateToProps, mapDispatchToProps)(TableBlockComponent);
+export const TableBlock:React.StatelessComponent<any> = connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(TableBlockComponent);

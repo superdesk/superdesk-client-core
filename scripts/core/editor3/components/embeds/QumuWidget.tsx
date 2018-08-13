@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import json5 from 'json5';
 import ng from 'core/services/ng';

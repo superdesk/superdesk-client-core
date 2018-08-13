@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import * as actions from '../../actions';
@@ -128,4 +128,7 @@ const mapDispatchToProps = (dispatch) => ({
     replaceWord: (word) => setTimeout(() => dispatch(actions.replaceWord(word)), 0),
 });
 
-export const SpellcheckerContextMenu:React.StatelessComponent<any> = connect(null, mapDispatchToProps)(SpellcheckerContextMenuComponent);
+export const SpellcheckerContextMenu:React.StatelessComponent<any> = connect(
+    null,
+    mapDispatchToProps
+)(SpellcheckerContextMenuComponent);

@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import ng from 'core/services/ng';
@@ -356,4 +356,7 @@ const mapDispatchToProps = (dispatch) => ({
     setLocked: () => dispatch(actions.setLocked(true)),
 });
 
-export const MediaBlock:React.StatelessComponent<any> = connect(mapStateToProps, mapDispatchToProps)(MediaBlockComponent);
+export const MediaBlock:React.StatelessComponent<any> = connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(MediaBlockComponent);

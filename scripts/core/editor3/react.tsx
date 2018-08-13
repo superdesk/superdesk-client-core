@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import createEditorStore from './store';
 import {Editor3} from './components';
 import {Provider} from 'react-redux';

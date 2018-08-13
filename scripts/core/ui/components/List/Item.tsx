@@ -7,7 +7,9 @@ import classNames from 'classnames';
  * @name Item
  * @description Component to encapsulate a list item
  */
-export const Item:React.StatelessComponent<any> = ({children, noBg, noHover, shadow, activated, className, onClick, margin}) => (
+export const Item:React.StatelessComponent<any> = (
+    {children, noBg, noHover, shadow, activated, className, onClick, margin}
+) => (
     <div className={classNames(
         className,
         'sd-list-item',

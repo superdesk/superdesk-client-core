@@ -7,7 +7,9 @@ import classNames from 'classnames';
  * @name Row
  * @description Row Component to be used in an item preview to show an item's detail
  */
-export const Row:React.StatelessComponent<any> = ({label, value, className, children, noPadding, enabled, flex, rowItem}) => (
+export const Row:React.StatelessComponent<any> = (
+    {label, value, className, children, noPadding, enabled, flex, rowItem}
+) => (
     enabled ?
         <div
             className={classNames(

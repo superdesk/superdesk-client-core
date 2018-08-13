@@ -9,7 +9,9 @@ import Label from './Label';
  * @name Header
  * @description Header Component of a popup
  */
-const Header:React.StatelessComponent<any> = ({text, onClose, children, className, noBorder, noPadding, centerText}): any => (
+const Header:React.StatelessComponent<any> = (
+    {text, onClose, children, className, noBorder, noPadding, centerText}
+): any => (
     <div className={classNames(
         'popup__menu-header',
         {

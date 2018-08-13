@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import moment from 'moment';
 import {TextWithMentions} from 'apps/users/components';
 import CommentTextArea from './CommentTextArea';

@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import {EditorState} from 'draft-js';
 import {render, unmountComponentAtNode} from 'react-dom';
 import PropTypes from 'prop-types';
