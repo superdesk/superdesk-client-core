@@ -1,7 +1,6 @@
 var path = require('path');
 var webpack = require('webpack');
 var lodash = require('lodash');
-var FixDefaultImportPlugin = require('webpack-fix-default-import-plugin');
 
 // makeConfig creates a new configuration file based on the passed options.
 module.exports = function makeConfig(grunt) {
@@ -62,7 +61,6 @@ module.exports = function makeConfig(grunt) {
             new webpack.DefinePlugin({
                 __SUPERDESK_CONFIG__: JSON.stringify(sdConfig),
             }),
-            new FixDefaultImportPlugin(),
         ],
 
         resolve: {
