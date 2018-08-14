@@ -34,6 +34,7 @@ import postscribe from 'postscribe';
  * @requires metadata
  * @requires suggest
  * @requires config
+ * @requires deployConfig
  * @requires editorResolver
  * @requires $sce
  * @requires mediaIdGenerator
@@ -69,6 +70,7 @@ AuthoringDirective.$inject = [
     'metadata',
     'suggest',
     'config',
+    'deployConfig',
     'editorResolver',
     'compareVersions',
     'embedService',
@@ -79,8 +81,8 @@ AuthoringDirective.$inject = [
 export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace, notify,
     gettext, desks, authoring, api, session, lock, privileges, content, $location,
     referrer, macros, $timeout, $q, modal, archiveService, confirm, reloadService,
-    $rootScope, $interpolate, metadata, suggest, config, editorResolver, compareVersions,
-    embedService, $sce, mediaIdGenerator, logger) {
+    $rootScope, $interpolate, metadata, suggest, config, deployConfig, editorResolver,
+    compareVersions, embedService, $sce, mediaIdGenerator, logger) {
     return {
         link: function($scope, elem, attrs) {
             var _closing;
@@ -487,7 +489,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             }
 
             function validateForPublish(item) {
-                var validator = $rootScope.config.validatorMediaMetadata;
+                var validator = deployConfig.getSync('validator_media_metadata');
 
                 if (item.type === 'picture' || item.type === 'graphic') {
                     // required media metadata fields are defined in superdesk.config.js

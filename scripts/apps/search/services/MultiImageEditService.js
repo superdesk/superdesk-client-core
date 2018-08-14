@@ -1,10 +1,10 @@
 import _ from 'lodash';
 
-MultiImageEditController.$inject = ['$scope', 'config', 'modal', 'gettextCatalog', 'data', 'authoring'];
-export function MultiImageEditController($scope, config, modal, gettextCatalog, data, authoring) {
+MultiImageEditController.$inject = ['$scope', 'deployConfig', 'modal', 'gettextCatalog', 'data', 'authoring'];
+export function MultiImageEditController($scope, deployConfig, modal, gettextCatalog, data, authoring) {
     let changes = {};
 
-    $scope.validator = config.validatorMediaMetadata;
+    $scope.validator = deployConfig.getSync('validator_media_metadata');
 
     $scope.origin = angular.copy(data);
     $scope.images = angular.copy(data);

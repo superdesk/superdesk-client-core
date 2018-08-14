@@ -1,8 +1,8 @@
 import EXIF from 'exif-js';
 import _ from 'lodash';
 
-UploadController.$inject = ['$scope', '$q', 'upload', 'api', 'archiveService', 'session', 'config'];
-export function UploadController($scope, $q, upload, api, archiveService, session, config) {
+UploadController.$inject = ['$scope', '$q', 'upload', 'api', 'archiveService', 'session', 'deployConfig'];
+export function UploadController($scope, $q, upload, api, archiveService, session, deployConfig) {
     $scope.items = [];
     $scope.saving = false;
     $scope.failed = false;
@@ -14,7 +14,7 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
     $scope.allowPicture = !($scope.locals && $scope.locals.data && $scope.locals.data.allowPicture === false);
     $scope.allowVideo = !($scope.locals && $scope.locals.data && $scope.locals.data.allowVideo === false);
     $scope.allowAudio = !($scope.locals && $scope.locals.data && $scope.locals.data.allowAudio === false);
-    $scope.validator = config.validatorMediaMetadata;
+    $scope.validator = deployConfig.getSync('validator_media_metadata');
 
     var uploadFile = function(item) {
         var handleError = function(reason) {

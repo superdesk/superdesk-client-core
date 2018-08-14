@@ -1,4 +1,28 @@
-
+var testDeployConfig = {
+    validator_media_metadata: {
+        headline: {
+            required: true,
+        },
+        alt_text: {
+            required: true,
+        },
+        description_text: {
+            required: true,
+        },
+        copyrightholder: {
+            required: false,
+        },
+        byline: {
+            required: false,
+        },
+        usageterms: {
+            required: false,
+        },
+        copyrightnotice: {
+            required: false,
+        },
+    },
+};
 
 describe('Upload controller', () => {
     var files = [{type: 'text/plain'}],
@@ -30,9 +54,10 @@ describe('Upload controller', () => {
         spyOn(api.archive, 'update').and.returnValue($q.when({}));
     }));
 
-    it('can upload files when added', inject(($controller, $rootScope, $q, api, upload) => {
+    it('can upload files when added', inject(($controller, $rootScope, $q, api, upload, deployConfig) => {
         var scope = $rootScope.$new(true);
 
+        deployConfig.config = testDeployConfig;
         spyOn(upload, 'start').and.callThrough();
 
         scope.resolve = function() { /* no-op */ };
@@ -85,8 +110,10 @@ describe('Upload controller', () => {
     }));
 
     it('can display error message if any of metadata field missing',
-        inject(($controller, $rootScope, $q, api, upload, config) => {
+        inject(($controller, $rootScope, $q, api, upload, deployConfig) => {
             var scope = $rootScope.$new(true);
+
+            deployConfig.config = testDeployConfig;
 
             $controller('UploadController', {$scope: scope});
             $rootScope.$digest();
