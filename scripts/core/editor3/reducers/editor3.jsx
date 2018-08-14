@@ -238,16 +238,15 @@ const setHtmlFromTansa = (state, html) => {
 };
 
 /**
- * Move atomic block
+ * Move atomic block and return the state
  *
  * @param {Object} state
  * @param {String} block
  * @param {String} dest
  * @param {String} insertionMode before|after
- * @param {Bool} returnState Returns state without calling onChange
  * @return {Object}
  */
-export function moveBlock(state, {block, dest, insertionMode, returnState = false}) {
+export function moveBlockWithoutDispatching(state, {block, dest, insertionMode}) {
     const {editorState} = state;
     const contentState = editorState.getCurrentContent();
 
@@ -270,11 +269,23 @@ export function moveBlock(state, {block, dest, insertionMode, returnState = fals
         insertionMode
     );
 
-    if (returnState) {
-        return {...state, editorState: withMovedAtomicBlock};
-    }
+    return {...state, editorState: withMovedAtomicBlock};
+}
 
-    return onChange(state, withMovedAtomicBlock);
+/**
+ * Move atomic block
+ *
+ * @param {Object} state
+ * @param {Object} options
+ *                 block
+ *                 dest
+ *                 insertionMode before|after
+ * @return {Object}
+ */
+export function moveBlock(state, options) {
+    const stateWithMovedBlock = moveBlockWithoutDispatching(state, options);
+
+    return onChange(state, stateWithMovedBlock);
 }
 
 export default editor3;

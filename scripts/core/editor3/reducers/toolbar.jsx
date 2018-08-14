@@ -6,7 +6,7 @@ import * as Links from '../helpers/links';
 import * as Blocks from '../helpers/blocks';
 import * as Highlights from '../helpers/highlights';
 import {removeFormatFromState} from '../helpers/removeFormat';
-import {moveBlock} from './editor3';
+import {moveBlockWithoutDispatching} from './editor3';
 
 /**
  * @description Contains the list of toolbar related reducers.
@@ -144,14 +144,14 @@ const removeFormat = (state) => {
  * @ngdoc method
  * @name insertMedia
  * @param {Array} files List of media files to be inserted into document.
- * @param {String} moveKey Block key
+ * @param {String} targetBlockKey Block key where we want to insert the media
  * @description Inserts a list of media files into the document.
  */
-const insertMedia = (state, {files = [], moveKey = null}) => {
+const insertMedia = (state, {files = [], targetBlockKey = null}) => {
     let {editorState} = state;
 
     files.forEach((file) => {
-        editorState = addMedia(editorState, file, moveKey);
+        editorState = addMedia(editorState, file, targetBlockKey);
     });
 
     return onChange(state, editorState);
@@ -162,12 +162,12 @@ const insertMedia = (state, {files = [], moveKey = null}) => {
  * @name addMedia
  * @param {Object} editorState Editor state to add the media to.
  * @param {Object} media Media data.
- * @param {String} moveKey Block key where the media is going to
+ * @param {String} targetBlockKey Block key where the media is going to
  * @returns {Object} New editor state with media inserted as atomic block.
  * @description Inserts the given media into the given editor state's content and returns
  * the updated editor state.
  */
-export const addMedia = (editorState, media, moveKey = null) => {
+export const addMedia = (editorState, media, targetBlockKey = null) => {
     const contentState = editorState.getCurrentContent();
     const contentStateWithEntity = contentState.createEntity('MEDIA', 'MUTABLE', {media});
     const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
@@ -178,12 +178,12 @@ export const addMedia = (editorState, media, moveKey = null) => {
         ' '
     );
 
-    if (moveKey) {
-        stateWithBlock = moveBlock(
+    if (targetBlockKey) {
+        stateWithBlock = moveBlockWithoutDispatching(
             {editorState: stateWithBlock},
             {
                 block: newBlockKey,
-                dest: moveKey,
+                dest: targetBlockKey,
                 insertionMode: 'after',
                 returnState: true,
             }

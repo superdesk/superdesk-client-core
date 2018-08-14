@@ -51,14 +51,14 @@ export function getValidMediaType(event) {
 
 /**
     * @ngdoc method
-    * @name Editor3#allowItem
+    * @name Editor3#canDropMedia
     * @param {Object} e Event
-    * @param {Array} props
+    * @param {Array} editorConfig
     * @returns {Boolean} Returns true if the item is permitted.
     * @description Check if the editor accept images and if current item is valid media.
     */
-export function allowItem(e, props) {
-    const {editorFormat, readOnly, singleLine} = props;
+export function canDropMedia(e, editorConfig) {
+    const {editorFormat, readOnly, singleLine} = editorConfig;
     const isValidMedia = !!getValidMediaType(e.originalEvent);
     const supportsMedia = !readOnly && !singleLine && editorFormat.indexOf('media') !== -1;
 
@@ -120,7 +120,7 @@ export class Editor3Component extends React.Component {
      * @description Checks if the dragged over item is not allowed.
      */
     onDragOver(e) {
-        return !allowItem(e, this.props);
+        return !canDropMedia(e, this.props);
     }
 
     keyBindingFn(e) {
