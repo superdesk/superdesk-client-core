@@ -285,7 +285,7 @@ export function moveBlockWithoutDispatching(state, {block, dest, insertionMode})
 export function moveBlock(state, options) {
     const stateWithMovedBlock = moveBlockWithoutDispatching(state, options);
 
-    return onChange(state, stateWithMovedBlock);
+    return onChange(state, stateWithMovedBlock.editorState);
 }
 
 export default editor3;
