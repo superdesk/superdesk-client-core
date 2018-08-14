@@ -43,7 +43,6 @@
     "angular-vs-repeat": "1.1.7",
     "ts-loader": "3.5.0",
     "typescript": "3.0.1",
-    "webpack-fix-default-import-plugin": "1.0.3",
     "bootstrap": "3.3.7",
     "classnames": "2.2.5",
     "css-loader": "0.28.10",
