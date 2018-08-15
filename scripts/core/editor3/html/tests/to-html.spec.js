@@ -267,10 +267,10 @@ describe('core.editor3.html.to-html.BlockInlineStyleWrapper', () => {
         expect(wrapper.tags(OS([]))).toEqual('');
         expect(wrapper.tags(OS(['BOLD', 'ITALIC']))).toEqual('<b><i>');
         expect(wrapper.tags(OS(['BOLD', 'ITALIC']))).toEqual('');
-        expect(wrapper.tags(OS(['ITALIC']))).toEqual('</b>');
+        expect(wrapper.tags(OS(['ITALIC']))).toEqual('</i></b><i>');
         expect(wrapper.tags(OS(['ITALIC', 'UNDERLINE']))).toEqual('<u>');
-        expect(wrapper.tags(OS(['UNDERLINE', 'BOLD']))).toEqual('</i><b>');
-        expect(wrapper.tags(OS([]))).toEqual('</u></b>');
+        expect(wrapper.tags(OS(['UNDERLINE', 'BOLD']))).toEqual('</u></i><u><b>');
+        expect(wrapper.tags(OS([]))).toEqual('</b></u>');
         expect(wrapper.tags(OS(['ITALIC', 'UNDERLINE']))).toEqual('<i><u>');
 
         expect(wrapper.flush()).toEqual('</u></i>');

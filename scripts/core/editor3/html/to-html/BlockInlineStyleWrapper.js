@@ -87,8 +87,14 @@ export class BlockInlineStyleWrapper {
             return '';
         }
 
-        const noLongerApplied = this.activeStyles
+        let noLongerApplied = this.activeStyles
             .filter((s) => styles.toArray().indexOf(s) === -1);
+
+        if (noLongerApplied.length !== 0) {
+            const index = this.activeStyles.indexOf(noLongerApplied[0]);
+
+            noLongerApplied = this.activeStyles.slice(index).reverse();
+        }
 
         return noLongerApplied.map((style) => {
             const tag = this.getTag(style, 'close');
