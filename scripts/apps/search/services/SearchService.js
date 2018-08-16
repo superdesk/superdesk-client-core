@@ -354,7 +354,7 @@ export function SearchService($location, gettext, config, session, multi,
 
                         facetrange[fieldname] = {
                             gte: formatDate(firstDayOfLastMonth, zeroHourSuffix),
-                            lte: formatDate(lastDayOfLastMonth, zeroHourSuffix),
+                            lte: formatDate(lastDayOfLastMonth, midnightSuffix),
                         };
                     } else if (dateRange === 'last_week') {
                         const startingDayInt = parseInt(config.startingDay, 10);
@@ -381,7 +381,7 @@ export function SearchService($location, gettext, config, session, multi,
 
                         facetrange[fieldname] = {
                             gte: formatDate(firstDayOfLastWeek, zeroHourSuffix),
-                            lte: formatDate(lastDayOfLastWeek, zeroHourSuffix),
+                            lte: formatDate(lastDayOfLastWeek, midnightSuffix),
                         };
                     } else if (dateRange === 'last_day') {
                         const yesterday = moment(
@@ -390,7 +390,7 @@ export function SearchService($location, gettext, config, session, multi,
 
                         facetrange[fieldname] = {
                             gte: formatDate(yesterday, zeroHourSuffix),
-                            lte: formatDate(yesterday, zeroHourSuffix),
+                            lte: formatDate(yesterday, midnightSuffix),
                         };
                     } else {
                         // handle last x hours for date scheduled

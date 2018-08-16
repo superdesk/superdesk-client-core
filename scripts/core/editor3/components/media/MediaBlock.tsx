@@ -159,6 +159,7 @@ export class MediaBlockComponent extends React.Component<any, any> {
             || get(features, 'editFeaturedImage', true));
 
         const removable = !readOnly;
+        const draggable = removable;
 
         var {gettextCatalog} = this.props.blockProps.svc;
 
@@ -166,7 +167,7 @@ export class MediaBlockComponent extends React.Component<any, any> {
 
             <div className="image-block"
                 onClick={(e) => e.stopPropagation()}
-                draggable={true} onDragStart={this.onDragStart} onDrag={this.onDrag}>
+                draggable={draggable} onDragStart={this.onDragStart} onDrag={this.onDrag}>
                 {
                     removable && (
                         <a className="icn-btn image-block__remove" onClick={this.onClickDelete}>
