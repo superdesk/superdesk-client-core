@@ -4,7 +4,7 @@
     ],
     "compilerOptions": {
         "baseUrl": "scripts",
-        "sourceMap": true,
+        "sourceMap": false,
         "allowJs": true,
         "esModuleInterop": true,
         "module": "commonjs",
