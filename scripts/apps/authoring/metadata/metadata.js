@@ -1154,6 +1154,22 @@ function MetadataService(api, subscribersService, config, vocabularies, $rootSco
                 self.values.cities = result._items;
             });
         },
+        fetchAgendas: function() {
+            var self = this;
+
+            if ($rootScope.features.agenda) {
+                return api.get('/agenda').then((result) => {
+                    var agendas = [];
+
+                    _.each(result._items, (item) => {
+                        if (item.is_enabled) {
+                            agendas.push({name: item.name, id: item._id, qcode: item.name});
+                        }
+                    });
+                    self.values.agendas = agendas;
+                });
+            }
+        },
         filterCvs: function(qcodes, cvs) {
             var self = this;
 
@@ -1196,7 +1212,8 @@ function MetadataService(api, subscribersService, config, vocabularies, $rootSco
                     .then(angular.bind(this, this.fetchSubjectcodes))
                     .then(angular.bind(this, this.fetchAuthors))
                     .then(angular.bind(this, this.fetchSubscribers))
-                    .then(angular.bind(this, this.fetchCities));
+                    .then(angular.bind(this, this.fetchCities))
+                    .then(angular.bind(this, this.fetchAgendas));
             }
 
             return this.loaded;

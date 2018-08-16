@@ -161,6 +161,17 @@ export function UserPreferencesDirective(
 
             scope.profileConfig = _.get(config, 'profile', {});
 
+
+            /**
+             * Determine if the planning related preferences should be shown based on the existance of the
+             * Agenda endpoint.
+             *
+             * @method showPlanning
+             */
+            scope.showPlanning = function() {
+                return !angular.isUndefined(scope.features.agenda);
+            };
+
             /**
             * Builds a user preferences object in scope from the given
             * data.
@@ -186,7 +197,7 @@ export function UserPreferencesDirective(
                 // values object is undefined or any of the needed
                 // data buckets are missing in it
                 buckets = [
-                    'cities', 'categories', 'default_categories', 'locators', 'calendars',
+                    'cities', 'categories', 'default_categories', 'locators', 'calendars', 'agendas',
                 ];
 
                 initNeeded = buckets.some((bucketName) => {
@@ -219,6 +230,11 @@ export function UserPreferencesDirective(
             */
             function updateScopeData(helperData, userPrefs) {
                 scope.cities = helperData.cities;
+
+                // If the planning module is installed we save a list of the available agendas
+                if (scope.features.agenda) {
+                    scope.agendas = helperData.agendas;
+                }
 
                 // A list of category codes that are considered
                 // preferred by default, unless of course the user
