@@ -10,6 +10,7 @@ module.exports = {
     app: {
         src: [
             path.join(root, 'scripts/**/*.js'),
+            path.join(root, 'scripts/**/*.jsx'),
             path.join(root, 'scripts/**/*.tsx'),
         ],
         envs: ['browser', 'amd'],
@@ -18,6 +19,7 @@ module.exports = {
     specs: {
         src: [
             path.join(root, 'spec/**/*.js'),
+            path.join(root, 'spec/**/*.jsx'),
             path.join(root, 'spec/**/*.tsx'),
         ],
         envs: ['node', 'jasmine'],
