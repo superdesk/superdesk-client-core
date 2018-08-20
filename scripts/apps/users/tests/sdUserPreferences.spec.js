@@ -62,6 +62,7 @@ describe('sdUserPreferences directive', () => {
         // compile the directive and run it
         scope = $rootScope.$new(true);
         scope.user = user;
+        scope.features = {};
         $element = $compile(html)(scope);
         scope.$digest();
     }));
