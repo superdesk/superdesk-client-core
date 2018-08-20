@@ -19,11 +19,17 @@ class UnstyledWrapper extends BaseUnstyledComponent {
     }
 
     render() {
-        const className = 'unstyled ' + (this.state.over ? 'unstyled--over' : '');
+        const className =
+            'unstyled ' + (this.state.over ? 'unstyled--over' : '');
+        const {children} = this.props;
+
+        const childrenWithProps = React.Children.map(children, (child) =>
+            React.cloneElement(child, {editorProps: this.props.editorProps})
+        );
 
         return (
-            <div className={className} ref={(div) => this.div = div}>
-                {this.props.children}
+            <div className={className} ref={(div) => (this.div = div)}>
+                {childrenWithProps}
             </div>
         );
     }
@@ -32,6 +38,7 @@ class UnstyledWrapper extends BaseUnstyledComponent {
 UnstyledWrapper.propTypes = {
     dispatch: PropTypes.func.isRequired,
     children: PropTypes.array,
+    editorProps: PropTypes.object,
 };
 
 export default UnstyledWrapper;

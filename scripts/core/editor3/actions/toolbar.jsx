@@ -64,14 +64,14 @@ export function removeFormat() {
  * @description Displays the external upload dialog and returns the insert media
  * action.
  */
-export function insertMedia(files) {
+export function insertMedia(files, targetBlockKey = null) {
     const superdesk = ng.get('superdesk');
 
     return (dispatch) => {
         superdesk.intent('upload', 'media', files).then((media) => {
             dispatch({
                 type: 'TOOLBAR_INSERT_MEDIA',
-                payload: media,
+                payload: {files: media, targetBlockKey: targetBlockKey},
             });
         });
     };

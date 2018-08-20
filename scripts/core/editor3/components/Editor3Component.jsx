@@ -26,7 +26,6 @@ import {getEntityTypeAfterCursor, getEntityTypeBeforeCursor} from './links/entit
 import {HighlightsPopup} from './HighlightsPopup';
 import UnstyledBlock from './UnstyledBlock';
 import UnstyledWrapper from './UnstyledWrapper';
-import {isEditorBlockEvent} from './BaseUnstyledComponent';
 import {handleBeforeInputHighlights} from '../helpers/handleBeforeInputHighlights';
 import * as Suggestions from '../helpers/suggestions';
 import {getCurrentAuthor} from '../helpers/author';
@@ -46,8 +45,24 @@ const VALID_MEDIA_TYPES = [
  * @param {Event} event
  * @return {String}
  */
-function getValidMediaType(event) {
+export function getValidMediaType(event) {
     return event.dataTransfer.types.find((mediaType) => VALID_MEDIA_TYPES.indexOf(mediaType) !== -1);
+}
+
+/**
+    * @ngdoc method
+    * @name Editor3#canDropMedia
+    * @param {Object} e Event
+    * @param {Array} editorConfig
+    * @returns {Boolean} Returns true if the item is permitted.
+    * @description Check if the editor accept images and if current item is valid media.
+    */
+export function canDropMedia(e, editorConfig) {
+    const {editorFormat, readOnly, singleLine} = editorConfig;
+    const isValidMedia = !!getValidMediaType(e.originalEvent);
+    const supportsMedia = !readOnly && !singleLine && editorFormat.indexOf('media') !== -1;
+
+    return supportsMedia && isValidMedia;
 }
 
 /**
@@ -83,9 +98,7 @@ export class Editor3Component extends React.Component {
         this.editorNode = undefined;
 
         this.focus = this.focus.bind(this);
-        this.allowItem = this.allowItem.bind(this);
         this.onDragOver = this.onDragOver.bind(this);
-        this.onDragDrop = this.onDragDrop.bind(this);
         this.handleKeyCommand = this.handleKeyCommand.bind(this);
         this.handleBeforeInput = this.handleBeforeInput.bind(this);
         this.keyBindingFn = this.keyBindingFn.bind(this);
@@ -102,55 +115,12 @@ export class Editor3Component extends React.Component {
 
     /**
      * @ngdoc method
-     * @name Editor3#allowItem
-     * @returns {Boolean} Returns true if the item is permitted.
-     * @description Check if the editor accept images and if current item is valid media.
-     */
-    allowItem(e) {
-        const {editorFormat, readOnly, singleLine} = this.props;
-        const isValidMedia = !!getValidMediaType(e.originalEvent);
-        const supportsMedia = !readOnly && !singleLine && editorFormat.indexOf('media') !== -1;
-
-        return supportsMedia && isValidMedia;
-    }
-
-    /**
-     * @ngdoc method
      * @name Editor3#onDragOver
      * @returns {Boolean} Returns true if the item is not permitted.
      * @description Checks if the dragged over item is not allowed.
      */
     onDragOver(e) {
-        return !this.allowItem(e);
-    }
-
-    /**
-     * @ngdoc method
-     * @name Editor3#onDragDrop
-     * @description If item is allowed process drop action.
-     */
-    onDragDrop(e) {
-        if (isEditorBlockEvent(e)) { // stop editor block drop propagating
-            e.preventDefault();
-            e.stopPropagation();
-            return;
-        }
-
-        if (this.allowItem(e)) {
-            // Firefox ignores the result of onDragOver and accept the item in all cases
-            // Here will be tested again if the item is allowed
-
-            e.preventDefault();
-            e.stopPropagation();
-
-            const dataTransfer = e.originalEvent.dataTransfer;
-            const mediaType = getValidMediaType(e.originalEvent);
-
-            this.props.dragDrop(dataTransfer, mediaType);
-            return true;
-        }
-
-        return false;
+        return !canDropMedia(e, this.props);
     }
 
     keyBindingFn(e) {
@@ -345,7 +315,6 @@ export class Editor3Component extends React.Component {
 
     componentDidMount() {
         $(this.div).on('dragover', this.onDragOver);
-        $(this.div).on('drop dragdrop', this.onDragDrop);
     }
 
     handleRefs(editor) {
@@ -391,7 +360,7 @@ export class Editor3Component extends React.Component {
                 unstyled: {
                     element: (props) => <UnstyledBlock {...props} dispatch={this.props.dispatch} />,
                     aliasedElements: ['p'],
-                    wrapper: <UnstyledWrapper dispatch={this.props.dispatch} />,
+                    wrapper: <UnstyledWrapper dispatch={this.props.dispatch} editorProps={this.props} />,
                 },
             } : {}
         ));

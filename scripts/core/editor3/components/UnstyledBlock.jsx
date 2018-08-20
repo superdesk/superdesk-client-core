@@ -24,7 +24,7 @@ class UnstyledBlock extends BaseUnstyledComponent {
     render() {
         let {className} = this.props;
 
-        const propsToTransfer = omit(this.props, ['className', 'invisibles', 'dispatch']);
+        const propsToTransfer = omit(this.props, ['className', 'invisibles', 'dispatch', 'editorProps']);
 
         return (
             <div ref={(div) => this.div = div}
@@ -40,7 +40,7 @@ class UnstyledBlock extends BaseUnstyledComponent {
 UnstyledBlock.propTypes = {
     children: PropTypes.object,
     className: PropTypes.string,
-    dispatch: PropTypes.func.isRequired,
+    editorProps: PropTypes.object,
 };
 
 // mapping state to props in `connect` might not work well for this component
