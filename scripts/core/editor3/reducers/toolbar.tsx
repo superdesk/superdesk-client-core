@@ -185,7 +185,6 @@ export const addMedia = (editorState, media, targetBlockKey = null) => {
                 block: newBlockKey,
                 dest: targetBlockKey,
                 insertionMode: 'after',
-                returnState: true,
             }
         ).editorState;
     }
