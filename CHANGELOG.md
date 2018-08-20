@@ -1,5 +1,31 @@
 # Superdesk Client Changelog
 
+## [1.24.0] 2018-08-20
+
+### Fixed
+
+- Update `item.associations` on save action.
+- In custom text fields table controls are not visible when scrolled down.
+- Wrong html output when saving story with inline styles.
+- Fix issue with changing workspace flag.
+- After media edit update etag for media items.
+- Move block to drop area after dragging new image to body.
+- Prevent dragging media around body when item is locked.
+- Adding subnav for privacy and status filters.
+- Search criteria set to last month for publish date is yielding improper results.
+- Unordered list appears as plain list in the preview.
+- Remove update button from edit/correct.
+- After selecting text and adding comment/annotation the cursor jumps to the beginning of input field.
+
+### Added
+
+- Use can set default planning agenda if planning is enabled.
+- Add functionality to edit metadata for single files.
+
+### Changed
+
+- Retrieve validator media metadata from backend.
+
 ## [1.23.0] 2018-08-07
 
 ### Fixed
