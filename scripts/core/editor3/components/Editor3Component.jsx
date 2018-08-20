@@ -423,7 +423,7 @@ Editor3Component.propTypes = {
     unlock: PropTypes.func,
     onTab: PropTypes.func,
     dragDrop: PropTypes.func,
-    scrollContainer: PropTypes.string,
+    scrollContainer: PropTypes.string.isRequired,
     singleLine: PropTypes.bool,
     editorFormat: PropTypes.array,
     tabindex: PropTypes.number,

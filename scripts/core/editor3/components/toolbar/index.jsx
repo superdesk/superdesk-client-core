@@ -228,7 +228,7 @@ ToolbarComponent.propTypes = {
     popup: PropTypes.object,
     editorState: PropTypes.object,
     editorNode: PropTypes.object,
-    scrollContainer: PropTypes.string,
+    scrollContainer: PropTypes.string.isRequired,
     highlightsManager: PropTypes.object.isRequired,
     editorWrapperElement: PropTypes.object,
 };
