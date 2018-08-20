@@ -111,4 +111,4 @@ function insertAtomicBlockWithoutEmptyLines(editorState, entityKey, character) {
     };
 }
 
-module.exports = insertAtomicBlockWithoutEmptyLines;
+export default insertAtomicBlockWithoutEmptyLines;

@@ -227,13 +227,11 @@ function hover(elem) {
  * @return {Promise}
  */
 function waitHidden(elem, time) {
-    return browser.wait(() =>
-        elem.isPresent()
-            .then((isPresent) =>
-                !isPresent ? true : elem.isDisplayed()
-                    .then((isDisplayed) => !isDisplayed)
-            )
-        , time || 1000);
+    return browser.wait(() => elem.isPresent()
+        .then((isPresent) =>
+            !isPresent ? true : elem.isDisplayed()
+                .then((isDisplayed) => !isDisplayed)
+        ), time || 1000);
 }
 
 

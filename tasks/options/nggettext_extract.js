@@ -5,15 +5,16 @@ module.exports = {
             html: 'html',
             js: 'js',
             jsx: 'js',
+            tsx: 'js',
         },
     },
     pot: {
         files: {
             '<%= poDir %>/superdesk.pot': [
-                'scripts/**/*.{html,js,jsx}',
+                'scripts/**/*.{html,js,jsx,tsx}',
                 // planning
                 '../superdesk-planning/index.js',
-                '../superdesk-planning/client/**/*.{html,js,jsx}',
+                '../superdesk-planning/client/**/*.{html,js,jsx,tsx}',
             ],
         },
     },

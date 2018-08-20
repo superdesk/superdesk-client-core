@@ -79,20 +79,15 @@ module.exports = function makeConfig(grunt) {
                 // ensure that react is loaded only once (3rd party apps can load more...)
                 react: path.resolve('./node_modules/react'),
             },
-            extensions: ['.js', '.jsx'],
+            extensions: ['.js', '.jsx', '.ts', '.tsx'],
         },
 
         module: {
             rules: [
                 {
-                    test: /\.jsx?$/,
+                    test: /\.[j|t]sx?$/,
                     exclude: shouldExclude,
-                    loader: 'babel-loader',
-                    options: {
-                        cacheDirectory: true,
-                        presets: ['es2015', 'react'],
-                        plugins: ['transform-object-rest-spread'],
-                    },
+                    loader: 'ts-loader',
                 },
                 {
                     test: /\.html$/,
