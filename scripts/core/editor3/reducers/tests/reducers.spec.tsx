@@ -40,7 +40,7 @@ describe('editor3.reducers', () => {
 
         const {editorState} = reducer(startState, {
             type: 'EDITOR_DRAG_DROP',
-            payload: data,
+            payload: {data: data, blockKey: null},
         });
 
         const contentState = editorState.getCurrentContent();

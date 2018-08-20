@@ -211,6 +211,10 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                         _previewHighlight(res._id);
                     }
 
+                    if (res.associations) {
+                        $scope.item.associations = res.associations;
+                    }
+
                     notify.success(gettext('Item updated.'));
 
                     initMedia();

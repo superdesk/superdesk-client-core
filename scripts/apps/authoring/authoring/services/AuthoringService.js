@@ -290,6 +290,11 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
             delete diff._etag;
         }
 
+        // if current document is image and it has been changed on 'media edit' we have to update the etag
+        if (origItem.type === 'picture' && item._etag != null) {
+            diff._etag = item._etag;
+        }
+
         helpers.filterDefaultValues(diff, origItem);
 
         if (_.size(diff) > 0) {

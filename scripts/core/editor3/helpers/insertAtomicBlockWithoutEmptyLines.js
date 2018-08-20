@@ -39,7 +39,7 @@ function getInsertionTarget(contentState, selectionState) {
         editorState: EditorState,
         entityKey: string,
         character: string
-    ): EditorState
+    ): { editorState: EditorState, blockKey: String }
 */
 
 function insertAtomicBlockWithoutEmptyLines(editorState, entityKey, character) {
@@ -57,6 +57,7 @@ function insertAtomicBlockWithoutEmptyLines(editorState, entityKey, character) {
             characterList: List(),
         }));
     }
+
 
     fragmentArray.push(new ContentBlock({
         key: genKey(),
@@ -92,13 +93,22 @@ function insertAtomicBlockWithoutEmptyLines(editorState, entityKey, character) {
         selectionAfter: withAtomicBlock.getSelectionAfter().set('hasFocus', true),
     });
 
+    const {block: blockKeyForEntity} = newContent.getBlocksAsArray()
+        .map((b) => ({entity: b.getEntityAt(0), block: b.getKey()}))
+        .find((b) => b.entity === entityKey);
+
     let newEditorState = EditorState.push(editorState, newContent, 'insert-fragment');
 
     // for the first block recover the initial block data because on replaceWithFragment the block data is
     // replaced with the data from pasted fragment
     newEditorState = setAllCustomDataForEditor(newEditorState, customData);
 
-    return EditorState.push(editorState, newEditorState.getCurrentContent(), 'insert-fragment');
+    newEditorState = EditorState.push(editorState, newEditorState.getCurrentContent(), 'insert-fragment');
+
+    return {
+        editorState: newEditorState,
+        blockKey: blockKeyForEntity,
+    };
 }
 
 export default insertAtomicBlockWithoutEmptyLines;

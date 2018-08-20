@@ -59,7 +59,7 @@ Editor.propTypes = {
     // If set, it will be used to make sure the toolbar is always
     // visible when scrolling. If not set, window object is used as reference.
     // Any valid jQuery selector will do.
-    scrollContainer: PropTypes.string,
+    scrollContainer: PropTypes.string.isRequired,
 
     // Whether this editor is the target for find & replace
     // operations. The Find & Replace service can only have one editor as
