@@ -110,9 +110,13 @@ angular.module('superdesk.core.menu', [
                     scope.$watch(function currentRoute() {
                         return $route.current;
                     }, (route) => {
-                        scope.currentRoute = route || null;
+                        if (!route) {
+                            return;
+                        }
+
+                        scope.currentRoute = route;
                         setActiveMenuItem(scope.currentRoute);
-                        ctrl.flags.workspace = route ? !!route.sideTemplateUrl : false;
+                        ctrl.flags.workspace = !!route.sideTemplateUrl;
                         ctrl.flags.workqueue = ctrl.flags.workqueue || true;
                     });
 
