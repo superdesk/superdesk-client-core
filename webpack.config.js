@@ -88,6 +88,9 @@ module.exports = function makeConfig(grunt) {
                     test: /\.[j|t]sx?$/,
                     exclude: shouldExclude,
                     loader: 'ts-loader',
+                    options: {
+                        transpileOnly: false, // overwritten for production in webpack.js
+                    },
                 },
                 {
                     test: /\.html$/,
