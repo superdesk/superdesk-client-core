@@ -6,6 +6,17 @@ module.exports = function(grunt) {
     config.progress = !grunt.option('webpack-no-progress');
     config.devtool = grunt.option('webpack-devtool') || 'cheap-source-map';
 
+    config.module.rules = config.module.rules.map((rule) => {
+        if (rule.loader === 'ts-loader') {
+            // skipping typechecking here to make build faster
+            // types are checked in `npm run lint` using
+            // typescript compiler directly which is faster
+            rule.options.transpileOnly = true;
+        }
+
+        return rule;
+    });
+
     return {
         options: config,
         build: {
