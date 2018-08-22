@@ -29,22 +29,6 @@
     </sd-line-input>
 </div>
 
-<div class="form__row" ng-if="validator.archive_description">
-    <sd-line-input
-        ng-model="item.archive_description"
-        data-dark="dark"
-        data-boxed="boxed"
-        data-textarea="true"
-        data-required="validator.archive_description.required"
-        data-label="{{:: 'Description' | translate}}"
-        data-disabled="disabled || associated"
-        data-onblur="onBlur()"
-        data-onchange="onChange({key: 'archive_description'})"
-        data-maxlength="validator.archive_description.maxlength"
-        data-placeholder="{{ placeholder.archive_description }}">
-    </sd-line-input>
-</div>
-
 <div class="form__row" ng-if="validator.alt_text">
     <sd-line-input
         ng-model="item.alt_text"
