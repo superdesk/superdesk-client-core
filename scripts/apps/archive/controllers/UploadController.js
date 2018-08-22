@@ -14,7 +14,8 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
     $scope.allowPicture = !($scope.locals && $scope.locals.data && $scope.locals.data.allowPicture === false);
     $scope.allowVideo = !($scope.locals && $scope.locals.data && $scope.locals.data.allowVideo === false);
     $scope.allowAudio = !($scope.locals && $scope.locals.data && $scope.locals.data.allowAudio === false);
-    $scope.validator = deployConfig.getSync('validator_media_metadata');
+
+    $scope.validator = _.omit(deployConfig.getSync('validator_media_metadata'), ['archive_description']);
 
     var uploadFile = function(item) {
         var handleError = function(reason) {
