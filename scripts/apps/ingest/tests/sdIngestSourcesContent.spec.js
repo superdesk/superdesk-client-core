@@ -36,7 +36,7 @@ describe('sdIngestSourcesContent directive', () => {
     }));
 
     beforeEach(inject(($compile, $rootScope, $templateCache, ingestSources, $q) => {
-        spyOn(ingestSources, 'fetchAllFeedingServicesAllowed').and.returnValue($q.when([{
+        spyOn(ingestSources, 'fetchAllFeedingServicesAllowed').and.returnValue(Promise.resolve([{
             feeding_service: 'rss',
             label: 'RSS',
             fields: [
@@ -73,7 +73,7 @@ describe('sdIngestSourcesContent directive', () => {
     describe('edit() method', () => {
         var fakeProvider;
 
-        beforeEach(() => {
+        beforeEach((done) => {
             fakeProvider = {
                 feeding_service: 'rss',
                 config: {
@@ -83,6 +83,8 @@ describe('sdIngestSourcesContent directive', () => {
                     ],
                 },
             };
+
+            scope.waitForDirectiveReady().then(done);
         });
 
         it('updates the list of field name aliases to match provider\'s configuration', () => {
@@ -160,6 +162,10 @@ describe('sdIngestSourcesContent directive', () => {
     });
 
     describe('addFieldAlias() method', () => {
+        beforeEach((done) => {
+            scope.waitForDirectiveReady().then(done);
+        });
+
         it('appends a new item to the list of field aliases', () => {
             scope.fieldAliases = {field_aliases: [
                 {fieldName: 'foo1', alias: 'bar1'},
@@ -177,13 +183,15 @@ describe('sdIngestSourcesContent directive', () => {
     });
 
     describe('removeFieldAlias() and fieldSelectionChanged() methods', () => {
-        beforeEach(() => {
+        beforeEach((done) => {
             scope.fieldAliases = {field_aliases: [
                 {fieldName: 'foo1', alias: 'bar1'},
                 {fieldName: 'foo2', alias: 'bar2'},
                 {fieldName: 'foo3', alias: 'bar3'},
             ]};
             scope.fieldsNotSelected = {field_aliases: ['foo4']};
+
+            scope.waitForDirectiveReady().then(done);
         });
 
         it('removes an item at given index from the list of field aliases', () => {
@@ -215,8 +223,10 @@ describe('sdIngestSourcesContent directive', () => {
     });
 
     describe('availableFieldOptions() method', () => {
-        beforeEach(() => {
+        beforeEach((done) => {
             scope.fieldsNotSelected = {field_aliases: ['foo1', 'foo3']};
+
+            scope.waitForDirectiveReady().then(done);
         });
 
         it('returns only the field names currently not selected if no field name is given', () => {
@@ -235,15 +245,17 @@ describe('sdIngestSourcesContent directive', () => {
     describe('save() method', () => {
         var deferredSave, fakeProvider;
 
-        beforeEach(inject(($q, api) => {
-            deferredSave = $q.defer();
+        beforeEach((done) => {
+            inject(($q, api) => {
+                deferredSave = $q.defer();
 
-            api.ingestProviders = {
-                save: jasmine.createSpy().and.returnValue(deferredSave.promise),
-            };
+                api.ingestProviders.save = jasmine.createSpy().and.returnValue(deferredSave.promise);
 
-            fakeProvider = {feeding_service: 'rss', config: {}};
-        }));
+                fakeProvider = {feeding_service: 'rss', config: {}};
+
+                scope.waitForDirectiveReady().then(done);
+            });
+        });
 
         it('updates field aliases in provider configuration', () => {
             scope.edit(fakeProvider);
