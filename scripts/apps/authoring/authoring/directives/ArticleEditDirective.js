@@ -285,9 +285,14 @@ export function ArticleEditDirective(
                     scope.mediaLoading = true;
 
                     const defaultTab = crop ? 'crop' : 'view';
+                    let hideTabs = [];
+
+                    if (scope.item.type !== 'picture') {
+                        hideTabs = ['image-edit', 'crop'];
+                    }
 
                     return renditions.crop(scope.item,
-                        {isNew: false, editable: true, isAssociated: false, defaultTab: defaultTab, showMetadata: true})
+                        {isNew: false, editable: true, isAssociated: false, defaultTab: defaultTab, showMetadata: true, hideTabs: hideTabs})
                         .then((picture) => {
                             scope.item._etag = picture._etag;
 
