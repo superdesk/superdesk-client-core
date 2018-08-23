@@ -291,8 +291,17 @@ export function ArticleEditDirective(
                         hideTabs = ['image-edit', 'crop'];
                     }
 
-                    return renditions.crop(scope.item,
-                        {isNew: false, editable: true, isAssociated: false, defaultTab: defaultTab, showMetadata: true, hideTabs: hideTabs})
+                    return renditions.crop(
+                        scope.item,
+                        {
+                            isNew: false,
+                            editable: true,
+                            isAssociated: false,
+                            defaultTab: defaultTab,
+                            showMetadata: true,
+                            hideTabs: hideTabs,
+                        }
+                    )
                         .then((picture) => {
                             scope.item._etag = picture._etag;
 
