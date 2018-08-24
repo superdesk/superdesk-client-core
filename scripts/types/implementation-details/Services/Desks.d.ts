@@ -1,4 +1,4 @@
-import {User} from '../../business-logic/User';
+import {User} from 'business-logic/User';
 
 export interface DesksService {
     desks: any;

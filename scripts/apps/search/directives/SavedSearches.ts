@@ -1,7 +1,7 @@
-import {User} from 'types/business-logic/User';
-import {Desk} from 'types/business-logic/Desk';
+import {User} from 'business-logic/User';
+import {Desk} from 'business-logic/Desk';
 
-import {SavedSearch} from 'types/business-logic/SavedSearch';
+import {SavedSearch} from 'business-logic/SavedSearch';
 import {DesksService} from 'types/implementation-details/Services/Desks';
 import {PrivilegesService} from 'types/implementation-details/Services/Privileges';
 
