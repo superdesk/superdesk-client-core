@@ -1,11 +1,9 @@
-export type UserId = string;
-
-interface UserRole {
+export interface UserRole {
     name: string;
     privileges: any;
 }
 
 export interface User {
-    id: UserId;
+    id: string;
     role: UserRole;
 }

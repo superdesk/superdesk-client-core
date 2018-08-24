@@ -1,4 +1,4 @@
-import {User, UserId} from '../../business-logic/User';
+import {User} from '../../business-logic/User';
 
 export interface DesksService {
     desks: any;
@@ -6,9 +6,7 @@ export interface DesksService {
     stages: any;
     deskLookup: {};
     stageLookup: {};
-    userLookup: {
-        [key: string]: User;
-    };
+    userLookup: Record<User['id'], User>;
     deskMembers: {};
     deskStages: {};
     loading: any;
