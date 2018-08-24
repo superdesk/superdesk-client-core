@@ -1,3 +1,3 @@
-export interface Stage {
+export interface IStage {
     _id: string;
 }

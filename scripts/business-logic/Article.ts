@@ -1,6 +1,6 @@
-import {User} from './User';
+import {IUser} from './User';
 
-export interface Article {
+export interface IArticle {
     usageterms: any;
     keywords: any;
     language: any;
@@ -14,7 +14,7 @@ export interface Article {
     subject: any;
     company_codes: Array<any>;
     ednote: string;
-    authors: Array<User>;
+    authors: Array<IUser>;
     headline: string;
     sms: string;
     abstract: string;

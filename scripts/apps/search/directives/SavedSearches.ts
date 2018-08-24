@@ -1,8 +1,8 @@
-import {User} from 'business-logic/User';
+import {IUser} from 'business-logic/User';
 
-import {SavedSearch, isUserSubsribedToSavedSearch} from 'business-logic/SavedSearch';
-import {DesksService} from 'types/Services/Desks';
-import {PrivilegesService} from 'types/Services/Privileges';
+import {ISavedSearch, isUserSubsribedToSavedSearch} from 'business-logic/SavedSearch';
+import {IDesksService} from 'types/Services/Desks';
+import {IPrivilegesService} from 'types/Services/Privileges';
 
 import {forEach, clone, filter} from 'lodash';
 
@@ -11,19 +11,19 @@ SavedSearches.$inject = [
     '$location', 'desks', 'privileges', 'search', 'savedSearch',
 ];
 
-interface SavedSearchesScope extends ng.IScope {
-    selected: SavedSearch;
+interface ISavedSearchesScope extends ng.IScope {
+    selected: ISavedSearch;
     searchText: string;
-    userSavedSearches: Array<SavedSearch>;
-    globalSavedSearches: Array<SavedSearch>;
-    privileges: PrivilegesService;
-    userLookup: DesksService['userLookup'];
-    searches: Array<SavedSearch>;
-    select(search: SavedSearch): void;
-    edit(search: SavedSearch): void;
+    userSavedSearches: Array<ISavedSearch>;
+    globalSavedSearches: Array<ISavedSearch>;
+    privileges: IPrivilegesService;
+    userLookup: IDesksService['userLookup'];
+    searches: Array<ISavedSearch>;
+    select(search: ISavedSearch): void;
+    edit(search: ISavedSearch): void;
     filter(): void;
-    remove(search: SavedSearch): void;
-    isUserSubsribedToSavedSearch(savedSearch: SavedSearch, userId: User['id']): boolean;
+    remove(search: ISavedSearch): void;
+    isUserSubsribedToSavedSearch(savedSearch: ISavedSearch, userId: IUser['id']): boolean;
 }
 
 export function SavedSearches($rootScope, api, session, modal, notify, gettext, asset, $location,
@@ -31,7 +31,7 @@ export function SavedSearches($rootScope, api, session, modal, notify, gettext, 
     return {
         templateUrl: asset.templateUrl('apps/search/views/saved-searches.html'),
         scope: {},
-        link: function(scope: SavedSearchesScope) {
+        link: function(scope: ISavedSearchesScope) {
             const resource = api('saved_searches');
 
             scope.selected = null;
@@ -48,11 +48,11 @@ export function SavedSearches($rootScope, api, session, modal, notify, gettext, 
                 });
 
             function initSavedSearches() {
-                savedSearch.getUserSavedSearches(session.identity).then((searches: Array<SavedSearch>) => {
+                savedSearch.getUserSavedSearches(session.identity).then((searches: Array<ISavedSearch>) => {
                     scope.userSavedSearches.length = 0;
                     scope.globalSavedSearches.length = 0;
                     scope.searches = searches;
-                    forEach(scope.searches, (_savedSearch: SavedSearch) => {
+                    forEach(scope.searches, (_savedSearch: ISavedSearch) => {
                         _savedSearch.filter.query = search.setFilters(_savedSearch.filter.query);
                         if (_savedSearch.user === session.identity._id) {
                             scope.userSavedSearches.push(_savedSearch);
@@ -67,12 +67,12 @@ export function SavedSearches($rootScope, api, session, modal, notify, gettext, 
 
             initSavedSearches();
 
-            scope.select = function(_search: SavedSearch) {
+            scope.select = function(_search: ISavedSearch) {
                 scope.selected = _search;
                 $location.search(_search.filter.query);
             };
 
-            scope.edit = function(_search: SavedSearch) {
+            scope.edit = function(_search: ISavedSearch) {
                 scope.select(_search);
                 $rootScope.$broadcast('edit:search', _search);
             };
@@ -94,7 +94,7 @@ export function SavedSearches($rootScope, api, session, modal, notify, gettext, 
                 }
             };
 
-            scope.remove = function(_search: SavedSearch) {
+            scope.remove = function(_search: ISavedSearch) {
                 modal.confirm(
                     gettext('Are you sure you want to delete saved search?'),
                 )

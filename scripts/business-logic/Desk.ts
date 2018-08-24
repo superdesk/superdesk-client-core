@@ -1,11 +1,11 @@
-import {User} from "./User";
-import {Stage} from "./Stage";
+import {IUser} from "./User";
+import {IStage} from "./Stage";
 
-export interface Desk {
+export interface IDesk {
     _id: string;
-    incoming_stage: Stage['_id'];
-    members: Array<User['id']>;
+    incoming_stage: IStage['_id'];
+    members: Array<IUser['id']>;
     name: string;
     desk_type: 'authoring' | 'production';
-    working_stage: Stage['_id'];
+    working_stage: IStage['_id'];
 }

@@ -1,1 +1,1 @@
-export type PrivilegesService = any;
+export type IPrivilegesService = any;

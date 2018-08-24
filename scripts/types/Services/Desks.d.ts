@@ -1,12 +1,12 @@
-import {User} from 'business-logic/User';
+import {IUser} from 'business-logic/User';
 
-export interface DesksService {
+export interface IDesksService {
     desks: any;
     users: any;
     stages: any;
     deskLookup: {};
     stageLookup: {};
-    userLookup: Dictionary<User['id'], User>;
+    userLookup: Dictionary<IUser['id'], IUser>;
     deskMembers: {};
     deskStages: {};
     loading: any;

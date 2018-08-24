@@ -1,9 +1,9 @@
-export interface UserRole {
+export interface IUserRole {
     name: string;
     privileges: any;
 }
 
-export interface User {
+export interface IUser {
     id: string;
-    role: UserRole;
+    role: IUserRole;
 }

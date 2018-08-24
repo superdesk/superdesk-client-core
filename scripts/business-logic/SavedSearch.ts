@@ -1,23 +1,23 @@
-import {User} from './User';
-import {Desk} from './Desk';
+import {IUser} from './User';
+import {IDesk} from './Desk';
 
-interface SavedSearchPreferences {
+interface ISavedSearchPreferences {
     notificationInterval: TimeInterval;
 }
 
-export interface SavedSearch {
+export interface ISavedSearch {
     name: string;
     description: string;
     is_global: boolean;
     filter: any;
-    user: User['id'];
+    user: IUser['id'];
     subscribers: {
-        users: Dictionary<User['id'], SavedSearchPreferences>;
-        desks: Dictionary<Desk['_id'], SavedSearchPreferences>;
+        users: Dictionary<IUser['id'], ISavedSearchPreferences>;
+        desks: Dictionary<IDesk['_id'], ISavedSearchPreferences>;
     };
 }
 
-export const isUserSubsribedToSavedSearch = (_savedSearch: SavedSearch, userId: User['id']) => {
+export const isUserSubsribedToSavedSearch = (_savedSearch: ISavedSearch, userId: IUser['id']) => {
     const {subscribers} = _savedSearch;
 
     if (subscribers.users[userId] != null) {
@@ -25,7 +25,7 @@ export const isUserSubsribedToSavedSearch = (_savedSearch: SavedSearch, userId: 
     }
 
     for (const deskId in subscribers.desks) {
-        const desk: Desk = subscribers.desks[deskId];
+        const desk: IDesk = subscribers.desks[deskId];
 
         if (desk.members.includes(userId)) {
             return true;
