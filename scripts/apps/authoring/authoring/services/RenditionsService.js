@@ -55,16 +55,16 @@ export function RenditionsService(metadata, $q, api, superdesk, _) {
      *  @public
      *  @description Crop the images.
      *
-     *  @param {Object} picture Picture item
+     *  @param {Object} item Media item
      *  @param {boolean} isNew to indicate if picture is new or not
      *  @param {boolean} editable to indicate if picture is editable or not
      *  @param {boolean} isAssociated to indicate if picture is isAssociated or not
      *  @return {promise} returns the modified picture item
      */
-    this.crop = function(picture, options) {
-        let clonedPicture = _.extend({}, picture);
+    this.crop = function(item, options) {
+        let clonedItem = _.extend({}, item);
 
-        clonedPicture.renditions = _.cloneDeep(clonedPicture.renditions);
+        clonedItem.renditions = _.cloneDeep(clonedItem.renditions);
 
         return self.get().then((renditions) => {
             // we want to crop only renditions that change the ratio
@@ -80,15 +80,15 @@ export function RenditionsService(metadata, $q, api, superdesk, _) {
                 isAssociated: false,
                 editable: true,
                 defaultTab: false,
-                hideTabs: [],
+                hideTabs: item.type === 'picture' ? [] : ['image-edit', 'crop'],
                 showMetadata: false,
                 ...options,
             };
 
             return superdesk.intent('edit', 'crop', {
-                item: clonedPicture,
+                item: clonedItem,
                 renditions: withRatio,
-                poi: clonedPicture.poi || {x: 0.5, y: 0.5},
+                poi: clonedItem.poi || {x: 0.5, y: 0.5},
                 showAoISelectionButton: true,
                 showMetadataEditor: true,
                 ...cropOptions,
@@ -103,8 +103,8 @@ export function RenditionsService(metadata, $q, api, superdesk, _) {
                         const keys = ['CropLeft', 'CropTop', 'CropBottom', 'CropRight'];
 
                         let canAdd = !keys.every((key) => {
-                            let sameCoords = angular.isDefined(picture.renditions[renditionName]) &&
-                            picture.renditions[renditionName][key] === croppingData[key];
+                            let sameCoords = angular.isDefined(item.renditions[renditionName]) &&
+                            item.renditions[renditionName][key] === croppingData[key];
 
                             return sameCoords;
                         });
@@ -116,9 +116,9 @@ export function RenditionsService(metadata, $q, api, superdesk, _) {
 
                     // perform the request to make the cropped images
                     renditionNames.forEach((renditionName) => {
-                        if (picture.renditions[renditionName] !== result.cropData[renditionName]) {
+                        if (item.renditions[renditionName] !== result.cropData[renditionName]) {
                             savingImagePromises.push(
-                                api.save('picture_crop', {item: clonedPicture, crop: result.cropData[renditionName]})
+                                api.save('picture_crop', {item: clonedItem, crop: result.cropData[renditionName]})
                             );
                         }
                     });
@@ -144,8 +144,8 @@ export function RenditionsService(metadata, $q, api, superdesk, _) {
                             });
 
                             // apply the metadata changes
-                            angular.extend(picture, result.metadata);
-                            return picture;
+                            angular.extend(item, result.metadata);
+                            return item;
                         });
                 });
         });

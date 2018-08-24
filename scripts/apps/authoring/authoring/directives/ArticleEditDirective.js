@@ -286,8 +286,16 @@ export function ArticleEditDirective(
 
                     const defaultTab = crop ? 'crop' : 'view';
 
-                    return renditions.crop(scope.item,
-                        {isNew: false, editable: true, isAssociated: false, defaultTab: defaultTab, showMetadata: true})
+                    return renditions.crop(
+                        scope.item,
+                        {
+                            isNew: false,
+                            editable: true,
+                            isAssociated: false,
+                            defaultTab: defaultTab,
+                            showMetadata: true,
+                        }
+                    )
                         .then((picture) => {
                             scope.item._etag = picture._etag;
 
