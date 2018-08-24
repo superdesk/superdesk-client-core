@@ -1,3 +1,6 @@
+import {User} from 'types/business-logic/User';
+import {Desk} from 'types/business-logic/Desk';
+
 import {SavedSearch} from 'types/business-logic/SavedSearch';
 import {DesksService} from 'types/implementation-details/Services/Desks';
 import {PrivilegesService} from 'types/implementation-details/Services/Privileges';
@@ -21,6 +24,7 @@ interface SavedSearchesScope extends ng.IScope {
     edit(search: SavedSearch): void;
     filter(): void;
     remove(search: SavedSearch): void;
+    isUserSubsribedToSavedSearch(savedSearch: SavedSearch, userId: User['id']): boolean;
 }
 
 export function SavedSearches($rootScope, api, session, modal, notify, gettext, asset, $location,
@@ -103,6 +107,24 @@ export function SavedSearches($rootScope, api, session, modal, notify, gettext, 
                             notify.error(gettext('Error. Saved search not deleted.'));
                         });
                     });
+            };
+
+            scope.isUserSubsribedToSavedSearch = function(_savedSearch: SavedSearch, userId: User['id']) {
+                const {subscribers} = _savedSearch;
+
+                if (subscribers.users[userId] != null) {
+                    return true;
+                }
+
+                for (const deskId in subscribers.desks) {
+                    const desk: Desk = subscribers.desks[deskId];
+
+                    if (desk.members.includes(userId)) {
+                        return true;
+                    }
+                }
+
+                return false;
             };
         },
     };

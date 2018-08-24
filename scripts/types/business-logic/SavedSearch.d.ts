@@ -13,6 +13,6 @@ export interface SavedSearch {
     user: User['id'];
     subscribers: {
         users: Dictionary<User['id'], SavedSearchPreferences>;
-        desks: Dictionary<Desk['id'], SavedSearchPreferences>;
+        desks: Dictionary<Desk['_id'], SavedSearchPreferences>;
     };
 }

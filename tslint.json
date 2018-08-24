@@ -14,6 +14,7 @@
         "array-type": [true, "generic"],
         "object-literal-shorthand": false,
         "variable-name": false,
+        "forin": false,
         "only-arrow-functions": false
     },
     "rulesDirectory": []
