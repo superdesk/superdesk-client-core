@@ -1,14 +1,30 @@
+import {forEach, clone, filter} from 'lodash';
+
 SavedSearches.$inject = [
     '$rootScope', 'api', 'session', 'modal', 'notify', 'gettext', 'asset',
     '$location', 'desks', 'privileges', 'search', 'savedSearch',
 ];
 
+interface SavedSearchesScope extends ng.IScope {
+    selected: any;
+    searchText: any;
+    userSavedSearches: any;
+    globalSavedSearches: any;
+    privileges: any;
+    userLookup: any;
+    searches: any;
+    select: any;
+    edit: any;
+    filter: any;
+    remove: any;
+}
+
 export function SavedSearches($rootScope, api, session, modal, notify, gettext, asset, $location,
-    desks, privileges, search, savedSearch) {
+    desks, privileges, search, savedSearch) : ng.IDirective {
     return {
         templateUrl: asset.templateUrl('apps/search/views/saved-searches.html'),
         scope: {},
-        link: function(scope) {
+        link: function(scope : SavedSearchesScope) {
             var resource = api('saved_searches');
 
             scope.selected = null;
@@ -29,7 +45,7 @@ export function SavedSearches($rootScope, api, session, modal, notify, gettext, 
                     scope.userSavedSearches.length = 0;
                     scope.globalSavedSearches.length = 0;
                     scope.searches = searches;
-                    _.forEach(scope.searches, (savedSearch) => {
+                    forEach(scope.searches, (savedSearch) => {
                         savedSearch.filter.query = search.setFilters(savedSearch.filter.query);
                         if (savedSearch.user === session.identity._id) {
                             scope.userSavedSearches.push(savedSearch);
@@ -37,8 +53,8 @@ export function SavedSearches($rootScope, api, session, modal, notify, gettext, 
                             scope.globalSavedSearches.push(savedSearch);
                         }
                     });
-                    originalUserSavedSearches = _.clone(scope.userSavedSearches);
-                    originalGlobalSavedSearches = _.clone(scope.globalSavedSearches);
+                    originalUserSavedSearches = clone(scope.userSavedSearches);
+                    originalGlobalSavedSearches = clone(scope.globalSavedSearches);
                 });
             }
 
@@ -59,14 +75,14 @@ export function SavedSearches($rootScope, api, session, modal, notify, gettext, 
              *
              */
             scope.filter = function() {
-                scope.userSavedSearches = _.clone(originalUserSavedSearches);
-                scope.globalSavedSearches = _.clone(originalGlobalSavedSearches);
+                scope.userSavedSearches = clone(originalUserSavedSearches);
+                scope.globalSavedSearches = clone(originalGlobalSavedSearches);
 
                 if (scope.searchText || scope.searchText !== '') {
-                    scope.userSavedSearches = _.filter(originalUserSavedSearches,
+                    scope.userSavedSearches = filter(originalUserSavedSearches,
                         (n) => n.name.toUpperCase().indexOf(scope.searchText.toUpperCase()) >= 0);
 
-                    scope.globalSavedSearches = _.filter(originalGlobalSavedSearches,
+                    scope.globalSavedSearches = filter(originalGlobalSavedSearches,
                         (n) => n.name.toUpperCase().indexOf(scope.searchText.toUpperCase()) >= 0);
                 }
             };
