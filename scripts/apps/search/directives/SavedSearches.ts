@@ -2,8 +2,8 @@ import {User} from 'business-logic/User';
 import {Desk} from 'business-logic/Desk';
 
 import {SavedSearch} from 'business-logic/SavedSearch';
-import {DesksService} from 'types/implementation-details/Services/Desks';
-import {PrivilegesService} from 'types/implementation-details/Services/Privileges';
+import {DesksService} from 'types/Services/Desks';
+import {PrivilegesService} from 'types/Services/Privileges';
 
 import {forEach, clone, filter} from 'lodash';
 
