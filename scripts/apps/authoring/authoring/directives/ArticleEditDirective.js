@@ -285,11 +285,6 @@ export function ArticleEditDirective(
                     scope.mediaLoading = true;
 
                     const defaultTab = crop ? 'crop' : 'view';
-                    let hideTabs = [];
-
-                    if (scope.item.type !== 'picture') {
-                        hideTabs = ['image-edit', 'crop'];
-                    }
 
                     return renditions.crop(
                         scope.item,
@@ -299,7 +294,6 @@ export function ArticleEditDirective(
                             isAssociated: false,
                             defaultTab: defaultTab,
                             showMetadata: true,
-                            hideTabs: hideTabs,
                         }
                     )
                         .then((picture) => {
