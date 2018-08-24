@@ -2,7 +2,7 @@ import {User} from './User';
 import {Desk} from './Desk';
 
 interface SavedSearchPreferences {
-    notificationInterval: TimeInterval,
+    notificationInterval: TimeInterval;
 }
 
 export interface SavedSearch {
@@ -12,7 +12,7 @@ export interface SavedSearch {
     filter: any;
     user: User['id'];
     subscribers: {
-        users: Record<User['id'], SavedSearchPreferences>,
-        desks: Record<Desk['id'], SavedSearchPreferences>;
+        users: Dictionary<User['id'], SavedSearchPreferences>;
+        desks: Dictionary<Desk['id'], SavedSearchPreferences>;
     };
 }

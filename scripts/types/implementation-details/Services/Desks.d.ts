@@ -6,7 +6,7 @@ export interface DesksService {
     stages: any;
     deskLookup: {};
     stageLookup: {};
-    userLookup: Record<User['id'], User>;
+    userLookup: Dictionary<User['id'], User>;
     deskMembers: {};
     deskStages: {};
     loading: any;
