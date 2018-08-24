@@ -1,7 +1,6 @@
 import {User} from 'business-logic/User';
-import {Desk} from 'business-logic/Desk';
 
-import {SavedSearch} from 'business-logic/SavedSearch';
+import {SavedSearch, isUserSubsribedToSavedSearch} from 'business-logic/SavedSearch';
 import {DesksService} from 'types/Services/Desks';
 import {PrivilegesService} from 'types/Services/Privileges';
 
@@ -109,23 +108,7 @@ export function SavedSearches($rootScope, api, session, modal, notify, gettext, 
                     });
             };
 
-            scope.isUserSubsribedToSavedSearch = function(_savedSearch: SavedSearch, userId: User['id']) {
-                const {subscribers} = _savedSearch;
-
-                if (subscribers.users[userId] != null) {
-                    return true;
-                }
-
-                for (const deskId in subscribers.desks) {
-                    const desk: Desk = subscribers.desks[deskId];
-
-                    if (desk.members.includes(userId)) {
-                        return true;
-                    }
-                }
-
-                return false;
-            };
+            scope.isUserSubsribedToSavedSearch = isUserSubsribedToSavedSearch;
         },
     };
 }
