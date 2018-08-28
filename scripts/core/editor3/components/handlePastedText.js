@@ -57,6 +57,16 @@ export function handlePastedText(text, _html) {
         return HANDLED;
     }
 
+    for (let [editorKey, editor] of Object.entries(window['editor3-refs'])) {
+        if (html.includes(editorKey)) {
+            const internalClipboard = editor.getClipboard();
+
+            if (internalClipboard) {
+                console.log(internalClipboard.first().text);
+            }
+        }
+    }
+
     if (htmlComesFromDraftjsEditor(html)) {
         return NOT_HANDLED;
     }
