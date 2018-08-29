@@ -29,6 +29,13 @@ describe('publish queue', () => {
         },
     ];
 
+    var contenttypes = [
+        {
+            qcode: 'text',
+            name: 'text',
+        },
+    ];
+
     var publishQueue = {_items: [
         {
             _created: '2015-05-15T06:27:13+0000',
@@ -121,10 +128,12 @@ describe('publish queue', () => {
     beforeEach(window.module('superdesk.mocks'));
     beforeEach(window.module('superdesk.apps.searchProviders'));
     beforeEach(window.module('superdesk.templates-cache'));
+    beforeEach(window.module('superdesk.apps.vocabularies'));
 
-    beforeEach(inject(($rootScope, $controller, subscribersService, $q, api, ingestSources) => {
+    beforeEach(inject(($rootScope, $controller, subscribersService, $q, api, ingestSources, vocabularies) => {
         spyOn(subscribersService, 'fetchSubscribers').and.returnValue($q.when(subscribers));
         spyOn(ingestSources, 'fetchAllIngestProviders').and.returnValue($q.when(providers));
+        spyOn(vocabularies, 'getVocabulary').and.returnValue($q.when(contenttypes));
         spyOn(api.publish_queue, 'query').and.returnValue($q.when(publishQueue));
         $scope = $rootScope.$new();
         $controller('publishQueueCtrl',
@@ -223,6 +232,14 @@ describe('publish queue', () => {
         $scope.selectedFilterStatus = null;
         $scope.filterPublishQueue(statusValue, 'status');
         expect($scope.selectedFilterStatus).toEqual(statusValue);
+    }));
+
+    it('sets the selected filter type', inject(() => {
+        var statusValue = 'success';
+
+        $scope.selectedFilterStatus = null;
+        $scope.filterPublishQueue(statusValue, 'type');
+        expect($scope.selectedFilterContentType).toEqual(statusValue);
     }));
 
     it('can search by headline', inject(($rootScope) => {
