@@ -6,6 +6,7 @@ import {sanitizeContent, inlineStyles} from '../helpers/inlineStyles';
 import {getAllCustomDataFromEditor, setAllCustomDataForEditor} from '../helpers/editor3CustomData';
 import {getCurrentAuthor} from '../helpers/author';
 import {htmlComesFromDraftjsEditor} from '../helpers/htmlComesFromDraftjsEditor';
+import {EDITOR_GLOBAL_REFS} from 'core/editor3/components/Editor3Component';
 
 function removeMediaFromHtml(htmlString) {
     const element = document.createElement('div');
@@ -21,6 +22,29 @@ function removeMediaFromHtml(htmlString) {
 
 const HANDLED = 'handled';
 const NOT_HANDLED = 'not-handled';
+
+function pasteContentFromOpenEditor(props: any, html: string) {
+    for (const editorKey in window[EDITOR_GLOBAL_REFS]) {
+        if (html.includes(editorKey)) {
+            const editor = window[EDITOR_GLOBAL_REFS][editorKey];
+            const internalClipboard = editor.getClipboard();
+
+            if (internalClipboard) {
+                const blocksArray = [];
+
+                internalClipboard.map((b) => blocksArray.push(b));
+                const contentState = ContentState.createFromBlockArray(blocksArray);
+
+                /* eslint-disable max-depth */
+                if (insertContentInState(props, contentState) === HANDLED) {
+                    return HANDLED;
+                }
+
+                break;
+            }
+        }
+    }
+}
 
 /**
  * @ngdoc method
@@ -57,15 +81,10 @@ export function handlePastedText(text, _html) {
         return HANDLED;
     }
 
-    for (let [editorKey, editor] of Object.entries(window['editor3-refs'])) {
-        if (html.includes(editorKey)) {
-            const internalClipboard = editor.getClipboard();
-
-            if (internalClipboard) {
-                console.log(internalClipboard.first().text);
-            }
-        }
+    if (pasteContentFromOpenEditor(this.props, html) === HANDLED) {
+        return HANDLED;
     }
+
 
     if (htmlComesFromDraftjsEditor(html)) {
         return NOT_HANDLED;
@@ -74,12 +93,9 @@ export function handlePastedText(text, _html) {
     return processPastedHtml(this.props, html || text);
 }
 
-// Checks if there are atomic blocks in the paste content. If there are, we need to set
-// the 'atomic' block type using the Modifier tool and add these entities to the
-// contentState.
-function processPastedHtml(props, html) {
-    const {onChange, editorState, editorFormat} = props;
-    let pastedContent = getContentStateFromHtml(html);
+function insertContentInState(props: any, _pastedContent: ContentState) {
+    const {editorState, editorFormat, onChange} = props;
+    let pastedContent = _pastedContent;
     const blockMap = pastedContent.getBlockMap();
     const hasAtomicBlocks = blockMap.some((block) => block.getType() === 'atomic');
     const acceptedInlineStyles =
@@ -144,6 +160,15 @@ function processPastedHtml(props, html) {
     onChange(nextEditorState);
 
     return HANDLED;
+}
+
+// Checks if there are atomic blocks in the paste content. If there are, we need to set
+// the 'atomic' block type using the Modifier tool and add these entities to the
+// contentState.
+function processPastedHtml(props, html) {
+    let pastedContent = getContentStateFromHtml(html);
+
+    return insertContentInState(props, pastedContent);
 }
 
 // Returns an empty block.
