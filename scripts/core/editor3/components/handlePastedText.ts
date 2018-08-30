@@ -8,7 +8,12 @@ import {getCurrentAuthor} from '../helpers/author';
 import {htmlComesFromDraftjsEditor} from '../helpers/htmlComesFromDraftjsEditor';
 import {EDITOR_GLOBAL_REFS} from 'core/editor3/components/Editor3Component';
 
-function removeMediaFromHtml(htmlString) {
+enum DraftHandleValue {
+    HANDLED = 'handled',
+    NOT_HANDLED = 'not-handled',
+}
+
+function removeMediaFromHtml(htmlString) : string {
     const element = document.createElement('div');
 
     element.innerHTML = htmlString;
@@ -20,10 +25,7 @@ function removeMediaFromHtml(htmlString) {
     return element.innerHTML;
 }
 
-const HANDLED = 'handled';
-const NOT_HANDLED = 'not-handled';
-
-function pasteContentFromOpenEditor(props: any, html: string) {
+function pasteContentFromOpenEditor(props: any, html: string) : DraftHandleValue {
     for (const editorKey in window[EDITOR_GLOBAL_REFS]) {
         if (html.includes(editorKey)) {
             const editor = window[EDITOR_GLOBAL_REFS][editorKey];
@@ -35,15 +37,12 @@ function pasteContentFromOpenEditor(props: any, html: string) {
                 internalClipboard.map((b) => blocksArray.push(b));
                 const contentState = ContentState.createFromBlockArray(blocksArray);
 
-                /* eslint-disable max-depth */
-                if (insertContentInState(props, contentState) === HANDLED) {
-                    return HANDLED;
-                }
-
-                break;
+                return insertContentInState(props, contentState);
             }
         }
     }
+
+    return DraftHandleValue.NOT_HANDLED;
 }
 
 /**
@@ -55,7 +54,7 @@ function pasteContentFromOpenEditor(props: any, html: string) {
  * @description Handles pasting into the editor, in cases where the content contains
  * atomic blocks that need special handling in editor3.
  */
-export function handlePastedText(text, _html) {
+export function handlePastedText(text: string, _html: string) : DraftHandleValue {
     const author = getCurrentAuthor();
     let html = _html;
 
@@ -66,34 +65,34 @@ export function handlePastedText(text, _html) {
     const {editorState, suggestingMode, onPasteFromSuggestingMode} = this.props;
 
     if (!html && !text) {
-        return HANDLED;
+        return DraftHandleValue.HANDLED;
     }
 
     if (suggestingMode) {
         if (!Suggestions.allowEditSuggestionOnLeft(editorState, author)
             && !Suggestions.allowEditSuggestionOnRight(editorState, author)) {
-            return HANDLED;
+            return DraftHandleValue.HANDLED;
         }
 
         const content = html ? getContentStateFromHtml(html) : ContentState.createFromText(text);
 
         onPasteFromSuggestingMode(content);
-        return HANDLED;
+        return DraftHandleValue.HANDLED;
     }
 
-    if (pasteContentFromOpenEditor(this.props, html) === HANDLED) {
-        return HANDLED;
+    if (pasteContentFromOpenEditor(this.props, html) === DraftHandleValue.HANDLED) {
+        return DraftHandleValue.HANDLED;
     }
 
 
     if (htmlComesFromDraftjsEditor(html)) {
-        return NOT_HANDLED;
+        return DraftHandleValue.NOT_HANDLED;
     }
 
     return processPastedHtml(this.props, html || text);
 }
 
-function insertContentInState(props: any, _pastedContent: ContentState) {
+function insertContentInState(props: any, _pastedContent: ContentState) : DraftHandleValue {
     const {editorState, editorFormat, onChange} = props;
     let pastedContent = _pastedContent;
     const blockMap = pastedContent.getBlockMap();
@@ -159,13 +158,13 @@ function insertContentInState(props: any, _pastedContent: ContentState) {
 
     onChange(nextEditorState);
 
-    return HANDLED;
+    return DraftHandleValue.HANDLED;
 }
 
 // Checks if there are atomic blocks in the paste content. If there are, we need to set
 // the 'atomic' block type using the Modifier tool and add these entities to the
 // contentState.
-function processPastedHtml(props, html) {
+function processPastedHtml(props: any, html: string) : DraftHandleValue {
     let pastedContent = getContentStateFromHtml(html);
 
     return insertContentInState(props, pastedContent);
