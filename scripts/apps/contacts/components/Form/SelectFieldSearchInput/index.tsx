@@ -80,9 +80,9 @@ export class SelectFieldSearchInput extends React.Component<any, any> {
     }
 
     render() {
-        const {value, dataList, label, readOnly, querySearch} = this.props;
-
+        const {value, dataList, label, readOnly, querySearch, initValue} = this.props;
         const listData = querySearch ? dataList : this.state.filteredDataList;
+        let inputValue = initValue ? value : this.state.searchText || value || '';
 
         return (
             <div>
@@ -94,7 +94,7 @@ export class SelectFieldSearchInput extends React.Component<any, any> {
                 {!readOnly && <Row noPadding={true}>
                     <LineInput isSelect={false} noLabel={!!value}>
                         <DebounceInput
-                            value={this.state.searchText || value || ''}
+                            value={inputValue}
                             className="sd-line-input__input"
                             minLength={1}
                             debounceTimeout={500}
@@ -124,6 +124,7 @@ SelectFieldSearchInput.propTypes = {
     readOnly: PropTypes.bool,
     querySearch: PropTypes.bool,
     onQuerySearch: PropTypes.func,
+    initValue: PropTypes.bool,
 };
 
 SelectFieldSearchInput.defaultProps = {

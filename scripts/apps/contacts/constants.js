@@ -61,3 +61,15 @@ export const FILTER_FIELDS = {
     PRIVACY_LEVEL: 'public',
     STATUS: 'is_active',
 };
+
+export const URL_PARAMETERS = {
+    first_name: gettext('First Name'),
+    last_name: gettext('Last Name'),
+    contact_email: gettext('Email'),
+    organisation: gettext('organisation'),
+    job_title: gettext('Job Title'),
+    postcode: gettext('Post Code'),
+    city: gettext('City'),
+    contact_state: gettext('State'),
+    country: gettext('Country'),
+};

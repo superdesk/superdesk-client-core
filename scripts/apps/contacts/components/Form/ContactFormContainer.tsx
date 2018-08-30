@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {renderContents, validateRequiredFormFields, replaceUrls} from '../../../contacts/helpers';
+import {validateRequiredFormFields, replaceUrls} from '../../../contacts/helpers';
 import {FB_URL, IG_URL} from '../../../contacts/constants';
 import {ContactProfile} from './ContactProfile';
 import {ActionBar} from './ActionBar';
@@ -68,7 +68,7 @@ export class ContactFormContainer extends React.Component<any, any> {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.triggerSave) {
+        if (!this.props.triggerSave && nextProps.triggerSave) {
             this.save();
         }
     }
@@ -147,32 +147,21 @@ export class ContactFormContainer extends React.Component<any, any> {
 
         const readOnly = !get(privileges, 'privileges.contacts', false);
 
-        let contents:any = [
-            'div',
-            {
-                className: 'contactForm',
-            },
-        ];
-
-        if (!hideActionBar) {
-            contents.push(
-                <ActionBar svc={svc} readOnly={readOnly} onSave={this.save} onCancel={onCancel}
-                    dirty={get(this.state, 'dirty', false)} valid={get(this.state, 'isFormValid', false)} />
-            );
-        }
-
-        contents.push(
-            <ContactProfile svc={svc}
-                contact={get(this.state, 'currentContact', {})}
-                dirty={get(this.state, 'dirty', false)}
-                onChange={this.onChange} readOnly={readOnly}
-                errors={get(this.state, 'errors', {})} />
-        );
-
         return (
             <div id={contact._id} key={contact._id} className="contact-form">
                 <form name="contactForm">
-                    {renderContents(contents)}
+                    {!hideActionBar && <ActionBar
+                        svc={svc}
+                        readOnly={readOnly}
+                        onSave={this.save}
+                        onCancel={onCancel}
+                        dirty={get(this.state, 'dirty', false)}
+                        valid={get(this.state, 'isFormValid', false)} />}
+                    <ContactProfile svc={svc}
+                        contact={get(this.state, 'currentContact', {})}
+                        dirty={get(this.state, 'dirty', false)}
+                        onChange={this.onChange} readOnly={readOnly}
+                        errors={get(this.state, 'errors', {})} />
                 </form>
             </div>
         );

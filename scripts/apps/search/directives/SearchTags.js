@@ -17,10 +17,13 @@ import {PARAMETERS} from 'apps/search/constants';
 SearchTags.$inject = ['$location', 'tags', 'asset', 'metadata', 'desks', '$rootScope'];
 export function SearchTags($location, tags, asset, metadata, desks, $rootScope) {
     return {
-        scope: {},
+        scope: {
+            urlParams: '=',
+        },
         templateUrl: asset.templateUrl('apps/search/views/search-tags.html'),
         link: function(scope) {
             scope.cvs = metadata.search_cvs;
+            const urlParams = scope.urlParams || PARAMETERS;
 
             scope.$watch(function getSearchParams() {
                 return _.omit($location.search(), ['_id', 'item', 'action']);
@@ -41,7 +44,7 @@ export function SearchTags($location, tags, asset, metadata, desks, $rootScope) 
             }
 
             function reloadTags() {
-                tags.initSelectedFacets().then((currentTags) => {
+                tags.initSelectedFacets(urlParams).then((currentTags) => {
                     scope.tags = currentTags;
                 });
             }
@@ -80,8 +83,8 @@ export function SearchTags($location, tags, asset, metadata, desks, $rootScope) 
                     var type = param.split(':')[0];
                     var value = param.split(':')[1];
 
-                    Object.keys(PARAMETERS).some((k) => {
-                        if (PARAMETERS[k] === type && searchParameters[k]) {
+                    Object.keys(urlParams).some((k) => {
+                        if (urlParams[k] === type && searchParameters[k]) {
                             if (k === 'marked_desks') {
                                 removeMarkedDeskParameter(value);
                                 return true;
