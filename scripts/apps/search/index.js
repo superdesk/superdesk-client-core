@@ -55,6 +55,7 @@ angular.module('superdesk.apps.search', [
     .directive('sdItemRepo', directive.ItemRepo)
     .directive('sdItemSortbar', directive.ItemSortbar)
     .directive('sdSavedSearchSelect', directive.SavedSearchSelect)
+    .directive('sdSavedSearchSubscribe', directive.SavedSearchSubscribe)
     .directive('sdSavedSearches', directive.SavedSearches)
     .directive('sdSearchContainer', directive.SearchContainer)
     .directive('sdSearchParameters', directive.SearchParameters)

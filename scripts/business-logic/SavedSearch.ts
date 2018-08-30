@@ -1,8 +1,15 @@
 import {IUser} from './User';
 import {IDesk} from './Desk';
+import {CronTimeInterval} from 'types/DataStructures/TimeInterval';
 
-interface ISavedSearchPreferences {
-    notificationInterval: TimeInterval;
+interface IUserSubscription {
+    user: IUser['id'];
+    scheduling: CronTimeInterval;
+}
+
+interface IDeskSubscription {
+    desk: IDesk['_id'];
+    scheduling: CronTimeInterval;
 }
 
 export interface ISavedSearch {
@@ -12,25 +19,35 @@ export interface ISavedSearch {
     filter: any;
     user: IUser['id'];
     subscribers: {
-        users: Dictionary<IUser['id'], ISavedSearchPreferences>;
-        desks: Dictionary<IDesk['_id'], ISavedSearchPreferences>;
+        user_subscriptions: Array<IUserSubscription>;
+        desk_subscriptions: Array<IDeskSubscription>;
     };
 }
 
-export const isUserSubsribedToSavedSearch = (_savedSearch: ISavedSearch, userId: IUser['id']) => {
+export const isUserSubscribedToSavedSearch = (
+    _savedSearch: ISavedSearch,
+    userId: IUser['id'],
+    getDesk: (id: IDesk['_id']) => IDesk,
+): boolean => {
     const {subscribers} = _savedSearch;
 
-    if (subscribers.users[userId] != null) {
+    if (subscribers == null) {
+        return false;
+    }
+
+    if (subscribers.user_subscriptions.some((subscription) => subscription.user === userId)) {
         return true;
     }
 
-    for (const deskId in subscribers.desks) {
-        const desk: IDesk = subscribers.desks[deskId];
+    if (subscribers.desk_subscriptions.some((subscription) => {
+        const desk: IDesk = getDesk(subscription.desk);
 
         if (desk.members.includes(userId)) {
             return true;
         }
+    })) {
+        return true;
+    } else {
+        return false;
     }
-
-    return false;
 };

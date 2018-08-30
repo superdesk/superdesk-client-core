@@ -1,6 +1,7 @@
 import {IUser} from 'business-logic/User';
+import {IDesk} from 'business-logic/Desk';
 
-import {ISavedSearch, isUserSubsribedToSavedSearch} from 'business-logic/SavedSearch';
+import {ISavedSearch, isUserSubscribedToSavedSearch} from 'business-logic/SavedSearch';
 import {IDesksService} from 'types/Services/Desks';
 import {IPrivilegesService} from 'types/Services/Privileges';
 
@@ -12,18 +13,22 @@ SavedSearches.$inject = [
 ];
 
 interface ISavedSearchesScope extends ng.IScope {
-    selected: ISavedSearch;
     searchText: string;
     userSavedSearches: Array<ISavedSearch>;
     globalSavedSearches: Array<ISavedSearch>;
     privileges: IPrivilegesService;
     userLookup: IDesksService['userLookup'];
     searches: Array<ISavedSearch>;
-    select(search: ISavedSearch): void;
     edit(search: ISavedSearch): void;
     filter(): void;
     remove(search: ISavedSearch): void;
-    isUserSubsribedToSavedSearch(savedSearch: ISavedSearch, userId: IUser['id']): boolean;
+
+    selected: ISavedSearch;
+    select(search: ISavedSearch): void;
+
+    selectedForEditingSubscription: ISavedSearch;
+    editSubscription(event: Event, savedSearch: ISavedSearch): void;
+    isUserSubscribedToSavedSearch(savedSearch: ISavedSearch, userId: IUser['id']): boolean;
 }
 
 export function SavedSearches($rootScope, api, session, modal, notify, gettext, asset, $location,
@@ -108,7 +113,16 @@ export function SavedSearches($rootScope, api, session, modal, notify, gettext, 
                     });
             };
 
-            scope.isUserSubsribedToSavedSearch = isUserSubsribedToSavedSearch;
+            scope.isUserSubscribedToSavedSearch = (_savedSearch: ISavedSearch) => isUserSubscribedToSavedSearch(
+                _savedSearch,
+                session.identity._id,
+                (deskId: IDesk['_id']) => desks.deskLookup[deskId],
+            );
+
+            scope.editSubscription = function(event, _savedSearch) {
+                event.stopPropagation();
+                scope.selectedForEditingSubscription = _savedSearch;
+            };
         },
     };
 }

@@ -15,6 +15,7 @@
         "object-literal-shorthand": false,
         "variable-name": false,
         "forin": false,
+        "member-ordering": false,
         "only-arrow-functions": false
     },
     "rulesDirectory": []
