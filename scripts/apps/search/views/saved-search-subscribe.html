@@ -34,5 +34,6 @@
     <div class="modal__footer">
         <button class="btn" ng-click="closeModal()" translate>Cancel</button>
         <button class="btn btn--primary" ng-click="saveOrUpdate()" ng-disabled="savingEnabled() !== true" translate=>Subscribe</button>
+        <button ng-if="isAlreadySubscribed()" class="btn btn--hollow" ng-click="unsubscribe()" translate=>Unsubscribe</button>
     </div>
 </div>

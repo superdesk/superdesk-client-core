@@ -1,13 +1,16 @@
 import {ISavedSearch} from "business-logic/SavedSearch";
 import {IDirectiveScope} from "types/Angular/DirectiveScope";
-import {createCronInterval} from "types/DataStructures/TimeInterval";
+import {createCronInterval, CronTimeInterval} from "types/DataStructures/TimeInterval";
 import {IUser} from "business-logic/User";
 
-interface IModel {
+interface ITimeIntervalUi {
     everyDay: 'true' | 'false'; // sd-check won't set a boolean
     customWeekdays: Array<string>;
     everyHour: 'true' | 'false'; // sd-check won't set a boolean
     customHours: Array<string>;
+}
+
+interface IModel extends ITimeIntervalUi {
     hoursList: Array<string>;
 }
 
@@ -16,7 +19,36 @@ interface IScope extends IDirectiveScope<IModel> {
     closeModal(): void;
     savingEnabled(): void;
     saveOrUpdate(): void;
+    unsubscribe(): void;
+    isAlreadySubscribed(): boolean;
 }
+
+const hourNameLookUp = {
+    0: '00:00',
+    1: '01:00',
+    2: '02:00',
+    3: '03:00',
+    4: '04:00',
+    5: '05:00',
+    6: '06:00',
+    7: '07:00',
+    8: '08:00',
+    9: '09:00',
+    10: '10:00',
+    11: '11:00',
+    12: '12:00',
+    13: '13:00',
+    14: '14:00',
+    15: '15:00',
+    16: '16:00',
+    17: '17:00',
+    18: '18:00',
+    19: '19:00',
+    20: '20:00',
+    21: '21:00',
+    22: '22:00',
+    23: '23:00',
+};
 
 const weekdaysToNumbersLookup = {
     SUN: 0,
@@ -26,6 +58,33 @@ const weekdaysToNumbersLookup = {
     THU: 4,
     FRI: 5,
     SAT: 6,
+};
+
+const numbersToWeekdaysLookup = {
+    0: 'SUN',
+    1: 'MON',
+    2: 'TUE',
+    3: 'WED',
+    4: 'THU',
+    5: 'FRI',
+    6: 'SAT',
+};
+
+const cronExpressionToTimeIntervalUi = (cron: CronTimeInterval): ITimeIntervalUi => {
+    const cronArray = cron.split(' ');
+    const hours = cronArray[1];
+    const weekdays = cronArray[4];
+
+    const everyHour = hours === '*';
+    const everyDay = weekdays === '*';
+
+    return {
+        everyDay: everyDay ? 'true' : 'false',
+        customWeekdays: everyDay ? [] : weekdays.split(',')
+            .map((dayNumber: string) => numbersToWeekdaysLookup[dayNumber]),
+        everyHour: everyHour ? 'true' : 'false',
+        customHours: everyHour ? [] : hours.split(',').map((hourNumber: string) => hourNameLookUp[hourNumber]),
+    };
 };
 
 SavedSearchSubscribe.$inject = ['asset', 'session', 'api'];
@@ -38,12 +97,7 @@ export function SavedSearchSubscribe(asset, session, api) {
         templateUrl: asset.templateUrl('apps/search/views/saved-search-subscribe.html'),
         link: function(scope: IScope) {
 
-            scope.closeModal = () => {
-                scope.savedSearch = null;
-                scope.wrapper = scope.getDefaults();
-            };
-
-            scope.getDefaults = () => ({
+            const getDefaults = (): IModel => ({
                 everyDay: 'true',
                 customWeekdays: [],
                 everyHour: 'true',
@@ -53,20 +107,31 @@ export function SavedSearchSubscribe(asset, session, api) {
                     '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00',
                     '18:00', '19:00', '20:00', '21:00', '22:00', '23:00',
                 ],
-                validationErrors: [],
             });
+
+            const updateSubscribers = (nextSubscribers: ISavedSearch['subscribers']): Promise<void> => {
+                const savedSearchNext: ISavedSearch = {
+                    ...scope.savedSearch,
+                    subscribers: nextSubscribers,
+                };
+
+                return api('saved_searches')
+                    .save(scope.savedSearch, savedSearchNext);
+            };
+
+            scope.closeModal = () => {
+                scope.savedSearch = null;
+                scope.wrapper = getDefaults();
+            };
+
+            scope.isAlreadySubscribed = () => scope.savedSearch.subscribers.user_subscriptions.some(
+                (subscription) => subscription.user === session.identity._id,
+            );
 
             scope.savingEnabled = () => (scope.wrapper.everyDay === 'true' || scope.wrapper.customWeekdays.length > 0)
                 && (scope.wrapper.everyHour === 'true' || scope.wrapper.customHours.length > 0);
 
             scope.saveOrUpdate = () => {
-                if (scope.savedSearch.subscribers == null) {
-                    scope.savedSearch.subscribers = {
-                        user_subscriptions: [],
-                        desk_subscriptions: [],
-                    };
-                }
-
                 const weekdays = scope.wrapper.everyDay === 'true'
                     ? '*'
                     : scope.wrapper.customWeekdays
@@ -83,13 +148,9 @@ export function SavedSearchSubscribe(asset, session, api) {
 
                 const cronExpression = createCronInterval('*', hours, '*', '*', weekdays);
 
-                const userId: IUser['id'] = session.identity._id;
+                const userId: IUser['_id'] = session.identity._id;
 
-                const userSubscriptionAlreadyExists = scope.savedSearch.subscribers.user_subscriptions.some(
-                        (subscription) => subscription.user === userId,
-                    );
-
-                const nextUserSubscriptions = userSubscriptionAlreadyExists
+                const nextUserSubscriptions = scope.isAlreadySubscribed()
                     ? scope.savedSearch.subscribers.user_subscriptions.map((subscription) => {
                         if (subscription.user === userId) {
                             return {
@@ -105,20 +166,50 @@ export function SavedSearchSubscribe(asset, session, api) {
                             scheduling: cronExpression,
                         }]);
 
-                const savedSearchNext: ISavedSearch = {
-                    ...scope.savedSearch,
-                    subscribers: {
-                        ...scope.savedSearch.subscribers,
-                        user_subscriptions: nextUserSubscriptions,
-                    },
+                const nextSubscribers: ISavedSearch['subscribers'] = {
+                    ...scope.savedSearch.subscribers,
+                    user_subscriptions: nextUserSubscriptions,
                 };
 
-                api('saved_searches')
-                    .save(scope.savedSearch, savedSearchNext)
-                    .then(scope.closeModal, () => '');
+                updateSubscribers(nextSubscribers)
+                    .then(scope.closeModal);
             };
 
-            scope.wrapper = scope.getDefaults();
+            scope.unsubscribe = () => {
+                const nextSubscribers: ISavedSearch['subscribers'] = {
+                    ...scope.savedSearch.subscribers,
+                    user_subscriptions: scope.savedSearch.subscribers.user_subscriptions.filter(
+                        (subscription) => subscription.user !== session.identity._id,
+                    ),
+                };
+
+                updateSubscribers(nextSubscribers)
+                    .then(scope.closeModal);
+            };
+
+            scope.$watch('savedSearch', () => {
+                if (scope.savedSearch != null && scope.savedSearch.subscribers == null) {
+                    scope.savedSearch.subscribers = {
+                        user_subscriptions: [],
+                        desk_subscriptions: [],
+                    };
+                }
+
+                if (scope.savedSearch != null) {
+                    const userSubscription = scope.savedSearch.subscribers.user_subscriptions.find(
+                        (subscription) => subscription.user === session.identity._id,
+                    );
+
+                    scope.wrapper = userSubscription == null
+                        ? getDefaults()
+                        : {
+                            ...getDefaults(),
+                            ...cronExpressionToTimeIntervalUi(userSubscription.scheduling),
+                        };
+                } else {
+                    scope.wrapper = getDefaults();
+                }
+            });
         },
     };
 }

@@ -4,6 +4,6 @@ export interface IUserRole {
 }
 
 export interface IUser {
-    id: string;
+    _id: string;
     role: IUserRole;
 }

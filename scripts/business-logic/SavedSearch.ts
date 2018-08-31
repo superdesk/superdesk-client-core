@@ -3,7 +3,7 @@ import {IDesk} from './Desk';
 import {CronTimeInterval} from 'types/DataStructures/TimeInterval';
 
 interface IUserSubscription {
-    user: IUser['id'];
+    user: IUser['_id'];
     scheduling: CronTimeInterval;
 }
 
@@ -17,7 +17,7 @@ export interface ISavedSearch {
     description: string;
     is_global: boolean;
     filter: any;
-    user: IUser['id'];
+    user: IUser['_id'];
     subscribers: {
         user_subscriptions: Array<IUserSubscription>;
         desk_subscriptions: Array<IDeskSubscription>;
@@ -26,7 +26,7 @@ export interface ISavedSearch {
 
 export const isUserSubscribedToSavedSearch = (
     _savedSearch: ISavedSearch,
-    userId: IUser['id'],
+    userId: IUser['_id'],
     getDesk: (id: IDesk['_id']) => IDesk,
 ): boolean => {
     const {subscribers} = _savedSearch;
