@@ -31,6 +31,10 @@
                 <button class="delete" ng-click="edit(search)" title="{{:: 'Edit search' | translate }}" ng-if="privileges.global_saved_searches"><i class="icon-pencil"></i></button>
                 <button class="delete" ng-click="remove(search); $event.stopPropagation();" title="{{:: 'Delete search' | translate }}" ng-if="privileges.global_saved_searches"><i class="icon-trash"></i></button>
             </div>
+            <div>
+                <a ng-if="!isUserSubscribedToSavedSearch(search)" ng-click="editSubscription($event, search)" translate>Subscribe</a>
+                <a ng-if="isUserSubscribedToSavedSearch(search)" ng-click="editSubscription($event, search)" translate>Manage subscription</a>
+            </div>
         </li>
     </ul>
 </div>
