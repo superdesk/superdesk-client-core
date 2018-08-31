@@ -28,7 +28,7 @@ interface ISavedSearchesScope extends ng.IScope {
 
     selectedForEditingSubscription: ISavedSearch;
     editSubscription(event: Event, savedSearch: ISavedSearch): void;
-    isUserSubscribedToSavedSearch(savedSearch: ISavedSearch, userId: IUser['id']): boolean;
+    isUserSubscribedToSavedSearch(savedSearch: ISavedSearch, userId: IUser['_id']): boolean;
 }
 
 export function SavedSearches($rootScope, api, session, modal, notify, gettext, asset, $location,
