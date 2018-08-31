@@ -2,7 +2,8 @@
     <div class="modal__header">
         <a href="" class="close" ng-click="closeModal()"><i class="icon-close-small"></i></a>
         <h3 class="modal__heading" translate="">
-            {{ :: isAlreadySubscribed() ? 'Update subscription' : 'New subscription' | translate}}
+            <span ng-if="isAlreadySubscribed()" translate>Update subscription</span>
+            <span ng-if="!isAlreadySubscribed()" translate>New subscription</span>
         </h3>
     </div>
 
@@ -37,7 +38,8 @@
         <button ng-if="isAlreadySubscribed()" class="btn btn--hollow pull-left" ng-click="unsubscribe()" translate=>Unsubscribe</button>
         <button class="btn" ng-click="closeModal()" translate>Cancel</button>
         <button class="btn btn--primary" ng-click="saveOrUpdate()" ng-disabled="savingEnabled() !== true"=>
-            {{ :: isAlreadySubscribed() ? 'Update subscription' : 'Subscribe' | translate}}
+            <span ng-if="isAlreadySubscribed()" translate=>Update subscription</span>
+            <span ng-if="!isAlreadySubscribed()" translate=>Subscribe</span>
         </button>
     </div>
 </div>
