@@ -5,7 +5,7 @@
 <div class="list saved-searches">
     <div class="saved-searches__group-title" translate>My Saved Searches</div>
     <ul>
-        <li ng-repeat="search in userSavedSearches | orderBy:'name' " ng-click="select(search)" ng-class="{active: search == selected}">
+        <li ng-repeat="search in userSavedSearches | orderBy:'name' " ng-click="select(search)" class="saved-search-item" ng-class="{active: search == selected}">
             <div class="search-item">
                 <div class="search-name">{{:: search.name }} <i ng-if="search.is_global" translate>[Global]</i></div>
                 <div class="search-description">{{:: search.description }}</div>
@@ -14,15 +14,25 @@
                 <button class="delete" ng-click="edit(search)" title="{{:: 'Edit search' | translate }}"><i class="icon-pencil"></i></button>
                 <button class="delete" ng-click="remove(search); $event.stopPropagation();" title="{{:: 'Delete search' | translate }}"><i class="icon-trash"></i></button>
             </div>
-            <div>
-                <a ng-if="!isUserSubscribedToSavedSearch(search)" ng-click="editSubscription($event, search)" translate>Subscribe</a>
-                <a ng-if="isUserSubscribedToSavedSearch(search)" ng-click="editSubscription($event, search)" translate>Manage subscription</a>
+            <div class="saved-search-subscriptions">
+                <a
+                    ng-if="!isUserSubscribedToSavedSearch(search)"
+                    class="saved-search-subscriptions--action"
+                    ng-click="editSubscription($event, search)"
+                    translate>Subscribe</a>
+
+                <a
+                    ng-if="isUserSubscribedToSavedSearch(search)"
+                    class="saved-search-subscriptions--action"
+                    ng-click="editSubscription($event, search)"
+                    translate>Manage subscription</a>
+                    <span ng-if="isUserSubscribedToSavedSearch(search)" class="label label--success">Subscribed</span>
             </div>
         </li>
     </ul>
     <div class="saved-searches__group-title" translate>Global Saved Searches</div>
     <ul>
-        <li ng-repeat="search in globalSavedSearches | orderBy:'name' " ng-click="select(search)" ng-class="{active: search == selected}">
+        <li ng-repeat="search in globalSavedSearches | orderBy:'name' " ng-click="select(search)" class="saved-search-item" ng-class="{active: search == selected}">
             <div class="search-item">
                 <div class="search-name">{{:: search.name }} <i>by {{:: userLookup[search.user].display_name }}</i></div>
                 <div class="search-description">{{:: search.description }}</div>
@@ -31,9 +41,19 @@
                 <button class="delete" ng-click="edit(search)" title="{{:: 'Edit search' | translate }}" ng-if="privileges.global_saved_searches"><i class="icon-pencil"></i></button>
                 <button class="delete" ng-click="remove(search); $event.stopPropagation();" title="{{:: 'Delete search' | translate }}" ng-if="privileges.global_saved_searches"><i class="icon-trash"></i></button>
             </div>
-            <div>
-                <a ng-if="!isUserSubscribedToSavedSearch(search)" ng-click="editSubscription($event, search)" translate>Subscribe</a>
-                <a ng-if="isUserSubscribedToSavedSearch(search)" ng-click="editSubscription($event, search)" translate>Manage subscription</a>
+            <div class="saved-search-subscriptions">
+                <a
+                    ng-if="!isUserSubscribedToSavedSearch(search)"
+                    class="saved-search-subscriptions--action"
+                    ng-click="editSubscription($event, search)"
+                    translate>Subscribe</a>
+
+                <a
+                    ng-if="isUserSubscribedToSavedSearch(search)"
+                    class="saved-search-subscriptions--action"
+                    ng-click="editSubscription($event, search)"
+                    translate>Manage subscription</a>
+                    <span ng-if="isUserSubscribedToSavedSearch(search)" class="label label--success">Subscribed</span>
             </div>
         </li>
     </ul>
