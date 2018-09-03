@@ -80,7 +80,7 @@
 .highlights-list-menu {
     padding: 5px 0;
     margin: 6px 0 0 0;
-    background-color: $black;
+    background-color: $black !important;
     &:before {
         display: none;
     }
