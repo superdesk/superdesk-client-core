@@ -7,10 +7,12 @@
         </h3>
     </div>
 
-    <div class="modal__body" style="min-height: 500px;">
+    <div class="modal__body" style="min-height: 550px;">
         <div class="sd-alert sd-alert--hollow sd-alert--primary">
             <p>You have chosen to subscribe to <strong>{{savedSearch.name}}</strong>. Please define the frequency and time of your email notifications below.</p>
         </div>
+
+        <div class="form-label">Schedule</div>
 
         <div class="form__row">
             <sd-check type="radio" ng-model="wrapper.everyDay" ng-value="true" label-position="inside">Every day</sd-check>
@@ -18,6 +20,8 @@
         </div>
 
         <div ng-if="wrapper.everyDay !== 'true'" class="form__row" sd-weekday-picker data-model="wrapper.customWeekdays"></div>
+
+        <div class="form-label">Time</div>
 
         <div class="form__row">
             <sd-check type="radio" ng-model="wrapper.everyHour" ng-value="true" label-position="inside">Every hour</sd-check>

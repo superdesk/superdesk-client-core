@@ -1,6 +1,7 @@
 import {IUser} from 'business-logic/User';
 import {IDesk} from 'business-logic/Desk';
 
+import {ISuperdeskGlobalConfig} from 'business-logic/SuperdeskGlobalConfig';
 import {ISavedSearch, isUserSubscribedToSavedSearch} from 'business-logic/SavedSearch';
 import {IDesksService} from 'types/Services/Desks';
 import {IPrivilegesService} from 'types/Services/Privileges';
@@ -9,10 +10,12 @@ import {forEach, clone, filter} from 'lodash';
 
 SavedSearches.$inject = [
     '$rootScope', 'api', 'session', 'modal', 'notify', 'gettext', 'asset',
-    '$location', 'desks', 'privileges', 'search', 'savedSearch',
+    '$location', 'desks', 'privileges', 'search', 'savedSearch', 'config',
 ];
 
 interface ISavedSearchesScope extends ng.IScope {
+    config: ISuperdeskGlobalConfig;
+
     searchText: string;
     userSavedSearches: Array<ISavedSearch>;
     globalSavedSearches: Array<ISavedSearch>;
@@ -32,12 +35,14 @@ interface ISavedSearchesScope extends ng.IScope {
 }
 
 export function SavedSearches($rootScope, api, session, modal, notify, gettext, asset, $location,
-    desks, privileges, search, savedSearch): ng.IDirective {
+    desks, privileges, search, savedSearch, config): ng.IDirective {
     return {
         templateUrl: asset.templateUrl('apps/search/views/saved-searches.html'),
         scope: {},
         link: function(scope: ISavedSearchesScope) {
             const resource = api('saved_searches');
+
+            scope.config = config;
 
             scope.selected = null;
             scope.searchText = null;
