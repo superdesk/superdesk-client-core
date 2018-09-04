@@ -1,4 +1,6 @@
+/* eslint-disable no-unused-vars */ // eslint complains about EditorChangeType not being used
 import {SelectionState, Modifier, EditorState, EditorChangeType} from 'draft-js';
+/* eslint-enable no-unused-vars */
 
 const findReplace = (state = {}, action) => {
     switch (action.type) {
