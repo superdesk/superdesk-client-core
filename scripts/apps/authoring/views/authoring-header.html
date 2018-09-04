@@ -145,7 +145,7 @@
              order="{{editor.place.order}}">
             <label class="authoring-header__item-label" translate>PLACE</label>
             <div class="authoring-header__input-holder">
-                <div sd-meta-terms ng-if="!features.places_autocomplete"
+                <div sd-meta-terms ng-if="!features.places_autocomplete && !single_value.locators"
                      class="data"
                      data-tabindex="editor.place.order"
                      data-item="item"
@@ -153,6 +153,18 @@
                      data-unique="qcode"
                      data-header="true"
                      data-list="metadata.locators"
+                     ng-disabled="!_editable"
+                     data-change="autosave(item)">
+                </div>
+
+                <div sd-meta-dropdown ng-if="!features.places_autocomplete && single_value.locators"
+                     class="data"
+                     data-tabindex="editor.place.order"
+                     data-item="item"
+                     data-field="place"
+                     data-unique="qcode"
+                     data-list="metadata.locators"
+                     data-group="region"
                      ng-disabled="!_editable"
                      data-change="autosave(item)">
                 </div>
