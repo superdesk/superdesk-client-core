@@ -6,6 +6,17 @@
     padding-top: 4px;
 }
 
+.saved-search-subscriptions--manage-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: -30px;
+    margin-bottom: 10px;
+    padding: 9px 20px;
+    font-size: 13px;
+    background: #DEE5E8;
+}
+
 .saved-search-subscriptions--action {
     visibility: hidden;
 }

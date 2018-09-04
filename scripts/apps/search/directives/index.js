@@ -14,6 +14,7 @@ export {ItemSortbar} from './ItemSortbar';
 export {SavedSearchSelect} from './SavedSearchSelect';
 export {SavedSearches} from './SavedSearches';
 export {SavedSearchSubscribe} from './SavedSearchSubscribe';
+export {SavedSearchManageSubscribers} from './SavedSearchManageSubscribers';
 export {MultiActionBar} from './MultiActionBar';
 export {RawSearch} from './RawSearch';
 export {SearchFilters} from './SearchFilters';

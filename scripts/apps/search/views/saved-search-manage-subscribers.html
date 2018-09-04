@@ -1,0 +1,51 @@
+<div sd-modal class="modal" ng-if="savedSearch != null" data-model="true">
+    <div class="modal__header">
+        <a href="" class="close" ng-click="closeModal()"><i class="icon-close-small"></i></a>
+        <h3 class="modal__heading" translate="">
+            <span translate>Manage: </span>
+            <strong>{{savedSearch.name}}</strong>
+        </h3>
+    </div>
+
+    <div class="modal__body">
+        <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 2rem; color: #898989">
+            <div>
+                <strong>{{savedSearch.subscribers == null ? '0' : savedSearch.subscribers.user_subscriptions.length}} </strong>
+                subscriptions
+            </div>
+            <button class="btn btn--hollow btn--primary"><i class="icon-plus-sign"></i>Add new</button>
+        </div>
+        
+        <div>
+            <div
+                ng-repeat="user in wrapper.userSubscribers track by user._id"
+                class="sd-list-item sd-shadow--z1"
+                ng-class="{&quot;sd-list-item--activated&quot;:itemActive2}"
+                style="margin-bottom: 6px">
+                <div class="sd-list-item__column">
+                    <figure class="avatar" style="margin:0">
+                        <img sd-user-avatar data-user="user">
+                    </figure>
+                </div>
+                <div class="sd-list-item__column sd-list-item__column--grow sd-list-item__column--no-border">
+                    <div class="sd-list-item__row">
+                        <strong class="sd-overflow-ellipsis">{{user.first_name}} {{user.last_name}}</strong>
+                    </div>
+                    <div class="sd-list-item__row">
+                        {{user.username}}
+                    </div>
+                </div>
+                <div class="sd-list-item__column">
+                    <div class="actions">
+                        <button><i class="icon-pencil"></i></button>
+                        <button><i class="icon-trash"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal__footer">
+        <button class="btn" ng-click="manageSubscriptions(false)" translate>Cancel</button>
+    </div>
+</div>
