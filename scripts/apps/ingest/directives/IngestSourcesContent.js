@@ -434,7 +434,7 @@ export function IngestSourcesContent(ingestSources, gettext, notify, api, $locat
                         };
 
                         $location.path('/planning').search(
-                            {filter: 'EVENTS', searchParams: angular.toJson(searchParams)}
+                            angular.toJson({filter: 'EVENTS', searchParams: searchParams})
                         );
                     } else {
                         $location.path('/search').search(
