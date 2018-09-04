@@ -1,4 +1,5 @@
-import {EditorState, ContentState, Modifier, genKey, CharacterMetadata, ContentBlock} from 'draft-js';
+import {EditorState, ContentState, Modifier, genKey, CharacterMetadata, ContentBlock, DraftHandleValue} from 'draft-js';
+import {EDITOR_GLOBAL_REFS, Editor3ComponentProps} from 'core/editor3/components/Editor3Component';
 import {List, OrderedMap} from 'immutable';
 import {getContentStateFromHtml} from '../html/from-html';
 import * as Suggestions from '../helpers/suggestions';
@@ -6,12 +7,6 @@ import {sanitizeContent, inlineStyles} from '../helpers/inlineStyles';
 import {getAllCustomDataFromEditor, setAllCustomDataForEditor} from '../helpers/editor3CustomData';
 import {getCurrentAuthor} from '../helpers/author';
 import {htmlComesFromDraftjsEditor} from '../helpers/htmlComesFromDraftjsEditor';
-import {EDITOR_GLOBAL_REFS} from 'core/editor3/components/Editor3Component';
-
-enum DraftHandleValue {
-    HANDLED = 'handled',
-    NOT_HANDLED = 'not-handled',
-}
 
 function removeMediaFromHtml(htmlString) : string {
     const element = document.createElement('div');
@@ -25,7 +20,8 @@ function removeMediaFromHtml(htmlString) : string {
     return element.innerHTML;
 }
 
-function pasteContentFromOpenEditor(props: any, html: string) : DraftHandleValue {
+function pasteContentFromOpenEditor(
+    html: string, editorState: EditorState, onChange: Function, editorFormat: Array<string>) : DraftHandleValue {
     for (const editorKey in window[EDITOR_GLOBAL_REFS]) {
         if (html.includes(editorKey)) {
             const editor = window[EDITOR_GLOBAL_REFS][editorKey];
@@ -34,15 +30,15 @@ function pasteContentFromOpenEditor(props: any, html: string) : DraftHandleValue
             if (internalClipboard) {
                 const blocksArray = [];
 
-                internalClipboard.map((b) => blocksArray.push(b));
+                internalClipboard.forEach((b) => blocksArray.push(b));
                 const contentState = ContentState.createFromBlockArray(blocksArray);
 
-                return insertContentInState(props, contentState);
+                return insertContentInState(editorState, contentState, onChange, editorFormat);
             }
         }
     }
 
-    return DraftHandleValue.NOT_HANDLED;
+    return 'not-handled';
 }
 
 /**
@@ -62,40 +58,43 @@ export function handlePastedText(text: string, _html: string) : DraftHandleValue
         html = removeMediaFromHtml(html);
     }
 
-    const {editorState, suggestingMode, onPasteFromSuggestingMode} = this.props;
+    const {editorState, suggestingMode, onPasteFromSuggestingMode, onChange, editorFormat} = this.props;
 
     if (!html && !text) {
-        return DraftHandleValue.HANDLED;
+        return 'handled';
     }
 
     if (suggestingMode) {
         if (!Suggestions.allowEditSuggestionOnLeft(editorState, author)
             && !Suggestions.allowEditSuggestionOnRight(editorState, author)) {
-            return DraftHandleValue.HANDLED;
+            return 'handled';
         }
 
         const content = html ? getContentStateFromHtml(html) : ContentState.createFromText(text);
 
         onPasteFromSuggestingMode(content);
-        return DraftHandleValue.HANDLED;
+        return 'handled';
     }
 
-    if (pasteContentFromOpenEditor(this.props, html) === DraftHandleValue.HANDLED) {
-        return DraftHandleValue.HANDLED;
+    if (pasteContentFromOpenEditor(html, editorState, onChange, editorFormat) === 'handled') {
+        return 'handled';
     }
 
 
     if (htmlComesFromDraftjsEditor(html)) {
-        return DraftHandleValue.NOT_HANDLED;
+        return 'not-handled';
     }
 
     return processPastedHtml(this.props, html || text);
 }
 
-function insertContentInState(props: any, _pastedContent: ContentState) : DraftHandleValue {
-    const {editorState, editorFormat, onChange} = props;
-    let pastedContent = _pastedContent;
-    const blockMap = pastedContent.getBlockMap();
+function insertContentInState(
+    editorState: EditorState,
+    pastedContent: ContentState,
+    onChange: Function,
+    editorFormat: Array<string>) : DraftHandleValue {
+    let _pastedContent = pastedContent;
+    const blockMap = _pastedContent.getBlockMap();
     const hasAtomicBlocks = blockMap.some((block) => block.getType() === 'atomic');
     const acceptedInlineStyles =
         Object.keys(inlineStyles)
@@ -111,7 +110,7 @@ function insertContentInState(props: any, _pastedContent: ContentState) : DraftH
         selection = contentState.getSelectionAfter();
     }
 
-    pastedContent = sanitizeContent(EditorState.createWithContent(pastedContent), acceptedInlineStyles)
+    _pastedContent = sanitizeContent(EditorState.createWithContent(_pastedContent), acceptedInlineStyles)
         .getCurrentContent();
 
     blockMap.forEach((block) => {
@@ -120,7 +119,7 @@ function insertContentInState(props: any, _pastedContent: ContentState) : DraftH
         }
 
         const entityKey = block.getEntityAt(0);
-        const entity = pastedContent.getEntity(entityKey);
+        const entity = _pastedContent.getEntity(entityKey);
 
         contentState = contentState.addEntity(entity);
 
@@ -160,16 +159,21 @@ function insertContentInState(props: any, _pastedContent: ContentState) : DraftH
 
     onChange(nextEditorState);
 
-    return DraftHandleValue.HANDLED;
+    return 'handled';
 }
 
 // Checks if there are atomic blocks in the paste content. If there are, we need to set
 // the 'atomic' block type using the Modifier tool and add these entities to the
 // contentState.
-function processPastedHtml(props: any, html: string) : DraftHandleValue {
+function processPastedHtml(props: Editor3ComponentProps, html: string) : DraftHandleValue {
     let pastedContent = getContentStateFromHtml(html);
 
-    return insertContentInState(props, pastedContent);
+    return insertContentInState(
+        props.editorState,
+        pastedContent,
+        props.onChange,
+        props.editorFormat
+    );
 }
 
 // Returns an empty block.

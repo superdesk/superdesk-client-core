@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import {
     Editor,
@@ -67,6 +66,32 @@ export function canDropMedia(e, editorConfig) {
     return supportsMedia && isValidMedia;
 }
 
+export interface Editor3ComponentProps {
+    readOnly?: boolean,
+    locked?: boolean,
+    showToolbar?: boolean,
+    editorState?: any,
+    onChange?: Function,
+    unlock?: Function,
+    onTab?: (e: any) => void,
+    dragDrop?: Function,
+    scrollContainer: string,
+    singleLine?: boolean,
+    editorFormat?: Array<string>,
+    tabindex?: number,
+    dispatch?: Function,
+    suggestingMode?: boolean,
+    onCreateAddSuggestion?: Function,
+    onCreateDeleteSuggestion?: Function,
+    onPasteFromSuggestingMode?: Function,
+    onCreateSplitParagraphSuggestion?: Function,
+    onCreateChangeStyleSuggestion?: Function,
+    svc?: any,
+    invisibles?: boolean,
+    highlights?: any,
+    highlightsManager?: any,
+}
+
 /**
  * @ngdoc React
  * @module superdesk.core.editor3
@@ -79,7 +104,7 @@ export function canDropMedia(e, editorConfig) {
  * @description Editor3 is a draft.js based editor that support customizable
  *  formatting, spellchecker and media files.
  */
-export class Editor3Component extends React.Component<any, any> {
+export class Editor3Component extends React.Component<Editor3ComponentProps, any> {
     static propTypes: any;
     static defaultProps: any;
 
@@ -432,31 +457,6 @@ export class Editor3Component extends React.Component<any, any> {
     }
 }
 
-Editor3Component.propTypes = {
-    readOnly: PropTypes.bool,
-    locked: PropTypes.bool,
-    showToolbar: PropTypes.bool,
-    editorState: PropTypes.object,
-    onChange: PropTypes.func,
-    unlock: PropTypes.func,
-    onTab: PropTypes.func,
-    dragDrop: PropTypes.func,
-    scrollContainer: PropTypes.string.isRequired,
-    singleLine: PropTypes.bool,
-    editorFormat: PropTypes.array,
-    tabindex: PropTypes.number,
-    dispatch: PropTypes.func,
-    suggestingMode: PropTypes.bool,
-    onCreateAddSuggestion: PropTypes.func,
-    onCreateDeleteSuggestion: PropTypes.func,
-    onPasteFromSuggestingMode: PropTypes.func,
-    onCreateSplitParagraphSuggestion: PropTypes.func,
-    onCreateChangeStyleSuggestion: PropTypes.func,
-    svc: PropTypes.object,
-    invisibles: PropTypes.bool,
-    highlights: PropTypes.object,
-    highlightsManager: PropTypes.object,
-};
 
 Editor3Component.defaultProps = {
     readOnly: false,
