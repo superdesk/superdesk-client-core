@@ -1,5 +1,5 @@
 import {EditorState, ContentState, Modifier, genKey, CharacterMetadata, ContentBlock} from 'draft-js';
-import {List, OrderedSet} from 'immutable';
+import {List, OrderedMap} from 'immutable';
 import {getContentStateFromHtml} from '../html/from-html';
 import * as Suggestions from '../helpers/suggestions';
 import {sanitizeContent, inlineStyles} from '../helpers/inlineStyles';
@@ -134,9 +134,11 @@ function insertContentInState(props: any, _pastedContent: ContentState) : DraftH
         contentState = Modifier.setBlockType(contentState, selection, 'atomic');
     }
 
+    const newBlockMap = OrderedMap<string, ContentBlock>(blocks.map((b) => ([b.getKey(), b])));
+
     let nextEditorState = EditorState.push(
         editorState,
-        Modifier.replaceWithFragment(contentState, selection, OrderedSet(blocks)),
+        Modifier.replaceWithFragment(contentState, selection, newBlockMap),
         'insert-fragment'
     );
 

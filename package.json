@@ -28,6 +28,7 @@
   ],
   "main": "scripts/index.js",
   "dependencies": {
+    "@types/draft-js": "^0.10.24",
     "@types/lodash": "4.14.116",
     "@types/react": "16.4.9",
     "angular": "1.6.9",
@@ -43,8 +44,6 @@
     "angular-resource": "1.6.9",
     "angular-route": "1.6.9",
     "angular-vs-repeat": "1.1.7",
-    "ts-loader": "3.5.0",
-    "typescript": "3.0.1",
     "bootstrap": "3.3.7",
     "classnames": "2.2.5",
     "css-loader": "0.28.10",
@@ -101,6 +100,8 @@
     "shortid": "2.2.8",
     "style-loader": "0.20.2",
     "superdesk-ui-framework": "^1.1.0",
+    "ts-loader": "3.5.0",
+    "typescript": "3.0.1",
     "webpack": "3.11.0",
     "webpack-dev-server": "2.11.1"
   },

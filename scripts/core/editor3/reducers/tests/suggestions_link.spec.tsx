@@ -26,8 +26,8 @@ describe('editor3.reducers.suggestion.LINK_SUGGESTIONS', () => {
 
         const entity = content.getEntity(content.getLastCreatedEntityKey());
 
-        expect(entity.type).toBe('LINK');
-        expect(entity.data.link.href).toBe('http://wwww.sourcefabric.org');
+        expect(entity.getType()).toBe('LINK');
+        expect(entity.getData().link.href).toBe('http://wwww.sourcefabric.org');
 
         let block = content.getFirstBlock();
 
@@ -69,8 +69,8 @@ describe('editor3.reducers.suggestion.LINK_SUGGESTIONS', () => {
         content = editorState.getCurrentContent();
         entity = content.getEntity(key);
 
-        expect(entity.type).toBe('LINK');
-        expect(entity.data.link.href).toBe('http://dev.sourcefabric.org');
+        expect(entity.getType()).toBe('LINK');
+        expect(entity.getData().link.href).toBe('http://dev.sourcefabric.org');
 
         let block = content.getFirstBlock();
 
@@ -113,8 +113,8 @@ describe('editor3.reducers.suggestion.LINK_SUGGESTIONS', () => {
         content = editorState.getCurrentContent();
         entity = content.getEntity(key);
 
-        expect(entity.type).toBe('LINK');
-        expect(entity.data.link).toBe('http://www.sourcefabric.org');
+        expect(entity.getType()).toBe('LINK');
+        expect(entity.getData().link).toBe('http://www.sourcefabric.org');
 
         let block = content.getFirstBlock();
 

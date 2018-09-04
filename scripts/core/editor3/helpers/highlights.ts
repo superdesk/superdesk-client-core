@@ -6,6 +6,7 @@ import {getDraftSelectionForEntireContent} from './getDraftSelectionForEntireCon
 import {resizeDraftSelection} from './resizeDraftSelection';
 import {clearInlineStyles} from './clearInlineStyles';
 import {changeSuggestionsTypes, blockStylesDescription, paragraphSuggestionTypes} from '../highlightsConfig';
+import _ from 'lodash';
 
 export const paragraphSeparator = '¶';
 
@@ -266,7 +267,8 @@ export function canAddHighlight(editorState, highlightType) {
  * @param {Boolean} firstFound - if true return first style found otherwise return all styles found
  * @description the highlight style from the new possition specified by offset.
  */
-export function getHighlightStyleAtOffset(editorState, types, selection, offset, fromEnd = false, firstFound = true) {
+export function getHighlightStyleAtOffset(
+    editorState, types, selection, offset, fromEnd = false, firstFound = true) : string | Array<string> {
     const {block, newOffset} = getBlockAndOffset(editorState, selection, offset, fromEnd);
 
     if (block == null) {
@@ -354,7 +356,7 @@ export function getHighlightAuthor(editorState, style) {
  * @description the highlight associated data from the new possition specified by offset.
  */
 export function getHighlightDataAtOffset(editorState, types, selection, offset, fromEnd = false) {
-    const style = getHighlightStyleAtOffset(editorState, types, selection, offset, fromEnd);
+    const style = getHighlightStyleAtOffset(editorState, types, selection, offset, fromEnd) as string;
 
     if (style == null) {
         return null;
