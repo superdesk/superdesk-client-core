@@ -24,8 +24,13 @@
                         <div class="field">
                             <i class="field-info pull-right" translate>* mandatory fields</i>
                         </div>
-                        <div >
-                            <label for="product-name" translate>Product name</label><i class="field-info pull-right" translate>*</i>
+                        <div class="field" ng-if="product._id">
+                            <label for="product-id" translate>Product ID</label>
+                            <input id="product-id" type="text" class="fullwidth-input" ng-model="product._id" ng-disabled="true">
+                            <i class="field-info" translate>*the Product ID can be copied and used as Superdesk Newshub product query</i>
+                        </div>
+                        <div class="field">
+                            <label for="product-name" translate>Product name<i class="field-info pull-right" translate>*</i></label>
                             <input id="product-name" type="text" class="fullwidth-input" ng-model="product.edit.name" required>
                         </div>
                         <div class="field">
@@ -33,7 +38,7 @@
                             <textarea class="fullwidth-input" ng-model="product.edit.description"></textarea>
                         </div>
                         <div class="field">
-                            <label translate>Product Type</label><i class="field-info pull-right" translate>*</i>
+                            <label translate>Product Type<i class="field-info pull-right" translate>*</i></label>
                             <select class="input"
                                     ng-model="product.edit.product_type"
                                     ng-options="p.qcode as p.name for p in product_types">
