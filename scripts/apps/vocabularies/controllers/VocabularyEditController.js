@@ -69,7 +69,8 @@ export function VocabularyEditController($scope, gettext, $interpolate, notify, 
                 }
 
                 if (!name || name.match(idRegex) === null) {
-                    $scope.errorMessage = gettext('Name field should only have alphanumeric characters');
+                    $scope.errorMessage =
+                        gettext('Name field should only have alphanumeric characters, dashes and underscores');
                 }
             });
         }
