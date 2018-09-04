@@ -119,6 +119,7 @@
     "karma-ng-html2js-preprocessor": "^1.0.0",
     "karma-sourcemap-loader": "^0.3.7",
     "karma-webpack": "^2.0.13",
+    "patch-package": "^5.1.1",
     "protractor": "^5.1.2",
     "react-addons-test-utils": "^15.6.0",
     "react-test-renderer": "^16.2.0",
@@ -134,6 +135,7 @@
     "lint": "tsc --noEmit --version && eslint --ext .js --ext .jsx --ext .tsx scripts spec tasks *.js",
     "start-test-server": "cd test-server && python3 -m venv env && . env/bin/activate && pip install -Ur requirements.txt && honcho start",
     "protractor": "protractor protractor.conf.js",
-    "webdriver-manager": "webdriver-manager"
+    "webdriver-manager": "webdriver-manager",
+    "postinstall": "patch-package"
   }
 }

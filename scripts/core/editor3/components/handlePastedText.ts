@@ -1,4 +1,4 @@
-import {EditorState, ContentState, Modifier, genKey, CharacterMetadata, ContentBlock, DraftHandleValue} from 'draft-js';
+import {EditorState, ContentState, Modifier, genKey, CharacterMetadata, ContentBlock, DraftHandleValue, EditorChangeType} from 'draft-js';
 import {EDITOR_GLOBAL_REFS, Editor3ComponentProps} from 'core/editor3/components/Editor3Component';
 import {List, OrderedMap} from 'immutable';
 import {getContentStateFromHtml} from '../html/from-html';
