@@ -1,4 +1,4 @@
-import {SelectionState, Modifier, EditorState} from 'draft-js';
+import {SelectionState, Modifier, EditorState, EditorChangeType} from 'draft-js';
 
 const findReplace = (state = {}, action) => {
     switch (action.type) {

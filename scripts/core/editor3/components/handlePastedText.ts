@@ -1,5 +1,4 @@
 import {EditorState, ContentState, Modifier, genKey, CharacterMetadata, ContentBlock, DraftHandleValue, EditorChangeType} from 'draft-js';
-import {EDITOR_GLOBAL_REFS, Editor3ComponentProps} from 'core/editor3/components/Editor3Component';
 import {List, OrderedMap} from 'immutable';
 import {getContentStateFromHtml} from '../html/from-html';
 import * as Suggestions from '../helpers/suggestions';
@@ -7,6 +6,7 @@ import {sanitizeContent, inlineStyles} from '../helpers/inlineStyles';
 import {getAllCustomDataFromEditor, setAllCustomDataForEditor} from '../helpers/editor3CustomData';
 import {getCurrentAuthor} from '../helpers/author';
 import {htmlComesFromDraftjsEditor} from '../helpers/htmlComesFromDraftjsEditor';
+import {EDITOR_GLOBAL_REFS} from 'core/editor3/components/Editor3Component';
 
 function removeMediaFromHtml(htmlString) : string {
     const element = document.createElement('div');
@@ -85,7 +85,7 @@ export function handlePastedText(text: string, _html: string) : DraftHandleValue
         return 'not-handled';
     }
 
-    return processPastedHtml(this.props, html || text);
+    return processPastedHtml(html || text, editorState, onChange, editorFormat);
 }
 
 function insertContentInState(
@@ -165,14 +165,15 @@ function insertContentInState(
 // Checks if there are atomic blocks in the paste content. If there are, we need to set
 // the 'atomic' block type using the Modifier tool and add these entities to the
 // contentState.
-function processPastedHtml(props: Editor3ComponentProps, html: string) : DraftHandleValue {
+function processPastedHtml(
+    html: string, editorState: EditorState, onChange: Function, editorFormat: Array<string>) : DraftHandleValue {
     let pastedContent = getContentStateFromHtml(html);
 
     return insertContentInState(
-        props.editorState,
+        editorState,
         pastedContent,
-        props.onChange,
-        props.editorFormat
+        onChange,
+        editorFormat
     );
 }
 
