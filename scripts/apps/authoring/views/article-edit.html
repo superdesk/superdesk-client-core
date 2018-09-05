@@ -325,28 +325,12 @@
         <div class="media-item__item">
             <div sd-item-rendition data-item="item" data-rendition="baseImage" ng-click="preview(item);"></div>
             <span class="media-item__item-label" translate>Original ({{item.renditions.original.width}} x {{item.renditions.original.height}} px)</span>
-            <div class="media-container__metadata media-container__metadata--image">
-                <span>
-                    <em>{{:: 'Credit:' | translate}}</em>
-                    {{item.byline || ('[No Value]' | translate)}}
-                </span>
-                <span>
-                    <em>{{:: 'Copyright holder:' | translate}}</em>
-                    {{item.copyrightholder || ('[No Value]' | translate)}}
-                </span>
-                <span>
-                    <em>{{:: 'Assign rights:' | translate}}</em>
-                    {{item.usageterms || ('[No Value]' | translate)}}
-                </span>
-                <span>
-                    <em>{{:: 'Copyright notice:' | translate}}</em>
-                    {{item.copyrightnotice || ('[No Value]' | translate)}}
-                </span>
-            </div>
-        </div>
-        <div sd-item-crops data-item="item">
+            <div sd-media-metadata-view
+                 class="media-container__metadata media-container__metadata--image"
+                 data-item="item"></div>
 
         </div>
+        <div sd-item-crops data-item="item"></div>
         <button id="btnCrop" class="btn btn--medium pull-right" ng-click="applyCrop()" ng-if="metadata.crop_sizes && _editable">
             <span ng-if="!item.hasCrops" translate>APPLY CROPS</span>
             <span ng-if="item.hasCrops" translate>EDIT CROPS</span>
@@ -356,24 +340,9 @@
     <div ng-if="item.type == 'audio'">
         <div class="media-container">
             <audio controls="controls" sd-sources data-renditions="item.renditions"></audio>
-            <div class="media-container__metadata">
-                <span>
-                    <em>{{:: 'Credit:' | translate}}</em>
-                    {{item.byline || ('[No Value]' | translate)}}
-                </span>
-                <span>
-                    <em>{{:: 'Copyright holder:' | translate}}</em>
-                    {{item.copyrightholder || ('[No Value]' | translate)}}
-                </span>
-                <span>
-                    <em>{{:: 'Assign rights:' | translate}}</em>
-                    {{item.usageterms || ('[No Value]' | translate)}}
-                </span>
-                <span>
-                    <em>{{:: 'Copyright notice:' | translate}}</em>
-                    {{item.copyrightnotice || ('[No Value]' | translate)}}
-                </span>
-            </div>
+            <div sd-media-metadata-view
+                 class="media-container__metadata"
+                 data-item="item"></div>
             <div class="media-container__action-bar" ng-if="_editable">
                 <a class="btn btn--hollow btn--small" ng-click="editMedia()"><span translate>Edit metadata</span></a>
             </div>
@@ -382,24 +351,9 @@
     <div ng-if="item.type == 'video'">
         <div class="media-container">
             <video controls="controls" sd-sources data-renditions="item.renditions"></video>
-            <div class="media-container__metadata">
-                <span>
-                    <em>{{:: 'Credit:' | translate}}</em>
-                    {{item.byline || ('[No Value]' | translate)}}
-                </span>
-                <span>
-                    <em>{{:: 'Copyright holder:' | translate}}</em>
-                    {{item.copyrightholder || ('[No Value]' | translate)}}
-                </span>
-                <span>
-                    <em>{{:: 'Assign rights:' | translate}}</em>
-                    {{item.usageterms || ('[No Value]' | translate)}}
-                </span>
-                <span>
-                    <em>{{:: 'Copyright notice:' | translate}}</em>
-                    {{item.copyrightnotice || ('[No Value]' | translate)}}
-                </span>
-            </div>
+            <div sd-media-metadata-view
+                 class="media-container__metadata"
+                 data-item="item"></div>
             <div class="media-container__action-bar" ng-if="_editable">
                 <a class="btn btn--hollow btn--small" ng-click="editMedia()"><span translate>Edit metadata</span></a>
             </div>
