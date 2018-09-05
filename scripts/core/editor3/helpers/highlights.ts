@@ -6,7 +6,7 @@ import {getDraftSelectionForEntireContent} from './getDraftSelectionForEntireCon
 import {resizeDraftSelection} from './resizeDraftSelection';
 import {clearInlineStyles} from './clearInlineStyles';
 import {changeSuggestionsTypes, blockStylesDescription, paragraphSuggestionTypes} from '../highlightsConfig';
-import _ from 'lodash';
+import {has} from 'lodash';
 
 export const paragraphSeparator = '¶';
 
@@ -422,7 +422,7 @@ export function addHighlight(editorState, type, data, single = false) {
 
     let newIndex = 0;
 
-    if (highlightsState.lastHighlightIds && _.has(highlightsState.lastHighlightIds, type)) {
+    if (highlightsState.lastHighlightIds && has(highlightsState.lastHighlightIds, type)) {
         newIndex = highlightsState.lastHighlightIds[type] + 1;
     }
     const styleName = type + '-' + newIndex;

@@ -1,4 +1,4 @@
-import {EditorState, ContentState, Modifier, genKey, CharacterMetadata, ContentBlock, DraftHandleValue, EditorChangeType} from 'draft-js';
+import {EditorState, ContentState, Modifier, genKey, CharacterMetadata, ContentBlock, DraftHandleValue} from 'draft-js';
 import {List, OrderedMap} from 'immutable';
 import {getContentStateFromHtml} from '../html/from-html';
 import * as Suggestions from '../helpers/suggestions';
