@@ -12,29 +12,10 @@
             <p>You have chosen to subscribe to <strong>{{savedSearch.name}}</strong>. Please define the frequency and time of your email notifications below.</p>
         </div>
 
-        <div class="form-label">Schedule</div>
-
-        <div class="form__row">
-            <sd-check type="radio" ng-model="wrapper.everyDay" ng-value="true" label-position="inside">Every day</sd-check>
-            <sd-check type="radio" ng-model="wrapper.everyDay" ng-value="false" label-position="inside">Select days</sd-check>
-        </div>
-
-        <div ng-if="wrapper.everyDay !== 'true'" class="form__row" sd-weekday-picker data-model="wrapper.customWeekdays"></div>
-
-        <div class="form-label">Time</div>
-
-        <div class="form__row">
-            <sd-check type="radio" ng-model="wrapper.everyHour" ng-value="true" label-position="inside">Every hour</sd-check>
-            <sd-check type="radio" ng-model="wrapper.everyHour" ng-value="false" label-position="inside">Select hours</sd-check>
-        </div>
-
-        <div ng-if="wrapper.everyHour !== 'true'" class="form__row">
-            <!-- TODO: sd-multi-select doesn't work in modal -->
-            <div sd-multi-select
-                data-item="wrapper.customHours"
-                data-list="wrapper.hoursList"
-                data-change="setDirty(true)"></div>
-        </div>
+        <div
+            sd-edit-time-interval
+            data-initial-value="ownSubscription == null ? '' : ownSubscription.scheduling"
+            on-change="handleIntervalChange"></div>
         
     </div>
 

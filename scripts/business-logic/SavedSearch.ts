@@ -2,14 +2,16 @@ import {IUser} from './User';
 import {IDesk} from './Desk';
 import {CronTimeInterval} from 'types/DataStructures/TimeInterval';
 
-interface IUserSubscription {
+export interface IUserSubscription {
     user: IUser['_id'];
     scheduling: CronTimeInterval;
+    next_report?: any;
 }
 
-interface IDeskSubscription {
+export interface IDeskSubscription {
     desk: IDesk['_id'];
     scheduling: CronTimeInterval;
+    next_report?: any;
 }
 
 export interface ISavedSearch {
