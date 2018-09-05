@@ -1,4 +1,4 @@
-import {ISavedSearch} from "business-logic/SavedSearch";
+import {ISavedSearch, updateSubscribers, unsubscribe} from "business-logic/SavedSearch";
 import {IDirectiveScope} from "types/Angular/DirectiveScope";
 import {createCronInterval, CronTimeInterval} from "types/DataStructures/TimeInterval";
 import {IUser} from "business-logic/User";
@@ -109,16 +109,6 @@ export function SavedSearchSubscribe(asset, session, api) {
                 ],
             });
 
-            const updateSubscribers = (nextSubscribers: ISavedSearch['subscribers']): Promise<void> => {
-                const savedSearchNext: ISavedSearch = {
-                    ...scope.savedSearch,
-                    subscribers: nextSubscribers,
-                };
-
-                return api('saved_searches')
-                    .save(scope.savedSearch, savedSearchNext);
-            };
-
             scope.closeModal = () => {
                 scope.savedSearch = null;
                 scope.wrapper = getDefaults();
@@ -171,21 +161,11 @@ export function SavedSearchSubscribe(asset, session, api) {
                     user_subscriptions: nextUserSubscriptions,
                 };
 
-                updateSubscribers(nextSubscribers)
+                updateSubscribers(scope.savedSearch, nextSubscribers, api)
                     .then(scope.closeModal);
             };
 
-            scope.unsubscribe = () => {
-                const nextSubscribers: ISavedSearch['subscribers'] = {
-                    ...scope.savedSearch.subscribers,
-                    user_subscriptions: scope.savedSearch.subscribers.user_subscriptions.filter(
-                        (subscription) => subscription.user !== session.identity._id,
-                    ),
-                };
-
-                updateSubscribers(nextSubscribers)
-                    .then(scope.closeModal);
-            };
+            scope.unsubscribe = () => unsubscribe(scope.savedSearch, session.identity._id, api).then(scope.closeModal);
 
             scope.$watch('savedSearch', () => {
                 if (scope.savedSearch != null && scope.savedSearch.subscribers == null) {

@@ -1,6 +1,6 @@
 <div sd-modal class="modal" ng-if="savedSearch != null" data-model="true">
     <div class="modal__header">
-        <a href="" class="close" ng-click="closeModal()"><i class="icon-close-small"></i></a>
+        <a href="" class="close" ng-click="manageSubscriptions(false)"><i class="icon-close-small"></i></a>
         <h3 class="modal__heading" translate="">
             <span translate>Manage: </span>
             <strong>{{savedSearch.name}}</strong>
@@ -38,7 +38,7 @@
                 <div class="sd-list-item__column">
                     <div class="actions">
                         <button><i class="icon-pencil"></i></button>
-                        <button><i class="icon-trash"></i></button>
+                        <button ng-click="unsubscribe(user)"><i class="icon-trash"></i></button>
                     </div>
                 </div>
             </div>
