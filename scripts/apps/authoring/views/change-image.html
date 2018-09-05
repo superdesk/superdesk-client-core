@@ -133,7 +133,7 @@
                 </div>
                 <div class="sd-slide-in-panel__content" ng-if="nav !== 'image-edit'">
                     <div class="sd-slide-in-panel__content-block sd-slide-in-panel__content-block--first">
-                        <div sd-media-metadata-editor 
+                        <div sd-media-metadata-editor
                             data-item="data.metadata"
                             data-validator="validator"
                             data-dark="true"
@@ -165,7 +165,7 @@
                             <button class="btn btn--ui-dark btn--hollow btn--icon-only btn--large" ng-click="showAreaOfInterestView()" ng-class="{'btn--active' : isAoISelectionModeEnabled}" sd-tooltip="Crop" ng-disabled="controls.isDirty"><i class="icon-crop icon--white"></i></button>
                             <button class="btn btn--ui-dark btn--hollow btn--icon-only btn--large" ng-click="rotateImage('left')" sd-tooltip="Rotate left" ng-disabled="isAoISelectionModeEnabled"><i class="icon-rotate-left icon--white"></i></button>
                             <button class="btn btn--ui-dark btn--hollow btn--icon-only btn--large" ng-click="rotateImage('right')" sd-tooltip="Rotate right" ng-disabled="isAoISelectionModeEnabled"><i class="icon-rotate-right icon--white"></i></button>
-                            <button class="btn btn--ui-dark btn--hollow btn--icon-only btn--large" ng-click="flipImage('horizontal')" sd-tooltip="Flip horizotal" ng-disabled="isAoISelectionModeEnabled"><i class="icon-flip-horizontal icon--white"></i></button>
+                            <button class="btn btn--ui-dark btn--hollow btn--icon-only btn--large" ng-click="flipImage('horizontal')" sd-tooltip="Flip horizontal" ng-disabled="isAoISelectionModeEnabled"><i class="icon-flip-horizontal icon--white"></i></button>
                             <button class="btn btn--ui-dark btn--hollow btn--icon-only btn--large" ng-click="flipImage('vertical')" sd-tooltip="Flip vertical" ng-disabled="isAoISelectionModeEnabled"><i class="icon-flip-vertical icon--white"></i></button>
                         </div>
                     </div>
@@ -196,10 +196,10 @@
                         </div>
                     </div>
                     <div class="sd-slide-in-panel__content-block" ng-if="!isAoISelectionModeEnabled">
-                        <h3 class="sd-slide-in-panel__heading sd-slide-in-panel__heading--marg-b20" translate>Adjust colors</h3>
+                        <h3 class="sd-slide-in-panel__heading sd-slide-in-panel__heading--marg-b20" translate>Adjust colours</h3>
                         <div class="form__row form__row--small-padding">
                             <div class="form-label__container">
-                                <label class="form-label" translate>Brigtness</label>
+                                <label class="form-label" translate>Brightness</label>
                                 <span class="form-label__info-block">{{controls.brightness * 100 - 100 | number:0}}%</span>
                             </div>
                             <input type="range" class="sd-slider__range" min="0" max="2" step=".05" ng-model="controls.brightness" ng-dblclick="controls.brightness = 1" ng-change="controls.isDirty = true">
