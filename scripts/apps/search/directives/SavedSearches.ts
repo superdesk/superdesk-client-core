@@ -31,6 +31,7 @@ interface ISavedSearchesScope extends ng.IScope {
 
     selectedForEditingSubscription: ISavedSearch;
     editSubscription(event: Event, savedSearch: ISavedSearch): void;
+    cancelEditingSubscription(event?: Event): void;
     isUserSubscribedToSavedSearch(savedSearch: ISavedSearch, userId: IUser['_id']): boolean;
 }
 
@@ -127,6 +128,13 @@ export function SavedSearches($rootScope, api, session, modal, notify, gettext, 
             scope.editSubscription = function(event, _savedSearch) {
                 event.stopPropagation();
                 scope.selectedForEditingSubscription = _savedSearch;
+            };
+
+            scope.cancelEditingSubscription = function(event) {
+                if (event != null) {
+                    event.stopPropagation();
+                }
+                scope.selectedForEditingSubscription = null;
             };
         },
     };

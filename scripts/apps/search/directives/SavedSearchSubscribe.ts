@@ -21,6 +21,7 @@ interface IScope extends IDirectiveScope<IModel> {
     saveOrUpdate(): void;
     unsubscribe(): void;
     isAlreadySubscribed(): boolean;
+    cancelEditingSubscription(event?: Event): void;
 }
 
 const hourNameLookUp = {
@@ -93,6 +94,7 @@ export function SavedSearchSubscribe(asset, session, api) {
     return {
         scope: {
             savedSearch: '=',
+            cancelEditingSubscription: '=',
         },
         templateUrl: asset.templateUrl('apps/search/views/saved-search-subscribe.html'),
         link: function(scope: IScope) {
@@ -110,7 +112,7 @@ export function SavedSearchSubscribe(asset, session, api) {
             });
 
             scope.closeModal = () => {
-                scope.savedSearch = null;
+                scope.cancelEditingSubscription();
                 scope.wrapper = getDefaults();
             };
 
