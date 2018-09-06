@@ -65,7 +65,7 @@
                             <b class="dropdown__caret"></b>
                         </button>
                         <ul class="dropdown__menu">
-                            <li><a href="" ng-click="filterPublishQueue(null, 'type')" translate=>None</a></li>
+                            <li><a href="" ng-click="filterPublishQueue(null, 'type')" translate>None</a></li>
                             <li ng-repeat="type in contentTypes track by type.qcode">
                                 <a href="" ng-click="filterPublishQueue(type, 'type')">{{ :: type.name | translate}}</a>
                         </ul>
