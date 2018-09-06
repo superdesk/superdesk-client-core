@@ -21,7 +21,10 @@ function removeMediaFromHtml(htmlString): string {
 }
 
 function pasteContentFromOpenEditor(
-    html: string, editorState: EditorState, onChange: () => void, editorFormat: Array<string>): DraftHandleValue {
+    html: string,
+    editorState: EditorState,
+    onChange: (e: EditorState) => void,
+    editorFormat: Array<string>): DraftHandleValue {
     for (const editorKey in window[EDITOR_GLOBAL_REFS]) {
         if (html.includes(editorKey)) {
             const editor = window[EDITOR_GLOBAL_REFS][editorKey];
@@ -90,7 +93,7 @@ export function handlePastedText(text: string, _html: string): DraftHandleValue 
 function insertContentInState(
     editorState: EditorState,
     pastedContent: ContentState,
-    onChange: () => void,
+    onChange: (e: EditorState) => void,
     editorFormat: Array<string>): DraftHandleValue {
     let _pastedContent = pastedContent;
     const blockMap = _pastedContent.getBlockMap();
@@ -124,12 +127,13 @@ function insertContentInState(
 
         blocks = blocks.concat(
             atomicBlock(block.getData(), contentState.getLastCreatedEntityKey()),
-            emptyBlock(),
         );
     });
 
     if (hasAtomicBlocks) {
         contentState = Modifier.setBlockType(contentState, selection, 'atomic');
+
+        blocks = blocks.concat(emptyBlock()); // add empty block to ensure writting afterwards
     }
 
     const newBlockMap = OrderedMap<string, ContentBlock>(blocks.map((b) => ([b.getKey(), b])));
@@ -165,7 +169,10 @@ function insertContentInState(
 // the 'atomic' block type using the Modifier tool and add these entities to the
 // contentState.
 function processPastedHtml(
-    html: string, editorState: EditorState, onChange: () => void, editorFormat: Array<string>): DraftHandleValue {
+    html: string,
+    editorState: EditorState,
+    onChange: (e: EditorState) => void,
+    editorFormat: Array<string>): DraftHandleValue {
     const pastedContent = getContentStateFromHtml(html);
 
     return insertContentInState(
