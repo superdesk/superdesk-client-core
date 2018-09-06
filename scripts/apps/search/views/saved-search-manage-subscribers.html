@@ -8,15 +8,16 @@
     </div>
 
     <div class="modal__body">
-        <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 2rem; color: #898989">
-            <div>
-                <strong>{{savedSearch.subscribers == null ? '0' : savedSearch.subscribers.user_subscriptions.length}} </strong>
-                subscriptions
+        <!-- if start -->
+        <div ng-if="wrapper.subscriptionInEditMode == null">
+            <div class="space-between" style="padding-bottom: 2rem; color: #898989">
+                <div>
+                    <strong>{{savedSearch.subscribers == null ? '0' : savedSearch.subscribers.user_subscriptions.length}} </strong>
+                    subscriptions
+                </div>
+                <button class="btn btn--hollow btn--primary"><i class="icon-plus-sign"></i>Add new</button>
             </div>
-            <button class="btn btn--hollow btn--primary"><i class="icon-plus-sign"></i>Add new</button>
-        </div>
-        
-        <div>
+
             <div
                 ng-repeat="user in wrapper.userSubscribers track by user._id"
                 class="sd-list-item sd-shadow--z1"
@@ -37,12 +38,50 @@
                 </div>
                 <div class="sd-list-item__column">
                     <div class="actions">
-                        <button><i class="icon-pencil"></i></button>
+                        <button ng-click="editUserSubscription(user)"><i class="icon-pencil"></i></button>
                         <button ng-click="unsubscribe(user)"><i class="icon-trash"></i></button>
                     </div>
                 </div>
             </div>
         </div>
+        <!-- else -->
+
+        <div ng-if="wrapper.subscriptionInEditMode != null">
+            <div style="margin: -20px -20px 10px -20px;">
+                <div class="space-between" style="background: #fff; padding: 9px 20px;">
+                    <button class="backlink" ng-click="backToList()" translate>Back</button>
+                    <button class="btn btn--primary" ng-click="saveChanges()" ng-disabled="!savingEnabled()" translate>Save changes</button>
+                </div>
+                <div
+                    class="sd-list-item"
+                    ng-class="{&quot;sd-list-item--activated&quot;:itemActive2}"
+                    style="margin-bottom: 6px; padding: 0 10px; background-color: #E6EDEF!important; cursor: default;">
+                    <div class="sd-list-item__column">
+                        <figure class="avatar" style="margin:0">
+                            <img sd-user-avatar data-user="wrapper.userLookup[wrapper.subscriptionInEditMode.user]">
+                        </figure>
+                    </div>
+                    <div class="sd-list-item__column sd-list-item__column--grow sd-list-item__column--no-border">
+                        <div class="sd-list-item__row">
+                            <strong class="sd-overflow-ellipsis">
+                                {{wrapper.userLookup[wrapper.subscriptionInEditMode.user].first_name}}
+                                {{wrapper.userLookup[wrapper.subscriptionInEditMode.user].last_name}}
+                            </strong>
+                        </div>
+                        <div class="sd-list-item__row">
+                            {{wrapper.userLookup[wrapper.subscriptionInEditMode.user].username}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                sd-edit-time-interval
+                data-initial-value="wrapper.subscriptionInEditMode.scheduling"
+                on-change="handleIntervalChange"></div>
+        </div>
+        <!-- if/else end-->
+
     </div>
 
     <div class="modal__footer">
