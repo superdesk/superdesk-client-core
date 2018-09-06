@@ -1,7 +1,7 @@
 <div>
     <div class="content-container">
 
-      <header class="preview-header" ng-class="{active: toggleHeader}">
+      <header class="preview-header" ng-class="{active: previewState.toggleHeader}">
         <div class="preview-header__timestamp" title="{{userLookup[selected.preview.original_creator].display_name || selected.preview.original_creator}}">
             <label translate>Created</label><time sd-datetime data-date="selected.preview.firstcreated"></time>
             <label ng-if="selected.preview.original_creator" translate>by</label><b>{{userLookup[selected.preview.original_creator].display_name || selected.preview.original_creator}}</b>
@@ -60,7 +60,11 @@
           </div>
         </div>
 
-        <button class="preview-header__toggle" ng-class="{active: toggleHeader}" ng-click="toggleHeader = !toggleHeader" tabindex="-1"><i class="icon-chevron-down-thin"></i></button>
+        <button
+                class="preview-header__toggle"
+                ng-class="{active: previewState.toggleHeader}"
+                ng-click="togglePreviewHeader()"
+                tabindex="-1"><i class="icon-chevron-down-thin"></i></button>
       </header>
 
         <div class="composite-nav" ng-if="selected.preview.type === 'composite'">
