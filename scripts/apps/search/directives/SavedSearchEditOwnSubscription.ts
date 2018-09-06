@@ -13,6 +13,7 @@ interface IScope extends IDirectiveScope<void> {
     saveOrUpdate(): void;
     unsubscribe(): void;
     cancelEditingSubscription(event?: Event): void;
+    isAlreadySubscribed(): void;
 }
 
 SavedSearchEditOwnSubscription.$inject = ['asset', 'session', 'api'];
@@ -39,10 +40,12 @@ export function SavedSearchEditOwnSubscription(asset, session, api) {
                     || (scope.ownSubscription.scheduling !== scope.currentlySelectedInterval);
             };
 
+            scope.isAlreadySubscribed = () => scope.ownSubscription != null;
+
             scope.saveOrUpdate = () => {
                 const userId: IUser['_id'] = session.identity._id;
 
-                const nextUserSubscriptions = scope.ownSubscription != null
+                const nextUserSubscriptions = scope.isAlreadySubscribed()
                     ? scope.savedSearch.subscribers.user_subscriptions.map((subscription) => {
                         if (subscription.user === userId) {
                             return {

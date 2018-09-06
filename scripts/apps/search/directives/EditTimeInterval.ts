@@ -82,7 +82,7 @@ const cronExpressionToTimeIntervalUi = (cron: CronTimeInterval): ITimeIntervalUi
 };
 
 const timeIntervalUiToCronExpression = (timeInterval: ITimeIntervalUi): CronTimeInterval => {
-    const weekdays = timeInterval.everyDay === 'true'
+    const weekdays = timeInterval.everyDay === 'true' || timeInterval.customWeekdays.length < 1
         ? '*'
         : timeInterval.customWeekdays
             .map((weekdayShort) => weekdaysToNumbersLookup[weekdayShort])
