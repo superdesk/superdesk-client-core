@@ -68,7 +68,7 @@ export const updateSubscribers = (
         .save(savedSearch, savedSearchNext);
 };
 
-export const unsubscribe = (
+export const unsubscribeUser = (
     savedSearch: ISavedSearch,
     userId: IUser['_id'],
     api: any,
@@ -77,6 +77,21 @@ export const unsubscribe = (
         ...savedSearch.subscribers,
         user_subscriptions: savedSearch.subscribers.user_subscriptions.filter(
             (subscription) => subscription.user !== userId,
+        ),
+    };
+
+    return updateSubscribers(savedSearch, nextSubscribers, api);
+};
+
+export const unsubscribeDesk = (
+    savedSearch: ISavedSearch,
+    deskId: IDesk['_id'],
+    api: any,
+): Promise<void> => {
+    const nextSubscribers: ISavedSearch['subscribers'] = {
+        ...savedSearch.subscribers,
+        desk_subscriptions: savedSearch.subscribers.desk_subscriptions.filter(
+            (subscription) => subscription.desk !== deskId,
         ),
     };
 

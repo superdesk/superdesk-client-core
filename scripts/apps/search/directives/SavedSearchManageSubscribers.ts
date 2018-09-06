@@ -1,26 +1,50 @@
-import {ISavedSearch, updateSubscribers, unsubscribe, IUserSubscription} from "business-logic/SavedSearch";
+import {
+    ISavedSearch,
+    updateSubscribers,
+    unsubscribeUser,
+    unsubscribeDesk,
+    IUserSubscription,
+    IDeskSubscription,
+} from "business-logic/SavedSearch";
 import {IDirectiveScope} from "types/Angular/DirectiveScope";
 import {IUser} from "business-logic/User";
 import {CronTimeInterval} from "types/DataStructures/TimeInterval";
+import {IDesk} from "business-logic/Desk";
+import {IDesksService} from "types/Services/Desks";
 
 interface IModel {
     userSubscribers: Array<IUser>;
-    subscriptionInCreateOrEditMode?: IUserSubscription;
+    subscriptionInCreateOrEditMode?: IUserSubscription | IDeskSubscription;
     currentlySelectedInterval: CronTimeInterval;
     userLookup: Dictionary<IUser['_id'], IUser>;
     users: Array<IUser>;
+    desks: IDesksService;
+}
+
+function isUserSubscription(x: IModel['subscriptionInCreateOrEditMode']): x is IUserSubscription {
+    return (x as IUserSubscription).user !== undefined;
+}
+
+function isDeskSubscription(x: IModel['subscriptionInCreateOrEditMode']): x is IDeskSubscription {
+    return (x as IDeskSubscription).desk !== undefined;
 }
 
 interface IScope extends IDirectiveScope<IModel> {
     savedSearch: ISavedSearch;
     manageSubscriptions(active: boolean): void;
-    unsubscribe(user: IUser): Promise<void>;
+    unsubscribeUser(user: IUser): Promise<void>;
+    unsubscribeDesk(desk: IDesk): Promise<void>;
     editUserSubscription(user: IUser): void;
+    editDeskSubscription(desk: IDesk): void;
     handleIntervalChange(cronExpression: CronTimeInterval): void;
     savingEnabled(): boolean;
     saveChanges(): void;
     subscribeUser(user: IUser): void;
+    subscribeDesk(user: IDesk): void;
     backToList(): void;
+    getSubscriptionCount(): number;
+    editingUserSubscription(): boolean;
+    editingDeskSubscription(): boolean;
 }
 
 // server doesn't allow read-only fields in patch request
@@ -29,9 +53,9 @@ const removeReadOnlyFields = (subscription: IUserSubscription): IUserSubscriptio
     scheduling: subscription.scheduling,
 });
 
-SavedSearchManageSubscribers.$inject = ['asset', 'userList', 'api', 'modal', 'gettext'];
+SavedSearchManageSubscribers.$inject = ['asset', 'userList', 'api', 'modal', 'gettext', 'desks'];
 
-export function SavedSearchManageSubscribers(asset, userList, api, modal, gettext) {
+export function SavedSearchManageSubscribers(asset, userList, api, modal, gettext, desks) {
     return {
         scope: {
             savedSearch: '=',
@@ -46,7 +70,30 @@ export function SavedSearchManageSubscribers(asset, userList, api, modal, gettex
                 currentlySelectedInterval: null,
                 userLookup: null,
                 users: [],
+                desks: desks,
             });
+
+            scope.editingUserSubscription = () => isUserSubscription(scope.wrapper.subscriptionInCreateOrEditMode);
+
+            scope.editingDeskSubscription = () => isDeskSubscription(scope.wrapper.subscriptionInCreateOrEditMode);
+
+            scope.getSubscriptionCount = () => {
+                let count = 0;
+
+                if (scope.savedSearch == null || scope.savedSearch.subscribers == null) {
+                    return count;
+                }
+
+                if (scope.savedSearch.subscribers.user_subscriptions != null ) {
+                    count += scope.savedSearch.subscribers.user_subscriptions.length;
+                }
+
+                if (scope.savedSearch.subscribers.desk_subscriptions != null ) {
+                    count += scope.savedSearch.subscribers.desk_subscriptions.length;
+                }
+
+                return count;
+            };
 
             scope.wrapper = getDefaults();
 
@@ -65,32 +112,71 @@ export function SavedSearchManageSubscribers(asset, userList, api, modal, gettex
                 };
             };
 
+            scope.subscribeDesk = (desk: IDesk) => {
+                scope.wrapper.subscriptionInCreateOrEditMode = {
+                    desk: desk._id,
+                    scheduling: null,
+                };
+            };
+
             scope.saveChanges = () => {
-                const {user_subscriptions} = scope.savedSearch.subscribers;
+                const {user_subscriptions, desk_subscriptions} = scope.savedSearch.subscribers;
+                const {subscriptionInCreateOrEditMode} = scope.wrapper;
 
-                const alreadySubscribed = user_subscriptions.some(
-                    (subscription) => subscription.user === scope.wrapper.subscriptionInCreateOrEditMode.user,
-                );
+                let nextUserSubscriptions = scope.savedSearch.subscribers.user_subscriptions;
 
-                const nextUserSubscriptions = (
-                    alreadySubscribed
-                        ? user_subscriptions.map(
-                            (subscription) => subscription.user === scope.wrapper.subscriptionInCreateOrEditMode.user
-                                ? {
-                                    ...scope.wrapper.subscriptionInCreateOrEditMode,
-                                    scheduling: scope.wrapper.currentlySelectedInterval,
-                                }
-                                : subscription,
-                        )
-                        : user_subscriptions.concat({
-                            ...scope.wrapper.subscriptionInCreateOrEditMode,
-                            scheduling: scope.wrapper.currentlySelectedInterval,
-                        })
-                    ).map(removeReadOnlyFields);
+                if (isUserSubscription(subscriptionInCreateOrEditMode)) {
+                    const userAlreadySubscribed = user_subscriptions.some(
+                        (subscription) => subscription.user === subscriptionInCreateOrEditMode.user,
+                    );
+
+                    nextUserSubscriptions = (
+                        userAlreadySubscribed
+                            ? user_subscriptions.map(
+                                (subscription) => subscription.user === subscriptionInCreateOrEditMode.user
+                                    ? {
+                                        ...subscriptionInCreateOrEditMode,
+                                        scheduling: scope.wrapper.currentlySelectedInterval,
+                                    }
+                                    : subscription,
+                            )
+                            : user_subscriptions.concat({
+                                ...subscriptionInCreateOrEditMode,
+                                scheduling: scope.wrapper.currentlySelectedInterval,
+                            })
+                    );
+                }
+
+                let nextDeskSubscriptions = scope.savedSearch.subscribers.desk_subscriptions;
+
+                if (isDeskSubscription(subscriptionInCreateOrEditMode)) {
+                    const deskAlreadySubscribed = desk_subscriptions.some(
+                        (subscription) => subscription.desk === subscriptionInCreateOrEditMode.desk,
+                    );
+
+                    nextDeskSubscriptions = (
+                        deskAlreadySubscribed
+                            ? desk_subscriptions.map(
+                                (subscription) => subscription.desk === subscriptionInCreateOrEditMode.desk
+                                    ? {
+                                        ...subscriptionInCreateOrEditMode,
+                                        scheduling: scope.wrapper.currentlySelectedInterval,
+                                    }
+                                    : subscription,
+                            )
+                            : desk_subscriptions.concat({
+                                ...subscriptionInCreateOrEditMode,
+                                scheduling: scope.wrapper.currentlySelectedInterval,
+                            })
+                    );
+                }
+
+                nextUserSubscriptions = nextUserSubscriptions.map(removeReadOnlyFields);
 
                 const nextSubscribers: ISavedSearch['subscribers'] = {
                     ...scope.savedSearch.subscribers,
                     user_subscriptions: nextUserSubscriptions,
+                    desk_subscriptions: nextDeskSubscriptions,
                 };
 
                 updateSubscribers(scope.savedSearch, nextSubscribers, api).then(scope.backToList);
@@ -103,14 +189,26 @@ export function SavedSearchManageSubscribers(asset, userList, api, modal, gettex
             scope.savingEnabled = () =>
                 scope.wrapper.subscriptionInCreateOrEditMode.scheduling !== scope.wrapper.currentlySelectedInterval;
 
-            scope.unsubscribe = (user: IUser) =>
+            scope.unsubscribeUser = (user: IUser) =>
                 modal.confirm(
                     gettext('Are you sure to remove this subscription?'),
                     gettext('Unsubscribe user'),
                 ).then(() => {
-                    unsubscribe(
+                    unsubscribeUser(
                         scope.savedSearch,
                         user._id,
+                        api,
+                    );
+                });
+
+            scope.unsubscribeDesk = (desk: IDesk) =>
+                modal.confirm(
+                    gettext('Are you sure to remove this subscription?'),
+                    gettext('Unsubscribe desk'),
+                ).then(() => {
+                    unsubscribeDesk(
+                        scope.savedSearch,
+                        desk._id,
                         api,
                     );
                 });
@@ -118,6 +216,12 @@ export function SavedSearchManageSubscribers(asset, userList, api, modal, gettex
             scope.editUserSubscription = (user: IUser) => {
                 scope.wrapper.subscriptionInCreateOrEditMode = scope.savedSearch.subscribers.user_subscriptions.find(
                     (subscription) => subscription.user === user._id,
+                );
+            };
+
+            scope.editDeskSubscription = (desk: IDesk) => {
+                scope.wrapper.subscriptionInCreateOrEditMode = scope.savedSearch.subscribers.desk_subscriptions.find(
+                    (subscription) => subscription.desk === desk._id,
                 );
             };
 

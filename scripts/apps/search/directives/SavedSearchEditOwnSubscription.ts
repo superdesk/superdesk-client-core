@@ -1,4 +1,4 @@
-import {ISavedSearch, updateSubscribers, unsubscribe, IUserSubscription} from "business-logic/SavedSearch";
+import {ISavedSearch, updateSubscribers, unsubscribeUser, IUserSubscription} from "business-logic/SavedSearch";
 import {IDirectiveScope} from "types/Angular/DirectiveScope";
 import {CronTimeInterval} from "types/DataStructures/TimeInterval";
 import {IUser} from "business-logic/User";
@@ -11,7 +11,7 @@ interface IScope extends IDirectiveScope<void> {
     closeModal(): void;
     savingEnabled(): void;
     saveOrUpdate(): void;
-    unsubscribe(): void;
+    unsubscribeUser(): void;
     cancelEditingSubscription(event?: Event): void;
     isAlreadySubscribed(): void;
 }
@@ -70,7 +70,8 @@ export function SavedSearchEditOwnSubscription(asset, session, api) {
                     .then(scope.closeModal);
             };
 
-            scope.unsubscribe = () => unsubscribe(scope.savedSearch, session.identity._id, api).then(scope.closeModal);
+            scope.unsubscribeUser = () =>
+                unsubscribeUser(scope.savedSearch, session.identity._id, api).then(scope.closeModal);
 
             scope.$watch('savedSearch', () => {
                 if (scope.savedSearch != null) {

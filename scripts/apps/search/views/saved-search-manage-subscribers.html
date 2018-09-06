@@ -12,7 +12,7 @@
         <div ng-if="wrapper.subscriptionInCreateOrEditMode == null">
             <div class="space-between" style="padding-bottom: 2rem; color: #898989">
                 <div>
-                    <strong>{{savedSearch.subscribers == null ? '0' : savedSearch.subscribers.user_subscriptions.length}} </strong>
+                    <strong>{{getSubscriptionCount()}}</strong>
                     subscriptions
                 </div>
                 
@@ -24,6 +24,32 @@
                             <div
                                 sd-user-select-list
                                 data-onchoose="subscribeUser(user)"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                ng-repeat="deskSubscription in savedSearch.subscribers.desk_subscriptions track by deskSubscription.desk"
+                class="sd-list-item sd-shadow--z1"
+                ng-class="{&quot;sd-list-item--activated&quot;:itemActive2}"
+                style="margin-bottom: 6px">
+                <div class="sd-list-item__column">
+                    <figure class="avatar" style="margin:0">
+                        <!-- TODO: add desk avatar -->
+                    </figure>
+                </div>
+                <div class="sd-list-item__column sd-list-item__column--grow sd-list-item__column--no-border">
+                    <div class="sd-list-item__row">
+                        <strong class="sd-overflow-ellipsis">{{wrapper.desks.deskLookup[deskSubscription.desk].name}}</strong>
+                    </div>
+                    <div class="sd-list-item__row">
+                        <span translate>Desk subscription</span>
+                    </div>
+                </div>
+                <div class="sd-list-item__column">
+                    <div class="actions">
+                        <button ng-click="editDeskSubscription(wrapper.desks.deskLookup[deskSubscription.desk])"><i class="icon-pencil"></i></button>
+                        <button ng-click="unsubscribeDesk(wrapper.desks.deskLookup[deskSubscription.desk])"><i class="icon-trash"></i></button>
                     </div>
                 </div>
             </div>
@@ -49,7 +75,7 @@
                 <div class="sd-list-item__column">
                     <div class="actions">
                         <button ng-click="editUserSubscription(user)"><i class="icon-pencil"></i></button>
-                        <button ng-click="unsubscribe(user)"><i class="icon-trash"></i></button>
+                        <button ng-click="unsubscribeUser(user)"><i class="icon-trash"></i></button>
                     </div>
                 </div>
             </div>
@@ -62,7 +88,9 @@
                     <button class="backlink" ng-click="backToList()" translate>Back</button>
                     <button class="btn btn--primary" ng-click="saveChanges()" ng-disabled="!savingEnabled()" translate>Save changes</button>
                 </div>
+
                 <div
+                    ng-if="editingUserSubscription()"
                     class="sd-list-item"
                     ng-class="{&quot;sd-list-item--activated&quot;:itemActive2}"
                     style="margin-bottom: 6px; padding: 0 10px; background-color: #E6EDEF!important; cursor: default;">
@@ -80,6 +108,28 @@
                         </div>
                         <div class="sd-list-item__row">
                             {{wrapper.userLookup[wrapper.subscriptionInCreateOrEditMode.user].username}}
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    ng-if="editingDeskSubscription()"
+                    class="sd-list-item"
+                    ng-class="{&quot;sd-list-item--activated&quot;:itemActive2}"
+                    style="margin-bottom: 6px; padding: 0 10px; background-color: #E6EDEF!important; cursor: default;">
+                    <div class="sd-list-item__column">
+                        <figure class="avatar" style="margin:0">
+                            <!-- TODO: desk avatar-->
+                        </figure>
+                    </div>
+                    <div class="sd-list-item__column sd-list-item__column--grow sd-list-item__column--no-border">
+                        <div class="sd-list-item__row">
+                            <strong class="sd-overflow-ellipsis">
+                                {{wrapper.desks.deskLookup[wrapper.subscriptionInCreateOrEditMode.desk].name}}
+                            </strong>
+                        </div>
+                        <div class="sd-list-item__row">
+                            <span translate>Desk subscription</span>
                         </div>
                     </div>
                 </div>
