@@ -90,7 +90,7 @@ function setHighlightsState(editorState, hightlightsState) {
 }
 
 function getHighlightType(styleName) {
-    var delimiterIndex = styleName.lastIndexOf('-');
+    const delimiterIndex = styleName.lastIndexOf('-');
 
     if (delimiterIndex === -1) {
         throw new Error('styleName doesn\'t belong to a highlight');
@@ -135,7 +135,7 @@ export function styleNameBelongsToHighlight(styleName) {
         return false;
     }
 
-    var delimiterIndex = styleName.lastIndexOf('-');
+    const delimiterIndex = styleName.lastIndexOf('-');
 
     if (delimiterIndex === -1) {
         return false;
@@ -156,13 +156,13 @@ export function getHighlightTypeFromStyleName(styleName) {
         throw new Error('string expected');
     }
 
-    var delimiterIndex = styleName.lastIndexOf('-');
+    const delimiterIndex = styleName.lastIndexOf('-');
 
     if (delimiterIndex === -1) {
         throw new Error('Style name does not contain a highlight type');
     }
 
-    var highlightType = styleName.slice(0, delimiterIndex);
+    const highlightType = styleName.slice(0, delimiterIndex);
 
     if (highlightTypeValid(highlightType) === false) {
         throw new Error(`Invalid highlight type '${highlightType}'`);
@@ -179,7 +179,7 @@ export function getHighlightTypeFromStyleName(styleName) {
  * @description return true if styleName coresponds to a valid type.
  */
 export function isHighlightStyle(styleName) {
-    let delimiterIndex = styleName.lastIndexOf('-');
+    const delimiterIndex = styleName.lastIndexOf('-');
 
     if (delimiterIndex === -1) {
         return false;
@@ -249,7 +249,7 @@ export function canAddHighlight(editorState, highlightType) {
         1,
         editorState.getSelection(),
         editorState,
-        true
+        true,
     );
 
     return getDraftCharacterListForSelection(editorState, selection)
@@ -268,7 +268,7 @@ export function canAddHighlight(editorState, highlightType) {
  * @description the highlight style from the new possition specified by offset.
  */
 export function getHighlightStyleAtOffset(
-    editorState, types, selection, offset, fromEnd = false, firstFound = true) : string | Array<string> {
+    editorState, types, selection, offset, fromEnd = false, firstFound = true): string | Array<string> {
     const {block, newOffset} = getBlockAndOffset(editorState, selection, offset, fromEnd);
 
     if (block == null) {
@@ -459,14 +459,14 @@ export function addHighlight(editorState, type, data, single = false) {
     nextEditorState = EditorState.push(
         nextEditorState,
         nextEditorState.getCurrentContent().set('selectionBefore', initialSelection),
-        'change-block-data'
+        'change-block-data',
     );
 
     // restore focus lost after clicking a toolbar action or entering highlight data OR pushing editorState
     // so the selection is visible after undo
     nextEditorState = EditorState.acceptSelection(
         nextEditorState,
-        initialSelection
+        initialSelection,
     );
 
     nextEditorState = EditorState.set(nextEditorState, {allowUndo: true});
@@ -516,11 +516,11 @@ export function removeHighlight(editorState, styleName) {
         return editorState;
     }
 
-    let nextHighlightsStyleMap = {...highlightsState.highlightsStyleMap};
+    const nextHighlightsStyleMap = {...highlightsState.highlightsStyleMap};
 
     delete nextHighlightsStyleMap[styleName];
 
-    let nextHighlightsData = {...highlightsState.highlightsData};
+    const nextHighlightsData = {...highlightsState.highlightsData};
 
     delete nextHighlightsData[styleName];
 
@@ -530,10 +530,10 @@ export function removeHighlight(editorState, styleName) {
         highlightsData: nextHighlightsData,
     };
 
-    var newEditorState = clearInlineStyles(
+    let newEditorState = clearInlineStyles(
         editorState,
         getDraftSelectionForEntireContent(editorState),
-        [styleName]
+        [styleName],
     );
 
     // prevent recording the changes to undo stack so user doesn't have to undo twice
@@ -614,7 +614,7 @@ export function changeEditorSelection(editorState, startOffset, endOffset, force
         return editorState;
     }
 
-    let newSelection = selection.merge({
+    const newSelection = selection.merge({
         anchorOffset: newStartOffset,
         anchorKey: startBlock.getKey(),
         focusOffset: newEndOffset,
@@ -645,7 +645,7 @@ export const getBlockAndOffset = (
     selection,
     offset,
     startFromEnd = false,
-    limitedToSingleBlock = false
+    limitedToSingleBlock = false,
 ) => {
     const noValue = {block: null, newOffset: null};
     const content = editorState.getCurrentContent();
@@ -908,7 +908,7 @@ export function getSuggestionData(editorState, styleName) {
     const type = getHighlightType(styleName);
     const {selection, highlightedText} = getRangeAndTextForStyle(editorState, styleName);
 
-    let data = {
+    const data = {
         ...getHighlightData(editorState, styleName),
         suggestionText: highlightedText,
         selection: selection,
@@ -984,11 +984,11 @@ export function getSuggestionData(editorState, styleName) {
 function addCommentsForServer(editorState) {
     const multipleHighlights = getCustomDataFromEditor(editorState, editor3DataKeys.MULTIPLE_HIGHLIGHTS);
 
-    if (multipleHighlights === undefined || multipleHighlights['highlightsData'] === undefined) {
+    if (multipleHighlights === undefined || multipleHighlights.highlightsData === undefined) {
         return editorState;
     }
 
-    const highlightsData = multipleHighlights['highlightsData'];
+    const highlightsData = multipleHighlights.highlightsData;
 
     const comments = Object.keys(highlightsData)
         .filter((key) => key.indexOf(highlightsConfig.COMMENT.type) === 0)
@@ -1023,7 +1023,7 @@ function applyHighlightsStyleMap(editorState) {
     return setCustomDataForEditor(
         editorState,
         editor3DataKeys.MULTIPLE_HIGHLIGHTS,
-        highlightsWithStyleMapApplied
+        highlightsWithStyleMapApplied,
     );
 }
 
@@ -1041,12 +1041,12 @@ function removeHighlightsStyleMap(editorState) {
     const highlights = getCustomDataFromEditor(editorState, editor3DataKeys.MULTIPLE_HIGHLIGHTS);
     const nextHighlights = {...highlights};
 
-    delete nextHighlights['highlightsStyleMap'];
+    delete nextHighlights.highlightsStyleMap;
 
     return setCustomDataForEditor(
         editorState,
         editor3DataKeys.MULTIPLE_HIGHLIGHTS,
-        nextHighlights
+        nextHighlights,
     );
 }
 

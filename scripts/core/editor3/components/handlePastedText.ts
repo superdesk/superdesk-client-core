@@ -8,7 +8,7 @@ import {getCurrentAuthor} from '../helpers/author';
 import {htmlComesFromDraftjsEditor} from '../helpers/htmlComesFromDraftjsEditor';
 import {EDITOR_GLOBAL_REFS} from 'core/editor3/components/Editor3Component';
 
-function removeMediaFromHtml(htmlString) : string {
+function removeMediaFromHtml(htmlString): string {
     const element = document.createElement('div');
 
     element.innerHTML = htmlString;
@@ -21,7 +21,7 @@ function removeMediaFromHtml(htmlString) : string {
 }
 
 function pasteContentFromOpenEditor(
-    html: string, editorState: EditorState, onChange: Function, editorFormat: Array<string>) : DraftHandleValue {
+    html: string, editorState: EditorState, onChange: () => void, editorFormat: Array<string>): DraftHandleValue {
     for (const editorKey in window[EDITOR_GLOBAL_REFS]) {
         if (html.includes(editorKey)) {
             const editor = window[EDITOR_GLOBAL_REFS][editorKey];
@@ -50,7 +50,7 @@ function pasteContentFromOpenEditor(
  * @description Handles pasting into the editor, in cases where the content contains
  * atomic blocks that need special handling in editor3.
  */
-export function handlePastedText(text: string, _html: string) : DraftHandleValue {
+export function handlePastedText(text: string, _html: string): DraftHandleValue {
     const author = getCurrentAuthor();
     let html = _html;
 
@@ -80,7 +80,6 @@ export function handlePastedText(text: string, _html: string) : DraftHandleValue
         return 'handled';
     }
 
-
     if (htmlComesFromDraftjsEditor(html)) {
         return 'not-handled';
     }
@@ -91,8 +90,8 @@ export function handlePastedText(text: string, _html: string) : DraftHandleValue
 function insertContentInState(
     editorState: EditorState,
     pastedContent: ContentState,
-    onChange: Function,
-    editorFormat: Array<string>) : DraftHandleValue {
+    onChange: () => void,
+    editorFormat: Array<string>): DraftHandleValue {
     let _pastedContent = pastedContent;
     const blockMap = _pastedContent.getBlockMap();
     const hasAtomicBlocks = blockMap.some((block) => block.getType() === 'atomic');
@@ -125,7 +124,7 @@ function insertContentInState(
 
         blocks = blocks.concat(
             atomicBlock(block.getData(), contentState.getLastCreatedEntityKey()),
-            emptyBlock()
+            emptyBlock(),
         );
     });
 
@@ -138,7 +137,7 @@ function insertContentInState(
     let nextEditorState = EditorState.push(
         editorState,
         Modifier.replaceWithFragment(contentState, selection, newBlockMap),
-        'insert-fragment'
+        'insert-fragment',
     );
 
     const selectionAfterInsert = nextEditorState.getSelection();
@@ -152,7 +151,7 @@ function insertContentInState(
     nextEditorState = EditorState.push(
         editorState,
         nextEditorState.getCurrentContent(),
-        'insert-fragment'
+        'insert-fragment',
     );
 
     nextEditorState = EditorState.forceSelection(nextEditorState, selectionAfterInsert);
@@ -166,14 +165,14 @@ function insertContentInState(
 // the 'atomic' block type using the Modifier tool and add these entities to the
 // contentState.
 function processPastedHtml(
-    html: string, editorState: EditorState, onChange: Function, editorFormat: Array<string>) : DraftHandleValue {
-    let pastedContent = getContentStateFromHtml(html);
+    html: string, editorState: EditorState, onChange: () => void, editorFormat: Array<string>): DraftHandleValue {
+    const pastedContent = getContentStateFromHtml(html);
 
     return insertContentInState(
         editorState,
         pastedContent,
         onChange,
-        editorFormat
+        editorFormat,
     );
 }
 

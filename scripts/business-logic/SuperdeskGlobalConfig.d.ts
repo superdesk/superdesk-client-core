@@ -9,10 +9,10 @@ export interface ISuperdeskGlobalConfig {
         savedSearch: {
             subscriptions: boolean;
         }
-    }
+    };
     auth: {
-        google: boolean
-    }
+        google: boolean,
+    };
     ingest: {
         PROVIDER_DASHBOARD_DEFAULTS: {
             show_log_messages: boolean;
@@ -29,5 +29,5 @@ export interface ISuperdeskGlobalConfig {
             hours: number;
             minutes: number;
         };
-    }
+    };
 }
