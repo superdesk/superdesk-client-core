@@ -59,7 +59,7 @@ export function stateWithLink() {
 
     return RichUtils.toggleLink(
         EditorState.createWithContent(contentState),
-        linkSelection,
+        linkSelection as SelectionState,
         entityKey
     );
 }
@@ -174,8 +174,10 @@ export function cursorAtPosition(editorState, pos, n = 0) {
         .getFirstBlock()
         .getKey();
 
-    return EditorState.forceSelection(editorState, SelectionState.createEmpty(blockKey).merge({
+    const selection = SelectionState.createEmpty(blockKey).merge({
         anchorOffset: pos,
         focusOffset: pos + n,
-    }));
+    }) as SelectionState;
+
+    return EditorState.forceSelection(editorState, selection);
 }

@@ -251,7 +251,7 @@ describe('editor3.reducers', () => {
         const updatedSelection = selectionState.merge({
             focusKey: blockKey,
             focusOffset: 4,
-        });
+        }) as SelectionState;
 
         const editorState = EditorState.createWithContent(contentState);
         const selectedEditorState = EditorState.forceSelection(editorState, updatedSelection);

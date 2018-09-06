@@ -29,6 +29,7 @@
   "main": "scripts/index.js",
   "dependencies": {
     "@types/angular": "1.6.50",
+    "@types/draft-js": "0.10.24",
     "@types/lodash": "4.14.116",
     "@types/react": "16.4.9",
     "angular": "1.6.9",
@@ -44,9 +45,6 @@
     "angular-resource": "1.6.9",
     "angular-route": "1.6.9",
     "angular-vs-repeat": "1.1.7",
-    "ts-loader": "3.5.0",
-    "tslint": "5.11.0",
-    "typescript": "3.0.1",
     "bootstrap": "3.3.7",
     "classnames": "2.2.5",
     "css-loader": "0.28.10",
@@ -103,6 +101,9 @@
     "shortid": "2.2.8",
     "style-loader": "0.20.2",
     "superdesk-ui-framework": "^1.1.0",
+    "ts-loader": "3.5.0",
+    "tslint": "5.11.0",
+    "typescript": "3.0.1",
     "webpack": "3.11.0",
     "webpack-dev-server": "2.11.1"
   },
@@ -120,6 +121,7 @@
     "karma-ng-html2js-preprocessor": "^1.0.0",
     "karma-sourcemap-loader": "^0.3.7",
     "karma-webpack": "^2.0.13",
+    "patch-package": "^5.1.1",
     "protractor": "^5.1.2",
     "react-addons-test-utils": "^15.6.0",
     "react-test-renderer": "^16.2.0",
@@ -135,6 +137,7 @@
     "lint": "tsc --noEmit --version && tslint -c tslint.json 'scripts/**/*.ts' && eslint --ext .js --ext .jsx --ext .tsx scripts spec tasks *.js",
     "start-test-server": "cd test-server && python3 -m venv env && . env/bin/activate && pip install -Ur requirements.txt && honcho start",
     "protractor": "protractor protractor.conf.js",
-    "webdriver-manager": "webdriver-manager"
+    "webdriver-manager": "webdriver-manager",
+    "postinstall": "patch-package"
   }
 }

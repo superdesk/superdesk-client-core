@@ -276,7 +276,7 @@ class HTMLParser {
  * @param {string} html
  * @param {Object} associations (optional)
  */
-export function getContentStateFromHtml(html, associations) {
+export function getContentStateFromHtml(html, associations = null) {
     return new HTMLParser(html, associations).contentState();
 }
 

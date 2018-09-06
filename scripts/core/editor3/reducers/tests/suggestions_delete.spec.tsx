@@ -1,4 +1,4 @@
-import {EditorState, ContentState} from 'draft-js';
+import {EditorState, ContentState, SelectionState} from 'draft-js';
 import * as Highlights from '../../helpers/highlights';
 import reducer from '../suggestions';
 
@@ -8,7 +8,7 @@ function getInitialEditorState(startOffset = 2, endOffset = 2) {
     const selection = editorState.getSelection().merge({
         anchorOffset: startOffset,
         focusOffset: endOffset,
-    });
+    }) as SelectionState;
 
     return EditorState.acceptSelection(editorState, selection);
 }

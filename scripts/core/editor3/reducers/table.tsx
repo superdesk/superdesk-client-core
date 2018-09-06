@@ -1,4 +1,5 @@
 import {EditorState, Modifier, RichUtils} from 'draft-js';
+import {Map} from 'immutable';
 import {onChange} from './editor3';
 import insertAtomicBlockWithoutEmptyLines from '../helpers/insertAtomicBlockWithoutEmptyLines';
 import {createBlockSelection} from '../helpers/selection';
@@ -163,7 +164,7 @@ const processCells = (state, fn) => {
     const {cells, numRows, numCols, withHeader} = getData(editorState, block);
     const {data, newCurrentStyle} = fn(cells, numCols, numRows, i, j, withHeader, currentStyle, selection);
     const blockSelection = createBlockSelection(editorState, block);
-    const newContentState = Modifier.setBlockData(contentState, blockSelection, {data: JSON.stringify(data)});
+    const newContentState = Modifier.setBlockData(contentState, blockSelection, Map({data: JSON.stringify(data)}));
     const newEditorState = EditorState.push(editorState, newContentState, 'change-block-data');
     const entityDataHasChanged = true;
 
