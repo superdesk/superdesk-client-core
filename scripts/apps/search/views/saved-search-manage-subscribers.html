@@ -7,15 +7,25 @@
         </h3>
     </div>
 
-    <div class="modal__body">
+    <div class="modal__body" style="min-height: 550px;">
         <!-- if start -->
-        <div ng-if="wrapper.subscriptionInEditMode == null">
+        <div ng-if="wrapper.subscriptionInCreateOrEditMode == null">
             <div class="space-between" style="padding-bottom: 2rem; color: #898989">
                 <div>
                     <strong>{{savedSearch.subscribers == null ? '0' : savedSearch.subscribers.user_subscriptions.length}} </strong>
                     subscriptions
                 </div>
-                <button class="btn btn--hollow btn--primary"><i class="icon-plus-sign"></i>Add new</button>
+                
+                <div class="dropdown dropdown--align-right" dropdown="">
+                    <button
+                        dropdown__toggle=""
+                        class="btn btn--hollow btn--primary"><i class="icon-plus-sign"></i>Add new</button>
+                    <div class="dropdown__menu">
+                            <div
+                                sd-user-select-list
+                                data-onchoose="subscribeUser(user)"></div>
+                    </div>
+                </div>
             </div>
 
             <div
@@ -46,7 +56,7 @@
         </div>
         <!-- else -->
 
-        <div ng-if="wrapper.subscriptionInEditMode != null">
+        <div ng-if="wrapper.subscriptionInCreateOrEditMode != null">
             <div style="margin: -20px -20px 10px -20px;">
                 <div class="space-between" style="background: #fff; padding: 9px 20px;">
                     <button class="backlink" ng-click="backToList()" translate>Back</button>
@@ -58,18 +68,18 @@
                     style="margin-bottom: 6px; padding: 0 10px; background-color: #E6EDEF!important; cursor: default;">
                     <div class="sd-list-item__column">
                         <figure class="avatar" style="margin:0">
-                            <img sd-user-avatar data-user="wrapper.userLookup[wrapper.subscriptionInEditMode.user]">
+                            <img sd-user-avatar data-user="wrapper.userLookup[wrapper.subscriptionInCreateOrEditMode.user]">
                         </figure>
                     </div>
                     <div class="sd-list-item__column sd-list-item__column--grow sd-list-item__column--no-border">
                         <div class="sd-list-item__row">
                             <strong class="sd-overflow-ellipsis">
-                                {{wrapper.userLookup[wrapper.subscriptionInEditMode.user].first_name}}
-                                {{wrapper.userLookup[wrapper.subscriptionInEditMode.user].last_name}}
+                                {{wrapper.userLookup[wrapper.subscriptionInCreateOrEditMode.user].first_name}}
+                                {{wrapper.userLookup[wrapper.subscriptionInCreateOrEditMode.user].last_name}}
                             </strong>
                         </div>
                         <div class="sd-list-item__row">
-                            {{wrapper.userLookup[wrapper.subscriptionInEditMode.user].username}}
+                            {{wrapper.userLookup[wrapper.subscriptionInCreateOrEditMode.user].username}}
                         </div>
                     </div>
                 </div>
@@ -77,14 +87,10 @@
 
             <div
                 sd-edit-time-interval
-                data-initial-value="wrapper.subscriptionInEditMode.scheduling"
+                data-initial-value="wrapper.subscriptionInCreateOrEditMode.scheduling"
                 on-change="handleIntervalChange"></div>
         </div>
         <!-- if/else end-->
 
-    </div>
-
-    <div class="modal__footer">
-        <button class="btn" ng-click="manageSubscriptions(false)" translate>Cancel</button>
     </div>
 </div>

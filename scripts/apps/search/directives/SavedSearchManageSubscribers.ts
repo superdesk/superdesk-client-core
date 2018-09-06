@@ -5,9 +5,10 @@ import {CronTimeInterval} from "types/DataStructures/TimeInterval";
 
 interface IModel {
     userSubscribers: Array<IUser>;
-    subscriptionInEditMode?: IUserSubscription;
+    subscriptionInCreateOrEditMode?: IUserSubscription;
     currentlySelectedInterval: CronTimeInterval;
     userLookup: Dictionary<IUser['_id'], IUser>;
+    users: Array<IUser>;
 }
 
 interface IScope extends IDirectiveScope<IModel> {
@@ -18,8 +19,15 @@ interface IScope extends IDirectiveScope<IModel> {
     handleIntervalChange(cronExpression: CronTimeInterval): void;
     savingEnabled(): boolean;
     saveChanges(): void;
+    subscribeUser(user: IUser): void;
     backToList(): void;
 }
+
+// server doesn't allow read-only fields in patch request
+const removeReadOnlyFields = (subscription: IUserSubscription): IUserSubscription => ({
+    user: subscription.user,
+    scheduling: subscription.scheduling,
+});
 
 SavedSearchManageSubscribers.$inject = ['asset', 'userList', 'api', 'modal', 'gettext'];
 
@@ -32,11 +40,12 @@ export function SavedSearchManageSubscribers(asset, userList, api, modal, gettex
         templateUrl: asset.templateUrl('apps/search/views/saved-search-manage-subscribers.html'),
         link: function(scope: IScope) {
 
-            const getDefaults = () => ({
+            const getDefaults = (): IModel => ({
                 userSubscribers: [],
-                subscriptionInEditMode: null,
+                subscriptionInCreateOrEditMode: null,
                 currentlySelectedInterval: null,
                 userLookup: null,
+                users: [],
             });
 
             scope.wrapper = getDefaults();
@@ -44,20 +53,40 @@ export function SavedSearchManageSubscribers(asset, userList, api, modal, gettex
             scope.backToList = () => {
                 scope.wrapper = {
                     ...scope.wrapper,
-                    subscriptionInEditMode: null,
+                    subscriptionInCreateOrEditMode: null,
                     currentlySelectedInterval: null,
                 };
             };
 
+            scope.subscribeUser = (user: IUser) => {
+                scope.wrapper.subscriptionInCreateOrEditMode = {
+                    user: user._id,
+                    scheduling: null,
+                };
+            };
+
             scope.saveChanges = () => {
-                const nextUserSubscriptions = scope.savedSearch.subscribers.user_subscriptions.map(
-                    (subscription) => subscription.user === scope.wrapper.subscriptionInEditMode.user
-                        ? {
-                            user: scope.wrapper.subscriptionInEditMode.user,
-                            scheduling: scope.wrapper.currentlySelectedInterval,
-                        }
-                        : subscription,
+                const {user_subscriptions} = scope.savedSearch.subscribers;
+
+                const alreadySubscribed = user_subscriptions.some(
+                    (subscription) => subscription.user === scope.wrapper.subscriptionInCreateOrEditMode.user,
                 );
+
+                const nextUserSubscriptions = (
+                    alreadySubscribed
+                        ? user_subscriptions.map(
+                            (subscription) => subscription.user === scope.wrapper.subscriptionInCreateOrEditMode.user
+                                ? {
+                                    ...scope.wrapper.subscriptionInCreateOrEditMode,
+                                    scheduling: scope.wrapper.currentlySelectedInterval,
+                                }
+                                : subscription,
+                        )
+                        : user_subscriptions.concat({
+                            ...scope.wrapper.subscriptionInCreateOrEditMode,
+                            scheduling: scope.wrapper.currentlySelectedInterval,
+                        })
+                    ).map(removeReadOnlyFields);
 
                 const nextSubscribers: ISavedSearch['subscribers'] = {
                     ...scope.savedSearch.subscribers,
@@ -72,7 +101,7 @@ export function SavedSearchManageSubscribers(asset, userList, api, modal, gettex
             };
 
             scope.savingEnabled = () =>
-                scope.wrapper.subscriptionInEditMode.scheduling !== scope.wrapper.currentlySelectedInterval;
+                scope.wrapper.subscriptionInCreateOrEditMode.scheduling !== scope.wrapper.currentlySelectedInterval;
 
             scope.unsubscribe = (user: IUser) =>
                 modal.confirm(
@@ -87,7 +116,7 @@ export function SavedSearchManageSubscribers(asset, userList, api, modal, gettex
                 });
 
             scope.editUserSubscription = (user: IUser) => {
-                scope.wrapper.subscriptionInEditMode = scope.savedSearch.subscribers.user_subscriptions.find(
+                scope.wrapper.subscriptionInCreateOrEditMode = scope.savedSearch.subscribers.user_subscriptions.find(
                     (subscription) => subscription.user === user._id,
                 );
             };
@@ -95,10 +124,16 @@ export function SavedSearchManageSubscribers(asset, userList, api, modal, gettex
             scope.$watch('savedSearch.subscribers', () => {
                 if (
                     scope.savedSearch != null
-                    && scope.savedSearch.subscribers != null
-                    && scope.savedSearch.subscribers.user_subscriptions.length > 0
                 ) {
+                    if (scope.savedSearch.subscribers == null) {
+                        scope.savedSearch.subscribers = {
+                            user_subscriptions: [],
+                            desk_subscriptions: [],
+                        };
+                    }
+
                     userList.getAll().then((users: Array<IUser>) => {
+                        scope.wrapper.users = users;
                         scope.wrapper.userLookup = users.reduce((lookUpObj: IModel['userLookup'], user) => {
                             lookUpObj[user._id] = user;
                             return lookUpObj;
