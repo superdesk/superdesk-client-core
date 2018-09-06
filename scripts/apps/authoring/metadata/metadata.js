@@ -663,7 +663,7 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
                 }
 
                 scope.terms = filterSelected(scope.list);
-                if (scope.cv) { // filter out items from current cv
+                if (_.get(scope, 'cv._id')) { // filter out items from current cv
                     scope.selectedItems = selected.filter((term) => term.scheme === (scope.cv._id || scope.cv.id));
                 } else {
                     scope.selectedItems = selected.filter((term) => !term.scheme || term.scheme === scope.field);
