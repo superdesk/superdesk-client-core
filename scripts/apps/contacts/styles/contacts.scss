@@ -13,6 +13,7 @@
 .contact-details-pane {
     position: relative;
     width: 100%;
+    display: flex;
 
     ::-webkit-scrollbar {
         border-left: 9px solid #fff;
@@ -39,6 +40,14 @@
 
         .sd-line-input__input--add-min-height {
             min-height: 6rem;
+        }
+    }
+
+    .contact-form {
+        display: flex;
+        form {
+            display: flex;
+            flex-direction: column;
         }
     }
 
@@ -252,6 +261,7 @@
 }
 .contacts-list__holder {
     padding: 2rem;
+    overflow-y: auto;
     .sd-grid-list--small-margin {
         margin: 0;
     }
@@ -260,5 +270,11 @@
         &.inactive {
             opacity: 0.5;
         }
+    }
+}
+
+.contacts-section {
+    .contact-editor, .content-item-preview {
+        display: flex;
     }
 }

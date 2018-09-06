@@ -177,8 +177,10 @@ export function TagService($location, desks, userList, metadata, search,
      * Parse $location.search and initialise tags for fields defined in the PARAMETERS.
      * @param {object} params - $location.search
      */
-    function initParameters(params) {
-        _.each(PARAMETERS, (value, key) => {
+    function initParameters(params, urlParams) {
+        const parameters = urlParams || PARAMETERS;
+
+        _.each(parameters, (value, key) => {
             if (!angular.isDefined(params[key])) {
                 return;
             }
@@ -287,7 +289,7 @@ export function TagService($location, desks, userList, metadata, search,
      * @description Parses search parameters object and create tags
      * @return {Promise} List of items
      */
-    function initSelectedFacets() {
+    function initSelectedFacets(urlParams) {
         let promises = $q.all([desks.initialize(), subscribersService.initialize()]);
 
         return promises.then((result) => {
@@ -305,7 +307,7 @@ export function TagService($location, desks, userList, metadata, search,
                 initSelectedKeywords(keywords);
             }
 
-            initParameters(tags.currentSearch);
+            initParameters(tags.currentSearch, urlParams);
             initExcludedFacets(tags.currentSearch);
 
             const dateFilters = getDateFilters(gettext);

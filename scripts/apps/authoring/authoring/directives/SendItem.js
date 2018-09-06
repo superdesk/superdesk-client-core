@@ -407,7 +407,8 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                     itemType = typesList.length === 1 ? typesList[0] : null;
                 }
 
-                return scope.mode === 'authoring' || itemType === 'archive' || scope.mode === 'spike';
+                return scope.mode === 'authoring' || itemType === 'archive' || scope.mode === 'spike' ||
+                    (scope.mode === 'monitoring' && _.get(scope, 'config.action') === scope.vm.userActions.send_to);
             };
 
             /**
@@ -434,6 +435,8 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                 } else if (scope._action === 'kill') {
                     return privileges.privileges.publish && scope.itemActions.kill;
                 }
+
+                return false;
             };
 
             /**
@@ -824,6 +827,9 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
              * @return {Boolean}
              */
             function isAuthoringDesk() {
+                if (!_.get(scope, 'item.task.desk')) {
+                    return false;
+                }
                 const desk = desks.getItemDesk(scope.item);
 
                 return desk && desk.desk_type === 'authoring';

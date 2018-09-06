@@ -86,7 +86,7 @@ export function ArchiveService(desks, session, api, $q, search, $location, confi
         params.q = 'slugline.phrase:"' + _.trim(item.slugline) + '"'; // exact match
         params.ignoreKilled = true;
         params.ignoreDigital = true;
-        params.afterversioncreated = beforeDateTime;
+        params.versioncreated = beforeDateTime;
 
         var query = search.query(params);
 

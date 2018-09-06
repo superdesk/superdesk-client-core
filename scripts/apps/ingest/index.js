@@ -99,7 +99,7 @@ angular.module('superdesk.apps.ingest', [
                 label: gettext('Fetch To'),
                 icon: 'fetch-as',
                 controller: ['data', 'send', function(data, send) {
-                    return send.allAs([data.item]);
+                    return send.allAs([data.item], 'fetch_to');
                 }],
                 filters: [{action: 'list', type: 'ingest'}],
                 privileges: {fetch: 1},

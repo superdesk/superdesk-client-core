@@ -28,6 +28,7 @@
   ],
   "main": "scripts/index.js",
   "dependencies": {
+    "@types/angular": "1.6.50",
     "@types/draft-js": "0.10.24",
     "@types/lodash": "4.14.116",
     "@types/react": "16.4.9",
@@ -101,6 +102,7 @@
     "style-loader": "0.20.2",
     "superdesk-ui-framework": "^1.1.0",
     "ts-loader": "3.5.0",
+    "tslint": "5.11.0",
     "typescript": "3.0.1",
     "webpack": "3.11.0",
     "webpack-dev-server": "2.11.1"
@@ -132,7 +134,7 @@
     "debug-unit-tests": "karma start karma.conf.js --browsers=Chrome",
     "unit": "grunt unit",
     "build": "grunt build",
-    "lint": "tsc --noEmit --version && eslint --ext .js --ext .jsx --ext .tsx scripts spec tasks *.js",
+    "lint": "tsc --noEmit --version && tslint -c tslint.json 'scripts/**/*.ts' && eslint --ext .js --ext .jsx --ext .tsx scripts spec tasks *.js",
     "start-test-server": "cd test-server && python3 -m venv env && . env/bin/activate && pip install -Ur requirements.txt && honcho start",
     "protractor": "protractor protractor.conf.js",
     "webdriver-manager": "webdriver-manager",

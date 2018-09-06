@@ -1,6 +1,6 @@
-import {FILTER_FIELDS} from '../constants';
+import {FILTER_FIELDS, URL_PARAMETERS} from '../constants';
 
-const DEFAULT_PAGE_SIZE = 25;
+const DEFAULT_PAGE_SIZE = 50;
 
 /**
  * @ngdoc service
@@ -59,11 +59,17 @@ export class ContactsService {
         criteria.max_results = DEFAULT_PAGE_SIZE;
         criteria.sort = this.sort.formatSort(sort.field, sort.dir);
         criteria.page = 1;
-        criteria.all = true;
-        criteria.filters = [];
 
-        if (params.q) {
-            criteria.q = params.q;
+        let queryParams = params.q ? [params.q] : [];
+
+        angular.forEach(URL_PARAMETERS, (val, key) => {
+            if (params[key]) {
+                queryParams.push(`${key}:(${params[key]})`);
+            }
+        });
+
+        if (queryParams.length) {
+            criteria.q = queryParams.join(' ');
             criteria.default_operator = 'AND';
         }
 
@@ -76,7 +82,7 @@ export class ContactsService {
         });
 
         if (filters.length) {
-            criteria.filter = JSON.stringify(filters);
+            criteria.filter = JSON.stringify({and: filters});
         }
 
         return criteria;

@@ -1,0 +1,49 @@
+<div sd-modal class="modal--large" ng-if="savedSearch != null" data-model="true">
+    <div class="modal__header">
+        <a href="" class="close" ng-click="closeModal()"><i class="icon-close-small"></i></a>
+        <h3 class="modal__heading" translate="">
+            <span ng-if="isAlreadySubscribed()" translate>Manage subscription</span>
+            <span ng-if="!isAlreadySubscribed()" translate>New subscription</span>
+        </h3>
+    </div>
+
+    <div class="modal__body" style="min-height: 550px;">
+        <div class="sd-alert sd-alert--hollow sd-alert--primary">
+            <p>You have chosen to subscribe to <strong>{{savedSearch.name}}</strong>. Please define the frequency and time of your email notifications below.</p>
+        </div>
+
+        <div class="form-label">Schedule</div>
+
+        <div class="form__row">
+            <sd-check type="radio" ng-model="wrapper.everyDay" ng-value="true" label-position="inside">Every day</sd-check>
+            <sd-check type="radio" ng-model="wrapper.everyDay" ng-value="false" label-position="inside">Select days</sd-check>
+        </div>
+
+        <div ng-if="wrapper.everyDay !== 'true'" class="form__row" sd-weekday-picker data-model="wrapper.customWeekdays"></div>
+
+        <div class="form-label">Time</div>
+
+        <div class="form__row">
+            <sd-check type="radio" ng-model="wrapper.everyHour" ng-value="true" label-position="inside">Every hour</sd-check>
+            <sd-check type="radio" ng-model="wrapper.everyHour" ng-value="false" label-position="inside">Select hours</sd-check>
+        </div>
+
+        <div ng-if="wrapper.everyHour !== 'true'" class="form__row">
+            <!-- TODO: sd-multi-select doesn't work in modal -->
+            <div sd-multi-select
+                data-item="wrapper.customHours"
+                data-list="wrapper.hoursList"
+                data-change="setDirty(true)"></div>
+        </div>
+        
+    </div>
+
+    <div class="modal__footer">
+        <button ng-if="isAlreadySubscribed()" class="btn btn--hollow pull-left" ng-click="unsubscribe()" translate=>Unsubscribe</button>
+        <button class="btn" ng-click="closeModal()" translate>Cancel</button>
+        <button class="btn btn--primary" ng-click="saveOrUpdate()" ng-disabled="savingEnabled() !== true"=>
+            <span ng-if="isAlreadySubscribed()" translate=>Update subscription</span>
+            <span ng-if="!isAlreadySubscribed()" translate=>Subscribe</span>
+        </button>
+    </div>
+</div>
