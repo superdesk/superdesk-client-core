@@ -6,6 +6,7 @@ module.exports = {
             js: 'js',
             jsx: 'js',
             tsx: 'js',
+            ts: 'js',
         },
     },
     pot: {

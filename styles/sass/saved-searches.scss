@@ -1,0 +1,15 @@
+.saved-search-subscriptions {
+    display: flex;
+    align-items: center;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    padding-top: 4px;
+}
+
+.saved-search-subscriptions--action {
+    visibility: hidden;
+}
+
+.saved-search-item:hover .saved-search-subscriptions--action {
+    visibility: visible;
+}
