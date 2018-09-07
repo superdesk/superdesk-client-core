@@ -1,4 +1,4 @@
-<div sd-modal class="modal" ng-if="savedSearch != null" data-model="true">
+<div sd-modal class="modal" data-model="wrapper.modalOpen" on-modal-close="onInternalModalClose">
     <div class="modal__header">
         <a href="" class="close" ng-click="manageSubscriptions(false)"><i class="icon-close-small"></i></a>
         <h3 class="modal__heading" translate="">

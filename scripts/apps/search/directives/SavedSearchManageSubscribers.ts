@@ -11,6 +11,7 @@ import {IUser} from "business-logic/User";
 import {CronTimeInterval} from "types/DataStructures/TimeInterval";
 import {IDesk} from "business-logic/Desk";
 import {IDesksService} from "types/Services/Desks";
+import {nameof} from "core/helpers/typescript-helpers";
 
 interface IModel {
     userSubscribers: Array<IUser>;
@@ -20,6 +21,7 @@ interface IModel {
     users: Array<IUser>;
     desks: IDesksService;
     newSubscriptionFilterText: string;
+    modalOpen: boolean;
 }
 
 function isUserSubscription(x: IModel['subscriptionInCreateOrEditMode']): x is IUserSubscription {
@@ -75,6 +77,7 @@ export function SavedSearchManageSubscribers(asset, userList, api, modal, gettex
                 users: [],
                 desks: desks,
                 newSubscriptionFilterText: '',
+                modalOpen: false,
             });
 
             scope.editingUserSubscription = () => isUserSubscription(scope.wrapper.subscriptionInCreateOrEditMode);
@@ -236,32 +239,49 @@ export function SavedSearchManageSubscribers(asset, userList, api, modal, gettex
                 );
             };
 
-            scope.$watch('savedSearch.subscribers', () => {
-                if (
-                    scope.savedSearch != null
-                ) {
-                    if (scope.savedSearch.subscribers == null) {
-                        scope.savedSearch.subscribers = {
-                            user_subscriptions: [],
-                            desk_subscriptions: [],
-                        };
+            scope.$watch(
+                nameof<IScope>('savedSearch')
+                + '.'
+                + nameof<ISavedSearch>('subscribers'),
+                () => {
+                    if (
+                        scope.savedSearch != null
+                    ) {
+                        scope.wrapper.modalOpen = true;
+                        if (scope.savedSearch.subscribers == null) {
+                            scope.savedSearch.subscribers = {
+                                user_subscriptions: [],
+                                desk_subscriptions: [],
+                            };
+                        }
+
+                        userList.getAll().then((users: Array<IUser>) => {
+                            scope.wrapper.users = users;
+                            scope.wrapper.userLookup = users.reduce((lookUpObj: IModel['userLookup'], user) => {
+                                lookUpObj[user._id] = user;
+                                return lookUpObj;
+                            }, {});
+
+                            scope.wrapper.userSubscribers = scope.savedSearch.subscribers.user_subscriptions.map(
+                                (subscription) => users.find((user) => user._id === subscription.user),
+                            );
+                        });
+                    } else {
+                        scope.wrapper = getDefaults();
                     }
-
-                    userList.getAll().then((users: Array<IUser>) => {
-                        scope.wrapper.users = users;
-                        scope.wrapper.userLookup = users.reduce((lookUpObj: IModel['userLookup'], user) => {
-                            lookUpObj[user._id] = user;
-                            return lookUpObj;
-                        }, {});
-
-                        scope.wrapper.userSubscribers = scope.savedSearch.subscribers.user_subscriptions.map(
-                            (subscription) => users.find((user) => user._id === subscription.user),
-                        );
-                    });
-                } else {
-                    scope.wrapper = getDefaults();
-                }
             });
+
+            scope.$watch(
+                nameof<IScope>('wrapper')
+                + '.'
+                + nameof<IModel>('modalOpen'),
+                function() {
+                    // when modal is closed via ESC key, stop managing subscription so it can be started again.
+                    if (!scope.wrapper.modalOpen) {
+                        scope.manageSubscriptions(false);
+                    }
+                },
+            );
         },
     };
 }
