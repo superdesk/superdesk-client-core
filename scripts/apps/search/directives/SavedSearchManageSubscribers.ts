@@ -19,6 +19,7 @@ interface IModel {
     userLookup: Dictionary<IUser['_id'], IUser>;
     users: Array<IUser>;
     desks: IDesksService;
+    newSubscriptionFilterText: string;
 }
 
 function isUserSubscription(x: IModel['subscriptionInCreateOrEditMode']): x is IUserSubscription {
@@ -45,6 +46,8 @@ interface IScope extends IDirectiveScope<IModel> {
     getSubscriptionCount(): number;
     editingUserSubscription(): boolean;
     editingDeskSubscription(): boolean;
+    usersFilter(user: IUser): boolean;
+    desksFilter(desk: IDesk): boolean;
 }
 
 // server doesn't allow read-only fields in patch request
@@ -71,11 +74,19 @@ export function SavedSearchManageSubscribers(asset, userList, api, modal, gettex
                 userLookup: null,
                 users: [],
                 desks: desks,
+                newSubscriptionFilterText: '',
             });
 
             scope.editingUserSubscription = () => isUserSubscription(scope.wrapper.subscriptionInCreateOrEditMode);
 
             scope.editingDeskSubscription = () => isDeskSubscription(scope.wrapper.subscriptionInCreateOrEditMode);
+
+            scope.usersFilter = (user: IUser) =>
+                user.first_name.toLowerCase().includes(scope.wrapper.newSubscriptionFilterText.toLowerCase())
+                || user.last_name.toLowerCase().includes(scope.wrapper.newSubscriptionFilterText.toLowerCase());
+
+            scope.desksFilter = (desk: IDesk) =>
+                desk.name.toLowerCase().includes(scope.wrapper.newSubscriptionFilterText.toLowerCase());
 
             scope.getSubscriptionCount = () => {
                 let count = 0;

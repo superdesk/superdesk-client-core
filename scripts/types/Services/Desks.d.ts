@@ -1,7 +1,10 @@
 import {IUser} from 'business-logic/User';
+import {IDesk} from 'business-logic/Desk';
 
 export interface IDesksService {
-    desks: any;
+    desks: {
+        _items: Array<IDesk>;
+    };
     users: any;
     stages: any;
     deskLookup: {};
