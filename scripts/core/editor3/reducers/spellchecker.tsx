@@ -25,7 +25,7 @@ const spellchecker = (state = {}, action) => {
  * @return {Object} returns new state
  * @description Replace the current word with the new selected one
  */
-const replaceWord = (state, {word, newWord}) => {
+export const replaceWord = (state, {word, newWord}, skipOnChange = false) => {
     const {editorState, suggestingMode} = state;
 
     if (word.text === newWord) {
@@ -63,9 +63,9 @@ const replaceWord = (state, {word, newWord}) => {
             // insert remaining text
             const insertSelection = selection.merge({
                 anchorOffset: word.offset + word.text.length,
-                focusOffset: word.offset + newWord.length,
+                focusOffset: word.offset + word.text.length,
             });
-            const text = newWord.substring(word.offset + word.text.length);
+            const text = newWord.substring(word.text.length);
             const inlineStyle = block.getInlineStyleAt(word.offset + word.text.length - 1);
 
             newContent = Modifier.replaceText(newContent, insertSelection, text, inlineStyle);
@@ -86,6 +86,12 @@ const replaceWord = (state, {word, newWord}) => {
 
         newState = EditorState.acceptSelection(newState, newSelection);
 
+        if (skipOnChange) {
+            return {
+                ...state,
+                editorState: newState,
+            };
+        }
         return onChange(state, newState);
     }
 };

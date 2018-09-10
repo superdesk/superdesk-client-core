@@ -2,6 +2,8 @@ import {RichUtils, EditorState, AtomicBlockUtils, SelectionState} from 'draft-js
 import {setTansaHtml} from '../helpers/tansa';
 import {addMedia} from './toolbar';
 import {isEditorPlainText} from '../store';
+import {replaceWord} from './spellchecker';
+import {DELETE_SUGGESTION} from '../highlightsConfig';
 
 /**
  * @description Contains the list of editor related reducers.
@@ -18,6 +20,8 @@ const editor3 = (state = {}, action) => {
         return onTab(state, action.payload);
     case 'EDITOR_FORCE_UPDATE':
         return forceUpdate(state);
+    case 'EDITOR_SET_ABBREVIATIONS':
+        return setAbbreviations(state, action.payload);
     case 'EDITOR_DRAG_DROP':
         return dragDrop(state, action.payload);
     case 'EDITOR_SET_CELL':
@@ -89,17 +93,115 @@ export const onChange = (state, newState, force = false) => {
     }
 
     if (force) {
-        return forceUpdate({
-            ...state,
-            editorState,
-        });
+        return forceUpdate(
+            applyAbbreviations({
+                ...state,
+                editorState,
+            })
+        );
     }
 
-    return {
+    return applyAbbreviations({
         ...state,
         editorState,
-    };
+    });
 };
+
+/**
+ * @ngdoc method
+ * @name setAbbreviations
+ * @param {Object} state
+ * @param {Object} abbreviations
+ * @return {Object} returns new state
+ * @description Set the abbreviations dictionary
+ */
+const setAbbreviations = (state, abbreviations) => ({
+    ...state,
+    abbreviations,
+});
+
+/**
+ * @ngdoc method
+ * @name applyAbbreviations
+ * @param {Object} editorState
+ * @param {Array} abbreviations
+ * @return {Object} returns new state
+ * @description Handle the editor tab key pressed event
+ */
+const applyAbbreviations = (state) => {
+    const {editorState, abbreviations} = state;
+    const selection = editorState.getSelection();
+
+    if (!selection.isCollapsed() || abbreviations == null || Object.keys(abbreviations).length === 0) {
+        return state;
+    }
+
+    const content = editorState.getCurrentContent();
+    const block = content.getBlockForKey(selection.getStartKey());
+    const word = getAbbreviationText(block, selection.getStartOffset());
+    const keys = Object.keys(abbreviations);
+    const pattern = '\\b(' + keys.map((item) => escapeRegExp(item)).join('|') + ')(\\*)';
+    const found = word.text.match(new RegExp(pattern, 'g'));
+
+    if (found) {
+        const abbreviation = found[0].replace('*', '');
+        const newWord = abbreviations[abbreviation];
+
+        return replaceWord(state, {word, newWord}, true);
+    }
+
+    return state;
+};
+
+/**
+ * @ngdoc method
+ * @name getAbbreviationText
+ * @param {Object} block
+ * @param {Integer} offset
+ * @return {String} returns text that can contain abbreviation
+ * @description If no current selection from current position extract text that is
+ * delimited on both sides by space or round brackets
+ */
+const getAbbreviationText = (block, offset) => {
+    const text = block.getText();
+    const length = block.getLength();
+    let start = offset;
+    let end = offset;
+
+    while (start > 0 && text[start - 1] !== ' ' && text[start - 1] !== '(' && text[start - 1] !== ')') {
+        const inlineStyles = block.getInlineStyleAt(start - 1);
+
+        if (inlineStyles.some((style) => style.startsWith(DELETE_SUGGESTION))) {
+            break;
+        }
+
+        start--;
+    }
+
+    while (end < length && text[end] !== ' ' && text[end] !== '(' && text[end] !== ')') {
+        const inlineStyles = block.getInlineStyleAt(end);
+
+        if (inlineStyles.some((style) => style.startsWith(DELETE_SUGGESTION))) {
+            break;
+        }
+
+        end++;
+    }
+
+    return {text: text.substring(start, end), offset: start};
+};
+
+/**
+ * Escape given string for reg exp
+ *
+ * @url https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions
+ *
+ * @param {string} string
+ * @return {string}
+ */
+function escapeRegExp(string) {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
 
 /**
  * @ngdoc method

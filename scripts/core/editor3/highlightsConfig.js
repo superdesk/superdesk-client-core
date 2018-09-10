@@ -149,7 +149,9 @@ export const blockStylesDescription = {
     'code-block': gettext('preformatted'),
 };
 
-export const changeSuggestionsTypes = ['DELETE_SUGGESTION', 'ADD_SUGGESTION'];
+export const DELETE_SUGGESTION = 'DELETE_SUGGESTION';
+export const ADD_SUGGESTION = 'ADD_SUGGESTION';
+export const changeSuggestionsTypes = [DELETE_SUGGESTION, ADD_SUGGESTION];
 export const styleSuggestionsTypes = Object.keys(highlightsConfig).filter(
     (key) => highlightsConfig[key].type === 'STYLE'
 );
