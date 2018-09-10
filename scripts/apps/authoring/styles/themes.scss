@@ -476,9 +476,20 @@ body, html {
             min-height: 48px;
             padding: 6px 0;
         }
+        .html-preview {
+            font-size: 2.8rem;
+        }
     }
     .body {
         clear: left;
+        .html-preview {
+            font-size: 1.6rem;
+            @include text-light();
+            line-height: 150%;
+            p {
+                font-size: 1.6rem;
+            }
+        }
     }
 }
 
