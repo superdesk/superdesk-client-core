@@ -133,7 +133,9 @@ export function EditTimeInterval(asset) {
                 if (scope.initialValue != null) {
                     scope.wrapper = {
                         ...scope.wrapper,
-                        ...cronExpressionToTimeIntervalUi(scope.initialValue),
+                        ...cronExpressionToTimeIntervalUi(
+                            scope.initialValue || createCronInterval('*', '*', '*', '*', '*'),
+                        ),
                     };
                 }
             }, true);
