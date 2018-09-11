@@ -12,9 +12,6 @@ module.exports = function(grunt) {
             swimlane: {columnsLimit: 4},
             editor3: true,
             qumu: true,
-            savedSearch: {
-                subscriptions: true,
-            },
         },
         auth: {google: false},
         ingest: {

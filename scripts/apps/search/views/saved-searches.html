@@ -15,7 +15,7 @@
                 <button class="delete" ng-click="remove(search); $event.stopPropagation();" title="{{:: 'Delete search' | translate }}"><i class="icon-trash"></i></button>
             </div>
             <div
-                ng-if="config.features.savedSearch.subscriptions"
+                ng-if="userHasPrivileges({saved_search_subscriptions: 1})"
                 class="saved-search-subscriptions">
                 <a
                     ng-if="!isUserSubscribedToSavedSearch(search)"
@@ -44,7 +44,7 @@
                 <button class="delete" ng-click="remove(search); $event.stopPropagation();" title="{{:: 'Delete search' | translate }}" ng-if="privileges.global_saved_searches"><i class="icon-trash"></i></button>
             </div>
             <div
-                ng-if="config.features.savedSearch.subscriptions"
+                ng-if="userHasPrivileges({saved_search_subscriptions: 1})"
                 class="saved-search-subscriptions">
                 <a
                     ng-if="!isUserSubscribedToSavedSearch(search)"
@@ -64,7 +64,7 @@
 </div>
 
 <div
-    ng-if="config.features.savedSearch.subscriptions"
+    ng-if="userHasPrivileges({saved_search_subscriptions: 1})"
     sd-saved-search-edit-own-subscription
     cancel-editing-subscription="cancelEditingSubscription"
     data-saved-search="selectedForEditingSubscription"></div>

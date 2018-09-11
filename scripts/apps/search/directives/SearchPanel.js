@@ -66,6 +66,7 @@ export function SearchPanel($location,
 
             scope.aggregations = {};
             scope.privileges = privileges.privileges;
+            scope.userHasPrivileges = privileges.userHasPrivileges;
             scope.search_config = metadata.search_config;
 
             scope.$on('edit:search', (event, args) => {

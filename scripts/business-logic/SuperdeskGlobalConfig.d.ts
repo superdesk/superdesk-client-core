@@ -6,9 +6,6 @@ export interface ISuperdeskGlobalConfig {
         };
         editor3: boolean;
         qumu: boolean;
-        savedSearch: {
-            subscriptions: boolean;
-        }
     }
     auth: {
         google: boolean

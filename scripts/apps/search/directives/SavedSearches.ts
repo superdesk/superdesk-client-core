@@ -33,6 +33,7 @@ interface ISavedSearchesScope extends ng.IScope {
     editSubscription(event: Event, savedSearch: ISavedSearch): void;
     cancelEditingSubscription(event?: Event): void;
     isUserSubscribedToSavedSearch(savedSearch: ISavedSearch, userId: IUser['_id']): boolean;
+    userHasPrivileges(privileges: any): boolean;
 }
 
 export function SavedSearches($rootScope, api, session, modal, notify, gettext, asset, $location,
@@ -50,6 +51,7 @@ export function SavedSearches($rootScope, api, session, modal, notify, gettext, 
             scope.userSavedSearches = [];
             scope.globalSavedSearches = [];
             scope.privileges = privileges.privileges;
+            scope.userHasPrivileges = privileges.userHasPrivileges;
             let originalUserSavedSearches = [];
             let originalGlobalSavedSearches = [];
 
