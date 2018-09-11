@@ -280,7 +280,7 @@ export class MediaBlockComponent extends React.Component<any, any> {
                                 )
                             }
 
-                            <audio controls src={rendition.href} style={{width: '100%', height: '100%'}} />
+                            <audio controls src={rendition.href} style={{width: '100%'}} />
                             <div className="image-block__metadata image-block__metadata--side-marg0">
                                 <span>
                                     <em>{gettextCatalog.getString('Credit:')}{' '}</em>

@@ -323,7 +323,18 @@
 
     <div ng-if="item.type == 'picture' || item.type == 'graphic'" class="full-preview" sd-ratio-calc>
         <div class="media-item__item">
-            <div sd-item-rendition data-item="item" data-rendition="baseImage" ng-click="preview(item);"></div>
+            <div class="item-association item-association--preview">
+                <div class="item-association__image-container" sd-item-rendition data-item="item" data-rendition="baseImage"></div>
+
+                <div class="item-association__image-overlay" ng-if="_editable">
+                    <div class="item-association__icons-block">
+                        <a class="item-association__image-action" sd-tooltip="Edit metadata" ng-click="editMedia('view')"><i class="icon-pencil"></i></a>
+                        <a class="item-association__image-action" sd-tooltip="Edit image" ng-click="editMedia('image-edit')"><i class="icon-switches"></i></a>
+                        <a class="item-association__image-action" sd-tooltip="Edit crops" ng-click="editMedia('crop')" ng-if="metadata.crop_sizes"><i class="icon-crop"></i></a>
+                    </div>
+                </div>
+            </div>
+
             <span class="media-item__item-label" translate>Original ({{item.renditions.original.width}} x {{item.renditions.original.height}} px)</span>
             <div sd-media-metadata-view
                  class="media-container__metadata media-container__metadata--image"
