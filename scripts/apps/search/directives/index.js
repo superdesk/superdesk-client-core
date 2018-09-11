@@ -13,7 +13,6 @@ export {ItemRepo} from './ItemRepo';
 export {ItemSortbar} from './ItemSortbar';
 export {SavedSearchSelect} from './SavedSearchSelect';
 export {SavedSearches} from './SavedSearches';
-export {SavedSearchSubscribe} from './SavedSearchSubscribe';
 export {SavedSearchEditOwnSubscription} from './SavedSearchEditOwnSubscription';
 export {EditTimeInterval} from './EditTimeInterval';
 export {SavedSearchManageSubscribers} from './SavedSearchManageSubscribers';
