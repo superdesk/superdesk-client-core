@@ -43,7 +43,11 @@ export const replaceWord = (state, {word, newWord}, skipOnChange = false) => {
         return createAddSuggestion(state, {text: newWord, data: data}, wordSelection);
     } else {
         const selection = editorState.getSelection();
-        const newSelection = selection.merge({hasFocus: true});
+        const newSelection = selection.merge({
+            anchorOffset: word.offset + newWord.length,
+            focusOffset: word.offset + newWord.length,
+            hasFocus: true,
+        });
         let newContent = editorState.getCurrentContent();
         const block = newContent.getBlockForKey(selection.getStartKey());
         const length = word.text.length < newWord.length ? word.text.length : newWord.length;

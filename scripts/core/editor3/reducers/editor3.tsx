@@ -139,6 +139,11 @@ const applyAbbreviations = (state) => {
     const content = editorState.getCurrentContent();
     const block = content.getBlockForKey(selection.getStartKey());
     const word = getAbbreviationText(block, selection.getStartOffset());
+
+    if (word == null) {
+        return state;
+    }
+
     const keys = Object.keys(abbreviations);
     const pattern = '\\b(' + keys.map((item) => escapeRegExp(item)).join('|') + ')(\\*)';
     const found = word.text.match(new RegExp(pattern, 'g'));
@@ -159,14 +164,18 @@ const applyAbbreviations = (state) => {
  * @param {Object} block
  * @param {Integer} offset
  * @return {String} returns text that can contain abbreviation
- * @description If no current selection from current position extract text that is
- * delimited on both sides by space or round brackets
+ * @description From current position extract text that is
+ * delimited on both sides by space, round brackets or delete suggestion
  */
 const getAbbreviationText = (block, offset) => {
     const text = block.getText();
     const length = block.getLength();
     let start = offset;
     let end = offset;
+
+    if (!text.includes('*')) {
+        return null;
+    }
 
     while (start > 0 && text[start - 1] !== ' ' && text[start - 1] !== '(' && text[start - 1] !== ')') {
         const inlineStyles = block.getInlineStyleAt(start - 1);
@@ -188,7 +197,13 @@ const getAbbreviationText = (block, offset) => {
         end++;
     }
 
-    return {text: text.substring(start, end), offset: start};
+    const textWithAbbreviation = text.substring(start, end);
+
+    if (!textWithAbbreviation.includes('*')) {
+        return null;
+    }
+
+    return {text: textWithAbbreviation, offset: start};
 };
 
 /**
