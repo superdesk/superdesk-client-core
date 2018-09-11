@@ -79,7 +79,8 @@ export function handlePastedText(text: string, _html: string): DraftHandleValue 
         return 'handled';
     }
 
-    if (pasteContentFromOpenEditor(html, editorState, onChange, editorFormat) === 'handled') {
+    if (html &&
+        pasteContentFromOpenEditor(html, editorState, onChange, editorFormat) === 'handled') {
         return 'handled';
     }
 
