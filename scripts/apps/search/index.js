@@ -58,6 +58,7 @@ angular.module('superdesk.apps.search', [
     .directive('sdSavedSearchEditOwnSubscription', directive.SavedSearchEditOwnSubscription)
     .directive('sdEditTimeInterval', directive.EditTimeInterval)
     .directive('sdSavedSearchManageSubscribers', directive.SavedSearchManageSubscribers)
+    .directive('sdSavedSearchSubscribe', directive.SavedSearchSubscribe)
     .directive('sdSavedSearches', directive.SavedSearches)
     .directive('sdSearchContainer', directive.SearchContainer)
     .directive('sdSearchParameters', directive.SearchParameters)

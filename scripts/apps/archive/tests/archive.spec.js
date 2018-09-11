@@ -223,6 +223,32 @@ describe('content', () => {
         }));
     });
 
+    describe('item preview header', () => {
+        it('on toggle sets the header state in local storage', inject(($rootScope, $compile, storage) => {
+            storage.clear();
+            var firstScope = $rootScope.$new();
+
+            firstScope.selected = {preview: item};
+            $compile('<div sd-media-preview></div>')(firstScope);
+            firstScope.$digest();
+
+            const expectValues = (directiveScope, value) => {
+                expect(directiveScope.previewState.toggleHeader).toBe(value);
+                expect(storage.getItem('item_preview:header_state')).toBe(value);
+            };
+
+            expectValues(firstScope, false);
+            firstScope.togglePreviewHeader();
+            expectValues(firstScope, true);
+
+            var secondScope = $rootScope.$new();
+
+            secondScope.selected = {preview: item};
+            $compile('<div sd-media-preview></div>')(secondScope);
+            expectValues(secondScope, true);
+        }));
+    });
+
     describe('duplicate', () => {
         it('can duplicate item to current desk', inject(($controller, desks, workspaces, session, api, $q) => {
             spyOn(workspaces, 'isCustom').and.returnValue(true);

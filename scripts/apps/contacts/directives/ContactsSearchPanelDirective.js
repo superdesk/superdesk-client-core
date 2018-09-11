@@ -1,30 +1,29 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import _ from 'lodash';
+import {URL_PARAMETERS} from '../constants';
 import {SelectFieldSearchInput} from '../../contacts/components/Form';
+
 
 class LinkFunction {
     constructor(contacts, $location, scope, elem) {
         this.scope = scope;
         this.elem = elem;
-
         this.orgField = document.getElementById('org-field');
-
         this.contacts = contacts;
         this.$location = $location;
         this.scope.searchItems = this.search.bind(this);
         this.scope.clear = this.clear.bind(this);
-        this.getQuery = this.getQuery.bind(this);
-        this.searchParameters = this.searchParameters.bind(this);
-
+        this.setQueryString = this.setQueryString.bind(this);
         this.scope.toggle = {all: true};
-
         this.scope.keyPressed = this.keyPressed.bind(this);
         this.scope.searchField = this.searchField.bind(this);
-
-        this.init();
+        this.scope.isSearchDifferent = this.isSearchDifferent.bind(this);
+        this.handleOnChange = this.handleOnChange.bind(this);
+        this.init(true);
 
         this.scope.$on('$locationChangeSuccess', () => {
-            if (this.scope.query !== this.$location.search().q) {
+            if (this.scope.query !== this.$location.search().q || this.scope.isSearchDifferent()) {
                 this.init();
             }
         });
@@ -37,27 +36,41 @@ class LinkFunction {
 
     /*
      * init function to setup the directive initial state and called by $locationChangeSuccess event
-     * @param {boolean} loadData.
      */
     init() {
         var params = this.$location.search();
 
         this.scope.query = params.q;
         this.scope.flags = false;
-        this.scope.meta = {};
+        let meta = {};
 
+        _.forEach(URL_PARAMETERS, (value, key) => {
+            if (_.get(params, key)) {
+                meta[key] = params[key];
+            }
+        });
+        this.scope.meta = meta;
         this.scope.filteredList = {};
-        this.scope.filteredList['organisation'] = [];
-        this.renderSearchField('organisation');
+        if (!params.organisation) {
+            this.scope.filteredList['organisation'] = [];
+        }
+
+        this.renderSearchField('organisation', true);
         this.scope.selectedItem = '';
+    }
+
+    isSearchDifferent() {
+        let params = this.$location.search();
+
+        return _.some(_.keys(URL_PARAMETERS), (key) => _.get(this.scope.meta, key) !== _.get(params, key));
     }
 
     handleOnChange(field, value) {
         this.scope.meta[field] = value;
-        this.renderSearchField(field);
+        this.renderSearchField(field, false);
     }
 
-    renderSearchField(field) {
+    renderSearchField(field, initValue) {
         let fieldElement;
         let fieldLabel;
         let querySearch = false;
@@ -74,34 +87,31 @@ class LinkFunction {
             <SelectFieldSearchInput
                 field={field}
                 label={fieldLabel}
-                onChange={this.handleOnChange.bind(this)}
+                onChange={this.handleOnChange}
                 value={_.get(this.scope.meta, field, '')}
                 querySearch={querySearch}
                 onQuerySearch={((searchText) => this.scope.searchField(field, searchText))}
-                dataList={this.scope.filteredList[field]} />
+                dataList={this.scope.filteredList[field]}
+                initValue={initValue}
+            />
             , fieldElement
         );
     }
 
 
-    /*
-     * Get Query function build the query string
+    /**
+     * @ngdoc method
+     * @name sdContactsSearchPanel#setQueryString
+     * @description function to set query string.
      */
-    getQuery() {
-        var metas = [];
-        var pattern = /[()]/g;
-        const getFirstKey = function(data) {
-            for (var prop in data) {
-                if (data.hasOwnProperty(prop)) {
-                    return prop;
-                }
-            }
-        };
+    setQueryString() {
+        let pattern = /[()]/g;
+        let params = this.$location.search();
         const booleanToBinaryString = function(bool) {
             return Number(bool).toString();
         };
 
-        angular.forEach(this.scope.meta, (val, key) => {
+        _.forEach(this.scope.meta, (val, key) => {
             let v = val;
 
             if (typeof val === 'boolean') {
@@ -112,42 +122,14 @@ class LinkFunction {
                 v = val.replace(pattern, '');
             }
 
-            if (key === '_all') {
-                metas.push(v.join(' '));
-            } else if (v) {
-                let k = key;
-
-                if (typeof v === 'string') {
-                    if (v) {
-                        metas.push(k + ':(' + v + ')');
-                    }
-                } else if (angular.isArray(v)) {
-                    angular.forEach(v, (value) => {
-                        metas.push(k + ':(' + value.replace(pattern, '') + ')');
-                    });
-                } else {
-                    var subkey = getFirstKey(v);
-
-                    if (v[subkey]) {
-                        metas.push(k + '.' + subkey + ':(' + v[subkey] + ')');
-                    }
-                }
+            if (v) {
+                this.$location.search(key, val);
+            } else if (_.get(params, key)) {
+                this.$location.search(key, null);
             }
         });
 
-        if (metas.length) {
-            if (this.scope.query) {
-                return this.scope.query + ' ' + metas.join(' ');
-            }
-            return metas.join(' ');
-        }
-
-        return this.scope.query || null;
-    }
-
-    searchParameters() {
-        this.$location.search('q', this.getQuery() || null);
-        this.scope.meta = {};
+        this.$location.search('q', this.scope.query || null);
     }
 
     /**
@@ -156,7 +138,7 @@ class LinkFunction {
      * @description function to perform search.
      */
     search() {
-        this.searchParameters();
+        this.setQueryString();
     }
 
     /*
@@ -176,7 +158,7 @@ class LinkFunction {
         const ENTER = 13;
 
         if (event.keyCode === ENTER) {
-            this.searchParameters();
+            this.search();
             event.preventDefault();
         }
     }
@@ -187,7 +169,9 @@ class LinkFunction {
      * @description clear all search and refresh the results.
      */
     clear() {
-        this.$location.search(_.omit(this.$location.search(), 'q'));
+        const fields = [..._.keys(URL_PARAMETERS), 'q'];
+
+        this.$location.search(_.omit(this.$location.search(), fields));
         this.scope.$broadcast('tag:removed');
     }
 }

@@ -56,7 +56,13 @@ export function SearchController($location, searchProviderService) {
      */
     this.toggleRepo = (repoName) => {
         this.repo[repoName] = !this.repo[repoName];
-        const active = getActiveRepos();
+        let active = getActiveRepos();
+
+        if (active.length === 0) {
+            // if no active repo then reset the state of the all repo buttons to active.
+            resetInternalRepo();
+            active = getActiveRepos();
+        }
 
         $location.search('repo', active.join(','));
     };

@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import {defer} from 'lodash';
 import {firstCharUpperCase} from '../utils';
 
-import {Menu, Label, Divider, Dropdown as DropMenu} from '../Dropdown';
+import {Menu, Label, Divider, Dropdown as DropMenu} from '../Dropdown/';
 
 /**
  * @ngdoc react

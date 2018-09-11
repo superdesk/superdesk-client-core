@@ -15,7 +15,7 @@
                     <div class="dropdown" dropdown>
                         <button class="dropdown__toggle" dropdown__toggle>
                             {{ selectedFilterSubscriber.name }}
-                            <span ng-if="!selectedFilterSubscriber">none</span>
+                            <span ng-if="!selectedFilterSubscriber" translate>none</span>
                             <b class="dropdown__caret"></b>
                         </button>
                         <ul class="dropdown__menu dropdown__menu--scrollable">
@@ -31,7 +31,7 @@
                     <div class="dropdown" dropdown>
                         <button class="dropdown__toggle" dropdown__toggle>
                             {{ selectedFilterIngestProvider.name }}
-                            <span ng-if="!selectedFilterIngestProvider">none</span>
+                            <span ng-if="!selectedFilterIngestProvider" translate>none</span>
                             <b class="dropdown__caret"></b>
                         </button>
                         <ul class="dropdown__menu dropdown__menu--scrollable">
@@ -47,7 +47,7 @@
                     <div class="dropdown" dropdown>
                         <button class="dropdown__toggle" dropdown__toggle>
                             {{ selectedFilterStatus }}
-                            <span ng-if="!selectedFilterStatus">none</span>
+                            <span ng-if="!selectedFilterStatus" translate>none</span>
                             <b class="dropdown__caret"></b>
                         </button>
                         <ul class="dropdown__menu">
@@ -55,6 +55,19 @@
                             <li ng-repeat="status in publish_queue_statuses track by $index">
                                 <a href="" ng-click="filterPublishQueue(status, 'status')">{{ :: status | translate}}</a>
                             </li>
+                        </ul>
+                    </div>
+                    <span class="lab" translate>Content Type:</span>
+                    <div class="dropdown" dropdown>
+                        <button class="dropdown__toggle" dropdown__toggle>
+                            {{ selectedFilterContentType.name }}
+                            <span ng-if="!selectedFilterContentType" translate>none</span>
+                            <b class="dropdown__caret"></b>
+                        </button>
+                        <ul class="dropdown__menu">
+                            <li><a href="" ng-click="filterPublishQueue(null, 'type')" translate>None</a></li>
+                            <li ng-repeat="type in contentTypes track by type.qcode">
+                                <a href="" ng-click="filterPublishQueue(type, 'type')">{{ :: type.name | translate}}</a>
                         </ul>
                     </div>
                 </div>

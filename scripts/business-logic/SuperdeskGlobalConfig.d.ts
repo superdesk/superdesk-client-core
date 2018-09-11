@@ -26,5 +26,5 @@ export interface ISuperdeskGlobalConfig {
             hours: number;
             minutes: number;
         };
-    }
+    };
 }

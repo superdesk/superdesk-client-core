@@ -1,3 +1,6 @@
+// eslint complains about imported types not being used
+// eslint-disable-next-line no-unused-vars
+import {EditorChangeType} from 'draft-js';
 import {SelectionState, Modifier, EditorState} from 'draft-js';
 
 const findReplace = (state = {}, action) => {
@@ -208,19 +211,14 @@ export const clearHighlights = (c, es = null) => {
 
 
 /**
- * @name createSelection
- * @param {string} key Block key
- * @param {number} anchor Anchor offset
- * @param {number} focus Focus offset
- * @returns {SelectionState}
- * @description Creates a new selection state, based on the given block key, having the specified
+ * Creates a new selection state, based on the given block key, having the specified
  * anchor and offset.
  */
-const createSelection = (key, start, end) =>
+const createSelection = (key: string, start: number, end: number) : SelectionState =>
     SelectionState.createEmpty(key).merge({
         anchorOffset: start,
         focusOffset: end,
-    });
+    }) as SelectionState;
 
 /**
  * @name forEachMatch
@@ -269,7 +267,7 @@ const getRegExp = ({pattern, caseSensitive}) =>
  * @description Silently pushes the new content state into the given editor state, without
  * affecting the undo/redo stack.
  */
-export const quietPush = (editorState, content, changeType = 'insert-characters') => {
+export const quietPush = (editorState, content, changeType: EditorChangeType = 'insert-characters') => {
     let newState;
 
     newState = EditorState.set(editorState, {allowUndo: false});

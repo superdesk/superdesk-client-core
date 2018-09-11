@@ -39,6 +39,8 @@ const VALID_MEDIA_TYPES = [
     'Files',
 ];
 
+export const EDITOR_GLOBAL_REFS = 'editor3-refs';
+
 /**
  * Get valid media type from event dataTransfer types
  *
@@ -323,6 +325,12 @@ export class Editor3Component extends React.Component<any, any> {
 
     componentDidMount() {
         $(this.div).on('dragover', this.onDragOver);
+
+        if (!window[EDITOR_GLOBAL_REFS]) {
+            window[EDITOR_GLOBAL_REFS] = {};
+        }
+
+        window[EDITOR_GLOBAL_REFS][this.editorKey] = this.editor;
     }
 
     handleRefs(editor) {
@@ -334,6 +342,8 @@ export class Editor3Component extends React.Component<any, any> {
 
     componentWillUnmount() {
         $(this.div).off();
+
+        delete window[EDITOR_GLOBAL_REFS][this.editorKey];
     }
 
     componentDidUpdate() {

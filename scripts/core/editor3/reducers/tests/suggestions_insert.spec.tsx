@@ -1,4 +1,4 @@
-import {EditorState, ContentState} from 'draft-js';
+import {EditorState, ContentState, SelectionState} from 'draft-js';
 import * as Highlights from '../../helpers/highlights';
 import reducer from '../suggestions';
 
@@ -44,7 +44,7 @@ describe('editor3.reducers.suggestion.CREATE_ADD_SUGGESTION', () => {
         const selection = initialEditorState.getSelection().merge({
             anchorOffset: 2,
             focusOffset: 2,
-        });
+        }) as SelectionState;
         const date = new Date();
 
         const result = reducer({

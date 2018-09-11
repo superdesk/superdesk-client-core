@@ -402,7 +402,8 @@ const createSplitParagraphSuggestion = (state, {data}) => {
 const pasteAddSuggestion = (state, {content, data}) => {
     let {editorState} = state;
     let selection = editorState.getSelection();
-    const beforeStyle = Highlights.getHighlightStyleAtOffset(editorState, changeSuggestionsTypes, selection, -1);
+    const beforeStyle =
+        Highlights.getHighlightStyleAtOffset(editorState, changeSuggestionsTypes, selection, -1) as string;
     const beforeData:any = beforeStyle != null ? Highlights.getHighlightData(editorState, beforeStyle) : null;
 
     // if text is selected mark it as removed and collapse the selection before replacing
@@ -552,7 +553,7 @@ const processMergeBlocksSuggestion = (state, data, suggestion, accepted) => {
     }
 
     editorState = EditorState.push(editorState, content, 'remove-range');
-    editorState = EditorState.acceptSelection(editorState, crtSelection, false);
+    editorState = EditorState.acceptSelection(editorState, crtSelection);
 
     return saveEditorStatus(state, editorState, 'change-inline-style', false);
 };
@@ -936,7 +937,7 @@ const deleteCurrentSelection = (editorState, data, action = 'delete') => {
     });
 
     newEditorState = Highlights.addHighlight(newEditorState, 'DELETE_SUGGESTION', data);
-    return EditorState.acceptSelection(newEditorState, selection, false);
+    return EditorState.acceptSelection(newEditorState, selection);
 };
 
 
@@ -958,9 +959,11 @@ const deleteCurrentSelection = (editorState, data, action = 'delete') => {
 const setAddSuggestionForCharacter = (editorState, data, text, inlineStyle = null) => {
     const crtInlineStyle = inlineStyle || editorState.getCurrentInlineStyle();
     let selection = editorState.getSelection();
-    const beforeStyle = Highlights.getHighlightStyleAtOffset(editorState, changeSuggestionsTypes, selection, -1);
+    const beforeStyle =
+        Highlights.getHighlightStyleAtOffset(editorState, changeSuggestionsTypes, selection, -1) as string;
     const beforeData:any = beforeStyle != null ? Highlights.getHighlightData(editorState, beforeStyle) : null;
-    const currentStyle = Highlights.getHighlightStyleAtOffset(editorState, changeSuggestionsTypes, selection, 0);
+    const currentStyle =
+        Highlights.getHighlightStyleAtOffset(editorState, changeSuggestionsTypes, selection, 0) as string;
     const currentData:any = currentStyle != null ? Highlights.getHighlightData(editorState, currentStyle) : null;
     let content = editorState.getCurrentContent();
     let newState = editorState;
@@ -1076,12 +1079,14 @@ const setDeleteSuggestionForCharacter = (editorState, data) => {
         return deleteCharacter(editorState, currentStyle);
     }
 
-    const beforeStyle = Highlights.getHighlightStyleAtOffset(editorState, changeSuggestionsTypes, selection, -2);
+    const beforeStyle =
+        Highlights.getHighlightStyleAtOffset(editorState, changeSuggestionsTypes, selection, -2) as string;
     const beforeData:any = beforeStyle != null ? Highlights.getHighlightData(editorState, beforeStyle) : null;
     const afterParagraphStyle = Highlights.getHighlightStyleAtOffset(
         editorState, paragraphSuggestionTypes, selection, 0);
     const offset = afterParagraphStyle == null ? 0 : 1;
-    const afterStyle = Highlights.getHighlightStyleAtOffset(editorState, changeSuggestionsTypes, selection, offset);
+    const afterStyle =
+        Highlights.getHighlightStyleAtOffset(editorState, changeSuggestionsTypes, selection, offset) as string;
     const afterData:any = afterStyle != null ? Highlights.getHighlightData(editorState, afterStyle) : null;
     let newState = Highlights.changeEditorSelection(editorState, -1, 0, false);
 

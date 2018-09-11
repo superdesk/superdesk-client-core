@@ -133,11 +133,7 @@ export function ArticleEditDirective(
                         if (autopopulateByline && !item.byline) {
                             item.byline = session.identity.byline;
                         }
-                        if (_.includes(['picture', 'graphic'], item.type) && _.get(metadata, 'values.crop_sizes')) {
-                            item.hasCrops = metadata.values.crop_sizes.some(
-                                (crop) => item.renditions && item.renditions[crop.name]
-                            );
-                        }
+                        hasCrops(item);
                     }
                 });
 
@@ -286,8 +282,16 @@ export function ArticleEditDirective(
 
                     const defaultTab = crop ? 'crop' : 'view';
 
-                    return renditions.crop(scope.item,
-                        {isNew: false, editable: true, isAssociated: false, defaultTab: defaultTab, showMetadata: true})
+                    return renditions.crop(
+                        scope.item,
+                        {
+                            isNew: false,
+                            editable: true,
+                            isAssociated: false,
+                            defaultTab: defaultTab,
+                            showMetadata: true,
+                        }
+                    )
                         .then((picture) => {
                             scope.item._etag = picture._etag;
 
@@ -301,10 +305,25 @@ export function ArticleEditDirective(
                             } else {
                                 scope.save();
                             }
+                            hasCrops(picture);
                         })
                         .finally(() => {
                             scope.mediaLoading = false;
                         });
+                };
+
+                /**
+                 * @ngdoc method
+                 * @name sdArticleEdit#hasCrops
+                 *
+                 * @description Checks if item has crops
+                 */
+                const hasCrops = (item) => {
+                    if (_.includes(['picture', 'graphic'], item.type) && _.get(metadata, 'values.crop_sizes')) {
+                        item.hasCrops = metadata.values.crop_sizes.some(
+                            (crop) => item.renditions && item.renditions[crop.name]
+                        );
+                    }
                 };
 
                 /**

@@ -72,18 +72,8 @@ export function validateRequiredField(contact) {
     const REQUIRED_CONTACT_FIELDS = getContactType(contact) === 'person' ?
         ['first_name', 'last_name'] : ['organisation'];
 
-    const REQUIRED_ARRAY_FIELDS = ['contact_email', 'mobile', 'contact_phone', 'contact_address'];
-
-    const REQUIRED_FIELDS = REQUIRED_CONTACT_FIELDS.concat(REQUIRED_ARRAY_FIELDS);
-
-    let invalid = _.some(REQUIRED_FIELDS, (field) => {
+    let invalid = _.some(REQUIRED_CONTACT_FIELDS, (field) => {
         switch (field) {
-        case 'contact_address':
-        case 'contact_email':
-            return _.get(contact, field, 0).length > 0 && _.some(contact[field], (v) => _.isEmpty(v));
-        case 'contact_phone':
-        case 'mobile':
-            return _.get(contact, field, 0).length > 0 && _.some(_.map(contact[field], 'number'), (v) => _.isEmpty(v));
         default:
             return _.isEmpty(contact[field]);
         }

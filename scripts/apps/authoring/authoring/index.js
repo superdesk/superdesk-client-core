@@ -132,7 +132,7 @@ angular.module('superdesk.apps.authoring', [
                 label: gettext('Send to'),
                 icon: 'share-alt',
                 controller: ['data', 'send', (data, send) => {
-                    send.allAs([data.item]);
+                    send.allAs([data.item], 'send_to');
                 }],
                 filters: [{action: 'list', type: 'archive'}],
                 additionalCondition: ['authoring', 'item', 'config', (authoring, item, config) =>

@@ -74,16 +74,10 @@ export class MediaBlockComponent extends React.Component<any, any> {
         const entityKey = block.getEntityAt(0);
         const entity = contentState.getEntity(entityKey);
         const data = entity.getData();
-        const isImage = data.media.type === 'picture';
         const isNew = false;
         const showMetadata = true;
-        let hideTabs = [];
 
-        if (!isImage) {
-            hideTabs = ['crop', 'image-edit'];
-        }
-
-        cropImage(entityKey, data, {isNew, hideTabs, showMetadata});
+        cropImage(entityKey, data, {isNew, showMetadata});
     }
 
     /**

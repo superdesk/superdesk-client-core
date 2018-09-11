@@ -2,12 +2,13 @@
     <div class="list-pane {{ view || 'photogrid' }}-view">
         <div id="content-list" class="content">
             <div class="loading-indicator" ng-show="loading" translate>loading</div>
-            <div class="search-tags" sd-search-tags></div>
+            <div class="search-tags" sd-search-tags data-url-params="urlParams"></div>
             <div class="contacts-list__holder" sd-contacts-list></div>
         </div>
         <div class="preview-pane content-item-preview" ng-if="selected.preview">
             <div class="contact-details-pane">
                 <div sd-contact-editor
+                    class="contact-editor"
                     data-contact="selected.preview"
                     data-oncancel="selected.preview = null">
                 </div>

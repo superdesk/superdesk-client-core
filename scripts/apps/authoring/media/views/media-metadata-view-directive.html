@@ -1,0 +1,20 @@
+<span ng-if="showAltText">
+    <em>{{:: 'Alt text:' | translate}}</em>
+    {{item.alt_text || ('[No Value]' | translate)}}
+</span>
+<span ng-if="validator.byline">
+    <em>{{:: 'Credit:' | translate}}</em>
+    {{item.byline || ('[No Value]' | translate)}}
+</span>
+<span ng-if="validator.copyrightholder">
+    <em>{{:: 'Copyright holder:' | translate}}</em>
+    {{item.copyrightholder || ('[No Value]' | translate)}}
+</span>
+<span ng-if="validator.usageterms">
+    <em>{{:: 'Assign rights:' | translate}}</em>
+    {{item.usageterms || ('[No Value]' | translate)}}
+</span>
+<span ng-if="validator.copyrightnotice">
+    <em>{{:: 'Copyright notice:' | translate}}</em>
+    {{item.copyrightnotice || ('[No Value]' | translate)}}
+</span>

@@ -9,16 +9,20 @@ PublishQueueController.$inject = [
     'notify',
     '$location',
     'ingestSources',
+    'vocabularies',
 ];
 
-export function PublishQueueController($scope, subscribersService, api, $q, notify, $location, ingestSources) {
+export function PublishQueueController($scope, subscribersService, api, $q, notify, $location, ingestSources,
+    vocabularies) {
     $scope.subscribers = null;
     $scope.subscriberLookup = {};
     $scope.ingestProviders = null;
     $scope.ingestProvidersLookup = {};
     $scope.publish_queue = [];
+    $scope.contentTypes = null;
     $scope.selectedFilterSubscriber = null;
     $scope.selectedFilterIngestProvider = null;
+    $scope.selectedFilterContentType = null;
     $scope.multiSelectCount = 0;
     $scope.selectedQueueItems = [];
     $scope.showResendBtn = false;
@@ -44,6 +48,10 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
     promises.push(ingestSources.fetchAllIngestProviders().then((items) => {
         $scope.ingestProviders = items;
         $scope.ingestProvidersLookup = _.keyBy($scope.ingestProviders, '_id');
+    }));
+
+    promises.push(vocabularies.getVocabulary('type').then((items) => {
+        $scope.contentTypes = items.items;
     }));
 
     /*
@@ -105,6 +113,10 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
 
         if (!_.isNil($scope.selectedFilterIngestProvider)) {
             filterTerms.push({ingest_provider: $scope.selectedFilterIngestProvider._id});
+        }
+
+        if (!_.isNil($scope.selectedFilterContentType)) {
+            filterTerms.push({content_type: $scope.selectedFilterContentType.qcode});
         }
 
         var andTerms = [];
@@ -201,10 +213,14 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
         case 'status':
             $scope.selectedFilterStatus = item;
             break;
+        case 'type':
+            $scope.selectedFilterContentType = item;
+            break;
         default:
             $scope.selectedFilterSubscriber = null;
             $scope.selectedFilterIngestProvider = null;
             $scope.selectedFilterStatus = null;
+            $scope.selectedFilterContentType = null;
         }
         populatePublishQueue();
         $scope.multiSelectCount = 0;

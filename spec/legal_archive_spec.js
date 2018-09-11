@@ -51,7 +51,10 @@ describe('legal_archive', () => {
 
         content.actionOnItem('Open', 'package1 in legal archive');
 
-        expect(content.getItemType('composite').isDisplayed()).toBe(true);
+        expect(content.getItemType('composite')
+            .waitReady()
+            .then((elem) => elem.isDisplayed())
+        ).toBe(true);
         expect(content.getWidgets().count()).toBe(2);
         assertAuthoringTopbarAndItemState();
     });
