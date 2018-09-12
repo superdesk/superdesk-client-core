@@ -8,7 +8,10 @@ export interface ISuperdeskGlobalConfig {
         qumu: boolean;
         savedSearch: {
             subscriptions: boolean;
-        }
+        };
+        editorAttachments: boolean;
+        editorInlineComments: boolean;
+        editorSuggestions: boolean;
     };
     auth: {
         google: boolean,
