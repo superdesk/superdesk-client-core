@@ -19,9 +19,18 @@ export class SortService {
      * @return {object} sort field and direction (asc or desc)
      */
     getSort(sortOptions) {
-        let sort = (this.$location.search().sort || 'versioncreated:desc').split(':');
+        const sortArray = (this.$location.search().sort || 'versioncreated:desc').split(':');
 
-        return _.extend({}, _.find(sortOptions, {field: sort[0]}), {dir: sort[1]});
+        const sort = _.extend({}, _.find(sortOptions, {field: sortArray[0]}), {dir: sortArray[1]});
+
+        if (sort.field === undefined) {
+            const customFieldSort = this.$location.search().sort.split(':');
+
+
+            return {field: customFieldSort[0], dir: customFieldSort[1]};
+        }
+
+        return sort;
     }
 
     /**

@@ -22,11 +22,11 @@ export const ListItemInfo:React.StatelessComponent<any> = (props) => {
         renderArea('firstLine', angular.extend({
             svc: props.svc,
             scope: props.scope,
-        }, props), {className: 'line'}),
+        }, props), {className: 'line'}, props.customRender),
         renderArea('secondLine', angular.extend({
             svc: props.svc,
             scope: props.scope,
-        }, props), {className: 'line'})
+        }, props), {className: 'line'}, props.customRender)
     );
 };
 

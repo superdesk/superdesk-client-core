@@ -122,7 +122,7 @@ export function renderToBody(elem, target, zIndex = 1000) {
     menuHolderElem().style.zIndex = zIndex;
 }
 
-export function renderArea(area, itemProps, props) {
+export function renderArea(area, itemProps, props, customRender = {}) {
     // If singleline preference is set, don't show second line
     if (itemProps.scope.singleLine && area === 'secondLine') {
         return;
@@ -139,7 +139,11 @@ export function renderArea(area, itemProps, props) {
     }
 
     var contents = specs.map((field) => {
-        if (fields[field]) {
+        if (customRender.fields && field in customRender.fields) {
+            return customRender.fields[field](itemProps);
+        }
+
+        if (field in fields) {
             return fields[field](itemProps);
         }
 

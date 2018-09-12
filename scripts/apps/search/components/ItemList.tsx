@@ -452,6 +452,7 @@ export class ItemList extends React.Component<any, any> {
                 versioncreator: this.modifiedUserName(item.version_creator),
                 narrow: this.state.narrow,
                 svc: this.props.svc,
+                customRender: this.props.customRender,
                 scope: scope,
             });
         }.bind(this);
@@ -487,4 +488,5 @@ ItemList.propTypes = {
     desksById: PropTypes.any,
     ingestProvidersById: PropTypes.any,
     usersById: PropTypes.any,
+    customRender: PropTypes.object,
 };

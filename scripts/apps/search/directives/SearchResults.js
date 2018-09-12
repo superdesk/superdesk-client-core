@@ -106,8 +106,10 @@ export function SearchResults(
 
 
             // used by superdesk-fi
-            // eslint-disable-next-line no-unneeded-ternary
-            scope.showtags = attr.showtags === 'false' ? false : true;
+            scope.showtags = attr.showtags !== 'false';
+
+            // Custom components for item fields
+            scope.customRender = scope.search.customRender || {};
 
             scope.$on('ingest:update', (event, args) => {
                 if (!scope.showRefresh) {

@@ -135,7 +135,7 @@ export function ItemList(
     };
 
     return {
-        link: function(scope, elem) {
+        link: function(scope, elem, attr) {
             elem.attr('tabindex', 0);
 
             var groupId = scope.$id;
@@ -157,6 +157,7 @@ export function ItemList(
                     angular.extend({
                         svc: services,
                         scope: scope,
+                        customRender: scope.customRender,
                     }, monitoringState.state));
 
                 var listComponent = ReactDOM.render(itemList, elem[0]);

@@ -81,6 +81,23 @@ export const getDateFilters = (gettext) => [
         ],
         isEnabled: (searchConfig) => searchConfig.scheduled,
     },
+    {
+        labelBlock: gettext('Compliant lifetime'),
+        labelFrom: null,
+        labelTo: gettext('Need review before'),
+        fieldname: 'extra.compliantlifetime',
+        predefinedFilters: [
+            {
+                key: 'Next month',
+                label: gettext('Month'),
+            },
+            {
+                key: 'Next 3 months',
+                label: gettext('3 Months'),
+            }
+        ],
+        isEnabled: () => false,
+    }
 ];
 
 class LinkFunction {

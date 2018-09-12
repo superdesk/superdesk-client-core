@@ -27,9 +27,8 @@ import {closeActionsMenu} from '../helpers';
  * Item component
  */
 export class Item extends React.Component<any, any> {
-    static propTypes: any;
-    static defaultProps: any;
-
+    public static propTypes: any;
+    public static defaultProps: any;
 
     constructor(props) {
         super(props);
@@ -46,17 +45,17 @@ export class Item extends React.Component<any, any> {
         this.openAuthoringView = this.openAuthoringView.bind(this);
     }
 
-    componentWillUnmount() {
+    public componentWillUnmount() {
         closeActionsMenu(this.props.item._id);
     }
 
-    componentWillReceiveProps(nextProps) {
+    public componentWillReceiveProps(nextProps) {
         if (nextProps.item !== this.props.item) {
             closeActionsMenu(this.props.item._id);
         }
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
+    public shouldComponentUpdate(nextProps, nextState) {
         return nextProps.swimlane !== this.props.swimlane || nextProps.item !== this.props.item ||
             nextProps.view !== this.props.view ||
             nextProps.flags.selected !== this.props.flags.selected ||
@@ -64,7 +63,7 @@ export class Item extends React.Component<any, any> {
             nextState !== this.state;
     }
 
-    select(event) {
+    public select(event) {
         if (!this.props.item.gone) {
             this.props.onSelect(this.props.item, event);
         }
@@ -74,19 +73,19 @@ export class Item extends React.Component<any, any> {
      * Opens the item in authoring in view mode
      * @param {string} itemId Id of the document
      */
-    openAuthoringView(itemId) {
+    public openAuthoringView(itemId) {
         const {authoringWorkspace} = this.props.svc;
 
         authoringWorkspace.edit({_id: itemId}, 'view');
     }
 
-    edit(event) {
+    public edit(event) {
         if (!this.props.item.gone) {
             this.props.onEdit(this.props.item);
         }
     }
 
-    dbClick(event) {
+    public dbClick(event) {
         if (!this.props.item.gone) {
             this.props.onDbClick(this.props.item);
         }
@@ -96,31 +95,36 @@ export class Item extends React.Component<any, any> {
      * Set Actioning state
      * @param {Boolean} isActioning - true if activity is in-progress, and false if completed
      */
-    setActioningState(isActioning) {
+    public setActioningState(isActioning) {
         this.setState({actioning: isActioning});
     }
 
-    setHoverState() {
+    public setHoverState() {
         this.setState({hover: true});
     }
 
-    unsetHoverState() {
+    public unsetHoverState() {
         this.setState({hover: false});
     }
 
-    onDragStart(event) {
+    public onDragStart(event) {
         const {dragitem} = this.props.svc;
 
         dragitem.start(event, this.props.item);
     }
 
-    render() {
-        var item = this.props.item;
-        var classes = this.props.view === 'photogrid' ?
+    public render() {
+        const {item, customRender} = this.props;
+        let classes = this.props.view === 'photogrid' ?
             'sd-grid-item sd-grid-item--with-click' :
             'media-box media-' + item.type;
 
-        var contents:any = [
+        // Customize item class from its props
+        if (typeof customRender.getItemClass === 'function') {
+            classes = `${classes} ${customRender.getItemClass(item)}`;
+        }
+
+        let contents: any = [
             'div', {
                 className: classNames(classes, {
                     active: this.props.flags.selected,
@@ -171,8 +175,8 @@ export class Item extends React.Component<any, any> {
                     item.urgency ?
                         React.createElement(ItemUrgency, angular.extend({svc: this.props.svc}, item)) : null,
                     broadcast({item: item}),
-                    getActionsMenu()
-                )
+                    getActionsMenu(),
+                ),
             );
         } else if (this.props.view === 'photogrid') {
             contents.push(
@@ -195,8 +199,8 @@ export class Item extends React.Component<any, any> {
                     getActionsMenu: getActionsMenu,
                 }),
                 React.createElement('div',
-                    {className: 'sd-grid-item__state-border'}
-                )
+                    {className: 'sd-grid-item__state-border'},
+                ),
             );
         } else {
             contents.push(
@@ -225,8 +229,9 @@ export class Item extends React.Component<any, any> {
                     narrow: this.props.narrow,
                     svc: this.props.svc,
                     scope: this.props.scope,
+                    customRender: this.props.customRender,
                 }),
-                getActionsMenu()
+                getActionsMenu(),
             );
         }
 
@@ -237,7 +242,7 @@ export class Item extends React.Component<any, any> {
                 className: classNames(
                     'list-item-view',
                     {active: this.props.flags.selected},
-                    {selected: this.props.item.selected && !this.props.flags.selected}
+                    {selected: this.props.item.selected && !this.props.flags.selected},
                 ),
                 onMouseEnter: this.setHoverState,
                 onMouseLeave: this.unsetHoverState,
@@ -246,7 +251,7 @@ export class Item extends React.Component<any, any> {
                 onDoubleClick: this.dbClick,
                 draggable: true,
             },
-            React.createElement.apply(null, contents)
+            React.createElement.apply(null, contents),
         );
     }
 }
@@ -269,4 +274,5 @@ Item.propTypes = {
     onEdit: PropTypes.any,
     onSelect: PropTypes.any,
     narrow: PropTypes.any,
+    customRender: PropTypes.object,
 };
