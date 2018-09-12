@@ -69,8 +69,8 @@
         tansa-scope-sync
         ng-model="related.headline"
         ng-model-options="{debounce: 1000}"
-        ng-change="onchange()"
-        sd-placeholder="Add title"
+        ng-change="onchange('headline')"
+        sd-placeholder="{{:: 'Add title' | translate}}"
         ng-if="related && showTitle"
         class="sd-media-carousel__media-title">
     </div>
@@ -79,8 +79,8 @@
         tansa-scope-sync
         ng-model="related.description_text"
         ng-model-options="{debounce: 1000}"
-        ng-change="onchange()"
-        sd-placeholder="Add caption"
+        ng-change="onchange('description_text')"
+        sd-placeholder="{{:: 'Add caption' | translate}}"
         ng-if="related"
         class="sd-media-carousel__media-caption">
     </div>

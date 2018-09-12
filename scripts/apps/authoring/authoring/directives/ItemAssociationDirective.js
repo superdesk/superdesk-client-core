@@ -1,4 +1,5 @@
 import * as ctrl from '../controllers';
+import {stripHtmlTags} from 'core/utils';
 
 /**
  * @ngdoc directive
@@ -30,7 +31,7 @@ export function ItemAssociationDirective(renditions) {
             allowPicture: '<',
             allowVideo: '<',
             allowAudio: '<',
-            onchange: '&',
+            _onchange: '&onchange',
             showTitle: '<',
             save: '&',
             maxUploads: '=',
@@ -109,6 +110,11 @@ export function ItemAssociationDirective(renditions) {
                 if (scope.editable) {
                     ctrl.uploadAndCropImages(scope);
                 }
+            };
+
+            scope.onchange = (field) => {
+                scope.related[field] = stripHtmlTags(scope.related[field]);
+                scope._onchange();
             };
         },
     };
