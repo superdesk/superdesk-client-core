@@ -45,6 +45,13 @@ export class ContactsController {
 
         preferencesService.get('contacts:view').then((result) => {
             this.$scope.view = result.view ? result.view : 'photogrid';
+
+            // Contacts previously allowed mgrid view
+            // Make sure the user preferences does not have this value
+            if (['photogrid', 'compact'].indexOf(this.$scope.view) < 0) {
+                this.$scope.view = 'photogrid';
+                this.updateViewPreferences();
+            }
         });
 
         metadata.initialize().then(() => {
@@ -75,6 +82,10 @@ export class ContactsController {
      */
     setView(view) {
         this.$scope.view = view || 'photogrid';
+        this.updateViewPreferences();
+    }
+
+    updateViewPreferences() {
         this.preferencesUpdate['contacts:view'].view = this.$scope.view;
         this.preferencesService.update(this.preferencesUpdate, 'contacts:view');
     }
