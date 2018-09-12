@@ -114,17 +114,17 @@ export class Item extends React.Component<any, any> {
     }
 
     public render() {
-        const {item, customRender} = this.props;
+        const {item, scope} = this.props;
         let classes = this.props.view === 'photogrid' ?
             'sd-grid-item sd-grid-item--with-click' :
             'media-box media-' + item.type;
 
         // Customize item class from its props
-        if (typeof customRender.getItemClass === 'function') {
-            classes = `${classes} ${customRender.getItemClass(item)}`;
+        if (scope.customRender && typeof scope.customRender.getItemClass === 'function') {
+            classes = `${classes} ${scope.customRender.getItemClass(item)}`;
         }
 
-        let contents: any = [
+        const contents: any = [
             'div', {
                 className: classNames(classes, {
                     active: this.props.flags.selected,
@@ -141,17 +141,14 @@ export class Item extends React.Component<any, any> {
             contents.push(React.createElement(ProgressBar, {completed: item._progress}));
         }
 
-        const getActionsMenu = () => {
-            const {scope} = this.props;
-
-            return !get(scope, 'flags.hideActions') && this.state.hover && !item.gone ? React.createElement(
+        const getActionsMenu = () =>
+            !get(scope, 'flags.hideActions') && this.state.hover && !item.gone ? React.createElement(
                 ActionsMenu, {
                     item: item,
                     svc: this.props.svc,
                     scope: this.props.scope,
                     onActioning: this.setActioningState,
                 }) : null;
-        };
 
         if (this.props.view === 'mgrid') {
             contents.push(
@@ -175,8 +172,8 @@ export class Item extends React.Component<any, any> {
                     item.urgency ?
                         React.createElement(ItemUrgency, angular.extend({svc: this.props.svc}, item)) : null,
                     broadcast({item: item}),
-                    getActionsMenu(),
-                ),
+                    getActionsMenu()
+                )
             );
         } else if (this.props.view === 'photogrid') {
             contents.push(
@@ -199,8 +196,8 @@ export class Item extends React.Component<any, any> {
                     getActionsMenu: getActionsMenu,
                 }),
                 React.createElement('div',
-                    {className: 'sd-grid-item__state-border'},
-                ),
+                    {className: 'sd-grid-item__state-border'}
+                )
             );
         } else {
             contents.push(
@@ -229,9 +226,8 @@ export class Item extends React.Component<any, any> {
                     narrow: this.props.narrow,
                     svc: this.props.svc,
                     scope: this.props.scope,
-                    customRender: this.props.customRender,
                 }),
-                getActionsMenu(),
+                getActionsMenu()
             );
         }
 
@@ -242,7 +238,7 @@ export class Item extends React.Component<any, any> {
                 className: classNames(
                     'list-item-view',
                     {active: this.props.flags.selected},
-                    {selected: this.props.item.selected && !this.props.flags.selected},
+                    {selected: this.props.item.selected && !this.props.flags.selected}
                 ),
                 onMouseEnter: this.setHoverState,
                 onMouseLeave: this.unsetHoverState,
@@ -251,7 +247,7 @@ export class Item extends React.Component<any, any> {
                 onDoubleClick: this.dbClick,
                 draggable: true,
             },
-            React.createElement.apply(null, contents),
+            React.createElement.apply(null, contents)
         );
     }
 }
@@ -274,5 +270,4 @@ Item.propTypes = {
     onEdit: PropTypes.any,
     onSelect: PropTypes.any,
     narrow: PropTypes.any,
-    customRender: PropTypes.object,
 };

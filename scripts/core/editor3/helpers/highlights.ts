@@ -249,7 +249,7 @@ export function canAddHighlight(editorState, highlightType) {
         1,
         editorState.getSelection(),
         editorState,
-        true,
+        true
     );
 
     return getDraftCharacterListForSelection(editorState, selection)
@@ -459,14 +459,14 @@ export function addHighlight(editorState, type, data, single = false) {
     nextEditorState = EditorState.push(
         nextEditorState,
         nextEditorState.getCurrentContent().set('selectionBefore', initialSelection),
-        'change-block-data',
+        'change-block-data'
     );
 
     // restore focus lost after clicking a toolbar action or entering highlight data OR pushing editorState
     // so the selection is visible after undo
     nextEditorState = EditorState.acceptSelection(
         nextEditorState,
-        initialSelection,
+        initialSelection
     );
 
     nextEditorState = EditorState.set(nextEditorState, {allowUndo: true});
@@ -533,7 +533,7 @@ export function removeHighlight(editorState, styleName) {
     let newEditorState = clearInlineStyles(
         editorState,
         getDraftSelectionForEntireContent(editorState),
-        [styleName],
+        [styleName]
     );
 
     // prevent recording the changes to undo stack so user doesn't have to undo twice
@@ -645,7 +645,7 @@ export const getBlockAndOffset = (
     selection,
     offset,
     startFromEnd = false,
-    limitedToSingleBlock = false,
+    limitedToSingleBlock = false
 ) => {
     const noValue = {block: null, newOffset: null};
     const content = editorState.getCurrentContent();
@@ -1023,7 +1023,7 @@ function applyHighlightsStyleMap(editorState) {
     return setCustomDataForEditor(
         editorState,
         editor3DataKeys.MULTIPLE_HIGHLIGHTS,
-        highlightsWithStyleMapApplied,
+        highlightsWithStyleMapApplied
     );
 }
 
@@ -1046,7 +1046,7 @@ function removeHighlightsStyleMap(editorState) {
     return setCustomDataForEditor(
         editorState,
         editor3DataKeys.MULTIPLE_HIGHLIGHTS,
-        nextHighlights,
+        nextHighlights
     );
 }
 

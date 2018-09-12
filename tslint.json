@@ -16,7 +16,15 @@
         "variable-name": false,
         "forin": false,
         "member-ordering": false,
-        "only-arrow-functions": false
+        "only-arrow-functions": false,
+        "trailing-comma": [
+            true,
+            {
+                "multiline": {
+                    "functions": "never"
+                }
+            }
+        ]
     },
     "rulesDirectory": []
 }

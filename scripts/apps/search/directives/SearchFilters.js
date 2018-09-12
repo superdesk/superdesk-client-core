@@ -94,10 +94,10 @@ export const getDateFilters = (gettext) => [
             {
                 key: 'Next 3 months',
                 label: gettext('3 Months'),
-            }
+            },
         ],
         isEnabled: () => false,
-    }
+    },
 ];
 
 class LinkFunction {

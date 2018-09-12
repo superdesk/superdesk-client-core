@@ -9,12 +9,12 @@ import {isCheckAllowed, closeActionsMenu, bindMarkItemShortcut} from '../helpers
  * Item list component
  */
 export class ItemList extends React.Component<any, any> {
-    static propTypes: any;
-    static defaultProps: any;
+    public static propTypes: any;
+    public static defaultProps: any;
 
-    closeActionsMenu: any;
-    updateTimeout: any;
-    selectedCom: any;
+    public closeActionsMenu: any;
+    public updateTimeout: any;
+    public selectedCom: any;
 
     constructor(props) {
         super(props);
@@ -50,14 +50,14 @@ export class ItemList extends React.Component<any, any> {
         this.unbindActionKeyShortcuts = this.unbindActionKeyShortcuts.bind(this);
     }
 
-    multiSelect(items, selected) {
+    public multiSelect(items, selected) {
         const {search, multi} = this.props.svc;
         const {scope} = this.props;
 
-        var itemsById = angular.extend({}, this.state.itemsById);
+        const itemsById = angular.extend({}, this.state.itemsById);
 
         items.forEach((item) => {
-            var itemId = search.generateTrackByIdentifier(item);
+            const itemId = search.generateTrackByIdentifier(item);
 
             itemsById[itemId] = angular.extend({}, item, {selected: selected});
             scope.$applyAsync(() => {
@@ -70,8 +70,8 @@ export class ItemList extends React.Component<any, any> {
     }
 
     // Method to check the selectBox of the selected item
-    multiSelectCurrentItem() {
-        let selectedItem = this.getSelectedItem();
+    public multiSelectCurrentItem() {
+        const selectedItem = this.getSelectedItem();
 
         if (selectedItem) {
             this.multiSelect([selectedItem], !selectedItem.selected);
@@ -79,11 +79,11 @@ export class ItemList extends React.Component<any, any> {
     }
 
     // Function to make narrowView active/inactive
-    setNarrowView(setNarrow) {
+    public setNarrowView(setNarrow) {
         this.setState({narrow: setNarrow});
     }
 
-    select(item, event?) {
+    public select(item, event?) {
         const {$timeout} = this.props.svc;
         const {scope} = this.props;
 
@@ -111,7 +111,7 @@ export class ItemList extends React.Component<any, any> {
     /*
      * Unbind all item actions
      */
-    unbindActionKeyShortcuts() {
+    public unbindActionKeyShortcuts() {
         const {keyboardManager} = this.props.svc;
 
         this.state.bindedShortcuts.forEach((shortcut) => {
@@ -126,7 +126,7 @@ export class ItemList extends React.Component<any, any> {
      *
      * @param {Object} item
      */
-    bindActionKeyShortcuts(selectedItem) {
+    public bindActionKeyShortcuts(selectedItem) {
         const {superdesk, workflowService, activityService, keyboardManager, archiveService} = this.props.svc;
 
         // First unbind all binded shortcuts
@@ -134,7 +134,7 @@ export class ItemList extends React.Component<any, any> {
             this.unbindActionKeyShortcuts();
         }
 
-        let intent = {action: 'list', type: archiveService.getType(selectedItem)};
+        const intent = {action: 'list', type: archiveService.getType(selectedItem)};
 
         superdesk.findActivities(intent, selectedItem).forEach((activity) => {
             if (activity.keyboardShortcut && workflowService.isActionAllowed(selectedItem, activity.action)) {
@@ -151,31 +151,30 @@ export class ItemList extends React.Component<any, any> {
         });
     }
 
-    selectItem(item) {
+    public selectItem(item) {
         if (isCheckAllowed(item)) {
-            var selected = !item.selected;
+            const selected = !item.selected;
 
             this.multiSelect([item], selected);
         }
     }
 
-    selectMultipleItems(lastItem) {
+    public selectMultipleItems(lastItem) {
         const {search} = this.props.svc;
-
-        var itemId = search.generateTrackByIdentifier(lastItem),
-            positionStart = 0,
-            positionEnd = _.indexOf(this.state.itemsList, itemId),
-            selectedItems = [];
+        const itemId = search.generateTrackByIdentifier(lastItem);
+        let positionStart = 0;
+        const positionEnd = _.indexOf(this.state.itemsList, itemId);
+        const selectedItems = [];
 
         if (this.state.selected) {
             positionStart = _.indexOf(this.state.itemsList, this.state.selected);
         }
 
-        var start = Math.min(positionStart, positionEnd),
-            end = Math.max(positionStart, positionEnd);
+        const start = Math.min(positionStart, positionEnd);
+        const end = Math.max(positionStart, positionEnd);
 
-        for (var i = start; i <= end; i++) {
-            var item = this.state.itemsById[this.state.itemsList[i]];
+        for (let i = start; i <= end; i++) {
+            const item = this.state.itemsById[this.state.itemsList[i]];
 
             if (isCheckAllowed(item)) {
                 selectedItems.push(item);
@@ -185,12 +184,12 @@ export class ItemList extends React.Component<any, any> {
         this.multiSelect(selectedItems, true);
     }
 
-    dbClick(item) {
+    public dbClick(item) {
         const {superdesk, $timeout, authoringWorkspace} = this.props.svc;
         const {scope} = this.props;
 
-        var activities = superdesk.findActivities({action: 'list', type: item._type}, item);
-        var canEdit = _.reduce(activities, (result, value) => result || value._id === 'edit.item', false);
+        const activities = superdesk.findActivities({action: 'list', type: item._type}, item);
+        const canEdit = _.reduce(activities, (result, value) => result || value._id === 'edit.item', false);
 
         this.setSelectedItem(item);
         $timeout.cancel(this.updateTimeout);
@@ -218,7 +217,7 @@ export class ItemList extends React.Component<any, any> {
         }
     }
 
-    edit(item) {
+    public edit(item) {
         const {$timeout, authoringWorkspace} = this.props.svc;
         const {scope} = this.props;
 
@@ -240,13 +239,13 @@ export class ItemList extends React.Component<any, any> {
         }
     }
 
-    deselectAll() {
+    public deselectAll() {
         this.setState({selected: null});
         this.unbindActionKeyShortcuts();
     }
 
-    updateAllItems(itemId, changes) {
-        var itemsById = angular.extend({}, this.state.itemsById);
+    public updateAllItems(itemId, changes) {
+        const itemsById = angular.extend({}, this.state.itemsById);
 
         _.forOwn(itemsById, (value, key) => {
             if (_.startsWith(key, itemId)) {
@@ -257,8 +256,8 @@ export class ItemList extends React.Component<any, any> {
         this.setState({itemsById: itemsById});
     }
 
-    findItemByPrefix(prefix) {
-        var item;
+    public findItemByPrefix(prefix) {
+        let item;
 
         _.forOwn(this.state.itemsById, (val, key) => {
             if (_.startsWith(key, prefix)) {
@@ -269,7 +268,7 @@ export class ItemList extends React.Component<any, any> {
         return item;
     }
 
-    setSelectedItem(item) {
+    public setSelectedItem(item) {
         const {monitoringState, $rootScope, search} = this.props.svc;
         const {scope} = this.props;
 
@@ -282,31 +281,31 @@ export class ItemList extends React.Component<any, any> {
         this.setState({selected: item ? search.generateTrackByIdentifier(item) : null});
     }
 
-    getSelectedItem() {
-        var selected = this.state.selected;
+    public getSelectedItem() {
+        const selected = this.state.selected;
 
         return this.state.itemsById[selected];
     }
 
-    updateItem(itemId, changes) {
-        var item = this.state.itemsById[itemId] || null;
+    public updateItem(itemId, changes) {
+        const item = this.state.itemsById[itemId] || null;
 
         if (item) {
-            var itemsById = angular.extend({}, this.state.itemsById);
+            const itemsById = angular.extend({}, this.state.itemsById);
 
             itemsById[itemId] = angular.extend({}, item, changes);
             this.setState({itemsById: itemsById});
         }
     }
 
-    handleKey(event) {
+    public handleKey(event) {
         const {scope} = this.props;
         const {Keys, monitoringState} = this.props.svc;
         const KEY_CODES = Object.freeze({
             X: 'X'.charCodeAt(0),
         });
 
-        var diff;
+        let diff;
 
         const moveActiveGroup = () => {
             event.preventDefault();
@@ -362,10 +361,10 @@ export class ItemList extends React.Component<any, any> {
             break;
         }
 
-        var highlightSelected = () => {
-            for (var i = 0; i < this.state.itemsList.length; i++) {
+        const highlightSelected = () => {
+            for (let i = 0; i < this.state.itemsList.length; i++) {
                 if (this.state.itemsList[i] === this.state.selected) {
-                    var next = Math.min(this.state.itemsList.length - 1, Math.max(0, i + diff));
+                    const next = Math.min(this.state.itemsList.length - 1, Math.max(0, i + diff));
 
                     this.select(this.state.itemsById[this.state.itemsList[next]]);
                     return;
@@ -385,15 +384,15 @@ export class ItemList extends React.Component<any, any> {
         };
 
         // This function is to bring the selected item (by key press) into view if it is out of container boundary.
-        var scrollSelectedItemIfRequired = (event, scope) => {
-            let container = scope.viewColumn ? $(document).find('.content-list') : $(event.currentTarget);
+        const scrollSelectedItemIfRequired = (event, scope) => {
+            const container = scope.viewColumn ? $(document).find('.content-list') : $(event.currentTarget);
 
-            let selectedItemElem = $(event.currentTarget.firstChild).children('.list-item-view.active');
+            const selectedItemElem = $(event.currentTarget.firstChild).children('.list-item-view.active');
 
             if (selectedItemElem.length > 0) {
                 // The following line translated to: top_Of_Selected_Item (minus) top_Of_Scrollable_Div
 
-                let distanceOfSelItemFromVisibleTop = $(selectedItemElem[0]).offset().top - $(document).scrollTop() -
+                const distanceOfSelItemFromVisibleTop = $(selectedItemElem[0]).offset().top - $(document).scrollTop() -
                 $(container[0]).offset().top - $(document).scrollTop();
 
                 // If the selected item goes beyond container view, scroll it to middle.
@@ -411,27 +410,27 @@ export class ItemList extends React.Component<any, any> {
         }
     }
 
-    componentWillUnmount() {
+    public componentWillUnmount() {
         this.unbindActionKeyShortcuts();
         this.closeActionsMenu();
     }
 
-    setSelectedComponent(com) {
+    public setSelectedComponent(com) {
         this.selectedCom = com;
     }
 
-    modifiedUserName(versionCreator) {
+    public modifiedUserName(versionCreator) {
         return this.props.usersById[versionCreator] ?
             this.props.usersById[versionCreator].display_name : null;
     }
 
-    render() {
+    public render() {
         const {storage, gettextCatalog} = this.props.svc;
         const {scope} = this.props;
 
-        var createItem = function createItem(itemId) {
-            var item = this.state.itemsById[itemId];
-            var task = item.task || {desk: null};
+        const createItem = function(itemId) {
+            const item = this.state.itemsById[itemId];
+            const task = item.task || {desk: null};
 
             return React.createElement(Item, {
                 key: itemId,
@@ -452,11 +451,10 @@ export class ItemList extends React.Component<any, any> {
                 versioncreator: this.modifiedUserName(item.version_creator),
                 narrow: this.state.narrow,
                 svc: this.props.svc,
-                customRender: this.props.customRender,
                 scope: scope,
             });
         }.bind(this);
-        var isEmpty = !this.state.itemsList.length;
+        const isEmpty = !this.state.itemsList.length;
 
         return React.createElement(
             'ul',
@@ -488,5 +486,4 @@ ItemList.propTypes = {
     desksById: PropTypes.any,
     ingestProvidersById: PropTypes.any,
     usersById: PropTypes.any,
-    customRender: PropTypes.object,
 };

@@ -27,7 +27,7 @@ export interface ISavedSearch {
 export const isUserSubscribedToSavedSearch = (
     _savedSearch: ISavedSearch,
     userId: IUser['_id'],
-    getDesk: (id: IDesk['_id']) => IDesk,
+    getDesk: (id: IDesk['_id']) => IDesk
 ): boolean => {
     const {subscribers} = _savedSearch;
 
