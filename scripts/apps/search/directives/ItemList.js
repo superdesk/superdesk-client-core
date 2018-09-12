@@ -135,7 +135,7 @@ export function ItemList(
     };
 
     return {
-        link: function(scope, elem, attr) {
+        link: function(scope, elem) {
             elem.attr('tabindex', 0);
 
             var groupId = scope.$id;
