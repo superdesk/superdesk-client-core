@@ -26,7 +26,6 @@ export class SortService {
         if (sort.field === undefined) {
             const customFieldSort = this.$location.search().sort.split(':');
 
-
             return {field: customFieldSort[0], dir: customFieldSort[1]};
         }
 
