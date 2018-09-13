@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import {cloneDeep} from 'lodash';
 
 IngestSourcesContent.$inject = ['ingestSources', 'gettext', 'notify', 'api', '$location',
     'modal', '$filter', 'config', 'deployConfig', 'privileges'];
@@ -36,7 +37,6 @@ export function IngestSourcesContent(ingestSources, gettext, notify, api, $locat
                 $scope.feedingServices = waitForDirectiveReadyResult[0];
 
                 $scope.provider = null;
-                $scope.origProvider = null;
                 $scope.allFeedParsers = [];
                 $scope.feedParsers = [];
                 $scope.fileTypes = [
@@ -252,8 +252,9 @@ export function IngestSourcesContent(ingestSources, gettext, notify, api, $locat
                         if (field.type != 'mapping') {
                             return;
                         }
-                        let aliases = angular.isDefined($scope.origProvider.config)
-                            && $scope.origProvider.config[field.id] || [];
+
+                        let aliases = angular.isDefined($scope.provider.config)
+                            && $scope.provider.config[field.id] || [];
 
                         var aliasObj = {};
 
@@ -280,22 +281,16 @@ export function IngestSourcesContent(ingestSources, gettext, notify, api, $locat
                 * @method edit
                 */
                 $scope.edit = function(provider) {
-                    $scope.origProvider = provider || {};
-                    $scope.provider = _.create($scope.origProvider);
-                    $scope.provider.update_schedule = $scope.origProvider.update_schedule
+                    $scope.provider = cloneDeep(provider);
+
+                    $scope.provider.update_schedule = $scope.provider.update_schedule
                         || config.ingest.DEFAULT_SCHEDULE;
-                    $scope.provider.idle_time = $scope.origProvider.idle_time || config.ingest.DEFAULT_IDLE_TIME;
-                    $scope.provider.notifications = $scope.origProvider.notifications;
-                    $scope.provider.config = $scope.origProvider.config;
-                    $scope.provider.critical_errors = $scope.origProvider.critical_errors;
-                    $scope.provider._id = $scope.origProvider._id;
-                    $scope.provider.content_types = $scope.origProvider.content_types;
+                    $scope.provider.idle_time = $scope.provider.idle_time || config.ingest.DEFAULT_IDLE_TIME;
 
                     initTupleFields();
                 };
 
                 $scope.cancel = function() {
-                    $scope.origProvider = null;
                     $scope.provider = null;
                 };
 
@@ -404,8 +399,12 @@ export function IngestSourcesContent(ingestSources, gettext, notify, api, $locat
                     delete $scope.provider.all_errors;
                     delete $scope.provider.source_errors;
 
+                    const originalProvider = $scope.providers._items.find(
+                        (provider) => provider._id === $scope.provider._id
+                    );
+
                     $scope.loading = true;
-                    api.ingestProviders.save($scope.origProvider, $scope.provider)
+                    api.ingestProviders.save(originalProvider, $scope.provider)
                         .then(() => {
                             notify.success(gettext('Provider saved!'));
                             $scope.cancel();

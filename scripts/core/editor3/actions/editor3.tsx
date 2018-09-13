@@ -29,6 +29,19 @@ export function forceUpdate() {
 
 /**
  * @ngdoc method
+ * @name setAbbreviations
+ * @return {Object} abbreviations
+ * @description set the abbreviation dictionary
+ */
+export function setAbbreviations(abbreviations) {
+    return {
+        type: 'EDITOR_SET_ABBREVIATIONS',
+        payload: abbreviations,
+    };
+}
+
+/**
+ * @ngdoc method
  * @name handleEditorTab
  * @param {Object} e on tab event
  * @return {String} action

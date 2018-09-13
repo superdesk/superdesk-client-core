@@ -6,7 +6,10 @@ export interface ISuperdeskGlobalConfig {
         };
         editor3: boolean;
         qumu: boolean;
-    }
+        editorAttachments: boolean;
+        editorInlineComments: boolean;
+        editorSuggestions: boolean;
+    };
     auth: {
         google: boolean
     }

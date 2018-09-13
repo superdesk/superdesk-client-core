@@ -8,8 +8,7 @@ export function ItemRendition() {
         link: function(scope, elem, attrs) {
             scope.$watch('item.renditions[rendition].href', (href) => {
                 var figure = elem.find('figure'),
-                    oldImg = figure.find('img').css('opacity', 0.5),
-                    previewHover = '<div class="preview-overlay"><i class="icon-fullscreen"></i></div>';
+                    oldImg = figure.find('img').css('opacity', 0.5);
 
                 if (href) {
                     var img = new Image();
@@ -19,9 +18,6 @@ export function ItemRendition() {
                             oldImg.replaceWith(img);
                         } else {
                             figure.html(img);
-                            if (attrs.ngClick) {
-                                figure.append(previewHover);
-                            }
                         }
 
                         if (img.naturalWidth < img.naturalHeight) {
