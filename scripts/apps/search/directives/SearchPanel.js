@@ -1,3 +1,5 @@
+import {cloneDeep} from 'lodash';
+
 /**
  * @ngdoc directive
  * @module superdesk.apps.search
@@ -59,6 +61,7 @@ export function SearchPanel($location,
             scope.editingSearch = false;
             scope.showSaveSearch = false;
             scope.isManagingSubscriptions = false;
+            scope.wrapper = {};
 
             scope.manageSubscriptions = (nextValue) => {
                 scope.isManagingSubscriptions = nextValue;
@@ -74,7 +77,7 @@ export function SearchPanel($location,
                 scope.innerTab = 'parameters';
                 scope.activateSearchPane = false;
                 scope.editingSearch = args;
-                scope.edit = _.create(scope.editingSearch) || {};
+                scope.wrapper.edit = cloneDeep(scope.editingSearch || {});
             });
 
             scope.changeTab = function(tabName) {

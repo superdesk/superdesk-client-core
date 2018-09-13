@@ -27,7 +27,7 @@
                 class="saved-search-subscriptions--manage-toolbar">
                 <span>
                     <strong>
-                        {{edit.subscribers == null ? '0' : edit.subscribers.user_subscriptions.length}}
+                        {{wrapper.edit.subscribers == null ? '0' : wrapper.edit.subscribers.user_subscriptions.length}}
                     </strong>
                     subscriptions
                 </span>
@@ -37,7 +37,7 @@
             <div
                 ng-if="isManagingSubscriptions"
                 manage-subscriptions="manageSubscriptions"
-                sd-saved-search-manage-subscribers data-saved-search="edit"></div>
+                sd-saved-search-manage-subscribers data-saved-search="wrapper.edit"></div>
 
             <form name="viewsForm">
                 <div ng-include="'scripts/apps/search/views/save-search-dialog.html'"></div>
