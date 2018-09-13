@@ -5,6 +5,7 @@ describe('editor3.store', () => {
         $provide.service('spellcheck', ($q) => ({
             setLanguage: jasmine.createSpy(),
             getDict: jasmine.createSpy().and.returnValue($q.when(null)),
+            getAbbreviationsDict: jasmine.createSpy().and.returnValue($q.when(null)),
             isCorrectWord: jasmine.createSpy(),
         }));
     }));

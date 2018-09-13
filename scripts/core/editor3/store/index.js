@@ -7,7 +7,7 @@ import {toHTML} from 'core/editor3/html';
 import ng from 'core/services/ng';
 
 import {Editor3} from '../components/Editor3';
-import {PopupTypes, forceUpdate} from '../actions';
+import {PopupTypes, forceUpdate, setAbbreviations} from '../actions';
 import {fieldsMetaKeys, setFieldMetadata, getFieldMetadata, FIELD_KEY_SEPARATOR} from '../helpers/fieldsMeta';
 import {getContentStateFromHtml} from '../html/from-html';
 import {getAnnotationsFromItem} from '../helpers/editor3CustomData';
@@ -65,11 +65,16 @@ export default function createEditorStore(props, isReact = false) {
         suggestingMode: false,
         invisibles: false,
         svc: props.svc,
+        abbreviations: {},
     }, applyMiddleware(thunk));
 
 
     // after we have the dictionary, force update the editor to highlight typos
     dict.finally(() => store.dispatch(forceUpdate()));
+
+    spellcheck.getAbbreviationsDict().then((abbreviations) => {
+        store.dispatch(setAbbreviations(abbreviations || {}));
+    });
 
     return store;
 }
