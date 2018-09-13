@@ -101,6 +101,14 @@
                     {{!canSendItem() ? 'fetch' : 'send' | translate}}
                 </button>
             </li>
+            <li class="full-width" ng-if="showSendButtonAndDestination() && isPackage">
+                <button class="btn btn--large btn--primary btn--expanded"
+                        ng-click="send(false, true)"
+                        ng-disabled="disableSendButton()"
+                        >
+                    {{'send all' | translate}}
+                </button>
+            </li>
         </ul>
     </div>
 

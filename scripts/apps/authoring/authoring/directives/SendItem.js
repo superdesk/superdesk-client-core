@@ -75,6 +75,7 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                     scope.item = scope.isActive ? {} : null;
                     scope.multiItems = multi.count ? multi.getItems() : null;
                     scope.config = config;
+                    scope.isPackage = config != null && config.isPackage;
                     activate();
                 }
             }
@@ -85,6 +86,10 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                 }
 
                 scope.isActive = !!item;
+
+                if (scope.config == null) {
+                    scope.isPackage = item != null && item.type === 'composite';
+                }
                 activate();
             }
 
@@ -176,9 +181,9 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                 }
             };
 
-            scope.send = function(open) {
+            scope.send = function(open, allPackageItems) {
                 updateLastDestination();
-                return runSend(open);
+                return runSend(open, allPackageItems);
             };
 
             scope.$on('item:nextStage', (_e, data) => {
@@ -323,16 +328,17 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
             /**
              * Send the content to different desk/stage
              * @param {Boolean} open - True to open the item.
+             * @param {Boolean} allPackageItems - True to include all contained items for packages
              * @return {Object} promise
              */
-            function runSend(open) {
+            function runSend(open, allPackageItems) {
                 scope.loading = true;
                 scope.item.sendTo = true;
                 var deskId = scope.selectedDesk._id;
                 var stageId = scope.selectedStage._id || scope.selectedDesk.incoming_stage;
 
                 if (scope.mode === 'authoring') {
-                    return sendAuthoring(deskId, stageId, scope.selectedMacro);
+                    return sendAuthoring(deskId, stageId, scope.selectedMacro, allPackageItems);
                 } else if (scope.mode === 'archive') {
                     return sendContent(deskId, stageId, scope.selectedMacro, open);
                 } else if (scope.config) {
@@ -345,6 +351,7 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                         stage: stageId,
                         macro: scope.selectedMacro ? scope.selectedMacro.name : null,
                         open: open,
+                        allPackageItems: allPackageItems,
                     });
                 } else if (scope.mode === 'ingest') {
                     return sendIngest(deskId, stageId, scope.selectedMacro, open);
@@ -484,7 +491,7 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                                 return $q.reject();
                             }
 
-                            return sendAuthoring(deskId, stageId, scope.selectedMacro, true)
+                            return sendAuthoring(deskId, stageId, scope.selectedMacro, false)
                                 .then((item) => {
                                     scope.loading = true;
                                     // open the item for locking and publish
@@ -538,9 +545,10 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
              * @param {String} deskId - selected desk Id
              * @param {String} stageId - selected stage Id
              * @param {String} macro - macro to apply
+             * @param {Boolean} allPackageItems - True to include all contained items for packages
              * @return {Object} promise
              */
-            function sendAuthoring(deskId, stageId, macro) {
+            function sendAuthoring(deskId, stageId, macro, allPackageItems) {
                 var msg;
 
                 scope.loading = true;
@@ -556,7 +564,9 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                             if (result && result._etag) {
                                 scope.task._etag = result._etag;
                             }
-                            return api.save('move', {}, {task: {desk: deskId, stage: stageId}}, scope.item);
+
+                            return api.save('move', {},
+                                {task: {desk: deskId, stage: stageId}, allPackageItems: allPackageItems}, scope.item);
                         })
                         .then((value) => {
                             notify.success(gettext('Item sent.'));

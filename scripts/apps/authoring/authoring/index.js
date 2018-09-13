@@ -136,7 +136,7 @@ angular.module('superdesk.apps.authoring', [
                 }],
                 filters: [{action: 'list', type: 'archive'}],
                 additionalCondition: ['authoring', 'item', 'config', (authoring, item, config) =>
-                    authoring.itemActions(item).send,
+                    authoring.itemActions(item).send && item.type !== 'composite',
                 ],
             })
             .activity('kill.text', {
