@@ -26,6 +26,13 @@ export interface ISavedSearch {
     };
 }
 
+// TODO: implement diffing
+// server doesn't allow read-only fields in patch request
+export const removeReadOnlyUserSubscriberFields = (subscription: IUserSubscription): IUserSubscription => ({
+    user: subscription.user,
+    scheduling: subscription.scheduling,
+});
+
 export const isUserSubscribedToSavedSearch = (
     _savedSearch: ISavedSearch,
     userId: IUser['_id'],
@@ -77,7 +84,7 @@ export const unsubscribeUser = (
         ...savedSearch.subscribers,
         user_subscriptions: savedSearch.subscribers.user_subscriptions.filter(
             (subscription) => subscription.user !== userId,
-        ),
+        ).map(removeReadOnlyUserSubscriberFields),
     };
 
     return updateSubscribers(savedSearch, nextSubscribers, api);

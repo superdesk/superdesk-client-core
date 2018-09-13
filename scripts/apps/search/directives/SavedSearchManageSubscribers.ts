@@ -5,6 +5,8 @@ import {
     unsubscribeDesk,
     IUserSubscription,
     IDeskSubscription,
+    isUserSubscribedToSavedSearch,
+    removeReadOnlyUserSubscriberFields,
 } from "business-logic/SavedSearch";
 import {IDirectiveScope} from "types/Angular/DirectiveScope";
 import {IUser} from "business-logic/User";
@@ -52,12 +54,6 @@ interface IScope extends IDirectiveScope<IModel> {
     desksFilter(desk: IDesk): boolean;
 }
 
-// server doesn't allow read-only fields in patch request
-const removeReadOnlyFields = (subscription: IUserSubscription): IUserSubscription => ({
-    user: subscription.user,
-    scheduling: subscription.scheduling,
-});
-
 SavedSearchManageSubscribers.$inject = ['asset', 'userList', 'api', 'modal', 'gettext', 'desks'];
 
 export function SavedSearchManageSubscribers(asset, userList, api, modal, gettext, desks) {
@@ -85,8 +81,15 @@ export function SavedSearchManageSubscribers(asset, userList, api, modal, gettex
             scope.editingDeskSubscription = () => isDeskSubscription(scope.wrapper.subscriptionInCreateOrEditMode);
 
             scope.usersFilter = (user: IUser) =>
-                user.first_name.toLowerCase().includes(scope.wrapper.newSubscriptionFilterText.toLowerCase())
-                || user.last_name.toLowerCase().includes(scope.wrapper.newSubscriptionFilterText.toLowerCase());
+                !isUserSubscribedToSavedSearch(
+                    scope.savedSearch,
+                    user._id,
+                    (deskId: IDesk['_id']) => desks.deskLookup[deskId],
+                )
+                && (
+                    user.first_name.toLowerCase().includes(scope.wrapper.newSubscriptionFilterText.toLowerCase())
+                    || user.last_name.toLowerCase().includes(scope.wrapper.newSubscriptionFilterText.toLowerCase())
+                );
 
             scope.desksFilter = (desk: IDesk) =>
                 desk.name.toLowerCase().includes(scope.wrapper.newSubscriptionFilterText.toLowerCase());
@@ -185,7 +188,7 @@ export function SavedSearchManageSubscribers(asset, userList, api, modal, gettex
                     );
                 }
 
-                nextUserSubscriptions = nextUserSubscriptions.map(removeReadOnlyFields);
+                nextUserSubscriptions = nextUserSubscriptions.map(removeReadOnlyUserSubscriberFields);
 
                 const nextSubscribers: ISavedSearch['subscribers'] = {
                     ...scope.savedSearch.subscribers,
