@@ -177,6 +177,7 @@ const config = (awp) =>
             picture: true,
             personal: true,
         },
+        feature: 'editorAttachments',
     });
 
 angular.module('superdesk.apps.authoring.attachments', [
