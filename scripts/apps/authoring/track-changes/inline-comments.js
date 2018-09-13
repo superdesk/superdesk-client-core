@@ -147,6 +147,8 @@ angular
                     picture: true,
                     personal: true,
                 },
+                onlyEditor3: true,
+                feature: 'editorInlineComments',
             });
         },
     ])

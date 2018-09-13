@@ -12,9 +12,9 @@ function AuthoringWidgetsProvider() {
 }
 
 WidgetsManagerCtrl.$inject = ['$scope', '$routeParams', 'authoringWidgets', 'archiveService',
-    'keyboardManager', '$location', 'desks', 'lock', 'content'];
+    'keyboardManager', '$location', 'desks', 'lock', 'content', 'config', 'lodash'];
 function WidgetsManagerCtrl($scope, $routeParams, authoringWidgets, archiveService,
-    keyboardManager, $location, desks, lock, content) {
+    keyboardManager, $location, desks, lock, content, config, _) {
     $scope.active = null;
 
     $scope.$watch('item', (item) => {
@@ -42,14 +42,24 @@ function WidgetsManagerCtrl($scope, $routeParams, authoringWidgets, archiveServi
             }
         }
 
-        let widgets = authoringWidgets.filter((widget) => !!widget.display[display]);
+        let widgets = authoringWidgets.filter((widget) => (
+            !!widget.display[display] &&
+                // If the widget requires a feature configured, then test this
+                // feature name against the config (defaulting to true)
+                (!widget.feature || !!_.get(config.features, widget.feature, true))
+        ));
 
         // if the story has a content profile and if the widget has required fields defined
         // check if the required fields exists in the content profile
         if (item.profile) {
             content.getType(item.profile).then((type) => {
+                const isEditor3 = _.get(type, 'editor.body_html.editor3');
+
                 $scope.widgets = widgets.filter((widget) => {
-                    if (widget.requiredFields) {
+                    if (!isEditor3 && !!_.get(widget, 'onlyEditor3', false)) {
+                        // This widget is only for Editor3
+                        return false;
+                    } else if (widget.requiredFields) {
                         return widget.requiredFields.every((field) => type.schema.hasOwnProperty(field));
                     }
                     return true;
