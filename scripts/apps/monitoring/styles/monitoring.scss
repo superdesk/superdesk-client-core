@@ -301,7 +301,7 @@
 }
 
 .monitoring {
-    .sd-grid-group {
+    .sd-grid-group:not(.refresh) {
         box-shadow: none !important;
         
         .sd-grid-list {

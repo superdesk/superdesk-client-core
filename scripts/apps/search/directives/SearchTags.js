@@ -51,6 +51,10 @@ export function SearchTags($location, tags, asset, metadata, desks, $rootScope) 
 
             init();
 
+            scope.refreshList = () => {
+                $rootScope.$broadcast('refresh:list');
+            };
+
             scope.removeFilter = function(type, key) {
                 tags.removeFacet(type, key);
             };
