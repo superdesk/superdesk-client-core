@@ -75,6 +75,7 @@ describe('sdIngestSourcesContent directive', () => {
 
         beforeEach((done) => {
             fakeProvider = {
+                _id: 'test-id',
                 feeding_service: 'rss',
                 config: {
                     field_aliases: [
@@ -82,6 +83,10 @@ describe('sdIngestSourcesContent directive', () => {
                         {foo4: 'bar4'},
                     ],
                 },
+            };
+
+            scope.providers = {
+                _items: [fakeProvider],
             };
 
             scope.waitForDirectiveReady().then(done);
@@ -153,7 +158,7 @@ describe('sdIngestSourcesContent directive', () => {
             expect(found[0].type).toEqual('text');
             expect(scope.isConfigFieldVisible({show_expression: '{auth_required}'})).toBeFalsy();
 
-            fakeProvider.config.auth_required = true;
+            scope.provider.config.auth_required = true;
             scope.$digest();
             found = directiveElement.find('input[id="rss-username"]');
             expect(found.length).toEqual(1);
@@ -251,7 +256,11 @@ describe('sdIngestSourcesContent directive', () => {
 
                 api.ingestProviders.save = jasmine.createSpy().and.returnValue(deferredSave.promise);
 
-                fakeProvider = {feeding_service: 'rss', config: {}};
+                fakeProvider = {_id: 'test-id', feeding_service: 'rss', config: {}};
+
+                scope.providers = {
+                    _items: [fakeProvider],
+                };
 
                 scope.waitForDirectiveReady().then(done);
             });
