@@ -1,12 +1,12 @@
 <ul class="search-tags__list">
     <li ng-repeat="(type,keys) in tags.selectedFacets">
         <div ng-repeat="key in keys" class="tag-label tag-label--highlight2">
-            <span>{{type| translate}}:</span>{{key.label || key}}<button class="tag-label__remove" ng-click="removeFilter(type, key.value || key)"><i class="icon-close-small"></i></button>
+            <span>{{type| translate}}:</span>{{key.label|| key}}<button class="tag-label__remove" ng-click="removeFilter(type, key.value || key)"><i class="icon-close-small"></i></button>
         </div>
     </li>
     <li ng-repeat="(type,keys) in tags.removedFacets">
         <div ng-repeat="key in keys" class="tag-label tag-label--highlight2">
-            <span>{{key.label | translate}}:</span>{{key.displayValue}}<button class="tag-label__remove" ng-click="removeFilter(type, key.value)"><i class="icon-close-small"></i></button>
+            <span>{{key.label| translate}}:</span>{{key.displayValue}}<button class="tag-label__remove" ng-click="removeFilter(type, key.value)"><i class="icon-close-small"></i></button>
         </div>
     </li>
     <li ng-repeat="parameter in tags.selectedParameters">
@@ -20,3 +20,8 @@
         </div>
     </li>
 </ul>
+<div class="refresh-box">
+    <button class="btn btn--primary btn--icon-only-circle" ng-click="refreshList()" tooltip="{{:: 'Refresh' | translate}}" tooltip-placement="left">
+        <i class="icon-repeat"></i>
+    </button>
+</div>

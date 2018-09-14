@@ -2,15 +2,14 @@
     <div class="list-pane {{ view || 'mgrid' }}-view">
         <div id="content-list" class="content">
             <div class="loading-indicator" ng-show="loading" translate>loading</div>
-            <div class="search-tags" sd-search-tags></div>
-            <div class="shadow-list-holder" ng-class="{'refresh': showRefresh}" sd-items-list></div>
+            <div class="search-tags" ng-class="{'refresh': showRefresh}" sd-search-tags></div>
+            <div class="shadow-list-holder" sd-items-list></div>
         </div>
         <div sd-item-preview
              data-item="selected.preview"
              data-close="preview()"
              data-open-single-item="openSingleItem"
-             data-hide-actions-menu="true"
-        >
+             data-hide-actions-menu="true">
         </div>
     </div>
 </div>

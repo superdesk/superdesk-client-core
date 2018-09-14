@@ -1,33 +1,28 @@
 <div class="subnav subnav--absolute">
-  <header class="search-page-header">
-      <div class="filter-trigger" title="{{ :: 'Filters' | translate }}" ng-click="flags.facets = !flags.facets" ng-class="{'filter-trigger--active': flags.facets}"><i class="icon-filter-large"></i></div>
+    <header class="search-page-header">
+        <div class="filter-trigger" title="{{ :: 'Filters' | translate }}" ng-click="flags.facets = !flags.facets" ng-class="{'filter-trigger--active': flags.facets}"><i class="icon-filter-large"></i></div>
 
-      <div sd-repo-dropdown class="sortbar-flex-handler"
-        data-active-provider="search.activeProvider"
-        data-toggle-provider="search.toggleProvider"
-      ></div>
-      <div sd-item-searchbar data-context="context" class="searchbar-flex-handler"></div>
-      <div sd-item-sortbar data-total="total_records" class="sortbar-flex-handler"></div>
+        <div sd-repo-dropdown class="sortbar-flex-handler"
+             data-active-provider="search.activeProvider"
+             data-toggle-provider="search.toggleProvider"
+             ></div>
+        <div sd-item-searchbar data-context="context" class="searchbar-flex-handler"></div>
+        <div sd-item-sortbar data-total="total_records" class="sortbar-flex-handler"></div>
 
-      <div class="refresh-box">
-          <button ng-if="showRefresh" class="navbtn" ng-click="refreshList()"
-              tooltip="{{:: 'Refresh' | translate}}" tooltip-placement="left">
-              <i class="icon-repeat icon--blue"></i>
-          </button>
-      </div>
-      <div class="view-select">
-          <button title="{{ :: 'Switch to grid view' | translate }}" ng-show="view !== 'photogrid'" ng-click="setview('photogrid')"><i class="icon-grid-view"></i></button>
-          <button title="{{ :: 'Switch to list view' | translate }}" ng-show="view !== 'compact'" ng-click="setview('compact')"><i class="icon-list-view"></i></button>
-      </div>
-      <div sd-multi-action-bar></div>
-  </header>
+        <div class="view-select">
+            <button title="{{ :: 'Switch to grid view' | translate }}" ng-show="view !== 'photogrid'" ng-click="setview('photogrid')"><i class="icon-grid-view"></i></button>
+            <button title="{{ :: 'Switch to list view' | translate }}" ng-show="view !== 'compact'" ng-click="setview('compact')"><i class="icon-list-view"></i></button>
+        </div>
+        <div sd-multi-action-bar></div>
+    </header>
 </div>
+
 <section sd-search-container class="search main-section search-page-container" ng-class="{'sidebar-open': flags.facets}">
     <div sd-search-panel class="archive-sidebar" data-items="items"
-        data-repo="search.repo"
-        data-providers="search.providers"
-        data-toggle-repo="search.toggleRepo"
-        data-provider-type="search.providerType"
-        data-context="context" ng-if="flags.facets"></div>
+         data-repo="search.repo"
+         data-providers="search.providers"
+         data-toggle-repo="search.toggleRepo"
+         data-provider-type="search.providerType"
+         data-context="context" ng-if="flags.facets"></div>
     <div sd-search-results class="archive-content"></div>
 </section>
