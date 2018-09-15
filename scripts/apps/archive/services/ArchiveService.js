@@ -79,14 +79,11 @@ export function ArchiveService(desks, session, api, $q, search, $location, confi
      *  @return {Object} the list of archive items
      */
     this.getRelatedItems = function(item, fromDateTime) {
-        var beforeDateTime = fromDateTime || moment().subtract(1, 'days')
-            .format(config.view.dateformat);
         var params = {};
 
         params.q = 'slugline.phrase:"' + _.trim(item.slugline) + '"'; // exact match
         params.ignoreKilled = true;
         params.ignoreDigital = true;
-        params.versioncreated = beforeDateTime;
 
         var query = search.query(params);
 
