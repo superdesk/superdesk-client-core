@@ -687,7 +687,8 @@ describe('cropImage', () => {
             }).then(() => {
                 done();
                 expect(scope.item.hasCrops).toBe(true);
-            });
+            })
+                .catch(done.fail);
         });
     });
 });
