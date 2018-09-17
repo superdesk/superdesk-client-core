@@ -29,7 +29,7 @@
   "main": "scripts/index.js",
   "dependencies": {
     "@types/angular": "1.6.50",
-    "@types/draft-js": "0.10.24",
+    "@types/draft-js": "0.10.25",
     "@types/lodash": "4.14.116",
     "@types/react": "16.4.9",
     "angular": "1.6.9",
@@ -83,7 +83,6 @@
     "ng-file-upload": "12.2.13",
     "node-sass": "4.7.2",
     "owl.carousel": "2.2.0",
-    "patch-package": "5.1.1",
     "postscribe": "2.0.8",
     "prop-types": "15.6.1",
     "rangy": "1.3.0",
@@ -137,7 +136,6 @@
     "lint": "tsc --noEmit --version && tslint -c tslint.json 'scripts/**/*.ts' && eslint --ext .js --ext .jsx --ext .tsx scripts spec tasks *.js",
     "start-test-server": "cd test-server && python3 -m venv env && . env/bin/activate && pip install -Ur requirements.txt && honcho start",
     "protractor": "protractor protractor.conf.js",
-    "webdriver-manager": "webdriver-manager",
-    "postinstall": "patch-package"
+    "webdriver-manager": "webdriver-manager"
   }
 }
