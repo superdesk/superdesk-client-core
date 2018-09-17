@@ -1,5 +1,5 @@
 <div class="modal__header modal__header--flex">
-    <h3 class="modal__heading modal__heading--no-grow" ng-if="!nav || nav === 'view'">{{ :: activity.label }}</h3>
+    <h3 class="modal__heading modal__heading--no-grow" ng-if="!nav || nav === 'view'">{{ :: activity.label}}</h3>
     <h3 class="modal__heading modal__heading--no-grow" ng-if="nav === 'image-edit'">{{ :: 'Edit image' | translate }}</h3>
     <h3 class="modal__heading modal__heading--no-grow" ng-if="nav === 'crop'">{{ :: 'Edit Crops' | translate }}</h3>
 
@@ -134,14 +134,14 @@
                 <div class="sd-slide-in-panel__content" ng-if="nav !== 'image-edit'">
                     <div class="sd-slide-in-panel__content-block sd-slide-in-panel__content-block--first">
                         <div sd-media-metadata-editor
-                            data-item="data.metadata"
-                            data-validator="validator"
-                            data-dark="true"
-                            data-boxed="true"
-                            data-on-change="data.isDirty = true"
-                            data-disabled="!data.editable"
-                            data-associated="data.isAssociated"
-                        ></div>
+                             data-item="data.metadata"
+                             data-validator="validator"
+                             data-dark="true"
+                             data-boxed="true"
+                             data-on-change="data.isDirty = true"
+                             data-disabled="!data.editable"
+                             data-associated="data.isAssociated"
+                             ></div>
                     </div>
                 </div>
 
@@ -200,21 +200,21 @@
                         <div class="form__row form__row--small-padding">
                             <div class="form-label__container">
                                 <label class="form-label" translate>Brightness</label>
-                                <span class="form-label__info-block">{{controls.brightness * 100 - 100 | number:0}}%</span>
+                                <span class="form-label__info-block">{{controls.brightness * 100 - 100| number:0}}%</span>
                             </div>
                             <input type="range" class="sd-slider__range" min="0" max="2" step=".05" ng-model="controls.brightness" ng-dblclick="controls.brightness = 1" ng-change="controls.isDirty = true">
                         </div>
                         <div class="form__row form__row--small-padding">
                             <div class="form-label__container">
                                 <label class="form-label" translate>Contrast</label>
-                                <span class="form-label__info-block">{{controls.contrast * 100 - 100 | number:0}}%</span>
+                                <span class="form-label__info-block">{{controls.contrast * 100 - 100| number:0}}%</span>
                             </div>
                             <input type="range" class="sd-slider__range" min=".5" max="1.5" step=".05" ng-model="controls.contrast" ng-dblclick="controls.contrast = 1" ng-change="controls.isDirty = true">
                         </div>
                         <div class="form__row form__row--small-padding">
                             <div class="form-label__container">
                                 <label class="form-label" translate>Saturation</label>
-                                <span class="form-label__info-block">{{controls.saturation * 100 - 100 | number:0}}%</span>
+                                <span class="form-label__info-block">{{controls.saturation * 100 - 100| number:0}}%</span>
                             </div>
                             <input type="range" class="sd-slider__range" min="0" max="2" step=".05" ng-model="controls.saturation" ng-dblclick="controls.saturation = 1" ng-change="controls.isDirty = true">
                         </div>
