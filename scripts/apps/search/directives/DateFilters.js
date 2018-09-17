@@ -83,3 +83,66 @@ export const getDateFilters = (gettext) => [
         isEnabled: (searchConfig) => searchConfig.scheduled,
     },
 ];
+
+const elasticSearchDateRangeToFieldNames = (elasticSearchDateRange, baseFieldName) => {
+    let result = {};
+
+    if (elasticSearchDateRange.gte != null) {
+        result[baseFieldName + 'from'] = elasticSearchDateRange.gte;
+    }
+    if (elasticSearchDateRange.lte != null) {
+        result[baseFieldName + 'to'] = elasticSearchDateRange.lte;
+    }
+
+    return result;
+};
+
+export function mapPredefinedDateFiltersClientToServer(search) {
+    let nextSearch = {...search};
+
+    // map custom range keys to from/to values server can understand
+
+    getDateFilters(gettext).forEach((dateFilter) => {
+        const searchValueForFilter = search[dateFilter.fieldname];
+        const predefinedFilter = dateFilter.predefinedFilters.find(
+            (predefinedFilter) => predefinedFilter.key === searchValueForFilter
+        );
+
+        if (predefinedFilter != null) {
+            nextSearch = {
+                ...search,
+                ...elasticSearchDateRangeToFieldNames(
+                    predefinedFilter.elasticSearchDateRange,
+                    dateFilter.fieldname
+                ),
+            };
+
+            delete nextSearch[dateFilter.fieldname];
+        }
+    });
+
+    return nextSearch;
+}
+
+export function mapPredefinedDateFiltersServerToClient(search) {
+    let nextSearch = {...search};
+
+    getDateFilters(gettext).forEach((dateFilter) => {
+        dateFilter.predefinedFilters.forEach((predefinedFilter) => {
+            const expectedSearch = elasticSearchDateRangeToFieldNames(
+                predefinedFilter.elasticSearchDateRange,
+                dateFilter.fieldname
+            );
+
+            if (Object.keys(expectedSearch).every((key) => expectedSearch[key] === nextSearch[key])) {
+                Object.keys(expectedSearch).forEach((key) => {
+                    delete nextSearch[key];
+                });
+
+                nextSearch[dateFilter.fieldname] = predefinedFilter.key;
+            }
+        });
+    });
+
+    return nextSearch;
+}

@@ -1,3 +1,5 @@
+import {mapPredefinedDateFiltersClientToServer} from './DateFilters';
+
 SaveSearch.$inject = ['$location', 'asset', 'api', 'session', 'notify', 'gettext', '$rootScope'];
 
 /**
@@ -85,20 +87,19 @@ export function SaveSearch($location, asset, api, session, notify, gettext, $roo
                     .then(onSuccess, onFail);
             };
 
-            /**
-             * Converts the integer fields: priority and urgency to objects
-             * within a given search
-             *
-             * @return {Object} the updated search object
-             */
             function getFilters(search) {
-                _.forOwn(search, (value, key) => {
+                let nextSearch = {...search};
+
+                _.forOwn(nextSearch, (value, key) => {
                     if (_.includes(['priority', 'urgency'], key)) {
-                        search[key] = JSON.parse(value);
+                        // Convert integer fields: priority and urgency to objects
+                        nextSearch[key] = JSON.parse(value);
                     }
                 });
 
-                return search;
+                nextSearch = mapPredefinedDateFiltersClientToServer(nextSearch);
+
+                return nextSearch;
             }
         },
     };
