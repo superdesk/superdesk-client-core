@@ -336,10 +336,10 @@ export function SearchService($location, gettext, config, session, multi,
             var facetrange = {};
 
             getDateFilters(gettext).forEach(({fieldname}) => {
-                if (params[fieldname] != null) {
-                    // handle predefined ranges
-                    const dateRangeKey = params[fieldname];
+                const dateRangeKey = params[fieldname];
 
+                if (params[fieldname] != null && dateRangesByKey[dateRangeKey] != null) {
+                    // handle predefined ranges
                     facetrange[fieldname] = dateRangesByKey[dateRangeKey].elasticSearchDateRange;
                 } else {
                     // handle manual ranges
