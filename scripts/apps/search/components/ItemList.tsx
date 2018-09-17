@@ -9,12 +9,12 @@ import {isCheckAllowed, closeActionsMenu, bindMarkItemShortcut} from '../helpers
  * Item list component
  */
 export class ItemList extends React.Component<any, any> {
-    public static propTypes: any;
-    public static defaultProps: any;
+    static propTypes: any;
+    static defaultProps: any;
 
-    public closeActionsMenu: any;
-    public updateTimeout: any;
-    public selectedCom: any;
+    closeActionsMenu: any;
+    updateTimeout: any;
+    selectedCom: any;
 
     constructor(props) {
         super(props);
@@ -50,7 +50,7 @@ export class ItemList extends React.Component<any, any> {
         this.unbindActionKeyShortcuts = this.unbindActionKeyShortcuts.bind(this);
     }
 
-    public multiSelect(items, selected) {
+    multiSelect(items, selected) {
         const {search, multi} = this.props.svc;
         const {scope} = this.props;
 
@@ -70,7 +70,7 @@ export class ItemList extends React.Component<any, any> {
     }
 
     // Method to check the selectBox of the selected item
-    public multiSelectCurrentItem() {
+    multiSelectCurrentItem() {
         const selectedItem = this.getSelectedItem();
 
         if (selectedItem) {
@@ -79,11 +79,11 @@ export class ItemList extends React.Component<any, any> {
     }
 
     // Function to make narrowView active/inactive
-    public setNarrowView(setNarrow) {
+    setNarrowView(setNarrow) {
         this.setState({narrow: setNarrow});
     }
 
-    public select(item, event?) {
+    select(item, event?) {
         const {$timeout} = this.props.svc;
         const {scope} = this.props;
 
@@ -111,7 +111,7 @@ export class ItemList extends React.Component<any, any> {
     /*
      * Unbind all item actions
      */
-    public unbindActionKeyShortcuts() {
+    unbindActionKeyShortcuts() {
         const {keyboardManager} = this.props.svc;
 
         this.state.bindedShortcuts.forEach((shortcut) => {
@@ -126,7 +126,7 @@ export class ItemList extends React.Component<any, any> {
      *
      * @param {Object} item
      */
-    public bindActionKeyShortcuts(selectedItem) {
+    bindActionKeyShortcuts(selectedItem) {
         const {superdesk, workflowService, activityService, keyboardManager, archiveService} = this.props.svc;
 
         // First unbind all binded shortcuts
@@ -151,7 +151,7 @@ export class ItemList extends React.Component<any, any> {
         });
     }
 
-    public selectItem(item) {
+    selectItem(item) {
         if (isCheckAllowed(item)) {
             const selected = !item.selected;
 
@@ -159,7 +159,7 @@ export class ItemList extends React.Component<any, any> {
         }
     }
 
-    public selectMultipleItems(lastItem) {
+    selectMultipleItems(lastItem) {
         const {search} = this.props.svc;
         const itemId = search.generateTrackByIdentifier(lastItem);
         let positionStart = 0;
@@ -184,7 +184,7 @@ export class ItemList extends React.Component<any, any> {
         this.multiSelect(selectedItems, true);
     }
 
-    public dbClick(item) {
+    dbClick(item) {
         const {superdesk, $timeout, authoringWorkspace} = this.props.svc;
         const {scope} = this.props;
 
@@ -217,7 +217,7 @@ export class ItemList extends React.Component<any, any> {
         }
     }
 
-    public edit(item) {
+    edit(item) {
         const {$timeout, authoringWorkspace} = this.props.svc;
         const {scope} = this.props;
 
@@ -239,12 +239,12 @@ export class ItemList extends React.Component<any, any> {
         }
     }
 
-    public deselectAll() {
+    deselectAll() {
         this.setState({selected: null});
         this.unbindActionKeyShortcuts();
     }
 
-    public updateAllItems(itemId, changes) {
+    updateAllItems(itemId, changes) {
         const itemsById = angular.extend({}, this.state.itemsById);
 
         _.forOwn(itemsById, (value, key) => {
@@ -256,7 +256,7 @@ export class ItemList extends React.Component<any, any> {
         this.setState({itemsById: itemsById});
     }
 
-    public findItemByPrefix(prefix) {
+    findItemByPrefix(prefix) {
         let item;
 
         _.forOwn(this.state.itemsById, (val, key) => {
@@ -268,7 +268,7 @@ export class ItemList extends React.Component<any, any> {
         return item;
     }
 
-    public setSelectedItem(item) {
+    setSelectedItem(item) {
         const {monitoringState, $rootScope, search} = this.props.svc;
         const {scope} = this.props;
 
@@ -281,13 +281,13 @@ export class ItemList extends React.Component<any, any> {
         this.setState({selected: item ? search.generateTrackByIdentifier(item) : null});
     }
 
-    public getSelectedItem() {
+    getSelectedItem() {
         const selected = this.state.selected;
 
         return this.state.itemsById[selected];
     }
 
-    public updateItem(itemId, changes) {
+    updateItem(itemId, changes) {
         const item = this.state.itemsById[itemId] || null;
 
         if (item) {
@@ -298,7 +298,7 @@ export class ItemList extends React.Component<any, any> {
         }
     }
 
-    public handleKey(event) {
+    handleKey(event) {
         const {scope} = this.props;
         const {Keys, monitoringState} = this.props.svc;
         const KEY_CODES = Object.freeze({
@@ -410,21 +410,21 @@ export class ItemList extends React.Component<any, any> {
         }
     }
 
-    public componentWillUnmount() {
+    componentWillUnmount() {
         this.unbindActionKeyShortcuts();
         this.closeActionsMenu();
     }
 
-    public setSelectedComponent(com) {
+    setSelectedComponent(com) {
         this.selectedCom = com;
     }
 
-    public modifiedUserName(versionCreator) {
+    modifiedUserName(versionCreator) {
         return this.props.usersById[versionCreator] ?
             this.props.usersById[versionCreator].display_name : null;
     }
 
-    public render() {
+    render() {
         const {storage, gettextCatalog} = this.props.svc;
         const {scope} = this.props;
 
@@ -463,7 +463,7 @@ export class ItemList extends React.Component<any, any> {
                     this.state.view === 'photogrid' ?
                         'sd-grid-list sd-grid-list--no-margin' :
                         (this.state.view || 'compact') + '-view list-view',
-                    {'list-without-items': isEmpty}
+                    {'list-without-items': isEmpty},
                 ),
                 onClick: this.closeActionsMenu,
             },
@@ -471,8 +471,8 @@ export class ItemList extends React.Component<any, any> {
                 React.createElement(
                     'li',
                     {onClick: this.closeActionsMenu},
-                    gettextCatalog.getString('There are currently no items')
-                ) : this.state.itemsList.map(createItem)
+                    gettextCatalog.getString('There are currently no items'),
+                ) : this.state.itemsList.map(createItem),
         );
     }
 }

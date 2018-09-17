@@ -8,5 +8,5 @@ export const createCronInterval = (
     hour: string,
     dayOfMonth: string,
     month: string,
-    dayOfWeek: string
+    dayOfWeek: string,
 ): CronTimeInterval => `${minute} ${hour} ${dayOfMonth} ${month} ${dayOfWeek}`;

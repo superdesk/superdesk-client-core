@@ -127,7 +127,7 @@ function insertContentInState(
         contentState = contentState.addEntity(entity);
 
         blocks = blocks.concat(
-            atomicBlock(block.getData(), contentState.getLastCreatedEntityKey())
+            atomicBlock(block.getData(), contentState.getLastCreatedEntityKey()),
         );
     });
 
@@ -142,7 +142,7 @@ function insertContentInState(
     let nextEditorState = EditorState.push(
         editorState,
         Modifier.replaceWithFragment(contentState, selection, newBlockMap),
-        'insert-fragment'
+        'insert-fragment',
     );
 
     const selectionAfterInsert = nextEditorState.getSelection();
@@ -156,7 +156,7 @@ function insertContentInState(
     nextEditorState = EditorState.push(
         editorState,
         nextEditorState.getCurrentContent(),
-        'insert-fragment'
+        'insert-fragment',
     );
 
     nextEditorState = EditorState.forceSelection(nextEditorState, selectionAfterInsert);
@@ -180,7 +180,7 @@ function processPastedHtml(
         editorState,
         pastedContent,
         onChange,
-        editorFormat
+        editorFormat,
     );
 }
 

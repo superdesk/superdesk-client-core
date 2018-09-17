@@ -27,8 +27,8 @@ import {closeActionsMenu} from '../helpers';
  * Item component
  */
 export class Item extends React.Component<any, any> {
-    public static propTypes: any;
-    public static defaultProps: any;
+    static propTypes: any;
+    static defaultProps: any;
 
     constructor(props) {
         super(props);
@@ -45,17 +45,17 @@ export class Item extends React.Component<any, any> {
         this.openAuthoringView = this.openAuthoringView.bind(this);
     }
 
-    public componentWillUnmount() {
+    componentWillUnmount() {
         closeActionsMenu(this.props.item._id);
     }
 
-    public componentWillReceiveProps(nextProps) {
+    componentWillReceiveProps(nextProps) {
         if (nextProps.item !== this.props.item) {
             closeActionsMenu(this.props.item._id);
         }
     }
 
-    public shouldComponentUpdate(nextProps, nextState) {
+    shouldComponentUpdate(nextProps, nextState) {
         return nextProps.swimlane !== this.props.swimlane || nextProps.item !== this.props.item ||
             nextProps.view !== this.props.view ||
             nextProps.flags.selected !== this.props.flags.selected ||
@@ -63,7 +63,7 @@ export class Item extends React.Component<any, any> {
             nextState !== this.state;
     }
 
-    public select(event) {
+    select(event) {
         if (!this.props.item.gone) {
             this.props.onSelect(this.props.item, event);
         }
@@ -73,19 +73,19 @@ export class Item extends React.Component<any, any> {
      * Opens the item in authoring in view mode
      * @param {string} itemId Id of the document
      */
-    public openAuthoringView(itemId) {
+    openAuthoringView(itemId) {
         const {authoringWorkspace} = this.props.svc;
 
         authoringWorkspace.edit({_id: itemId}, 'view');
     }
 
-    public edit(event) {
+    edit(event) {
         if (!this.props.item.gone) {
             this.props.onEdit(this.props.item);
         }
     }
 
-    public dbClick(event) {
+    dbClick(event) {
         if (!this.props.item.gone) {
             this.props.onDbClick(this.props.item);
         }
@@ -95,25 +95,25 @@ export class Item extends React.Component<any, any> {
      * Set Actioning state
      * @param {Boolean} isActioning - true if activity is in-progress, and false if completed
      */
-    public setActioningState(isActioning) {
+    setActioningState(isActioning) {
         this.setState({actioning: isActioning});
     }
 
-    public setHoverState() {
+    setHoverState() {
         this.setState({hover: true});
     }
 
-    public unsetHoverState() {
+    unsetHoverState() {
         this.setState({hover: false});
     }
 
-    public onDragStart(event) {
+    onDragStart(event) {
         const {dragitem} = this.props.svc;
 
         dragitem.start(event, this.props.item);
     }
 
-    public render() {
+    render() {
         const {item, scope} = this.props;
         let classes = this.props.view === 'photogrid' ?
             'sd-grid-item sd-grid-item--with-click' :
@@ -172,8 +172,8 @@ export class Item extends React.Component<any, any> {
                     item.urgency ?
                         React.createElement(ItemUrgency, angular.extend({svc: this.props.svc}, item)) : null,
                     broadcast({item: item}),
-                    getActionsMenu()
-                )
+                    getActionsMenu(),
+                ),
             );
         } else if (this.props.view === 'photogrid') {
             contents.push(
@@ -196,8 +196,8 @@ export class Item extends React.Component<any, any> {
                     getActionsMenu: getActionsMenu,
                 }),
                 React.createElement('div',
-                    {className: 'sd-grid-item__state-border'}
-                )
+                    {className: 'sd-grid-item__state-border'},
+                ),
             );
         } else {
             contents.push(
@@ -227,7 +227,7 @@ export class Item extends React.Component<any, any> {
                     svc: this.props.svc,
                     scope: this.props.scope,
                 }),
-                getActionsMenu()
+                getActionsMenu(),
             );
         }
 
@@ -238,7 +238,7 @@ export class Item extends React.Component<any, any> {
                 className: classNames(
                     'list-item-view',
                     {active: this.props.flags.selected},
-                    {selected: this.props.item.selected && !this.props.flags.selected}
+                    {selected: this.props.item.selected && !this.props.flags.selected},
                 ),
                 onMouseEnter: this.setHoverState,
                 onMouseLeave: this.unsetHoverState,
@@ -247,7 +247,7 @@ export class Item extends React.Component<any, any> {
                 onDoubleClick: this.dbClick,
                 draggable: true,
             },
-            React.createElement.apply(null, contents)
+            React.createElement.apply(null, contents),
         );
     }
 }

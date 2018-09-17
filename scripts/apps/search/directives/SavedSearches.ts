@@ -106,7 +106,7 @@ export function SavedSearches($rootScope, api, session, modal, notify, gettext, 
 
             scope.remove = function(_search: ISavedSearch) {
                 modal.confirm(
-                    gettext('Are you sure you want to delete saved search?')
+                    gettext('Are you sure you want to delete saved search?'),
                 )
                     .then(() => {
                         resource.remove(_search).then(() => {
@@ -121,7 +121,7 @@ export function SavedSearches($rootScope, api, session, modal, notify, gettext, 
             scope.isUserSubscribedToSavedSearch = (_savedSearch: ISavedSearch) => isUserSubscribedToSavedSearch(
                 _savedSearch,
                 session.identity._id,
-                (deskId: IDesk['_id']) => desks.deskLookup[deskId]
+                (deskId: IDesk['_id']) => desks.deskLookup[deskId],
             );
 
             scope.editSubscription = function(event, _savedSearch) {

@@ -125,7 +125,7 @@ export function SavedSearchSubscribe(asset, session, api) {
             };
 
             scope.isAlreadySubscribed = () => scope.savedSearch.subscribers.user_subscriptions.some(
-                (subscription) => subscription.user === session.identity._id
+                (subscription) => subscription.user === session.identity._id,
             );
 
             scope.savingEnabled = () => (scope.wrapper.everyDay === 'true' || scope.wrapper.customWeekdays.length > 0)
@@ -179,7 +179,7 @@ export function SavedSearchSubscribe(asset, session, api) {
                 const nextSubscribers: ISavedSearch['subscribers'] = {
                     ...scope.savedSearch.subscribers,
                     user_subscriptions: scope.savedSearch.subscribers.user_subscriptions.filter(
-                        (subscription) => subscription.user !== session.identity._id
+                        (subscription) => subscription.user !== session.identity._id,
                     ),
                 };
 
@@ -197,7 +197,7 @@ export function SavedSearchSubscribe(asset, session, api) {
 
                 if (scope.savedSearch != null) {
                     const userSubscription = scope.savedSearch.subscribers.user_subscriptions.find(
-                        (subscription) => subscription.user === session.identity._id
+                        (subscription) => subscription.user === session.identity._id,
                     );
 
                     scope.wrapper = userSubscription == null
