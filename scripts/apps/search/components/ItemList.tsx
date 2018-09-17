@@ -463,7 +463,7 @@ export class ItemList extends React.Component<any, any> {
                     this.state.view === 'photogrid' ?
                         'sd-grid-list sd-grid-list--no-margin' :
                         (this.state.view || 'compact') + '-view list-view',
-                    {'list-without-items': isEmpty},
+                    {'list-without-items': isEmpty}
                 ),
                 onClick: this.closeActionsMenu,
             },
@@ -471,8 +471,8 @@ export class ItemList extends React.Component<any, any> {
                 React.createElement(
                     'li',
                     {onClick: this.closeActionsMenu},
-                    gettextCatalog.getString('There are currently no items'),
-                ) : this.state.itemsList.map(createItem),
+                    gettextCatalog.getString('There are currently no items')
+                ) : this.state.itemsList.map(createItem)
         );
     }
 }
