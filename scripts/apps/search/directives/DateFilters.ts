@@ -1,4 +1,13 @@
-const lastMonthFilter = {
+interface IDateRange {
+    key: string;
+    label: string;
+    elasticSearchDateRange: {
+        lte?: string,
+        gte?: string,
+    };
+}
+
+const lastMonthFilter: IDateRange = {
     key: 'last_month',
     label: gettext('Last Month'),
     elasticSearchDateRange: {
@@ -7,7 +16,7 @@ const lastMonthFilter = {
     },
 };
 
-const lastWeekFilter = {
+const lastWeekFilter: IDateRange = {
     key: 'last_week',
     label: gettext('Last Week'),
     elasticSearchDateRange: {
@@ -16,7 +25,7 @@ const lastWeekFilter = {
     },
 };
 
-const lastDayFilter = {
+const lastDayFilter: IDateRange = {
     key: 'last_day',
     label: gettext('Last Day'),
     elasticSearchDateRange: {
@@ -25,7 +34,7 @@ const lastDayFilter = {
     },
 };
 
-const last24hoursFilter = {
+const last24hoursFilter: IDateRange = {
     key: 'last_24_hours',
     label: gettext('Last 24 Hours'),
     elasticSearchDateRange: {
@@ -33,7 +42,7 @@ const last24hoursFilter = {
     },
 };
 
-const last8hoursFilter = {
+const last8hoursFilter: IDateRange = {
     key: 'last_8_hours',
     label: gettext('Last 8 Hours'),
     elasticSearchDateRange: {
@@ -41,7 +50,7 @@ const last8hoursFilter = {
     },
 };
 
-export const dateRangesByKey = {
+export const dateRangesByKey: Dictionary<string, IDateRange> = {
     last_month: lastMonthFilter,
     last_week: lastWeekFilter,
     last_day: lastDayFilter,
@@ -85,7 +94,7 @@ export const getDateFilters = (gettext) => [
 ];
 
 const elasticSearchDateRangeToFieldNames = (elasticSearchDateRange, baseFieldName) => {
-    let result = {};
+    const result = {};
 
     if (elasticSearchDateRange.gte != null) {
         result[baseFieldName + 'from'] = elasticSearchDateRange.gte;
@@ -105,7 +114,7 @@ export function mapPredefinedDateFiltersClientToServer(search) {
     getDateFilters(gettext).forEach((dateFilter) => {
         const searchValueForFilter = search[dateFilter.fieldname];
         const predefinedFilter = dateFilter.predefinedFilters.find(
-            (predefinedFilter) => predefinedFilter.key === searchValueForFilter
+            (_predefinedFilter) => _predefinedFilter.key === searchValueForFilter,
         );
 
         if (predefinedFilter != null) {
@@ -113,7 +122,7 @@ export function mapPredefinedDateFiltersClientToServer(search) {
                 ...search,
                 ...elasticSearchDateRangeToFieldNames(
                     predefinedFilter.elasticSearchDateRange,
-                    dateFilter.fieldname
+                    dateFilter.fieldname,
                 ),
             };
 
@@ -125,13 +134,13 @@ export function mapPredefinedDateFiltersClientToServer(search) {
 }
 
 export function mapPredefinedDateFiltersServerToClient(search) {
-    let nextSearch = {...search};
+    const nextSearch = {...search};
 
     getDateFilters(gettext).forEach((dateFilter) => {
         dateFilter.predefinedFilters.forEach((predefinedFilter) => {
             const expectedSearch = elasticSearchDateRangeToFieldNames(
                 predefinedFilter.elasticSearchDateRange,
-                dateFilter.fieldname
+                dateFilter.fieldname,
             );
 
             if (Object.keys(expectedSearch).every((key) => expectedSearch[key] === nextSearch[key])) {
