@@ -135,10 +135,11 @@ export function SendService(desks, api, $q, notify, $injector, multi, $rootScope
                     return item;
                 });
         } else if (!item.lock_user) {
-            return api.save('move', {}, {task: data, allPackageItems: config.allPackageItems}, item).then((item) => {
-                $rootScope.$broadcast('item:update', {item: item});
-                return item;
-            });
+            return api.save('move', {}, {task: data, allPackageItems: config.sendAllPackageItems}, item)
+                .then((item) => {
+                    $rootScope.$broadcast('item:update', {item: item});
+                    return item;
+                });
         }
 
         function getData(config) {

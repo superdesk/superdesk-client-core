@@ -181,9 +181,9 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                 }
             };
 
-            scope.send = function(open, allPackageItems) {
+            scope.send = function(open, sendAllPackageItems) {
                 updateLastDestination();
-                return runSend(open, allPackageItems);
+                return runSend(open, sendAllPackageItems);
             };
 
             scope.$on('item:nextStage', (_e, data) => {
@@ -328,17 +328,17 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
             /**
              * Send the content to different desk/stage
              * @param {Boolean} open - True to open the item.
-             * @param {Boolean} allPackageItems - True to include all contained items for packages
+             * @param {Boolean} sendAllPackageItems - True to include all contained items for packages
              * @return {Object} promise
              */
-            function runSend(open, allPackageItems) {
+            function runSend(open, sendAllPackageItems) {
                 scope.loading = true;
                 scope.item.sendTo = true;
                 var deskId = scope.selectedDesk._id;
                 var stageId = scope.selectedStage._id || scope.selectedDesk.incoming_stage;
 
                 if (scope.mode === 'authoring') {
-                    return sendAuthoring(deskId, stageId, scope.selectedMacro, allPackageItems);
+                    return sendAuthoring(deskId, stageId, scope.selectedMacro, sendAllPackageItems);
                 } else if (scope.mode === 'archive') {
                     return sendContent(deskId, stageId, scope.selectedMacro, open);
                 } else if (scope.config) {
@@ -351,7 +351,7 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                         stage: stageId,
                         macro: scope.selectedMacro ? scope.selectedMacro.name : null,
                         open: open,
-                        allPackageItems: allPackageItems,
+                        sendAllPackageItems: sendAllPackageItems,
                     });
                 } else if (scope.mode === 'ingest') {
                     return sendIngest(deskId, stageId, scope.selectedMacro, open);
@@ -545,10 +545,10 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
              * @param {String} deskId - selected desk Id
              * @param {String} stageId - selected stage Id
              * @param {String} macro - macro to apply
-             * @param {Boolean} allPackageItems - True to include all contained items for packages
+             * @param {Boolean} sendAllPackageItems - True to include all contained items for packages
              * @return {Object} promise
              */
-            function sendAuthoring(deskId, stageId, macro, allPackageItems) {
+            function sendAuthoring(deskId, stageId, macro, sendAllPackageItems) {
                 var msg;
 
                 scope.loading = true;
@@ -566,7 +566,10 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                             }
 
                             return api.save('move', {},
-                                {task: {desk: deskId, stage: stageId}, allPackageItems: allPackageItems}, scope.item);
+                                {
+                                    task: {desk: deskId, stage: stageId},
+                                    allPackageItems: sendAllPackageItems,
+                                }, scope.item);
                         })
                         .then((value) => {
                             notify.success(gettext('Item sent.'));
