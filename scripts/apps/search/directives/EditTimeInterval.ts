@@ -99,15 +99,13 @@ const timeIntervalUiToCronExpression = (timeInterval: ITimeIntervalUi): CronTime
     return createCronInterval('*', hours, '*', '*', weekdays);
 };
 
-EditTimeInterval.$inject = ['asset'];
-
-export function EditTimeInterval(asset) {
+export function EditTimeInterval() {
     return {
         scope: {
             initialValue: '=',
             onChange: '=',
         },
-        templateUrl: asset.templateUrl('apps/search/views/edit-time-interval.html'),
+        template: require('../views/edit-time-interval.html'),
         link: function(scope: IScope) {
             const getDefaults = (): IModel => ({
                 everyDay: 'true',

@@ -1,8 +1,8 @@
-import {IUser} from 'business-logic/User';
-import {IDesk} from 'business-logic/Desk';
+import {IUser} from 'superdesk-interfaces/User';
+import {IDesk} from 'superdesk-interfaces/Desk';
 
-import {ISuperdeskGlobalConfig} from 'business-logic/SuperdeskGlobalConfig';
-import {ISavedSearch, isUserSubscribedToSavedSearch} from 'business-logic/SavedSearch';
+import {ISuperdeskGlobalConfig} from 'superdesk-interfaces/SuperdeskGlobalConfig';
+import {ISavedSearch, isUserSubscribedToSavedSearch} from 'superdesk-interfaces/SavedSearch';
 import {IDesksService} from 'types/Services/Desks';
 import {IPrivilegesService} from 'types/Services/Privileges';
 

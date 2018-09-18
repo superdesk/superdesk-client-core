@@ -7,11 +7,11 @@ import {
     IDeskSubscription,
     isUserSubscribedToSavedSearch,
     removeReadOnlyUserSubscriberFields,
-} from "business-logic/SavedSearch";
+} from "superdesk-interfaces/SavedSearch";
 import {IDirectiveScope} from "types/Angular/DirectiveScope";
-import {IUser} from "business-logic/User";
+import {IUser} from "superdesk-interfaces/User";
 import {CronTimeInterval} from "types/DataStructures/TimeInterval";
-import {IDesk} from "business-logic/Desk";
+import {IDesk} from "superdesk-interfaces/Desk";
 import {IDesksService} from "types/Services/Desks";
 import {nameof} from "core/helpers/typescript-helpers";
 

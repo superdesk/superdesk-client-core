@@ -1,5 +1,5 @@
-import {IUser} from 'business-logic/User';
-import {IDesk} from 'business-logic/Desk';
+import {IUser} from 'superdesk-interfaces/User';
+import {IDesk} from 'superdesk-interfaces/Desk';
 
 export interface IDesksService {
     desks: {
