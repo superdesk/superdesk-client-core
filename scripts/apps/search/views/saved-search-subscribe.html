@@ -16,6 +16,12 @@
             sd-edit-time-interval
             data-initial-value="ownSubscription == null ? '' : ownSubscription.scheduling"
             on-change="handleIntervalChange"></div>
+
+        <p ng-if="ownSubscription != null" style="margin: 0;">
+            <span translate>Last report sent on: </span>
+            <span ng-if="ownSubscription.last_report != null" sd-absdate datetime="ownSubscription.last_report"></span>
+            <span ng-if="ownSubscription.last_report == null" translate>never</span>
+        </p>
         
     </div>
 
