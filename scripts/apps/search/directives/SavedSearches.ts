@@ -7,6 +7,7 @@ import {IDesksService} from 'types/Services/Desks';
 import {IPrivilegesService} from 'types/Services/Privileges';
 
 import {forEach, clone, filter} from 'lodash';
+import {mapPredefinedDateFiltersServerToClient} from './DateFilters';
 
 SavedSearches.$inject = [
     '$rootScope', 'api', 'session', 'modal', 'notify', 'gettext', 'asset',
@@ -79,7 +80,7 @@ export function SavedSearches($rootScope, api, session, modal, notify, gettext, 
 
             scope.select = function(_search: ISavedSearch) {
                 scope.selected = _search;
-                $location.search(_search.filter.query);
+                $location.search(mapPredefinedDateFiltersServerToClient(_search.filter.query));
             };
 
             scope.edit = function(_search: ISavedSearch) {

@@ -1,5 +1,5 @@
 import {PARAMETERS, EXCLUDE_FACETS} from 'apps/search/constants';
-import {getDateFilters} from '../directives/SearchFilters';
+import {getDateFilters, dateRangesByKey} from '../directives/DateFilters';
 /**
  * @ngdoc service
  * @module superdesk.apps.search
@@ -341,17 +341,9 @@ export function TagService($location, desks, userList, metadata, search,
                         });
                     });
                 } else if (dateFilters.some(({fieldname}) => fieldname === key)) {
-                    var dateForType = {
-                        'now-8H': 'Last 8 Hours',
-                        'now-24H': 'Last 24 hours',
-                        last_day: 'Last Day',
-                        last_week: 'Last Week',
-                        last_month: 'Last Month',
-                    };
-
                     const dateFilter = dateFilters.find(({fieldname}) => fieldname === key);
 
-                    tags.selectedFacets[dateFilter.labelBlock] = [dateForType[type]];
+                    tags.selectedFacets[dateFilter.labelBlock] = [dateRangesByKey[type].label];
                 } else if (key === 'creditqcode') {
                     tags.selectedFacets.credit = JSON.parse(type);
                 } else {

@@ -138,28 +138,28 @@
     </div>
 
     <!-- ID only needed for E2E test -->
-    <div ng-repeat="dateFilter in dateFilters"
+    <div ng-repeat="dateFilter in dateFilters track by dateFilter.fieldname"
         sd-toggle-box data-title="{{:: dateFilter.labelBlock }}"
         data-open="false"
         id="filter-{{dateFilter.fieldname}}"
         ng-if="dateFilter.isEnabled(search_config)">
         <form class="date-filter">
             <div class="predefined-dates">
-                <button ng-repeat="predefinedFilter in dateFilter.predefinedFilters"
-                        ng-click="toggleFilter('date', predefinedFilter.key, dateFilter.fieldname)" 
+                <button ng-repeat="predefinedFilter in dateFilter.predefinedFilters track by predefinedFilter.key"
+                        ng-click="togglePredefinedDateFilter(dateFilter.fieldname, predefinedFilter.key)" 
                         class="btn btn--mini" 
-                        ng-class="{active: hasFilter(dateFilter.labelBlock, predefinedFilter.key), 'btn--primary': hasFilter(dateFilter.labelBlock, predefinedFilter.key)}">{{predefinedFilter.label}}</button>
+                        ng-class="{active: hasPredefinedDateFilter(dateFilter.fieldname, predefinedFilter.key), 'btn--primary': hasPredefinedDateFilter(dateFilter.fieldname, predefinedFilter.key)}">{{predefinedFilter.label}}</button>
             </div>
 
             <fieldset ng-show="(dateFilter.labelFrom != null && dateFilter.labelTo != null) && (repo.search === 'local' || providerType.startsWith('scanpix') || repo.search === 'content-api' || providerType === 'aapmm')">
                 <div class="multiple">
                     <div class="field" sd-date-param data-location="{{dateFilter.fieldname}}from">
                         <label>{{dateFilter.labelFrom}}</label>
-                        <div sd-datepicker ng-model="date"></div>
+                        <div sd-datepicker on-change="clearPredefinedFilters(dateFilter.fieldname)" ng-model="date"></div>
                     </div>
                     <div class="field" sd-date-param data-location="{{dateFilter.fieldname}}to">
                         <label>{{dateFilter.labelTo}}</label>
-                        <div sd-datepicker ng-model="date"></div>
+                        <div sd-datepicker on-change="clearPredefinedFilters(dateFilter.fieldname)" ng-model="date"></div>
                     </div>
                 </div>
             </fieldset>
