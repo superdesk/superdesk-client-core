@@ -1,5 +1,4 @@
 import _ from 'lodash';
-
 import {getDateFilters} from './DateFilters';
 
 class LinkFunction {

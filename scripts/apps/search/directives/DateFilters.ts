@@ -80,7 +80,20 @@ export const getDateFilters = (gettext) => [
         labelFrom: gettext('Published from'),
         labelTo: gettext('Published to'),
         fieldname: 'firstpublished',
-        predefinedFilters: [lastDayFilter, lastWeekFilter, lastMonthFilter],
+        predefinedFilters: [
+            {
+                key: 'Last Day',
+                label: gettext('Last Day'),
+            },
+            {
+                key: 'Last Week',
+                label: gettext('Last Week'),
+            },
+            {
+                key: 'Last Month',
+                label: gettext('Last Month'),
+            },
+        ],
         isEnabled: () => true,
     },
     {
@@ -90,6 +103,24 @@ export const getDateFilters = (gettext) => [
         fieldname: 'schedule_settings.utc_publish_schedule',
         predefinedFilters: [last24hoursFilter, last8hoursFilter],
         isEnabled: (searchConfig) => searchConfig.scheduled,
+    },
+    {
+        // TODO: set predefinedFilters in IDateRange format
+        labelBlock: gettext('Compliant lifetime'),
+        labelFrom: null,
+        labelTo: gettext('Need review before'),
+        fieldname: 'extra.compliantlifetime',
+        predefinedFilters: [
+            {
+                key: 'Next month',
+                label: gettext('Month'),
+            },
+            {
+                key: 'Next 3 months',
+                label: gettext('3 Months'),
+            },
+        ],
+        isEnabled: () => false,
     },
 ];
 

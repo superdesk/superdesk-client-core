@@ -17,7 +17,8 @@ describe('attachments', () => {
             .then((attachment) => {
                 expect(api.find.calls.count()).toBe(2);
             })
-            .then(done);
+            .then(done)
+            .catch(done.fail);
 
         $rootScope.$digest();
     }));

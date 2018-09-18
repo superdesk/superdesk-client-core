@@ -308,7 +308,8 @@ describe('superdesk.apps.workspace.content', () => {
                     var fields = el.find('li.schema-item');
 
                     expect(fields.length).toBe(Object.keys(content.contentProfileEditor).length);
-                });
+                })
+                    .catch(done.fail);
             });
         });
 

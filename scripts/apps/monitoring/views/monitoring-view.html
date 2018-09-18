@@ -56,8 +56,9 @@
                 <button ng-if="monitoring.showRefresh &&
                                         (monitoring.singleGroup || type === 'spike' || type === 'highlights' || monitoring.viewColumn)"
                         ng-click="refreshGroup(monitoring.singleGroup)"
+                        class="btn btn--primary btn--icon-only-circle btn--small"
                         sd-tooltip="{{:: 'Refresh' | translate}}" flow="left" class="navbtn">
-                    <i class="icon-repeat icon--blue"></i>
+                    <i class="icon-repeat"></i>
                 </button>
             </div>
             <div class="pull-left-10x" ng-if="type === 'highlights'" sd-create-highlights-button data-highlight="monitoring.queryParam.highlight"></div>

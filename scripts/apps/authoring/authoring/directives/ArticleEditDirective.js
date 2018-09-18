@@ -287,7 +287,7 @@ export function ArticleEditDirective(
                             editable: true,
                             isAssociated: false,
                             defaultTab: defaultTab,
-                            hideTabs: scope.metadata.crop_sizes ? [] : ['crop'],
+                            hideTabs: scope.metadata && scope.metadata.crop_sizes ? [] : ['crop'],
                             showMetadata: true,
                         }
                     )
