@@ -50,7 +50,6 @@ export function Personal(superdesk, workspaceMenuProvider) {
             label: gettext('Personal'),
             priority: 100,
             templateUrl: 'scripts/apps/monitoring/views/personal.html',
-            topTemplateUrl: 'scripts/apps/dashboard/views/workspace-topnav.html',
             sideTemplateUrl: 'scripts/apps/workspace/views/workspace-sidenav.html',
         });
 
@@ -59,7 +58,7 @@ export function Personal(superdesk, workspaceMenuProvider) {
         label: gettext('Personal'),
         shortcut: 'alt+p',
         icon: 'personal',
-        order: 800,
+        order: 900,
         group: 'personal',
     });
 }
