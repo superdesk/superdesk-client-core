@@ -9,7 +9,7 @@
 
     <div class="modal__body">
         <div class="sd-alert sd-alert--hollow sd-alert--primary">
-            <p>You have chosen to subscribe to <strong>{{savedSearch.name}}</strong>. Please define the frequency and time of your email notifications below.</p>
+            <p><span translate>You have chosen to subscribe to</span> <strong>{{savedSearch.name}}</strong>. <span translate>Please define the frequency and time of your email notifications below.</span></p>
         </div>
 
         <div
@@ -26,12 +26,12 @@
     </div>
 
     <div class="modal__footer">
-        <button ng-if="isAlreadySubscribed()" class="btn btn--hollow pull-left" ng-click="unsubscribeUser()" translate=>Unsubscribe</button>
+        <button ng-if="isAlreadySubscribed()" class="btn btn--hollow pull-left" ng-click="unsubscribeUser()" translate>Unsubscribe</button>
 
         <button class="btn" ng-click="closeModal()" translate>Cancel</button>
-        <button class="btn btn--primary" ng-click="saveOrUpdate()" ng-disabled="savingEnabled() !== true"=>
-            <span ng-if="isAlreadySubscribed()" translate=>Update subscription</span>
-            <span ng-if="!isAlreadySubscribed()" translate=>Subscribe</span>
+        <button class="btn btn--primary" ng-click="saveOrUpdate()" ng-disabled="savingEnabled() !== true">
+            <span ng-if="isAlreadySubscribed()" translate>Update subscription</span>
+            <span ng-if="!isAlreadySubscribed()" translate>Subscribe</span>
         </button>
     </div>
 </div>
