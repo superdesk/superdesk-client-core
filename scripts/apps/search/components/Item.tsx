@@ -30,7 +30,6 @@ export class Item extends React.Component<any, any> {
     static propTypes: any;
     static defaultProps: any;
 
-
     constructor(props) {
         super(props);
 
@@ -115,12 +114,17 @@ export class Item extends React.Component<any, any> {
     }
 
     render() {
-        var item = this.props.item;
-        var classes = this.props.view === 'photogrid' ?
+        const {item, scope} = this.props;
+        let classes = this.props.view === 'photogrid' ?
             'sd-grid-item sd-grid-item--with-click' :
             'media-box media-' + item.type;
 
-        var contents:any = [
+        // Customize item class from its props
+        if (scope.customRender && typeof scope.customRender.getItemClass === 'function') {
+            classes = `${classes} ${scope.customRender.getItemClass(item)}`;
+        }
+
+        const contents: any = [
             'div', {
                 className: classNames(classes, {
                     active: this.props.flags.selected,
@@ -137,17 +141,14 @@ export class Item extends React.Component<any, any> {
             contents.push(React.createElement(ProgressBar, {completed: item._progress}));
         }
 
-        const getActionsMenu = () => {
-            const {scope} = this.props;
-
-            return !get(scope, 'flags.hideActions') && this.state.hover && !item.gone ? React.createElement(
+        const getActionsMenu = () =>
+            !get(scope, 'flags.hideActions') && this.state.hover && !item.gone ? React.createElement(
                 ActionsMenu, {
                     item: item,
                     svc: this.props.svc,
                     scope: this.props.scope,
                     onActioning: this.setActioningState,
                 }) : null;
-        };
 
         if (this.props.view === 'mgrid') {
             contents.push(

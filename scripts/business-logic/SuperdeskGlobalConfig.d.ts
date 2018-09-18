@@ -30,4 +30,5 @@ export interface ISuperdeskGlobalConfig {
             minutes: number;
         };
     };
+    confirm_spike: boolean;
 }

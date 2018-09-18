@@ -135,10 +135,11 @@ export function SendService(desks, api, $q, notify, $injector, multi, $rootScope
                     return item;
                 });
         } else if (!item.lock_user) {
-            return api.save('move', {}, {task: data}, item).then((item) => {
-                $rootScope.$broadcast('item:update', {item: item});
-                return item;
-            });
+            return api.save('move', {}, {task: data, allPackageItems: config.sendAllPackageItems}, item)
+                .then((item) => {
+                    $rootScope.$broadcast('item:update', {item: item});
+                    return item;
+                });
         }
 
         function getData(config) {
@@ -174,6 +175,7 @@ export function SendService(desks, api, $q, notify, $injector, multi, $rootScope
         self.config = $q.defer();
         self.config.action = action;
         self.config.itemIds = _.map(items, '_id');
+        self.config.isPackage = items.some((item) => item.type === 'composite');
         return self.config.promise.then((config) => {
             self.config = null;
             multi.reset();

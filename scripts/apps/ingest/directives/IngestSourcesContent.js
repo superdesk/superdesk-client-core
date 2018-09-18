@@ -281,7 +281,7 @@ export function IngestSourcesContent(ingestSources, gettext, notify, api, $locat
                 * @method edit
                 */
                 $scope.edit = function(provider) {
-                    $scope.provider = cloneDeep(provider);
+                    $scope.provider = cloneDeep(provider || {});
 
                     $scope.provider.update_schedule = $scope.provider.update_schedule
                         || config.ingest.DEFAULT_SCHEDULE;
@@ -404,7 +404,7 @@ export function IngestSourcesContent(ingestSources, gettext, notify, api, $locat
                     );
 
                     $scope.loading = true;
-                    api.ingestProviders.save(originalProvider, $scope.provider)
+                    api.ingestProviders.save(originalProvider || {}, $scope.provider)
                         .then(() => {
                             notify.success(gettext('Provider saved!'));
                             $scope.cancel();
@@ -420,21 +420,29 @@ export function IngestSourcesContent(ingestSources, gettext, notify, api, $locat
 
                 $scope.gotoIngest = function(provider) {
                     const contentTypes = provider.content_types;
+                    const length = provider.content_types.includes('preformatted') ? 2 : 1;
 
-                    if (contentTypes.length === 1 && contentTypes.includes('event')) {
+                    if (contentTypes.length === length && contentTypes.includes('event')) {
                         const searchParams = {
                             page: 1,
+                            noCalendarAssigned: false,
+                            calendars: null,
                             advancedSearch: {
                                 source: [{
                                     id: provider._id,
                                     name: provider.name,
                                 }],
                             },
+                            spikeState: 'draft',
+                            fulltext: '',
                         };
 
-                        $location.path('/planning').search(
-                            angular.toJson({filter: 'EVENTS', searchParams: searchParams})
-                        );
+                        $location.path('/planning').search({
+                            filter: 'EVENTS',
+                            isNewSearch: true,
+                            searchParams: angular.toJson(searchParams),
+                            calendar: 'ALL_CALENDARS',
+                        });
                     } else {
                         $location.path('/search').search(
                             {repo: 'ingest', source: angular.toJson([provider.source])}

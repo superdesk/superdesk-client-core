@@ -1,87 +1,5 @@
 import _ from 'lodash';
-
-export const getDateFilters = (gettext) => [
-    {
-        labelBlock: gettext('Date created'),
-        labelFrom: gettext('Created from'),
-        labelTo: gettext('Created to'),
-        fieldname: 'firstcreated',
-        predefinedFilters: [
-            {
-                key: 'Last Day',
-                label: gettext('Last Day'),
-            },
-            {
-                key: 'Last Week',
-                label: gettext('Last Week'),
-            },
-            {
-                key: 'Last Month',
-                label: gettext('Last Month'),
-            },
-        ],
-        isEnabled: () => true,
-    },
-    {
-        labelBlock: gettext('Date modified'),
-        labelFrom: gettext('Modified from'),
-        labelTo: gettext('Modified to'),
-        fieldname: 'versioncreated',
-        predefinedFilters: [
-            {
-                key: 'Last Day',
-                label: gettext('Last Day'),
-            },
-            {
-                key: 'Last Week',
-                label: gettext('Last Week'),
-            },
-            {
-                key: 'Last Month',
-                label: gettext('Last Month'),
-            },
-        ],
-        isEnabled: () => true,
-    },
-    {
-        labelBlock: gettext('Date published'),
-        labelFrom: gettext('Published from'),
-        labelTo: gettext('Published to'),
-        fieldname: 'firstpublished',
-        predefinedFilters: [
-            {
-                key: 'Last Day',
-                label: gettext('Last Day'),
-            },
-            {
-                key: 'Last Week',
-                label: gettext('Last Week'),
-            },
-            {
-                key: 'Last Month',
-                label: gettext('Last Month'),
-            },
-        ],
-        isEnabled: () => true,
-    },
-    {
-        labelBlock: gettext('Date scheduled'),
-        labelFrom: null,
-        labelTo: null,
-        fieldname: 'schedule_settings.utc_publish_schedule',
-        predefinedFilters: [
-            {
-                key: 'Last 24 Hours',
-                label: gettext('Last 24 Hours'),
-            },
-            {
-                key: 'Last 8 Hours',
-                label: gettext('Last 8 Hours'),
-            },
-        ],
-        isEnabled: (searchConfig) => searchConfig.scheduled,
-    },
-];
+import {getDateFilters} from './DateFilters';
 
 class LinkFunction {
     constructor(desks, tags, $location, scope, elem, metadata, gettext) {
@@ -97,6 +15,9 @@ class LinkFunction {
         this.scope.setFilter = this.setFilter.bind(this);
         this.scope.isEmpty = this.isEmpty.bind(this);
         this.scope.dateFilters = getDateFilters(gettext);
+        this.scope.clearPredefinedFilters = this.clearPredefinedFilters.bind(this);
+        this.scope.togglePredefinedDateFilter = this.togglePredefinedDateFilter.bind(this);
+        this.scope.hasPredefinedDateFilter = this.hasPredefinedDateFilter.bind(this);
         this.aggregationsMapper = {
             genre: this._categoryMapper.bind(this),
             category: this._categoryMapper.bind(this),
@@ -117,6 +38,26 @@ class LinkFunction {
                     });
                 }
             });
+    }
+
+    hasPredefinedDateFilter(fieldname, filterValue) {
+        return this.$location.search()[fieldname] === filterValue;
+    }
+
+    clearPredefinedFilters(fieldname) {
+        this.$location.search(fieldname, null);
+    }
+
+    togglePredefinedDateFilter(fieldname, filterValue) {
+        // clear exact range filters
+        this.$location.search(fieldname + 'from', null);
+        this.$location.search(fieldname + 'to', null);
+
+        if (this.hasPredefinedDateFilter(fieldname, filterValue)) {
+            this.clearPredefinedFilters(fieldname);
+        } else {
+            this.$location.search(fieldname, filterValue);
+        }
     }
 
 
@@ -251,7 +192,6 @@ class LinkFunction {
         this.scope.aggregations = {
             type: {},
             desk: {},
-            date: {},
             source: {},
             credit: {},
             category: {},
@@ -272,11 +212,9 @@ class LinkFunction {
      * @param {String} key - facet value
      * @param {String?} fieldname
      */
-    toggleFilter(type, key, fieldname) {
+    toggleFilter(type, key) {
         if (this.hasFilter(type, key)) {
             this.removeFilter(type, key);
-        } else if (type === 'date') {
-            this.setDateFilter(key, fieldname);
         } else {
             this.setFilter(type, key);
         }
@@ -353,37 +291,6 @@ class LinkFunction {
                 JSON.stringify([{label: key, value: this.scope.aggregations.credit[key].qcode}]));
         } else {
             this.$location.search(type, JSON.stringify([key]));
-        }
-    }
-
-    /**
-     * @ngdoc method
-     * @name sdSearchFilters#setDateFilter
-     * @public
-     * @description Set location url for date filters
-     * @param {string} key Date key
-     */
-    setDateFilter(key, fieldname) {
-        // Clean other date filters
-
-        if (fieldname != null) {
-            this.$location.search(fieldname, null);
-            this.$location.search(fieldname + 'from', null);
-            this.$location.search(fieldname + 'to', null);
-
-            if (key === 'Last 8 Hours') {
-                this.$location.search(fieldname, 'now-8H');
-            } else if (key === 'Last 24 Hours') {
-                this.$location.search(fieldname, 'now-24H');
-            } else if (key === 'Last Day') {
-                this.$location.search(fieldname, 'last_day');
-            } else if (key === 'Last Week') {
-                this.$location.search(fieldname, 'last_week');
-            } else if (key === 'Last Month') {
-                this.$location.search(fieldname, 'last_month');
-            }
-        } else {
-            this.$location.search(fieldname, null);
         }
     }
 

@@ -100,6 +100,19 @@ angular.module('superdesk.apps.packaging', [
                             actions.add_to_current;
                     }],
                 group: 'packaging',
+            })
+
+            .activity('movepackage', {
+                label: gettext('Send package to'),
+                icon: 'share-alt',
+                controller: ['data', 'send', (data, send) => {
+                    send.allAs([data.item], 'send_to');
+                }],
+                filters: [{action: 'list', type: 'archive'}],
+                additionalCondition: ['authoring', 'item', 'config', (authoring, item, config) =>
+                    authoring.itemActions(item).send && item.type === 'composite',
+                ],
+                group: 'packaging',
             });
     }])
 

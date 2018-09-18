@@ -4,7 +4,7 @@ import classNames from 'classnames';
 
 import {renderArea} from '../helpers';
 
-export const ListItemInfo:React.StatelessComponent<any> = (props) => {
+export const ListItemInfo: React.StatelessComponent<any> = (props) => {
     if (props.scope.singleLine) {
         return React.createElement(
             'div',
@@ -22,11 +22,11 @@ export const ListItemInfo:React.StatelessComponent<any> = (props) => {
         renderArea('firstLine', angular.extend({
             svc: props.svc,
             scope: props.scope,
-        }, props), {className: 'line'}),
+        }, props), {className: 'line'}, props.scope.customRender),
         renderArea('secondLine', angular.extend({
             svc: props.svc,
             scope: props.scope,
-        }, props), {className: 'line'})
+        }, props), {className: 'line'}, props.scope.customRender)
     );
 };
 

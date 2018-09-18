@@ -205,25 +205,38 @@
 
 
 .search-tags {
-    padding: 0 20px 0;
     position: relative;
     z-index: 2;
+    padding: 0 0 0 20px;
     box-shadow: 0 1px 1px 0 rgba(0,0,0,0.12);
     background-color: rgba(255, 255, 255, 0.5);
     .search-tags__list {
-        display: inline; 
+        flex-grow: 1;
         li {
-            display: inline;
+            display: inline-block;
+            padding: 8px 0 6px 0;
         }
     }
     .tag-label {
         line-height: 1.8rem;
-        margin: 11px 5px 11px 0;
+        margin: 2px 1px 2px 0;
         span {
             text-transform: capitalize;
             opacity: 0.75;
             margin-right: 0.5rem
         }
+    }
+    .refresh-box {
+        display: none;
+    }
+    &.refresh {
+        padding-right: 50px;
+        min-height: 44px;
+        .refresh-box { 
+            display: block;
+            position: absolute;
+            right: 10px; top: 8px;
+        } 
     }
 }
 

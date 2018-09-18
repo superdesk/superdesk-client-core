@@ -55,7 +55,9 @@ export default angular.module('superdesk.core.upload.imagemodify', [
             });
 
             scope.$watch('rotate', (value, old) => {
-                transform.rotate = 'rotateZ(' + value + 'deg) ';
+                let scale = (value / 90) % 2 ? (canvas.height / canvas.width) : 1;
+
+                transform.rotate = 'scale(' + scale + ', ' + scale + ') rotateZ(' + value + 'deg) ';
                 setTransform();
             });
 
