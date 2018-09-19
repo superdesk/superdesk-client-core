@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import {closeActionsMenu, renderToBody} from '../helpers';
 
-var closeTimeout;
+let closeTimeout;
 
 export class DesksDropdown extends React.Component<any, any> {
     static propTypes: any;
@@ -48,28 +48,28 @@ export class DesksDropdown extends React.Component<any, any> {
                 onMouseLeave: this.close,
             },
             React.createElement('i',
-                {className: 'icon-dots'})
+                {className: 'icon-dots'}),
             ));
     }
 
     renderDropdown() {
-        var desks = this.props.desks.map((desk, index) => React.createElement(
+        const desks = this.props.desks.map((desk, index) => React.createElement(
             'li',
             {key: 'desk' + index},
             React.createElement(
                 'a',
                 {disabled: !desk.isUserDeskMember, onClick: this.props.openDesk(desk)},
-                desk.desk.name + ' (' + desk.count + ')'
-            )
+                desk.desk.name + ' (' + desk.count + ')',
+            ),
         ));
 
-        var elem = React.createElement('div', {
+        const elem = React.createElement('div', {
             className: 'dropdown__menu more-activity-menu',
             onMouseOver: this.toggle,
             onMouseLeave: this.close,
         }, React.createElement('ul', {}, desks));
 
-        var icon = ReactDOM.findDOMNode(this).getElementsByClassName('dropdown__toggle')[0];
+        const icon = ReactDOM.findDOMNode(this).getElementsByClassName('dropdown__toggle')[0];
 
         renderToBody(elem, icon);
     }

@@ -8,7 +8,7 @@ import {get} from 'lodash';
  * @name SelectInput
  * @description Component to select a list from dropdown with field label
  */
-export const SelectInput:React.StatelessComponent<any> = ({
+export const SelectInput: React.StatelessComponent<any> = ({
     field,
     label,
     value,
@@ -32,12 +32,12 @@ export const SelectInput:React.StatelessComponent<any> = ({
         label: get(opt, labelField),
     }));
 
-    const onChangeHandler = (field, key) => {
-        const value = options.find(
-            (option) => get(option, keyField) === key
+    const onChangeHandler = (_field, _key) => {
+        const _value = options.find(
+            (option) => get(option, keyField) === _key,
         ) || null;
 
-        onChange(field, value);
+        onChange(_field, _value);
     };
 
     return (

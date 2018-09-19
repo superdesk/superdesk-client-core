@@ -6,12 +6,12 @@ import {FetchedDesksInfo} from './index';
 /**
  * Media Info - renders item metadata
  */
-export const MediaInfo:React.StatelessComponent<any> = (props) => {
+export const MediaInfo: React.StatelessComponent<any> = (props) => {
     const {gettextCatalog, gettext, datetime} = props.svc;
 
-    var item = props.item;
-    var meta = [];
-    var source = props.ingestProvider ? props.ingestProvider.source : '';
+    const item = props.item;
+    const meta = [];
+    let source = props.ingestProvider ? props.ingestProvider.source : '';
 
     if (item.source) {
         source = item.source;
@@ -19,13 +19,13 @@ export const MediaInfo:React.StatelessComponent<any> = (props) => {
     if (source) {
         meta.push(
             React.createElement('dt', {key: 1}, gettextCatalog.getString('source')),
-            React.createElement('dd', {key: 2, className: 'provider'}, source)
+            React.createElement('dd', {key: 2, className: 'provider'}, source),
         );
     }
 
     meta.push(
         React.createElement('dt', {key: 3}, gettextCatalog.getString('updated')),
-        React.createElement('dd', {key: 4}, datetime.shortFormat(item.versioncreated))
+        React.createElement('dd', {key: 4}, datetime.shortFormat(item.versioncreated)),
     );
 
     if (item.is_spiked) {
@@ -33,27 +33,27 @@ export const MediaInfo:React.StatelessComponent<any> = (props) => {
         meta.push(React.createElement('dd', {key: 6}, datetime.shortFormat(item.expiry)));
     }
 
-    var info = [];
-    var flags = item.flags || {};
+    const info = [];
+    const flags = item.flags || {};
 
     info.push(React.createElement(
         'h5',
         {key: 1,
-            dangerouslySetInnerHTML: createMarkUp(item.headline || item.slugline || item.type)}
+            dangerouslySetInnerHTML: createMarkUp(item.headline || item.slugline || item.type)},
 
     ));
 
     info.push(React.createElement(
         'dl',
         {key: 2},
-        meta
+        meta,
     ));
 
     if (flags.marked_for_legal) {
         info.push(React.createElement(
             'div',
             {key: 3, className: 'state-label legal'},
-            gettext('Legal')
+            gettext('Legal'),
         ));
     }
 
@@ -64,7 +64,7 @@ export const MediaInfo:React.StatelessComponent<any> = (props) => {
             React.createElement(FetchedDesksInfo, {
                 item: item,
                 svc: props.svc,
-            })
+            }),
         ));
     }
 

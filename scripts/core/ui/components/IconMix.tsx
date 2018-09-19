@@ -12,7 +12,7 @@ import Icon from './Icon';
  * @name IconMix
  * @description Mixing two icons
  */
-const IconMix:React.StatelessComponent<any> = ({icon, subIcon, big, doubleSize, className, tooltip, color}) => {
+const IconMix: React.StatelessComponent<any> = ({icon, subIcon, big, doubleSize, className, tooltip, color}) => {
     let iconElement;
 
     if (subIcon) {

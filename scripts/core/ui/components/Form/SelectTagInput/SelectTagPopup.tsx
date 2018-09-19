@@ -19,7 +19,6 @@ export class SelectTagPopup extends React.Component<any, any> {
     static propTypes: any;
     static defaultProps: any;
 
-
     constructor(props) {
         super(props);
 
@@ -120,7 +119,7 @@ export class SelectTagPopup extends React.Component<any, any> {
                                     key={index}
                                     className={classNames(
                                         'select-tag__popup-item',
-                                        {'select-tag__popup-item--active': index === this.state.activeOptionIndex}
+                                        {'select-tag__popup-item--active': index === this.state.activeOptionIndex},
                                     )}
                                 >
                                     <button onClick={this.props.onChange.bind(null, o)}>

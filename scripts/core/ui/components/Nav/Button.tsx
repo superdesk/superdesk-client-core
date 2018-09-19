@@ -9,7 +9,7 @@ import './style.scss';
  * @name Button
  * @description Button Component for a NavBar
  */
-export const Button:React.StatelessComponent<any> = ({
+export const Button: React.StatelessComponent<any> = ({
     className,
     onClick,
     icon,
@@ -34,7 +34,7 @@ export const Button:React.StatelessComponent<any> = ({
                 'dropdown-toggle': dropdown,
                 dropdown__toggle: dropdown,
             },
-            className
+            className,
         )}
         onClick={onClick || null}
         data-sd-tooltip={tooltip}

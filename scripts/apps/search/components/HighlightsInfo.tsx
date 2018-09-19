@@ -45,14 +45,14 @@ export class HighlightsInfo extends React.Component<any, any> {
     getHighlightStatuses(highlights, item) {
         const {$filter, highlightsService} = this.props.svc;
 
-        var highlightStatuses = {};
-        var highlightsById = this.props.highlightsById;
+        const highlightStatuses = {};
+        const highlightsById = this.props.highlightsById;
 
         forEach(highlights, (highlight) => {
-            var hours = $filter('hoursFromNow')(item.versioncreated);
+            const hours = $filter('hoursFromNow')(item.versioncreated);
 
             highlightStatuses[highlight] = highlightsService.isInDateRange(
-                highlightsById[highlight], hours
+                highlightsById[highlight], hours,
             );
         });
 
@@ -60,7 +60,7 @@ export class HighlightsInfo extends React.Component<any, any> {
     }
 
     getHighlights() {
-        var itemHighlights = [];
+        let itemHighlights = [];
 
         if (isCheckAllowed(this.props.item)) {
             if (this.props.item.archive_item && this.props.item.archive_item.highlights &&
@@ -76,10 +76,10 @@ export class HighlightsInfo extends React.Component<any, any> {
 
     render() {
         const {$location} = this.props.svc;
-        var highlights = this.getHighlights();
+        const highlights = this.getHighlights();
 
-        var hasActiveHighlight = function() {
-            var statuses = this.getHighlightStatuses(highlights, this.props.item);
+        const hasActiveHighlight = function() {
+            const statuses = this.getHighlightStatuses(highlights, this.props.item);
 
             if ($location.path() === '/workspace/highlights') {
                 return statuses[$location.search().highlight];
@@ -106,14 +106,14 @@ export class HighlightsInfo extends React.Component<any, any> {
                             'icon-multi-star': highlights.length > 1,
                             red: hasActiveHighlight,
                         }),
-                    })
-                )
-            ) : null
+                    }),
+                ),
+            ) : null,
         );
     }
 
     renderDropdown() {
-        var elem = React.createElement(HighlightsList, {
+        const elem = React.createElement(HighlightsList, {
             item: this.props.item,
             highlights: this.getHighlights(),
             highlightsById: this.props.highlightsById,
@@ -121,7 +121,7 @@ export class HighlightsInfo extends React.Component<any, any> {
             scope: this.props.scope,
         });
 
-        var icon = ReactDOM.findDOMNode(this).getElementsByClassName('icon-star')[0] ||
+        const icon = ReactDOM.findDOMNode(this).getElementsByClassName('icon-star')[0] ||
         ReactDOM.findDOMNode(this).getElementsByClassName('icon-multi-star')[0];
 
         openActionsMenu(elem, icon, this.props.item._id);

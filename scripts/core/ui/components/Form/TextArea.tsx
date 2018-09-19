@@ -63,7 +63,7 @@ export class TextArea extends React.Component<any, any> {
         } else {
             onChange(
                 field,
-                multiLine ? event.target.value : event.target.value.replace('\n', '')
+                multiLine ? event.target.value : event.target.value.replace('\n', ''),
             );
         }
 
@@ -97,7 +97,7 @@ export class TextArea extends React.Component<any, any> {
                     {
                         'sd-line-input__input--auto-height': autoHeight,
                         'sd-line-input__input--padding-right-60': paddingRight60,
-                    }
+                    },
                 )}
                 value={value}
                 name={field}

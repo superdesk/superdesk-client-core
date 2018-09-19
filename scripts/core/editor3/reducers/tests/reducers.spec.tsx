@@ -55,7 +55,7 @@ describe('editor3.reducers', () => {
     it('HIGHLIGHTS_RENDER highlight', () => {
         const startState = withSearchTerm(
             'apple banana apple ananas apple prune',
-            {index: 1, pattern: 'Apple', caseSensitive: false}
+            {index: 1, pattern: 'Apple', caseSensitive: false},
         );
 
         const state = reducer(startState, {type: 'HIGHLIGHTS_RENDER'});
@@ -71,7 +71,7 @@ describe('editor3.reducers', () => {
     it('HIGHLIGHTS_RENDER case sensitive', () => {
         const startState = withSearchTerm(
             'apple banana apple ananas apple prune',
-            {index: 1, pattern: 'Apple', caseSensitive: true}
+            {index: 1, pattern: 'Apple', caseSensitive: true},
         );
 
         const state = reducer(startState, {type: 'HIGHLIGHTS_RENDER'});
@@ -84,7 +84,7 @@ describe('editor3.reducers', () => {
     it('HIGHLIGHTS_RENDER special characters', () => {
         const startState = withSearchTerm(
             '?apple banana ?apple ananas apple prune',
-            {index: 1, pattern: '?Apple', caseSensitive: false}
+            {index: 1, pattern: '?Apple', caseSensitive: false},
         );
 
         const state = reducer(startState, {type: 'HIGHLIGHTS_RENDER'});
@@ -99,7 +99,7 @@ describe('editor3.reducers', () => {
     it('HIGHLIGHTS_CRITERIA change term', () => {
         const startState = withSearchTerm(
             'apple banana apple ananas apple prune',
-            {index: 1, pattern: 'apple', caseSensitive: false}
+            {index: 1, pattern: 'apple', caseSensitive: false},
         );
 
         const state = reducer(startState, {
@@ -119,7 +119,7 @@ describe('editor3.reducers', () => {
     it('HIGHLIGHTS_CRITERIA change sensitivity', () => {
         const startState = withSearchTerm(
             'apple banana apple ananas apple prune',
-            {index: 1, pattern: 'apple', caseSensitive: false}
+            {index: 1, pattern: 'apple', caseSensitive: false},
         );
 
         const state = reducer(startState, {
@@ -133,7 +133,7 @@ describe('editor3.reducers', () => {
     it('HIGHLIGHTS_FIND_NEXT', () => {
         const startState = withSearchTerm(
             'apple banana apple ananas apple prune',
-            {index: 1, pattern: 'Apple', caseSensitive: false}
+            {index: 1, pattern: 'Apple', caseSensitive: false},
         );
 
         const state = reducer(startState, {type: 'HIGHLIGHTS_FIND_NEXT'});
@@ -148,7 +148,7 @@ describe('editor3.reducers', () => {
     it('HIGHLIGHTS_FIND_NEXT past last', () => {
         const startState = withSearchTerm(
             'apple banana apple ananas apple prune',
-            {index: 2, pattern: 'Apple', caseSensitive: false}
+            {index: 2, pattern: 'Apple', caseSensitive: false},
         );
 
         const state = reducer(startState, {type: 'HIGHLIGHTS_FIND_NEXT'});
@@ -163,7 +163,7 @@ describe('editor3.reducers', () => {
     it('HIGHLIGHTS_FIND_PREV', () => {
         const startState = withSearchTerm(
             'apple banana apple ananas apple prune',
-            {index: 1, pattern: 'Apple', caseSensitive: false}
+            {index: 1, pattern: 'Apple', caseSensitive: false},
         );
 
         const state = reducer(startState, {type: 'HIGHLIGHTS_FIND_PREV'});
@@ -178,7 +178,7 @@ describe('editor3.reducers', () => {
     it('HIGHLIGHTS_FIND_PREV before first', () => {
         const startState = withSearchTerm(
             'apple banana apple ananas apple prune',
-            {index: 0, pattern: 'Apple', caseSensitive: false}
+            {index: 0, pattern: 'Apple', caseSensitive: false},
         );
 
         const state = reducer(startState, {type: 'HIGHLIGHTS_FIND_PREV'});
@@ -193,7 +193,7 @@ describe('editor3.reducers', () => {
     it('HIGHLIGHTS_FIND_REPLACE', () => {
         const startState = withSearchTerm(
             'apple banana apple ananas apple prune',
-            {index: 1, pattern: 'Apple', caseSensitive: false}
+            {index: 1, pattern: 'Apple', caseSensitive: false},
         );
 
         const state = reducer(startState, {
@@ -209,7 +209,7 @@ describe('editor3.reducers', () => {
     it('HIGHLIGHTS_FIND_REPLACE_ALL', () => {
         const startState = withSearchTerm(
             'apple banana apple ananas apple prune',
-            {index: 1, pattern: 'Apple', caseSensitive: false}
+            {index: 1, pattern: 'Apple', caseSensitive: false},
         );
 
         const state = reducer(startState, {
@@ -224,7 +224,7 @@ describe('editor3.reducers', () => {
 
     it('SPELLCHECKER_REPLACE_WORD', () => {
         const editorState = EditorState.createWithContent(
-            ContentState.createFromText('abcd efgh')
+            ContentState.createFromText('abcd efgh'),
         );
 
         const state = reducer({
@@ -261,7 +261,7 @@ describe('editor3.reducers', () => {
                 editorState: selectedEditorState,
                 onChangeValue: jasmine.createSpy('onChangeValue'),
             },
-            applyLink({link: 'http://example.com'})
+            applyLink({link: 'http://example.com'}),
         );
 
         let updatedContent = state.editorState.getCurrentContent();
@@ -276,7 +276,7 @@ describe('editor3.reducers', () => {
                 editorState: state.editorState,
                 onChangeValue: jasmine.createSpy('onChangeValue'),
             },
-            applyLink({link: 'http://foo.com'}, entity)
+            applyLink({link: 'http://foo.com'}, entity),
         );
 
         updatedContent = nextState.editorState.getCurrentContent();

@@ -4,8 +4,10 @@ const SPACE_REGEX = / /g;
 
 function findWithRegex(regex, contentBlock, callback) {
     const text = contentBlock.getText();
-    let matches, start;
+    let matches;
+    let start;
 
+    // tslint:disable-next-line no-conditional-assignment
     while ((matches = regex.exec(text)) !== null) {
         start = matches.index;
         callback(start, start + matches[0].length);

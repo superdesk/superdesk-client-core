@@ -106,7 +106,7 @@ class SpellcheckerError extends React.Component<any, any> {
                             suggestions={suggestions}
                             word={word}
                         />,
-                        getElementForPortal()
+                        getElementForPortal(),
                     )
                     : null}
                 {this.props.children}
@@ -133,8 +133,11 @@ function spellcheckStrategy(contentBlock, callback) {
     const WORD_REGEXP = /[0-9a-zA-Z\u00C0-\u1FFF\u2C00-\uD7FF]+/g;
     const text = contentBlock.getText();
 
-    let matchArr, start, regex = WORD_REGEXP;
+    let matchArr;
+    let start;
+    const regex = WORD_REGEXP;
 
+    // tslint:disable-next-line no-conditional-assignment
     while ((matchArr = regex.exec(text)) !== null) {
         start = matchArr.index;
         if (!spellcheck.isCorrectWord(matchArr[0])) {

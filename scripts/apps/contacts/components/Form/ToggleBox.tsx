@@ -9,8 +9,8 @@ export class ToggleBox extends React.Component<any, any> {
     static defaultProps: any;
 
     dom: {
-        node: any
-    }
+        node: any,
+    };
 
     constructor(props) {
         super(props);
@@ -64,7 +64,7 @@ export class ToggleBox extends React.Component<any, any> {
                 className={classNames(
                     'toggle-box toggle-box--circle',
                     style,
-                    {hidden: !this.state.isOpen}
+                    {hidden: !this.state.isOpen},
                 )}
                 ref={(node) => this.dom.node = node}
             >
@@ -84,7 +84,7 @@ export class ToggleBox extends React.Component<any, any> {
                     {hideUsingCSS && (
                         <div className={classNames(
                             'toggle-box__content',
-                            {'toggle-box__content--hidden': !this.state.isOpen}
+                            {'toggle-box__content--hidden': !this.state.isOpen},
                         )}>
                             {children}
                         </div>

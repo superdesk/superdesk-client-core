@@ -34,7 +34,6 @@ function getEditorStateWithDeleteSuggestion(author, date, startOffset, endOffset
     return editorState;
 }
 
-
 describe('editor3.reducers.suggestion.CREATE_DELETE_SUGGESTION', () => {
     it('should suggest a character delete by using backspace key', () => {
         const date = new Date();
@@ -255,7 +254,6 @@ describe('editor3.reducers.suggestion.CREATE_DELETE_SUGGESTION', () => {
             type: 'DELETE_SUGGESTION',
         });
     });
-
 
     it('should extend old suggestion when backspace before an existing suggestion with the same author', () => {
         const date = new Date();

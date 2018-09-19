@@ -11,7 +11,7 @@ import './style.scss';
  * @name TextAreaInput
  * @description Component to multi-line text input with Field Label
  */
-export const TextAreaInput:React.StatelessComponent<any> = ({
+export const TextAreaInput: React.StatelessComponent<any> = ({
     field,
     value,
     label,

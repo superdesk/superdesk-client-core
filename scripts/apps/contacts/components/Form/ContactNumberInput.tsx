@@ -21,7 +21,7 @@ export class ContactNumberInput extends React.Component<any, any> {
     }
 
     onBlur(e) {
-        let _touched = this.state.touched;
+        const _touched = this.state.touched;
 
         set(_touched, e.target.name, true);
 
@@ -35,7 +35,7 @@ export class ContactNumberInput extends React.Component<any, any> {
     onChange(field, value) {
         // Turn off and prevent public switch for confidential contact number
         if (value === 'Confidential') {
-            this.props.value['public'] = false;
+            this.props.value.public = false;
             this.setState({preventSwitch: true});
         } else {
             this.setState({preventSwitch: false});
@@ -49,8 +49,8 @@ export class ContactNumberInput extends React.Component<any, any> {
         return (
             <Row flex={true}>
                 <LineInput readOnly={readOnly}
-                    invalid={this.isFieldInvalid(`${field}.number`, value['number'])}
-                    message={this.isFieldInvalid(`${field}.number`, value['number']) ?
+                    invalid={this.isFieldInvalid(`${field}.number`, value.number)}
+                    message={this.isFieldInvalid(`${field}.number`, value.number) ?
                         gettext('This field is required.') : ''}>
                     <Label text={gettext('Number')} />
                     <Input

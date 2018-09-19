@@ -71,7 +71,7 @@ const mapDispatchToProps = (dispatch) => ({
     removeLinkSuggestion: () => dispatch(actions.removeLinkSuggestion()),
 });
 
-export const LinkToolbar:React.StatelessComponent<any> = connect(
+export const LinkToolbar: React.StatelessComponent<any> = connect(
     mapStateToProps,
-    mapDispatchToProps
+    mapDispatchToProps,
 )(LinkToolbarComponent);

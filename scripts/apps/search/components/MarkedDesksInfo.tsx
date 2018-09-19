@@ -23,7 +23,6 @@ export class MarkedDesksInfo extends React.Component<any, any> {
     static propTypes: any;
     static defaultProps: any;
 
-
     constructor(props) {
         super(props);
 
@@ -42,7 +41,7 @@ export class MarkedDesksInfo extends React.Component<any, any> {
     }
 
     getMarkedDesks() {
-        var markedDesks = [];
+        let markedDesks = [];
 
         if (isCheckAllowed(this.props.item)) {
             if (this.props.item.archive_item && this.props.item.archive_item.marked_desks &&
@@ -57,7 +56,7 @@ export class MarkedDesksInfo extends React.Component<any, any> {
     }
 
     render() {
-        var markedDesks = this.getMarkedDesks();
+        const markedDesks = this.getMarkedDesks();
 
         return (
             <div className="highlights-box" onClick={this.toggle}>
@@ -72,14 +71,14 @@ export class MarkedDesksInfo extends React.Component<any, any> {
     }
 
     renderDropdown() {
-        var elem = React.createElement(MarkedDesksList, {
+        const elem = React.createElement(MarkedDesksList, {
             item: this.props.item,
             desks: this.getMarkedDesks(),
             markedDesksById: this.props.markedDesksById,
             svc: this.props.svc,
         });
 
-        var icon = ReactDOM.findDOMNode(this).getElementsByClassName('icon-bell')[0] ||
+        const icon = ReactDOM.findDOMNode(this).getElementsByClassName('icon-bell')[0] ||
         ReactDOM.findDOMNode(this).getElementsByClassName('icon-bell')[0];
 
         openActionsMenu(elem, icon, this.props.item._id);

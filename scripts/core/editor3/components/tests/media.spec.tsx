@@ -4,7 +4,7 @@ import {MediaBlockComponent as MediaBlock} from '../media/MediaBlock';
 import {imageBlockAndContent} from './utils';
 import Textarea from 'react-textarea-autosize';
 
-var servicesStub = {
+const servicesStub = {
     svc: {
         gettextCatalog: {
             getString: (s) => s,

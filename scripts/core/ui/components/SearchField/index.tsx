@@ -38,7 +38,7 @@ export default class SearchField extends React.Component<any, any> {
         this.setState(
             {searchInputValue: value || ''},
             // update the input value since we are using the DebounceInput `value` prop
-            () => this.props.onSearch(value)
+            () => this.props.onSearch(value),
         );
     }
 
@@ -47,7 +47,7 @@ export default class SearchField extends React.Component<any, any> {
     }
 
     render() {
-        const {uniqueId} = this.state;
+        const _uniqueId = this.state.uniqueId;
         const minLength = this.props.minLength ? this.props.minLength : 2;
 
         return (
@@ -57,7 +57,7 @@ export default class SearchField extends React.Component<any, any> {
                 value={this.state.searchInputValue}
                 onChange={this.onSearchChange.bind(this)}
                 onClick={this.onSearchClick.bind(this)}
-                id={uniqueId}
+                id={_uniqueId}
                 placeholder="Search"
                 className="sd-line-input__input"
                 type="text"

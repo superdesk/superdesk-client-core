@@ -48,9 +48,9 @@ export default class ItemsTableComponent extends React.Component<any, any> {
         const value = item[field.key] || '';
         const disabled = !item.is_active;
         const update = (event) => {
-            let value = field.type === 'integer' ? parseInt(event.target.value, 10) : event.target.value;
+            const _value = field.type === 'integer' ? parseInt(event.target.value, 10) : event.target.value;
 
-            this.props.update(item, field.key, value);
+            this.props.update(item, field.key, _value);
         };
         const required = this.state.itemsValidation.length && has(this.state.itemsValidation[index], field.key);
         const valid = !required || this.state.itemsValidation[index][field.key];
@@ -96,7 +96,7 @@ export default class ItemsTableComponent extends React.Component<any, any> {
                 <ObjectEditor
                     value={value}
                     disabled={disabled}
-                    onChange={(value) => this.props.update(item, field.key, value)}
+                    onChange={(_value) => this.props.update(item, field.key, _value)}
                 />
             );
         }

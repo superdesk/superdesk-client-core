@@ -55,7 +55,6 @@ export default class StyleButton extends React.Component<any, any> {
     static propTypes: any;
     static defaultProps: any;
 
-
     constructor(props) {
         super(props);
         this.onToggle = this.onToggle.bind(this);

@@ -2,13 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {Checkbox, Label, LineInput} from '.';
 
-
 /**
  * @ngdoc react
  * @name RadioButtonInput
  * @description Component to show radio-button
  */
-export const RadioButtonInput:React.StatelessComponent<any> = ({
+export const RadioButtonInput: React.StatelessComponent<any> = ({
     field,
     value,
     onChange,
@@ -26,11 +25,11 @@ export const RadioButtonInput:React.StatelessComponent<any> = ({
                     label={state.label}
                     value={value}
                     checkedValue={state.value}
-                    onChange={(field, value) => onChange(field, value)}
+                    onChange={(_field, _value) => onChange(_field, _value)}
                     type="radio"
                     labelPosition="inside"
                     readOnly={readOnly}
-                />
+                />,
             )}
         </div>
     </LineInput>

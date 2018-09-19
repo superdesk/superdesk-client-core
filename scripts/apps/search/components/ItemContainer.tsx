@@ -1,13 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export const ItemContainer:React.StatelessComponent<any> = (props) => {
+export const ItemContainer: React.StatelessComponent<any> = (props) => {
     const {gettext} = props.svc;
     const {gettextCatalog} = props.svc;
 
-    var item = props.item;
-    var desk = props.desk || null;
-    var label, value;
+    const item = props.item;
+    const desk = props.desk || null;
+    let label;
+    let value;
 
     if (item._type !== 'ingest') {
         if (desk) {
@@ -28,9 +29,9 @@ export const ItemContainer:React.StatelessComponent<any> = (props) => {
         React.createElement(
             'span',
             {className: 'location-desk-label'},
-            label
+            label,
         ),
-        value
+        value,
     );
 };
 

@@ -8,10 +8,10 @@ import classNames from 'classnames';
  * @description Main panel component of column box
  */
 
-export const MainColumn:React.StatelessComponent<any> = ({children, padded}) => (
+export const MainColumn: React.StatelessComponent<any> = ({children, padded}) => (
     <div className={classNames(
         'sd-column-box__main-column',
-        {'sd-column-box__main-column--padded': padded}
+        {'sd-column-box__main-column--padded': padded},
     )} >
         {children}
     </div>

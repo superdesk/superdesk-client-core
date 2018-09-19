@@ -5,7 +5,6 @@ export default class PackageGroup extends React.Component<any, any> {
     static propTypes: any;
     static defaultProps: any;
 
-
     constructor(props) {
         super(props);
         this.select = this.select.bind(this);
@@ -16,7 +15,7 @@ export default class PackageGroup extends React.Component<any, any> {
     }
 
     render() {
-        var group = this.props.group;
+        const group = this.props.group;
 
         return (
             <li>

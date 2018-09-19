@@ -60,11 +60,11 @@ export class HighlightsList extends React.Component<any, any> {
 
     render() {
         const {highlightsService} = this.props.svc;
-        var highlights = this.props.highlights;
-        var highlightsById = this.props.highlightsById || {};
+        const highlights = this.props.highlights;
+        const highlightsById = this.props.highlightsById || {};
 
-        var createHighlight = function(id) {
-            var highlight = highlightsById[id];
+        const createHighlight = function(id) {
+            const highlight = highlightsById[id];
 
             if (highlight) {
                 return React.createElement(
@@ -74,29 +74,29 @@ export class HighlightsList extends React.Component<any, any> {
                     highlightsService.hasMarkItemPrivilege() ? React.createElement(
                         'button',
                         {className: 'btn btn--mini', onClick: this.removeHighlight(highlight)},
-                        gettext('REMOVE')
-                    ) : null
+                        gettext('REMOVE'),
+                    ) : null,
                 );
             }
         }.bind(this);
 
-        var items = [
+        const items = [
             React.createElement(
                 'li',
                 {key: 'item-highlight-label'},
                 React.createElement(
                     'div',
                     {className: 'dropdown__menu-label'},
-                    gettext('Marked For')
+                    gettext('Marked For'),
                 ),
                 React.createElement(
                     'button',
                     {className: 'dropdown__menu-close', onClick: this.closeMenu},
                     React.createElement(
                         'i',
-                        {className: 'icon-close-small icon--white'}
-                    )
-                )
+                        {className: 'icon-close-small icon--white'},
+                    ),
+                ),
             ),
         ];
 
@@ -107,7 +107,7 @@ export class HighlightsList extends React.Component<any, any> {
                 onMouseEnter: this.stopTimeout,
                 onMouseLeave: this.close,
             },
-            items.concat(highlights.map(createHighlight))
+            items.concat(highlights.map(createHighlight)),
         );
     }
 }

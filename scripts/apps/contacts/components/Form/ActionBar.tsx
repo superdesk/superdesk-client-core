@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export const ActionBar:React.StatelessComponent<any> = ({svc, readOnly, dirty, valid, onSave, onCancel}) => {
+export const ActionBar: React.StatelessComponent<any> = ({svc, readOnly, dirty, valid, onSave, onCancel}) => {
     const {gettext} = svc;
 
     return (

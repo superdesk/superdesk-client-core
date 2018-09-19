@@ -20,15 +20,15 @@ export default class HighlightBtn extends React.Component<any, any> {
     }
 
     render() {
-        var item = this.props.item;
-        var highlight = this.props.highlight;
-        var isMarked = item.highlights && item.highlights.indexOf(highlight._id) >= 0;
+        const item = this.props.item;
+        const highlight = this.props.highlight;
+        const isMarked = item.highlights && item.highlights.indexOf(highlight._id) >= 0;
 
         return React.createElement(
             'button',
             {disabled: isMarked, onClick: this.markHighlight},
             React.createElement('i', {className: 'icon-star'}),
-            highlight.label
+            highlight.label,
         );
     }
 }

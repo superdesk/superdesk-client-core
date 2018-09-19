@@ -37,7 +37,7 @@ describe('editor3.components.toolbar', () => {
             <BlockStyleButtons
                 editorFormat={opts}
                 editorState={editorState}
-            />
+            />,
         );
 
         wrapper.find('StyleButton').forEach((btn) => {
@@ -55,7 +55,7 @@ describe('editor3.components.toolbar', () => {
             <InlineStyleButtons
                 editorFormat={opts}
                 editorState={editorState}
-            />
+            />,
         );
 
         wrapper.find('StyleButton').forEach((btn) => {

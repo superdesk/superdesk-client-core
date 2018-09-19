@@ -24,7 +24,7 @@ describe('editor3.reducers.suggestion.ACCEPT_REJECT_SUGGESTION', () => {
         expect(selection.getEndOffset()).toEqual(8);
         expect(selection.getEndKey()).toEqual(content.getFirstBlock().getKey());
 
-        let block = content.getFirstBlock();
+        const block = content.getFirstBlock();
 
         for (let i = 0; i < 14; i++) {
             expect(block.getInlineStyleAt(i).toJS()).toEqual([]);
@@ -54,7 +54,7 @@ describe('editor3.reducers.suggestion.ACCEPT_REJECT_SUGGESTION', () => {
         expect(selection.getEndOffset()).toEqual(4);
         expect(selection.getEndKey()).toEqual(content.getFirstBlock().getKey());
 
-        let block = content.getFirstBlock();
+        const block = content.getFirstBlock();
 
         for (let i = 0; i < 10; i++) {
             expect(block.getInlineStyleAt(i).toJS()).toEqual([]);
@@ -159,7 +159,7 @@ describe('editor3.reducers.suggestion.ACCEPT_REJECT_SUGGESTION', () => {
         expect(selection.getEndOffset()).toEqual(10);
         expect(selection.getEndKey()).toEqual(content.getLastBlock().getKey());
 
-        let block = content.getFirstBlock();
+        const block = content.getFirstBlock();
 
         for (let i = 0; i < 12; i++) {
             expect(block.getInlineStyleAt(i).toJS()).toEqual([]);
@@ -228,7 +228,6 @@ describe('editor3.reducers.suggestion.ACCEPT_REJECT_SUGGESTION', () => {
         expect(selection.getEndOffset()).toEqual(10);
         expect(selection.getEndKey()).toEqual(content.getFirstBlock().getKey());
 
-
         let block = content.getFirstBlock();
 
         for (let i = 0; i < 10; i++) {
@@ -265,8 +264,7 @@ describe('editor3.reducers.suggestion.ACCEPT_REJECT_SUGGESTION', () => {
         expect(selection.getEndOffset()).toEqual(10);
         expect(selection.getEndKey()).toEqual(content.getFirstBlock().getKey());
 
-
-        let block = content.getFirstBlock();
+        const block = content.getFirstBlock();
 
         for (let i = 0; i < 20; i++) {
             expect(block.getInlineStyleAt(i).toJS()).toEqual([]);

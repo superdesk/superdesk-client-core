@@ -20,7 +20,7 @@ class UnstyledBlock extends BaseUnstyledComponent {
         this.getDropBlockKey = () => this.props.children['key'];
     }
     render() {
-        let {className} = this.props;
+        const {className} = this.props;
 
         const propsToTransfer = omit(this.props, ['className', 'invisibles', 'dispatch', 'editorProps']);
 

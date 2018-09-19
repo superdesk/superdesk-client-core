@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
-export const LineInput:React.StatelessComponent<any> = ({
+export const LineInput: React.StatelessComponent<any> = ({
     children,
     required,
     invalid,
@@ -32,7 +32,7 @@ export const LineInput:React.StatelessComponent<any> = ({
             'sd-line-input--label-left': labelLeft,
             'sd-line-input--label-left-auto': labelLeftAuto,
         },
-        className
+        className,
     )}>
         {children}
         {hint && <div className="sd-line-input__hint">{hint}</div>}

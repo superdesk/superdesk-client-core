@@ -1,5 +1,5 @@
-import {IUser} from "./User";
-import {IStage} from "./Stage";
+import {IUser} from './User';
+import {IStage} from './Stage';
 
 export interface IDesk {
     _id: string;

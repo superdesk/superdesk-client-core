@@ -15,7 +15,8 @@ class Annotation extends React.Component<any, any> {
     static defaultProps: any;
 
     render() {
-        const {annotation, editorNode, showPopup, highlightId, highlightsManager, annotationTypes} = this.props;
+        const {annotation, editorNode, highlightId, highlightsManager, annotationTypes} = this.props;
+        const _showPopup = this.props.showPopup;
         const {author, avatar, date, msg, annotationType} = annotation.data;
         const {name: type} = annotationTypes.find((t) => t.qcode === annotationType);
         const relativeDateString = moment(date).calendar();
@@ -24,7 +25,7 @@ class Annotation extends React.Component<any, any> {
         const html = toHTML(convertFromRaw(JSON.parse(msg)), logger);
         const modal = ng.get('modal');
 
-        const onEdit = () => showPopup(PopupTypes.Annotation, {annotation, highlightId});
+        const onEdit = () => _showPopup(PopupTypes.Annotation, {annotation, highlightId});
         const onDelete = () => modal
             .confirm(gettext('The annotation will be deleted. Are you sure?'))
             .then(() => {
@@ -88,7 +89,7 @@ const AnnotationWithDependenciesLoaded = connectPromiseResults(() => ({
         .then(() => ng.get('metadata').values.annotation_types),
 }))(Annotation);
 
-export const AnnotationPopup:React.StatelessComponent<any> = connect(
+export const AnnotationPopup: React.StatelessComponent<any> = connect(
     () => ({}),
-    {showPopup}
+    {showPopup},
 )(AnnotationWithDependenciesLoaded);

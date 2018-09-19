@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {closeActionsMenu} from '../../helpers';
 
-const Label:React.StatelessComponent<any> = (props) => {
+const Label: React.StatelessComponent<any> = (props) => {
     const {gettextCatalog} = props.svc;
 
     return React.createElement(
@@ -18,10 +18,10 @@ const Label:React.StatelessComponent<any> = (props) => {
             }},
             React.createElement(
                 'i',
-                {className: 'icon-close-small'}
-            )
-        ) : null
-        )
+                {className: 'icon-close-small'},
+            ),
+        ) : null,
+        ),
     );
 };
 

@@ -43,7 +43,7 @@ const addTable = (state, data) => {
     const {editorState} = insertAtomicBlockWithoutEmptyLines(
         state.editorState,
         entityKey,
-        ' '
+        ' ',
     );
 
     return onChange(state, editorState);
@@ -56,8 +56,8 @@ const addTable = (state, data) => {
  */
 const addRowAfter = (state) =>
     processCells(state, (prevCells, numCols, nRows, i, j, withHeader) => {
-        let numRows = nRows + 1;
-        let cells = [];
+        const numRows = nRows + 1;
+        const cells = [];
 
         prevCells.forEach((row, index) => {
             cells.push(row);
@@ -100,7 +100,7 @@ const addColAfter = (state) =>
             withHeader: withHeader,
             cells: cells.map((_, ii) =>
                 Array.from(new Array(numCols + 1))
-                    .map((_, jj) => {
+                    .map((__, jj) => {
                         if (jj === j + 1) {
                             return null;
                         }
@@ -212,7 +212,7 @@ const toggleTableStyle = (state, inlineStyle) =>
                 data: newData,
                 newCurrentStyle: newCurrentStyle,
             };
-        }
+        },
     );
 
 export default table;

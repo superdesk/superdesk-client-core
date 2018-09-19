@@ -13,8 +13,8 @@ export class SelectFieldPopup extends React.Component<any, any> {
     static defaultProps: any;
 
     dom: {
-        itemList: any
-    }
+        itemList: any,
+    };
 
     constructor(props) {
         super(props);
@@ -53,7 +53,6 @@ export class SelectFieldPopup extends React.Component<any, any> {
             scrollListItemIfNeeded(this.state.activeIndex, this.dom.itemList);
         }
     }
-
 
     handleUpArrowKey(event) {
         if (this.state.activeIndex > 0) {

@@ -38,7 +38,7 @@ const replaceHighlight = (state, txt, all = false) => {
     let {content, editorState} = clearHighlights(es.getCurrentContent(), es);
 
     // tries to replace the occurrence at position pos and returns true if successful.
-    let replaceAt = (pos) =>
+    const replaceAt = (pos) =>
         forEachMatch(content, pattern, caseSensitive, (i, selection, block) => {
             if (i === pos) {
                 // let's preserve styling and entities (such as links) on replacing
@@ -142,7 +142,7 @@ const render = (state) => {
         content = Modifier.applyInlineStyle(
             content,
             selection,
-            i === index ? 'HIGHLIGHT_STRONG' : 'HIGHLIGHT'
+            i === index ? 'HIGHLIGHT_STRONG' : 'HIGHLIGHT',
         );
     });
 
@@ -187,7 +187,7 @@ export const clearHighlights = (c, es = null) => {
     let editorState = es;
     let changedContent = false;
 
-    const filterFn = (c) => c.hasStyle('HIGHLIGHT') || c.hasStyle('HIGHLIGHT_STRONG');
+    const filterFn = (d) => d.hasStyle('HIGHLIGHT') || d.hasStyle('HIGHLIGHT_STRONG');
 
     content.getBlocksAsArray().forEach((block) => {
         block.findStyleRanges(filterFn,
@@ -198,7 +198,7 @@ export const clearHighlights = (c, es = null) => {
                 content = Modifier.removeInlineStyle(content, selection, 'HIGHLIGHT_STRONG');
 
                 changedContent = true;
-            }
+            },
         );
     });
 
@@ -209,12 +209,11 @@ export const clearHighlights = (c, es = null) => {
     return {content, editorState};
 };
 
-
 /**
  * Creates a new selection state, based on the given block key, having the specified
  * anchor and offset.
  */
-const createSelection = (key: string, start: number, end: number) : SelectionState =>
+const createSelection = (key: string, start: number, end: number): SelectionState =>
     SelectionState.createEmpty(key).merge({
         anchorOffset: start,
         focusOffset: end,
@@ -249,7 +248,7 @@ export const forEachMatch = (content, pattern, caseSensitive, cb) => {
             cb(
                 ++matchIndex,
                 createSelection(key, match.index, match.index + pattern.length),
-                block
+                block,
             );
         }
     });

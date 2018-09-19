@@ -131,7 +131,6 @@ describe('editor3.reducers.suggestion.CREATE_ADD_SUGGESTION', () => {
         }
     });
 
-
     it('should create new suggestion when insert text adjacent to the different user insert suggestion', () => {
         const date = new Date();
 

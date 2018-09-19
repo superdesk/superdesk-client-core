@@ -12,13 +12,13 @@ function prepareRawContent(rawContent) {
         data: {},
     };
 
-    let newRawContent = {
+    const newRawContent = {
         blocks: [],
         entityMap: {},
         ...rawContent,
     };
 
-    let blocks = newRawContent.blocks.map((block) => ({
+    const blocks = newRawContent.blocks.map((block) => ({
         ...defaultBlock,
         ...block,
     }));
@@ -83,7 +83,7 @@ export function addDeleteSuggestion(editorState, action?, date = new Date(), aut
                     author: author,
                 },
             },
-        }
+        },
     );
 
     return result.editorState;
@@ -105,7 +105,7 @@ export function addInsertSuggestion(editorState, text, date = new Date(), author
                     author: author,
                 },
             },
-        }
+        },
     );
 
     return result.editorState;
@@ -128,7 +128,7 @@ export function addStyleSuggestion(editorState, style, date = new Date(), active
                     originalStyle: active ? style : '',
                 },
             },
-        }
+        },
     );
 
     return result.editorState;
@@ -151,7 +151,7 @@ export function addBlockStyleSuggestion(editorState, blockType, date = new Date(
                     originalStyle: active ? blockType : '',
                 },
             },
-        }
+        },
     );
 
     return result.editorState;
@@ -172,7 +172,7 @@ export function addSplitParagraphSuggestion(editorState, date = new Date(), auth
                     author: author,
                 },
             },
-        }
+        },
     );
 
     return result.editorState;
@@ -202,7 +202,7 @@ export function processSuggestion(editorState, type, accepted, date = new Date()
                     author: author,
                 },
             },
-        }
+        },
     );
 
     return result.editorState;
@@ -225,12 +225,11 @@ export function addLinkSuggestion(editorState, date = new Date(),
                     link: {href: url},
                 },
             },
-        }
+        },
     );
 
     return result.editorState;
 }
-
 
 export function changeLinkSuggestion(editorState, entity, date = new Date(),
     author = 'author_id', url = 'http://dev.sourcefabric.org') {
@@ -250,7 +249,7 @@ export function changeLinkSuggestion(editorState, entity, date = new Date(),
                 link: {href: url},
                 entity: entity,
             },
-        }
+        },
     );
 
     return result.editorState;
@@ -271,7 +270,7 @@ export function removeLinkSuggestion(editorState, date = new Date(), author = 'a
                     author: author,
                 },
             },
-        }
+        },
     );
 
     return result.editorState;
@@ -280,7 +279,6 @@ export function removeLinkSuggestion(editorState, date = new Date(), author = 'a
 export function addLink(editorState, link = 'http://www.sourcefabric.org') {
     return Links.createLink(editorState, link);
 }
-
 
 export function addPasteSuggestion(editorState, content, date = new Date(), author = 'author_id') {
     const result = reducer(
@@ -298,7 +296,7 @@ export function addPasteSuggestion(editorState, content, date = new Date(), auth
                 },
                 content: content,
             },
-        }
+        },
     );
 
     return result.editorState;

@@ -24,8 +24,7 @@ describe('editor3.reducers.suggestion.CREATE_SPLIT_PARAGRAPH_SUGGESTION', () => 
         expect(selection.getEndOffset()).toEqual(0);
         expect(selection.getEndKey()).toEqual(content.getLastBlock().getKey());
 
-
-        let block = content.getFirstBlock();
+        const block = content.getFirstBlock();
 
         expect(block.getInlineStyleAt(10).toJS()).toEqual(['SPLIT_PARAGRAPH_SUGGESTION-1']);
 

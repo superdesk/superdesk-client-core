@@ -34,7 +34,7 @@ class Suggestion extends React.Component<any, any> {
     }
 
     componentDidMount() {
-        var gettextCatalog = ng.get('gettextCatalog');
+        const gettextCatalog = ng.get('gettextCatalog');
         const gettext = gettextCatalog.getString.bind(gettextCatalog);
 
         ng.get('api')('users').getById(this.props.suggestion.author)
@@ -70,7 +70,7 @@ class Suggestion extends React.Component<any, any> {
             return null;
         }
 
-        var gettextCatalog = ng.get('gettextCatalog');
+        const gettextCatalog = ng.get('gettextCatalog');
         const gettext = gettextCatalog.getString.bind(gettextCatalog);
 
         const {author} = this.state;
@@ -81,7 +81,7 @@ class Suggestion extends React.Component<any, any> {
 
         const description = Highlights.getHighlightDescription(this.props.suggestion.type);
         const blockStyleDescription = Highlights.getBlockStylesDescription(this.props.suggestion.blockType);
-        const space = blockStyleDescription != '' ? ' ' : '';
+        const space = blockStyleDescription !== '' ? ' ' : '';
 
         let content;
 
@@ -173,7 +173,7 @@ Suggestion.propTypes = {
     editorNode: PropTypes.object,
 };
 
-export const SuggestionPopup:React.StatelessComponent<any> = connect(null, {
+export const SuggestionPopup: React.StatelessComponent<any> = connect(null, {
     acceptSuggestion,
     rejectSuggestion,
 })(Suggestion);

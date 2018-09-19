@@ -16,7 +16,7 @@ import {getData, getCell} from '../../helpers/table';
  * @param {Function} removeCol
  * @description Holds the toolbar for table operations.
  */
-const TableControlsComponent:React.StatelessComponent<any> = ({
+const TableControlsComponent: React.StatelessComponent<any> = ({
     addRowAfter,
     addColAfter,
     removeRow,
@@ -53,7 +53,7 @@ const TableControlsComponent:React.StatelessComponent<any> = ({
                     label={type}
                     onToggle={toggleTableStyle}
                     style={inlineStyles[type]}
-                />
+                />,
             )
         }
     </div>;

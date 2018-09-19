@@ -79,7 +79,7 @@ export class LinkInput extends React.Component<any, any> {
             return;
         }
 
-        let url = 'https://iframe.ly/api/iframely?url=' + link + '&api_key=' + this.props.iframelyKey;
+        const url = 'https://iframe.ly/api/iframely?url=' + link + '&api_key=' + this.props.iframelyKey;
 
         fetch(url).then((response) => {
             // Need to do HTTP response status check manually for whatwg-fetch

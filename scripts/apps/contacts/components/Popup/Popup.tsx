@@ -15,7 +15,7 @@ export default class Popup extends React.Component<any, any> {
         child: any,
         root: any,
         parent: any,
-    }
+    };
 
     constructor(props) {
         super(props);

@@ -60,7 +60,7 @@ export function stateWithLink() {
     return RichUtils.toggleLink(
         EditorState.createWithContent(contentState),
         linkSelection as SelectionState,
-        entityKey
+        entityKey,
     );
 }
 

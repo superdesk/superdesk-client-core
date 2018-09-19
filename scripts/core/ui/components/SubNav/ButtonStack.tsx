@@ -7,14 +7,14 @@ import classNames from 'classnames';
  * @name ButtonStack
  * @description Stack of buttons of a Sub Nav bar
  */
-export const ButtonStack:React.StatelessComponent<any> = ({children, right, padded, className}) => (
+export const ButtonStack: React.StatelessComponent<any> = ({children, right, padded, className}) => (
     <div className={classNames(
         'subnav__button-stack',
         {
             'subnav__button-stack--right': right,
             'subnav__button-stack--padded': padded,
         },
-        className
+        className,
     )}>
         {children}
     </div>

@@ -10,7 +10,7 @@ describe('editor3.components.spellchecker-decorator', () => {
     function getWrapper() {
         // to avoid React warning about 'text' prop, we need to create a custom
         // component as the child.
-        const CC:any = () => <span />;
+        const CC: any = () => <span />;
         const children = [<CC key={0} text="tihs" start={3} />];
         const {options} = mockStore();
 
@@ -29,7 +29,7 @@ describe('editor3.components.spellchecker-decorator', () => {
             <SpellcheckerError>
                 <strong>hello </strong>
                 <strong>world</strong>
-            </SpellcheckerError>
+            </SpellcheckerError>,
         );
 
         expect(wrapper.find('strong').length).toBe(2);
@@ -95,7 +95,7 @@ describe('editor3.components.spellchecker-context-menu', () => {
     }));
 
     it('should correctly render no suggestions', () => {
-        const element = document.createElement('div');// required for positioning
+        const element = document.createElement('div'); // required for positioning
 
         document.body.appendChild(element);
 
@@ -108,7 +108,7 @@ describe('editor3.components.spellchecker-context-menu', () => {
     });
 
     it('should correctly render with suggestions', () => {
-        const element = document.createElement('div');// required for positioning
+        const element = document.createElement('div'); // required for positioning
 
         document.body.appendChild(element);
 
@@ -121,7 +121,7 @@ describe('editor3.components.spellchecker-context-menu', () => {
     });
 
     it('should add word to dictionary when requested', inject((spellcheck) => {
-        const element = document.createElement('div');// required for positioning
+        const element = document.createElement('div'); // required for positioning
 
         document.body.appendChild(element);
 
@@ -131,7 +131,7 @@ describe('editor3.components.spellchecker-context-menu', () => {
                 targetElement={element}
                 word={{text: 'abc'}}
                 refreshWord={refreshWord}
-                suggestions={[]} />
+                suggestions={[]} />,
         );
 
         wrapper
@@ -144,7 +144,7 @@ describe('editor3.components.spellchecker-context-menu', () => {
     }));
 
     it('should ignore word when requested', inject((spellcheck) => {
-        const element = document.createElement('div');// required for positioning
+        const element = document.createElement('div'); // required for positioning
 
         document.body.appendChild(element);
 
@@ -166,7 +166,7 @@ describe('editor3.components.spellchecker-context-menu', () => {
     }));
 
     it('should replace word when requested', inject((spellcheck) => {
-        const element = document.createElement('div');// required for positioning
+        const element = document.createElement('div'); // required for positioning
 
         document.body.appendChild(element);
 

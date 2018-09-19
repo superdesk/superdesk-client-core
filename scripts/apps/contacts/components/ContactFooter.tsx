@@ -7,12 +7,12 @@ import classNames from 'classnames';
 /**
  * Contact footer - renders footer for contact card used in grid view
  */
-export const ContactFooter:React.StatelessComponent<any> = ({item, svc}) => {
+export const ContactFooter: React.StatelessComponent<any> = ({item, svc}) => {
     const {gettextCatalog} = svc;
 
     const cssClass = classNames(
         'sd-grid-item__footer sd-grid-item__footer--padded',
-        {padded: getContactType(item) === 'organisation' || !item.organisation}
+        {padded: getContactType(item) === 'organisation' || !item.organisation},
     );
 
     return (

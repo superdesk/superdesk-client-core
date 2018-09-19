@@ -47,7 +47,7 @@ export class CommentPopup extends React.Component<any, any> {
                     {
                         msg,
                         ...getAuthorInfo(),
-                    }
+                    },
                 ),
             },
         });
@@ -71,7 +71,7 @@ export class CommentPopup extends React.Component<any, any> {
             data: {
                 ...commentData.data,
                 replies: commentData.data.replies.map(
-                    (reply, i) => i === index ? {...reply, msg} : reply
+                    (reply, i) => i === index ? {...reply, msg} : reply,
                 ),
             },
         });
@@ -80,7 +80,7 @@ export class CommentPopup extends React.Component<any, any> {
     removeReply(removeAtIndex) {
         const {highlightsManager, highlightId} = this.props;
 
-        var commentData = highlightsManager.getHighlightData(highlightId);
+        const commentData = highlightsManager.getHighlightData(highlightId);
 
         highlightsManager.updateHighlightData(highlightId, {
             ...commentData,
@@ -112,13 +112,13 @@ export class CommentPopup extends React.Component<any, any> {
 
         const allResolvedComments = getCustomDataFromEditor(
             editorState,
-            editor3DataKeys.RESOLVED_COMMENTS_HISTORY
+            editor3DataKeys.RESOLVED_COMMENTS_HISTORY,
         );
 
         const editorStateWithResolvedCommentAdded = setCustomDataForEditor(
             editorStateWithCommentRemoved,
             editor3DataKeys.RESOLVED_COMMENTS_HISTORY,
-            (allResolvedComments || []).concat(resolvedCommentData)
+            (allResolvedComments || []).concat(resolvedCommentData),
         );
 
         this.props.onChange(editorStateWithResolvedCommentAdded);

@@ -48,7 +48,6 @@ export default class Item extends React.Component<any, any> {
         closeActionsMenu(this.props.item._id);
     }
 
-
     open() {
         const {$timeout} = this.props.svc;
 
@@ -61,8 +60,8 @@ export default class Item extends React.Component<any, any> {
     }
 
     setPosition() {
-        var targetRect = ReactDOM.findDOMNode(this).getBoundingClientRect();
-        var BUFFER = 250;
+        const targetRect = ReactDOM.findDOMNode(this).getBoundingClientRect();
+        const BUFFER = 250;
 
         if (targetRect.left < LEFT_SIDEBAR_WIDTH + BUFFER) {
             this.setState({position: 'dropdown__menu--submenu-right'});
@@ -107,9 +106,9 @@ export default class Item extends React.Component<any, any> {
     render() {
         const {gettextCatalog, $injector} = this.props.svc;
 
-        var activity = this.props.activity;
+        const activity = this.props.activity;
 
-        var invoke = typeof activity.dropdown === 'function' || typeof activity.dropdown === 'object';
+        const invoke = typeof activity.dropdown === 'function' || typeof activity.dropdown === 'object';
 
         if (activity.dropdown) {
             return React.createElement(
@@ -127,7 +126,7 @@ export default class Item extends React.Component<any, any> {
                         activity.icon ? React.createElement('i', {
                             className: 'icon-' + activity.icon,
                         }, '') : null,
-                        gettextCatalog.getString(activity.label)
+                        gettextCatalog.getString(activity.label),
                     ),
                     this.state.open && invoke ? $injector.invoke(activity.dropdown, activity, {
                         item: this.props.item,
@@ -135,8 +134,8 @@ export default class Item extends React.Component<any, any> {
                         noHighlightsLabel: gettextCatalog.getString('No available highlights'),
                         noDesksLabel: gettextCatalog.getString('No available desks'),
                         noLanguagesLabel: gettextCatalog.getString('No available translations'),
-                    }) : null
-                )
+                    }) : null,
+                ),
             );
         }
 
@@ -151,8 +150,8 @@ export default class Item extends React.Component<any, any> {
                 }),
                 React.createElement('span', {
                     style: {display: 'inline'},
-                }, gettextCatalog.getString(activity.label))
-            )
+                }, gettextCatalog.getString(activity.label)),
+            ),
         );
     }
 }

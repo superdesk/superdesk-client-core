@@ -2,10 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
-export const Select:React.StatelessComponent<any> = ({field, value, onChange, options, readOnly, clearable}) => (
+export const Select: React.StatelessComponent<any> = ({field, value, onChange, options, readOnly, clearable}) => (
     <select
         className={classNames(
-            'sd-line-input__select'
+            'sd-line-input__select',
         )}
         value={value}
         onChange={(e) => onChange(field, e.target.value)}

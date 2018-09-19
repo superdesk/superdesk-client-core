@@ -94,7 +94,7 @@ export class TableBlockComponent extends React.Component<any, any> {
         const data = this.getData();
         const {numRows, numCols, withHeader} = data;
 
-        let cx = classNames({
+        const cx = classNames({
             'table-block': true,
             'table-header': withHeader,
         });
@@ -103,18 +103,18 @@ export class TableBlockComponent extends React.Component<any, any> {
             <div className={cx} onMouseDown={this.onMouseDown}>
                 <table>
                     <tbody>
-                        {Array.from(new Array(numRows)).map((v, i) =>
+                        {Array.from(new Array(numRows)).map((_, i) =>
                             <tr key={`col-${i}-${numRows}-${numCols}`}>
-                                {Array.from(new Array(numCols)).map((v, j) =>
+                                {Array.from(new Array(numCols)).map((__, j) =>
                                     <TableCell
                                         key={`cell-${i}-${j}-${numRows}-${numCols}`}
                                         readOnly={this.props.readOnly}
                                         editorState={this.getCellEditorState(data, i, j)}
                                         onChange={this.onCellChange.bind(this, i, j)}
                                         onUndo={this.onUndo.bind(this)}
-                                        onFocus={this.onFocus.bind(this, i, j)} />
+                                        onFocus={this.onFocus.bind(this, i, j)} />,
                                 )}
-                            </tr>
+                            </tr>,
                         )}
                     </tbody>
                 </table>
@@ -135,7 +135,7 @@ TableBlockComponent.propTypes = {
 const mapDispatchToProps = (dispatch) => ({
     parentOnChange: (editorState, force) => dispatch(actions.changeEditorState(editorState, force)),
     setActiveCell: (i, j, key, currentStyle, selection) => dispatch(
-        actions.setActiveCell(i, j, key, currentStyle, selection)
+        actions.setActiveCell(i, j, key, currentStyle, selection),
     ),
 });
 
@@ -145,7 +145,7 @@ const mapStateToProps = (state) => ({
     activeCell: state.activeCell,
 });
 
-export const TableBlock:React.StatelessComponent<any> = connect(
+export const TableBlock: React.StatelessComponent<any> = connect(
     mapStateToProps,
-    mapDispatchToProps
+    mapDispatchToProps,
 )(TableBlockComponent);

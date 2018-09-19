@@ -10,7 +10,7 @@ import './style.scss';
  * @name Toggle
  * @description Toggle component used to togle check/uncheck status
  */
-const Toggle:React.StatelessComponent<any> = ({value, onChange, readOnly, onFocus, className}) => {
+const Toggle: React.StatelessComponent<any> = ({value, onChange, readOnly, onFocus, className}) => {
     const handleKeyDown = (event) => {
         if (event.keyCode === KEYCODES.ENTER) {
             onEventCapture(event);
@@ -27,7 +27,7 @@ const Toggle:React.StatelessComponent<any> = ({value, onChange, readOnly, onFocu
             'sd-toggle--checked': value,
             'sd-toggle--disabled': readOnly,
         },
-        className
+        className,
     );
 
     return (

@@ -2,11 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {getSpecStyle, getSpecTitle, getSpecValue} from '../helpers';
 
-export const ItemPriority:React.StatelessComponent<any> = (props) => {
+export const ItemPriority: React.StatelessComponent<any> = (props) => {
     const {metadata, gettextCatalog} = props.svc;
 
-    var priority = props.priority || 3;
-    var spec = metadata.priorityByValue(priority);
+    const priority = props.priority || 3;
+    const spec = metadata.priorityByValue(priority);
 
     if (spec) {
         return React.createElement(
@@ -17,7 +17,7 @@ export const ItemPriority:React.StatelessComponent<any> = (props) => {
                 title: getSpecTitle(spec, gettextCatalog.getString('Priority')),
                 key: 'priority',
             },
-            getSpecValue(spec, priority)
+            getSpecValue(spec, priority),
         );
     }
 
@@ -28,7 +28,7 @@ export const ItemPriority:React.StatelessComponent<any> = (props) => {
             title: gettextCatalog.getString('Priority'),
             key: 'priority',
         },
-        priority
+        priority,
     );
 };
 

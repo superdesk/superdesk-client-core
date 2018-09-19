@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export const flags:React.StatelessComponent<any> = (props) => {
+export const flags: React.StatelessComponent<any> = (props) => {
     const {gettext} = props.svc;
 
-    var flags = props.item.flags || {};
-    var elems = [
-        flags.marked_for_not_publication ?
+    const _flags = props.item.flags || {};
+    const elems = [
+        _flags.marked_for_not_publication ?
             React.createElement(
                 'div', {
                     className: 'state-label not-for-publication',
@@ -14,7 +14,7 @@ export const flags:React.StatelessComponent<any> = (props) => {
                     key: 'not-for-publication',
                 }, gettext('Not For Publication'))
             : null,
-        flags.marked_for_legal ?
+        _flags.marked_for_legal ?
             React.createElement(
                 'div', {
                     className: 'state-label legal',
@@ -22,7 +22,7 @@ export const flags:React.StatelessComponent<any> = (props) => {
                     key: 'legal',
                 }, gettext('Legal'))
             : null,
-        flags.marked_for_sms ?
+        _flags.marked_for_sms ?
             React.createElement(
                 'div', {
                     className: 'state-label sms',

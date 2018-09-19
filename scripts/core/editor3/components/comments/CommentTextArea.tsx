@@ -41,8 +41,8 @@ class CommentTextArea extends React.Component<any, any> {
                         id: d._id,
                         display: d.name,
                         type: 'desk',
-                    }))
-            )
+                    })),
+            ),
         );
     }
 
@@ -60,8 +60,8 @@ class CommentTextArea extends React.Component<any, any> {
                     id: u._id,
                     display: u.display_name,
                     type: 'user',
-                }))
-            )
+                })),
+            ),
         );
     }
 

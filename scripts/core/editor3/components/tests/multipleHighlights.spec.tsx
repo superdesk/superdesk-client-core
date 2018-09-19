@@ -11,7 +11,7 @@ const contentState = ContentState.createFromText(
 `Not enjoyment, and not sorrow,
 Is our destined end or way;
 But to act, that each tomorrow
-Find us farther than today.`
+Find us farther than today.`,
 );
 
 const editorState = EditorState.createWithContent(contentState);
@@ -55,7 +55,7 @@ class MultipleHighlightsTester extends React.Component<any, any> {
             <MultipleHighlights
                 availableHighlights={availableHighlights}
                 editorState={this.state.editorState}
-                onChange={(editorState) => this.setState({editorState})}
+                onChange={(_editorState) => this.setState({editorState: _editorState})}
                 initialState={this.props.initialHighlightsState}
             >
                 <ChildComponent ref={(r) => this.childRef = r} />
@@ -79,8 +79,8 @@ const availableHighlights = {
 };
 
 describe('multipleHighlights.component', () => {
-    var highlightsManager = null;
-    var getEditorState = null;
+    let highlightsManager = null;
+    let getEditorState = null;
 
     beforeEach(() => {
         const selection = new SelectionState({
@@ -109,12 +109,12 @@ describe('multipleHighlights.component', () => {
             .first();
 
         expect(
-            JSON.stringify(highlightsManager.getHighlightData(styleName))
+            JSON.stringify(highlightsManager.getHighlightData(styleName)),
         ).toBe(JSON.stringify(highlightDataExpectedResponse));
 
         highlightsManager.updateHighlightData(styleName, highlightDataUpdate);
         expect(
-            JSON.stringify(highlightsManager.getHighlightData(styleName))
+            JSON.stringify(highlightsManager.getHighlightData(styleName)),
         ).toBe(JSON.stringify(highlightDataUpdate));
 
         highlightsManager.removeHighlight(styleName);
