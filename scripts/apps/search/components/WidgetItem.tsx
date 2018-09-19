@@ -4,7 +4,6 @@ import classNames from 'classnames';
 
 import {ItemUrgency, TypeIcon} from './index';
 
-
 /**
  * @ngdoc React
  * @module superdesk.search
@@ -55,13 +54,13 @@ export class WidgetItem extends React.Component<any, any> {
     }
 
     render() {
-        let className = classNames(
+        const className = classNames(
             'content-item',
             {'content-item--locked': this.item.lock_user},
             {'custom-monitoring': this.props.customMonitoringWidget},
             {shifted: this.props.allowed},
             {active: this.props.selected},
-            {gone: !!this.item.gone}
+            {gone: !!this.item.gone},
         );
 
         return (

@@ -112,7 +112,7 @@ export class CollapseBox extends React.Component<any, any> {
                     {
                         'sd-collapse-box--open': this.state.isOpen,
                         'sd-collapse-box--invalid': this.props.invalid,
-                    }
+                    },
                 )}
                 ref={(node) => this.dom.node = node}
                 onClick={this.handleOpenClick}

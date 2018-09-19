@@ -5,7 +5,8 @@ module.exports = Object.assign({}, sharedConfigs, {
     overrides: {
         files: ['*.ts', '*.tsx'],
         rules: {
-            'no-undef': 0
+            'no-undef': 0,
+            'comma-dangle': 0,
         },
     },
 });

@@ -2,11 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
-const Content:React.StatelessComponent<any> = ({children, className, noPadding}) => (
+const Content: React.StatelessComponent<any> = ({children, className, noPadding}) => (
     <div className={classNames(
         'popup__menu-content',
         {'popup__menu-content--no-padding': noPadding},
-        className
+        className,
     )}>
         {children}
     </div>

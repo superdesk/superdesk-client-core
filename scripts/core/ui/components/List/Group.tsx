@@ -7,7 +7,7 @@ import classNames from 'classnames';
  * @name Group
  * @description Component to group a list of items
  */
-export const Group:React.StatelessComponent<any> = ({
+export const Group: React.StatelessComponent<any> = ({
     className,
     children,
     spaceBetween,
@@ -25,7 +25,7 @@ export const Group:React.StatelessComponent<any> = ({
             {
                 'sd-list-item-group--space-between-items': spaceBetween,
                 'sd-list-item-group--vertical-scroll': verticalScroll,
-            }
+            },
         )}
         style={style}
         onScroll={onScroll}

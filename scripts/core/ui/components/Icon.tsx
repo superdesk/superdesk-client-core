@@ -12,7 +12,7 @@ import {ICON_COLORS} from './constants';
  * @name Icon
  * @description Generic Icon component with tooltip
  */
-const Icon:React.StatelessComponent<any> = ({icon, doubleSize, big, className, tooltip, color}) => {
+const Icon: React.StatelessComponent<any> = ({icon, doubleSize, big, className, tooltip, color}) => {
     const iconElement = (
         <i className={classNames(
             icon,
@@ -21,7 +21,7 @@ const Icon:React.StatelessComponent<any> = ({icon, doubleSize, big, className, t
                 'double-size-icn': big,
             },
             color,
-            className
+            className,
         )} />
     );
 

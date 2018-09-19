@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export const takekey:React.StatelessComponent<any> = (props) => {
+export const takekey: React.StatelessComponent<any> = (props) => {
     const {gettextCatalog} = props.svc;
 
     if (props.item.anpa_take_key) {

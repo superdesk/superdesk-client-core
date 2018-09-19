@@ -22,8 +22,8 @@ class UnstyledWrapper extends BaseUnstyledComponent {
             'unstyled ' + (this.state.over ? 'unstyled--over' : '');
         const {children} = this.props;
 
-        const childrenWithProps = React.Children.map(children, (child:any) =>
-            React.cloneElement(child, {editorProps: this.props.editorProps})
+        const childrenWithProps = React.Children.map(children, (child: any) =>
+            React.cloneElement(child, {editorProps: this.props.editorProps}),
         );
 
         return (

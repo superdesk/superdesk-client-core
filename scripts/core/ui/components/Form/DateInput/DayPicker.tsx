@@ -17,7 +17,6 @@ export class DayPicker extends React.Component<any, any> {
     static propTypes: any;
     static defaultProps: any;
 
-
     constructor(props) {
         super(props);
         this.state = {
@@ -58,7 +57,7 @@ export class DayPicker extends React.Component<any, any> {
             prevMonthDates = range(daysOfPreviousMonth - firstDayOfMonth + 1, daysOfPreviousMonth + 1);
         }
 
-        let nextMonthDates = range(1, 43 - (prevMonthDates.length + daysInCurrentMonth.length));
+        const nextMonthDates = range(1, 43 - (prevMonthDates.length + daysInCurrentMonth.length));
 
         this.setState({
             dates: [...prevMonthDates,
@@ -80,7 +79,7 @@ export class DayPicker extends React.Component<any, any> {
 
     onDateChange(index) {
         // Form new moment object and inform the parent component
-        let newMoment = this.props.selectedDate.clone();
+        const newMoment = this.props.selectedDate.clone();
 
         if (index < this.state.monthStartIndex) {
             // Date selected was of previous month

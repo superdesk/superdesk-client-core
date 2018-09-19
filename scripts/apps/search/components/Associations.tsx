@@ -14,7 +14,6 @@ export class Associations extends React.Component<any, any> {
     static propTypes: any;
     static defaultProps: any;
 
-
     constructor(props) {
         super(props);
 
@@ -48,7 +47,6 @@ export class Associations extends React.Component<any, any> {
         return null;
     }
 }
-
 
 /*
  * item: item having associations

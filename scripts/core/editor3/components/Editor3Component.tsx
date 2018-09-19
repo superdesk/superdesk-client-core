@@ -58,7 +58,7 @@ export function getValidMediaType(event) {
     * @param {Array} editorConfig
     * @returns {Boolean} Returns true if the item is permitted.
     * @description Check if the editor accept images and if current item is valid media.
-    */
+*/
 export function canDropMedia(e, editorConfig) {
     const {editorFormat, readOnly, singleLine} = editorConfig;
     const isValidMedia = !!getValidMediaType(e.originalEvent);
@@ -364,7 +364,7 @@ export class Editor3Component extends React.Component<any, any> {
             scrollContainer,
         } = this.props;
 
-        let cx = classNames({
+        const cx = classNames({
             'Editor3-root Editor3-editor': true,
             'no-toolbar': !showToolbar,
             'read-only': readOnly,
@@ -380,7 +380,7 @@ export class Editor3Component extends React.Component<any, any> {
                     aliasedElements: ['p'],
                     wrapper: <UnstyledWrapper dispatch={this.props.dispatch} editorProps={this.props} />,
                 },
-            } : {}
+            } : {},
         ));
 
         return (

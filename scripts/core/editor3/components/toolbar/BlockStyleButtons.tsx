@@ -74,7 +74,7 @@ export class BlockStyleButtonsComponent extends React.Component<any, any> {
                         label={type}
                         onToggle={this.onToggle}
                         style={blockStyles[type]}
-                    />
+                    />,
                 )}
             </span>
         );

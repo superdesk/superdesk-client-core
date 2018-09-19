@@ -51,7 +51,7 @@ export class Item extends React.Component<any, any> {
     render() {
         const {item, svc, flags, view, scope} = this.props;
 
-        let contents:any = [
+        const contents: any = [
             'div',
             {
                 className: classNames(
@@ -60,7 +60,7 @@ export class Item extends React.Component<any, any> {
                         'media-box contacts',
                     {
                         selected: flags.selected,
-                    }
+                    },
                 ),
             },
         ];
@@ -69,21 +69,21 @@ export class Item extends React.Component<any, any> {
             contents.push(
                 <ContactHeader item={item} svc={svc} />,
                 <ContactInfo item={item} svc={svc} />,
-                <ContactFooter item={item} svc={svc} />
+                <ContactFooter item={item} svc={svc} />,
             );
         } else {
             contents.push(
                 <ListTypeIcon item={item} svc={svc} />,
-                <ListItemInfo item={item} svc={svc} scope={scope} />
+                <ListItemInfo item={item} svc={svc} scope={scope} />,
             );
         }
 
-        let cssClass = classNames(
+        const cssClass = classNames(
             'list-item-view',
             {
                 active: flags.selected,
                 inactive: !item.is_active,
-            }
+            },
         );
 
         return (

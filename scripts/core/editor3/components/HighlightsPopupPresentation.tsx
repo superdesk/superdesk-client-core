@@ -92,7 +92,7 @@ export class HighlightsPopupPresentation extends React.Component<any, any> {
     render() {
         const {availableActions} = this.props;
 
-        const actionsDropdownStyles:any = this.state.actionsDropdownOpen !== true ? {} : {
+        const actionsDropdownStyles: any = this.state.actionsDropdownOpen !== true ? {} : {
             display: 'block',
             position: 'absolute',
             width: 'auto',
@@ -162,7 +162,6 @@ export class HighlightsPopupPresentation extends React.Component<any, any> {
                 </div>
             ),
         ];
-
 
         if (this.props.isRoot) {
             return (

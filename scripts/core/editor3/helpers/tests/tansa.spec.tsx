@@ -11,7 +11,7 @@ describe('editor3.helpers.tansa', () => {
             entityMap: {},
         };
 
-        let editorState = Setup.getInitialEditorState(rawContent);
+        const editorState = Setup.getInitialEditorState(rawContent);
 
         expect(getTansaHtml(editorState)).toEqual(
             '<p id="text-4vu4i">paragraph1</p>\n<p id="text-9d99u">paragraph2</p>\n');
@@ -84,7 +84,7 @@ describe('editor3.helpers.tansa', () => {
             },
         };
 
-        let editorState = Setup.getInitialEditorState(rawContent);
+        const editorState = Setup.getInitialEditorState(rawContent);
 
         const tansaHtml = '<p id="description-4vu4i">description</p>\n'
             + '<p id="alt-4vu4i">alt</p>\n'

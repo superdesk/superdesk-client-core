@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import {find, join, map} from 'lodash';
 import {MAP_URL, TWITTER_URL, MAILTO_URL} from '../../contacts/constants';
 
-
 export class ItemContainer extends React.Component<any, any> {
     static propTypes: any;
     static defaultProps: any;
@@ -26,7 +25,7 @@ export class ItemContainer extends React.Component<any, any> {
     }
 
     getEmailValue(item) {
-        let emails = map(item.contact_email, (email) => (
+        const emails = map(item.contact_email, (email) => (
             <a href={`${MAILTO_URL}${email}`} title={`${email}`}>{email}</a>
         ));
 
@@ -40,21 +39,43 @@ export class ItemContainer extends React.Component<any, any> {
 
     init(props) {
         const {gettextCatalog} = props.svc;
-        let value, title, altTitle;
-        let item, key, _class, _link;
-        let addressInfo = [];
+        let value;
+        let title;
+        let altTitle;
+        let item;
+        let key;
+        let _class;
+        let _link;
+        const addressInfo = [];
 
         item = props.item;
         key = props.field || null;
         _class = 'container';
         _link = _class + ' link';
 
-        item.contact_address && addressInfo.push(item.contact_address[0]);
-        item.locality && addressInfo.push(item.locality);
-        item.city && addressInfo.push(item.city);
-        item.contact_state && addressInfo.push(item.contact_state);
-        item.postcode && addressInfo.push(item.postcode);
-        item.country && addressInfo.push(item.country);
+        if (item.contact_address) {
+            addressInfo.push(item.contact_address[0]);
+        }
+
+        if (item.locality) {
+            addressInfo.push(item.locality);
+        }
+
+        if (item.city) {
+            addressInfo.push(item.city);
+        }
+
+        if (item.contact_state) {
+            addressInfo.push(item.contact_state);
+        }
+
+        if (item.postcode) {
+            addressInfo.push(item.postcode);
+        }
+
+        if (item.country) {
+            addressInfo.push(item.country);
+        }
 
         const contactAddress = addressInfo.join(', ');
 

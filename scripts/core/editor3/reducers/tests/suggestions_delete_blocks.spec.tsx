@@ -336,7 +336,7 @@ describe('editor3.reducers.suggestion.DELETE_BLOCKS_SUGGESTION', () => {
 
         expect(content.getPlainText()).toEqual('paragph1\nparagraph2');
 
-        let block = content.getFirstBlock();
+        const block = content.getFirstBlock();
 
         for (let i = 0; i < 8; i++) {
             if (i < 4) {

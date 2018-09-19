@@ -11,7 +11,7 @@ const getFormattedDocument = (url) => fetch(url).then(
         .then((responseText) => ({
             fomattedDocument: responseText,
             documentContentType: response.headers.get('content-type'),
-        }))
+        })),
 );
 
 export class PreviewModal extends React.Component<any, any> {
@@ -80,7 +80,7 @@ export class PreviewModal extends React.Component<any, any> {
                                                             this.openPreviewForItem(
                                                                 subscriber._id,
                                                                 destination.format,
-                                                                destination.preview_endpoint_url
+                                                                destination.preview_endpoint_url,
                                                             );
                                                         }}
                                                     >

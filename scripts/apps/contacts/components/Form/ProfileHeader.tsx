@@ -4,18 +4,18 @@ import classNames from 'classnames';
 import {Toggle} from './index';
 import {get} from 'lodash';
 
-export const ProfileHeader:React.StatelessComponent<any> = ({svc, contact, onChange, readOnly, contactType}) => {
+export const ProfileHeader: React.StatelessComponent<any> = ({svc, contact, onChange, readOnly, contactType}) => {
     const {gettext} = svc;
 
     const displayName = contact.first_name ? contact.first_name + ' ' + contact.last_name : contact.organisation;
 
     const cssClass = classNames(
-        'header-info'
+        'header-info',
     );
 
     const avatarClass = classNames(
         'avatar',
-        {organisation: contactType === 'organisation'}
+        {organisation: contactType === 'organisation'},
     );
 
     return (

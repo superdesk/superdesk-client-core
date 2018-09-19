@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export const updated:React.StatelessComponent<any> = (props) => {
+export const updated: React.StatelessComponent<any> = (props) => {
     const {gettextCatalog} = props.svc;
 
-    var openItem = function(event) {
+    const openItem = function(event) {
         event.stopPropagation();
         props.openAuthoringView(props.item.rewritten_by);
     };
@@ -13,7 +13,7 @@ export const updated:React.StatelessComponent<any> = (props) => {
         return React.createElement(
             'div',
             {className: 'state-label updated', key: 'updated', onClick: openItem},
-            gettextCatalog.getString('Updated')
+            gettextCatalog.getString('Updated'),
         );
     }
 };

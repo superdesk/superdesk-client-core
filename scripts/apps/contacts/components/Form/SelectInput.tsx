@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {LineInput, Label, Select} from './';
 import {get, isObject} from 'lodash';
 
-export const SelectInput:React.StatelessComponent<any> = ({
+export const SelectInput: React.StatelessComponent<any> = ({
     field,
     label,
     value,
@@ -16,19 +16,19 @@ export const SelectInput:React.StatelessComponent<any> = ({
     ...props
 }) => {
     const getKey = () => {
-        let key = '';
+        let _key = '';
 
         if (clearable) {
             if (isObject(value)) {
-                key = get(value, keyField, '');
+                _key = get(value, keyField, '');
             } else {
-                key = value;
+                _key = value;
             }
         } else {
-            key = get(value, keyField, get(options, `[0].${keyField}`));
+            _key = get(value, keyField, get(options, `[0].${keyField}`));
         }
 
-        return key;
+        return _key;
     };
 
     const key = getKey();
@@ -38,12 +38,12 @@ export const SelectInput:React.StatelessComponent<any> = ({
         label: get(opt, labelField),
     }));
 
-    const onChangeHandler = (field, key) => {
-        const value = options.find(
-            (option) => get(option, keyField) === key
+    const onChangeHandler = (_field, _key) => {
+        const _value = options.find(
+            (option) => get(option, keyField) === _key,
         ) || null;
 
-        onChange(field, get(value, keyField, ''));
+        onChange(_field, get(_value, keyField, ''));
     };
 
     return (

@@ -1,14 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export const broadcast:React.StatelessComponent<any> = (props) => {
-    var broadcast = props.item.broadcast || {};
+export const broadcast: React.StatelessComponent<any> = (props) => {
+    const _broadcast = props.item.broadcast || {};
 
-    if (broadcast.status) {
+    if (_broadcast.status) {
         return React.createElement(
             'span',
-            {className: 'broadcast-status', title: broadcast.status, key: 'broadcast'},
-            '!'
+            {className: 'broadcast-status', title: _broadcast.status, key: 'broadcast'},
+            '!',
         );
     }
 };

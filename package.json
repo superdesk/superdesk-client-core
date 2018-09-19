@@ -133,7 +133,7 @@
     "debug-unit-tests": "karma start karma.conf.js --browsers=Chrome",
     "unit": "grunt unit",
     "build": "grunt build",
-    "lint": "tsc --noEmit && tslint -c tslint.json 'scripts/**/*.ts' && eslint --ext .js --ext .jsx --ext .tsx scripts spec tasks *.js",
+    "lint": "tsc --noEmit && tslint -c tslint.json 'scripts/**/*.{ts,tsx}' && eslint --ext .js --ext .jsx --ext .tsx scripts spec tasks *.js",
     "lint-fix": "tsc --noEmit --version && tslint -c tslint.json 'scripts/**/*.ts' --fix && eslint --ext .js --ext .jsx --ext .tsx scripts spec tasks *.js --fix",
     "start-test-server": "cd test-server && python3 -m venv env && . env/bin/activate && pip install -Ur requirements.txt && honcho start",
     "protractor": "protractor protractor.conf.js",

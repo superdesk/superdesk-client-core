@@ -7,7 +7,7 @@ import classNames from 'classnames';
  * @name Column
  * @description Column Component of a list item
  */
-export const Column:React.StatelessComponent<any> = ({children, grow, border, noPadding, hasCheck, checked}) => (
+export const Column: React.StatelessComponent<any> = ({children, grow, border, noPadding, hasCheck, checked}) => (
     <div className={classNames(
         'sd-list-item__column',
         {
@@ -16,7 +16,7 @@ export const Column:React.StatelessComponent<any> = ({children, grow, border, no
             'sd-list-item__column--no-padding': noPadding,
             'sd-list-item__column--has-check': hasCheck,
             'sd-list-item__column--checked': checked,
-        }
+        },
     )}>
         {children}
     </div>

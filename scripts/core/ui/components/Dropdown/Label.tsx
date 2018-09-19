@@ -8,11 +8,11 @@ import classNames from 'classnames';
  * @description Label styling for dropdown optins
  */
 
-export const Label:React.StatelessComponent<any> = ({children, className}) => (
+export const Label: React.StatelessComponent<any> = ({children, className}) => (
     <li
         className={classNames(
             'dropdown__menu-label',
-            className
+            className,
         )}
     >
         {children}

@@ -7,7 +7,7 @@ import classNames from 'classnames';
  * @name LineInput
  * @description Component to style input component in a line-input style
  */
-export const LineInput:React.StatelessComponent<any> = ({
+export const LineInput: React.StatelessComponent<any> = ({
     children,
     required,
     invalid,
@@ -40,7 +40,7 @@ export const LineInput:React.StatelessComponent<any> = ({
             'sd-line-input--label-left-auto': labelLeftAuto,
             'sd-line-input--no-border-bottom': !borderBottom,
         },
-        className
+        className,
     )}
     onClick={onClick ? onClick : undefined}>
         {children}

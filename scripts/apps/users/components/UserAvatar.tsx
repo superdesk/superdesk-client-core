@@ -11,12 +11,12 @@ import classNames from 'classnames';
  * @description Displays the user avatar. If `pictureUrl` is provided it shows the picture
  * at that URL, otherwise it shows the initial of `displayName`.
  */
-export const UserAvatar:React.StatelessComponent<any> = ({displayName, pictureUrl, ...rest}) =>
+export const UserAvatar: React.StatelessComponent<any> = ({displayName, pictureUrl, ...rest}) =>
     <div className="user-avatar" {...rest}>
         <figure className={classNames(
             'avatar',
             {'no-bg': pictureUrl},
-            {initials: !pictureUrl}
+            {initials: !pictureUrl},
         )}>
             {pictureUrl && <img src={pictureUrl} />}
             {displayName && <span>{displayName[0].toUpperCase()}</span>}

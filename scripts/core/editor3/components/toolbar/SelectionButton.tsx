@@ -13,8 +13,8 @@ import {connect} from 'react-redux';
  * that are bound exclusively to having text selected in the editor, such as: links, comments,
  * annotations, etc. Note that a precondition prop may be supplied which precedes any other condition.
  */
-const SelectionButtonComponent:React.StatelessComponent<any> = (
-    {editorState, onClick, tooltip, iconName, precondition}
+const SelectionButtonComponent: React.StatelessComponent<any> = (
+    {editorState, onClick, tooltip, iconName, precondition},
 ) => {
     const isCollapsed = editorState.getSelection().isCollapsed();
     const inactive = !precondition || isCollapsed;

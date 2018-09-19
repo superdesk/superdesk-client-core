@@ -44,7 +44,7 @@ export class SelectMetaTermsInput extends React.Component<any, any> {
 
     removeValue(index) {
         const {value, field, onChange} = this.props;
-        let newValue = cloneDeep(value);
+        const newValue = cloneDeep(value);
 
         newValue.splice(index, 1);
         onChange(field, newValue);
@@ -85,7 +85,7 @@ export class SelectMetaTermsInput extends React.Component<any, any> {
                 className={classNames(
                     'dropdown-terms',
                     'select__meta-terms',
-                    {'select__meta-terms--disabled': readOnly}
+                    {'select__meta-terms--disabled': readOnly},
                 )}
             >
                 {!readOnly && (
@@ -93,7 +93,7 @@ export class SelectMetaTermsInput extends React.Component<any, any> {
                         className={classNames(
                             'dropdown__toggle',
                             'sd-line-input__plus-btn',
-                            {'sd-line-input__plus-btn--disabled': options.length === 0}
+                            {'sd-line-input__plus-btn--disabled': options.length === 0},
                         )}
                         onClick={options.length > 0 ? this.toggleOpenSelectPopup : null}
                         onFocus={onFocus}

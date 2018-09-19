@@ -7,9 +7,9 @@ import {isEmpty, findKey} from 'lodash';
 /**
  * Media Contact Info - renders contact's information
  */
-export const ContactInfo:React.StatelessComponent<any> = ({item, svc}) => {
-    let meta = [];
-    let info = [];
+export const ContactInfo: React.StatelessComponent<any> = ({item, svc}) => {
+    const meta = [];
+    const info = [];
 
     const contactJobTitle = item.job_title ? <JobTitle item={item} /> : null;
     const contactOrg = item.first_name && item.organisation ?
@@ -24,7 +24,7 @@ export const ContactInfo:React.StatelessComponent<any> = ({item, svc}) => {
             <div key="contact-org">
                 <span className="item-info">{contactOrg}</span>
             </div>
-        </div>
+        </div>,
     );
 
     meta.push(
@@ -33,7 +33,7 @@ export const ContactInfo:React.StatelessComponent<any> = ({item, svc}) => {
             <span key="3">
                 {!isEmpty(item.contact_email) && (<ItemContainer item={item} field="contact_email" svc={svc} />)}
             </span>
-        </li>
+        </li>,
     );
 
     meta.push(
@@ -42,7 +42,7 @@ export const ContactInfo:React.StatelessComponent<any> = ({item, svc}) => {
             <span key="11">
                 {item.website && (<ItemContainer item={item} field="website" svc={svc} />)}
             </span>
-        </li>
+        </li>,
     );
 
     meta.push(
@@ -53,7 +53,7 @@ export const ContactInfo:React.StatelessComponent<any> = ({item, svc}) => {
                     (<ItemContainer item={item} field="contact_phone" svc={svc} />)
                 }
             </span>
-        </li>
+        </li>,
     );
 
     meta.push(
@@ -64,7 +64,7 @@ export const ContactInfo:React.StatelessComponent<any> = ({item, svc}) => {
                     (<ItemContainer item={item} field="mobile" svc={svc} />)
                 }
             </span>
-        </li>
+        </li>,
     );
 
     meta.push(
@@ -73,7 +73,7 @@ export const ContactInfo:React.StatelessComponent<any> = ({item, svc}) => {
             <span key="address-dd">
                 {item && (<ItemContainer item={item} field="location" svc={svc} />)}
             </span>
-        </li>
+        </li>,
     );
 
     info.push(
@@ -85,7 +85,7 @@ export const ContactInfo:React.StatelessComponent<any> = ({item, svc}) => {
                     {item.notes && (<Notes item={item} svc={svc} />)}
                 </span>
             </li>
-        </ul>
+        </ul>,
     );
 
     return (

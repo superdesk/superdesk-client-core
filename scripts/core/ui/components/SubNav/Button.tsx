@@ -8,8 +8,8 @@ import {ButtonStack} from './ButtonStack';
  * @name Button
  * @description Button of a Sub Nav bar
  */
-export const Button:React.StatelessComponent<any> = (
-    {children, className, right, buttonClassName, onClick, padded}
+export const Button: React.StatelessComponent<any> = (
+    {children, className, right, buttonClassName, onClick, padded},
 ) => (
     <ButtonStack
         right={right}

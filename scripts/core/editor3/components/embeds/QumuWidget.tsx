@@ -15,7 +15,7 @@ function getQumuData(html) {
         json5.parse(configString),
         {
             selector: `#qumu-${uuid()}`,
-        }
+        },
     );
 }
 

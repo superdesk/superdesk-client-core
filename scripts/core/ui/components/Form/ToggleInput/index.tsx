@@ -12,8 +12,8 @@ import './style.scss';
  * @name ToggleInput
  * @description Component to toggle input values
  */
-export const ToggleInput:React.StatelessComponent<any> = (
-    {field, label, value, onChange, readOnly, className, labelLeftAuto, onFocus, ...props}
+export const ToggleInput: React.StatelessComponent<any> = (
+    {field, label, value, onChange, readOnly, className, labelLeftAuto, onFocus, ...props},
 ) => (
     <LineInput {...props} readOnly={readOnly} labelLeftAuto={labelLeftAuto} className="sd-line-input__toggle">
         <Label text={label}/>

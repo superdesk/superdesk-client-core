@@ -65,9 +65,9 @@ export class MarkedDesksList extends React.Component<any, any> {
 
     render() {
         const {desks} = this.props.svc;
-        var markedDesks = isString(this.props.item.marked_desks[0]) ?
+        const markedDesks = isString(this.props.item.marked_desks[0]) ?
             this.props.item.marked_desks : map(this.props.item.marked_desks, 'desk_id');
-        var markedDesksById = this.props.markedDesksById || {};
+        const markedDesksById = this.props.markedDesksById || {};
 
         return (
             <ul className="dropdown dropdown__menu highlights-list-menu open"

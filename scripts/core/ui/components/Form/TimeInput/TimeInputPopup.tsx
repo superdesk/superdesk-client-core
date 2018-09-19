@@ -36,7 +36,8 @@ export class TimeInputPopup extends React.Component<any, any> {
 
     componentWillMount() {
         const {value} = this.props;
-        let hourIndex, minuteIndex;
+        let hourIndex;
+        let minuteIndex;
         let inputDateTime = value && moment.isMoment(value) ? moment(value) : this.state.currentTime;
 
         // Round it to nearest 5 minutes mark if needed

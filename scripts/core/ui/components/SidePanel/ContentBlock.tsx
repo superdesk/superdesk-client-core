@@ -7,7 +7,7 @@ import classNames from 'classnames';
  * @name ContentBlock
  * @description Component to hold a single block of content
  */
-export const ContentBlock:React.StatelessComponent<any> = ({children, className, padSmall, flex}) => (
+export const ContentBlock: React.StatelessComponent<any> = ({children, className, padSmall, flex}) => (
     <div
         className={classNames(
             'side-panel__content-block',
@@ -15,7 +15,7 @@ export const ContentBlock:React.StatelessComponent<any> = ({children, className,
             {
                 'side-panel__content-block--pad-small': padSmall,
                 'side-panel__content-block--flex': flex,
-            }
+            },
         )}
     >
         {children}

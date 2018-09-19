@@ -45,7 +45,7 @@ export class ItemList extends React.Component<any, any> {
     }
 
     getSelectedItem() {
-        var selected = this.state.selected;
+        const selected = this.state.selected;
 
         return this.state.itemsById[selected];
     }
@@ -54,7 +54,7 @@ export class ItemList extends React.Component<any, any> {
         const {scope} = this.props;
         const {Keys} = this.props.svc;
 
-        var diff;
+        let diff;
 
         switch (event.keyCode) {
         case Keys.right:
@@ -68,10 +68,10 @@ export class ItemList extends React.Component<any, any> {
             break;
         }
 
-        var highlightSelected = () => {
-            for (var i = 0; i < this.state.itemsList.length; i++) {
+        const highlightSelected = () => {
+            for (let i = 0; i < this.state.itemsList.length; i++) {
                 if (this.state.itemsList[i] === this.state.selected) {
-                    var next = Math.min(this.state.itemsList.length - 1, Math.max(0, i + diff));
+                    const next = Math.min(this.state.itemsList.length - 1, Math.max(0, i + diff));
 
                     this.select(this.state.itemsById[this.state.itemsList[next]]);
                     return;
@@ -91,15 +91,15 @@ export class ItemList extends React.Component<any, any> {
         };
 
         // This function is to bring the selected item (by key press) into view if it is out of container boundary.
-        var scrollSelectedItemIfRequired = (event, scope) => {
-            let container = scope.viewColumn ? $(document).find('.content-list') : $(event.currentTarget);
+        const scrollSelectedItemIfRequired = (_event, _scope) => {
+            const container = _scope.viewColumn ? $(document).find('.content-list') : $(_event.currentTarget);
 
-            let selectedItemElem = $(event.currentTarget.firstChild).children('.list-item-view.active');
+            const selectedItemElem = $(_event.currentTarget.firstChild).children('.list-item-view.active');
 
             if (selectedItemElem.length > 0) {
                 // The following line translated to: top_Of_Selected_Item (minus) top_Of_Scrollable_Div
 
-                let distanceOfSelItemFromVisibleTop = $(selectedItemElem[0]).offset().top - $(document).scrollTop() -
+                const distanceOfSelItemFromVisibleTop = $(selectedItemElem[0]).offset().top - $(document).scrollTop() -
                 $(container[0]).offset().top - $(document).scrollTop();
 
                 // If the selected item goes beyond container view, scroll it to middle.
@@ -121,10 +121,10 @@ export class ItemList extends React.Component<any, any> {
         const {gettextCatalog} = this.props.svc;
         const {scope, svc} = this.props;
 
-        var createItem = function createItem(itemId) {
-            var item = this.state.itemsById[itemId];
+        const _createItem = function createItem(itemId) {
+            const item = this.state.itemsById[itemId];
 
-            var flags = {selected: this.state.selected === itemId};
+            const flags = {selected: this.state.selected === itemId};
 
             return (
                 <Item key={itemId}
@@ -136,18 +136,18 @@ export class ItemList extends React.Component<any, any> {
                     scope={scope}/>
             );
         }.bind(this);
-        var isEmpty = !this.state.itemsList.length;
+        const isEmpty = !this.state.itemsList.length;
 
-        var cssClass = classNames(
+        const cssClass = classNames(
             this.state.view === 'photogrid' ?
                 'sd-grid-list sd-grid-list--large sd-grid-list--small-margin' :
                 (this.state.view || 'compact') + '-view list-view',
-            {'list-without-items': isEmpty}
+            {'list-without-items': isEmpty},
         );
 
-        var listItems = isEmpty && !scope.loading ?
+        const listItems = isEmpty && !scope.loading ?
             <span key="no-items">{gettextCatalog.getString('There are currently no items')}</span>
-            : this.state.itemsList.map(createItem);
+            : this.state.itemsList.map(_createItem);
 
         return (
             <ul className={cssClass}>

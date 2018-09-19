@@ -42,7 +42,7 @@ export class LinkInputComponent extends React.Component<any, any> {
 
         if (props.item) {
             this.tabs.push(
-                {label: gettext('Attachment'), render: this.renderAttachment.bind(this)}
+                {label: gettext('Attachment'), render: this.renderAttachment.bind(this)},
             );
         }
 
@@ -80,7 +80,10 @@ export class LinkInputComponent extends React.Component<any, any> {
      */
     onSubmit(linkType) {
         let link;
-        const {suggestingMode, createLinkSuggestion, applyLink, changeLinkSuggestion} = this.props;
+        const {suggestingMode} = this.props;
+        const _createLinkSuggestion = this.props.createLinkSuggestion;
+        const _applyLink = this.props.applyLink;
+        const _changeLinkSuggestion = this.props.changeLinkSuggestion;
 
         if (linkType === linkTypes.href) {
             link = {href: this.state.url};
@@ -96,12 +99,12 @@ export class LinkInputComponent extends React.Component<any, any> {
 
         if (suggestingMode) {
             if (this.entity) {
-                changeLinkSuggestion(link, this.entity);
+                _changeLinkSuggestion(link, this.entity);
             } else {
-                createLinkSuggestion(link);
+                _createLinkSuggestion(link);
             }
         } else {
-            applyLink(link, this.entity);
+            _applyLink(link, this.entity);
         }
 
         this.props.hidePopups();
@@ -213,7 +216,7 @@ const mapStateToProps = (state) => ({
     suggestingMode: state.suggestingMode,
 });
 
-export const LinkInput:React.StatelessComponent<any> = connect(mapStateToProps, {
+export const LinkInput: React.StatelessComponent<any> = connect(mapStateToProps, {
     applyLink,
     hidePopups,
     createLinkSuggestion,

@@ -7,7 +7,6 @@ export class ListTypeIcon extends React.Component<any, any> {
     static propTypes: any;
     static defaultProps: any;
 
-
     constructor(props) {
         super(props);
         this.state = {hover: false};
@@ -27,7 +26,7 @@ export class ListTypeIcon extends React.Component<any, any> {
     }
 
     render() {
-        var showSelect = this.state.hover || this.props.item.selected;
+        const showSelect = this.state.hover || this.props.item.selected;
 
         return React.createElement(
             'div',
@@ -47,8 +46,8 @@ export class ListTypeIcon extends React.Component<any, any> {
                         type: this.props.item.type,
                         highlight: this.props.item.highlight,
                         svc: this.props.svc,
-                    }
-                )
+                    },
+                ),
         );
     }
 }

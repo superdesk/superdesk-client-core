@@ -62,7 +62,7 @@ export class Dropdown extends React.Component<any, any> {
                 navbtn: this.props.navbtn,
                 'sd-create-btn': isCreate,
                 'navbtn--text-only': this.props.buttonLabel,
-            }
+            },
         );
 
         const buttonDropMenu = (
@@ -126,13 +126,13 @@ export class Dropdown extends React.Component<any, any> {
                                         {item.icon && (
                                             <i className={classNames(
                                                 {'icon--gray': item.disabled},
-                                                item.icon
+                                                item.icon,
                                             )} />
                                         )}
 
                                         <span className={classNames(
                                             {'dropdown__menu-item--disabled': item.disabled},
-                                            item.className
+                                            item.className,
                                         )}>
                                             {firstCharUpperCase(item.label)}
                                         </span>

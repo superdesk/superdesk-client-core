@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {get} from 'lodash';
 
-export const assignment:React.StatelessComponent<any> = ({item, svc}) => {
+export const assignment: React.StatelessComponent<any> = ({item, svc}) => {
     const {gettextCatalog} = svc;
 
     if (!get(item, 'assignment_id')) {

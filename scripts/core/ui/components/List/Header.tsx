@@ -7,7 +7,7 @@ import classNames from 'classnames';
  * @name Header
  * @description Header Component of a list
  */
-export const Header:React.StatelessComponent<any> = ({children, title, marginTop}) => (
+export const Header: React.StatelessComponent<any> = ({children, title, marginTop}) => (
     <div className={classNames('sd-list-header', {'sd-list-header--m-top': marginTop})}>
         {title && <span className="sd-list-header__name">{title}</span>}
         {children}

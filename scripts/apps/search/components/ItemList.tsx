@@ -384,10 +384,10 @@ export class ItemList extends React.Component<any, any> {
         };
 
         // This function is to bring the selected item (by key press) into view if it is out of container boundary.
-        const scrollSelectedItemIfRequired = (event, scope) => {
-            const container = scope.viewColumn ? $(document).find('.content-list') : $(event.currentTarget);
+        const scrollSelectedItemIfRequired = (_event, _scope) => {
+            const container = _scope.viewColumn ? $(document).find('.content-list') : $(_event.currentTarget);
 
-            const selectedItemElem = $(event.currentTarget.firstChild).children('.list-item-view.active');
+            const selectedItemElem = $(_event.currentTarget.firstChild).children('.list-item-view.active');
 
             if (selectedItemElem.length > 0) {
                 // The following line translated to: top_Of_Selected_Item (minus) top_Of_Scrollable_Div
@@ -463,7 +463,7 @@ export class ItemList extends React.Component<any, any> {
                     this.state.view === 'photogrid' ?
                         'sd-grid-list sd-grid-list--no-margin' :
                         (this.state.view || 'compact') + '-view list-view',
-                    {'list-without-items': isEmpty}
+                    {'list-without-items': isEmpty},
                 ),
                 onClick: this.closeActionsMenu,
             },
@@ -471,8 +471,8 @@ export class ItemList extends React.Component<any, any> {
                 React.createElement(
                     'li',
                     {onClick: this.closeActionsMenu},
-                    gettextCatalog.getString('There are currently no items')
-                ) : this.state.itemsList.map(createItem)
+                    gettextCatalog.getString('There are currently no items'),
+                ) : this.state.itemsList.map(createItem),
         );
     }
 }

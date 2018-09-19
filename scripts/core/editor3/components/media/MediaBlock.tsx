@@ -155,7 +155,7 @@ export class MediaBlockComponent extends React.Component<any, any> {
         const removable = !readOnly;
         const draggable = removable;
 
-        var {gettextCatalog} = this.props.blockProps.svc;
+        const {gettextCatalog} = this.props.blockProps.svc;
 
         return (
 
@@ -351,7 +351,7 @@ const mapDispatchToProps = (dispatch) => ({
     setLocked: () => dispatch(actions.setLocked(true)),
 });
 
-export const MediaBlock:React.StatelessComponent<any> = connect(
+export const MediaBlock: React.StatelessComponent<any> = connect(
     mapStateToProps,
-    mapDispatchToProps
+    mapDispatchToProps,
 )(MediaBlockComponent);

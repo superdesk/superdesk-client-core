@@ -7,7 +7,7 @@ import {DayPicker} from './DayPicker';
 import {MonthPicker} from './MonthPicker';
 import {YearPicker} from './YearPicker';
 
-const moment:any = momentAlias;
+const moment: any = momentAlias;
 
 import {gettext} from '../../utils';
 
@@ -21,7 +21,6 @@ import './style.scss';
 export class DateInputPopup extends React.Component<any, any> {
     static propTypes: any;
     static defaultProps: any;
-
 
     constructor(props) {
         super(props);
@@ -77,7 +76,8 @@ export class DateInputPopup extends React.Component<any, any> {
     * @description getFurtherValues gets next set-list of options when left/right arrows are clicked
     */
     getFurtherValues(direction) {
-        let diff = 1, diffType = '';
+        let diff = 1;
+        let diffType = '';
 
         switch (this.state.mode) {
         case 'day':

@@ -12,7 +12,7 @@ export const ListItemInfo: React.StatelessComponent<any> = (props) => {
             renderArea('singleLine', angular.extend({
                 svc: props.svc,
                 scope: props.scope,
-            }, props), {className: 'line'})
+            }, props), {className: 'line'}),
         );
     }
 
@@ -26,7 +26,7 @@ export const ListItemInfo: React.StatelessComponent<any> = (props) => {
         renderArea('secondLine', angular.extend({
             svc: props.svc,
             scope: props.scope,
-        }, props), {className: 'line'}, props.scope.customRender)
+        }, props), {className: 'line'}, props.scope.customRender),
     );
 };
 

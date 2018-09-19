@@ -5,7 +5,6 @@ import {KEYCODES} from '../../../contacts/constants';
 import {gettext} from '../../../contacts/helpers';
 import {isEmpty, get, set} from 'lodash';
 
-
 export class MultiTextInput extends React.Component<any, any> {
     static propTypes: any;
     static defaultProps: any;
@@ -23,7 +22,7 @@ export class MultiTextInput extends React.Component<any, any> {
     }
 
     onBlur(e) {
-        let _touched = this.state.touched;
+        const _touched = this.state.touched;
 
         set(_touched, e.target.name, true);
 

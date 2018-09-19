@@ -38,16 +38,16 @@ export default class MenuItems extends React.Component<any, any> {
     }
 
     getActions() {
-        var item = this.props.item;
-        var type = this.getType();
-        var intent = {action: 'list', type: type};
-        var groups = {};
+        const item = this.props.item;
+        const type = this.getType();
+        const intent = {action: 'list', type: type};
+        const groups = {};
 
         const {superdesk, workflowService} = this.props.svc;
 
         superdesk.findActivities(intent, item).forEach((activity) => {
             if (workflowService.isActionAllowed(item, activity.action) && activity.list !== false) {
-                var group = activity.group || 'default';
+                const group = activity.group || 'default';
 
                 groups[group] = groups[group] || [];
                 groups[group].push(activity);
@@ -65,10 +65,10 @@ export default class MenuItems extends React.Component<any, any> {
     renderMenu() {
         const {gettextCatalog} = this.props.svc;
 
-        var menu = [];
-        var item = this.props.item;
+        const menu = [];
+        const item = this.props.item;
 
-        var createAction = (activity) =>
+        const createAction = (activity) =>
             <Item key={activity._id}
                 svc={this.props.svc}
                 scope={this.props.scope}
@@ -76,7 +76,7 @@ export default class MenuItems extends React.Component<any, any> {
                 onActioning={this.props.onActioning}
             />;
 
-        var actions = this.getActions();
+        const actions = this.getActions();
 
         AUTHORING_MENU_GROUPS.map((group) => {
             if (actions[group._id]) {
@@ -87,7 +87,7 @@ export default class MenuItems extends React.Component<any, any> {
                             svc={this.props.svc}
                             key={`group-label-${group._id}`}
                             item={this.props.item} />,
-                        <Divider key={`group-divider-${group._id}`} />
+                        <Divider key={`group-divider-${group._id}`} />,
                     );
                 } else if (group.concate) {
                     const submenu = actions[group._id].map((action) => createAction(action));
@@ -99,7 +99,7 @@ export default class MenuItems extends React.Component<any, any> {
                                 submenu={submenu}
                                 icon={actions[group._id][0].icon}
                             />
-                        </li>
+                        </li>,
                     );
                     return null;
                 } else {
@@ -114,7 +114,7 @@ export default class MenuItems extends React.Component<any, any> {
 
         // adding menu item for the groups that are not define above
         Object.keys(actions).forEach((groupName) => {
-            var existingGroup = AUTHORING_MENU_GROUPS.find((g) => g._id === groupName);
+            const existingGroup = AUTHORING_MENU_GROUPS.find((g) => g._id === groupName);
 
             if (!existingGroup) {
                 menu.push(<Divider key={`group-divider-${groupName}`} />);

@@ -8,7 +8,7 @@ import {KEYCODES} from '../../constants';
 import {onEventCapture} from '../../utils';
 import './style.scss';
 
-const moment:any = momentAlias;
+const moment: any = momentAlias;
 
 /**
  * @ngdoc react
@@ -75,7 +75,7 @@ export class DateInput extends React.Component<any, any> {
     * @description validateDateText sets validate-state after text-input of dates
     */
     validateDateText(field, val) {
-        let regex = new RegExp('[0-9][0-9]/[0-9][0-9]/[0-9][0-9][0-9][0-9]', 'i');
+        const regex = new RegExp('[0-9][0-9]/[0-9][0-9]/[0-9][0-9][0-9][0-9]', 'i');
         const valMoment = moment(val, this.props.dateFormat);
 
         if (val.match(regex) && valMoment.isValid()) {
@@ -119,7 +119,7 @@ export class DateInput extends React.Component<any, any> {
         if (newMoment.isValid() && (!newMoment.isSame(value)) || !value) {
             onChange(
                 field,
-                newMoment
+                newMoment,
             );
         }
     }

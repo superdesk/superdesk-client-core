@@ -5,13 +5,12 @@ import classNames from 'classnames';
 import {KEYCODES} from './constants';
 import {onEventCapture} from './utils';
 
-
 /**
  * @ngdoc react
  * @name Button
  * @description Generic Button component
  */
-const Button:React.StatelessComponent<any> = ({
+const Button: React.StatelessComponent<any> = ({
     className,
     onClick,
     icon,
@@ -61,7 +60,7 @@ const Button:React.StatelessComponent<any> = ({
                     'btn--icon-only-circle': iconOnlyCircle,
                     'pull-right': pullRight,
                 },
-                className
+                className,
             )}
             onClick={disabled ? null : onClick || null}
             title={title}

@@ -10,7 +10,6 @@ import {Popup, Header, Content, Label} from '../../Popup';
 
 import './style.scss';
 
-
 /**
  * @ngdoc react
  * @name ColouredValuePopup

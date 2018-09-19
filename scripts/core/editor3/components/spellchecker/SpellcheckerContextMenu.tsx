@@ -94,7 +94,7 @@ export class SpellcheckerContextMenuComponent extends React.Component<any, any> 
                                 <button onMouseDown={this.replaceWord(suggestion.key)}>
                                     {suggestion.value}
                                 </button>
-                            </li>
+                            </li>,
                         )
                     }
                     <li className="divider"/>
@@ -105,7 +105,6 @@ export class SpellcheckerContextMenuComponent extends React.Component<any, any> 
         );
     }
 }
-
 
 /** Set the types of props for the spellchecker context menu component*/
 SpellcheckerContextMenuComponent.propTypes = {
@@ -128,7 +127,7 @@ const mapDispatchToProps = (dispatch) => ({
     replaceWord: (word) => setTimeout(() => dispatch(actions.replaceWord(word)), 0),
 });
 
-export const SpellcheckerContextMenu:React.StatelessComponent<any> = connect(
+export const SpellcheckerContextMenu: React.StatelessComponent<any> = connect(
     null,
-    mapDispatchToProps
+    mapDispatchToProps,
 )(SpellcheckerContextMenuComponent);
