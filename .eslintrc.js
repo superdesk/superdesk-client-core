@@ -12,7 +12,7 @@ module.exports = Object.assign({}, sharedConfigs, {
             },
         },
         {
-            files: ['scripts/business-logic/*'],
+            files: ['scripts/superdesk-interfaces/*'],
             rules: {
                 'camelcase': 0,
             },
