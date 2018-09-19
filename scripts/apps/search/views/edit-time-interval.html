@@ -1,8 +1,8 @@
 <div class="form-label" translate>Schedule</div>
 
 <div class="form__row">
-    <sd-check type="radio" ng-model="wrapper.everyDay" ng-value="true" label-position="inside" translate>Every day</sd-check>
-    <sd-check type="radio" ng-model="wrapper.everyDay" ng-value="false" label-position="inside" translate>Select days</sd-check>
+    <sd-check type="radio" ng-model="wrapper.everyDay" ng-value="true" label-position="inside">{{'Every day' | translate}}</sd-check>
+    <sd-check type="radio" ng-model="wrapper.everyDay" ng-value="false" label-position="inside">{{'Select days' | translate}}</sd-check>
 </div>
 
 <div
@@ -15,8 +15,8 @@
 <div class="form-label" translate>Time</div>
 
 <div class="form__row">
-    <sd-check type="radio" ng-model="wrapper.everyHour" ng-value="true" label-position="inside" translate>Every hour</sd-check>
-    <sd-check type="radio" ng-model="wrapper.everyHour" ng-value="false" label-position="inside" translate>Select hours</sd-check>
+    <sd-check type="radio" ng-model="wrapper.everyHour" ng-value="true" label-position="inside">{{'Every hour' | translate}}</sd-check>
+    <sd-check type="radio" ng-model="wrapper.everyHour" ng-value="false" label-position="inside">{{'Select hours' | translate}}</sd-check>
 </div>
 
 <div ng-if="wrapper.everyHour !== 'true'" class="form__row">
