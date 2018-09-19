@@ -28,7 +28,7 @@ export function RenditionsService(metadata, $q, api, superdesk, _) {
         // ingest picture if it comes from an external source (create renditions)
 
         if (item._type && item._type === 'externalsource') {
-            performRenditions = superdesk.intent('list', 'externalsource', {item: item}, 'externalsource')
+            performRenditions = superdesk.intent('list', 'externalsource', {item: item}, 'fetch-externalsource')
                 .then((item) => api.find('archive', item._id));
         }
         return performRenditions;
