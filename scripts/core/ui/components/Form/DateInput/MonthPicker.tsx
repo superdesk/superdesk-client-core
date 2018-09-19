@@ -12,7 +12,7 @@ import './style.scss';
  * @name MonthPicker
  * @description Component to Pick months of DatePicker
  */
-export const MonthPicker:React.StatelessComponent<any> = ({selectedDate, onChange}) => {
+export const MonthPicker: React.StatelessComponent<any> = ({selectedDate, onChange}) => {
     const monthNames = ['JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE', 'JULY',
         'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER'];
     const rows = chunk(monthNames, 3);

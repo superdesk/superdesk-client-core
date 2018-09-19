@@ -33,7 +33,7 @@ class CommentInputBody extends React.Component<any, any> {
      */
     onSubmit() {
         const {msg} = this.state;
-        const {hidePopups} = this.props;
+        const _hidePopups = this.props.hidePopups;
         const {highlightId} = this.props.data;
 
         if (msg !== '') {
@@ -47,18 +47,18 @@ class CommentInputBody extends React.Component<any, any> {
                             resolutionInfo: null,
                             ...getAuthorInfo(),
                         },
-                    }
+                    },
                 );
             } else {
-                var highlightData = this.props.highlightsManager.getHighlightData(highlightId);
+                const highlightData = this.props.highlightsManager.getHighlightData(highlightId);
                 const date = new Date();
 
                 this.props.highlightsManager.updateHighlightData(
                     highlightId,
-                    {...highlightData, data: {...highlightData.data, msg, date}}
+                    {...highlightData, data: {...highlightData.data, msg, date}},
                 );
             }
-            hidePopups();
+            _hidePopups();
         }
     }
 
@@ -101,6 +101,6 @@ CommentInputBody.propTypes = {
     highlightsManager: PropTypes.object.isRequired,
 };
 
-export const CommentInput:React.StatelessComponent<any> = connect(null, {
+export const CommentInput: React.StatelessComponent<any> = connect(null, {
     hidePopups,
 })(CommentInputBody);

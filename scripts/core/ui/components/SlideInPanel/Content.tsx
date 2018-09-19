@@ -7,7 +7,7 @@ import classNames from 'classnames';
  * @name Content
  * @description Contents of a slide-in panel
  */
-export const Content:React.StatelessComponent<any> = ({children, first}) => (
+export const Content: React.StatelessComponent<any> = ({children, first}) => (
     <div className="sd-slide-in-panel__content">
         <div className={classNames('sd-slide-in-panel__content-block',
             {'sd-slide-in-panel__content-block--first': first})}>

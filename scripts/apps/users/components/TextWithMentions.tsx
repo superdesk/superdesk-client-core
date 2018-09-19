@@ -11,11 +11,11 @@ const mentionRegexp = /@\[([^\]]+)\]\((desk|user):([^\)]+)\)/g;
  * @name TextWithMentions
  * @description Displays a text containing mentions.
  */
-export const TextWithMentions:React.StatelessComponent<any> = ({children, ...props}) => {
+export const TextWithMentions: React.StatelessComponent<any> = ({children, ...props}) => {
     const msg = children;
     const n = msg.length;
 
-    let r = []; // array of components to render
+    const r = []; // array of components to render
     let m; // regexp match
     let lastEnd = 0; // end index of last match
 
@@ -23,7 +23,7 @@ export const TextWithMentions:React.StatelessComponent<any> = ({children, ...pro
         m = mentionRegexp.exec(msg);
 
         if (m) {
-            let [match, name, type, id] = m;
+            const [match, name, type, id] = m;
 
             if (lastEnd < m.index) {
                 // push the previous slice of plain text

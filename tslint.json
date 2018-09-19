@@ -6,17 +6,43 @@
     "jsRules": {},
     "rules": {
         "quotemark": false,
+        "trailing-comma": [
+            true,
+            {
+                "multiline": {
+                    "objects": "always",
+                    "arrays": "always",
+                    "functions": "always",
+                    "typeLiterals": "ignore"
+                },
+                "esSpecCompliant": true
+            }
+        ],
         "ordered-imports": false,
         "interface-name": true,
         "align": false,
         "interface-over-type-literal": false,
         "object-literal-sort-keys": false,
-        "array-type": [true, "generic"],
+        "array-type": [
+            true,
+            "generic"
+        ],
         "object-literal-shorthand": false,
         "variable-name": false,
         "forin": false,
         "member-ordering": false,
-        "member-access": [true, "no-public"],
+        "member-access": [
+            true,
+            "no-public"
+        ],
+        "no-string-literal": false,
+        "jsdoc-format": false,
+        "no-console": false,
+        "max-classes-per-file": false,
+        "prefer-for-of": false,
+        "object-literal-key-quotes": false,
+        "no-eval": false, // already handled in eslint
+        "no-conditional-assignment": false, // already handled in eslint
         "only-arrow-functions": false
     },
     "rulesDirectory": []

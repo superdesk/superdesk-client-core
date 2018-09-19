@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
  * Usage Terms field
  * @param {Object} props
  */
-export const usageterms:React.StatelessComponent<any> = ({item}) => {
+export const usageterms: React.StatelessComponent<any> = ({item}) => {
     if (item.usageterms) {
         return (
             <small key="usageterms"

@@ -10,10 +10,10 @@ import {gettextCatalog} from '../utils';
  * @description Label used in a popup, typically in header
  */
 
-const Label:React.StatelessComponent<any> = ({text, children, centerText}) => (
+const Label: React.StatelessComponent<any> = ({text, children, centerText}) => (
     <span className={classNames(
         'popup__menu-label',
-        {'popup__menu-label--center': centerText}
+        {'popup__menu-label--center': centerText},
     )}>
         {gettextCatalog(text)}
         {children}

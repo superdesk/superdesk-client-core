@@ -6,7 +6,6 @@ export class FetchedDesksInfo extends React.Component<any, any> {
     static propTypes: any;
     static defaultProps: any;
 
-
     constructor(props) {
         super(props);
 
@@ -57,7 +56,7 @@ export class FetchedDesksInfo extends React.Component<any, any> {
     render() {
         const {gettext} = this.props.svc;
 
-        var items = [];
+        const items = [];
 
         items.push(React.createElement('dt', {
             key: 'dt',
@@ -65,12 +64,12 @@ export class FetchedDesksInfo extends React.Component<any, any> {
         }, gettext('fetched in')));
 
         if (this.state.desks.length) {
-            var desk = this.state.desks[0];
-            var name = this.formatDeskName(desk.desk.name);
+            const desk = this.state.desks[0];
+            const name = this.formatDeskName(desk.desk.name);
 
             items.push(React.createElement('dd', {key: 'dd1'}, desk.isUserDeskMember ?
                 React.createElement('a', {onClick: this.openDesk(desk)}, name) :
-                React.createElement('span', {className: 'container'}, name)
+                React.createElement('span', {className: 'container'}, name),
             ));
 
             if (this.state.desks.length > 1) {
@@ -84,7 +83,7 @@ export class FetchedDesksInfo extends React.Component<any, any> {
         }
 
         return React.createElement('div', {},
-            React.createElement('dl', {}, items)
+            React.createElement('dl', {}, items),
         );
     }
 }

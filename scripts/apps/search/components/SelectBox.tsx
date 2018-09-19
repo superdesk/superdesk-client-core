@@ -6,7 +6,6 @@ export class SelectBox extends React.Component<any, any> {
     static propTypes: any;
     static defaultProps: any;
 
-
     constructor(props) {
         super(props);
         this.toggle = this.toggle.bind(this);
@@ -19,7 +18,7 @@ export class SelectBox extends React.Component<any, any> {
 
         event.stopPropagation();
         if (isCheckAllowed(this.props.item)) {
-            var selected = !this.props.item.selected;
+            const selected = !this.props.item.selected;
 
             this.props.onMultiSelect([this.props.item], selected);
         }
@@ -39,8 +38,8 @@ export class SelectBox extends React.Component<any, any> {
             React.createElement(
                 'span', {
                     className: 'sd-checkbox' + (this.props.item.selected ? ' checked' : ''),
-                }
-            )
+                },
+            ),
         );
     }
 }

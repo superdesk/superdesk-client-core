@@ -7,7 +7,7 @@ import {IconButton} from '../../';
 import {KEYCODES} from '../../constants';
 import './style.scss';
 
-const moment:any = momentAlias;
+const moment: any = momentAlias;
 
 /**
  * @ngdoc react
@@ -64,7 +64,7 @@ export class TimeInput extends React.Component<any, any> {
     }
 
     validateTimeText(field, val) {
-        let regex = new RegExp('^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$', 'i');
+        const regex = new RegExp('^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$', 'i');
 
         if (!val.match(regex)) {
             this.setState({
@@ -100,7 +100,7 @@ export class TimeInput extends React.Component<any, any> {
         // Takes the time as a string (based on the configured time format)
         // Then parses it and calls parents onChange with new moment object
         const newTime = moment(newValue, timeFormat);
-        let newMoment = value && moment.isMoment(value) ? moment(value) : moment();
+        const newMoment = value && moment.isMoment(value) ? moment(value) : moment();
 
         newMoment.hour(newTime.hour());
         newMoment.minute(newTime.minute());

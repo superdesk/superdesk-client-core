@@ -32,7 +32,7 @@ describe('editor3.reducers.suggestion.PASTE_ADD_SUGGESTION', () => {
         expect(selection.getEndOffset()).toEqual(15);
         expect(selection.getEndKey()).toEqual(content.getFirstBlock().getKey());
 
-        let block = content.getFirstBlock();
+        const block = content.getFirstBlock();
 
         for (let i = 0; i < 21; i++) {
             if (i < 4 || i >= 15) {
@@ -136,7 +136,7 @@ describe('editor3.reducers.suggestion.PASTE_ADD_SUGGESTION', () => {
         expect(selection.getEndOffset()).toEqual(17);
         expect(selection.getEndKey()).toEqual(content.getFirstBlock().getKey());
 
-        let block = content.getFirstBlock();
+        const block = content.getFirstBlock();
 
         for (let i = 0; i < 21; i++) {
             if (i < 4 || i >= 17) {
@@ -257,7 +257,7 @@ describe('editor3.reducers.suggestion.PASTE_ADD_SUGGESTION', () => {
         expect(selection.getEndOffset()).toEqual(9);
         expect(selection.getEndKey()).toEqual(content.getFirstBlock().getKey());
 
-        let block = content.getFirstBlock();
+        const block = content.getFirstBlock();
 
         for (let i = 0; i < 16; i++) {
             if (i < 2) {

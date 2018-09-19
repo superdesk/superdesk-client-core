@@ -8,7 +8,7 @@ import classNames from 'classnames';
  * @description Main dropdown component
  */
 
-export const Dropdown:React.StatelessComponent<any> = ({children, className, isOpen, alignRight, dropUp}) => (
+export const Dropdown: React.StatelessComponent<any> = ({children, className, isOpen, alignRight, dropUp}) => (
     <div
         className={classNames(
             'dropdown',
@@ -17,7 +17,7 @@ export const Dropdown:React.StatelessComponent<any> = ({children, className, isO
                 open: isOpen,
             },
             {'dropdown--dropup': dropUp},
-            className
+            className,
         )}
     >
         {children}
@@ -31,4 +31,3 @@ Dropdown.propTypes = {
     alignRight: PropTypes.bool,
     dropUp: PropTypes.bool,
 };
-

@@ -100,4 +100,3 @@ describe('editor3.components.embed-input', () => {
         expect(wrapper.state('error')).toBe('');
     }));
 });
-

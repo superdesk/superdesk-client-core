@@ -82,9 +82,9 @@ export const forceUpdate = (state) => {
  */
 export const onChange = (state, newState, force = false) => {
     // TODO(x): Remove `force` once Draft v0.11.0 is in
-    let editorState = newState;
+    const editorState = newState;
 
-    let contentChanged = state.editorState.getCurrentContent() !== newState.getCurrentContent();
+    const contentChanged = state.editorState.getCurrentContent() !== newState.getCurrentContent();
 
     if (contentChanged || force) {
         const plainText = isEditorPlainText(state);
@@ -97,7 +97,7 @@ export const onChange = (state, newState, force = false) => {
             applyAbbreviations({
                 ...state,
                 editorState,
-            })
+            }),
         );
     }
 
@@ -324,7 +324,7 @@ const changeImageCaption = (state, {entityKey, newCaption, field}) => {
     const {editorState} = state;
     const contentState = editorState.getCurrentContent();
     const entity = contentState.getEntity(entityKey);
-    let {media} = entity.getData();
+    const {media} = entity.getData();
 
     if (field === 'Title') {
         media.headline = newCaption;
@@ -383,7 +383,7 @@ export function moveBlockWithoutDispatching(state, {block, dest, insertionMode})
         editorState,
         atomicBlock,
         targetRange,
-        insertionMode
+        insertionMode,
     );
 
     return {...state, editorState: withMovedAtomicBlock};

@@ -13,7 +13,7 @@ import './style.scss';
  * @name InputArray
  * @description Component to create an array of input components
  */
-export const InputArray:React.StatelessComponent<any> = ({
+export const InputArray: React.StatelessComponent<any> = ({
     field,
     value,
     onChange,
@@ -50,7 +50,7 @@ export const InputArray:React.StatelessComponent<any> = ({
     const showAddButton = (maxCount ? value.length < maxCount : true) && !readOnly;
     const isIndexReadOnly = (index) => (addOnly && index === originalCount) ? false : readOnly;
     const customButton = addButtonComponent ? React.createElement(addButtonComponent, {onAdd: add}) : false;
-    let addButton = row ? (customButton || <Button onClick={add} text={addButtonText} />) :
+    const addButton = row ? (customButton || <Button onClick={add} text={addButtonText} />) :
         (customButton || <Button onClick={add} text={addButtonText} tabIndex={0} enterKeyIsClick/>);
 
     const labelComponent = label ?
@@ -59,10 +59,10 @@ export const InputArray:React.StatelessComponent<any> = ({
             {buttonWithLabel && showAddButton && addButton}
         </div> : null;
 
-    const getComponent = (val, index, row) => {
+    const getComponent = (val, index, _row) => {
         const indexReadOnly = isIndexReadOnly(index);
 
-        return row ?
+        return _row ?
             (<Component
                 key={index}
                 index={index}

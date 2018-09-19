@@ -16,7 +16,7 @@ function LinkStrategy(contentBlock, callback, contentState) {
 
             return entityKey !== null && contentState.getEntity(entityKey).getType() === 'LINK';
         },
-        callback
+        callback,
     );
 }
 

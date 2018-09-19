@@ -50,7 +50,7 @@ const toggleBlockStyle = (state, blockType) => {
     const {editorState} = state;
     const stateAfterChange = RichUtils.toggleBlockType(
         editorState,
-        blockType
+        blockType,
     );
 
     return onChange(state, stateAfterChange);
@@ -67,7 +67,7 @@ const toggleInlineStyle = (state, inlineStyle) => {
 
     let stateAfterChange = RichUtils.toggleInlineStyle(
         editorState,
-        inlineStyle
+        inlineStyle,
     );
 
     // Check if there was a suggestions to toggle that style
@@ -172,11 +172,14 @@ export const addMedia = (editorState, media, targetBlockKey = null) => {
     const contentStateWithEntity = contentState.createEntity('MEDIA', 'MUTABLE', {media});
     const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
 
-    let {editorState: stateWithBlock, blockKey: newBlockKey} = insertAtomicBlockWithoutEmptyLines(
+    const insertResult = insertAtomicBlockWithoutEmptyLines(
         editorState,
         entityKey,
-        ' '
+        ' ',
     );
+
+    let stateWithBlock = insertResult.editorState;
+    const newBlockKey = insertResult.blockKey;
 
     if (targetBlockKey) {
         stateWithBlock = moveBlockWithoutDispatching(
@@ -185,7 +188,7 @@ export const addMedia = (editorState, media, targetBlockKey = null) => {
                 block: newBlockKey,
                 dest: targetBlockKey,
                 insertionMode: 'after',
-            }
+            },
         ).editorState;
     }
 
@@ -240,14 +243,13 @@ const applyEmbed = (state, code) => {
     let {editorState} = insertAtomicBlockWithoutEmptyLines(
         state.editorState,
         entityKey,
-        ' '
+        ' ',
     );
 
     editorState = EditorState.acceptSelection(editorState, selection);
 
     return onChange(state, editorState);
 };
-
 
 /**
  * @ngdoc method

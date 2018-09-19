@@ -13,7 +13,6 @@ export class Field extends React.Component<any, any> {
     static propTypes: any;
     static defaultProps: any;
 
-
     constructor(props) {
         super(props);
 
@@ -67,7 +66,7 @@ export class Field extends React.Component<any, any> {
         }
 
         const schema = get(formProfile, `schema["${profileField}"]`) || {};
-        let currentError = (this.state.dirty || showErrors) ? (error || get(errors, field)) : null;
+        const currentError = (this.state.dirty || showErrors) ? (error || get(errors, field)) : null;
         const currentValue = value || get(diff, field);
         // console.log('field', currentError, showErrors, errors);
 

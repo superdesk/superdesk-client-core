@@ -2,16 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {TypeIcon} from '../index';
 
-export const type:React.StatelessComponent<any> = (props) => {
+export const type: React.StatelessComponent<any> = (props) => {
     if (props.item.type == null) {
         return null;
     }
 
-    const {type, highlight} = props.item;
+    const {_type, highlight} = props.item;
 
     return (
         <span className={props.className}>
-            <TypeIcon type={type} highlight={highlight} svc={props.svc} />
+            <TypeIcon type={_type} highlight={highlight} svc={props.svc} />
         </span>
     );
 };

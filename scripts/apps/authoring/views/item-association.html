@@ -5,6 +5,7 @@
         tabindex="{{tabindex}}"
         ng-if="editable && associations.isMediaEditable() && !related"
         ng-click="upload()"
+        ng-class="{'item-association--loading': loading}"
         class="item-association"></button>
 
     <!-- else -->

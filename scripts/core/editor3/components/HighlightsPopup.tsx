@@ -191,7 +191,7 @@ export class HighlightsPopup extends React.Component<any, any> {
         const hadHighlightsChanged = this.props.highlightsManager.hadHighlightsChanged(
             this.props.editorState, nextProps.editorState);
 
-        var cursorMoved = nextSelection.getAnchorOffset() !== selection.getAnchorOffset() ||
+        const cursorMoved = nextSelection.getAnchorOffset() !== selection.getAnchorOffset() ||
             nextSelection.getAnchorKey() !== selection.getAnchorKey();
 
         return cursorMoved || hadHighlightsChanged;
@@ -207,14 +207,14 @@ export class HighlightsPopup extends React.Component<any, any> {
         }
 
         const blockKey = selection.getStartKey();
-        let block = content.getBlockForKey(blockKey);
-        let offset = selection.getStartOffset();
+        const block = content.getBlockForKey(blockKey);
+        const offset = selection.getStartOffset();
 
         if (block.getLength() === offset) {
             return List();
         }
 
-        var inlineStyle = block.getInlineStyleAt(offset);
+        const inlineStyle = block.getInlineStyleAt(offset);
 
         return inlineStyle;
     }

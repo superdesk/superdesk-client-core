@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {Row} from './';
 import {cloneDeep} from 'lodash';
 
-export const InputArray:React.StatelessComponent<any> = ({
+export const InputArray: React.StatelessComponent<any> = ({
     field,
     value,
     onChange,
@@ -15,14 +15,14 @@ export const InputArray:React.StatelessComponent<any> = ({
     ...props
 }) => {
     const add = () => {
-        let clonedValue = cloneDeep(value);
+        const clonedValue = cloneDeep(value);
 
         clonedValue.push(cloneDeep(defaultValue));
         onChange(field, [...clonedValue]);
     };
 
     const remove = (index) => {
-        let clonedValue = cloneDeep(value);
+        const clonedValue = cloneDeep(value);
 
         clonedValue.splice(index, 1);
         onChange(field, [...clonedValue]);

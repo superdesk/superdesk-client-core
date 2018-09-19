@@ -15,7 +15,7 @@ describe('editor3.component.table-block', () => {
                 setActiveCell={() => { /* no-op */ }}
                 editorState={EditorState.createWithContent(contentState)}
                 parentOnChange={() => { /* no-op */ }}
-                readOnly={false} />
+                readOnly={false} />,
         );
 
         expect(wrapper.find('tr').length).toEqual(2);
@@ -31,7 +31,7 @@ describe('editor3.component.table-block', () => {
                 setActiveCell={() => { /* no-op */ }}
                 editorState={EditorState.createWithContent(contentState)}
                 parentOnChange={() => { /* no-op */ }}
-                readOnly={true} />
+                readOnly={true} />,
         );
 
         ['a', 'b', 'c', 'd', 'e', 'f'].forEach((letter, i) => {
@@ -52,7 +52,7 @@ describe('editor3.component.table-cell', () => {
                 editorState={EditorState.createWithContent(ContentState.createFromText('abc'))}
                 onChange={() => { /* no-op */ }}
                 readOnly={false}
-                onFocus={() => { /* no-op */ }} />
+                onFocus={() => { /* no-op */ }} />,
         );
 
         expect(wrapper.find('DraftEditor').length).toBe(1);

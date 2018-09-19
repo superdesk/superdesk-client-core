@@ -12,7 +12,7 @@ import {Checkbox} from '../Form';
  * @name ItemType
  * @description Component to show item type - generally left of the item with select checkbox
  */
-export const ItemType:React.StatelessComponent<any> = ({hasCheck, checked, onCheckToggle}) => (
+export const ItemType: React.StatelessComponent<any> = ({hasCheck, checked, onCheckToggle}) => (
     <Column hasCheck={hasCheck} checked={checked} >
         {hasCheck && (
             <div className="sd-list-item__checkbox-container">

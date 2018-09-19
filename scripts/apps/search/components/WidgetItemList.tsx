@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {WidgetItem} from './index';
 
-
 /**
  * @ngdoc React
  * @module superdesk.search
@@ -19,7 +18,6 @@ import {WidgetItem} from './index';
 export class WidgetItemList extends React.Component<any, any> {
     static propTypes: any;
     static defaultProps: any;
-
 
     constructor(props) {
         super(props);
@@ -53,7 +51,7 @@ export class WidgetItemList extends React.Component<any, any> {
                 <ul className="inline-content-items">
                     {
                         this.state.itemIds.map((itemId) => {
-                            var item = this.state.itemsById[itemId];
+                            const item = this.state.itemsById[itemId];
 
                             return (
                                 <WidgetItem

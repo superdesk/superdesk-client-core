@@ -172,8 +172,8 @@ export class Item extends React.Component<any, any> {
                     item.urgency ?
                         React.createElement(ItemUrgency, angular.extend({svc: this.props.svc}, item)) : null,
                     broadcast({item: item}),
-                    getActionsMenu()
-                )
+                    getActionsMenu(),
+                ),
             );
         } else if (this.props.view === 'photogrid') {
             contents.push(
@@ -196,8 +196,8 @@ export class Item extends React.Component<any, any> {
                     getActionsMenu: getActionsMenu,
                 }),
                 React.createElement('div',
-                    {className: 'sd-grid-item__state-border'}
-                )
+                    {className: 'sd-grid-item__state-border'},
+                ),
             );
         } else {
             contents.push(
@@ -227,7 +227,7 @@ export class Item extends React.Component<any, any> {
                     svc: this.props.svc,
                     scope: this.props.scope,
                 }),
-                getActionsMenu()
+                getActionsMenu(),
             );
         }
 
@@ -238,7 +238,7 @@ export class Item extends React.Component<any, any> {
                 className: classNames(
                     'list-item-view',
                     {active: this.props.flags.selected},
-                    {selected: this.props.item.selected && !this.props.flags.selected}
+                    {selected: this.props.item.selected && !this.props.flags.selected},
                 ),
                 onMouseEnter: this.setHoverState,
                 onMouseLeave: this.unsetHoverState,
@@ -247,7 +247,7 @@ export class Item extends React.Component<any, any> {
                 onDoubleClick: this.dbClick,
                 draggable: true,
             },
-            React.createElement.apply(null, contents)
+            React.createElement.apply(null, contents),
         );
     }
 }

@@ -9,7 +9,6 @@ export class ActionsMenu extends React.Component<any, any> {
     static propTypes: any;
     static defaultProps: any;
 
-
     constructor(props) {
         super(props);
 
@@ -20,7 +19,7 @@ export class ActionsMenu extends React.Component<any, any> {
     toggle(event) {
         this.stopEvent(event);
         closeActionsMenu(this.props.item._id);
-        var icon = ReactDOM.findDOMNode(this)
+        const icon = ReactDOM.findDOMNode(this)
             .getElementsByClassName('icon-dots-vertical')[0];
 
         openActionsMenu(<MenuItems
@@ -49,9 +48,9 @@ export class ActionsMenu extends React.Component<any, any> {
                         onClick: this.toggle,
                         onDoubleClick: this.stopEvent,
                     },
-                    React.createElement('i', {className: 'icon-dots-vertical'})
-                )
-            )
+                    React.createElement('i', {className: 'icon-dots-vertical'}),
+                ),
+            ),
         );
     }
 }

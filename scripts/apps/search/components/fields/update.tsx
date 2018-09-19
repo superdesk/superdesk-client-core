@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export const update:React.StatelessComponent<any> = (props) => {
+export const update: React.StatelessComponent<any> = (props) => {
     const {$interpolate, gettextCatalog} = props.svc;
 
     if (props.item.correction_sequence) {
@@ -15,8 +15,8 @@ export const update:React.StatelessComponent<any> = (props) => {
             $interpolate(
                 gettextCatalog.getString('Update {{ seq }}'))({
                 seq: props.item.correction_sequence,
-            }
-            )
+            },
+            ),
         );
     }
 };

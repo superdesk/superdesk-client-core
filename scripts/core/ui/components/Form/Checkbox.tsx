@@ -7,7 +7,7 @@ import classNames from 'classnames';
  * @name Checkbox
  * @description Component to show checkbox input in styles including radiobutton
  */
-export const Checkbox:React.StatelessComponent<any> = ({
+export const Checkbox: React.StatelessComponent<any> = ({
     field,
     value,
     checkedValue,
@@ -32,7 +32,7 @@ export const Checkbox:React.StatelessComponent<any> = ({
             'sd-checkbox--button-style': labelPosition === 'inside',
             'sd-checkbox--radio': isRadio,
             checked: isRadio ? value === checkedValue : value,
-        }
+        },
     );
 
     let checkbox;

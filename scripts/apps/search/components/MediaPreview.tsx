@@ -10,17 +10,17 @@ function hasThumbnail(item) {
 /**
  * Media Preview - renders item thumbnail
  */
-export const MediaPreview:React.StatelessComponent<any> = (props) => {
-    var item = props.item;
-    var headline = item.headline || item.slugline || item.type;
+export const MediaPreview: React.StatelessComponent<any> = (props) => {
+    const item = props.item;
+    const headline = item.headline || item.slugline || item.type;
     // headline could contains html tags hence stripping for tooltips
-    var headlineText = headline.replace(/(<([^>]+)>)/ig, '');
-    var preview;
+    const headlineText = headline.replace(/(<([^>]+)>)/ig, '');
+    let preview;
 
     if (hasThumbnail(props.item)) {
         preview = React.createElement(
             'img',
-            {src: props.item.renditions.thumbnail.href}
+            {src: props.item.renditions.thumbnail.href},
         );
     }
 
@@ -30,7 +30,7 @@ export const MediaPreview:React.StatelessComponent<any> = (props) => {
         preview ? React.createElement(
             'figure',
             null,
-            preview
+            preview,
         ) : null,
         React.createElement(
             'span',
@@ -38,19 +38,19 @@ export const MediaPreview:React.StatelessComponent<any> = (props) => {
             React.createElement(
                 'small',
                 {title: headlineText,
-                    dangerouslySetInnerHTML: createMarkUp(headline)}
+                    dangerouslySetInnerHTML: createMarkUp(headline)},
             ),
             React.createElement(ItemContainer, {
                 item: item,
                 desk: props.desk,
                 svc: props.svc,
-            })
+            }),
         ),
         React.createElement(SelectBox, {
             item: item,
             onMultiSelect: props.onMultiSelect,
             svc: props.svc,
-        })
+        }),
     );
 };
 

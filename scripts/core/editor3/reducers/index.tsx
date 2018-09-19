@@ -17,7 +17,7 @@ const editorReducers = chainReduce(
     table,
     editor3,
     findReplace,
-    suggestions
+    suggestions,
 );
 
 export default editorReducers;

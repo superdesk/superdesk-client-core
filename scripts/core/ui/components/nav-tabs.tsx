@@ -6,7 +6,6 @@ export class NavTabs extends React.Component<any, any> {
     static propTypes: any;
     static defaultProps: any;
 
-
     constructor(props) {
         super(props);
         this.state = {tab: props.active ? props.tabs[props.active] : props.tabs[0]};

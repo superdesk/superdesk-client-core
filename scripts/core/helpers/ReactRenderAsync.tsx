@@ -7,7 +7,6 @@ class ReactRenderAsync extends React.Component<any, any> {
     static propTypes: any;
     static defaultProps: any;
 
-
     constructor(props) {
         super(props);
 
@@ -61,7 +60,7 @@ export function connectPromiseResults(getPromises) {
 
 export function connectServices(component, services) {
     return connectPromiseResults(() => {
-        let promisesObject = {};
+        const promisesObject = {};
 
         services.forEach((serviceName) => {
             promisesObject[serviceName] = ng.getService(serviceName);

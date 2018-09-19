@@ -155,7 +155,7 @@ export default class Popup extends React.Component<any, any> {
                         ref={(node) => this.dom.child = node}
                         className={classNames(
                             'popup',
-                            className
+                            className,
                         )}
                     >
                         <Menu noPadding={noPadding}>

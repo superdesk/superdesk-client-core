@@ -12,7 +12,7 @@ import {Icon} from './';
  * @name IconButton
  * @description Icon with Button component
  */
-const IconButton:React.StatelessComponent<any> = ({
+const IconButton: React.StatelessComponent<any> = ({
     onClick,
     tabIndex,
     onKeyDown,
@@ -40,7 +40,7 @@ const IconButton:React.StatelessComponent<any> = ({
         <a
             className={classNames(
                 {'icn-btn': useDefaultClass},
-                className
+                className,
             )}
             onClick={onClick}
             onFocus={onFocus}

@@ -29,7 +29,7 @@ describe('editor3.reducers.suggestion.LINK_SUGGESTIONS', () => {
         expect(entity.getType()).toBe('LINK');
         expect(entity.getData().link.href).toBe('http://wwww.sourcefabric.org');
 
-        let block = content.getFirstBlock();
+        const block = content.getFirstBlock();
 
         for (let i = 0; i < 10; i++) {
             if (i < 4 || i >= 6) {
@@ -72,7 +72,7 @@ describe('editor3.reducers.suggestion.LINK_SUGGESTIONS', () => {
         expect(entity.getType()).toBe('LINK');
         expect(entity.getData().link.href).toBe('http://dev.sourcefabric.org');
 
-        let block = content.getFirstBlock();
+        const block = content.getFirstBlock();
 
         for (let i = 0; i < 10; i++) {
             if (i < 4 || i >= 6) {
@@ -116,7 +116,7 @@ describe('editor3.reducers.suggestion.LINK_SUGGESTIONS', () => {
         expect(entity.getType()).toBe('LINK');
         expect(entity.getData().link).toBe('http://www.sourcefabric.org');
 
-        let block = content.getFirstBlock();
+        const block = content.getFirstBlock();
 
         for (let i = 0; i < 10; i++) {
             if (i < 4 || i >= 6) {

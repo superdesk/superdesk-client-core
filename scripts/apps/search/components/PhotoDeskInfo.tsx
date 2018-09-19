@@ -5,7 +5,7 @@ import {PhotoDeskFields} from './PhotoDeskFields';
 import {DEFAULT_GRID_VIEW_FIELDS_CONFIG} from 'apps/search/constants';
 import {get} from 'lodash';
 
-export const PhotoDeskInfo:React.StatelessComponent<any> = (props) => {
+export const PhotoDeskInfo: React.StatelessComponent<any> = (props) => {
     const {datetime} = props.svc;
     const {item, svc} = props;
 

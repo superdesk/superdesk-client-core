@@ -5,7 +5,6 @@ import {Row, LineInput, Label} from '../';
 import {SelectFieldPopup} from './SelectFieldPopup';
 import {isEmpty} from 'lodash';
 
-
 export class SelectFieldSearchInput extends React.Component<any, any> {
     static propTypes: any;
     static defaultProps: any;
@@ -34,11 +33,10 @@ export class SelectFieldSearchInput extends React.Component<any, any> {
         this.setState({openFilterList: false});
     }
 
-
     filterDataList(event) {
         const {dataList, onChange, querySearch, onQuerySearch} = this.props;
 
-        let value = event.target.value;
+        const value = event.target.value;
 
         const filterTextNoCase = value ? value.toLowerCase() : '';
 
@@ -82,7 +80,7 @@ export class SelectFieldSearchInput extends React.Component<any, any> {
     render() {
         const {value, dataList, label, readOnly, querySearch, initValue} = this.props;
         const listData = querySearch ? dataList : this.state.filteredDataList;
-        let inputValue = initValue ? value : this.state.searchText || value || '';
+        const inputValue = initValue ? value : this.state.searchText || value || '';
 
         return (
             <div>

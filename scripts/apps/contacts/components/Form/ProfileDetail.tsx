@@ -6,7 +6,6 @@ import {Row, LineInput, InputArray, MultiTextInput, Input, SelectInput, Toggle, 
 import {get, set, isEmpty, findKey, orderBy, map} from 'lodash';
 import {validateMinRequiredField} from '../../../contacts/helpers';
 
-
 export class ProfileDetail extends React.Component<any, any> {
     static propTypes: any;
     static defaultProps: any;
@@ -42,7 +41,7 @@ export class ProfileDetail extends React.Component<any, any> {
     }
 
     onBlur(e) {
-        let _touched = this.state.touched;
+        const _touched = this.state.touched;
 
         set(_touched, e.target.name, true);
 
@@ -82,7 +81,6 @@ export class ProfileDetail extends React.Component<any, any> {
         }
     }
 
-
     handleOrgChange(field, value) {
         this.setState({
             orgValue: value,
@@ -92,7 +90,7 @@ export class ProfileDetail extends React.Component<any, any> {
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.contact !== this.props.contact) {
-            let displayOtherState = this.shouldDisplayOtherState(nextProps);
+            const displayOtherState = this.shouldDisplayOtherState(nextProps);
 
             this.setState({
                 displayOtherStateField: displayOtherState,
@@ -108,7 +106,7 @@ export class ProfileDetail extends React.Component<any, any> {
 
         const contactLabel = contactType === 'person' ? gettext('Role') : gettext('Point of contact');
 
-        let isRequired = get(this.state, 'requiredField', false);
+        const isRequired = get(this.state, 'requiredField', false);
 
         const MSG_REQUIRED = gettext('This field is required.');
 
@@ -442,7 +440,7 @@ export class ProfileDetail extends React.Component<any, any> {
                             <textarea
                                 className={classNames(
                                     'sd-line-input__input',
-                                    {'sd-line-input__input--add-min-height': !isEmpty(contact.notes)}
+                                    {'sd-line-input__input--add-min-height': !isEmpty(contact.notes)},
                                 )}
                                 name="notes"
                                 value={get(contact, 'notes', '')}

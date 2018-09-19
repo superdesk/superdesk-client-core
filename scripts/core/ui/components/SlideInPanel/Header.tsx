@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
  * @name Header
  * @description Header of a slide-in panel
  */
-export const Header:React.StatelessComponent<any> = ({title, tools, children, onClose}) => (
+export const Header: React.StatelessComponent<any> = ({title, tools, children, onClose}) => (
     <div className="sd-slide-in-panel__header">
         <div className="subnav__sliding-toolbar">
             <div className="sliding-toolbar__inner" />

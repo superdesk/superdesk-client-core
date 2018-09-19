@@ -4,10 +4,10 @@ import classNames from 'classnames';
 
 import {gettext} from '../../../contacts/helpers';
 
-const Label:React.StatelessComponent<any> = ({text, children, centerText}) => (
+const Label: React.StatelessComponent<any> = ({text, children, centerText}) => (
     <span className={classNames(
         'popup__menu-label',
-        {'popup__menu-label--center': centerText}
+        {'popup__menu-label--center': centerText},
     )}>
         {gettext(text)}
         {children}

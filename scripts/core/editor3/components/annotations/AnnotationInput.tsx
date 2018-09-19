@@ -56,7 +56,7 @@ class AnnotationInputBody extends React.Component<any, any> {
      */
     onSubmit() {
         const {body, type} = this.state;
-        const {hidePopups} = this.props;
+        const _hidePopups = this.props.hidePopups;
         const {highlightId} = this.props.data;
 
         if (body !== '') {
@@ -72,19 +72,19 @@ class AnnotationInputBody extends React.Component<any, any> {
                             annotationType,
                             ...getAuthorInfo(),
                         },
-                    }
+                    },
                 );
             } else {
-                var highlightData = this.props.highlightsManager.getHighlightData(highlightId);
+                const highlightData = this.props.highlightsManager.getHighlightData(highlightId);
                 const date = new Date();
 
                 this.props.highlightsManager.updateHighlightData(
                     highlightId,
-                    {...highlightData, data: {...highlightData.data, msg, annotationType, date}}
+                    {...highlightData, data: {...highlightData.data, msg, annotationType, date}},
                 );
             }
 
-            hidePopups();
+            _hidePopups();
         }
     }
 
@@ -116,7 +116,8 @@ class AnnotationInputBody extends React.Component<any, any> {
     }
 
     deleteAnnotation() {
-        const {highlightsManager, hidePopups} = this.props;
+        const {highlightsManager} = this.props;
+        const _hidePopups = this.props.hidePopups;
         const {highlightId} = this.props.data;
 
         ng.get('modal')
@@ -125,11 +126,12 @@ class AnnotationInputBody extends React.Component<any, any> {
                 highlightsManager.removeHighlight(highlightId);
             });
 
-        hidePopups();
+        _hidePopups();
     }
 
     render() {
-        const {hidePopups, data, spellcheckerEnabled, language, annotationTypes} = this.props;
+        const {data, spellcheckerEnabled, language, annotationTypes} = this.props;
+        const _hidePopups = this.props.hidePopups;
         const {annotation} = data;
         const {type, isEmpty} = this.state;
 
@@ -143,7 +145,7 @@ class AnnotationInputBody extends React.Component<any, any> {
                                 {annotationTypes.map((annotationType) =>
                                     <option key={annotationType.qcode} value={annotationType.qcode}>
                                         {annotationType.name}
-                                    </option>
+                                    </option>,
                                 )}
                             </select>
                         </div>
@@ -165,7 +167,7 @@ class AnnotationInputBody extends React.Component<any, any> {
                                 onClick={this.deleteAnnotation}>
                                 {gettext('Delete')}
                             </button>}
-                        <button className="btn btn--cancel" onClick={hidePopups}>
+                        <button className="btn btn--cancel" onClick={_hidePopups}>
                             {gettext('Cancel')}
                         </button>
                         <button className="btn btn--primary" onClick={this.onSubmit} disabled={isEmpty}>
@@ -197,6 +199,6 @@ const AnnotationInputBodyWithDependenciesLoaded = connectPromiseResults(() => ({
         .then(() => ng.get('metadata').values.annotation_types),
 }))(AnnotationInputBody);
 
-export const AnnotationInput:React.StatelessComponent<any> = connect(mapStateToProps, {
+export const AnnotationInput: React.StatelessComponent<any> = connect(mapStateToProps, {
     hidePopups,
 })(AnnotationInputBodyWithDependenciesLoaded);

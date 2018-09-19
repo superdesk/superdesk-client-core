@@ -9,7 +9,6 @@ export class MultipleHighlights extends React.Component<any, any> {
     static propTypes: any;
     static defaultProps: any;
 
-
     addHighlight(highlightType, highlightData) {
         const editorState = Highlights.addHighlight(this.props.editorState, highlightType, highlightData);
 
@@ -49,8 +48,8 @@ export class MultipleHighlights extends React.Component<any, any> {
                 return obj;
             }, {});
 
-        var childrenWithProps = React.Children.map(
-            children, (child:any) =>
+        const childrenWithProps = React.Children.map(
+            children, (child: any) =>
                 React.cloneElement(child, {
                     ...propsExcludingOwn,
                     highlightsManager: {
@@ -66,7 +65,7 @@ export class MultipleHighlights extends React.Component<any, any> {
                         hadHighlightsChanged: Highlights.hadHighlightsChanged,
                         availableHighlights: Highlights.availableHighlights,
                     },
-                })
+                }),
         );
 
         return <div>{childrenWithProps}</div>;

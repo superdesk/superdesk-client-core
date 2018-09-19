@@ -6,7 +6,7 @@ import {connectPromiseResults} from 'core/helpers/ReactRenderAsync';
 
 const availablelabelModes = ['always', 'never', 'never-with-custom-renderer'];
 
-export const PhotoDeskFieldsComponent:React.StatelessComponent<any> = (props) => {
+export const PhotoDeskFieldsComponent: React.StatelessComponent<any> = (props) => {
     const {item, getLabelForFieldId, itemClassName} = props;
 
     return props.fieldsConfig
@@ -37,7 +37,7 @@ export const PhotoDeskFieldsComponent:React.StatelessComponent<any> = (props) =>
         });
 };
 
-export const PhotoDeskFields:React.StatelessComponent<any> = connectPromiseResults(() => ({
+export const PhotoDeskFields: React.StatelessComponent<any> = connectPromiseResults(() => ({
     getLabelForFieldId: getLabelNameResolver(),
 }))(PhotoDeskFieldsComponent);
 

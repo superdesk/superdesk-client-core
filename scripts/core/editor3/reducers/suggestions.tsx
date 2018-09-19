@@ -14,7 +14,6 @@ import {
 import * as Links from '../helpers/links';
 import {replaceSelectedEntityData} from '../components/links/entityUtils';
 
-
 const suggestions = (state = {}, action) => {
     switch (action.type) {
     case 'TOGGLE_SUGGESTING_MODE':
@@ -120,7 +119,7 @@ export const createAddSuggestion = (state, {text, data}, selection = null) => {
  */
 const createDeleteSuggestion = (state, {action, data}) => {
     let {editorState} = state;
-    let selection = editorState.getSelection();
+    const selection = editorState.getSelection();
 
     if (selection.isCollapsed()) {
         if (action === 'backspace') {
@@ -185,7 +184,7 @@ function applyStyleSuggestion(editorState, type, style, data) {
     }
 
     if (changeStyle && currentStyle != null) {
-        const oldData:any = Highlights.getHighlightData(editorState, currentStyle);
+        const oldData: any = Highlights.getHighlightData(editorState, currentStyle);
 
         if (oldData.originalStyle === style && data.originalStyle === '' ||
             oldData.originalStyle === '' && data.originalStyle === style) {
@@ -240,7 +239,7 @@ const changeLinkSuggestion = (state, {data, link, entity}) => {
             to: link,
             from: entity.getData().link,
         },
-        undefined
+        undefined,
     );
 
     newState = replaceSelectedEntityData(newState, {link});
@@ -302,7 +301,6 @@ const createChangeBlockStyleSuggestion = (state, {blockType, data}) => {
 
     return saveEditorStatus(state, editorState, 'change-block-type', true);
 };
-
 
 /**
  * @ngdoc method
@@ -404,7 +402,7 @@ const pasteAddSuggestion = (state, {content, data}) => {
     let selection = editorState.getSelection();
     const beforeStyle =
         Highlights.getHighlightStyleAtOffset(editorState, changeSuggestionsTypes, selection, -1) as string;
-    const beforeData:any = beforeStyle != null ? Highlights.getHighlightData(editorState, beforeStyle) : null;
+    const beforeData: any = beforeStyle != null ? Highlights.getHighlightData(editorState, beforeStyle) : null;
 
     // if text is selected mark it as removed and collapse the selection before replacing
     if (!selection.isCollapsed()) {
@@ -421,7 +419,7 @@ const pasteAddSuggestion = (state, {content, data}) => {
         editorState.getSelection(),
         sanitizeContent(EditorState.createWithContent(content))
             .getCurrentContent()
-            .getBlockMap()
+            .getBlockMap(),
     );
 
     // push new content
@@ -470,7 +468,7 @@ const pasteAddSuggestion = (state, {content, data}) => {
 function moveToSuggestionsHistory(editorState, data, suggestion, accepted) {
     const resolvedSuggestions = getCustomDataFromEditor(
         editorState,
-        editor3DataKeys.RESOLVED_SUGGESTIONS_HISTORY
+        editor3DataKeys.RESOLVED_SUGGESTIONS_HISTORY,
     ) || [];
 
     let nextEditorState = editorState;
@@ -489,7 +487,7 @@ function moveToSuggestionsHistory(editorState, data, suggestion, accepted) {
                 date: data.date,
                 accepted: accepted,
             },
-        })
+        }),
     );
 
     nextEditorState = Highlights.removeHighlight(nextEditorState, suggestion.styleName);
@@ -513,8 +511,8 @@ const processSplitBlockSuggestion = (state, data, suggestion, accepted) => {
 
     editorState = moveToSuggestionsHistory(editorState, data, suggestion, accepted);
     let content = editorState.getCurrentContent();
-    let block = content.getBlockAfter(selection.getStartKey());
-    let newSelection = selection.merge({
+    const block = content.getBlockAfter(selection.getStartKey());
+    const newSelection = selection.merge({
         anchorOffset: selection.getStartOffset(),
         anchorKey: selection.getStartKey(),
         focusOffset: accepted ? selection.getEndOffset() : 0,
@@ -577,7 +575,7 @@ const processSuggestion = (state, {data, suggestion}, accepted) => {
             state.editorState,
             state.editorState.getSelection().merge({
                 hasFocus: true,
-            })
+            }),
         );
     }
 
@@ -673,7 +671,7 @@ const processSuggestion = (state, {data, suggestion}, accepted) => {
  * @description Accept or reject the change suggestions in current editor selection.
  */
 const applyChangeSuggestion = (editorState, accepted) => {
-    let suggestionTypes = [...changeSuggestionsTypes, ...paragraphSuggestionTypes];
+    const suggestionTypes = [...changeSuggestionsTypes, ...paragraphSuggestionTypes];
     let selection = editorState.getSelection();
     let content = editorState.getCurrentContent();
     let lastBlock = content.getBlockForKey(selection.getEndKey());
@@ -729,8 +727,8 @@ const applyChangeSuggestion = (editorState, accepted) => {
 
         if (!applySuggestion) {
             // delete current selection
-            const content = newEditorState.getCurrentContent();
-            const newContent = Modifier.removeRange(content, newSelection, 'forward');
+            const _content = newEditorState.getCurrentContent();
+            const newContent = Modifier.removeRange(_content, newSelection, 'forward');
 
             newEditorState = EditorState.push(newEditorState, newContent, 'backspace-character');
         }
@@ -883,7 +881,6 @@ const removeDeleteParagraphSuggestions = (editorState) => {
     return Highlights.changeEditorSelection(newEditorState, 0, offset, false);
 };
 
-
 /**
  * @ngdoc method
  * @name deleteCurrentSelection
@@ -940,7 +937,6 @@ const deleteCurrentSelection = (editorState, data, action = 'delete') => {
     return EditorState.acceptSelection(newEditorState, selection);
 };
 
-
 /**
  * @ngdoc method
  * @name setAddSuggestionForCharacter
@@ -958,13 +954,13 @@ const deleteCurrentSelection = (editorState, data, action = 'delete') => {
  */
 const setAddSuggestionForCharacter = (editorState, data, text, inlineStyle = null) => {
     const crtInlineStyle = inlineStyle || editorState.getCurrentInlineStyle();
-    let selection = editorState.getSelection();
+    const selection = editorState.getSelection();
     const beforeStyle =
         Highlights.getHighlightStyleAtOffset(editorState, changeSuggestionsTypes, selection, -1) as string;
-    const beforeData:any = beforeStyle != null ? Highlights.getHighlightData(editorState, beforeStyle) : null;
+    const beforeData: any = beforeStyle != null ? Highlights.getHighlightData(editorState, beforeStyle) : null;
     const currentStyle =
         Highlights.getHighlightStyleAtOffset(editorState, changeSuggestionsTypes, selection, 0) as string;
-    const currentData:any = currentStyle != null ? Highlights.getHighlightData(editorState, currentStyle) : null;
+    const currentData: any = currentStyle != null ? Highlights.getHighlightData(editorState, currentStyle) : null;
     let content = editorState.getCurrentContent();
     let newState = editorState;
 
@@ -1026,7 +1022,7 @@ const setMergeParagraphSuggestion = (editorState, data) => {
     const offset = deleteSplitSuggestion ? -1 : 0;
     let newState = Highlights.changeEditorSelection(editorState, offset, 0, false);
     let content = newState.getCurrentContent();
-    let selection = newState.getSelection();
+    const selection = newState.getSelection();
 
     if (deleteSplitSuggestion) {
         content = Modifier.removeRange(content, selection, 'backward');
@@ -1056,7 +1052,7 @@ const setMergeParagraphSuggestion = (editorState, data) => {
  *   3. other cases -> add new 'delete suggestion'
  */
 const setDeleteSuggestionForCharacter = (editorState, data) => {
-    let selection = editorState.getSelection();
+    const selection = editorState.getSelection();
 
     const paragraphStyle = Highlights.getHighlightStyleAtOffset(editorState, paragraphSuggestionTypes, selection, -1);
 
@@ -1066,7 +1062,7 @@ const setDeleteSuggestionForCharacter = (editorState, data) => {
     }
 
     const currentStyle = Highlights.getHighlightStyleAtOffset(editorState, changeSuggestionsTypes, selection, -1);
-    const currentData:any = currentStyle != null ? Highlights.getHighlightData(editorState, currentStyle) : null;
+    const currentData: any = currentStyle != null ? Highlights.getHighlightData(editorState, currentStyle) : null;
 
     if (currentData != null && currentData.type === 'DELETE_SUGGESTION') {
         // if current character is already marked as a delete suggestion, skip
@@ -1081,13 +1077,13 @@ const setDeleteSuggestionForCharacter = (editorState, data) => {
 
     const beforeStyle =
         Highlights.getHighlightStyleAtOffset(editorState, changeSuggestionsTypes, selection, -2) as string;
-    const beforeData:any = beforeStyle != null ? Highlights.getHighlightData(editorState, beforeStyle) : null;
+    const beforeData: any = beforeStyle != null ? Highlights.getHighlightData(editorState, beforeStyle) : null;
     const afterParagraphStyle = Highlights.getHighlightStyleAtOffset(
         editorState, paragraphSuggestionTypes, selection, 0);
     const offset = afterParagraphStyle == null ? 0 : 1;
     const afterStyle =
         Highlights.getHighlightStyleAtOffset(editorState, changeSuggestionsTypes, selection, offset) as string;
-    const afterData:any = afterStyle != null ? Highlights.getHighlightData(editorState, afterStyle) : null;
+    const afterData: any = afterStyle != null ? Highlights.getHighlightData(editorState, afterStyle) : null;
     let newState = Highlights.changeEditorSelection(editorState, -1, 0, false);
 
     if (beforeData != null && beforeData.type === 'DELETE_SUGGESTION'

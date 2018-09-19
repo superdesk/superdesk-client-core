@@ -6,7 +6,6 @@ import {Editor3Component} from './Editor3Component';
 import {MultipleHighlights} from './MultipleHighlights';
 import * as actions from '../actions';
 
-
 export class Editor3Base extends React.Component<any, any> {
     static propTypes: any;
     static defaultProps: any;
@@ -53,4 +52,4 @@ const mapDispatchToProps = (dispatch) => ({
     onCreateChangeStyleSuggestion: (type, active) => dispatch(actions.createChangeStyleSuggestion(type, active)),
 });
 
-export const Editor3:React.StatelessComponent<any> = connect(mapStateToProps, mapDispatchToProps)(Editor3Base);
+export const Editor3: React.StatelessComponent<any> = connect(mapStateToProps, mapDispatchToProps)(Editor3Base);

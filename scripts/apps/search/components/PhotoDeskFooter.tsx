@@ -5,7 +5,7 @@ import {PhotoDeskFields} from './PhotoDeskFields';
 
 import {DEFAULT_GRID_VIEW_FOOTER_CONFIG} from 'apps/search/constants';
 
-export const PhotoDeskFooter:React.StatelessComponent<any> = (props) => {
+export const PhotoDeskFooter: React.StatelessComponent<any> = (props) => {
     const {item, svc} = props;
     const gridViewFooterFieldsConfig = _.get(svc.config, 'gridViewFooterFields', DEFAULT_GRID_VIEW_FOOTER_CONFIG);
 

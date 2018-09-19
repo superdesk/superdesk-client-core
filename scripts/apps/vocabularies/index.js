@@ -22,7 +22,6 @@ import * as directive from './directives';
  */
 angular.module('superdesk.apps.vocabularies', [
     'superdesk.core.activity',
-    'superdesk.apps.authoring.metadata',
 ])
     .service('vocabularies', VocabularyService)
 

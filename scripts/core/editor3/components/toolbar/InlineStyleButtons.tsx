@@ -53,7 +53,7 @@ export class InlineStyleButtonsComponent extends React.Component<any, any> {
                         label={type}
                         onToggle={this.onToggle}
                         style={inlineStyles[type]}
-                    />
+                    />,
                 )}
             </span>
         );

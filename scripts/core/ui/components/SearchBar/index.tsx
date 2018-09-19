@@ -59,20 +59,21 @@ export default class SearchBar extends React.Component<any, any> {
         this.setState(
             {searchInputValue: value || ''},
             // update the input value since we are using the DebounceInput `value` prop
-            () => this.props.onSearch(value)
+            () => this.props.onSearch(value),
         );
     }
 
     render() {
         const {timeout, allowCollapsed} = this.props;
-        const {searchBarExtended, uniqueId} = this.state;
+        const {searchBarExtended} = this.state;
+        const _uniqueId = this.state.uniqueId;
         const minLength = this.props.minLength ? this.props.minLength : 2;
 
         return (
             <div className={'SearchBar flat-searchbar' + (searchBarExtended ? ' extended' : '')}>
                 <div className="search-handler">
                     <label
-                        htmlFor={uniqueId}
+                        htmlFor={_uniqueId}
                         className="trigger-icon"
                         onClick={this.toggleSearchBar}
                         ref={(node) => this.dom.searchIcon = node}
@@ -84,7 +85,7 @@ export default class SearchBar extends React.Component<any, any> {
                         debounceTimeout={timeout}
                         value={this.state.searchInputValue}
                         onChange={this.onSearchChange}
-                        id={uniqueId}
+                        id={_uniqueId}
                         placeholder="Search"
                         type="text"
                     />

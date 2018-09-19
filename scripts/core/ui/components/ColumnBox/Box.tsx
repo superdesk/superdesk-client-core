@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
  * @description UI component with column-box styling
  */
 
-export const Box:React.StatelessComponent<any> = ({children}) => (
+export const Box: React.StatelessComponent<any> = ({children}) => (
     <div className="sd-column-box--2">
         {children}
     </div>

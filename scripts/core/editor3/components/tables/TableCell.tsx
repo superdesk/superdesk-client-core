@@ -105,7 +105,7 @@ export class TableCell extends React.Component<any, any> {
         return RichUtils.toggleLink(
             editorState,
             editorState.getSelection(),
-            contentState.getLastCreatedEntityKey()
+            contentState.getLastCreatedEntityKey(),
         );
     }
 
@@ -127,7 +127,7 @@ export class TableCell extends React.Component<any, any> {
                 });
 
                 stateAfterChange = RichUtils.toggleLink(editorState, entitySelection, null);
-            }
+            },
         );
 
         return stateAfterChange;
@@ -149,7 +149,7 @@ export class TableCell extends React.Component<any, any> {
         }
 
         this.setState({editorState},
-            () => this.props.onChange(editorState)
+            () => this.props.onChange(editorState),
         );
     }
 

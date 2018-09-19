@@ -2,11 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {getSpecStyle, getSpecTitle, getSpecValue} from '../helpers';
 
-export const ItemUrgency:React.StatelessComponent<any> = (props) => {
+export const ItemUrgency: React.StatelessComponent<any> = (props) => {
     const {metadata, gettextCatalog} = props.svc;
 
-    var urgency = props.urgency || 3;
-    var spec = metadata.urgencyByValue(urgency);
+    const urgency = props.urgency || 3;
+    const spec = metadata.urgencyByValue(urgency);
 
     if (spec) {
         return React.createElement(
@@ -17,7 +17,7 @@ export const ItemUrgency:React.StatelessComponent<any> = (props) => {
                 style: getSpecStyle(spec),
                 key: 'urgency',
             },
-            getSpecValue(spec, urgency)
+            getSpecValue(spec, urgency),
         );
     }
 
@@ -28,7 +28,7 @@ export const ItemUrgency:React.StatelessComponent<any> = (props) => {
             title: gettextCatalog.getString('Urgency'),
             key: 'urgency',
         },
-        urgency
+        urgency,
     );
 };
 

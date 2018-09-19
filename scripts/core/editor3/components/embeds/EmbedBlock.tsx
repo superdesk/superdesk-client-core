@@ -37,7 +37,7 @@ export class EmbedBlockComponent extends React.Component<any, any> {
         tree.find('script').each((i, s) => {
             if (s.hasAttribute('src')) {
                 let url = s.getAttribute('src');
-                let async = s.hasAttribute('async');
+                const async = s.hasAttribute('async');
 
                 if (url.startsWith('http')) {
                     url = url.substring(url.indexOf(':') + 1);
@@ -166,4 +166,4 @@ const mapDispatchToProps = (dispatch) => ({
         dispatch(actions.mergeEntityDataByKey(blockKey, entityKey, valuesToMerge)),
 });
 
-export const EmbedBlock:React.StatelessComponent<any> = connect(null, mapDispatchToProps)(EmbedBlockComponent);
+export const EmbedBlock: React.StatelessComponent<any> = connect(null, mapDispatchToProps)(EmbedBlockComponent);

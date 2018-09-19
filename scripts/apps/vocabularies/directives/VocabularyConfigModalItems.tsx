@@ -3,15 +3,14 @@ import ReactDOM from 'react-dom';
 import ItemsTableComponent from '../components/ItemsTableComponent';
 import {forEach, every} from 'lodash';
 
-
-export const VocabularyConfigModalItems:any = (gettext) => ({
+export const VocabularyConfigModalItems: any = (gettext) => ({
     require: '^^form',
     link: (scope, element, attr, ngForm) => {
         let component;
         let itemsValidation = [];
 
         function validateItem(item) {
-            let itemValidation = {};
+            const itemValidation = {};
 
             forEach(scope.vocabulary.schema, (desc, field) => {
                 itemValidation[field] = !desc.required || !!item[field];
@@ -27,7 +26,7 @@ export const VocabularyConfigModalItems:any = (gettext) => ({
         const validateItems = (items) => {
             scope.itemsValidation.valid = true;
             itemsValidation = items.map((_item) => {
-                let itemValidation = validateItem(_item);
+                const itemValidation = validateItem(_item);
 
                 scope.itemsValidation.valid = scope.itemsValidation.valid && validItem(itemValidation);
                 return itemValidation;
@@ -45,7 +44,7 @@ export const VocabularyConfigModalItems:any = (gettext) => ({
                 scope.vocabulary.items = scope.vocabulary.items.map((_item) => {
                     index++;
                     if (_item === item) {
-                        let updated = Object.assign({}, item, updates);
+                        const updated = Object.assign({}, item, updates);
 
                         itemsValidation[index - 1] = validateItem(updated);
                         scope.itemsValidation.valid = scope.itemsValidation.valid &&

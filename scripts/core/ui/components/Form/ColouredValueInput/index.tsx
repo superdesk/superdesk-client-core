@@ -5,7 +5,6 @@ import {get} from 'lodash';
 
 import {gettext} from '../../utils';
 
-
 import {LineInput, Label} from '../';
 import {ColouredValuePopup} from './ColouredValuePopup';
 
@@ -17,7 +16,6 @@ import {ColouredValuePopup} from './ColouredValuePopup';
 export class ColouredValueInput extends React.Component<any, any> {
     static propTypes: any;
     static defaultProps: any;
-
 
     constructor(props) {
         super(props);

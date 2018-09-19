@@ -73,7 +73,7 @@ export class SelectFieldPopup extends React.Component<any, any> {
                 if (this.state.activeOptionIndex !== -1) {
                     this.onMutiLevelSelect(
                         this.state.filteredList[this.state.activeOptionIndex],
-                        true
+                        true,
                     );
                 }
                 break;
@@ -230,7 +230,6 @@ export class SelectFieldPopup extends React.Component<any, any> {
         return true;
     }
 
-
     filterSearchResults(val) {
         if (!val) {
             this.setState({
@@ -287,14 +286,14 @@ export class SelectFieldPopup extends React.Component<any, any> {
                                 key={index}
                                 className={classNames(
                                     'Select__popup__item',
-                                    {'Select__popup__item--active': index === this.state.activeOptionIndex}
+                                    {'Select__popup__item--active': index === this.state.activeOptionIndex},
                                 )}
                             >
                                 <button
                                     type="button"
                                     onClick={this.onSelect.bind(
                                         this,
-                                        this.state.filteredList[index]
+                                        this.state.filteredList[index],
                                     )}
                                 >
                                     <span>{get(opt, this.props.labelKey)}</span>
@@ -330,7 +329,7 @@ export class SelectFieldPopup extends React.Component<any, any> {
                                     type="button"
                                     className={classNames(
                                         'Select__popup__category',
-                                        {'Select__popup__item--active': this.state.activeOptionIndex === -1}
+                                        {'Select__popup__item--active': this.state.activeOptionIndex === -1},
                                     )}
                                     onClick={this.chooseEntireCategory}
                                 >
@@ -359,7 +358,7 @@ export class SelectFieldPopup extends React.Component<any, any> {
                                 key={index}
                                 className={classNames(
                                     'Select__popup__item',
-                                    {'Select__popup__item--active': index === this.state.activeOptionIndex}
+                                    {'Select__popup__item--active': index === this.state.activeOptionIndex},
                                 )}
                             >
                                 <button
@@ -367,7 +366,7 @@ export class SelectFieldPopup extends React.Component<any, any> {
                                     onClick={this.onMutiLevelSelect.bind(
                                         this,
                                         this.state.filteredList[index],
-                                        false
+                                        false,
                                     )}
                                 >
                                     <span>{get(opt, this.props.labelKey)}</span>

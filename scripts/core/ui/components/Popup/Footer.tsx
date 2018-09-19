@@ -7,14 +7,14 @@ import classNames from 'classnames';
  * @name Footer
  * @description Footer Component of a popup
  */
-const Footer:React.StatelessComponent<any> = ({children, className, noBorder, noPadding}) => (
+const Footer: React.StatelessComponent<any> = ({children, className, noBorder, noPadding}) => (
     <div className={classNames(
         'popup__menu-footer',
         {
             'popup__menu-footer--no-border': noBorder,
             'popup__menu-footer--no-padding': noPadding,
         },
-        className
+        className,
     )}>
         {children}
     </div>

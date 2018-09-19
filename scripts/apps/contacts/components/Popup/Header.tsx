@@ -4,8 +4,8 @@ import classNames from 'classnames';
 
 import Label from './Label';
 
-const Header:React.StatelessComponent<any> = (
-    {text, onClose, children, className, noBorder, noPadding, centerText}
+const Header: React.StatelessComponent<any> = (
+    {text, onClose, children, className, noBorder, noPadding, centerText},
 ) => (
     <div className={classNames(
         'popup__menu-header',
@@ -13,7 +13,7 @@ const Header:React.StatelessComponent<any> = (
             'popup__menu-header--no-border': noBorder,
             'popup__menu-header--no-padding': noPadding,
         },
-        className
+        className,
     )}>
         {text && (
             <Label text={text} centerText={centerText}>

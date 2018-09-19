@@ -6,7 +6,6 @@ import {ContactProfile} from './ContactProfile';
 import {ActionBar} from './ActionBar';
 import {get, set, isEqual, cloneDeep, some, isEmpty, extend, each, omit, isNil} from 'lodash';
 
-
 export class ContactFormContainer extends React.Component<any, any> {
     static propTypes: any;
     static defaultProps: any;
@@ -29,7 +28,7 @@ export class ContactFormContainer extends React.Component<any, any> {
     }
 
     validateForm() {
-        let valid = validateRequiredFormFields(this.state.currentContact) &&
+        const valid = validateRequiredFormFields(this.state.currentContact) &&
             !some(this.state.errors, (value) => !isEmpty(value));
 
         this.setState({isFormValid: valid});
@@ -42,7 +41,7 @@ export class ContactFormContainer extends React.Component<any, any> {
     }
 
     validateField(fieldName, value, e) {
-        let fieldValidationErrors = this.state.errors;
+        const fieldValidationErrors = this.state.errors;
 
         const {gettext, contacts} = this.props.svc;
         const twitterPattern = contacts.twitterPattern;
@@ -81,7 +80,7 @@ export class ContactFormContainer extends React.Component<any, any> {
 
         notify.info(gettext('Saving...'));
 
-        let diff:any = {};
+        let diff: any = {};
 
         each(this.state.currentContact, (value, key) => {
             if (!isEqual(origContact[key], value)) {
