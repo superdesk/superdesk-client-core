@@ -2,6 +2,8 @@
 
 module.exports = new Workspace();
 
+var monitoring = require('./monitoring');
+
 var content = require('./content'),
     nav = require('./utils').nav,
     waitFor = require('./utils').wait;
@@ -44,6 +46,8 @@ function Workspace() {
     this.selectDesk = function(desk) {
         var dropdownBtn = element(by.id('selected-desk')),
             dropdownMenu = element(by.id('select-desk-menu'));
+        
+        monitoring.openMonitoring();
 
         // open dropdown
         dropdownBtn.click();
