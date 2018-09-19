@@ -21,7 +21,7 @@ export class SelectBox extends React.Component<any, any> {
         if (isCheckAllowed(this.props.item)) {
             var selected = !this.props.item.selected;
 
-            this.props.onMultiSelect([this.props.item], selected);
+            this.props.onMultiSelect([this.props.item], selected, event);
         }
     }
 

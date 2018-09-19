@@ -32,7 +32,7 @@ export class ListTypeIcon extends React.Component<any, any> {
         return React.createElement(
             'div',
             {
-                className: classNames('list-field type-icon'),
+                className: classNames('list-field type-icon sd-monitoring-item-multi-select-checkbox'),
                 onMouseEnter: this.setHover,
                 onMouseLeave: this.unsetHover,
             },
