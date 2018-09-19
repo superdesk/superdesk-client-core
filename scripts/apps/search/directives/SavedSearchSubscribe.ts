@@ -1,7 +1,7 @@
-import {ISavedSearch} from "business-logic/SavedSearch";
-import {IDirectiveScope} from "types/Angular/DirectiveScope";
-import {createCronInterval, CronTimeInterval} from "types/DataStructures/TimeInterval";
-import {IUser} from "business-logic/User";
+import {ISavedSearch} from 'business-logic/SavedSearch';
+import {IDirectiveScope} from 'types/Angular/DirectiveScope';
+import {createCronInterval, CronTimeInterval} from 'types/DataStructures/TimeInterval';
+import {IUser} from 'business-logic/User';
 
 interface ITimeIntervalUi {
     everyDay: 'true' | 'false'; // sd-check won't set a boolean
@@ -96,7 +96,6 @@ export function SavedSearchSubscribe(asset, session, api) {
         },
         templateUrl: asset.templateUrl('apps/search/views/saved-search-subscribe.html'),
         link: function(scope: IScope) {
-
             const getDefaults = (): IModel => ({
                 everyDay: 'true',
                 customWeekdays: [],
@@ -162,9 +161,9 @@ export function SavedSearchSubscribe(asset, session, api) {
                         }
                     })
                     : scope.savedSearch.subscribers.user_subscriptions.concat([{
-                            user: userId,
-                            scheduling: cronExpression,
-                        }]);
+                        user: userId,
+                        scheduling: cronExpression,
+                    }]);
 
                 const nextSubscribers: ISavedSearch['subscribers'] = {
                     ...scope.savedSearch.subscribers,

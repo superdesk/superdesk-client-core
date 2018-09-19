@@ -42,9 +42,7 @@ export const isUserSubscribedToSavedSearch = (
     if (subscribers.desk_subscriptions.some((subscription) => {
         const desk: IDesk = getDesk(subscription.desk);
 
-        if (desk.members.includes(userId)) {
-            return true;
-        }
+        return desk.members.includes(userId);
     })) {
         return true;
     } else {
