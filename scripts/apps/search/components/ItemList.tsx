@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import {Item} from './index';
 import {isCheckAllowed, closeActionsMenu, bindMarkItemShortcut} from '../helpers';
+import {querySelectorParent} from 'core/helpers/dom/querySelectorParent';
 
 /**
  * Item list component
@@ -50,7 +51,7 @@ export class ItemList extends React.Component<any, any> {
         this.unbindActionKeyShortcuts = this.unbindActionKeyShortcuts.bind(this);
     }
 
-    multiSelect(items, selected) {
+    multiSelect(items, selected, event?) {
         const {search, multi} = this.props.svc;
         const {scope} = this.props;
 
@@ -65,7 +66,7 @@ export class ItemList extends React.Component<any, any> {
             });
         });
 
-        this.select(_.last(items));
+        this.select(_.last(items), event);
         this.setState({itemsById: itemsById});
     }
 
@@ -98,10 +99,18 @@ export class ItemList extends React.Component<any, any> {
         }
 
         $timeout.cancel(this.updateTimeout);
+
+        // even is null when selecting with keyboard
+        // but is not null and has a target when selected using the checkbox
+        const showPreview = (event == null || event.target == null) ||
+            querySelectorParent(event.target, '.sd-monitoring-item-multi-select-checkbox') == null;
+
         this.updateTimeout = $timeout(() => {
             if (item && scope.preview) {
                 scope.$apply(() => {
-                    scope.preview(item);
+                    if (showPreview) {
+                        scope.preview(item);
+                    }
                     this.bindActionKeyShortcuts(item);
                 });
             }

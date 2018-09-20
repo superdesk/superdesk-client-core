@@ -98,7 +98,6 @@ describe('content', () => {
         toggle(boxes.last());
         expect(count.getText()).toBe('2 Items selected');
 
-        content.closePreview();
         element(by.css('.big-icon--multiedit')).click();
         expect(browser.getCurrentUrl()).toMatch(/multiedit$/);
         expect(element.all(by.repeater('board in boards')).count()).toBe(2);

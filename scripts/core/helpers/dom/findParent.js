@@ -1,7 +1,7 @@
 export function findParent(element, checkFn, checkCurrentElement) {
     var elementToCheck = checkCurrentElement === true ? element : element.parentElement;
 
-    while (elementToCheck != null && checkFn(element) !== true) {
+    while (elementToCheck != null && checkFn(elementToCheck) !== true) {
         elementToCheck = elementToCheck.parentElement;
     }
 
