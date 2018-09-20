@@ -1,5 +1,53 @@
 # Superdesk Client Changelog
 
+## [1.25.0] 2018-09-20
+
+### Fixed
+
+- Fix fetching media from external source on drop to featured media.
+- Date fields are not working in search.
+- Add all 3 edit options for single image items.
+- Fix ingest config bug for ftp move folder.
+- Add feature flags to display editor widgets for attachments, inline comments and suggestions.
+- Fix striping html tags when pasting content in image caption field.
+- Only allow photogrid and compact views in media contacts.
+- Fix pasting to editor when it's not html.
+- Modified styles in editor so that body html and headline renders same in view and edit mode.
+- Use editor3 internal clipboard to copy entities from open editors.
+- Add validation to Image Crop sizes CV names.
+- Fix typos in image editor.
+- Fix error when users are unable to see selected categories in authoring.
+- Fix error when go to items is called for second ingest source.
+- Fix media metadata save issue and display fields based on validator config.
+- Fix issue when send to panel is displaying fetch actions.
+- Update etag of image item after updating crops.
+- Place single or multi value dropdown based on the vocabulary settings.
+- Enable all repos if no repos are selected in search panel.
+- Some of ingest channel details are missing if opened from ingest dashboard.
+- Fix searching for media contacts.
+- Duplicate description field is presented when uploading a media to authoring item.
+- Hide edit/crop tabs when editing video/audio items.
+- After image editing don't reset current image in carousel.
+
+### Added
+
+- Managing of saved searches for other users.
+- Allow moving package with all its items.
+- Add config option for spike confirmations.
+- Add support for abbreviations in editor3.
+- Open or close preview header based on local storage settings.
+- Add saved search subscriptions.
+- Show product id when product is edited.
+- Add content type filter to publish queue view.
+- Typescript integration.
+
+### Changed
+
+- Improve rotate function in image editor.
+- Allow custom fields and sorting in `sd-search-results` directive.
+- Refresh button improvements in monitoring.
+- Add empty block on pasting to editor3 only at the bottom.
+
 ## [1.24.0] 2018-08-20
 
 ### Fixed
