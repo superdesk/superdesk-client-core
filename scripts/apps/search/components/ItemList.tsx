@@ -100,7 +100,10 @@ export class ItemList extends React.Component<any, any> {
 
         $timeout.cancel(this.updateTimeout);
 
-        const showPreview = querySelectorParent(event.target, '.sd-monitoring-item-multi-select-checkbox') == null;
+        // even is null when selecting with keyboard
+        // but is not null and has a target when selected using the checkbox
+        const showPreview = (event == null || event.target == null) ||
+            querySelectorParent(event.target, '.sd-monitoring-item-multi-select-checkbox') == null;
 
         this.updateTimeout = $timeout(() => {
             if (item && scope.preview) {
