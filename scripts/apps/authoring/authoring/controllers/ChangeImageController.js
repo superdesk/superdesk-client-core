@@ -32,6 +32,17 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
         isDirty: false,
     };
 
+    const EDITABLE_METADATA = [
+        'headline',
+        'description_text',
+        'archive_description',
+        'alt_text',
+        'byline',
+        'copyrightholder',
+        'usageterms',
+        'copyrightnotice',
+    ];
+
     $scope.controls = angular.copy(DEFAULT_CONTROLS);
 
     $scope.showMetadata = $scope.data.showMetadata;
@@ -126,14 +137,7 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
         $scope.resolve({
             cropData: $scope.data.cropData,
             metadata: _.pick($scope.data.item, [
-                'headline',
-                'description_text',
-                'archive_description',
-                'alt_text',
-                'byline',
-                'copyrightholder',
-                'usageterms',
-                'copyrightnotice',
+                ...EDITABLE_METADATA,
                 'poi',
                 'renditions',
                 '_etag',
@@ -204,16 +208,7 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
     }
 
     function extractEditableMetadata(metadata) {
-        return _.pick(metadata, [
-            'headline',
-            'description_text',
-            'archive_description',
-            'alt_text',
-            'byline',
-            'copyrightholder',
-            'usageterms',
-            'copyrightnotice',
-        ]);
+        return _.pick(metadata, EDITABLE_METADATA);
     }
 
     /**
@@ -253,7 +248,7 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
                     $scope.data.item.renditions = item.renditions;
                     const editableMetadata = extractEditableMetadata($scope.data.metadata);
 
-                    $scope.data.metadata = angular.extend($scope.data.item, editableMetadata);
+                    $scope.data.metadata = Object.assign($scope.data.item, editableMetadata);
                     $scope.data.poi = {x: 0.5, y: 0.5};
                     $rootScope.$broadcast('poiUpdate', $scope.data.poi);
                 });
@@ -345,7 +340,7 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
             $scope.data.item._etag = result._etag;
             const editableMetadata = extractEditableMetadata($scope.data.metadata);
 
-            $scope.data.metadata = angular.extend($scope.data.item, editableMetadata);
+            $scope.data.metadata = Object.assign($scope.data.item, editableMetadata);
             $scope.controls = angular.copy(DEFAULT_CONTROLS);
             $scope.data.isDirty = true;
             $scope.loaderForMediaEdit = false;
