@@ -81,7 +81,8 @@ angular.module('superdesk.apps.search', [
                 href: '/search',
                 label: gettext('Search'),
                 templateUrl: asset.templateUrl('apps/search/views/menu.html'),
-                order: 900,
+                order: 800,
+                group: 'personal',
             });
         },
     ])

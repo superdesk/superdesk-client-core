@@ -86,7 +86,6 @@ describe('send', () => {
     });
 
     it('can confirm before submitting unsaved item to a desk', () => {
-        workspace.openPersonal();
         workspace.editItem(1);
 
         // Skip spell check
