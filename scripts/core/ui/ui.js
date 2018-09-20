@@ -1,3 +1,4 @@
+import {mapValues} from 'lodash';
 /**
  * Gives top shadow for scroll elements
  *
@@ -775,9 +776,15 @@ WeekdayPickerDirective.$inject = ['weekdays'];
 function WeekdayPickerDirective(weekdays) {
     return {
         templateUrl: 'scripts/core/ui/views/weekday-picker.html',
-        scope: {model: '='},
+        scope: {
+            model: '=',
+            shortWeekdayLabels: '=',
+        },
         link: function(scope) {
-            scope.weekdays = weekdays;
+            scope.weekdays = scope.shortWeekdayLabels !== true
+                ? weekdays
+                : mapValues(weekdays, (weekday) => weekday.slice(0, 3));
+
             scope.weekdayList = Object.keys(weekdays);
 
             scope.model = scope.model || [];

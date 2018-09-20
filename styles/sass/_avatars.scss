@@ -26,6 +26,10 @@
         font-size: 11px;
         line-height: 31px;
     }
+
+    &.organisation {
+        background-image: url('~images/avatar_group_64.png');
+    }
 }
 .avatar.avatar-with-info {
     overflow: visible;

@@ -99,3 +99,9 @@ ul.list-view.list-without-items {
     }
 
 }
+
+.space-between {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}

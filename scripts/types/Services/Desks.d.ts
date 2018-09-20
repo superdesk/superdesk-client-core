@@ -1,7 +1,10 @@
-import {IUser} from 'business-logic/User';
+import {IUser} from 'superdesk-interfaces/User';
+import {IDesk} from 'superdesk-interfaces/Desk';
 
 export interface IDesksService {
-    desks: any;
+    desks: {
+        _items: Array<IDesk>;
+    };
     users: any;
     stages: any;
     deskLookup: {};

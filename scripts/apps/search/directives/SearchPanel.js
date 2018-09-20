@@ -1,3 +1,5 @@
+import {cloneDeep} from 'lodash';
+
 /**
  * @ngdoc directive
  * @module superdesk.apps.search
@@ -17,8 +19,28 @@
  *   filters (so-called "aggregations" in Elastic's terms).
  */
 
-SearchPanel.$inject = ['$location', 'desks', 'privileges', 'tags', 'asset', 'metadata', '$rootScope', 'session'];
-export function SearchPanel($location, desks, privileges, tags, asset, metadata, $rootScope, session) {
+SearchPanel.$inject = [
+    '$location',
+    'desks',
+    'privileges',
+    'tags',
+    'asset',
+    'metadata',
+    '$rootScope',
+    'session',
+    'config',
+];
+
+export function SearchPanel($location,
+    desks,
+    privileges,
+    tags,
+    asset,
+    metadata,
+    $rootScope,
+    session,
+    config
+) {
     desks.initialize();
     return {
         require: '^sdSearchContainer',
@@ -32,14 +54,22 @@ export function SearchPanel($location, desks, privileges, tags, asset, metadata,
             providerType: '=',
         },
         link: function(scope, element, attrs, controller) {
+            scope.config = config;
             scope.flags = controller.flags;
             scope.sTab = 'advancedSearch';
             scope.innerTab = 'parameters';
             scope.editingSearch = false;
             scope.showSaveSearch = false;
+            scope.isManagingSubscriptions = false;
+            scope.wrapper = {};
+
+            scope.manageSubscriptions = (nextValue) => {
+                scope.isManagingSubscriptions = nextValue;
+            };
 
             scope.aggregations = {};
             scope.privileges = privileges.privileges;
+            scope.userHasPrivileges = privileges.userHasPrivileges;
             scope.search_config = metadata.search_config;
 
             scope.$on('edit:search', (event, args) => {
@@ -47,7 +77,7 @@ export function SearchPanel($location, desks, privileges, tags, asset, metadata,
                 scope.innerTab = 'parameters';
                 scope.activateSearchPane = false;
                 scope.editingSearch = args;
-                scope.edit = _.create(scope.editingSearch) || {};
+                scope.wrapper.edit = cloneDeep(scope.editingSearch || {});
             });
 
             scope.changeTab = function(tabName) {

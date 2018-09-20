@@ -1,0 +1,183 @@
+<div sd-modal class="modal" data-model="wrapper.modalOpen" on-modal-close="onInternalModalClose">
+    <div class="modal__header">
+        <a href="" class="close" ng-click="manageSubscriptions(false)"><i class="icon-close-small"></i></a>
+        <h3 class="modal__heading" translate="">
+            <span translate>Manage: </span>
+            <strong>{{savedSearch.name}}</strong>
+        </h3>
+    </div>
+
+    <div class="modal__body">
+        <!-- if start -->
+        <div ng-if="wrapper.subscriptionInCreateOrEditMode == null">
+            <div class="space-between" style="padding-bottom: 2rem; color: #898989">
+                <div>
+                    <strong>{{getSubscriptionCount()}}</strong>
+                    <span translate>subscriptions</span>
+                </div>
+                
+                <div class="dropdown dropdown--align-right" dropdown="">
+                    <button
+                        dropdown__toggle=""
+                        class="btn btn--hollow btn--primary"><i class="icon-plus-sign"></i>Add new</button>
+                    <div class="dropdown__menu" style="padding: 0; width: 442px;">
+                        <div class="flat-searchbar extended">
+                            <div class="search-handler" style="height: auto!important; padding: 4px 8px; padding-right: 0;">
+                                <label
+                                    ng-click="$event.stopPropagation()"
+                                    for="saved-search-add-subscriber"
+                                    class="trigger-icon"><i class="icon-search"></i></label>
+                                <input
+                                    ng-click="$event.stopPropagation()"
+                                    id="saved-search-add-subscriber"
+                                    type="text"
+                                    placeholder="{{ :: 'Search' | translate }}"
+                                    ng-model="wrapper.newSubscriptionFilterText"
+                                    style="width: 100%;">
+                            </div>
+                        </div>
+
+                        <div ng-if="wrapper.newSubscriptionFilterText.length > 0" style="border-top: 1px solid #F5F5F5; margin-bottom: 6px;"></div>
+
+                        <div ng-if="wrapper.newSubscriptionFilterText.length > 0" class="search-result">
+                            <ul class="users-list-embed">
+                                <li
+                                    ng-click="subscribeDesk(desk)"
+                                    ng-repeat="desk in wrapper.desks.desks._items | filter: desksFilter"
+                                    style="padding-left: 6px;padding-right: 6px; margin-right: 0;">
+                                    <figure class="avatar organisation small"></figure>
+                                    <div class="name">{{desk.name}}</div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div ng-if="wrapper.newSubscriptionFilterText.length > 0" class="search-result">
+                            <ul class="users-list-embed">
+                                <li ng-click="subscribeUser(user)"
+                                ng-repeat="user in wrapper.users | filter: usersFilter"
+                                style="padding-left: 6px;padding-right: 6px; margin-right: 0;">
+                                    <figure class="avatar small"><img sd-user-avatar data-user="user"></figure>
+                                    <div class="name">{{user.first_name}} {{user.last_name}}</div>
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- getUserDisplay -->
+
+                        <div ng-if="wrapper.newSubscriptionFilterText.length > 0" style="margin-bottom: 4px;"></div>
+                                    
+                    </div>
+                </div>
+            </div>
+
+            <div
+                ng-repeat="deskSubscription in savedSearch.subscribers.desk_subscriptions track by deskSubscription.desk"
+                class="sd-list-item sd-shadow--z1"
+                ng-class="{&quot;sd-list-item--activated&quot;:itemActive2}"
+                style="margin-bottom: 6px">
+                <div class="sd-list-item__column">
+                    <figure class="avatar organisation" style="margin:0"></figure>
+                </div>
+                <div class="sd-list-item__column sd-list-item__column--grow sd-list-item__column--no-border">
+                    <div class="sd-list-item__row">
+                        <strong class="sd-overflow-ellipsis">{{wrapper.desks.deskLookup[deskSubscription.desk].name}}</strong>
+                    </div>
+                    <div class="sd-list-item__row">
+                        <span translate>Desk subscription</span>
+                    </div>
+                </div>
+                <div class="sd-list-item__column">
+                    <div class="actions">
+                        <button ng-click="editDeskSubscription(wrapper.desks.deskLookup[deskSubscription.desk])"><i class="icon-pencil"></i></button>
+                        <button ng-click="unsubscribeDesk(wrapper.desks.deskLookup[deskSubscription.desk])"><i class="icon-trash"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                ng-repeat="user in wrapper.userSubscribers track by user._id"
+                class="sd-list-item sd-shadow--z1"
+                ng-class="{&quot;sd-list-item--activated&quot;:itemActive2}"
+                style="margin-bottom: 6px">
+                <div class="sd-list-item__column">
+                    <figure class="avatar" style="margin:0">
+                        <img sd-user-avatar data-user="user">
+                    </figure>
+                </div>
+                <div class="sd-list-item__column sd-list-item__column--grow sd-list-item__column--no-border">
+                    <div class="sd-list-item__row">
+                        <strong class="sd-overflow-ellipsis">{{user.first_name}} {{user.last_name}}</strong>
+                    </div>
+                    <div class="sd-list-item__row">
+                        {{user.username}}
+                    </div>
+                </div>
+                <div class="sd-list-item__column">
+                    <div class="actions">
+                        <button ng-click="editUserSubscription(user)"><i class="icon-pencil"></i></button>
+                        <button ng-click="unsubscribeUser(user)"><i class="icon-trash"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- else -->
+
+        <div ng-if="wrapper.subscriptionInCreateOrEditMode != null">
+            <div style="margin: -20px -20px 10px -20px;">
+                <div class="space-between" style="background: #fff; padding: 9px 20px;">
+                    <button class="backlink" ng-click="backToList()" translate>Back</button>
+                    <button class="btn btn--primary" ng-click="saveChanges()" ng-disabled="!savingEnabled()" translate>Save changes</button>
+                </div>
+
+                <div
+                    ng-if="editingUserSubscription()"
+                    class="sd-list-item"
+                    ng-class="{&quot;sd-list-item--activated&quot;:itemActive2}"
+                    style="margin-bottom: 6px; padding: 0 10px; background-color: #E6EDEF!important; cursor: default;">
+                    <div class="sd-list-item__column">
+                        <figure class="avatar" style="margin:0">
+                            <img sd-user-avatar data-user="wrapper.userLookup[wrapper.subscriptionInCreateOrEditMode.user]">
+                        </figure>
+                    </div>
+                    <div class="sd-list-item__column sd-list-item__column--grow sd-list-item__column--no-border">
+                        <div class="sd-list-item__row">
+                            <strong class="sd-overflow-ellipsis">
+                                {{wrapper.userLookup[wrapper.subscriptionInCreateOrEditMode.user].first_name}}
+                                {{wrapper.userLookup[wrapper.subscriptionInCreateOrEditMode.user].last_name}}
+                            </strong>
+                        </div>
+                        <div class="sd-list-item__row">
+                            {{wrapper.userLookup[wrapper.subscriptionInCreateOrEditMode.user].username}}
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    ng-if="editingDeskSubscription()"
+                    class="sd-list-item"
+                    ng-class="{&quot;sd-list-item--activated&quot;:itemActive2}"
+                    style="margin-bottom: 6px; padding: 0 10px; background-color: #E6EDEF!important; cursor: default;">
+                    <div class="sd-list-item__column">
+                        <figure class="avatar organisation" style="margin:0"></figure>
+                    </div>
+                    <div class="sd-list-item__column sd-list-item__column--grow sd-list-item__column--no-border">
+                        <div class="sd-list-item__row">
+                            <strong class="sd-overflow-ellipsis">
+                                {{wrapper.desks.deskLookup[wrapper.subscriptionInCreateOrEditMode.desk].name}}
+                            </strong>
+                        </div>
+                        <div class="sd-list-item__row">
+                            <span translate>Desk subscription</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                sd-edit-time-interval
+                data-initial-value="wrapper.subscriptionInCreateOrEditMode.scheduling"
+                on-change="handleIntervalChange"></div>
+        </div>
+        <!-- if/else end-->
+
+    </div>
+</div>

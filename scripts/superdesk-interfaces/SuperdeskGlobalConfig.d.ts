@@ -6,16 +6,13 @@ export interface ISuperdeskGlobalConfig {
         };
         editor3: boolean;
         qumu: boolean;
-        savedSearch: {
-            subscriptions: boolean;
-        };
         editorAttachments: boolean;
         editorInlineComments: boolean;
         editorSuggestions: boolean;
     };
     auth: {
-        google: boolean,
-    };
+        google: boolean
+    }
     ingest: {
         PROVIDER_DASHBOARD_DEFAULTS: {
             show_log_messages: boolean;

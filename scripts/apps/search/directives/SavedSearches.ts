@@ -1,8 +1,8 @@
-import {IUser} from 'business-logic/User';
-import {IDesk} from 'business-logic/Desk';
+import {IUser} from 'superdesk-interfaces/User';
+import {IDesk} from 'superdesk-interfaces/Desk';
 
-import {ISuperdeskGlobalConfig} from 'business-logic/SuperdeskGlobalConfig';
-import {ISavedSearch, isUserSubscribedToSavedSearch} from 'business-logic/SavedSearch';
+import {ISuperdeskGlobalConfig} from 'superdesk-interfaces/SuperdeskGlobalConfig';
+import {ISavedSearch, isUserSubscribedToSavedSearch} from 'superdesk-interfaces/SavedSearch';
 import {IDesksService} from 'types/Services/Desks';
 import {IPrivilegesService} from 'types/Services/Privileges';
 
@@ -32,7 +32,9 @@ interface ISavedSearchesScope extends ng.IScope {
 
     selectedForEditingSubscription: ISavedSearch;
     editSubscription(event: Event, savedSearch: ISavedSearch): void;
+    cancelEditingSubscription(event?: Event): void;
     isUserSubscribedToSavedSearch(savedSearch: ISavedSearch, userId: IUser['_id']): boolean;
+    userHasPrivileges(privileges: any): boolean;
 }
 
 export function SavedSearches($rootScope, api, session, modal, notify, gettext, asset, $location,
@@ -50,6 +52,7 @@ export function SavedSearches($rootScope, api, session, modal, notify, gettext, 
             scope.userSavedSearches = [];
             scope.globalSavedSearches = [];
             scope.privileges = privileges.privileges;
+            scope.userHasPrivileges = privileges.userHasPrivileges;
             let originalUserSavedSearches = [];
             let originalGlobalSavedSearches = [];
 
@@ -128,6 +131,13 @@ export function SavedSearches($rootScope, api, session, modal, notify, gettext, 
             scope.editSubscription = function(event, _savedSearch) {
                 event.stopPropagation();
                 scope.selectedForEditingSubscription = _savedSearch;
+            };
+
+            scope.cancelEditingSubscription = function(event) {
+                if (event != null) {
+                    event.stopPropagation();
+                }
+                scope.selectedForEditingSubscription = null;
             };
         },
     };

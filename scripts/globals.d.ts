@@ -23,3 +23,5 @@ declare const it: any;
 // ------------------------------------------------------------------------------------------------
 
 type Dictionary<K, V> = {};
+type Omit<K, V> = Pick<K, Exclude<keyof K, V>>;
+
