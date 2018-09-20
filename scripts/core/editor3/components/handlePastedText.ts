@@ -23,25 +23,34 @@ function removeMediaFromHtml(htmlString): string {
 function pasteContentFromOpenEditor(
     html: string,
     editorState: EditorState,
+    editorKey: string,
     onChange: (e: EditorState) => void,
     editorFormat: Array<string>): DraftHandleValue {
-    for (const editorKey in window[EDITOR_GLOBAL_REFS]) {
-        if (html.includes(editorKey)) {
-            const editor = window[EDITOR_GLOBAL_REFS][editorKey];
-            const internalClipboard = editor.getClipboard();
 
-            if (internalClipboard) {
-                const blocksArray = [];
+        if (html.includes(editorKey)) { // comes from the same editor
+            return 'not-handled';
+        }
 
-                internalClipboard.forEach((b) => blocksArray.push(b));
-                const contentState = ContentState.createFromBlockArray(blocksArray);
+        for (const key in window[EDITOR_GLOBAL_REFS]) {
+            if (html.includes(key)) {
+                const editor = window[EDITOR_GLOBAL_REFS][key];
 
-                return insertContentInState(editorState, contentState, onChange, editorFormat);
+                if (editor) {
+                    const internalClipboard = editor.getClipboard();
+
+                    if (internalClipboard) {
+                        const blocksArray = [];
+
+                        internalClipboard.forEach((b) => blocksArray.push(b));
+                        const contentState = ContentState.createFromBlockArray(blocksArray);
+
+                        return insertContentInState(editorState, contentState, onChange, editorFormat);
+                    }
+                }
             }
         }
-    }
 
-    return 'not-handled';
+        return 'not-handled';
 }
 
 /**
@@ -80,7 +89,7 @@ export function handlePastedText(text: string, _html: string): DraftHandleValue 
     }
 
     if (html &&
-        pasteContentFromOpenEditor(html, editorState, onChange, editorFormat) === 'handled') {
+        pasteContentFromOpenEditor(html, editorState, this.editorKey, onChange, editorFormat) === 'handled') {
         return 'handled';
     }
 
@@ -100,9 +109,9 @@ function insertContentInState(
     const blockMap = _pastedContent.getBlockMap();
     const hasAtomicBlocks = blockMap.some((block) => block.getType() === 'atomic');
     const acceptedInlineStyles =
-        Object.keys(inlineStyles)
-            .filter((style) => editorFormat.includes(style))
-            .map((style) => inlineStyles[style]);
+            Object.keys(inlineStyles)
+                .filter((style) => editorFormat.includes(style))
+                .map((style) => inlineStyles[style]);
 
     let contentState = editorState.getCurrentContent();
     let selection = editorState.getSelection();
