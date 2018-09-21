@@ -162,30 +162,4 @@ describe('sdItemPreview directive', () => {
 
         expect(iscope.close).toHaveBeenCalledTimes(0);
     });
-
-    describe('assignment tab', () => {
-        it('can display the assignment tab', inject((privileges) => {
-            privileges.privileges = {planning: 1};
-
-            scope.item = {_id: '1', family_id: '1', _type: 'archive', assignment_id: '123'};
-            scope.$apply();
-            expect(iscope.isAssigned).toBeTruthy();
-        }));
-
-        it('cannot display the assignment tab if no assignment', inject((privileges) => {
-            privileges.privileges = {planning: 1};
-
-            scope.item = {_id: '1', family_id: '1', _type: 'archive'};
-            scope.$apply();
-            expect(iscope.isAssigned).toBeFalsy();
-        }));
-
-        it('cannot display the assignment tab if no privileges', inject((privileges) => {
-            privileges.privileges = {planning: 0};
-
-            scope.item = {_id: '1', family_id: '1', _type: 'archive', assignment_id: '123'};
-            scope.$apply();
-            expect(iscope.isAssigned).toBeFalsy();
-        }));
-    });
 });
