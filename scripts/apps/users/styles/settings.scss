@@ -75,6 +75,7 @@ $roles-border: 1px solid #f0f0f0;
         border-top: 0;
         text-align: center;
         word-wrap: break-word;
+        vertical-align: middle;
         @include user-select(none);
         .label {
             font-size: 80%;
@@ -88,7 +89,7 @@ $roles-border: 1px solid #f0f0f0;
         padding: 10px;
         text-transform: uppercase;
         @include text-semibold();
-        white-space: nowrap;
+        max-width: 270px;
         color: #666;
     }
     .role-field {
