@@ -2,8 +2,14 @@
     <li ng-class="{active: tab === 'metadata' || !tab}">
         <button ng-click="tab = 'metadata'" translate>Metadata</button>
     </li>
+
     <li ng-class="{active: tab === 'task-detail'}">
         <button ng-click="tab = 'task-detail'" translate>Task Details</button>
+    </li>
+
+    <!-- can't use ng-if due to https://stackoverflow.com/q/36357640/1175593 -->
+    <li ng-show="isAssigned(item)" ng-class="{active: tab === 'assignment'}">
+        <button ng-click="tab = 'assignment'" translate>Assignment</button>
     </li>
 </ul>
 <div class="content" ng-controller="MetadataWidgetCtrl">
@@ -160,4 +166,5 @@
                 </li>
             </ul>
     </div>
+    <div ng-if="tab === 'assignment'" style="margin: -10px;" sd-assignment-preview data-item="item"></div>
 </div>

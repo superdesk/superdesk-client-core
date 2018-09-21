@@ -75,13 +75,6 @@ export function ItemPreview(asset, storage, desks, _, familyService, privileges)
                     } else {
                         scope.deskName = scope.stage = null;
                     }
-
-                    // item is associated to an assignment
-                    scope.isAssigned = _.get(scope, 'item.assignment_id') && _.get(privileges, 'privileges.planning');
-
-                    if (scope.vm.current_tab === 'assignment' && !scope.isAssigned) {
-                        scope.vm.current_tab = 'content';
-                    }
                 }
             });
 

@@ -12,9 +12,9 @@ function AuthoringWidgetsProvider() {
 }
 
 WidgetsManagerCtrl.$inject = ['$scope', '$routeParams', 'authoringWidgets', 'archiveService',
-    'keyboardManager', '$location', 'desks', 'lock', 'content', 'config', 'lodash'];
+    'keyboardManager', '$location', 'desks', 'lock', 'content', 'config', 'lodash', 'privileges'];
 function WidgetsManagerCtrl($scope, $routeParams, authoringWidgets, archiveService,
-    keyboardManager, $location, desks, lock, content, config, _) {
+    keyboardManager, $location, desks, lock, content, config, _, privileges) {
     $scope.active = null;
 
     $scope.$watch('item', (item) => {
@@ -122,6 +122,10 @@ function WidgetsManagerCtrl($scope, $routeParams, authoringWidgets, archiveServi
             }
         }
     };
+
+    // item is associated to an assignment
+    $scope.isAssigned = (item) => _.get(item, 'assignment_id') != null
+        && _.get(privileges, 'privileges.planning') === 1;
 
     this.activate = function(widget) {
         $scope.activate(widget);
