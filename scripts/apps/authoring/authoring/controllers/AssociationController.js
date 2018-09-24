@@ -250,18 +250,20 @@ export function AssociationController(config, send, api, $q, superdesk,
                 return;
             }
 
-            self.updateItemAssociation(scope, item, null, null, true);
-
             // save generated association id in order to be able to update the same item after editing.
             const originalRel = scope.rel;
 
             if (self.isMediaEditable()) {
+                // if media is editable then association will be updated by self.edit method
                 scope.loading = true;
                 renditions.ingest(item)
                     .then((item) => self.edit(scope, item, {customRel: originalRel}))
                     .finally(() => {
                         scope.loading = false;
                     });
+            } else {
+                // Update the association is media is not editable.
+                self.updateItemAssociation(scope, item, null, null, true);
             }
         });
     };
