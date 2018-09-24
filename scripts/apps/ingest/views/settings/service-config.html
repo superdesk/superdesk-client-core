@@ -22,6 +22,14 @@
         <div sd-ingest-config-errors></div>
     </div>
 
+    <div class="field" ng-if="field.type === 'choices'" ng-show="isConfigFieldVisible(field)">
+        <label for="{{getConfigFieldId(field.id)}}">{{ field.label | translate }}</label>
+        <select id="{{getConfigFieldId(field.id)}}"
+                ng-required="isConfigFieldRequired(field)"
+                ng-options="r[0] as r[1] for r in field.choices"
+                ng-model="provider.config[field.id]">
+        </select>
+    </div>
 
     <fieldset class="separated rss-config" ng-if="field.type === 'mapping'">
       <legend translate>{{ field.label | translate }}</legend>
