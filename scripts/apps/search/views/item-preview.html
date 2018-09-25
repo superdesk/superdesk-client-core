@@ -19,6 +19,9 @@
             <li class="nav-tabs__tab" ng-show="isMediaUsed" ng-class="{'nav-tabs__tab--active': vm.current_tab === 'used'}">
                 <button class="nav-tabs__link" ng-click="vm.current_tab = 'used'" translate>Used</button>
             </li>
+            <li class="nav-tabs__tab" ng-show="isAssigned" ng-class="{'nav-tabs__tab--active': vm.current_tab === 'assignment'}">
+                <button class="nav-tabs__link" ng-click="vm.current_tab = 'assignment'" translate>Assignment</button>
+            </li>
         </ul>
         <button ng-click="close()" class="icn-btn close-preview">
             <i class="icon-close-small"></i>
@@ -33,5 +36,6 @@
         </div>
         <div ng-if="vm.current_tab === 'history' && showHistoryTab" sd-versioning-history data-item="item"></div>
         <div ng-if="vm.current_tab === 'used' && isMediaUsed" sd-media-used data-item="item"></div>
+        <div ng-if="vm.current_tab === 'assignment' && isAssigned" sd-assignment-preview data-item="item"></div>
     </div>
 </div>
