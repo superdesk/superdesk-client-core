@@ -17,18 +17,19 @@ import _ from 'lodash';
  * @requires spike
  * @requires authoring
  * @requires $location
+ * @requires config
  * @description MultiActionBarController holds a set of convenience functions which
  * are used by the Multi-Action bar wwhen an item is click-selected.
  */
 
 MultiActionBarController.$inject = [
     '$rootScope', 'multi', 'multiEdit', 'multiImageEdit', 'send', 'remove', 'modal', '$q', 'gettext',
-    'packages', 'superdesk', 'notify', 'spike', 'authoring', 'privileges', '$location',
+    'packages', 'superdesk', 'notify', 'spike', 'authoring', 'privileges', '$location', 'config',
 ];
 
 export function MultiActionBarController(
     $rootScope, multi, multiEdit, multiImageEdit, send, remove, modal, $q, gettext,
-    packages, superdesk, notify, spike, authoring, privileges, $location
+    packages, superdesk, notify, spike, authoring, privileges, $location, config
 ) {
     this.send = function() {
         send.all(multi.getItems());
@@ -86,25 +87,25 @@ export function MultiActionBarController(
      */
     this.spikeItems = function() {
         let message = gettext('Are you sure you want to spike the items?');
+        let assignedItems = _.get(privileges, 'privileges.planning') ?
+            multi.getItems().filter((item) => item.assignment_id) : [];
+        const spikeMultiple = () => {
+            spike.spikeMultiple(multi.getItems());
+            $rootScope.$broadcast('item:spike');
+            multi.reset();
+        };
 
         if ($location.path() === '/workspace/personal') {
             message = gettext('Do you want to delete the items permanently?');
-        }
-
-        if (_.get(privileges, 'privileges.planning')) {
-            var assignedItems = multi.getItems().filter((item) => item.assignment_id);
-
-            if (assignedItems.length) {
-                message = gettext('Some item/s are linked to in-progress planning coverage, spike anyway?');
-            }
+        } else if (assignedItems.length) {
+            message = gettext('Some item/s are linked to in-progress planning coverage, spike anyway?');
+        } else if (!_.get(config, 'confirm_spike', true)) {
+            spikeMultiple();
+            return;
         }
 
         return modal.confirm(message)
-            .then(() => {
-                spike.spikeMultiple(multi.getItems());
-                $rootScope.$broadcast('item:spike');
-                multi.reset();
-            });
+            .then(spikeMultiple);
     };
 
     /**

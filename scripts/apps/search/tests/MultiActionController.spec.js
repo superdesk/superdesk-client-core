@@ -94,4 +94,77 @@ describe('Multi Action Bar', () => {
             expect(multi.reset).toHaveBeenCalled();
             expect(multi.getItems.calls.count()).toEqual(1);
         }));
+
+    it('spike does not prompt if confirm_spike is to false',
+        inject(($controller, $rootScope, privileges, multi, modal, $q, spike, config) => {
+            config.confirm_spike = false;
+            let itemlist = [
+                {
+                    _id: 'foo1',
+                    _type: 'archive',
+                    task: {desk: 'desk1', stage: 'stage1'},
+                    type: 'text',
+                },
+                {
+                    _id: 'foo2',
+                    _type: 'archive',
+                    task: {desk: 'desk1', stage: 'stage1'},
+                    type: 'text',
+                },
+            ];
+
+            spyOn(multi, 'getItems').and.returnValue(itemlist);
+            spyOn(multi, 'reset');
+            spyOn(modal, 'confirm').and.returnValue($q.when({}));
+            spyOn(spike, 'spikeMultiple').and.returnValue($q.when({}));
+
+            let ctrl = $controller(MultiActionBarController, {});
+
+            ctrl.spikeItems();
+            $rootScope.$digest();
+
+            expect(multi.getItems).toHaveBeenCalled();
+            expect(modal.confirm).not.toHaveBeenCalled();
+            expect(spike.spikeMultiple).toHaveBeenCalled();
+            expect(multi.reset).toHaveBeenCalled();
+            expect(multi.getItems.calls.count()).toEqual(1);
+        }));
+
+    it('spike does prompt if confirm_spike is to false and item has assignment',
+        inject(($controller, $rootScope, privileges, multi, modal, $q, spike, config) => {
+            config.confirm_spike = false;
+            privileges.privileges = {planning: 1};
+
+            let itemlist = [
+                {
+                    _id: 'foo1',
+                    _type: 'archive',
+                    task: {desk: 'desk1', stage: 'stage1'},
+                    type: 'text',
+                    assignment_id: 'foo',
+                },
+                {
+                    _id: 'foo2',
+                    _type: 'archive',
+                    task: {desk: 'desk1', stage: 'stage1'},
+                    type: 'text',
+                },
+            ];
+
+            spyOn(multi, 'getItems').and.returnValue(itemlist);
+            spyOn(multi, 'reset');
+            spyOn(modal, 'confirm').and.returnValue($q.when({}));
+            spyOn(spike, 'spikeMultiple').and.returnValue($q.when({}));
+
+            let ctrl = $controller(MultiActionBarController, {});
+
+            ctrl.spikeItems();
+            $rootScope.$digest();
+
+            expect(multi.getItems).toHaveBeenCalled();
+            expect(modal.confirm).toHaveBeenCalled();
+            expect(spike.spikeMultiple).toHaveBeenCalled();
+            expect(multi.reset).toHaveBeenCalled();
+            expect(multi.getItems.calls.count()).toEqual(2);
+        }));
 });
