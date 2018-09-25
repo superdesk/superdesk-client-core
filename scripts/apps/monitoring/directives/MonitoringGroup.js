@@ -208,12 +208,18 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
             scope.$on('refresh:list', (event, group) => {
                 var _viewType = event.currentScope.viewType || '';
 
-                if (group && group._id === scope.group._id || !group &&
-                        _.includes(['highlights',
-                            'spiked',
-                            'single_monitoring',
-                            'monitoring'],
-                        _viewType)) {
+                if (
+                    group
+                    && group._id === scope.group._id
+                    || !group
+                    && [
+                        'highlights',
+                        'spiked',
+                        'single_monitoring',
+                        'monitoring',
+                        'personal',
+                    ].includes(_viewType)
+                ) {
                     scope.refreshGroup();
                 }
             });
