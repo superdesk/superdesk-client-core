@@ -61,7 +61,7 @@ describe('item association directive', () => {
         $rootScope.$digest();
         expect(renditions.ingest).toHaveBeenCalled();
         expect(renditions.crop).toHaveBeenCalled();
-        expect(scope.onChange).toHaveBeenCalled();
+        expect(scope.onChange).not.toHaveBeenCalled();
         expect(scope.save).toHaveBeenCalled();
         expect(event.preventDefault).toHaveBeenCalled();
         expect(event.stopPropagation).toHaveBeenCalled();
