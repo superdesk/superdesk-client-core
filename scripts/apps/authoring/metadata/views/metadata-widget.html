@@ -12,8 +12,8 @@
         <button ng-click="tab = 'assignment'" translate>Assignment</button>
     </li>
 </ul>
-<div class="content" ng-controller="MetadataWidgetCtrl">
-    <div ng-if="tab === 'metadata' || !tab">
+<div ng-controller="MetadataWidgetCtrl">
+    <div class="widget-content-padding" ng-if="tab === 'metadata' || !tab">
         <ul class="basic-list">
             <li ng-if="_isInProductionStates">
                 <label ng-if="_editable" translate>Not For Publication</label>
@@ -138,7 +138,7 @@
             </li>
         </ul>
     </div>
-    <div ng-if="tab === 'task-detail'">
+    <div class="widget-content-padding" ng-if="tab === 'task-detail'">
             <ul class="basic-list task-info">
                 <li ng-if="item.slugline" class="auto">
                     <label translate>Title</label>
@@ -166,5 +166,5 @@
                 </li>
             </ul>
     </div>
-    <div ng-if="tab === 'assignment'" style="margin: -10px;" sd-assignment-preview data-item="item" hide-avatar="true"></div>
+    <div ng-if="tab === 'assignment'" sd-assignment-preview data-item="item" hide-avatar="true"></div>
 </div>
