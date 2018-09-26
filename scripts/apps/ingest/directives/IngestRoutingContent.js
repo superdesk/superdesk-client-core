@@ -61,14 +61,19 @@ export function IngestRoutingContent(api, gettext, notify, modal, contentFilters
 
                 scope.editScheme.rules = _.reject(scope.editScheme.rules, {name: null});
 
-                _.forEach(scope.editScheme.rules, (r) => {
+                const diff = _.cloneDeep(scope.editScheme);
+
+                _.forEach(diff.rules, (r) => {
                     // filterName was only needed to display it in the UI
                     delete r.filterName;
+
+                    // only need for display
+                    delete r.schedule._allDay;
                 });
 
                 var _new = !scope.editScheme._id;
 
-                api('routing_schemes').save(_orig, scope.editScheme)
+                api('routing_schemes').save(_orig, diff)
                     .then(() => {
                         if (_new) {
                             scope.schemes.push(_orig);
@@ -125,8 +130,9 @@ export function IngestRoutingContent(api, gettext, notify, modal, contentFilters
                     },
                     schedule: {
                         day_of_week: ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'],
-                        hour_of_day_from: '00:00:00',
-                        hour_of_day_to: '23:55:00',
+                        hour_of_day_from: null,
+                        hour_of_day_to: null,
+                        _allDay: true,
                     },
                 };
 
@@ -141,7 +147,7 @@ export function IngestRoutingContent(api, gettext, notify, modal, contentFilters
              * @param {Object} rule - routing scheme rule's config data
              */
             scope.editRule = function(rule) {
-                var filter;
+                let filter;
 
                 scope.rule = rule;
 
@@ -150,6 +156,9 @@ export function IngestRoutingContent(api, gettext, notify, modal, contentFilters
                     // filterName needed to display it in the UI
                     scope.rule.filterName = filter.name;
                 }
+
+                scope.rule.schedule._allDay = !(_.get(scope.rule, 'schedule.hour_of_day_from', false) ||
+                    _.get(scope.rule, 'schedule.hour_of_day_to', false));
             };
 
             scope.reorder = function(start, end) {

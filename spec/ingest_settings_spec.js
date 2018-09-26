@@ -94,6 +94,9 @@ describe('ingest_settings', () => {
         ruleSettings.daysButtons.sat.click();
         ruleSettings.daysButtons.sun.click();
 
+        // untick the all day
+        ruleSettings.allDayCheckBox.click();
+
         // pick the time zone
         ruleSettings.timezoneLabel.click();
         ruleSettings.timezoneDeleteBtn.click();

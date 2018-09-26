@@ -138,7 +138,7 @@ function IngestDashboard() {
 /**
  * Constructor for the "class" representing the ingest settings page.
  *
- * Contains pre-defined ElementLocator objects, representing the varios UI
+ * Contains pre-defined ElementLocator objects, representing the various UI
  * elements on the page used in tests.
  *
  */
@@ -203,6 +203,8 @@ function IngestSettings() {
             sat: daysButonsBox.element(by.className('sd-checkbox--button-Saturday')),
             sun: daysButonsBox.element(by.className('sd-checkbox--button-Sunday')),
         },
+
+        allDayCheckBox: $('.sd-checkbox--button-allDay'),
 
         timezoneLabel: element(by.id('timezone')),
         timezoneDeleteBtn: element(by.css('[ng-click="clearSelectedTimeZone()"]')),
