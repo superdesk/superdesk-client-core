@@ -59,6 +59,7 @@ export class ContactsService {
         criteria.max_results = DEFAULT_PAGE_SIZE;
         criteria.sort = this.sort.formatSort(sort.field, sort.dir);
         criteria.page = 1;
+        criteria.all = false; // to get all contacts
 
         let queryParams = params.q ? [params.q] : [];
 
