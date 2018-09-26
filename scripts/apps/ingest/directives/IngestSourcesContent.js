@@ -272,9 +272,9 @@ export function IngestSourcesContent(ingestSources, gettext, notify, api, $locat
                             // preset value in dropdown
                             field.type === 'choices' &&
                             !(field.id in $scope.provider.config) &&
-                            'preset' in field
+                            'default' in field
                         ) {
-                            $scope.provider.config[field.id] = field.preset;
+                            $scope.provider.config[field.id] = field.default;
                         }
                     });
                 }
