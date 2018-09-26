@@ -4,11 +4,19 @@
 </div>
 
 <div class="field">
+    <sd-check
+            ng-model="rule.schedule._allDay"
+            label-position="left"
+            class="sd-checkbox--button-allDay"
+            translate>All Day</sd-check>
+</div>
+
+<div class="field" ng-if="!rule.schedule._allDay">
     <label translate>Start Time (inclusive)</label>
     <span sd-timepicker ng-model="rule.schedule.hour_of_day_from"></span>
 </div>
 
-<div class="field">
+<div class="field" ng-if="!rule.schedule._allDay">
     <label translate>End Time (exclusive)</label>
     <span sd-timepicker ng-model="rule.schedule.hour_of_day_to"></span>
 </div>

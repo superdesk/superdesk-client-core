@@ -46,13 +46,17 @@
                     - {{dayLookup[day]| translate}}
                 </span>
             </div>
-            <div>
-                <label class="title">{{ :: 'Start time' | translate }}:</label>
-                <span>{{rule.schedule.hour_of_day_from}}</span>
+            <div ng-if="rule.schedule._allDay">
+                <label class="title">{{ :: 'Duration' | translate }}:</label>
+                <span translate>All Day</span>
             </div>
-            <div>
+            <div ng-if="!rule.schedule._allDay">
+                <label class="title">{{ :: 'Start time' | translate }}:</label>
+                <span>{{rule.schedule.hour_of_day_from || '00:00'}}</span>
+            </div>
+            <div ng-if="!rule.schedule._allDay">
                 <label class="title">{{ :: 'End time' | translate }}:</label>
-                <span>{{rule.schedule.hour_of_day_to}}</span>
+                <span>{{rule.schedule.hour_of_day_to || '23:59'}}</span>
             </div>
         </div>
 

@@ -71,7 +71,7 @@ describe('sdIngestRoutingContent directive', () => {
         });
 
         it('sets the rule object in scope to given object', () => {
-            var ruleToEdit = {_id: 'rule_1', filter: null};
+            var ruleToEdit = {_id: 'rule_1', filter: null, schedule: {}};
 
             scope.rule = null;
             scope.editRule(ruleToEdit);
@@ -83,7 +83,7 @@ describe('sdIngestRoutingContent directive', () => {
             'filter the rule references',
         () => {
             var scopeRule,
-                ruleToEdit = {_id: 'rule_1', filter: 'filter_2'};
+                ruleToEdit = {_id: 'rule_1', filter: 'filter_2', schedule: {}};
 
             scope.editRule(ruleToEdit);
 
