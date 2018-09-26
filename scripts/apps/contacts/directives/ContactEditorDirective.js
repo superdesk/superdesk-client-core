@@ -44,12 +44,6 @@ export function ContactEditorDirective(
             oncancel: '&',
         },
         link: function(scope, elem) {
-            scope.onSave = function() {
-                scope.$applyAsync(() => {
-                    $rootScope.$broadcast('refresh:list');
-                });
-            };
-
             scope.onCancel = function() {
                 scope.$applyAsync(() => {
                     scope.oncancel();
@@ -60,7 +54,6 @@ export function ContactEditorDirective(
                 angular.extend({
                     svc: services,
                     contact: scope.origContact,
-                    onSave: scope.onSave,
                     onCancel: scope.onCancel,
                 })
             );

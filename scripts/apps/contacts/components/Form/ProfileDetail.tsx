@@ -221,15 +221,16 @@ export class ProfileDetail extends React.Component<any, any> {
                 }
 
                 <Row>
-                    <SelectInput
-                        field="job_title"
-                        label={contactLabel}
-                        value={get(contact, 'job_title', '')}
-                        onChange={onChange}
-                        options={get(this.state, 'jobTitles', [])}
-                        labelField="name"
-                        keyField="name"
-                        clearable={true} />
+                    <LineInput readOnly={readOnly}>
+                        <Label text={contactLabel} />
+                        <Input
+                            field="job_title"
+                            onChange={onChange}
+                            value={get(contact, 'job_title', '')}
+                            onBlur={this.onBlur}
+                            type="text"
+                            readOnly={readOnly}/>
+                    </LineInput>
                 </Row>
 
                 <Row>

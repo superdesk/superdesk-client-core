@@ -181,5 +181,6 @@ ContactFormContainer.propTypes = {
 ContactFormContainer.defaultProps = {
     onDirty: () => { /* no-op */ },
     onValidation: () => { /* no-op */ },
+    onSave: () => { /* no-op */ },
     hideActionBar: false,
 };

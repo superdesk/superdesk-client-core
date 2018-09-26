@@ -24,13 +24,14 @@ class LinkFunction {
                 }
             }, true);
 
-        angular.forEach(['refresh:list', 'contacts:create'], (evt) => {
+        angular.forEach(['refresh:list'], (evt) => {
             this.scope.$on(evt, (event) => {
                 this.scope.refreshList({force: true});
             });
         });
 
         this.scope.$on('contacts:update', this.scope.refreshList);
+        this.scope.$on('contacts:create', this.scope.refreshList);
         this.scope.urlParams = URL_PARAMETERS;
     }
 
