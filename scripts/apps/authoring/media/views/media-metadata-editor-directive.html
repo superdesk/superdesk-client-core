@@ -20,7 +20,7 @@
         data-boxed="boxed"
         data-textarea="true"
         data-required="validator.description_text.required"
-        data-label="{{:: 'Caption' | translate}}"
+        data-label="{{:: 'Description' | translate}}"
         data-disabled="disabled"
         data-onblur="onBlur()"
         data-onchange="onChange({key: 'description_text'})"
@@ -29,6 +29,7 @@
     </sd-line-input>
 </div>
 
+<!-- Only used by APP as a read-only version of `description_text`. It comes from their image archive. -->
 <div class="form__row" ng-if="validator.archive_description">
     <sd-line-input
         ng-model="item.archive_description"
@@ -36,7 +37,7 @@
         data-boxed="boxed"
         data-textarea="true"
         data-required="validator.archive_description.required"
-        data-label="{{:: 'Description' | translate}}"
+        data-label="{{:: 'Archive description' | translate}}"
         data-disabled="disabled || associated"
         data-onblur="onBlur()"
         data-onchange="onChange({key: 'archive_description'})"
