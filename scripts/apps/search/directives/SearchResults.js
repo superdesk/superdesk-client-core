@@ -217,6 +217,10 @@ export function SearchResults(
                 criteria.es_highlight = search.getElasticHighlight();
                 criteria.projections = JSON.stringify(projections);
                 return api.query(getProvider(criteria), criteria).then((items) => {
+                    if (config.features.autorefreshContent) {
+                        data.force = true;
+                    }
+
                     if (!scope.showRefresh && data && !data.force && data.user !== session.identity._id) {
                         var isItemPreviewing = !!scope.selected.preview;
                         var _data = {
