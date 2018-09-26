@@ -206,20 +206,16 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
 
             // refreshes the list for matching group or view type only or if swimlane view is ON.
             scope.$on('refresh:list', (event, group) => {
-                var _viewType = event.currentScope.viewType || '';
+                const _viewType = event.currentScope.viewType || '';
+                const viewTypeMatches = [
+                    'highlights',
+                    'spiked',
+                    'single_monitoring',
+                    'monitoring',
+                    'personal',
+                ].includes(_viewType);
 
-                if (
-                    group
-                    && group._id === scope.group._id
-                    || !group
-                    && [
-                        'highlights',
-                        'spiked',
-                        'single_monitoring',
-                        'monitoring',
-                        'personal',
-                    ].includes(_viewType)
-                ) {
+                if ((group && group._id === scope.group._id) || (!group && viewTypeMatches)) {
                     scope.refreshGroup();
                 }
             });
