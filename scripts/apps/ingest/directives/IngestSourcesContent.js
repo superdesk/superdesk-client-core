@@ -249,28 +249,33 @@ export function IngestSourcesContent(ingestSources, gettext, notify, api, $locat
                     }
 
                     _.forEach($scope.currentFeedingService.fields, (field) => {
-                        if (field.type != 'mapping') {
-                            return;
+                        if (field.type === 'mapping') {
+                            let aliases = angular.isDefined($scope.provider.config)
+                                && $scope.provider.config[field.id] || [];
+
+                            let aliasObj = {};
+
+                            aliases.forEach((item) => {
+                                _.extend(aliasObj, item);
+                            });
+
+                            $scope.fieldAliases[field.id] = [];
+                            Object.keys(aliasObj).forEach((fieldName) => {
+                                $scope.fieldAliases[field.id].push(
+                                    {fieldName: fieldName, alias: aliasObj[fieldName]});
+                            });
+
+                            $scope.fieldsNotSelected[field.id] = field.first_field_options.values.filter(
+                                (fieldName) => !(fieldName in aliasObj)
+                            );
+                        } else if (
+                            // preset value in dropdown
+                            field.type === 'choices' &&
+                            !(field.id in $scope.provider.config) &&
+                            'preset' in field
+                        ) {
+                            $scope.provider.config[field.id] = field.preset;
                         }
-
-                        let aliases = angular.isDefined($scope.provider.config)
-                            && $scope.provider.config[field.id] || [];
-
-                        var aliasObj = {};
-
-                        aliases.forEach((item) => {
-                            _.extend(aliasObj, item);
-                        });
-
-                        $scope.fieldAliases[field.id] = [];
-                        Object.keys(aliasObj).forEach((fieldName) => {
-                            $scope.fieldAliases[field.id].push(
-                                {fieldName: fieldName, alias: aliasObj[fieldName]});
-                        });
-
-                        $scope.fieldsNotSelected[field.id] = field.first_field_options.values.filter(
-                            (fieldName) => !(fieldName in aliasObj)
-                        );
                     });
                 }
 
