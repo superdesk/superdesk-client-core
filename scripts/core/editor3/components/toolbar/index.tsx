@@ -45,6 +45,12 @@ class ToolbarComponent extends React.Component<any, any> {
         if (nextProps.popup.type === 'NONE' && this.props.popup.type !== 'NONE') {
             // restoring editor focus after closing the popup
 
+            const scrollableElement = document.querySelector('.page-content-container');
+            const scrollSnapshot = {
+                top: scrollableElement.scrollTop,
+                left: scrollableElement.scrollLeft,
+            };
+
             setTimeout(() => { // wait for render
                 const {editorWrapperElement} = this.props;
 
@@ -59,6 +65,10 @@ class ToolbarComponent extends React.Component<any, any> {
                 }
 
                 draftjsContentEditable.focus();
+
+                // prevent fousing from changing scroll position
+                scrollableElement.scrollTop = scrollSnapshot.top;
+                scrollableElement.scrollLeft = scrollSnapshot.left;
             });
         }
 
