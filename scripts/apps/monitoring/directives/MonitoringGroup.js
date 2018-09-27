@@ -212,6 +212,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                     'spiked',
                     'single_monitoring',
                     'monitoring',
+                    'deskOutput',
                     'personal',
                 ].includes(_viewType);
 
