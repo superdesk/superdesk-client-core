@@ -4,49 +4,60 @@
             <i class="filetype-icon-{{ :: item.type}}" title="{{'Article Type'| translate }}: {{ item.type}}"></i>
         </div>
         <div ng-if="item.profile && !change_profile">
-            <label translate>PROFILE</label>
-            <div class="data" sd-item-profile data-profile="item.profile"></div>
+            <span class="authoring-header__label" translate>PROFILE</span>
+            <div class="authoring-header__value" sd-item-profile data-profile="item.profile"></div>
         </div>
         <div ng-if="change_profile && content_types.length">
-            <label translate>PROFILE</label>
-            <div class="data">
+            <span class="authoring-header__label" translate>PROFILE</span>
+            <div class="authoring-header__value" >
                 <select id="item-profile"
                         ng-model="item.profile"
                         ng-change="changeProfile(item)"
+                        style="padding: 0px; height: 16px; font-size: 11px;"
                         ng-options="type._id as type.label for type in desk_content_types">
                 </select>
             </div>
         </div>
         <div ng-if="item.type === 'text'">
-            <label class="word-count"><b sd-word-count data-item="item.body_html" data-html="true" data-count-only="true"></b> <span translate translate-n="item.word_count" translate-plural="WORDS">WORD</span></label>
+            <span class="authoring-header__value">
+                <strong sd-word-count data-item="item.body_html" data-html="true" data-count-only="true"></strong>
+            </span>
+            <span class="authoring-header__label" translate translate-n="item.word_count" translate-plural="WORDS">WORD</span>
         </div>
         <div ng-if="item.signal">
             <span class="signal">{{ item.signal}}</span>
         </div>
         <div>
-            <label translate>SOURCE</label>
-            <div id="item-source" class="data">{{ item.source}}</div>
+            <span class="authoring-header__label" translate>SOURCE</span>
+            <div class="authoring-header__value" id="item-source" >{{ item.source}}</div>
         </div>
-        <div ng-if="relatedItems._items.length">
-            <label translate>RELATED</label>
-            <div class="data"><a href="" ng-click="activateWidget()">{{relatedItems._items.length}}</a></div>
+        <div ng-if="relatedItems != null && Array.isArray(relatedItems._items) && relatedItems._items.length > 0">
+            <span class="authoring-header__label" translate>RELATED</span>
+            <a href="" class="authoring-header__value" ng-click="activateWidget()">{{relatedItems._items.length}}</a>
         </div>
         <div id="item-correction" ng-if="item.correction_sequence">
-            <label translate>UPDATE</label>
-            <div class="data">{{item.correction_sequence}}</div>
+            <span class="authoring-header__label" translate>UPDATE</span>
+            <div class="authoring-header__value">{{item.correction_sequence}}</div>
         </div>
-        <div>
-            <span class="state-label missing-link" ng-if="missing_link" translate>Missing Link</span>
+        <div ng-if="missing_link || item.flags.marked_for_legal || item.flags.marked_for_sms || item.flags.marked_for_not_publication || item.rewritten_by">
+            <span class="state-label missing-link" ng-if="" translate>Missing Link</span>
             <span class="state-label legal" ng-if="item.flags.marked_for_legal" translate>Legal</span>
             <span class="state-label sms" ng-if="item.flags.marked_for_sms" translate>Sms</span>
             <span class="state-label not-for-publication" ng-if="item.flags.marked_for_not_publication" translate>Not For Publication</span>
             <span class="state-label updated" ng-if="item.rewritten_by" translate>Updated</span>
         </div>
         <div ng-if="item.broadcast.master_id">
-            <label ng-class="{'broadcast-status': item.broadcast.status !== ''}" title="{{item.broadcast.status| translate}}"><span translate>MASTER</span><b ng-if="item.broadcast.status"> !</b></label>
-            <div class="data"><a id="preview-master" ng-click="previewMasterStory()" title="{{ :: 'Preview master story' | translate }}" ng-app=""class="open-item">
+            <span
+                class="authoring-header__label"
+                ng-class="{'broadcast-status': item.broadcast.status !== ''}"
+                title="{{item.broadcast.status| translate}}"
+                style="color: #e51c23;">
+                <span translate>MASTER</span><b style="font-size: 14px;" ng-if="item.broadcast.status"> !</b></span>
+            <div>
+                <a id="preview-master" ng-click="previewMasterStory()" title="{{ :: 'Preview master story' | translate }}" ng-app=""class="open-item">
                     <i class="icon-external"></i>
-                </a></div>
+                </a>
+            </div>
         </div>
     </div>
 
