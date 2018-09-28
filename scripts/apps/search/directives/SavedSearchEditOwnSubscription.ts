@@ -1,4 +1,4 @@
-import {ISavedSearch, updateSubscribers, unsubscribeUser, IUserSubscription} from "superdesk-interfaces/SavedSearch";
+import {ISavedSearch, updateSubscribers, unsubscribeUser, IUserSubscription} from "../SavedSearch";
 import {IDirectiveScope} from "types/Angular/DirectiveScope";
 import {CronTimeInterval} from "types/DataStructures/TimeInterval";
 import {IUser} from "superdesk-interfaces/User";

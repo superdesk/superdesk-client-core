@@ -1,5 +1,5 @@
-import {IUser} from './User';
-import {IDesk} from './Desk';
+import {IUser} from 'superdesk-interfaces/User';
+import {IDesk} from 'superdesk-interfaces/Desk';
 import {CronTimeInterval} from 'types/DataStructures/TimeInterval';
 
 import {forOwn} from 'lodash';

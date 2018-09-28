@@ -6,7 +6,7 @@ import {
     IUserSubscription,
     IDeskSubscription,
     isUserSubscribedToSavedSearch,
-} from "superdesk-interfaces/SavedSearch";
+} from "../SavedSearch";
 import {IDirectiveScope} from "types/Angular/DirectiveScope";
 import {IUser} from "superdesk-interfaces/User";
 import {CronTimeInterval} from "types/DataStructures/TimeInterval";

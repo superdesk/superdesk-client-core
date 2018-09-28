@@ -1,4 +1,4 @@
-import {saveOrUpdateSavedSearch} from 'superdesk-interfaces/SavedSearch';
+import {saveOrUpdateSavedSearch} from '../SavedSearch';
 
 SaveSearch.$inject = ['$location', 'asset', 'api', 'session', 'notify', 'gettext', '$rootScope'];
 
