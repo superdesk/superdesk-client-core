@@ -1,4 +1,4 @@
-import {mapPredefinedDateFiltersClientToServer} from './DateFilters';
+import {saveOrUpdateSavedSearch} from 'superdesk-interfaces/SavedSearch';
 
 SaveSearch.$inject = ['$location', 'asset', 'api', 'session', 'notify', 'gettext', '$rootScope'];
 
@@ -73,34 +73,16 @@ export function SaveSearch($location, asset, api, session, notify, gettext, $roo
                     }
                 }
 
-                var search = getFilters(_.clone($location.search()));
-
-                editSearch.filter = {query: search};
+                editSearch.filter = {query: _.clone($location.search())};
                 var originalSearch = {};
 
                 if (editSearch._id) {
                     originalSearch = scope.editingSearch;
                 }
 
-                api('saved_searches')
-                    .save(originalSearch, editSearch)
+                saveOrUpdateSavedSearch(api, originalSearch, editSearch)
                     .then(onSuccess, onFail);
             };
-
-            function getFilters(search) {
-                let nextSearch = {...search};
-
-                _.forOwn(nextSearch, (value, key) => {
-                    if (_.includes(['priority', 'urgency'], key)) {
-                        // Convert integer fields: priority and urgency to objects
-                        nextSearch[key] = JSON.parse(value);
-                    }
-                });
-
-                nextSearch = mapPredefinedDateFiltersClientToServer(nextSearch);
-
-                return nextSearch;
-            }
         },
     };
 }

@@ -6,7 +6,6 @@ import {
     IUserSubscription,
     IDeskSubscription,
     isUserSubscribedToSavedSearch,
-    removeReadOnlyUserSubscriberFields,
 } from "superdesk-interfaces/SavedSearch";
 import {IDirectiveScope} from "types/Angular/DirectiveScope";
 import {IUser} from "superdesk-interfaces/User";
@@ -187,8 +186,6 @@ export function SavedSearchManageSubscribers(asset, userList, api, modal, gettex
                             })
                     );
                 }
-
-                nextUserSubscriptions = nextUserSubscriptions.map(removeReadOnlyUserSubscriberFields);
 
                 const nextSubscribers: ISavedSearch['subscribers'] = {
                     ...scope.savedSearch.subscribers,
