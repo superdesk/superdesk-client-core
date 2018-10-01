@@ -59,6 +59,14 @@
                 </a>
             </div>
         </div>
+
+        <!-- TODO: SDFID-489 don't forget the conditionals -->
+        <div ng-if="translationService.translationsEnabled()">
+            <span class="authoring-header__label-2" translate>Translated from</span>
+            <span class="label label--hollow">es</span>
+            <span class="label label--primary label--hollow">original</span>
+            <a href="#"><strong>(4)</strong> translations</a>
+        </div>
     </div>
 
     <div class="authoring-header__detailed" sd-media-query min-width="550">
