@@ -27,11 +27,11 @@ interface IModel {
 }
 
 function isUserSubscription(x: IModel['subscriptionInCreateOrEditMode']): x is IUserSubscription {
-    return (x as IUserSubscription).user !== undefined;
+    return x != null && (x as IUserSubscription).user !== undefined;
 }
 
 function isDeskSubscription(x: IModel['subscriptionInCreateOrEditMode']): x is IDeskSubscription {
-    return (x as IDeskSubscription).desk !== undefined;
+    return x != null && (x as IDeskSubscription).desk !== undefined;
 }
 
 interface IScope extends IDirectiveScope<IModel> {

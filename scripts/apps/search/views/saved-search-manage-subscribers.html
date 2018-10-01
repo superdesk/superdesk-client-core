@@ -15,57 +15,57 @@
                     <strong>{{getSubscriptionCount()}}</strong>
                     <span translate>subscriptions</span>
                 </div>
-                
-                <div class="dropdown dropdown--align-right" dropdown="">
+
+                <div>
                     <button
-                        dropdown__toggle=""
+                        id="saved-search-subscriptions--add-new"
                         class="btn btn--hollow btn--primary"><i class="icon-plus-sign"></i>Add new</button>
-                    <div class="dropdown__menu" style="padding: 0; width: 442px;">
-                        <div class="flat-searchbar extended">
-                            <div class="search-handler" style="height: auto!important; padding: 4px 8px; padding-right: 0;">
-                                <label
-                                    ng-click="$event.stopPropagation()"
-                                    for="saved-search-add-subscriber"
-                                    class="trigger-icon"><i class="icon-search"></i></label>
-                                <input
-                                    ng-click="$event.stopPropagation()"
-                                    id="saved-search-add-subscriber"
-                                    type="text"
-                                    placeholder="{{ :: 'Search' | translate }}"
-                                    ng-model="wrapper.newSubscriptionFilterText"
-                                    style="width: 100%;">
+
+                    <dropdown2 placement="'bottom-end'" trigger-selector="'#saved-search-subscriptions--add-new'">
+                        <div class="dropdown2" style="width: 439px; z-index: 1050;">
+                            <div class="flat-searchbar extended">
+                                <div class="search-handler" style="height: auto!important; padding: 4px 8px; padding-right: 0; border: 0">
+                                    <label
+                                        for="saved-search-add-subscriber"
+                                        class="trigger-icon"><i class="icon-search"></i></label>
+                                    <input
+                                        id="saved-search-add-subscriber"
+                                        type="text"
+                                        placeholder="{{ :: 'Search' | translate }}"
+                                        ng-model="wrapper.newSubscriptionFilterText"
+                                        style="width: 100%;">
+                                </div>
                             </div>
-                        </div>
 
-                        <div ng-if="wrapper.newSubscriptionFilterText.length > 0" style="border-top: 1px solid #F5F5F5; margin-bottom: 6px;"></div>
+                            <div ng-if="wrapper.newSubscriptionFilterText.length > 0" style="border-top: 1px solid #F5F5F5; margin-bottom: 6px;"></div>
 
-                        <div ng-if="wrapper.newSubscriptionFilterText.length > 0" class="search-result">
-                            <ul class="users-list-embed">
-                                <li
-                                    ng-click="subscribeDesk(desk)"
-                                    ng-repeat="desk in wrapper.desks.desks._items | filter: desksFilter"
+                            <div ng-if="wrapper.newSubscriptionFilterText.length > 0" class="search-result">
+                                <ul class="users-list-embed">
+                                    <li
+                                        ng-click="subscribeDesk(desk)"
+                                        ng-repeat="desk in wrapper.desks.desks._items | filter: desksFilter"
+                                        style="padding-left: 6px;padding-right: 6px; margin-right: 0;">
+                                        <figure class="avatar organisation small"></figure>
+                                        <div class="name">{{desk.name}}</div>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div ng-if="wrapper.newSubscriptionFilterText.length > 0" class="search-result">
+                                <ul class="users-list-embed">
+                                    <li ng-click="subscribeUser(user)"
+                                    ng-repeat="user in wrapper.users | filter: usersFilter"
                                     style="padding-left: 6px;padding-right: 6px; margin-right: 0;">
-                                    <figure class="avatar organisation small"></figure>
-                                    <div class="name">{{desk.name}}</div>
-                                </li>
-                            </ul>
-                        </div>
+                                        <figure class="avatar small"><img sd-user-avatar data-user="user"></figure>
+                                        <div class="name">{{user.first_name}} {{user.last_name}}</div>
+                                    </li>
+                                </ul>
+                            </div>
+                            <!-- getUserDisplay -->
 
-                        <div ng-if="wrapper.newSubscriptionFilterText.length > 0" class="search-result">
-                            <ul class="users-list-embed">
-                                <li ng-click="subscribeUser(user)"
-                                ng-repeat="user in wrapper.users | filter: usersFilter"
-                                style="padding-left: 6px;padding-right: 6px; margin-right: 0;">
-                                    <figure class="avatar small"><img sd-user-avatar data-user="user"></figure>
-                                    <div class="name">{{user.first_name}} {{user.last_name}}</div>
-                                </li>
-                            </ul>
+                            <div ng-if="wrapper.newSubscriptionFilterText.length > 0" style="margin-bottom: 4px;"></div>
                         </div>
-                        <!-- getUserDisplay -->
-
-                        <div ng-if="wrapper.newSubscriptionFilterText.length > 0" style="margin-bottom: 4px;"></div>
-                                    
-                    </div>
+                    </dropdown2>
                 </div>
             </div>
 
