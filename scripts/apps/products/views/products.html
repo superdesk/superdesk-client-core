@@ -1,8 +1,7 @@
 <div class="sd-page__flex-helper products-content" ng-controller="ProductsConfigCtrl">
     <div class="sd-page__header">
+        <sd-search-handler ng-model="search.name" data-debounce="200"></sd-search-handler>
         <div class="sortbar">
-            <span translate>Filter: </span>
-            <input type="text" class="input-medium" ng-model="search.name" ng-model-options="{debounce: 800}"/>
             <span translate>Product Type: </span>
             <select class="input-small"
                     ng-model="search.product_type"

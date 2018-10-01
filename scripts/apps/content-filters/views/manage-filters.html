@@ -1,4 +1,6 @@
 <div class="sd-page__header">
+    <sd-search-handler ng-model="query.name" data-debounce="200"></sd-search-handler>
+    
     <span class="sd-page__element-grow"></span>
     <button class="btn btn--primary" ng-click="editFilter()">
         <i class="icon-plus-sign icon--white"></i><span translate>Add New</span>
@@ -7,7 +9,7 @@
 
 <div class="sd-page__content manage-filters-page">
     <ul class="pills-list wide">
-        <li ng-repeat="filter in contentFilters track by filter._id" class="clearfix">
+        <li ng-repeat="filter in contentFilters | filter:query track by filter._id" class="clearfix">
             <div class="header">
                 <h6>{{ filter.name }}</h6>
                 <span ng-if="filter.is_global" class="label label--warning label--hollow">Global Block</span>

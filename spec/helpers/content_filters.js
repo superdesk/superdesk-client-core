@@ -17,7 +17,7 @@ function ContentFilters() {
     this.previewField = element(by.id('contentFilter-preview'));
     this.testResultField = element(by.id('test-result'));
     this.globalBlockSwitch = element(by.model('contentFilter.is_global'));
-    this.list = element.all(by.repeater('filter in contentFilters track by filter._id'));
+    this.list = element.all(by.repeater('filter in contentFilters | filter:query track by filter._id'));
     this.filterConditionDropdown = element.all(by.model('filterRow.selected'));
 
     /**

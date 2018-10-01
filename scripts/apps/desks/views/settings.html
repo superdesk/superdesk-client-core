@@ -3,6 +3,8 @@
         <h2 class="sd-page__page-heading" translate>Desk management</h2>
     </div>
     <div class="sd-page__header">
+        <sd-search-handler ng-model="query.name" data-debounce="200"></sd-search-handler>
+
         <span class="sd-page__element-grow"></span>
         <button id="add-new-desk" class="btn btn--primary" ng-click="openDesk('general')">
             <i class="icon-plus-sign icon--white"></i> {{ :: 'Add New' | translate }}
@@ -12,7 +14,7 @@
     <div class="sd-page__content desk-settings">
         <div class="flex-grid box wrap-items small-1 medium-3 large-4 xlarge-6">
 
-            <div class="flex-item card-box" ng-repeat="desk in desks._items track by desk._id">
+            <div class="flex-item card-box" ng-repeat="desk in desks._items | filter:query track by desk._id">
                 <div class="card-box__header">
                     <div class="dropdown" dropdown>
                         <button class="dropdown__toggle" dropdown__toggle>

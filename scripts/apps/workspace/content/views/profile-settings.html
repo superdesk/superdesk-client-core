@@ -3,6 +3,8 @@
         <h2 class="sd-page__page-heading" translate>Content Profiles</h2>
     </div>
     <div class="sd-page__header">
+        <sd-search-handler ng-model="query.label" data-debounce="200"></sd-search-handler>
+
         <sd-check ng-model="active_only" label-position="inside" type="radio" style="margin-left: 0;">{{:: 'All'| translate}}</sd-check>                
         <sd-check ng-model="active_only" ng-value="true" label-position="inside" type="radio" ng-checked="true">{{:: 'Active only'| translate}}</sd-check>
         <span class="sd-page__element-grow"></span>
@@ -14,7 +16,7 @@
     <div class="sd-page__content profile-settings desk-settings">
         <div class="flex-grid box wrap-items small-1 medium-3 large-4 xlarge-6">
             <div class="flex-item card-box"
-                 ng-repeat="type in ctrl.items| orderBy: 'label' track by type._id"
+                 ng-repeat="type in ctrl.items| orderBy: 'label' | filter: query track by type._id"
                  ng-class="{inactive: !type.enabled}" ng-show="!active_only || (active_only && type.enabled)">
 
                 <div class="card-box__header">
