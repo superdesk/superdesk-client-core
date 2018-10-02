@@ -190,8 +190,23 @@ const processCells = (state, fn) => {
  * @description Toggles the table's header.
  */
 const toggleTableHeader = (state) =>
-    processCells(state, (cells, numCols, numRows, i, j, withHeader, currentStyle) =>
-        ({cells: cells, numRows: numRows, numCols: numCols, withHeader: !withHeader, currentStyle: currentStyle}));
+    processCells(
+        state,
+        (cells, numCols, numRows, i, j, withHeader, currentStyle) => {
+            const newData = {
+                cells: cells,
+                numRows: numRows,
+                numCols: numCols,
+                withHeader: !withHeader,
+                currentStyle: currentStyle
+            };
+
+            return {
+                data: newData,
+                newCurrentStyle: currentStyle,
+            };
+        },
+    );
 
 /**
  * @ngdoc method
