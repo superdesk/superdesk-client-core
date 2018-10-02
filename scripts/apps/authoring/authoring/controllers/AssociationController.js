@@ -253,7 +253,7 @@ export function AssociationController(config, send, api, $q, superdesk,
             // save generated association id in order to be able to update the same item after editing.
             const originalRel = scope.rel;
 
-            if (self.isMediaEditable()) {
+            if (self.isMediaEditable() && _.get(item, '_type') === 'externalsource') {
                 // if media is editable then association will be updated by self.edit method
                 scope.loading = true;
                 renditions.ingest(item)

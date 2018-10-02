@@ -99,6 +99,7 @@
      data-required="schema.feature_media.required">
     <label class="field__label">{{label('feature_media')}}</label>
     <div sd-item-association
+         ng-class="{'item-association--marg-b10': editor.feature_media.showCrops}"
          data-allow-picture="true"
          data-allow-video="true"
          data-allow-audio="true"
