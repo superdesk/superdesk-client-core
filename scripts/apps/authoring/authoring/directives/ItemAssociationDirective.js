@@ -63,25 +63,35 @@ export function ItemAssociationDirective(renditions) {
                     if (MEDIA_TYPES.indexOf(ctrl.getSuperdeskType(event)) > -1) {
                         event.preventDefault();
                         event.stopPropagation();
-                        elem.find('figure').addClass(dragOverClass);
+                        addDragOverClass();
                     } else {
-                        elem.find('figure').removeClass(dragOverClass);
+                        removeDragOverClass();
                     }
                 });
 
                 elem.on('dragleave', () => {
-                    elem.find('figure').removeClass(dragOverClass);
+                    removeDragOverClass();
                 });
 
                 // update item associations on drop
                 elem.on('drop dragdrop', (event) => {
-                    elem.find('figure').removeClass(dragOverClass);
+                    removeDragOverClass();
                     event.preventDefault();
                     event.stopPropagation();
 
                     ctrl.initializeUploadOnDrop(scope, event);
                 });
             }
+
+            const addDragOverClass = () => {
+                elem.find('figure').addClass(dragOverClass);
+                elem.find('button.item-association').addClass(dragOverClass);
+            };
+
+            const removeDragOverClass = () => {
+                elem.find('figure').removeClass(dragOverClass);
+                elem.find('button.item-association').removeClass(dragOverClass);
+            };
 
             // init associated item for preview
             scope.$watch('item.associations[rel]', (related) => {
