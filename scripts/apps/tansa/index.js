@@ -30,10 +30,9 @@ document.write(`
     </script>
 `);
 
-/* globals tansa: true */
 var script = document.createElement('script');
 
-script.src = `${tansa.settings.baseUrl}tansaLoader.js?${new Date().getTime()}`;
+script.src = `${location.protocol}//${location.host}/tansaclient/tansaLoader.js?${new Date().getTime()}`;
 document.write(script.outerHTML);
 
 document.write(`
