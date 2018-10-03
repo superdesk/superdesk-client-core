@@ -13,8 +13,6 @@ export class RelativeDate extends React.Component<IRelativeDate, any> {
     render() {
         const date = moment.utc(this.props.datetime);
 
-        console.log('wops', this.props);
-
         date.local(); // switch to local time zone
 
         const datetimeIso = date.toISOString();
