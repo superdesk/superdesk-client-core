@@ -1,13 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Provider} from 'react-redux';
-import {EditorState} from 'draft-js';
+import {EditorState, convertFromRaw} from 'draft-js';
 
 import {Editor3} from './components';
 import createEditorStore from './store';
 import {getContentStateFromHtml} from './html/from-html';
 
 import {changeEditorState, setReadOnly} from './actions';
+import {fieldsMetaKeys, getFieldMetadata} from './helpers/fieldsMeta';
+import {initializeHighlights} from './helpers/highlights';
 
 import ng from 'core/services/ng';
 /**
@@ -86,6 +88,12 @@ class Editor3Directive {
              * in compare versions.
              */
             bindToValue: '=?',
+
+            /**
+             * @type {Boolean}
+             * @description If changed the editor will reload the editor state from item.
+             */
+            refreshTrigger: '=?',
 
             /**
              * @type {Function}
@@ -170,6 +178,25 @@ class Editor3Directive {
             const editorState = EditorState.push(state.editorState, content, 'insert-characters');
 
             store.dispatch(changeEditorState(editorState));
+        });
+
+        // bind the directive refreshTrigger attribute bi-directionally between Angular and Redux.
+        $scope.$watch('vm.refreshTrigger', (val, old) => {
+            const draftjsRawState = getFieldMetadata(
+                this.item,
+                this.pathToValue,
+                fieldsMetaKeys.draftjsState
+            );
+
+            if (draftjsRawState != null) {
+                let content = convertFromRaw(draftjsRawState);
+
+                content = initializeHighlights(EditorState.createWithContent(content)).getCurrentContent();
+                const state = store.getState();
+                const editorState = EditorState.push(state.editorState, content, 'change-block-data');
+
+                store.dispatch(changeEditorState(editorState));
+            }
         });
 
         // bind the directive readOnly attribute bi-directionally between Angular and Redux.
