@@ -3,7 +3,10 @@ import PropTypes from 'prop-types';
 import {get} from 'lodash';
 
 export const state: React.StatelessComponent<any> = (props) => {
-    const {$filter, gettextCatalog, datetime} = props.svc;
+    // support passing services as props
+    const $filter = props.$filter || props.svc.$filter;
+    const gettextCatalog = props.gettextCatalog || props.svc.gettextCatalog;
+    const datetime = props.datetime || props.svc.datetime;
 
     if (props.item.state !== undefined && props.item.state !== null) {
         let title = $filter('removeLodash')(props.item.state);
@@ -28,6 +31,9 @@ export const state: React.StatelessComponent<any> = (props) => {
 };
 
 state.propTypes = {
-    svc: PropTypes.any.isRequired,
+    svc: PropTypes.any,
     item: PropTypes.any,
+    $filter: PropTypes.any,
+    gettextCatalog: PropTypes.any,
+    datetime: PropTypes.any,
 };

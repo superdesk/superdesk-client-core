@@ -58,7 +58,7 @@ export function connectPromiseResults(getPromises) {
     };
 }
 
-export function connectServices(component, services) {
+export function connectServices(component, services): React.StatelessComponent<any> {
     return connectPromiseResults(() => {
         const promisesObject = {};
 
