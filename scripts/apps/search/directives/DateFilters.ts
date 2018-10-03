@@ -7,6 +7,22 @@ interface IDateRange {
     };
 }
 
+const before1MonthFilter: IDateRange = {
+    key: 'before_next_month',
+    label: gettext('Next Month'),
+    elasticSearchDateRange: {
+        lte: 'now+1M/d',
+    },
+};
+
+const before3MonthsFilter: IDateRange = {
+    key: 'before_3_months_ahead',
+    label: gettext('Next 3 Months'),
+    elasticSearchDateRange: {
+        lte: 'now+3M/d',
+    },
+};
+
 const lastMonthFilter: IDateRange = {
     key: 'last_month',
     label: gettext('Last Month'),
@@ -51,6 +67,8 @@ const last8hoursFilter: IDateRange = {
 };
 
 export const dateRangesByKey: Dictionary<string, IDateRange> = {
+    before_next_month: before1MonthFilter,
+    before_3_months_ahead: before3MonthsFilter,
     last_month: lastMonthFilter,
     last_week: lastWeekFilter,
     last_day: lastDayFilter,
@@ -91,24 +109,14 @@ export const getDateFilters = (gettext) => [
         predefinedFilters: [last24hoursFilter, last8hoursFilter],
         isEnabled: (searchConfig) => searchConfig.scheduled,
     },
-    // {
-    //     // TODO: set predefinedFilters in IDateRange format
-    //     labelBlock: gettext('Compliant lifetime'),
-    //     labelFrom: null,
-    //     labelTo: gettext('Need review before'),
-    //     fieldname: 'extra.compliantlifetime',
-    //     predefinedFilters: [
-    //         {
-    //             key: 'Next month',
-    //             label: gettext('Month'),
-    //         },
-    //         {
-    //             key: 'Next 3 months',
-    //             label: gettext('3 Months'),
-    //         },
-    //     ],
-    //     isEnabled: () => false,
-    // },
+    {
+        labelBlock: gettext('Compliant lifetime'),
+        labelFrom: null,
+        labelTo: gettext('Need review before'),
+        fieldname: 'extra.compliantlifetime',
+        predefinedFilters: [before1MonthFilter, before3MonthsFilter],
+        isEnabled: () => false,
+    },
 ];
 
 const elasticSearchDateRangeToFieldNames = (elasticSearchDateRange, baseFieldName) => {
