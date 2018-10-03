@@ -1,6 +1,3 @@
-import {waitUntil} from 'core/helpers/waitUtil';
-
-
 describe('authoring', () => {
     var GUID = 'urn:tag:superdesk-1';
     var USER = 'user:1';
@@ -631,7 +628,7 @@ describe('authoring', () => {
     });
 });
 
-describe('cropImage', () => {
+describe('Item Crops directive', () => {
     beforeEach(window.module('superdesk.apps.publish'));
     beforeEach(window.module('superdesk.apps.authoring'));
     beforeEach(window.module('superdesk.mocks'));
@@ -641,7 +638,7 @@ describe('cropImage', () => {
     beforeEach(window.module('superdesk.core.editor3'));
     beforeEach(window.module('superdesk.apps.editor2'));
 
-    it('can change button label for apply/edit crop', (done) => {
+    it('showCrops return true if image renditions are present',
         inject(($rootScope, $compile, $q, metadata, vocabularies) => {
             var metaInit = $q.defer();
 
@@ -654,8 +651,7 @@ describe('cropImage', () => {
             spyOn(metadata, 'initialize').and.returnValue(metaInit.promise);
             spyOn(vocabularies, 'getAllActiveVocabularies').and.returnValue($q.when([]));
 
-            var elem = $compile('<div sd-article-edit></div>')($rootScope.$new());
-            var scope = elem.scope();
+            let scope = $rootScope.$new();
 
             scope.item = {
                 type: 'picture',
@@ -663,13 +659,14 @@ describe('cropImage', () => {
                 },
             };
 
+            var elem = $compile('<div sd-item-crops data-item="item"></div>')(scope);
+
             metaInit.resolve();
             scope.$digest();
 
-            expect(scope.item.hasCrops).not.toBe(true);
+            let iScope = elem.isolateScope();
 
-            elem = $compile('<div sd-article-edit></div>')($rootScope.$new());
-            scope = elem.scope();
+            expect(iScope.showCrops()).not.toBe(true);
 
             scope.item = {
                 type: 'picture',
@@ -679,18 +676,11 @@ describe('cropImage', () => {
                 },
             };
 
-            metaInit.resolve();
+            scope.$digest();
 
-            waitUntil(() => {
-                scope.$digest();
-                return scope.item.hasCrops === true;
-            }).then(() => {
-                done();
-                expect(scope.item.hasCrops).toBe(true);
-            })
-                .catch(done.fail);
-        });
-    });
+            expect(iScope.showCrops()).toBe(true);
+        })
+    );
 });
 
 describe('autosave', () => {
