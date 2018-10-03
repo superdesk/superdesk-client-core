@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {omit} from 'lodash';
+import {connect} from 'react-redux';
 
 import BaseUnstyledComponent from './BaseUnstyledComponent';
 
@@ -39,8 +40,9 @@ UnstyledBlock.propTypes = {
     children: PropTypes.object,
     className: PropTypes.string,
     editorProps: PropTypes.object,
+    dispatch: PropTypes.func.isRequired,
 };
 
 // mapping state to props in `connect` might not work well for this component
 // it was removed to fix SDESK-2886
-export default UnstyledBlock;
+export default connect()(UnstyledBlock);
