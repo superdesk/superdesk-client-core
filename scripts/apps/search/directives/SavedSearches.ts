@@ -2,7 +2,7 @@ import {IUser} from 'superdesk-interfaces/User';
 import {IDesk} from 'superdesk-interfaces/Desk';
 
 import {ISuperdeskGlobalConfig} from 'superdesk-interfaces/SuperdeskGlobalConfig';
-import {ISavedSearch, isUserSubscribedToSavedSearch} from 'superdesk-interfaces/SavedSearch';
+import {ISavedSearch, isUserSubscribedToSavedSearch} from '../SavedSearch';
 import {IDesksService} from 'types/Services/Desks';
 import {IPrivilegesService} from 'types/Services/Privileges';
 
