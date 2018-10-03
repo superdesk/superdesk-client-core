@@ -106,7 +106,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             $scope.isValidEmbed = {};
             $scope.embedPreviews = {};
             $scope.mediaFieldVersions = {};
-            $scope.refreshTrigger = false;
+            $scope.refreshTrigger = 0;
 
             $scope.$watch('origItem', (newValue, oldValue) => {
                 $scope.itemActions = null;
@@ -728,7 +728,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
              * Revert item to given version
              */
             $scope.revert = function(version) {
-                $scope.refreshTrigger = !$scope.refreshTrigger;
+                $scope.refreshTrigger = $scope.refreshTrigger + 1;
                 helpers.forcedExtend($scope.item, version);
                 return $scope.save();
             };
