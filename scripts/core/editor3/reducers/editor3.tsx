@@ -43,12 +43,13 @@ const editor3 = (state = {}, action) => {
  * @ngdoc method
  * @name forceUpdate
  * @param {Object} editorState
+ * @param {Bool} keepSelection if set to true it won't force selection
  * @return {Object}
  * @description Forces an update of the editor. This is somewhat of a hack
  * based on https://github.com/facebook/draft-js/issues/458#issuecomment-225710311
  * until a better solution is found.
  */
-export const forceUpdate = (state) => {
+export const forceUpdate = (state, keepSelection = false) => {
     const {editorState, spellcheckerEnabled} = state;
     const content = editorState.getCurrentContent();
     const selection = editorState.getSelection();
@@ -59,7 +60,10 @@ export const forceUpdate = (state) => {
         undoStack: editorState.getUndoStack(),
         redoStack: editorState.getRedoStack(),
     });
-    newState = EditorState.forceSelection(newState, selection);
+
+    if (!keepSelection) {
+        newState = EditorState.forceSelection(newState, selection);
+    }
 
     return {
         ...state,
@@ -77,10 +81,11 @@ export const forceUpdate = (state) => {
  * In Draft v0.11.0 we will be able to request all entities from the content and could compare them to get a
  * more accurate result.
  * See https://draftjs.org/docs/api-reference-content-state.html#getentitymap"
+ * @param {Bool} keepSelection keep selection as it is
  * @return {Object} returns new state
  * @description Handle the editor state has been changed event
  */
-export const onChange = (state, newState, force = false) => {
+export const onChange = (state, newState, force = false, keepSelection = false) => {
     // TODO(x): Remove `force` once Draft v0.11.0 is in
     const editorState = newState;
 
@@ -98,6 +103,7 @@ export const onChange = (state, newState, force = false) => {
                 ...state,
                 editorState,
             }),
+            keepSelection
         );
     }
 
@@ -336,7 +342,7 @@ const changeImageCaption = (state, {entityKey, newCaption, field}) => {
     const newEditorState = EditorState.push(editorState, newContentState, 'change-block-data');
     const entityDataHasChanged = true;
 
-    return onChange(state, newEditorState, entityDataHasChanged);
+    return onChange(state, newEditorState, entityDataHasChanged, true);
 };
 
 /**
