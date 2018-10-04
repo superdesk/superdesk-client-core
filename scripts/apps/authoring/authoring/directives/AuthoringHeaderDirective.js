@@ -11,6 +11,19 @@ export function AuthoringHeaderDirective(api, authoringWidgets, $rootScope, arch
             scope.features = features;
             scope.translationService = TranslationService;
 
+            let promisesForTranslationsDate = [TranslationService.getTranslations(scope.item)];
+
+            if (scope.item.translated_from != null) {
+                promisesForTranslationsDate.push(api.find('archive', scope.item.translated_from));
+            }
+
+            Promise.all(promisesForTranslationsDate).then(([translations, translatedFromItem]) => {
+                scope.translationsInfo = {
+                    count: translations._meta.total,
+                    translatedFromReference: translatedFromItem,
+                };
+            });
+
             scope.shouldDisplayUrgency = function() {
                 return !(scope.editor.urgency || {}).service ||
                     Array.isArray(scope.item.anpa_category) &&

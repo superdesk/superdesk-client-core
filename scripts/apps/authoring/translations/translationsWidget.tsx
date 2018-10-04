@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {RelativeDate} from 'core/datetime/relativeDate';
 import {state as State} from 'apps/search/components/fields/state';
 import {connectServices} from 'core/helpers/ReactRenderAsync';
@@ -11,6 +10,7 @@ interface IProps {
     gettextCatalog: any;
     datetime: any;
     api: any;
+    TranslationService: any;
 }
 
 interface IState {
@@ -45,10 +45,9 @@ class TranslationsWidgetComponent extends React.Component<IProps, IState> {
     }
 
     componentDidMount() {
-        const {api, item} = this.props;
+        const {api, item, TranslationService} = this.props;
 
-        api('archive').query({where: {translation_id: item.translation_id}})
-            .then((response) => {
+        TranslationService.getTranslations(item).then((response) => {
                 const translations: Array<IArticle> = response._items;
 
                 getReferences(api, translations).then((references) => {
@@ -128,14 +127,7 @@ class TranslationsWidgetComponent extends React.Component<IProps, IState> {
     }
 }
 
-TranslationsWidgetComponent.propTypes = {
-    item: PropTypes.any.isRequired,
-    $filter: PropTypes.any.isRequired,
-    gettextCatalog: PropTypes.any.isRequired,
-    datetime: PropTypes.any.isRequired,
-};
-
 export const TranslationsWidget = connectServices<IProps>(
     TranslationsWidgetComponent,
-    ['api', '$filter', 'gettextCatalog', 'datetime'],
+    ['api', 'TranslationService', '$filter', 'gettextCatalog', 'datetime'],
 );

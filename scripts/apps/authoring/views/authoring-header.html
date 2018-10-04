@@ -60,12 +60,12 @@
             </div>
         </div>
 
-        <!-- TODO: SDFID-489 don't forget the conditionals -->
-        <div ng-if="translationService.translationsEnabled()">
-            <span class="authoring-header__label-2" translate>Translated from</span>
-            <span class="label label--hollow">es</span>
-            <span class="label label--primary label--hollow">original</span>
-            <a href="#"><strong>(4)</strong> translations</a>
+        <div ng-if="translationService.translationsEnabled() && translationsInfo != null">
+            <span ng-if="item.translated_from != null" class="authoring-header__label-2" translate>Translated from</span>
+            <span ng-if="item.translated_from != null" class="label label--hollow">{{translationsInfo.translatedFromReference.language}}</span>
+            
+            <span ng-if="item.translated_from == null" class="label label--primary label--hollow" translate>Original</span>
+            <a href="#"><strong>({{translationsInfo.count}})</strong> <span translate>translations</span></a>
         </div>
     </div>
 

@@ -65,6 +65,10 @@ export function TranslationService(api, $rootScope, notify, authoringWorkspace, 
             && service.languages._items.length > 0;
     };
 
+    service.getTranslations = function(item) {
+        return api('archive').query({where: {translation_id: item.translation_id}});
+    };
+
     /**
      * @ngdoc method
      * @name TranslationService#checkAvailability
