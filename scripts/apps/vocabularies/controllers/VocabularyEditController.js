@@ -81,6 +81,17 @@ export function VocabularyEditController($scope, gettext, $interpolate, notify, 
             $scope.errorMessage = gettext('The values should be unique for ') + uniqueField;
         }
 
+        if ($scope.vocabulary.field_type === 'related-content'
+            && $scope.vocabulary.field_options.contentType === 'media-gallery') {
+            const allowedTypes = $scope.vocabulary.field_options.allowed_types;
+
+            Object.keys(allowedTypes).forEach((key) => {
+                if (!['picture', 'video', 'audio'].includes(key)) {
+                    allowedTypes[key] = false;
+                }
+            });
+        }
+
         if (_.isNil($scope.errorMessage)) {
             api.save('vocabularies', $scope.vocabulary).then(onSuccess, onError);
         }
@@ -109,6 +120,10 @@ export function VocabularyEditController($scope, gettext, $interpolate, notify, 
 
         $scope.vocabulary.items = $scope.vocabulary.items.concat([newVocabulary]);
     };
+
+    if ($scope.vocabulary.field_type === 'related-content' && $scope.vocabulary._id == null) {
+        $scope.vocabulary.field_options = {contentType: 'media-gallery'};
+    }
 
     // try to reproduce data model of vocabulary:
     var model = _.mapValues(_.keyBy(

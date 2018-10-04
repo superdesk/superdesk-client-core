@@ -60,14 +60,33 @@
                 <sd-check id="field-text-single" ng-model="vocabulary.field_options.single">{{'Single line' | translate}}</sd-check>
             </div>
 
-            <div class="form__row" ng-show="matchFieldTypeToTab('media-fields', vocabulary.field_type)">
-                <label for="field-media-type" class="form-label form__row-label" translate>Media Type</label>
-                <div class="form__row-item">
-                    <sd-check name="field_type" ng-model="vocabulary.field_options.allowed_types.picture" data-icon="photo">{{'Image' | translate}}</sd-check><sd-check name="field_type" ng-model="vocabulary.field_options.allowed_types.video" data-icon="video">{{'Video' | translate}}</sd-check><sd-check name="field_type" ng-model="vocabulary.field_options.allowed_types.audio" data-icon="audio">{{'Audio' | translate}}</sd-check>
+            <div class="form__row" ng-show="matchFieldTypeToTab('related-content-fields', vocabulary.field_type)">
+                <label for="field-media-type" class="form-label form__row-label" translate>Content Type</label>
+
+                <div class="form__row form__row--inner form__row--flex">
+                    <div class="form__row-item form__row-item--no-grow">
+                        <select class="input-medium" ng-model="vocabulary.field_options.contentType">
+                            <option value="media-gallery" translate>Media gallery</option>
+                            <option value="related-items" translate>Related items</option>
+                        </select>
+                    </div>
+                    <div class="form__row-item form__row-item--no-grow">
+                        <div class="form__row">
+                            <sd-check name="field_type" ng-model="vocabulary.field_options.allowed_types.picture" data-icon="photo">{{'Image' | translate}}</sd-check>
+                            <sd-check name="field_type" ng-model="vocabulary.field_options.allowed_types.video" data-icon="video">{{'Video' | translate}}</sd-check>
+                            <sd-check name="field_type" ng-model="vocabulary.field_options.allowed_types.audio" data-icon="audio">{{'Audio' | translate}}</sd-check>
+                        </div>
+                        <div class="form__row" ng-if="vocabulary.field_options.contentType === 'related-items'">
+                            <sd-check name="field_type" ng-model="vocabulary.field_options.allowed_types.text" data-icon="text">{{'Text' | translate}}</sd-check>
+                            <sd-check name="field_type" ng-model="vocabulary.field_options.allowed_types.preformatted" data-icon="text">{{'Preformatted' | translate}}</sd-check>   
+                            <sd-check name="field_type" ng-model="vocabulary.field_options.allowed_types.graphic" data-icon="graphic">{{'Graphic' | translate}}</sd-check>
+                            <sd-check name="field_type" ng-model="vocabulary.field_options.allowed_types.composite" data-icon="composite">{{'Composite' | translate}}</sd-check>    
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="form__row" ng-show="matchFieldTypeToTab('media-fields', vocabulary.field_type)">
+            <div class="form__row" ng-show="matchFieldTypeToTab('related-content-fields', vocabulary.field_type)">
                 <div class="form__row-item">
                     <span id="multiple_items" sd-switch ng-model="vocabulary.field_options.multiple_items.enabled"></span>
                     <label for="multiple_items" translate>Allow Multiple Items</label>
