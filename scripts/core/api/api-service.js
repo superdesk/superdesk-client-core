@@ -102,6 +102,7 @@ function APIProvider() {
          */
         function clean(data, keepId) {
             var blacklist = {
+                    _type: 1,
                     _status: 1,
                     _updated: 1,
                     _created: 1,

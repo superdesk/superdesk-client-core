@@ -354,6 +354,11 @@ describe('API Provider', () => {
 
             expect(user.name).toBe('bar');
             expect(_.has(user, '_type')).toBe(false);
+
+            $httpBackend.expectPATCH(USER_URL, {foo: 1}, testEtagHeader).respond(200, {});
+            api('users').save(user, {foo: 1, _type: 'user'});
+            $httpBackend.flush();
+            $httpBackend.verifyNoOutstandingExpectation();
         }));
 
         it('can query resource', inject((api, $httpBackend) => {
