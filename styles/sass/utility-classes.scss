@@ -105,3 +105,14 @@ ul.list-view.list-without-items {
     justify-content: space-between;
     align-items: center;
 }
+
+.flex-bar {
+    display: flex;
+    align-items: center;
+}
+
+.sibling-spacer-4 {
+    > * + * {
+        margin-left: 4px;
+    }
+}

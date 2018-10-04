@@ -23,4 +23,4 @@ angular.module('superdesk.apps.authoring.translations', [
                 },
             });
     }])
-    .component('translationsWidget', reactToAngular1(TranslationsWidget));
+    .component('translationsWidget', reactToAngular1(TranslationsWidget, ['item']));

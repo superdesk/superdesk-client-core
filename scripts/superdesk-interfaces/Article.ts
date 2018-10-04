@@ -1,6 +1,9 @@
 import {IUser} from './User';
 
 export interface IArticle {
+    _id: string;
+    translated_from: string;
+    translation_id: string;
     usageterms: any;
     keywords: any;
     language: any;
@@ -22,6 +25,7 @@ export interface IArticle {
     dateline: string;
     body_html: string;
     footer: string;
+    firstcreated: any;
     body_footer: string;
     sign_off: string;
     feature_media: any;

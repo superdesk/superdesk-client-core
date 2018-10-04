@@ -1,13 +1,12 @@
-import moment from 'moment';
 import React from 'react';
-import PropTypes from 'prop-types';
+import moment from 'moment';
 import {reactToAngular1} from 'superdesk-ui-framework';
 
-interface IRelativeDate {
+interface IProps {
     datetime: string;
 }
 
-export class RelativeDate extends React.Component<IRelativeDate, any> {
+export class RelativeDate extends React.Component<IProps> {
     static propTypes: any;
 
     render() {
@@ -25,9 +24,5 @@ export class RelativeDate extends React.Component<IRelativeDate, any> {
     }
 }
 
-RelativeDate.propTypes = {
-    datetime: PropTypes.any,
-};
-
 angular.module('superdesk.core.datetime.relativeDate', [])
-    .component('relativeDate', reactToAngular1(RelativeDate));
+    .component('relativeDate', reactToAngular1(RelativeDate, ['datetime']));

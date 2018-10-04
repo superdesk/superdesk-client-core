@@ -49,7 +49,7 @@ export function connectPromiseResults(getPromises) {
         return function connectPromiseComponent(props) {
             return (
                 <ReactRenderAsync
-                    promises={getPromises()}
+                    promises={getPromises(props)}
                     component={component}
                     originalProps={props}
                 />
@@ -58,7 +58,7 @@ export function connectPromiseResults(getPromises) {
     };
 }
 
-export function connectServices(component, services): React.StatelessComponent<any> {
+export function connectServices<T>(component, services): React.ComponentType<T> {
     return connectPromiseResults(() => {
         const promisesObject = {};
 
