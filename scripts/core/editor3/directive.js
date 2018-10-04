@@ -5,6 +5,7 @@ import {EditorState} from 'draft-js';
 
 import {Editor3} from './components';
 import createEditorStore from './store';
+import {getInitialContent} from './store';
 import {getContentStateFromHtml} from './html/from-html';
 
 import {changeEditorState, setReadOnly} from './actions';
@@ -88,6 +89,12 @@ class Editor3Directive {
             bindToValue: '=?',
 
             /**
+             * @type {Number}
+             * @description If changed the editor will reload the editor state from item.
+             */
+            refreshTrigger: '=?',
+
+            /**
              * @type {Function}
              * @description Function that gets called on every content change.
              */
@@ -168,6 +175,23 @@ class Editor3Directive {
             const content = getContentStateFromHtml(text);
             const state = store.getState();
             const editorState = EditorState.push(state.editorState, content, 'insert-characters');
+
+            store.dispatch(changeEditorState(editorState));
+        });
+
+        // bind the directive refreshTrigger attribute bi-directionally between Angular and Redux.
+        $scope.$watch('vm.refreshTrigger', (val, old) => {
+            if (val === 0) {
+                return;
+            }
+
+            const props = {
+                item: this.item,
+                pathToValue: this.pathToValue,
+            };
+            const content = getInitialContent(props);
+            const state = store.getState();
+            const editorState = EditorState.push(state.editorState, content, 'change-block-data');
 
             store.dispatch(changeEditorState(editorState));
         });

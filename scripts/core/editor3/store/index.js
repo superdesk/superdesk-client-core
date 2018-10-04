@@ -154,7 +154,7 @@ export function onChange(contentState, {plainText = false} = {}) {
  * If an editor state is available as saved in the DB, we use that, otherwise we attempt to
  * use available HTML. If none are available, an empty ContentState is created.
  */
-function getInitialContent(props) {
+export function getInitialContent(props) {
     // support standalone instance of editor3 which is not connected to item field
     if (props.editorState != null) {
         var contentState = convertFromRaw(
