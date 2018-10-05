@@ -26,6 +26,7 @@ export interface IArticle {
     body_html: string;
     footer: string;
     firstcreated: any;
+    versioncreated: any;
     body_footer: string;
     sign_off: string;
     feature_media: any;

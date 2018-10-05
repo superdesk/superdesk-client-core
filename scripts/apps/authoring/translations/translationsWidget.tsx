@@ -92,7 +92,7 @@ class TranslationsWidgetComponent extends React.Component<IProps, IState> {
                                             {translation.headline}
                                         </span>
                                         <span style={{whiteSpace: 'nowrap'}}>
-                                            <RelativeDate datetime={translation.firstcreated} />
+                                            <RelativeDate datetime={translation.versioncreated} />
                                         </span>
                                     </div>
                                     <div className="sd-list-item__row">
