@@ -10,6 +10,7 @@ interface IProps {
     gettextCatalog: any;
     datetime: any;
     api: any;
+    authoringWorkspace: any;
     TranslationService: any;
 }
 
@@ -63,7 +64,7 @@ class TranslationsWidgetComponent extends React.Component<IProps, IState> {
     }
 
     render() {
-        const {$filter, gettextCatalog, datetime} = this.props;
+        const {$filter, gettextCatalog, authoringWorkspace, datetime} = this.props;
         const {translations, references} = this.state;
 
         if (translations == null) {
@@ -78,7 +79,12 @@ class TranslationsWidgetComponent extends React.Component<IProps, IState> {
                 {
                     translations.sort(sortOriginalFirst).map((translation: IArticle) => {
                         return (
-                            <div key={translation._id} className="sd-list-item sd-shadow--z1" style={{marginBottom: 6}}>
+                            <div
+                                key={translation._id}
+                                onClick={() => authoringWorkspace.popup(translation, 'edit')}
+                                className="sd-list-item sd-shadow--z1"
+                                style={{marginBottom: 6}}
+                            >
                                 <div className={listClassNames}>
                                     <div className="sd-list-item__row">
                                         <span className="label">{translation.language}</span>
@@ -130,5 +136,5 @@ class TranslationsWidgetComponent extends React.Component<IProps, IState> {
 
 export const TranslationsWidget = connectServices<IProps>(
     TranslationsWidgetComponent,
-    ['api', 'TranslationService', '$filter', 'gettextCatalog', 'datetime'],
+    ['api', 'TranslationService', 'authoringWorkspace', '$filter', 'gettextCatalog', 'datetime'],
 );
