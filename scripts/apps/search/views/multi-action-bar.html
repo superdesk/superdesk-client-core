@@ -7,7 +7,7 @@
           translate-plural="{{ multi.count}} Items selected">{{ multi.count}} Item selected</span>
 
     <div class="pull-right" ng-if="action.canPackageItems() && (!elementState || elementState === 'comfort')">
-        <button class="navbtn strict" ng-click="action.createPackage()" title="{{ :: 'Create Package' | translate }}">
+        <button class="navbtn strict" ng-click="action.createPackage(); multi.reset()" title="{{ :: 'Create Package' | translate }}">
             <i class="big-icon--create-package"></i>
         </button>
         <button class="navbtn strict" ng-if="isOpenItemType('composite')" ng-click="action.addToPackage()" title="{{ :: 'Add to Current Package' | translate }}">
