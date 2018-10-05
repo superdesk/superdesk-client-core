@@ -10,7 +10,7 @@
         <button class="navbtn strict" ng-click="action.createPackage(); multi.reset()" title="{{ :: 'Create Package' | translate }}">
             <i class="big-icon--create-package"></i>
         </button>
-        <button class="navbtn strict" ng-if="isOpenItemType('composite')" ng-click="action.addToPackage()" title="{{ :: 'Add to Current Package' | translate }}">
+        <button class="navbtn strict" ng-if="isOpenItemType('composite')" ng-click="action.addToPackage(); multi.reset()" title="{{ :: 'Add to Current Package' | translate }}">
             <i class="big-icon--add-to-package"></i>
         </button>
 
