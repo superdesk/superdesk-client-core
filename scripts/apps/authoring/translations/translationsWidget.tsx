@@ -114,6 +114,7 @@ class TranslationsWidgetComponent extends React.Component<IProps, IState> {
                                                 gettextCatalog={gettextCatalog}
                                                 datetime={datetime}
                                                 item={translation}
+                                                style={{marginRight: 0}}
                                             />
                                         </div>
                                     </div>

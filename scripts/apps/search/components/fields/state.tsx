@@ -22,6 +22,7 @@ export const state: React.StatelessComponent<any> = (props) => {
         return React.createElement(
             'span', {
                 title: title,
+                style: props.style || {},
                 className: 'state-label state-' + props.item.state,
                 key: 'state',
             },
@@ -33,6 +34,7 @@ export const state: React.StatelessComponent<any> = (props) => {
 state.propTypes = {
     svc: PropTypes.any,
     item: PropTypes.any,
+    style: PropTypes.any,
     $filter: PropTypes.any,
     gettextCatalog: PropTypes.any,
     datetime: PropTypes.any,
