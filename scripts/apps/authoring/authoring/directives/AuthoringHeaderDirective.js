@@ -89,6 +89,10 @@ export function AuthoringHeaderDirective(api, authoringWidgets, $rootScope, arch
                 }
             });
 
+            scope.activateTranslationsWidget = function() {
+                WidgetsManagerCtrl.activate(authoringWidgets.find((widget) => widget._id === 'translations'));
+            };
+
             scope.$watch('item.profile', (profile) => {
                 if (profile) {
                     content.getType(profile)

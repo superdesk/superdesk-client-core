@@ -65,7 +65,7 @@
             <span ng-if="item.translated_from != null" class="label label--hollow">{{translationsInfo.translatedFromReference.language}}</span>
             
             <span ng-if="item.translated_from == null" class="label label--primary label--hollow" translate>Original</span>
-            <a href="#"><strong>({{translationsInfo.count}})</strong> <span translate>translations</span></a>
+            <a href ng-click="activateTranslationsWidget()"><strong>({{translationsInfo.count}})</strong> <span translate>translations</span></a>
         </div>
     </div>
 
