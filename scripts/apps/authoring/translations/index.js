@@ -7,11 +7,12 @@ angular.module('superdesk.apps.authoring.translations', [
     .config(['authoringWidgetsProvider', function(authoringWidgetsProvider) {
         authoringWidgetsProvider
             .widget('translations', {
-                icon: 'info',
+                icon: 'web',
                 label: gettext('Translations'),
                 template: 'scripts/apps/authoring/translations/views/translations-widget.html',
                 order: 7,
                 side: 'right',
+                hideWhenTranslationsDisabled: true,
                 display: {
                     authoring: true,
                     packages: true,

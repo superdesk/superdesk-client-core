@@ -12,9 +12,9 @@ function AuthoringWidgetsProvider() {
 }
 
 WidgetsManagerCtrl.$inject = ['$scope', '$routeParams', 'authoringWidgets', 'archiveService',
-    'keyboardManager', '$location', 'desks', 'lock', 'content', 'config', 'lodash', 'privileges'];
+    'keyboardManager', '$location', 'desks', 'lock', 'content', 'config', 'lodash', 'privileges', 'TranslationService'];
 function WidgetsManagerCtrl($scope, $routeParams, authoringWidgets, archiveService,
-    keyboardManager, $location, desks, lock, content, config, _, privileges) {
+    keyboardManager, $location, desks, lock, content, config, _, privileges, TranslationService) {
     $scope.active = null;
 
     $scope.$watch('item', (item) => {
@@ -56,6 +56,13 @@ function WidgetsManagerCtrl($scope, $routeParams, authoringWidgets, archiveServi
                 const isEditor3 = _.get(type, 'editor.body_html.editor3');
 
                 $scope.widgets = widgets.filter((widget) => {
+                    if (
+                        widget.hideWhenTranslationsDisabled === true
+                        && TranslationService.translationsEnabled() !== true
+                    ) {
+                        return false;
+                    }
+
                     if (!isEditor3 && !!_.get(widget, 'onlyEditor3', false)) {
                         // This widget is only for Editor3
                         return false;
