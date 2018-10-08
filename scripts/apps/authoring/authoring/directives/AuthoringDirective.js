@@ -77,12 +77,13 @@ AuthoringDirective.$inject = [
     '$sce',
     'mediaIdGenerator',
     'logger',
+    'familyService',
 ];
 export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace, notify,
     gettext, desks, authoring, api, session, lock, privileges, content, $location,
     referrer, macros, $timeout, $q, modal, archiveService, confirm, reloadService,
     $rootScope, $interpolate, metadata, suggest, config, deployConfig, editorResolver,
-    compareVersions, embedService, $sce, mediaIdGenerator, logger) {
+    compareVersions, embedService, $sce, mediaIdGenerator, logger, familyService) {
     return {
         link: function($scope, elem, attrs) {
             var _closing;
@@ -599,7 +600,30 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                     return;
                 }
 
-                return performPublish();
+                // Check if there's unpublished related items
+                familyService.fetchRelatedItems($scope.item)
+                    .then(({_items}) => {
+                        if (_items.length > 0) {
+                            const firstSentence = _items.length === 1
+                                ? 'There is an unpublished related item'
+                                : `There are ${_items.length} unpublished related items`;
+                            const it = _items.length === 1
+                                ? 'It'
+                                : 'They';
+
+                            modal.confirm({
+                                bodyText: gettext(
+                                    `${firstSentence}. `
+                                    + `${it} will not be sent out as related items. `
+                                    + 'Do you want to publish the article now?'
+                                ),
+                            }).then((ok) => {
+                                ok && performPublish();
+                            });
+                        } else {
+                            return performPublish();
+                        }
+                    });
             };
 
             function performPublish() {
