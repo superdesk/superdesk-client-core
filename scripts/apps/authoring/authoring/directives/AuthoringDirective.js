@@ -720,6 +720,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
              * Preview different version of an item
              */
             $scope.preview = function(version) {
+                $scope.refreshTrigger++;
                 helpers.forcedExtend($scope.item, version);
                 $scope._editable = false;
             };
@@ -728,8 +729,11 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
              * Revert item to given version
              */
             $scope.revert = function(version) {
-                $scope.refreshTrigger = $scope.refreshTrigger + 1;
+                $scope.refreshTrigger++;
                 helpers.forcedExtend($scope.item, version);
+                if ($scope.item.annotations == null) {
+                    $scope.item.annotations = [];
+                }
                 return $scope.save();
             };
 
