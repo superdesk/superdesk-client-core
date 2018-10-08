@@ -205,6 +205,11 @@ export function TemplatesDirective(gettext, notify, api, templates, modal, desks
             }
 
             $scope.save = function() {
+                $scope.template.schedule.cron_list = [];
+                _.forEach($scope.cron_times, (time) => {
+                    $scope.template.schedule.cron_list.push(time.substring(3, 5) + ' ' + time.substring(0, 2) +
+                        ' * * ' + $scope.template.schedule.day_of_week.join(','));
+                });
                 if (validate($scope.origTemplate, $scope.template)) {
                     templates.save($scope.origTemplate, $scope.template)
                         .then(
@@ -217,6 +222,28 @@ export function TemplatesDirective(gettext, notify, api, templates, modal, desks
                             }
                         )
                         .then(fetchTemplates);
+                }
+            };
+
+            function getCronTimes(schedule) {
+                var times = [];
+
+                _.forEach(schedule.cron_list, (cron) => {
+                    times.push(cron.split(' ')[1] + ':' + cron.split(' ')[0]);
+                });
+                return times;
+            }
+
+            $scope.removeCronTime = function(cron) {
+                _.remove($scope.cron_times, (c) => c === cron);
+            };
+
+            $scope.addCronTime = function() {
+                if ($scope.new_time && $scope.new_time.picked && _.findIndex($scope.cron_times,
+                    (t) => t == $scope.new_time.picked.substring(0, 5)) == -1) {
+                    $scope.cron_times.push($scope.new_time.picked.substring(0, 5));
+                    $scope.cron_times = _.sortBy($scope.cron_times);
+                    $scope.new_time = {picked: null};
                 }
             };
 
@@ -246,6 +273,8 @@ export function TemplatesDirective(gettext, notify, api, templates, modal, desks
                 $scope._editable = true;
                 $scope.error = {};
                 selectDesks($scope.template.template_desks);
+                $scope.cron_times = getCronTimes($scope.template.schedule);
+                $scope.new_time = {picked: null};
             };
 
             $scope.$watch('item.profile', (profile) => {
@@ -263,6 +292,8 @@ export function TemplatesDirective(gettext, notify, api, templates, modal, desks
                         $scope.template.schedule.day_of_week = [];
                     }
                     delete $scope.template.schedule.create_at;
+                    $scope.template.schedule.cron_list = [];
+                    $scope.cron_times = [];
                     $scope.template.schedule_desk = null;
                     $scope.template.schedule_stage = null;
                 }
@@ -317,7 +348,7 @@ export function TemplatesDirective(gettext, notify, api, templates, modal, desks
             $scope.isScheduleValid = () => $scope.showScheduling() && $scope.template.schedule.is_active ?
                 $scope.template.schedule.day_of_week &&
                     $scope.template.schedule.day_of_week.length > 0 &&
-                    $scope.template.schedule.create_at &&
+                    $scope.cron_times.length > 0 &&
                     $scope.template.schedule_desk &&
                     $scope.template.schedule_stage : true;
 
