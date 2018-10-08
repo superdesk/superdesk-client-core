@@ -237,6 +237,9 @@ export class Editor3Component extends React.Component<any, any> {
 
             newState = RichUtils.handleKeyCommand(editorState, command);
             break;
+        case 'secondary-paste': // this is blocking redo on non-windows systems, should be osx specific
+            newState = EditorState.redo(editorState);
+            break;
         case 'backspace': {
             if (suggestingMode) {
                 // prevent to change other user suggestion that is before current position
