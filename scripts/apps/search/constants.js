@@ -127,6 +127,10 @@ export const CORE_PROJECTED_FIELDS = {
         'copyrightholder',
         'copyrightnotice',
         'usageterms',
+
+        // added in order to show the list of items on spiked packages
+        'groups',
+        'deleted_groups',
     ],
 };
 
