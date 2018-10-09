@@ -415,7 +415,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                 }
 
                 return apiquery(criteria, true).then((items) => {
-                    if (config.features.autorefreshContent) {
+                    if (config.features.autorefreshContent && data != null) {
                         data.force = true;
                     }
 
