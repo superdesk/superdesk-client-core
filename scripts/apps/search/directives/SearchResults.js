@@ -217,7 +217,7 @@ export function SearchResults(
                 criteria.es_highlight = search.getElasticHighlight();
                 criteria.projections = JSON.stringify(projections);
                 return api.query(getProvider(criteria), criteria).then((items) => {
-                    if (config.features.autorefreshContent) {
+                    if (config.features.autorefreshContent && data != null) {
                         data.force = true;
                     }
 
