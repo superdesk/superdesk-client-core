@@ -193,7 +193,7 @@ class Editor3Directive {
             const state = store.getState();
             const editorState = EditorState.push(state.editorState, content, 'change-block-data');
 
-            store.dispatch(changeEditorState(editorState));
+            store.dispatch(changeEditorState(editorState, true, true));
         });
 
         // bind the directive readOnly attribute bi-directionally between Angular and Redux.
