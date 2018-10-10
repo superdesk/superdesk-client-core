@@ -155,9 +155,17 @@
                             <div class="day-filter-box clearfix sd-line-input__select" sd-weekday-picker data-model="template.schedule.day_of_week"></div>
                         </div>
                         <div ng-if="template.schedule.is_active && template.template_type !== 'kill'">
-                            <div class="sd-line-input sd-line-input--required">
-                                <label class="sd-line-input__label" translate>At</label>
-                                <span sd-timepicker ng-model="template.schedule.create_at" data-style="line-input"></span>
+                            <label class="sd-line-input__label--required" translate>Scheduled at</label>
+                            <div class="terms-list">
+                            <ul>
+                                <li ng-repeat="time in cron_times" class="pull-left" ng-click="removeCronTime(time)">{{time}}<i class="icon-close-small"></i></li>
+                            </ul>
+                            </div>
+                            <div class="sd-line-input">
+                                <label class="sd-line-input__label" translate>New schedule</label>
+                                <span sd-timepicker ng-model="new_time.picked" data-style="line-input"></span>
+                                <button id="add_time" class="btn pull-right" ng-click="addCronTime()"
+                                translate>Add</button>
                             </div>
                             <div>
                                 <span sd-timezone data-timezone="template.schedule.time_zone" data-style="line-input"></span>
