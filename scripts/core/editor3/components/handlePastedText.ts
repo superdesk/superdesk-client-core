@@ -31,22 +31,28 @@ function pasteContentFromOpenEditor(
     }
 
     for (const key in window[EDITOR_GLOBAL_REFS]) {
-        if (html.includes(key)) {
-            const editor = window[EDITOR_GLOBAL_REFS][key];
-
-            if (editor) {
-                const internalClipboard = editor.getClipboard();
-
-                if (internalClipboard) {
-                    const blocksArray = [];
-
-                    internalClipboard.forEach((b) => blocksArray.push(b));
-                    const contentState = ContentState.createFromBlockArray(blocksArray);
-
-                    return insertContentInState(editorState, contentState, onChange, editorFormat);
-                }
-            }
+        if (html.includes(key) !== true) {
+            continue;
         }
+
+        const editor = window[EDITOR_GLOBAL_REFS][key];
+
+        if (!editor) {
+            continue;
+        }
+
+        const internalClipboard = editor.getClipboard();
+
+        if (!internalClipboard) {
+            continue;
+        }
+
+        const blocksArray = [];
+
+        internalClipboard.forEach((b) => blocksArray.push(b));
+        const contentState = ContentState.createFromBlockArray(blocksArray);
+
+        return insertContentInState(editorState, contentState, onChange, editorFormat);
     }
 
     return 'not-handled';

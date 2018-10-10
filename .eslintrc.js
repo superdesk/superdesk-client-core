@@ -9,11 +9,6 @@ module.exports = Object.assign({}, sharedConfigs, {
                 'no-unused-vars': 0,
                 'no-undef': 0,
                 'comma-dangle': 0,
-            },
-        },
-        {
-            files: ['scripts/superdesk-interfaces/*'],
-            rules: {
                 'camelcase': 0,
             },
         }
