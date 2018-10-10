@@ -21,7 +21,7 @@ angular.module('superdesk.apps.dashboard.widgets.relatedItem', [
             },
             isWidgetVisible: (item) => ['content', function(content) {
                 if (item.profile == null) {
-                    return Promise.resolve(false);
+                    return Promise.resolve(true);
                 }
 
                 return new Promise((resolve) => {
