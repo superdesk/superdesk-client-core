@@ -10,6 +10,6 @@
 angular.module('superdesk.core.datetime.reldate', []).directive('sdReldate', [function() {
     return {
         scope: {datetime: '='},
-        template: '<relative-date datetime="datetime"></relative-date>',
+        template: '<sd-relative-date datetime="datetime"></sd-relative-date>',
     };
 }]);

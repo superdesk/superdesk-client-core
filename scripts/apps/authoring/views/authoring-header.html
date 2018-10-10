@@ -31,7 +31,7 @@
             <span class="authoring-header__label" translate>SOURCE</span>
             <div class="authoring-header__value" id="item-source" >{{ item.source}}</div>
         </div>
-        <div ng-if="relatedItems != null && Array.isArray(relatedItems._items) && relatedItems._items.length > 0">
+        <div ng-if="relatedItems._items.length > 0">
             <span class="authoring-header__label" translate>RELATED</span>
             <a href="" class="authoring-header__value" ng-click="activateWidget()">{{relatedItems._items.length}}</a>
         </div>
@@ -40,7 +40,7 @@
             <div class="authoring-header__value">{{item.correction_sequence}}</div>
         </div>
         <div ng-if="missing_link || item.flags.marked_for_legal || item.flags.marked_for_sms || item.flags.marked_for_not_publication || item.rewritten_by">
-            <span class="state-label missing-link" ng-if="" translate>Missing Link</span>
+            <span class="state-label missing-link" ng-if="missing_link" translate>Missing Link</span>
             <span class="state-label legal" ng-if="item.flags.marked_for_legal" translate>Legal</span>
             <span class="state-label sms" ng-if="item.flags.marked_for_sms" translate>Sms</span>
             <span class="state-label not-for-publication" ng-if="item.flags.marked_for_not_publication" translate>Not For Publication</span>
@@ -48,10 +48,9 @@
         </div>
         <div ng-if="item.broadcast.master_id">
             <span
-                class="authoring-header__label"
+                class="authoring-header__label text-red"
                 ng-class="{'broadcast-status': item.broadcast.status !== ''}"
-                title="{{item.broadcast.status| translate}}"
-                style="color: #e51c23;">
+                title="{{item.broadcast.status| translate}}">
                 <span translate>MASTER</span><b style="font-size: 14px;" ng-if="item.broadcast.status"> !</b></span>
             <div>
                 <a id="preview-master" ng-click="previewMasterStory()" title="{{ :: 'Preview master story' | translate }}" ng-app=""class="open-item">

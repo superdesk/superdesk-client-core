@@ -111,6 +111,10 @@ ul.list-view.list-without-items {
     align-items: center;
 }
 
+.text-red {
+    color: #e51c23;
+}
+
 .sibling-spacer-4 {
     > * + * {
         margin-left: 4px;

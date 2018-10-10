@@ -25,4 +25,4 @@ export class RelativeDate extends React.Component<IProps> {
 }
 
 angular.module('superdesk.core.datetime.relativeDate', [])
-    .component('relativeDate', reactToAngular1(RelativeDate, ['datetime']));
+    .component('sdRelativeDate', reactToAngular1(RelativeDate, ['datetime']));
