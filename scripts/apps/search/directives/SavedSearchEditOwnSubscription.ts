@@ -34,10 +34,8 @@ export function SavedSearchEditOwnSubscription(asset, session, api) {
                 scope.currentlySelectedInterval = cronExpression;
             };
 
-            scope.savingEnabled = () => {
-                return scope.ownSubscription == null
+            scope.savingEnabled = () => scope.ownSubscription == null
                     || (scope.ownSubscription.scheduling !== scope.currentlySelectedInterval);
-            };
 
             scope.isAlreadySubscribed = () => scope.ownSubscription != null;
 
@@ -56,9 +54,9 @@ export function SavedSearchEditOwnSubscription(asset, session, api) {
                         }
                     })
                     : scope.savedSearch.subscribers.user_subscriptions.concat([{
-                            user: userId,
-                            scheduling: scope.currentlySelectedInterval,
-                        }]);
+                        user: userId,
+                        scheduling: scope.currentlySelectedInterval,
+                    }]);
 
                 const nextSubscribers: ISavedSearch['subscribers'] = {
                     ...scope.savedSearch.subscribers,

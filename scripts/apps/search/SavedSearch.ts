@@ -128,7 +128,6 @@ function mapFiltersClientToServer(search) {
 }
 
 export function saveOrUpdateSavedSearch(api, savedSearchOriginal: ISavedSearch, savedSearchChanged: ISavedSearch) {
-
     if (savedSearchChanged.filter != null && savedSearchChanged.filter.query != null) {
         savedSearchChanged.filter.query = mapFiltersClientToServer(savedSearchChanged.filter.query);
     }
