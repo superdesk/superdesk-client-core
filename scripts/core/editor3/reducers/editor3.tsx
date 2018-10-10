@@ -11,7 +11,7 @@ import {DELETE_SUGGESTION} from '../highlightsConfig';
 const editor3 = (state = {}, action) => {
     switch (action.type) {
     case 'EDITOR_CHANGE_STATE':
-        return onChange(state, action.payload.editorState, action.payload.force);
+        return onChange(state, action.payload.editorState, action.payload.force, false, action.payload.skipOnChange);
     case 'EDITOR_SET_LOCKED':
         return setLocked(state, action.payload);
     case 'EDITOR_SET_READONLY':
@@ -85,13 +85,13 @@ export const forceUpdate = (state, keepSelection = false) => {
  * @return {Object} returns new state
  * @description Handle the editor state has been changed event
  */
-export const onChange = (state, newState, force = false, keepSelection = false) => {
+export const onChange = (state, newState, force = false, keepSelection = false, skipOnChange = false) => {
     // TODO(x): Remove `force` once Draft v0.11.0 is in
     const editorState = newState;
 
     const contentChanged = state.editorState.getCurrentContent() !== newState.getCurrentContent();
 
-    if (contentChanged || force) {
+    if (!skipOnChange && (contentChanged || force)) {
         const plainText = isEditorPlainText(state);
 
         state.onChangeValue(editorState.getCurrentContent(), {plainText});

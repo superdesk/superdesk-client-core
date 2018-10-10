@@ -8,10 +8,10 @@ import {insertMedia} from './toolbar';
  * @return {String} action
  * @description Creates the change editor action
  */
-export function changeEditorState(editorState, force?) {
+export function changeEditorState(editorState, force = false, skipOnChange = false) {
     return {
         type: 'EDITOR_CHANGE_STATE',
-        payload: {editorState, force},
+        payload: {editorState, force, skipOnChange},
     };
 }
 
