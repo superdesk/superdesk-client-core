@@ -21,15 +21,17 @@ interface IState {
 
 function getReferences(api, translations: Array<IArticle>) {
     return new Promise<Array<IArticle>>((resolve) => {
-        const translated_from_ids = translations
+        const translatedFromIds = translations
             .map((translation) => translation.translated_from)
-            .filter((translated_from_id) => translated_from_id != null); // is null for original
+            .filter((translatedFromId) => translatedFromId != null); // is null for original
 
-        api('archive').query({
-            $or: translated_from_ids.map((id) => ({_id: id})),
-        }).then((response) => {
-            resolve(response._items);
-        });
+        api('archive')
+            .query({
+                $or: translatedFromIds.map((id) => ({_id: id})),
+            })
+            .then((response) => {
+                resolve(response._items);
+            });
     });
 }
 
@@ -48,7 +50,8 @@ class TranslationsWidgetComponent extends React.Component<IProps, IState> {
     componentDidMount() {
         const {api, item, TranslationService} = this.props;
 
-        TranslationService.getTranslations(item).then((response) => {
+        TranslationService.getTranslations(item)
+            .then((response) => {
                 const translations: Array<IArticle> = response._items;
 
                 getReferences(api, translations).then((references) => {
@@ -72,33 +75,32 @@ class TranslationsWidgetComponent extends React.Component<IProps, IState> {
         }
 
         const sortOriginalFirst = (a: IArticle) => a.translated_from == null ? -1 : 1;
-        const listClassNames = "sd-list-item__column sd-list-item__column--grow sd-list-item__column--no-border";
+        const listClassNames = 'sdc-list-item__column sd-list-item__column--grow sd-list-item__column--no-border';
 
         return (
             <div className="widget">
                 {
-                    translations.sort(sortOriginalFirst).map((translation: IArticle) => {
-                        return (
-                            <div
-                                key={translation._id}
-                                onClick={() => authoringWorkspace.popup(translation, 'edit')}
-                                className="sd-list-item sd-shadow--z1"
-                                style={{marginBottom: 6}}
-                            >
-                                <div className={listClassNames}>
-                                    <div className="sd-list-item__row">
-                                        <span className="label">{translation.language}</span>
-                                        <span className="sd-overflow-ellipsis sd-list-item--element-grow">
-                                            {translation.headline}
-                                        </span>
-                                        <span style={{whiteSpace: 'nowrap'}}>
-                                            <RelativeDate datetime={translation.versioncreated} />
-                                        </span>
-                                    </div>
-                                    <div className="sd-list-item__row">
-                                        <div className="sd-list-item--element-grow">
-                                            {
-                                                translation.translated_from == null
+                    translations.sort(sortOriginalFirst).map((translation: IArticle) => (
+                        <div
+                            key={translation._id}
+                            onClick={() => authoringWorkspace.popup(translation, 'edit')}
+                            className="sd-list-item sd-shadow--z1"
+                            style={{marginBottom: 6}}
+                        >
+                            <div className={listClassNames}>
+                                <div className="sd-list-item__row">
+                                    <span className="label">{translation.language}</span>
+                                    <span className="sd-overflow-ellipsis sd-list-item--element-grow">
+                                        {translation.headline}
+                                    </span>
+                                    <span style={{whiteSpace: 'nowrap'}}>
+                                        <RelativeDate datetime={translation.versioncreated} />
+                                    </span>
+                                </div>
+                                <div className="sd-list-item__row">
+                                    <div className="sd-list-item--element-grow">
+                                        {
+                                            translation.translated_from == null
                                                 ? (
                                                     <span className="label label--primary label--hollow">
                                                         {gettext('Original')}
@@ -112,22 +114,21 @@ class TranslationsWidgetComponent extends React.Component<IProps, IState> {
                                                         </span>
                                                     </div>
                                                 )
-                                            }
-                                        </div>
-                                        <div>
-                                            <State
-                                                $filter={$filter}
-                                                gettextCatalog={gettextCatalog}
-                                                datetime={datetime}
-                                                item={translation}
-                                                style={{marginRight: 0}}
-                                            />
-                                        </div>
+                                        }
+                                    </div>
+                                    <div>
+                                        <State
+                                            $filter={$filter}
+                                            gettextCatalog={gettextCatalog}
+                                            datetime={datetime}
+                                            item={translation}
+                                            style={{marginRight: 0}}
+                                        />
                                     </div>
                                 </div>
                             </div>
-                        );
-                    })
+                        </div>
+                    ))
                 }
             </div>
         );

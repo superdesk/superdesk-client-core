@@ -66,6 +66,9 @@ export function TranslationService(api, $rootScope, notify, authoringWorkspace, 
     };
 
     service.getTranslations = function(item) {
+        if (item.translation_id == null) {
+            return Promise.reject('translation_id is not present');
+        }
         return api('archive').query({where: {translation_id: item.translation_id}});
     };
 

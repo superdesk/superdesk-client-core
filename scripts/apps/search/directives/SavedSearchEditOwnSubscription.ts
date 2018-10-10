@@ -1,7 +1,7 @@
-import {ISavedSearch, updateSubscribers, unsubscribeUser, IUserSubscription} from "../SavedSearch";
-import {IDirectiveScope} from "types/Angular/DirectiveScope";
-import {CronTimeInterval} from "types/DataStructures/TimeInterval";
-import {IUser} from "superdesk-interfaces/User";
+import {ISavedSearch, updateSubscribers, unsubscribeUser, IUserSubscription} from '../SavedSearch';
+import {IDirectiveScope} from 'types/Angular/DirectiveScope';
+import {CronTimeInterval} from 'types/DataStructures/TimeInterval';
+import {IUser} from 'superdesk-interfaces/User';
 
 interface IScope extends IDirectiveScope<void> {
     savedSearch: ISavedSearch;
@@ -26,7 +26,6 @@ export function SavedSearchEditOwnSubscription(asset, session, api) {
         },
         templateUrl: asset.templateUrl('apps/search/views/saved-search-subscribe.html'),
         link: function(scope: IScope) {
-
             scope.closeModal = () => {
                 scope.cancelEditingSubscription();
             };

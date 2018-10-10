@@ -12,7 +12,22 @@ angular.module('superdesk.apps.authoring.translations', [
                 template: 'scripts/apps/authoring/translations/views/translations-widget.html',
                 order: 7,
                 side: 'right',
-                hideWhenTranslationsDisabled: true,
+                isWidgetVisible: (item) => ['TranslationService', function(TranslationService) {
+                    return new Promise((resolve) => {
+                        if (TranslationService.translationsEnabled() !== true) {
+                            resolve(false);
+                            return;
+                        }
+
+                        TranslationService.getTranslations(item)
+                            .then((result) => {
+                                resolve(result._items.length > 0);
+                            })
+                            .catch(() => {
+                                resolve(false);
+                            });
+                    });
+                }],
                 display: {
                     authoring: true,
                     packages: true,

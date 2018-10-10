@@ -694,7 +694,11 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
                 scope.activeTree = scope.tree[term ? term[scope.uniqueField] : null];
                 $event.stopPropagation();
                 _.defer(() => {
-                    elem.find('button:not([disabled]):not(.dropdown__toggle)')[0].focus();
+                    const el = elem.find('button:not([disabled]):not(.dropdown__toggle)');
+
+                    if (Array.isArray(el) && el.length > 0) {
+                        el[0].focus();
+                    }
                 });
                 scope.activeList = false;
             };

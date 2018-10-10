@@ -19,7 +19,17 @@ angular.module('superdesk.apps.dashboard.widgets.relatedItem', [
                 picture: false,
                 personal: false,
             },
-            requiredFields: ['slugline'],
+            isWidgetVisible: (item) => ['content', function(content) {
+                if (item.profile == null) {
+                    return Promise.resolve(false);
+                }
+
+                return new Promise((resolve) => {
+                    content.getType(item.profile).then((type) => {
+                        resolve(type.schema.hasOwnProperty('slugline'));
+                    });
+                });
+            }],
             configurationTemplate: 'scripts/apps/archive/related-item-widget/relatedItem-configuration.html',
             configurable: false,
             needEditable: true,

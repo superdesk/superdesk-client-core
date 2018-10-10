@@ -26,7 +26,6 @@ function pasteContentFromOpenEditor(
     editorKey: string,
     onChange: (e: EditorState) => void,
     editorFormat: Array<string>): DraftHandleValue {
-
         if (html.includes(editorKey)) { // comes from the same editor
             return 'not-handled';
         }
