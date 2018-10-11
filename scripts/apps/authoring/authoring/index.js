@@ -18,7 +18,6 @@ angular.module('superdesk.apps.authoring.autosave', []).service('autosave', svc.
  * @description Superdesk authoring application module.
  */
 angular.module('superdesk.apps.authoring', [
-    'superdesk.core.services.logger',
     'superdesk.core.menu',
     'superdesk.core.activity',
     'superdesk.apps.authoring.widgets',

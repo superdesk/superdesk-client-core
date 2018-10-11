@@ -21,8 +21,7 @@ class Annotation extends React.Component<any, any> {
         const {name: type} = annotationTypes.find((t) => t.qcode === annotationType);
         const relativeDateString = moment(date).calendar();
         const absoluteDateString = moment(date).format('MMMM Do YYYY, h:mm:ss a');
-        const logger = ng.get('logger');
-        const html = toHTML(convertFromRaw(JSON.parse(msg)), logger);
+        const html = toHTML(convertFromRaw(JSON.parse(msg)));
         const modal = ng.get('modal');
 
         const onEdit = () => _showPopup(PopupTypes.Annotation, {annotation, highlightId});

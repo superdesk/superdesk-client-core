@@ -18,7 +18,6 @@ import './workflowService';
 import './asset';
 import './image-factory';
 import './pageTitle';
-import './logger';
 
 import {ServerConfigService} from './serverConfig';
 
@@ -32,6 +31,5 @@ angular.module('superdesk.core.services', [
     'superdesk.core.services.permissions',
     'superdesk.core.services.storage',
     'superdesk.core.services.pageTitle',
-    'superdesk.core.services.logger',
 ])
     .service('serverConfig', ServerConfigService);
