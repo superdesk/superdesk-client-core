@@ -6,13 +6,13 @@ import {
     IUserSubscription,
     IDeskSubscription,
     isUserSubscribedToSavedSearch,
-} from "../SavedSearch";
-import {IDirectiveScope} from "types/Angular/DirectiveScope";
-import {IUser} from "superdesk-interfaces/User";
-import {CronTimeInterval} from "types/DataStructures/TimeInterval";
-import {IDesk} from "superdesk-interfaces/Desk";
-import {IDesksService} from "types/Services/Desks";
-import {nameof} from "core/helpers/typescript-helpers";
+} from '../SavedSearch';
+import {IDirectiveScope} from 'types/Angular/DirectiveScope';
+import {IUser} from 'superdesk-interfaces/User';
+import {CronTimeInterval} from 'types/DataStructures/TimeInterval';
+import {IDesk} from 'superdesk-interfaces/Desk';
+import {IDesksService} from 'types/Services/Desks';
+import {nameof} from 'core/helpers/typescript-helpers';
 
 interface IModel {
     userSubscribers: Array<IUser>;
@@ -63,7 +63,6 @@ export function SavedSearchManageSubscribers(asset, userList, api, modal, gettex
         },
         templateUrl: asset.templateUrl('apps/search/views/saved-search-manage-subscribers.html'),
         link: function(scope: IScope) {
-
             const getDefaults = (): IModel => ({
                 userSubscribers: [],
                 subscriptionInCreateOrEditMode: null,
@@ -100,11 +99,11 @@ export function SavedSearchManageSubscribers(asset, userList, api, modal, gettex
                     return count;
                 }
 
-                if (scope.savedSearch.subscribers.user_subscriptions != null ) {
+                if (scope.savedSearch.subscribers.user_subscriptions != null) {
                     count += scope.savedSearch.subscribers.user_subscriptions.length;
                 }
 
-                if (scope.savedSearch.subscribers.desk_subscriptions != null ) {
+                if (scope.savedSearch.subscribers.desk_subscriptions != null) {
                     count += scope.savedSearch.subscribers.desk_subscriptions.length;
                 }
 
@@ -269,13 +268,13 @@ export function SavedSearchManageSubscribers(asset, userList, api, modal, gettex
                     } else {
                         scope.wrapper = getDefaults();
                     }
-            });
+                });
 
             scope.$watch(
                 nameof<IScope>('wrapper')
                 + '.'
                 + nameof<IModel>('modalOpen'),
-                function() {
+                () => {
                     // when modal is closed via ESC key, stop managing subscription so it can be started again.
                     if (!scope.wrapper.modalOpen) {
                         scope.manageSubscriptions(false);
