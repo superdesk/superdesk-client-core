@@ -5,4 +5,4 @@
  * @packageName superdesk.core
  * @description Spellchecker.
  */
-import './spellcheck.js';
+import './spellcheck';
