@@ -85,12 +85,11 @@
 
     <div class="slide-pane__footer" sd-loading="loading" ng-show="currentUserAction === vm.userActions.send_to">
         <ul class="btn-list">
-            <li class="full-width" ng-if="showSendButtonAndDestination() && !canSendItem()">
+            <li class="full-width" ng-if="showSendButtonAndDestination() && mode !== 'spike'">
                 <button class="btn btn--large btn--primary btn--hollow btn--expanded"
                         ng-click="send(true)"
-                        ng-disabled="disableFetchAndOpenButton()"
-                        translate>
-                    fetch and open
+                        ng-disabled="disableFetchAndOpenButton()">
+                    {{!canSendItem() ? 'fetch and open' : 'send and open' | translate}}
                 </button>
             </li>
             <li class="full-width" ng-if="showSendButtonAndDestination()">

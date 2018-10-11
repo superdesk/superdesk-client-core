@@ -138,6 +138,9 @@ export function SendService(desks, api, $q, notify, $injector, multi, $rootScope
             return api.save('move', {}, {task: data, allPackageItems: config.sendAllPackageItems}, item)
                 .then((item) => {
                     $rootScope.$broadcast('item:update', {item: item});
+                    if (config.open) {
+                        $injector.get('authoringWorkspace').edit(item);
+                    }
                     return item;
                 });
         }
