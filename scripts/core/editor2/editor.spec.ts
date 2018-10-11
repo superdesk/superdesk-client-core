@@ -1,5 +1,4 @@
 
-
 describe('text editor', () => {
     beforeEach(window.module(($provide) => {
         $provide.constant('config', {server: {url: undefined}, iframely: {key: '123'}});

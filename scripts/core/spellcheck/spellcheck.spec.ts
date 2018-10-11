@@ -1,5 +1,4 @@
 
-
 describe('spellcheck', () => {
     var DICT = {
             what: 1,
@@ -289,7 +288,7 @@ describe('spellcheck', () => {
                 spyOn(editor, 'render');
                 ctrl.runSpellchecker();
                 expect(editor.render).toHaveBeenCalled();
-            })
+            }),
         );
     });
 });

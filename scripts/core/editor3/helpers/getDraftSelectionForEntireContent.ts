@@ -2,7 +2,6 @@ import {
     SelectionState,
 } from 'draft-js';
 
-
 export function getDraftSelectionForEntireContent(editorState) {
     const contentState = editorState.getCurrentContent();
 

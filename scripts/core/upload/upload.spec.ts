@@ -1,5 +1,4 @@
 
-
 describe('upload module', () => {
     beforeEach(window.module('superdesk.core.upload'));
 

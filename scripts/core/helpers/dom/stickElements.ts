@@ -5,7 +5,6 @@ export function stickElements(target, source, preferredPosition) {
 
     const {clientWidth, clientHeight} = document.body;
 
-
     // position horizontally
 
     const placeOnTheLeft = () => {
@@ -29,7 +28,6 @@ export function stickElements(target, source, preferredPosition) {
     } else {
         placeOnTheRight();
     }
-
 
     // position vertically
 

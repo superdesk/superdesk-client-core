@@ -16,4 +16,3 @@ export function ActivityStream(asset, authoringWorkspace) {
         },
     };
 }
-

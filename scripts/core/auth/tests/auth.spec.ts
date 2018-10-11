@@ -1,5 +1,4 @@
 
-
 describe('auth', () => {
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.core.activity'));

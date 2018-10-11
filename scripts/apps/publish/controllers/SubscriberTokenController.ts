@@ -1,4 +1,4 @@
-let moment = require('moment');
+const moment = require('moment');
 
 /**
  * @ngdoc controller
@@ -9,11 +9,11 @@ let moment = require('moment');
  * @description SubscriberTokenController manages subsriber tokens for Content API.
  */
 export function SubscriberTokenController($scope, api) {
-    let subscriber = $scope.subscriber;
+    const subscriber = $scope.subscriber;
 
     this.tokens = [];
 
-    let fetchTokens = () => {
+    const fetchTokens = () => {
         if (subscriber._id) {
             api.query('subscriber_token', {where: {subscriber: subscriber._id}})
                 .then((response) => {
@@ -22,7 +22,7 @@ export function SubscriberTokenController($scope, api) {
         }
     };
 
-    let expiry = (ttl) => moment().utc()
+    const expiry = (ttl) => moment().utc()
         .add(parseInt(ttl, 10), 'days')
         .format();
 

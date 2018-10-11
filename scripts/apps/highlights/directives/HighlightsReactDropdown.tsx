@@ -38,7 +38,7 @@ export function HighlightsReactDropdown(item, className, highlightsService, desk
                         item={item}
                         highlight={h}
                         service={highlightsService} />
-                </li>
+                </li>,
             ) : noHighlights}
         </ul>
     );

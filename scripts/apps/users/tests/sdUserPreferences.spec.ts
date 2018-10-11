@@ -1,5 +1,4 @@
 
-
 describe('sdUserPreferences directive', () => {
     var fetchedPreferences,
         scope,
@@ -17,7 +16,7 @@ describe('sdUserPreferences directive', () => {
     beforeEach(window.module('superdesk.apps.searchProviders'));
 
     beforeEach(inject((
-        $rootScope, $compile, $q, metadata, preferencesService, session, userList, desks
+        $rootScope, $compile, $q, metadata, preferencesService, session, userList, desks,
     ) => {
         var html = '<div sd-user-preferences data-user="user"></div>';
 
@@ -75,7 +74,7 @@ describe('sdUserPreferences directive', () => {
             [
                 {name: 'Domestic Sport', qcode: 't', selected: false},
                 {name: 'Politics', qcode: 'p', selected: false},
-            ]
+            ],
         )).toBe(true);
     });
 
@@ -83,7 +82,7 @@ describe('sdUserPreferences directive', () => {
         () => {
             scope.$digest();
             expect(scope.defaultCategories).toEqual({x: true, y: true});
-        }
+        },
     );
 
     describe('scope\'s save() method', () => {
@@ -161,9 +160,9 @@ describe('sdUserPreferences directive', () => {
 
             arg = callArgs['categories:preferred'] || {};
             expect(arg.selected).toEqual(
-                {a: false, b: true, c: false, d: true}
+                {a: false, b: true, c: false, d: true},
             );
-        }
+        },
         ));
 
         it('does not save with default preferred categories if the user ' +
@@ -184,7 +183,7 @@ describe('sdUserPreferences directive', () => {
             // modal should have been displayed
             expect(modal.confirm).toHaveBeenCalled();
             expect(preferencesService.update).not.toHaveBeenCalled();
-        }
+        },
         ));
     });
 

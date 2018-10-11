@@ -29,7 +29,7 @@ describe('content expiry', () => {
     }
 
     it('expiry from system', inject(($rootScope, $compile) => {
-        let scope = setupElement('System', 0);
+        const scope = setupElement('System', 0);
 
         scope.contentExpiry.expire = false;
 
@@ -47,7 +47,7 @@ describe('content expiry', () => {
     }));
 
     it('expiry already set', inject(($rootScope, $compile) => {
-        let scope = setupElement('System', 4320);
+        const scope = setupElement('System', 4320);
 
         $rootScope.$digest();
         expect(scope.contentExpiry.actualExpiry).toBe(null);
@@ -57,7 +57,7 @@ describe('content expiry', () => {
     }));
 
     it('expiry not set', inject(($rootScope, $compile) => {
-        let scope = setupElement('', 0);
+        const scope = setupElement('', 0);
 
         scope.expiryMinutes = 0;
         scope.contentExpiry.expire = false;

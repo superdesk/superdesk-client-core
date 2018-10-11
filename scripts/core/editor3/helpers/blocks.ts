@@ -22,7 +22,7 @@ export const removeBlock = (editorState, blockKey) => {
     let newContentState = Modifier.setBlockType(
         contentState,
         targetRange,
-        'unstyled'
+        'unstyled',
     );
 
     newContentState = Modifier.removeRange(newContentState, targetRange, 'backward');

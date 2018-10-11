@@ -54,7 +54,7 @@ export function ContentProfileSchemaEditor(content, config) {
 
                     _.each(_.difference(Object.keys(scope.model.editor), scope.schemaKeys), (value) =>
                         scope.schemaKeysDisabled.push(
-                            {key: value, name: scope.model.editor[value].field_name || scope.label(value)}
+                            {key: value, name: scope.model.editor[value].field_name || scope.label(value)},
                         ));
 
                     scope.schemaKeysOrdering = _.clone(scope.schemaKeys);

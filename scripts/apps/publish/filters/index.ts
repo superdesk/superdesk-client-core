@@ -20,7 +20,7 @@ export function SubscribersFilter() {
         let filteredItems = items;
 
         if (search.name && search.name !== '') {
-            let regExp = new RegExp(search.name, 'i');
+            const regExp = new RegExp(search.name, 'i');
 
             filteredItems = filteredItems.filter((item) => item.name.match(regExp));
         }

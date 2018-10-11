@@ -1,5 +1,4 @@
 
-
 describe('authoring widgets', () => {
     beforeEach(window.module('superdesk.templates-cache'));
 

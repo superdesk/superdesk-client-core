@@ -16,7 +16,7 @@ export function Monitoring(superdesk, workspaceMenuProvider) {
             label: gettext('Monitoring'),
             shortcut: 'alt+m',
             order: 200,
-        }
+        },
     );
 }
 

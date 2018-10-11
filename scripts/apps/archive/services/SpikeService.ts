@@ -109,7 +109,7 @@ export function SpikeService($location, api, notify, gettext, send, $q, authorin
      * @param {Object} item
      */
     function closeAuthoring(item) {
-        let authoringItem = authoringWorkspace.getItem();
+        const authoringItem = authoringWorkspace.getItem();
         let closeWorkSpace;
 
         if (authoringItem && authoringItem._id === item._id) {

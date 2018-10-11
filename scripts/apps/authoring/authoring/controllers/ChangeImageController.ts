@@ -20,7 +20,7 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
     $scope.data = $scope.locals.data;
     $scope.data.cropData = {};
     $scope.validator = deployConfig.getSync('validator_media_metadata');
-    let sizes = {};
+    const sizes = {};
 
     const DEFAULT_CONTROLS = {
         brightness: 1,
@@ -50,7 +50,7 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
     $scope.hideTabs = $scope.data.hideTabs || [];
 
     $scope.data.renditions.forEach((rendition) => {
-        let original = $scope.data.item.renditions.original;
+        const original = $scope.data.item.renditions.original;
         // only extend the item renditions if the original image can fit the rendition dimensions
         // otherwise we will get an error saving
 
@@ -96,8 +96,8 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
     $scope.done = function() {
         /* Throw an exception if PoI is outisde of a crop */
         function poiIsInsideEachCrop() {
-            let originalImage = $scope.data.metadata.renditions.original;
-            let originalPoi = {x: originalImage.width * $scope.data.poi.x, y: originalImage.height * $scope.data.poi.y};
+            const originalImage = $scope.data.metadata.renditions.original;
+            const originalPoi = {x: originalImage.width * $scope.data.poi.x, y: originalImage.height * $scope.data.poi.y};
 
             _.forEach($scope.data.cropData, (cropData, cropName) => {
                 if (originalPoi.y < cropData.CropTop ||
@@ -111,8 +111,8 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
         /* Throw an exception if a required metadata field is missing */
         function validateMediaFields() {
             _.each(Object.keys($scope.validator), (key) => {
-                let value = $scope.data.metadata[key];
-                let regex = new RegExp('^\<*br\/*\>*$', 'i');
+                const value = $scope.data.metadata[key];
+                const regex = new RegExp('^\<*br\/*\>*$', 'i');
 
                 if ($scope.validator[key].required && (!value || value.match(regex))) {
                     throw gettext('Required field(s) missing');
@@ -156,7 +156,7 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
             modal.confirm(gettext('You have unsaved changes, do you want to continue?'))
                 .then(() => {
                 // Ok = continue w/o saving
-                    let promise = $scope.reject();
+                    const promise = $scope.reject();
 
                     return promise;
                 });
@@ -198,7 +198,7 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
 
     function isAreaOfInterestChanged() {
         if ($scope.areaOfInterestData && angular.isDefined($scope.areaOfInterestData.CropLeft)) {
-            let {width, height} = $scope.data.item.renditions.original;
+            const {width, height} = $scope.data.item.renditions.original;
 
             return width !== $scope.areaOfInterestData.CropRight - $scope.areaOfInterestData.CropLeft ||
                     height !== $scope.areaOfInterestData.CropBottom - $scope.areaOfInterestData.CropTop;
@@ -218,7 +218,7 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
     * @description Based on the new Area of Interest save the original image and crops.
     */
     $scope.saveAreaOfInterest = function(croppingData) {
-        let [width, height] = [
+        const [width, height] = [
             croppingData.CropRight - croppingData.CropLeft,
             croppingData.CropBottom - croppingData.CropTop,
         ];
@@ -253,7 +253,7 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
                     $rootScope.$broadcast('poiUpdate', $scope.data.poi);
                 });
             }, (response) =>
-                $q.reject(response)
+                $q.reject(response),
             )
             .then(() => {
                 $scope.showAreaOfInterestView(false);

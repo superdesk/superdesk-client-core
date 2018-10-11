@@ -1,5 +1,4 @@
 
-
 describe('superdesk filters', () => {
     beforeEach(window.module('superdesk.core.datetime'));
     beforeEach(window.module('superdesk.core.filters'));

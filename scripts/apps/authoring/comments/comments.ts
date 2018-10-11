@@ -99,7 +99,7 @@ function CommentTextDirective($compile) {
 
                 if (scope.comment.mentioned_users && scope.comment.mentioned_users[username]) {
                     html = html.replace(token,
-                        '<i sd-user-info data-user="' + scope.comment.mentioned_users[username] + '">' + token + '</i>'
+                        '<i sd-user-info data-user="' + scope.comment.mentioned_users[username] + '">' + token + '</i>',
                     );
                 }
             });

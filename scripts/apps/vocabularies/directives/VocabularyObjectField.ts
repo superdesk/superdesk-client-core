@@ -23,7 +23,7 @@ export function VocabularyObjectField() {
      * @return {Boolean}
      */
     function validateJson(modelValue, viewValue) {
-        let value = modelValue || viewValue;
+        const value = modelValue || viewValue;
 
         try {
             angular.fromJson(value);

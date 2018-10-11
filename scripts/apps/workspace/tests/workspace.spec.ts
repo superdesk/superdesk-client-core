@@ -1,5 +1,4 @@
 
-
 describe('workspace', () => {
     var DESK = 1;
 
@@ -78,7 +77,7 @@ describe('workspace', () => {
 
                 expect(preferencesService.update).toHaveBeenCalledWith(
                     {'workspace:active': {workspace: 'foo'}},
-                    'workspace:active'
+                    'workspace:active',
                 );
             }));
 

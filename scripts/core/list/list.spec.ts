@@ -1,5 +1,4 @@
 
-
 describe('superdesk.core.list module', () => {
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.core.list'));

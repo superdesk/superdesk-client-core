@@ -93,7 +93,7 @@ describe('sdIngestRoutingFilter directive', () => {
                 scope = $element.isolateScope();
 
                 expect(scope.selectedFilter).toBe(null);
-            }
+            },
         );
     });
 
@@ -118,7 +118,7 @@ describe('sdIngestRoutingFilter directive', () => {
             matchIds = _.map(scope.matchingFilters, 'id').sort();
             expectedIds = [2, 5].sort();
             expect(matchIds).toEqual(expectedIds);
-        }
+        },
         );
     });
 
@@ -135,7 +135,7 @@ describe('sdIngestRoutingFilter directive', () => {
                 scope.selectedFilter = null;
                 scope.selectFilter(contentFilter);
                 expect(scope.selectedFilter).toEqual(contentFilter);
-            }
+            },
         );
 
         it('sets the routing rule\'s filter to the given filter', () => {
@@ -149,7 +149,7 @@ describe('sdIngestRoutingFilter directive', () => {
                 scope.rule.filterName = null;
                 scope.selectFilter(contentFilter);
                 expect(scope.rule.filterName).toEqual('My Filter');
-            }
+            },
         );
 
         it('clears the filter search term', () => {

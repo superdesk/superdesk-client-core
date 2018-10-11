@@ -1,5 +1,4 @@
 
-
 describe('MetadataWidgetCtrl controller', () => {
     var metadata, // the metadata service
         metaInit, // deferred initialization of the metadata service
@@ -30,7 +29,7 @@ describe('MetadataWidgetCtrl controller', () => {
     }));
 
     beforeEach(inject((
-        $rootScope, $controller, $q, _metadata_, preferencesService
+        $rootScope, $controller, $q, _metadata_, preferencesService,
     ) => {
         metadata = _metadata_;
 
@@ -76,7 +75,7 @@ describe('MetadataWidgetCtrl controller', () => {
         scope.$digest();
 
         expect(scope.availableCategories).toEqual(
-            [{qcode: 'a'}, {qcode: 'c'}]
+            [{qcode: 'a'}, {qcode: 'c'}],
         );
     });
 

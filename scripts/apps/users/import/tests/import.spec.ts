@@ -1,5 +1,4 @@
 
-
 describe('user import', () => {
     beforeEach(window.module('superdesk.apps.users.import'));
     beforeEach(window.module('superdesk.mocks'));

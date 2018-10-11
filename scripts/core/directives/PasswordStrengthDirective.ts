@@ -63,7 +63,7 @@ function PasswordStrength(gettext, $interpolate) {
                 '<div class="password-strength">' +
                     gettext('Strength') + ': <span class="label"></span>' +
                     '<div class="icon-question-sign"></div>' +
-                '</div>'
+                '</div>',
             );
 
             indicator.find('.icon-question-sign').tooltip({

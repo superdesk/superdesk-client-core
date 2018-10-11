@@ -4,7 +4,7 @@ export function ThemeSelectDirective(authThemes) {
         templateUrl: 'scripts/apps/authoring/views/theme-select.html',
         scope: {key: '@'},
         link: function themeSelectLink(scope, elem) {
-            let DEFAULT_CLASS = 'main-article theme-container';
+            const DEFAULT_CLASS = 'main-article theme-container';
 
             scope.themes = authThemes.availableThemes;
 

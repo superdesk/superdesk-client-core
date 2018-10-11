@@ -42,7 +42,7 @@ export function ItemAssociationDirective(renditions) {
         link: function(scope, elem, attr, ctrl) {
             const dragOverClass = 'dragover';
 
-            let MEDIA_TYPES = [];
+            const MEDIA_TYPES = [];
 
             if (scope.allowPicture) {
                 MEDIA_TYPES.push('application/superdesk.item.picture');

@@ -7,7 +7,7 @@ function AuthExpiredInterceptor(session, $q, $injector, $browser, config, _) {
         $browser.$$completeOutstandingRequest(angular.noop);
         session.expire();
         return session.getIdentity().then(() => {
-            let $http = $injector.get('$http');
+            const $http = $injector.get('$http');
 
             $browser.$$incOutstandingRequestCount();
             $http.defaults.headers.common.Authorization = session.token;

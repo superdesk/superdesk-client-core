@@ -6,6 +6,6 @@ export const getSelectedBlocks = (editorState) => {
     return getBlockKeys(
         editorState.getCurrentContent(),
         selectionState.getStartKey(),
-        selectionState.getEndKey()
+        selectionState.getEndKey(),
     );
 };

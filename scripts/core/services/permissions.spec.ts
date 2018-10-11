@@ -1,5 +1,4 @@
 
-
 describe('PermissionsService', () => {
     beforeEach(window.module('superdesk.core.services.entity'));
     beforeEach(window.module('superdesk.core.services.server'));

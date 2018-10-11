@@ -33,7 +33,7 @@ export function VocabularyService(api, $q, $filter, $rootScope) {
                 (result) => {
                     self.AllActiveVocabularies = result;
                     return self.AllActiveVocabularies;
-                }
+                },
             );
         }
 
@@ -54,7 +54,7 @@ export function VocabularyService(api, $q, $filter, $rootScope) {
                     result._items = $filter('sortByName')(result._items, 'display_name');
                     self.vocabularies = result;
                     return self.vocabularies;
-                }
+                },
             );
         }
 

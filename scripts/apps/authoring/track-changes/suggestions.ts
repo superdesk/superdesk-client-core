@@ -54,7 +54,7 @@ function SuggestionsCtrl($scope, userList, content) {
                     fieldName: getLabelForFieldId(getFieldId(obj.contentKey)),
                     suggestions: getCustomDataFromEditorRawState(
                         obj[fieldsMetaKeys.draftjsState],
-                        editor3DataKeys.RESOLVED_SUGGESTIONS_HISTORY
+                        editor3DataKeys.RESOLVED_SUGGESTIONS_HISTORY,
                     ) || [],
                 }
             ))

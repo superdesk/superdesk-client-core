@@ -89,7 +89,7 @@ describe('sdIngestRoutingContent directive', () => {
 
             scopeRule = scope.rule || {};
             expect(scopeRule.filterName).toEqual('filter two');
-        }
+        },
         );
     });
 });

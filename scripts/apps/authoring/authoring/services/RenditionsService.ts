@@ -62,7 +62,7 @@ export function RenditionsService(metadata, $q, api, superdesk, _) {
      *  @return {promise} returns the modified picture item
      */
     this.crop = function(item, options) {
-        let clonedItem = _.extend({}, item);
+        const clonedItem = _.extend({}, item);
 
         clonedItem.renditions = _.cloneDeep(clonedItem.renditions);
 
@@ -94,16 +94,16 @@ export function RenditionsService(metadata, $q, api, superdesk, _) {
                 ...cropOptions,
             })
                 .then((result) => {
-                    let renditionNames = [];
-                    let savingImagePromises = [];
+                    const renditionNames = [];
+                    const savingImagePromises = [];
 
                     // applying metadata changes
                     angular.forEach(result.cropData, (croppingData, renditionName) => {
                     // if there a change in the crop co-ordinates
                         const keys = ['CropLeft', 'CropTop', 'CropBottom', 'CropRight'];
 
-                        let canAdd = !keys.every((key) => {
-                            let sameCoords = angular.isDefined(item.renditions[renditionName]) &&
+                        const canAdd = !keys.every((key) => {
+                            const sameCoords = angular.isDefined(item.renditions[renditionName]) &&
                             item.renditions[renditionName][key] === croppingData[key];
 
                             return sameCoords;
@@ -118,7 +118,7 @@ export function RenditionsService(metadata, $q, api, superdesk, _) {
                     renditionNames.forEach((renditionName) => {
                         if (item.renditions[renditionName] !== result.cropData[renditionName]) {
                             savingImagePromises.push(
-                                api.save('picture_crop', {item: clonedItem, crop: result.cropData[renditionName]})
+                                api.save('picture_crop', {item: clonedItem, crop: result.cropData[renditionName]}),
                             );
                         }
                     });
@@ -128,7 +128,7 @@ export function RenditionsService(metadata, $q, api, superdesk, _) {
                         .then((croppedImages) => {
                             // save created images in "association" property
                             croppedImages.forEach((image, index) => {
-                                let url = image.href;
+                                const url = image.href;
 
                                 // update association renditions
                                 result.metadata.renditions[renditionNames[index]] = angular.extend(
@@ -139,7 +139,7 @@ export function RenditionsService(metadata, $q, api, superdesk, _) {
                                         height: image.height,
                                         media: image._id,
                                         mimetype: image.item.mimetype,
-                                    }
+                                    },
                                 );
                             });
 

@@ -1,5 +1,4 @@
 
-
 describe('workqueue', () => {
     var USER_ID = 'u1';
 
@@ -43,7 +42,6 @@ describe('workqueue', () => {
         });
 
         $rootScope.$apply();
-
 
         expect(items.length).toBe(1);
         expect(items).toBe(workqueue.items);

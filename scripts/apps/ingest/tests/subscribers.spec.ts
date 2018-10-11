@@ -1,5 +1,4 @@
 
-
 describe('subscribers service', () => {
     beforeEach(window.module('superdesk.core.filters'));
     beforeEach(window.module('superdesk.apps.publish'));

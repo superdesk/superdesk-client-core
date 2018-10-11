@@ -78,7 +78,7 @@ describe('sdDeskeditStages directive', () => {
     });
 
     it('fetches macros when creating a new desk', () => {
-        let $element = compileDirective({desk: {}});
+        const $element = compileDirective({desk: {}});
 
         scope = $element.scope();
         scope.$digest();

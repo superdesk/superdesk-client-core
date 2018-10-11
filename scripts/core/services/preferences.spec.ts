@@ -1,5 +1,4 @@
 
-
 describe('Preferences Service', () => {
     beforeEach(window.module('superdesk.core.preferences'));
     beforeEach(window.module('superdesk.core.api'));

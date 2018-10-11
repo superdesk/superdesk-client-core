@@ -27,7 +27,7 @@ describe('Multi Action Bar', () => {
         inject(($controller, $rootScope, privileges, multi, modal, $q, spike) => {
             privileges.privileges = {planning: 1};
 
-            let itemlist = [
+            const itemlist = [
                 {
                     _id: 'foo1',
                     _type: 'archive',
@@ -48,7 +48,7 @@ describe('Multi Action Bar', () => {
             spyOn(modal, 'confirm').and.returnValue($q.when({}));
             spyOn(spike, 'spikeMultiple').and.returnValue($q.when({}));
 
-            let ctrl = $controller(MultiActionBarController, {});
+            const ctrl = $controller(MultiActionBarController, {});
 
             ctrl.spikeItems();
             $rootScope.$digest();
@@ -63,7 +63,7 @@ describe('Multi Action Bar', () => {
 
     it('spike does prompt if planning component not activated',
         inject(($controller, $rootScope, privileges, multi, modal, $q, spike) => {
-            let itemlist = [
+            const itemlist = [
                 {
                     _id: 'foo1',
                     _type: 'archive',
@@ -83,7 +83,7 @@ describe('Multi Action Bar', () => {
             spyOn(modal, 'confirm').and.returnValue($q.when({}));
             spyOn(spike, 'spikeMultiple').and.returnValue($q.when({}));
 
-            let ctrl = $controller(MultiActionBarController, {});
+            const ctrl = $controller(MultiActionBarController, {});
 
             ctrl.spikeItems();
             $rootScope.$digest();
@@ -98,7 +98,7 @@ describe('Multi Action Bar', () => {
     it('spike does not prompt if confirm_spike is to false',
         inject(($controller, $rootScope, privileges, multi, modal, $q, spike, config) => {
             config.confirm_spike = false;
-            let itemlist = [
+            const itemlist = [
                 {
                     _id: 'foo1',
                     _type: 'archive',
@@ -118,7 +118,7 @@ describe('Multi Action Bar', () => {
             spyOn(modal, 'confirm').and.returnValue($q.when({}));
             spyOn(spike, 'spikeMultiple').and.returnValue($q.when({}));
 
-            let ctrl = $controller(MultiActionBarController, {});
+            const ctrl = $controller(MultiActionBarController, {});
 
             ctrl.spikeItems();
             $rootScope.$digest();
@@ -135,7 +135,7 @@ describe('Multi Action Bar', () => {
             config.confirm_spike = false;
             privileges.privileges = {planning: 1};
 
-            let itemlist = [
+            const itemlist = [
                 {
                     _id: 'foo1',
                     _type: 'archive',
@@ -156,7 +156,7 @@ describe('Multi Action Bar', () => {
             spyOn(modal, 'confirm').and.returnValue($q.when({}));
             spyOn(spike, 'spikeMultiple').and.returnValue($q.when({}));
 
-            let ctrl = $controller(MultiActionBarController, {});
+            const ctrl = $controller(MultiActionBarController, {});
 
             ctrl.spikeItems();
             $rootScope.$digest();

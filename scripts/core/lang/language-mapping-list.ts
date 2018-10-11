@@ -3,731 +3,731 @@
 export default {
     ach: {
         nativeName: 'Lwo',
-        englishName: 'Acholi'
+        englishName: 'Acholi',
     },
     ady: {
         nativeName: 'Адыгэбзэ',
-        englishName: 'Adyghe'
+        englishName: 'Adyghe',
     },
     af: {
         nativeName: 'Afrikaans',
-        englishName: 'Afrikaans'
+        englishName: 'Afrikaans',
     },
     'af-NA': {
         nativeName: 'Afrikaans (Namibia)',
-        englishName: 'Afrikaans (Namibia)'
+        englishName: 'Afrikaans (Namibia)',
     },
     'af-ZA': {
         nativeName: 'Afrikaans (South Africa)',
-        englishName: 'Afrikaans (South Africa)'
+        englishName: 'Afrikaans (South Africa)',
     },
     ak: {
         nativeName: 'Tɕɥi',
-        englishName: 'Akan'
+        englishName: 'Akan',
     },
     ar: {
         nativeName: 'العربية',
-        englishName: 'Arabic'
+        englishName: 'Arabic',
     },
     'ar-AR': {
         nativeName: 'العربية',
-        englishName: 'Arabic'
+        englishName: 'Arabic',
     },
     'ay-BO': {
         nativeName: 'Aymar aru',
-        englishName: 'Aymara'
+        englishName: 'Aymara',
     },
     'az-AZ': {
         nativeName: 'Azərbaycan dili',
-        englishName: 'Azerbaijani'
+        englishName: 'Azerbaijani',
     },
     'be-BY': {
         nativeName: 'Беларуская',
-        englishName: 'Belarusian'
+        englishName: 'Belarusian',
     },
     'bg-BG': {
         nativeName: 'Български',
-        englishName: 'Bulgarian'
+        englishName: 'Bulgarian',
     },
     bn: {
         nativeName: 'বাংলা',
-        englishName: 'Bengali'
+        englishName: 'Bengali',
     },
     'bn-IN': {
         nativeName: 'বাংলা (ভারত)',
-        englishName: 'Bengali (India)'
+        englishName: 'Bengali (India)',
     },
     'bn-BD': {
         nativeName: 'বাংলা(বাংলাদেশ)',
-        englishName: 'Bengali (Bangladesh)'
+        englishName: 'Bengali (Bangladesh)',
     },
     'bs-BA': {
         nativeName: 'Bosanski',
-        englishName: 'Bosnian'
+        englishName: 'Bosnian',
     },
     ca: {
         nativeName: 'Català',
-        englishName: 'Catalan'
+        englishName: 'Catalan',
     },
     'ca-ES': {
         nativeName: 'Català',
-        englishName: 'Catalan'
+        englishName: 'Catalan',
     },
     'ck-US': {
         nativeName: 'ᏣᎳᎩ (tsalagi)',
-        englishName: 'Cherokee'
+        englishName: 'Cherokee',
     },
     cs: {
         nativeName: 'Čeština',
-        englishName: 'Czech'
+        englishName: 'Czech',
     },
     'cs-CZ': {
         nativeName: 'Čeština',
-        englishName: 'Czech'
+        englishName: 'Czech',
     },
     'cy-GB': {
         nativeName: 'Cymraeg',
-        englishName: 'Welsh'
+        englishName: 'Welsh',
     },
     'da-DK': {
         nativeName: 'Dansk',
-        englishName: 'Danish'
+        englishName: 'Danish',
     },
     de: {
         nativeName: 'Deutsch',
-        englishName: 'German'
+        englishName: 'German',
     },
     'de-AT': {
         nativeName: 'Deutsch (Austria)',
-        englishName: 'German (Austria)'
+        englishName: 'German (Austria)',
     },
     'de-DE': {
         nativeName: 'Deutsch (German)',
-        englishName: 'German (German)'
+        englishName: 'German (German)',
     },
     'de-CH': {
         nativeName: 'Deutsch (Switzerland)',
-        englishName: 'German (Switzerland)'
+        englishName: 'German (Switzerland)',
     },
     el: {
         nativeName: 'Ελληνικά',
-        englishName: 'Greek'
+        englishName: 'Greek',
     },
     'el-GR': {
         nativeName: 'Ελληνικά',
-        englishName: 'Greek (Greece)'
+        englishName: 'Greek (Greece)',
     },
     en: {
         nativeName: 'English',
-        englishName: 'English'
+        englishName: 'English',
     },
     'en-GB': {
         nativeName: 'English (UK)',
-        englishName: 'English (UK)'
+        englishName: 'English (UK)',
     },
     'en-CA': {
         nativeName: 'English (Canada)',
-        englishName: 'English (Canada)'
+        englishName: 'English (Canada)',
     },
     'en-IN': {
         nativeName: 'English (India)',
-        englishName: 'English (India)'
+        englishName: 'English (India)',
     },
     'en-PI': {
         nativeName: 'English (Pirate)',
-        englishName: 'English (Pirate)'
+        englishName: 'English (Pirate)',
     },
     'en-UD': {
         nativeName: 'English (Upside Down)',
-        englishName: 'English (Upside Down)'
+        englishName: 'English (Upside Down)',
     },
     'en-US': {
         nativeName: 'English (US)',
-        englishName: 'English (US)'
+        englishName: 'English (US)',
     },
     'en@pirate': {
         nativeName: 'English (Pirate)',
-        englishName: 'English (Pirate)'
+        englishName: 'English (Pirate)',
     },
     eo: {
         nativeName: 'Esperanto',
-        englishName: 'Esperanto'
+        englishName: 'Esperanto',
     },
     'eo-EO': {
         nativeName: 'Esperanto',
-        englishName: 'Esperanto'
+        englishName: 'Esperanto',
     },
     es: {
         nativeName: 'Español',
-        englishName: 'Spanish'
+        englishName: 'Spanish',
     },
     'es-AR': {
         nativeName: 'Español (Argentine)',
-        englishName: 'Spanish (Argentina)'
+        englishName: 'Spanish (Argentina)',
     },
     'es-419': {
         nativeName: 'Español (Latino America)',
-        englishName: 'Spanish (Latin America)'
+        englishName: 'Spanish (Latin America)',
     },
     'es-CL': {
         nativeName: 'Español (Chile)',
-        englishName: 'Spanish (Chile)'
+        englishName: 'Spanish (Chile)',
     },
     'es-CO': {
         nativeName: 'Español (Colombia)',
-        englishName: 'Spanish (Colombia)'
+        englishName: 'Spanish (Colombia)',
     },
     'es-EC': {
         nativeName: 'Español (Ecuador)',
-        englishName: 'Spanish (Ecuador)'
+        englishName: 'Spanish (Ecuador)',
     },
     'es-ES': {
         nativeName: 'Español (España)',
-        englishName: 'Spanish (Spain)'
+        englishName: 'Spanish (Spain)',
     },
     'es-LA': {
         nativeName: 'Español',
-        englishName: 'Spanish (Latin)'
+        englishName: 'Spanish (Latin)',
     },
     'es-NI': {
         nativeName: 'Español Nicaragüense',
-        englishName: 'Spanish (Nicaragua)'
+        englishName: 'Spanish (Nicaragua)',
     },
     'es-MX': {
         nativeName: 'Español (México)',
-        englishName: 'Spanish (Mexico)'
+        englishName: 'Spanish (Mexico)',
     },
     'es-VE': {
         nativeName: 'Español (Venezuela)',
-        englishName: 'Spanish (Venezuela)'
+        englishName: 'Spanish (Venezuela)',
     },
     et: {
         nativeName: 'eesti keel',
-        englishName: 'Estonian'
+        englishName: 'Estonian',
     },
     'et-EE': {
         nativeName: 'Eesti (Estonia)',
-        englishName: 'Estonian (Estonia)'
+        englishName: 'Estonian (Estonia)',
     },
     eu: {
         nativeName: 'Euskara',
-        englishName: 'Basque'
+        englishName: 'Basque',
     },
     'eu-ES': {
         nativeName: 'Euskara',
-        englishName: 'Basque'
+        englishName: 'Basque',
     },
     fa: {
         nativeName: 'فارسی',
-        englishName: 'Persian'
+        englishName: 'Persian',
     },
     'fa-IR': {
         nativeName: 'فارسی',
-        englishName: 'Persian'
+        englishName: 'Persian',
     },
     'fb-LT': {
         nativeName: 'Leet Speak',
-        englishName: 'Leet'
+        englishName: 'Leet',
     },
     ff: {
         nativeName: 'Fulah',
-        englishName: 'Fulah'
+        englishName: 'Fulah',
     },
     fi: {
         nativeName: 'Suomi',
-        englishName: 'Finnish'
+        englishName: 'Finnish',
     },
     'fi-FI': {
         nativeName: 'Suomi',
-        englishName: 'Finnish'
+        englishName: 'Finnish',
     },
     'fo-FO': {
         nativeName: 'Føroyskt',
-        englishName: 'Faroese'
+        englishName: 'Faroese',
     },
     fr: {
         nativeName: 'Français',
-        englishName: 'French'
+        englishName: 'French',
     },
     'fr-CA': {
         nativeName: 'Français (Canada)',
-        englishName: 'French (Canada)'
+        englishName: 'French (Canada)',
     },
     'fr-FR': {
         nativeName: 'Français (France)',
-        englishName: 'French (France)'
+        englishName: 'French (France)',
     },
     'fy-NL': {
         nativeName: 'Frysk',
-        englishName: 'Frisian (West)'
+        englishName: 'Frisian (West)',
     },
     ga: {
         nativeName: 'Gaeilge',
-        englishName: 'Irish'
+        englishName: 'Irish',
     },
     'ga-IE': {
         nativeName: 'Gaeilge (Gaelic)',
-        englishName: 'Irish (Gaelic)'
+        englishName: 'Irish (Gaelic)',
     },
     gl: {
         nativeName: 'Galego',
-        englishName: 'Galician'
+        englishName: 'Galician',
     },
     'gl-ES': {
         nativeName: 'Galego',
-        englishName: 'Galician'
+        englishName: 'Galician',
     },
     'gn-PY': {
         nativeName: 'Avañe\'ẽ',
-        englishName: 'Guarani'
+        englishName: 'Guarani',
     },
     'gu-IN': {
         nativeName: 'ગુજરાતી',
-        englishName: 'Gujarati'
+        englishName: 'Gujarati',
     },
     'gx-GR': {
         nativeName: 'Ἑλληνική ἀρχαία',
-        englishName: 'Classical Greek'
+        englishName: 'Classical Greek',
     },
     he: {
         nativeName: 'עברית‏',
-        englishName: 'Hebrew'
+        englishName: 'Hebrew',
     },
     'he-IL': {
         nativeName: 'עברית‏',
-        englishName: 'Hebrew'
+        englishName: 'Hebrew',
     },
     hi: {
         nativeName: 'हिन्दी',
-        englishName: 'Hindi'
+        englishName: 'Hindi',
     },
     'hi-IN': {
         nativeName: 'हिन्दी',
-        englishName: 'Hindi'
+        englishName: 'Hindi',
     },
     'hr-HR': {
         nativeName: 'Hrvatski',
-        englishName: 'Croatian'
+        englishName: 'Croatian',
     },
     hu: {
         nativeName: 'Magyar',
-        englishName: 'Hungarian'
+        englishName: 'Hungarian',
     },
     'hu-HU': {
         nativeName: 'Magyar',
-        englishName: 'Hungarian'
+        englishName: 'Hungarian',
     },
     'hy-AM': {
         nativeName: 'Հայերեն',
-        englishName: 'Armenian'
+        englishName: 'Armenian',
     },
     id: {
         nativeName: 'Bahasa Indonesia',
-        englishName: 'Indonesian'
+        englishName: 'Indonesian',
     },
     'id-ID': {
         nativeName: 'Bahasa Indonesia',
-        englishName: 'Indonesian'
+        englishName: 'Indonesian',
     },
     is: {
         nativeName: 'Íslenska',
-        englishName: 'Icelandic'
+        englishName: 'Icelandic',
     },
     'is-IS': {
         nativeName: 'Íslenska (Iceland)',
-        englishName: 'Icelandic (Iceland)'
+        englishName: 'Icelandic (Iceland)',
     },
     it: {
         nativeName: 'Italiano',
-        englishName: 'Italian'
+        englishName: 'Italian',
     },
     'it-IT': {
         nativeName: 'Italiano',
-        englishName: 'Italian'
+        englishName: 'Italian',
     },
     ja: {
         nativeName: '日本語',
-        englishName: 'Japanese'
+        englishName: 'Japanese',
     },
     'ja-JP': {
         nativeName: '日本語',
-        englishName: 'Japanese'
+        englishName: 'Japanese',
     },
     'jv-ID': {
         nativeName: 'Basa Jawa',
-        englishName: 'Javanese'
+        englishName: 'Javanese',
     },
     'ka-GE': {
         nativeName: 'ქართული',
-        englishName: 'Georgian'
+        englishName: 'Georgian',
     },
     'kk-KZ': {
         nativeName: 'Қазақша',
-        englishName: 'Kazakh'
+        englishName: 'Kazakh',
     },
     km: {
         nativeName: 'ភាសាខ្មែរ',
-        englishName: 'Khmer'
+        englishName: 'Khmer',
     },
     'km-KH': {
         nativeName: 'ភាសាខ្មែរ',
-        englishName: 'Khmer'
+        englishName: 'Khmer',
     },
     kn: {
         nativeLanguage: 'ಕನ್ನಡ',
-        englishName: 'Kannada'
+        englishName: 'Kannada',
     },
     'kn-IN': {
         nativeName: 'ಕನ್ನಡ (India)',
-        englishName: 'Kannada (India)'
+        englishName: 'Kannada (India)',
     },
     ko: {
         nativeName: '한국어',
-        englishName: 'Korean'
+        englishName: 'Korean',
     },
     'ko-KR': {
         nativeName: '한국어 (韩国)',
-        englishName: 'Korean (Korea)'
+        englishName: 'Korean (Korea)',
     },
     'ku-TR': {
         nativeName: 'Kurdî',
-        englishName: 'Kurdish'
+        englishName: 'Kurdish',
     },
     la: {
         nativeName: 'Latin',
-        englishName: 'Latin'
+        englishName: 'Latin',
     },
     'la-VA': {
         nativeName: 'Latin',
-        englishName: 'Latin'
+        englishName: 'Latin',
     },
     'li-NL': {
         nativeName: 'Lèmbörgs',
-        englishName: 'Limburgish'
+        englishName: 'Limburgish',
     },
     'lt-LT': {
         nativeName: 'Lietuvių',
-        englishName: 'Lithuanian'
+        englishName: 'Lithuanian',
     },
     'lv-LV': {
         nativeName: 'Latviešu',
-        englishName: 'Latvian'
+        englishName: 'Latvian',
     },
     mai: {
         nativeName: 'मैथिली, মৈথিলী',
-        englishName: 'Maithili'
+        englishName: 'Maithili',
     },
     'mg-MG': {
         nativeName: 'Malagasy',
-        englishName: 'Malagasy'
+        englishName: 'Malagasy',
     },
     mk: {
         nativeName: 'Македонски',
-        englishName: 'Macedonian'
+        englishName: 'Macedonian',
     },
     'mk-MK': {
         nativeName: 'Македонски (Македонски)',
-        englishName: 'Macedonian (Macedonian)'
+        englishName: 'Macedonian (Macedonian)',
     },
     ml: {
         nativeName: 'മലയാളം',
-        englishName: 'Malayalam'
+        englishName: 'Malayalam',
     },
     'ml-IN': {
         nativeName: 'മലയാളം',
-        englishName: 'Malayalam'
+        englishName: 'Malayalam',
     },
     'mn-MN': {
         nativeName: 'Монгол',
-        englishName: 'Mongolian'
+        englishName: 'Mongolian',
     },
     mr: {
         nativeName: 'मराठी',
-        englishName: 'Marathi'
+        englishName: 'Marathi',
     },
     'mr-IN': {
         nativeName: 'मराठी',
-        englishName: 'Marathi'
+        englishName: 'Marathi',
     },
     ms: {
         nativeName: 'Bahasa Melayu',
-        englishName: 'Malay'
+        englishName: 'Malay',
     },
     'ms-MY': {
         nativeName: 'Bahasa Melayu',
-        englishName: 'Malay'
+        englishName: 'Malay',
     },
     'mt-MT': {
         nativeName: 'Malti',
-        englishName: 'Maltese'
+        englishName: 'Maltese',
     },
     my: {
         nativeName: 'ဗမာစကာ',
-        englishName: 'Burmese'
+        englishName: 'Burmese',
     },
     nb: {
         nativeName: 'Norsk (bokmål)',
-        englishName: 'Norwegian (bokmal)'
+        englishName: 'Norwegian (bokmal)',
     },
     'nb-NO': {
         nativeName: 'Norsk (bokmål)',
-        englishName: 'Norwegian (bokmal)'
+        englishName: 'Norwegian (bokmal)',
     },
     ne: {
         nativeName: 'नेपाली',
-        englishName: 'Nepali'
+        englishName: 'Nepali',
     },
     'ne-NP': {
         nativeName: 'नेपाली',
-        englishName: 'Nepali'
+        englishName: 'Nepali',
     },
     nl: {
         nativeName: 'Nederlands',
-        englishName: 'Dutch'
+        englishName: 'Dutch',
     },
     'nl-BE': {
         nativeName: 'Nederlands (België)',
-        englishName: 'Dutch (België)'
+        englishName: 'Dutch (België)',
     },
     'nl-NL': {
         nativeName: 'Nederlands, Dutch',
-        englishName: 'Netherlands, Dutch'
+        englishName: 'Netherlands, Dutch',
     },
     'nn-NO': {
         nativeName: 'Norsk (nynorsk)',
-        englishName: 'Norwegian (nynorsk)'
+        englishName: 'Norwegian (nynorsk)',
     },
     oc: {
         nativeName: 'Occitan',
-        englishName: 'Occitan'
+        englishName: 'Occitan',
     },
     'or-IN': {
         nativeName: 'ଓଡ଼ିଆ',
-        englishName: 'Oriya'
+        englishName: 'Oriya',
     },
     pa: {
         nativeName: 'ਪੰਜਾਬੀ',
-        englishName: 'Punjabi'
+        englishName: 'Punjabi',
     },
     'pa-IN': {
         nativeName: 'ਪੰਜਾਬੀ (ਭਾਰਤ ਨੂੰ)',
-        englishName: 'Punjabi (India)'
+        englishName: 'Punjabi (India)',
     },
     'pl-PL': {
         nativeName: 'Polski',
-        englishName: 'Polish'
+        englishName: 'Polish',
     },
     'ps-AF': {
         nativeName: 'پښتو',
-        englishName: 'Pashto'
+        englishName: 'Pashto',
     },
     pt: {
         nativeName: 'Português',
-        englishName: 'Portuguese'
+        englishName: 'Portuguese',
     },
     'pt-BR': {
         nativeName: 'Português (Brasil)',
-        englishName: 'Portuguese (Brazil)'
+        englishName: 'Portuguese (Brazil)',
     },
     'pt-PT': {
         nativeName: 'Português (Portugal)',
-        englishName: 'Portuguese (Portugal)'
+        englishName: 'Portuguese (Portugal)',
     },
     'qu-PE': {
         nativeName: 'Qhichwa',
-        englishName: 'Quechua'
+        englishName: 'Quechua',
     },
     'rm-CH': {
         nativeName: 'Rumantsch',
-        englishName: 'Romansh'
+        englishName: 'Romansh',
     },
     ro: {
         nativeName: 'Română',
-        englishName: 'Romanian'
+        englishName: 'Romanian',
     },
     'ro-RO': {
         nativeName: 'Română',
-        englishName: 'Romanian'
+        englishName: 'Romanian',
     },
     ru: {
         nativeName: 'Русский',
-        englishName: 'Russian'
+        englishName: 'Russian',
     },
     'ru-RU': {
         nativeName: 'Русский',
-        englishName: 'Russian'
+        englishName: 'Russian',
     },
     'sa-IN': {
         nativeName: 'संस्कृतम्',
-        englishName: 'Sanskrit'
+        englishName: 'Sanskrit',
     },
     'se-NO': {
         nativeName: 'Davvisámegiella',
-        englishName: 'Northern Sámi'
+        englishName: 'Northern Sámi',
     },
     'si-LK': {
         nativeName: 'පළාත',
-        englishName: 'Sinhala (Sri Lanka)'
+        englishName: 'Sinhala (Sri Lanka)',
     },
     sk: {
         nativeName: 'Slovenčina',
-        englishName: 'Slovak'
+        englishName: 'Slovak',
     },
     'sk-SK': {
         nativeName: 'Slovenčina (Slovakia)',
-        englishName: 'Slovak (Slovakia)'
+        englishName: 'Slovak (Slovakia)',
     },
     sl: {
         nativeName: 'Slovenščina',
-        englishName: 'Slovenian'
+        englishName: 'Slovenian',
     },
     'sl-SI': {
         nativeName: 'Slovenščina',
-        englishName: 'Slovenian'
+        englishName: 'Slovenian',
     },
     'so-SO': {
         nativeName: 'Soomaaliga',
-        englishName: 'Somali'
+        englishName: 'Somali',
     },
     sq: {
         nativeName: 'Shqip',
-        englishName: 'Albanian'
+        englishName: 'Albanian',
     },
     'sq-AL': {
         nativeName: 'Shqip',
-        englishName: 'Albanian'
+        englishName: 'Albanian',
     },
     sr: {
         nativeName: 'Српски',
-        englishName: 'Serbian'
+        englishName: 'Serbian',
     },
     'sr-RS': {
         nativeName: 'Српски (Serbia)',
-        englishName: 'Serbian (Serbia)'
+        englishName: 'Serbian (Serbia)',
     },
     su: {
         nativeName: 'Basa Sunda',
-        englishName: 'Sundanese'
+        englishName: 'Sundanese',
     },
     sv: {
         nativeName: 'Svenska',
-        englishName: 'Swedish'
+        englishName: 'Swedish',
     },
     'sv-SE': {
         nativeName: 'Svenska',
-        englishName: 'Swedish'
+        englishName: 'Swedish',
     },
     sw: {
         nativeName: 'Kiswahili',
-        englishName: 'Swahili'
+        englishName: 'Swahili',
     },
     'sw-KE': {
         nativeName: 'Kiswahili',
-        englishName: 'Swahili (Kenya)'
+        englishName: 'Swahili (Kenya)',
     },
     ta: {
         nativeName: 'தமிழ்',
-        englishName: 'Tamil'
+        englishName: 'Tamil',
     },
     'ta-IN': {
         nativeName: 'தமிழ்',
-        englishName: 'Tamil'
+        englishName: 'Tamil',
     },
     te: {
         nativeName: 'తెలుగు',
-        englishName: 'Telugu'
+        englishName: 'Telugu',
     },
     'te-IN': {
         nativeName: 'తెలుగు',
-        englishName: 'Telugu'
+        englishName: 'Telugu',
     },
     'tg-TJ': {
         nativeName: 'тоҷикӣ',
-        englishName: 'Tajik'
+        englishName: 'Tajik',
     },
     th: {
         nativeName: 'ภาษาไทย',
-        englishName: 'Thai'
+        englishName: 'Thai',
     },
     'th-TH': {
         nativeName: 'ภาษาไทย (ประเทศไทย)',
-        englishName: 'Thai (Thailand)'
+        englishName: 'Thai (Thailand)',
     },
     tl: {
         nativeName: 'Filipino',
-        englishName: 'Filipino'
+        englishName: 'Filipino',
     },
     'tl-PH': {
         nativeName: 'Filipino',
-        englishName: 'Filipino'
+        englishName: 'Filipino',
     },
     'tl-ST': {
         nativeName: 'tlhIngan-Hol',
-        englishName: 'Klingon'
+        englishName: 'Klingon',
     },
     'tr-TR': {
         nativeName: 'Türkçe',
-        englishName: 'Turkish'
+        englishName: 'Turkish',
     },
     'tt-RU': {
         nativeName: 'татарча',
-        englishName: 'Tatar'
+        englishName: 'Tatar',
     },
     uk: {
         nativeName: 'Українська',
-        englishName: 'Ukrainian'
+        englishName: 'Ukrainian',
     },
     'uk-UA': {
         nativeName: 'Українська',
-        englishName: 'Ukrainian'
+        englishName: 'Ukrainian',
     },
     ur: {
         nativeName: 'اردو',
-        englishName: 'Urdu'
+        englishName: 'Urdu',
     },
     'ur-PK': {
         nativeName: 'اردو',
-        englishName: 'Urdu'
+        englishName: 'Urdu',
     },
     uz: {
         nativeName: 'O\'zbek',
-        englishName: 'Uzbek'
+        englishName: 'Uzbek',
     },
     'uz-UZ': {
         nativeName: 'O\'zbek',
-        englishName: 'Uzbek'
+        englishName: 'Uzbek',
     },
     'vi-VN': {
         nativeName: 'Tiếng Việt',
-        englishName: 'Vietnamese'
+        englishName: 'Vietnamese',
     },
     'xh-ZA': {
         nativeName: 'isiXhosa',
-        englishName: 'Xhosa'
+        englishName: 'Xhosa',
     },
     yi: {
         nativeName: 'ייִדיש',
-        englishName: 'Yiddish'
+        englishName: 'Yiddish',
     },
     'yi-DE': {
         nativeName: 'ייִדיש (German)',
-        englishName: 'Yiddish (German)'
+        englishName: 'Yiddish (German)',
     },
     'zh-CN': {
         nativeName: '中文(简体)',
-        englishName: 'Simplified Chinese (China)'
+        englishName: 'Simplified Chinese (China)',
     },
     'zh-HK': {
         nativeName: '中文(香港)',
-        englishName: 'Traditional Chinese (Hong Kong)'
+        englishName: 'Traditional Chinese (Hong Kong)',
     },
     'zh-TW': {
         nativeName: '中文(台灣)',
-        englishName: 'Traditional Chinese (Taiwan)'
+        englishName: 'Traditional Chinese (Taiwan)',
     },
     'zu-ZA': {
         nativeName: 'isiZulu',
-        englishName: 'Zulu'
-    }
+        englishName: 'Zulu',
+    },
 };
 /* jshint ignore:end */

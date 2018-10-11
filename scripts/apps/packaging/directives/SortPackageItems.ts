@@ -23,7 +23,7 @@ export function SortPackageItems() {
                             ui.item
                                 .parent()
                                 .find('li.sort-item')
-                                .index(ui.item)
+                                .index(ui.item),
                         );
 
                     ui.item
@@ -31,7 +31,7 @@ export function SortPackageItems() {
                             'start_group',
                             ui.item
                                 .parent()
-                                .data('group')
+                                .data('group'),
                         );
                 },
                 stop: function(event, ui) {

@@ -21,7 +21,7 @@ export function SortContentProfiles() {
                         ui.item
                             .parent()
                             .find('li.schema-item')
-                            .index(ui.item)
+                            .index(ui.item),
                     );
                 },
                 stop: function(event, ui) {

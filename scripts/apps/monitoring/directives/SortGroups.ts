@@ -22,7 +22,7 @@ export function SortGroups() {
                             ui.item
                                 .parent()
                                 .find('li.sort-item')
-                                .index(ui.item)
+                                .index(ui.item),
                         );
                 },
                 stop: function(event, ui) {

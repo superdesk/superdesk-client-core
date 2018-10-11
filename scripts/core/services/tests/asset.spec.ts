@@ -1,5 +1,4 @@
 
-
 describe('superdesk.core.services.asset module', () => {
     beforeEach(window.module('superdesk.core.services.asset'));
     beforeEach(window.module(($provide) => {

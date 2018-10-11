@@ -10,7 +10,7 @@ export default angular.module('superdesk.core.directives.select', ['superdesk.co
                     throw new Error(
                         'Expected typeahead specification in form of _modelValue_ ' +
                         '(as _label_)? for _item_ in _collection_' +
-                      ' but got ' + input + '.'
+                      ' but got ' + input + '.',
                     );
                 }
 

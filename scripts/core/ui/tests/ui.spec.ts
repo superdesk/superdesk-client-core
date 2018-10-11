@@ -1,5 +1,4 @@
 
-
 describe('superdesk ui', () => {
     beforeEach(window.module(($provide) => {
         $provide.constant('config', {
@@ -103,7 +102,7 @@ describe('superdesk ui', () => {
         it('initializes the list of matching time zones to an empty list',
             () => {
                 expect(isoScope.matchingTimeZones).toEqual([]);
-            }
+            },
         );
 
         it('initializes the list of all available time zones', () => {
@@ -129,7 +128,7 @@ describe('superdesk ui', () => {
             isoScope.$digest();
 
             expect(isoScope.timeZones).toEqual(
-                ['Australia/Sydney', 'Europe/Rome', 'Foo/Bar']
+                ['Australia/Sydney', 'Europe/Rome', 'Foo/Bar'],
             );
         });
 
@@ -158,7 +157,7 @@ describe('superdesk ui', () => {
             isoScope.$digest();
 
             expect(isoScope.timeZones).toEqual(
-                ['Australia/Sydney', 'Europe/Rome', 'Foo/Bar']
+                ['Australia/Sydney', 'Europe/Rome', 'Foo/Bar'],
             );
 
             isoScope.$digest();
@@ -172,7 +171,7 @@ describe('superdesk ui', () => {
                     isoScope.tzSearchTerm = 'foo';
                     isoScope.searchTimeZones('bar');
                     expect(isoScope.tzSearchTerm).toEqual('bar');
-                }
+                },
             );
 
             it('sets the matching time zones to an empty list if given ' +
@@ -181,7 +180,7 @@ describe('superdesk ui', () => {
                 isoScope.matchingTimeZones = ['foo', 'bar'];
                 isoScope.searchTimeZones('');
                 expect(isoScope.matchingTimeZones).toEqual([]);
-            }
+            },
             );
 
             it('sets the matching time zones to those matching the given ' +
@@ -194,7 +193,7 @@ describe('superdesk ui', () => {
                 expect(isoScope.matchingTimeZones).toEqual([
                     'Foo/City', 'Asia/FooBar', 'bar_fOo',
                 ]);
-            }
+            },
             );
         });
 
@@ -204,7 +203,7 @@ describe('superdesk ui', () => {
                     isoScope.timezone = null;
                     isoScope.selectTimeZone('foo');
                     expect(isoScope.timezone).toEqual('foo');
-                }
+                },
             );
 
             it('clears the time zone search term', () => {
@@ -268,7 +267,7 @@ describe('superdesk ui', () => {
 
     describe('filesize filter', () => {
         it('can format bytes', inject(($filter) => {
-            let filesize = $filter('filesize');
+            const filesize = $filter('filesize');
 
             expect(filesize(0)).toBe('0 b');
             expect(filesize(1024)).toBe('1.0 kB');
@@ -280,7 +279,7 @@ describe('superdesk ui', () => {
 
     describe('fileicon filter', () => {
         it('can get file icon', inject(($filter) => {
-            let filetype = $filter('fileicon');
+            const filetype = $filter('fileicon');
 
             expect(filetype('image/jpeg')).toBe('document-default');
             expect(filetype('application/pdf')).toBe('document-pdf');

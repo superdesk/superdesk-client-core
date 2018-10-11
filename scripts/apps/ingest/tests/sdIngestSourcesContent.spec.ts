@@ -103,7 +103,7 @@ describe('sdIngestSourcesContent directive', () => {
         it('updates the list of field names that don\'t have an alias set', () => {
             scope.edit(fakeProvider);
             expect(scope.fieldsNotSelected).toEqual(
-                {field_aliases: ['foo1', 'foo3']}
+                {field_aliases: ['foo1', 'foo3']},
             );
         });
 
@@ -274,7 +274,7 @@ describe('sdIngestSourcesContent directive', () => {
             ]};
             scope.save();
             expect(scope.provider.config.field_aliases).toEqual(
-                [{foo1: 'bar1'}, {foo2: 'bar2'}]
+                [{foo1: 'bar1'}, {foo2: 'bar2'}],
             );
         });
 

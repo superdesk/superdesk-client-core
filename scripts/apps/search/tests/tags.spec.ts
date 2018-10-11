@@ -1,5 +1,4 @@
 
-
 describe('Tag Service', () => {
     var deskList = {
         123: {_id: '123', name: 'desk1'},
@@ -239,7 +238,7 @@ describe('Tag Service', () => {
         $rootScope.$digest();
         expect(tagsList.selectedParameters.length).toEqual(1);
         expect(tagsList.selectedParameters[0]).toEqual(
-            {label: 'Provider:Test Provider', value: 'Provider:Test Provider'}
+            {label: 'Provider:Test Provider', value: 'Provider:Test Provider'},
         );
     }));
 
@@ -276,7 +275,7 @@ describe('Tag Service', () => {
         $rootScope.$digest();
         expect(tagsList.removedFacets.notdesk.length).toEqual(1);
         expect(tagsList.removedFacets.notdesk[0]).toEqual(
-            {label: 'Not Desk', displayValue: 'desk1', value: '123'}
+            {label: 'Not Desk', displayValue: 'desk1', value: '123'},
         );
     }));
 

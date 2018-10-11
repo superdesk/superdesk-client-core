@@ -5,7 +5,6 @@ beforeEach(window.module('superdesk.mocks'));
 beforeEach(window.module('superdesk.core.auth.session'));
 beforeEach(window.module('superdesk.core.services.storage'));
 
-
 /**
  * Mock services that call server on init and thus would require mocking all the time
  */

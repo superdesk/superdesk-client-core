@@ -1,5 +1,4 @@
 
-
 describe('Workflow Service', () => {
     beforeEach(window.module('superdesk.core.workflow'));
 

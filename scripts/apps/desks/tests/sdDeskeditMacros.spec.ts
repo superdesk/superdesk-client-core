@@ -92,7 +92,7 @@ describe('sdDeskeditMacros directive', () => {
             scope.$digest();
 
             expect(scope.macros).toEqual(macrosFromServer);
-        }
+        },
     );
 
     it('fetches all macros if current desk is not set', () => {

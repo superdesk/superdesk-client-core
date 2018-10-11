@@ -121,7 +121,7 @@ export function UserEditDirective(api, gettext, notify, usersService, userList, 
                     } else {
                         modal.confirm(
                             gettext('Do you want to reload the page now?'),
-                            gettext('The page needs to be reloaded to change the language')
+                            gettext('The page needs to be reloaded to change the language'),
                         )
                             .then(() => {
                                 resolve(true);
@@ -163,7 +163,7 @@ export function UserEditDirective(api, gettext, notify, usersService, userList, 
                                     if (response.data && response.data._issues) {
                                         if (angular.isDefined(response.data._issues['validator exception'])) {
                                             errorMessage = gettext(
-                                                'Error: ' + response.data._issues['validator exception']
+                                                'Error: ' + response.data._issues['validator exception'],
                                             );
                                         }
 

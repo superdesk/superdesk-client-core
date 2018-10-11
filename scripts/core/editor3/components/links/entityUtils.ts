@@ -37,7 +37,7 @@ export function mergeSelectedEntityData(editorState, data) {
     return EditorState.push(
         editorState,
         contentState.mergeEntityData(entityKey, data),
-        'change-block-data'
+        'change-block-data',
     );
 }
 
@@ -54,7 +54,7 @@ export function replaceSelectedEntityData(editorState, data) {
     return EditorState.push(
         editorState,
         contentState.replaceEntityData(entityKey, data),
-        'change-block-data'
+        'change-block-data',
     );
 }
 

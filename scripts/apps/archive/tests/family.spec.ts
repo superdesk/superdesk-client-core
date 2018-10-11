@@ -1,5 +1,4 @@
 
-
 describe('family service', () => {
     var items = [
         {unique_id: 1, _id: 'z', family_id: 'family1', task: {desk: 'desk1'}},
@@ -29,12 +28,12 @@ describe('family service', () => {
         beforeEach(inject((api, $q) => {
             spyOn(api, 'find').and.returnValue($q.reject({}));
             spyOn(api, 'query').and.callFake((endpoint, params) => {
-                let familyId = params.source.query.filtered.filter.and[1].term.family_id;
-                let members = _.filter(items, {family_id: familyId});
+                const familyId = params.source.query.filtered.filter.and[1].term.family_id;
+                const members = _.filter(items, {family_id: familyId});
 
                 if (params.source.query.filtered.filter.and[2]) {
                     _.remove(members,
-                        {unique_id: params.source.query.filtered.filter.and[2].not.term.unique_id}
+                        {unique_id: params.source.query.filtered.filter.and[2].not.term.unique_id},
                     );
                 }
 
@@ -110,7 +109,7 @@ describe('family service', () => {
 
     describe('fetching related items', () => {
         it('can query related items', inject(($rootScope, $q, familyService, api) => {
-            let query = {
+            const query = {
                 repo: 'archive,published',
                 source: {
                     query: {
@@ -137,7 +136,7 @@ describe('family service', () => {
         }));
 
         it('can query relatable items with empty match criteria', inject(($rootScope, $q, familyService, api) => {
-            let query = {
+            const query = {
                 repo: 'archive,published',
                 source: {
                     query: {
@@ -168,7 +167,7 @@ describe('family service', () => {
         }));
 
         it('can query relatable items with prefix criteria', inject(($rootScope, $q, familyService, api) => {
-            let query = {
+            const query = {
                 repo: 'archive,published',
                 source: {
                     query: {
@@ -199,7 +198,7 @@ describe('family service', () => {
         }));
 
         it('can query relatable items with date range', inject(($rootScope, $q, familyService, api) => {
-            let query = {
+            const query = {
                 repo: 'archive,published',
                 source: {
                     query: {

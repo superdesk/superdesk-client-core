@@ -7,5 +7,5 @@ export const getUniqueStyleNamesInDraftSelection = (editorState, selection) => O
                 obj[styleName] = true;
             });
             return obj;
-        }, {})
+        }, {}),
 );

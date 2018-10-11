@@ -64,7 +64,7 @@ function RelatedItemController(
     familyService,
     gettext,
     moment,
-    content
+    content,
 ) {
     $scope.type = 'archiveWidget';
     $scope.itemListOptions = {
@@ -231,7 +231,6 @@ function RelatedItemController(
             $scope.widget.configuration.sluglineMatch = storage.getItem('sluglineMatch') || 'EXACT';
         }
     }
-
 
     if ($scope.widget) {
         $scope.widget.save = function() {

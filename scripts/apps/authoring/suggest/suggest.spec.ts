@@ -63,7 +63,7 @@ describe('suggest', () => {
     }));
 
     it('should get suggestions when triggered', inject((suggest, autosave, $q, api, $rootScope) => {
-        let item = testItems[0];
+        const item = testItems[0];
 
         spyOn(autosave, 'save').and.returnValue($q.when(item));
         spyOn(api, 'get').and.returnValue($q.reject());
@@ -79,7 +79,7 @@ describe('suggest', () => {
 
     it('should get suggestion of first item in array when triggered',
         inject((suggest, autosave, $q, api, $rootScope) => {
-            let item = testItems[0];
+            const item = testItems[0];
 
             spyOn(autosave, 'save').and.returnValue($q.when(testItems));
             spyOn(api, 'get').and.returnValue($q.reject());
@@ -91,11 +91,11 @@ describe('suggest', () => {
 
             expect(api.get.calls.count()).toBe(1);
             expect(api.get).toHaveBeenCalledWith(`suggestions/${item._id}`);
-        })
+        }),
     );
 
     it('should trigger listeners on success', inject((suggest, autosave, $q, api, $rootScope) => {
-        let item = testItems[0];
+        const item = testItems[0];
         let response = null;
 
         spyOn(autosave, 'save').and.returnValue($q.when(testItems));

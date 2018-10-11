@@ -3,7 +3,7 @@ InternalDestinationsFactory.$inject = ['api'];
 function InternalDestinationsFactory(api) {
     class InternalDestinationsService {
         query(params) {
-            let queryParams = params || {};
+            const queryParams = params || {};
 
             queryParams.max_results = 200;
             return api.query('internal_destinations', params)

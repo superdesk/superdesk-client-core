@@ -1,7 +1,6 @@
 import $ from 'jquery';
 import {get} from 'lodash';
 
-
 /**
  * @ngdoc method
  * @name onEventCapture
@@ -62,10 +61,10 @@ export const gettextCatalog = (text, params = null) => {
  */
 export const scrollListItemIfNeeded = (selectedIndex, listRefElement) => {
     if (listRefElement.children.length > 0) {
-        let activeElement = listRefElement.children[selectedIndex];
+        const activeElement = listRefElement.children[selectedIndex];
 
         if (activeElement) {
-            let distanceOfSelItemFromVisibleTop = $(activeElement).offset().top -
+            const distanceOfSelItemFromVisibleTop = $(activeElement).offset().top -
                 $(document).scrollTop() -
             $(listRefElement).offset().top - $(document).scrollTop();
 

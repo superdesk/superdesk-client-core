@@ -1,5 +1,4 @@
 
-
 var template = [
     '<form name="userForm">',
     '<input type="text" name="username" ng-model="user.username"',

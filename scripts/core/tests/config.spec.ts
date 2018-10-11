@@ -21,8 +21,8 @@ describe('superdesk.config', () => {
 
     describe('deployConfig service', () => {
         it('can provide config', inject((deployConfig, $rootScope) => {
-            let getSpy = jasmine.createSpy('get');
-            let allSpy = jasmine.createSpy('all');
+            const getSpy = jasmine.createSpy('get');
+            const allSpy = jasmine.createSpy('all');
 
             deployConfig.config = {foo: 1, bar: 2, baz: 'x'};
 

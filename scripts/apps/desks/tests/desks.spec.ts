@@ -1,5 +1,4 @@
 
-
 describe('desks service', () => {
     var USER_URL = 'users/1';
 
@@ -34,7 +33,7 @@ describe('desks service', () => {
             $rootScope.$digest();
             expect(desks.getCurrentDeskId()).toBe(null);
             expect(preferencesService.update).not.toHaveBeenCalled();
-        })
+        }),
     );
 
     it('can checks if current desk is part of user desks, personal will be selected',
@@ -46,7 +45,7 @@ describe('desks service', () => {
             $rootScope.$digest();
             expect(desks.getCurrentDeskId()).toBe(null);
             expect(preferencesService.update).not.toHaveBeenCalled();
-        })
+        }),
     );
 
     it('can save desk changes', inject((desks, api, $q) => {

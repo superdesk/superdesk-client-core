@@ -16,7 +16,7 @@ export function createLink(editorState, link) {
     const stateAfterChange = RichUtils.toggleLink(
         editorState,
         editorState.getSelection(),
-        entityKey
+        entityKey,
     );
 
     return stateAfterChange;
@@ -42,7 +42,7 @@ export function removeLink(editorState) {
             });
 
             stateAfterChange = RichUtils.toggleLink(editorState, entitySelection, null);
-        }
+        },
     );
 
     return stateAfterChange;

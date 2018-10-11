@@ -1,7 +1,6 @@
 
-
 describe('macros', () => {
-    let allMacros = [
+    const allMacros = [
         {
             _etag: '1',
             description: 'Converts distance values from feet and inches to metric',
@@ -68,9 +67,9 @@ describe('macros', () => {
     it('can provide group list option when group is defined in any of macros',
         inject((macros, $q, autosave, $rootScope) => {
             // when group defined in any of macros
-            let groupedMacros = _.groupBy(_.filter(allMacros, 'group'), 'group');
+            const groupedMacros = _.groupBy(_.filter(allMacros, 'group'), 'group');
 
-            let $scope = $rootScope.$new();
+            const $scope = $rootScope.$new();
 
             macros.macros = allMacros;
             $controller('Macros', {$scope: $scope});
@@ -84,9 +83,9 @@ describe('macros', () => {
     it('can hide group list option when group is undefined in all macros',
         inject((macros, $q, autosave, $rootScope) => {
             // consider, when group is not available in all macros
-            let withoutGroupMacros = _.filter(allMacros, (o) => o.group === undefined);
+            const withoutGroupMacros = _.filter(allMacros, (o) => o.group === undefined);
 
-            let $scope = $rootScope.$new();
+            const $scope = $rootScope.$new();
 
             macros.macros = withoutGroupMacros;
             $controller('Macros', {$scope: $scope});

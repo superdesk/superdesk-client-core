@@ -1,5 +1,4 @@
 
-
 describe('content filters', () => {
     var $scope;
 
@@ -16,7 +15,7 @@ describe('content filters', () => {
                 $window: $window,
                 notify: notify,
                 contentFilters: contentFilters,
-            }
+            },
         );
     }));
 

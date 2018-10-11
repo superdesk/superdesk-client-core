@@ -29,7 +29,7 @@ MultiActionBarController.$inject = [
 
 export function MultiActionBarController(
     $rootScope, multi, multiEdit, multiImageEdit, send, remove, modal, $q, gettext,
-    packages, superdesk, notify, spike, authoring, privileges, $location, config
+    packages, superdesk, notify, spike, authoring, privileges, $location, config,
 ) {
     this.send = function() {
         send.all(multi.getItems());
@@ -87,7 +87,7 @@ export function MultiActionBarController(
      */
     this.spikeItems = function() {
         let message = gettext('Are you sure you want to spike the items?');
-        let assignedItems = _.get(privileges, 'privileges.planning') ?
+        const assignedItems = _.get(privileges, 'privileges.planning') ?
             multi.getItems().filter((item) => item.assignment_id) : [];
         const spikeMultiple = () => {
             spike.spikeMultiple(multi.getItems());
@@ -118,7 +118,7 @@ export function MultiActionBarController(
     };
 
     this.canEditMetadata = () => multi.getItems().every(
-        (item) => !item.lock_user && ['picture', 'video', 'audio'].includes(item.type)
+        (item) => !item.lock_user && ['picture', 'video', 'audio'].includes(item.type),
     );
 
     this.canPackageItems = function() {

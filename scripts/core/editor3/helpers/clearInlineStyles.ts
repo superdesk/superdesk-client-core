@@ -10,19 +10,19 @@ export function clearInlineStyles(editorState, selection, stylesArray) {
         Modifier.removeInlineStyle(
             newContentState,
             selection,
-            style
+            style,
         )
     ), editorState.getCurrentContent());
 
     const editorStateWithInlineStylesCleared = EditorState.push(
         editorState,
         contentWithoutStyles,
-        'change-inline-style'
+        'change-inline-style',
     );
 
     const editorStateWithSelectionRestored = EditorState.forceSelection(
         editorStateWithInlineStylesCleared,
-        currentSelectionToPreserve
+        currentSelectionToPreserve,
     );
 
     return editorStateWithSelectionRestored;

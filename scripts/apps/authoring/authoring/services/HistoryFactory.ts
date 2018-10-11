@@ -53,4 +53,3 @@ export function HistoryFactory(History, $window, $timeout) {
         },
     };
 }
-

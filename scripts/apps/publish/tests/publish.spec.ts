@@ -1,5 +1,4 @@
 
-
 describe('publish queue', () => {
     var subscribers = {_items: [
         {
@@ -143,7 +142,7 @@ describe('publish queue', () => {
                 ingestSouces: ingestSources,
                 $q: $q,
                 api: api,
-            }
+            },
         );
     }));
 
@@ -292,7 +291,7 @@ describe('publish queue', () => {
 });
 
 describe('subscriber filter', () => {
-    let subscribers = [
+    const subscribers = [
         {name: 'test all', subscriber_type: 'all'},
         {name: 'test wire', subscriber_type: 'wire'},
         {name: 'digital', subscriber_type: 'digital'},
@@ -306,40 +305,40 @@ describe('subscriber filter', () => {
     }));
 
     it('can get all subscribers if no subscriber type', () => {
-        let items = subscribersByFilter(subscribers);
+        const items = subscribersByFilter(subscribers);
 
         expect(items.length).toBe(subscribers.length);
     });
 
     it('can get all subscribers buy name test', () => {
-        let items = subscribersByFilter(subscribers, {name: 'test'});
+        const items = subscribersByFilter(subscribers, {name: 'test'});
 
         expect(items.length).toBe(2);
     });
 
     it('can get all subscribers by subscriber type all', () => {
-        let items = subscribersByFilter(subscribers, {subscriber_type: 'all'});
+        const items = subscribersByFilter(subscribers, {subscriber_type: 'all'});
 
         expect(items.length).toBe(1);
         expect(items[0].name).toBe('test all');
     });
 
     it('can get all subscribers by subscriber type digital', () => {
-        let items = subscribersByFilter(subscribers, {subscriber_type: 'digital'});
+        const items = subscribersByFilter(subscribers, {subscriber_type: 'digital'});
 
         expect(items.length).toBe(1);
         expect(items[0].name).toBe('digital');
     });
 
     it('can get all subscribers by subscriber type wire', () => {
-        let items = subscribersByFilter(subscribers, {subscriber_type: 'wire'});
+        const items = subscribersByFilter(subscribers, {subscriber_type: 'wire'});
 
         expect(items.length).toBe(1);
         expect(items[0].name).toBe('test wire');
     });
 
     it('can get all subscribers', () => {
-        let items = subscribersByFilter(subscribers, {subscriber_type: ''});
+        const items = subscribersByFilter(subscribers, {subscriber_type: ''});
 
         expect(items.length).toBe(subscribers.length);
     });

@@ -1,10 +1,10 @@
 
 describe('sdItemPreview directive', () => {
     let scope, elem, iscope;
-    let archiveItem = {_id: '1', family_id: '1', _type: 'archive'};
-    let ingestItem = {_id: 'a', _type: 'ingest'};
-    let relatedItems = {_items: []};
-    let relatedItemEntries = [{_id: '2', family_id: '1'}];
+    const archiveItem = {_id: '1', family_id: '1', _type: 'archive'};
+    const ingestItem = {_id: 'a', _type: 'ingest'};
+    const relatedItems = {_items: []};
+    const relatedItemEntries = [{_id: '2', family_id: '1'}];
 
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.mocks'));
@@ -12,9 +12,8 @@ describe('sdItemPreview directive', () => {
     beforeEach(window.module('superdesk.apps.archive'));
     beforeEach(window.module('superdesk.apps.vocabularies'));
 
-
     beforeEach(inject(($rootScope, $compile) => {
-        let html = '<div sd-item-preview data-item="item" data-close="" data-show-history-tab="true"></div>';
+        const html = '<div sd-item-preview data-item="item" data-close="" data-show-history-tab="true"></div>';
 
         scope = $rootScope.$new();
 
@@ -100,7 +99,7 @@ describe('sdItemPreview directive', () => {
     }));
 
     it('can re-fetch relatedItems when navigating to the duplicates tab', () => {
-        let newRelatedItemEntries = [{_id: '2', family_id: '1'}, {_id: '3', family_id: '1'}];
+        const newRelatedItemEntries = [{_id: '2', family_id: '1'}, {_id: '3', family_id: '1'}];
 
         relatedItems._items = relatedItemEntries;
         scope.item = archiveItem;

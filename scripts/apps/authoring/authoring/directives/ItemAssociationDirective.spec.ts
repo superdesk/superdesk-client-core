@@ -39,7 +39,7 @@ describe('item association directive', () => {
             data-rel="rel"
             data-editable="editable"
             data-onchange="onChange()"
-            data-save="save()"></div>`
+            data-save="save()"></div>`,
         )(scope);
         $rootScope.$digest();
     }));

@@ -30,7 +30,7 @@ describe('renditions service', () => {
             {guid: item.guid, desk: 'sports'},
             null,
             null,
-            {repo: item.ingest_provider}
+            {repo: item.ingest_provider},
         );
 
         expect(api.find).toHaveBeenCalledWith('archive', 'ingested');

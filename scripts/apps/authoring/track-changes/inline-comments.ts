@@ -48,7 +48,7 @@ function getCommentsFromField(getLabelForFieldId) {
         fieldName: getLabelForFieldId(getFieldId(obj.contentKey)),
         comments: getCustomDataFromEditorRawState(
             obj[fieldsMetaKeys.draftjsState],
-            editor3DataKeys.RESOLVED_COMMENTS_HISTORY
+            editor3DataKeys.RESOLVED_COMMENTS_HISTORY,
         ) || [],
     });
 }
@@ -64,7 +64,7 @@ function InlineCommentsCtrl($scope, userList, metadata, content) {
                 [fieldsMetaKeys.draftjsState]: getFieldMetadata(
                     $scope.item,
                     contentKey,
-                    fieldsMetaKeys.draftjsState
+                    fieldsMetaKeys.draftjsState,
                 ),
             }))
             .filter((obj) => obj[fieldsMetaKeys.draftjsState] != null);
@@ -77,7 +77,7 @@ function InlineCommentsCtrl($scope, userList, metadata, content) {
             const rawEditorState = getFieldMetadata(
                 $scope.item,
                 contentKey,
-                fieldsMetaKeys.draftjsState
+                fieldsMetaKeys.draftjsState,
             );
 
             const comments = getCustomMetadata($scope.item, contentKey, highlightsConfig.COMMENT.type)
@@ -89,7 +89,7 @@ function InlineCommentsCtrl($scope, userList, metadata, content) {
                             ...highlight.obj.data,
                             commentedText: getRangeAndTextForStyleInRawState(
                                 rawEditorState,
-                                highlightId
+                                highlightId,
                             ).highlightedText,
                         },
                     };
@@ -104,7 +104,6 @@ function InlineCommentsCtrl($scope, userList, metadata, content) {
             };
         })
             .filter((obj) => obj.comments.length > 0);
-
 
         const allComments = []
             .concat(...resolvedComments.map((obj) => obj.comments))

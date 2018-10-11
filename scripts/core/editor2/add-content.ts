@@ -76,12 +76,12 @@ function AddContentCtrl(scope, element, superdesk, editor, $timeout, config, $q)
                 return;
             }
 
-            let isFocusEvent = event && event.type === 'focus';
-            let isClickEvent = event && event.type === 'click';
-            let containsTarget = elementContainsEventTarget(event) && currentParagraph.text() === '';
-            let isFocused = editorElem.is(':focus') && currentParagraph.text() === '';
-            let isEmptyLine = currentParagraph.text() === '';
-            let shouldShow = isFocusEvent && containsTarget || isClickEvent && isFocused || isEmptyLine;
+            const isFocusEvent = event && event.type === 'focus';
+            const isClickEvent = event && event.type === 'click';
+            const containsTarget = elementContainsEventTarget(event) && currentParagraph.text() === '';
+            const isFocused = editorElem.is(':focus') && currentParagraph.text() === '';
+            const isEmptyLine = currentParagraph.text() === '';
+            const shouldShow = isFocusEvent && containsTarget || isClickEvent && isFocused || isEmptyLine;
 
             return shouldShow ? self.show() : self.hide();
         },

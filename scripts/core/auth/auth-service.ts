@@ -22,7 +22,7 @@ angular.module('superdesk.core.auth.auth', []).service('auth', ['api', 'session'
                     .then((userData) => {
                         session.start(sessionData, userData);
                         return session.identity;
-                    })
+                    }),
                 );
         };
 
@@ -55,7 +55,7 @@ angular.module('superdesk.core.auth.auth', []).service('auth', ['api', 'session'
                     .then((userData) => {
                         session.start(sessionData, userData);
                         return session.identity;
-                    })
+                    }),
                 );
         };
     }]);

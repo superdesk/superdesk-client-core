@@ -153,7 +153,7 @@ export const DELETE_SUGGESTION = 'DELETE_SUGGESTION';
 export const ADD_SUGGESTION = 'ADD_SUGGESTION';
 export const changeSuggestionsTypes = [DELETE_SUGGESTION, ADD_SUGGESTION];
 export const styleSuggestionsTypes = Object.keys(highlightsConfig).filter(
-    (key) => highlightsConfig[key].type === 'STYLE'
+    (key) => highlightsConfig[key].type === 'STYLE',
 );
 export const blockSuggestionTypes = [
     'BLOCK_STYLE_SUGGESTION',
@@ -175,7 +175,7 @@ export const suggestionsTypes = [
 ];
 
 export const isSuggestion = (highlightId) => suggestionsTypes.some(
-    (suggestionType) => highlightId.indexOf(suggestionType) === 0
+    (suggestionType) => highlightId.indexOf(suggestionType) === 0,
 );
 
 export const isComment = (highlightId) => highlightId.startsWith(highlightsConfig.COMMENT.type);

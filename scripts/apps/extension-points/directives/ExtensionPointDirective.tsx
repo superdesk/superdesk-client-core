@@ -44,7 +44,7 @@ export function ExtensionPointDirective(extensionPoints, _, $q) {
             $q.all(
                 registeredExtensions.map((extension, index) => (
                     _buildCompoment(extension, scope)
-                ))
+                )),
             )
                 .then((components) => {
                     const elements = components.map((component, index) => (

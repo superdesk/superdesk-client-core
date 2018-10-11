@@ -1,5 +1,4 @@
 
-
 describe('Image Crop', () => {
     beforeEach(window.module('superdesk.core.upload'));
     beforeEach(window.module('superdesk.core.services.imageFactory'));

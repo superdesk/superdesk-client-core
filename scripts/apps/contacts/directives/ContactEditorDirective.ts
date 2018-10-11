@@ -26,7 +26,7 @@ export function ContactEditorDirective(
     $filter,
     Keys,
     $rootScope,
-    _
+    _,
 ) {
     // contains all the injected services to be passed down to child
     // components via props
@@ -55,7 +55,7 @@ export function ContactEditorDirective(
                     svc: services,
                     contact: scope.origContact,
                     onCancel: scope.onCancel,
-                })
+                }),
             );
 
             var contactFormComponent = ReactDOM.render(contactFormContainer, elem[0]);

@@ -53,7 +53,7 @@ describe('externalSourceController', () => {
                 guid: externalSourceData.item.guid,
                 desk: userDesks[2]._id,
             },
-            null, null, {repo: externalSourceData.item.ingest_provider}
+            null, null, {repo: externalSourceData.item.ingest_provider},
         );
 
         expect(notify.success.calls.count()).toEqual(1);
@@ -72,7 +72,7 @@ describe('externalSourceController', () => {
                 guid: externalSourceData.item.guid,
                 desk: userDesks[1]._id,
             },
-            null, null, {repo: externalSourceData.item.ingest_provider}
+            null, null, {repo: externalSourceData.item.ingest_provider},
         );
     }));
 
@@ -88,7 +88,7 @@ describe('externalSourceController', () => {
                 guid: externalSourceData.item.guid,
                 desk: userDesks[0]._id,
             },
-            null, null, {repo: externalSourceData.item.ingest_provider}
+            null, null, {repo: externalSourceData.item.ingest_provider},
         );
     }));
 

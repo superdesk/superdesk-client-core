@@ -12,7 +12,7 @@ UserPreferencesDirective.$inject = ['api', 'session', 'preferencesService', 'not
 
 export function UserPreferencesDirective(
     api, session, preferencesService, notify, asset, metadata, desks, modal,
-    $timeout, $q, userList, _, config, search
+    $timeout, $q, userList, _, config, search,
 ) {
     return {
         templateUrl: asset.templateUrl('apps/users/views/user-preferences.html'),
@@ -72,7 +72,7 @@ export function UserPreferencesDirective(
                     }, (reason) => {
                         if (reason !== 'canceledByModal') {
                             notify.error(gettext(
-                                'User preferences could not be saved...'
+                                'User preferences could not be saved...',
                             ));
                         }
                     });
@@ -142,12 +142,11 @@ export function UserPreferencesDirective(
                 scope.userPrefs.$setDirty();
             };
 
-
             scope.showCategory = function(preference) {
                 if (preference.category === 'rows') {
                     return _.get(config, 'list.singleLineView');
                 }
-                let noShowCategories = [
+                const noShowCategories = [
                     'article_defaults',
                     'categories',
                     'desks',
@@ -160,7 +159,6 @@ export function UserPreferencesDirective(
             };
 
             scope.profileConfig = _.get(config, 'profile', {});
-
 
             /**
              * Determine if the planning related preferences should be shown based on the existance of the

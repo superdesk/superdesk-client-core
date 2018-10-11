@@ -10,7 +10,7 @@ export class Logger {
         }
     }
     logWarning(message, additionalData) {
-        let data = {
+        const data = {
             level: 'warning', // one of 'info', 'warning', or 'error'
         };
 

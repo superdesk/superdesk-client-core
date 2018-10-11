@@ -1,5 +1,4 @@
 
-
 describe('user notifications', () => {
     var notifications = {_items: [
         {recipients: [{user_id: 'foo', read: 0}, {user_id: 'bar', read: 1}]},

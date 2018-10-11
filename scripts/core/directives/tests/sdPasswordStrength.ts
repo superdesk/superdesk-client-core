@@ -1,5 +1,4 @@
 
-
 describe('sdPasswordStrength', () => {
     var $compile, $rootScope, compileDirective;
 
@@ -33,7 +32,7 @@ describe('sdPasswordStrength', () => {
 
         expect($el.next()
             .find('.label')
-            .text()
+            .text(),
         ).toBe('Short');
     });
 
@@ -42,7 +41,7 @@ describe('sdPasswordStrength', () => {
 
         expect($el.next()
             .find('.label')
-            .text()
+            .text(),
         ).toBe('OK');
     });
 

@@ -21,6 +21,6 @@ export function UserDeleteCommand(api, data, $q, notify, gettext, $rootScope) {
             } else {
                 notify.error(gettext('Error. User Profile cannot be disabled.'));
             }
-        }
+        },
     );
 }

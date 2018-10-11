@@ -10,7 +10,7 @@ function orderedMapGetRange(orderedMap, fromKey, toKey) {
     let lastItemFound = false;
 
     return orderedMap.filter((item) => {
-        let itemKey = item.getKey();
+        const itemKey = item.getKey();
 
         if (itemKey === fromKey) {
             firstItemFound = true;
@@ -42,11 +42,10 @@ export function getDraftCharacterListForSelection(editorState, selection) {
     const selectionStartKey = selection.getStartKey();
     const selectionEndKey = selection.getEndKey();
 
-
     const selectedBlocks = orderedMapGetRange(
         editorState.getCurrentContent().getBlockMap(),
         selectionStartKey,
-        selectionEndKey
+        selectionEndKey,
     );
 
     const selectedCharacters = selectedBlocks

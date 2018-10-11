@@ -36,7 +36,6 @@ angular.module('superdesk.apps.content-api', [
     .directive('sdContentApiSearchResults', directives.ContentAPISearchResultsDirective)
     .directive('sdContentApiSortBar', directives.ContentAPISortBarDirective)
 
-
     .config(['apiProvider', function(apiProvider) {
         apiProvider.api('search_capi', {
             type: 'http',

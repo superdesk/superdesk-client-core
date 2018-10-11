@@ -18,6 +18,6 @@ export function UserEnableCommand(api, data, $q, notify, gettext, usersService, 
             } else {
                 notify.error(gettext('Error. User Profile cannot be enabled.'));
             }
-        }
+        },
     );
 }

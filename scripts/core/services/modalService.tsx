@@ -18,7 +18,7 @@ export default angular.module('superdesk.core.services.modal', ['superdesk-ui', 
             headerText = defaults.headerText,
             okText = defaults.okText,
             cancelText = defaults.cancelText,
-            additionalCancelText = defaults.additionalCancelText
+            additionalCancelText = defaults.additionalCancelText,
         ) {
             return confirmBase(bodyText, headerText, okText, cancelText, additionalCancelText);
         }
@@ -31,7 +31,7 @@ export default angular.module('superdesk.core.services.modal', ['superdesk-ui', 
                 nextOptions.headerText,
                 nextOptions.okText,
                 nextOptions.cancelText,
-                nextOptions.additionalCancelText
+                nextOptions.additionalCancelText,
             );
         }
 
@@ -40,7 +40,7 @@ export default angular.module('superdesk.core.services.modal', ['superdesk-ui', 
             headerText,
             okText,
             cancelText,
-            additionalCancelText
+            additionalCancelText,
         ) {
             var delay = $q.defer();
 
@@ -98,14 +98,14 @@ export default angular.module('superdesk.core.services.modal', ['superdesk-ui', 
                                 setTimeout(() => {
                                     ReactDOM.render(
                                         reactComponent,
-                                        document.querySelector('#custom-modal-placeholder')
+                                        document.querySelector('#custom-modal-placeholder'),
                                     );
                                 });
                             },
                             closeModal: () => {
                                 $modalInstance.close();
                                 ReactDOM.unmountComponentAtNode(
-                                    document.querySelector('#custom-modal-placeholder')
+                                    document.querySelector('#custom-modal-placeholder'),
                                 );
                             },
                         });
@@ -127,7 +127,7 @@ export default angular.module('superdesk.core.services.modal', ['superdesk-ui', 
                                     resolve(value);
                                 }}
                                 close={closeModal}
-                            />
+                            />,
                         );
                     });
             });

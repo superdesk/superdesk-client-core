@@ -302,7 +302,7 @@ export default angular.module('superdesk.core.upload.imagecrop', [
                         if (img.width < rendition.width || img.height < rendition.height) {
                             var text = $interpolate(
                                 gettext('Sorry, but image must be at least {{ r.width }}x{{ r.height }},' +
-                                ' (it is {{ img.width }}x{{ img.height }}).')
+                                ' (it is {{ img.width }}x{{ img.height }}).'),
                             )({
                                 r: rendition,
                                 img: img,

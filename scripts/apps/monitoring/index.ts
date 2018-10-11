@@ -47,7 +47,6 @@ angular.module('superdesk.apps.monitoring', [
     .config(config.SpikeMonitoring)
     .config(config.Personal)
 
-
     .filter('splitText', SplitFilter)
 
     .run(['keyboardManager', 'gettext', function(keyboardManager, gettext) {

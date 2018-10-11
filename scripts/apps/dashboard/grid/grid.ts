@@ -32,7 +32,7 @@ angular.module('superdesk.apps.dashboard.grid', [])
                     widget.sizex,
                     widget.sizey,
                     widget.col,
-                    widget.row
+                    widget.row,
                 );
             };
 

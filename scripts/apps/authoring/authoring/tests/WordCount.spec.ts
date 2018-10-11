@@ -4,7 +4,7 @@ describe('WordCount directive', () => {
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.apps.authoring'));
     beforeEach(inject(($rootScope, $compile) => {
-        let html = '<span sd-word-count data-item="item.body_html" data-html="true"></span>';
+        const html = '<span sd-word-count data-item="item.body_html" data-html="true"></span>';
 
         scope = $rootScope.$new();
 

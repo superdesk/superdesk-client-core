@@ -75,8 +75,8 @@ export function MonitoringController($rootScope, $scope, $location, desks, confi
     function preview(item) {
         self.previewItem = item;
         self.state['with-preview'] = superdeskFlags.flags.previewing = !!item;
-        let sendPreviewEvent = _.get(config, 'list.narrowView') && search.singleLine && superdeskFlags.flags.authoring;
-        let evnt = item ? 'rowview:narrow' : 'rowview:default';
+        const sendPreviewEvent = _.get(config, 'list.narrowView') && search.singleLine && superdeskFlags.flags.authoring;
+        const evnt = item ? 'rowview:narrow' : 'rowview:default';
 
         if (!_.isNil(self.previewItem)) {
             self.showHistoryTab = self.previewItem.state !== 'ingested' &&

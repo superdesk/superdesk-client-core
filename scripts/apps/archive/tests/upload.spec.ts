@@ -171,4 +171,3 @@ describe('Upload controller', () => {
             });
         }));
 });
-

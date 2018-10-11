@@ -48,7 +48,6 @@ export default function MetaPlaceDirective(api) {
                     scope.item[scope.field] = [];
                 }
 
-
                 if (!scope.item[scope.field].find((item) => getCode(item) === getCode(term))) {
                     scope.$applyAsync(() => {
                         scope.item[scope.field] = scope.item[scope.field].concat([term]);

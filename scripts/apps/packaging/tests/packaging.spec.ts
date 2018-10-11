@@ -1,5 +1,4 @@
 
-
 describe('packaging', () => {
     beforeEach(window.module('superdesk.apps.packaging'));
     beforeEach(window.module('superdesk.apps.searchProviders'));

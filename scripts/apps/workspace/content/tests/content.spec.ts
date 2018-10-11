@@ -283,7 +283,7 @@ describe('superdesk.apps.workspace.content', () => {
 
                 angular.extend(scope, props);
                 return _$compile_(
-                    '<form><sd-content-schema-editor data-model="model"></sd-content-schema-editor></form>'
+                    '<form><sd-content-schema-editor data-model="model"></sd-content-schema-editor></form>',
                 )(scope);
             };
         }));

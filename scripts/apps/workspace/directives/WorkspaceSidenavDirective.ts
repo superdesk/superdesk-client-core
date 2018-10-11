@@ -56,7 +56,7 @@ export function WorkspaceSidenavDirective(superdeskFlags, workspaceMenu, Keys, g
              *
              */
             scope.highlightsHotkey = function() {
-                let ddlhighlights = elem.find('.highlights-dropdown .dropdown__toggle');
+                const ddlhighlights = elem.find('.highlights-dropdown .dropdown__toggle');
 
                 if (ddlhighlights.length > 0) {
                     ddlhighlights.first().click();

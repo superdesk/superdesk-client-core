@@ -30,7 +30,7 @@ export function SearchController($location, searchProviderService) {
             // init selected/default provider
             if (this.providers.length) {
                 const selectedProvider = this.providers.find((provider) =>
-                    provider.search_provider === $location.search().repo || provider._id === $location.search().repo
+                    provider.search_provider === $location.search().repo || provider._id === $location.search().repo,
                 );
                 const defaultProvider = $location.search().repo === undefined &&
                                         this.providers.find((provider) => provider.is_default);

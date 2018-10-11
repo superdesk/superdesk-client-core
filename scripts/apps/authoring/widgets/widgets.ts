@@ -42,7 +42,7 @@ function WidgetsManagerCtrl($scope, $routeParams, authoringWidgets, archiveServi
             }
         }
 
-        let widgets = authoringWidgets.filter((widget) => (
+        const widgets = authoringWidgets.filter((widget) => (
             !!widget.display[display] &&
                 // If the widget requires a feature configured, then test this
                 // feature name against the config (defaulting to true)

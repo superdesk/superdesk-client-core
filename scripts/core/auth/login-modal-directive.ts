@@ -81,10 +81,10 @@ angular.module('superdesk.core.auth.login', []).directive('sdLoginModal', [
                     window.open(apiUrl + '/login/' + service);
                 };
 
-                let apiUrl = _.get(config, 'server.url', '').replace('api/', 'api'); // make sure there is no trailing /
-                let handleAuthMessage = (event) => {
+                const apiUrl = _.get(config, 'server.url', '').replace('api/', 'api'); // make sure there is no trailing /
+                const handleAuthMessage = (event) => {
                     if (event.origin === apiUrl.replace('/api', '') && event.data.type === 'oauth') {
-                        let message = event.data;
+                        const message = event.data;
 
                         if (message.data.token) {
                             auth.loginOAuth(message);

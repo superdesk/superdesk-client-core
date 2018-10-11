@@ -27,7 +27,6 @@ export const DEFAULT_LIST_CONFIG = {
     ],
 };
 
-
 export const KEYCODES = {
     BACKSPACE: 8,
     ENTER: 13,

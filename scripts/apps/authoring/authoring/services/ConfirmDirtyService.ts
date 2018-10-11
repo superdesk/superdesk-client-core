@@ -46,7 +46,7 @@ export function ConfirmDirtyService($window, $q, $filter, api, modal, gettextCat
             gettextCatalog.getString('Save changes?'),
             gettextCatalog.getString('Go-To'),
             gettextCatalog.getString('Ignore'),
-            gettextCatalog.getString('Cancel')
+            gettextCatalog.getString('Cancel'),
         );
     };
 
@@ -59,7 +59,7 @@ export function ConfirmDirtyService($window, $q, $filter, api, modal, gettextCat
             gettextCatalog.getString('Save changes?'),
             gettextCatalog.getString('Save'),
             gettextCatalog.getString('Ignore'),
-            gettextCatalog.getString('Cancel')
+            gettextCatalog.getString('Cancel'),
         );
     };
 
@@ -71,7 +71,7 @@ export function ConfirmDirtyService($window, $q, $filter, api, modal, gettextCat
             gettextCatalog.getString('Do you want to publish the article?'),
             gettextCatalog.getString('Publishing'),
             gettextCatalog.getString('Publish'),
-            gettextCatalog.getString('Cancel')
+            gettextCatalog.getString('Cancel'),
         );
     };
 
@@ -83,7 +83,7 @@ export function ConfirmDirtyService($window, $q, $filter, api, modal, gettextCat
             gettextCatalog.getString('There are some unsaved changes, do you want to save and publish it now?'),
             gettextCatalog.getString('Save changes?'),
             gettextCatalog.getString('Save and publish'),
-            gettextCatalog.getString('Cancel')
+            gettextCatalog.getString('Cancel'),
         );
     };
 
@@ -93,11 +93,11 @@ export function ConfirmDirtyService($window, $q, $filter, api, modal, gettextCat
     this.confirmSendTo = function confirmSendTo(action) {
         return modal.confirm(
             $interpolate(gettextCatalog.getString(
-                'There are some unsaved changes, do you want to save and send it now?'
+                'There are some unsaved changes, do you want to save and send it now?',
             ))({action: action}),
             gettextCatalog.getString('Save changes?'),
             $interpolate(gettextCatalog.getString('Save and send'))({action: action}),
-            gettextCatalog.getString('Cancel')
+            gettextCatalog.getString('Cancel'),
         );
     };
 
@@ -105,9 +105,9 @@ export function ConfirmDirtyService($window, $q, $filter, api, modal, gettextCat
         return modal.confirm(
             $interpolate(
                 gettextCatalog.getString(
-                    'Configuration has changed. {{ message }} Would you like to save the story to your workspace?'
-                )
-            )({message: msg})
+                    'Configuration has changed. {{ message }} Would you like to save the story to your workspace?',
+                ),
+            )({message: msg}),
         );
     };
 
@@ -148,7 +148,7 @@ export function ConfirmDirtyService($window, $q, $filter, api, modal, gettextCat
      * @param {Object} item
      */
     this.confirmFeatureMedia = function(item) {
-        let defered = $q.defer();
+        const defered = $q.defer();
 
         $modal.open({
             templateUrl: 'scripts/apps/authoring/views/confirm-media-associated.html',
@@ -171,7 +171,6 @@ export function ConfirmDirtyService($window, $q, $filter, api, modal, gettextCat
                 };
             }],
         });
-
 
         return defered.promise;
     };

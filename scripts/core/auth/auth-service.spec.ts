@@ -19,7 +19,7 @@ describe('auth service', () => {
     }));
 
     it('can login', inject((auth, session, $httpBackend, $rootScope) => {
-        let success = jasmine.createSpy('authenticated');
+        const success = jasmine.createSpy('authenticated');
 
         $httpBackend.expectPOST('http://localhost:5000/api/auth').respond(200, {user: 'foo', token: 'bar'});
 

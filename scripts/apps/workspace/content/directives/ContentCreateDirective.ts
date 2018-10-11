@@ -89,7 +89,7 @@ export function ContentCreateDirective(api, desks, templates, content, authoring
             });
 
             function getDefaultTemplate() {
-                let desk = desks.getCurrentDesk();
+                const desk = desks.getCurrentDesk();
 
                 scope.defaultTemplate = null;
                 if (desk && desk.default_content_template) {

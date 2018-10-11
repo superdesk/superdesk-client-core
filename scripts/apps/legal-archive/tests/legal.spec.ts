@@ -1,5 +1,4 @@
 
-
 describe('legal archive service', () => {
     beforeEach(window.module('superdesk.core.api'));
     beforeEach(window.module('superdesk.apps.legal_archive'));

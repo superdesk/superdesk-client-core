@@ -1,5 +1,4 @@
 
-
 describe('superdesk.core.features module', () => {
     beforeEach(window.module('superdesk.core.features'));
     beforeEach(inject((urls, $q) => {

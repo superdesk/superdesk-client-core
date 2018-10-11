@@ -20,7 +20,7 @@ declare const it: any;
 
 // globals
 interface Window {
-    instgrm:any;
+    instgrm: any;
     tansa: any;
     $: any;
     _paq: any;
@@ -31,11 +31,10 @@ interface Window {
     dragPageY: any;
     gettext: any;
     _: any;
-    webkitURL:  any;
+    webkitURL: any;
     superdeskConfig: any;
     module: any;
 }
-
 
 // ------------------------------------------------------------------------------------------------
 // TYPES
@@ -43,4 +42,3 @@ interface Window {
 
 type Dictionary<K, V> = {};
 type Omit<K, V> = Pick<K, Exclude<keyof K, V>>;
-

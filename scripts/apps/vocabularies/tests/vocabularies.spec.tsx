@@ -18,7 +18,7 @@ describe('vocabularies', () => {
         vocabularies.getVocabularies().then(
             (vocabs) => {
                 result = vocabs;
-            }
+            },
         );
         $rootScope.$digest();
         expect(api.getAll).toHaveBeenCalledWith('vocabularies', {where: {type: 'manageable'}});
@@ -58,7 +58,7 @@ describe('vocabularies', () => {
 
             it('being detected correctly', () => {
                 expect(scope.model).toEqual(
-                    {foo: null, bar: null, spam: null, qux: null, corge: null, is_active: null}
+                    {foo: null, bar: null, spam: null, qux: null, corge: null, is_active: null},
                 );
             });
         });
@@ -110,7 +110,7 @@ describe('vocabularies', () => {
 
                     $rootScope.$digest();
                     expect(scope.errorMessage).toBe(
-                        'Minimum height and width should be greater than or equal to 200'
+                        'Minimum height and width should be greater than or equal to 200',
                     );
                     expect(api.save).not.toHaveBeenCalled();
                     expect(metadata.initialize).toHaveBeenCalled();
@@ -137,10 +137,10 @@ describe('vocabularies', () => {
             }));
 
             it('convert values for qcode having integer type', inject(($compile) => {
-                let items = [{name: 'foo', qcode: '1'}];
-                let itemsValidation = [{name: true, qcode: true}];
-                let schema = {name: {required: true}, qcode: {type: 'integer'}};
-                let schemaFields = [{key: 'name', required: true}, {key: 'qcode', type: 'integer'}];
+                const items = [{name: 'foo', qcode: '1'}];
+                const itemsValidation = [{name: true, qcode: true}];
+                const schema = {name: {required: true}, qcode: {type: 'integer'}};
+                const schemaFields = [{key: 'name', required: true}, {key: 'qcode', type: 'integer'}];
                 let updatedValue;
                 const update = (item, key, value) => {
                     updatedValue = value;
@@ -156,7 +156,7 @@ describe('vocabularies', () => {
                             remove={() => null}
                             update={update}
                         />
-                    )
+                    ),
                 );
 
                 const instance = wrapper.instance();
@@ -189,7 +189,7 @@ describe('vocabularies', () => {
             }));
 
             it('can remove an item', inject(() => {
-                let items = scope.vocabulary.items;
+                const items = scope.vocabulary.items;
 
                 scope.removeItem(0);
                 expect(scope.vocabulary.items.length).toBe(0);

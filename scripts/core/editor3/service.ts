@@ -18,7 +18,7 @@ let store = null;
  * if they are spellchecker targets
  * @private
  */
-let spellcheckerStores = [];
+const spellcheckerStores = [];
 
 /**
  * @ngdoc service

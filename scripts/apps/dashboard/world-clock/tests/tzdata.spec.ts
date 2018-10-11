@@ -72,7 +72,7 @@ describe('tzdata factory', () => {
 
                 result = tzdata.getTzNames();
                 expect(result).toEqual([]);
-            }
+            },
         );
 
         it('returns a sorted list of available time zone names', () => {

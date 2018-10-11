@@ -44,4 +44,3 @@ export function setFieldMetadata(item, fieldKey, contentKey, contentValue) {
         [contentKey]: wrapper.wrap(contentValue),
     };
 }
-
