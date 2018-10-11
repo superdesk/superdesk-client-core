@@ -299,9 +299,9 @@ describe('search', () => {
         scheduleFilter.click();
 
         element.all(by.buttonText('Last 24 Hours')).then(function(items) {
-          expect(items.length).toBe(4);
-          scrollToView(items[3])
-          items[3].click();
+            expect(items.length).toBe(4);
+            scrollToView(items[3]);
+            items[3].click();
         });
 
         expect(globalSearch.getItems().count()).toBe(1);
