@@ -162,17 +162,17 @@ function updateText(editorState, content, block, newText, diffMatchPatch) {
     diffs = diffMatchPatch.diff_main(text, newText);
 
     diffs.forEach((diff) => {
-        const text = diff[1];
+        const _text = diff[1];
 
         if (diff[0] === 0) {
-            offset += text.length;
+            offset += _text.length;
         } else if (diff[0] === 1) {
             selection = createSelectionForBlock(editorState, block, offset);
-            offset += text.length;
+            offset += _text.length;
 
-            newContent = Modifier.insertText(newContent, selection, text);
+            newContent = Modifier.insertText(newContent, selection, _text);
         } else {
-            selection = createSelectionForBlock(editorState, block, offset, text.length);
+            selection = createSelectionForBlock(editorState, block, offset, _text.length);
 
             newContent = Modifier.removeRange(newContent, selection, 'forward');
         }

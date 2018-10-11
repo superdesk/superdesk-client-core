@@ -19,6 +19,7 @@ declare const expect: any;
 declare const it: any;
 
 // globals
+// tslint:disable-next-line: interface-name
 interface Window {
     instgrm: any;
     tansa: any;

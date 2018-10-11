@@ -21,9 +21,9 @@ export function ItemPreview(asset, storage, desks, _, familyService, privileges)
      * @param {Object} _ - event data (unused)
      * @param {Object=} args - the item that was spiked/unspiked/moved
      */
-    function shouldClosePreview(scope, _, args) {
+    function shouldClosePreview(scope, __, args) {
         // if preview pane currently previewed then close
-        if (_.name === 'content:update' && scope.item && args &&
+        if (__.name === 'content:update' && scope.item && args &&
                 Object.keys(args.items)[0] === scope.item._id) {
             scope.close();
         } else if (scope.item && args && args.item === scope.item._id) {

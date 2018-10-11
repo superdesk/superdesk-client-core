@@ -7,8 +7,8 @@ export function LockService($q, api, session, privileges, notify) {
      */
     this.lock = function lock(item, force, action) {
         if (!item.lock_user && item._editable || force) {
-            return api.save('archive_lock', {}, {lock_action: action}, item).then((lock) => {
-                _.extend(item, lock);
+            return api.save('archive_lock', {}, {lock_action: action}, item).then((_lock) => {
+                _.extend(item, _lock);
                 item._locked = true;
                 item.lock_user = session.identity._id;
                 item.lock_session = session.sessionId;

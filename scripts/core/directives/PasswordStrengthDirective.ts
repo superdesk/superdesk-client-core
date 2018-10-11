@@ -78,7 +78,7 @@ function PasswordStrength(gettext, $interpolate) {
              * reflect the strength of the given password.
              * @param {string} pass the password to compute the strength of
              */
-            var updateStrength = function updateStrength(pass) {
+            var updateStrength = function(pass) {
                 var strength = 0;
 
                 if (typeof pass === 'string') {

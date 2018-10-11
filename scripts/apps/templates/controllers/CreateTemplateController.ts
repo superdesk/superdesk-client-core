@@ -25,8 +25,8 @@ export function CreateTemplateController(item, templates, api, desks, $q, notify
             });
         }
 
-        desks.fetchCurrentUserDesks().then((desks) => {
-            self.desks = desks;
+        desks.fetchCurrentUserDesks().then((_desks) => {
+            self.desks = _desks;
         });
     }
 
@@ -49,9 +49,9 @@ export function CreateTemplateController(item, templates, api, desks, $q, notify
         }
 
         return api.save('content_templates', template, diff)
-            .then((data) => {
+            .then((_data) => {
                 self._issues = null;
-                return data;
+                return _data;
             }, (response) => {
                 notifySaveError(response, notify);
                 self._issues = response.data._issues;

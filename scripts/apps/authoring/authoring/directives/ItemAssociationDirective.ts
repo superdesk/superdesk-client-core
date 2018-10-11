@@ -39,7 +39,7 @@ export function ItemAssociationDirective(renditions) {
         controller: ctrl.AssociationController,
         controllerAs: 'associations',
         templateUrl: 'scripts/apps/authoring/views/item-association.html',
-        link: function(scope, elem, attr, ctrl) {
+        link: function(scope, elem, attr, _ctrl) {
             const dragOverClass = 'dragover';
 
             const MEDIA_TYPES = [];
@@ -60,7 +60,7 @@ export function ItemAssociationDirective(renditions) {
             if (!elem.hasClass('no-drop-zone')) {
                 // it should prevent default as long as this is valid image
                 elem.on('dragover', (event) => {
-                    if (MEDIA_TYPES.indexOf(ctrl.getSuperdeskType(event)) > -1) {
+                    if (MEDIA_TYPES.indexOf(_ctrl.getSuperdeskType(event)) > -1) {
                         event.preventDefault();
                         event.stopPropagation();
                         addDragOverClass();
@@ -79,7 +79,7 @@ export function ItemAssociationDirective(renditions) {
                     event.preventDefault();
                     event.stopPropagation();
 
-                    ctrl.initializeUploadOnDrop(scope, event);
+                    _ctrl.initializeUploadOnDrop(scope, event);
                 });
             }
 
@@ -107,7 +107,7 @@ export function ItemAssociationDirective(renditions) {
              * @description Remove the associations
              */
             scope.remove = function(item) {
-                ctrl.updateItemAssociation(scope, null, item.fieldId);
+                _ctrl.updateItemAssociation(scope, null, item.fieldId);
             };
 
             /**
@@ -118,7 +118,7 @@ export function ItemAssociationDirective(renditions) {
              */
             scope.upload = function() {
                 if (scope.editable) {
-                    ctrl.uploadAndCropImages(scope);
+                    _ctrl.uploadAndCropImages(scope);
                 }
             };
 

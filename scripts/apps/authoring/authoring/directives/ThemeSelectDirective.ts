@@ -33,8 +33,8 @@ export function ThemeSelectDirective(authThemes) {
 
                 let themeClasses = '';
 
-                angular.forEach(theme, (value, key) => {
-                    themeClasses += ' sd-editor--' + key + '-' + value;
+                angular.forEach(theme, (value, _key) => {
+                    themeClasses += ' sd-editor--' + _key + '-' + value;
                 });
 
                 angular.element('.page-content-container')

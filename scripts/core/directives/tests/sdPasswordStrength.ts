@@ -8,7 +8,7 @@ describe('sdPasswordStrength', () => {
     beforeEach(inject((_$compile_, _$rootScope_) => {
         $compile = _$compile_;
         $rootScope = _$rootScope_;
-        compileDirective = function compileDirective(scopeValues) {
+        compileDirective = function(scopeValues) {
             var html = '<input type="password" ng-model="pwd" sd-password-strength>';
             var newScope = $rootScope.$new();
 

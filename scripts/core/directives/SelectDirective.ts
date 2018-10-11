@@ -184,10 +184,10 @@ export default angular.module('superdesk.core.directives.select', ['superdesk.co
                         setModelValue(true);
                     }
 
-                    function setModelValue(isMultiple) {
+                    function setModelValue(_isMultiple) {
                         var value;
 
-                        if (isMultiple) {
+                        if (_isMultiple) {
                             value = [];
                             angular.forEach(scope.items, (item) => {
                                 if (item.checked) {

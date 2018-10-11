@@ -28,6 +28,8 @@
             true,
             "generic"
         ],
+        "prefer-const": false,
+        "one-variable-per-declaration": false,
         "object-literal-shorthand": false,
         "variable-name": false,
         "forin": false,

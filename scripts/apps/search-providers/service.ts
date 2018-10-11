@@ -1,11 +1,11 @@
-export default function SearchProviderService(providerTypes, $filter, api, allowed) {
+export default function SearchProviderService($filter, api) {
     this.getAllowedProviderTypes = () => api.get('search_providers_allowed')
         .then((allowedTypes) => allowedTypes._items);
 
-    this.getProviderLabels = (providerTypes) => {
+    this.getProviderLabels = (_providerTypes) => {
         var providerLabels = {};
 
-        providerTypes.forEach((type) => {
+        _providerTypes.forEach((type) => {
             providerLabels[type.search_provider] = type.label;
         });
 
@@ -18,4 +18,4 @@ export default function SearchProviderService(providerTypes, $filter, api, allow
     this.getActiveSearchProviders = () => this.getSearchProviders({where: {is_closed: {$ne: true}}});
 }
 
-SearchProviderService.$inject = ['providerTypes', '$filter', 'api', 'allowed'];
+SearchProviderService.$inject = ['$filter', 'api'];

@@ -111,14 +111,14 @@ function InlineCommentsCtrl($scope, userList, metadata, content) {
 
         const userIds = getAllUserIdsFromComments(allComments);
 
-        const comments = {
+        const _comments = {
             RESOLVED: resolvedComments,
             UNRESOLVED: unresolvedComments,
         };
 
         userList.getAll().then((users) => {
             $scope.users = convertUsersArrayToObject(filterUsers(users, userIds));
-            $scope.items = comments;
+            $scope.items = _comments;
         });
     });
 }

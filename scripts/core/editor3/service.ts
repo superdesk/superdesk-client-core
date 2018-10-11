@@ -91,7 +91,9 @@ export class EditorService {
      * criteria in the editor.
      */
     selectNext() {
-        ok() && store.dispatch(action.findNext());
+        if (ok()) {
+            store.dispatch(action.findNext());
+        }
     }
 
     /**
@@ -101,7 +103,9 @@ export class EditorService {
      * criteria in the editor.
      */
     selectPrev() {
-        ok() && store.dispatch(action.findPrev());
+        if (ok()) {
+            store.dispatch(action.findPrev());
+        }
     }
 
     /**
@@ -111,7 +115,9 @@ export class EditorService {
      * @description Replaces the currently highlighted search criteria with the given text.
      */
     replace(txt) {
-        ok() && store.dispatch(action.replace(txt));
+        if (ok()) {
+            store.dispatch(action.replace(txt));
+        }
     }
 
     /**
@@ -121,7 +127,9 @@ export class EditorService {
      * @description Replaces all the search criteria with the given text.
      */
     replaceAll(txt) {
-        ok() && store.dispatch(action.replaceAll(txt));
+        if (ok()) {
+            store.dispatch(action.replaceAll(txt));
+        }
     }
 
     /**
@@ -170,7 +178,9 @@ export class EditorService {
      * @description Highlights the current search criteria in the editor.
      */
     render() {
-        ok() && store.dispatch(action.renderHighlights());
+        if (ok()) {
+            store.dispatch(action.renderHighlights());
+        }
     }
 
     /**
@@ -245,7 +255,9 @@ export class EditorService {
      * @description For every block from editor content merge the changes received from tansa.
      */
     setHtmlFromTansa(html) {
-        ok() && store.dispatch(action.setHtmlFromTansa(html));
+        if (ok()) {
+            store.dispatch(action.setHtmlFromTansa(html));
+        }
     }
 }
 

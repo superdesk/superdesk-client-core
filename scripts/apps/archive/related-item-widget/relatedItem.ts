@@ -210,17 +210,17 @@ function RelatedItemController(
 
     BaseWidgetController.call(this, $scope);
 
-    $scope.$watch('widget.configuration', (config) => {
-        if (config && config.sluglineMatch && config.sluglineMatch !== $scope.itemListOptions.sluglineMatch) {
-            $scope.itemListOptions.sluglineMatch = config.sluglineMatch;
+    $scope.$watch('widget.configuration', (_config) => {
+        if (_config && _config.sluglineMatch && _config.sluglineMatch !== $scope.itemListOptions.sluglineMatch) {
+            $scope.itemListOptions.sluglineMatch = _config.sluglineMatch;
         }
 
-        if (config && config.modificationDateAfter &&
-            config.modificationDateAfter !== $scope.itemListOptions.modificationDateAfter) {
-            if (config.modificationDateAfter === 'today') {
+        if (_config && _config.modificationDateAfter &&
+            _config.modificationDateAfter !== $scope.itemListOptions.modificationDateAfter) {
+            if (_config.modificationDateAfter === 'today') {
                 $scope.itemListOptions.modificationDateAfter = today();
             } else {
-                $scope.itemListOptions.modificationDateAfter = config.modificationDateAfter;
+                $scope.itemListOptions.modificationDateAfter = _config.modificationDateAfter;
             }
         }
     }, true);

@@ -295,17 +295,17 @@ export default angular.module('superdesk.core.upload.imagecrop', [
                         img.src = src;
                     }
 
-                    function validateConstraints(img, rendition) {
+                    function validateConstraints(_img, rendition) {
                         if (!angular.isDefined(rendition)) {
                             return true;
                         }
-                        if (img.width < rendition.width || img.height < rendition.height) {
+                        if (_img.width < rendition.width || _img.height < rendition.height) {
                             var text = $interpolate(
                                 gettext('Sorry, but image must be at least {{ r.width }}x{{ r.height }},' +
                                 ' (it is {{ img.width }}x{{ img.height }}).'),
                             )({
                                 r: rendition,
-                                img: img,
+                                img: _img,
                             });
 
                             elem.append('<p class="error">' + text);
@@ -321,16 +321,16 @@ export default angular.module('superdesk.core.upload.imagecrop', [
                 * @param {Object} rendition
                 * @return {Array} [x0, y0, x1, y1]
                 */
-                    function getDefaultCoordinates(img, rendition) {
+                    function getDefaultCoordinates(_img, rendition) {
                         if (!rendition.width || !rendition.height) {
-                            return [0, 0, img.width, img.height];
+                            return [0, 0, _img.width, _img.height];
                         }
 
-                        var ratio = Math.min(img.width / rendition.width, img.height / rendition.height);
+                        var ratio = Math.min(_img.width / rendition.width, _img.height / rendition.height);
                         var width = Math.floor(ratio * rendition.width);
                         var height = Math.floor(ratio * rendition.height);
-                        var x0 = Math.floor((img.width - width) / 2);
-                        var y0 = Math.floor((img.height - height) / 2);
+                        var x0 = Math.floor((_img.width - width) / 2);
+                        var y0 = Math.floor((_img.height - height) / 2);
 
                         return [x0, y0, x0 + width, y0 + height];
                     }
@@ -432,19 +432,19 @@ export default angular.module('superdesk.core.upload.imagecrop', [
                     // draws points
                     drawPointsFromModel();
                     // setup overlay to listen mouse events
-                    (function onMouseEvents($img) {
+                    (function onMouseEvents(_$img) {
                         var debouncedPoiUpdateModel = _.debounce((newPoi) => {
                             vm.updatePOI(newPoi);
                         }, 500);
 
                         function updatePOIModel(e) {
                             var newPoi = {
-                                x: Math.round(e.offsetX * 100 / $img.width) / 100,
-                                y: Math.round(e.offsetY * 100 / $img.height) / 100,
+                                x: Math.round(e.offsetX * 100 / _$img.width) / 100,
+                                y: Math.round(e.offsetY * 100 / _$img.height) / 100,
                             };
 
                             // refresh the points
-                            drawPoint($img, newPoi);
+                            drawPoint(_$img, newPoi);
 
                             // and notice the controller that points have been moved
                             debouncedPoiUpdateModel(newPoi);

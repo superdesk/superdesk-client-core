@@ -1,4 +1,4 @@
-var Raven = require('raven-js');
+import Raven from 'raven-js';
 
 export class Logger {
     constructor(config) {
@@ -10,9 +10,9 @@ export class Logger {
         }
     }
     logWarning(message, additionalData) {
-        const data = {
-            level: 'warning', // one of 'info', 'warning', or 'error'
-        };
+        const data = {};
+
+        data['level'] = 'warning';
 
         if (additionalData != null) {
             try {

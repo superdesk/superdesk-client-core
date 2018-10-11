@@ -13,8 +13,8 @@ export function DeskeditMacros(macros, WizardHandler) {
     return {
         link: function(scope) {
             if (scope.desk && scope.desk.edit) {
-                macros.getByDesk(scope.desk.edit.name, true).then((macros) => {
-                    scope.macros = macros;
+                macros.getByDesk(scope.desk.edit.name, true).then((_macros) => {
+                    scope.macros = _macros;
                 });
             } else {
                 macros.get().then((macroList) => {

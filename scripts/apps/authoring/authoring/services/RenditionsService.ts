@@ -29,7 +29,7 @@ export function RenditionsService(metadata, $q, api, superdesk, _) {
 
         if (item._type && item._type === 'externalsource') {
             performRenditions = superdesk.intent('list', 'externalsource', {item: item}, 'fetch-externalsource')
-                .then((item) => api.find('archive', item._id));
+                .then((_item) => api.find('archive', _item._id));
         }
         return performRenditions;
     };

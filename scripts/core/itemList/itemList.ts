@@ -94,8 +94,12 @@ angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
 
                         if (scope.options.existingRelations) {
                             scope.processedItems = scope.options.existingRelations;
-                            itemListListener && itemListListener();
-                            optionsListener && optionsListener();
+                            if (itemListListener) {
+                                itemListListener();
+                            }
+                            if (optionsListener) {
+                                optionsListener();
+                            }
                         } else {
                             optionsListener = scope.$watch('options.related', () => {
                                 if (scope.options.related && scope.options.item) {
