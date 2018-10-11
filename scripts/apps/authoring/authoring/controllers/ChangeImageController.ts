@@ -97,7 +97,10 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
         /* Throw an exception if PoI is outisde of a crop */
         function poiIsInsideEachCrop() {
             const originalImage = $scope.data.metadata.renditions.original;
-            const originalPoi = {x: originalImage.width * $scope.data.poi.x, y: originalImage.height * $scope.data.poi.y};
+            const originalPoi = {
+                x: originalImage.width * $scope.data.poi.x,
+                y: originalImage.height * $scope.data.poi.y,
+            };
 
             _.forEach($scope.data.cropData, (cropData, cropName) => {
                 if (originalPoi.y < cropData.CropTop ||
