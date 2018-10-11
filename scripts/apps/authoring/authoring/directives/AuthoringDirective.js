@@ -581,6 +581,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                             'Article cannot be published. Please accept or reject all suggestions first.'
                         ),
                     });
+
                     return;
                 }
 
@@ -594,14 +595,13 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                         headerText: gettext('Resolving comments'),
                         okText: gettext('Ok'),
                         cancelText: gettext('Cancel'),
-                    }).then((ok) => {
-                        ok && performPublish();
-                    });
+                    }).then((ok) => ok ? performPublish() : false);
+
                     return;
                 }
 
                 // Check if there's unpublished related items
-                familyService.fetchRelatedItems($scope.item)
+                return familyService.fetchRelatedItems($scope.item)
                     .then(({_items}) => {
                         if (_items.length > 0) {
                             const firstSentence = _items.length === 1
@@ -611,15 +611,13 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                                 ? 'It'
                                 : 'They';
 
-                            modal.confirm({
+                            return modal.confirm({
                                 bodyText: gettext(
                                     `${firstSentence}. `
                                     + `${it} will not be sent out as related items. `
                                     + 'Do you want to publish the article now?'
                                 ),
-                            }).then((ok) => {
-                                ok && performPublish();
-                            });
+                            }).then((ok) => ok ? performPublish() : false);
                         } else {
                             return performPublish();
                         }
