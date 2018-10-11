@@ -25,32 +25,32 @@ function pasteContentFromOpenEditor(
     editorState: EditorState,
     editorKey: string,
     onChange: (e: EditorState) => void,
-    editorFormat: Array<string>): DraftHandleValue {
+    editorFormat: Array<string>,
+): DraftHandleValue {
+    if (html.includes(editorKey)) { // comes from the same editor
+        return 'not-handled';
+    }
 
-        if (html.includes(editorKey)) { // comes from the same editor
-            return 'not-handled';
-        }
+    for (const key in window[EDITOR_GLOBAL_REFS]) {
+        if (html.includes(key)) {
+            const editor = window[EDITOR_GLOBAL_REFS][key];
 
-        for (const key in window[EDITOR_GLOBAL_REFS]) {
-            if (html.includes(key)) {
-                const editor = window[EDITOR_GLOBAL_REFS][key];
+            if (editor) {
+                const internalClipboard = editor.getClipboard();
 
-                if (editor) {
-                    const internalClipboard = editor.getClipboard();
+                if (internalClipboard) {
+                    const blocksArray = [];
 
-                    if (internalClipboard) {
-                        const blocksArray = [];
+                    internalClipboard.forEach((b) => blocksArray.push(b));
+                    const contentState = ContentState.createFromBlockArray(blocksArray);
 
-                        internalClipboard.forEach((b) => blocksArray.push(b));
-                        const contentState = ContentState.createFromBlockArray(blocksArray);
-
-                        return insertContentInState(editorState, contentState, onChange, editorFormat);
-                    }
+                    return insertContentInState(editorState, contentState, onChange, editorFormat);
                 }
             }
         }
+    }
 
-        return 'not-handled';
+    return 'not-handled';
 }
 
 /**
