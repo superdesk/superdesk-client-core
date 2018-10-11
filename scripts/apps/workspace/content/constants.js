@@ -91,6 +91,11 @@ export const GET_LABEL_MAP = (gettext) => ({
     language: gettext('Language'),
     usageterms: gettext('Usage Terms'),
     sms_message: gettext('SMS Message'),
+    description_text: gettext('Description'),
+    archive_description: gettext('Archive description'),
+    alt_text: gettext('Alt text'),
+    copyrightholder: gettext('Copyright holder'),
+    copyrightnotice: gettext('Copyright notice'),
 });
 
 export const HAS_FORMAT_OPTIONS = Object.freeze({
