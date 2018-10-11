@@ -696,7 +696,12 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
                 _.defer(() => {
                     const el = elem.find('button:not([disabled]):not(.dropdown__toggle)');
 
-                    if (Array.isArray(el) && el.length > 0) {
+                    if (
+                        typeof el === 'object'
+                        && el != null
+                        && typeof el[0] === 'object'
+                        && typeof el[0].focus === 'function'
+                    ) {
                         el[0].focus();
                     }
                 });
