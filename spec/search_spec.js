@@ -298,11 +298,12 @@ describe('search', () => {
         scrollToView(scheduleFilter);
         scheduleFilter.click();
 
-        var scheduleDay = element(by.buttonText('Last 24 Hours'));
+        element.all(by.buttonText('Last 24 Hours')).then(function(items) {
+          expect(items.length).toBe(4);
+          scrollToView(items[3])
+          items[3].click();
+        });
 
-        scrollToView(scheduleDay);
-
-        scheduleDay.click();
         expect(globalSearch.getItems().count()).toBe(1);
         expect(globalSearch.getItem(0).element(by.className('state-scheduled')).isDisplayed()).toBe(true);
         expect(globalSearch.getItem(0).element(by.className('state-scheduled')).getText()).toEqual('SCHEDULED');
