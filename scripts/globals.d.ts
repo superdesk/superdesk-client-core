@@ -17,6 +17,8 @@ declare const describe: any;
 declare const beforeEach: any;
 declare const expect: any;
 declare const it: any;
+interface Window { module: any; }
+
 
 // ------------------------------------------------------------------------------------------------
 // TYPES
