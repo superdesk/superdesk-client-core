@@ -298,7 +298,7 @@ describe('search', () => {
         scrollToView(scheduleFilter);
         scheduleFilter.click();
 
-        element.all(by.buttonText('Last 24 Hours')).then(function(items) {
+        element.all(by.buttonText('Last 24 Hours')).then((items) => {
             expect(items.length).toBe(4);
             scrollToView(items[3]);
             items[3].click();
