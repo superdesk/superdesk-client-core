@@ -10,11 +10,7 @@ MetadataCtrl.$inject = [
 function MetadataCtrl(
     $scope, desks, metadata, privileges, datetimeHelper,
     preferencesService, config, moment, content) {
-    desks.initialize()
-        .then(() => {
-            $scope.deskLookup = desks.deskLookup;
-            $scope.userLookup = desks.userLookup;
-        });
+    desks.initialize();
 
     $scope.change_profile = config.item_profile && config.item_profile.change_profile === 1 &&
                             _.get($scope, 'origItem.type') === 'text';
