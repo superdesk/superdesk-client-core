@@ -17,7 +17,24 @@ declare const describe: any;
 declare const beforeEach: any;
 declare const expect: any;
 declare const it: any;
-interface Window { module: any; }
+
+// globals
+interface Window {
+    instgrm:any;
+    tansa: any;
+    $: any;
+    _paq: any;
+    GoogleAnalyticsObject: any;
+    TimeoutHttpInterceptor: any;
+    RequestService: any;
+    clipboardData: any;
+    dragPageY: any;
+    gettext: any;
+    _: any;
+    webkitURL:  any;
+    superdeskConfig: any;
+    module: any;
+}
 
 
 // ------------------------------------------------------------------------------------------------
