@@ -21,7 +21,9 @@ export function DeskeditPeople(gettext, WizardHandler, desks, $rootScope) {
             });
 
             scope.add = function(user) {
-                scope.deskMembers.unshift(user);
+                if (!_.find(scope.deskMembers, {_id: user._id})) {
+                    scope.deskMembers.unshift(user);
+                }
             };
 
             scope.remove = function(user) {
