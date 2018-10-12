@@ -12,7 +12,7 @@ export interface ISuperdeskGlobalConfig {
     };
     auth: {
         google: boolean
-    }
+    };
     ingest: {
         PROVIDER_DASHBOARD_DEFAULTS: {
             show_log_messages: boolean;

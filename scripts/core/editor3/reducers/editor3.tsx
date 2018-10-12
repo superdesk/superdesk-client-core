@@ -103,7 +103,7 @@ export const onChange = (state, newState, force = false, keepSelection = false, 
                 ...state,
                 editorState,
             }),
-            keepSelection
+            keepSelection,
         );
     }
 
