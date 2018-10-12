@@ -1,126 +1,56 @@
-<div class="form__row" ng-if="validator.headline">
+<div class="form__row" ng-repeat="field in fields track by field.field">
     <sd-line-input
-        ng-model="item.headline"
+        ng-if="field.type === 'string' || (!field.type && !field.cv)"
+        ng-model="item[field.field]"
         data-dark="dark"
         data-boxed="boxed"
-        data-required="validator.headline.required"
-        data-label="{{:: 'Title' | translate}}"
-        data-disabled="disabled"
-        data-onchange="onChange({key: 'headline'})"
+        data-label="{{ field.label }}"
+        data-required="field.required"
+        data-disabled="isDisabled(field)"
+        data-onchange="onChange({key: field.field})"
         data-onblur="onBlur()"
-        data-maxlength="validator.headline.maxlength"
-        data-placeholder="{{ placeholder.headline }}">
-    </sd-line-input>
-</div>
+        data-maxlength="field.maxlength"
+        data-placeholder="{{ placeholder[field.field] }}"
+        data-textarea="field.textarea"
+    />
 
-<div class="form__row" ng-if="validator.description_text">
     <sd-line-input
-        ng-model="item.description_text"
+        ng-if="field.type === 'text'"
+        ng-model="item.extra[field.field]"
         data-dark="dark"
         data-boxed="boxed"
-        data-textarea="true"
-        data-required="validator.description_text.required"
-        data-label="{{:: 'Description' | translate}}"
-        data-disabled="disabled"
+        data-label="{{ field.label }}"
+        data-required="field.required"
+        data-disabled="isDisabled(field)"
+        data-onchange="onChange({key: 'extra'})"
         data-onblur="onBlur()"
-        data-onchange="onChange({key: 'description_text'})"
-        data-maxlength="validator.description_text.maxlength"
-        data-placeholder="{{ placeholder.description_text }}">
-    </sd-line-input>
-</div>
+        data-maxlength="field.maxlength"
+        data-placeholder="{{ placeholder[field.field] }}"
+    />
 
-<!-- Only used by APP as a read-only version of `description_text`. It comes from their image archive. -->
-<div class="form__row" ng-if="validator.archive_description">
-    <sd-line-input
-        ng-model="item.archive_description"
-        data-dark="dark"
-        data-boxed="boxed"
-        data-textarea="true"
-        data-required="validator.archive_description.required"
-        data-label="{{:: 'Archive description' | translate}}"
-        data-disabled="disabled || associated"
-        data-onblur="onBlur()"
-        data-onchange="onChange({key: 'archive_description'})"
-        data-maxlength="validator.archive_description.maxlength"
-        data-placeholder="{{ placeholder.archive_description }}">
-    </sd-line-input>
-</div>
+    <div ng-if="field.type === 'list' || field.cv" class="sd-line-input">
+        <label>{{ field.label }}</label>
+        <div sd-meta-terms
+            class="data"
+            data-item="item"
+            data-field="{{ field.cv.schema_field || 'subject'}}"
+            data-unique="qcode"
+            data-list="field.cv.items"
+            data-cv="field.cv"
+            ng-disabled="isDisabled(field)"
+            data-header="true"
+            data-change="onChange({key: field.field})"
+            data-include-parent="{{ field.includeparent }}"
+        ></div>
+    </div>
 
-<div class="form__row" ng-if="validator.alt_text">
-    <sd-line-input
-        ng-model="item.alt_text"
-        data-dark="dark"
-        data-boxed="boxed"
-        data-required="validator.alt_text.required"
-        data-label="{{:: 'Alt text' | translate}}"
-        data-disabled="disabled"
-        data-onchange="onChange({key: 'alt_text'})"
-        data-onblur="onBlur()"
-        data-maxlength="validator.alt_text.maxlength"
-        data-placeholder="{{ placeholder.alt_text }}">
-    </sd-line-input>
-</div>
-
-<div class="form__row" ng-if="validator.byline">
-    <sd-line-input
-        ng-model="item.byline"
-        data-dark="dark"
-        data-boxed="boxed"
-        data-required="validator.byline.required"
-        data-label="{{:: 'Credit' | translate}}"
-        data-disabled="disabled"
-        data-onchange="onChange({key: 'byline'})"
-        data-onblur="onBlur()"
-        data-placeholder="{{ placeholder.byline }}">
-    </sd-line-input>
-</div>
-
-<div class="form__row" ng-if="validator.copyrightholder">
-    <sd-line-input
-        ng-model="item.copyrightholder"
-        data-dark="dark"
-        data-boxed="boxed"
-        data-required="validator.copyrightholder.required"
-        data-label="{{:: 'Copyright holder' | translate}}"
-        data-disabled="disabled"
-        data-onblur="onBlur()"
-        data-onchange="onChange({key: 'copyrightholder'})"
-        data-placeholder="{{ placeholder.copyrightholder }}">
-    </sd-line-input>
-</div>
-
-<div class="form__row" ng-if="validator.usageterms">
-    <sd-line-input
-        data-dark="dark"
-        data-boxed="boxed"
-        data-transclude="true"
-        data-required="validator.copyrightnotice.required"
-        data-label="{{:: 'Assign Rights' | translate}}"
-        data-placeholder="{{ placeholder.usageterms }}">
-        <select class="sd-line-input__select"
-            ng-model="item.usageterms"
-            ng-blur="onBlur()"
-            ng-change="onChange({key: 'usageterms'})"
-            ng-disabled="disabled">
-            <option translate value=""></option> <!-- not selected / blank option -->
-            <option translate value="single-usage">Single Usage</option>
-            <option translate value="time-restricted">Time Restricted</option>
-            <option translate value="indefinite-usage">Indefinite Usage</option>
-        </select>
-    </sd-line-input>
-</div>
-
-<div class="form__row" ng-if="validator.copyrightnotice">
-    <sd-line-input
-        ng-model="item.copyrightnotice"
-        data-dark="dark"
-        data-boxed="boxed"
-        data-required="validator.copyrightnotice.required"
-        data-label="{{:: 'Copyright notice' | translate}}"
-        data-disabled="disabled"
-        data-onblur="onBlur()"
-        data-onchange="onChange({key: 'copyrightnotice'})"
-        data-maxlength="validator.copyrightnotice.maxlength"
-        data-placeholder="{{ placeholder.copyrightnotice }}">
-    </sd-line-input>
+    <div ng-if="field.type === 'date'" class="sd-line-input">
+        <label>{{ field.label }}</label>
+        <div sd-datepicker
+            ng-disabled="isDisabled(field)"
+            ng-model="item.extra[field.field]"
+            data-format="YYYY-MM-DDT00:00:00+0000"
+            data-on-change="onChange({key: 'extra'})"
+        ></div>
+    </div>
 </div>

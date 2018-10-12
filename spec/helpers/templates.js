@@ -151,6 +151,15 @@ function Templates() {
      **/
     this.setTime = function(hour, minute) {
         element(by.model('tt')).sendKeys(hour.toString() + ':' + minute.toString());
+        element(by.id('add_time')).click();
+    };
+
+    /**
+     * getTime
+     * returns the first time in the list of time pills
+    **/
+    this.getTime = function() {
+        return element.all(by.repeater('time in cron_times')).first().getText();
     };
 
     /**

@@ -1,4 +1,4 @@
-var embedCodeHandlers = require('./embedCodeHandlers.js');
+var embedCodeHandlers = require('./embedCodeHandlers');
 
 angular.module('superdesk.apps.editor2.embed', []).controller('SdAddEmbedController', SdAddEmbedController);
 

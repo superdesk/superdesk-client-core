@@ -1,5 +1,5 @@
-import {IDirectiveScope} from "types/Angular/DirectiveScope";
-import {CronTimeInterval, createCronInterval} from "types/DataStructures/TimeInterval";
+import {IDirectiveScope} from 'types/Angular/DirectiveScope';
+import {CronTimeInterval, createCronInterval} from 'types/DataStructures/TimeInterval';
 
 interface ITimeIntervalUi {
     everyDay: 'true' | 'false'; // sd-check won't set a boolean

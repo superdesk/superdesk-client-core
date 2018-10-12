@@ -15,15 +15,20 @@ export class ProfileDetail extends React.Component<any, any> {
         const {svc, contact} = props;
         const {metadata} = svc;
 
-        let stateNames = [];
+        let stateNames = [], countries = [];
 
-        if (metadata.values.contact_states) {
-            stateNames = orderBy(metadata.values.contact_states, 'name', 'asc');
+        if (metadata.values.regions) {
+            stateNames = orderBy(metadata.values.regions, 'name', 'asc');
+        }
+
+        if (metadata.values.countries) {
+            countries = orderBy(metadata.values.countries, 'name', 'asc');
         }
 
         this.state = {
             jobTitles: orderBy(metadata.values.contact_job_titles, 'name', 'asc') || [],
-            stateNames: stateNames || [],
+            stateNames: stateNames,
+            countries: countries,
             phoneUsages: metadata.values.contact_phone_usage || [],
             mobileUsages: metadata.values.contact_mobile_usage || [],
             displayOtherStateField: this.shouldDisplayOtherState(props) || false,
@@ -61,7 +66,7 @@ export class ProfileDetail extends React.Component<any, any> {
         const {metadata} = svc;
 
         return !isEmpty(contact.contact_state) &&
-            !findKey(metadata.values.contact_states, (m) => m.qcode === contact.contact_state);
+            !findKey(metadata.values.regions, (m) => m.qcode === contact.contact_state);
     }
 
     getSearchResult(field, text) {
@@ -424,15 +429,17 @@ export class ProfileDetail extends React.Component<any, any> {
                     </Row>
 
                     <Row>
-                        <LineInput readOnly={readOnly}>
-                            <Label text={gettext('country')} />
-                            <Input
-                                field="country"
-                                value={get(contact, 'country', '')}
-                                onChange={onChange}
-                                type="text"
-                                readOnly={readOnly} />
-                        </LineInput>
+                        <SelectInput
+                            label={gettext('Country')}
+                            field="country"
+                            value={get(contact, 'country', '')}
+                            onChange={onChange}
+                            type="text"
+                            readOnly={readOnly}
+                            options={get(this.state, 'countries')}
+                            keyField="qcode"
+                            labelField="name"
+                            clearable />
                     </Row>
 
                     <Row>

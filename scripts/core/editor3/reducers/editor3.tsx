@@ -103,7 +103,7 @@ export const onChange = (state, newState, force = false, keepSelection = false, 
                 ...state,
                 editorState,
             }),
-            keepSelection
+            keepSelection,
         );
     }
 
@@ -304,9 +304,9 @@ const mergeEntityDataByKey = (state, {blockKey, entityKey, valuesToMerge}) => {
     const newBlockKey = newContentState.getKeyAfter(blockKey) || blockKey;
     const newBlock = newContentState.getBlockBefore(blockKey);
     const newSelection = selection.merge({
-        anchorOffset: newBlock != null ? newBlock.getLength() : 0,
+        anchorOffset: newBlock != null ? newBlock.getLength() : null,
         anchorKey: newBlock != null ? newBlock.getKey() : newBlockKey,
-        focusOffset: newBlock != null ? newBlock.getLength() : 0,
+        focusOffset: newBlock != null ? newBlock.getLength() : null,
         focusKey: newBlock != null ? newBlock.getKey() : newBlockKey,
         isBackward: false,
         hasFocus: true,
@@ -315,7 +315,7 @@ const mergeEntityDataByKey = (state, {blockKey, entityKey, valuesToMerge}) => {
     let newEditorState = EditorState.push(editorState, newContentState, 'change-block-data');
 
     newEditorState = EditorState.forceSelection(newEditorState, newSelection);
-    return onChange(state, newEditorState, entityDataHasChanged);
+    return onChange(state, newEditorState, entityDataHasChanged, true);
 };
 
 /**

@@ -39,6 +39,4 @@ gettext('replaced item {{ type }} about {{ subject }}'); gettext('\'URGENCY is a
 gettext('World Clock'); gettext('Ingest Stats'); gettext('Monitoring'); gettext('Activity Stream'); gettext('Activity stream widget');
 gettext('World clock widget'); gettext('Displaying news ingest statistics. You can switch color themes or graph sources.');
 gettext('This widget allows you to create literally any content view you may need in Superdesk, be it production or ingest. All you need is to select a desk, its stages or a saved search. Name your view once you are done. Enjoy!');
-gettext('ABSTRACT is too long');gettext('SLUGLINE is too long');gettext('HEADLINE is too long');
-
-
+gettext('ABSTRACT is too long'); gettext('SLUGLINE is too long'); gettext('HEADLINE is too long');
