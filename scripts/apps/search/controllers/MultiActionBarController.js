@@ -71,6 +71,7 @@ export function MultiActionBarController(
         packages.createPackageFromItems(multi.getItems())
             .then((newPackage) => {
                 superdesk.intent('edit', 'item', newPackage);
+                multi.reset();
             }, (response) => {
                 if (response.status === 403 && response.data && response.data._message) {
                     notify.error(gettext(response.data._message), 3000);
@@ -80,6 +81,7 @@ export function MultiActionBarController(
 
     this.addToPackage = function() {
         $rootScope.$broadcast('package:addItems', {items: multi.getItems(), group: 'main'});
+        multi.reset();
     };
 
     /**
