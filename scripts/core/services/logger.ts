@@ -1,15 +1,19 @@
 import Raven from 'raven-js';
 
-export class Logger {
-    constructor(config) {
-        if (config.raven && config.raven.dsn.length > 0) {
-            Raven.config(config.raven.dsn, {
+class Logger {
+    constructor() {
+        /* globals __SUPERDESK_CONFIG__: true */
+        const appConfig = __SUPERDESK_CONFIG__;
+
+        if (appConfig.raven && appConfig.raven.dsn.length > 0) {
+            Raven.config(appConfig.raven.dsn, {
                 logger: 'javascript-client',
-                release: config.version,
+                release: appConfig.version,
             }).install();
         }
     }
-    logWarning(message, additionalData) {
+
+    warn(message, additionalData) {
         const data = {};
 
         data['level'] = 'warning';
@@ -30,15 +34,7 @@ export class Logger {
     }
 }
 
-/**
- * @ngdoc service
- * @module superdesk.core.services
- * @name loger
- *
- * @description
- * logger service
- *
- * Sends logs to sentry servers
- */
+export const logger = new Logger();
+
 export default angular.module('superdesk.core.services.logger', [])
-    .service('logger', ['config', Logger]);
+    .service('logger', [Logger]);

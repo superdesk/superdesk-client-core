@@ -3,10 +3,6 @@ import {AtomicBlockParser} from '../to-html';
 import {ContentState, convertToRaw, convertFromRaw} from 'draft-js';
 import {BlockInlineStyleWrapper, BlockEntityWrapper, HTMLGenerator} from '../to-html';
 import {OrderedSet as OS} from 'immutable';
-import {Logger} from 'core/services/logger';
-
-const emptyConfigsForTesting = {};
-const logger = new Logger(emptyConfigsForTesting);
 
 describe('core.editor3.html.to-html.HTMLGenerator', () => {
     it('should correctly parse lists', () => {
@@ -27,7 +23,7 @@ describe('core.editor3.html.to-html.HTMLGenerator', () => {
             ['unordered-list-item', 0, '8'],
         ]);
 
-        const result = new HTMLGenerator(contentState, logger).html();
+        const result = new HTMLGenerator(contentState).html();
 
         expect(result).toBe(`
             <ul>
@@ -66,7 +62,7 @@ describe('core.editor3.html.to-html.HTMLGenerator', () => {
             ['unstyled', 0, 'abc'],
         ]);
 
-        const result = new HTMLGenerator(contentState, logger).html();
+        const result = new HTMLGenerator(contentState).html();
 
         expect(result).toBe(`
             <ul>
@@ -149,14 +145,14 @@ describe('core.editor3.html.to-html.HTMLGenerator', () => {
 describe('core.editor3.html.to-html.AtomicBlockParser', () => {
     it('should correctly parse embeds', () => {
         const {block, contentState} = testUtils.embedBlockAndContent();
-        const html = new AtomicBlockParser(contentState, logger).parse(block);
+        const html = new AtomicBlockParser(contentState).parse(block);
 
         expect(html).toBe('<div class="embed-block"><h1>Embed Title</h1></div>');
     });
 
     it('should correctly parse images', () => {
         const {block, contentState} = testUtils.imageBlockAndContent();
-        const html = new AtomicBlockParser(contentState, logger).parse(block);
+        const html = new AtomicBlockParser(contentState).parse(block);
 
         expect(html).toBe('<div class="media-block"><img src="image_href" alt="image_alt_text" />' +
             '<span class="media-block__description">image_description</span></div>');
@@ -167,7 +163,7 @@ describe('core.editor3.html.to-html.AtomicBlockParser', () => {
             media: {renditions: {original: {href: 'image_href'}}},
         });
 
-        const html = new AtomicBlockParser(contentState, logger).parse(block);
+        const html = new AtomicBlockParser(contentState).parse(block);
 
         expect(html).toBe('<div class="media-block"><img src="image_href" alt="" /></div>');
     });
@@ -185,7 +181,7 @@ describe('core.editor3.html.to-html.AtomicBlockParser', () => {
             },
         });
 
-        const html = new AtomicBlockParser(contentState, logger).parse(block);
+        const html = new AtomicBlockParser(contentState).parse(block);
 
         expect(html).toBe('<table><tbody><tr><td><p>a</p></td><td></td><td><p>c</p></td></tr>' +
             '<tr><td><p>d</p></td><td><p>e</p></td><td><p>f</p></td></tr></tbody></table>');
@@ -201,7 +197,7 @@ describe('core.editor3.html.to-html.AtomicBlockParser', () => {
             },
         });
 
-        const html = new AtomicBlockParser(contentState, logger).parse(block);
+        const html = new AtomicBlockParser(contentState).parse(block);
 
         expect(html).toBe('<table><tbody><tr><td><p>a</p></td><td><p>b</p></td><td><p>c</p></td></tr></tbody></table>');
     });
@@ -221,7 +217,7 @@ describe('core.editor3.html.to-html.AtomicBlockParser', () => {
             },
         });
 
-        const html = new AtomicBlockParser(contentState, logger).parse(block);
+        const html = new AtomicBlockParser(contentState).parse(block);
 
         expect(html).toBe('<table><thead><tr><th><p>a</p></th><th></th><th><p>c</p></th></tr></thead>' +
             '<tbody><tr><td><p>d</p></td><td><p>e</p></td><td><p>f</p></td></tr>' +
@@ -239,7 +235,7 @@ describe('core.editor3.html.to-html.AtomicBlockParser', () => {
             },
         });
 
-        const html = new AtomicBlockParser(contentState, logger).parse(block);
+        const html = new AtomicBlockParser(contentState).parse(block);
 
         expect(html).toBe('<table><thead><tr><th><p>a</p></th><th><p>b</p></th><th><p>c</p></th></tr></thead></table>');
     });
@@ -253,7 +249,7 @@ describe('core.editor3.html.to-html.AtomicBlockParser', () => {
             },
         });
 
-        const html = new AtomicBlockParser(contentState, logger).parse(block);
+        const html = new AtomicBlockParser(contentState).parse(block);
 
         expect(html).toBe('<table><tbody><tr><td></td><td></td><td></td></tr>' +
             '<tr><td></td><td></td><td></td></tr></tbody></table>');
