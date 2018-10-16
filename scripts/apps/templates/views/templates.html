@@ -58,7 +58,10 @@
                               {{ :: weekdays[day] | translate }}
                               <span ng-if="$index < template.schedule.day_of_week.length-1">, </span>
                           </span>
-                          <span ng-repeat="cron in template.schedule.cron_list" class="creation-time"> <i class="icon-time"></i> at {{ cron.split(' ')[1] + ':' + cron.split(' ')[0] }}<span>
+                      </li>
+                      <li ng-if="template.schedule.cron_list.length">
+                          <h4>{{ :: 'Scheduled Time(s)' | translate }}</h4>
+                          <i class="icon-time"></i> <span ng-repeat="cron in template.schedule.cron_list" class="creation-time"> {{ cron.split(' ')[1] + ':' + cron.split(' ')[0] }}<span ng-if="!$last">,&nbsp;</span><span>
                       </li>
                   </ul>
               </div>
