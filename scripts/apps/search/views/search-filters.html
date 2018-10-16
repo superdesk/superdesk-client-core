@@ -148,7 +148,8 @@
                 <button ng-repeat="predefinedFilter in dateFilter.predefinedFilters track by predefinedFilter.key"
                         ng-click="togglePredefinedDateFilter(dateFilter.fieldname, predefinedFilter.key)" 
                         class="btn btn--mini" 
-                        ng-class="{active: hasPredefinedDateFilter(dateFilter.fieldname, predefinedFilter.key), 'btn--primary': hasPredefinedDateFilter(dateFilter.fieldname, predefinedFilter.key)}">{{predefinedFilter.label}}</button>
+                        ng-class="{active: hasPredefinedDateFilter(dateFilter.fieldname, predefinedFilter.key), 'btn--primary': hasPredefinedDateFilter(dateFilter.fieldname, predefinedFilter.key)}"
+                        id="filter-{{dateFilter.fieldname}}-{{predefinedFilter.key}}">{{predefinedFilter.label}}</button>
             </div>
 
             <fieldset ng-show="(dateFilter.labelFrom != null && dateFilter.labelTo != null) && (repo.search === 'local' || providerType.startsWith('scanpix') || repo.search === 'content-api' || providerType === 'aapmm')">

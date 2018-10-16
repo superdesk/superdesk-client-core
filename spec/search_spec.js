@@ -298,11 +298,10 @@ describe('search', () => {
         scrollToView(scheduleFilter);
         scheduleFilter.click();
 
-        element.all(by.buttonText('Last 24 Hours')).then((items) => {
-            expect(items.length).toBe(4);
-            scrollToView(items[3]);
-            items[3].click();
-        });
+        var dateScheduled = element(by.css('#filter-schedule_settings\\.utc_publish_schedule-last_24_hours'));
+
+        scrollToView(dateScheduled);
+        dateScheduled.click();
 
         expect(globalSearch.getItems().count()).toBe(1);
         expect(globalSearch.getItem(0).element(by.className('state-scheduled')).isDisplayed()).toBe(true);
