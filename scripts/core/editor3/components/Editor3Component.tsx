@@ -16,7 +16,6 @@ import {getVisibleSelectionRect} from 'draft-js';
 import {Map} from 'immutable';
 import Toolbar from './toolbar';
 import {SpellcheckerDecorator} from './spellchecker';
-import {SpaceDecorator} from './invisibles';
 import {LinkDecorator} from './links';
 import {getBlockRenderer} from './blockRenderer';
 import {customStyleMap} from './customStyleMap';
@@ -91,7 +90,6 @@ export class Editor3Component extends React.Component<any, any> {
     static getDecorator(disableSpellchecker) {
         const decorators: any = [
             LinkDecorator,
-            SpaceDecorator,
         ];
 
         if (!disableSpellchecker) {

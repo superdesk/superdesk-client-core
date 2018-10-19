@@ -383,20 +383,6 @@ $editor-styleButton-size: 3rem;
 }
 
 .Editor3-editor.unstyled__block--invisibles {
-	.space-component {
-		margin-left: .2em;
-	}
-
-	.space-component > span::before {
-		content: '•';
-		color: $sd-blue;
-	}
-
-	.space-component > span[style^="color"]::before {
-		color: inherit; // let it inherit suggestions color
-		padding-left: .2em;
-	}
-
 	[data-block]:after {
 		content: '\E690';
 		font-family: 'sd_icons';
@@ -450,16 +436,6 @@ $editor-styleButton-size: 3rem;
 				padding-top: 0.2em;
 			}
 		}
-	}
-}
-
-.space-component {
-	&.add-suggestion {
-		background-color: rgba(0, 180, 0, 0.2);
-	}
-
-	&.delete-suggestion {
-		background-color: rgba(255, 0, 0, 0.2);
 	}
 }
 
