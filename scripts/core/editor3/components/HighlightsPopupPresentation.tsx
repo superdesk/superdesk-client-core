@@ -1,7 +1,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export class HighlightsPopupPresentation extends React.Component<any, any> {
+interface IProps {
+    availableActions: Array<any>;
+    header: any;
+    content: any;
+    scrollableContent: any;
+    stickyFooter: any;
+    isRoot: boolean;
+    editorNode: any;
+    className: string;
+}
+
+interface IState {
+    actionsDropdownOpen: boolean;
+}
+
+export class HighlightsPopupPresentation extends React.Component<IProps, IState> {
     static propTypes: any;
     static defaultProps: any;
 
