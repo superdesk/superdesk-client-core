@@ -3,6 +3,8 @@
         <h2 class="sd-page__page-heading" translate>Internal Destinations</h2>
     </div>
     <div class="sd-page__header">
+        <sd-search-handler ng-model="query.name" data-debounce="200"></sd-search-handler>
+
         <sd-check type="radio" ng-model="active_only" label-position="inside" style="margin-left: 0;">{{:: 'All'| translate}}</sd-check>
         <sd-check type="radio" ng-model="active_only" label-position="inside" ng-value="true" ng-checked="true">{{:: 'Active only'| translate}}</sd-check>
         <span class="sd-page__element-grow"></span>
@@ -12,7 +14,7 @@
     </div>
     <div class="sd-page__content">
         <ul class="pills-list">
-            <li ng-repeat="destination in dest.destinations track by destination._id"
+            <li ng-repeat="destination in dest.destinations | filter: query track by destination._id"
                 ng-class="{inactive: !destination.is_active}" ng-show="!active_only || (active_only && destination.is_active)"
                 class="clearfix">
                 <h6>{{ destination.name}}</h6>
