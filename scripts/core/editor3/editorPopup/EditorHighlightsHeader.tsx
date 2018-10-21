@@ -2,7 +2,7 @@ import React from 'react';
 
 interface IProps {
     availableActions: Array<any>;
-    header: any;
+    children: any;
 }
 
 interface IState {
@@ -36,7 +36,7 @@ export class EditorHighlightsHeader extends React.Component<IProps, IState> {
             <div className="editor-popup__header">
 
                 <div className="editor-popup__header-text">
-                    {this.props.header}
+                    {this.props.children}
                 </div>
 
                 {

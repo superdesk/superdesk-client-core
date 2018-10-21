@@ -1,23 +1,11 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import {EditorHighlightsHeader} from '../editorPopup/EditorHighlightsHeader';
 
 interface IProps {
-    availableActions: Array<any>;
-    header: any;
-    content: any;
-    scrollableContent: any;
-    stickyFooter: any;
-    isRoot: boolean;
+    children: any;
     editorNode: any;
-    className: string;
 }
 
-interface IState {
-    actionsDropdownOpen: boolean;
-}
-
-export class HighlightsPopupPresentation extends React.Component<IProps, IState> {
+export class HighlightsPopupPositioner extends React.Component<IProps> {
     static propTypes: any;
     static defaultProps: any;
 
@@ -27,9 +15,6 @@ export class HighlightsPopupPresentation extends React.Component<IProps, IState>
 
     constructor(props) {
         super(props);
-        this.state = {
-            actionsDropdownOpen: false,
-        };
         this.animationTimer = null;
         this.position = this.position.bind(this);
         this.positionOnNextAnimationFrame = this.positionOnNextAnimationFrame.bind(this);
@@ -101,69 +86,16 @@ export class HighlightsPopupPresentation extends React.Component<IProps, IState>
         window.removeEventListener('click', this.positionOnNextAnimationFrame);
     }
     render() {
-
-        const popUpContent = [
-            this.props.header == null ? null : (
-                <EditorHighlightsHeader
-                    key="1"
-                    availableActions={this.props.availableActions}
-                    header={this.props.header}
-                />
-            ),
-            this.props.content == null ? null : (
-                <div key="2" className="editor-popup__content-block">
-                    {this.props.content}
-                </div>
-            ),
-            this.props.scrollableContent == null && this.props.stickyFooter == null ? null : (
-                <div key="3" className="editor-popup__secondary-content">
-                    {
-                        this.props.scrollableContent == null ? null : (
-                            <div className="editor-popup__content-scrollable ">
-                                {this.props.scrollableContent}
-                            </div>
-                        )
-                    }
-                    {
-                        this.props.stickyFooter == null ? null : (
-                            <div className="editor-popup__content-block">
-                                {this.props.stickyFooter}
-                            </div>
-                        )
-                    }
-                </div>
-            ),
-        ];
-
-        if (this.props.isRoot) {
-            return (
-                <div className={'editor-popup editor-popup--open ' + this.props.className} ref={ (el) => {
-                    this.highlightsPopupRootElement = el;
+        return (
+            <div className={'editor-popup editor-popup--open '} ref={ (el) => {
+                this.highlightsPopupRootElement = el;
+            }}>
+                <div className="editor-popup__main editor-popup__main--floating" ref={(el) => {
+                    this.highlightsPopupMainFlexElement = el;
                 }}>
-                    <div className="editor-popup__main editor-popup__main--floating" ref={(el) => {
-                        this.highlightsPopupMainFlexElement = el;
-                    }}>
-                        {popUpContent}
-                    </div>
+                    {this.props.children}
                 </div>
-            );
-        } else {
-            return (
-                <div className={this.props.className}>
-                    {popUpContent}
-                </div>
-            );
-        }
+            </div>
+        );
     }
 }
-
-HighlightsPopupPresentation.propTypes = {
-    availableActions: PropTypes.array,
-    header: PropTypes.object,
-    content: PropTypes.object,
-    scrollableContent: PropTypes.object,
-    stickyFooter: PropTypes.object,
-    isRoot: PropTypes.bool,
-    editorNode: PropTypes.object,
-    className: PropTypes.string,
-};
