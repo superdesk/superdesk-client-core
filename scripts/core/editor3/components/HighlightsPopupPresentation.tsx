@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {EditorHighlightsHeader} from '../editorPopup/EditorHighlightsHeader';
 
 interface IProps {
     availableActions: Array<any>;
@@ -43,11 +44,6 @@ export class HighlightsPopupPresentation extends React.Component<IProps, IState>
         this.animationTimer = window.requestAnimationFrame(() => {
             this.animationTimer = null;
             position();
-        });
-    }
-    toggleActionsDropdown() {
-        this.setState({
-            actionsDropdownOpen: !this.state.actionsDropdownOpen,
         });
     }
     position() {
@@ -105,53 +101,14 @@ export class HighlightsPopupPresentation extends React.Component<IProps, IState>
         window.removeEventListener('click', this.positionOnNextAnimationFrame);
     }
     render() {
-        const {availableActions} = this.props;
-
-        const actionsDropdownStyles: any = this.state.actionsDropdownOpen !== true ? {} : {
-            display: 'block',
-            position: 'absolute',
-            width: 'auto',
-            padding: '1rem 0',
-            marginBottom: 12, // so the last item doesn't look like it's shaddow is cut off
-        };
 
         const popUpContent = [
             this.props.header == null ? null : (
-                <div key="1" className="editor-popup__header">
-
-                    <div className="editor-popup__header-text">
-                        {this.props.header}
-                    </div>
-
-                    {
-                        availableActions.length < 1 ? null : (
-                            <div className="editor-popup__header-tools">
-                                <div className="dropdown dropdown--align-right">
-                                    <button
-                                        className="icn-btn dropdown__toggle"
-                                        onClick={() => this.toggleActionsDropdown()}>
-                                        <i className="icon-dots-vertical" />
-                                    </button>
-
-                                    <ul className="dropdown__menu" style={actionsDropdownStyles}>
-                                        {
-                                            availableActions.map((action, i) => (
-                                                <li key={i}>
-                                                    <button onClick={() => {
-                                                        this.toggleActionsDropdown();
-                                                        action.onClick();
-                                                    }}>
-                                                        <i className={action.icon} />{action.text}
-                                                    </button>
-                                                </li>
-                                            ))
-                                        }
-                                    </ul>
-                                </div>
-                            </div>
-                        )
-                    }
-                </div>
+                <EditorHighlightsHeader
+                    key="1"
+                    availableActions={this.props.availableActions}
+                    header={this.props.header}
+                />
             ),
             this.props.content == null ? null : (
                 <div key="2" className="editor-popup__content-block">
