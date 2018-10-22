@@ -12,6 +12,7 @@ import './styles/dictionaries.scss';
 import {DictionaryService} from './services';
 import {DictionaryEditController, DictionaryConfigController} from './controllers';
 import * as directive from './directives';
+import { coreMenuGroups } from 'core/activity/activity';
 
 /**
  * @ngdoc module
@@ -31,6 +32,7 @@ angular.module('superdesk.apps.dictionaries', [
             controller: DictionaryConfigController,
             templateUrl: 'scripts/apps/dictionaries/views/settings.html',
             category: superdesk.MENU_SETTINGS,
+            settings_menu_group: coreMenuGroups.CONTENT_CONFIG,
             priority: -800,
             privileges: {dictionaries: 1},
         });

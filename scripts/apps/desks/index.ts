@@ -12,6 +12,7 @@ import './styles/desks.scss';
 import * as ctrl from './controllers';
 import * as directive from './directives';
 import {DesksFactory} from './services';
+import { coreMenuGroups } from 'core/activity/activity';
 
 /**
  * @ngdoc module
@@ -67,6 +68,7 @@ angular.module('superdesk.apps.desks', [
                 controller: ctrl.DeskSettingsController,
                 templateUrl: 'scripts/apps/desks/views/settings.html',
                 category: superdesk.MENU_SETTINGS,
+                settings_menu_group: coreMenuGroups.WORKFLOW,
                 priority: -800,
                 privileges: {desks: 1},
             })

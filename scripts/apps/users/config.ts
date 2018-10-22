@@ -8,6 +8,7 @@ import {
     UserRolesController,
     SessionsDeleteCommand,
 } from './controllers';
+import { coreMenuGroups } from 'core/activity/activity';
 
 API.$inject = ['apiProvider'];
 export function API(apiProvider) {
@@ -65,6 +66,7 @@ export function Activities(superdesk, asset) {
             templateUrl: asset.templateUrl('apps/users/views/settings.html'),
             controller: UserRolesController,
             category: superdesk.MENU_SETTINGS,
+            settings_menu_group: coreMenuGroups.WORKFLOW,
             priority: -500,
             privileges: {roles: 1},
         })

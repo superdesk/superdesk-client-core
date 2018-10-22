@@ -13,6 +13,7 @@ import {ContentFiltersService} from './services';
 import {ManageFiltersTab} from './directives';
 import {ContentFilterSelectDirective} from './directives';
 import * as ctrl from './controllers';
+import { coreMenuGroups } from 'core/activity/activity';
 
 // XXX: For some reason, loading the superdesk.apps.content_filters module in
 // tests fails to load due to "Unknown provider: superdeskProvider" error.
@@ -39,6 +40,7 @@ angular.module('superdesk.apps.content_filters', ['superdesk.apps.publish'])
             controllerAs: 'ctrl',
             templateUrl: templateUrl,
             category: superdesk.MENU_SETTINGS,
+            settings_menu_group: coreMenuGroups.CONTENT_CONFIG,
             priority: -800,
             privileges: {dictionaries: 1},
         });

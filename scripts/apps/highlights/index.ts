@@ -12,6 +12,7 @@ import './styles/highlights.scss';
 import {HighlightsService} from './services';
 import * as ctrl from './controllers';
 import * as directive from './directives';
+import { coreMenuGroups } from 'core/activity/activity';
 
 /**
  * @ngdoc module
@@ -62,6 +63,7 @@ export default angular.module('superdesk.apps.highlights', [
                 controller: ctrl.HighlightsSettings,
                 templateUrl: 'scripts/apps/highlights/views/settings.html',
                 category: superdesk.MENU_SETTINGS,
+                settings_menu_group: coreMenuGroups.CONTENT_CONFIG,
                 priority: -800,
                 privileges: {highlights: 1},
             })

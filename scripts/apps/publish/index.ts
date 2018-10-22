@@ -13,6 +13,7 @@ import * as svc from './services';
 import * as ctrl from './controllers';
 import * as directive from './directives';
 import * as filter from './filters';
+import { coreMenuGroups } from 'core/activity/activity';
 
 /**
  * @ngdoc module
@@ -40,6 +41,7 @@ export default angular.module('superdesk.apps.publish', ['superdesk.apps.users',
                 templateUrl: 'scripts/apps/publish/views/settings.html',
                 controller: ctrl.AdminPublishSettingsController,
                 category: superdesk.MENU_SETTINGS,
+                settings_menu_group: coreMenuGroups.CONTENT_FLOW,
                 privileges: {subscribers: 1},
                 priority: 2000,
             })

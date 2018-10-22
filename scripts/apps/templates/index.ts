@@ -13,6 +13,7 @@ import {TemplatesService} from './services';
 import {FilterTemplatesFilter} from './filters';
 import * as directive from './directives';
 import * as ctrl from './controllers';
+import { coreMenuGroups } from 'core/activity/activity';
 
 angular.module('superdesk.apps.templates', [
     'superdesk.core.activity',
@@ -37,6 +38,7 @@ angular.module('superdesk.apps.templates', [
             templateUrl: 'scripts/apps/templates/views/settings.html',
             controller: ctrl.TemplatesSettingsController,
             category: superdesk.MENU_SETTINGS,
+            settings_menu_group: coreMenuGroups.CONTENT_CONFIG,
             priority: 2000,
         });
     }]);

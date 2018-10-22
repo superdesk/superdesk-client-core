@@ -3,6 +3,7 @@ import './styles/products.scss';
 import {ProductsFilter} from './filters';
 import {ProductsFactory} from './services';
 import {ProductsConfigController} from './controllers';
+import { coreMenuGroups } from 'core/activity/activity';
 
 /**
  * @ngdoc module
@@ -19,6 +20,7 @@ export default angular.module('superdesk.apps.products', ['superdesk.apps.users'
                 controller: ProductsConfigController,
                 templateUrl: 'scripts/apps/products/views/settings.html',
                 category: superdesk.MENU_SETTINGS,
+                settings_menu_group: coreMenuGroups.CONTENT_FLOW,
                 privileges: {products: 1},
             });
     }])

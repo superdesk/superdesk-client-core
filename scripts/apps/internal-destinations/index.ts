@@ -1,3 +1,4 @@
+import { coreMenuGroups } from "core/activity/activity";
 
 InternalDestinationsFactory.$inject = ['api'];
 function InternalDestinationsFactory(api) {
@@ -81,6 +82,7 @@ angular.module('superdesk.apps.internal-destinations', [])
                 controller: InternalDestinationsController,
                 controllerAs: 'dest',
                 category: superdeskProvider.MENU_SETTINGS,
+                settings_menu_group: coreMenuGroups.CONTENT_FLOW,
                 privileges: {publish: 1},
             });
     }]);

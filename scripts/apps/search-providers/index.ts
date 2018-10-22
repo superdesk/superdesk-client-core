@@ -10,6 +10,7 @@
 import {providerTypes} from './constants';
 import SearchProviderService from './service';
 import SearchProviderConfigDirective from './directive';
+import { coreMenuGroups } from 'core/activity/activity';
 
 SearchProviderSettingsController.$inject = ['$scope', 'privileges'];
 function SearchProviderSettingsController($scope, privileges) { /* no-op */ }
@@ -36,6 +37,7 @@ export default angular.module('superdesk.apps.searchProviders', [
                 templateUrl: 'scripts/apps/search-providers/views/settings.html',
                 controller: SearchProviderSettingsController,
                 category: superdesk.MENU_SETTINGS,
+                settings_menu_group: coreMenuGroups.CONTENT_CONFIG,
                 privileges: {search_providers: 1},
                 priority: 2000,
             });

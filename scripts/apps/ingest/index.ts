@@ -8,6 +8,7 @@ import * as svc from './services';
 import * as directive from './directives';
 import {InsertFilter, ScheduleFilter} from './filters';
 import _ from 'lodash';
+import { coreMenuGroups } from 'core/activity/activity';
 
 angular.module('superdesk.apps.ingest.send', ['superdesk.core.api', 'superdesk.apps.desks'])
     .service('send', svc.SendService);
@@ -69,6 +70,7 @@ angular.module('superdesk.apps.ingest', [
                 templateUrl: 'scripts/apps/ingest/views/settings/settings.html',
                 controller: ctrl.IngestSettingsController,
                 category: superdesk.MENU_SETTINGS,
+                settings_menu_group: coreMenuGroups.CONTENT_FLOW,
                 privileges: {ingest_providers: 1},
             })
 
