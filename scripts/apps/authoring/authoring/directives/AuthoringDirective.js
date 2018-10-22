@@ -604,18 +604,10 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 return familyService.fetchRelatedItems($scope.item)
                     .then(({_items}) => {
                         if (_items.length > 0) {
-                            const firstSentence = _items.length === 1
-                                ? 'There is an unpublished related item'
-                                : `There are ${_items.length} unpublished related items`;
-                            const it = _items.length === 1
-                                ? 'It'
-                                : 'They';
-
                             return modal.confirm({
                                 bodyText: gettext(
-                                    `${firstSentence}. `
-                                    + `${it} will not be sent out as related items. `
-                                    + 'Do you want to publish the article now?'
+                                    'There are unpublished related items that won\'t be sent out as related items.'
+                                    + 'Do you want to publish the article anyway?'
                                 ),
                             }).then((ok) => ok ? performPublish() : false);
                         } else {
