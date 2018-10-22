@@ -467,7 +467,7 @@ describe('authoring', () => {
         ctrlShiftKey(protractor.Key.END);
         ctrlKey('x');
         authoring.save();
-        authoring.publish(true);
+        authoring.publish(false);
         assertToastMsg('error', 'BODY_HTML empty values not allowed');
     });
 
@@ -668,6 +668,7 @@ describe('authoring', () => {
         authoring.writeText('Testing');
         authoring.save();
         authoring.publishFrom('Sports Desk');
+        authoring.confirmSendTo();
         // desk output count zero as content publish from sport desk
         expect(monitoring.getGroupItems(5).count()).toBe(0);
         workspace.selectDesk('Sports Desk');

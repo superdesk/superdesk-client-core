@@ -573,7 +573,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
              * Depending on the item state one of the publish, correct, kill actions will be executed on the item
              * in $scope.
              */
-            $scope.publish = function(continueOnPublish) {
+            $scope.publish = function() {
                 if (helpers.itemHasUnresolvedSuggestions($scope.item)) {
                     modal.alert({
                         headerText: gettext('Resolving suggestions'),
