@@ -19,14 +19,13 @@ import * as helpers from 'apps/authoring/authoring/helpers';
  * @requires $injector
  * @requires moment
  * @requires config
- * @requires logger
  *
  * @description Authoring Service is responsible for management of the actions on a story
  */
 AuthoringService.$inject = ['$q', '$location', 'api', 'lock', 'autosave', 'confirm', 'privileges',
-    'desks', 'superdeskFlags', 'notify', 'session', '$injector', 'moment', 'config', 'logger'];
+    'desks', 'superdeskFlags', 'notify', 'session', '$injector', 'moment', 'config'];
 export function AuthoringService($q, $location, api, lock, autosave, confirm, privileges, desks, superdeskFlags,
-    notify, session, $injector, moment, config, logger) {
+    notify, session, $injector, moment, config) {
     var self = this;
 
     // TODO: have to trap desk update event for refereshing users desks.

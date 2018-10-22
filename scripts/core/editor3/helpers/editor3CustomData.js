@@ -38,13 +38,13 @@ function getCustomMetadataFromContentState(contentState, highlightType) {
         }));
 }
 
-function getAnnotationsFromHighlights(highlights, logger) {
+function getAnnotationsFromHighlights(highlights) {
     return highlights.map(({styleName, obj}, index) => ({
         styleName: styleName,
         id: index + 1, // count from 1
         index: index + 1, // count from 1
         type: obj.data.annotationType,
-        body: toHTML(convertFromRaw(JSON.parse(obj.data.msg)), logger),
+        body: toHTML(convertFromRaw(JSON.parse(obj.data.msg))),
     }));
 }
 
@@ -111,16 +111,16 @@ export function getCustomDataFromEditorRawState(rawState, key) {
     return getCustomDataFromEditor(EditorState.createWithContent(convertFromRaw(rawState)), key);
 }
 
-export function getAnnotationsFromItem(item, field, logger = {}) {
-    const highlights = getCustomMetadata(item, field, highlightsConfig.ANNOTATION.type, logger);
+export function getAnnotationsFromItem(item, field) {
+    const highlights = getCustomMetadata(item, field, highlightsConfig.ANNOTATION.type);
 
-    return getAnnotationsFromHighlights(highlights, logger);
+    return getAnnotationsFromHighlights(highlights);
 }
 
-export function getAnnotationsFromContentState(contentState, logger = {}) {
+export function getAnnotationsFromContentState(contentState) {
     const highlights = getCustomMetadataFromContentState(contentState, highlightsConfig.ANNOTATION.type);
 
-    return getAnnotationsFromHighlights(highlights, logger);
+    return getAnnotationsFromHighlights(highlights);
 }
 
 export function getCustomMetadata(item, field, highlightType) {

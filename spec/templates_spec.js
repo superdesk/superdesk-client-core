@@ -78,7 +78,7 @@ describe('templates', () => {
         expect(templates.getAutomaticItemCreationElement().getAttribute('checked')).toEqual('true');
         expect(templates.getWeekDayElement('Tuesday').element(by.className('sd-checkbox'))
             .getAttribute('class')).toContain('checked');
-        expect(templates.getTimeElement().getAttribute('value')).toEqual('10:30');
+        expect(templates.getTime()).toEqual('10:30');
         expect(templates.getDeskScheduleElement('Politic Desk')
             .getAttribute('selected')).toEqual('true');
         expect(templates.getStageScheduleElement('one').getAttribute('selected')).toEqual('true');

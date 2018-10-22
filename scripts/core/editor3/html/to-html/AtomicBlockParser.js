@@ -1,6 +1,7 @@
 import {ContentState, convertFromRaw} from 'draft-js';
 import {HTMLGenerator} from '.';
 import {isQumuWidget, postProccessQumuEmbed} from '../../components/embeds/QumuWidget';
+import {logger} from 'core/services/logger';
 
 /**
  * @ngdoc class
@@ -11,10 +12,9 @@ import {isQumuWidget, postProccessQumuEmbed} from '../../components/embeds/QumuW
  * @param {Array=} disabled A set of disabled elements (ie. ['table'] will ignore tables.
  */
 export class AtomicBlockParser {
-    constructor(contentState, logger, disabled = []) {
+    constructor(contentState, disabled = []) {
         this.contentState = contentState;
         this.disabled = disabled;
-        this.logger = logger;
     }
 
     /**
@@ -42,7 +42,7 @@ export class AtomicBlockParser {
         case 'TABLE':
             return this.parseTable(data);
         default:
-            this.logger.logWarning(`Editor3: Cannot generate HTML for entity type of ${entity.getType()}`, data);
+            logger.warn(`Editor3: Cannot generate HTML for entity type of ${entity.getType()}`, data);
             return '';
         }
     }
@@ -119,7 +119,7 @@ export class AtomicBlockParser {
                 ? convertFromRaw(cells[i][j])
                 : ContentState.createFromText('');
 
-            return new HTMLGenerator(cellContentState, this.logger, ['table']).html();
+            return new HTMLGenerator(cellContentState, ['table']).html();
         };
 
         let html = '<table>';

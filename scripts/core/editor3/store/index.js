@@ -84,9 +84,9 @@ export default function createEditorStore(props, isReact = false) {
  *
  * @param {Object} item
  */
-function generateAnnotations(item, logger) {
+function generateAnnotations(item) {
     item.annotations = ignoreInternalAnnotationFields(
-        getAnnotationsFromItem(item, 'body_html', logger)
+        getAnnotationsFromItem(item, 'body_html')
     );
 }
 
@@ -131,13 +131,12 @@ export function onChange(contentState, {plainText = false} = {}) {
         }, this.item);
 
     const fieldName = pathToValueArray[pathToValueArray.length - 1];
-    const logger = ng.get('logger');
 
     if (plainText) {
         objectToUpdate[fieldName] = contentStateHighlightsReadyForExport.getPlainText();
     } else {
-        objectToUpdate[fieldName] = toHTML(contentStateHighlightsReadyForExport, logger);
-        generateAnnotations(this.item, logger);
+        objectToUpdate[fieldName] = toHTML(contentStateHighlightsReadyForExport);
+        generateAnnotations(this.item);
     }
 
     // call on change with scope updated

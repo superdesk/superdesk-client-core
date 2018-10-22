@@ -198,7 +198,7 @@ const toggleTableHeader = (state) =>
                 numRows: numRows,
                 numCols: numCols,
                 withHeader: !withHeader,
-                currentStyle: currentStyle
+                currentStyle: currentStyle,
             };
 
             return {

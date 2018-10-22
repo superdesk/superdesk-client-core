@@ -18,10 +18,28 @@ declare const beforeEach: any;
 declare const expect: any;
 declare const it: any;
 
+// globals
+// tslint:disable-next-line: interface-name
+interface Window {
+    instgrm: any;
+    tansa: any;
+    $: any;
+    _paq: any;
+    GoogleAnalyticsObject: any;
+    TimeoutHttpInterceptor: any;
+    RequestService: any;
+    clipboardData: any;
+    dragPageY: any;
+    gettext: any;
+    _: any;
+    webkitURL: any;
+    superdeskConfig: any;
+    module: any;
+}
+
 // ------------------------------------------------------------------------------------------------
 // TYPES
 // ------------------------------------------------------------------------------------------------
 
 type Dictionary<K, V> = {};
 type Omit<K, V> = Pick<K, Exclude<keyof K, V>>;
-

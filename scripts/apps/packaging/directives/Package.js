@@ -21,12 +21,12 @@ export function Package() {
         },
         link: function(scope, elem, attrs) {
             scope.mode = attrs.mode || 'tree';
-            scope.$watchGroup(['item', 'item.groups'], () => {
-                if (scope.item && scope.item.groups) {
-                    scope.tree = solveRefs(
-                        _.find(scope.item.groups, {id: 'root'}),
-                        scope.item.groups
-                    );
+            scope.$watchGroup(['item', 'item.groups', 'item.deleted_groups'], () => {
+                var isDeleted = scope.item.deleted_groups != null && scope.item.deleted_groups.length !== 0;
+                var groups = isDeleted ? scope.item.deleted_groups : scope.item.groups;
+
+                if (scope.item && groups) {
+                    scope.tree = solveRefs(_.find(groups, {id: 'root'}), groups);
                 }
             });
         },

@@ -1,8 +1,7 @@
 <div class="sd-page__flex-helper">
     <div class="sd-page__header" ng-hide="hideHeader">
+        <sd-search-handler ng-model="search.name" data-debounce="200"></sd-search-handler>
         <div class="sortbar">
-            <span translate>Filter:</span>
-            <input type="text" class="input-medium" ng-model="search.name" ng-model-options="{debounce: 800}"/>
             <span translate>Target Type:</span>
             <select class="input-medium" ng-model="search.subscriber_type"
                     ng-options="s.qcode as s.name for s in subTypes">

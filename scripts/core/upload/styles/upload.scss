@@ -420,7 +420,7 @@ media uploader
         }
 
         .upload-thumbs {
-            li {
+            .flex-grid__item {
                 min-height: 350px;
                 background: #fff;
                 .thumb {

@@ -3,6 +3,7 @@
     <h2 class="sd-page__page-heading" translate>Templates</h2>
   </div>
   <div class="sd-page__header">
+        <sd-search-handler ng-model="query.template_name" data-debounce="200"></sd-search-handler>
         <div class="sortbar">
            <span class="lab" translate>Filter:</span>
            <div class="dropdown" dropdown sd-dropdown-position>
@@ -23,7 +24,7 @@
 
   <div class="sd-page__content">
       <div class="flex-grid box wrap-items small-1 medium-3 large-4 xlarge-6">
-          <div class="flex-item card-box template-card" ng-repeat="template in content_templates._items | templatesBy:filters[activeFilter]" ng-if="desks">
+          <div class="flex-item card-box template-card" ng-repeat="template in content_templates._items | filter:query | templatesBy:filters[activeFilter]" ng-if="desks">
               <div class="card-box__header" ng-class="{'card-box__header--dark': !template.is_public}" >
                   <div class="dropdown" dropdown>
                       <button class="dropdown__toggle" dropdown__toggle>
@@ -58,7 +59,10 @@
                               {{ :: weekdays[day] | translate }}
                               <span ng-if="$index < template.schedule.day_of_week.length-1">, </span>
                           </span>
-                          <span class="creation-time"> <i class="icon-time"></i> at {{ template.schedule.create_at | time }}<span>
+                      </li>
+                      <li ng-if="template.schedule.cron_list.length">
+                          <h4>{{ :: 'Scheduled Time(s)' | translate }}</h4>
+                          <i class="icon-time"></i> <span ng-repeat="cron in template.schedule.cron_list" class="creation-time"> {{ cron.split(' ')[1] + ':' + cron.split(' ')[0] }}<span ng-if="!$last">,&nbsp;</span><span>
                       </li>
                   </ul>
               </div>

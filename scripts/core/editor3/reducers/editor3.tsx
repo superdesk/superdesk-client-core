@@ -11,7 +11,7 @@ import {DELETE_SUGGESTION} from '../highlightsConfig';
 const editor3 = (state = {}, action) => {
     switch (action.type) {
     case 'EDITOR_CHANGE_STATE':
-        return onChange(state, action.payload.editorState, action.payload.force);
+        return onChange(state, action.payload.editorState, action.payload.force, false, action.payload.skipOnChange);
     case 'EDITOR_SET_LOCKED':
         return setLocked(state, action.payload);
     case 'EDITOR_SET_READONLY':
@@ -85,13 +85,13 @@ export const forceUpdate = (state, keepSelection = false) => {
  * @return {Object} returns new state
  * @description Handle the editor state has been changed event
  */
-export const onChange = (state, newState, force = false, keepSelection = false) => {
+export const onChange = (state, newState, force = false, keepSelection = false, skipOnChange = false) => {
     // TODO(x): Remove `force` once Draft v0.11.0 is in
     const editorState = newState;
 
     const contentChanged = state.editorState.getCurrentContent() !== newState.getCurrentContent();
 
-    if (contentChanged || force) {
+    if (!skipOnChange && (contentChanged || force)) {
         const plainText = isEditorPlainText(state);
 
         state.onChangeValue(editorState.getCurrentContent(), {plainText});
@@ -103,7 +103,7 @@ export const onChange = (state, newState, force = false, keepSelection = false) 
                 ...state,
                 editorState,
             }),
-            keepSelection
+            keepSelection,
         );
     }
 
@@ -304,9 +304,9 @@ const mergeEntityDataByKey = (state, {blockKey, entityKey, valuesToMerge}) => {
     const newBlockKey = newContentState.getKeyAfter(blockKey) || blockKey;
     const newBlock = newContentState.getBlockBefore(blockKey);
     const newSelection = selection.merge({
-        anchorOffset: newBlock != null ? newBlock.getLength() : 0,
+        anchorOffset: newBlock != null ? newBlock.getLength() : null,
         anchorKey: newBlock != null ? newBlock.getKey() : newBlockKey,
-        focusOffset: newBlock != null ? newBlock.getLength() : 0,
+        focusOffset: newBlock != null ? newBlock.getLength() : null,
         focusKey: newBlock != null ? newBlock.getKey() : newBlockKey,
         isBackward: false,
         hasFocus: true,
@@ -315,7 +315,7 @@ const mergeEntityDataByKey = (state, {blockKey, entityKey, valuesToMerge}) => {
     let newEditorState = EditorState.push(editorState, newContentState, 'change-block-data');
 
     newEditorState = EditorState.forceSelection(newEditorState, newSelection);
-    return onChange(state, newEditorState, entityDataHasChanged);
+    return onChange(state, newEditorState, entityDataHasChanged, true);
 };
 
 /**

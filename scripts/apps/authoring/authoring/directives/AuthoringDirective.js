@@ -76,14 +76,13 @@ AuthoringDirective.$inject = [
     'embedService',
     '$sce',
     'mediaIdGenerator',
-    'logger',
     'familyService',
 ];
 export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace, notify,
     gettext, desks, authoring, api, session, lock, privileges, content, $location,
     referrer, macros, $timeout, $q, modal, archiveService, confirm, reloadService,
     $rootScope, $interpolate, metadata, suggest, config, deployConfig, editorResolver,
-    compareVersions, embedService, $sce, mediaIdGenerator, logger, familyService) {
+    compareVersions, embedService, $sce, mediaIdGenerator, familyService) {
     return {
         link: function($scope, elem, attrs) {
             var _closing;
@@ -108,6 +107,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             $scope.embedPreviews = {};
             $scope.mediaFieldVersions = {};
             $scope.refreshTrigger = 0;
+            $scope.isPreview = false;
 
             $scope.$watch('origItem', (newValue, oldValue) => {
                 $scope.itemActions = null;
@@ -734,8 +734,9 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
              * Preview different version of an item
              */
             $scope.preview = function(version) {
-                $scope.refreshTrigger++;
                 helpers.forcedExtend($scope.item, version);
+                $scope.refreshTrigger++;
+                $scope.isPreview = true;
                 $scope._editable = false;
             };
 
@@ -743,8 +744,9 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
              * Revert item to given version
              */
             $scope.revert = function(version) {
-                $scope.refreshTrigger++;
+                $scope.isPreview = false;
                 helpers.forcedExtend($scope.item, version);
+                $scope.refreshTrigger++;
                 if ($scope.item.annotations == null) {
                     $scope.item.annotations = [];
                 }
@@ -757,6 +759,11 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             $scope.closePreview = function() {
                 $scope.item = _.create($scope.origItem);
                 $scope._editable = $scope.action !== 'view' && authoring.isEditable($scope.origItem);
+
+                if ($scope.isPreview) {
+                    $scope.isPreview = false;
+                    $scope.refreshTrigger++;
+                }
 
                 // populate content fields so that it can undo to initial (empty) version later
                 var autosave = $scope.origItem._autosave || {};

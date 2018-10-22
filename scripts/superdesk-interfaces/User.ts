@@ -1,4 +1,4 @@
-import {IDesk} from "./Desk";
+import {IDesk} from './Desk';
 
 export interface IUserRole {
     name: string;
