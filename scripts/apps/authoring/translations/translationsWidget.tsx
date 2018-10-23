@@ -74,13 +74,15 @@ class TranslationsWidgetComponent extends React.Component<IProps, IState> {
             return null;
         }
 
-        const sortOriginalFirst = (a: IArticle) => a.translated_from == null ? -1 : 1;
-        const listClassNames = 'sdc-list-item__column sd-list-item__column--grow sd-list-item__column--no-border';
+        const sortOldestFirst = (a: IArticle, b: IArticle) =>
+            new Date(b.firstcreated) > new Date(a.firstcreated) ? -1 : 1;
+
+        const listClassNames = 'sd-list-item__column sd-list-item__column--grow sd-list-item__column--no-border';
 
         return (
             <div className="widget">
                 {
-                    translations.sort(sortOriginalFirst).map((translation: IArticle) => (
+                    translations.sort(sortOldestFirst).map((translation: IArticle) => (
                         <div
                             key={translation._id}
                             onClick={() => authoringWorkspace.popup(translation, 'edit')}
