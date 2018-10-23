@@ -49,6 +49,8 @@ export default function MediaMetadataEditorDirective(metadata, content) {
                         }, editor[field], schema[field])),
                     'order'
                 );
+                
+                scope.$apply();
             });
 
             /**
