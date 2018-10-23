@@ -7,7 +7,7 @@ import {isEmpty, findKey} from 'lodash';
 /**
  * Media Contact Info - renders contact's information
  */
-export const ContactInfo: React.StatelessComponent<any> = ({item, svc}) => {
+export const ContactInfo: React.StatelessComponent<any> = ({item, svc, labelInactive}) => {
     const meta = [];
     const info = [];
 
@@ -23,6 +23,10 @@ export const ContactInfo: React.StatelessComponent<any> = ({item, svc}) => {
             </h3>
             <div key="contact-org">
                 <span className="item-info">{contactOrg}</span>
+                {!item.is_active && labelInactive &&
+                <span title="inactive"
+                    className="label label--draft label--hollow pull-right">
+                    {gettext('Inactive')}</span>}
             </div>
         </div>,
     );
@@ -96,4 +100,5 @@ export const ContactInfo: React.StatelessComponent<any> = ({item, svc}) => {
 ContactInfo.propTypes = {
     item: PropTypes.object,
     svc: PropTypes.object.isRequired,
+    labelInactive: PropTypes.bool,
 };
