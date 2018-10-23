@@ -258,6 +258,8 @@ function Authoring() {
         if (!skipConfirm) {
             var modal = element(by.className('modal__dialog'));
 
+            browser.wait(() => element(by.css('[ng-click="ok()"]')), 1000);
+
             modal.isPresent().then((click) => {
                 if (click) {
                     modal.element(by.className('btn--primary')).click();
