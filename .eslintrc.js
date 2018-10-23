@@ -11,6 +11,6 @@ module.exports = Object.assign({}, sharedConfigs, {
                 'comma-dangle': 0,
                 'camelcase': 0,
             },
-        }
+        },
     ],
 });

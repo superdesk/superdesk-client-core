@@ -1,5 +1,6 @@
 <div class="sd-page__flex-helper">
     <div class="sd-page__header">
+        <sd-search-handler ng-model="query.display_name" data-debounce="200"></sd-search-handler>
         <span class="sd-page__element-grow"></span>
         <button class="btn btn--primary"
           ng-click="createCustomField('text')" ng-if="tab === 'text-fields'">
@@ -14,7 +15,7 @@
         </button>
 
         <button class="btn btn--primary"
-          ng-click="createCustomField('related-content')" ng-if="tab === 'related-content-fields'">
+          ng-click="createCustomField('media')" ng-if="tab === 'related-content-fields'">
           <i class="icon-plus-sign icon--white"></i>
           <span translate>Add New</span>
         </button>
@@ -35,7 +36,7 @@
     <div class="sd-page__content">
       <div ng-if="loading" class="loading-overlay" ng-class="{active: loading}" style="opacity: 0.5;"></div>
         <ul class="pills-list">
-          <li ng-repeat="vocabulary in vocabularies | orderBy:'display_name|translate'" ng-if="matchFieldTypeToTab(tab, vocabulary.field_type)">
+          <li ng-repeat="vocabulary in vocabularies | orderBy:'display_name|translate' | filter: query track by vocabulary._id" ng-if="matchFieldTypeToTab(tab, vocabulary.field_type)">
             <h6>{{ vocabulary.display_name | translate }}</h6>&nbsp;
             <em><strong ng-show="!vocabulary.field_type">({{ vocabulary.items.length }})</strong></em>
             <div class="actions">

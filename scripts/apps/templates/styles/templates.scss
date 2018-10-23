@@ -9,6 +9,13 @@
     .card-box__content {
         min-height: 120px; /* should be big enough to fit in dropdown menu */
     }
+
+
+    .card-box__content-list {
+        .creation-time {
+            display: inline-block;
+        }
+    }
 }
 
 .header {

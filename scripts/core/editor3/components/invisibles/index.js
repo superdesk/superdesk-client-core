@@ -1,1 +1,0 @@
-export {SpaceDecorator} from './SpaceDecorator';

@@ -76,13 +76,12 @@ AuthoringDirective.$inject = [
     'embedService',
     '$sce',
     'mediaIdGenerator',
-    'logger',
 ];
 export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace, notify,
     gettext, desks, authoring, api, session, lock, privileges, content, $location,
     referrer, macros, $timeout, $q, modal, archiveService, confirm, reloadService,
     $rootScope, $interpolate, metadata, suggest, config, deployConfig, editorResolver,
-    compareVersions, embedService, $sce, mediaIdGenerator, logger) {
+    compareVersions, embedService, $sce, mediaIdGenerator) {
     return {
         link: function($scope, elem, attrs) {
             var _closing;

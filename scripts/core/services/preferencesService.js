@@ -183,6 +183,10 @@ export default angular.module('superdesk.core.preferences', ['superdesk.core.not
                 }
             };
 
+            this.registerUserPreference = function(key) {
+                userPreferences[key] = 1;
+            };
+
             /**
              * @ngdoc method
              * @name preferencesService#update

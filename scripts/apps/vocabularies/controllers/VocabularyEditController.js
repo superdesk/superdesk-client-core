@@ -81,8 +81,7 @@ export function VocabularyEditController($scope, gettext, $interpolate, notify, 
             $scope.errorMessage = gettext('The values should be unique for ') + uniqueField;
         }
 
-        if ($scope.vocabulary.field_type === 'related-content'
-            && $scope.vocabulary.field_options.contentType === 'media-gallery') {
+        if ($scope.vocabulary.field_type === 'media') {
             const allowedTypes = $scope.vocabulary.field_options.allowed_types;
 
             Object.keys(allowedTypes).forEach((key) => {
@@ -120,10 +119,6 @@ export function VocabularyEditController($scope, gettext, $interpolate, notify, 
 
         $scope.vocabulary.items = $scope.vocabulary.items.concat([newVocabulary]);
     };
-
-    if ($scope.vocabulary.field_type === 'related-content' && $scope.vocabulary._id == null) {
-        $scope.vocabulary.field_options = {contentType: 'media-gallery'};
-    }
 
     // try to reproduce data model of vocabulary:
     var model = _.mapValues(_.keyBy(

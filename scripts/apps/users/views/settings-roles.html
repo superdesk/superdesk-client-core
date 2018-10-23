@@ -1,5 +1,6 @@
 <div class="sd-page__flex-helper">
     <div class="sd-page__header">
+        <sd-search-handler ng-model="query.name" data-debounce="200"></sd-search-handler>
         <span class="sd-page__element-grow"></span>
         <button class="btn btn--primary" ng-click="edit({})">
             <i class="icon-plus-sign icon--white"></i> {{:: 'Add New' | translate}}
@@ -8,7 +9,7 @@
 
     <div class="sd-page__content user-roles-settings">
         <ul class="pills-list">
-            <li ng-repeat="role in roles" class="clearfix">
+            <li ng-repeat="role in roles | filter: query" class="clearfix">
                 <div class="header">
                     <h6>{{role.name}}</h6>
                     <span class="label label--primary label--hollow" ng-if="role.is_default" translate>default</span>

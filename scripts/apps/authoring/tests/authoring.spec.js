@@ -22,7 +22,6 @@ describe('authoring', () => {
     beforeEach(window.module('superdesk.apps.searchProviders'));
     beforeEach(window.module('superdesk.core.editor3'));
     beforeEach(window.module('superdesk.apps.editor2'));
-    beforeEach(window.module('superdesk.core.services.logger'));
 
     beforeEach(inject(($window) => {
         $window.onbeforeunload = angular.noop;

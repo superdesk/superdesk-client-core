@@ -9,7 +9,9 @@ function FilterConditions() {
     this.filterConditionNameField = element(by.id('filterCondition-name'));
     this.saveButton = element(by.css('[ng-click="save()"]'));
     this.cancelButton = element(by.css('[ng-click="cancel()"]'));
-    this.list = element.all(by.repeater('filterCondition in filterConditions track by filterCondition._id'));
+    this.list = element.all(
+        by.repeater('filterCondition in filterConditions | filter: query track by filterCondition._id')
+    );
     this.valueField = element(by.model('filterCondition.value'));
     this.addPredefinedValueButton = element(by.className('dropdown__toggle'));
 
