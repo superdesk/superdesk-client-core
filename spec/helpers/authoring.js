@@ -244,6 +244,21 @@ function Authoring() {
         return this.save_publish_button.click();
     };
 
+    this.clickModalOk = function() {
+        const modal = element(by.className('modal__dialog'));
+
+        modal.isPresent().then((click) => {
+            if (click) {
+                modal.element(by.className('btn--primary')).click();
+            }
+        });
+    };
+
+    this.waitForModalAndClickOk = function(timeout = 1000) {
+        browser.wait(() => by.className('modal__content'), timeout);
+        this.clickModalOk();
+    };
+
     this.publish = function(skipConfirm) {
         browser.wait(() => this.sendToButton.isPresent(), 1000);
         this.sendToButton.click();
@@ -256,15 +271,7 @@ function Authoring() {
         this.publish_button.click();
 
         if (!skipConfirm) {
-            var modal = element(by.className('modal__dialog'));
-
-            browser.wait(() => element(by.css('[ng-click="ok()"]')), 1000);
-
-            modal.isPresent().then((click) => {
-                if (click) {
-                    modal.element(by.className('btn--primary')).click();
-                }
-            });
+            this.waitForModalAndClickOk(1000);
         }
     };
 
@@ -281,13 +288,7 @@ function Authoring() {
         this.sendAndPublishBtn.click();
 
         if (!skipConfirm) {
-            var modal = element(by.className('modal__dialog'));
-
-            modal.isPresent().then((click) => {
-                if (click) {
-                    modal.element(by.className('btn--primary')).click();
-                }
-            });
+            this.waitForModalAndClickOk();
         }
     };
 
@@ -314,13 +315,8 @@ function Authoring() {
         this.publish_button.click();
 
         if (!skipConfirm) {
-            var modal = element(by.className('modal__dialog'));
-
-            modal.isPresent().then((click) => {
-                if (click) {
-                    modal.element(by.className('btn--primary')).click();
-                }
-            });
+            this.waitForModalAndClickOk(1000); // for related items
+            this.clickModalOk(); // for saving item
         }
     };
 
