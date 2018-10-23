@@ -3,7 +3,7 @@ import './styles/products.scss';
 import {ProductsFilter} from './filters';
 import {ProductsFactory} from './services';
 import {ProductsConfigController} from './controllers';
-import { coreMenuGroups } from 'core/activity/activity';
+import {coreMenuGroups} from 'core/activity/activity';
 
 /**
  * @ngdoc module

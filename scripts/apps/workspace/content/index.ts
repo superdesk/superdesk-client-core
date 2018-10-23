@@ -1,7 +1,7 @@
 import {ContentService} from './services';
 import * as directive from './directives';
 import * as ctrl from './controllers';
-import { coreMenuGroups } from 'core/activity/activity';
+import {coreMenuGroups} from 'core/activity/activity';
 
 /**
  * @ngdoc module

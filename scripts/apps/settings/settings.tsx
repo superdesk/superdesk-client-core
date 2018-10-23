@@ -1,7 +1,7 @@
 import React from 'react';
-import { connectServices } from 'core/helpers/ReactRenderAsync';
+import {connectServices} from 'core/helpers/ReactRenderAsync';
 import {capitalize} from 'lodash';
-import { coreMenuGroups } from 'core/activity/activity';
+import {coreMenuGroups} from 'core/activity/activity';
 
 interface IProps {
     $route: any;

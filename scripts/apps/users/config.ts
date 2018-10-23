@@ -8,7 +8,7 @@ import {
     UserRolesController,
     SessionsDeleteCommand,
 } from './controllers';
-import { coreMenuGroups } from 'core/activity/activity';
+import {coreMenuGroups} from 'core/activity/activity';
 
 API.$inject = ['apiProvider'];
 export function API(apiProvider) {

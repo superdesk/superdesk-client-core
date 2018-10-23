@@ -13,7 +13,7 @@ import * as svc from './services';
 import * as ctrl from './controllers';
 import * as directive from './directives';
 import * as filter from './filters';
-import { coreMenuGroups } from 'core/activity/activity';
+import {coreMenuGroups} from 'core/activity/activity';
 
 /**
  * @ngdoc module

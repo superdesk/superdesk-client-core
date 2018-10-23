@@ -1,4 +1,4 @@
-import { coreMenuGroups } from "core/activity/activity";
+import {coreMenuGroups} from 'core/activity/activity';
 
 InternalDestinationsFactory.$inject = ['api'];
 function InternalDestinationsFactory(api) {

@@ -13,7 +13,7 @@ import {ContentFiltersService} from './services';
 import {ManageFiltersTab} from './directives';
 import {ContentFilterSelectDirective} from './directives';
 import * as ctrl from './controllers';
-import { coreMenuGroups } from 'core/activity/activity';
+import {coreMenuGroups} from 'core/activity/activity';
 
 // XXX: For some reason, loading the superdesk.apps.content_filters module in
 // tests fails to load due to "Unknown provider: superdeskProvider" error.

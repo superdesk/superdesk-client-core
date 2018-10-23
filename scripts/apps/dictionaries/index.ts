@@ -12,7 +12,7 @@ import './styles/dictionaries.scss';
 import {DictionaryService} from './services';
 import {DictionaryEditController, DictionaryConfigController} from './controllers';
 import * as directive from './directives';
-import { coreMenuGroups } from 'core/activity/activity';
+import {coreMenuGroups} from 'core/activity/activity';
 
 /**
  * @ngdoc module
