@@ -1,37 +1,39 @@
-<div class="sd-page__main-content" id="content-filters-settings" sd-settings-view>
-    <div class="sd-page__header sd-page__header--white">
-        <h2 class="sd-page__page-heading" translate>Content Filters</h2>
-    </div>
-    <div class="sd-page__header sd-page__header--white">
-        <ul class="nav nav-tabs">
-            <li ng-class="{active: ctrl.activeTab === 'filters'}">
-                <button
-                    ng-click="ctrl.changeTab('filters')"
-                    translate>Filters</button>
-            </li>
-            <li ng-class="{active: ctrl.activeTab === 'filter_conditions'}">
-                <button
-                    ng-click="ctrl.changeTab('filter_conditions')"
-                    translate>Filter Conditions</button>
-            </li>
-            <li ng-class="{active: ctrl.activeTab === 'filter_search'}">
-                <button
-                    ng-click="ctrl.changeTab('filter_search')"
-                    translate>Filter Search</button>
-            </li>
-        </ul>
-    </div>
-    <div class="sd-page__flex-helper" ng-switch="ctrl.activeTab">
-        <div class="sd-page__flex-helper" ng-switch-when="filter_conditions">
-            <div class="sd-page__flex-helper" ng-include="ctrl.TEMPLATES_DIR + '/manage-filter-conditions.html'"></div>
+<sd-settings-view>
+    <div class="sd-page__main-content" id="content-filters-settings">
+        <div class="sd-page__header sd-page__header--white">
+            <h2 class="sd-page__page-heading" translate>Content Filters</h2>
         </div>
-        <div ng-switch-when="filters" class="sd-page__flex-helper">
-            <div class="sd-page__flex-helper" sd-manage-filters-tab></div>
+        <div class="sd-page__header sd-page__header--white">
+            <ul class="nav nav-tabs">
+                <li ng-class="{active: ctrl.activeTab === 'filters'}">
+                    <button
+                        ng-click="ctrl.changeTab('filters')"
+                        translate>Filters</button>
+                </li>
+                <li ng-class="{active: ctrl.activeTab === 'filter_conditions'}">
+                    <button
+                        ng-click="ctrl.changeTab('filter_conditions')"
+                        translate>Filter Conditions</button>
+                </li>
+                <li ng-class="{active: ctrl.activeTab === 'filter_search'}">
+                    <button
+                        ng-click="ctrl.changeTab('filter_search')"
+                        translate>Filter Search</button>
+                </li>
+            </ul>
         </div>
-        <div ng-switch-when="filter_search" class="sd-page__flex-helper">
-            <div class="sd-page__flex-helper" ng-include="ctrl.TEMPLATES_DIR + '/filter-search.html'"
-                 data-search="search">
+        <div class="sd-page__flex-helper" ng-switch="ctrl.activeTab">
+            <div class="sd-page__flex-helper" ng-switch-when="filter_conditions">
+                <div class="sd-page__flex-helper" ng-include="ctrl.TEMPLATES_DIR + '/manage-filter-conditions.html'"></div>
+            </div>
+            <div ng-switch-when="filters" class="sd-page__flex-helper">
+                <div class="sd-page__flex-helper" sd-manage-filters-tab></div>
+            </div>
+            <div ng-switch-when="filter_search" class="sd-page__flex-helper">
+                <div class="sd-page__flex-helper" ng-include="ctrl.TEMPLATES_DIR + '/filter-search.html'"
+                     data-search="search">
+                </div>
             </div>
         </div>
     </div>
-</div>
+</sd-settings-view>

@@ -1,25 +1,27 @@
-<div class="sd-page__main-content" sd-settings-view  sd-highlights-config>
-    <div class="sd-page__header sd-page__header--white">
-        <h2 class="sd-page__page-heading" translate>Highlights configurations</h2>
+<sd-settings-view>
+    <div class="sd-page__main-content" sd-highlights-config>
+        <div class="sd-page__header sd-page__header--white">
+            <h2 class="sd-page__page-heading" translate>Highlights configurations</h2>
+        </div>
+        <div class="sd-page__header">
+            <sd-search-handler ng-model="query.name" data-debounce="200"></sd-search-handler>
+    
+            <span class="sd-page__element-grow"></span>
+            <button class="btn btn--primary pull-right" ng-click="edit({})">
+                <i class="icon-plus-sign icon--white"></i>{{ 'Create configuration' | translate }}
+            </button>
+        </div>
+        <div class="sd-page__content">
+            <ul class="pills-list">
+                <li ng-repeat="config in configurations._items | filter: query track by config._id" class="clearfix">
+                    <h6 class="pull-left" title="{{ config.name }}">{{ config.name }}</h6>
+                    <div class="actions">
+                        <button ng-click="edit(config)" title="{{:: 'Edit configuration' | translate }}"><i class="icon-pencil"></i></button>
+                        <button ng-click="remove(config)" title="{{:: 'Remove configuration' | translate }}"><i class="icon-trash"></i></button>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div sd-highlights-config-modal ></div>
     </div>
-    <div class="sd-page__header">
-        <sd-search-handler ng-model="query.name" data-debounce="200"></sd-search-handler>
-
-        <span class="sd-page__element-grow"></span>
-        <button class="btn btn--primary pull-right" ng-click="edit({})">
-            <i class="icon-plus-sign icon--white"></i>{{ 'Create configuration' | translate }}
-        </button>
-    </div>
-    <div class="sd-page__content">
-        <ul class="pills-list">
-            <li ng-repeat="config in configurations._items | filter: query track by config._id" class="clearfix">
-                <h6 class="pull-left" title="{{ config.name }}">{{ config.name }}</h6>
-                <div class="actions">
-                    <button ng-click="edit(config)" title="{{:: 'Edit configuration' | translate }}"><i class="icon-pencil"></i></button>
-                    <button ng-click="remove(config)" title="{{:: 'Remove configuration' | translate }}"><i class="icon-trash"></i></button>
-                </div>
-            </li>
-        </ul>
-    </div>
-    <div sd-highlights-config-modal ></div>
-</div>
+</sd-settings-view>
