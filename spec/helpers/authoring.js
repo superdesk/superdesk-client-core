@@ -316,7 +316,7 @@ function Authoring() {
 
         if (!skipConfirm) {
             this.waitForModalAndClickOk(1000); // for related items
-            this.clickModalOk(); // for saving item
+            this.waitForModalAndClickOk(2000); // for saving item
         }
     };
 
