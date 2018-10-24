@@ -21,6 +21,7 @@ import './versioning/versioning';
 import './versioning/versions/versions';
 import './versioning/history/history';
 import './metadata/metadata';
+import './translations/index';
 import './workqueue/workqueue';
 import './packages/packages';
 import './editor/find-replace';

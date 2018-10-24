@@ -6,6 +6,7 @@ import * as Highlights from 'core/editor3/helpers/highlights';
 
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
 import {fieldsMetaKeys, META_FIELD_NAME, getFieldMetadata, getFieldId} from '../../../core/editor3/helpers/fieldsMeta';
+import {get} from 'lodash';
 
 function getAllUserIdsFromSuggestions(suggestions) {
     const users = [];
@@ -100,7 +101,19 @@ angular
                     picture: true,
                     personal: true,
                 },
-                onlyEditor3: true,
+                isWidgetVisible: (item) => ['content', function(content) {
+                    if (item.profile == null) {
+                        return Promise.resolve(true);
+                    }
+
+                    return new Promise((resolve) => {
+                        content.getType(item.profile).then((type) => {
+                            const editor3enabled = get(type, 'editor.body_html.editor3') === true;
+
+                            resolve(editor3enabled);
+                        });
+                    });
+                }],
                 feature: 'editorSuggestions',
             });
         },

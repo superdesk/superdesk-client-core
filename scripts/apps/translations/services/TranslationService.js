@@ -59,6 +59,19 @@ export function TranslationService(api, $rootScope, notify, authoringWorkspace, 
         });
     };
 
+    service.translationsEnabled = function() {
+        return typeof service.languages === 'object'
+            && Array.isArray(service.languages._items)
+            && service.languages._items.length > 0;
+    };
+
+    service.getTranslations = function(item) {
+        if (item.translation_id == null) {
+            return Promise.reject('translation_id is not present');
+        }
+        return api('archive').query({where: {translation_id: item.translation_id}});
+    };
+
     /**
      * @ngdoc method
      * @name TranslationService#checkAvailability
@@ -67,9 +80,9 @@ export function TranslationService(api, $rootScope, notify, authoringWorkspace, 
      * @return {boolean}
      */
     service.checkAvailability = function(item) {
-        return !service.languages ?
-            false
-            : _.find(service.languages._items, (language) => language.source && language.language === item.language);
+        return service.translationsEnabled() ?
+            _.find(service.languages._items, (language) => language.source && language.language === item.language)
+            : false;
     };
 
     // Fetch languages from database on service initialization

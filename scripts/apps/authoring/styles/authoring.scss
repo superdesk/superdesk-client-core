@@ -492,7 +492,6 @@
     position: relative;
     max-width: 900px;
     margin: 0 auto;
-    font-size: 0;
     padding: 5px 10px 12px 10px;
     border: 1px solid #cacaca;
     border-top: 0;
@@ -527,61 +526,54 @@
 }
 
 .authoring-header__general-info {
-    display: block;
+    $spacing: 10px;
+
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
     margin: 10px 0;
-    padding: 0 10px;
-    > div {
-        display: inline-block;
-        vertical-align: top;
-        line-height: 0;
-        padding-right: 10px;
-        margin-right: 10px;
+
+    > * {
+        display: flex;
+        align-items: center;
+        flex-wrap: nowrap;
+        margin-top: 2px;
+        margin-bottom: 2px;
+        padding-left: $spacing;
+        padding-right: $spacing;
         border-right: 1px solid #DADADA;
-        &:last-of-type {
+
+        // equal spacing between children
+        > * {
+            margin-left: 0;
             margin-right: 0;
-            border-right: 0;
+
+            + * {
+                margin-left: $spacing;
+            }
         }
     }
-    label {
-        display: inline-block;
+
+    [class^="filetype-icon-"],
+    [class*="filetype-icon-"] {
+        color: $grayLight;
+    }
+
+    .authoring-header__label {
         font-size: 10px;
-        line-height: 16px;
-        min-width: 0;
-        margin: 0;
         color: $sd-text-label;
         letter-spacing: 0.06em;
     }
-    .data {
-        display: inline-block;
-        font-size: 13px;
-        line-height: 14px;
-        padding-left: 10px;
-        text-transform: lowercase;
-        select {
-            padding: 0px;
-            height: 16px;
-            font-size: 11px;
-        }
-    }
-    .word-count b {
+
+    .authoring-header__label-2 {
         font-size: 12px;
-        line-height: 12px;
-        color: #575656;
-        padding-right: .2em;
+        color: $sd-text-label;
     }
-    .broadcast-status {
-        color: #e51c23;
-        b {
-            font-size: 14px;
-        }
-    }
-    [class^="filetype-icon-"],
-    [class*="filetype-icon-"] {
-        height: 13px;
-        color: $grayLight;
-    }
-    .update-info {
-        padding-left: 0;
+
+    .authoring-header__value {
+        font-size: 13px;
+        margin-top: -2px;
+        text-transform: lowercase;
     }
 }
 
