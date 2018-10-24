@@ -53,11 +53,12 @@ function WidgetsManagerCtrl($scope, $routeParams, authoringWidgets, archiveServi
             const promises = widgets.map(
                 (widget) => typeof widget.isWidgetVisible === 'function'
                     ? $injector.invoke(widget.isWidgetVisible(item))
-                    : Promise.resolve(true)
+                    : Promise.resolve(true),
             );
 
             Promise.all(promises).then((result) => {
-                $scope.widgets = widgets.filter((_, i) => result[i] === true);
+                $scope.widgets = widgets.filter((__, i) => result[i] === true);
+                $scope.$apply(); // tell angular to re-render
             });
         });
 
