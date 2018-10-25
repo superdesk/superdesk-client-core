@@ -3,8 +3,10 @@ import moment from 'moment';
 import {TextWithMentions} from 'apps/users/components';
 import CommentTextArea from './CommentTextArea';
 import PropTypes from 'prop-types';
-import {HighlightsPopupPresentation} from '../HighlightsPopupPresentation';
 import {UserAvatar} from 'apps/users/components/UserAvatar';
+import {EditorHighlightsHeader} from 'core/editor3/editorPopup/EditorHighlightsHeader';
+import {FluidRows} from '../../fluid-flex-rows/fluid-rows';
+import {FluidRow} from '../../fluid-flex-rows/fluid-row';
 
 /**
  * @ngdoc React
@@ -48,85 +50,101 @@ export class Comment extends React.Component<any, any> {
 
         const isRoot = this.props.isReply === false;
 
+        const availableActions = isAuthor !== true ? [] : [
+            {
+                text: gettext('Edit'),
+                icon: 'icon-pencil',
+                onClick: () => this.setState({editMode: true}),
+            },
+            {
+                text: gettext('Delete'),
+                icon: 'icon-trash',
+                onClick: onRemove,
+            },
+        ];
+
         return (
-            <HighlightsPopupPresentation
-                className={isReply ? 'comment-box__reply-item' : ''}
-                editorNode={this.props.editorNode}
-                isRoot={isRoot}
-                header={(
-                    <div>
+            <FluidRows onClick={this.props.onClick} className={isReply ? 'comment-box__reply-item' : null}>
+                <FluidRow scrollable={false}>
+                    <EditorHighlightsHeader availableActions={availableActions}>
                         <UserAvatar displayName={author} pictureUrl={avatar} />
                         <p className="editor-popup__author-name">{author}</p>
                         <time className="editor-popup__time" title={relativeDateString}>{absoluteDateString}</time>
-                    </div>
-                )}
-                availableActions={isAuthor !== true ? [] : [
+                    </EditorHighlightsHeader>
+
                     {
-                        text: gettext('Edit'),
-                        icon: 'icon-pencil',
-                        onClick: () => this.setState({editMode: true}),
-                    },
-                    {
-                        text: gettext('Delete'),
-                        icon: 'icon-trash',
-                        onClick: onRemove,
-                    },
-                ]}
-                scrollableContent={this.props.scrollableContent}
-                stickyFooter={this.props.stickyFooter}
-                content={(
-                    <div>
-                        {
-                            isReply !== false ? null : (
-                                <div className="editor-popup__info-bar">
+                        isReply !== false ? null : (
+                            <div className="editor-popup__content-block" style={{paddingBottom: 0}}>
+                                <div className="space-between editor-popup__info-bar">
                                     <span className="label">{gettext('Comment')}</span>
+                                    {this.props.inlineActions || null}
+                                </div>
+                            </div>
+                        )
+                    }
+                </FluidRow>
+
+                <FluidRow className="editor-popup__content-block" scrollable={!this.state.editMode}>
+                    {
+                        this.state.editMode === true ?
+                            (
+                                <div>
+                                    <CommentTextArea
+                                        className="comment-box__input"
+                                        value={this.state.editModeValue}
+                                        onChange={(event, value) => this.setState({editModeValue: value})}
+                                        singleLine={false}
+                                        maxHeight={isRoot === true ? 300 : undefined}
+                                    />
+
+                                    <div
+                                        className={
+                                            'comment-box__button-toolbar'
+                                            + ' comment-box__button-toolbar--right'
+                                            + ' comment-box__button-toolbar--small'
+                                        }>
+                                        <button onClick={(event) => {
+                                            this.cancelEditing(event);
+                                        }} className="btn btn--icon-only btn--hollow">
+                                            <i className="icon-close-small" />
+                                        </button>
+                                        <button onClick={() => {
+                                            this.props.updateComment(this.state.editModeValue);
+                                            this.cancelEditing();
+                                        }} className="btn btn--primary btn--icon-only">
+                                            <i className="icon-ok" />
+                                        </button>
+                                    </div>
                                 </div>
                             )
-                        }
+                            : (
+                                <TextWithMentions>
+                                    {this.props.data.msg}
+                                </TextWithMentions>
+                            )
+                    }
+                </FluidRow>
 
-                        {
-                            this.state.editMode === true ?
-                                (
-                                    <div>
-                                        <CommentTextArea
-                                            className="comment-box__input"
-                                            value={this.state.editModeValue}
-                                            onChange={(event, value) => this.setState({editModeValue: value})}
-                                            singleLine={false}
-                                            maxHeight={isRoot === true ? 300 : undefined}
-                                        />
+                {
+                    this.props.scrollableContent == null ? null : (
+                        <FluidRow className="editor-popup__secondary-content" scrollable={true}>
+                            {this.props.scrollableContent}
+                        </FluidRow>
+                    )
+                }
 
-                                        <div
-                                            className={
-                                                'comment-box__button-toolbar'
-                                                + ' comment-box__button-toolbar--right'
-                                                + ' comment-box__button-toolbar--small'
-                                            }>
-                                            <button onClick={(event) => {
-                                                this.cancelEditing(event);
-                                            }} className="btn btn--icon-only btn--hollow">
-                                                <i className="icon-close-small" />
-                                            </button>
-                                            <button onClick={() => {
-                                                this.props.updateComment(this.state.editModeValue);
-                                                this.cancelEditing();
-                                            }} className="btn btn--primary btn--icon-only">
-                                                <i className="icon-ok" />
-                                            </button>
-                                        </div>
-                                    </div>
-                                )
-                                : (
-                                    <TextWithMentions>
-                                        {this.props.data.msg}
-                                    </TextWithMentions>
-                                )
-                        }
-
-                        {this.props.inlineActions || null}
-                    </div>
-                )}
-            />
+                {
+                    this.props.stickyFooter == null ? null : (
+                        <FluidRow scrollable={false}>
+                            <div className="editor-popup__secondary-content">
+                                <div className="editor-popup__content-block">
+                                    {this.props.stickyFooter}
+                                </div>
+                            </div>
+                        </FluidRow>
+                    )
+                }
+            </FluidRows>
         );
     }
 }
@@ -138,6 +156,7 @@ Comment.propTypes = {
         avatar: PropTypes.string,
         msg: PropTypes.string,
     }),
+    onClick: PropTypes.func,
     inlineActions: PropTypes.object,
     replies: PropTypes.object,
     className: PropTypes.string,

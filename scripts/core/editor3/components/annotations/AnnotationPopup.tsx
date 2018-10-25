@@ -6,9 +6,12 @@ import {showPopup, PopupTypes} from '../../actions';
 import {toHTML} from 'core/editor3';
 import {convertFromRaw} from 'draft-js';
 import ng from 'core/services/ng';
-import {HighlightsPopupPresentation} from '../HighlightsPopupPresentation';
+import {HighlightsPopupPositioner} from '../HighlightsPopupPositioner';
 import {UserAvatar} from 'apps/users/components/UserAvatar';
 import {connectPromiseResults} from 'core/helpers/ReactRenderAsync';
+import {EditorHighlightsHeader} from '../../editorPopup/EditorHighlightsHeader';
+import {FluidRows} from '../../fluid-flex-rows/fluid-rows';
+import {FluidRow} from '../../fluid-flex-rows/fluid-row';
 
 class Annotation extends React.Component<any, any> {
     static propTypes: any;
@@ -31,45 +34,45 @@ class Annotation extends React.Component<any, any> {
                 highlightsManager.removeHighlight(highlightId);
             });
 
-        return (
-            <HighlightsPopupPresentation
-                editorNode={editorNode}
-                isRoot={true}
-                header={(
-                    <div>
-                        <UserAvatar displayName={author} pictureUrl={avatar} />
-                        <p className="editor-popup__author-name">{author}</p>
-                        <time className="editor-popup__time" title={relativeDateString}>{absoluteDateString}</time>
-                    </div>
-                )}
-                availableActions={[
-                    {
-                        text: gettext('Edit'),
-                        icon: 'icon-pencil',
-                        onClick: onEdit,
-                    },
-                    {
-                        text: gettext('Delete'),
-                        icon: 'icon-trash',
-                        onClick: onDelete,
-                    },
-                ]}
-                content={(
-                    <div>
-                        <div className="editor-popup__info-bar">
-                            <span className="label">{gettext('Annotation')}</span>
-                        </div>
+        const availableActions = [
+            {
+                text: gettext('Edit'),
+                icon: 'icon-pencil',
+                onClick: onEdit,
+            },
+            {
+                text: gettext('Delete'),
+                icon: 'icon-trash',
+                onClick: onDelete,
+            },
+        ];
 
-                        <div><b>{gettext('Annotation type')}: </b>{type}</div>
-                    </div>
-                )}
-                stickyFooter={null}
-                scrollableContent={(
-                    <div style={{background: '#fff', padding: '1.6rem', paddingBottom: '1rem'}}>
-                        <div dangerouslySetInnerHTML={{__html: html}} />
-                    </div>
-                )}
-            />
+        return (
+            <HighlightsPopupPositioner editorNode={editorNode}>
+                <FluidRows>
+                    <FluidRow scrollable={false}>
+                        <EditorHighlightsHeader availableActions={availableActions}>
+                            <UserAvatar displayName={author} pictureUrl={avatar} />
+                            <p className="editor-popup__author-name">{author}</p>
+                            <time className="editor-popup__time" title={relativeDateString}>{absoluteDateString}</time>
+                        </EditorHighlightsHeader>
+
+                        <div className="editor-popup__content-block">
+                            <div className="editor-popup__info-bar">
+                                <span className="label">{gettext('Annotation')}</span>
+                            </div>
+
+                            <div><b>{gettext('Annotation type')}: </b>{type}</div>
+                        </div>
+                    </FluidRow>
+
+                    <FluidRow scrollable={true} className="editor-popup__secondary-content">
+                        <div style={{background: '#fff', padding: '1.6rem', paddingBottom: '1rem'}}>
+                            <div dangerouslySetInnerHTML={{__html: html}} />
+                        </div>
+                    </FluidRow>
+                </FluidRows>
+            </HighlightsPopupPositioner>
         );
     }
 }
