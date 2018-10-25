@@ -603,11 +603,13 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 // Check if there's unpublished related items
                 return familyService.fetchRelatedItems($scope.item)
                     .then(({_items}) => {
-                        if (_items.length > 0) {
+                        const related = _items.filter((i) => i.guid !== $scope.item.guid);
+
+                        if (related.length > 0) {
                             return modal.confirm({
                                 bodyText: gettext(
                                     'There are unpublished related items that won\'t be sent out as related items.'
-                                    + 'Do you want to publish the article anyway?'
+                                    + ' Do you want to publish the article anyway?'
                                 ),
                             }).then((ok) => ok ? performPublish() : false);
                         } else {
