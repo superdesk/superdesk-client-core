@@ -47,7 +47,7 @@ export default function MediaMetadataEditorDirective(metadata, deployConfig) {
                             label: getLabelForFieldId(field),
                             cv: getCV(field),
                         }, editor[field], schema[field])),
-                    'order'
+                    'order',
                 );
                 
                 scope.$apply();

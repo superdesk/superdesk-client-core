@@ -9,6 +9,21 @@ var constants = {
     ACTION_PREVIEW: 'preview',
 };
 
+export const coreMenuGroups = {
+    WORKFLOW: {
+        id: 'WORKFLOW',
+        getLabel: (gettext) => gettext('Workflow'),
+    },
+    CONTENT_CONFIG: {
+        id: 'CONTENT_CONFIG',
+        getLabel: (gettext) => gettext('Content config'),
+    },
+    CONTENT_FLOW: {
+        id: 'CONTENT_FLOW',
+        getLabel: (gettext) => gettext('Content flow'),
+    },
+};
+
 /**
  * @ngdoc provider
  * @module superdesk.core.activity

@@ -1,27 +1,29 @@
-<div class="sd-page__main-content" sd-settings-view ng-init="tab = 'vocabularies'">
-  <div class="sd-page__header sd-page__header--white">
-      <h2 class="sd-page__page-heading" translate>Metadata management</h2>
-  </div>
-    
-  <div class="sd-page__header sd-page__header--white">
-      <ul class="nav nav-tabs">
-          <li ng-class="{active: tab === 'vocabularies'}">
-              <button ng-click="tab = 'vocabularies'" translate>Vocabularies</button>
-          </li>
-          <li ng-class="{active: tab === 'text-fields'}">
-              <button ng-click="tab = 'text-fields'" translate>Custom text fields</button>
-          </li>
-          <li ng-class="{active: tab === 'date-fields'}">
-              <button ng-click="tab = 'date-fields'" translate>Custom date fields</button>
-          </li>
-          <li ng-class="{active: tab === 'embed-fields'}">
-              <button ng-click="tab = 'embed-fields'" translate>Custom embed fields</button>
-          </li>
-          <li ng-class="{active: tab === 'related-content-fields'}">
-            <button ng-click="tab = 'related-content-fields'" translate>Related content</button>
-        </li>
-      </ul>
-  </div>
-
-  <div class="sd-page__flex-helper" sd-vocabulary-config data-tab="tab"></div>
-</div> 
+<sd-settings-view>
+    <div class="sd-page__main-content" ng-init="tab = 'vocabularies'">
+        <div class="sd-page__header sd-page__header--white">
+            <h2 class="sd-page__page-heading" translate>Metadata management</h2>
+        </div>
+            
+        <div class="sd-page__header sd-page__header--white">
+            <ul class="nav nav-tabs">
+                <li ng-class="{active: tab === 'vocabularies'}">
+                    <button ng-click="tab = 'vocabularies'" translate>Vocabularies</button>
+                </li>
+                <li ng-class="{active: tab === 'text-fields'}">
+                    <button ng-click="tab = 'text-fields'" translate>Custom text fields</button>
+                </li>
+                <li ng-class="{active: tab === 'date-fields'}">
+                    <button ng-click="tab = 'date-fields'" translate>Custom date fields</button>
+                </li>
+                <li ng-class="{active: tab === 'embed-fields'}">
+                    <button ng-click="tab = 'embed-fields'" translate>Custom embed fields</button>
+                </li>
+                <li ng-class="{active: tab === 'related-content-fields'}">
+                    <button ng-click="tab = 'related-content-fields'" translate>Related content</button>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="sd-page__flex-helper" sd-vocabulary-config data-tab="tab"></div>
+    </div>
+</sd-settings-view>

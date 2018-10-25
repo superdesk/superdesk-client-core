@@ -1,19 +1,21 @@
-<div class="sd-page__main-content" sd-settings-view ng-init="tab = 'products'">
-    <div class="sd-page__header sd-page__header--white">
-        <h2 class="sd-page__page-heading" translate>Products management</h2>
+<sd-settings-view>
+    <div class="sd-page__main-content" ng-init="tab = 'products'">
+        <div class="sd-page__header sd-page__header--white">
+            <h2 class="sd-page__page-heading" translate>Products management</h2>
+        </div>
+        <div class="sd-page__header sd-page__header--white">
+            <ul class="nav nav-tabs">
+                <li ng-class="{active: tab === 'products'}">
+                    <button ng-click="tab = 'products'" translate>Products</button>
+                </li>
+                <li ng-class="{active: tab === 'productTest'}">
+                    <button ng-click="tab = 'productTest'" translate>Product Test</button>
+                </li>
+            </ul>
+        </div>
+        <div class="sd-page__flex-helper">
+            <div class="sd-page__flex-helper" ng-if="tab === 'products'" ng-include="'scripts/apps/products/views/products.html'"></div>
+            <div class="sd-page__flex-helper" ng-if="tab === 'productTest'" ng-include="'scripts/apps/products/views/product-test.html'"></div>
+        </div>
     </div>
-    <div class="sd-page__header sd-page__header--white">
-        <ul class="nav nav-tabs">
-            <li ng-class="{active: tab === 'products'}">
-                <button ng-click="tab = 'products'" translate>Products</button>
-            </li>
-            <li ng-class="{active: tab === 'productTest'}">
-                <button ng-click="tab = 'productTest'" translate>Product Test</button>
-            </li>
-        </ul>
-    </div>
-    <div class="sd-page__flex-helper">
-        <div class="sd-page__flex-helper" ng-if="tab === 'products'" ng-include="'scripts/apps/products/views/products.html'"></div>
-        <div class="sd-page__flex-helper" ng-if="tab === 'productTest'" ng-include="'scripts/apps/products/views/product-test.html'"></div>
-    </div>
-</div>
+</sd-settings-view>

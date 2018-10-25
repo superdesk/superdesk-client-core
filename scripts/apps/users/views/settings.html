@@ -1,17 +1,19 @@
-<div class="sd-page__main-content" sd-settings-view ng-init="rolesTab = true">
-    <div class="sd-page__header sd-page__header--white">
-        <h2 class="sd-page__page-heading" translate>User Roles</h2>
-    </div>
-    <div class="sd-page__header">
-        <ul class="nav nav-tabs">
-            <li ng-class="{active: rolesTab}">
-                <button ng-click="rolesTab = true" translate>Roles</button>
-            </li>
-            <li ng-class="{active: !rolesTab}">
-                <button ng-click="rolesTab = false" translate>Roles privileges</button>
-            </li>
-        </ul>
-    </div>
-    <div class="sd-page__flex-helper" sd-user-roles ng-if="rolesTab"></div>
-    <div class="sd-page__flex-helper" sd-roles-privileges ng-if="!rolesTab"></div>
-</div>
+<sd-settings-view>
+    <div class="sd-page__main-content" ng-init="rolesTab = true">
+        <div class="sd-page__header sd-page__header--white">
+            <h2 class="sd-page__page-heading" translate>User Roles</h2>
+        </div>
+        <div class="sd-page__header">
+            <ul class="nav nav-tabs">
+                <li ng-class="{active: rolesTab}">
+                    <button ng-click="rolesTab = true" translate>Roles</button>
+                </li>
+                <li ng-class="{active: !rolesTab}">
+                    <button ng-click="rolesTab = false" translate>Roles privileges</button>
+                </li>
+            </ul>
+        </div>
+        <div class="sd-page__flex-helper" sd-user-roles ng-if="rolesTab"></div>
+        <div class="sd-page__flex-helper" sd-roles-privileges ng-if="!rolesTab"></div>
+    </div>            
+</sd-settings-view>

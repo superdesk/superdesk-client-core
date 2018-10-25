@@ -1,6 +1,8 @@
 // styles
 import './styles/settings.scss';
 
+import {reactToAngular1} from 'superdesk-ui-framework';
+import {Settings} from './settings';
 import * as directive from './directives';
 
 /**
@@ -24,7 +26,7 @@ export default angular.module('superdesk.apps.settings', [])
         });
     }])
 
-    .directive('sdSettingsView', directive.SettingsView)
+    .component('sdSettingsView', reactToAngular1(Settings))
     .directive('sdDateParam', directive.DateParam)
     .directive('sdValidError', directive.ValidError)
     .directive('sdRoleUnique', directive.RoleUnique);
