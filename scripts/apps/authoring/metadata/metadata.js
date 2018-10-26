@@ -1179,8 +1179,9 @@ function MetadataService(api, subscribersService, config, vocabularies, $rootSco
                 });
             }
         },
-        filterCvs: function(qcodes, cvs) {
+        getFilteredCustomVocabularies: function(qcodes) {
             var self = this;
+            const cvs = [];
 
             self.cvs.forEach((cv) => {
                 var cvService = cv.service || {};
@@ -1200,6 +1201,8 @@ function MetadataService(api, subscribersService, config, vocabularies, $rootSco
                     cvs.push(cv);
                 }
             });
+
+            return cvs;
         },
         filterByService: function(items, qcodes) {
             return _.filter(items, (item) => {

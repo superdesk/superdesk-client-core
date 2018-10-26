@@ -186,9 +186,8 @@ export function AuthoringHeaderDirective(api, authoringWidgets, $rootScope, arch
 
                 scope.$watch('item.anpa_category', (services) => {
                     var qcodes = _.map(services, 'qcode');
-                    var cvs = [];
 
-                    metadata.filterCvs(qcodes, cvs);
+                    var cvs = metadata.getFilteredCustomVocabularies(qcodes);
 
                     scope.cvs = _.sortBy(cvs, 'priority');
                     scope.genreInCvs = _.map(cvs, 'schema_field').indexOf('genre') !== -1;
