@@ -1,5 +1,6 @@
 <div class="form__row" ng-repeat="field in fields track by field.field">
     <sd-line-input
+        class="sd-line-input--no-margin"
         ng-if="field.type === 'string' || (!field.type && !field.cv)"
         ng-model="item[field.field]"
         data-dark="dark"
@@ -15,6 +16,7 @@
     />
 
     <sd-line-input
+        class="sd-line-input--no-margin"
         ng-if="field.type === 'text'"
         ng-model="item.extra[field.field]"
         data-dark="dark"
@@ -28,10 +30,10 @@
         data-placeholder="{{ placeholder[field.field] }}"
     />
 
-    <div ng-if="field.type === 'list' || field.cv" class="sd-line-input">
-        <label>{{ field.label }}</label>
+    <div ng-if="field.type === 'list' || field.cv">
+        <label class="form-label">{{ field.label }}</label>
         <div sd-meta-terms
-            class="data"
+            class="data sd-terms--boxed"
             data-item="item"
             data-field="{{ field.cv.schema_field || 'subject'}}"
             data-unique="qcode"
@@ -44,8 +46,8 @@
         ></div>
     </div>
 
-    <div ng-if="field.type === 'date'" class="sd-line-input">
-        <label>{{ field.label }}</label>
+    <div ng-if="field.type === 'date'">
+        <label class="form-label">{{ field.label }}</label>
         <div sd-datepicker
             ng-disabled="isDisabled(field)"
             ng-model="item.extra[field.field]"

@@ -10,17 +10,6 @@
 angular.module('superdesk.core.datetime.reldate', []).directive('sdReldate', [function() {
     return {
         scope: {datetime: '='},
-        template: '<time datetime="{{ datetimeIso }}" title="{{ title }}">{{ reldate }}</time>',
-        link: function(scope) {
-            scope.$watch('datetime', (datetime) => {
-                var date = moment.utc(scope.datetime);
-
-                date.local(); // switch to local time zone
-
-                scope.datetimeIso = date.toISOString();
-                scope.title = date.format('LLLL');
-                scope.reldate = date.fromNow();
-            });
-        },
+        template: '<sd-relative-date datetime="datetime"></sd-relative-date>',
     };
 }]);

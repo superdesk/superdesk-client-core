@@ -1,22 +1,24 @@
-<div class="sd-page__main-content" id="ingest-settings" sd-settings-view ng-init="tab = 'sources'">
-    <div class="sd-page__header sd-page__header--white">
-        <h2 class="sd-page__page-heading" translate>Ingest</h2>
+<sd-settings-view>
+    <div class="sd-page__main-content" id="ingest-settings" ng-init="tab = 'sources'">
+        <div class="sd-page__header sd-page__header--white">
+            <h2 class="sd-page__page-heading" translate>Ingest</h2>
+        </div>
+        <div class="sd-page__header sd-page__header--white">
+            <ul class="nav nav-tabs">
+                <li ng-class="{active: tab === 'sources'}" ng-show="showIngest">
+                    <button ng-click="tab = 'sources'" translate>Ingest Sources</button>
+                </li>
+                <li ng-class="{active: tab === 'rulesets'}" ng-show="showRuleset">
+                    <button ng-click="tab = 'rulesets'" translate>Ingest Rule sets</button>
+                </li>
+                <li ng-class="{active: tab === 'routing'}" ng-show="showRouting">
+                    <button ng-click="tab = 'routing'" translate>Ingest Routing</button>
+                </li>
+            </ul>
+        </div>
+    
+        <div class="sd-page__flex-helper" ng-if="tab === 'sources'" sd-ingest-sources-content></div>
+        <div class="sd-page__flex-helper" ng-if="tab === 'rulesets'" sd-ingest-rules-content></div>
+        <div class="sd-page__flex-helper" ng-if="tab === 'routing'" sd-ingest-routing-content></div>
     </div>
-    <div class="sd-page__header sd-page__header--white">
-        <ul class="nav nav-tabs">
-            <li ng-class="{active: tab === 'sources'}" ng-show="showIngest">
-                <button ng-click="tab = 'sources'" translate>Ingest Sources</button>
-            </li>
-            <li ng-class="{active: tab === 'rulesets'}" ng-show="showRuleset">
-                <button ng-click="tab = 'rulesets'" translate>Ingest Rule sets</button>
-            </li>
-            <li ng-class="{active: tab === 'routing'}" ng-show="showRouting">
-                <button ng-click="tab = 'routing'" translate>Ingest Routing</button>
-            </li>
-        </ul>
-    </div>
-
-    <div class="sd-page__flex-helper" ng-if="tab === 'sources'" sd-ingest-sources-content></div>
-    <div class="sd-page__flex-helper" ng-if="tab === 'rulesets'" sd-ingest-rules-content></div>
-    <div class="sd-page__flex-helper" ng-if="tab === 'routing'" sd-ingest-routing-content></div>
-</div>
+</sd-settings-view>

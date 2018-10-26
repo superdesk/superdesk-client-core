@@ -1,8 +1,8 @@
-import {max, sortBy} from 'lodash';
+import {max, sortBy, get} from 'lodash';
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
 
-MediaMetadataEditorDirective.$inject = ['metadata', 'content'];
-export default function MediaMetadataEditorDirective(metadata, content) {
+MediaMetadataEditorDirective.$inject = ['metadata', 'deployConfig'];
+export default function MediaMetadataEditorDirective(metadata, deployConfig) {
     function getCV(field) {
         return metadata.cvs.find((cv) => !cv.field_type && (cv._id === field || cv.schema_field === field));
     }
@@ -22,8 +22,8 @@ export default function MediaMetadataEditorDirective(metadata, content) {
         template: require('./views/media-metadata-editor-directive.html'),
         link: (scope) => {
             getLabelNameResolver().then((getLabelForFieldId) => {
-                const editor = content.editor({}, 'picture');
-                const schema = content.schema({}, 'picture');
+                const editor = get(deployConfig.getSync('editor'), 'picture', {});
+                const schema = get(deployConfig.getSync('editor'), 'picture', {});
 
                 // get last order
                 let nextOrder = max(Object.keys(editor).map((field) => editor[field].order || 0)) + 1;
@@ -47,8 +47,10 @@ export default function MediaMetadataEditorDirective(metadata, content) {
                             label: getLabelForFieldId(field),
                             cv: getCV(field),
                         }, editor[field], schema[field])),
-                    'order'
+                    'order',
                 );
+                
+                scope.$apply();
             });
 
             /**

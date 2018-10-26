@@ -126,12 +126,16 @@ export default class MenuItems extends React.Component<any, any> {
     }
 
     render() {
-        return (
-            <ul
-                className="dropdown dropdown__menu more-activity-menu open"
-                style={{display: 'block', minWidth: 200}}
-            >{this.renderMenu()}</ul>
-        );
+        if (this.renderMenu().length > 0) {
+            return (
+                <ul
+                    className="dropdown dropdown__menu more-activity-menu open"
+                    style={{display: 'block', minWidth: 200}}
+                >{this.renderMenu()}</ul>
+            );
+        } else {
+            return <ul />;
+        }
     }
 }
 

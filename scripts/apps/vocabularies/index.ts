@@ -12,6 +12,7 @@ import './styles/vocabularies.scss';
 import {VocabularyService, SchemaFactory} from './services';
 import * as ctrl from './controllers';
 import * as directive from './directives';
+import {coreMenuGroups} from 'core/activity/activity';
 
 /**
  * @ngdoc module
@@ -40,6 +41,7 @@ angular.module('superdesk.apps.vocabularies', [
             label: gettext('Metadata'),
             templateUrl: 'scripts/apps/vocabularies/views/settings.html',
             category: superdesk.MENU_SETTINGS,
+            settings_menu_group: coreMenuGroups.CONTENT_CONFIG,
             priority: -800,
             privileges: {vocabularies: 1},
         });

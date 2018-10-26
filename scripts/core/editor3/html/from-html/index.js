@@ -96,9 +96,15 @@ class HTMLParser {
             $(node).replaceWith(`<figure>BLOCK_TABLE_${i}</figure>`);
         });
 
-        this.tree.find('.media-block, img, audio, video').each((i, node) => {
+        this.tree.find('.media-block').each((i, node) => {
             this.media[i] = $(node)[0].outerHTML;
             $(node).replaceWith(`<figure>BLOCK_MEDIA_${i}</figure>`);
+        });
+
+        // import external media as embeds
+        this.tree.find('img, audio, video').each((i, node) => {
+            this.figures[i] = node.outerHTML;
+            $(node).replaceWith(`<figure>BLOCK_FIGURE_${i}</figure>`);
         });
     }
 

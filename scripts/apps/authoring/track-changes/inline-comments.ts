@@ -14,6 +14,7 @@ import {
 import {highlightsConfig} from 'core/editor3/highlightsConfig';
 import {getCustomMetadata} from 'core/editor3/helpers/editor3CustomData';
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
+import {get} from 'lodash';
 
 function getAllUserIdsFromComments(comments) {
     const users = [];
@@ -146,7 +147,19 @@ angular
                     picture: true,
                     personal: true,
                 },
-                onlyEditor3: true,
+                isWidgetVisible: (item) => ['content', function(content) {
+                    if (item.profile == null) {
+                        return Promise.resolve(true);
+                    }
+
+                    return new Promise((resolve) => {
+                        content.getType(item.profile).then((type) => {
+                            const editor3enabled = get(type, 'editor.body_html.editor3') === true;
+
+                            resolve(editor3enabled);
+                        });
+                    });
+                }],
                 feature: 'editorInlineComments',
             });
         },

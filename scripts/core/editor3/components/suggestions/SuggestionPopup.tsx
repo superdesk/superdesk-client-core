@@ -7,8 +7,11 @@ import ng from 'core/services/ng';
 import {Dropdown} from 'core/ui/components';
 import {acceptSuggestion, rejectSuggestion} from '../../actions';
 import * as Highlights from '../../helpers/highlights';
-import {HighlightsPopupPresentation} from '../HighlightsPopupPresentation';
+import {HighlightsPopupPositioner} from '../HighlightsPopupPositioner';
 import {UserAvatar} from 'apps/users/components/UserAvatar';
+import {FluidRows} from '../../fluid-flex-rows/fluid-rows';
+import {FluidRow} from '../../fluid-flex-rows/fluid-row';
+import {EditorHighlightsHeader} from '../../editorPopup/EditorHighlightsHeader';
 
 /**
  * @ngdoc React
@@ -126,34 +129,34 @@ class Suggestion extends React.Component<any, any> {
         }
 
         return (
-            <HighlightsPopupPresentation
-                editorNode={this.props.editorNode}
-                isRoot={true}
-                header={(
-                    <div>
-                        <UserAvatar displayName={author.display_name} pictureUrl={author.picture_url} />
-                        <p className="editor-popup__author-name">{author.display_name}</p>
-                        <time className="editor-popup__time" title={relativeDateString}>{absoluteDateString}</time>
-                    </div>
-                )}
-                availableActions={[]}
-                content={null}
-                scrollableContent={(
-                    <div style={{background: '#fff', padding: '1.6rem', paddingBottom: '1rem'}}>
-                        {content}
-                    </div>
-                )}
-                stickyFooter={(
-                    <div>
-                        <button className="btn btn--small btn--hollow" onClick={this.onAccept}>
-                            {gettext('Accept')}
-                        </button>
-                        <button className="btn btn--small btn--hollow" onClick={this.onReject}>
-                            {gettext('Reject')}
-                        </button>
-                    </div>
-                )}
-            />
+            <HighlightsPopupPositioner editorNode={this.props.editorNode}>
+                <FluidRows>
+                    <FluidRow scrollable={false}>
+                        <EditorHighlightsHeader availableActions={[]}>
+                            <UserAvatar displayName={author.display_name} pictureUrl={author.picture_url} />
+                            <p className="editor-popup__author-name">{author.display_name}</p>
+                            <time className="editor-popup__time" title={relativeDateString}>{absoluteDateString}</time>
+                        </EditorHighlightsHeader>
+                    </FluidRow>
+
+                    <FluidRow scrollable={true} className="editor-popup__secondary-content">
+                        <div style={{background: '#fff', padding: '1.6rem', paddingBottom: '1rem'}}>
+                            {content}
+                        </div>
+                    </FluidRow>
+
+                    <FluidRow scrollable={true} className="editor-popup__secondary-content">
+                        <div className="editor-popup__content-block">
+                            <button className="btn btn--small btn--hollow" onClick={this.onAccept}>
+                                {gettext('Accept')}
+                            </button>
+                            <button className="btn btn--small btn--hollow" onClick={this.onReject}>
+                                {gettext('Reject')}
+                            </button>
+                        </div>
+                    </FluidRow>
+                </FluidRows>
+            </HighlightsPopupPositioner>
         );
     }
 }

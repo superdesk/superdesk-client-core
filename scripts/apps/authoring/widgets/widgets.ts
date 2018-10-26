@@ -12,9 +12,9 @@ function AuthoringWidgetsProvider() {
 }
 
 WidgetsManagerCtrl.$inject = ['$scope', '$routeParams', 'authoringWidgets', 'archiveService',
-    'keyboardManager', '$location', 'desks', 'lock', 'content', 'config', 'lodash', 'privileges'];
+    'keyboardManager', '$location', 'desks', 'lock', 'content', 'config', 'lodash', 'privileges', '$injector'];
 function WidgetsManagerCtrl($scope, $routeParams, authoringWidgets, archiveService,
-    keyboardManager, $location, desks, lock, content, config, _, privileges) {
+    keyboardManager, $location, desks, lock, content, config, _, privileges, $injector) {
     $scope.active = null;
 
     $scope.$watch('item', (item) => {
@@ -49,25 +49,18 @@ function WidgetsManagerCtrl($scope, $routeParams, authoringWidgets, archiveServi
                 (!widget.feature || !!_.get(config.features, widget.feature, true))
         ));
 
-        // if the story has a content profile and if the widget has required fields defined
-        // check if the required fields exists in the content profile
-        if (item.profile) {
-            content.getType(item.profile).then((type) => {
-                const isEditor3 = _.get(type, 'editor.body_html.editor3');
+        content.getType(item.profile).then((type) => {
+            const promises = widgets.map(
+                (widget) => typeof widget.isWidgetVisible === 'function'
+                    ? $injector.invoke(widget.isWidgetVisible(item))
+                    : Promise.resolve(true),
+            );
 
-                $scope.widgets = widgets.filter((widget) => {
-                    if (!isEditor3 && !!_.get(widget, 'onlyEditor3', false)) {
-                        // This widget is only for Editor3
-                        return false;
-                    } else if (widget.requiredFields) {
-                        return widget.requiredFields.every((field) => type.schema.hasOwnProperty(field));
-                    }
-                    return true;
-                });
+            Promise.all(promises).then((result) => {
+                $scope.widgets = widgets.filter((__, i) => result[i] === true);
+                $scope.$apply(); // tell angular to re-render
             });
-        } else {
-            $scope.widgets = widgets;
-        }
+        });
 
         bindAllShortcuts();
     });

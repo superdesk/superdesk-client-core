@@ -157,7 +157,9 @@
             <div sd-info-item class="user_role field__default_desk form__row" ng-if="userDesks && userDesks.length > 0">
                 <div class="sd-line-input sd-line-input--is-select">
                     <label class="sd-line-input__label" for="user_default_desk" translate>Default Desk</label>
-                    <select class="sd-line-input__select" ng-model="user.desk" name="user_default_desk" id="user_default_desk" ng-options="desk._id as desk.name for desk in userDesks"></select>
+                    <select class="sd-line-input__select" ng-model="user.desk" name="user_default_desk" id="user_default_desk" ng-options="desk._id as desk.name for desk in userDesks">
+                        <option value="" ng-click="user.desk = null" translate>No desk selected</option>
+                    </select>
                 </div>
             </div>
 

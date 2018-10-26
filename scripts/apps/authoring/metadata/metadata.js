@@ -690,7 +690,16 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
                 scope.activeTree = scope.tree[term ? term[scope.uniqueField] : null];
                 $event.stopPropagation();
                 _.defer(() => {
-                    elem.find('button:not([disabled]):not(.dropdown__toggle)')[0].focus();
+                    const el = elem.find('button:not([disabled]):not(.dropdown__toggle)');
+
+                    if (
+                        typeof el === 'object'
+                        && el != null
+                        && typeof el[0] === 'object'
+                        && typeof el[0].focus === 'function'
+                    ) {
+                        el[0].focus();
+                    }
                 });
                 scope.activeList = false;
             };

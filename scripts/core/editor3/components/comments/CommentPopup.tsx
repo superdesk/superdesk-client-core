@@ -8,6 +8,7 @@ import CommentTextArea from './CommentTextArea';
 import {getAuthorInfo} from '../../actions';
 import {editor3DataKeys, getCustomDataFromEditor, setCustomDataForEditor} from '../../helpers/editor3CustomData';
 import * as Highlights from '../../helpers/highlights';
+import {HighlightsPopupPositioner} from '../HighlightsPopupPositioner';
 
 /**
  * @ngdoc React
@@ -150,7 +151,7 @@ export class CommentPopup extends React.Component<any, any> {
             .then(() => this.removeReply(index));
 
         return (
-            <div onClick={(e) => this.manageFocusForReplyInput(e)}>
+            <HighlightsPopupPositioner editorNode={this.props.editorNode}>
                 <Comment
                     data={data}
                     updateComment={(msg) => this.editComment(comment, msg)}
@@ -158,16 +159,13 @@ export class CommentPopup extends React.Component<any, any> {
                     isAuthor={isAuthor}
                     isReply={false}
                     editorNode={this.props.editorNode}
-                    inlineActions={(
-                        <div className="comment-box__button-toolbar comment-box__button-toolbar--right">
-                            {resolutionInfo === null && (
-                                <button
-                                    className="btn btn--hollow btn--small"
-                                    onClick={() => this.resolveComment()}>
-                                    {gettext('Resolve')}
-                                </button>
-                            )}
-                        </div>
+                    onClick={(e) => this.manageFocusForReplyInput(e)}
+                    inlineActions={resolutionInfo === null && (
+                        <button
+                            className="btn btn--hollow btn--small"
+                            onClick={() => this.resolveComment()}>
+                            {gettext('Resolve')}
+                        </button>
                     )}
                     scrollableContent={(
                         <div>
@@ -217,7 +215,7 @@ export class CommentPopup extends React.Component<any, any> {
                         </div>
                     )}
                 />
-            </div>
+            </HighlightsPopupPositioner>
         );
     }
 }

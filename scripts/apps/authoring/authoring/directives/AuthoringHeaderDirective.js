@@ -1,7 +1,7 @@
 AuthoringHeaderDirective.$inject = ['api', 'authoringWidgets', '$rootScope', 'archiveService', 'metadata',
-    'content', 'lodash', 'authoring', 'vocabularies', '$timeout', 'config', 'moment', 'features'];
+    'content', 'lodash', 'authoring', 'vocabularies', '$timeout', 'config', 'moment', 'features', 'TranslationService'];
 export function AuthoringHeaderDirective(api, authoringWidgets, $rootScope, archiveService, metadata, content,
-    lodash, authoring, vocabularies, $timeout, config, moment, features) {
+    lodash, authoring, vocabularies, $timeout, config, moment, features, TranslationService) {
     return {
         templateUrl: 'scripts/apps/authoring/views/authoring-header.html',
         require: '?^sdAuthoringWidgets',
@@ -9,6 +9,26 @@ export function AuthoringHeaderDirective(api, authoringWidgets, $rootScope, arch
             scope.contentType = null;
             scope.displayCompanyCodes = null;
             scope.features = features;
+            scope.translationService = TranslationService;
+
+            if (TranslationService.translationsEnabled() === true) {
+                let promisesForTranslationsDate = [TranslationService.getTranslations(scope.item)];
+
+                if (scope.item.translated_from != null) {
+                    promisesForTranslationsDate.push(api.find('archive', scope.item.translated_from));
+                }
+
+                Promise.all(promisesForTranslationsDate)
+                    .then(([translations, translatedFromItem]) => {
+                        scope.translationsInfo = {
+                            count: translations._meta.total,
+                            translatedFromReference: translatedFromItem,
+                        };
+                    })
+                    .catch(() => {
+                        scope.translationsInfo = null;
+                    });
+            }
 
             scope.shouldDisplayUrgency = function() {
                 return !(scope.editor.urgency || {}).service ||
@@ -74,6 +94,10 @@ export function AuthoringHeaderDirective(api, authoringWidgets, $rootScope, arch
                     };
                 }
             });
+
+            scope.activateTranslationsWidget = function() {
+                WidgetsManagerCtrl.activate(authoringWidgets.find((widget) => widget._id === 'translations'));
+            };
 
             scope.$watch('item.profile', (profile) => {
                 if (profile) {

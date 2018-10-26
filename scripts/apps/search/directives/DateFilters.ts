@@ -23,30 +23,19 @@ const before3MonthsFilter: IDateRange = {
     },
 };
 
-const lastMonthFilter: IDateRange = {
-    key: 'last_month',
-    label: gettext('Last Month'),
+const last30daysFilter: IDateRange = {
+    key: 'last_30_days',
+    label: gettext('Last 30 Days'),
     elasticSearchDateRange: {
-        lte: 'now-1M/M',
-        gte: 'now-1M/M',
+        gte: 'now-30d',
     },
 };
 
-const lastWeekFilter: IDateRange = {
-    key: 'last_week',
-    label: gettext('Last Week'),
+const last7daysFilter: IDateRange = {
+    key: 'last_7_days',
+    label: gettext('Last 7 Days'),
     elasticSearchDateRange: {
-        lte: 'now-1w/w',
-        gte: 'now-1w/w',
-    },
-};
-
-const lastDayFilter: IDateRange = {
-    key: 'last_day',
-    label: gettext('Last Day'),
-    elasticSearchDateRange: {
-        lte: 'now-1d/d',
-        gte: 'now-1d/d',
+        gte: 'now-7d',
     },
 };
 
@@ -69,9 +58,8 @@ const last8hoursFilter: IDateRange = {
 export const dateRangesByKey: Dictionary<string, IDateRange> = {
     before_next_month: before1MonthFilter,
     before_3_months_ahead: before3MonthsFilter,
-    last_month: lastMonthFilter,
-    last_week: lastWeekFilter,
-    last_day: lastDayFilter,
+    last_30_days: last30daysFilter,
+    last_7_days: last7daysFilter,
     last_24_hours: last24hoursFilter,
     last_8_hours: last8hoursFilter,
 };
@@ -82,7 +70,7 @@ export const getDateFilters = (gettext) => [
         labelFrom: gettext('Created from'),
         labelTo: gettext('Created to'),
         fieldname: 'firstcreated',
-        predefinedFilters: [lastDayFilter, lastWeekFilter, lastMonthFilter],
+        predefinedFilters: [last24hoursFilter, last7daysFilter, last30daysFilter],
         isEnabled: () => true,
     },
     {
@@ -90,7 +78,7 @@ export const getDateFilters = (gettext) => [
         labelFrom: gettext('Modified from'),
         labelTo: gettext('Modified to'),
         fieldname: 'versioncreated',
-        predefinedFilters: [lastDayFilter, lastWeekFilter, lastMonthFilter],
+        predefinedFilters: [last24hoursFilter, last7daysFilter, last30daysFilter],
         isEnabled: () => true,
     },
     {
@@ -98,7 +86,7 @@ export const getDateFilters = (gettext) => [
         labelFrom: gettext('Published from'),
         labelTo: gettext('Published to'),
         fieldname: 'firstpublished',
-        predefinedFilters: [lastDayFilter, lastWeekFilter, lastMonthFilter],
+        predefinedFilters: [last24hoursFilter, last7daysFilter, last30daysFilter],
         isEnabled: () => true,
     },
     {

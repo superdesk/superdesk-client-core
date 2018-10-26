@@ -177,6 +177,7 @@ export default angular.module('superdesk.core.datetime', [
     'ngResource',
     'superdesk.core.datetime.absdate',
     'superdesk.core.datetime.groupdates',
+    'superdesk.core.datetime.relativeDate',
     'superdesk.core.datetime.reldatecomplex',
     'superdesk.core.datetime.reldate',
     'superdesk.core.translate',

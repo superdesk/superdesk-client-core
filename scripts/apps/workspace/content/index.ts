@@ -1,6 +1,7 @@
 import {ContentService} from './services';
 import * as directive from './directives';
 import * as ctrl from './controllers';
+import {coreMenuGroups} from 'core/activity/activity';
 
 /**
  * @ngdoc module
@@ -34,6 +35,7 @@ angular.module('superdesk.apps.workspace.content', [
                 controllerAs: 'ctrl',
                 templateUrl: 'scripts/apps/workspace/content/views/profile-settings.html',
                 category: superdesk.MENU_SETTINGS,
+                settings_menu_group: coreMenuGroups.CONTENT_CONFIG,
                 priority: 100,
                 privileges: {content_type: 1},
             });
