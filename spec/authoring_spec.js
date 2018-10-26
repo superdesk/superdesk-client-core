@@ -467,7 +467,7 @@ describe('authoring', () => {
         ctrlShiftKey(protractor.Key.END);
         ctrlKey('x');
         authoring.save();
-        authoring.publish(false);
+        authoring.publish(true);
         assertToastMsg('error', 'BODY_HTML empty values not allowed');
     });
 

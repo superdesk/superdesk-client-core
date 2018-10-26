@@ -64,7 +64,7 @@ describe('Content profiles', () => {
         browser.actions().sendKeys(protractor.Key.ENTER)
             .perform();
         authoring.save();
-        authoring.publish(false);
+        authoring.publish(true);
         assertToastMsg('error', 'EDNOTE is a required field');
     });
 
