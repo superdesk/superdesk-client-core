@@ -29,7 +29,7 @@ export default function MediaMetadataEditorDirective(metadata, deployConfig) {
                 let nextOrder = max(Object.keys(editor).map((field) => editor[field].order || 0)) + 1;
 
                 // add missing fields from validator to editor/schema
-                Object.keys(scope.validator).forEach((field) => {
+                Object.keys(scope.validator || {}).forEach((field) => {
                     if (!editor[field]) {
                         editor[field] = {
                             type: scope.validator[field].type || null,
@@ -49,7 +49,6 @@ export default function MediaMetadataEditorDirective(metadata, deployConfig) {
                         }, editor[field], schema[field])),
                     'order',
                 );
-                
                 scope.$apply();
             });
 
