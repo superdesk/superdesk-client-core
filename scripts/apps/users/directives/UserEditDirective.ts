@@ -116,7 +116,10 @@ export function UserEditDirective(api, gettext, notify, usersService, userList, 
 
             scope.save = function() {
                 new Promise((resolve) => {
-                    if (scope.user.language === scope.origUser.language) {
+                    if (
+                        scope.user._id !== session.identity._id // changing language for another user
+                        || scope.user.language === scope.origUser.language
+                    ) {
                         resolve(false);
                     } else {
                         modal.confirm(

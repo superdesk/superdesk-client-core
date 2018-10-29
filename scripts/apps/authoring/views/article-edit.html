@@ -655,3 +655,22 @@
     </div>
     <div class="sd-editor__info-text" ng-if="helper_text[field._id]">{{field.helper_text}}</div>
 </div>
+
+
+<div class="field" ng-repeat="field in fields track by field._id"
+     ng-if="field.field_type === 'related-content'"
+     sd-width="{{editor[field._id].sdWidth || 'full'}}"
+     sd-validation-error="error[field._id.toLowerCase()]"
+     order="{{editor[field._id].order}}"
+     data-required="schema[field._id].required">
+    <label class="field__label" translate>{{ field.display_name }}</label>
+
+    <div sd-related_items
+        data-item="item"
+        data-field="field"
+        data-editable="_editable"
+        data-onchange="autosave(item)">
+    </div>
+
+    <div class="sd-editor__info-text" ng-if="helper_text[field._id]">{{field.helper_text}}</div>
+</div>
