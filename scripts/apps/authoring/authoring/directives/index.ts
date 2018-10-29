@@ -13,6 +13,7 @@ export {AuthoringContainerDirective} from './AuthoringContainerDirective';
 export {AuthoringEmbeddedDirective} from './AuthoringEmbeddedDirective';
 export {AuthoringHeaderDirective} from './AuthoringHeaderDirective';
 export {ItemAssociationDirective} from './ItemAssociationDirective';
+export {RelatedItemsDirective} from './RelatedItemsDirective';
 export {ItemCarouselDirective} from './ItemCarouselDirective';
 export {FullPreviewDirective} from './FullPreviewDirective';
 export {RemoveTagsDirective} from './RemoveTagsDirective';
