@@ -1,6 +1,5 @@
 import * as helpers from 'apps/authoring/authoring/helpers';
 import _ from 'lodash';
-
 import postscribe from 'postscribe';
 
 /**
@@ -76,13 +75,13 @@ AuthoringDirective.$inject = [
     'embedService',
     '$sce',
     'mediaIdGenerator',
-    'familyService',
+    'RelationsService',
 ];
 export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace, notify,
     gettext, desks, authoring, api, session, lock, privileges, content, $location,
     referrer, macros, $timeout, $q, modal, archiveService, confirm, reloadService,
     $rootScope, $interpolate, metadata, suggest, config, deployConfig, editorResolver,
-    compareVersions, embedService, $sce, mediaIdGenerator, familyService) {
+    compareVersions, embedService, $sce, mediaIdGenerator, RelationsService) {
     return {
         link: function($scope, elem, attrs) {
             var _closing;
@@ -601,21 +600,18 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 }
 
                 // Check if there's unpublished related items
-                return familyService.fetchRelatedItems($scope.item)
-                    .then(({_items}) => {
-                        const related = _items.filter((i) => i.guid !== $scope.item.guid);
+                const related = RelationsService.getRelatedItems($scope.item);
 
-                        if (related.length > 0) {
-                            return modal.confirm({
-                                bodyText: gettext(
-                                    'There are unpublished related items that won\'t be sent out as related items.'
-                                    + ' Do you want to publish the article anyway?'
-                                ),
-                            }).then((ok) => ok ? performPublish() : false);
-                        } else {
-                            return performPublish();
-                        }
-                    });
+                if (related.length > 0) {
+                    modal.confirm({
+                        bodyText: gettext(
+                            'There are unpublished related items that won\'t be sent out as related items.'
+                            + ' Do you want to publish the article anyway?'
+                        ),
+                    }).then((ok) => ok ? performPublish() : false);
+                }
+
+                return performPublish();
             };
 
             function performPublish() {
@@ -823,12 +819,12 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             };
 
             /**
-            * On change content profile the default values from new content profile
-            * will overwrite the current values from item
-            *
-            * @function changeProfile
-            * @param {Object} item - ucurrent edited content items
-            */
+             * On change content profile the default values from new content profile
+             * will overwrite the current values from item
+             *
+             * @function changeProfile
+             * @param {Object} item - ucurrent edited content items
+             */
             $scope.changeProfile = function(item) {
                 angular.forEach($scope.content_types, (profile) => {
                     if (item.profile === profile._id && profile.schema) {
@@ -941,7 +937,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
 
                 authoring.saveWorkConfirmation($scope.origItem, $scope.item, $scope.dirty, changeMsg)
                     .then((res) => {
-                    // after saving work make sure this item won't be open again
+                        // after saving work make sure this item won't be open again
                         desks.setCurrentDeskId(null);
                         $location.search('item', null);
                         $location.search('action', null);

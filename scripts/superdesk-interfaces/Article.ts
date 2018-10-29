@@ -31,4 +31,5 @@ export interface IArticle {
     sign_off: string;
     feature_media: any;
     media_description: string;
+    associations: { string: IArticle };
 }
