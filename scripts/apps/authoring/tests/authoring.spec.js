@@ -329,7 +329,6 @@ describe('authoring', () => {
         spyOn(lock, 'unlock').and.returnValue();
 
         authoring.publish({}, {}).then(success, error);
-
         $rootScope.$digest();
 
         expect(api.update).toHaveBeenCalled();
@@ -2083,7 +2082,7 @@ describe('authoring container directive', () => {
                 spyOn(api, 'save').and.returnValue($q.when({}));
 
                 var elemEmbed = $compile('<div sd-authoring-embedded data-item="authoring.item"' +
-                    ' data-action="authoring.action"></div>')(iscope);
+                ' data-action="authoring.action"></div>')(iscope);
 
                 iscope.$digest();
                 var iscopeEmbed = elemEmbed.isolateScope();

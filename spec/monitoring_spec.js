@@ -690,7 +690,6 @@ describe('monitoring', () => {
 
         monitoring.actionOnItem('Correct item', 0, 0);
         authoring.send_correction_button.click();
-        authoring.waitForModalAndClickOk();
         expect(element(by.id('multi-select-count')).isPresent()).toBeFalsy();
     });
 

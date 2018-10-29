@@ -244,21 +244,6 @@ function Authoring() {
         return this.save_publish_button.click();
     };
 
-    this.clickModalOk = function() {
-        const modal = element(by.className('modal__dialog'));
-
-        modal.isPresent().then((click) => {
-            if (click) {
-                modal.element(by.className('btn--primary')).click();
-            }
-        });
-    };
-
-    this.waitForModalAndClickOk = function(timeout = 1000) {
-        browser.wait(() => by.className('modal__content'), timeout);
-        this.clickModalOk();
-    };
-
     this.publish = function(skipConfirm) {
         browser.wait(() => this.sendToButton.isPresent(), 1000);
         this.sendToButton.click();
@@ -271,7 +256,13 @@ function Authoring() {
         this.publish_button.click();
 
         if (!skipConfirm) {
-            this.waitForModalAndClickOk(1000);
+            var modal = element(by.className('modal__dialog'));
+
+            modal.isPresent().then((click) => {
+                if (click) {
+                    modal.element(by.className('btn--primary')).click();
+                }
+            });
         }
     };
 
@@ -288,7 +279,13 @@ function Authoring() {
         this.sendAndPublishBtn.click();
 
         if (!skipConfirm) {
-            this.waitForModalAndClickOk();
+            var modal = element(by.className('modal__dialog'));
+
+            modal.isPresent().then((click) => {
+                if (click) {
+                    modal.element(by.className('btn--primary')).click();
+                }
+            });
         }
     };
 
@@ -315,8 +312,13 @@ function Authoring() {
         this.publish_button.click();
 
         if (!skipConfirm) {
-            this.waitForModalAndClickOk(1000); // for related items
-            this.waitForModalAndClickOk(2000); // for saving item
+            var modal = element(by.className('modal__dialog'));
+
+            modal.isPresent().then((click) => {
+                if (click) {
+                    modal.element(by.className('btn--primary')).click();
+                }
+            });
         }
     };
 

@@ -668,7 +668,6 @@ describe('authoring', () => {
         authoring.writeText('Testing');
         authoring.save();
         authoring.publishFrom('Sports Desk');
-        authoring.confirmSendTo();
         // desk output count zero as content publish from sport desk
         expect(monitoring.getGroupItems(5).count()).toBe(0);
         workspace.selectDesk('Sports Desk');
