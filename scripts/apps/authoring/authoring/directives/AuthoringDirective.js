@@ -75,13 +75,13 @@ AuthoringDirective.$inject = [
     'embedService',
     '$sce',
     'mediaIdGenerator',
-    'RelationsService',
+    'relationsService',
 ];
 export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace, notify,
     gettext, desks, authoring, api, session, lock, privileges, content, $location,
     referrer, macros, $timeout, $q, modal, archiveService, confirm, reloadService,
     $rootScope, $interpolate, metadata, suggest, config, deployConfig, editorResolver,
-    compareVersions, embedService, $sce, mediaIdGenerator, RelationsService) {
+    compareVersions, embedService, $sce, mediaIdGenerator, relationsService) {
     return {
         link: function($scope, elem, attrs) {
             var _closing;
@@ -600,7 +600,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 }
 
                 // Check if there's unpublished related items
-                const related = RelationsService.getRelatedItems($scope.item);
+                const related = relationsService.getRelatedItems($scope.item);
 
                 if (related.length > 0) {
                     modal.confirm({

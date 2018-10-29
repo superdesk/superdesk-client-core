@@ -242,7 +242,7 @@ describe('authoring', () => {
         }));
 
     it('confirm the associated media called if rewrite_of but no associated media on edited item',
-        inject((api, $q, $rootScope, config, confirm, authoring, familyService) => {
+        inject((api, $q, $rootScope, config, confirm, authoring) => {
             let item = {
                 _id: 'test',
                 headline: 'headline',
@@ -270,8 +270,6 @@ describe('authoring', () => {
             spyOn(confirm, 'confirmFeatureMedia').and.returnValue(defered.promise);
             spyOn(authoring, 'autosave').and.returnValue(item);
             spyOn(authoring, 'publish').and.returnValue(item);
-            spyOn(familyService, 'fetchRelatedItems')
-                .and.returnValue($q.when({_items: []}));
             let scope = startAuthoring(item, 'edit');
 
             scope.publish();
@@ -285,7 +283,7 @@ describe('authoring', () => {
         }));
 
     it('confirm the associated media but do not use the associated media',
-        inject((api, $q, $rootScope, config, confirm, authoring, familyService) => {
+        inject((api, $q, $rootScope, config, confirm, authoring) => {
             let item = {
                 _id: 'test',
                 rewrite_of: 'rewriteOf',
@@ -311,8 +309,6 @@ describe('authoring', () => {
             spyOn(confirm, 'confirmFeatureMedia').and.returnValue(defered.promise);
             spyOn(authoring, 'autosave').and.returnValue({});
             spyOn(authoring, 'publish').and.returnValue({});
-            spyOn(familyService, 'fetchRelatedItems')
-                .and.returnValue($q.when({_items: []}));
             let scope = startAuthoring(item, 'edit');
 
             scope.publish();

@@ -39,6 +39,7 @@ angular.module('superdesk.apps.authoring', [
     'superdesk.apps.desks',
     'superdesk.apps.notification',
     'superdesk.apps.vocabularies',
+    'superdesk.apps.relations',
     'contenteditable',
     'decipher.history',
     'superdesk.config',

@@ -1,5 +1,5 @@
 // services
-import * as svc from './services/RelationsService';
+import {RelationsService} from './services/RelationsService';
 
 angular.module('superdesk.apps.relations', [])
-    .service('RelationsService', svc.RelationsService);
+    .service('relationsService', RelationsService);
