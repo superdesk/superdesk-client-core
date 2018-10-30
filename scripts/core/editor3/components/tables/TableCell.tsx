@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Editor, RichUtils, getDefaultKeyBinding} from 'draft-js';
+import {Editor, RichUtils, getDefaultKeyBinding, DraftHandleValue} from 'draft-js';
 import {getSelectedEntityType, getSelectedEntityRange} from '../links/entityUtils';
 import {customStyleMap} from '../customStyleMap';
 
@@ -58,22 +58,28 @@ export class TableCell extends React.Component<any, any> {
      * @param {string} command
      * @description DraftJS key command handler.
      */
-    handleKeyCommand(command) {
+    handleKeyCommand(command: string): DraftHandleValue {
         const {editorState} = this.state;
         let newState;
 
-        if (command === 'parent-undo') {
-            this.props.onUndo();
+        switch (command) {
+            case 'parent-undo':
+                this.props.onUndo();
+                return 'handled';
 
-            return 'handled';
-        }
+            case 'secondary-paste':
+                this.props.onRedo();
+                return 'handled';
 
-        if (command === 'toggle-link') {
-            newState = getSelectedEntityType(this.state.editorState) === 'LINK'
-                ? this.removeLink()
-                : this.addLink();
-        } else {
-            newState = RichUtils.handleKeyCommand(editorState, command);
+            case 'toggle-link':
+                newState = getSelectedEntityType(this.state.editorState) === 'LINK'
+                    ? this.removeLink()
+                    : this.addLink();
+                break;
+
+            default:
+                newState = RichUtils.handleKeyCommand(editorState, command);
+                break;
         }
 
         if (newState) {
@@ -186,5 +192,6 @@ TableCell.propTypes = {
     readOnly: PropTypes.bool.isRequired,
     onChange: PropTypes.func.isRequired,
     onUndo: PropTypes.func.isRequired,
+    onRedo: PropTypes.func.isRequired,
     onFocus: PropTypes.func.isRequired,
 };
