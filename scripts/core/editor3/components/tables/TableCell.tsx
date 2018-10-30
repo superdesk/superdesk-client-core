@@ -39,6 +39,10 @@ export class TableCell extends React.Component<any, any> {
             return 'parent-undo';
         }
 
+        if (e.ctrlKey && e.key === 'y') {
+            return 'parent-redo';
+        }
+
         if (e.ctrlKey && e.key === 'l') {
             return 'toggle-link';
         }
@@ -67,7 +71,7 @@ export class TableCell extends React.Component<any, any> {
             this.props.onUndo();
             return 'handled';
 
-        case 'secondary-paste':
+        case 'parent-redo':
             this.props.onRedo();
             return 'handled';
 
