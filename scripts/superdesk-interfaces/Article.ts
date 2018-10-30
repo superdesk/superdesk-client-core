@@ -32,4 +32,6 @@ export interface IArticle {
     feature_media: any;
     media_description: string;
     associations: { string: IArticle };
+    type: 'text' | 'picture' | 'video' | 'audio' | 'preformatted' | 'graphic' | 'composite';
+    firstpublished?: string;
 }
