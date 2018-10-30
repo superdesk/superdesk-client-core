@@ -1180,43 +1180,29 @@ function MetadataService(api, subscribersService, config, vocabularies, $rootSco
             }
         },
         getFilteredCustomVocabularies: function(qcodes) {
-            var self = this;
-            const cvs = [];
-
-            self.cvs.forEach((cv) => {
+            return this.fetchMetadataValues().then(() => this.cvs.filter((cv) => {
                 var cvService = cv.service || {};
-                var match = false;
 
                 if (cvService.all) {
-                    match = true;
-                    cv.terms = self.filterByService(cv.items, qcodes);
-                } else {
-                    qcodes.forEach((qcode) => {
-                        match = match || cvService[qcode];
+                    cv.terms = (cv.items || []).filter((item) => {
+                        if (item.service) {
+                            return qcodes.some((qcode) => !!item.service[qcode]);
+                        } else {
+                            return true;
+                        }
                     });
+                    return true;
+                } else {
                     cv.terms = cv.items;
+                    return qcodes.some((qcode) => !!cvService[qcode]);
                 }
-
-                if (match) {
-                    cvs.push(cv);
-                }
-            });
-
-            return cvs;
+            }));
         },
-        filterByService: function(items, qcodes) {
-            return _.filter(items, (item) => {
-                var match = false;
-
-                if (item.service) {
-                    qcodes.forEach((qcode) => {
-                        match = match || item.service[qcode];
-                    });
-                } else {
-                    match = true;
-                }
-                return match;
-            });
+        getCustomVocabulariesForArticleHeader: function(qcodes, editor, schema) {
+            return this.getFilteredCustomVocabularies(qcodes)
+                .then(
+                    (cvs) => cvs.filter((cv) => cv.terms.length && (editor[cv._id] || schema[cv._id]))
+                );
         },
         initialize: function() {
             if (!this.loaded) {

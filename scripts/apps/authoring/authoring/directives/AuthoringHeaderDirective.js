@@ -187,13 +187,13 @@ export function AuthoringHeaderDirective(api, authoringWidgets, $rootScope, arch
                 scope.$watch('item.anpa_category', (services) => {
                     var qcodes = _.map(services, 'qcode');
 
-                    var cvs = metadata.getFilteredCustomVocabularies(qcodes);
+                    metadata.getCustomVocabulariesForArticleHeader(qcodes, scope.editor, scope.schema).then((cvs) => {
+                        scope.cvs = _.sortBy(cvs, 'priority');
+                        scope.genreInCvs = _.map(cvs, 'schema_field').indexOf('genre') !== -1;
+                        scope.placeInCvs = _.map(cvs, 'schema_field').indexOf('place') !== -1;
 
-                    scope.cvs = _.sortBy(cvs, 'priority');
-                    scope.genreInCvs = _.map(cvs, 'schema_field').indexOf('genre') !== -1;
-                    scope.placeInCvs = _.map(cvs, 'schema_field').indexOf('place') !== -1;
-
-                    scope.shouldDisplayCompanyCodes();
+                        scope.shouldDisplayCompanyCodes();
+                    });
                 });
 
                 scope.$watch('item.subject', () => {

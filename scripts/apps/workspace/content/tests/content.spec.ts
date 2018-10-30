@@ -335,7 +335,7 @@ describe('superdesk.apps.workspace.content', () => {
 
                     expect(form.$dirty).toBeFalsy();
                     $(fields[0])
-                        .find('#remove-item')
+                        .find('.remove-item')
                         .click();
                     expect(form.$dirty).toBeTruthy();
                 })
