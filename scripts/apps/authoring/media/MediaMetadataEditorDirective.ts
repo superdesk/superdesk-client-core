@@ -49,7 +49,7 @@ export default function MediaMetadataEditorDirective(metadata, deployConfig) {
                         }, editor[field], schema[field])),
                     'order',
                 );
-                
+
                 scope.$apply();
             });
 

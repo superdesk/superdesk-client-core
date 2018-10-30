@@ -63,23 +63,23 @@ export class TableCell extends React.Component<any, any> {
         let newState;
 
         switch (command) {
-            case 'parent-undo':
-                this.props.onUndo();
-                return 'handled';
+        case 'parent-undo':
+            this.props.onUndo();
+            return 'handled';
 
-            case 'secondary-paste':
-                this.props.onRedo();
-                return 'handled';
+        case 'secondary-paste':
+            this.props.onRedo();
+            return 'handled';
 
-            case 'toggle-link':
-                newState = getSelectedEntityType(this.state.editorState) === 'LINK'
-                    ? this.removeLink()
-                    : this.addLink();
-                break;
+        case 'toggle-link':
+            newState = getSelectedEntityType(this.state.editorState) === 'LINK'
+                ? this.removeLink()
+                : this.addLink();
+            break;
 
-            default:
-                newState = RichUtils.handleKeyCommand(editorState, command);
-                break;
+        default:
+            newState = RichUtils.handleKeyCommand(editorState, command);
+            break;
         }
 
         if (newState) {
