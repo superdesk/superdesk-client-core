@@ -144,7 +144,7 @@ describe('send', () => {
         monitoring.expectIsChecked(2, 1);
 
         monitoring.openSendMenu();
-        authoring.sendTo('Sports Desk', 'Working Stage');
+        authoring.sendToSidebarOpened('Sports Desk', 'Working Stage');
 
         // now continue to open new multi selected items' SendTo panel to see if last destination remembered?
         monitoring.selectItem(3, 0);

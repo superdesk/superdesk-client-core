@@ -9,6 +9,7 @@ export function SendService(desks, api, $q, notify, $injector, multi, $rootScope
     this.config = null;
     this.getConfig = getConfig;
     this.startConfig = startConfig;
+    this.getItemsFromPackages = getItemsFromPackages;
 
     var self = this;
 
@@ -162,6 +163,19 @@ export function SendService(desks, api, $q, notify, $injector, multi, $rootScope
         }
     }
 
+    function getItemsFromPackages(packages) {
+        let items = [];
+
+        (packages || []).forEach((packageItem) => {
+            (packageItem.groups || [])
+                .filter((group) => group.id !== 'root')
+                .forEach((group) => {
+                    group.refs.forEach((item) => items.push(item.residRef));
+                });
+        });
+        return items;
+    }
+
     /**
      * Send all given item using config once it's resolved
      *
@@ -179,10 +193,18 @@ export function SendService(desks, api, $q, notify, $injector, multi, $rootScope
         self.config.action = action;
         self.config.itemIds = _.map(items, '_id');
         self.config.isPackage = items.some((item) => item.type === 'composite');
+
+        if (self.config.isPackage) {
+            self.config.packageItemIds = getItemsFromPackages(items);
+        }
+
         return self.config.promise.then((config) => {
             self.config = null;
             multi.reset();
             return $q.all(items.map((item) => sendOneAs(item, config, action)));
+        }, () => {
+            self.config = null;
+            multi.reset();
         });
     }
 
