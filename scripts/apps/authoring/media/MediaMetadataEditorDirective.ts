@@ -1,8 +1,8 @@
 import {max, sortBy, get} from 'lodash';
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
 
-MediaMetadataEditorDirective.$inject = ['metadata', 'deployConfig'];
-export default function MediaMetadataEditorDirective(metadata, deployConfig) {
+MediaMetadataEditorDirective.$inject = ['metadata', 'deployConfig', '$q'];
+export default function MediaMetadataEditorDirective(metadata, deployConfig, $q) {
     function getCV(field) {
         return metadata.cvs.find((cv) => !cv.field_type && (cv._id === field || cv.schema_field === field));
     }
@@ -21,12 +21,15 @@ export default function MediaMetadataEditorDirective(metadata, deployConfig) {
         },
         template: require('./views/media-metadata-editor-directive.html'),
         link: (scope) => {
-            getLabelNameResolver().then((getLabelForFieldId) => {
+            $q.all({
+                getLabelForFieldId: getLabelNameResolver(),
+                metdataInit: metadata.initialize(),
+            }).then(({getLabelForFieldId}) => {
                 const editor = get(deployConfig.getSync('editor'), 'picture', {});
                 const schema = get(deployConfig.getSync('editor'), 'picture', {});
 
                 // get last order
-                let nextOrder = max(Object.keys(editor).map((field) => editor[field].order || 0)) + 1;
+                let nextOrder = max(Object.keys(editor).map((field) => get(editor, `${field}.order`, 0))) + 1;
 
                 // add missing fields from validator to editor/schema
                 Object.keys(scope.validator || {}).forEach((field) => {
@@ -42,6 +45,7 @@ export default function MediaMetadataEditorDirective(metadata, deployConfig) {
                 // set scope fields in order
                 scope.fields = sortBy(
                     Object.keys(editor)
+                        .filter((key) => editor[key] != null)
                         .map((field) => Object.assign({
                             field: field,
                             label: getLabelForFieldId(field),
@@ -49,7 +53,8 @@ export default function MediaMetadataEditorDirective(metadata, deployConfig) {
                         }, editor[field], schema[field])),
                     'order',
                 );
-                scope.$apply();
+                
+                scope.$applyAsync();
             });
 
             /**
