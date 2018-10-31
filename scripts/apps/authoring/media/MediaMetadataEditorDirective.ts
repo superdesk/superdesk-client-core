@@ -26,7 +26,7 @@ export default function MediaMetadataEditorDirective(metadata, deployConfig, $q)
                 metdataInit: metadata.initialize(),
             }).then(({getLabelForFieldId}) => {
                 const editor = get(deployConfig.getSync('editor'), 'picture', {});
-                const schema = get(deployConfig.getSync('editor'), 'picture', {});
+                const schema = get(deployConfig.getSync('schema'), 'picture', {});
 
                 // get last order
                 let nextOrder = max(Object.keys(editor).map((field) => get(editor, `${field}.order`, 0))) + 1;
