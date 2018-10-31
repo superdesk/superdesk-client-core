@@ -94,9 +94,14 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
     * modified crop information, point of interest and metadata changes.
     */
     $scope.done = function() {
-        /* Throw an exception if PoI is outisde of a crop */
+        /* Throw an exception if PoI is outside of a crop */
         function poiIsInsideEachCrop() {
             const originalImage = $scope.data.metadata.renditions.original;
+
+            if (!$scope.data.poi || !_.isFinite($scope.data.poi.x) || !_.isFinite($scope.data.poi.y)) {
+                throw gettext('Point of interest is not defined.');
+            }
+
             const originalPoi = {
                 x: originalImage.width * $scope.data.poi.x,
                 y: originalImage.height * $scope.data.poi.y,
@@ -122,6 +127,7 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
                 }
             });
         }
+
         // check if data are valid
         try {
             poiIsInsideEachCrop();
