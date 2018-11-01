@@ -108,6 +108,10 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
             };
 
             _.forEach($scope.data.cropData, (cropData, cropName) => {
+                if (!cropData || _.isEmpty(cropData)) {
+                    throw gettext('Crop coordinates are not defined for ' + cropName + ' picture crop.');
+                }
+
                 if (originalPoi.y < cropData.CropTop ||
                     originalPoi.y > cropData.CropBottom ||
                     originalPoi.x < cropData.CropLeft ||
