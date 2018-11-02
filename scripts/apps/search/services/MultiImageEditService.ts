@@ -21,7 +21,6 @@ MultiImageEditController.$inject = [
     'modal',
     'gettextCatalog',
     'images',
-    'authoring',
     'saveHandler',
 ];
 
@@ -31,7 +30,6 @@ export function MultiImageEditController(
     modal,
     gettextCatalog,
     images,
-    authoring,
     saveHandler,
 ) {
     let changes = {};
