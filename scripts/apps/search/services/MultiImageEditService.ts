@@ -15,8 +15,25 @@ interface IScope extends ng.IScope {
     $close: any;
 }
 
-MultiImageEditController.$inject = ['$scope', 'deployConfig', 'modal', 'gettextCatalog', 'images', 'authoring'];
-export function MultiImageEditController($scope: IScope, deployConfig, modal, gettextCatalog, images, authoring) {
+MultiImageEditController.$inject = [
+    '$scope',
+    'deployConfig',
+    'modal',
+    'gettextCatalog',
+    'images',
+    'authoring',
+    'saveHandler',
+];
+
+export function MultiImageEditController(
+    $scope: IScope,
+    deployConfig,
+    modal,
+    gettextCatalog,
+    images,
+    authoring,
+    saveHandler,
+) {
     let changes = {};
 
     $scope.validator = deployConfig.getSync('validator_media_metadata');
@@ -51,12 +68,10 @@ export function MultiImageEditController($scope: IScope, deployConfig, modal, ge
     };
 
     $scope.save = (close) => {
-        angular.forEach(images, (image) => {
-            authoring.save(image, _.find($scope.origin, (item) => item._id === image._id))
-                .then(() => {
-                    changes = {};
-                });
-        });
+        saveHandler($scope.origin)
+            .then(() => {
+                changes = {};
+            });
 
         if (close) {
             $scope.$close();
@@ -131,13 +146,14 @@ export function MultiImageEditController($scope: IScope, deployConfig, modal, ge
  */
 MultiImageEditService.$inject = ['$modal'];
 export function MultiImageEditService($modal) {
-    this.edit = (images) => {
+    this.edit = (images, saveHandler) => {
         $modal.open({
             templateUrl: 'scripts/apps/search/views/multi-image-edit.html',
             controller: MultiImageEditController,
             size: 'fullscreen modal--dark-ui',
             resolve: {
                 images: () => images,
+                saveHandler: () => saveHandler,
             },
         });
     };
