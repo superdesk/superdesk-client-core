@@ -1,7 +1,22 @@
 import _ from 'lodash';
 
+interface IScope extends ng.IScope {
+    validator: any;
+    origin: any;
+    images: any;
+    placeholder: any;
+    isDirty: any;
+    selectImage: any;
+    onBlur: any;
+    onChange: any;
+    metadata: any;
+    save: any;
+    close: any;
+    $close: any;
+}
+
 MultiImageEditController.$inject = ['$scope', 'deployConfig', 'modal', 'gettextCatalog', 'data', 'authoring'];
-export function MultiImageEditController($scope, deployConfig, modal, gettextCatalog, data, authoring) {
+export function MultiImageEditController($scope: IScope, deployConfig, modal, gettextCatalog, data, authoring) {
     let changes = {};
 
     $scope.validator = deployConfig.getSync('validator_media_metadata');
@@ -15,9 +30,9 @@ export function MultiImageEditController($scope, deployConfig, modal, gettextCat
 
     $scope.selectImage = (image) => {
         image.unselected = !image.unselected;
-        image.unselected ?
-            _.remove($scope.images, (res) => res._id === image._id) :
-            $scope.images.push(image);
+        image.unselected
+            ? _.remove($scope.images, (res: any) => res._id === image._id)
+            : $scope.images.push(image);
 
         return updateMetadata();
     };
@@ -52,7 +67,7 @@ export function MultiImageEditController($scope, deployConfig, modal, gettextCat
         if ($scope.isDirty()) {
             modal.confirm(
                 gettextCatalog.getString('You have unsaved changes, do you want to continue?'),
-                gettextCatalog.getString('Confirm')
+                gettextCatalog.getString('Confirm'),
             )
                 .then(() => {
                     $scope.$close();
