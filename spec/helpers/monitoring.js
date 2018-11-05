@@ -119,7 +119,7 @@ function Monitoring() {
     };
 
     this.getMonitoringHomeTitle = function() {
-        return element(by.css('[ng-if="!monitoring.singleGroup && type === \'monitoring\'"]'))
+        return element(by.css('[ng-if="type === \'monitoring\'"]'))
             .element(by.className('dropdown__toggle')).getText();
     };
 
