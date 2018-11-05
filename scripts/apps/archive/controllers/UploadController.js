@@ -1,8 +1,25 @@
 import EXIF from 'exif-js';
 import _ from 'lodash';
 
-UploadController.$inject = ['$scope', '$q', 'upload', 'api', 'archiveService', 'session', 'deployConfig'];
-export function UploadController($scope, $q, upload, api, archiveService, session, deployConfig) {
+/* eslint-disable complexity */
+
+const getExifData = (file) => new Promise((resolve) => {
+    EXIF.getData(file, function() {
+        resolve(this);
+    });
+});
+
+UploadController.$inject = [
+    '$scope',
+    '$q',
+    'upload',
+    'api',
+    'archiveService',
+    'session',
+    'deployConfig',
+    'multiImageEdit',
+];
+export function UploadController($scope, $q, upload, api, archiveService, session, deployConfig, multiImageEdit) {
     $scope.items = [];
     $scope.saving = false;
     $scope.failed = false;
@@ -70,12 +87,17 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
         });
     };
 
-    var initFile = function(file, meta) {
+    var initFile = function(file, meta, id) {
         var item = {
             file: file,
             meta: meta,
             progress: 0,
         };
+
+        if (id != null) {
+            item.meta._id = id;
+            item.meta_id = id;
+        }
 
         item.cssType = item.file.type.split('/')[0];
         $scope.items.unshift(item);
@@ -119,23 +141,11 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
             return false;
         }
 
+        let imageFiles = [];
+
         _.each(files, (file) => {
             if (/^image/.test(file.type)) {
-                if (!$scope.allowPicture) {
-                    $scope.errorMessage = getErrorMessage('image');
-                }
-                EXIF.getData(file, function() {
-                    var fileMeta = this.iptcdata;
-
-                    $scope.$apply(() => {
-                        initFile(file, {
-                            byline: fileMeta.byline,
-                            headline: fileMeta.headline,
-                            description_text: fileMeta.caption,
-                            copyrightnotice: fileMeta.copyright,
-                        });
-                    });
-                });
+                imageFiles.push(file);
             } else {
                 if (/^video/.test(file.type)) {
                     if (!$scope.allowVideo) {
@@ -154,6 +164,46 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
                 });
             }
         });
+
+        if (imageFiles.length > 0) {
+            if ($scope.allowPicture) {
+                Promise.all(imageFiles.map((file) => getExifData(file)))
+                    .then((filesWithExifDataAttached) => {
+                        filesWithExifDataAttached.forEach((file, i) => {
+                            var fileMeta = file.iptcdata;
+
+                            initFile(file, {
+                                byline: fileMeta.byline,
+                                headline: fileMeta.headline,
+                                description_text: fileMeta.caption,
+                                copyrightnotice: fileMeta.copyright,
+                            }, i);
+                        });
+                    })
+                    .then(() => {
+                        multiImageEdit.edit(
+                            $scope.items.map((item) => item.meta),
+                            (editedMetadataItems) => {
+                                editedMetadataItems.forEach((metaItem) => {
+                                    const item = $scope.items.find((i) => i.meta_id === metaItem._id);
+
+                                    if (item != null) {
+                                        item.meta = metaItem;
+
+                                        // the item is not created yet, so has no real id
+                                        // it only has local pseudo-id for multi metadata editing to work
+                                        delete item.meta._id;
+                                    }
+                                });
+
+                                return $scope.save();
+                            }
+                        );
+                    });
+            } else {
+                $scope.errorMessage = getErrorMessage('image');
+            }
+        }
     };
 
     $scope.upload = function() {
@@ -187,6 +237,8 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
                     $scope.saving = false;
                     checkFail();
                 });
+        } else {
+            return Promise.reject();
         }
     };
 
