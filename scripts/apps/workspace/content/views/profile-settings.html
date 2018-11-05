@@ -110,8 +110,18 @@
                 <div class="field" ng-if="withEditor3">
                     <span ng-model="editing.form.editor.body_html.editor3" sd-switch></span><label>{{:: 'Editor3' | translate }}</label>
                 </div>
+
+                <h4 translate>Schema Configuration</h4>
+
                 <div class="field">
-                    <sd-content-schema-editor data-model="editing.form"></sd-content-schema-editor>
+                    <div sd-wizard data-name="profile-settings-content-profiles" data-current-step="'header'">
+                        <div sd-wizard-step data-title="{{ 'Header' | translate }}" data-code="header">
+                            <sd-content-schema-editor data-section-to-render="'header'" data-model="editing.form"></sd-content-schema-editor>
+                        </div>
+                        <div sd-wizard-step data-title="{{ :: 'Content' | translate }}" data-code="content">
+                            <sd-content-schema-editor data-section-to-render="'content'" data-model="editing.form"></sd-content-schema-editor>
+                        </div>
+                    </div>
                 </div>
             </fieldset>
         </form>

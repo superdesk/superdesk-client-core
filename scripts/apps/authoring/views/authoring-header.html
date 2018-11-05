@@ -328,7 +328,6 @@
              ng-repeat="cv in cvs track by cv._id"
              sd-validation-error="error[cv.display_name.toLowerCase()]"
              data-required="editor[cv._id].required"
-             ng-if="cv.terms.length && (editor[cv._id] || schema[cv._id])"
              sd-width="{{editor[cv._id].sdWidth}}"
              order="{{editor[cv._id].order}}">
             <label class="authoring-header__item-label">
