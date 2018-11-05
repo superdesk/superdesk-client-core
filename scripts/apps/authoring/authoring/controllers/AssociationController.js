@@ -179,7 +179,7 @@ export function AssociationController(config, send, api, $q, superdesk,
             return promise;
         }
 
-        scope._onchange({item: scope.item, data: data});
+        scope.onchange({item: scope.item, data: data});
     };
 
     /**
