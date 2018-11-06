@@ -2,12 +2,14 @@
     <div class="sd-page__header">
         <sd-search-handler ng-model="search.name" data-debounce="200"></sd-search-handler>
         <div class="sortbar">
-            <span translate>Product Type: </span>
-            <select class="input-small"
-                    ng-model="search.product_type"
-                    ng-options="p.qcode as p.name for p in product_types">
-                <option value="" translate>Select</option>
-            </select>
+            <span class="lab" translate>Product Type: </span>
+            <div class="sd-line-input sd-line-input--is-select sd-line-input--no-label sd-line-input--no-margin" style="min-width:120px;">
+                <select class="sd-line-input__select"
+                        ng-model="search.product_type"
+                        ng-options="p.qcode as p.name for p in product_types">
+                    <option value="" translate>Select</option>
+                </select>
+            </div>
         </div>
         <span class="sd-page__element-grow"></span>
         <button class="btn btn--primary" ng-click="newProduct()">
@@ -16,15 +18,27 @@
     </div>
 
     <div class="sd-page__content">
-        <ul class="pills-list" >
-            <li ng-repeat="product in products| productsBy:search as filtered_products track by product._id" class="clearfix">
-                <h6>{{ product.name}}</h6> <i>[{{ product.product_type || 'both' }}]</i>
-                <div class="actions">
-                    <button ng-click="edit(product)" title="{{:: 'Edit product' | translate }}"><i class="icon-pencil"></i></button>
-                    <button ng-click="remove(product)" title="{{:: 'Remove product' | translate }}"><i class="icon-trash"></i></button>
+        <ul class="sd-list-item-group sd-list-item-group--space-between-items" style="max-width: 1000px;">
+            <li ng-repeat="product in products| productsBy:search as filtered_products track by product._id" class="sd-list-item sd-shadow--z1">
+                <div class="sd-list-item__border"></div>
+                <div class="sd-list-item__column sd-list-item__column--grow sd-list-item__column--no-border">
+                    <div class="sd-list-item__row">
+                        <span class="sd-overflow-ellipsis sd-list-item--element-grow">{{ product.name}}</span>&nbsp;<span class="label label--hollow">{{ product.product_type || 'both' }}</span>
+                    </div>
+                </div>
+                <div class="sd-list-item__action-menu sd-list-item__action-menu--direction-row">
+                    <button class="icn-btn" ng-click="edit(product)" title="{{:: 'Edit product' | translate }}"><i class="icon-pencil"></i></button>
+                    <button class="icn-btn" ng-click="remove(product)" title="{{:: 'Remove product' | translate }}"><i class="icon-trash"></i></button>
                 </div>
             </li>
-            <li ng-show="products.length > 0 && !filtered_products.length"><h6 translate>No Products Found</h6></li>
+            <li ng-show="products.length > 0 && !filtered_products.length" class="sd-list-item sd-list-item--no-hover sd-shadow--z1">
+                <div class="sd-list-item__border"></div>
+                <div class="sd-list-item__column sd-list-item__column--grow sd-list-item__column--no-border">
+                    <div class="sd-list-item__row">
+                        <span translate>No Products Found</span>
+                    </div>
+                </div>
+            </li>
         </ul>
     </div>
     <div sd-products-config-modal></div>
