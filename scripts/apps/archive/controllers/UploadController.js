@@ -1,5 +1,6 @@
 import EXIF from 'exif-js';
 import _ from 'lodash';
+import {getDataUrl} from 'scripts/core/upload/image-preview-directive';
 
 /* eslint-disable complexity */
 
@@ -32,6 +33,42 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
     $scope.allowVideo = !($scope.locals && $scope.locals.data && $scope.locals.data.allowVideo === false);
     $scope.allowAudio = !($scope.locals && $scope.locals.data && $scope.locals.data.allowAudio === false);
     $scope.validator = _.omit(deployConfig.getSync('validator_media_metadata'), ['archive_description']);
+
+    let pseudoId = 0;
+    const getPseudoId = () => ++pseudoId;
+
+    $scope.imagesMetadata = [];
+    $scope.getImageUrl = (imageMeta) => {
+        const item = $scope.items.find((item) => item.meta_id === imageMeta._id);
+
+        return item == null ? '' : item.imageDataUrl;
+    };
+    $scope.invokeImagesInput = () => {
+        document.querySelector('#images-input').click();
+    };
+
+    $scope.isDragging = false;
+
+    $scope.drag = ($isDragging, $class, $event) => {
+        $scope.isDragging = $isDragging;
+        $scope.$apply();
+    };
+
+    $scope.handleImageMetadataEdit = (editedMetadataItems) => {
+        editedMetadataItems.forEach((metaItem) => {
+            const item = $scope.items.find((i) => i.meta_id === metaItem._id);
+
+            if (item != null) {
+                item.meta = metaItem;
+
+                // the item is not created yet, so has no real id
+                // it only has local pseudo-id for multi metadata editing to work
+                delete item.meta._id;
+            }
+        });
+
+        return $scope.save();
+    };
 
     var uploadFile = function(item) {
         var handleError = function(reason) {
@@ -81,12 +118,6 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
         }
     };
 
-    $scope.setAllMeta = function(field, val) {
-        _.each($scope.items, (item) => {
-            item.meta[field] = val;
-        });
-    };
-
     var initFile = function(file, meta, id) {
         var item = {
             file: file,
@@ -128,6 +159,8 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
     };
 
     $scope.addFiles = function(files) {
+        $scope.isDragging = false;
+
         $scope.errorMessage = null;
         if (!files.length) {
             return false;
@@ -169,7 +202,7 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
             if ($scope.allowPicture) {
                 Promise.all(imageFiles.map((file) => getExifData(file)))
                     .then((filesWithExifDataAttached) => {
-                        filesWithExifDataAttached.forEach((file, i) => {
+                        filesWithExifDataAttached.forEach((file) => {
                             var fileMeta = file.iptcdata;
 
                             initFile(file, {
@@ -177,27 +210,23 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
                                 headline: fileMeta.headline,
                                 description_text: fileMeta.caption,
                                 copyrightnotice: fileMeta.copyright,
-                            }, i);
+                            }, getPseudoId());
                         });
                     })
                     .then(() => {
-                        multiImageEdit.edit(
-                            $scope.items.map((item) => item.meta),
-                            (editedMetadataItems) => {
-                                editedMetadataItems.forEach((metaItem) => {
-                                    const item = $scope.items.find((i) => i.meta_id === metaItem._id);
+                        $scope.imagesMetadata = $scope.items.map((item) => item.meta);
+                        $scope.$apply();
 
-                                    if (item != null) {
-                                        item.meta = metaItem;
-
-                                        // the item is not created yet, so has no real id
-                                        // it only has local pseudo-id for multi metadata editing to work
-                                        delete item.meta._id;
-                                    }
-                                });
-
-                                return $scope.save();
-                            }
+                        // running promises sequentially
+                        $scope.items.reduce(
+                            (promise, item, i) => promise.then(
+                                () => getDataUrl(item.file).then((url) => {
+                                    $scope.$apply(() => {
+                                        $scope.items[i].imageDataUrl = url;
+                                    });
+                                })
+                            )
+                            , Promise.resolve()
                         );
                     });
             } else {
@@ -225,7 +254,7 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
         validateFields();
         if (_.isNil($scope.errorMessage)) {
             $scope.saving = true;
-            return $scope.upload().then((results) => {
+            return $scope.upload().then(() => {
                 $q.all(_.map($scope.items, (item) => {
                     archiveService.addTaskToArticle(item.meta);
                     return api.archive.update(item.model, item.meta);

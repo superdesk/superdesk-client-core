@@ -12,7 +12,8 @@ interface IScope extends ng.IScope {
     metadata: any;
     save: any;
     close: any;
-    $close: any;
+    saveHandler(origin): Promise<void>;
+    closeHandler(): void;
 }
 
 MultiImageEditController.$inject = [
@@ -20,8 +21,6 @@ MultiImageEditController.$inject = [
     'deployConfig',
     'modal',
     'gettextCatalog',
-    'images',
-    'saveHandler',
 ];
 
 export function MultiImageEditController(
@@ -29,15 +28,22 @@ export function MultiImageEditController(
     deployConfig,
     modal,
     gettextCatalog,
-    images,
-    saveHandler,
 ) {
+    const saveHandler = $scope.saveHandler;
+
+    $scope.origin = angular.copy($scope.images);
+
     let changes = {};
 
     $scope.validator = deployConfig.getSync('validator_media_metadata');
 
-    $scope.origin = angular.copy(images);
-    $scope.images = angular.copy(images);
+    $scope.$watch('images', (images: Array<any>) => {
+        const newImages = images.filter(
+            ({_id}) => $scope.origin.find((existingImage) => existingImage._id === _id) == null,
+        );
+
+        $scope.origin = $scope.origin.concat(newImages);
+    });
 
     $scope.placeholder = {};
 
@@ -66,14 +72,20 @@ export function MultiImageEditController(
     };
 
     $scope.save = (close) => {
-        saveHandler($scope.origin)
+        const imagesForSaving = angular.copy($scope.origin);
+
+        imagesForSaving.forEach((image) => {
+            delete image.unselected;
+        });
+
+        saveHandler(imagesForSaving)
             .then(() => {
                 changes = {};
-            });
 
-        if (close) {
-            $scope.$close();
-        }
+                if (close) {
+                    $scope.closeHandler();
+                }
+            });
     };
 
     $scope.close = () => {
@@ -83,10 +95,10 @@ export function MultiImageEditController(
                 gettextCatalog.getString('Confirm'),
             )
                 .then(() => {
-                    $scope.$close();
+                    $scope.closeHandler();
                 });
         } else {
-            $scope.$close();
+            $scope.closeHandler();
         }
     };
 
@@ -133,6 +145,14 @@ export function MultiImageEditController(
     }
 }
 
+MultiImageEditModalController.$inject = ['$scope', 'images', 'saveHandler'];
+function MultiImageEditModalController($scope, images, saveHandler) {
+    $scope.images = images;
+    $scope.saveHandler = saveHandler;
+    $scope.closeHandler = () => $scope.$close();
+    $scope.getImageUrl = (image) => image.renditions.thumbnail.href;
+}
+
 /**
  * @ngdoc service
  * @module superdesk.apps.search
@@ -146,8 +166,8 @@ MultiImageEditService.$inject = ['$modal'];
 export function MultiImageEditService($modal) {
     this.edit = (images, saveHandler) => {
         $modal.open({
-            templateUrl: 'scripts/apps/search/views/multi-image-edit.html',
-            controller: MultiImageEditController,
+            templateUrl: 'scripts/apps/search/views/multi-image-edit-modal.html',
+            controller: MultiImageEditModalController,
             size: 'fullscreen modal--dark-ui',
             resolve: {
                 images: () => images,

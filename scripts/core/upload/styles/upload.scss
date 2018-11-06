@@ -297,11 +297,10 @@ media uploader
     }
     .drag-area { //start screen on modal show
         position: absolute;
-        top:5px;
-        left: 5px;
-        bottom: 5px;
-        right: 5px;
-        border: 3px dashed $background-main;
+        top:0;
+        left: 0;
+        bottom: 0;
+        right: 0;
         overflow-y: auto;
         @include user-select(none);
         &.dragover {
@@ -545,32 +544,6 @@ media uploader
                         }
                     }
                 }
-            }
-        }
-
-        &.compact {
-        }
-    }
-
-    .optional-drag-holder {
-        position: absolute;
-        bottom: -1px; left: 0; right: 0;
-        z-index: 10;
-        border-bottom: 1px solid #ddd;
-        &.open {
-            position: relative;
-        }
-        .optional-drag {
-            width: 130px;
-            margin: 0 auto;
-            background: #ececec;
-            padding: 5px 10px;
-            text-align: center;
-            &:hover {
-                cursor: pointer;
-            }
-            i {
-                margin-top: -2px;
             }
         }
     }
