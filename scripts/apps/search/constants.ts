@@ -109,6 +109,7 @@ export const CORE_PROJECTED_FIELDS = {
         'item_id',
         'guid',
         '_current_version',
+        'lock_action',
         'lock_user',
         'lock_session',
         'genre',
