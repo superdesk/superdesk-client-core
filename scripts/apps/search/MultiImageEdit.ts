@@ -4,7 +4,7 @@ MultiImageEdit.$inject = ['asset'];
 export function MultiImageEdit(asset) {
     return {
         scope: {
-            images: '=',
+            imagesOriginal: '=',
             isUpload: '=',
             saveHandler: '=',
             closeHandler: '=',

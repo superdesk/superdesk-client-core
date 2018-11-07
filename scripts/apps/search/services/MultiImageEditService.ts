@@ -4,6 +4,7 @@ import {validateMediaFieldsThrows} from 'apps/authoring/authoring/controllers/Ch
 interface IScope extends ng.IScope {
     validator: any;
     origin: any;
+    imagesOriginal: any;
     images: any;
     placeholder: any;
     isDirty: any;
@@ -32,19 +33,21 @@ export function MultiImageEditController(
 ) {
     const saveHandler = $scope.saveHandler;
 
-    $scope.origin = angular.copy($scope.images);
+    $scope.origin = angular.copy($scope.imagesOriginal);
+    $scope.images = angular.copy($scope.imagesOriginal);
 
     let changes = {};
 
-    $scope.$watch('images', (images: Array<any>) => {
+    $scope.$watch('imagesOriginal', (imagesOriginal: Array<any>) => {
         // add and remove images without losing metadata of the ones which stay
-        const updatedImages = images.map((image) => {
+        const updatedImages = imagesOriginal.map((image) => {
             const existingImage = $scope.origin.find(({_id}) => _id === image._id);
 
             return existingImage != null ? existingImage : image;
         });
 
         $scope.origin = angular.copy(updatedImages);
+        $scope.images = angular.copy(updatedImages);
     });
 
     $scope.placeholder = {};
@@ -61,9 +64,11 @@ export function MultiImageEditController(
     };
 
     $scope.onBlur = () => {
-        _.map($scope.origin, (item) => {
-            if (_.find($scope.images, (image) => image._id === item._id)) {
-                _.merge(item, _.pick($scope.metadata, _.keys(changes)));
+        $scope.origin.forEach((item) => {
+            if ($scope.images.find((image) => image._id === item._id)) {
+                for (var key in changes) {
+                    item[key] = $scope.metadata[key] || '';
+                }
             }
         });
     };
@@ -81,7 +86,9 @@ export function MultiImageEditController(
         });
 
         try {
-            validateMediaFieldsThrows($scope.validator, $scope.metadata);
+            imagesForSaving.forEach((metadata) => {
+                validateMediaFieldsThrows($scope.validator, metadata);
+            });
         } catch (e) {
             notify.error(e);
             return;
@@ -154,9 +161,9 @@ export function MultiImageEditController(
     }
 }
 
-MultiImageEditModalController.$inject = ['$scope', 'images', 'saveHandler', 'deployConfig'];
-function MultiImageEditModalController($scope, images, saveHandler, deployConfig) {
-    $scope.images = images;
+MultiImageEditModalController.$inject = ['$scope', 'imagesOriginal', 'saveHandler', 'deployConfig'];
+function MultiImageEditModalController($scope, imagesOriginal, saveHandler, deployConfig) {
+    $scope.imagesOriginal = imagesOriginal;
     $scope.saveHandler = saveHandler;
     $scope.closeHandler = () => $scope.$close();
     $scope.getImageUrl = (image) => image.renditions.thumbnail.href;
@@ -174,13 +181,13 @@ function MultiImageEditModalController($scope, images, saveHandler, deployConfig
  */
 MultiImageEditService.$inject = ['$modal'];
 export function MultiImageEditService($modal) {
-    this.edit = (images, saveHandler) => {
+    this.edit = (imagesOriginal, saveHandler) => {
         $modal.open({
             templateUrl: 'scripts/apps/search/views/multi-image-edit-modal.html',
             controller: MultiImageEditModalController,
             size: 'fullscreen modal--dark-ui',
             resolve: {
-                images: () => images,
+                imagesOriginal: () => imagesOriginal,
                 saveHandler: () => saveHandler,
             },
         });
