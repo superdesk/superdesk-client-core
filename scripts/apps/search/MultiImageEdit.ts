@@ -17,6 +17,7 @@ export function MultiImageEdit(asset) {
         },
         transclude: {
             'additional-content': '?sdMultiEditAdditionalContent',
+            'select-desk': '?sdMultiEditSelectDesk',
         },
         controller: MultiImageEditController,
         templateUrl: asset.templateUrl('apps/search/views/multi-image-edit.html'),

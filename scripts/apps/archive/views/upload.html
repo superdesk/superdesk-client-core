@@ -11,6 +11,20 @@
     upload-in-progress="saving"
     style="height: 100%; display: flex; flex-direction: column;"
 >
+    <sd-multi-edit-select-desk>
+        <div ng-if="desks" class="dropdown dropdown--dark" dropdown is-open="isOpen">
+            <button class="dropdown__toggle dropdown__toggle--small dropdown__toggle--hollow dropdown-toggle" dropdown__toggle aria-haspopup="true" aria-expanded="false">
+                <span class="dropdown__button-label">
+                    Send to:</span> <span>{{selectedDesk.name}}</span>
+                    <b class="dropdown__caret white"></b>
+            </button>
+            <!-- TODO: fix dropdown2 component so height adjusts according to available space-->
+            <ul class="dropdown__menu dropdown--align-right" style="max-height: 400px; overflow: auto;">
+                <li ng-repeat="desk in desks track by desk._id"><button ng-click="selectDesk(desk)">{{desk.name}}</button></li>
+            </ul>
+        </div>
+    </sd-multi-edit-select-desk>
+
     <sd-multi-edit-additional-content>
         <div class="drag-area"
             ngf-drop="addFiles($files)"

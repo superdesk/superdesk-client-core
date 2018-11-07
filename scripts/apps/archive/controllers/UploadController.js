@@ -18,8 +18,9 @@ UploadController.$inject = [
     'archiveService',
     'session',
     'deployConfig',
+    'desks',
 ];
-export function UploadController($scope, $q, upload, api, archiveService, session, deployConfig) {
+export function UploadController($scope, $q, upload, api, archiveService, session, deployConfig, desks) {
     $scope.items = [];
     $scope.saving = false;
     $scope.failed = false;
@@ -32,6 +33,15 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
     $scope.allowVideo = !($scope.locals && $scope.locals.data && $scope.locals.data.allowVideo === false);
     $scope.allowAudio = !($scope.locals && $scope.locals.data && $scope.locals.data.allowAudio === false);
     $scope.validator = _.omit(deployConfig.getSync('validator_media_metadata'), ['archive_description']);
+
+    Promise.all([desks.fetchDesks(), desks.getCurrentDesk()]).then(([desks, currentDesk]) => {
+        $scope.desks = desks._items;
+        $scope.selectedDesk = currentDesk;
+    });
+
+    $scope.selectDesk = (desk) => {
+        $scope.selectedDesk = desk;
+    };
 
     let pseudoId = 0;
     const getPseudoId = () => ++pseudoId;
@@ -274,7 +284,7 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
             $scope.saving = true;
             return $scope.upload().then(() => {
                 $q.all(_.map($scope.items, (item) => {
-                    archiveService.addTaskToArticle(item.meta);
+                    archiveService.addTaskToArticle(item.meta, $scope.selectedDesk);
                     return api.archive.update(item.model, item.meta);
                 })).then((results) => {
                     $scope.resolve(results);
