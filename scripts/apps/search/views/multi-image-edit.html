@@ -27,12 +27,17 @@
                     <div class="sd-grid-list dark-ui">
 
                         <div class="sd-grid-item sd-grid-item--with-click"
-                             ng-click="selectImage(image)"
+                             ng-click="handleItemClick($event, image)"
                              ng-repeat="image in origin track by image._id"
                              ng-class="{'sd-grid-item--selected' : !image.unselected}"
                              style="z-index: 1;"><!--  // required so it's visible on top or drag-and-drop layer -->
                             <div class="sd-grid-item__thumb">
                                 <img ng-src="{{getImageUrl(image)}}"/>
+
+                                <a ng-if="onRemoveItem" class="icn-btn sd-grid-item__remove" sd-tooltip="Remove item" flow="left">
+                                    <i class="icon-close-small"></i>
+                                </a>
+
                                 <span ng-if="getProgress && getProgress(image) > 0" class="sd-grid-item__progress-circle">
                                     <sd-circular-progress value="getProgress(image)" class="sd-circular-progress--m"></sd-circular-progress>
                                 </span>

@@ -38,11 +38,14 @@ export function MultiImageEditController(
     $scope.validator = deployConfig.getSync('validator_media_metadata');
 
     $scope.$watch('images', (images: Array<any>) => {
-        const newImages = images.filter(
-            ({_id}) => $scope.origin.find((existingImage) => existingImage._id === _id) == null,
-        );
+        // add and remove images without losing metadata of the ones which stay
+        const updatedImages = images.map((image) => {
+            const existingImage = $scope.origin.find(({_id}) => _id === image._id);
 
-        $scope.origin = $scope.origin.concat(newImages);
+            return existingImage != null ? existingImage : image;
+        });
+
+        $scope.origin = angular.copy(updatedImages);
     });
 
     $scope.placeholder = {};

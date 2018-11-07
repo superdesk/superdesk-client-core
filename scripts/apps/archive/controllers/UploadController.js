@@ -39,6 +39,11 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
 
     const getItemByMetaId = (metaId) => $scope.items.find((item) => item.meta_id === metaId);
 
+    $scope.onRemoveItem = (imageMeta) => {
+        $scope.items = $scope.items.filter((item) => item.meta_id !== imageMeta._id);
+        $scope.imagesMetadata = $scope.items.map((item) => item.meta);
+    };
+
     $scope.imagesMetadata = [];
     $scope.getProgress = (imageMeta) => {
         const item = getItemByMetaId(imageMeta._id);
