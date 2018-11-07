@@ -12,8 +12,6 @@ export function SearchController($location, searchProviderService, config) {
         search: SUPERDESK,
     }, config.defaultSearch);
 
-    console.info('default', DEFAULT_CONFIG, config.defaultSearch);
-
     const getActiveRepos = () => INTERNAL.filter((name) => this.repo[name]);
     const resetInternalRepo = () => this.repo = Object.assign({}, DEFAULT_CONFIG);
 
@@ -50,8 +48,6 @@ export function SearchController($location, searchProviderService, config) {
             INTERNAL.forEach((repo) => {
                 this.repo[repo] = repos.length === 0 ? DEFAULT_CONFIG[repo] : repos.indexOf(repo) >= 0;
             });
-
-            console.info('repos', repos, this.repo);
         });
 
     /**

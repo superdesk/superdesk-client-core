@@ -421,7 +421,6 @@ export function SearchService($location, gettext, config, session, multi,
                 if (search.repo) {
                     criteria.repo = search.repo;
                 } else if (config.defaultSearch) {
-                    console.info('config', config.defaultSearch, DEFAULT_REPOS);
                     criteria.repo = DEFAULT_REPOS.filter((repo) => config.defaultSearch[repo] !== false).join(',');
                 }
             }
