@@ -45,6 +45,14 @@ export class Item extends React.Component<any, any> {
         this.openAuthoringView = this.openAuthoringView.bind(this);
     }
 
+    componentWillMount() {
+        const {config} = this.props.svc;
+
+        if (get(this.props, 'svc.config.apps', []).includes('superdesk-planning')) {
+            this.loadPlanningModals();
+        }
+    }
+
     componentWillUnmount() {
         closeActionsMenu(this.props.item._id);
     }
@@ -52,6 +60,34 @@ export class Item extends React.Component<any, any> {
     componentWillReceiveProps(nextProps) {
         if (nextProps.item !== this.props.item) {
             closeActionsMenu(this.props.item._id);
+        }
+    }
+
+    loadPlanningModals() {
+        const {session, superdesk, activityService} = this.props.svc;
+
+        if (!['add_to_planning', 'fulfil_assignment'].includes(get(this.props, 'item.lock_action')) ||
+                get(this.props, 'item.lock_user') !== session.identity._id ||
+                get(this.props, 'item.lock_session') !== session.sessionId) {
+            return;
+        }
+
+        let planningActivity;
+        const activities = superdesk.findActivities({action: 'list', type: 'archive'},
+            this.props.item);
+
+        // Planning: if page probably was refreshed / loaded during the add-to-planning operation,
+        // reload the add-to-planning modal
+        if (this.props.item.lock_action === 'add_to_planning') {
+            planningActivity = activities.find((a) => a._id === 'planning.addto');
+        } else if (this.props.item.lock_action === 'fulfil_assignment') {
+            planningActivity = activities.find((a) => a._id === 'planning.fulfil');
+        }
+
+        if (planningActivity) {
+            this.setActioningState(true);
+            activityService.start(planningActivity, {data: {item: this.props.item}})
+                .finally(() => this.setActioningState(false));
         }
     }
 

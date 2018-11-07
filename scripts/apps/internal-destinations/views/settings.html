@@ -4,8 +4,7 @@
             <h2 class="sd-page__page-heading" translate>Internal Destinations</h2>
         </div>
         <div class="sd-page__header">
-            <sd-search-handler ng-model="query.name" data-debounce="200"></sd-search-handler>
-    
+            <sd-search-handler ng-model="query.name" data-debounce="200"></sd-search-handler>    
             <sd-check type="radio" ng-model="active_only" label-position="inside" style="margin-left: 0;">{{:: 'All'| translate}}</sd-check>
             <sd-check type="radio" ng-model="active_only" label-position="inside" ng-value="true" ng-checked="true">{{:: 'Active only'| translate}}</sd-check>
             <span class="sd-page__element-grow"></span>
@@ -14,48 +13,65 @@
             </button>
         </div>
         <div class="sd-page__content">
-            <ul class="pills-list">
+            <ul class="sd-list-item-group sd-list-item-group--space-between-items" style="max-width: 1000px;">
                 <li ng-repeat="destination in dest.destinations | filter: query track by destination._id"
                     ng-class="{inactive: !destination.is_active}" ng-show="!active_only || (active_only && destination.is_active)"
-                    class="clearfix">
-                    <h6>{{ destination.name}}</h6>
-                    <div class="actions">
-                        <button ng-click="dest.edit(destination)" title="{{:: 'Edit' | translate }}"><i class="icon-pencil"></i></button>
-                        <button ng-click="dest.remove(destination)" title="{{:: 'Remove' | translate }}"><i class="icon-trash"></i></button>
+                    class="sd-list-item sd-shadow--z1">
+                    <div class="sd-list-item__border"></div>
+                    <div class="sd-list-item__column sd-list-item__column--grow sd-list-item__column--no-border">
+                        <div class="sd-list-item__row">
+                            <span class="sd-overflow-ellipsis sd-list-item--element-grow">{{ destination.name}}</span>
+                            <span class="label label--hollow label--alert" ng-show="!destination.is_active" translate>Inactive</span>
+                        </div>
+                    </div>
+                    
+                    <div class="sd-list-item__action-menu sd-list-item__action-menu--direction-row">
+                        <button class="icn-btn" ng-click="dest.edit(destination)" title="{{:: 'Edit' | translate }}"><i class="icon-pencil"></i></button>
+                        <button class="icn-btn" ng-click="dest.remove(destination)" title="{{:: 'Remove' | translate }}"><i class="icon-trash"></i></button>
                     </div>
                 </li>
-                <li ng-show="dest.destinations.length === 0" translate>There are no destinations defined.</li>
+                <li class="sd-list-item sd-list-item--no-hover sd-shadow--z1" ng-show="dest.destinations.length === 0">
+                    <div class="sd-list-item__border"></div>
+                    <div class="sd-list-item__column sd-list-item__column--grow sd-list-item__column--no-border">
+                        <div class="sd-list-item__row">
+                            <span class="sd-overflow-ellipsis sd-list-item--element-grow" translate>There are no destinations defined.</span>
+                        </div>
+                    </div>
+                </li>
             </ul>
         </div>
     </div>
 </sd-settings-view>
 
 <div sd-modal data-model="dest.active" class="modal--large">
-    <div class="modal__header">
-        <a href="" class="modal__close pull-right" ng-click="dest.closeEdit()"><i class="icon-close-small"></i></a>
+    <div class="modal__header modal__header--flex">
         <h3 class="modal__heading" ng-show="!dest.active._id" translate>Add New Destination</h3>
         <h3 class="modal__heading" ng-show="dest.active._id" translate>Edit Destination</h3>
+        <a href="" class="icn-btn" ng-click="dest.stopEdit()"><i class="icon-close-small"></i></a>
     </div>
     <div class="modal__body">
         <form name="editForm">
             <fieldset>
-                <div class="sd-line-input">
-                    <label ng-click="dest.active.is_active = !dest.active.is_active" translate>Active</label> <span sd-switch ng-model="dest.active.is_active"></span>
+                <div class="form__row">
+                    <span sd-switch ng-model="dest.active.is_active"></span><label ng-click="dest.active.is_active = !dest.active.is_active" translate>Active</label> 
                 </div>
-
-                <div class="sd-line-input sd-line-input--required">
-                    <label for="dest-name" class="sd-line-input__label" translate>Destination name</label>
-                    <input id="dest-name" type="text" class="sd-line-input__input" ng-model="dest.active.name" required>
+                <div class="form__row">
+                    <div class="sd-line-input sd-line-input--required sd-line-input--boxed">
+                        <label for="dest-name" class="sd-line-input__label" translate>Destination name</label>
+                        <input id="dest-name" type="text" class="sd-line-input__input" ng-model="dest.active.name" required>
+                    </div>
                 </div>
-
-                <div sd-content-filter-select data-model="dest.active.filter"></div>
-
-                <div sd-action-picker
-                     data-desk="dest.active.desk"
-                     data-stage="dest.active.stage"
-                     data-macro="dest.active.macro"
-                     data-required="{desk: true}"
-                ></div>
+                <div class="form__row">
+                    <div sd-content-filter-select data-model="dest.active.filter"></div>
+                </div>
+                <div class="form__row">
+                    <div sd-action-picker
+                        data-desk="dest.active.desk"
+                        data-stage="dest.active.stage"
+                        data-macro="dest.active.macro"
+                        data-required="{desk: true}">
+                    </div>
+                </div>
             </fieldset>
         </form>
     </div>

@@ -137,7 +137,7 @@ class LinkFunction {
      */
     _legalMapper(key) {
         _.each(this.scope.items._aggregations[key].buckets, (bucketCount) => {
-            if (bucketCount.key === 'T' && bucketCount.doc_count > 0) {
+            if ((bucketCount.key === 'T' || bucketCount.key === 1) && bucketCount.doc_count > 0) {
                 this.scope.aggregations[key] = {count: bucketCount.doc_count};
             }
         });

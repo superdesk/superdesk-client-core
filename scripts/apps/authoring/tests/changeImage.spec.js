@@ -175,5 +175,32 @@ describe('authoring ChangeImageController', () => {
 
             expect($rootScope.$broadcast).toHaveBeenCalledWith('poiUpdate', {x: 0.5, y: 0.5});
         }));
+
+        it('throw error if poi not defined', inject((api, gettext, $rootScope, $q, notify) => {
+            let scope = angular.copy(scopeData);
+
+            ChangeImageController(scope, gettext, notify, modal, _, api, $rootScope, deployConfig, $q);
+            const result = scope.done();
+
+            $rootScope.$digest();
+
+            expect(result).toBe(false);
+            expect(notify.error).toHaveBeenCalledWith('Point of interest is not defined.');
+        }));
+
+        it('No error thrown if poi is specified', inject((api, gettext, $rootScope, $q, notify) => {
+            let scope = angular.copy(scopeData);
+
+            scope.resolve = () => true;
+            spyOn(scope, 'resolve').and.returnValue(null);
+            scope.locals.data.poi = {x: 0.5, y: 0.5};
+
+            ChangeImageController(scope, gettext, notify, modal, _, api, $rootScope, deployConfig, $q);
+            scope.done();
+            $rootScope.$digest();
+
+            expect(scope.resolve).toHaveBeenCalled();
+            expect(notify.error).not.toHaveBeenCalled();
+        }));
     });
 });
