@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import {validateMediaFieldsThrows} from 'apps/authoring/authoring/controllers/ChangeImageController';
 
 interface IScope extends ng.IScope {
     validator: any;
@@ -18,24 +19,22 @@ interface IScope extends ng.IScope {
 
 MultiImageEditController.$inject = [
     '$scope',
-    'deployConfig',
     'modal',
     'gettextCatalog',
+    'notify',
 ];
 
 export function MultiImageEditController(
     $scope: IScope,
-    deployConfig,
     modal,
     gettextCatalog,
+    notify,
 ) {
     const saveHandler = $scope.saveHandler;
 
     $scope.origin = angular.copy($scope.images);
 
     let changes = {};
-
-    $scope.validator = deployConfig.getSync('validator_media_metadata');
 
     $scope.$watch('images', (images: Array<any>) => {
         // add and remove images without losing metadata of the ones which stay
@@ -80,6 +79,13 @@ export function MultiImageEditController(
         imagesForSaving.forEach((image) => {
             delete image.unselected;
         });
+
+        try {
+            validateMediaFieldsThrows($scope.validator, $scope.metadata);
+        } catch (e) {
+            notify.error(e);
+            return;
+        }
 
         saveHandler(imagesForSaving)
             .then(() => {
@@ -148,12 +154,13 @@ export function MultiImageEditController(
     }
 }
 
-MultiImageEditModalController.$inject = ['$scope', 'images', 'saveHandler'];
-function MultiImageEditModalController($scope, images, saveHandler) {
+MultiImageEditModalController.$inject = ['$scope', 'images', 'saveHandler', 'deployConfig'];
+function MultiImageEditModalController($scope, images, saveHandler, deployConfig) {
     $scope.images = images;
     $scope.saveHandler = saveHandler;
     $scope.closeHandler = () => $scope.$close();
     $scope.getImageUrl = (image) => image.renditions.thumbnail.href;
+    $scope.validator = deployConfig.getSync('validator_media_metadata');
 }
 
 /**

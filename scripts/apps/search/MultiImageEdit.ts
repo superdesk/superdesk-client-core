@@ -13,6 +13,7 @@ export function MultiImageEdit(asset) {
             getProgress: '=',
             onRemoveItem: '=',
             uploadInProgress: '=',
+            validator: '=',
         },
         transclude: {
             'additional-content': '?sdMultiEditAdditionalContent',
@@ -27,6 +28,6 @@ export function MultiImageEdit(asset) {
                     scope.selectImage(image);
                 }
             };
-        }
+        },
     };
 }

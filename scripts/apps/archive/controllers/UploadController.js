@@ -18,9 +18,8 @@ UploadController.$inject = [
     'archiveService',
     'session',
     'deployConfig',
-    'multiImageEdit',
 ];
-export function UploadController($scope, $q, upload, api, archiveService, session, deployConfig, multiImageEdit) {
+export function UploadController($scope, $q, upload, api, archiveService, session, deployConfig) {
     $scope.items = [];
     $scope.saving = false;
     $scope.failed = false;

@@ -14,6 +14,18 @@
  *
  * @description Controller is responsible for cropping pictures and setting Point of Interest for an image.
  */
+
+export function validateMediaFieldsThrows(validator, metadata) {
+    for (let key in validator) {
+        const value = metadata[key];
+        const regex = new RegExp('^\<*br\/*\>*$', 'i');
+
+        if (validator[key].required && (!value || value.match(regex))) {
+            throw gettext('Required field(s) missing');
+        }
+    }
+}
+
 ChangeImageController.$inject = ['$scope', 'gettext', 'notify', 'modal', 'lodash', 'api', '$rootScope',
     'deployConfig', '$q'];
 export function ChangeImageController($scope, gettext, notify, modal, _, api, $rootScope, deployConfig, $q) {
@@ -116,23 +128,12 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
                 }
             });
         }
-        /* Throw an exception if a required metadata field is missing */
-        function validateMediaFields() {
-            _.each(Object.keys($scope.validator), (key) => {
-                const value = $scope.data.metadata[key];
-                const regex = new RegExp('^\<*br\/*\>*$', 'i');
-
-                if ($scope.validator[key].required && (!value || value.match(regex))) {
-                    throw gettext('Required field(s) missing');
-                }
-            });
-        }
 
         // check if data are valid
         try {
             poiIsInsideEachCrop();
             if ($scope.data.showMetadataEditor) {
-                validateMediaFields();
+                validateMediaFieldsThrows($scope.validator, $scope.data.metadata);
             }
         } catch (e) {
             // show an error and stop the "done" operation
