@@ -37,9 +37,20 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
     let pseudoId = 0;
     const getPseudoId = () => ++pseudoId;
 
+    const getItemByMetaId = (metaId) => $scope.items.find((item) => item.meta_id === metaId);
+
     $scope.imagesMetadata = [];
+    $scope.getProgress = (imageMeta) => {
+        const item = getItemByMetaId(imageMeta._id);
+
+        if (item == null) {
+            return 0;
+        } else {
+            return item.progress || 0;
+        }
+    };
     $scope.getImageUrl = (imageMeta) => {
-        const item = $scope.items.find((item) => item.meta_id === imageMeta._id);
+        const item = getItemByMetaId(imageMeta._id);
 
         return item == null ? '' : item.imageDataUrl;
     };
@@ -90,10 +101,13 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
                         return handleError(response);
                     }
 
+                    item.progress = 100;
+
                     item.model = response.data;
                     return item;
                 }, handleError, (progress) => {
-                    item.progress = Math.round(progress.loaded / progress.total * 100.0);
+                    // limit progress to 90% and set 100 only after request is done
+                    item.progress = Math.min(Math.round(progress.loaded / progress.total * 100.0), 90);
                 });
 
                 return item.upload;

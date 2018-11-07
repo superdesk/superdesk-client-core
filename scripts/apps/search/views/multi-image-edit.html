@@ -33,6 +33,9 @@
                              style="z-index: 1;"><!--  // required so it's visible on top or drag-and-drop layer -->
                             <div class="sd-grid-item__thumb">
                                 <img ng-src="{{getImageUrl(image)}}"/>
+                                <span ng-if="getProgress && getProgress(image) > 0" class="sd-grid-item__progress-circle">
+                                    <sd-circular-progress value="getProgress(image)" class="sd-circular-progress--m"></sd-circular-progress>
+                                </span>
                             </div>
                             <div class="sd-grid-item__content">
                                 <time sd-absdate datetime="image.versioncreated"></time>

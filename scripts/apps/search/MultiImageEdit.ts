@@ -10,6 +10,7 @@ export function MultiImageEdit(asset) {
             closeHandler: '=',
             hideEditPane: '=',
             getImageUrl: '=',
+            getProgress: '=',
         },
         transclude: {
             'additional-content': '?sdMultiEditAdditionalContent',
