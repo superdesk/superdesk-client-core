@@ -12,6 +12,7 @@ export function MultiImageEdit(asset) {
             getImageUrl: '=',
             getProgress: '=',
             onRemoveItem: '=',
+            uploadInProgress: '=',
         },
         transclude: {
             'additional-content': '?sdMultiEditAdditionalContent',

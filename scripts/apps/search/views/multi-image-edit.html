@@ -14,7 +14,7 @@
     <h3 class="modal__heading modal__heading--grow" translate>Upload media</h3>
 
     <div class="modal__header-buttons modal__header-buttons--right">
-        <button class="btn btn--ui-dark btn--hollow" ng-click="close()" translate>Cancel</button>
+        <button class="btn btn--ui-dark btn--hollow" ng-click="close()" ng-disabled="uploadInProgress" translate>Cancel</button>
         <button class="btn btn--primary btn--hollow" ng-click="save(true)" ng-disabled="!isDirty()" translate>Upload</button>
     </div>
 </div>
