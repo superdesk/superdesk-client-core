@@ -1861,3 +1861,13 @@
         color: rgba(123, 123, 123, 0.75);
     }
 }
+
+.sd-toggle + label {
+    letter-spacing: 0;
+}
+.sd-list-item__text-label {
+    time {
+        padding: 0;
+        font-style: normal;
+    }
+}
