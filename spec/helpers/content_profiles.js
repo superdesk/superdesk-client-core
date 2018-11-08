@@ -133,7 +133,9 @@ function ContentProfiles() {
      * Open first add field dropdown
      */
     this.openAddFieldDropdown = () => {
-        element.all(by.className('dropdown--add-more')).first()
+        element.all(by.className('dropdown--add-more'))
+            .filter((el) => el.isDisplayed())
+            .first()
             .element(by.tagName('button')).click();
     };
 }

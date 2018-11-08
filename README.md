@@ -116,6 +116,16 @@ You can disable certain content profile fields. Set value to `false` in order to
 - `category` - Preferred categories
 - `desks` - Preferred desks
 
+##### Search
+
+You can override default search repos (all set `true` by default).
+
+- `defaultSearch`
+    - `ingest`
+    - `archive`
+    - `published`
+    - `archived`
+
 ##### Miscellaneous
 
 - `defaultRoute` - sets the route that the app will go to upon logging in (home route).

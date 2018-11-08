@@ -283,35 +283,13 @@ describe('superdesk.apps.workspace.content', () => {
 
                 angular.extend(scope, props);
                 return _$compile_(
-                    '<form><sd-content-schema-editor data-model="model"></sd-content-schema-editor></form>',
+                    '<form>'
+                    + '<sd-content-schema-editor data-model="model" data-section-to-render="\'header\'">'
+                    + '</sd-content-schema-editor>'
+                    + '</form>',
                 )(scope);
             };
         }));
-
-        it('render correctly all fields', (done) => {
-            inject((content, vocabularies, $q) => {
-                var el = compile({
-                    model: {},
-                });
-
-                spyOn(content, 'getTypeMetadata').and.returnValue($q.when({schema: content.contentProfileSchema,
-                    editor: content.contentProfileEditor}));
-
-                spyOn(content, 'getCustomFields').and.returnValue($q.when([]));
-                spyOn(vocabularies, 'getAllActiveVocabularies').and.returnValue($q.when([]));
-
-                waitUntil(() => {
-                    el.scope().$digest();
-                    return el.find('li.schema-item').length > 0;
-                }).then(() => {
-                    done();
-                    var fields = el.find('li.schema-item');
-
-                    expect(fields.length).toBe(Object.keys(content.contentProfileEditor).length);
-                })
-                    .catch(done.fail);
-            });
-        });
 
         it('should dirty parent form when toggling fields', (done) => {
             inject((content, vocabularies, $q) => {
@@ -335,7 +313,7 @@ describe('superdesk.apps.workspace.content', () => {
 
                     expect(form.$dirty).toBeFalsy();
                     $(fields[0])
-                        .find('#remove-item')
+                        .find('.remove-item')
                         .click();
                     expect(form.$dirty).toBeTruthy();
                 })

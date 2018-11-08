@@ -1,16 +1,16 @@
 import {intersection} from 'lodash';
 
-SearchController.$inject = ['$location', 'searchProviderService'];
-export function SearchController($location, searchProviderService) {
+SearchController.$inject = ['$location', 'searchProviderService', 'config'];
+export function SearchController($location, searchProviderService, config) {
     const SUPERDESK = 'local';
     const INTERNAL = ['archive', 'published', 'ingest', 'archived'];
-    const DEFAULT_CONFIG = {
+    const DEFAULT_CONFIG = Object.assign({}, {
         ingest: true,
         archive: true,
         published: true,
         archived: true,
         search: SUPERDESK,
-    };
+    }, config.defaultSearch);
 
     const getActiveRepos = () => INTERNAL.filter((name) => this.repo[name]);
     const resetInternalRepo = () => this.repo = Object.assign({}, DEFAULT_CONFIG);
@@ -46,7 +46,7 @@ export function SearchController($location, searchProviderService) {
             const repos = ($location.search().repo || '').split(',').filter((repo) => !!repo);
 
             INTERNAL.forEach((repo) => {
-                this.repo[repo] = !repos.length || repos.indexOf(repo) >= 0;
+                this.repo[repo] = repos.length === 0 ? DEFAULT_CONFIG[repo] : repos.indexOf(repo) >= 0;
             });
         });
 

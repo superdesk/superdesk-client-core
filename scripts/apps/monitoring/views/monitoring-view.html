@@ -17,13 +17,14 @@
             </div>
         </div>
 
-        <div class="dropdown" dropdown ng-if="!monitoring.singleGroup && type === 'monitoring'">
+        <div class="dropdown" dropdown ng-if="type === 'monitoring'">
             <button class="dropdown__toggle navbtn navbtn--text-only" dropdown-toggle>{{ :: 'Monitoring' | translate }} {{workspace.name}} <span class="dropdown__caret"></span></button>
             <ul class="dropdown__menu scrollable">
                 <li><div class="dropdown__menu-label">{{ :: 'Stages' | translate }}</div></li>
-                <li ng-repeat="card in aggregate.cards">
-                    <button class="label-group" ng-click="monitoring.viewSingleGroup(card,
-                                            card.type === 'stage' ? card.type : 'single-stage')" translate>{{:: monitoring.getGroupLabel(card, aggregate.settings.type)}}</button>
+                <li ng-repeat="card in aggregate.cards" ng-class="{active: monitoring.singleGroup.">
+                    <button class="label-group"
+                        ng-click="monitoring.viewSingleGroup(card, card.type === 'stage' ? card.type : 'single-stage')"
+                    translate>{{:: monitoring.getGroupLabel(card, aggregate.settings.type)}}</button>
                 </li>
             </ul>
         </div>
@@ -34,19 +35,19 @@
             <span ng-if="type === 'highlights'" sd-highlight-label data-highlight="monitoring.queryParam.highlight" data-total="monitoring.totalItems"></span>
 
             <span ng-if="monitoring.singleGroup.subheader && monitoring.singleGroup.singleViewType == null">
-                {{ :: monitoring.singleGroup.header}} / {{ :: monitoring.singleGroup.subheader}} {{ :: monitoring.singleGroup.type}}
+                {{ monitoring.singleGroup.header}} / {{ monitoring.singleGroup.subheader}} {{ monitoring.singleGroup.type}}
                 <span class="label-total">{{ monitoring.totalItems}}</span>
             </span>
             <span ng-if="monitoring.singleGroup.singleViewType === 'desk'">
-                {{ :: monitoring.singleGroup.header}} {{ :: monitoring.singleGroup.singleViewType}}
+                {{ monitoring.singleGroup.header }} {{ monitoring.singleGroup.singleViewType}}
                 <span class="label-total">{{ monitoring.totalItems}}</span>
             </span>
             <span ng-if="monitoring.singleGroup.singleViewType === 'stage'">
-                {{ :: monitoring.singleGroup.header}} / {{ :: monitoring.singleGroup.subheader}} {{ :: monitoring.singleGroup.singleViewType}}
+                {{ monitoring.singleGroup.header }} / {{ monitoring.singleGroup.subheader}} {{ monitoring.singleGroup.singleViewType}}
                 <span class="label-total">{{ monitoring.totalItems}}</span>
             </span>
             <span ng-if="monitoring.singleGroup && !monitoring.singleGroup.subheader">
-                {{ :: monitoring.singleGroup.header}} {{ :: monitoring.singleGroup.type | splitText | translate }}
+                {{ monitoring.singleGroup.header }} {{ monitoring.singleGroup.type | splitText | translate }}
                 <span class="label-total">{{ monitoring.totalItems}}</span>
             </span>
         </h3>

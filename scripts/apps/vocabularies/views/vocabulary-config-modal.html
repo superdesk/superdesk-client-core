@@ -110,6 +110,10 @@
                 <button id="add-new-btn" class="btn btn--primary" ng-click="addItem()"><i class="icon-plus-sign"></i> {{'Add Item' | translate}}</button>
             </div>
 
+            <div class="sd-line-input" ng-if="matchFieldTypeToTab('vocabularies', vocabulary.field_type)">
+                <sd-check ng-model="vocabulary.single_value">{{ :: 'Accept only single selection' | translate }}</sd-check>
+            </div>
+
             <div ng-if="errorMessage" class="sd-line-input sd-line-input--invalid">
                 <p class="sd-line-input__message">{{ errorMessage }}</p>
             </div>

@@ -34,6 +34,7 @@ ItemList.$inject = [
     'metadata',
     'storage',
     'keyboardManager',
+    'session',
 ];
 
 /**
@@ -68,6 +69,7 @@ ItemList.$inject = [
  * @requires metadata
  * @requires storage
  * @requires keyboardManager
+ * @requires session
  *
  * @description Handles the functionality displaying list of items from repos (archive, ingest, publish,
  * external, content api, archived)
@@ -100,7 +102,8 @@ export function ItemList(
     $interpolate,
     metadata,
     storage,
-    keyboardManager
+    keyboardManager,
+    session
 ) {
     // contains all the injected services to be passed down to child
     // components via props
@@ -132,6 +135,7 @@ export function ItemList(
         metadata: metadata,
         storage: storage,
         keyboardManager: keyboardManager,
+        session: session,
     };
 
     return {

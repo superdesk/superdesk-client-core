@@ -22,8 +22,8 @@ export function RelatedItemsDirective(authoringWorkspace, relationsService) {
             const dragOverClass = 'dragover';
             const allowed = ((scope.field || {}).field_options || {}).allowed_types || {};
             const ALLOWED_TYPES = Object.keys(allowed)
-            .filter((key) => allowed[key] === true)
-            .map((key) => 'application/superdesk.item.' + key);
+                .filter((key) => allowed[key] === true)
+                .map((key) => 'application/superdesk.item.' + key);
 
             if (!elem.hasClass('no-drop-zone') && scope.editable) {
                 elem.on('dragover', (event) => {
@@ -83,6 +83,19 @@ export function RelatedItemsDirective(authoringWorkspace, relationsService) {
             }
 
            /**
+            * Return true if there are association for current field
+            *
+            * @param {String} fieldId
+            * @return {Boolean}
+            */
+            scope.isEmptyRelatedItems = (fieldId) => {
+                const keys = Object.keys(scope.item.associations || {})
+                .filter(key => key.startsWith(fieldId) && scope.item.associations[key] != null);
+
+                return keys.length === 0;
+            }
+
+          /**
             * Get related items for fireldId
             *
             * @param {String} fieldId
@@ -124,7 +137,7 @@ export function RelatedItemsDirective(authoringWorkspace, relationsService) {
              * @return {int} nextKey
              */
             function getNextKey(associations, fieldId) {
-                for (let i = 1;; i++) {
+                for (let i = 1; ; i++) {
                     const key = fieldId + '--' + i;
 
                     if (associations[key] == null) {

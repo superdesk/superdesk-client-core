@@ -23,10 +23,11 @@ SearchParameters.$inject = [
     '$location', 'asset', 'tags', 'metadata',
     'searchCommon', 'desks', 'userList',
     'ingestSources', 'subscribersService',
+    '$templateCache',
 ];
 
 export function SearchParameters($location, asset, tags, metadata, common, desks,
-    userList, ingestSources, subscribersService) {
+    userList, ingestSources, subscribersService, $templateCache) {
     return {
         scope: {
             repo: '=',
@@ -403,6 +404,11 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
                     delete scope.fields[type];
                 }
             };
+
+            scope.getTemplate = (providerType) => `search-panel-${providerType}.html`;
+
+            scope.hasTemplate = (providerType) =>
+                providerType != null && $templateCache.get(scope.getTemplate(providerType)) != null;
         },
     };
 }

@@ -179,7 +179,7 @@ export function AssociationController(config, send, api, $q, superdesk,
             return promise;
         }
 
-        scope._onchange({item: scope.item, data: data});
+        scope.onchange({item: scope.item, data: data});
     };
 
     /**
@@ -213,6 +213,8 @@ export function AssociationController(config, send, api, $q, superdesk,
             return renditions.crop(item, cropOptions)
                 .then((rendition) => {
                     self.updateItemAssociation(scope, rendition, options.customRel, callback);
+                }, (error) => {
+                    notify.error(gettext('Failed to generate picture crops.'));
                 })
                 .finally(() => {
                     scope.loading = false;

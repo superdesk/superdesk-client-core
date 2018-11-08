@@ -12,6 +12,7 @@ describe('Content profiles', () => {
         contentProfiles.openContentProfileSettings();
         contentProfiles.addNew('Simple');
         contentProfiles.toggleEnable();
+        element(by.buttonText('Content')).click();
         contentProfiles.disableField('Abstract');
         contentProfiles.update();
         templates.openTemplatesSettings();
@@ -45,7 +46,9 @@ describe('Content profiles', () => {
         contentProfiles.openContentProfileSettings();
         contentProfiles.addNew('Simple');
         contentProfiles.toggleEnable();
+        element(by.buttonText('Content')).click();
         contentProfiles.disableField('Abstract');
+        element(by.buttonText('Header')).click();
         contentProfiles.setRequired('Editorial Note');
         contentProfiles.update();
         monitoring.openMonitoring();
@@ -81,6 +84,7 @@ describe('Content profiles', () => {
         contentProfiles.openContentProfileSettings();
         contentProfiles.addNew('Simple');
 
+        element(by.buttonText('Content')).click();
         expect(element(by.buttonText(FIELD_LABEL)).isDisplayed()).toBeFalsy();
 
         contentProfiles.openAddFieldDropdown();

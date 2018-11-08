@@ -1,8 +1,6 @@
-<div class="schema-editor">
-    <h4 translate>Schema Configuration</h4>
+<div class="schema-editor" ng-if="loading === false">
     <ul class="pills-list" sd-sort-content-profiles>
-        <li class="schema-item" ng-repeat="id in schemaKeys track by id">
-
+        <li class="schema-item" ng-repeat="id in getSchemaKeys() track by id">
             <div class="dropdown dropdown--add-more dropdown--add-more__top dropdown-terms" dropdown>
                 <button class="btn btn--primary btn--icon-only-circle" sd-tooltip="{{ :: 'Add Field' | translate }}" flow="right" ng-click="search = ''" dropdown__toggle>
                     <i class="icon-plus-large"></i>
@@ -13,7 +11,7 @@
                     </li>
                     <li class="main-list">
                         <ul>
-                            <li ng-repeat="schema in schemaKeysDisabled | orderBy: 'name' | filter: search track by schema.key">
+                            <li ng-repeat="schema in getSchemaKeysDisabled() | orderBy: 'name' | filter: search track by schema.key">
                                 <button ng-click="toggle(schema, model.editor[id].order, 'before')">{{schema.name | translate}}</button>
                             </li>
                         </ul>
@@ -23,7 +21,7 @@
 
             <div class="header">
                 <span class="title">{{ :: model.editor[id].field_name|| label(id) | translate}}</span>
-                <button class="btn btn--icon-only btn--text-only pull-right" id="remove-item" ng-click="remove(id)">
+                <button class="btn btn--icon-only btn--text-only pull-right remove-item" ng-click="remove(id)">
                     <i class="icon-close-small"></i>
                 </button>
             </div>
@@ -123,7 +121,7 @@
                     </li>
                     <li class="main-list">
                         <ul>
-                            <li ng-repeat="schema in schemaKeysDisabled | orderBy: 'name' | filter: search track by schema.key">
+                            <li ng-repeat="schema in getSchemaKeysDisabled() | orderBy: 'name' | filter: search track by schema.key">
                                 <button ng-click="toggle(schema, model.editor[schema.key].order, 'after')">{{schema.name | translate}}</button>
                             </li>
                         </ul>

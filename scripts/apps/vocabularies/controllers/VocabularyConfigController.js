@@ -79,7 +79,7 @@ export function VocabularyConfigController($scope, $route, $routeParams, vocabul
             $scope.vocabularies[index] = angular.extend({}, $scope.vocabularies[index], updates);
         }
 
-        $rootScope.$broadcast('vocabularies:updated');
+        $rootScope.$broadcast('vocabularies:updated', updates);
     };
 
     // remove is the UI callback for deleting a vocabulary entry

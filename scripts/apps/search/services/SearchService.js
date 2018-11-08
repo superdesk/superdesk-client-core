@@ -8,6 +8,9 @@ import {
 
 import _ from 'lodash';
 import {getDateFilters, dateRangesByKey} from '../directives/DateFilters';
+
+const DEFAULT_REPOS = ['ingest', 'archive', 'published', 'archived'];
+
 /**
  * @ngdoc service
  * @module superdesk.apps.search
@@ -21,7 +24,6 @@ import {getDateFilters, dateRangesByKey} from '../directives/DateFilters';
  * @requires preferencesService
  * @requires moment
  * @requires sort
- * @requires deployConfig
  *
  * @description Search Service is responsible for creation and manipulation of Query object
  */
@@ -34,10 +36,9 @@ SearchService.$inject = [
     'preferencesService',
     'moment',
     'sort',
-    'deployConfig',
 ];
 export function SearchService($location, gettext, config, session, multi,
-    preferencesService, moment, sortService, deployConfig) {
+    preferencesService, moment, sortService) {
     var sortOptions = [
         {field: 'versioncreated', label: gettext('Updated')},
         {field: 'firstcreated', label: gettext('Created')},
@@ -419,6 +420,8 @@ export function SearchService($location, gettext, config, session, multi,
                 criteria = {source: criteria};
                 if (search.repo) {
                     criteria.repo = search.repo;
+                } else if (config.defaultSearch) {
+                    criteria.repo = DEFAULT_REPOS.filter((repo) => config.defaultSearch[repo] !== false).join(',');
                 }
             }
 
