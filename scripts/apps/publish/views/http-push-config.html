@@ -1,19 +1,15 @@
-<div class="field">
-    <label class="right">
-        {{ :: 'Package individual items' | translate }}
-        <span sd-check ng-model="destination.config.packaged"  tooltip="{{ destination.config.packaged ? 'Package individual items' : '' | translate }}" tooltip-placement="right"></span>
-    </label>
+<div class="form__row">
+    <sd-check ng-model="destination.config.packaged">{{ :: 'Package individual items' | translate }}</sd-check>
 </div>
-<div class="field">
-    <label for="resource_url" translate>Resource URL</label>
-    <i class="field-info pull-right">*</i>
-    <input type="text" id="resource_url" placeholder="{{ :: 'Resource URL'|translate }}" ng-model="destination.config.resource_url" required ng-change="$parent.setConfig(destination)">
+<div class="sd-line-input sd-line-input--required">
+    <label class="sd-line-input__label" for="resource_url" translate>Resource URL</label>
+    <input class="sd-line-input__input" type="text" id="resource_url" placeholder="{{ :: 'Resource URL'|translate }}" ng-model="destination.config.resource_url" required ng-change="$parent.setConfig(destination)">
 </div>
-<div class="field">
-    <label for="assets_url" translate>Assets URL</label>
-    <input type="text" id="assets_url" placeholder="{{ :: 'Assets URL'|translate }}" ng-model="destination.config.assets_url" ng-change="$parent.setConfig(destination)">
+<div class="sd-line-input">
+    <label class="sd-line-input__label" for="assets_url" translate>Assets URL</label>
+    <input class="sd-line-input__input" type="text" id="assets_url" placeholder="{{ :: 'Assets URL'|translate }}" ng-model="destination.config.assets_url" ng-change="$parent.setConfig(destination)">
 </div>
-<div class="field">
-    <label for="secret_token" translate>Secret Token</label>
-    <input type="text" id="secret_token" placeholder="{{ :: 'Secret Token'|translate }}" ng-model="destination.config.secret_token" ng-change="$parent.setConfig(destination)">
+<div class="sd-line-input">
+    <label class="sd-line-input__label" for="secret_token" translate>Secret Token</label>
+    <input class="sd-line-input__input" type="text" id="secret_token" placeholder="{{ :: 'Secret Token'|translate }}" ng-model="destination.config.secret_token" ng-change="$parent.setConfig(destination)">
 </div>
