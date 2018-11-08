@@ -89,7 +89,6 @@ describe('fetch', () => {
 
         workspace.openIngest();
         content.actionOnItem('Fetch To', 0);
-        content.actionOnItem('Fetch To', 0);
         authoring.selectDeskforSendTo('Test Desk');
         expect(btnFetchAndOpen.getAttribute('disabled')).toBeTruthy();
     });
@@ -127,7 +126,6 @@ describe('fetch', () => {
 
         // Now test expections for stages of Test Desk as selected desk, in Fetch To panel at workspace.
         workspace.openIngest();
-        content.actionOnItem('Fetch To', 0);
         content.actionOnItem('Fetch To', 0);
         authoring.selectDeskforSendTo('Test Desk');
 

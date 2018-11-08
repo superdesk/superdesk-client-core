@@ -187,8 +187,6 @@ export function SendService(desks, api, $q, notify, $injector, multi, $rootScope
      * @return {Promise}
      */
     function sendAllAs(items, action) {
-        resetConfig();
-
         self.config = $q.defer();
         self.config.action = action;
         self.config.itemIds = _.map(items, '_id');

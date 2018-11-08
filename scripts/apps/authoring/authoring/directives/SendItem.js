@@ -554,7 +554,7 @@ export function SendItem($q, api, search, desks, notify, authoringWorkspace,
 
             const confirmMovePackage = () =>
                 modal.confirm(
-                    gettext('On current package there are already published items that can\'t be moved.'),
+                    gettext('The package contains published items which can\'t be moved.'),
                     gettext('Warning'),
                     gettext('Continue'),
                     gettext('Cancel')
