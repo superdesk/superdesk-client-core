@@ -5,7 +5,7 @@ import * as directive from './directives';
 import {MultiActionBarController} from './controllers';
 import {SearchController} from './controllers';
 import SearchMenuController from './controllers/SearchMenuController';
-import {MultiImageEdit} from './MultiImageEdit';
+import {MultiImageEditDirective} from './MultiImageEdit';
 
 angular.module('superdesk.apps.search.react', [
     'superdesk.apps.highlights',
@@ -65,7 +65,7 @@ angular.module('superdesk.apps.search', [
     .directive('sdMultiActionBar', directive.MultiActionBar)
     .directive('sdRawSearch', directive.RawSearch)
     .directive('sdRepoDropdown', directive.RepoDropdown)
-    .directive('sdMultiImageEdit', MultiImageEdit)
+    .directive('sdMultiImageEdit', MultiImageEditDirective)
 
     .config(['superdeskProvider', 'assetProvider', 'workspaceMenuProvider',
         (superdesk, asset, workspaceMenuProvider) => {

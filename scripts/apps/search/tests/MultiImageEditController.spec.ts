@@ -1,4 +1,4 @@
-import {MultiImageEditController} from '../services/MultiImageEditService';
+import {MultiImageEditController} from '../MultiImageEdit';
 
 describe('multi image edit controller', () => {
     beforeEach(window.module('superdesk.core.translate'));
