@@ -5,7 +5,6 @@ interface IScope extends ng.IScope {
     validator: any;
     origin: any;
     imagesOriginal: any;
-    images: any;
     placeholder: any;
     isDirty: any;
     selectImage: any;
@@ -33,7 +32,6 @@ export function MultiImageEditController(
     const saveHandler = $scope.saveHandler;
 
     $scope.origin = angular.copy($scope.imagesOriginal);
-    $scope.images = angular.copy($scope.imagesOriginal);
 
     let unsavedChangesExist = false;
 
@@ -46,7 +44,6 @@ export function MultiImageEditController(
         });
 
         $scope.origin = angular.copy(updatedImages);
-        $scope.images = angular.copy(updatedImages);
     });
 
     $scope.placeholder = {};
@@ -55,11 +52,7 @@ export function MultiImageEditController(
 
     $scope.selectImage = (image) => {
         image.unselected = !image.unselected;
-        image.unselected
-            ? _.remove($scope.images, (res: any) => res._id === image._id)
-            : $scope.images.push(image);
-
-        return updateMetadata();
+        updateMetadata();
     };
 
     $scope.onChange = (field) => {
@@ -67,7 +60,7 @@ export function MultiImageEditController(
         $scope.placeholder[field] = '';
 
         $scope.origin.forEach((item) => {
-            if ($scope.images.find((image) => image._id === item._id)) {
+            if (!item.unselected) {
                 item[field] = $scope.metadata[field] || '';
             }
         });
@@ -128,31 +121,23 @@ export function MultiImageEditController(
         };
     }
 
-    function compare(value) {
-        if (!$scope.images.length) {
-            $scope.placeholder = {};
+    function compare(fieldName) {
+        const mapOfValues = ($scope.origin || []).filter((item) => !item.unselected).reduce((acc, item) => {
+            acc[item[fieldName]] = true;
+            return acc;
+        }, {});
+
+        const uniqueValues = Object.keys(mapOfValues);
+
+        if (uniqueValues.length < 1) {
             return '';
+        } else if (uniqueValues.length > 1) {
+            $scope.placeholder[fieldName] = '(multiple values)';
+            return '';
+        } else {
+            $scope.placeholder[fieldName] = '';
+            return uniqueValues[0];
         }
-
-        let uniqueValue = true;
-        let initialValue = _.find($scope.origin, (origImage) => origImage._id === $scope.images[0]._id);
-
-        angular.forEach($scope.images, (image) => {
-            let compareImage = _.find($scope.origin, (origImage) => origImage._id === image._id);
-
-            if (initialValue[value] !== compareImage[value]) {
-                uniqueValue = false;
-            }
-        });
-
-        if (uniqueValue) {
-            $scope.placeholder[value] = '';
-            return initialValue[value];
-        }
-
-        $scope.placeholder[value] = '(multiple values)';
-
-        return '';
     }
 }
 

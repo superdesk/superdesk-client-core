@@ -3,6 +3,7 @@
         class="sd-line-input--no-margin"
         ng-if="field.type === 'string' || (!field.type && !field.cv)"
         ng-model="item[field.field]"
+        data-sync="true"
         data-dark="dark"
         data-boxed="boxed"
         data-label="{{ field.label }}"
@@ -18,6 +19,7 @@
     <sd-line-input
         class="sd-line-input--no-margin"
         ng-if="field.type === 'text'"
+        data-sync="true"
         ng-model="item.extra[field.field]"
         data-dark="dark"
         data-boxed="boxed"
