@@ -3,7 +3,7 @@ import {validateMediaFieldsThrows} from 'apps/authoring/authoring/controllers/Ch
 
 interface IScope extends ng.IScope {
     validator: any;
-    origin: any;
+    images: any;
     imagesOriginal: any;
     placeholder: any;
     isDirty: any;
@@ -12,7 +12,8 @@ interface IScope extends ng.IScope {
     metadata: any;
     save: any;
     close: any;
-    saveHandler(origin): Promise<void>;
+    getSelectedImages(): Array<any>;
+    saveHandler(images): Promise<void>;
     closeHandler(): void;
 }
 
@@ -31,19 +32,19 @@ export function MultiImageEditController(
 ) {
     const saveHandler = $scope.saveHandler;
 
-    $scope.origin = angular.copy($scope.imagesOriginal);
+    $scope.images = angular.copy($scope.imagesOriginal);
 
     let unsavedChangesExist = false;
 
     $scope.$watch('imagesOriginal', (imagesOriginal: Array<any>) => {
         // add and remove images without losing metadata of the ones which stay
         const updatedImages = imagesOriginal.map((image) => {
-            const existingImage = $scope.origin.find(({_id}) => _id === image._id);
+            const existingImage = $scope.images.find(({_id}) => _id === image._id);
 
             return existingImage != null ? existingImage : {...image, ...$scope.metadata};
         });
 
-        $scope.origin = angular.copy(updatedImages);
+        $scope.images = angular.copy(updatedImages);
     });
 
     $scope.placeholder = {};
@@ -59,7 +60,7 @@ export function MultiImageEditController(
         unsavedChangesExist = true;
         $scope.placeholder[field] = '';
 
-        $scope.origin.forEach((item) => {
+        $scope.images.forEach((item) => {
             if (!item.unselected) {
                 item[field] = $scope.metadata[field] || '';
             }
@@ -67,7 +68,7 @@ export function MultiImageEditController(
     };
 
     $scope.save = (close) => {
-        const imagesForSaving = angular.copy($scope.origin);
+        const imagesForSaving = angular.copy($scope.images);
 
         imagesForSaving.forEach((image) => {
             delete image.unselected;
@@ -106,6 +107,8 @@ export function MultiImageEditController(
         }
     };
 
+    $scope.getSelectedImages = () => ($scope.images || []).filter((item) => !item.unselected);
+
     updateMetadata();
 
     function updateMetadata() {
@@ -122,7 +125,7 @@ export function MultiImageEditController(
     }
 
     function compare(fieldName) {
-        const mapOfValues = ($scope.origin || []).filter((item) => !item.unselected).reduce((acc, item) => {
+        const mapOfValues = $scope.getSelectedImages().reduce((acc, item) => {
             acc[item[fieldName]] = true;
             return acc;
         }, {});

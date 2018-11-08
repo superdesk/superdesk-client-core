@@ -29,7 +29,7 @@
 
                         <div class="sd-grid-item sd-grid-item--with-click"
                              ng-click="handleItemClick($event, image)"
-                             ng-repeat="image in origin track by image._id"
+                             ng-repeat="image in images track by image._id"
                              ng-class="{'sd-grid-item--selected' : !image.unselected}"
                              style="z-index: 1;"><!--  // required so it's visible on top or drag-and-drop layer -->
                             <div class="sd-grid-item__thumb">
@@ -72,12 +72,12 @@
                 <div class="sd-slide-in-panel__content">
                     <div class="sd-slide-in-panel__content-block sd-slide-in-panel__content-block--first">
                         <div class="sd-alert sd-alert--hollow sd-alert--primary sd-alert--small" style="margin: -1rem 0 3rem;">
-                            <span translate>Currently editing: {{origin.length}} items</span>
+                            <span translate>Currently editing: {{getSelectedImages().length}} items</span>
                         </div>
                         <div sd-media-metadata-editor
                             data-item="metadata"
                             data-validator="validator"
-                            data-disabled="!origin.length"
+                            data-disabled="!getSelectedImages().length"
                             data-dark="true"
                             data-boxed="true"
                             data-on-change="onChange(key)"
