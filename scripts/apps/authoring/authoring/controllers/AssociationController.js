@@ -101,6 +101,10 @@ export function AssociationController(config, send, api, $q, superdesk,
                 return send.one(item);
             }
 
+            if (item.archive_item != null) {
+                return $q.when(item.archive_item);
+            }
+
             return api.find(item._type, item._id);
         }
 
