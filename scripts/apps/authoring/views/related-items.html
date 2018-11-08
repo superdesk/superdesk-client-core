@@ -1,4 +1,5 @@
-<div class="related-items">
+<div class="item-association" ng-if="isEmptyRelatedItems(field._id)"></div>
+<div class="related-items" ng-if="!isEmptyRelatedItems(field._id)">
     <ul class="groups draggable-list" sd-sort-groups>
         <li id="{{field._id}}" class="sort-item draggable-list__item draggable-list__item--small"
             ng-repeat="(key, relatedItem) in getRelatedItems(field._id) track by key">

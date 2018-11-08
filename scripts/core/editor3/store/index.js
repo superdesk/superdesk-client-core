@@ -111,7 +111,6 @@ export function onChange(contentState, {plainText = false} = {}) {
         EditorState.createWithContent(contentStateCleaned)
     ).getCurrentContent();
 
-
     setFieldMetadata(
         this.item,
         pathToValue,

@@ -84,7 +84,20 @@ export function RelatedItemsDirective(authoringWorkspace) {
                     .sort();
             }
 
-            /**
+           /**
+            * Return true if there are association for current field
+            *
+            * @param {String} fieldId
+            * @return {Boolean}
+            */
+            scope.isEmptyRelatedItems = (fieldId) => {
+                const keys = Object.keys(scope.item.associations || {})
+                .filter(key => key.startsWith(fieldId) && scope.item.associations[key] != null);
+
+                return keys.length === 0;
+            }
+
+          /**
             * Get related items for fireldId
             *
             * @param {String} fieldId
