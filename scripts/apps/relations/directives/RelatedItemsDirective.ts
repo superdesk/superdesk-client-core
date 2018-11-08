@@ -8,8 +8,8 @@
  * add related items by using drag and drop, delete related items and open related items.
  */
 
-RelatedItemsDirective.$inject = ['authoringWorkspace'];
-export function RelatedItemsDirective(authoringWorkspace) {
+RelatedItemsDirective.$inject = ['authoringWorkspace', 'relationsService'];
+export function RelatedItemsDirective(authoringWorkspace, relationsService) {
     return {
         scope: {
             item: '=',
@@ -17,7 +17,7 @@ export function RelatedItemsDirective(authoringWorkspace) {
             field: '<',
             onchange: '&onchange',
         },
-        templateUrl: 'scripts/apps/authoring/views/related-items.html',
+        templateUrl: 'scripts/apps/relations/views/related-items.html',
         link: function(scope, elem, attr) {
             const dragOverClass = 'dragover';
             const allowed = ((scope.field || {}).field_options || {}).allowed_types || {};
@@ -79,9 +79,7 @@ export function RelatedItemsDirective(authoringWorkspace) {
              * @return {[String]}
              */
             function getRelatedKeys(item, fieldId) {
-                return Object.keys(item.associations || {})
-                    .filter((key) => key.startsWith(fieldId) && item.associations[key] != null)
-                    .sort();
+                return relationsService.getRelatedKeys(item, fieldId);
             }
 
            /**
@@ -104,12 +102,7 @@ export function RelatedItemsDirective(authoringWorkspace) {
             * @return {[Object]}
             */
             scope.getRelatedItems = (fieldId) => {
-                const related = getRelatedKeys(scope.item, fieldId);
-
-                return related.reduce((obj, key) => {
-                    obj[key] = scope.item.associations[key];
-                    return obj;
-                }, {});
+                return relationsService.getRelatedItemsForField(scope.item, fieldId);
             };
 
             /**

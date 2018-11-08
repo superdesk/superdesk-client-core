@@ -39,6 +39,7 @@ angular.module('superdesk.apps.authoring', [
     'superdesk.apps.desks',
     'superdesk.apps.notification',
     'superdesk.apps.vocabularies',
+    'superdesk.apps.relations',
     'contenteditable',
     'decipher.history',
     'superdesk.config',
@@ -70,7 +71,6 @@ angular.module('superdesk.apps.authoring', [
     .directive('sdAuthoringEmbedded', directive.AuthoringEmbeddedDirective)
     .directive('sdAuthoringHeader', directive.AuthoringHeaderDirective)
     .directive('sdItemAssociation', directive.ItemAssociationDirective)
-    .directive('sdRelatedItems', directive.RelatedItemsDirective)
     .directive('sdItemCarousel', directive.ItemCarouselDirective)
     .directive('sdFullPreview', directive.FullPreviewDirective)
     .directive('sdRemoveTags', directive.RemoveTagsDirective)

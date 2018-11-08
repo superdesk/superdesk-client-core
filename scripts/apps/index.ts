@@ -25,6 +25,7 @@ import 'apps/internal-destinations';
 import 'apps/content-api';
 import 'apps/extension-points';
 import 'apps/contacts';
+import 'apps/relations';
 
 export default angular.module('superdesk.apps', [
     'superdesk.apps.settings',
@@ -57,4 +58,5 @@ export default angular.module('superdesk.apps', [
     'superdesk.apps.content-api',
     'superdesk.apps.extension-points',
     'superdesk.apps.contacts',
+    'superdesk.apps.relations',
 ]);
