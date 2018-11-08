@@ -8,8 +8,8 @@
  * add related items by using drag and drop, delete related items and open related items.
  */
 
-RelatedItemsDirective.$inject = ['authoringWorkspace'];
-export function RelatedItemsDirective(authoringWorkspace) {
+RelatedItemsDirective.$inject = ['authoringWorkspace', 'relationsService'];
+export function RelatedItemsDirective(authoringWorkspace, relationsService) {
     return {
         scope: {
             item: '=',
@@ -22,7 +22,7 @@ export function RelatedItemsDirective(authoringWorkspace) {
             const dragOverClass = 'dragover';
             const allowed = ((scope.field || {}).field_options || {}).allowed_types || {};
             const ALLOWED_TYPES = Object.keys(allowed)
-            .filter(key => allowed[key] === true)
+            .filter((key) => allowed[key] === true)
             .map((key) => 'application/superdesk.item.' + key);
 
             if (!elem.hasClass('no-drop-zone') && scope.editable) {
@@ -66,10 +66,10 @@ export function RelatedItemsDirective(authoringWorkspace) {
              * @param {Event} event
              * @return {string}
              */
-            function getSuperdeskType (event) {
+            function getSuperdeskType(event) {
                 return event.originalEvent.dataTransfer.types
                     .find((name) => name.indexOf('application/superdesk') === 0);
-            };
+            }
 
             /**
              * Get related items keys for fireldId
@@ -79,9 +79,7 @@ export function RelatedItemsDirective(authoringWorkspace) {
              * @return {[String]}
              */
             function getRelatedKeys(item, fieldId) {
-                return Object.keys(item.associations || {})
-                .filter(key => key.startsWith(fieldId) && item.associations[key] != null)
-                .sort();
+                return relationsService.getRelatedKeys(item, fieldId);
             }
 
            /**
@@ -91,13 +89,8 @@ export function RelatedItemsDirective(authoringWorkspace) {
             * @return {[Object]}
             */
             scope.getRelatedItems = (fieldId) => {
-                const related = getRelatedKeys(scope.item, fieldId);
-
-                return related.reduce((obj, key) => {
-                    obj[key] = scope.item.associations[key];
-                    return obj;
-                }, {});
-            }
+                return relationsService.getRelatedItemsForField(scope.item, fieldId);
+            };
 
             /**
              * Reorder related items on related items list
@@ -121,7 +114,7 @@ export function RelatedItemsDirective(authoringWorkspace) {
 
                 scope.item.associations = angular.extend({}, scope.item.associations, updated);
                 scope.onchange();
-            }
+            };
 
             /**
              * Return the next key for related item associated to current field
@@ -152,7 +145,7 @@ export function RelatedItemsDirective(authoringWorkspace) {
                 data[key] = item;
                 scope.item.associations = angular.extend({}, scope.item.associations, data);
                 scope.onchange();
-            }
+            };
 
             /**
              * Remove the related item with key
@@ -168,7 +161,7 @@ export function RelatedItemsDirective(authoringWorkspace) {
                 data[key] = null;
                 scope.item.associations = angular.extend({}, scope.item.associations, data);
                 scope.onchange();
-            }
+            };
 
             /**
              * Open related item
@@ -177,7 +170,7 @@ export function RelatedItemsDirective(authoringWorkspace) {
              */
             scope.openRelatedItem = (item) => {
                 authoringWorkspace.edit(item);
-            }
+            };
         },
     };
 }

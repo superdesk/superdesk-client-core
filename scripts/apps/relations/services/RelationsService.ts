@@ -10,9 +10,27 @@ export function RelationsService(archiveService) {
 
         const related = Object.values(item.associations);
         const relatedWithoutNull = related.filter((o) => o !== null);
+        if (relatedWithoutNull.length === 0) {
+            return [];
+        }
         const relatedWithoutMedia = related.filter((o) => o.type === 'text');
         const unpublished = relatedWithoutMedia.filter((o) => !archiveService.isPublished(o));
 
         return unpublished;
+    };
+
+    this.getRelatedKeys = function(item: IArticle, fieldId: string) {
+        return Object.keys(item.associations || {})
+            .filter((key) => key.startsWith(fieldId) && item.associations[key] != null)
+            .sort();
+    };
+
+    this.getRelatedItemsForField = function(item: IArticle, fieldId: string) {
+        const related = this.getRelatedKeys(item, fieldId);
+
+        return related.reduce((obj, key) => {
+            obj[key] = item.associations[key];
+            return obj;
+        }, {});
     };
 }
