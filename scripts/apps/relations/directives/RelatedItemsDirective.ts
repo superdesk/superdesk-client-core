@@ -17,7 +17,7 @@ export function RelatedItemsDirective(authoringWorkspace, relationsService) {
             field: '<',
             onchange: '&onchange',
         },
-        templateUrl: 'scripts/apps/authoring/views/related-items.html',
+        templateUrl: 'scripts/apps/relations/views/related-items.html',
         link: function(scope, elem, attr) {
             const dragOverClass = 'dragover';
             const allowed = ((scope.field || {}).field_options || {}).allowed_types || {};

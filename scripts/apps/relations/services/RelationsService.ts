@@ -10,10 +10,7 @@ export function RelationsService(archiveService) {
 
         const related = Object.values(item.associations);
         const relatedWithoutNull = related.filter((o) => o !== null);
-        if (relatedWithoutNull.length === 0) {
-            return [];
-        }
-        const relatedWithoutMedia = related.filter((o) => o.type === 'text');
+        const relatedWithoutMedia = relatedWithoutNull.filter((o) => o.type === 'text');
         const unpublished = relatedWithoutMedia.filter((o) => !archiveService.isPublished(o));
 
         return unpublished;
