@@ -9,7 +9,6 @@ interface IScope extends ng.IScope {
     placeholder: any;
     isDirty: any;
     selectImage: any;
-    onBlur: any;
     onChange: any;
     metadata: any;
     save: any;
@@ -36,7 +35,7 @@ export function MultiImageEditController(
     $scope.origin = angular.copy($scope.imagesOriginal);
     $scope.images = angular.copy($scope.imagesOriginal);
 
-    let changes = {};
+    let unsavedChangesExist = false;
 
     $scope.$watch('imagesOriginal', (imagesOriginal: Array<any>) => {
         // add and remove images without losing metadata of the ones which stay
@@ -52,7 +51,7 @@ export function MultiImageEditController(
 
     $scope.placeholder = {};
 
-    $scope.isDirty = () => !_.isEmpty(changes);
+    $scope.isDirty = () => unsavedChangesExist;
 
     $scope.selectImage = (image) => {
         image.unselected = !image.unselected;
@@ -63,19 +62,15 @@ export function MultiImageEditController(
         return updateMetadata();
     };
 
-    $scope.onBlur = () => {
+    $scope.onChange = (field) => {
+        unsavedChangesExist = true;
+        $scope.placeholder[field] = '';
+
         $scope.origin.forEach((item) => {
             if ($scope.images.find((image) => image._id === item._id)) {
-                for (var key in changes) {
-                    item[key] = $scope.metadata[key] || '';
-                }
+                item[field] = $scope.metadata[field] || '';
             }
         });
-    };
-
-    $scope.onChange = (field) => {
-        changes[field] = true;
-        $scope.placeholder[field] = '';
     };
 
     $scope.save = (close) => {
@@ -96,7 +91,7 @@ export function MultiImageEditController(
 
         saveHandler(imagesForSaving)
             .then(() => {
-                changes = {};
+                unsavedChangesExist = false;
 
                 if (close) {
                     $scope.closeHandler();
