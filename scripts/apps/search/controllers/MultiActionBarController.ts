@@ -64,7 +64,14 @@ export function MultiActionBarController(
     };
 
     this.multiImageEdit = function() {
-        multiImageEdit.edit(multi.getItems());
+        const originalImages = multi.getItems();
+
+        multiImageEdit.edit(originalImages, (editedImages) => Promise.all(
+            originalImages.map((originalImage) => authoring.save(
+                originalImage,
+                _.find(editedImages, (item) => item._id === originalImage._id),
+            )),
+        ));
     };
 
     this.createPackage = function() {

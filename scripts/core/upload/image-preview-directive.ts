@@ -1,3 +1,9 @@
+export const getDataUrl = (file) => new Promise<string>((resolve) => {
+    const fileReader = new FileReader();
+    fileReader.onload = () => resolve(fileReader.result.toString());
+    fileReader.readAsDataURL(file);
+});
+
 angular.module('superdesk.core.upload.imagepreview', []).directive('sdImagePreview', [function() {
     var IS_IMG_REGEXP = /^image\//;
 
@@ -16,30 +22,25 @@ angular.module('superdesk.core.upload.imagepreview', []).directive('sdImagePrevi
                 }
             }
 
-            function updatePreview(e) {
-                scope.$apply(() => {
-                    scope.sdImagePreview = e.target.result;
-                    setProgress(50);
-                });
-
-                var img = document.createElement('img');
-
-                img.onload = function() {
-                    scope.$apply(() => {
-                        scope.width = img.width;
-                        scope.height = img.height;
-                    });
-                };
-                img.src = e.target.result;
-            }
-
             scope.$watch('file', (file) => {
                 if (file && IS_IMG_REGEXP.test(file.type)) {
-                    var fileReader = new FileReader();
-
-                    fileReader.onload = updatePreview;
-                    fileReader.readAsDataURL(file);
                     setProgress(30);
+                    getDataUrl(file).then((dataUrl) => {
+                        scope.$apply(() => {
+                            scope.sdImagePreview = dataUrl;
+                            setProgress(50);
+                        });
+
+                        var img = document.createElement('img');
+
+                        img.onload = function() {
+                            scope.$apply(() => {
+                                scope.width = img.width;
+                                scope.height = img.height;
+                            });
+                        };
+                        img.src = dataUrl;
+                    });
                 }
             });
 
