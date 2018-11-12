@@ -1,3 +1,4 @@
+import {create, clone, each} from 'lodash';
 import {saveOrUpdateSavedSearch} from '../SavedSearch';
 
 SaveSearch.$inject = ['$location', 'asset', 'api', 'session', 'notify', 'gettext', '$rootScope'];
@@ -15,17 +16,17 @@ export function SaveSearch($location, asset, api, session, notify, gettext, $roo
             scope.$on('edit:search', (event, args) => {
                 scope.activateSearchPane = false;
                 scope.editingSearch = args;
-                scope.edit = _.create(scope.editingSearch) || {};
+                scope.edit = create(scope.editingSearch) || {};
             });
 
             scope.editItem = function() {
                 scope.activateSearchPane = true;
-                scope.edit = _.create(scope.editingSearch) || {};
+                scope.edit = create(scope.editingSearch) || {};
             };
 
             scope.saveas = function() {
                 scope.activateSearchPane = true;
-                scope.edit = _.clone(scope.editingSearch) || {};
+                scope.edit = clone(scope.editingSearch) || {};
                 delete scope.edit._id;
                 scope.edit.name = '';
                 scope.edit.description = '';
@@ -41,7 +42,7 @@ export function SaveSearch($location, asset, api, session, notify, gettext, $roo
             scope.clear = function() {
                 scope.editingSearch = false;
                 scope.edit = null;
-                _.each($location.search(), (item, key) => {
+                each($location.search(), (item, key) => {
                     if (key !== 'repo') {
                         $location.search(key, null);
                     }
@@ -73,12 +74,8 @@ export function SaveSearch($location, asset, api, session, notify, gettext, $roo
                     }
                 }
 
-                editSearch.filter = {query: _.clone($location.search())};
-                var originalSearch = {};
-
-                if (editSearch._id) {
-                    originalSearch = scope.editingSearch;
-                }
+                editSearch.filter = {query: clone($location.search())};
+                var originalSearch = editSearch._id ? scope.editingSearch : {};
 
                 saveOrUpdateSavedSearch(api, originalSearch, editSearch)
                     .then(onSuccess, onFail);
