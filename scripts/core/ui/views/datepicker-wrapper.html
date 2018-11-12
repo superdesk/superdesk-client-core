@@ -1,11 +1,11 @@
 <div class="datepicker-wrapper" ng-show="open" ng-keydown="keydown($event)">
-    <div class="datepicker-additional">
+    <div class="datepicker-additional" ng-if="shortcuts">
         <table>
             <tbody>
                 <tr>
-                    <td><button class="btn btn--mini" ng-click="select(0)" translate>Today</button></td>
-                    <td><button class="btn btn--mini" ng-click="select(1)" translate>Tomorrow</button></td>
-                    <td><button class="btn btn--mini" ng-click="select(2)" translate>In 2 days</button></td>
+                    <td ng-repeat="b in shortcuts">
+                        <button class="btn btn--mini" ng-click="selectShortcut(b.value, b.term)">{{ b.label }}</button>
+                    </td>
                 </tr>
             </tbody>
         </table>
