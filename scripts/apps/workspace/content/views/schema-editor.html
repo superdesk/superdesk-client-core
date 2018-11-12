@@ -1,4 +1,25 @@
 <div class="schema-editor" ng-if="loading === false">
+
+    <div ng-if="getSchemaKeys().length < 1" style="display: flex; justify-content: center; margin: 20px 0;">
+        <div class="dropdown dropdown--add-more dropdown--add-more__top dropdown-terms" dropdown>
+            <button class="btn btn--primary btn--icon-only-circle" sd-tooltip="{{ :: 'Add Field' | translate }}" flow="right" ng-click="search = ''" dropdown__toggle>
+                <i class="icon-plus-large"></i>
+            </button>
+            <ul class="dropdown__menu nested-menu">
+                <li class="input-term">
+                    <input ng-model="search" type="text" ng-click="$event.stopPropagation()">
+                </li>
+                <li class="main-list">
+                    <ul>
+                        <li ng-repeat="schema in getSchemaKeysDisabled() | orderBy: 'name' | filter: search track by schema.key">
+                            <button ng-click="toggle(schema, model.editor[id].order, 'before')">{{schema.name | translate}}</button>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+
     <ul class="pills-list" sd-sort-content-profiles>
         <li class="schema-item" ng-repeat="id in getSchemaKeys() track by id">
             <div class="dropdown dropdown--add-more dropdown--add-more__top dropdown-terms" dropdown>
