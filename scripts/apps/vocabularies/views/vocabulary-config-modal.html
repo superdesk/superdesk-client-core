@@ -135,14 +135,6 @@
                         <button id="add-new-btn" class="btn btn--primary" ng-click="addItem()"><i class="icon-plus-sign"></i> {{'Add Item' | translate}}</button>
                     </div>
 
-            <div class="vocabulary-items__wrapper" ng-if="matchFieldTypeToTab('vocabularies', vocabulary.field_type)">
-                <h3 class="sd-line-input__label" translate>Items</h3>
-                <div sd-vocabulary-config-modal-items></div>
-            </div>
-            <div class="vocabulary-items__button-bar" ng-show="matchFieldTypeToTab('vocabularies', vocabulary.field_type)">
-                <button id="add-new-btn" class="btn btn--primary" ng-click="addItem()"><i class="icon-plus-sign"></i> {{'Add Item' | translate}}</button>
-            </div>
-
             <div class="sd-line-input" ng-if="matchFieldTypeToTab('vocabularies', vocabulary.field_type)">
                 <sd-check ng-model="vocabulary.single_value">{{ :: 'Accept only single selection' | translate }}</sd-check>
             </div>
