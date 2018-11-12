@@ -74,6 +74,9 @@ export function SaveSearch($location, asset, api, session, notify, gettext, $roo
                     }
                 }
 
+                // perform search with selected parameters before saving
+                // so parameters get in the url where they are later read from
+                scope.search();
                 editSearch.filter = {query: clone($location.search())};
                 var originalSearch = editSearch._id ? scope.editingSearch : {};
 
