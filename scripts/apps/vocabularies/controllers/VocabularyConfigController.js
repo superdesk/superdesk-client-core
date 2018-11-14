@@ -1,4 +1,3 @@
-
 const DEFAULT_SCHEMA = {
     name: {},
     qcode: {},
@@ -48,10 +47,10 @@ export function VocabularyConfigController($scope, $route, $routeParams, vocabul
     $scope.matchFieldTypeToTab = (tab, fieldType) =>
         tab === 'vocabularies' && !fieldType || fieldType &&
         (tab === 'text-fields' && fieldType === 'text' ||
-         tab === 'date-fields' && fieldType === 'date' ||
-         tab === 'related-content-fields' && fieldType === 'related-content' ||
-         tab === 'related-content-fields' && fieldType === 'media' ||
-         tab === 'embed-fields' && fieldType === 'embed');
+            tab === 'date-fields' && fieldType === 'date' ||
+            tab === 'related-content-fields' && fieldType === 'related-content' ||
+            tab === 'related-content-fields' && fieldType === 'media' ||
+            tab === 'embed-fields' && fieldType === 'embed');
 
     /**
      * Reload list of vocabularies
@@ -130,6 +129,12 @@ export function VocabularyConfigController($scope, $route, $routeParams, vocabul
                 schema: angular.extend({}, DEFAULT_SCHEMA),
                 service: {all: 1}, // needed for vocabulary to be visible in content profile
             };
+        }
+
+        if ($scope.vocabulary && $scope.vocabulary.field_type === 'date') {
+            if (!$scope.vocabulary.date_shortcuts) {
+                $scope.vocabulary.date_shortcuts = vocabularies.getDefaultDatefieldShortcuts();
+            }
         }
     }
 }
