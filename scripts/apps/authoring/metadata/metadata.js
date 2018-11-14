@@ -764,11 +764,11 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
                     // instead of simple push, extend the item[field] in order to trigger dirty $watch
                     var t = [];
 
-                    if (!term.single_value) {
+                    if (term.selection_type !== 'single selection') {
                         t = _.clone(scope.item[scope.field]) || [];
                     }
 
-                    if (scope.cv && scope.cv.single_value) {
+                    if (scope.cv && scope.cv.selection_type === 'single selection') {
                         t = _.filter(t, (term) => term.scheme !== scope.cv._id);
                     }
 
@@ -1061,8 +1061,8 @@ function MetadataService(api, subscribersService, config, vocabularies, $rootSco
                     if (_.has(vocabulary, 'popup_width')) {
                         self.popup_width[vocabulary._id] = vocabulary.popup_width;
                     }
-                    if (_.has(vocabulary, 'single_value')) {
-                        self.single_value[vocabulary._id] = vocabulary.single_value;
+                    if (_.has(vocabulary, 'selection_type')) {
+                        self.single_value[vocabulary._id] = vocabulary.selection_type === 'single value';
                     }
                 });
                 self.cvs = result;

@@ -27,6 +27,10 @@ describe('vocabularies', () => {
     }));
 
     describe('config controller', () => {
+        beforeEach(inject((session) => {
+            session.identity = {_id: 'user:1'};
+        }));
+
         it('can sync changes in the list', inject(($controller, $rootScope) => {
             const scope = $rootScope.$new();
 
