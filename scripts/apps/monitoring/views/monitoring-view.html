@@ -21,7 +21,7 @@
             <button class="dropdown__toggle navbtn navbtn--text-only" dropdown-toggle>{{ :: 'Monitoring' | translate }} {{workspace.name}} <span class="dropdown__caret"></span></button>
             <ul class="dropdown__menu scrollable">
                 <li><div class="dropdown__menu-label">{{ :: 'Stages' | translate }}</div></li>
-                <li ng-repeat="card in aggregate.cards" ng-class="{active: monitoring.singleGroup.">
+                <li ng-repeat="card in aggregate.cards">
                     <button class="label-group"
                         ng-click="monitoring.viewSingleGroup(card, card.type === 'stage' ? card.type : 'single-stage')"
                     translate>{{:: monitoring.getGroupLabel(card, aggregate.settings.type)}}</button>

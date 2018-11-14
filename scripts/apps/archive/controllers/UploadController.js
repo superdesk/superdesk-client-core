@@ -300,30 +300,12 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
     };
 
     $scope.cancel = function() {
-        _.each($scope.items, $scope.cancelItem, $scope);
         $scope.reject();
     };
 
     $scope.tryAgain = function() {
         $scope.failed = null;
         $scope.upload();
-    };
-
-    $scope.cancelItem = function(item, index) {
-        if (!_.isNil(item)) {
-            if (item.model) {
-                api.archive.remove(item.model);
-            } else if (item.upload && item.upload.abort) {
-                item.upload.abort();
-            }
-        }
-        if (index !== undefined) {
-            $scope.items.splice(index, 1);
-        }
-        if (_.isEmpty($scope.items)) {
-            $scope.enableSave = false;
-        }
-        checkFail();
     };
 
     $scope.canUpload = () => {
