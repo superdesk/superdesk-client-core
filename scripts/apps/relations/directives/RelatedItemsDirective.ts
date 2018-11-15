@@ -82,7 +82,7 @@ export function RelatedItemsDirective(authoringWorkspace, relationsService) {
                 return relationsService.getRelatedKeys(item, fieldId);
             }
 
-           /**
+            /**
             * Return true if there are association for current field
             *
             * @param {String} fieldId
@@ -90,20 +90,18 @@ export function RelatedItemsDirective(authoringWorkspace, relationsService) {
             */
             scope.isEmptyRelatedItems = (fieldId) => {
                 const keys = Object.keys(scope.item.associations || {})
-                .filter((key) => key.startsWith(fieldId) && scope.item.associations[key] != null);
+                    .filter((key) => key.startsWith(fieldId) && scope.item.associations[key] != null);
 
                 return keys.length === 0;
             };
 
-          /**
+            /**
             * Get related items for fireldId
             *
             * @param {String} fieldId
             * @return {[Object]}
             */
-            scope.getRelatedItems = (fieldId) => {
-                return relationsService.getRelatedItemsForField(scope.item, fieldId);
-            };
+            scope.getRelatedItems = (fieldId) => relationsService.getRelatedItemsForField(scope.item, fieldId);
 
             /**
              * Reorder related items on related items list

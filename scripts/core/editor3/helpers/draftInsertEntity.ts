@@ -1,6 +1,6 @@
 import {EditorState} from 'draft-js';
-import insertAtomicBlockWithoutEmptyLines from "./insertAtomicBlockWithoutEmptyLines";
-import {moveBlockWithoutDispatching} from "./draftMoveBlockWithoutDispatching";
+import insertAtomicBlockWithoutEmptyLines from './insertAtomicBlockWithoutEmptyLines';
+import {moveBlockWithoutDispatching} from './draftMoveBlockWithoutDispatching';
 
 export function insertEntity(editorState, draftEntityType, mutability, data, targetBlockKey = null): EditorState {
     const contentState = editorState.getCurrentContent();

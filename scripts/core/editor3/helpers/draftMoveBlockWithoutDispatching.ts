@@ -1,4 +1,4 @@
-import {SelectionState, AtomicBlockUtils} from "draft-js";
+import {SelectionState, AtomicBlockUtils} from 'draft-js';
 
 /**
  * Move atomic block and return the state

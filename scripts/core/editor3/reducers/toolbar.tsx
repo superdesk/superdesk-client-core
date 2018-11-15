@@ -164,9 +164,8 @@ const insertMedia = (state, {files = [], targetBlockKey = null}) => {
  * @description Inserts the given media into the given editor state's content and returns
  * the updated editor state.
  */
-export const addMedia = (editorState: EditorState, media, targetBlockKey = null): EditorState => {
-    return insertEntity(editorState, 'MEDIA', 'MUTABLE', {media}, targetBlockKey);
-};
+export const addMedia = (editorState: EditorState, media, targetBlockKey = null): EditorState =>
+    insertEntity(editorState, 'MEDIA', 'MUTABLE', {media}, targetBlockKey);
 
 /**
  * @ngdoc method
