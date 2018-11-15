@@ -101,6 +101,24 @@ export function VocabularyEditController($scope, gettext, $interpolate, notify, 
     };
 
     /**
+     * Return true if at least one content type should be selected
+     */
+    $scope.requireAllowedTypesSelection = function() {
+        if ($scope.vocabulary.field_type !== 'media' && $scope.vocabulary.field_type !== 'related_content') {
+            return false;
+        }
+
+        if ($scope.vocabulary.field_options == null || $scope.vocabulary.field_options.allowed_types == null) {
+            return true;
+        }
+
+        const allowedTypes = $scope.vocabulary.field_options.allowed_types;
+        const selectedKeys = Object.keys(allowedTypes).filter((key) => allowedTypes[key] === true);
+
+        return selectedKeys.length === 0;
+    };
+
+    /**
      * Discard changes and close modal.
      */
     $scope.cancel = function() {
