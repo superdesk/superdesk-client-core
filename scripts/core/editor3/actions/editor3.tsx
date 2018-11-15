@@ -167,3 +167,20 @@ export function moveBlock(block, dest, insertionMode) {
         payload: {block, dest, insertionMode},
     };
 }
+
+/**
+ * @ngdoc method
+ * @name embed
+ * @param {Object|string} oEmbed code, HTML string.
+ * @return {Object}
+ * @description Dispatches the action to use the given oEmbed data for media embedding.
+ */
+export function embed(code, targetBlockKey = null) {
+    return {
+        type: 'EDITOR_APPLY_EMBED',
+        payload: {
+            code,
+            targetBlockKey,
+        },
+    };
+}
