@@ -1,5 +1,6 @@
 <div class="sd-page__flex-helper">
     <div class="sd-page__header">
+        <sd-search-handler ng-model="query.name" data-debounce="200"></sd-search-handler>
         <div class="sd-page__element-grow">
             <div sd-pagination items="providers"></div>
         </div>
@@ -10,7 +11,7 @@
 
     <div class="sd-page__content">
         <ul class="pills-list provider-list">
-            <li ng-repeat="provider in providers._items" class="clearfix">
+            <li ng-repeat="provider in providers._items | filter:query" class="clearfix">
                 <div class="header">
                     <h6>{{ provider.name}}<span class="label offProvider" ng-if="provider.is_closed" translate>closed</span></h6>
                     <div class="last-updated" ng-if="provider.last_updated">
