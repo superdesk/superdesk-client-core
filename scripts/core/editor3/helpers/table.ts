@@ -108,13 +108,14 @@ export function setCell(data, row, col, cellEditorState: EditorState) {
 export function getData(contentState: ContentState, block: ContentBlock) {
     const entityKey = block.getEntityAt(0);
     const { data } = contentState.getEntity(entityKey).getData();
-    const blockData = JSON.parse(block.getData().get('data'));
+
+    const blockData = block.getData().get('data');
 
     if (!blockData && data) {
         return data;
     }
 
-    return blockData;
+    return JSON.parse(blockData);
 }
 
 /**
