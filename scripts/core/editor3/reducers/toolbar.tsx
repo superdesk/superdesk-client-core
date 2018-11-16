@@ -1,12 +1,11 @@
 import {RichUtils, EditorState} from 'draft-js';
 import * as entityUtils from '../components/links/entityUtils';
 import {onChange} from './editor3';
-import insertAtomicBlockWithoutEmptyLines from '../helpers/insertAtomicBlockWithoutEmptyLines';
 import * as Links from '../helpers/links';
 import * as Blocks from '../helpers/blocks';
 import * as Highlights from '../helpers/highlights';
 import {removeFormatFromState} from '../helpers/removeFormat';
-import {moveBlockWithoutDispatching} from './editor3';
+import {insertEntity} from '../helpers/draftInsertEntity';
 
 /**
  * @description Contains the list of toolbar related reducers.
@@ -29,8 +28,6 @@ const toolbar = (state = {}, action) => {
         return updateImage(state, action.payload);
     case 'TOOLBAR_REMOVE_BLOCK':
         return removeBlock(state, action.payload);
-    case 'TOOLBAR_APPLY_EMBED':
-        return applyEmbed(state, action.payload);
     case 'TOOLBAR_SET_POPUP':
         return setPopup(state, action.payload);
     case 'TOOLBAR_TOGGLE_INVISIBLES':
@@ -167,33 +164,8 @@ const insertMedia = (state, {files = [], targetBlockKey = null}) => {
  * @description Inserts the given media into the given editor state's content and returns
  * the updated editor state.
  */
-export const addMedia = (editorState, media, targetBlockKey = null) => {
-    const contentState = editorState.getCurrentContent();
-    const contentStateWithEntity = contentState.createEntity('MEDIA', 'MUTABLE', {media});
-    const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
-
-    const insertResult = insertAtomicBlockWithoutEmptyLines(
-        editorState,
-        entityKey,
-        ' ',
-    );
-
-    let stateWithBlock = insertResult.editorState;
-    const newBlockKey = insertResult.blockKey;
-
-    if (targetBlockKey) {
-        stateWithBlock = moveBlockWithoutDispatching(
-            {editorState: stateWithBlock},
-            {
-                block: newBlockKey,
-                dest: targetBlockKey,
-                insertionMode: 'after',
-            },
-        ).editorState;
-    }
-
-    return stateWithBlock;
-};
+export const addMedia = (editorState: EditorState, media, targetBlockKey = null): EditorState =>
+    insertEntity(editorState, 'MEDIA', 'MUTABLE', {media}, targetBlockKey);
 
 /**
  * @ngdoc method
@@ -225,30 +197,6 @@ const removeBlock = (state, {blockKey}) => {
     const newEditorState = Blocks.removeBlock(editorState, blockKey);
 
     return onChange(state, newEditorState);
-};
-
-/**
- * @ngdoc method
- * @name applyEmbed
- * @param {Object|string} data oEmbed data, HTML string.
- * @description Applies the embed in the given oEmbed data to the active block.
- */
-const applyEmbed = (state, code) => {
-    const selection = state.editorState.getSelection();
-    const contentState = state.editorState.getCurrentContent();
-    const data = typeof code === 'string' ? {html: code} : code;
-    const contentStateWithEntity = contentState.createEntity('EMBED', 'MUTABLE', {data});
-    const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
-
-    let {editorState} = insertAtomicBlockWithoutEmptyLines(
-        state.editorState,
-        entityKey,
-        ' ',
-    );
-
-    editorState = EditorState.acceptSelection(editorState, selection);
-
-    return onChange(state, editorState);
 };
 
 /**

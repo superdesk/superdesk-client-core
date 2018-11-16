@@ -2,7 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import {getValidMediaType, canDropMedia} from './Editor3Component';
-import {moveBlock, dragDrop} from '../actions/editor3';
+import {moveBlock, dragDrop, embed} from '../actions/editor3';
+import {getEmbedObject} from './embeds/EmbedInput';
 
 const EDITOR_BLOCK_TYPE = 'superdesk/editor3-block';
 
@@ -39,7 +40,8 @@ class BaseUnstyledComponent extends React.Component<any, any> {
 
         const block = getEditorBlock(event);
 
-        if (block) { // Dragging media around
+        if (typeof block === 'string' && block.length > 0) {
+            // existing media item dropped to another place
             this.props.dispatch(moveBlock(block, this.getDropBlockKey(), this.dropInsertionMode));
             return;
         }

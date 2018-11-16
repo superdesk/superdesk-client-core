@@ -190,7 +190,7 @@ export function MultiImageEditDirective(asset, $sce) {
             scope.trustAsHtml = $sce.trustAsHtml;
 
             scope.handleItemClick = function(event, image) {
-                if (event.target != null && event.target.classList.contains("icon-close-small")) {
+                if (event.target != null && event.target.classList.contains('icon-close-small')) {
                     scope.onRemoveItem(image);
                 } else {
                     scope.selectImage(image);
