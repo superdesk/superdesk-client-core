@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import * as actions from '../../actions';
 import {connect} from 'react-redux';
 import {TableCell} from '.';
-import {EditorState} from 'draft-js';
+import {EditorState, ContentState} from 'draft-js';
 import {getCell, setCell, getData, setData} from '../../helpers/table';
 
 /**
@@ -68,7 +68,7 @@ export class TableBlockComponent extends React.Component<any, any> {
     getData() {
         const {block, editorState} = this.props;
 
-        return getData(editorState, block);
+        return getData(editorState.getCurrentContent(), block);
     }
 
     onFocus(i, j, currentStyle, selection) {
