@@ -1,5 +1,6 @@
 import {FIELD_KEY_SEPARATOR} from 'core/editor3/helpers/fieldsMeta';
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
+import {MEDIA_TYPES} from 'apps/vocabularies/constants';
 
 /**
  * @ngdoc directive
@@ -77,6 +78,7 @@ export function ArticleEditDirective(
                 scope.label = (id) => getLabelForFieldId(id);
 
                 scope.FIELD_KEY_SEPARATOR = FIELD_KEY_SEPARATOR;
+                scope.mediaTypes = MEDIA_TYPES;
 
                 /* Start: Dateline related properties */
 

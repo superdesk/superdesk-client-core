@@ -1,14 +1,11 @@
-const DEFAULT_SCHEMA = {
-    name: {},
-    qcode: {},
-    parent: {},
-};
+import {MEDIA_TYPES, MEDIA_TYPE_KEYS, DEFAULT_SCHEMA} from '../constants';
 
 VocabularyConfigController.$inject = ['$scope', '$route', '$routeParams', 'vocabularies', '$rootScope',
     'api', 'notify', 'modal'];
 export function VocabularyConfigController($scope, $route, $routeParams, vocabularies, $rootScope,
     api, notify, modal) {
     $scope.loading = true;
+    $scope.mediaTypes = MEDIA_TYPES;
 
     /**
      * Open vocabulary in the edit modal.
@@ -48,8 +45,7 @@ export function VocabularyConfigController($scope, $route, $routeParams, vocabul
         tab === 'vocabularies' && !fieldType || fieldType &&
         (tab === 'text-fields' && fieldType === 'text' ||
             tab === 'date-fields' && fieldType === 'date' ||
-            tab === 'related-content-fields' && fieldType === 'related_content' ||
-            tab === 'related-content-fields' && fieldType === 'media' ||
+            tab === 'related-content-fields' && MEDIA_TYPE_KEYS.includes(fieldType) ||
             tab === 'embed-fields' && fieldType === 'embed');
 
     /**

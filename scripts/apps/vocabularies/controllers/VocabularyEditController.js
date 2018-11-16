@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import {MEDIA_TYPE_KEYS} from '../constants';
 
 VocabularyEditController.$inject = [
     '$scope',
@@ -104,7 +105,7 @@ export function VocabularyEditController($scope, gettext, $interpolate, notify, 
      * Return true if at least one content type should be selected
      */
     $scope.requireAllowedTypesSelection = function() {
-        if ($scope.vocabulary.field_type !== 'media' && $scope.vocabulary.field_type !== 'related_content') {
+        if (!MEDIA_TYPE_KEYS.includes($scope.vocabulary.field_type)) {
             return false;
         }
 
