@@ -1,11 +1,15 @@
+// Adding the following because planning webpack when compiled for test cases
+// won't be aware of gettext.
+const gettext = _.get(window, 'gettext', (text) => text);
+
 export const MEDIA_TYPES = {
     GALLERY: {
         id: 'media',
-        label: 'Media gallery'
+        label: gettext('Media gallery')
     },
     RELATED_CONTENT: {
         id: 'related_content',
-        label: 'Related items'
+        label: gettext('Related items')
     },
 };
 

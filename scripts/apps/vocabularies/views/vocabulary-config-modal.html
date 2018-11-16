@@ -92,7 +92,7 @@
                         <div class="form__row form__row--inner form__row--flex">
                             <div class="form__row-item form__row-item--no-grow">
                                 <select class="input-medium" ng-model="vocabulary.field_type">
-                                    <option value="{{key}}" ng-repeat="(key, type) in mediaTypes">{{type.label}}</option>
+                                    <option value="{{type.id}}" ng-repeat="type in mediaTypes">{{type.label}}</option>
                                 </select>
                             </div>
                             <div class="form__row-item form__row-item--no-grow">
