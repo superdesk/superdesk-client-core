@@ -2,6 +2,8 @@ import _ from 'lodash';
 import PreferedCvItemsConfigDirective from './PreferedCvItemsConfigDirective';
 import MetaPlaceDirective from './MetaPlaceDirective';
 
+const SINGLE_SELECTION = 'single selection';
+
 MetadataCtrl.$inject = [
     '$scope', 'desks', 'metadata', 'privileges', 'datetimeHelper',
     'preferencesService', 'config', 'moment', 'content',
@@ -764,11 +766,11 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
                     // instead of simple push, extend the item[field] in order to trigger dirty $watch
                     var t = [];
 
-                    if (term.selection_type !== 'single selection') {
+                    if (term.selection_type !== SINGLE_SELECTION) {
                         t = _.clone(scope.item[scope.field]) || [];
                     }
 
-                    if (scope.cv && scope.cv.selection_type === 'single selection') {
+                    if (scope.cv && scope.cv.selection_type === SINGLE_SELECTION) {
                         t = _.filter(t, (term) => term.scheme !== scope.cv._id);
                     }
 
@@ -1062,7 +1064,7 @@ function MetadataService(api, subscribersService, config, vocabularies, $rootSco
                         self.popup_width[vocabulary._id] = vocabulary.popup_width;
                     }
                     if (_.has(vocabulary, 'selection_type')) {
-                        self.single_value[vocabulary._id] = vocabulary.selection_type === 'single value';
+                        self.single_value[vocabulary._id] = vocabulary.selection_type === SINGLE_SELECTION;
                     }
                 });
                 self.cvs = result;
