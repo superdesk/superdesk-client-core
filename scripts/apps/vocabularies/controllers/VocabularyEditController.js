@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import {MEDIA_TYPES, MEDIA_TYPE_KEYS} from '../constants';
 
 VocabularyEditController.$inject = [
     '$scope',
@@ -81,7 +82,7 @@ export function VocabularyEditController($scope, gettext, $interpolate, notify, 
             $scope.errorMessage = gettext('The values should be unique for ') + uniqueField;
         }
 
-        if ($scope.vocabulary.field_type === 'media') {
+        if ($scope.vocabulary.field_type === MEDIA_TYPES.GALLERY) {
             const allowedTypes = $scope.vocabulary.field_options.allowed_types;
 
             Object.keys(allowedTypes).forEach((key) => {
@@ -98,6 +99,24 @@ export function VocabularyEditController($scope, gettext, $interpolate, notify, 
         // discard metadata cache:
         metadata.loaded = null;
         metadata.initialize();
+    };
+
+    /**
+     * Return true if at least one content type should be selected
+     */
+    $scope.requireAllowedTypesSelection = function() {
+        if (!MEDIA_TYPE_KEYS.includes($scope.vocabulary.field_type)) {
+            return false;
+        }
+
+        if ($scope.vocabulary.field_options == null || $scope.vocabulary.field_options.allowed_types == null) {
+            return true;
+        }
+
+        const allowedTypes = $scope.vocabulary.field_options.allowed_types;
+        const selectedKeys = Object.keys(allowedTypes).filter((key) => allowedTypes[key] === true);
+
+        return selectedKeys.length === 0;
     };
 
     /**
