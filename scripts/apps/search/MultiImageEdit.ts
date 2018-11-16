@@ -14,7 +14,8 @@ interface IScope extends ng.IScope {
     close: any;
     getSelectedImages(): Array<any>;
     saveHandler(images): Promise<void>;
-    closeHandler(): void;
+    successHandler?(): void;
+    cancelHandler?(): void;
 }
 
 MultiImageEditController.$inject = [
@@ -87,8 +88,8 @@ export function MultiImageEditController(
             .then(() => {
                 unsavedChangesExist = false;
 
-                if (close) {
-                    $scope.closeHandler();
+                if (close && typeof $scope.successHandler === 'function') {
+                    $scope.successHandler();
                 }
             });
     };
@@ -100,10 +101,14 @@ export function MultiImageEditController(
                 gettextCatalog.getString('Confirm'),
             )
                 .then(() => {
-                    $scope.closeHandler();
+                    if (typeof $scope.cancelHandler === 'function') {
+                        $scope.cancelHandler();
+                    }
                 });
         } else {
-            $scope.closeHandler();
+            if (typeof $scope.cancelHandler === 'function') {
+                $scope.cancelHandler();
+            }
         }
     };
 
@@ -151,7 +156,8 @@ export function MultiImageEditDirective(asset) {
             imagesOriginal: '=',
             isUpload: '=',
             saveHandler: '=',
-            closeHandler: '=',
+            cancelHandler: '=',
+            successHandler: '=',
             hideEditPane: '=',
             getImageUrl: '=',
             getProgress: '=',
