@@ -1,15 +1,15 @@
 export const MEDIA_TYPES = {
-    media: {
+    GALLERY: {
         id: 'media',
         label: 'Media gallery'
     },
-    related_content: {
+    RELATED_CONTENT: {
         id: 'related_content',
         label: 'Related items'
     },
 };
 
-export const MEDIA_TYPE_KEYS = Object.keys(MEDIA_TYPES);
+export const MEDIA_TYPE_KEYS = Object.keys(MEDIA_TYPES).map((type) => MEDIA_TYPES[type].id);
 
 export const DEFAULT_SCHEMA = {
     name: {},

@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import {MEDIA_TYPE_KEYS} from '../constants';
+import {MEDIA_TYPES, MEDIA_TYPE_KEYS} from '../constants';
 
 VocabularyEditController.$inject = [
     '$scope',
@@ -82,7 +82,7 @@ export function VocabularyEditController($scope, gettext, $interpolate, notify, 
             $scope.errorMessage = gettext('The values should be unique for ') + uniqueField;
         }
 
-        if ($scope.vocabulary.field_type === 'media') {
+        if ($scope.vocabulary.field_type === MEDIA_TYPES.GALLERY) {
             const allowedTypes = $scope.vocabulary.field_options.allowed_types;
 
             Object.keys(allowedTypes).forEach((key) => {
