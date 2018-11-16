@@ -2,7 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import {getValidMediaType, canDropMedia} from './Editor3Component';
-import {moveBlock, dragDrop} from '../actions/editor3';
+import {moveBlock, dragDrop, embed} from '../actions/editor3';
+import {getEmbedObject} from './embeds/EmbedInput';
 
 const EDITOR_BLOCK_TYPE = 'superdesk/editor3-block';
 
@@ -39,13 +40,23 @@ class BaseUnstyledComponent extends React.Component<any, any> {
 
         const block = getEditorBlock(event);
 
-        if (block) { // Dragging media around
+        if (typeof block === 'string' && block.length > 0) {
+            // existing media item dropped to another place
             this.props.dispatch(moveBlock(block, this.getDropBlockKey(), this.dropInsertionMode));
-        } else if (canDropMedia(event, this.props.editorProps)) { // Dropping new media
-            const {dataTransfer} = event.originalEvent;
-            const mediaType = getValidMediaType(event.originalEvent);
-            const blockKey = this.getDropBlockKey();
+            return;
+        }
 
+        const {dataTransfer} = event.originalEvent;
+        const mediaType = getValidMediaType(event.originalEvent);
+        const blockKey = this.getDropBlockKey();
+        const link = event.originalEvent.dataTransfer.getData('URL');
+
+        if (typeof link === 'string' && link.startsWith('http')) {
+            getEmbedObject(link)
+                .then((oEmbed) => {
+                    this.props.dispatch(embed(oEmbed, blockKey));
+                });
+        } else if (canDropMedia(event, this.props.editorProps)) { // Dropping new media
             this.props.dispatch(dragDrop(dataTransfer, mediaType, blockKey));
         }
     }

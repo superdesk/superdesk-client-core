@@ -167,7 +167,7 @@ export function MultiImageEditDirective(asset) {
         templateUrl: asset.templateUrl('apps/search/views/multi-image-edit.html'),
         link: function(scope) {
             scope.handleItemClick = function(event, image) {
-                if (event.target != null && event.target.classList.contains("icon-close-small")) {
+                if (event.target != null && event.target.classList.contains('icon-close-small')) {
                     scope.onRemoveItem(image);
                 } else {
                     scope.selectImage(image);
