@@ -54,7 +54,7 @@
 
                 <div class="sd-line-input" ng-if="matchFieldTypeToTab('vocabularies', vocabulary.field_type)">
                     <label for="cv_selection_type" class="sd-line-input__label" translate>Show to users as:</label>
-                    <select class="input-medium" ng-model="vocabulary.selection_type">
+                    <select id="cv_selection_type" class="input-medium" ng-model="vocabulary.selection_type">
                         <option value="{{type.id}}" ng-repeat="type in selectionTypes" translate>{{type.label}}</option>
                     </select>
                 </div>
