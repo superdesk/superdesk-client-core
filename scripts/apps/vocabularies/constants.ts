@@ -15,6 +15,21 @@ export const MEDIA_TYPES = {
 
 export const MEDIA_TYPE_KEYS = Object.keys(MEDIA_TYPES).map((type) => MEDIA_TYPES[type].id);
 
+export const VOCABULARY_SELECTION_TYPES = {
+    SINGLE_SELECTION: {
+        id: 'single selection',
+        label: gettext('Single selection')
+    },
+    MULTIPLE_SELECTION: {
+        id: 'multi selection',
+        label: gettext('Multi selection')
+    },
+    DO_NOT_SHOW: {
+        id: 'do not show',
+        label: gettext('Do not show')
+    },
+};
+
 export const DEFAULT_SCHEMA = {
     name: {},
     qcode: {},

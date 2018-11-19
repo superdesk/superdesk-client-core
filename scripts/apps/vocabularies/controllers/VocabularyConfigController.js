@@ -1,4 +1,4 @@
-import {MEDIA_TYPES, MEDIA_TYPE_KEYS, DEFAULT_SCHEMA} from '../constants';
+import {MEDIA_TYPES, MEDIA_TYPE_KEYS, DEFAULT_SCHEMA, VOCABULARY_SELECTION_TYPES} from '../constants';
 
 VocabularyConfigController.$inject = ['$scope', '$route', '$routeParams', 'vocabularies', '$rootScope',
     'api', 'notify', 'modal', 'session'];
@@ -136,7 +136,7 @@ export function VocabularyConfigController($scope, $route, $routeParams, vocabul
             };
 
             if ($routeParams.type == null) {
-                $scope.vocabulary.selection_type = 'multi selection';
+                $scope.vocabulary.selection_type = VOCABULARY_SELECTION_TYPES.MULTIPLE_SELECTION.id;
             }
         }
 

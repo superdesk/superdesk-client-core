@@ -1,7 +1,5 @@
 import _ from 'lodash';
-import {MEDIA_TYPES, MEDIA_TYPE_KEYS} from '../constants';
-
-const SELECTION_TYPES = ['single selection', 'multi selection', 'do not show'];
+import {MEDIA_TYPES, MEDIA_TYPE_KEYS, VOCABULARY_SELECTION_TYPES} from '../constants';
 
 VocabularyEditController.$inject = [
     '$scope',
@@ -20,7 +18,7 @@ export function VocabularyEditController($scope, gettext, $interpolate, notify, 
     var origVocabulary = _.cloneDeep($scope.vocabulary);
 
     $scope.idRegex = idRegex;
-    $scope.selectionTypes = SELECTION_TYPES;
+    $scope.selectionTypes = VOCABULARY_SELECTION_TYPES;
 
     function onSuccess(result) {
         notify.success(gettext('Vocabulary saved successfully'));

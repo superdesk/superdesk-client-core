@@ -55,7 +55,7 @@
                 <div class="sd-line-input" ng-if="matchFieldTypeToTab('vocabularies', vocabulary.field_type)">
                     <label for="cv_selection_type" class="sd-line-input__label" translate>Show to users as:</label>
                     <select class="input-medium" ng-model="vocabulary.selection_type">
-                        <option value="{{type}}" ng-repeat="type in selectionTypes" translate>{{type}}</option>
+                        <option value="{{type.id}}" ng-repeat="type in selectionTypes" translate>{{type.label}}</option>
                     </select>
                 </div>
 
@@ -87,6 +87,10 @@
 
                     <div class="sd-line-input" ng-if="matchFieldTypeToTab('vocabularies', vocabulary.field_type)">
                         <sd-check ng-model="vocabulary.preffered_items">{{ :: 'Available in user/desk preferences' | translate }}</sd-check>
+                    </div>
+
+                    <div class="form__row" ng-show="matchFieldTypeToTab('text-fields', vocabulary.field_type)">
+                        <sd-check id="field-text-single" ng-model="vocabulary.field_options.single">{{'Single line' | translate}}</sd-check>
                     </div>
 
                     <div class="form__row" ng-show="matchFieldTypeToTab('related-content-fields', vocabulary.field_type)">
@@ -137,10 +141,6 @@
                     <div class="vocabulary-items__button-bar" ng-show="matchFieldTypeToTab('vocabularies', vocabulary.field_type)">
                         <button id="add-new-btn" class="btn btn--primary" ng-click="addItem()"><i class="icon-plus-sign"></i> {{'Add Item' | translate}}</button>
                     </div>
-
-            <div class="sd-line-input" ng-if="matchFieldTypeToTab('vocabularies', vocabulary.field_type)">
-                <sd-check ng-model="vocabulary.single_value">{{ :: 'Accept only single selection' | translate }}</sd-check>
-            </div>
 
             <div ng-if="errorMessage" class="sd-line-input sd-line-input--invalid">
                 <p class="sd-line-input__message">{{ errorMessage }}</p>
