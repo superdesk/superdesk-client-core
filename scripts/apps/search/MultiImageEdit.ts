@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import {uniq} from 'lodash';
 import {validateMediaFieldsThrows} from 'apps/authoring/authoring/controllers/ChangeImageController';
 import {logger} from 'core/services/logger';
 
@@ -128,6 +129,8 @@ export function MultiImageEditController(
 
     function updateMetadata() {
         $scope.metadata = {
+            // subject is required to "usage terms" and other custom fields are editable
+            subject: compare('subject'),
             headline: compare('headline'),
             description_text: compare('description_text'),
             archive_description: compare('archive_description'),
@@ -140,14 +143,14 @@ export function MultiImageEditController(
     }
 
     function compare(fieldName) {
-        const mapOfValues = $scope.getSelectedImages().reduce((acc, item) => {
-            if (item[fieldName] != null) {
-                acc[item[fieldName]] = true;
-            }
-            return acc;
-        }, {});
+        const uniqueValues = uniq(
+            $scope.getSelectedImages()
+                .filter((item) => item[fieldName] != null)
 
-        const uniqueValues = Object.keys(mapOfValues);
+                // IArticle['subject'] is a collection of custom vocabulary items
+                // stringifying is required to compare arrays
+                .map((item) => JSON.stringify(item[fieldName])),
+        );
 
         if (uniqueValues.length < 1) {
             return '';
@@ -156,7 +159,7 @@ export function MultiImageEditController(
             return '';
         } else {
             $scope.placeholder[fieldName] = '';
-            return uniqueValues[0];
+            return JSON.parse(uniqueValues[0]);
         }
     }
 }
