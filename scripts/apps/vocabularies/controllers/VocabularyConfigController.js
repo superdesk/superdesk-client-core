@@ -1,9 +1,9 @@
-import {MEDIA_TYPES, MEDIA_TYPE_KEYS, DEFAULT_SCHEMA} from '../constants';
+import {MEDIA_TYPES, MEDIA_TYPE_KEYS, DEFAULT_SCHEMA, VOCABULARY_SELECTION_TYPES} from '../constants';
 
 VocabularyConfigController.$inject = ['$scope', '$route', '$routeParams', 'vocabularies', '$rootScope',
-    'api', 'notify', 'modal'];
+    'api', 'notify', 'modal', 'session'];
 export function VocabularyConfigController($scope, $route, $routeParams, vocabularies, $rootScope,
-    api, notify, modal) {
+    api, notify, modal, session) {
     $scope.loading = true;
     $scope.mediaTypes = MEDIA_TYPES;
 
@@ -67,14 +67,23 @@ export function VocabularyConfigController($scope, $route, $routeParams, vocabul
      */
     $scope.updateVocabulary = (updates) => {
         const index = $scope.vocabularies.findIndex((v) => v._id === updates._id);
+        var vocabulary = null;
 
         if (index === -1) {
             $scope.vocabularies = [updates].concat($scope.vocabularies);
+            vocabulary = $scope.vocabularies;
         } else {
             $scope.vocabularies[index] = angular.extend({}, $scope.vocabularies[index], updates);
+            vocabulary = $scope.vocabularies[index];
         }
 
-        $rootScope.$broadcast('vocabularies:updated', updates);
+        const dataVocabulary = {
+            user: session.identity._id,
+            vocabulary: vocabulary.display_name || vocabulary._id,
+            vocabulary_id: vocabulary._id,
+        };
+
+        $rootScope.$broadcast('vocabularies:updated', dataVocabulary);
     };
 
     // remove is the UI callback for deleting a vocabulary entry
@@ -125,6 +134,10 @@ export function VocabularyConfigController($scope, $route, $routeParams, vocabul
                 schema: angular.extend({}, DEFAULT_SCHEMA),
                 service: {all: 1}, // needed for vocabulary to be visible in content profile
             };
+
+            if ($routeParams.type == null) {
+                $scope.vocabulary.selection_type = VOCABULARY_SELECTION_TYPES.MULTIPLE_SELECTION.id;
+            }
         }
 
         if ($scope.vocabulary && $scope.vocabulary.field_type === 'date') {

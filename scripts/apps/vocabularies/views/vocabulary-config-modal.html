@@ -52,6 +52,13 @@
                          ng-show="vocabularyForm.$error.maxlength" translate>The helper text must not exceed 120 characters.</div>
                 </div>
 
+                <div class="sd-line-input" ng-if="matchFieldTypeToTab('vocabularies', vocabulary.field_type)">
+                    <label for="cv_selection_type" class="sd-line-input__label" translate>Show to users as:</label>
+                    <select id="cv_selection_type" class="input-medium" ng-model="vocabulary.selection_type">
+                        <option value="{{type.id}}" ng-repeat="type in selectionTypes" translate>{{type.label}}</option>
+                    </select>
+                </div>
+
                 <div class="sd-line-input" ng-if="matchFieldTypeToTab('date-fields', vocabulary.field_type)">
                     <label class="sd-line-input__label" translate>Shortcuts</label>
                     <ul class="date_shortcuts">
@@ -134,10 +141,6 @@
                     <div class="vocabulary-items__button-bar" ng-show="matchFieldTypeToTab('vocabularies', vocabulary.field_type)">
                         <button id="add-new-btn" class="btn btn--primary" ng-click="addItem()"><i class="icon-plus-sign"></i> {{'Add Item' | translate}}</button>
                     </div>
-
-            <div class="sd-line-input" ng-if="matchFieldTypeToTab('vocabularies', vocabulary.field_type)">
-                <sd-check ng-model="vocabulary.single_value">{{ :: 'Accept only single selection' | translate }}</sd-check>
-            </div>
 
             <div ng-if="errorMessage" class="sd-line-input sd-line-input--invalid">
                 <p class="sd-line-input__message">{{ errorMessage }}</p>
