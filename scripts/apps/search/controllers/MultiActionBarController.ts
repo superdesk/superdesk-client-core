@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import {IArticle} from 'superdesk-interfaces/Article';
 
 /**
  * @ngdoc controller
@@ -24,12 +25,12 @@ import _ from 'lodash';
 
 MultiActionBarController.$inject = [
     '$rootScope', 'multi', 'multiEdit', 'multiImageEdit', 'send', 'remove', 'modal', '$q', 'gettext',
-    'packages', 'superdesk', 'notify', 'spike', 'authoring', 'privileges', '$location', 'config',
+    'packages', 'superdesk', 'notify', 'spike', 'authoring', 'privileges', '$location', 'config', 'api',
 ];
 
 export function MultiActionBarController(
     $rootScope, multi, multiEdit, multiImageEdit, send, remove, modal, $q, gettext,
-    packages, superdesk, notify, spike, authoring, privileges, $location, config,
+    packages, superdesk, notify, spike, authoring, privileges, $location, config, api,
 ) {
     this.send = function() {
         send.all(multi.getItems());
@@ -64,14 +65,18 @@ export function MultiActionBarController(
     };
 
     this.multiImageEdit = function() {
-        const originalImages = multi.getItems();
+        // load images fully. Using multi.getItems() doesn't work
+        // since it doesn't contain "subject" required for "usage terms"
 
-        multiImageEdit.edit(originalImages, (editedImages) => Promise.all(
-            originalImages.map((originalImage) => authoring.save(
-                originalImage,
-                _.find(editedImages, (item) => item._id === originalImage._id),
-            )),
-        ));
+        Promise.all(multi.getIds().map((id) => api.find('archive', id)))
+            .then((images) => {
+                multiImageEdit.edit(images, (editedImages) => Promise.all(
+                    images.map((image: IArticle) => authoring.save(
+                        image,
+                        _.find(editedImages, (item) => item._id === image._id),
+                    )),
+                ));
+            });
     };
 
     this.createPackage = function() {
