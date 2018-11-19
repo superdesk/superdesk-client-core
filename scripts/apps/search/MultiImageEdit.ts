@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import {validateMediaFieldsThrows} from 'apps/authoring/authoring/controllers/ChangeImageController';
+import {logger} from 'core/services/logger';
 
 interface IScope extends ng.IScope {
     validator: any;
@@ -58,6 +59,15 @@ export function MultiImageEditController(
     };
 
     $scope.onChange = (field) => {
+        try {
+            if (field == null) {
+                throw new Error('field required');
+            }
+        } catch (e) {
+            logger.error(e);
+            return;
+        }
+
         unsavedChangesExist = true;
         $scope.placeholder[field] = '';
 
