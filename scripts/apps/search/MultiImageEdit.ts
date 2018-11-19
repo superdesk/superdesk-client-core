@@ -141,7 +141,9 @@ export function MultiImageEditController(
 
     function compare(fieldName) {
         const mapOfValues = $scope.getSelectedImages().reduce((acc, item) => {
-            acc[item[fieldName]] = true;
+            if (item[fieldName] != null) {
+                acc[item[fieldName]] = true;
+            }
             return acc;
         }, {});
 
