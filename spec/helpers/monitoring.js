@@ -107,7 +107,7 @@ function Monitoring() {
     };
 
     this.getStageSingleViewTitle = function() {
-        return element.all(by.css('[ng-if="monitoring.singleGroup.singleViewType === \'stage\'"]')).get(0).getText();
+        return element(by.className('subnav__stage-group')).element(by.className('dropdown__toggle')).getText();
     };
 
     this.getSingleViewItemCount = function() {
@@ -119,7 +119,7 @@ function Monitoring() {
     };
 
     this.getMonitoringHomeTitle = function() {
-        return element(by.css('[ng-if="type === \'monitoring\'"]'))
+        return element(by.css('[ng-if="!monitoring.singleGroup && type === \'monitoring\'"]'))
             .element(by.className('dropdown__toggle')).getText();
     };
 

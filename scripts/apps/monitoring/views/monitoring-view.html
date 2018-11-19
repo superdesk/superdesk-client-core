@@ -36,7 +36,7 @@
                 <button class="dropdown__toggle navbtn navbtn--text-only navbtn--padding-s" dropdown-toggle>{{ monitoring.singleGroup.subheader}} {{ monitoring.singleGroup.type | splitText | translate }}<span class="dropdown__caret"></span></button>
                 <ul class="dropdown__menu scrollable">
                     <li><div class="dropdown__menu-label">{{ :: 'Stages' | translate }}</div></li>
-                    <li ng-repeat="card in aggregate.cards" ng-class="{active: monitoring.singleGroup.">
+                    <li ng-repeat="card in aggregate.cards" ng-class="{active: monitoring.singleGroup}">
                         <button class="label-group"
                                 ng-click="monitoring.viewSingleGroup(card, card.type === 'stage' ? card.type : 'single-stage')"
                                 ng-disabled="monitoring.singleGroup._id === card._id"
