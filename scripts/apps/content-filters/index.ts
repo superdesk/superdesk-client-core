@@ -40,7 +40,7 @@ angular.module('superdesk.apps.content_filters', ['superdesk.apps.publish'])
             controllerAs: 'ctrl',
             templateUrl: templateUrl,
             category: superdesk.MENU_SETTINGS,
-            settings_menu_group: coreMenuGroups.CONTENT_CONFIG,
+            settings_menu_group: coreMenuGroups.CONTENT_FLOW,
             priority: -800,
             privileges: {dictionaries: 1},
         });
