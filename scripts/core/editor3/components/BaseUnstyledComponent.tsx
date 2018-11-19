@@ -41,6 +41,21 @@ class BaseUnstyledComponent extends React.Component<any, any> {
 
         if (block) { // Dragging media around
             this.props.dispatch(moveBlock(block, this.getDropBlockKey(), this.dropInsertionMode));
+            return;
+        }
+
+        const {dataTransfer} = event.originalEvent;
+        const mediaType = getValidMediaType(event.originalEvent);
+        const blockKey = this.getDropBlockKey();
+        const link = event.originalEvent.dataTransfer.getData('URL');
+
+        if (typeof link === 'string' && link.startsWith('http')) {
+            getEmbedObject(link)
+                .then((oEmbed) => {
+                    this.props.dispatch(embed(oEmbed, blockKey));
+                });
+        } else if (mediaType === 'text/html') {
+            this.props.dispatch(embed(event.originalEvent.dataTransfer.getData(mediaType), blockKey));
         } else if (canDropMedia(event, this.props.editorProps)) { // Dropping new media
             const {dataTransfer} = event.originalEvent;
             const mediaType = getValidMediaType(event.originalEvent);

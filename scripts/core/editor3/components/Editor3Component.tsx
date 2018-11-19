@@ -34,6 +34,7 @@ const VALID_MEDIA_TYPES = [
     'application/superdesk.item.graphic',
     'application/superdesk.item.video',
     'application/superdesk.item.audio',
+    'text/uri-list',
     'text/html',
     'Files',
 ];
