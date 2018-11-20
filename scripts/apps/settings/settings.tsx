@@ -36,7 +36,11 @@ class SettingsComponent extends React.Component<IProps, IState> {
         }
 
         superdesk.getMenu(superdesk.MENU_SETTINGS).then((flatMenuItems) => {
-            this.setState({flatMenuItems: flatMenuItems, loading: false});
+            this.setState({
+                flatMenuItems: flatMenuItems.sort((a, b) =>
+                    b.settings_menu_group.priority - a.settings_menu_group.priority),
+                loading: false,
+            });
         });
     }
     render() {
