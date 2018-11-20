@@ -184,10 +184,14 @@ export function AuthoringHeaderDirective(api, authoringWidgets, $rootScope, arch
                 scope.popup_width = metadata.popup_width;
                 scope.single_value = metadata.single_value;
 
-                scope.$watch('item.anpa_category', (services) => {
+                scope.$watchGroup(['item.anpa_category', 'editor', 'schema'], ([services, editor, schema]) => {
+                    if (editor == null || schema == null) {
+                        return;
+                    }
+
                     var qcodes = _.map(services, 'qcode');
 
-                    metadata.getCustomVocabulariesForArticleHeader(qcodes, scope.editor, scope.schema).then((cvs) => {
+                    metadata.getCustomVocabulariesForArticleHeader(qcodes, editor, schema).then((cvs) => {
                         scope.cvs = _.sortBy(cvs, 'priority');
                         scope.genreInCvs = _.map(cvs, 'schema_field').indexOf('genre') !== -1;
                         scope.placeInCvs = _.map(cvs, 'schema_field').indexOf('place') !== -1;

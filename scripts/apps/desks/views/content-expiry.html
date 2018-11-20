@@ -22,9 +22,9 @@
                   title="{{ contentExpiry.actualExpiry.expiry | translate}}">{{ contentExpiry.actualExpiry.text | translate }}</span>
         </label>
     </div>
-    <div class="form__row form__row--flex">
+    <div class="form__row form__row--flex form__row--no-padding">
         <div class="form__row-item form__row-item--no-grow">
-            <div class="sd-line-input">
+            <div class="sd-line-input sd-line-input--no-margin">
                 <input class="sd-line-input__input sd-line-input__input--mini" type="number" ng-model="contentExpiry.days" min ="0" required>
             </div>
         </div>
@@ -32,7 +32,7 @@
             <span class="" translate>days</span>
         </div>
         <div class="form__row-item form__row-item--no-grow">
-            <div class="sd-line-input">
+            <div class="sd-line-input sd-line-input--no-margin">
                 <input class="sd-line-input__input sd-line-input__input--mini" type="number" ng-model="contentExpiry.hours" min ="0" max="23" required>
             </div>
         </div>
@@ -40,7 +40,7 @@
             <span class="" translate>hr</span>
         </div>
         <div class="form__row-item form__row-item--no-grow">
-            <div class="sd-line-input">
+            <div class="sd-line-input sd-line-input--no-margin">
                 <input class="sd-line-input__input sd-line-input__input--mini" type="number" ng-model="contentExpiry.minutes" min ="0" max="59" required>
             </div>
         </div>

@@ -1085,6 +1085,12 @@ input {
         width: 40px;
     }
 }
+.sd-line-input {
+    select.sd-line-input__select.sd-line-input__select--mini {
+        text-align: center;
+        width: 45px;
+    }
+}
 
 .helper-text {
     display: inline-block;

@@ -658,7 +658,7 @@
 
 
 <div class="field" ng-repeat="field in fields track by field._id"
-     ng-if="field.field_type === 'related-content'"
+     ng-if="field.field_type === mediaTypes.RELATED_CONTENT.id"
      sd-width="{{editor[field._id].sdWidth || 'full'}}"
      sd-validation-error="error[field._id.toLowerCase()]"
      order="{{editor[field._id].order}}"
