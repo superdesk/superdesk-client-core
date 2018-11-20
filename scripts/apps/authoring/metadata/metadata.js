@@ -853,7 +853,9 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
 
                 if (!reloadList) {
                     scope.terms.push(term);
-                    scope.activeTree.push(term);
+                    if (scope.activeTree.find((item) => item.qcode === term.qcode) == null) {
+                        scope.activeTree.push(term);
+                    }
                     scope.activeTree = $filter('sortByName')(scope.activeTree);
                     scope.allSelected = false;
                 }
