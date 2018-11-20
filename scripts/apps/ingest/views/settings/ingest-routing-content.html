@@ -16,6 +16,10 @@
                         <button ng-click="remove(scheme)" title="{{:: 'Remove scheme' | translate }}"><i class="icon-trash"></i></button>
                     </div>
                 </div>
+                <div class="sd-list-item__action-menu sd-list-item__action-menu--direction-row">
+                    <button class="icn-btn" ng-click="edit(scheme)" title="{{:: 'Edit scheme' | translate }}"><i class="icon-pencil"></i></button>
+                    <button class="icn-btn" ng-click="remove(scheme)" title="{{:: 'Remove scheme' | translate }}"><i class="icon-trash"></i></button>
+                </div>
             </li>
         </ul>
     </div>
@@ -23,23 +27,22 @@
 
 <!-- Modal -->
 <div sd-modal data-model="editScheme" class="add-scheme-modal modal--tabs">
-    <div class="modal__header">
-        <a href="" class="close" ng-click="cancel()">
-            <i class="icon-close-small"></i>
-        </a>
+    <div class="modal__header modal__header--flex">
         <h3 class="modal__heading" translate ng-show="editScheme._id" translate>Edit Scheme</h3>
         <h3 class="modal__heading" translate ng-hide="editScheme._id" translate>Add New Scheme</h3>
+        <a href="" class="icn-btn close" ng-click="cancel()"><i class="icon-close-small"></i></a>
     </div>
 
     <div class="modal__body">    
         <form name="schemeForm">
-            <div class="modal__body-header modal__body-header--add-padding">
-                <div class="field">
-                    <label translate>Scheme name</label>
-                    <input type="text" class="line-input input" placeholder="{{ 'Scheme name'|translate }}" ng-model="editScheme.name" required>
-                </div>
-            </div>
+
             <div class="modal__body-content">
+                    <div class="form__row" style="padding: 1.6rem 2rem; border-bottom: 1px solid rgba(123, 123, 123, 0.2);">
+                            <div class="sd-line-input sd-line-input--boxed sd-line-input--required sd-line-input--boxed sd-line-input--no-margin">
+                                <label class="sd-line-input__label" translate>Scheme name</label>
+                                <input class="sd-line-input__input" type="text" class="line-input input" placeholder="{{ 'Scheme name'|translate }}" ng-model="editScheme.name" required>
+                            </div>
+                        </div>
                 <div class="split-view">
 
                     <div class="sidebar">

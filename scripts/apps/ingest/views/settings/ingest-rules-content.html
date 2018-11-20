@@ -16,6 +16,10 @@
                         <button ng-click="remove(ruleset)" title="{{:: 'Remove rule set' | translate }}"><i class="icon-trash"></i></button>
                     </div>
                 </div>
+                <div class="sd-list-item__action-menu sd-list-item__action-menu--direction-row">
+                    <button class="icn-btn" ng-click="edit(ruleset)" title="{{:: 'Edit rule set' | translate }}"><i class="icon-pencil"></i></button>
+                    <button class="icn-btn" ng-click="remove(ruleset)" title="{{:: 'Remove rule set' | translate }}"><i class="icon-trash"></i></button>
+                </div>
             </li>
         </ul>
     </div>
@@ -23,35 +27,44 @@
 
 <!-- Modal -->
 <div sd-modal data-model="editRuleset" class="modal--tabs">
-    <div class="modal__header"> <a href="" class="close" ng-click="cancel()"><i class="icon-close-small"></i></a>
+    <div class="modal__header  modal__header--flex"> 
         <h3 class="modal__heading" translate ng-show="editRuleset._id" translate>Edit Rule set</h3>
         <h3 class="modal__heading" translate ng-hide="editRuleset._id" translate>Add New Rule Set</h3>
+        <a href="" class="icn-btn close" ng-click="cancel()"><i class="icon-close-small"></i></a>
     </div>
     <form name="rulesetForm" class="modal__body">
-        <div class="modal__body-header modal__body-header--add-padding">
-            <input type="text" class="input-xlarge" placeholder="{{ 'Rule set name'|translate }}" ng-model="editRuleset.name" required>
-            <button class="btn btn--primary pull-right" ng-disabled="!rulesetForm.$valid" ng-click="addRule()"><i class="icon-plus-large"></i> {{:: 'Add rule' | translate}}</button>
-        </div>
         <div class="modal__body-content">
+            <div class="for__row">
+                <div class="sd-line-input sd-line-input--boxed sd-line-input--required">
+                    <label class="sd-line-input__label">{{'Rule set name'| translate}}</label>
+                    <input class="sd-line-input__input" type="text" placeholder="{{ 'Rule set name'|translate }}" ng-model="editRuleset.name" required>
+                </div>
+            </div>
             <div sd-sortrules>
-                <div ng-repeat="rule in editRuleset.rules" class="grid grid--padding-fix">
-                    <div class="grid__item order">#{{$index}}</div>
-                    <fieldset class="grid__item">
-                        <div class="grid">
-                            <div class="grid__item">
-                                <input type="text" placeholder="old" ng-model="rule.old" required>
-                            </div>
-                            <div class="grid__item">
-                                <input type="text" placeholder="new" ng-model="rule.new">
-                            </div>
+                <div class="form__row form__row--flex form__row--bordered" ng-repeat="rule in editRuleset.rules" >
+                    <div class="form__row-item form__row-item--no-grow">
+                        <span>#{{$index}}</span>
+                    </div>
+                    <div class="form__row-item">
+                        <div class="sd-line-input sd-line-input--boxed sd-line-input--no-label sd-line-input--no-margin">
+                            <input class="sd-line-input__input" type="text" placeholder="old" ng-model="rule.old" required>
                         </div>
-                    </fieldset>
-                    <div class="grid__item actions">
-                        <button ng-click="removeRule(rule)"><i class="icon-trash"></i></button>
+                    </div>
+                    <div class="form__row-item">
+                        <div class="sd-line-input sd-line-input--boxed sd-line-input--no-label sd-line-input--no-margin">
+                            <input class="sd-line-input__input" type="text" placeholder="new" ng-model="rule.new">
+                        </div>
+                    </div>
+
+                    <div class="form__row-item form__row-item--no-grow">
+                        <button class="icn-btn" ng-click="removeRule(rule)"><i class="icon-trash"></i></button>
                     </div>
                 </div>
             </div>
             <p ng-if="!editRuleset.rules" translate>No rules defined in a set.</p>
+            <div class="for__row form__row--inner">
+                <button class="btn btn--primary btn--hollow btn--large btn--expanded" ng-disabled="!rulesetForm.$valid" ng-click="addRule()"><i class="icon-plus-sign"></i> {{:: 'Add rule' | translate}}</button>
+            </div>
         </div>
         <div class="modal__body-footer">
             <button class="btn" ng-click="cancel()" translate>Cancel</button>

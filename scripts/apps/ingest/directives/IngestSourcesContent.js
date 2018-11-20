@@ -79,14 +79,37 @@ export function IngestSourcesContent(ingestSources, gettext, notify, api, $locat
                     13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24];
                 $scope.ingestExpiry = deployConfig.getSync('ingest_expiry_minutes');
 
+                $scope.search = function(query) {
+                    $scope.searchQuery = query;
+                    fetchProviders();
+                };
+
                 function fetchProviders() {
-                    return api.ingestProviders.query({
-                        max_results: $location.search().max_results || 25,
-                        page: $location.search().page || 1,
-                        sort: 'name',
-                    }).then((result) => {
-                        $scope.providers = result;
-                    });
+                    var criteria = criteria || {};
+
+                    criteria.max_results = $location.search().max_results || 25;
+                    criteria.page = $location.search().page || 1;
+                    criteria.sort = 'name';
+                    var orTerms = null;
+
+                    if (!_.isEmpty($scope.searchQuery)) {
+                        orTerms = {$or: [
+                            {name: {
+                                $regex: $scope.searchQuery,
+                                $options: '-i'},
+                            },
+                        ]};
+                    }
+
+                    if (orTerms !== null) {
+                        criteria.page = 1;
+                        criteria.where = JSON.stringify(orTerms);
+                    }
+
+                    return api.ingestProviders.query(criteria)
+                        .then((result) => {
+                            $scope.providers = result;
+                        });
                 }
 
                 function openProviderModal() {
