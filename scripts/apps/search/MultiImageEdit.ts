@@ -116,10 +116,8 @@ export function MultiImageEditController(
                         $scope.cancelHandler();
                     }
                 });
-        } else {
-            if (typeof $scope.cancelHandler === 'function') {
-                $scope.cancelHandler();
-            }
+        } else if (typeof $scope.cancelHandler === 'function') {
+            $scope.cancelHandler();
         }
     };
 
