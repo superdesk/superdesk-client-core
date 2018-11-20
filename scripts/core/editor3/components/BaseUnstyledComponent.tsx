@@ -49,7 +49,9 @@ class BaseUnstyledComponent extends React.Component<any, any> {
         const blockKey = this.getDropBlockKey();
         const link = event.originalEvent.dataTransfer.getData('URL');
 
-        if (
+        if (canDropMedia(event, this.props.editorProps) && mediaType.includes('application/superdesk')) {
+            this.props.dispatch(dragDrop(dataTransfer, mediaType, blockKey));
+        } else if (
             typeof link === 'string'
             && link.startsWith('http')
             && this.props.editorProps.editorFormat.includes('embed')
@@ -60,12 +62,8 @@ class BaseUnstyledComponent extends React.Component<any, any> {
                 });
         } else if (mediaType === 'text/html' && this.props.editorProps.editorFormat.includes('embed')) {
             this.props.dispatch(embed(event.originalEvent.dataTransfer.getData(mediaType), blockKey));
-        } else if (canDropMedia(event, this.props.editorProps)) { // Dropping new media
-            const {dataTransfer} = event.originalEvent;
-            const mediaType = getValidMediaType(event.originalEvent);
-            const blockKey = this.getDropBlockKey();
-
-            this.props.dispatch(dragDrop(dataTransfer, mediaType, blockKey));
+        } else {
+            console.warn('unsupported media type on drop', mediaType);
         }
     }
 
