@@ -161,13 +161,14 @@ const processCells = (state, fn) => {
     const {i, j, key, currentStyle, selection} = activeCell;
     const contentState = editorState.getCurrentContent();
     const block = contentState.getBlockForKey(key);
-    const {cells, numRows, numCols, withHeader} = getData(editorState, block);
+    const {cells, numRows, numCols, withHeader} = getData(contentState, block);
     const {data, newCurrentStyle} = fn(cells, numCols, numRows, i, j, withHeader, currentStyle, selection);
     const newEditorState = setData(editorState, block, data, 'change-block-data');
-    const entityDataHasChanged = true;
 
-    if (newCurrentStyle != null) {
-        const newState = {
+    let newState = state;
+
+    if (newCurrentStyle !== null) {
+        newState = {
             ...state,
             activeCell: {
                 ...activeCell,
@@ -175,11 +176,9 @@ const processCells = (state, fn) => {
                 selection: selection,
             },
         };
-
-        return onChange(newState, newEditorState, entityDataHasChanged);
-    } else {
-        return onChange(state, newEditorState, entityDataHasChanged);
     }
+
+    return onChange(newState, newEditorState, true);
 };
 
 /**

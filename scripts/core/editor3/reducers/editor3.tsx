@@ -89,7 +89,7 @@ export const forceUpdate = (state, keepSelection = false) => {
  * @return {Object} returns new state
  * @description Handle the editor state has been changed event
  */
-export const onChange = (state, newState, force = false, keepSelection = false, skipOnChange = false) => {
+export const onChange = (state, newState: EditorState, force = false, keepSelection = false, skipOnChange = false) => {
     // TODO(x): Remove `force` once Draft v0.11.0 is in
     const editorState = newState;
 

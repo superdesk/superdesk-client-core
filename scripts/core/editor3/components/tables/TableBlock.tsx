@@ -68,7 +68,7 @@ export class TableBlockComponent extends React.Component<any, any> {
     getData() {
         const {block, editorState} = this.props;
 
-        return getData(editorState, block);
+        return getData(editorState.getCurrentContent(), block);
     }
 
     onFocus(i, j, currentStyle, selection) {

@@ -1,3 +1,4 @@
+import {ContentState} from 'draft-js';
 import {HTMLGenerator} from './to-html';
 
 /**
@@ -6,6 +7,6 @@ import {HTMLGenerator} from './to-html';
  * @description Converts DraftJS ContentState to HTML.
  * @returns {string} HTML
  */
-export function toHTML(contentState) {
+export function toHTML(contentState: ContentState) {
     return new HTMLGenerator(contentState).html();
 }
