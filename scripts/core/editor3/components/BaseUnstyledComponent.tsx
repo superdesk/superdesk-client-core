@@ -51,7 +51,11 @@ class BaseUnstyledComponent extends React.Component<any, any> {
         const blockKey = this.getDropBlockKey();
         const link = event.originalEvent.dataTransfer.getData('URL');
 
-        if (typeof link === 'string' && link.startsWith('http')) {
+        if (
+            typeof link === 'string'
+            && link.startsWith('http')
+            && this.props.editorProps.editorFormat.includes('embed')
+        ) {
             getEmbedObject(link)
                 .then((oEmbed) => {
                     this.props.dispatch(embed(oEmbed, blockKey));
