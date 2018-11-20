@@ -45,6 +45,7 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
     };
 
     const EDITABLE_METADATA = [
+        'subject', // required for "usage terms" and other fields based on vocabularies
         'headline',
         'description_text',
         'archive_description',

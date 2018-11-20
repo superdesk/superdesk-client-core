@@ -13,6 +13,12 @@ class Logger {
         }
     }
 
+    error(e: Error) {
+        console.error(e);
+
+        Raven.captureException(e);
+    }
+
     warn(message, additionalData) {
         const data = {};
 
