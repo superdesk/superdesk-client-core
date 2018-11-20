@@ -65,13 +65,29 @@ export function MultiActionBarController(
     };
 
     this.multiImageEdit = function() {
+        const originalImages = multi.getItems();
         // load images fully. Using multi.getItems() doesn't work
         // since it doesn't contain "subject" required for "usage terms"
 
         Promise.all(multi.getIds().map((id) => api.find('archive', id)))
-            .then((images) => {
-                multiImageEdit.edit(images, (editedImages) => Promise.all(
-                    images.map((image: IArticle) => authoring.save(
+            .then((imagesFromDatabase) => {
+
+                // <TECHNICAL DEBT>
+                // UI state(`selected` property of the article) is stored on a database/API entity
+                // because of that, it's not possible to use the latest data from the API
+                // and it has to be patched on top of old data in order for UI state related properties to be preserved
+                imagesFromDatabase.forEach((imageFromDb: IArticle) => {
+                    const originalImage = originalImages.find((i) => i._id === imageFromDb._id);
+
+                    // attaching missing properties to originalImages
+                    for (const prop in imageFromDb) {
+                        originalImage[prop] = imageFromDb[prop];
+                    }
+                });
+                // </TECHNICAL DEBT>
+
+                multiImageEdit.edit(originalImages, (editedImages) => Promise.all(
+                    originalImages.map((image: IArticle) => authoring.save(
                         image,
                         _.find(editedImages, (item) => item._id === image._id),
                     )),
