@@ -1,5 +1,20 @@
 # Superdesk Client Changelog
 
+## [1.26.1] 2018-11-20
+
+### Fixed
+
+- Fix the display of contextual menu for published items on move.
+- Fix embedding items from ansa metasearch in editor3.
+- Usage terms can not be edited in media editor.
+- Fix missing vocabularies in authoring header.
+- Prefer superdesk media when dropping items to editor3.
+- Translation widget fails loading the list of translations.
+- Multimedia are not added to the story when the new upload is used.
+- Change the type of related content.
+- Uploading media to master is not working.
+- Changes are not saved in saved searches if search is not clicked first.
+
 ## [1.26.0] 2018-11-12
 
 ### TBD
