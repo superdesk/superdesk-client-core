@@ -62,7 +62,6 @@ class BaseUnstyledComponent extends React.Component<any, any> {
                 });
         } else if (mediaType === 'text/html' && this.props.editorProps.editorFormat.includes('embed')) {
             this.props.dispatch(embed(event.originalEvent.dataTransfer.getData(mediaType), blockKey));
-
         } else if (canDropMedia(event, this.props.editorProps)) { // Dropping new media
             this.props.dispatch(dragDrop(dataTransfer, mediaType, blockKey));
         }

@@ -39,7 +39,7 @@ class SettingsComponent extends React.Component<IProps, IState> {
             this.setState({
                 flatMenuItems: flatMenuItems.sort((a, b) =>
                     b.settings_menu_group.priority - a.settings_menu_group.priority),
-                loading: false
+                loading: false,
             });
         });
     }
