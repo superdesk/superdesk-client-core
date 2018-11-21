@@ -183,11 +183,6 @@
 
 .flat-searchbar {
     flex-grow: 0;
-    &.monitoring-flat-searchbar {
-        .search-handler {
-
-        }
-    }
     .search-handler {
         min-width: 48px;
         height: $nav-height;
@@ -954,9 +949,6 @@
                 .text {
                     color: #333;
                 }
-                .date, .date time {
-
-                }
             }
             &.active {
                 border-color: #999;
@@ -1122,15 +1114,8 @@
         min-width: auto !important;
     }
     .direction {
-        margin-left: 5px;
         background: none;
-        border: 0;
-        @include opacity(60);
-        &.btn {
-            &:hover {
-                box-shadow: none;
-            }
-        }
+        @include opacity(80);
     }
 }
 
@@ -1626,7 +1611,6 @@
 
         > div {
             float: none !important;
-            display: inline-block;
         }
     }
 }
@@ -1645,7 +1629,6 @@
 .scroll-shadow {
     height: 0;
     .inner {
-        //-webkit-mask-box-image: -webkit-gradient(linear,left top,right top,color-stop(0.0,rgba(0,0,0,0)),color-stop(0.3,rgba(0,0,0,.8)),color-stop(0.7,rgba(0,0,0,.8)),color-stop(1.0,rgba(0,0,0,0)));
         background: -webkit-gradient(linear,left top,left bottom,from(rgba(0,0,0,.10)),to(transparent));
         height: 4px;
         position: relative;
@@ -1870,4 +1853,21 @@
 
 .sd-line-input__message--with-char-count {
     padding-right: 10rem;
+}
+
+.sd-list-item {
+    &.inactive {
+        background-color: transparent;
+        color: rgba(123, 123, 123, 0.75);
+    }
+}
+
+.sd-toggle + label {
+    letter-spacing: 0;
+}
+.sd-list-item__text-label {
+    time {
+        padding: 0;
+        font-style: normal;
+    }
 }

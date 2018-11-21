@@ -130,17 +130,3 @@ export function removeBlock(blockKey) {
 export function toggleInvisibles() {
     return {type: 'TOOLBAR_TOGGLE_INVISIBLES'};
 }
-
-/**
- * @ngdoc method
- * @name embed
- * @param {Object|string} oEmbed code, HTML string.
- * @return {Object}
- * @description Dispatches the action to use the given oEmbed data for media embedding.
- */
-export function embed(code) {
-    return {
-        type: 'TOOLBAR_APPLY_EMBED',
-        payload: code,
-    };
-}

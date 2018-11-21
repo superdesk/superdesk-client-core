@@ -34,6 +34,7 @@ const VALID_MEDIA_TYPES = [
     'application/superdesk.item.graphic',
     'application/superdesk.item.video',
     'application/superdesk.item.audio',
+    'text/uri-list',
     'text/html',
     'Files',
 ];
@@ -43,11 +44,13 @@ export const EDITOR_GLOBAL_REFS = 'editor3-refs';
 /**
  * Get valid media type from event dataTransfer types
  *
+ * Prefer superdesk media types
+ *
  * @param {Event} event
  * @return {String}
  */
 export function getValidMediaType(event) {
-    return event.dataTransfer.types.find((mediaType) => VALID_MEDIA_TYPES.indexOf(mediaType) !== -1);
+    return VALID_MEDIA_TYPES.find((mediaType) => event.dataTransfer.types.indexOf(mediaType) !== -1);
 }
 
 /**

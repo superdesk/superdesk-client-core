@@ -1,4 +1,5 @@
-<div class="modal__header modal__header--flex">
+
+<div ng-if="isUpload !== true" class="modal__header modal__header--flex">
     <h3 class="modal__heading modal__heading--no-grow" translate>Edit metadata</h3>
 
     <div class="modal__header-buttons  modal__header-buttons--center modal__header-element-grow button-nav"></div>
@@ -7,6 +8,15 @@
         <button class="btn btn--ui-dark btn--hollow" ng-click="close()" translate>Close</button>
         <button class="btn btn--primary btn--hollow" ng-click="save()" ng-disabled="!isDirty()" translate>Save</button>
         <button class="btn btn--primary btn--hollow" ng-click="save(true)" ng-disabled="!isDirty()" translate>Save & Close</button>
+    </div>
+</div>
+<div ng-if="isUpload === true" class="modal__header modal__header--flex">
+    <h3 class="modal__heading modal__heading--grow" translate>Upload media</h3>
+
+    <div class="modal__header-buttons modal__header-buttons--right">
+        <button class="btn btn--ui-dark btn--hollow" ng-click="close()" ng-disabled="uploadInProgress" translate>Cancel</button>
+        <div ng-transclude="select-desk"></div>
+        <button class="btn btn--primary btn--hollow" ng-click="save(true)" ng-disabled="!isDirty()" translate>Upload</button>
     </div>
 </div>
 
@@ -18,11 +28,20 @@
                     <div class="sd-grid-list dark-ui">
 
                         <div class="sd-grid-item sd-grid-item--with-click"
-                             ng-click="selectImage(image)"
-                             ng-repeat="image in origin track by image._id"
-                             ng-class="{'sd-grid-item--selected' : !image.unselected}">
+                             ng-click="handleItemClick($event, image)"
+                             ng-repeat="image in images track by image._id"
+                             ng-class="{'sd-grid-item--selected' : !image.unselected}"
+                             style="z-index: 1;"><!--  // required so it's visible on top or drag-and-drop layer -->
                             <div class="sd-grid-item__thumb">
-                                <img ng-src="{{image.renditions.thumbnail.href}}"/>
+                                <img ng-src="{{getImageUrl(image)}}"/>
+
+                                <a ng-if="onRemoveItem" class="icn-btn sd-grid-item__remove" sd-tooltip="Remove item" flow="left">
+                                    <i class="icon-close-small"></i>
+                                </a>
+
+                                <span ng-if="getProgress && getProgress(image) > 0" class="sd-grid-item__progress-circle">
+                                    <sd-circular-progress value="getProgress(image)" class="sd-circular-progress--m"></sd-circular-progress>
+                                </span>
                             </div>
                             <div class="sd-grid-item__content">
                                 <time sd-absdate datetime="image.versioncreated"></time>
@@ -39,13 +58,13 @@
                                 </div>
                             </div>
                         </div>
-
+                        <div ng-transclude="additional-content"></div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="sd-column-box__slide-in-column sd-column-box__slide-in-column--large sd-column-box__slide-in-column--dark-ui">
+        <div ng-if="hideEditPane !== true" class="sd-column-box__slide-in-column sd-column-box__slide-in-column--large sd-column-box__slide-in-column--dark-ui">
             <div class="sd-column-box__slide-in-column-inner sd-slide-in-panel">
                 <div class="sd-slide-in-panel__header">
                     <h3 class="sd-slide-in-panel__heading" translate>Metadata</h3>
@@ -53,15 +72,14 @@
                 <div class="sd-slide-in-panel__content">
                     <div class="sd-slide-in-panel__content-block sd-slide-in-panel__content-block--first">
                         <div class="sd-alert sd-alert--hollow sd-alert--primary sd-alert--small" style="margin: -1rem 0 3rem;">
-                            <span translate>Currently editing: {{images.length}} items</span>
+                            <span translate>Currently editing: {{getSelectedImages().length}} items</span>
                         </div>
                         <div sd-media-metadata-editor
                             data-item="metadata"
                             data-validator="validator"
-                            data-disabled="!images.length"
+                            data-disabled="!getSelectedImages().length"
                             data-dark="true"
                             data-boxed="true"
-                            data-on-blur="onBlur()"
                             data-on-change="onChange(key)"
                             data-placeholder="placeholder"
                         ></div>

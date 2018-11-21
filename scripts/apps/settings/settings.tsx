@@ -36,7 +36,11 @@ class SettingsComponent extends React.Component<IProps, IState> {
         }
 
         superdesk.getMenu(superdesk.MENU_SETTINGS).then((flatMenuItems) => {
-            this.setState({flatMenuItems: flatMenuItems, loading: false});
+            this.setState({
+                flatMenuItems: flatMenuItems.sort((a, b) =>
+                    b.settings_menu_group.priority - a.settings_menu_group.priority),
+                loading: false,
+            });
         });
     }
     render() {
@@ -62,7 +66,19 @@ class SettingsComponent extends React.Component<IProps, IState> {
         const currentRoute = this.props.$route.current;
 
         for (const key in menuItemsByGroup) {
-            menuItemsByGroup[key] = menuItemsByGroup[key].sort((a, b) => b.priority - a.priority);
+            menuItemsByGroup[key] = menuItemsByGroup[key].sort((a, b) => {
+                let textA = a.label.toLowerCase();
+                let textB = b.label.toLowerCase();
+                // to sort alphabetically
+
+                if (textA < textB) {
+                    return -1;
+                }
+                if (textA > textB) {
+                    return 1;
+                }
+                return 0;
+            });
 
             listToRender.push(
                 <li key={++reactKey} className="sd-left-nav__group-header">{coreMenuGroups[key].getLabel(gettext)}</li>,

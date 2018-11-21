@@ -1,4 +1,4 @@
-import {MultiImageEditController} from '../services/MultiImageEditService';
+import {MultiImageEditController} from '../MultiImageEdit';
 
 describe('multi image edit controller', () => {
     beforeEach(window.module('superdesk.core.translate'));
@@ -9,7 +9,9 @@ describe('multi image edit controller', () => {
         const data = [];
         const $scope = $rootScope.$new();
 
-        $controller(MultiImageEditController, {$scope, data});
+        $scope.imagesOriginal = data;
+
+        $controller(MultiImageEditController, {$scope});
 
         spyOn(modal, 'confirm').and.returnValue($q.reject());
         $scope.$close = jasmine.createSpy('$close');
@@ -26,8 +28,10 @@ describe('multi image edit controller', () => {
         const data = [item];
         const $scope = $rootScope.$new();
 
-        $controller(MultiImageEditController, {$scope, data});
-        spyOn(authoring, 'save').and.returnValue($q.when());
+        $scope.imagesOriginal = data;
+        $scope.saveHandler = () => $q.when();
+
+        $controller(MultiImageEditController, {$scope});
 
         expect($scope.isDirty()).toBe(false);
 

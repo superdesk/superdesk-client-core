@@ -1,4 +1,5 @@
 import {mapValues} from 'lodash';
+
 /**
  * Gives top shadow for scroll elements
  *
@@ -275,6 +276,7 @@ function DatepickerDirective($document) {
             dt: '=ngModel',
             disabled: '=ngDisabled',
             tabindex: '=',
+            shortcuts: '=',
             format: '@',
             onChange: '&',
         },
@@ -326,6 +328,7 @@ function DatepickerInnerDirective($compile, $document, popupService, datetimeHel
         scope: {
             open: '=opened',
             dtFormat: '=format',
+            shortcuts: '=?',
         },
         link: function(scope, element, attrs, ctrl) {
             var VIEW_DATE_FORMAT = config.view.dateformat;
@@ -367,11 +370,16 @@ function DatepickerInnerDirective($compile, $document, popupService, datetimeHel
             };
 
             // select one of predefined dates
-            scope.select = function(offset) {
-                var day = moment().startOf('day')
-                    .add(offset, 'days');
+            scope.selectShortcut = function(offset, type) {
+                const day = moment().startOf('day')
+                    .add(offset, type);
 
                 scope.dateSelection(day);
+            };
+
+            // select one of predefined dates
+            scope.select = function(offset) {
+                scope.selectShortcut(offset, 'days');
             };
 
             ctrl.$render = function() {

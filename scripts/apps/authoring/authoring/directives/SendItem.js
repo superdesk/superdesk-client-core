@@ -3,11 +3,11 @@ import React from 'react';
 import {PreviewModal} from '../previewModal';
 
 
-SendItem.$inject = ['$q', 'api', 'desks', 'notify', 'authoringWorkspace',
+SendItem.$inject = ['$q', 'api', 'search', 'desks', 'notify', 'authoringWorkspace',
     'superdeskFlags', '$location', 'macros', '$rootScope', 'deployConfig',
     'authoring', 'send', 'editorResolver', 'confirm', 'archiveService',
     'preferencesService', 'multi', 'datetimeHelper', 'config', 'privileges', 'storage', 'modal', 'gettext', 'urls'];
-export function SendItem($q, api, desks, notify, authoringWorkspace,
+export function SendItem($q, api, search, desks, notify, authoringWorkspace,
     superdeskFlags, $location, macros, $rootScope, deployConfig,
     authoring, send, editorResolver, confirm, archiveService,
     preferencesService, multi, datetimeHelper, config, privileges, storage, modal, gettext, urls) {
@@ -342,17 +342,29 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                 } else if (scope.mode === 'archive') {
                     return sendContent(deskId, stageId, scope.selectedMacro, open);
                 } else if (scope.config) {
-                    scope.config.promise.finally(() => {
-                        scope.loading = false;
-                    });
-
-                    return scope.config.resolve({
+                    let data = {
                         desk: deskId,
                         stage: stageId,
                         macro: scope.selectedMacro ? scope.selectedMacro.name : null,
                         open: open,
                         sendAllPackageItems: sendAllPackageItems,
+                    };
+
+                    scope.config.promise.finally(() => {
+                        scope.loading = false;
                     });
+
+                    if (sendAllPackageItems && scope.config.packageItemIds) {
+                        return containsPublishedItems(scope.config.packageItemIds).then((result) => {
+                            if (result) {
+                                return confirmMovePackage().then(
+                                    () => scope.config.resolve(data), () => scope.config.reject());
+                            }
+                            return scope.config.resolve(data);
+                        });
+                    }
+
+                    return scope.config.resolve(data);
                 } else if (scope.mode === 'ingest') {
                     return sendIngest(deskId, stageId, scope.selectedMacro, open);
                 }
@@ -540,6 +552,28 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                 return $q.when(item);
             }
 
+            const confirmMovePackage = () =>
+                modal.confirm(
+                    gettext('The package contains published items which can\'t be moved.'),
+                    gettext('Warning'),
+                    gettext('Continue'),
+                    gettext('Cancel')
+                );
+
+            const containsPublishedItems = (items) => {
+                let query = search.query();
+
+                query.clear_filters();
+                query.size(1).filter({terms: {guid: items}});
+
+                let criteria = query.getCriteria(true);
+
+                criteria.repo = 'published';
+
+                return api.query('search', criteria)
+                    .then((result) => result._items.length === 1);
+            };
+
             /**
              * Send to different location from authoring.
              * @param {String} deskId - selected desk Id
@@ -554,6 +588,20 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                 scope.loading = true;
 
                 return runMacro(scope.item, macro)
+                    .then((item) => {
+                        if (!sendAllPackageItems) {
+                            return $q.when(item);
+                        }
+
+                        const items = send.getItemsFromPackages([item]);
+
+                        return containsPublishedItems(items).then((result) => {
+                            if (result) {
+                                return confirmMovePackage().then(() => $q.when(item), () => $q.reject());
+                            }
+                            return $q.when(item);
+                        });
+                    })
                     .then((item) => api.find('tasks', scope.item._id)
                         .then((task) => {
                             scope.task = task;

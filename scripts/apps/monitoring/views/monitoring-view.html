@@ -22,10 +22,29 @@
             <ul class="dropdown__menu scrollable">
                 <li><div class="dropdown__menu-label">{{ :: 'Stages' | translate }}</div></li>
                 <li ng-repeat="card in aggregate.cards">
-                    <button class="label-group" ng-click="monitoring.viewSingleGroup(card,
-                                            card.type === 'stage' ? card.type : 'single-stage')" translate>{{:: monitoring.getGroupLabel(card, aggregate.settings.type)}}</button>
+                    <button class="label-group"
+                        ng-click="monitoring.viewSingleGroup(card, card.type === 'stage' ? card.type : 'single-stage')"
+                    translate>{{:: monitoring.getGroupLabel(card, aggregate.settings.type)}}</button>
                 </li>
             </ul>
+        </div>
+
+        <div class="subnav__stage-group" ng-if="monitoring.singleGroup.singleViewType === 'stage' || monitoring.singleGroup && !monitoring.singleGroup.subheader">
+            <span class="stage-group__desk">{{ monitoring.singleGroup.header }}</span>
+            <span class="stage-group__split">/</span>
+            <div class="dropdown" dropdown>
+                <button class="dropdown__toggle navbtn navbtn--text-only navbtn--padding-s" dropdown-toggle>{{ monitoring.singleGroup.subheader}} {{ monitoring.singleGroup.type | splitText | translate }}<span class="dropdown__caret"></span></button>
+                <ul class="dropdown__menu scrollable">
+                    <li><div class="dropdown__menu-label">{{ :: 'Stages' | translate }}</div></li>
+                    <li ng-repeat="card in aggregate.cards" ng-class="{active: monitoring.singleGroup}">
+                        <button class="label-group"
+                                ng-click="monitoring.viewSingleGroup(card, card.type === 'stage' ? card.type : 'single-stage')"
+                                ng-disabled="monitoring.singleGroup._id === card._id"
+                                translate>{{:: monitoring.getGroupLabel(card, aggregate.settings.type)}}</button>
+                    </li>
+                </ul>
+            </div>
+            <span class="stage-group__badge label label--large">{{ monitoring.totalItems}}</span>
         </div>
 
         <h3 class="subnav__page-title">
@@ -34,19 +53,11 @@
             <span ng-if="type === 'highlights'" sd-highlight-label data-highlight="monitoring.queryParam.highlight" data-total="monitoring.totalItems"></span>
 
             <span ng-if="monitoring.singleGroup.subheader && monitoring.singleGroup.singleViewType == null">
-                {{ :: monitoring.singleGroup.header}} / {{ :: monitoring.singleGroup.subheader}} {{ :: monitoring.singleGroup.type}}
+                {{ monitoring.singleGroup.header}} / {{ monitoring.singleGroup.subheader}} {{ monitoring.singleGroup.type}}
                 <span class="label-total">{{ monitoring.totalItems}}</span>
             </span>
             <span ng-if="monitoring.singleGroup.singleViewType === 'desk'">
-                {{ :: monitoring.singleGroup.header}} {{ :: monitoring.singleGroup.singleViewType}}
-                <span class="label-total">{{ monitoring.totalItems}}</span>
-            </span>
-            <span ng-if="monitoring.singleGroup.singleViewType === 'stage'">
-                {{ :: monitoring.singleGroup.header}} / {{ :: monitoring.singleGroup.subheader}} {{ :: monitoring.singleGroup.singleViewType}}
-                <span class="label-total">{{ monitoring.totalItems}}</span>
-            </span>
-            <span ng-if="monitoring.singleGroup && !monitoring.singleGroup.subheader">
-                {{ :: monitoring.singleGroup.header}} {{ :: monitoring.singleGroup.type | splitText | translate }}
+                {{ monitoring.singleGroup.header }} {{ monitoring.singleGroup.singleViewType}}
                 <span class="label-total">{{ monitoring.totalItems}}</span>
             </span>
         </h3>

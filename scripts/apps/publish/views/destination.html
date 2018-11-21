@@ -1,37 +1,34 @@
 <div class="destination-box">
     <fieldset>
-        <div class="field">
-            <label for="destination-name" class="pull-left" translate>Name</label>
-            <i class="field-info pull-right">*</i>
-            <input type="text" id="destination-name" required ng-model="destination.name">
+        <div class="sd-line-input sd-line-input--boxed sd-line-input--required">
+            <label class="sd-line-input__label" for="destination-name" translate>Name</label>
+            <input class="sd-line-input__input" type="text" id="destination-name" required ng-model="destination.name">
         </div>
 
-        <div class="field">
-            <label for="destination-format" class="pull-left" translate>Format</label>
-            <i class="field-info pull-right">*</i>
-            <select id="destination-format" class="input" required ng-model="destination.format">
+        <div class="sd-line-input sd-line-input--is-select sd-line-input--required">
+            <label class="sd-line-input__label" for="destination-format" translate>Format</label>
+            <select class="sd-line-input__select" id="destination-format" required ng-model="destination.format">
                 <option value=""></option>
                 <option value="{{format.qcode}}" ng-selected="format.qcode === destination.format" ng-repeat="format in $parent.formats track by format.qcode">{{:: format.name | translate}}</option>
             </select>
         </div>
 
-        <div class="field">
-            <label for="preview-endpoint-url" class="pull-left" translate>Preview endpoint URL</label>
-            <input type="url" id="preview-endpoint-url" class="input" ng-model="destination.preview_endpoint_url" />
+        <div class="sd-line-input">
+            <label class="sd-line-input__label" for="preview-endpoint-url" translate>Preview endpoint URL</label>
+            <input class="sd-line-input__input" type="url" id="preview-endpoint-url" ng-model="destination.preview_endpoint_url" />
         </div>
 
-        <div class="field">
-            <label for="destination-delivery-type" class="pull-left" translate>Delivery type</label>
-            <i class="field-info pull-right">*</i>
-            <select id="destination-delivery-type" required ng-model="destination.delivery_type" ng-options="key as val.label for (key, val) in types"></select>
+        <div class="sd-line-input sd-line-input--is-select sd-line-input--required">
+            <label class="sd-line-input__label" for="destination-delivery-type" translate>Delivery type</label>
+            <select class="sd-line-input__select" id="destination-delivery-type" required ng-model="destination.delivery_type" ng-options="key as val.label for (key, val) in types"></select>
         </div>
 
-        <div class="field credentials">
+        <div class="form__row form__row--no-padding credentials">
             <div ng-include="types[destination.delivery_type].templateUrl"></div>
         </div>
 
-        <div class="field" ng-if="actions">
-            <button type="button" class="btn" ng-class="{'btn--primary' : action.label === 'Save'}" ng-repeat="action in actions" ng-click="action.fn(destination)">
+        <div class="form__row" ng-if="actions" style="text-align:right;">
+            <button type="button" class="btn btn--hollow" ng-class="{'btn--primary' : action.label === 'Save'}" ng-repeat="action in actions" ng-click="action.fn(destination)">
                 <span>{{:: action.label | translate}}</span>
             </button>
         </div>

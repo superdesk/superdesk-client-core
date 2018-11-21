@@ -4,6 +4,8 @@ import {addMedia} from './toolbar';
 import {isEditorPlainText} from '../store';
 import {replaceWord} from './spellchecker';
 import {DELETE_SUGGESTION} from '../highlightsConfig';
+import {moveBlockWithoutDispatching} from '../helpers/draftMoveBlockWithoutDispatching';
+import {insertEntity} from '../helpers/draftInsertEntity';
 
 /**
  * @description Contains the list of editor related reducers.
@@ -34,6 +36,8 @@ const editor3 = (state = {}, action) => {
         return setHtmlFromTansa(state, action.payload);
     case 'EDITOR_MOVE_BLOCK':
         return moveBlock(state, action.payload);
+    case 'EDITOR_APPLY_EMBED':
+        return applyEmbed(state, action.payload);
     default:
         return state;
     }
@@ -85,7 +89,7 @@ export const forceUpdate = (state, keepSelection = false) => {
  * @return {Object} returns new state
  * @description Handle the editor state has been changed event
  */
-export const onChange = (state, newState, force = false, keepSelection = false, skipOnChange = false) => {
+export const onChange = (state, newState: EditorState, force = false, keepSelection = false, skipOnChange = false) => {
     // TODO(x): Remove `force` once Draft v0.11.0 is in
     const editorState = newState;
 
@@ -361,41 +365,6 @@ const setHtmlFromTansa = (state, html) => {
 };
 
 /**
- * Move atomic block and return the state
- *
- * @param {Object} state
- * @param {String} block
- * @param {String} dest
- * @param {String} insertionMode before|after
- * @return {Object}
- */
-export function moveBlockWithoutDispatching(state, {block, dest, insertionMode}) {
-    const {editorState} = state;
-    const contentState = editorState.getCurrentContent();
-
-    switch (true) {
-    case block === dest:
-    case !contentState.getBlockForKey(dest):
-    case !contentState.getBlockForKey(block):
-    case dest === contentState.getKeyBefore(block) && insertionMode === 'after':
-    case dest === contentState.getKeyAfter(block) && insertionMode === 'before':
-    case dest === contentState.getKeyAfter(block) && !insertionMode:
-        return state; // noop
-    }
-
-    const atomicBlock = contentState.getBlockForKey(block);
-    const targetRange = SelectionState.createEmpty(dest);
-    const withMovedAtomicBlock = AtomicBlockUtils.moveAtomicBlock(
-        editorState,
-        atomicBlock,
-        targetRange,
-        insertionMode,
-    );
-
-    return {...state, editorState: withMovedAtomicBlock};
-}
-
-/**
  * Move atomic block
  *
  * @param {Object} state
@@ -410,5 +379,18 @@ export function moveBlock(state, options) {
 
     return onChange(state, stateWithMovedBlock.editorState);
 }
+
+/**
+ * @ngdoc method
+ * @name applyEmbed
+ * @param {Object|string} data oEmbed data, HTML string.
+ * @description Applies the embed in the given oEmbed data to the active block.
+ */
+const applyEmbed = (state, {code, targetBlockKey}) => {
+    const data = typeof code === 'string' ? {html: code} : code;
+    const nextEditorState = insertEntity(state.editorState, 'EMBED', 'MUTABLE', {data}, targetBlockKey);
+
+    return onChange(state, nextEditorState);
+};
 
 export default editor3;

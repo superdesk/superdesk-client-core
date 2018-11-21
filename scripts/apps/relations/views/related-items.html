@@ -1,0 +1,23 @@
+<div class="item-association" ng-if="isEmptyRelatedItems(field._id)"></div>
+<div class="related-items" ng-if="!isEmptyRelatedItems(field._id)">
+    <ul class="groups draggable-list" sd-sort-groups>
+        <li id="{{field._id}}" class="sort-item draggable-list__item draggable-list__item--small"
+            ng-repeat="(key, relatedItem) in getRelatedItems(field._id) track by key">
+            <div>
+                <i class="type-icon" sd-filetype-icon data-item="relatedItem"></i>
+                <span class="keyword" ng-if="relatedItem.slugline">{{ relatedItem.slugline }}</span>
+                <span sd-item-container data-item="relatedItem" class="container"></span>
+                <span class="pull-right">
+                    <button class="remove" ng-click="openRelatedItem(relatedItem)"><i class="icon-pencil"></i></button>
+                    <button class="remove" ng-click="removeRelatedItem(key)"><i class="icon-close-small"></i></button>
+                </span>
+                <div class="item">
+                    <span class="state-label state-{{relatedItem.state}}">{{ relatedItem.state }}</span>
+                    <span ng-href="" title="{{ relatedItem.headline }}" class="headline">
+                        {{ relatedItem.headline || relatedItem.description_text }}
+                    </span>
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>

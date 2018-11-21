@@ -1,4 +1,3 @@
-import '../styles/upload-attachments.scss';
 import _ from 'lodash';
 
 UploadAttachmentsController.$inject = ['$scope', '$q', 'urls', 'upload'];

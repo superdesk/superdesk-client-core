@@ -96,7 +96,7 @@ const timeIntervalUiToCronExpression = (timeInterval: ITimeIntervalUi): CronTime
             .sort((a: number, b: number) => a - b)
             .join(',');
 
-    return createCronInterval('*', hours, '*', '*', weekdays);
+    return createCronInterval('0', hours, '*', '*', weekdays);
 };
 
 export function EditTimeInterval() {
@@ -132,7 +132,7 @@ export function EditTimeInterval() {
                     scope.wrapper = {
                         ...scope.wrapper,
                         ...cronExpressionToTimeIntervalUi(
-                            scope.initialValue || createCronInterval('*', '*', '*', '*', '*'),
+                            scope.initialValue || createCronInterval('0', '*', '*', '*', '*'),
                         ),
                     };
                 }

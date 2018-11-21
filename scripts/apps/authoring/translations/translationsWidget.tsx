@@ -9,30 +9,13 @@ interface IProps {
     $filter: any;
     gettextCatalog: any;
     datetime: any;
-    api: any;
     authoringWorkspace: any;
     TranslationService: any;
 }
 
 interface IState {
     translations: Array<IArticle>;
-    references: Dictionary<IArticle['_id'], IArticle>;
-}
-
-function getReferences(api, translations: Array<IArticle>) {
-    return new Promise<Array<IArticle>>((resolve) => {
-        const translatedFromIds = translations
-            .map((translation) => translation.translated_from)
-            .filter((translatedFromId) => translatedFromId != null); // is null for original
-
-        api('archive')
-            .query({
-                $or: translatedFromIds.map((id) => ({_id: id})),
-            })
-            .then((response) => {
-                resolve(response._items);
-            });
-    });
+    translationsLookup: Dictionary<IArticle['_id'], IArticle>;
 }
 
 class TranslationsWidgetComponent extends React.Component<IProps, IState> {
@@ -43,32 +26,30 @@ class TranslationsWidgetComponent extends React.Component<IProps, IState> {
 
         this.state = {
             translations: null,
-            references: null,
+            translationsLookup: null,
         };
     }
 
     componentDidMount() {
-        const {api, item, TranslationService} = this.props;
+        const {item, TranslationService} = this.props;
 
         TranslationService.getTranslations(item)
             .then((response) => {
                 const translations: Array<IArticle> = response._items;
 
-                getReferences(api, translations).then((references) => {
-                    this.setState({
-                        translations: response._items,
-                        references: references.reduce((result, reference) => {
-                            result[reference._id] = reference;
-                            return result;
-                        }, {}),
-                    });
+                this.setState({
+                    translations: translations,
+                    translationsLookup: translations.reduce((result, reference) => {
+                        result[reference._id] = reference;
+                        return result;
+                    }, {}),
                 });
             });
     }
 
     render() {
         const {$filter, gettextCatalog, authoringWorkspace, datetime} = this.props;
-        const {translations, references} = this.state;
+        const {translations, translationsLookup} = this.state;
 
         if (translations == null) {
             return null;
@@ -112,7 +93,7 @@ class TranslationsWidgetComponent extends React.Component<IProps, IState> {
                                                     <div className="flex-bar sibling-spacer-4">
                                                         <span>{gettext('Translated from')}</span>
                                                         <span className="label label--hollow">
-                                                            {references[translation.translated_from].language}
+                                                            {translationsLookup[translation.translated_from].language}
                                                         </span>
                                                     </div>
                                                 )
@@ -139,5 +120,5 @@ class TranslationsWidgetComponent extends React.Component<IProps, IState> {
 
 export const TranslationsWidget = connectServices<IProps>(
     TranslationsWidgetComponent,
-    ['api', 'TranslationService', 'authoringWorkspace', '$filter', 'gettextCatalog', 'datetime'],
+    ['TranslationService', 'authoringWorkspace', '$filter', 'gettextCatalog', 'datetime'],
 );

@@ -2,11 +2,14 @@
     <div class="sd-page__header" ng-hide="hideHeader">
         <sd-search-handler ng-model="search.name" data-debounce="200"></sd-search-handler>
         <div class="sortbar">
-            <span translate>Target Type:</span>
-            <select class="input-medium" ng-model="search.subscriber_type"
-                    ng-options="s.qcode as s.name for s in subTypes">
-                <option value="" translate>Select</option>
-            </select>
+            <span class="lab" translate>Target Type:</span>
+            <div class="sd-line-input sd-line-input--is-select sd-line-input--no-label sd-line-input--no-margin" style="min-width:120px;">
+                <select class="sd-line-input__select"
+                        ng-model="search.subscriber_type"
+                        ng-options="s.qcode as s.name for s in subTypes">
+                    <option value="" translate>Select</option>
+                </select>
+            </div>
         </div>
         <span class="sd-page__element-grow"></span>
         <button id="addSubscriber" class="btn btn--primary" ng-click="edit()">
@@ -15,84 +18,108 @@
     </div>
 
     <div class="sd-page__content">
-        <ul class="pills-list">
-            <li ng-repeat="subscriber in subscribers | subscribersBy:search as filtered_subscribers track by subscriber._id" class="clearfix">
-                <div class="header">
-                    <h6 id="subscriberName">{{ subscriber.name }}</h6>
-                    <span class="label offProvider" ng-if="!subscriber.is_active" translate>Not Active</span>
-                    <div class="actions">
-                        <button ng-click="edit(subscriber)" title="{{:: 'Edit Subscriber' | translate }}"><i class="icon-pencil"></i></button>
+        <ul class="sd-list-item-group sd-list-item-group--space-between-items" style="max-width: 1000px;">
+            <li ng-repeat="subscriber in subscribers | subscribersBy:search as filtered_subscribers track by subscriber._id" class="sd-list-item sd-shadow--z1">
+                <div class="sd-list-item__border"></div>
+                <div class="sd-list-item__column sd-list-item__column--grow sd-list-item__column--no-border">
+                    <div class="sd-list-item__row">
+                        <span class="sd-overflow-ellipsis sd-list-item--element-grow" id="subscriberName">{{ subscriber.name }}</span>
+                        <span class="label label--hollow label--alert" ng-if="!subscriber.is_active" translate>Not Active</span>
+                    </div>
+                </div>
+                <div class="sd-list-item__action-menu sd-list-item__action-menu--direction-row">
+                    <button class="icn-btn" ng-click="edit(subscriber)" title="{{:: 'Edit Subscriber' | translate }}"><i class="icon-pencil"></i></button>
+                </div>
+            </li>
+            <li ng-show="subscribers.length > 0 && !filtered_subscribers.length" class="sd-list-item sd-list-item--no-hover sd-shadow--z1">
+                <div class="sd-list-item__border"></div>
+                <div class="sd-list-item__column sd-list-item__column--grow sd-list-item__column--no-border">
+                    <div class="sd-list-item__row">
+                        <span translate>No Subscribers Found</span>
                     </div>
                 </div>
             </li>
-            <li ng-show="subscribers.length > 0 && !filtered_subscribers.length" class="clearfix"><h6 translate>No Subscribers Found</h6></li>
         </ul>
     </div>
 </div>
 
 <!-- Modal -->
 <div sd-modal data-model="subscriber" data-close="cancel()" class="modal--large modal--tabs sd-wizard">
-    <div class="modal__header"> <a href="" class="close" ng-click="cancel()"><i class="icon-close-small"></i></a>
+    <div class="modal__header modal__header--flex">
         <h3 class="modal__heading" ng-show="subscriber._id"><span translate>Edit Subscriber</span> "{{ origSubscriber.name}}"</h3>
         <h3 class="modal__heading" translate ng-hide="subscriber._id">Add New Subscriber</h3>
+        <a href="" class="icn-btn" ng-click="cancel()"><i class="icon-close-small"></i></a>
     </div>
     <div class="modal__body" sd-wizard data-name="subscribers" data-current-step="step.current" data-finish="cancel()">
         <form name="editForm">
             <fieldset>
                 <div sd-wizard-step data-title="{{ 'General' | translate }}" data-code="general">
                     <div class="content">
-                        <div class="field">
-                            <i class="field-info pull-right" translate>* mandatory fields</i>                            
+                        <div class="form__row">                      
                                 <span title="{{ subscriber.is_active ? 'Deactivate' : 'Activate' | translate }}">
                                     <span sd-switch ng-model="subscriber.is_active"></span><label>{{:: 'Status' | translate }}</label>
                                 </span>                        
                         </div>
 
-                        <div class="field">
-                            <label for="subscriber-name" class="pull-left" translate>Name</label>
-                            <i class="field-info pull-right">*</i>
-                            <input type="text" id="subscriber-name" required ng-model="subscriber.name">
+                        <div class="form__row">
+                            <div class="sd-line-input sd-line-input--boxed sd-line-input--required">
+                                <label class="sd-line-input__label" for="subscriber-name" translate>Name</label>
+                                <input class="sd-line-input__input" id="subscriber-name" type="text" required ng-model="subscriber.name">
+                            </div>
                         </div>
 
-                        <div class="field">
-                            <label for="subscriber-email" class="pull-left" translate>E-Mail to broadcast Kill Events</label>
-                            <i class="field-info pull-right">*</i>
-                            <input type="text"
-                                   id="subscriber-email"
-                                   ng-model="subscriber.email"
-                                   required sd-multiple-emails>
+                        <div class="form__row">
+                            <div class="sd-line-input sd-line-input--required">
+                                <label class="sd-line-input__label" for="subscriber-email" ranslate>E-Mail to broadcast Kill Events</label>
+                                <input type="text"
+                                        class="sd-line-input__input"
+                                        id="subscriber-email"
+                                        ng-model="subscriber.email"
+                                        required sd-multiple-emails>
+                            </div>
                         </div>
 
-                        <div class="field">
-                            <label for="subType" class="pull-left" translate>Target Type</label>
-                            <i class="field-info pull-right">*</i>
-                            <select id="subType" ng-model="subscriber.subscriber_type" ng-options="s.qcode as s.name for s in subTypes" ng-change="changeFormats(subscriber.subscriber_type)" required>
-                                <option value=""></option>
-                            </select>
+                        <div class="form__row">
+                            <div class="sd-line-input sd-line-input--is-select sd-line-input--required">
+                                <label class="sd-line-input__label" for="subType" translate>Target Type</label>
+                                <select class="sd-line-input__select" 
+                                        id="subType"
+                                        ng-model="subscriber.subscriber_type"
+                                        ng-options="s.qcode as s.name for s in subTypes"
+                                        ng-change="changeFormats(subscriber.subscriber_type)" required>
+                                    <option value=""></option>
+                                </select>
+                            </div>
                         </div>
 
-                        <div class="field">
-                            <label for="media-type" class="pull-left" translate>Media Type</label>
-                            <select id="media-type" class="input" ng-model="subscriber.media_type">
-                                <option value="media" translate>Media</option>
-                                <option value="nonmedia" translate>Non-media</option>
-                                <option value="" translate>Both</option>
-                            </select>
+                        <div class="form__row">
+                            <div class="sd-line-input sd-line-input--is-select">
+                                <label class="sd-line-input__label" for="media-type" translate>Media Type</label>
+                                <select class="sd-line-input__select" 
+                                        id="media-type"
+                                        ng-model="subscriber.media_type">
+                                    <option value="media" translate>Media</option>
+                                    <option value="nonmedia" translate>Non-media</option>
+                                    <option value="" translate>Both</option>
+                                </select>
+                            </div>
                         </div>
 
-                        <div class="field">
-                            <label translate>Subscriber codes</label><i class="field-info" translate>*comma separated values</i>
-                            <textarea class="fullwidth-input" ng-model="subscriber.codes"></textarea>
+                        <div class="form__row">
+                            <div class="sd-line-input">
+                                <label class="sd-line-input__label" translate>Subscriber codes</label>
+                                <textarea class="sd-line-input__input" ng-model="subscriber.codes"sd-auto-height></textarea>
+                                <span class="sd-line-input__hint" translate>Comma separated values</span>
+                            </div>
+                        </div>
+                        <div class="form__row form__row--l-padding">                            
+                            <span title="{{ subscriber.is_targetable ? 'Deactivate' : 'Activate' | translate }}">
+                                <span sd-switch ng-model="subscriber.is_targetable"></span><label>{{:: 'Targetable by users' | translate }}</label>
+                            </span>
                         </div>
 
-                        <div class="field">                            
-                                <span title="{{ subscriber.is_targetable ? 'Deactivate' : 'Activate' | translate }}">
-                                    <span sd-switch ng-model="subscriber.is_targetable"></span><label>{{:: 'Targetable by users' | translate }}</label>
-                                </span>
-                        </div>
-
-                        <div class="field">
-                            <label translate>Products</label>
+                        <div class="form__row form__row--l-padding">
+                            <label class="form-label" translate>Products</label>
                             <div sd-meta-terms
                                  class="subscriber-products"
                                  data-reload-list="true"
@@ -104,52 +131,65 @@
                             </div>
                         </div>
 
-                        <div class="field">
-                            <label translate>Sequence Number Settings</label>
-                            <i class="field-info pull-right">*</i>
-                            <div>
-                                <span translate>Minimum</span>
-                                <input type="number" class="input-mini" ng-model="subscriber.sequence_num_settings.min" min ="1" id="subscriber-seq_num_settings.min" required>
-                                <span translate>Maximum</span>
-                                <input type="number" class="input-small" ng-model="subscriber.sequence_num_settings.max" min ="2" id="subscriber-seq_num_settings.max" required>
+                        <div class="form__row">
+                            <label class="form-label form-label--required"translate>Sequence Number Settings</label>
+                            <div class="form__row form__row--flex form__row--no-padding">
+                                <div class="form__row-item form__row-item--no-grow">
+                                    <span translate>Minimum</span>
+                                </div>
+                                <div class="form__row-item form__row-item--no-grow">
+                                    <div class="sd-line-input">
+                                        <input type="number" class="sd-line-input__input sd-line-input__input--mini" ng-model="subscriber.sequence_num_settings.min" min ="1" id="subscriber-seq_num_settings.min" required>
+                                    </div>
+                                    
+                                </div>
+                                <div class="form__row-item form__row-item--no-grow">
+                                    <span translate>Maximum</span>
+                                </div>
+                                <div class="form__row-item form__row-item--no-grow">
+                                   <div class="sd-line-input">
+                                       <input type="number" class="sd-line-input__input sd-line-input__input--small" ng-model="subscriber.sequence_num_settings.max" min ="2" id="subscriber-seq_num_settings.max" required>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
                         <fieldset class="separated">
                             <legend translate>Destinations</legend>
-                            <div class="field">
-                                <i class="field-info pull-right" translate>* For Content API only subscriber destinations are not required.</i>
+                            <div class="sd-alert sd-alert--hollow sd-alert--primary sd-alert--small">
+                                <span translate>For Content API only subscriber destinations are not required.</i>
                             </div>
                             <div sd-destination ng-repeat="destination in destinations" data-destination="destination"
                                  data-actions="[{label: 'Delete', fn: deleteDestination}]"></div>
                             <div sd-destination ng-if="newDestination"
                                  data-destination="newDestination"
-                                 data-actions="[{label: 'Save', fn: saveNewDestination}, {label: 'Cancel', fn: cancelNewDestination}]"></div>
-                            <i class="field-info pull-right">*</i>
-                            <button type="button" class="btn btn--primary" ng-click="addNewDestination()" ng-show="newDestination === null">
-                                <i class="icon-plus-sign icon--white"></i> <span translate>Add New Destination</span>
-                            </button>
+                                 data-actions="[{label: 'Cancel', fn: cancelNewDestination}, {label: 'Save', fn: saveNewDestination}]"></div>
+                            <div style="text-align:right;">
+                                <button type="button" class="btn btn--primary btn--hollow btn--large btn--expanded" ng-click="addNewDestination()" ng-show="newDestination === null">
+                                    <i class="icon-plus-sign"></i> <span translate>Add New Destination</span>
+                                </button>
+                            </div>
                         </fieldset>
                     </div>
                 </div>
 
                 <div sd-wizard-step data-title="{{ 'Critical Errors' | translate }}" data-code="critical-errors">
                     <div class="content">
-                        <div ng-repeat="(key, val) in all_errors" class="field">                            
-                            <span sd-switch ng-model="subscriber.critical_errors[key]"></span><label>{{::key}}: {{::val}}</label>
-                        </div>
+                        <ul class="simple-list simple-list--dotted">
+                            <li ng-repeat="(key, val) in all_errors" class="simple-list__item">                            
+                                <span sd-switch ng-model="subscriber.critical_errors[key]"></span><label>{{::key}}: {{::val}}</label>
+                            </li>
+                        </ul>
                     </div>
                 </div>
 
                 <div sd-wizard-step data-title="{{ 'Applied Global Block Filters' | translate }}" data-code="global-block-filters">
                     <div class="content privileges-settings">
-                        <div class="horizontal">
-                            <div class="roles-list">
-                                <div ng-repeat="gf in globalFilters track by gf._id" class="field">                                    
-                                    <span sd-switch ng-model="subscriber.global_filters[gf._id]"></span><label>{{:: gf.name}}</label>
-                                </div>
-                            </div>
-                        </div>
+                        <ul class="simple-list simple-list--dotted">
+                            <li ng-repeat="gf in globalFilters track by gf._id" class="simple-list__item">                                    
+                                <span sd-switch ng-model="subscriber.global_filters[gf._id]"></span><label>{{:: gf.name}}</label>
+                            </li>
+                        </ul>
                     </div>
                 </div>
 
@@ -169,66 +209,56 @@
                         </div>
                         <div class="field" ng-if="subscriber._id" ng-controller="SubscriberTokenCtrl as tokens">
                             <label translate>Authentication Token</label>
-                            <ul class="pills-list">
-                                <li ng-repeat="token in tokens.tokens track by token._id" class="field clearfix">
-                                    <div class="header">
-                                        <h6><code contenteditable="true" spellcheck="false">{{ :: token._id}}</code></h6>
-                                        <small class="badge">{{ :: 'expires:' | translate }} <time sd-datetime data-date="token.expiry" data-from-now="true"></time></small>
+                            <ul class="sd-list-item-group sd-list-item-group--space-between-items">
+                                <li ng-repeat="token in tokens.tokens track by token._id" class="sd-list-item sd-shadow--z1">
+                                    <div class="sd-list-item__border"></div>
+                                    <div class="sd-list-item__column sd-list-item__column--grow sd-list-item__column--no-border">
+                                        <div class="sd-list-item__row">
+                                            <span class="sd-overflow-ellipsis sd-list-item--element-grow"><code contenteditable="true" spellcheck="false">{{ :: token._id}}</code></span>
+                                            <span class="sd-list-item__text-label">{{ :: 'expires:' | translate }} <time sd-datetime data-date="token.expiry" data-from-now="true"></time></span>
+                                        </div>
                                     </div>
-                                    <div class="actions">
-                                        <button ng-click="tokens.revoke(token)" title="{{ :: 'Revoke' | translate }}">
+                                    <div class="sd-list-item__action-menu sd-list-item__action-menu--direction-row">
+                                        <button class="icn-btn" ng-click="tokens.revoke(token)" title="{{ :: 'Revoke' | translate }}">
                                             <i class="icon-trash"></i>
                                         </button>
                                     </div>
                                 </li>
-                                <li ng-show="tokens.tokens.length === 0" class="clearfix">
-                                    <div class="header">
-                                        <h6 translate>There is no token for subscriber.</h6>
+
+                                <li  ng-show="tokens.tokens.length === 0" class="sd-list-item sd-list-item--no-hover sd-shadow--z1">
+                                    <div class="sd-list-item__border"></div>
+                                    <div class="sd-list-item__column sd-list-item__column--grow sd-list-item__column--no-border">
+                                        <div class="sd-list-item__row">
+                                            <span translate>There is no token for subscriber.</span>
+                                        </div>
                                     </div>
                                 </li>
                             </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <div sd-wizard-step data-title="{{ :: 'Content API Tokens' | translate }}" data-code="content-tokens">
-                    <div class="content">
-                        <div ng-controller="SubscriberTokenCtrl as tokens">
-                            <h3 translate>Authentication Token</h3>
-                            <ul class="pills-list">
-                                <li ng-repeat="token in tokens.tokens track by token._id" class="field clearfix">
-                                    <div class="header">
-                                        <h6><code contenteditable="true" spellcheck="false">{{ :: token._id}}</code></h6>
-                                        <small class="badge">{{ :: 'expires:' | translate }} <time sd-datetime data-date="token.expiry" data-from-now="true"></time></small>
-                                    </div>
-                                    <div class="actions">
-                                        <button ng-click="tokens.revoke(token)" title="{{ :: 'Revoke' | translate }}">
-                                            <i class="icon-trash"></i>
-                                        </button>
-                                    </div>
-                                </li>
-                                <li ng-show="tokens.tokens.length === 0" class="clearfix">
-                                    <div class="header">
-                                        <h6 translate>There is no token for subscriber.</h6>
-                                    </div>
-                                </li>
-                            </ul>
-
                             <fieldset ng-show="tokens.tokens.length < 5">
-                                <select class="input-small" ng-model="tokens.ttl" title="{{ :: 'Token expiry' | translate }}">
-                                    <option value="7" translate>1 week</option>
-                                    <option value="14" translate>2 weeks</option>
-                                    <option value="30" translate>1 month</option>
-                                    <option value="180" translate>6 months</option>
-                                    <option value="365" translate>1 year</option>
-                                </select>
-                                <button class="btn" ng-click="tokens.generate(tokens.ttl)"
-                                        translate>Generate token</button>
+                                <div class="form__row form__row--flex">
+                                    <div class="form__row-item form__row-item--no-grow">
+                                        <span translate>Expire in:</span>
+                                    </div>
+                                    <div class="form__row-item">
+                                        <div class="sd-line-input sd-line-input--is-select">
+                                            <select class="sd-line-input__select" ng-model="tokens.ttl" title="{{ :: 'Token expiry' | translate }}">
+                                                <option value="7" translate>1 week</option>
+                                                <option value="14" translate>2 weeks</option>
+                                                <option value="30" translate>1 month</option>
+                                                <option value="180" translate>6 months</option>
+                                                <option value="365" translate>1 year</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form__row-item"></div>
+                                    <div class="form__row-item form__row-item--no-grow">
+                                        <button class="btn btn--hollow" ng-click="tokens.generate(tokens.ttl)" translate>Generate token</button>
+                                    </div>
+                                </div>
                             </fieldset>
                         </div>
                     </div>
                 </div>
-
             </fieldset>
         </form>
         <div class="modal__footer">

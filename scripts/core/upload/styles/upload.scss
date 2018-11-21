@@ -297,116 +297,12 @@ media uploader
     }
     .drag-area { //start screen on modal show
         position: absolute;
-        top:5px;
-        left: 5px;
-        bottom: 5px;
-        right: 5px;
-        border: 3px dashed $background-main;
+        top:0;
+        left: 0;
+        bottom: 0;
+        right: 0;
         overflow-y: auto;
         @include user-select(none);
-        &.dragover {
-            border-color: #e7e7e7;
-        }
-
-        .title {
-            position: absolute;
-            height: 120px; width: 400px;
-            @include box-sizing(border-box);
-            top: 50%; left: 50%;
-            margin-top: -120px;
-            margin-left: -200px;
-            background: url('~images/dragfiles.png') no-repeat 50% 0;
-            padding-top: 100px;
-            text-align: center;
-            color: #a0a0a0;
-            font-size: 24px;
-            font-weight: 300;
-        }
-
-        .upload-manual {
-            position: absolute;
-            top: 50%; left: 50%;
-            width: 240px;
-            margin-top: 20px;
-            margin-left: -120px;
-            text-align: center;
-            .or-label {
-                margin-bottom: 20px;
-            }
-            .btn {
-                height: auto;
-                line-height: 140%;
-            }
-        }
-
-        &.compact {
-            z-index: 5;
-            height: 90px;
-            border-color: #e7e7e7;
-            position: relative;
-            top: auto; bottom: auto; left: auto; right: auto;
-            order: 2;
-            flex: 0 0 auto;
-            margin: 5px;
-            @include box-sizing(border-box);
-            &.dragover {
-                border-color: #c7c7c7;
-            }
-            .title {
-                background: none;
-                font-size: 16px;
-                right: 50%;
-                left: auto;
-                top: 32px;
-                margin:0;
-                padding-top: 0;
-                height: auto;
-                margin-right: 30px;
-                text-align: right;
-            }
-            .upload-manual {
-                top: 26px;
-                margin: 0;
-                width: auto;
-                .or-label {
-                    margin: 0 30px 0 0;
-                    display: inline-block;
-                    &:after {
-                        content : "|";
-                        top: 15px;
-                        margin-left: -3px;
-                    }
-                    &:before {
-                         content : "|";
-                        margin-left : -3px;
-                        top: -15px;
-                    }
-                }
-            }
-        }
-    }
-
-    .upload-error {
-        height: 40px;
-        position: relative;
-        @include box-sizing(border-box);
-        background: #f7e8e8;
-        border-bottom: 1px solid #eed7d7;
-        text-align: center;
-        line-height: 40px;
-        margin-bottom: 10px;
-        span {
-            @include text-light();
-            font-size: 14px;
-            color: #b90000;
-        }
-        .action {
-            text-decoration: underline;
-            margin-left: 10px;
-            &:hover {
-                cursor: pointer;
-            }
-        }
     }
 
     .upload-edit {    //detail upload screen and basic edit
@@ -545,32 +441,6 @@ media uploader
                         }
                     }
                 }
-            }
-        }
-
-        &.compact {
-        }
-    }
-
-    .optional-drag-holder {
-        position: absolute;
-        bottom: -1px; left: 0; right: 0;
-        z-index: 10;
-        border-bottom: 1px solid #ddd;
-        &.open {
-            position: relative;
-        }
-        .optional-drag {
-            width: 130px;
-            margin: 0 auto;
-            background: #ececec;
-            padding: 5px 10px;
-            text-align: center;
-            &:hover {
-                cursor: pointer;
-            }
-            i {
-                margin-top: -2px;
             }
         }
     }

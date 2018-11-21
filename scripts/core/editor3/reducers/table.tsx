@@ -3,7 +3,7 @@ import {Map} from 'immutable';
 import {onChange} from './editor3';
 import insertAtomicBlockWithoutEmptyLines from '../helpers/insertAtomicBlockWithoutEmptyLines';
 import {createBlockSelection} from '../helpers/selection';
-import {getCell, setCell, getData} from '../helpers/table';
+import {getCell, setCell, getData, setData} from '../helpers/table';
 
 /**
  * @description Contains the list of table related reducers.
@@ -161,15 +161,14 @@ const processCells = (state, fn) => {
     const {i, j, key, currentStyle, selection} = activeCell;
     const contentState = editorState.getCurrentContent();
     const block = contentState.getBlockForKey(key);
-    const {cells, numRows, numCols, withHeader} = getData(editorState, block);
+    const {cells, numRows, numCols, withHeader} = getData(contentState, block);
     const {data, newCurrentStyle} = fn(cells, numCols, numRows, i, j, withHeader, currentStyle, selection);
-    const blockSelection = createBlockSelection(editorState, block);
-    const newContentState = Modifier.setBlockData(contentState, blockSelection, Map({data: JSON.stringify(data)}));
-    const newEditorState = EditorState.push(editorState, newContentState, 'change-block-data');
-    const entityDataHasChanged = true;
+    const newEditorState = setData(editorState, block, data, 'change-block-data');
 
-    if (newCurrentStyle != null) {
-        const newState = {
+    let newState = state;
+
+    if (newCurrentStyle !== null) {
+        newState = {
             ...state,
             activeCell: {
                 ...activeCell,
@@ -177,11 +176,9 @@ const processCells = (state, fn) => {
                 selection: selection,
             },
         };
-
-        return onChange(newState, newEditorState, entityDataHasChanged);
-    } else {
-        return onChange(state, newEditorState, entityDataHasChanged);
     }
+
+    return onChange(newState, newEditorState, true);
 };
 
 /**

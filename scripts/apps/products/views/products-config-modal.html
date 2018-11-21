@@ -1,8 +1,8 @@
 <div sd-modal data-model="modalActive" data-close="cancel()" class="modal--large modal--tabs">
-    <div class="modal__header">
-        <a href="" class="close" ng-click="cancel()"><i class="icon-close-small"></i></a>
+    <div class="modal__header modal__header--flex">
         <h3 class="modal__heading" ng-show="!product.edit._id" translate>Add New Product</h3>
         <h3 class="modal__heading" ng-show="product.edit._id" translate>Edit "{{product.edit.name}}" Product</h3>
+        <a href="" class="icn-btn close" ng-click="cancel()"><i class="icon-close-small"></i></a>
     </div>
     <div class="modal__body">
         <form name="editForm">
@@ -21,59 +21,67 @@
             <div class="modal__body-content">
                 <div ng-if="!tab || tab === 'products'" class="nav-tabs__pane">
                     <fieldset>
-                        <div class="field">
-                            <i class="field-info pull-right" translate>* mandatory fields</i>
+                        <div class="form__row" ng-if="product._id">
+                            <div class="sd-line-input sd-line-input--boxed sd-line-input--disabled">
+                                <label class="sd-line-input__label" for="product-id" translate>Product ID</label>
+                                <input class="sd-line-input__input" id="product-id" type="text" ng-model="product._id" ng-disabled="true">
+                                <span class="sd-line-input__hint" translate>The Product ID can be copied and used as Superdesk Newshub product query.</span>
+                            </div>
                         </div>
-                        <div class="field" ng-if="product._id">
-                            <label for="product-id" translate>Product ID</label>
-                            <input id="product-id" type="text" class="fullwidth-input" ng-model="product._id" ng-disabled="true">
-                            <i class="field-info" translate>*the Product ID can be copied and used as Superdesk Newshub product query</i>
+
+                        <div class="sd-line-input sd-line-input--boxed sd-line-input--required">
+                            <label class="sd-line-input__label" for="product-name" translate>Product name</label>
+                            <input class="sd-line-input__input" id="product-name" type="text" ng-model="product.edit.name" required>
                         </div>
-                        <div class="field">
-                            <label for="product-name" translate>Product name<i class="field-info pull-right">*</i></label>
-                            <input id="product-name" type="text" class="fullwidth-input" ng-model="product.edit.name" required>
+                        <div class="sd-line-input">
+                            <label class="sd-line-input__label" translate>Product description</label>
+                            <textarea class="sd-line-input__input" ng-model="product.edit.description" sd-auto-height></textarea>
                         </div>
-                        <div class="field">
-                            <label translate>Product description</label>
-                            <textarea class="fullwidth-input" ng-model="product.edit.description"></textarea>
-                        </div>
-                        <div class="field">
-                            <label translate>Product Type<i class="field-info pull-right">*</i></label>
-                            <select class="input"
+                        <div class="sd-line-input sd-line-input--is-select sd-line-input--required">
+                            <label class="sd-line-input__label" translate>Product Type</label>
+                            <select class="sd-line-input__select"
                                     ng-model="product.edit.product_type"
                                     ng-options="p.qcode as p.name for p in product_types">
                                 <option value=""></option>
                             </select>
                         </div>
-                        <div class="field">
-                            <label translate>Product codes</label><i class="field-info" translate>*comma separated values</i>
-                            <textarea class="fullwidth-input" ng-model="product.edit.codes"></textarea>
+                        <div class="form__row">
+                            <div class="sd-line-input">
+                                <label class="sd-line-input__label" translate>Product codes</label>
+                                <textarea class="sd-line-input__input" ng-model="product.edit.codes" sd-auto-height></textarea>
+                                <span class="sd-line-input__hint" translate>Comma separated values.</span>
+                            </div>
                         </div>
-                        <div class="field">
-                            <label translate class="right">Content Filter</label>
-                            <select class="input" ng-model="product.edit.content_filter.filter_id">
+
+                        <div class="sd-line-input  sd-line-input--is-select">
+                            <label class="sd-line-input__label" translate>Content Filter</label>
+                            <select class="sd-line-input__select" ng-model="product.edit.content_filter.filter_id">
                                 <option value=""></option>
                                 <option value="{{filter._id}}" ng-selected="filter._id === product.edit.content_filter.filter_id" ng-repeat="filter in contentFilters track by filter._id">{{:: filter.name}}</option>
                             </select>
                         </div>
-                        <div class="field" ng-if="product.edit.content_filter.filter_id">
-                            <label translate>Content Filter Type</label>
-                            <sd-check ng-model="product.edit.content_filter.filter_type" type="radio" ng-value="permitting">{{ :: 'Permitting' | translate }}</sd-check>
-                            <sd-check ng-model="product.edit.content_filter.filter_type" type="radio" ng-value="blocking">{{ :: 'Blocking' | translate }}</sd-check>
+
+                        <div class="form__row" ng-if="product.edit.content_filter.filter_id">
+                            <label class="form-label form-label--block form-label--marg-b10" translate>Content Filter Type</label>
+                            <div class="sd-check__group">
+                                <sd-check ng-model="product.edit.content_filter.filter_type" type="radio" ng-value="permitting">{{ :: 'Permitting' | translate }}</sd-check>
+                                <sd-check ng-model="product.edit.content_filter.filter_type" type="radio" ng-value="blocking">{{ :: 'Blocking' | translate }}</sd-check>
+                            </div>
                         </div>
-                        <div class="field">
-                            <label for="geoRestrictions" translate>Target Regions</label>
-                            <select id="geoRestrictions" ng-model="product.edit.geo_restrictions" ng-options="g.qcode as g.name for g in geoRestrictions">
+
+                        <div class="sd-line-input  sd-line-input--is-select">
+                            <label class="sd-line-input__label" for="geoRestrictions" translate>Target Regions</label>
+                            <select class="sd-line-input__select" id="geoRestrictions" ng-model="product.edit.geo_restrictions" ng-options="g.qcode as g.name for g in geoRestrictions">
                                 <option value=""></option>
                             </select>
                         </div>
                     </fieldset>
                 </div>
                 <div ng-if="tab === 'subscribers'" class="nav-tabs__pane">
-                    <div ng-repeat="subscriber in subscribers| orderBy:name" class="field">
-                        <span ng-if="subscriber.products.indexOf(product.edit._id) >= 0">
-                            {{::subscriber.name}}
-                        </span>
+                    <div class="sd-grid-list sd-grid-list--no-margin">
+                        <div ng-repeat="subscriber in subscribers| orderBy:name" class="sd-card sd-card--auto-height" ng-if="subscriber.products.indexOf(product.edit._id) >= 0">
+                            <span class="sd-card__content  sd-card__content--padd-10">{{::subscriber.name}}</span>
+                        </div>
                     </div>
                 </div>
             </div>
