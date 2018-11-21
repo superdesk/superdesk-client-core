@@ -19,8 +19,9 @@ UploadController.$inject = [
     'session',
     'deployConfig',
     'desks',
+    'notify',
 ];
-export function UploadController($scope, $q, upload, api, archiveService, session, deployConfig, desks) {
+export function UploadController($scope, $q, upload, api, archiveService, session, deployConfig, desks, notify) {
     $scope.items = [];
     $scope.saving = false;
     $scope.failed = false;
@@ -132,20 +133,6 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
         $scope.failed = _.some($scope.items, {model: false});
     };
 
-    var validateFields = function() {
-        $scope.errorMessage = null;
-        if (!_.isEmpty($scope.items)) {
-            _.each($scope.items, (item) => {
-                _.each(Object.keys($scope.validator), (key) => {
-                    if ($scope.validator[key].required && (_.isNil(item.meta[key]) || _.isEmpty(item.meta[key]))) {
-                        $scope.errorMessage = gettext('Required field(s) are missing');
-                        return false;
-                    }
-                });
-            });
-        }
-    };
-
     var initFile = function(file, meta, id) {
         var item = {
             file: file,
@@ -160,106 +147,90 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
 
         item.cssType = item.file.type.split('/')[0];
         $scope.items.unshift(item);
-        $scope.enableSave = _.isNil($scope.errorMessage) && $scope.items.length > 0;
-    };
-
-    var getErrorMessage = function(type) {
-        var errorMessage = gettext('Only the following files are allowed: ');
-        var separator = '';
-        var separatorAnd = ' ' + gettext('and') + ' ';
-
-        if ($scope.allowPicture && type !== 'image') {
-            errorMessage += separator + gettext('image');
-            separator = separatorAnd;
-        }
-
-        if ($scope.allowVideo && type !== 'video') {
-            errorMessage += separator + gettext('video');
-            separator = separatorAnd;
-        }
-
-        if ($scope.allowAudio && type !== 'audio') {
-            errorMessage += separator + gettext('audio');
-            separator = separatorAnd;
-        }
-
-        return errorMessage;
+        $scope.enableSave = $scope.items.length > 0;
     };
 
     $scope.addFiles = function(files) {
         $scope.isDragging = false;
 
-        $scope.errorMessage = null;
         if (!files.length) {
             return false;
         }
         if ($scope.uniqueUpload && files.length > 1) {
-            $scope.errorMessage = gettext('Only one file can be uploaded');
+            notify.error(gettext('Only one file can be uploaded'));
             return false;
         }
         if (!$scope.uniqueUpload && $scope.maxUploads && (files.length + $scope.items.length) > $scope.maxUploads) {
-            $scope.errorMessage = gettext('Select at most ') + $scope.maxUploads + gettext(' files to upload.');
+            notify.error(gettext('Select at most ') + $scope.maxUploads + gettext(' files to upload.'));
             return false;
         }
 
-        let imageFiles = [];
+        let acceptedFiles = [];
+        let uploadOfDisallowedFileTypesAttempted = false;
 
         _.each(files, (file) => {
             if (/^image/.test(file.type)) {
-                imageFiles.push(file);
-            } else {
-                if (/^video/.test(file.type)) {
-                    if (!$scope.allowVideo) {
-                        $scope.errorMessage = getErrorMessage('video');
-                    }
-                } else if (/^audio/.test(file.type)) {
-                    if (!$scope.allowAudio) {
-                        $scope.errorMessage = getErrorMessage('audio');
-                    }
-                } else if ($scope.allowPicture || $scope.allowVideo || $scope.allowAudio) {
-                    $scope.errorMessage = getErrorMessage('');
+                if ($scope.allowPicture) {
+                    acceptedFiles.push(file);
+                } else {
+                    uploadOfDisallowedFileTypesAttempted = true;
                 }
-
-                initFile(file, {
-                    byline: $scope.currentUser.byline, // initialize meta.byline from user profile
-                });
+            } else if (/^video/.test(file.type)) {
+                if ($scope.allowVideo) {
+                    acceptedFiles.push(file);
+                } else {
+                    uploadOfDisallowedFileTypesAttempted = true;
+                }
+            } else if (/^audio/.test(file.type)) {
+                if ($scope.allowAudio) {
+                    acceptedFiles.push(file);
+                } else {
+                    uploadOfDisallowedFileTypesAttempted = true;
+                }
+            } else {
+                uploadOfDisallowedFileTypesAttempted = true;
             }
         });
 
-        if (imageFiles.length > 0) {
-            if ($scope.allowPicture) {
-                Promise.all(imageFiles.map((file) => getExifData(file)))
-                    .then((filesWithExifDataAttached) => {
-                        filesWithExifDataAttached.forEach((file) => {
-                            var fileMeta = file.iptcdata;
+        if (uploadOfDisallowedFileTypesAttempted === true) {
+            const message = gettext('Only the following files are allowed: ')
+                + ($scope.allowPicture ? gettext('image') : '')
+                + ($scope.allowVideo ? ', ' + gettext('video') : '')
+                + ($scope.allowAudio ? ', ' + gettext('audio') : '');
 
-                            initFile(file, {
-                                byline: fileMeta.byline,
-                                headline: fileMeta.headline,
-                                description_text: fileMeta.caption,
-                                copyrightnotice: fileMeta.copyright,
-                            }, getPseudoId());
-                        });
-                    })
-                    .then(() => {
-                        $scope.imagesMetadata = $scope.items.map((item) => item.meta);
-                        $scope.$apply();
+            notify.error(message);
+        }
 
-                        // running promises sequentially
-                        $scope.items.reduce(
-                            (promise, item, i) => promise.then(
-                                () => getDataUrl(item.file).then((url) => {
-                                    $scope.$apply(() => {
-                                        $scope.items[i].imageDataUrl = url;
-                                    });
-                                })
-                            )
-                            , Promise.resolve()
-                        );
+        if (acceptedFiles.length > 0) {
+            Promise.all(acceptedFiles.map((file) => getExifData(file)))
+                .then((filesWithExifDataAttached) => {
+                    filesWithExifDataAttached.forEach((file) => {
+                        var fileMeta = file.iptcdata;
+
+                        initFile(file, {
+                            byline: fileMeta.byline || $scope.currentUser.byline,
+                            headline: fileMeta.headline,
+                            description_text: fileMeta.caption,
+                            copyrightnotice: fileMeta.copyright,
+                        }, getPseudoId());
                     });
-            } else {
-                $scope.errorMessage = getErrorMessage('image');
-            }
+                })
+                .then(() => {
+                    $scope.imagesMetadata = $scope.items.map((item) => item.meta);
+                    $scope.$apply();
+
+                    // running promises sequentially
+                    $scope.items.reduce(
+                        (promise, item, i) => promise.then(
+                            () => getDataUrl(item.file).then((url) => {
+                                $scope.$apply(() => {
+                                    $scope.items[i].imageDataUrl = url;
+                                });
+                            })
+                        )
+                        , Promise.resolve()
+                    );
+                });
         }
     };
 
@@ -279,24 +250,19 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
     };
 
     $scope.save = function() {
-        validateFields();
-        if (_.isNil($scope.errorMessage)) {
-            $scope.saving = true;
-            return $scope.upload().then(() => {
-                $q.all(_.map($scope.items, (item) => {
-                    archiveService.addTaskToArticle(item.meta, $scope.selectedDesk);
-                    return api.archive.update(item.model, item.meta);
-                })).then((results) => {
-                    $scope.resolve(results);
-                });
-            })
-                .finally(() => {
-                    $scope.saving = false;
-                    checkFail();
-                });
-        } else {
-            return Promise.reject();
-        }
+        $scope.saving = true;
+        return $scope.upload().then(() => {
+            $q.all(_.map($scope.items, (item) => {
+                archiveService.addTaskToArticle(item.meta, $scope.selectedDesk);
+                return api.archive.update(item.model, item.meta);
+            })).then((results) => {
+                $scope.resolve(results);
+            });
+        })
+            .finally(() => {
+                $scope.saving = false;
+                checkFail();
+            });
     };
 
     $scope.cancel = function() {
