@@ -1,6 +1,6 @@
 import EXIF from 'exif-js';
 import _ from 'lodash';
-import {getDataUrl} from 'scripts/core/upload/image-preview-directive';
+import {getDataUrl} from 'core/upload/image-preview-directive';
 
 /* eslint-disable complexity */
 
@@ -35,8 +35,8 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
     $scope.allowAudio = !($scope.locals && $scope.locals.data && $scope.locals.data.allowAudio === false);
     $scope.validator = _.omit(deployConfig.getSync('validator_media_metadata'), ['archive_description']);
 
-    Promise.all([desks.fetchDesks(), desks.getCurrentDesk()]).then(([desks, currentDesk]) => {
-        $scope.desks = desks._items;
+    Promise.all([desks.fetchDesks(), desks.getCurrentDesk()]).then(([_desks, currentDesk]) => {
+        $scope.desks = _desks._items;
         $scope.selectedDesk = currentDesk;
     });
 
@@ -70,7 +70,8 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
         return item == null ? '' : item.imageDataUrl;
     };
     $scope.invokeImagesInput = () => {
-        document.querySelector('#images-input').click();
+        var el: HTMLElement = document.querySelector('#images-input');
+        el.click();
     };
 
     $scope.isDragging = false;
@@ -138,14 +139,14 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
             file: file,
             meta: meta,
             progress: 0,
+            cssType: item.file.type.split('/')[0],
         };
 
         if (id != null) {
             item.meta._id = id;
-            item.meta_id = id;
+            item['meta_id'] = id;
         }
 
-        item.cssType = item.file.type.split('/')[0];
         $scope.items.unshift(item);
         $scope.enableSave = $scope.items.length > 0;
     };
@@ -166,7 +167,7 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
         }
 
         let acceptedFiles = [];
-        let uploadOfDisallowedFileTypesAttempted = false;
+        let uploadOfDisallowedFileTypesAttempted: boolean = false;
 
         _.each(files, (file) => {
             if (/^image/.test(file.type)) {
@@ -192,7 +193,7 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
             }
         });
 
-        if (uploadOfDisallowedFileTypesAttempted === true) {
+        if (uploadOfDisallowedFileTypesAttempted) {
             const message = gettext('Only the following files are allowed: ')
                 + ($scope.allowPicture ? gettext('image') : '')
                 + ($scope.allowVideo ? ', ' + gettext('video') : '')
@@ -205,7 +206,7 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
             Promise.all(acceptedFiles.map((file) => getExifData(file)))
                 .then((filesWithExifDataAttached) => {
                     filesWithExifDataAttached.forEach((file) => {
-                        var fileMeta = file.iptcdata;
+                        var fileMeta = file['iptcdata'];
 
                         initFile(file, {
                             byline: fileMeta.byline || $scope.currentUser.byline,
@@ -226,9 +227,9 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
                                 $scope.$apply(() => {
                                     $scope.items[i].imageDataUrl = url;
                                 });
-                            })
+                            }),
                         )
-                        , Promise.resolve()
+                        , Promise.resolve(),
                     );
                 });
         }
