@@ -212,8 +212,9 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
             notify.error(message);
         }
 
-        if (acceptedFiles.length > 0) {
-            Promise.all(acceptedFiles.map(({file}) => getExifData(file)))
+        return acceptedFiles.length < 1
+            ? Promise.resolve()
+            : Promise.all(acceptedFiles.map(({file}) => getExifData(file)))
                 .then((filesWithExifDataAttached) => {
                     filesWithExifDataAttached.forEach((file) => {
                         var fileMeta = file['iptcdata'];
@@ -240,7 +241,6 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
                         , Promise.resolve(),
                     );
                 });
-        }
     };
 
     $scope.upload = function() {
