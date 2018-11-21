@@ -6,7 +6,7 @@ export function SortContentProfiles() {
             element.sortable({
                 items: '.schema-item:not(.schema-item__disabled)',
                 cursor: 'move',
-                containment: '.pills-list',
+                containment: element,
                 tolerance: 'pointer',
                 placeholder: {
                     element: function(current) {
