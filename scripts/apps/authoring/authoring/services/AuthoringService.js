@@ -417,7 +417,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         // item is published state - corrected, published, scheduled, killed
         if (self.isPublished(currentItem)) {
             // if not the last published version
-            if (item.last_published_version == false) {
+            if (item.last_published_version === false) {
                 return angular.extend({}, helpers.DEFAULT_ACTIONS);
             }
 
