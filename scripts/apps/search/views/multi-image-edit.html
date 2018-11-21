@@ -33,7 +33,9 @@
                              ng-class="{'sd-grid-item--selected' : !image.unselected}"
                              style="z-index: 1;"><!--  // required so it's visible on top or drag-and-drop layer -->
                             <div class="sd-grid-item__thumb">
-                                <img ng-src="{{getImageUrl(image)}}"/>
+                                <div
+                                    ng-bind-html="trustAsHtml(getThumbnailHtml(image))"
+                                    style="display: flex; align-items: center; justify-content: center;"></div>
 
                                 <a ng-if="onRemoveItem" class="icn-btn sd-grid-item__remove" sd-tooltip="Remove item" flow="left">
                                     <i class="icon-close-small"></i>

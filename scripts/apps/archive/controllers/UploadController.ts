@@ -64,10 +64,10 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
             return item.progress || 0;
         }
     };
-    $scope.getImageUrl = (imageMeta) => {
+    $scope.getThumbnailHtml = (imageMeta) => {
         const item = getItemByMetaId(imageMeta._id);
 
-        return item == null ? '' : item.imageDataUrl;
+        return item == null ? '' : item.thumbnailHtml;
     };
     $scope.invokeImagesInput = () => {
         var el: HTMLElement = document.querySelector('#images-input');
@@ -140,7 +140,7 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
             file: file,
             meta: meta,
             progress: 0,
-            cssType: item.file.type.split('/')[0],
+            cssType: file.type.split('/')[0],
         };
 
         if (id != null) {
@@ -152,7 +152,7 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
         $scope.enableSave = $scope.items.length > 0;
     };
 
-    $scope.addFiles = function(files) {
+    $scope.addFiles = function(files: Array<File>) {
         $scope.isDragging = false;
 
         if (!files.length) {
@@ -167,25 +167,34 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
             return false;
         }
 
-        let acceptedFiles = [];
+        let acceptedFiles: Array<{file: File, getThumbnail: (file: File) => Promise<string>}> = [];
         let uploadOfDisallowedFileTypesAttempted: boolean = false;
 
         _.each(files, (file) => {
             if (/^image/.test(file.type)) {
                 if ($scope.allowPicture) {
-                    acceptedFiles.push(file);
+                    acceptedFiles.push({
+                        file,
+                        getThumbnail: (f: File) => getDataUrl(f).then((uri) => `<img src="${uri}" />`),
+                    });
                 } else {
                     uploadOfDisallowedFileTypesAttempted = true;
                 }
             } else if (/^video/.test(file.type)) {
                 if ($scope.allowVideo) {
-                    acceptedFiles.push(file);
+                    acceptedFiles.push({
+                        file,
+                        getThumbnail: () => Promise.resolve('<i class="icon--2x icon-video"></i>'),
+                    });
                 } else {
                     uploadOfDisallowedFileTypesAttempted = true;
                 }
             } else if (/^audio/.test(file.type)) {
                 if ($scope.allowAudio) {
-                    acceptedFiles.push(file);
+                    acceptedFiles.push({
+                        file,
+                        getThumbnail: () => Promise.resolve('<i class="icon--2x icon-audio"></i>'),
+                    });
                 } else {
                     uploadOfDisallowedFileTypesAttempted = true;
                 }
@@ -204,7 +213,7 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
         }
 
         if (acceptedFiles.length > 0) {
-            Promise.all(acceptedFiles.map((file) => getExifData(file)))
+            Promise.all(acceptedFiles.map(({file}) => getExifData(file)))
                 .then((filesWithExifDataAttached) => {
                     filesWithExifDataAttached.forEach((file) => {
                         var fileMeta = file['iptcdata'];
@@ -216,17 +225,15 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
                             copyrightnotice: fileMeta.copyright,
                         }, getPseudoId());
                     });
-                })
-                .then(() => {
                     $scope.imagesMetadata = $scope.items.map((item) => item.meta);
                     $scope.$apply();
 
                     // running promises sequentially
-                    $scope.items.reduce(
-                        (promise, item, i) => promise.then(
-                            () => getDataUrl(item.file).then((url) => {
+                    acceptedFiles.reduce(
+                        (promise, {file, getThumbnail}, i) => promise.then(
+                            () => getThumbnail(file).then((htmlString) => {
                                 $scope.$apply(() => {
-                                    $scope.items[i].imageDataUrl = url;
+                                    $scope.items[i].thumbnailHtml = htmlString;
                                 });
                             }),
                         )

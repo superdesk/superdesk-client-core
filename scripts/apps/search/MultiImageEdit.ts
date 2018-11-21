@@ -150,11 +150,13 @@ export function MultiImageEditController(
                 .map((item) => JSON.stringify(item[fieldName])),
         );
 
+        const defaultValue = fieldName === 'subject' ? [] : '';
+
         if (uniqueValues.length < 1) {
-            return '';
+            return defaultValue;
         } else if (uniqueValues.length > 1) {
             $scope.placeholder[fieldName] = '(multiple values)';
-            return '';
+            return defaultValue;
         } else {
             $scope.placeholder[fieldName] = '';
             return JSON.parse(uniqueValues[0]);
@@ -162,8 +164,8 @@ export function MultiImageEditController(
     }
 }
 
-MultiImageEditDirective.$inject = ['asset'];
-export function MultiImageEditDirective(asset) {
+MultiImageEditDirective.$inject = ['asset', '$sce'];
+export function MultiImageEditDirective(asset, $sce) {
     return {
         scope: {
             imagesOriginal: '=',
@@ -172,7 +174,7 @@ export function MultiImageEditDirective(asset) {
             cancelHandler: '=',
             successHandler: '=',
             hideEditPane: '=',
-            getImageUrl: '=',
+            getThumbnailHtml: '=',
             getProgress: '=',
             onRemoveItem: '=',
             uploadInProgress: '=',
@@ -185,6 +187,8 @@ export function MultiImageEditDirective(asset) {
         controller: MultiImageEditController,
         templateUrl: asset.templateUrl('apps/search/views/multi-image-edit.html'),
         link: function(scope) {
+            scope.trustAsHtml = $sce.trustAsHtml;
+
             scope.handleItemClick = function(event, image) {
                 if (event.target != null && event.target.classList.contains('icon-close-small')) {
                     scope.onRemoveItem(image);

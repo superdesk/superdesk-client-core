@@ -4,7 +4,7 @@ function MultiImageEditModalController($scope, imagesOriginal, saveHandler, depl
     $scope.saveHandler = saveHandler;
     $scope.cancelHandler = () => $scope.$close();
     $scope.successHandler = () => $scope.$close();
-    $scope.getImageUrl = (image) => image.renditions.thumbnail.href;
+    $scope.getThumbnailHtml = (image) => `<img src="${image.renditions.thumbnail.href}" />`;
     $scope.validator = deployConfig.getSync('validator_media_metadata');
 }
 
