@@ -7,13 +7,12 @@
         </button>
     </div>
     <div class="sd-page__content">
-        <ul class="pills-list ruleset-list">
-            <li ng-repeat="ruleset in rulesets | filter:query">
-                <div class="header">
-                    <div class="name">{{ruleset.name}}</div>
-                    <div class="actions">
-                        <button ng-click="edit(ruleset)" title="{{:: 'Edit rule set' | translate }}"><i class="icon-pencil"></i></button>
-                        <button ng-click="remove(ruleset)" title="{{:: 'Remove rule set' | translate }}"><i class="icon-trash"></i></button>
+        <ul class="sd-list-item-group sd-list-item-group--space-between-items"  style="max-width: 1000px;">
+            <li ng-repeat="ruleset in rulesets | filter:query" class="sd-list-item sd-shadow--z1">
+                <div class="sd-list-item__border"></div>
+                <div class="sd-list-item__column sd-list-item__column--grow sd-list-item__column--no-border">
+                    <div class="sd-list-item__row">
+                        <span class="sd-overflow-ellipsis sd-list-item--element-grow">{{ruleset.name}}</span>
                     </div>
                 </div>
                 <div class="sd-list-item__action-menu sd-list-item__action-menu--direction-row">

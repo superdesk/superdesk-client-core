@@ -15,17 +15,18 @@
     </div>
 
     <div class="sd-page__content">
-        <ul class="pills-list provider-list">
-            <li ng-repeat="provider in providers._items | filter:query" class="clearfix">
-                <div class="header">
-                    <h6>{{ provider.name}}<span class="label offProvider" ng-if="provider.is_closed" translate>closed</span></h6>
-                    <div class="last-updated" ng-if="provider.last_updated">
-                        <span translate>Last updated</span> {{ provider.last_updated | reldate }}
-                    </div>
-                    <div class="actions">
-                        <button ng-click="gotoIngest(provider)" title="{{:: 'Go to items' | translate }}"><i class="icon-external"></i></button>
-                        <button ng-click="edit(provider)" title="{{:: 'Edit source' | translate }}"><i class="icon-pencil"></i></button>
-                        <button ng-click="remove(provider)" ng-show="!provider.last_item_update" title="{{:: 'Remove source' | translate }}"><i class="icon-trash"></i></button>
+        <ul class="sd-list-item-group sd-list-item-group--space-between-items" style="max-width: 1000px;">
+            <li class="sd-list-item sd-shadow--z1" ng-repeat="provider in providers._items">
+                <div class="sd-list-item__border"></div>
+                <div class="sd-list-item__column sd-list-item__column--grow sd-list-item__column--no-border">
+                    <div class="sd-list-item__row">
+                        <span class="sd-overflow-ellipsis sd-list-item--element-grow">
+                            {{ provider.name}}
+                            <span class="last-updated" ng-if="provider.last_updated">
+                                <span translate>Last updated</span> {{ provider.last_updated | reldate }}
+                            </span>
+                        </span>
+                        <span class="label label--hollow label--alert" ng-if="provider.is_closed" translate>closed</span>
                     </div>
                 </div>
                 <div class="sd-list-item__action-menu sd-list-item__action-menu--direction-row">
