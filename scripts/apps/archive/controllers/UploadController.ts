@@ -71,6 +71,7 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
     };
     $scope.invokeImagesInput = () => {
         var el: HTMLElement = document.querySelector('#images-input');
+
         el.click();
     };
 

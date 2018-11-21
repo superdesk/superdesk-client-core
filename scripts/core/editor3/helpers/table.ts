@@ -7,10 +7,10 @@ import {
     CompositeDecorator,
     convertToRaw,
     convertFromRaw
-} from "draft-js";
-import { OrderedSet, Map } from "immutable";
-import { LinkDecorator } from "../components/links/LinkDecorator";
-import { createBlockSelection } from "./selection";
+} from 'draft-js';
+import {OrderedSet, Map} from 'immutable';
+import {LinkDecorator} from '../components/links/LinkDecorator';
+import {createBlockSelection} from './selection';
 
 /**
  * @ngdoc method
@@ -22,12 +22,12 @@ import { createBlockSelection } from "./selection";
  */
 export function getCell(data, row, col, currentStyle, selection) {
     const decorator = new CompositeDecorator([LinkDecorator]);
-    const { cells } = data;
+    const {cells} = data;
     let cellEditorState;
 
     if (!cells[row] || !cells[row][col]) {
         cellEditorState = EditorState.createWithContent(
-            ContentState.createFromText(""),
+            ContentState.createFromText(''),
             decorator,
         );
     } else {
@@ -38,7 +38,7 @@ export function getCell(data, row, col, currentStyle, selection) {
     }
 
     if (selection != null) {
-        const { anchorKey, focusKey } = selection;
+        const {anchorKey, focusKey} = selection;
         const cellContentState = cellEditorState.getCurrentContent();
         const anchorBlock = cellContentState.getBlockForKey(anchorKey);
         const focusBlock = cellContentState.getBlockForKey(focusKey);
@@ -46,7 +46,7 @@ export function getCell(data, row, col, currentStyle, selection) {
         if (anchorBlock != null && focusBlock != null) {
             const newSelection = cellEditorState
                 .getSelection()
-                .merge({ ...selection });
+                .merge({...selection});
 
             cellEditorState = EditorState.forceSelection(
                 cellEditorState,
@@ -94,7 +94,7 @@ export function setCell(data, row, col, cellEditorState: EditorState) {
 
     data.cells[row][col] = convertToRaw(cellContentState);
 
-    return { data, needUpdate, forceUpdate };
+    return {data, needUpdate, forceUpdate};
 }
 
 /**
@@ -107,7 +107,7 @@ export function setCell(data, row, col, cellEditorState: EditorState) {
  */
 export function getData(contentState: ContentState, block: ContentBlock) {
     const entityKey = block.getEntityAt(0);
-    const { data } = contentState.getEntity(entityKey).getData();
+    const {data} = contentState.getEntity(entityKey).getData();
 
     const blockData = block.getData().get('data');
 
@@ -138,7 +138,7 @@ export function setData(
     const newContentState = Modifier.setBlockData(
         contentState,
         selection,
-        Map().set("data", JSON.stringify(data)),
+        Map().set('data', JSON.stringify(data)),
     );
 
     newContentState.replaceEntityData(entityKey, {data});
