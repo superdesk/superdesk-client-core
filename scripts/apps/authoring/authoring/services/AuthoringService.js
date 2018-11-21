@@ -419,8 +419,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
             // if not the last published version
             if (angular.isDefined(item.archive_item) &&
                 item._current_version !== item.archive_item._current_version &&
-                (item.operation == null || item.operation !== 'move') &&
-                (item.archive_item.operation == null || item.archive_item.operation !== 'move')) {
+                item.operation !== 'move' && item.archive_item.operation !== 'move') {
                 return angular.extend({}, helpers.DEFAULT_ACTIONS);
             }
 
