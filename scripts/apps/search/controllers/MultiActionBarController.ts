@@ -71,7 +71,6 @@ export function MultiActionBarController(
 
         Promise.all(multi.getIds().map((id) => api.find('archive', id)))
             .then((imagesFromDatabase) => {
-
                 // <TECHNICAL DEBT>
                 // UI state(`selected` property of the article) is stored on a database/API entity
                 // because of that, it's not possible to use the latest data from the API
