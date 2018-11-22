@@ -1733,6 +1733,14 @@
     &--small {
         padding: 10px 14px 10px 25px;
     }
+    &--no-padding {
+        padding: 0 0 0 8px;
+        &:after {
+            width: 6px;
+            left: 2px;
+            background: transparent url(~images/draggable-bg.png) repeat-y left 0px top 3px;
+        }
+    }
 }
 .draggable-list.serial-decimal {
     list-style-type: decimal !important;

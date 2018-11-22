@@ -1384,11 +1384,10 @@
 .item-association {
     border: 2px dashed rgba(150,150,150,0.3);
     background-color: rgba(150,150,150,0.06);
-
+    color: inherit;
     &:focus {
         border-color: #5ea9c8;
     }
-
     width: 100%;
     height: 65px;
     position: relative;
@@ -1399,15 +1398,23 @@
         background-color: fade(#f7f7f7, 40%);
         border-color: fade(#cfcfcf, 40%);
         &:before {
-            @include spinner-big();
             content: '';
-            top: 50%;
-            left: 0;
-            transform: translateY(-50%);
             position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 3;
+            background-image: url(~images/three-dots.svg);
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-size: 70px;
         }
         img {
             opacity: .2;
+        }
+        .item-association__text-label {
+            opacity: 0.1;
         }
     }
 
@@ -1446,6 +1453,11 @@
             cursor: auto;
         }
     }
+    &--no-click {
+        &:hover {
+            cursor: auto;
+        }
+    }
 
     .close-overlay {
         z-index:10000;
@@ -1453,6 +1465,10 @@
         top: 16px;
         right: 16px;
     }
+}
+.item-association__text-label {
+    font-weight: 500;
+    opacity: 0.4;
 }
 
 feature-image {
@@ -1621,6 +1637,44 @@ feature-image {
 }
 
 
+//  RELATED ITEMS
+// -------------------------------------------------------------
+.related-items {
+    padding: 1rem 1rem 0;
+    background-color: rgba(150, 150, 150, 0.075);
+    border: 1px solid rgba(150, 150, 150, 0.2);
+    .draggable-list {
+        .placeholder {
+            border: 2px dotted $sd-blue;
+            background-color: scale-color($sd-blue, $alpha: -90%);
+            min-height: 58px !important;
+            margin: 0 0 1rem;
+        }
+        .sd-list-item {
+            &:hover {
+                cursor: inherit;
+            }
+        }
+    }
+    &.dragover {
+        border: 1px dashed $sd-blue;
+        background-color: scale-color($sd-blue, $alpha: -90%);
+    }
+}
+
+.sd-list-item {
+    .type-icon {
+        opacity: 0.6;
+    }
+}
+
+
+
+
+// -------------------------------------------------------------
+//  END RELATED ITEMS
+
+
 [class^="--dark-ui"],
 [class*="--dark-ui"] {
     [sd-meta-terms] {
@@ -1648,5 +1702,5 @@ feature-image {
             }
         }
     }
-  
 }
+

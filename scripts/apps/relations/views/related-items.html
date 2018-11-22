@@ -1,21 +1,27 @@
-<div class="item-association" ng-if="isEmptyRelatedItems(field._id)"></div>
+<button class="item-association item-association--no-click" 
+        ng-if="isEmptyRelatedItems(field._id)"
+        ng-class="{'item-association--loading': loading}">
+        <span class="item-association__text-label">{{'Drop items here' | translate}}</span>  
+</button>
 <div class="related-items" ng-if="!isEmptyRelatedItems(field._id)">
     <ul class="groups draggable-list" sd-sort-groups>
-        <li id="{{field._id}}" class="sort-item draggable-list__item draggable-list__item--small"
+        <li id="{{field._id}}" class="sort-item draggable-list__item draggable-list__item--no-padding"
             ng-repeat="(key, relatedItem) in getRelatedItems(field._id) track by key">
-            <div>
-                <i class="type-icon" sd-filetype-icon data-item="relatedItem"></i>
-                <span class="keyword" ng-if="relatedItem.slugline">{{ relatedItem.slugline }}</span>
-                <span sd-item-container data-item="relatedItem" class="container"></span>
-                <span class="pull-right">
-                    <button class="remove" ng-click="openRelatedItem(relatedItem)"><i class="icon-pencil"></i></button>
-                    <button class="remove" ng-click="removeRelatedItem(key)"><i class="icon-close-small"></i></button>
-                </span>
-                <div class="item">
-                    <span class="state-label state-{{relatedItem.state}}">{{ relatedItem.state }}</span>
-                    <span ng-href="" title="{{ relatedItem.headline }}" class="headline">
-                        {{ relatedItem.headline || relatedItem.description_text }}
-                    </span>
+            <div class="sd-list-item sd-list-item--no-hover">
+                <div class="sd-list-item__column"><i class="type-icon" sd-filetype-icon data-item="relatedItem"></i></div>
+                <div class="sd-list-item__column sd-list-item__column--grow sd-list-item__column--no-border">
+                    <div class="sd-list-item__row">
+                        <span class="sd-list-item__slugline" ng-if="relatedItem.slugline">{{ relatedItem.slugline }}</span>
+                        <span class="sd-overflow-ellipsis sd-list-item--element-grow" sd-item-container data-item="relatedItem" class="container"></span>
+                    </div>
+                    <div class="sd-list-item__row">
+                        <span class="state-label state-{{relatedItem.state}}">{{ relatedItem.state }}</span>
+                        <span class="sd-overflow-ellipsis sd-list-item--element-grow" title="{{ relatedItem.headline }}">{{ relatedItem.headline || relatedItem.description_text }}</span>
+                    </div>
+                </div>
+                <div class="sd-list-item__action-menu sd-list-item__action-menu--direction-row">
+                    <button class="icn-btn" ng-click="openRelatedItem(relatedItem)"><i class="icon-pencil"></i></button>
+                    <button class="icn-btn" ng-click="removeRelatedItem(key)"><i class="icon-close-small"></i></button>
                 </div>
             </div>
         </li>

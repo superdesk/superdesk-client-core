@@ -1,6 +1,7 @@
 <button tabindex="{{tabindex}}" class="item-association" ng-if="!carouselItems.length"
     ng-class="{'item-association--preview': item[item.fieldId], 'item-association--loading': loading}"
     ng-click="editable && associations.isMediaEditable() && !item[item.fieldId] && upload()">
+    <span class="item-association__text-label">{{'Drop items here or click to upload' | translate}}</span>
 </button>
 
 <div class="sd-media-carousel" ng-if="carouselItems.length">
