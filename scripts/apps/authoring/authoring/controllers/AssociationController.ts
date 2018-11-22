@@ -1,5 +1,4 @@
-/* global _ */
-
+import {startsWith, endsWith, some, forEach, get} from 'lodash';
 
 /**
  * @ngdoc controller
@@ -35,7 +34,7 @@ export function AssociationController(config, send, api, $q, superdesk,
      * @param {Object} rendition Rendition of the item.
      */
     this.isImage = function(rendition) {
-        return _.startsWith(rendition.mimetype, 'image');
+        return startsWith(rendition.mimetype, 'image');
     };
 
     /**
@@ -46,11 +45,11 @@ export function AssociationController(config, send, api, $q, superdesk,
      * @param {Object} rendition Rendition of the item.
      */
     this.isVideo = function(rendition) {
-        if (_.startsWith(rendition.mimetype, 'video')) {
+        if (startsWith(rendition.mimetype, 'video')) {
             return true;
         }
 
-        return _.some(['.mp4', '.webm', '.ogv', '.ogg'], (ext) => _.endsWith(rendition.href, ext));
+        return some(['.mp4', '.webm', '.ogv', '.ogg'], (ext) => endsWith(rendition.href, ext));
     };
 
     /**
@@ -61,13 +60,13 @@ export function AssociationController(config, send, api, $q, superdesk,
      * @param {Object} rendition Rendition of the item.
      */
     this.isAudio = function(rendition) {
-        if (_.startsWith(rendition.mimetype, 'audio')) {
+        if (startsWith(rendition.mimetype, 'audio')) {
             return true;
         }
 
-        return _.some(
+        return some(
             ['.mp3', '.3gp', '.wav', '.ogg', 'wma', 'aa', 'aiff'],
-            (ext) => _.endsWith(rendition.href, ext)
+            (ext) => endsWith(rendition.href, ext),
         );
     };
 
@@ -148,7 +147,7 @@ export function AssociationController(config, send, api, $q, superdesk,
                         }
                     }
 
-                    _.forEach(images, (image) => {
+                    forEach(images, (image) => {
                         imagesWithIds.push({id: scope.rel, image: image});
                         scope.rel = mediaIdGenerator.getFieldVersionName(rootField, ++index);
                     });
@@ -193,10 +192,14 @@ export function AssociationController(config, send, api, $q, superdesk,
      * @description Opens the item for edit.
      * @param {Object} scope Directive scope
      * @param {Object} item Item to be edited
-     * @param {Object} options { isNew: Boolean, customRel: String }
      * @param {Function} callback Callback function
      */
-    this.edit = function(scope, item, options = {}, callback = null) {
+    this.edit = function(
+        scope,
+        item,
+        options: {isNew?: boolean, customRel?: string, defaultTab?: any, showMetadata?: boolean} = {},
+        callback = null,
+    ) {
         if (!self.isMediaEditable()) {
             return;
         }
@@ -212,17 +215,19 @@ export function AssociationController(config, send, api, $q, superdesk,
             showMetadata: 'showMetadata' in options ? options.showMetadata : true,
         };
 
-        if (item.renditions && item.renditions.original) {
+        if (isImage === true && item.renditions && item.renditions.original) {
             scope.loading = true;
             return renditions.crop(item, cropOptions)
                 .then((rendition) => {
                     self.updateItemAssociation(scope, rendition, options.customRel, callback);
-                }, (error) => {
+                }, () => {
                     notify.error(gettext('Failed to generate picture crops.'));
                 })
                 .finally(() => {
                     scope.loading = false;
                 });
+        } else {
+            scope.loading = false;
         }
 
         self.updateItemAssociation(scope, item, options.customRel, callback);
@@ -259,11 +264,11 @@ export function AssociationController(config, send, api, $q, superdesk,
             // save generated association id in order to be able to update the same item after editing.
             const originalRel = scope.rel;
 
-            if (self.isMediaEditable() && _.get(item, '_type') === 'externalsource') {
+            if (self.isMediaEditable() && get(item, '_type') === 'externalsource') {
                 // if media is editable then association will be updated by self.edit method
                 scope.loading = true;
                 renditions.ingest(item)
-                    .then((item) => self.edit(scope, item, {customRel: originalRel}))
+                    .then((_item) => self.edit(scope, _item, {customRel: originalRel}))
                     .finally(() => {
                         scope.loading = false;
                     });
