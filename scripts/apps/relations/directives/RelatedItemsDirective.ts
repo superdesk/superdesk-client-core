@@ -53,11 +53,13 @@ export function RelatedItemsDirective(authoringWorkspace, relationsService) {
             }
 
             const addDragOverClass = () => {
-                elem.find('related-items').addClass(dragOverClass);
+                elem.find('.item-association').addClass(dragOverClass);
+                elem.find('.related-items').addClass(dragOverClass);
             };
 
             const removeDragOverClass = () => {
-                elem.find('related-items').removeClass(dragOverClass);
+                elem.find('.item-association').removeClass(dragOverClass);
+                elem.find('.related-items').removeClass(dragOverClass);
             };
 
             /**

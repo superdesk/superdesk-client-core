@@ -4,7 +4,7 @@ export function ItemContainer(desks) {
         scope: {
             item: '=',
         },
-        template: '<span class="location-desk-label">{{item.label}}</span> {{item.value}}',
+        template: '<span class="location-desk-label sd-list-item__text-label">{{item.label}}</span> {{item.value}}',
         link: function(scope, elem) {
             if (scope.item._type !== 'ingest') {
                 if (scope.item.task && scope.item.task.desk) {
