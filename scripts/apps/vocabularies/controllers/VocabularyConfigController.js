@@ -1,5 +1,7 @@
 import {MEDIA_TYPES, MEDIA_TYPE_KEYS, DEFAULT_SCHEMA, VOCABULARY_SELECTION_TYPES} from '../constants';
 
+const OTHER = 'Other';
+
 VocabularyConfigController.$inject = ['$scope', '$route', '$routeParams', 'vocabularies', '$rootScope',
     'api', 'notify', 'modal', 'session'];
 export function VocabularyConfigController($scope, $route, $routeParams, vocabularies, $rootScope,
@@ -54,11 +56,35 @@ export function VocabularyConfigController($scope, $route, $routeParams, vocabul
     $scope.reloadList = () => {
         $scope.loading = true;
         vocabularies.getVocabularies().then((vocabularies) => {
+            const wordSet = (vocabularies || []).reduce((wordSet, vocabulary) => {
+                (vocabulary.tags || []).forEach((tag) => {
+                    wordSet.add(tag.text);
+                });
+                return wordSet;
+            }, new Set());
+
+            let wordList = Array.from(wordSet).sort((a, b) => a.localeCompare(b));
+
+            wordList.push(OTHER);
+
+            $scope.tags = wordList.map((word) => ({text: word}));
             $scope.vocabularies = vocabularies;
             $scope.loading = false;
             setupActiveVocabulary();
         });
     };
+
+    function checkTag(vocabulary, currentTag, tab) {
+        return $scope.matchFieldTypeToTab(tab, vocabulary.field_type) &&
+        (currentTag.text === OTHER && (vocabulary.tags == null || vocabulary.tags.length === 0) ||
+        (vocabulary.tags || []).some((tag) => tag.text === currentTag.text));
+    }
+
+    $scope.getVocabulariesForTag = (currentTag, tab) =>
+        ($scope.vocabularies || []).filter((vocabulary) => checkTag(vocabulary, currentTag, tab));
+
+    $scope.existsVocabulariesForTag = (currentTag, tab) =>
+        ($scope.vocabularies || []).some((vocabulary) => checkTag(vocabulary, currentTag, tab));
 
     /**
      * Update vocabulary in the list with given updates

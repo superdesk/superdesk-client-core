@@ -18,7 +18,7 @@ class MetadataHelper {
     }
 
     items() {
-        return element.all(by.repeater('vocabulary in vocabularies'));
+        return element.all(by.repeater('vocabulary in getVocabulariesForTag'));
     }
 }
 
