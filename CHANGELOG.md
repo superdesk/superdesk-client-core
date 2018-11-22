@@ -1,5 +1,14 @@
 # Superdesk Client Changelog
 
+## [1.26.2] 2018-11-22
+
+### Fixed
+
+- Fix loading of published items in translations widget.
+- Fix image upload issues.
+- Fix actions dropdown for published items.
+- Fix embeding items in editor3 using drag&drop.
+
 ## [1.26.1] 2018-11-20
 
 ### Fixed
