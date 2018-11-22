@@ -2,8 +2,7 @@ IngestRoutingGeneral.$inject = ['weekdays', 'desks', 'macros'];
 export function IngestRoutingGeneral(weekdays, desks, macros) {
     return {
         scope: {
-            rule: '=',
-            removeAction: '=',
+            rule: '='
         },
         templateUrl: 'scripts/apps/ingest/views/settings/ingest-routing-general.html',
         link: function(scope) {
@@ -15,12 +14,6 @@ export function IngestRoutingGeneral(weekdays, desks, macros) {
                     scope.deskLookup = desks.deskLookup;
                     scope.stageLookup = desks.stageLookup;
                 });
-
-            scope.remove = function() {
-                if (typeof scope.removeAction === 'function') {
-                    return scope.removeAction(scope.rule);
-                }
-            };
 
             macros.get().then((macros) => {
                 _.transform(macros, (lookup, macro, idx) => {
