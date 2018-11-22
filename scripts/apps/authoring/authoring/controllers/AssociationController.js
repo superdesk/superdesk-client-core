@@ -212,17 +212,19 @@ export function AssociationController(config, send, api, $q, superdesk,
             showMetadata: 'showMetadata' in options ? options.showMetadata : true,
         };
 
-        if (item.renditions && item.renditions.original) {
+        if (isImage === true && item.renditions && item.renditions.original) {
             scope.loading = true;
             return renditions.crop(item, cropOptions)
                 .then((rendition) => {
                     self.updateItemAssociation(scope, rendition, options.customRel, callback);
-                }, (error) => {
+                }, () => {
                     notify.error(gettext('Failed to generate picture crops.'));
                 })
                 .finally(() => {
                     scope.loading = false;
                 });
+        } else {
+            scope.loading = false;
         }
 
         self.updateItemAssociation(scope, item, options.customRel, callback);
