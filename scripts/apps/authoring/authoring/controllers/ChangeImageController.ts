@@ -1,3 +1,5 @@
+import {get} from 'lodash';
+
 /**
  * @ngdoc controller
  * @module superdesk.apps.authoring
@@ -54,7 +56,10 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
         'copyrightholder',
         'usageterms',
         'copyrightnotice',
-    ];
+        'place',
+        'subject',
+        'keywords',
+    ].concat(Object.keys(get(deployConfig.getSync('schema'), 'picture', {})));
 
     $scope.controls = angular.copy(DEFAULT_CONTROLS);
 
