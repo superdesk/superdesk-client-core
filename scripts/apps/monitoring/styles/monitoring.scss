@@ -397,3 +397,36 @@
         }
     }
 }
+
+.subnav__stage-group {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-left: 2rem;
+    font-size: 1.5rem;
+    .stage-group__split {
+        padding: 0 0.4rem 0 0.8rem;
+        opacity: 0.4;
+    }
+    .stage-group__badge {
+        padding: 0.4rem 0.8rem;
+        margin-left: 1rem;
+    }
+    .dropdown.open {
+        .navbtn {
+            background-color: transparent !important;
+            box-shadow: none;
+            &:hover {
+                background-color: transparent !important;
+            }
+        }
+        > .dropdown__menu {
+            margin: -4px 0 0 -10px;
+        }
+    }
+}
+.navbtn.navbtn--text-only {
+    &.navbtn--padding-s {
+        padding: 0 0.4rem
+    }
+}

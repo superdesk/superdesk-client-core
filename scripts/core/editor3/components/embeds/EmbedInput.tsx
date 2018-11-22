@@ -8,6 +8,16 @@ import {embed, hidePopups} from '../../actions';
 const fallbackAPIKey = '1d1728bf82b2ac8139453f'; // register to author's personal account
 const GenericError = gettext('This URL could not be embedded.');
 
+export const getEmbedObject = (url) => {
+    const config = ng.get('config');
+    const apiKey = config.iframely.key || fallbackAPIKey;
+
+    return $.ajax({
+        url: `//iframe.ly/api/oembed?callback=?&url=${url}&api_key=${apiKey}&omit_script=true&iframe=true`,
+        dataType: 'json',
+    });
+};
+
 /**
  * @ngdoc React
  * @module superdesk.core.editor3
@@ -95,13 +105,7 @@ export class EmbedInputComponent extends React.Component<any, any> {
             return this.processSuccess(value);
         }
 
-        const config = ng.get('config');
-        const apiKey = config.iframely.key || fallbackAPIKey;
-
-        $.ajax({
-            url: `//iframe.ly/api/oembed?callback=?&url=${value}&api_key=${apiKey}&omit_script=true&iframe=true`,
-            dataType: 'json',
-        })
+        getEmbedObject(value)
             .then((data) => data.type === 'link' ? $.Deferred().reject() : data)
             .then(this.processSuccess, this.processError);
     }

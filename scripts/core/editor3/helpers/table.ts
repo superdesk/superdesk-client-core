@@ -1,5 +1,14 @@
-import {Modifier, ContentState, EditorState, CompositeDecorator, convertToRaw, convertFromRaw} from 'draft-js';
-import {OrderedSet} from 'immutable';
+import {
+    EditorChangeType,
+    Modifier,
+    ContentState,
+    ContentBlock,
+    EditorState,
+    CompositeDecorator,
+    convertToRaw,
+    convertFromRaw
+} from 'draft-js';
+import {OrderedSet, Map} from 'immutable';
 import {LinkDecorator} from '../components/links/LinkDecorator';
 import {createBlockSelection} from './selection';
 
@@ -17,9 +26,15 @@ export function getCell(data, row, col, currentStyle, selection) {
     let cellEditorState;
 
     if (!cells[row] || !cells[row][col]) {
-        cellEditorState = EditorState.createWithContent(ContentState.createFromText(''), decorator);
+        cellEditorState = EditorState.createWithContent(
+            ContentState.createFromText(''),
+            decorator,
+        );
     } else {
-        cellEditorState = EditorState.createWithContent(convertFromRaw(cells[row][col]), decorator);
+        cellEditorState = EditorState.createWithContent(
+            convertFromRaw(cells[row][col]),
+            decorator,
+        );
     }
 
     if (selection != null) {
@@ -29,14 +44,22 @@ export function getCell(data, row, col, currentStyle, selection) {
         const focusBlock = cellContentState.getBlockForKey(focusKey);
 
         if (anchorBlock != null && focusBlock != null) {
-            const newSelection = cellEditorState.getSelection().merge({...selection});
+            const newSelection = cellEditorState
+                .getSelection()
+                .merge({...selection});
 
-            cellEditorState = EditorState.forceSelection(cellEditorState, newSelection);
+            cellEditorState = EditorState.forceSelection(
+                cellEditorState,
+                newSelection,
+            );
         }
     }
 
     if (currentStyle != null) {
-        cellEditorState = EditorState.setInlineStyleOverride(cellEditorState, OrderedSet(currentStyle));
+        cellEditorState = EditorState.setInlineStyleOverride(
+            cellEditorState,
+            OrderedSet(currentStyle),
+        );
     }
 
     return cellEditorState;
@@ -51,7 +74,7 @@ export function getCell(data, row, col, currentStyle, selection) {
  * @description Updates data about this cell inside the entity for this atomic
  * block.
  */
-export function setCell(data, row, col, cellEditorState) {
+export function setCell(data, row, col, cellEditorState: EditorState) {
     const cellContentState = cellEditorState.getCurrentContent();
     let needUpdate = true;
     let forceUpdate = true;
@@ -61,8 +84,12 @@ export function setCell(data, row, col, cellEditorState) {
     }
 
     if (data.cells[row][col]) {
-        needUpdate = JSON.stringify(data.cells[row][col]) !== JSON.stringify(convertToRaw(cellContentState));
-        forceUpdate = convertFromRaw(data.cells[row][col]).getPlainText() !== cellContentState.getPlainText();
+        needUpdate =
+            JSON.stringify(data.cells[row][col]) !==
+            JSON.stringify(convertToRaw(cellContentState));
+        forceUpdate =
+            convertFromRaw(data.cells[row][col]).getPlainText() !==
+            cellContentState.getPlainText();
     }
 
     data.cells[row][col] = convertToRaw(cellContentState);
@@ -78,17 +105,17 @@ export function setCell(data, row, col, cellEditorState) {
  * @description Returns the data contained in the entity of this atomic block.
  * @return {Object}
  */
-export function getData(editorState, block) {
-    const contentState = editorState.getCurrentContent();
+export function getData(contentState: ContentState, block: ContentBlock) {
     const entityKey = block.getEntityAt(0);
-    const entity = contentState.getEntity(entityKey);
-    const {data} = entity.getData();
+    const {data} = contentState.getEntity(entityKey).getData();
 
-    if (block.getData().get('data')) {
-        return JSON.parse(block.getData().get('data'));
+    const blockData = block.getData().get('data');
+
+    if (!blockData && data) {
+        return data;
     }
 
-    return data;
+    return JSON.parse(blockData);
 }
 
 /**
@@ -96,18 +123,31 @@ export function getData(editorState, block) {
  * @name getData
  * @param {Object} contentState The editor content state
  * @param {Object} block The current atomic block
- * @description Returns the data contained in the entity of this atomic block.
+ * @description Returns EditorState with the data contained in the entity of this atomic block.
  * @return {Object}
  */
-export function setData(editorState, block, data, lastChangeType) {
+export function setData(
+    editorState: EditorState,
+    block: ContentBlock,
+    data,
+    lastChangeType,
+): EditorState {
     const contentState = editorState.getCurrentContent();
     const entityKey = block.getEntityAt(0);
     const selection = createBlockSelection(editorState, block);
-    const newContentState = Modifier.setBlockData(contentState, selection, {data: JSON.stringify(data)});
-
-    return EditorState.push(
-        editorState,
-        newContentState.replaceEntityData(entityKey, {data}),
-        lastChangeType
+    const newContentState = Modifier.setBlockData(
+        contentState,
+        selection,
+        Map().set('data', JSON.stringify(data)),
     );
+
+    newContentState.replaceEntityData(entityKey, {data});
+
+    const newEditorState = EditorState.push(
+        editorState,
+        newContentState,
+        lastChangeType,
+    );
+
+    return newEditorState;
 }

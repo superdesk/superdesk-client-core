@@ -1283,6 +1283,7 @@ describe('authoring actions', () => {
                 task: {
                     desk: 'desk1',
                 },
+                last_published_version: false,
                 _current_version: 8,
                 archive_item: {
                     _id: 'test',

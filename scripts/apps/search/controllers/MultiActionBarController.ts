@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import {IArticle} from 'superdesk-interfaces/Article';
 
 /**
  * @ngdoc controller
@@ -24,12 +25,12 @@ import _ from 'lodash';
 
 MultiActionBarController.$inject = [
     '$rootScope', 'multi', 'multiEdit', 'multiImageEdit', 'send', 'remove', 'modal', '$q', 'gettext',
-    'packages', 'superdesk', 'notify', 'spike', 'authoring', 'privileges', '$location', 'config',
+    'packages', 'superdesk', 'notify', 'spike', 'authoring', 'privileges', '$location', 'config', 'api',
 ];
 
 export function MultiActionBarController(
     $rootScope, multi, multiEdit, multiImageEdit, send, remove, modal, $q, gettext,
-    packages, superdesk, notify, spike, authoring, privileges, $location, config,
+    packages, superdesk, notify, spike, authoring, privileges, $location, config, api,
 ) {
     this.send = function() {
         send.all(multi.getItems());
@@ -65,13 +66,32 @@ export function MultiActionBarController(
 
     this.multiImageEdit = function() {
         const originalImages = multi.getItems();
+        // load images fully. Using multi.getItems() doesn't work
+        // since it doesn't contain "subject" required for "usage terms"
 
-        multiImageEdit.edit(originalImages, (editedImages) => Promise.all(
-            originalImages.map((originalImage) => authoring.save(
-                originalImage,
-                _.find(editedImages, (item) => item._id === originalImage._id),
-            )),
-        ));
+        Promise.all(multi.getIds().map((id) => api.find('archive', id)))
+            .then((imagesFromDatabase) => {
+                // <TECHNICAL DEBT>
+                // UI state(`selected` property of the article) is stored on a database/API entity
+                // because of that, it's not possible to use the latest data from the API
+                // and it has to be patched on top of old data in order for UI state related properties to be preserved
+                imagesFromDatabase.forEach((imageFromDb: IArticle) => {
+                    const originalImage = originalImages.find((i) => i._id === imageFromDb._id);
+
+                    // attaching missing properties to originalImages
+                    for (const prop in imageFromDb) {
+                        originalImage[prop] = imageFromDb[prop];
+                    }
+                });
+                // </TECHNICAL DEBT>
+
+                multiImageEdit.edit(originalImages, (editedImages) => Promise.all(
+                    originalImages.map((image: IArticle) => authoring.save(
+                        image,
+                        _.find(editedImages, (item) => item._id === image._id),
+                    )),
+                ));
+            });
     };
 
     this.createPackage = function() {

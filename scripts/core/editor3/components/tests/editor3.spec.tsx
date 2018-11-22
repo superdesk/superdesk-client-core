@@ -1,6 +1,6 @@
 import React from 'react';
 import {shallow, mount} from 'enzyme';
-import {Editor3Component as Editor3} from '../Editor3Component';
+import {Editor3Component as Editor3, getValidMediaType} from '../Editor3Component';
 import {getBlockRenderer} from '../blockRenderer';
 import {EditorState} from 'draft-js';
 import mockStore from './utils';
@@ -94,6 +94,16 @@ describe('editor3.component', () => {
         ].forEach((validType) => {
             expect(onDragOver(makeEvent(validType))).toBeTruthy();
         });
+    });
+
+    it('should prefer superdesk media when dropping', () => {
+        const event = {dataTransfer: {types: ['text/html', 'application/superdesk.item.picture']}};
+
+        expect(getValidMediaType(event)).toBe('application/superdesk.item.picture');
+
+        event.dataTransfer.types.reverse();
+
+        expect(getValidMediaType(event)).toBe('application/superdesk.item.picture');
     });
 });
 

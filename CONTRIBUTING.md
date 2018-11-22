@@ -6,7 +6,6 @@ We accept all contributions to Superdesk. Changes containing fixes or enhancemen
 
 ### Checklist
 
-* All code must be documented and checked using `grunt docs`.
 * Changes that contain functional code must be unit tested.
 * Presentational code that affects UI must come with behavioral (e2e) tests.
 * Keep commit history clean (see recommendations further down this page).

@@ -273,23 +273,23 @@ export function ContentProfileSchemaEditor(content, metadata) {
 
                     scope.getSchemaKeys = () => {
                         switch (scope.sectionToRender) {
-                            case 'header':
-                                return schemaKeys.filter((key) => articleHeaderFields.has(key));
-                            case 'content':
-                                return schemaKeys.filter((key) => articleHeaderFields.has(key) === false);
-                            default:
-                                return assertNever(scope.sectionToRender);
+                        case 'header':
+                            return schemaKeys.filter((key) => articleHeaderFields.has(key));
+                        case 'content':
+                            return schemaKeys.filter((key) => articleHeaderFields.has(key) === false);
+                        default:
+                            return assertNever(scope.sectionToRender);
                         }
                     };
 
                     scope.getSchemaKeysDisabled = () => {
                         switch (scope.sectionToRender) {
-                            case 'header':
-                                return schemaKeysDisabled.filter(({key}) => articleHeaderFields.has(key));
-                            case 'content':
-                                return schemaKeysDisabled.filter(({key}) => articleHeaderFields.has(key) === false);
-                            default:
-                                return assertNever(scope.sectionToRender);
+                        case 'header':
+                            return schemaKeysDisabled.filter(({key}) => articleHeaderFields.has(key));
+                        case 'content':
+                            return schemaKeysDisabled.filter(({key}) => articleHeaderFields.has(key) === false);
+                        default:
+                            return assertNever(scope.sectionToRender);
                         }
                     };
 

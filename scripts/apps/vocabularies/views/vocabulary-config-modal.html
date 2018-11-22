@@ -52,6 +52,13 @@
                          ng-show="vocabularyForm.$error.maxlength" translate>The helper text must not exceed 120 characters.</div>
                 </div>
 
+                <div class="sd-line-input" ng-if="matchFieldTypeToTab('vocabularies', vocabulary.field_type)">
+                    <label for="cv_selection_type" class="sd-line-input__label" translate>Show to users as:</label>
+                    <select id="cv_selection_type" class="input-medium" ng-model="vocabulary.selection_type">
+                        <option value="{{type.id}}" ng-repeat="type in selectionTypes" translate>{{type.label}}</option>
+                    </select>
+                </div>
+
                 <div class="sd-line-input" ng-if="matchFieldTypeToTab('date-fields', vocabulary.field_type)">
                     <label class="sd-line-input__label" translate>Shortcuts</label>
                     <ul class="date_shortcuts">
@@ -76,6 +83,7 @@
                             </div>
                         </li>
                     </ul>
+                </div>
 
                     <div class="sd-line-input" ng-if="matchFieldTypeToTab('vocabularies', vocabulary.field_type)">
                         <sd-check ng-model="vocabulary.preffered_items">{{ :: 'Available in user/desk preferences' | translate }}</sd-check>
@@ -91,8 +99,7 @@
                         <div class="form__row form__row--inner form__row--flex">
                             <div class="form__row-item form__row-item--no-grow">
                                 <select class="input-medium" ng-model="vocabulary.field_type">
-                                    <option value="media" translate>Media gallery</option>
-                                    <option value="related-content" translate>Related items</option>
+                                    <option value="{{type.id}}" ng-repeat="type in mediaTypes">{{type.label}}</option>
                                 </select>
                             </div>
                             <div class="form__row-item form__row-item--no-grow">
@@ -101,7 +108,7 @@
                                     <sd-check name="field_type" ng-model="vocabulary.field_options.allowed_types.video" data-icon="video">{{'Video' | translate}}</sd-check>
                                     <sd-check name="field_type" ng-model="vocabulary.field_options.allowed_types.audio" data-icon="audio">{{'Audio' | translate}}</sd-check>
                                 </div>
-                                <div class="form__row" ng-if="vocabulary.field_type === 'related_content'">
+                                <div class="form__row" ng-if="vocabulary.field_type === mediaTypes.RELATED_CONTENT.id">
                                     <sd-check name="field_type" ng-model="vocabulary.field_options.allowed_types.text" data-icon="text">{{'Text' | translate}}</sd-check>
                                     <sd-check name="field_type" ng-model="vocabulary.field_options.allowed_types.preformatted" data-icon="text">{{'Preformatted' | translate}}</sd-check>
                                     <sd-check name="field_type" ng-model="vocabulary.field_options.allowed_types.graphic" data-icon="graphic">{{'Graphic' | translate}}</sd-check>
@@ -135,10 +142,6 @@
                         <button id="add-new-btn" class="btn btn--primary" ng-click="addItem()"><i class="icon-plus-sign"></i> {{'Add Item' | translate}}</button>
                     </div>
 
-            <div class="sd-line-input" ng-if="matchFieldTypeToTab('vocabularies', vocabulary.field_type)">
-                <sd-check ng-model="vocabulary.single_value">{{ :: 'Accept only single selection' | translate }}</sd-check>
-            </div>
-
             <div ng-if="errorMessage" class="sd-line-input sd-line-input--invalid">
                 <p class="sd-line-input__message">{{ errorMessage }}</p>
             </div>
@@ -147,7 +150,7 @@
 
                 <div class="modal__footer">
                     <button id="save-edit-btn" type="submit" class="btn btn--primary pull-right" ng-click="save()"
-                                                                                                 ng-disabled="!editForm.$dirty || editForm.$invalid || !itemsValidation.valid" translate>Save
+                        ng-disabled="!editForm.$dirty || editForm.$invalid || !itemsValidation.valid || requireAllowedTypesSelection()" translate>Save
                     </button>
                     <button id="cancel-edit-btn" type="button" class="btn pull-right" ng-click="cancel()" translate>Cancel
                     </button>

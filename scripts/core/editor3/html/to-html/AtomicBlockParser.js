@@ -2,6 +2,7 @@ import {ContentState, convertFromRaw} from 'draft-js';
 import {HTMLGenerator} from '.';
 import {isQumuWidget, postProccessQumuEmbed} from '../../components/embeds/QumuWidget';
 import {logger} from 'core/services/logger';
+import * as tableHelpers from 'core/editor3/helpers/table';
 
 /**
  * @ngdoc class
@@ -40,7 +41,7 @@ export class AtomicBlockParser {
         case 'EMBED':
             return this.parseEmbed(data);
         case 'TABLE':
-            return this.parseTable(data);
+            return this.parseTable(tableHelpers.getData(this.contentState, contentBlock));
         default:
             logger.warn(`Editor3: Cannot generate HTML for entity type of ${entity.getType()}`, data);
             return '';
@@ -113,7 +114,7 @@ export class AtomicBlockParser {
             return '';
         }
 
-        const {numRows, numCols, cells, withHeader} = data.data;
+        const {numRows, numCols, cells, withHeader} = data;
         const getCell = (i, j) => {
             const cellContentState = cells[i] && cells[i][j]
                 ? convertFromRaw(cells[i][j])
