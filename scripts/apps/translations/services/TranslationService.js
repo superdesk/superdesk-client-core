@@ -11,8 +11,8 @@
  * @description Provides set of methods to translate items to different languages
  */
 
-TranslationService.$inject = ['api', '$rootScope', 'notify', 'authoringWorkspace', 'desks'];
-export function TranslationService(api, $rootScope, notify, authoringWorkspace, desks) {
+TranslationService.$inject = ['api', '$rootScope', 'notify', 'authoringWorkspace', 'desks', 'search'];
+export function TranslationService(api, $rootScope, notify, authoringWorkspace, desks, search) {
     var service = {};
 
     /**
@@ -69,7 +69,16 @@ export function TranslationService(api, $rootScope, notify, authoringWorkspace, 
         if (item.translation_id == null) {
             return Promise.reject('translation_id is not present');
         }
-        return api('archive').query({where: {translation_id: item.translation_id}});
+
+        var query = search.query({});
+
+        query.filter({term: {translation_id: item.translation_id}});
+
+        var criteria = query.getCriteria(true);
+
+        criteria.repo = 'archive,published';
+
+        return api.query('search', criteria);
     };
 
     /**

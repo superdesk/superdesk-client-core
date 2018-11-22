@@ -12,22 +12,12 @@ export function AuthoringHeaderDirective(api, authoringWidgets, $rootScope, arch
             scope.translationService = TranslationService;
 
             if (TranslationService.translationsEnabled() === true) {
-                let promisesForTranslationsDate = [TranslationService.getTranslations(scope.item)];
-
-                if (scope.item.translated_from != null) {
-                    promisesForTranslationsDate.push(api.find('archive', scope.item.translated_from));
-                }
-
-                Promise.all(promisesForTranslationsDate)
-                    .then(([translations, translatedFromItem]) => {
-                        scope.translationsInfo = {
-                            count: translations._meta.total,
-                            translatedFromReference: translatedFromItem,
-                        };
-                    })
-                    .catch(() => {
-                        scope.translationsInfo = null;
-                    });
+                TranslationService.getTranslations(scope.item).then((translations) => {
+                    scope.translationsInfo = {
+                        count: translations._meta.total,
+                        translatedFromReference: translations._items.find((item) => item._id === scope.item._id),
+                    };
+                });
             }
 
             scope.shouldDisplayUrgency = function() {
