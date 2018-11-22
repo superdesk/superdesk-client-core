@@ -62,7 +62,7 @@
         <div ng-if="translationService.translationsEnabled() && translationsInfo != null">
             <span ng-if="item.translated_from != null" class="authoring-header__label-2" translate>Translated from</span>
             <span ng-if="item.translated_from != null" class="label label--hollow">{{translationsInfo.translatedFromReference.language}}</span>
-            
+
             <span ng-if="item.translated_from == null" class="label label--primary label--hollow" translate>Original</span>
             <a href ng-click="activateTranslationsWidget()"><strong>({{translationsInfo.count}})</strong> <span translate>translations</span></a>
         </div>
@@ -112,6 +112,7 @@
                     data-style="line-input"
                     tabindex="{{editor.keywords.order}}">
                 </div>
+                <div class="authoring-header__hint" ng-if="helper_text.keywords">{{helper_text.keywords}}</div>
             </div>
         </div>
 
