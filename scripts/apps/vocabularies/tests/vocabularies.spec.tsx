@@ -71,6 +71,8 @@ describe('vocabularies', () => {
                 scope = $rootScope.$new();
                 testItem = {foo: 'flareon', bar: 'beedrill', is_active: true};
                 scope.vocabulary = {items: [testItem]};
+                scope.closeVocabulary = jasmine.createSpy('close');
+                scope.updateVocabulary = jasmine.createSpy('update');
                 $controller('VocabularyEdit', {$scope: scope});
             }));
 
@@ -172,8 +174,6 @@ describe('vocabularies', () => {
 
             it('can cancel editing vocabulary', inject((api, $q, $rootScope, metadata) => {
                 var vocabularyLink = scope.vocabulary;
-
-                scope.closeVocabulary = jasmine.createSpy('close');
 
                 scope.vocabulary.items[0].foo = 'furret';
                 scope.vocabulary.items[0].bar = 'buizel';
