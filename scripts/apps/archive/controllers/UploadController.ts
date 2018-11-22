@@ -174,7 +174,7 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
             if (/^image/.test(file.type)) {
                 if ($scope.allowPicture) {
                     acceptedFiles.push({
-                        file,
+                        file: file,
                         getThumbnail: (f: File) => getDataUrl(f).then((uri) => `<img src="${uri}" />`),
                     });
                 } else {
@@ -183,7 +183,7 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
             } else if (/^video/.test(file.type)) {
                 if ($scope.allowVideo) {
                     acceptedFiles.push({
-                        file,
+                        file: file,
                         getThumbnail: () => Promise.resolve('<i class="icon--2x icon-video"></i>'),
                     });
                 } else {
@@ -192,7 +192,7 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
             } else if (/^audio/.test(file.type)) {
                 if ($scope.allowAudio) {
                     acceptedFiles.push({
-                        file,
+                        file: file,
                         getThumbnail: () => Promise.resolve('<i class="icon--2x icon-audio"></i>'),
                     });
                 } else {

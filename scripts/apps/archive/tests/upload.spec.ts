@@ -105,7 +105,6 @@ describe('Upload controller', () => {
             $rootScope.$digest();
 
             expect(resolve).toHaveBeenCalledWith([{}]);
-
         });
     }));
 
