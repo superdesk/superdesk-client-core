@@ -107,11 +107,14 @@ export function IngestSourcesContent(ingestSources, gettext, notify, api, $locat
                     if (orTerms !== null) {
                         criteria.where = JSON.stringify(orTerms);
                     }
+                    const searchTerm = $scope.searchQuery;
 
                     return api.ingestProviders.query(criteria)
                         .then((result) => {
-                            $scope.providers = result;
-                            $scope.searchPage = null;
+                            if ($scope.searchQuery === searchTerm) {
+                                $scope.providers = result;
+                                $scope.searchPage = null;
+                            }
                         });
                 }
 
