@@ -1,6 +1,17 @@
+/* eslint-disable complexity */
+
 import * as helpers from 'apps/authoring/authoring/helpers';
 import _ from 'lodash';
 import postscribe from 'postscribe';
+
+import React from 'react';
+
+import {getSizesAndCropData} from 'apps/authoring/authoring/controllers/ChangeImageController';
+
+import {Modal} from 'core/ui/components/Modal/Modal';
+import {ModalHeader} from 'core/ui/components/Modal/ModalHeader';
+import {ModalBody} from 'core/ui/components/Modal/ModalBody';
+import {ModalFooter} from 'core/ui/components/Modal/ModalFooter';
 
 /**
  * @ngdoc directive
@@ -76,12 +87,13 @@ AuthoringDirective.$inject = [
     '$sce',
     'mediaIdGenerator',
     'relationsService',
+    'renditions',
 ];
 export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace, notify,
     gettext, desks, authoring, api, session, lock, privileges, content, $location,
     referrer, macros, $timeout, $q, modal, archiveService, confirm, reloadService,
     $rootScope, $interpolate, metadata, suggest, config, deployConfig, editorResolver,
-    compareVersions, embedService, $sce, mediaIdGenerator, relationsService) {
+    compareVersions, embedService, $sce, mediaIdGenerator, relationsService, renditions) {
     return {
         link: function($scope, elem, attrs) {
             var _closing;
@@ -424,12 +436,86 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                     });
             }
 
+            function validatePointOfInterest(item) {
+                return new Promise((resolve, reject) => {
+                    renditions.getWithRatio().then((renditionsFromMetadata) => {
+                        const errors = new Map();
+
+                        const images = Object.keys(item.associations)
+                            .map((key) => item.associations[key])
+                            .filter((association) => association.type === 'picture');
+
+                        images.forEach((image) => {
+                            const originalRendition = image.renditions.original;
+
+                            if (!image.poi || !_.isFinite(image.poi.x) || !_.isFinite(image.poi.y)) {
+                                errors.set(image, gettext('Point of interest is not defined for image'));
+                                return;
+                            }
+
+                            const originalPoi = {
+                                x: originalRendition.width * image.poi.x,
+                                y: originalRendition.height * image.poi.y,
+                            };
+
+                            const {cropData} = getSizesAndCropData(image, renditionsFromMetadata);
+
+                            for (const cropName in cropData) {
+                                const cropDataForImage = cropData[cropName];
+
+                                if (!cropDataForImage || _.isEmpty(cropDataForImage)) {
+                                    errors.set(image, gettext('Crop coordinates are not defined for ') + cropName);
+                                    return;
+                                }
+
+                                if (originalPoi.y < cropDataForImage.CropTop ||
+                                    originalPoi.y > cropDataForImage.CropBottom ||
+                                    originalPoi.x < cropDataForImage.CropLeft ||
+                                    originalPoi.x > cropDataForImage.CropRight) {
+                                    errors.set(
+                                        image,
+                                        gettext('Point of interest outside the crop limits for ') + cropName
+                                    );
+                                    return;
+                                }
+                            }
+                        });
+
+                        if (errors.size < 1) {
+                            resolve(item);
+                        } else {
+                            modal.createCustomModal()
+                                .then(({openModal, closeModal}) => {
+                                    const body = Array.from(errors).map(([image, message], i) => (
+                                        <div className="space-between" style={{marginBottom: 10}} key={i}>
+                                            <img style={{height: '100px'}} src={image.renditions.original.href} />
+                                            {message}
+                                        </div>
+                                    ));
+
+                                    openModal(
+                                        <Modal>
+                                            <ModalHeader>{gettext('Item not published')}</ModalHeader>
+                                            <ModalBody>{body}</ModalBody>
+                                            <ModalFooter>
+                                                <button className="btn" onClick={closeModal}>{gettext('Close')}</button>
+                                            </ModalFooter>
+                                        </Modal>
+                                    );
+                                });
+                            reject({messageShownToUser: true});
+                        }
+                    });
+                });
+            }
+
             function publishItem(orig, item) {
                 var action = $scope.action === 'edit' ? 'publish' : $scope.action;
 
                 $scope.error = {};
 
-                return checkMediaAssociatedToUpdate()
+                return validatePointOfInterest($scope.item)
+                    .then(checkMediaAssociatedToUpdate)
                     .then((result) => {
                         if (result) {
                             return authoring.publish(orig, item, action);
@@ -443,6 +529,11 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                         authoringWorkspace.close(true);
                         return true;
                     }, (response) => {
+                        if (typeof response === 'object' && response.messageShownToUser === true) {
+                            $q.reject(false);
+                            return;
+                        }
+
                         let issues = _.get(response, 'data._issues');
 
                         if (issues) {

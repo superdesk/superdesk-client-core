@@ -26,6 +26,24 @@ export function validateMediaFieldsThrows(validator, metadata) {
     }
 }
 
+export const getSizesAndCropData = (item, renditionsFromMetadata) => {
+    const sizes = {};
+    const cropData = {};
+
+    renditionsFromMetadata.forEach((rendition) => {
+        const original = item.renditions.original;
+        // only extend the item renditions if the original image can fit the rendition dimensions
+        // otherwise we will get an error saving
+
+        if (original.height >= rendition.height && original.width >= rendition.width) {
+            sizes[rendition.name] = {width: rendition.width, height: rendition.height};
+            cropData[rendition.name] = angular.extend({}, item.renditions[rendition.name]);
+        }
+    });
+
+    return {sizes, cropData};
+};
+
 ChangeImageController.$inject = ['$scope', 'gettext', 'notify', 'modal', 'lodash', 'api', '$rootScope',
     'deployConfig', '$q'];
 export function ChangeImageController($scope, gettext, notify, modal, _, api, $rootScope, deployConfig, $q) {
@@ -62,16 +80,9 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
     $scope.nav = $scope.data.defaultTab || 'view';
     $scope.hideTabs = $scope.data.hideTabs || [];
 
-    $scope.data.renditions.forEach((rendition) => {
-        const original = $scope.data.item.renditions.original;
-        // only extend the item renditions if the original image can fit the rendition dimensions
-        // otherwise we will get an error saving
-
-        if (original.height >= rendition.height && original.width >= rendition.width) {
-            sizes[rendition.name] = {width: rendition.width, height: rendition.height};
-            $scope.data.cropData[rendition.name] = angular.extend({}, $scope.data.item.renditions[rendition.name]);
-        }
-    });
+    const sizesAndCropData = getSizesAndCropData($scope.data.item, $scope.data.renditions);
+    $scope.sizes = sizesAndCropData.sizes;
+    $scope.data.cropData = sizesAndCropData.cropData;
 
     $scope.data.isDirty = false;
     $scope.isNew = $scope.data.isNew === true;
@@ -107,36 +118,8 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
     * modified crop information, point of interest and metadata changes.
     */
     $scope.done = function() {
-        /* Throw an exception if PoI is outside of a crop */
-        function poiIsInsideEachCrop() {
-            const originalImage = $scope.data.metadata.renditions.original;
-
-            if (!$scope.data.poi || !_.isFinite($scope.data.poi.x) || !_.isFinite($scope.data.poi.y)) {
-                throw gettext('Point of interest is not defined.');
-            }
-
-            const originalPoi = {
-                x: originalImage.width * $scope.data.poi.x,
-                y: originalImage.height * $scope.data.poi.y,
-            };
-
-            _.forEach($scope.data.cropData, (cropData, cropName) => {
-                if (!cropData || _.isEmpty(cropData)) {
-                    throw gettext('Crop coordinates are not defined for ' + cropName + ' picture crop.');
-                }
-
-                if (originalPoi.y < cropData.CropTop ||
-                    originalPoi.y > cropData.CropBottom ||
-                    originalPoi.x < cropData.CropLeft ||
-                    originalPoi.x > cropData.CropRight) {
-                    throw gettext('Point of interest outside the crop ' + cropName + ' limits');
-                }
-            });
-        }
-
         // check if data are valid
         try {
-            poiIsInsideEachCrop();
             if ($scope.data.showMetadataEditor) {
                 validateMediaFieldsThrows($scope.validator, $scope.data.metadata);
             }

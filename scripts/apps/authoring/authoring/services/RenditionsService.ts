@@ -49,6 +49,14 @@ export function RenditionsService(metadata, $q, api, superdesk, _) {
         });
     };
 
+    this.getWithRatio = () => {
+        return this.get().then((renditions) => {
+            const filteredRenditions = renditions.filter((rendition) => typeof rendition.ratio !== 'undefined');
+
+            return filteredRenditions.length > 0 ? filteredRenditions : renditions;
+        });
+    };
+
     /**
      *  ngdoc method
      *  @name renditions#crop
@@ -66,14 +74,7 @@ export function RenditionsService(metadata, $q, api, superdesk, _) {
 
         clonedItem.renditions = _.cloneDeep(clonedItem.renditions);
 
-        return self.get().then((renditions) => {
-            // we want to crop only renditions that change the ratio
-            let withRatio = _.filter(renditions, (rendition) => angular.isDefined(rendition.ratio));
-
-            if (!withRatio.length) {
-                withRatio = self.renditions;
-            }
-
+        return self.getWithRatio().then((withRatio) => {
             // Merge options with defauts
             const cropOptions = {
                 isNew: true,
