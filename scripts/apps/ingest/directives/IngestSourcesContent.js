@@ -80,6 +80,9 @@ export function IngestSourcesContent(ingestSources, gettext, notify, api, $locat
                 $scope.ingestExpiry = deployConfig.getSync('ingest_expiry_minutes');
 
                 $scope.search = function(query) {
+                    if (query) {
+                        $scope.searchPage = 1;
+                    }
                     $scope.searchQuery = query;
                     fetchProviders();
                 };
@@ -88,7 +91,7 @@ export function IngestSourcesContent(ingestSources, gettext, notify, api, $locat
                     var criteria = criteria || {};
 
                     criteria.max_results = $location.search().max_results || 25;
-                    criteria.page = $location.search().page || 1;
+                    criteria.page = $scope.searchPage || $location.search().page || 1;
                     criteria.sort = 'name';
                     var orTerms = null;
 
@@ -102,13 +105,13 @@ export function IngestSourcesContent(ingestSources, gettext, notify, api, $locat
                     }
 
                     if (orTerms !== null) {
-                        criteria.page = 1;
                         criteria.where = JSON.stringify(orTerms);
                     }
 
                     return api.ingestProviders.query(criteria)
                         .then((result) => {
                             $scope.providers = result;
+                            $scope.searchPage = null;
                         });
                 }
 
