@@ -283,7 +283,7 @@ describe('authoring', () => {
         }));
 
     it('confirm the associated media but do not use the associated media',
-        inject((api, $q, $rootScope, config, confirm, authoring) => {
+        inject((api, $q, $rootScope, config, confirm, authoring, renditions) => {
             let item = {
                 _id: 'test',
                 rewrite_of: 'rewriteOf',
@@ -305,20 +305,22 @@ describe('authoring', () => {
                 confirmMediaOnUpdate: 1,
             };
 
+            spyOn(renditions, 'getWithRatio').and.returnValue($q.when([]));
             spyOn(api, 'find').and.returnValue($q.when(rewriteOf));
             spyOn(confirm, 'confirmFeatureMedia').and.returnValue(defered.promise);
             spyOn(authoring, 'autosave').and.returnValue({});
             spyOn(authoring, 'publish').and.returnValue({});
             let scope = startAuthoring(item, 'edit');
 
-            scope.publish();
-            $rootScope.$digest();
-            expect(api.find).toHaveBeenCalledWith('archive', 'rewriteOf');
-            expect(confirm.confirmFeatureMedia).toHaveBeenCalledWith(rewriteOf);
-            defered.resolve({});
-            $rootScope.$digest();
-            expect(authoring.publish).toHaveBeenCalled();
-            expect(authoring.autosave).not.toHaveBeenCalled();
+            scope.publish().then(() => {
+                $rootScope.$digest();
+                expect(api.find).toHaveBeenCalledWith('archive', 'rewriteOf');
+                expect(confirm.confirmFeatureMedia).toHaveBeenCalledWith(rewriteOf);
+                defered.resolve({});
+                $rootScope.$digest();
+                expect(authoring.publish).toHaveBeenCalled();
+                expect(authoring.autosave).not.toHaveBeenCalled();
+            });
         }));
 
     it('can reject publishing on error', inject((api, $q, $rootScope, authoring, lock) => {

@@ -43,22 +43,6 @@ describe('authoring ChangeImageController', () => {
     };
 
     describe('saveAreaOfInterest', () => {
-        it('can notify error if crop is invalid', inject((api, gettext, $rootScope, $q, notify) => {
-            let scope = angular.copy(scopeData);
-            let croppingData = {
-                CropRight: 10,
-                CropLeft: 10,
-                CropTop: 10,
-                CropBottom: 10,
-            };
-
-            ChangeImageController(scope, gettext, notify, modal, _, api, $rootScope, deployConfig, $q);
-            scope.saveAreaOfInterest(croppingData);
-            expect(notify.error).toHaveBeenCalledWith(
-                gettext('Original size cannot be less than the required crop sizes.')
-            );
-        }));
-
         it('can generate picture crop using api save', inject((api, gettext, $rootScope, $q, notify) => {
             let scope = angular.copy(scopeData);
             let croppingData = {
@@ -174,18 +158,6 @@ describe('authoring ChangeImageController', () => {
             expect(scope.loaderForAoI).toBeFalsy();
 
             expect($rootScope.$broadcast).toHaveBeenCalledWith('poiUpdate', {x: 0.5, y: 0.5});
-        }));
-
-        it('throw error if poi not defined', inject((api, gettext, $rootScope, $q, notify) => {
-            let scope = angular.copy(scopeData);
-
-            ChangeImageController(scope, gettext, notify, modal, _, api, $rootScope, deployConfig, $q);
-            const result = scope.done();
-
-            $rootScope.$digest();
-
-            expect(result).toBe(false);
-            expect(notify.error).toHaveBeenCalledWith('Point of interest is not defined.');
         }));
 
         it('No error thrown if poi is specified', inject((api, gettext, $rootScope, $q, notify) => {

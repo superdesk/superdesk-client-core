@@ -514,11 +514,11 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
 
                 $scope.error = {};
 
-                return validatePointOfInterest($scope.item)
-                    .then(checkMediaAssociatedToUpdate)
+                return checkMediaAssociatedToUpdate()
                     .then((result) => {
                         if (result) {
-                            return authoring.publish(orig, item, action);
+                            return validatePointOfInterest($scope.item)
+                                .then(() => authoring.publish(orig, item, action));
                         }
                         return $q.reject(false);
                     })
