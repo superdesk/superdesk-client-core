@@ -27,8 +27,8 @@ export function validateMediaFieldsThrows(validator, metadata) {
 }
 
 ChangeImageController.$inject = ['$scope', 'gettext', 'notify', 'modal', 'lodash', 'api', '$rootScope',
-    'deployConfig', '$q'];
-export function ChangeImageController($scope, gettext, notify, modal, _, api, $rootScope, deployConfig, $q) {
+    'deployConfig', '$q', 'config'];
+export function ChangeImageController($scope, gettext, notify, modal, _, api, $rootScope, deployConfig, $q, config) {
     $scope.data = $scope.locals.data;
     $scope.data.cropData = {};
     $scope.validator = deployConfig.getSync('validator_media_metadata');
@@ -107,8 +107,38 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
     * modified crop information, point of interest and metadata changes.
     */
     $scope.done = function() {
+        /* Throw an exception if PoI is outside of a crop */
+        function poiIsInsideEachCrop() {
+            const originalImage = $scope.data.metadata.renditions.original;
+
+            if (!$scope.data.poi || !_.isFinite($scope.data.poi.x) || !_.isFinite($scope.data.poi.y)) {
+                throw gettext('Point of interest is not defined.');
+            }
+
+            const originalPoi = {
+                x: originalImage.width * $scope.data.poi.x,
+                y: originalImage.height * $scope.data.poi.y,
+            };
+
+            _.forEach($scope.data.cropData, (cropData, cropName) => {
+                if (!cropData || _.isEmpty(cropData)) {
+                    throw gettext('Crop coordinates are not defined for ' + cropName + ' picture crop.');
+                }
+
+                if (originalPoi.y < cropData.CropTop ||
+                    originalPoi.y > cropData.CropBottom ||
+                    originalPoi.x < cropData.CropLeft ||
+                    originalPoi.x > cropData.CropRight) {
+                    throw gettext('Point of interest outside the crop ' + cropName + ' limits');
+                }
+            });
+        }
+
         // check if data are valid
         try {
+            if (config.features.validatePointOfInterestForImages === true) {
+                poiIsInsideEachCrop();
+            }
             if ($scope.data.showMetadataEditor) {
                 validateMediaFieldsThrows($scope.validator, $scope.data.metadata);
             }

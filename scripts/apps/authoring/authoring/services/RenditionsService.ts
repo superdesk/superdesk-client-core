@@ -1,3 +1,5 @@
+import {IArticle} from "superdesk-interfaces/Article";
+
 /**
  * @ngdoc service
  * @module superdesk.apps.authoring
@@ -11,8 +13,8 @@
  *
  * @description Renditions Service allows the user to generate different crops.
  */
-RenditionsService.$inject = ['metadata', '$q', 'api', 'superdesk', 'lodash'];
-export function RenditionsService(metadata, $q, api, superdesk, _) {
+RenditionsService.$inject = ['metadata', '$q', 'api', 'superdesk', 'lodash', 'config'];
+export function RenditionsService(metadata, $q, api, superdesk, _, config) {
     var self = this;
 
     /**
@@ -61,7 +63,7 @@ export function RenditionsService(metadata, $q, api, superdesk, _) {
      *  @param {boolean} isAssociated to indicate if picture is isAssociated or not
      *  @return {promise} returns the modified picture item
      */
-    this.crop = function(item, options) {
+    this.crop = function(item, options): Promise<IArticle> {
         const clonedItem = _.extend({}, item);
 
         clonedItem.renditions = _.cloneDeep(clonedItem.renditions);
@@ -94,6 +96,11 @@ export function RenditionsService(metadata, $q, api, superdesk, _) {
                 ...cropOptions,
             })
                 .then((result) => {
+                    if (config.features.validatePointOfInterestForImages !== true) {
+                        angular.extend(item, result.metadata);
+                        return $q.resolve(item);
+                    }
+
                     const renditionNames = [];
                     const savingImagePromises = [];
 
