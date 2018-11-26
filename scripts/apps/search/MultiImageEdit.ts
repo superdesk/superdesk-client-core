@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import {uniq} from 'lodash';
+import {uniq, pickBy, isEmpty} from 'lodash';
 import {validateMediaFieldsThrows} from 'apps/authoring/authoring/controllers/ChangeImageController';
 import {logger} from 'core/services/logger';
 
@@ -44,7 +44,7 @@ export function MultiImageEditController(
         const updatedImages = imagesOriginal.map((image) => {
             const existingImage = $scope.images.find(({_id}) => _id === image._id);
 
-            return existingImage != null ? existingImage : {...image, ...$scope.metadata};
+            return existingImage != null ? existingImage : {...image, ...pickBy($scope.metadata, (value) => !isEmpty(value))};
         });
 
         $scope.images = angular.copy(updatedImages);

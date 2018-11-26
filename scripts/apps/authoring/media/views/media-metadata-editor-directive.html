@@ -34,7 +34,27 @@
 
     <div ng-if="field.type === 'list' || field.cv">
         <label class="form-label">{{ field.label }}</label>
-        <div sd-meta-terms
+
+        <div sd-meta-place ng-if="field.field === 'place' && features.places_autocomplete"
+            class="data sd-terms--boxed"
+            data-item="item"
+            data-field="place"
+            ng-disabled="isDisabled(field)"
+            data-change="onChange({key: field})"
+        ></div>
+
+        <div sd-meta-words-list ng-if="field.field === 'keywords'"
+            class="data sd-terms--boxed sd-line-input--dark-ui sd-line-input--boxed"
+            data-item="item"
+            data-field="keywords"
+            data-change="onChange({key: field})"
+            data-list="metadata.keywords"
+            data-disabled="isDisabled(field)"
+            data-style="sd-line-input__input"
+            data-header="true"
+        ></div>
+
+        <div sd-meta-terms ng-if="!(field.field === 'place' && features.places_autocomplete) && field.field !== 'keywords'"
             class="data sd-terms--boxed"
             data-item="item"
             data-field="{{ field.cv.schema_field || 'subject'}}"

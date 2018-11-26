@@ -1,10 +1,16 @@
 import {max, sortBy, get} from 'lodash';
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
 
-MediaMetadataEditorDirective.$inject = ['metadata', 'deployConfig', '$q'];
-export default function MediaMetadataEditorDirective(metadata, deployConfig, $q) {
+MediaMetadataEditorDirective.$inject = ['metadata', 'deployConfig', 'features', '$q'];
+export default function MediaMetadataEditorDirective(metadata, deployConfig, features, $q) {
     function getCV(field) {
-        return metadata.cvs.find((cv) => !cv.field_type && (cv._id === field || cv.schema_field === field));
+        const cv = metadata.cvs.find((cv) => !cv.field_type && (cv._id === field || cv.schema_field === field));
+
+        if (cv == null && field === 'subject') {
+            return {items: metadata.values.subjectcodes}; // fallback for built in subjectcodes
+        }
+
+        return cv;
     }
 
     return {
@@ -21,6 +27,9 @@ export default function MediaMetadataEditorDirective(metadata, deployConfig, $q)
         },
         template: require('./views/media-metadata-editor-directive.html'),
         link: (scope) => {
+            scope.features = features;
+            scope.metadata = metadata;
+
             $q.all({
                 getLabelForFieldId: getLabelNameResolver(),
                 metdataInit: metadata.initialize(),
