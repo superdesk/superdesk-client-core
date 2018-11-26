@@ -15,7 +15,7 @@ module.exports = function(grunt) {
             savedSearch: {
                 subscriptions: true,
             },
-            validatePointOfInterestForImages: false,
+            validatePointOfInterestForImages: true,
         },
         auth: {google: false},
         ingest: {
