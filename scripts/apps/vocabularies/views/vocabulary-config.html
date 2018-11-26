@@ -45,12 +45,11 @@
                 ng-repeat="vocabulary in getVocabulariesForTag(tag, tab) | orderBy:'display_name|translate' | filter: query track by vocabulary._id"
             >
                 <div class="sd-list-item sd-shadow--z1">
-                    <div class="sd-list-item__column" ng-if="tab === 'vocabularies'">
-                        <span class="badge">{{ vocabulary.items.length }}</span>
-                    </div>
                     <div class="sd-list-item__column sd-list-item__column--grow sd-list-item__column--no-border">
                         <div class="sd-list-item__row">
-                            <span class="sd-overflow-ellipsis">{{ vocabulary.display_name | translate }} {{ vocabulary.description | translate }}</span>
+                            <span>{{ vocabulary.display_name | translate }}</span>
+                            <span class="badge" ng-if="tab === 'vocabularies'">{{ vocabulary.items.length }}</span>
+                            <span class="sd-overflow-ellipsis">{{ vocabulary.description | translate }}</span>
                         </div>
                     </div>
                     <div class="sd-list-item__action-menu sd-list-item__action-menu--direction-row">
