@@ -60,7 +60,7 @@
                 </div>
 
                 <div class="sd-line-input">
-                    <sd-tag-input ng-model="vocabulary.tags" data-label="Tags" data-items="tags" data-field="text" data-freetext="true" class="ng-pristine ng-untouched ng-valid ng-isolate-scope">
+                    <sd-tag-input ng-model="vocabulary.tags" data-label="{{Tags | translate}}" data-items="tags" data-field="text" data-freetext="true" class="ng-pristine ng-untouched ng-valid ng-isolate-scope" translate>
                         <tags-input ng-model="model" add-from-autocomplete-only="{{items ? !freetext : false}}" show-button="{{!!items}}" display-property="{{field}}" key-property="{{keyProperty}}" use-strings="{{!field}}" ng-required="required" on-tag-added="onChange($tag)" on-tag-removed="onChange($tag)" replace-spaces-with-dashes="{{replaceSpacesWithDashes}}" min-length="{{minLength}}" max-length="{{maxLength}}" placeholder="{{placeholder}}" class="ng-pristine ng-untouched ng-valid"></tags-input>
                     </sd-tag-input>
                 </div>
