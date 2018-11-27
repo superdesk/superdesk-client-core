@@ -1,22 +1,31 @@
 // see https://iframely.com/docs/reactjs and https://gist.github.com/nleush/7e7775c9709eb3bdb6e6
-export function loadIframelyEmbedJs() {
-    const iframely = window['iframely'] = window['iframely'] || {};
-    const widgets = iframely.widgets = iframely.widgets || {};
 
-    if (widgets.load) {
-        widgets.load();
-    } else {
-        const ifs = document.createElement('script');
-        const s = document.getElementsByTagName('script')[0];
+let promise = null;
 
-        if (typeof s === 'undefined') {
-            return; // happens in tests
-        }
+function importIframelyEmbedJs() {
+    if (promise === null) {
+        promise = new Promise((resolve) => {
+            const embed = document.createElement('script');
 
-        ifs.type = 'text/javascript';
-        ifs.async = true;
-        ifs.src = (document.location.protocol === 'https:' ? 'https:' : 'http:') + '//cdn.iframe.ly/embed.js';
+            embed.type = 'text/javascript';
+            embed.async = true;
+            embed.onload = resolve;
+            embed.src = (document.location.protocol === 'https:' ? 'https:' : 'http:') + '//cdn.iframe.ly/embed.js';
 
-        s.parentNode.insertBefore(ifs, s);
+            document.body.appendChild(embed);
+        });
     }
+
+    return promise;
+}
+
+export function loadIframelyEmbedJs() {
+    importIframelyEmbedJs().then(() => {
+        const iframely = window['iframely'] = window['iframely'] || {};
+        const widgets = iframely.widgets = iframely.widgets || {};
+
+        if (widgets.load) {
+            widgets.load();
+        }
+    });
 }

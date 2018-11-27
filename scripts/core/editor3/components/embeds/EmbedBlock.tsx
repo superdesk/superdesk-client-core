@@ -5,6 +5,10 @@ import {connect} from 'react-redux';
 import {QumuWidget, isQumuWidget} from './QumuWidget';
 import * as actions from '../../actions';
 import ng from 'core/services/ng';
+import {loadIframelyEmbedJs} from './loadIframely';
+import {debounce} from 'lodash';
+
+const loadIframely = debounce(loadIframelyEmbedJs, 100);
 
 /**
  * @ngdoc React
@@ -112,6 +116,14 @@ export class EmbedBlockComponent extends React.Component<any, any> {
         const {block, removeBlock} = this.props;
 
         removeBlock(block.getKey());
+    }
+
+    componentDidMount() {
+        const embed = this.data();
+
+        if (embed.data.html.includes('iframe.ly')) {
+            loadIframely();
+        }
     }
 
     render() {
