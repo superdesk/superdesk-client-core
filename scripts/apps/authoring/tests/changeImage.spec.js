@@ -43,7 +43,7 @@ describe('authoring ChangeImageController', () => {
     };
 
     describe('saveAreaOfInterest', () => {
-        it('can notify error if crop is invalid', inject((api, gettext, $rootScope, $q, notify) => {
+        it('can notify error if crop is invalid', inject((api, gettext, $rootScope, $q, notify, config) => {
             let scope = angular.copy(scopeData);
             let croppingData = {
                 CropRight: 10,
@@ -52,14 +52,14 @@ describe('authoring ChangeImageController', () => {
                 CropBottom: 10,
             };
 
-            ChangeImageController(scope, gettext, notify, modal, _, api, $rootScope, deployConfig, $q);
+            ChangeImageController(scope, gettext, notify, modal, _, api, $rootScope, deployConfig, $q, config);
             scope.saveAreaOfInterest(croppingData);
             expect(notify.error).toHaveBeenCalledWith(
                 gettext('Original size cannot be less than the required crop sizes.')
             );
         }));
 
-        it('can generate picture crop using api save', inject((api, gettext, $rootScope, $q, notify) => {
+        it('can generate picture crop using api save', inject((api, gettext, $rootScope, $q, notify, config) => {
             let scope = angular.copy(scopeData);
             let croppingData = {
                 CropRight: 2500,
@@ -70,13 +70,13 @@ describe('authoring ChangeImageController', () => {
 
             spyOn(api, 'save').and.returnValue($q.when({}));
 
-            ChangeImageController(scope, gettext, notify, modal, _, api, $rootScope, deployConfig, $q);
+            ChangeImageController(scope, gettext, notify, modal, _, api, $rootScope, deployConfig, $q, config);
             scope.saveAreaOfInterest(croppingData);
 
             expect(api.save).toHaveBeenCalledWith('picture_crop', {item: scope.data.item, crop: croppingData});
         }));
 
-        it('can notify error if picture_crop fails', inject((api, gettext, $rootScope, $q, notify) => {
+        it('can notify error if picture_crop fails', inject((api, gettext, $rootScope, $q, notify, config) => {
             let scope = angular.copy(scopeData);
             let croppingData = {
                 CropRight: 2500,
@@ -87,7 +87,7 @@ describe('authoring ChangeImageController', () => {
 
             spyOn(api, 'save').and.returnValue($q.reject({data: {_message: 'Failed to call picture_crop.'}}));
 
-            ChangeImageController(scope, gettext, notify, modal, _, api, $rootScope, deployConfig, $q);
+            ChangeImageController(scope, gettext, notify, modal, _, api, $rootScope, deployConfig, $q, config);
             scope.saveAreaOfInterest(croppingData);
 
             $rootScope.$digest();
@@ -99,7 +99,7 @@ describe('authoring ChangeImageController', () => {
             expect(scope.loaderForAoI).toBeFalsy();
         }));
 
-        it('can notify error if picture_renditions fails', inject((api, gettext, $rootScope, $q, notify) => {
+        it('can notify error if picture_renditions fails', inject((api, gettext, $rootScope, $q, notify, config) => {
             let scope = angular.copy(scopeData);
             let croppingData = {
                 CropRight: 2500,
@@ -121,7 +121,7 @@ describe('authoring ChangeImageController', () => {
                 return $q.reject({data: {_message: 'Failed to call picture_renditions.'}});
             });
 
-            ChangeImageController(scope, gettext, notify, modal, _, api, $rootScope, deployConfig, $q);
+            ChangeImageController(scope, gettext, notify, modal, _, api, $rootScope, deployConfig, $q, config);
             scope.saveAreaOfInterest(croppingData);
 
             $rootScope.$digest();
@@ -135,7 +135,7 @@ describe('authoring ChangeImageController', () => {
             expect(scope.data.isDirty).toBeTruthy();
         }));
 
-        it('can save new area of interest', inject((api, gettext, $rootScope, $q, notify) => {
+        it('can save new area of interest', inject((api, gettext, $rootScope, $q, notify, config) => {
             let scope = angular.copy(scopeData);
             let croppingData = {
                 CropRight: 2500,
@@ -159,7 +159,7 @@ describe('authoring ChangeImageController', () => {
                 });
             });
 
-            ChangeImageController(scope, gettext, notify, modal, _, api, $rootScope, deployConfig, $q);
+            ChangeImageController(scope, gettext, notify, modal, _, api, $rootScope, deployConfig, $q, config);
             scope.saveAreaOfInterest(croppingData);
 
             $rootScope.$digest();
@@ -176,10 +176,15 @@ describe('authoring ChangeImageController', () => {
             expect($rootScope.$broadcast).toHaveBeenCalledWith('poiUpdate', {x: 0.5, y: 0.5});
         }));
 
-        it('throw error if poi not defined', inject((api, gettext, $rootScope, $q, notify) => {
+        it('throw error if poi not defined', inject((api, gettext, $rootScope, $q, notify, config) => {
+            if (config.features == null) {
+                config.features = {};
+            }
+            config.features.validatePointOfInterestForImages = true;
+
             let scope = angular.copy(scopeData);
 
-            ChangeImageController(scope, gettext, notify, modal, _, api, $rootScope, deployConfig, $q);
+            ChangeImageController(scope, gettext, notify, modal, _, api, $rootScope, deployConfig, $q, config);
             const result = scope.done();
 
             $rootScope.$digest();
@@ -188,14 +193,14 @@ describe('authoring ChangeImageController', () => {
             expect(notify.error).toHaveBeenCalledWith('Point of interest is not defined.');
         }));
 
-        it('No error thrown if poi is specified', inject((api, gettext, $rootScope, $q, notify) => {
+        it('No error thrown if poi is specified', inject((api, gettext, $rootScope, $q, notify, config) => {
             let scope = angular.copy(scopeData);
 
             scope.resolve = () => true;
             spyOn(scope, 'resolve').and.returnValue(null);
             scope.locals.data.poi = {x: 0.5, y: 0.5};
 
-            ChangeImageController(scope, gettext, notify, modal, _, api, $rootScope, deployConfig, $q);
+            ChangeImageController(scope, gettext, notify, modal, _, api, $rootScope, deployConfig, $q, config);
             scope.done();
             $rootScope.$digest();
 

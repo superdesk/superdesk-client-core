@@ -29,8 +29,8 @@ export function validateMediaFieldsThrows(validator, metadata) {
 }
 
 ChangeImageController.$inject = ['$scope', 'gettext', 'notify', 'modal', 'lodash', 'api', '$rootScope',
-    'deployConfig', '$q'];
-export function ChangeImageController($scope, gettext, notify, modal, _, api, $rootScope, deployConfig, $q) {
+    'deployConfig', '$q', 'config'];
+export function ChangeImageController($scope, gettext, notify, modal, _, api, $rootScope, deployConfig, $q, config) {
     $scope.data = $scope.locals.data;
     $scope.data.cropData = {};
     $scope.validator = deployConfig.getSync('validator_media_metadata');
@@ -141,7 +141,9 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
 
         // check if data are valid
         try {
-            poiIsInsideEachCrop();
+            if (config.features.validatePointOfInterestForImages === true) {
+                poiIsInsideEachCrop();
+            }
             if ($scope.data.showMetadataEditor) {
                 validateMediaFieldsThrows($scope.validator, $scope.data.metadata);
             }
