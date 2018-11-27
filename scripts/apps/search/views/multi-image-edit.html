@@ -16,7 +16,7 @@
     <div class="modal__header-buttons modal__header-buttons--right">
         <button class="btn btn--ui-dark btn--hollow" ng-click="close()" ng-disabled="uploadInProgress" translate>Cancel</button>
         <div ng-transclude="select-desk"></div>
-        <button class="btn btn--primary btn--hollow" ng-click="save(true)" ng-disabled="!isDirty()" translate>Upload</button>
+        <button class="btn btn--primary btn--hollow" ng-click="save(true)" ng-disabled="!images.length" translate>Upload</button>
     </div>
 </div>
 
@@ -29,8 +29,8 @@
 
                         <div class="sd-grid-item sd-grid-item--with-click"
                              ng-click="handleItemClick($event, image)"
-                             ng-repeat="image in images track by image._id"
-                             ng-class="{'sd-grid-item--selected' : !image.unselected}"
+                             ng-repeat="image in images track by $index"
+                             ng-class="{'sd-grid-item--selected' : image.selected}"
                              style="z-index: 1;"><!--  // required so it's visible on top or drag-and-drop layer -->
                             <div class="sd-grid-item__thumb">
                                 <div
