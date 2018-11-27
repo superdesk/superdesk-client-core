@@ -106,7 +106,7 @@ export function ContentProfileSchemaEditor(content, metadata) {
                         .filter((value) => scope.model.editor[value].enabled)
                         .sort((a, b) => getOrder(a) - getOrder(b));
 
-                        scope.schemaKeysDisabled = [];
+                    scope.schemaKeysDisabled = [];
                     _.each(_.difference(keysForSection, schemaKeys), (value) =>
                         scope.schemaKeysDisabled.push(
                             {key: value, name: scope.model.editor[value].field_name || scope.label(value)},

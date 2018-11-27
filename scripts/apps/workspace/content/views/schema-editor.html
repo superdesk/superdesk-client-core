@@ -11,7 +11,7 @@
                 </li>
                 <li class="main-list">
                     <ul>
-                        <li ng-repeat="schema in getSchemaKeysDisabled() | orderBy: 'name' | filter: search track by schema.key">
+                        <li ng-repeat="schema in schemaKeysDisabled | orderBy: 'name' | filter: search track by schema.key">
                             <button ng-click="toggle(schema, model.editor[id].order, 'before')">{{schema.name | translate}}</button>
                         </li>
                     </ul>
@@ -32,7 +32,7 @@
                     </li>
                     <li class="main-list">
                         <ul>
-                            <li ng-repeat="schema in getSchemaKeysDisabled() | orderBy: 'name' | filter: search track by schema.key">
+                            <li ng-repeat="schema in schemaKeysDisabled | orderBy: 'name' | filter: search track by schema.key">
                                 <button ng-click="toggle(schema, model.editor[id].order, 'before')">{{schema.name | translate}}</button>
                             </li>
                         </ul>
@@ -142,7 +142,7 @@
                     </li>
                     <li class="main-list">
                         <ul>
-                            <li ng-repeat="schema in getSchemaKeysDisabled() | orderBy: 'name' | filter: search track by schema.key">
+                            <li ng-repeat="schema in schemaKeysDisabled | orderBy: 'name' | filter: search track by schema.key">
                                 <button ng-click="toggle(schema, model.editor[schema.key].order, 'after')">{{schema.name | translate}}</button>
                             </li>
                         </ul>
