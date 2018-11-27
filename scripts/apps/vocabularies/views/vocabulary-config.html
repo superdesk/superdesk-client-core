@@ -34,24 +34,37 @@
     </div>
 
     <div class="sd-page__content">
-      <div ng-if="loading" class="loading-overlay" ng-class="{active: loading}" style="opacity: 0.5;"></div>
-        <ul class="pills-list">
-          <li ng-repeat="vocabulary in vocabularies | orderBy:'display_name|translate' | filter: query track by vocabulary._id" ng-if="matchFieldTypeToTab(tab, vocabulary.field_type)">
-            <h6>{{ vocabulary.display_name | translate }}</h6>&nbsp;
-            <em><strong ng-show="!vocabulary.field_type">({{ vocabulary.items.length }})</strong></em>
-            <div class="actions">
-              <button
-                ng-click="openVocabulary(vocabulary)"
-                title="{{:: 'Edit vocabulary' | translate }}"
-              ><i class="icon-pencil"></i></button>
-              <button
-                ng-click="remove(vocabulary)"
-                ng-if="tab !== 'vocabularies'"
-                title="{{:: 'Remove vocabulary' | translate }}"
-              ><i class="icon-trash"></i></button>
+        <div ng-if="loading" class="loading-overlay" ng-class="{active: loading}" style="opacity: 0.5;"></div>
+
+        <div ng-repeat="tag in tags" ng-if="existsVocabulariesForTag(tag, tab)">
+            <div className="sd-list-header">
+                <span className="sd-list-header__name">{{tag.text}}</span>
             </div>
-          </li>
-        </ul>
+
+            <div class="sd-list-item-group sd-shadow--z2"
+                ng-repeat="vocabulary in getVocabulariesForTag(tag, tab) | orderBy:'display_name|translate' | filter: query track by vocabulary._id"
+            >
+                <div class="sd-list-item sd-shadow--z1">
+                    <div class="sd-list-item__column sd-list-item__column--grow sd-list-item__column--no-border">
+                        <div class="sd-list-item__row">
+                            <span>{{ vocabulary.display_name | translate }}</span>
+                            <span class="badge" ng-if="tab === 'vocabularies'">{{ vocabulary.items.length }}</span>
+                            <span class="sd-overflow-ellipsis">{{ vocabulary.description | translate }}</span>
+                        </div>
+                    </div>
+                    <div class="sd-list-item__action-menu sd-list-item__action-menu--direction-row">
+                        <button ng-click="openVocabulary(vocabulary)" sd-tooltip="{{:: 'Edit vocabulary' | translate }}">
+                            <i class="icon-pencil"></i>
+                        </button>
+                        <button ng-click="remove(vocabulary)" ng-if="tab !== 'vocabularies'" sd-tooltip="{{:: 'Remove vocabulary' | translate }}">
+                            <i class="icon-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <br>
+        </div>
+
     </div>
 </div>
 
