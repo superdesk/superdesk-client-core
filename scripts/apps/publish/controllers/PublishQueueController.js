@@ -51,8 +51,24 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
     }));
 
     promises.push(vocabularies.getVocabulary('type').then((items) => {
-        $scope.contentTypes = items.items;
+        $scope.contentTypes = removeDuplicatesByKey(items.items, 'qcode');
     }));
+
+    /* Remove the duplicate items from the array */
+    function removeDuplicatesByKey(collection, keyname) {
+        var output = [],
+            keys = [];
+
+        _.forEach(collection, (item) => {
+            var key = item[keyname];
+
+            if (keys.indexOf(key) === -1) {
+                keys.push(key);
+                output.push(item);
+            }
+        });
+        return output;
+    }
 
     /*
     * Get search input from search box to search for headline or unique_name,
