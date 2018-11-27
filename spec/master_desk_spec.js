@@ -77,7 +77,7 @@ describe('master_desk', () => {
         expect(element(by.className('modal__content')).isDisplayed()).toBe(true);
     });
 
-    xit('show user role view all users', () => {
+    it('show user role view all users', () => {
         masterDesks.switchToTab('users');
         expect(masterDesks.getUser(1, 1, 0).element(by.className('content-item__text')).getText())
             .toContain('first name last name');
