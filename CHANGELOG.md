@@ -1,5 +1,13 @@
 # Superdesk Client Changelog
 
+## [1.26.3] 2018-11-27
+
+### Fixed
+
+- Make validation of POI configurable.
+- Fix editing of vocabularies in media editor.
+- Fix reordering of related content items in authoring.
+
 ## [1.26.2] 2018-11-22
 
 ### Fixed
