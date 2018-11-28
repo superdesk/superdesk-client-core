@@ -603,7 +603,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 const related = relationsService.getRelatedItems($scope.item);
 
                 if (related.length > 0) {
-                    modal.confirm({
+                    return modal.confirm({
                         bodyText: gettext(
                             'There are unpublished related items that won\'t be sent out as related items.'
                             + ' Do you want to publish the article anyway?'
