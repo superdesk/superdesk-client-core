@@ -1,4 +1,4 @@
-<label translate>Time Zone</label>
+<label class="form-label" style="margin-bottom:6px;" translate>Time Zone</label>
 <div class="control" ng-hide="timezone">
     <ul sd-typeahead
         data-style="style"
@@ -20,7 +20,7 @@
 </div>
 
 <ul class="pills-list {{style}} clearfix" ng-show="timezone">
-    <li class="pull-left">
+    <li>
         <div id="timezone" class="name right-pad">{{timezone}}</div>
         <div class="actions">
             <button title="{{:: 'Clear' | translate }}" ng-click="clearSelectedTimeZone()">

@@ -36,54 +36,58 @@
         <form name="schemeForm">
 
             <div class="modal__body-content">
-                <div style="padding: 1.6rem 2rem; border-bottom: 1px solid rgba(123, 123, 123, 0.2);">
-                    <div class="sd-line-input sd-line-input--boxed sd-line-input--required sd-line-input--boxed sd-line-input--no-margin">
-                        <label class="sd-line-input__label" translate>Scheme name</label>
-                        <input class="sd-line-input__input" type="text" class="line-input input" placeholder="{{ 'Scheme name'|translate }}" ng-model="editScheme.name" required>
+                <div style="padding: 0.8rem 2rem; border-bottom: 1px solid rgba(123, 123, 123, 0.2); flex-shrink: 0;">
+                    <div class="sd-line-input sd-line-input--required sd-line-input--boxed sd-line-input--no-margin sd-line-input--no-label">
+                        <input class="sd-line-input__input" type="text" class="line-input input" placeholder="{{ 'Scheme name'|translate }}" ng-model="editScheme.name" required  ng-if="editScheme.name">
+                        <input class="sd-line-input__input" type="text" class="line-input input" placeholder="{{ 'Scheme name'|translate }}" ng-model="editScheme.name" required autofocus ng-if="!editScheme.name">
                     </div>
                 </div>
                 
                 <div>
-                    <div class="content stages form-flat">
+                    <div class="content form-flat">
                         <div class="grid grid--padding-fix">
-                            <div class="grid__item grid__item--col-5">
-                                <div class="heading" translate>Scheme rules</div>
+                            <div class="grid__item grid__item--col-4">
+                                <div class="col-heading" translate>Scheme rules</div>
                                 <div class="column">
-                                    <div class="stage editable addnew" ng-if="rule">
+                                    <div class="selected-field editable addnew" ng-if="rule">
                                         <div class="sd-line-input">
                                             <input class="sd-line-input__input" type="text" ng-model="rule.name" placeholder="{{ 'Rule name' | translate }}" required autofocus>
                                         </div>
                                     </div>
 
-                                    <ul sd-sortrules class="pills-list" ng-if="!rule">
+                                    <ul class="pills-list" ng-if="!rule && !editScheme.rules.length">
+                                        <li class="empty-info">No rules defined yet</li>
+                                    </ul>
+
+                                    <ul sd-sortrules class="pills-list pills-list--draggable" ng-if="!rule">
                                         <li ng-repeat="schemeRule in editScheme.rules" ng-class="{active: selectedRule === schemeRule}" ng-click="selectRule(schemeRule)">
                                             {{schemeRule.name}}
 
                                             <div class="actions">
-                                                <button ng-click="editRule(schemeRule)">
+                                                <button ng-click="editRule(schemeRule)" sd-tooltip="{{ :: 'Edit Rule' | translate }}">
                                                     <i class="icon-pencil"></i>
                                                 </button>
-                                                <button ng-click="removeRule(schemeRule)">
+                                                <button ng-click="removeRule(schemeRule)" sd-tooltip="{{ :: 'Delete Rule' | translate }}">
                                                     <i class="icon-trash"></i>
                                                 </button>
                                             </div>
                                         </li>
                                     </ul>
 
-                                    <button class="btn btn--primary btn--expanded" ng-if="!rule" ng-click="addRule()" ng-disabled="!editScheme.name" style="margin-top: 1.6rem;">
-                                        <i class="icon-plus-sign icon--white"></i><span translate>Add New Rule</span>
+                                    <button class="btn btn--primary btn--hollow btn--large btn--expanded" ng-if="!rule" ng-click="addRule()" ng-disabled="!editScheme.name"  style="margin-top: 1.6rem;">
+                                        <i class="icon-plus-sign"></i><span translate>Add New Rule</span>
                                     </button>
 
                                     <div class="button-toolbar" ng-if="rule">
-                                        <button class="btn" ng-click="cancelRule()" translate>Cancel</button>
+                                        <button class="btn" ng-click="cancelRule(rule)" translate>Cancel</button>
                                         <button class="btn btn--primary" ng-click="save()" ng-disabled="disableSchemeForm()" translate>Save</button>
                                     </div>
                                 </div>
                             </div>
-                            <div class="grid__item grid__item--col-7">
-                                <div class="heading" translate>Scheme details</div>
+                            <div class="grid__item grid__item--col-8">
+                                <div class="col-heading" ng-if="editScheme.rules.length" translate>Scheme details</div>
 
-                                <div class="column" ng-if="!selectedRule && !rule">
+                                <div class="column" ng-if="!selectedRule && !rule && editScheme.rules.length">
                                     <i class="icon-info-sign icon--blue"></i><span class="helper-text helper-text--after-icon">Click on a Scheme rules on the left to view details.</span>
                                 </div>
 
@@ -102,7 +106,7 @@
                 </div>
             </div>
             <div class="modal__body-footer">
-                <button class="btn btn--primary" ng-click="done()" translate>Done</button>
+                <button class="btn btn--primary" ng-click="done()" ng-disabled="rule" translate>Done</button>
             </div>
         </form>
     </div>

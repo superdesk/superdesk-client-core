@@ -1,39 +1,45 @@
 <div class="form__row form__row--flex">
-
-    <div class="sd-line-input" ng-class="{'sd-line-input--required': required.desk}">
-        <label for="desk" class="sd-line-input__label" translate>Desk</label>
-        <select
-            id="desk" name="desk"
-            class="sd-line-input__select"
-            ng-options="d._id as d.name for d in desks"
-            ng-model="desk"
-            ng-required="required.desk">
-            <option value=""></option>
-        </select>
+    <div class="form__row-item">
+        <div class="sd-line-input sd-line-input--is-select sd-line-input--no-margin" ng-class="{'sd-line-input--required': required.desk}">
+            <label for="desk" class="sd-line-input__label" translate>Desk</label>
+            <select
+                id="desk" name="desk"
+                class="sd-line-input__select"
+                ng-options="d._id as d.name for d in desks"
+                ng-model="desk"
+                ng-required="required.desk">
+                <option value=""></option>
+            </select>
+        </div>
     </div>
 
-    <div class="sd-line-input" ng-class="{'sd-line-input--required': required.stage}">
-        <label for="stage" class="sd-line-input__label" translate>Stage</label>
-        <select
-            id="stage" name="stage"
-            class="sd-line-input__select"
-            ng-options="s._id as s.name for s in deskStages[desk]"
-            ng-model="stage"
-            ng-required="required.stage">
-            <option value=""></option>
-        </select>
+    <div class="form__row-item">
+        <div class="sd-line-input sd-line-input--is-select sd-line-input--no-margin"" ng-class="{'sd-line-input--required': required.stage}">
+            <label for="stage" class="sd-line-input__label" translate>Stage</label>
+            <select
+                id="stage" name="stage"
+                class="sd-line-input__select"
+                ng-options="s._id as s.name for s in deskStages[desk]"
+                ng-model="stage"
+                ng-required="required.stage">
+                <option value=""></option>
+            </select>
+        </div>
     </div>
 
-    <div class="sd-line-input" ng-class="{'sd-line-input--required': required.macro}">
-        <label for="macro" class="sd-line-input__label" translate>Macro</label>
-        <select
-            id="macro" name="macro"
-            class="sd-line-input__select"
-            ng-options="m.name as m.name for m in deskMacros"
-            ng-model="macro"
-            ng-required="required.macro"
-            >
-            <option value=""></option>
-        </select>
+    <div class="form__row-item">
+        <div class="sd-line-input  sd-line-input--is-select sd-line-input--no-margin"" ng-class="{'sd-line-input--required': required.macro}">
+            <label for="macro" class="sd-line-input__label" translate>Macro</label>
+            <select
+                id="macro" name="macro"
+                class="sd-line-input__select"
+                ng-options="m.name as m.name for m in deskMacros"
+                ng-model="macro"
+                ng-required="required.macro"
+                >
+                <option value=""></option>
+            </select>
+        </div>
     </div>
+
 </div>

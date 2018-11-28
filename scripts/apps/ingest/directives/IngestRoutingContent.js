@@ -11,7 +11,7 @@ export function IngestRoutingContent(api, gettext, notify, modal, contentFilters
     return {
         templateUrl: 'scripts/apps/ingest/views/settings/ingest-routing-content.html',
         link: function (scope) {
-            let _orig = null;
+            let _orig = null, _new = false;
 
             const DEFAULT_DATA = {
                 name: null,
@@ -71,6 +71,8 @@ export function IngestRoutingContent(api, gettext, notify, modal, contentFilters
              * @description Close Ingest Routing editing modal
              */
             scope.cancel = () => {
+                _new = false;
+                
                 scope.editScheme = null;
                 scope.selectedRule = null;
                 scope.rule = null;
@@ -97,7 +99,13 @@ export function IngestRoutingContent(api, gettext, notify, modal, contentFilters
              * @param {Object} rule Routing scheme rule's config data
              * @description Pick up rule for preview.
              */
-            scope.selectRule = (rule) => scope.selectedRule = rule;
+            scope.selectRule = (rule) => {
+                rule.filterName = rule.filter ? _.find(scope.contentFilters, {_id: rule.filter}).name : null;
+                rule.schedule._allDay = !(_.get(rule, 'schedule.hour_of_day_from', false) ||
+                    _.get(rule, 'schedule.hour_of_day_to', false));
+
+                scope.selectedRule = rule;
+            }
             
             /**
              * @ngdoc method
@@ -108,6 +116,8 @@ export function IngestRoutingContent(api, gettext, notify, modal, contentFilters
                 let rule = angular.copy(DEFAULT_DATA);
                 scope.editScheme.rules.push(rule);
                 scope.editRule(rule);
+                
+                _new = true;
             };
 
             /**
@@ -144,10 +154,12 @@ export function IngestRoutingContent(api, gettext, notify, modal, contentFilters
                        scope.schemes.push(_orig) : null;
 
                    scope.schemes = $filter('sortByName')(scope.schemes);
+                   scope.editScheme = _.clone(result);
                    notify.success(gettext('Routing scheme saved.'));
                    scope.rule = null;
-                   initSchemes();
+                   _new = false;
 
+                   initSchemes();
                }, (response) => {
                    notify.error(gettext('I\'m sorry but there was an error when saving the routing scheme.'));
                });
@@ -180,8 +192,9 @@ export function IngestRoutingContent(api, gettext, notify, modal, contentFilters
              * @description Cancel adding or editing schema rule
              */
             scope.cancelRule = () => {
-                !scope.rule._id ? scope.editScheme.rules.splice(-1, 1) : null;
+                _new ? scope.editScheme.rules.splice(-1, 1) : null;
                 scope.rule = null;
+                _new = false;
             };
 
             /**

@@ -1,76 +1,94 @@
-<div class="field">
-    <label translate>Fetch</label>
-    <a class="btn btn--primary btn--icon-only-circle btn--small" ng-click="showNewFetch = true;">
-        <i class="icon-plus-large"></i>
-    </a>
+<div class="form-block">
+    <h3 class="form-block__title" translate>Actions</h3>
+    <div class="form-block__sub-section">
+        <label class="form-label" translate>Fetch</label>
 
-    <div class="action-panel" ng-show="showNewFetch">
-        <div sd-action-picker data-desk="newFetch.desk" data-stage="newFetch.stage" data-macro="newFetch.macro" class="split"></div>
-        <div class="btn-group">
-            <button class="btn btn--primary" ng-click="addFetch();showNewFetch = false" ng-disabled="!newFetch.desk || !newFetch.stage" translate>Add</button>
-            <button class="btn" ng-click="showNewFetch = false" translate>Cancel</button>
+        <div class="list-row list-row--dotted sd-margin-b--1" ng-if="!rule.actions.fetch.length">
+            <span class="text-label" translate="">No Fetch actions defined</span>
         </div>
+
+        <ul class="pills-list with-action">
+            <li ng-repeat="fetchAction in rule.actions.fetch">
+                {{ getActionString(fetchAction)}}
+                <div class="actions">
+                    <button ng-click="removeFetch(fetchAction)" title="{{:: 'Remove fetch action' | translate }}"><i class="icon-trash"></i></button>
+                </div>
+            </li>
+        </ul>
+    
+        <div class="sd-card sd-card--auto-height action-panel action-panel" ng-show="showNewFetch">
+            <div class="sd-card__content">
+
+                <div sd-action-picker data-desk="newFetch.desk" data-stage="newFetch.stage" data-macro="newFetch.macro" class="split"></div>
+
+                
+                <div class="form__row form__row--inner sd-text__right">
+                    <button class="btn" ng-click="showNewFetch = false" translate>Cancel</button>
+                    <button class="btn btn--primary" ng-click="addFetch();showNewFetch = false" ng-disabled="!newFetch.desk || !newFetch.stage" translate>Add</button>
+                </div>
+            </div>
+        </div>
+        <a class="btn btn--primary btn--hollow btn--expanded" ng-click="showNewFetch = true;" ng-show="!showNewFetch">
+            <i class="icon-plus-sign"></i> Add Fetch action
+        </a>
     </div>
+    
+    <div class="form-block__sub-section sd-margin-b--2">
+        <label class="form-label" translate>Publish</label>
+        <div class="list-row list-row--dotted sd-margin-b--1" ng-if="!rule.actions.publish.length">
+            <span class="text-label" translate>No Publish actions defined</span>
+        </div>
 
-    <ul class="pills-list with-action">
-        <li ng-repeat="fetchAction in rule.actions.fetch">
-            {{ getActionString(fetchAction)}}
-            <div class="actions">
-                <button ng-click="removeFetch(fetchAction)" title="{{:: 'Remove fetch action' | translate }}"><i class="icon-trash"></i></button>
-            </div>
-        </li>
-    </ul>
-</div>
+        <ul class="pills-list with-action">
+            <li ng-repeat="publishAction in rule.actions.publish">
+                {{ getActionString(publishAction)}}
+                <div class="actions">
+                    <button ng-click="removePublish(publishAction)" title="{{:: 'Remove publish action' | translate }}"><i class="icon-trash"></i></button>
+                </div>
+            </li>
+        </ul>
 
-<div class="field">
-    <label translate>Publish</label>
-    <a class="btn btn--primary btn--icon-only-circle btn--small" ng-click="showNewPublish = true;">
-        <i class="icon-plus-large"></i>
-    </a>
-
-    <div class="action-panel" ng-show="showNewPublish">
-        <div sd-action-picker data-desk="newPublish.desk" data-stage="newPublish.stage" data-macro="newPublish.macro" class="split"></div>
-        <div class="field">
-            <label translate>Select Subscribers</label>
-            <div class="term-editor"
-                 sd-meta-terms
-                 data-item="newPublish"
-                 data-field="target_subscribers"
-                 data-unique="_id"
-                 data-list="customSubscribers"
-                 data-header="true"
-                 data-reload-list="true">
+        <div class="sd-card sd-card--auto-height action-panel" ng-show="showNewPublish">
+            <div class="sd-card__content">
+                <div sd-action-picker data-desk="newPublish.desk" data-stage="newPublish.stage" data-macro="newPublish.macro" class="split"></div>
+                <div class="form__row">
+                    <label class="form-label" translate>Select Subscribers</label>
+                    <div class="term-editor"
+                            sd-meta-terms
+                            data-item="newPublish"
+                            data-field="target_subscribers"
+                            data-unique="_id"
+                            data-list="customSubscribers"
+                            data-header="true"
+                            data-reload-list="true">
+                    </div>
+                </div>
+                <div class="target-field">
+                    <label class="form-label" translate>Target Types</label>
+                    <div sd-meta-target
+                         data-list="target_types"
+                         data-targets="newPublish.target_types">
+                    </div>
+                </div>
+                <div class="form__row form__row--inner sd-text__right">
+                    <button class="btn" ng-click="cancel();showNewPublish = false" translate>Cancel</button>
+                    <button class="btn btn--primary" ng-click="addPublish();showNewPublish = false" ng-disabled="!newPublish.desk || !newPublish.stage" translate>Add</button>
+                </div>
             </div>
         </div>
-        <div class="field target-field">
-            <label translate>Target Types</label>
-            <div sd-meta-target
-                 data-list="target_types"
-                 data-targets="newPublish.target_types">
-            </div>
-        </div>
-        <div class="btn-group">
-            <button class="btn btn--primary" ng-click="addPublish();showNewPublish = false" ng-disabled="!newPublish.desk || !newPublish.stage" translate>Add</button>
-            <button class="btn" ng-click="cancel();showNewPublish = false" translate>Cancel</button>
-        </div>
+
+        <a class="btn btn--primary btn--hollow btn--expanded" ng-click="showNewPublish = true;" ng-show="!showNewPublish">
+            <i class="icon-plus-sign"></i> Add Publish action
+        </a>
     </div>
-
-    <ul class="pills-list with-action">
-        <li class="pill-small" ng-repeat="publishAction in rule.actions.publish">
-            {{ getActionString(publishAction)}}
-            <div class="actions">
-                <button ng-click="removePublish(publishAction)" title="{{:: 'Remove publish action' | translate }}"><i class="icon-trash"></i></button>
-            </div>
-        </li>
-    </ul>
-</div>
-
-<div class="form__row form__row--s-padding">
-    <span sd-switch ng-model="rule.actions.exit"></span>
-    <label translate>Exit</label>    
-</div>
-
-<div class="form__row form__row--s-padding">
-    <span sd-switch ng-model="rule.actions.preserve_desk"></span>
-    <label translate>Preserve Desk</label>
+    
+    <div class="form__row form__row--s-padding">
+        <span sd-switch ng-model="rule.actions.exit"></span>
+        <label translate>Exit</label>    
+    </div>
+    
+    <div class="form__row form__row--s-padding">
+        <span sd-switch ng-model="rule.actions.preserve_desk"></span>
+        <label translate>Preserve Desk</label>
+    </div>
 </div>

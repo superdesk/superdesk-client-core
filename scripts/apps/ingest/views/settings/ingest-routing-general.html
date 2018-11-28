@@ -1,59 +1,74 @@
-<fieldset class="summary">
-    <label translate>Summary</label>
-    <div class="multiple">
+<fieldset class="">
+    <div class="form-block">
+        <h3 class="form-block__title" translate>Content Filter</h3>
+        
+        <div class="list-row list-row--dotted list-row--flex" ng-if="rule.filter">
+            <span class="text-label list-row__item list-row__item--grow">{{ :: 'Name' | translate }}:</span>
+            <span class="list-row__item">{{rule.filterName}}</span>
+        </div>
 
-        <div class="field">
-            <label translate>Filter</label>
-            <div ng-show="rule.filter">
-                <label class="title">{{ :: 'Name' | translate }}:</label> {{rule.filterName}}
-            </div>
-            <div ng-show="!rule.filter">
-                <span translate>[none]</span>
+        <div class="list-row list-row--dotted" ng-if="!rule.filter">
+            <span class="text-label" translate>No content filter defined</span>
+        </div>
+    </div>
+
+    <div class="form-block">
+        <h3 class="form-block__title" translate>Action</h3>
+
+        <div class="form-block__sub-section" ng-if="!rule.actions.fetch.length && !rule.actions.publish.length">
+            <div class="list-row list-row--dotted list-row--flex">
+                <span class="text-label" translate>No fetch or publish actions defined</span>
             </div>
         </div>
 
-        <div class="field">
-            <label translate>Action</label>
-            <div ng-show="rule.actions.fetch">
-                <label class="title">{{ :: 'Fetch' | translate }}:</label>
-                <span class="list-item" ng-repeat="fetchAction in rule.actions.fetch">
-                    - {{deskLookup[fetchAction.desk].name}} / {{stageLookup[fetchAction.stage].name}} / {{macroLookup[fetchAction.macro].label}}
-                </span>
-            </div>
-            <div ng-show="rule.actions.publish">
-                <label class="title">{{ :: 'Publish' | translate }}:</label>
-                <span class="list-item" ng-repeat="publishAction in rule.actions.publish">
-                    - {{deskLookup[publishAction.desk].name}} / {{stageLookup[publishAction.stage].name}}
-                </span>
-            </div>
-            <div>
-                <label class="title">{{ :: 'Exit' | translate }}:</label>
-                <span ng-show="rule.actions.exit" translate>On</span>
-                <span ng-hide="rule.actions.exit" translate>Off</span>
+        <div class="form-block__sub-section" ng-show="rule.actions.fetch && rule.actions.fetch.length">
+            <label class="form-label">{{ :: 'Fetch' | translate }}</label>
+            <div class="list-row list-row--dotted list-row--flex" ng-repeat="fetchAction in rule.actions.fetch">
+                <span class="list-row__item">{{deskLookup[fetchAction.desk].name}} / {{stageLookup[fetchAction.stage].name}} / {{macroLookup[fetchAction.macro].label}}</span>
             </div>
         </div>
 
-        <div class="field">
-            <label translate>Schedule</label>
-            <div ng-show="rule.schedule.day_of_week">
-                <label class="title">{{ :: 'Days' | translate }}</label>
-                <span class="list-item" ng-repeat="day in rule.schedule.day_of_week">
-                    - {{dayLookup[day]| translate}}
+        <div class="form-block__sub-section" ng-show="rule.actions.publish && rule.actions.publish.length">
+            <label class="form-label">{{ :: 'Publish' | translate }}</label>
+            <div class="list-row list-row--dotted list-row--flex" ng-repeat="publishAction in rule.actions.publish">
+                <span class="list-row__item">{{deskLookup[publishAction.desk].name}} / {{stageLookup[publishAction.stage].name}}</span>
+            </div>
+        </div>
+
+        <div class="list-row">
+            <span class="text-label text-label--auto">{{ :: 'Exit' | translate }}:</span>
+            <span class="list-row__item" ng-show="rule.actions.exit" translate>On</span>
+            <span class="list-row__item" ng-hide="rule.actions.exit" translate>Off</span>
+        </div>
+    </div>
+
+    <div class="form-block">
+        <h3 class="form-block__title" translate>Schedule</h3>
+
+        <div ng-show="rule.schedule.day_of_week">
+            <div class="list-row list-row--dotted">
+                <span class="list-row__item">
+                    <span class="tag-label" ng-repeat="day in rule.schedule.day_of_week">
+                        {{dayLookup[day]| translate}} 
+                    </span>
                 </span>
             </div>
-            <div ng-if="rule.schedule._allDay">
-                <label class="title">{{ :: 'Duration' | translate }}:</label>
+        </div>
+
+        <div class="list-row">
+            <span ng-if="rule.schedule._allDay">
+                <span class="text-label text-label--auto">{{ :: 'Duration' | translate }}:</span>
                 <span translate>All Day</span>
-            </div>
-            <div ng-if="!rule.schedule._allDay">
-                <label class="title">{{ :: 'Start time' | translate }}:</label>
+            </span>
+            <span ng-if="!rule.schedule._allDay">
+                <span class="text-label text-label--auto">{{ :: 'From' | translate }}:</span>
                 <span>{{rule.schedule.hour_of_day_from || '00:00'}}</span>
-            </div>
-            <div ng-if="!rule.schedule._allDay">
-                <label class="title">{{ :: 'End time' | translate }}:</label>
+            </span>
+            &nbsp;
+            <span ng-if="!rule.schedule._allDay">
+                <span class="text-label text-label--auto">{{ :: 'to' | translate }}:</span>
                 <span>{{rule.schedule.hour_of_day_to || '23:59'}}</span>
-            </div>
+            </span>
         </div>
-
     </div>
 </fieldset>

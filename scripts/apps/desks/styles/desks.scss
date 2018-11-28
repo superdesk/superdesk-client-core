@@ -476,6 +476,12 @@ $desk-width: 270px;
     textarea {
         height: 44px;
     }
+    .col-heading {
+        padding: 2px 0;
+        color: #666;
+        margin-right: 10px;
+        text-transform: uppercase;
+    }
 }
 
 .user-email {

@@ -1,26 +1,33 @@
-<div class="field">
-    <label translate>Days</label>
-    <div class="day-filter-box clearfix" sd-weekday-picker data-model="rule.schedule.day_of_week"></div>
-</div>
+<div class="form-block">
+    <h3 class="form-block__title" translate>Schedule</h3>
+    <div class="form__row">
+        <label class="form-label" translate>Days</label>
+        <div class="day-filter-box clearfix" sd-weekday-picker data-model="rule.schedule.day_of_week"></div>
+    </div>
 
-<div class="field">
-    <sd-check
-            ng-model="rule.schedule._allDay"
-            label-position="left"
-            class="sd-checkbox--button-allDay"
-            >{{'All Day' | translate}}</sd-check>
-</div>
+    <div class="form__row">
+        <sd-check ng-model="rule.schedule._allDay"
+                  label-position="right"
+                  class="sd-checkbox--button-allDay">
+                  {{'All Day' | translate}}
+        </sd-check>
+    </div>
 
-<div class="field" ng-if="!rule.schedule._allDay">
-    <label translate>Start Time (inclusive)</label>
-    <span sd-timepicker ng-model="rule.schedule.hour_of_day_from"></span>
-</div>
+    <div class="form__row form__row--flex" ng-if="!rule.schedule._allDay">
+        <div class="form__row-item">
+            <label class="form-label" translate>Start Time (inclusive)</label>
+            <span sd-timepicker ng-model="rule.schedule.hour_of_day_from"></span>
+        </div>
+    
+        <div class="form__row-item">
+            <label class="form-label" translate>End Time (exclusive)</label>
+            <span sd-timepicker ng-model="rule.schedule.hour_of_day_to"></span>
+        </div>
+    </div>
 
-<div class="field" ng-if="!rule.schedule._allDay">
-    <label translate>End Time (exclusive)</label>
-    <span sd-timepicker ng-model="rule.schedule.hour_of_day_to"></span>
-</div>
+ 
 
-<div class="field">
-    <div sd-timezone data-timezone="rule.schedule.time_zone"></div>
+    <div class="form__row">
+        <div sd-timezone data-timezone="rule.schedule.time_zone"></div>
+    </div>
 </div>

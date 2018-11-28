@@ -1,19 +1,16 @@
-<div class="field">
-    <label translate>Content Filter</label>
-    <a class="btn btn--primary btn--icon-only-circle btn--small" ng-click="showNewFilter = true;" ng-show="!selectedFilter">
-        <i class="icon-plus-large"></i>
-    </a>
-</div>
-
-<div class="field">
-    <div sd-typeahead ng-show="showNewFilter" items="matchingFilters" term="filterSearchTerm" search="searchFilters(term)" select="selectFilter(item); showNewFilter = false">
-        <li typeahead-item="filter" ng-repeat="filter in matchingFilters track by filter._id">
-            {{::filter.name}}
-        </li>
+<div class="form-block">
+    <h3 class="form-block__title" translate>Content Filter</h3>
+    <div ng-show="!showNewFilter">
+        <div class="list-row list-row--dotted sd-margin-b--1" ng-show="!selectedFilter">
+            <span class="text-label" translate="">No content filter defined</span>
+        </div>
+        <a class="btn btn--primary btn--hollow btn--expanded" ng-click="showNewFilter = true;" ng-show="!selectedFilter">
+            <i class="icon-plus-sign"></i> Add filter
+        </a>
     </div>
 
     <ul class="pills-list with-action" ng-if="selectedFilter">
-        <li class="pull-left">
+        <li>
             {{selectedFilter.name}}
             <div class="actions">
                 <button ng-click="clearSelectedFilter()" title="{{:: 'Remove filter' | translate }}">
@@ -23,8 +20,21 @@
         </li>
     </ul>
 
-</div>
+    <div class="sd-card sd-card--auto-height" ng-show="showNewFilter">
+        <div class="sd-card__content">
+            <div sd-typeahead items="matchingFilters" term="filterSearchTerm" search="searchFilters(term)" select="selectFilter(item); showNewFilter = false">
+                <li typeahead-item="filter" ng-repeat="filter in matchingFilters track by filter._id">
+                    {{::filter.name}}
+                </li>
+            </div>
 
-<div class="field">
-    <button ng-show="showNewFilter" class="btn" ng-click="showNewFilter = false" translate>Cancel</button>
+            <div class="form__row form__row--inner sd-text__right">
+                <button class="btn" ng-click="showNewFilter = false" translate>Cancel</button>
+            </div>
+
+        </div>
+    </div>
+
+
+
 </div>
