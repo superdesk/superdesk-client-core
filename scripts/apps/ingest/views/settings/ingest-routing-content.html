@@ -1,5 +1,6 @@
 <div class="sd-page__flex-helper">
     <div class="sd-page__header">
+        <sd-search-handler ng-model="query.name" data-debounce="200"></sd-search-handler>
         <span class="sd-page__element-grow"></span>
         <button class="btn btn--primary" ng-click="edit({})">
             <i class="icon-plus-sign icon--white"></i><span translate>Add New</span>
@@ -7,7 +8,7 @@
     </div>
     <div class="sd-page__content">
         <ul class="sd-list-item-group sd-list-item-group--space-between-items" style="max-width: 1000px;">
-            <li ng-repeat="scheme in schemes" class="sd-list-item sd-shadow--z1">
+            <li ng-repeat="scheme in schemes | filter:query" class="sd-list-item sd-shadow--z1">
                 <div class="sd-list-item__border"></div>
                 <div class="sd-list-item__column sd-list-item__column--grow sd-list-item__column--no-border">
                     <div class="sd-list-item__row">

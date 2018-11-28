@@ -1,5 +1,11 @@
 <div class="sd-page__flex-helper">
     <div class="sd-page__header">
+        <div class="flat-searchbar" ng-class="{extended: queueSearch}">
+            <div class="search-handler" >
+                <label for="search-input" class="trigger-icon" ng-click="queueSearch = !queueSearch"><i class="icon-search"></i></label>
+                <input id="search-input" type="text" placeholder="{{ :: 'Search' | translate }}" ng-model="query" ng-model-options="{debounce: 500}" ng-change="search(query)">
+            </div>
+        </div>
         <div class="sd-page__element-grow">
             <div sd-pagination items="providers"></div>
         </div>

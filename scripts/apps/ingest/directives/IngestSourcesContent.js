@@ -79,14 +79,43 @@ export function IngestSourcesContent(ingestSources, gettext, notify, api, $locat
                     13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24];
                 $scope.ingestExpiry = deployConfig.getSync('ingest_expiry_minutes');
 
+                $scope.search = function(query) {
+                    if (query) {
+                        $scope.searchPage = 1;
+                    }
+                    $scope.searchQuery = query;
+                    fetchProviders();
+                };
+
                 function fetchProviders() {
-                    return api.ingestProviders.query({
-                        max_results: $location.search().max_results || 25,
-                        page: $location.search().page || 1,
-                        sort: 'name',
-                    }).then((result) => {
-                        $scope.providers = result;
-                    });
+                    var criteria = criteria || {};
+
+                    criteria.max_results = $location.search().max_results || 25;
+                    criteria.page = $scope.searchPage || $location.search().page || 1;
+                    criteria.sort = 'name';
+                    var orTerms = null;
+
+                    if (!_.isEmpty($scope.searchQuery)) {
+                        orTerms = {$or: [
+                            {name: {
+                                $regex: $scope.searchQuery,
+                                $options: '-i'},
+                            },
+                        ]};
+                    }
+
+                    if (orTerms !== null) {
+                        criteria.where = JSON.stringify(orTerms);
+                    }
+                    const searchTerm = $scope.searchQuery;
+
+                    return api.ingestProviders.query(criteria)
+                        .then((result) => {
+                            if ($scope.searchQuery === searchTerm) {
+                                $scope.providers = result;
+                                $scope.searchPage = null;
+                            }
+                        });
                 }
 
                 function openProviderModal() {
