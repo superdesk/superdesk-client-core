@@ -80,7 +80,7 @@
 
                                     <div class="button-toolbar" ng-if="rule">
                                         <button class="btn" ng-click="cancelRule(rule)" translate>Cancel</button>
-                                        <button class="btn btn--primary" ng-click="save()" ng-disabled="disableSchemeForm()" translate>Save</button>
+                                        <button class="btn btn--primary" ng-click="save()" ng-disabled="!rule.name" translate>Save</button>
                                     </div>
                                 </div>
                             </div>

@@ -2,7 +2,7 @@ IngestRoutingGeneral.$inject = ['weekdays', 'desks', 'macros'];
 export function IngestRoutingGeneral(weekdays, desks, macros) {
     return {
         scope: {
-            rule: '='
+            rule: '=',
         },
         templateUrl: 'scripts/apps/ingest/views/settings/ingest-routing-general.html',
         link: function(scope) {

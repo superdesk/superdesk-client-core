@@ -23,7 +23,6 @@ describe('ingest_settings', () => {
 
         ingestSettings.newRoutingRuleBtn.click();
         ruleSettings = ingestSettings.routingRuleSettings;
-        ruleSettings.tabAction.click();
 
         // Select values in the three dropdown lists under the FETCH section,
         // then try to deselect them, i.e. select an empty option. If the
@@ -87,8 +86,6 @@ describe('ingest_settings', () => {
         ingestSettings.newRoutingRuleBtn.click();
         ruleSettings.ruleNameInput.sendKeys('Routing Rule 1');
 
-        ruleSettings.tabSchedule.click();
-
         // one the Schedule tab now, set a few scheduling options...
         // de-select Saturday and Sunday
         ruleSettings.daysButtons.sat.click();
@@ -101,8 +98,10 @@ describe('ingest_settings', () => {
         ruleSettings.timezoneLabel.click();
         ruleSettings.timezoneDeleteBtn.click();
         ruleSettings.timezoneInput.sendKeys('Asia/Singapore');
-        tzOption = ruleSettings.timezoneList.first();
-        browser.wait(() => ruleSettings.timezoneList.first().isDisplayed(), 3000);
+        tzOption = ruleSettings.timezoneList;
+
+        browser.wait(() => tzOption.isDisplayed(), 3000);
+
         tzOption.click();
 
         // save the routing scheme and check that it was successfull
