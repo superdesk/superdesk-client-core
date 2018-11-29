@@ -50,6 +50,7 @@ export function RelatedItemsDirective(authoringWorkspace, relationsService) {
 
                     const itemAlreadyAddedAsRelated = Object.keys(scope.item.associations || {})
                     .some((key) => key.startsWith(scope.field._id) &&
+                        scope.item.associations[key] != null &&
                         scope.item.associations[key]._id === item._id);
 
                     if (!itemAlreadyAddedAsRelated && scope.item._id !== item._id) {
