@@ -52,7 +52,7 @@ export function RelatedItemsDirective(authoringWorkspace, relationsService) {
                     .some((key) => key.startsWith(scope.field._id) &&
                         scope.item.associations[key]._id === item._id);
 
-                    if (!itemAlreadyAddedAsRelated && scope.item._id != item._id) {
+                    if (!itemAlreadyAddedAsRelated && scope.item._id !== item._id) {
                         scope.addRelatedItem(item);
                     }
                 });
