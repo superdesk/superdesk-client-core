@@ -48,11 +48,11 @@ export function RelatedItemsDirective(authoringWorkspace, relationsService) {
                     const type = getSuperdeskType(event);
                     const item = angular.fromJson(event.originalEvent.dataTransfer.getData(type));
 
-                    const isDuplicate = Object.keys(scope.item.associations || {})
+                    const itemAlreadyAddedAsRelated = Object.keys(scope.item.associations || {})
                     .some((key) => key.startsWith(scope.field._id) &&
                         scope.item.associations[key]._id === item._id);
 
-                    if (!isDuplicate) {
+                    if (!itemAlreadyAddedAsRelated && scope.item._id != item._id) {
                         scope.addRelatedItem(item);
                     }
                 });
