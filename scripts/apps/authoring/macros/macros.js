@@ -240,8 +240,6 @@ function MacrosReplaceDirective(editorResolver) {
         scope: true,
         templateUrl: 'scripts/apps/authoring/macros/views/macros-replace.html',
         link: function(scope) {
-            const editor = editorResolver.get();
-
             scope.diff = null;
 
             scope.$on('macro:diff', (evt, diff) => {
@@ -250,6 +248,8 @@ function MacrosReplaceDirective(editorResolver) {
             });
 
             function init(diff) {
+                const editor = editorResolver.get();
+
                 if (diff) {
                     scope.noMatch = Object.keys(diff || {}).length;
                     editor.setSettings({findreplace: {diff: diff}});
@@ -263,16 +263,22 @@ function MacrosReplaceDirective(editorResolver) {
             }
 
             scope.next = function() {
+                const editor = editorResolver.get();
+
                 editor.selectNext();
                 scope.preview = getCurrentReplace();
             };
 
             scope.prev = function() {
+                const editor = editorResolver.get();
+
                 editor.selectPrev();
                 scope.preview = getCurrentReplace();
             };
 
             scope.replace = function() {
+                const editor = editorResolver.get();
+
                 var to = getCurrentReplace();
 
                 if (to) {
@@ -288,6 +294,7 @@ function MacrosReplaceDirective(editorResolver) {
             };
 
             function getCurrentReplace() {
+                const editor = editorResolver.get();
                 var from = editor.getActiveText();
 
                 return scope.diff[from] || null;
