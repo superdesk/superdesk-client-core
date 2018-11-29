@@ -37,6 +37,7 @@ export function ItemCarouselDirective($timeout) {
             let carousel;
             let previousItemsString;
 
+
             /*
              * Initialize carousel after all content is loaded
              * otherwise carousel height is messed up
@@ -49,6 +50,7 @@ export function ItemCarouselDirective($timeout) {
                     return false;
                 }
 
+                scope.navCounter = 1;
                 previousItemsString = itemsString;
 
                 let field = _.find(items, (item) => !item[item.fieldId]);
@@ -57,6 +59,7 @@ export function ItemCarouselDirective($timeout) {
 
                 scope.carouselItems = _.sortBy(_.filter(items, (item) => item[item.fieldId]),
                     [(item) => item[item.fieldId].order]);
+
 
                 scope.$applyAsync(() => {
                     // waiting for angular to render items
@@ -82,18 +85,29 @@ export function ItemCarouselDirective($timeout) {
                     ]).then(initCarousel);
                 });
             });
-
             /*
              * Initialize carousel navigation
              */
-            scope.navNext = () => carousel.trigger('next.owl.carousel');
-            scope.navPrev = () => carousel.trigger('prev.owl.carousel');
+            scope.navNext = () => {
+                if (scope.navCounter < scope.carouselItems.length) {
+                    carousel.trigger('next.owl.carousel');
+                    scope.navCounter++;
+                }
+            };
+
+            scope.navPrev = () => {
+                if (scope.navCounter > 1) {
+                    carousel.trigger('prev.owl.carousel');
+                    scope.navCounter--;
+                }
+            };
 
             /*
              * Function for triggering thumbnail navigation
              */
             scope.goTo = (index) => {
                 scope.crtIndex = index;
+                scope.navCounter = index + 1;
                 carousel.trigger('to.owl.carousel', [index]);
             };
 
