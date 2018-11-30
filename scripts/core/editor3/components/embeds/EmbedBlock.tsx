@@ -8,6 +8,8 @@ import ng from 'core/services/ng';
 import {loadIframelyEmbedJs} from './loadIframely';
 import {debounce} from 'lodash';
 
+// debounce to avoid multiple widget load calls on initial load
+// when it gets executed for every embed block
 const loadIframely = debounce(loadIframelyEmbedJs, 100);
 
 /**
