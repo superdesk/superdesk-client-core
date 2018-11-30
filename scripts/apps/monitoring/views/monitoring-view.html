@@ -146,6 +146,8 @@
                             <i class="icon-switches"></i>
                             &nbsp;<span>{{:: 'Rearrange Groups' | translate}}</span>
                         </button>
+                        <button ng-if="swimlane" ng-click="switchSwimlaneColumn()">{{ :: 'Show' | translate }} <span ng-show="!showColumns6" class="ng-hide">6</span>
+                        <span ng-if="showColumns6" class="ng-scope">5</span>{{:: ' columns' | translate}}</button>
                     </li>
                 </ul>
             </div>

@@ -47,6 +47,12 @@ export function MonitoringView($rootScope, authoringWorkspace, pageTitle, $timeo
                 }
             });
 
+
+            scope.switchSwimlaneColumn = function() {
+                scope.showColumns6 = !scope.showColumns6;
+                scope.monitoring.switchViewColumn(true, true, scope.showColumns6);
+            };
+
             /**
              * Toggle viewColumn to switch views between swimlane and list
              * @param {Boolean} value
@@ -55,6 +61,7 @@ export function MonitoringView($rootScope, authoringWorkspace, pageTitle, $timeo
             scope.switchView = function(value, swimlane) {
                 scope.monitoring.switchViewColumn(swimlane, true);
                 scope.view = value;
+                scope.swimlane = swimlane;
             };
 
             /**
