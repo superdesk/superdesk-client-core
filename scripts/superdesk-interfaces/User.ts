@@ -10,8 +10,8 @@ export interface IUser {
     username: string;
     password: string;
     password_changed_on: string;
-    first_name: string;
-    last_name: string;
+    first_name?: string; // not mandatory, empty when user is created programatically
+    last_name?: string; // not mandatory, empty when user is created programatically
     display_name: string;
     email: string;
     phone: string;
