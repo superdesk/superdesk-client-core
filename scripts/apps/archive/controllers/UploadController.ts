@@ -141,6 +141,7 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
             meta: meta,
             progress: 0,
             cssType: file.type.split('/')[0],
+            thumbnailHtml: '',
         };
 
         if (id != null) {
@@ -150,6 +151,7 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
 
         $scope.items.unshift(item);
         $scope.enableSave = $scope.items.length > 0;
+        return item;
     };
 
     $scope.addFiles = function(files: Array<File>) {
@@ -214,33 +216,24 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
 
         return acceptedFiles.length < 1
             ? Promise.resolve()
-            : Promise.all(acceptedFiles.map(({file}) => getExifData(file)))
-                .then((filesWithExifDataAttached) => {
-                    filesWithExifDataAttached.forEach((file) => {
-                        var fileMeta = file['iptcdata'];
+            : Promise.all(acceptedFiles.map(({file, getThumbnail}) => getExifData(file)
+                .then((fileWithExif) => {
+                    var fileMeta = fileWithExif['iptcdata'];
 
-                        initFile(file, {
-                            byline: fileMeta.byline || $scope.currentUser.byline,
-                            headline: fileMeta.headline,
-                            description_text: fileMeta.caption,
-                            copyrightnotice: fileMeta.copyright,
-                        }, getPseudoId());
-                    });
+                    const item = initFile(fileWithExif, {
+                        byline: fileMeta.byline || $scope.currentUser.byline,
+                        headline: fileMeta.headline,
+                        description_text: fileMeta.caption,
+                        copyrightnotice: fileMeta.copyright,
+                    }, getPseudoId());
+
+                    return getThumbnail(file).then((htmlString) => item.thumbnailHtml = htmlString);
+                })
+            )).then(() => {
+                $scope.$applyAsync(() => {
                     $scope.imagesMetadata = $scope.items.map((item) => item.meta);
-                    $scope.$apply();
-
-                    // running promises sequentially
-                    acceptedFiles.reduce(
-                        (promise, {file, getThumbnail}, i) => promise.then(
-                            () => getThumbnail(file).then((htmlString) => {
-                                $scope.$apply(() => {
-                                    $scope.items[i].thumbnailHtml = htmlString;
-                                });
-                            }),
-                        )
-                        , Promise.resolve(),
-                    );
                 });
+            });
     };
 
     $scope.upload = function() {
