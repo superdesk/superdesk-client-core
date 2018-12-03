@@ -1,5 +1,6 @@
 import {IArticle} from 'superdesk-interfaces/Article';
-import {find, each, without, keys, includes} from 'lodash';
+import {find, each, without, keys, includes, get} from 'lodash';
+import {getGenericErrorMessage} from 'core/ui/constants';
 
 /**
  * This file is part of Superdesk.
@@ -69,9 +70,10 @@ WorkqueueCtrl.$inject = [
     'autosave',
     'confirm',
     'referrer',
+    'notify',
 ];
 function WorkqueueCtrl($scope, $rootScope, $route, workqueue, authoringWorkspace, multiEdit,
-    lock, $location, session, authoring, autosave, confirm, referrer) {
+    lock, $location, session, authoring, autosave, confirm, referrer, notify) {
     $scope.active = null;
     $scope.workqueue = workqueue;
     $scope.multiEdit = multiEdit;
@@ -183,15 +185,22 @@ function WorkqueueCtrl($scope, $rootScope, $route, workqueue, authoringWorkspace
     }
 
     function _closeItem(item) {
-        lock.unlock(item);
-        if (authoringWorkspace.item && item._id === authoringWorkspace.item._id) {
-            authoringWorkspace.close(true);
-        }
+        lock.unlock(item)
+            .then(() => {
+                if (authoringWorkspace.item && item._id === authoringWorkspace.item._id) {
+                    authoringWorkspace.close(true);
+                }
 
-        multiEdit.items = without(multiEdit.items, find(multiEdit.items, {article: item._id}));
-        if (multiEdit.items.length === 0) {
-            $scope.redirectOnCloseMulti();
-        }
+                multiEdit.items = without(multiEdit.items, find(multiEdit.items, {article: item._id}));
+                if (multiEdit.items.length === 0) {
+                    $scope.redirectOnCloseMulti();
+                }
+            })
+            .catch((err) => {
+                const message = get(err, 'data._message') || getGenericErrorMessage(gettext);
+
+                notify.error(message);
+            });
     }
 
     $scope.openMulti = function() {

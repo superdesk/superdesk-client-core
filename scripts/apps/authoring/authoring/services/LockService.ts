@@ -38,7 +38,7 @@ export function LockService($q, api, session, privileges, notify) {
                 _.extend(item, lock);
                 item._locked = false;
                 return item;
-            }, (err) => item);
+            });
     };
 
     /**
