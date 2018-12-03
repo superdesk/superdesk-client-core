@@ -2,7 +2,7 @@ import {IUser} from 'superdesk-interfaces/User';
 import {IDesk} from 'superdesk-interfaces/Desk';
 
 import {ISuperdeskGlobalConfig} from 'superdesk-interfaces/SuperdeskGlobalConfig';
-import {ISavedSearch, isUserSubscribedToSavedSearch} from '../SavedSearch';
+import {ISavedSearch, isUserSubscribedToSavedSearch, mapFiltersServerToClient} from '../SavedSearch';
 import {IDesksService} from 'types/Services/Desks';
 import {IPrivilegesService} from 'types/Services/Privileges';
 
@@ -67,7 +67,7 @@ export function SavedSearches($rootScope, api, session, modal, notify, gettext, 
                     scope.globalSavedSearches.length = 0;
                     scope.searches = searches;
                     forEach(scope.searches, (_savedSearch: ISavedSearch) => {
-                        _savedSearch.filter.query = search.setFilters(_savedSearch.filter.query);
+                        mapFiltersServerToClient(_savedSearch);
                         if (_savedSearch.user === session.identity._id) {
                             scope.userSavedSearches.push(_savedSearch);
                         } else if (_savedSearch.is_global) {

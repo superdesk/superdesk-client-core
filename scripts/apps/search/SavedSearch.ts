@@ -4,6 +4,7 @@ import {CronTimeInterval} from 'types/DataStructures/TimeInterval';
 
 import {forOwn} from 'lodash';
 import {mapPredefinedDateFiltersClientToServer} from 'apps/search/directives/DateFilters';
+import {setFilters} from './services/SearchService';
 
 export interface IUserSubscription {
     user: IUser['_id'];
@@ -112,6 +113,12 @@ export const unsubscribeDesk = (
     return updateSubscribers(savedSearch, nextSubscribers, api);
 };
 
+export function mapFiltersServerToClient(savedSearch: ISavedSearch) {
+    savedSearch.filter.query = setFilters(savedSearch.filter.query);
+
+    return savedSearch;
+}
+
 function mapFiltersClientToServer(search) {
     let nextSearch = {...search};
 
@@ -144,5 +151,5 @@ export function saveOrUpdateSavedSearch(api, savedSearchOriginal: ISavedSearch, 
         }
     }
 
-    return api('saved_searches').save(savedSearchOriginal, savedSearchChanged);
+    return api('saved_searches').save(savedSearchOriginal, savedSearchChanged).then(mapFiltersServerToClient);
 }

@@ -12,6 +12,22 @@ import {getDateFilters, dateRangesByKey} from '../directives/DateFilters';
 const DEFAULT_REPOS = ['ingest', 'archive', 'published', 'archived'];
 
 /**
+ * Converts the integer fields to string
+ * within a given search
+ *
+ * @return {Object} the updated search object
+ */
+export function setFilters(search) {
+    _.forOwn(search, (value, key) => {
+        if (_.includes(['priority', 'urgency'], key)) {
+            search[key] = JSON.stringify(value);
+        }
+    });
+
+    return search;
+}
+
+/**
  * @ngdoc service
  * @module superdesk.apps.search
  * @name search
@@ -223,21 +239,7 @@ export function SearchService($location, gettext, config, session, multi,
 
     this.sortOptions = sortOptions;
 
-    /**
-     * Converts the integer fields to string
-     * within a given search
-     *
-     * @return {Object} the updated search object
-     */
-    this.setFilters = function(search) {
-        _.forOwn(search, (value, key) => {
-            if (_.includes(['priority', 'urgency'], key)) {
-                search[key] = JSON.stringify(value);
-            }
-        });
-
-        return search;
-    };
+    this.setFilters = setFilters;
 
     /**
      * Prepares the date based on the timezone settings.

@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import {setFilters} from 'apps/search/services/SearchService';
 
 CardsService.$inject = ['api', 'search', 'session', 'desks', 'config'];
 export function CardsService(api, search, session, desks, config) {
@@ -140,7 +141,7 @@ export function CardsService(api, search, session, desks, config) {
      */
     function getCriteria(card, queryString, queryParam) {
         var params = getCriteriaParams(card);
-        var query = search.query(search.setFilters(params));
+        var query = search.query(setFilters(params));
         var criteria = {es_highlight: card.query ? search.getElasticHighlight() : 0};
 
         filterQueryByCardType(query, queryParam, card);
