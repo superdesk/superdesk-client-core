@@ -1,3 +1,5 @@
+import {get} from 'lodash';
+
 /**
  * @ngdoc directive
  * @module superdesk.apps.authoring
@@ -8,8 +10,8 @@
  * add related items by using drag and drop, delete related items and open related items.
  */
 
-RelatedItemsDirective.$inject = ['authoringWorkspace', 'relationsService'];
-export function RelatedItemsDirective(authoringWorkspace, relationsService) {
+RelatedItemsDirective.$inject = ['authoringWorkspace', 'relationsService', 'notify'];
+export function RelatedItemsDirective(authoringWorkspace, relationsService, notify) {
     return {
         scope: {
             item: '=',
@@ -45,13 +47,31 @@ export function RelatedItemsDirective(authoringWorkspace, relationsService) {
                     event.preventDefault();
                     event.stopPropagation();
 
+                    const relatedItemsForCurrentField = Object.keys(scope.item.associations || {})
+                        .filter((key) =>  key.startsWith(scope.field._id) && scope.item.associations[key] != null)
+                        .map((key) => scope.item.associations[key]);
+
+                    const currentCount = relatedItemsForCurrentField.length;
+                    const maxCount = get(scope, 'field.field_options.multiple_items.enabled') === true
+                        ? get(scope, 'field.field_options.multiple_items.max_items')
+                        : 1;
+
+                    if (currentCount >= maxCount) {
+                        notify.error(
+                            gettext(
+                                'Related item was not added, because the field '
+                                + 'reached the limit of related items allowed',
+                            ),
+                        );
+                        return;
+                    }
+
                     const type = getSuperdeskType(event);
                     const item = angular.fromJson(event.originalEvent.dataTransfer.getData(type));
 
-                    const itemAlreadyAddedAsRelated = Object.keys(scope.item.associations || {})
-                    .some((key) => key.startsWith(scope.field._id) &&
-                        scope.item.associations[key] != null &&
-                        scope.item.associations[key]._id === item._id);
+                    const itemAlreadyAddedAsRelated = relatedItemsForCurrentField.some(
+                        (relatedItem) => relatedItem._id === item._id,
+                    );
 
                     if (!itemAlreadyAddedAsRelated && scope.item._id !== item._id) {
                         scope.addRelatedItem(item);
