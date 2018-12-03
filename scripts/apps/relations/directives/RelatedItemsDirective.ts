@@ -48,7 +48,7 @@ export function RelatedItemsDirective(authoringWorkspace, relationsService, noti
                     event.stopPropagation();
 
                     const relatedItemsForCurrentField = Object.keys(scope.item.associations || {})
-                        .filter((key) =>  key.startsWith(scope.field._id) && scope.item.associations[key] != null)
+                        .filter((key) => key.startsWith(scope.field._id) && scope.item.associations[key] != null)
                         .map((key) => scope.item.associations[key]);
 
                     const currentCount = relatedItemsForCurrentField.length;

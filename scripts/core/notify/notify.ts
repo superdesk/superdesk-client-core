@@ -31,7 +31,7 @@ export default angular.module('superdesk.core.notify', ['superdesk.core.translat
 
                 // add message, only if it's does not already exist
                 if (find(this.messages, matches({msg: text})) === undefined) {
-                    $timeout(() => {// $timeout is used to force angular digest
+                    $timeout(() => { // $timeout is used to force angular digest
                         this.messages.push({type: type, msg: text, options: options});
                     }, 0);
                 }

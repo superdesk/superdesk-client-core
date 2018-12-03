@@ -228,7 +228,7 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
                     }, getPseudoId());
 
                     return getThumbnail(file).then((htmlString) => item.thumbnailHtml = htmlString);
-                })
+                }),
             )).then(() => {
                 $scope.$applyAsync(() => {
                     $scope.imagesMetadata = $scope.items.map((item) => item.meta);

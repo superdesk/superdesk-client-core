@@ -1,3 +1,6 @@
+import {IArticle} from 'superdesk-interfaces/Article';
+import {find, each, without, keys, includes} from 'lodash';
+
 /**
  * This file is part of Superdesk.
  *
@@ -44,7 +47,7 @@ function WorkqueueService(session, api) {
      * Update given item
      */
     this.updateItem = function(itemId) {
-        var old = _.find(this.items, {_id: itemId});
+        var old = find(this.items, {_id: itemId});
 
         if (old) {
             return api.find('archive', itemId).then((item) => angular.extend(old, item));
@@ -76,10 +79,10 @@ function WorkqueueCtrl($scope, $rootScope, $route, workqueue, authoringWorkspace
     $scope.$on('content:update', (_e, data) => {
         // only update the workqueue for content:update items in the workqueue
         if (data && data.items) {
-            var updateItems = _.keys(data.items);
+            var updateItems = keys(data.items);
 
             if (updateItems.length) {
-                var item = _.find(workqueue.items, (item) => _.includes(updateItems, item._id));
+                var item = find(workqueue.items, (_item) => includes(updateItems, _item._id));
 
                 if (item) {
                     updateWorkqueue();
@@ -94,15 +97,15 @@ function WorkqueueCtrl($scope, $rootScope, $route, workqueue, authoringWorkspace
         }
     });
     $scope.$on('item:unlock', (_e, data) => {
-        var item = _.find(workqueue.items, {_id: data.item});
+        var item: IArticle = workqueue.items.find((_item) => _item._id === data.item);
 
         if (item && lock.isLocked(item) && session.sessionId !== data.lock_session && $scope.active !== item) {
             authoring.unlock(item, data.user, item.headline);
         }
 
         if (item && item.linked_in_packages) {
-            _.each(item.linked_in_packages, (item) => {
-                var pck = _.find(workqueue.items, {_id: item.package});
+            each(item.linked_in_packages, (_item) => {
+                var pck = find(workqueue.items, {_id: _item.package});
 
                 if (pck) {
                     authoringWorkspace.edit(pck);
@@ -124,7 +127,7 @@ function WorkqueueCtrl($scope, $rootScope, $route, workqueue, authoringWorkspace
     /**
      * Update list of opened items and set one active to currently opened item
      */
-    function updateWorkqueue(e, data) {
+    function updateWorkqueue(e?, data?) {
         workqueue.fetch().then(() => {
             var route = $route.current || {_id: null, params: {}};
 
@@ -134,7 +137,7 @@ function WorkqueueCtrl($scope, $rootScope, $route, workqueue, authoringWorkspace
             let currentItemId = data && data.item ? data.item : route.params.item;
 
             if (currentItemId) {
-                $scope.active = _.find(workqueue.items, {_id: currentItemId});
+                $scope.active = find(workqueue.items, {_id: currentItemId});
             }
         });
     }
@@ -185,7 +188,7 @@ function WorkqueueCtrl($scope, $rootScope, $route, workqueue, authoringWorkspace
             authoringWorkspace.close(true);
         }
 
-        multiEdit.items = _.without(multiEdit.items, _.find(multiEdit.items, {article: item._id}));
+        multiEdit.items = without(multiEdit.items, find(multiEdit.items, {article: item._id}));
         if (multiEdit.items.length === 0) {
             $scope.redirectOnCloseMulti();
         }

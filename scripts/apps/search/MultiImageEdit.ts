@@ -44,7 +44,9 @@ export function MultiImageEditController(
         const updatedImages = imagesOriginal.map((image) => {
             const existingImage = $scope.images.find(({_id}) => _id === image._id);
 
-            return existingImage != null ? existingImage : {...image, ...pickBy($scope.metadata, (value) => !isEmpty(value))};
+            return existingImage != null
+                ? existingImage
+                : {...image, ...pickBy($scope.metadata, (value) => !isEmpty(value))};
         });
 
         $scope.images = angular.copy(updatedImages);

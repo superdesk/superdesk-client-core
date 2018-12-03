@@ -1,4 +1,4 @@
-import {IArticle} from "superdesk-interfaces/Article";
+import {IArticle} from 'superdesk-interfaces/Article';
 
 /**
  * @ngdoc service
