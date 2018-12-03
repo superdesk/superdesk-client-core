@@ -11,10 +11,13 @@ export default angular.module('superdesk.core.directives.filetypeIcon', [])
     .directive('sdFiletypeIcon', ['gettextCatalog', (gettextCatalog) => ({
         scope: {item: '='},
         link: function(scope, element, attrs) {
-            var stopWatch = scope.$watch('item', (item) => {
-                if (item) {
+            var oldClass = null;
+
+            scope.$watch('item', (item) => {
+                if (item != null) {
                     initIcon(item);
-                    stopWatch();
+                } else {
+                    oldClass = null;
                 }
             });
 
@@ -26,8 +29,14 @@ export default angular.module('superdesk.core.directives.filetypeIcon', [])
                 } else {
                     cls += item.type;
                 }
+
                 element.attr('title', `${gettextCatalog.getString('Article Type')}: ${item.type}`);
                 element.addClass(cls);
+
+                if (oldClass != null) {
+                    element.removeClass(oldClass);
+                }
+                oldClass = cls;
             }
         },
     })]);
