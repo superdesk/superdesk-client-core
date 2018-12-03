@@ -114,7 +114,14 @@ export const unsubscribeDesk = (
 };
 
 export function mapFiltersServerToClient(savedSearch: ISavedSearch) {
-    savedSearch.filter.query = setFilters(savedSearch.filter.query);
+    if (typeof savedSearch.filter === 'object' && savedSearch.filter.hasOwnProperty('query')) {
+        savedSearch.filter.query = setFilters(savedSearch.filter.query);
+
+        // after saving the item, filter value is string similar to
+        // filter: "{"query": {"desk": "[\"5c04e596149f111ebc9d3da3\"]", "spike": "exclude"}}"
+
+        // This check can be replaced with `!= null` check after SDESK-3698 is merged
+    }
 
     return savedSearch;
 }
