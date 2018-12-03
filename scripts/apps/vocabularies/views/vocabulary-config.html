@@ -37,18 +37,16 @@
         <div ng-if="loading" class="loading-overlay" ng-class="{active: loading}" style="opacity: 0.5;"></div>
 
         <div ng-repeat="tag in tags" ng-if="existsVocabulariesForTag(tag, tab)">
-            <div className="sd-list-header">
-                <span className="sd-list-header__name">{{tag.text}}</span>
+            <div class="sd-list-header">
+                <span class="sd-list-header__name">{{tag.text}}</span>
             </div>
 
-            <div class="sd-list-item-group sd-shadow--z2"
-                ng-repeat="vocabulary in getVocabulariesForTag(tag, tab) | orderBy:'display_name|translate' | filter: query track by vocabulary._id"
-            >
-                <div class="sd-list-item sd-shadow--z1">
+            <div class="sd-list-item-group sd-list-item-group--space-between-items" style="max-width: 1000px;">
+                <div class="sd-list-item sd-shadow--z1" ng-repeat="vocabulary in getVocabulariesForTag(tag, tab) | orderBy:'display_name|translate' | filter: query track by vocabulary._id">
                     <div class="sd-list-item__column sd-list-item__column--grow sd-list-item__column--no-border">
                         <div class="sd-list-item__row">
-                            <span>{{ vocabulary.display_name | translate }}</span>
-                            <span class="badge" ng-if="tab === 'vocabularies'">{{ vocabulary.items.length }}</span>
+                            <span class="sd-list-item__text-strong sd-list-item__element-rm-10">{{ vocabulary.display_name | translate }}</span>
+                            <span class="badge badge--light  sd-list-item__element-rm-10" ng-if="tab === 'vocabularies'">{{ vocabulary.items.length }}</span>
                             <span class="sd-overflow-ellipsis">{{ vocabulary.description | translate }}</span>
                         </div>
                     </div>
@@ -69,3 +67,6 @@
 </div>
 
 <div sd-vocabulary-config-modal ng-if="vocabulary"></div>
+
+
+
