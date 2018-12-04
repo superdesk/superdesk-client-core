@@ -725,7 +725,8 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                             $q.reject());
                 }
 
-                return lock.unlock($scope.origItem);
+                return lock.unlock($scope.origItem)
+                    .catch(() => $scope.origItem); // ignore failed unlock
             };
 
             /**
