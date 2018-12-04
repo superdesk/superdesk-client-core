@@ -15,13 +15,13 @@ export default angular.module('superdesk.core.directives.filetypeIcon', [])
 
             scope.$watch('item', (item) => {
                 if (item != null) {
-                    initIcon(item);
+                    setIcon(item);
                 } else {
                     oldClass = null;
                 }
             });
 
-            function initIcon(item) {
+            function setIcon(item) {
                 var cls = 'filetype-icon-';
 
                 if (item.type === 'composite' && item.highlight) {
