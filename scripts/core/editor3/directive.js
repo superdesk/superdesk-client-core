@@ -196,6 +196,16 @@ class Editor3Directive {
             store.dispatch(changeEditorState(editorState, true, true));
         });
 
+        $scope.$on('macro:refreshField', (evt, field, value) => {
+            if (field === this.pathToValue) {
+                const content = getContentStateFromHtml(value);
+                const state = store.getState();
+                const editorState = EditorState.push(state.editorState, content, 'change-block-data');
+
+                store.dispatch(changeEditorState(editorState, true, true));
+            }
+        });
+
         // bind the directive readOnly attribute bi-directionally between Angular and Redux.
         $scope.$watch('vm.readOnly', (val, old) => {
             if (val !== old) {

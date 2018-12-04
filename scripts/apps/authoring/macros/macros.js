@@ -140,6 +140,10 @@ function MacrosController($scope, macros, desks, autosave, $rootScope, storage) 
         }
     }
 
+    function isString(value) {
+        return typeof value === 'string' || value instanceof String;
+    }
+
     /**
      * @ngdoc method
      * @name Macros#call
@@ -154,6 +158,12 @@ function MacrosController($scope, macros, desks, autosave, $rootScope, storage) 
         $scope.loading = true;
         return macros.call(macro, item).then((res) => {
             if (!res.diff) {
+                Object.keys(res.item || {}).forEach((field) => {
+                    if (isString(res.item[field]) && res.item[field] !== item[field] && field !== 'body_html') {
+                        $rootScope.$broadcast('macro:refreshField', field, res.item[field]);
+                    }
+                });
+
                 angular.extend($scope.item, _.omit(res.item, ['_etag']));
                 autosave.save($scope.item, $scope.origItem);
             } else {
