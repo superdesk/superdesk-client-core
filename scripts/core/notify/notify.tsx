@@ -86,7 +86,7 @@ class NotifyComponent extends React.Component<any, IState> {
             <div className="notification-holder">
                 {
                     this.state.messages.map((msg, i) => (
-                        <div key={i} className={"alert alert-" + msg.type} onClick={() => this.removeMessage(i)}>
+                        <div key={i} className={'alert alert-' + msg.type} onClick={() => this.removeMessage(i)}>
                             {gettext(msg.msg)}
 
                             {
@@ -122,6 +122,6 @@ export default angular.module('superdesk.core.notify', ['superdesk.core.translat
 
         document.body.appendChild(targetEl);
 
-        // returns instance of NotifyComponent
-        return ReactDOM.render(<NotifyComponent />, targetEl);
+        // eslint-disable-next-line
+        return ReactDOM.render(<NotifyComponent />, targetEl); // returns instance of NotifyComponent
     }]);
