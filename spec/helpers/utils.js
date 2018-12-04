@@ -189,12 +189,13 @@ function altKey(key) {
  * @param {string} msg - a string expected to be present in the toast message
  */
 function assertToastMsg(type, msg) {
-    var cssSelector = '.notification-holder .alert-' + type,
-        toast = $(cssSelector);
-
     browser.sleep(500);
     browser.ignoreSynchronization = true;
-    expect(toast.getText()).toContain(msg);
+    expect(
+        element.all(by.cssContainingText(`.notification-holder .alert-${type}`, msg))
+            .first()
+            .isDisplayed()
+    ).toBe(true);
     browser.sleep(500);
     browser.ignoreSynchronization = false;
 }
