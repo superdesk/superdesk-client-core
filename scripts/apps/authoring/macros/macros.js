@@ -150,7 +150,9 @@ function MacrosController($scope, macros, desks, autosave, $rootScope, storage) 
      * @param {Object} macro - contains name, label, group, order etc.
      * @returns {Promise} - If resolved then macro is applied successfully
      * @description
-     * Triggers macros service call to apply the provided macro on opened article
+     * Triggers macros service call to apply the provided macro on opened article.
+     * The macros that changes the body should return diff; for other fields the entire
+     * content is replaced with the value changed by macro
      */
     $scope.call = function(macro) {
         let item = _.extend({}, $scope.origItem, $scope.item);
@@ -252,6 +254,7 @@ function MacrosReplaceDirective(editorResolver) {
         link: function(scope) {
             scope.diff = null;
 
+            //this is triggered from MacrosController.call and apply the changes to body field
             scope.$on('macro:diff', (evt, diff) => {
                 scope.diff = diff;
                 init(scope.diff);
