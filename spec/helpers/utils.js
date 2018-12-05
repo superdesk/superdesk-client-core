@@ -178,25 +178,18 @@ function altKey(key) {
  * Asserts that a toast message of a particular type has appeared with its
  * message containing the given string.
  *
- * A workaround with setting the ignoreSyncronization flag is needed due to a
- * protractor issue that does not find DOM elements dynamically displayed in a
- * $timeout callback. More info here:
- *    http://stackoverflow.com/questions/25062748/
- *           testing-the-contents-of-a-temporary-element-with-protractor
- *
  * @param {string} type - type of the toast notificiation ("info", "success" or
  *   "error")
  * @param {string} msg - a string expected to be present in the toast message
  */
 function assertToastMsg(type, msg) {
-    var cssSelector = '.notification-holder .alert-' + type,
-        toast = $(cssSelector);
-
     browser.sleep(500);
-    browser.ignoreSynchronization = true;
-    expect(toast.getText()).toContain(msg);
+    expect(
+        element.all(by.cssContainingText(`.notification-holder .alert-${type}`, msg))
+            .first()
+            .isDisplayed()
+    ).toBe(true);
     browser.sleep(500);
-    browser.ignoreSynchronization = false;
 }
 
 /**

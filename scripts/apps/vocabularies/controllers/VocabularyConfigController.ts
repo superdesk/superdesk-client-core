@@ -1,10 +1,31 @@
 import {MEDIA_TYPES, MEDIA_TYPE_KEYS, DEFAULT_SCHEMA, VOCABULARY_SELECTION_TYPES} from '../constants';
+import {IVocabulary, IVocabularyTag} from 'superdesk-interfaces/Vocabulary';
+import {IDirectiveScope} from 'types/Angular/DirectiveScope';
+import {remove, reduce} from 'lodash';
 
 const OTHER = gettext('Other');
 
+interface IScope extends IDirectiveScope<void> {
+    vocabularies: Array<IVocabulary>;
+    vocabulary: any;
+    tags: IVocabulary['tags'];
+    loading: boolean;
+    mediaTypes: object;
+    openVocabulary(vocabulary: IVocabulary): void;
+    getVocabulariesForTag(currentTag: IVocabularyTag, tab: string): Array<IVocabulary>;
+    existsVocabulariesForTag(currentTag: IVocabularyTag, tab: string): boolean;
+    closeVocabulary(): void;
+    createVocabulary(): void;
+    createCustomField(type: any): void;
+    matchFieldTypeToTab(tab: any, fieldType: any): boolean;
+    reloadList(): void;
+    remove(vocabulary: IVocabulary);
+    updateVocabulary(updates: any): void;
+}
+
 VocabularyConfigController.$inject = ['$scope', '$route', '$routeParams', 'vocabularies', '$rootScope',
     'api', 'notify', 'modal', 'session'];
-export function VocabularyConfigController($scope, $route, $routeParams, vocabularies, $rootScope,
+export function VocabularyConfigController($scope: IScope, $route, $routeParams, vocabularies, $rootScope,
     api, notify, modal, session) {
     $scope.loading = true;
     $scope.mediaTypes = MEDIA_TYPES;
@@ -14,7 +35,7 @@ export function VocabularyConfigController($scope, $route, $routeParams, vocabul
      *
      * @param {Object} vocabulary
      */
-    $scope.openVocabulary = (vocabulary) => {
+    $scope.openVocabulary = (vocabulary: IVocabulary) => {
         $route.updateParams({id: vocabulary._id});
     };
 
@@ -55,35 +76,35 @@ export function VocabularyConfigController($scope, $route, $routeParams, vocabul
      */
     $scope.reloadList = () => {
         $scope.loading = true;
-        vocabularies.getVocabularies().then((vocabularies) => {
-            const wordSet = (vocabularies || []).reduce((wordSet, vocabulary) => {
+        vocabularies.getVocabularies().then((_vocabularies: Array<IVocabulary>) => {
+            const wordSet = (_vocabularies || []).reduce((_wordSet, vocabulary) => {
                 (vocabulary.tags || []).forEach((tag) => {
-                    wordSet.add(tag.text);
+                    _wordSet.add(tag.text);
                 });
-                return wordSet;
-            }, new Set());
+                return _wordSet;
+            }, new Set<string>());
 
             let wordList = Array.from(wordSet).sort((a, b) => a.localeCompare(b));
 
             wordList.push(OTHER);
 
             $scope.tags = wordList.map((word) => ({text: word}));
-            $scope.vocabularies = vocabularies;
+            $scope.vocabularies = _vocabularies;
             $scope.loading = false;
             setupActiveVocabulary();
         });
     };
 
-    function checkTag(vocabulary, currentTag, tab) {
+    function checkTag(vocabulary: IVocabulary, currentTag: IVocabularyTag, tab: string) {
         return $scope.matchFieldTypeToTab(tab, vocabulary.field_type) &&
         (currentTag.text === OTHER && (vocabulary.tags == null || vocabulary.tags.length === 0) ||
         (vocabulary.tags || []).some((tag) => tag.text === currentTag.text));
     }
 
-    $scope.getVocabulariesForTag = (currentTag, tab) =>
+    $scope.getVocabulariesForTag = (currentTag: IVocabularyTag, tab: string) =>
         ($scope.vocabularies || []).filter((vocabulary) => checkTag(vocabulary, currentTag, tab));
 
-    $scope.existsVocabulariesForTag = (currentTag, tab) =>
+    $scope.existsVocabulariesForTag = (currentTag: IVocabularyTag, tab: string) =>
         ($scope.vocabularies || []).some((vocabulary) => checkTag(vocabulary, currentTag, tab));
 
     /**
@@ -113,7 +134,7 @@ export function VocabularyConfigController($scope, $route, $routeParams, vocabul
     };
 
     // remove is the UI callback for deleting a vocabulary entry
-    $scope.remove = (vocabulary) => {
+    $scope.remove = (vocabulary: IVocabulary) => {
         modal.confirm(gettext('Please confirm you want to delete the vocabulary.'))
             .then(() => api.remove(vocabulary, {}, 'vocabularies'))
             .then(vocabularyRemoved(vocabulary), errorRemovingVocabulary);
@@ -121,7 +142,7 @@ export function VocabularyConfigController($scope, $route, $routeParams, vocabul
 
     // vocabularyRemoved updates the UI after the given vocabulary has been removed via the API.
     const vocabularyRemoved = (vocabulary) => () => {
-        _.remove($scope.vocabularies, (v) => v._id === vocabulary._id);
+        remove($scope.vocabularies, (v) => v._id === vocabulary._id);
         $scope.reloadList();
         notify.success(gettext('Vocabulary was deleted.'));
     };
@@ -135,7 +156,7 @@ export function VocabularyConfigController($scope, $route, $routeParams, vocabul
         } else if (issues._message) {
             notify.error(issues._message);
         } else if (issues.content_types) {
-            const contentTypes = _.reduce(issues.content_types,
+            const contentTypes = reduce(issues.content_types,
                 (result, value) => result ? `${result}, ${value.label}` : value.label, null);
 
             notify.error(gettext('The vocabulary is used in the following content types:') + ' ' + contentTypes);

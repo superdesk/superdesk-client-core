@@ -2,18 +2,20 @@ import {ISavedSearch, updateSubscribers, unsubscribeUser, IUserSubscription} fro
 import {IDirectiveScope} from 'types/Angular/DirectiveScope';
 import {CronTimeInterval} from 'types/DataStructures/TimeInterval';
 import {IUser} from 'superdesk-interfaces/User';
+import {IVocabulary} from 'superdesk-interfaces/Vocabulary';
 
 interface IScope extends IDirectiveScope<void> {
+    vocabularies: Array<IVocabulary>;
     savedSearch: ISavedSearch;
     currentlySelectedInterval: CronTimeInterval;
     ownSubscription?: IUserSubscription;
     handleIntervalChange(cronExpression: CronTimeInterval): void;
     closeModal(): void;
-    savingEnabled(): void;
+    savingEnabled(): boolean;
+    isAlreadySubscribed(): boolean;
+    unsubscribeUser(): Promise<void>;
+    cancelEditingSubscription(): void;
     saveOrUpdate(): void;
-    unsubscribeUser(): void;
-    cancelEditingSubscription(event?: Event): void;
-    isAlreadySubscribed(): void;
 }
 
 SavedSearchEditOwnSubscription.$inject = ['asset', 'session', 'api'];

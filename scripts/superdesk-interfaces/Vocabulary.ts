@@ -1,3 +1,7 @@
+export interface IVocabularyTag {
+    text: string;
+}
+
 export interface IVocabulary {
     _id: string;
     display_name: string;
@@ -16,5 +20,6 @@ export interface IVocabulary {
     field_options: {};
     init_version: number;
     preffered_items: boolean;
+    tags: Array<IVocabularyTag>;
     date_shortcuts: Array<{value: number; term: string; label: string}>;
 }

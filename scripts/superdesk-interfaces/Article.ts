@@ -34,4 +34,5 @@ export interface IArticle {
     associations: { string: IArticle };
     type: 'text' | 'picture' | 'video' | 'audio' | 'preformatted' | 'graphic' | 'composite';
     firstpublished?: string;
+    linked_in_packages: any;
 }

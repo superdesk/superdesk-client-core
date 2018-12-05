@@ -65,7 +65,7 @@ export function VocabularyEditController($scope, gettext, $interpolate, notify, 
         if ($scope.vocabulary._id === 'crop_sizes') {
             var activeItems = _.filter($scope.vocabulary.items, (o) => o.is_active);
 
-            activeItems.forEach(({width, height, name}) => {
+            activeItems.forEach(({width, height, name}: any) => {
                 if (parseInt(height, 10) < 200 || parseInt(width, 10) < 200) {
                     $scope.errorMessage = gettext('Minimum height and width should be greater than or equal to 200');
                 }
@@ -132,7 +132,7 @@ export function VocabularyEditController($scope, gettext, $interpolate, notify, 
      * Add new blank vocabulary item.
      */
     $scope.addItem = function() {
-        var newVocabulary = {};
+        var newVocabulary: any = {};
 
         _.extend(newVocabulary, $scope.model);
         newVocabulary.is_active = true;
@@ -143,8 +143,8 @@ export function VocabularyEditController($scope, gettext, $interpolate, notify, 
     // try to reproduce data model of vocabulary:
     var model = _.mapValues(_.keyBy(
         _.uniq(_.flatten(
-            _.map($scope.vocabulary.items, (o) => _.keys(o))
-        ))
+            _.map($scope.vocabulary.items, (o) => _.keys(o)),
+        )),
     ), () => null);
 
     $scope.model = model;
@@ -154,7 +154,7 @@ export function VocabularyEditController($scope, gettext, $interpolate, notify, 
             .sort()
             .map((key) => angular.extend(
                 {key: key},
-                $scope.schema[key]
+                $scope.schema[key],
             ));
     }
 
