@@ -196,8 +196,8 @@ class Editor3Directive {
             store.dispatch(changeEditorState(editorState, true, true));
         });
 
-        //this is triggered from MacrosController.call
-        //if the current editor is for 'field' replace the current content with 'value'
+        // this is triggered from MacrosController.call
+        // if the current editor is for 'field' replace the current content with 'value'
         $scope.$on('macro:refreshField', (evt, field, value) => {
             if (field === this.pathToValue) {
                 const content = getContentStateFromHtml(value);

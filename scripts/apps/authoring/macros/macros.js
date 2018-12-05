@@ -254,7 +254,7 @@ function MacrosReplaceDirective(editorResolver) {
         link: function(scope) {
             scope.diff = null;
 
-            //this is triggered from MacrosController.call and apply the changes to body field
+            // this is triggered from MacrosController.call and apply the changes to body field
             scope.$on('macro:diff', (evt, diff) => {
                 scope.diff = diff;
                 init(scope.diff);
