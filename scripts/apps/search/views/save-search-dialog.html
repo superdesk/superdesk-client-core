@@ -6,7 +6,7 @@
         <div class="field">
             <textarea id="search_description" class="line-input" sd-auto-height ng-model="edit.description" placeholder="{{:: 'Description' | translate}}"></textarea>
         </div>
-        <div class="field">
+        <div class="field" ng-if="!wrapper.edit.subscribers.user_subscriptions.length">
             <span id="search_global" sd-switch ng-model="edit.is_global"></span>
             <label class="label--inline" translate>Make global</label>
         </div>
