@@ -60,6 +60,13 @@ export function HistoryController(
                     } else {
                         $scope.historyItems = historyItems;
                     }
+
+                    // Filter out item_lock and item_unlock history entries
+                    if ($scope.historyItems && $scope.historyItems.length > 0) {
+                        $scope.historyItems = $scope.historyItems.filter(
+                            (entry) => !entry.operation || ['item_lock', 'item_unlock'].indexOf(entry.operation) < 0
+                        );
+                    }
                 })
                 .catch((error) => {
                     $scope.historyItems = null;
