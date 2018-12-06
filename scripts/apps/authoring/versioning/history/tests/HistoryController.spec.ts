@@ -143,4 +143,37 @@ describe('archive-history', () => {
             expect(scope.historyItems.length).toBe(1);
             expect(scope.historyItems[0].displayName).toBe('System');
         }));
+
+    it('ignores lock history entries',
+        inject(($controller, $rootScope, api, $q, archiveService, desks) => {
+            const historyItems = [{
+                version: 1,
+                item_id: 123,
+                operation: 'create',
+            }, {
+                version: 1,
+                item_id: 123,
+                operation: 'item_lock',
+            }, {
+                version: 1,
+                item_id: 123,
+                operation: 'update',
+            }, {
+                version: 1,
+                item_id: 123,
+                operation: 'item_unlock',
+            }];
+
+            spyOn(api, 'query').and.returnValue($q.when({_items: historyItems}));
+
+            var scope = $rootScope.$new();
+
+            scope.item = {_id: 123, _type: 'archive'};
+            $controller('HistoryWidgetCtrl', {$scope: scope});
+
+            $rootScope.$digest();
+            expect(scope.historyItems.length).toBe(2);
+            expect(scope.historyItems[0].operation).toBe('create');
+            expect(scope.historyItems[1].operation).toBe('update');
+    }));
 });
