@@ -31,6 +31,8 @@ import {
  */
 class HTMLParser {
     constructor(html, associations) {
+        this.iframes = {};
+        this.scripts = {};
         this.figures = {};
         this.tables = {};
         this.media = {};
@@ -62,7 +64,22 @@ class HTMLParser {
      * about the HTML that was extracted.
      */
     pruneNodes() {
+        this.tree.find('iframe').each((i, node) => {
+            this.iframes[i] = node.outerHTML;
+            $(node).replaceWith(`<figure>BLOCK_IFRAME_${i}</figure>`);
+        });
+
+        this.tree.find('script').each((i, node) => {
+            this.scripts[i] = node.outerHTML;
+            $(node).replaceWith(`<figure>BLOCK_SCRIPT_${i}</figure>`);
+        });
+
         this.tree.find('figure').each((i, node) => {
+            if (node.innerText.startsWith('BLOCK_')) {
+                // iframe or script
+                return;
+            }
+
             if (node.querySelector('img, video') != null) {
                 try {
                     // editor2 media support
@@ -172,6 +189,8 @@ class HTMLParser {
         const isTable = block.getText().startsWith('BLOCK_TABLE_');
         const isMedia = block.getText().startsWith('BLOCK_MEDIA_');
         const isFigure = block.getText().startsWith('BLOCK_FIGURE_');
+        const isIframe = block.getText().startsWith('BLOCK_IFRAME_');
+        const isScript = block.getText().startsWith('BLOCK_SCRIPT_');
 
         if (isAtomic && isTable) {
             return this.createTableBlock(block);
@@ -183,6 +202,14 @@ class HTMLParser {
 
         if (isAtomic && isFigure) {
             return this.createFigureBlock(block);
+        }
+
+        if (isAtomic && isIframe) {
+            return this.createEmbedBlock(block, this.iframes);
+        }
+
+        if (isAtomic && isScript) {
+            return this.createEmbedBlock(block, this.scripts);
         }
 
         return block;
@@ -212,6 +239,24 @@ class HTMLParser {
         return atomicBlock(block, 'EMBED', 'MUTABLE', {
             data: {html: htmlElement.innerHTML},
             description: descriptionText,
+        });
+    }
+
+    /**
+     * Create atomic block for embeds
+     *
+     * @param {ContentBlock} block
+     * @returns {ContentBlock}
+     */
+    createEmbedBlock(block, items) {
+        const id = this.getBlockId(block);
+
+        var htmlElement = document.createElement('div');
+
+        htmlElement.innerHTML = items[id];
+
+        return atomicBlock(block, 'EMBED', 'MUTABLE', {
+            data: {html: htmlElement.innerHTML},
         });
     }
 
