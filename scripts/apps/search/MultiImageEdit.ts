@@ -183,6 +183,7 @@ export function MultiImageEditDirective(asset, $sce) {
             successHandler: '=',
             hideEditPane: '=',
             getThumbnailHtml: '=',
+            getIconForItemType: '=',
             getProgress: '=',
             onRemoveItem: '=',
             uploadInProgress: '=',

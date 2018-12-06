@@ -69,6 +69,11 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
 
         return item == null ? '' : item.thumbnailHtml;
     };
+    $scope.getIconForItemType = (imageMeta) => {
+        const item = getItemByMetaId(imageMeta._id);
+
+        return 'icon-' + item.cssType;
+    };
     $scope.invokeImagesInput = () => {
         var el: HTMLElement = document.querySelector('#images-input');
 
