@@ -30,12 +30,13 @@ export default angular.module('superdesk.core.directives.filetypeIcon', [])
                     cls += item.type;
                 }
 
+                if (oldClass === cls) {
+                    return;
+                }
+
                 element.attr('title', `${gettextCatalog.getString('Article Type')}: ${item.type}`);
                 element.addClass(cls);
-
-                if (oldClass != null) {
-                    element.removeClass(oldClass);
-                }
+                element.removeClass(oldClass);
                 oldClass = cls;
             }
         },
