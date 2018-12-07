@@ -1181,11 +1181,7 @@ input {
 }
 .list-row--dotted {
     border-bottom: 1px dotted #999;
-    &:first-child, 
-    &:only-child, 
-    &:only-of-type,
-    &:first-of-type,
-    &.list-row--top-brdr {
+    &:first-child {
         border-top: 1px dotted #999;
     }
 }
@@ -1198,9 +1194,6 @@ input {
     display: inline-block;
     flex-grow: 0;
     flex-shrink: 0;
-    .tag-label {
-        margin: 0.2rem 0.1rem !important;
-    }
 }
 .list-row__item--block {
     display: block;
@@ -1227,7 +1220,6 @@ input {
     margin-bottom: 2.4rem;
 }
 
-<<<<<<< HEAD
 .basic-input {
     border: 1px solid rgba(123, 123, 123, 0.5);
     border-radius: 3px;
@@ -1243,16 +1235,4 @@ input {
     &[disabled] {
         border-color: #ddd !important;
     }
-=======
-.form-block {
-    margin-bottom: 2rem;
-}
-.form-block__title {
-    margin-bottom: 0.8rem;
-    font-size: 1.6rem;
-    font-weight: 400;
-}
-.form-block__sub-section + .form-block__sub-section {
-    margin-top: 1.6rem;
->>>>>>> [SDESK-3594] Refactor the Ingest management page
 }

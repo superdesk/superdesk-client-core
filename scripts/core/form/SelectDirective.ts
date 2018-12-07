@@ -5,6 +5,8 @@ export default function SelectDirective() {
             label: '@',
             model: '=',
             options: '=',
+            optionLabel: '@',
+            optionValue: '@',
             required: '=',
         },
         template: require('./views/select-directive.html'),
