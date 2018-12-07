@@ -91,10 +91,10 @@ export class LinkInputComponent extends React.Component<any, any> {
             const url = this.state.url;
             const isLocalDomain = (localDomains || []).some((item) => url.includes(item.domain));
 
-            link = {
-                href: url,
-                target: isLocalDomain ? '_self' : '_blank',
-            };
+            link = {href: url};
+            if (!isLocalDomain && localDomains != null) {
+                link.target = '_blank';
+            }
         } else if (linkType === linkTypes.attachement) {
             link = {attachment: this.state.selected};
         } else {
