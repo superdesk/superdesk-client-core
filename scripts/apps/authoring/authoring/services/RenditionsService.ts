@@ -1,3 +1,4 @@
+import {isEmpty} from 'lodash';
 import {IArticle} from 'superdesk-interfaces/Article';
 
 /**
@@ -96,11 +97,6 @@ export function RenditionsService(metadata, $q, api, superdesk, _, config) {
                 ...cropOptions,
             })
                 .then((result) => {
-                    if (config.features.validatePointOfInterestForImages !== true) {
-                        angular.extend(item, result.metadata);
-                        return $q.resolve(item);
-                    }
-
                     const renditionNames = [];
                     const savingImagePromises = [];
 
@@ -123,7 +119,7 @@ export function RenditionsService(metadata, $q, api, superdesk, _, config) {
 
                     // perform the request to make the cropped images
                     renditionNames.forEach((renditionName) => {
-                        if (item.renditions[renditionName] !== result.cropData[renditionName]) {
+                        if (!isEmpty(result.cropData[renditionName]) && item.renditions[renditionName] !== result.cropData[renditionName]) {
                             savingImagePromises.push(
                                 api.save('picture_crop', {item: clonedItem, crop: result.cropData[renditionName]}),
                             );
