@@ -48,8 +48,10 @@ export class BlockEntityWrapper {
             } else {
                 const link = data.link;
 
-                if (link.attachment) {
+                if (link.attachment != null) {
                     html += `<a data-attachment="${link.attachment}">`;
+                } else if (link.target != null) {
+                    html += `<a href="${link.href}" target="${link.target}">`;
                 } else {
                     html += `<a href="${link.href}">`;
                 }

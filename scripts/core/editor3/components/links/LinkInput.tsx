@@ -6,6 +6,8 @@ import {getSelectedEntity} from './entityUtils';
 import {Dropdown, NavTabs} from 'core/ui/components';
 import {AttachmentList} from './AttachmentList';
 import {applyLink, hidePopups, createLinkSuggestion, changeLinkSuggestion} from '../../actions';
+import {connectPromiseResults} from 'core/helpers/ReactRenderAsync';
+import ng from 'core/services/ng';
 
 /**
  * @ngdoc React
@@ -80,13 +82,19 @@ export class LinkInputComponent extends React.Component<any, any> {
      */
     onSubmit(linkType) {
         let link;
-        const {suggestingMode} = this.props;
+        const {suggestingMode, localDomains} = this.props;
         const _createLinkSuggestion = this.props.createLinkSuggestion;
         const _applyLink = this.props.applyLink;
         const _changeLinkSuggestion = this.props.changeLinkSuggestion;
 
         if (linkType === linkTypes.href) {
-            link = {href: this.state.url};
+            const url = this.state.url;
+            const isLocalDomain = (localDomains || []).some((item) => url.includes(item.domain));
+
+            link = {
+                href: url,
+                target: isLocalDomain ? '_self' : '_blank',
+            };
         } else if (linkType === linkTypes.attachement) {
             link = {attachment: this.state.selected};
         } else {
@@ -208,6 +216,7 @@ LinkInputComponent.propTypes = {
     suggestingMode: PropTypes.bool,
     createLinkSuggestion: PropTypes.func,
     changeLinkSuggestion: PropTypes.func,
+    localDomains: PropTypes.array,
 };
 
 const mapStateToProps = (state) => ({
@@ -216,9 +225,14 @@ const mapStateToProps = (state) => ({
     suggestingMode: state.suggestingMode,
 });
 
+const LinkInputComponentWithDependenciesLoaded = connectPromiseResults(() => ({
+    localDomains: ng.get('metadata').initialize()
+        .then(() => ng.get('metadata').values.local_domains),
+}))(LinkInputComponent);
+
 export const LinkInput: React.StatelessComponent<any> = connect(mapStateToProps, {
     applyLink,
     hidePopups,
     createLinkSuggestion,
     changeLinkSuggestion,
-})(LinkInputComponent);
+})(LinkInputComponentWithDependenciesLoaded);

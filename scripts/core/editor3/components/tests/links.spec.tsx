@@ -160,7 +160,7 @@ describe('editor3.components.link-input', () => {
 
         wrapper.find('form').simulate('submit');
 
-        expect(onSubmit.calls.first().args[0]).toEqual({href: 'abc'});
+        expect(onSubmit.calls.first().args[0]).toEqual({href: 'abc', target: '_blank'});
         expect(onSubmit.calls.first().args[1]).not.toBe(null);
         expect(onCancel).toHaveBeenCalled();
     });
