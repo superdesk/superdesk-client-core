@@ -10,65 +10,71 @@
 </ul>
 <div ng-controller="MetadataWidgetCtrl">
     <div class="widget-content-padding" ng-if="tab === 'metadata' || !tab">
-        <ul class="basic-list">
-            <li ng-if="_isInProductionStates">
-                <label ng-if="_editable" translate>Not For Publication</label>
-                <span ng-if="_editable">
+        <ul class="basic-list basic-list--dotted">
+            <li class="basic-list__item" ng-if="_isInProductionStates">
+                <label class="basic-list__item-label" ng-if="_editable" translate>Not For Publication</label>
+                <span class="basic-list__item-data" ng-if="_editable">
                     <span ng-if="_editable" sd-switch ng-model="item.flags.marked_for_not_publication"></span>
                 </span>
-                <label ng-if="!_editable">
+                <span ng-if="!_editable">
                     <span class="state-label not-for-publication" ng-show="item.flags.marked_for_not_publication" translate>Not For Publication</span>
                     <span class="state-label for-publication" ng-show="!item.flags.marked_for_not_publication" translate>For Publication</span>
-                </label>
+                </span>
             </li>
 
-            <li ng-if="_isInProductionStates">
-                <label ng-if="_editable" translate>Legal</label>
-                <span ng-if="_editable">
+            <li class="basic-list__item" ng-if="_isInProductionStates">
+                <label class="basic-list__item-label" ng-if="_editable" translate>Legal</label>
+                <span class="basic-list__item-data" ng-if="_editable">
                     <span sd-switch ng-model="item.flags.marked_for_legal"></span>
                 </span>
-                <label ng-if="!_editable">
+                <span ng-if="!_editable">
                     <span class="state-label legal" ng-show="item.flags.marked_for_legal" translate>Legal</span>
-                </label>
+                </span>
             </li>
-            <li ng-if="!isRemovedField('usageterms')">
-                <label translate>Usage terms</label>
-                <div class="data">
-                    <input class="line-input" type="text" ng-model="item.usageterms" ng-disabled="!_editable" ng-change="autosave(item)">
+            <li class="basic-list__item" ng-if="!isRemovedField('usageterms')">
+                <label class="basic-list__item-label" translate>Usage terms</label>
+                <div class="basic-list__item-data">
+                    <input class="basic-input" type="text" ng-model="item.usageterms" ng-disabled="!_editable" ng-change="autosave(item)">
                 </div>
             </li>
-            <li class="terms-box" ng-if="$root.config.features.alchemy">
+            <li class="basic-list__item basic-list__item--stacked" ng-if="$root.config.features.alchemy">
                 <label translate>Tags</label>
                 <div sd-meta-tags data-item="item" data-field="keywords" data-source-field="body_html" data-change="autosave(item)" data-disabled="!_editable">
             </li>
-            <li ng-if="!isRemovedField('language')">
-                <label translate>Language</label>
-                <div class="data">
-                    <input class="line-input" type="text" ng-model="item.language" ng-disabled="!_editable" ng-change="autosave(item)">
+            <li class="basic-list__item" ng-if="!isRemovedField('language')">
+                <label class="basic-list__item-label" translate>Language</label>
+                <div class="basic-list__item-data">
+                    <input class="basic-input" type="text" ng-model="item.language" ng-disabled="!_editable" ng-change="autosave(item)">
                 </div>
             </li>
 
-            <li ng-if="item.pubstatus">
-                <label translate>Pubstatus</label>
-                <div class="data">{{item.pubstatus}}</div>
+            <li class="basic-list__item" ng-if="item.pubstatus">
+                <label class="basic-list__item-label" translate>Pubstatus</label>
+                <div class="basic-list__item-data">
+                    {{item.pubstatus}}
+                </div>
             </li>
-
-
-            <li ng-if="item.original_source">
-                <label translate>Original source</label>
-                <div class="data">{{ item.original_source}}</div>
+            <li class="basic-list__item" ng-if="item.original_source">
+                <label class="basic-list__item-label" translate>Original source</label>
+                <div class="basic-list__item-data">
+                    {{ item.original_source}}
+                </div>
             </li>
-            <li ng-if="item.copyrightholder">
-                <label translate>Copyright</label>
-                <div class="data">{{item.copyrightholder}}</div>
+            <li class="basic-list__item" ng-if="item.copyrightholder">
+                <label class="basic-list__item-label" translate>Copyright</label>
+                <div class="basic-list__item-data">
+                    {{item.copyrightholder}}
+                </div>
             </li>
-            <li ng-if="item.creditline">
-                <label translate>Credit</label>
-                <div class="data">{{item.creditline}}</div>
+            <li class="basic-list__item" ng-if="item.creditline">
+                <label class="basic-list__item-label" translate>Credit</label>
+                <div class="basic-list__item-data">
+                    {{item.creditline}}
+                </div>
             </li>
-            <li>
-                <label translate>State</label>
-                <div class="preview-state__row">
+            <li class="basic-list__item">
+                <label class="basic-list__item-label" translate>State</label>
+                <div class="basic-list__item-data">
                     <span sd-item-state data-state=item.state data-embargo=item.embargo></span>
                     <span ng-if="item.flags.marked_for_not_publication" class="state-label not-for-publication" translate>Not For Publication</span>
                     <span ng-if="item.flags.marked_for_legal" class="state-label legal" translate>Legal</span>
@@ -77,62 +83,72 @@
                 </div>
             </li>
 
-            <li ng-if="item.ingest_provider">
-                <label translate>Ingest Provider</label>
-                <div class="data" sd-meta-ingest data-item="item"></div>
+            <li class="basic-list__item" ng-if="item.ingest_provider">
+                <label class="basic-list__item-label" translate>Ingest Provider</label>
+                <div class="basic-list__item-data" sd-meta-ingest data-item="item"></div>
             </li>
 
-            <li ng-if="item.ingest_provider_sequence">
-                <label translate>Provider sequence</label>
-                <div class="data">{{item.ingest_provider_sequence}}</div>
+            <li class="basic-list__item" ng-if="item.ingest_provider_sequence">
+                <label class="basic-list__item-label" translate>Provider sequence</label>
+                <div class="basic-list__item-data">
+                    {{item.ingest_provider_sequence}}
+                </div>
             </li>
-            <li ng-if="item.expiry">
-                <label translate>Expiry</label>
-                <div class="data" sd-reldate-complex datetime="item.expiry"></div>
+            <li class="basic-list__item" ng-if="item.expiry">
+                <label class="basic-list__item-label" translate>Expiry</label>
+                <div class="basic-list__item-data" sd-reldate-complex datetime="item.expiry"></div>
             </li>
-            <li class="auto">
-                <label translate>GUID</label>
-                <div class="data wrap" id="guid">{{item.guid}}</div>
+            <li class="basic-list__item basic-list__item--stacked">
+                <label class="basic-list__item-label basic-list__item-label--block" translate>GUID</label>
+                <div class="basic-list__item-data" id="guid">
+                    {{item.guid}}
+                </div>
             </li>
-            <li>
-                <label translate>Unique name</label>
-                <div class="data">
-                    <input class="line-input" type="text" ng-model="item.unique_name" ng-change="autosave(item)" ng-disabled="!_editable || !unique_name_editable">
+            <li class="basic-list__item">
+                <label class="basic-list__item-label" translate>Unique name</label>
+                <div class="basic-list__item-data">
+                    <input class="basic-input" type="text" ng-model="item.unique_name" ng-change="autosave(item)" ng-disabled="!_editable || !unique_name_editable">
                 </div>
             </li>
         </ul>
-        <ul class="basic-list top-border">
-            <li class="terms-box">
-                <label translate>Target Subscribers</label>
-                <div class="term-editor"
-                     sd-meta-terms
-                     data-item="item"
-                     data-unique="_id"
-                     data-list="metadata.customSubscribers"
-                     ng-disabled="!_editable || !targetsEditable"
-                     data-change="autosave(item)"
-                     data-field="target_subscribers"
-                     data-header="true"
-                     data-reload-list="true">
-                </div>
-            </li>
-            <li class="terms-box">
-                <label translate>Target Regions</label>
-                <div sd-meta-target
-                    data-list="metadata.regions"
-                    data-targets="item.target_regions"
-                    ng-disabled="!_editable || !targetsEditable"
-                    data-autosave="autosave(item)"></div>
-            </li>
-            <li class="terms-box">
-                <label translate>Target Types</label>
-                <div sd-meta-target
-                    data-list="metadata.subscriberTypes"
-                    data-targets="item.target_types"
-                    ng-disabled="!_editable || !targetsEditable"
-                    data-autosave="autosave(item)"></div>
-            </li>
-        </ul>
+
+        <div class="sd-card sd-card--auto-height">
+            <div class="sd-card__content sd-card__content--padd-10">
+                <ul class="basic-list basic-list--no-margin">
+                    <li class="basic-list__item basic-list__item--stacked">
+                        <label class="basic-list__item-label basic-list__item-label--block" translate>Target Subscribers</label>
+                        <div class="term-editor"
+                                sd-meta-terms
+                                data-item="item"
+                                data-unique="_id"
+                                data-list="metadata.customSubscribers"
+                                ng-disabled="!_editable || !targetsEditable"
+                                data-change="autosave(item)"
+                                data-field="target_subscribers"
+                                data-header="true"
+                                data-reload-list="true">
+                        </div>
+                    </li>
+                    <li class="basic-list__item basic-list__item--stacked">
+                        <label class="basic-list__item-label basic-list__item-label--block" translate>Target Regions</label>
+                        <div sd-meta-target
+                            data-list="metadata.regions"
+                            data-targets="item.target_regions"
+                            ng-disabled="!_editable || !targetsEditable"
+                            data-autosave="autosave(item)"></div>
+                    </li>
+                    <li class="basic-list__item basic-list__item--stacked">
+                        <label class="basic-list__item-label basic-list__item-label--block" translate>Target Types</label>
+                        <div sd-meta-target
+                            data-list="metadata.subscriberTypes"
+                            data-targets="item.target_types"
+                            ng-disabled="!_editable || !targetsEditable"
+                            data-autosave="autosave(item)"></div>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
     </div>
     <div ng-if="tab === 'assignment'" sd-assignment-preview data-item="item" hide-avatar="true"></div>
 </div>

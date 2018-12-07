@@ -4,157 +4,13 @@
 @import '~mixins.scss';
 @import '~variables.scss';
 
-
 .sd-widget.metadata {
     .widget-content {
         background: $sd-background;
         padding: 0;
-        padding-bottom: $authoring-opened-articles + $scratchpad-closed;
+        padding-bottom: $authoring-opened-articles;
         overflow: auto;
-        margin: 5px 0 20px;
-    }
-    .basic-list {
-        margin-bottom: 20px;
-        &.top-border {
-            border-top: 1px dotted #ddd;
-            margin-bottom: 30px;
-        }
-        > li, .sublist > ul > li {
-            padding: 10px 0;
-            text-align: right;
-            height: 28px;
-            line-height: 18px;
-            .lbl, label {
-                float: left;
-                font-size: 11px;
-                text-transform: uppercase;
-                color: rgba(0,0,0,40%);
-                @include text-semibold();
-            }
-            .data {
-                float: right;
-                margin-top: -5px;
-                padding-top: 5px;
-                padding-right: 5px;
-                width: 182px;
-                height: 27px;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-                input, select {
-                    margin-top: -5px;
-                    margin-right: -5px;
-                    text-align: right;
-                    font-size: 13px;
-                }
-                select {
-                    margin: -4px -4px 0 0;
-                    width: auto;
-                    padding: 4px 10px;
-                    -webkit-appearance: none;
-                    max-width: 100%;
-                    direction: rtl;
-                }
-                &.visible {
-                    overflow: visible;
-                }
-                &.wrap {
-                    white-space: normal;
-                    text-align: right;
-                }
-            }
-            &.wider {
-                .data {
-                    width: 220px;
-                }
-            }
-            &.auto {
-                height: auto;
-                text-align: left;
-                .lbl, label {
-                    display: block;
-                    float: none;
-                }
-                .data {
-                    display: block;
-                    float: none;
-                    margin-top: 0;
-                    width: auto;
-                    height: auto;
-                }
-                .datepicker-input {
-                    margin-bottom: 10px;
-                }
-            }
-            .preview-state__row {
-                margin-bottom: 4px;
-                display: block;
-                .state-label {
-                    float: none;
-                    margin-right: 0;
-                    padding: 2px 8px;
-                }
-            }
-        }
-    }
-    .terms-box {
-        @include clearfix();
-        height: auto !important;
-        .term-editor {
-          input[type="text"] {
-            padding-right: 25px;
-            text-align: left;
-          }
-          .item-list {
-            max-width: $tabpane-width - 40px;
-          }
-        }
-        .terms {
-            @include user-select(none);
-            width: auto;
-            clear: both;
-            float: right;
-            padding-top: 10px;
-            @include clearfix();
-            li {
-                  position: relative;
-                background: #e8e8e8;
-                line-height: 26px;
-                height: 26px;
-                padding: 0 6px;
-                @include border-radius(3px);
-                margin: 0 5px 5px 0;
-                float: left;
-                  @include transition(all .5s);
-                i:not(.alt) {
-                    position: absolute;
-                    display: none;
-                    right: 5px;
-                    top: 6px;
-                    @include opacity(0);
-                    @include transition(all .5s);
-                }
-                &:hover {
-                    cursor: pointer;
-                    background: #e0e0e0;
-                    i {
-                        @include opacity(70);
-                    }
-                }
-                &:hover {
-                    > i:not(.alt) {
-                        display: inline-block;
-                    }
-                }
-                &.selected {
-                    background: #333333;
-                    color: #e8e8e8;
-                }
-            }
-        }
-          select {
-          width: 120px;
-        }
+        margin: 5px 0 0;
     }
     .ednote {
         @include clearfix();
@@ -166,6 +22,61 @@
             width: 100% !important;
         }
     }
-
 }
 
+
+.basic-list {
+    margin-bottom: 20px;
+    &--dotted {
+        .basic-list__item {
+            border-bottom: 1px dotted rgba(123, 123, 123, 0.5);
+        }
+    }
+    &--no-margin {
+        margin-bottom: 0;
+    }
+    .basic-list__item {
+        padding: 1rem 0 0.8rem;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        &--stacked {
+            flex-direction: column;
+            align-items: stretch;
+            .basic-list__item-label {
+                padding-bottom: 0.5rem;
+            }
+            .basic-list__item-data {
+                text-align: left;
+                .basic-input {
+                    max-width: auto;
+                    text-align: left;
+                }
+            }
+        }
+    }
+    .basic-list__item-label {
+        flex-grow: 0;
+        font-size: 11px;
+        text-transform: uppercase;
+        padding-right: 1rem;
+        margin: 0;
+        color: rgba(0, 0, 0, 0.5);
+        @include text-semibold();
+    }
+    .basic-list__item-data {
+        flex-grow: 1;
+        margin-bottom: 2px;
+        text-align: right;
+        .basic-input {
+            max-width: 160px;
+            text-align: right;
+        }
+    }
+    .state-label {
+        margin-right: 0;
+        + .state-label {
+            margin-left: 0.5rem;
+        }
+    }
+}
