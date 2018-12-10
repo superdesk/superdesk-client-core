@@ -47,10 +47,10 @@ export function MonitoringView($rootScope, authoringWorkspace, pageTitle, $timeo
                 }
             });
 
-            scope.numberOfColumn = 1;
-            scope.switchSwimlaneColumn = function(numberOfColumn) {
-                scope.numberOfColumn = numberOfColumn;
-                scope.monitoring.switchViewColumn(true, true, numberOfColumn);
+            scope.numberOfColumns = 1;
+            scope.switchSwimlaneColumns = function(numberOfColumns) {
+                scope.numberOfColumns = numberOfColumns;
+                scope.monitoring.switchViewColumn(true, true, numberOfColumns);
             };
 
             /**
