@@ -20,8 +20,20 @@ UploadController.$inject = [
     'deployConfig',
     'desks',
     'notify',
+    '$location',
 ];
-export function UploadController($scope, $q, upload, api, archiveService, session, deployConfig, desks, notify) {
+export function UploadController(
+    $scope,
+    $q,
+    upload,
+    api,
+    archiveService,
+    session,
+    deployConfig,
+    desks,
+    notify,
+    $location,
+) {
     $scope.items = [];
     $scope.saving = false;
     $scope.failed = false;
@@ -34,11 +46,14 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
     $scope.allowVideo = !($scope.locals && $scope.locals.data && $scope.locals.data.allowVideo === false);
     $scope.allowAudio = !($scope.locals && $scope.locals.data && $scope.locals.data.allowAudio === false);
     $scope.validator = _.omit(deployConfig.getSync('validator_media_metadata'), ['archive_description']);
+    $scope.deskSelectionAllowed = $location.path() !== '/workspace/personal';
 
-    Promise.all([desks.fetchDesks(), desks.getCurrentDesk()]).then(([_desks, currentDesk]) => {
-        $scope.desks = _desks._items;
-        $scope.selectedDesk = currentDesk;
-    });
+    if ($scope.deskSelectionAllowed === true) {
+        Promise.all([desks.fetchDesks(), desks.getCurrentDesk()]).then(([_desks, currentDesk]) => {
+            $scope.desks = _desks._items;
+            $scope.selectedDesk = currentDesk;
+        });
+    }
 
     $scope.selectDesk = (desk) => {
         $scope.selectedDesk = desk;
