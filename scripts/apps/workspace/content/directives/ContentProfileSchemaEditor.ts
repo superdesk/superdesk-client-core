@@ -13,8 +13,7 @@ interface IScope extends ng.IScope {
     formattingOptions: Array<string>;
     formattingOptionsEditor3: Array<string>;
     schemaKeysOrdering: any;
-    getSchemaKeys(): any;
-    getSchemaKeysDisabled(): any;
+    schemaKeysDisabled: any;
     hasFormatOptions(field): boolean;
     hasImageSelected(field): boolean;
     remove(id): void;
@@ -61,7 +60,7 @@ export function ContentProfileSchemaEditor(content, metadata) {
         link: function(scope: IScope, elem, attr, form) {
             scope.loading = true;
 
-            const schemaKeysDisabled = [];
+            scope.schemaKeysDisabled = [];
             let schemaKeys = [];
 
             Promise.all([
@@ -73,18 +72,43 @@ export function ContentProfileSchemaEditor(content, metadata) {
 
                 scope.label = (id) => getLabelForFieldId(id);
 
-                const updateSchemaKeys = () => {
+                const updateSchemaKeys = (customVocabulariesForArticleHeader) => {
                     // Creates a list of field names of the schema sorted by 'order' value
                     // and assigns it to schemaKeys
 
                     // inner function to return the value of 'order' of a given field
                     const getOrder = (f) => _.get(scope.model.editor[f], 'order') || 99;
 
-                    schemaKeys = _.filter(Object.keys(scope.model.editor),
-                        (value) => scope.model.editor[value].enabled).sort((a, b) => getOrder(a) - getOrder(b));
+                    let sectionFilter = (function() {
+                        switch (scope.sectionToRender) {
+                        case 'header':
+                            return (key) => articleHeaderFields.has(key);
+                        case 'content':
+                            return (key) => articleHeaderFields.has(key) === false;
+                        default:
+                            assertNever(scope.sectionToRender);
+                        }
+                    })();
 
-                    _.each(_.difference(Object.keys(scope.model.editor), schemaKeys), (value) =>
-                        schemaKeysDisabled.push(
+                    const articleHeaderFields = new Set();
+
+                    articleHeaderHardcodedFields.forEach((id) => {
+                        articleHeaderFields.add(id);
+                    });
+
+                    customVocabulariesForArticleHeader.forEach((filteredCustomField) => {
+                        articleHeaderFields.add(filteredCustomField._id);
+                    });
+
+                    const keysForSection = Object.keys(scope.model.editor).filter(sectionFilter);
+
+                    schemaKeys = keysForSection
+                        .filter((value) => scope.model.editor[value].enabled)
+                        .sort((a, b) => getOrder(a) - getOrder(b));
+
+                    scope.schemaKeysDisabled = [];
+                    _.each(_.difference(keysForSection, schemaKeys), (value) =>
+                        scope.schemaKeysDisabled.push(
                             {key: value, name: scope.model.editor[value].field_name || scope.label(value)},
                         ));
 
@@ -113,7 +137,6 @@ export function ContentProfileSchemaEditor(content, metadata) {
 
                 scope.model.schema = angular.extend({}, typeMetadata.schema);
                 scope.model.editor = angular.extend({}, typeMetadata.editor);
-                updateSchemaKeys();
                 scope.fields = _.keyBy(customFields, '_id');
 
                 scope.formattingOptions = [
@@ -193,7 +216,7 @@ export function ContentProfileSchemaEditor(content, metadata) {
                     }
 
                     schemaKeys.splice(position === 'before' ? order - 1 : order + 1, 0, schema.key);
-                    _.remove(schemaKeysDisabled, schema);
+                    _.remove(scope.schemaKeysDisabled, schema);
                     scope.schemaKeysOrdering = _.clone(schemaKeys);
 
                     scope.updateOrder();
@@ -209,7 +232,7 @@ export function ContentProfileSchemaEditor(content, metadata) {
                     scope.model.schema[id].enabled = false;
 
                     schemaKeys.splice(schemaKeys.indexOf(id), 1);
-                    schemaKeysDisabled.push({
+                    scope.schemaKeysDisabled.push({
                         key: id, name: scope.model.editor[id].field_name || scope.label(id),
                     });
                     scope.schemaKeysOrdering = _.clone(schemaKeys);
@@ -261,37 +284,7 @@ export function ContentProfileSchemaEditor(content, metadata) {
                     scope.model.editor,
                     scope.model.schema,
                 ).then((customVocabulariesForArticleHeader) => {
-                    const articleHeaderFields = new Set();
-
-                    articleHeaderHardcodedFields.forEach((id) => {
-                        articleHeaderFields.add(id);
-                    });
-
-                    customVocabulariesForArticleHeader.forEach((filteredCustomField) => {
-                        articleHeaderFields.add(filteredCustomField._id);
-                    });
-
-                    scope.getSchemaKeys = () => {
-                        switch (scope.sectionToRender) {
-                        case 'header':
-                            return schemaKeys.filter((key) => articleHeaderFields.has(key));
-                        case 'content':
-                            return schemaKeys.filter((key) => articleHeaderFields.has(key) === false);
-                        default:
-                            return assertNever(scope.sectionToRender);
-                        }
-                    };
-
-                    scope.getSchemaKeysDisabled = () => {
-                        switch (scope.sectionToRender) {
-                        case 'header':
-                            return schemaKeysDisabled.filter(({key}) => articleHeaderFields.has(key));
-                        case 'content':
-                            return schemaKeysDisabled.filter(({key}) => articleHeaderFields.has(key) === false);
-                        default:
-                            return assertNever(scope.sectionToRender);
-                        }
-                    };
+                    updateSchemaKeys(customVocabulariesForArticleHeader);
 
                     scope.loading = false;
                 });
