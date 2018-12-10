@@ -1,5 +1,17 @@
 # Superdesk Client Changelog
 
+## [1.26.4] 2018-12-10
+
+### Fixed
+
+- Fix iframely embeds display in editor3.
+- Fix related item counter.
+- Fix iptc metadata loading on image upload.
+- Fix media gallery when last item is swiped and the gallery disappears.
+- Fix drag&drop delay in related items component.
+- Fix `translated_from` feference.
+- Prevent publish before checking related items.
+
 ## [1.26.3] 2018-11-27
 
 ### Fixed
