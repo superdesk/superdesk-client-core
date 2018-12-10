@@ -85,8 +85,7 @@ export function SavedSearchManageSubscribers(asset, userList, api, modal, gettex
                     (deskId: IDesk['_id']) => desks.deskLookup[deskId],
                 )
                 && (
-                    user.first_name.toLowerCase().includes(scope.wrapper.newSubscriptionFilterText.toLowerCase())
-                    || user.last_name.toLowerCase().includes(scope.wrapper.newSubscriptionFilterText.toLowerCase())
+                    user.display_name.toLowerCase().includes(scope.wrapper.newSubscriptionFilterText.toLowerCase())
                 )
                 && (scope.savedSearch.is_global === true || user._id === scope.savedSearch.user);
 

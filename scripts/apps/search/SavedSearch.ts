@@ -4,6 +4,7 @@ import {CronTimeInterval} from 'types/DataStructures/TimeInterval';
 
 import {forOwn} from 'lodash';
 import {mapPredefinedDateFiltersClientToServer} from 'apps/search/directives/DateFilters';
+import {setFilters} from './services/SearchService';
 
 export interface IUserSubscription {
     user: IUser['_id'];
@@ -112,6 +113,19 @@ export const unsubscribeDesk = (
     return updateSubscribers(savedSearch, nextSubscribers, api);
 };
 
+export function mapFiltersServerToClient(savedSearch: ISavedSearch) {
+    if (typeof savedSearch.filter === 'object' && savedSearch.filter.hasOwnProperty('query')) {
+        savedSearch.filter.query = setFilters(savedSearch.filter.query);
+
+        // after saving the item, filter value is string similar to
+        // filter: "{"query": {"desk": "[\"5c04e596149f111ebc9d3da3\"]", "spike": "exclude"}}"
+
+        // This check can be replaced with `!= null` check after SDESK-3698 is merged
+    }
+
+    return savedSearch;
+}
+
 function mapFiltersClientToServer(search) {
     let nextSearch = {...search};
 
@@ -144,5 +158,5 @@ export function saveOrUpdateSavedSearch(api, savedSearchOriginal: ISavedSearch, 
         }
     }
 
-    return api('saved_searches').save(savedSearchOriginal, savedSearchChanged);
+    return api('saved_searches').save(savedSearchOriginal, savedSearchChanged).then(mapFiltersServerToClient);
 }
