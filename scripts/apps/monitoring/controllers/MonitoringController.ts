@@ -122,9 +122,15 @@ export function MonitoringController($rootScope, $scope, $location, desks, confi
      * @param {Boolean} updateSession if set it will update user session setting.
      * @returns {Number|null} function returns columnsLimit null if viewColumn is false.
      */
-    function switchViewColumn(viewColumn, updateSession) {
+    function switchViewColumn(viewColumn, updateSession, numberOfColumns) {
         self.viewColumn = viewColumn;
-        self.columnsLimit = self.viewColumn ? config.features.swimlane.columnsLimit : null;
+
+        if (self.viewColumn) {
+            self.columnsLimit = numberOfColumns ? numberOfColumns : config.features.swimlane.columnsLimit;
+        } else {
+            self.columnsLimit = null;
+        }
+
         $scope.$broadcast('view:column', {viewColumn: self.viewColumn});
         if (updateSession) {
             preferencesService.update({'monitoring:view:session': viewColumn}, 'monitoring:view:session');

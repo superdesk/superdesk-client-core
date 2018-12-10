@@ -147,6 +147,9 @@
                             &nbsp;<span>{{:: 'Rearrange Groups' | translate}}</span>
                         </button>
                     </li>
+                    <li ng-if="swimlane" ng-repeat="n in [2,3,4,5,6]">
+                        <button ng-if="numberOfColumns !== n" ng-click="switchSwimlaneColumns(n)"><span>{{ :: 'Show' | translate}} {{n}} {{:: 'columns' | translate }}</span></button>
+                    </li>
                 </ul>
             </div>
 
