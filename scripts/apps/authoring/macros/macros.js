@@ -140,13 +140,19 @@ function MacrosController($scope, macros, desks, autosave, $rootScope, storage) 
         }
     }
 
+    function isString(value) {
+        return typeof value === 'string' || value instanceof String;
+    }
+
     /**
      * @ngdoc method
      * @name Macros#call
      * @param {Object} macro - contains name, label, group, order etc.
      * @returns {Promise} - If resolved then macro is applied successfully
      * @description
-     * Triggers macros service call to apply the provided macro on opened article
+     * Triggers macros service call to apply the provided macro on opened article.
+     * The macros that changes the body should return diff; for other fields the entire
+     * content is replaced with the value changed by macro
      */
     $scope.call = function(macro) {
         let item = _.extend({}, $scope.origItem, $scope.item);
@@ -154,6 +160,12 @@ function MacrosController($scope, macros, desks, autosave, $rootScope, storage) 
         $scope.loading = true;
         return macros.call(macro, item).then((res) => {
             if (!res.diff) {
+                Object.keys(res.item || {}).forEach((field) => {
+                    if (isString(res.item[field]) && res.item[field] !== item[field] && field !== 'body_html') {
+                        $rootScope.$broadcast('macro:refreshField', field, res.item[field]);
+                    }
+                });
+
                 angular.extend($scope.item, _.omit(res.item, ['_etag']));
                 autosave.save($scope.item, $scope.origItem);
             } else {
@@ -242,6 +254,7 @@ function MacrosReplaceDirective(editorResolver) {
         link: function(scope) {
             scope.diff = null;
 
+            // this is triggered from MacrosController.call and apply the changes to body field
             scope.$on('macro:diff', (evt, diff) => {
                 scope.diff = diff;
                 init(scope.diff);
