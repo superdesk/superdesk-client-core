@@ -13,7 +13,7 @@
     style="height: 100%; display: flex; flex-direction: column;"
 >
     <sd-multi-edit-select-desk>
-        <div ng-if="desks" class="dropdown dropdown--dark" dropdown is-open="isOpen">
+        <div ng-if="deskSelectionAllowed === true && desks !== null" class="dropdown dropdown--dark" dropdown is-open="isOpen">
             <button class="dropdown__toggle dropdown__toggle--small dropdown__toggle--hollow dropdown-toggle" dropdown__toggle aria-haspopup="true" aria-expanded="false">
                 <span class="dropdown__button-label">
                     Send to:</span> <span>{{selectedDesk.name}}</span>
