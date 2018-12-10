@@ -1502,42 +1502,12 @@ feature-image {
 }
 
 #timezoneTimestamp {
-    .timezone-input--dark > label {
+    .timezone-label {
         display: none;
     }
-
-    .input-term input {
-        background: #4f4f4f;
-        font-size: 13px;
-        line-height: 18px;
-        color: $white;
-        border: 2px solid #4f4f4f !important;
-        height: 35px;
-        margin-bottom: 5px;
-    }
-
     ul.item-list {
         right: auto;
         top: -170px;
-        width: 100%;
-    }
-
-    ul.pills-list {
-        li {
-            .icon-remove-sign {
-                margin-top: -1px;
-                color: $white;
-            }
-            #timezone {
-                padding-right: 25px;
-            }
-            background: #4f4f4f;
-            padding: 7px;
-            font-size: 13px;
-            line-height: 18px;
-            color: $white;
-            border: 2px solid #4f4f4f !important;
-        }
     }
 }
 
@@ -1682,6 +1652,9 @@ feature-image {
 // -------------------------------------------------------------
 //  END RELATED ITEMS
 
+.form__row--desk-select + .btn-list {
+    margin-top: 1rem;
+}
 
 [class^="--dark-ui"],
 [class*="--dark-ui"] {

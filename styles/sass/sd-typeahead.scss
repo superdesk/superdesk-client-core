@@ -11,30 +11,32 @@
         max-height: 170px;
         overflow-y: auto;
         overflow-x: hidden;
-        @include box-sizing(border-box);
         background: #fff;
         border: 1px #bbb;
-        @include box-shadow(0 0 3px 0 #ccc);
+        box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.2);
         position: absolute;
-        top:24px;
-        z-index: 1;
-        font-size: 12px;
+        top:28px;
+        z-index: 61;
+        
         li {
-            @include box-sizing(border-box);
             width: 100%;
+            font-size: 1.3rem;
+            margin-bottom: 0.4rem;
             &:hover {
                 cursor: pointer;
+                background-color: rgba(94, 169, 200, 0.1);
             }
             &.active button {
-                background-color: #c8e4ee !important;
+                background-color: rgba(94, 169, 200, 0.4) !important;
             }
             .country_state_info {
-                padding-left:  10px;
-                font-size: 12px;
-                font-weight: bold;
+                font-weight: 500;
             }
             em {
                 font-size: 11px;
+            }
+            &.typeahead-item--padded {
+                padding: 0.4rem 1.2rem;;
             }
         }
 

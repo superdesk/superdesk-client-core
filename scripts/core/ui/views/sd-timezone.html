@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 <label class="form-label" style="margin-bottom:6px;" translate>Time Zone</label>
+=======
+<label class="form-label timezone-label" translate>Time Zone</label>
+>>>>>>> [SDESK-3732] Refactor the Send-to pane to introduce more space for the Publish section
 <div class="control" ng-hide="timezone">
     <ul sd-typeahead
         data-style="style"
@@ -8,8 +12,8 @@
         select="selectTimeZone(item)"
         always-visible="tzSearchTerm"
         placeholder="ie. Europe/London">
-        <li typeahead-item="tz" ng-repeat="tz in matchingTimeZones track by tz">{{ ::tz}}</li>
-        <li ng-show="tzSearchTerm && matchingTimeZones.length === 0"
+        <li class="typeahead-item--padded" typeahead-item="tz" ng-repeat="tz in matchingTimeZones track by tz">{{ ::tz}}</li>
+        <li class="typeahead-item--padded" ng-show="tzSearchTerm && matchingTimeZones.length === 0"
             class="no-match"
             translate>(no matches)
         </li>
@@ -19,7 +23,11 @@
     </p>
 </div>
 
+<<<<<<< HEAD
 <ul class="pills-list {{style}} clearfix" ng-show="timezone">
+=======
+<ul class="pills-list {{style}}" ng-show="timezone">
+>>>>>>> [SDESK-3732] Refactor the Send-to pane to introduce more space for the Publish section
     <li>
         <div id="timezone" class="name right-pad">{{timezone}}</div>
         <div class="actions">
