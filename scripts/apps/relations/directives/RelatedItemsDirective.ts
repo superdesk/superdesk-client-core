@@ -56,16 +56,6 @@ export function RelatedItemsDirective(authoringWorkspace, relationsService, noti
                         ? get(scope, 'field.field_options.multiple_items.max_items')
                         : 1;
 
-                    if (currentCount >= maxCount) {
-                        notify.error(
-                            gettext(
-                                'Related item was not added, because the field '
-                                + 'reached the limit of related items allowed',
-                            ),
-                        );
-                        return;
-                    }
-
                     const type = getSuperdeskType(event);
                     const item = angular.fromJson(event.originalEvent.dataTransfer.getData(type));
 
@@ -73,9 +63,27 @@ export function RelatedItemsDirective(authoringWorkspace, relationsService, noti
                         (relatedItem) => relatedItem._id === item._id,
                     );
 
-                    if (!itemAlreadyAddedAsRelated && scope.item._id !== item._id) {
-                        scope.addRelatedItem(item);
+                    if (scope.item._id === item._id) {
+                        notify.error('Cannot add self as related item.');
+                        return;
                     }
+
+                    if (itemAlreadyAddedAsRelated) {
+                        notify.error('This item is already added as related.');
+                        return;
+                    }
+
+                    if (currentCount >= maxCount) {
+                        notify.error(
+                            gettext(
+                                'Related item was not added, because the field '
+                                + 'reached the limit of related items allowed.',
+                            ),
+                        );
+                        return;
+                    }
+
+                    scope.addRelatedItem(item);
                 });
             }
 
