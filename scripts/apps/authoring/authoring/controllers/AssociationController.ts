@@ -1,4 +1,5 @@
 import {startsWith, endsWith, some, forEach, get} from 'lodash';
+import {getSuperdeskType} from 'core/utils';
 
 /**
  * @ngdoc controller
@@ -68,17 +69,6 @@ export function AssociationController(config, send, api, $q, superdesk,
             ['.mp3', '.3gp', '.wav', '.ogg', 'wma', 'aa', 'aiff'],
             (ext) => endsWith(rendition.href, ext),
         );
-    };
-
-    /**
-     * Get superdesk type for data transfer if any
-     *
-     * @param {Event} event
-     * @return {string}
-     */
-    this.getSuperdeskType = function(event) {
-        return event.originalEvent.dataTransfer.types
-            .find((name) => name.indexOf('application/superdesk') === 0 || name === 'Files');
     };
 
     /**
@@ -242,7 +232,7 @@ export function AssociationController(config, send, api, $q, superdesk,
      * @param {Object} event Drop event
      */
     this.initializeUploadOnDrop = function(scope, event) {
-        if (self.getSuperdeskType(event) === 'Files') {
+        if (getSuperdeskType(event) === 'Files') {
             if (self.isMediaEditable()) {
                 const files = event.originalEvent.dataTransfer.files;
 
@@ -251,7 +241,7 @@ export function AssociationController(config, send, api, $q, superdesk,
             return;
         }
 
-        self.getItem(event, self.getSuperdeskType(event)).then((item) => {
+        self.getItem(event, getSuperdeskType(event)).then((item) => {
             if (!scope.editable) {
                 return;
             }
