@@ -5,7 +5,7 @@ const notEmpty = (str) => typeof str === 'string' && str.length > 0;
 
 export const ContactName: React.StatelessComponent<any> = ({item}) => {
     const displayContact = notEmpty(item.first_name) || notEmpty(item.last_name) ?
-        `${notEmpty(item.first_name) ? item.first_name : ''} ${notEmpty(item.last_name) ? item.last_name : ''}`
+        [item.first_name, item.last_name].filter(notEmpty).join(' ')
         : item.organisation;
 
     return (
