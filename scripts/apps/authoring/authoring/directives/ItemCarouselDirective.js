@@ -126,7 +126,7 @@ export function ItemCarouselDirective($timeout, notify) {
                 event.preventDefault();
                 event.stopPropagation();
 
-                if (ALLOWED_TYPES.includes() || type === 'Files') {
+                if (ALLOWED_TYPES.includes(type) || type === 'Files') {
                     ctrl.initializeUploadOnDrop(scope, event);
                 } else {
                     const allowedTypeNames = [
