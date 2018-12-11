@@ -4,7 +4,7 @@ module.exports = function(grunt) {
     var config = require('../../webpack.config.js')(grunt);
 
     config.progress = !grunt.option('webpack-no-progress');
-    config.devtool = grunt.option('webpack-devtool') || 'cheap-source-map';
+    config.devtool = grunt.option('webpack-devtool') || 'source-map';
 
     config.module.rules = config.module.rules.map((rule) => {
         if (rule.loader === 'ts-loader') {
