@@ -159,13 +159,51 @@ export function ItemList(
             });
 
             monitoringState.init().then(() => {
-                var itemList = React.createElement(ItemListComponent,
-                    angular.extend({
-                        svc: services,
-                        scope: scope,
-                    }, monitoringState.state));
 
-                var listComponent = ReactDOM.render(itemList, elem[0]);
+                class ItemsListDirective extends React.Component<any, any> {
+                    _child: any;
+
+                    constructor(props) {
+                        super(props);
+
+                        this.state = {
+                            narrow: false,
+                        };
+
+                        this._child = null;
+                    }
+                    getChild() {
+                        return this._child;
+                    }
+                    componentDidMount() {
+                        scope.$on('rowview:narrow', () => {
+                            this.setState({narrow: true});
+                        });
+
+                        scope.$on('rowview:default', () => {
+                            this.setState({narrow: false});
+                        });
+                    }
+                    render() {
+                        const props = angular.extend({
+                            svc: services,
+                            scope: scope,
+                        }, monitoringState.state);
+
+                        return (
+                            <ItemListComponent
+                                {...props}
+                                narrow={this.state.narrow}
+                                ref={(el) => {this._child = el; }}
+                            />
+                        );
+                    }
+                }
+
+                var listComponent = ReactDOM.render(
+                    <ItemsListDirective />,
+                    elem[0],
+                ).getChild();
 
                 /**
                  * Test if item a equals to item b
@@ -395,14 +433,6 @@ export function ItemList(
                 });
 
                 scope.singleLine = search.singleLine;
-
-                scope.$on('rowview:narrow', () => {
-                    listComponent.setNarrowView(true);
-                });
-
-                scope.$on('rowview:default', () => {
-                    listComponent.setNarrowView(false);
-                });
 
                 var updateTimeout;
 

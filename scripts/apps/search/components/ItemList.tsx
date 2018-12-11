@@ -10,16 +10,22 @@ import {IArticle, IArticleIdWithTrackByIdentifier} from 'superdesk-interfaces/Ar
 interface IState {
     itemsList: Array<IArticleIdWithTrackByIdentifier>;
     itemsById: Dictionary<IArticleIdWithTrackByIdentifier, IArticle>;
-    narrow: any;
     bindedShortcuts: Array<any>;
     selected: IArticleIdWithTrackByIdentifier;
     view: 'compact' | 'photogrid';
 }
 
+interface IProps {
+    svc: any;
+    scope: any;
+    usersById: any;
+    narrow: boolean;
+}
+
 /**
  * Item list component
  */
-export class ItemList extends React.Component<any, IState> {
+export class ItemList extends React.Component<IProps, IState> {
     static propTypes: any;
     static defaultProps: any;
 
@@ -35,7 +41,6 @@ export class ItemList extends React.Component<any, IState> {
             itemsById: {},
             selected: null,
             view: 'compact',
-            narrow: false,
             bindedShortcuts: [],
         };
 
@@ -55,7 +60,6 @@ export class ItemList extends React.Component<any, IState> {
         this.closeActionsMenu = closeActionsMenu.bind(this);
         this.setSelectedComponent = this.setSelectedComponent.bind(this);
         this.modifiedUserName = this.modifiedUserName.bind(this);
-        this.setNarrowView = this.setNarrowView.bind(this);
         this.multiSelectCurrentItem = this.multiSelectCurrentItem.bind(this);
         this.bindActionKeyShortcuts = this.bindActionKeyShortcuts.bind(this);
         this.unbindActionKeyShortcuts = this.unbindActionKeyShortcuts.bind(this);
@@ -87,11 +91,6 @@ export class ItemList extends React.Component<any, IState> {
         if (selectedItem) {
             this.multiSelect([selectedItem], !selectedItem.selected);
         }
-    }
-
-    // Function to make narrowView active/inactive
-    setNarrowView(setNarrow) {
-        this.setState({narrow: setNarrow});
     }
 
     select(item, event?) {
@@ -446,6 +445,7 @@ export class ItemList extends React.Component<any, IState> {
     render() {
         const {storage, gettextCatalog} = this.props.svc;
         const {scope} = this.props;
+        const {narrow} = this.props;
 
         const createItem = function(itemId) {
             const item = this.state.itemsById[itemId];
@@ -468,7 +468,7 @@ export class ItemList extends React.Component<any, IState> {
                 profilesById: this.props.profilesById,
                 setSelectedComponent: this.setSelectedComponent,
                 versioncreator: this.modifiedUserName(item.version_creator),
-                narrow: this.state.narrow,
+                narrow: narrow,
                 svc: this.props.svc,
                 scope: scope,
             });
