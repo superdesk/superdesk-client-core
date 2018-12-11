@@ -37,7 +37,7 @@
         <div ng-if="loading" class="loading-overlay" ng-class="{active: loading}" style="opacity: 0.5;"></div>
 
         <div ng-repeat="tag in tags" ng-if="existsVocabulariesForTag(tag, tab)">
-            <div class="sd-list-header">
+            <div class="sd-list-header" ng-if="canShowTag(tag, tab)">
                 <span class="sd-list-header__name">{{tag.text}}</span>
             </div>
 
