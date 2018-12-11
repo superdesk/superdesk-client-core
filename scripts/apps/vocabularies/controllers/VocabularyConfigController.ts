@@ -14,6 +14,7 @@ interface IScope extends IDirectiveScope<void> {
     openVocabulary(vocabulary: IVocabulary): void;
     getVocabulariesForTag(currentTag: IVocabularyTag, tab: string): Array<IVocabulary>;
     existsVocabulariesForTag(currentTag: IVocabularyTag, tab: string): boolean;
+    canShowTag(currentTag: IVocabularyTag, tab: string): boolean;
     closeVocabulary(): void;
     createVocabulary(): void;
     createCustomField(type: any): void;
@@ -26,7 +27,9 @@ interface IScope extends IDirectiveScope<void> {
 function getTags(_vocabularies: Array<IVocabulary>) : IVocabulary['tags'] {
     const wordSet = (_vocabularies || []).reduce((_wordSet, vocabulary) => {
         (vocabulary.tags || []).forEach((tag) => {
-            _wordSet.add(tag.text);
+            if (tag.text !== OTHER) {
+                _wordSet.add(tag.text);
+            }
         });
         return _wordSet;
     }, new Set<string>());
@@ -110,6 +113,16 @@ export function VocabularyConfigController($scope: IScope, $route, $routeParams,
 
     $scope.existsVocabulariesForTag = (currentTag: IVocabularyTag, tab: string) =>
         ($scope.vocabularies || []).some((vocabulary) => checkTag(vocabulary, currentTag, tab));
+
+    /**
+     * Don't show OTHER tag if it is the only tag available for current tab
+     */
+    $scope.canShowTag = (currentTag: IVocabularyTag, tab: string) =>
+        currentTag.text !== OTHER ||
+        ($scope.vocabularies || []).some((vocabulary) =>
+            $scope.matchFieldTypeToTab(tab, vocabulary.field_type) &&
+            (vocabulary.tags || []).some((tag) => tag.text !== OTHER)
+        );
 
     /**
      * Update vocabulary in the list with given updates
