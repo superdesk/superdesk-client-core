@@ -10,8 +10,11 @@ import {applyLink} from '../../actions/toolbar';
  */
 function withSearchTerm(txt, searchTerm) {
     const editorState = EditorState.createWithContent(ContentState.createFromText(txt));
+    const onChangeValue = function() {
+        // noop
+    };
 
-    return {editorState, searchTerm};
+    return {editorState, searchTerm, onChangeValue};
 }
 
 describe('editor3.reducers', () => {

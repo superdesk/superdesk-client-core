@@ -1,7 +1,7 @@
 import * as action from './actions';
-import {forEachMatch} from './reducers/find-replace';
+import {forEachMatch} from './helpers/find-replace';
 import {toHTML} from './html';
-import {clearHighlights} from './reducers/find-replace';
+import {clearHighlights} from './helpers/find-replace';
 import {getTansaHtml} from './helpers/tansa';
 
 /**
