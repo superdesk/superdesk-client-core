@@ -261,7 +261,6 @@ export function ItemList(
             });
 
             monitoringState.init().then(() => {
-
                 class ItemsListDirective extends React.Component<any, IState> {
                     _child: any;
                     updateTimeout: any;
@@ -353,7 +352,6 @@ export function ItemList(
                          * before activating render function
                          */
 
-                        console.log('scroll');
                         // force refresh the group or list, if scroll bar hits the top of list.
                         if (elem[0].scrollTop === 0) {
                             $rootScope.$broadcast('refresh:list', scope.group);
@@ -367,7 +365,6 @@ export function ItemList(
                         // only scroll the list, not its parent
                         $event.stopPropagation();
 
-                        console.log('ff');
                         closeAnyActionsMenu();
                         $timeout.cancel(this.updateTimeout);
 
@@ -421,8 +418,6 @@ export function ItemList(
                                     itemsList.push(itemId);
                                 }
                             });
-
-                            console.log('watch fired', items);
 
                             this.setState({
                                 itemsList: itemsList,
@@ -538,7 +533,9 @@ export function ItemList(
                                 itemsList={this.state.itemsList}
                                 itemsById={this.state.itemsById}
                                 view={this.state.view}
-                                ref={(el) => {this._child = el; }}
+                                ref={(el) => {
+                                    this._child = el;
+                                }}
                             />
                         );
                     }

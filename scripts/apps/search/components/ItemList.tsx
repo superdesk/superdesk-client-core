@@ -76,8 +76,6 @@ export class ItemList extends React.Component<IProps, IState> {
 
         this.select(_.last(items), event);
         this.props.handleItemsChange(itemsById);
-
-        console.log(itemsById);
     }
 
     // Method to check the selectBox of the selected item
