@@ -4,6 +4,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+import {get, map, forOwn, isString, startsWith} from 'lodash';
+
 import {ItemList as ItemListComponent} from 'apps/search/components';
 
 ItemList.$inject = [
@@ -103,7 +105,7 @@ export function ItemList(
     metadata,
     storage,
     keyboardManager,
-    session
+    session,
 ) {
     // contains all the injected services to be passed down to child
     // components via props
@@ -197,8 +199,8 @@ export function ItemList(
                         return item[0];
                     }
 
-                    return _.map(a.es_highlight, getEsHighlight).join('-') ===
-                        _.map(b.es_highlight, getEsHighlight).join('-');
+                    return map(a.es_highlight, getEsHighlight).join('-') ===
+                        map(b.es_highlight, getEsHighlight).join('-');
                 }
 
                 /**
@@ -235,13 +237,13 @@ export function ItemList(
                  * @return {boolean} returns true if the id of the featuremedia is same
                  */
                 function isContentApiItemAssociation(oldItem, newItem) {
-                    if (_.get(oldItem, '_type') !== 'items' || _.get(newItem, '_type') !== 'items') {
+                    if (get(oldItem, '_type') !== 'items' || get(newItem, '_type') !== 'items') {
                         return true;
                     }
 
                     if (oldItem && newItem) {
-                        return _.get(oldItem, 'associations.featuremedia._id') ===
-                                _.get(newItem, 'associations.featuremedia._id');
+                        return get(oldItem, 'associations.featuremedia._id') ===
+                                get(newItem, 'associations.featuremedia._id');
                     }
 
                     return false;
@@ -325,7 +327,7 @@ export function ItemList(
                     var itemsById = angular.extend({}, listComponent.state.itemsById);
                     var shouldUpdate = false;
 
-                    _.forOwn(itemsById, (item, key) => {
+                    forOwn(itemsById, (item, key) => {
                         if (data.items[item._id]) {
                             itemsById[key] = angular.extend({gone: true}, item);
                             shouldUpdate = true;
@@ -360,7 +362,7 @@ export function ItemList(
                         var markedItems = item[field] || [];
 
                         if (field === 'marked_desks' && item[field]) {
-                            markedItems = _.isString(markedItems[0]) ? markedItems : _.map(markedItems, 'desk_id');
+                            markedItems = isString(markedItems[0]) ? markedItems : map(markedItems, 'desk_id');
                         }
 
                         if (data.marked) {
@@ -378,9 +380,9 @@ export function ItemList(
                     var shouldUpdate = false;
                     var itemsById = angular.extend({}, listComponent.state.itemsById);
 
-                    _.forOwn(itemsById, (value, key) => {
+                    forOwn(itemsById, (value, key) => {
                         ids.forEach((id) => {
-                            if (_.startsWith(key, id)) {
+                            if (startsWith(key, id)) {
                                 shouldUpdate = true;
                                 itemsById[key] = angular.extend({}, value, {selected: null});
                             }
@@ -391,7 +393,6 @@ export function ItemList(
                         listComponent.setState({itemsById: itemsById});
                     }
                 });
-
 
                 scope.singleLine = search.singleLine;
 
@@ -451,8 +452,8 @@ export function ItemList(
                  * @param {Element} elem
                  * @return {Boolean}
                  */
-                function isListEnd(elem) {
-                    return elem.scrollTop + elem.offsetHeight + 200 >= elem.scrollHeight;
+                function isListEnd(_elem) {
+                    return _elem.scrollTop + _elem.offsetHeight + 200 >= _elem.scrollHeight;
                 }
 
                 elem.on('keydown', listComponent.handleKey);
