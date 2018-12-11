@@ -141,7 +141,7 @@ export function ItemCarouselDirective($timeout, notify) {
             });
 
             /**
-             * Get superdesk type for data transfer if any
+             * Get the type supported by superdesk if any
              *
              * @param {Event} event
              * @return {string}
