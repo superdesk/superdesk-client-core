@@ -23,6 +23,21 @@ interface IScope extends IDirectiveScope<void> {
     updateVocabulary(updates: any): void;
 }
 
+function getTags(_vocabularies: Array<IVocabulary>) : IVocabulary['tags'] {
+    const wordSet = (_vocabularies || []).reduce((_wordSet, vocabulary) => {
+        (vocabulary.tags || []).forEach((tag) => {
+            _wordSet.add(tag.text);
+        });
+        return _wordSet;
+    }, new Set<string>());
+
+    const wordList = Array.from(wordSet).sort((a, b) => a.localeCompare(b));
+
+    wordList.push(OTHER);
+
+    return wordList.map((word) => ({text: word}));
+}
+
 VocabularyConfigController.$inject = ['$scope', '$route', '$routeParams', 'vocabularies', '$rootScope',
     'api', 'notify', 'modal', 'session'];
 export function VocabularyConfigController($scope: IScope, $route, $routeParams, vocabularies, $rootScope,
@@ -77,18 +92,7 @@ export function VocabularyConfigController($scope: IScope, $route, $routeParams,
     $scope.reloadList = () => {
         $scope.loading = true;
         vocabularies.getVocabularies().then((_vocabularies: Array<IVocabulary>) => {
-            const wordSet = (_vocabularies || []).reduce((_wordSet, vocabulary) => {
-                (vocabulary.tags || []).forEach((tag) => {
-                    _wordSet.add(tag.text);
-                });
-                return _wordSet;
-            }, new Set<string>());
-
-            let wordList = Array.from(wordSet).sort((a, b) => a.localeCompare(b));
-
-            wordList.push(OTHER);
-
-            $scope.tags = wordList.map((word) => ({text: word}));
+            $scope.tags = getTags(_vocabularies);
             $scope.vocabularies = _vocabularies;
             $scope.loading = false;
             setupActiveVocabulary();
@@ -123,6 +127,9 @@ export function VocabularyConfigController($scope: IScope, $route, $routeParams,
             $scope.vocabularies[index] = angular.extend({}, $scope.vocabularies[index], updates);
             vocabulary = $scope.vocabularies[index];
         }
+
+        // refresh tags to get any new ones
+        $scope.tags = getTags($scope.vocabularies);
 
         const dataVocabulary = {
             user: session.identity._id,
