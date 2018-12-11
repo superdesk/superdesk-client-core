@@ -53,6 +53,13 @@ export function closeActionsMenu(itemId) {
     ReactDOM.unmountComponentAtNode(menuHolderElem());
 }
 
+export function closeAnyActionsMenu() {
+    const menuHolder = menuHolderElem();
+
+    menuHolder.removeAttribute('data-item-id');
+    ReactDOM.unmountComponentAtNode(menuHolderElem());
+}
+
 export function openActionsMenu(elem, target, itemId) {
     const menuHolder = menuHolderElem();
 
