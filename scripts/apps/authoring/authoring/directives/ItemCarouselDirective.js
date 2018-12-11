@@ -14,8 +14,8 @@ const carouselContainerSelector = '.sd-media-carousel__content';
  *
  * @requires $timeout
  */
-ItemCarouselDirective.$inject = ['$timeout'];
-export function ItemCarouselDirective($timeout) {
+ItemCarouselDirective.$inject = ['$timeout', 'notify'];
+export function ItemCarouselDirective($timeout, notify) {
     return {
         scope: {
             items: '=',
@@ -36,6 +36,10 @@ export function ItemCarouselDirective($timeout) {
         link: function(scope, elem, attr, ctrl) {
             let carousel;
             let previousItemsString;
+            const allowed = {picture: scope.allowPicture, video: scope.allowVideo, audio: scope.allowAudio};
+            const ALLOWED_TYPES = Object.keys(allowed)
+                .filter((key) => allowed[key] === true)
+                .map((key) => 'application/superdesk.item.' + key);
 
 
             /*
@@ -117,11 +121,35 @@ export function ItemCarouselDirective($timeout) {
             });
 
             elem.on('drop dragdrop', (event) => {
+                const type = getSuperdeskType(event);
+
                 event.preventDefault();
                 event.stopPropagation();
 
-                ctrl.initializeUploadOnDrop(scope, event);
+                if (ALLOWED_TYPES.includes() || type === 'Files') {
+                    ctrl.initializeUploadOnDrop(scope, event);
+                } else {
+                    const allowedTypeNames = [
+                        (scope.allowPicture === true ? gettext('image') : ''),
+                        (scope.allowVideo === true ? gettext('video') : ''),
+                        (scope.allowAudio === true ? gettext('audio') : ''),
+                    ].filter(Boolean).join(', ');
+                    const message = gettext('Only the following content item types are allowed: ');
+
+                    notify.error(message + allowedTypeNames);
+                }
             });
+
+            /**
+             * Get superdesk type for data transfer if any
+             *
+             * @param {Event} event
+             * @return {string}
+             */
+            function getSuperdeskType(event) {
+                return event.originalEvent.dataTransfer.types
+                    .find((name) => name.includes('application/superdesk') || name === 'Files');
+            }
 
             /**
              * @ngdoc method
