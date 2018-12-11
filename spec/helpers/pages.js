@@ -176,9 +176,6 @@ function IngestSettings() {
 
     // the settings pane for routing rule (in a modal)
     this.routingRuleSettings = {
-        tabAction: element(by.buttonText('Action')),
-        tabSchedule: element(by.buttonText('Schedule')),
-
         ruleNameInput: $('[placeholder="Rule name"]'),
 
         // NOTE: several elements appear twice - under the FETCH settings

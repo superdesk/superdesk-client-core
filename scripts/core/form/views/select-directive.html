@@ -7,7 +7,7 @@
     <label class="sd-line-input__label">{{ label }}</label>
     <select class="sd-line-input__select"
         ng-model="model"
-        ng-options="option.value as option.label for option in options"
+        ng-options="option[optionValue] as option[optionLabel] for option in options"
         ng-required="required"
     ></select>
 </div>

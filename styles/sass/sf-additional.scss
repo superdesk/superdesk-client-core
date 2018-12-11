@@ -1338,6 +1338,12 @@
         &.inactive {
             opacity: 0.5;
         }
+        &.empty-info {
+            background: transparent;
+            border: 1px dotted rgba(123, 123, 123, 0.5);
+            opacity: 0.75;
+            box-shadow: none !important;
+        }
         .dropdown {
             margin-top: -3px;
         }

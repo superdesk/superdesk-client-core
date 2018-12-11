@@ -135,3 +135,45 @@
 .shadow-list-holder > .pills-list {
     margin: 8px 0 0 5px;
 }
+
+.pills-list--draggable {
+    & > li {
+        position: relative;
+        //transition: all ease-in-out 0.2s;
+        &:after {
+            content: "";
+            width: 6px;
+            transition: opacity ease-in-out 0.2s;
+            top: 4px;
+            bottom: 4px;
+            left: 3px;
+            border: 2px dotted currentColor;
+            border-width: 0 2px;
+            opacity: 0.1;
+            position: absolute;
+            display: block;
+        }
+        &:hover {
+            &:after {
+                opacity: 0.6;
+                cursor: move;
+            }
+        }
+
+    }
+    .ui-sortable-placeholder {
+        border: 1px dashed $sd-blue !important;
+        background-color: scale-color($sd-blue, $alpha: -90%) !important;
+        visibility: visible !important;
+        box-shadow: none !important;
+        &:after {
+            content: none !important;
+        } 
+    } 
+}
+
+.selected-field {
+    outline: 1px solid #5ea9c8;
+    background-color: rgba(94, 169, 200, 0.1);
+    padding: 0 1rem 1rem;
+}
