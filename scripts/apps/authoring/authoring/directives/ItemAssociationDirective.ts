@@ -1,5 +1,5 @@
 import * as ctrl from '../controllers';
-import {stripHtmlTags} from 'core/utils';
+import {stripHtmlTags, getSuperdeskType} from 'core/utils';
 
 /**
  * @ngdoc directive
@@ -60,7 +60,7 @@ export function ItemAssociationDirective(renditions) {
             if (!elem.hasClass('no-drop-zone')) {
                 // it should prevent default as long as this is valid image
                 elem.on('dragover', (event) => {
-                    if (MEDIA_TYPES.indexOf(_ctrl.getSuperdeskType(event)) > -1) {
+                    if (MEDIA_TYPES.includes(getSuperdeskType(event))) {
                         event.preventDefault();
                         event.stopPropagation();
                         addDragOverClass();

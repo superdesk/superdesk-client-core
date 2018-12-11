@@ -1,4 +1,5 @@
 import {get} from 'lodash';
+import {getSuperdeskType} from 'core/utils';
 
 /**
  * @ngdoc directive
@@ -56,7 +57,7 @@ export function RelatedItemsDirective(authoringWorkspace, relationsService, noti
                         ? get(scope, 'field.field_options.multiple_items.max_items')
                         : 1;
 
-                    const type = getSuperdeskType(event);
+                    const type = getSuperdeskType(event, false);
                     const item = angular.fromJson(event.originalEvent.dataTransfer.getData(type));
 
                     const itemAlreadyAddedAsRelated = relatedItemsForCurrentField.some(
@@ -96,17 +97,6 @@ export function RelatedItemsDirective(authoringWorkspace, relationsService, noti
                 elem.find('.item-association').removeClass(dragOverClass);
                 elem.find('.related-items').removeClass(dragOverClass);
             };
-
-            /**
-             * Get superdesk type for data transfer if any
-             *
-             * @param {Event} event
-             * @return {string}
-             */
-            function getSuperdeskType(event) {
-                return event.originalEvent.dataTransfer.types
-                    .find((name) => name.indexOf('application/superdesk') === 0);
-            }
 
             /**
              * Get related items keys for fireldId

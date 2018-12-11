@@ -3,6 +3,7 @@
 import 'owl.carousel';
 import * as ctrl from '../controllers';
 import {waitForImagesToLoad, waitForAudioAndVideoToLoadMetadata} from 'core/helpers/waitForMediaToBeReady';
+import {getSuperdeskType} from 'core/utils';
 
 
 const carouselContainerSelector = '.sd-media-carousel__content';
@@ -139,17 +140,6 @@ export function ItemCarouselDirective($timeout, notify) {
                     notify.error(message + allowedTypeNames);
                 }
             });
-
-            /**
-             * Get the type supported by superdesk if any
-             *
-             * @param {Event} event
-             * @return {string}
-             */
-            function getSuperdeskType(event) {
-                return event.originalEvent.dataTransfer.types
-                    .find((name) => name.includes('application/superdesk') || name === 'Files');
-            }
 
             /**
              * @ngdoc method
