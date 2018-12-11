@@ -5,11 +5,21 @@ import classNames from 'classnames';
 import {Item} from './index';
 import {isCheckAllowed, closeActionsMenu, bindMarkItemShortcut} from '../helpers';
 import {querySelectorParent} from 'core/helpers/dom/querySelectorParent';
+import {IArticle, IArticleIdWithTrackByIdentifier} from 'superdesk-interfaces/Article';
+
+interface IState {
+    itemsList: Array<IArticleIdWithTrackByIdentifier>;
+    itemsById: Dictionary<IArticleIdWithTrackByIdentifier, IArticle>;
+    narrow: any;
+    bindedShortcuts: Array<any>;
+    selected: IArticleIdWithTrackByIdentifier;
+    view: 'compact' | 'photogrid';
+}
 
 /**
  * Item list component
  */
-export class ItemList extends React.Component<any, any> {
+export class ItemList extends React.Component<any, IState> {
     static propTypes: any;
     static defaultProps: any;
 

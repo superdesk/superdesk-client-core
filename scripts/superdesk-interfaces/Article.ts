@@ -1,5 +1,9 @@
 import {IUser} from './User';
 
+// IArticle['_id'] combined with version number. Generated at
+// scripts/apps/search/services/SearchService.js @ generateTrackByIdentifier
+export type IArticleIdWithTrackByIdentifier = string;
+
 export interface IArticle {
     _id: string;
     translated_from: string;
