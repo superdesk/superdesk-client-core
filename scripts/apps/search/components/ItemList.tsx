@@ -20,6 +20,7 @@ interface IProps {
     swimlane: any;
     itemsList: Array<IArticleIdWithTrackByIdentifier>;
     itemsById: Dictionary<IArticleIdWithTrackByIdentifier, IArticle>;
+    elementForListeningKeyEvents: JQuery;
     view: 'compact' | 'photogrid';
     handleItemsChange(itemsById: Dictionary<IArticleIdWithTrackByIdentifier, IArticle>): void;
 }
@@ -385,12 +386,6 @@ export class ItemList extends React.Component<IProps, IState> {
             scrollSelectedItemIfRequired(event, scope);
         }
     }
-
-    componentWillUnmount() {
-        this.unbindActionKeyShortcuts();
-        this.closeActionsMenu();
-    }
-
     setSelectedComponent(com) {
         this.selectedCom = com;
     }
@@ -401,10 +396,18 @@ export class ItemList extends React.Component<IProps, IState> {
     }
 
     componentDidMount() {
+        this.props.elementForListeningKeyEvents.on('keydown', this.handleKey);
+
         this.props.scope.$on('item:unselect', () => {
             this.setState({selected: null});
             this.unbindActionKeyShortcuts();
         });
+    }
+
+    componentWillUnmount() {
+        this.props.elementForListeningKeyEvents.off('keydown', this.handleKey);
+        this.unbindActionKeyShortcuts();
+        this.closeActionsMenu();
     }
 
     render() {

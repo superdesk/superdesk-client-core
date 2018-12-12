@@ -533,6 +533,7 @@ export function ItemList(
                                 itemsList={this.state.itemsList}
                                 itemsById={this.state.itemsById}
                                 view={this.state.view}
+                                elementForListeningKeyEvents={elem}
                                 ref={(el) => {
                                     this._child = el;
                                 }}
