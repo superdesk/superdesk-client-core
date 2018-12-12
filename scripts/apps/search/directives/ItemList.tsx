@@ -262,7 +262,6 @@ export function ItemList(
 
             monitoringState.init().then(() => {
                 class ItemsListDirective extends React.Component<any, IState> {
-                    _child: any;
                     updateTimeout: any;
 
                     constructor(props) {
@@ -276,9 +275,7 @@ export function ItemList(
                             swimlane: undefined,
                         };
 
-                        this._child = null;
                         this.updateTimeout = undefined;
-
                         this.updateAllItems = this.updateAllItems.bind(this);
                         this.updateItem = this.updateItem.bind(this);
                         this.updateMarkedItems = this.updateMarkedItems.bind(this);
@@ -286,9 +283,6 @@ export function ItemList(
                         this.handleItemsChange = this.handleItemsChange.bind(this);
                         this.handleScroll = this.handleScroll.bind(this);
                         this.renderIfNeeded = this.renderIfNeeded.bind(this);
-                    }
-                    getChild() {
-                        return this._child;
                     }
                     updateItem(itemId, changes) {
                         const item = this.state.itemsById[itemId] || null;
@@ -534,9 +528,6 @@ export function ItemList(
                                 itemsById={this.state.itemsById}
                                 view={this.state.view}
                                 elementForListeningKeyEvents={elem}
-                                ref={(el) => {
-                                    this._child = el;
-                                }}
                             />
                         );
                     }
@@ -545,7 +536,7 @@ export function ItemList(
                 ReactDOM.render(
                     <ItemsListDirective />,
                     elem[0],
-                ).getChild();
+                );
 
                 scope.singleLine = search.singleLine;
 
