@@ -29,34 +29,34 @@ interface IProps {
     handleItemsChange(itemsById: Dictionary<IArticleIdWithTrackByIdentifier, IArticle>): void;
 
     // services
-    $location: any;
-    $timeout: any;
-    $injector: any;
-    $filter: any;
-    search: any;
-    datetime: any;
-    gettext: any;
-    superdesk: any;
-    workflowService: any;
-    archiveService: any;
-    activityService: any;
-    multi: any;
-    desks: any;
-    familyService: any;
-    Keys: any;
-    dragitem: any;
-    highlightsService: any;
-    TranslationService: any;
-    monitoringState: any;
-    authoringWorkspace: any;
-    gettextCatalog: any;
-    $rootScope: any;
-    config: any;
-    $interpolate: any;
-    metadata: any;
-    storage: any;
-    keyboardManager: any;
-    session: any;
+    $location?: any;
+    $timeout?: any;
+    $injector?: any;
+    $filter?: any;
+    search?: any;
+    datetime?: any;
+    gettext?: any;
+    superdesk?: any;
+    workflowService?: any;
+    archiveService?: any;
+    activityService?: any;
+    multi?: any;
+    desks?: any;
+    familyService?: any;
+    Keys?: any;
+    dragitem?: any;
+    highlightsService?: any;
+    TranslationService?: any;
+    monitoringState?: any;
+    authoringWorkspace?: any;
+    gettextCatalog?: any;
+    $rootScope?: any;
+    config?: any;
+    $interpolate?: any;
+    metadata?: any;
+    storage?: any;
+    keyboardManager?: any;
+    session?: any;
 }
 
 /**

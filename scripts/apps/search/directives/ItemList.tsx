@@ -411,13 +411,15 @@ export function ItemList(
                         this.setState({itemsById: itemsById});
                     }
                     render() {
-                        const props = angular.extend({
-                            scope: scope,
-                        }, monitoringState.state);
-
                         return (
                             <ItemListComponent
-                                {...props}
+                                scope={scope}
+                                desksById={monitoringState.state.desksById}
+                                highlightsById={monitoringState.state.highlightsById}
+                                ingestProvidersById={monitoringState.state.ingestProvidersById}
+                                markedDesksById={monitoringState.state.markedDesksById}
+                                profilesById={monitoringState.state.profilesById}
+                                usersById={monitoringState.state.usersById}
                                 narrow={this.state.narrow}
                                 swimlane={this.state.swimlane || storage.getItem('displaySwimlane')}
                                 handleItemsChange={this.handleItemsChange}
