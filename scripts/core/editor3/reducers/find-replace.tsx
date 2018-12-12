@@ -74,20 +74,54 @@ const replaceHighlight = (state, txt, all = false) => {
     };
 };
 
+const getNextPattern = (pattern, diff) => {
+    if (diff == null || pattern === '') {
+        return null;
+    }
+
+    const keys = Object.keys(diff);
+    const index = keys.indexOf(pattern);
+
+    if (index === -1 || keys.length === index - 1) {
+        return null;
+    }
+
+    return keys[index + 1];
+};
+
 /**
  * @name findNext
  * @param {Object} state
  * @description Increases the highlighted ocurrence index.
  */
 const findNext = (state) => {
-    const i = state.searchTerm.index + 1;
     const total = countOccurrences(state);
-    const index = i === total ? 0 : i;
+    let {index, pattern, diff} = state.searchTerm;
+
+    if (++index === total) {
+        pattern = getNextPattern(pattern, diff) || pattern;
+        index = 0;
+    }
 
     return render({
         ...state,
-        searchTerm: {...state.searchTerm, index},
+        searchTerm: {...state.searchTerm, index, pattern},
     });
+};
+
+const getPrevPattern = (pattern, diff) => {
+    if (diff == null || pattern === '') {
+        return null;
+    }
+
+    const keys = Object.keys(diff);
+    const index = keys.indexOf(pattern);
+
+    if (index === -1 || index < 1) {
+        return null;
+    }
+
+    return keys[index - 1];
 };
 
 /**
@@ -96,32 +130,38 @@ const findNext = (state) => {
  * @description Decreases the highlighted ocurrence index.
  */
 const findPrev = (state) => {
-    const i = state.searchTerm.index - 1;
     const total = countOccurrences(state);
-    const index = i < 0 ? total - 1 : i;
+    let {index, pattern, diff} = state.searchTerm;
+
+    if (index-- === 0) {
+        pattern = getPrevPattern(pattern, diff) || pattern;
+        index = 0;
+    }
 
     return render({
         ...state,
-        searchTerm: {...state.searchTerm, index},
+        searchTerm: {...state.searchTerm, index, pattern},
     });
 };
 
 /**
  * @name setCriteria
  * @param {Object} state
- * @param {string} pattern
+ * @param {Object} diff
  * @param {boolean} caseSensitive
- * @description Sets the highlight criteria pattern and case sensitivity.
+ * @description Sets the highlight criteria diff and case sensitivity.
  */
-const setCriteria = (state, {pattern, caseSensitive}) => {
+const setCriteria = (state, {diff, caseSensitive}) => {
     // If a new pattern is entered, the FindReplaceDirective calls selectNext, so the
     // index needs to become -1. See apps/authoring/editor/find-replace.js.
     // Otherwise, if only the sensitivity is changed, we reset to 0.
+    const pattern = diff == null ? '' : Object.keys(diff || {})[0] || '';
     const index = pattern !== state.searchTerm.pattern ? -1 : 0;
 
     return render({
         ...state,
-        searchTerm: {pattern, caseSensitive, index},
+
+        searchTerm: {pattern, caseSensitive, index, diff},
     });
 };
 

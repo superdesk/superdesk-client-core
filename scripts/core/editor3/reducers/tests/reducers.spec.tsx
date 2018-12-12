@@ -108,8 +108,7 @@ describe('editor3.reducers', () => {
         const state = reducer(startState, {
             type: 'HIGHLIGHTS_CRITERIA',
             payload: {
-                index: -1,
-                pattern: 'banana',
+                diff: {banana: 'Banana'},
                 caseSensitive: true,
             },
         });
@@ -127,7 +126,7 @@ describe('editor3.reducers', () => {
 
         const state = reducer(startState, {
             type: 'HIGHLIGHTS_CRITERIA',
-            payload: {caseSensitive: true, pattern: 'apple'},
+            payload: {caseSensitive: true, diff: {apple: 'Apple'}},
         });
 
         expect(state.searchTerm.index).toBe(0);
@@ -166,7 +165,7 @@ describe('editor3.reducers', () => {
     it('HIGHLIGHTS_FIND_PREV', () => {
         const startState = withSearchTerm(
             'apple banana apple ananas apple prune',
-            {index: 1, pattern: 'Apple', caseSensitive: false},
+            {index: 1, pattern: 'Apple', caseSensitive: false, diff: {Apple: 'apple'}},
         );
 
         const state = reducer(startState, {type: 'HIGHLIGHTS_FIND_PREV'});
@@ -181,16 +180,16 @@ describe('editor3.reducers', () => {
     it('HIGHLIGHTS_FIND_PREV before first', () => {
         const startState = withSearchTerm(
             'apple banana apple ananas apple prune',
-            {index: 0, pattern: 'Apple', caseSensitive: false},
+            {index: 0, pattern: 'Apple', caseSensitive: false, diff: {Apple: 'apple'}},
         );
 
         const state = reducer(startState, {type: 'HIGHLIGHTS_FIND_PREV'});
         const block = state.editorState.getCurrentContent().getFirstBlock();
 
-        expect(state.searchTerm.index).toBe(2);
-        expect(block.getInlineStyleAt(0).has('HIGHLIGHT')).toBe(true);
+        expect(state.searchTerm.index).toBe(0);
+        expect(block.getInlineStyleAt(0).has('HIGHLIGHT_STRONG')).toBe(true);
         expect(block.getInlineStyleAt(13).has('HIGHLIGHT')).toBe(true);
-        expect(block.getInlineStyleAt(26).has('HIGHLIGHT_STRONG')).toBe(true);
+        expect(block.getInlineStyleAt(26).has('HIGHLIGHT')).toBe(true);
     });
 
     it('HIGHLIGHTS_FIND_REPLACE', () => {

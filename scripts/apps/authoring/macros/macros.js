@@ -159,16 +159,20 @@ function MacrosController($scope, macros, desks, autosave, $rootScope, storage) 
 
         $scope.loading = true;
         return macros.call(macro, item).then((res) => {
-            if (!res.diff) {
-                Object.keys(res.item || {}).forEach((field) => {
-                    if (isString(res.item[field]) && res.item[field] !== item[field] && field !== 'body_html') {
-                        $rootScope.$broadcast('macro:refreshField', field, res.item[field]);
-                    }
-                });
+            let ignoreFields = ['_etag', 'body_html', 'fields_meta'];
 
-                angular.extend($scope.item, _.omit(res.item, ['_etag']));
-                autosave.save($scope.item, $scope.origItem);
-            } else {
+            Object.keys(res.item || {}).forEach((field) => {
+                if (isString(res.item[field]) === false || field === 'body_html') {
+                    return;
+                }
+                ignoreFields.push(field);
+                if (res.item[field] !== item[field]) {
+                    $rootScope.$broadcast('macro:refreshField', field, res.item[field]);
+                }
+            });
+            angular.extend($scope.item, _.omit(res.item, ignoreFields));
+            autosave.save($scope.item, $scope.origItem);
+            if (res.diff !== null) {
                 $rootScope.$broadcast('macro:diff', res.diff);
             }
             $scope.closeWidget();
