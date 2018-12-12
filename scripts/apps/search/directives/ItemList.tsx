@@ -103,34 +103,11 @@ function isListEnd(elem) {
 }
 
 ItemList.$inject = [
-    '$location',
     '$timeout',
-    '$injector',
-    '$filter',
     'search',
-    'datetime',
-    'gettext',
-    'superdesk',
-    'workflowService',
-    'archiveService',
-    'activityService',
-    'multi',
-    'desks',
-    'familyService',
-    'Keys',
-    'dragitem',
-    'highlightsService',
-    'TranslationService',
     'monitoringState',
-    'authoringWorkspace',
-    'gettextCatalog',
     '$rootScope',
-    'config',
-    '$interpolate',
-    'metadata',
     'storage',
-    'keyboardManager',
-    'session',
 ];
 
 /**
@@ -138,34 +115,11 @@ ItemList.$inject = [
  * @module superdesk.apps.ItemList
  * @name sdItemList
  *
- * @requires $location
  * @requires $timeout
- * @requires $injector
- * @requires $filter
  * @requires search
- * @requires datetime
- * @requires gettext
- * @requires superdesk
- * @requires workflowService
- * @requires archiveService
- * @requires activityService
- * @requires multi
- * @requires desks
- * @requires familyService
- * @requires Keys
- * @requires dragitem
- * @requires highlightsService
- * @requires TranslationService
  * @requires monitoringState
- * @requires authoringWorkspace
- * @requires gettextCatalog
  * @requires $rootScope
- * @requires config
- * @requires $interpolate
- * @requires metadata
  * @requires storage
- * @requires keyboardManager
- * @requires session
  *
  * @description Handles the functionality displaying list of items from repos (archive, ingest, publish,
  * external, content api, archived)
@@ -180,68 +134,12 @@ interface IState {
 }
 
 export function ItemList(
-    $location,
     $timeout,
-    $injector,
-    $filter,
     search,
-    datetime,
-    gettext,
-    superdesk,
-    workflowService,
-    archiveService,
-    activityService,
-    multi,
-    desks,
-    familyService,
-    Keys,
-    dragitem,
-    highlightsService,
-    TranslationService,
     monitoringState,
-    authoringWorkspace,
-    gettextCatalog,
     $rootScope,
-    config,
-    $interpolate,
-    metadata,
     storage,
-    keyboardManager,
-    session,
 ) {
-    // contains all the injected services to be passed down to child
-    // components via props
-    const services = {
-        $location: $location,
-        $timeout: $timeout,
-        $injector: $injector,
-        $filter: $filter,
-        search: search,
-        datetime: datetime,
-        gettext: gettext,
-        superdesk: superdesk,
-        workflowService: workflowService,
-        archiveService: archiveService,
-        activityService: activityService,
-        multi: multi,
-        desks: desks,
-        familyService: familyService,
-        Keys: Keys,
-        dragitem: dragitem,
-        highlightsService: highlightsService,
-        TranslationService: TranslationService,
-        monitoringState: monitoringState,
-        authoringWorkspace: authoringWorkspace,
-        gettextCatalog: gettextCatalog,
-        $rootScope: $rootScope,
-        config: config,
-        $interpolate: $interpolate,
-        metadata: metadata,
-        storage: storage,
-        keyboardManager: keyboardManager,
-        session: session,
-    };
-
     return {
         link: function(scope, elem) {
             elem.attr('tabindex', 0);
@@ -514,7 +412,6 @@ export function ItemList(
                     }
                     render() {
                         const props = angular.extend({
-                            svc: services,
                             scope: scope,
                         }, monitoringState.state);
 

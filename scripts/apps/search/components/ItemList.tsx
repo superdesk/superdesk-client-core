@@ -1,11 +1,11 @@
 import _ from 'lodash';
 import React from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import {Item} from './index';
 import {isCheckAllowed, closeActionsMenu, bindMarkItemShortcut} from '../helpers';
 import {querySelectorParent} from 'core/helpers/dom/querySelectorParent';
 import {IArticle, IArticleIdWithTrackByIdentifier} from 'superdesk-interfaces/Article';
+import {connectServices} from 'core/helpers/ReactRenderAsync';
 
 interface IState {
     bindedShortcuts: Array<any>;
@@ -13,7 +13,11 @@ interface IState {
 }
 
 interface IProps {
-    svc: any;
+    profilesById: any;
+    highlightsById: any;
+    markedDesksById: any;
+    desksById: any;
+    ingestProvidersById: any;
     scope: any;
     usersById: any;
     narrow: boolean;
@@ -23,12 +27,42 @@ interface IProps {
     elementForListeningKeyEvents: JQuery;
     view: 'compact' | 'photogrid';
     handleItemsChange(itemsById: Dictionary<IArticleIdWithTrackByIdentifier, IArticle>): void;
+
+    // services
+    $location: any;
+    $timeout: any;
+    $injector: any;
+    $filter: any;
+    search: any;
+    datetime: any;
+    gettext: any;
+    superdesk: any;
+    workflowService: any;
+    archiveService: any;
+    activityService: any;
+    multi: any;
+    desks: any;
+    familyService: any;
+    Keys: any;
+    dragitem: any;
+    highlightsService: any;
+    TranslationService: any;
+    monitoringState: any;
+    authoringWorkspace: any;
+    gettextCatalog: any;
+    $rootScope: any;
+    config: any;
+    $interpolate: any;
+    metadata: any;
+    storage: any;
+    keyboardManager: any;
+    session: any;
 }
 
 /**
  * Item list component
  */
-export class ItemList extends React.Component<IProps, IState> {
+class ItemListComponent extends React.Component<IProps, IState> {
     static propTypes: any;
     static defaultProps: any;
 
@@ -63,7 +97,7 @@ export class ItemList extends React.Component<IProps, IState> {
     }
 
     multiSelect(items, selected, event?) {
-        const {search, multi} = this.props.svc;
+        const {search, multi} = this.props;
         const {scope} = this.props;
 
         const itemsById = angular.extend({}, this.props.itemsById);
@@ -89,7 +123,7 @@ export class ItemList extends React.Component<IProps, IState> {
     }
 
     select(item, event?) {
-        const {$timeout} = this.props.svc;
+        const {$timeout} = this.props;
         const {scope} = this.props;
 
         if (event && event.shiftKey) {
@@ -125,7 +159,7 @@ export class ItemList extends React.Component<IProps, IState> {
      * Unbind all item actions
      */
     unbindActionKeyShortcuts() {
-        const {keyboardManager} = this.props.svc;
+        const {keyboardManager} = this.props;
 
         this.state.bindedShortcuts.forEach((shortcut) => {
             keyboardManager.unbind(shortcut);
@@ -140,7 +174,7 @@ export class ItemList extends React.Component<IProps, IState> {
      * @param {Object} item
      */
     bindActionKeyShortcuts(selectedItem) {
-        const {superdesk, workflowService, activityService, keyboardManager, archiveService} = this.props.svc;
+        const {superdesk, workflowService, activityService, keyboardManager, archiveService} = this.props;
 
         // First unbind all binded shortcuts
         if (this.state.bindedShortcuts.length) {
@@ -173,7 +207,7 @@ export class ItemList extends React.Component<IProps, IState> {
     }
 
     selectMultipleItems(lastItem) {
-        const {search} = this.props.svc;
+        const {search} = this.props;
         const itemId = search.generateTrackByIdentifier(lastItem);
         let positionStart = 0;
         const positionEnd = _.indexOf(this.props.itemsList, itemId);
@@ -198,7 +232,7 @@ export class ItemList extends React.Component<IProps, IState> {
     }
 
     dbClick(item) {
-        const {superdesk, $timeout, authoringWorkspace} = this.props.svc;
+        const {superdesk, $timeout, authoringWorkspace} = this.props;
         const {scope} = this.props;
 
         const activities = superdesk.findActivities({action: 'list', type: item._type}, item);
@@ -231,7 +265,7 @@ export class ItemList extends React.Component<IProps, IState> {
     }
 
     edit(item) {
-        const {$timeout, authoringWorkspace} = this.props.svc;
+        const {$timeout, authoringWorkspace} = this.props;
         const {scope} = this.props;
 
         this.setSelectedItem(item);
@@ -257,7 +291,7 @@ export class ItemList extends React.Component<IProps, IState> {
         this.unbindActionKeyShortcuts();
     }
     setSelectedItem(item) {
-        const {monitoringState, $rootScope, search} = this.props.svc;
+        const {monitoringState, $rootScope, search} = this.props;
         const {scope} = this.props;
 
         if (monitoringState.state.activeGroup !== scope.$id) {
@@ -277,7 +311,7 @@ export class ItemList extends React.Component<IProps, IState> {
 
     handleKey(event) {
         const {scope} = this.props;
-        const {Keys, monitoringState} = this.props.svc;
+        const {Keys, monitoringState} = this.props;
         const KEY_CODES = Object.freeze({
             X: 'X'.charCodeAt(0),
         });
@@ -411,18 +445,49 @@ export class ItemList extends React.Component<IProps, IState> {
     }
 
     render() {
-        const {storage, gettextCatalog} = this.props.svc;
+        const {gettextCatalog} = this.props;
         const {scope} = this.props;
-        const {narrow, swimlane} = this.props;
+        const {narrow, swimlane, view} = this.props;
 
-        const createItem = function(itemId) {
+        const services = {
+            $location: this.props.$location,
+            $timeout: this.props.$timeout,
+            $injector: this.props.$injector,
+            $filter: this.props.$filter,
+            search: this.props.search,
+            datetime: this.props.datetime,
+            gettext: this.props.gettext,
+            superdesk: this.props.superdesk,
+            workflowService: this.props.workflowService,
+            archiveService: this.props.archiveService,
+            activityService: this.props.activityService,
+            multi: this.props.multi,
+            desks: this.props.desks,
+            familyService: this.props.familyService,
+            Keys: this.props.Keys,
+            dragitem: this.props.dragitem,
+            highlightsService: this.props.highlightsService,
+            TranslationService: this.props.TranslationService,
+            monitoringState: this.props.monitoringState,
+            authoringWorkspace: this.props.authoringWorkspace,
+            gettextCatalog: this.props.gettextCatalog,
+            $rootScope: this.props.$rootScope,
+            config: this.props.config,
+            $interpolate: this.props.$interpolate,
+            metadata: this.props.metadata,
+            storage: this.props.storage,
+            keyboardManager: this.props.keyboardManager,
+            session: this.props.session,
+        };
+
+        const createItem = (itemId) => {
             const item = this.props.itemsById[itemId];
             const task = item.task || {desk: null};
 
             return React.createElement(Item, {
                 key: itemId,
                 item: item,
-                view: this.state.view,
+                view: view,
                 swimlane: swimlane,
                 flags: {selected: this.state.selected === itemId},
                 onEdit: this.edit,
@@ -437,10 +502,11 @@ export class ItemList extends React.Component<IProps, IState> {
                 setSelectedComponent: this.setSelectedComponent,
                 versioncreator: this.modifiedUserName(item.version_creator),
                 narrow: narrow,
-                svc: this.props.svc,
+                svc: services,
                 scope: scope,
             });
-        }.bind(this);
+        };
+
         const isEmpty = !this.props.itemsList.length;
 
         return React.createElement(
@@ -465,13 +531,36 @@ export class ItemList extends React.Component<IProps, IState> {
     }
 }
 
-ItemList.propTypes = {
-    svc: PropTypes.object.isRequired,
-    scope: PropTypes.any.isRequired,
-    profilesById: PropTypes.any,
-    highlightsById: PropTypes.any,
-    markedDesksById: PropTypes.any,
-    desksById: PropTypes.any,
-    ingestProvidersById: PropTypes.any,
-    usersById: PropTypes.any,
-};
+export const ItemList = connectServices<IProps>(
+    ItemListComponent,
+    [
+        '$location',
+        '$timeout',
+        '$injector',
+        '$filter',
+        'search',
+        'datetime',
+        'gettext',
+        'superdesk',
+        'workflowService',
+        'archiveService',
+        'activityService',
+        'multi',
+        'desks',
+        'familyService',
+        'Keys',
+        'dragitem',
+        'highlightsService',
+        'TranslationService',
+        'monitoringState',
+        'authoringWorkspace',
+        'gettextCatalog',
+        '$rootScope',
+        'config',
+        '$interpolate',
+        'metadata',
+        'storage',
+        'keyboardManager',
+        'session',
+    ],
+);
