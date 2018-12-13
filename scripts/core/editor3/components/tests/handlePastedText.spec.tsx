@@ -11,7 +11,7 @@ const stubForHighlights = {
 };
 
 describe('editor3.handlePastedText', () => {
-    fit('should insert text without selection', () => {
+    it('should insert text without selection', () => {
         const editorState = EditorState.createWithContent(
             ContentState.createFromText('paste before this')
         );
@@ -24,7 +24,7 @@ describe('editor3.handlePastedText', () => {
         expect(text).toBe('some text paste before this');
     });
 
-    fit('should insert text with selection at the end', () => {
+    it('should insert text with selection at the end', () => {
         let editorState = EditorState.createWithContent(
             ContentState.createFromText('paste after this ')
         );
@@ -39,7 +39,7 @@ describe('editor3.handlePastedText', () => {
         expect(text).toBe('paste after this some text');
     });
 
-    fit('should insert text with selection in the middle', () => {
+    it('should insert text with selection in the middle', () => {
         let editorState = EditorState.createWithContent(
             ContentState.createFromText('paste after this!')
         );
@@ -54,7 +54,7 @@ describe('editor3.handlePastedText', () => {
         expect(text).toBe('paste after this some text!');
     });
 
-    fit('should keep undo/redo history consistent', () => {
+    it('should keep undo/redo history consistent', () => {
         let editorState = EditorState.createWithContent(
             ContentState.createFromText('paste after this')
         );
