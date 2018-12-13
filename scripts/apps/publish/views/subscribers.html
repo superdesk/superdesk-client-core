@@ -193,7 +193,7 @@
                     </div>
                 </div>
 
-                <div sd-wizard-step data-title="{{ :: 'Content API' | translate }}" data-code="content-api">
+                <div sd-wizard-step data-title="{{ :: 'Content API' | translate }}" data-code="content-api" ng-if="subscriber._id">
                     <div class="content">
                         <div class="field">
                             <label translate>Products</label>
@@ -207,7 +207,7 @@
                                  data-header="true">
                             </div>
                         </div>
-                        <div class="field" ng-if="subscriber._id" ng-controller="SubscriberTokenCtrl as tokens"> 
+                        <div class="field" ng-controller="SubscriberTokenCtrl as tokens">
                             <label translate>Authentication Token</label>
                             <ul class="sd-list-item-group sd-list-item-group--space-between-items">
                                 <li ng-repeat="token in tokens.tokens track by token._id" class="sd-list-item sd-shadow--z1">
