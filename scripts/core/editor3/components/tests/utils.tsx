@@ -161,7 +161,7 @@ export function tableBlockAndContent(cells?) {
     });
 }
 
-export function cursorAtEndPosition(editorState) : EditorState {
+export function cursorAtEndPosition(editorState): EditorState {
     const content = editorState.getCurrentContent();
     const blockMap = content.getBlockMap();
 
@@ -174,6 +174,7 @@ export function cursorAtEndPosition(editorState) : EditorState {
         focusKey: key,
         focusOffset: length,
     });
+
     return EditorState.forceSelection(editorState, selection);
 }
 
