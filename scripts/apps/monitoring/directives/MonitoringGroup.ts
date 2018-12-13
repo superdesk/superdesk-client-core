@@ -283,7 +283,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
 
             function edit(item) {
                 if (item.state !== 'spiked') {
-                    var intent = {action: 'list'};
+                    var intent = {action: 'list', type: undefined};
 
                     if (item._type === 'ingest') {
                         intent.type = 'ingest';
@@ -311,8 +311,8 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
 
                 if (!_.isNil(activity)) {
                     activityService.start(activity, {data: {item: item}})
-                        .then((item) => {
-                            authoringWorkspace.edit(item);
+                        .then((_item) => {
+                            authoringWorkspace.edit(_item);
                         });
                 }
             }
@@ -379,7 +379,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                 return monitoring.previewItem && monitoring.previewItem.task.stage === scope.group._id;
             }
 
-            function queryItems(event, data, params) {
+            function queryItems(event?, data?, params?) {
                 criteria = cards.criteria(scope.group, null, monitoring.queryParam);
                 criteria.source.from = 0;
                 criteria.source.size = PAGE_SIZE;
@@ -455,7 +455,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                     });
             }
 
-            function render(next) {
+            function render(next?) {
                 return apiquery(criteria, true).then((items) => {
                     scope.$applyAsync(() => {
                         if (scope.total !== items._meta.total) {
