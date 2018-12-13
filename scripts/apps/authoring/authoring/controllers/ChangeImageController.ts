@@ -67,6 +67,14 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
     $scope.nav = $scope.data.defaultTab || 'view';
     $scope.hideTabs = $scope.data.hideTabs || [];
 
+    $scope.metadata = {
+        isDirty: false
+    };
+    
+    $scope.crops = {
+        isDirty: false
+    };
+
     $scope.data.renditions.forEach((rendition) => {
         const original = $scope.data.item.renditions.original;
         // only extend the item renditions if the original image can fit the rendition dimensions
@@ -93,25 +101,41 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
         }
     };
 
+    const _origCropsData = angular.copy($scope.data.cropData);
+
     /**
      * @ngdoc method
-     * @name ChangeImageController#saveIsEnabled
+     * @name ChangeImageController#isDoneEnabled
      * @public
      * @description if dirty or is new picture item.
      * @returns {Boolean}
      */
-    $scope.saveIsEnabled = function() {
-        return !$scope.controls.isDirty && ($scope.data.isDirty || $scope.isNew);
+    $scope.isDoneEnabled = function() {
+        return !$scope.metadata.isDirty &&
+            !$scope.controls.isDirty &&
+            !$scope.crops.isDirty;
+    };
+    
+    /**
+     * @ngdoc method
+     * @name ChangeImageController#areTabsEnabled
+     * @public
+     * @description if dirty or is new picture item.
+     * @returns {Boolean}
+     */
+    $scope.areTabsEnabled = () => {
+        return !$scope.metadata.isDirty && !$scope.controls.isDirty &&
+            !$scope.crops.isDirty && !$scope.isAoISelectionModeEnabled;
     };
 
     /**
     * @ngdoc method
-    * @name ChangeImageController#done
+    * @name ChangeImageController#saveCrops
     * @public
     * @description Validate new crop-coordinates and resolve the promise and return
     * modified crop information, point of interest and metadata changes.
     */
-    $scope.done = function() {
+    $scope.saveCrops = function() {
         /* Throw an exception if PoI is outside of a crop */
         function poiIsInsideEachCrop() {
             const originalImage = $scope.data.metadata.renditions.original;
@@ -156,35 +180,66 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
         // update crop and poi data in `item`
         angular.extend($scope.data.item, $scope.data.metadata);
         $scope.data.item.poi = $scope.data.poi;
-        $scope.resolve({
-            cropData: $scope.data.cropData,
-            metadata: _.pick($scope.data.item, [
-                ...EDITABLE_METADATA,
-                'poi',
-                'renditions',
-                '_etag',
-            ]),
-        });
+        
+        $scope.crops.isDirty = false;
+        $scope.data.isDirty = true;
+    };
+    
+    /**
+    * @ngdoc method
+    * @name ChangeImageController#cancelCrops
+    * @public
+    * @description
+    */
+    $scope.cancelCrops = () => {
+        $scope.data.cropData = angular.copy(_origCropsData);
+        $scope.crops.isDirty = false;
+    };
+    
+    /**
+    * @ngdoc method
+    * @name ChangeImageController#applyMetadataChanges
+    * @public
+    * @description
+    */
+    $scope.applyMetadataChanges = () => {
+        $scope.metadata.isDirty = false;
+        $scope.data.isDirty = true;
+    };
+    
+    /**
+    * @ngdoc method
+    * @name ChangeImageController#cancelMetadataChanges
+    * @public
+    * @description
+    */
+    $scope.cancelMetadataChanges = () => {
+        $scope.data.metadata = angular.copy($scope.data.item);
+        $scope.metadata.isDirty = false;
     };
 
     /**
     * @ngdoc method
-    * @name ChangeImageController#close
+    * @name ChangeImageController#done
     * @public
-    * @description Close the Change Image form.
+    * @description Validate new crop-coordinates and resolve the promise and return
+    * modified crop information, point of interest and metadata changes.
     */
-    $scope.close = function() {
-        if ($scope.data.editable && $scope.data.isDirty) {
-            modal.confirm(gettext('You have unsaved changes, do you want to continue?'))
-                .then(() => {
-                // Ok = continue w/o saving
-                    const promise = $scope.reject();
+    $scope.done = () => {
+        if ($scope.data.isDirty) {
+            $scope.resolve({
+                cropData: $scope.data.cropData,
+                metadata: _.pick($scope.data.item, [
+                    ...EDITABLE_METADATA,
+                    'poi',
+                    'renditions',
+                    '_etag',
+                ]),
+            });
 
-                    return promise;
-                });
         } else {
             $scope.reject();
-        }
+        } 
     };
 
     // Area of Interest
@@ -438,6 +493,7 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
             if (angular.isDefined(renditionName)) {
                 $scope.data.cropData[renditionName] = angular.extend({}, cropData, sizes[renditionName]);
                 $scope.data.isDirty = true;
+                $scope.crops.isDirty = true;
             }
         });
     };
