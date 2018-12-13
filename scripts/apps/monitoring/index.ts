@@ -17,6 +17,7 @@ import * as config from './config';
 import * as directive from './directives';
 import * as svc from './services';
 import {SplitFilter} from './filters';
+import {MonitoringGroupCompatibilityService} from './services/MonitoringGroupCompatibilityService';
 
 /**
  * @ngdoc module
@@ -36,6 +37,7 @@ angular.module('superdesk.apps.monitoring', [
     .controller('Monitoring', ctrl.MonitoringController)
 
     .service('cards', svc.CardsService)
+    .service('monitoringGroupCompatibilityService', MonitoringGroupCompatibilityService)
 
     .directive('sdMonitoringView', directive.MonitoringView)
     .directive('sdMonitoringGroup', directive.MonitoringGroup)

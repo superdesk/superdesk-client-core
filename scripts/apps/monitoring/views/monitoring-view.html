@@ -194,6 +194,14 @@
                     <div sd-monitoring-group data-view="view" data-group="{'type': 'personal', 'query': query, 'fileType': aggregate.getSelectedFileTypes()}" view-type="'personal'">
                     </div>
                 </div>
+                <div ng-if="type === 'subject-matter-expert-review'" class="list">
+                    <div
+                        sd-monitoring-group
+                        monitoring-group-get-items="monitoringGroupGetItems"
+                        data-view="view"
+                        data-group="{'type': 'subject-matter-expert-review', 'query': query, 'fileType': aggregate.getSelectedFileTypes()}"
+                        view-type="'subject-matter-expert-review'"></div>
+                </div>
                 <div ng-if="type === 'highlights' && !monitoring.highlightsDeskChanged()" class="list">
                     <div sd-monitoring-group class="single-group"
                          data-group="{'type': 'highlights', 'query': query, 'fileType': aggregate.getSelectedFileTypes()}"

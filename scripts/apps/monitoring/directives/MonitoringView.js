@@ -12,6 +12,8 @@ export function MonitoringView($rootScope, authoringWorkspace, pageTitle, $timeo
         scope: {
             type: '=',
             state: '=',
+            monitoringGroupGetItems: '=',
+            monitoringGroupGetItem: '=',
         },
         link: function(scope, elem) {
             const containerElem = elem.find('.content-list');

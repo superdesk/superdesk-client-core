@@ -1,32 +1,74 @@
 import _ from 'lodash';
+import {IUser} from 'superdesk-interfaces/User';
+import {IArticle} from 'superdesk-interfaces/Article';
+import {IMonitoringGroupCompatibilityService} from '../services/MonitoringGroupCompatibilityService';
+
+interface IScope extends ng.IScope {
+    page: any;
+    fetching: any;
+    previewingBroadcast: any;
+    loading: any;
+    cacheNextItems: any;
+    cachePreviousItems: any;
+    viewColumn: any;
+    showRefresh: any;
+    items: any;
+    selected: any;
+    style: any;
+    edit: any;
+    select: any;
+    preview: any;
+    viewSingleGroup: any;
+    currentGroup: any;
+    newItemsCount: any;
+    group: any;
+    numItems: any;
+    view: any;
+    viewType: any;
+    forceLimited: any;
+    total: any;
+    refreshGroup(): void;
+    fetchNext(i: number): any;
+
+    // support for providing custom data source
+    monitoringGroupGetItem(item: IArticle): any;
+    monitoringGroupGetItems(from: number, pageSize): any;
+}
+
 /**
  * @ngdoc directive
  * @module superdesk.apps.monitoring
  * @name sdMonitoringGroup
  *
- * @requires cards
- * @requires api
- * @requires authoringWorkspace
- * @requires $timeout
- * @requires superdesk
- * @requires session
- * @requires activityService
- * @requires workflowService
- * @requires keyboardManager
- * @requires desks
- * @requires search
- * @requires multi
- * @requires archiveService
- * @requires $rootScope
- * @requires preferencesService
- *
  * @description
  *   A directive that generates group/section on stages of a desk or saved search.
  */
-MonitoringGroup.$inject = ['cards', 'api', 'authoringWorkspace', '$timeout', 'superdesk', 'session',
-    'activityService', 'desks', 'search', 'multi', 'archiveService', 'config', '$rootScope'];
-export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superdesk, session, activityService,
-    desks, search, multi, archiveService, config, $rootScope) {
+MonitoringGroup.$inject = [
+    'cards',
+    'authoringWorkspace',
+    '$timeout',
+    'superdesk',
+    'session',
+    'activityService',
+    'search',
+    'archiveService',
+    'config',
+    '$rootScope',
+    'monitoringGroupCompatibilityService',
+];
+export function MonitoringGroup(
+    cards,
+    authoringWorkspace,
+    $timeout,
+    superdesk,
+    session,
+    activityService,
+    search,
+    archiveService,
+    config,
+    $rootScope,
+    monitoringGroupCompatibilityService: IMonitoringGroupCompatibilityService,
+) {
     let ITEM_HEIGHT = 57;
     let PAGE_SIZE = 25;
     let DEFAULT_GROUP_ITEMS = 10;
@@ -35,15 +77,24 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
         templateUrl: 'scripts/apps/monitoring/views/monitoring-group.html',
         require: ['^sdMonitoringView'],
         scope: {
+            monitoringGroupGetItem: '=',
+            monitoringGroupGetItems: '=',
             group: '=',
             numItems: '=',
             view: '=',
             viewType: '=',
             forceLimited: '@',
         },
-        link: function(scope, elem, attrs, ctrls) {
+        link: function(scope: IScope, elem, attrs, ctrls) {
+            if (typeof scope.monitoringGroupGetItem !== typeof scope.monitoringGroupGetItems) {
+                throw new Error(
+                    'Both values have to be either supplied or not. Supplying only one of them is not supported.',
+                );
+            }
+
+            monitoringGroupCompatibilityService.initialize();
+
             var monitoring = ctrls[0];
-            var projections = search.getProjectedFields();
 
             var containerElem = monitoring.viewColumn ? $(document).find('.content-list') : elem.find('.stage-content');
 
@@ -68,7 +119,6 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
             scope.edit = edit;
             scope.select = select;
             scope.preview = preview;
-            scope.renderNew = renderNew;
             scope.viewSingleGroup = viewSingleGroup;
 
             scope.$watchCollection('group', () => {
@@ -206,7 +256,8 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
 
             // refreshes the list for matching group or view type only or if swimlane view is ON.
             scope.$on('refresh:list', (event, group) => {
-                const _viewType = event.currentScope.viewType || '';
+                const currentScope: any = event.currentScope;
+                const _viewType = currentScope.viewType || '';
                 const viewTypeMatches = [
                     'highlights',
                     'spiked',
@@ -279,8 +330,6 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                 }
             }
 
-            var criteria;
-
             function edit(item) {
                 if (item.state !== 'spiked') {
                     var intent = {action: 'list', type: undefined};
@@ -333,20 +382,24 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                     }
 
                     scope.loading = true;
-                    criteria = cards.criteria(scope.group, null, monitoring.queryParam);
-                    let previewCriteria = search.getSingleItemCriteria(item, criteria);
 
-                    apiquery(previewCriteria, false).then((completeItems) => {
-                        let completeItem = search.mergeHighlightFields(completeItems._items[0]);
+                    (
+                        typeof scope.monitoringGroupGetItem === 'function'
+                            ? scope.monitoringGroupGetItem(item)
+                            : monitoringGroupCompatibilityService.getSingleItemCompat(
+                                item,
+                                PAGE_SIZE,
+                                scope.group,
+                                monitoring,
+                            )
+                    )
+                        .then((completeItems) => {
+                            let completeItem = search.mergeHighlightFields(completeItems._items[0]);
 
-                        select(completeItem);
-                    })
+                            select(completeItem);
+                        })
                         .finally(() => {
                             scope.loading = false;
-
-                            // Reset to get bulk query items
-                            criteria = cards.criteria(scope.group, null, monitoring.queryParam);
-                            criteria.source.size = PAGE_SIZE;
                         });
                 } else {
                     select(item);
@@ -379,75 +432,61 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                 return monitoring.previewItem && monitoring.previewItem.task.stage === scope.group._id;
             }
 
-            function queryItems(event?, data?, params?) {
-                criteria = cards.criteria(scope.group, null, monitoring.queryParam);
-                criteria.source.from = 0;
-                criteria.source.size = PAGE_SIZE;
-                var originalQuery;
+            function queryItems(
+                event?,
+                data?: {force: boolean, items: any, item: any, item_id: string, user: IUser['_id']},
+                params?,
+            ) {
+                const from = 0;
 
-                // when forced refresh or query then keep query size default as set PAGE_SIZE (25) above.
-                // To compare current scope of items, consider fetching same number of items.
-                if (!(data && data.force) && scope.items && scope.items._items.length > PAGE_SIZE) {
-                    criteria.source.size = scope.items._items.length;
-                }
-
-                if (desks.changeDesk) {
-                    desks.changeDesk = false;
-                    monitoring.singleGroup = null;
-                    multi.reset();
-                }
-
-                if (data && (data.item || data.items || data.item_id) && scope.showRefresh && !data.force) {
-                    // if we know the ids of the items then try to fetch those only
-                    originalQuery = angular.extend({}, criteria.source.query);
-
-                    let items = data.items || {};
-
-                    if (data.item || data.item_id) {
-                        items[data.item || data.item_id] = 1;
-                    }
-
-                    criteria.source.query = search.getItemQuery(items);
-                }
-
-                if (params) {
-                    angular.extend(criteria, params);
-                }
-
-                return apiquery(criteria, true).then((items) => {
-                    if (config.features.autorefreshContent && data != null) {
-                        data.force = true;
-                    }
-
-                    if (!scope.showRefresh && data && !data.force && data.user !== session.identity._id) {
-                        var itemPreviewing = isItemPreviewing();
-
-                        var _data = {
-                            newItems: items,
-                            scopeItems: scope.items,
-                            scrollTop: containerElem.scrollTop(),
-                            isItemPreviewing: itemPreviewing,
-                        };
-
-                        monitoring.showRefresh = scope.showRefresh = search.canShowRefresh(_data);
-                    }
-
-                    if (!scope.showRefresh || data && data.force) {
-                        scope.total = items._meta.total;
-                        let onlyHighlighted = scope.group.type === 'highlights' ? getOnlyHighlightsItems(items) : items;
-
-                        monitoring.totalItems = onlyHighlighted._meta.total;
-                        scope.items = search.mergeItems(onlyHighlighted, scope.items, null, true);
-                    } else {
-                        // update scope items only with the matching fetched items
-                        scope.items = search.updateItems(items, scope.items);
-                    }
-                })
-                    .finally(() => {
-                        if (originalQuery) {
-                            criteria.source.query = originalQuery;
+                (
+                    typeof scope.monitoringGroupGetItems === 'function'
+                        ? scope.monitoringGroupGetItems(from, PAGE_SIZE)
+                        : monitoringGroupCompatibilityService.getItemsCompat(
+                            from,
+                            PAGE_SIZE,
+                            scope.group,
+                            monitoring,
+                            scope.items,
+                            scope.showRefresh,
+                            event,
+                            data,
+                            params,
+                            false,
+                        )
+                )
+                    .then((items) => {
+                        if (config.features.autorefreshContent && data != null) {
+                            data.force = true;
                         }
 
+                        if (!scope.showRefresh && data && !data.force && data.user !== session.identity._id) {
+                            var itemPreviewing = isItemPreviewing();
+
+                            var _data = {
+                                newItems: items,
+                                scopeItems: scope.items,
+                                scrollTop: containerElem.scrollTop(),
+                                isItemPreviewing: itemPreviewing,
+                            };
+
+                            monitoring.showRefresh = scope.showRefresh = search.canShowRefresh(_data);
+                        }
+
+                        if (!scope.showRefresh || data && data.force) {
+                            scope.total = items._meta.total;
+                            let onlyHighlighted = scope.group.type === 'highlights'
+                                ? getOnlyHighlightsItems(items)
+                                : items;
+
+                            monitoring.totalItems = onlyHighlighted._meta.total;
+                            scope.items = search.mergeItems(onlyHighlighted, scope.items, null, true);
+                        } else {
+                            // update scope items only with the matching fetched items
+                            scope.items = search.updateItems(items, scope.items);
+                        }
+                    })
+                    .finally(() => {
                         // update scroll position to top, when forced refresh
                         if (data && data.force) {
                             containerElem[0].scrollTop = 0;
@@ -455,8 +494,22 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                     });
             }
 
-            function render(next?) {
-                return apiquery(criteria, true).then((items) => {
+            scope.fetchNext = function(from) {
+                const next = true;
+
+                (
+                    typeof scope.monitoringGroupGetItems === 'function'
+                        ? scope.monitoringGroupGetItems(from, PAGE_SIZE)
+                        : monitoringGroupCompatibilityService.getItemsCompat(
+                            from,
+                            PAGE_SIZE,
+                            scope.group,
+                            monitoring,
+                            scope.items,
+                            scope.showRefresh,
+                            true,
+                        )
+                ).then((items) => {
                     scope.$applyAsync(() => {
                         if (scope.total !== items._meta.total) {
                             scope.total = items._meta.total;
@@ -466,43 +519,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                         scope.items = search.mergeItems(onlyHighlighted, scope.items, next);
                     });
                 });
-            }
-
-            scope.fetchNext = function(from) {
-                criteria.source.from = from;
-                render(true);
             };
-
-            /**
-             * Request the data on search or archive endpoints
-             * return {promise} list of items
-             */
-            function apiquery(searchCriteria, applyProjections) {
-                var provider = 'search';
-
-                if (scope.group.type === 'search' || desks.isPublishType(scope.group.type)) {
-                    if (searchCriteria.repo && searchCriteria.repo.indexOf(',') === -1) {
-                        provider = searchCriteria.repo;
-                        if (!angular.isDefined(searchCriteria.source.size)) {
-                            searchCriteria.source.size = PAGE_SIZE;
-                        }
-                    }
-                } else {
-                    provider = 'archive';
-                }
-
-                if (applyProjections) {
-                    searchCriteria.projections = JSON.stringify(projections);
-                }
-
-                return api.query(provider, searchCriteria);
-            }
-
-            function renderNew() {
-                scope.total += scope.newItemsCount;
-                scope.newItemsCount = 0;
-                render();
-            }
 
             function viewSingleGroup(group, type) {
                 monitoring.viewSingleGroup(group, type);
