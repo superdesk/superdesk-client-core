@@ -8,8 +8,8 @@ import mockStore from './utils';
 const editorState = EditorState.createEmpty();
 const stubForHighlights = {
     highlightsManager: {
-        styleMap: {},
-    },
+        styleMap: {}
+    }
 };
 
 describe('editor3.component', () => {
@@ -30,7 +30,7 @@ describe('editor3.component', () => {
             'application/superdesk.item.graphic',
             'application/superdesk.item.video',
             'application/superdesk.item.audio',
-            'text/html',
+            'text/html'
         ].forEach((validType) => {
             expect(onDragOver(makeEvent(validType))).toBe(false);
         });
@@ -38,7 +38,7 @@ describe('editor3.component', () => {
         [
             'text/md',
             'application/javascript',
-            'invalid',
+            'invalid'
         ].forEach((invalidType) => {
             expect(onDragOver(makeEvent(invalidType))).toBeTruthy();
         });
@@ -46,7 +46,7 @@ describe('editor3.component', () => {
 
     it('should not accept dragging when editor is readOnly', () => {
         const wrapper = shallow(
-            <Editor3 readOnly editorFormat={['media']} editorState={editorState} {...stubForHighlights} />,
+            <Editor3 readOnly editorFormat={['media']} editorState={editorState} {...stubForHighlights} />
         );
         const {onDragOver} = wrapper.instance();
         const makeEvent = (t) => ({originalEvent: {dataTransfer: {types: [t]}}});
@@ -56,7 +56,7 @@ describe('editor3.component', () => {
             'application/superdesk.item.graphic',
             'application/superdesk.item.video',
             'application/superdesk.item.audio',
-            'text/html',
+            'text/html'
         ].forEach((validType) => {
             expect(onDragOver(makeEvent(validType))).toBeTruthy();
         });
@@ -72,7 +72,7 @@ describe('editor3.component', () => {
             'application/superdesk.item.graphic',
             'application/superdesk.item.video',
             'application/superdesk.item.audio',
-            'text/html',
+            'text/html'
         ].forEach((validType) => {
             expect(onDragOver(makeEvent(validType))).toBeTruthy();
         });
@@ -80,7 +80,7 @@ describe('editor3.component', () => {
 
     it('should not accept dragging when editor is single line', () => {
         const wrapper = shallow(
-            <Editor3 singleLine editorFormat={['media']} editorState={editorState} {...stubForHighlights} />,
+            <Editor3 singleLine editorFormat={['media']} editorState={editorState} {...stubForHighlights} />
         );
         const {onDragOver} = wrapper.instance();
         const makeEvent = (t) => ({originalEvent: {dataTransfer: {types: [t]}}});
@@ -90,7 +90,7 @@ describe('editor3.component', () => {
             'application/superdesk.item.graphic',
             'application/superdesk.item.video',
             'application/superdesk.item.audio',
-            'text/html',
+            'text/html'
         ].forEach((validType) => {
             expect(onDragOver(makeEvent(validType))).toBeTruthy();
         });
