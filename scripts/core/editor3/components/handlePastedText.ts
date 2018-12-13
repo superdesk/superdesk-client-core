@@ -150,8 +150,6 @@ export function insertContentInState(
     }
 
     const newBlockMap = OrderedMap<string, ContentBlock>(blocks.map((b) => ([b.getKey(), b])));
-
-    // const selectionAfterInsert = nextEditorState.getSelection();
     const customData = getAllCustomDataFromEditor(editorState);
 
     // for the first block recover the initial block data because on replaceWithFragment the block data is
