@@ -4,20 +4,19 @@
     <h3 class="modal__heading modal__heading--no-grow" ng-if="nav === 'crop'">{{ :: 'Edit Crops' | translate }}</h3>
 
     <div class="modal__header-buttons  modal__header-buttons--center modal__header-element-grow button-nav">
-        <button class="button-nav__btn" ng-click="nav = 'view'; showMetadata = true" ng-class="{'button-nav__btn--active' : !nav || nav === 'view'}" ng-show="!hideTabs.includes('view')" ng-disabled="controls.isDirty || isAoISelectionModeEnabled" translate>Details</button>
-        <button class="button-nav__btn" ng-click="nav = 'image-edit'; showMetadata = true" ng-show="data.editable && !hideTabs.includes('image-edit')" ng-class="{'button-nav__btn--active': nav === 'image-edit'}" ng-disabled="controls.isDirty || isAoISelectionModeEnabled" translate>Edit image</button>
-        <button class="button-nav__btn" ng-click="nav = 'crop'; showMetadata = false" ng-show="data.editable && !hideTabs.includes('crop')" ng-class="{'button-nav__btn--active': nav === 'crop'}" ng-disabled="controls.isDirty || isAoISelectionModeEnabled" translate>Edit crops</button>
+        <button class="button-nav__btn" ng-click="nav = 'view'; showMetadata = true" ng-class="{'button-nav__btn--active' : !nav || nav === 'view'}" ng-show="!hideTabs.includes('view')" ng-disabled="!isDoneEnabled()" translate>Details</button>
+        <button class="button-nav__btn" ng-click="nav = 'image-edit'; showMetadata = true" ng-show="data.editable && !hideTabs.includes('image-edit')" ng-class="{'button-nav__btn--active': nav === 'image-edit'}" ng-disabled="!isDoneEnabled()" translate>Edit image</button>
+        <button class="button-nav__btn" ng-click="nav = 'crop'; showMetadata = false" ng-show="data.editable && !hideTabs.includes('crop')" ng-class="{'button-nav__btn--active': nav === 'crop'}" ng-disabled="!isDoneEnabled()" translate>Edit crops</button>
     </div>
 
     <div class="modal__header-buttons modal__header-buttons--right">
-        <button class="btn btn--ui-dark btn--hollow" ng-click="close()" ng-disabled="controls.isDirty || isAoISelectionModeEnabled">{{ 'Close' | translate }}</button>
-        <button class="btn btn--primary btn--hollow" ng-click="done(true)" ng-disabled="!saveIsEnabled() || isAoISelectionModeEnabled">{{ 'Save & Close' | translate }}</button>
+        <button class="btn btn--primary btn--hollow" ng-click="done()" ng-disabled="!isDoneEnabled() || isAoISelectionModeEnabled">{{ 'Done ' | translate }}</button>
     </div>
 </div>
 
 <div class="modal__body modal__body--no-padding">
     <div class="sd-column-box--2">
-        <div class="sd-column-box__main-column sd-column-box__main-column--photo-preview">
+        <div class="sd-column-box__main-column sd-column-box__main-column--photo-preview" ng-class="{'toolbar-offset': crops.isDirty}">
             <a class="sd-photo-preview__slide-in-button" ng-show="!showMetadata" ng-click="showMetadata = !showMetadata" data-sd-tooltip="Open metadata" data-flow="left">
                 <i class="icon-backward-thin"></i>
             </a>
@@ -56,11 +55,17 @@
                 </div>
             </div>
             <div class="sd-photo-preview sd-photo-preview__edit-mode" ng-if="nav === 'crop'">
+                <div class="modal__sliding-toolbar" ng-if="crops.isDirty">
+                    <div class="sliding-toolbar__inner"></div>
+                    <a class="btn" ng-click="cancelCrops()" translate>Cancel</a>
+                    <a class="btn btn--primary" ng-click="saveCrops()" translate>Save</a>
+                </div>
+                
                 <div class="sd-photo-preview__image--with-strip" ng-if="!selectedRendition">
                     <sd-image-point
                         data-src="data.item.renditions.viewImage.href"
                         data-poi="data.poi"
-                        data-on-change="data.isDirty = true">
+                        data-on-change="crops.isDirty = true">
                     </sd-image-point>
                     <div>
                         <label class="sd-photo-preview__label">
@@ -93,7 +98,7 @@
                                 <sd-image-point
                                     data-src="data.item.renditions.viewImage.href"
                                     data-poi="data.poi"
-                                    data-on-change="data.isDirty = true">
+                                    data-on-change="crops.isDirty = true">
                                 </sd-image-point>
                             </div>
                             <div class="sd-grid-item__content">
@@ -119,9 +124,7 @@
                         </div>
                     </div>
                 </div>
-
             </div>
-
         </div>
 
         <div class="sd-column-box__slide-in-column sd-column-box__slide-in-column--large sd-column-box__slide-in-column--dark-ui" ng-class="{'sd-column-box__slide-in-column--closed' : !showMetadata}">
@@ -133,17 +136,24 @@
                 </div>
                 <div class="sd-slide-in-panel__content" ng-if="nav !== 'image-edit'">
                     <div class="sd-slide-in-panel__content-block sd-slide-in-panel__content-block--first">
+
+                        <div class="modal__sliding-toolbar" ng-if="metadata.isDirty">
+                            <div class="sliding-toolbar__inner"></div>
+                            <a class="btn" ng-click="cancelMetadataChanges()" translate>Cancel</a>
+                            <a class="btn btn--primary" ng-click="applyMetadataChanges()" translate>Apply</a>
+                        </div>
+                        
                         <div sd-media-metadata-editor
                              data-item="data.metadata"
                              data-validator="validator"
                              data-dark="true"
                              data-boxed="true"
-                             data-on-change="data.isDirty = true"
+                             data-on-change="metadata.isDirty = true"
                              data-disabled="!data.editable"
-                             data-associated="data.isAssociated"
-                             ></div>
+                             data-associated="data.isAssociated">
+                        </div>
                     </div>
-                </div>
+                </div>  
 
                 <div class="sd-slide-in-panel__content" ng-if="nav === 'image-edit'">
                     <div class="sd-slide-in-panel__content-block sd-slide-in-panel__content-block--first">
