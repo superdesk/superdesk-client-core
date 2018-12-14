@@ -283,6 +283,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
 
         helpers.stripHtml(diff);
         helpers.stripWhitespaces(diff);
+        helpers.cutoffPreviousRenditions(diff, origItem);
         autosave.stop(item);
 
         if (diff._etag) { // make sure we use orig item etag
