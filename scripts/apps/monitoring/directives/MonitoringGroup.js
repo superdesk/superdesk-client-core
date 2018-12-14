@@ -127,6 +127,10 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
 
             // Determines if limited maxHeight style need to apply on group list
             function shouldLimited() {
+                if (scope.customDataSource != null) {
+                    return false;
+                }
+
                 let limited = !(monitoring.singleGroup || scope.group.type === 'highlights'
                 || scope.group.type === 'spike');
 

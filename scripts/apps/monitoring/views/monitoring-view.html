@@ -195,10 +195,10 @@
                     </div>
                 </div>
 
-                <!-- BRANCH TODO: render like in singleGroup -->
                 <div ng-if="type === 'custom-monitoring-view'" class="list">
                     <div
                         sd-monitoring-group
+                        class="single-group"
                         custom-data-source="customDataSource"
                         data-view="view"
                         data-group="{'type': 'custom-monitoring-view', 'query': query, 'fileType': aggregate.getSelectedFileTypes()}"
