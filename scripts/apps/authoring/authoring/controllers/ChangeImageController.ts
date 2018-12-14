@@ -113,19 +113,8 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
     $scope.isDoneEnabled = function() {
         return !$scope.metadata.isDirty &&
             !$scope.controls.isDirty &&
-            !$scope.crops.isDirty;
-    };
-    
-    /**
-     * @ngdoc method
-     * @name ChangeImageController#areTabsEnabled
-     * @public
-     * @description if dirty or is new picture item.
-     * @returns {Boolean}
-     */
-    $scope.areTabsEnabled = () => {
-        return !$scope.metadata.isDirty && !$scope.controls.isDirty &&
-            !$scope.crops.isDirty && !$scope.isAoISelectionModeEnabled;
+            !$scope.crops.isDirty &&
+            !$scope.isAoISelectionModeEnabled;
     };
 
     /**
