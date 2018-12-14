@@ -1,5 +1,43 @@
 /* eslint-disable complexity */
 import _ from 'lodash';
+
+interface IScope extends ng.IScope {
+    customDataSource: {
+        getItems(from: number, pageSize: number): any;
+        getItem(item: any): any;
+    };
+    page: number;
+    fetching: boolean;
+    previewingBroadcast: boolean;
+    loading: boolean;
+    cacheNextItems: Array<any>;
+    cachePreviousItems: Array<any>;
+    viewColumn: any;
+    style: any;
+    edit: any;
+    select: any;
+    preview: any;
+    showRefresh: boolean;
+    viewSingleGroup: any;
+    forceLimited: any;
+    total: any;
+    items: any;
+    selected: any;
+    numItems: any;
+    view: any;
+    viewType?: any;
+    group?: {
+        _id?: any;
+        type?: string;
+        search?: 'ingest';
+        max_items?: any;
+    };
+    currentGroup: any;
+    fetchNext(i: number): any;
+    refreshGroup(): void;
+
+}
+
 /**
  * @ngdoc directive
  * @module superdesk.apps.monitoring
@@ -36,14 +74,21 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
         templateUrl: 'scripts/apps/monitoring/views/monitoring-group.html',
         require: ['^sdMonitoringView'],
         scope: {
-            group: '=',
+            // not required if using custom data source
+            group: '=?',
+            view: '=?',
+
             numItems: '=',
-            view: '=',
             viewType: '=',
             forceLimited: '@',
             customDataSource: '=',
         },
-        link: function(scope, elem, attrs, ctrls) {
+        link: function(scope: IScope, elem, attrs, ctrls) {
+
+            if (scope.group == null) {
+                scope.group = {};
+            }
+
             if (
                 scope.customDataSource != null
                 && typeof scope.customDataSource === 'object'
@@ -221,7 +266,8 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
 
             // refreshes the list for matching group or view type only or if swimlane view is ON.
             scope.$on('refresh:list', (event, group) => {
-                const _viewType = event.currentScope.viewType || '';
+                const currentScope: IScope = event.currentScope as IScope;
+                const _viewType = currentScope.viewType || '';
                 const viewTypeMatches = [
                     'highlights',
                     'spiked',
