@@ -12,6 +12,7 @@ export function MonitoringView($rootScope, authoringWorkspace, pageTitle, $timeo
         scope: {
             type: '=',
             state: '=',
+            customDataSource: '=',
         },
         link: function(scope, elem) {
             const containerElem = elem.find('.content-list');

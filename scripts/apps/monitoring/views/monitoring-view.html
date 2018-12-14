@@ -194,6 +194,16 @@
                     <div sd-monitoring-group data-view="view" data-group="{'type': 'personal', 'query': query, 'fileType': aggregate.getSelectedFileTypes()}" view-type="'personal'">
                     </div>
                 </div>
+
+                <!-- BRANCH TODO: render like in singleGroup -->
+                <div ng-if="type === 'custom-monitoring-view'" class="list">
+                    <div
+                        sd-monitoring-group
+                        custom-data-source="customDataSource"
+                        data-view="view"
+                        data-group="{'type': 'custom-monitoring-view', 'query': query, 'fileType': aggregate.getSelectedFileTypes()}"
+                        view-type="'custom-monitoring-view'"></div>
+                </div>
                 <div ng-if="type === 'highlights' && !monitoring.highlightsDeskChanged()" class="list">
                     <div sd-monitoring-group class="single-group"
                          data-group="{'type': 'highlights', 'query': query, 'fileType': aggregate.getSelectedFileTypes()}"
