@@ -24,7 +24,7 @@ interface IScope extends IDirectiveScope<void> {
     updateVocabulary(updates: any): void;
 }
 
-function getTags(_vocabularies: Array<IVocabulary>) : IVocabulary['tags'] {
+function getTags(_vocabularies: Array<IVocabulary>): IVocabulary['tags'] {
     const wordSet = (_vocabularies || []).reduce((_wordSet, vocabulary) => {
         (vocabulary.tags || []).forEach((tag) => {
             if (tag.text !== OTHER) {
@@ -121,7 +121,7 @@ export function VocabularyConfigController($scope: IScope, $route, $routeParams,
         currentTag.text !== OTHER ||
         ($scope.vocabularies || []).some((vocabulary) =>
             $scope.matchFieldTypeToTab(tab, vocabulary.field_type) &&
-            (vocabulary.tags || []).some((tag) => tag.text !== OTHER)
+            (vocabulary.tags || []).some((tag) => tag.text !== OTHER),
         );
 
     /**

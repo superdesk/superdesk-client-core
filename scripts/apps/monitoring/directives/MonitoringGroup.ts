@@ -50,7 +50,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                 && typeof scope.customDataSource.getItem !== typeof scope.customDataSource.getItems
             ) {
                 throw new Error(
-                    'Both values have to be either supplied or not. Supplying only one of them is not supported.'
+                    'Both values have to be either supplied or not. Supplying only one of them is not supported.',
                 );
             }
 
@@ -298,7 +298,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
 
             function edit(item) {
                 if (item.state !== 'spiked') {
-                    var intent = {action: 'list'};
+                    var intent = {action: 'list', type: undefined};
 
                     if (item._type === 'ingest') {
                         intent.type = 'ingest';
@@ -326,8 +326,8 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
 
                 if (!_.isNil(activity)) {
                     activityService.start(activity, {data: {item: item}})
-                        .then((item) => {
-                            authoringWorkspace.edit(item);
+                        .then((_item) => {
+                            authoringWorkspace.edit(_item);
                         });
                 }
             }
@@ -402,7 +402,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                 return monitoring.previewItem && monitoring.previewItem.task.stage === scope.group._id;
             }
 
-            function queryItems(event, data, params) {
+            function queryItems(event?, data?, params?) {
                 var originalQuery;
 
                 if (desks.changeDesk) {
@@ -418,7 +418,6 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                         criteria = cards.criteria(scope.group, null, monitoring.queryParam);
                         criteria.source.from = 0;
                         criteria.source.size = PAGE_SIZE;
-
 
                         // when forced refresh or query then keep query size default as set PAGE_SIZE (25) above.
                         // To compare current scope of items, consider fetching same number of items.

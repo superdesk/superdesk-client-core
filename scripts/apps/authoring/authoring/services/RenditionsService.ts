@@ -119,7 +119,10 @@ export function RenditionsService(metadata, $q, api, superdesk, _, config) {
 
                     // perform the request to make the cropped images
                     renditionNames.forEach((renditionName) => {
-                        if (!isEmpty(result.cropData[renditionName]) && item.renditions[renditionName] !== result.cropData[renditionName]) {
+                        if (
+                            !isEmpty(result.cropData[renditionName])
+                            && item.renditions[renditionName] !== result.cropData[renditionName]
+                        ) {
                             savingImagePromises.push(
                                 api.save('picture_crop', {item: clonedItem, crop: result.cropData[renditionName]}),
                             );
