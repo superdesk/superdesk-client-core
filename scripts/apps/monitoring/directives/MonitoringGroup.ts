@@ -36,6 +36,10 @@ interface IScope extends ng.IScope {
     fetchNext(i: number): any;
     refreshGroup(): void;
 
+    hideActionsForMonitoringItems: boolean;
+    disableMonitoringMultiSelect: boolean;
+    onMonitoringItemSelect(): void;
+    onMonitoringItemDoubleClick(): void;
 }
 
 /**
@@ -81,7 +85,12 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
             numItems: '=',
             viewType: '=',
             forceLimited: '@',
-            customDataSource: '=',
+
+            customDataSource: '=?',
+            hideActionsForMonitoringItems: '=?',
+            disableMonitoringMultiSelect: '=?',
+            onMonitoringItemSelect: '=?',
+            onMonitoringItemDoubleClick: '=?',
         },
         link: function(scope: IScope, elem, attrs, ctrls) {
 

@@ -720,6 +720,11 @@ $rightfield-width:60px;
             width: 100%;
         }
     }
+    .actions-visible .media-box:hover {
+        .item-info {
+            padding: 10px 30px 10px 10px;
+        }
+    }
     .media-box {
         position: relative;
         background: #fff;
@@ -727,15 +732,13 @@ $rightfield-width:60px;
         border-right: 2px solid #fff;
         padding-left: 40px;
         overflow: hidden;
+
         &:hover {
             background-color: #f4f4f4 !important;
             border-right: 2px solid #f4f4f4;
             cursor: pointer;
             .list-field {
                 border-color:#ebebeb;
-            }
-            .item-info {
-                padding: 10px 30px 10px 10px;
             }
             .item-info-reduced-rowheight {
                 padding: 5px 10px 5px 10px;

@@ -12,7 +12,11 @@ export function MonitoringView($rootScope, authoringWorkspace, pageTitle, $timeo
         scope: {
             type: '=',
             state: '=',
-            customDataSource: '=',
+            customDataSource: '=?',
+            onMonitoringItemSelect: '=?',
+            onMonitoringItemDoubleClick: '=?',
+            hideActionsForMonitoringItems: '=?',
+            disableMonitoringMultiSelect: '=?',
         },
         link: function(scope, elem) {
             const containerElem = elem.find('.content-list');

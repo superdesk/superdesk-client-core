@@ -26,14 +26,15 @@ export class ListTypeIcon extends React.Component<any, any> {
     }
 
     render() {
-        const showSelect = this.state.hover || this.props.item.selected;
+        const {selectingDisabled} = this.props;
+        const showSelect = selectingDisabled !== true && (this.state.hover || this.props.item.selected);
 
         return React.createElement(
             'div',
             {
                 className: classNames('list-field type-icon sd-monitoring-item-multi-select-checkbox'),
-                onMouseEnter: this.setHover,
-                onMouseLeave: this.unsetHover,
+                onMouseEnter: selectingDisabled ? null : this.setHover,
+                onMouseLeave: selectingDisabled ? null : this.unsetHover,
             },
             showSelect ?
                 React.createElement(SelectBox, {
@@ -56,4 +57,5 @@ ListTypeIcon.propTypes = {
     svc: PropTypes.object.isRequired,
     onMultiSelect: PropTypes.func,
     item: PropTypes.any,
+    selectingDisabled: PropTypes.bool,
 };

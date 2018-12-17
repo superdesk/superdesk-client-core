@@ -199,7 +199,11 @@
                     <div
                         sd-monitoring-group
                         class="single-group"
-                        custom-data-source="customDataSource"></div>
+                        custom-data-source="customDataSource"
+                        data-hide-actions-for-monitoring-items="hideActionsForMonitoringItems"
+                        data-disable-monitoring-multi-select="disableMonitoringMultiSelect"
+                        on-monitoring-item-select="onMonitoringItemSelect"
+                        on-monitoring-item-double-click="onMonitoringItemDoubleClick"></div>
                 </div>
                 <div ng-if="type === 'highlights' && !monitoring.highlightsDeskChanged()" class="list">
                     <div sd-monitoring-group class="single-group"
