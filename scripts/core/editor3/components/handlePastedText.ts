@@ -44,9 +44,11 @@ function pasteContentFromOpenEditor(
                     const blocksArray = [];
 
                     internalClipboard.forEach((b) => blocksArray.push(b));
-                    const contentState = ContentState.createFromBlockArray(blocksArray);
 
+                    const contentState = ContentState.createFromBlockArray(blocksArray);
                     const editorWithContent = insertContentInState(editorState, contentState, editorFormat);
+
+                    onChange(editorWithContent);
 
                     return 'handled';
                 }
