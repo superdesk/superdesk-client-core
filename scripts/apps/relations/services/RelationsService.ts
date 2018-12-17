@@ -3,12 +3,15 @@ import {IArticle} from 'superdesk-interfaces/Article';
 RelationsService.$inject = ['archiveService'];
 
 export function RelationsService(archiveService) {
-    this.getRelatedItems = function(item: IArticle) {
+    this.getRelatedItems = function(item: IArticle, mediaFields: IArticle) {
         if (!item.associations) {
             return [];
         }
 
-        const related = Object.values(item.associations);
+        const relatedWithoutMedia = _.pickBy(item.associations, (value, key) =>
+            !_.includes(key, Object.keys(mediaFields)));
+
+        const related = Object.values(relatedWithoutMedia);
         const relatedWithoutNull = related.filter((o) => o !== null);
         const unpublished = relatedWithoutNull.filter((o) => !archiveService.isPublished(o));
 
