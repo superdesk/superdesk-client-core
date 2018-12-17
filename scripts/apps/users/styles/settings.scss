@@ -77,9 +77,6 @@ $roles-border: 1px solid #f0f0f0;
         word-wrap: break-word;
         vertical-align: middle;
         @include user-select(none);
-        .label {
-            font-size: 80%;
-        }
     }
     .name {
         min-width: 270px;
