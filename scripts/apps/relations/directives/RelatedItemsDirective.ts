@@ -12,8 +12,8 @@ import {gettext} from 'core/utils';
  * add related items by using drag and drop, delete related items and open related items.
  */
 
-RelatedItemsDirective.$inject = ['authoringWorkspace', 'relationsService', 'notify'];
-export function RelatedItemsDirective(authoringWorkspace, relationsService, notify) {
+RelatedItemsDirective.$inject = ['authoringWorkspace', 'relationsService', 'notify', 'api'];
+export function RelatedItemsDirective(authoringWorkspace, relationsService, notify, api) {
     return {
         scope: {
             item: '=',
@@ -210,6 +210,15 @@ export function RelatedItemsDirective(authoringWorkspace, relationsService, noti
             scope.openRelatedItem = (item) => {
                 authoringWorkspace.edit(item);
             };
+
+            function getUpdatedItem() {
+                return api.find('archive', scope.item._id).then((item) => {
+                    scope.item = item;
+                });
+            }
+
+            // init
+            getUpdatedItem();
         },
     };
 }
