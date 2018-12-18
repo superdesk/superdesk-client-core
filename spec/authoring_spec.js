@@ -663,10 +663,15 @@ describe('authoring', () => {
         ctrlKey('x');
         authoring.sendAndpublish('Sports Desk');
         authoring.confirmSendTo(); // confirm unsaved changes
+
+        browser.sleep(3000); // wait for alert message to go away
+
         authoring.publishFrom('Sports Desk');
         assertToastMsg('error', 'BODY_HTML empty values not allowed'); // validation takes place
+        authoring.closeSendAndPublish();
         authoring.writeText('Testing');
         authoring.save();
+        authoring.sendToButton.click();
         authoring.publishFrom('Sports Desk');
         // desk output count zero as content publish from sport desk
         expect(monitoring.getGroupItems(5).count()).toBe(0);

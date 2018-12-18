@@ -118,7 +118,7 @@ function Authoring() {
 
     this.sendToSidebarOpened = function(desk, stage, _continue) {
         this.send_panel.click();
-        var sidebar = element.all(by.css('.slide-pane')).last(),
+        var sidebar = element.all(by.css('.side-panel')).last(),
             dropdown = sidebar.element(by.css('.dropdown--dark .dropdown__toggle'));
 
         dropdown.waitReady();
@@ -138,7 +138,7 @@ function Authoring() {
         let duplicateButton = element(by.id('duplicate-btn'));
         let duplicateAndOpenButton = element(by.id('duplicate-open-btn'));
 
-        var sidebar = element.all(by.css('.slide-pane')).last(),
+        var sidebar = element.all(by.css('.side-panel')).last(),
             dropdown = sidebar.element(by.css('.dropdown--dark .dropdown__toggle'));
 
         dropdown.waitReady();
@@ -155,8 +155,8 @@ function Authoring() {
     };
 
     this.selectDeskforSendTo = function(desk) {
-        var sidebar = element.all(by.css('.slide-pane')).last(),
-            dropdown = sidebar.element(by.css('.dropdown--dark .dropdown__toggle'));
+        var sidebar = element.all(by.css('.side-panel')).last(),
+            dropdown = element(by.css('.dropdown--dark .dropdown__toggle'));
 
         dropdown.waitReady();
         dropdown.click();
@@ -289,9 +289,18 @@ function Authoring() {
         }
     };
 
+    this.closeSendAndPublish = function() {
+        var sidebar = element.all(by.css('.side-panel')).last();
+
+        return sidebar.element(by.css('[ng-click="close()"]')).click();
+    };
+
     this.publishFrom = function(desk) {
-        browser.wait(() => this.publish_panel.isPresent(), 2000);
         this.publish_panel.click();
+
+        browser.sleep(1000);
+
+        browser.wait(() => this.publish_panel.isPresent(), 2000);
         this.selectDeskforSendTo(desk);
         this.sendAndPublishBtn.click();
     };
@@ -300,8 +309,6 @@ function Authoring() {
         browser.wait(() => this.sendToButton.isPresent(), 1000);
         this.sendToButton.click();
 
-        browser.wait(() => this.publish_button.isPresent(), 1000);
-
         var scheduleDate = '09/09/' + ((new Date()).getFullYear() + 1);
         var scheduleTime = '04:00';
 
@@ -309,6 +316,9 @@ function Authoring() {
         element(by.model('item.publish_schedule_time')).element(by.tagName('input')).sendKeys(scheduleTime);
 
         this.publish_panel.click();
+
+        browser.wait(() => this.publish_button.isPresent(), 1000);
+
         this.publish_button.click();
 
         if (!skipConfirm) {

@@ -321,7 +321,7 @@ function Monitoring() {
 
     this.unspikeMultipleItems = function() {
         element(by.css('[ng-click="action.unspikeItems()"]')).click();
-        return element(by.partialButtonText('send')).click();
+        return element(by.buttonText('send')).click();
     };
 
     this.unspikeItem = function(item, desk, stage) {
@@ -334,13 +334,13 @@ function Monitoring() {
 
         menu.element(by.partialLinkText('Unspike')).click();
 
-        var sidebar = element.all(by.css('.slide-pane')).last();
+        var sidebar = element.all(by.css('.side-panel')).last();
 
         if (stage) {
             sidebar.element(by.buttonText(stage)).click();
         }
 
-        return element(by.partialButtonText('send')).click();
+        return element(by.buttonText('send')).click();
     };
 
     this.openItemMenu = function(group, item) {
@@ -802,7 +802,7 @@ function Monitoring() {
      *
      */
     this.getSendToDropdown = () => {
-        var sidebar = element.all(by.css('.slide-pane')).last(),
+        var sidebar = element.all(by.css('.side-panel')).last(),
             dropdown = sidebar.element(by.css('.dropdown--dark .dropdown__toggle')),
             dropdownSelected = dropdown.element(by.css('[ng-show="selectedDesk"]'));
 

@@ -29,7 +29,7 @@
         </div>
 
         <!-- Content Send To-->
-        <div class="side-panel__content" ng-show="currentUserAction === vm.userActions.send_to || currentUserAction === vm.userActions.duplicate_to">
+        <div class="side-panel__content" ng-if="currentUserAction === vm.userActions.send_to || currentUserAction === vm.userActions.duplicate_to">
             <div class="side-panel__content-block">
                 
                 <div sd-toggle-box
@@ -100,9 +100,9 @@
                 </div>
             </div>
         </div>
-<!-- ///////////////// PUBLISH /////////////////////// -->
+        <!-- ///////////////// PUBLISH /////////////////////// -->
         <!-- Content Publish-->
-        <div class="side-panel__content side-panel__content--split" ng-show="currentUserAction === vm.userActions.publish">
+        <div class="side-panel__content side-panel__content--split" ng-if="currentUserAction === vm.userActions.publish">
             <div class="side-panel__content-block side-panel__content-block--left">
                 <div sd-toggle-box
                     ng-if="showSendButtonAndDestination()"
@@ -167,7 +167,7 @@
         </div>
 
         <!-- Footer Send To-->
-        <div class="side-panel__footer side-panel__footer--button-box-large" ng-show="currentUserAction === vm.userActions.send_to">
+        <div class="side-panel__footer side-panel__footer--button-box-large" ng-if="currentUserAction === vm.userActions.send_to">
             <button class="btn btn--large btn--primary btn--hollow btn--expanded"
                     ng-show="showSendButtonAndDestination() && mode !== 'spike'"
                     ng-click="send(true)"
@@ -191,7 +191,7 @@
             </button>
         </div>
         <!-- Footer Duplicate To-->
-        <div class="side-panel__footer side-panel__footer--button-box-large" ng-show="currentUserAction === vm.userActions.duplicate_to">
+        <div class="side-panel__footer side-panel__footer--button-box-large" ng-if="currentUserAction === vm.userActions.duplicate_to">
             <button id="duplicate-open-btn"
                     class="btn btn--large btn--hollow btn--expanded btn--ui-dark"
                     ng-show="showSendButtonAndDestination() && !canSendItem()"
@@ -211,7 +211,7 @@
             </button>
         </div>
         <!-- Footer Fetch To-->
-        <div class="side-panel__footer side-panel__footer--button-box-large" ng-show="currentUserAction === vm.userActions.externalsource_to">
+        <div class="side-panel__footer side-panel__footer--button-box-large" ng-if="currentUserAction === vm.userActions.externalsource_to">
             <button id="externalsource-open-btn"
                     class="btn btn--large btn--primary btn--hollow btn--expanded"
                     ng-show="showSendButtonAndDestination() && !canSendItem()"
@@ -231,7 +231,7 @@
             </button>
         </div>
         <!-- Footer Publish-->
-        <div class="side-panel__footer side-panel__footer--button-box-large" ng-show="currentUserAction === vm.userActions.publish">
+        <div class="side-panel__footer side-panel__footer--button-box-large" ng-if="currentUserAction === vm.userActions.publish">
             <div class="side-panel__footer-buttons--flex">
                 <button type="button"
                         class="btn btn--large btn--ui-dark btn--hollow btn--expanded"

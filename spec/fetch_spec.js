@@ -129,7 +129,7 @@ describe('fetch', () => {
         content.actionOnItem('Fetch To', 0);
         authoring.selectDeskforSendTo('Test Desk');
 
-        var sidebar = element.all(by.css('.slide-pane')).last();
+        var sidebar = element.all(by.css('.side-panel')).last();
 
         expect(sidebar.element(by.buttonText('Working Stage')).isPresent()).toBeTruthy();
         expect(sidebar.element(by.buttonText('Test Stage')).isPresent()).toBeFalsy();
