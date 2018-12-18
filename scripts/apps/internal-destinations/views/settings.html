@@ -77,6 +77,6 @@
     </div>
     <div class="modal__footer">
         <button class="btn" ng-click="dest.stopEdit()" translate>Cancel</button>
-        <button class="btn btn--primary" ng-click="dest.save(dest.active)" ng-disabled="editForm.$invalid" translate>Save</button>
+        <button class="btn btn--primary" ng-click="dest.save(dest.active)" ng-disabled="editForm.$invalid || !editForm.$dirty" translate>Save</button>
     </div>
 </div>

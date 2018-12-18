@@ -139,7 +139,7 @@
         <div class="modal__footer">
             
             <button class="btn" ng-click="close()" translate>Cancel</button>
-            <button class="btn btn--primary" ng-click="saveFilter()" ng-disabled="!editForm.$valid || !preview" translate>Save</button>
+            <button class="btn btn--primary" ng-click="saveFilter()" ng-disabled="!editForm.$valid || !preview || !editForm.$dirty" translate>Save</button>
         </div>
     </div>
 <!-- Close Modal -->
