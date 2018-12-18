@@ -1,13 +1,39 @@
 <div class="field">
-    <label for="recipients" translate>Recipients</label>
-    <i class="field-info" translate>*at least one visible or hidden recipient needed</i>
-    <input type="text" id="recipients" placeholder="{{:: 'Recipients (visible to everybody)'|translate }}"
-      ng-model="destination.config.recipients"
+  <label for="recipients" translate>Recipients</label>
+  <i class="field-info" translate>*at least one visible or hidden recipient needed</i>
+  <input type="text" id="recipients" placeholder="{{:: 'Recipients (visible to everybody)'|translate }}"
+    ng-model="destination.config.recipients"
+    ng-change="$parent.setConfig(provider)"
+    ng-required="!(destination.config.recipients.length || destination.config.recipients_bcc.length)">
+</div>
+<div class="field">
+      <label for="recipients" translate>Recipients (Bcc, hidden)</label>
+      <input type="text" id="recipients_bcc" placeholder="{{:: 'Hidden recipients (blind carbon copy)'|translate }}"
+        ng-model="destination.config.recipients_bcc"
+        ng-change="$parent.setConfig(provider)"
+        ng-required="!(destination.config.recipients.length || destination.config.recipients_bcc.length)">
+</div>
+<div class="field">
+    <label translate>Include Feature Media</label><span ng-model="destination.config.attach_media" sd-switch=""></span>
+</div>
+<div class="field" ng-show="destination.config.attach_media">
+    <label translate>CID</label>
+    <i class="field-info" translate>Identifier for the media within the email html template</i>
+    <input type="text" id="media_cid"
+      ng-model="destination.config.media_cid"
       ng-change="$parent.setConfig(provider)"
-      ng-required="!(destination.config.recipients.length || destination.config.recipients_bcc.length)">
-    <label for="recipients" translate>Recipients (Bcc, hidden)</label>
-    <input type="text" id="recipients_bcc" placeholder="{{:: 'Hidden recipients (blind carbon copy)'|translate }}"
-      ng-model="destination.config.recipients_bcc"
+      ng-required="destination.config.attach_media"
+      placeholder="{{:: 'Identifier for the media in the email template'|translate}}">
+</div>
+<div class="field" ng-show="destination.config.attach_media">
+    <label translate>Rendition</label>
+    <i class="field-info" translate>Name of the rendition to attach to the email</i>
+    <input type="text" id="media_rendition"
+      ng-model="destination.config.media_rendition"
       ng-change="$parent.setConfig(provider)"
-      ng-required="!(destination.config.recipients.length || destination.config.recipients_bcc.length)">
+      ng-required="destination.config.attach_media"
+      placeholder="{{:: 'The rendition to attach to the email'|translate}}">
+</div>
+<div class="field" ng-show="destination.config.attach_media">
+    <label translate>Apply watermark</label><span ng-model="destination.config.watermark" sd-switch=""></span>
 </div>
