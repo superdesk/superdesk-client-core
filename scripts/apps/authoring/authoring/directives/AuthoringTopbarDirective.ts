@@ -12,7 +12,8 @@ export function AuthoringTopbarDirective(TranslationService, privileges, authori
     return {
         templateUrl: 'scripts/apps/authoring/views/authoring-topbar.html',
         link: function(scope) {
-            scope.customButtons = authoringWorkspace.authoringTopBarButtons;
+            scope.additionalButtons = authoringWorkspace.authoringTopBarAdditionalButtons;
+            scope.buttonsToHide = authoringWorkspace.authoringTopBarButtonsToHide;
 
             scope.saveDisabled = false;
 
