@@ -99,6 +99,8 @@ export function RelatedItemsDirective(authoringWorkspace, relationsService, noti
                 elem.find('.related-items').removeClass(dragOverClass);
             };
 
+            scope.isItemUpdated = false;
+
             /**
              * Get related items keys for fireldId
              *
@@ -129,7 +131,12 @@ export function RelatedItemsDirective(authoringWorkspace, relationsService, noti
             * @param {String} fieldId
             * @return {[Object]}
             */
-            scope.getRelatedItems = (fieldId) => relationsService.getRelatedItemsForField(scope.item, fieldId);
+            scope.getRelatedItems = (fieldId) => {
+                if (!scope.isItemUpdated) { // check if item is updated one
+                    return;
+                }
+                return relationsService.getRelatedItemsForField(scope.item, fieldId);
+            };
 
             /**
              * Reorder related items on related items list
@@ -214,6 +221,7 @@ export function RelatedItemsDirective(authoringWorkspace, relationsService, noti
             function getUpdatedItem() {
                 return api.find('archive', scope.item._id).then((item) => {
                     scope.item = item;
+                    scope.isItemUpdated = true;
                 });
             }
 
