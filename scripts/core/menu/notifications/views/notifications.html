@@ -34,7 +34,7 @@
                         </div>
                         <div class="content" ng-if="notification.name === 'translated:changed'">
                             <time sd-datetime data-date="notification._created"></time>
-                            <p class="text"><b>{{:: notification.user_name }}</b> <span translate>changed translated article</span> <i>
+                            <p class="text"><b>{{:: notification.user_name }}</b> <span translate>changed the following original item. Please make sure to update the corresponding translated item accordingly</span> <i>
                                 <a title="{{ notification.item_slugline }}" ng-click="openArticle(notification)">{{ :: notification.item_slugline }}</a></i>
                             </p>
                         </div>
