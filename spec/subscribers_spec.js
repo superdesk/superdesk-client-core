@@ -21,9 +21,10 @@ describe('subscribers', () => {
         it('save button is disabled when subscriber type is changed', () => {
             subscribers.edit('Public API');
 
-            expect(subscribers.saveSubscriberButton.isEnabled()).toBe(true);
-            subscribers.setType('wire');
             expect(subscribers.saveSubscriberButton.isEnabled()).toBe(false);
+            subscribers.setType('wire');
+            subscribers.setDestinationFormat('nitf');
+            expect(subscribers.saveSubscriberButton.isEnabled()).toBe(true);
             subscribers.cancel();
         });
     });
