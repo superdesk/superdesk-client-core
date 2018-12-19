@@ -48,6 +48,9 @@ export function AuthoringWorkspaceService($location, superdeskFlags, authoring, 
         }
     };
 
+    // plugin support
+    this.authoringTopBarButtons = {},
+
     /**
      * Open an item in readonly mode without locking it
      *

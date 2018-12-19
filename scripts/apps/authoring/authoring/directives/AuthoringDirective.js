@@ -682,7 +682,9 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
              */
             $scope.close = function() {
                 _closing = true;
-                authoring.close($scope.item, $scope.origItem, $scope.save_enabled()).then(() => {
+
+                // returned promise used by superdesk-fi
+                return authoring.close($scope.item, $scope.origItem, $scope.save_enabled()).then(() => {
                     authoringWorkspace.close(true);
                 });
             };

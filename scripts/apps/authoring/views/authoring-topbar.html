@@ -160,6 +160,8 @@
                 ng-if="action === 'correct' || action === 'kill'"
                 ng-click="close()"
                 translate>Cancel</button>
+        
+        <button ng-repeat="(_, btn) in customButtons" ng-class="btn.class" ng-click="btn.onClick(item)">{{btn.label}}</button>
     </div>
 
     <div class="subnav__button-stack subnav__button-stack--square-buttons">
