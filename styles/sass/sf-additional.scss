@@ -457,6 +457,78 @@
 }
 
 
+// Timezone picker
+// ---------------------------------------------
+
+[sd-timezone] {
+    .timezone-label {
+        margin-bottom: 1rem;
+    }
+    .input-term input {
+        height: 3.2rem;
+        margin-bottom: 5px;
+        width: 100%;
+        transition: border linear 0.2s, box-shadow linear 0.2s, background-color linear 0.2s;
+        border: none;
+        border-radius: 2px;
+        background-color: rgba(0, 0, 0, 0.05);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+        font-size: 1.3rem;
+        color: inherit;
+        padding-left: 1rem;
+        &:hover {
+            border-bottom-color: rgba(0, 0, 0, 0.3);
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+        &:focus {
+            box-shadow: 0 1px 0 0 $sd-blue;
+            border-color: $sd-blue;
+        }
+    }
+
+    .item-list {
+        width: 100%;
+        color: $sd-text;
+    }
+
+    .pills-list {
+        li {
+            padding: 0.7rem 1rem;
+            display: flex;
+            align-items: center;
+            font-size: 1.3rem;
+
+            .icon-remove-sign {
+                color: inherit;
+
+            }
+            #timezone {
+                padding-right: 2.5rem;
+                flex-grow: 1;
+            }
+        }
+    }
+}
+
+[class^="--dark-ui"],
+[class*="--dark-ui"] {
+    [sd-timezone] {
+        .input-term input {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            &:hover {
+                border-bottom-color: rgba(255, 255, 255, 0.4);
+                background-color: rgba(255, 255, 255, 0.1);
+            }
+            &:focus {
+                box-shadow: 0 1px 0 0 $sd-blue;
+                border-color: $sd-blue;
+            }
+        }
+    }
+}
+
+
 // Datepicker - wrapper for angular ui datepicker
 // ---------------------------------------------
 .datepicker-input, .timepicker-input {
@@ -465,50 +537,59 @@
     min-width: 130px;
     input {
         width: 100%;
-        padding-right: 30px;
+        transition: border linear 0.2s, box-shadow linear 0.2s, background-color linear 0.2s;
+        padding-right: 3.2rem;
+        padding-left: 1rem;
+        min-height: 2.8rem;
+        border: none;
+        border-radius: 2px;
+        background-color: rgba(0, 0, 0, 0.05);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+        font-size: 1.3rem;
+        color: inherit;
+        &:hover {
+            border-bottom-color: rgba(0, 0, 0, 0.3);
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+        &:focus {
+            box-shadow: 0 1px 0 0 $sd-blue;
+            border-color: $sd-blue;
+        }
         &.ng-invalid {
+            color: #d10000;
             border-color: #b61818 !important;
-        }
-        &.line-input + .btn {
-            background-color: transparent;
-            top: 0px;
+            box-shadow: 0 1px 0 0 #b61818 !important;
         }
     }
-    .btn {
-        background: #fff;
-        border: 0;
+    .icn-btn {
         position: absolute;
-        right: 2px; top: 2px;
-        padding: 0 5px;
-        height: 24px;
-        i {
-            margin-right: 0;
-        }
-        &:hover, &:active, &:focus {
-            @include box-shadow(none);
-        }
+        right: 2px; top: 0;
     }
-
-
-
 }
 
 .datepicker-input--dark, .timepicker-input--dark {
     input {
-        background: #4f4f4f;
-        font-size: 13px;
-        line-height: 18px;
-        color: $white;
-        border: 2px solid #4f4f4f !important;
+        transition: border linear 0.2s, box-shadow linear 0.2s, background-color linear 0.2s;
+        background-color: rgba(255, 255, 255, 0.05);
+        border: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        font-size: 1.3rem;
+        line-height: 1.8rem;
+        color: inherit;
+        min-height: 32px;
+        &:hover {
+            border-bottom-color: rgba(255, 255, 255, 0.4);
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        &:focus {
+            box-shadow: 0 1px 0 0 $sd-blue;
+            border-color: $sd-blue;
+        }
     }
-    .btn {
-        background: #4f4f4f;
+    .icn-btn {
+        background: transparent;
         top: 50%;
-        margin-top: -12px;
-    }
-    .icon-calendar, .icon-time {
-        color: $white;
-        margin-top: 0;
+        margin-top: -14px;
     }
     .name {
         background-color: #4f4f4f;
@@ -1889,4 +1970,37 @@
 
 [sd-meta-terms] {
     min-height: 2.8rem;
+}
+
+.line-input--boxed {
+    .input-term {
+        input[type="text"] {
+            width: 100%;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            border: 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+            font-size: 1.4rem;
+            border-radius: 2px;
+            background-color: rgba(0, 0, 0, 0.05);
+            padding: 0 1rem;
+            height: 3.2rem;
+            transition: border linear 0.2s, box-shadow linear 0.2s, background-color linear 0.2s;
+            &:hover {
+                border-color: rgba(0, 0, 0, 0.3) !important;
+                background-color: rgba(0, 0, 0, 0.1) !important;
+            }
+            &:focus {
+                background-color: rgba(0, 0, 0, 0.05) !important;
+                box-shadow: 0 1px 0 0 #5ea9c8 !important;
+                border-color: #5ea9c8 !important;
+            }
+        }
+    }
+    .terms-list {
+        width: 100%;
+        margin-top: 0.8rem;
+    }
+
 }

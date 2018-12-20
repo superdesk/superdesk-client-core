@@ -459,7 +459,7 @@ function GlobalSearch() {
         browser.actions()
             .mouseMove(deskFacet)
             .perform();
-        deskFacet.element(by.className('remove-aggregate')).click();
+        deskFacet.element(by.className('filter-box__negate-filter')).click();
     };
 
     /**
