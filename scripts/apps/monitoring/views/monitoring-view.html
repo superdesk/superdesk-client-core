@@ -5,7 +5,9 @@
                 <i class="icon-arrow-left"></i>
             </button>
         </div>
-        <div class="flat-searchbar monitoring-flat-searchbar" ng-class="{extended: aggregate.monitoringSearch}">
+
+        <!-- search not implemented for usage with custom data source -->
+        <div ng-if="customDataSource == null" class="flat-searchbar monitoring-flat-searchbar" ng-class="{extended: aggregate.monitoringSearch}">
             <div class="search-handler">
                 <label for="search-input" class="trigger-icon" ng-click="aggregate.monitoringSearch = !aggregate.monitoringSearch"><i class="icon-search"></i></label>
                 <input id="search-input" type="text" placeholder="{{ :: 'Search' | translate }}" ng-model="query"
@@ -77,7 +79,7 @@
                 <i class="icon-settings"></i>
             </button>
 
-            <div class="dropdown dropdown--align-right strict" ng-if="!state.opened && (type !== 'spike' && type !== 'highlights')" sd-tooltip="{{ :: 'Create new item' | translate }}" flow="left" dropdown>
+            <div ng-if="disableMonitoringCreateItem == null && (!state.opened && (type !== 'spike' && type !== 'highlights'))" class="dropdown dropdown--align-right strict" sd-tooltip="{{ :: 'Create new item' | translate }}" flow="left" dropdown>
                 <button class="navbtn dropdown__toggle sd-create-btn" dropdown__toggle></button>
                 <ul class="dropdown__menu dropdown__menu--scrollable pull-right" sd-content-create></ul>
             </div>
@@ -88,7 +90,8 @@
 
         <div sd-media-query min-width="700" class="subnav">
 
-            <div class="button-list button-list--padded" ng-if="!elementState || elementState === 'comfort'">
+            <!-- filtering by file type not implemented for usage with custom data source -->
+            <div ng-if="(!elementState || elementState === 'comfort') && customDataSource == null" class="button-list button-list--padded">
                 <a href="" ng-repeat="fileType in aggregate.fileTypes" ng-click="aggregate.setFileType(fileType)" class="toggle-button" ng-class="{'toggle-button--active': aggregate.hasFileType(fileType)}" title="{{fileType| translate}}">
                     <span ng-if="fileType === 'all'" class="toggle-button__text toggle-button__text--all">{{:: 'all' | translate}}</span>
                     <i ng-if="fileType !== 'all' && fileType !== 'highlightsPackage'" class="toggle-button__icon filetype-icon-{{fileType}}"></i>
@@ -98,7 +101,8 @@
 
             <div class="subnav__stretch-bar"></div>
 
-            <div sd-item-sortbar ng-if="!elementState || elementState === 'comfort'" class="sortbar-container"></div>
+            <!-- sorting not implemented for usage with custom data source -->
+            <div sd-item-sortbar ng-if="(!elementState || elementState === 'comfort') && customDataSource == null" class="sortbar-container"></div>
 
             <div class="dropdown dropdown--align-right" dropdown ng-if="type === 'monitoring'">
                 <button class="navbtn dropdown__toggle" dropdown__toggle><i ng-class="{'icon-list-view': !monitoring.viewColumn && (!view || view === 'compact'), 'icon-grid-view': view === 'photogrid', 'icon-kanban-view': monitoring.viewColumn}"></i></button>

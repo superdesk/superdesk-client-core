@@ -17,6 +17,7 @@ export function MonitoringView($rootScope, authoringWorkspace, pageTitle, $timeo
             onMonitoringItemDoubleClick: '=?',
             hideActionsForMonitoringItems: '=?',
             disableMonitoringMultiSelect: '=?',
+            disableMonitoringCreateItem: '=?',
         },
         link: function(scope, elem) {
             const containerElem = elem.find('.content-list');
