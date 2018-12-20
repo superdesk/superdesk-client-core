@@ -7,13 +7,22 @@
  *   panel, allowing users to set various system preferences for
  *   themselves.
  */
-UserPreferencesDirective.$inject = ['api', 'session', 'preferencesService', 'notify', 'asset',
-    'metadata', 'desks', 'modal', '$timeout', '$q', 'userList', 'lodash', 'config', 'search'];
+UserPreferencesDirective.$inject = ['session', 'preferencesService', 'notify', 'asset',
+    'metadata', 'desks', 'modal', '$timeout', '$q', 'userList', 'lodash', 'config', 'search', 'gettext'];
 
 export function UserPreferencesDirective(
-    api, session, preferencesService, notify, asset, metadata, desks, modal,
-    $timeout, $q, userList, _, config, search,
+    session, preferencesService, notify, asset, metadata, desks, modal,
+    $timeout, $q, userList, _, config, search, gettext
 ) {
+    // human readable labels for server values
+    const LABELS = {
+        mgrid: gettext('Grid View'),
+        compact: gettext('List View'),
+        photogrid: gettext('Photo Grid View'),
+        list: gettext('List View'),
+        swimlane: gettext('Swimlane View'),
+    };
+
     return {
         templateUrl: asset.templateUrl('apps/users/views/user-preferences.html'),
         link: function(scope, element, attrs) {
@@ -169,6 +178,8 @@ export function UserPreferencesDirective(
             scope.showPlanning = function() {
                 return !angular.isUndefined(scope.features.agenda);
             };
+
+            scope.valueLabel = (value) => LABELS[value] || value;
 
             /**
             * Builds a user preferences object in scope from the given
