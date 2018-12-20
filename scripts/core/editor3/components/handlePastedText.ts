@@ -44,9 +44,13 @@ function pasteContentFromOpenEditor(
                     const blocksArray = [];
 
                     internalClipboard.forEach((b) => blocksArray.push(b));
-                    const contentState = ContentState.createFromBlockArray(blocksArray);
 
-                    return insertContentInState(editorState, contentState, onChange, editorFormat);
+                    const contentState = ContentState.createFromBlockArray(blocksArray);
+                    const editorWithContent = insertContentInState(editorState, contentState, editorFormat);
+
+                    onChange(editorWithContent);
+
+                    return 'handled';
                 }
             }
         }
@@ -102,11 +106,10 @@ export function handlePastedText(text: string, _html: string): DraftHandleValue 
     return processPastedHtml(html || text, editorState, onChange, editorFormat);
 }
 
-function insertContentInState(
+export function insertContentInState(
     editorState: EditorState,
     pastedContent: ContentState,
-    onChange: (e: EditorState) => void,
-    editorFormat: Array<string>): DraftHandleValue {
+    editorFormat: Array<string>): EditorState {
     let _pastedContent = pastedContent;
     const blockMap = _pastedContent.getBlockMap();
     const hasAtomicBlocks = blockMap.some((block) => block.getType() === 'atomic');
@@ -149,32 +152,15 @@ function insertContentInState(
     }
 
     const newBlockMap = OrderedMap<string, ContentBlock>(blocks.map((b) => ([b.getKey(), b])));
-
-    let nextEditorState = EditorState.push(
-        editorState,
-        Modifier.replaceWithFragment(contentState, selection, newBlockMap),
-        'insert-fragment',
-    );
-
-    const selectionAfterInsert = nextEditorState.getSelection();
     const customData = getAllCustomDataFromEditor(editorState);
 
     // for the first block recover the initial block data because on replaceWithFragment the block data is
     // replaced with the data from pasted fragment
-    nextEditorState = setAllCustomDataForEditor(nextEditorState, customData);
+    const editorStateWithCustomData = setAllCustomDataForEditor(editorState, customData);
+    const newContent = Modifier.replaceWithFragment(editorStateWithCustomData.getCurrentContent(), editorState.getSelection(), newBlockMap);
+    const nextEditorState = EditorState.push(editorStateWithCustomData, newContent, 'insert-fragment');
 
-    // reset undo stack
-    nextEditorState = EditorState.push(
-        editorState,
-        nextEditorState.getCurrentContent(),
-        'insert-fragment',
-    );
-
-    nextEditorState = EditorState.forceSelection(nextEditorState, selectionAfterInsert);
-
-    onChange(nextEditorState);
-
-    return 'handled';
+    return nextEditorState;
 }
 
 // Checks if there are atomic blocks in the paste content. If there are, we need to set
@@ -187,12 +173,15 @@ function processPastedHtml(
     editorFormat: Array<string>): DraftHandleValue {
     const pastedContent = getContentStateFromHtml(html);
 
-    return insertContentInState(
+    const editorWithPastedText = insertContentInState(
         editorState,
         pastedContent,
-        onChange,
         editorFormat,
     );
+
+    onChange(editorWithPastedText);
+
+    return 'handled';
 }
 
 // Returns an empty block.

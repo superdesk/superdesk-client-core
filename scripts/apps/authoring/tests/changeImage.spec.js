@@ -185,7 +185,7 @@ describe('authoring ChangeImageController', () => {
             let scope = angular.copy(scopeData);
 
             ChangeImageController(scope, gettext, notify, modal, _, api, $rootScope, deployConfig, $q, config);
-            const result = scope.done();
+            const result = scope.saveCrops();
 
             $rootScope.$digest();
 
@@ -201,6 +201,7 @@ describe('authoring ChangeImageController', () => {
             scope.locals.data.poi = {x: 0.5, y: 0.5};
 
             ChangeImageController(scope, gettext, notify, modal, _, api, $rootScope, deployConfig, $q, config);
+            scope.saveCrops();
             scope.done();
             $rootScope.$digest();
 

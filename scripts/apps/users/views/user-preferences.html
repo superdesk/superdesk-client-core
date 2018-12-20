@@ -6,60 +6,80 @@
     </div>
 
     <div class="preferences form-flat inner-content" ng-init="val = true">
-        <div class="title" translate>User settings</div>
-        <ul>
+        <ul class="simple-list simple-list--comfortable simple-list--dotted simple-list--no-border-b simple-list--no-border-t simple-list--no-padding">
             
-            <li class="fieldset" ng-repeat="(id, p) in preferences track by id"
+            <li class="simple-list__item" 
+                ng-repeat="(id, p) in preferences track by id"
                 ng-if="showCategory(p)">
-                <div class="legend">{{ p.category | translate }}</div>
+                <div class="user-preferences__heading">{{ p.category | translate }}</div>
                 <div sd-info-item>
-                    <label>{{ :: p.label | translate }}</label>
-                    <span ng-hide="p.allowed" sd-switch ng-model="p.enabled"></span>
+                    
+                    <div class="form__row form__row--s-padding" ng-show="id === 'feature:preview'">
+                        <span ng-hide="p.allowed" sd-switch ng-model="p.enabled"></span>
+                        <label class="form-label">{{ :: p.label | translate }}</label>
+                    </div>
+
                     <span ng-show="p.allowed">
-                        <sd-check ng-repeat="i in p.allowed" ng-model="p.view" type="radio" ng-value="{{i}}">{{ i | translate }}</sd-check>
+                        <label class="form-label">{{ :: p.label | translate }}</label>
+                        <div class="sd-check__group">
+                            <sd-check ng-repeat="i in p.allowed" 
+                                ng-model="p.view"
+                                label-position="inside"
+                                type="radio" 
+                                ng-value="{{i}}">{{ valueLabel(i) }}</sd-check>
+                        </div>
                     </span>
                 </div>
             </li>
 
-            <li class="fieldset">
-                <div class="legend" translate>Notifications</div>
-                <div sd-info-item>
-                    <label>{{ :: preferences['email:notification'].label | translate }}</label>
+            <li class="simple-list__item">
+                <div class="user-preferences__heading" translate>Notifications</div>
+                <div class="form__row form__row--s-padding" sd-info-item>
                     <span ng-hide="preferences['email:notification'].allowed" sd-switch ng-model="preferences['email:notification'].enabled"></span>
+                    <label>{{ :: preferences['email:notification'].label | translate }}</label>
                 </div>
-                <div sd-info-item>
-                    <label>{{ :: preferences['desktop:notification'].label | translate }}</label>
+                <div class="form__row form__row--s-padding" sd-info-item>
                     <span ng-hide="preferences['desktop:notification'].allowed" sd-switch ng-model="preferences['desktop:notification'].enabled"></span>
+                    <label>{{ :: preferences['desktop:notification'].label | translate }}</label>
                 </div>
-                <div sd-info-item ng-hide="!$root.config.features.slackNotifications">
-                    <label>{{ :: preferences['slack:notification'].label | translate }}</label>
+                <div class="form__row form__row--s-padding" sd-info-item ng-hide="!$root.config.features.slackNotifications">
                     <span ng-hide="preferences['slack:notification'].allowed" sd-switch ng-model="preferences['slack:notification'].enabled"></span>
+                    <label>{{ :: preferences['slack:notification'].label | translate }}</label>
                 </div>
             </li>
 
-            <li class="fieldset terms-box" ng-hide="profileConfig.defaults === false">
-                <div class="legend" translate>Article Defaults</div>
-                <div class="legend" translate>Dateline</div>
+            <li class="simple-list__item terms-box" ng-hide="profileConfig.defaults === false">
+                <div class="user-preferences__heading" translate>Article Defaults</div>
+                <div class="form-label">{{ 'Dateline'  | translate}} / {{ :: preferences['dateline:located'].label | translate}}</div>
 
                 <div sd-info-item ng-if="preferencesLoaded === true" ng-hide="profileConfig.located === false">
-                    <label>{{ :: preferences['dateline:located'].label | translate}}</label>
-                    <span sd-meta-locators data-list="cities" data-item="preferences['dateline:located']" data-field="located"
-                          data-postprocessing="changeDatelinePreview(item, city)" data-keepinput="true"></span>
+                    <div class="form__row">
+                        <span sd-meta-locators 
+                            data-list="cities"
+                            data-item="preferences['dateline:located']"
+                            data-field="located"
+                            data-postprocessing="changeDatelinePreview(item, city)"
+                            data-keepinput="true"></span>
+                        <div sd-info-item class="dateline_preview" ng-hide="!datelinePreview">
+                            <span>{{ datelinePreview | previewDateline:datelineSource}} </span>
+                        </div>
+                    </div>
                 </div>
-                <div sd-info-item class="dateline_preview" ng-hide="profileConfig.located === false">
-                    <label translate>Preview</label>
-                    <span>{{ datelinePreview | previewDateline:datelineSource}} </span>
-                </div>
-
+    
                 <div sd-info-item ng-if="preferencesLoaded === true" ng-hide="profileConfig.place === false">
-                    <label>{{ :: preferences['article:default:place'].label | translate}}</label>
-                    <span sd-meta-dropdown data-item="preferences['article:default:place']"
-                          data-field="place" data-list="locators" data-change="articleDefaultsChanged(item)"></span>
+                    <label class="form-label">{{ :: preferences['article:default:place'].label | translate}}</label>
+                    <div class="form__row form__row--s-padding">
+                        <span sd-meta-dropdown
+                              data-item="preferences['article:default:place']"
+                              data-field="place"
+                              data-list="locators"
+                              data-change="articleDefaultsChanged(item)"></span>
+                    </div>
                 </div>
             </li>
 
-            <li class="fieldset" ng-hide="profileConfig.category === false">
-                <div class="legend">
+            <li class="simple-list__item" ng-hide="profileConfig.category === false">
+                <div class="user-preferences__heading">
                     {{ :: preferences['categories:preferred'].category | translate }}
                 </div>
 
@@ -71,33 +91,41 @@
                         By selecting the categories you are interested in, the system will only display these in a menu for setting the content item's categories (along with any of its existing categories).
                     </p>
 
-                    <div class="actions">
+                    <div class="preferences__actions">
                         <a ng-click="checkAll()"
+                           class="preferences__action-link"
                            title="{{:: 'Select all categories' | translate}}"
-                           translate>all</a> |
+                           translate>all</a>
+
+                        <span class="preferences__action-spacer"></span>
 
                         <a ng-click="checkNone()"
+                           class="preferences__action-link"
                            title="{{:: 'Clear all selected' | translate}}"
-                           translate>none</a> |
+                           translate>none</a>
+                           
+                        <span class="preferences__action-spacer"></span>  
 
                         <a ng-click="checkDefault()"
+                           class="preferences__action-link"
                            title="{{:: 'Select default categories only' | translate}}"
                            translate>default</a>
                     </div>
-
-                    <div ng-repeat="cat in categories track by cat.qcode">
-                        <input
-                            type="checkbox"
-                            name="categories" id="cat_{{::cat.qcode}}"
-                            value="{{cat.qcode}}" ng-model="cat.selected" />
-                        <label for="cat_{{::cat.qcode}}">
-                            {{:: cat.name | translate}}</label>
+                    <div class="sd-check__group">
+                        <span ng-repeat="cat in categories track by cat.qcode">
+                            <sd-check ng-model="cat.selected"
+                                label-position="inside"
+                                id="cat_{{::cat.qcode}}"
+                                ng-value="{{cat.qcode}}">
+                                {{:: cat.name | translate}}
+                            </sd-check>
+                        </span>
                     </div>
                 </div>
             </li>
 
-            <li class="fieldset" ng-hide="profileConfig.desks === false">
-                <div class="legend">
+            <li class="simple-list__item" ng-hide="profileConfig.desks === false">
+                <div class="user-preferences__heading">
                     {{ :: preferences['desks:preferred'].category | translate }}
                 </div>
                 <div sd-info-item>
@@ -107,18 +135,21 @@
                     <p class="discreet" translate>
                         By selecting the desks as your preferred desks, they appear first in the order when sending or publishing items.
                     </p>
-                    <div ng-repeat="desk in desks track by desk._id">
-                        <input
-                            type="checkbox"
-                            name="desks" id="{{desk._id}}"
-                            value="{{desk._id}}" ng-model="desk.selected"/>
-                        <label for="{{desk._id}}">
-                            {{desk.name}}</label>
+
+                    <div class="sd-check__group sd-check__group--grid">
+                        <div  ng-repeat="desk in desks track by desk._id">
+                            <sd-check ng-model="desk.selected"
+                                label-position="inside"
+                                id="{{desk._id}}"
+                                ng-value="{{desk._id}}">
+                                {{desk.name}}
+                            </sd-check>
+                        </div>
                     </div>
                 </div>
             </li>
-            <li class="fieldset terms-box" ng-if="showPlanning()">
-                <div class="legend" translate>Planning</div>
+            <li class="simple-list__item terms-box" ng-if="showPlanning()">
+                <div class="user-preferences__heading" translate>Planning</div>
                 <div sd-info-item>
                     <label translate>Default Calendar</label>
                     <span sd-meta-dropdown
@@ -139,8 +170,8 @@
                 </div>
             </li>
 
-            <li class="fieldset terms-box" ng-if="profileConfig.desks !== false">
-                <div class="legend" translate>Preferred values for vocabularies</div>
+            <li class="simple-list__item terms-box" ng-if="profileConfig.desks !== false">
+                <div class="user-preferences__heading" translate>Preferred values for vocabularies</div>
                 <div sd-info-item sd-prefered-cv-items-config ng-model="preferences['cvs:preferred_items'].value"></div>
             </li>
         </ul>

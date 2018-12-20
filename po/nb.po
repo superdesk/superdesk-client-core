@@ -3,12 +3,13 @@
 # Helen Vogt <helen.vogt@ntb.no>, 2016-2018
 # Karel Petrak <karel.petrak@sourcefabric.org>, 2016,2018
 # Karel Petrak <karel.petrak@sourcefabric.org>, 2016-2017
+# Magnus Aabech <magnus.aabech@ntb.no>, 2018
 # Rune Wikstøl <rune.wikstol@ntb.no>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
-"PO-Revision-Date: 2018-06-20 12:16+0000\n"
-"Last-Translator: Helen Vogt <helen.vogt@ntb.no>\n"
+"PO-Revision-Date: 2018-10-19 11:57+0000\n"
+"Last-Translator: Magnus Aabech <magnus.aabech@ntb.no>\n"
 "Language-Team: Norwegian Bokmål (http://www.transifex.com/sourcefabric/superdesk/language/nb/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -49,7 +50,7 @@ msgstr "'Stofftype kreves'"
 
 #: scripts/core/lang/missing-translations-strings.js:19
 msgid "'HEADLINE is a required field'"
-msgstr "'Infolinje kreves'"
+msgstr "'Tittel kreves'"
 
 #: scripts/core/lang/missing-translations-strings.js:25
 msgid "'PLACE is a required field'"
@@ -1051,14 +1052,14 @@ msgstr "Info om innholdsprodusent"
 #: scripts/apps/authoring/compare-versions/index.js:26
 #: scripts/apps/authoring/multiedit/multiedit.js:300
 msgid "Authoring"
-msgstr "Innholdsproduksjon"
+msgstr "Opprinnelse"
 
 #: scripts/apps/desks/views/desk-config-modal.html:65
 msgid ""
 "Authoring desks are for content creation, and items within it are protected "
 "from accidental publication. Publishing is only permitted  from production "
 "desks."
-msgstr "Opprinnelsesdesker brukes til å skrive saker, men innholdet kan ikke publiseres direkte. Publisering er bare tillatt fra produksjonsdeskene."
+msgstr "Opprinnelsessdesker brukes til å skrive saker, men innholdet kan ikke publiseres direkte. Publisering er bare tillatt fra produksjonsdeskene."
 
 #: scripts/apps/users/views/list.html:15
 msgid "Authors only"
@@ -1131,7 +1132,7 @@ msgstr "SvartHvitt"
 #: scripts/apps/authoring/packages/views/packages-widget.html:13
 #: scripts/apps/packaging/views/sd-package-item-preview.html:20
 msgid "Blank headline received"
-msgstr "Infolinje er tom"
+msgstr "Tittel er tom"
 
 #: scripts/apps/content-filters/views/manage-filters.html:55
 msgid "Block API"
@@ -2462,7 +2463,7 @@ msgstr "Deaktiver bruker"
 #: ../superdesk-planning/client/utils/planning.js:719
 #: scripts/apps/users/controllers/UserListController.js:150
 msgid "Disabled"
-msgstr "Slått av"
+msgstr "Deaktivert"
 
 #: scripts/core/notification/notification.js:102
 msgid "Disconnected from Notification Server!"
@@ -3236,7 +3237,7 @@ msgstr "Kalender & planer"
 
 #: ../superdesk-planning/client/components/Main/FiltersBox.jsx:33
 msgid "Events only"
-msgstr "Kalender"
+msgstr "Nyhetskalender"
 
 #: ../superdesk-planning/client/components/Events/RepeatEventSummary/index.jsx:72
 msgid "Every"
@@ -3841,7 +3842,7 @@ msgstr "O6"
 
 #: scripts/core/lang/missing-translations-strings.js:42
 msgid "HEADLINE is too long"
-msgstr "Infolinjen er for lang"
+msgstr "Tittelen er for lang"
 
 #: scripts/apps/workspace/content/views/schema-editor.html:68
 msgid "Half"
@@ -3861,7 +3862,7 @@ msgstr "Har du passord? Logg inn."
 #: scripts/apps/workspace/content/constants.js:57
 #: scripts/apps/workspace/content/views/schema-editor.html:109
 msgid "Headline"
-msgstr "Infolinje"
+msgstr "Tittel"
 
 #: scripts/apps/users/views/edit-form.html:138
 msgid "Help us translate Superdesk"
@@ -5287,7 +5288,7 @@ msgstr "Objektnavn (stikkord)"
 #: ../superdesk-planning/client/components/Events/EventMetadata/index.jsx:138
 #: ../superdesk-planning/client/components/Events/EventPreviewContent.jsx:167
 msgid "Occurrence Status"
-msgstr "Status hendelse"
+msgstr "Status "
 
 #: ../superdesk-planning/client/components/Events/RecurringRulesInput/EndsInput.jsx:88
 msgid "Occurrences"
@@ -5714,7 +5715,7 @@ msgstr "Planelement opprettet"
 
 #: ../superdesk-planning/client/components/Main/FiltersBox.jsx:37
 msgid "Planning only"
-msgstr "Planer"
+msgstr "NTB-planer"
 
 #: scripts/core/auth/secure-login.html:14
 msgid "Please check that the following id is the same as on your device:"
@@ -6533,7 +6534,7 @@ msgstr "Flyttet"
 
 #: ../superdesk-planning/client/utils/index.js:394
 msgid "Rescheduled From"
-msgstr "Flyttet fra"
+msgstr "Ny dato"
 
 #: scripts/apps/archive/views/resend-configuration.html:25
 #: scripts/apps/publish/views/publish-queue.html:129
@@ -8233,7 +8234,7 @@ msgstr "Feltet må fylles ut"
 #: scripts/apps/authoring/views/theme-select.html:38
 #: scripts/apps/authoring/views/theme-select.html:89
 msgid "This is the headline"
-msgstr "Dette er infolinja"
+msgstr "Dette er tittelen"
 
 #: scripts/apps/archive/index.js:413
 msgid "This item is linked to in-progress planning coverage, spike anyway?"
@@ -8342,7 +8343,7 @@ msgstr "Til desk"
 #: ../superdesk-planning/client/constants/assignments.js:68
 #: scripts/apps/dashboard/workspace-tasks/tasks.js:6
 msgid "To Do"
-msgstr "Oppgaveliste"
+msgstr "på vent"
 
 #: ../superdesk-planning/client/components/AdvancedSearch/index.jsx:273
 #: ../superdesk-planning/client/components/Main/CalendarNavigation.jsx:25
@@ -9256,7 +9257,7 @@ msgstr "innholdsprodusent"
 
 #: scripts/core/lang/missing-translations-strings.js:22
 msgid "authoring"
-msgstr "innholdsproduksjon"
+msgstr "opprinnelse"
 
 #: scripts/core/editor2/editor.js:1058
 msgid "bold"
@@ -9412,7 +9413,7 @@ msgstr "desk:"
 #: scripts/apps/users/views/edit-form.html:14
 #: scripts/apps/users/views/user-list-item.html:17
 msgid "disabled"
-msgstr "deaktiverte"
+msgstr "deaktivert"
 
 #: scripts/core/lang/missing-translations-strings.js:31
 msgid "disabled user {{user}}"

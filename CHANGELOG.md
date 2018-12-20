@@ -1,5 +1,46 @@
 # Superdesk Client Changelog
 
+## [1.27.0] 2018-12-14
+
+### Fixed
+
+- Fix media editor behaviour - only save crops when updated.
+- Fix issue with subscriber creation in settings.
+- Validate item type when dropping to media gallery field.
+- Save button in authoring is not active when find&replace is finished.
+- Display contact name properly when first or last name is missing.
+- Configure sourcemap to work with sentry.
+- Do not show send to desk for media upload in personal space.
+- Saved search could not be updated twice without reload.
+- When publishing all related items should be checked if published.
+- Handle iframes and scripts when importing html to editor3.
+- Generate picture crops even when poi validation is turned off.
+- Ignore lock operations in item history tab.
+- Fix type icon for media upload.
+- Fix issue when opened article can't be closed.
+- Fix related items icon not refreshing.
+- User should not be able to make global search private when ther are subscribers.
+- Fix macros not updating content in editor3.
+- Show helper text for `keywords` in authoring if available.
+- Sync table entity and table block data in editor3.
+- Add missing dropdown for stage switching when stage is selected.
+- Activate save button when at least one type is selected in related items field config.
+
+### Added
+
+- Show a warning when same item is added twice to related items.
+- Implement new swimlane view.
+- Detect local links based on `local_domains` cv.
+- Add search to ingest settings.
+- Add description and tags to vocabularies in metadata settings.
+- Add option to hide vocabulary from content profile editor.
+- Allow custom date shortcut buttons for custom date fields.
+
+### Changed
+
+- Ingest settings UI refactoring.
+- Split article header and content configuration in content profile.
+
 ## [1.26.0] 2018-11-12
 
 ### TBD
