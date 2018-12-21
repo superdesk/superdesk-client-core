@@ -38,6 +38,7 @@ class ToolbarComponent extends React.Component<any, any> {
             // helps the toolbar continue to be visible when it goes out of view
             // because of scrolling.
             floating: false,
+            width: 'auto',
         };
     }
 
@@ -96,9 +97,10 @@ class ToolbarComponent extends React.Component<any, any> {
         const isToolbarOut = editorRect.top < pageRect.top + 50;
         const isBottomOut = editorRect.bottom < pageRect.top + 60;
         const floating = isToolbarOut && !isBottomOut;
+        const width = floating ? editorRect.width : 'auto';
 
         if (floating !== this.state.floating) {
-            this.setState({floating});
+            this.setState({floating, width});
         }
     }
 
@@ -137,7 +139,7 @@ class ToolbarComponent extends React.Component<any, any> {
         });
 
         return activeCell !== null ? <TableControls className={cx} /> :
-            <div className={cx}>
+            <div className={cx} style={{width: this.state.width}}>
                 {/* Styles */}
                 <BlockStyleButtons />
                 <InlineStyleButtons />
