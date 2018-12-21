@@ -264,7 +264,7 @@
         <div class="modal__footer">
             <button class="btn" ng-click="cancel()" translate>Cancel</button>
             <button class="btn btn--primary" ng-click="save()"
-                    ng-disabled="editForm.$invalid || (destinations.length === 0 && api_products.length === 0) || (destinations.length === 0 && products.length > 0)" translate>Save</button>
+                    ng-disabled="editForm.$invalid || (destinations.length === 0 && api_products.length === 0) || (destinations.length === 0 && products.length > 0) || !editForm.$dirty" translate>Save</button>
         </div>
     </div>
 </div>

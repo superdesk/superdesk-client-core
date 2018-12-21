@@ -43,6 +43,14 @@ function Subscribers() {
             });
     };
 
+    this.setDestinationFormat = function(ingestType) {
+        element(by.id('destination-format')).all(by.tagName('option'))
+            .filter((elem, index) => elem.getText().then((label) => label.toLowerCase().indexOf(ingestType) > -1))
+            .then((options) => {
+                options[0].click();
+            });
+    };
+
     this.cancel = function() {
         this.cancelSubscriberButton.click();
     };
