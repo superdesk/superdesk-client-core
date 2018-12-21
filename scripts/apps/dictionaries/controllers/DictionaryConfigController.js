@@ -68,6 +68,12 @@ export function DictionaryConfigController($scope, dictionaries, gettext, sessio
         });
     };
 
+    $scope.searchDictionary = function(param) {
+        let string = param.user ? 'Personal' : param.name;
+
+        return !$scope.query || string.toLowerCase().indexOf($scope.query.toLowerCase()) !== -1;
+    };
+
     $scope.stopLoading = function() {
         $scope.loading = false;
     };

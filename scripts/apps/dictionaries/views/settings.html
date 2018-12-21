@@ -4,7 +4,7 @@
             <h2 class="sd-page__page-heading" translate>Dictionary management</h2>
         </div>
         <div class="sd-page__header">
-            <sd-search-handler ng-model="query.name" data-debounce="200"></sd-search-handler>
+            <sd-search-handler ng-model="query" data-debounce="200"></sd-search-handler>
     
             <span class="sd-page__element-grow"></span>
             <div class="dropdown dropdown--align-right" dropdown style="margin-right: -20px;" data-sd-tooltip="{{ :: 'Add new' | translate }}" data-flow="left">
@@ -40,7 +40,7 @@
     
         <div class="sd-page__content dictionary-settings" sd-loading="loading">
             <ul class="pills-list">
-                <li ng-repeat="dictionary in dictionaries track by dictionary._id" ng-class="{inactive: dictionary.is_active === 'false'}">
+                <li ng-repeat="dictionary in dictionaries | filter:searchDictionary track by dictionary._id" ng-class="{inactive: dictionary.is_active === 'false'}">
                     <div ng-if="!dictionary.user">
                         <h6>{{ dictionary.name }}</h6>&nbsp;<em><strong>({{ :: dictionary.language_id }})</strong></em>
                     </div>
