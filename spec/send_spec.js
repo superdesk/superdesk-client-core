@@ -125,7 +125,7 @@ describe('send', () => {
         monitoring.showHideList();
         authoring.sendToButton.click();
 
-        var sidebar = element.all(by.css('.slide-pane')).last(),
+        var sidebar = element.all(by.css('.side-panel')).last(),
             dropdown = sidebar.element(by.css('.dropdown--dark .dropdown__toggle')),
             dropdownSelected = dropdown.element(by.css('[ng-show="selectedDesk"]'));
 
@@ -153,7 +153,7 @@ describe('send', () => {
         // open sendTo panel
         monitoring.openSendMenu();
 
-        var sidebar = element.all(by.css('.slide-pane')).last(),
+        var sidebar = element.all(by.css('.side-panel')).last(),
             dropdown = sidebar.element(by.css('.dropdown--dark .dropdown__toggle')),
             dropdownSelected = dropdown.element(by.css('[ng-show="selectedDesk"]'));
 

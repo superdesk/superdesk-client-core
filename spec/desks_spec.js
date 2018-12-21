@@ -202,6 +202,8 @@ describe('desks', () => {
         authoring.sendTo('Test Desk', 'Test Stage A');
         assertToastMsg('error', 'BODY_HTML is a required field');
         expect(monitoring.getGroupItems(2).count()).toBe(0);
+
+        authoring.closeSendAndPublish();
         authoring.close();
 
         // confirm onstage rule kicks in
@@ -209,6 +211,8 @@ describe('desks', () => {
         authoring.sendTo('Test Desk', 'Test Stage C');
         assertToastMsg('error', 'BODY_HTML is a required field');
         expect(monitoring.getGroupItems(4).count()).toBe(1);
+
+        authoring.closeSendAndPublish();
         authoring.close();
 
         // confirm outgoing rule kicks in

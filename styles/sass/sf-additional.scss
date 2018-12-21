@@ -1404,11 +1404,11 @@
         @include border-radius(2px);
         padding: 10px 16px;
         min-height: 18px;
-        color: #444;
+        color: inherit;
         position: relative;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 1px rgba(0, 0, 0, 0.08);
+        transition: all ease-in-out 0.2s;
         &:hover {
-            //background: #e8e8e8;
             box-shadow: 0 0px 3px rgba(0, 0, 0, 0.3), 0 0 1px rgba(0, 0, 0, 0.2);
         }
         &.active {
@@ -1434,6 +1434,7 @@
             top: 0px;
             right: 4px;
             button {
+                transition: opacity ease-in-out 0.2s;
                 border: 0;
                 height: 30px;
                 width: 30px;
@@ -1456,8 +1457,8 @@
         }
         h6 {
             text-transform: none;
+            color: inherit;
             font-size: 14px;
-            color: $sd-text;
             @include text-light();
             float: left;
             max-width: 99%;
@@ -1513,6 +1514,16 @@
         }
     }
 }
+
+[class^="--dark-ui"],
+[class*="--dark-ui"] {
+    .pills-list {
+        > li {
+            background: #4f4f4f;
+        }
+    }
+}
+
 
 .pill-small {
     width: 200px;
@@ -1735,17 +1746,17 @@
 // ---------------------------------------------
 
 .toggle-box__button {
+    transition: color ease-in-out 0.2s;
     color: $grayLight;
     cursor: pointer;
     i {
-        color: $grayLight;
+        color: inherit;
         margin-right: 5px;
         vertical-align: text-bottom;
     }
     &:hover {
         text-decoration: none;
         color: $white;
-        i { color: $white; }
     }
 }
 
