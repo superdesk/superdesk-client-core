@@ -144,6 +144,9 @@ angular.module('superdesk.core.menu', [
                         scope.build_rev = metadata.meta_rev;
                         scope.build_rev_core = metadata.meta_rev_core;
                         scope.build_rev_client = metadata.meta_rev_client;
+                        scope.build_rev_planning = metadata.meta_rev_planning;
+                        scope.build_rev_publisher = metadata.meta_rev_publisher;
+                        scope.build_rev_analytics = metadata.meta_rev_analytics;
                     });
                 scope.version = config.version;
                 scope.year = (new Date()).getUTCFullYear();

@@ -11,11 +11,15 @@
       <span class="sf-logo"></span>
       <h4>Superdesk {{ :: version }}</span></h4>
       <h5 ng-if="build_rev && build_rev !== ''">Superdesk rev. <a href="https://github.com/superdesk/superdesk/commit/{{ :: build_rev }}" rel="noopener noreferrer">{{ :: build_rev }}</a></h5>
-      <h5 ng-if="build_rev_core && build_rev_core !== ''">Superdesk core rev. <a href="https://github.com/superdesk/superdesk-core/commit/{{ :: build_rev_core }}" rel="noopener noreferrer">{{ :: build_rev_core }}</a></h5>
-      <h5 ng-if="build_rev_client && build_rev_client !== ''">Superdesk client rev. <a href="https://github.com/superdesk/superdesk-client-core/commit/{{ :: build_rev_client }}" rel="noopener noreferrer">{{ :: build_rev_client }}</a></h5>
+      <h5 ng-if="build_rev_core.href">Superdesk Core rev. <a ng-href="{{ :: build_rev_core.href }}" rel="noopener noreferrer">{{ :: build_rev_core.name }}</a></h5>
+      <h5 ng-if="build_rev_client.href">Superdesk Client rev. <a href="{{ :: build_rev_client.href }}" rel="noopener noreferrer">{{ :: build_rev_client.name }}</a></h5>
+      <h5 ng-if="build_rev_planning.href">Superdesk Planning rev. <a href="{{ :: build_rev_planning.href }}" rel="noopener noreferrer">{{ :: build_rev_planning.name }}</a></h5>
+      <h5 ng-if="build_rev_analytics.href">Superdesk Analytics rev. <a href="{{ :: build_rev_analytics.href }}" rel="noopener noreferrer">{{ :: build_rev_analytics.name }}</a></h5>
+      <h5 ng-if="build_rev_publisher.href">Superdesk Publisher rev. <a href="{{ :: build_rev_publisher.href }}" rel="noopener noreferrer">{{ :: build_rev_publisher.name }}</a></h5>
+
       <p class="date-released"><span ng-show="releaseDate">Released on</span> {{ :: releaseDate }}</p>
       <p>
-        <a href="https://www.superdesk.org" target="_blank"><b>Superdesk</b></a> is an open source end-to-end news creation, production, curation, distribution and publishing platform maintained by <a href="http://sourcefabric.org">Sourcefabric z.u.</a>, a nonprofit organisation whose primary purpose is to make the best possible software for journalism.
+        <a href="https://www.superdesk.org" target="_blank"><b>Superdesk</b></a> is an open source end-to-end news creation, production, curation, distribution and publishing platform maintained by <a href="https://www.sourcefabric.org">Sourcefabric z.u.</a>, a nonprofit organisation whose primary purpose is to make the best possible software for journalism.
       </p>
       <p>
         Copyright (c) 2014 - {{ year }} Sourcefabric z.u. and contributors.<br>
@@ -27,7 +31,7 @@
         <a href="https://www.superdesk.org/attachment/13/superdeskmastermanual.pdf?g_download=1" target="_blank">User Manual</a>
       </p>
       <p>
-        Get in touch with us via direct email <a href="mailto:superdesk@sourcefabric.org">superdesk@sourcefabric.org</a>... or find us in IRC Freenode at the #superdesk channel.
+        Get in touch with us via direct email <a href="mailto:superdesk@sourcefabric.org">superdesk@sourcefabric.org</a>.
       </p>
     </div>
   </div>
