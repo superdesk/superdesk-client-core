@@ -6,13 +6,13 @@ import {VOCABULARY_SELECTION_TYPES} from '../../vocabularies/constants';
 const SINGLE_SELECTION = VOCABULARY_SELECTION_TYPES.SINGLE_SELECTION.id;
 
 MetadataCtrl.$inject = [
-    '$scope', 'desks', 'metadata', 'privileges', 'datetimeHelper', 'userList',
-    'preferencesService', 'archiveService', 'config', 'moment', 'content',
+    '$scope', 'desks', 'metadata', 'privileges', 'datetimeHelper',
+    'preferencesService', 'config', 'moment', 'content',
 ];
 
 function MetadataCtrl(
-    $scope, desks, metadata, privileges, datetimeHelper, userList,
-    preferencesService, archiveService, config, moment, content) {
+    $scope, desks, metadata, privileges, datetimeHelper,
+    preferencesService, config, moment, content) {
     desks.initialize();
 
     $scope.change_profile = config.item_profile && config.item_profile.change_profile === 1 &&
@@ -220,30 +220,6 @@ function MetadataCtrl(
     $scope.targetsEditable = $scope.action !== 'correct' && $scope.action !== 'kill';
 
     resolvePublishScheduleAndEmbargoTS();
-
-    metadata.getFilteredCustomVocabularies([]).then((cvs) => {
-        $scope.cvs = _.sortBy(cvs, 'priority');
-        $scope.genreInCvs = _.map(cvs, 'schema_field').indexOf('genre') !== -1;
-        $scope.placeInCvs = _.map(cvs, 'schema_field').indexOf('place') !== -1;
-    });
-
-    $scope.originalCreator = $scope.item.original_creator;
-    $scope.versionCreator = $scope.item.version_creator;
-
-    if (!archiveService.isLegal($scope.item)) {
-        if ($scope.item.original_creator) {
-            userList.getUser($scope.item.original_creator)
-                .then((user) => {
-                    $scope.originalCreator = user.display_name;
-                });
-        }
-        if ($scope.item.version_creator) {
-            userList.getUser($scope.item.version_creator)
-                .then((user) => {
-                    $scope.versionCreator = user.display_name;
-                });
-        }
-    }
 }
 
 MetaTargetedPublishingDirective.$inject = [];
