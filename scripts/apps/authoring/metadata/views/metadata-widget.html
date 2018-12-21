@@ -57,19 +57,13 @@
             <li class="basic-list__item" ng-if="item.original_source">
                 <label class="basic-list__item-label" translate>Original source</label>
                 <div class="basic-list__item-data">
-                    {{item.original_source}}
+                    {{ item.original_source}}
                 </div>
             </li>
             <li class="basic-list__item" ng-if="item.copyrightholder">
                 <label class="basic-list__item-label" translate>Copyright</label>
                 <div class="basic-list__item-data">
                     {{item.copyrightholder}}
-                </div>
-            </li>
-            <li class="basic-list__item" ng-if="item.copyrightnotice">
-                <label class="basic-list__item-label" translate>Copyright notice</label>
-                <div class="basic-list__item-data">
-                    {{item.copyrightnotice}}
                 </div>
             </li>
             <li class="basic-list__item" ng-if="item.creditline">
@@ -104,159 +98,6 @@
                 <label class="basic-list__item-label" translate>Expiry</label>
                 <div class="basic-list__item-data" sd-reldate-complex datetime="item.expiry"></div>
             </li>
-
-            <li class="basic-list__item" ng-if="item.slugline">
-                <label class="basic-list__item-label" translate>Slugline</label>
-                <div class="basic-list__item-data">
-                    {{item.slugline}}
-                </div>
-            </li>
-
-            <li class="basic-list__item" ng-if="item.urgency">
-                <label class="basic-list__item-label" translate>Urgency</label>
-                <div class="basic-list__item-data">
-                    {{item.urgency}}
-                </div>
-            </li>
-
-            <li class="basic-list__item" ng-if="item.priority">
-                <label class="basic-list__item-label" translate>Priority</label>
-                <div class="basic-list__item-data">
-                    {{item.priority}}
-                </div>
-            </li>
-
-            <li class="basic-list__item">
-                <label class="basic-list__item-label" translate>Word Count</label>
-                <div class="basic-list__item-data">
-                    {{item.word_count}}
-                </div>
-            </li>
-
-            <li class="basic-list__item" ng-if="item.keywords && item.keywords.length">
-                <label class="basic-list__item-label" translate>Keywords</label>
-                <div class="basic-list__item-data">
-                        {{item.keywords | mergeWords}}
-                </div>
-            </li>
-
-            <li class="basic-list__item" ng-if="item.source">
-                <label class="basic-list__item-label" translate>Source</label>
-                <div class="basic-list__item-data">
-                        {{item.source}}
-                </div>
-            </li>
-
-            <li class="basic-list__item">
-                <label class="basic-list__item-label" translate>Take key</label>
-                <div class="basic-list__item-data">
-                        {{item.anpa_take_key}}
-                </div>
-            </li>
-
-            <li class="basic-list__item" ng-if="item.signal">
-                <label class="basic-list__item-label" translate>Signal</label>
-                <div class="basic-list__item-data">
-                        {{item.signal}}
-                </div>
-            </li>
-
-            <li class="basic-list__item" ng-if="item.anpa_category && item.anpa_category.length">
-                <label class="basic-list__item-label" translate>Service</label>
-                <div class="basic-list__item-data">
-                        {{item.anpa_category | mergeWords:'name'}}
-                </div>
-            </li>
-
-            <li class="basic-list__item" ng-repeat="cv in cvs track by cv._id" ng-if="item[cv.schema_field] | mergeWords:'name' : cv._id">
-                <label class="basic-list__item-label">{{ cv.display_name | translate }}</label>
-                <div class="basic-list__item-data">
-                        {{getLocaleName(item[cv.schema_field], cv._id)}}
-                </div>
-            </li>
-
-            <li class="basic-list__item" ng-if="item.genre  && item.genre.length > 0 && !genreInCvs">
-                <label class="basic-list__item-label" translate>Genre</label>
-                <div class="basic-list__item-data">
-                        {{item.genre | mergeWords:'name'}}
-                </div>
-            </li>
-
-            <li class="basic-list__item" ng-if="item.place && item.place.length > 0 && !placeInCvs">
-                <label class="basic-list__item-label" translate>Place</label>
-                <div class="basic-list__item-data">
-                        {{item.place | mergeWords:'name'}}
-                </div>
-            </li>
-
-            <li class="basic-list__item" ng-if="item.ednote">
-                <label class="basic-list__item-label" translate>Editorial Note</label>
-                <div class="basic-list__item-data">
-                        {{item.ednote}}
-                </div>
-            </li>
-
-            <li class="basic-list__item">
-                <label class="basic-list__item-label" translate>Dateline</label>
-                <div class="basic-list__item-data">
-                        {{item.dateline.text}}
-                </div>
-            </li>
-
-            <li class="basic-list__item">
-                <label class="basic-list__item-label" translate>Byline</label>
-                <div class="basic-list__item-data">
-                        {{item.byline}}
-                </div>
-            </li>
-
-            <li class="basic-list__item">
-                    <label class="basic-list__item-label" translate>Sign-Off</label>
-                <div class="basic-list__item-data">
-                        {{item.sign_off}}
-                </div>
-            </li>
-
-            <li class="basic-list__item" ng-if="item._current_version">
-                    <label class="basic-list__item-label" translate>Version</label>
-                <div class="basic-list__item-data">
-                        {{item._current_version}}
-                </div>
-            </li>
-
-            <li class="basic-list__item" ng-if="item.firstcreated">
-                    <label class="basic-list__item-label" translate>Created</label>
-                <div class="basic-list__item-data" sd-reldate-complex datetime="item.firstcreated">
-                </div>
-            </li>
-
-            <li class="basic-list__item" ng-if="item.versioncreated">
-                    <label class="basic-list__item-label" translate>Last updated</label>
-                <div class="basic-list__item-data" sd-reldate-complex datetime="item.versioncreated">
-                </div>
-            </li>
-
-            <li class="basic-list__item" ng-if="item.original_id">
-                    <label class="basic-list__item-label" translate>Original ID</label>
-                <div class="basic-list__item-data">
-                        {{item.original_id}}
-                </div>
-            </li>
-
-            <li class="basic-list__item" ng-if="originalCreator">
-                    <label class="basic-list__item-label" translate>Original creator</label>
-                <div class="basic-list__item-data">
-                        {{originalCreator}}
-                </div>
-            </li>
-
-            <li class="basic-list__item" ng-if="versionCreator">
-                    <label class="basic-list__item-label" translate>Version creator</label>
-                <div class="basic-list__item-data">
-                        {{versionCreator}}
-                </div>
-            </li>
-
             <li class="basic-list__item basic-list__item--stacked">
                 <label class="basic-list__item-label basic-list__item-label--block" translate>GUID</label>
                 <div class="basic-list__item-data" id="guid">
@@ -269,26 +110,45 @@
                     <input class="basic-input" type="text" ng-model="item.unique_name" ng-change="autosave(item)" ng-disabled="!_editable || !unique_name_editable">
                 </div>
             </li>
-
-            <li class="basic-list__item">
-                    <label class="basic-list__item-label" translate>Type</label>
-                <div class="basic-list__item-data">
-                        {{item.type}}
-                </div>
-            </li>
-
-            <li class="basic-list__item" ng-if="item.renditions && item.renditions.original">
-                <label class="basic-list__item-label" translate>Dimensions</label>
-                <div class="basic-list__item-data">
-                    {{ item.renditions.original.width }} x {{ item.renditions.original.height }}
-                </div>
-            </li>
-
-            <li class="basic-list__item" ng-if="item.type == 'picture' && item.archive_description && item.archive_description !== item.description_text">
-                <label class="basic-list__item-label" translate>Description</label>
-                <div class="basic-list__item-data" sd-html-preview="item.archive_description"></div>
-            </li>
         </ul>
+
+        <div class="sd-card sd-card--auto-height">
+            <div class="sd-card__content sd-card__content--padd-10">
+                <ul class="basic-list basic-list--no-margin">
+                    <li class="basic-list__item basic-list__item--stacked">
+                        <label class="basic-list__item-label basic-list__item-label--block" translate>Target Subscribers</label>
+                        <div class="term-editor"
+                                sd-meta-terms
+                                data-item="item"
+                                data-unique="_id"
+                                data-list="metadata.customSubscribers"
+                                ng-disabled="!_editable || !targetsEditable"
+                                data-change="autosave(item)"
+                                data-field="target_subscribers"
+                                data-header="true"
+                                data-reload-list="true">
+                        </div>
+                    </li>
+                    <li class="basic-list__item basic-list__item--stacked">
+                        <label class="basic-list__item-label basic-list__item-label--block" translate>Target Regions</label>
+                        <div sd-meta-target
+                            data-list="metadata.regions"
+                            data-targets="item.target_regions"
+                            ng-disabled="!_editable || !targetsEditable"
+                            data-autosave="autosave(item)"></div>
+                    </li>
+                    <li class="basic-list__item basic-list__item--stacked">
+                        <label class="basic-list__item-label basic-list__item-label--block" translate>Target Types</label>
+                        <div sd-meta-target
+                            data-list="metadata.subscriberTypes"
+                            data-targets="item.target_types"
+                            ng-disabled="!_editable || !targetsEditable"
+                            data-autosave="autosave(item)"></div>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
     </div>
     <div ng-if="tab === 'assignment'" sd-assignment-preview data-item="item" hide-avatar="true"></div>
 </div>
