@@ -15,7 +15,7 @@
                 <div sd-info-item>
                     
                     <div class="form__row form__row--s-padding" ng-show="id === 'feature:preview'">
-                        <span ng-hide="p.allowed" sd-switch ng-model="p.enabled"></span>
+                        <span sd-switch ng-hide="p.allowed" ng-model="p.enabled"></span>
                         <label class="form-label">{{ :: p.label | translate }}</label>
                     </div>
 
@@ -25,7 +25,8 @@
                             <sd-check ng-repeat="i in p.allowed" 
                                 ng-model="p.view"
                                 label-position="inside"
-                                type="radio" 
+                                type="radio"
+                                data-icon="{{getIcon(i)}}" 
                                 ng-value="{{i}}">{{ valueLabel(i) }}</sd-check>
                         </div>
                     </span>

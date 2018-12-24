@@ -23,6 +23,14 @@ export function UserPreferencesDirective(
         swimlane: gettext('Swimlane View'),
     };
 
+    const ICONS = {
+        mgrid: 'grid-view',
+        compact: 'list-view',
+        photogrid: 'grid-view',
+        list: 'list-view',
+        swimlane: 'kanban-view',
+    };
+
     return {
         templateUrl: asset.templateUrl('apps/users/views/user-preferences.html'),
         link: function(scope, element, attrs) {
@@ -180,6 +188,8 @@ export function UserPreferencesDirective(
             };
 
             scope.valueLabel = (value) => LABELS[value] || value;
+
+            scope.getIcon = (value) => ICONS[value] || 'list-view';
 
             /**
             * Builds a user preferences object in scope from the given
