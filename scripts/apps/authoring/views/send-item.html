@@ -1,4 +1,4 @@
-<div class="sd-overlay-panel sd-overlay-panel--dark-ui" ng-show="isActive" ng-class="{'sd-overlay-panel--open': isActive, 'sd-overlay-panel--large' : currentUserAction === vm.userActions.publish}">
+<div class="sd-overlay-panel sd-overlay-panel--dark-ui" ng-show="isActive && !isSendToNextStage" ng-class="{'sd-overlay-panel--open': isActive, 'sd-overlay-panel--large' : currentUserAction === vm.userActions.publish}" >
     <div class="side-panel side-panel--shadow-right side-panel--dark-ui">
         <div class="side-panel__header">
             <ul class="nav-tabs nav-tabs--ui-dark nav-tabs--big">
