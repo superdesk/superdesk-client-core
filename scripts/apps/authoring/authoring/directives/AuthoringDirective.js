@@ -137,6 +137,21 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 }
             });
 
+            // to fetch the updated item if there are associations
+            function getUpdatedItem() {
+                if ($scope.item.associations) {
+                    api.find('archive', $scope.item._id).then((item) => {
+                        $scope.updatedItem = item;
+                    });
+                }
+            }
+            getUpdatedItem();
+            $scope.$watch('item.associations', (newValue, oldValue) => {
+                if (newValue !== oldValue) {
+                    getUpdatedItem();
+                }
+            }, true);
+
             $scope._isInProductionStates = !authoring.isPublished($scope.origItem);
 
             $scope.fullPreview = false;
