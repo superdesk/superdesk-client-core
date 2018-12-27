@@ -7,7 +7,7 @@ interface IProps {
     $route: any;
     superdesk: any;
     pageTitle: any;
-    gettext: any;
+    gettextCatalog: any;
 }
 
 interface IState {
@@ -23,14 +23,23 @@ class SettingsComponent extends React.Component<IProps, IState> {
             loading: true,
             flatMenuItems: [],
         };
+
+        this.gettext = this.gettext.bind(this);
     }
+
+    gettext(text) {
+        const {gettextCatalog} = this.props;
+
+        return gettextCatalog.getString(text);
+    }
+
     componentDidMount() {
         const {$route, pageTitle, superdesk} = this.props;
         const currentRoute = $route.current;
 
-        pageTitle.setUrl(capitalize(gettext('Settings')));
+        pageTitle.setUrl(capitalize(this.gettext('Settings')));
         if (currentRoute.$$route.label !== 'Settings') {
-            pageTitle.setWorkspace(capitalize(gettext(currentRoute.$$route.label)));
+            pageTitle.setWorkspace(capitalize(this.gettext(currentRoute.$$route.label)));
         } else {
             pageTitle.setWorkspace(null);
         }
@@ -80,8 +89,10 @@ class SettingsComponent extends React.Component<IProps, IState> {
                 return 0;
             });
 
+            const groupLabel = coreMenuGroups[key].getLabel(this.gettext);
+
             listToRender.push(
-                <li key={++reactKey} className="sd-left-nav__group-header">{coreMenuGroups[key].getLabel(gettext)}</li>,
+                <li key={++reactKey} className="sd-left-nav__group-header">{groupLabel}</li>,
             );
 
             menuItemsByGroup[key].forEach((item) => {
@@ -92,7 +103,7 @@ class SettingsComponent extends React.Component<IProps, IState> {
                     (
                         <li key={++reactKey}>
                             <a href={'#' + item.href} className={className}>
-                                {gettext(item.label)}
+                                {this.gettext(item.label)}
                             </a>
                         </li>
                     ),
@@ -111,4 +122,4 @@ class SettingsComponent extends React.Component<IProps, IState> {
     }
 }
 
-export const Settings = connectServices(SettingsComponent, ['$route', 'superdesk', 'pageTitle', 'gettext']);
+export const Settings = connectServices(SettingsComponent, ['$route', 'superdesk', 'pageTitle', 'gettextCatalog']);
