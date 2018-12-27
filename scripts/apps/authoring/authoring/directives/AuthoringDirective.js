@@ -139,7 +139,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
 
             // to fetch the updated item if there are associations
             function getUpdatedItem() {
-                if ($scope.item.associations) {
+                if ($scope.item && $scope.item.associations) {
                     api.find('archive', $scope.item._id).then((item) => {
                         $scope.updatedItem = item;
                     });
