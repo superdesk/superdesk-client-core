@@ -26,7 +26,7 @@
         </li>
 
         <li class="place-dropdown" ng-repeat="(region, placelist) in places" ng-if="field === 'place'">
-            {{ ::region }}
+            <span ng-if="region !== 'undefined'">{{ ::region }}</span>
             <button ng-repeat="item in placelist" ng-click="select(item)">{{ ::item.name }}</button>
         </li>
     </ul>
