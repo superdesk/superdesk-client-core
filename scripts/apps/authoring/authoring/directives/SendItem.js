@@ -185,8 +185,16 @@ export function SendItem($q, api, search, desks, notify, authoringWorkspace,
                 updateLastDestination();
                 return runSend(open, sendAllPackageItems);
             };
-
+            scope.isSendToNextStage = false;
             scope.$on('item:nextStage', (_e, data) => {
+                if (!scope.item) {
+                    scope.item = data.item;
+                    scope.selectedStage = data.selectedStage;
+                    scope.selectedDesk = data.selectedDesk;
+                    scope.mode = 'authoring';
+                    scope.isSendToNextStage = true;
+                }
+
                 if (scope.item && scope.item._id === data.itemId) {
                     var oldStage = scope.selectedStage;
 
