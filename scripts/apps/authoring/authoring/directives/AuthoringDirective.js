@@ -146,7 +146,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 }
             }
             getUpdatedItem();
-            $scope.$watch('item.associations', (newValue, oldValue) => {
+            $scope.$watchCollection('item.associations', (newValue, oldValue) => {
                 if (newValue !== oldValue) {
                     getUpdatedItem();
                 }
