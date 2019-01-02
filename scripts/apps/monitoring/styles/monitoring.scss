@@ -58,12 +58,8 @@
         }
     }
 
-    .monitoring-preview-layout {
-        margin-top: 48px;
-    }
-
     .main-section {
-        top: $subnav-height;
+        top: 0;
         padding-bottom: 0 !important;
         .content-list {
             position: absolute;
@@ -71,12 +67,13 @@
             left: 0;
             right: 0;
             bottom: 0;
-            overflow-y: scroll;
+            overflow-y: auto;
             @include transition(all .3s);
             @include border-box();
-            padding: 0px 18px 18px !important;
+            padding: 0!important;
+
             .list {
-                padding: 9px 4px 18px 0px !important;
+                padding-top: 9px
             }
             .sd-columns {
                 display: table;
@@ -146,18 +143,7 @@
                     }
                 }
             }
-            // this is probably not needed. Needs testing
-            .single-group {
-                .stage {
-                    position: absolute;
-                    top: 0;
-                    right: 0;
-                    bottom: 0;
-                    left: 0;
-                    padding: 0;
-                    margin: 30px 18px 18px;
-                }
-            }
+
             .inline-content-items {
                 @include border-box();
                 max-height: calc(100vh - 180px) !important;
