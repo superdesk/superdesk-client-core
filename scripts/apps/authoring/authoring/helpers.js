@@ -177,7 +177,7 @@ export function removeWhitespaces(data) {
 
 /**
  * Removes whitespaces for fields
- * @param data
+ * @param item
  */
 export function stripWhitespaces(item) {
     var fields = ['headline', 'slugline', 'anpa_take_key', 'sms_message', 'abstract'];
@@ -210,4 +210,47 @@ export function itemHasUnresolvedSuggestions(item) {
 
 export function itemHasUnresolvedComments(item) {
     return itemHasUnresolvedHighlight(item, isComment);
+}
+
+
+/**
+ * Removes renditions from previously used image(s)
+ * @param {object} update
+ * @param {object} origItem
+ */
+export function cutoffPreviousRenditions(update, origItem) {
+    const defaultRenditions = ['original', 'baseImage', 'thumbnail', 'viewImage'];
+    let updateRenditions = null;
+    let origRenditions = null;
+
+    if (!('associations' in origItem)) {
+        return;
+    }
+
+    Object.keys(origItem.associations).forEach((key) => {
+        try {
+            updateRenditions = update.associations[key].renditions;
+            origRenditions = origItem.associations[key].renditions;
+        } catch (error) {
+            if (error instanceof TypeError) {
+                return;
+            }
+            throw error;
+        }
+        // image was changed
+        if (updateRenditions.original.href !== origRenditions.original.href) {
+            // walk through all renditions
+            Object.keys(origRenditions).forEach((key) => {
+                // ignore default renditions, because all images have default renditions
+                if (!(key in defaultRenditions) &&
+                    key in updateRenditions &&
+                    origRenditions[key] !== null &&
+                    // image was changed, but rendition(s) still equal
+                    origRenditions[key].href === updateRenditions[key].href) {
+                    // remove rendition from previously used image
+                    delete updateRenditions[key];
+                }
+            });
+        }
+    });
 }
