@@ -3,7 +3,7 @@ import {IArticle} from 'superdesk-interfaces/Article';
 RelationsService.$inject = ['archiveService', 'mediaIdGenerator'];
 
 export function RelationsService(archiveService, mediaIdGenerator) {
-    this.getRelatedItems = function(item: IArticle, mediaFields: object) {
+    this.getRelatedItemsWithoutMediaGallery = function(item: IArticle, mediaFields) {
         if (!item.associations) {
             return [];
         }
