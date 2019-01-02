@@ -5,7 +5,7 @@
         <div class="preview-layout monitoring-preview-layout">
             <div class="content-list" ng-if="!aggregate.loading" style="display:flex;flex-direction:column;">
                 <div>
-                    <div class="subnav">
+                    <div class="subnav" ng-if="hideMonitoringToolbar1 !== true">
                         <div class="flat-searchbar monitoring-backlink" ng-if="monitoring.singleGroup">
                             <button sd-tooltip="{{ :: 'Back to original view' | translate }}" flow="right" class="navbtn navbtn--left" ng-click="monitoring.viewMonitoringHome()">
                                 <i class="icon-arrow-left"></i>
@@ -92,7 +92,7 @@
                         </div>
                     </div>
     
-                    <div sd-media-query min-width="700" class="subnav">
+                    <div ng-if="hideMonitoringToolbar2 !== true" sd-media-query min-width="700" class="subnav">
             
                         <!-- filtering by file type not implemented for usage with custom data source -->
                         <div ng-if="(!elementState || elementState === 'comfort') && customDataSource == null" class="button-list button-list--padded">

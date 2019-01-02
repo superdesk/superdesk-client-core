@@ -18,6 +18,8 @@ export function MonitoringView($rootScope, authoringWorkspace, pageTitle, $timeo
             hideActionsForMonitoringItems: '=?',
             disableMonitoringMultiSelect: '=?',
             disableMonitoringCreateItem: '=?',
+            hideMonitoringToolbar1: '=?',
+            hideMonitoringToolbar2: '=?',
         },
         link: function(scope, elem) {
             const containerElem = elem.find('.content-list');
