@@ -150,7 +150,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 if (newValue !== oldValue) {
                     getUpdatedItem();
                 }
-            }, true);
+            });
 
             $scope._isInProductionStates = !authoring.isPublished($scope.origItem);
 
