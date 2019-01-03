@@ -11,11 +11,10 @@
       <span class="sf-logo"></span>
       <h4>Superdesk {{ :: version }}</span></h4>
       <h5 ng-if="build_rev && build_rev !== ''">Superdesk rev. <a href="https://github.com/superdesk/superdesk/commit/{{ :: build_rev }}" rel="noopener noreferrer">{{ :: build_rev }}</a></h5>
-      <h5 ng-if="build_rev_core.href">Superdesk Core rev. <a ng-href="{{ :: build_rev_core.href }}" rel="noopener noreferrer">{{ :: build_rev_core.name }}</a></h5>
-      <h5 ng-if="build_rev_client.href">Superdesk Client rev. <a href="{{ :: build_rev_client.href }}" rel="noopener noreferrer">{{ :: build_rev_client.name }}</a></h5>
-      <h5 ng-if="build_rev_planning.href">Superdesk Planning rev. <a href="{{ :: build_rev_planning.href }}" rel="noopener noreferrer">{{ :: build_rev_planning.name }}</a></h5>
-      <h5 ng-if="build_rev_analytics.href">Superdesk Analytics rev. <a href="{{ :: build_rev_analytics.href }}" rel="noopener noreferrer">{{ :: build_rev_analytics.name }}</a></h5>
-      <h5 ng-if="build_rev_publisher.href">Superdesk Publisher rev. <a href="{{ :: build_rev_publisher.href }}" rel="noopener noreferrer">{{ :: build_rev_publisher.name }}</a></h5>
+
+      <h5 ng-repeat="module in modules track by module.name">
+        {{ module.name }}: <a ng-href="{{ module.href }}" rel="noopener noreferrer">{{ module.version }}</a>
+      </h5>
 
       <p class="date-released"><span ng-show="releaseDate">Released on</span> {{ :: releaseDate }}</p>
       <p>
