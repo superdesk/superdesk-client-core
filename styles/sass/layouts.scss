@@ -39,6 +39,25 @@ a:hover {
 // Layouts
 // --------------------------------------------
 
+.top-menu-hidden {
+    #top-menu {
+        display: none;
+    }
+
+    .monitoring {
+        top: 0;
+    }
+
+    .subnav--authoring {
+        top: 0;
+    }
+    
+    .main-section {
+        // excludes $subnav-height
+        top: $topspace;
+    }
+}
+
 // main container
 // ------------------------------------
 #main-container {

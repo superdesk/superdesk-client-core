@@ -419,16 +419,18 @@
   }
 }
 
-.side-menu-hidden #side-menu {
-    display: none;
-}
+.side-menu-hidden {
+    #side-menu {
+        display: none;
+    }
 
-.side-menu-hidden #main-container.hideMonitoring #authoring-container {
-    width: 100%!important;
-}
+    #main-container.hideMonitoring #authoring-container {
+        width: 100%!important;
+    }
 
-.side-menu-hidden #workspace-container {
-    left: 0;
+    #workspace-container {
+        left: 0;
+    }
 }
 
 .sd-sidetab-menu,
