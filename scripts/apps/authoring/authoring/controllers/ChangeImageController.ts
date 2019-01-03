@@ -70,7 +70,7 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
     $scope.metadata = {
         isDirty: false
     };
-    
+
     $scope.crops = {
         isDirty: false
     };
@@ -169,11 +169,14 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
         // update crop and poi data in `item`
         angular.extend($scope.data.item, $scope.data.metadata);
         $scope.data.item.poi = $scope.data.poi;
-        
+
+        if ($scope.selectedRendition) {
+            $scope.saveAreaOfInterest($scope.currentCropData);
+        }
         $scope.crops.isDirty = false;
         $scope.data.isDirty = true;
     };
-    
+
     /**
     * @ngdoc method
     * @name ChangeImageController#cancelCrops
@@ -184,7 +187,7 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
         $scope.data.cropData = angular.copy(_origCropsData);
         $scope.crops.isDirty = false;
     };
-    
+
     /**
     * @ngdoc method
     * @name ChangeImageController#applyMetadataChanges
@@ -195,7 +198,7 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
         $scope.metadata.isDirty = false;
         $scope.data.isDirty = true;
     };
-    
+
     /**
     * @ngdoc method
     * @name ChangeImageController#cancelMetadataChanges
@@ -225,10 +228,9 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
                     '_etag',
                 ]),
             });
-
         } else {
             $scope.reject();
-        } 
+        }
     };
 
     // Area of Interest
@@ -480,6 +482,7 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
     $scope.onChange = function(renditionName, cropData) {
         $scope.$applyAsync(() => {
             if (angular.isDefined(renditionName)) {
+                $scope.currentCropData = cropData;
                 $scope.data.cropData[renditionName] = angular.extend({}, cropData, sizes[renditionName]);
                 $scope.data.isDirty = true;
                 $scope.crops.isDirty = true;
