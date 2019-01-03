@@ -157,10 +157,14 @@
 .page-content-container {
     position: absolute;
     top:0;
+    bottom: 0;
     left: $tablist-width + $article-tabpane-padding;
     right: $tablist-width + $article-tabpane-padding;
-    bottom: 30px;
     overflow-y: auto;
+}
+
+.workqueue .page-content-container {
+    bottom: 30px;
 }
 
 
