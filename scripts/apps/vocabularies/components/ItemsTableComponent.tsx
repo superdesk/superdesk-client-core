@@ -9,7 +9,13 @@ export default class ItemsTableComponent extends React.Component<any, any> {
 
     constructor(props) {
         super(props);
-        this.state = {items: [], itemsValidation: []};
+        this.state = {items: [], itemsValidation: [], caretPosition: '', targetInput: ''};
+    }
+
+    componentDidUpdate() {
+        const {targetInput, caretPosition} = this.state;
+
+        this.setCaretPosition(targetInput, caretPosition);
     }
 
     getModelKeys() {
@@ -44,12 +50,23 @@ export default class ItemsTableComponent extends React.Component<any, any> {
         return <tr>{fields}</tr>;
     }
 
+    setCaretPosition(ctrl, pos) {
+        if (ctrl.setSelectionRange) {
+            ctrl.focus();
+            ctrl.setSelectionRange(pos, pos);
+        }
+    }
+
     inputField(field, item, index?) {
         const value = item[field.key] || '';
         const disabled = !item.is_active;
         const update = (event) => {
             const _value = field.type === 'integer' ? parseInt(event.target.value, 10) : event.target.value;
 
+            const caretPosition = event.target.selectionStart;
+            const targetInput = event.target;
+
+            this.setState({targetInput, caretPosition});
             this.props.update(item, field.key, _value);
         };
         const required = this.state.itemsValidation.length && has(this.state.itemsValidation[index], field.key);
