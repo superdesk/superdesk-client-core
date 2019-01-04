@@ -18,6 +18,7 @@ export function ChangePasswordDirective(usersService, notify, gettext) {
                         scope.oldPasswordInvalid = false;
                         notify.success(gettext('The password has been changed.'), 3000);
                         scope.show.change_password = false;
+                        scope.user._etag = response._etag;
                     }, (response) => {
                         scope.oldPasswordInvalid = true;
                     });
