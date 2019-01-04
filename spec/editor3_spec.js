@@ -41,7 +41,7 @@ describe('editor3', () => {
     const editors = element.all(by.className('Editor3-editor'));
     const bodyEditor = new Editor3(editors.get(1));
     const headlineEditor = new Editor3(editors.get(0));
-    const ctrlA = protractor.Key.chord(protractor.Key.CONTROL, 'a');
+    const selectAll = protractor.Key.chord(protractor.Key.SHIFT, protractor.Key.UP);
 
     beforeEach(() => {
         monitoring.openMonitoring();
@@ -58,7 +58,7 @@ describe('editor3', () => {
 
     it('can edit body with toolbar', () => {
         bodyEditor.sendKeys('body text');
-        bodyEditor.sendKeys(ctrlA);
+        bodyEditor.sendKeys(selectAll);
         bodyEditor.toolbar.bold();
         bodyEditor.toolbar.link();
         bodyEditor.toolbar.linkInput.sendKeys('example.com/');
