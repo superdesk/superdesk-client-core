@@ -1,10 +1,10 @@
 import {GET_LABEL_MAP} from '../content/constants';
 import ng from 'core/services/ng';
+import {gettext} from 'core/ui/components/utils';
 
-export const getLabelNameResolver = () => ng.getServices(['gettextCatalog', 'vocabularies'])
+export const getLabelNameResolver = () => ng.getServices(['vocabularies'])
     .then((services) => {
-        const [gettextCatalog, vocabularies] = services;
-        const gettext = (str) => gettextCatalog.getString(str);
+        const [vocabularies] = services;
 
         return vocabularies.getAllActiveVocabularies()
             .then((vocabularies) => [gettext, vocabularies]);

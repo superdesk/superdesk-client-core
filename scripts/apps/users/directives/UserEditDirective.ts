@@ -1,7 +1,9 @@
-UserEditDirective.$inject = ['api', 'gettext', 'notify', 'usersService', 'userList', 'session', 'lodash',
+import {gettext} from 'core/ui/components/utils';
+
+UserEditDirective.$inject = ['api', 'notify', 'usersService', 'userList', 'session', 'lodash',
     'langmap', '$location', '$route', 'superdesk', 'features', 'asset', 'privileges',
     'desks', 'keyboardManager', 'gettextCatalog', 'config', 'metadata', 'deployConfig', 'modal'];
-export function UserEditDirective(api, gettext, notify, usersService, userList, session, _,
+export function UserEditDirective(api, notify, usersService, userList, session, _,
     langmap, $location, $route, superdesk, features, asset, privileges, desks, keyboardManager,
     gettextCatalog, config, metadata, deployConfig, modal) {
     return {
@@ -166,7 +168,8 @@ export function UserEditDirective(api, gettext, notify, usersService, userList, 
                                     if (response.data && response.data._issues) {
                                         if (angular.isDefined(response.data._issues['validator exception'])) {
                                             errorMessage = gettext(
-                                                'Error: ' + response.data._issues['validator exception'],
+                                                'Error: {{error}}',
+                                                {error: response.data._issues['validator exception']}
                                             );
                                         }
 

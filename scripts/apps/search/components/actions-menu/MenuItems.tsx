@@ -7,6 +7,7 @@ import Item from './Item';
 import SubmenuDropdown from './SubmenuDropdown';
 import {AUTHORING_MENU_GROUPS} from '../../../authoring/authoring/constants';
 import {closeActionsMenu, menuHolderElem} from '../../helpers';
+import {gettext} from 'core/ui/components/utils';
 
 export default class MenuItems extends React.Component<any, any> {
     static propTypes: any;
@@ -63,8 +64,6 @@ export default class MenuItems extends React.Component<any, any> {
     }
 
     renderMenu() {
-        const {gettextCatalog} = this.props.svc;
-
         const menu = [];
         const item = this.props.item;
 
@@ -84,7 +83,6 @@ export default class MenuItems extends React.Component<any, any> {
                     menu.push(
                         <Label
                             label={group.label}
-                            svc={this.props.svc}
                             key={`group-label-${group._id}`}
                             item={this.props.item} />,
                         <Divider key={`group-divider-${group._id}`} />,
@@ -95,7 +93,7 @@ export default class MenuItems extends React.Component<any, any> {
                     menu.push(
                         <li key={`group-label-${group._id}`}>
                             <SubmenuDropdown
-                                label={gettextCatalog.getString(group.label)}
+                                label={gettext(group.label)}
                                 submenu={submenu}
                                 icon={actions[group._id][0].icon}
                             />

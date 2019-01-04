@@ -6,7 +6,7 @@ import {some, isEmpty} from 'lodash';
 /**
  * ContactLocation - to display address/location of a contact item
  */
-export const ContactLocation: React.StatelessComponent<any> = ({item, svc}) => {
+export const ContactLocation: React.StatelessComponent<any> = ({item}) => {
     const ADDRESS_FIELDS = ['contact_address', 'locality', 'city', 'contact_state', 'postcode', 'country'];
 
     const canShow = some(ADDRESS_FIELDS, (field) => !isEmpty(item[field]));
@@ -16,7 +16,7 @@ export const ContactLocation: React.StatelessComponent<any> = ({item, svc}) => {
             {canShow && <i className="icon-map-marker" />}
             {
                 canShow &&
-                (<ItemContainer item={item} field="location" svc={svc} />)
+                (<ItemContainer item={item} field="location" />)
             }
         </div>
     );
@@ -24,5 +24,4 @@ export const ContactLocation: React.StatelessComponent<any> = ({item, svc}) => {
 
 ContactLocation.propTypes = {
     item: PropTypes.object,
-    svc: PropTypes.object,
 };

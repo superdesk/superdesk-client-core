@@ -5,14 +5,13 @@ import {ItemContainer} from 'apps/contacts/components';
 /**
  * SocialInfo - to display facebook, twitter etc. information of a contact
  */
-export const SocialInfo: React.StatelessComponent<any> = ({item, svc}) => (
+export const SocialInfo: React.StatelessComponent<any> = ({item}) => (
     <div key="contact-social" className="social-info">
-        {item.facebook && <ItemContainer item={item} field="facebook" svc={svc} />}
-        {item.twitter && <ItemContainer item={item} field="twitter" svc={svc} />}
+        {item.facebook && <ItemContainer item={item} field="facebook" />}
+        {item.twitter && <ItemContainer item={item} field="twitter" />}
     </div>
 );
 
 SocialInfo.propTypes = {
     item: PropTypes.object,
-    svc: PropTypes.object,
 };

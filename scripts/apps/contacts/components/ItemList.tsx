@@ -3,6 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import {Item} from 'apps/contacts/components';
+import {gettext} from 'core/ui/components/utils';
 
 /**
  * Contact Item list component
@@ -118,7 +119,6 @@ export class ItemList extends React.Component<any, any> {
     }
 
     render() {
-        const {gettextCatalog} = this.props.svc;
         const {scope, svc} = this.props;
 
         const _createItem = function createItem(itemId) {
@@ -146,7 +146,7 @@ export class ItemList extends React.Component<any, any> {
         );
 
         const listItems = isEmpty && !scope.loading ?
-            <span key="no-items">{gettextCatalog.getString('There are currently no items')}</span>
+            <span key="no-items">{gettext('There are currently no items')}</span>
             : this.state.itemsList.map(_createItem);
 
         return (

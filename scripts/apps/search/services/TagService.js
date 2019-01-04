@@ -1,5 +1,7 @@
 import {PARAMETERS, EXCLUDE_FACETS} from 'apps/search/constants';
 import {getDateFilters, dateRangesByKey} from '../directives/DateFilters';
+import {gettext} from 'core/ui/components/utils';
+
 /**
  * @ngdoc service
  * @module superdesk.apps.search
@@ -11,16 +13,15 @@ import {getDateFilters, dateRangesByKey} from '../directives/DateFilters';
  * @requires metadata
  * @requires search
  * @requires ingestSources
- * @requires gettextCatalog
  * @requires subscribersService
  * @requires $q
  *
  * @description Provides set of methods to manipulate with tags in search bar
  */
 TagService.$inject = ['$location', 'desks', 'userList', 'metadata', 'search',
-    'ingestSources', 'gettextCatalog', 'subscribersService', '$q', 'gettext'];
+    'ingestSources', 'subscribersService', '$q'];
 export function TagService($location, desks, userList, metadata, search,
-    ingestSources, gettextCatalog, subscribersService, $q, gettext) {
+    ingestSources, subscribersService, $q) {
     var tags = {};
 
     tags.selectedFacets = {};
@@ -79,7 +80,7 @@ export function TagService($location, desks, userList, metadata, search,
 
             if (!added) {
                 var paramArr = parameter.split(':');
-                var parameterTranslated = gettextCatalog.getString(paramArr[0]) + ':' + paramArr[1];
+                var parameterTranslated = gettext(paramArr[0]) + ':' + paramArr[1];
 
                 tags.selectedParameters.push(tag(parameterTranslated, paramArr.join(':')));
             }

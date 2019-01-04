@@ -12,6 +12,7 @@ import {UserAvatar} from 'apps/users/components/UserAvatar';
 import {FluidRows} from '../../fluid-flex-rows/fluid-rows';
 import {FluidRow} from '../../fluid-flex-rows/fluid-row';
 import {EditorHighlightsHeader} from '../../editorPopup/EditorHighlightsHeader';
+import {gettext} from 'core/ui/components/utils';
 
 /**
  * @ngdoc React
@@ -37,9 +38,6 @@ class Suggestion extends React.Component<any, any> {
     }
 
     componentDidMount() {
-        const gettextCatalog = ng.get('gettextCatalog');
-        const gettext = gettextCatalog.getString.bind(gettextCatalog);
-
         ng.get('api')('users').getById(this.props.suggestion.author)
             .then((author) => {
                 this.setState({author});
@@ -72,9 +70,6 @@ class Suggestion extends React.Component<any, any> {
         if (this.state.author === null) {
             return null;
         }
-
-        const gettextCatalog = ng.get('gettextCatalog');
-        const gettext = gettextCatalog.getString.bind(gettextCatalog);
 
         const {author} = this.state;
         const {date, suggestionText, oldText} = this.props.suggestion;

@@ -5,6 +5,7 @@ import classNames from 'classnames';
 import {Item} from './index';
 import {isCheckAllowed, closeActionsMenu, bindMarkItemShortcut} from '../helpers';
 import {querySelectorParent} from 'core/helpers/dom/querySelectorParent';
+import {gettext} from 'core/ui/components/utils';
 
 /**
  * Item list component
@@ -444,7 +445,7 @@ export class ItemList extends React.Component<any, any> {
     }
 
     render() {
-        const {storage, gettextCatalog} = this.props.svc;
+        const {storage} = this.props.svc;
         const {scope} = this.props;
 
         const createItem = function(itemId) {
@@ -492,7 +493,7 @@ export class ItemList extends React.Component<any, any> {
                 React.createElement(
                     'li',
                     {onClick: this.closeActionsMenu},
-                    gettextCatalog.getString('There are currently no items'),
+                    gettext('There are currently no items'),
                 ) : this.state.itemsList.map(createItem),
         );
     }

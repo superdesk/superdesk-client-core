@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import {LEFT_SIDEBAR_WIDTH} from 'core/ui/constants';
+import {gettext} from 'core/ui/components/utils';
 
 import {closeActionsMenu} from '../../helpers';
 
@@ -104,7 +105,7 @@ export default class Item extends React.Component<any, any> {
     }
 
     render() {
-        const {gettextCatalog, $injector} = this.props.svc;
+        const {$injector} = this.props.svc;
 
         const activity = this.props.activity;
 
@@ -121,19 +122,19 @@ export default class Item extends React.Component<any, any> {
                         'a',
                         {
                             className: 'dropdown__toggle',
-                            title: gettextCatalog.getString(activity.label),
+                            title: gettext(activity.label),
                         },
                         activity.icon ? React.createElement('i', {
                             className: 'icon-' + activity.icon,
                         }, '') : null,
-                        gettextCatalog.getString(activity.label),
+                        gettext(activity.label),
                     ),
                     this.state.open && invoke ? $injector.invoke(activity.dropdown, activity, {
                         item: this.props.item,
                         className: 'dropdown__menu upward ' + this.state.position,
-                        noHighlightsLabel: gettextCatalog.getString('No available highlights'),
-                        noDesksLabel: gettextCatalog.getString('No available desks'),
-                        noLanguagesLabel: gettextCatalog.getString('No available translations'),
+                        noHighlightsLabel: gettext('No available highlights'),
+                        noDesksLabel: gettext('No available desks'),
+                        noLanguagesLabel: gettext('No available translations'),
                     }) : null,
                 ),
             );
@@ -144,13 +145,13 @@ export default class Item extends React.Component<any, any> {
             null,
             React.createElement(
                 'a',
-                {title: gettextCatalog.getString(activity.label), onClick: this.run},
+                {title: gettext(activity.label), onClick: this.run},
                 React.createElement('i', {
                     className: 'icon-' + activity.icon,
                 }),
                 React.createElement('span', {
                     style: {display: 'inline'},
-                }, gettextCatalog.getString(activity.label)),
+                }, gettext(activity.label)),
             ),
         );
     }

@@ -1,3 +1,5 @@
+import {gettext} from 'core/ui/components/utils';
+
 export default angular.module('superdesk.core.directives.filetypeIcon', [])
 /**
  * @ngdoc directive
@@ -8,7 +10,7 @@ export default angular.module('superdesk.core.directives.filetypeIcon', [])
  *
  * @description Adds the "filetype-icon-*" class based on the item.
  */
-    .directive('sdFiletypeIcon', ['gettextCatalog', (gettextCatalog) => ({
+    .directive('sdFiletypeIcon', [() => ({
         scope: {item: '='},
         link: function(scope, element, attrs) {
             var oldClass = null;
@@ -34,7 +36,7 @@ export default angular.module('superdesk.core.directives.filetypeIcon', [])
                     return;
                 }
 
-                element.attr('title', `${gettextCatalog.getString('Article Type')}: ${item.type}`);
+                element.attr('title', `${gettext('Article Type')}: ${item.type}`);
                 element.addClass(cls);
                 element.removeClass(oldClass);
                 oldClass = cls;

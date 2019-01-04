@@ -5,11 +5,7 @@ import {imageBlockAndContent} from './utils';
 import Textarea from 'react-textarea-autosize';
 
 const servicesStub = {
-    svc: {
-        gettextCatalog: {
-            getString: (s) => s,
-        },
-    },
+    svc: {},
 };
 
 describe('editor3.components.media-block', () => {

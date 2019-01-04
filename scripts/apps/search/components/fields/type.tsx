@@ -11,7 +11,7 @@ export const type: React.StatelessComponent<any> = (props) => {
 
     return (
         <span className={props.className}>
-            <TypeIcon type={_type} highlight={highlight} svc={props.svc} />
+            <TypeIcon type={_type} highlight={highlight} />
         </span>
     );
 };

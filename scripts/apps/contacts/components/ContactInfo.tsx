@@ -7,7 +7,7 @@ import {isEmpty, findKey} from 'lodash';
 /**
  * Media Contact Info - renders contact's information
  */
-export const ContactInfo: React.StatelessComponent<any> = ({item, svc, labelInactive}) => {
+export const ContactInfo: React.StatelessComponent<any> = ({item, labelInactive}) => {
     const meta = [];
     const info = [];
 
@@ -35,7 +35,7 @@ export const ContactInfo: React.StatelessComponent<any> = ({item, svc, labelInac
         <li className="simple-list__item simple-list__item--with-icon" key="l-1">
             <span key="2"><i key="2.1" className="icon-envelope" /></span>
             <span key="3">
-                {!isEmpty(item.contact_email) && (<ItemContainer item={item} field="contact_email" svc={svc} />)}
+                {!isEmpty(item.contact_email) && (<ItemContainer item={item} field="contact_email" />)}
             </span>
         </li>,
     );
@@ -44,7 +44,7 @@ export const ContactInfo: React.StatelessComponent<any> = ({item, svc, labelInac
         <li className="simple-list__item simple-list__item--with-icon" key="l-2">
             <span key="10"><i key="10.1" className="icon-globe" /></span>
             <span key="11">
-                {item.website && (<ItemContainer item={item} field="website" svc={svc} />)}
+                {item.website && (<ItemContainer item={item} field="website" />)}
             </span>
         </li>,
     );
@@ -54,7 +54,7 @@ export const ContactInfo: React.StatelessComponent<any> = ({item, svc, labelInac
             <span key="4"><i key="4.1" className="icon-phone" /></span>
             <span key="5" className="dark">
                 {!isEmpty(item.contact_phone) && findKey(item.contact_phone, 'number') &&
-                    (<ItemContainer item={item} field="contact_phone" svc={svc} />)
+                    (<ItemContainer item={item} field="contact_phone" />)
                 }
             </span>
         </li>,
@@ -65,7 +65,7 @@ export const ContactInfo: React.StatelessComponent<any> = ({item, svc, labelInac
             <span key="mobile-dt"><i key="mobile-icon" className="icon-mobile" /></span>
             <span key="mobile-dd" className="dark">
                 {!isEmpty(item.mobile) && findKey(item.mobile, 'number') &&
-                    (<ItemContainer item={item} field="mobile" svc={svc} />)
+                    (<ItemContainer item={item} field="mobile" />)
                 }
             </span>
         </li>,
@@ -75,7 +75,7 @@ export const ContactInfo: React.StatelessComponent<any> = ({item, svc, labelInac
         <li className="simple-list__item simple-list__item--with-icon" key="l-5">
             <span key="address-dt"><i key="address-link" className="icon-map-marker" /></span>
             <span key="address-dd">
-                {item && (<ItemContainer item={item} field="location" svc={svc} />)}
+                {item && (<ItemContainer item={item} field="location" />)}
             </span>
         </li>,
     );
@@ -86,7 +86,7 @@ export const ContactInfo: React.StatelessComponent<any> = ({item, svc, labelInac
             <li className="simple-list__item simple-list__item--with-icon" key="l-6">
                 <i key="12.1" className="icon-info-sign"/>
                 <span key="12.2">
-                    {item.notes && (<Notes item={item} svc={svc} />)}
+                    {item.notes && (<Notes item={item} />)}
                 </span>
             </li>
         </ul>,
@@ -99,6 +99,5 @@ export const ContactInfo: React.StatelessComponent<any> = ({item, svc, labelInac
 
 ContactInfo.propTypes = {
     item: PropTypes.object,
-    svc: PropTypes.object.isRequired,
     labelInactive: PropTypes.bool,
 };

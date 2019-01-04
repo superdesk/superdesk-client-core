@@ -1,3 +1,4 @@
+import {gettext} from 'core/ui/components/utils';
 
 describe('Tag Service', () => {
     var deskList = {
@@ -49,14 +50,13 @@ describe('Tag Service', () => {
     }));
 
     it('can populate parameters from location',
-        inject(($location, tags, $rootScope, desks, $q, gettextCatalog) => {
+        inject(($location, tags, $rootScope, desks, $q) => {
             var members = null;
 
             $location.search('q=headline:(Obama)');
             $rootScope.$apply();
 
             spyOn(desks, 'initialize').and.returnValue($q.when({deskLookup: deskList}));
-            gettextCatalog.setStrings(gettextCatalog.getCurrentLanguage(), {headline: 'foo'});
 
             tags.initSelectedFacets()
                 .then((currentTags) => {
@@ -65,7 +65,7 @@ describe('Tag Service', () => {
 
             $rootScope.$digest();
             expect(members.selectedParameters.length).toBe(1);
-            expect(members.selectedParameters[0].label).toBe('foo:(Obama)');
+            expect(members.selectedParameters[0].label).toBe('headline:(Obama)');
             expect(members.selectedParameters[0].value).toBe('headline:(Obama)');
         }));
 

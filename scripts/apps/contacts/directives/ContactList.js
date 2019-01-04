@@ -11,7 +11,6 @@ ContactList.$inject = [
     'search',
     'datetime',
     'Keys',
-    'gettextCatalog',
     '$rootScope',
 ];
 
@@ -25,7 +24,6 @@ ContactList.$inject = [
  * @requires search
  * @requires datetime
  * @requires Keys
- * @requires gettextCatalog
  * @requires $rootScope
  *
  * @description Handles the functionality displaying list of items from contacts collection
@@ -37,7 +35,6 @@ export function ContactList(
     search,
     datetime,
     Keys,
-    gettextCatalog,
     $rootScope
 ) {
     // contains all the injected services to be passed down to child
@@ -47,7 +44,6 @@ export function ContactList(
         $filter: $filter,
         datetime: datetime,
         Keys: Keys,
-        gettextCatalog: gettextCatalog,
         $rootScope: $rootScope,
     };
 

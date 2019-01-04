@@ -27,7 +27,6 @@ ItemList.$inject = [
     'TranslationService',
     'monitoringState',
     'authoringWorkspace',
-    'gettextCatalog',
     '$rootScope',
     'config',
     '$interpolate',
@@ -62,7 +61,6 @@ ItemList.$inject = [
  * @requires TranslationService
  * @requires monitoringState
  * @requires authoringWorkspace
- * @requires gettextCatalog
  * @requires $rootScope
  * @requires config
  * @requires $interpolate
@@ -96,7 +94,6 @@ export function ItemList(
     TranslationService,
     monitoringState,
     authoringWorkspace,
-    gettextCatalog,
     $rootScope,
     config,
     $interpolate,
@@ -128,7 +125,6 @@ export function ItemList(
         TranslationService: TranslationService,
         monitoringState: monitoringState,
         authoringWorkspace: authoringWorkspace,
-        gettextCatalog: gettextCatalog,
         $rootScope: $rootScope,
         config: config,
         $interpolate: $interpolate,

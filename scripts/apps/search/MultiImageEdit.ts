@@ -2,6 +2,7 @@ import _ from 'lodash';
 import {uniq, pickBy, isEmpty} from 'lodash';
 import {validateMediaFieldsThrows} from 'apps/authoring/authoring/controllers/ChangeImageController';
 import {logger} from 'core/services/logger';
+import {gettext} from 'core/ui/components/utils';
 
 interface IScope extends ng.IScope {
     validator: any;
@@ -23,14 +24,12 @@ interface IScope extends ng.IScope {
 MultiImageEditController.$inject = [
     '$scope',
     'modal',
-    'gettextCatalog',
     'notify',
 ];
 
 export function MultiImageEditController(
     $scope: IScope,
     modal,
-    gettextCatalog,
     notify,
 ) {
     const saveHandler = $scope.saveHandler;
@@ -118,8 +117,8 @@ export function MultiImageEditController(
     $scope.close = () => {
         if ($scope.isDirty()) {
             modal.confirm(
-                gettextCatalog.getString('You have unsaved changes, do you want to continue?'),
-                gettextCatalog.getString('Confirm'),
+                gettext('You have unsaved changes, do you want to continue?'),
+                gettext('Confirm'),
             )
                 .then(() => {
                     if (typeof $scope.cancelHandler === 'function') {
