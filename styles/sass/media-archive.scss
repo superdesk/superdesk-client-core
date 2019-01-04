@@ -438,7 +438,7 @@ $sfbox_mediaMaxWidth : 172px;
     }
 }
 
-.mgrid-view, #scratchpad {
+.mgrid-view {
     .media-box {
         .action {
             display: none;
@@ -664,15 +664,6 @@ $sfbox_mediaMaxWidth : 172px;
     height: 1px;
     width: 1px;
     margin: 0;
-}
-
-#scratchpad {
-    .media-box {
-        border-color: #aaa;
-        &.archived {
-            @include box-shadow(none);
-        }
-    }
 }
 
 .sd-grid-list {
@@ -1141,7 +1132,7 @@ $rightfield-width:60px;
     }
 }
 
-.mgrid-view, #scratchpad {
+.mgrid-view {
     .active:not(.selected) {
         .media-box {
             border-color: #787878;

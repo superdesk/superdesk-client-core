@@ -154,7 +154,6 @@ a:hover {
     margin:0;
     padding:0;
     z-index:1;
-    padding-bottom:35px !important; /* because of scratchpad*/
     &.with-subnav {
         .preview-layout {
             top : $nav-height;
@@ -176,7 +175,6 @@ a:hover {
     margin:0;
     padding:0;
     z-index:1;
-    padding-bottom:35px !important; /* because of scratchpad*/
     &.with-subnav {
         .preview-layout {
             top : $nav-height;
@@ -633,7 +631,6 @@ $slide-pane-width: 400px;
     }
     .tabcontent {
         padding:$tabcontent-padding;
-        padding-bottom: $tabcontent-padding + 30px; //because of scratchpad
         @include box-sizing(border-box);
         position: absolute;
         bottom: 0;
