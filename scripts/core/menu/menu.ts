@@ -142,7 +142,7 @@ angular.module('superdesk.core.menu', [
                 api.query('backend_meta', {}).then(
                     (metadata) => {
                         scope.build_rev = metadata.meta_rev;
-                        scope.modules = metadata.modules.filter((mod) => mod !== null);
+                        scope.modules = metadata.modules;
                     });
                 scope.version = config.version;
                 scope.year = (new Date()).getUTCFullYear();
