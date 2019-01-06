@@ -2169,6 +2169,7 @@ describe('send item directive', () => {
     beforeEach(window.module('superdesk.core.api'));
     beforeEach(window.module('superdesk.apps.vocabularies'));
     beforeEach(window.module('superdesk.apps.searchProviders'));
+    beforeEach(window.module('superdesk.apps.extension-points'));
 
     beforeEach(inject(($templateCache) => {
         $templateCache.put('scripts/apps/authoring/views/send-item.html', '');
