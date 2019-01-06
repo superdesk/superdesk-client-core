@@ -725,6 +725,22 @@ Profile page styles
             }
         }
     }
+
+    [sd-meta-dropdown] {
+        .dropdown__toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 0.2rem !important;
+            min-width: 240px;
+            .dropdown__caret {
+                display: block;
+                flex-grow: 0;
+                flex-shrink: 0;
+                margin: 0 !important;
+            }
+        }
+    }
 }
 
 .mini-modal {
@@ -768,20 +784,4 @@ Profile page styles
     font-weight: 300;
     letter-spacing: 0.02em;
     text-transform: capitalize;
-}
-
-[sd-meta-dropdown] {
-    .dropdown__toggle {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 0 0.2rem !important;
-        min-width: 240px;
-        .dropdown__caret {
-            display: block;
-            flex-grow: 0;
-            flex-shrink: 0;
-            margin: 0 !important;
-        }
-    }
 }
