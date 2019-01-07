@@ -101,15 +101,11 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
         }
     };
 
-    $scope.handleNoImageCrops = function(_origCropsData) {
-        if (Object.keys(_origCropsData).length === 0) {
-            $scope.data.isDirty = true;
-        }
-    };
-
     const _origCropsData = angular.copy($scope.data.cropData);
 
-    $scope.handleNoImageCrops(_origCropsData);
+    if (_origCropsData && Object.keys(_origCropsData).length === 0) {
+        $scope.data.isDirty = true;
+    }
 
     /**
      * @ngdoc method
