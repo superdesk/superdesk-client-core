@@ -1,3 +1,4 @@
+import {pickBy} from 'lodash';
 import {IArticle} from 'superdesk-interfaces/Article';
 
 RelationsService.$inject = ['archiveService', 'mediaIdGenerator'];
@@ -7,7 +8,8 @@ export function RelationsService(archiveService, mediaIdGenerator) {
         if (!item.associations) {
             return [];
         }
-        const relatedWithoutMedia = _.pickBy(item.associations, (value, key) => {
+
+        const relatedWithoutMedia = pickBy(item.associations, (value, key) => {
             var parts = mediaIdGenerator.getFieldParts(key);
             var field = fields.find((field) => field._id === parts[0]);
 
