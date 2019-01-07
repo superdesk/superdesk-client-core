@@ -6,6 +6,17 @@
                 <input id="search-input" type="text" placeholder="{{ :: 'Search' | translate }}" ng-model="query" ng-model-options="{debounce: 500}" ng-change="search(query)">
             </div>
         </div>
+        <div class="dropdown" dropdown>
+            <button class="dropdown__toggle navbtn navbtn--text-only" dropdown__toggle translate>
+                Status: {{selectedStatusFilter}}
+                <span class="dropdown__caret"></span>
+            </button>
+            <ul class="dropdown__menu">
+                <li ng-repeat="option in ['Active', 'All', 'Closed'] track by $index" >
+                    <button ng-click="filterIngestSources(option)">{{option}}</button>
+                </li>
+            </ul>
+        </div>
         <div class="sd-page__element-grow">
             <div sd-pagination items="providers"></div>
         </div>

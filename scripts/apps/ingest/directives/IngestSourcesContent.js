@@ -79,6 +79,12 @@ export function IngestSourcesContent(ingestSources, gettext, notify, api, $locat
                     13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24];
                 $scope.ingestExpiry = deployConfig.getSync('ingest_expiry_minutes');
 
+                $scope.selectedStatusFilter = 'Active';
+                $scope.filterIngestSources = function(option) {
+                    $scope.selectedStatusFilter = option;
+                    fetchProviders();
+                };
+
                 $scope.search = function(query) {
                     if (query) {
                         $scope.searchPage = 1;
@@ -100,6 +106,14 @@ export function IngestSourcesContent(ingestSources, gettext, notify, api, $locat
                             {name: {
                                 $regex: $scope.searchQuery,
                                 $options: '-i'},
+                            },
+                        ]};
+                    } else if ($scope.selectedStatusFilter !== 'All') {
+                        const status = $scope.selectedStatusFilter !== 'Active';
+
+                        orTerms = {$or: [
+                            {
+                                is_closed: status,
                             },
                         ]};
                     }
