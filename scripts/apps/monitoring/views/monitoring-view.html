@@ -92,7 +92,7 @@
                         </div>
                     </div>
     
-                    <div ng-if="hideMonitoringToolbar2 !== true" sd-media-query min-width="700" class="subnav">
+                    <div ng-hide="hideMonitoringToolbar2 === true" sd-media-query min-width="700" class="subnav">
             
                         <!-- filtering by file type not implemented for usage with custom data source -->
                         <div ng-if="(!elementState || elementState === 'comfort') && customDataSource == null" class="button-list button-list--padded">
