@@ -1,5 +1,12 @@
 # Superdesk Client Changelog
 
+## [1.27.1] 2019-01-08
+
+### Fixed
+
+- Allow date ranges in custom fields.
+- Adjust style for relative date buttons in the datepicker.
+
 ## [1.27.0] 2018-12-14
 
 ### Fixed
