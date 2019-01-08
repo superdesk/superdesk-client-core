@@ -70,7 +70,7 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
     $scope.metadata = {
         isDirty: false
     };
-    
+
     $scope.crops = {
         isDirty: false
     };
@@ -102,6 +102,10 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
     };
 
     const _origCropsData = angular.copy($scope.data.cropData);
+
+    if (_origCropsData && Object.keys(_origCropsData).length === 0) {
+        $scope.data.isDirty = true;
+    }
 
     /**
      * @ngdoc method
@@ -169,11 +173,11 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
         // update crop and poi data in `item`
         angular.extend($scope.data.item, $scope.data.metadata);
         $scope.data.item.poi = $scope.data.poi;
-        
+
         $scope.crops.isDirty = false;
         $scope.data.isDirty = true;
     };
-    
+
     /**
     * @ngdoc method
     * @name ChangeImageController#cancelCrops
@@ -184,7 +188,7 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
         $scope.data.cropData = angular.copy(_origCropsData);
         $scope.crops.isDirty = false;
     };
-    
+
     /**
     * @ngdoc method
     * @name ChangeImageController#applyMetadataChanges
@@ -195,7 +199,7 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
         $scope.metadata.isDirty = false;
         $scope.data.isDirty = true;
     };
-    
+
     /**
     * @ngdoc method
     * @name ChangeImageController#cancelMetadataChanges
@@ -225,10 +229,9 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
                     '_etag',
                 ]),
             });
-
         } else {
             $scope.reject();
-        } 
+        }
     };
 
     // Area of Interest
