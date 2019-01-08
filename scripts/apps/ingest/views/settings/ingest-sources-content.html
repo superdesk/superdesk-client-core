@@ -8,12 +8,12 @@
         </div>
         <div class="dropdown" dropdown>
             <button class="dropdown__toggle navbtn navbtn--text-only" dropdown__toggle translate>
-                Status: {{selectedStatusFilter}}
+                Status: {{selectedStatusFilter | translate}}
                 <span class="dropdown__caret"></span>
             </button>
             <ul class="dropdown__menu">
                 <li ng-repeat="option in ['Active', 'All', 'Closed'] track by $index" >
-                    <button ng-click="filterIngestSources(option)">{{option}}</button>
+                    <button ng-click="filterIngestSources(option)">{{option | translate}}</button>
                 </li>
             </ul>
         </div>
