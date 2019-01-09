@@ -76,7 +76,16 @@ describe('ingest_provider', () => {
 
         browser.wait(() => element(by.id('ingest-settings')).isDisplayed(), 1000).then(() => {
             expect(element(by.id('ingest-settings')).isDisplayed()).toBe(true);
-            expect(element(by.css('.modal__dialog')).element(by.id('provider-name')).isDisplayed()).toBe(true);
         });
+        var statusFilter = element(by.id('status_filter_button'));
+
+        statusFilter.click();
+        expect(element(by.id('status--Closed-filter')).isDisplayed()).toBe(true);
+        element(by.id('status--Closed-filter')).click();
+        var ingestProvider = element.all(by.repeater('provider in providers._items')).first();
+
+        browser.actions().mouseMove(ingestProvider).perform();
+        ingestProvider.all(by.css('.icon-pencil')).first().click();
+        expect(element(by.css('.modal__dialog')).element(by.id('provider-name')).isDisplayed()).toBe(true);
     });
 });

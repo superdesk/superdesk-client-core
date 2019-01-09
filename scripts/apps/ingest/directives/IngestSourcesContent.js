@@ -79,9 +79,15 @@ export function IngestSourcesContent(ingestSources, gettext, notify, api, $locat
                     13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24];
                 $scope.ingestExpiry = deployConfig.getSync('ingest_expiry_minutes');
 
-                $scope.selectedStatusFilter = 'Active';
-                $scope.filterIngestSources = function(option) {
-                    $scope.selectedStatusFilter = option;
+                $scope.statusFilters = [
+                    {label: gettext('Active'), value: 'Active'},
+                    {label: gettext('All'), value: 'All'},
+                    {label: gettext('Closed'), value: 'Closed'},
+                ];
+
+                $scope.activeStatusFilter = $scope.statusFilters[0].label;
+                $scope.filterIngestSources = function(filterIndex) {
+                    $scope.activeStatusFilter = $scope.statusFilters[filterIndex].label;
                     fetchProviders();
                 };
 
@@ -108,8 +114,8 @@ export function IngestSourcesContent(ingestSources, gettext, notify, api, $locat
                                 $options: '-i'},
                             },
                         ]};
-                    } else if ($scope.selectedStatusFilter !== 'All') {
-                        const status = $scope.selectedStatusFilter !== 'Active';
+                    } else if ($scope.activeStatusFilter !== 'All') {
+                        const status = $scope.activeStatusFilter !== 'Active';
 
                         orTerms = {$or: [
                             {

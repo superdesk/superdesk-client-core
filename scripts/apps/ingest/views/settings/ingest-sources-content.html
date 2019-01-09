@@ -7,13 +7,14 @@
             </div>
         </div>
         <div class="dropdown" dropdown>
-            <button class="dropdown__toggle navbtn navbtn--text-only" dropdown__toggle translate>
-                Status: {{selectedStatusFilter | translate}}
+            <!-- id only for testing purpose --->
+            <button id="status_filter_button" class="dropdown__toggle navbtn navbtn--text-only" dropdown__toggle translate>
+                Status: {{ activeStatusFilter | translate }}
                 <span class="dropdown__caret"></span>
             </button>
             <ul class="dropdown__menu">
-                <li ng-repeat="option in ['Active', 'All', 'Closed'] track by $index" >
-                    <button ng-click="filterIngestSources(option)">{{option | translate}}</button>
+                <li ng-repeat="filter in statusFilters track by $index" >
+                    <button ng-click="filterIngestSources($index)" id="status--{{::filter.label}}-filter">{{filter.label | translate}}</button>
                 </li>
             </ul>
         </div>
