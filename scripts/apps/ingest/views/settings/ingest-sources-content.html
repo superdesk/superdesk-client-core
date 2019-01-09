@@ -14,7 +14,7 @@
             <ul class="dropdown__menu">
                 <li ng-repeat="filter in statusFilters track by filter.id" >
                     <!-- dynamic id only for testing purpose --->
-                    <button ng-click="filterIngestSources(filter.id)" id="status--{{::filter.label}}-filter">{{filter.label | translate}}</button>
+                    <button ng-click="filterIngestSources(filter.id)" id="status--{{::filter.id}}-filter">{{filter.label | translate}}</button>
                 </li>
             </ul>
         </div>

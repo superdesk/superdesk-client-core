@@ -80,8 +80,8 @@ describe('ingest_provider', () => {
         var statusFilter = element(by.id('status_filter_button'));
 
         statusFilter.click();
-        expect(element(by.id('status--Closed-filter')).isDisplayed()).toBe(true);
-        element(by.id('status--Closed-filter')).click();
+        expect(element(by.id('status--closed-filter')).isDisplayed()).toBe(true);
+        element(by.id('status--closed-filter')).click();
         var ingestProvider = element.all(by.repeater('provider in providers._items')).first();
 
         browser.actions().mouseMove(ingestProvider).perform();

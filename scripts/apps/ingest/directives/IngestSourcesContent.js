@@ -87,7 +87,7 @@ export function IngestSourcesContent(ingestSources, gettext, notify, api, $locat
 
                 $scope.activeStatusFilter = $scope.statusFilters[0];
                 $scope.filterIngestSources = function(id) {
-                    $scope.activeStatusFilter = _.find($scope.statusFilters, (item) => item.id === id);
+                    $scope.activeStatusFilter = $scope.statusFilters.find((item) => item.id === id);
                     fetchProviders();
                 };
 
