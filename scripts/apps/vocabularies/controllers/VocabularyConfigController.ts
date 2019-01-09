@@ -86,6 +86,7 @@ export function VocabularyConfigController($scope: IScope, $route, $routeParams,
         tab === 'vocabularies' && !fieldType || fieldType &&
         (tab === 'text-fields' && fieldType === 'text' ||
             tab === 'date-fields' && fieldType === 'date' ||
+            tab === 'urls-fields' && fieldType === 'urls' ||
             tab === 'related-content-fields' && MEDIA_TYPE_KEYS.includes(fieldType) ||
             tab === 'embed-fields' && fieldType === 'embed');
 

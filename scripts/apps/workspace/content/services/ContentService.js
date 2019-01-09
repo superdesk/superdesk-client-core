@@ -320,7 +320,7 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
             self._fieldsPromise = api.getAll('vocabularies', {
                 where: {
                     $or: [
-                        {field_type: {$in: ['text', 'date', 'media', 'embed']}},
+                        {field_type: {$in: ['text', 'date', 'media', 'embed', 'urls']}},
                         {service: {$exists: true}},
                     ],
                 },
