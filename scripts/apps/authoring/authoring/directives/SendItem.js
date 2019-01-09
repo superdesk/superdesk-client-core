@@ -199,7 +199,6 @@ export function SendItem($q, api, search, desks, notify, authoringWorkspace,
                     var oldStage = scope.selectedStage;
 
                     scope.selectedStage = data.stage;
-
                     scope.send().then((sent) => {
                         if (!sent) {
                             scope.selectedStage = oldStage;
@@ -290,7 +289,7 @@ export function SendItem($q, api, search, desks, notify, authoringWorkspace,
              * Returns true if timezone needs to be displayed, false otherwise.
              */
             scope.showTimezone = function() {
-                return (scope.item.publish_schedule || scope.item.embargo) &&
+                return (scope.item && (scope.item.publish_schedule || scope.item.embargo)) &&
                     (scope.showPublishSchedule() || scope.showEmbargo());
             };
 
