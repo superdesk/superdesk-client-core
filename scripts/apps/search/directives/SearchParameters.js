@@ -77,6 +77,7 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
                 scope.cvs = metadata.search_cvs;
                 scope.search_config = getSearchConfig();
                 scope.lookupCvs = {};
+                scope.params = params.params ? JSON.parse(params.params) : {};
                 angular.forEach(scope.cvs, (cv) => {
                     scope.lookupCvs[cv.id] = cv;
                 });
@@ -373,6 +374,7 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
 
             function searchParameters() {
                 $location.search('q', getQuery() || null);
+                $location.search('params', scope.params ? JSON.stringify(scope.params) : null);
                 scope.meta = {};
             }
 
