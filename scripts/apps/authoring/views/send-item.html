@@ -172,7 +172,7 @@
         <!-- Footer Send To-->
         <div class="side-panel__footer side-panel__footer--button-box-large" ng-if="currentUserAction === vm.userActions.send_to">
             <button class="btn btn--large btn--primary btn--hollow btn--expanded"
-                    ng-show="showSendButtonAndDestination() && mode !== 'spike'"
+                    ng-show="showSendButtonAndDestination() && mode !== 'spike' && mode !== 'authoring'"
                     ng-click="send(true)"
                     ng-disabled="disableFetchAndOpenButton()">
                     {{!canSendItem() ? 'fetch and open' : 'send and open' | translate}}
