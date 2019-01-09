@@ -80,14 +80,14 @@ export function IngestSourcesContent(ingestSources, gettext, notify, api, $locat
                 $scope.ingestExpiry = deployConfig.getSync('ingest_expiry_minutes');
 
                 $scope.statusFilters = [
-                    {label: gettext('Active'), value: 'Active'},
-                    {label: gettext('All'), value: 'All'},
-                    {label: gettext('Closed'), value: 'Closed'},
+                    {label: gettext('Active'), id: 'active'},
+                    {label: gettext('All'), id: 'all'},
+                    {label: gettext('Closed'), id: 'closed'},
                 ];
 
-                $scope.activeStatusFilter = $scope.statusFilters[0].label;
-                $scope.filterIngestSources = function(filterIndex) {
-                    $scope.activeStatusFilter = $scope.statusFilters[filterIndex].label;
+                $scope.activeStatusFilter = $scope.statusFilters[0];
+                $scope.filterIngestSources = function(id) {
+                    $scope.activeStatusFilter = _.find($scope.statusFilters, (item) => item.id === id);
                     fetchProviders();
                 };
 
@@ -114,12 +114,10 @@ export function IngestSourcesContent(ingestSources, gettext, notify, api, $locat
                                 $options: '-i'},
                             },
                         ]};
-                    } else if ($scope.activeStatusFilter !== 'All') {
-                        const status = $scope.activeStatusFilter !== 'Active';
-
+                    } else if ($scope.activeStatusFilter.id !== 'all') {
                         orTerms = {$or: [
                             {
-                                is_closed: status,
+                                is_closed: $scope.activeStatusFilter.id !== 'active',
                             },
                         ]};
                     }
