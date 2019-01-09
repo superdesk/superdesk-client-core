@@ -11,11 +11,14 @@
       <span class="sf-logo"></span>
       <h4>Superdesk {{ :: version }}</span></h4>
       <h5 ng-if="build_rev && build_rev !== ''">Superdesk rev. <a href="https://github.com/superdesk/superdesk/commit/{{ :: build_rev }}" rel="noopener noreferrer">{{ :: build_rev }}</a></h5>
-      <h5 ng-if="build_rev_core && build_rev_core !== ''">Superdesk core rev. <a href="https://github.com/superdesk/superdesk-core/commit/{{ :: build_rev_core }}" rel="noopener noreferrer">{{ :: build_rev_core }}</a></h5>
-      <h5 ng-if="build_rev_client && build_rev_client !== ''">Superdesk client rev. <a href="https://github.com/superdesk/superdesk-client-core/commit/{{ :: build_rev_client }}" rel="noopener noreferrer">{{ :: build_rev_client }}</a></h5>
+
+      <h5 ng-repeat="module in modules track by module.name">
+        {{ module.name }}: <a ng-href="{{ module.href }}" rel="noopener noreferrer">{{ module.version }}</a>
+      </h5>
+
       <p class="date-released"><span ng-show="releaseDate">Released on</span> {{ :: releaseDate }}</p>
       <p>
-        <a href="https://www.superdesk.org" target="_blank"><b>Superdesk</b></a> is an open source end-to-end news creation, production, curation, distribution and publishing platform maintained by <a href="http://sourcefabric.org">Sourcefabric z.u.</a>, a nonprofit organisation whose primary purpose is to make the best possible software for journalism.
+        <a href="https://www.superdesk.org" target="_blank"><b>Superdesk</b></a> is an open source end-to-end news creation, production, curation, distribution and publishing platform maintained by <a href="https://www.sourcefabric.org">Sourcefabric z.u.</a>, a nonprofit organisation whose primary purpose is to make the best possible software for journalism.
       </p>
       <p>
         Copyright (c) 2014 - {{ year }} Sourcefabric z.u. and contributors.<br>
@@ -27,7 +30,7 @@
         <a href="https://www.superdesk.org/attachment/13/superdeskmastermanual.pdf?g_download=1" target="_blank">User Manual</a>
       </p>
       <p>
-        Get in touch with us via direct email <a href="mailto:superdesk@sourcefabric.org">superdesk@sourcefabric.org</a>... or find us in IRC Freenode at the #superdesk channel.
+        Get in touch with us via direct email <a href="mailto:superdesk@sourcefabric.org">superdesk@sourcefabric.org</a>.
       </p>
     </div>
   </div>

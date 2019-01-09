@@ -103,6 +103,10 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
 
     const _origCropsData = angular.copy($scope.data.cropData);
 
+    if (_origCropsData && Object.keys(_origCropsData).length === 0) {
+        $scope.data.isDirty = true;
+    }
+
     /**
      * @ngdoc method
      * @name ChangeImageController#isDoneEnabled
@@ -173,6 +177,7 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
         if ($scope.selectedRendition) {
             $scope.saveAreaOfInterest($scope.currentCropData);
         }
+
         $scope.crops.isDirty = false;
         $scope.data.isDirty = true;
     };

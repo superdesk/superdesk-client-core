@@ -870,6 +870,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                     selectedDesk: selectedDesk,
                     item: $scope.item,
                 });
+                $scope.close();
             };
 
             // Returns true if the given text is an URL
