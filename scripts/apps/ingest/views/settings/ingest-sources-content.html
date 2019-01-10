@@ -6,6 +6,18 @@
                 <input id="search-input" type="text" placeholder="{{ :: 'Search' | translate }}" ng-model="query" ng-model-options="{debounce: 500}" ng-change="search(query)">
             </div>
         </div>
+        <div class="dropdown" dropdown>
+            <button id="status_filter_button" class="dropdown__toggle navbtn navbtn--text-only" dropdown__toggle>
+                <span translate translate-params-filter="activeStatusFilter.label">Status: {{filter}}</span>
+                <span class="dropdown__caret"></span>
+            </button>
+            <ul class="dropdown__menu">
+                <li ng-repeat="filter in statusFilters track by filter.id" >
+                    <!-- dynamic id only for testing purpose --->
+                    <button ng-click="filterIngestSources(filter.id)" id="status--{{::filter.id}}-filter">{{filter.label | translate}}</button>
+                </li>
+            </ul>
+        </div>
         <div class="sd-page__element-grow">
             <div sd-pagination items="providers"></div>
         </div>
