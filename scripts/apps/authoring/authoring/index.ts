@@ -7,6 +7,8 @@ import * as filter from './filters';
 
 import '../suggest';
 import mediaModule from '../media';
+import {reactToAngular1} from 'superdesk-ui-framework';
+import {ArticleUrlFields} from './article-url-fields';
 
 angular.module('superdesk.apps.authoring.autosave', []).service('autosave', svc.AutosaveService);
 
@@ -76,6 +78,9 @@ angular.module('superdesk.apps.authoring', [
     .directive('sdRemoveTags', directive.RemoveTagsDirective)
     .directive('tansaScopeSync', directive.TansaScopeSyncDirective)
     .directive('sdItemActionByIntent', directive.ItemActionsByIntentDirective)
+    .component('sdArticleUrlFields',
+        reactToAngular1(ArticleUrlFields, ['label', 'urls', 'helperText', 'onChange', 'fieldId']),
+    )
 
     .filter('embeddedFilter', filter.EmbeddedFilter)
 
