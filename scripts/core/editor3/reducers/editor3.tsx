@@ -14,8 +14,6 @@ const editor3 = (state = {}, action) => {
     switch (action.type) {
     case 'EDITOR_CHANGE_STATE':
         return onChange(state, action.payload.editorState, action.payload.force, false, action.payload.skipOnChange);
-    case 'EDITOR_CHANGE_STATE_AND_CELL':
-        return onChangeAndSetCell(state, action.payload);
     case 'EDITOR_SET_LOCKED':
         return setLocked(state, action.payload);
     case 'EDITOR_SET_READONLY':
