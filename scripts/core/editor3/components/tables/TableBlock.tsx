@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import * as actions from '../../actions';
 import {connect} from 'react-redux';
 import {TableCell} from '.';
-import {EditorState} from 'draft-js';
+import {EditorState, SelectionState} from 'draft-js';
 import {getCell, setCell, getData, setData} from '../../helpers/table';
 
 /**
@@ -27,6 +27,9 @@ export class TableBlockComponent extends React.Component<any, any> {
         this.getCellEditorState = this.getCellEditorState.bind(this);
         this.getData = this.getData.bind(this);
         this.onFocus = this.onFocus.bind(this);
+        this.onHistoryAction = this.onHistoryAction.bind(this);
+        this.onRedo = this.onRedo.bind(this);
+        this.onUndo = this.onUndo.bind(this);
     }
 
     /**
@@ -38,7 +41,7 @@ export class TableBlockComponent extends React.Component<any, any> {
      * @description Updates data about this cell inside the entity for this atomic
      * block.
      */
-    onCellChange(row, col, cellEditorState) {
+    onCellChange(row: number, col: number, cellEditorState: EditorState) {
         const lastChangeType = cellEditorState.getLastChangeType();
         const {block, setActiveCell, editorState, parentOnChange} = this.props;
         const {data, needUpdate, forceUpdate} = setCell(this.getData(), row, col, cellEditorState);
@@ -53,7 +56,7 @@ export class TableBlockComponent extends React.Component<any, any> {
         setActiveCell(row, col, block.key, currentStyle, selection.toJS());
     }
 
-    getCellEditorState(data, i, j) {
+    getCellEditorState(data, i, j): EditorState {
         const {currentStyle, selection}: any = this.props.activeCell || {};
 
         return getCell(data, i, j, currentStyle, selection);
@@ -68,10 +71,10 @@ export class TableBlockComponent extends React.Component<any, any> {
     getData() {
         const {block, editorState} = this.props;
 
-        return getData(editorState.getCurrentContent(), block);
+        return getData(editorState.getCurrentContent(), block.getKey());
     }
 
-    onFocus(i, j, currentStyle, selection) {
+    onFocus(i: number, j: number, currentStyle: Array<string>, selection: SelectionState) {
         const {setActiveCell, block} = this.props;
         const newSelection = selection.merge({hasFocus: true});
 
@@ -83,18 +86,31 @@ export class TableBlockComponent extends React.Component<any, any> {
         event.stopPropagation();
     }
 
-    onUndo() {
-        const {editorState, parentOnChange} = this.props;
-        const newEditorState = EditorState.undo(editorState);
+    onHistoryAction(action: 'redo' | 'undo') {
+        const {editorState, parentOnChange, block, setActiveCell, activeCell} = this.props;
+        const newEditorState = EditorState[action](editorState);
+        const data = getData(newEditorState.getCurrentContent(), block.getKey());
+        const cellEditorState = this.getCellEditorState(data, activeCell.i, activeCell.j);
+        const currentStyle = cellEditorState.getCurrentInlineStyle().toArray();
+
+        const selection = cellEditorState.getSelection().toJS();
+        const selectedBlock = cellEditorState.getCurrentContent().getBlockForKey(selection.anchorKey);
+        const overflow = selection.anchorOffset > selectedBlock.getLength();
+
+        if (overflow) {
+            selection.anchorOffset = selection.focusOffset = selectedBlock.getLength();
+        }
 
         parentOnChange(newEditorState, false);
+        setActiveCell(activeCell.i, activeCell.j, block.getKey(), currentStyle, selection);
+    }
+
+    onUndo() {
+        this.onHistoryAction('undo');
     }
 
     onRedo() {
-        const {editorState, parentOnChange} = this.props;
-        const newEditorState = EditorState.redo(editorState);
-
-        parentOnChange(newEditorState, false);
+        this.onHistoryAction('redo');
     }
 
     render() {

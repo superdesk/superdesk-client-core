@@ -101,11 +101,12 @@ export function setCell(data, row, col, cellEditorState: EditorState) {
  * @ngdoc method
  * @name getData
  * @param {Object} contentState The editor content state
- * @param {Object} block The current atomic block
+ * @param {String} blockKey The current atomic block key
  * @description Returns the data contained in the entity of this atomic block.
  * @return {Object}
  */
-export function getData(contentState: ContentState, block: ContentBlock) {
+export function getData(contentState: ContentState, blockKey: string) {
+    const block = contentState.getBlockForKey(blockKey);
     const entityKey = block.getEntityAt(0);
     const {data} = contentState.getEntity(entityKey).getData();
 

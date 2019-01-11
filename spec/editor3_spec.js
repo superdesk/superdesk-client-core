@@ -1,4 +1,3 @@
-
 const authoring = require('./helpers/authoring');
 const monitoring = require('./helpers/monitoring');
 
@@ -33,8 +32,8 @@ class Editor3 {
         this.toolbar = new Editor3Toolbar(element);
     }
 
-    sendKeys(keys) {
-        this.editable.sendKeys(keys);
+    sendKeys(...keys) {
+        this.editable.sendKeys(...keys);
     }
 }
 
@@ -81,6 +80,65 @@ describe('editor3', () => {
         const body = getPreviewBody();
 
         expect(body.element(by.tagName('table')).getText()).toBe('foo');
+    });
+
+    fit('ctrl+z on tables mantains cursor position at the end', () => {
+        const tableEditor = new Editor3(editors.get(1).element(by.className('table-block')));
+
+        bodyEditor.toolbar.table();
+        tableEditor.sendKeys('foo');
+        tableEditor.sendKeys(protractor.Key.CONTROL, 'z');
+        tableEditor.sendKeys('bar');
+
+        const body = getPreviewBody();
+
+        expect(body.element(by.tagName('table')).getText()).toBe('fobar');
+    });
+
+    fit('ctrl+z on tables mantains cursor position at the beginning', () => {
+        const tableEditor = new Editor3(editors.get(1).element(by.className('table-block')));
+
+        bodyEditor.toolbar.table();
+        tableEditor.sendKeys('foo');
+        tableEditor.sendKeys(protractor.Key.ARROW_LEFT);
+        tableEditor.sendKeys(protractor.Key.ARROW_LEFT);
+        tableEditor.sendKeys(protractor.Key.ARROW_LEFT);
+        tableEditor.sendKeys(protractor.Key.CONTROL, 'z');
+        tableEditor.sendKeys('bar');
+
+        const body = getPreviewBody();
+
+        expect(body.element(by.tagName('table')).getText()).toBe('barfo');
+    });
+
+    fit('ctrl+z on tables mantains cursor position in the middle', () => {
+        const tableEditor = new Editor3(editors.get(1).element(by.className('table-block')));
+
+        bodyEditor.toolbar.table();
+        tableEditor.sendKeys('foo');
+        tableEditor.sendKeys(protractor.Key.ARROW_LEFT);
+        tableEditor.sendKeys(protractor.Key.ARROW_LEFT);
+        tableEditor.sendKeys(protractor.Key.CONTROL, 'z');
+        tableEditor.sendKeys(protractor.Key.CONTROL, 'z');
+        tableEditor.sendKeys('bar');
+
+        const body = getPreviewBody();
+
+        expect(body.element(by.tagName('table')).getText()).toBe('fbar');
+    });
+
+    fit('ctrl+y on tables mantains cursor position', () => {
+        const tableEditor = new Editor3(editors.get(1).element(by.className('table-block')));
+
+        bodyEditor.toolbar.table();
+        tableEditor.sendKeys('foo');
+        tableEditor.sendKeys(protractor.Key.CONTROL, 'z');
+        tableEditor.sendKeys(protractor.Key.CONTROL, 'y');
+        tableEditor.sendKeys('bar');
+
+        const body = getPreviewBody();
+
+        expect(body.element(by.tagName('table')).getText()).toBe('fobaro');
     });
 
     function getPreviewBody() {
