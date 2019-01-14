@@ -226,7 +226,7 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
         if ($scope.data.isDirty) {
             $scope.resolve({
                 cropData: $scope.data.cropData,
-                metadata: _.pick($scope.data.item, [
+                metadata: _.pick($scope.data.metadata, [
                     ...EDITABLE_METADATA,
                     'poi',
                     'renditions',
