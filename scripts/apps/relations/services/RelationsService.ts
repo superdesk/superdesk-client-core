@@ -3,15 +3,15 @@ import {IArticle} from 'superdesk-interfaces/Article';
 RelationsService.$inject = ['archiveService', 'mediaIdGenerator'];
 
 export function RelationsService(archiveService, mediaIdGenerator) {
-    this.getRelatedItemsWithoutMediaGallery = function(item: IArticle, mediaFields: Dictionary<string, Array<number>>) {
+    this.getRelatedItemsWithoutMediaGallery = function(item: IArticle, fields) {
         if (!item.associations) {
             return [];
         }
-
         const relatedWithoutMedia = _.pickBy(item.associations, (value, key) => {
             var parts = mediaIdGenerator.getFieldParts(key);
+            var field = fields.find((field) => field._id === parts[0]);
 
-            return !_.includes(Object.keys(mediaFields), parts[0]);
+            return field && field.field_type === 'related_content';
         });
 
         const related = Object.values(relatedWithoutMedia);

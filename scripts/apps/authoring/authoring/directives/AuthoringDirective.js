@@ -600,7 +600,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 }
 
                 // Check if there's unpublished related items
-                const related = relationsService.getRelatedItemsWithoutMediaGallery($scope.item, mediaFields);
+                const related = relationsService.getRelatedItemsWithoutMediaGallery($scope.item, $scope.fields);
 
                 if (related.length > 0) {
                     return modal.confirm({
