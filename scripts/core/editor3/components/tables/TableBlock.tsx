@@ -4,19 +4,25 @@ import classNames from 'classnames';
 import * as actions from '../../actions';
 import {connect} from 'react-redux';
 import {TableCell} from '.';
-import {EditorState, SelectionState} from 'draft-js';
+import {EditorState, SelectionState, ContentBlock} from 'draft-js';
 import {getCell, setCell, getData, setData} from '../../helpers/table';
+
+interface IProps {
+    block: ContentBlock;
+    readOnly: boolean;
+    editorState: EditorState;
+    activeCell?: any;
+    setActiveCell: (row: number, col: number, blockKey: string, currentStyle: Array<string>, selection: any) => void;
+    parentOnChange: (newEditorState: EditorState, force: boolean) => void;
+}
 
 /**
  * @ngdoc React
  * @module superdesk.core.editor3
  * @name TableBlockComponent
- * @param block {Object} Information about this atomic block.
- * @param contentState {Object} The content state containing this atomic block.
- * @param setActiveCell {Function} When called, sets the parent (main) editor to read only.
  * @description Handles a cell in the table, as well as the containing editor.
  */
-export class TableBlockComponent extends React.Component<any, any> {
+export class TableBlockComponent extends React.Component<IProps, any> {
     static propTypes: any;
     static defaultProps: any;
 
@@ -53,7 +59,7 @@ export class TableBlockComponent extends React.Component<any, any> {
             parentOnChange(newEditorState, forceUpdate);
         }
 
-        setActiveCell(row, col, block.key, currentStyle, selection.toJS());
+        setActiveCell(row, col, block.getKey(), currentStyle, selection.toJS());
     }
 
     getCellEditorState(data, i, j): EditorState {
@@ -78,7 +84,7 @@ export class TableBlockComponent extends React.Component<any, any> {
         const {setActiveCell, block} = this.props;
         const newSelection = selection.merge({hasFocus: true});
 
-        setActiveCell(i, j, block.key, currentStyle, newSelection.toJS());
+        setActiveCell(i, j, block.getKey(), currentStyle, newSelection.toJS());
     }
 
     // onMouseDown is used in the main editor to set focus and stop table editing
@@ -146,15 +152,6 @@ export class TableBlockComponent extends React.Component<any, any> {
         );
     }
 }
-
-TableBlockComponent.propTypes = {
-    block: PropTypes.object.isRequired,
-    readOnly: PropTypes.bool.isRequired,
-    editorState: PropTypes.object.isRequired,
-    activeCell: PropTypes.object,
-    setActiveCell: PropTypes.func.isRequired,
-    parentOnChange: PropTypes.func.isRequired,
-};
 
 const mapDispatchToProps = (dispatch) => ({
     parentOnChange: (editorState, force) => dispatch(actions.changeEditorState(editorState, force)),

@@ -10,7 +10,6 @@ describe('editor3.component.table-block', () => {
         const {block, contentState} = tableBlockAndContent();
         const wrapper = shallow(
             <TableBlock
-                contentState={contentState}
                 block={block}
                 setActiveCell={() => { /* no-op */ }}
                 editorState={EditorState.createWithContent(contentState)}
@@ -26,7 +25,6 @@ describe('editor3.component.table-block', () => {
         const {block, contentState} = tableBlockAndContent();
         const wrapper = mount(
             <TableBlock
-                contentState={contentState}
                 block={block}
                 setActiveCell={() => { /* no-op */ }}
                 editorState={EditorState.createWithContent(contentState)}
@@ -52,7 +50,9 @@ describe('editor3.component.table-cell', () => {
                 editorState={EditorState.createWithContent(ContentState.createFromText('abc'))}
                 onChange={() => { /* no-op */ }}
                 readOnly={false}
-                onFocus={() => { /* no-op */ }} />,
+                onFocus={() => { /* no-op */ }}
+                onRedo={() => { /* no-op */ }}
+                onUndo={() => { /* no-op */ }} />,
         );
 
         expect(wrapper.find('DraftEditor').length).toBe(1);
