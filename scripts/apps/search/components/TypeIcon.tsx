@@ -12,7 +12,7 @@ export const TypeIcon: React.StatelessComponent<any> = (props) => {
 
     return React.createElement('i', {
         className: 'filetype-icon-' + props.type,
-        title: `${gettext('Article Type')}: ${props.type}`,
+        title: gettext('Article Type: {{type}}', {type: props.type}),
     });
 };
 

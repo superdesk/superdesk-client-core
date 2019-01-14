@@ -36,7 +36,7 @@ export default angular.module('superdesk.core.directives.filetypeIcon', [])
                     return;
                 }
 
-                element.attr('title', `${gettext('Article Type')}: ${item.type}`);
+                element.attr('title', gettext('Article Type: {{type}}', {type: item.type}));
                 element.addClass(cls);
                 element.removeClass(oldClass);
                 oldClass = cls;

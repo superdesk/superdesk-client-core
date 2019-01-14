@@ -15,7 +15,7 @@ export const state: React.StatelessComponent<any> = (props) => {
             const scheduled = get(props.item, 'archive_item.schedule_settings.utc_publish_schedule');
 
             if (scheduled) {
-                title = gettext('Scheduled for') + ' ' + datetime.longFormat(scheduled);
+                title = gettext('Scheduled for {{date}}', {date: datetime.longFormat(scheduled)});
             }
         }
 

@@ -121,13 +121,13 @@ export function ConfirmDirtyService($window, $q, $filter, api, modal, $interpola
             var username = $filter('username')(user);
             var msg = headline ?
                 gettext(
-                    'This item was unlocked by <b>{{username}}</b>.',
-                    {username: username}
+                    'This item was unlocked by {{username}}.',
+                    {username: `<b>${username}</b>`}
                 )
                 :
                 gettext(
-                    'Item <b>{{headline}}</b> was unlocked by <b>{{username}}.',
-                    {headline: headline, username: username}
+                    'Item {{headline}} was unlocked by {{username}}.',
+                    {headline: `<b>${headline}</b>`, username: `<b>${username}</b>`}
                 );
 
             return modal.confirm(msg, gettext('Item Unlocked'), gettext('OK'), false);
@@ -142,7 +142,7 @@ export function ConfirmDirtyService($window, $q, $filter, api, modal, $interpola
     this.lock = function lock(userId) {
         api.find('users', userId).then((user) => {
             var username = $filter('username')(user);
-            var msg = gettext('This item was locked by <b>{{username}}</b>.', {username: username});
+            var msg = gettext('This item was locked by {{username}}.', {username: `<b>${username}</b>`});
 
             return modal.confirm(msg, gettext('Item locked'), gettext('OK'), false);
         });

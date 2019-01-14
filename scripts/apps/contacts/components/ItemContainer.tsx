@@ -94,7 +94,7 @@ export class ItemContainer extends React.Component<any, any> {
             break;
         case 'website':
             value = (<a href={item.website} target="_blank" rel="noopener noreferrer">{item.website}</a>);
-            title = value && gettext(item.website);
+            title = value && item.website;
             _class = _link;
             break;
         case 'twitter':
@@ -107,20 +107,20 @@ export class ItemContainer extends React.Component<any, any> {
                     <i className="icon-twitter" />
                 </a>
             );
-            title = value && gettext(`${TWITTER_URL}${item.twitter}`);
+            title = value && `${TWITTER_URL}${item.twitter}`;
             _class = _link;
             break;
         case 'facebook':
             value = (
                 <a href={item.facebook} target="_blank" rel="noopener noreferrer"><i className="icon-facebook" /></a>
             );
-            title = value && gettext(item.facebook);
+            title = value && item.facebook;
             _class = _link;
             break;
         case 'location':
             value = contactAddress ? (<a href={`${MAP_URL}${contactAddress}`} target="_blank" rel="noopener noreferrer">
                 {contactAddress}</a>) : null;
-            title = value && gettext(contactAddress);
+            title = value && contactAddress;
             _class = _link;
             break;
         }

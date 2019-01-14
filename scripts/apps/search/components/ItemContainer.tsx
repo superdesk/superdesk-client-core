@@ -11,7 +11,7 @@ export const ItemContainer: React.StatelessComponent<any> = (props) => {
     if (item._type !== 'ingest') {
         if (desk) {
             label = gettext('desk:');
-            value = item._type !== 'archived' ? desk.name : gettext('Archived from') + ' ' + desk.name;
+            value = item._type !== 'archived' ? desk.name : gettext('Archived from {{desk}}', {desk: desk.name});
         } else if (item._type === 'archive') {
             label = gettext('location:');
             value = gettext('workspace');

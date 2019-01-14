@@ -11,7 +11,7 @@ export const update: React.StatelessComponent<any> = (props) => {
                 key: 'update',
                 title: gettext('correction sequence'),
             },
-            gettext('Update {{seq}}', {seq: props.item.correction_sequence}),
+            gettext('Update {{sequence}}', {sequence: props.item.correction_sequence}),
         );
     }
 };
