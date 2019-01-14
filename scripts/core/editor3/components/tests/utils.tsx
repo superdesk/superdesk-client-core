@@ -97,7 +97,7 @@ export function createBlockAndContent(type, data) {
         entityKey, ' ');
     const block = editorState.getCurrentContent().getBlocksAsArray()[1];
 
-    return {block, contentState: editorState.getCurrentContent()};
+    return {block: block, contentState: editorState.getCurrentContent()};
 }
 
 /**
