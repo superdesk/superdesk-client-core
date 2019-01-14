@@ -86,7 +86,6 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
         link: function($scope, elem, attrs) {
             var _closing;
             var mediaFields = {};
-            var relatedItemFields = []; // To store the _id of related_content
 
             const UNIQUE_NAME_ERROR = gettext('Error: Unique Name is not unique.');
             const MEDIA_TYPES = ['video', 'picture', 'audio'];
@@ -601,7 +600,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 }
 
                 // Check if there's unpublished related items
-                const related = relationsService.getRelatedItemsWithoutMediaGallery($scope.item, relatedItemFields);
+                const related = relationsService.getRelatedItemsWithoutMediaGallery($scope.item, $scope.fields);
 
                 if (related.length > 0) {
                     return modal.confirm({
@@ -1027,9 +1026,6 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 var parts = mediaIdGenerator.getFieldParts(fieldId);
                 var field = _.find($scope.fields, (field) => field._id === parts[0]);
 
-                if (field && field.field_type === 'related_content' && relatedItemFields.indexOf(field._id) === -1) {
-                    relatedItemFields.push(field._id);
-                }
                 return field && field.field_type === 'media';
             }
 
