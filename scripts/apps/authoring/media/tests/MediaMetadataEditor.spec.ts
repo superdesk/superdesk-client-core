@@ -12,7 +12,7 @@ describe('media metadata editor', () => {
     beforeEach(window.module('superdesk.apps.authoring.media'));
 
     beforeEach(inject(($q) => {
-        spyOn(helper, 'getLabelNameResolver').and.returnValue($q.when(() => {/* no-op */}));
+        spyOn(helper, 'getLabelNameResolver').and.returnValue($q.when(() => { /* no-op */ }));
     }));
 
     it('dislays all fields', inject(($rootScope, $compile, deployConfig) => {
@@ -47,9 +47,11 @@ describe('media metadata editor', () => {
             },
         };
         let scope = $rootScope.$new(true);
+
         scope.item = {_id: 'foo'};
 
         let elm = $compile('<div sd-media-metadata-editor data-item="item"></div>')(scope);
+
         scope.$digest();
 
         let iScope = elm.isolateScope();
@@ -94,9 +96,11 @@ describe('media metadata editor', () => {
             },
         };
         let scope = $rootScope.$new(true);
+
         scope.item = {_id: 'foo'};
 
         let elm = $compile('<div sd-media-metadata-editor data-item="item"></div>')(scope);
+
         scope.$digest();
 
         let iScope = elm.isolateScope();

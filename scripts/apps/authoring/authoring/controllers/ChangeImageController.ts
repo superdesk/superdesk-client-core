@@ -68,11 +68,11 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
     $scope.hideTabs = $scope.data.hideTabs || [];
 
     $scope.metadata = {
-        isDirty: false
+        isDirty: false,
     };
 
     $scope.crops = {
-        isDirty: false
+        isDirty: false,
     };
 
     $scope.data.renditions.forEach((rendition) => {

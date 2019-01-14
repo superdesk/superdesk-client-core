@@ -30,5 +30,5 @@ export const promiseAllObject = (promises) => new Promise((resolve, reject) => {
  */
 export const getSuperdeskType = (event, supportExternalFiles = true) =>
     event.originalEvent.dataTransfer.types.find((name) =>
-        name.includes('application/superdesk') || supportExternalFiles && name === 'Files'
+        name.includes('application/superdesk') || supportExternalFiles && name === 'Files',
     );

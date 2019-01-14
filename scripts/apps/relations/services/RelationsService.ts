@@ -11,7 +11,7 @@ export function RelationsService(archiveService, mediaIdGenerator) {
 
         const relatedWithoutMedia = pickBy(item.associations, (value, key) => {
             var parts = mediaIdGenerator.getFieldParts(key);
-            var field = fields.find((field) => field._id === parts[0]);
+            var field = fields.find((f) => f._id === parts[0]);
 
             return field && field.field_type === 'related_content';
         });
