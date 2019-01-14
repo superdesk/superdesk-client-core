@@ -82,7 +82,7 @@ describe('editor3', () => {
         expect(body.element(by.tagName('table')).getText()).toBe('foo');
     });
 
-    fit('ctrl+z on tables mantains cursor position at the end', () => {
+    it('ctrl+z on tables mantains cursor position at the end', () => {
         const tableEditor = new Editor3(editors.get(1).element(by.className('table-block')));
 
         bodyEditor.toolbar.table();
@@ -95,7 +95,7 @@ describe('editor3', () => {
         expect(body.element(by.tagName('table')).getText()).toBe('fobar');
     });
 
-    fit('ctrl+z on tables mantains cursor position at the beginning', () => {
+    it('ctrl+z on tables mantains cursor position at the beginning', () => {
         const tableEditor = new Editor3(editors.get(1).element(by.className('table-block')));
 
         bodyEditor.toolbar.table();
@@ -111,7 +111,7 @@ describe('editor3', () => {
         expect(body.element(by.tagName('table')).getText()).toBe('barfo');
     });
 
-    fit('ctrl+z on tables mantains cursor position in the middle', () => {
+    it('ctrl+z on tables mantains cursor position in the middle', () => {
         const tableEditor = new Editor3(editors.get(1).element(by.className('table-block')));
 
         bodyEditor.toolbar.table();
@@ -127,7 +127,7 @@ describe('editor3', () => {
         expect(body.element(by.tagName('table')).getText()).toBe('fbar');
     });
 
-    fit('ctrl+y on tables mantains cursor position', () => {
+    it('ctrl+y on tables mantains cursor position', () => {
         const tableEditor = new Editor3(editors.get(1).element(by.className('table-block')));
 
         bodyEditor.toolbar.table();
