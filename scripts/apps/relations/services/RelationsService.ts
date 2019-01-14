@@ -9,7 +9,7 @@ export function RelationsService(archiveService, mediaIdGenerator) {
         }
         const relatedWithoutMedia = _.pickBy(item.associations, (value, key) => {
             var parts = mediaIdGenerator.getFieldParts(key);
-            var field = _.find(fields, (field) => field._id === parts[0]);
+            var field = fields.find((field) => field._id === parts[0]);
 
             return field && field.field_type === 'related_content';
         });
