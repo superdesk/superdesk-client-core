@@ -19,15 +19,31 @@ export const onEventCapture = (event) => {
  * @name gettext
  * @param {String} text
  * @param {Object} params
+ * @param {String} plural
+ * @param {number} count required if plural is present
  * @description Used angular gettext service for displaying localised text on Browser
+ *
+ * Examples:
+ *
+ * gettext('This item was locked by {{username}}.', {username: 'John'});
+ * result -> 'This item was locked by John'
+ *
+ * gettext('One item.', {}, '{{$count}} items', 1);
+ * result -> 'One item'
+ *
+ * gettext('One item.', {}, '{{$count}} items', 2);
+ * result -> '2 items'
  */
-export const gettext = (text, params = null) => {
+export const gettext = (text, params = null, plural = null, count = null) => {
     const injector = angular.element(document.body).injector();
 
     if (injector) { // in tests this will be empty
-        const translated = injector.get('gettextCatalog').getString(text);
+        const gettextCatalog = injector.get('gettextCatalog');
+        const translated = plural === null || count === null ?
+            gettextCatalog.getString(text, params || {}) :
+            gettextCatalog.getPlural(count, text, plural, params || {});
 
-        return params ? injector.get('$interpolate')(translated)(params) : translated;
+        return translated;
     }
 
     return text;
