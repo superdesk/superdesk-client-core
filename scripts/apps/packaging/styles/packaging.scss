@@ -146,7 +146,7 @@
             border: 1px solid #ebebeb;
             border-width: 0 1px;
             background: #fcfcfc;
-            padding: 30px 60px $scratchpad-closed + 20px;
+            padding: 30px 60px 20px;
             @include border-box();
             overflow: auto;
         }

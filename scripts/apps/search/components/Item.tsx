@@ -178,7 +178,7 @@ export class Item extends React.Component<any, any> {
         }
 
         const getActionsMenu = () =>
-            !get(scope, 'flags.hideActions') && this.state.hover && !item.gone ? React.createElement(
+            this.props.hideActions !== true && this.state.hover && !item.gone ? React.createElement(
                 ActionsMenu, {
                     item: item,
                     svc: this.props.svc,
@@ -243,6 +243,7 @@ export class Item extends React.Component<any, any> {
                     onMultiSelect: this.props.onMultiSelect,
                     swimlane: this.props.swimlane,
                     svc: this.props.svc,
+                    selectingDisabled: this.props.multiSelectDisabled,
                 }),
                 item.priority || item.urgency ? React.createElement(ListPriority, {
                     item: item,
@@ -273,6 +274,7 @@ export class Item extends React.Component<any, any> {
                 key: item._id,
                 className: classNames(
                     'list-item-view',
+                    {'actions-visible': this.props.hideActions !== true},
                     {active: this.props.flags.selected},
                     {selected: this.props.item.selected && !this.props.flags.selected},
                 ),
@@ -306,4 +308,6 @@ Item.propTypes = {
     onEdit: PropTypes.any,
     onSelect: PropTypes.any,
     narrow: PropTypes.any,
+    hideActions: PropTypes.bool,
+    multiSelectDisabled: PropTypes.bool,
 };

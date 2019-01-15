@@ -3,16 +3,6 @@ import _ from 'lodash';
 /**
  * @ngdoc controller
  * @module superdesk.apps.monitoring
- * @name MonitoringController
- *
- * @requires $rootscope
- * @requires $location
- * @requires desks
- * @requires config
- * @requires superdeskFlags
- * @requires search
- *
- * @description MonitoringController is responsible for providing functionalities in monitoring view of the application
  */
 MonitoringController.$inject = ['$rootScope', '$scope', '$location', 'desks', 'config', 'superdeskFlags',
     'search', '$filter', 'preferencesService', '$q'];

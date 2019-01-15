@@ -33,10 +33,6 @@
         right: 0;
         left: 0;
         box-sizing: border-box;
-
-        .sd-widget.versions .article-versions {
-            bottom: 0;
-        }
     }
 
     .page-content-container {
@@ -157,10 +153,14 @@
 .page-content-container {
     position: absolute;
     top:0;
+    bottom: 0;
     left: $tablist-width + $article-tabpane-padding;
     right: $tablist-width + $article-tabpane-padding;
-    bottom: 30px;
     overflow-y: auto;
+}
+
+.workqueue .page-content-container {
+    bottom: 30px;
 }
 
 
@@ -321,12 +321,6 @@
         i {
             margin: -5px 0 0 0;
         }
-    }
-}
-
-.scratchpad-open {
-    .opened-articles {
-        bottom: $scratchpad-closed + $scratchpad-content-height;
     }
 }
 

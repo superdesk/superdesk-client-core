@@ -418,6 +418,21 @@
     }
   }
 }
+
+.side-menu-hidden {
+    #side-menu {
+        display: none;
+    }
+
+    #main-container.hideMonitoring #authoring-container {
+        width: 100%!important;
+    }
+
+    #workspace-container {
+        left: 0;
+    }
+}
+
 .sd-sidetab-menu,
 .sd-sidebar-menu {
     top: 0;

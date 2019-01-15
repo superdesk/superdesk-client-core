@@ -36,10 +36,6 @@ describe('Preferences Service', () => {
             session_preferences: {
                 'desk:items': [],
                 'pinned:items': [],
-                'scratchpad:items': [
-                    '/archive/urn:newsml:a0cca6c9-fe94-46ed-9ce7-aab9361ff6b8',
-                    '/archive/urn:newsml:a0cca6c9-fe94-46ed-9ce7-aab9361ff6b8',
-                ],
             },
         };
 

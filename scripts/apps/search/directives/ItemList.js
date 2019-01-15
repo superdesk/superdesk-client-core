@@ -161,6 +161,10 @@ export function ItemList(
                     angular.extend({
                         svc: services,
                         scope: scope,
+                        hideActionsForMonitoringItems: scope.hideActionsForMonitoringItems,
+                        onMonitoringItemSelect: scope.onMonitoringItemSelect,
+                        onMonitoringItemDoubleClick: scope.onMonitoringItemDoubleClick,
+                        disableMonitoringMultiSelect: scope.disableMonitoringMultiSelect,
                     }, monitoringState.state));
 
                 var listComponent = ReactDOM.render(itemList, elem[0]);

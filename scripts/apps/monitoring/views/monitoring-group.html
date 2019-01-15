@@ -4,9 +4,11 @@
     <div sd-monitoring-group-header class="column-header" ng-class="{swimlane: viewColumn}" ng-if="group.header && viewType !== 'single_monitoring'">
     </div>
 
-    <div class="stage-content group"
+    <div sd-items-list class="stage-content group"
         ng-class="{refresh: showRefresh, 'sd-grid-group': view === 'photogrid'}"
         ng-style="style"
-        sd-items-list>
-    </div>
+        data-hide-actions-for-monitoring-items="hideActionsForMonitoringItems"
+        data-disable-monitoring-multi-select="disableMonitoringMultiSelect"
+        on-monitoring-item-select="onMonitoringItemSelect"
+        on-monitoring-item-double-click="onMonitoringItemDoubleClick"></div>
 </div>
