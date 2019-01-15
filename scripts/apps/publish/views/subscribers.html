@@ -152,6 +152,12 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="form__row form__row--flex form__row--no-padding">
+                                <div class="form__row-item form__row-item--no-grow">
+                                    <span sd-switch ng-model="subscriber.async"></span><label>{{:: 'Parallel publishing' | translate }}</label>
+                                    <span class="sd-line-input__hint" translate>When enabled it can send multiple items at the same time.</span>
+                                </div>
+                            </div>
                         </div>
 
                         <fieldset class="separated">
